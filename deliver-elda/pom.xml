@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.epimorphics.lda</groupId>
+  <artifactId>elda</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>elda</name>
+  <description>instant Elda webapp</description>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.epimorphics.lda</groupId>
+      <artifactId>lda</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  
+  </dependencies>
+
+  <build>
+    <finalName>elda</finalName>
+    <plugins>
+        <plugin>
+            <artifactId>maven-jetty-plugin</artifactId>
+            <groupId>org.mortbay.jetty</groupId>
+        </plugin>
+    </plugins>
+  </build>
+
+</project>

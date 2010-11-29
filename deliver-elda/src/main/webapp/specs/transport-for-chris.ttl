@@ -1,0 +1,381 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix ex:  <http://www.epimorphics.com/examples/eg1#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix api: <http://purl.org/linked-data/api/vocab#> .
+##@prefix api:  <http://www.epimorphics.com/vocabularies/lda#> .
+
+@prefix :  <http://www.epimorphics.com/vocabularies/config#> .
+
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix spatialrelations: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+
+@prefix dgu: <http://reference.data.gov.uk/def/reference/> .
+@prefix admingeo: <http://statistics.data.gov.uk/def/administrative-geography/> .
+@prefix naptan: <http://transport.data.gov.uk/def/naptan/> .
+@prefix traffic: <http://transport.data.gov.uk/def/traffic/> .
+
+@prefix t: <http://transport.data.gov.uk/api#> .
+
+t:api
+	a api:API ;
+	rdfs:label "Transport API"@en ;
+	api:prefixMapping [ 
+		api:namespace "http://transport.data.gov.uk/def/naptan/";
+		api:prefix	  "naptan";
+	];
+	api:maxPageSize "100";
+	api:defaultPageSize "10" ;
+##	api:sparqlEndpoint <http://example> ;
+##  api:sparqlEndpoint <tdb:> ;
+##  api:sparqlEndpoint <http://gov.tso.co.uk/transport/sparql> ;
+	api:sparqlEndpoint <http://services.data.gov.uk/transport/sparql> ;
+	api:viewer 
+	  t:stopPointViewer ;
+	api:endpoint
+	  t:stopPoints , 
+	  t:stopPoint;  
+	  .
+# Viewers #
+
+
+t:stopPointViewer
+  a api:Viewer ; 
+  api:name "stopPoint" ; 
+  api:properties "name,alias,atcoCode,naptanCode,plateCode,type.name,type.label,note,indicator,landmark,street,town,suburb,lat,long,easting,northing,compassPointBearing,administrativeArea.name,nptgLocality.name,type.name,type.label,plusbusZone.name,mainNptgLocality.name,mainNptgLocality,localityCentre,defaultWaitTime,coachStop.label,coachStop.alias,coachStop.coachRef,station.label,station.alias,station.crs,station.tiploc,airport.name,airport.alias,airport.iataRef,ferryTerminal.name,ferryTerminal.alias,ferryTerminal.ferryRef";
+  .
+  
+
+## NaPTAN ##
+
+t:stopPointSelector
+  a api:Selector ;
+  api:filter "type=StopPoint" ; 
+  .
+
+t:stopPoints
+	a api:ListEndpoint ;
+	api:uriTemplate "/transport/doc/stop-point" ;
+	api:exampleRequestPath "/transport/doc/stop-point" ;
+	api:selector t:stopPointSelector ;
+	api:defaultViewer t:stopPointViewer .
+
+t:stopPoint
+  a api:ItemEndpoint ;
+  api:uriTemplate "/transport/doc/stop-point/{code}" ;
+  api:exampleRequestPath "/transport/doc/stop-point/2800S40063G" ;
+  api:itemTemplate "http://transport.data.gov.uk/id/stop-point/{code}" ;
+  api:defaultViewer t:stopPointViewer ;
+##
+##  api:selector [ api:type  naptan:StopPoint; api:query "atcoCode=?code" ] ;
+  api:selector [ 
+  		api:filter	"type=StopPoint";
+  		api:where "?item <http://transport.data.gov.uk/def/naptan/atcoCode> ?code^^<http://transport.data.gov.uk/def/naptan/AtcoCode> ."
+  ] ;
+##
+   .
+
+
+## Labels ##
+
+# Common #
+
+rdf:type api:label "type" .
+rdfs:label api:label "label" .
+rdfs:comment api:label "comment" .
+owl:sameAs api:label "sameAs" .
+
+skos:prefLabel api:label "name" .
+skos:altLabel api:label "alias" .
+skos:note api:label "note" .
+
+dgu:uriSet api:label "uriSet" .
+
+geo:lat
+  api:label "lat" ;
+  rdfs:range xsd:decimal .
+  
+geo:long
+  api:label "long" ;
+  rdfs:range xsd:decimal .
+
+spatialrelations:easting 
+  a owl:DatatypeProperty ;
+  api:label "easting" ;
+  rdfs:range xsd:integer .
+spatialrelations:northing 
+  a owl:DatatypeProperty ;
+  api:label "northing" ;
+  rdfs:range xsd:integer .
+
+spatialrelations:containedBy api:label "containedBy" .
+spatialrelations:contains api:label "contains" .
+spatialrelations:borders api:label "borders" .
+
+admingeo:country api:label "countryAdmingeo" .
+admingeo:region api:label "regionAdmingeo" .
+admingeo:localAuthority api:label "localAuthority" .
+admingeo:district api:label "district" .
+admingeo:coverage api:label "coverage" .
+admingeo:standardCode
+  a owl:DatatypeProperty ;
+  api:label "snac" ;
+  rdfs:range admingeo:StandardCode .
+
+admingeo:LocalAuthority api:label "LocalAuthority" .
+admingeo:LocalAuthorityDistrict api:label "LocalAuthorityDistrict" .
+
+admingeo:StandardCode a rdfs:Datatype .
+
+# Traffic Flow #
+
+traffic:lacode
+  a owl:DatatypeProperty ;
+  api:label "dftLAcode" ;
+  rdfs:range traffic:LAcode .
+
+traffic:CountPoint api:label "CountPoint" .
+traffic:countPoint api:label "countPoint" .
+traffic:countHour api:label "countHour" .
+traffic:count api:label "count" .
+traffic:direction api:label "direction" .
+traffic:observationRoad api:label "observationRoad" .
+traffic:observationDirection api:label "observationDirection" .
+traffic:observationCountPoint api:label "observationCountPoint" .
+traffic:observationCountHour api:label "observationCountHour" .
+traffic:vehicleType api:label "vehicleType" .
+
+traffic:countPointNumber 
+  a owl:DatatypeProperty ;
+  api:label "countPointNumber" ;
+  rdfs:range traffic:CountPointNumber .
+  
+traffic:countPointCount api:label "countPointCount" . 
+traffic:countPointRegion api:label "countPointRegion" .
+traffic:districtRegion api:label "districtRegion" .
+traffic:countPointDistrict api:label "countPointDistrict" .
+traffic:countPointCountry api:label "countPointCountry" .
+traffic:countPointRoadCategory api:label "countPointRoadCategory" .
+traffic:countRoad api:label "countRoad" .
+traffic:districtCountry api:label "districtCountry" .
+traffic:roadCountPoint api:label "roadCountPoint" .
+traffic:observation api:label "observation" .
+traffic:roadCount api:label "roadCount" .
+traffic:road api:label "road" .
+traffic:roadName api:label "roadName" .
+traffic:roadNumber 
+  a owl:DatatypeProperty ;
+  api:label "roadNumber" ;
+  rdfs:range traffic:RoadNumber .
+
+traffic:roadCategory 
+  api:label "roadCategory" ;
+  api:multiValued true .
+
+<http://transport.data.gov.uk/def/road-category/motorway> api:label "motorway" .
+<http://transport.data.gov.uk/def/road-category/a> api:label "A" .
+<http://transport.data.gov.uk/def/road-category/b> api:label "B" .
+<http://transport.data.gov.uk/def/road-category/c> api:label "C" .
+<http://transport.data.gov.uk/def/road-category/unclassified> api:label "unclassified" .
+
+traffic:LAcode a rdfs:Datatype .
+traffic:CountPointNumber a rdfs:Datatype .
+traffic:RoadNumber a rdfs:Datatype .
+
+# NPTG #
+
+naptan:Country api:label "Country" .
+naptan:Region api:label "Region" .
+naptan:AdministrativeArea api:label "AdministrativeArea" .
+naptan:NptgDistrict api:label "NptgDistrict" .
+naptan:NptgLocality api:label "NptgLocality" .
+
+naptan:country api:label "country" .
+naptan:region api:label "region" .
+naptan:administrativeArea api:label "administrativeArea" .
+naptan:nptgDistrict api:label "nptgDistrict" .
+naptan:nptgLocality api:label "nptgLocality" .
+naptan:parentNptgLocality api:label "parentNptgLocality" .
+naptan:childNptgLocality api:label "childNptgLocality" .
+naptan:plusbusZone api:label "plusbusZone" .
+
+naptan:countryCode 
+  a owl:DatatypeProperty ;
+  api:label "countryCode" ; 
+  rdfs:range naptan:CountryCode .
+naptan:regionCode 
+  a owl:DatatypeProperty ;
+  api:label "regionCode" ;
+  rdfs:range naptan:RegionCode .
+naptan:administrativeAreaCode 
+  a owl:DatatypeProperty ;
+  api:label "administrativeAreaCode" ;
+  rdfs:range naptan:AdministrativeAreaCode .
+naptan:atcoAreaCode 
+  a owl:DatatypeProperty ;
+  api:label "atcoAreaCode" ;
+  rdfs:range naptan:AtcoAreaCode .
+naptan:nptgDistrictCode 
+  a owl:DatatypeProperty ;
+  api:label "nptgDistrictCode" ;
+  rdfs:range naptan:NptgDistrictCode .
+naptan:nptgLocalityCode 
+  a owl:DatatypeProperty ;
+  api:label "nptgLocalityCode" ;
+  rdfs:range naptan:NptgLocalityCode .
+
+naptan:CountryCode a rdfs:Datatype .
+naptan:RegionCode a rdfs:Datatype .
+naptan:AdministrativeAreaCode a rdfs:Datatype .
+naptan:AtcoAreaCode a rdfs:Datatype .
+naptan:NptgDistrictCode a rdfs:Datatype .
+naptan:NptgLocalityCode a rdfs:Datatype .
+
+<http://transport.data.gov.uk/id/region> api:label "Regions" .
+<http://transport.data.gov.uk/id/administrative-area> api:label "AdministrativeAreas" .
+<http://transport.data.gov.uk/id/nptg-district> api:label "NptgDistricts" .
+<http://transport.data.gov.uk/id/nptg-locality> api:label "NptgLocalities" .
+
+# NaPTAN #
+
+naptan:StopPoint api:label "StopPoint" .
+naptan:StopArea api:label "StopArea" .
+
+naptan:OnStreetStopPoint api:label "OnStreetStopPoint" .
+naptan:OffStreetStopPoint api:label "OffStreetStopPoint" .
+
+naptan:BusStopPoint api:label "BusStopPoint" .
+naptan:BusCoachTramOnStreetPoint api:label "BusCoachTramOnStreetPoint" .
+naptan:MarkedBusStop api:label "MarkedBusStop" .
+naptan:HailAndRideBusStop api:label "HailAndRideBusStop" .
+naptan:CustomBusStop api:label "CustomBusStop" .
+naptan:FlexibleBusStop api:label "FlexibleBusStop" .
+
+naptan:TaxiStopPoint api:label "TaxiStopPoint" .
+naptan:TaxiRank api:label "TaxiRank" .
+naptan:SharedTaxiRank api:label "SharedTaxiRank" .
+
+naptan:AirStopPoint api:label "AirStopPoint" .
+naptan:AirportEntrance api:label "AirportEntrance" .
+naptan:AirAccessArea api:label "AirAccessArea" .
+
+naptan:FerryStopPoint api:label "FerryStopPoint" .
+naptan:FerryTerminalDockEntrance api:label "FerryTerminalDockEntrance" .
+naptan:FerryDockAccessArea api:label "FerryDockAccessArea" .
+naptan:FerryBerth api:label "FerryBerth" .
+
+naptan:RailStopPoint api:label "RailStopPoint" .
+naptan:RailStationEntrance api:label "RailStationEntrance" .
+naptan:RailAccessArea api:label "RailAccessArea" .
+naptan:RailPlatform api:label "RailPlatform" .
+
+naptan:MetroStopPoint api:label "MetroStopPoint" .
+naptan:TramMetroUndergroundStationEntrance api:label "TramMetroUndergroundStationEntrance" .
+naptan:TramMetroUndergroundAccessArea api:label "TramMetroUndergroundAccessArea" .
+naptan:TramMetroUndergroundPlatform api:label "TramMetroUndergroundPlatform" .
+
+naptan:CoachStationPoint api:label "CoachStationPoint" .
+naptan:BusCoachTramStationEntrance api:label "BusCoachTramStationEntrance" .
+naptan:BusCoachStationAccessArea api:label "BusCoachStationAccessArea" .
+naptan:BusCoachTramStationBay api:label "BusCoachTramStationBay" .
+naptan:BusCoachTramStationVariableBay api:label "BusCoachTramStationVariableBay" .
+
+naptan:BusCoachStopPoint api:label "BusCoachStopPoint" .
+naptan:CoachStopPoint api:label "CoachStopPoint" .
+
+naptan:PrinciplePoint api:label "PrinciplePoint" .
+naptan:TimeInfoPoint api:label "TimeInfoPoint" .
+naptan:PrincipleTimingPoint api:label "PrincipleTimingPoint" .
+naptan:OtherPoint api:label "OtherPoint" .
+
+naptan:CoachStop api:label "CoachStop" .
+naptan:Station api:label "Station" .
+naptan:Airport api:label "Airport" .
+naptan:FerryTerminal api:label "FerryTerminal" .
+
+naptan:coachStop api:label "coachStop" .
+naptan:station api:label "station" .
+naptan:airport api:label "airport" .
+naptan:ferryTerminal api:label "ferryTerminal" .
+
+naptan:indicator api:label "indicator" .
+naptan:landmark api:label "landmark" .
+naptan:street api:label "street" .
+naptan:town api:label "town" .
+naptan:suburb api:label "suburb" .
+naptan:compassPointBearing api:label "compassPointBearing" .
+
+naptan:stopValidity 
+  api:label "stopValidity" ;
+  api:multiValued true .
+naptan:mainNptgLocality 
+  api:label "mainNptgLocality" ;
+  api:multiValued true .
+
+naptan:defaultWaitTime
+  a owl:DatatypeProperty ;
+  api:label "defaultWaitTime" ;
+  rdfs:range xsd:dayTimeDuration .
+naptan:localityCentre
+  a owl:DatatypeProperty ;
+  api:label "localityCentre" ;
+  rdfs:range xsd:boolean .
+
+naptan:atcoCode
+  a owl:DatatypeProperty ;
+  api:label "atcoCode" ;
+  rdfs:range naptan:AtcoCode .
+naptan:naptanCode
+  a owl:DatatypeProperty ;
+  api:label "naptanCode" ;
+  rdfs:range naptan:NaptanCode .
+naptan:plateCode
+  a owl:DatatypeProperty ;
+  api:label "plateCode" ;
+  rdfs:range naptan:PlateCode .
+naptan:coachRef
+  a owl:DatatypeProperty ;
+  api:label "coachRef" ;
+  rdfs:range naptan:CoachStopCode .
+naptan:crsRef
+  a owl:DatatypeProperty ;
+  api:label "crs" ;
+  rdfs:range naptan:CrsCode .
+naptan:tiplocRef
+  a owl:DatatypeProperty ;
+  api:label "tiploc" ;
+  rdfs:range naptan:TiplocCode .
+naptan:iataRef
+  a owl:DatatypeProperty ;
+  api:label "iataRef" ;
+  rdfs:range naptan:IataCode .
+naptan:ferryRef
+  a owl:DatatypeProperty ;
+  api:label "ferryRef" ;
+  rdfs:range naptan:NationalFerryPortCode .
+
+naptan:AtcoCode a rdfs:Datatype .
+naptan:NaptanCode a rdfs:Datatype .
+naptan:PlateCode a rdfs:Datatype .
+naptan:CoachStopCode a rdfs:Datatype .
+naptan:CrsCode a rdfs:Datatype .
+naptan:TiplocCode a rdfs:Datatype .
+naptan:IataCode a rdfs:Datatype .
+naptan:NationalFerryPortCode a rdfs:Datatype .
+
+## Changed labels from N,E,S,W to avoid short name service expansion problems.
+<http://reference.data.gov.uk/def/compass/N> api:label "N" .
+<http://reference.data.gov.uk/def/compass/E> api:label "E" .
+<http://reference.data.gov.uk/def/compass/S> api:label "S" .
+<http://reference.data.gov.uk/def/compass/W> api:label "W" .
+
+rdf:value api:label "value" ;
+  rdfs:range xsd:integer .
+  
+  
+skos:notation a owl:DatatypeProperty; api:label "notation"  .
+  

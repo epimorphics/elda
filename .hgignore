@@ -1,0 +1,23 @@
+syntax: glob
+*~
+*.class
+target/*
+.settings
+.classpath
+.project
+
+syntax: regexp
+^scratch$
+syntax: regexp
+^scratch/ian\.ttl$
+syntax: regexp
+^scratch$
+syntax: regexp
+^lda/scratchpad/cmd$
+syntax: regexp
+^lda/scratch/ian\.ttl$
+
+syntax: regexp
+^deliver-elda/delivery/.*
+^deliver-elda/elda.jar
+^deliver-elda/target

@@ -1,0 +1,138 @@
+package com.epimorphics.lda.apispec.tests;
+
+import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.Test;
+
+import org.hamcrest.core.IsNot;
+
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.core.APIEndpointSpec;
+import com.epimorphics.lda.core.APISpec;
+import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.tests_support.Matchers;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+
+public class TestAPISpecExtractsVariables 
+	{
+
+	ModelLoaderI NoLoader = null;
+	
+	@Test public void testNoVariablesInRDFMeansNoneInSpec()
+		{
+		testVariableExtraction( "", ":my a api:API; api:sparqlEndpoint :spoo;." );
+		}
+
+	@Test public void testAVariableInRDFMeansOneInSpec()
+		{
+		testVariableExtraction( "fred=17", 
+			":my a api:API; api:sparqlEndpoint :spoo; api:variable [api:name 'fred'; api:value 17].");
+		}
+
+	@Test public void testTwoVariablesInRDFMeansTwoInSpec()
+		{
+		testVariableExtraction( "fred=api:value;tom='frodo'", 
+			":my a api:API; api:sparqlEndpoint :spoo; api:variable"
+			+ " [api:name 'fred'; api:value api:value]"
+			+ ", [api:name 'tom'; api:value 'frodo']." 
+			);
+		}
+	
+	@Test public void ensureSpotsCircularity() 
+		{
+		try
+			{
+			testVariableExtraction( "", 
+					":my a api:API; api:sparqlEndpoint :spoo; api:variable"
+					+ " [api:name 'fred'; api:value '{tom}']"
+					+ ", [api:name 'tom'; api:value '{fred}']." 
+					);
+			}
+		catch (RuntimeException e)
+			{
+			assertTrue( "should trap circular definition", e.getMessage().contains( "circularity" ) );
+			}
+		}
+	
+	@Test public void testVariableSubstitution() 
+		{
+		testVariableExtraction( "fred='17';tom=17", 
+				":my a api:API; api:sparqlEndpoint :spoo; api:variable"
+				+ " [api:name 'fred'; api:value '{tom}']"
+				+ ", [api:name 'tom'; api:value 17]." 
+				);
+		}
+	
+	@Test public void ensureEndpointsInheritVariables()
+		{
+		String spec = 
+			":my a api:API; api:sparqlEndpoint :spoo; api:variable"
+			+ " [api:name 'fred'; api:value '{tom}']"
+			+ ", [api:name 'tom'; api:value 17]"
+			+ "; api:endpoint :myE."
+			+ "\n"
+			+ ":myE a api:ListEndpoint"
+			+ ";   api:uriTemplate '/whatsit'" 
+			+ "."
+			;
+		Model m = ModelIOUtils.modelFromTurtle( spec );
+		Resource root = m.createResource( m.expandPrefix( ":my" ) );
+		APISpec s = new APISpec( root, NoLoader );
+		assertThat( s.getEndpoints(), IsNot.not( Matchers.isEmpty() ) );
+		for (APIEndpointSpec x: s.getEndpoints())
+			assertEquals( s.getBindings(), x.getBindings() );
+		}
+	
+	@Test public void ensureEndpointsAddVariables()
+		{
+		String spec = 
+			":my a api:API; api:sparqlEndpoint :spoo; api:variable"
+			+ " [api:name 'fred'; api:value '{tom}']"
+			+ ", [api:name 'tom'; api:value 17]"
+			+ "; api:endpoint :myE."
+			+ "\n"
+			+ ":myE a api:ListEndpoint"
+			+ ";   api:uriTemplate '/whatsit'" 
+			+ "; api:variable [api:name 'harry'; api:value 'x{fred}y']"
+			+ "."
+			;
+		Model m = ModelIOUtils.modelFromTurtle( spec );
+		Resource root = m.createResource( m.expandPrefix( ":my" ) );
+		APISpec s = new APISpec( root, NoLoader );
+		assertThat( s.getEndpoints(), IsNot.not( Matchers.isEmpty() ) );
+		assertEquals( binding("tom=17;fred='17';harry='x17y'"), s.getEndpoints().get(0).getBindings() );
+		}
+	
+	public void testVariableExtraction(String expected, String spec) 
+		{
+		Model m = ModelIOUtils.modelFromTurtle( spec );
+		Resource root = m.createResource( m.expandPrefix( ":my" ) );
+		APISpec s = new APISpec( root, NoLoader );
+//		System.err.println( ">> expected: " + expected );
+//		System.err.println( ">> got:      " + s.getBindings() );
+		assertEquals( binding( expected ), s.getBindings() );
+		}
+	
+	private RDFNode term( String term )
+		{
+		Model m = ModelIOUtils.modelFromTurtle( ":x :value " + term + " ." );
+		return m.listStatements().toList().get(0).getObject();
+		}
+
+	private Map<String, RDFNode> binding( String desc ) 
+		{
+		Map<String, RDFNode> result = new HashMap<String, RDFNode>();
+		if (desc.length() > 0)
+			for (String bind: desc.split(" *; *" ))
+				{
+				String [] parts = bind.split( "=" );
+				result.put( parts[0], term(parts[1]) );
+				}
+		return result;
+		}
+	}

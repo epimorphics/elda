@@ -1,0 +1,43 @@
+# Model from test: http://dummy/doc/deptsEn?name=department
+@prefix spec:    <http://www.epimorphics.com/examples/spec1#> .
+@prefix ex:      <http://www.epimorphics.com/examples/eg1#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix school-ont:  <http://education.data.gov.uk/def/school/> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix api:     <http://purl.org/linked-data/api/vocab#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+ex:dept3
+      a       school-ont:Department ;
+      ex:name "department"@en .
+
+ex:dept2
+      a       school-ont:Department ;
+      ex:name "department"@en .
+
+<http://dummy/doc/deptsEn>
+      a       api:ListEndpoint ;
+      rdfs:label "should be a description of this list" ;
+      <http://purl.org/dc/terms/hasPart>
+              <http://dummy/doc/deptsEn?_page=0> ;
+      api:definition spec:api1 .
+
+<http://dummy/doc/deptsEn?_page=0>
+      a       api:Page ;
+      <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>
+              "10"^^xsd:long ;
+      <http://a9.com/-/spec/opensearch/1.1/startIndex>
+              "1"^^xsd:long ;
+      <http://purl.org/dc/terms/isPartOf>
+              <http://dummy/doc/deptsEn> ;
+      api:definition spec:api1 ;
+      api:items (ex:dept3 ex:dept2 ex:dept1) ;
+      api:page "0"^^xsd:long ;
+      <http://www.w3.org/1999/xhtml/vocab#first>
+              <http://dummy/doc/deptsEn?_page=0> .
+
+ex:dept1
+      a       school-ont:Department ;
+      ex:name "département"@fr , "department"@en .

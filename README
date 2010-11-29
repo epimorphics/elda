@@ -1,0 +1,22 @@
+Modules for Jena-based implementation of the linked data api and 
+associated JSON encoding.
+
+This is organized as a multi-module Maven project with
+the follow modules:
+  o json-rdf   - usable standalone as a JSON encode/decode
+  o lda        - linked data API as a vanilla web app
+  o lda-proxy  - packaged version of lda that can be used as a dynamic proxy
+                 (To be created)
+
+Eclipse project and settings should not be in the repository.
+If not using m2clipse then create the Eclipse settings using:
+
+   mvn -DdownloadJavadocs=true -DdownloadSources=true eclipse:eclipse
+
+[The download options are optional beware that the jersey sources and javadocs
+are usually excrutiatingly slow to download.]
+
+Import into Eclipse using the multi-project import tool from:
+http://eclipse-tools.sourceforge.net/updates/
+
+

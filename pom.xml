@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.epimorphics.lda</groupId>
+  <artifactId>lda-top</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>lda-top</name>
+  <description>Top level linked data API project</description>
+  <build>
+  	<pluginManagement>
+  		<plugins>
+  			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+  		</plugins>
+  	</pluginManagement>
+  </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.7</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-api</artifactId>
+  		<version>1.5.10</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-log4j12</artifactId>
+  		<version>1.5.10</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>log4j</groupId>
+  		<artifactId>log4j</artifactId>
+  		<version>1.2.15</version>
+  		<type>jar</type>
+  		<scope>compile</scope>
+		<exclusions>
+		    <exclusion>
+		      <groupId>javax.mail</groupId>
+		      <artifactId>mail</artifactId>
+		    </exclusion>
+		    <exclusion>
+		      <groupId>javax.jms</groupId>
+		      <artifactId>jms</artifactId>
+		    </exclusion>
+		    <exclusion>
+		      <groupId>com.sun.jdmk</groupId>
+		      <artifactId>jmxtools</artifactId>
+		    </exclusion>
+		    <exclusion>
+		      <groupId>com.sun.jmx</groupId>
+		      <artifactId>jmxri</artifactId>
+		    </exclusion>
+	    </exclusions>
+  	</dependency>
+  </dependencies>
+
+ <repositories>
+    <!-- jena-repo is mirrored to Maven central repository -->
+    <!-- In case mirroring has not happened yet ... -->
+    <repository>
+      <id>repo-jena</id>
+      <name>Jena Maven - Repository</name>
+      <layout>default</layout>
+      <url>http://openjena.org/repo</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+
+    <!-- jena-repo-dev is where SNAPSHOTs and RCs are published -->
+    <repository>
+      <id>repo-jena-dev</id>
+      <name>Jena Maven - Development Repository</name>
+      <layout>default</layout>
+      <url>http://openjena.org/repo-dev</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+
+<repository>
+    <id>maven2-repository.dev.java.net</id>
+    <name>Java.net Repository for Maven</name>
+    <url>http://download.java.net/maven/2/</url>
+    <layout>default</layout>
+</repository> 
+<repository>
+    <id>maven-repository.dev.java.net</id>
+    <name>Java.net Maven 1 Repository (legacy)</name>
+    <url>http://download.java.net/maven/1</url>
+    <layout>legacy</layout>
+</repository>
+
+  </repositories>
+
+  <modules>
+    <module>json-rdf</module>
+    <module>lda</module>
+  </modules>
+</project>

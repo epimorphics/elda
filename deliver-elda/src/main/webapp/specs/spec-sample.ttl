@@ -1,0 +1,54 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix lda:  <http://www.epimorphics.com/vocabularies/lda#> .
+@prefix ex:  <http://www.epimorphics.com/examples/eg1#> .
+
+ex:endpointSpec1 a lda:ConstructResources;
+    rdfs:comment "Extract schools by local authority region (la) returning name and ofsted status";
+    rdfs:label "Schools by local authority";
+    lda:template """
+        PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX school-ont: <http://education.data.gov.uk/def/school/> 
+        SELECT ?r ?la WHERE {?r rdf:type school-ont:School; school-ont:localAuthority ?la}
+        ORDERBY ?r
+        """;
+    lda:resourceVar "r";
+    lda:paramVar "la";
+    
+    lda:construct """
+        PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX school-ont: <http://education.data.gov.uk/def/school/> 
+        CONSTRUCT 
+           {?r a school-ont:School; school-ont:localAuthority ?la;  rdfs:label ?label; school-ont:ofstedSpecialMeasures ?sm}
+        WHERE
+           {?r a school-ont:School; school-ont:localAuthority ?la;  rdfs:label ?label; school-ont:ofstedSpecialMeasures ?sm}
+        """ ;
+   .
+
+ex:endpointSpec2 a lda:DescribeResources;
+    rdfs:comment "Extract schools by local authority region (la) returning everything";
+    lda:template """
+        PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX school-ont: <http://education.data.gov.uk/def/school/> 
+        SELECT ?r ?la WHERE {?r rdf:type school-ont:School; school-ont:localAuthority ?la}
+        """;
+    lda:resourceVar "r";
+    lda:paramVar "la";
+   .
+    
+ex:endpointSpec3 a lda:SimpleQuery;
+    rdfs:comment "Extract schools by local authority region (la) returning name and ofsted status as a table";
+    lda:template """
+        PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX school-ont: <http://education.data.gov.uk/def/school/> 
+        SELECT ?r ?la ?label ?sm WHERE {?r rdf:type school-ont:School; school-ont:localAuthority ?la; 
+                              rdfs:label ?label; school-ont:ofstedSpecialMeasures ?sm}
+        """;
+    lda:resourceVar "r";
+    lda:paramVar "la";
+   .
+   
+   
+        

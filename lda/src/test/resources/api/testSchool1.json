@@ -1,0 +1,22 @@
+# Model from test: http://dummy/doc/schools?_subject=http://www.epimorphics.com/examples/eg1#school_1&_view=all
+{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://www.epimorphics.com/examples/eg1#school_1", "name" : "Name1", "size" : 100, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#123"}
+  ], "context" : {"mapping" : {"ex_size" : {"uri" : "http://www.epimorphics.com/examples/eg1#size", "range" : "http://www.w3.org/2001/XMLSchema#integer"}
+      , "school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "school-ont_School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
+      , "ex_Secondary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Secondary"}
+      , "ex_Primary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Primary"}
+      , "localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "rdfs_label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label"}
+      , "school-ont_localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label"}
+      , "Primary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Primary"}
+      , "type" : {"uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "ex_name" : {"uri" : "http://www.epimorphics.com/examples/eg1#name", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
+      , "ex_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "Secondary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Secondary"}
+      , "size" : {"uri" : "http://www.epimorphics.com/examples/eg1#size", "range" : "http://www.w3.org/2001/XMLSchema#integer"}
+      , "name" : {"uri" : "http://www.epimorphics.com/examples/eg1#name", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
+      , "School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
+    }
+  }
+}

@@ -1,0 +1,33 @@
+# Model from test: http://dummy/doc/deptsFr?name=département
+{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/deptsFr?_page=0", "page" : 0, "itemsPerPage" : 10, "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "first" : "http://dummy/doc/deptsFr?_page=0", "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#dept4", "name" : "département@fr", "type" : "http://education.data.gov.uk/def/school/Department"}
+    , {"_about" : "http://www.epimorphics.com/examples/eg1#dept1", "name" : ["department@en", "département@fr"], "type" : "http://education.data.gov.uk/def/school/Department"}
+    ], "isPartOf" : {"_about" : "http://dummy/doc/deptsFr", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/deptsFr?_page=0"}
+    , "startIndex" : 1}
+  ], "context" : {"mapping" : {"school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "school-ont_School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
+      , "ex_Secondary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Secondary"}
+      , "localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority"}
+      , "Primary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Primary"}
+      , "type" : {"uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "ex_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "ex_name" : {"uri" : "http://www.epimorphics.com/examples/eg1#name", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
+      , "Secondary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Secondary"}
+      , "page" : {"uri" : "http://purl.org/linked-data/api/vocab#page", "range" : "http://www.w3.org/2001/XMLSchema#long"}
+      , "name" : {"uri" : "http://www.epimorphics.com/examples/eg1#name", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
+      , "School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
+      , "itemsPerPage" : {"uri" : "http://a9.com/-/spec/opensearch/1.1/itemsPerPage", "range" : "http://www.w3.org/2001/XMLSchema#long"}
+      , "ex_size" : {"uri" : "http://www.epimorphics.com/examples/eg1#size", "range" : "http://www.w3.org/2001/XMLSchema#int"}
+      , "startIndex" : {"uri" : "http://a9.com/-/spec/opensearch/1.1/startIndex", "range" : "http://www.w3.org/2001/XMLSchema#long"}
+      , "definition" : {"uri" : "http://purl.org/linked-data/api/vocab#definition", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "ex_Primary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Primary"}
+      , "school-ont_localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority"}
+      , "rdfs_label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
+      , "hasPart" : {"uri" : "http://purl.org/dc/terms/hasPart", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
+      , "size" : {"uri" : "http://www.epimorphics.com/examples/eg1#size", "range" : "http://www.w3.org/2001/XMLSchema#int"}
+      , "items" : {"uri" : "http://purl.org/linked-data/api/vocab#items", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#List"}
+      , "isPartOf" : {"uri" : "http://purl.org/dc/terms/isPartOf", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "first" : {"uri" : "http://www.w3.org/1999/xhtml/vocab#first", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+    }
+  }
+}
