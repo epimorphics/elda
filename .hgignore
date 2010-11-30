@@ -1,6 +1,7 @@
 syntax: glob
 *~
 *.class
+.metadata
 target/*
 .settings
 .classpath
