@@ -1,0 +1,105 @@
+<html>
+<head>
+<title>Elda -- an implementation of the Linked Data API</title>
+<style>
+h1
+    { background: #ccccff 
+    }
+
+h2
+    { background: #ccccff
+    ; padding-left: 1px
+    }
+
+pre 
+    { background: #dddddd
+    ; margin-left: 2em
+    }
+</style>
+</head>
+<body>
+<h1>Elda -- an implementation of the Linked Data API</h1>
+
+<p>
+This document is a quick-start for the 
+<a href="http://www.epimorphics.com">Epimorphics Ltd</a>
+implementation, Elda, of the 
+<a href="http://code.google.com/p/linked-data-api/wiki/Specification">Linked Data API</a>.
+The Elda jar can be downloaded from its Googlecode 
+<a href="http://code.google.com/p/elda/downloads/list">downloads page</a>;
+pick the latest unless you have good reason not to.
+</p>
+
+<h2>getting started</h2>
+
+<p>
+The Elda code is shipped as a single self-unpacking jar, 
+<code>elda.jar</code>. You can start it from the command line:
+
+<pre>
+java -jar elda.jar
+</pre>
+
+or, if your system permits, by double-clicking on it in
+your preferred file browser.
+</p>
+
+<p>
+In either case, Elda unzips itself from its jar into a
+new directory, currently Elda_1.0, from which it starts
+itself as a Jetty server running on port 8080.
+</p>
+
+<p>
+You should now be able to browse to
+
+<pre>
+http://localhost:8080/elda/api/education/api/schools.json
+</pre>
+
+and see a JSON presentation of the top-level schools
+data.
+</p>
+
+<p>
+Once Elda has unzipped itself, you can run it from the Elda
+directory it creates:
+
+<pre>
+java -jar start.jar
+</pre>
+
+(Or by double-clicking, etc).
+</p>
+
+<h2>can't use port 8080</h2>
+
+<p>
+You may already be using port 8080 for some local service.
+In that case, you'll have to start Elda from the command
+line (no double-click) with
+
+<pre>
+java MAYBE SOMETHING HERE -jar elda.jar OR SOMETHING HERE
+</pre>
+
+or, if you're starting from the unzipped Elda directory,
+
+<pre>
+java MAYBE SOMETHING HERE -jar start.jar OR SOMETHING HERE
+</pre>
+
+Or you can fiddle with the Elda configuration, for which
+see the instructions in the Advanced section.
+</p>
+
+<h2>Advanced</h2>
+
+<p>
+For more about Elda configuration and support, see the
+sibling document
+<a href="advanced.html">advanced.html</a>.
+</p>
+
+</body>
+</html>
