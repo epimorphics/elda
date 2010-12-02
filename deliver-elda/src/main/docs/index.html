@@ -80,15 +80,17 @@ In that case, you'll have to start Elda from the command
 line (no double-click) with
 
 <pre>
-java MAYBE SOMETHING HERE -jar elda.jar OR SOMETHING HERE
+java -jar elda.jar -Djetty.port=NNNN
 </pre>
 
 or, if you're starting from the unzipped Elda directory,
 
 <pre>
-java MAYBE SOMETHING HERE -jar start.jar OR SOMETHING HERE
+java -Djetty.port=NNNN -jar start.jar
 </pre>
 
+Where NNNN is the port of your choice. (Yes, the -D
+comes after elda.jar, but before start.jar.)
 Or you can fiddle with the Elda configuration, for which
 see the instructions in the Advanced section.
 </p>

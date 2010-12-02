@@ -23,6 +23,26 @@ pre
 
 <h2>changing the port number</h2>
 
+<p>
+To change the port number without having to
+supply a -Djetty.port command line option
+every time, in the Elda directory edit the
+configuration file <code>etc/jetty.xml</code>
+and change the line:
+
+<pre>
+&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" default="8080"/&gt;&lt;/Set&gt;
+</pre>
+
+to:
+
+<pre>
+&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" default="NNNN"/&gt;&lt;/Set&gt;
+</pre>
+
+
+where NNNN is the port number of your choice.
+</p>
 
 </body>
 </html>
