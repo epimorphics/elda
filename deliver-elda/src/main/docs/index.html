@@ -11,10 +11,20 @@ h2
     ; padding-left: 1px
     }
 
+h3
+    { background: #ccccff
+    ; padding-left: 1px
+    }
+
 pre 
     { background: #dddddd
     ; margin-left: 2em
     }
+    
+span.todo
+	{ background: pink
+	}
+	
 </style>
 </head>
 <body>
@@ -30,12 +40,40 @@ The Elda jar can be downloaded from its Googlecode
 pick the latest unless you have good reason not to.
 </p>
 
+<h3>what is the LDA?</h3>
+
+<p>
+The Linked Data API provides a configurable way to access RDF data
+using simple RESTful URLs that are translated into queries to
+a SPARQL endpoint. The API developer (probably you) writes an
+API spec (in RDF) which specifies how to translate URLs into
+queries. Elda comes with some pre-built examples which allow
+you to experiment with the style of query and get started with
+building your own specs.
+</p>
+
+<h3>prerequisites</h3>
+
+<p>Elda is written in Java 
+(using the <a href="http://jena.sourceforge.net">Jena RDF toolkit</a>),
+so you will need Java installed on your system.
+</p>
+
+<p>
+The default demonstration setup for Elda uses the 
+<code>data.gov.uk</code>
+data accessible from the SPARQL endpoint 
+<code>http://services.data.gov.uk/education/sparql</code>.
+To run the demonstration, you will need to have open
+web access.
+</p>
+
 <h3>caveat</h3>
 
 <p>
 This is an early release of Elda to get feedback from the community.
-Some features of the LDA have not yet been implemented, or are not
-completely implemented. We welcome feedback.
+Some features of the LDA have <span class="todo">not yet been implemented</span>, or are not
+completely implemented. <span class="todo">We welcome feedback.</span>
 </p>
 
 <h2>getting started</h2>
@@ -103,7 +141,7 @@ Or you can fiddle with the Elda configuration, for which
 see the instructions in the Advanced section.
 </p>
 
-<h2>Advanced</h2>
+<h2>advanced</h2>
 
 <p>
 For more about Elda configuration and support, see the

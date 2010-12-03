@@ -32,9 +32,11 @@ cp -r contexts delivery
 
 #
 # copy the created webapp into the clone's webapps area.
+# add the documentation directory in our preferred place.
 #
 
 cp -r target/elda delivery/webapps/elda
+cp -r src/main/docs delivery/webapps/elda
 
 #
 # extract the unzip-and-run command class from the lda jar

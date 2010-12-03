@@ -5,6 +5,15 @@
 <web-app>
 
   <servlet>
+    <servlet-name>default</servlet-name>
+    <servlet-class>org.eclipse.jetty.servlet.DefaultServlet</servlet-class>
+    <init-param>
+      <param-name>aliases</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </servlet>
+
+  <servlet>
     <servlet-name>jersey</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
       
@@ -32,8 +41,13 @@
   </servlet>
 
   <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/*.html</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
     <servlet-name>jersey</servlet-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/DEFER/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>

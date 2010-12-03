@@ -24,12 +24,6 @@
 #
 ############################################################################################
 
-spec:coins-observation
-    a lda:ItemEndPoint;
-    lda:uriTemplate "/data/coins/{version}/{dimtime}/{dimdt}/{dimdst}/{dimdept}/{dimact}/{dimpob}/{dimcpid}";
-    lda:itemTemplate "http://finance.data.gov.uk/data/coins/{version}/{dimtime}/{dimdt}/{dimdst}/{dimdept}/{dimact}/{dimpob}/{dimcpid}";
-    .
-    
 #SELECTORS
 
 #select schools that are related to a resource, via the school:pageOfEducation property, 
