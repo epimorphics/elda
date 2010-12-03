@@ -39,10 +39,44 @@ to:
 <pre>
 &lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" default="NNNN"/&gt;&lt;/Set&gt;
 </pre>
-
-
 where NNNN is the port number of your choice.
 </p>
+
+<h2>different specifications using the command line</h2>
+
+<p>
+To use different LDA specifications, use the system property 
+<code>elda.spec</code>. Like the port number, it can be set
+as part of launching the elda jar or when launching the jetty
+start jar:
+
+<pre>
+java -jar elda.jar -Delda.spec=SPECS
+</pre>
+
+or (in the Elda directory):
+
+<pre>
+java -Delda.spec=SPECS -jar start.jar
+</pre>
+
+where SPECS is one or more LDA specification files separated
+by commas.
+</p>
+
+<p>
+If you use elda.spec, then elda ignores the default specification
+(the education LDA) wired into it.
+</p>
+
+<h2>different specifications using web.xml</h2>
+
+<p>
+
+</p>
+
+
+
 
 </body>
 </html>
