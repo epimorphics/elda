@@ -72,6 +72,25 @@ If you use elda.spec, then elda ignores the default specification
 <h2>different specifications using web.xml</h2>
 
 <p>
+To change the specification used without having to use
+a -Delda.spec command line option every time, edit the
+Elda <code>webapps/elda/WEB-INF/web.xml</code>. Find the
+servlet configuration
+
+<pre>
+&lt;servlet&gt;
+  &lt;servlet-name&gt;loader-init&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;com.epimorphics.lda.routing.Loader&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;com.epimorphics.api.initialSpecFile&lt;/param-name&gt;
+    &lt;param-value&gt;<b>specs/education.ttl</b>&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+</pre>
+
+Replace <b>specs/education.ttl</b> with the name of the LDA
+specification files you wish to load, separated by commas. 
 
 </p>
 
