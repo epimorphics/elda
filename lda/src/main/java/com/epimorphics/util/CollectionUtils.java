@@ -1,5 +1,7 @@
 /*
-    See lda-top/LICENCE for the licence for this software.
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
     (c) copyright Epimorphics Limited 2010
     $Id$
 */

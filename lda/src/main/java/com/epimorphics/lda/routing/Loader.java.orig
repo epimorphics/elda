@@ -1,5 +1,7 @@
 /*
-    See lda-top/LICENCE for the licence for this software.
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
     (c) copyright Epimorphics Limited 2010
     $Id$
 */
@@ -17,6 +19,7 @@ package com.epimorphics.lda.routing;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -74,8 +77,8 @@ public class Loader extends HttpServlet {
     }
 
     public void init() {
+    	baseFilePath = withTrailingSlash( getServletContext().getRealPath("/") );
     	configureLog4J();
-        baseFilePath = withTrailingSlash( getServletContext().getRealPath("/") );
         log.warn( "baseFilePath: " + baseFilePath );
         setupLARQandTDB();
         modelLoader = new APIModelLoader(baseFilePath);
