@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>Elda -- an implementation of the Linked Data API</title>
+<style>
+h1
+    { background: #ccccff
+    }
+
+h2
+    { background: #ccccff
+    ; padding-left: 1px
+    }
+
+h3
+    { background: #ccccff
+    ; padding-left: 1px
+    }
+
+pre
+    { background: #dddddd
+    ; margin-left: 2em
+    }
+   
+span.todo
+        { background: pink
+        }
+
+</style>
+</head>
+<body>
+<h1>Elda -- an implementation of the Linked Data API</h1>
+
+<h2>state of the implementation</h2>
+
+<h3>cache</h3>
+
+<p>
+Elda caches the results of queries so that they may be re-served
+quickly. At the moment <i>these caches are never emptied</i>
+until the Elda server exits. This has two consequences: the server
+may unexpectedly run out of room, and changes to the remote dataset
+may not be reflected in queries using the API.
+</p>
+
+
+</body>
+</html>
+
