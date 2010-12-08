@@ -84,8 +84,7 @@ spec:api
 	api:defaultPageSize "10" ;
 	api:sparqlEndpoint <http://services.data.gov.uk/education/sparql> ;
 	api:endpoint 
-	   spec:coins-observation
-	   , spec:itemish
+	   spec:itemish
 	   , spec:schools
 	   , spec:schoolsPrimary
 	   , spec:schoolsSecondary
