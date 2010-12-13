@@ -26,6 +26,7 @@ cp -r jetty-distribution* delivery
 
 #
 # remove the clone's example webapps and contexts.
+# add in the Elda contexts.
 #
 (cd delivery; rm -rf webapps/* context*)
 cp -r contexts delivery

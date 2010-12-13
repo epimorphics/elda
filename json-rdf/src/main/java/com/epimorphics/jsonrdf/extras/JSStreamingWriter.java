@@ -260,7 +260,7 @@ public class JSStreamingWriter {
     private static int oneHex(IndentedWriter out, int x, int i)
     {
         int y = BitsInt.unpack(x, 4*i, 4*i+4) ;
-        char charHex = org.openjena.atlas.lib.Chars.hexDigits[y] ;
+        char charHex = org.openjena.atlas.lib.Chars.hexDigitsLC[y] ;
         out.print(charHex) ; 
         return BitsInt.clear(x, 4*i, 4*i+4) ;
     }

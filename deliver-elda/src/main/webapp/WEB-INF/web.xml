@@ -34,20 +34,20 @@
   	<servlet-name>loader-init</servlet-name>
   	<servlet-class>com.epimorphics.lda.routing.Loader</servlet-class>
   	<init-param>
-  		<param-name>com.epimorphics.api.initialSpecFile</param-name>
-  		<param-value>specs/education.ttl</param-value>
+	<param-name>com.epimorphics.api.initialSpecFile</param-name>
+        <param-value>specs/education.ttl</param-value>
   	</init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
-    <url-pattern>/*.html</url-pattern>
+    <url-pattern>/docs/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>jersey</servlet-name>
-    <url-pattern>/DEFER/*</url-pattern>
+    <url-pattern>/exec/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>
