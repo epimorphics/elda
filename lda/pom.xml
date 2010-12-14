@@ -53,7 +53,7 @@
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
@@ -65,16 +65,16 @@
     <dependency>
         <groupId>com.hp.hpl.jena</groupId>
         <artifactId>tdb</artifactId>
-        <version>0.8.8-SNAPSHOT</version>
+        <version>0.8.8-RC-1</version>
         <type>jar</type>
     </dependency>
 
     <dependency>
-    	<groupId>com.hp.hpl.jena</groupId>
-    	<artifactId>jena</artifactId>
-    	<version>2.6.4-RC-1</version>
-    	<type>test-jar</type>
-    	<scope>test</scope>
+      <groupId>com.hp.hpl.jena</groupId>
+      <artifactId>jena</artifactId>
+      <version>2.6.4</version>
+      <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>
