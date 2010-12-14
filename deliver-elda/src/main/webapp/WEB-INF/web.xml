@@ -47,7 +47,7 @@
 
   <servlet-mapping>
     <servlet-name>jersey</servlet-name>
-    <url-pattern>/exec/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>

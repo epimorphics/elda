@@ -95,7 +95,7 @@ spec:api
 #ENDPOINTS
 
 spec:itemish a api:ItemEndpoint
-    ; api:uriTemplate "/education/api/schools/spoo"
+    ; api:uriTemplate "/education/schools/spoo"
     ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
     ; api:itemTemplate "http://education.data.gov.uk/id/school/100869"
     .
@@ -103,7 +103,7 @@ spec:itemish a api:ItemEndpoint
 #List all schools
 spec:schools
 	a api:ListEndpoint ;
-	api:uriTemplate "/education/api/schools" ;
+	api:uriTemplate "/education/schools" ;
 	api:selector [ 
 		api:filter "type=School"
 	] ;
@@ -119,7 +119,7 @@ spec:schools
 #List all primary schools
 spec:schoolsPrimary
 	a api:ListEndpoint ;
-	api:uriTemplate "/education/api/schools/primary" ;
+	api:uriTemplate "/education/schools/primary" ;
 	api:selector spec:schoolsPrimarySelector ;
 	api:defaultViewer spec:viewerShort
 	.
@@ -127,7 +127,7 @@ spec:schoolsPrimary
 #List all secondary schools
 spec:schoolsSecondary
 	a api:ListEndpoint ;
-	api:uriTemplate "/education/api/schools/secondary" ;
+	api:uriTemplate "/education/schools/secondary" ;
 	api:selector spec:schoolsSecondarySelector;
 	api:defaultViewer spec:viewerShort
 	.
@@ -137,7 +137,7 @@ spec:schoolsSecondary
 #Selector builds on the primary school selector, narrowing query to matching region from uri template
 spec:schoolsPrimaryDistrict
 	a api:ListEndpoint ;
-	api:uriTemplate "/education/api/schools/primary/district/{district}" ;
+	api:uriTemplate "/education/schools/primary/district/{district}" ;
     api:selector [ 
 		api:parent spec:schoolsPrimarySelector ;
 		api:filter "name-districtAdministrative={district}"
@@ -147,7 +147,7 @@ spec:schoolsPrimaryDistrict
 
 spec:schoolsSecondaryDistrict
 	a api:ListEndpoint ;
-	api:uriTemplate "/education/api/schools/secondary/district/{district}" ;
+	api:uriTemplate "/education/schools/secondary/district/{district}" ;
     api:selector [ 
 		api:parent spec:schoolsSecondarySelector ;
 		api:filter "name-districtAdministrative={district}"

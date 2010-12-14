@@ -40,7 +40,7 @@ The Elda jar can be downloaded from its Googlecode
 pick the latest unless you have good reason not to.
 </p>
 
-<h3>what is the LDA?</h3>
+<h3>What is the LDA?</h3>
 
 <p>
 The Linked Data API provides a configurable way to access RDF data
@@ -52,7 +52,7 @@ you to experiment with the style of query and get started with
 building your own specs.
 </p>
 
-<h3>prerequisites</h3>
+<h3>Prerequisites</h3>
 
 <p>Elda is written in Java 
 (using the <a href="http://openjena.org/">Jena RDF toolkit</a>),
@@ -68,7 +68,7 @@ To run the demonstration, you will need to have open
 web access.
 </p>
 
-<h3>caveat</h3>
+<h3>Caveat</h3>
 
 <p>
 This is an early release of Elda to get feedback from the community.
@@ -83,7 +83,7 @@ use this group).
 
 </p>
 
-<h2>getting started</h2>
+<h2>Getting started</h2>
 
 <p>
 The Elda code is shipped as a single self-unpacking jar, 
@@ -107,7 +107,7 @@ itself as a Jetty server running on port 8080.
 You should now be able to browse to
 
 <pre>
-<a href="http://localhost:8080/elda/exec/api/education/api/schools.json">http://localhost:8080/elda/exec/api/education/api/schools.json</a>
+<a href="http://localhost:8080/elda/api/education/schools.json">http://localhost:8080/elda/api/education/schools.json</a>
 </pre>
 
 and see a JSON presentation of the top-level schools
@@ -129,7 +129,7 @@ java -jar start.jar
 
 <p>
 You may already be using port 8080 for some local service.
-In that case, you'll have to start Elda from the command
+In that case, you can start Elda from the command
 line (no double-click) with
 
 <pre>
@@ -144,16 +144,135 @@ java -Djetty.port=NNNN -jar start.jar
 
 where NNNN is the port of your choice. (Yes, the -D
 comes after elda.jar, but before start.jar.)
-Or you can fiddle with the Elda configuration, for which
-see the instructions in the Advanced section.
 </p>
 
-<h2>advanced</h2>
+<p>
+To change the port number without having to
+supply a -Djetty.port command line option
+every time, in the Elda directory edit the
+configuration file <code>etc/jetty.xml</code>
+and change the line:
+
+<pre>
+&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" default="8080"/&gt;&lt;/Set&gt;
+</pre>
+
+to:
+
+<pre>
+&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" default="NNNN"/&gt;&lt;/Set&gt;
+</pre>
+where NNNN is the port number of your choice.
+</p>
+<h2>Different specifications using the command line</h2>
 
 <p>
-For more about Elda configuration and support, see the
-sibling document
-<a href="advanced.html">advanced.html</a>.
+To use different LDA specifications, use the system property 
+<code>elda.spec</code>. Like the port number, it can be set
+as part of launching the elda jar or when launching the jetty
+start jar:
+
+<pre>
+java -jar elda.jar -Delda.spec=SPECS
+</pre>
+
+or (in the Elda directory):
+
+<pre>
+java -Delda.spec=SPECS -jar start.jar
+</pre>
+
+where SPECS is one or more LDA specification files separated
+by commas.
+</p>
+
+<p>
+If you use elda.spec, then elda ignores the default specification
+(the education LDA) wired into it.
+</p>
+
+<h2>Different specifications using web.xml</h2>
+
+<p>
+To change the specification used without having to use
+a -Delda.spec command line option every time, edit the
+Elda <code>webapps/elda/WEB-INF/web.xml</code>. Find the
+servlet configuration
+
+<pre>
+&lt;servlet&gt;
+  &lt;servlet-name&gt;loader-init&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;com.epimorphics.lda.routing.Loader&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;com.epimorphics.api.initialSpecFile&lt;/param-name&gt;
+    &lt;param-value&gt;<b>specs/education.ttl</b>&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+</pre>
+
+Replace <b>specs/education.ttl</b> with the name of the LDA
+specification files you wish to load, separated by commas. 
+</p>
+
+
+<h2>Setting up your own SPARQL endpoint</h2>
+
+<p>To Be Done.</p>
+
+<h2>Using Elda as a webapp</h2>
+
+<p>To Be Done.</p>
+
+<h2>Using a local TDB datasource</h2>
+
+<p>
+As an alternative to setting up a local SPARQL endpoint, you
+can instead use a
+<a href="http://openjena.org/wiki/TDB">Jena TDB</a>
+database. To do so you will need to modify the <code>web.xml</code>
+webapp configuration file and supply an additional init-param
+for the <code>loader-init</code> servlet. You can do this in
+two ways:
+<p>
+
+<pre>
+  &lt;init-param>
+    &lt;param-name>com.epimorphics.api.TDB-base-directory&lt;/param-name>
+    &lt;param-value><b>tdb-directory</b>&lt;/param-value>
+  &lt;/init-param&gt;
+</pre>
+
+<p>
+Replace <b>tdb-directory</b> with the path to
+your chosen TDB directory. Note that the path is relative to the
+webapps directory -- your best choice is to use an absolute path.
+</p>
+
+<p>
+<i>Warning</i>. If the directory does not contain any TDB files,
+TDB will create a new empty dataset in it. This is usually not
+what you want, since all queries will return no answers, so
+Elda will report an error during setup.
+</p>
+
+<p>
+The alternative form:
+</p>
+
+<pre>
+  &lt;init-param>
+    &lt;param-name>com.epimorphics.api.dataStoreDirectory&lt;/param-name>
+    &lt;param-value><b>datastore-directory</b>&lt;/param-value>
+  &lt;/init-param&gt;
+</pre>
+
+<p>
+specifies <b>datastore-directory</b> as a directory containing a
+TDB directory named <i>tdb</i>. The same warnings as above apply. 
+(This form exists because Elda can do limited LARQ indexing and
+in that case the datastore directory will have a <b>larq</b>
+subdirectory for the LARQ indexes.)
 </p>
 
 </body>

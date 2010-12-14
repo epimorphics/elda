@@ -53,7 +53,7 @@ import com.sun.jersey.api.uri.UriTemplate;
  * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-@Path("/api/{path: .*}")
+@Path("{path: .*}")
 public class RouterRestlet {
 
     static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
@@ -111,7 +111,7 @@ public class RouterRestlet {
         Map<String, String> bindings = new HashMap<String, String>();
         synchronized (routerTable) {
             for (Map.Entry<UriTemplate, APIEndpoint> e : routerTable.entrySet()) {
-            	log.debug( "considering entry: " + e );
+            	log.info( "considering entry: " + e );
 //            	System.err.println( "||  considering entry: " + e );
                 if (e.getKey().match( path, bindings )) {
                     int len = e.getValue().getURITemplate().length();
