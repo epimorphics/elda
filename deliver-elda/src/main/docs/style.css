@@ -5,7 +5,7 @@ h1
 
 .heading
     {
-    background: #9ECAE1
+    background: #9ecae1
     ; padding-left: 1ex
     ; padding-right: 1ex
     ; border-radius: 5px
@@ -14,7 +14,7 @@ h1
 
 .main h2
     { padding-left: 1px
-    ; border-top: 3px solid #9ECAE1
+    ; border-top: 3px solid #9ecae1
     ; margin-top: 0.6ex
     }
 
@@ -26,6 +26,7 @@ h3
 pre 
     { background: #dddddd
     ; margin-left: 2em
+    ; margin-right: 2em
     }
 
 body

@@ -4,6 +4,7 @@
 <link href="style.css" type="text/css" rel="stylesheet"></link>
 </head>
 <body>
+
 <div class="main">
 
 <div class="heading">
@@ -84,7 +85,7 @@ your preferred file browser.
 
 <p>
 In either case, Elda unzips itself from its jar into a
-new directory, currently Elda_1.0, from which it starts
+new directory, currently Elda_0.9.5, from which it starts
 itself as a Jetty server running on port 8080.
 </p>
 
@@ -110,7 +111,7 @@ java -jar start.jar
 (Or by double-clicking, etc).
 </p>
 
-<h2>I can't use port 8080</h2>
+<h2>If you can't use port 8080</h2>
 
 <p>
 You may already be using port 8080 for some local service.
@@ -133,23 +134,29 @@ comes after elda.jar, but before start.jar.)
 
 <p>
 To change the port number without having to
-supply a -Djetty.port command line option
+supply a <code>-Djetty.port</code> command line option
 every time, in the Elda directory edit the
 configuration file <code>etc/jetty.xml</code>
 and change the line:
 
 <pre>
-&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" default="8080"/&gt;&lt;/Set&gt;
+&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <b>default="8080"</b>/&gt;&lt;/Set&gt;
 </pre>
 
 to:
 
 <pre>
-&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" default="NNNN"/&gt;&lt;/Set&gt;
+&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <b>default="NNNN"</b>/&gt;&lt;/Set&gt;
 </pre>
 where NNNN is the port number of your choice.
 </p>
-<h2>Different specifications using the command line</h2>
+
+<h2>Using other LDA specifications</h2>
+
+<p>
+</p>
+
+<h3>From the command line</h3>
 
 <p>
 To use different LDA specifications, use the system property 
@@ -172,15 +179,15 @@ by commas.
 </p>
 
 <p>
-If you use elda.spec, then elda ignores the default specification
-(the education LDA) wired into it.
+If you use <code>elda.spec</code>, then Elda ignores the 
+default specification (the education LDA) wired into it.
 </p>
 
-<h2>Different specifications using web.xml</h2>
+<h3>By editing web.xml</h3>
 
 <p>
 To change the specification used without having to use
-a -Delda.spec command line option every time, edit the
+a <code>-Delda.spec</code> command line option every time, edit the
 Elda <code>webapps/elda/WEB-INF/web.xml</code>. Find the
 servlet configuration
 
@@ -200,7 +207,6 @@ Replace <b>specs/education.ttl</b> with the name of the LDA
 specification files you wish to load, separated by commas. 
 </p>
 
-
 <h2>Setting up your own SPARQL endpoint</h2>
 
 <p>To Be Done.</p>
@@ -213,7 +219,7 @@ specification files you wish to load, separated by commas.
 
 <p>
 As an alternative to setting up a local SPARQL endpoint, you
-can instead use a
+can instead use a local
 <a href="http://openjena.org/wiki/TDB">Jena TDB</a>
 database. To do so you will need to modify the <code>web.xml</code>
 webapp configuration file and supply an additional init-param
@@ -231,7 +237,7 @@ two ways:
 <p>
 Replace <b>tdb-directory</b> with the path to
 your chosen TDB directory. Note that the path is relative to the
-webapps directory -- your best choice is to use an absolute path.
+webapps directory &ndash; your best choice is to use an absolute path.
 </p>
 
 <p>
@@ -261,7 +267,6 @@ subdirectory for the LARQ indexes.)
 </p>
 
 <h2><a name="implementation-state">state of the implementation</a></h2>
-
 
 <h3>exists</h3>
 
