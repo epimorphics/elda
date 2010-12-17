@@ -19,7 +19,6 @@ package com.epimorphics.lda.routing;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -121,6 +120,7 @@ public class Loader extends HttpServlet {
     // This is an attempt to force logging configuration to be loaded
     private void configureLog4J() throws FactoryConfigurationError {
         String file = getInitParameter(LOG4J_PARAM_NAME);
+        if (file == null) file = "log4j.properties"; // hackery
         if(file != null) {
             if (file.endsWith( ".xml" )) {
                 DOMConfigurator.configure( baseFilePath + file );

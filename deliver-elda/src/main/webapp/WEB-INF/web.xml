@@ -5,15 +5,6 @@
 <web-app>
 
   <servlet>
-    <servlet-name>default</servlet-name>
-    <servlet-class>org.eclipse.jetty.servlet.DefaultServlet</servlet-class>
-    <init-param>
-      <param-name>aliases</param-name>
-      <param-value>true</param-value>
-    </init-param>
-  </servlet>
-
-  <servlet>
     <servlet-name>jersey</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
       

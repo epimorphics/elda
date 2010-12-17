@@ -38,7 +38,8 @@ public class CallContext {
     static Logger log = LoggerFactory.getLogger( CallContext.class );
     
     protected OneToManyMap<String, String> parameters = new OneToManyMap<String, String>();
-    protected UriInfo uriInfo;
+    protected UriInfo uriInfo = null;
+    protected String mediaSuffix = "";
     
     public CallContext(UriInfo uriInfo) {
         this.uriInfo = uriInfo;
@@ -52,11 +53,17 @@ public class CallContext {
     	this.uriInfo = toCopy.uriInfo;
     	this.parameters.putAll( defaults );
     	this.parameters.putAll( toCopy.parameters );
+    	this.mediaSuffix = toCopy.getMediaSuffix();
     }
     
 	public static CallContext createContext( UriInfo ui, Map<String, String> bindings ) {
+		return createContext( ui, bindings, "" );
+	}
+    
+	public static CallContext createContext( UriInfo ui, Map<String, String> bindings, String mediaSuffix ) {
 	    MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
-	    CallContext cc = new CallContext(ui);
+	    CallContext cc = new CallContext( ui );
+	    cc.mediaSuffix = mediaSuffix;
 	    for (Map.Entry<String, String> e : bindings.entrySet()) {
 	        cc.parameters.put( e.getKey(), e.getValue() );
 	    }
@@ -126,6 +133,10 @@ public class CallContext {
 		}
 		result.append( valueString.substring( anchor ) );
 		return result.toString();			
+	}
+
+	public String getMediaSuffix() {
+		return mediaSuffix;
 	}
 }
 

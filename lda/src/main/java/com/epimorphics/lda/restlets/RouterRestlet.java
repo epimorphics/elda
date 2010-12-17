@@ -41,11 +41,13 @@ import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.renderers.JSONRenderer;
 import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.restlets.support.SDX_URI_ConnegFilter;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.MediaTypeSupport;
 import com.hp.hpl.jena.shared.NotFoundException;
 import com.sun.jersey.api.uri.UriTemplate;
+import com.sun.jersey.spi.container.ContainerRequest;
 
 /**
  * Handles all incoming API calls and routes to appropriate locations.
@@ -105,7 +107,6 @@ public class RouterRestlet {
 
     private static Match tryMatch( String path ) {
     	log.info( "tryMatch: " + path );
-    	path = path.replaceFirst("//", "/" ); // TODO -- fix this hack
         int matchlen = 0;
         Map.Entry<UriTemplate, APIEndpoint> match = null;
         Map<String, String> bindings = new HashMap<String, String>();
@@ -122,10 +123,7 @@ public class RouterRestlet {
                 }
             }
         }
-        if (match != null) 
-            return new Match( match.getValue(), bindings );
-        else
-            return null;
+        return match == null ? null : new Match( match.getValue(), bindings );
     }
     
     
@@ -136,18 +134,19 @@ public class RouterRestlet {
             @Context UriInfo ui) 
     {
         List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
+        String mediaSuffix = getMediaTypeSuffix( headers );
         String path = "/" + pathstub;
         Match match = getMatch(path);
 
         if (match == null) {
             return returnNotFound("ERROR: Failed to find API handler for path " + path);
         } else {
-            CallContext cc = CallContext.createContext(ui, match.getBindings());
+            CallContext cc = CallContext.createContext( ui, match.getBindings(), mediaSuffix );
             APIEndpoint ep = match.getEndpoint();
             log.info("Info: calling APIEndpoint " + ep.getSpec());
 
             try {
-                APIResultSet results = ep.call(cc);
+                APIResultSet results = ep.call( cc );
                 if (results == null) {
                     return returnNotFound("No answer back from " + ep.getSpec());
                 } else {
@@ -165,6 +164,19 @@ public class RouterRestlet {
             } 
         }
     }
+
+    /**
+        Answer the media type suffix (including the dot) that was specified in the 
+        request URI, or the empty string if there wasn't one. This code assumes
+        that the HttpHeaders implementation is the Jersey ContainerRequest class,
+        into the properties of which our content-negotiation filter has stored
+        the extracted suffix under SUFFIX_KEY.
+    */
+	private String getMediaTypeSuffix( HttpHeaders headers ) {
+		ContainerRequest cr = (ContainerRequest) headers;
+        Map<String, Object> properties = cr.getProperties();
+        return (String) properties.get( SDX_URI_ConnegFilter.SUFFIX_KEY );
+	}
 
     private Response renderByType( List<MediaType> mediaTypes, APIEndpoint ep, APIResultSet results ) {
         for (MediaType mt: mediaTypes) {
