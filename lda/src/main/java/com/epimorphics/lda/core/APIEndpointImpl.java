@@ -163,18 +163,22 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     private Resource resourceForList(Model m, CallContext context) {
-        String uri = context.getURIBuilder()
+        UriBuilder ub = context.getURIBuilder();
+        String uri = ub
             .replaceQueryParam( APIQuery.PAGE_PARAM )
             .replaceQueryParam( APIQuery.PAGE_SIZE_PARAM )
+            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
             .build().toASCIIString();
         uri = uri.replaceFirst("/meta/", "/api/");
         return m.createResource( uri );
     }
 
     private Resource resourceForMetaList(Model m, CallContext context) {
-        String uri = context.getURIBuilder()
+        UriBuilder ub = context.getURIBuilder();
+        String uri = ub
             .replaceQueryParam(APIQuery.PAGE_PARAM)
             .replaceQueryParam(APIQuery.PAGE_SIZE_PARAM)
+            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
             .build().toASCIIString();
         uri = uri.replaceFirst("/api/", "/meta/");
         return m.createResource( uri );
