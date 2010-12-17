@@ -19,12 +19,15 @@ import java.util.*;
 import javax.ws.rs.core.MediaType;
 
 import com.sun.jersey.api.container.filter.UriConnegFilter;
+import com.sun.jersey.spi.container.ContainerRequest;
 
 public class SDX_URI_ConnegFilter extends UriConnegFilter
     {
     protected static final Map<String, MediaType> mediaExtensions = createMediaExtensions();
 
     protected static final Map<String, String> languageExtensions = createNewLanguageExtensions();
+    
+    public static String SUFFIX_KEY = "SPOO";
     
     public SDX_URI_ConnegFilter()
         { super( mediaExtensions, languageExtensions  ); }
@@ -35,6 +38,23 @@ public class SDX_URI_ConnegFilter extends UriConnegFilter
         result.put( "en", "en-uk" );
         return result;
         }
+    
+    /**
+        Do the content negotiation filtering, and remember the
+        media-type suffix if any (WARNING: this code assumes that
+        there's only one suffix; TODO generalise, might be best
+        done by ignoring the UriConnegFilter code completely since
+        it's not utterly clear.
+    */
+    public ContainerRequest filter( ContainerRequest request ) 
+		{
+		String A = request.getRequestUri().getRawPath();
+		ContainerRequest result = super.filter( request );
+		String B = result.getRequestUri().getRawPath();
+		String suffix = A.substring( B.length() );
+		request.getProperties().put( SUFFIX_KEY, suffix );
+		return result;
+		}
     
     private static HashMap<String, MediaType> createMediaExtensions()
         {

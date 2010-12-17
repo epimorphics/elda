@@ -34,6 +34,19 @@ public class TestCallContext
 		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		}
 	
+	@Test public void ensureContextStoresMediaSuffix()
+		{
+		ensureContextStoresMediaSuffix( ".json" );
+		ensureContextStoresMediaSuffix( ".html" );
+		}
+
+	private void ensureContextStoresMediaSuffix(String suffix) {
+		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString("");
+		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
+		CallContext cc = CallContext.createContext( ui, MakeData.hashMap( "" ), suffix );
+		assertThat( cc.getMediaSuffix(), is( suffix ) );
+	}
+	
 	@Test public void ensureContextRecallsParameterNames()
 		{
 		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString("spoo=fresh&space=cold");
@@ -65,13 +78,15 @@ public class TestCallContext
 		assertThat( cc.getParameterValue( "p1" ), is( "v1" ) );
 		}
 	
-	@Test public void ensureCopyingConstructorePreservesValues()
+	@Test public void ensureCopyingConstructorPreservesValues()
 		{
 		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( "p1=v1&p2=v2" );
 		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
-		CallContext base = CallContext.createContext( ui, MakeData.hashMap( "" ) );
+		String mediaSuffix = ".spoo";
+		CallContext base = CallContext.createContext( ui, MakeData.hashMap( "" ), mediaSuffix );
 		CallContext cc = new CallContext( MakeData.hashMap( "fly=fishing" ), base );
 		assertThat( cc.getUriInfo(), is( base.getUriInfo() ) );
 		assertThat( cc.getParameterValue( "fly" ), is( "fishing" ) );
+		assertThat( cc.getMediaSuffix(), is( mediaSuffix ) );
 		}
 	}

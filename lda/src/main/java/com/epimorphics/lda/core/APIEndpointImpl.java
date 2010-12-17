@@ -13,6 +13,8 @@
 package com.epimorphics.lda.core;
 
 
+import javax.ws.rs.core.UriBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -151,16 +153,19 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     private Resource resourceForPage(Model m, CallContext context, int page) {
-        String uri = context.getURIBuilder()
+        UriBuilder ub = context.getURIBuilder();
+        String uri = ub
             .replaceQueryParam(APIQuery.PAGE_PARAM, Integer.toString(page))
-            .build().toASCIIString();
+            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
+            .build()
+            .toASCIIString();
         return m.createResource( uri );
     }
     
     private Resource resourceForList(Model m, CallContext context) {
         String uri = context.getURIBuilder()
-            .replaceQueryParam(APIQuery.PAGE_PARAM)
-            .replaceQueryParam(APIQuery.PAGE_SIZE_PARAM)
+            .replaceQueryParam( APIQuery.PAGE_PARAM )
+            .replaceQueryParam( APIQuery.PAGE_SIZE_PARAM )
             .build().toASCIIString();
         uri = uri.replaceFirst("/meta/", "/api/");
         return m.createResource( uri );
