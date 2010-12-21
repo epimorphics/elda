@@ -23,7 +23,7 @@ public class ModelIOUtils {
 	    + "@prefix xsd: <" + XSD.getURI() + "> .\n"
 	    + "@prefix api: <" + API.getURI() + "> .\n"
 	    + "@prefix alt: <http://www.epimorphics.com/tools/exampleAlt#> .\n"
-	   + "@prefix : <http://www.epimorphics.com/tools/example#> .\n";
+	    + "@prefix : <http://www.epimorphics.com/tools/example#> .\n";
 
 	/**
 	    Create a model by reading the Turtle string ttl, using the prefixes
