@@ -92,6 +92,7 @@ public class TestAPI {
     private boolean compareNormalized(Model a, Model b) {
         Model na = normalizeModel(a);
 		Model nb = normalizeModel(b);
+		
 		boolean isIso = na.isIsomorphicWith( nb );
 		if (!isIso)
 			{

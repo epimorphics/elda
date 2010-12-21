@@ -150,7 +150,7 @@ public class StandardShortnameService implements ShortnameService {
                         if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
                             return Node.createURI(nodeValue); 
                         } else if (type.startsWith(XSD.getURI())) {
-                            RDFDatatype dt =  TypeMapper.getInstance().getTypeByName(type);
+                            RDFDatatype dt = TypeMapper.getInstance().getTypeByName(type);
                             return Node.createLiteral(nodeValue, null, dt);
                         }
                         return Node.createLiteral(nodeValue);

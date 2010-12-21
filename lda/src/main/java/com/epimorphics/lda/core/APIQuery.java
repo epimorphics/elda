@@ -98,7 +98,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     protected StringBuffer propertyChains = new StringBuffer();
     protected StringBuffer whereExpressions = new StringBuffer();
-    protected StringBuffer orderExpressions = new StringBuffer();
+    
+    private StringBuffer orderExpressions = new StringBuffer();
     
     /**
         List of pseudo-triples which form the basic graph pattern element
@@ -117,7 +118,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected final ShortnameService sns;
     protected String defaultLanguage = null;
     
-    protected boolean isDefaultOrder = true;
     protected int varcount = 0;
     
     protected final int defaultPageSize;
@@ -322,7 +322,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         } else if (param.hasPrefix(SEARCH)) {
             addSearchTriple( val );
         } else if (param.hasPrefix(SORT)) {
-            addOrderBy( val );
+            setOrderBy( val );
         } else if (param.hasPrefix(_SELECT_PARAM )) {
         	fixedQueryString = val;
         } else if (param.hasPrefix(WHERE_PARAM)) {
@@ -441,28 +441,41 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         return path[i];
     }
 
-    public void setDefaultOrdering(String orderSpec) {
-        addOrderBy(orderSpec);
-        isDefaultOrder = true;
+    /**
+        Discard any existing order expressions (a string that
+        may appear after SPARQL's ORDER BY). Add <code>orderBy</code>
+        as the new order expressions.
+    */
+    public void setExplicitOrderBy( String orderBy ) {
+    	orderExpressions.setLength(0);
+    	orderExpressions.append( orderBy );
     }
     
-    public void addOrderBy(String orderSpec) {
-        if (isDefaultOrder) {
-            isDefaultOrder = false;
-            orderExpressions.setLength(0);
-        }
-        boolean descending = orderSpec.startsWith("-"); 
-        if (descending) 
-            orderSpec = orderSpec.substring(1);
-        boolean varOrder = orderSpec.startsWith("?");
-        String var = varOrder ? orderSpec : newVar().name(); // TODO
-        if (descending) {
-        	orderExpressions.append("DESC(" + var + ") ");
-        } else {
-            orderExpressions.append(var + " ");
-        }
-        if (!varOrder)
-            addPropertyHasValue(Param.make(orderSpec), var); // TODO fix use of make
+    /**
+        Discard any existing order expressions. Decode
+        <code>orderSpec</code> to produce a new order expression.
+        orderSpec is a comma-separated list of sort fields,
+        each optionally proceeded by - for DESC. If the field
+        is a variable, it is used as-is, otherwise it is assumed
+        to be a short property name and an additional triple
+        (?item Property Var) added to the query with the Var
+        being the sort field.
+    */
+    public void setOrderBy( String orderSpecs ) {
+    	orderExpressions.setLength(0);
+    	for (String spec: orderSpecs.split(",")) {
+	        boolean descending = spec.startsWith("-"); 
+	        if (descending) spec = spec.substring(1);
+	        boolean varOrder = spec.startsWith("?");
+	        String var = varOrder ? spec : newVar().name(); // TODO
+	        if (descending) {
+	        	orderExpressions.append(" DESC(" + var + ") ");
+	        } else {
+	            orderExpressions.append(" " + var + " ");
+	        }
+	        if (!varOrder)
+	            addPropertyHasValue(Param.make(spec), var); // TODO fix use of make
+    	}
     }
 
     protected void noteBindableVar(Param p) {

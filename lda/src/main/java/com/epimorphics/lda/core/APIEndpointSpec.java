@@ -207,8 +207,10 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
             baseQuery.addWhere(where);
         }
         if (view.hasProperty(API.orderBy)) {
-            String orderSpec = getStringValue(view, API.orderBy);
-            baseQuery.setDefaultOrdering(orderSpec);
+            baseQuery.setExplicitOrderBy( getStringValue( view, API.orderBy ) );
+        }
+        if (view.hasProperty(API.sort)) {
+            baseQuery.setOrderBy( getStringValue( view, API.sort ) );
         }
     }
     

@@ -120,18 +120,18 @@ public class APIEndpointImpl implements APIEndpoint {
                 .addProperty( RDF.type, FIXUP.Page )
                 .addProperty( FIXUP.items, content )
                 .addLiteral( FIXUP.page, page )
-                .addLiteral(OpenSearch.itemsPerPage, perPage )
-                .addLiteral(OpenSearch.startIndex, perPage * page + 1 )
+                .addLiteral( OpenSearch.itemsPerPage, perPage )
+                .addLiteral( OpenSearch.startIndex, perPage * page + 1 )
                 ;            
             Resource listRoot = resourceForList(rs, context);
             listRoot
-            	.addProperty(DCTerms.hasPart, thisPage )
+            	.addProperty( DCTerms.hasPart, thisPage )
             	.addProperty( FIXUP.definition, uriForSpec ) 
             	.addProperty( RDF.type, API.ListEndpoint )
             	.addProperty( RDFS.label, "should be a description of this list" )
             	;
             thisPage
-            	.addProperty(DCTerms.isPartOf, listRoot)
+            	.addProperty( DCTerms.isPartOf, listRoot )
             	.addProperty( FIXUP.definition, uriForSpec )
             	;
             String topic = spec.getAPISpec().getPrimaryTopic();

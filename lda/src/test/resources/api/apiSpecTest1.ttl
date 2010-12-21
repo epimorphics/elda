@@ -47,13 +47,13 @@ spec:primarySchools
     a api:ListEndpoint;
     api:uriTemplate "http://dummy/doc/schools/primary";
     foaf:primaryTopic "http://education.data.gov.uk/set/schools";
-    api:selector spec:primaryShoolsView ;
+    api:selector spec:primarySchoolsView ;
     .
 
-spec:primaryShoolsView
+spec:primarySchoolsView
      	api:type school-ont:School;
     	api:filter "school_type=Primary";
-    	api:orderBy "name" .
+    	api:sort "name" .
     
 spec:primaryBigSchools
     a api:ListEndpoint;
@@ -61,7 +61,7 @@ spec:primaryBigSchools
     api:api spec:api1;
     foaf:primaryTopic "http://education.data.gov.uk/set/schools";
     api:selector [
-    	api:parent spec:primaryShoolsView ;
+    	api:parent spec:primarySchoolsView ;
     	api:filter "min-size=300";
         ] ;
     .
