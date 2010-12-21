@@ -18,6 +18,9 @@
 package com.epimorphics.lda.shortnames;
 import static com.epimorphics.util.RDFUtils.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.Context.Prop;
@@ -25,9 +28,11 @@ import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.vocabs.API;
+import com.hp.hpl.jena.datatypes.BaseDatatype;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.impl.AdhocDatatype;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.*;
@@ -149,11 +154,11 @@ public class StandardShortnameService implements ShortnameService {
                     if (type != null) {
                         if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
                             return Node.createURI(nodeValue); 
-                        } else if (type.startsWith(XSD.getURI())) {
-                            RDFDatatype dt = TypeMapper.getInstance().getTypeByName(type);
-                            return Node.createLiteral(nodeValue, null, dt);
+                        } else {
+                        	RDFDatatype dt = TypeMapper.getInstance().getTypeByName(type);
+                        	if (dt == null) dt = fakeDatatype( type );
+                        	return Node.createLiteral( nodeValue, null, dt );
                         }
-                        return Node.createLiteral(nodeValue);
                     } else {
                         return Node.createLiteral(nodeValue);
                     }
@@ -163,7 +168,34 @@ public class StandardShortnameService implements ShortnameService {
         }
     }
     
-    /**
+    private final Map<String, RDFDatatype> fakeTypes = new HashMap<String, RDFDatatype>();
+    
+    private RDFDatatype fakeDatatype( String type ) {
+    	RDFDatatype result = fakeTypes.get( type );
+    	if (result == null) fakeTypes.put( type, result = new FakeDatatype( type ) );
+		return result;
+	}
+    
+    static private class FakeDatatype extends BaseDatatype {	
+    	public FakeDatatype( String type ) {
+    		super( type );
+    	}
+    	
+    	@Override public boolean isValidValue( Object value )
+    		{ throw new RuntimeException( "unimplemented: isValidValue of fake RDF datatype for " + uri ); }
+    	
+    	@Override public Class<?> getJavaClass() 
+    		{ throw new RuntimeException( "unimplemented: getJavaClass of fake RDF datatype for " + uri ); }
+    	
+    	@Override public Object parse( String lexicalForm ) 
+    		//{ throw new IllegalArgumentException( "don't know how to parse a " + uri ); }
+    		{ return lexicalForm; }
+    	
+    	@Override public String toString() 
+    		{ return "Datatype[fake: " + uri + "]"; }
+    }
+
+	/**
      * Normalize a node value, using the given property name as a guide
      * to typing information. If the value is a variable then leave it as such.
      * @return a string suitable for embedding in a SPARQL query
