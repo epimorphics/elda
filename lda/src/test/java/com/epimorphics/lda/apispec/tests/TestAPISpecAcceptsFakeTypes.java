@@ -26,10 +26,11 @@ public class TestAPISpecAcceptsFakeTypes
 		+ "\n;   api:selector [api:filter 'year=1066']"
 		+ "."
 		+ "\n:year a owl:DatatypeProperty; rdfs:label 'year'; rdfs:range :faketype."
+		+ "\n:name a owl:DatatypeProperty; rdfs:label 'name'."
 		+ "\n"
 		;
 	
-	@Test public void testMe() 
+	@Test public void testFakeType() 
 		{
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
@@ -37,6 +38,15 @@ public class TestAPISpecAcceptsFakeTypes
 		String x = s.getShortnameService().normalizeNodeToString( "year", "spoo" );
 		String eg = m.getNsPrefixURI( "" );
 		assertThat( x, is( "'spoo'^^<" + eg + "faketype>" ) );
+		}
+	
+	@Test public void testPlainLiteral() 
+		{
+		Model m = ModelIOUtils.modelFromTurtle( spec );
+		Resource root = m.createResource( m.expandPrefix( ":my" ) );
+		APISpec s = new APISpec( root, NoLoader );
+		String x = s.getShortnameService().normalizeNodeToString( "name", "Frodo" );
+		assertThat( x, is( "'Frodo'" ) );
 		}
 
 	}

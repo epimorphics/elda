@@ -58,12 +58,22 @@ public class ContextQueryUpdater {
 	*/
     public View updateQueryAndConstructView() {	  
     	query.activateDeferredFilters( context );
+    	for (String param: context.getFilterPropertyNames()) 
+    		if (param.startsWith( APIQuery.LANG_PREFIX ))
+    			handleLangPrefix( param );
         GEOLocation geo = new GEOLocation();
         for (String param: context.getFilterPropertyNames()) 
             handleParam( geo, Param.make( param ) );
         geo.addLocationQueryIfPresent( query );
         return view == noneSpecified ? defaultView : view;
     }
+
+	private void handleLangPrefix( String taggedParam ) {
+		String param = taggedParam.substring( APIQuery.LANG_LEN );
+		String val = context.expand( context.getParameterValue( param ) );
+		String pString = context.expand( param );
+		query.setLanguagesFor( pString, val );
+	}
 
 	private void handleParam(GEOLocation geo, Param p) {
 		String zpString = p.asString();
@@ -76,7 +86,9 @@ public class ContextQueryUpdater {
 	//
 		if (query.isBindable(pString)) 
 			{ /* nothing to do -- report suspect? */ } 
-		else if (p.is(APIQuery.TEMPLATE_PARAM)) {
+		else if (zpString.startsWith( APIQuery.LANG_PREFIX )) {
+			// Nothing to do -- done on previous pass 
+		} else if (p.is(APIQuery.TEMPLATE_PARAM)) {
 			setViewByProperties(val);
 		} else if (p.is(APIQuery.SHOW_PARAM)) {
 		    setViewByName(val);

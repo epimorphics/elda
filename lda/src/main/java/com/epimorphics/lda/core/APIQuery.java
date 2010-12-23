@@ -48,15 +48,22 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     public static final String PAGE_PARAM = "_page";
     public static final String PAGE_SIZE_PARAM = "_pageSize";
-    
+
     public static final String NAME_PREFIX = "name-";
     public static final int NAME_LEN = NAME_PREFIX.length();
+    
+    public static final String LANG_PREFIX = "lang-";
+    public static final int LANG_LEN = LANG_PREFIX.length();
+    
     public static final String MIN_PREFIX = "min-";
     public static final int MIN_LEN = MIN_PREFIX.length();
+    
     public static final String MAX_PREFIX = "max-";
     public static final int MAX_LEN = MAX_PREFIX.length();
+    
     public static final String MIN_OPEN_PREFIX = "minEx-";
     public static final int MINO_LEN = MIN_OPEN_PREFIX.length();
+    
     public static final String MAX_OPEN_PREFIX = "maxEx-";
     public static final int MAXO_LEN = MAX_OPEN_PREFIX.length();
     
@@ -290,12 +297,19 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     		{ return "<deferred " + param + "=" + val + ">"; }
     	}
     
+    private Map<String, String> languagesFor = new HashMap<String, String>();
+    
+    public void setLanguagesFor( String fullParamName, String languages ) {
+    	System.err.println( ">> set languages for '" + fullParamName + "' to '" + languages + "'." );
+    	languagesFor.put( fullParamName, languages );    
+    }
+    
     /**
      * General interface for extending the query with a specified parameter.
      * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
      * @return the name of the final property referencing the val, to allow type sensitive normalization
     */
-    public String addFilterFromQuery(Param param, String val) {
+    public String addFilterFromQuery( Param param, String val ) {
         if (param.is(PAGE_PARAM)) {
             setPageNumber( Integer.parseInt(val) ); 
         } else if (param.is(PAGE_SIZE_PARAM)) {
@@ -303,6 +317,9 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         } else if (param.hasPrefix(NAME_PREFIX)) {
         	param = param.substring(NAME_LEN);
             addNameProp(param, val);
+        } else if (param.hasPrefix( LANG_PREFIX )) {
+        	param = param.substring( LANG_LEN );
+        	
         } else if (param.hasPrefix(MIN_PREFIX)) {
         	param = param.substring(MIN_LEN);
             addRangeFilter(param, val, ">=");
@@ -402,12 +419,18 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
      * @param val  The value as a string, shortname. The expansion should take into
      * account the type of the property and created typed literals if necessary.
      */
-    private void addTriplePattern( RDFQ.Variable var, String prop, String val) {
-    	if (val.startsWith("?")) {
-    		// Record property which points to this variable for us in decoding binding values
-    		varProps.put(val.substring(1), prop);   
+    private void addTriplePattern( RDFQ.Variable var, String prop, String languages, String val ) {
+    	if (languages == null) {
+	    	if (val.startsWith("?")) {
+	    		// Record property which points to this variable for us in decoding binding values
+	    		varProps.put(val.substring(1), prop);   
+	    	}
+	        addTriplePattern( var, sns.normalizeResource(prop), sns.normalizeNodeToRDFQ(prop, val, defaultLanguage) ); 
+    	} else {
+    		for (String lang: languages.split( "," )) {
+    	        addTriplePattern( var, sns.normalizeResource(prop), sns.normalizeNodeToRDFQ( prop, val, lang ) ); 
+    		}
     	}
-        addTriplePattern( var, sns.normalizeResource(prop), sns.normalizeNodeToRDFQ(prop, val, defaultLanguage) ); 
     }
     
     private void addTriplePattern( RDFQ.Variable var, String prop, RDFQ.Variable val ) {
@@ -425,6 +448,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
 
     protected String addPropertyHasValue( Param param, String rawValue ) {
+    	String languages = languagesFor.get( param.toString() );
+    	if (languages == null) languages = defaultLanguage;
         String[] path = param.parts();
         RDFQ.Variable var = SELECT_VAR;
         int i = 0;
@@ -435,7 +460,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             var = newvar;
             i++;
         }
-        addTriplePattern(var, path[i], rawValue);
+        addTriplePattern(var, path[i], languages, rawValue);
         noteBindableVar( path[i] );
         noteBindableVar( rawValue );
         return path[i];

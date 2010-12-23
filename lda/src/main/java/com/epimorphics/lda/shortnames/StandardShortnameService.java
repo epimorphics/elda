@@ -32,7 +32,6 @@ import com.hp.hpl.jena.datatypes.BaseDatatype;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.impl.AdhocDatatype;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.*;
@@ -132,7 +131,7 @@ public class StandardShortnameService implements ShortnameService {
      * Normalize a node value, using the given property name as a guide
      * to typing information. If the value is a variable then leave it as such.
      */
-    public Node normalizeNode(String p, String nodeValue) {
+    private Node normalizeNode(String p, String nodeValue) {
         if (nodeValue.startsWith("?")) {
             return Node.createVariable(nodeValue.substring(1));
         } else {
