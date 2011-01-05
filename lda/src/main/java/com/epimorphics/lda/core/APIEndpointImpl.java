@@ -50,7 +50,7 @@ public class APIEndpointImpl implements APIEndpoint {
     
     @Override public APIResultSet call( CallContext given ) {
     	CallContext context = new CallContext( spec.getParameterBindings(), given );
-        log.info("API " + spec + " called on " + context + " from " + context.getUriInfo());
+        log.debug("API " + spec + " called on " + context + " from " + context.getUriInfo());
         APIQuery query = spec.getBaseQuery();
         View view = buildQueryAndView(context, query);
         APIResultSet unfiltered = query.runQuery( spec.getAPISpec(), context, view );
@@ -75,7 +75,7 @@ public class APIEndpointImpl implements APIEndpoint {
 			return rs;			
 		}
 		else {			
-			log.info("Applying view: " + view.toString());
+			log.debug("Applying view: " + view.toString());
 			return rs.getFilteredSet( view );
 		}
 	}

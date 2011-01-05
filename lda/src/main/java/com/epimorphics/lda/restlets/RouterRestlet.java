@@ -106,13 +106,13 @@ public class RouterRestlet {
     }
 
     private static Match tryMatch( String path ) {
-    	log.info( "tryMatch: " + path );
+    	log.debug( "tryMatch: " + path );
         int matchlen = 0;
         Map.Entry<UriTemplate, APIEndpoint> match = null;
         Map<String, String> bindings = new HashMap<String, String>();
         synchronized (routerTable) {
             for (Map.Entry<UriTemplate, APIEndpoint> e : routerTable.entrySet()) {
-            	log.info( "considering entry: " + e );
+            	log.debug( "considering entry: " + e );
 //            	System.err.println( "||  considering entry: " + e );
                 if (e.getKey().match( path, bindings )) {
                     int len = e.getValue().getURITemplate().length();
@@ -143,7 +143,7 @@ public class RouterRestlet {
         } else {
             CallContext cc = CallContext.createContext( ui, match.getBindings(), mediaSuffix );
             APIEndpoint ep = match.getEndpoint();
-            log.info("Info: calling APIEndpoint " + ep.getSpec());
+            log.debug("Info: calling APIEndpoint " + ep.getSpec());
 
             try {
                 APIResultSet results = ep.call( cc );

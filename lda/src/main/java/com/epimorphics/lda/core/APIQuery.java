@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.rdfq.RDFQ;
-import com.epimorphics.lda.rdfq.RDFQ.Any;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.LARQManager;
@@ -368,7 +367,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 
 	public void activateDeferredFilters( CallContext cc ) {
 		for (Deferred d: deferredFilters) {
-			log.info( "activating deferred filter " + d );
+			log.debug( "activating deferred filter " + d );
 			addFilterFromQuery( d.param.expand( cc ), cc.expand( d.val ) );
 		}
 	}
@@ -405,7 +404,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     protected void addSearchTriple( String val ) {
     	needsLARQindex = true;
-        log.info( "enabled LARQ indexing to search for " + val );
+        log.debug( "enabled LARQ indexing to search for " + val );
         addTriplePattern( SELECT_VAR, PF_TEXT_MATCH, RDFQ.literal( val ) );
     }
     
@@ -540,7 +539,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     private Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
     
 	public void addWhere(String whereClause) {
-		log.info( "TODO: check the legality of the where clause: " + whereClause );
+		log.debug( "TODO: check the legality of the where clause: " + whereClause );
         if (whereExpressions.length() > 0)
             whereExpressions.append(" ");
         whereExpressions.append(whereClause);
@@ -678,7 +677,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             APIResultSet already = cache.getCachedResultSet( results, view.toString() );
             if (already != null && expansionPoints.isEmpty() ) 
                 {
-                log.info( "re-using cached results for " + results );
+                log.debug( "re-using cached results for " + results );
                 return already.clone();
                 }
             
@@ -762,7 +761,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     private List<Resource> fetchRequiredResources( Cache cache, APISpec spec, CallContext call, Source source )
         {
-    	log.info( "fetchRequiredResources()" );
+    	log.debug( "fetchRequiredResources()" );
         List<Resource> results = new ArrayList<Resource>();
         if (itemTemplate != null) setSubject( call.expand( itemTemplate ) );
         if ( isFixedSubject() ) {
@@ -772,7 +771,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             List<Resource> already = cache.getCachedResources( select );
             if (already != null)
                 {
-                log.info( "re-using cached results for query " + select );
+                log.debug( "re-using cached results for query " + select );
                 return already;
                 }
             Query q = null;
@@ -782,7 +781,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
                 throw new APIException("Internal error building query: " + select, e);
             }
             
-            log.info( "Running query: " + select.replaceAll( "\n", " " ) );
+            log.debug( "Running query: " + select.replaceAll( "\n", " " ) );
             QueryExecution exec = source.execute( q );
             if (needsLARQindex) LARQManager.setLARQIndex( exec );
         
