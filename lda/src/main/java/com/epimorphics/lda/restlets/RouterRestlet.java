@@ -214,14 +214,14 @@ public class RouterRestlet {
     }
     
     public static Response returnError(String message) {
-        log.error(message);
-        new RuntimeException("BOOM").printStackTrace( System.err );
+        log.error( message );
+        new RuntimeException( "returning error: '" + message + "'" ).printStackTrace( System.err );
         return Response.serverError().entity(message).build();
     }
     
     public static Response returnNotFound(String message) {
         log.warn("Failed to return results: " + message);
-        new RuntimeException("BOOM").printStackTrace( System.err );
+        new RuntimeException("returning NotFound: '" + message + "'").printStackTrace( System.err );
         return Response.status(Status.NOT_FOUND).entity(message).build();
     }
     
