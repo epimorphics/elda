@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.RDFQ.Any;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.LARQManager;
@@ -347,8 +348,13 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         } else {
             addPropertyHasValue( param, val );
         }
-        return param.asString();
+        return lastPropertyOf(param);
     }
+
+	private String lastPropertyOf(Param param) {
+		String [] parts = param.asString().split( "\\." );
+		return parts[parts.length - 1];
+	}
     
     List<Deferred> deferredFilters = new ArrayList<Deferred>();
     
@@ -505,7 +511,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 
     protected void noteBindableVar(Param p) {
     	// TODO fix to work properly
-    	noteBindableVar( p.asString() );
+    	noteBindableVar( lastPropertyOf(p) );
     }
 
     protected void noteBindableVar(String propname) {

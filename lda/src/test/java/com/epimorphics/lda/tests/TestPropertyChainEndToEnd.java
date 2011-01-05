@@ -12,12 +12,19 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import com.epimorphics.lda.core.APIQuery;
+import com.epimorphics.lda.core.APIQuery.Param;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.lda.tests_support.MakeData;
+import com.epimorphics.lda.tests_support.ShortnameFake;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestPropertyChainEndToEnd 
 	{
@@ -37,7 +44,7 @@ public class TestPropertyChainEndToEnd
 			+ "; spec:my-viewer rdfs:label 'mine'"
 			+ "; spec:my-viewer api:properties ex:size"
 		//	
-			+ "; ex:size a owl:DatatypeProperty"
+			+ "; ex:size rdf:type owl:DatatypeProperty"
 			+ "; ex:size api:label 'size'"
 			+ "; ex:size rdfs:range xsd:int"
 			+ "; ex:number api:label 'number'"
@@ -82,7 +89,7 @@ public class TestPropertyChainEndToEnd
 			+ "; spec:my-viewer rdfs:label 'mine'"
 			+ "; spec:my-viewer api:properties 'localAuthority.number'"
 		//	
-			+ "; ex:size a owl:DatatypeProperty"
+			+ "; ex:size rdf:type owl:DatatypeProperty"
 			+ "; ex:size api:label 'size'"
 			+ "; ex:size rdfs:range xsd:int"
 			+ "; ex:number api:label 'number'"
@@ -110,6 +117,40 @@ public class TestPropertyChainEndToEnd
 		assertContains( expect, rs );
 		}
 	
+	@Test public void ensureUnitPropertyHasType()
+		{
+		ensurePropertyThingHasType( "max-size" );
+		}
+	
+	@Test public void ensureChainedPropertyHasType()
+		{
+		ensurePropertyThingHasType( "max-thing.size" );
+		}
+
+	private void ensurePropertyThingHasType(String propertyThing) 
+		{
+		Model model = MakeData.specModel
+			( "spec:spoo rdf:type api:API"
+			+ "; ex:size rdf:type owl:DatatypeProperty"
+			+ "; ex:size rdfs:range xsd:int"
+			+ "; ex:thing rdf:type owl:DatatypeProperty"
+			+ ""
+			);
+		Resource spec = model.createResource( model.expandPrefix( "spec:spoo" ) );
+		ModelLoaderI loader = new LoadsNothing();
+		PrefixMapping prefixes = PrefixMapping.Factory.create();
+		ShortnameService sns = new StandardShortnameService( spec, prefixes, loader );
+		APIQuery q = new APIQuery( sns );
+		q.addFilterFromQuery( Param.make( propertyThing), "17" );
+		assertContains( q.assembleSelectQuery( prefixes ), "\"17\"^^< http://www.w3.org/2001/XMLSchema#int>" );
+		}
+	
+	private void assertContains(String target, String want) 
+		{
+		if (!target.contains(want))
+			fail( "expected '" + target + "' to contain '" + want + "'" );
+		}
+
 	private void assertContains(Model expect, Model rs) 
 		{
 		if (!rs.containsAll(expect))
