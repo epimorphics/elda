@@ -25,6 +25,7 @@ import com.epimorphics.lda.support.PropertyChainTranslator;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
@@ -39,23 +40,27 @@ public class View {
     static Logger log = LoggerFactory.getLogger(View.class);
 
     protected final List<PropertyChain> chains = new ArrayList<PropertyChain>();
-        
+
+    public static final String SHOW_ALL = "all";
+    
+    public static final String SHOW_BASIC = "basic";
+
+    public static final String SHOW_DESCRIPTION = "description";
+    
+    public static final String SHOW_DEFAULT_INTERNAL = "###default";
+
     /**
         view that accepts any property; doesFiltering answers false.
     */
     public static final View ALL = new View( false, Type.T_ALL );
-
-    public static final String SHOW_ALL = "all";
-
-    public static final String SHOW_DESCRIPTION = "description";
     
-	public static final String SHOW_DEFAULT_INTERNAL = "###default";
-
-	public static final View DESCRIBE = new View(false, Type.T_DESCRIBE );
+    public static final View BASIC = new View( false, Type.T_BASIC );
+    
+    public static final View DESCRIBE = new View(false, Type.T_DESCRIBE );
 
 	protected boolean doesFiltering = true;
 	
-	static enum Type { T_DESCRIBE, T_ALL, T_CHAINS };
+	static enum Type { T_DESCRIBE, T_ALL, T_CHAINS, T_BASIC };
 	
 	protected Type type = Type.T_DESCRIBE;
     
@@ -189,7 +194,7 @@ public class View {
 	public Model applyTo( Model source, List<Resource> roots ) {
 //		System.err.println( ">> applyTo: view = " + this );
         Model result = doesFiltering() && false
-        	? ChainScanner.onlyMatchingChains( source, roots, chains )
+        	? ChainScanner.onlyMatchingChains( source, roots, chains ) // TODO this may well be dead dead dead
         	: source
         	;
 //        result.write( System.err, "Turtle" );
@@ -208,17 +213,31 @@ public class View {
 			    addAllObjectLabels( m, sources );
 			    break;
 
-			case T_CHAINS:			
-				fetchByPropertyChains(m, roots, sources, vars);
+			case T_CHAINS:	{
+				long zero = System.currentTimeMillis();
+				fetchByGivenPropertyChains( m, roots, sources, vars, chains );
+				long time = System.currentTimeMillis() - zero;
+				log.debug( "T_CHAINS took " + (time/1000.0) + "s" );
 				break;
+			}
+				
+			case T_BASIC: {
+				long zero = System.currentTimeMillis();
+				fetchByGivenPropertyChains( m, roots, sources, vars, BasicChains );
+				long time = System.currentTimeMillis() - zero;
+				log.debug( "T_BASIC took " + (time/1000.0) + "s" );
+				break;
+			}
 				
 			default:
 				throw new RuntimeException( "unknown view type " + type );				
 		}
 	}
 
-	public void fetchByPropertyChains(Model m, List<Resource> roots, List<Source> sources, VarSupply vars) {
-		long zero = System.currentTimeMillis();
+	static final List<PropertyChain> BasicChains = 
+		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
+
+	private void fetchByGivenPropertyChains(Model m, List<Resource> roots, List<Source> sources, VarSupply vars, List<PropertyChain> chains) {
 		String construct = "CONSTRUCT {";
 		List<Variable> varsInOrder = new ArrayList<Variable>();
 		for (Resource r: new HashSet<Resource>( roots)) {
@@ -241,9 +260,6 @@ public class View {
 	//
 		Query constructQuery = QueryFactory.create( construct );
 		for (Source x: sources) m.add( x.execute( constructQuery ).execConstruct() );
-		long time = System.currentTimeMillis() - zero;
-		log.debug( "T_CHAINS took " + (time/1000.0) + "s" );
-		return;
 	}
 	
 	private String buildConstructClause( Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {

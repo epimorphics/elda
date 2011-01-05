@@ -33,6 +33,10 @@ public class PropertyChain {
 		this( CollectionUtils.list(ResourceFactory.createProperty( URI ) ) );		
 	}
 	
+	public PropertyChain( Property p ) {
+		this( CollectionUtils.list( p ) );		
+	}
+	
 	@Override public String toString() {
 		return chain.toString();
 	}

@@ -108,6 +108,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 			result.put( viewName, extractView( m, tView ) );
         }
         result.put( View.SHOW_ALL, View.ALL );
+        result.put( View.SHOW_BASIC, View.BASIC );
         result.put( View.SHOW_DESCRIPTION, View.DESCRIBE );
         View dv = getDefaultView( endpoint );
 //        System.err.println( ">> default view for " + endpoint + " is " + dv );
