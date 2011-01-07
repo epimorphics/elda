@@ -24,7 +24,6 @@ import static com.epimorphics.lda.restlets.RouterRestlet.returnNotFound;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -40,6 +39,7 @@ import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointSpec;
 import com.epimorphics.lda.core.APIException;
+import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
@@ -111,7 +111,7 @@ public class ControlRestlet {
             return isAPI;
         }
         
-        public Map<String, String> getBindings() {
+        public Variables getBindings() {
             return match.getBindings();
         }
     }

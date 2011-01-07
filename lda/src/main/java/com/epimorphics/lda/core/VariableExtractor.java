@@ -1,18 +1,21 @@
 package com.epimorphics.lda.core;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
-import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.util.OneToManyMap;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 import static com.epimorphics.util.RDFUtils.*;
 
@@ -22,15 +25,132 @@ import static com.epimorphics.util.RDFUtils.*;
  	@author chris
 */
 public class VariableExtractor {
+	
+	public static class Variables implements Iterable<Variable>
+		{
+		protected final Map<String, Variable> vars = new HashMap<String, Variable>();
+		
+		public Variables( Variables other ) 
+			{ 
+			this();
+			putAll( other );
+			}
+		
+		public Variables()
+			{}
+
+		public void putAll( Variables other ) 
+			{
+			for (Entry<String, Variable> e: other.vars.entrySet()) 
+				this.vars.put( e.getKey(), e.getValue().copy() );
+			}
+
+		@Override public Iterator<Variable> iterator() 
+			{
+			final Iterator<Map.Entry<String, Variable>> it = vars.entrySet().iterator();
+			return new Iterator<Variable>() 
+				{
+				@Override public boolean hasNext() 
+					{ return it.hasNext(); }
+
+				@Override public Variable next() 
+					{ return it.next().getValue(); }
+
+				@Override public void remove() 
+					{ it.remove(); }
+				};
+			}
+
+		public boolean hasVariable( String name ) 
+			{ return vars.containsKey( name ); }
+
+		public Variable get( String name ) 
+			{ return vars.get( name ); }
+
+		public void put( String name, Variable v ) 
+			{ vars.put( name, v ); }
+
+		public void putInto( OneToManyMap<String, Variable> map ) 
+			{ map.putAll( vars ); }
+		
+		public String toString()
+			{ return "<variables " + vars.toString() + ">"; }
+		
+		public boolean equals( Object other )
+			{ return other instanceof Variables && vars.equals( ((Variables) other).vars ); }
+		
+		public int hashCode()
+			{ return vars.hashCode(); }
+
+		public static Variables uplift( Map<String, String> bindings ) 
+			{
+			Variables result = new Variables();
+			for (String key: bindings.keySet())
+				result.put( key, new Variable( key, "", "", bindings.get( key ) ) );
+			return result;
+			}
+		}
+	
+	public static class Variable
+		{
+		protected final String name;
+		protected final String language;
+		protected final String type;
+		protected String valueString;
+		
+		public Variable( String name, String language, String type, String valueString )
+			{
+			this.name = name;
+			this.type = type;
+			this.language = language;
+			this.valueString = valueString;
+			}	
+		
+		public static Variable make( String name, Variable already ) 
+			{ return already == null ? new Variable( name, "", "", null ) : already; }	
+		
+		public Variable copy() 
+			{ return new Variable( name, language, type, valueString ); }
+
+		public String valueString() 
+			{ return valueString; }
+
+		public String name() 
+			{ return name; }
+
+		public Variable withValueString( String vs ) 
+			{ return new Variable( name, language, type, vs ); }
+		
+		public String toString()
+			{ return "<var name=" + name + " lang: " + language + " type: " + type + " value: " + valueString + ">"; }
+		
+		public boolean equals( Object other ) 
+			{ return other instanceof Variable && same( (Variable) other );	}
+
+		private boolean same( Variable other ) 
+			{ return 
+				this.name.equals( other.name )
+				&& this.language.equals( other.language )
+				&& equals( this.type, other.type )
+				&& equals( this.valueString, other.valueString )
+				; 
+			}
+		
+		private boolean equals( String a, String b ) 
+			{ return a == null ? b == null : a.equals( b ); }
+
+		public int hashCode()
+			{ return name.hashCode() + language.hashCode() + type.hashCode(); }
+		}
 
     static Logger log = LoggerFactory.getLogger(VariableExtractor.class);
     
-	public static Map<String, RDFNode> findAndBindVariables( Resource root ) {
-		return findAndBindVariables( new HashMap<String, RDFNode>(), root ); 
+	public static Variables findAndBindVariables( Resource root ) {
+		return findAndBindVariables( new Variables(), root ); 
 	}	
 
-	public static Map<String, RDFNode> findAndBindVariables( Map<String, RDFNode> bound, Resource root) {
-    	Map<String, String> toDo = new HashMap<String, String>();
+	public static Variables findAndBindVariables( Variables bound, Resource root) {
+    	Variables toDo = new Variables();
     	findVariables( root, bound, toDo );
     	doRemainingEvaluations( bound, toDo );
 		return bound;
@@ -42,29 +162,40 @@ public class VariableExtractor {
 	    <code>bound</code>. Otherwise, the name and its literal value are
 	    stored into <code>toDo</code> for later evaluation.
 	*/
-	public static void findVariables( Resource root, Map<String, RDFNode> bound, Map<String, String> toDo ) {
+	public static void findVariables( Resource root, Variables bound, Variables toDo ) {
 		for (Statement s: root.listProperties( FIXUP.variable ).toList()) {
 			Resource v = s.getResource();
 			String name = getStringValue( v, API.name, null );
-			RDFNode value = v.getProperty( FIXUP.value ).getObject();
-			if (value.isLiteral()) {
-				String lf = ((Literal) value).getLexicalForm();
-				if (lf.contains( "{" ))	toDo.put( name, lf );
-				else bound.put( name, value );
-			} else {
-				bound.put( name, value );    			
+			String language = getStringValue( v, FIXUP.language, "" );
+			String type = getStringValue( v, FIXUP.type, "" );
+			Statement value = v.getProperty( FIXUP.value );
+			if (value != null && value.getObject().isLiteral())
+				type = value.getObject().asNode().getLiteralDatatypeURI();
+			if (value != null && value.getObject().isURIResource())
+				type = RDFS.Resource.getURI();
+			String valueString = getValueString( v, language, type );
+			Variable var = new Variable( name, language, type, valueString );
+			(valueString.contains( "{" ) ? toDo : bound).put( name, var ); 			
 			}
 		}
+
+	private static String getValueString(Resource v, String language, String type) {
+		Statement s = v.getProperty( FIXUP.value );
+		if (s == null) return null;
+		Node object = s.getObject().asNode();
+		if (object.isURI()) return object.getURI();
+		if (object.isLiteral()) return object.getLiteralLexicalForm();
+		throw new RuntimeException( "cannot convert " + object + " to RDFQ type." );
 	}
 	
 	/**
 	    Evaluate the variables whose lexical form contains references to other
 	    variables. Their evaluated form ends up in <code>bound</code>.
 	*/
-	private static void doRemainingEvaluations(Map<String, RDFNode> bound,	Map<String, String> toDo) {
-		for (Map.Entry<String, String> e: toDo.entrySet()) {
-			String evaluated = evaluate( e.getKey(), bound, toDo );
-			bound.put( e.getKey(), ResourceFactory.createPlainLiteral( evaluated ) );
+	private static void doRemainingEvaluations( Variables bound, Variables toDo ) {
+		for (Variable v: toDo) {
+			String evaluated = evaluate( v.name(), bound, toDo );
+			bound.put( v.name(), v.withValueString( evaluated ) );
 		}
 	}
 	
@@ -75,14 +206,15 @@ public class VariableExtractor {
 	    it is bound to its RDF value. Otherwise, recursively evaluate all
 	    the variables in its value string and put them together as directed.
 	 */
-	private static String evaluate( String name, Map<String, RDFNode> bound, Map<String, String> toDo ) {
-		if (bound.containsKey( name )) {
-			RDFNode value = bound.get( name );
-			if (value == null) throw new RuntimeException( "circularity in variable definitions involving " + name );
-			return value.asLiteral().getLexicalForm();			
+	private static String evaluate( String name, Variables bound, Variables toDo ) {
+		if (bound.hasVariable( name )) {
+			Variable v = bound.get( name );
+			if (v == null) throw new RuntimeException( "circularity in variable definitions involving " + name );
+			return v.valueString();			
 		} else {
 			bound.put( name, null );
-			String valueString = toDo.get( name );
+			Variable x = toDo.get( name );			
+			String valueString = x.valueString();
 			if (valueString == null) {
 				log.warn( "no value for variable " + name );
 				valueString = "(no value for " + name + ")";

@@ -7,6 +7,8 @@
 */
 package com.epimorphics.lda.rdfq;
 
+import com.hp.hpl.jena.vocabulary.XSD;
+
 /**
     A skinny set of classes for representing SPARQL atomic terms,
     triples, and infix expressions.
@@ -18,13 +20,22 @@ public class RDFQ
 	public static abstract class Any 
 		{
 		@Override public String toString()
+			{ return "<!! " + asSparqlTerm() + "!!>"; }
+		
+		@Override public boolean equals( Object other )
 			{ throw new UnsupportedOperationException(); }
 		
 		public abstract String asSparqlTerm();
+		
+		public abstract boolean isFinal();
 		}
 	
 	public static abstract class Fixed extends RDFQ.Any 
-		{}
+		{
+		public abstract Fixed replaceBy( String r );
+		
+		public abstract String spelling();
+		}
 	
 	public static class Resource extends RDFQ.Fixed 
 		{
@@ -33,8 +44,23 @@ public class RDFQ
 		public Resource( String URI ) 
 			{ this.URI = URI; }
 		
-		public String asSparqlTerm()
+		@Override public String asSparqlTerm()
 			{ return "<" + URI + ">"; }
+
+		@Override public boolean isFinal() 
+			{ return !URI.contains( "{" ); }
+
+		@Override public Resource replaceBy( String r ) 
+			{ return new Resource( r ); }
+
+		@Override public String spelling() 
+			 { return URI; }
+		
+		@Override public boolean equals( Object other )
+			{ return other instanceof Resource && same( (Resource) other ); }
+
+		private boolean same( Resource other ) 
+			{ return URI.equals( other.URI ); }
 		}
 	
 	public static class Literal extends RDFQ.Fixed 
@@ -53,12 +79,34 @@ public class RDFQ
 			this.datatype = datatype == null ? "" : datatype; 
 			}
 		
-		public String asSparqlTerm()
+		@Override public String asSparqlTerm()
 			{ 
 			String lf = "\"" + spelling.replaceAll( "\\\\", "\\\\" ) + "\"";
+			if (datatype.equals( XSD.integer.getURI() )) return spelling;
 			if (language.length() > 0) return lf + "@" + language;
 			if (datatype.length() > 0) return lf + "^^<" + datatype + ">";
 			return lf;
+			}
+
+		@Override public boolean isFinal() 
+			{ return !spelling.contains( "{" ); }
+
+		@Override public Literal replaceBy( String r ) 
+			{ return new Literal( r, language, datatype ); }
+
+		@Override public String spelling() 
+			 { return spelling; }
+		
+		@Override public boolean equals( Object other )
+			{ return other instanceof Literal && same( (Literal) other ); }
+
+		private boolean same( Literal other ) 
+			{ 
+			return 
+				spelling.equals( other.spelling ) 
+				&& language.equals( other.language ) 
+				&& datatype.equals( other.datatype )
+				; 
 			}
 		}
 	
@@ -72,8 +120,11 @@ public class RDFQ
 		public String name()
 			{ return name; }
 		
-		public String asSparqlTerm()
+		@Override public String asSparqlTerm()
 			{ return name; }
+
+		@Override public boolean isFinal() 
+			{ return false; }
 		}
 	
 	public static class Triple 

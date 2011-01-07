@@ -61,6 +61,9 @@ public class TestSelectParameter
 			@Override public Resource normalizeResource(RDFNode r) 
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			
+			@Override public Resource normalizeResource(RDFQ.Fixed r) 
+				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
+			
 			@Override public String normalizeNodeToString(String prop, String val) 
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			

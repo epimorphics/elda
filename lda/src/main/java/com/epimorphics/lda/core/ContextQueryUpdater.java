@@ -106,7 +106,7 @@ public class ContextQueryUpdater {
 			setViewByExplicitClause( val );
 			query.setViewByTemplateClause( val );
 		} else {
-			log.info( "handleParam: " + p + " with value: " + val );
+			log.debug( "handleParam: " + p + " with value: " + val );
 //			System.err.println( ">> handleParam: " + p + " with value: " + val );
 			query.addFilterFromQuery( Param.make( pString ), val );
 		}

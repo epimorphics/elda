@@ -39,6 +39,7 @@ import com.epimorphics.lda.core.APIEndpointException;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.QueryParseException;
+import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.renderers.JSONRenderer;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.restlets.support.SDX_URI_ConnegFilter;
@@ -123,7 +124,7 @@ public class RouterRestlet {
                 }
             }
         }
-        return match == null ? null : new Match( match.getValue(), bindings );
+        return match == null ? null : new Match( match.getValue(), Variables.uplift( bindings ) );
     }
     
     

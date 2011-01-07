@@ -36,6 +36,8 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.APISpec;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.VariableExtractor.Variable;
+import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
 import com.epimorphics.vocabs.API;
@@ -134,9 +136,16 @@ public class APITester {
             throw new APIException("Tester failed to find routed endpoint: " + uriTemplate);
         MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( queryString );
         APITesterUriInfo ui = new APITesterUriInfo( uriTemplate, map );
-		CallContext call = CallContext.createContext( ui, match.bindings );
+		CallContext call = CallContext.createContext( ui, fix( match.bindings ) );
         return match.endpoint.call(call);
     }
+
+	private Variables fix(Map<String, String> bindings) {
+		Variables result = new Variables();
+		for (String key: bindings.keySet())
+			result.put( key, new Variable( key, "", "", bindings.get(key) ) );
+		return result;
+	}
 
 	/**
      * Render  results as JSON, using context mappings from the API

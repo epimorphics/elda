@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.epimorphics.lda.core.VariableExtractor.Variable;
+import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
@@ -69,6 +71,18 @@ public class MakeData
 		Properties result = new Properties();
 		Map<String, String> h = hashMap( bindings );
 		for (Map.Entry<String, String> e: h.entrySet()) result.put( e.getKey(), e.getValue() );
+		return result;
+		}
+
+	public static Variables variables( String bindings ) 
+		{
+		Variables result = new Variables();
+		if (bindings.length() > 0)
+			for (String b: bindings.split( " +" ))
+				{
+				String [] parts = b.split( "=" );
+				result.put( parts[0], new Variable( parts[0], "", "", parts[1] ) );
+				}
 		return result;
 		}
 	}

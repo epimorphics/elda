@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIQuery.Param;
+import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
@@ -47,7 +48,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     public final int defaultPageSize;
     public final int maxPageSize;
 
-    protected final Map<String, RDFNode> bindings = new HashMap<String, RDFNode>();
+    protected final Variables bindings = new Variables();
     
     static Logger log = LoggerFactory.getLogger(APIEndpointSpec.class);
     
@@ -267,7 +268,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         return views.get( View.SHOW_DEFAULT_INTERNAL );
     }
 
-	public Map<String, RDFNode> getBindings() {
+	public Variables getBindings() {
 		return bindings;
 	}
 
@@ -280,13 +281,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	    mapping is supposed to be: not convinced that the SNS conversion is
 	    enough. Typed literals are a concern.
 	*/
-	public Map<String, String> getParameterBindings() {
-		ShortnameService sns = apiSpec.getShortnameService();
-		Map<String, String> result = new HashMap<String, String>();
-		for (Map.Entry<String, RDFNode> e: bindings.entrySet()) {
-			result.put( e.getKey(), sns.shorten( sns.normalizeResource( e.getValue() ).getURI() ) );
-		}
-		return result;
+	public Variables getParameterBindings() {
+		return new Variables( bindings );
 	}
 
 	/**

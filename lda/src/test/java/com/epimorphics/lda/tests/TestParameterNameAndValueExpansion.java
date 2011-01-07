@@ -16,6 +16,7 @@ import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ContextQueryUpdater;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.NamedViews;
+import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -78,7 +79,7 @@ public class TestParameterNameAndValueExpansion
 		{
 		MultivaluedMap<String, String> qp = MultiValuedMapSupport.parseQueryString( "{aname}=value" );
 		UriInfo ui = new APITesterUriInfo( "my:URI", qp );
-		Map<String, String> bindings = MakeData.hashMap( "aname=bname" );
+		Variables bindings = MakeData.variables( "aname=bname" );
 		CallContext cc = CallContext.createContext( ui, bindings );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "bname=eh:/full-bname" );

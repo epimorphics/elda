@@ -77,7 +77,7 @@ public class ExploreTestingForLatAndLongEtc
 		APIEndpoint e = new APIEndpointImpl( spec );
 		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( settings.replaceAll( " ", "\\&" ) );
 		APITesterUriInfo info = new APITesterUriInfo( "http://dummy/doc/schools", map );
-		CallContext cc = CallContext.createContext( info, MakeData.hashMap( settings ) );
+		CallContext cc = CallContext.createContext( info, MakeData.variables( settings ) );
 		APIResultSet rs = e.call( cc );
 		return new HashSet<Resource>( rs.getResultList() );
 		}

@@ -27,6 +27,7 @@ import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.RDFQ.Any;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.datatypes.BaseDatatype;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
@@ -110,7 +111,13 @@ public class StandardShortnameService implements ShortnameService {
         throw new APIException("Failed to expand resource: " + res);
     }
 
-    public Resource normalizeResource(String res) {
+	@Override public Resource normalizeResource( RDFQ.Fixed r ) {
+		if (r instanceof RDFQ.Resource) return ResourceFactory.createResource( r.spelling() );
+		if (r instanceof RDFQ.Literal) return normalizeResource( r.spelling() );
+        throw new APIException( "Failed to expand resource: " + r );
+	}
+	
+    @Override public Resource normalizeResource(String res) {
         String uri = expand( res );
         if (uri == null &&  RDFUtil.looksLikeURI(res)) {
             uri = res;
@@ -156,7 +163,10 @@ public class StandardShortnameService implements ShortnameService {
                         } else {
                         	RDFDatatype dt = TypeMapper.getInstance().getTypeByName(type);
                         	if (dt == null) dt = fakeDatatype( type );
-                        	return Node.createLiteral( nodeValue, null, dt );
+                        	if (dt.getURI().equals( RDFUtil.RDFPlainLiteral ))
+                        		return Node.createLiteral( nodeValue );
+                        	else
+                        		return Node.createLiteral( nodeValue, null, dt );
                         }
                     } else {
                         return Node.createLiteral(nodeValue);

@@ -46,7 +46,7 @@ public class SparqlSource implements Source {
     
     @Override public QueryExecution execute(Query query) {
         if (log.isInfoEnabled()) {
-            log.info("Running query on " + sparqlEndpoint + ":\n" + query);
+            log.debug("Running query on " + sparqlEndpoint + ":\n" + query);
         }
         return QueryExecutionFactory.sparqlService(sparqlEndpoint, query);
     }

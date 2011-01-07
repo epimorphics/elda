@@ -2,21 +2,21 @@ package com.epimorphics.lda.apispec.tests;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Test;
 
-import org.hamcrest.core.IsNot;
+import org.hamcrest.core.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.APIEndpointSpec;
 import com.epimorphics.lda.core.APISpec;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.VariableExtractor.Variable;
+import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.tests_support.Matchers;
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class TestAPISpecExtractsVariables 
 	{
@@ -108,30 +108,38 @@ public class TestAPISpecExtractsVariables
 		assertEquals( binding("tom=17;fred='17';harry='x17y'"), s.getEndpoints().get(0).getBindings() );
 		}
 	
-	public void testVariableExtraction(String expected, String spec) 
+	public void testVariableExtraction( String expected, String spec ) 
 		{
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
 		APISpec s = new APISpec( root, NoLoader );
 //		System.err.println( ">> expected: " + expected );
 //		System.err.println( ">> got:      " + s.getBindings() );
+		assertThat( s.getBindings(), Is.is( binding( expected ) ) );
 		assertEquals( binding( expected ), s.getBindings() );
 		}
 	
-	private RDFNode term( String term )
+	private Node term( String term )
 		{
 		Model m = ModelIOUtils.modelFromTurtle( ":x :value " + term + " ." );
-		return m.listStatements().toList().get(0).getObject();
+		return m.listStatements().toList().get(0).getObject().asNode();
 		}
 
-	private Map<String, RDFNode> binding( String desc ) 
+	private Variable asVar( String name, Node n ) 
 		{
-		Map<String, RDFNode> result = new HashMap<String, RDFNode>();
+		if (n.isURI()) return new Variable( name, "", RDFS.Resource.getURI(), n.getURI() );
+		if (n.isLiteral()) return new Variable( name, n.getLiteralLanguage(), n.getLiteralDatatypeURI(), n.getLiteralLexicalForm() );
+		throw new RuntimeException( "cannot convert " + n + " to an RDFQ node" );
+		}
+
+	private Variables binding( String desc ) 
+		{
+		Variables result = new Variables();
 		if (desc.length() > 0)
 			for (String bind: desc.split(" *; *" ))
 				{
 				String [] parts = bind.split( "=" );
-				result.put( parts[0], term(parts[1]) );
+				result.put( parts[0], asVar( parts[0], term( parts[1] ) ) );
 				}
 		return result;
 		}
