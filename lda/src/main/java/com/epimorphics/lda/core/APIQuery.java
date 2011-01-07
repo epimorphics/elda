@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.RDFQ.Any;
+import com.epimorphics.lda.rdfq.RDFQ.Render;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.LARQManager;
@@ -298,6 +300,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	}
     
     private Map<String, String> languagesFor = new HashMap<String, String>();
+        
+    public void clearLanguages() {
+    	languagesFor.clear();
+    }
     
     public void setLanguagesFor( String fullParamName, String languages ) {
     	System.err.println( ">> set languages for '" + fullParamName + "' to '" + languages + "'." );
@@ -425,20 +431,42 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
      * account the type of the property and created typed literals if necessary.
      */
     private void addTriplePattern( RDFQ.Variable var, String prop, String languages, String val ) {
+    	Resource np = sns.normalizeResource(prop);
     	if (languages == null) {
 	    	if (val.startsWith("?")) {
 	    		// Record property which points to this variable for us in decoding binding values
 	    		varProps.put(val.substring(1), prop);   
 	    	}
-	        addTriplePattern( var, sns.normalizeResource(prop), sns.normalizeNodeToRDFQ(prop, val, defaultLanguage) ); 
+			addTriplePattern( var, np, sns.normalizeNodeToRDFQ(prop, val, defaultLanguage) ); 
     	} else {
-    		for (String lang: languages.split( "," )) {
-    	        addTriplePattern( var, sns.normalizeResource(prop), sns.normalizeNodeToRDFQ( prop, val, lang ) ); 
-    		}
+    		addLanguagedTriplePattern(var, prop, languages, val);
     	}
     }
+
+	private void addLanguagedTriplePattern(RDFQ.Variable var, String prop, String languages, String val) {
+		String[] langArray = languages.split( "," );
+		Resource np = sns.normalizeResource(prop);
+		if (langArray.length == 1) {
+			addTriplePattern( var, np, sns.normalizeNodeToRDFQ( prop, val, langArray[0] ) ); 
+		} else {
+			RDFQ.Variable v = newVar();
+			addTriplePattern( var, np, v );
+			RDFQ.Apply stringOf = RDFQ.apply( "str", v );
+			RDFQ.Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
+			RDFQ.Infix filter = RDFQ.infix( equals, "&&", someOf( v, langArray ) );
+			filterExpressions.add( filter );
+		}
+	}
     
-    private void addTriplePattern( RDFQ.Variable var, String prop, RDFQ.Variable val ) {
+    private Render someOf( RDFQ.Variable v, String[] langArray ) 
+    	{
+    	Render result = RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( langArray[0] ) );
+    	for (int i = 1; i < langArray.length; i += 1)
+    		result = RDFQ.infix( result, "||", RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( langArray[i] ) ) );
+    	return result;
+    	}
+
+	private void addTriplePattern( RDFQ.Variable var, String prop, RDFQ.Variable val ) {
    		// Record property which points to this variable for us in decoding binding values
    		varProps.put( val.name().substring(1), prop );   
         addTriplePattern( var, sns.normalizeResource(prop), val ); 
@@ -455,6 +483,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected String addPropertyHasValue( Param param, String rawValue ) {
     	String languages = languagesFor.get( param.toString() );
     	if (languages == null) languages = defaultLanguage;
+    	// System.err.println( ">> addPropertyHasValue for " + param + ", languages '" + languages + "'" );
         String[] path = param.parts();
         RDFQ.Variable var = SELECT_VAR;
         int i = 0;
@@ -582,24 +611,28 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	        }
 	        q.append(" OFFSET " + (pageNumber * pageSize));
 	        q.append(" LIMIT " + pageSize);
+	        System.err.println( ">> QUERY IS: \n" + q.toString() );
 	        return q.toString();
     	} else {
     		return fixedQueryString;
     	}
     }
 
-	public void appendFilterExpressions(StringBuffer q) {
+	public void appendFilterExpressions( StringBuffer q ) {
 		if (filterExpressions.size() > 0) {
-			String and = "";
-			q.append( " FILTER (" );
-			for (RDFQ.Infix inf: filterExpressions) {				
-				q
-					.append( and ).append( inf.L.asSparqlTerm() )
-					.append( " " ).append( inf.op )
-					.append( " " ).append( inf.R.asSparqlTerm() );
-				and = "&&";
-			}
-			q.append( ") " );
+//			String and = "";
+//			q.append( " FILTER (" );
+//			for (RDFQ.Infix inf: filterExpressions) {				
+//				q
+//					.append( and ).append( inf.L.asSparqlTerm() )
+//					.append( " " ).append( inf.op )
+//					.append( " " ).append( inf.R.asSparqlTerm() );
+//				and = "&&";
+//			}
+//			q.append( ") " );
+			for (RDFQ.Infix i: filterExpressions) {
+				q.append( i.asSparqlFilter() );
+			}				
 		}
 	}
 

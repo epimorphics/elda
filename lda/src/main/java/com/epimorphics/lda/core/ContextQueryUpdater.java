@@ -58,6 +58,7 @@ public class ContextQueryUpdater {
 	*/
     public View updateQueryAndConstructView() {	  
     	query.activateDeferredFilters( context );
+    	query.clearLanguages();
     	for (String param: context.getFilterPropertyNames()) 
     		if (param.startsWith( APIQuery.LANG_PREFIX ))
     			handleLangPrefix( param );
@@ -70,7 +71,7 @@ public class ContextQueryUpdater {
 
 	private void handleLangPrefix( String taggedParam ) {
 		String param = taggedParam.substring( APIQuery.LANG_LEN );
-		String val = context.expand( context.getParameterValue( param ) );
+		String val = context.expand( context.getParameterValue( taggedParam ) );
 		String pString = context.expand( param );
 		query.setLanguagesFor( pString, val );
 	}

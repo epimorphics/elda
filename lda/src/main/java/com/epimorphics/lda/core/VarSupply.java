@@ -20,8 +20,7 @@ public interface VarSupply {
 	
 	/**
 	    Answer a new variable not equal to any that this VarSupply has
-	    delivered before. NOTE String is sub-optimal, should replace with
-	    better type later.
+	    delivered before. 
 	*/
 	public RDFQ.Variable newVar();
 

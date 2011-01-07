@@ -17,13 +17,25 @@ import com.hp.hpl.jena.vocabulary.XSD;
 */
 public class RDFQ
 	{
-	public static abstract class Any 
+	public interface Render
+		{
+		public StringBuilder render( StringBuilder out );
+		public StringBuilder renderWrapped( StringBuilder out );
+		}
+	
+	public static abstract class Any implements Render
 		{
 		@Override public String toString()
 			{ return "<!! " + asSparqlTerm() + "!!>"; }
 		
 		@Override public boolean equals( Object other )
 			{ throw new UnsupportedOperationException(); }
+		
+		public StringBuilder render( StringBuilder out )
+			{ return out.append( asSparqlTerm() ); }
+		
+		public StringBuilder renderWrapped( StringBuilder out )
+			{ return render( out.append( "(" ) ).append( ")" ); }
 		
 		public abstract String asSparqlTerm();
 		
@@ -35,6 +47,9 @@ public class RDFQ
 		public abstract Fixed replaceBy( String r );
 		
 		public abstract String spelling();
+		
+		public StringBuilder renderWrapped( StringBuilder out )
+			{ return out.append( asSparqlTerm() ); }
 		}
 	
 	public static class Resource extends RDFQ.Fixed 
@@ -135,13 +150,57 @@ public class RDFQ
 			{ this.S = S; this.P = P; this.O = O; }
 		}
 	
-	public static class Infix
+	public static class Apply implements Render
 		{
-		public final Any L, R;
-		public final String op;
+		private final String f;
+		private final Render x;
 		
-		public Infix( Any L, String op, Any R )
+		public Apply( String f, Render x ) 
+			{ this.f = f; this.x = x; }
+
+		@Override public StringBuilder render( StringBuilder out ) 
+			{
+			out.append( f );
+			x.renderWrapped( out );
+			return out;
+			}
+
+		@Override public StringBuilder renderWrapped( StringBuilder out ) 
+			{ return render( out );	}
+		}
+	
+	public static class Infix implements Render
+		{
+		private final Render L, R;
+		private final String op;
+		
+		public Infix( Render L, String op, Render R )
 			{ this.L = L; this.op = op; this.R = R; }
+
+		public String asSparqlFilter() 
+			{
+			StringBuilder result = new StringBuilder();
+			result.append( "FILTER (" );
+			render( result );
+			result.append( ")" );
+			return result.toString();
+			}
+
+		public StringBuilder render( StringBuilder out ) 
+			{
+			L.renderWrapped( out );
+			out.append( " " ).append( op ).append( " " );
+			R.renderWrapped( out );
+			return out;
+			}
+
+		@Override public StringBuilder renderWrapped( StringBuilder out ) 
+			{
+			out.append( "(" );
+			render( out );
+			out.append( ")" );
+			return out;
+			}
 		}
 	
 	public static Literal literal( double d )
@@ -153,7 +212,10 @@ public class RDFQ
 			};
 		}
 	
-	public static Infix infix( Any L, String op, Any R ) 
+	public static Apply apply( String f, Render X ) 
+		{ return new Apply( f, X ); }
+	
+	public static Infix infix( Render L, String op, Render R ) 
 		{ return new Infix( L, op, R ); }
 	
 	public static Resource uri( String URI ) 
