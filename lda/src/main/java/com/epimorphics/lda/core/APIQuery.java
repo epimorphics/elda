@@ -619,21 +619,9 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
 
 	public void appendFilterExpressions( StringBuffer q ) {
-		if (filterExpressions.size() > 0) {
-//			String and = "";
-//			q.append( " FILTER (" );
-//			for (RDFQ.Infix inf: filterExpressions) {				
-//				q
-//					.append( and ).append( inf.L.asSparqlTerm() )
-//					.append( " " ).append( inf.op )
-//					.append( " " ).append( inf.R.asSparqlTerm() );
-//				and = "&&";
-//			}
-//			q.append( ") " );
-			for (RDFQ.Infix i: filterExpressions) {
-				q.append( i.asSparqlFilter() );
-			}				
-		}
+		for (RDFQ.Infix i: filterExpressions) {
+			q.append( i.asSparqlFilter() );
+		}				
 	}
 
 	public String constructBGP() {

@@ -138,6 +138,9 @@ public class RDFQ
 		@Override public String asSparqlTerm()
 			{ return name; }
 
+		@Override public StringBuilder renderWrapped( StringBuilder out ) 
+			{ return out.append( name ); }
+
 		@Override public boolean isFinal() 
 			{ return false; }
 		}
@@ -161,7 +164,9 @@ public class RDFQ
 		@Override public StringBuilder render( StringBuilder out ) 
 			{
 			out.append( f );
-			x.renderWrapped( out );
+			out.append( "(" );
+			x.render( out );
+			out.append( ")" );
 			return out;
 			}
 
