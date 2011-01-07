@@ -28,6 +28,8 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
+import com.epimorphics.lda.bindings.Binding;
+import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointSpec;
 import com.epimorphics.lda.core.APIException;
@@ -36,8 +38,6 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.APISpec;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ModelLoaderI;
-import com.epimorphics.lda.core.VariableExtractor.Variable;
-import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
 import com.epimorphics.vocabs.API;
@@ -140,10 +140,10 @@ public class APITester {
         return match.endpoint.call(call);
     }
 
-	private Variables fix(Map<String, String> bindings) {
-		Variables result = new Variables();
+	private BindingSet fix(Map<String, String> bindings) {
+		BindingSet result = new BindingSet();
 		for (String key: bindings.keySet())
-			result.put( key, new Variable( key, "", "", bindings.get(key) ) );
+			result.put( key, new Binding( key, "", "", bindings.get(key) ) );
 		return result;
 	}
 

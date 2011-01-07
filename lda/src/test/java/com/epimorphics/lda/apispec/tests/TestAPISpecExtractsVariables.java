@@ -7,11 +7,11 @@ import org.junit.Test;
 import org.hamcrest.core.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.bindings.Binding;
+import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIEndpointSpec;
 import com.epimorphics.lda.core.APISpec;
 import com.epimorphics.lda.core.ModelLoaderI;
-import com.epimorphics.lda.core.VariableExtractor.Variable;
-import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.tests_support.Matchers;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -125,16 +125,16 @@ public class TestAPISpecExtractsVariables
 		return m.listStatements().toList().get(0).getObject().asNode();
 		}
 
-	private Variable asVar( String name, Node n ) 
+	private Binding asVar( String name, Node n ) 
 		{
-		if (n.isURI()) return new Variable( name, "", RDFS.Resource.getURI(), n.getURI() );
-		if (n.isLiteral()) return new Variable( name, n.getLiteralLanguage(), n.getLiteralDatatypeURI(), n.getLiteralLexicalForm() );
+		if (n.isURI()) return new Binding( name, "", RDFS.Resource.getURI(), n.getURI() );
+		if (n.isLiteral()) return new Binding( name, n.getLiteralLanguage(), n.getLiteralDatatypeURI(), n.getLiteralLexicalForm() );
 		throw new RuntimeException( "cannot convert " + n + " to an RDFQ node" );
 		}
 
-	private Variables binding( String desc ) 
+	private BindingSet binding( String desc ) 
 		{
-		Variables result = new Variables();
+		BindingSet result = new BindingSet();
 		if (desc.length() > 0)
 			for (String bind: desc.split(" *; *" ))
 				{

@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.support.PropertyChainTranslator;
 
@@ -60,7 +61,7 @@ public class TestPropertyChainToSPARQLTranslator
 		{
 		int count = 0;
 		
-		@Override public RDFQ.Variable newVar() 
+		@Override public Variable newVar() 
 			{ return RDFQ.var( "v" + ++count ); }
 		}
 	}

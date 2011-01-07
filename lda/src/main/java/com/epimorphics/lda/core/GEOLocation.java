@@ -11,7 +11,7 @@
  */
 package com.epimorphics.lda.core;
 
-import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.support.NumericArgUtils;
 import com.epimorphics.lda.vocabularies.GEOStub;
 
@@ -40,7 +40,7 @@ public class GEOLocation
 			double deltaLat = NumericArgUtils.deltaLat( d, lat, lang );
 			double deltaLong = NumericArgUtils.deltaLong( d, lat, lang );
 		//
-		    RDFQ.Variable latVar = query.newVar(), longVar = query.newVar();
+		    Variable latVar = query.newVar(), longVar = query.newVar();
 		    query
 		        .addSubjectHasProperty( GEOStub.LAT, latVar )
 		        .addSubjectHasProperty( GEOStub.LONG, longVar )

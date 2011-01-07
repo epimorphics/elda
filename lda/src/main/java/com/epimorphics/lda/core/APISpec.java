@@ -21,7 +21,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.VariableExtractor.Variables;
+import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.sources.GetDataSource;
@@ -62,7 +63,7 @@ public class APISpec {
     public final int maxPageSize;
     
     protected final List<Source> describeSources;
-    protected final Variables bindings = new Variables();
+    protected final BindingSet bindings = new BindingSet();
     
     public APISpec(Resource specification, ModelLoaderI loader) {
     	specificationURI = specification.getURI();
@@ -173,7 +174,7 @@ public class APISpec {
         return describeSources;
     }
 
-	public Variables getBindings() {
+	public BindingSet getBindings() {
 		return bindings;
 	}
 

@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.Any;
+import com.epimorphics.lda.rdfq.Term;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -67,7 +68,7 @@ public interface ShortnameService
 	    If r is a resource, answer r; if it is a literal with lexical form l,
 	    answer normaliseResource(l); otherwise throw an API exception.
 	*/
-	public Resource normalizeResource( RDFQ.Fixed r );
+	public Resource normalizeResource( Term r );
 	
 	/**
 	    Answer a resource with uri = expand(s). If there's no such expansion
@@ -96,7 +97,7 @@ public interface ShortnameService
 	    (if non-null) will be used as the language encoding for any
 	    plain literals
 	*/
-	public RDFQ.Any normalizeNodeToRDFQ( String prop, String val, String language );
+	public Any normalizeNodeToRDFQ( String prop, String val, String language );
 
 	/**
 	    Answer a string which is the SPARQL representation of the value

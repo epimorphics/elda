@@ -17,8 +17,8 @@
 
 package com.epimorphics.lda.routing;
 
+import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.core.VariableExtractor.Variables;
 
 /**
  * Represents the result of a router maching an incoming URL
@@ -29,16 +29,16 @@ import com.epimorphics.lda.core.VariableExtractor.Variables;
  */
 public class Match {
     final APIEndpoint endpoint;
-    final Variables bindings;
+    final BindingSet bindings;
 
-    public Match( APIEndpoint endpoint, Variables bindings )
+    public Match( APIEndpoint endpoint, BindingSet bindings )
         { this.endpoint = endpoint; this.bindings = bindings; }
 
     public APIEndpoint getEndpoint() {
         return endpoint;
     }
     
-    public Variables getBindings() {
+    public BindingSet getBindings() {
         return bindings;
     }
 }

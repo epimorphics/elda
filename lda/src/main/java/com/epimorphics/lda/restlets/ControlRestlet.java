@@ -36,10 +36,10 @@ import javax.ws.rs.core.UriInfo;
 import org.openjena.atlas.json.JsonException;
 
 import com.epimorphics.jsonrdf.Encoder;
+import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointSpec;
 import com.epimorphics.lda.core.APIException;
-import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
@@ -111,7 +111,7 @@ public class ControlRestlet {
             return isAPI;
         }
         
-        public Variables getBindings() {
+        public BindingSet getBindings() {
             return match.getBindings();
         }
     }

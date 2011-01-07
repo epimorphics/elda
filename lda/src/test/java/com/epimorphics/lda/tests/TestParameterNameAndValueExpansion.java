@@ -10,14 +10,15 @@ import javax.ws.rs.core.UriInfo;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIQuery;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ContextQueryUpdater;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.NamedViews;
-import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.core.View;
+import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.MultiValuedMapSupport;
@@ -79,7 +80,7 @@ public class TestParameterNameAndValueExpansion
 		{
 		MultivaluedMap<String, String> qp = MultiValuedMapSupport.parseQueryString( "{aname}=value" );
 		UriInfo ui = new APITesterUriInfo( "my:URI", qp );
-		Variables bindings = MakeData.variables( "aname=bname" );
+		BindingSet bindings = MakeData.variables( "aname=bname" );
 		CallContext cc = CallContext.createContext( ui, bindings );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "bname=eh:/full-bname" );
@@ -103,7 +104,7 @@ public class TestParameterNameAndValueExpansion
 			return ResourceFactory.createResource( u );
 			}
 
-		@Override public RDFQ.Any normalizeNodeToRDFQ( String prop, String val, String language ) 
+		@Override public Any normalizeNodeToRDFQ( String prop, String val, String language ) 
 			{
 			return RDFQ.literal( val );
 			}

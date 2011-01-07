@@ -14,7 +14,8 @@ import org.junit.Test;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.core.APIQuery;
-import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.Any;
+import com.epimorphics.lda.rdfq.Term;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -61,7 +62,7 @@ public class TestSelectParameter
 			@Override public Resource normalizeResource(RDFNode r) 
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			
-			@Override public Resource normalizeResource(RDFQ.Fixed r) 
+			@Override public Resource normalizeResource(Term r) 
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			
 			@Override public String normalizeNodeToString(String prop, String val) 
@@ -79,7 +80,7 @@ public class TestSelectParameter
 			@Override public String normalizeValue(String val, String language) 
 				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
 
-			@Override public RDFQ.Any normalizeNodeToRDFQ(String prop, String val, String language) 
+			@Override public Any normalizeNodeToRDFQ(String prop, String val, String language) 
 				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
 
     		};

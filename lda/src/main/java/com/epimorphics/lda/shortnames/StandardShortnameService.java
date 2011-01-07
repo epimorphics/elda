@@ -26,8 +26,11 @@ import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.rdfq.Any;
+import com.epimorphics.lda.rdfq.LiteralNode;
 import com.epimorphics.lda.rdfq.RDFQ;
-import com.epimorphics.lda.rdfq.RDFQ.Any;
+import com.epimorphics.lda.rdfq.Term;
+import com.epimorphics.lda.rdfq.URINode;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.datatypes.BaseDatatype;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
@@ -111,9 +114,9 @@ public class StandardShortnameService implements ShortnameService {
         throw new APIException("Failed to expand resource: " + res);
     }
 
-	@Override public Resource normalizeResource( RDFQ.Fixed r ) {
-		if (r instanceof RDFQ.Resource) return ResourceFactory.createResource( r.spelling() );
-		if (r instanceof RDFQ.Literal) return normalizeResource( r.spelling() );
+	@Override public Resource normalizeResource( Term r ) {
+		if (r instanceof URINode) return ResourceFactory.createResource( r.spelling() );
+		if (r instanceof LiteralNode) return normalizeResource( r.spelling() );
         throw new APIException( "Failed to expand resource: " + r );
 	}
 	
@@ -213,7 +216,7 @@ public class StandardShortnameService implements ShortnameService {
     	return normalizeNodeToString(p, nodeValue, null);
     }
     
-    public RDFQ.Any normalizeNodeToRDFQ( String p, String nodeValue, String language ) {
+    public Any normalizeNodeToRDFQ( String p, String nodeValue, String language ) {
         Node n = normalizeNode( p, nodeValue );
     	if (n.isURI()) return RDFQ.uri( n.getURI() );
     	if (n.isVariable()) return RDFQ.var( "?" + n.getName() );

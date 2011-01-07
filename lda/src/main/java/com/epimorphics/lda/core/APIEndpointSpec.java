@@ -16,8 +16,9 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.APIQuery.Param;
-import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
@@ -48,7 +49,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     public final int defaultPageSize;
     public final int maxPageSize;
 
-    protected final Variables bindings = new Variables();
+    protected final BindingSet bindings = new BindingSet();
     
     static Logger log = LoggerFactory.getLogger(APIEndpointSpec.class);
     
@@ -268,7 +269,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         return views.get( View.SHOW_DEFAULT_INTERNAL );
     }
 
-	public Variables getBindings() {
+	public BindingSet getBindings() {
 		return bindings;
 	}
 
@@ -281,8 +282,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	    mapping is supposed to be: not convinced that the SNS conversion is
 	    enough. Typed literals are a concern.
 	*/
-	public Variables getParameterBindings() {
-		return new Variables( bindings );
+	public BindingSet getParameterBindings() {
+		return new BindingSet( bindings );
 	}
 
 	/**

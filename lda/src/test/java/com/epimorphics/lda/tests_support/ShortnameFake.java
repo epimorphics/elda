@@ -9,8 +9,8 @@
 package com.epimorphics.lda.tests_support;
 
 import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.lda.rdfq.RDFQ;
-import com.epimorphics.lda.rdfq.RDFQ.Fixed;
+import com.epimorphics.lda.rdfq.Any;
+import com.epimorphics.lda.rdfq.Term;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -39,7 +39,7 @@ public class ShortnameFake implements ShortnameService
 		throw new NotImplementedException();
 		}
 
-	@Override public Resource normalizeResource( Fixed r ) {
+	@Override public Resource normalizeResource( Term r ) {
 		throw new NotImplementedException();
 		}
 
@@ -63,7 +63,7 @@ public class ShortnameFake implements ShortnameService
 		throw new NotImplementedException();
 		}
 
-	@Override public RDFQ.Any normalizeNodeToRDFQ(String prop, String val, String language) {
+	@Override public Any normalizeNodeToRDFQ(String prop, String val, String language) {
 		throw new NotImplementedException();
 		}
 }

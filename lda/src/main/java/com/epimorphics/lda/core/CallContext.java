@@ -24,8 +24,8 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.VariableExtractor.Variable;
-import com.epimorphics.lda.core.VariableExtractor.Variables;
+import com.epimorphics.lda.bindings.Binding;
+import com.epimorphics.lda.bindings.BindingSet;
 import com.hp.hpl.jena.util.OneToManyMap;
 
 /**
@@ -39,7 +39,7 @@ public class CallContext {
 
     static Logger log = LoggerFactory.getLogger( CallContext.class );
     
-    protected OneToManyMap<String, Variable> parameters = new OneToManyMap<String, Variable>();
+    protected OneToManyMap<String, Binding> parameters = new OneToManyMap<String, Binding>();
     protected UriInfo uriInfo = null;
     protected String mediaSuffix = "";
     
@@ -51,25 +51,25 @@ public class CallContext {
         Copy the given call-context, but add any bindings from the map
         for unset parameters.
     */
-    public CallContext( Variables defaults, CallContext toCopy ) {
+    public CallContext( BindingSet defaults, CallContext toCopy ) {
     	this.uriInfo = toCopy.uriInfo;
     	defaults.putInto( this.parameters ); // this.parameters.putAll( defaults );
     	this.parameters.putAll( toCopy.parameters );
     	this.mediaSuffix = toCopy.getMediaSuffix();
     }
     
-	public static CallContext createContext( UriInfo ui, Variables bindings ) {
+	public static CallContext createContext( UriInfo ui, BindingSet bindings ) {
 		return createContext( ui, bindings, "" );
 	}
     
-	public static CallContext createContext( UriInfo ui, Variables bindings, String mediaSuffix ) {
+	public static CallContext createContext( UriInfo ui, BindingSet bindings, String mediaSuffix ) {
 	    MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 	    CallContext cc = new CallContext( ui );
 	    cc.mediaSuffix = mediaSuffix;
 	    bindings.putInto( cc.parameters );
 	    for (Map.Entry<String, List<String>> e : queryParams.entrySet()) {
 	        String name = e.getKey();
-	        Variable basis = Variable.make( name, cc.parameters.get( name ) );
+	        Binding basis = Binding.make( name, cc.parameters.get( name ) );
 	        for (String val : e.getValue())
 				cc.parameters.put( name, basis.withValueString( val ) );
 	    }
@@ -81,7 +81,7 @@ public class CallContext {
      * the returned one may be arbitrary
      */
     public String getParameterValue(String param) {
-        Variable v = parameters.get( param );
+        Binding v = parameters.get( param );
 		return v == null ? uriInfo.getQueryParameters().getFirst( param ) : v.valueString();
     }
     

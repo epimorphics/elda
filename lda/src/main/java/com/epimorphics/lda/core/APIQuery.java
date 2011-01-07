@@ -19,9 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.cache.Cache;
-import com.epimorphics.lda.rdfq.RDFQ;
-import com.epimorphics.lda.rdfq.RDFQ.Any;
-import com.epimorphics.lda.rdfq.RDFQ.Render;
+import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.LARQManager;
@@ -96,7 +94,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     public static final String SELECT_VARNAME = "item";
     
-    public static final RDFQ.Variable SELECT_VAR = RDFQ.var( "?" + SELECT_VARNAME );
+    public static final Variable SELECT_VAR = RDFQ.var( "?" + SELECT_VARNAME );
     
     public static final String PREFIX_VAR = "?___";
     
@@ -120,7 +118,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         List of little infix expressions (operands must be RDFQ.Any's) which
         are SPARQL filters for this query. 
     */
-    protected List<RDFQ.Infix> filterExpressions = new ArrayList<RDFQ.Infix>();
+    protected List<Infix> filterExpressions = new ArrayList<Infix>();
     
     protected String viewArgument = null;
     
@@ -199,7 +197,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         try {
             APIQuery clone = (APIQuery) super.clone();
             clone.basicGraphTriples = new ArrayList<RDFQ.Triple>( basicGraphTriples );
-            clone.filterExpressions = new ArrayList<RDFQ.Infix>( filterExpressions );
+            clone.filterExpressions = new ArrayList<Infix>( filterExpressions );
             clone.orderExpressions = new StringBuffer( orderExpressions );
             clone.whereExpressions = new StringBuffer( whereExpressions );
             clone.bindableVars = new HashSet<String>( bindableVars );
@@ -306,7 +304,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
     
     public void setLanguagesFor( String fullParamName, String languages ) {
-    	System.err.println( ">> set languages for '" + fullParamName + "' to '" + languages + "'." );
     	languagesFor.put( fullParamName, languages );    
     }
     
@@ -382,19 +379,19 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	viewArgument = clause;
     }
     
-    public APIQuery addNumericRangeFilter( RDFQ.Variable var, double base, double delta ) {
+    public APIQuery addNumericRangeFilter( Variable var, double base, double delta ) {
        addInfixSparqlFilter( RDFQ.literal( base - delta ), "<", var );
        addInfixSparqlFilter( var, "<", RDFQ.literal( base + delta) );
        return this;
     }
 
     protected void addRangeFilter( Param param, String val, String op ) {
-        RDFQ.Variable newvar = newVar(); 
+        Variable newvar = newVar(); 
         String prop = addFilterFromQuery( param, newvar.name() );
         addInfixSparqlFilter( newvar, op, sns.normalizeNodeToRDFQ( prop, val, defaultLanguage ) );
     }
     
-    private void addInfixSparqlFilter( RDFQ.Any l, String op, RDFQ.Any r ) {
+    private void addInfixSparqlFilter( Any l, String op, Any r ) {
     	filterExpressions.add( RDFQ.infix( l, op, r ) );
     }
             
@@ -414,12 +411,12 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         addTriplePattern( SELECT_VAR, PF_TEXT_MATCH, RDFQ.literal( val ) );
     }
     
-    public APIQuery addSubjectHasProperty( Resource P, RDFQ.Any O ) {
+    public APIQuery addSubjectHasProperty( Resource P, Any O ) {
         addTriplePattern( SELECT_VAR, P, O );
         return this;
     }
     
-    private void addTriplePattern( RDFQ.Variable varname, Resource P, RDFQ.Any O ) {
+    private void addTriplePattern( Variable varname, Resource P, Any O ) {
         basicGraphTriples.add( RDFQ.triple( varname, RDFQ.uri( P.getURI() ), O ) );
     }
     
@@ -430,7 +427,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
      * @param val  The value as a string, shortname. The expansion should take into
      * account the type of the property and created typed literals if necessary.
      */
-    private void addTriplePattern( RDFQ.Variable var, String prop, String languages, String val ) {
+    private void addTriplePattern( Variable var, String prop, String languages, String val ) {
     	Resource np = sns.normalizeResource(prop);
     	if (languages == null) {
 	    	if (val.startsWith("?")) {
@@ -443,30 +440,30 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	}
     }
 
-	private void addLanguagedTriplePattern(RDFQ.Variable var, String prop, String languages, String val) {
+	private void addLanguagedTriplePattern(Variable var, String prop, String languages, String val) {
 		String[] langArray = languages.split( "," );
 		Resource np = sns.normalizeResource(prop);
 		if (langArray.length == 1) {
 			addTriplePattern( var, np, sns.normalizeNodeToRDFQ( prop, val, langArray[0] ) ); 
 		} else {
-			RDFQ.Variable v = newVar();
+			Variable v = newVar();
 			addTriplePattern( var, np, v );
-			RDFQ.Apply stringOf = RDFQ.apply( "str", v );
-			RDFQ.Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
-			RDFQ.Infix filter = RDFQ.infix( equals, "&&", someOf( v, langArray ) );
+			Apply stringOf = RDFQ.apply( "str", v );
+			Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
+			Infix filter = RDFQ.infix( equals, "&&", someOf( v, langArray ) );
 			filterExpressions.add( filter );
 		}
 	}
     
-    private Render someOf( RDFQ.Variable v, String[] langArray ) 
+    private RenderExpression someOf( Variable v, String[] langArray ) 
     	{
-    	Render result = RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( langArray[0] ) );
+    	RenderExpression result = RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( langArray[0] ) );
     	for (int i = 1; i < langArray.length; i += 1)
     		result = RDFQ.infix( result, "||", RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( langArray[i] ) ) );
     	return result;
     	}
 
-	private void addTriplePattern( RDFQ.Variable var, String prop, RDFQ.Variable val ) {
+	private void addTriplePattern( Variable var, String prop, Variable val ) {
    		// Record property which points to this variable for us in decoding binding values
    		varProps.put( val.name().substring(1), prop );   
         addTriplePattern( var, sns.normalizeResource(prop), val ); 
@@ -476,7 +473,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	return addPropertyHasValue( param, newVar().name() );
     }
     
-    protected String addPropertyHasValue( Param param, RDFQ.Variable O ) {
+    protected String addPropertyHasValue( Param param, Variable O ) {
     	return addPropertyHasValue( param, O.name() );    	
     }
 
@@ -485,10 +482,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	if (languages == null) languages = defaultLanguage;
     	// System.err.println( ">> addPropertyHasValue for " + param + ", languages '" + languages + "'" );
         String[] path = param.parts();
-        RDFQ.Variable var = SELECT_VAR;
+        Variable var = SELECT_VAR;
         int i = 0;
         while (i <path.length-1) {
-            RDFQ.Variable newvar = newVar();
+            Variable newvar = newVar();
             addTriplePattern(var, path[i], newvar );
             noteBindableVar(path[i]);
             var = newvar;
@@ -549,19 +546,19 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         }
     }
     
-    public RDFQ.Variable newVar() {
+    public Variable newVar() {
         return RDFQ.var( PREFIX_VAR + varcount++ );
     }
 
     protected void addNameProp(Param param, String rawObject) {
         noteBindableVar(param);
         noteBindableVar(rawObject);
-        RDFQ.Variable newvar = newVar();
+        Variable newvar = newVar();
         addPropertyHasValue( param, newvar );
         addTriplePattern( newvar, RDFS.label, asRDFQ( rawObject ) );
     }
 
-	public RDFQ.Any asRDFQ( String rawObject ) {
+	public Any asRDFQ( String rawObject ) {
 		return rawObject.startsWith("?") ? RDFQ.var( rawObject ) : RDFQ.literal( rawObject );
 	}
     
@@ -619,7 +616,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
 
 	public void appendFilterExpressions( StringBuffer q ) {
-		for (RDFQ.Infix i: filterExpressions) {
+		for (Infix i: filterExpressions) {
 			q.append( i.asSparqlFilter() );
 		}				
 	}

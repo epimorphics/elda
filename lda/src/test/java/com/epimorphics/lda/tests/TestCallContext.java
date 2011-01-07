@@ -18,7 +18,6 @@ import static org.hamcrest.CoreMatchers.*;
 import org.junit.Test;
 
 import com.epimorphics.lda.core.CallContext;
-import com.epimorphics.lda.core.VariableExtractor.Variables;
 import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.tests_support.Matchers;
