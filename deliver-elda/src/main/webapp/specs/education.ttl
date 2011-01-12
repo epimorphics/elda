@@ -84,8 +84,7 @@ spec:api
 	api:defaultPageSize "10" ;
 	api:sparqlEndpoint <http://services.data.gov.uk/education/sparql> ;
 	api:endpoint 
-	   spec:itemish
-	   , spec:schools
+	   spec:schools
 	   , spec:schoolsPrimary
 	   , spec:schoolsSecondary
 	   , spec:schoolsPrimaryDistrict
@@ -93,12 +92,6 @@ spec:api
 	   .
     
 #ENDPOINTS
-
-spec:itemish a api:ItemEndpoint
-    ; api:uriTemplate "/education/schools/spoo"
-    ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
-    ; api:itemTemplate "http://education.data.gov.uk/id/school/100869"
-    .
 
 #List all schools
 spec:schools

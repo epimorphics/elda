@@ -90,14 +90,19 @@ itself as a Jetty server running on port 8080.
 </p>
 
 <p>
-You should now be able to browse to
+You should now be able to browse to LDA URIs:
 
 <pre>
 <a href="http://localhost:8080/elda/api/education/schools.json">http://localhost:8080/elda/api/education/schools.json</a>
+
+<a href="http://localhost:8080/elda/api/education/schools.html">http://localhost:8080/elda/api/education/schools.html</a>
+
+<a href="http://localhost:8080/elda/api/education/schools.html?label=Hope+Primary+School">http://localhost:8080/elda/api/education/schools.html?label=Hope+Primary+School</a>
+
+<a href="http://localhost:8080/elda/api/education/schools.html?max-schoolCapacity=100">http://localhost:8080/elda/api/education/schools.html?max-schoolCapacity=100</a>
 </pre>
 
-and see a JSON presentation of the top-level schools
-data.
+and see presentations of selected schools' data.
 </p>
 
 <p>
@@ -207,19 +212,47 @@ Replace <b>specs/education.ttl</b> with the name of the LDA
 specification files you wish to load, separated by commas. 
 </p>
 
-<h2>Setting up your own SPARQL endpoint</h2>
+<h2>Querying a local file</h2>
 
-<p>To Be Done.</p>
+<p>
+If the remote SPARQL endpoint is slow, not yet fully configured,
+or plain unimplemented, you might want to set up a local endpoint
+using a tool like 
+<a href="http://www.joseki.org">Joseki</a>. But it's also
+possible for Elda to use a local file as an endpoint. 
+</p>
 
-<h2>Using Elda as a webapp</h2>
+<p>
+Edit your spec file, which will look something like the
+education spec suplied with Elda:
 
-<p>To Be Done.</p>
+<pre>
+spec:api
+  a api:API ;
+  rdfs:label "Edubase API"@en;
+  api:maxPageSize "50";
+  api:defaultPageSize "10" ;
+  <b>api:sparqlEndpoint &lt;http://services.data.gov.uk/education/sparql&gt;</b> ;
+  api:endpoint 
+   spec:schools
+   , spec:schoolsPrimary
+   , spec:schoolsSecondary
+   , spec:schoolsPrimaryDistrict
+   , spec:schoolsSecondaryDistrict 
+ .
+</pre>
+
+Replace the services URI with <b>local:file-name</b>, where <b>file-name</b>
+is the name of your endpoint file. It's safest to make this an absolute
+filename. When Elda issues queries to a local: endpoint, it loads (and
+remembers) the file contents and queries those.
+</p>
 
 <h2>Using a local TDB datasource</h2>
 
 <p>
-As an alternative to setting up a local SPARQL endpoint, you
-can instead use a local
+As an alternative to setting up a local SPARQL endpoint, 
+or using a local: file, you can instead use a local
 <a href="http://openjena.org/wiki/TDB">Jena TDB</a>
 database. To do so you will need to modify the <code>web.xml</code>
 webapp configuration file and supply an additional init-param
@@ -265,6 +298,36 @@ TDB directory named <i>tdb</i>. The same warnings as above apply.
 in that case the datastore directory will have a <b>larq</b>
 subdirectory for the LARQ indexes.)
 </p>
+
+<p>
+Having specified a TDB directory, you can now edit your spec's
+sparqlEndpoint declaration, which in the education example looks
+like:
+
+<pre>
+spec:api
+  a api:API ;
+  rdfs:label "Edubase API"@en;
+  api:maxPageSize "50";
+  api:defaultPageSize "10" ;
+  <b>api:sparqlEndpoint &lt;http://services.data.gov.uk/education/sparql&gt;</b> ;
+  api:endpoint 
+   spec:schools
+   , spec:schoolsPrimary
+   , spec:schoolsSecondary
+   , spec:schoolsPrimaryDistrict
+   , spec:schoolsSecondaryDistrict 
+ .
+</pre>
+
+Replace the services URI with <b>tdb:model-name</b>, where <b>model-name</b>
+is the name of your endpoint model inside the TDB store.
+
+</p>
+
+<h2>Using Elda as a webapp</h2>
+
+<p>To Be Done.</p>
 
 <h2><a name="implementation-state">state of the implementation</a></h2>
 
