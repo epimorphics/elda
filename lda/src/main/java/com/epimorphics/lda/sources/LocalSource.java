@@ -31,13 +31,13 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.util.FileManager;
 
 /**
- * Data source which represents and in-memory model loaded
- * from a local file. Used for testing. Model will be reloaded
- * from file each time this class is constructed!
- * 
- * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
- * @version $Revision: $
- */
+ 	Data source which represents an in-memory model loaded
+ 	from a local file. Used for testing. Model will be reloaded
+ 	from file each time this class is constructed!
+ 	
+ 	@author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
+ 	@version $Revision: $
+*/
 public class LocalSource implements Source {
     
     static Logger log = LoggerFactory.getLogger(LocalSource.class);
@@ -50,12 +50,11 @@ public class LocalSource implements Source {
     public LocalSource(String endpoint) {
         if (!endpoint.startsWith(PREFIX))
             throw new APIException("Illegal local endpoint: " + endpoint);
-        source = FileManager.get().loadModel( endpoint.substring(PREFIX.length()) );
+        source = FileManager.get().loadModel( endpoint.substring( PREFIX.length() ) );
         this.endpoint = endpoint;
     }
     
-    @Override
-    public QueryExecution execute(Query query) {
+    @Override public QueryExecution execute(Query query) {
         if (log.isDebugEnabled()) {
             log.debug("Running query: " + query);
         }
@@ -67,8 +66,8 @@ public class LocalSource implements Source {
     }
     
     /**
-     * Add metdata describing this source to a metdata model 
-     */
+     	Add metdata describing this source to a metdata model 
+    */
     public void addMetadata(Resource meta) {
         meta.addProperty(API.sparqlEndpoint, ResourceFactory.createResource(endpoint));
     }
