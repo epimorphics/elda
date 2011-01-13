@@ -17,6 +17,8 @@ rm -rf delivery
 # use maven to generate the webapp -- this is mostly
 # just getting the right jars in the right place.
 
+(cd ../json-rdf; mvn compile package install)
+(cd ../lda; mvn compile package install)
 mvn package
 
 #
@@ -43,7 +45,7 @@ cp -r src/main/docs delivery/webapps/elda
 # extract the unzip-and-run command class from the lda jar
 #
 
-(cd delivery; unzip $HERE/target/elda/WEB-INF/lib/lda-0.0.1-SNAPSHOT.jar cmd/run.class)
+(cd delivery; unzip $HERE/target/elda/WEB-INF/lib/lda-0.1.0-SNAPSHOT.jar cmd/run.class)
 
 #
 # make the delivery area into a executable jar that runs cmd.run,
