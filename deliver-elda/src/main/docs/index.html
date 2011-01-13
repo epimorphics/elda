@@ -73,10 +73,10 @@ use this group).
 
 <p>
 The Elda code is shipped as a single self-unpacking jar, 
-<code>elda.jar</code>. You can start it from the command line:
+<code>elda-VERSION.jar</code>. You can start it from the command line:
 
 <pre>
-java -jar elda.jar
+java -jar elda-VERSION.jar
 </pre>
 
 or, if your system permits, by double-clicking on it in
@@ -84,8 +84,8 @@ your preferred file browser.
 </p>
 
 <p>
-In either case, Elda unzips itself from its jar into a
-new directory, currently Elda_0.9.5, from which it starts
+In either case, Elda unzips itself from that jar into a
+new directory, Elda_VERSION, from which it starts
 itself as a Jetty server running on port 8080.
 </p>
 
@@ -110,6 +110,8 @@ Once Elda has unzipped itself, you can run it from the Elda
 directory it creates:
 
 <pre>
+(in Elda_VERSION)
+
 java -jar start.jar
 </pre>
 
@@ -219,7 +221,7 @@ If the remote SPARQL endpoint is slow, not yet fully configured,
 or plain unimplemented, you might want to set up a local endpoint
 using a tool like 
 <a href="http://www.joseki.org">Joseki</a>. But it's also
-possible for Elda to use a local file as an endpoint. 
+possible for Elda to query a local RDF file. 
 </p>
 
 <p>
@@ -242,10 +244,11 @@ spec:api
  .
 </pre>
 
-Replace the services URI with <b>local:file-name</b>, where <b>file-name</b>
-is the name of your endpoint file. It's safest to make this an absolute
-filename. When Elda issues queries to a local: endpoint, it loads (and
-remembers) the file contents and queries those.
+Replace the services URI with <b>local:file-name</b>, 
+where <b>file-name</b> is the name of the RDF file you 
+wish to query. (It's safest to make this an absolute
+filename.) When Elda issues queries to a local: file, 
+it loads (and remembers) the file contents and queries those.
 </p>
 
 <h2>Using a local TDB datasource</h2>
