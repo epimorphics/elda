@@ -80,11 +80,26 @@ public class RDFUtil {
                  || ((Resource)value).hasProperty(RDF.first)
                 );
     }
+    
+    /**
+        xsdDateFormat returns a SimpleDateFormat  in yyyy-MM-dd form.
+        Note that synchronisation issues mean that we can't have a single
+        shared constant -- it has mutable state.
+    */
 
-    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss 'GMT'Z");
-    public static final SimpleDateFormat xsdDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    static {
-        dateFormat.setTimeZone( TimeZone.getTimeZone("GMT"));
+    protected static SimpleDateFormat xsdDateFormat() {
+    	return new SimpleDateFormat( "yyyy-MM-dd" );
+    }  
+
+    /**
+        xsdDateFormat returns a SimpleDateFormat  in "EEE, d MMM yyyy HH:mm:ss 'GMT'Z" 
+        form, with the timezone set to GMT. Note that synchronisation issues 
+        mean that we can't have a single shared constant -- it has mutable state.
+    */
+    protected static SimpleDateFormat dateFormat() {
+    	SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss 'GMT'Z");
+    	df.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+    	return df;
     }
     
     /**
@@ -95,7 +110,7 @@ public class RDFUtil {
         Object val = l.getValue();
         if (val instanceof XSDDateTime) {
             Date date =  ((XSDDateTime)val).asCalendar().getTime();
-            return dateFormat.format(date);
+            return dateFormat().format(date);
         } else {
             return null;
         }
@@ -106,10 +121,10 @@ public class RDFUtil {
      * @throws ParseException 
      */
     public static Literal parseDateTime(String lex, String type) throws ParseException {
-        Date date = dateFormat.parse(lex);
+        Date date = dateFormat().parse(lex);
         if (XSD.date.getURI().equals(type)) {
             // Doing this by string hacking is evil but avoids dependence on Jena innards
-            return ResourceFactory.createTypedLiteral(xsdDateFormat.format(date), XSDDatatype.XSDdate);
+            return ResourceFactory.createTypedLiteral(xsdDateFormat().format(date), XSDDatatype.XSDdate);
         } else {
             // Default to dateTime
             // Note this loses time zone info, don't know how get parser to extract that
