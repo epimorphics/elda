@@ -16,14 +16,25 @@ public class run
 	{
 	public static void main( String [] args ) throws IOException, InterruptedException 
 		{
-		String toDir = "Elda_0.9.9";
-		unzipJarfile( toDir, "elda.jar" );
+		String eldaJarName = System.getProperty( "java.class.path", "elda.jar" );
+//		System.err.println( ">> --------------------------------" );
+//		for (Object key: System.getProperties().keySet())
+//			System.err.println( ">> " + key + " ==> " + System.getProperties().getProperty( (String) key ) );
+//		System.err.println( ">> " + System.getProperties() );
+//		System.err.println( ">> --------------------------------" );
+		String toDir = jarToDir( eldaJarName );
+		unzipJarfile( toDir, eldaJarName );
 	//
 		ProcessBuilder pb = new ProcessBuilder( buildArgs( args ) );
 		pb.directory( new File( toDir ) );
 		pb.redirectErrorStream( true );
 	//
 		forwardOutput( pb.start() );
+		}
+
+	private static String jarToDir( String jarName ) 
+		{
+		return jarName.replaceFirst( "^e", "E" ).replaceAll( "-", "_" ).replace( ".jar", "" );
 		}
 
 	/**
@@ -69,6 +80,7 @@ public class run
 	*/
 	public static void unzipJarfile( String toDir, String jarFile ) throws IOException 
 		{
+		System.err.println( "INFO: unzipping " + jarFile + " to " + toDir );
 		byte [] buffer = new byte[100 * 1024];
 		File pathPrefix = new File( toDir );
 		ZipFile z = new ZipFile( jarFile );
