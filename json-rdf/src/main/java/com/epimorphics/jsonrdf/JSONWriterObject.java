@@ -2,7 +2,7 @@
     See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
     for the licence for this software.
     
-    (c) copyright Epimorphics Limited 2010
+    (c) Copyright 2011 Epimorphics Limited
     $Id$
 
     File:        JSONWriterObject.java
