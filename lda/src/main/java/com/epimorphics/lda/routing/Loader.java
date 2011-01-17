@@ -78,7 +78,7 @@ public class Loader extends HttpServlet {
     public void init() {
     	baseFilePath = withTrailingSlash( getServletContext().getRealPath("/") );
     	configureLog4J();
-        log.warn( "baseFilePath: " + baseFilePath );
+        log.info( "baseFilePath: " + baseFilePath );
         setupLARQandTDB();
         modelLoader = new APIModelLoader(baseFilePath);
         FileManager.get().addLocatorFile( baseFilePath );

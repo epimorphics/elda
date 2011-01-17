@@ -50,12 +50,18 @@ public class View {
     public static final String SHOW_DEFAULT_INTERNAL = "###default";
 
     /**
-        view that accepts any property; doesFiltering answers false.
+        View that does DESCRIBE plus labels of all objects.
     */
     public static final View ALL = new View( false, Type.T_ALL );
     
+    /**
+        View that does rdf:type and rdfs:label.
+    */
     public static final View BASIC = new View( false, Type.T_BASIC );
     
+    /**
+        View that does DESCRIBE.
+    */
     public static final View DESCRIBE = new View(false, Type.T_DESCRIBE );
 
 	protected boolean doesFiltering = true;

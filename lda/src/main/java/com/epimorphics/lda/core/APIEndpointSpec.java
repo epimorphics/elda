@@ -113,7 +113,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         result.put( View.SHOW_BASIC, View.BASIC );
         result.put( View.SHOW_DESCRIPTION, View.DESCRIBE );
         View dv = getDefaultView( endpoint );
-//        System.err.println( ">> default view for " + endpoint + " is " + dv );
 		result.put( View.SHOW_DEFAULT_INTERNAL, dv );
         return result;
     }
@@ -137,6 +136,10 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     private View extractView( Model m, Resource tRes ) {
     	if (tRes.equals( API.describeViewer )) {
     		return View.DESCRIBE;
+    	} else if (tRes.equals( API.labelledDescribeViewer )) {
+    		return View.ALL;
+    	} else if (tRes.equals( API.basicViewer )){
+    		return View.BASIC;
     	} else {
 	        View v = new View(false);
 			extractView( v, m.listObjectsOfProperty(tRes, API.properties ) );
