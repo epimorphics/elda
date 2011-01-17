@@ -220,7 +220,7 @@ specification files you wish to load, separated by commas.
 If the remote SPARQL endpoint is slow, not yet fully configured,
 or plain unimplemented, you might want to set up a local endpoint
 using a tool like 
-<a href="http://www.joseki.org">Joseki</a>. But it's also
+<a href="http://openjena.org/wiki/Fuseki">Fuseki</a>. But it's also
 possible for Elda to query a local RDF file. 
 </p>
 
@@ -334,17 +334,16 @@ is the name of your endpoint model inside the TDB store.
 
 <h2><a name="implementation-state">state of the implementation</a></h2>
 
+<p>
+Elda provides a complete implementation of the Linked Data API,
+but the following minor features are not currently provided.
+Future releases will include them.
+</p>
+
 <h3>exists</h3>
 
 <p>
 <b>exists</b> and <b>not-exists</b> are not implemented at present.
-</p>
-
-<h3>views</h3>
-
-<p>
-The explicit <i>describeViewer</i>, <i>labelledDescribeViewer</i>, 
-<i>basicViewer</i> are not currently available.
 </p>
 
 <h3>formatting</h3>
