@@ -806,8 +806,20 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             try {
                 // Run the select and find the matches
                 ResultSet rs = exec.execSelect();
-                while (rs.hasNext()) results.add( rs.next().getResource( SELECT_VAR.name() ) );
+                while (rs.hasNext()) {
+                	Resource item = rs.next().getResource( SELECT_VAR.name() );
+                	if (item == null) {
+                		throw new RuntimeException
+                			( "<br>Oops. No binding for " + SELECT_VAR.name() + " in successful SELECT.\n"
+                			+ "<br>Perhaps ?item was mis-spelled in an explicit api:where clause.\n"
+                			+ "<br>It's not your fault; contact the API provider."                			
+                			);                		
+                	}
+					results.add( item );
+                }
                 exec.close();
+            } catch (APIException e) {
+            	throw e;
             } catch (Throwable t) {
                 exec.close();
                 throw new APIException("Query execution problem on query: " + t, t);
