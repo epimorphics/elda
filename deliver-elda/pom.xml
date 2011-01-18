@@ -4,7 +4,7 @@
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda</artifactId>
   <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>${elda.version}</version>
   <name>elda</name>
   <description>instant Elda webapp</description>
 
@@ -13,7 +13,7 @@
     <dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>lda</artifactId>
-      <version>0.1.0-SNAPSHOT</version>
+      <version>${elda.version}</version>
     </dependency>
 
     <dependency>
