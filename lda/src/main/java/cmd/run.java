@@ -25,11 +25,6 @@ public class run
 	public static void main( String [] args ) throws IOException, InterruptedException 
 		{
 		String eldaJarName = System.getProperty( "java.class.path", "elda.jar" );
-//		System.err.println( ">> --------------------------------" );
-//		for (Object key: System.getProperties().keySet())
-//			System.err.println( ">> " + key + " ==> " + System.getProperties().getProperty( (String) key ) );
-//		System.err.println( ">> " + System.getProperties() );
-//		System.err.println( ">> --------------------------------" );
 		String toDir = jarToDir( eldaJarName );
 		unzipJarfile( toDir, eldaJarName );
 	//
