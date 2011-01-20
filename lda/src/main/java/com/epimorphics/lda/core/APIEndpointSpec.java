@@ -20,6 +20,7 @@ import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.APIQuery.Param;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
@@ -46,6 +47,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     protected String fixedWhere;  
     protected String itemTemplate;
     
+    protected final boolean wantsContext;
+    
     public final int defaultPageSize;
     public final int maxPageSize;
 
@@ -56,6 +59,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     public APIEndpointSpec( APISpec apiSpec, APISpec parent, Resource endpoint ) {
     	checkEndpointType( endpoint );
     	this.apiSpec = apiSpec;
+    	wantsContext = endpoint.hasLiteral( EXTRAS.wantsContext, true );
     	bindings.putAll( apiSpec.bindings );
         bindings.putAll( VariableExtractor.findAndBindVariables( bindings, endpoint ) );
         fixedSelect = getStringValue( endpoint, API.select, null );
@@ -81,6 +85,10 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     	log.warn( "endpoint " + endpoint + " is not declared as ListEndpoint or ItemEndpoint -- unexpected behaviour may result." );
 	}
 
+    public boolean wantsContext() {
+    	return wantsContext;
+    }
+    
 	public String getURI() {
         return endpointResource.getURI();
     }

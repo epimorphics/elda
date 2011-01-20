@@ -162,7 +162,7 @@ public class ControlRestlet {
             try {
                 List<Resource> roots = new ArrayList<Resource>();
                 roots.add( rec.getApiRoot());
-                enc = Encoder.getForOneResult().encodeRecursive(rec.getSpecModel(), roots).toString();
+                enc = Encoder.getForOneResult( false ).encodeRecursive(rec.getSpecModel(), roots).toString();
             } catch (JsonException e) {
                 return returnError(e);
             } catch (NotFoundException e) { // TODO ensure this is clean

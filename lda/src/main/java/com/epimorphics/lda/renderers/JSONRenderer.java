@@ -38,16 +38,18 @@ public class JSONRenderer implements Renderer {
 
     static Logger log = LoggerFactory.getLogger(JSONRenderer.class);
     
-    APIEndpoint api;
-    String mime = JSON_MIME;
+    final APIEndpoint api;
+    final String mime;
+    final boolean wantContext;
     
     public JSONRenderer( APIEndpoint api ) {
-        this.api = api;
+        this( api, JSON_MIME );
     }
     
-    public JSONRenderer( APIEndpoint api, String overrideMime ) {
+    public JSONRenderer( APIEndpoint api, String mime ) {
         this.api = api;
-        mime = overrideMime;
+        this.mime = mime;
+        this.wantContext = api.wantContext();
     }
     
     @Override public String getMimeType() {
@@ -61,7 +63,7 @@ public class JSONRenderer implements Renderer {
         Context context = api.getSpec().getAPISpec().getShortnameService().asContext();
         context.setSorted(true);
         try {
-            Encoder.getForOneResult( context ).encodeRecursive(results, roots, writer, true);
+            Encoder.getForOneResult( context, api.wantContext() ).encodeRecursive(results, roots, writer, true);
             String written = writer.toString();
             ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json
             return written;

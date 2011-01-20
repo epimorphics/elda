@@ -58,5 +58,12 @@ public interface APIEndpoint {
      * Return a render appropriate for the given mimetype
      */
     public Renderer getRendererFor(String mimetype);
+
+    /**
+        For an Epimorphics extension. Answer true iff this API endpoint
+        would like the round-trip context added to the JSON encoding.
+     	(Dynamic; its value may depend on query parameters.)
+    */
+	public boolean wantContext();
 }
 

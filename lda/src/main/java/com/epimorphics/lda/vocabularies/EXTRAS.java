@@ -41,6 +41,8 @@ public class EXTRAS
 	public static final Property listURL = property( EXTRA, "listURL" );
 
 	public static final Property metaURL = property( EXTRA, "metaURL" );
+
+	public static final Property wantsContext = property( EXTRA, "wantsContext" );
     
     private static Property property( String ns, String local )
         { return ResourceFactory.createProperty( ns + local ); }

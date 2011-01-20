@@ -38,12 +38,12 @@ public class Encoder {
     
     protected static EncoderPlugin defaultPlugin = new EncoderDefault();
     
-    public static Encoder getForOneResult( Context c ) {
-    	return new Encoder( defaultPlugin, c, true );
+    public static Encoder getForOneResult( Context c, boolean wantContext ) {
+    	return new Encoder( defaultPlugin, wantContext, c, true );
     }
     
-    public static Encoder getForOneResult() {
-    	return getForOneResult( new Context() );    	
+    public static Encoder getForOneResult( boolean wantContext ) {
+    	return getForOneResult( new Context(), wantContext );    	
     }
     
     /**
@@ -106,15 +106,21 @@ public class Encoder {
      * @param oneResult true iff the LDA "result: object" style is required
      */
     private Encoder(EncoderPlugin rules, Context context, boolean oneResult ) {
+        this( rules, false, context, oneResult );
+    }
+    
+    private Encoder(EncoderPlugin rules, boolean wantsContext, Context context, boolean oneResult ) {
         this.rules = rules;
         this.context = context;
         this.oneResult = oneResult;
+        this.wantsContext = wantsContext;
     }
 
     // Instance data
     protected EncoderPlugin rules;
     protected Context context;
     protected final boolean oneResult;
+    protected final boolean wantsContext;
     
     /**
      * Encode the whole of the given RDF model into the writer 
@@ -455,7 +461,7 @@ public class Encoder {
             if (startedGraphs) {
                 rules.finishNamedGraphs(jw);
             }
-            rules.writeContext(context, jw);
+            if (wantsContext) rules.writeContext(context, jw);
             jw.endObject();
         }
         

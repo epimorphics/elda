@@ -104,7 +104,8 @@ public class MetadataRestlet {
             roots.add( meta );
             com.epimorphics.jsonrdf.Context context = rec.getAPIEndpoint().getSpec().getAPISpec().getShortnameService().asContext();
             context.setSorted(true);
-            Encoder.getForOneResult( context ).encodeRecursive(meta.getModel(), roots, writer, true);
+            // false == don't want round-trip context in JSON encoding
+            Encoder.getForOneResult( context, false ).encodeRecursive(meta.getModel(), roots, writer, true);
             String enc = writer.toString();
             return returnAs(enc, "application/json");
         }

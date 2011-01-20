@@ -41,14 +41,17 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 public class APIEndpointImpl implements APIEndpoint {
 
     protected APIEndpointSpec spec;
+    protected final boolean specWantsContext;
     
     static Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
     
     public APIEndpointImpl(APIEndpointSpec spec) {
         this.spec = spec;
+        specWantsContext = spec.wantsContext();
     }
     
     @Override public APIResultSet call( CallContext given ) {
+    	wantsContext = specWantsContext;
     	CallContext context = new CallContext( spec.getParameterBindings(), given );
         log.debug("API " + spec + " called on " + context + " from " + context.getUriInfo());
         APIQuery query = spec.getBaseQuery();
@@ -58,6 +61,12 @@ public class APIEndpointImpl implements APIEndpoint {
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
         insertResultSetRoot(filtered, context, query);
         return filtered;
+    }
+    
+    protected boolean wantsContext = false;
+    
+    public boolean wantContext() {
+    	return wantsContext;
     }
 
     // Filter by any views
