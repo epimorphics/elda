@@ -181,7 +181,9 @@ public class EncoderDefault implements EncoderPlugin {
 	}
 
 	private void encodeString(JSONWriterFacade jw, String lex, String lang ) {
-        jw.value( lang.isEmpty() ? lex : lex + "@" + lang );
+        // WAS: jw.value( lang.isEmpty() ? lex : lex + "@" + lang );
+		// (suppressing language tags)
+		jw.value( lex );
     }
 
     /** Write the context object to a JSON stream */
