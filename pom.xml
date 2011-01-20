@@ -3,10 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>lda-top</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.9.8</version>
   <packaging>pom</packaging>
   <name>lda-top</name>
   <description>Top level linked data API project</description>
+
+  <properties>
+    <elda.version>0.9.8</elda.version>
+  </properties>
+
   <build>
     <pluginManagement>
       <plugins>
@@ -21,6 +26,7 @@
       </plugins>
     </pluginManagement>
   </build>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -112,5 +118,6 @@
   <modules>
     <module>json-rdf</module>
     <module>lda</module>
+    <module>deliver-elda</module>
   </modules>
 </project>

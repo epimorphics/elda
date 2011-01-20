@@ -9,12 +9,11 @@
   <parent>
     <artifactId>lda-top</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>${elda.version}</version>
+    <version>0.9.8</version>
   </parent>
 
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>json-rdf</artifactId>
-  <version>${elda.version}</version>
   <name>json-rdf</name>
 
   <dependencies>

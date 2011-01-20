@@ -8,20 +8,21 @@
   <parent>
     <artifactId>lda-top</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>${elda.version}</version>
+    <version>0.9.8</version>
   </parent>
 
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>lda</artifactId>
+  <name>lda</name>  
   <version>${elda.version}</version>
-  <name>lda</name>
+
   <url>http://maven.apache.org</url>
 
   <dependencies>
     <dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>json-rdf</artifactId>
-      <version>${elda.version}</version>
+      <version>${project.version}</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -29,7 +30,7 @@
     <dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>json-rdf</artifactId>
-      <version>${elda.version}</version>
+      <version>${project.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
