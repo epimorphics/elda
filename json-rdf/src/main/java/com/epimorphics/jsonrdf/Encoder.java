@@ -50,8 +50,12 @@ public class Encoder {
      * Return an encoder using the default rules and no Context, any
      * Context information will be generated on-the-fly.
      */
+    public static Encoder get( boolean wantsContext ) {
+        return get( defaultPlugin, wantsContext );
+    }
+    
     public static Encoder get() {
-        return get(defaultPlugin);
+        return get( defaultPlugin, true );
     }
     
     /**
@@ -62,7 +66,15 @@ public class Encoder {
         return get(rules, new Context());
     }
     
-    /**
+    public static Encoder get( EncoderPlugin rules, boolean wantsContext ) {
+        return get(rules, wantsContext, new Context());
+    }
+    
+    private static Encoder get(EncoderPlugin rules, boolean wantsContext, Context context ) {
+		return new Encoder( rules, wantsContext, context, false );
+	}
+
+	/**
      * Return an encoder using the default rules and the specified 
      * base ontology.
      */
@@ -75,7 +87,7 @@ public class Encoder {
      * base ontology.
      */
     public static Encoder get(EncoderPlugin rules, Model ontology) {
-        return new Encoder(rules, new Context(ontology));
+        return new Encoder(rules, true, new Context(ontology), false );
     }
     
     /**
@@ -89,7 +101,7 @@ public class Encoder {
      * Return an encoder using the specified rules and the specified Context.
      */
     public static Encoder get(EncoderPlugin rules, Context context) {
-        return new Encoder(rules, context);
+        return new Encoder(rules, true, context, false );
     }
 
     /**

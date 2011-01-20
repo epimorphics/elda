@@ -62,7 +62,7 @@ public class TestEncoder {
 
     @Test public void testNullEncode() throws IOException {
         StringWriter writer = new StringWriter();
-        Encoder.get().encode(
+        Encoder.get( true ).encode(
                 ModelFactory.createDefaultModel(), 
                 new ArrayList<Resource>(), 
                 writer);
@@ -105,7 +105,7 @@ public class TestEncoder {
             Model found = results.get(0).getModel();
             // assertIsoModels(expected, found);
             boolean ok = ModelCompareUtils.compareAndDisplayDifferences( expected, found );
-            assertTrue( "models shoudl be isomorphic", ok );
+            assertTrue( "models should be isomorphic", ok );
 //            boolean ok = found.isIsomorphicWith(expected);
 //            if (!ok) {
 //                System.out.println("Found:");
@@ -278,12 +278,15 @@ public class TestEncoder {
                 new String[]{":r"}, "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'foo','q':'bar','s':'baz'}]");
     }
     
+    /*
+        This is the no-language-tags version of the encoding. The older test is below.
+     */
     @Test public void testLiterals() throws IOException {
-        testEncoding(":r :p 'foo'@en; :q '2.3'^^xsd:float; :s 'bar'^^xsd:string.", 
+        testEncoding(":r :p 'foo'; :q '2.3'^^xsd:float; :s 'bar'^^xsd:string.", 
                 Encoder.get(),
-                ":r :p 'foo'@en; :q '2.3'^^xsd:double; :s 'bar'.",
+                ":r :p 'foo'; :q '2.3'^^xsd:double; :s 'bar'.",
                 new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','q':2.3,'p':'foo@en','s':'bar'}]" );
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','q':2.3,'p':'foo','s':'bar'}]" );
         testEncoding(":r :p 'true'^^xsd:boolean.", 
                 Encoder.get(),
                 new String[]{":r"}, 
@@ -298,8 +301,29 @@ public class TestEncoder {
 //                Encoder.get(),
 //                new String[]{":r"}, 
 //                null);
-
     }
+    
+//    @Test public void testLiterals() throws IOException {
+//        testEncoding(":r :p 'foo'@en; :q '2.3'^^xsd:float; :s 'bar'^^xsd:string.", 
+//                Encoder.get(),
+//                ":r :p 'foo'@en; :q '2.3'^^xsd:double; :s 'bar'.",
+//                new String[]{":r"}, 
+//                "[{'_about':'http://www.epimorphics.com/tools/example#r','q':2.3,'p':'foo@en','s':'bar'}]" );
+//        testEncoding(":r :p 'true'^^xsd:boolean.", 
+//                Encoder.get(),
+//                new String[]{":r"}, 
+//                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':true}]" );
+//        testEncoding(":r :p 'http://example.com/eg'^^xsd:anyURI.", 
+//                Encoder.get(),
+//                new String[]{":r"}, 
+//                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'http://example.com/eg'}]");                
+//        // Problem with Jena datatype equality blocks testing
+//        // If we weren't using Maven this would be easy to fix. Sigh.
+////        testEncoding(":r :p 'foobar'^^alt:mytype.", 
+////                Encoder.get(),
+////                new String[]{":r"}, 
+////                null);
+//    }
     
     static final String somePrefixes = 
     	"@prefix api: <" + API.getURI() + ">.\n"
