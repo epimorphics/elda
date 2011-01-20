@@ -18,9 +18,11 @@ rm -rf target/*
 rm -rf delivery
 
 #
-# use maven to generate the webapp -- this is mostly
-# just getting the right jars in the right place.
+# ensure top-level version number is pushed into modules.
+# then do a build. this will sort out the webapp jars here.
+#
 
+(cd ..; mvn -N versions:update-child-modules)
 (cd ..; mvn compile package install)
 
 #
