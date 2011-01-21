@@ -23,7 +23,18 @@ implementation, Elda, of the
 <a href="http://code.google.com/p/linked-data-api/wiki/Specification">Linked Data API</a>.
 The Elda jar can be downloaded from its Googlecode 
 <a href="http://code.google.com/p/elda/downloads/list">downloads page</a>;
-pick the latest unless you have good reason not to.
+pick the latest unless you have good reason not to. 
+</p>
+
+<p>
+If you want to explore the Elda codebase and have
+<a href="http://mercurial.selenic.com/">Mercurial</a>
+installed, you can download the Elda repository:
+
+<pre>
+hg clone https://elda.googlecode.com/hg/ elda  
+</pre>
+
 </p>
 
 <h3>What is the LDA?</h3>
@@ -330,7 +341,23 @@ is the name of your endpoint model inside the TDB store.
 
 <h2>Using Elda as a webapp</h2>
 
-<p>To Be Done.</p>
+<p>
+The Elda shipped jar is just a delivery mechanism for getting
+started with LDA functionality. Elda itself is just a webapp
+which the jar bundles with Jetty.
+</p>
+
+<p>
+To use Elda in your own webapps, you can copy the constructed
+Elda webapp from the unzipped Elda-VERSION/webapps/elda directory
+and edit its web.xml as you require. 
+</p>
+
+<p>
+If you have downloaded the Elda repository, then you can
+rebuild the Elda working jars and webapp using 
+<a href="http://maven.apache.org/">Maven</a>. 
+</p>
 
 <h2><a name="implementation-state">state of the implementation</a></h2>
 
