@@ -21,7 +21,7 @@ This document is a quick-start for the
 <a href="http://www.epimorphics.com">Epimorphics Ltd</a>
 implementation, Elda, of the 
 <a href="http://code.google.com/p/linked-data-api/wiki/Specification">Linked Data API</a>.
-The Elda jar can be downloaded from its Googlecode 
+The Elda runnable-demo jar can be downloaded from its Googlecode 
 <a href="http://code.google.com/p/elda/downloads/list">downloads page</a>;
 pick the latest unless you have good reason not to. 
 </p>
@@ -34,6 +34,11 @@ installed, you can download the Elda repository:
 <pre>
 hg clone https://elda.googlecode.com/hg/ elda  
 </pre>
+
+<p>
+In the rest of this document, "the Elda jar" means the 
+downloaded demonstration jar. 
+</p>
 
 </p>
 
@@ -350,13 +355,14 @@ which the jar bundles with Jetty.
 <p>
 To use Elda in your own webapps, you can copy the constructed
 Elda webapp from the unzipped Elda-VERSION/webapps/elda directory
-and edit its web.xml as you require. 
+and edit its web.xml as you require.
 </p>
 
 <p>
 If you have downloaded the Elda repository, then you can
-rebuild the Elda working jars and webapp using 
-<a href="http://maven.apache.org/">Maven</a>. 
+rebuild the Elda working jars 
+(rdf-json-VERSION.jar and lda-VERSION.jar) 
+and webapp using <a href="http://maven.apache.org/">Maven</a>. 
 </p>
 
 <h2><a name="implementation-state">state of the implementation</a></h2>
