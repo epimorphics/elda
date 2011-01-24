@@ -7,7 +7,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>lda-top</artifactId>
+    <artifactId>json-rdf</artifactId>
     <groupId>com.epimorphics.lda</groupId>
     <version>0.9.10</version>
   </parent>
