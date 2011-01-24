@@ -687,9 +687,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     /**
      * Run the defined query against the datasource
      */
-    public APIResultSet runQuery(APISpec spec, CallContext call, View view ) {
+    public APIResultSet runQuery( APISpec spec, Cache cache, CallContext call, View view ) {
         Source source = spec.getDataSource();
-        Cache cache = Cache.forSource( source );
         try {
             List<Resource> results = fetchRequiredResources( cache, spec, call, source );
             APIResultSet already = cache.getCachedResultSet( results, view.toString() );

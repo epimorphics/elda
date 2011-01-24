@@ -18,6 +18,8 @@ import javax.ws.rs.core.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.cache.Cache;
+import com.epimorphics.lda.cache.PermaCache;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.EXTRAS;
@@ -40,14 +42,20 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  */
 public class APIEndpointImpl implements APIEndpoint {
 
-    protected APIEndpointSpec spec;
+    protected final APIEndpointSpec spec;
     protected final boolean specWantsContext;
+    protected final Cache cache;
     
     static Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
     
-    public APIEndpointImpl(APIEndpointSpec spec) {
+    public APIEndpointImpl( APIEndpointSpec spec ) {
+    	this( spec, PermaCache.forSource( spec.getAPISpec().getDataSource() ) );
+    }
+    
+    public APIEndpointImpl( APIEndpointSpec spec, Cache cache ) {
         this.spec = spec;
-        specWantsContext = spec.wantsContext();
+        this.cache = cache;
+        this.specWantsContext = spec.wantsContext();
     }
     
     @Override public APIResultSet call( CallContext given ) {
@@ -56,7 +64,7 @@ public class APIEndpointImpl implements APIEndpoint {
         log.debug("API " + spec + " called on " + context + " from " + context.getUriInfo());
         APIQuery query = spec.getBaseQuery();
         View view = buildQueryAndView(context, query);
-        APIResultSet unfiltered = query.runQuery( spec.getAPISpec(), context, view );
+        APIResultSet unfiltered = query.runQuery( spec.getAPISpec(), cache, context, view );
         APIResultSet filtered = filterByView(view, unfiltered);
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
         insertResultSetRoot(filtered, context, query);

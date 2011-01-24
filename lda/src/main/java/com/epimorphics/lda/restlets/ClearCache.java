@@ -13,13 +13,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import com.epimorphics.lda.cache.Cache;
+import com.epimorphics.lda.cache.PermaCache;
 
 @Path( "/control/clear-cache") public class ClearCache 
 	{
 	@GET @Produces("text/plain") public Response clearCache() 
 		{
-		Cache.clearAll();
+		PermaCache.clearAll();
 		return RouterRestlet.returnAs( "caches cleared", "text/plain" );
 		}
 	}

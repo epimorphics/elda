@@ -23,36 +23,52 @@ import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.sources.Source;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public class Cache {
+public class PermaCache implements Cache {
 
-    static Logger log = LoggerFactory.getLogger( Cache.class );
+    static Logger log = LoggerFactory.getLogger( PermaCache.class );
     
     public static Cache forSource( Source source ) {
         String key = source.toString();
-        Cache x = caches.get( key );
-        if (x == null) caches.put( key, x = new Cache() );
+        PermaCache x = caches.get( key );
+        if (x == null) caches.put( key, x = new PermaCache() );
         return x;
     }
     
-    public APIResultSet getCachedResultSet( List<Resource> results, String view ) { 
+    /* (non-Javadoc)
+	 * @see com.epimorphics.lda.cache.Cache#getCachedResultSet(java.util.List, java.lang.String)
+	 */
+    @Override
+	public APIResultSet getCachedResultSet( List<Resource> results, String view ) { 
         return cd.get( results.toString() + "::" + view );
     }
     
-    public List<Resource> getCachedResources( String select ) { 
+    /* (non-Javadoc)
+	 * @see com.epimorphics.lda.cache.Cache#getCachedResources(java.lang.String)
+	 */
+    @Override
+	public List<Resource> getCachedResources( String select ) { 
         return cs.get( select );
     }
     
-    public void cacheDescription( List<Resource> results, String view, APIResultSet rs ) {
+    /* (non-Javadoc)
+	 * @see com.epimorphics.lda.cache.Cache#cacheDescription(java.util.List, java.lang.String, com.epimorphics.lda.core.APIResultSet)
+	 */
+    @Override
+	public void cacheDescription( List<Resource> results, String view, APIResultSet rs ) {
         log.debug( "caching descriptions for resources " + results );
         cd.put( results.toString() + "::" + view, rs );        
     }
     
-    public void cacheSelection( String select, List<Resource> results ) {
+    /* (non-Javadoc)
+	 * @see com.epimorphics.lda.cache.Cache#cacheSelection(java.lang.String, java.util.List)
+	 */
+    @Override
+	public void cacheSelection( String select, List<Resource> results ) {
         log.debug( "caching resource selection for query " + select );
         cs.put( select, results );        
     }
     
-    static final Map<String, Cache> caches = new HashMap<String, Cache>();
+    static final Map<String, PermaCache> caches = new HashMap<String, PermaCache>();
     
     private final Map<String, APIResultSet> cd = new HashMap<String, APIResultSet>();
     
