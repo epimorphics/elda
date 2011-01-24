@@ -33,14 +33,14 @@ public class TestEndpointHandlesWhere
 	@Test public void testEndpointSpecExtractsWhere()
 		{
 		APISpec a = new APISpec( s, null );
-		APIEndpointSpec eps = new APIEndpointSpec( a, null, e );
+		APIEndpointSpec eps = new APIEndpointSpec( a, a, e );
 		assertEquals( "PONDENOME", eps.getWhere() );
 		}
 	
 	@Test public void testEndpointImplUsedFixedSelect()
 		{
 		APISpec a = new APISpec( s, null );
-		APIEndpointSpec eps = new APIEndpointSpec( a, null, e );
+		APIEndpointSpec eps = new APIEndpointSpec( a, a, e );
 		APIEndpointImpl i = new APIEndpointImpl( eps );
 		String q = i.getSelectQuery();
 		if (!q.replaceAll( "[\n ]+", " " ).matches( "SELECT \\?item WHERE \\{ PONDENOME\\} OFFSET 0 LIMIT 10" ))

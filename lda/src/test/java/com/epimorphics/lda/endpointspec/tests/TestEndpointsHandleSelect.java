@@ -39,14 +39,14 @@ public class TestEndpointsHandleSelect
 	@Test public void testEndpointSpecExtractsSelect()
 		{
 		APISpec a = new APISpec( s, null );
-		APIEndpointSpec eps = new APIEndpointSpec( a, null, e );
+		APIEndpointSpec eps = new APIEndpointSpec( a, a, e );
 		assertEquals( "GROCID", eps.getFixedSelect() );
 		}
 	
 	@Test public void testEndpointImplUsedFixedSelect()
 		{
 		APISpec a = new APISpec( s, null );
-		APIEndpointSpec eps = new APIEndpointSpec( a, null, e );
+		APIEndpointSpec eps = new APIEndpointSpec( a, a, e );
 		APIEndpointImpl i = new APIEndpointImpl( eps );
 		String q = i.getSelectQuery();
 		assertEquals( "GROCID", q );

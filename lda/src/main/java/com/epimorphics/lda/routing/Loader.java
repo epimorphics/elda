@@ -54,6 +54,8 @@ import com.hp.hpl.jena.vocabulary.RDF;
  */
 public class Loader extends HttpServlet {
 
+	static {}
+	
     private static final long serialVersionUID = 4184390033676415261L;
 
     public static final String INITIAL_SPECS_PARAM_NAME = "com.epimorphics.api.initialSpecFile";

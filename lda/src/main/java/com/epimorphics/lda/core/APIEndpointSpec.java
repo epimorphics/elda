@@ -34,20 +34,23 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 
 	private final APISpec apiSpec;
 	
-	protected String uriTemplate ;
-    protected APISpec parentApi;
-    protected String name;
-//        protected String endpointURI;
-    protected Resource endpointResource;
-    protected APIQuery baseQuery;
-    protected Map<String, View> views;
-    protected String defaultLanguage;
+    protected final APISpec parentApi;
+    protected final String name;
+    protected final Resource endpointResource;
     
-    protected String fixedSelect;
-    protected String fixedWhere;  
-    protected String itemTemplate;
+    protected APIQuery baseQuery;
+    protected String uriTemplate ;
+    
+    protected final Map<String, View> views;
+    protected final String defaultLanguage;
+    
+    protected final String fixedSelect;
+    protected final String fixedWhere;  
+    protected final String itemTemplate;
     
     protected final boolean wantsContext;
+    
+    protected final String cachePolicyName;
     
     public final int defaultPageSize;
     public final int maxPageSize;
@@ -67,6 +70,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         defaultLanguage = getStringValue(endpoint, FIXUP.language, apiSpec.getDefaultLanguage());
     	defaultPageSize = getIntValue( endpoint, API.defaultPageSize, apiSpec.defaultPageSize );
 		maxPageSize = getIntValue( endpoint, API.maxPageSize, apiSpec.maxPageSize );
+		cachePolicyName = getStringValue( endpoint, EXTRAS.cachePolicyName, "default" );
 		parentApi = parent;
         name = endpoint.getLocalName();
         uriTemplate = getStringValue(endpoint, API.uriTemplate, null);
@@ -87,6 +91,10 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 
     public boolean wantsContext() {
     	return wantsContext;
+    }
+    
+    public String getCachePolicyName() {
+    	return cachePolicyName;
     }
     
 	public String getURI() {

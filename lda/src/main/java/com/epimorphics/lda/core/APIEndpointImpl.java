@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.cache.Cache;
-import com.epimorphics.lda.cache.PermaCache;
+import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.EXTRAS;
@@ -49,7 +49,7 @@ public class APIEndpointImpl implements APIEndpoint {
     static Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
     
     public APIEndpointImpl( APIEndpointSpec spec ) {
-    	this( spec, PermaCache.forSource( spec.getAPISpec().getDataSource() ) );
+    	this( spec, Registry.forSource( spec.getCachePolicyName(), spec.getAPISpec().getDataSource() ) );
     }
     
     public APIEndpointImpl( APIEndpointSpec spec, Cache cache ) {
