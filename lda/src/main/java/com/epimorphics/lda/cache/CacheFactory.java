@@ -1,0 +1,19 @@
+/**
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011 Epimorphics Limited
+    $Id$
+*/
+
+package com.epimorphics.lda.cache;
+
+interface CacheFactory {
+	/**
+	    Answer a new, freshly-allocated cache, which respects
+	    the policy value. (Interpretation of the value is
+	    cache-specific, but the empty string is used for a
+	    sensible default.)
+	*/
+	Cache New( String policyValue ); 
+}

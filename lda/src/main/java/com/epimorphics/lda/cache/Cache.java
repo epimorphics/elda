@@ -1,4 +1,4 @@
-/*
+/**
     See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
     for the licence for this software.
     
@@ -24,6 +24,10 @@ import com.hp.hpl.jena.rdf.model.Resource;
 */
 public interface Cache {
 
+	/**
+	    Answer the API result set remembered for the given list of results and
+	    view, or null if there isn't one.
+	*/
 	public APIResultSet getCachedResultSet(List<Resource> results, String view );
 
 	public List<Resource> getCachedResources( String select );
@@ -32,27 +36,52 @@ public interface Cache {
 
 	public void cacheSelection(String select, List<Resource> results);
 	
-	public interface CacheMaker {
-		public Cache create( Source s );		
+	public void clear();
+	
+	public interface Controller {
+		/**
+		    Answer a Cache associated with the given Source. Create one if
+		    there isn't one known.
+		*/
+		public Cache cacheFor( Source s, String policyValue );	
+		
+		/**
+		    Clear and remove the cache associated with the given source. 
+		*/
+		public void clear( Source s );
+		
+		/**
+		 	Clear and remove all the caches that this maker knows about.
+		*/
+		public void clearAll();
 	}
 	
 	public static class Registry {
 		
-		protected static final Map<String, CacheMaker> map = new HashMap<String, CacheMaker>();
+		protected static final Map<String, Controller> map = new HashMap<String, Controller>();
 		
-		public static synchronized void add( String policyName, CacheMaker cm ) {
+		public static synchronized void add( String policyName, Controller cm ) {
 			map.put( policyName, cm );
 		}
 
 		static { 
-			try { Class.forName( PermaCache.class.getName() ); }
-			catch (Exception e) { throw new RuntimeException( e ); }
+	    	Cache.Registry.add( "default", new PermaController() );
+	    	Cache.Registry.add( "perma-cache", new PermaController() );
+	    	Cache.Registry.add( "limit-entries", new LimitEntriesController() );
 		}
 		
-		public static synchronized Cache forSource( String policyName, Source source ) {
-			CacheMaker cm = map.get( policyName );
+		public static synchronized Cache cacheFor( String policy, Source source ) {
+			policy = "limit-entries:1";
+			String [] p = policy.split( ":", 2 );
+			String policyName = p[0], policyValue = (p.length == 2 ? p[1] : "");
+			Controller cm = map.get( policyName );
 			if (cm == null) throw new RuntimeException( "no CacheMaker for policy '" + policyName + "'" );
-		    return cm.create( source );
+		    return cm.cacheFor( source, policyValue );
+		}
+		
+		public static void clearAll() {
+			for (Map.Entry<String, Controller> e: map.entrySet())
+				e.getValue().clearAll();
 		}
 		
 	}

@@ -49,7 +49,7 @@ public class APIEndpointImpl implements APIEndpoint {
     static Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
     
     public APIEndpointImpl( APIEndpointSpec spec ) {
-    	this( spec, Registry.forSource( spec.getCachePolicyName(), spec.getAPISpec().getDataSource() ) );
+    	this( spec, Registry.cacheFor( spec.getCachePolicyName(), spec.getAPISpec().getDataSource() ) );
     }
     
     public APIEndpointImpl( APIEndpointSpec spec, Cache cache ) {

@@ -8,63 +8,32 @@
 
 package com.epimorphics.lda.cache;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.epimorphics.lda.core.*;
-import com.epimorphics.lda.sources.Source;
 import com.hp.hpl.jena.rdf.model.Resource;
+
+import com.epimorphics.lda.core.APIResultSet;
 
 /**
     The cache that remembers everything (until the world explodes
-    with an OOM).
+    with an OOM) -- a LimitedCache with no limits.
 */
-public class PermaCache implements Cache {
+public class PermaCache extends LimitedCacheBase implements Cache {
 
     static Logger log = LoggerFactory.getLogger( PermaCache.class );
-    
-    @Override public APIResultSet getCachedResultSet( List<Resource> results, String view ) { 
-        return cd.get( results.toString() + "::" + view );
-    }
-    
-    @Override public List<Resource> getCachedResources( String select ) { 
-        return cs.get( select );
-    }
-    
-    @Override public void cacheDescription( List<Resource> results, String view, APIResultSet rs ) {
-        log.debug( "caching descriptions for resources " + results );
-        cd.put( results.toString() + "::" + view, rs );        
-    }
-    
-    @Override public void cacheSelection( String select, List<Resource> results ) {
-        log.debug( "caching resource selection for query " + select );
-        cs.put( select, results );        
-    }
-    
-    static final Map<String, PermaCache> caches = new HashMap<String, PermaCache>();
-    
-    private final Map<String, APIResultSet> cd = new HashMap<String, APIResultSet>();
-    
-    private final Map<String, List<Resource>> cs = new HashMap<String, List<Resource>>();
 
-    static class PermaCacheMaker implements Cache.CacheMaker {
-
-		@Override public Cache create( Source s ) {		    
-			String key = s.toString();
-		    PermaCache x = caches.get( key );
-		    if (x == null) caches.put( key, x = new PermaCache() );
-		    return x;
-		}
-    }
+    @Override protected boolean exceedsSelectLimit( Map<String, List<Resource>> m ) {
+		return false;
+	}
     
-    static {
-    	Cache.Registry.add( "default", new PermaCacheMaker() );
-    	Cache.Registry.add( "perma-cache", new PermaCacheMaker() );
-    }
+    @Override protected boolean exceedsResultSetLimit( Map<String, APIResultSet> m ) {
+		return false;
+	}
     
-	public static void clearAll() {
-		caches.clear();		
+    public static void clearAll() {
+		PermaController.caches.clear();		
 	}
 }
