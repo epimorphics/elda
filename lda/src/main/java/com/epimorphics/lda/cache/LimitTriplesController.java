@@ -16,7 +16,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 public class LimitTriplesController extends ControllerBase {
 
-	static final int DEFAULT = 10000;
+	static final int DEFAULT = 20000;
 	
 	static class LimitTriplesCache extends LimitedCacheBase {
 

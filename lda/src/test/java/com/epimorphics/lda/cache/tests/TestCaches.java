@@ -34,6 +34,9 @@ public class TestCaches
 
 		@Override public void addMetadata(Resource meta) 
 			{ throw new RuntimeException( "should never be called" ); }
+		
+		@Override public String toString() 
+			{ return "FakeSource:" + name; }
 		}
 	
 	static final Resource RA = ResourceFactory.createResource( "eh:/A" );
@@ -46,7 +49,7 @@ public class TestCaches
 		{
 		Graph g = GraphTestBase.graphWith( "" );
 		APIResultSet rs = new APIResultSet( g, resources, true );
-		Source s = new FakeSource( "titular" );
+		Source s = new FakeSource( "limited.entries" );
 		Controller cm = new LimitEntriesController();
 		Cache c = cm.cacheFor( s, "1" );
 		assertEquals( 0, c.numEntries() );
@@ -60,7 +63,7 @@ public class TestCaches
 		{
 		Graph g = GraphTestBase.graphWith( "a P b; c P d" );
 		APIResultSet rs = new APIResultSet( g, resources, true );
-		Source s = new FakeSource( "titular" );
+		Source s = new FakeSource( "limited.triples" );
 		Controller cm = new LimitTriplesController();
 		Cache c = cm.cacheFor( s, "2" );
 		assertEquals( 0, c.numEntries() );
