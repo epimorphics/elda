@@ -15,5 +15,5 @@ interface CacheNewer {
 	    cache-specific, but the empty string is used for a
 	    sensible default.)
 	*/
-	Cache New( String policyValue ); 
+	Cache New( String label, String policyValue ); 
 }

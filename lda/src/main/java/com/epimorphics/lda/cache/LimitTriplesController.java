@@ -22,7 +22,8 @@ public class LimitTriplesController extends ControllerBase {
 
 		private final int limit;
 		
-		public LimitTriplesCache( int limit ) {
+		public LimitTriplesCache( String label, int limit ) {
+			super( label );
 			this.limit = limit;
 		}
 
@@ -39,9 +40,9 @@ public class LimitTriplesController extends ControllerBase {
 	
 	protected final static class Factory implements CacheNewer {
 		
-		@Override public Cache New( String policyValue ) {
+		@Override public Cache New( String label, String policyValue ) {
 			int limit = policyValue.length() == 0 ? DEFAULT : Integer.parseInt( policyValue );
-			return new LimitTriplesCache( limit );
+			return new LimitTriplesCache( label, limit );
 		}
 	}
 	

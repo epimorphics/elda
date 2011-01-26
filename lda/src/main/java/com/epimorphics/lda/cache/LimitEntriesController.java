@@ -22,7 +22,8 @@ public class LimitEntriesController extends ControllerBase {
 
 		private final int limit;
 		
-		public LimitEntriesCache( int limit ) {
+		public LimitEntriesCache( String label, int limit ) {
+			super( label );
 			this.limit = limit;
 		}
 
@@ -37,9 +38,9 @@ public class LimitEntriesController extends ControllerBase {
 	
 	protected final static class Factory implements CacheNewer {
 		
-		@Override public Cache New( String policyValue ) {
+		@Override public Cache New( String label, String policyValue ) {
 			int limit = policyValue.length() == 0 ? DEFAULT : Integer.parseInt( policyValue );
-			return new LimitEntriesCache( limit );
+			return new LimitEntriesCache( label, limit );
 		}
 	}
 	

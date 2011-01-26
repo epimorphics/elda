@@ -23,7 +23,11 @@ import com.epimorphics.lda.core.APIResultSet;
 */
 public class PermaCache extends LimitedCacheBase implements Cache {
 
-    static Logger log = LoggerFactory.getLogger( PermaCache.class );
+    public PermaCache( String label ) {
+		super(label);
+	}
+
+	static Logger log = LoggerFactory.getLogger( PermaCache.class );
 
     @Override protected boolean exceedsSelectLimit( Map<String, List<Resource>> m ) {
 		return false;

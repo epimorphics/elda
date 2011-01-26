@@ -67,7 +67,7 @@ public interface Cache {
 		}
 
 		static { 
-	    	Cache.Registry.add( "default", new PermaController() );
+	    	Cache.Registry.add( "default", new LimitTriplesController() );
 	    	Cache.Registry.add( "perma-cache", new PermaController() );
 	    	Cache.Registry.add( "limit-entries", new LimitEntriesController() );
 	    	Cache.Registry.add( "limit-triples", new LimitTriplesController() );

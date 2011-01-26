@@ -41,7 +41,7 @@ public class ControllerBase implements Cache.Controller {
 	@Override public Cache cacheFor( Source s, String policyValue ) {		    
 		String key = s.toString();
 	    Cache x = caches.get( key );
-	    if (x == null) caches.put( key, x = factory.New( policyValue ) );
+	    if (x == null) caches.put( key, x = factory.New( key, policyValue ) );
 	    return x;
 	
 	}

@@ -21,6 +21,12 @@ public abstract class LimitedCacheBase implements Cache {
 
     static Logger log = LoggerFactory.getLogger( LimitedCacheBase.class );
     
+    protected final String label;
+    
+    public LimitedCacheBase( String label ) {
+    	this.label = label;
+    }
+    
     protected abstract boolean exceedsSelectLimit( Map<String, List<Resource>> m) ;
     
     protected abstract boolean exceedsResultSetLimit( Map<String, APIResultSet> m );
@@ -40,13 +46,20 @@ public abstract class LimitedCacheBase implements Cache {
     @Override public void cacheDescription( List<Resource> results, String view, APIResultSet rs ) {
         log.debug( "caching descriptions for resources " + results );
         cd.put( results.toString() + "::" + view, rs );   
-        if (exceedsResultSetLimit( cd )) cd.clear();
+        if (exceedsResultSetLimit( cd )) {
+        	log.info( "clearing description cache for " + label );
+        	System.err.println( "clearing description cache for " + label );
+        	cd.clear();
+        }
     }
 
 	@Override public void cacheSelection( String select, List<Resource> results ) {
         log.debug( "caching resource selection for query " + select );
         cs.put( select, results );        
-        if (exceedsSelectLimit( cs )) cs.clear();
+        if (exceedsSelectLimit( cs )) {
+        	log.info( "clearing select cache for " + label );
+        	cs.clear();
+        }
     }
 
 	public void clear() {
