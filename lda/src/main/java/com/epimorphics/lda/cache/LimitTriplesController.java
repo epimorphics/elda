@@ -8,30 +8,32 @@
 
 package com.epimorphics.lda.cache;
 
-import java.util.List;
 import java.util.Map;
+import java.util.List;
 
 import com.epimorphics.lda.core.APIResultSet;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public class LimitEntriesController extends ControllerBase {
+public class LimitTriplesController extends ControllerBase {
 
-	static final int DEFAULT = 100;
+	static final int DEFAULT = 10000;
 	
-	static class LimitEntriesCache extends LimitedCacheBase {
+	static class LimitTriplesCache extends LimitedCacheBase {
 
 		private final int limit;
 		
-		public LimitEntriesCache( int limit ) {
+		public LimitTriplesCache( int limit ) {
 			this.limit = limit;
 		}
 
 		@Override protected boolean exceedsSelectLimit( Map<String, List<Resource>> m ) {
-			return m.size() > limit;
+			return false; // return m.size() > limit;
 		}
 
 		@Override protected boolean exceedsResultSetLimit(Map<String, APIResultSet> m) {
-			return m.size() > limit;
+			long size = 0;
+			for (Map.Entry<String, APIResultSet> e: m.entrySet()) size += e.getValue().size();
+			return size > limit;
 		}
 	}
 	
@@ -39,12 +41,11 @@ public class LimitEntriesController extends ControllerBase {
 		
 		@Override public Cache New( String policyValue ) {
 			int limit = policyValue.length() == 0 ? DEFAULT : Integer.parseInt( policyValue );
-			return new LimitEntriesCache( limit );
+			return new LimitTriplesCache( limit );
 		}
 	}
 	
-	public LimitEntriesController() {
+	protected LimitTriplesController() {
 		super( new Factory() );
 	}
-
 }

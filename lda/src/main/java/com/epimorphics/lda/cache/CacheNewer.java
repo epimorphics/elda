@@ -8,7 +8,7 @@
 
 package com.epimorphics.lda.cache;
 
-interface CacheFactory {
+interface CacheNewer {
 	/**
 	    Answer a new, freshly-allocated cache, which respects
 	    the policy value. (Interpretation of the value is

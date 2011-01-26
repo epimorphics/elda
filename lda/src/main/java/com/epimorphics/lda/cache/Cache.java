@@ -37,6 +37,8 @@ public interface Cache {
 	public void cacheSelection(String select, List<Resource> results);
 	
 	public void clear();
+
+	public int numEntries();
 	
 	public interface Controller {
 		/**
@@ -68,10 +70,10 @@ public interface Cache {
 	    	Cache.Registry.add( "default", new PermaController() );
 	    	Cache.Registry.add( "perma-cache", new PermaController() );
 	    	Cache.Registry.add( "limit-entries", new LimitEntriesController() );
+	    	Cache.Registry.add( "limit-triples", new LimitTriplesController() );
 		}
 		
 		public static synchronized Cache cacheFor( String policy, Source source ) {
-			policy = "limit-entries:1";
 			String [] p = policy.split( ":", 2 );
 			String policyName = p[0], policyValue = (p.length == 2 ? p[1] : "");
 			Controller cm = map.get( policyName );
@@ -85,5 +87,4 @@ public interface Cache {
 		}
 		
 	}
-	
 }

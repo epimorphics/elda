@@ -53,4 +53,8 @@ public abstract class LimitedCacheBase implements Cache {
     	cs.clear();
     	cd.clear();
     }
+	
+	public int numEntries() {
+		return cd.size() + cs.size();
+	}
 }

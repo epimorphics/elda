@@ -18,9 +18,9 @@ import com.epimorphics.lda.sources.Source;
 */
 public class ControllerBase implements Cache.Controller {
 
-	protected final CacheFactory factory;
+	protected final CacheNewer factory;
 	
-	protected ControllerBase( CacheFactory m ) {
+	protected ControllerBase( CacheNewer m ) {
 		this.factory = m;
 	}
 	
