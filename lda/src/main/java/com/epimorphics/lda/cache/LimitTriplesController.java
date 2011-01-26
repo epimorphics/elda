@@ -45,7 +45,7 @@ public class LimitTriplesController extends ControllerBase {
 		}
 	}
 	
-	protected LimitTriplesController() {
+	public LimitTriplesController() {
 		super( new Factory() );
 	}
 }

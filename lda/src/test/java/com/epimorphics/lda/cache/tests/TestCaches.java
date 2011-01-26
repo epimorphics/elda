@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Controller;
 import com.epimorphics.lda.cache.LimitEntriesController;
+import com.epimorphics.lda.cache.LimitTriplesController;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.util.CollectionUtils;
@@ -48,6 +49,20 @@ public class TestCaches
 		Source s = new FakeSource( "titular" );
 		Controller cm = new LimitEntriesController();
 		Cache c = cm.cacheFor( s, "1" );
+		assertEquals( 0, c.numEntries() );
+		c.cacheDescription( resources, "view.string", rs );
+		assertEquals( 1, c.numEntries() );
+		c.cacheDescription( resources, "view.string.other", rs );
+		assertEquals( 0, c.numEntries() );
+		}
+	
+	@Test public void testLimitTriplesCache() 
+		{
+		Graph g = GraphTestBase.graphWith( "a P b; c P d" );
+		APIResultSet rs = new APIResultSet( g, resources, true );
+		Source s = new FakeSource( "titular" );
+		Controller cm = new LimitTriplesController();
+		Cache c = cm.cacheFor( s, "2" );
 		assertEquals( 0, c.numEntries() );
 		c.cacheDescription( resources, "view.string", rs );
 		assertEquals( 1, c.numEntries() );
