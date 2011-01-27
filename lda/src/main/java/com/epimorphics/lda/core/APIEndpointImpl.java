@@ -224,7 +224,8 @@ public class APIEndpointImpl implements APIEndpoint {
         if (mimetype.equals( "text/plain" )) return new JSONRenderer(this, "text/plain");
         if (mimetype.equals( "text/turtle" )) return new TurtleRenderer();
         if (mimetype.equals( "application/rdf+xml" )) return new RDFXMLRenderer();
-        if (mimetype.equals( "application/json" )) return new JSONRenderer( this );
+        if (mimetype.equals( JSONRenderer.JSON_MIME )) return new JSONRenderer( this );
+        if (mimetype.equals( XMLRenderer.XML_MIME )) return new XMLRenderer();
         if (mimetype.equals( "text/html" )) return new HTMLRenderer();
         return null;
     }

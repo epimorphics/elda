@@ -23,7 +23,7 @@ public class TurtleRenderer implements Renderer {
         return "text/turtle";
     }
     
-    @Override public Object render( APIResultSet results ) {
+    @Override public String render( APIResultSet results ) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         results.write( bos, "TTL" );
         return bos.toString();

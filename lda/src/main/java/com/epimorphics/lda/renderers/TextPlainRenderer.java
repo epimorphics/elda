@@ -22,7 +22,7 @@ public final class TextPlainRenderer implements Renderer {
         return "text/plain";
     }
 
-    @Override public Object render( APIResultSet results ) {
+    @Override public String render( APIResultSet results ) {
         return results.toString();
     }
 }

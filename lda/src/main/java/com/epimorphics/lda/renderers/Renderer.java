@@ -36,6 +36,6 @@ public interface Renderer {
     /**
      * Render a result set
      */
-    public Object render(APIResultSet results);
+    public String render(APIResultSet results);
 }
 

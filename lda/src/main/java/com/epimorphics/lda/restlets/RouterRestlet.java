@@ -128,7 +128,7 @@ public class RouterRestlet {
     }
     
     
-    @GET @Produces( { "text/plain", "application/rdf+xml", "application/json", "text/turtle", "text/html" })
+    @GET @Produces( { "text/plain", "application/rdf+xml", "application/json", "text/turtle", "text/html", "text/xml" })
     public Response requestHandler(
             @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
