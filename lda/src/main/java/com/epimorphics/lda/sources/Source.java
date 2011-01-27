@@ -41,18 +41,30 @@ public interface Source {
         Add metdata describing this source to a metdata model 
     */
     public void addMetadata( Resource meta );
-    
+        
     /**
-        Set up an execution of the given query against the source.
+        Do a DESCRIBE. Answer the resulting model. Puts a read
+        lock around the access to the underlying data.
     */
-    public QueryExecution execute( Query q );
-    
     public Model executeDescribe( Query q );
-    
+        
+    /**
+        Do a CONSTRUCT. Answer the resulting model. Puts a read
+        lock around the access to the underlying data.
+    */
     public Model executeConstruct( Query q );
-    
+        
+    /**
+        Do a SELECT. First run c.setup on the QueryExecution
+        object created from the query. Then run c.consume on the
+        ResultSet of the select. Puts a read lock around the access 
+        to the underlying data.
+    */
     public void executeSelect( Query q, ResultSetConsumer c );
     
+    /**
+        The callback object used for SELECTs.
+    */
     public interface ResultSetConsumer {
     	void setup( QueryExecution qe );
     	void consume( ResultSet rs );
