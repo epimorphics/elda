@@ -10,19 +10,14 @@ import org.junit.Test;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.sources.SourceBase;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.sparql.util.Context;
-import com.hp.hpl.jena.util.FileManager;
 
 public class TestSourceLocking {
 
@@ -32,8 +27,8 @@ public class TestSourceLocking {
 
 		Lock lock = new Lock() {
 
-			@Override public void enterCriticalSection(boolean readLockRequested) {
-				history.add( "LOCK" );
+			@Override public void enterCriticalSection( boolean readLockRequested ) {
+				history.add( "LOCK-" + readLockRequested );
 			}
 	
 			@Override public void leaveCriticalSection() {
@@ -53,58 +48,8 @@ public class TestSourceLocking {
 			return wrapped( qe );
 		}
 
-		private QueryExecution wrapped( final QueryExecution qe ) {
-			return new QueryExecution() {
-				
-				@Override public void setInitialBinding(QuerySolution binding) {
-					qe.setInitialBinding(binding);
-				}
-				
-				@Override public void setFileManager(FileManager fm) {
-					qe.setFileManager(fm);
-				}
-				
-				@Override public Dataset getDataset() {
-					return qe.getDataset();
-				}
-				
-				@Override public Context getContext() {
-					return qe.getContext();
-				}
-				
-				@Override public ResultSet execSelect() {
-					return qe.execSelect();
-				}
-				
-				@Override public Model execDescribe(Model model) {
-					return qe.execDescribe();
-				}
-				
-				@Override public Model execDescribe() {
-					return qe.execDescribe();
-				}
-				
-				@Override public Model execConstruct(Model model) {
-					return qe.execConstruct(model);
-				}
-				
-				@Override public Model execConstruct() {
-					history.add( "CONSTRUCT" );
-					return qe.execConstruct();
-				}
-				
-				@Override public boolean execAsk() {
-					return qe.execAsk();
-				}
-				
-				@Override public void close() {
-					qe.close();
-				}
-				
-				@Override public void abort() {
-					qe.abort();
-				}
-			};
+		public QueryExecution wrapped( final QueryExecution qe ) {
+			return new QueryExecutionWithHistory( qe, history );
 		}
 
 		@Override public Lock getLock() {
@@ -112,10 +57,17 @@ public class TestSourceLocking {
 		}
 	}
 	
-	@Test public void testMe() {
+	@Test public void testConstruct() {
 		TestSource s = new TestSource();
 		Query q = QueryFactory.create( "CONSTRUCT {?s ?p ?o} WHERE {?s ?p ?o}" );
 		s.executeConstruct( q );
-		assertEquals( CollectionUtils.list( "LOCK", "QE_CRTEATE", "CONSTRUCT", "UNLOCK" ), s.history );
+		assertEquals( CollectionUtils.list( "LOCK-true", "QE_CREATE", "CONSTRUCT", "UNLOCK" ), s.history );
+	}
+	
+	@Test public void testDescribe() {
+		TestSource s = new TestSource();
+		Query q = QueryFactory.create( "DESCRIBE ?s WHERE {?s ?p ?o}" );
+		s.executeDescribe( q );
+		assertEquals( CollectionUtils.list( "LOCK-true", "QE_CREATE", "DESCRIBE", "UNLOCK" ), s.history );
 	}
 }

@@ -41,7 +41,7 @@ public abstract class SourceBase {
     	Lock l = getLock();
     	l.enterCriticalSection( Lock.READ );
 		try { return execute( query ).execDescribe(); }
-		finally { l.leaveCriticalSection(); }
+		finally	{ l.leaveCriticalSection();	}
 	}
 		
 	/**
