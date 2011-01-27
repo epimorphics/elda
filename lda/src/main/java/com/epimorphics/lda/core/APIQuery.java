@@ -769,7 +769,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         		appendPrefixes( p, spec.getPrefixMap() );
         		String query = "CONSTRUCT {" + ta + "} where {" + ta + "}\n";
         		Query cq = QueryFactory.create( p.append(query).toString() );
-        		for (Source x: sources) m.add( x.execute( cq ).execConstruct() );
+        		for (Source x: sources) m.add( x.executeConstruct( cq ) );
         	}
         	return;
         }
@@ -779,7 +779,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     private List<Resource> fetchRequiredResources( Cache cache, APISpec spec, CallContext call, Source source )
         {
     	log.debug( "fetchRequiredResources()" );
-        List<Resource> results = new ArrayList<Resource>();
+        final List<Resource> results = new ArrayList<Resource>();
         if (itemTemplate != null) setSubject( call.expand( itemTemplate ) );
         if ( isFixedSubject() ) {
         	results.add( subjectResource );
@@ -799,30 +799,33 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             }
             
             log.debug( "Running query: " + select.replaceAll( "\n", " " ) );
-            QueryExecution exec = source.execute( q );
-            if (needsLARQindex) LARQManager.setLARQIndex( exec );
-        
-            try {
-                // Run the select and find the matches
-                ResultSet rs = exec.execSelect();
-                while (rs.hasNext()) {
-                	Resource item = rs.next().getResource( SELECT_VAR.name() );
-                	if (item == null) {
-                		throw new RuntimeException
-                			( "<br>Oops. No binding for " + SELECT_VAR.name() + " in successful SELECT.\n"
-                			+ "<br>Perhaps ?item was mis-spelled in an explicit api:where clause.\n"
-                			+ "<br>It's not your fault; contact the API provider."                			
-                			);                		
-                	}
-					results.add( item );
-                }
-                exec.close();
-            } catch (APIException e) {
-            	throw e;
-            } catch (Throwable t) {
-                exec.close();
-                throw new APIException("Query execution problem on query: " + t, t);
-            }          
+            
+            source.executeSelect( q, new Source.ResultSetConsumer() {
+				
+				@Override public void setup(QueryExecution qe) {
+		            if (needsLARQindex) LARQManager.setLARQIndex( qe );				
+				}
+				
+				@Override public void consume( ResultSet rs ) {
+					try {
+						while (rs.hasNext()) {
+							Resource item = rs.next().getResource( SELECT_VAR.name() );
+							if (item == null) {
+								throw new RuntimeException
+								( "<br>Oops. No binding for " + SELECT_VAR.name() + " in successful SELECT.\n"
+										+ "<br>Perhaps ?item was mis-spelled in an explicit api:where clause.\n"
+										+ "<br>It's not your fault; contact the API provider."                			
+								);                		
+							}
+							results.add( item );
+						}
+					} catch (APIException e) {
+						throw e;
+					} catch (Throwable t) {
+						throw new APIException("Query execution problem on query: " + t, t);
+					}				
+				}
+            } );
             cache.cacheSelection( select, results );
         }
         return results;

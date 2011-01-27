@@ -20,6 +20,8 @@ import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.shared.Lock;
+import com.hp.hpl.jena.shared.LockMRSW;
 import com.hp.hpl.jena.util.iterator.Map1;
 
 import org.slf4j.*;
@@ -31,7 +33,7 @@ import org.slf4j.*;
     
     @author chris
 */
-public class CombinedSource implements Source
+public class CombinedSource extends SourceBase implements Source
     {
 
     static Logger log = LoggerFactory.getLogger( CombinedSource.class );
@@ -43,6 +45,8 @@ public class CombinedSource implements Source
     protected final List<String> constructs;
     
     protected String name;
+    
+    protected final Lock lock = new LockMRSW();
     
     private static final Map1<Statement, Source> toSource = new Map1<Statement, Source>()
         {
@@ -67,6 +71,10 @@ public class CombinedSource implements Source
         sources = ep.listProperties( EXTRAS.element ).mapWith( toSource ).toList();
         }
 
+    @Override public Lock getLock() {
+    	return lock;
+    }
+    
     @Override public QueryExecution execute( Query query )
         {
         log.info( "doing query execution on a CombinedSource" );
@@ -85,9 +93,7 @@ public class CombinedSource implements Source
         {
         log.info( "getting model data from source " + s );
         String queryString = "construct " + zoob( constructs ) + " where " + zoob( matches ) + "";
-        Query mine = QueryFactory.create( queryString );
-        QueryExecution q = s.execute( mine );
-        return q.execConstruct();
+        return s.executeConstruct( QueryFactory.create( queryString ) );
         }
 
     private String zoob( List<String> ls )

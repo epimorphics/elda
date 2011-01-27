@@ -28,6 +28,7 @@ import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.util.FileManager;
 
 /**
@@ -38,7 +39,7 @@ import com.hp.hpl.jena.util.FileManager;
  	@author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  	@version $Revision: $
 */
-public class LocalSource implements Source {
+public class LocalSource extends SourceBase implements Source {
     
     static Logger log = LoggerFactory.getLogger(LocalSource.class);
 
@@ -61,7 +62,11 @@ public class LocalSource implements Source {
         return QueryExecutionFactory.create(query, source);
     }
     
-    public String toString() {
+    @Override public Lock getLock() {
+    	return source.getLock();
+    }
+    
+    @Override public String toString() {
         return "Local datasource - " + endpoint;
     }
     

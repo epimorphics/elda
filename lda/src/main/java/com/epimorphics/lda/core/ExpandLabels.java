@@ -69,7 +69,7 @@ public class ExpandLabels {
 		return labelQuery.toString();
 	}
 
-	private void runLabelQuery(Source source, APIResultSet results,	Set<Resource> varAllocation, String labelQuery) {
+	private void runLabelQuery(Source source, final APIResultSet results, Set<Resource> varAllocation, String labelQuery) {
 		// TODO remove
 	    // System.out.println("Running label expansion query: " + labelQuery);
 	    
@@ -78,33 +78,24 @@ public class ExpandLabels {
 	        q = QueryFactory.create(labelQuery);
 	    } catch (Exception e) {
 	        throw new APIException("Internal error building label query: " + labelQuery, e);
-	    }
-	    QueryExecution exec = source.execute(q);
-	
-	    try {
-	        // Run the select and find the matches
-	        ResultSet rs = exec.execSelect();
-	        while (rs.hasNext()) {
-	        	QuerySolution s = rs.next();
-//	        	System.err.println( ">> solution: " + s );
-	        	Resource r = s.getResource( "resource" );
-	        	String l = s.getLiteral("label").getLexicalForm();
-	        	results.add( r, RDFS.label, l );
-	        }
-//	        if (rs.hasNext()) {
-//	            QuerySolution soln = rs.next();
-//	            for (Map.Entry<String, Resource> e : varAllocation.entrySet()) {
-//	                String var = e.getKey();
-//	                RDFNode label = soln.get( var.substring(1) );
-//	                if (label != null) {
-//	                    results.add(e.getValue(), RDFS.label, label);
-//	                }
-//	            }
-//	        }
-	        exec.close();
-	    } catch (Throwable t) {
-	        exec.close();
-	        throw new APIException("Query execution problem on label fetching: " + t, t);
-	    }
+	    }	
+	    
+	    source.executeSelect( q, new Source.ResultSetConsumer() {
+
+			@Override public void setup(QueryExecution qe) {}
+
+			@Override public void consume(ResultSet rs) {			
+			    try {
+			        while (rs.hasNext()) {
+			        	QuerySolution s = rs.next();
+			        	Resource r = s.getResource( "resource" );
+			        	String l = s.getLiteral("label").getLexicalForm();
+			        	results.add( r, RDFS.label, l );
+			        }
+			    } catch (Throwable t) {
+			        throw new APIException("Query execution problem on label fetching: " + t, t);
+			    }
+			}
+	    } );
 	}
 }

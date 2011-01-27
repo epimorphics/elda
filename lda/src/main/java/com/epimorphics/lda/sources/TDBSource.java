@@ -18,11 +18,12 @@ import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.shared.Lock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TDBSource implements Source
+public class TDBSource extends SourceBase implements Source
     {
     static Logger log = LoggerFactory.getLogger(TDBSource.class);
 
@@ -54,6 +55,10 @@ public class TDBSource implements Source
 
     @Override public String toString()
         { return "TDB datasource - " + endpoint; }
+    
+    @Override public Lock getLock() {
+    	return source == null ? sourceSet.getLock() : source.getLock();
+    }
     
     @Override public QueryExecution execute( Query query )
         {

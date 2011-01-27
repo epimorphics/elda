@@ -18,6 +18,7 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.util.ResourceUtils;
 
 /**
@@ -27,7 +28,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
     
  	@author chris
 */
-public class HereSource implements Source
+public class HereSource extends SourceBase implements Source
 	{
 	public static final String PREFIX = "here:";
 
@@ -55,6 +56,9 @@ public class HereSource implements Source
         return QueryExecutionFactory.create( query, model );
 		}
 
-	public String toString()
+	@Override public String toString()
 		{ return "HereSource{" + endpoint + "}"; }
+
+	@Override public Lock getLock() 
+		{ return model.getLock(); }
 	}

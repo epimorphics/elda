@@ -26,6 +26,8 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.shared.Lock;
+import com.hp.hpl.jena.shared.LockNone;
 
 /**
  * Data source representing and external SPARQL endpoint.
@@ -33,11 +35,13 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-public class SparqlSource implements Source {
+public class SparqlSource extends SourceBase implements Source {
     
     static Logger log = LoggerFactory.getLogger(SparqlSource.class);
 
-    protected String sparqlEndpoint;
+    protected final String sparqlEndpoint;
+    
+    protected final Lock lock = new LockNone();
     
     public SparqlSource(String sparqlEndpoint) {
         this.sparqlEndpoint = sparqlEndpoint;
@@ -51,8 +55,12 @@ public class SparqlSource implements Source {
         return QueryExecutionFactory.sparqlService(sparqlEndpoint, query);
     }
 
-    public String toString() {
+    @Override public String toString() {
         return "SparqlSource{" + sparqlEndpoint + "}";
+    }
+    
+    @Override public Lock getLock() {
+    	return lock;
     }
     
     /**

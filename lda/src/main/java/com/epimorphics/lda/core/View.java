@@ -265,7 +265,7 @@ public class View {
 		construct += "\n}";
 	//
 		Query constructQuery = QueryFactory.create( construct );
-		for (Source x: sources) m.add( x.execute( constructQuery ).execConstruct() );
+		for (Source x: sources) m.add( x.executeConstruct( constructQuery ) );
 	}
 	
 	private String buildConstructClause( Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
@@ -310,7 +310,7 @@ public class View {
 			describe += " <" + r.getURI() + ">";
 		}
 		Query describeQuery = QueryFactory.create( describe );
-		for (Source x: sources) m.add( x.execute( describeQuery ).execDescribe() );
+		for (Source x: sources) m.add( x.executeDescribe( describeQuery ) );
 		long time = System.currentTimeMillis() - zero;
 		log.debug( "fetchBareDescriptions took " + (time/1000.0) + "s" );
 	}		
@@ -327,7 +327,7 @@ public class View {
 		}
 		construct += "}\n";
 		Query constructQuery = QueryFactory.create( construct );
-		for (Source x: sources) m.add( x.execute( constructQuery ).execConstruct() );
+		for (Source x: sources) m.add( x.executeConstruct( constructQuery ) );
 		long time = System.currentTimeMillis() - zero;
 		log.debug( "addAllObjectLabels took " + (time/1000.0) + "s" );
 	}
