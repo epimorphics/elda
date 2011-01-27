@@ -14,6 +14,7 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -61,13 +62,30 @@ public class TestSourceLocking {
 		TestSource s = new TestSource();
 		Query q = QueryFactory.create( "CONSTRUCT {?s ?p ?o} WHERE {?s ?p ?o}" );
 		s.executeConstruct( q );
-		assertEquals( CollectionUtils.list( "LOCK-true", "QE_CREATE", "CONSTRUCT", "UNLOCK" ), s.history );
+		assertEquals( CollectionUtils.list( "LOCK-true", "QE_CREATE", "CONSTRUCT", "CLOSE", "UNLOCK" ), s.history );
 	}
 	
 	@Test public void testDescribe() {
 		TestSource s = new TestSource();
 		Query q = QueryFactory.create( "DESCRIBE ?s WHERE {?s ?p ?o}" );
 		s.executeDescribe( q );
-		assertEquals( CollectionUtils.list( "LOCK-true", "QE_CREATE", "DESCRIBE", "UNLOCK" ), s.history );
+		assertEquals( CollectionUtils.list( "LOCK-true", "QE_CREATE", "DESCRIBE", "CLOSE", "UNLOCK" ), s.history );
+	}
+	
+	@Test public void testSelect() {
+		final TestSource s = new TestSource();
+		Query q = QueryFactory.create( "SELECT * WHERE {?s ?p ?o}" );
+		s.executeSelect( q, new Source.ResultSetConsumer() {
+			
+			@Override public void setup(QueryExecution qe) {
+				s.history.add("SETUP");
+			}
+			
+			@Override public void consume(ResultSet rs) {
+				s.history.add("CONSUME");
+				
+			}
+		});
+		assertEquals( CollectionUtils.list( "LOCK-true", "QE_CREATE", "SETUP", "CONSUME", "CLOSE", "UNLOCK" ), s.history );
 	}
 }

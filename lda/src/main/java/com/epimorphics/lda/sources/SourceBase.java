@@ -40,8 +40,13 @@ public abstract class SourceBase {
 	public Model executeDescribe( Query query ) {
     	Lock l = getLock();
     	l.enterCriticalSection( Lock.READ );
-		try { return execute( query ).execDescribe(); }
-		finally	{ l.leaveCriticalSection();	}
+    	QueryExecution qe = execute( query );
+		try { 
+			return qe.execDescribe(); 
+		}
+		finally	{
+			try { qe.close(); } finally { l.leaveCriticalSection(); } 
+		}
 	}
 		
 	/**
@@ -51,8 +56,13 @@ public abstract class SourceBase {
 	public Model executeConstruct( Query query ) {
     	Lock l = getLock();
     	l.enterCriticalSection( Lock.READ );
-		try { return execute( query ).execConstruct(); }
-		finally { l.leaveCriticalSection(); }
+    	QueryExecution qe = execute( query );
+		try { 
+			return qe.execConstruct(); 
+		}
+		finally { 
+			try { qe.close(); } finally { l.leaveCriticalSection(); } 
+		}
 	}
 
 	/**
@@ -72,9 +82,8 @@ public abstract class SourceBase {
     		c.setup( qe );
     		c.consume( qe.execSelect() );
     	}
-    	finally {
-    		qe.close();
-    		l.leaveCriticalSection();
+    	finally {			
+    		try { qe.close(); } finally { l.leaveCriticalSection(); } 
     	}
     }
 }
