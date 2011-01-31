@@ -1,6 +1,14 @@
+/*
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011 Epimorphics Limited
+*/
 package com.epimorphics.lda.renderers;
 
+import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -8,6 +16,15 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,6 +39,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
 From the spec: 
@@ -98,12 +116,39 @@ public class XMLRenderer implements Renderer {
 	}
 
 	@Override public synchronized String render( APIResultSet results ) {
-		Document d = getBuilder().newDocument();
-		Resource root = results.getRoot();
-		Rendering r = new Rendering( d );
-		Element e = r.traverse( root );
-		System.err.println( ">> " + e );
-		return "<oops>Not Implemented Yet</oops>\n";
+			Document d = getBuilder().newDocument();
+			Resource root = results.getRoot();
+			Rendering r = new Rendering( d );
+			Element e = r.traverse( root );
+			Element bloop = d.createElement( "BLOOP" );
+			d.appendChild( bloop );
+			bloop.appendChild( e );
+			StringWriter sw = docToString( d );
+		return sw.toString();
+	}
+
+	private void printDocument( Document d ) {
+		try {
+			StringWriter sw = docToString(d);
+			System.err.println( ">> " + sw.toString() );
+		} catch (Throwable t) {
+			throw new RuntimeException( t );
+		} 
+	}
+
+	private StringWriter docToString( Document d ) {
+		try {
+			Transformer t = TransformerFactory.newInstance().newTransformer();
+			t.setOutputProperty( OutputKeys.INDENT, "yes" );
+			t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			DOMSource ds = new DOMSource( d );
+			StringWriter sw = new StringWriter();
+			StreamResult sr = new StreamResult( sw );
+			t.transform( ds, sr );
+			return sw;
+		} catch (Throwable t) {
+			throw new RuntimeException( t );
+		} 
 	}	
 	
 	private static DocumentBuilder getBuilder() {
@@ -121,46 +166,78 @@ public class XMLRenderer implements Renderer {
 		public Rendering( Document d ) {
 			this.d = d;
 		}
+		
+		private final Set<Resource> seen = new HashSet<Resource>();
 	
 		private Element traverse( Resource x ) {
+			// System.err.println( "traverse: " + x );
 			Element e = elementFor( x );
-			Set<Property> properties = x.listProperties().mapWith( Statement.Util.getPredicate ).toSet();
-			for (Property p: properties) {
-				addPropertyValues( e, x, p );
+			if (seen.add( x )) {
+				Set<Property> properties = x.listProperties().mapWith( Statement.Util.getPredicate ).toSet();
+				for (Property p: properties) addPropertyValues( e, x, p );
 			}
 			return e;
 		}
 	
 		private void addPropertyValues( Element e, Resource x, Property p ) {
+			// System.err.println( ">> add property values for " + p );
 			Element pe = d.createElement( shortNameFor( p ) );
+			// System.err.println( ">> pe := " + pe );
 			e.appendChild( pe );
+			// System.err.println( ">> e := " + e );
 			Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();
-			if (values.size() > 0 || isMultiValued( p )) {
+			if (values.size() > 1 || isMultiValued( p )) {
 				for (RDFNode value: values) {
 					Element i = d.createElement( "item" );
-					i.appendChild( elementForValue( value ) );
+					addValueToProperty( i, value );
+					// i.appendChild( elementForValue( value ) );
 					pe.appendChild( i );
 				}
-			} else {
-				pe.appendChild( elementForValue( values.iterator().next() ) );
+			} else if (values.size() == 1) {
+				// pe.appendChild( elementForValue( values.iterator().next() ) );
+				addValueToProperty( pe, values.iterator().next() );
 			}
 		}
-		// TODO Auto-generated method stub
+
+		public void addValueToProperty( Element pe, RDFNode v ) {
+			if (v.isLiteral()) {
+				addLiteralToElement( pe, (Literal) v );
+			} else {
+				Resource r = v.asResource();
+				if (inPlace( r )) pe.setAttribute( "href", r.getURI() );
+				else if (isRDFList( r )) addItems( pe, r.as(RDFList.class).asJavaList() );
+				else pe.appendChild( elementForValue( v ) );
+			}
+		}
+
+		private void addItems( Element pe, List<RDFNode> jl ) {
+			Element items = pe.getOwnerDocument().createElement( "items" );
+			for (RDFNode item: jl) items.appendChild( elementForValue( item ) );
+			pe.appendChild( items );			
+		}
+
+		private boolean inPlace( Resource r ) {
+			if (r.isAnon()) return false;
+			if (r.listProperties().hasNext()) return false;
+			return true;
+		}
+
+		private void addLiteralToElement( Element e, Literal L ) {
+			String lang = L.getLanguage();
+			if (lang.length() > 0) e.setAttribute( "lang", lang );
+			String type = L.getDatatypeURI();
+			if (type != null) e.setAttribute( "datatype", shortNameFor( type ) );
+			e.appendChild( d.createTextNode( L.getLexicalForm() ) );
+		}
 
 		private Element elementForValue( RDFNode v ) {
-			Element e = d.createElement( "V" );
+			Element e = d.createElement( "item" );
 			if (v.isLiteral()) {
-				Literal L = (Literal) v;
-				Text t = d.createTextNode( L.getLexicalForm() );
-				String lang = L.getLanguage();
-				if (lang.length() > 0) e.setAttribute( "lang", lang );
-				String type = L.getDatatypeURI();
-				if (type.length() > 0) e.setAttribute( "datatype", shortNameFor( type ) );
+				addLiteralToElement( e, (Literal) v );
 			} else if (isRDFList( v )){
 				List<RDFNode> items = v.as(RDFList.class).asJavaList();
 				for (RDFNode item: items) {
-					Element ie = d.createElement( "item" );
-					ie.appendChild( elementForValue( item ) );
+					addValueToProperty( e, item );
 				}
 			} else if (v.isResource() && v.asResource().listProperties().hasNext()){
 				return traverse( v.asResource() );
@@ -172,12 +249,12 @@ public class XMLRenderer implements Renderer {
 	    return e;
 		}
 	
-		private boolean needsId(RDFNode v) {
+		private boolean needsId( RDFNode v ) {
 			return false;
 		}
 
 		private boolean isRDFList(RDFNode v) {
-			return false;
+			return v.isResource() && v.asResource().hasProperty( RDF.first );
 		}
 
 		private boolean isMultiValued( Property p ) {
@@ -203,15 +280,10 @@ public class XMLRenderer implements Renderer {
 		}
 	
 		private Element elementFor( Resource x ) {
-			if  (x.isAnon()) {
-				Element e = d.createElement( "E" );		// TODO Auto-generated method stub
-				e.setAttribute( "id", idFor( x ) );
-				return e;
-			} else {
-				Element e = d.createElement( "E" );
-				e.setAttribute( "href", x.getURI() );
-				return e;
-			}
+			Element e = d.createElement( "item" );
+			if  (x.isAnon()) e.setAttribute( "id", idFor( x ) );
+			else e.setAttribute( "href", x.getURI() );
+			return e;
 		}
 	
 		final Map<AnonId, String> idMap = new HashMap<AnonId, String>();
