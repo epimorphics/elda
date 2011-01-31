@@ -221,11 +221,12 @@ public class APIEndpointImpl implements APIEndpoint {
      * Return a render appropriate for the given mimetype
      */
     public Renderer getRendererFor( String mimetype ) {
+    	ShortnameService sns = getSpec().getAPISpec().getShortnameService();
         if (mimetype.equals( "text/plain" )) return new JSONRenderer(this, "text/plain");
         if (mimetype.equals( "text/turtle" )) return new TurtleRenderer();
         if (mimetype.equals( "application/rdf+xml" )) return new RDFXMLRenderer();
         if (mimetype.equals( JSONRenderer.JSON_MIME )) return new JSONRenderer( this );
-        if (mimetype.equals( XMLRenderer.XML_MIME )) return new XMLRenderer();
+        if (mimetype.equals( XMLRenderer.XML_MIME )) return new XMLRenderer( sns );
         if (mimetype.equals( "text/html" )) return new HTMLRenderer();
         return null;
     }

@@ -22,6 +22,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -92,7 +93,10 @@ public class XMLRenderer implements Renderer {
 
 	public static final String XML_MIME = "text/xml";
 	
-	public XMLRenderer() {
+	final ShortnameService sns;
+	
+	public XMLRenderer( ShortnameService sns ) {
+		this.sns = sns;
 	}
 	
 	@Override public String getMimeType() {
@@ -102,7 +106,7 @@ public class XMLRenderer implements Renderer {
 	@Override public synchronized String render( APIResultSet results ) {
 		Document d = getBuilder().newDocument();
 		Resource root = results.getRoot();
-		Rendering r = new Rendering( d );
+		Rendering r = new Rendering( sns, d );
 		Element result = d.createElement( "result" );
 		result.setAttribute( "format", "linked-data-api" );
 		result.setAttribute( "version", "0.2" );
@@ -137,9 +141,11 @@ public class XMLRenderer implements Renderer {
 	static class Rendering {
 		
 		private final Document d;
+		private final ShortnameService sns;
 		
-		public Rendering( Document d ) {
+		public Rendering( ShortnameService sns, Document d ) {
 			this.d = d;
+			this.sns = sns;
 		}
 		
 		private final Set<Resource> seen = new HashSet<Resource>();
@@ -250,8 +256,13 @@ public class XMLRenderer implements Renderer {
 		}
 	
 		private String createShortName( String URI ) {
-			// fx:cough.
-			return ResourceFactory.createResource( URI ).getLocalName();
+			String s = sns.shorten( URI );
+			if (s == null) {
+				System.err.println( ">> Odd, no short name for '" + URI + "'" );
+				return ResourceFactory.createResource( URI ).getLocalName();
+			} else {
+				return s;
+			}
 		}
 	
 		final Map<AnonId, String> idMap = new HashMap<AnonId, String>();
