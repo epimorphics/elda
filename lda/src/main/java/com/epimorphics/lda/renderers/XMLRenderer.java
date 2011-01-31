@@ -254,13 +254,6 @@ public class XMLRenderer implements Renderer {
 			return ResourceFactory.createResource( URI ).getLocalName();
 		}
 	
-		private Element elementFor( Resource x ) {
-			Element e = d.createElement( "item" );
-			if  (x.isAnon()) e.setAttribute( "id", idFor( x ) );
-			else e.setAttribute( "href", x.getURI() );
-			return e;
-		}
-	
 		final Map<AnonId, String> idMap = new HashMap<AnonId, String>();
 	
 		private String idFor( Resource x ) {
