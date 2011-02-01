@@ -6,6 +6,7 @@
 */
 package com.epimorphics.lda.renderers;
 
+import java.io.File;
 import java.io.StringWriter;
 import java.util.*;
 
@@ -13,15 +14,20 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.routing.Loader;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -93,9 +99,17 @@ public class XMLRenderer implements Renderer {
 
 	public static final String XML_MIME = "text/xml";
 	
+	public enum As {HTML, XML};
+	
 	final ShortnameService sns;
+	final As as;
 	
 	public XMLRenderer( ShortnameService sns ) {
+		this( sns, As.XML );
+	}
+	
+	public XMLRenderer( ShortnameService sns, As as ) {
+		this.as = as;
 		this.sns = sns;
 	}
 	
@@ -117,7 +131,7 @@ public class XMLRenderer implements Renderer {
 
 	private String docToString( Document d ) {
 		try {
-			Transformer t = TransformerFactory.newInstance().newTransformer();
+			Transformer t = getTransformer();
 			t.setOutputProperty( OutputKeys.INDENT, "yes" );
 			t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
 			DOMSource ds = new DOMSource( d );
@@ -128,6 +142,19 @@ public class XMLRenderer implements Renderer {
 		} catch (Throwable t) {
 			throw new RuntimeException( t );
 		} 
+	}
+
+	private Transformer getTransformer() 
+		throws TransformerConfigurationException, TransformerFactoryConfigurationError {
+		TransformerFactory tf = TransformerFactory.newInstance();
+		if (as == As.XML) 
+			return tf.newTransformer();
+		else {
+			String bfp = Loader.getBaseFilePath();
+			System.err.println( ">> bfp = " + bfp );
+			Source s = new StreamSource( new File( bfp + "/xsltsheets/results.xsl" ) );
+			return tf.newTransformer( s );
+		}
 	}	
 	
 	private static DocumentBuilder getBuilder() {
@@ -191,9 +218,10 @@ public class XMLRenderer implements Renderer {
 		}
 
 		private void addItems( Element pe, List<RDFNode> jl ) {
-			Element items = pe.getOwnerDocument().createElement( "items" );
-			for (RDFNode item: jl) items.appendChild( elementForValue( item ) );
-			pe.appendChild( items );			
+//			Element items = pe.getOwnerDocument().createElement( "items" );
+//			for (RDFNode item: jl) items.appendChild( elementForValue( item ) );
+//			pe.appendChild( items );			
+			for (RDFNode item: jl) pe.appendChild( elementForValue( item ) );
 		}
 
 		private boolean inPlace( Resource r ) {

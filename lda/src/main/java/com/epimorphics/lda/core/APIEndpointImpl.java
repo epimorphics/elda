@@ -46,6 +46,9 @@ public class APIEndpointImpl implements APIEndpoint {
     protected final boolean specWantsContext;
     protected final Cache cache;
     
+    public static final Resource NO_PRIMARY_TOPIC = ResourceFactory.createResource
+    	( API.getURI() + "NO_PRIMARY_TOPIC_PROVIDED" );
+    
     static Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
     
     public APIEndpointImpl( APIEndpointSpec spec ) {
@@ -152,9 +155,11 @@ public class APIEndpointImpl implements APIEndpoint {
             	.addProperty( FIXUP.definition, uriForSpec )
             	;
             String topic = spec.getAPISpec().getPrimaryTopic();
-            if (topic != null) {
-                listRoot.addProperty(FOAF.primaryTopic, rs.createResource(topic));
-            }
+            listRoot.addProperty
+            	(
+            	FOAF.primaryTopic,
+            	topic == null ? NO_PRIMARY_TOPIC : rs.createResource( topic )
+            	);
     
             thisPage.addProperty(XHV.first, resourceForPage(rs, context, 0));
             
@@ -226,7 +231,8 @@ public class APIEndpointImpl implements APIEndpoint {
         if (mimetype.equals( "text/turtle" )) return new TurtleRenderer();
         if (mimetype.equals( "application/rdf+xml" )) return new RDFXMLRenderer();
         if (mimetype.equals( JSONRenderer.JSON_MIME )) return new JSONRenderer( this );
-        if (mimetype.equals( XMLRenderer.XML_MIME )) return new XMLRenderer( sns );
+        if (mimetype.equals( XMLRenderer.XML_MIME )) return new XMLRenderer( sns, XMLRenderer.As.XML );
+        if (mimetype.equals( "text/html" )) return new XMLRenderer( sns, XMLRenderer.As.HTML );
         if (mimetype.equals( "text/html" )) return new HTMLRenderer();
         return null;
     }
