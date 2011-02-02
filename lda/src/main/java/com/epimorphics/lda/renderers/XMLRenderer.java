@@ -32,6 +32,13 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+/*
+    TODO:
+    format
+    version
+    bnode ID/REFs
+*/
+
 /**
 From the spec: 
 
@@ -178,13 +185,22 @@ public class XMLRenderer implements Renderer {
 		private final Set<Resource> seen = new HashSet<Resource>();
 	
 		private Element addResourceToElement( Element e, Resource x ) {
-			// System.err.println( "traverse: " + x );
-			e.setAttribute( "href", x.getURI() );
+			addIdentification( e, x );
 			if (seen.add( x )) {
 				Set<Property> properties = x.listProperties().mapWith( Statement.Util.getPredicate ).toSet();
 				for (Property p: properties) addPropertyValues( e, x, p );
 			}
 			return e;
+		}
+
+		private void addIdentification( Element e, Resource x ) {
+			if (x.isURIResource())  
+				e.setAttribute( "href", x.getURI() );
+			else if (seen.contains( x )) {
+				e.setAttribute( "ref", idFor( x ) );
+			} else {
+				e.setAttribute( "id", idFor( x ) );
+			}
 		}
 	
 		private void addPropertyValues( Element e, Resource x, Property p ) {
@@ -196,10 +212,12 @@ public class XMLRenderer implements Renderer {
 			Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();
 			if (values.size() > 1 || isMultiValued( p )) {
 				for (RDFNode value: values) {
-					Element i = d.createElement( "item" );
-					giveValueToElement( i, value );
-					// i.appendChild( elementForValue( value ) );
-					pe.appendChild( i );
+//					Element i = d.createElement( "item" );
+//					i.setAttribute( "MULTI", "VALUED" );
+//					giveValueToElement( i, value );
+//					// i.appendChild( elementForValue( value ) );
+//					pe.appendChild( i );
+					pe.appendChild( elementForValue( value ) );
 				}
 			} else if (values.size() == 1) {
 				giveValueToElement( pe, values.iterator().next() );
@@ -211,7 +229,8 @@ public class XMLRenderer implements Renderer {
 				addLiteralToElement( pe, (Literal) v );
 			} else {
 				Resource r = v.asResource();
-				if (inPlace( r )) pe.setAttribute( "href", r.getURI() );
+				if (inPlace( r ))
+					addIdentification(pe, r);
 				else if (isRDFList( r )) addItems( pe, r.as(RDFList.class).asJavaList() );
 				else pe.appendChild( elementForValue( v ) );
 			}
@@ -241,6 +260,7 @@ public class XMLRenderer implements Renderer {
 
 		private Element elementForValue( RDFNode v ) {
 			Element e = d.createElement( "item" );
+			// if (v.isAnon()) e.setAttribute( "ANON", v.asNode().getBlankNodeLabel() );
 			if (v.isLiteral()) {
 				addLiteralToElement( e, (Literal) v );
 			} else if (isRDFList( v )){

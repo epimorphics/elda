@@ -56,7 +56,7 @@ public class SDX_URI_ConnegFilter extends UriConnegFilter
 		return result;
 		}
     
-    private static HashMap<String, MediaType> createMediaExtensions()
+    public static HashMap<String, MediaType> createMediaExtensions()
         {
         HashMap<String, MediaType> result = new HashMap<String, MediaType>();
         result.put( "xml", MediaType.TEXT_XML_TYPE );

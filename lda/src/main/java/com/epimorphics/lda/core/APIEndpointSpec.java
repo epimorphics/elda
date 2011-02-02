@@ -82,6 +82,10 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         views = extractViews(endpoint);
     }
     
+    public boolean isListEndpoint() {
+    	return endpointResource.hasProperty( RDF.type, API.ListEndpoint );
+    }
+    
     private void checkEndpointType(Resource endpoint) {
     	boolean isList = endpoint.hasProperty( RDF.type, API.ListEndpoint );
     	boolean isItem = endpoint.hasProperty( RDF.type, API.ItemEndpoint );

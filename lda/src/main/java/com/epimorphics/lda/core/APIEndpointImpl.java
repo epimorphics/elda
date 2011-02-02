@@ -13,6 +13,9 @@
 package com.epimorphics.lda.core;
 
 
+import java.util.Map;
+
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
@@ -21,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.renderers.*;
+import com.epimorphics.lda.restlets.support.SDX_URI_ConnegFilter;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
@@ -123,6 +127,53 @@ public class APIEndpointImpl implements APIEndpoint {
         return meta;
     }
     
+    private boolean isListEndpoint() {
+    	return spec.isListEndpoint();
+    }
+
+    private Resource resourceForView( Model m, CallContext context, String name ) {
+        UriBuilder ub = context.getURIBuilder();
+        String uri = ub
+        	.replaceQueryParam( APIQuery.SHOW_PARAM, name )
+            .build()
+            .toASCIIString();
+        return m.createResource( uri );
+    }
+    
+    private void addVersionsAndFormats( Model m, CallContext c, Resource thisPage ) {
+    	addVersions( m, c, thisPage );
+    	addFormats( m, c, thisPage );
+    }
+
+	private void addFormats(Model m, CallContext c, Resource thisPage) {
+		for (Map.Entry<String, MediaType> e: SDX_URI_ConnegFilter.createMediaExtensions().entrySet()) {
+			Resource v = resourceForFormat( m, c, e.getKey() );
+			Resource format = m.createResource().addProperty( RDFS.label, e.getValue().toString() );
+			thisPage.addProperty( DCTerms.hasFormat, v );
+			v.addProperty( DCTerms.isFormatOf, thisPage );
+			v.addProperty( DCTerms.format, format );
+		}
+	}
+
+	private Resource resourceForFormat( Model m, CallContext c, String key ) {
+		String oldPath = c.getUriInfo().getBaseUri().getPath() + c.getUriInfo().getPath();
+        UriBuilder ub = c.getURIBuilder();
+        String uri = ub
+        	.replacePath( oldPath + "." + key )
+            .build()
+            .toASCIIString();
+        return m.createResource( uri );
+    }
+
+	private void addVersions( Model m, CallContext c, Resource thisPage ) {
+		for (Map.Entry<String, View> e: spec.views.entrySet()) {
+    		Resource v = resourceForView( m, c, e.getKey() );
+			thisPage.addProperty( DCTerms.hasVersion, v	);
+			v.addProperty( DCTerms.isVersionOf, thisPage );
+			v.addProperty( RDFS.label, e.getKey() );
+    	}
+	}
+    
     private void insertResultSetRoot(APIResultSet rs, CallContext context, APIQuery query) {
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
@@ -135,14 +186,23 @@ public class APIEndpointImpl implements APIEndpoint {
             Resource thisPage = resourceForPage(rs, context, page);
             rs.setRoot(thisPage);
         //
-            RDFList content = rs.createList( rs.getResultList().iterator() );
             thisPage
                 .addProperty( RDF.type, FIXUP.Page )
-                .addProperty( FIXUP.items, content )
                 .addLiteral( FIXUP.page, page )
                 .addLiteral( OpenSearch.itemsPerPage, perPage )
                 .addLiteral( OpenSearch.startIndex, perPage * page + 1 )
                 ;            
+            
+            addVersionsAndFormats( rs, context, thisPage );
+            
+            if (isListEndpoint()) {
+            	RDFList content = rs.createList( rs.getResultList().iterator() );
+            	thisPage.addProperty( FIXUP.items, content );
+            } else {
+            	Resource content = rs.getResultList().get(0);
+            	thisPage.addProperty( FOAF.primaryTopic, content );
+            }
+            
             Resource listRoot = resourceForList(rs, context);
             listRoot
             	.addProperty( DCTerms.hasPart, thisPage )
@@ -161,14 +221,14 @@ public class APIEndpointImpl implements APIEndpoint {
             	topic == null ? NO_PRIMARY_TOPIC : rs.createResource( topic )
             	);
     
-            thisPage.addProperty(XHV.first, resourceForPage(rs, context, 0));
-            
-            if (!rs.isCompleted) {
-                thisPage.addProperty(XHV.next, resourceForPage(rs, context, page+1) );
-            }
-            
-            if (page > 0) {
-                thisPage.addProperty(XHV.prev, resourceForPage(rs, context, page-1));
+            if (isListEndpoint()) {
+	            thisPage.addProperty( XHV.first, resourceForPage(rs, context, 0) );
+	            if (!rs.isCompleted) {
+	                thisPage.addProperty( XHV.next, resourceForPage(rs, context, page+1) );
+	            }
+	            if (page > 0) {
+	                thisPage.addProperty( XHV.prev, resourceForPage(rs, context, page-1) );
+	            }
             }
             rs.setContentLocation( listRoot.getURI() );
         }
