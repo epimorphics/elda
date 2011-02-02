@@ -139,11 +139,6 @@ public class APIEndpointImpl implements APIEndpoint {
             .toASCIIString();
         return m.createResource( uri );
     }
-    
-    private void addVersionsAndFormats( Model m, CallContext c, Resource thisPage ) {
-    	addVersions( m, c, thisPage );
-    	addFormats( m, c, thisPage );
-    }
 
 	private void addFormats(Model m, CallContext c, Resource thisPage) {
 		for (Map.Entry<String, MediaType> e: SDX_URI_ConnegFilter.createMediaExtensions().entrySet()) {
@@ -178,59 +173,41 @@ public class APIEndpointImpl implements APIEndpoint {
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
         Resource uriForSpec = rs.createResource( spec.getAPISpec().specificationURI ); 
-        
-        if (query.isFixedSubject()) {
-//        	System.err.println( ">> query isFixedSubject " + query.getSubject() );
-            rs.setContentLocation( query.getSubject() );
-        } else {   
-            Resource thisPage = resourceForPage(rs, context, page);
-            rs.setRoot(thisPage);
-        //
-            thisPage
-                .addProperty( RDF.type, FIXUP.Page )
-                .addLiteral( FIXUP.page, page )
-                .addLiteral( OpenSearch.itemsPerPage, perPage )
-                .addLiteral( OpenSearch.startIndex, perPage * page + 1 )
-                ;            
-            
-            addVersionsAndFormats( rs, context, thisPage );
-            
-            if (isListEndpoint()) {
-            	RDFList content = rs.createList( rs.getResultList().iterator() );
-            	thisPage.addProperty( FIXUP.items, content );
-            } else {
-            	Resource content = rs.getResultList().get(0);
-            	thisPage.addProperty( FOAF.primaryTopic, content );
-            }
-            
-            Resource listRoot = resourceForList(rs, context);
-            listRoot
-            	.addProperty( DCTerms.hasPart, thisPage )
-            	.addProperty( FIXUP.definition, uriForSpec ) 
-            	.addProperty( RDF.type, API.ListEndpoint )
-            	.addProperty( RDFS.label, "should be a description of this list" )
-            	;
-            thisPage
-            	.addProperty( DCTerms.isPartOf, listRoot )
-            	.addProperty( FIXUP.definition, uriForSpec )
-            	;
-            String topic = spec.getAPISpec().getPrimaryTopic();
-            listRoot.addProperty
-            	(
-            	FOAF.primaryTopic,
-            	topic == null ? NO_PRIMARY_TOPIC : rs.createResource( topic )
-            	);
-    
-            if (isListEndpoint()) {
-	            thisPage.addProperty( XHV.first, resourceForPage(rs, context, 0) );
-	            if (!rs.isCompleted) {
-	                thisPage.addProperty( XHV.next, resourceForPage(rs, context, page+1) );
-	            }
-	            if (page > 0) {
-	                thisPage.addProperty( XHV.prev, resourceForPage(rs, context, page-1) );
-	            }
-            }
-            rs.setContentLocation( listRoot.getURI() );
+        Resource thisPage = resourceForPage(rs, context, page);
+        rs.setRoot(thisPage);
+    //
+		thisPage.addProperty( FIXUP.definition, uriForSpec );
+        addVersions( rs, context, thisPage );
+		addFormats( rs, context, thisPage );
+    //
+        if (isListEndpoint()) {
+        	RDFList content = rs.createList( rs.getResultList().iterator() );
+        	thisPage
+	        	.addProperty( RDF.type, FIXUP.Page )
+	        	.addLiteral( FIXUP.page, page )
+	        	.addLiteral( OpenSearch.itemsPerPage, perPage )
+	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
+	        	;
+        	thisPage.addProperty( FIXUP.items, content );
+    		thisPage.addProperty( XHV.first, resourceForPage( rs, context, 0 ) );
+    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( rs, context, page+1 ) );
+    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( rs, context, page-1 ) );
+    		Resource listRoot = resourceForList(rs, context);
+    		thisPage
+	    		.addProperty( DCTerms.isPartOf, listRoot )
+	    		;
+    		listRoot
+	    		.addProperty( DCTerms.hasPart, thisPage )
+	    		.addProperty( FIXUP.definition, uriForSpec ) 
+	    		.addProperty( RDF.type, API.ListEndpoint )
+	    		.addProperty( RDFS.label, "should be a description of this list" )
+	    		;
+    		rs.setContentLocation( listRoot.getURI() );
+        } else {
+        	Resource content = rs.getResultList().get(0);
+        	thisPage.addProperty( FOAF.primaryTopic, content );
+        	content.addProperty( FOAF.isPrimaryTopicOf, thisPage );     
+        	rs.setContentLocation( query.getSubject() );
         }
     }
     

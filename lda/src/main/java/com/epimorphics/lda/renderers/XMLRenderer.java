@@ -212,11 +212,6 @@ public class XMLRenderer implements Renderer {
 			Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();
 			if (values.size() > 1 || isMultiValued( p )) {
 				for (RDFNode value: values) {
-//					Element i = d.createElement( "item" );
-//					i.setAttribute( "MULTI", "VALUED" );
-//					giveValueToElement( i, value );
-//					// i.appendChild( elementForValue( value ) );
-//					pe.appendChild( i );
 					pe.appendChild( elementForValue( value ) );
 				}
 			} else if (values.size() == 1) {
@@ -236,10 +231,7 @@ public class XMLRenderer implements Renderer {
 			}
 		}
 
-		private void addItems( Element pe, List<RDFNode> jl ) {
-//			Element items = pe.getOwnerDocument().createElement( "items" );
-//			for (RDFNode item: jl) items.appendChild( elementForValue( item ) );
-//			pe.appendChild( items );			
+		private void addItems( Element pe, List<RDFNode> jl ) {	
 			for (RDFNode item: jl) pe.appendChild( elementForValue( item ) );
 		}
 
