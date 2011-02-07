@@ -15,12 +15,23 @@
               "10"^^xsd:long ;
       <http://a9.com/-/spec/opensearch/1.1/startIndex>
               "1"^^xsd:long ;
+      <http://purl.org/dc/terms/hasFormat>
+              <http://dummy//doc/deptsFr.html> , <http://dummy//doc/deptsFr.rdf> , <http://dummy//doc/deptsFr.json> , <http://dummy//doc/deptsFr.ttl> , <http://dummy//doc/deptsFr.owl> , <http://dummy//doc/deptsFr.xml> , <http://dummy//doc/deptsFr.text> ;
+      <http://purl.org/dc/terms/hasVersion>
+              <http://dummy/doc/deptsFr?_view=all> , <http://dummy/doc/deptsFr?_view=description> , <http://dummy/doc/deptsFr?_view=basic> , <http://dummy/doc/deptsFr?_view=%23%23%23default> ;
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/deptsFr> ;
       api:definition spec:api1 ;
       api:items (ex:dept4 ex:dept1) ;
       api:page "0"^^xsd:long ;
       <http://www.w3.org/1999/xhtml/vocab#first>
+              <http://dummy/doc/deptsFr?_page=0> .
+
+<http://dummy//doc/deptsFr.html>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/html"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/deptsFr?_page=0> .
 
 <http://dummy/doc/deptsFr>
@@ -30,10 +41,72 @@
               <http://dummy/doc/deptsFr?_page=0> ;
       api:definition spec:api1 .
 
+<http://dummy/doc/deptsFr?_view=all>
+      rdfs:label "all" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/deptsFr?_page=0> .
+
+<http://dummy/doc/deptsFr?_view=description>
+      rdfs:label "description" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/deptsFr?_page=0> .
+
+<http://dummy/doc/deptsFr?_view=basic>
+      rdfs:label "basic" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/deptsFr?_page=0> .
+
+<http://dummy//doc/deptsFr.ttl>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/turtle"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/deptsFr?_page=0> .
+
 ex:dept4
       a       school-ont:Department ;
       ex:name "département"@fr .
 
+<http://dummy/doc/deptsFr?_view=%23%23%23default>
+      rdfs:label "###default" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/deptsFr?_page=0> .
+
+<http://dummy//doc/deptsFr.rdf>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/deptsFr?_page=0> .
+
+<http://dummy//doc/deptsFr.json>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "application/json"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/deptsFr?_page=0> .
+
+<http://dummy//doc/deptsFr.owl>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/deptsFr?_page=0> .
+
 ex:dept1
       a       school-ont:Department ;
       ex:name "département"@fr , "department"@en .
+
+<http://dummy//doc/deptsFr.text>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/plain"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/deptsFr?_page=0> .
+
+<http://dummy//doc/deptsFr.xml>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/deptsFr?_page=0> .

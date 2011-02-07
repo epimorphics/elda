@@ -41,7 +41,7 @@ public class ExploreTestingForLatAndLongEtc
 		( "spec rdf:type api:API" 
 		+ "; spec api:sparqlEndpoint here:example"
 		+ "; spec api:endPoint End"
-		+ "; End a api:ListEndpoint"
+		+ "; End rdf:type api:ListEndpoint"
 		+ "; End api:uriTemplate 'http://dummy/doc/schools'"
 		+ ""
 		+ "; here:example has:root A; here:example has:root B; here:example has:root C; here:example has:root D"

@@ -9,6 +9,11 @@
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
+<http://dummy/doc/schools?_view=%23%23%23default>
+      rdfs:label "###default" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/schools?_page=1> .
+
 <http://dummy/doc/schools>
       a       api:ListEndpoint ;
       rdfs:label "should be a description of this list" ;
@@ -16,17 +21,12 @@
               <http://dummy/doc/schools?_page=1> ;
       api:definition spec:api1 .
 
-ex:school_2
-      a       school-ont:School ;
-      ex:name "Name2" .
-
-ex:school_24
-      a       school-ont:School ;
-      ex:name "Name24" .
-
-ex:school_26
-      a       school-ont:School ;
-      ex:name "Name26" .
+<http://dummy//doc/schools.ttl>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/turtle"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools?_page=1> .
 
 ex:school_25
       a       school-ont:School ;
@@ -40,21 +40,76 @@ ex:school_21
       a       school-ont:School ;
       ex:name "Name21" .
 
-ex:school_22
-      a       school-ont:School ;
-      ex:name "Name22" .
-
 ex:school_18
       a       school-ont:School ;
       ex:name "Name18" .
+
+<http://dummy//doc/schools.json>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "application/json"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools?_page=1> .
+
+<http://dummy//doc/schools.owl>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools?_page=1> .
+
+<http://dummy/doc/schools?_view=all>
+      rdfs:label "all" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/schools?_page=1> .
+
+ex:school_2
+      a       school-ont:School ;
+      ex:name "Name2" .
+
+ex:school_24
+      a       school-ont:School ;
+      ex:name "Name24" .
+
+ex:school_26
+      a       school-ont:School ;
+      ex:name "Name26" .
+
+<http://dummy//doc/schools.text>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/plain"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools?_page=1> .
+
+ex:school_22
+      a       school-ont:School ;
+      ex:name "Name22" .
 
 ex:school_20
       a       school-ont:School ;
       ex:name "Name20" .
 
+<http://dummy/doc/schools?_view=description>
+      rdfs:label "description" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/schools?_page=1> .
+
+<http://dummy/doc/schools?_view=medium>
+      rdfs:label "medium" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/schools?_page=1> .
+
 ex:school_19
       a       school-ont:School ;
       ex:name "Name19" .
+
+<http://dummy//doc/schools.html>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/html"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools?_page=1> .
 
 <http://dummy/doc/schools?_page=1>
       a       api:Page ;
@@ -62,6 +117,10 @@ ex:school_19
               "10"^^xsd:long ;
       <http://a9.com/-/spec/opensearch/1.1/startIndex>
               "11"^^xsd:long ;
+      <http://purl.org/dc/terms/hasFormat>
+              <http://dummy//doc/schools.json> , <http://dummy//doc/schools.ttl> , <http://dummy//doc/schools.owl> , <http://dummy//doc/schools.html> , <http://dummy//doc/schools.text> , <http://dummy//doc/schools.rdf> , <http://dummy//doc/schools.xml> ;
+      <http://purl.org/dc/terms/hasVersion>
+              <http://dummy/doc/schools?_view=%23%23%23default> , <http://dummy/doc/schools?_view=description> , <http://dummy/doc/schools?_view=medium> , <http://dummy/doc/schools?_view=all> , <http://dummy/doc/schools?_view=basic> ;
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools> ;
       api:definition spec:api1 ;
@@ -73,3 +132,22 @@ ex:school_19
               <http://dummy/doc/schools?_page=2> ;
       <http://www.w3.org/1999/xhtml/vocab#prev>
               <http://dummy/doc/schools?_page=0> .
+
+<http://dummy//doc/schools.xml>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools?_page=1> .
+
+<http://dummy//doc/schools.rdf>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools?_page=1> .
+
+<http://dummy/doc/schools?_view=basic>
+      rdfs:label "basic" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/schools?_page=1> .

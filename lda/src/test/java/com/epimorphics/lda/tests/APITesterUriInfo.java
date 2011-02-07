@@ -48,7 +48,8 @@ public final class APITesterUriInfo implements UriInfo {
     }
 
     @Override public URI getBaseUri() {
-        return null;
+        try { return new URI( "http://dummy.domain.com/" ); }
+        catch (URISyntaxException u) { throw new RuntimeException( u ); }
     }
 
     @Override public UriBuilder getBaseUriBuilder() {
