@@ -32,13 +32,6 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-/*
-    TODO:
-    format
-    version
-    bnode ID/REFs
-*/
-
 /**
 From the spec: 
 
@@ -125,18 +118,25 @@ public class XMLRenderer implements Renderer {
 	}
 
 	@Override public synchronized String render( APIResultSet results ) {
+		return render( results.getRoot() );
+	}
+
+	public String render( Resource root ) {
 		Document d = getBuilder().newDocument();
-		Resource root = results.getRoot();
+		renderInto( root, d );
+		return docToString( d );
+	}
+
+	public void renderInto( Resource root, Document d ) {
 		Rendering r = new Rendering( sns, d );
 		Element result = d.createElement( "result" );
 		result.setAttribute( "format", "linked-data-api" );
 		result.setAttribute( "version", "0.2" );
 		r.addResourceToElement( result, root );
 		d.appendChild( result );
-		return docToString( d );
 	}
 
-	private String docToString( Document d ) {
+	public String docToString( Document d ) {
 		try {
 			Transformer t = getTransformer();
 			t.setOutputProperty( OutputKeys.INDENT, "yes" );
