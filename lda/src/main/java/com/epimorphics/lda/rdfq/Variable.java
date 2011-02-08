@@ -18,6 +18,12 @@ public class Variable extends Any
 	public String name()
 		{ return name; }
 	
+	@Override public boolean equals( Object other )
+		{ return other instanceof Variable && name.equals( ((Variable) other).name ); }
+	
+	@Override public int hashCode()
+		{ return name.hashCode(); }
+	
 	@Override public String asSparqlTerm()
 		{ return name; }
 	

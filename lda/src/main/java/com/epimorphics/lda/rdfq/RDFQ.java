@@ -22,6 +22,9 @@ public class RDFQ
 		
 		public Triple( Any S, Any P, Any O ) 
 			{ this.S = S; this.P = P; this.O = O; }
+		
+		@Override public String toString()
+			{ return S.asSparqlTerm() + " " + P.asSparqlTerm() + " " + O.asSparqlTerm(); }
 		}
 	
 	public static LiteralNode literal( double d )

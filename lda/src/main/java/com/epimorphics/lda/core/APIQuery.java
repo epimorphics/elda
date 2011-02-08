@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.rdfq.*;
+import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.LARQManager;
@@ -623,7 +624,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 
 	public String constructBGP() {
 		StringBuilder sb = new StringBuilder();
-		for (RDFQ.Triple t: basicGraphTriples)
+		for (RDFQ.Triple t: reorder( basicGraphTriples ))
 			sb
 				.append( t.S.asSparqlTerm() )
 				.append( " " ).append( t.P.asSparqlTerm() )
@@ -633,7 +634,28 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		return sb.toString();
 	}
     
-    private void appendPrefixes(StringBuffer q, PrefixMapping prefixes) {
+	static final URINode RDF_TYPE = RDFQ.uri( RDF.type.getURI() );
+	
+    private List<Triple> reorder( List<Triple> triples ) {
+    	List<Triple> result = new ArrayList<Triple>(triples.size());
+    	List<Triple> plain = new ArrayList<Triple>(triples.size());
+    	List<Triple> type = new ArrayList<Triple>(triples.size());
+    	for (Triple t: triples) {
+    		if (t.S.equals( SELECT_VAR ) && t.O instanceof LiteralNode)
+    			result.add( t );
+    		else if (t.O.equals( RDF_TYPE )) 
+    			type.add( t );
+    		else
+    			plain.add( t );
+    	}
+    	result.addAll( plain );
+    	result.addAll( type );
+    	if (!result.equals( triples ))
+    		log.debug( ">> reordered\n    " + triples + "\nto\n    " + result );
+    	return result;
+	}
+
+	private void appendPrefixes(StringBuffer q, PrefixMapping prefixes) {
 		for (String prefix: prefixes.getNsPrefixMap().keySet()) {
 			q
 				.append( "PREFIX " )
