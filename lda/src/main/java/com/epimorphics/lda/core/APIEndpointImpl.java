@@ -29,6 +29,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.XHV;
+import com.epimorphics.util.DOMUtils.As;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
@@ -268,8 +269,8 @@ public class APIEndpointImpl implements APIEndpoint {
         if (mimetype.equals( "text/turtle" )) return new TurtleRenderer();
         if (mimetype.equals( "application/rdf+xml" )) return new RDFXMLRenderer();
         if (mimetype.equals( JSONRenderer.JSON_MIME )) return new JSONRenderer( this );
-        if (mimetype.equals( XMLRenderer.XML_MIME )) return new XMLRenderer( sns, XMLRenderer.As.XML );
-        if (mimetype.equals( "text/html" )) return new XMLRenderer( sns, XMLRenderer.As.HTML );
+        if (mimetype.equals( XMLRenderer.XML_MIME )) return new XMLRenderer( sns, As.XML );
+        if (mimetype.equals( "text/html" )) return new XMLRenderer( sns, As.HTML );
         if (mimetype.equals( "text/html" )) return new HTMLRenderer();
         return null;
     }

@@ -9,12 +9,7 @@ package com.epimorphics.lda.renderers.tests;
 import static org.junit.Assert.*;
 
 import java.io.StringWriter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -24,78 +19,25 @@ import javax.xml.transform.stream.StreamResult;
 import org.junit.Test;
 
 import com.epimorphics.lda.renderers.XMLRenderer;
-import com.epimorphics.lda.renderers.XMLRenderer.As;
-import com.epimorphics.lda.renderers.tests.TestXMLRenderer.Tokens.Type;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.tests_support.ShortnameFake;
+import com.epimorphics.util.DOMUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class TestXMLRenderer 
 	{
-	static class Tokens 
+	private static class ForceShorten extends ShortnameFake 
 		{
-		String spelling;
-		Type type;
-		String source;
-		Matcher m;
-		
-		static final Pattern p = Pattern.compile( "\\(|\\)|'[^']*'|[^()=' ]+=[^()=' ]+|[^()=' ]+|." );
-
-		enum Type {WRONG, EOF, LPAR, RPAR, LIT, WORD, ATTR}
-		
-		public Tokens( String source ) 
-			{
-			this.source = source;
-			this.m = p.matcher( source );
-			advance();
-			}
-		
-		public void advance()
-			{
-			if (m.find()) 
-				{
-				spelling = m.group();
-//				System.err.println( ">> SPELLING: " + spelling );
-				if (spelling.equals( " "))
-					advance();
-				else
-					type =
-						spelling.equals( "(" ) ? Type.LPAR
-						: spelling.equals( ")" ) ? Type.RPAR
-						: spelling.startsWith( "'" ) ? Type.LIT
-						: spelling.contains( "=" ) ? Type.ATTR
-						: Type.WORD
-						;
-				}
-			else
-				{
-				spelling = "";
-				type = Type.EOF;
-				}
-			// System.err.println( ">> advanced to " + type + " \"" + spelling + "\"" );
-			}
-
-		public void demand( Type t ) 
-			{
-			if (type == t) advance();
-			else throw new RuntimeException( "expected a " + t + " but got: " + type + " " + spelling );
-			}
+		@Override public String shorten( String uri ) 
+			{ return uri.replaceAll( "^.*/", "" ); }
 		}
+
 	
-	protected Node parse( String source ) 
-		{
-		Document d = getBuilder().newDocument();
-		Node result = parse( d, new Tokens( source ) );
-//		System.err.println( "-->> " + docToString( result ) );
-		return result;		
-		}
-
 	public String nodeToString( Node d ) {
 		try {
 			TransformerFactory tf = TransformerFactory.newInstance();
@@ -112,57 +54,6 @@ public class TestXMLRenderer
 		} 
 	}
 	
-	private Node parse( Document d, Tokens t ) 
-		{
-		if (t.type == Tokens.Type.LPAR)
-			{
-			t.advance();
-			String tag = parseWord( d, t );
-			Element e = d.createElement( tag );
-			while (true)
-				{
-				switch (t.type)
-					{
-					case ATTR:
-						int eq = t.spelling.indexOf( '=' );
-						String name = t.spelling.substring( 0, eq );
-						String value = t.spelling.substring( eq + 1 );
-						e.setAttribute( name, value );
-						t.advance();
-						break;
-						
-					case LPAR:
-					case LIT:
-						e.appendChild( parse( d, t ) );
-						break;
-						
-					case RPAR:
-						t.advance();
-						return e;
-						
-					default: 
-						throw new RuntimeException( "Not allowed in element: " + t.type + " " + t.spelling );
-					}
-				}
-			}
-		else if (t.type == Tokens.Type.LIT)
-			{
-			try { return d.createTextNode( t.spelling ); } finally { t.advance(); }
-			}
-		else
-			throw new RuntimeException( "OOPS -- bad token for parse: " + t.type + " " + t.spelling );
-		}
-
-	private String parseWord(Document d, Tokens t)
-		{
-		if (t.type == Tokens.Type.WORD)
-			{
-			try { return t.spelling; } finally { t.advance(); }
-			}
-		else
-			throw new RuntimeException( "tag following LPAR must be WORD: " + t.type + " " + t.spelling );
-		}
-
 	@Test public void testParser() 
 		{
 //		System.err.println( ">> " + parse( "'hello'" ) );
@@ -177,35 +68,29 @@ public class TestXMLRenderer
 	
 	@Test public void testSketch() 
 		{
-		Model m = ModelTestBase.modelWithStatements( "a P b" );
-		Resource root = m.createResource( "eh:/a" );
-		ShortnameService sns = new ShortnameFake() 
-			{
-			@Override public String shorten( String uri ) 
-				{ return uri.replaceAll( "^.*/", "" ); }
-			};
-		XMLRenderer xr = new XMLRenderer( sns, As.XML );
-		Document d = getBuilder().newDocument();
+		ensureRendering( "(P href=eh:/b)", resourceInModel( "a P b" ) );
+		}
+
+    protected Resource resourceInModel( String string )
+        {
+        Model m = ModelTestBase.modelWithStatements( string );
+        Resource r = ModelTestBase.resource( m, string.substring( 0, string.indexOf( ' ' ) ) );
+        return r.inModel( m );        
+        }
+    
+	private void ensureRendering( String desired, Resource root ) 
+		{
+		ShortnameService sns = new ForceShorten();
+		XMLRenderer xr = new XMLRenderer( sns, DOMUtils.As.XML );
+		Document d = DOMUtils.newDocument();
 		xr.renderInto( root, d );
-		Node de = d.getDocumentElement();
-		Node expected = parse( "(result format=linked-data-api version=0.2 href=eh:/a (P href=eh:/b))" );
+		Node de = d.getDocumentElement().getFirstChild();
+		Node expected = new TinyParser().parse( desired );
 		if (!de.isEqualNode( expected )) 
 			{
 			System.err.println( "expected: " + nodeToString( expected ) );
 			System.err.println( "obtained: " + nodeToString( de ) );
-			fail( "ALAS" );
-			}
-		}
-	
-	private static DocumentBuilder getBuilder() 
-		{
-		try 
-			{
-			return DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			} 
-		catch (ParserConfigurationException e) 
-			{
-			throw new RuntimeException( e );
+			fail( "ALAS -- rendering not as expected." );
 			}
 		}
 	
