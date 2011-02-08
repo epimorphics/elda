@@ -44,7 +44,7 @@ public class XMLRenderer implements Renderer {
 	public String render( Resource root ) {
 		Document d = DOMUtils.newDocument();
 		renderInto( root, d );
-		return DOMUtils.docToIndentedString( d, as );
+		return DOMUtils.nodeToIndentedString( d, as );
 	}
 
 	public void renderInto( Resource root, Document d ) {

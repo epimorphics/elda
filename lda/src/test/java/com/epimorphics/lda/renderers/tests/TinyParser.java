@@ -55,7 +55,7 @@ public class TinyParser
 			}
 		else if (t.type == TinyTokens.Type.LIT)
 			{
-			try { return d.createTextNode( t.spelling ); } finally { t.advance(); }
+			try { return d.createTextNode( t.spelling.substring(1, t.spelling.length() - 1) ); } finally { t.advance(); }
 			}
 		else
 			throw new RuntimeException( "OOPS -- bad token for parse: " + t.type + " " + t.spelling );

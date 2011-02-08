@@ -23,6 +23,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import com.epimorphics.lda.routing.Loader;
 
@@ -56,7 +57,7 @@ public class DOMUtils
 			}
 		}
 
-	public static String docToIndentedString( Document d, As as ) 
+	public static String nodeToIndentedString( Node d, As as ) 
 		{
 		try {
 			Transformer t = getTransformer( as );

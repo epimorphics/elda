@@ -50,7 +50,8 @@ Resources are mapped onto XML elements as follows:
 The RDF properties of a resource are mapped onto XML elements. The 
 name of the XML element is:
 
-    * the short name for the property, as described in the property paths section, if it has one
+    * the short name for the property, as described in the property paths section, 
+      if it has one
     
     * the rdfs:label of the property, if it is a legal short name for a property 
     	that doesn't clash with an existing name
