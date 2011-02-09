@@ -645,7 +645,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	for (Triple t: triples) {
     		if (t.O instanceof LiteralNode && canPromoteSubject( t.S ))
     			result.add( t );
-    		else if (t.O.equals( RDF_TYPE )) 
+    		else if (t.P.equals( RDF_TYPE ))
     			type.add( t );
     		else
     			plain.add( t );

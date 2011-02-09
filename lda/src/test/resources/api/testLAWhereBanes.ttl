@@ -70,16 +70,16 @@ ex:school_3
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/laWhere/BANES?_page=0> .
 
+<http://dummy/doc/schools/laWhere/BANES?_view=basic>
+      rdfs:label "basic" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/schools/laWhere/BANES?_page=0> .
+
 <http://dummy//doc/schools/laWhere/BANES.text>
       <http://purl.org/dc/terms/format>
               [ rdfs:label "text/plain"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/laWhere/BANES?_page=0> .
-
-<http://dummy/doc/schools/laWhere/BANES?_view=basic>
-      rdfs:label "basic" ;
-      <http://purl.org/dc/terms/isVersionOf>
               <http://dummy/doc/schools/laWhere/BANES?_page=0> .
 
 <http://dummy//doc/schools/laWhere/BANES.owl>
