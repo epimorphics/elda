@@ -636,12 +636,14 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
 	static final URINode RDF_TYPE = RDFQ.uri( RDF.type.getURI() );
 	
+	private boolean promoteAnySubject = true;
+	
     private List<Triple> reorder( List<Triple> triples ) {
     	List<Triple> result = new ArrayList<Triple>(triples.size());
     	List<Triple> plain = new ArrayList<Triple>(triples.size());
     	List<Triple> type = new ArrayList<Triple>(triples.size());
     	for (Triple t: triples) {
-    		if (t.S.equals( SELECT_VAR ) && t.O instanceof LiteralNode)
+    		if (t.O instanceof LiteralNode && canPromoteSubject( t.S ))
     			result.add( t );
     		else if (t.O.equals( RDF_TYPE )) 
     			type.add( t );
@@ -653,6 +655,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	if (!result.equals( triples ))
     		log.debug( ">> reordered\n    " + triples + "\nto\n    " + result );
     	return result;
+	}
+
+	private boolean canPromoteSubject( Any S ) {
+		return promoteAnySubject || S.equals( SELECT_VAR );
 	}
 
 	private void appendPrefixes(StringBuffer q, PrefixMapping prefixes) {
