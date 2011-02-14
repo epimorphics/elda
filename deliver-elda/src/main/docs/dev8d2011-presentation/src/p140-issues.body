@@ -1,1 +1,35 @@
-p140=issues
+<h2>Interoperability issues</h2>
+
+<p style="font-size: 120%">
+It's easy to write simple URI queries that 
+generate surprisingly complicated SPARQL.
+</p>
+
+<ul>
+<li style="font-size: 120%">
+Property chains especially when combined with big
+data windows (200K SPARQL queries!).
+</li>
+
+<li style="font-size: 120%">
+Some endpoints do less optimisation than others.
+Elda does a primitive literals-to-the-top reordering
+as a work-around.
+</li>
+</ul>
+
+<div style="float: left">
+<pre>
+LLLLLLLLLLLLLLLLLLLLLLLLLL
+</pre>
+</div>
+
+<div style="float: right">
+<pre>
+RRRRRRRRRRRRRRRRRRRRRRRRRRR
+</pre>
+</div>
+
+<div style="clear: both">
+</div>
+

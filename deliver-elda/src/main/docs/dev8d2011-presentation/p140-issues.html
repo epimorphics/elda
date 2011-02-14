@@ -2,6 +2,9 @@
 <head>
 <title>dev8d Elda presentation</title>
 <link href="../style.css" type="text/css" rel="stylesheet"></link>
+<style>
+.chunky { font-size: 200% }
+</style>
 </head>
 <body>
 <div class="main">
@@ -17,7 +20,41 @@
 <a href="p000-and-so-it-begins.html">FIRST</a>
 <a href="p130-inside-spec.html">PREV</a>
 <a href="p150-where-next.html">NEXT</a>
-p140=issues
+<h2>Interoperability issues</h2>
+
+<p style="font-size: 120%">
+It's easy to write simple URI queries that 
+generate surprisingly complicated SPARQL.
+</p>
+
+<ul>
+<li style="font-size: 120%">
+Property chains especially when combined with big
+data windows (200K SPARQL queries!).
+</li>
+
+<li style="font-size: 120%">
+Some endpoints do less optimisation than others.
+Elda does a primitive literals-to-the-top reordering
+as a work-around.
+</li>
+</ul>
+
+<div style="float: left">
+<pre>
+LLLLLLLLLLLLLLLLLLLLLLLLLL
+</pre>
+</div>
+
+<div style="float: right">
+<pre>
+RRRRRRRRRRRRRRRRRRRRRRRRRRR
+</pre>
+</div>
+
+<div style="clear: both">
+</div>
+
 <div class="footer">
 <hr>
 &copy; Copyright 2011 Epimorphics Limited. For licencing conditions see

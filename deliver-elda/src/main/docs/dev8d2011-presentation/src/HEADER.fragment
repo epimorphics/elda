@@ -2,6 +2,9 @@
 <head>
 <title>dev8d Elda presentation</title>
 <link href="../style.css" type="text/css" rel="stylesheet"></link>
+<style>
+.chunky { font-size: 200% }
+</style>
 </head>
 <body>
 <div class="main">
