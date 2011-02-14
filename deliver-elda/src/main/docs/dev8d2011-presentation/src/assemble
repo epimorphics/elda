@@ -20,7 +20,6 @@ do
         echo >> $out '<a href="'$next'">NEXT</a>'
 
     fi
-    echo >> $out "<hr>"
     cat $x >> $out
     cat FOOTER.fragment >> $out
 done

@@ -17,8 +17,29 @@
 <a href="p010-who-am-i.html">FIRST</a>
 <a href="p020-plan-of-talk.html">PREV</a>
 <a href="p040-result-sets.html">NEXT</a>
-<hr>
-p030-sparql-is-big
+<h2>SPARQL is BIG</h2>
+
+<p>
+Names of closed schools known to the SPARQL endpoint
+at <b>http://services.data.gov.uk/education/sparql</b>.
+</p>
+
+<pre style="font-size: 200%">
+prefix school: &lt;http://education.data.gov.uk/def/school/&gt; 
+select * where
+{
+    ?school 
+        ; school:establishmentStatus 
+            school:EstablishmentStatus_Closed
+        ; rdfs:label ?label
+        .
+}
+</pre>
+
+<p>
+(And then you URL-encode it for GET, or wimp out and POST it.)
+</p>
+
 <div class="footer">
 <hr>
 &copy; Copyright 2011 Epimorphics Limited. For licencing conditions see
