@@ -1,9 +1,7 @@
 #!/bin/bash
 
-export HTML="assembled"
-
 #
 # wrap the header & footer fragments around the .body files and write
-# the result to the .html files.
+# the result to the .html files in the directory above this one.
 #
-for x in *body; do cat HEADER.fragment $x FOOTER.fragment > $HTML/$(basename $x .body).html; done
+for x in *body; do cat HEADER.fragment $x FOOTER.fragment > ../$(basename $x .body).html; done
