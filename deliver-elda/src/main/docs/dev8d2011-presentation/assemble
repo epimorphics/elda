@@ -1,7 +1,0 @@
-#!/bin/bash
-
-#
-# wrap the header & footer fragments around the .body files and write
-# the result to the .html files.
-#
-for x in *body; do cat HEADER.fragment $x FOOTER.fragment > $(basename $x .body).html; done
