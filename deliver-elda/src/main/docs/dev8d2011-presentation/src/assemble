@@ -1,7 +1,37 @@
 #!/bin/bash
 
+files=("" *body "")
+size=${#files[*]}
+for ((i = 1; i < size-1; i += 1)) 
+do
+    x=${files[i]}
+    first=$(basename ${files[1]} .body).html
+    prev=$(basename ${files[i-1]} .body).html
+    next=$(basename ${files[i+1]} .body).html
+    out=../$(basename $x .body).html
+    cat HEADER.fragment > $out
+    if [ $i != 1 ]; then
+        echo >> $out '<a href="'$first'">FIRST</a>'
+    fi
+    if [ "${files[i-1]}" != "" ]; then 
+       echo >> $out '<a href="'$prev'">PREV</a>'
+    fi
+    if [ "${files[i+1]}" != "" ]; then 
+        echo >> $out '<a href="'$next'">NEXT</a>'
+
+    fi
+    echo >> $out "<hr>"
+    cat $x >> $out
+    cat FOOTER.fragment >> $out
+done
+
+exit
+
 #
 # wrap the header & footer fragments around the .body files and write
 # the result to the .html files in the directory above this one.
 #
-for x in *body; do cat HEADER.fragment $x FOOTER.fragment > ../$(basename $x .body).html; done
+for x in *body
+do 
+    cat HEADER.fragment $x FOOTER.fragment > ../$(basename $x .body).html
+done
