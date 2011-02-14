@@ -1,5 +1,14 @@
 #!/bin/bash
 
+#
+# copy up the diagrams (there's at least one)
+#
+cp *.png ..
+
+#
+# copy up the bodies, wrapped in the header and footer
+# fragments, with the appropriate FIRST/NEXT/PREV links
+#
 files=("" *body "")
 size=${#files[*]}
 for ((i = 1; i < size-1; i += 1)) 
@@ -22,15 +31,4 @@ do
     fi
     cat $x >> $out
     cat FOOTER.fragment >> $out
-done
-
-exit
-
-#
-# wrap the header & footer fragments around the .body files and write
-# the result to the .html files in the directory above this one.
-#
-for x in *body
-do 
-    cat HEADER.fragment $x FOOTER.fragment > ../$(basename $x .body).html
 done
