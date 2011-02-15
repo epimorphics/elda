@@ -5,7 +5,7 @@ Names of closed schools known to the SPARQL endpoint
 at <b>http://services.data.gov.uk/education/sparql</b>.
 </p>
 
-<pre style="font-size: 200%">
+<pre class="chunky">
 prefix school: &lt;http://education.data.gov.uk/def/school/&gt; 
 select * where
 {

@@ -6,9 +6,9 @@
 
 <span style="color: blue">...wossname/elda/api</span>
     <span style="color: green">/education/schools</span>
-    <span style="color: yellow">.xml</span>
-    ?establishmentStatus=<span style="color: red">closed</span>
-    &amp;<span style="color: cyan">_view</span>=label
+    <span style="color: orange">.xml</span>
+    ?<span style="color: red">establishmentStatus=closed</span>
+    &amp;<span style="color: magenta">_view</span>=label
 
 </pre>
 
