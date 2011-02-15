@@ -15,34 +15,30 @@
 </div>
 
 <a href="p000-and-so-it-begins.html">FIRST</a>
-<a href="p101-cloned-repository.html">PREV</a>
-<a href="p115-running-elda-jar.html">NEXT</a>
-<h2>Using the Elda demo jar</h2>
+<a href="p110-jar-not-jar-jar.html">PREV</a>
+<a href="p120-examples.html">NEXT</a>
+<h2>Running the Elda jar</h2>
 
-<p class="chunky">
 <ul>
-<li style="font-size: 170%">
-quickstart: click and go
+<li class="chunky">
+java -jar elda-0.9.12-SNAPSHOT.jar
 </li>
 
-<li style="font-size: 170%">
-all dependencies included
+<li class="chunky">
+cd Elda*
+java -jar start.jar
 </li>
 
-<li style="font-size: 170%">
-runs education example by default
+<li class="chunky">
+java -Djetty.port=28059 -jar start.jar
 </li>
 
-<li style="font-size: 170%">
-can be configured from the command line
-</li>
-
-<li style="font-size: 170%">
-(some) documentation included
+<li class="chunky">
+java -Delda.spec=SPEC1,SPEC2 -jar start.jar
 </li>
 
 </ul>
-</p>
+
 <div class="footer">
 <hr>
 &copy; Copyright 2011 Epimorphics Limited. For licencing conditions see

@@ -653,7 +653,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	result.addAll( plain );
     	result.addAll( type );
     	if (!result.equals( triples ))
-    		log.debug( ">> reordered\n    " + triples + "\nto\n    " + result );
+    		System.err.println( ">> reordered\n    " + triples + "\nto\n    " + result );
     	return result;
 	}
 

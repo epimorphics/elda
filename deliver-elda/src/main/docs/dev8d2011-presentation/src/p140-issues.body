@@ -16,23 +16,26 @@ data windows (200K SPARQL queries!).
 
 <li style="font-size: 120%">
 Some endpoints do less optimisation than others.
-Elda does a primitive literals-to-the-top reordering
+Elda does a primitive constants-to-the-top reordering
 as a work-around.
 </li>
 </ul>
 
 <div style="float: left">
 <pre>
-LLLLLLLLLLLLLLLLLLLLLLLLLL
+?item rdf:type school:School
+?item school:localAuthority> ?___0
+?___0 rdfs:label "London"
 </pre>
 </div>
 
 <div style="float: right">
 <pre>
-RRRRRRRRRRRRRRRRRRRRRRRRRRR
+?___0 rdfs:label "London"
+?item school:localAuthority ?___0
+?item rdf:type school:School
 </pre>
 </div>
 
 <div style="clear: both">
 </div>
-
