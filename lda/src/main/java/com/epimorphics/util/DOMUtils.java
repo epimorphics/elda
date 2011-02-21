@@ -67,11 +67,21 @@ public class DOMUtils
 			StringWriter sw = new StringWriter();
 			StreamResult sr = new StreamResult( sw );
 			t.transform( ds, sr );
-			return sw.toString();
+			String raw = sw.toString();
+			return as == As.XML ? raw : cook(raw);
 			} 
 		catch (Throwable t) 
 			{
 			throw new RuntimeException( t );
 			}	 
+		}
+
+	private static String cook(String raw) 
+		{
+		return raw
+			.replaceAll( "\"/images", "\"/elda/images" )
+			.replaceAll( "\"/css", "\"/elda/css" )
+			.replaceAll( "\"/scripts", "\"/elda/scripts" )
+			;
 		}
 	}

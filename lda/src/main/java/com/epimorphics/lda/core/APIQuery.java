@@ -653,7 +653,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	result.addAll( plain );
     	result.addAll( type );
     	if (!result.equals( triples ))
-    		log.debug( ">> reordered\n    " + triples + "\nto\n    " + result );
+    		log.debug( "reordered\n    " + triples + "\nto\n    " + result );
     	return result;
 	}
 
@@ -744,7 +744,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             return rs;
 
         } catch (QueryExceptionHTTP ie) {
-            throw new APIEndpointException("Cannot reach source SPARQL endpoint for " + source);
+            throw new APIEndpointException("Problem running query for " + source + ": " + ie.getMessage(), ie);
         }
     }
 
