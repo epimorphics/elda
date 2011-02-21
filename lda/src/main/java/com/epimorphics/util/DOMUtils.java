@@ -27,6 +27,12 @@ import org.w3c.dom.Node;
 
 import com.epimorphics.lda.routing.Loader;
 
+/**
+    Handles XSLT rewrites for HTML and indented-string display
+    of XML.
+    
+ 	@author chris
+*/
 public class DOMUtils 
 	{
 	public enum As {HTML, XML};
