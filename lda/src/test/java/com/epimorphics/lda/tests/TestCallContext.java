@@ -40,12 +40,13 @@ public class TestCallContext
 		ensureContextStoresMediaSuffix( ".html" );
 		}
 
-	private void ensureContextStoresMediaSuffix(String suffix) {
+	private void ensureContextStoresMediaSuffix(String suffix) 
+		{
 		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString("");
 		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
 		CallContext cc = CallContext.createContext( ui, MakeData.variables( "" ), suffix );
 		assertThat( cc.getMediaSuffix(), is( suffix ) );
-	}
+		}
 	
 	@Test public void ensureContextRecallsParameterNames()
 		{

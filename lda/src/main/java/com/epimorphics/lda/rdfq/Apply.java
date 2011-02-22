@@ -27,4 +27,20 @@ public class Apply implements RenderExpression
 	
 	@Override public StringBuilder renderWrapped( StringBuilder out ) 
 		{ return render( out );	}
+	
+	@Override public int hashCode() 
+		{ return f.hashCode() ^ x.hashCode(); }
+	
+	@Override public boolean equals( Object other )
+		{ return other instanceof Apply && same( (Apply) other ); }
+	
+	private boolean same( Apply other ) 
+		{ return f.equals( other.f ) && x.equals( other.x ); }
+
+	@Override public String toString()
+		{
+		StringBuilder b = new StringBuilder();
+		render( b );
+		return b.toString();
+		}
 	}

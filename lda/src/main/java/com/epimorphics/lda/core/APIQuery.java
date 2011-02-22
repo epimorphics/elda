@@ -115,11 +115,21 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     */
     protected List<RDFQ.Triple> basicGraphTriples = new ArrayList<RDFQ.Triple>();
     
+    public List<RDFQ.Triple> getBasicGraphTriples() {
+    	// FOR TESTING ONLY
+    	return basicGraphTriples;
+    }
+    
     /**
         List of little infix expressions (operands must be RDFQ.Any's) which
         are SPARQL filters for this query. 
     */
-    protected List<Infix> filterExpressions = new ArrayList<Infix>();
+    protected List<RenderExpression> filterExpressions = new ArrayList<RenderExpression>();
+    
+    public List<RenderExpression> getFilterExpressions() {
+    	// FOR ETSTING ONLY
+    	return filterExpressions;
+    }
     
     protected String viewArgument = null;
     
@@ -198,7 +208,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         try {
             APIQuery clone = (APIQuery) super.clone();
             clone.basicGraphTriples = new ArrayList<RDFQ.Triple>( basicGraphTriples );
-            clone.filterExpressions = new ArrayList<Infix>( filterExpressions );
+            clone.filterExpressions = new ArrayList<RenderExpression>( filterExpressions );
             clone.orderExpressions = new StringBuffer( orderExpressions );
             clone.whereExpressions = new StringBuffer( whereExpressions );
             clone.bindableVars = new HashSet<String>( bindableVars );
@@ -338,8 +348,9 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             addRangeFilter(param, val, "<");
         } else if (param.hasPrefix(EXISTS_PREFIX)) {
         	param = param.substring(EXISTS_LEN);
-            // TODO check for true/false value, currently ignores the negative case :)
-            addPropertyHasValue( param ); // TODO
+            if (val.equals( "true" )) addPropertyHasValue( param );
+            else if (val.equals( "false" )) addPropertyHasntValue( param );
+            else throw new RuntimeException( "value of " + param + " must be true or false, not " + val );
         } else if (param.hasPrefix(SEARCH)) {
             addSearchTriple( val );
         } else if (param.hasPrefix(SORT)) {
@@ -470,6 +481,12 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         addTriplePattern( var, sns.normalizeResource(prop), val ); 
     }
 
+    protected String addPropertyHasntValue( Param param ) {
+    	Variable var = newVar();
+    	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
+		return addPropertyHasValue( param, var.name(), true );
+    }
+
     protected String addPropertyHasValue( Param param ) {
     	return addPropertyHasValue( param, newVar().name() );
     }
@@ -479,7 +496,21 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
 
     protected String addPropertyHasValue( Param param, String rawValue ) {
+    	return addPropertyHasValue( param, rawValue, false );
+    }
+        
+    protected String addPropertyHasValue( Param param, String rawValue, boolean optional ) {
     	String languages = languagesFor.get( param.toString() );
+    	if (optional) { // TODO clean this up
+    		String [] path = param.parts();
+			String prop = path[0];
+    		Resource np = sns.normalizeResource(prop);
+			varProps.put(rawValue.substring(1), prop);   
+			basicGraphTriples.add( RDFQ.triple( SELECT_VAR, RDFQ.uri( np.getURI() ), sns.normalizeNodeToRDFQ( prop, rawValue, defaultLanguage ), optional ) ); 
+    		noteBindableVar( path[0] );
+    		noteBindableVar( rawValue );
+    		return path[0];
+    	}
     	if (languages == null) languages = defaultLanguage;
     	// System.err.println( ">> addPropertyHasValue for " + param + ", languages '" + languages + "'" );
         String[] path = param.parts();
@@ -492,7 +523,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             var = newvar;
             i++;
         }
-        addTriplePattern(var, path[i], languages, rawValue);
+        addTriplePattern(var, path[i], languages, rawValue );
         noteBindableVar( path[i] );
         noteBindableVar( rawValue );
         return path[i];
@@ -588,7 +619,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 //    	System.err.println( ">> ME ME ME" );
 //    	new RuntimeException().printStackTrace(System.out);
     	if (fixedQueryString == null) {
-	        StringBuffer q = new StringBuffer();
+	        StringBuilder q = new StringBuilder();
 	        appendPrefixes( q, prefixes );
 	        q.append("SELECT ");
 	        if (orderExpressions.length() > 0) q.append("DISTINCT "); // Hack to work around lack of _select but seems a common pattern
@@ -616,9 +647,11 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	}
     }
 
-	public void appendFilterExpressions( StringBuffer q ) {
-		for (Infix i: filterExpressions) {
-			q.append( i.asSparqlFilter() );
+	public void appendFilterExpressions( StringBuilder q ) {
+		for (RenderExpression i: filterExpressions) {
+			q.append( "FILTER (" );
+			i.render( q );
+			q.append( ")" );
 		}				
 	}
 
@@ -626,9 +659,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		StringBuilder sb = new StringBuilder();
 		for (RDFQ.Triple t: reorder( basicGraphTriples ))
 			sb
-				.append( t.S.asSparqlTerm() )
-				.append( " " ).append( t.P.asSparqlTerm() )
-				.append( " " ).append( t.O.asSparqlTerm() )
+				.append( t.asSparqlTriple() )
 				.append( " .\n" )
 				;
 		return sb.toString();
@@ -661,7 +692,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		return promoteAnySubject || S.equals( SELECT_VAR );
 	}
 
-	private void appendPrefixes(StringBuffer q, PrefixMapping prefixes) {
+	private void appendPrefixes(StringBuilder q, PrefixMapping prefixes) {
 		for (String prefix: prefixes.getNsPrefixMap().keySet()) {
 			q
 				.append( "PREFIX " )
@@ -792,7 +823,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         if (viewArgument != null) {
         	// TODO: avoid BRUTE FORCE to get things going
         	for (Resource root: roots) {
-        		StringBuffer p = new StringBuffer();
+        		StringBuilder p = new StringBuilder();
         		String ta = viewArgument.replaceAll( "\\?item", "<" + root.getURI() + ">" );
         		appendPrefixes( p, spec.getPrefixMap() );
         		String query = "CONSTRUCT {" + ta + "} where {" + ta + "}\n";
