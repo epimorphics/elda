@@ -30,6 +30,16 @@
   	</init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+  
+  <servlet>
+  	<servlet-name>hub-handler</servlet-name>
+  	<servlet-class>com.epimorphics.lda.servlets.Hub</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>hub-handler</servlet-name>
+  	<url-pattern>/hub/*</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
