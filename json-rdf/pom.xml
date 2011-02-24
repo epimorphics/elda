@@ -9,7 +9,7 @@
   <parent>
     <artifactId>lda-top</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>0.9.12-SNAPSHOT</version>
+    <version>1.0.1</version>
   </parent>
 
   <groupId>com.epimorphics.lda</groupId>
