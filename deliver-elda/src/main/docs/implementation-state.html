@@ -9,47 +9,14 @@
 
 <h2><a name="implementation-state">state of the implementation</a></h2>
 
-<h3>exists</h3>
-
-<p>
-<b>exists</b> and <b>not-exists</b> are not implemented at present.
-</p>
-
-<h3>views</h3>
-
-<p>
-The explicit <i>describeViewer</i>, <i>labelledDescribeViewer</i>, 
-<i>basicViewer</i> are not currently available.
-</p>
-
-<h3>formatting</h3>
-
-<p>
-The HTML renderer is very primitive and there is no XSLT support.
-</p>
-
-<p>
-Not all of the detailed language-tag and literal-type features
-work as specified.
-</p>
-
 <h3>cache</h3>
 
 <p>
 Elda caches the results of queries so that they may be re-served
-quickly. At the moment <i>these caches are never emptied</i>
-until the Elda server exits. This has two consequences: the server
-may unexpectedly run out of room, and changes to the remote dataset
-may not be reflected in queries using the API.
+quickly. When the cache gets "too full", it is reset. "Too full"
+by default is measured by the number of triples in the cache.
+See the more detailed documentation how to control the cache.
 </p>
-
-<h3>HTML and XML rendering</h3>
-
-<p>
-The current HTML renderer is very primitive and there is no
-XML renderer.
-</p>
-
 
 </body>
 </html>

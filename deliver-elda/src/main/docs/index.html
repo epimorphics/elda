@@ -73,7 +73,7 @@ web access.
 <h3>Caveat</h3>
 
 <p>
-This is an early release of Elda to get feedback from the community.
+This is a second release of Elda to get feedback from the community.
 Some features of the LDA have not yet been implemented, or are not
 completely implemented &ndash; see 
 <a href="#implementation-state">the implementation state</a>. 
@@ -111,14 +111,18 @@ You should now be able to browse to LDA URIs:
 <pre>
 <a href="http://localhost:8080/elda/api/education/schools.json">http://localhost:8080/elda/api/education/schools.json</a>
 
+<a href="http://localhost:8080/elda/api/education/schools.xml">http://localhost:8080/elda/api/education/schools.xml</a>
+
 <a href="http://localhost:8080/elda/api/education/schools.html">http://localhost:8080/elda/api/education/schools.html</a>
 
-<a href="http://localhost:8080/elda/api/education/schools.html?label=Hope+Primary+School">http://localhost:8080/elda/api/education/schools.html?label=Hope+Primary+School</a>
+<a href="http://localhost:8080/elda/api/education/schools.xml?label=Hope+Primary+School">http://localhost:8080/elda/api/education/schools.xml?label=Hope+Primary+School</a>
 
-<a href="http://localhost:8080/elda/api/education/schools.html?max-schoolCapacity=100">http://localhost:8080/elda/api/education/schools.html?max-schoolCapacity=100</a>
+<a href="http://localhost:8080/elda/api/education/schools.xml?max-schoolCapacity=100">http://localhost:8080/elda/api/education/schools.xml?max-schoolCapacity=100</a>
 </pre>
 
-and see presentations of selected schools' data.
+and see presentations of selected schools' data. The html rendering
+(which is provided by an XSLT transform of the xml rendering)
+has many interesting features.
 </p>
 
 <p>
@@ -380,18 +384,7 @@ Elda issues list
 </a>.
 </p>
 
-<h3>exists</h3>
-
-<p>
-<b>exists</b> and <b>not-exists</b> are not implemented at present.
-</p>
-
 <h3>formatting</h3>
-
-<p>
-The HTML renderer is very primitive and there is no XML or 
-XSLT support.
-</p>
 
 <p>
 Not all of the detailed language-tag and literal-type features
@@ -402,10 +395,9 @@ work as specified.
 
 <p>
 Elda caches the results of queries so that they may be re-served
-quickly. At the moment <i>these caches are never emptied</i>
-until the Elda server exits. This has two consequences: the server
-may unexpectedly run out of room, and changes to the remote dataset
-may not be reflected in queries using the API.
+quickly. When the cache gets "too full", it is reset. "Too full"
+by default is measured by the number of triples in the cache.
+See the more detailed documentation how to control the cache.
 </p>
 
 <div class="footer">
