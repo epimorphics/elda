@@ -33,8 +33,15 @@ import com.epimorphics.lda.tests.APITesterUriInfo;
 
 import static javax.servlet.http.HttpServletResponse.*;
 
+/**
+    NOT FOR PUBLIC USE -- it's a Jerseyless version under development.
+    
+ 	@author chris
+*/
 public class Hub extends HttpServlet
 	{
+	private static final long serialVersionUID = 719130733256615295L;
+	
 	static final String acceptable = 
 		"text/plain"
 		+ ", text/turtle"
