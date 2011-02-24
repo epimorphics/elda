@@ -29,6 +29,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.slf4j.Logger;
@@ -61,6 +62,8 @@ public class RouterRestlet {
 
     static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
 
+    public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+
     // Real router needs to cater for overlapping patterns and pick most specific
     protected static Map<UriTemplate, APIEndpoint> routerTable = new HashMap<UriTemplate, APIEndpoint>();
     
@@ -70,6 +73,7 @@ public class RouterRestlet {
             routerTable.put(new UriTemplate(URITemplate), api);
         }
     }
+
     
     public RouterRestlet() {
     }
@@ -195,13 +199,17 @@ public class RouterRestlet {
         return returnAs( new JSONRenderer(ep).render(results), "text/plain" );
     }
     
+    public static ResponseBuilder enableCORS( ResponseBuilder rb ) {
+    	return rb.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" );
+    }
+    
     public static Response returnAs(String response, String mimetype) {
-        return Response.ok(response, mimetype).build();
+        return enableCORS( Response.ok(response, mimetype) ).build();
     }
     
     public static Response returnAs(String response, String mimetype, String contentLocation) {
         try {
-            return Response.ok(response, mimetype)
+            return enableCORS( Response.ok(response, mimetype) )
                     .contentLocation( new URI(contentLocation) )
                     .build();
         } catch (URISyntaxException e) {
@@ -211,24 +219,19 @@ public class RouterRestlet {
     
     public static Response returnError(Throwable e) {
         log.error("Exception: " + e.getMessage(), e);
-        return Response.serverError().entity(e.getMessage()).build();
+        return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
     }
     
     public static Response returnError(String message) {
         log.error( message );
         new RuntimeException( "returning error: '" + message + "'" ).printStackTrace( System.err );
-        return Response.serverError().entity(message).build();
+        return enableCORS( Response.serverError() ).entity(message).build();
     }
     
     public static Response returnNotFound(String message) {
         log.warn("Failed to return results: " + message);
         new RuntimeException("returning NotFound: '" + message + "'").printStackTrace( System.err );
-        return Response.status(Status.NOT_FOUND).entity(message).build();
+        return enableCORS( Response.status(Status.NOT_FOUND) ).entity(message).build();
     }
-    
-//    private static Response returnError(String message, Throwable e) {
-//        log.error(message, e);
-//        return Response.serverError().entity(message).build();
-//    }
 }
 

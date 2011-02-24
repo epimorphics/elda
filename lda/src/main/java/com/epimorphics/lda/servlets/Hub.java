@@ -67,7 +67,9 @@ public class Hub extends HttpServlet
 		String pathstub = req.getPathInfo();
 		UriInfo ui = new APITesterUriInfo( "SPOO/FLARN", MultiValuedMapSupport.parseQueryString( "" ) );
 	//
-        String path = "/" + pathstub;
+		// CORS, see http://www.w3.org/wiki/CORS_Enabled
+		res.setHeader( RouterRestlet.ACCESS_CONTROL_ALLOW_ORIGIN, "*" );
+	//
         Match match = RouterRestlet.getMatch( pathstub );
         if (match == null) 
         	{
