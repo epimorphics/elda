@@ -5,11 +5,9 @@
 :c a :C; :p 3 .
 :d a :C; :p 4 .
 :e a :C; :p 5 .
-:f a :C; :p 6 .
-:g a :C; :p 7 .
+:f a :C; :p 6 ; :q 1 .
+:g a :C; :p 7 ; :q 2 .
 
-:h a :C; :q 1 .
-:i a :C; :q 2 .
 :j a :C; :q 3 .
 :k a :C; :q 4 .
 :l a :C; :q 5 .

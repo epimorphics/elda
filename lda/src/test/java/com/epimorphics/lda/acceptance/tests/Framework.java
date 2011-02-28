@@ -109,6 +109,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 
 	private static Query loadQuery( Model spec, String fileName ) 
 		{
+//		System.err.println( ">> loading query " + fileName );
 		String body = FileManager.get().readWholeFileAsUTF8( fileName );
 		String prefixes = sparqlPrefixesFrom( spec );
 		return QueryFactory.create( prefixes + body );
