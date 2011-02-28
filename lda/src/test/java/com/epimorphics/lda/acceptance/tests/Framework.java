@@ -79,10 +79,11 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 			{
 			for (File f: d.listFiles( endsWith( "-test.ask") )) 
 				{
-				Query probe = loadQuery( spec.b, f );
-				String name = f.getName().replace( "-test.ask", "" );
+				String fileName = f.toString();
+				Query probe = loadQuery( spec.b, fileName );
+				String name = fileName.replaceAll( ".*/", "" ).replaceAll( "!.*", "" ).replace( "-test.ask", "" );
 				String [] parts = name.split( "\\?" );
-				String path = parts[0].replaceAll( "!.*$", "" ).replaceAll( "_", "/" );
+				String path = parts[0].replaceAll( "_", "/" );
 				String queryParams = parts.length > 1 ? parts[1] : "";
 			//
 				WhatToDo w = new WhatToDo();
@@ -106,9 +107,9 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 				if (f.isDirectory()) findTestsFromRoot( items, f );
 		}
 
-	private static Query loadQuery( Model spec, File f ) 
+	private static Query loadQuery( Model spec, String fileName ) 
 		{
-		String body = FileManager.get().readWholeFileAsUTF8( f.toString() );
+		String body = FileManager.get().readWholeFileAsUTF8( fileName );
 		String prefixes = sparqlPrefixesFrom( spec );
 		return QueryFactory.create( prefixes + body );
 		}
