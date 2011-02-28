@@ -43,6 +43,7 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.vocabulary.DCTerms;
 
 /**
     Framework for running tests from suite in filing
@@ -81,7 +82,7 @@ import com.hp.hpl.jena.util.FileManager;
 				Query probe = loadQuery( spec.b, f );
 				String name = f.getName().replace( "-test.ask", "" );
 				String [] parts = name.split( "\\?" );
-				String path = parts[0].replaceAll( "_", "/" );
+				String path = parts[0].replaceAll( "!.*$", "" ).replaceAll( "_", "/" );
 				String queryParams = parts.length > 1 ? parts[1] : "";
 			//
 				WhatToDo w = new WhatToDo();
@@ -154,6 +155,7 @@ import com.hp.hpl.jena.util.FileManager;
 				.append( "<" ).append( e.getValue() ).append( ">" )
 				.append( "\n" )
 				;
+		sb.append( "PREFIX dcterms: <" + DCTerms.getURI() + ">\n" );
 		return sb.toString();
 		}
 
@@ -162,13 +164,33 @@ import com.hp.hpl.jena.util.FileManager;
 		String title;
 		String pathToData;
 		Model specModel;
-//		Model toQuery;
 		String path;
 		String queryParams;
 		Query shouldAppear;
 		}
 	
 	@Test public void RUN()
+		{ 
+		// Messing around with exceptions because JUnit's Parameterized
+		// runner doesn't display a decent test name. So we bash out the
+		// test title if it fails.
+		try
+			{ 
+			RunTestAllowingFailures(); 
+			}
+		catch (RuntimeException e)
+			{
+			System.err.println( ">> test " + w.title + " FAILED." );
+			throw e;
+			}
+		catch (Error e)
+			{
+			System.err.println( ">> test " + w.title + " FAILED." );
+			throw e;
+			}
+		}
+	
+	public void RunTestAllowingFailures()
 		{
 		log.debug( "running test " + w.title );
 //		System.err.println( "running test " + w.title );

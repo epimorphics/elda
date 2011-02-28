@@ -9,10 +9,10 @@
     .
 
 :p api:label 'p'
+	; a owl:DatatypeProperty
     ; rdfs:range xsd:integer
     .
     
 rdf:type api:label 'type'.
 
 :C api:label 'C'.
-
