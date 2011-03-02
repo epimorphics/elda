@@ -23,7 +23,7 @@ rm -rf delivery
 #
 
 (cd ..; mvn -N versions:update-child-modules)
-(cd ..; mvn compile package install)
+(cd ..; mvn clean compile package install)
 
 #
 # clone the built-in jetty distribution into 'delivery'.

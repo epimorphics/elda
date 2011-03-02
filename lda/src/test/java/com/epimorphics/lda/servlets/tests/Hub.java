@@ -1,4 +1,4 @@
-package com.epimorphics.lda.servlets;
+package com.epimorphics.lda.servlets.tests;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,10 +19,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIEndpoint;
-
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
-
 import com.epimorphics.lda.renderers.JSONRenderer;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.XMLRenderer;
