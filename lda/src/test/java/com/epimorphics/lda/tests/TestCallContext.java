@@ -34,19 +34,19 @@ public class TestCallContext
 		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		}
 	
-	@Test public void ensureContextStoresMediaSuffix()
-		{
-		ensureContextStoresMediaSuffix( ".json" );
-		ensureContextStoresMediaSuffix( ".html" );
-		}
+//	@Test public void ensureContextStoresMediaSuffix()
+//		{
+//		ensureContextStoresMediaSuffix( ".json" );
+//		ensureContextStoresMediaSuffix( ".html" );
+//		}
 
-	private void ensureContextStoresMediaSuffix(String suffix) 
-		{
-		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString("");
-		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
-		CallContext cc = CallContext.createContext( ui, MakeData.variables( "" ), suffix );
-		assertThat( cc.getMediaSuffix(), is( suffix ) );
-		}
+//	private void ensureContextStoresMediaSuffix(String suffix) 
+//		{
+//		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString("");
+//		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
+//		CallContext cc = CallContext.createContext( ui, MakeData.variables( "" ), suffix );
+//		assertThat( cc.getMediaSuffix(), is( suffix ) );
+//		}
 	
 	@Test public void ensureContextRecallsParameterNames()
 		{
@@ -88,6 +88,6 @@ public class TestCallContext
 		CallContext cc = new CallContext( MakeData.variables( "fly=fishing" ), base );
 		assertThat( cc.getUriInfo(), is( base.getUriInfo() ) );
 		assertThat( cc.getParameterValue( "fly" ), is( "fishing" ) );
-		assertThat( cc.getMediaSuffix(), is( mediaSuffix ) );
+//		assertThat( cc.getMediaSuffix(), is( mediaSuffix ) );
 		}
 	}

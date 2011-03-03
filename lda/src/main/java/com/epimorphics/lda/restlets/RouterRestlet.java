@@ -47,6 +47,7 @@ import com.epimorphics.lda.restlets.support.SDX_URI_ConnegFilter;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.MediaTypeSupport;
+import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.shared.NotFoundException;
 import com.sun.jersey.api.uri.UriTemplate;
 import com.sun.jersey.spi.container.ContainerRequest;
@@ -131,7 +132,6 @@ public class RouterRestlet {
         return match == null ? null : new Match( match.getValue(), BindingSet.uplift( bindings ) );
     }
     
-    
     @GET @Produces( { "text/plain", "application/rdf+xml", "application/json", "text/turtle", "text/html", "text/xml" })
     public Response requestHandler(
             @PathParam("path") String pathstub,
@@ -139,14 +139,15 @@ public class RouterRestlet {
             @Context UriInfo ui) 
     {
         List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
-        String mediaSuffix = getMediaTypeSuffix( headers );
-        String path = "/" + pathstub;
-        Match match = getMatch(path);
+//        String mediaSuffix = getMediaTypeSuffix( headers );
+        Couple<String, String> pathAndType = parse( pathstub );
+        String path = "/" + pathAndType.a;
+        Match match = getMatch( path );
 
         if (match == null) {
             return returnNotFound("ERROR: Failed to find API handler for path " + path);
         } else {
-            CallContext cc = CallContext.createContext( ui, match.getBindings(), mediaSuffix );
+            CallContext cc = CallContext.createContext( ui, match.getBindings() );
             APIEndpoint ep = match.getEndpoint();
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
 
@@ -155,7 +156,7 @@ public class RouterRestlet {
                 if (results == null) {
                     return returnNotFound("No answer back from " + ep.getSpec());
                 } else {
-                    return renderByType(mediaTypes, ep, results);
+                    return renderByType( mediaTypes, pathAndType.b, ep, results );
                 }
             } catch (NotFoundException e) { // TODO echeck that it's VIEW not found.
             	return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -170,32 +171,62 @@ public class RouterRestlet {
         }
     }
 
-    /**
-        Answer the media type suffix (including the dot) that was specified in the 
-        request URI, or the empty string if there wasn't one. This code assumes
-        that the HttpHeaders implementation is the Jersey ContainerRequest class,
-        into the properties of which our content-negotiation filter has stored
-        the extracted suffix under SUFFIX_KEY.
-    */
-	private String getMediaTypeSuffix( HttpHeaders headers ) {
-		ContainerRequest cr = (ContainerRequest) headers;
-        Map<String, Object> properties = cr.getProperties();
-        return (String) properties.get( SDX_URI_ConnegFilter.SUFFIX_KEY );
-	}
-
-    private Response renderByType( List<MediaType> mediaTypes, APIEndpoint ep, APIResultSet results ) {
-        for (MediaType mt: mediaTypes) {
-            String type = mt.getType() + "/" + mt.getSubtype();
-            Renderer renderer = ep.getRendererFor(type);
-            if (renderer != null) return returnAs(renderer.render(results).toString(), type, 
-                    results.getContentLocation());
-        }
-        String choices = MediaTypeSupport.mediaTypeString( mediaTypes );
-        log.warn( "looks like no known media type was specified [choices: " + choices + "], using text/plain." );
-        return renderAsPlainText( results, ep );
-    }
+    static HashMap<String, MediaType> types = SDX_URI_ConnegFilter.createMediaExtensions();
     
-    public static Response renderAsPlainText( APIResultSet results, APIEndpoint ep ) {
+    //** return (revised path, renderer name or null)
+    private Couple<String, String> parse( String pathstub ) 
+    	{
+    	String path = pathstub, type = null;
+    	int dot = pathstub.lastIndexOf( '.' ) + 1;
+    	if (dot > 0 && types.containsKey( pathstub.substring( dot ) )) 
+    		{ path = pathstub.substring(0, dot - 1); type = pathstub.substring(dot); }    	
+    	return new Couple<String, String>( path, type );
+    	}
+    
+    private String nameForMimeType( String type )
+    	{
+    	for (String name: types.keySet())
+    		if (types.get(name).toString().equals( type )) return name;
+		return null;
+    	}
+
+//	/**
+//        Answer the media type suffix (including the dot) that was specified in the 
+//        request URI, or the empty string if there wasn't one. This code assumes
+//        that the HttpHeaders implementation is the Jersey ContainerRequest class,
+//        into the properties of which our content-negotiation filter has stored
+//        the extracted suffix under SUFFIX_KEY.
+//    */
+//	private String getMediaTypeSuffix( HttpHeaders headers ) {
+//		ContainerRequest cr = (ContainerRequest) headers;
+//        Map<String, Object> properties = cr.getProperties();
+//        return (String) properties.get( SDX_URI_ConnegFilter.SUFFIX_KEY );
+//	}
+
+    private Response renderByType( List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
+        if (rName == null)
+        	{
+        	for (MediaType mt: mediaTypes) {
+        		String type = mt.getType() + "/" + mt.getSubtype();
+        		String name = nameForMimeType( type );
+        		Renderer renderer = ep.getRendererNamed( name ); // ep.getRendererFor(type);
+        		if (renderer != null) return returnAs(renderer.render(results).toString(), type, 
+        				results.getContentLocation());
+        	}
+        	String choices = MediaTypeSupport.mediaTypeString( mediaTypes );
+        	log.warn( "looks like no known media type was specified [choices: " + choices + "], using text/plain." );
+        	return renderAsPlainText( results, ep );        	
+        	}
+        else
+        	{
+        	String type = types.get( rName ).toString();
+        	Renderer renderer = ep.getRendererNamed( rName );
+        	return returnAs(renderer.render(results).toString(), type, results.getContentLocation());
+        	}
+    }
+
+
+	public static Response renderAsPlainText( APIResultSet results, APIEndpoint ep ) {
         return returnAs( new JSONRenderer(ep).render(results), "text/plain" );
     }
     

@@ -17,11 +17,14 @@ package com.epimorphics.lda.restlets.support;
 import java.util.*;
 
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.PathSegment;
 
 import com.sun.jersey.api.container.filter.UriConnegFilter;
 import com.sun.jersey.spi.container.ContainerRequest;
+import com.sun.jersey.spi.container.ContainerRequestFilter;
 
-public class SDX_URI_ConnegFilter extends UriConnegFilter
+// OBSOLETE
+public class SDX_URI_ConnegFilter implements ContainerRequestFilter // extends UriConnegFilter
     {
     protected static final Map<String, MediaType> mediaExtensions = createMediaExtensions();
 
@@ -30,7 +33,7 @@ public class SDX_URI_ConnegFilter extends UriConnegFilter
     public static String SUFFIX_KEY = "SPOO";
     
     public SDX_URI_ConnegFilter()
-        { super( mediaExtensions, languageExtensions  ); }
+        {} // { super( mediaExtensions, languageExtensions  ); }
     
     private static HashMap<String, String> createNewLanguageExtensions()
         {
@@ -48,13 +51,29 @@ public class SDX_URI_ConnegFilter extends UriConnegFilter
     */
     public ContainerRequest filter( ContainerRequest request ) 
 		{
-		String A = request.getRequestUri().getRawPath();
-		ContainerRequest result = super.filter( request );
-		String B = result.getRequestUri().getRawPath();
-		String suffix = A.substring( B.length() );
-		request.getProperties().put( SUFFIX_KEY, suffix );
-		return result;
-		}
+//    	System.err.println( ">> ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::" );
+//    	Map<String, MediaType> m = createMediaExtensions();
+//    	Map<String, String> l = createNewLanguageExtensions();
+//    //
+//    	List<PathSegment> segs = request.getPathSegments( false );
+//    	PathSegment lastPath = segs.get( segs.size() - 1 );
+//    	String last = lastPath.getPath();
+//    	System.err.println( ">> last = " + last );
+//    	String [] suffixes = last.split( "\\." );
+//    	for (int i = suffixes.length; i > 0; i -= 1)
+//    		{
+//    		String suffix = suffixes[i-1];
+//    		System.err.println( ">> considering suffix " + suffix );
+//    		if (m.containsKey( suffix ))
+//    			{}
+//    		else if (l.containsKey( suffix ))
+//    			{}
+//    		else
+//    			{}
+//    		}
+//    	System.err.println( ">> should trim back to " + last );
+    	return request;
+    	}
     
     public static HashMap<String, MediaType> createMediaExtensions()
         {

@@ -48,7 +48,7 @@ public class DOMUtils
 	public static Document newDocument() 
 		{ return getBuilder().newDocument(); }
 
-	public static Transformer getTransformer( As a ) 
+	public static Transformer getTransformer( As a, String transformFilePath ) 
 		throws TransformerConfigurationException, TransformerFactoryConfigurationError 
 		{
 		TransformerFactory tf = TransformerFactory.newInstance();
@@ -56,17 +56,24 @@ public class DOMUtils
 			return tf.newTransformer();
 		else 
 			{
-			String bfp = Loader.getBaseFilePath();
-			System.err.println( ">> bfp = " + bfp );
-			Source s = new StreamSource( new File( bfp + "/xsltsheets/results.xsl" ) );
+//			String bfp = Loader.getBaseFilePath();
+//			System.err.println( ">> bfp = " + bfp );
+			Source s = new StreamSource( new File( transformFilePath ) );
 			return tf.newTransformer( s );
 			}
 		}
 
 	public static String nodeToIndentedString( Node d, As as ) 
 		{
+		if (as == As.HTML)
+			throw new RuntimeException( "As.HTML requested, but no filepath given." );
+		return nodeToIndentedString( d, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
+		}
+	
+	public static String nodeToIndentedString( Node d, As as, String transformFilePath ) 
+		{
 		try {
-			Transformer t = getTransformer( as );
+			Transformer t = getTransformer( as, transformFilePath );
 			t.setOutputProperty( OutputKeys.INDENT, "yes" );
 			t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
 			DOMSource ds = new DOMSource( d );

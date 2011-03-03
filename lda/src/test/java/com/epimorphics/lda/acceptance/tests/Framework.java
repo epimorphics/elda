@@ -36,6 +36,7 @@ import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests.APITesterUriInfo;
 import com.epimorphics.lda.tests_support.LoadsNothing;
+import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -68,8 +69,8 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 	
 	private static void findTestsFromRoot( List<Object[]> items, File d ) 
 		{
-		Pair<String, Model> spec = getModelNamedEnding( d, "-spec.ttl" );
-		Pair<String, Model> data = getModelNamedEnding( d, "-data.ttl" );
+		Couple<String, Model> spec = getModelNamedEnding( d, "-spec.ttl" );
+		Couple<String, Model> data = getModelNamedEnding( d, "-data.ttl" );
 		log.debug( "considering: " + d );
 		if (spec == null || data == null)
 			{
@@ -115,14 +116,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		return QueryFactory.create( prefixes + body );
 		}
 
-	public static class Pair<A, B> 
-		{
-		public final A a;
-		public final B b;
-		public Pair(A a, B b) { this.a = a; this.b = b; }		
-		}
-	
-	private static Pair<String, Model> getModelNamedEnding( File d, String end ) 
+	private static Couple<String, Model> getModelNamedEnding( File d, String end ) 
 		{
 		File [] specFiles = d.listFiles( endsWith( end ) );
 		if (specFiles == null || specFiles.length == 0) 
@@ -136,7 +130,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		String specFile = specFiles[0].getPath();
 		String name = specFiles[0].getName().replace( end, "" );
 		String body = FileManager.get().readWholeFileAsUTF8( specFile );
-		return new Pair<String, Model>( name, ModelIOUtils.modelFromTurtle( body ) );
+		return new Couple<String, Model>( name, ModelIOUtils.modelFromTurtle( body ) );
 		}
 
 	private static FilenameFilter endsWith( final String end ) 

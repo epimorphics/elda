@@ -42,22 +42,22 @@ public interface APIEndpoint {
      * @param context The call parameters and other context information
      * @return result set ready for rendering
      */
-    public APIResultSet call(CallContext context);
+    public APIResultSet call( CallContext context );
     
     /**
-     * Return a metadata description for the query that would be run by this endpoint
-     */
+     	Return a metadata description for the query that would be run by this endpoint
+    */
     public Resource getMetadata(CallContext context, Model metadata);
     
     /**
-     * Return the specification for this endpoint
-     */
+        Return the specification for this endpoint
+    */
     public APIEndpointSpec getSpec();
-    
+
     /**
-     * Return a render appropriate for the given mimetype
-     */
-    public Renderer getRendererFor(String mimetype);
+        Return the renderer known by the given name.
+    */
+	public Renderer getRendererNamed( String name );
 
     /**
         For an Epimorphics extension. Answer true iff this API endpoint

@@ -79,5 +79,4 @@ public class TestCaches
 		c.cacheDescription( resources, "view.string.other", rs );
 		assertEquals( 0, c.numEntries() );
 		}
-
 	}

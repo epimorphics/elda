@@ -93,8 +93,8 @@ public class Hub extends HttpServlet
                     res.sendError( SC_NOT_FOUND, "No answer back from " + ep.getSpec() );
                 	} 
                 else 
-                	{
-                	Renderer r = ep.getRendererFor( acceptedType );
+                	{ // TODO fix the switch from media types to named renderers.
+                	Renderer r = ep.getRendererNamed( acceptedType );
                 	System.err.println( "r = " + r + " for " + acceptedType );
                 	String result = r.render(results);
 //                	String cl = results.getContentLocation();

@@ -12,7 +12,6 @@
 
 package com.epimorphics.lda.core;
 
-
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -29,7 +28,6 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.XHV;
-import com.epimorphics.util.DOMUtils.As;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
@@ -216,7 +214,7 @@ public class APIEndpointImpl implements APIEndpoint {
         UriBuilder ub = context.getURIBuilder();
         String uri = ub
             .replaceQueryParam(APIQuery.PAGE_PARAM, Integer.toString(page))
-            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
+//            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
             .build()
             .toASCIIString();
         return m.createResource( uri );
@@ -227,7 +225,7 @@ public class APIEndpointImpl implements APIEndpoint {
         String uri = ub
             .replaceQueryParam( APIQuery.PAGE_PARAM )
             .replaceQueryParam( APIQuery.PAGE_SIZE_PARAM )
-            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
+//            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
             .build().toASCIIString();
         uri = uri.replaceFirst("/meta/", "/api/");
         return m.createResource( uri );
@@ -238,7 +236,7 @@ public class APIEndpointImpl implements APIEndpoint {
         String uri = ub
             .replaceQueryParam(APIQuery.PAGE_PARAM)
             .replaceQueryParam(APIQuery.PAGE_SIZE_PARAM)
-            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
+//            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
             .build().toASCIIString();
         uri = uri.replaceFirst("/api/", "/meta/");
         return m.createResource( uri );
@@ -252,32 +250,22 @@ public class APIEndpointImpl implements APIEndpoint {
         return spec.getURITemplate();
     }
     
-    
     /**
      * Return the specification for this endpoint
      */
     public APIEndpointSpec getSpec() {
         return spec;
     }
-    
-    /**
-     * Return a render appropriate for the given mimetype
-     */
-    public Renderer getRendererFor( String mimetype ) {
-    	ShortnameService sns = getSpec().getAPISpec().getShortnameService();
-        if (mimetype.equals( "text/plain" )) return new JSONRenderer(this, "text/plain");
-        if (mimetype.equals( "text/turtle" )) return new TurtleRenderer();
-        if (mimetype.equals( "application/rdf+xml" )) return new RDFXMLRenderer();
-        if (mimetype.equals( JSONRenderer.JSON_MIME )) return new JSONRenderer( this );
-        if (mimetype.equals( XMLRenderer.XML_MIME )) return new XMLRenderer( sns, As.XML );
-        if (mimetype.equals( "text/html" )) return new XMLRenderer( sns, As.HTML );
-        if (mimetype.equals( "text/html" )) return new HTMLRenderer();
-        return null;
-    }
 
 	public String getSelectQuery() {
 		PrefixMapping noPrefixes = PrefixMapping.Factory.create();
 		return spec.getBaseQuery().assembleSelectQuery( noPrefixes );
+	}
+	
+	@Override public Renderer getRendererNamed( String name ) {
+		RendererFactory s = spec.getRendererFactoryTable().get( name );
+		if (s == null) return null;
+		return s.buildWith( this, getSpec().getAPISpec().getShortnameService() );		
 	}
 }
 

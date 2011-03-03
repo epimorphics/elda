@@ -41,7 +41,7 @@ public class CallContext {
     
     protected OneToManyMap<String, Binding> parameters = new OneToManyMap<String, Binding>();
     protected UriInfo uriInfo = null;
-    protected String mediaSuffix = "";
+    // protected String mediaSuffix = "";
     
     public CallContext(UriInfo uriInfo) {
         this.uriInfo = uriInfo;
@@ -55,7 +55,7 @@ public class CallContext {
     	this.uriInfo = toCopy.uriInfo;
     	defaults.putInto( this.parameters ); // this.parameters.putAll( defaults );
     	this.parameters.putAll( toCopy.parameters );
-    	this.mediaSuffix = toCopy.getMediaSuffix();
+//    	this.mediaSuffix = toCopy.getMediaSuffix();
     }
     
 	public static CallContext createContext( UriInfo ui, BindingSet bindings ) {
@@ -65,7 +65,7 @@ public class CallContext {
 	public static CallContext createContext( UriInfo ui, BindingSet bindings, String mediaSuffix ) {
 	    MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 	    CallContext cc = new CallContext( ui );
-	    cc.mediaSuffix = mediaSuffix;
+//	    cc.mediaSuffix = mediaSuffix;
 	    bindings.putInto( cc.parameters );
 	    for (Map.Entry<String, List<String>> e : queryParams.entrySet()) {
 	        String name = e.getKey();
@@ -136,8 +136,8 @@ public class CallContext {
 		return result.toString();			
 	}
 
-	public String getMediaSuffix() {
-		return mediaSuffix;
-	}
+//	public String getMediaSxuffix() {
+//		return mediaSuffix;
+//	}
 }
 

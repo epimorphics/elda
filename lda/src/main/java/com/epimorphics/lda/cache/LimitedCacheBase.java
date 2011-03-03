@@ -48,7 +48,7 @@ public abstract class LimitedCacheBase implements Cache {
         cd.put( results.toString() + "::" + view, rs );   
         if (exceedsResultSetLimit( cd )) {
         	log.info( "clearing description cache for " + label );
-        	System.err.println( "clearing description cache for " + label );
+//        	System.err.println( "clearing description cache for " + label );
         	cd.clear();
         }
     }

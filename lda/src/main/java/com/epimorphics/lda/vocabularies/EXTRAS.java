@@ -25,6 +25,8 @@ import com.hp.hpl.jena.rdf.model.*;
 public class EXTRAS
     {
 	public static String EXTRA = "http://www.epimorphics.com/vocabularies/lda#";
+
+	public static final Property className = property( API.getURI(), "className" );
 	
     public static final Resource Combiner = resource( API.getURI(), "Combiner" );
     
