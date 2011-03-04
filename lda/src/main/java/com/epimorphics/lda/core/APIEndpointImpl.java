@@ -23,11 +23,11 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.renderers.*;
-import com.epimorphics.lda.restlets.support.SDX_URI_ConnegFilter;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.XHV;
+import com.epimorphics.util.MediaTypes;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
@@ -140,7 +140,7 @@ public class APIEndpointImpl implements APIEndpoint {
     }
 
 	private void addFormats(Model m, CallContext c, Resource thisPage) {
-		for (Map.Entry<String, MediaType> e: SDX_URI_ConnegFilter.createMediaExtensions().entrySet()) {
+		for (Map.Entry<String, MediaType> e: MediaTypes.createMediaExtensions().entrySet()) {
 			Resource v = resourceForFormat( m, c, e.getKey() );
 			Resource format = m.createResource().addProperty( RDFS.label, e.getValue().toString() );
 			thisPage.addProperty( DCTerms.hasFormat, v );
@@ -153,11 +153,20 @@ public class APIEndpointImpl implements APIEndpoint {
 		String oldPath = c.getUriInfo().getBaseUri().getPath() + c.getUriInfo().getPath();
         UriBuilder ub = c.getURIBuilder();
         String uri = ub
-        	.replacePath( oldPath + "." + key )
+        	.replacePath( replaceSuffix( key, oldPath ) )
             .build()
             .toASCIIString();
         return m.createResource( uri );
     }
+
+	// TODO should only substitute .foo if it's a renderer or language
+	private String replaceSuffix( String key, String oldPath ) {
+		int dot_pos = oldPath.lastIndexOf( '.' ), slash_pos = oldPath.lastIndexOf( '/' );
+		if (dot_pos > -1 && dot_pos > slash_pos)
+			return oldPath.substring(0, dot_pos + 1) + key;
+		else
+			return oldPath + "." + key;
+	}
 
 	private void addVersions( Model m, CallContext c, Resource thisPage ) {
 		for (Map.Entry<String, View> e: spec.views.entrySet()) {

@@ -43,14 +43,13 @@ import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.renderers.JSONRenderer;
 import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.restlets.support.SDX_URI_ConnegFilter;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.MediaTypeSupport;
 import com.epimorphics.util.Couple;
+import com.epimorphics.util.MediaTypes;
 import com.hp.hpl.jena.shared.NotFoundException;
 import com.sun.jersey.api.uri.UriTemplate;
-import com.sun.jersey.spi.container.ContainerRequest;
 
 /**
  * Handles all incoming API calls and routes to appropriate locations.
@@ -171,7 +170,7 @@ public class RouterRestlet {
         }
     }
 
-    static HashMap<String, MediaType> types = SDX_URI_ConnegFilter.createMediaExtensions();
+    static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
     
     //** return (revised path, renderer name or null)
     private Couple<String, String> parse( String pathstub ) 

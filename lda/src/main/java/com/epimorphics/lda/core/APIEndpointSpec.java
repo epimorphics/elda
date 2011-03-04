@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.APIQuery.Param;
-import com.epimorphics.lda.renderers.BuiltinRendererTable;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
@@ -84,34 +84,10 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         endpointResource = endpoint;
         instantiateBaseQuery(endpoint);
         views = extractViews(endpoint);
-        factoryTable = createFactoryTable( endpoint );
+        factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
     }
     
-    private Map<String, RendererFactory> createFactoryTable( Resource endpoint ) {
-    	Map<String, RendererFactory> result = BuiltinRendererTable.getBuiltinRenderers();
-		for (RDFNode n: endpoint.listProperties( API.formatter ).mapWith( Statement.Util.getObject ).toList()) {
-			Resource r = (Resource) n;
-			if (r.hasProperty( API.name ) && r.hasProperty( EXTRAS.className )) {
-				String name = r.getProperty( API.name ).getString();
-				String className = r.getProperty( EXTRAS.className ).getString();
-				Class<?> c = classForName( className );
-				result.put( name, (RendererFactory) newInstanceOf(c) );
-			}
-		}
-    	return result;
-	}
-
-	private Object newInstanceOf(Class<?> c) {
-		try { return c.newInstance(); } 
-		catch (Exception e) { throw new RuntimeException( e ); }
-	}
-
-	private Class<?> classForName(String className) {
-		try { return Class.forName( className ); } 
-		catch (ClassNotFoundException e) { throw new RuntimeException( e ); }
-	}
-
-	public boolean isListEndpoint() {
+    public boolean isListEndpoint() {
     	return endpointResource.hasProperty( RDF.type, API.ListEndpoint );
     }
     

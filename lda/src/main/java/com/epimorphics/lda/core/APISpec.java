@@ -23,10 +23,12 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.bindings.VariableExtractor;
+import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.sources.GetDataSource;
 import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
@@ -62,6 +64,8 @@ public class APISpec {
     public final int defaultPageSize;
     public final int maxPageSize;
     
+    protected final Map<String, RendererFactory> factoryTable;
+    
     protected final List<Source> describeSources;
     protected final BindingSet bindings = new BindingSet();
     
@@ -77,6 +81,7 @@ public class APISpec {
         defaultLanguage = getStringValue(specification, FIXUP.language, null);
         base = getStringValue( specification, API.base, null );
         bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
+        factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         extractEndpointSpecifications( specification );
     }
 
@@ -178,8 +183,16 @@ public class APISpec {
 		return bindings;
 	}
 
-	public Object getBase() {
+	public String getBase() {
 		return base;
+	}
+	
+	/**
+	    Answer a copy of the renderer factory map. (It's a copy so
+	    that the caller can freely mutate it afterwards.)
+	*/
+	public Map<String, RendererFactory> getRendererFactoryTable() {
+		return new HashMap<String, RendererFactory>( factoryTable );
 	}
 }
 

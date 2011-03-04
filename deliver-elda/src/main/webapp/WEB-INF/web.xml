@@ -7,11 +7,6 @@
   <servlet>
     <servlet-name>jersey</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-      
-    <init-param>
-      <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-      <param-value>com.epimorphics.lda.restlets.support.SDX_URI_ConnegFilter</param-value>
-    </init-param>    
     
     <init-param>
     	<param-name>com.sun.jersey.config.property.packages</param-name>
