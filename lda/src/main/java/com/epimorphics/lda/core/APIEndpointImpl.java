@@ -27,6 +27,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.XHV;
+import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaTypes;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
@@ -64,17 +65,18 @@ public class APIEndpointImpl implements APIEndpoint {
         this.specWantsContext = spec.wantsContext();
     }
     
-    @Override public APIResultSet call( CallContext given ) {
+    @Override public Couple<APIResultSet, String> call( CallContext given ) {
     	wantsContext = specWantsContext;
     	CallContext context = new CallContext( spec.getParameterBindings(), given );
         log.debug("API " + spec + " called on " + context + " from " + context.getUriInfo());
         APIQuery query = spec.getBaseQuery();
-        View view = buildQueryAndView(context, query);
+        Couple<View, String> viewAndFormat = buildQueryAndView( context, query );
+        View view = viewAndFormat.a; String format = viewAndFormat.b;
         APIResultSet unfiltered = query.runQuery( spec.getAPISpec(), cache, context, view );
         APIResultSet filtered = filterByView(view, unfiltered);
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
         insertResultSetRoot(filtered, context, query);
-        return filtered;
+        return new Couple<APIResultSet, String>( filtered, format );
     }
     
     protected boolean wantsContext = false;
@@ -103,7 +105,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		}
 	}
 
-    private View buildQueryAndView( CallContext context, APIQuery query ) {
+    private Couple<View, String> buildQueryAndView( CallContext context, APIQuery query ) {
     	ShortnameService sns = spec.getAPISpec().getShortnameService();
     	ContextQueryUpdater cq = new ContextQueryUpdater( context, spec, sns, query );
 		try { return cq.updateQueryAndConstructView(); }
@@ -272,7 +274,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	}
 	
 	@Override public Renderer getRendererNamed( String name ) {
-		RendererFactory s = spec.getRendererFactoryTable().get( name );
+		RendererFactory s = spec.getRendererFactoryTable().getFactory( name );
 		if (s == null) return null;
 		return s.buildWith( this, getSpec().getAPISpec().getShortnameService() );		
 	}

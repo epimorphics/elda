@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIQuery.Param;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.shared.NotFoundException;
 
 /**
@@ -24,6 +25,7 @@ import com.hp.hpl.jena.shared.NotFoundException;
 */
 public class ContextQueryUpdater {
 	
+	private static final String _FORMAT = "_format";
 	private final CallContext context;
 	private final APIQuery query;
 	private final ShortnameService sns;
@@ -32,6 +34,8 @@ public class ContextQueryUpdater {
 	private View view; // = new view(); -- doesn't work, null is important somewhere
 	protected final View defaultView;
 	protected final View noneSpecified;
+	
+	protected String requestedFormat = "";
 
     static Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
     
@@ -56,7 +60,7 @@ public class ContextQueryUpdater {
 	    Apply the context updates to the query, and answer the view
 	    specified.
 	*/
-    public View updateQueryAndConstructView() {	  
+    public Couple<View, String> updateQueryAndConstructView() {	  
     	query.activateDeferredFilters( context );
     	query.clearLanguages();
     	for (String param: context.getFilterPropertyNames()) 
@@ -66,7 +70,7 @@ public class ContextQueryUpdater {
         for (String param: context.getFilterPropertyNames()) 
             handleParam( geo, Param.make( param ) );
         geo.addLocationQueryIfPresent( query );
-        return view == noneSpecified ? defaultView : view;
+        return new Couple<View, String>( (view == noneSpecified ? defaultView : view), requestedFormat );
     }
 
 	private void handleLangPrefix( String taggedParam ) {
@@ -89,6 +93,8 @@ public class ContextQueryUpdater {
 			{ /* nothing to do -- report suspect? */ } 
 		else if (zpString.startsWith( APIQuery.LANG_PREFIX )) {
 			// Nothing to do -- done on previous pass 
+		} else if (p.is( _FORMAT )) {
+			requestedFormat = val;
 		} else if (p.is(APIQuery.TEMPLATE_PARAM)) {
 			setViewByProperties(val);
 		} else if (p.is(APIQuery.SHOW_PARAM)) {

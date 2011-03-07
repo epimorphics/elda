@@ -199,7 +199,8 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
         MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( w.queryParams );
 		UriInfo ui = new APITesterUriInfo( w.path, map );
 		CallContext cc = CallContext.createContext( ui, new BindingSet() );
-		APIResultSet rs = ep.call( cc );
+		Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
+		APIResultSet rs = resultsAndFormat.a;
 //		System.err.println( ">> " + rs.getResultList() );
 		QueryExecution qe = QueryExecutionFactory.create( w.shouldAppear, rs );
 		if (!qe.execAsk())

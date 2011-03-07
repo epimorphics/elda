@@ -137,7 +137,7 @@ public class APITester {
         MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( queryString );
         APITesterUriInfo ui = new APITesterUriInfo( uriTemplate, map );
 		CallContext call = CallContext.createContext( ui, fix( match.bindings ) );
-        return match.endpoint.call(call);
+        return match.endpoint.call(call).a;
     }
 
 	private BindingSet fix(Map<String, String> bindings) {

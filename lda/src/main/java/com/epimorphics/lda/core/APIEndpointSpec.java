@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.APIQuery.Param;
-import com.epimorphics.lda.renderers.RendererFactory;
+import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
@@ -59,7 +59,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 
     protected final BindingSet bindings = new BindingSet();
     
-    protected final Map<String, RendererFactory> factoryTable;
+    protected final Factories factoryTable;
     
     static Logger log = LoggerFactory.getLogger(APIEndpointSpec.class);
     
@@ -330,7 +330,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 		return itemTemplate;
 	}
 	
-	public Map<String, RendererFactory> getRendererFactoryTable() {
+	public Factories getRendererFactoryTable() {
 		return factoryTable;
 	}
 	

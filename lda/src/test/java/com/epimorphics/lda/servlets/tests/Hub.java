@@ -28,6 +28,7 @@ import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests.APITesterUriInfo;
+import com.epimorphics.util.Couple;
 
 import static javax.servlet.http.HttpServletResponse.*;
 
@@ -87,7 +88,8 @@ public class Hub extends HttpServlet
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
             try 
             	{
-                APIResultSet results = ep.call( cc );
+                Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
+				APIResultSet results = resultsAndFormat.a;
                 if (results == null) 
                 	{
                     res.sendError( SC_NOT_FOUND, "No answer back from " + ep.getSpec() );

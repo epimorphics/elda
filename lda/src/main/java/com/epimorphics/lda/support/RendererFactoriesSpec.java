@@ -7,9 +7,8 @@
 */
 package com.epimorphics.lda.support;
 
-import java.util.Map;
-
 import com.epimorphics.lda.renderers.BuiltinRendererTable;
+import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
@@ -23,7 +22,7 @@ public class RendererFactoriesSpec {
 	 	Answers a renderer factory table with the built-in formaters and additional
 	 	entries from the api:formatter properties of <code>endpoint</code>.
 	*/
-	public static Map<String, RendererFactory> createFactoryTable( Resource endpoint ) {
+	public static Factories createFactoryTable( Resource endpoint ) {
 		return createFactoryTable( endpoint, BuiltinRendererTable.getBuiltinRenderers() );
 	}
 
@@ -31,15 +30,15 @@ public class RendererFactoriesSpec {
 	 	Answers a renderer factory table by updating <code>rf</code> with additional
 	 	entries from the api:formatter properties of <code>endpoint</code>.
 	*/
-	public static Map<String, RendererFactory> createFactoryTable( Resource endpoint, Map<String, RendererFactory> rf ) {
-		Map<String, RendererFactory> result = BuiltinRendererTable.getBuiltinRenderers();
+	public static Factories createFactoryTable( Resource endpoint, Factories rf ) {
+		Factories result = BuiltinRendererTable.getBuiltinRenderers();
 		for (RDFNode n: endpoint.listProperties( API.formatter ).mapWith( Statement.Util.getObject ).toList()) {
 			Resource r = (Resource) n;
 			if (r.hasProperty( API.name ) && r.hasProperty( EXTRAS.className )) {
 				String name = r.getProperty( API.name ).getString();
 				String className = r.getProperty( EXTRAS.className ).getString();
 				Class<?> c = ReflectionSupport.classForName( className );
-				result.put( name, (RendererFactory) ReflectionSupport.newInstanceOf(c) );
+				result.putFactory( name, (RendererFactory) ReflectionSupport.newInstanceOf(c) );
 			}
 		}
 		return result;

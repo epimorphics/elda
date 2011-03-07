@@ -18,6 +18,7 @@
 package com.epimorphics.lda.core;
 
 import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -42,7 +43,7 @@ public interface APIEndpoint {
      * @param context The call parameters and other context information
      * @return result set ready for rendering
      */
-    public APIResultSet call( CallContext context );
+    public Couple<APIResultSet, String> call( CallContext context );
     
     /**
      	Return a metadata description for the query that would be run by this endpoint

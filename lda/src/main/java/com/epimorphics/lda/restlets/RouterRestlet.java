@@ -151,11 +151,12 @@ public class RouterRestlet {
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
 
             try {
-                APIResultSet results = ep.call( cc );
+                Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
+				APIResultSet results = resultsAndFormat.a;
                 if (results == null) {
                     return returnNotFound("No answer back from " + ep.getSpec());
                 } else {
-                    return renderByType( mediaTypes, pathAndType.b, ep, results );
+                    return renderByType( mediaTypes, pickFormatter( resultsAndFormat.b, pathAndType.b ), ep, results );
                 }
             } catch (NotFoundException e) { // TODO echeck that it's VIEW not found.
             	return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -169,8 +170,14 @@ public class RouterRestlet {
             } 
         }
     }
+    
+    
+   private String pickFormatter( String _format, String dotSuffix ) {
+		return _format.equals( "" ) ? dotSuffix : _format;
+	}
 
-    static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
+
+static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
     
     //** return (revised path, renderer name or null)
     private Couple<String, String> parse( String pathstub ) 
@@ -189,19 +196,6 @@ public class RouterRestlet {
 		return null;
     	}
 
-//	/**
-//        Answer the media type suffix (including the dot) that was specified in the 
-//        request URI, or the empty string if there wasn't one. This code assumes
-//        that the HttpHeaders implementation is the Jersey ContainerRequest class,
-//        into the properties of which our content-negotiation filter has stored
-//        the extracted suffix under SUFFIX_KEY.
-//    */
-//	private String getMediaTypeSuffix( HttpHeaders headers ) {
-//		ContainerRequest cr = (ContainerRequest) headers;
-//        Map<String, Object> properties = cr.getProperties();
-//        return (String) properties.get( SDX_URI_ConnegFilter.SUFFIX_KEY );
-//	}
-
     private Response renderByType( List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
         if (rName == null)
         	{
@@ -218,10 +212,15 @@ public class RouterRestlet {
         	}
         else
         	{
-        	String type = types.get( rName ).toString();
         	Renderer renderer = ep.getRendererNamed( rName );
-        	return returnAs(renderer.render(results).toString(), type, results.getContentLocation());
-        	}
+        	if (renderer == null) {
+        		String message = "renderer '" + rName + "' is not known to this server.";
+        		return enableCORS( Response.status( Status.BAD_REQUEST ).entity( message ) ).build();
+        	} else {
+	        	String type = types.get( rName ).toString();
+	        	return returnAs(renderer.render(results).toString(), type, results.getContentLocation());
+    		}
+        }
     }
 
 

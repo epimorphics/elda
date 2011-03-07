@@ -11,11 +11,9 @@
  */
 
 package com.epimorphics.lda.core;
-
-import java.util.*;
-
 import static com.epimorphics.util.RDFUtils.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -23,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.bindings.VariableExtractor;
-import com.epimorphics.lda.renderers.RendererFactory;
+import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.sources.GetDataSource;
@@ -61,11 +59,12 @@ public class APISpec {
     protected final String specificationURI;
     protected final String defaultLanguage;
     protected final String base;
+    
     public final int defaultPageSize;
     public final int maxPageSize;
     
-    protected final Map<String, RendererFactory> factoryTable;
-    
+    protected final Factories factoryTable;
+    protected final boolean hasParameterBasedContentNegotiation;
     protected final List<Source> describeSources;
     protected final BindingSet bindings = new BindingSet();
     
@@ -82,6 +81,7 @@ public class APISpec {
         base = getStringValue( specification, API.base, null );
         bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
         factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
+        hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
         extractEndpointSpecifications( specification );
     }
 
@@ -191,8 +191,8 @@ public class APISpec {
 	    Answer a copy of the renderer factory map. (It's a copy so
 	    that the caller can freely mutate it afterwards.)
 	*/
-	public Map<String, RendererFactory> getRendererFactoryTable() {
-		return new HashMap<String, RendererFactory>( factoryTable );
+	public Factories getRendererFactoryTable() {
+		return factoryTable.copy();
 	}
 }
 
