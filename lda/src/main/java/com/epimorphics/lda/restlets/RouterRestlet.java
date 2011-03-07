@@ -43,7 +43,9 @@ import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.renderers.JSONRenderer;
 import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
+import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.MediaTypeSupport;
 import com.epimorphics.util.Couple;
@@ -206,9 +208,15 @@ static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
         		if (renderer != null) return returnAs(renderer.render(results).toString(), type, 
         				results.getContentLocation());
         	}
-        	String choices = MediaTypeSupport.mediaTypeString( mediaTypes );
-        	log.warn( "looks like no known media type was specified [choices: " + choices + "], using text/plain." );
-        	return renderAsPlainText( results, ep );        	
+        //
+        	RendererFactory rf = ep.getSpec().getRendererFactoryTable().getDefaultFactory();
+        	ShortnameService sns = ep.getSpec().sns();
+        	Renderer r = rf.buildWith( ep, sns );
+        	String mediaType = r.getMimeType();
+        	return returnAs( r.render( results ).toString(), mediaType, results.getContentLocation() );
+//        	String choices = MediaTypeSupport.mediaTypeString( mediaTypes );
+//        	log.warn( "looks like no known media type was specified [choices: " + choices + "], using text/plain." );
+//        	return renderAsPlainText( results, ep );        	
         	}
         else
         	{
@@ -222,7 +230,6 @@ static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
     		}
         }
     }
-
 
 	public static Response renderAsPlainText( APIResultSet results, APIEndpoint ep ) {
         return returnAs( new JSONRenderer(ep).render(results), "text/plain" );

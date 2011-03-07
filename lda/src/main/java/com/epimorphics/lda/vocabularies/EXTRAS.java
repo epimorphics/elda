@@ -47,6 +47,8 @@ public class EXTRAS
 	public static final Property wantsContext = property( EXTRA, "wantsContext" );
 
 	public static final Property cachePolicyName = property( EXTRA, "cachePolicyName" );
+
+	public static final Property mediaType = property( EXTRA, "mediaType" );
     
     private static Property property( String ns, String local )
         { return ResourceFactory.createProperty( ns + local ); }

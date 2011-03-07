@@ -274,7 +274,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	}
 	
 	@Override public Renderer getRendererNamed( String name ) {
-		RendererFactory s = spec.getRendererFactoryTable().getFactory( name );
+		RendererFactory s = spec.getRendererFactoryTable().getFactoryByName( name );
 		if (s == null) return null;
 		return s.buildWith( this, getSpec().getAPISpec().getShortnameService() );		
 	}

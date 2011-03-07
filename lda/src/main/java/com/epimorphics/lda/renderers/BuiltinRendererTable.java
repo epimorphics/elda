@@ -10,6 +10,9 @@ import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.routing.Loader;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.DOMUtils.As;
+import com.epimorphics.vocabs.API;
+import com.epimorphics.vocabs.FIXUP;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
     The built-in table of renderers, by name. Includes those defined
@@ -28,42 +31,42 @@ public class BuiltinRendererTable {
 	static private Factories factoryTable = new Factories();
 	
 	static {
-		factoryTable.putFactory( "text", new RendererFactory() 
+		factoryTable.putFactory( "text", API.RdfXmlFormatter, "text/plain", new RendererFactory() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new JSONRenderer( ep, "text/plain");
 			}
 			} );
 		
-		factoryTable.putFactory( "ttl", new RendererFactory() 
+		factoryTable.putFactory( "ttl", API.TurtleFormatter, "text/turtle", new RendererFactory() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new TurtleRenderer();
 			}
 			} );
 		
-		factoryTable.putFactory( "rdf", new RendererFactory() 
+		factoryTable.putFactory( "rdf", API.RdfXmlFormatter, "application/rdf+xml", new RendererFactory() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new RDFXMLRenderer();
 			}
 			} );
 		
-		factoryTable.putFactory( "json", new RendererFactory() 
+		factoryTable.putFactory( "json", API.JsonFormatter, "application/json", new RendererFactory() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new JSONRenderer( ep );
 			}
-			} );
+			}, true );
 		
-		factoryTable.putFactory( "xml", new RendererFactory() 
+		factoryTable.putFactory( "xml", API.XmlFormatter, "application/xml", new RendererFactory() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new XMLRenderer( sns, As.XML );
 			}
 			} );
 		
-		factoryTable.putFactory( "html", new RendererFactory() 
+		factoryTable.putFactory( "html", FIXUP.HtmlFormatter, "text/html", new RendererFactory() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new XMLRenderer( sns, As.HTML, transformFilepath() );
@@ -73,6 +76,10 @@ public class BuiltinRendererTable {
 	
 	public static Factories getBuiltinRenderers() {
 		return factoryTable.copy();
+	}
+
+	public static RendererFactory factoryWithURI( Resource r ) {
+		return factoryTable.getFactoryByURI( r );
 	}
 
 }
