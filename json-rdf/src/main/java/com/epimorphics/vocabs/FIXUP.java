@@ -54,6 +54,8 @@ public class FIXUP
 
 	public static final Property value = property( NS, "value" );
 
+	public static final Resource HtmlFormatter = property( NS, "HtmlFormatter" );
+
 	private static Property property( String ns, String local )
         { return ResourceFactory.createProperty( ns + local ); }
 
