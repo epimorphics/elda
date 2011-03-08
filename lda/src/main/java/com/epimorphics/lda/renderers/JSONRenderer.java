@@ -52,7 +52,7 @@ public class JSONRenderer implements Renderer {
         this.wantContext = api.wantContext();
     }
     
-    @Override public String getMimeType() {
+    @Override public String getMediaType() {
         return mime;
     }
 

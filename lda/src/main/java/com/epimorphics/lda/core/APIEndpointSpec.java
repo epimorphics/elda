@@ -84,11 +84,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         endpointResource = endpoint;
         instantiateBaseQuery(endpoint); 
         views = extractViews(endpoint);
-    //
-//        apiSpec.getRendererFactoryTable().debugPrint( "ZOOPLE" );
-    //
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
-//        factoryTable.debugPrint( this );
     }
     
     public boolean isListEndpoint() {

@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
 import com.epimorphics.lda.core.APIResultSet;
 
 public class TurtleRenderer implements Renderer {
-    @Override public String getMimeType() {
+    @Override public String getMediaType() {
         return "text/turtle";
     }
     

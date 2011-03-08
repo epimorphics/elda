@@ -18,7 +18,7 @@ import com.epimorphics.lda.core.*;
 
 public final class TextPlainRenderer implements Renderer {
 
-    @Override public String getMimeType() {
+    @Override public String getMediaType() {
         return "text/plain";
     }
 

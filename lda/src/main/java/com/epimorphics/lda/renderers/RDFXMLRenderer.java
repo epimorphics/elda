@@ -19,7 +19,7 @@ import java.io.ByteArrayOutputStream;
 import com.epimorphics.lda.core.APIResultSet;
 
 public class RDFXMLRenderer implements Renderer {
-    @Override public String getMimeType() {
+    @Override public String getMediaType() {
        return "rdf/xml";
     }
 

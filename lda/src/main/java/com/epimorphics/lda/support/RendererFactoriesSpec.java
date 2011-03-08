@@ -59,7 +59,6 @@ public class RendererFactoriesSpec {
 			  : "node " + r.toString() )
 			);
 		RendererFactory rfx = BuiltinRendererTable.getFactory( type ); // BuiltinRendererTable.factoryWithURI( type );
-//		System.err.println( ">> adding entry for " + name );
 		result.putFactory( name, r, mimeType, pickFactory( className, rfx ), isDefault );
 	}
 

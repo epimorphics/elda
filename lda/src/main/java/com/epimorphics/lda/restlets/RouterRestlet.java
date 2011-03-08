@@ -141,7 +141,6 @@ public class RouterRestlet {
         List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
 //        String mediaSuffix = getMediaTypeSuffix( headers );
         Couple<String, String> pathAndType = parse( pathstub );
-        System.err.println( ">> pathAndType = " + pathAndType );
         String path = "/" + pathAndType.a;
         Match match = getMatch( path );
 
@@ -214,11 +213,8 @@ public class RouterRestlet {
         	RendererFactory rf = ep.getSpec().getRendererFactoryTable().getDefaultFactory();
         	ShortnameService sns = ep.getSpec().sns();
         	Renderer r = rf.buildWith( ep, sns );
-        	String mediaType = r.getMimeType();
-        	return returnAs( r.render( results ).toString(), mediaType, results.getContentLocation() );
-//        	String choices = MediaTypeSupport.mediaTypeString( mediaTypes );
-//        	log.warn( "looks like no known media type was specified [choices: " + choices + "], using text/plain." );
-//        	return renderAsPlainText( results, ep );        	
+        	String mediaType = r.getMediaType();
+        	return returnAs( r.render( results ).toString(), mediaType, results.getContentLocation() );       	
         	}
         else
         	{
@@ -227,7 +223,7 @@ public class RouterRestlet {
         		String message = "renderer '" + rName + "' is not known to this server.";
         		return enableCORS( Response.status( Status.BAD_REQUEST ).entity( message ) ).build();
         	} else {
-        		String type = renderer.getMimeType();
+        		String type = renderer.getMediaType();
 	        	return returnAs( renderer.render(results).toString(), type, results.getContentLocation() );
     		}
         }

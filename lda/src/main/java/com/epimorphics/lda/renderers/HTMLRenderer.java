@@ -26,7 +26,7 @@ import com.hp.hpl.jena.rdf.model.*;
 
 public class HTMLRenderer implements Renderer {
 	
-    @Override public String getMimeType() {
+    @Override public String getMediaType() {
         return "text/html";
     }
 

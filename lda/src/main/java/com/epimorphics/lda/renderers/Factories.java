@@ -42,12 +42,4 @@ public class Factories {
 	public RendererFactory getDefaultFactory() {
 		return theDefault;
 	}
-
-//	public void debugPrint( Object x ) {
-//		System.err.println();
-//		System.err.println( ">> debug print table for " + x );
-//		for (Map.Entry<String, RendererFactory> e: table.entrySet()) {
-//			System.err.println( ">>  " + e.getKey() + " => " + e.getValue() );
-//		}
-//	}
 }

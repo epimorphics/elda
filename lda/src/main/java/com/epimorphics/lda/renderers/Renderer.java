@@ -31,7 +31,7 @@ public interface Renderer {
      * @return  the mimetype which this renderer returns
      * TODO should this be some class instead of a string?
      */
-    public String getMimeType();
+    public String getMediaType();
     
     /**
      * Render a result set

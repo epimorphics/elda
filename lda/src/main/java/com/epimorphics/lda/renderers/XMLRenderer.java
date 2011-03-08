@@ -8,6 +8,8 @@ package com.epimorphics.lda.renderers;
 
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -21,6 +23,8 @@ public class XMLRenderer implements Renderer {
 
 	public static final String XML_MIME = "text/xml";
 	
+    static Logger log = LoggerFactory.getLogger(XMLRenderer.class);
+	
 	final ShortnameService sns;
 	final Mode as;
 	final String transformFilePath;
@@ -30,20 +34,20 @@ public class XMLRenderer implements Renderer {
 		this( sns, Mode.AS_IS );
 	}
 	
-	public XMLRenderer( ShortnameService sns, Mode as ) {
-		this( sns, as, XML_MIME, null );
+	public XMLRenderer( ShortnameService sns, Mode m ) {
+		this( sns, m, XML_MIME, null );
 	}
 	
-	public XMLRenderer( ShortnameService sns, Mode as, String mediaType, String transformFilePath ) {
-		this.as = as;
+	public XMLRenderer( ShortnameService sns, Mode m, String mediaType, String transformFilePath ) {
+		this.as = m;
 		this.sns = sns;
 		this.mediaType = mediaType;
 		this.transformFilePath = transformFilePath;
-		if (as == Mode.TRANSFORM && transformFilePath == null)
-			throw new RuntimeException( "As.TRANSFORM requested but no transform filepath supplied." );
+		if (m == Mode.TRANSFORM && transformFilePath == null)
+			throw new RuntimeException( "Mode.TRANSFORM requested but no transform filepath supplied." );
 	}
 	
-	@Override public String getMimeType() {
+	@Override public String getMediaType() {
 		return mediaType;
 	}
 
@@ -52,7 +56,7 @@ public class XMLRenderer implements Renderer {
 	}
 
 	public String render( Resource root ) {
-		System.err.println( ">> XMLRenderer, with stylesheet " + transformFilePath + ": rendering ..." );
+		log.debug( "render with stylesheet '" + transformFilePath + "'" );
 		Document d = DOMUtils.newDocument();
 		renderInto( root, d );
 		return DOMUtils.nodeToIndentedString( d, as, transformFilePath );

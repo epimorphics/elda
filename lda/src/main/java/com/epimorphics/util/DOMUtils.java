@@ -91,7 +91,7 @@ public class DOMUtils
 	private static String cook(String raw) 
 		{
 		return raw
-			.replaceAll( "\"/images", "\"/elda/images" )
+			.replaceAll( "\"/images", "\"/elda/images/images" )
 			.replaceAll( "\"/css", "\"/elda/css" )
 			.replaceAll( "\"/scripts", "\"/elda/scripts" )
 			;
