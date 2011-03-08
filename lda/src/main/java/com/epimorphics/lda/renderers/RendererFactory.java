@@ -9,6 +9,7 @@ package com.epimorphics.lda.renderers;
 
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
     A RendererFactory can construct a Renderer given an {@link APIEndpoint}
@@ -16,5 +17,15 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 */
 public interface RendererFactory
 	{
+	/**
+	    Answer a Renderer constructed to our recipie for the
+	    given endpoint and short-name service.
+	*/
 	public Renderer buildWith( APIEndpoint ep, ShortnameService sns );
+
+	/**
+	    Answer a new RendererFactory just like this one, but with
+	    the given Resource for additional properties.
+	*/
+	public RendererFactory withResource( Resource uri );
 	}

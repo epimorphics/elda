@@ -18,6 +18,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.NotFoundException;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 public class RendererFactoriesSpec {
 
@@ -34,7 +35,7 @@ public class RendererFactoriesSpec {
 	 	entries from the api:formatter properties of <code>endpoint</code>.
 	*/
 	public static Factories createFactoryTable( Resource endpoint, Factories rf ) {
-		Factories result = BuiltinRendererTable.getBuiltinRenderers();
+		Factories result = rf.copy();
 		for (RDFNode n: formattersOf( endpoint )) {
 			addEntry( result, n.asResource(), false );
 		}
@@ -49,8 +50,25 @@ public class RendererFactoriesSpec {
 		String name = getName( r );
 		String className = getClassName( r );
 		String mimeType = getMimeType( r );
-		RendererFactory rfx = BuiltinRendererTable.factoryWithURI( r );
+		Resource type = getRendererType( r );
+		if (type == null) throw new RuntimeException
+			(
+			"no renderer type for "
+			+ (name != null ? name 
+			  : mimeType != null ? ("spec with mime type " + mimeType)
+			  : "node " + r.toString() )
+			);
+		RendererFactory rfx = BuiltinRendererTable.getFactory( type ); // BuiltinRendererTable.factoryWithURI( type );
+//		System.err.println( ">> adding entry for " + name );
 		result.putFactory( name, r, mimeType, pickFactory( className, rfx ), isDefault );
+	}
+
+	private static Resource getRendererType( Resource r ) {
+		for (RDFNode tn: r.listProperties( RDF.type ).mapWith( Statement.Util.getObject ).toList()) {
+			Resource t = tn.asResource();
+			if (BuiltinRendererTable.isRendererType( t )) return t;
+		}
+		return null;
 	}
 
 	private static String getMimeType(Resource r) {

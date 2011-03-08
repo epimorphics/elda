@@ -14,7 +14,7 @@ import org.w3c.dom.Element;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.DOMUtils;
-import com.epimorphics.util.DOMUtils.As;
+import com.epimorphics.util.DOMUtils.Mode;
 import com.hp.hpl.jena.rdf.model.*;
 
 public class XMLRenderer implements Renderer {
@@ -22,22 +22,22 @@ public class XMLRenderer implements Renderer {
 	public static final String XML_MIME = "text/xml";
 	
 	final ShortnameService sns;
-	final As as;
+	final Mode as;
 	final String transformFilePath;
 	
 	public XMLRenderer( ShortnameService sns ) {
-		this( sns, As.XML );
+		this( sns, Mode.AS_IS );
 	}
 	
-	public XMLRenderer( ShortnameService sns, As as ) {
+	public XMLRenderer( ShortnameService sns, Mode as ) {
 		this( sns, as, null );
 	}
 	
-	public XMLRenderer( ShortnameService sns, As as, String transformFilePath ) {
+	public XMLRenderer( ShortnameService sns, Mode as, String transformFilePath ) {
 		this.as = as;
 		this.sns = sns;
 		this.transformFilePath = transformFilePath;
-		if (as == As.HTML && transformFilePath == null)
+		if (as == Mode.TRANSFORM && transformFilePath == null)
 			throw new RuntimeException( "As.HTML requested but no transform filepath supplied." );
 	}
 	
@@ -50,6 +50,7 @@ public class XMLRenderer implements Renderer {
 	}
 
 	public String render( Resource root ) {
+		System.err.println( ">> XMLRenderer, with stylesheet " + transformFilePath + ": rendering ..." );
 		Document d = DOMUtils.newDocument();
 		renderInto( root, d );
 		return DOMUtils.nodeToIndentedString( d, as, transformFilePath );

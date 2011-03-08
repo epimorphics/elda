@@ -82,9 +82,13 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         if (uriTemplate == null) throw new APIEndpointException("No deployment uri for Endpoint " + name );
         if (!uriTemplate.startsWith("/") && !uriTemplate.startsWith("http")) uriTemplate = "/" + uriTemplate;
         endpointResource = endpoint;
-        instantiateBaseQuery(endpoint);
+        instantiateBaseQuery(endpoint); 
         views = extractViews(endpoint);
+    //
+//        apiSpec.getRendererFactoryTable().debugPrint( "ZOOPLE" );
+    //
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
+//        factoryTable.debugPrint( this );
     }
     
     public boolean isListEndpoint() {

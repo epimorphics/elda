@@ -12,7 +12,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class Factories {
 	
 	protected final Map<String, RendererFactory> table = new HashMap<String, RendererFactory>();
-	protected final Map<Resource, RendererFactory> other = new HashMap<Resource, RendererFactory>();
 	
 	protected RendererFactory theDefault; 
 	
@@ -22,7 +21,6 @@ public class Factories {
 	public Factories copy() {
 		Factories result = new Factories();
 		result.table.putAll( table );
-		result.other.putAll( other );
 		result.theDefault = theDefault;
 		return result;
 	}
@@ -32,9 +30,9 @@ public class Factories {
 	}
 
 	public void putFactory( String name, Resource uri, String mimeType, RendererFactory factory, boolean isDefault ) {
-		table.put( name, factory );
-		other.put( uri, factory );
-		if (isDefault) theDefault = factory;
+		RendererFactory f = factory.withResource( uri );
+		table.put( name, f );
+		if (isDefault) theDefault = f;
 	}
 
 	public RendererFactory getFactoryByName( String name ) {
@@ -45,7 +43,11 @@ public class Factories {
 		return theDefault;
 	}
 
-	public RendererFactory getFactoryByURI( Resource r ) {
-		return other.get( r );
-	}
+//	public void debugPrint( Object x ) {
+//		System.err.println();
+//		System.err.println( ">> debug print table for " + x );
+//		for (Map.Entry<String, RendererFactory> e: table.entrySet()) {
+//			System.err.println( ">>  " + e.getKey() + " => " + e.getValue() );
+//		}
+//	}
 }

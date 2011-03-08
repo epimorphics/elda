@@ -25,8 +25,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.epimorphics.lda.routing.Loader;
-
 /**
     Handles XSLT rewrites for HTML and indented-string display
     of XML.
@@ -35,7 +33,7 @@ import com.epimorphics.lda.routing.Loader;
 */
 public class DOMUtils 
 	{
-	public enum As {HTML, XML};
+	public enum Mode {TRANSFORM, AS_IS};
 	
 	public static DocumentBuilder getBuilder() 
 		{
@@ -48,29 +46,27 @@ public class DOMUtils
 	public static Document newDocument() 
 		{ return getBuilder().newDocument(); }
 
-	public static Transformer getTransformer( As a, String transformFilePath ) 
+	public static Transformer getTransformer( Mode a, String transformFilePath ) 
 		throws TransformerConfigurationException, TransformerFactoryConfigurationError 
 		{
 		TransformerFactory tf = TransformerFactory.newInstance();
-		if (a == As.XML) 
+		if (a == Mode.AS_IS) 
 			return tf.newTransformer();
 		else 
 			{
-//			String bfp = Loader.getBaseFilePath();
-//			System.err.println( ">> bfp = " + bfp );
 			Source s = new StreamSource( new File( transformFilePath ) );
 			return tf.newTransformer( s );
 			}
 		}
 
-	public static String nodeToIndentedString( Node d, As as ) 
+	public static String nodeToIndentedString( Node d, Mode as ) 
 		{
-		if (as == As.HTML)
+		if (as == Mode.TRANSFORM)
 			throw new RuntimeException( "As.HTML requested, but no filepath given." );
 		return nodeToIndentedString( d, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
 		}
 	
-	public static String nodeToIndentedString( Node d, As as, String transformFilePath ) 
+	public static String nodeToIndentedString( Node d, Mode as, String transformFilePath ) 
 		{
 		try {
 			Transformer t = getTransformer( as, transformFilePath );
@@ -81,7 +77,7 @@ public class DOMUtils
 			StreamResult sr = new StreamResult( sw );
 			t.transform( ds, sr );
 			String raw = sw.toString();
-			return as == As.XML ? raw : cook(raw);
+			return as == Mode.AS_IS ? raw : cook(raw);
 			} 
 		catch (Throwable t) 
 			{

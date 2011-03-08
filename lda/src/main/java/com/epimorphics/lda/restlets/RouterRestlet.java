@@ -47,7 +47,6 @@ import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
-import com.epimorphics.lda.support.MediaTypeSupport;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaTypes;
 import com.hp.hpl.jena.shared.NotFoundException;
@@ -142,6 +141,7 @@ public class RouterRestlet {
         List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
 //        String mediaSuffix = getMediaTypeSuffix( headers );
         Couple<String, String> pathAndType = parse( pathstub );
+        System.err.println( ">> pathAndType = " + pathAndType );
         String path = "/" + pathAndType.a;
         Match match = getMatch( path );
 
@@ -179,14 +179,16 @@ public class RouterRestlet {
 	}
 
 
-static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
+   	// TODO this is probably obsolete
+    static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
     
     //** return (revised path, renderer name or null)
+    // TODO work out a spec-conformant method for this lookup
     private Couple<String, String> parse( String pathstub ) 
     	{
     	String path = pathstub, type = null;
     	int dot = pathstub.lastIndexOf( '.' ) + 1;
-    	if (dot > 0 && types.containsKey( pathstub.substring( dot ) )) 
+    	if (dot > 0) //  && types.containsKey( pathstub.substring( dot ) )) 
     		{ path = pathstub.substring(0, dot - 1); type = pathstub.substring(dot); }    	
     	return new Couple<String, String>( path, type );
     	}
@@ -225,8 +227,8 @@ static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
         		String message = "renderer '" + rName + "' is not known to this server.";
         		return enableCORS( Response.status( Status.BAD_REQUEST ).entity( message ) ).build();
         	} else {
-	        	String type = types.get( rName ).toString();
-	        	return returnAs(renderer.render(results).toString(), type, results.getContentLocation());
+        		String type = renderer.getMimeType();
+	        	return returnAs( renderer.render(results).toString(), type, results.getContentLocation() );
     		}
         }
     }

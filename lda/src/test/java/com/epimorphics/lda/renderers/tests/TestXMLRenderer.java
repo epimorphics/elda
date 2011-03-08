@@ -14,7 +14,7 @@ import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.tests_support.ShortnameFake;
 import com.epimorphics.util.DOMUtils;
-import com.epimorphics.util.DOMUtils.As;
+import com.epimorphics.util.DOMUtils.Mode;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
@@ -93,15 +93,15 @@ public class TestXMLRenderer
 	private void ensureRendering( String desired, Resource root ) 
 		{
 		ShortnameService sns = new ForceShorten();
-		XMLRenderer xr = new XMLRenderer( sns, DOMUtils.As.XML );
+		XMLRenderer xr = new XMLRenderer( sns, DOMUtils.Mode.AS_IS );
 		Document d = DOMUtils.newDocument();
 		xr.renderInto( root, d );
 		Node de = d.getDocumentElement().getFirstChild();
 		Node expected = new TinyParser().parse( desired );
 		if (!de.isEqualNode( expected )) 
 			{
-			System.err.println( "expected: " + DOMUtils.nodeToIndentedString( expected, As.XML ) );
-			System.err.println( "obtained: " + DOMUtils.nodeToIndentedString( de, As.XML ) );
+			System.err.println( "expected: " + DOMUtils.nodeToIndentedString( expected, Mode.AS_IS ) );
+			System.err.println( "obtained: " + DOMUtils.nodeToIndentedString( de, Mode.AS_IS ) );
 			fail( "ALAS -- rendering not as expected." );
 			}
 		}
