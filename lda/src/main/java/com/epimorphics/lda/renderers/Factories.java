@@ -29,8 +29,8 @@ public class Factories {
 		putFactory( name, uri, mimeType, factory, false );
 	}
 
-	public void putFactory( String name, Resource uri, String mimeType, RendererFactory factory, boolean isDefault ) {
-		RendererFactory f = factory.withResource( uri );
+	public void putFactory( String name, Resource uri, String mediaType, RendererFactory factory, boolean isDefault ) {
+		RendererFactory f = factory.withResource( uri ).withMediaType( mediaType );
 		table.put( name, f );
 		if (isDefault) theDefault = f;
 	}
