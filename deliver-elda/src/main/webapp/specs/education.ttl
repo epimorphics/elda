@@ -18,6 +18,8 @@
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 
+@prefix extras: <http://www.epimorphics.com/vocabularies/lda> .
+
 ############################################################################################
 #
 # COMPONENTS
@@ -84,6 +86,12 @@ spec:api
 	api:maxPageSize "50";
 	api:defaultPageSize "10" ;
 	api:sparqlEndpoint <http://services.data.gov.uk/education/sparql> ;
+	api:formatter 
+		[a api:XsltFormatter
+		; api:name 'ashtml'
+		; api:stylesheet '/xsltsheets/results.xsl'
+		; extras:mediaType 'text/html'
+		] ;
 	api:endpoint 
 	   spec:schools
 	   , spec:schoolsPrimary
