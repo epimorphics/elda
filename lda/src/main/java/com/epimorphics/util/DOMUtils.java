@@ -25,6 +25,8 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import com.epimorphics.lda.routing.Loader;
+
 /**
     Handles XSLT rewrites for HTML and indented-string display
     of XML.
@@ -62,14 +64,15 @@ public class DOMUtils
 	public static String nodeToIndentedString( Node d, Mode as ) 
 		{
 		if (as == Mode.TRANSFORM)
-			throw new RuntimeException( "As.HTML requested, but no filepath given." );
+			throw new RuntimeException( "Mode.TRANSFORM requested, but no filepath given." );
 		return nodeToIndentedString( d, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
 		}
 	
 	public static String nodeToIndentedString( Node d, Mode as, String transformFilePath ) 
 		{
 		try {
-			Transformer t = getTransformer( as, transformFilePath );
+			String fullPath = Loader.getBaseFilePath() + transformFilePath;
+			Transformer t = getTransformer( as, fullPath );
 			t.setOutputProperty( OutputKeys.INDENT, "yes" );
 			t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
 			DOMSource ds = new DOMSource( d );

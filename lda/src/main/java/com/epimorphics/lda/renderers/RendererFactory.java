@@ -28,4 +28,10 @@ public interface RendererFactory
 	    the given Resource for additional properties.
 	*/
 	public RendererFactory withResource( Resource uri );
+
+	/**
+	    Answer a new RendererFactory just like this one, but producing
+	    renderers that announce the given media type.
+	*/
+	public RendererFactory withMediaType( String mediaType );
 	}

@@ -24,25 +24,27 @@ public class XMLRenderer implements Renderer {
 	final ShortnameService sns;
 	final Mode as;
 	final String transformFilePath;
+	final String mediaType;
 	
 	public XMLRenderer( ShortnameService sns ) {
 		this( sns, Mode.AS_IS );
 	}
 	
 	public XMLRenderer( ShortnameService sns, Mode as ) {
-		this( sns, as, null );
+		this( sns, as, XML_MIME, null );
 	}
 	
-	public XMLRenderer( ShortnameService sns, Mode as, String transformFilePath ) {
+	public XMLRenderer( ShortnameService sns, Mode as, String mediaType, String transformFilePath ) {
 		this.as = as;
 		this.sns = sns;
+		this.mediaType = mediaType;
 		this.transformFilePath = transformFilePath;
 		if (as == Mode.TRANSFORM && transformFilePath == null)
-			throw new RuntimeException( "As.HTML requested but no transform filepath supplied." );
+			throw new RuntimeException( "As.TRANSFORM requested but no transform filepath supplied." );
 	}
 	
 	@Override public String getMimeType() {
-		return XML_MIME;
+		return mediaType;
 	}
 
 	@Override public synchronized String render( APIResultSet results ) {

@@ -26,26 +26,40 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class BuiltinRendererTable {
 	
 	private static class XSLT_thingy implements RendererFactory {
+		
 		private final Resource root;
+		private final String mediaType;
 		
-		XSLT_thingy() {
-			this( null );
-		}
-		
-		XSLT_thingy( Resource root ) {
-			this.root = root;
+		XSLT_thingy( Resource root, String mediaType ) {
+			this.root = root;		
+			this.mediaType = mediaType;
 		}
 		
 		@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 			String sheet = root.getProperty( API.stylesheet ).getString();
-			return new XMLRenderer( sns, Mode.TRANSFORM, sheet );
+			return new XMLRenderer( sns, Mode.TRANSFORM, mediaType, sheet );
 		}
 
 		@Override public RendererFactory withResource( Resource r ) {
-			return new XSLT_thingy( r );
+			return new XSLT_thingy( r, mediaType );
+		}
+
+		@Override public RendererFactory withMediaType( String mediaType ) {
+			return new XSLT_thingy( root, mediaType );
 		}
 	}
 
+	private abstract static class DoingWith implements RendererFactory {
+		
+		@Override public RendererFactory withResource( Resource r ) {
+			return this;
+		}
+		
+		@Override public RendererFactory withMediaType( String type ) {
+			return this;
+		}
+	}
+	
 	private static String transformFilepath() {
 		String bfp = Loader.getBaseFilePath();
 		System.err.println( ">> bfp = " + bfp );
@@ -55,7 +69,6 @@ public class BuiltinRendererTable {
 	static private Factories factoryTable = new Factories();
 	
 	static private Map<Resource, RendererFactory> builtins = new HashMap<Resource, RendererFactory>();
-	
 	
 	static void putFactory( String name, Resource type, String mime, RendererFactory rf ) {
 		factoryTable.putFactory( name, null, mime, rf );
@@ -67,71 +80,47 @@ public class BuiltinRendererTable {
 	}
 	
 	static {
-		putFactory( "text", API.RdfXmlFormatter, "text/plain", new RendererFactory() 
+		putFactory( "text", API.RdfXmlFormatter, "text/plain", new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new JSONRenderer( ep, "text/plain");
 			}
-			
-			@Override public RendererFactory withResource( Resource r ) {
-				return this;
-			}
 			} );
 		
-		putFactory( "ttl", API.TurtleFormatter, "text/turtle", new RendererFactory() 
+		putFactory( "ttl", API.TurtleFormatter, "text/turtle", new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new TurtleRenderer();
 			}
-			
-			@Override public RendererFactory withResource( Resource r ) {
-				return this;
-			}
 			} );
 		
-		 putFactory( "rdf", API.RdfXmlFormatter, "application/rdf+xml", new RendererFactory() 
+		 putFactory( "rdf", API.RdfXmlFormatter, "application/rdf+xml", new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new RDFXMLRenderer();
 			}
-			
-			@Override public RendererFactory withResource( Resource r ) {
-				return this;
-			}
 			} );
 		
-		putFactory( "json", API.JsonFormatter, "application/json", new RendererFactory() 
+		putFactory( "json", API.JsonFormatter, "application/json", new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new JSONRenderer( ep );
 			}
-			
-			@Override public RendererFactory withResource( Resource r ) {
-				return this;
-			}
 			} ); // TODO , true );
 		
-		putFactory( "xml", API.XmlFormatter, "application/xml", new RendererFactory() 
+		putFactory( "xml", API.XmlFormatter, "application/xml", new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new XMLRenderer( sns, Mode.AS_IS );
 			}
-			
-			@Override public RendererFactory withResource( Resource r ) {
-				return this;
-			}
 			} );
 		
-		putFactory( "_xslt", API.XsltFormatter, "*/*", new XSLT_thingy() );
+		putFactory( "_xslt", API.XsltFormatter, "*/*", new XSLT_thingy( null, null ) );
 		
-		putFactory( "html", FIXUP.HtmlFormatter, "text/html", new RendererFactory() 
+		putFactory( "html", FIXUP.HtmlFormatter, "text/html", new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-				return new XMLRenderer( sns, Mode.TRANSFORM, transformFilepath() );
-			}
-			
-			@Override public RendererFactory withResource( Resource r ) {
-				return this;
+				return new XMLRenderer( sns, Mode.TRANSFORM, "text/html", transformFilepath() );
 			}
 			} );
 	}
