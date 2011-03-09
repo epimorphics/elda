@@ -17,6 +17,8 @@
 
 package com.epimorphics.lda.renderers;
 
+import java.util.HashMap;
+
 import com.epimorphics.lda.core.APIResultSet;
 
 /**
@@ -36,6 +38,10 @@ public interface Renderer {
     /**
      * Render a result set
      */
-    public String render(APIResultSet results);
+    public String render( Params parameters, APIResultSet results );
+    
+    public class Params extends HashMap<String, String> {
+    	
+    }
 }
 

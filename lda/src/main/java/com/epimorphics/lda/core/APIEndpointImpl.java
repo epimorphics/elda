@@ -12,6 +12,7 @@
 
 package com.epimorphics.lda.core;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -20,6 +21,8 @@ import javax.ws.rs.core.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.bindings.Binding;
+import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.renderers.*;
@@ -78,8 +81,8 @@ public class APIEndpointImpl implements APIEndpoint {
         insertResultSetRoot(filtered, context, query);
         return new Couple<APIResultSet, String>( filtered, format );
     }
-    
-    protected boolean wantsContext = false;
+
+	protected boolean wantsContext = false;
     
     public boolean wantContext() {
     	return wantsContext;

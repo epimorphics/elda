@@ -23,7 +23,7 @@ public class RDFXMLRenderer implements Renderer {
        return "rdf/xml";
     }
 
-    @Override public String render( APIResultSet results ) {
+    @Override public String render( Params ignored, APIResultSet results ) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         results.write( bos, "RDF/XML-ABBREV" );
         return bos.toString();

@@ -51,15 +51,15 @@ public class XMLRenderer implements Renderer {
 		return mediaType;
 	}
 
-	@Override public synchronized String render( APIResultSet results ) {
-		return render( results.getRoot() );
+	@Override public synchronized String render( Params p, APIResultSet results ) {
+		return render( p, results.getRoot() );
 	}
 
-	public String render( Resource root ) {
+	public String render( Params p, Resource root ) {
 		log.debug( "render with stylesheet '" + transformFilePath + "'" );
 		Document d = DOMUtils.newDocument();
 		renderInto( root, d );
-		return DOMUtils.nodeToIndentedString( d, as, transformFilePath );
+		return DOMUtils.nodeToIndentedString( d, p, as, transformFilePath );
 	}
 
 	public void renderInto( Resource root, Document d ) {

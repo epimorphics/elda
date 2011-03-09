@@ -25,6 +25,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import com.epimorphics.lda.renderers.Renderer.Params;
 import com.epimorphics.lda.routing.Loader;
 
 /**
@@ -65,10 +66,18 @@ public class DOMUtils
 		{
 		if (as == Mode.TRANSFORM)
 			throw new RuntimeException( "Mode.TRANSFORM requested, but no filepath given." );
-		return nodeToIndentedString( d, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
+		return nodeToIndentedString( d, new Params(), as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
 		}
 	
-	public static String nodeToIndentedString( Node d, Mode as, String transformFilePath ) 
+	/*
+	The XSLT stylesheet is passed an $api:namespaces parameter which contains an XML document in the format:
+
+		<namespaces>
+		  <namespace prefix="{prefix}">{value}</namespace>
+		  ... other namespaces ...
+		</namespaces>
+	*/
+	public static String nodeToIndentedString( Node d, Params p, Mode as, String transformFilePath ) 
 		{
 		try {
 			String fullPath = Loader.getBaseFilePath() + transformFilePath;
@@ -78,6 +87,10 @@ public class DOMUtils
 			DOMSource ds = new DOMSource( d );
 			StringWriter sw = new StringWriter();
 			StreamResult sr = new StreamResult( sw );
+			for (String name: p.keySet()) {
+//				System.err.println( ">> setting parameter " + name + " to " + p.get( name ) );
+				t.setParameter( name, p.get( name ) );
+			}
 			t.transform( ds, sr );
 			String raw = sw.toString();
 			return as == Mode.AS_IS ? raw : cook(raw);
@@ -91,7 +104,7 @@ public class DOMUtils
 	private static String cook(String raw) 
 		{
 		return raw
-			.replaceAll( "\"/images", "\"/elda/images/images" )
+			.replaceAll( "\"/images", "\"/elda/images" )
 			.replaceAll( "\"/css", "\"/elda/css" )
 			.replaceAll( "\"/scripts", "\"/elda/scripts" )
 			;

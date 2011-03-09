@@ -56,7 +56,7 @@ public class JSONRenderer implements Renderer {
         return mime;
     }
 
-    @Override public String render(APIResultSet results) {
+    @Override public String render( Params ignored, APIResultSet results) {
         StringWriter writer = new StringWriter();
         List<Resource> roots = new ArrayList<Resource>(1);
         roots.add( results.getRoot() );

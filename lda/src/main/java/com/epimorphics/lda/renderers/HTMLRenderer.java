@@ -30,7 +30,7 @@ public class HTMLRenderer implements Renderer {
         return "text/html";
     }
 
-    @Override public String render( APIResultSet results ) {
+    @Override public String render( Params ignored, APIResultSet results ) {
     	boolean isItemRendering = results.listStatements( null, FIXUP.items, (RDFNode) null ).hasNext() == false;
         return isItemRendering ? renderItem(results) : renderList(results);
     }

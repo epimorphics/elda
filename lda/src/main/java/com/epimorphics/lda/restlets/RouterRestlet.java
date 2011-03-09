@@ -41,8 +41,8 @@ import com.epimorphics.lda.core.APIEndpointException;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.QueryParseException;
-import com.epimorphics.lda.renderers.JSONRenderer;
 import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.renderers.Renderer.Params;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -150,14 +150,13 @@ public class RouterRestlet {
             CallContext cc = CallContext.createContext( ui, match.getBindings() );
             APIEndpoint ep = match.getEndpoint();
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
-
             try {
                 Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
 				APIResultSet results = resultsAndFormat.a;
                 if (results == null) {
                     return returnNotFound("No answer back from " + ep.getSpec());
                 } else {
-                    return renderByType( mediaTypes, pickFormatter( resultsAndFormat.b, pathAndType.b ), ep, results );
+                    return renderByType( cc, mediaTypes, pickFormatter( resultsAndFormat.b, pathAndType.b ), ep, results );
                 }
             } catch (NotFoundException e) { // TODO echeck that it's VIEW not found.
             	return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -172,11 +171,9 @@ public class RouterRestlet {
         }
     }
     
-    
    private String pickFormatter( String _format, String dotSuffix ) {
 		return _format.equals( "" ) ? dotSuffix : _format;
 	}
-
 
    	// TODO this is probably obsolete
     static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
@@ -199,22 +196,23 @@ public class RouterRestlet {
 		return null;
     	}
 
-    private Response renderByType( List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
-        if (rName == null)
+    private Response renderByType( CallContext cc, List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
+        Renderer.Params rp = paramsFromContext( cc );
+    	if (rName == null)
         	{
         	for (MediaType mt: mediaTypes) {
         		String type = mt.getType() + "/" + mt.getSubtype();
         		String name = nameForMimeType( type );
         		Renderer renderer = ep.getRendererNamed( name ); // ep.getRendererFor(type);
-        		if (renderer != null) return returnAs(renderer.render(results).toString(), type, 
-        				results.getContentLocation());
+        		if (renderer != null) 
+        			return returnAs( renderer.render( rp, results ).toString(), type, results.getContentLocation() );
         	}
         //
         	RendererFactory rf = ep.getSpec().getRendererFactoryTable().getDefaultFactory();
         	ShortnameService sns = ep.getSpec().sns();
         	Renderer r = rf.buildWith( ep, sns );
         	String mediaType = r.getMediaType();
-        	return returnAs( r.render( results ).toString(), mediaType, results.getContentLocation() );       	
+        	return returnAs( r.render( rp, results ).toString(), mediaType, results.getContentLocation() );       	
         	}
         else
         	{
@@ -224,16 +222,22 @@ public class RouterRestlet {
         		return enableCORS( Response.status( Status.BAD_REQUEST ).entity( message ) ).build();
         	} else {
         		String type = renderer.getMediaType();
-	        	return returnAs( renderer.render(results).toString(), type, results.getContentLocation() );
+	        	return returnAs( renderer.render( rp, results ).toString(), type, results.getContentLocation() );
     		}
         }
     }
-
-	public static Response renderAsPlainText( APIResultSet results, APIEndpoint ep ) {
-        return returnAs( new JSONRenderer(ep).render(results), "text/plain" );
-    }
     
-    public static ResponseBuilder enableCORS( ResponseBuilder rb ) {
+    public static Params paramsFromContext( CallContext cc ) {
+    	Params result = new Params();
+       	for (Iterator<String> it = cc.parameterNames(); it.hasNext();) {
+       		String name = it.next();
+       		// System.err.println( ">>  " + name + " = " + cc.getParameterValue( name ) );
+       		result.put( name, cc.getParameterValue( name ) );
+    	}
+    	return result;
+	}
+
+	public static ResponseBuilder enableCORS( ResponseBuilder rb ) {
     	return rb.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" );
     }
     
