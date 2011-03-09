@@ -33,6 +33,7 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.shared.NotFoundException;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import com.epimorphics.lda.tests.APITester;
 
 public class TestAPI {
 
@@ -230,7 +231,7 @@ public class TestAPI {
     @Test
     public void testLanguage() {
     	testAPI("http://dummy/doc/deptsEn", "name=department", "testDeptEn.ttl");
-    	// testAPI("http://dummy/doc/deptsFr", "name=d��partement", "testDeptFr.ttl");
+    	// testAPI("http://dummy/doc/deptsFr", "name=dpartement", "testDeptFr.ttl");
     	System.err.println( "NOTE: test French test suppressed temporarily [fails on Chris's home machine]" );
     }
     
