@@ -91,8 +91,14 @@ spec:api
 		; api:name 'ashtml'
 		; api:stylesheet '/xsltsheets/results.xsl'
 		; extras:mediaType 'text/html'
-		] ;
-	api:endpoint 
+		] 
+	; api:formatter 
+		[a api:XsltFormatter
+		; api:name 'example'
+		; api:stylesheet '/xsltsheets/example-a.xsl'
+		; extras:mediaType 'text/plain'
+		]
+	; api:endpoint 
 	   spec:schools
 	   , spec:schoolsPrimary
 	   , spec:schoolsSecondary
