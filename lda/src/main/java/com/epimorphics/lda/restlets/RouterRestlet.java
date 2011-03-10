@@ -138,8 +138,8 @@ public class RouterRestlet {
             @Context HttpHeaders headers, 
             @Context UriInfo ui) 
     {
-        List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
-//        String mediaSuffix = getMediaTypeSuffix( headers );
+    	System.err.println( ">> getPath: " + ui.getPath() );
+    	List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
         Couple<String, String> pathAndType = parse( pathstub );
         String path = "/" + pathAndType.a;
         Match match = getMatch( path );
@@ -153,7 +153,6 @@ public class RouterRestlet {
             try {
                 Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
 				APIResultSet results = resultsAndFormat.a;
-				System.err.println( ">> RESULTS NS: " + results.getNsPrefixMap() );
                 if (results == null) {
                     return returnNotFound("No answer back from " + ep.getSpec());
                 } else {

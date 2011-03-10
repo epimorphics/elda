@@ -70,6 +70,7 @@ public class DOMUtils
 			throw new RuntimeException( "Mode.TRANSFORM requested, but no filepath given." );
 		return nodeToIndentedString( d, new Params(), pm, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
 		}
+	
 	public static String nodeToIndentedString( Node d, Params p, PrefixMapping pm, Mode as, String transformFilePath ) 
 		{
 		try {
@@ -80,7 +81,7 @@ public class DOMUtils
 			StreamResult sr = new StreamResult( sw );
 			t.transform( ds, sr );
 			String raw = sw.toString();
-			return as == Mode.AS_IS ? raw : cook(raw);
+			return as == Mode.AS_IS ? raw : cook( raw );
 			} 
 		catch (Throwable t) 
 			{
@@ -88,14 +89,6 @@ public class DOMUtils
 			}	 
 		}
 	
-	/*
-	The XSLT stylesheet is passed an $api:namespaces parameter which contains an XML document in the format:
-
-		<namespaces>
-		  <namespace prefix="{prefix}">{value}</namespace>
-		  ... other namespaces ...
-		</namespaces>
-	*/
 	private static Transformer setPropertiesAndParams(Params p, PrefixMapping pm, Mode as,	String fullPath) 
 		throws TransformerConfigurationException, TransformerFactoryConfigurationError {
 		Transformer t = getTransformer( as, fullPath );
@@ -117,16 +110,15 @@ public class DOMUtils
 			sb.append( "</namespace>\n" );
 		}
 		sb.append( "</namespaces>\n" );
-		System.err.println( ">> NS DOC:\n" + sb );
 		return sb.toString();
 	}
 
-	private static String cook(String raw) 
+	private static String cook( String raw ) 
 		{
 		return raw
-			.replaceAll( "\"/images", "\"/elda/images" )
-			.replaceAll( "\"/css", "\"/elda/css" )
-			.replaceAll( "\"/scripts", "\"/elda/scripts" )
+			.replaceAll( "\"/images", "\"../../images" )
+			.replaceAll( "\"/css", "\"../../css" )
+			.replaceAll( "\"/scripts", "\"../../scripts" )
 			;
 		}
 	}

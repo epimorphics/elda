@@ -20,7 +20,7 @@ nav.site {
 }
 
 header h1 {
-	background: url("../images/molecule.png") no-repeat scroll 0 0 transparent;
+	background: url(../images/molecule.png) no-repeat scroll 0 0 transparent;
 	color: #555555;
 	font-size: 3em;
 	font-weight: 300;
