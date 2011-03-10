@@ -18,6 +18,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.DOMUtils.Mode;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class XMLRenderer implements Renderer {
 
@@ -56,10 +57,11 @@ public class XMLRenderer implements Renderer {
 	}
 
 	public String render( Params p, Resource root ) {
+		PrefixMapping pm = root.getModel();
 		log.debug( "render with stylesheet '" + transformFilePath + "'" );
 		Document d = DOMUtils.newDocument();
 		renderInto( root, d );
-		return DOMUtils.nodeToIndentedString( d, p, as, transformFilePath );
+		return DOMUtils.nodeToIndentedString( d, p, pm, as, transformFilePath );
 	}
 
 	public void renderInto( Resource root, Document d ) {

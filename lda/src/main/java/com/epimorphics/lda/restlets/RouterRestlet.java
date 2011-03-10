@@ -153,6 +153,7 @@ public class RouterRestlet {
             try {
                 Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
 				APIResultSet results = resultsAndFormat.a;
+				System.err.println( ">> RESULTS NS: " + results.getNsPrefixMap() );
                 if (results == null) {
                     return returnNotFound("No answer back from " + ep.getSpec());
                 } else {

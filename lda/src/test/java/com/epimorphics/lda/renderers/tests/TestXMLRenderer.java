@@ -18,6 +18,7 @@ import com.epimorphics.util.DOMUtils.Mode;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -92,6 +93,7 @@ public class TestXMLRenderer
     
 	private void ensureRendering( String desired, Resource root ) 
 		{
+		PrefixMapping pm = root.getModel();
 		ShortnameService sns = new ForceShorten();
 		XMLRenderer xr = new XMLRenderer( sns, DOMUtils.Mode.AS_IS );
 		Document d = DOMUtils.newDocument();
@@ -100,8 +102,8 @@ public class TestXMLRenderer
 		Node expected = new TinyParser().parse( desired );
 		if (!de.isEqualNode( expected )) 
 			{
-			System.err.println( "expected: " + DOMUtils.nodeToIndentedString( expected, Mode.AS_IS ) );
-			System.err.println( "obtained: " + DOMUtils.nodeToIndentedString( de, Mode.AS_IS ) );
+			System.err.println( "expected: " + DOMUtils.nodeToIndentedString( expected, pm, Mode.AS_IS ) );
+			System.err.println( "obtained: " + DOMUtils.nodeToIndentedString( de, pm, Mode.AS_IS ) );
 			fail( "ALAS -- rendering not as expected." );
 			}
 		}

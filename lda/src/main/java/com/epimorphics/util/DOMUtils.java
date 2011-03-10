@@ -8,6 +8,7 @@ package com.epimorphics.util;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,6 +28,7 @@ import org.w3c.dom.Node;
 
 import com.epimorphics.lda.renderers.Renderer.Params;
 import com.epimorphics.lda.routing.Loader;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
     Handles XSLT rewrites for HTML and indented-string display
@@ -62,11 +64,28 @@ public class DOMUtils
 			}
 		}
 
-	public static String nodeToIndentedString( Node d, Mode as ) 
+	public static String nodeToIndentedString( Node d, PrefixMapping pm, Mode as ) 
 		{
 		if (as == Mode.TRANSFORM)
 			throw new RuntimeException( "Mode.TRANSFORM requested, but no filepath given." );
-		return nodeToIndentedString( d, new Params(), as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
+		return nodeToIndentedString( d, new Params(), pm, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
+		}
+	public static String nodeToIndentedString( Node d, Params p, PrefixMapping pm, Mode as, String transformFilePath ) 
+		{
+		try {
+			String fullPath = Loader.getBaseFilePath() + transformFilePath;
+			Transformer t = setPropertiesAndParams(p, pm, as, fullPath);
+			DOMSource ds = new DOMSource( d );
+			StringWriter sw = new StringWriter();
+			StreamResult sr = new StreamResult( sw );
+			t.transform( ds, sr );
+			String raw = sw.toString();
+			return as == Mode.AS_IS ? raw : cook(raw);
+			} 
+		catch (Throwable t) 
+			{
+			throw new RuntimeException( t );
+			}	 
 		}
 	
 	/*
@@ -77,29 +96,30 @@ public class DOMUtils
 		  ... other namespaces ...
 		</namespaces>
 	*/
-	public static String nodeToIndentedString( Node d, Params p, Mode as, String transformFilePath ) 
-		{
-		try {
-			String fullPath = Loader.getBaseFilePath() + transformFilePath;
-			Transformer t = getTransformer( as, fullPath );
-			t.setOutputProperty( OutputKeys.INDENT, "yes" );
-			t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-			DOMSource ds = new DOMSource( d );
-			StringWriter sw = new StringWriter();
-			StreamResult sr = new StreamResult( sw );
-			for (String name: p.keySet()) {
-//				System.err.println( ">> setting parameter " + name + " to " + p.get( name ) );
-				t.setParameter( name, p.get( name ) );
-			}
-			t.transform( ds, sr );
-			String raw = sw.toString();
-			return as == Mode.AS_IS ? raw : cook(raw);
-			} 
-		catch (Throwable t) 
-			{
-			throw new RuntimeException( t );
-			}	 
+	private static Transformer setPropertiesAndParams(Params p, PrefixMapping pm, Mode as,	String fullPath) 
+		throws TransformerConfigurationException, TransformerFactoryConfigurationError {
+		Transformer t = getTransformer( as, fullPath );
+		t.setOutputProperty( OutputKeys.INDENT, "yes" );
+		t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
+		for (String name: p.keySet()) t.setParameter( name, p.get( name ) );
+		t.setParameter( "$api:namespaces", namespacesDocument( pm ) );
+		return t;
+	}
+
+	private static String namespacesDocument( PrefixMapping pm ) {
+		StringBuilder sb = new StringBuilder();
+		sb.append( "<namespaces>\n" );
+		for (Map.Entry<String, String> e: pm.getNsPrefixMap().entrySet()) {
+			sb.append( "<namespace prefix='" );
+			sb.append( e.getKey() );
+			sb.append( "'>" );
+			sb.append( e.getValue() );
+			sb.append( "</namespace>\n" );
 		}
+		sb.append( "</namespaces>\n" );
+		System.err.println( ">> NS DOC:\n" + sb );
+		return sb.toString();
+	}
 
 	private static String cook(String raw) 
 		{
