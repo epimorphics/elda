@@ -138,7 +138,6 @@ public class RouterRestlet {
             @Context HttpHeaders headers, 
             @Context UriInfo ui) 
     {
-    	System.err.println( ">> getPath: " + ui.getPath() );
     	List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
         Couple<String, String> pathAndType = parse( pathstub );
         String path = "/" + pathAndType.a;

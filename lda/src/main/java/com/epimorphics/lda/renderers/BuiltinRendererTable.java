@@ -60,18 +60,17 @@ public class BuiltinRendererTable {
 		}
 	}
 	
-	private static String transformFilepath() {
-		String bfp = Loader.getBaseFilePath();
-		System.err.println( ">> bfp = " + bfp );
-		return bfp + "xsltsheets/results.xsl";
-	}
-	
 	static private Factories factoryTable = new Factories();
 	
 	static private Map<Resource, RendererFactory> builtins = new HashMap<Resource, RendererFactory>();
 	
 	static void putFactory( String name, Resource type, String mime, RendererFactory rf ) {
 		factoryTable.putFactory( name, null, mime, rf );
+		builtins.put( type, rf );
+	}
+	
+	static void putDefaultFactory( String name, Resource type, String mime, RendererFactory rf ) {
+		factoryTable.putFactory( name, null, mime, rf, true );
 		builtins.put( type, rf );
 	}
 	
@@ -101,12 +100,12 @@ public class BuiltinRendererTable {
 			}
 			} );
 		
-		putFactory( "json", API.JsonFormatter, "application/json", new DoingWith() 
+		putDefaultFactory( "json", API.JsonFormatter, "application/json", new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new JSONRenderer( ep );
 			}
-			} ); // TODO , true );
+			} );
 		
 		putFactory( "xml", API.XmlFormatter, "application/xml", new DoingWith() 
 			{
@@ -115,12 +114,12 @@ public class BuiltinRendererTable {
 			}
 			} );
 		
-		putFactory( "_xslt", API.XsltFormatter, "*/*", new XSLT_thingy( null, null ) );
+		putFactory( "_xslt", API.XsltFormatter, "*/*", new XSLT_thingy( null, "*/*" ) );
 		
 		putFactory( "html", FIXUP.HtmlFormatter, "text/html", new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-				return new XMLRenderer( sns, Mode.TRANSFORM, "text/html", transformFilepath() );
+				return new XMLRenderer( sns, Mode.TRANSFORM, "text/html", "xsl:ashtml.xsl" );
 			}
 			} );
 	}

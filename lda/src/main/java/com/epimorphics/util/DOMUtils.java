@@ -74,12 +74,11 @@ public class DOMUtils
 	public static String nodeToIndentedString( Node d, Params p, PrefixMapping pm, Mode as, String transformFilePath ) 
 		{
 		try {
-			String fullPath = Loader.getBaseFilePath() + transformFilePath;
+			String fullPath = expandStylesheetName(transformFilePath);
 			Transformer t = setPropertiesAndParams(p, pm, as, fullPath);
-			DOMSource ds = new DOMSource( d );
 			StringWriter sw = new StringWriter();
 			StreamResult sr = new StreamResult( sw );
-			t.transform( ds, sr );
+			t.transform( new DOMSource( d ), sr );
 			String raw = sw.toString();
 			return as == Mode.AS_IS ? raw : cook( raw );
 			} 
@@ -88,8 +87,16 @@ public class DOMUtils
 			throw new RuntimeException( t );
 			}	 
 		}
+
+	private static String expandStylesheetName( String path ) {
+		if (path.startsWith( "xsl:" )) {
+			return Loader.getBaseFilePath() + "xsltsheets/" + path.substring(4);
+		} else {
+			return path;
+		}
+	}
 	
-	private static Transformer setPropertiesAndParams(Params p, PrefixMapping pm, Mode as,	String fullPath) 
+	private static Transformer setPropertiesAndParams(Params p, PrefixMapping pm, Mode as, String fullPath) 
 		throws TransformerConfigurationException, TransformerFactoryConfigurationError {
 		Transformer t = getTransformer( as, fullPath );
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );

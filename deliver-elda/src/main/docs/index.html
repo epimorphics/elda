@@ -369,6 +369,25 @@ rebuild the Elda working jars
 and webapp using <a href="http://maven.apache.org/">Maven</a>. 
 </p>
 
+<h2>formatting extensions</h2>
+
+<p>
+If the object of an <code>api:stylesheet</code> directive starts
+with the prefix "xsl:", then the stylesheet is loaded from Elda's
+stylesheet directory, wherever that is. (By default it is 
+<code>webapp/xsltsheets</code>, but this will become configurable.)
+</p>
+
+<p>
+If a formatter has the property 
+<code>http://www.epimorphics.com/vocabularies/lda#className</code>,
+then the (String) object of that property must be the name of a Java
+class that implements the <code>RendererFactory</code> interface.
+When rendering is required, an instance of that class is invoked
+to deliver a Renderer, and that Renderer is used to render the
+result set.
+</p>
+
 <h2><a name="implementation-state">state of the implementation</a></h2>
 
 <p>

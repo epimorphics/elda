@@ -20,6 +20,9 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.NotFoundException;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+import static com.epimorphics.lda.support.ReflectionSupport.classForName;
+import static com.epimorphics.lda.support.ReflectionSupport.newInstanceOf;
+
 public class RendererFactoriesSpec {
 
 	/**
@@ -75,7 +78,7 @@ public class RendererFactoriesSpec {
 	}
 
 	private static RendererFactory pickFactory( String className, RendererFactory rfx ) {
-		if (className != null) return (RendererFactory) ReflectionSupport.newInstanceOf( ReflectionSupport.classForName( className ) );
+		if (className != null) return (RendererFactory) newInstanceOf( classForName( className ) );
 		if (rfx != null) return rfx;
 		throw new NotFoundException( "renderer class: name" );
 	}
