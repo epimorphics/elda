@@ -263,7 +263,7 @@ public class Context {
      * Determine an appropriate name for a property resource, creating a new
      * context entry if required. 
      */
-    protected String findNameForProperty(Resource r) {
+    public String findNameForProperty(Resource r) {
         String uri = r.getURI();
         String name = getNameForURI( uri );
         if (name == null) {
