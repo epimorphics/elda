@@ -95,8 +95,7 @@ public class DOMUtils
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );
 		t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
 		for (String name: p.keySet()) t.setParameter( name, p.get( name ) );
-		t.setParameter( "SPOO", "Spoo SPOO oops." );
-		t.setParameter( "namespaces", namespacesDocument( pm ) );
+		t.setParameter( "api:namespaces", namespacesDocument( pm ) );
 		return t;
 	}
 
