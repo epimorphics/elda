@@ -18,11 +18,11 @@ import org.w3c.dom.Element;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.AnonId;
 import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFList;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -93,10 +93,12 @@ Each RDF value is mapped onto some XML content as follows:
 public class XMLRendering {
 	
 	private final Document d;
+	private final Model m;
 	private final ShortnameService sns;
 	
-	public XMLRendering( ShortnameService sns, Document d ) {
+	public XMLRendering( Model m, ShortnameService sns, Document d ) {
 		this.d = d;
+		this.m = m;
 		this.sns = sns;
 	}
 	
@@ -203,8 +205,8 @@ public class XMLRendering {
 
 	final Map<String, String> shortNames = new HashMap<String, String>();
 	
-	private String shortNameFor( Property p ) {
-		return shortNameFor( p.getURI() );
+	private String shortNameFor( Resource r ) {
+		return shortNameFor( r.getURI() );
 	}
 	
 	private String shortNameFor( String URI ) {
@@ -214,13 +216,7 @@ public class XMLRendering {
 	}
 
 	private String createShortName( String URI ) {
-		String s = sns.shorten( URI );
-		if (s == null) {
-			System.err.println( ">> Odd, no short name for '" + URI + "'" );
-			return ResourceFactory.createResource( URI ).getLocalName();
-		} else {
-			return s;
-		}
+		return sns.asContext().findNameForProperty( m.getResource( URI ) );
 	}
 
 	final Map<AnonId, String> idMap = new HashMap<AnonId, String>();

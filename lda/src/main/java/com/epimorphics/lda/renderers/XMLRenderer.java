@@ -65,7 +65,7 @@ public class XMLRenderer implements Renderer {
 	}
 
 	public void renderInto( Resource root, Document d ) {
-		XMLRendering r = new XMLRendering( sns, d );
+		XMLRendering r = new XMLRendering( root.getModel(), sns, d );
 		Element result = d.createElement( "result" );
 		result.setAttribute( "format", "linked-data-api" );
 		result.setAttribute( "version", "0.2" );
