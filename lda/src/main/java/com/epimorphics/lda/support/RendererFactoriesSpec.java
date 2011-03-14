@@ -74,7 +74,7 @@ public class RendererFactoriesSpec {
 	}
 
 	private static String getMimeType(Resource r) {
-		return r.hasProperty( EXTRAS.mediaType ) ? r.getProperty( EXTRAS.mediaType ).getString() : "text/plain";
+		return r.hasProperty( API.mimeType ) ? r.getProperty( API.mimeType ).getString() : "text/plain";
 	}
 
 	private static RendererFactory pickFactory( String className, RendererFactory rfx ) {

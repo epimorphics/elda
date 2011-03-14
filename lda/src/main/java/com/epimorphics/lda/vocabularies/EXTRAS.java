@@ -14,7 +14,6 @@
 
 package com.epimorphics.lda.vocabularies;
 
-import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 
 /**
@@ -26,35 +25,33 @@ public class EXTRAS
     {
 	public static String EXTRA = "http://www.epimorphics.com/vocabularies/lda#";
 
-	public static final Property className = property( API.getURI(), "className" );
+	public static final Property className = property( "className" );
 	
-    public static final Resource Combiner = resource( API.getURI(), "Combiner" );
+    public static final Resource Combiner = resource( "Combiner" );
     
-    public static final Property element = property( API.getURI(), "element" );
+    public static final Property element = property( "element" );
 
-    public static final Property construct = property( API.getURI(), "construct" );
+    public static final Property construct = property( "construct" );
 
-    public static final Property match = property( API.getURI(), "match" );
+    public static final Property match = property( "match" );
 
-    public static final Property enhanceViewWith = property( API.getURI(), "enhanceViewWith" );
+    public static final Property enhanceViewWith = property( "enhanceViewWith" );
 
-	public static final Property sparqlQuery = property( EXTRA, "sparqlQuery" );
+	public static final Property sparqlQuery = property( "sparqlQuery" );
 
-	public static final Property listURL = property( EXTRA, "listURL" );
+	public static final Property listURL = property( "listURL" );
 
-	public static final Property metaURL = property( EXTRA, "metaURL" );
+	public static final Property metaURL = property( "metaURL" );
 
-	public static final Property wantsContext = property( EXTRA, "wantsContext" );
+	public static final Property wantsContext = property( "wantsContext" );
 
-	public static final Property cachePolicyName = property( EXTRA, "cachePolicyName" );
-
-	public static final Property mediaType = property( EXTRA, "mediaType" );
+	public static final Property cachePolicyName = property( "cachePolicyName" );
     
-    private static Property property( String ns, String local )
-        { return ResourceFactory.createProperty( ns + local ); }
+    private static Property property( String local )
+        { return ResourceFactory.createProperty( EXTRA + local ); }
 
-    private static Resource resource( String ns, String local )
-        { return ResourceFactory.createResource( ns + local ); }
+    private static Resource resource( String local )
+        { return ResourceFactory.createResource( EXTRA + local ); }
     }
 
     
