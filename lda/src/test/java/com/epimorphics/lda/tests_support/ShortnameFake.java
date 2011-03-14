@@ -17,7 +17,8 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
     A fake base-class implementation of ShortnameService that always throws
-    a NotImplementedException.
+    a NotImplementedException (except for asContext, which returns an empty
+    Context for this ShortnameFake -- this is needed for XML rendering).
     
  	@author chris
 */
@@ -51,8 +52,10 @@ public class ShortnameFake implements ShortnameService
 		throw new NotImplementedException();
 		}
 
+	final Context c = new Context();
+	
 	@Override public Context asContext() {
-		throw new NotImplementedException();
+		return c;
 		}
 
 	@Override public String normalizeNodeToString(String prop, String val, String language) {

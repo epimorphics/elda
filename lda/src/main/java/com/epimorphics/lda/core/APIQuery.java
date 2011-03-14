@@ -170,7 +170,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     		@Override public final ShortnameService sns() { return sns; }
     		@Override public final String getDefaultLanguage() { return null; }
     		@Override public final String getFixedSelect() { return null; }
-    		@Override public final String getWhere() { return null; }
     		@Override public String getItemTemplate() { return null; }
     		@Override public final int getMaxPageSize() { return MAX_PAGE_SIZE; }
     		@Override public final int getDefaultPageSize() { return DEFAULT_PAGE_SIZE; }
@@ -186,7 +185,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	ShortnameService sns();
     	String getDefaultLanguage();
     	String getFixedSelect();
-    	String getWhere();
     	int getMaxPageSize();
     	int getDefaultPageSize();
 		String getItemTemplate();
@@ -200,8 +198,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         this.maxPageSize = qb.getMaxPageSize();
         this.fixedQueryString = qb.getFixedSelect();
         this.itemTemplate = qb.getItemTemplate();
-        String fw = qb.getWhere();
-        if (fw != null) whereExpressions.append( fw );
     }
 
     public APIQuery clone() {
@@ -616,8 +612,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
     
     public String assembleSelectQuery(PrefixMapping prefixes) {
-//    	System.err.println( ">> ME ME ME" );
-//    	new RuntimeException().printStackTrace(System.out);
     	if (fixedQueryString == null) {
 	        StringBuilder q = new StringBuilder();
 	        appendPrefixes( q, prefixes );

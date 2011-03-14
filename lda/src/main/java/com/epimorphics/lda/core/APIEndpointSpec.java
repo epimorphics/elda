@@ -47,7 +47,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     protected final String defaultLanguage;
     
     protected final String fixedSelect;
-    protected final String fixedWhere;  
     protected final String itemTemplate;
     
     protected final boolean wantsContext;
@@ -69,8 +68,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     	wantsContext = endpoint.hasLiteral( EXTRAS.wantsContext, true );
     	bindings.putAll( apiSpec.bindings );
         bindings.putAll( VariableExtractor.findAndBindVariables( bindings, endpoint ) );
-        fixedSelect = getStringValue( endpoint, API.select, null );
-        fixedWhere = getStringValue( endpoint, API.where, null );
         defaultLanguage = getStringValue(endpoint, FIXUP.language, apiSpec.getDefaultLanguage());
     	defaultPageSize = getIntValue( endpoint, API.defaultPageSize, apiSpec.defaultPageSize );
 		maxPageSize = getIntValue( endpoint, API.maxPageSize, apiSpec.maxPageSize );
@@ -82,8 +79,9 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         if (uriTemplate == null) throw new APIEndpointException("No deployment uri for Endpoint " + name );
         if (!uriTemplate.startsWith("/") && !uriTemplate.startsWith("http")) uriTemplate = "/" + uriTemplate;
         endpointResource = endpoint;
-        instantiateBaseQuery(endpoint); 
-        views = extractViews(endpoint);
+        fixedSelect = getStringValue( endpoint, API.select, null );
+        instantiateBaseQuery( endpoint ); 
+        views = extractViews( endpoint );
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
     }
     
@@ -187,7 +185,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	    }
 	}    
 
-
 	@Override public ShortnameService sns() {
 		return apiSpec.getShortnameService();
 	}
@@ -200,7 +197,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 		return defaultPageSize;
 	}
 	
-    private void instantiateBaseQuery(Resource endpoint) {
+    private void instantiateBaseQuery( Resource endpoint ) {
         baseQuery = new APIQuery( this );
         Resource view = getResourceValue(endpoint, API.selector);
         if (view == null) return;  // Just default view
@@ -216,7 +213,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         addView(view);
     }
 
-    private void addView(Resource view) {
+    private void addView( Resource view ) {
         Model m = view.getModel();
         if (view.hasProperty(FIXUP.type)) {
             Resource ty = this.apiSpec.sns.normalizeResource( view.getProperty(FIXUP.type).getObject() );
@@ -320,10 +317,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	*/
 	public String getFixedSelect() {
 		return fixedSelect;
-	}
-
-	public String getWhere() {
-		return fixedWhere;
 	}
 
 	public String getItemTemplate() {

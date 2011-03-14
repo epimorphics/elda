@@ -24,20 +24,14 @@ public class TestEndpointHandlesWhere
 	Model spec = ModelIOUtils.modelFromTurtle
 		( 
 		":s a api:API; api:endpoint :e; api:sparqlEndpoint <http://example.com/none>."
-		+ "\n:e a api:ListEndpoint; api:uriTemplate '/absent/friends'; api:where 'PONDENOME'." 
+		+ "\n:e a api:ListEndpoint; api:uriTemplate '/absent/friends'"
+		+ "\n; api:selector[api:where 'PONDENOME']." 
 		);
 
 	Resource s = spec.getResource( spec.expandPrefix( ":s" ) );
 	Resource e = spec.getResource( spec.expandPrefix( ":e" ) );
-	
-	@Test public void testEndpointSpecExtractsWhere()
-		{
-		APISpec a = new APISpec( s, null );
-		APIEndpointSpec eps = new APIEndpointSpec( a, a, e );
-		assertEquals( "PONDENOME", eps.getWhere() );
-		}
-	
-	@Test public void testEndpointImplUsedFixedSelect()
+		
+	@Test public void testEndpointImplUsedWhere()
 		{
 		APISpec a = new APISpec( s, null );
 		APIEndpointSpec eps = new APIEndpointSpec( a, a, e );

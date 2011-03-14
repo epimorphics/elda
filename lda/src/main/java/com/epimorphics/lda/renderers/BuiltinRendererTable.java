@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.routing.Loader;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.DOMUtils.Mode;
 import com.epimorphics.vocabs.API;

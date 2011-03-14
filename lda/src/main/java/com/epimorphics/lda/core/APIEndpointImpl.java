@@ -12,7 +12,6 @@
 
 package com.epimorphics.lda.core;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -21,8 +20,6 @@ import javax.ws.rs.core.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.Binding;
-import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.renderers.*;
