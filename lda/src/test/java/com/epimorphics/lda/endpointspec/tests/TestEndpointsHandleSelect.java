@@ -30,18 +30,19 @@ public class TestEndpointsHandleSelect
 	Model spec = ModelIOUtils.modelFromTurtle
 		( 
 		":s a api:API; api:endpoint :e; api:sparqlEndpoint <http://example.com/none>."
-		+ "\n:e a api:ListEndpoint; api:uriTemplate '/absent/friends'; api:select 'GROCID'." 
+		+ "\n:e a api:ListEndpoint; api:uriTemplate '/absent/friends'"
+		+ "\n; api:selector [api:select 'GROCID']." 
 		);
 	
 	Resource s = spec.getResource( spec.expandPrefix( ":s" ) );
 	Resource e = spec.getResource( spec.expandPrefix( ":e" ) );
 
-	@Test public void testEndpointSpecExtractsSelect()
-		{
-		APISpec a = new APISpec( s, null );
-		APIEndpointSpec eps = new APIEndpointSpec( a, a, e );
-		assertEquals( "GROCID", eps.getFixedSelect() );
-		}
+//	@Test public void testEndpointSpecExtractsSelect()
+//		{
+//		APISpec a = new APISpec( s, null );
+//		APIEndpointSpec eps = new APIEndpointSpec( a, a, e );
+//		assertEquals( "GROCID", eps.getFixedSelect() );
+//		}
 	
 	@Test public void testEndpointImplUsedFixedSelect()
 		{

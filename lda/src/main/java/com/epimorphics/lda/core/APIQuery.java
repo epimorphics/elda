@@ -169,7 +169,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	return new QueryBasis() {
     		@Override public final ShortnameService sns() { return sns; }
     		@Override public final String getDefaultLanguage() { return null; }
-    		@Override public final String getFixedSelect() { return null; }
     		@Override public String getItemTemplate() { return null; }
     		@Override public final int getMaxPageSize() { return MAX_PAGE_SIZE; }
     		@Override public final int getDefaultPageSize() { return DEFAULT_PAGE_SIZE; }
@@ -184,7 +183,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     public interface QueryBasis {
     	ShortnameService sns();
     	String getDefaultLanguage();
-    	String getFixedSelect();
     	int getMaxPageSize();
     	int getDefaultPageSize();
 		String getItemTemplate();
@@ -196,7 +194,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         this.pageSize = qb.getDefaultPageSize();
         this.defaultPageSize = qb.getDefaultPageSize();
         this.maxPageSize = qb.getMaxPageSize();
-        this.fixedQueryString = qb.getFixedSelect();
         this.itemTemplate = qb.getItemTemplate();
     }
 
@@ -533,6 +530,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     public void setExplicitOrderBy( String orderBy ) {
     	orderExpressions.setLength(0);
     	orderExpressions.append( orderBy );
+    }
+    
+    public void setFixedSelect( String fixedSelect ) {
+    	fixedQueryString = fixedSelect;
     }
     
     /**

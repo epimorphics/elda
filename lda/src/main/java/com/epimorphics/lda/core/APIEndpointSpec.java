@@ -46,7 +46,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     protected final Map<String, View> views;
     protected final String defaultLanguage;
     
-    protected final String fixedSelect;
     protected final String itemTemplate;
     
     protected final boolean wantsContext;
@@ -79,7 +78,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         if (uriTemplate == null) throw new APIEndpointException("No deployment uri for Endpoint " + name );
         if (!uriTemplate.startsWith("/") && !uriTemplate.startsWith("http")) uriTemplate = "/" + uriTemplate;
         endpointResource = endpoint;
-        fixedSelect = getStringValue( endpoint, API.select, null );
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
@@ -240,6 +238,9 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         if (view.hasProperty(API.sort)) {
             baseQuery.setOrderBy( getStringValue( view, API.sort ) );
         }
+        if (view.hasProperty( API.select)) {
+        	baseQuery.setFixedSelect( getStringValue( view, API.select ) );
+        }
     }
     
     /**
@@ -309,14 +310,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	*/
 	public BindingSet getParameterBindings() {
 		return new BindingSet( bindings );
-	}
-
-	/**
-	    Answer the fixed select string provided by api:select, or null if there
-	    wasn't one.
-	*/
-	public String getFixedSelect() {
-		return fixedSelect;
 	}
 
 	public String getItemTemplate() {
