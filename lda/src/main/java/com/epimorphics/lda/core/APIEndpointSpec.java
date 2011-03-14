@@ -197,27 +197,28 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	
     private void instantiateBaseQuery( Resource endpoint ) {
         baseQuery = new APIQuery( this );
-        Resource view = getResourceValue(endpoint, API.selector);
-        if (view == null) return;  // Just default view
-        StmtIterator i = view.listProperties(API.parent);
-        while (i.hasNext()) {
-            RDFNode parentN = i.next().getObject();
-            if (parentN instanceof Resource) {
-                addView( (Resource)parentN );
-            } else {
-                APISpec.log.error("Parent view must be a resource, found a literal: " + parentN);
-            }
+        Resource s = getResourceValue( endpoint, API.selector );
+        if (s != null) {
+	        StmtIterator i = s.listProperties( API.parent );
+	        while (i.hasNext()) {
+	            RDFNode parentN = i.next().getObject();
+	            if (parentN instanceof Resource) {
+	                addSelectorInfo( (Resource)parentN );
+	            } else {
+	                APISpec.log.error("Parent view must be a resource, found a literal: " + parentN);
+	            }
+	        }
+	        addSelectorInfo(s);
         }
-        addView(view);
     }
 
-    private void addView( Resource view ) {
-        Model m = view.getModel();
-        if (view.hasProperty(FIXUP.type)) {
-            Resource ty = this.apiSpec.sns.normalizeResource( view.getProperty(FIXUP.type).getObject() );
+    private void addSelectorInfo( Resource s ) {
+        Model m = s.getModel();
+        if (s.hasProperty(FIXUP.type)) {
+            Resource ty = this.apiSpec.sns.normalizeResource( s.getProperty(FIXUP.type).getObject() );
             baseQuery.setTypeConstraint( ty );
         }
-        for (NodeIterator ni = m.listObjectsOfProperty(view, API.filter); ni.hasNext();) {
+        for (NodeIterator ni = m.listObjectsOfProperty(s, API.filter); ni.hasNext();) {
             String q = getLexicalForm( ni.next() );
             for (String query : q.split("[,&]")) { // TODO -- remove this compatability HACK
 	            String[] paramValue = query.split("=");
@@ -228,18 +229,18 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	            }
             }
         }
-        if (view.hasProperty(API.where)) {
-            String where = getStringValue(view, API.where);
+        if (s.hasProperty(API.where)) {
+            String where = getStringValue(s, API.where);
             baseQuery.addWhere(where);
         }
-        if (view.hasProperty(API.orderBy)) {
-            baseQuery.setExplicitOrderBy( getStringValue( view, API.orderBy ) );
+        if (s.hasProperty(API.orderBy)) {
+            baseQuery.setExplicitOrderBy( getStringValue( s, API.orderBy ) );
         }
-        if (view.hasProperty(API.sort)) {
-            baseQuery.setOrderBy( getStringValue( view, API.sort ) );
+        if (s.hasProperty(API.sort)) {
+            baseQuery.setOrderBy( getStringValue( s, API.sort ) );
         }
-        if (view.hasProperty( API.select)) {
-        	baseQuery.setFixedSelect( getStringValue( view, API.select ) );
+        if (s.hasProperty( API.select)) {
+        	baseQuery.setFixedSelect( getStringValue( s, API.select ) );
         }
     }
     
