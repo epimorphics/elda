@@ -27,11 +27,11 @@ public class LimitTriplesController extends ControllerBase {
 			this.limit = limit;
 		}
 
-		@Override protected boolean exceedsSelectLimit( Map<String, List<Resource>> m ) {
+		@Override protected synchronized boolean exceedsSelectLimit( Map<String, List<Resource>> m ) {
 			return false; // return m.size() > limit;
 		}
 
-		@Override protected boolean exceedsResultSetLimit(Map<String, APIResultSet> m) {
+		@Override protected synchronized boolean exceedsResultSetLimit(Map<String, APIResultSet> m) {
 			long size = 0;
 			for (Map.Entry<String, APIResultSet> e: m.entrySet()) size += e.getValue().size();
 			return size > limit;

@@ -29,15 +29,15 @@ public class PermaCache extends LimitedCacheBase implements Cache {
 
 	static Logger log = LoggerFactory.getLogger( PermaCache.class );
 
-    @Override protected boolean exceedsSelectLimit( Map<String, List<Resource>> m ) {
+    @Override protected synchronized boolean exceedsSelectLimit( Map<String, List<Resource>> m ) {
 		return false;
 	}
     
-    @Override protected boolean exceedsResultSetLimit( Map<String, APIResultSet> m ) {
+    @Override protected synchronized boolean exceedsResultSetLimit( Map<String, APIResultSet> m ) {
 		return false;
 	}
     
-    public static void clearAll() {
+    public synchronized static void clearAll() {
 		PermaController.caches.clear();		
 	}
 }

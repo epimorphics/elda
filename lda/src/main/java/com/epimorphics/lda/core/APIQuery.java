@@ -595,8 +595,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
 	public void addWhere(String whereClause) {
 		log.debug( "TODO: check the legality of the where clause: " + whereClause );
-        if (whereExpressions.length() > 0)
-            whereExpressions.append(" ");
+        if (whereExpressions.length() > 0) whereExpressions.append(" ");
         whereExpressions.append(whereClause);
         for (String var : RDFUtils.allMatches(varPattern, whereClause)) 
             noteBindableVar(var);

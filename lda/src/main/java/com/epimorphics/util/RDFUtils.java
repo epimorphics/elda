@@ -17,17 +17,12 @@
 
 package com.epimorphics.util;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -134,34 +129,6 @@ public class RDFUtils {
 	public static int getIntValue(Resource x, Property p, int ifAbsent) {
 		Statement s = x.getProperty( p );
 		return s == null ? ifAbsent : s.getInt();
-	}
-	
-	/**
-	    Serialise the model to the named file in Turtle.
-	*/
-	public static void writeToFile(Model results, String fileName) {
-		try {
-			PrintStream ps = new PrintStream( new FileOutputStream( new File( fileName ) ) );
-			results.write( ps, "TTL" );
-			ps.flush();
-			ps.close();
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException( e );
-		}
-	}
-
-	/**
-	    Serialise the string toWrite to the file fileName.
-	*/
-	public static void writeToFile(String toWrite, String fileName) {
-		try {
-			PrintStream ps = new PrintStream( new FileOutputStream( new File( fileName ) ) );
-			ps.print(toWrite);
-			ps.flush();
-			ps.close();
-		} catch (FileNotFoundException e) {
-			throw new RuntimeException( e );
-		}
 	}
 
 }

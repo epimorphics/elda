@@ -35,15 +35,15 @@ public abstract class LimitedCacheBase implements Cache {
     
     private final Map<String, List<Resource>> cs = new HashMap<String, List<Resource>>();
     
-    @Override public APIResultSet getCachedResultSet( List<Resource> results, String view ) { 
+    @Override public synchronized APIResultSet getCachedResultSet( List<Resource> results, String view ) { 
         return cd.get( results.toString() + "::" + view );
     }
     
-    @Override public List<Resource> getCachedResources( String select ) { 
+    @Override public synchronized List<Resource> getCachedResources( String select ) { 
         return cs.get( select );
     }
     
-    @Override public void cacheDescription( List<Resource> results, String view, APIResultSet rs ) {
+    @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs ) {
         log.debug( "caching descriptions for resources " + results );
         cd.put( results.toString() + "::" + view, rs );   
         if (exceedsResultSetLimit( cd )) {
@@ -53,7 +53,7 @@ public abstract class LimitedCacheBase implements Cache {
         }
     }
 
-	@Override public void cacheSelection( String select, List<Resource> results ) {
+	@Override public synchronized void cacheSelection( String select, List<Resource> results ) {
         log.debug( "caching resource selection for query " + select );
         cs.put( select, results );        
         if (exceedsSelectLimit( cs )) {
@@ -62,12 +62,12 @@ public abstract class LimitedCacheBase implements Cache {
         }
     }
 
-	public void clear() {
+	public synchronized void clear() {
     	cs.clear();
     	cd.clear();
     }
 	
-	public int numEntries() {
+	public synchronized int numEntries() {
 		return cd.size() + cs.size();
 	}
 }

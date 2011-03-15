@@ -26,19 +26,19 @@ public class ControllerBase implements Cache.Controller {
 	
 	static final Map<String, Cache> caches = new HashMap<String, Cache>();
 
-	@Override public void clear( Source s ) {
+	@Override public synchronized void clear( Source s ) {
 		String key = s.toString();
 		Cache c = caches.get( key );
 		if (c != null) c.clear();
 		caches.remove( key );
 	}
 
-	@Override public void clearAll() {
+	@Override public synchronized void clearAll() {
 		for (Map.Entry<String, ? extends Cache> e: caches.entrySet()) e.getValue().clear();
 		caches.clear();
 	}
 	
-	@Override public Cache cacheFor( Source s, String policyValue ) {		    
+	@Override public synchronized Cache cacheFor( Source s, String policyValue ) {		    
 		String key = s.toString();
 	    Cache x = caches.get( key );
 	    if (x == null) caches.put( key, x = factory.New( key, policyValue ) );
