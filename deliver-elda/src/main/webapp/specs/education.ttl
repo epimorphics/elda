@@ -86,17 +86,21 @@ spec:api
 	api:maxPageSize "50";
 	api:defaultPageSize "10" ;
 	api:sparqlEndpoint <http://services.data.gov.uk/education/sparql> ;
-	api:formatter 
+	api:variable
+		[ api:name "activeImageBase"; api:value "/elda/images/green/16x16"]
+		, [ api:name "inactiveImageBase"; api:value "/elda/images/grey/16x16"]
+		, [ api:name "webapp"; api:value "/elda"]
+	; api:formatter 
 		[a api:XsltFormatter
 		; api:name 'ashtml'
-		; api:stylesheet 'xsl:ashtml.xsl'
-		; extras:mediaType 'text/html'
+		; api:stylesheet 'xsltsheets/ashtml.xsl'
+		; api:mimeType 'text/html'
 		] 
 	; api:formatter 
 		[a api:XsltFormatter
 		; api:name 'example'
 		; api:stylesheet '/xsltsheets/example-a.xsl'
-		; extras:mediaType 'text/plain'
+		; api:mimeType 'text/plain'
 		]
 	; api:endpoint 
 	   spec:schools

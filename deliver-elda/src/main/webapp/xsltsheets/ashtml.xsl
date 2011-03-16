@@ -12,8 +12,8 @@ $prefLabel, $altLabel, $title and $name variables.
 
 <xsl:import href="linked-data-api.xsl" />
 
-<xsl:param name="activeImageBase" select="'/images/green/16x16'" />
-<xsl:param name="inactiveImageBase" select="'/images/grey/16x16'" />
+<xsl:param name="activeImageBase" select="'_ROOT/images/green/16x16'" />
+<xsl:param name="inactiveImageBase" select="'_ROOT/images/grey/16x16'" />
 <xsl:param name="graphColour" select="'#577D00'" />
 
 <xsl:variable name="openSpaceAPIkey" select="'91BDD27E0581EC9FE0405F0ACA603BCF'" />
@@ -59,13 +59,13 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 
 <xsl:template match="result" mode="style">
-        <link rel="stylesheet" href="/css/html5reset-1.6.1.css" type="text/css" />
-        <link rel="stylesheet" href="/css/jquery-ui.css" type="text/css" />
-        <link rel="stylesheet" href="/css/smoothness/jquery-ui.css" type="text/css" />
-        <link rel="stylesheet" href="/css/result.css" type="text/css" />
+        <link rel="stylesheet" href="_ROOT/css/html5reset-1.6.1.css" type="text/css" />
+        <link rel="stylesheet" href="_ROOT/css/jquery-ui.css" type="text/css" />
+        <link rel="stylesheet" href="_ROOT/css/smoothness/jquery-ui.css" type="text/css" />
+        <link rel="stylesheet" href="_ROOT/css/result.css" type="text/css" />
         <xsl:comment>
                 <xsl:text>[if lt IE 9]&gt;</xsl:text>
-                <xsl:text>&lt;link rel="stylesheet" href="/css/ie.css" type="text/css">&lt;/link></xsl:text>
+                <xsl:text>&lt;link rel="stylesheet" href="_ROOT/css/ie.css" type="text/css">&lt;/link></xsl:text>
                 <xsl:text>&lt;![endif]</xsl:text>
         </xsl:comment>
 </xsl:template>
@@ -85,10 +85,10 @@ $prefLabel, $altLabel, $title and $name variables.
                 <script type="text/javascript"
      src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key={$openSpaceAPIkey}"></script>
         </xsl:if>
-        <script type="text/javascript" src="/scripts/jquery.min.js"></script>
-        <script type="text/javascript" src="/scripts/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="/scripts/jquery.sparkline.js"></script>
-        <script type="text/javascript" src="/scripts/codemirror/codemirror_min.js"></script>
+        <script type="text/javascript" src="_ROOT/scripts/jquery.min.js"></script>
+        <script type="text/javascript" src="_ROOT/scripts/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="_ROOT/scripts/jquery.sparkline.js"></script>
+        <script type="text/javascript" src="_ROOT/scripts/codemirror/codemirror_min.js"></script>
         <script type="text/javascript">
                 $(function() {
                         $('.info img')
@@ -126,8 +126,8 @@ $prefLabel, $altLabel, $title and $name variables.
                                         var lineHeight = parseFloat($(this).css('line-height'), 10);
                                         $(this).scrollTop(skipLines * lineHeight);
                                         var cm = CodeMirror.fromTextArea(this, {
-                                                basefiles: ["/scripts/codemirror/codemirror_base_sparql.js"],
-                                                stylesheet: "/css/sparql.css",
+                                                basefiles: ["_ROOT/scripts/codemirror/codemirror_base_sparql.js"],
+                                                stylesheet: "_ROOT/css/sparql.css",
                                                 textWrapping: false
                                         });
                                         $(cm.frame).load(function () {

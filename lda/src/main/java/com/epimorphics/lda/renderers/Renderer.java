@@ -41,6 +41,10 @@ public interface Renderer {
     public String render( Params parameters, APIResultSet results );
     
     public class Params extends HashMap<String, String> {
+
+		public String get( String key, String ifAbsent ) {
+			return containsKey( key ) ? get( key ) : ifAbsent;
+		}
     	
     }
 }

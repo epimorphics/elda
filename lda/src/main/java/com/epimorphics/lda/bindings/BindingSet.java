@@ -28,10 +28,11 @@ public class BindingSet implements Iterable<Binding>
 	public BindingSet()
 		{}
 	
-	public void putAll( BindingSet other ) 
+	public BindingSet putAll( BindingSet other ) 
 		{
 		for (Entry<String, Binding> e: other.vars.entrySet()) 
 			this.vars.put( e.getKey(), e.getValue().copy() );
+		return this;
 		}
 	
 	@Override public Iterator<Binding> iterator() 
@@ -56,8 +57,8 @@ public class BindingSet implements Iterable<Binding>
 	public Binding get( String name ) 
 		{ return vars.get( name ); }
 	
-	public void put( String name, Binding v ) 
-		{ vars.put( name, v ); }
+	public BindingSet put( String name, Binding v ) 
+		{ vars.put( name, v ); return this; }
 	
 	public void putInto( OneToManyMap<String, Binding> map ) 
 		{ map.putAll( vars ); }

@@ -68,6 +68,7 @@ public class Loader extends HttpServlet {
     public static final String LOCAL_PREFIX = "local:";
 
     protected static String baseFilePath = "";
+    protected static String contextPath = "";
 
     protected static ModelLoaderI modelLoader;
 
@@ -76,11 +77,16 @@ public class Loader extends HttpServlet {
     public static String getBaseFilePath() {
         return baseFilePath;
     }
+    
+    public static String getContextPath() {
+    	return contextPath;
+    }
 
     public void init() {
     	baseFilePath = withTrailingSlash( getServletContext().getRealPath("/") );
     	configureLog4J();
         log.info( "baseFilePath: " + baseFilePath );
+        contextPath = getServletContext().getContextPath();
         setupLARQandTDB();
         modelLoader = new APIModelLoader(baseFilePath);
         FileManager.get().addLocatorFile( baseFilePath );

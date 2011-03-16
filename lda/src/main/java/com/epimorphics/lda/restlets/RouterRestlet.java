@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -136,8 +138,17 @@ public class RouterRestlet {
     public Response requestHandler(
             @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
+            @Context HttpServletRequest request,
+            @Context ServletContext servCon,
             @Context UriInfo ui) 
     {
+//    	System.err.println( ">> STUB: " + pathstub );
+//    	System.err.println( ">> UI.PATH: " + ui.getPath() );
+//    	System.err.println( ">> UI.ABS: " + ui.getAbsolutePath() );
+//    	System.err.println( ">> UI.BASE: " + ui.getBaseUri() );
+//    	System.err.println( ">> UI.REQ: " + ui.getRequestUri() );
+//    	System.err.println( ">> CP: " + request.getContextPath() );
+//    	System.err.println( ">> gRP = " + servCon.getRealPath( "/" ) );
     	List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
         Couple<String, String> pathAndType = parse( pathstub );
         String path = "/" + pathAndType.a;
@@ -146,8 +157,12 @@ public class RouterRestlet {
         if (match == null) {
             return returnNotFound("ERROR: Failed to find API handler for path " + path);
         } else {
-            CallContext cc = CallContext.createContext( ui, match.getBindings() );
-            APIEndpoint ep = match.getEndpoint();
+        	APIEndpoint ep = match.getEndpoint();
+        	BindingSet bs = new BindingSet( ep.getSpec().getBindings() ).putAll( match.getBindings() );
+            CallContext cc = CallContext.createContext( ui, bs );
+            Renderer.Params rp = paramsFromContext( cc );
+            rp.put( "_context_path", request.getContextPath() );
+            rp.put( "_webapp_root", servCon.getRealPath( "/" ) );
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
             try {
                 Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
@@ -155,7 +170,7 @@ public class RouterRestlet {
                 if (results == null) {
                     return returnNotFound("No answer back from " + ep.getSpec());
                 } else {
-                    return renderByType( cc, mediaTypes, pickFormatter( resultsAndFormat.b, pathAndType.b ), ep, results );
+                    return renderByType( rp, mediaTypes, pickFormatter( resultsAndFormat.b, pathAndType.b ), ep, results );
                 }
             } catch (NotFoundException e) { // TODO echeck that it's VIEW not found.
             	return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -195,8 +210,7 @@ public class RouterRestlet {
 		return null;
     	}
 
-    private Response renderByType( CallContext cc, List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
-        Renderer.Params rp = paramsFromContext( cc );
+    private Response renderByType( Renderer.Params rp, List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
     	if (rName == null)
         	{
         	for (MediaType mt: mediaTypes) {
@@ -230,7 +244,7 @@ public class RouterRestlet {
     	Params result = new Params();
        	for (Iterator<String> it = cc.parameterNames(); it.hasNext();) {
        		String name = it.next();
-       		// System.err.println( ">>  " + name + " = " + cc.getParameterValue( name ) );
+//       		System.err.println( ">>  " + name + " = " + cc.getParameterValue( name ) );
        		result.put( name, cc.getParameterValue( name ) );
     	}
     	return result;

@@ -27,7 +27,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.epimorphics.lda.renderers.Renderer.Params;
-import com.epimorphics.lda.routing.Loader;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
@@ -74,13 +73,13 @@ public class DOMUtils
 	public static String nodeToIndentedString( Node d, Params p, PrefixMapping pm, Mode as, String transformFilePath ) 
 		{
 		try {
-			String fullPath = expandStylesheetName(transformFilePath);
+			String fullPath = expandStylesheetName( p, transformFilePath );
 			Transformer t = setPropertiesAndParams(p, pm, as, fullPath);
 			StringWriter sw = new StringWriter();
 			StreamResult sr = new StreamResult( sw );
 			t.transform( new DOMSource( d ), sr );
 			String raw = sw.toString();
-			return as == Mode.AS_IS ? raw : cook( raw );
+			return as == Mode.AS_IS ? raw : raw.replaceAll( "\"_ROOT", "\"" + p.get( "_context_path", "" ) );
 			} 
 		catch (Throwable t) 
 			{
@@ -88,44 +87,54 @@ public class DOMUtils
 			}	 
 		}
 
-	private static String expandStylesheetName( String path ) {
-		if (path.startsWith( "xsl:" )) {
-			return Loader.getBaseFilePath() + "xsltsheets/" + path.substring(4);
-		} else {
-			return path;
+	private static String expandStylesheetName( Params p, String path ) 
+		{
+		String ePath = expandVariables(p, path);
+		return ePath.startsWith( "/" ) ? ePath : p.get( "_webapp_root", "" ) + ePath;
 		}
-	}
+
+	private static String expandVariables(Params p, String path) 
+		{
+		int start = 0;
+		StringBuilder sb = new StringBuilder();
+		while (true) 
+			{
+			int lb = path.indexOf( '{', start );
+			if (lb < 0) break;
+			int rb = path.indexOf( '}', lb );
+			sb.append( path.substring( start, lb ) );
+			sb.append( p.get( path.substring( lb + 1, rb ) ) );
+			start = rb + 1;
+			}
+		sb.append( path.substring( start ) );
+		String ePath = sb.toString();
+		return ePath;
+		}
 	
-	private static Transformer setPropertiesAndParams(Params p, PrefixMapping pm, Mode as, String fullPath) 
-		throws TransformerConfigurationException, TransformerFactoryConfigurationError {
+	private static Transformer setPropertiesAndParams( Params p, PrefixMapping pm, Mode as, String fullPath) 
+		throws TransformerConfigurationException, TransformerFactoryConfigurationError 
+		{
 		Transformer t = getTransformer( as, fullPath );
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );
 		t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
 		for (String name: p.keySet()) t.setParameter( name, p.get( name ) );
 		t.setParameter( "api:namespaces", namespacesDocument( pm ) );
 		return t;
-	}
+		}
 
-	private static String namespacesDocument( PrefixMapping pm ) {
+	private static String namespacesDocument( PrefixMapping pm ) 
+		{
 		StringBuilder sb = new StringBuilder();
 		sb.append( "<namespaces>\n" );
-		for (Map.Entry<String, String> e: pm.getNsPrefixMap().entrySet()) {
+		for (Map.Entry<String, String> e: pm.getNsPrefixMap().entrySet()) 
+			{
 			sb.append( "<namespace prefix='" );
 			sb.append( e.getKey() );
 			sb.append( "'>" );
 			sb.append( e.getValue() );
 			sb.append( "</namespace>\n" );
-		}
+			}
 		sb.append( "</namespaces>\n" );
 		return sb.toString();
-	}
-
-	private static String cook( String raw ) 
-		{
-		return raw
-			.replaceAll( "\"/images", "\"../../images" )
-			.replaceAll( "\"/css", "\"../../css" )
-			.replaceAll( "\"/scripts", "\"../../scripts" )
-			;
 		}
 	}
