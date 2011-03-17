@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.hp.hpl.jena.util.OneToManyMap;
 
@@ -51,12 +52,24 @@ public class BindingSet implements Iterable<Binding>
 			};
 		}
 	
+	public Set<String> keySet() 
+		{ return vars.keySet(); }
+	
 	public boolean hasVariable( String name ) 
 		{ return vars.containsKey( name ); }
 	
 	public Binding get( String name ) 
 		{ return vars.get( name ); }
 	
+	public String getAsString( String name ) 
+		{ return vars.get( name ).valueString(); }
+	
+	public String getAsString( String name, String ifAbsent ) 
+		{ return vars.containsKey( name ) ? vars.get( name ).valueString() : ifAbsent; }
+	
+	public BindingSet put( String name, String valueString )
+		{ return put( name, new Binding( name, "", "", valueString ) ); }
+		
 	public BindingSet put( String name, Binding v ) 
 		{ vars.put( name, v ); return this; }
 	

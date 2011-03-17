@@ -18,6 +18,7 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
@@ -98,7 +99,7 @@ public class Hub extends HttpServlet
                 	{ // TODO fix the switch from media types to named renderers.
                 	Renderer r = ep.getRendererNamed( acceptedType );
                 	System.err.println( "r = " + r + " for " + acceptedType );
-                	Renderer.Params rp = RouterRestlet.paramsFromContext( cc );
+                	BindingSet rp = RouterRestlet.paramsFromContext( cc );
                 	String result = r.render( rp, results );
 //                	String cl = results.getContentLocation();
                 	res.setContentType( acceptedType );

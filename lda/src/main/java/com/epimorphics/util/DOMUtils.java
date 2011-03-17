@@ -26,7 +26,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.epimorphics.lda.renderers.Renderer.Params;
+import com.epimorphics.lda.bindings.BindingSet;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
@@ -67,19 +67,19 @@ public class DOMUtils
 		{
 		if (as == Mode.TRANSFORM)
 			throw new RuntimeException( "Mode.TRANSFORM requested, but no filepath given." );
-		return nodeToIndentedString( d, new Params(), pm, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
+		return nodeToIndentedString( d, new BindingSet(), pm, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
 		}
 	
-	public static String nodeToIndentedString( Node d, Params p, PrefixMapping pm, Mode as, String transformFilePath ) 
+	public static String nodeToIndentedString( Node d, BindingSet p, PrefixMapping pm, Mode as, String transformFilePath ) 
 		{
 		try {
 			String fullPath = expandStylesheetName( p, transformFilePath );
-			Transformer t = setPropertiesAndParams(p, pm, as, fullPath);
+			Transformer t = setPropertiesAndParams(  p, pm, as, fullPath);
 			StringWriter sw = new StringWriter();
 			StreamResult sr = new StreamResult( sw );
 			t.transform( new DOMSource( d ), sr );
 			String raw = sw.toString();
-			return as == Mode.AS_IS ? raw : raw.replaceAll( "\"_ROOT", "\"" + p.get( "_context_path", "" ) );
+			return as == Mode.AS_IS ? raw : raw.replaceAll( "\"_ROOT", "\"" + p.getAsString( "_context_path", "" ) );
 			} 
 		catch (Throwable t) 
 			{
@@ -87,13 +87,13 @@ public class DOMUtils
 			}	 
 		}
 
-	private static String expandStylesheetName( Params p, String path ) 
+	private static String expandStylesheetName( BindingSet p, String path ) 
 		{
 		String ePath = expandVariables(p, path);
-		return ePath.startsWith( "/" ) ? ePath : p.get( "_webapp_root", "" ) + ePath;
+		return ePath.startsWith( "/" ) ? ePath : p.getAsString( "_webapp_root", "" ) + ePath;
 		}
 
-	private static String expandVariables(Params p, String path) 
+	private static String expandVariables(BindingSet p, String path) 
 		{
 		int start = 0;
 		StringBuilder sb = new StringBuilder();
@@ -103,7 +103,7 @@ public class DOMUtils
 			if (lb < 0) break;
 			int rb = path.indexOf( '}', lb );
 			sb.append( path.substring( start, lb ) );
-			sb.append( p.get( path.substring( lb + 1, rb ) ) );
+			sb.append( p.getAsString( path.substring( lb + 1, rb ) ) );
 			start = rb + 1;
 			}
 		sb.append( path.substring( start ) );
@@ -111,13 +111,13 @@ public class DOMUtils
 		return ePath;
 		}
 	
-	private static Transformer setPropertiesAndParams( Params p, PrefixMapping pm, Mode as, String fullPath) 
+	private static Transformer setPropertiesAndParams( BindingSet p, PrefixMapping pm, Mode as, String fullPath) 
 		throws TransformerConfigurationException, TransformerFactoryConfigurationError 
 		{
 		Transformer t = getTransformer( as, fullPath );
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );
 		t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-		for (String name: p.keySet()) t.setParameter( name, p.get( name ) );
+		for (String name: p.keySet()) t.setParameter( name, p.getAsString( name ) );
 		t.setParameter( "api:namespaces", namespacesDocument( pm ) );
 		return t;
 		}

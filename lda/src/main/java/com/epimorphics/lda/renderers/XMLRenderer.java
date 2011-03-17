@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.DOMUtils;
@@ -52,11 +53,11 @@ public class XMLRenderer implements Renderer {
 		return mediaType;
 	}
 
-	@Override public synchronized String render( Params p, APIResultSet results ) {
+	@Override public synchronized String render( BindingSet p, APIResultSet results ) {
 		return render( p, results.getRoot() );
 	}
 
-	public String render( Params p, Resource root ) {
+	public String render( BindingSet p, Resource root ) {
 		PrefixMapping pm = root.getModel();
 		log.debug( "render with stylesheet '" + transformFilePath + "'" );
 		Document d = DOMUtils.newDocument();

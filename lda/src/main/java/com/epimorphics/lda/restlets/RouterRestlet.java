@@ -44,7 +44,6 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.renderers.Renderer.Params;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -160,7 +159,7 @@ public class RouterRestlet {
         	APIEndpoint ep = match.getEndpoint();
         	BindingSet bs = new BindingSet( ep.getSpec().getBindings() ).putAll( match.getBindings() );
             CallContext cc = CallContext.createContext( ui, bs );
-            Renderer.Params rp = paramsFromContext( cc );
+            BindingSet rp = paramsFromContext( cc );
             rp.put( "_context_path", request.getContextPath() );
             rp.put( "_webapp_root", servCon.getRealPath( "/" ) );
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
@@ -210,7 +209,7 @@ public class RouterRestlet {
 		return null;
     	}
 
-    private Response renderByType( Renderer.Params rp, List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
+    private Response renderByType( BindingSet rp, List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
     	if (rName == null)
         	{
         	for (MediaType mt: mediaTypes) {
@@ -240,8 +239,8 @@ public class RouterRestlet {
         }
     }
     
-    public static Params paramsFromContext( CallContext cc ) {
-    	Params result = new Params();
+    public static BindingSet paramsFromContext( CallContext cc ) {
+    	BindingSet result = new BindingSet();
        	for (Iterator<String> it = cc.parameterNames(); it.hasNext();) {
        		String name = it.next();
 //       		System.err.println( ">>  " + name + " = " + cc.getParameterValue( name ) );

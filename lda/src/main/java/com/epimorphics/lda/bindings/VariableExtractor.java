@@ -97,7 +97,7 @@ public class VariableExtractor {
 			if (v == null) throw new RuntimeException( "circularity in variable definitions involving " + name );
 			return v.valueString();			
 		} else {
-			bound.put( name, null );
+			bound.put( name, (Binding) null );
 			Binding x = toDo.get( name );			
 			String valueString = x.valueString();
 			if (valueString == null) {

@@ -19,6 +19,7 @@ package com.epimorphics.lda.renderers;
 
 import java.util.HashMap;
 
+import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIResultSet;
 
 /**
@@ -38,14 +39,6 @@ public interface Renderer {
     /**
      * Render a result set
      */
-    public String render( Params parameters, APIResultSet results );
-    
-    public class Params extends HashMap<String, String> {
-
-		public String get( String key, String ifAbsent ) {
-			return containsKey( key ) ? get( key ) : ifAbsent;
-		}
-    	
-    }
+    public String render( BindingSet parameters, APIResultSet results );
 }
 

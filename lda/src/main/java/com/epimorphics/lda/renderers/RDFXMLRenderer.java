@@ -16,6 +16,7 @@ package com.epimorphics.lda.renderers;
 
 import java.io.ByteArrayOutputStream;
 
+import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIResultSet;
 
 public class RDFXMLRenderer implements Renderer {
@@ -23,7 +24,7 @@ public class RDFXMLRenderer implements Renderer {
        return "rdf/xml";
     }
 
-    @Override public String render( Params ignored, APIResultSet results ) {
+    @Override public String render( BindingSet ignored, APIResultSet results ) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         results.write( bos, "RDF/XML-ABBREV" );
         return bos.toString();
