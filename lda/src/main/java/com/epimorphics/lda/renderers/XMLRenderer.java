@@ -6,14 +6,11 @@
 */
 package com.epimorphics.lda.renderers;
 
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.DOMUtils;
@@ -53,11 +50,11 @@ public class XMLRenderer implements Renderer {
 		return mediaType;
 	}
 
-	@Override public synchronized String render( BindingSet p, APIResultSet results ) {
+	@Override public synchronized String render( RendererContext p, APIResultSet results ) {
 		return render( p, results.getRoot() );
 	}
 
-	public String render( BindingSet p, Resource root ) {
+	public String render( RendererContext p, Resource root ) {
 		PrefixMapping pm = root.getModel();
 		Document d = DOMUtils.newDocument();
 		renderInto( root, d );

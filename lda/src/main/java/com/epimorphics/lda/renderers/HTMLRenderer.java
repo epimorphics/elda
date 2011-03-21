@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.Util;
@@ -31,7 +30,7 @@ public class HTMLRenderer implements Renderer {
         return "text/html";
     }
 
-    @Override public String render( BindingSet ignored, APIResultSet results ) {
+    @Override public String render( RendererContext ignored, APIResultSet results ) {
     	boolean isItemRendering = results.listStatements( null, FIXUP.items, (RDFNode) null ).hasNext() == false;
         return isItemRendering ? renderItem(results) : renderList(results);
     }

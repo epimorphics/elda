@@ -18,7 +18,6 @@
 package com.epimorphics.lda.restlets;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -47,6 +46,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -162,7 +162,7 @@ public class RouterRestlet {
         	APIEndpoint ep = match.getEndpoint();
         	BindingSet bs = new BindingSet( ep.getSpec().getBindings() ).putAll( match.getBindings() );
             CallContext cc = CallContext.createContext( ui, bs );
-            BindingSet rp = paramsFromContext( cc );
+            RendererContext rp = new RendererContext( paramsFromContext( cc ) );
             rp.put( "_context_path", request.getContextPath() );
             rp.put( "_webapp_root", servCon.getRealPath( "/" ) );
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
@@ -212,7 +212,7 @@ public class RouterRestlet {
 		return null;
     	}
 
-    private Response renderByType( BindingSet rp, List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
+    private Response renderByType( RendererContext rp, List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
     	if (rName == null)
         	{
         	for (MediaType mt: mediaTypes) {

@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.ParseWrapper;
-import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -57,7 +56,7 @@ public class JSONRenderer implements Renderer {
         return mime;
     }
 
-    @Override public String render( BindingSet ignored, APIResultSet results) {
+    @Override public String render( RendererContext ignored, APIResultSet results) {
         StringWriter writer = new StringWriter();
         List<Resource> roots = new ArrayList<Resource>(1);
         roots.add( results.getRoot() );

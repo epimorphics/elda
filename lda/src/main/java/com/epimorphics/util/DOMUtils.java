@@ -27,6 +27,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.renderers.RendererContext;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
@@ -67,10 +68,10 @@ public class DOMUtils
 		{
 		if (as == Mode.TRANSFORM)
 			throw new RuntimeException( "Mode.TRANSFORM requested, but no filepath given." );
-		return nodeToIndentedString( d, new BindingSet(), pm, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
+		return nodeToIndentedString( d, new RendererContext(), pm, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
 		}
 	
-	public static String nodeToIndentedString( Node d, BindingSet p, PrefixMapping pm, Mode as, String transformFilePath ) 
+	public static String nodeToIndentedString( Node d, RendererContext p, PrefixMapping pm, Mode as, String transformFilePath ) 
 		{
 		try {
 			String fullPath = expandStylesheetName( p, transformFilePath );
@@ -88,16 +89,13 @@ public class DOMUtils
 			}	 
 		}
 
-	private static String expandStylesheetName( BindingSet p, String path ) 
+	private static String expandStylesheetName( RendererContext rc, String path ) 
 		{
-		String ePath = expandVariables(p, path);
-		if (ePath.startsWith( "/" )) return ePath;
-		String wr = p.getAsString( "_webapp_root", "" );
-//		System.err.println( ">> _webapp_root = " + wr );
-		return wr.equals( "" ) ? ePath : wr + "/" + ePath;
+		String ePath = expandVariables(rc, path);
+		return ePath.startsWith( "/" ) ? ePath : rc.withWebRoot( ePath );
 		}
 
-	private static String expandVariables(BindingSet p, String path) 
+	private static String expandVariables(RendererContext p, String path) 
 		{
 		int start = 0;
 		StringBuilder sb = new StringBuilder();
@@ -115,7 +113,7 @@ public class DOMUtils
 		return ePath;
 		}
 	
-	private static Transformer setPropertiesAndParams( BindingSet p, PrefixMapping pm, Mode as, String fullPath) 
+	private static Transformer setPropertiesAndParams( RendererContext p, PrefixMapping pm, Mode as, String fullPath) 
 		throws TransformerConfigurationException, TransformerFactoryConfigurationError 
 		{
 		Transformer t = getTransformer( as, fullPath );

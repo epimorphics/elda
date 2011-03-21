@@ -16,7 +16,6 @@ package com.epimorphics.lda.renderers;
 
 import java.io.ByteArrayOutputStream;
 
-import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIResultSet;
 
 public class TurtleRenderer implements Renderer {
@@ -24,7 +23,7 @@ public class TurtleRenderer implements Renderer {
         return "text/turtle";
     }
     
-    @Override public String render( BindingSet ignored, APIResultSet results ) {
+    @Override public String render( RendererContext ignored, APIResultSet results ) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         results.write( bos, "TTL" );
         return bos.toString();

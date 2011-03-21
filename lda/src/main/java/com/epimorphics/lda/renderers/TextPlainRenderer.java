@@ -14,7 +14,6 @@
 
 package com.epimorphics.lda.renderers;
 
-import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.*;
 
 public final class TextPlainRenderer implements Renderer {
@@ -23,7 +22,7 @@ public final class TextPlainRenderer implements Renderer {
         return "text/plain";
     }
 
-    @Override public String render( BindingSet ignored, APIResultSet results ) {
+    @Override public String render( RendererContext ignored, APIResultSet results ) {
         return results.toString();
     }
 }

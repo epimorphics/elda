@@ -17,7 +17,6 @@
 
 package com.epimorphics.lda.renderers;
 
-import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIResultSet;
 
 /**
@@ -37,6 +36,6 @@ public interface Renderer {
     /**
      * Render a result set
      */
-    public String render( BindingSet parameters, APIResultSet results );
+    public String render( RendererContext rc, APIResultSet results );
 }
 
