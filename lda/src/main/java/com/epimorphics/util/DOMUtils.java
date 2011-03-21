@@ -74,6 +74,7 @@ public class DOMUtils
 		{
 		try {
 			String fullPath = expandStylesheetName( p, transformFilePath );
+//			System.err.println( ">> expanded stylesheet name " + transformFilePath + " to " + fullPath );
 			Transformer t = setPropertiesAndParams(  p, pm, as, fullPath);
 			StringWriter sw = new StringWriter();
 			StreamResult sr = new StreamResult( sw );
@@ -90,7 +91,10 @@ public class DOMUtils
 	private static String expandStylesheetName( BindingSet p, String path ) 
 		{
 		String ePath = expandVariables(p, path);
-		return ePath.startsWith( "/" ) ? ePath : p.getAsString( "_webapp_root", "" ) + ePath;
+		if (ePath.startsWith( "/" )) return ePath;
+		String wr = p.getAsString( "_webapp_root", "" );
+//		System.err.println( ">> _webapp_root = " + wr );
+		return wr.equals( "" ) ? ePath : wr + "/" + ePath;
 		}
 
 	private static String expandVariables(BindingSet p, String path) 

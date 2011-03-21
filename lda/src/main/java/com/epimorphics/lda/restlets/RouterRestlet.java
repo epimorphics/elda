@@ -17,8 +17,11 @@
 
 package com.epimorphics.lda.restlets;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -51,6 +54,7 @@ import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaTypes;
 import com.hp.hpl.jena.shared.NotFoundException;
+import com.hp.hpl.jena.util.FileManager;
 import com.sun.jersey.api.uri.UriTemplate;
 
 /**
@@ -139,20 +143,19 @@ public class RouterRestlet {
             @Context HttpHeaders headers, 
             @Context HttpServletRequest request,
             @Context ServletContext servCon,
-            @Context UriInfo ui) 
+            @Context UriInfo ui) throws IOException 
     {
-//    	System.err.println( ">> STUB: " + pathstub );
-//    	System.err.println( ">> UI.PATH: " + ui.getPath() );
-//    	System.err.println( ">> UI.ABS: " + ui.getAbsolutePath() );
-//    	System.err.println( ">> UI.BASE: " + ui.getBaseUri() );
-//    	System.err.println( ">> UI.REQ: " + ui.getRequestUri() );
-//    	System.err.println( ">> CP: " + request.getContextPath() );
-//    	System.err.println( ">> gRP = " + servCon.getRealPath( "/" ) );
     	List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
         Couple<String, String> pathAndType = parse( pathstub );
         String path = "/" + pathAndType.a;
         Match match = getMatch( path );
-
+//
+        URL res = servCon.getResource( "/xsltsheets/ashtml.xsl" );
+        String it = FileManager.get().readWholeFileAsUTF8( res.openStream() );
+		System.err.println( ">> ASHTML: " + res );
+		System.err.println( ">> CONTENT: " + it );
+        System.err.println( ">> INDEX: " + servCon.getResource( "/index.html" ) );
+//        
         if (match == null) {
             return returnNotFound("ERROR: Failed to find API handler for path " + path);
         } else {

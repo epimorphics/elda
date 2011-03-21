@@ -17,8 +17,6 @@
 
 package com.epimorphics.lda.renderers;
 
-import java.util.HashMap;
-
 import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.core.APIResultSet;
 

@@ -59,7 +59,6 @@ public class XMLRenderer implements Renderer {
 
 	public String render( BindingSet p, Resource root ) {
 		PrefixMapping pm = root.getModel();
-		log.debug( "render with stylesheet '" + transformFilePath + "'" );
 		Document d = DOMUtils.newDocument();
 		renderInto( root, d );
 		return DOMUtils.nodeToIndentedString( d, p, pm, as, transformFilePath );
