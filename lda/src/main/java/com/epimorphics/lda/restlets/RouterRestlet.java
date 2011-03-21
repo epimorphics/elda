@@ -150,11 +150,11 @@ public class RouterRestlet {
         String path = "/" + pathAndType.a;
         Match match = getMatch( path );
 //
-        URL res = servCon.getResource( "/xsltsheets/ashtml.xsl" );
-        String it = FileManager.get().readWholeFileAsUTF8( res.openStream() );
-		System.err.println( ">> ASHTML: " + res );
-		System.err.println( ">> CONTENT: " + it );
-        System.err.println( ">> INDEX: " + servCon.getResource( "/index.html" ) );
+//        URL res = servCon.getResource( "/xsltsheets/ashtml.xsl" );
+//        String it = FileManager.get().readWholeFileAsUTF8( res.openStream() );
+//		System.err.println( ">> ASHTML: " + res );
+//		System.err.println( ">> CONTENT: " + it );
+//        System.err.println( ">> INDEX: " + servCon.getResource( "/index.html" ) );
 //        
         if (match == null) {
             return returnNotFound("ERROR: Failed to find API handler for path " + path);
@@ -162,7 +162,7 @@ public class RouterRestlet {
         	APIEndpoint ep = match.getEndpoint();
         	BindingSet bs = new BindingSet( ep.getSpec().getBindings() ).putAll( match.getBindings() );
             CallContext cc = CallContext.createContext( ui, bs );
-            RendererContext rp = new RendererContext( paramsFromContext( cc ) );
+            RendererContext rp = new RendererContext( paramsFromContext( cc ), servCon );
             rp.put( "_context_path", request.getContextPath() );
             rp.put( "_webapp_root", servCon.getRealPath( "/" ) );
             log.debug("Info: calling APIEndpoint " + ep.getSpec());

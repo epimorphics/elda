@@ -7,6 +7,8 @@
 */
 package com.epimorphics.lda.renderers;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -20,16 +22,30 @@ public class RendererContext {
 	
 	public RendererContext( BindingSet v, final ServletContext sc ) {
 		this.v = v;
-		this.s = new Spoo() {public String getWebRoot() { return sc.getContextPath(); }};
+		this.s = new Spoo() 
+			{public URL asResourceURL( String p ) 
+				{ try {
+					return sc.getResource( p );
+				} catch (MalformedURLException e) {
+					throw new RuntimeException( e );
+				} }
+			};
+	}
+	
+	public RendererContext( BindingSet v ) {
+		this.v = v;
+		this.s = new Spoo() 
+			{public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
 	}
 	
 	interface Spoo {
-		String getWebRoot();
+		URL asResourceURL( String u );
 	}
 	
 	public RendererContext() {
 		this.v = new BindingSet();
-		this.s = new Spoo() { public String getWebRoot() { return ""; }};
+		this.s = new Spoo() 
+			{public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
 	}
 	
 	public String getAsString( String key, String ifAbsent ) {
@@ -48,9 +64,9 @@ public class RendererContext {
 		v.put( key, value );		
 	}
 
-	public String withWebRoot( String ePath ) {
-		String wr = s.getWebRoot();
-		return wr.equals( "" ) ? ePath : wr + "/" + ePath;
+	public URL toURL( String ePath ) {
+		String p = ePath.startsWith( "/" ) ? ePath : "/" + ePath;
+		return s.asResourceURL( p );
 	}
 
 }

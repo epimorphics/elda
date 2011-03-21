@@ -8,6 +8,7 @@ package com.epimorphics.util;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -51,7 +52,7 @@ public class DOMUtils
 	public static Document newDocument() 
 		{ return getBuilder().newDocument(); }
 
-	public static Transformer getTransformer( Mode a, String transformFilePath ) 
+	public static Transformer getTransformer( Mode a, URL u ) 
 		throws TransformerConfigurationException, TransformerFactoryConfigurationError 
 		{
 		TransformerFactory tf = TransformerFactory.newInstance();
@@ -59,7 +60,7 @@ public class DOMUtils
 			return tf.newTransformer();
 		else 
 			{
-			Source s = new StreamSource( new File( transformFilePath ) );
+			Source s = new StreamSource( u.toExternalForm() );
 			return tf.newTransformer( s );
 			}
 		}
@@ -74,9 +75,9 @@ public class DOMUtils
 	public static String nodeToIndentedString( Node d, RendererContext p, PrefixMapping pm, Mode as, String transformFilePath ) 
 		{
 		try {
-			String fullPath = expandStylesheetName( p, transformFilePath );
+			URL u = expandStylesheetName( p, transformFilePath );
 //			System.err.println( ">> expanded stylesheet name " + transformFilePath + " to " + fullPath );
-			Transformer t = setPropertiesAndParams(  p, pm, as, fullPath);
+			Transformer t = setPropertiesAndParams(  p, pm, as, u );
 			StringWriter sw = new StringWriter();
 			StreamResult sr = new StreamResult( sw );
 			t.transform( new DOMSource( d ), sr );
@@ -89,13 +90,13 @@ public class DOMUtils
 			}	 
 		}
 
-	private static String expandStylesheetName( RendererContext rc, String path ) 
+	private static URL expandStylesheetName( RendererContext rc, String path ) 
 		{
 		String ePath = expandVariables(rc, path);
-		return ePath.startsWith( "/" ) ? ePath : rc.withWebRoot( ePath );
+		return rc.toURL( ePath );
 		}
 
-	private static String expandVariables(RendererContext p, String path) 
+	private static String expandVariables( RendererContext p, String path ) 
 		{
 		int start = 0;
 		StringBuilder sb = new StringBuilder();
@@ -113,10 +114,10 @@ public class DOMUtils
 		return ePath;
 		}
 	
-	private static Transformer setPropertiesAndParams( RendererContext p, PrefixMapping pm, Mode as, String fullPath) 
+	private static Transformer setPropertiesAndParams( RendererContext p, PrefixMapping pm, Mode as, URL u ) 
 		throws TransformerConfigurationException, TransformerFactoryConfigurationError 
 		{
-		Transformer t = getTransformer( as, fullPath );
+		Transformer t = getTransformer( as, u );
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );
 		t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
 		for (String name: p.keySet()) t.setParameter( name, p.getAsString( name ) );
