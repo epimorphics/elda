@@ -118,7 +118,7 @@ public class BuiltinRendererTable {
 		putFactory( "html", FIXUP.HtmlFormatter, "text/html", new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-				return new XMLRenderer( sns, Mode.TRANSFORM, "text/html", "xsl:ashtml.xsl" );
+				return new HTMLRenderer();
 			}
 			} );
 	}

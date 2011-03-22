@@ -92,7 +92,7 @@ spec:api
 		, [ api:name "webapp"; api:value "/elda"]
 	; api:formatter 
 		[a api:XsltFormatter
-		; api:name 'ashtml'
+		; api:name 'html'
 		; api:stylesheet 'xsltsheets/ashtml.xsl'
 		; api:mimeType 'text/html'
 		] 

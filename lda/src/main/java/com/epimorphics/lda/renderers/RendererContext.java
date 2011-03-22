@@ -31,7 +31,9 @@ public class RendererContext {
 		this.s = new AsURL() 
 			{public URL asResourceURL( String p ) 
 				{ try {
-					return sc.getResource( p );
+					URL result = sc.getResource( p );
+					if (result == null) throw new RuntimeException( "could not find webapp resource " + p );
+					return result;
 				} catch (MalformedURLException e) {
 					throw new RuntimeException( e );
 				} }
