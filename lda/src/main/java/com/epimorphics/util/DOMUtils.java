@@ -6,7 +6,6 @@
 */
 package com.epimorphics.util;
 
-import java.io.File;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Map;
@@ -27,7 +26,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.renderers.RendererContext;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
@@ -72,17 +70,17 @@ public class DOMUtils
 		return nodeToIndentedString( d, new RendererContext(), pm, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
 		}
 	
-	public static String nodeToIndentedString( Node d, RendererContext p, PrefixMapping pm, Mode as, String transformFilePath ) 
+	public static String nodeToIndentedString( Node d, RendererContext rc, PrefixMapping pm, Mode as, String transformFilePath ) 
 		{
 		try {
-			URL u = expandStylesheetName( p, transformFilePath );
+			URL u = expandStylesheetName( rc, transformFilePath );
 //			System.err.println( ">> expanded stylesheet name " + transformFilePath + " to " + fullPath );
-			Transformer t = setPropertiesAndParams(  p, pm, as, u );
+			Transformer t = setPropertiesAndParams(  rc, pm, as, u );
 			StringWriter sw = new StringWriter();
 			StreamResult sr = new StreamResult( sw );
 			t.transform( new DOMSource( d ), sr );
 			String raw = sw.toString();
-			return as == Mode.AS_IS ? raw : raw.replaceAll( "\"_ROOT", "\"" + p.getAsString( "_context_path", "" ) );
+			return as == Mode.AS_IS ? raw : raw.replaceAll( "\"_ROOT", "\"" + rc.getContextPath() );
 			} 
 		catch (Throwable t) 
 			{
@@ -93,7 +91,7 @@ public class DOMUtils
 	private static URL expandStylesheetName( RendererContext rc, String path ) 
 		{
 		String ePath = expandVariables(rc, path);
-		return rc.toURL( ePath );
+		return rc.pathAsURL( ePath );
 		}
 
 	private static String expandVariables( RendererContext p, String path ) 

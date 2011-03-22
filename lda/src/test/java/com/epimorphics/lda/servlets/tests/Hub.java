@@ -84,7 +84,7 @@ public class Hub extends HttpServlet
         	} 
         else 
         	{
-            CallContext cc = CallContext.createContext( ui, match.getBindings(), acceptedType );
+            CallContext cc = CallContext.createContext( ui, match.getBindings() );
             APIEndpoint ep = match.getEndpoint();
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
             try 

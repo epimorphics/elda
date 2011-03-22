@@ -83,8 +83,7 @@ public class TestCallContext
 		{
 		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( "p1=v1&p2=v2" );
 		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
-		String mediaSuffix = ".spoo";
-		CallContext base = CallContext.createContext( ui, MakeData.variables( "" ), mediaSuffix );
+		CallContext base = CallContext.createContext( ui, MakeData.variables( "" ) );
 		CallContext cc = new CallContext( MakeData.variables( "fly=fishing" ), base );
 		assertThat( cc.getUriInfo(), is( base.getUriInfo() ) );
 		assertThat( cc.getParameterValue( "fly" ), is( "fishing" ) );

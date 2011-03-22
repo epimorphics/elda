@@ -20,14 +20,12 @@ package com.epimorphics.lda.restlets;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -54,7 +52,6 @@ import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaTypes;
 import com.hp.hpl.jena.shared.NotFoundException;
-import com.hp.hpl.jena.util.FileManager;
 import com.sun.jersey.api.uri.UriTemplate;
 
 /**
@@ -80,7 +77,6 @@ public class RouterRestlet {
         }
     }
 
-    
     public RouterRestlet() {
     }
 
@@ -141,51 +137,44 @@ public class RouterRestlet {
     public Response requestHandler(
             @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
-            @Context HttpServletRequest request,
             @Context ServletContext servCon,
             @Context UriInfo ui) throws IOException 
     {
-    	List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
         Couple<String, String> pathAndType = parse( pathstub );
-        String path = "/" + pathAndType.a;
-        Match match = getMatch( path );
-//
-//        URL res = servCon.getResource( "/xsltsheets/ashtml.xsl" );
-//        String it = FileManager.get().readWholeFileAsUTF8( res.openStream() );
-//		System.err.println( ">> ASHTML: " + res );
-//		System.err.println( ">> CONTENT: " + it );
-//        System.err.println( ">> INDEX: " + servCon.getResource( "/index.html" ) );
-//        
+        Match match = getMatch( "/" + pathAndType.a );
         if (match == null) {
-            return returnNotFound("ERROR: Failed to find API handler for path " + path);
+            return returnNotFound( "ERROR: Failed to find API handler for path " + ("/" + pathAndType.a) );
         } else {
-        	APIEndpoint ep = match.getEndpoint();
-        	BindingSet bs = new BindingSet( ep.getSpec().getBindings() ).putAll( match.getBindings() );
-            CallContext cc = CallContext.createContext( ui, bs );
-            RendererContext rp = new RendererContext( paramsFromContext( cc ), servCon );
-            rp.put( "_context_path", request.getContextPath() );
-            rp.put( "_webapp_root", servCon.getRealPath( "/" ) );
-            log.debug("Info: calling APIEndpoint " + ep.getSpec());
-            try {
-                Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
-				APIResultSet results = resultsAndFormat.a;
-                if (results == null) {
-                    return returnNotFound("No answer back from " + ep.getSpec());
-                } else {
-                    return renderByType( rp, mediaTypes, pickFormatter( resultsAndFormat.b, pathAndType.b ), ep, results );
-                }
-            } catch (NotFoundException e) { // TODO echeck that it's VIEW not found.
-            	return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
-            } catch (APIEndpointException e) {
-                return returnNotFound("Query Failed.\n" + e.getMessage());
-            } catch (QueryParseException e) {
-            	e.printStackTrace( System.err );
-                return returnNotFound("Failed to parse query request : " + e.getMessage());
-            } catch (Throwable e) {
-                return returnError(e);
-            } 
+        	List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
+        	return runEndpoint( servCon, ui, mediaTypes, pathAndType.b, match ); 
         }
     }
+
+	private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
+		APIEndpoint ep = match.getEndpoint();
+		BindingSet bs = new BindingSet( ep.getSpec().getBindings() ).putAll( match.getBindings() );
+		CallContext cc = CallContext.createContext( ui, bs );
+		log.debug("Info: calling APIEndpoint " + ep.getSpec());
+		try {
+		    Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
+			APIResultSet results = resultsAndFormat.a;
+		    if (results == null) {
+		        return returnNotFound("No answer back from " + ep.getSpec());
+		    } else {
+		    	RendererContext rp = new RendererContext( paramsFromContext( cc ), servCon );
+		        return renderByType( rp, mediaTypes, pickFormatter( resultsAndFormat.b, suffix ), ep, results );
+		    }
+		} catch (NotFoundException e) { // TODO echeck that it's VIEW not found.
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+		} catch (APIEndpointException e) {
+		    return returnNotFound("Query Failed.\n" + e.getMessage());
+		} catch (QueryParseException e) {
+			e.printStackTrace( System.err );
+		    return returnNotFound("Failed to parse query request : " + e.getMessage());
+		} catch (Throwable e) {
+		    return returnError(e);
+		}
+	}
     
    private String pickFormatter( String _format, String dotSuffix ) {
 		return _format.equals( "" ) ? dotSuffix : _format;
@@ -218,7 +207,7 @@ public class RouterRestlet {
         	for (MediaType mt: mediaTypes) {
         		String type = mt.getType() + "/" + mt.getSubtype();
         		String name = nameForMimeType( type );
-        		Renderer renderer = ep.getRendererNamed( name ); // ep.getRendererFor(type);
+        		Renderer renderer = ep.getRendererNamed( name ); 
         		if (renderer != null) 
         			return returnAs( renderer.render( rp, results ).toString(), type, results.getContentLocation() );
         	}

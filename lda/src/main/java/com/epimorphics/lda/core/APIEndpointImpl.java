@@ -50,9 +50,6 @@ public class APIEndpointImpl implements APIEndpoint {
     protected final boolean specWantsContext;
     protected final Cache cache;
     
-    public static final Resource NO_PRIMARY_TOPIC = ResourceFactory.createResource
-    	( API.getURI() + "NO_PRIMARY_TOPIC_PROVIDED" );
-    
     static Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
     
     public APIEndpointImpl( APIEndpointSpec spec ) {
@@ -67,7 +64,7 @@ public class APIEndpointImpl implements APIEndpoint {
     
     @Override public Couple<APIResultSet, String> call( CallContext given ) {
     	wantsContext = specWantsContext;
-    	CallContext context = new CallContext( spec.getParameterBindings(), given );
+    	CallContext context = new CallContext( spec.getBindings(), given );
         log.debug("API " + spec + " called on " + context + " from " + context.getUriInfo());
         APIQuery query = spec.getBaseQuery();
         Couple<View, String> viewAndFormat = buildQueryAndView( context, query );

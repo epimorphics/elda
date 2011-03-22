@@ -300,19 +300,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 		return bindings;
 	}
 
-	/**
-	    Answer the variable bindings name->RDFNode of this EndpointSpec
-	    converted to the same form as used by parameters, using the
-	    short name service.
-	    
-	    WARNING: under development. chris doesn't fully understand what the
-	    mapping is supposed to be: not convinced that the SNS conversion is
-	    enough. Typed literals are a concern.
-	*/
-	public BindingSet getParameterBindings() {
-		return new BindingSet( bindings );
-	}
-
 	public String getItemTemplate() {
 		return itemTemplate;
 	}

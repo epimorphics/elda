@@ -15,14 +15,20 @@ import javax.servlet.ServletContext;
 
 import com.epimorphics.lda.bindings.BindingSet;
 
+/**
+	The context in which a rendering takes place. It provides access to the value
+	of bound variables and a way of transforming a file path into a URL (which
+	can then be used to access the contents of the specified file).
+*/
 public class RendererContext {
 
 	protected final BindingSet v;
-	protected final Spoo s;
+	protected final AsURL s;
+	protected final String contextPath;
 	
 	public RendererContext( BindingSet v, final ServletContext sc ) {
 		this.v = v;
-		this.s = new Spoo() 
+		this.s = new AsURL() 
 			{public URL asResourceURL( String p ) 
 				{ try {
 					return sc.getResource( p );
@@ -30,21 +36,24 @@ public class RendererContext {
 					throw new RuntimeException( e );
 				} }
 			};
+		this.contextPath = sc.getContextPath();
 	}
 	
 	public RendererContext( BindingSet v ) {
 		this.v = v;
-		this.s = new Spoo() 
+		this.contextPath = "";
+		this.s = new AsURL() 
 			{public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
 	}
 	
-	interface Spoo {
+	interface AsURL {
 		URL asResourceURL( String u );
 	}
 	
 	public RendererContext() {
 		this.v = new BindingSet();
-		this.s = new Spoo() 
+		this.contextPath = "";
+		this.s = new AsURL() 
 			{public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
 	}
 	
@@ -60,11 +69,15 @@ public class RendererContext {
 		return v.keySet();
 	}
 
-	public void put(String key, String value ) {
+	public void put( String key, String value ) {
 		v.put( key, value );		
 	}
+	
+	public String getContextPath() {
+		return contextPath;
+	}
 
-	public URL toURL( String ePath ) {
+	public URL pathAsURL( String ePath ) {
 		String p = ePath.startsWith( "/" ) ? ePath : "/" + ePath;
 		return s.asResourceURL( p );
 	}
