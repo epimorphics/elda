@@ -37,7 +37,7 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointException;
 import com.epimorphics.lda.core.APIResultSet;
@@ -130,7 +130,7 @@ public class RouterRestlet {
                 }
             }
         }
-        return match == null ? null : new Match( match.getValue(), BindingSet.uplift( bindings ) );
+        return match == null ? null : new Match( match.getValue(), VarValues.uplift( bindings ) );
     }
     
     @GET @Produces( { "text/plain", "application/rdf+xml", "application/json", "text/turtle", "text/html", "text/xml" })
@@ -152,7 +152,7 @@ public class RouterRestlet {
 
 	private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
 		APIEndpoint ep = match.getEndpoint();
-		BindingSet bs = new BindingSet( ep.getSpec().getBindings() ).putAll( match.getBindings() );
+		VarValues bs = new VarValues( ep.getSpec().getBindings() ).putAll( match.getBindings() );
 		CallContext cc = CallContext.createContext( ui, bs );
 		log.debug("Info: calling APIEndpoint " + ep.getSpec());
 		try {
@@ -231,8 +231,8 @@ public class RouterRestlet {
         }
     }
     
-    public static BindingSet paramsFromContext( CallContext cc ) {
-    	BindingSet result = new BindingSet();
+    public static VarValues paramsFromContext( CallContext cc ) {
+    	VarValues result = new VarValues();
        	for (Iterator<String> it = cc.parameterNames(); it.hasNext();) {
        		String name = it.next();
 //       		System.err.println( ">>  " + name + " = " + cc.getParameterValue( name ) );

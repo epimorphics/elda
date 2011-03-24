@@ -18,7 +18,7 @@ import javax.ws.rs.core.UriInfo;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIQuery;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
@@ -88,7 +88,7 @@ public class TestParameterNameAndValueExpansion
 		{
 		MultivaluedMap<String, String> qp = MultiValuedMapSupport.parseQueryString( "{aname}=value" );
 		UriInfo ui = new APITesterUriInfo( "my:URI", qp );
-		BindingSet bindings = MakeData.variables( "aname=bname" );
+		VarValues bindings = MakeData.variables( "aname=bname" );
 		CallContext cc = CallContext.createContext( ui, bindings );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "bname=eh:/full-bname" );

@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.epimorphics.lda.bindings.Binding;
-import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.Value;
+import com.epimorphics.lda.bindings.VarValues;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
@@ -74,14 +74,14 @@ public class MakeData
 		return result;
 		}
 
-	public static BindingSet variables( String bindings ) 
+	public static VarValues variables( String bindings ) 
 		{
-		BindingSet result = new BindingSet();
+		VarValues result = new VarValues();
 		if (bindings.length() > 0)
 			for (String b: bindings.split( " +" ))
 				{
 				String [] parts = b.split( "=" );
-				result.put( parts[0], new Binding( parts[0], "", "", parts[1] ) );
+				result.put( parts[0], new Value( parts[1] ) );
 				}
 		return result;
 		}

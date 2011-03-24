@@ -13,7 +13,7 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 
-import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.bindings.Lookup;
 
 /**
@@ -23,11 +23,11 @@ import com.epimorphics.lda.bindings.Lookup;
 */
 public class RendererContext implements Lookup {
 
-	protected final BindingSet v;
+	protected final VarValues v;
 	protected final AsURL s;
 	protected final String contextPath;
 	
-	public RendererContext( BindingSet v, final ServletContext sc ) {
+	public RendererContext( VarValues v, final ServletContext sc ) {
 		this.v = v;
 		this.s = new AsURL() 
 			{public URL asResourceURL( String p ) 
@@ -42,7 +42,7 @@ public class RendererContext implements Lookup {
 		this.contextPath = sc.getContextPath();
 	}
 	
-	public RendererContext( BindingSet v ) {
+	public RendererContext( VarValues v ) {
 		this.v = v;
 		this.contextPath = "";
 		this.s = new AsURL() 
@@ -54,7 +54,7 @@ public class RendererContext implements Lookup {
 	}
 	
 	public RendererContext() {
-		this.v = new BindingSet();
+		this.v = new VarValues();
 		this.contextPath = "";
 		this.s = new AsURL() 
 			{public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};

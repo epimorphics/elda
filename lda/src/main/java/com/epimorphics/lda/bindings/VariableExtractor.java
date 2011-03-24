@@ -30,12 +30,12 @@ public class VariableExtractor {
 	
 	static Logger log = LoggerFactory.getLogger(VariableExtractor.class);
     
-	public static BindingSet findAndBindVariables( Resource root ) {
-		return findAndBindVariables( new BindingSet(), root ); 
+	public static VarValues findAndBindVariables( Resource root ) {
+		return findAndBindVariables( new VarValues(), root ); 
 	}	
 
-	public static BindingSet findAndBindVariables( BindingSet bound, Resource root) {
-    	BindingSet toDo = new BindingSet();
+	public static VarValues findAndBindVariables( VarValues bound, Resource root) {
+    	VarValues toDo = new VarValues();
     	findVariables( root, bound, toDo );
     	doRemainingEvaluations( bound, toDo );
 		return bound;
@@ -47,7 +47,7 @@ public class VariableExtractor {
 	    <code>bound</code>. Otherwise, the name and its literal value are
 	    stored into <code>toDo</code> for later evaluation.
 	*/
-	public static void findVariables( Resource root, BindingSet bound, BindingSet toDo ) {
+	public static void findVariables( Resource root, VarValues bound, VarValues toDo ) {
 		for (Statement s: root.listProperties( FIXUP.variable ).toList()) {
 			Resource v = s.getResource();
 			String name = getStringValue( v, API.name, null );
@@ -59,7 +59,7 @@ public class VariableExtractor {
 			if (value != null && value.getObject().isURIResource())
 				type = RDFS.Resource.getURI();
 			String valueString = getValueString( v, language, type );
-			Binding var = new Binding( name, language, type, valueString );
+			Value var = new Value( language, type, valueString );
 			(valueString.contains( "{" ) ? toDo : bound).put( name, var ); 			
 			}
 		}
@@ -77,10 +77,10 @@ public class VariableExtractor {
 	    Evaluate the variables whose lexical form contains references to other
 	    variables. Their evaluated form ends up in <code>bound</code>.
 	*/
-	private static void doRemainingEvaluations( BindingSet bound, BindingSet toDo ) {
-		for (Binding v: toDo) {
-			String evaluated = evaluate( v.name(), bound, toDo );
-			bound.put( v.name(), v.withValueString( evaluated ) );
+	private static void doRemainingEvaluations( VarValues bound, VarValues toDo ) {
+		for (String name: toDo.keySet()) {
+			String evaluated = evaluate( name, bound, toDo );
+			bound.put( name, toDo.get( name ).withValueString( evaluated ) );
 		}
 	}
 	
@@ -91,14 +91,14 @@ public class VariableExtractor {
 	    it is bound to its RDF value. Otherwise, recursively evaluate all
 	    the variables in its value string and put them together as directed.
 	 */
-	private static String evaluate( String name, BindingSet bound, BindingSet toDo ) {
+	private static String evaluate( String name, VarValues bound, VarValues toDo ) {
 		if (bound.hasVariable( name )) {
-			Binding v = bound.get( name );
+			Value v = bound.get( name );
 			if (v == null) throw new RuntimeException( "circularity in variable definitions involving " + name );
 			return v.valueString();			
 		} else {
-			bound.put( name, (Binding) null );
-			Binding x = toDo.get( name );			
+			bound.put( name, (Value) null );
+			Value x = toDo.get( name );			
 			String valueString = x.valueString();
 			if (valueString == null) {
 				log.warn( "no value for variable " + name );

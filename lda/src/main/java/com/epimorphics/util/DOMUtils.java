@@ -26,7 +26,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.renderers.RendererContext;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
@@ -91,7 +91,7 @@ public class DOMUtils
 
 	private static URL expandStylesheetName( RendererContext rc, String path ) 
 		{
-		String ePath = BindingSet.expandVariables(rc, path);
+		String ePath = VarValues.expandVariables(rc, path);
 		return rc.pathAsURL( ePath );
 		}
 

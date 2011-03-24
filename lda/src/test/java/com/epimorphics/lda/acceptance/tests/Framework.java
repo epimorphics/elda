@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIResultSet;
@@ -198,7 +198,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) );        
         MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( w.queryParams );
 		UriInfo ui = new APITesterUriInfo( w.path, map );
-		CallContext cc = CallContext.createContext( ui, new BindingSet() );
+		CallContext cc = CallContext.createContext( ui, new VarValues() );
 		Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
 		APIResultSet rs = resultsAndFormat.a;
 //		System.err.println( ">> " + rs.getResultList() );

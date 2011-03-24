@@ -19,7 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.APIQuery;
@@ -69,7 +69,7 @@ public class APISpec {
     protected final Factories factoryTable;
     protected final boolean hasParameterBasedContentNegotiation;
     protected final List<Source> describeSources;
-    protected final BindingSet bindings = new BindingSet();
+    protected final VarValues bindings = new VarValues();
     
     public APISpec(Resource specification, ModelLoaderI loader) {
     	specificationURI = specification.getURI();
@@ -182,7 +182,7 @@ public class APISpec {
         return describeSources;
     }
 
-	public BindingSet getBindings() {
+	public VarValues getBindings() {
 		return bindings;
 	}
 

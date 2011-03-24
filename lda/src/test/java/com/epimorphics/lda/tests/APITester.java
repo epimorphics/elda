@@ -28,8 +28,8 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
-import com.epimorphics.lda.bindings.Binding;
-import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.Value;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.APIFactory;
@@ -140,10 +140,10 @@ public class APITester {
         return match.endpoint.call(call).a;
     }
 
-	private BindingSet fix(Map<String, String> bindings) {
-		BindingSet result = new BindingSet();
+	private VarValues fix(Map<String, String> bindings) {
+		VarValues result = new VarValues();
 		for (String key: bindings.keySet())
-			result.put( key, new Binding( key, "", "", bindings.get(key) ) );
+			result.put( key, new Value( bindings.get(key) ) );
 		return result;
 	}
 

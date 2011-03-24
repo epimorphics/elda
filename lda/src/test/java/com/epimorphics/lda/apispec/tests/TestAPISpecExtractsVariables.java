@@ -15,8 +15,8 @@ import org.junit.Test;
 import org.hamcrest.core.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.bindings.Binding;
-import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.Value;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
@@ -133,16 +133,16 @@ public class TestAPISpecExtractsVariables
 		return m.listStatements().toList().get(0).getObject().asNode();
 		}
 
-	private Binding asVar( String name, Node n ) 
+	private Value asVar( String name, Node n ) 
 		{
-		if (n.isURI()) return new Binding( name, "", RDFS.Resource.getURI(), n.getURI() );
-		if (n.isLiteral()) return new Binding( name, n.getLiteralLanguage(), n.getLiteralDatatypeURI(), n.getLiteralLexicalForm() );
+		if (n.isURI()) return new Value( "", RDFS.Resource.getURI(), n.getURI() );
+		if (n.isLiteral()) return new Value( n.getLiteralLanguage(), n.getLiteralDatatypeURI(), n.getLiteralLexicalForm() );
 		throw new RuntimeException( "cannot convert " + n + " to an RDFQ node" );
 		}
 
-	private BindingSet binding( String desc ) 
+	private VarValues binding( String desc ) 
 		{
-		BindingSet result = new BindingSet();
+		VarValues result = new VarValues();
 		if (desc.length() > 0)
 			for (String bind: desc.split(" *; *" ))
 				{
