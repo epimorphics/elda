@@ -19,7 +19,7 @@ public class Value
 	protected final String type;
 	protected final String valueString;
 	
-	public Value( String language, String type, String valueString )
+	public Value( String valueString, String language, String type )
 		{
 		this.type = type;
 		this.language = language;
@@ -27,7 +27,7 @@ public class Value
 		}	
 	
 	public Value( String valueString ) 
-		{ this( "", "", valueString ); }
+		{ this( valueString, "", "" ); }
 	
 	public static Value make( String name, Value already ) 
 		{ return already == null ? new Value( null ) : already; }	
@@ -35,7 +35,7 @@ public class Value
 		{ return valueString; }
 	
 	public Value withValueString( String vs ) 
-		{ return new Value( language, type, vs ); }
+		{ return new Value( vs, language, type ); }
 	
 	public String toString()
 		{ return "<value lang: " + language + " type: " + type + " value: " + valueString + ">"; }

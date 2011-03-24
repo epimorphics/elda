@@ -59,7 +59,7 @@ public class VariableExtractor {
 			if (value != null && value.getObject().isURIResource())
 				type = RDFS.Resource.getURI();
 			String valueString = getValueString( v, language, type );
-			Value var = new Value( language, type, valueString );
+			Value var = new Value( valueString, language, type );
 			(valueString.contains( "{" ) ? toDo : bound).put( name, var ); 			
 			}
 		}
