@@ -25,13 +25,13 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.APIEndpointSpec;
 import com.epimorphics.lda.core.APIFactory;
 import com.epimorphics.lda.core.APISecurityException;
-import com.epimorphics.lda.core.APISpec;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
+import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Model;
 
 /**

@@ -20,11 +20,11 @@ import static org.hamcrest.CoreMatchers.is;
 
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointImpl;
-import com.epimorphics.lda.core.APIEndpointSpec;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.APISpec;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.Couple;

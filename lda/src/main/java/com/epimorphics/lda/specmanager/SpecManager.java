@@ -18,7 +18,7 @@
 package com.epimorphics.lda.specmanager;
 
 import com.epimorphics.lda.core.APISecurityException;
-import com.epimorphics.lda.core.APISpec;
+import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Model;
 
 /**

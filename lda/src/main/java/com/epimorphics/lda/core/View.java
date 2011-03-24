@@ -21,7 +21,6 @@ import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.PropertyChain;
-import com.epimorphics.lda.support.PropertyChainTranslator;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.*;
@@ -154,16 +153,6 @@ public class View {
         if (expansion) ep.addExpansion(uri);
         if (chains.size() > 0) type = Type.T_CHAINS;
         return this;
-    }
-    
-    
-    public void createPropertyChainOptionalClause( PropertyChainTranslator.Vars vs, ClauseConsumer cc, boolean dropLast ) {
-    	if (this == DESCRIBE) 
-    		{
-    		System.err.println( ">> i am DESCRIBE." );
-    		return;
-    		}
-    	cc.consumeClause( new PropertyChainTranslator(chains).translate( vs, "item", dropLast ) );
     }
     
     /**

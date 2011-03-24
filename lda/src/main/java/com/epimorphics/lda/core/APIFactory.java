@@ -18,6 +18,8 @@
 package com.epimorphics.lda.core;
 
 import com.epimorphics.lda.routing.Router;
+import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.specs.APISpec;
 
 /**
  * Factory for creating ApiInstances form a specification and 

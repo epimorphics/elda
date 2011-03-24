@@ -18,6 +18,7 @@
 package com.epimorphics.lda.core;
 
 import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;

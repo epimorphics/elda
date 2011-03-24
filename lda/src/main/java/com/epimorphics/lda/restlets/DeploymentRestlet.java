@@ -32,10 +32,10 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.APIEndpointSpec;
 import com.epimorphics.lda.core.APISecurityException;
-import com.epimorphics.lda.core.APISpec;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
+import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;

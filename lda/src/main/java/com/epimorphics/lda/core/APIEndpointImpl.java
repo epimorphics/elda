@@ -24,6 +24,8 @@ import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.XHV;
@@ -168,18 +170,18 @@ public class APIEndpointImpl implements APIEndpoint {
 	}
 
 	private void addVersions( Model m, CallContext c, Resource thisPage ) {
-		for (Map.Entry<String, View> e: spec.views.entrySet()) {
-    		Resource v = resourceForView( m, c, e.getKey() );
+		for (String viewName: spec.viewNames()) {
+    		Resource v = resourceForView( m, c, viewName );
 			thisPage.addProperty( DCTerms.hasVersion, v	);
 			v.addProperty( DCTerms.isVersionOf, thisPage );
-			v.addProperty( RDFS.label, e.getKey() );
+			v.addProperty( RDFS.label, viewName );
     	}
 	}
     
     private void insertResultSetRoot(APIResultSet rs, CallContext context, APIQuery query) {
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
-        Resource uriForSpec = rs.createResource( spec.getAPISpec().specificationURI ); 
+        Resource uriForSpec = rs.createResource( spec.getSpecificationURI() ); 
         Resource thisPage = resourceForPage(rs, context, page);
         rs.setRoot(thisPage);
     //

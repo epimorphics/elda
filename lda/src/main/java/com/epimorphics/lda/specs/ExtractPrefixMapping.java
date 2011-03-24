@@ -6,7 +6,7 @@
     $Id$
 */
 
-package com.epimorphics.lda.core;
+package com.epimorphics.lda.specs;
 
 import static com.epimorphics.util.RDFUtils.getStringValue;
 

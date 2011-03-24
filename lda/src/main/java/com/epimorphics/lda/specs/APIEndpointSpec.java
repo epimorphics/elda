@@ -6,18 +6,26 @@
     $Id$
 */
 
-package com.epimorphics.lda.core;
+package com.epimorphics.lda.specs;
 
 import static com.epimorphics.util.RDFUtils.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.bindings.VariableExtractor;
+import com.epimorphics.lda.core.APIEndpointException;
+import com.epimorphics.lda.core.APIException;
+import com.epimorphics.lda.core.APIQuery;
+import com.epimorphics.lda.core.NamedViews;
+import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.APIQuery.Param;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -133,8 +141,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         result.put( View.SHOW_ALL, View.ALL );
         result.put( View.SHOW_BASIC, View.BASIC );
         result.put( View.SHOW_DESCRIPTION, View.DESCRIBE );
-        View dv = getDefaultView( endpoint );
-		result.put( View.SHOW_DEFAULT_INTERNAL, dv );
+        result.put( View.SHOW_DEFAULT_INTERNAL, getDefaultView( endpoint ) );
         return result;
     }
 
@@ -163,20 +170,19 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     		return View.BASIC;
     	} else {
 	        View v = new View(false);
-			extractView( v, m.listObjectsOfProperty(tRes, API.properties ) );
-			extractView( v, m.listObjectsOfProperty(tRes, API.property ) );
+			addViewProperties( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
+			addViewProperties( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
 	        return v;
     	}
     }
 
-	private void extractView(View v, NodeIterator items) {
-		for (NodeIterator nii = items; nii.hasNext();) {
-            RDFNode pNode = nii.next();
+	private void addViewProperties( View v, List<RDFNode> items ) {
+		ShortnameService sns = apiSpec.getShortnameService();
+		for (RDFNode pNode: items) {
             if (pNode.isResource()) {
-                v.addViewFromRDFList((Resource)pNode, this.apiSpec.sns);
+                v.addViewFromRDFList((Resource)pNode, sns);
             } else if (pNode.isLiteral()) {
             	for(String dotted : pNode.asNode().getLiteralLexicalForm().split(" *, *")) {
-					ShortnameService sns = apiSpec.getShortnameService();
 					v.addViewFromParameterValue(dotted, baseQuery, sns);
 	        	}
 	        }
@@ -306,6 +312,22 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	
 	public Factories getRendererFactoryTable() {
 		return factoryTable;
+	}
+
+	/**
+	    Answer (a copy of) the set of names of views in this
+	    EndpointSpec.
+	*/
+	public Set<String> viewNames() {
+		return new HashSet<String>( views.keySet() );
+	}
+
+	/**
+	    Answer the specification URI for this Endpoint, which is
+	    the specification URI for its parent APISpec.
+	*/
+	public String getSpecificationURI() {
+		return getAPISpec().specificationURI;
 	}
 	
 }

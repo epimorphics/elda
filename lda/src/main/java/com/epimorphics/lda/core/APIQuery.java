@@ -23,6 +23,7 @@ import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.LARQManager;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.graph.*;

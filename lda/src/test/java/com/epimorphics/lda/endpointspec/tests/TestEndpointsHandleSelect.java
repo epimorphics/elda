@@ -13,8 +13,8 @@ import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.APIEndpointImpl;
-import com.epimorphics.lda.core.APIEndpointSpec;
-import com.epimorphics.lda.core.APISpec;
+import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 

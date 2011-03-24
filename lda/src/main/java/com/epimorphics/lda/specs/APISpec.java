@@ -10,7 +10,7 @@
     Created on:  31 Jan 2010
  */
 
-package com.epimorphics.lda.core;
+package com.epimorphics.lda.specs;
 import static com.epimorphics.util.RDFUtils.*;
 
 import java.util.ArrayList;
@@ -21,6 +21,9 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.bindings.VariableExtractor;
+import com.epimorphics.lda.core.APIException;
+import com.epimorphics.lda.core.APIQuery;
+import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;

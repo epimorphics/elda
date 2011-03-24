@@ -34,8 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.Decoder;
-import com.epimorphics.lda.core.APISpec;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
+import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;

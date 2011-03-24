@@ -15,7 +15,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
-import com.epimorphics.lda.core.ExtractPrefixMapping;
+import com.epimorphics.lda.specs.ExtractPrefixMapping;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
