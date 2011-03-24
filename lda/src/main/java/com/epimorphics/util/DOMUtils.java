@@ -26,6 +26,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import com.epimorphics.lda.bindings.BindingSet;
 import com.epimorphics.lda.renderers.RendererContext;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
@@ -90,28 +91,10 @@ public class DOMUtils
 
 	private static URL expandStylesheetName( RendererContext rc, String path ) 
 		{
-		String ePath = expandVariables(rc, path);
+		String ePath = BindingSet.expandVariables(rc, path);
 		return rc.pathAsURL( ePath );
 		}
 
-	private static String expandVariables( RendererContext p, String path ) 
-		{
-		int start = 0;
-		StringBuilder sb = new StringBuilder();
-		while (true) 
-			{
-			int lb = path.indexOf( '{', start );
-			if (lb < 0) break;
-			int rb = path.indexOf( '}', lb );
-			sb.append( path.substring( start, lb ) );
-			sb.append( p.getAsString( path.substring( lb + 1, rb ) ) );
-			start = rb + 1;
-			}
-		sb.append( path.substring( start ) );
-		String ePath = sb.toString();
-		return ePath;
-		}
-	
 	private static Transformer setPropertiesAndParams( RendererContext p, PrefixMapping pm, Mode as, URL u ) 
 		throws TransformerConfigurationException, TransformerFactoryConfigurationError 
 		{

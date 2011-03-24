@@ -16,7 +16,7 @@ import java.util.Set;
 
 import com.hp.hpl.jena.util.OneToManyMap;
 
-public class BindingSet implements Iterable<Binding>
+public class BindingSet implements Lookup, Iterable<Binding>
 	{
 	protected final Map<String, Binding> vars = new HashMap<String, Binding>();
 	
@@ -85,6 +85,32 @@ public class BindingSet implements Iterable<Binding>
 	public int hashCode()
 		{ return vars.hashCode(); }
 	
+	/**
+	    Expands the string <code>s</code> by replacing any
+	    occurrence of {wossname} by the value of wossname as
+	    given by the Lookup <code>values</code>.
+	*/
+	public static String expandVariables( Lookup values, String s ) 
+		{
+		int start = 0;
+		StringBuilder sb = new StringBuilder();
+		while (true) 
+			{
+			int lb = s.indexOf( '{', start );
+			if (lb < 0) break;
+			int rb = s.indexOf( '}', lb );
+			sb.append( s.substring( start, lb ) );
+			sb.append( values.getAsString( s.substring( lb + 1, rb ) ) );
+			start = rb + 1;
+			}
+		sb.append( s.substring( start ) );
+		return sb.toString();
+		}
+
+	/**
+	    Answer a new BindingSet constructed from the givem map
+	    by converting the values into a plain string Binding object.
+	*/
 	public static BindingSet uplift( Map<String, String> bindings ) 
 		{
 		BindingSet result = new BindingSet();

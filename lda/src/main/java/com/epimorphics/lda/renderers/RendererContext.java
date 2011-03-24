@@ -14,13 +14,14 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 
 import com.epimorphics.lda.bindings.BindingSet;
+import com.epimorphics.lda.bindings.Lookup;
 
 /**
 	The context in which a rendering takes place. It provides access to the value
 	of bound variables and a way of transforming a file path into a URL (which
 	can then be used to access the contents of the specified file).
 */
-public class RendererContext {
+public class RendererContext implements Lookup {
 
 	protected final BindingSet v;
 	protected final AsURL s;
