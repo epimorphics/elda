@@ -25,6 +25,7 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.VarValues;
 import com.hp.hpl.jena.util.OneToManyMap;
@@ -131,7 +132,17 @@ public class CallContext {
 			anchor = rbrace + 1;
 		}
 		result.append( valueString.substring( anchor ) );
-		return result.toString();			
+		String answer = result.toString();
+		Lookup CCC = new Lookup() {
+			@Override public String getAsString( String name ) {
+				return getParameterValue( name );
+			}
+		};
+		String other = VarValues.expandVariables( CCC, valueString );
+		if (!answer.equals( other )) {
+			log.error( "evaluation difference in expand: " + answer + " vs " + other );
+		}
+		return answer;			
 	}
 }
 
