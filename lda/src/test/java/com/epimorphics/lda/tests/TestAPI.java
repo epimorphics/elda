@@ -44,13 +44,14 @@ public class TestAPI {
     public APIResultSet testAPI(String uri, String query, String expectedResults) {
         String description = "# Model from test: " + uri + "?" + query + "\n";
         APIResultSet rs = tester.runQuery(uri, query);
+        Model rsm = rs.getModel();
         if (expectedResults == null) {
             System.out.print(description);
-            rs.write(System.out, "Turtle");
+            rsm.write(System.out, "Turtle");
         } else {
             try {
                 Model expected = FileManager.get().loadModel(TEST_BASE + expectedResults);
-                if ( ! compareNormalized(expected, rs)) {
+                if ( ! compareNormalized(expected, rsm)) {
                     // Print out to help debugging
 //                    System.out.println("** FAILED output for " + description + " [" + expectedResults + "]");
 //                    rs.write(System.out, "Turtle");
@@ -64,7 +65,7 @@ public class TestAPI {
                 try {
                     FileOutputStream out = new FileOutputStream(file);
                     out.write(description.getBytes());
-                    rs.write(out, "Turtle");
+                    rsm.write(out, "Turtle");
                     out.close();
                 } catch (IOException ei) {
                     System.err.println("Failed to create output file: " + file + " " + ei.getMessage());

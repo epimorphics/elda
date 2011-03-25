@@ -179,18 +179,19 @@ public class APIEndpointImpl implements APIEndpoint {
 	}
     
     private void insertResultSetRoot(APIResultSet rs, CallContext context, APIQuery query) {
+    	Model rsm = rs.getModel();
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
-        Resource uriForSpec = rs.createResource( spec.getSpecificationURI() ); 
-        Resource thisPage = resourceForPage(rs, context, page);
+        Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
+        Resource thisPage = resourceForPage(rsm, context, page);
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( FIXUP.definition, uriForSpec );
-        addVersions( rs, context, thisPage );
-		addFormats( rs, context, thisPage );
+        addVersions( rsm, context, thisPage );
+		addFormats( rsm, context, thisPage );
     //
         if (isListEndpoint()) {
-        	RDFList content = rs.createList( rs.getResultList().iterator() );
+        	RDFList content = rsm.createList( rs.getResultList().iterator() );
         	thisPage
 	        	.addProperty( RDF.type, FIXUP.Page )
 	        	.addLiteral( FIXUP.page, page )
@@ -198,10 +199,10 @@ public class APIEndpointImpl implements APIEndpoint {
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
         	thisPage.addProperty( FIXUP.items, content );
-    		thisPage.addProperty( XHV.first, resourceForPage( rs, context, 0 ) );
-    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( rs, context, page+1 ) );
-    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( rs, context, page-1 ) );
-    		Resource listRoot = resourceForList(rs, context);
+    		thisPage.addProperty( XHV.first, resourceForPage( rsm, context, 0 ) );
+    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( rsm, context, page+1 ) );
+    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( rsm, context, page-1 ) );
+    		Resource listRoot = resourceForList(rsm, context);
     		thisPage
 	    		.addProperty( DCTerms.isPartOf, listRoot )
 	    		;

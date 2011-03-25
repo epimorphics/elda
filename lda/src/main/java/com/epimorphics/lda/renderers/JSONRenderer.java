@@ -63,7 +63,7 @@ public class JSONRenderer implements Renderer {
         Context context = api.getSpec().getAPISpec().getShortnameService().asContext();
         context.setSorted(true);
         try {
-            Encoder.getForOneResult( context, api.wantContext() ).encodeRecursive(results, roots, writer, true);
+            Encoder.getForOneResult( context, api.wantContext() ).encodeRecursive(results.getModel(), roots, writer, true);
             String written = writer.toString();
             ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json
             return written;

@@ -788,9 +788,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 
     /** Find all current values for the given property on the results and fetch a description of them */
     private void expandResourcesOf(Property exp, APIResultSet rs, View view, APISpec spec ) {
+    	Model rsm = rs.getModel();
         List<Resource> toExpand = new ArrayList<Resource>();
         for (Resource root : rs.getResultList()) {
-            NodeIterator ni = rs.listObjectsOfProperty(root, exp);
+            NodeIterator ni = rsm.listObjectsOfProperty(root, exp);
             while (ni.hasNext()) {
                 RDFNode n = ni.next();
                 if (n.isAnon()) {
@@ -807,7 +808,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
                 }
             }
         }
-        fetchDescriptionsFor(toExpand, view, rs, spec);
+        fetchDescriptionsFor(toExpand, view, rsm, spec);
     }
     
     // let's respect property chains ...

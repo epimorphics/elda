@@ -200,16 +200,16 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		UriInfo ui = new APITesterUriInfo( w.path, map );
 		CallContext cc = CallContext.createContext( ui, new VarValues() );
 		Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
-		APIResultSet rs = resultsAndFormat.a;
+		Model rsm = resultsAndFormat.a.getModel();
 //		System.err.println( ">> " + rs.getResultList() );
-		QueryExecution qe = QueryExecutionFactory.create( w.shouldAppear, rs );
+		QueryExecution qe = QueryExecutionFactory.create( w.shouldAppear, rsm );
 		if (!qe.execAsk())
 			{
 			fail
 				( "test " + w.title + ": the probe query\n"
 				+ shortStringFor( w.shouldAppear ) + "\n"
 				+ "failed for the result set\n"
-				+ shortStringFor( rs )
+				+ shortStringFor( rsm )
 				)
 				;			
 			}

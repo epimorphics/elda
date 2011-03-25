@@ -156,7 +156,7 @@ public class APITester {
         List<Resource> roots = new ArrayList<Resource>(1);
         roots.add( results.getRoot() );
         Context context = specifications.get(api).getShortnameService().asContext();
-        Encoder.get( context ).encodeRecursive(results, roots, writer, true);
+        Encoder.get( context ).encodeRecursive(results.getModel(), roots, writer, true);
         return writer.toString();
     }
 }

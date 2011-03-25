@@ -90,7 +90,7 @@ public class ExpandLabels {
 			        	QuerySolution s = rs.next();
 			        	Resource r = s.getResource( "resource" );
 			        	String l = s.getLiteral("label").getLexicalForm();
-			        	results.add( r, RDFS.label, l );
+			        	results.getModel().add( r, RDFS.label, l );
 			        }
 			    } catch (Throwable t) {
 			        throw new APIException("Query execution problem on label fetching: " + t, t);

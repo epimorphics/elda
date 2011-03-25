@@ -25,7 +25,7 @@ public class TurtleRenderer implements Renderer {
     
     @Override public String render( RendererContext ignored, APIResultSet results ) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        results.write( bos, "TTL" );
+        results.getModel().write( bos, "TTL" );
         return bos.toString();
     }
 

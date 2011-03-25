@@ -17,7 +17,7 @@ import java.util.List;
 
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.impl.ModelCom;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
  * Wrapper for the results of an API query before rendering.
@@ -27,12 +27,13 @@ import com.hp.hpl.jena.rdf.model.impl.ModelCom;
  * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-public class APIResultSet extends ModelCom  {
+public class APIResultSet {
 
     protected List<Resource> results;
     protected Resource root;
     protected boolean isCompleted;
     protected String contentLocation;
+    protected final Model model;
     
     public String getContentLocation() {
         return contentLocation;
@@ -43,13 +44,28 @@ public class APIResultSet extends ModelCom  {
     }
 
     public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted) {
-        super(graph);
+        model = ModelFactory.createModelForGraph( graph );
         this.results = results;
         this.isCompleted = isCompleted;
         if (!results.isEmpty())
-            this.root = results.get(0).inModel(this); 
+            this.root = results.get(0).inModel(model); 
     }
 
+    /**
+        Answer the model this resultset wraps.
+    */
+    public Model getModel() {
+    	return model;
+    }
+
+    public long modelSize() {
+		return model.size();
+	}
+    
+    public void setNsPrefixes( PrefixMapping pm ) {
+    	model.setNsPrefixes( pm );
+    }
+    
     public List<Resource> getResultList() {
         return results;
     }
@@ -72,13 +88,8 @@ public class APIResultSet extends ModelCom  {
      * Will not include any root resource, need to create page information after filtering.
      */
     public APIResultSet getFilteredSet( View t ) {
-    	Model m = t.applyTo( this, results );
-        m.setNsPrefixes(this);
-//        System.err.println( ">> applying template " + t );
-//        System.err.println( ">> to this:" );
-//        this.write( System.err, "TTL" );
-//        System.err.println( ">> produces this:" );
-//        m.write( System.err, "TTL" );
+    	Model m = t.applyTo( model, results );
+        m.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
         for (Resource r : results) mappedResults.add( r.inModel(m) );
         return new APIResultSet( m.getGraph(), mappedResults, isCompleted );
@@ -94,13 +105,17 @@ public class APIResultSet extends ModelCom  {
 //        Graph additions = ModelFactory.createDefaultModel().getGraph();
 //        Graph cloneGraph = new Union(additions, graph);
         Model temp = ModelFactory.createDefaultModel();
-        temp.add( this );
+        temp.add( model );
         Graph cloneGraph = temp.getGraph();
         APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted);
         clone.setRoot(root);
         clone.setContentLocation(contentLocation);
         return clone;
     }
+
+	public StmtIterator listStatements( Resource S, Property P, RDFNode O) {
+		return model.listStatements( S, P, O );
+	}
     
 }
 

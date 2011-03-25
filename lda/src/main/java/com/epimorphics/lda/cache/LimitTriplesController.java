@@ -33,7 +33,7 @@ public class LimitTriplesController extends ControllerBase {
 
 		@Override protected synchronized boolean exceedsResultSetLimit(Map<String, APIResultSet> m) {
 			long size = 0;
-			for (Map.Entry<String, APIResultSet> e: m.entrySet()) size += e.getValue().size();
+			for (Map.Entry<String, APIResultSet> e: m.entrySet()) size += e.getValue().modelSize();
 			return size > limit;
 		}
 	}

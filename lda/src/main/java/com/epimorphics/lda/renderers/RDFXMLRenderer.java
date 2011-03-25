@@ -25,7 +25,7 @@ public class RDFXMLRenderer implements Renderer {
 
     @Override public String render( RendererContext ignored, APIResultSet results ) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        results.write( bos, "RDF/XML-ABBREV" );
+        results.getModel().write( bos, "RDF/XML-ABBREV" );
         return bos.toString();
     }
 }
