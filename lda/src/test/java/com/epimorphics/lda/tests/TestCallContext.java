@@ -64,8 +64,8 @@ public class TestCallContext
 		CallContext cc = CallContext.createContext( ui, MakeData.variables( "a=b c=d" ) );
 		assertThat( cc.getFilterPropertyNames(), Matchers.isEmpty() );
 		assertThat( cc.getUriInfo(), sameInstance(ui) );
-		assertThat( cc.getParameterValue( "a" ), is( "b" ) );
-		assertThat( cc.getParameterValue( "c" ), is( "d" ) );
+		assertThat( cc.getStringValue( "a" ), is( "b" ) );
+		assertThat( cc.getStringValue( "c" ), is( "d" ) );
 		}
 	
 	@Test public void ensureContextGetsAppropriateValues()
@@ -75,8 +75,8 @@ public class TestCallContext
 		CallContext cc = CallContext.createContext( ui, MakeData.variables( "x=y" ) );
 		assertThat( cc.getFilterPropertyNames(), is( JenaTestBase.setOfStrings( "p1 p2" ) ) );
 		assertThat( cc.getUriInfo(), sameInstance(ui) );
-		assertThat( cc.getParameterValue( "x" ), is( "y" ) );
-		assertThat( cc.getParameterValue( "p1" ), is( "v1" ) );
+		assertThat( cc.getStringValue( "x" ), is( "y" ) );
+		assertThat( cc.getStringValue( "p1" ), is( "v1" ) );
 		}
 	
 	@Test public void ensureCopyingConstructorPreservesValues()
@@ -86,7 +86,7 @@ public class TestCallContext
 		CallContext base = CallContext.createContext( ui, MakeData.variables( "" ) );
 		CallContext cc = new CallContext( MakeData.variables( "fly=fishing" ), base );
 		assertThat( cc.getUriInfo(), is( base.getUriInfo() ) );
-		assertThat( cc.getParameterValue( "fly" ), is( "fishing" ) );
+		assertThat( cc.getStringValue( "fly" ), is( "fishing" ) );
 //		assertThat( cc.getMediaSuffix(), is( mediaSuffix ) );
 		}
 	}

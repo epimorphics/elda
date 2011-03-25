@@ -101,7 +101,7 @@ public class DOMUtils
 		Transformer t = getTransformer( as, u );
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );
 		t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-		for (String name: p.keySet()) t.setParameter( name, p.getAsString( name ) );
+		for (String name: p.keySet()) t.setParameter( name, p.getStringValue( name ) );
 		t.setParameter( "api:namespaces", namespacesDocument( pm ) );
 		return t;
 		}

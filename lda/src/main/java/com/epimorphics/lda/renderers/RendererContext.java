@@ -64,8 +64,8 @@ public class RendererContext implements Lookup {
 		return v.getAsString( key, ifAbsent );
 	}
 
-	public String getAsString( String key ) {
-		return v.getAsString( key );
+	public String getStringValue( String key ) {
+		return v.getStringValue( key );
 	}
 
 	public Set<String> keySet() {

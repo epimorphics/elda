@@ -284,7 +284,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		public Param substring(int n) { return new Param(p.substring(n)); }
 		public String[] parts() { return p.split("\\."); }
 		public boolean hasVariable() { return p.indexOf('{') >= 0; }
-		public Param expand( CallContext cc ) { return new Param( cc.expand( p ) ); }
+		public Param expand( CallContext cc ) { return new Param( cc.expandVariables( p ) ); }
     	}
     
     public static class Deferred
@@ -377,7 +377,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	public void activateDeferredFilters( CallContext cc ) {
 		for (Deferred d: deferredFilters) {
 			log.debug( "activating deferred filter " + d );
-			addFilterFromQuery( d.param.expand( cc ), cc.expand( d.val ) );
+			addFilterFromQuery( d.param.expand( cc ), cc.expandVariables( d.val ) );
 		}
 	}
     
@@ -706,7 +706,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         String bound = query;
         if (!bindableVars.isEmpty()) {
             for (String var : bindableVars) {
-                String val = call.getParameterValue(var);
+                String val = call.getStringValue(var);
                 if (val != null) {
                 	String prop = varProps.get(var);
                 	String normalizedValue = 
@@ -834,7 +834,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         {
     	log.debug( "fetchRequiredResources()" );
         final List<Resource> results = new ArrayList<Resource>();
-        if (itemTemplate != null) setSubject( call.expand( itemTemplate ) );
+        if (itemTemplate != null) setSubject( call.expandVariables( itemTemplate ) );
         if ( isFixedSubject() ) {
         	results.add( subjectResource );
         } else {

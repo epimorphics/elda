@@ -236,7 +236,7 @@ public class RouterRestlet {
        	for (Iterator<String> it = cc.parameterNames(); it.hasNext();) {
        		String name = it.next();
 //       		System.err.println( ">>  " + name + " = " + cc.getParameterValue( name ) );
-       		result.put( name, cc.getParameterValue( name ) );
+       		result.put( name, cc.getStringValue( name ) );
     	}
     	return result;
 	}

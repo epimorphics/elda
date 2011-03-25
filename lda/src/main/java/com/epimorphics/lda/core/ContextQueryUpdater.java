@@ -75,15 +75,15 @@ public class ContextQueryUpdater {
 
 	private void handleLangPrefix( String taggedParam ) {
 		String param = taggedParam.substring( APIQuery.LANG_LEN );
-		String val = context.expand( context.getParameterValue( taggedParam ) );
-		String pString = context.expand( param );
+		String val = context.expandVariables( context.getStringValue( taggedParam ) );
+		String pString = context.expandVariables( param );
 		query.setLanguagesFor( pString, val );
 	}
 
 	private void handleParam(GEOLocation geo, Param p) {
 		String zpString = p.asString();
-		String val = context.expand( context.getParameterValue(zpString) );
-		String pString = context.expand( zpString );
+		String val = context.expandVariables( context.getStringValue(zpString) );
+		String pString = context.expandVariables( zpString );
 	//
 		if (val == null)
 			throw new RuntimeException( "value for " + p + " is null." );

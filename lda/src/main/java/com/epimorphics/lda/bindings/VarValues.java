@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hp.hpl.jena.util.OneToManyMap;
 
 /**
@@ -20,6 +23,8 @@ import com.hp.hpl.jena.util.OneToManyMap;
 */
 public class VarValues implements Lookup
 	{
+    static Logger log = LoggerFactory.getLogger( VarValues.class );
+    
 	protected final Map<String, Value> vars = new HashMap<String, Value>();
 	
 	public VarValues( VarValues other ) 
@@ -46,7 +51,7 @@ public class VarValues implements Lookup
 	public Value get( String name ) 
 		{ return vars.get( name ); }
 	
-	public String getAsString( String name ) 
+	public String getStringValue( String name ) 
 		{ return vars.get( name ).valueString(); }
 	
 	public String getAsString( String name, String ifAbsent ) 
@@ -85,7 +90,12 @@ public class VarValues implements Lookup
 			if (lb < 0) break;
 			int rb = s.indexOf( '}', lb );
 			sb.append( s.substring( start, lb ) );
-			sb.append( values.getAsString( s.substring( lb + 1, rb ) ) );
+			String name = s.substring( lb + 1, rb );
+			String value = values.getStringValue( name );
+			if (value == null)
+				log.warn( "variable " + name + " has no value, treated as empty string." );
+			else
+				sb.append( value );
 			start = rb + 1;
 			}
 		sb.append( s.substring( start ) );
@@ -93,7 +103,7 @@ public class VarValues implements Lookup
 		}
 
 	/**
-	    Answer a new BindingSet constructed from the givem map
+	    Answer a new BindingSet constructed from the given map
 	    by converting the values into a plain string Binding object.
 	*/
 	public static VarValues uplift( Map<String, String> bindings ) 

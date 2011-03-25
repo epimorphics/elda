@@ -37,7 +37,7 @@ import com.hp.hpl.jena.util.OneToManyMap;
  * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
  * @version $Revision: $
 */
-public class CallContext {
+public class CallContext implements Lookup {
 
     static Logger log = LoggerFactory.getLogger( CallContext.class );
     
@@ -79,7 +79,7 @@ public class CallContext {
      * Return a single value for a parameter, if there are multiple values
      * the returned one may be arbitrary
      */
-    public String getParameterValue( String param ) {
+    public String getStringValue( String param ) {
         Value v = parameters.get( param );
 		return v == null ? uriInfo.getQueryParameters().getFirst( param ) : v.valueString();
     }
@@ -114,35 +114,8 @@ public class CallContext {
         Expand <code>valueString</code> by replacing "{name}" by the value
         of that name. Answer the updated string.
     */
-	public String expand( String valueString ) {
-		StringBuilder result = new StringBuilder();
-		int anchor = 0;
-		while (true) {
-			int lbrace = valueString.indexOf( '{', anchor );
-			if (lbrace < 0) break;
-			int rbrace = valueString.indexOf( '}', lbrace );
-			result.append( valueString.substring( anchor, lbrace ) );
-			String innerName = valueString.substring( lbrace + 1, rbrace );
-			String evaluated = this.getParameterValue( innerName );
-			if (evaluated == null) {
-				log.warn( "variable " + innerName + " has no value, treated as empty string." );
-			} else {
-				result.append( evaluated );
-			}
-			anchor = rbrace + 1;
-		}
-		result.append( valueString.substring( anchor ) );
-		String answer = result.toString();
-		Lookup CCC = new Lookup() {
-			@Override public String getAsString( String name ) {
-				return getParameterValue( name );
-			}
-		};
-		String other = VarValues.expandVariables( CCC, valueString );
-		if (!answer.equals( other )) {
-			log.error( "evaluation difference in expand: " + answer + " vs " + other );
-		}
-		return answer;			
+	public String expandVariables( String valueString ) {
+		return VarValues.expandVariables( this, valueString );			
 	}
 }
 
