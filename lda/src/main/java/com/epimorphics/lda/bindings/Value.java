@@ -19,6 +19,12 @@ public class Value
 	protected final String type;
 	protected final String valueString;
 	
+	/**
+	    A "zero value" for Value -- an untyped, unlanguaged,
+	    empty string.
+	*/
+	public static final Value emptyPlain = new Value("");
+	
 	public Value( String valueString, String language, String type )
 		{
 		this.type = type;
@@ -29,8 +35,6 @@ public class Value
 	public Value( String valueString ) 
 		{ this( valueString, "", "" ); }
 	
-	public static Value make( String name, Value already ) 
-		{ return already == null ? new Value( null ) : already; }	
 	public String valueString() 
 		{ return valueString; }
 	

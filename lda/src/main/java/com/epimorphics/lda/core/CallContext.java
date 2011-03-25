@@ -64,7 +64,8 @@ public class CallContext implements Lookup {
 	    bindings.putInto( cc.parameters );
 	    for (Map.Entry<String, List<String>> e : queryParams.entrySet()) {
 	        String name = e.getKey();
-	        Value basis = Value.make( name, cc.parameters.get( name ) );
+			Value basis = cc.parameters.get( name );
+			if (basis == null) basis = Value.emptyPlain;
 	        for (String val : e.getValue())
 				cc.parameters.put( name, basis.withValueString( val ) );
 	    }
