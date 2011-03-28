@@ -75,7 +75,7 @@ public class DOMUtils
 		{
 		try {
 			URL u = expandStylesheetName( rc, transformFilePath );
-			System.err.println( ">> expanded stylesheet name " + transformFilePath + " to " + u );
+			// System.err.println( ">> expanded stylesheet name " + transformFilePath + " to " + u );
 			Transformer t = setPropertiesAndParams(  rc, pm, as, u );
 			StringWriter sw = new StringWriter();
 			StreamResult sr = new StreamResult( sw );
