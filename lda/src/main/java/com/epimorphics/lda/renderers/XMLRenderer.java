@@ -50,15 +50,15 @@ public class XMLRenderer implements Renderer {
 		return mediaType;
 	}
 
-	@Override public synchronized String render( RendererContext p, APIResultSet results ) {
-		return render( p, results.getRoot() );
+	@Override public synchronized String render( RendererContext rc, APIResultSet results ) {
+		return render( rc, results.getRoot() );
 	}
 
-	public String render( RendererContext p, Resource root ) {
+	public String render( RendererContext rc, Resource root ) {
 		PrefixMapping pm = root.getModel();
 		Document d = DOMUtils.newDocument();
 		renderInto( root, d );
-		return DOMUtils.nodeToIndentedString( d, p, pm, as, transformFilePath );
+		return DOMUtils.nodeToIndentedString( d, rc, pm, as, transformFilePath );
 	}
 
 	public void renderInto( Resource root, Document d ) {

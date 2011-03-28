@@ -91,6 +91,7 @@ public class DOMUtils
 
 	private static URL expandStylesheetName( RendererContext rc, String path ) 
 		{
+		if (path == null) return null; // HACK -- TODO: remove when refactoring done.
 		String ePath = VarValues.expandVariables(rc, path);
 		return rc.pathAsURL( ePath );
 		}
