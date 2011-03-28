@@ -24,33 +24,9 @@ import com.hp.hpl.jena.rdf.model.Resource;
 */
 public class BuiltinRendererTable {
 	
-	private static class XSLT_thingy implements RendererFactory {
-		
-		private final Resource root;
-		private final String mediaType;
-		
-		XSLT_thingy( Resource root, String mediaType ) {
-			this.root = root;		
-			this.mediaType = mediaType;
-		}
-		
-		@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-			String sheet = root.getProperty( API.stylesheet ).getString();
-			return new XMLRenderer( sns, Mode.TRANSFORM, mediaType, sheet );
-		}
-
-		@Override public RendererFactory withResource( Resource r ) {
-			return new XSLT_thingy( r, mediaType );
-		}
-
-		@Override public RendererFactory withMediaType( String mediaType ) {
-			return new XSLT_thingy( root, mediaType );
-		}
-	}
-
 	private abstract static class DoingWith implements RendererFactory {
 		
-		@Override public RendererFactory withResource( Resource r ) {
+		@Override public RendererFactory withRoot( Resource r ) {
 			return this;
 		}
 		
@@ -113,7 +89,7 @@ public class BuiltinRendererTable {
 			}
 			} );
 		
-		putFactory( "_xslt", API.XsltFormatter, "*/*", new XSLT_thingy( null, "*/*" ) );
+		putFactory( "_xslt", API.XsltFormatter, "*/*", new XSLT_RendererFactory( null, "*/*" ) );
 		
 		putFactory( "html", FIXUP.HtmlFormatter, "text/html", new DoingWith() 
 			{

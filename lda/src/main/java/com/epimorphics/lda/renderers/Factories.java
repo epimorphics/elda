@@ -30,7 +30,7 @@ public class Factories {
 	}
 
 	public void putFactory( String name, Resource uri, String mediaType, RendererFactory factory, boolean isDefault ) {
-		RendererFactory f = factory.withResource( uri ).withMediaType( mediaType );
+		RendererFactory f = factory.withRoot( uri ).withMediaType( mediaType );
 		table.put( name, f );
 		if (isDefault) theDefault = f;
 	}

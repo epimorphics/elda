@@ -18,7 +18,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public interface RendererFactory
 	{
 	/**
-	    Answer a Renderer constructed to our recipie for the
+	    Answer a Renderer constructed to our recipe for the
 	    given endpoint and short-name service.
 	*/
 	public Renderer buildWith( APIEndpoint ep, ShortnameService sns );
@@ -27,7 +27,7 @@ public interface RendererFactory
 	    Answer a new RendererFactory just like this one, but with
 	    the given Resource for additional properties.
 	*/
-	public RendererFactory withResource( Resource uri );
+	public RendererFactory withRoot( Resource uri );
 
 	/**
 	    Answer a new RendererFactory just like this one, but producing

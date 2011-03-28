@@ -26,7 +26,7 @@ import static com.epimorphics.lda.support.ReflectionSupport.newInstanceOf;
 public class RendererFactoriesSpec {
 
 	/**
-	 	Answers a renderer factory table with the built-in formaters and additional
+	 	Answers a renderer factory table with the built-in formatters and additional
 	 	entries from the api:formatter properties of <code>endpoint</code>.
 	*/
 	public static Factories createFactoryTable( Resource endpoint ) {
@@ -61,7 +61,7 @@ public class RendererFactoriesSpec {
 			  : mimeType != null ? ("spec with mime type " + mimeType)
 			  : "node " + r.toString() )
 			);
-		RendererFactory rfx = BuiltinRendererTable.getFactory( type ); // BuiltinRendererTable.factoryWithURI( type );
+		RendererFactory rfx = BuiltinRendererTable.getFactory( type ); 
 		result.putFactory( name, r, mimeType, pickFactory( className, rfx ), isDefault );
 	}
 
