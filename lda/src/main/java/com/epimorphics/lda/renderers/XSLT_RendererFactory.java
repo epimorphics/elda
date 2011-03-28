@@ -9,7 +9,6 @@ package com.epimorphics.lda.renderers;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.util.DOMUtils.Mode;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -29,7 +28,7 @@ public class XSLT_RendererFactory implements RendererFactory {
 	
 	@Override public Renderer buildWith( final APIEndpoint ep, final ShortnameService sns ) {
 		final String sheet = root.getProperty( API.stylesheet ).getString();
-		final Renderer x = new XMLRenderer( sns, Mode.AS_IS );
+		final XMLRenderer xr = new XMLRenderer( sns, mediaType, sheet );
 		return new Renderer() {
 
 			@Override public String getMediaType() {
@@ -37,9 +36,9 @@ public class XSLT_RendererFactory implements RendererFactory {
 			}
 
 			@Override public String render( RendererContext rc, APIResultSet results ) {
-				return new XMLRenderer( sns, Mode.TRANSFORM, mediaType, sheet ).render( rc, results );
+				String rendered = xr.render( rc, results );			
+				return rendered.replaceAll( "\"_ROOT", "\"" + rc.getContextPath() );
 			}
-			
 		}; 
 	}
 

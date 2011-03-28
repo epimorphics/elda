@@ -11,7 +11,6 @@ import java.util.Map;
 
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.util.DOMUtils.Mode;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -85,7 +84,7 @@ public class BuiltinRendererTable {
 		putFactory( "xml", API.XmlFormatter, "application/xml", new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-				return new XMLRenderer( sns, Mode.AS_IS );
+				return new XMLRenderer( sns );
 			}
 			} );
 		

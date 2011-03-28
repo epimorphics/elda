@@ -14,11 +14,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -29,6 +28,7 @@ import org.w3c.dom.Node;
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.renderers.RendererContext;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.shared.WrappedException;
 
 /**
     Handles XSLT rewrites for HTML and indented-string display
@@ -37,74 +37,53 @@ import com.hp.hpl.jena.shared.PrefixMapping;
  	@author chris
 */
 public class DOMUtils 
-	{
-	public enum Mode {TRANSFORM, AS_IS};
-	
-	public static DocumentBuilder getBuilder() 
-		{
-		try 
-			{ return DocumentBuilderFactory.newInstance().newDocumentBuilder(); } 
-		catch (ParserConfigurationException e) 
-			{ throw new RuntimeException( e ); }
-		}
-
+	{	
 	public static Document newDocument() 
 		{ return getBuilder().newDocument(); }
-
-	public static Transformer getTransformer( Mode a, URL u ) 
-		throws TransformerConfigurationException, TransformerFactoryConfigurationError 
-		{
-		TransformerFactory tf = TransformerFactory.newInstance();
-		if (a == Mode.AS_IS) 
-			return tf.newTransformer();
-		else 
-			{
-			Source s = new StreamSource( u.toExternalForm() );
-			return tf.newTransformer( s );
-			}
-		}
-
-	public static String nodeToIndentedString( Node d, PrefixMapping pm, Mode as ) 
-		{
-		if (as == Mode.TRANSFORM)
-			throw new RuntimeException( "Mode.TRANSFORM requested, but no filepath given." );
-		return nodeToIndentedString( d, new RendererContext(), pm, as, "SHOULD_NOT_OPEN_THIS_FILEPATH" );
-		}
+	public static String renderNodeToString( Node d, PrefixMapping pm ) 
+		{ return renderNodeToString( d, new RendererContext(), pm, null ); }
 	
-	public static String nodeToIndentedString( Node d, RendererContext rc, PrefixMapping pm, Mode as, String transformFilePath ) 
+	public static String renderNodeToString( Node d, RendererContext rc, PrefixMapping pm, String transformFilePath ) 
 		{
-		try {
-			URL u = expandStylesheetName( rc, transformFilePath );
-			// System.err.println( ">> expanded stylesheet name " + transformFilePath + " to " + u );
-			Transformer t = setPropertiesAndParams(  rc, pm, as, u );
-			StringWriter sw = new StringWriter();
-			StreamResult sr = new StreamResult( sw );
-			t.transform( new DOMSource( d ), sr );
-			String raw = sw.toString();
-			return as == Mode.AS_IS ? raw : raw.replaceAll( "\"_ROOT", "\"" + rc.getContextPath() );
-			} 
-		catch (Throwable t) 
-			{
-			throw new RuntimeException( t );
-			}	 
+		Transformer t = setPropertiesAndParams(  rc, pm, transformFilePath );
+		StringWriter sw = new StringWriter();
+		StreamResult sr = new StreamResult( sw );
+		try { t.transform( new DOMSource( d ), sr ); } 
+		catch (TransformerException e) { throw new WrappedException( e ); }
+		return sw.toString();
 		}
 
-	private static URL expandStylesheetName( RendererContext rc, String path ) 
+	private static Transformer setPropertiesAndParams( RendererContext rc, PrefixMapping pm, String transformFilePath ) 
 		{
-		if (path == null) return null; // HACK -- TODO: remove when refactoring done.
-		String ePath = VarValues.expandVariables(rc, path);
-		return rc.pathAsURL( ePath );
-		}
-
-	private static Transformer setPropertiesAndParams( RendererContext p, PrefixMapping pm, Mode as, URL u ) 
-		throws TransformerConfigurationException, TransformerFactoryConfigurationError 
-		{
-		Transformer t = getTransformer( as, u );
+		Transformer t = getTransformer( rc, transformFilePath );
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );
 		t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-		for (String name: p.keySet()) t.setParameter( name, p.getStringValue( name ) );
+		for (String name: rc.keySet()) t.setParameter( name, rc.getStringValue( name ) );
 		t.setParameter( "api:namespaces", namespacesDocument( pm ) );
 		return t;
+		}
+	
+	private static DocumentBuilder getBuilder() 
+		{
+		try  { return DocumentBuilderFactory.newInstance().newDocumentBuilder(); } 
+		catch (ParserConfigurationException e) { throw new WrappedException( e ); }
+		}
+	
+	private static Transformer getTransformer( RendererContext rc, String transformFilePath ) 
+		{
+		try
+			{
+			TransformerFactory tf = TransformerFactory.newInstance();
+			if (transformFilePath == null) 
+				return tf.newTransformer();
+			else 
+				{
+				URL u = rc.pathAsURL( VarValues.expandVariables( rc, transformFilePath ) );
+				return tf.newTransformer( new StreamSource( u.toExternalForm() ) );
+				}
+			}
+		catch (TransformerConfigurationException e) 
+			{ throw new WrappedException( e ); }
 		}
 
 	private static String namespacesDocument( PrefixMapping pm ) 

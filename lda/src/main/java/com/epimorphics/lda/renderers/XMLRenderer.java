@@ -14,7 +14,6 @@ import org.w3c.dom.Element;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.DOMUtils;
-import com.epimorphics.util.DOMUtils.Mode;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
@@ -25,25 +24,21 @@ public class XMLRenderer implements Renderer {
     static Logger log = LoggerFactory.getLogger(XMLRenderer.class);
 	
 	final ShortnameService sns;
-	final Mode as;
+//	final Mode as;
 	final String transformFilePath;
 	final String mediaType;
 	
 	public XMLRenderer( ShortnameService sns ) {
-		this( sns, Mode.AS_IS );
+		this( sns, XML_MIME, null );
 	}
 	
-	public XMLRenderer( ShortnameService sns, Mode m ) {
-		this( sns, m, XML_MIME, null );
-	}
-	
-	public XMLRenderer( ShortnameService sns, Mode m, String mediaType, String transformFilePath ) {
-		this.as = m;
+	public XMLRenderer( ShortnameService sns, String mediaType, String transformFilePath ) {
+//		this.as = m;
 		this.sns = sns;
 		this.mediaType = mediaType;
 		this.transformFilePath = transformFilePath;
-		if (m == Mode.TRANSFORM && transformFilePath == null)
-			throw new RuntimeException( "Mode.TRANSFORM requested but no transform filepath supplied." );
+//		if (m == Mode.TRANSFORM && transformFilePath == null)
+//			throw new RuntimeException( "Mode.TRANSFORM requested but no transform filepath supplied." );
 	}
 	
 	@Override public String getMediaType() {
@@ -58,7 +53,7 @@ public class XMLRenderer implements Renderer {
 		PrefixMapping pm = root.getModel();
 		Document d = DOMUtils.newDocument();
 		renderInto( root, d );
-		return DOMUtils.nodeToIndentedString( d, rc, pm, as, transformFilePath );
+		return DOMUtils.renderNodeToString( d, rc, pm, transformFilePath );
 	}
 
 	public void renderInto( Resource root, Document d ) {

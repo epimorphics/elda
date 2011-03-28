@@ -14,7 +14,6 @@ import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.tests_support.ShortnameFake;
 import com.epimorphics.util.DOMUtils;
-import com.epimorphics.util.DOMUtils.Mode;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
@@ -95,15 +94,15 @@ public class TestXMLRenderer
 		{
 		PrefixMapping pm = root.getModel();
 		ShortnameService sns = new ForceShorten();
-		XMLRenderer xr = new XMLRenderer( sns, DOMUtils.Mode.AS_IS );
+		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
 		xr.renderInto( root, d );
 		Node de = d.getDocumentElement().getFirstChild();
 		Node expected = new TinyParser().parse( desired );
 		if (!de.isEqualNode( expected )) 
 			{
-			System.err.println( "expected: " + DOMUtils.nodeToIndentedString( expected, pm, Mode.AS_IS ) );
-			System.err.println( "obtained: " + DOMUtils.nodeToIndentedString( de, pm, Mode.AS_IS ) );
+			System.err.println( "expected: " + DOMUtils.renderNodeToString( expected, pm ) );
+			System.err.println( "obtained: " + DOMUtils.renderNodeToString( de, pm ) );
 			fail( "ALAS -- rendering not as expected." );
 			}
 		}
