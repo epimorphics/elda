@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.larq.*;
+import com.hp.hpl.jena.shared.WrappedException;
 
 public class LARQManager {
 
@@ -59,12 +60,12 @@ public class LARQManager {
 
     private static IndexReader getReader() {
         try { return IndexReader.open( larqIndexDirectory ); }
-        catch (Exception e) { throw new RuntimeException( e ); }
+        catch (Exception e) { throw new WrappedException( e ); }
     }
 
     private static IndexWriter getWriter() {
         try { return new IndexWriter( larqIndexDirectory, new StandardAnalyzer() ); }
-        catch (Exception e) { throw new RuntimeException( e ); }
+        catch (Exception e) { throw new WrappedException( e ); }
     }
 }
 

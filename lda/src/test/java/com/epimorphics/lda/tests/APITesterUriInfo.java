@@ -20,6 +20,8 @@ import javax.ws.rs.core.PathSegment;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import com.hp.hpl.jena.shared.WrappedException;
+
 /**
     A partial implementation of UriInfo for the API tests.
  
@@ -49,7 +51,7 @@ public final class APITesterUriInfo implements UriInfo {
 
     @Override public URI getBaseUri() {
         try { return new URI( "http://dummy.domain.com/" ); }
-        catch (URISyntaxException u) { throw new RuntimeException( u ); }
+        catch (URISyntaxException u) { throw new WrappedException( u ); }
     }
 
     @Override public UriBuilder getBaseUriBuilder() {

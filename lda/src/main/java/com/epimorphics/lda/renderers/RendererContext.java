@@ -15,6 +15,7 @@ import javax.servlet.ServletContext;
 
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.bindings.Lookup;
+import com.hp.hpl.jena.shared.WrappedException;
 
 /**
 	The context in which a rendering takes place. It provides access to the value
@@ -36,7 +37,7 @@ public class RendererContext implements Lookup {
 					if (result == null) throw new RuntimeException( "could not find webapp resource " + p );
 					return result;
 				} catch (MalformedURLException e) {
-					throw new RuntimeException( e );
+					throw new WrappedException( e );
 				} }
 			};
 		this.contextPath = sc.getContextPath();

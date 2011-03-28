@@ -40,6 +40,7 @@ public class DOMUtils
 	{	
 	public static Document newDocument() 
 		{ return getBuilder().newDocument(); }
+	
 	public static String renderNodeToString( Node d, PrefixMapping pm ) 
 		{ return renderNodeToString( d, new RendererContext(), pm, null ); }
 	

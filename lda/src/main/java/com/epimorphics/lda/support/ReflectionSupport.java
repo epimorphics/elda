@@ -8,6 +8,7 @@
 package com.epimorphics.lda.support;
 
 import com.hp.hpl.jena.shared.NotFoundException;
+import com.hp.hpl.jena.shared.WrappedException;
 
 /**
     Versions of Class.forName and Class.newInstance that turn checked
@@ -31,7 +32,7 @@ public class ReflectionSupport {
 	*/
 	public static <T> T newInstanceOf( Class<T> c ) {
 		try { return c.newInstance(); } 
-		catch (Exception e) { throw new RuntimeException( e ); }
+		catch (Exception e) { throw new WrappedException( e ); }
 	}
 
 }
