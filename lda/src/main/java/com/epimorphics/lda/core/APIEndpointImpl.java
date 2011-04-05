@@ -72,7 +72,7 @@ public class APIEndpointImpl implements APIEndpoint {
         Couple<View, String> viewAndFormat = buildQueryAndView( context, query );
         View view = viewAndFormat.a; String format = viewAndFormat.b;
         APIResultSet unfiltered = query.runQuery( spec.getAPISpec(), cache, context, view );
-        APIResultSet filtered = filterByView(view, unfiltered);
+        APIResultSet filtered = filterByView( view, unfiltered );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
         insertResultSetRoot(filtered, context, query);
         return new Couple<APIResultSet, String>( filtered, format );
@@ -217,7 +217,7 @@ public class APIEndpointImpl implements APIEndpoint {
         	Resource content = rs.getResultList().get(0);
         	thisPage.addProperty( FOAF.primaryTopic, content );
         	content.addProperty( FOAF.isPrimaryTopicOf, thisPage );     
-        	rs.setContentLocation( query.getSubject() );
+        	// rs.setContentLocation( query.getSubject() );
         }
     }
     

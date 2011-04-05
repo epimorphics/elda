@@ -13,9 +13,12 @@
 package com.epimorphics.lda.core;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.hp.hpl.jena.graph.Graph;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
@@ -33,7 +36,7 @@ public class APIResultSet {
     protected Resource root;
     protected boolean isCompleted;
     protected String contentLocation;
-    protected final Model model;
+    protected Model model;
     
     public String getContentLocation() {
         return contentLocation;
@@ -116,6 +119,37 @@ public class APIResultSet {
 	public StmtIterator listStatements( Resource S, Property P, RDFNode O) {
 		return model.listStatements( S, P, O );
 	}
+
+//	public void rename() {
+//		// model = rename( model );		
+//	}
+//
+//	private Model rename( Model m ) {
+//		Model renamed = ModelFactory.createDefaultModel();
+//		Graph from = m.getGraph(), to = renamed.getGraph();
+//		for (Iterator<Triple> ts = from.find( Node.ANY, Node.ANY, Node.ANY ); ts.hasNext();) to.add( rename( ts.next() ) );
+//		renamed.setNsPrefixes( m );
+//		return renamed;
+//	}
+//
+//	private Triple rename( Triple t ) {
+//		return Triple.create( rename( t.getSubject() ), rename( t.getPredicate() ), rename( t.getObject() ) );
+//	}
+//
+//	String relabel_from = "http://education.data.gov.uk/";
+//	String relabel_to = "http://localhost:8080/elda/api/education/";
+//	
+//	private Node rename( Node x ) {
+//		if (x.isURI()) {
+//			String u = x.getURI();
+//			if (u.startsWith( relabel_from )) {
+//				String uri = relabel_to + u.substring( relabel_from.length( ) );
+//				System.err.println( ">> renamed " + u + " to " + uri );
+//				return Node.createURI( uri );
+//			}
+//		}
+//		return x;
+//	}
     
 }
 

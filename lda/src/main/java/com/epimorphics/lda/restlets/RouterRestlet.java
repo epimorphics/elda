@@ -161,8 +161,8 @@ public class RouterRestlet {
 		    if (results == null) {
 		        return returnNotFound("No answer back from " + ep.getSpec());
 		    } else {
-		    	RendererContext rp = new RendererContext( paramsFromContext( cc ), servCon );
-		        return renderByType( rp, mediaTypes, pickFormatter( resultsAndFormat.b, suffix ), ep, results );
+		    	RendererContext rc = new RendererContext( paramsFromContext( cc ), servCon );
+		        return renderByType( rc, mediaTypes, pickFormatter( resultsAndFormat.b, suffix ), ep, results );
 		    }
 		} catch (NotFoundException e) { // TODO echeck that it's VIEW not found.
 			return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
@@ -201,7 +201,7 @@ public class RouterRestlet {
 		return null;
     	}
 
-    private Response renderByType( RendererContext rp, List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
+    private Response renderByType( RendererContext rc, List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
     	if (rName == null)
         	{
         	for (MediaType mt: mediaTypes) {
@@ -209,14 +209,14 @@ public class RouterRestlet {
         		String name = nameForMimeType( type );
         		Renderer renderer = ep.getRendererNamed( name ); 
         		if (renderer != null) 
-        			return returnAs( renderer.render( rp, results ).toString(), type, results.getContentLocation() );
+        			return returnAs( relabel( rc, renderer.render( rc, results ) ), type, results.getContentLocation() );
         	}
         //
         	RendererFactory rf = ep.getSpec().getRendererFactoryTable().getDefaultFactory();
         	ShortnameService sns = ep.getSpec().sns();
         	Renderer r = rf.buildWith( ep, sns );
         	String mediaType = r.getMediaType();
-        	return returnAs( r.render( rp, results ).toString(), mediaType, results.getContentLocation() );       	
+        	return returnAs( relabel( rc, r.render( rc, results ) ), mediaType, results.getContentLocation() );       	
         	}
         else
         	{
@@ -226,12 +226,20 @@ public class RouterRestlet {
         		return enableCORS( Response.status( Status.BAD_REQUEST ).entity( message ) ).build();
         	} else {
         		String type = renderer.getMediaType();
-	        	return returnAs( renderer.render( rp, results ).toString(), type, results.getContentLocation() );
+	        	return returnAs( relabel( rc, renderer.render( rc, results ) ), type, results.getContentLocation() );
     		}
         }
     }
     
-    public static VarValues paramsFromContext( CallContext cc ) {
+    // HACK for bootstrapping. Should be endpoint-driven somehow.
+    private String relabel( RendererContext rc, String rendered ) {
+    	String relabel_from = rc.getAsString( "_change_from", null );
+    	String relabel_to = rc.getAsString( "_change_to", null );
+    	if (relabel_from == null || relabel_to == null) return rendered;
+    	return rendered.replace( relabel_from, relabel_to );
+	}
+
+	public static VarValues paramsFromContext( CallContext cc ) {
     	VarValues result = new VarValues();
        	for (Iterator<String> it = cc.parameterNames(); it.hasNext();) {
        		String name = it.next();
@@ -252,9 +260,9 @@ public class RouterRestlet {
     public static Response returnAs(String response, String mimetype, String contentLocation) {
         try {
             return enableCORS( Response.ok(response, mimetype) )
-                    .contentLocation( new URI(contentLocation) )
+                    // .contentLocation( new URI(contentLocation) ) // what does it do & how can we get it back 
                     .build();
-        } catch (URISyntaxException e) {
+        } catch (RuntimeException e) { // (URISyntaxException e) {
             return returnError(e);
         }
     }

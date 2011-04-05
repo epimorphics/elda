@@ -1,0 +1,9 @@
+Post 1.1.1:
+
+* corrected oversight which had the Jetty licenses appearing at the
+  top level of the demo directory. Corrected by distinguishing
+  elda- licenses and jetty- licenses in differently-named files.
+
+* the delivery process now creates and installs javadoc into the
+  elda-javadoc directory.
+

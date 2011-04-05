@@ -108,9 +108,22 @@ spec:api
 	   , spec:schoolsSecondary
 	   , spec:schoolsPrimaryDistrict
 	   , spec:schoolsSecondaryDistrict 
-	   .
-    
+	   , spec:school-by-id
+	# the demo rewriting-URIs hack.
+    ; api:variable 
+    	[api:name "_change_from"; api:value "http://education.data.gov.uk/"]
+    ; api:variable 
+    	[api:name "_change_to"; api:value "http://localhost:8080/elda/api/education/"]
+    .
+    	
 #ENDPOINTS
+
+spec:school-by-id
+	a api:ItemEndpoint
+	; api:uriTemplate "/education/id/school/{id}"
+	; api:selector [api:filter "uniqueReferenceNumber={id}"]
+	; api:viewer api:describeViewer
+	.
 
 #List all schools
 spec:schools

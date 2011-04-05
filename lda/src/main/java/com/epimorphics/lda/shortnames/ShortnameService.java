@@ -139,14 +139,16 @@ public interface ShortnameService
 		*/
 		public static List<Property> expandProperties( String shortNames, ShortnameService sns ) 
 			{
+			// System.err.println( ">> expandProperties: " + shortNames );
 			String [] elements = shortNames.split( "\\." );
 			List<Property> result = new ArrayList<Property>( elements.length );
 			for (String e: elements) 
-				{
-				String expanded = sns.expand( e );
-				if (expanded == null) throw new IllegalArgumentException( "no long name for '" + e + "'" );
-				result.add( ResourceFactory.createProperty( expanded ) );
-				}
+				if (e.length() > 0)
+					{
+					String expanded = sns.expand( e );
+					if (expanded == null) throw new IllegalArgumentException( "no long name for '" + e + "'" );
+					result.add( ResourceFactory.createProperty( expanded ) );
+					}
 			return result;
 			}
 		
