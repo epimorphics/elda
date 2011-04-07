@@ -1,7 +1,7 @@
 /**
     See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
     for the licence for this software.
-    
+
     (c) Copyright 2011 Epimorphics Limited
     $Id$
 */
@@ -24,20 +24,20 @@ import com.epimorphics.lda.core.APIResultSet;
 public class PermaCache extends LimitedCacheBase implements Cache {
 
     public PermaCache( String label ) {
-		super(label);
-	}
+        super(label);
+    }
 
-	static Logger log = LoggerFactory.getLogger( PermaCache.class );
+    private static Logger log = LoggerFactory.getLogger( PermaCache.class );
 
     @Override protected synchronized boolean exceedsSelectLimit( Map<String, List<Resource>> m ) {
-		return false;
-	}
-    
+        return false;
+    }
+
     @Override protected synchronized boolean exceedsResultSetLimit( Map<String, APIResultSet> m ) {
-		return false;
-	}
-    
+        return false;
+    }
+
     public synchronized static void clearAll() {
-		PermaController.caches.clear();		
-	}
+        PermaController.caches.clear();
+    }
 }

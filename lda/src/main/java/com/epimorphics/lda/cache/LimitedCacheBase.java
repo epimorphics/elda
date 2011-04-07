@@ -1,7 +1,7 @@
 /**
     See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
     for the licence for this software.
-    
+
     (c) Copyright 2011 Epimorphics Limited
     $Id$
 */
@@ -19,55 +19,55 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 public abstract class LimitedCacheBase implements Cache {
 
-    static Logger log = LoggerFactory.getLogger( LimitedCacheBase.class );
-    
+    private static Logger log = LoggerFactory.getLogger( LimitedCacheBase.class );
+
     protected final String label;
-    
+
     public LimitedCacheBase( String label ) {
-    	this.label = label;
+        this.label = label;
     }
-    
+
     protected abstract boolean exceedsSelectLimit( Map<String, List<Resource>> m) ;
-    
+
     protected abstract boolean exceedsResultSetLimit( Map<String, APIResultSet> m );
-    
+
     private final Map<String, APIResultSet> cd = new HashMap<String, APIResultSet>();
-    
+
     private final Map<String, List<Resource>> cs = new HashMap<String, List<Resource>>();
-    
-    @Override public synchronized APIResultSet getCachedResultSet( List<Resource> results, String view ) { 
+
+    @Override public synchronized APIResultSet getCachedResultSet( List<Resource> results, String view ) {
         return cd.get( results.toString() + "::" + view );
     }
-    
-    @Override public synchronized List<Resource> getCachedResources( String select ) { 
+
+    @Override public synchronized List<Resource> getCachedResources( String select ) {
         return cs.get( select );
     }
-    
+
     @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs ) {
         log.debug( "caching descriptions for resources " + results );
-        cd.put( results.toString() + "::" + view, rs );   
+        cd.put( results.toString() + "::" + view, rs );
         if (exceedsResultSetLimit( cd )) {
-        	log.info( "clearing description cache for " + label );
+            log.info( "clearing description cache for " + label );
 //        	System.err.println( "clearing description cache for " + label );
-        	cd.clear();
+            cd.clear();
         }
     }
 
-	@Override public synchronized void cacheSelection( String select, List<Resource> results ) {
+    @Override public synchronized void cacheSelection( String select, List<Resource> results ) {
         log.debug( "caching resource selection for query " + select );
-        cs.put( select, results );        
+        cs.put( select, results );
         if (exceedsSelectLimit( cs )) {
-        	log.info( "clearing select cache for " + label );
-        	cs.clear();
+            log.info( "clearing select cache for " + label );
+            cs.clear();
         }
     }
 
-	public synchronized void clear() {
-    	cs.clear();
-    	cd.clear();
+    public synchronized void clear() {
+        cs.clear();
+        cd.clear();
     }
-	
-	public synchronized int numEntries() {
-		return cd.size() + cs.size();
-	}
+
+    public synchronized int numEntries() {
+        return cd.size() + cs.size();
+    }
 }
