@@ -3,8 +3,32 @@
 <title>{$title}</title>
    <link rel="stylesheet" type="text/css" href="/sdx-api/styles/style.css" />
    <link rel="stylesheet" type="text/css" href="/styles/style.css" />
+   
+<style>
+.paging-links 
+	{ background-color: pink
+	}
+	
+.one-item
+	{ background-color: #eeeeff
+	; border: 1px solid gray
+	; margin-bottom: 2ex
+	}
+	
+.body-style
+	{ background-color: #eeeeee
+	}
+	
+.zebra tr:nth-child(2n+1) 
+	{ background: #ffffee }
+
+.zebra tr:nth-child(2n) 
+	{ background: #ffeeff }
+	
+</style>
+
 </head>
-<body>
+<body class='body-style'>
 {$body}
 </body>
 </html>

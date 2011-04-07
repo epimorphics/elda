@@ -92,15 +92,15 @@ spec:api
 		, [ api:name "webapp"; api:value "/elda"]
 	; api:formatter 
 		[a api:XsltFormatter
-		; api:name 'html'
+		; api:name 'styled'
 		; api:stylesheet 'xsltsheets/ashtml.xsl'
-		; api:mimeType 'text/html'
+		; api:mimeType 'text/xhtml'
 		] 
-	; api:formatter 
-		[a api:XsltFormatter
-		; api:name 'example'
-		; api:stylesheet '/xsltsheets/example-a.xsl'
-		; api:mimeType 'text/plain'
+	; api:formatter
+		[a api:HtmlFormatter
+		; extras:className "com.epimorphics.lda.demo.Demo_HTML_RendererFactory"
+		; api:name "html"
+		; api:mimeType 'text/html'
 		]
 	; api:endpoint 
 	   spec:schools
