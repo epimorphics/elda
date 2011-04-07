@@ -111,9 +111,9 @@ spec:api
 	   , spec:school-by-id
 	# the demo rewriting-URIs hack.
     ; api:variable 
-    	[api:name "x_change_from"; api:value "http://education.data.gov.uk/"]
+    	[api:name "_change_from"; api:value "http://education.data.gov.uk/"]
     ; api:variable 
-    	[api:name "x_change_to"; api:value "http://localhost:8080/elda/api/education/"]
+    	[api:name "_change_to"; api:value "http://localhost:8080/elda/api/education/"]
     # suppress media-type selection
     ; api:variable
     	[api:name "_supress_media_type"; api:value "yes"]
@@ -558,7 +558,10 @@ school:actionFP
       api:label "actionFP" .
 
 school:closeDate
-      api:label "closeDate" .
+	a owl:DatatypeProperty
+    ; api:label "closeDate" 
+	; rdfs:range xsd:date
+    .
 
 school:leadershipIncentiveGrant
       a       owl:DatatypeProperty ;

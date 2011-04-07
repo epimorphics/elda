@@ -151,8 +151,8 @@ public class StandardShortnameService implements ShortnameService {
                 return Node.createURI(full); 
             } else {
                 Prop prop = context.getPropertyByName(p);
-//                System.err.println( ">> property information for " + p + " is " + prop );
-//                System.err.println( ">> (URI: " + context.getURIfromName( p ) + ")" );
+                System.err.println( ">> property information for " + p + " is " + prop );
+                System.err.println( ">> (URI: " + context.getURIfromName( p ) + ")" );
                 if (prop == null) {
                     // No typing information 
                     if (RDFUtil.looksLikeURI(nodeValue)) {

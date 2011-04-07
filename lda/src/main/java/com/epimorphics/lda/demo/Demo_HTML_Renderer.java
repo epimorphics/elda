@@ -43,8 +43,9 @@ public class Demo_HTML_Renderer implements Renderer {
 	private String renderItem( APIResultSet results ) {
 		StringBuilder textBody = new StringBuilder();
         Resource root = results.getRoot();
+        String x = root.getURI().replaceAll( "\\.html", "" ).replaceFirst( "[?&].*", "" );
         h1( textBody, "properties of " + root.getURI() );
-        renderResourceDetails( textBody, root );
+        renderResourceDetails( textBody, x, root );
 		return Util.withBody( "description of " + root, textBody.toString() );
 	}
 
@@ -52,6 +53,7 @@ public class Demo_HTML_Renderer implements Renderer {
 		StringBuilder textBody = new StringBuilder();
         Resource root = results.getRoot();
         String main = root.getURI();
+        String x = main.replaceAll( "\\.html", "" ).replaceFirst( "[?&].*", "" );
         String title = main.replace( "http://localhost:8080/elda/api/", "").replaceAll( "[?&]", " ");
         h1( textBody, "Elda: " + title );
         Resource anchor = results.listStatements( null, FIXUP.items, (RDFNode) null ).next().getSubject();
@@ -61,7 +63,7 @@ public class Demo_HTML_Renderer implements Renderer {
             Resource e = (Resource) elem;
             String name = getSubjectName( e );
             h2( textBody, name );
-            renderResourceDetails(textBody, e);
+            renderResourceDetails(textBody, x, e);
             textBody.append( "\n</div>" );
             }
         linkyBits( textBody, anchor );
@@ -86,47 +88,13 @@ public class Demo_HTML_Renderer implements Renderer {
 			}
 		};
 	
-	public void renderResourceDetails(StringBuilder textBody, Resource e) 
+	public void renderResourceDetails(StringBuilder textBody, String x, Resource e) 
 		{
 		List<Couple<String, String>> props = new ArrayList<Couple<String, String>>();
-		String x = "http://localhost:8080/elda/api/education/schools";
-		for (Statement s: e.listProperties().toList()) { 
-		    boolean isAnon = s.getObject().isAnon();
-		    // String primaryText = brief( "font-weight: bold", s.getPredicate() ) + " " + (isAnon ? "" : brief( s.getObject()) );
+		for (Statement s: e.listProperties().toList()) {
 		    Property p = s.getPredicate();
-		    String property = briefName( p );
-		    String value = brief( s.getObject() );
-		    if (s.getObject().isResource())
-		    	{
-		    	Resource o = s.getObject().asResource();
-		    	Statement label = o.getProperty(RDFS.label);
-		    	if (label != null) value = label.getString(); 
-		    	value = value + " " + resRequest( x, p, o );
-		    	}
-		    else if (s.getObject().isLiteral()) 
-		    	{
-		    	String u = s.getObject().asLiteral().getDatatypeURI();
-		    	if (u != null)
-			    	{
-			    	if (u.endsWith("#integer")) //  || u.endsWith("#date"))
-			    		{
-			    		value = intRequest(x, "max", p, value) + " " + value + " " + intRequest( x, "min", p, value );
-			    		}
-			    	}
-		    	}
-//		    StringBuilder secondary = new StringBuilder();
-//		    if (isAnon)
-//		        {
-//		        List<String> details = new ArrayList<String>();
-//		        for (Statement ss: s.getResource().listProperties().toList())
-//		            details.add( brief( "font-weight: bold", ss.getPredicate() ) + " " + brief( ss.getObject() ) );
-//		        Collections.sort( details );
-//		        for (String detail: details)
-//		        	{
-//		        	div( secondary, "property-details", "\n" + detail );
-//		        	}
-//		        }
-		    props.add( new Couple<String, String>( property, value ) );
+		    String value = makeEntry(x, s, p, brief( s.getObject() ));
+		    props.add( new Couple<String, String>( shortProperty(p), value ) );
 		}
 		Collections.sort(props, compareStringCouple);
 	//
@@ -144,23 +112,73 @@ public class Demo_HTML_Renderer implements Renderer {
 			}
 		textBody.append( "</table>" );
 	}
+	
+	private String makeEntry( String x, Statement s, Property p, String value )
+		{			
+		RDFNode ob = s.getObject();
+	    boolean isAnon = 
+	    	ob.isAnon() 
+	    	|| ob.isResource() && ob.asResource().getURI().matches( "http://api.talis.com/stores/.*#self" )
+	    	;
+	    if (false && isAnon && p.getModel().listStatements( ob.asResource(), null, (RDFNode) null ).toList().size() > 0)
+	    	{
+	    	StringBuilder vv = new StringBuilder();
+	    	vv.append( "<div>\n" );
+	    	List<Statement> sts = p.getModel().listStatements( ob.asResource(), null, (RDFNode) null ).toList();
+	    	for (Statement st: sts)
+	    		{
+	    		Property ip = st.getPredicate();
+			    String v = makeEntry(x, s, ip, brief( st.getObject() ));
+			    vv.append( "<div>" ).append( v ).append( "</div>" ).append( "\n" );
+	    		}
+	    	vv.append( "</div>\n" );
+	    	return vv.toString();
+	    	}
+	    else if (ob.isResource())
+			{
+			Resource o = ob.asResource();
+			Statement label = o.getProperty(RDFS.label);
+			if (label != null) value = label.getString(); 
+			value = value + " " + resRequest( x, p, o );
+			}
+		else if (ob.isLiteral()) 
+			{
+			String u = ob.asLiteral().getDatatypeURI();
+			if (u != null)
+		    	{
+		    	if (u.endsWith("#integer") || u.endsWith("#date"))
+		    		{
+		    		value = intRequest(x, "max", p, value) + " " + value + " " + intRequest( x, "min", p, value );
+		    		}
+		    	}
+			}
+		return value;
+		}
 
     private String resRequest(String base, Property p, Resource o )
     	{
     	String shortP = sns.shorten( p.getURI() );
-    	String os = briefName(o);
-    	String shortO = sns.shorten( o.getURI() );
-    	if (shortO == null) shortO = o.getURI();
+    	String oURI = o.getURI();
+		String shortO = sns.shorten( oURI );
+    	if (shortO == null) shortO = oURI;
     	String uri = base + ".html" + "?" + shortP + "=" + shortO;
     	String image = "[similar]";
     	String title = "click to see other items with the same property-value";
-    	return "<a href='" + uri + "' title='" + protect(title) + "'>" + image + "</a>";
+    	String link = "<a href='" + oURI + ".html'>&Delta;</a>";
+    	return "<a href='" + uri + "' title='" + protect(title) + "'>" + image + "</a>" + " " + link;
     	}
+
+	private String shortProperty(Property p)
+		{
+		String u = p.getURI();
+		String s = sns.shorten(u);
+		return "<a href='" + u + "' title='click to try and get definition details for " + s + "'>&Delta;</a>" + " " + s;
+		}
 
 	private String intRequest(String base, String minormax, Property p, String value ) 
     	{
     	String shortP = sns.shorten( p.getURI() );
-    	String uri = base + ".html" + "?" + minormax + "-" + shortP + "=" + value;
+    	String uri = base + ".html" + "?" + minormax + "Ex-" + shortP + "=" + value;
     	String image = minormax.equals("max") ? "&#0171;" : "&#0187;";
     	return "<a href='" + uri + "' title='" + protect( rangeTitle(minormax, value) ) + "'>" + image + "</a>";
     	}
