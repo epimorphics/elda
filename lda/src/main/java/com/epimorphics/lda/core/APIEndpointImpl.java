@@ -43,7 +43,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 /**
  * Implements a single endpoint for an API.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class APIEndpointImpl implements APIEndpoint {

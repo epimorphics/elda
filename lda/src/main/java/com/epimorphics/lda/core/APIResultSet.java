@@ -27,7 +27,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
  * A ResultSet is an ordered list of results and an associated 
  * RDF graph.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class APIResultSet {

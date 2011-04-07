@@ -45,7 +45,7 @@ import com.hp.hpl.jena.util.iterator.Map1;
  * is self contained to make it easier to migrate to GAE-JDO 
  * storage for persisting specs.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class APISpec {

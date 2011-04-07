@@ -19,7 +19,7 @@ import com.hp.hpl.jena.rdf.model.Model;
  * Allows us to adapt spec execution environment to use local tdb
  * or web-app relative models.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public interface ModelLoaderI {

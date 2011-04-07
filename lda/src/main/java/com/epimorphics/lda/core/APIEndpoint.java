@@ -29,7 +29,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
  * some underlying API specification, retrieves the relevant
  * results page and returns it with the appropriate Mime type.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public interface APIEndpoint {

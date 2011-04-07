@@ -16,7 +16,7 @@ package com.epimorphics.lda.core;
  * Used to indicated an update/delete operation on an API
  * specification was rejected due to incorrect credential of some sort.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class APISecurityException extends Exception {

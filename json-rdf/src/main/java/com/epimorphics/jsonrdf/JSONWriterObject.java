@@ -21,7 +21,7 @@ import org.openjena.atlas.json.JsonArray;
 /**
  * Implements the JSONWriter emulation by creating a JsonObject
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class JSONWriterObject implements JSONWriterFacade {

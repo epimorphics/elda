@@ -57,7 +57,7 @@ import com.sun.jersey.api.uri.UriTemplate;
 /**
  * Handles all incoming API calls and routes to appropriate locations.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 @Path("{path: .*}")

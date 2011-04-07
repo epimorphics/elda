@@ -55,7 +55,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * that leads to the query but, unlike the control restlet, doesn't
  * directly link to a dynamically updateable specification.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 @Path("/meta/{path: .*}")

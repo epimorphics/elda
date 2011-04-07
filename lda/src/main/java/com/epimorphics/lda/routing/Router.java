@@ -27,7 +27,7 @@ import com.epimorphics.lda.core.APIEndpoint;
  * 
  * TODO: determine how to persist the routing table when running under GAE-JDO
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public interface Router {

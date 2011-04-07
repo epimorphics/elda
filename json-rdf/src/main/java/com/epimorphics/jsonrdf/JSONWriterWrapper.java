@@ -24,7 +24,7 @@ import com.epimorphics.jsonrdf.extras.JSStreamingWriter;
  * Wrap up a JSONWriter to (trivially) implement the JSONWriterFacade interface.
  * Allows for streaming pretty printing.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class JSONWriterWrapper implements JSONWriterFacade {

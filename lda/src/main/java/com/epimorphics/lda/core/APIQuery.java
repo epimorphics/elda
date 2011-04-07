@@ -39,7 +39,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * Query abstraction that supports assembling multiple filter/order/view
  * specifications into a set of working sparql queries.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, ExpansionPoints {

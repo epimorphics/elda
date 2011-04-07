@@ -23,7 +23,7 @@ import com.epimorphics.lda.restlets.RouterRestlet;
 /**
  * Simple implementation of Router based on Servlets.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 // TODO replace by JAX-RS implementation if we can figure out a bearable mechanism

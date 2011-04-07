@@ -73,7 +73,7 @@ web access.
 <h3>Caveat</h3>
 
 <p>
-This is a second release of Elda to get feedback from the community.
+This is a release of Elda to get feedback from the community.
 Some features of the LDA have not yet been implemented, or are not
 completely implemented &ndash; see 
 <a href="#implementation-state">the implementation state</a>. 
@@ -359,14 +359,21 @@ which the jar bundles with Jetty.
 <p>
 To use Elda in your own webapps, you can copy the constructed
 Elda webapp from the unzipped Elda-VERSION/webapps/elda directory
-and edit its web.xml as you require.
+and edit its web.xml as you require. The necessary jars are all
+in <code>webapps/elda/WEB-INF/lib</code>.
 </p>
 
 <p>
 If you have downloaded the Elda repository, then you can
 rebuild the Elda working jars 
-(rdf-json-VERSION.jar and lda-VERSION.jar) 
+(json-rdf-VERSION.jar and lda-VERSION.jar) 
 and webapp using <a href="http://maven.apache.org/">Maven</a>. 
+</p>
+
+<p>
+(At the moment, to generate the demo jar you must be on a
+Linux system; cd into <code>deliver-elda</code> and run the 
+script <code>deliver.bash</code>.)
 </p>
 
 <h2>formatting extensions</h2>

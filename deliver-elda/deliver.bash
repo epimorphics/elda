@@ -36,6 +36,7 @@ cp -r jetty-distribution* delivery
     ; mv README.txt jetty-README.txt  \
     ; mv VERSION.txt jetty-VERSION.txt \
     ; mv notice.html jetty-notice.html \
+    ; mv about.html jetty-about.html \
 )
 cp ../LICENCE delivery/elda-LICENCE
 cp ../LICENCE.html delivery/elda-LICENCE.html

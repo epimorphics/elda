@@ -20,7 +20,7 @@ package com.epimorphics.jsonrdf;
  * which we used to use and has advantages (read from stream, better
  * quoting etc).
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public interface JSONWriterFacade {

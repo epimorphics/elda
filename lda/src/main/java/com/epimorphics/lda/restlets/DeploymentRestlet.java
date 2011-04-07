@@ -47,7 +47,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 /**
  * Support for dynamic configuration of new APIs with associated endpoints
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 @Path("/deploy")

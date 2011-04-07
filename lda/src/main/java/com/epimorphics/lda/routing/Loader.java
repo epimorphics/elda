@@ -49,7 +49,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
  * This arranges for the current Api specifications to be
  * loaded and registered with the router.
  *
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class Loader extends HttpServlet {

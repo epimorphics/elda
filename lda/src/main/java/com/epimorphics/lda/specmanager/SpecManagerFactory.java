@@ -22,7 +22,7 @@ package com.epimorphics.lda.specmanager;
  * Supply an environment-specific implementation of the
  * SpecManager.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class SpecManagerFactory {

@@ -34,7 +34,7 @@ import com.hp.hpl.jena.util.OneToManyMap;
  * Encapsulates all the information which define a particular
  * invocation of the API. 
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
 */
 public class CallContext implements Lookup {

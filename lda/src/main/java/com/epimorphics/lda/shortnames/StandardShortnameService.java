@@ -43,7 +43,7 @@ import com.hp.hpl.jena.vocabulary.*;
 /**
 	See ShortnameService.
 	
- 	@author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ 	@author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  	@version $Revision: $
 */
 public class StandardShortnameService implements ShortnameService {

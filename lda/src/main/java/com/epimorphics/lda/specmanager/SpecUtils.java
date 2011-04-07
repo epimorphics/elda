@@ -26,7 +26,7 @@ import com.epimorphics.lda.core.APIException;
 /**
  * Random utility methods for the implementing SpecManagers
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class SpecUtils {

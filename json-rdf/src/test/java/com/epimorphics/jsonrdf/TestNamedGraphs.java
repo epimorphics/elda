@@ -54,7 +54,7 @@ import static org.junit.Assert.*;
 /**
  * Test the round tripping of named graphs
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class TestNamedGraphs {

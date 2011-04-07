@@ -31,7 +31,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * Represents a view which selects which parts of a result 
  * resource to show, defined by a (possibly) ordered list of properties.
  * 
- * @author <a href="mailto:der@hplb.hpl.hp.com">Dave Reynolds</a>
+ * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class View {
