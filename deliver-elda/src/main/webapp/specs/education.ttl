@@ -94,13 +94,13 @@ spec:api
 		[a api:XsltFormatter
 		; api:name 'styled'
 		; api:stylesheet 'xsltsheets/ashtml.xsl'
-		; api:mimeType 'text/xhtml'
+		; api:mimeType 'text/html'
 		] 
 	; api:formatter
 		[a api:HtmlFormatter
 		; extras:className "com.epimorphics.lda.demo.Demo_HTML_RendererFactory"
 		; api:name "html"
-		; api:mimeType 'text/html'
+		; api:mimeType 'text/xhtml'
 		]
 	; api:endpoint 
 	   spec:schools
