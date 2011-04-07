@@ -146,7 +146,7 @@ public class Demo_HTML_Renderer implements Renderer {
 			String u = ob.asLiteral().getDatatypeURI();
 			if (u != null)
 		    	{
-		    	if (u.endsWith("#integer")) //  || u.endsWith("#date"))
+		    	if (u.endsWith("#integer") || u.endsWith("#date"))
 		    		{
 		    		value = intRequest(x, "max", p, value) + " " + value + " " + intRequest( x, "min", p, value );
 		    		}
@@ -158,13 +158,14 @@ public class Demo_HTML_Renderer implements Renderer {
     private String resRequest(String base, Property p, Resource o )
     	{
     	String shortP = sns.shorten( p.getURI() );
-    	String os = briefName(o);
-    	String shortO = sns.shorten( o.getURI() );
-    	if (shortO == null) shortO = o.getURI();
+    	String oURI = o.getURI();
+		String shortO = sns.shorten( oURI );
+    	if (shortO == null) shortO = oURI;
     	String uri = base + ".html" + "?" + shortP + "=" + shortO;
     	String image = "[similar]";
     	String title = "click to see other items with the same property-value";
-    	return "<a href='" + uri + "' title='" + protect(title) + "'>" + image + "</a>";
+    	String link = "<a href='" + oURI + ".html'>&Delta;</a>";
+    	return "<a href='" + uri + "' title='" + protect(title) + "'>" + image + "</a>" + " " + link;
     	}
 
 	private String shortProperty(Property p)
