@@ -111,9 +111,9 @@ spec:api
 	   , spec:school-by-id
 	# the demo rewriting-URIs hack.
     ; api:variable 
-    	[api:name "_change_from"; api:value "http://education.data.gov.uk/"]
+    	[api:name "x_change_from"; api:value "http://education.data.gov.uk/"]
     ; api:variable 
-    	[api:name "_change_to"; api:value "http://localhost:8080/elda/api/education/"]
+    	[api:name "x_change_to"; api:value "http://localhost:8080/elda/api/education/"]
     # suppress media-type selection
     ; api:variable
     	[api:name "_supress_media_type"; api:value "yes"]
@@ -135,7 +135,7 @@ spec:schools
 	api:selector [ 
 		api:filter "type=School"
 	] ;
-	api:defaultViewer api:describeViewer ;
+	api:defaultViewer api:labelledDescribeViewer ;
 	api:viewer spec:viewerShort ;
 	api:viewer spec:viewerMedium ;
 	api:viewer [ 

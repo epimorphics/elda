@@ -14,10 +14,12 @@ import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.FIXUP;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFList;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class Demo_HTML_Renderer implements Renderer {
 
@@ -82,13 +84,34 @@ public class Demo_HTML_Renderer implements Renderer {
 			}
 		};
 	
-	public void renderResourceDetails(StringBuilder textBody, Resource e) {
+	public void renderResourceDetails(StringBuilder textBody, Resource e) 
+		{
 		List<Couple<String, String>> props = new ArrayList<Couple<String, String>>();
+		String x = "http://localhost:8080/elda/api/education/schools";
 		for (Statement s: e.listProperties().toList()) { 
 		    boolean isAnon = s.getObject().isAnon();
 		    // String primaryText = brief( "font-weight: bold", s.getPredicate() ) + " " + (isAnon ? "" : brief( s.getObject()) );
-		    String property = briefName( s.getPredicate() );
+		    Property p = s.getPredicate();
+		    String property = briefName( p );
 		    String value = brief( s.getObject() );
+		    if (s.getObject().isResource())
+		    	{
+		    	Resource o = s.getObject().asResource();
+		    	Statement label = o.getProperty(RDFS.label);
+		    	if (label != null) value = label.getString(); 
+		    	value = value + " " + resRequest( x, p, o );
+		    	}
+		    else if (s.getObject().isLiteral()) 
+		    	{
+		    	String u = s.getObject().asLiteral().getDatatypeURI();
+		    	if (u != null)
+			    	{
+			    	if (u.endsWith("#integer")) //  || u.endsWith("#date"))
+			    		{
+			    		value = intRequest(x, "max", p, value) + " " + value + " " + intRequest( x, "min", p, value );
+			    		}
+			    	}
+		    	}
 //		    StringBuilder secondary = new StringBuilder();
 //		    if (isAnon)
 //		        {
@@ -120,7 +143,32 @@ public class Demo_HTML_Renderer implements Renderer {
 		textBody.append( "</table>" );
 	}
 
-    private void linkyBits( StringBuilder textBody, Resource anchor )
+    private String resRequest(String base, Property p, Resource o )
+    	{
+    	String shortP = sns.shorten( p.getURI() );
+    	String os = briefName(o);
+    	String shortO = sns.shorten( o.getURI() );
+    	if (shortO == null) shortO = o.getURI();
+    	String uri = base + ".html" + "?" + shortP + "=" + shortO;
+    	String image = "[similar]";
+    	String title = "click to see other items with the same property-value";
+    	return "<a href='" + uri + "' title='" + protect(title) + "'>" + image + "</a>";
+    	}
+
+	private String intRequest(String base, String minormax, Property p, String value ) 
+    	{
+    	String shortP = sns.shorten( p.getURI() );
+    	String uri = base + ".html" + "?" + minormax + "-" + shortP + "=" + value;
+    	String image = minormax.equals("max") ? "&#0171;" : "&#0187;";
+    	return "<a href='" + uri + "' title='" + protect( rangeTitle(minormax, value) ) + "'>" + image + "</a>";
+    	}
+
+	private String rangeTitle(String minormax, String value) {
+		String x = minormax.equals("min") ? "more than" : "less than";
+		return "click to show only items with values " + x + " " + value;
+	}
+
+	private void linkyBits( StringBuilder textBody, Resource anchor )
         {
         Statement first = anchor.getProperty( XHV.first );
         Statement next = anchor.getProperty( XHV.next );
