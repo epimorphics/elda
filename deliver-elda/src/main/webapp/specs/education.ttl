@@ -94,13 +94,13 @@ spec:api
 		[a api:XsltFormatter
 		; api:name 'styled'
 		; api:stylesheet 'xsltsheets/ashtml.xsl'
-		; api:mimeType 'text/html'
+		; api:mimeType 'text/htmlx'
 		] 
 	; api:formatter
 		[a api:HtmlFormatter
 		; extras:className "com.epimorphics.lda.demo.Demo_HTML_RendererFactory"
 		; api:name "html"
-		; api:mimeType 'text/xhtml'
+		; api:mimeType 'text/html'
 		]
 	; api:endpoint 
 	   spec:schools
@@ -114,6 +114,9 @@ spec:api
     	[api:name "_change_from"; api:value "http://education.data.gov.uk/"]
     ; api:variable 
     	[api:name "_change_to"; api:value "http://localhost:8080/elda/api/education/"]
+    # suppress media-type selection
+    ; api:variable
+    	[api:name "_supress_media_type"; api:value "yes"]
     .
     	
 #ENDPOINTS

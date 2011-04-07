@@ -52,7 +52,10 @@ public class VarValues implements Lookup
 		{ return vars.get( name ); }
 	
 	public String getStringValue( String name ) 
-		{ return vars.get( name ).valueString(); }
+		{ 
+		Value v = vars.get( name );
+		return v == null ? null : v.valueString(); 
+		}
 	
 	public String getAsString( String name, String ifAbsent ) 
 		{ return vars.containsKey( name ) ? vars.get( name ).valueString() : ifAbsent; }

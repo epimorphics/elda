@@ -204,12 +204,16 @@ public class RouterRestlet {
     private Response renderByType( RendererContext rc, List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
     	if (rName == null)
         	{
-        	for (MediaType mt: mediaTypes) {
-        		String type = mt.getType() + "/" + mt.getSubtype();
-        		String name = nameForMimeType( type );
-        		Renderer renderer = ep.getRendererNamed( name ); 
-        		if (renderer != null) 
-        			return returnAs( relabel( rc, renderer.render( rc, results ) ), type, results.getContentLocation() );
+    		String suppress = rc.getAsString("_supress_media_type", "no");
+    		System.err.println( ">> suppress = " + suppress );
+			if (suppress.equals("no")) {
+	        	for (MediaType mt: mediaTypes) {
+	        		String type = mt.getType() + "/" + mt.getSubtype();
+	        		String name = nameForMimeType( type );
+	        		Renderer renderer = ep.getRendererNamed( name ); 
+	        		if (renderer != null) 
+	        			return returnAs( relabel( rc, renderer.render( rc, results ) ), type, results.getContentLocation() );
+	        	}
         	}
         //
         	RendererFactory rf = ep.getSpec().getRendererFactoryTable().getDefaultFactory();
