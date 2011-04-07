@@ -22,10 +22,7 @@ import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class Util
-    {
-    public static String withBody( String body )
-        { return withBody( "", body ); }
-    
+    {    
     protected static String htmlWrapper = readResource( "textlike/html-wrapper.html" );
     
     public static String readResource( String path )

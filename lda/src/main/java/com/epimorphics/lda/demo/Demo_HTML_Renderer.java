@@ -52,7 +52,8 @@ public class Demo_HTML_Renderer implements Renderer {
 		StringBuilder textBody = new StringBuilder();
         Resource root = results.getRoot();
         String main = root.getURI();
-        h1( textBody, "result-set for query " + main );
+        String title = main.replace( "http://localhost:8080/elda/api/", "").replaceAll( "[?&]", " ");
+        h1( textBody, "Elda: " + title );
         Resource anchor = results.listStatements( null, FIXUP.items, (RDFNode) null ).next().getSubject();
         for (RDFNode elem: anchor.getProperty( FIXUP.items ).getResource().as( RDFList.class ).asJavaList())
             {
@@ -64,14 +65,15 @@ public class Demo_HTML_Renderer implements Renderer {
             textBody.append( "\n</div>" );
             }
         linkyBits( textBody, anchor );
-        return Util.withBody( "result set for " + main, textBody.toString() );
+        return Util.withBody( "Elda result set", textBody.toString() );
 	}
 
 	private String getSubjectName( Resource e ) 
 		{
-		return e.hasProperty( SCHOOL.establishmentName) 
-			? e.getProperty(SCHOOL.establishmentName).getString() 
-			: "School #" + e.getLocalName()
+		return 
+			e.hasProperty( SCHOOL.establishmentName) ? e.getProperty(SCHOOL.establishmentName).getString() 
+			: e.hasProperty(RDFS.label) ? e.getProperty(RDFS.label).getString() 
+			: "School #" + e.getURI().replaceFirst( ".*[/#]", "" )
 			;
 		}
 
