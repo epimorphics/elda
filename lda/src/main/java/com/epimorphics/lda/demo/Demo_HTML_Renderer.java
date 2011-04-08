@@ -51,11 +51,10 @@ public class Demo_HTML_Renderer implements Renderer {
 
 	public String renderList(APIResultSet results) {
 		StringBuilder textBody = new StringBuilder();
-        Resource root = results.getRoot();
-        String main = root.getURI();
-        String x = main.replaceAll( "\\.html", "" ).replaceFirst( "[?&].*", "" );
-        String title = main.replace( "http://localhost:8080/elda/api/", "").replaceAll( "[?&]", " ");
-        h1( textBody, "Elda: " + title );
+        String rootURI = results.getRoot().getURI();
+        h1( textBody, "Elda query results" );
+        renderParameters(textBody, rootURI);
+    //    
         Resource anchor = results.listStatements( null, FIXUP.items, (RDFNode) null ).next().getSubject();
         for (RDFNode elem: anchor.getProperty( FIXUP.items ).getResource().as( RDFList.class ).asJavaList())
             {
@@ -63,12 +62,31 @@ public class Demo_HTML_Renderer implements Renderer {
             Resource e = (Resource) elem;
             String name = getSubjectName( e );
             h2( textBody, name );
-            renderResourceDetails(textBody, x, e);
+            renderResourceDetails(textBody, rootURI, e);
             textBody.append( "\n</div>" );
             }
         linkyBits( textBody, anchor );
         return Util.withBody( "Elda result set", textBody.toString() );
 	}
+
+	private void renderParameters( StringBuilder textBody, String main ) 
+		{
+		String [] parts = main.split( "[&?]");
+        parts[0] = "Request=" + parts[0];
+        h2(textBody, "request parameters:" );
+        textBody.append( "<table class='zebra'>\n" );
+        for (String part: parts)
+        	{
+        	String [] pv = part.split("="); 
+        	textBody
+        		.append( "<tr>" )
+        		.append( "<td align='right'>" ).append( pv[0] ).append( ": </td>" )
+        		.append( "<td>" ).append( pv[1] ).append( "</td>" )
+        		.append( "</tr>" )
+        		;
+        	}
+        textBody.append( "</table>\n" );
+		}
 
 	private String getSubjectName( Resource e ) 
 		{
@@ -148,11 +166,28 @@ public class Demo_HTML_Renderer implements Renderer {
 		    	{
 		    	if (u.endsWith("#integer") || u.endsWith("#date"))
 		    		{
-		    		value = intRequest(x, "max", p, value) + " " + value + " " + intRequest( x, "min", p, value );
+		    		value = 
+		    			intRequest(x, Mode.MAX, p, value) 
+		    			+ " " + intRequest( x, Mode.EQ, p, value ) 
+		    			+ " " + intRequest( x, Mode.MIN, p, value )
+		    			;
 		    		}
 		    	}
 			}
 		return value;
+		}
+	
+	static class Mode 
+		{ 
+		final String related;
+		final String prefix;
+		
+		public Mode( String related, String prefix )
+			{ this.related = related; this.prefix = prefix; }
+		
+		static final Mode EQ = new Mode( "equal to", "" );
+		static final Mode MAX = new Mode( "less than", "maxEx-" ); 
+		static final Mode MIN = new Mode( "greater than", "minEx-" );
 		}
 
     private String resRequest(String base, Property p, Resource o )
@@ -161,7 +196,7 @@ public class Demo_HTML_Renderer implements Renderer {
     	String oURI = o.getURI();
 		String shortO = sns.shorten( oURI );
     	if (shortO == null) shortO = oURI;
-    	String uri = base + ".html" + "?" + shortP + "=" + shortO;
+    	String uri = withArgs( base, shortP + "=" + shortO );
     	String image = "[similar]";
     	String title = "click to see other items with the same property-value";
     	String link = "<a href='" + oURI + ".html'>&Delta;</a>";
@@ -174,18 +209,26 @@ public class Demo_HTML_Renderer implements Renderer {
 		String s = sns.shorten(u);
 		return "<a href='" + u + "' title='click to try and get definition details for " + s + "'>&Delta;</a>" + " " + s;
 		}
+	
+	private String withArgs( String base, String args )
+		{
+		return base + (base.contains("?") ? "&" : "?") + args;
+		}
 
-	private String intRequest(String base, String minormax, Property p, String value ) 
+	private String intRequest(String base, Mode m, Property p, String value ) 
     	{
     	String shortP = sns.shorten( p.getURI() );
-    	String uri = base + ".html" + "?" + minormax + "Ex-" + shortP + "=" + value;
-    	String image = minormax.equals("max") ? "&#0171;" : "&#0187;";
-    	return "<a href='" + uri + "' title='" + protect( rangeTitle(minormax, value) ) + "'>" + image + "</a>";
+    	String uri = withArgs( base,  m.prefix + shortP + "=" + value );
+    	String image = 
+    		m == Mode.MAX ? "&#0171;" 
+    		: m == Mode.MIN ? "&#0187;"
+    		: value
+    		;
+    	return "<a href='" + uri + "' title='" + protect( rangeTitle(m, value) ) + "'>" + image + "</a>";
     	}
 
-	private String rangeTitle(String minormax, String value) {
-		String x = minormax.equals("min") ? "more than" : "less than";
-		return "click to show only items with values " + x + " " + value;
+	private String rangeTitle( Mode m, String value) {
+		return "click to show only items with values " + m.related + " " + value;
 	}
 
 	private void linkyBits( StringBuilder textBody, Resource anchor )
@@ -262,9 +305,9 @@ public class Demo_HTML_Renderer implements Renderer {
         }
 
     private void h1( StringBuilder textBody, String s ) {  
-        textBody.append( "\n<h1>" ).append( safe( s ) ).append( "</h1>" );        
+        textBody.append( "\n<h1>" ).append( safe( s ) ).append( "</h1>" );    
     }
-
+        
     private void h2( StringBuilder textBody, String s ) {  
         textBody.append( "\n<h2>" ).append( safe( s ) ).append( "</h2>" );        
     }
