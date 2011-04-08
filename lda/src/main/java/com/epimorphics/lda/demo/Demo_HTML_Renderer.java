@@ -14,11 +14,14 @@ import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.FIXUP;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFList;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class Demo_HTML_Renderer implements Renderer {
@@ -36,9 +39,25 @@ public class Demo_HTML_Renderer implements Renderer {
     }
 
     @Override public String render( RendererContext ignored, APIResultSet results ) {
+    	hackBnodes( results.getModel() );
     	boolean isItemRendering = results.listStatements( null, FIXUP.items, (RDFNode) null ).hasNext() == false;
         return isItemRendering ? renderItem(results) : renderList(results);
     }
+
+    // Attempt to bypass the Talis unBNode hack
+	private void hackBnodes(Model m) {
+		List<RDFNode> nodes = m.listObjects().filterKeep( fakeBNode ).toList();
+		for (RDFNode n: nodes)
+			m.add( FileManager.get().loadModel( n.asNode().getURI() ) );
+	}
+	
+	static final Filter<RDFNode> fakeBNode = new Filter<RDFNode>() 
+		{
+		@Override public boolean accept(RDFNode o) 
+			{
+			return o.isURIResource() && o.asNode().getURI().matches( "http://api.talis.com/stores/.*#self" );
+			}
+		};
 
 	private String renderItem( APIResultSet results ) {
 		StringBuilder textBody = new StringBuilder();
@@ -102,7 +121,7 @@ public class Demo_HTML_Renderer implements Renderer {
 		@Override public int compare(Couple<String, String> x, Couple<String, String> y) 
 			{
 			int a = x.a.compareTo(y.a);
-			return a == 0 ? y.a.compareTo(y.b) : a;
+			return a == 0 ? x.b.compareTo(y.b) : a;
 			}
 		};
 	
@@ -114,7 +133,7 @@ public class Demo_HTML_Renderer implements Renderer {
 		    String value = makeEntry(x, s, p, brief( s.getObject() ));
 		    props.add( new Couple<String, String>( shortProperty(p), value ) );
 		}
-		Collections.sort(props, compareStringCouple);
+		Collections.sort( props, compareStringCouple);
 	//
 		textBody.append( "<table class='zebra' style='margin-left: 2ex'>" );
 		int count = 0;
@@ -138,18 +157,21 @@ public class Demo_HTML_Renderer implements Renderer {
 	    	ob.isAnon() 
 	    	|| ob.isResource() && ob.asResource().getURI().matches( "http://api.talis.com/stores/.*#self" )
 	    	;
-	    if (false && isAnon && p.getModel().listStatements( ob.asResource(), null, (RDFNode) null ).toList().size() > 0)
+	    if (isAnon) //  && p.getModel().listStatements( ob.asResource(), null, (RDFNode) null ).toList().size() > 0)
 	    	{
 	    	StringBuilder vv = new StringBuilder();
-	    	vv.append( "<div>\n" );
-	    	List<Statement> sts = p.getModel().listStatements( ob.asResource(), null, (RDFNode) null ).toList();
+	    	vv.append( "<span>\n" );
+	    	String gap = "";
+	    	List<Statement> sts = sortBypredicate( ob.asResource().listProperties().toList() );
 	    	for (Statement st: sts)
 	    		{
-	    		Property ip = st.getPredicate();
-			    String v = makeEntry(x, s, ip, brief( st.getObject() ));
-			    vv.append( "<div>" ).append( v ).append( "</div>" ).append( "\n" );
+	    		vv.append( gap );
+	    		vv.append( shortPropertyName(st) );
+	    		vv.append( ": " );
+	    		vv.append( brief( st.getObject() ) );
+	    		gap = "; ";
 	    		}
-	    	vv.append( "</div>\n" );
+	    	vv.append( "</span>\n" );
 	    	return vv.toString();
 	    	}
 	    else if (ob.isResource())
@@ -175,6 +197,26 @@ public class Demo_HTML_Renderer implements Renderer {
 		    	}
 			}
 		return value;
+		}
+
+	static final Comparator<Statement> byPredicate = new Comparator<Statement>() 
+		{
+		@Override public int compare( Statement x, Statement y ) 
+			{ return x.getPredicate().getURI().compareTo( y.getPredicate().getURI() );
+			}
+		};
+		
+	private List<Statement> sortBypredicate(List<Statement> list) 
+		{
+		Collections.sort( list, byPredicate );
+		return list;
+		}
+
+	private String shortPropertyName( Statement st ) 
+		{
+		String uri = st.getPredicate().getURI();
+		String shorter = sns.shorten( uri );
+		return shorter == null ? st.getModel().shortForm( uri ) : shorter;
 		}
 	
 	static class Mode 
@@ -207,7 +249,7 @@ public class Demo_HTML_Renderer implements Renderer {
 		{
 		String u = p.getURI();
 		String s = sns.shorten(u);
-		return "<a href='" + u + "' title='click to try and get definition details for " + s + "'>&Delta;</a>" + " " + s;
+		return s + " <a href='" + u + "' title='click to try and get definition details for " + s + "'>&Delta;</a>";
 		}
 	
 	private String withArgs( String base, String args )
@@ -254,30 +296,6 @@ public class Demo_HTML_Renderer implements Renderer {
     	Resource r = s.getResource();
         return "<td text-align='" + align + "'><a href='" + r.getURI() + "'>" + safe(label) + "</a></td>";
     	}
-
-    private String link_to( String label, String uri )
-        {
-        return " <a href='" + uri + "'>" + safe(label) + "</a>";
-        }
-
-    private void div( StringBuilder x, String classes, String content )
-        {
-        x.append( "\n<div class='"  ).append( classes ).append( "'>" ).append( content ).append( "</div>" );
-        }
-
-    private String brief( String styles, RDFNode x )
-    	{
-    	return "<span style='" + styles + "'>" + brief( x ) + "</span>";
-    	}
-    
-    private String briefName( RDFNode x )
-        {
-        return
-            x.isAnon() ? x.asNode().getBlankNodeLabel()
-            : x.isResource() ? qname( (Resource) x ) 
-            : protect( x.asNode().getLiteralLexicalForm() )
-            ;
-        }
     
     private String brief( RDFNode x )
         {
