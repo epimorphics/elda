@@ -156,7 +156,7 @@ public class Demo_HTML_Renderer implements Renderer {
 			{
 			Resource o = ob.asResource();
 			Statement label = o.getProperty(RDFS.label);
-			if (label != null) value = label.getString(); 
+			if (label != null) value = protect(label.getString()); 
 			value = value + " " + resRequest( x, p, o );
 			}
 		else if (ob.isLiteral()) 

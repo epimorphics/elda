@@ -196,12 +196,15 @@ geo:lat
       api:label "lat" .
 
 school:openDate
-      api:label "openDate" .
+	a owl:DatatypeProperty
+	; rdfs:range xsd:date
+    ; api:label "openDate" 
+    .
 
 school:EICLSU
-      a       owl:DatatypeProperty ;
-      rdfs:range xsd:boolean ;
-      api:label "EICLSU" .
+   	a owl:DatatypeProperty ;
+    rdfs:range xsd:boolean ;
+    api:label "EICLSU" .
 
 school:highDayFee
       api:label "highDayFee" .
@@ -210,7 +213,10 @@ school:admissionsPolicy
       api:label "admissionsPolicy" .
 
 school:dateofLastISIVisit
-      api:label "dateofLastISIVisit" .
+	a owl:DatatypeProperty
+	; rdfs:range xsd:date
+    ; api:label "dateofLastISIVisit" 
+    .
 
 school:region
       api:label "region" .
@@ -265,13 +271,16 @@ school:LSOA
       api:label "LSOA" .
 
 school:lastChangedDate
-      api:label "lastChangedDate" .
+	a owl:DatatypeProperty
+    ; api:label "lastChangedDate" 
+    ; rdfs:range xsd:date
+    .
 
 school:administrativeWard
       api:label "administrativeWard" .
 
 school:boys9
-      a       owl:DatatypeProperty ;
+      a owl:DatatypeProperty ;
       rdfs:range xsd:int ;
       api:label "boys9" .
 
@@ -345,7 +354,10 @@ school:boys19plus
       api:label "boys19plus" .
 
 school:dateofLastFPVisit
-      api:label "dateofLastFPVisit" .
+	a owl:DatatypeProperty
+    ; rdfs:range xsd:date
+    ; api:label "dateofLastFPVisit" 
+    .
 
 geo:long
       api:label "long" .
@@ -371,7 +383,10 @@ school:PTBoys4c
       api:label "PTBoys4c" .
 
 school:dateofLastOfstedVisit
-      api:label "dateofLastOfstedVisit" .
+	a owl:DatatypeProperty
+	; rdfs:range xsd:date
+	; api:label "dateofLastOfstedVisit" 
+	.
 
 school:secondarySpecialism
       api:label "secondarySpecialism" .
@@ -639,7 +654,10 @@ school:establishmentNumber
       api:label "establishmentNumber" .
 
 school:dateofLastWelfareVisit
-      api:label "dateofLastWelfareVisit" .
+	a owl:DatatypeProperty
+	; rdfs:range xsd:date
+    ; api:label "dateofLastWelfareVisit" 
+    .
 
 school:gender
       api:label "gender" .
@@ -667,7 +685,10 @@ school:TrainingSchool
       rdfs:range xsd:boolean .
 
 dc:date
-      api:label "date" .
+	# a owl:DatatypeProperty
+	# ; rdfs:range xsd:date
+    api:label "date" 
+    .
 
 school:ASCHighestAge
       a       owl:DatatypeProperty ;
@@ -846,7 +867,10 @@ school:boys15
       api:label "boys15" .
 
 school:dateofLastBridgeVisit
-      api:label "dateofLastBridgeVisit" .
+	a owl:DatatypeProperty
+	; rdfs:range xsd:date
+    ; api:label "dateofLastBridgeVisit" 
+    .
 
 school:TypeOfEstablishment_Voluntary_Aided_School
       api:label "Type_Voluntary_Aided_School" .
@@ -974,7 +998,10 @@ school:reasonEstablishmentClosed
       api:label "reasonEstablishmentClosed" .
 
 school:dateofLastSISVisit
-      api:label "dateofLastSISVisit" .
+	a owl:DatatypeProperty
+	; rdfs:range xsd:date
+    ; api:label "dateofLastSISVisit" 
+    .
 
 school:girls12
       a       owl:DatatypeProperty ;
