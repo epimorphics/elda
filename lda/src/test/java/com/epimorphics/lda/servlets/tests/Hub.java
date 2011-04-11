@@ -54,7 +54,7 @@ public class Hub extends HttpServlet
 	public void doGet( HttpServletRequest req, HttpServletResponse res) 
 		throws IOException, ServletException 
 		{
-		List<MT> types = mediaType( req.getHeaders( "accept" ));
+		@SuppressWarnings("unchecked") List<MT> types = mediaType( req.getHeaders( "accept" ));
 		String acceptedType = accept( types, acceptable );
 		if (acceptedType == null)
 			{
@@ -158,7 +158,7 @@ public class Hub extends HttpServlet
 			}
 		};
 	
-	private List<MT> mediaType( Enumeration e ) 
+	private List<MT> mediaType( Enumeration<String> e ) 
 		{
 		List<MT> types = new ArrayList<MT>();
 		while (e.hasMoreElements()) types.addAll( decodeTypes( (String) e.nextElement() ) );
@@ -186,10 +186,10 @@ public class Hub extends HttpServlet
 		return new MT( AB[0], AB[1], Q );
 		}
 
-	private String names( Enumeration e ) 
-		{
-		StringBuilder b = new StringBuilder();
-		while (e.hasMoreElements()) b.append( " | " ).append( e.nextElement() );
-		return b.toString();
-		}
+//	private String names( Enumeration<String> e ) 
+//		{
+//		StringBuilder b = new StringBuilder();
+//		while (e.hasMoreElements()) b.append( " | " ).append( e.nextElement() );
+//		return b.toString();
+//		}
 	}

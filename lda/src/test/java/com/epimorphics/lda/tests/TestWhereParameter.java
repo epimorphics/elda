@@ -17,6 +17,8 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 
 public class TestWhereParameter 
 	{
+	static final String defaultQuery = "?item ?__p ?__v .";
+	
 	@Test public void testAddWhereParameter()
 		{    
         ShortnameService sns = TestSelectParameter.makeSNS();
@@ -30,12 +32,16 @@ public class TestWhereParameter
     // string arithmetic.
     //
         String theUpdatedQuery = q.assembleSelectQuery( TestSelectParameter.noPrefixes);
+//        System.err.println( ">> the updated query: " + theUpdatedQuery );
+//        System.err.println( ">> the base query: " + theBaseQuery );
         assertTrue( theUpdatedQuery.contains( theWhereClause ) );
         // Commented out. The base case has a dumy ?x ?p ?o clause but this should not be present in the
         // case of a where clause
-//		if (!theUpdatedQuery.replace( theWhereClause, "" ).equals( theBaseQuery ))
-//			{
-//			fail( "BOOM [FIX THIS MESSAGE]" );
-//			}
+		String pruned = theUpdatedQuery.replace( theWhereClause, "" ).replaceAll( "[ \n]", "" );
+		String other = theBaseQuery.replace(defaultQuery, "").replaceAll( "[ \n]", "" );
+		if (!pruned.equals( other))
+			{
+			fail( "the updated query " + theUpdatedQuery + " isn't just the base query with different triples." );
+			}
 		}
 	}
