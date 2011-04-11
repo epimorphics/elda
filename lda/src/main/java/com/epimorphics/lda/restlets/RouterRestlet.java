@@ -18,8 +18,6 @@
 package com.epimorphics.lda.restlets;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;

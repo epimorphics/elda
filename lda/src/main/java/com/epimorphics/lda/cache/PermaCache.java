@@ -11,8 +11,6 @@ package com.epimorphics.lda.cache;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 import com.epimorphics.lda.core.APIResultSet;
@@ -26,8 +24,6 @@ public class PermaCache extends LimitedCacheBase implements Cache {
     public PermaCache( String label ) {
         super(label);
     }
-
-    private static Logger log = LoggerFactory.getLogger( PermaCache.class );
 
     @Override protected synchronized boolean exceedsSelectLimit( Map<String, List<Resource>> m ) {
         return false;

@@ -20,7 +20,6 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.lda.tests_support.ShortnameFake;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;

@@ -10,12 +10,9 @@ package com.epimorphics.lda.tests;
 
 import static org.junit.Assert.*;
 
-import java.util.Map;
-
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.bindings.VarValues;
@@ -36,6 +33,7 @@ import com.epimorphics.lda.tests_support.MakeData;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestParameterNameAndValueExpansion 
@@ -68,6 +66,7 @@ public class TestParameterNameAndValueExpansion
 		//
 			+ "; ex:A rdf:type ex:Class"
 			+ "; ex:A school-ont:localAuthority ex:LA-1"
+			+ "; ex:A ex:doc 'schools'"
 		//
 			+ "; ex:LA-1 ex:name 'la-one'"
 			+ "; ex:LA-1 ex:number 17"
@@ -81,9 +80,41 @@ public class TestParameterNameAndValueExpansion
 		String uriTemplate = "http://dummy/doc/schools";
 		String queryString = "_properties=type,localAuthority.number";
 		APIResultSet rs = t.runQuery( uriTemplate, queryString );
-		// assertContains( expect, rs );
+		assertContains( expect, rs );
 		}
 	
+	private void assertContains( Model expect, APIResultSet rs) {
+		Model m = rs.getModel();
+		if (!m.containsAll( expect )) {
+			PrefixMapping pm = prefixes(rs);
+			String message = "result set " 
+				+ show(m, pm)
+				+ " does not contain all of "
+				+ show(expect, pm)
+				;
+			fail( message );
+		}
+	}
+
+	private PrefixMapping prefixes( APIResultSet rs ) {
+		return PrefixMapping.Factory.create()
+			.setNsPrefixes(rs.getModel())
+			.setNsPrefixes( PrefixMapping.Extended )
+			.setNsPrefix( "terms", "http://purl.org/dc/terms/" )
+			.setNsPrefix( "dum", "http://dummy/doc/schools" )
+			.setNsPrefix( "dumx", "http://dummy//doc/schools" )
+			;
+	}
+	
+	private String show( Model m, PrefixMapping pm ) {
+		StringBuilder sb = new StringBuilder();
+		sb.append( "\n" );
+		for (Statement s: m.listStatements().toList()) {
+			sb.append( "  " ).append( s.asTriple().toString( pm ) ).append( "\n" );
+		}
+		return sb.toString();
+	}
+
 	@Test public void deferredPropertyShouldAppearInQuery()
 		{
 		MultivaluedMap<String, String> qp = MultiValuedMapSupport.parseQueryString( "{aname}=value" );

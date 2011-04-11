@@ -635,7 +635,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	        }
 	        q.append(" OFFSET " + (pageNumber * pageSize));
 	        q.append(" LIMIT " + pageSize);
-//	        System.err.println( ">> QUERY IS: \n" + q.toString() );
+	        // System.err.println( ">> QUERY IS: \n" + q.toString() );
 	        return q.toString();
     	} else {
     		return fixedQueryString;

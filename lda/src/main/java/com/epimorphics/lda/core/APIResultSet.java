@@ -13,12 +13,9 @@
 package com.epimorphics.lda.core;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
