@@ -115,38 +115,6 @@ public class APIResultSet {
 
 	public StmtIterator listStatements( Resource S, Property P, RDFNode O) {
 		return model.listStatements( S, P, O );
-	}
-
-//	public void rename() {
-//		// model = rename( model );		
-//	}
-//
-//	private Model rename( Model m ) {
-//		Model renamed = ModelFactory.createDefaultModel();
-//		Graph from = m.getGraph(), to = renamed.getGraph();
-//		for (Iterator<Triple> ts = from.find( Node.ANY, Node.ANY, Node.ANY ); ts.hasNext();) to.add( rename( ts.next() ) );
-//		renamed.setNsPrefixes( m );
-//		return renamed;
-//	}
-//
-//	private Triple rename( Triple t ) {
-//		return Triple.create( rename( t.getSubject() ), rename( t.getPredicate() ), rename( t.getObject() ) );
-//	}
-//
-//	String relabel_from = "http://education.data.gov.uk/";
-//	String relabel_to = "http://localhost:8080/elda/api/education/";
-//	
-//	private Node rename( Node x ) {
-//		if (x.isURI()) {
-//			String u = x.getURI();
-//			if (u.startsWith( relabel_from )) {
-//				String uri = relabel_to + u.substring( relabel_from.length( ) );
-//				System.err.println( ">> renamed " + u + " to " + uri );
-//				return Node.createURI( uri );
-//			}
-//		}
-//		return x;
-//	}
-    
+	}    
 }
 

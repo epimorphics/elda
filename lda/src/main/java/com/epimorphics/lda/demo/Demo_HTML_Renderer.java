@@ -11,7 +11,7 @@ import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.XHV;
-import com.epimorphics.util.Couple;
+import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -28,6 +28,10 @@ public class Demo_HTML_Renderer implements Renderer {
 
 	protected final APIEndpoint endpoint;
 	protected final ShortnameService sns;
+	
+	protected static final FileManager fm = new FileManager(FileManager.get());
+	
+	{ fm.setModelCaching( true ); }
 	
     public Demo_HTML_Renderer( APIEndpoint ep, ShortnameService sns ) {
     	this.sns = sns;
@@ -47,8 +51,11 @@ public class Demo_HTML_Renderer implements Renderer {
     // Attempt to bypass the Talis unBNode hack
 	private void hackBnodes(Model m) {
 		List<RDFNode> nodes = m.listObjects().filterKeep( fakeBNode ).toList();
-		for (RDFNode n: nodes)
-			m.add( FileManager.get().loadModel( n.asNode().getURI() ) );
+		for (RDFNode n: nodes) m.add( modelFor(n) );
+	}
+
+	private Model modelFor( RDFNode n ) {
+		return fm.loadModel( n.asNode().getURI() );
 	}
 	
 	static final Filter<RDFNode> fakeBNode = new Filter<RDFNode>() 
@@ -116,33 +123,45 @@ public class Demo_HTML_Renderer implements Renderer {
 			;
 		}
 
-	Comparator<Couple<String, String>> compareStringCouple = new Comparator<Couple<String, String>>() 
+	Comparator<Triad<String, String, String>> compareStringTriad = new Comparator<Triad<String, String, String>>() 
 		{
-		@Override public int compare(Couple<String, String> x, Couple<String, String> y) 
+		@Override public int compare(Triad<String, String, String> x, Triad<String, String, String> y) 
 			{
-			int a = x.a.compareTo(y.a);
-			return a == 0 ? x.b.compareTo(y.b) : a;
+			int result = x.a.compareTo(y.a);
+			if (result == 0) result = x.b.compareTo(y.b);
+			if (result == 0) result = x.c.compareTo(y.c);
+			return result;
 			}
 		};
 	
 	public void renderResourceDetails(StringBuilder textBody, String x, Resource e) 
 		{
-		List<Couple<String, String>> props = new ArrayList<Couple<String, String>>();
+		List<Triad<String, String, String>> props = new ArrayList<Triad<String, String, String>>();
 		for (Statement s: e.listProperties().toList()) {
 		    Property p = s.getPredicate();
 		    String value = makeEntry(x, s, p, brief( s.getObject() ));
-		    props.add( new Couple<String, String>( shortProperty(p), value ) );
+		    String shortP = sns.shorten(p.getURI());
+		    String title = "click to try and get definition details for " + shortP;
+			String pd =	"<a href='" + p.getURI() + "' title='" + title + "'>" + shortP + "</a>"
+		    	;
+		    props.add( new Triad<String, String, String>( "", pd, value ) );
 		}
-		Collections.sort( props, compareStringCouple);
+		Collections.sort( props, compareStringTriad );
 	//
-		textBody.append( "<table class='zebra' style='margin-left: 2ex'>" );
+		textBody
+			.append( "<table class='zebra' style='margin-left: 2ex'>" )
+			.append( "<thead>" )
+			.append( "<tr><th width='2em'></th><th width='18%'></th><th width='78%'></th></tr>" )
+			.append( "</thead>" )
+			;
 		int count = 0;
-		for (Couple<String, String> prop : props) 
+		for (Triad<String, String, String> prop : props) 
 			{
 			count += 1;
 			textBody.append( "<tr>" )
-				.append( "<td align='right'>" ).append( prop.a ).append( "</td>" )
-				.append( "<td>" ).append( prop.b ).append( "</td>" )
+				.append( "<td>" ).append( prop.a ).append( "</td>" )
+				.append( "<td align='right'>" ).append( prop.b ).append( "</td>" )
+				.append( "<td>" ).append( prop.c ).append( "</td>" )
 				.append( "</tr>" )
 				.append( "\n" )
 				;
@@ -244,13 +263,6 @@ public class Demo_HTML_Renderer implements Renderer {
     	String link = "<a href='" + oURI + ".html'>&Delta;</a>";
     	return "<a href='" + uri + "' title='" + protect(title) + "'>" + image + "</a>" + " " + link;
     	}
-
-	private String shortProperty(Property p)
-		{
-		String u = p.getURI();
-		String s = sns.shorten(u);
-		return s + " <a href='" + u + "' title='click to try and get definition details for " + s + "'>&Delta;</a>";
-		}
 	
 	private String withArgs( String base, String args )
 		{
