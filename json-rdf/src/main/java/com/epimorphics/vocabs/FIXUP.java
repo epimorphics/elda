@@ -30,7 +30,7 @@ public class FIXUP
 	
 	public static Property namespace = property( NS, "namespace" );
 	
-	public static final Property language = property( NS, "language" );
+	public static final Property lang = property( NS, "lang" );
 
 	public static final Resource Hidden = resource( NS, "Hidden" );
 

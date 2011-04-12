@@ -80,7 +80,7 @@ public class APISpec {
         dataSource = GetDataSource.sourceFromSpec( specification );
         describeSources = extractDescribeSources( specification, dataSource );
         primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
-        defaultLanguage = getStringValue(specification, FIXUP.language, null);
+        defaultLanguage = getStringValue(specification, FIXUP.lang, null);
         base = getStringValue( specification, API.base, null );
         bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
         factoryTable = RendererFactoriesSpec.createFactoryTable( specification );

@@ -132,7 +132,7 @@ spec:typedSchools
 spec:departmentsEn
     a api:ListEndpoint;
     api:uriTemplate "http://dummy/doc/deptsEn";
-    api:language "en";
+    api:lang "en";
     api:api spec:api1;
     foaf:primaryTopic "http://education.data.gov.uk/set/schools";
     api:selector [
@@ -142,7 +142,7 @@ spec:departmentsEn
 spec:departmentsFr
     a api:ListEndpoint;
     api:uriTemplate "http://dummy/doc/deptsFr";
-    api:language "fr";
+    api:lang "fr";
     api:api spec:api1;
     foaf:primaryTopic "http://education.data.gov.uk/set/schools";
     api:selector [

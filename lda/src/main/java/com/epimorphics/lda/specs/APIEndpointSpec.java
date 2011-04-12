@@ -75,7 +75,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     	wantsContext = endpoint.hasLiteral( EXTRAS.wantsContext, true );
     	bindings.putAll( apiSpec.bindings );
         bindings.putAll( VariableExtractor.findAndBindVariables( bindings, endpoint ) );
-        defaultLanguage = getStringValue(endpoint, FIXUP.language, apiSpec.getDefaultLanguage());
+        defaultLanguage = getStringValue(endpoint, FIXUP.lang, apiSpec.getDefaultLanguage());
     	defaultPageSize = getIntValue( endpoint, API.defaultPageSize, apiSpec.defaultPageSize );
 		maxPageSize = getIntValue( endpoint, API.maxPageSize, apiSpec.maxPageSize );
 		cachePolicyName = getStringValue( endpoint, EXTRAS.cachePolicyName, "default" );

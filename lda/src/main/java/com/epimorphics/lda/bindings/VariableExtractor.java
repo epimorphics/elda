@@ -51,7 +51,7 @@ public class VariableExtractor {
 		for (Statement s: root.listProperties( FIXUP.variable ).toList()) {
 			Resource v = s.getResource();
 			String name = getStringValue( v, API.name, null );
-			String language = getStringValue( v, FIXUP.language, "" );
+			String language = getStringValue( v, FIXUP.lang, "" );
 			String type = getStringValue( v, FIXUP.type, "" );
 			Statement value = v.getProperty( FIXUP.value );
 			if (value != null && value.getObject().isLiteral())
