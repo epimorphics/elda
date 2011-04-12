@@ -80,7 +80,7 @@ public class APIEndpointImpl implements APIEndpoint {
 
 	protected boolean wantsContext = false;
     
-    public boolean wantContext() {
+    @Override public boolean wantContext() {
     	return wantsContext;
     }
 
@@ -93,7 +93,7 @@ public class APIEndpointImpl implements APIEndpoint {
     // (2) where return value is a bNode and we want automatic bNode closure.
     // Current solution get full description from endpoint and post filter
 	
-    private APIResultSet filterByView(View view, APIResultSet rs) {
+    private APIResultSet filterByView( View view, APIResultSet rs ) {
 		if (view == null) {
 			log.warn( "somehow, filterByTemplate got a null view." );
 			return rs;			
@@ -114,7 +114,7 @@ public class APIEndpointImpl implements APIEndpoint {
     /**
      * Return a metadata description for the query that would be run by this endpoint
      */
-    public Resource getMetadata(CallContext context, Model metadata) {
+    @Override public Resource getMetadata(CallContext context, Model metadata) {
         APIQuery query = spec.getBaseQuery();
         buildQueryAndView(context, query);
         metadata.setNsPrefix("api", API.getURI());
@@ -163,10 +163,10 @@ public class APIEndpointImpl implements APIEndpoint {
 	// TODO should only substitute .foo if it's a renderer or language
 	private String replaceSuffix( String key, String oldPath ) {
 		int dot_pos = oldPath.lastIndexOf( '.' ), slash_pos = oldPath.lastIndexOf( '/' );
-		if (dot_pos > -1 && dot_pos > slash_pos)
-			return oldPath.substring(0, dot_pos + 1) + key;
-		else
-			return oldPath + "." + key;
+		return dot_pos > -1 && dot_pos > slash_pos
+			? oldPath.substring(0, dot_pos + 1) + key
+			: oldPath + "." + key
+			;
 	}
 
 	private void addVersions( Model m, CallContext c, Resource thisPage ) {
@@ -264,7 +264,7 @@ public class APIEndpointImpl implements APIEndpoint {
     /**
      * Return the specification for this endpoint
      */
-    public APIEndpointSpec getSpec() {
+    @Override public APIEndpointSpec getSpec() {
         return spec;
     }
 

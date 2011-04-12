@@ -198,7 +198,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         this.itemTemplate = qb.getItemTemplate();
     }
 
-    public APIQuery clone() {
+    @Override public APIQuery clone() {
         try {
             APIQuery clone = (APIQuery) super.clone();
             clone.basicGraphTriples = new ArrayList<RDFQ.Triple>( basicGraphTriples );
@@ -405,7 +405,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
      * Record a required expansion point, i.e. a view path prop.*
      * TODO Extend to full paths instead of just single step 
      */
-    public void addExpansion(String uri) {
+    @Override public void addExpansion(String uri) {
         expansionPoints.add( ResourceFactory.createProperty(uri) );
     }
     
@@ -576,7 +576,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         }
     }
     
-    public Variable newVar() {
+    @Override public Variable newVar() {
         return RDFQ.var( PREFIX_VAR + varcount++ );
     }
 
@@ -698,7 +698,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		}
 	}
 
-	public void consumeClause( String clause ) {
+	@Override public void consumeClause( String clause ) {
     	 propertyChains.append( clause );    	
     }
     
@@ -731,11 +731,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
      * Return the select query that would be run or a plain string for the resource
      */
     public String getQueryString(APISpec spec, CallContext call) {
-        if (isFixedSubject()) {
-            return "<" + subjectResource.getURI() + ">";
-        } else {
-            return boundQuery( assembleSelectQuery(spec.getPrefixMap()), call);
-        }
+        return isFixedSubject()
+            ? "<" + subjectResource.getURI() + ">"
+            : boundQuery( assembleSelectQuery(spec.getPrefixMap()), call)
+            ;
     }
     
     /**

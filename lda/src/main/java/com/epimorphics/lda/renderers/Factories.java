@@ -15,7 +15,8 @@ public class Factories {
 	
 	protected RendererFactory theDefault; 
 	
-	public Factories() {
+	public Factories() { 
+		theDefault = null;
 	}
 
 	public Factories copy() {

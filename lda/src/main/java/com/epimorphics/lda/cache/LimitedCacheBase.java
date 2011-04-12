@@ -62,12 +62,12 @@ public abstract class LimitedCacheBase implements Cache {
         }
     }
 
-    public synchronized void clear() {
+    @Override public synchronized void clear() {
         cs.clear();
         cd.clear();
     }
 
-    public synchronized int numEntries() {
+    @Override public synchronized int numEntries() {
         return cd.size() + cs.size();
     }
 }

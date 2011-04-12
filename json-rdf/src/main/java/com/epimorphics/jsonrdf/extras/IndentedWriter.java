@@ -119,10 +119,10 @@ public class IndentedWriter
     }
 
     private void write(char ch) 
-    { try { out.write(ch) ; } catch (IOException ex) {} }
+    	{ try { out.write(ch) ; } catch (IOException ex) {} }
     
     private void write(String s) 
-    { try { out.write(s) ; } catch (IOException ex) {} }
+    	{ try { out.write(s) ; } catch (IOException ex) {} }
     
     /** Print a string N times */
     public void print(String s, int n)

@@ -133,7 +133,7 @@ public class StandardShortnameService implements ShortnameService {
     /**
      * Return a Context object suitable for driving the JSON encoding
      */
-    public Context asContext() {
+    @Override public Context asContext() {
         return context;
     }
     
@@ -214,11 +214,11 @@ public class StandardShortnameService implements ShortnameService {
      * to typing information. If the value is a variable then leave it as such.
      * @return a string suitable for embedding in a SPARQL query
      */
-    public String normalizeNodeToString(String p, String nodeValue) {
+    @Override public String normalizeNodeToString(String p, String nodeValue) {
     	return normalizeNodeToString(p, nodeValue, null);
     }
     
-    public Any normalizeNodeToRDFQ( String p, String nodeValue, String language ) {
+    @Override public Any normalizeNodeToRDFQ( String p, String nodeValue, String language ) {
         Node n = normalizeNode( p, nodeValue );
     	if (n.isURI()) return RDFQ.uri( n.getURI() );
     	if (n.isVariable()) return RDFQ.var( "?" + n.getName() );
@@ -232,7 +232,7 @@ public class StandardShortnameService implements ShortnameService {
      * to typing information. If the value is a variable then leave it as such.
      * @return a string suitable for embedding in a SPARQL query
      */
-    public String normalizeNodeToString(String p, String nodeValue, String language) {
+    @Override public String normalizeNodeToString(String p, String nodeValue, String language) {
         Node n = normalizeNode(p, nodeValue);
         if (n.isURI()) {
             return "<" + n.getURI() + ">";
@@ -252,7 +252,7 @@ public class StandardShortnameService implements ShortnameService {
      * then return as <uri> string else quote it for insertion in a query.
      * TODO Review how to add typing information to this.
      */
-    public String normalizeValue(String val) {
+    @Override public String normalizeValue(String val) {
     	return normalizeValue(val, null);
     }
     
@@ -261,7 +261,7 @@ public class StandardShortnameService implements ShortnameService {
      * then return as <uri> string else quote it for insertion in a query.
      * TODO Review how to add typing information to this.
      */
-    public String normalizeValue(String val, String language) {
+    @Override public String normalizeValue(String val, String language) {
         String uri = expand(val);
         if (uri == null) {
         	try {

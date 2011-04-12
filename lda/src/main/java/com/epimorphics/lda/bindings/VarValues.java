@@ -51,7 +51,7 @@ public class VarValues implements Lookup
 	public Value get( String name ) 
 		{ return vars.get( name ); }
 	
-	public String getStringValue( String name ) 
+	@Override public String getStringValue( String name ) 
 		{ 
 		Value v = vars.get( name );
 		return v == null ? null : v.valueString(); 
@@ -69,13 +69,13 @@ public class VarValues implements Lookup
 	public void putInto( OneToManyMap<String, Value> map ) 
 		{ map.putAll( vars ); }
 	
-	public String toString()
+	@Override public String toString()
 		{ return "<variables " + vars.toString() + ">"; }
 	
-	public boolean equals( Object other )
+	@Override public boolean equals( Object other )
 		{ return other instanceof VarValues && vars.equals( ((VarValues) other).vars ); }
 	
-	public int hashCode()
+	@Override public int hashCode()
 		{ return vars.hashCode(); }
 	
 	/**

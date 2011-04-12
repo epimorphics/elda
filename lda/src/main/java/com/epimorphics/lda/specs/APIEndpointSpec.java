@@ -269,7 +269,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     /**
      * The default language for encoding plain literals (null if no default).
      */
-    public String getDefaultLanguage() {
+    @Override public String getDefaultLanguage() {
     	return defaultLanguage;
     }
 
@@ -284,21 +284,21 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     /**
      * Printable summary for debugging
      */
-    public String toString() {
+    @Override public String toString() {
         return "[Endpoint " + getURITemplate() + " on API " + this.apiSpec.specificationURI + "]";
     }
 
     /**
      * Return the view template definition for the given named view
      */
-    public View getView(String viewname) {
+    @Override public View getView(String viewname) {
         return views.get(viewname);
     }
 
     /**
      * Return the default view template definition, if any
      */
-    public View getDefaultView() {
+    @Override public View getDefaultView() {
         return views.get( View.SHOW_DEFAULT_INTERNAL );
     }
 
@@ -306,7 +306,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 		return bindings;
 	}
 
-	public String getItemTemplate() {
+	@Override public String getItemTemplate() {
 		return itemTemplate;
 	}
 	

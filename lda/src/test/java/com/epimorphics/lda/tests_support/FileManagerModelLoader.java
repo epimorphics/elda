@@ -22,7 +22,7 @@ public final class FileManagerModelLoader implements ModelLoaderI {
 	    Load the model named by the uri using the FileManager's global
 	    instance.
 	*/
-	public Model loadModel( String uri ) {
+	@Override public Model loadModel( String uri ) {
 	    return FileManager.get().loadModel(uri);
 	}
 }

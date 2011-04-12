@@ -127,7 +127,7 @@ public class CombinedSource extends SourceBase implements Source
     /**
      * Add metdata describing this source to a metdata model 
      */
-    public void addMetadata(Resource meta) {
+    @Override public void addMetadata(Resource meta) {
         meta.addProperty(API.sparqlEndpoint, "a combined source");
     }
 

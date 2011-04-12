@@ -80,7 +80,7 @@ public class CallContext implements Lookup {
      * Return a single value for a parameter, if there are multiple values
      * the returned one may be arbitrary
      */
-    public String getStringValue( String param ) {
+    @Override public String getStringValue( String param ) {
         Value v = parameters.get( param );
 		return v == null ? uriInfo.getQueryParameters().getFirst( param ) : v.valueString();
     }
@@ -92,7 +92,7 @@ public class CallContext implements Lookup {
         return uriInfo;
     }
     
-    public String toString() {
+    @Override public String toString() {
         return parameters.toString();
     }
     

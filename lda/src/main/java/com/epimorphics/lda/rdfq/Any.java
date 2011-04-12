@@ -16,10 +16,10 @@ public abstract class Any implements RenderExpression
 	@Override public boolean equals( Object other )
 		{ throw new UnsupportedOperationException(); }
 	
-	public StringBuilder render( StringBuilder out )
+	@Override public StringBuilder render( StringBuilder out )
 		{ return out.append( asSparqlTerm() ); }
 	
-	public StringBuilder renderWrapped( StringBuilder out )
+	@Override public StringBuilder renderWrapped( StringBuilder out )
 		{ return render( out.append( "(" ) ).append( ")" ); }
 	
 	public abstract String asSparqlTerm();

@@ -99,7 +99,7 @@ public class APIResultSet {
      * Return a new result set with this one as its initial content 
      * but where additions to this model do not affect the source
      */
-    public APIResultSet clone() {
+    @Override public APIResultSet clone() {
         // Dynamic cloning should be a lot better but strangely in fails
         // Perhaps there is a delete going on somewhere that I've missed
 //        Graph additions = ModelFactory.createDefaultModel().getGraph();

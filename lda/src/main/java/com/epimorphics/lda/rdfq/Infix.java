@@ -16,7 +16,7 @@ public class Infix implements RenderExpression
 	public Infix( RenderExpression L, String op, RenderExpression R )
 		{ this.L = L; this.op = op; this.R = R; }
 	
-	public StringBuilder render( StringBuilder out ) 
+	@Override public StringBuilder render( StringBuilder out ) 
 		{
 		L.renderWrapped( out );
 		out.append( " " ).append( op ).append( " " );

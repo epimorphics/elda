@@ -31,7 +31,7 @@ public class RendererContext implements Lookup {
 	public RendererContext( VarValues v, final ServletContext sc ) {
 		this.v = v;
 		this.s = new AsURL() 
-			{public URL asResourceURL( String p ) 
+			{@Override public URL asResourceURL( String p ) 
 				{ try {
 					URL result = sc.getResource( p );
 					if (result == null) throw new RuntimeException( "could not find webapp resource " + p );
@@ -47,7 +47,7 @@ public class RendererContext implements Lookup {
 		this.v = v;
 		this.contextPath = "";
 		this.s = new AsURL() 
-			{public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
+			{@Override public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
 	}
 	
 	interface AsURL {
@@ -58,14 +58,14 @@ public class RendererContext implements Lookup {
 		this.v = new VarValues();
 		this.contextPath = "";
 		this.s = new AsURL() 
-			{public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
+			{@Override public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
 	}
 	
 	public String getAsString( String key, String ifAbsent ) {
 		return v.getAsString( key, ifAbsent );
 	}
 
-	public String getStringValue( String key ) {
+	@Override public String getStringValue( String key ) {
 		return v.getStringValue( key );
 	}
 

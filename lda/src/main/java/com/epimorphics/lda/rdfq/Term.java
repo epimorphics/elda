@@ -14,6 +14,6 @@ public abstract class Term extends Any
 	
 	public abstract String spelling();
 	
-	public StringBuilder renderWrapped( StringBuilder out )
+	@Override public StringBuilder renderWrapped( StringBuilder out )
 		{ return out.append( asSparqlTerm() ); }
 	}

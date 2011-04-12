@@ -37,7 +37,7 @@ public class JSStreamingWriter {
     public JSStreamingWriter(OutputStream ps) { this(new IndentedWriter(ps)) ; }
     public JSStreamingWriter(IndentedWriter ps) { out = ps ; }
     
-    public void startOutput() {}
+    public void startOutput() { /* */ }
     public void finishOutput() { out.flush(); } 
     
     // Remember whether we are in the first element of a compound (object or array). 

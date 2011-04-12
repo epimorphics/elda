@@ -41,10 +41,10 @@ public class Value
 	public Value withValueString( String vs ) 
 		{ return new Value( vs, language, type ); }
 	
-	public String toString()
+	@Override public String toString()
 		{ return "<value lang: " + language + " type: " + type + " value: " + valueString + ">"; }
 	
-	public boolean equals( Object other ) 
+	@Override public boolean equals( Object other ) 
 		{ return other instanceof Value && same( (Value) other );	}
 	
 	private boolean same( Value other ) 
@@ -58,6 +58,6 @@ public class Value
 	private boolean equals( String a, String b ) 
 		{ return a == null ? b == null : a.equals( b ); }
 	
-	public int hashCode()
+	@Override public int hashCode()
 		{ return valueString.hashCode() + language.hashCode() + type.hashCode(); }
 	}

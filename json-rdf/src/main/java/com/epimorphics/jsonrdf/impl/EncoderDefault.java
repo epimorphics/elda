@@ -369,11 +369,11 @@ public class EncoderDefault implements EncoderPlugin {
 	private RDFNode decodeNumber( JsonNumber jn ) {
 		BigDecimal bd = (BigDecimal) jn.value();
 		try { return ResourceFactory.createTypedLiteral( bd.intValueExact() ); }
-		catch (ArithmeticException e) {}
+		catch (ArithmeticException e) { /* fall through on exception */ }
 		try { return ResourceFactory.createTypedLiteral( bd.longValueExact() ); }
-		catch (ArithmeticException e) {}
+		catch (ArithmeticException e) { /* fall through on exception */ }
 		try { return ResourceFactory.createTypedLiteral( bd.doubleValue() ); }
-		catch (ArithmeticException e) {}
+		catch (ArithmeticException e) { /* fall through on exception */ }
 		return ResourceFactory.createTypedLiteral( bd );
 	}
 

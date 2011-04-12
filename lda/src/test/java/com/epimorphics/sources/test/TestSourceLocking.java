@@ -40,7 +40,7 @@ public class TestSourceLocking {
 		
 		final Model model = ModelFactory.createDefaultModel();
 		
-		@Override public void addMetadata( Resource meta ) {			
+		@Override public void addMetadata( Resource meta ) {
 		}
 
 		@Override public QueryExecution execute( Query q ) {

@@ -10,7 +10,7 @@ package com.epimorphics.lda.cache;
 public class PermaController extends ControllerBase implements Cache.Controller {
 
 	private static final class Factory implements CacheNewer {
-		public Cache New( String label, String policyValue ) { 
+		@Override public Cache New( String label, String policyValue ) { 
 			return new PermaCache( label ); }
 	}
 

@@ -35,7 +35,7 @@ public interface Source {
     /**
         Return a name for this source, used for error reporting
     */
-    public String toString();
+    @Override public String toString();
     
     /**
         Add metdata describing this source to a metdata model 

@@ -82,7 +82,7 @@ public class Loader extends HttpServlet {
     	return contextPath;
     }
 
-    public void init() {
+    @Override public void init() {
     	baseFilePath = withTrailingSlash( getServletContext().getRealPath("/") );
     	configureLog4J();
         log.info( "baseFilePath: " + baseFilePath );

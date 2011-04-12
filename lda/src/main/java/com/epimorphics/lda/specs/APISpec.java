@@ -174,7 +174,7 @@ public class APISpec {
     /**
      * Printable representation for debugging
      */
-    public String toString() {
+    @Override public String toString() {
         return "API-" + specificationURI;
     }
     
