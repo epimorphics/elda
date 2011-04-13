@@ -220,10 +220,17 @@ public class StandardShortnameService implements ShortnameService {
     
     @Override public Any normalizeNodeToRDFQ( String p, String nodeValue, String language ) {
         Node n = normalizeNode( p, nodeValue );
-    	if (n.isURI()) return RDFQ.uri( n.getURI() );
-    	if (n.isVariable()) return RDFQ.var( "?" + n.getName() );
-    	if (n.isLiteral()) return RDFQ.literal
-    		( n.getLiteralLexicalForm(), language, n.getLiteralDatatypeURI() );
+    	if (n.isURI()) 
+    		return RDFQ.uri( n.getURI() );
+    	if (n.isVariable()) 
+    		return RDFQ.var( "?" + n.getName() );
+    	if (n.isLiteral()) 
+    		{
+    		// if there's a type, the language (which was a default) is unnecessary.
+    		String type = n.getLiteralDatatypeURI();
+    		String form = n.getLiteralLexicalForm();
+    		return RDFQ.literal( form, (type == null ? language : ""), type );
+    		}	
     	throw new IllegalArgumentException( "cannot normalise: " + n.toString() );
     }
     

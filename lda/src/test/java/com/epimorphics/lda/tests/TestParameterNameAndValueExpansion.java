@@ -75,7 +75,7 @@ public class TestParameterNameAndValueExpansion
 			( "ex:A school-ont:localAuthority ex:LA-1"
 			+ "; ex:LA-1 ex:number 17"					
 			);
-		ModelLoaderI loader = new LoadsNothing();
+		ModelLoaderI loader = LoadsNothing.instance;
 		APITester t = new APITester( model, loader );
 		String uriTemplate = "http://dummy/doc/schools";
 		String queryString = "_properties=type,localAuthority.number";

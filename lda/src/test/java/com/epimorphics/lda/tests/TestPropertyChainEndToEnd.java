@@ -66,7 +66,7 @@ public class TestPropertyChainEndToEnd
 			( "ex:A school-ont:localAuthority ex:LA-1"
 			+ "; ex:LA-1 ex:number 17"					
 			);
-		ModelLoaderI loader = new LoadsNothing();
+		ModelLoaderI loader = LoadsNothing.instance;
 		APITester t = new APITester( model, loader );
 		String uriTemplate = "http://dummy/doc/schools";
 		String queryString = "_properties=type,localAuthority.number";
@@ -109,7 +109,7 @@ public class TestPropertyChainEndToEnd
 			( "ex:A school-ont:localAuthority ex:LA-1"
 			+ "; ex:LA-1 ex:number 17"					
 			);
-		ModelLoaderI loader = new LoadsNothing();
+		ModelLoaderI loader = LoadsNothing.instance;
 		APITester t = new APITester( model, loader );
 		String uriTemplate = "http://dummy/doc/schools";
 		APIResultSet rs = t.runQuery( uriTemplate, "" );
@@ -136,7 +136,7 @@ public class TestPropertyChainEndToEnd
 			+ ""
 			);
 		Resource spec = model.createResource( model.expandPrefix( "spec:spoo" ) );
-		ModelLoaderI loader = new LoadsNothing();
+		ModelLoaderI loader = LoadsNothing.instance;
 		PrefixMapping prefixes = PrefixMapping.Factory.create();
 		ShortnameService sns = new StandardShortnameService( spec, prefixes, loader );
 		APIQuery q = new APIQuery( sns );

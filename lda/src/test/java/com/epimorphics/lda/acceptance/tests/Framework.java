@@ -194,7 +194,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		FileManager.get().getLocationMapper().addAltEntry( "CURRENT-TEST", w.pathToData );
 		Model specModel = w.specModel;
 		Resource root = specModel.createResource( specModel.expandPrefix( ":root" ) );
-		APISpec s = new APISpec( root, new LoadsNothing() );
+		APISpec s = new APISpec( root, LoadsNothing.instance );
 		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) );        
         MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( w.queryParams );
 		UriInfo ui = new APITesterUriInfo( w.path, map );

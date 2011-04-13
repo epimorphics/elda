@@ -23,6 +23,8 @@ import com.hp.hpl.jena.shared.NotFoundException;
 */
 public class LoadsNothing implements ModelLoaderI
 	{
+	public static final LoadsNothing instance = new LoadsNothing();
+	
 	@Override public Model loadModel(String uri) 
 		{
 		throw new NotFoundException( uri );

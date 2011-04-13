@@ -26,6 +26,11 @@ public class LiteralNode extends Term
 		this.datatype = datatype == null ? "" : datatype; 
 		}
 	
+	public String toString() 
+		{
+		return "{" + spelling + "|" + language + "|" + datatype + "}";
+		}
+	
 	@Override public String asSparqlTerm()
 		{ 
 		String lf = "\"" + spelling.replaceAll( "\\\\", "\\\\" ) + "\"";
