@@ -39,7 +39,13 @@ public class Scratch_URI_Templates {
 			this.literals = literals;
 			this.compiled = compiled;
 		}
-		
+	
+		public int compareTo( UT other ) {
+			int result = literals - other.literals;
+			if (result == 0) result = slashes - other.slashes;
+			return result;
+		}
+
 		public boolean match( Map<String, String> bindings, String uri ) {
 			Matcher mu = compiled.matcher( uri );
 			if (mu.matches()) {
