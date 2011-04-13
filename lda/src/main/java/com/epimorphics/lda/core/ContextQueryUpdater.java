@@ -95,6 +95,8 @@ public class ContextQueryUpdater {
 			// Nothing to do -- done on previous pass 
 		} else if (p.is( _FORMAT )) {
 			requestedFormat = val;
+		} else if (p.is("_lang")) {
+			query.setDefaultLanguage( val );
 		} else if (p.is(APIQuery.TEMPLATE_PARAM)) {
 			setViewByProperties(val);
 		} else if (p.is(APIQuery.SHOW_PARAM)) {

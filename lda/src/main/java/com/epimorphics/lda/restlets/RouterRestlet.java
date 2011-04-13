@@ -57,7 +57,7 @@ import com.sun.jersey.api.uri.UriTemplate;
  * 
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
- */
+*/
 @Path("{path: .*}") public class RouterRestlet {
 
     static Logger log = LoggerFactory.getLogger(RouterRestlet.class);

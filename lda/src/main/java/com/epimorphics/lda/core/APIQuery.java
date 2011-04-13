@@ -304,6 +304,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     private Map<String, String> languagesFor = new HashMap<String, String>();
         
+    public void setDefaultLanguage( String defaults ) {
+    	defaultLanguage = defaults;
+    	}
+    
     public void clearLanguages() {
     	languagesFor.clear();
     }
