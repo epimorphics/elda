@@ -27,11 +27,16 @@ public class Scratch_URI_Templates {
 	}
 
 	static class UT {
+		
 		private final Pattern compiled;
 		private final List<Couple<String, Integer>> where;
+		private final int literals;
+		private final int slashes;
 		
-		private UT( Pattern compiled, List<Couple<String, Integer>> where ) {
+		private UT( int literals, int slashes, Pattern compiled, List<Couple<String, Integer>> where ) {
 			this.where = where;
+			this.slashes = slashes;
+			this.literals = literals;
 			this.compiled = compiled;
 		}
 		
@@ -53,19 +58,25 @@ public class Scratch_URI_Templates {
 			Matcher m = p.matcher( template );
 			int start = 0;
 			int index = 0;
+			int literals = 0;
+			int slashes = 0;
 			List<Couple<String, Integer>> where = new ArrayList<Couple<String, Integer>>();
 			StringBuilder sb = new StringBuilder();
 			while (m.find(start)) {
 				index += 1;
 				String name = m.group(1);
 				where.add( new Couple<String, Integer>( name, index ) );
-				sb.append( template.substring( start, m.start() ) );
+				String literal = template.substring( start, m.start() );
+				literals += literal.length();
+				sb.append( literal );
 				sb.append( "([^/]+)" );
 				start = m.end();
 			}
-			sb.append( template.substring( start ) );
+			String literal = template.substring( start );
+			sb.append( literal );
+			literals += literal.length();
 			Pattern compiled = Pattern.compile( sb.toString() );
-			return new UT( compiled, where );
+			return new UT( literals, slashes, compiled, where );
 		}
 	}
 	
