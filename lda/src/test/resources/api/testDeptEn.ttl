@@ -76,7 +76,7 @@ ex:dept3
 
 ex:dept1
       a       school-ont:Department ;
-      ex:name "département"@fr , "department"@en .
+      ex:name "department"@en .
 
 <http://dummy/doc/deptsEn?_view=description>
       rdfs:label "description" ;

@@ -15,6 +15,7 @@ package com.epimorphics.lda.core;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.epimorphics.lda.support.LanguageFilter;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -86,16 +87,18 @@ public class APIResultSet {
      * Generate and return a new copy of the model filtered to only include
      * statements reachable from the results via allowed properties in the given set.
      * Will not include any root resource, need to create page information after filtering.
+     * @param string 
      */
-    public APIResultSet getFilteredSet( View t ) {
+    public APIResultSet getFilteredSet( View t, String languages ) {
     	Model m = t.applyTo( model, results );
+    	if (languages != null) LanguageFilter.filterByLanguages( m, languages.split(",") );
         m.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
         for (Resource r : results) mappedResults.add( r.inModel(m) );
         return new APIResultSet( m.getGraph(), mappedResults, isCompleted );
     }
-    
-    /**
+
+	/**
      * Return a new result set with this one as its initial content 
      * but where additions to this model do not affect the source
      */

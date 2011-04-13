@@ -100,7 +100,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		}
 		else {			
 			log.debug("Applying view: " + view.toString());
-			return rs.getFilteredSet( view );
+			return rs.getFilteredSet( view, spec.getDefaultLanguage() );
 		}
 	}
 

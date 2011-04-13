@@ -19,7 +19,7 @@
     , {"_about" : "http://dummy/doc/deptsEn?_view=description", "isVersionOf" : "http://dummy/doc/deptsEn?_page=0", "label" : "description"}
     ], "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "first" : "http://dummy/doc/deptsEn?_page=0", "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#dept3", "name" : "department", "type" : "http://education.data.gov.uk/def/school/Department"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#dept2", "name" : "department", "type" : "http://education.data.gov.uk/def/school/Department"}
-    , {"_about" : "http://www.epimorphics.com/examples/eg1#dept1", "name" : ["department", "département"], "type" : "http://education.data.gov.uk/def/school/Department"}
+    , {"_about" : "http://www.epimorphics.com/examples/eg1#dept1", "name" : "department", "type" : "http://education.data.gov.uk/def/school/Department"}
     ], "isPartOf" : {"_about" : "http://dummy/doc/deptsEn", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/deptsEn?_page=0"}
     , "startIndex" : 1}
   ], "context" : {"mapping" : {"school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
