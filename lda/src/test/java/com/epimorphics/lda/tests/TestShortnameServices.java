@@ -24,7 +24,6 @@ import com.epimorphics.lda.tests_support.ExpandOnly;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.datatypes.xsd.impl.XSDFloat;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
