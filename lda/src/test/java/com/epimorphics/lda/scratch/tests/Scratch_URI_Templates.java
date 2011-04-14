@@ -2,7 +2,9 @@ package com.epimorphics.lda.scratch.tests;
 
 import static org.junit.Assert.*;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.tests_support.MakeData;
+import com.epimorphics.lda.tests_support.NotImplementedException;
 import com.epimorphics.util.Couple;
 
 public class Scratch_URI_Templates {
@@ -24,7 +27,109 @@ public class Scratch_URI_Templates {
 		assertTrue( UT.prepare(path).match(null, path) );
 	}
 	
-	@Test @Ignore public void path_thinking() {
+	@Test public void search_thinking() {
+		String path1 = "/foo/bar/baz", path2 = "/foo/bill/ben", path3 = "/other/thing";
+		Table t = new Table();
+		t.add(path1, "A" );
+		t.add(path2, "B" );
+		t.add(path3, "C" );
+	//
+		t.printOn( System.out );
+	//
+		assertEquals( "A", t.lookup( path1 ) );
+		assertEquals( "B", t.lookup( path2 ) );
+		assertEquals( "C", t.lookup( path3 ) );
+	}
+	
+	static class Table {
+
+		State initial = new State();
+		
+		public void add( String path, String result ) {
+			initial.add( Arrays.asList( path.split("/") ), result );
+		}
+		
+		public void printOn( PrintStream out ) {
+			initial.printOn( out );
+			out.println();
+		}
+		
+		static class State {
+			
+			final Map<String, State> followers = new HashMap<String, State>();
+			String result = null;
+			
+			public void printOn( PrintStream out ) {
+				out.print( "(" );
+				String pre = "";
+				for (Map.Entry<String, State> e: followers.entrySet()) {
+					out.print( pre ); pre = "; ";
+					out.print( e.getKey() );
+					out.print( " => " );
+					e.getValue().printOn( out );
+				}
+				if (result == null) {
+					out.print( " [...] " );
+				} else {
+					out.print( " | " );
+					out.print( result );
+				}
+				out.print( ")" );
+			}
+			
+			public boolean hasPattern() {
+				return false;
+			}
+			
+			public void add( List<String> segments, String result ) {
+				if (segments.isEmpty()) {
+					if (this.result == null) this.result = result;
+					else throw new RuntimeException( "already have result: " + this.result + ", now given " + result );
+				} else {
+					String seg = segments.get(0);
+					if (!followers.containsKey(seg)) followers.put(seg, new State() );
+					followers.get(seg).add( segments.subList(1, segments.size() ), result );
+				}
+			}
+
+			public boolean hasSegment(String s) {
+				return followers.containsKey( s );
+			}
+			
+			public State next( String s ) {
+				return followers.get(s);
+			}
+			
+			public boolean completed() {
+				return result != null;
+			}
+			
+			public String result() {
+				return result;
+			}
+		}
+		
+		public String lookup( String path ) {
+			State s = initial;
+			String [] segments = path.split( "/" );
+			for (String segment: segments) {
+				if (s.hasPattern()) {
+					throw new NotImplementedException();
+				} else {
+					if (s.hasSegment(segment)) {
+						s = s.next(segment);
+					} else {
+						return null;
+					}
+				}
+			}
+			if (s.completed()) return s.result();
+			return null;
+		}
+		
+	}
+	
+	@Test public void path_thinking() {
 		String path1 = "/abc/def", path2 = "/abc/{xyz}", path3 = "/other", path4 = "/abc/{x}{y}{z}";
 		Router r = new Router();
 		r.add(path3); 
@@ -48,13 +153,13 @@ public class Scratch_URI_Templates {
 			List<UT> uts = new ArrayList<UT>(paths.size());
 			for (String p: paths) uts.add( UT.prepare( p ) );
 		//
-			System.err.println( ">> before sorting: " );
-			for (UT u: uts) System.err.println( ">>  " + u.template() );
+//			System.err.println( ">> before sorting: " );
+//			for (UT u: uts) System.err.println( ">>  " + u.template() );
 		//
 			Collections.sort( uts, UT.compare );			
 		//
-			System.err.println( ">> after sorting: " );
-			for (UT u: uts) System.err.println( ">>  " + u.template() );
+//			System.err.println( ">> after sorting: " );
+//			for (UT u: uts) System.err.println( ">>  " + u.template() );
 		//
 			Map<String, String> bindings = new HashMap<String, String>();
 			for (UT u: uts) {
@@ -93,8 +198,8 @@ public class Scratch_URI_Templates {
 		}
 	
 		public int compareTo( UT other ) {
-			int result = literals - other.literals;
-			if (result == 0) result = slashes - other.slashes;
+			int result = other.literals - literals;
+			if (result == 0) result = other.slashes - slashes;
 			return result;
 		}
 		
