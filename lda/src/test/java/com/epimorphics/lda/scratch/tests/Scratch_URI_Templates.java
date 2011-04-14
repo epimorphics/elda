@@ -21,7 +21,7 @@ public class Scratch_URI_Templates {
 
 	@Test public void probe() {
 		String path = "/abd/def";
-		assertTrue( MatchTemplate.prepare(path).match(null, path) );
+		assertTrue( MatchTemplate.prepare(path, "value").match(null, path) );
 	}
 	
 	@Test public void search_thinking() {
@@ -128,27 +128,27 @@ public class Scratch_URI_Templates {
 	
 	@Test public void path_thinking() {
 		String path1 = "/abc/def", path2 = "/abc/{xyz}", path3 = "/other", path4 = "/abc/{x}{y}{z}";
-		Router r = new Router();
-		r.add(path3); 
-		r.add(path4);
-		r.add(path2); 
-		r.add(path1); 
+		Router<String> r = new Router<String>();
+		r.add(path3, "A" ); 
+		r.add(path4, "B" );
+		r.add(path2, "C" ); 
+		r.add(path1, "D" ); 
 		assertEquals(path1, r.lookup("/abc/def") );
 		assertEquals(path2, r.lookup("/abc/27" ) );
 		assertEquals(path3, r.lookup("/other" ) );
 	}
 	
-	static class Router {
+	public static class Router<T> {
 
 		List<String> paths = new ArrayList<String>();
 		
-		public void add(String path) {
-			paths.add(path);
+		public void add( String path, T result ) {
+			paths.add( path );
 		}
 		
 		public String lookup(String path) {
-			List<MatchTemplate> uts = new ArrayList<MatchTemplate>(paths.size());
-			for (String p: paths) uts.add( MatchTemplate.prepare( p ) );
+			List<MatchTemplate<String>> uts = new ArrayList<MatchTemplate<String>>(paths.size());
+			for (String p: paths) uts.add( MatchTemplate.prepare( p, p ) );
 		//
 //			System.err.println( ">> before sorting: " );
 //			for (UT u: uts) System.err.println( ">>  " + u.template() );
@@ -159,9 +159,9 @@ public class Scratch_URI_Templates {
 //			for (UT u: uts) System.err.println( ">>  " + u.template() );
 		//
 			Map<String, String> bindings = new HashMap<String, String>();
-			for (MatchTemplate u: uts) {
+			for (MatchTemplate<String> u: uts) {
 				if (u.match(bindings, path)) {
-					return u.template();
+					return u.value();
 				}
 			}
 			return null;
@@ -173,7 +173,7 @@ public class Scratch_URI_Templates {
 		String uri = "/furber/any-99-100/boggle";
 		Map<String, String> map = new HashMap<String, String>();
 		Map<String, String> expected = MakeData.hashMap( "alpha=99 beta=100 gamma=boggle" );
-		MatchTemplate ut = MatchTemplate.prepare( template );
+		MatchTemplate<String> ut = MatchTemplate.prepare( template, "SPOO" );
 		assertTrue( "the uri should match the pattern", ut.match(map, uri ) );
 		assertEquals( expected, map );
 	}

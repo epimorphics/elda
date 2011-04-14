@@ -18,16 +18,18 @@ import com.epimorphics.util.Couple;
      
  	@author chris
 */
-public class MatchTemplate {
+public class MatchTemplate<T> {
 	
 	private final String template;
 	private final Pattern compiled;
 	private final List<Couple<String, Integer>> where;
 	private final int literals;
 	private final int slashes;
+	private final T value;
 	
-	private MatchTemplate( int literals, int slashes, String template, Pattern compiled, List<Couple<String, Integer>> where ) {
+	private MatchTemplate( int literals, int slashes, String template, Pattern compiled, List<Couple<String, Integer>> where, T value ) {
 		this.where = where;
+		this.value = value;
 		this.slashes = slashes;
 		this.literals = literals;
 		this.compiled = compiled;
@@ -40,7 +42,7 @@ public class MatchTemplate {
 	    of literals, the one with the fewer number of path segments --
 	    well, slashes actually -- is the lesser.
 	*/
-	public int compareTo( MatchTemplate other ) {
+	public int compareTo( MatchTemplate<?> other ) {
 		int result = other.literals - literals;
 		if (result == 0) result = other.slashes - slashes;
 		return result;
@@ -49,8 +51,8 @@ public class MatchTemplate {
 	/**
 	    A MatchTemplate comparator for use in sorting.
 	*/
-	public static Comparator<MatchTemplate> compare = new Comparator<MatchTemplate>() {
-		@Override public int compare( MatchTemplate a, MatchTemplate b ) {
+	public static Comparator<MatchTemplate<?>> compare = new Comparator<MatchTemplate<?>>() {
+		@Override public int compare( MatchTemplate<?> a, MatchTemplate<?> b ) {
 			return a.compareTo( b );
 		}
 	};
@@ -61,6 +63,13 @@ public class MatchTemplate {
 	*/
 	public String template() {
 		return template;
+	}
+	
+	/**
+	    Answer the associated value for this template.
+	*/
+	public T value() {
+		return value;
 	}
 
 	/**
@@ -85,7 +94,7 @@ public class MatchTemplate {
 	/**
 	    Answer a MatchTemplate corresponding to the template string.
 	*/
-	public static MatchTemplate prepare( String template ) {
+	public static <T> MatchTemplate<T> prepare( String template, T value ) {
 		Matcher m = varPattern.matcher( template );
 		int start = 0;
 		int index = 0;
@@ -107,6 +116,6 @@ public class MatchTemplate {
 		sb.append( literal );
 		literals += literal.length();
 		Pattern compiled = Pattern.compile( sb.toString() );
-		return new MatchTemplate( literals, slashes, template, compiled, where );
+		return new MatchTemplate<T>( literals, slashes, template, compiled, where, value );
 	}
 }
