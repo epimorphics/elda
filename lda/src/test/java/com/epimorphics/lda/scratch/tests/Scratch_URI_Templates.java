@@ -128,41 +128,29 @@ public class Scratch_URI_Templates {
 	
 	@Test public void path_thinking() {
 		String path1 = "/abc/def", path2 = "/abc/{xyz}", path3 = "/other", path4 = "/abc/{x}{y}{z}";
-		Router<String> r = new Router<String>();
+		MatchSearcher<String> r = new MatchSearcher<String>();
 		r.add(path3, "A" ); 
 		r.add(path4, "B" );
 		r.add(path2, "C" ); 
 		r.add(path1, "D" ); 
-		assertEquals(path1, r.lookup("/abc/def") );
-		assertEquals(path2, r.lookup("/abc/27" ) );
-		assertEquals(path3, r.lookup("/other" ) );
+		assertEquals("D", r.lookup("/abc/def") );
+		assertEquals("C", r.lookup("/abc/27" ) );
+		assertEquals("A", r.lookup("/other" ) );
 	}
 	
-	public static class Router<T> {
-
-		List<String> paths = new ArrayList<String>();
+	public static class MatchSearcher<T> {
+		
+		List<MatchTemplate<T>> templates = new ArrayList<MatchTemplate<T>>();
 		
 		public void add( String path, T result ) {
-			paths.add( path );
+			templates.add( MatchTemplate.prepare( path, result ) );
 		}
 		
-		public String lookup(String path) {
-			List<MatchTemplate<String>> uts = new ArrayList<MatchTemplate<String>>(paths.size());
-			for (String p: paths) uts.add( MatchTemplate.prepare( p, p ) );
-		//
-//			System.err.println( ">> before sorting: " );
-//			for (UT u: uts) System.err.println( ">>  " + u.template() );
-		//
-			Collections.sort( uts, MatchTemplate.compare );			
-		//
-//			System.err.println( ">> after sorting: " );
-//			for (UT u: uts) System.err.println( ">>  " + u.template() );
-		//
+		public T lookup(String path) {
+			Collections.sort( templates, MatchTemplate.compare );			
 			Map<String, String> bindings = new HashMap<String, String>();
-			for (MatchTemplate<String> u: uts) {
-				if (u.match(bindings, path)) {
-					return u.value();
-				}
+			for (MatchTemplate<T> t: templates) {
+				if (t.match(bindings, path)) return t.value();
 			}
 			return null;
 		}
