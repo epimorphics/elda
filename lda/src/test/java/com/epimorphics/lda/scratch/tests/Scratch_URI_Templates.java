@@ -16,7 +16,40 @@ import com.epimorphics.util.Couple;
 
 public class Scratch_URI_Templates {
 
-	@Test public void thinking() {
+	@Test public void probe() {
+		String path = "/abd/def";
+		assertTrue( UT.prepare(path).match(null, path) );
+	}
+	
+	@Test public void path_thinking() {
+		String path1 = "/abc/def", path2 = "/abc/{xyz}", path3 = "/other";
+		Router r = new Router();
+		r.add(path1); r.add(path2); r.add(path3);
+		assertEquals(path1, r.lookup("/abc/def") );
+		assertEquals(path2, r.lookup("/abc/27" ) );
+		assertEquals(path3, r.lookup("/other" ) );
+	}
+	
+	static class Router {
+
+		List<String> paths = new ArrayList<String>();
+		
+		public void add(String path) {
+			paths.add(path);
+		}
+		
+		public String lookup(String path) {
+			Map<String, String> bindings = new HashMap<String, String>();
+			for (String candidate: paths) {
+				if (UT.prepare(candidate).match(bindings, path)) {
+					return candidate;
+				}
+			}
+			return null;
+		}
+	}
+	
+	@Test public void pattern_thinking() {
 		String template = "/furber/any-{alpha}-{beta}/{gamma}";
 		String uri = "/furber/any-99-100/boggle";
 		Map<String, String> map = new HashMap<String, String>();
@@ -58,10 +91,10 @@ public class Scratch_URI_Templates {
 			}
 		}
 		
-		static final Pattern p = Pattern.compile( "\\{([a-zA-Z]*)\\}" );
+		static final Pattern varPattern = Pattern.compile( "\\{([a-zA-Z]*)\\}" );
 		
 		static UT prepare( String template ) {
-			Matcher m = p.matcher( template );
+			Matcher m = varPattern.matcher( template );
 			int start = 0;
 			int index = 0;
 			int literals = 0;
