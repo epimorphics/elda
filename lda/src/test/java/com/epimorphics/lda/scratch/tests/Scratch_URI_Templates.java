@@ -1,11 +1,17 @@
+/*
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011 Epimorphics Limited
+    $Id$
+*/
+
 package com.epimorphics.lda.scratch.tests;
 
 import static org.junit.Assert.*;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +19,7 @@ import java.util.Map;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.routing.MatchTemplate;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.tests_support.NotImplementedException;
@@ -139,28 +146,14 @@ public class Scratch_URI_Templates {
 		assertEquals("A", r.lookup(b, "/other" ) );
 	}
 	
-	public static class MatchSearcher<T> {
-		
-		List<MatchTemplate<T>> templates = new ArrayList<MatchTemplate<T>>();
-		boolean needsSorting = false;
-		
-		public void add( String path, T result ) {
-			templates.add( MatchTemplate.prepare( path, result ) );
-			needsSorting = true;
-		}
-		
-		public T lookup( Map<String, String> bindings, String path ) {
-			if (needsSorting) sortTemplates();	
-			for (MatchTemplate<T> t: templates) {
-				if (t.match(bindings, path)) return t.value();
-			}
-			return null;
-		}
-
-		private void sortTemplates() {
-			Collections.sort( templates, MatchTemplate.compare );
-			needsSorting = false;
-		}
+	@Test public void remove() {		
+		Map<String, String> b = new HashMap<String, String>();
+		MatchSearcher<String> r = new MatchSearcher<String>();
+		String path = "/going/away/";
+		r.add( path, "GA" );
+		assertEquals( "GA", r.lookup( b, path ) );
+		r.remove( path );
+		assertEquals( null, r.lookup( b, path ) );
 	}
 	
 	@Test public void pattern_thinking() {

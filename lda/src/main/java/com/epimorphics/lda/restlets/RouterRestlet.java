@@ -45,13 +45,12 @@ import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
-import com.epimorphics.lda.scratch.tests.Scratch_URI_Templates.MatchSearcher;
+import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaTypes;
 import com.hp.hpl.jena.shared.NotFoundException;
-import com.sun.jersey.api.uri.UriTemplate;
 
 /**
  * Handles all incoming API calls and routes to appropriate locations.
@@ -91,17 +90,12 @@ import com.sun.jersey.api.uri.UriTemplate;
         return match;
     }
     
-      private static Match tryMatch( String path ) {
-          Map<String, String> bindings = new HashMap<String, String>();
-          APIEndpoint e = ms.lookup( bindings, path );
-          if (e != null) {
-        	  System.out.println( ">> match for '" + path + "'" );
-        	  System.out.println( ">> bindings: " + bindings );
-        	  System.out.println( ">> endpoint: " + e.getURITemplate() );
-          }
-          if (e == null) return null;
-          else return new Match( e, VarValues.uplift( bindings ) );
-      }
+    private static Match tryMatch( String path ) {
+        Map<String, String> bindings = new HashMap<String, String>();
+        APIEndpoint e = ms.lookup( bindings, path );
+        if (e == null) return null;
+        else return new Match( e, VarValues.uplift( bindings ) );
+    }
     
     @GET @Produces( { "text/plain", "application/rdf+xml", "application/json", "text/turtle", "text/html", "text/xml" })
     public Response requestHandler(
