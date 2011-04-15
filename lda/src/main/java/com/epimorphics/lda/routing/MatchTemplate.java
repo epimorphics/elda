@@ -24,13 +24,13 @@ public class MatchTemplate<T> {
 	private final Pattern compiled;
 	private final List<Couple<String, Integer>> where;
 	private final int literals;
-	private final int slashes;
+	private final int patterns;
 	private final T value;
 	
-	private MatchTemplate( int literals, int slashes, String template, Pattern compiled, List<Couple<String, Integer>> where, T value ) {
+	private MatchTemplate( int literals, int patterns, String template, Pattern compiled, List<Couple<String, Integer>> where, T value ) {
 		this.where = where;
 		this.value = value;
-		this.slashes = slashes;
+		this.patterns = patterns;
 		this.literals = literals;
 		this.compiled = compiled;
 		this.template = template;
@@ -44,7 +44,7 @@ public class MatchTemplate<T> {
 	*/
 	public int compareTo( MatchTemplate<?> other ) {
 		int result = other.literals - literals;
-		if (result == 0) result = other.slashes - slashes;
+		if (result == 0) result = other.patterns - patterns;
 		return result;
 	}
 	
@@ -99,7 +99,7 @@ public class MatchTemplate<T> {
 		int start = 0;
 		int index = 0;
 		int literals = 0;
-		int slashes = 0;
+		int patterns = 0;
 		List<Couple<String, Integer>> where = new ArrayList<Couple<String, Integer>>();
 		StringBuilder sb = new StringBuilder();
 		while (m.find(start)) {
@@ -108,6 +108,7 @@ public class MatchTemplate<T> {
 			where.add( new Couple<String, Integer>( name, index ) );
 			String literal = template.substring( start, m.start() );
 			literals += literal.length();
+			patterns += 1;
 			sb.append( literal );
 			sb.append( "([^/]+)" );
 			start = m.end();
@@ -116,6 +117,6 @@ public class MatchTemplate<T> {
 		sb.append( literal );
 		literals += literal.length();
 		Pattern compiled = Pattern.compile( sb.toString() );
-		return new MatchTemplate<T>( literals, slashes, template, compiled, where, value );
+		return new MatchTemplate<T>( literals, patterns, template, compiled, where, value );
 	}
 }

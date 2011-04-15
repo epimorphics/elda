@@ -133,26 +133,33 @@ public class Scratch_URI_Templates {
 		r.add(path4, "B" );
 		r.add(path2, "C" ); 
 		r.add(path1, "D" ); 
-		assertEquals("D", r.lookup("/abc/def") );
-		assertEquals("C", r.lookup("/abc/27" ) );
-		assertEquals("A", r.lookup("/other" ) );
+		Map<String, String> b = new HashMap<String, String>();
+		assertEquals("D", r.lookup(b, "/abc/def") );
+		assertEquals("C", r.lookup(b, "/abc/27" ) );
+		assertEquals("A", r.lookup(b, "/other" ) );
 	}
 	
 	public static class MatchSearcher<T> {
 		
 		List<MatchTemplate<T>> templates = new ArrayList<MatchTemplate<T>>();
+		boolean needsSorting = false;
 		
 		public void add( String path, T result ) {
 			templates.add( MatchTemplate.prepare( path, result ) );
+			needsSorting = true;
 		}
 		
-		public T lookup(String path) {
-			Collections.sort( templates, MatchTemplate.compare );			
-			Map<String, String> bindings = new HashMap<String, String>();
+		public T lookup( Map<String, String> bindings, String path ) {
+			if (needsSorting) sortTemplates();	
 			for (MatchTemplate<T> t: templates) {
 				if (t.match(bindings, path)) return t.value();
 			}
 			return null;
+		}
+
+		private void sortTemplates() {
+			Collections.sort( templates, MatchTemplate.compare );
+			needsSorting = false;
 		}
 	}
 	
