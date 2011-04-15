@@ -14,6 +14,7 @@
 
 package com.epimorphics.lda.sources;
 
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.*;
@@ -40,8 +41,7 @@ public class TDBSource extends SourceBase implements Source
             log.debug("TDB with endpoint " + endpoint + " has model with "
                     + this.source.size() + " triples.");
             if (this.source.isEmpty())
-                throw new RuntimeException("TDB endpoint " + name
-                        + " is empty -- surely an error.");
+                EldaException.EmptyTDB( name );
         } else {
             source = null;
             log.info("Using TDB whole dataset");

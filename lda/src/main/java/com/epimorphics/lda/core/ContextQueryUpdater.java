@@ -86,7 +86,7 @@ public class ContextQueryUpdater {
 		String pString = context.expandVariables( zpString );
 	//
 		if (val == null)
-			throw new RuntimeException( "value for " + p + " is null." );
+			EldaException.NullParameter( p );
 //		System.err.println( ">> pString=" + pString + ", value=" + val );
 	//
 		if (query.isBindable(pString)) 

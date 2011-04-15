@@ -8,6 +8,7 @@
 
 package com.epimorphics.lda.sources;
 
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -74,7 +75,7 @@ public abstract class SourceBase {
 	*/
     public void executeSelect( Query q, ResultSetConsumer c ) {
     	Lock l = getLock();
-    	if (l == null) throw new RuntimeException
+    	if (l == null)EldaException.Broken
     		( "lock is null for " + this.toString() + " (" + this.getClass() + ")" );
     	l.enterCriticalSection( Lock.READ );
     	QueryExecution qe = execute( q );

@@ -349,7 +349,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         	param = param.substring(EXISTS_LEN);
             if (val.equals( "true" )) addPropertyHasValue( param );
             else if (val.equals( "false" )) addPropertyHasntValue( param );
-            else throw new RuntimeException( "value of " + param + " must be true or false, not " + val );
+            else EldaException.BadBooleanParameter( param.toString(), val );
         } else if (param.hasPrefix(SEARCH)) {
             addSearchTriple( val );
         } else if (param.hasPrefix(SORT)) {
@@ -871,7 +871,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 						while (rs.hasNext()) {
 							Resource item = rs.next().getResource( SELECT_VAR.name() );
 							if (item == null) {
-								throw new RuntimeException
+								EldaException.BadSpecification
 								( "<br>Oops. No binding for " + SELECT_VAR.name() + " in successful SELECT.\n"
 										+ "<br>Perhaps ?item was mis-spelled in an explicit api:where clause.\n"
 										+ "<br>It's not your fault; contact the API provider."                			

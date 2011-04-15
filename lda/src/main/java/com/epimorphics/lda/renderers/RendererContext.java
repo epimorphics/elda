@@ -15,6 +15,7 @@ import javax.servlet.ServletContext;
 
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.bindings.Lookup;
+import com.epimorphics.lda.exceptions.EldaException;
 import com.hp.hpl.jena.shared.WrappedException;
 
 /**
@@ -34,7 +35,7 @@ public class RendererContext implements Lookup {
 			{@Override public URL asResourceURL( String p ) 
 				{ try {
 					URL result = sc.getResource( p );
-					if (result == null) throw new RuntimeException( "could not find webapp resource " + p );
+					if (result == null) EldaException.NotFound( "webapp resource", p );
 					return result;
 				} catch (MalformedURLException e) {
 					throw new WrappedException( e );

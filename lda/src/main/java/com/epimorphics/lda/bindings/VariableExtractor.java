@@ -12,6 +12,7 @@ package com.epimorphics.lda.bindings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.graph.Node;
@@ -70,7 +71,8 @@ public class VariableExtractor {
 		Node object = s.getObject().asNode();
 		if (object.isURI()) return object.getURI();
 		if (object.isLiteral()) return object.getLiteralLexicalForm();
-		throw new RuntimeException( "cannot convert " + object + " to RDFQ type." );
+		EldaException.Broken( "cannot convert " + object + " to RDFQ type." );
+		return null;
 	}
 	
 	/**
@@ -94,7 +96,7 @@ public class VariableExtractor {
 	private static String evaluate( String name, VarValues bound, VarValues toDo ) {
 		if (bound.hasVariable( name )) {
 			Value v = bound.get( name );
-			if (v == null) throw new RuntimeException( "circularity in variable definitions involving " + name );
+			if (v == null) EldaException.BadSpecification( "circularity in variable definitions involving " + name );
 			return v.valueString();			
 		} else {
 			bound.put( name, (Value) null );

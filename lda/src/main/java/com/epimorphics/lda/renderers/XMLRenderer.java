@@ -24,7 +24,6 @@ public class XMLRenderer implements Renderer {
     static Logger log = LoggerFactory.getLogger(XMLRenderer.class);
 	
 	final ShortnameService sns;
-//	final Mode as;
 	final String transformFilePath;
 	final String mediaType;
 	
@@ -33,12 +32,9 @@ public class XMLRenderer implements Renderer {
 	}
 	
 	public XMLRenderer( ShortnameService sns, String mediaType, String transformFilePath ) {
-//		this.as = m;
 		this.sns = sns;
 		this.mediaType = mediaType;
 		this.transformFilePath = transformFilePath;
-//		if (m == Mode.TRANSFORM && transformFilePath == null)
-//			throw new RuntimeException( "Mode.TRANSFORM requested but no transform filepath supplied." );
 	}
 	
 	@Override public String getMediaType() {

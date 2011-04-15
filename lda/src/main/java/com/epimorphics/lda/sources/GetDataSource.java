@@ -14,6 +14,7 @@
 
 package com.epimorphics.lda.sources;
 
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
@@ -35,7 +36,7 @@ public class GetDataSource
             }
         String sparqlEndpoint = getStringValue( specification, API.sparqlEndpoint );
         if (sparqlEndpoint == null)
-        	throw new RuntimeException( "no SPARQL endpoint specified for " + specification );
+        	EldaException.BadSpecification( "no SPARQL endpoint specified for " + specification );
         return 
             sparqlEndpoint.startsWith( LocalSource.PREFIX ) ? new LocalSource( sparqlEndpoint )
         	: sparqlEndpoint.startsWith( HereSource.PREFIX ) ? new HereSource( specification.getModel(), sparqlEndpoint )

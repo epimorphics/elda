@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.sources.Source;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -77,7 +78,7 @@ public interface Cache {
 			String [] p = policy.split( ":", 2 );
 			String policyName = p[0], policyValue = (p.length == 2 ? p[1] : "");
 			Controller cm = map.get( policyName );
-			if (cm == null) throw new RuntimeException( "no CacheMaker for policy '" + policyName + "'" );
+			if (cm == null) EldaException.NotFound( "cacheMaker policy", policyName );
 		    return cm.cacheFor( source, policyValue );
 		}
 		
