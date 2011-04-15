@@ -9,6 +9,7 @@ package com.epimorphics.lda.support;
 
 import java.util.List;
 
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.BuiltinRendererTable;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.renderers.RendererFactory;
@@ -17,7 +18,6 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.shared.NotFoundException;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 import static com.epimorphics.lda.support.ReflectionSupport.classForName;
@@ -79,8 +79,8 @@ public class RendererFactoriesSpec {
 
 	private static RendererFactory pickFactory( String className, RendererFactory rfx ) {
 		if (className != null) return (RendererFactory) newInstanceOf( classForName( className ) );
-		if (rfx != null) return rfx;
-		throw new NotFoundException( "renderer class: name" );
+		if (rfx == null) EldaException.NotFound( "renderer class", className );
+		return rfx;
 	}
 
 	private static String getClassName(Resource r) {

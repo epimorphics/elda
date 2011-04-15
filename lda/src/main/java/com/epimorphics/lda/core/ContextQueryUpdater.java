@@ -15,7 +15,6 @@ import com.epimorphics.lda.core.APIQuery.Param;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.Couple;
-import com.hp.hpl.jena.shared.NotFoundException;
 
 /**
     A ContextQueryUpdater is used to update an APIQuery according to context

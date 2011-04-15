@@ -7,7 +7,7 @@
 */
 package com.epimorphics.lda.support;
 
-import com.hp.hpl.jena.shared.NotFoundException;
+import com.epimorphics.lda.exceptions.EldaException;
 import com.hp.hpl.jena.shared.WrappedException;
 
 /**
@@ -23,8 +23,10 @@ public class ReflectionSupport {
 	 	if there's no such class.
 	*/
 	public static Class<?> classForName( String className ) {
-		try { return Class.forName( className ); } 
-		catch (ClassNotFoundException e) { throw new NotFoundException( className ); }
+		try 
+			{ return Class.forName( className ); } 
+		catch (ClassNotFoundException e) 
+			{ EldaException.NotFound( "class", className ); return null; }
 	}
 
 	/**

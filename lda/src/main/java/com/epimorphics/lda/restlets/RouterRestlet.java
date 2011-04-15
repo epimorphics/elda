@@ -50,7 +50,6 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaTypes;
-import com.hp.hpl.jena.shared.NotFoundException;
 
 /**
  * Handles all incoming API calls and routes to appropriate locations.
@@ -118,9 +117,6 @@ import com.hp.hpl.jena.shared.NotFoundException;
         	System.err.println( "Caught exception: " + e.getMessage() );
         	e.printStackTrace( System.err );
         	return buildErrorResponse(e);
-        } catch (NotFoundException e) { // TODO echeck that it's VIEW not found.
-        	throw new RuntimeException( "unexpected Not Found exception", e );
-            // return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (QueryParseException e) {
             e.printStackTrace( System.err );
             return returnNotFound("Failed to parse query request : " + e.getMessage());

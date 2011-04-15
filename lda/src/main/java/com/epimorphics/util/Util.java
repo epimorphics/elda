@@ -17,7 +17,6 @@ import java.util.List;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.NotFoundException;
 import com.hp.hpl.jena.shared.WrappedException;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -29,7 +28,7 @@ public class Util
     public static String readResource( String path )
         {
         InputStream in = Util.class.getClassLoader().getResourceAsStream( path );
-        if (in == null) throw new NotFoundException( path );
+        if (in == null) EldaException.NotFound( "resouce", path );
         return FileManager.get().readWholeFileAsUTF8( in );
         }
     

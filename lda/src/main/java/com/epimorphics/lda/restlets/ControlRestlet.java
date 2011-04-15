@@ -52,7 +52,6 @@ import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.shared.NotFoundException;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 /**
@@ -165,8 +164,8 @@ public class ControlRestlet {
                 enc = Encoder.getForOneResult( false ).encodeRecursive(rec.getSpecModel(), roots).toString();
             } catch (JsonException e) {
                 return returnError(e);
-            } catch (NotFoundException e) { // TODO ensure this is clean
-            	return returnNotFound( e.getMessage() );
+            } catch (Throwable e) { // TODO ensure this is clean
+            	return returnError( e.getMessage() );
             }
             return returnAs(enc, "application/json");
         }
