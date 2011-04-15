@@ -23,41 +23,44 @@ import com.hp.hpl.jena.rdf.model.Statement;
 
 public class LanguageFilter {
 
-	/**
-	    Filter the model m according to the view-languages rules 
-	    of the LDA spec.
-	    
-		<p>
-		If the list of viewing languages contains some values, then
-		the only values of a property that will be provided are those
-		without a language or whose language is in that list. 
-	*/
+    /**
+        Filter the model m according to the view-languages rules 
+        of the LDA spec.
+        
+        <p>
+        If the list of viewing languages contains some values, then
+        the only untyped literal values of a property P for some subject 
+        S that will kept are those with a language in the list or, if 
+        there are none, those with no language. 
+        </p>
+    */
     public static void filterByLanguages( Model m, String[] split) {
-    	Set<String> allowed = new HashSet<String>( Arrays.asList( split ) );
-    	List<Statement> removes = new ArrayList<Statement>();
-    //	
-    	for (Resource sub: m.listSubjects().toSet()) {
-    		for (Property prop: sub.listProperties().mapWith( Statement.Util.getPredicate ).toSet()) {
-    			boolean hasLanguagedObjects = false;
-    			List<Statement> plains = new ArrayList<Statement>();
-    			for (Statement s: sub.listProperties( prop ).toList()) {
-    				RDFNode mo = s.getObject();
-    				Node o = mo.asNode();
-    				if (o.isLiteral() && o.getLiteralDatatypeURI() == null) {
-    					String lang = o.getLiteralLanguage();
-    					if (lang.equals( "" )) {
-    						plains.add( s );
-    					} else if (allowed.contains( lang )) {
-    						hasLanguagedObjects = true;  						
-    					} else {
-    						removes.add( s );
-    					}
-    				}
-    			}
-    			if (hasLanguagedObjects) removes.addAll( plains );
-    		}
-    	}
-    //
-    	m.remove( removes );
-	}
+        Set<String> allowed = new HashSet<String>( Arrays.asList( split ) );
+        for (Resource sub: m.listSubjects().toSet()) {
+            List<Statement> removes = new ArrayList<Statement>();
+            for (Property prop: sub.listProperties().mapWith( Statement.Util.getPredicate ).toSet())
+                findUnwantedStrings( allowed, sub, removes, prop );
+            m.remove( removes );
+        }
+    }
+
+    /**
+        Add to <code>removes</code> the statements whose objects are
+        unwanted untyped literals.
+    */
+    private static void findUnwantedStrings( Set<String> allowed, Resource sub, List<Statement> removes, Property prop ) {
+        boolean hasLanguagedObjects = false;
+        List<Statement> plains = new ArrayList<Statement>();
+        for (Statement s: sub.listProperties( prop ).toList()) {
+            RDFNode mo = s.getObject();
+            Node o = mo.asNode();
+            if (o.isLiteral() && o.getLiteralDatatypeURI() == null) {
+                String lang = o.getLiteralLanguage();
+                if (lang.equals( "" )) plains.add( s );
+                else if (allowed.contains( lang )) hasLanguagedObjects = true;                          
+                else removes.add( s );
+            }
+        }
+        if (hasLanguagedObjects) removes.addAll( plains );
+    }
 }

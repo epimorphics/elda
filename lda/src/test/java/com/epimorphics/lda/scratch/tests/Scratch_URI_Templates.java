@@ -31,7 +31,7 @@ public class Scratch_URI_Templates {
 		t.add(path2, "B" );
 		t.add(path3, "C" );
 	//
-		t.printOn( System.out );
+//		t.printOn( System.out );
 	//
 		assertEquals( "A", t.lookup( path1 ) );
 		assertEquals( "B", t.lookup( path2 ) );
