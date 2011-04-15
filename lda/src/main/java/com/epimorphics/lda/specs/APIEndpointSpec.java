@@ -21,12 +21,12 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.bindings.VariableExtractor;
-import com.epimorphics.lda.core.APIEndpointException;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.APIQuery;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.APIQuery.Param;
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
@@ -83,7 +83,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         name = endpoint.getLocalName();
         uriTemplate = getStringValue(endpoint, API.uriTemplate, null);
         itemTemplate = getStringValue( endpoint, API.itemTemplate, null );
-        if (uriTemplate == null) throw new APIEndpointException("No deployment uri for Endpoint " + name );
+        if (uriTemplate == null) EldaException.NoDeploymentURIFor( name ); 
         if (!uriTemplate.startsWith("/") && !uriTemplate.startsWith("http")) uriTemplate = "/" + uriTemplate;
         endpointResource = endpoint;
         instantiateBaseQuery( endpoint ); 

@@ -213,7 +213,7 @@ public class ControlRestlet {
         while (ri.hasNext()) {
             RDFNode viewN = ri.next();
             if ( ! (viewN instanceof Resource)) {
-                throw new APIException("Bad specification file, non-resource defintion of Endpoint. " + viewN);
+                throw new APIException("Bad specification file, non-resource definition of Endpoint. " + viewN);
             }
             Resource view = (Resource)viewN;
             ExtendedIterator<Statement> si = view.listProperties(API.uriTemplate)

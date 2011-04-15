@@ -36,10 +36,10 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.core.APIEndpointException;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.QueryParseException;
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.renderers.RendererFactory;
@@ -110,22 +110,23 @@ import com.hp.hpl.jena.shared.NotFoundException;
                 return returnNotFound("No answer back from " + ep.getSpec());
             } else {
                 RendererContext rc = new RendererContext( paramsFromContext( cc ), servCon );
-                return renderByType( rc, mediaTypes, pickFormatter( resultsAndFormat.b, suffix ), ep, results );
+				String _format = resultsAndFormat.b;
+                String formatter = (_format.equals( "" ) ? suffix : _format);
+				return renderByType( rc, mediaTypes, formatter, ep, results );
             }
+        } catch (EldaException e) {
+        	System.err.println( "Caught exception: " + e.getMessage() );
+        	e.printStackTrace( System.err );
+        	return buildErrorResponse(e);
         } catch (NotFoundException e) { // TODO echeck that it's VIEW not found.
-            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
-        } catch (APIEndpointException e) {
-            return returnNotFound("Query Failed.\n" + e.getMessage());
+        	throw new RuntimeException( "unexpected Not Found exception", e );
+            // return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
         } catch (QueryParseException e) {
             e.printStackTrace( System.err );
             return returnNotFound("Failed to parse query request : " + e.getMessage());
         } catch (Throwable e) {
             return returnError(e);
         }
-    }
-    
-   private String pickFormatter( String _format, String dotSuffix ) {
-        return _format.equals( "" ) ? dotSuffix : _format;
     }
 
        // TODO this is probably obsolete
@@ -218,22 +219,43 @@ import com.hp.hpl.jena.shared.NotFoundException;
             return returnError(e);
         }
     }
-    
+
     public static Response returnError(Throwable e) {
         log.error("Exception: " + e.getMessage(), e);
         return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
     }
     
-    public static Response returnError(String message) {
-        log.error( message );
-        new RuntimeException( "returning error: '" + message + "'" ).printStackTrace( System.err );
-        return enableCORS( Response.serverError() ).entity(message).build();
+    public static Response returnError(String s) {
+        log.error("Exception: " + s );
+        return enableCORS( Response.serverError() ).entity( s ).build();
     }
     
-    public static Response returnNotFound(String message) {
-        log.warn("Failed to return results: " + message);
+    public static Response returnNotFound( String message ) {
+        log.warn( "Failed to return results: " + message );
         new RuntimeException("returning NotFound: '" + message + "'").printStackTrace( System.err );
         return enableCORS( Response.status(Status.NOT_FOUND) ).entity(message).build();
     }
+	private Response buildErrorResponse( EldaException e ) {
+		return enableCORS( Response.status(e.code) )
+			.entity( niceMessage( e ) )
+			.build()
+			;
+	}
+    
+   private String niceMessage( EldaException e ) {
+		return
+			"<html>"
+			+ "\n<head>"
+			+ "\n<title>alas</title>"
+			+ "\n</head>"
+			+ "\n<body style='background-color: #ffdddd'>"
+			+ "\n<h2>there seems to be a problem.</h2>"
+			+ "\n<p>" + e.getMessage() + "</p>"
+			+ (e.moreMessage == null ? "" : "<p>" + e.moreMessage + "</p>")
+			+ "\n</body>"
+			+ "\n</html>"
+			+ "\n"
+			;
+	}
 }
 

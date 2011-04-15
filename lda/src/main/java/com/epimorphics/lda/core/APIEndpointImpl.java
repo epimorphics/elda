@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
@@ -217,6 +218,8 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		.addProperty( RDFS.label, "should be a description of this list" )
 	    		;
     		rs.setContentLocation( listRoot.getURI() );
+        } else if (rs.getResultList().isEmpty()) {
+        	EldaException.NoItemFound();
         } else {
         	Resource content = rs.getResultList().get(0);
         	thisPage.addProperty( FOAF.primaryTopic, content );

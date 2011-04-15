@@ -14,6 +14,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
 
+import com.epimorphics.lda.exceptions.EldaException;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.NotFoundException;
@@ -35,7 +36,7 @@ public class Util
     public static Model readModel( String path )
         {
         InputStream in = Util.class.getClassLoader().getResourceAsStream( path );
-        if (in == null) throw new NotFoundException( path );
+        if (in == null) EldaException.NotFound( "model", path );
         return ModelFactory.createDefaultModel().read( in, "", "TTL" );
         }
     

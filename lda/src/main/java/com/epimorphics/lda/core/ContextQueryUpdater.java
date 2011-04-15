@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIQuery.Param;
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.shared.NotFoundException;
@@ -139,13 +140,9 @@ public class ContextQueryUpdater {
 	}
 
 	private void setViewByName( String viewName ) {
-		// view = view.addFrom( nt.getView( viewName ) );
-//		System.err.println( ">> setViewByName from " + viewName + " given current view " + view );
 		View named  = nt.getView( viewName );
-		if (named == null) throw new NotFoundException( "view " + viewName );
-//		System.err.println( ">> named view is " + named );
+		if (named == null) EldaException.NotFound( "view", viewName );
 		view = named.copy().addFrom( view );
-//		System.err.println( ">> result is " + view );
 		log.info( "view " + viewName + " yields view " + view + " from\n  " + nt );
 	}
 

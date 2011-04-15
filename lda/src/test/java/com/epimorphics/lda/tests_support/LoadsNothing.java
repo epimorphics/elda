@@ -12,8 +12,8 @@
 package com.epimorphics.lda.tests_support;
 
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.exceptions.EldaException;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.shared.NotFoundException;
 
 /**
 	A ModelLoadI that throws a NotFoundException whatever uri is
@@ -25,8 +25,6 @@ public class LoadsNothing implements ModelLoaderI
 	{
 	public static final LoadsNothing instance = new LoadsNothing();
 	
-	@Override public Model loadModel(String uri) 
-		{
-		throw new NotFoundException( uri );
-		}
+	@Override public Model loadModel( String uri) 
+		{ EldaException.NotFound( "model", uri ); return /* never */ null; }
 	}

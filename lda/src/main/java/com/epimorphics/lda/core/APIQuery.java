@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.cache.Cache;
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -773,7 +774,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             return rs;
 
         } catch (QueryExceptionHTTP ie) {
-            throw new APIEndpointException("Problem running query for " + source + ": " + ie.getMessage(), ie);
+            EldaException.ARQ_Exception( source, ie );
+            return /* NEVER */ null;
         }
     }
 
