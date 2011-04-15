@@ -64,6 +64,10 @@ public class APIEndpointImpl implements APIEndpoint {
         this.specWantsContext = spec.wantsContext();
     }
     
+    @Override public String toString() {
+    	return spec.toString();
+    }
+    
     @Override public Couple<APIResultSet, String> call( CallContext given ) {
     	wantsContext = specWantsContext;
     	CallContext context = new CallContext( spec.getBindings(), given );

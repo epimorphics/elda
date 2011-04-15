@@ -196,7 +196,7 @@ public class ControlRestlet {
     
     public static SpecRecord lookupRequest(String pathstub, UriInfo ui) {
         String path = "/" + pathstub;
-        Match match = RouterFactory.get().getMatch(path);
+        Match match = RouterFactory.getDefaultRouter().getMatch(path);
         if (match == null)  {
             return null;        
         } else {

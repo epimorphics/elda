@@ -14,6 +14,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
     A MatchSearcher<T> maintains a collection of MatchTemplate<T>s.
     The collection can be added to and removed from [TBD]. It can be 
@@ -27,11 +30,14 @@ public class MatchSearcher<T> {
     List<MatchTemplate<T>> templates = new ArrayList<MatchTemplate<T>>();
     boolean needsSorting = false;
     
+    static final Logger log = LoggerFactory.getLogger( MatchSearcher.class );
+    
     /**
         Add the template <code>path</code> to the collection, associated
         with the supplied result value.
     */
-    public void add( String path, T result ) {
+    public void register( String path, T result ) {
+    	log.info( "registering " + path + " for " + result.toString() );
         templates.add( MatchTemplate.prepare( path, result ) );
         needsSorting = true;
     }
@@ -40,7 +46,7 @@ public class MatchSearcher<T> {
         Remove the entry with the given template path from
         the collection.
     */
-    public void remove( String path ) {
+    public void unregister( String path ) {
         Iterator<MatchTemplate<T>> it = templates.iterator();
         while (it.hasNext())
             if (it.next().template().equals( path )) 

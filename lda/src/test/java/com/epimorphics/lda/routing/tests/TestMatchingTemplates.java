@@ -23,10 +23,10 @@ public class TestMatchingTemplates {
 	@Test public void ensure_searcher_finds_correct_value() {
 		String path1 = "/abc/def", path2 = "/abc/{xyz}", path3 = "/other", path4 = "/abc/{x}{y}{z}";
 		MatchSearcher<String> r = new MatchSearcher<String>();
-		r.add(path3, "A" ); 
-		r.add(path4, "B" );
-		r.add(path2, "C" ); 
-		r.add(path1, "D" ); 
+		r.register(path3, "A" ); 
+		r.register(path4, "B" );
+		r.register(path2, "C" ); 
+		r.register(path1, "D" ); 
 		Map<String, String> b = new HashMap<String, String>();
 		assertEquals("D", r.lookup(b, "/abc/def") );
 		assertEquals("C", r.lookup(b, "/abc/27" ) );
@@ -37,9 +37,9 @@ public class TestMatchingTemplates {
 		Map<String, String> b = new HashMap<String, String>();
 		MatchSearcher<String> r = new MatchSearcher<String>();
 		String path = "/going/away/";
-		r.add( path, "GA" );
+		r.register( path, "GA" );
 		assertEquals( "GA", r.lookup( b, path ) );
-		r.remove( path );
+		r.unregister( path );
 		assertEquals( null, r.lookup( b, path ) );
 	}
 	

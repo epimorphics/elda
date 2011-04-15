@@ -90,7 +90,7 @@ public class Loader extends HttpServlet {
         setupLARQandTDB();
         modelLoader = new APIModelLoader(baseFilePath);
         FileManager.get().addLocatorFile( baseFilePath );
-        SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.get(), modelLoader) );
+        SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
         for (String spec : getSpecNamesFromContext()) {
              loadSpecFromFile(spec);
         }

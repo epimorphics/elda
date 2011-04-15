@@ -285,7 +285,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
      * Printable summary for debugging
      */
     @Override public String toString() {
-        return "[Endpoint " + getURITemplate() + " on API " + this.apiSpec.specificationURI + "]";
+        return "[Endpoint " + name + " for " + this.apiSpec.specificationURI + "]";
     }
 
     /**

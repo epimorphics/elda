@@ -17,52 +17,22 @@
 
 package com.epimorphics.lda.routing;
 
-import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.restlets.RouterRestlet;
 
 /**
- * Simple implementation of Router based on Servlets.
- * 
- * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
- * @version $Revision: $
- */
-// TODO replace by JAX-RS implementation if we can figure out a bearable mechanism
+
+ 	@author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
+ 	@author Chris Dollin [complete revision]
+ 	@version $Revision: $
+*/
 
 public class RouterFactory {
 
     protected static Router theRouter;
     
-    public static void setRouter(Router router) {
-        theRouter = router;
-    }
-    
-    public static Router get() {
-        if (theRouter == null) {
-            theRouter = new RouterImpl();
-        }
+    public static Router getDefaultRouter() {
+        if (theRouter == null) theRouter = new DefaultRouter();
         return theRouter;
-    }
-
-    public static void set(Router router) {
-        theRouter = router;
-    }
-    
-    static class RouterImpl implements Router {
-        
-        @Override
-        public void register(String URITemplate, APIEndpoint api) {
-            RouterRestlet.register(URITemplate, api);
-        }
-    
-        @Override
-        public void unregister(String URITemplate) {
-            RouterRestlet.unregister(URITemplate);
-        }
-
-        @Override
-        public Match getMatch(String path) {
-            return RouterRestlet.getMatch(path);
-        }
     }
     
 }

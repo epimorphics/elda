@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
@@ -45,7 +44,8 @@ import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
-import com.epimorphics.lda.routing.MatchSearcher;
+import com.epimorphics.lda.routing.Router;
+import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.util.Couple;
@@ -66,35 +66,19 @@ import com.hp.hpl.jena.shared.NotFoundException;
     
     public RouterRestlet() {
     }
-
-    static MatchSearcher<APIEndpoint> ms = new MatchSearcher<APIEndpoint>();
-    
-    static public void register(String URITemplate, APIEndpoint api) {
-        log.info("Registering api " + api.getSpec() + " at " + URITemplate);
-        synchronized (ms) { ms.add( URITemplate, api); }
-    }
-
-    static public void unregister( String URITemplate ) {
-        log.error( "Failed to unregister " + URITemplate );
-    }
+   
+    static final Router router = RouterFactory.getDefaultRouter();
     
     public static Match getMatch( String path ) {
-        Match match = tryMatch( path );
+        Match match = router.getMatch( path );
         if (match == null) {
             // No match in the table at the moment, but check the persistence
             // manager to see if it can restore an API spec which would enable this endpoint
             // System.err.println( ">> ----------------- " + SpecManagerFactory.get() );
             SpecManagerFactory.get().loadSpecFor(path);
-            match = tryMatch( path );
+            match = router.getMatch( path );
         }
         return match;
-    }
-    
-    private static Match tryMatch( String path ) {
-        Map<String, String> bindings = new HashMap<String, String>();
-        APIEndpoint e = ms.lookup( bindings, path );
-        if (e == null) return null;
-        else return new Match( e, VarValues.uplift( bindings ) );
     }
     
     @GET @Produces( { "text/plain", "application/rdf+xml", "application/json", "text/turtle", "text/html", "text/xml" })
