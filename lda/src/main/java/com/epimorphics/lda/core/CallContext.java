@@ -12,11 +12,7 @@
 
 package com.epimorphics.lda.core;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriBuilder;
@@ -28,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.VarValues;
-import com.hp.hpl.jena.util.OneToManyMap;
 
 /**
  * Encapsulates all the information which define a particular
@@ -41,7 +36,7 @@ public class CallContext implements Lookup {
 
     static Logger log = LoggerFactory.getLogger( CallContext.class );
     
-    protected OneToManyMap<String, Value> parameters = new OneToManyMap<String, Value>();
+    protected MultiMap<String, Value> parameters = new MultiMap<String, Value>();
     protected UriInfo uriInfo = null;
     
     public CallContext(UriInfo uriInfo) {
@@ -59,7 +54,9 @@ public class CallContext implements Lookup {
     }
     
 	public static CallContext createContext( UriInfo ui, VarValues bindings ) {
+//		System.err.println( ">> bindings: " + bindings );
 	    MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+//	    System.err.println( ">> qp: " + queryParams );
 	    CallContext cc = new CallContext( ui );
 	    bindings.putInto( cc.parameters );
 	    for (Map.Entry<String, List<String>> e : queryParams.entrySet()) {
@@ -67,13 +64,14 @@ public class CallContext implements Lookup {
 			Value basis = cc.parameters.get( name );
 			if (basis == null) basis = Value.emptyPlain;
 	        for (String val : e.getValue())
-				cc.parameters.put( name, basis.withValueString( val ) );
+				cc.parameters.add( name, basis.withValueString( val ) );
 	    }
+//	    System.err.println( ">> !parameters: " + cc.parameters );
 	    return cc;
 	}
 	
 	public Iterator<String> parameterNames() {
-		return parameters.keySet().iterator();
+		return parameters.keyIterator();
 	}
 
     /**
@@ -86,6 +84,22 @@ public class CallContext implements Lookup {
     }
     
     /**
+     	Return all the values for a parameter.
+    */
+    @Override public Set<String> getStringValues( String param ) {
+        Set<Value> vs = parameters.getAll( param );
+//        System.err.println( ">> " + parameters );
+		Set<String> values = new HashSet<String>( uriInfo.getQueryParameters().get( param ) );
+		return vs == null ? values : asStrings( vs );
+    }
+    
+    private Set<String> asStrings(Set<Value> vs) {
+    	Set<String> result = new HashSet<String>(vs.size());
+    	for (Value v: vs) result.add( v.valueString() );
+    	return result;
+	}
+
+	/**
      * Return the request URI information.
      */
     public UriInfo getUriInfo() {

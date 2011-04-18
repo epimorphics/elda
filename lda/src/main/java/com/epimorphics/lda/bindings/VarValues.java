@@ -8,14 +8,13 @@
 
 package com.epimorphics.lda.bindings;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.util.OneToManyMap;
+import com.epimorphics.lda.core.MultiMap;
+import com.epimorphics.util.CollectionUtils;
 
 /**
     A VarValues maps variables (identified by their string names) to
@@ -57,6 +56,14 @@ public class VarValues implements Lookup
 		return v == null ? null : v.valueString(); 
 		}
 	
+	static final Set<String> NoStrings = new HashSet<String>();
+	
+	@Override public Set<String> getStringValues( String name ) 
+		{ 
+		Value v = vars.get( name );
+		return v == null ? NoStrings : CollectionUtils.set( v.valueString() ); 
+		}
+	
 	public String getAsString( String name, String ifAbsent ) 
 		{ return vars.containsKey( name ) ? vars.get( name ).valueString() : ifAbsent; }
 	
@@ -66,7 +73,7 @@ public class VarValues implements Lookup
 	public VarValues put( String name, Value v ) 
 		{ vars.put( name, v ); return this; }
 	
-	public void putInto( OneToManyMap<String, Value> map ) 
+	public void putInto( MultiMap<String, Value> map ) 
 		{ map.putAll( vars ); }
 	
 	@Override public String toString()

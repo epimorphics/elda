@@ -59,6 +59,10 @@ public class VariableExtractor {
 				type = value.getObject().asNode().getLiteralDatatypeURI();
 			if (value != null && value.getObject().isURIResource())
 				type = RDFS.Resource.getURI();
+			if (type == null){
+				log.warn("type mysteriously null, needs sorting soon" );
+				type = "";
+			}
 			String valueString = getValueString( v, language, type );
 			Value var = new Value( valueString, language, type );
 			(valueString.contains( "{" ) ? toDo : bound).put( name, var ); 			

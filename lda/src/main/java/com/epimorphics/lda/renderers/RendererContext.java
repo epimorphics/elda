@@ -16,6 +16,7 @@ import javax.servlet.ServletContext;
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.shared.WrappedException;
 
 /**
@@ -85,6 +86,10 @@ public class RendererContext implements Lookup {
 	public URL pathAsURL( String ePath ) {
 		String p = ePath.startsWith( "/" ) ? ePath : "/" + ePath;
 		return s.asResourceURL( p );
+	}
+
+	@Override public Set<String> getStringValues( String name ) {
+		return CollectionUtils.set( getStringValue( name ) );
 	}
 
 }

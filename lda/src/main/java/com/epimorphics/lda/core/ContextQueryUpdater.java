@@ -8,6 +8,9 @@
 
 package com.epimorphics.lda.core;
 
+import java.util.List;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +85,11 @@ public class ContextQueryUpdater {
 
 	private void handleParam(GEOLocation geo, Param p) {
 		String zpString = p.asString();
-		String val = context.expandVariables( context.getStringValue(zpString) );
+		Set<String> values = context.getStringValues(zpString);
+		if (values.size() > 1) {
+			throw new RuntimeException( "multiple values " + values + " for " + p + " -- not implemented yet." );
+		} 
+		String val = context.expandVariables( values.iterator().next() );
 		String pString = context.expandVariables( zpString );
 		if (val == null) EldaException.NullParameter( p );
 	//

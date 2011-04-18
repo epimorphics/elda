@@ -8,10 +8,7 @@
 
 package com.epimorphics.util;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
     Some collection-oriented utilities.
@@ -36,4 +33,13 @@ public class CollectionUtils
 		return result;
 		}
 
+	public static <T> List<T> toList(Iterator<T> it ) 
+		{
+		List<T> result = new ArrayList<T>();
+		while (it.hasNext()) result.add(it.next());
+		return result;
+		}
+
+	public static <T> Set<T> set(T ...elements) 
+		{ return new HashSet<T>( list(elements) ); }
 	}
