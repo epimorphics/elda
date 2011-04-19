@@ -27,6 +27,7 @@ public class Value
 	
 	public Value( String valueString, String language, String type )
 		{
+		if (type == null) throw new IllegalArgumentException( "type must not be null (use \"\")" );
 		this.type = type;
 		this.language = language;
 		this.valueString = valueString;
