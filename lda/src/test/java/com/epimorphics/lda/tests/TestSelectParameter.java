@@ -8,6 +8,7 @@
 
 package com.epimorphics.lda.tests;
 
+import static com.epimorphics.util.CollectionUtils.set;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -31,7 +32,7 @@ public class TestSelectParameter
         APIQuery q = new APIQuery(sns);
         APIQuery.Param _select = APIQuery.Param.make("_select" );
         String theSelectQuery = "this is a select query";
-        q.addFilterFromQuery( _select, theSelectQuery );
+        q.addFilterFromQuery( _select, set(theSelectQuery) );
         assertEquals( theSelectQuery, q.assembleSelectQuery( noPrefixes) );
         }
     
@@ -41,7 +42,7 @@ public class TestSelectParameter
         APIQuery q = new APIQuery(sns);
         APIQuery.Param _select = APIQuery.Param.make("_select" );
         String theSelectQuery = "this is a select query";
-        q.addFilterFromQuery( _select, theSelectQuery );
+        q.addFilterFromQuery( _select, set(theSelectQuery) );
         APIQuery cloned = q.clone();
         assertEquals( theSelectQuery, cloned.assembleSelectQuery( noPrefixes ) );
         }

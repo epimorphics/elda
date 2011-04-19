@@ -10,6 +10,7 @@ package com.epimorphics.lda.tests;
 
 import org.junit.Test;
 
+import static com.epimorphics.util.CollectionUtils.set;
 import static org.junit.Assert.*;
 
 import com.epimorphics.lda.core.APIQuery;
@@ -140,7 +141,7 @@ public class TestPropertyChainEndToEnd
 		PrefixMapping prefixes = PrefixMapping.Factory.create();
 		ShortnameService sns = new StandardShortnameService( spec, prefixes, loader );
 		APIQuery q = new APIQuery( sns );
-		q.addFilterFromQuery( Param.make( propertyThing), "17" );
+		q.addFilterFromQuery( Param.make( propertyThing), set("17") );
 		assertContains( q.assembleSelectQuery( prefixes ), "\"17\"^^< http://www.w3.org/2001/XMLSchema#int>" );
 		}
 	

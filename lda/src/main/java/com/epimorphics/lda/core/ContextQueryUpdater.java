@@ -8,6 +8,8 @@
 
 package com.epimorphics.lda.core;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -82,14 +84,18 @@ public class ContextQueryUpdater {
 		String pString = context.expandVariables( param );
 		query.setLanguagesFor( pString, val );
 	}
+	
+	private Set<String> expandVariables( Set<String> s ) {
+		Set<String> result = new HashSet<String>(s.size());
+		for (String x: s) result.add( context.expandVariables( x ) );
+		return result;
+	}
 
 	private void handleParam(GEOLocation geo, Param p) {
 		String zpString = p.asString();
 		Set<String> values = context.getStringValues(zpString);
-		if (values.size() > 1) {
-			throw new RuntimeException( "multiple values " + values + " for " + p + " -- not implemented yet." );
-		} 
-		String val = context.expandVariables( values.iterator().next() );
+		Set<String> allVal = expandVariables( values );
+		String val = allVal.iterator().next();
 		String pString = context.expandVariables( zpString );
 		if (val == null) EldaException.NullParameter( p );
 	//
@@ -121,7 +127,7 @@ public class ContextQueryUpdater {
 		} else {
 			log.debug( "handleParam: " + p + " with value: " + val );
 //			System.err.println( ">> handleParam: " + p + " with value: " + val );
-			query.addFilterFromQuery( Param.make( pString ), val );
+			query.addFilterFromQuery( Param.make( pString ), allVal );
 		}
 	}
 

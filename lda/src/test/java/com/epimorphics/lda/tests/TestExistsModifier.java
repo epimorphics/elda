@@ -1,5 +1,6 @@
 package com.epimorphics.lda.tests;
 
+import static com.epimorphics.util.CollectionUtils.set;
 import static org.junit.Assert.*;
 
 import java.util.HashSet;
@@ -46,7 +47,7 @@ public class TestExistsModifier
 	@Test public void testExists()
 		{
 		APIQuery q = new APIQuery( new Shorts() );
-		q.addFilterFromQuery( Param.make( "exists-backwards" ), "true" );
+		q.addFilterFromQuery( Param.make( "exists-backwards" ), set("true") );
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		assertEquals( 1, triples.size() );
 		RDFQ.Triple t = triples.get(0);
@@ -58,7 +59,7 @@ public class TestExistsModifier
 	@Test public void testNotExists()
 		{
 		APIQuery q = new APIQuery( new Shorts() );
-		q.addFilterFromQuery( Param.make( "exists-backwards" ), "false" );
+		q.addFilterFromQuery( Param.make( "exists-backwards" ), set("false") );
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		List<RenderExpression> filters = q.getFilterExpressions();
 	//
@@ -98,8 +99,8 @@ public class TestExistsModifier
 	public void testNotExistsXY( String existsSetting, String expect )
 		{
 		APIQuery q = new APIQuery( new Shorts() );
-		q.addFilterFromQuery( Param.make( "type" ), "Item" );
-		q.addFilterFromQuery( Param.make( "exists-backwards" ), existsSetting );
+		q.addFilterFromQuery( Param.make( "type" ), set("Item") );
+		q.addFilterFromQuery( Param.make( "exists-backwards" ), set(existsSetting) );
 	//
 		String query = q.assembleSelectQuery( PrefixMapping.Factory.create() );
 		QueryExecution qx = QueryExecutionFactory.create( query, model );

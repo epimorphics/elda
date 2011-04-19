@@ -26,6 +26,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.LARQManager;
+import static com.epimorphics.util.CollectionUtils.*;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.graph.*;
 import com.hp.hpl.jena.query.*;
@@ -322,7 +323,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
      * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
      * @return the name of the final property referencing the val, to allow type sensitive normalization
     */
-    public String addFilterFromQuery( Param param, String val ) {
+    public String addFilterFromQuery( Param param, Set<String> allVal ) {
+    	String val = allVal.iterator().next();
         if (param.is(PAGE_PARAM)) {
             setPageNumber( Integer.parseInt(val) ); 
         } else if (param.is(PAGE_SIZE_PARAM)) {
@@ -359,7 +361,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         } else if (param.hasPrefix(WHERE_PARAM)) {
         	addWhere( val );
         } else {
-            addPropertyHasValue( param, val );
+            addPropertyHasValue( param, allVal );
         }
         return lastPropertyOf(param);
     }
@@ -375,14 +377,14 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	if (param.hasVariable() || val.indexOf('{') >= 0) {
     		deferredFilters.add( new Deferred( param, val ) );
     	} else {
-    		addFilterFromQuery( param, val );
+    		addFilterFromQuery( param, set(val) );
     	}
     }
 
 	public void activateDeferredFilters( CallContext cc ) {
 		for (Deferred d: deferredFilters) {
 			log.debug( "activating deferred filter " + d );
-			addFilterFromQuery( d.param.expand( cc ), cc.expandVariables( d.val ) );
+			addFilterFromQuery( d.param.expand( cc ), set(cc.expandVariables( d.val )) );
 		}
 	}
     
@@ -398,7 +400,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 
     protected void addRangeFilter( Param param, String val, String op ) {
         Variable newvar = newVar(); 
-        String prop = addFilterFromQuery( param, newvar.name() );
+        String prop = addFilterFromQuery( param, set(newvar.name()) );
         addInfixSparqlFilter( newvar, op, sns.normalizeNodeToRDFQ( prop, val, defaultLanguage ) );
     }
     
@@ -483,25 +485,30 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected String addPropertyHasntValue( Param param ) {
     	Variable var = newVar();
     	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
-		return addPropertyHasValue( param, var.name(), true );
+		return addPropertyHasValue( param, set(var.name()), true );
     }
 
     protected String addPropertyHasValue( Param param ) {
-    	return addPropertyHasValue( param, newVar().name() );
+    	return addPropertyHasValue( param, set(newVar().name()) );
     }
     
     protected String addPropertyHasValue( Param param, Variable O ) {
-    	return addPropertyHasValue( param, O.name() );    	
+    	return addPropertyHasValue( param, set(O.name()) );    	
     }
 
-    protected String addPropertyHasValue( Param param, String rawValue ) {
-    	return addPropertyHasValue( param, rawValue, false );
+    protected String addPropertyHasValue( Param param, Set<String> rawValues ) {
+    	return addPropertyHasValue( param, rawValues, false );
     }
         
-    protected String addPropertyHasValue( Param param, String rawValue, boolean optional ) {
+    protected String addPropertyHasValue( Param param, Set<String> rawValues, boolean optional ) {
     	String languages = languagesFor.get( param.toString() );
+    	if (languages == null) languages = defaultLanguage;
+    	String [] path = param.parts();
+    //
+		String rawValue = rawValues.iterator().next();
     	if (optional) { // TODO clean this up
-    		String [] path = param.parts();
+    		if (rawValues.size() > 1)
+    			throw new RuntimeException( "TOO MANY VALUES FOR OPTIONAL: BOOM!" );
 			String prop = path[0];
     		Resource np = sns.normalizeResource(prop);
 			varProps.put(rawValue.substring(1), prop);   
@@ -510,9 +517,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     		noteBindableVar( rawValue );
     		return path[0];
     	}
-    	if (languages == null) languages = defaultLanguage;
     	// System.err.println( ">> addPropertyHasValue for " + param + ", languages '" + languages + "'" );
-        String[] path = param.parts();
         Variable var = SELECT_VAR;
         int i = 0;
         while (i <path.length-1) {
@@ -522,9 +527,22 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             var = newvar;
             i++;
         }
-        addTriplePattern(var, path[i], languages, rawValue );
         noteBindableVar( path[i] );
-        noteBindableVar( rawValue );
+        if (rawValues.size() == 1) {
+        	addTriplePattern(var, path[i], languages, rawValue );
+        	noteBindableVar( rawValue );        	
+        } else {
+        	Variable v = newVar();
+        	addTriplePattern( var, path[i], languages, v.name() );
+        	noteBindableVar( v.name() );
+        	Infix ors = null;
+        	for (String rv: rawValues) {
+        		Any R = sns.normalizeNodeToRDFQ( path[i], rv, defaultLanguage );
+        		Infix eq = RDFQ.infix( v, "=", R );
+        		if (ors == null) ors = eq; else ors = RDFQ.infix(ors, "||", eq );
+        	}
+        	filterExpressions.add( ors );
+        }
         return path[i];
     }
 
@@ -565,7 +583,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	            orderExpressions.append(" " + var + " ");
 	        }
 	        if (!varOrder)
-	            addPropertyHasValue(Param.make(spec), var); // TODO fix use of make
+	            addPropertyHasValue(Param.make(spec), set(var)); // TODO fix use of make
     	}
     }
 
