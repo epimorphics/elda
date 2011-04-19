@@ -11,10 +11,13 @@ package com.epimorphics.lda.scratch.tests;
 import static org.junit.Assert.*;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -41,6 +44,91 @@ public class Scratch_URI_Templates {
 		assertEquals( "B", t.lookup( path2 ) );
 		assertEquals( "C", t.lookup( path3 ) );
 	}
+	
+	@Test public void search_res() {
+		ReBox<String> rb = new ReBox<String>();
+		rb.add( "/foo/bar/baz", "A" );
+		assertEquals( "A", rb.match( "/foo/bar/baz" ) );
+		assertEquals( null, rb.match( "/foo/bar/ba" ) );
+		assertEquals( null, rb.match( "/foo/bar/bazz" ) );
+	}
+	
+	static class ReBox<T> {
+
+		Map<String, T> templates = new HashMap<String, T>();
+		
+		public void add(String template, T value ) {
+			templates.put(template, value);
+			}
+		
+		public T match( String s ) {
+			Machine<T> m = compile( templates );
+			return m.match(s);
+		}
+		
+		Machine<T> compile( Map<String, T> templates ) {
+			Machine<T> m = new Machine<T>();
+			for (Map.Entry<String, T> e: templates.entrySet()) {
+				String t = e.getKey();
+				int state = 0;
+				for (int i = 0; i < t.length(); i += 1) {
+					char ch = t.charAt(i);
+					if (ch == '{') {
+						throw new RuntimeException("NOT YET" );
+					} else {
+						int next = m.freshState();
+						m.go(state, ch, next);
+						state = next;
+					}
+				}
+				m.isfinal(state, e.getValue());
+			}
+			return m;
+		}
+		
+	}
+	
+	static class Machine<T> {
+		
+		int counter = 0;
+		
+		Map<Integer, Integer> states = new HashMap<Integer, Integer>();
+		Map<Integer, T> answers = new HashMap<Integer, T>();
+		
+		public int freshState() {
+			return ++counter;
+		}
+
+		public void go(int state, char ch, int next) {
+			states.put( (state << 16) + ch, next );
+		}
+		
+		public void isfinal(int state, T value) {
+			answers.put(state, value);
+		}
+
+		public T match(String s) {
+			Set<Integer> current = new HashSet<Integer>(); 
+			current.add(0);
+			Set<Integer> nexties = new HashSet<Integer>();
+		//
+			for (int i = 0; i < s.length(); i += 1) {
+				char ch = s.charAt(i);
+				for (Integer state: current) {
+					Integer next = states.get( (state << 16) + ch );
+					if (next != null) {
+						nexties.add( next );
+					}
+				if (nexties.isEmpty()) return null;
+				Set<Integer> x = nexties; nexties = current; current = x; nexties.clear();
+				}
+			}
+		//
+			return answers.get( current.iterator().next() );
+		}
+		
+	}
+	
 	
 	static class Table {
 
