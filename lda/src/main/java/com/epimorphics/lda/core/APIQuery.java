@@ -275,7 +275,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     public static class Param
     	{
     	final String p;
-    	public Param( String p ) { this.p = p; }
+    	
+    	private Param( String p ) { this.p = p; }
     	public static Param make( String p ) { return new Param( p ); }
     	
     	@Override public String toString() { return p; }
@@ -506,21 +507,11 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	String [] path = param.parts();
     //
 		String rawValue = rawValues.iterator().next();
-    	if (optional) { // TODO clean this up
-    		if (rawValues.size() > 1)
-    			throw new RuntimeException( "TOO MANY VALUES FOR OPTIONAL: BOOM!" );
-			String prop = path[0];
-    		Resource np = sns.normalizeResource(prop);
-			varProps.put(rawValue.substring(1), prop);   
-			basicGraphTriples.add( RDFQ.triple( SELECT_VAR, RDFQ.uri( np.getURI() ), sns.normalizeNodeToRDFQ( prop, rawValue, defaultLanguage ), optional ) ); 
-    		noteBindableVar( path[0] );
-    		noteBindableVar( rawValue );
-    		return path[0];
-    	}
-    	// System.err.println( ">> addPropertyHasValue for " + param + ", languages '" + languages + "'" );
-        Variable var = SELECT_VAR;
+    	if (optional) return generateOptionalTriple(rawValues, optional, path, rawValue);
+    //
+    	Variable var = SELECT_VAR;
         int i = 0;
-        while (i <path.length-1) {
+        while (i < path.length-1) {
             Variable newvar = newVar();
             addTriplePattern(var, path[i], newvar );
             noteBindableVar(path[i]);
@@ -545,6 +536,18 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         }
         return path[i];
     }
+
+	private String generateOptionalTriple(Set<String> rawValues, boolean optional, String[] path, String rawValue) {
+	// TODO clean this up
+		if (rawValues.size() > 1) throw new RuntimeException( "too many (>1) values for optional." );
+		String prop = path[0];
+		Resource np = sns.normalizeResource(prop);
+		varProps.put(rawValue.substring(1), prop);   
+		basicGraphTriples.add( RDFQ.triple( SELECT_VAR, RDFQ.uri( np.getURI() ), sns.normalizeNodeToRDFQ( prop, rawValue, defaultLanguage ), optional ) ); 
+		noteBindableVar( path[0] );
+		noteBindableVar( rawValue );
+		return path[0];
+	}
 
     /**
         Discard any existing order expressions (a string that
