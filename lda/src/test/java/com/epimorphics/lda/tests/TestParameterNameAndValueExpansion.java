@@ -135,7 +135,7 @@ public class TestParameterNameAndValueExpansion
 	private final class SNS extends ExpandOnly
 		{
 		public SNS(String expansions) 
-			{ super( expansions ); }
+			{ super( MakeData.modelForBrief( "bname" ), expansions ); }
 
 		@Override public Resource normalizeResource( String s ) 
 			{

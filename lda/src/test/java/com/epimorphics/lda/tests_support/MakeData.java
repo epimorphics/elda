@@ -14,9 +14,14 @@ import java.util.Properties;
 
 import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.vocabs.FIXUP;
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
     Helper code to construct String->String hash maps from tiny strings
@@ -83,6 +88,26 @@ public class MakeData
 				String [] parts = b.split( "=" );
 				result.put( parts[0], new Value( parts[1] ) );
 				}
+		return result;
+		}
+
+	/**
+	    Answers a model which can be used to establish the short form and type 
+	    of fake properties. The comma-separated shortnames S from <code>brief</code>
+	    are converted to full fake URIs fake:/S which are declared as 
+	    rdf:Property's with integer ranges and label S.
+	*/
+	public static Model modelForBrief(String brief) 
+		{
+		Model result = ModelFactory.createDefaultModel();
+		Resource integer = result.createResource( XSDDatatype.XSDinteger.getURI() );
+		for (String b: brief.split(",")) 
+			{
+			Resource r = result.createResource( "fake:/" + b );
+			r.addProperty( FIXUP.label, b );
+			r.addProperty( RDF.type, RDF.Property );
+			r.addProperty( RDFS.range, integer );
+			}
 		return result;
 		}
 	}

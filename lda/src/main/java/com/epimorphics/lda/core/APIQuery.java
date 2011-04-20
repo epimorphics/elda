@@ -277,32 +277,62 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	{
     	final String p;
     	
-    	private Param( String p ) { this.p = p; }
+    	protected Param( String p ) { this.p = p; }
     	
     	public static Param make( ShortnameService sns, String p ) 
     		{ 
-//    		if (p.charAt(0) == '_') 
-//    			System.err.println( ">> magic property: " + p );
-//    		else if (p.indexOf('-') > -1) 
-//    			System.err.println( ">> prefixed property: " + p );
-//    		else 
-//    			{
-//    			System.err.println( ">> undecorated chain: " + p );
-//    			String [] parts = p.split("\\.");
-//    			for (String part: parts)
-//    				{
-//    				if (part.charAt(0) == '{')
-//    					{ /* deferred */ }
-//    				else
-//    					{
-//    					Prop prop = sns.asContext().getPropertyByName( part );
-//    					if (prop == null) throw new RuntimeException( "property '" + part + "' isn't defined." );
-//    					else System.err.println( "]]  type: " + prop.getType() );
-//    					}
-//    				}
-//    			}
-    		return new Param( p ); 
+    		if (p.charAt(0) == '_') return new MagicParam( p );
+    		int hyphen = p.indexOf('-');
+    		if (hyphen < 0)
+    			{
+    			return new PlainParam( p );
+    			}
+    		else
+    			{
+    			String prefix = p.substring(0, hyphen);
+    			String name = p.substring(hyphen+1);
+    			return new PrefixedParam( prefix, p );
+    			}
     		}
+
+    	protected static void munge( ShortnameService sns, String p ) 
+    		{
+			String [] parts = p.split("\\.");
+			for (String part: parts)
+				{
+				if (part.charAt(0) == '{')
+					{ /* deferred */ }
+				else
+					{
+					Prop prop = sns.asContext().getPropertyByName( part );
+					if (prop == null) throw new RuntimeException( "property '" + part + "' isn't defined." );
+					else System.err.println( "]]  type: " + prop.getType() );
+					}
+				}
+    		}
+    	    	
+    	static class MagicParam extends Param 
+    		{
+			protected MagicParam( String p ) 
+				{ super( p ); }
+    		}
+    	    	
+    	static class PrefixedParam extends Param 
+    		{
+			protected PrefixedParam( String prefix, String p ) 
+				{ super( p ); }
+    		}
+    	
+    	static class PlainParam extends Param
+    		{
+    		protected PlainParam( String p )
+    			{ super( p ); }
+    		}
+
+    	public String lastPropertyOf() {
+    		String [] parts = this.asString().split( "\\." );
+    		return parts[parts.length - 1];
+    	}
     	
     	@Override public String toString() { return p; }
     	
@@ -395,13 +425,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         } else {
             addPropertyHasValue( param, allVal );
         }
-        return lastPropertyOf(param);
+        return param.lastPropertyOf();
     }
-
-	private String lastPropertyOf(Param param) {
-		String [] parts = param.asString().split( "\\." );
-		return parts[parts.length - 1];
-	}
     
     List<Deferred> deferredFilters = new ArrayList<Deferred>();
     
@@ -623,7 +648,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 
     protected void noteBindableVar(Param p) {
     	// TODO fix to work properly
-    	noteBindableVar( lastPropertyOf(p) );
+    	noteBindableVar( p.lastPropertyOf() );
     }
 
     protected void noteBindableVar(String propname) {

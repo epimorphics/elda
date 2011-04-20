@@ -18,18 +18,13 @@ import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.tests_support.ShortnameFake;
 import com.epimorphics.util.CollectionUtils;
-import com.epimorphics.vocabs.FIXUP;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class TestExistsModifier 
 	{
@@ -38,22 +33,8 @@ public class TestExistsModifier
 		static final String NS = "fake:";
 		
 		public Shorts(String brief) 
-			{ super( modelForBrief( brief ) ); }
+			{ super( MakeData.modelForBrief( brief ) ); }
 		
-		static Model modelForBrief(String brief) 
-			{
-			Model result = ModelFactory.createDefaultModel();
-			Resource integer = result.createResource( XSDDatatype.XSDinteger.getURI() );
-			for (String b: brief.split(",")) 
-				{
-				Resource r = result.createResource( "fake:/" + b );
-				r.addProperty( FIXUP.label, b );
-				r.addProperty( RDF.type, RDF.Property );
-				r.addProperty( RDFS.range, integer );
-				}
-			return result;
-			}
-
 		@Override public Resource normalizeResource( String shortName ) 
 			{ return ResourceFactory.createResource( NS + shortName ); }
 
