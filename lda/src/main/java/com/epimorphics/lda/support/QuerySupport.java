@@ -14,12 +14,26 @@
 
 package com.epimorphics.lda.support;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.epimorphics.lda.core.APIQuery;
+import com.epimorphics.lda.rdfq.Any;
+import com.epimorphics.lda.rdfq.LiteralNode;
+import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 
 public class QuerySupport
     {
+    
+    static Logger log = LoggerFactory.getLogger( APIQuery.class );
+    
     /**
         Answer the ResultSet obtained by running the query in queryString
         over the given model with the given initial variable bindings. The
@@ -40,7 +54,46 @@ public class QuerySupport
         System.err.println( ">> mapToStringLiteral: " + value );
         final Literal literal = ResourceFactory.createTypedLiteral( value, XSDDatatype.XSDstring );
         return new InitialParameter( name, literal );
-        }
+        }    
+    
+	private static boolean promoteAnySubject = true;
+	
+	/**
+	    Reorder the given triples to try and arrange that
+	   	query engines with weak optimisers aren't given excessively
+	   	silly queries. So rdf:type statements (which are usually
+	   	less useful than specific properties) are moved down the
+	   	order, and triples with literal objects (which often only
+	   	appear a few times) are moved up.
+	   	
+	 	@param triples the list of triples to re-order.
+	 	@return a fresh list of triples, a reordered version of triples.
+	*/
+    public static List<Triple> reorder( List<Triple> triples )
+    	{
+    	List<Triple> result = new ArrayList<Triple>(triples.size());
+    	List<Triple> plain = new ArrayList<Triple>(triples.size());
+    	List<Triple> type = new ArrayList<Triple>(triples.size());
+    	for (Triple t: triples) 
+    		{
+    		if (t.O instanceof LiteralNode && canPromoteSubject( t.S ))
+    			result.add( t );
+    		else if (t.P.equals( RDFQ.RDF_TYPE ))
+    			type.add( t );
+    		else
+    			plain.add( t );
+    		}
+    	result.addAll( plain );
+    	result.addAll( type );
+    	if (!result.equals( triples ))
+    		log.debug( "reordered\n    " + triples + "\nto\n    " + result );
+    	return result;
+    	}
+
+	public static boolean canPromoteSubject( Any S ) 
+		{
+		return promoteAnySubject || S.equals( APIQuery.SELECT_VAR );
+		}
     }
 
     

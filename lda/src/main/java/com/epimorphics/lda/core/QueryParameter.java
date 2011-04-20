@@ -9,7 +9,8 @@ package com.epimorphics.lda.core;
 
 /**
     Transparent names for the reserved _spoo query parameters
-    and their default values (if they have them).
+    and their default values (if they have them) and the
+    allowable parameter prefixes.
     
  	@author chris
 */
@@ -31,5 +32,13 @@ public class QueryParameter {
 	
 	public static final int DEFAULT_PAGE_SIZE = 10;
 	public static final int MAX_PAGE_SIZE = 250;
+	
+	public static final String NAME_PREFIX = "name-";
+	public static final String LANG_PREFIX = "lang-";
+	public static final String MIN_PREFIX = "min-";
+	public static final String MAX_PREFIX = "max-";
+	public static final String MIN_EX_PREFIX = "minEx-";
+	public static final String MAX_EX_PREFIX = "maxEx-";
+	public static final String EXISTS_PREFIX = "exists-";
 
 }

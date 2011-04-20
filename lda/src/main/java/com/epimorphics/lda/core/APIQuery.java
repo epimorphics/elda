@@ -21,11 +21,12 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
-import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.LARQManager;
+import com.epimorphics.lda.support.QuerySupport;
+
 import static com.epimorphics.util.CollectionUtils.*;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.graph.*;
@@ -45,27 +46,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @version $Revision: $
  */
 public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, ExpansionPoints {
-    
-	public static final String NAME_PREFIX = "name-";
-    public static final int NAME_LEN = NAME_PREFIX.length();
-    
-    public static final String LANG_PREFIX = "lang-";
-    public static final int LANG_LEN = LANG_PREFIX.length();
-    
-    public static final String MIN_PREFIX = "min-";
-    public static final int MIN_LEN = MIN_PREFIX.length();
-    
-    public static final String MAX_PREFIX = "max-";
-    public static final int MAX_LEN = MAX_PREFIX.length();
-    
-    public static final String MIN_OPEN_PREFIX = "minEx-";
-    public static final int MINO_LEN = MIN_OPEN_PREFIX.length();
-    
-    public static final String MAX_OPEN_PREFIX = "maxEx-";
-    public static final int MAXO_LEN = MAX_OPEN_PREFIX.length();
-    
-    public static final String EXISTS_PREFIX = "exists-";
-    public static final int EXISTS_LEN = EXISTS_PREFIX.length();
     
 	public static final String NEAR_LAT = "near-lat";
 	
@@ -327,26 +307,19 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	String prefix = param.prefix();
     	if (prefix == null) {
     		addPropertyHasValue( param, allVal );    		
-    	} else if (prefix.equals(NAME_PREFIX)) {
-//        	param = param.substring(NAME_LEN);
+    	} else if (prefix.equals(QueryParameter.NAME_PREFIX)) {
             addNameProp(param.plain(), val);
-        } else if (prefix.equals( LANG_PREFIX )) {
-//        	param = param.substring( LANG_LEN );
-        	
-        } else if (prefix.equals(MIN_PREFIX)) {
-//        	param = param.substring(MIN_LEN);
+        } else if (prefix.equals( QueryParameter.LANG_PREFIX )) {
+        	// handled elsewhere
+        } else if (prefix.equals(QueryParameter.MIN_PREFIX)) {
             addRangeFilter(param.plain(), val, ">=");
-        } else if (prefix.equals(MIN_OPEN_PREFIX)) {
-//        	param = param.substring(MINO_LEN);
+        } else if (prefix.equals(QueryParameter.MIN_EX_PREFIX)) {
             addRangeFilter(param.plain(), val, ">");
-        } else if (prefix.equals(MAX_PREFIX)) {
-//        	param = param.substring(MAX_LEN);
+        } else if (prefix.equals(QueryParameter.MAX_PREFIX)) {
             addRangeFilter(param.plain(), val, "<=");
-        } else if (prefix.equals(MAX_OPEN_PREFIX)) {
-//        	param = param.substring(MAXO_LEN);
+        } else if (prefix.equals(QueryParameter.MAX_EX_PREFIX)) {
             addRangeFilter(param.plain(), val, "<");
-        } else if (prefix.equals(EXISTS_PREFIX)) {
-//        	param = param.substring(EXISTS_LEN);
+        } else if (prefix.equals(QueryParameter.EXISTS_PREFIX)) {
             if (val.equals( "true" )) addPropertyHasValue( param );
             else if (val.equals( "false" )) addPropertyHasntValue( param );
             else EldaException.BadBooleanParameter( param.toString(), val );
@@ -662,40 +635,14 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 
 	public String constructBGP() {
 		StringBuilder sb = new StringBuilder();
-		for (RDFQ.Triple t: reorder( basicGraphTriples ))
+		for (RDFQ.Triple t: QuerySupport.reorder( basicGraphTriples ))
 			sb
 				.append( t.asSparqlTriple() )
 				.append( " .\n" )
 				;
 		return sb.toString();
 	}
-    
-	static final URINode RDF_TYPE = RDFQ.uri( RDF.type.getURI() );
-	
-	private boolean promoteAnySubject = true;
-	
-    private List<Triple> reorder( List<Triple> triples ) {
-    	List<Triple> result = new ArrayList<Triple>(triples.size());
-    	List<Triple> plain = new ArrayList<Triple>(triples.size());
-    	List<Triple> type = new ArrayList<Triple>(triples.size());
-    	for (Triple t: triples) {
-    		if (t.O instanceof LiteralNode && canPromoteSubject( t.S ))
-    			result.add( t );
-    		else if (t.P.equals( RDF_TYPE ))
-    			type.add( t );
-    		else
-    			plain.add( t );
-    	}
-    	result.addAll( plain );
-    	result.addAll( type );
-    	if (!result.equals( triples ))
-    		log.debug( "reordered\n    " + triples + "\nto\n    " + result );
-    	return result;
-	}
 
-	private boolean canPromoteSubject( Any S ) {
-		return promoteAnySubject || S.equals( SELECT_VAR );
-	}
 
 	private void appendPrefixes(StringBuilder q, PrefixMapping prefixes) {
 		for (String prefix: prefixes.getNsPrefixMap().keySet()) {

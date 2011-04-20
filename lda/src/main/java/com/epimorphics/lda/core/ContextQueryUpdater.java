@@ -65,7 +65,7 @@ public class ContextQueryUpdater implements ViewSetter {
     	query.activateDeferredFilters( context );
     	query.clearLanguages();
     	for (String param: context.getFilterPropertyNames()) 
-    		if (param.startsWith( APIQuery.LANG_PREFIX ))
+    		if (param.startsWith( QueryParameter.LANG_PREFIX ))
     			handleLangPrefix( param );
         GEOLocation geo = new GEOLocation();
         for (String param: context.getFilterPropertyNames()) 
@@ -75,7 +75,7 @@ public class ContextQueryUpdater implements ViewSetter {
     }
 
 	private void handleLangPrefix( String taggedParam ) {
-		String param = taggedParam.substring( APIQuery.LANG_LEN );
+		String param = taggedParam.substring( QueryParameter.LANG_PREFIX.length() );
 		String val = context.expandVariables( context.getStringValue( param ) );
 		String pString = context.expandVariables( param );
 		query.setLanguagesFor( pString, val );
@@ -96,7 +96,7 @@ public class ContextQueryUpdater implements ViewSetter {
 	//
 		if (query.isBindable(pString)) {
 			// nothing to do -- report suspect?  
-		} else if (p.startsWith( APIQuery.LANG_PREFIX )) {
+		} else if (p.startsWith( QueryParameter.LANG_PREFIX )) {
 			// Nothing to do -- done on previous pass 
 		} else if (p.startsWith("_") || p.equals("near-lat") || p.equals("near-long")) {
 			query.handleReservedParameters( geo, this, p, val );

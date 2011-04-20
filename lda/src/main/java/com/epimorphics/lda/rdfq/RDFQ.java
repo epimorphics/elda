@@ -7,6 +7,8 @@
 */
 package com.epimorphics.lda.rdfq;
 
+import com.hp.hpl.jena.vocabulary.RDF;
+
 
 /**
     A skinny set of classes for representing SPARQL atomic terms,
@@ -16,6 +18,8 @@ package com.epimorphics.lda.rdfq;
 */
 public class RDFQ
 	{
+	public static final URINode RDF_TYPE = uri( RDF.type.getURI() );
+	
 	public static class Triple 
 		{
 		public final Any S, P, O;
@@ -72,4 +76,5 @@ public class RDFQ
 	
 	public static Triple triple( Any S, Any P, Any O, boolean optional ) 
 		{ return new Triple( S, P, O, optional ); }
+
 	}
