@@ -24,7 +24,7 @@ public class TestWhereParameter
 		{    
         ShortnameService sns = TestSelectParameter.makeSNS();
         APIQuery q = new APIQuery(sns);
-        APIQuery.Param _select = APIQuery.Param.make( "_where" );
+        APIQuery.Param _select = APIQuery.Param.make( sns, "_where" );
         String theBaseQuery = q.assembleSelectQuery( TestSelectParameter.noPrefixes );
         String theWhereClause = "?p <spoo:equals> 17";
         q.addFilterFromQuery( _select, set(theWhereClause) );

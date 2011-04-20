@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
@@ -277,16 +278,46 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	final String p;
     	
     	private Param( String p ) { this.p = p; }
-    	public static Param make( String p ) { return new Param( p ); }
+    	
+    	public static Param make( ShortnameService sns, String p ) 
+    		{ 
+//    		if (p.charAt(0) == '_') 
+//    			System.err.println( ">> magic property: " + p );
+//    		else if (p.indexOf('-') > -1) 
+//    			System.err.println( ">> prefixed property: " + p );
+//    		else 
+//    			{
+//    			System.err.println( ">> undecorated chain: " + p );
+//    			String [] parts = p.split("\\.");
+//    			for (String part: parts)
+//    				{
+//    				if (part.charAt(0) == '{')
+//    					{ /* deferred */ }
+//    				else
+//    					{
+//    					Prop prop = sns.asContext().getPropertyByName( part );
+//    					if (prop == null) throw new RuntimeException( "property '" + part + "' isn't defined." );
+//    					else System.err.println( "]]  type: " + prop.getType() );
+//    					}
+//    				}
+//    			}
+    		return new Param( p ); 
+    		}
     	
     	@Override public String toString() { return p; }
     	
 		public String asString() { return p; }
+		
 		public boolean is( String thing ) { return p.equals(thing); }
+		
 		public boolean hasPrefix(String s) { return p.startsWith(s); }
+		
 		public Param substring(int n) { return new Param(p.substring(n)); }
+		
 		public String[] parts() { return p.split("\\."); }
+		
 		public boolean hasVariable() { return p.indexOf('{') >= 0; }
+		
 		public Param expand( CallContext cc ) { return new Param( cc.expandVariables( p ) ); }
     	}
     
@@ -586,7 +617,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	            orderExpressions.append(" " + var + " ");
 	        }
 	        if (!varOrder)
-	            addPropertyHasValue(Param.make(spec), set(var)); // TODO fix use of make
+	            addPropertyHasValue(Param.make(sns, spec), set(var)); // TODO fix use of make
     	}
     }
 

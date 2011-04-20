@@ -8,18 +8,16 @@
 
 package com.epimorphics.lda.core;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.util.Couple;
 import com.epimorphics.lda.core.APIQuery.Param;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.util.Couple;
 
 /**
     A ContextQueryUpdater is used to update an APIQuery according to context
@@ -73,7 +71,7 @@ public class ContextQueryUpdater {
     			handleLangPrefix( param );
         GEOLocation geo = new GEOLocation();
         for (String param: context.getFilterPropertyNames()) 
-            handleParam( geo, Param.make( param ) );
+            handleParam( geo, Param.make( sns, param ) );
         geo.addLocationQueryIfPresent( query );
         return new Couple<View, String>( (view == noneSpecified ? defaultView : view), requestedFormat );
     }
@@ -127,7 +125,7 @@ public class ContextQueryUpdater {
 		} else {
 			log.debug( "handleParam: " + p + " with value: " + val );
 //			System.err.println( ">> handleParam: " + p + " with value: " + val );
-			query.addFilterFromQuery( Param.make( pString ), allVal );
+			query.addFilterFromQuery( Param.make( sns, pString ), allVal );
 		}
 	}
 

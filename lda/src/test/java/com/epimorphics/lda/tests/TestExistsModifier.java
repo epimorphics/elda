@@ -18,20 +18,42 @@ import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.tests_support.ShortnameFake;
 import com.epimorphics.util.CollectionUtils;
+import com.epimorphics.vocabs.FIXUP;
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class TestExistsModifier 
 	{
-	private final class Shorts extends ShortnameFake 
+	private static final class Shorts extends ShortnameFake 
 		{
 		static final String NS = "fake:";
 		
+		public Shorts(String brief) 
+			{ super( modelForBrief( brief ) ); }
+		
+		static Model modelForBrief(String brief) 
+			{
+			Model result = ModelFactory.createDefaultModel();
+			Resource integer = result.createResource( XSDDatatype.XSDinteger.getURI() );
+			for (String b: brief.split(",")) 
+				{
+				Resource r = result.createResource( "fake:/" + b );
+				r.addProperty( FIXUP.label, b );
+				r.addProperty( RDF.type, RDF.Property );
+				r.addProperty( RDFS.range, integer );
+				}
+			return result;
+			}
+
 		@Override public Resource normalizeResource( String shortName ) 
 			{ return ResourceFactory.createResource( NS + shortName ); }
 
@@ -46,8 +68,9 @@ public class TestExistsModifier
 	
 	@Test public void testExists()
 		{
-		APIQuery q = new APIQuery( new Shorts() );
-		q.addFilterFromQuery( Param.make( "exists-backwards" ), set("true") );
+		Shorts sns = new Shorts( "exists-backwards" );
+		APIQuery q = new APIQuery( sns );
+		q.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("true") );
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		assertEquals( 1, triples.size() );
 		RDFQ.Triple t = triples.get(0);
@@ -58,8 +81,9 @@ public class TestExistsModifier
 	
 	@Test public void testNotExists()
 		{
-		APIQuery q = new APIQuery( new Shorts() );
-		q.addFilterFromQuery( Param.make( "exists-backwards" ), set("false") );
+		Shorts sns = new Shorts( "exists-backwards" );
+		APIQuery q = new APIQuery( sns );
+		q.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("false") );
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		List<RenderExpression> filters = q.getFilterExpressions();
 	//
@@ -98,9 +122,10 @@ public class TestExistsModifier
 	*/
 	public void testNotExistsXY( String existsSetting, String expect )
 		{
-		APIQuery q = new APIQuery( new Shorts() );
-		q.addFilterFromQuery( Param.make( "type" ), set("Item") );
-		q.addFilterFromQuery( Param.make( "exists-backwards" ), set(existsSetting) );
+		Shorts sns = new Shorts( "type,exists-backwards" );
+		APIQuery q = new APIQuery( sns );
+		q.addFilterFromQuery( Param.make( sns, "type" ), set("Item") );
+		q.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set(existsSetting) );
 	//
 		String query = q.assembleSelectQuery( PrefixMapping.Factory.create() );
 		QueryExecution qx = QueryExecutionFactory.create( query, model );

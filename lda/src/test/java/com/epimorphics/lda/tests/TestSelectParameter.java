@@ -30,7 +30,7 @@ public class TestSelectParameter
         {    
         ShortnameService sns = makeSNS();
         APIQuery q = new APIQuery(sns);
-        APIQuery.Param _select = APIQuery.Param.make("_select" );
+        APIQuery.Param _select = APIQuery.Param.make(sns, "_select" );
         String theSelectQuery = "this is a select query";
         q.addFilterFromQuery( _select, set(theSelectQuery) );
         assertEquals( theSelectQuery, q.assembleSelectQuery( noPrefixes) );
@@ -40,7 +40,7 @@ public class TestSelectParameter
         {    
         ShortnameService sns = makeSNS();
         APIQuery q = new APIQuery(sns);
-        APIQuery.Param _select = APIQuery.Param.make("_select" );
+        APIQuery.Param _select = APIQuery.Param.make(sns, "_select" );
         String theSelectQuery = "this is a select query";
         q.addFilterFromQuery( _select, set(theSelectQuery) );
         APIQuery cloned = q.clone();

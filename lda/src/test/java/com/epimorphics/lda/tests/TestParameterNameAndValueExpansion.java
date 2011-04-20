@@ -57,6 +57,7 @@ public class TestParameterNameAndValueExpansion
 			+ "; ex:number api:label 'number'"
 			+ "; ex:name api:label 'name'"
 			+ "; rdf:type api:label 'type'"
+			+ "; rdf:type rdf:type rdf:Property"
 			+ "; ex:Class api:label 'class'"
 		//
 			+ "; school-ont:localAuthority api:label 'localAuthority'"

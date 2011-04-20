@@ -49,6 +49,7 @@ public class TestPropertyChainEndToEnd
 			+ "; ex:size rdfs:range xsd:int"
 			+ "; ex:number api:label 'number'"
 			+ "; ex:name api:label 'name'"
+			+ "; rdf:type rdf:type rdf:Property"
 			+ "; rdf:type api:label 'type'"
 			+ "; ex:Class api:label 'class'"
 		//
@@ -141,7 +142,7 @@ public class TestPropertyChainEndToEnd
 		PrefixMapping prefixes = PrefixMapping.Factory.create();
 		ShortnameService sns = new StandardShortnameService( spec, prefixes, loader );
 		APIQuery q = new APIQuery( sns );
-		q.addFilterFromQuery( Param.make( propertyThing), set("17") );
+		q.addFilterFromQuery( Param.make(sns, propertyThing), set("17") );
 		assertContains( q.assembleSelectQuery( prefixes ), "\"17\"^^< http://www.w3.org/2001/XMLSchema#int>" );
 		}
 	

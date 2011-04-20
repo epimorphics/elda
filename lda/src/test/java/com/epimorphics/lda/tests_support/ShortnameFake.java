@@ -12,6 +12,7 @@ import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.Term;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -24,6 +25,16 @@ import com.hp.hpl.jena.rdf.model.Resource;
 */
 public class ShortnameFake implements ShortnameService
 {
+	final Context c;
+
+	public ShortnameFake() {
+		this.c = new Context();
+	}
+	
+	public ShortnameFake(Model config) {
+		this.c = new Context(config);
+	}
+	
 	@Override public String shorten(String u) {
 		throw new NotImplementedException();
 	}
@@ -51,8 +62,6 @@ public class ShortnameFake implements ShortnameService
 	@Override public String expand(String s) {
 		throw new NotImplementedException();
 		}
-
-	final Context c = new Context();
 	
 	@Override public Context asContext() {
 		return c;

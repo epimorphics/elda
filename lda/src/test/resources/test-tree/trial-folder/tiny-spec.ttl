@@ -18,6 +18,8 @@
     ; rdfs:range xsd:integer
     .
     
-rdf:type api:label 'type'.
+rdf:type a rdf:Property
+    ; api:label 'type'
+    .
 
 :C api:label 'C'.

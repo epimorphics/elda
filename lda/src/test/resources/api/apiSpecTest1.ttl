@@ -158,8 +158,14 @@ ex:type a owl:ObjectProperty; api:label "school_type" .
 ex:Primary api:label "Primary" .
 ex:Secondary api:label "Secondary" .
 
-school-ont:localAuthority api:label "localAuthority" .
-rdfs:label api:label "label".
+school-ont:localAuthority 
+    a rdf:Property
+    ; api:label "localAuthority" 
+    .
+    
+rdfs:label a rdf:Property
+    ; api:label "label"
+    .
 
 
 

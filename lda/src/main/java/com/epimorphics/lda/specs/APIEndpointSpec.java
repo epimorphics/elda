@@ -220,8 +220,9 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 
     private void addSelectorInfo( Resource s ) {
         Model m = s.getModel();
+        ShortnameService sns = this.apiSpec.sns;
         if (s.hasProperty(FIXUP.type)) {
-            Resource ty = this.apiSpec.sns.normalizeResource( s.getProperty(FIXUP.type).getObject() );
+			Resource ty = sns.normalizeResource( s.getProperty(FIXUP.type).getObject() );
             baseQuery.setTypeConstraint( ty );
         }
         for (NodeIterator ni = m.listObjectsOfProperty(s, API.filter); ni.hasNext();) {
@@ -229,7 +230,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
             for (String query : q.split("[,&]")) { // TODO -- remove this compatability HACK
 	            String[] paramValue = query.split("=");
 	            if (paramValue.length == 2) {
-	                baseQuery.deferrableAddFilter( Param.make( paramValue[0] ), paramValue[1] );
+	                baseQuery.deferrableAddFilter( Param.make( sns, paramValue[0] ), paramValue[1] );
 	            } else {
 	                APISpec.log.error("View specification contained unintepretable query string: " + q);
 	            }

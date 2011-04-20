@@ -234,59 +234,56 @@ public class View {
 		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
 
 	private void fetchByGivenPropertyChains(Model m, List<Resource> roots, List<Source> sources, VarSupply vars, List<PropertyChain> chains) {
-		String construct = "CONSTRUCT {";
+		StringBuilder construct = new StringBuilder();
+		construct.append( "CONSTRUCT {" );
 		List<Variable> varsInOrder = new ArrayList<Variable>();
 		for (Resource r: new HashSet<Resource>( roots)) {
 			for (PropertyChain c: chains) {
-				construct += "\n  ";
-				construct += buildConstructClause( r, c, vars, varsInOrder );
+				construct.append( "\n  " );
+				buildConstructClause( construct, r, c, vars, varsInOrder );
 			}
 		}
 	//
-		construct += "\n} WHERE {";
+		construct.append( "\n} WHERE {" );
 		String union = "";
 		for (Resource r: new HashSet<Resource>( roots)) {
 			for (PropertyChain c: chains) {
-				construct += "\n  " + union;
-				construct += buildWhereClause( r, c, vars, varsInOrder );
+				construct.append( "\n  " ).append( union );
+				buildWhereClause( construct, r, c, vars, varsInOrder );
 				union = "UNION ";
 			}
 		}
-		construct += "\n}";
+		construct.append( "\n}" );
 	//
-		Query constructQuery = QueryFactory.create( construct );
+		Query constructQuery = QueryFactory.create( construct.toString() );
 		for (Source x: sources) m.add( x.executeConstruct( constructQuery ) );
 	}
 	
-	private String buildConstructClause( Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
-		StringBuffer sb = new StringBuffer();
+	private void buildConstructClause( StringBuilder construct, Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
 		String S = "<" + r.getURI() + ">";
 		for (Property p: c.getProperties()) {
 			Variable v = vs.newVar();
 			varsInOrder.add( v );
 			String V = v.asSparqlTerm();
-			sb.append( S );
-			sb.append( " " ).append( "<" ).append( p.getURI() ).append( ">" );
-			sb.append( " " ).append( V );
+			construct.append( S );
+			construct.append( " " ).append( "<" ).append( p.getURI() ).append( ">" );
+			construct.append( " " ).append( V );
 			S = " . " + V;
 		}
-		sb.append( " ." );
-		return sb.toString();
+		construct.append( " ." );
 	}
 	
-	private String buildWhereClause( Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
-		StringBuffer sb = new StringBuffer();
+	private void buildWhereClause( StringBuilder construct, Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
 		String S = "<" + r.getURI() + ">";
-		sb.append( "{" );
+		construct.append( "{" );
 		for (Property p: c.getProperties()) {
 			String V = next( varsInOrder) .asSparqlTerm();
-			sb.append( S );
-			sb.append( " " ).append( "<" ).append( p.getURI() ).append( ">" );
-			sb.append( " " ).append( V );
+			construct.append( S );
+			construct.append( " " ).append( "<" ).append( p.getURI() ).append( ">" );
+			construct.append( " " ).append( V );
 			S = " OPTIONAL { " + V;
 		}
-		for (int i = 0; i < c.getProperties().size(); i += 1) sb.append( "}" );
-		return sb.toString();
+		for (int i = 0; i < c.getProperties().size(); i += 1) construct.append( "}" );
 	}
 
 	private Variable next(List<Variable> varsInOrder) {
