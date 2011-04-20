@@ -18,7 +18,6 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
@@ -47,14 +46,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  */
 public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, ExpansionPoints {
     
-	public static final int DEFAULT_PAGE_SIZE = 10;
-	
-	public static final int MAX_PAGE_SIZE = 250;
-    
-    public static final String PAGE_PARAM = "_page";
-    public static final String PAGE_SIZE_PARAM = "_pageSize";
-
-    public static final String NAME_PREFIX = "name-";
+	public static final String NAME_PREFIX = "name-";
     public static final int NAME_LEN = NAME_PREFIX.length();
     
     public static final String LANG_PREFIX = "lang-";
@@ -79,25 +71,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	
 	public static final String NEAR_LONG = "near-long";
     
-	public static final String DISTANCE = "_distance";
-    
-    public static final String SEARCH = "_search";
-    
-    public static final String SORT = "_sort";
-    
-    public static final String SUBJECT_PARAM = "_subject";
-    
-    public static final String WHERE_PARAM = "_where";
-    
-    private static final String _SELECT_PARAM = "_select";
-    
-    public static final String _TEMPLATE = "_template";
-    
-    public static final String TEMPLATE_PARAM = "_properties";
-    
-    public static final String SHOW_PARAM = "_view";
-    
-    public static final String SELECT_VARNAME = "item";
+	public static final String SELECT_VARNAME = "item";
     
     public static final Variable SELECT_VAR = RDFQ.var( "?" + SELECT_VARNAME );
     
@@ -143,7 +117,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected int varcount = 0;
     
     protected final int defaultPageSize;
-    protected int pageSize = DEFAULT_PAGE_SIZE;
+    protected int pageSize = QueryParameter.DEFAULT_PAGE_SIZE;
     protected final int maxPageSize;
     
     protected int pageNumber = 0;
@@ -174,8 +148,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     		@Override public final ShortnameService sns() { return sns; }
     		@Override public final String getDefaultLanguage() { return null; }
     		@Override public String getItemTemplate() { return null; }
-    		@Override public final int getMaxPageSize() { return MAX_PAGE_SIZE; }
-    		@Override public final int getDefaultPageSize() { return DEFAULT_PAGE_SIZE; }
+    		@Override public final int getMaxPageSize() { return QueryParameter.MAX_PAGE_SIZE; }
+    		@Override public final int getDefaultPageSize() { return QueryParameter.DEFAULT_PAGE_SIZE; }
     	};
     }
     
@@ -269,88 +243,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         return subjectResource.getURI();
     }
     
-    /**
-     	introduced to try and pull apart the types of arguments to the different filtering
-     	functions so that they're not all strings.
-    */
-    public static class Param
-    	{
-    	final String p;
-    	
-    	protected Param( String p ) { this.p = p; }
-    	
-    	public static Param make( ShortnameService sns, String p ) 
-    		{ 
-    		if (p.charAt(0) == '_') return new MagicParam( p );
-    		int hyphen = p.indexOf('-');
-    		if (hyphen < 0)
-    			{
-    			return new PlainParam( p );
-    			}
-    		else
-    			{
-    			String prefix = p.substring(0, hyphen);
-    			String name = p.substring(hyphen+1);
-    			return new PrefixedParam( prefix, p );
-    			}
-    		}
-
-    	protected static void munge( ShortnameService sns, String p ) 
-    		{
-			String [] parts = p.split("\\.");
-			for (String part: parts)
-				{
-				if (part.charAt(0) == '{')
-					{ /* deferred */ }
-				else
-					{
-					Prop prop = sns.asContext().getPropertyByName( part );
-					if (prop == null) throw new RuntimeException( "property '" + part + "' isn't defined." );
-					else System.err.println( "]]  type: " + prop.getType() );
-					}
-				}
-    		}
-    	    	
-    	static class MagicParam extends Param 
-    		{
-			protected MagicParam( String p ) 
-				{ super( p ); }
-    		}
-    	    	
-    	static class PrefixedParam extends Param 
-    		{
-			protected PrefixedParam( String prefix, String p ) 
-				{ super( p ); }
-    		}
-    	
-    	static class PlainParam extends Param
-    		{
-    		protected PlainParam( String p )
-    			{ super( p ); }
-    		}
-
-    	public String lastPropertyOf() {
-    		String [] parts = this.asString().split( "\\." );
-    		return parts[parts.length - 1];
-    	}
-    	
-    	@Override public String toString() { return p; }
-    	
-		public String asString() { return p; }
-		
-		public boolean is( String thing ) { return p.equals(thing); }
-		
-		public boolean hasPrefix(String s) { return p.startsWith(s); }
-		
-		public Param substring(int n) { return new Param(p.substring(n)); }
-		
-		public String[] parts() { return p.split("\\."); }
-		
-		public boolean hasVariable() { return p.indexOf('{') >= 0; }
-		
-		public Param expand( CallContext cc ) { return new Param( cc.expandVariables( p ) ); }
-    	}
-    
     public static class Deferred
     	{
     	final Param param;
@@ -379,7 +271,45 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     public void setLanguagesFor( String fullParamName, String languages ) {
     	languagesFor.put( fullParamName, languages );    
     }
-    
+ 
+	public void handleReservedParameters( GEOLocation geo, ViewSetter vs, String p, String val ) {
+		if (p.equals(QueryParameter._PAGE)) {
+		    setPageNumber( Integer.parseInt(val) ); 
+		} else if (p.equals(QueryParameter._PAGE_SIZE)) {
+		    setPageSize( Integer.parseInt(val) );
+		} else if (p.equals( QueryParameter._FORMAT )) {
+			vs.setFormat(val);
+        } else if (p.equals(QueryParameter._SEARCH)) {
+            addSearchTriple( val );
+        } else if (p.equals(QueryParameter._SELECT_PARAM )) {
+        	fixedQueryString = val;
+        } else if (p.equals(QueryParameter._LANG)) {
+			setDefaultLanguage( val );
+        } else if (p.equals(QueryParameter._WHERE)) {
+        	addWhere( val );
+		} else if (p.equals(QueryParameter._PROPERTIES)) {
+			vs.setViewByProperties(val);
+		} else if (p.equals(QueryParameter._VIEW)) {
+		    vs.setViewByName(val);
+		} else if (p.equals(QueryParameter._WHERE)) {
+		    addWhere(val);
+		} else if (p.equals(QueryParameter._SUBJECT)) {
+		    setSubject(val);
+		} else if (p.equals( APIQuery.NEAR_LAT)) { 
+			geo.setNearLat( val );
+		} else if (p.equals( APIQuery.NEAR_LONG )) {
+			geo.setNearLong( val );
+		} else if (p.equals( QueryParameter._DISTANCE )) { 
+			geo.setDistance( val );
+		} else if (p.equals( QueryParameter._TEMPLATE )) {
+			vs.setViewByExplicitClause( val );
+			setViewByTemplateClause( val );
+		} else if (p.equals(QueryParameter._SORT)) {
+		    setOrderBy( val );
+		} else {
+			throw new EldaException( "unrecognised reserved parameter: " + p );
+		}
+	}
     /**
      * General interface for extending the query with a specified parameter.
      * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
@@ -387,11 +317,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     */
     public String addFilterFromQuery( Param param, Set<String> allVal ) {
     	String val = allVal.iterator().next();
-        if (param.is(PAGE_PARAM)) {
-            setPageNumber( Integer.parseInt(val) ); 
-        } else if (param.is(PAGE_SIZE_PARAM)) {
-            setPageSize( Integer.parseInt(val) );
-        } else if (param.hasPrefix(NAME_PREFIX)) {
+        if (param.hasPrefix(NAME_PREFIX)) {
         	param = param.substring(NAME_LEN);
             addNameProp(param, val);
         } else if (param.hasPrefix( LANG_PREFIX )) {
@@ -414,14 +340,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             if (val.equals( "true" )) addPropertyHasValue( param );
             else if (val.equals( "false" )) addPropertyHasntValue( param );
             else EldaException.BadBooleanParameter( param.toString(), val );
-        } else if (param.hasPrefix(SEARCH)) {
-            addSearchTriple( val );
-        } else if (param.hasPrefix(SORT)) {
-            setOrderBy( val );
-        } else if (param.hasPrefix(_SELECT_PARAM )) {
-        	fixedQueryString = val;
-        } else if (param.hasPrefix(WHERE_PARAM)) {
-        	addWhere( val );
         } else {
             addPropertyHasValue( param, allVal );
         }

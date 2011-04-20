@@ -8,7 +8,6 @@
 
 package com.epimorphics.lda.tests;
 
-import static com.epimorphics.util.CollectionUtils.set;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -24,10 +23,9 @@ public class TestWhereParameter
 		{    
         ShortnameService sns = TestSelectParameter.makeSNS();
         APIQuery q = new APIQuery(sns);
-        APIQuery.Param _select = APIQuery.Param.make( sns, "_where" );
         String theBaseQuery = q.assembleSelectQuery( TestSelectParameter.noPrefixes );
         String theWhereClause = "?p <spoo:equals> 17";
-        q.addFilterFromQuery( _select, set(theWhereClause) );
+        q.handleReservedParameters( null, null, "_where", theWhereClause );
     //
     // this is horrid -- want something better later. too dependent on
     // string arithmetic.

@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.util.Couple;
-import com.epimorphics.lda.core.APIQuery.Param;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
@@ -26,9 +25,8 @@ import com.epimorphics.lda.shortnames.ShortnameService;
  
     @author chris
 */
-public class ContextQueryUpdater {
+public class ContextQueryUpdater implements ViewSetter {
 	
-	private static final String _FORMAT = "_format";
 	private final CallContext context;
 	private final APIQuery query;
 	private final ShortnameService sns;
@@ -71,14 +69,14 @@ public class ContextQueryUpdater {
     			handleLangPrefix( param );
         GEOLocation geo = new GEOLocation();
         for (String param: context.getFilterPropertyNames()) 
-            handleParam( geo, Param.make( sns, param ) );
+            handleParam( geo, param );
         geo.addLocationQueryIfPresent( query );
         return new Couple<View, String>( (view == noneSpecified ? defaultView : view), requestedFormat );
     }
 
 	private void handleLangPrefix( String taggedParam ) {
 		String param = taggedParam.substring( APIQuery.LANG_LEN );
-		String val = context.expandVariables( context.getStringValue( taggedParam ) );
+		String val = context.expandVariables( context.getStringValue( param ) );
 		String pString = context.expandVariables( param );
 		query.setLanguagesFor( pString, val );
 	}
@@ -89,42 +87,21 @@ public class ContextQueryUpdater {
 		return result;
 	}
 
-	private void handleParam(GEOLocation geo, Param p) {
-		String zpString = p.asString();
-		Set<String> values = context.getStringValues(zpString);
+	private void handleParam( GEOLocation geo, String p ) {
+		Set<String> values = context.getStringValues(p);
 		Set<String> allVal = expandVariables( values );
 		String val = allVal.iterator().next();
-		String pString = context.expandVariables( zpString );
+		String pString = context.expandVariables( p );
 		if (val == null) EldaException.NullParameter( p );
 	//
-		if (query.isBindable(pString)) 
-			{ /* nothing to do -- report suspect? */ } 
-		else if (zpString.startsWith( APIQuery.LANG_PREFIX )) {
+		if (query.isBindable(pString)) {
+			// nothing to do -- report suspect?  
+		} else if (p.startsWith( APIQuery.LANG_PREFIX )) {
 			// Nothing to do -- done on previous pass 
-		} else if (p.is( _FORMAT )) {
-			requestedFormat = val;
-		} else if (p.is("_lang")) {
-			query.setDefaultLanguage( val );
-		} else if (p.is(APIQuery.TEMPLATE_PARAM)) {
-			setViewByProperties(val);
-		} else if (p.is(APIQuery.SHOW_PARAM)) {
-		    setViewByName(val);
-		} else if (p.is(APIQuery.WHERE_PARAM)) {
-		    query.addWhere(val);
-		} else if (p.is(APIQuery.SUBJECT_PARAM)) {
-		    query.setSubject(val);
-		} else if (p.is( APIQuery.NEAR_LAT)) { 
-			geo.setNearLat( val );
-		} else if (p.is( APIQuery.NEAR_LONG )) {
-			geo.setNearLong( val );
-		} else if (p.is( APIQuery.DISTANCE )) { 
-			geo.setDistance( val );
-		} else if (p.is( APIQuery._TEMPLATE )) {
-			setViewByExplicitClause( val );
-			query.setViewByTemplateClause( val );
+		} else if (p.startsWith("_") || p.equals("near-lat") || p.equals("near-long")) {
+			query.handleReservedParameters( geo, this, p, val );
 		} else {
 			log.debug( "handleParam: " + p + " with value: " + val );
-//			System.err.println( ">> handleParam: " + p + " with value: " + val );
 			query.addFilterFromQuery( Param.make( sns, pString ), allVal );
 		}
 	}
@@ -133,7 +110,7 @@ public class ContextQueryUpdater {
 	    Half-baked construction of a view given a clause.
 	    Make that tenth-baked. Maybe epsilon-baked.
 	*/
-	private void setViewByExplicitClause( String clause ) {
+	@Override public void setViewByExplicitClause( String clause ) {
 		view = new View();
 		String [] parts = clause.replaceAll( "[\\[\\],;]", " " ).split( " +" );
 		for (String p: parts) {
@@ -145,15 +122,19 @@ public class ContextQueryUpdater {
 		// view.addviewFromParameterValue( "type", null, sns ); // HACK
 //		System.err.println( ">> clause '" + clause + "' generates view " + view );
 	}
+	
+	@Override public void setFormat( String format ) {
+		requestedFormat = format;
+	}
 
-	private void setViewByName( String viewName ) {
+	@Override public void setViewByName( String viewName ) {
 		View named  = nt.getView( viewName );
 		if (named == null) EldaException.NotFound( "view", viewName );
 		view = named.copy().addFrom( view );
 		log.info( "view " + viewName + " yields view " + view + " from\n  " + nt );
 	}
 
-	private void setViewByProperties(String val) {
+	@Override public void setViewByProperties(String val) {
 		view = nt.getDefaultView().copy();
 		for (String prop: val.split(","))
 			view.addViewFromParameterValue( prop, query, sns );

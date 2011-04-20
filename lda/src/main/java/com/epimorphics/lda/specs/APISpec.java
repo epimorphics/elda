@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.APIException;
-import com.epimorphics.lda.core.APIQuery;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
@@ -73,8 +73,8 @@ public class APISpec {
     
     public APISpec(Resource specification, ModelLoaderI loader) {
     	specificationURI = specification.getURI();
-    	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, APIQuery.DEFAULT_PAGE_SIZE );
-		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, APIQuery.MAX_PAGE_SIZE );
+    	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
+		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
         prefixes = ExtractPrefixMapping.from(specification);
         sns = new StandardShortnameService(specification, prefixes, loader);
         dataSource = GetDataSource.sourceFromSpec( specification );

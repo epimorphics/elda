@@ -1,6 +1,5 @@
 package com.epimorphics.lda.exceptions;
 
-import com.epimorphics.lda.core.APIQuery.Param;
 import com.epimorphics.lda.sources.Source;
 import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
 
@@ -62,7 +61,7 @@ public class EldaException extends RuntimeException {
 		throw new EldaException( "TDB endpoint " + name + " is empty -- surely an error." );
 	}
 
-	public static void NullParameter(Param p) {
+	public static void NullParameter(String p) {
 		throw new EldaException( "value for parameter " + p + " is null" );
 	}
 }

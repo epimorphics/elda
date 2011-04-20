@@ -1,3 +1,10 @@
+/*
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011 Epimorphics Limited
+    $Id$
+*/
 package com.epimorphics.lda.tests;
 
 import static com.epimorphics.util.CollectionUtils.set;
@@ -10,7 +17,7 @@ import java.util.Set;
 import org.junit.Test;
 
 import com.epimorphics.lda.core.APIQuery;
-import com.epimorphics.lda.core.APIQuery.Param;
+import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.RenderExpression;

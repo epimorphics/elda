@@ -8,7 +8,6 @@
 
 package com.epimorphics.lda.tests;
 
-import static com.epimorphics.util.CollectionUtils.set;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -30,9 +29,8 @@ public class TestSelectParameter
         {    
         ShortnameService sns = makeSNS();
         APIQuery q = new APIQuery(sns);
-        APIQuery.Param _select = APIQuery.Param.make(sns, "_select" );
         String theSelectQuery = "this is a select query";
-        q.addFilterFromQuery( _select, set(theSelectQuery) );
+        q.handleReservedParameters( null, null, "_select", theSelectQuery );
         assertEquals( theSelectQuery, q.assembleSelectQuery( noPrefixes) );
         }
     
@@ -40,14 +38,13 @@ public class TestSelectParameter
         {    
         ShortnameService sns = makeSNS();
         APIQuery q = new APIQuery(sns);
-        APIQuery.Param _select = APIQuery.Param.make(sns, "_select" );
         String theSelectQuery = "this is a select query";
-        q.addFilterFromQuery( _select, set(theSelectQuery) );
+        q.handleReservedParameters( null, null, "_select", theSelectQuery );
         APIQuery cloned = q.clone();
         assertEquals( theSelectQuery, cloned.assembleSelectQuery( noPrefixes ) );
         }
 
-    public static ShortnameService makeSNS() 
+    public static ShortnameService makeSNS()
         {
     	return new ShortnameService() 
     		{

@@ -139,7 +139,7 @@ public class APIEndpointImpl implements APIEndpoint {
     private Resource resourceForView( Model m, CallContext context, String name ) {
         UriBuilder ub = context.getURIBuilder();
         String uri = ub
-        	.replaceQueryParam( APIQuery.SHOW_PARAM, name )
+        	.replaceQueryParam( QueryParameter._VIEW, name )
             .build()
             .toASCIIString();
         return m.createResource( uri );
@@ -231,7 +231,7 @@ public class APIEndpointImpl implements APIEndpoint {
     private Resource resourceForPage(Model m, CallContext context, int page) {
         UriBuilder ub = context.getURIBuilder();
         String uri = ub
-            .replaceQueryParam(APIQuery.PAGE_PARAM, Integer.toString(page))
+            .replaceQueryParam(QueryParameter._PAGE, Integer.toString(page))
 //            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
             .build()
             .toASCIIString();
@@ -241,8 +241,8 @@ public class APIEndpointImpl implements APIEndpoint {
     private Resource resourceForList(Model m, CallContext context) {
         UriBuilder ub = context.getURIBuilder();
         String uri = ub
-            .replaceQueryParam( APIQuery.PAGE_PARAM )
-            .replaceQueryParam( APIQuery.PAGE_SIZE_PARAM )
+            .replaceQueryParam( QueryParameter._PAGE )
+            .replaceQueryParam( QueryParameter._PAGE_SIZE )
 //            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
             .build().toASCIIString();
         uri = uri.replaceFirst("/meta/", "/api/");
@@ -252,8 +252,8 @@ public class APIEndpointImpl implements APIEndpoint {
     private Resource resourceForMetaList(Model m, CallContext context) {
         UriBuilder ub = context.getURIBuilder();
         String uri = ub
-            .replaceQueryParam(APIQuery.PAGE_PARAM)
-            .replaceQueryParam(APIQuery.PAGE_SIZE_PARAM)
+            .replaceQueryParam(QueryParameter._PAGE)
+            .replaceQueryParam(QueryParameter._PAGE_SIZE)
 //            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
             .build().toASCIIString();
         uri = uri.replaceFirst("/api/", "/meta/");
