@@ -30,9 +30,9 @@ public abstract class Param
 			}
 		else
 			{
-			String prefix = p.substring(0, hyphen);
+			String prefix = p.substring(0, hyphen+1);
 			String name = p.substring(hyphen+1);
-			return new PrefixedParam( prefix, p );
+			return new PrefixedParam( prefix, name );
 			}
 		}
 
@@ -62,6 +62,12 @@ public abstract class Param
 
 		@Override public Param expand(CallContext cc) 
 			{ throw new RuntimeException( "cannot expand magic parameter " + p );}
+
+		@Override public String prefix()
+			{ return null; }
+
+		@Override public Param plain() 
+			 { throw new RuntimeException( "cannot make plain a reserved parameter: " + p ); }
 		}
 	    	
 	static class PrefixedParam extends Param 
@@ -70,12 +76,21 @@ public abstract class Param
 		
 		protected PrefixedParam( String prefix, String p ) 
 			{ super( p ); this.prefix = prefix; }
+		
+		@Override public String toString()
+			{ return prefix + "--" + p; }
 
 		@Override public Param substring(int n) 
 			{ return new PrefixedParam(prefix, p.substring(n)); }
 
 		@Override public Param expand(CallContext cc) 
 			{ return new PrefixedParam( prefix, cc.expandVariables( p ) ); }
+
+		@Override public String prefix() 
+			{ return prefix; }
+
+		@Override public Param plain() 
+			{ return new PlainParam( p ); }
 		}
 	
 	static class PlainParam extends Param
@@ -88,6 +103,12 @@ public abstract class Param
 
 		@Override public Param expand(CallContext cc) 
 			{ return new PlainParam( cc.expandVariables( p ) ); }
+
+		@Override public String prefix()
+			{ return null; }
+
+		@Override public Param plain() 
+			 { throw new RuntimeException( "cannot make plain a plain parameter: " + p ); }
 		}
 
 	public String lastPropertyOf() {
@@ -109,5 +130,9 @@ public abstract class Param
 	
 	public boolean hasVariable() { return p.indexOf('{') >= 0; }
 	
-	public abstract Param expand( CallContext cc ); 
+	public abstract Param expand( CallContext cc );
+
+	public abstract String prefix();
+
+	public abstract Param plain();
 	}

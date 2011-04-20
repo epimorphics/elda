@@ -200,7 +200,7 @@ public class TestAPI {
     
     @Test
     public void testPrefixedReferences() {
-        testAPI("http://dummy/doc/schools", "_view=all&school-ont_localAuthority.rdfs_label=London", "testPrefixedPath.ttl");
+        testAPI("http://dummy/doc/schools", "_view=all&localAuthority.rdfs_label=London", "testPrefixedPath.ttl");
     }
     
     @Test

@@ -272,6 +272,12 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	languagesFor.put( fullParamName, languages );    
     }
  
+    /**
+        handle the reserved, ie, _wossname, parameters. These may update
+        the given <code>geo</code>, the <code>vs</code>, or this query
+        object. <code>p</code> is the property shortname, <code>val</code>
+        is the value string.
+    */
 	public void handleReservedParameters( GEOLocation geo, ViewSetter vs, String p, String val ) {
 		if (p.equals(QueryParameter._PAGE)) {
 		    setPageNumber( Integer.parseInt(val) ); 
@@ -310,6 +316,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 			throw new EldaException( "unrecognised reserved parameter: " + p );
 		}
 	}
+	
     /**
      * General interface for extending the query with a specified parameter.
      * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
@@ -317,31 +324,34 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     */
     public String addFilterFromQuery( Param param, Set<String> allVal ) {
     	String val = allVal.iterator().next();
-        if (param.hasPrefix(NAME_PREFIX)) {
-        	param = param.substring(NAME_LEN);
-            addNameProp(param, val);
-        } else if (param.hasPrefix( LANG_PREFIX )) {
-        	param = param.substring( LANG_LEN );
+    	String prefix = param.prefix();
+    	if (prefix == null) {
+    		addPropertyHasValue( param, allVal );    		
+    	} else if (prefix.equals(NAME_PREFIX)) {
+//        	param = param.substring(NAME_LEN);
+            addNameProp(param.plain(), val);
+        } else if (prefix.equals( LANG_PREFIX )) {
+//        	param = param.substring( LANG_LEN );
         	
-        } else if (param.hasPrefix(MIN_PREFIX)) {
-        	param = param.substring(MIN_LEN);
-            addRangeFilter(param, val, ">=");
-        } else if (param.hasPrefix(MIN_OPEN_PREFIX)) {
-        	param = param.substring(MINO_LEN);
-            addRangeFilter(param, val, ">");
-        } else if (param.hasPrefix(MAX_PREFIX)) {
-        	param = param.substring(MAX_LEN);
-            addRangeFilter(param, val, "<=");
-        } else if (param.hasPrefix(MAX_OPEN_PREFIX)) {
-        	param = param.substring(MAXO_LEN);
-            addRangeFilter(param, val, "<");
-        } else if (param.hasPrefix(EXISTS_PREFIX)) {
-        	param = param.substring(EXISTS_LEN);
+        } else if (prefix.equals(MIN_PREFIX)) {
+//        	param = param.substring(MIN_LEN);
+            addRangeFilter(param.plain(), val, ">=");
+        } else if (prefix.equals(MIN_OPEN_PREFIX)) {
+//        	param = param.substring(MINO_LEN);
+            addRangeFilter(param.plain(), val, ">");
+        } else if (prefix.equals(MAX_PREFIX)) {
+//        	param = param.substring(MAX_LEN);
+            addRangeFilter(param.plain(), val, "<=");
+        } else if (prefix.equals(MAX_OPEN_PREFIX)) {
+//        	param = param.substring(MAXO_LEN);
+            addRangeFilter(param.plain(), val, "<");
+        } else if (prefix.equals(EXISTS_PREFIX)) {
+//        	param = param.substring(EXISTS_LEN);
             if (val.equals( "true" )) addPropertyHasValue( param );
             else if (val.equals( "false" )) addPropertyHasntValue( param );
             else EldaException.BadBooleanParameter( param.toString(), val );
         } else {
-            addPropertyHasValue( param, allVal );
+        	throw new EldaException( "unrecognised parameter prefix: " + prefix );
         }
         return param.lastPropertyOf();
     }
