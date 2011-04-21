@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.cache.Cache;
+import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -410,6 +411,11 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     		addLanguagedTriplePattern(var, prop, languages, val);
     	}
     }
+    
+    private void addTriplePattern( Variable var, Info prop, String languages, String val ) {
+    	addTriplePattern( var, prop.shortName, languages, val );
+    }
+
 
 	private void addLanguagedTriplePattern(Variable var, String prop, String languages, String val) {
 		String[] langArray = languages.split( "," );
@@ -434,10 +440,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	return result;
     	}
 
-	private void addTriplePattern( Variable var, String prop, Variable val ) {
+	private void addTriplePattern( Variable var, Param.Info prop, Variable val ) {
    		// Record property which points to this variable for us in decoding binding values
-   		varProps.put( val.name().substring(1), prop );   
-        addTriplePattern( var, sns.normalizeResource(prop), val ); 
+   		varProps.put( val.name().substring(1), prop.shortName );   
+        basicGraphTriples.add( RDFQ.triple( var, prop.asURI, val ) );
     }
 
     protected String addPropertyHasntValue( Param param ) {
@@ -461,49 +467,54 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected String addPropertyHasValue( Param param, Set<String> rawValues, boolean optional ) {
     	String languages = languagesFor.get( param.toString() );
     	if (languages == null) languages = defaultLanguage;
-    	String [] path = param.parts();
+    	Param.Info [] infos = param.fullParts();
     //
 		String rawValue = rawValues.iterator().next();
-    	if (optional) return generateOptionalTriple(rawValues, optional, path, rawValue);
+    	if (optional) return generateOptionalTriple(rawValues, optional, infos, rawValue);
     //
     	Variable var = SELECT_VAR;
         int i = 0;
-        while (i < path.length-1) {
+        while (i < infos.length-1) {
+        	Param.Info inf = infos[i];
             Variable newvar = newVar();
-            addTriplePattern(var, path[i], newvar );
-            noteBindableVar(path[i]);
+            addTriplePattern(var, inf, newvar );
+            noteBindableVar( inf );
             var = newvar;
             i++;
         }
-        noteBindableVar( path[i] );
+        noteBindableVar( infos[i].shortName );
         if (rawValues.size() == 1) {
-        	addTriplePattern(var, path[i], languages, rawValue );
+        	addTriplePattern(var, infos[i], languages, rawValue );
         	noteBindableVar( rawValue );        	
         } else {
         	Variable v = newVar();
-        	addTriplePattern( var, path[i], languages, v.name() );
+        	addTriplePattern( var, infos[i], languages, v.name() );
         	noteBindableVar( v.name() );
         	Infix ors = null;
         	for (String rv: rawValues) {
-        		Any R = sns.normalizeNodeToRDFQ( path[i], rv, defaultLanguage );
+        		Any R = asRDFQ(infos, i, rv);
         		Infix eq = RDFQ.infix( v, "=", R );
         		if (ors == null) ors = eq; else ors = RDFQ.infix(ors, "||", eq );
         	}
         	filterExpressions.add( ors );
         }
-        return path[i];
+        return infos[i].shortName;
     }
 
-	private String generateOptionalTriple(Set<String> rawValues, boolean optional, String[] path, String rawValue) {
+	private Any asRDFQ(Param.Info[] infos, int i, String rv) {
+		return sns.normalizeNodeToRDFQ( infos[i].shortName, rv, defaultLanguage );
+	}
+
+	private String generateOptionalTriple(Set<String> rawValues, boolean optional, Param.Info[] path, String rawValue) {
 	// TODO clean this up
 		if (rawValues.size() > 1) throw new RuntimeException( "too many (>1) values for optional." );
-		String prop = path[0];
+		String prop = path[0].shortName;
 		Resource np = sns.normalizeResource(prop);
 		varProps.put(rawValue.substring(1), prop);   
 		basicGraphTriples.add( RDFQ.triple( SELECT_VAR, RDFQ.uri( np.getURI() ), sns.normalizeNodeToRDFQ( prop, rawValue, defaultLanguage ), optional ) ); 
-		noteBindableVar( path[0] );
+		noteBindableVar( prop );
 		noteBindableVar( rawValue );
-		return path[0];
+		return prop;
 	}
 
     /**
@@ -550,6 +561,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected void noteBindableVar(Param p) {
     	// TODO fix to work properly
     	noteBindableVar( p.lastPropertyOf() );
+    }
+
+    protected void noteBindableVar( Param.Info inf ) {
+    	bindableVars.add(inf.shortName);
     }
 
     protected void noteBindableVar(String propname) {

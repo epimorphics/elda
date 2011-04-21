@@ -56,7 +56,7 @@ public class VariableExtractor {
 			String type = getStringValue( v, FIXUP.type, "" );
 			Statement value = v.getProperty( FIXUP.value );
 			if (value != null && value.getObject().isLiteral())
-				type = value.getObject().asNode().getLiteralDatatypeURI();
+				type = emptyIfNull( value.getObject().asNode().getLiteralDatatypeURI() );
 			if (value != null && value.getObject().isURIResource())
 				type = RDFS.Resource.getURI();
 			if (type == null){
@@ -68,6 +68,10 @@ public class VariableExtractor {
 			(valueString.contains( "{" ) ? toDo : bound).put( name, var ); 			
 			}
 		}
+
+	private static String emptyIfNull(String s) {
+		return s == null ? "" : s;
+	}
 
 	private static String getValueString(Resource v, String language, String type) {
 		Statement s = v.getProperty( FIXUP.value );
