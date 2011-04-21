@@ -1,3 +1,48 @@
+1.1.3 (21 April 2011):
+
+* corrections to language-tag handling: the _lang query
+  parameter has been implemented. Views are now language-
+  filtered as per spec (especially appropriate if one of
+  the DESCRIBE views has been used).
+
+* union parameter handling has been implemented: if there
+  are multiple bindings for some (plain, ie non-prefixed)
+  property, then the query will allow either value for
+  that property. (The current implementation uses ||-filters,
+  not actual unions.)
+
+* the default simple HTML renderer has been rewritten.
+  The new version attaches less-than, equal-to, and
+  greater-than links to integer and date property values.
+  Other kinds of property have an equal-to link. This
+  provides (a weak form of) faceted browsing. The education
+  spec has been updated to type more of these properties.
+
+* the dispatcher that processes URIs and selects the
+  appropriate endpoint has been improved; it now respects
+  JAX-RS template preference order (and should be faster).
+
+* some internal changes to the way query parameters are 
+  handled result in different problem reports:
+
+  - unknown reserved parameters, ie _something other than
+    the defined _ parameters, result in an "unknown reserved
+    parameter" message rather than being treated as a property.
+
+  - multiple values for anything other than a plain P=V
+    parameter are reported as incorrect.
+
+* when the CONSTRUCT queries that do non-DESCRIBE views
+  are very large (which happens surprisingly often in the
+  current architecture), significant time was consumed in
+  their construction. This was traced to naive use of
+  string concatenation and has been fixed.
+
+* exception reporting and handling has been improved.
+
+1.1.2:
+  (details not provided, rolled into 1.1.3)
+
 Post 1.1.1:
 
 * corrected oversight which had the Jetty licenses appearing at the
