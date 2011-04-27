@@ -141,16 +141,16 @@ public class APIEndpointImpl implements APIEndpoint {
     private Resource resourceForView( Model m, CallContext context, String name ) {
     	URI req = context.getRequestURI();
     	String alt = replaceQueryParam( req, QueryParameter._VIEW, name );
-        UriBuilder ub = context.getURIBuilder();
-        String uri = ub
-        	.replaceQueryParam( QueryParameter._VIEW, name )
-            .build()
-            .toASCIIString();
-        if (!uri.equals(alt)) {
-        	System.err.println( ">> exp:   " + uri );
-        	System.err.println( ">> got:   " + alt );
-        }
-        return m.createResource( uri );
+//        UriBuilder ub = context.getURIBuilder();
+//        String uri = ub
+//        	.replaceQueryParam( QueryParameter._VIEW, name )
+//            .build()
+//            .toASCIIString();
+//        if (!uri.equals(alt)) {
+//        	System.err.println( ">> exp:   " + uri );
+//        	System.err.println( ">> got:   " + alt );
+//        }
+        return m.createResource( alt );
     }
 
 	private String replaceQueryParam(URI ru, String key, String value) {
