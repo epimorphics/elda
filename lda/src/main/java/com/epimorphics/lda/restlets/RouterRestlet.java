@@ -150,7 +150,7 @@ import com.epimorphics.util.MediaTypes;
         if (rName == null)
             {
             String suppress = rc.getAsString("_supress_media_type", "no");
-            System.err.println( ">> suppress = " + suppress );
+            // System.err.println( ">> suppress = " + suppress );
             if (suppress.equals("no")) {
                 for (MediaType mt: mediaTypes) {
                     String type = mt.getType() + "/" + mt.getSubtype();

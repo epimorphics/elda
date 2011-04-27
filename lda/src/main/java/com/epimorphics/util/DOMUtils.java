@@ -22,6 +22,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -53,14 +55,23 @@ public class DOMUtils
 		catch (TransformerException e) { throw new WrappedException( e ); }
 		return sw.toString();
 		}
+    
+    static Logger log = LoggerFactory.getLogger(DOMUtils.class);
 
 	private static Transformer setPropertiesAndParams( RendererContext rc, PrefixMapping pm, String transformFilePath ) 
 		{
 		Transformer t = getTransformer( rc, transformFilePath );
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );
 		t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-		for (String name: rc.keySet()) t.setParameter( name, rc.getStringValue( name ) );
-		t.setParameter( "api:namespaces", namespacesDocument( pm ) );
+		for (String name: rc.keySet()) 
+			{
+			String value = rc.getStringValue( name );
+			t.setParameter( name, value );
+			log.debug( "set xslt parameter " + name + " = " + value );
+			}
+		String nsd = namespacesDocument( pm );
+		t.setParameter( "api:namespaces", nsd );
+		log.debug( "set xslt parameter api:namespaces = " + rc.getStringValue( "api:namespaces" ) );
 		return t;
 		}
 	
