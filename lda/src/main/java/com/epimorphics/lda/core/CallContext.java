@@ -12,6 +12,7 @@
 
 package com.epimorphics.lda.core;
 
+import java.net.URI;
 import java.util.*;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -37,10 +38,17 @@ public class CallContext implements Lookup {
     static Logger log = LoggerFactory.getLogger( CallContext.class );
     
     protected MultiMap<String, Value> parameters = new MultiMap<String, Value>();
+    
+    final protected MultivaluedMap<String, String> queryParameters;
+    
+    protected final URI requestURI;
+    
     protected UriInfo uriInfo = null;
     
     public CallContext(UriInfo uriInfo) {
         this.uriInfo = uriInfo;
+        this.requestURI = uriInfo.getRequestUri();
+        this.queryParameters = uriInfo.getQueryParameters();
     }
     
     /**
@@ -51,6 +59,8 @@ public class CallContext implements Lookup {
     	this.uriInfo = toCopy.uriInfo;
     	defaults.putInto( this.parameters );
     	this.parameters.putAll( toCopy.parameters );
+        this.requestURI = uriInfo.getRequestUri();
+        this.queryParameters = uriInfo.getQueryParameters();
     }
     
 	public static CallContext createContext( UriInfo ui, VarValues bindings ) {
@@ -80,7 +90,7 @@ public class CallContext implements Lookup {
      */
     @Override public String getStringValue( String param ) {
         Value v = parameters.get( param );
-		return v == null ? uriInfo.getQueryParameters().getFirst( param ) : v.valueString();
+		return v == null ? queryParameters.getFirst( param ) : v.valueString();
     }
     
     /**
@@ -89,7 +99,7 @@ public class CallContext implements Lookup {
     @Override public Set<String> getStringValues( String param ) {
         Set<Value> vs = parameters.getAll( param );
 //        System.err.println( ">> " + parameters );
-		Set<String> values = new HashSet<String>( uriInfo.getQueryParameters().get( param ) );
+		Set<String> values = new HashSet<String>( queryParameters.get( param ) );
 		return vs == null ? values : asStrings( vs );
     }
     
@@ -98,13 +108,6 @@ public class CallContext implements Lookup {
     	for (Value v: vs) result.add( v.valueString() );
     	return result;
 	}
-
-	/**
-     * Return the request URI information.
-     */
-    public UriInfo getUriInfo() {
-        return uriInfo;
-    }
     
     @Override public String toString() {
         return parameters.toString();
@@ -118,11 +121,15 @@ public class CallContext implements Lookup {
        return uriInfo.getRequestUriBuilder(); 
     }
     
+    public URI getRequestURI() {
+    	return requestURI;
+    }
+    
     /**
         Answer the set of filter names from the call context query parameters.
     */
     public Set<String> getFilterPropertyNames() {
-    	return new HashSet<String>( uriInfo.getQueryParameters().keySet() );    	
+    	return new HashSet<String>( queryParameters.keySet() );    	
     }
 
     /**

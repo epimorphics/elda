@@ -1,17 +1,17 @@
 # Model from test: http://dummy/doc/schools/la/BANES?
-{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools/la/BANES?_page=0", "next" : "http://dummy/doc/schools/la/BANES?_page=1", "hasFormat" : [{"_about" : "http://dummy//doc/schools/la/BANES.html", "format" : {"label" : "text/html"}
+{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools/la/BANES?_page=0", "next" : "http://dummy/doc/schools/la/BANES?_page=1", "hasFormat" : [{"_about" : "http://dummy/doc/schools/la/BANES.html", "format" : {"label" : "text/html"}
       , "isFormatOf" : "http://dummy/doc/schools/la/BANES?_page=0"}
-    , {"_about" : "http://dummy//doc/schools/la/BANES.json", "format" : {"label" : "application/json"}
+    , {"_about" : "http://dummy/doc/schools/la/BANES.json", "format" : {"label" : "application/json"}
       , "isFormatOf" : "http://dummy/doc/schools/la/BANES?_page=0"}
-    , {"_about" : "http://dummy//doc/schools/la/BANES.owl", "format" : {"label" : "application/rdf+xml"}
+    , {"_about" : "http://dummy/doc/schools/la/BANES.owl", "format" : {"label" : "application/rdf+xml"}
       , "isFormatOf" : "http://dummy/doc/schools/la/BANES?_page=0"}
-    , {"_about" : "http://dummy//doc/schools/la/BANES.rdf", "format" : {"label" : "application/rdf+xml"}
+    , {"_about" : "http://dummy/doc/schools/la/BANES.rdf", "format" : {"label" : "application/rdf+xml"}
       , "isFormatOf" : "http://dummy/doc/schools/la/BANES?_page=0"}
-    , {"_about" : "http://dummy//doc/schools/la/BANES.text", "format" : {"label" : "text/plain"}
+    , {"_about" : "http://dummy/doc/schools/la/BANES.text", "format" : {"label" : "text/plain"}
       , "isFormatOf" : "http://dummy/doc/schools/la/BANES?_page=0"}
-    , {"_about" : "http://dummy//doc/schools/la/BANES.ttl", "format" : {"label" : "text/turtle"}
+    , {"_about" : "http://dummy/doc/schools/la/BANES.ttl", "format" : {"label" : "text/turtle"}
       , "isFormatOf" : "http://dummy/doc/schools/la/BANES?_page=0"}
-    , {"_about" : "http://dummy//doc/schools/la/BANES.xml", "format" : {"label" : "text/xml"}
+    , {"_about" : "http://dummy/doc/schools/la/BANES.xml", "format" : {"label" : "text/xml"}
       , "isFormatOf" : "http://dummy/doc/schools/la/BANES?_page=0"}
     ], "itemsPerPage" : 10, "page" : 0, "hasVersion" : [{"_about" : "http://dummy/doc/schools/la/BANES?_view=%23%23%23default", "isVersionOf" : "http://dummy/doc/schools/la/BANES?_page=0", "label" : "###default"}
     , {"_about" : "http://dummy/doc/schools/la/BANES?_view=all", "isVersionOf" : "http://dummy/doc/schools/la/BANES?_page=0", "label" : "all"}
@@ -50,8 +50,8 @@
       , "definition" : {"uri" : "http://purl.org/linked-data/api/vocab#definition", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "ex_Primary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Primary"}
       , "hasPart" : {"uri" : "http://purl.org/dc/terms/hasPart", "range" : "http://www.w3.org/2002/07/owl#Thing"}
-      , "school-ont_localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "rdfs_label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
+      , "school-ont_localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
       , "format" : {"uri" : "http://purl.org/dc/terms/format", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "size" : {"uri" : "http://www.epimorphics.com/examples/eg1#size", "range" : "http://www.w3.org/2001/XMLSchema#integer"}

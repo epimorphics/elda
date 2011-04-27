@@ -12,6 +12,8 @@
 
 package com.epimorphics.lda.core;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -72,7 +74,7 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public Couple<APIResultSet, String> call( CallContext given ) {
     	wantsContext = specWantsContext;
     	CallContext context = new CallContext( spec.getBindings(), given );
-        log.debug("API " + spec + " called on " + context + " from " + context.getUriInfo());
+        log.debug("API " + spec + " called on " + context + " from " + context.getRequestURI());
         APIQuery query = spec.getBaseQuery();
         Couple<View, String> viewAndFormat = buildQueryAndView( context, query );
         View view = viewAndFormat.a; String format = viewAndFormat.b;
@@ -137,13 +139,45 @@ public class APIEndpointImpl implements APIEndpoint {
     }
 
     private Resource resourceForView( Model m, CallContext context, String name ) {
+    	URI req = context.getRequestURI();
+    	String alt = replaceQueryParam( req, QueryParameter._VIEW, name );
         UriBuilder ub = context.getURIBuilder();
         String uri = ub
         	.replaceQueryParam( QueryParameter._VIEW, name )
             .build()
             .toASCIIString();
+        if (!uri.equals(alt)) {
+        	System.err.println( ">> exp:   " + uri );
+        	System.err.println( ">> got:   " + alt );
+        }
         return m.createResource( uri );
     }
+
+	private String replaceQueryParam(URI ru, String key, String value) {
+		try {
+			String q = ru.getQuery();
+			// System.err.println( ">> query: " + q );
+			String qa = q == null ? "" : strip( q, key );
+			// System.err.println( ">> qa:    " + qa );
+			String qb = qa.isEmpty() ? "" : qa + "&";
+			String newq = qb + key + "=" + value;
+			// System.err.println( ">> res:   " + newq );
+			return new URI
+				(
+				ru.getScheme(), 
+				ru.getAuthority(), 
+				ru.getPath(),
+				newq, 
+				ru.getFragment() 
+				).toASCIIString();
+		} catch (URISyntaxException e) {			
+			throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e );
+		}
+	}
+
+	private String strip(String query, String key) {
+		return query.replaceAll( "(^|[&])" + key + "=[^&]*", "" );
+	}
 
 	private void addFormats(Model m, CallContext c, Resource thisPage) {
 		for (Map.Entry<String, MediaType> e: MediaTypes.createMediaExtensions().entrySet()) {
@@ -154,15 +188,21 @@ public class APIEndpointImpl implements APIEndpoint {
 			v.addProperty( DCTerms.format, format );
 		}
 	}
-
+	
 	private Resource resourceForFormat( Model m, CallContext c, String key ) {
-		String oldPath = c.getUriInfo().getBaseUri().getPath() + c.getUriInfo().getPath();
-        UriBuilder ub = c.getURIBuilder();
-        String uri = ub
-        	.replacePath( replaceSuffix( key, oldPath ) )
-            .build()
-            .toASCIIString();
-        return m.createResource( uri );
+		URI ru = c.getRequestURI();
+		try {
+			URI x = new URI
+				( ru.getScheme()
+				, ru.getAuthority()
+				, replaceSuffix( key, ru.getPath() )
+				, ru.getQuery()
+				, ru.getFragment() 
+				);
+			return m.createResource( x.toASCIIString() );
+		} catch (URISyntaxException e) {
+			throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e );
+		}
     }
 
 	// TODO should only substitute .foo if it's a renderer or language

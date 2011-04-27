@@ -31,7 +31,7 @@ public class TestCallContext
 		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
 		CallContext cc = CallContext.createContext( ui, MakeData.variables( "" ) );
 		assertThat( cc.getFilterPropertyNames(), Matchers.isEmpty() );
-		assertThat( cc.getUriInfo(), sameInstance(ui) );
+//		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		}
 	
 //	@Test public void ensureContextStoresMediaSuffix()
@@ -54,7 +54,7 @@ public class TestCallContext
 		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
 		CallContext cc = CallContext.createContext( ui, MakeData.variables( "" ) );
 		assertThat( cc.getFilterPropertyNames(), is( JenaTestBase.setOfStrings( "spoo space" ) ) );
-		assertThat( cc.getUriInfo(), sameInstance(ui) );
+//		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		}
 	
 	@Test public void ensureContextRecallsBindingNames()
@@ -63,7 +63,7 @@ public class TestCallContext
 		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
 		CallContext cc = CallContext.createContext( ui, MakeData.variables( "a=b c=d" ) );
 		assertThat( cc.getFilterPropertyNames(), Matchers.isEmpty() );
-		assertThat( cc.getUriInfo(), sameInstance(ui) );
+//		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		assertThat( cc.getStringValue( "a" ), is( "b" ) );
 		assertThat( cc.getStringValue( "c" ), is( "d" ) );
 		}
@@ -74,7 +74,7 @@ public class TestCallContext
 		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
 		CallContext cc = CallContext.createContext( ui, MakeData.variables( "x=y" ) );
 		assertThat( cc.getFilterPropertyNames(), is( JenaTestBase.setOfStrings( "p1 p2" ) ) );
-		assertThat( cc.getUriInfo(), sameInstance(ui) );
+//		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		assertThat( cc.getStringValue( "x" ), is( "y" ) );
 		assertThat( cc.getStringValue( "p1" ), is( "v1" ) );
 		}
@@ -85,7 +85,7 @@ public class TestCallContext
 		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
 		CallContext base = CallContext.createContext( ui, MakeData.variables( "" ) );
 		CallContext cc = new CallContext( MakeData.variables( "fly=fishing" ), base );
-		assertThat( cc.getUriInfo(), is( base.getUriInfo() ) );
+//		assertThat( cc.getUriInfo(), is( base.getUriInfo() ) );
 		assertThat( cc.getStringValue( "fly" ), is( "fishing" ) );
 //		assertThat( cc.getMediaSuffix(), is( mediaSuffix ) );
 		}

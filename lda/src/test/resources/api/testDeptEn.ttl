@@ -9,9 +9,9 @@
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
-<http://dummy//doc/deptsEn.rdf>
+<http://dummy/doc/deptsEn.xml>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/rdf+xml"
+              [ rdfs:label "text/xml"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/deptsEn?_page=0> .
@@ -21,9 +21,9 @@
       <http://purl.org/dc/terms/isVersionOf>
               <http://dummy/doc/deptsEn?_page=0> .
 
-<http://dummy//doc/deptsEn.json>
+<http://dummy/doc/deptsEn.owl>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/json"
+              [ rdfs:label "application/rdf+xml"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/deptsEn?_page=0> .
@@ -35,7 +35,7 @@
       <http://a9.com/-/spec/opensearch/1.1/startIndex>
               "1"^^xsd:long ;
       <http://purl.org/dc/terms/hasFormat>
-              <http://dummy//doc/deptsEn.rdf> , <http://dummy//doc/deptsEn.html> , <http://dummy//doc/deptsEn.text> , <http://dummy//doc/deptsEn.xml> , <http://dummy//doc/deptsEn.json> , <http://dummy//doc/deptsEn.owl> , <http://dummy//doc/deptsEn.ttl> ;
+              <http://dummy/doc/deptsEn.rdf> , <http://dummy/doc/deptsEn.xml> , <http://dummy/doc/deptsEn.html> , <http://dummy/doc/deptsEn.owl> , <http://dummy/doc/deptsEn.text> , <http://dummy/doc/deptsEn.ttl> , <http://dummy/doc/deptsEn.json> ;
       <http://purl.org/dc/terms/hasVersion>
               <http://dummy/doc/deptsEn?_view=%23%23%23default> , <http://dummy/doc/deptsEn?_view=all> , <http://dummy/doc/deptsEn?_view=description> , <http://dummy/doc/deptsEn?_view=basic> ;
       <http://purl.org/dc/terms/isPartOf>
@@ -51,25 +51,25 @@
       <http://purl.org/dc/terms/isVersionOf>
               <http://dummy/doc/deptsEn?_page=0> .
 
-<http://dummy//doc/deptsEn.ttl>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/turtle"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/deptsEn?_page=0> .
-
 <http://dummy/doc/deptsEn?_view=%23%23%23default>
       rdfs:label "###default" ;
       <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/deptsEn?_page=0> .
+
+<http://dummy/doc/deptsEn.html>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/html"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/deptsEn?_page=0> .
 
 ex:dept3
       a       school-ont:Department ;
       ex:name "department"@en .
 
-<http://dummy//doc/deptsEn.xml>
+<http://dummy/doc/deptsEn.text>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/xml"
+              [ rdfs:label "text/plain"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/deptsEn?_page=0> .
@@ -78,21 +78,28 @@ ex:dept1
       a       school-ont:Department ;
       ex:name "department"@en .
 
+<http://dummy/doc/deptsEn.rdf>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/deptsEn?_page=0> .
+
 <http://dummy/doc/deptsEn?_view=description>
       rdfs:label "description" ;
       <http://purl.org/dc/terms/isVersionOf>
               <http://dummy/doc/deptsEn?_page=0> .
 
-<http://dummy//doc/deptsEn.html>
+<http://dummy/doc/deptsEn.ttl>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/html"
+              [ rdfs:label "text/turtle"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/deptsEn?_page=0> .
 
-<http://dummy//doc/deptsEn.text>
+<http://dummy/doc/deptsEn.json>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/plain"
+              [ rdfs:label "application/json"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/deptsEn?_page=0> .
@@ -107,10 +114,3 @@ ex:dept2
       <http://purl.org/dc/terms/hasPart>
               <http://dummy/doc/deptsEn?_page=0> ;
       api:definition spec:api1 .
-
-<http://dummy//doc/deptsEn.owl>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/rdf+xml"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/deptsEn?_page=0> .

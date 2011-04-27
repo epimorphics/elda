@@ -21,7 +21,7 @@
       <http://a9.com/-/spec/opensearch/1.1/startIndex>
               "1"^^xsd:long ;
       <http://purl.org/dc/terms/hasFormat>
-              <http://dummy//doc/schools/primary.owl> , <http://dummy//doc/schools/primary.json> , <http://dummy//doc/schools/primary.xml> , <http://dummy//doc/schools/primary.html> , <http://dummy//doc/schools/primary.rdf> , <http://dummy//doc/schools/primary.text> , <http://dummy//doc/schools/primary.ttl> ;
+              <http://dummy/doc/schools/primary.xml> , <http://dummy/doc/schools/primary.json> , <http://dummy/doc/schools/primary.rdf> , <http://dummy/doc/schools/primary.ttl> , <http://dummy/doc/schools/primary.html> , <http://dummy/doc/schools/primary.text> , <http://dummy/doc/schools/primary.owl> ;
       <http://purl.org/dc/terms/hasVersion>
               <http://dummy/doc/schools/primary?_view=%23%23%23default> , <http://dummy/doc/schools/primary?_view=description> , <http://dummy/doc/schools/primary?_view=all> , <http://dummy/doc/schools/primary?_view=basic> ;
       <http://purl.org/dc/terms/isPartOf>
@@ -34,16 +34,9 @@
       <http://www.w3.org/1999/xhtml/vocab#next>
               <http://dummy/doc/schools/primary?_page=1> .
 
-<http://dummy//doc/schools/primary.text>
+<http://dummy/doc/schools/primary.rdf>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/plain"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/primary?_page=0> .
-
-<http://dummy//doc/schools/primary.ttl>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/turtle"
+              [ rdfs:label "application/rdf+xml"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/primary?_page=0> .
@@ -105,28 +98,28 @@ ex:school_10
               <http://dummy/doc/schools/primary?_page=0> ;
       api:definition spec:api1 .
 
-<http://dummy//doc/schools/primary.owl>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/rdf+xml"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/primary?_page=0> .
-
 <http://dummy/doc/schools/primary?_view=%23%23%23default>
       rdfs:label "###default" ;
       <http://purl.org/dc/terms/isVersionOf>
               <http://dummy/doc/schools/primary?_page=0> .
 
-<http://dummy//doc/schools/primary.xml>
+<http://dummy/doc/schools/primary.json>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/xml"
+              [ rdfs:label "application/json"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/primary?_page=0> .
 
-<http://dummy//doc/schools/primary.rdf>
+<http://dummy/doc/schools/primary.owl>
       <http://purl.org/dc/terms/format>
               [ rdfs:label "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools/primary?_page=0> .
+
+<http://dummy/doc/schools/primary.xml>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/xml"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/primary?_page=0> .
@@ -155,13 +148,6 @@ ex:school_17
       ex:size 200 ;
       ex:type ex:Primary .
 
-<http://dummy//doc/schools/primary.json>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/json"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/primary?_page=0> .
-
 ex:school_19
       a       school-ont:School ;
       school-ont:localAuthority
@@ -178,9 +164,23 @@ ex:school_15
       ex:size 100 ;
       ex:type ex:Primary .
 
-<http://dummy//doc/schools/primary.html>
+<http://dummy/doc/schools/primary.ttl>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/turtle"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools/primary?_page=0> .
+
+<http://dummy/doc/schools/primary.html>
       <http://purl.org/dc/terms/format>
               [ rdfs:label "text/html"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools/primary?_page=0> .
+
+<http://dummy/doc/schools/primary.text>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/plain"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/primary?_page=0> .

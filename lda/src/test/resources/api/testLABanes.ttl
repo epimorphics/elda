@@ -9,13 +9,6 @@
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
-<http://dummy//doc/schools/la/BANES.json>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/json"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/la/BANES?_page=0> .
-
 ex:school_1
       a       school-ont:School ;
       school-ont:localAuthority
@@ -29,6 +22,13 @@ ex:school_51
               <http://admin.data.gov.uk/def/localAythority#123> ;
       ex:name "Name51" ;
       ex:size 100 .
+
+<http://dummy/doc/schools/la/BANES.rdf>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools/la/BANES?_page=0> .
 
 ex:school_5
       a       school-ont:School ;
@@ -44,16 +44,23 @@ ex:school_3
       ex:name "Name3" ;
       ex:size 100 .
 
-<http://dummy//doc/schools/la/BANES.xml>
+<http://dummy/doc/schools/la/BANES.html>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/xml"
+              [ rdfs:label "text/html"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/la/BANES?_page=0> .
 
-<http://dummy//doc/schools/la/BANES.rdf>
+<http://dummy/doc/schools/la/BANES.owl>
       <http://purl.org/dc/terms/format>
               [ rdfs:label "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools/la/BANES?_page=0> .
+
+<http://dummy/doc/schools/la/BANES.xml>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/xml"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/la/BANES?_page=0> .
@@ -70,26 +77,19 @@ ex:school_49
       ex:name "Name49" ;
       ex:size 100 .
 
-<http://dummy//doc/schools/la/BANES.html>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/html"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/la/BANES?_page=0> .
-
-<http://dummy//doc/schools/la/BANES.ttl>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/turtle"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/la/BANES?_page=0> .
-
 ex:school_50
       a       school-ont:School ;
       school-ont:localAuthority
               <http://admin.data.gov.uk/def/localAythority#123> ;
       ex:name "Name50" ;
       ex:size 100 .
+
+<http://dummy/doc/schools/la/BANES.text>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/plain"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools/la/BANES?_page=0> .
 
 ex:school_2
       a       school-ont:School ;
@@ -105,16 +105,16 @@ ex:school_52
       ex:name "Name52" ;
       ex:size 100 .
 
-<http://dummy//doc/schools/la/BANES.text>
+<http://dummy/doc/schools/la/BANES.json>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/plain"
+              [ rdfs:label "application/json"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/la/BANES?_page=0> .
 
-<http://dummy//doc/schools/la/BANES.owl>
+<http://dummy/doc/schools/la/BANES.ttl>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/rdf+xml"
+              [ rdfs:label "text/turtle"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/la/BANES?_page=0> .
@@ -138,7 +138,7 @@ ex:school_4
       <http://a9.com/-/spec/opensearch/1.1/startIndex>
               "1"^^xsd:long ;
       <http://purl.org/dc/terms/hasFormat>
-              <http://dummy//doc/schools/la/BANES.rdf> , <http://dummy//doc/schools/la/BANES.json> , <http://dummy//doc/schools/la/BANES.text> , <http://dummy//doc/schools/la/BANES.owl> , <http://dummy//doc/schools/la/BANES.ttl> , <http://dummy//doc/schools/la/BANES.html> , <http://dummy//doc/schools/la/BANES.xml> ;
+              <http://dummy/doc/schools/la/BANES.html> , <http://dummy/doc/schools/la/BANES.text> , <http://dummy/doc/schools/la/BANES.owl> , <http://dummy/doc/schools/la/BANES.rdf> , <http://dummy/doc/schools/la/BANES.xml> , <http://dummy/doc/schools/la/BANES.json> , <http://dummy/doc/schools/la/BANES.ttl> ;
       <http://purl.org/dc/terms/hasVersion>
               <http://dummy/doc/schools/la/BANES?_view=%23%23%23default> , <http://dummy/doc/schools/la/BANES?_view=description> , <http://dummy/doc/schools/la/BANES?_view=all> , <http://dummy/doc/schools/la/BANES?_view=basic> ;
       <http://purl.org/dc/terms/isPartOf>
@@ -159,17 +159,17 @@ ex:school_100
       ex:size 100 ;
       ex:type ex:Secondary .
 
+<http://dummy/doc/schools/la/BANES?_view=description>
+      rdfs:label "description" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/schools/la/BANES?_page=0> .
+
 <http://dummy/doc/schools/la/BANES>
       a       api:ListEndpoint ;
       rdfs:label "should be a description of this list" ;
       <http://purl.org/dc/terms/hasPart>
               <http://dummy/doc/schools/la/BANES?_page=0> ;
       api:definition spec:api1 .
-
-<http://dummy/doc/schools/la/BANES?_view=description>
-      rdfs:label "description" ;
-      <http://purl.org/dc/terms/isVersionOf>
-              <http://dummy/doc/schools/la/BANES?_page=0> .
 
 <http://dummy/doc/schools/la/BANES?_view=basic>
       rdfs:label "basic" ;

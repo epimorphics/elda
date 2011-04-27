@@ -1,24 +1,25 @@
 # Model from test: http://dummy/doc/schools?school_type=Primary&_view=all
-{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools?_page=0", "next" : "http://dummy/doc/schools?_page=1", "hasFormat" : [{"_about" : "http://dummy//doc/schools.html", "format" : {"label" : "text/html"}
+{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools?_page=0", "next" : "http://dummy/doc/schools?_page=1", "hasFormat" : [{"_about" : "http://dummy/doc/schools.html", "format" : {"label" : "text/html"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=0"}
-    , {"_about" : "http://dummy//doc/schools.json", "format" : {"label" : "application/json"}
+    , {"_about" : "http://dummy/doc/schools.json", "format" : {"label" : "application/json"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=0"}
-    , {"_about" : "http://dummy//doc/schools.owl", "format" : {"label" : "application/rdf+xml"}
+    , {"_about" : "http://dummy/doc/schools.owl", "format" : {"label" : "application/rdf+xml"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=0"}
-    , {"_about" : "http://dummy//doc/schools.rdf", "format" : {"label" : "application/rdf+xml"}
+    , {"_about" : "http://dummy/doc/schools.rdf", "format" : {"label" : "application/rdf+xml"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=0"}
-    , {"_about" : "http://dummy//doc/schools.text", "format" : {"label" : "text/plain"}
+    , {"_about" : "http://dummy/doc/schools.text", "format" : {"label" : "text/plain"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=0"}
-    , {"_about" : "http://dummy//doc/schools.ttl", "format" : {"label" : "text/turtle"}
+    , {"_about" : "http://dummy/doc/schools.ttl", "format" : {"label" : "text/turtle"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=0"}
-    , {"_about" : "http://dummy//doc/schools.xml", "format" : {"label" : "text/xml"}
+    , {"_about" : "http://dummy/doc/schools.xml", "format" : {"label" : "text/xml"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=0"}
     ], "itemsPerPage" : 10, "page" : 0, "hasVersion" : [{"_about" : "http://dummy/doc/schools?_view=%23%23%23default", "isVersionOf" : "http://dummy/doc/schools?_page=0", "label" : "###default"}
     , {"_about" : "http://dummy/doc/schools?_view=all", "isVersionOf" : "http://dummy/doc/schools?_page=0", "label" : "all"}
     , {"_about" : "http://dummy/doc/schools?_view=basic", "isVersionOf" : "http://dummy/doc/schools?_page=0", "label" : "basic"}
     , {"_about" : "http://dummy/doc/schools?_view=description", "isVersionOf" : "http://dummy/doc/schools?_page=0", "label" : "description"}
     , {"_about" : "http://dummy/doc/schools?_view=medium", "isVersionOf" : "http://dummy/doc/schools?_page=0", "label" : "medium"}
-    ], "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "first" : "http://dummy/doc/schools?_page=0", "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#school_10", "name" : "Name10", "size" : 100, "type" : "School", "localAuthority" : {"_about" : "http://admin.data.gov.uk/def/localAythority#456", "label" : "SGlous"}
+    ], "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "first" : "http://dummy/doc/schools?_page=0", "isPartOf" : {"_about" : "http://dummy/doc/schools", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools?_page=0"}
+    , "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#school_10", "name" : "Name10", "size" : 100, "type" : "School", "localAuthority" : {"_about" : "http://admin.data.gov.uk/def/localAythority#456", "label" : "SGlous"}
       , "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_11", "name" : "Name11", "size" : 100, "type" : "School", "localAuthority" : {"_about" : "http://admin.data.gov.uk/def/localAythority#456", "label" : "SGlous"}
       , "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
@@ -38,8 +39,7 @@
       , "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_19", "name" : "Name19", "size" : 200, "type" : "School", "localAuthority" : {"_about" : "http://admin.data.gov.uk/def/localAythority#456", "label" : "SGlous"}
       , "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
-    ], "isPartOf" : {"_about" : "http://dummy/doc/schools", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools?_page=0"}
-    , "startIndex" : 1}
+    ], "startIndex" : 1}
   ], "context" : {"mapping" : {"school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "school-ont_School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
       , "isFormatOf" : {"uri" : "http://purl.org/dc/terms/isFormatOf", "range" : "http://www.w3.org/2002/07/owl#Thing"}
@@ -61,8 +61,8 @@
       , "definition" : {"uri" : "http://purl.org/linked-data/api/vocab#definition", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "ex_Primary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Primary"}
       , "hasPart" : {"uri" : "http://purl.org/dc/terms/hasPart", "range" : "http://www.w3.org/2002/07/owl#Thing"}
-      , "school-ont_localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "rdfs_label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
+      , "school-ont_localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
       , "format" : {"uri" : "http://purl.org/dc/terms/format", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "size" : {"uri" : "http://www.epimorphics.com/examples/eg1#size", "range" : "http://www.w3.org/2001/XMLSchema#integer"}

@@ -24,10 +24,10 @@ public class EldaException extends RuntimeException {
 		this( message, "", SERVER_ERROR, null );
 	}
 	
-	static final int BAD_REQUEST = 400;
-	static final int NOT_FOUND = 404;
+	public static final int BAD_REQUEST = 400;
+	public static final int NOT_FOUND = 404;
 	
-	static final int SERVER_ERROR = 500;
+	public static final int SERVER_ERROR = 500;
 	
 	public static void NotFound( String kind, String name ) {
 		throw new EldaException( kind + " not found: " + name, null, BAD_REQUEST, null );

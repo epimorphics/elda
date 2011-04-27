@@ -1,19 +1,19 @@
 # Model from test: http://dummy/doc/schools?_page=1
-{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools?_page=1", "next" : "http://dummy/doc/schools?_page=2", "hasFormat" : [{"_about" : "http://dummy//doc/schools.html", "format" : {"label" : "text/html"}
+{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools?_page=1", "next" : "http://dummy/doc/schools?_page=2", "hasFormat" : [{"_about" : "http://dummy/doc/schools.html", "format" : {"label" : "text/html"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=1"}
-    , {"_about" : "http://dummy//doc/schools.json", "format" : {"label" : "application/json"}
+    , {"_about" : "http://dummy/doc/schools.json", "format" : {"label" : "application/json"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=1"}
-    , {"_about" : "http://dummy//doc/schools.owl", "format" : {"label" : "application/rdf+xml"}
+    , {"_about" : "http://dummy/doc/schools.owl", "format" : {"label" : "application/rdf+xml"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=1"}
-    , {"_about" : "http://dummy//doc/schools.rdf", "format" : {"label" : "application/rdf+xml"}
+    , {"_about" : "http://dummy/doc/schools.rdf", "format" : {"label" : "application/rdf+xml"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=1"}
-    , {"_about" : "http://dummy//doc/schools.text", "format" : {"label" : "text/plain"}
+    , {"_about" : "http://dummy/doc/schools.text", "format" : {"label" : "text/plain"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=1"}
-    , {"_about" : "http://dummy//doc/schools.ttl", "format" : {"label" : "text/turtle"}
+    , {"_about" : "http://dummy/doc/schools.ttl", "format" : {"label" : "text/turtle"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=1"}
-    , {"_about" : "http://dummy//doc/schools.xml", "format" : {"label" : "text/xml"}
+    , {"_about" : "http://dummy/doc/schools.xml", "format" : {"label" : "text/xml"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=1"}
-    ], "page" : 1, "itemsPerPage" : 10, "hasVersion" : [{"_about" : "http://dummy/doc/schools?_view=%23%23%23default", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "###default"}
+    ], "itemsPerPage" : 10, "page" : 1, "hasVersion" : [{"_about" : "http://dummy/doc/schools?_view=%23%23%23default", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "###default"}
     , {"_about" : "http://dummy/doc/schools?_view=all", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "all"}
     , {"_about" : "http://dummy/doc/schools?_view=basic", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "basic"}
     , {"_about" : "http://dummy/doc/schools?_view=description", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "description"}
@@ -51,8 +51,8 @@
       , "definition" : {"uri" : "http://purl.org/linked-data/api/vocab#definition", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "ex_Primary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Primary"}
       , "hasPart" : {"uri" : "http://purl.org/dc/terms/hasPart", "range" : "http://www.w3.org/2002/07/owl#Thing"}
-      , "school-ont_localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority"}
       , "rdfs_label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
+      , "school-ont_localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority"}
       , "label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
       , "format" : {"uri" : "http://purl.org/dc/terms/format", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "prev" : {"uri" : "http://www.w3.org/1999/xhtml/vocab#prev", "range" : "http://www.w3.org/2002/07/owl#Thing"}

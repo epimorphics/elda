@@ -9,9 +9,23 @@
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
+<http://dummy/doc/schools.json>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "application/json"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools?_page=0> .
+
 <http://dummy/doc/schools?_view=%23%23%23default>
       rdfs:label "###default" ;
       <http://purl.org/dc/terms/isVersionOf>
+              <http://dummy/doc/schools?_page=0> .
+
+<http://dummy/doc/schools.xml>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools?_page=0> .
 
 <http://dummy/doc/schools>
@@ -35,13 +49,6 @@ ex:school_51
       ex:name "Name51" ;
       ex:size 100 .
 
-<http://dummy//doc/schools.ttl>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/turtle"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools?_page=0> .
-
 ex:school_5
       a       school-ont:School ;
       school-ont:localAuthority
@@ -56,22 +63,22 @@ ex:school_3
       ex:name "Name3" ;
       ex:size 100 .
 
-<http://dummy//doc/schools.json>
+<http://dummy/doc/schools.owl>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/json"
+              [ rdfs:label "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools?_page=0> .
+
+<http://dummy/doc/schools.html>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/html"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools?_page=0> .
 
 <http://admin.data.gov.uk/def/localAythority#123>
       rdfs:label "BANES" .
-
-<http://dummy//doc/schools.owl>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/rdf+xml"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools?_page=0> .
 
 <http://dummy/doc/schools?_page=0>
       a       api:Page ;
@@ -80,7 +87,7 @@ ex:school_3
       <http://a9.com/-/spec/opensearch/1.1/startIndex>
               "1"^^xsd:long ;
       <http://purl.org/dc/terms/hasFormat>
-              <http://dummy//doc/schools.json> , <http://dummy//doc/schools.ttl> , <http://dummy//doc/schools.text> , <http://dummy//doc/schools.owl> , <http://dummy//doc/schools.html> , <http://dummy//doc/schools.xml> , <http://dummy//doc/schools.rdf> ;
+              <http://dummy/doc/schools.json> , <http://dummy/doc/schools.xml> , <http://dummy/doc/schools.ttl> , <http://dummy/doc/schools.owl> , <http://dummy/doc/schools.html> , <http://dummy/doc/schools.rdf> , <http://dummy/doc/schools.text> ;
       <http://purl.org/dc/terms/hasVersion>
               <http://dummy/doc/schools?_view=%23%23%23default> , <http://dummy/doc/schools?_view=description> , <http://dummy/doc/schools?_view=medium> , <http://dummy/doc/schools?_view=all> , <http://dummy/doc/schools?_view=basic> ;
       <http://purl.org/dc/terms/isPartOf>
@@ -126,9 +133,9 @@ ex:school_52
       ex:name "Name52" ;
       ex:size 100 .
 
-<http://dummy//doc/schools.text>
+<http://dummy/doc/schools.rdf>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/plain"
+              [ rdfs:label "application/rdf+xml"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools?_page=0> .
@@ -150,9 +157,9 @@ ex:school_4
       <http://purl.org/dc/terms/isVersionOf>
               <http://dummy/doc/schools?_page=0> .
 
-<http://dummy//doc/schools.html>
+<http://dummy/doc/schools.ttl>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/html"
+              [ rdfs:label "text/turtle"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools?_page=0> .
@@ -165,16 +172,9 @@ ex:school_100
       ex:size 100 ;
       ex:type ex:Secondary .
 
-<http://dummy//doc/schools.xml>
+<http://dummy/doc/schools.text>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/xml"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools?_page=0> .
-
-<http://dummy//doc/schools.rdf>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/rdf+xml"
+              [ rdfs:label "text/plain"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools?_page=0> .

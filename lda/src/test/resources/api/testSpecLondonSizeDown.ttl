@@ -9,16 +9,16 @@
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
-<http://dummy//doc/schools/london.ttl>
+<http://dummy/doc/schools/london.owl>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/turtle"
+              [ rdfs:label "application/rdf+xml"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/london?_page=0> .
 
-<http://dummy//doc/schools/london.rdf>
+<http://dummy/doc/schools/london.text>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/rdf+xml"
+              [ rdfs:label "text/plain"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/london?_page=0> .
@@ -44,7 +44,7 @@ ex:school_23
       ex:size 200 ;
       ex:type ex:Primary .
 
-<http://dummy//doc/schools/london.xml>
+<http://dummy/doc/schools/london.xml>
       <http://purl.org/dc/terms/format>
               [ rdfs:label "text/xml"
               ] ;
@@ -67,9 +67,9 @@ ex:school_27
       ex:size 200 ;
       ex:type ex:Primary .
 
-<http://dummy//doc/schools/london.text>
+<http://dummy/doc/schools/london.ttl>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/plain"
+              [ rdfs:label "text/turtle"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/london?_page=0> .
@@ -89,13 +89,6 @@ ex:school_27
 <http://dummy/doc/schools/london?_view=%23%23%23default>
       rdfs:label "###default" ;
       <http://purl.org/dc/terms/isVersionOf>
-              <http://dummy/doc/schools/london?_page=0> .
-
-<http://dummy//doc/schools/london.json>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/json"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/london?_page=0> .
 
 ex:school_24
@@ -122,6 +115,13 @@ ex:school_28
       ex:size 100 ;
       ex:type ex:Primary .
 
+<http://dummy/doc/schools/london.html>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "text/html"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools/london?_page=0> .
+
 ex:school_22
       a       school-ont:School ;
       school-ont:localAuthority
@@ -137,7 +137,7 @@ ex:school_22
       <http://a9.com/-/spec/opensearch/1.1/startIndex>
               "1"^^xsd:long ;
       <http://purl.org/dc/terms/hasFormat>
-              <http://dummy//doc/schools/london.json> , <http://dummy//doc/schools/london.text> , <http://dummy//doc/schools/london.ttl> , <http://dummy//doc/schools/london.rdf> , <http://dummy//doc/schools/london.owl> , <http://dummy//doc/schools/london.html> , <http://dummy//doc/schools/london.xml> ;
+              <http://dummy/doc/schools/london.ttl> , <http://dummy/doc/schools/london.owl> , <http://dummy/doc/schools/london.text> , <http://dummy/doc/schools/london.json> , <http://dummy/doc/schools/london.rdf> , <http://dummy/doc/schools/london.xml> , <http://dummy/doc/schools/london.html> ;
       <http://purl.org/dc/terms/hasVersion>
               <http://dummy/doc/schools/london?_view=%23%23%23default> , <http://dummy/doc/schools/london?_view=description> , <http://dummy/doc/schools/london?_view=basic> , <http://dummy/doc/schools/london?_view=all> ;
       <http://purl.org/dc/terms/isPartOf>
@@ -155,7 +155,14 @@ ex:school_22
       <http://purl.org/dc/terms/isVersionOf>
               <http://dummy/doc/schools/london?_page=0> .
 
-<http://dummy//doc/schools/london.owl>
+<http://dummy/doc/schools/london.json>
+      <http://purl.org/dc/terms/format>
+              [ rdfs:label "application/json"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://dummy/doc/schools/london?_page=0> .
+
+<http://dummy/doc/schools/london.rdf>
       <http://purl.org/dc/terms/format>
               [ rdfs:label "application/rdf+xml"
               ] ;
@@ -169,13 +176,6 @@ ex:school_29
       ex:name "Name29" ;
       ex:size 100 ;
       ex:type ex:Primary .
-
-<http://dummy//doc/schools/london.html>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/html"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/london?_page=0> .
 
 ex:school_30
       a       school-ont:School ;
