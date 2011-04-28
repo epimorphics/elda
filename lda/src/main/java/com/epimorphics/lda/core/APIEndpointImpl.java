@@ -239,6 +239,12 @@ public class APIEndpointImpl implements APIEndpoint {
         if (query.wantsMetadata( "bindings" )) addBindings( rsm, context, thisPage );
         // TODO also: execution
     //
+        Property EMV = rsm.createProperty( API.NS, "extendedMetadataVersion" );
+        String and = thisPage.getURI().indexOf("?") < 0 ? "?" : "&";
+        String emv_uri = thisPage.getURI() + and + "_metadata=all";
+        Resource emv = rsm.createResource( emv_uri );
+        thisPage.addProperty( EMV, emv );
+    //
         if (isListEndpoint()) {
         	RDFList content = rsm.createList( rs.getResultList().iterator() );
         	thisPage

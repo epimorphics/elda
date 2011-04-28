@@ -17,7 +17,7 @@
     , {"_about" : "http://dummy/doc/schools/la/BANES?_view=all", "isVersionOf" : "http://dummy/doc/schools/la/BANES?_page=0", "label" : "all"}
     , {"_about" : "http://dummy/doc/schools/la/BANES?_view=basic", "isVersionOf" : "http://dummy/doc/schools/la/BANES?_page=0", "label" : "basic"}
     , {"_about" : "http://dummy/doc/schools/la/BANES?_view=description", "isVersionOf" : "http://dummy/doc/schools/la/BANES?_page=0", "label" : "description"}
-    ], "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "first" : "http://dummy/doc/schools/la/BANES?_page=0", "isPartOf" : {"_about" : "http://dummy/doc/schools/la/BANES", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools/la/BANES?_page=0"}
+    ], "extendedMetadataVersion" : "http://dummy/doc/schools/la/BANES?_page=0&_metadata=all", "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "first" : "http://dummy/doc/schools/la/BANES?_page=0", "isPartOf" : {"_about" : "http://dummy/doc/schools/la/BANES", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools/la/BANES?_page=0"}
     , "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#school_1", "name" : "Name1", "size" : 100, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#123"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_100", "name" : "Name100", "size" : 100, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#123", "school_type" : "http://www.epimorphics.com/examples/eg1#Secondary"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_2", "name" : "Name2", "size" : 100, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#123"}
@@ -32,6 +32,7 @@
   ], "context" : {"mapping" : {"school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "school-ont_School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
       , "isFormatOf" : {"uri" : "http://purl.org/dc/terms/isFormatOf", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "extendedMetadataVersion" : {"uri" : "http://purl.org/linked-data/api/vocab#extendedMetadataVersion", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "ex_Secondary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Secondary"}
       , "next" : {"uri" : "http://www.w3.org/1999/xhtml/vocab#next", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority", "range" : "http://www.w3.org/2002/07/owl#Thing"}

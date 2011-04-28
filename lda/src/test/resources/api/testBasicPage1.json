@@ -1,5 +1,15 @@
 # Model from test: http://dummy/doc/schools?_page=1
-{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools?_page=1", "next" : "http://dummy/doc/schools?_page=2", "hasFormat" : [{"_about" : "http://dummy/doc/schools.html", "format" : {"label" : "text/html"}
+{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools?_page=1", "next" : "http://dummy/doc/schools?_page=2", "page" : 1, "itemsPerPage" : 10, "extendedMetadataVersion" : "http://dummy/doc/schools?_page=1&_metadata=all", "first" : "http://dummy/doc/schools?_page=0", "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#school_18", "name" : "Name18", "type" : "School"}
+    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_19", "name" : "Name19", "type" : "School"}
+    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_2", "name" : "Name2", "type" : "School"}
+    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_20", "name" : "Name20", "type" : "School"}
+    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_21", "name" : "Name21", "type" : "School"}
+    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_22", "name" : "Name22", "type" : "School"}
+    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_23", "name" : "Name23", "type" : "School"}
+    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_24", "name" : "Name24", "type" : "School"}
+    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_25", "name" : "Name25", "type" : "School"}
+    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_26", "name" : "Name26", "type" : "School"}
+    ], "startIndex" : 11, "hasFormat" : [{"_about" : "http://dummy/doc/schools.html", "format" : {"label" : "text/html"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=1"}
     , {"_about" : "http://dummy/doc/schools.json", "format" : {"label" : "application/json"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=1"}
@@ -13,26 +23,17 @@
       , "isFormatOf" : "http://dummy/doc/schools?_page=1"}
     , {"_about" : "http://dummy/doc/schools.xml", "format" : {"label" : "text/xml"}
       , "isFormatOf" : "http://dummy/doc/schools?_page=1"}
-    ], "itemsPerPage" : 10, "page" : 1, "hasVersion" : [{"_about" : "http://dummy/doc/schools?_view=%23%23%23default", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "###default"}
+    ], "prev" : "http://dummy/doc/schools?_page=0", "hasVersion" : [{"_about" : "http://dummy/doc/schools?_view=%23%23%23default", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "###default"}
     , {"_about" : "http://dummy/doc/schools?_view=all", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "all"}
     , {"_about" : "http://dummy/doc/schools?_view=basic", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "basic"}
     , {"_about" : "http://dummy/doc/schools?_view=description", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "description"}
     , {"_about" : "http://dummy/doc/schools?_view=medium", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "medium"}
-    ], "prev" : "http://dummy/doc/schools?_page=0", "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "first" : "http://dummy/doc/schools?_page=0", "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#school_18", "name" : "Name18", "type" : "School"}
-    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_19", "name" : "Name19", "type" : "School"}
-    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_2", "name" : "Name2", "type" : "School"}
-    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_20", "name" : "Name20", "type" : "School"}
-    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_21", "name" : "Name21", "type" : "School"}
-    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_22", "name" : "Name22", "type" : "School"}
-    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_23", "name" : "Name23", "type" : "School"}
-    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_24", "name" : "Name24", "type" : "School"}
-    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_25", "name" : "Name25", "type" : "School"}
-    , {"_about" : "http://www.epimorphics.com/examples/eg1#school_26", "name" : "Name26", "type" : "School"}
-    ], "isPartOf" : {"_about" : "http://dummy/doc/schools", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools?_page=1"}
-    , "startIndex" : 11}
+    ], "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "isPartOf" : {"_about" : "http://dummy/doc/schools", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools?_page=1"}
+  }
   ], "context" : {"mapping" : {"school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "school-ont_School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
       , "isFormatOf" : {"uri" : "http://purl.org/dc/terms/isFormatOf", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "extendedMetadataVersion" : {"uri" : "http://purl.org/linked-data/api/vocab#extendedMetadataVersion", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "ex_Secondary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Secondary"}
       , "next" : {"uri" : "http://www.w3.org/1999/xhtml/vocab#next", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority"}

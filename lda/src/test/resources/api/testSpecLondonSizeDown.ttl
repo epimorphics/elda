@@ -143,6 +143,8 @@ ex:school_22
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools/london> ;
       api:definition spec:api1 ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/schools/london?_page=0&_metadata=all> ;
       api:items (ex:school_21 ex:school_22 ex:school_23 ex:school_24 ex:school_25 ex:school_26 ex:school_27 ex:school_28 ex:school_29 ex:school_30) ;
       api:page "0"^^xsd:long ;
       <http://www.w3.org/1999/xhtml/vocab#first>

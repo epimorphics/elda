@@ -17,7 +17,8 @@
     , {"_about" : "http://dummy/doc/schools/size/400?_view=all", "isVersionOf" : "http://dummy/doc/schools/size/400?_page=0", "label" : "all"}
     , {"_about" : "http://dummy/doc/schools/size/400?_view=basic", "isVersionOf" : "http://dummy/doc/schools/size/400?_page=0", "label" : "basic"}
     , {"_about" : "http://dummy/doc/schools/size/400?_view=description", "isVersionOf" : "http://dummy/doc/schools/size/400?_page=0", "label" : "description"}
-    ], "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "first" : "http://dummy/doc/schools/size/400?_page=0", "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#school_40", "name" : "Name40", "size" : 400, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#abc", "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
+    ], "extendedMetadataVersion" : "http://dummy/doc/schools/size/400?_page=0&_metadata=all", "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "first" : "http://dummy/doc/schools/size/400?_page=0", "isPartOf" : {"_about" : "http://dummy/doc/schools/size/400", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools/size/400?_page=0"}
+    , "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#school_40", "name" : "Name40", "size" : 400, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#abc", "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_39", "name" : "Name39", "size" : 400, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#abc", "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_38", "name" : "Name38", "size" : 400, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#abc", "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_37", "name" : "Name37", "size" : 400, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#abc", "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
@@ -26,12 +27,12 @@
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_34", "name" : "Name34", "size" : 400, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#abc", "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_33", "name" : "Name33", "size" : 400, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#abc", "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_32", "name" : "Name32", "size" : 400, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#abc", "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
-    ], "isPartOf" : {"_about" : "http://dummy/doc/schools/size/400", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools/size/400?_page=0"}
-    , "startIndex" : 1}
+    ], "startIndex" : 1}
   ], "context" : {"mapping" : {"school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "school-ont_School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
       , "isFormatOf" : {"uri" : "http://purl.org/dc/terms/isFormatOf", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "ex_Secondary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Secondary"}
+      , "extendedMetadataVersion" : {"uri" : "http://purl.org/linked-data/api/vocab#extendedMetadataVersion", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "Primary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Primary"}
       , "type" : {"uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}

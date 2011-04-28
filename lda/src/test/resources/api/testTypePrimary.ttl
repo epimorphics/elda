@@ -52,6 +52,8 @@ ex:school_37
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools/type/Primary> ;
       api:definition spec:api1 ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/schools/type/Primary?_page=0&_metadata=all> ;
       api:items (ex:school_37 ex:school_30 ex:school_17 ex:school_35 ex:school_29 ex:school_20 ex:school_12 ex:school_23 ex:school_39 ex:school_40) ;
       api:page "0"^^xsd:long ;
       <http://www.w3.org/1999/xhtml/vocab#first>

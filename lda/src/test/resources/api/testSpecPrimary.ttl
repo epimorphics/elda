@@ -27,6 +27,8 @@
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools/primary> ;
       api:definition spec:api1 ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/schools/primary?_page=0&_metadata=all> ;
       api:items (ex:school_10 ex:school_11 ex:school_12 ex:school_13 ex:school_14 ex:school_15 ex:school_16 ex:school_17 ex:school_18 ex:school_19) ;
       api:page "0"^^xsd:long ;
       <http://www.w3.org/1999/xhtml/vocab#first>
@@ -164,16 +166,16 @@ ex:school_15
       ex:size 100 ;
       ex:type ex:Primary .
 
-<http://dummy/doc/schools/primary.ttl>
+<http://dummy/doc/schools/primary.html>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/turtle"
+              [ rdfs:label "text/html"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/primary?_page=0> .
 
-<http://dummy/doc/schools/primary.html>
+<http://dummy/doc/schools/primary.ttl>
       <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/html"
+              [ rdfs:label "text/turtle"
               ] ;
       <http://purl.org/dc/terms/isFormatOf>
               <http://dummy/doc/schools/primary?_page=0> .

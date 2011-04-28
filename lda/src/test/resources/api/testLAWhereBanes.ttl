@@ -81,6 +81,8 @@ ex:school_3
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools/laWhere/BANES> ;
       api:definition spec:api1 ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/schools/laWhere/BANES?_page=0&_metadata=all> ;
       api:items (ex:school_1 ex:school_100 ex:school_2 ex:school_3 ex:school_4 ex:school_49 ex:school_5 ex:school_50 ex:school_51 ex:school_52) ;
       api:page "0"^^xsd:long ;
       <http://www.w3.org/1999/xhtml/vocab#first>

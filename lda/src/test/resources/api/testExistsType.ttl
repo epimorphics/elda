@@ -176,6 +176,8 @@ ex:school_62
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools> ;
       api:definition spec:api1 ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/schools?_page=0&_metadata=all> ;
       api:items (ex:school_10 ex:school_100 ex:school_11 ex:school_12 ex:school_13 ex:school_14 ex:school_15 ex:school_16 ex:school_28 ex:school_29 ex:school_30 ex:school_31 ex:school_61 ex:school_62 ex:school_63 ex:school_64 ex:school_65 ex:school_77 ex:school_78 ex:school_79 ex:school_80 ex:school_81 ex:school_82 ex:school_83 ex:school_84 ex:school_85 ex:school_97 ex:school_98 ex:school_99) ;
       api:page "0"^^xsd:long ;
       <http://www.w3.org/1999/xhtml/vocab#first>

@@ -41,6 +41,8 @@
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/deptsEn> ;
       api:definition spec:api1 ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/deptsEn?_page=0&_metadata=all> ;
       api:items (ex:dept3 ex:dept2 ex:dept1) ;
       api:page "0"^^xsd:long ;
       <http://www.w3.org/1999/xhtml/vocab#first>
