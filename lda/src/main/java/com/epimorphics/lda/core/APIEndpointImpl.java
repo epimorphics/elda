@@ -234,10 +234,10 @@ public class APIEndpointImpl implements APIEndpoint {
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( FIXUP.definition, uriForSpec );
-        if (query.wantsMetadata( "versions" )) addVersions( rsm, context, thisPage );
-        if (query.wantsMetadata( "formats" )) addFormats( rsm, context, thisPage );
-        if (query.wantsMetadata( "bindings" ) || true) addBindings( rsm, context, thisPage );
-        // also: execution, bindings
+        if (query.wantsMetadata( "versions" ) || true) addVersions( rsm, context, thisPage );
+        if (query.wantsMetadata( "formats" ) || true) addFormats( rsm, context, thisPage );
+        if (query.wantsMetadata( "bindings" )) addBindings( rsm, context, thisPage );
+        // TODO also: execution
     //
         if (isListEndpoint()) {
         	RDFList content = rsm.createList( rs.getResultList().iterator() );
