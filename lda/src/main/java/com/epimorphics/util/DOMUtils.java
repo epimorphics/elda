@@ -71,7 +71,7 @@ public class DOMUtils
 			}
 		String nsd = namespacesDocument( pm );
 		t.setParameter( "api:namespaces", nsd );
-		log.debug( "set xslt parameter api:namespaces = " + rc.getStringValue( "api:namespaces" ) );
+		log.debug( "set xslt parameter api:namespaces = " + nsd );
 		return t;
 		}
 	

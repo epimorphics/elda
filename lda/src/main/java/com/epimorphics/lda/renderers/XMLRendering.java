@@ -6,25 +6,14 @@
 */
 package com.epimorphics.lda.renderers;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.epimorphics.lda.shortnames.ShortnameService;
-import com.hp.hpl.jena.rdf.model.AnonId;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFList;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
+import com.epimorphics.lda.shortnames.ShortnameService;
 
 /**
 From the spec: 
@@ -131,12 +120,16 @@ public class XMLRendering {
 		// System.err.println( ">> e := " + e );
 		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();
 		if (values.size() > 1 || isMultiValued( p )) {
-			for (RDFNode value: values) {
-				pe.appendChild( elementForValue( value ) );
-			}
+			for (RDFNode value: values) appendValueAsItem(pe, value);
 		} else if (values.size() == 1) {
 			giveValueToElement( pe, values.iterator().next() );
 		}
+	}
+
+	private void appendValueAsItem( Element pe, RDFNode value ) {
+		Element item = d.createElement( "item" );
+		elementForValue( item, value );
+		pe.appendChild( item );
 	}
 
 	public void giveValueToElement( Element pe, RDFNode v ) {
@@ -146,13 +139,15 @@ public class XMLRendering {
 			Resource r = v.asResource();
 			if (inPlace( r ))
 				addIdentification(pe, r);
-			else if (isRDFList( r )) addItems( pe, r.as(RDFList.class).asJavaList() );
-			else pe.appendChild( elementForValue( v ) );
+			else if (isRDFList( r )) 
+				addItems( pe, r.as(RDFList.class).asJavaList() );
+			else 
+				elementForValue( pe, v );
 		}
 	}
 
 	private void addItems( Element pe, List<RDFNode> jl ) {	
-		for (RDFNode item: jl) pe.appendChild( elementForValue( item ) );
+		for (RDFNode item: jl) appendValueAsItem( pe, item );
 	}
 
 	private boolean inPlace( Resource r ) {
@@ -170,8 +165,8 @@ public class XMLRendering {
 		e.appendChild( d.createTextNode( L.getLexicalForm() ) );
 	}
 
-	private Element elementForValue( RDFNode v ) {
-		Element e = d.createElement( "item" );
+	private Element elementForValue( Element e, RDFNode v ) {
+		// Element e = d.createElement( "item" );
 		// if (v.isAnon()) e.setAttribute( "ANON", v.asNode().getBlankNodeLabel() );
 		if (v.isLiteral()) {
 			addLiteralToElement( e, (Literal) v );
@@ -201,7 +196,6 @@ public class XMLRendering {
 	private boolean isMultiValued( Property p ) {
 		return false;
 	}
-
 
 	final Map<String, String> shortNames = new HashMap<String, String>();
 	

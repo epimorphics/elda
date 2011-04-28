@@ -11,11 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.hp.hpl.jena.rdf.model.*;
+import com.epimorphics.util.DOMUtils;
+import com.hp.hpl.jena.shared.PrefixMapping;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.util.DOMUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class XMLRenderer implements Renderer {
 
@@ -60,4 +60,5 @@ public class XMLRenderer implements Renderer {
 		r.addResourceToElement( result, root );
 		d.appendChild( result );
 	}
+	
 }

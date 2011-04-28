@@ -49,7 +49,7 @@ public class TestXMLRenderer
 	
 	@Test public void testSimpleChain() 
 		{
-		ensureRendering( "(P (item href=eh:/b (Q href=eh:/c)))", resourceInModel( "a P b; b Q c" ) );
+		ensureRendering( "(P href=eh:/b (Q href=eh:/c))", resourceInModel( "a P b; b Q c" ) );
 		}
 	
 	@Test public void testSingleDataStatement()
