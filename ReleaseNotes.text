@@ -6,6 +6,13 @@
 * The names allocated to pseudo-bnodes in the XML
   tree now start "_:".
 
+* Elda accepts _metadata=m1,m2... query parameters to specify which
+  metadata is returned. The currently understood options are
+  'all', 'bindings', 'versions', and 'formats', and for the moment 
+  'versions' and 'formats' are enabled regardless (until the test
+  suite is fixed). The bindings metadata is intended to be the
+  same as provided by our sibling implementations.
+
 * progress towards eliminating use of UriBuilder from
   endpoint code (then from CallContext, reducing
   dependencies.)
