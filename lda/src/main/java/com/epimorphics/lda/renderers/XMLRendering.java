@@ -13,6 +13,7 @@ import org.w3c.dom.Element;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
+import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
 /**
@@ -194,7 +195,8 @@ public class XMLRendering {
 	}
 
 	private boolean isMultiValued( Property p ) {
-		return false;
+		Prop px = sns.asContext().getPropertyByURI(p.getURI());
+		return px != null && px.isMultivalued();
 	}
 
 	final Map<String, String> shortNames = new HashMap<String, String>();
