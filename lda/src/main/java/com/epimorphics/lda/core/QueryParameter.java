@@ -27,6 +27,7 @@ public class QueryParameter {
 	public static final String _VIEW = "_view";
 	public static final String _PROPERTIES = "_properties";
 	public static final String _SELECT_PARAM = "_select";
+	public static final String _METADATA= "_metadata";
 	public static final String _FORMAT = "_format";
 	public static final String _LANG = "_lang";
 	

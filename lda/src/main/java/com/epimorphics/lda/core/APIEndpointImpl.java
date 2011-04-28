@@ -14,6 +14,7 @@ package com.epimorphics.lda.core;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -22,6 +23,7 @@ import javax.ws.rs.core.UriBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.exceptions.EldaException;
@@ -232,8 +234,10 @@ public class APIEndpointImpl implements APIEndpoint {
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( FIXUP.definition, uriForSpec );
-        addVersions( rsm, context, thisPage );
-		addFormats( rsm, context, thisPage );
+        if (query.wantsMetadata( "versions" )) addVersions( rsm, context, thisPage );
+        if (query.wantsMetadata( "formats" )) addFormats( rsm, context, thisPage );
+        if (query.wantsMetadata( "bindings" ) || true) addBindings( rsm, context, thisPage );
+        // also: execution, bindings
     //
         if (isListEndpoint()) {
         	RDFList content = rsm.createList( rs.getResultList().iterator() );
@@ -268,7 +272,33 @@ public class APIEndpointImpl implements APIEndpoint {
         }
     }
     
-    private Resource resourceForPage(Model m, CallContext context, int page) {
+    private void addBindings(Model rsm, CallContext cc, Resource thisPage) {
+		Resource exec = rsm.createResource();
+		Property VB = rsm.createProperty( API.NS + "variableBinding" );
+		Property TB = rsm.createProperty( API.NS + "termBinding" );
+		Property wasResultOf = rsm.createProperty( API.NS + "wasResultOf" );
+		exec.addProperty( RDF.type, rsm.createResource( API.NS + "Execution" ) );
+	//
+		for (Iterator<String> names = cc.parameters.keyIterator(); names.hasNext();) {
+			String name = names.next();
+			Resource vb = rsm.createResource();
+			exec.addProperty( VB, vb );
+			vb.addProperty( FIXUP.label, name );
+			vb.addProperty( FIXUP.value, cc.getStringValue( name ) );
+		}
+	//
+    	Context c = spec.getAPISpec().getShortnameService().asContext();
+    	for (String name: c.allNames()) {
+    		Resource tb = rsm.createResource();
+    		exec.addProperty( TB, tb );
+    		tb.addProperty( FIXUP.label, name );
+    		tb.addProperty( API.property, rsm.createResource( c.getURIfromName( name ) ) );
+    	}
+	//
+		thisPage.addProperty( wasResultOf, exec );
+	}
+
+	private Resource resourceForPage(Model m, CallContext context, int page) {
         UriBuilder ub = context.getURIBuilder();
         String uri = ub
             .replaceQueryParam(QueryParameter._PAGE, Integer.toString(page))

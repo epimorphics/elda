@@ -109,6 +109,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected String itemTemplate;
     protected String fixedQueryString = null;
     
+    protected Set<String> metadataOptions = new HashSet<String>();
+    
     // TODO replace this by full property chain descriptions
     protected Set<Property> expansionPoints = new HashSet<Property>();
 
@@ -266,6 +268,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		    setPageSize( Integer.parseInt(val) );
 		} else if (p.equals( QueryParameter._FORMAT )) {
 			vs.setFormat(val);
+		} else if (p.equals(QueryParameter._METADATA)) {
+			addMetadataOptions(val.split(","));
         } else if (p.equals(QueryParameter._SEARCH)) {
             addSearchTriple( val );
         } else if (p.equals(QueryParameter._SELECT_PARAM )) {
@@ -296,6 +300,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		} else {
 			throw new EldaException( "unrecognised reserved parameter: " + p );
 		}
+	}
+	
+	private void addMetadataOptions( String [] options ) {
+		for (String option: options) metadataOptions.add( option );
 	}
 	
     /**
@@ -857,6 +865,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         }
         return results;
         }
+
+	public boolean wantsMetadata( String name ) {
+		return metadataOptions.contains( name ) || metadataOptions.contains( "all" );
+	}
 
 }
 

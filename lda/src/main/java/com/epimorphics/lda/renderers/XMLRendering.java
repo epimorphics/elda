@@ -106,9 +106,9 @@ public class XMLRendering {
 		if (x.isURIResource())  
 			e.setAttribute( "href", x.getURI() );
 		else if (seen.contains( x )) {
-			e.setAttribute( "ref", idFor( x ) );
+			e.setAttribute( "ref", idFor( e, x ) );
 		} else {
-			e.setAttribute( "id", idFor( x ) );
+			e.setAttribute( "id", idFor( e, x ) );
 		}
 	}
 
@@ -178,7 +178,7 @@ public class XMLRendering {
 		} else if (v.isResource() && v.asResource().listProperties().hasNext()){
 			return addResourceToElement( e, v.asResource() );
 		} else if (v.isAnon() && !v.asResource().listProperties().hasNext()) {
-			if (needsId( v )) e.setAttribute( "id", idFor( v.asResource() ));
+			if (needsId( v )) e.setAttribute( "id", idFor( e, v.asResource() ));
 		} else {
 			e.setAttribute( "href", v.asResource().getURI() );
 		}
@@ -215,16 +215,16 @@ public class XMLRendering {
 
 	final Map<AnonId, String> idMap = new HashMap<AnonId, String>();
 
-	private String idFor( Resource x ) {
+	private String idFor( Element e, Resource x ) {
 		String id = idMap.get(x.getId());
-		if (id == null) idMap.put(x.getId(), id = newId() );
+		if (id == null) idMap.put(x.getId(), id = newId(e.getTagName()) );
 		return id;
 	}
 
 	int idCount = 1000;
 	
-	private String newId() {
-		return "anon_" + ++idCount;
+	private String newId(String name) {
+		return "_:" + name + "-" + ++idCount;
 	}
 
 }
