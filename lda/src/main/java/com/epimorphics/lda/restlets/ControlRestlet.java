@@ -21,7 +21,6 @@ import static com.epimorphics.lda.restlets.RouterRestlet.returnAs;
 import static com.epimorphics.lda.restlets.RouterRestlet.returnError;
 import static com.epimorphics.lda.restlets.RouterRestlet.returnNotFound;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +35,7 @@ import javax.ws.rs.core.UriInfo;
 import org.openjena.atlas.json.JsonException;
 
 import com.epimorphics.jsonrdf.Encoder;
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIException;
@@ -122,7 +122,7 @@ public class ControlRestlet {
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            return returnAs(renderModelAs(rec.getSpecModel(), "Turtle"), "text/plain");
+            return returnAs(ModelIOUtils.renderModelAs(rec.getSpecModel(), "Turtle"), "text/plain");
         }
     }
     
@@ -135,7 +135,7 @@ public class ControlRestlet {
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            return returnAs(renderModelAs(rec.getSpecModel(), "Turtle"), "text/turtle");
+            return returnAs(ModelIOUtils.renderModelAs(rec.getSpecModel(), "Turtle"), "text/turtle");
         }
     }
     
@@ -146,7 +146,7 @@ public class ControlRestlet {
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            return returnAs(renderModelAs(rec.getSpecModel(), "RDF/XML-ABBREV"), "application/rdf+xml");
+            return returnAs(ModelIOUtils.renderModelAs(rec.getSpecModel(), "RDF/XML-ABBREV"), "application/rdf+xml");
         }
     }
     
@@ -182,15 +182,9 @@ public class ControlRestlet {
             String body = Util.readResource("textlike/spec-form.html")
                 .replace("${endpoint}", pathstub)
                 .replace("${list}", ui.getBaseUri() + "api/" + pathstub)
-                .replace("${model}", renderModelAs(rec.getSpecModel(), "Turtle"));
+                .replace("${model}", ModelIOUtils.renderModelAs(rec.getSpecModel(), "Turtle"));
             return returnAs(body, "text/html");
         }
-    }
-
-    public static String renderModelAs(Model model, String format) {
-        StringWriter writer = new StringWriter();
-        model.write(writer, format);
-        return writer.toString();
     }
     
     public static SpecRecord lookupRequest(String pathstub, UriInfo ui) {

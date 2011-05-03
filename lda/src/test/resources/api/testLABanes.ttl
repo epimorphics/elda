@@ -143,7 +143,7 @@ ex:school_4
               <http://dummy/doc/schools/la/BANES?_view=%23%23%23default> , <http://dummy/doc/schools/la/BANES?_view=description> , <http://dummy/doc/schools/la/BANES?_view=all> , <http://dummy/doc/schools/la/BANES?_view=basic> ;
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools/la/BANES> ;
-      api:definition spec:api1 ;
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/schools/la/{name}> ;
       api:extendedMetadataVersion
               <http://dummy/doc/schools/la/BANES?_page=0&_metadata=all> ;
       api:items (ex:school_1 ex:school_100 ex:school_2 ex:school_3 ex:school_4 ex:school_49 ex:school_5 ex:school_50 ex:school_51 ex:school_52) ;
@@ -171,7 +171,7 @@ ex:school_100
       rdfs:label "should be a description of this list" ;
       <http://purl.org/dc/terms/hasPart>
               <http://dummy/doc/schools/la/BANES?_page=0> ;
-      api:definition spec:api1 .
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/schools/la/{name}> .
 
 <http://dummy/doc/schools/la/BANES?_view=basic>
       rdfs:label "basic" ;

@@ -1,3 +1,10 @@
+/*
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011 Epimorphics Limited
+    $Id$
+*/
 package com.epimorphics.lda.demo;
 
 import java.util.ArrayList;
@@ -20,6 +27,7 @@ import com.hp.hpl.jena.rdf.model.RDFList;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -75,11 +83,12 @@ public class Demo_HTML_Renderer implements Renderer {
 		return Util.withBody( "description of " + root, textBody.toString() );
 	}
 
-	public String renderList(APIResultSet results) {
+	public String renderList( APIResultSet results ) {
 		StringBuilder textBody = new StringBuilder();
         String rootURI = results.getRoot().getURI();
         h1( textBody, "Elda query results" );
         renderParameters(textBody, rootURI);
+        renderMetadata( textBody, results.getModel() );
     //    
         Resource anchor = results.listStatements( null, FIXUP.items, (RDFNode) null ).next().getSubject();
         for (RDFNode elem: anchor.getProperty( FIXUP.items ).getResource().as( RDFList.class ).asJavaList())
@@ -93,6 +102,19 @@ public class Demo_HTML_Renderer implements Renderer {
             }
         linkyBits( textBody, anchor );
         return Util.withBody( "Elda result set", textBody.toString() );
+	}
+
+	private void renderMetadata( StringBuilder textBody, Model rsm ) {
+		StmtIterator sit = rsm.listStatements( null, FIXUP.definition, (RDFNode) null );
+		if (sit.hasNext()) {
+			String def = sit.next().getResource().getURI();
+			textBody
+				.append( "<div style='margin: 1ex'>" )
+				.append( "<b>definition</b> at: " )
+				.append( "<a href='" + def + "'>" + def + "</a>" )
+				.append( "</div>" )
+				;
+		}
 	}
 
 	private void renderParameters( StringBuilder textBody, String main ) 

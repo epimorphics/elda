@@ -28,7 +28,7 @@
     , {"_about" : "http://dummy/doc/schools?_view=basic", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "basic"}
     , {"_about" : "http://dummy/doc/schools?_view=description", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "description"}
     , {"_about" : "http://dummy/doc/schools?_view=medium", "isVersionOf" : "http://dummy/doc/schools?_page=1", "label" : "medium"}
-    ], "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "isPartOf" : {"_about" : "http://dummy/doc/schools", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://www.epimorphics.com/examples/spec1#api1", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools?_page=1"}
+    ], "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://localhost:8080/elda/api/metahttp://dummy/doc/schools", "isPartOf" : {"_about" : "http://dummy/doc/schools", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://localhost:8080/elda/api/metahttp://dummy/doc/schools", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools?_page=1"}
   }
   ], "context" : {"mapping" : {"school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "school-ont_School" : {"uri" : "http://education.data.gov.uk/def/school/School"}

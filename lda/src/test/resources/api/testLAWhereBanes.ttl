@@ -28,7 +28,7 @@ ex:school_51
       rdfs:label "should be a description of this list" ;
       <http://purl.org/dc/terms/hasPart>
               <http://dummy/doc/schools/laWhere/BANES?_page=0> ;
-      api:definition spec:api1 .
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/schools/laWhere/{name}> .
 
 <http://dummy/doc/schools/laWhere/BANES?_view=description>
       rdfs:label "description" ;
@@ -80,7 +80,7 @@ ex:school_3
               <http://dummy/doc/schools/laWhere/BANES?_view=basic> , <http://dummy/doc/schools/laWhere/BANES?_view=all> , <http://dummy/doc/schools/laWhere/BANES?_view=description> , <http://dummy/doc/schools/laWhere/BANES?_view=%23%23%23default> ;
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools/laWhere/BANES> ;
-      api:definition spec:api1 ;
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/schools/laWhere/{name}> ;
       api:extendedMetadataVersion
               <http://dummy/doc/schools/laWhere/BANES?_page=0&_metadata=all> ;
       api:items (ex:school_1 ex:school_100 ex:school_2 ex:school_3 ex:school_4 ex:school_49 ex:school_5 ex:school_50 ex:school_51 ex:school_52) ;

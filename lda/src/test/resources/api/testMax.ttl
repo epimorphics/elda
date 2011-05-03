@@ -33,7 +33,7 @@
       rdfs:label "should be a description of this list" ;
       <http://purl.org/dc/terms/hasPart>
               <http://dummy/doc/schools?_page=0> ;
-      api:definition spec:api1 .
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/schools> .
 
 ex:school_1
       a       school-ont:School ;
@@ -106,7 +106,7 @@ ex:school_10
               <http://dummy/doc/schools?_view=%23%23%23default> , <http://dummy/doc/schools?_view=description> , <http://dummy/doc/schools?_view=medium> , <http://dummy/doc/schools?_view=all> , <http://dummy/doc/schools?_view=basic> ;
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools> ;
-      api:definition spec:api1 ;
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/schools> ;
       api:extendedMetadataVersion
               <http://dummy/doc/schools?_page=0&_metadata=all> ;
       api:items (ex:school_1 ex:school_10 ex:school_100 ex:school_11 ex:school_12 ex:school_13 ex:school_14 ex:school_15 ex:school_16 ex:school_17) ;

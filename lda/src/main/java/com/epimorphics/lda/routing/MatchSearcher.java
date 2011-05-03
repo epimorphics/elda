@@ -62,7 +62,7 @@ public class MatchSearcher<T> {
     public T lookup( Map<String, String> bindings, String path ) {
         if (needsSorting) sortTemplates();    
         for (MatchTemplate<T> t: templates)
-            if (t.match(bindings, path)) return t.value();
+        	if (t.match(bindings, path)) return t.value();
         return null;
     }
 

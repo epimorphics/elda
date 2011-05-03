@@ -40,7 +40,7 @@
               <http://dummy/doc/deptsEn?_view=%23%23%23default> , <http://dummy/doc/deptsEn?_view=all> , <http://dummy/doc/deptsEn?_view=description> , <http://dummy/doc/deptsEn?_view=basic> ;
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/deptsEn> ;
-      api:definition spec:api1 ;
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/deptsEn> ;
       api:extendedMetadataVersion
               <http://dummy/doc/deptsEn?_page=0&_metadata=all> ;
       api:items (ex:dept3 ex:dept2 ex:dept1) ;
@@ -115,4 +115,4 @@ ex:dept2
       rdfs:label "should be a description of this list" ;
       <http://purl.org/dc/terms/hasPart>
               <http://dummy/doc/deptsEn?_page=0> ;
-      api:definition spec:api1 .
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/deptsEn> .

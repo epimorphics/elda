@@ -86,7 +86,7 @@ ex:school_35
       rdfs:label "should be a description of this list" ;
       <http://purl.org/dc/terms/hasPart>
               <http://dummy/doc/schools/primary/big?_page=0> ;
-      api:definition spec:api1 .
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/schools/primary/big> .
 
 <http://dummy/doc/schools/primary/big?_view=basic>
       rdfs:label "basic" ;
@@ -169,7 +169,7 @@ ex:school_32
               <http://dummy/doc/schools/primary/big?_view=description> , <http://dummy/doc/schools/primary/big?_view=%23%23%23default> , <http://dummy/doc/schools/primary/big?_view=all> , <http://dummy/doc/schools/primary/big?_view=basic> ;
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools/primary/big> ;
-      api:definition spec:api1 ;
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/schools/primary/big> ;
       api:extendedMetadataVersion
               <http://dummy/doc/schools/primary/big?_page=0&_metadata=all> ;
       api:items (ex:school_32 ex:school_33 ex:school_34 ex:school_35 ex:school_36 ex:school_37 ex:school_38 ex:school_39 ex:school_40) ;

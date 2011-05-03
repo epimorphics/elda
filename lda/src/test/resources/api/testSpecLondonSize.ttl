@@ -71,7 +71,7 @@ ex:school_21
       rdfs:label "should be a description of this list" ;
       <http://purl.org/dc/terms/hasPart>
               <http://dummy/doc/schools/london?_page=0> ;
-      api:definition spec:api1 .
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/schools/london> .
 
 <http://dummy/doc/schools/london?_view=basic>
       rdfs:label "basic" ;
@@ -142,7 +142,7 @@ ex:school_22
               <http://dummy/doc/schools/london?_view=%23%23%23default> , <http://dummy/doc/schools/london?_view=description> , <http://dummy/doc/schools/london?_view=basic> , <http://dummy/doc/schools/london?_view=all> ;
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools/london> ;
-      api:definition spec:api1 ;
+      api:definition <http://localhost:8080/elda/api/metahttp://dummy/doc/schools/london> ;
       api:extendedMetadataVersion
               <http://dummy/doc/schools/london?_page=0&_metadata=all> ;
       api:items (ex:school_28 ex:school_29 ex:school_30 ex:school_31 ex:school_21 ex:school_22 ex:school_23 ex:school_24 ex:school_25 ex:school_26) ;

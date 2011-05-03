@@ -18,7 +18,6 @@
 package com.epimorphics.lda.restlets;
 
 import static com.epimorphics.lda.restlets.ControlRestlet.lookupRequest;
-import static com.epimorphics.lda.restlets.ControlRestlet.renderModelAs;
 import static com.epimorphics.lda.restlets.RouterRestlet.returnAs;
 import static com.epimorphics.lda.restlets.RouterRestlet.returnNotFound;
 
@@ -35,6 +34,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.epimorphics.jsonrdf.Encoder;
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.restlets.ControlRestlet.SpecRecord;
 import com.epimorphics.lda.vocabularies.EXTRAS;
@@ -44,7 +44,10 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.util.ResourceUtils;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -61,22 +64,18 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 @Path("/meta/{path: .*}")
 public class MetadataRestlet {
     
-    @GET
-    @Produces("text/plain")
-    public Response requestHandlerPlain(
-            @PathParam("path") String pathstub,
-            @Context UriInfo ui) {
+    @GET @Produces("text/plain")
+    public Response requestHandlerPlain( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
             Resource meta = createMetadata(ui, rec);
-            return returnAs(renderModelAs(meta.getModel(), "Turtle"), "text/plain");
+            return returnAs(ModelIOUtils.renderModelAs(meta.getModel(), "Turtle"), "text/plain");
         }
     }
     
-    @GET
-    @Produces("text/turtle")
+    @GET @Produces("text/turtle")
     public Response requestHandlerTurtle(
             @PathParam("path") String pathstub,
             @Context UriInfo ui) {
@@ -85,12 +84,11 @@ public class MetadataRestlet {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
             Resource meta = createMetadata(ui, rec);
-            return returnAs(renderModelAs(meta.getModel(), "Turtle"), "text/turtle");
+            return returnAs(ModelIOUtils.renderModelAs(meta.getModel(), "Turtle"), "text/turtle");
         }
     }
     
-    @GET
-    @Produces("application/json")
+    @GET @Produces("application/json")
     public Response requestHandlerJson(
             @PathParam("path") String pathstub,
             @Context UriInfo ui) {
@@ -124,24 +122,52 @@ public class MetadataRestlet {
         return meta;
     }
     
-    @GET
-    @Produces("text/html")
-    public Response requestHandlerHTML(
-            @PathParam("path") String pathstub,
-            @Context UriInfo ui) {
+    @GET @Produces("text/html") public Response requestHandlerHTML( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            Resource meta = createMetadata(ui, rec);
-            String body = Util.readResource("textlike/metadescription.html");
-            body = replaceByProperty(body, "${comment}", meta, RDFS.comment);
-            body = replaceByProperty(body, "${query}", meta, EXTRAS.sparqlQuery);
-            body = replaceByProperty(body, "${source}", meta, API.sparqlEndpoint);
-            body = body.replace("${specification}", quote( renderModelAs(meta.getModel(), "Turtle") ) );
-            body = replaceByProperty(body, "${endpointURL}", meta, EXTRAS.listURL);
-            body = replaceByProperty(body, "${endpointName}", meta, EXTRAS.listURL);
-            return returnAs(body, "text/html");
+            Resource meta = createMetadata( ui, rec );
+            StringBuilder textBody = new StringBuilder();
+            h1( textBody, "metadata for " + pathstub );
+        //
+            Statement ep = meta.getProperty( API.sparqlEndpoint );
+            h2( textBody, "SPARQL endpoint for queries" );
+            textBody
+            	.append( "<div style='margin-left: 2ex; background-color: #dddddd'>" )
+            	.append( safe( ep.getResource().getURI() ) )
+            	.append( "</div>" )
+            	;
+        //
+            StmtIterator comments = meta.listProperties( RDFS.comment );
+            if (comments.hasNext()) {
+            	h2( textBody, "comments on the specification" );
+            	while (comments.hasNext()) {
+            		textBody
+            			.append( "\n<div style='margin-left: 2ex; background-color: #dddddd'>\n" )
+            			.append( safe( comments.next().getString() ) )
+            			.append( "</div>\n" )
+            			;
+            	}
+            }
+        //
+            StmtIterator queries = meta.listProperties( EXTRAS.sparqlQuery );
+            if (queries.hasNext()) {
+            	h2( textBody, "generated SPARQL query for item selection" );
+            	while (queries.hasNext()) {
+            		textBody
+            			.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" )
+            			.append( safe( queries.next().getString() ))
+            			.append( "\n</pre>\n" )
+            			;
+            	}
+            }
+            // String body = Util.readResource("textlike/metadescription.html");
+//            body = body.replace("${specification}", safe( ModelIOUtils.renderModelAs(meta.getModel(), "Turtle") ) );
+//            body = replaceByProperty(body, "${endpointURL}", meta, EXTRAS.listURL);
+//            body = replaceByProperty(body, "${endpointName}", meta, EXTRAS.listURL);
+            // return returnAs(body, "text/html");
+            return returnAs( Util.withBody( "Metadata", textBody.toString() ), "text/html" );
         }
     }
 
@@ -149,15 +175,21 @@ public class MetadataRestlet {
         String val = RDFUtils.getStringValue(root, prop);
         return body.replace(pattern, fullquote(val));
     }
-    
-    private String fullquote(String val) {
-        return quote(val).replaceAll("\\n", "<br />");
+
+    private void h1( StringBuilder textBody, String s ) {  
+       textBody.append( "\n<h1>" ).append( safe( s ) ).append( "</h1>" );   
+    }
+        
+    private void h2( StringBuilder textBody, String s ) {  
+        textBody.append( "\n<h2>" ).append( safe( s ) ).append( "</h2>" );        
     }
     
-    private String quote(String val) {
-        return val
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;");
+    private String fullquote(String val) {
+        return safe(val).replaceAll("\\n", "<br />");
+    }
+    
+    private String safe(String val) {
+        return val.replaceAll( "&", "&amp;" ).replaceAll("<", "&lt;").replaceAll(">", "&gt;");
     }
 }
 

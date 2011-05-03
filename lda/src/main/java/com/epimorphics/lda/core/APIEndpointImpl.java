@@ -143,15 +143,6 @@ public class APIEndpointImpl implements APIEndpoint {
     private Resource resourceForView( Model m, CallContext context, String name ) {
     	URI req = context.getRequestURI();
     	String alt = replaceQueryParam( req, QueryParameter._VIEW, name );
-//        UriBuilder ub = context.getURIBuilder();
-//        String uri = ub
-//        	.replaceQueryParam( QueryParameter._VIEW, name )
-//            .build()
-//            .toASCIIString();
-//        if (!uri.equals(alt)) {
-//        	System.err.println( ">> exp:   " + uri );
-//        	System.err.println( ">> got:   " + alt );
-//        }
         return m.createResource( alt );
     }
 
@@ -230,10 +221,12 @@ public class APIEndpointImpl implements APIEndpoint {
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
+        String template = spec.getURITemplate();
+        Resource uriForDefinition = createDefinitionURI( rsm, uriForSpec, template ); 
         Resource thisPage = resourceForPage(rsm, context, page);
         rs.setRoot(thisPage);
     //
-		thisPage.addProperty( FIXUP.definition, uriForSpec );
+		thisPage.addProperty( FIXUP.definition, uriForDefinition );
         if (query.wantsMetadata( "versions" ) || true) addVersions( rsm, context, thisPage );
         if (query.wantsMetadata( "formats" ) || true) addFormats( rsm, context, thisPage );
         if (query.wantsMetadata( "bindings" )) addBindings( rsm, context, thisPage );
@@ -263,7 +256,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		;
     		listRoot
 	    		.addProperty( DCTerms.hasPart, thisPage )
-	    		.addProperty( FIXUP.definition, uriForSpec ) 
+	    		.addProperty( FIXUP.definition, uriForDefinition ) 
 	    		.addProperty( RDF.type, API.ListEndpoint )
 	    		.addProperty( RDFS.label, "should be a description of this list" )
 	    		;
@@ -278,7 +271,12 @@ public class APIEndpointImpl implements APIEndpoint {
         }
     }
     
-    private void addBindings(Model rsm, CallContext cc, Resource thisPage) {
+    private Resource createDefinitionURI( Model rsm, Resource uriForSpec, String template ) {
+    	System.err.println( ">> NOTE: making assumptions about root URI." );
+		return rsm.createResource( "http://localhost:8080/elda/api/meta" + template );
+	}
+
+	private void addBindings(Model rsm, CallContext cc, Resource thisPage) {
 		Resource exec = rsm.createResource();
 		Property VB = rsm.createProperty( API.NS + "variableBinding" );
 		Property TB = rsm.createProperty( API.NS + "termBinding" );

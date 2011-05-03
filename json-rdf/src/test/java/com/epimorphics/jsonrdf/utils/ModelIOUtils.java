@@ -1,9 +1,17 @@
+/*
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011 Epimorphics Limited
+    $Id$
+*/
 package com.epimorphics.jsonrdf.utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -35,13 +43,27 @@ public class ModelIOUtils {
 		return model;
 	}
     
-    public void modelToTurtleFile(Model m, String name) {
+	/**
+	    Write the model <code>m</code> to the file named <code>fileName</code>
+	    in Turtle format.
+	*/
+    public void modelToTurtleFile(Model m, String fileName) {
     	try {
-			OutputStream os = new FileOutputStream( new File( name ) );
+			OutputStream os = new FileOutputStream( new File( fileName ) );
 			m.write( os, "Turtle" );
 			os.close();
 		} catch (Exception e) {
 			throw new JenaException(e);
 		}
 	}
+    
+    /**
+        Answer a serialisation of <code>m</code> in the format 
+        <code>format</code>.
+    */
+    public static String renderModelAs( Model m, String format ) {
+        StringWriter sw = new StringWriter();
+        m.write( sw, format );
+        return sw.toString();
+    }
 }
