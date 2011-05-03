@@ -18,6 +18,7 @@
 package com.epimorphics.lda.restlets;
 
 import static com.epimorphics.lda.restlets.ControlRestlet.lookupRequest;
+//import static com.epimorphics.lda.restlets.ControlRestlet.lookupRequest;
 import static com.epimorphics.lda.restlets.RouterRestlet.returnAs;
 import static com.epimorphics.lda.restlets.RouterRestlet.returnNotFound;
 
@@ -162,6 +163,14 @@ public class MetadataRestlet {
             			;
             	}
             }
+        //
+            String it = ModelIOUtils.renderModelAs(meta.getModel(), "Turtle");
+            h2( textBody, "LDA spec for this endpoint as raw Turtle" );
+            textBody
+            	.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" )
+            	.append( safe( it ) )
+            	.append( "\n</pre>\n" )
+            	;
             // String body = Util.readResource("textlike/metadescription.html");
 //            body = body.replace("${specification}", safe( ModelIOUtils.renderModelAs(meta.getModel(), "Turtle") ) );
 //            body = replaceByProperty(body, "${endpointURL}", meta, EXTRAS.listURL);
