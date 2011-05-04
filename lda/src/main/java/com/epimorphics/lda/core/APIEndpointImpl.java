@@ -273,11 +273,18 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
-		String remove = template + "(\\.[-A-Za-z]+)?";
-		return rsm.createResource( ru.toASCIIString().replaceAll( remove, "/meta" + template ) );
+    	if (template.startsWith("http:")) {
+    		// nasty hackery to avoid nasty hackery in the TestAPI uriTemplates, qv.
+    		return rsm.createResource( template + "/meta" );
+    	}
+		String remove = "/?" + template.replace("{", "\\{" ).replace( "}", "\\}" ) + "(\\.[-A-Za-z]+)?";
+		// System.err.println( ">> remove: " + remove + " from: " + ru.toASCIIString() );
+		String result = ru.toASCIIString().replaceAll( remove, "/meta" + template );
+		// System.err.println( ">> from " + ru + ", " + template + " => " + result );
+		return rsm.createResource( result );
 	}
 
-	private void addBindings(Model rsm, CallContext cc, Resource thisPage) {
+	private void addBindings( Model rsm, CallContext cc, Resource thisPage ) {
 		Resource exec = rsm.createResource();
 		Property VB = rsm.createProperty( API.NS + "variableBinding" );
 		Property TB = rsm.createProperty( API.NS + "termBinding" );
@@ -294,10 +301,13 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
     	Context c = spec.getAPISpec().getShortnameService().asContext();
     	for (String name: c.allNames()) {
-    		Resource tb = rsm.createResource();
-    		exec.addProperty( TB, tb );
-    		tb.addProperty( FIXUP.label, name );
-    		tb.addProperty( API.property, rsm.createResource( c.getURIfromName( name ) ) );
+    		Resource term = rsm.createResource( c.getURIfromName( name ) );
+    		if (rsm.containsResource( term )) {
+	    		Resource tb = rsm.createResource();
+	    		exec.addProperty( TB, tb );
+	    		tb.addProperty( FIXUP.label, name );
+				tb.addProperty( API.property, term );
+    		}
     	}
 	//
 		thisPage.addProperty( wasResultOf, exec );

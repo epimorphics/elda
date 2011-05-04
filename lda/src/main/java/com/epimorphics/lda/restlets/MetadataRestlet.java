@@ -41,6 +41,7 @@ import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.restlets.ControlRestlet.SpecRecord;
+import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
@@ -69,7 +70,7 @@ public class MetadataRestlet {
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            Resource meta = createMetadata(ui, rec);
+            Resource meta = createMetadata(ui, pathstub, rec);
             return returnAs(ModelIOUtils.renderModelAs(meta.getModel(), "Turtle"), "text/plain");
         }
     }
@@ -82,7 +83,7 @@ public class MetadataRestlet {
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            Resource meta = createMetadata(ui, rec);
+            Resource meta = createMetadata(ui, pathstub, rec);
             return returnAs(ModelIOUtils.renderModelAs(meta.getModel(), "Turtle"), "text/turtle");
         }
     }
@@ -95,7 +96,7 @@ public class MetadataRestlet {
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            Resource meta = createMetadata(ui, rec);
+            Resource meta = createMetadata(ui, pathstub, rec);
             StringWriter writer = new StringWriter();
             List<Resource> roots = new ArrayList<Resource>(1);
             roots.add( meta );
@@ -108,17 +109,32 @@ public class MetadataRestlet {
         }
     }
 
-    private Resource createMetadata(UriInfo ui, SpecRecord rec) {
+    static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.EXTRA + "SIBLING" );
+    
+    private Resource createMetadata(UriInfo ui, String pathStub, SpecRecord rec) {
         CallContext cc = CallContext.createContext(ui, rec.getBindings());
         Model metadata = ModelFactory.createDefaultModel();
-        Resource meta = rec.getAPIEndpoint().getMetadata( cc , metadata);
-        
-        // Extract the endpoint specification
+        Resource meta = rec.getAPIEndpoint().getMetadata( cc, metadata);
+    //
+        for (APIEndpointSpec s: rec.getAPIEndpoint().getSpec().getAPISpec().getEndpoints()) {
+        	String ut = s.getURITemplate().replaceFirst( "^/", "" );
+        	if (!ut.equals(pathStub)) {
+				String sib = ui
+					.getRequestUri()
+					.toASCIIString()
+					.replace( pathStub, ut )
+					.replace( "%7B", "{" )
+					.replace( "%7D", "}" )
+					;
+				meta.addProperty( SIBLING, metadata.createResource( sib ) );
+        	}
+        }
+    // Extract the endpoint specification
         Model spec = rec.getSpecModel();
         Resource endpointSpec = rec.getAPIEndpoint().getSpec().getResource().inModel(spec);
-        metadata.add( ResourceUtils.reachableClosure( endpointSpec) );
+        metadata.add( ResourceUtils.reachableClosure( endpointSpec ) );
         meta.getModel().withDefaultMappings( PrefixMapping.Extended );
-        meta.addProperty(API.endpoint, endpointSpec);
+        meta.addProperty( API.endpoint, endpointSpec );
         return meta;
     }
     
@@ -127,9 +143,24 @@ public class MetadataRestlet {
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            Resource meta = createMetadata( ui, rec );
+            Resource meta = createMetadata( ui, pathstub, rec );
             StringBuilder textBody = new StringBuilder();
             h1( textBody, "metadata for " + pathstub );
+        //
+            List<Statement> sibs = meta.listProperties( SIBLING ).toList();
+            if (sibs.size() > 0) {
+            	h2( textBody, "other endpoints in the same API" );
+            	for (Statement sib: sibs) {
+            		String u = safe( sib.getResource().getURI() );
+            		textBody.append( "\n<div class='link'>" );
+            		textBody.append( "<a href='" );
+					textBody.append( u );
+            		textBody.append( "'>" );
+            		textBody.append( u );
+            		textBody.append( "</a>" );            		
+            		textBody.append( "</div>\n" );
+            	}
+            }
         //
             Statement ep = meta.getProperty( API.sparqlEndpoint );
             h2( textBody, "SPARQL endpoint for queries" );
@@ -237,8 +268,9 @@ public class MetadataRestlet {
     		List<Statement> properties = S.asResource().listProperties().toList();
     		Collections.sort( properties, byPredicate );
 			for (Statement s: properties) {
-    			if (!s.getPredicate().equals(FIXUP.label)) {
-	    			String p = "<b>" + nicely( prefixes, s.getPredicate() ) + "</b>";
+    			Property P = s.getPredicate();
+				if (!P.equals(FIXUP.label)  &!P.equals(SIBLING)) {
+	    			String p = "<b>" + nicely( prefixes, P ) + "</b>";
 	    			renderNicely( prefixes, sb, p, s.getObject(), seen, depth + 1 );
     			}
     		}
@@ -286,11 +318,7 @@ public class MetadataRestlet {
     }
         
     private void h2( StringBuilder textBody, String s ) {  
-        textBody.append( "\n<h2>" ).append( safe( s ) ).append( "</h2>" );        
-    }
-    
-    private String fullquote(String val) {
-        return safe(val).replaceAll("\\n", "<br />");
+        textBody.append( "\n<h2>" ).append( safe( s ) ).append( "</h2>\n" );        
     }
     
     private String safe(String val) {
