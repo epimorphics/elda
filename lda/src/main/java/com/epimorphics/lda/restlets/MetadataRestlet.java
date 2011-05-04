@@ -28,6 +28,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -117,17 +119,17 @@ public class MetadataRestlet {
         Resource meta = rec.getAPIEndpoint().getMetadata( cc, metadata);
     //
         for (APIEndpointSpec s: rec.getAPIEndpoint().getSpec().getAPISpec().getEndpoints()) {
-        	String ut = s.getURITemplate().replaceFirst( "^/", "" );
-        	if (!ut.equals(pathStub)) {
-				String sib = ui
-					.getRequestUri()
-					.toASCIIString()
-					.replace( pathStub, ut )
-					.replace( "%7B", "{" )
-					.replace( "%7D", "}" )
-					;
-				meta.addProperty( SIBLING, metadata.createResource( sib ) );
-        	}
+            String ut = s.getURITemplate().replaceFirst( "^/", "" );
+            if (!ut.equals(pathStub)) {
+                String sib = ui
+                    .getRequestUri()
+                    .toASCIIString()
+                    .replace( pathStub, ut )
+                    .replace( "%7B", "{" )
+                    .replace( "%7D", "}" )
+                    ;
+                meta.addProperty( SIBLING, metadata.createResource( sib ) );
+            }
         }
     // Extract the endpoint specification
         Model spec = rec.getSpecModel();
@@ -149,49 +151,47 @@ public class MetadataRestlet {
         //
             List<Statement> sibs = meta.listProperties( SIBLING ).toList();
             if (sibs.size() > 0) {
-            	h2( textBody, "other endpoints in the same API" );
-            	for (Statement sib: sibs) {
-            		String u = safe( sib.getResource().getURI() );
-            		textBody.append( "\n<div class='link'>" );
-            		textBody.append( "<a href='" );
-					textBody.append( u );
-            		textBody.append( "'>" );
-            		textBody.append( u );
-            		textBody.append( "</a>" );            		
-            		textBody.append( "</div>\n" );
-            	}
+                h2( textBody, "other endpoints in the same API" );
+                for (Statement sib: sibs) {
+                    String u = safe( sib.getResource().getURI() );
+                    textBody.append( "\n<div class='link'>" );
+                    textBody.append( "<a href='" );
+                    textBody.append( u );
+                    textBody.append( "'>" );
+                    textBody.append( u );
+                    textBody.append( "</a>" );                    
+                    textBody.append( "</div>\n" );
+                }
             }
         //
             Statement ep = meta.getProperty( API.sparqlEndpoint );
             h2( textBody, "SPARQL endpoint for queries" );
             textBody
-            	.append( "<div style='margin-left: 2ex; background-color: #dddddd'>" )
-            	.append( safe( ep.getResource().getURI() ) )
-            	.append( "</div>" )
-            	;
+                .append( "<div style='margin-left: 2ex; background-color: #dddddd'>" )
+                .append( safe( ep.getResource().getURI() ) )
+                .append( "</div>" )
+                ;
         //
             StmtIterator comments = meta.listProperties( RDFS.comment );
             if (comments.hasNext()) {
-            	h2( textBody, "comments on the specification" );
-            	while (comments.hasNext()) {
-            		textBody
-            			.append( "\n<div style='margin-left: 2ex; background-color: #dddddd'>\n" )
-            			.append( safe( comments.next().getString() ) )
-            			.append( "</div>\n" )
-            			;
-            	}
+                h2( textBody, "comments on the specification" );
+                while (comments.hasNext()) {
+                    textBody
+                        .append( "\n<div style='margin-left: 2ex; background-color: #dddddd'>\n" )
+                        .append( safe( comments.next().getString() ) )
+                        .append( "</div>\n" )
+                        ;
+                }
             }
         //
             StmtIterator queries = meta.listProperties( EXTRAS.sparqlQuery );
             if (queries.hasNext()) {
-            	h2( textBody, "generated SPARQL query for item selection" );
-            	while (queries.hasNext()) {
-            		textBody
-            			.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" )
-            			.append( safe( queries.next().getString() ))
-            			.append( "\n</pre>\n" )
-            			;
-            	}
+                h2( textBody, "generated SPARQL query for item selection" );
+                while (queries.hasNext()) {
+                    textBody.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" );
+                    doSPARQL( textBody, queries.next().getString() );
+                    textBody.append( "\n</pre>\n" );
+                }
             }
         //
             h2( textBody, "LDA spec for this endpoint" );
@@ -206,112 +206,121 @@ public class MetadataRestlet {
             String it = ModelIOUtils.renderModelAs(meta.getModel(), "Turtle");
             h2( textBody, "LDA spec for this endpoint as raw Turtle" );
             textBody
-            	.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" )
-            	.append( safe( it ) )
-            	.append( "\n</pre>\n" )
-            	;
-            // String body = Util.readResource("textlike/metadescription.html");
-//            body = body.replace("${specification}", safe( ModelIOUtils.renderModelAs(meta.getModel(), "Turtle") ) );
-//            body = replaceByProperty(body, "${endpointURL}", meta, EXTRAS.listURL);
-//            body = replaceByProperty(body, "${endpointName}", meta, EXTRAS.listURL);
-            // return returnAs(body, "text/html");
+                .append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" )
+                .append( safe( it ) )
+                .append( "\n</pre>\n" )
+                ;
             return returnAs( Util.withBody( "Metadata", textBody.toString() ), "text/html" );
         }
     }
 
-    private void renderNicely( StringBuilder prefixes, StringBuilder sb, String property, RDFNode S, HashSet<RDFNode> seen, int depth ) {
-    	indent( sb, depth );
-    	sb.append( property );
-    	sb.append( " " );
-    	if (S.isLiteral()) {
-    		Literal literal = S.asLiteral();
-			String lf = literal.getLexicalForm();
-			if (lf.indexOf('\n') > -1) {
-				sb.append( "\n" );
-				for (String line: lf.split("\n" )) {
-					indent( sb, depth + 1 );
-					sb
-						.append( "<span class='literal'>" )
-						.append( safe( line ) )
-						.append( "</span>" )
-						.append( "\n" )
-						;
-				}
-			} else {				
-				sb.append( "<span class='literal'>" );
-				sb.append( safe( lf ) );
-				sb.append( "</span>" );				
-			}
-    		String lang = literal.getLanguage();
-    		String dt = literal.getDatatypeURI();
-    		if (lang.length() > 0) sb.append( "@" ).append( lang );
-    		if (dt != null) sb.append( "^^" ).append( dt );
-    		sb.append( "\n" );
-    	} else {
-    		if (S.isAnon()) sb.append( "[] ..." ); else sb.append( nicely(prefixes, S) );
-    		List<RDFNode> labels = S.asResource().listProperties(FIXUP.label).mapWith(Statement.Util.getObject).toList();
-    		if (labels.size() > 0) {
-    			String space = "";
-    			sb.append( " (" );
-    			for (RDFNode label: labels) {
-    				sb    		
-    					.append( space )
-    					.append( "<span class='literal'>" )
-    					.append( safe( label.asLiteral().getLexicalForm() ) )    		
-    					.append( "</span>" )
-    					;
-    				space = " ";
-    			}
-    			sb.append( ")" );
-    		}
-    		sb.append( "\n" );
-    		List<Statement> properties = S.asResource().listProperties().toList();
-    		Collections.sort( properties, byPredicate );
-			for (Statement s: properties) {
-    			Property P = s.getPredicate();
-				if (!P.equals(FIXUP.label)  &!P.equals(SIBLING)) {
-	    			String p = "<b>" + nicely( prefixes, P ) + "</b>";
-	    			renderNicely( prefixes, sb, p, s.getObject(), seen, depth + 1 );
-    			}
-    		}
-    	}
+    private void doSPARQL( StringBuilder sb, String query ) {
+		String [] x = query.split( "\nSELECT " );
+		String [] prefixes = x[0].split( "\n" );
+		Pattern p = Pattern.compile( "([-A-Za-z]+:)" );
+		String pp = "", alt = "";
+		Matcher m = p.matcher( x[1] );
+		while (m.find()) { pp = pp + alt + "PREFIX[ \\t]+" + m.group(0); alt = "|"; }
+		Pattern q = Pattern.compile( pp );
+		for (String prefix: prefixes)
+			if (q.matcher(prefix).find())
+				sb.append( safe( prefix ) ).append( "\n" );
+		sb.append( safe( "SELECT " + x[1] ) );
 	}
 
-	static final Comparator<Statement> byPredicate = new Comparator<Statement>() 
-		{
-		@Override public int compare( Statement x, Statement y ) 
-			{ return x.getPredicate().getURI().compareTo( y.getPredicate().getURI() );
-			}
-		};
-		
+	private void renderNicely( StringBuilder prefixes, StringBuilder sb, String property, RDFNode S, HashSet<RDFNode> seen, int depth ) {
+        indent( sb, depth );
+        sb.append( property );
+        sb.append( " " );
+        if (S.isLiteral()) {
+            Literal literal = S.asLiteral();
+            String lf = literal.getLexicalForm();
+            if (lf.indexOf('\n') > -1) {
+                sb.append( "\n" );
+                for (String line: lf.split("\n" )) {
+                    indent( sb, depth + 1 );
+                    sb
+                        .append( "<span class='literal'>" )
+                        .append( safe( line ) )
+                        .append( "</span>" )
+                        .append( "\n" )
+                        ;
+                }
+            } else {                
+                sb.append( "<span class='literal'>" );
+                sb.append( safe( lf ) );
+                sb.append( "</span>" );                
+            }
+            String lang = literal.getLanguage();
+            String dt = literal.getDatatypeURI();
+            if (lang.length() > 0) sb.append( "@" ).append( lang );
+            if (dt != null) sb.append( "^^" ).append( dt );
+            sb.append( "\n" );
+        } else {
+            if (S.isAnon()) sb.append( "[] ..." ); else sb.append( nicely(prefixes, S) );
+            List<RDFNode> labels = S.asResource().listProperties(FIXUP.label).mapWith(Statement.Util.getObject).toList();
+            if (labels.size() > 0) {
+                String space = "";
+                sb.append( " (" );
+                for (RDFNode label: labels) {
+                    sb            
+                        .append( space )
+                        .append( "<span class='literal'>" )
+                        .append( safe( label.asLiteral().getLexicalForm() ) )            
+                        .append( "</span>" )
+                        ;
+                    space = " ";
+                }
+                sb.append( ")" );
+            }
+            sb.append( "\n" );
+            List<Statement> properties = S.asResource().listProperties().toList();
+            Collections.sort( properties, byPredicate );
+            for (Statement s: properties) {
+                Property P = s.getPredicate();
+                if (!P.equals(FIXUP.label)  &!P.equals(SIBLING)) {
+                    String p = "<b>" + nicely( prefixes, P ) + "</b>";
+                    renderNicely( prefixes, sb, p, s.getObject(), seen, depth + 1 );
+                }
+            }
+        }
+    }
+
+    static final Comparator<Statement> byPredicate = new Comparator<Statement>() 
+        {
+        @Override public int compare( Statement x, Statement y ) 
+            { return x.getPredicate().getURI().compareTo( y.getPredicate().getURI() );
+            }
+        };
+        
 
     private int count = 0;
     
-	private String nicely( StringBuilder prefixes, RDFNode S ) {
-		Resource r = S.asResource();
-		String u = r.getURI();
-		Model m = r.getModel();
-		String q = m.shortForm( u );
-		if (u.equals(q)) {
-			String prefix = "p" + ++count, ns = r.getNameSpace();
-			m.setNsPrefix( prefix, ns );
-			prefixes
-				.append( "<span class='keyword'>" )
-				.append( "prefix " )
-				.append( "</span>" )
-				.append( prefix )
-				.append( ": &lt;" )
-				.append( safe(ns) )
-				.append("&gt;\n" )
-				;
-			q = m.shortForm( u );
-		}
-		return safe( q );
-	}
+    private String nicely( StringBuilder prefixes, RDFNode S ) {
+        Resource r = S.asResource();
+        String u = r.getURI();
+        Model m = r.getModel();
+        String q = m.shortForm( u );
+        if (u.equals(q)) {
+            String prefix = "p" + ++count, ns = r.getNameSpace();
+            m.setNsPrefix( prefix, ns );
+            prefixes
+                .append( "<span class='keyword'>" )
+                .append( "prefix " )
+                .append( "</span>" )
+                .append( prefix )
+                .append( ": &lt;" )
+                .append( safe(ns) )
+                .append("&gt;\n" )
+                ;
+            q = m.shortForm( u );
+        }
+        return safe( q );
+    }
     
-	private void indent(StringBuilder sb, int depth) {
-		for (int i = 0; i < depth; i += 1) sb.append(' ');
-	}
+    private void indent(StringBuilder sb, int depth) {
+        for (int i = 0; i < depth; i += 1) sb.append(' ');
+    }
 
     private void h1( StringBuilder textBody, String s ) {  
        textBody.append( "\n<h1>" ).append( safe( s ) ).append( "</h1>" );   
