@@ -216,13 +216,14 @@ public class APIEndpointImpl implements APIEndpoint {
     	}
 	}
     
-    private void insertResultSetRoot(APIResultSet rs, CallContext context, APIQuery query) {
+    private void insertResultSetRoot( APIResultSet rs, CallContext context, APIQuery query ) {
     	Model rsm = rs.getModel();
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
-        Resource uriForDefinition = createDefinitionURI( rsm, uriForSpec, template ); 
+        URI ru = context.getRequestURI();
+        Resource uriForDefinition = createDefinitionURI( rsm, ru, uriForSpec, template ); 
         Resource thisPage = resourceForPage(rsm, context, page);
         rs.setRoot(thisPage);
     //
@@ -271,9 +272,9 @@ public class APIEndpointImpl implements APIEndpoint {
         }
     }
     
-    private Resource createDefinitionURI( Model rsm, Resource uriForSpec, String template ) {
-    	System.err.println( ">> NOTE: making assumptions about root URI." );
-		return rsm.createResource( "http://localhost:8080/elda/api/meta" + template );
+    private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
+		String remove = template + "(\\.[-A-Za-z]+)?";
+		return rsm.createResource( ru.toASCIIString().replaceAll( remove, "/meta" + template ) );
 	}
 
 	private void addBindings(Model rsm, CallContext cc, Resource thisPage) {
