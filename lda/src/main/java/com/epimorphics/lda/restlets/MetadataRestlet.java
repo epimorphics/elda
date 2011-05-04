@@ -24,6 +24,9 @@ import static com.epimorphics.lda.restlets.RouterRestlet.returnNotFound;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -39,16 +42,11 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.restlets.ControlRestlet.SpecRecord;
 import com.epimorphics.lda.vocabularies.EXTRAS;
-import com.epimorphics.util.RDFUtils;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.epimorphics.vocabs.FIXUP;
+import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.util.ResourceUtils;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -119,6 +117,7 @@ public class MetadataRestlet {
         Model spec = rec.getSpecModel();
         Resource endpointSpec = rec.getAPIEndpoint().getSpec().getResource().inModel(spec);
         metadata.add( ResourceUtils.reachableClosure( endpointSpec) );
+        meta.getModel().withDefaultMappings( PrefixMapping.Extended );
         meta.addProperty(API.endpoint, endpointSpec);
         return meta;
     }
@@ -164,6 +163,15 @@ public class MetadataRestlet {
             	}
             }
         //
+            h2( textBody, "LDA spec for this endpoint" );
+            StringBuilder nice = new StringBuilder();
+            StringBuilder prefixes = new StringBuilder();
+            renderNicely( prefixes, nice, "", meta, new HashSet<RDFNode>(), 0 );
+            textBody.append( "\n<pre>\n" );
+            textBody.append( prefixes );
+            textBody.append( nice );
+            textBody.append( "\n</pre>\n" );
+        //
             String it = ModelIOUtils.renderModelAs(meta.getModel(), "Turtle");
             h2( textBody, "LDA spec for this endpoint as raw Turtle" );
             textBody
@@ -180,10 +188,98 @@ public class MetadataRestlet {
         }
     }
 
-    private String replaceByProperty(String body, String pattern, Resource root, Property prop) {
-        String val = RDFUtils.getStringValue(root, prop);
-        return body.replace(pattern, fullquote(val));
-    }
+    private void renderNicely( StringBuilder prefixes, StringBuilder sb, String property, RDFNode S, HashSet<RDFNode> seen, int depth ) {
+    	indent( sb, depth );
+    	sb.append( property );
+    	sb.append( " " );
+    	if (S.isLiteral()) {
+    		Literal literal = S.asLiteral();
+			String lf = literal.getLexicalForm();
+			if (lf.indexOf('\n') > -1) {
+				sb.append( "\n" );
+				for (String line: lf.split("\n" )) {
+					indent( sb, depth + 1 );
+					sb
+						.append( "<span class='literal'>" )
+						.append( safe( line ) )
+						.append( "</span>" )
+						.append( "\n" )
+						;
+				}
+			} else {				
+				sb.append( "<span class='literal'>" );
+				sb.append( safe( lf ) );
+				sb.append( "</span>" );				
+			}
+    		String lang = literal.getLanguage();
+    		String dt = literal.getDatatypeURI();
+    		if (lang.length() > 0) sb.append( "@" ).append( lang );
+    		if (dt != null) sb.append( "^^" ).append( dt );
+    		sb.append( "\n" );
+    	} else {
+    		if (S.isAnon()) sb.append( "[] ..." ); else sb.append( nicely(prefixes, S) );
+    		List<RDFNode> labels = S.asResource().listProperties(FIXUP.label).mapWith(Statement.Util.getObject).toList();
+    		if (labels.size() > 0) {
+    			String space = "";
+    			sb.append( " (" );
+    			for (RDFNode label: labels) {
+    				sb    		
+    					.append( space )
+    					.append( "<span class='literal'>" )
+    					.append( safe( label.asLiteral().getLexicalForm() ) )    		
+    					.append( "</span>" )
+    					;
+    				space = " ";
+    			}
+    			sb.append( ")" );
+    		}
+    		sb.append( "\n" );
+    		List<Statement> properties = S.asResource().listProperties().toList();
+    		Collections.sort( properties, byPredicate );
+			for (Statement s: properties) {
+    			if (!s.getPredicate().equals(FIXUP.label)) {
+	    			String p = "<b>" + nicely( prefixes, s.getPredicate() ) + "</b>";
+	    			renderNicely( prefixes, sb, p, s.getObject(), seen, depth + 1 );
+    			}
+    		}
+    	}
+	}
+
+	static final Comparator<Statement> byPredicate = new Comparator<Statement>() 
+		{
+		@Override public int compare( Statement x, Statement y ) 
+			{ return x.getPredicate().getURI().compareTo( y.getPredicate().getURI() );
+			}
+		};
+		
+
+    private int count = 0;
+    
+	private String nicely( StringBuilder prefixes, RDFNode S ) {
+		Resource r = S.asResource();
+		String u = r.getURI();
+		Model m = r.getModel();
+		String q = m.shortForm( u );
+		if (u.equals(q)) {
+			String prefix = "p" + ++count, ns = r.getNameSpace();
+			m.setNsPrefix( prefix, ns );
+			prefixes
+				.append( "<span class='keyword'>" )
+				.append( "prefix " )
+				.append( "</span>" )
+				.append( prefix )
+				.append( ": &lt;" )
+				.append( safe(ns) )
+				.append("&gt;\n" )
+				;
+			q = m.shortForm( u );
+		}
+		return safe( q );
+	}
+    
+	private void indent(StringBuilder sb, int depth) {
+		for (int i = 0; i < depth; i += 1) sb.append(' ');
+	}
 
     private void h1( StringBuilder textBody, String s ) {  
        textBody.append( "\n<h1>" ).append( safe( s ) ).append( "</h1>" );   
