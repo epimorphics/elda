@@ -73,4 +73,6 @@ public class FIXUP
 	public static final Property TB = property( API.NS, "termBinding" );
 	
 	public static final Resource Execution = resource( API.NS, "Execution" );
+	
+    public static final Property extendedMetadata = property( API.NS, "extendedMetadataVersion" );
 	}
