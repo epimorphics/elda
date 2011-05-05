@@ -23,12 +23,18 @@ public class FIXUP
 	
 	public static String getURI()
 		{ return NS; }
+
+	private static Property property( String ns, String local )
+        { return ResourceFactory.createProperty( ns + local ); }
+
+    private static Resource resource( String ns, String local )
+        { return ResourceFactory.createResource( ns + local ); }
 	
-	public static Property prefixMapping = property( NS, "prefixMapping" );
+	public static final Property prefixMapping = property( NS, "prefixMapping" );
 	
-	public static Property prefix = property( NS, "prefix" );
+	public static final Property prefix = property( NS, "prefix" );
 	
-	public static Property namespace = property( NS, "namespace" );
+	public static final Property namespace = property( NS, "namespace" );
 	
 	public static final Property lang = property( NS, "lang" );
 
@@ -56,10 +62,15 @@ public class FIXUP
 
 	public static final Resource HtmlFormatter = property( NS, "HtmlFormatter" );
 
-	private static Property property( String ns, String local )
-        { return ResourceFactory.createProperty( ns + local ); }
+	public static final Resource Service = resource( API.NS, "processor" );
 
-    private static Resource resource( String ns, String local )
-        { return ResourceFactory.createResource( ns + local ); }
+	public static final Property processor = property( API.NS, "processor" );
+
+	public static final Property wasResultOf = property( API.NS, "wasResultOf" );
+
+	public static final Property VB = property( API.NS, "variableBinding" );
 	
+	public static final Property TB = property( API.NS, "termBinding" );
+	
+	public static final Resource Execution = resource( API.NS, "Execution" );
 	}
