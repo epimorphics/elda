@@ -25,19 +25,12 @@ ex:school_37
       ex:size 400 ;
       ex:type ex:Primary .
 
-<http://dummy/doc/schools/type/Primary.rdf>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/rdf+xml"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/type/Primary?_page=0> .
-
-<http://dummy/doc/schools/type/Primary.json>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/json"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/type/Primary?_page=0> .
+<http://dummy/doc/schools/type/Primary>
+      a       api:ListEndpoint ;
+      rdfs:label "should be a description of this list" ;
+      <http://purl.org/dc/terms/hasPart>
+              <http://dummy/doc/schools/type/Primary?_page=0> ;
+      api:definition <http://dummy/doc/schools/type/{type}/meta> .
 
 <http://dummy/doc/schools/type/Primary?_page=0>
       a       api:Page ;
@@ -45,10 +38,6 @@ ex:school_37
               "10"^^xsd:long ;
       <http://a9.com/-/spec/opensearch/1.1/startIndex>
               "1"^^xsd:long ;
-      <http://purl.org/dc/terms/hasFormat>
-              <http://dummy/doc/schools/type/Primary.ttl> , <http://dummy/doc/schools/type/Primary.rdf> , <http://dummy/doc/schools/type/Primary.text> , <http://dummy/doc/schools/type/Primary.xml> , <http://dummy/doc/schools/type/Primary.json> , <http://dummy/doc/schools/type/Primary.html> , <http://dummy/doc/schools/type/Primary.owl> ;
-      <http://purl.org/dc/terms/hasVersion>
-              <http://dummy/doc/schools/type/Primary?_view=%23%23%23default> , <http://dummy/doc/schools/type/Primary?_view=description> , <http://dummy/doc/schools/type/Primary?_view=all> , <http://dummy/doc/schools/type/Primary?_view=basic> ;
       <http://purl.org/dc/terms/isPartOf>
               <http://dummy/doc/schools/type/Primary> ;
       api:definition <http://dummy/doc/schools/type/{type}/meta> ;
@@ -77,59 +66,6 @@ ex:school_35
       ex:size 400 ;
       ex:type ex:Primary .
 
-<http://dummy/doc/schools/type/Primary.owl>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/rdf+xml"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/type/Primary?_page=0> .
-
-<http://dummy/doc/schools/type/Primary.html>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/html"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/type/Primary?_page=0> .
-
-ex:school_12
-      a       school-ont:School ;
-      school-ont:localAuthority
-              <http://admin.data.gov.uk/def/localAythority#456> ;
-      ex:name "Name12" ;
-      ex:size 100 ;
-      ex:type ex:Primary .
-
-<http://dummy/doc/schools/type/Primary.text>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/plain"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/type/Primary?_page=0> .
-
-<http://dummy/doc/schools/type/Primary?_view=all>
-      rdfs:label "all" ;
-      <http://purl.org/dc/terms/isVersionOf>
-              <http://dummy/doc/schools/type/Primary?_page=0> .
-
-<http://dummy/doc/schools/type/Primary.ttl>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/turtle"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/type/Primary?_page=0> .
-
-<http://dummy/doc/schools/type/Primary>
-      a       api:ListEndpoint ;
-      rdfs:label "should be a description of this list" ;
-      <http://purl.org/dc/terms/hasPart>
-              <http://dummy/doc/schools/type/Primary?_page=0> ;
-      api:definition <http://dummy/doc/schools/type/{type}/meta> .
-
-<http://dummy/doc/schools/type/Primary?_view=description>
-      rdfs:label "description" ;
-      <http://purl.org/dc/terms/isVersionOf>
-              <http://dummy/doc/schools/type/Primary?_page=0> .
-
 ex:school_40
       a       school-ont:School ;
       school-ont:localAuthority
@@ -137,11 +73,6 @@ ex:school_40
       ex:name "Name40" ;
       ex:size 400 ;
       ex:type ex:Primary .
-
-<http://dummy/doc/schools/type/Primary?_view=basic>
-      rdfs:label "basic" ;
-      <http://purl.org/dc/terms/isVersionOf>
-              <http://dummy/doc/schools/type/Primary?_page=0> .
 
 ex:school_20
       a       school-ont:School ;
@@ -151,10 +82,13 @@ ex:school_20
       ex:size 200 ;
       ex:type ex:Primary .
 
-<http://dummy/doc/schools/type/Primary?_view=%23%23%23default>
-      rdfs:label "###default" ;
-      <http://purl.org/dc/terms/isVersionOf>
-              <http://dummy/doc/schools/type/Primary?_page=0> .
+ex:school_12
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#456> ;
+      ex:name "Name12" ;
+      ex:size 100 ;
+      ex:type ex:Primary .
 
 ex:school_17
       a       school-ont:School ;
@@ -163,13 +97,6 @@ ex:school_17
       ex:name "Name17" ;
       ex:size 200 ;
       ex:type ex:Primary .
-
-<http://dummy/doc/schools/type/Primary.xml>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/xml"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/schools/type/Primary?_page=0> .
 
 ex:school_29
       a       school-ont:School ;

@@ -40,6 +40,7 @@ import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -226,11 +227,13 @@ public class APIEndpointImpl implements APIEndpoint {
         Resource uriForDefinition = createDefinitionURI( rsm, ru, uriForSpec, template ); 
         Resource thisPage = resourceForPage(rsm, context, page);
         rs.setRoot(thisPage);
+        Resource exec = rsm.createResource();
     //
 		thisPage.addProperty( FIXUP.definition, uriForDefinition );
-        if (query.wantsMetadata( "versions" ) || true) addVersions( rsm, context, thisPage );
-        if (query.wantsMetadata( "formats" ) || true) addFormats( rsm, context, thisPage );
-        if (query.wantsMetadata( "bindings" )) addBindings( rsm, context, thisPage );
+        if (query.wantsMetadata( "versions" )) addVersions( rsm, context, thisPage );
+        if (query.wantsMetadata( "formats" )) addFormats( rsm, context, thisPage );
+        if (query.wantsMetadata( "bindings" )) addBindings( rsm, exec, context, thisPage );
+        if (query.wantsMetadata( "execution" )) addExecution( rsm, exec, context, thisPage );
         // TODO also: execution
     //
         Property EMV = rsm.createProperty( API.NS, "extendedMetadataVersion" );
@@ -278,17 +281,69 @@ public class APIEndpointImpl implements APIEndpoint {
     		return rsm.createResource( template + "/meta" );
     	}
 		String remove = "/?" + template.replace("{", "\\{" ).replace( "}", "\\}" ) + "(\\.[-A-Za-z]+)?";
-		// System.err.println( ">> remove: " + remove + " from: " + ru.toASCIIString() );
 		String result = ru.toASCIIString().replaceAll( remove, "/meta" + template );
-		// System.err.println( ">> from " + ru + ", " + template + " => " + result );
 		return rsm.createResource( result );
 	}
 
-	private void addBindings( Model rsm, CallContext cc, Resource thisPage ) {
-		Resource exec = rsm.createResource();
+    static final Property wasResultOf = ResourceFactory.createProperty( API.NS + "wasResultOf" );
+    
+    static final Property processor = ResourceFactory.createProperty( API.NS + "processor" );
+    
+    static final Resource Service = ResourceFactory.createResource( API.NS + "processor" );
+    
+    static final String COMMON = "http://purl.org/net/opmv/types/common#";
+    
+    static final Resource Elda = ResourceFactory.createResource( EXTRAS.EXTRA + "Elda" );
+    
+    static final Resource ThisElda = ResourceFactory.createResource( EXTRAS.EXTRA + "Elda_1.1.4-SNAPSHOT" );
+    
+    static final Resource EldaRepository = ResourceFactory.createResource( "!!!REPO!!!" );
+
+    static final Property software = ResourceFactory.createProperty( COMMON + "software" );
+
+    static class XDOAP {
+    	static final String NS = DOAP.NS;
+    	
+        static final Property releaseOf = ResourceFactory.createProperty( XDOAP.NS + "releaseOf" );
+        static final Property _implements = ResourceFactory.createProperty( XDOAP.NS + "implements" );
+    }
+    
+    // following the Puelia model.
+    //
+    private void addExecution( Model rsm, Resource exec, CallContext cc, Resource thisPage ) {
+		exec.addProperty( RDF.type, rsm.createResource( API.NS + "Execution" ) );
+		// exec viewingResult ...
+		// exec slectionResult ...
+		// exec processor ...
+		Resource P = rsm.createResource();
+		exec.addProperty( processor, P );
+		P.addProperty( RDF.type, Service );
+		P.addProperty( software, ThisElda );
+		ThisElda.inModel(rsm)
+			.addProperty( RDFS.label, "Elda 1.1.4-SNAPSHOT" )
+			.addProperty( RDF.type, DOAP.Version )
+			.addProperty( DOAP.revision, "1.1.4-SNAPSHOT" )
+			.addProperty( XDOAP.releaseOf, Elda );
+		Elda.inModel(rsm)
+			.addProperty( RDFS.label, "Elda" )
+			.addProperty( DOAP.homepage, rsm.createResource( "http://elda.googlecode.com" ) )
+			.addProperty( DOAP.wiki, rsm.createResource( "http://code.google.com/p/elda/w/list" ) )
+			.addProperty( DOAP.bug_database, rsm.createResource( "http://code.google.com/p/elda/issues/list" ) )
+			.addProperty( DOAP.programming_language, "Java" )
+			.addProperty( DOAP.repository, EldaRepository )
+			.addProperty( XDOAP._implements, "http://code.google.com/p/linked-data-api/wiki/Specification" )
+			;
+		EldaRepository.inModel(rsm)
+			.addProperty( RDF.type, DOAP.Repository )
+			.addProperty( DOAP.location, rsm.createResource( "elda.googlecode.com" ) )
+			.addProperty( DOAP.browse, rsm.createResource( "http://code.google.com/p/elda/source/browse/" ) )
+			;
+		thisPage.addProperty( wasResultOf, exec );
+	}
+	
+	private void addBindings( Model rsm, Resource exec, CallContext cc, Resource thisPage ) {
 		Property VB = rsm.createProperty( API.NS + "variableBinding" );
 		Property TB = rsm.createProperty( API.NS + "termBinding" );
-		Property wasResultOf = rsm.createProperty( API.NS + "wasResultOf" );
 		exec.addProperty( RDF.type, rsm.createResource( API.NS + "Execution" ) );
 	//
 		for (Iterator<String> names = cc.parameters.keyIterator(); names.hasNext();) {
