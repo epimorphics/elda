@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.renderers.JSONRenderer;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererContext;
@@ -83,7 +84,7 @@ public class Hub extends HttpServlet
         	} 
         else 
         	{
-        	MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( "" );
+        	MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString( "" );
         	URI ru = Util.newURI( "SPOO/FLARN" );
             CallContext cc = CallContext.createContext( ru, map, match.getBindings() );
             APIEndpoint ep = match.getEndpoint();

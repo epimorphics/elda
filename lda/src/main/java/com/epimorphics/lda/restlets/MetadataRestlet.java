@@ -63,8 +63,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-@Path("/meta/{path: .*}")
-public class MetadataRestlet {
+@Path("/meta/{path: .*}") public class MetadataRestlet {
     
     @GET @Produces("text/plain")
     public Response requestHandlerPlain( @PathParam("path") String pathstub, @Context UriInfo ui) {
@@ -114,7 +113,7 @@ public class MetadataRestlet {
     static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.EXTRA + "SIBLING" );
     
     private Resource createMetadata(UriInfo ui, String pathStub, SpecRecord rec) {
-        CallContext cc = CallContext.createContext(ui.getRequestUri(), ui.getQueryParameters(), rec.getBindings());
+        CallContext cc = CallContext.createContext(ui.getRequestUri(), RouterRestlet.convert(ui.getQueryParameters()), rec.getBindings());
         Model metadata = ModelFactory.createDefaultModel();
         Resource meta = rec.getAPIEndpoint().getMetadata( cc, metadata);
     //

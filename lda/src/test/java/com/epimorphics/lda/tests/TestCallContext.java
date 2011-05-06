@@ -12,12 +12,11 @@ import static org.junit.Assert.*;
 
 import java.net.URI;
 
-import javax.ws.rs.core.MultivaluedMap;
-
 import static org.hamcrest.CoreMatchers.*;
 import org.junit.Test;
 
 import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.tests_support.Matchers;
@@ -30,7 +29,7 @@ public class TestCallContext
 	
 	@Test public void ensureContextCreatedEmptyIsEmpty()
 		{
-		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString("");
+		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString("");
 		CallContext cc = CallContext.createContext( ru, map, MakeData.variables( "" ) );
 		assertThat( cc.getFilterPropertyNames(), Matchers.isEmpty() );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
@@ -52,7 +51,7 @@ public class TestCallContext
 	
 	@Test public void ensureContextRecallsParameterNames()
 		{
-		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString("spoo=fresh&space=cold");
+		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString("spoo=fresh&space=cold");
 		CallContext cc = CallContext.createContext( ru, map, MakeData.variables( "" ) );
 		assertThat( cc.getFilterPropertyNames(), is( JenaTestBase.setOfStrings( "spoo space" ) ) );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
@@ -60,7 +59,7 @@ public class TestCallContext
 	
 	@Test public void ensureContextRecallsBindingNames()
 		{
-		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString("");
+		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString("");
 		CallContext cc = CallContext.createContext( ru, map, MakeData.variables( "a=b c=d" ) );
 		assertThat( cc.getFilterPropertyNames(), Matchers.isEmpty() );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
@@ -70,7 +69,7 @@ public class TestCallContext
 	
 	@Test public void ensureContextGetsAppropriateValues()
 		{
-		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString("p1=v1&p2=v2");
+		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString("p1=v1&p2=v2");
 		CallContext cc = CallContext.createContext( ru, map, MakeData.variables( "x=y" ) );
 		assertThat( cc.getFilterPropertyNames(), is( JenaTestBase.setOfStrings( "p1 p2" ) ) );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
@@ -80,7 +79,7 @@ public class TestCallContext
 	
 	@Test public void ensureCopyingConstructorPreservesValues()
 		{
-		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( "p1=v1&p2=v2" );
+		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString( "p1=v1&p2=v2" );
 		CallContext base = CallContext.createContext( ru, map, MakeData.variables( "" ) );
 		CallContext cc = new CallContext( MakeData.variables( "fly=fishing" ), base );
 //		assertThat( cc.getUriInfo(), is( base.getUriInfo() ) );

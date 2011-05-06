@@ -23,6 +23,7 @@ import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.MultiValuedMapSupport;
@@ -77,7 +78,7 @@ public class ExploreTestingForLatAndLongEtc
 		APISpec parent = new APISpec( specification, ml );
 		APIEndpointSpec spec = new APIEndpointSpec( parent, parent, endpoint );
 		APIEndpoint e = new APIEndpointImpl( spec );
-		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( settings.replaceAll( " ", "\\&" ) );
+		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString( settings.replaceAll( " ", "\\&" ) );
 		CallContext cc = CallContext.createContext( Util.newURI("http://dummy/doc/schools"), map, MakeData.variables( settings ) );
 		Couple<APIResultSet, String> resultsAndFormat = e.call( cc );
 		APIResultSet rs = resultsAndFormat.a;

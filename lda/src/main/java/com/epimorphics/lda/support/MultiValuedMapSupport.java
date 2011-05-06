@@ -8,16 +8,14 @@
 
 package com.epimorphics.lda.support;
 
-import javax.ws.rs.core.MultivaluedMap;
-
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import com.epimorphics.lda.core.MultiMap;
 
 public class MultiValuedMapSupport 
 	{
 
-	public static MultivaluedMap<String, String> parseQueryString( String queryString ) 
+	public static MultiMap<String, String> parseQueryString( String queryString ) 
 		{
-		MultivaluedMap<String, String> result = new MultivaluedMapImpl();
+		MultiMap<String, String> result = new MultiMap<String, String>();
 		String[] pairs = queryString.split( "&" );
 	    for (int i = 0; i < pairs.length; i++) 
 	    	{

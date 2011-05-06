@@ -20,6 +20,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ContextQueryUpdater;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.rdfq.Any;
@@ -118,7 +119,7 @@ public class TestParameterNameAndValueExpansion
 
 	@Test public void deferredPropertyShouldAppearInQuery()
 		{
-		MultivaluedMap<String, String> qp = MultiValuedMapSupport.parseQueryString( "{aname}=value" );
+		MultiMap<String, String> qp = MultiValuedMapSupport.parseQueryString( "{aname}=value" );
 		VarValues bindings = MakeData.variables( "aname=bname" );
 		CallContext cc = CallContext.createContext( Util.newURI("my:URI"), qp, bindings );
 		NamedViews nv = new FakeNamedViews();

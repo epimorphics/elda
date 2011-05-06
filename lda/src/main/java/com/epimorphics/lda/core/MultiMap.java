@@ -18,34 +18,38 @@ import java.util.*;
 */
 public class MultiMap<K, V> {
 	
-	protected final HashMap<K, Set<V>> underlying = new HashMap<K, Set<V>>();
+	protected final HashMap<K, List<V>> underlying = new HashMap<K, List<V>>();
 
 	public Iterator<K> keyIterator() {
 		return underlying.keySet().iterator();
 	}
 	
-	final Set<V> NoValues = new HashSet<V>();
+	final List<V> NoValues = new ArrayList<V>();
 	
-	public Set<V> getAll(K key) {
-		Set<V> values = underlying.get(key);
+	public List<V> getAll(K key) {
+		List<V> values = underlying.get(key);
 		return values == null ? NoValues : values;
 	}
 
-	public V get(K key) {
-		Set<V> values = underlying.get(key);
-		return values == null ? null : values.iterator().next();
+	public Set<K> keySet() {
+		return underlying.keySet();
+	}
+	
+	public V getOne(K key) {
+		List<V> values = underlying.get(key);
+		return values == null ? null : values.get(0);
 	}
 	
 	public void add(K key, V value) {
 //		System.err.println( ">> add " + key + " => " + value );
-		Set<V> values = underlying.get(key);
-		if (values == null) underlying.put(key, values = new HashSet<V>() );
+		List<V> values = underlying.get(key);
+		if (values == null) underlying.put(key, values = new ArrayList<V>() );
 		values.add(value);
 	}
 	
 	public void add(K key, Set<V> value) {
-		Set<V> values = underlying.get(key);
-		if (values == null) underlying.put(key, values = new HashSet<V>() );
+		List<V> values = underlying.get(key);
+		if (values == null) underlying.put(key, values = new ArrayList<V>() );
 		values.addAll(value);
 	}
 
@@ -56,8 +60,8 @@ public class MultiMap<K, V> {
 	}
 
 	public void putAll(MultiMap<K, V> vars) {
-		for (Map.Entry<K, Set<V>> e: vars.underlying.entrySet()) {
-			add(e.getKey(), e.getValue());
+		for (Map.Entry<K, List<V>> e: vars.underlying.entrySet()) {
+			for (V v: e.getValue()) add( e.getKey(), v );
 		}
 	}
 	

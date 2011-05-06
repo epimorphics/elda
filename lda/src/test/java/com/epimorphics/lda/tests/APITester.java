@@ -20,8 +20,6 @@ package com.epimorphics.lda.tests;
 import java.io.StringWriter;
 import java.util.*;
 
-import javax.ws.rs.core.MultivaluedMap;
-
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.lda.bindings.Value;
@@ -127,7 +125,7 @@ public class APITester {
         Match match = getMatch(uriTemplate);
         if (match == null) 
             throw new APIException("Tester failed to find routed endpoint: " + uriTemplate);
-        MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( queryString );
+        MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString( queryString );
         // TODO: the template should be a proper URI.
 		CallContext call = CallContext.createContext( Util.newURI(uriTemplate), map, fix( match.bindings ) );
         return match.endpoint.call(call).a;
