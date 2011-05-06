@@ -33,11 +33,11 @@ public class CallContext implements Lookup {
 
     static Logger log = LoggerFactory.getLogger( CallContext.class );
     
-    protected MultiMap<String, Value> parameters = new MultiMap<String, Value>();
+    final protected MultiMap<String, Value> parameters = new MultiMap<String, Value>();
     
     final protected MultiMap<String, String> queryParameters;
     
-    protected final URI requestURI;
+    final protected URI requestURI;
     
     private CallContext( URI requestURI, MultiMap<String, String> queryParameters ) {
         this.requestURI = requestURI;
@@ -59,14 +59,11 @@ public class CallContext implements Lookup {
 	    CallContext cc = new CallContext( requestURI, queryParams );
 	    bindings.putInto( cc.parameters );
 	    for (String name: queryParams.keySet()) {
-	    // for (Map.Entry<String, List<String>> e : queryParams.entrySet()) {
-	        // String name = e.getKey();
 			Value basis = cc.parameters.getOne( name );
 			if (basis == null) basis = Value.emptyPlain;
 	        for (String val : queryParams.getAll( name ))
 				cc.parameters.add( name, basis.withValueString( val ) );
 	    }
-//	    System.err.println( ">> !parameters: " + cc.parameters );
 	    return cc;
 	}
 	
@@ -88,7 +85,6 @@ public class CallContext implements Lookup {
     */
     @Override public Set<String> getStringValues( String param ) {
         Set<Value> vs = new HashSet<Value>( parameters.getAll( param ) );
-//        System.err.println( ">> " + parameters );
 		Set<String> values = new HashSet<String>( queryParameters.getAll( param ) );
 		return vs == null ? values : asStrings( vs );
     }
