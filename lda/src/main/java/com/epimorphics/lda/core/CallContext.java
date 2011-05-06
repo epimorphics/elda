@@ -57,8 +57,22 @@ public class CallContext implements Lookup {
         this.requestURI = toCopy.requestURI;
         this.queryParameters = toCopy.queryParameters;
     }
-    
-	public static CallContext createContext( UriInfo ui, VarValues bindings ) {
+
+	public static CallContext createContext( URI requestURI, MultivaluedMap<String, String> queryParams, VarValues bindings ) {
+	    CallContext cc = new CallContext( requestURI, queryParams );
+	    bindings.putInto( cc.parameters );
+	    for (Map.Entry<String, List<String>> e : queryParams.entrySet()) {
+	        String name = e.getKey();
+			Value basis = cc.parameters.get( name );
+			if (basis == null) basis = Value.emptyPlain;
+	        for (String val : e.getValue())
+				cc.parameters.add( name, basis.withValueString( val ) );
+	    }
+//	    System.err.println( ">> !parameters: " + cc.parameters );
+	    return cc;
+	}
+	
+	public static CallContext GONEcreateContext( UriInfo ui, VarValues bindings ) {
 //		System.err.println( ">> bindings: " + bindings );
 	    MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 //	    System.err.println( ">> qp: " + queryParams );

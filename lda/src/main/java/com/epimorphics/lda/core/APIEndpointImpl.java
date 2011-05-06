@@ -36,11 +36,11 @@ import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaTypes;
+import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.shared.WrappedException;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -220,19 +220,14 @@ public class APIEndpointImpl implements APIEndpoint {
     private Resource resourceForList(Model m, CallContext context) {		
     	URI ru = context.getRequestURI();
     	String rqp1 = replaceQueryParam( ru, QueryParameter._PAGE );
-    	String rqp2 = replaceQueryParam( newURI(rqp1), QueryParameter._PAGE_SIZE );
+    	String rqp2 = replaceQueryParam( Util.newURI(rqp1), QueryParameter._PAGE_SIZE );
     	return m.createResource( rqp2 );
     }
-
-	private URI newURI(String rqp1) {
-		try { return new URI(rqp1); }
-		catch (Exception e) { throw new WrappedException( e ); }
-	}
 
     private Resource resourceForMetaList(Model m, CallContext context) {
     	URI ru = context.getRequestURI();
     	String rqp1 = replaceQueryParam( ru, QueryParameter._PAGE );
-    	String rqp2 = replaceQueryParam( newURI(rqp1), QueryParameter._PAGE_SIZE );    	
+    	String rqp2 = replaceQueryParam( Util.newURI(rqp1), QueryParameter._PAGE_SIZE );    	
     	return m.createResource( rqp2 );
     }
 

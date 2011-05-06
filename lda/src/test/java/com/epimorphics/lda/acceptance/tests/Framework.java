@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,9 +33,9 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.MultiValuedMapSupport;
-import com.epimorphics.lda.tests.APITesterUriInfo;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.util.Couple;
+import com.epimorphics.util.Util;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -197,8 +196,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		APISpec s = new APISpec( root, LoadsNothing.instance );
 		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) );        
         MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( w.queryParams );
-		UriInfo ui = new APITesterUriInfo( w.path, map );
-		CallContext cc = CallContext.createContext( ui, new VarValues() );
+		CallContext cc = CallContext.createContext( Util.newURI(w.path), map, new VarValues() );
 		Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
 		Model rsm = resultsAndFormat.a.getModel();
 //		System.err.println( ">> " + rs.getResultList() );

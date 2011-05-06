@@ -114,7 +114,7 @@ public class MetadataRestlet {
     static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.EXTRA + "SIBLING" );
     
     private Resource createMetadata(UriInfo ui, String pathStub, SpecRecord rec) {
-        CallContext cc = CallContext.createContext(ui, rec.getBindings());
+        CallContext cc = CallContext.createContext(ui.getRequestUri(), ui.getQueryParameters(), rec.getBindings());
         Model metadata = ModelFactory.createDefaultModel();
         Resource meta = rec.getAPIEndpoint().getMetadata( cc, metadata);
     //

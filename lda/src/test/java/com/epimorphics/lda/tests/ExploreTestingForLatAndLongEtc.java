@@ -28,6 +28,7 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.Couple;
+import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -77,8 +78,7 @@ public class ExploreTestingForLatAndLongEtc
 		APIEndpointSpec spec = new APIEndpointSpec( parent, parent, endpoint );
 		APIEndpoint e = new APIEndpointImpl( spec );
 		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( settings.replaceAll( " ", "\\&" ) );
-		APITesterUriInfo info = new APITesterUriInfo( "http://dummy/doc/schools", map );
-		CallContext cc = CallContext.createContext( info, MakeData.variables( settings ) );
+		CallContext cc = CallContext.createContext( Util.newURI("http://dummy/doc/schools"), map, MakeData.variables( settings ) );
 		Couple<APIResultSet, String> resultsAndFormat = e.call( cc );
 		APIResultSet rs = resultsAndFormat.a;
 		return new HashSet<Resource>( rs.getResultList() );

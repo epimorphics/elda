@@ -11,7 +11,6 @@ package com.epimorphics.lda.tests;
 import static org.junit.Assert.*;
 
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
 
 import org.junit.Test;
 
@@ -30,6 +29,7 @@ import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests_support.ExpandOnly;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.lda.tests_support.MakeData;
+import com.epimorphics.util.Util;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
@@ -119,9 +119,8 @@ public class TestParameterNameAndValueExpansion
 	@Test public void deferredPropertyShouldAppearInQuery()
 		{
 		MultivaluedMap<String, String> qp = MultiValuedMapSupport.parseQueryString( "{aname}=value" );
-		UriInfo ui = new APITesterUriInfo( "my:URI", qp );
 		VarValues bindings = MakeData.variables( "aname=bname" );
-		CallContext cc = CallContext.createContext( ui, bindings );
+		CallContext cc = CallContext.createContext( Util.newURI("my:URI"), qp, bindings );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "bname=eh:/full-bname" );
 		APIQuery aq = new APIQuery( sns );
