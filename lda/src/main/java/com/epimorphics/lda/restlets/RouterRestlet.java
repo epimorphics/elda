@@ -38,7 +38,6 @@ import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
-import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.Renderer;
@@ -101,7 +100,7 @@ import com.epimorphics.util.MediaTypes;
     private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
         APIEndpoint ep = match.getEndpoint();
         VarValues bs = new VarValues( ep.getSpec().getBindings() ).putAll( match.getBindings() );
-        CallContext cc = CallContext.createContext( ui.getRequestUri(), convert(ui.getQueryParameters()), bs );
+        CallContext cc = CallContext.createContext( ui.getRequestUri(), JerseyUtils.convert(ui.getQueryParameters()), bs );
         log.debug("Info: calling APIEndpoint " + ep.getSpec());
         try {
             Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
@@ -126,15 +125,7 @@ import com.epimorphics.util.MediaTypes;
         }
     }
 
-        public static <K, V> MultiMap<K, V> convert( MultivaluedMap<K, V> map ) {
-        	MultiMap<K, V> result = new MultiMap<K, V>();
-        	for (K key: map.keySet()) {
-        		for (V value: map.get(key)) result.add(key, value);        			
-        	}
-        	return result;
-	    }
-
-	// TODO this is probably obsolete
+    // TODO this is probably obsolete
     static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
     
     //** return (revised path, renderer name or null)

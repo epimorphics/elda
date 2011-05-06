@@ -28,8 +28,8 @@ import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.APIEndpointSpec;
-import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
+import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -125,7 +125,7 @@ public class APITester {
         Match match = getMatch(uriTemplate);
         if (match == null) 
             throw new APIException("Tester failed to find routed endpoint: " + uriTemplate);
-        MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString( queryString );
+        MultiMap<String, String> map = MakeData.parseQueryString( queryString );
         // TODO: the template should be a proper URI.
 		CallContext call = CallContext.createContext( Util.newURI(uriTemplate), map, fix( match.bindings ) );
         return match.endpoint.call(call).a;

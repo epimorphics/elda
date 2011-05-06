@@ -17,7 +17,6 @@ import org.junit.Test;
 
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.MultiMap;
-import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.tests_support.Matchers;
 import com.epimorphics.util.Util;
@@ -29,29 +28,15 @@ public class TestCallContext
 	
 	@Test public void ensureContextCreatedEmptyIsEmpty()
 		{
-		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString("");
+		MultiMap<String, String> map = MakeData.parseQueryString("");
 		CallContext cc = CallContext.createContext( ru, map, MakeData.variables( "" ) );
 		assertThat( cc.getFilterPropertyNames(), Matchers.isEmpty() );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		}
 	
-//	@Test public void ensureContextStoresMediaSuffix()
-//		{
-//		ensureContextStoresMediaSuffix( ".json" );
-//		ensureContextStoresMediaSuffix( ".html" );
-//		}
-
-//	private void ensureContextStoresMediaSuffix(String suffix) 
-//		{
-//		MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString("");
-//		UriInfo ui = new APITesterUriInfo( "eh:/spoo", map );
-//		CallContext cc = CallContext.createContext( ui, MakeData.variables( "" ), suffix );
-//		assertThat( cc.getMediaSuffix(), is( suffix ) );
-//		}
-	
 	@Test public void ensureContextRecallsParameterNames()
 		{
-		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString("spoo=fresh&space=cold");
+		MultiMap<String, String> map = MakeData.parseQueryString("spoo=fresh&space=cold");
 		CallContext cc = CallContext.createContext( ru, map, MakeData.variables( "" ) );
 		assertThat( cc.getFilterPropertyNames(), is( JenaTestBase.setOfStrings( "spoo space" ) ) );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
@@ -59,7 +44,7 @@ public class TestCallContext
 	
 	@Test public void ensureContextRecallsBindingNames()
 		{
-		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString("");
+		MultiMap<String, String> map = MakeData.parseQueryString("");
 		CallContext cc = CallContext.createContext( ru, map, MakeData.variables( "a=b c=d" ) );
 		assertThat( cc.getFilterPropertyNames(), Matchers.isEmpty() );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
@@ -69,7 +54,7 @@ public class TestCallContext
 	
 	@Test public void ensureContextGetsAppropriateValues()
 		{
-		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString("p1=v1&p2=v2");
+		MultiMap<String, String> map = MakeData.parseQueryString("p1=v1&p2=v2");
 		CallContext cc = CallContext.createContext( ru, map, MakeData.variables( "x=y" ) );
 		assertThat( cc.getFilterPropertyNames(), is( JenaTestBase.setOfStrings( "p1 p2" ) ) );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
@@ -79,7 +64,7 @@ public class TestCallContext
 	
 	@Test public void ensureCopyingConstructorPreservesValues()
 		{
-		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString( "p1=v1&p2=v2" );
+		MultiMap<String, String> map = MakeData.parseQueryString( "p1=v1&p2=v2" );
 		CallContext base = CallContext.createContext( ru, map, MakeData.variables( "" ) );
 		CallContext cc = new CallContext( MakeData.variables( "fly=fishing" ), base );
 //		assertThat( cc.getUriInfo(), is( base.getUriInfo() ) );

@@ -14,8 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javax.ws.rs.core.MultivaluedMap;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +27,7 @@ import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.routing.Match;
-import com.epimorphics.lda.support.MultiValuedMapSupport;
+import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.Util;
 
@@ -84,7 +82,7 @@ public class Hub extends HttpServlet
         	} 
         else 
         	{
-        	MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString( "" );
+        	MultiMap<String, String> map = MakeData.parseQueryString( "" );
         	URI ru = Util.newURI( "SPOO/FLARN" );
             CallContext cc = CallContext.createContext( ru, map, match.getBindings() );
             APIEndpoint ep = match.getEndpoint();

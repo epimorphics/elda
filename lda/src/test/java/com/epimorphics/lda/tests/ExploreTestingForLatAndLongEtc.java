@@ -13,8 +13,6 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.core.MultivaluedMap;
-
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -26,7 +24,6 @@ import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
-import com.epimorphics.lda.support.MultiValuedMapSupport;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.Util;
@@ -78,7 +75,7 @@ public class ExploreTestingForLatAndLongEtc
 		APISpec parent = new APISpec( specification, ml );
 		APIEndpointSpec spec = new APIEndpointSpec( parent, parent, endpoint );
 		APIEndpoint e = new APIEndpointImpl( spec );
-		MultiMap<String, String> map = MultiValuedMapSupport.parseQueryString( settings.replaceAll( " ", "\\&" ) );
+		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );
 		CallContext cc = CallContext.createContext( Util.newURI("http://dummy/doc/schools"), map, MakeData.variables( settings ) );
 		Couple<APIResultSet, String> resultsAndFormat = e.call( cc );
 		APIResultSet rs = resultsAndFormat.a;
