@@ -274,14 +274,16 @@ public class MetadataRestlet {
                 sb.append( ")" );
             }
             sb.append( "\n" );
-            List<Statement> properties = S.asResource().listProperties().toList();
-            Collections.sort( properties, byPredicate );
-            for (Statement s: properties) {
-                Property P = s.getPredicate();
-                if (!P.equals(FIXUP.label)  &!P.equals(SIBLING)) {
-                    String p = "<b>" + nicely( prefixes, P ) + "</b>";
-                    renderNicely( prefixes, sb, p, s.getObject(), seen, depth + 1 );
-                }
+            if (seen.add( S )) {
+	            List<Statement> properties = S.asResource().listProperties().toList();
+	            Collections.sort( properties, byPredicate );
+	            for (Statement s: properties) {
+	                Property P = s.getPredicate();
+	                if (!P.equals(FIXUP.label)  &!P.equals(SIBLING)) {
+	                    String p = "<b>" + nicely( prefixes, P ) + "</b>";
+	                    renderNicely( prefixes, sb, p, s.getObject(), seen, depth + 1 );
+	                }
+	            }
             }
         }
     }

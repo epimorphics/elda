@@ -16,7 +16,6 @@ import java.net.URI;
 import java.util.*;
 
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
@@ -43,12 +42,9 @@ public class CallContext implements Lookup {
     
     protected final URI requestURI;
     
-    protected UriInfo uriInfo = null;
-    
-    public CallContext(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
-        this.requestURI = uriInfo.getRequestUri();
-        this.queryParameters = uriInfo.getQueryParameters();
+    private CallContext( URI requestURI, MultivaluedMap<String, String> queryParameters ) {
+        this.requestURI = requestURI;
+        this.queryParameters = queryParameters;
     }
     
     /**
@@ -56,18 +52,17 @@ public class CallContext implements Lookup {
         for unset parameters.
     */
     public CallContext( VarValues defaults, CallContext toCopy ) {
-    	this.uriInfo = toCopy.uriInfo;
     	defaults.putInto( this.parameters );
     	this.parameters.putAll( toCopy.parameters );
-        this.requestURI = uriInfo.getRequestUri();
-        this.queryParameters = uriInfo.getQueryParameters();
+        this.requestURI = toCopy.requestURI;
+        this.queryParameters = toCopy.queryParameters;
     }
     
 	public static CallContext createContext( UriInfo ui, VarValues bindings ) {
 //		System.err.println( ">> bindings: " + bindings );
 	    MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
 //	    System.err.println( ">> qp: " + queryParams );
-	    CallContext cc = new CallContext( ui );
+	    CallContext cc = new CallContext( ui.getRequestUri(), queryParams );
 	    bindings.putInto( cc.parameters );
 	    for (Map.Entry<String, List<String>> e : queryParams.entrySet()) {
 	        String name = e.getKey();
@@ -111,14 +106,6 @@ public class CallContext implements Lookup {
     
     @Override public String toString() {
         return parameters.toString();
-    }
-    
-    /**
-     * Return a UriBuilder initialized from the query, to allow
-     * modified versions of query to be generated
-     */
-    public UriBuilder getURIBuilder() {
-       return uriInfo.getRequestUriBuilder(); 
     }
     
     public URI getRequestURI() {
