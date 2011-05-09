@@ -15,10 +15,6 @@ package com.epimorphics.lda.core;
 import java.net.URI;
 import java.util.*;
 
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,18 +33,15 @@ public class CallContext implements Lookup {
 
     static Logger log = LoggerFactory.getLogger( CallContext.class );
     
-    protected MultiMap<String, Value> parameters = new MultiMap<String, Value>();
+    final protected MultiMap<String, Value> parameters = new MultiMap<String, Value>();
     
-    final protected MultivaluedMap<String, String> queryParameters;
+    final protected MultiMap<String, String> queryParameters;
     
-    protected final URI requestURI;
+    final protected URI requestURI;
     
-    protected UriInfo uriInfo = null;
-    
-    public CallContext(UriInfo uriInfo) {
-        this.uriInfo = uriInfo;
-        this.requestURI = uriInfo.getRequestUri();
-        this.queryParameters = uriInfo.getQueryParameters();
+    private CallContext( URI requestURI, MultiMap<String, String> queryParameters ) {
+        this.requestURI = requestURI;
+        this.queryParameters = queryParameters;
     }
     
     /**
@@ -56,27 +49,21 @@ public class CallContext implements Lookup {
         for unset parameters.
     */
     public CallContext( VarValues defaults, CallContext toCopy ) {
-    	this.uriInfo = toCopy.uriInfo;
     	defaults.putInto( this.parameters );
     	this.parameters.putAll( toCopy.parameters );
-        this.requestURI = uriInfo.getRequestUri();
-        this.queryParameters = uriInfo.getQueryParameters();
+        this.requestURI = toCopy.requestURI;
+        this.queryParameters = toCopy.queryParameters;
     }
-    
-	public static CallContext createContext( UriInfo ui, VarValues bindings ) {
-//		System.err.println( ">> bindings: " + bindings );
-	    MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
-//	    System.err.println( ">> qp: " + queryParams );
-	    CallContext cc = new CallContext( ui );
+
+	public static CallContext createContext( URI requestURI, MultiMap<String, String> queryParams, VarValues bindings ) {
+	    CallContext cc = new CallContext( requestURI, queryParams );
 	    bindings.putInto( cc.parameters );
-	    for (Map.Entry<String, List<String>> e : queryParams.entrySet()) {
-	        String name = e.getKey();
-			Value basis = cc.parameters.get( name );
+	    for (String name: queryParams.keySet()) {
+			Value basis = cc.parameters.getOne( name );
 			if (basis == null) basis = Value.emptyPlain;
-	        for (String val : e.getValue())
+	        for (String val : queryParams.getAll( name ))
 				cc.parameters.add( name, basis.withValueString( val ) );
 	    }
-//	    System.err.println( ">> !parameters: " + cc.parameters );
 	    return cc;
 	}
 	
@@ -89,17 +76,16 @@ public class CallContext implements Lookup {
      * the returned one may be arbitrary
      */
     @Override public String getStringValue( String param ) {
-        Value v = parameters.get( param );
-		return v == null ? queryParameters.getFirst( param ) : v.valueString();
+        Value v = parameters.getOne( param );
+		return v == null ? queryParameters.getOne( param ) : v.valueString();
     }
     
     /**
      	Return all the values for a parameter.
     */
     @Override public Set<String> getStringValues( String param ) {
-        Set<Value> vs = parameters.getAll( param );
-//        System.err.println( ">> " + parameters );
-		Set<String> values = new HashSet<String>( queryParameters.get( param ) );
+        Set<Value> vs = new HashSet<Value>( parameters.getAll( param ) );
+		Set<String> values = new HashSet<String>( queryParameters.getAll( param ) );
 		return vs == null ? values : asStrings( vs );
     }
     
@@ -111,14 +97,6 @@ public class CallContext implements Lookup {
     
     @Override public String toString() {
         return parameters.toString();
-    }
-    
-    /**
-     * Return a UriBuilder initialized from the query, to allow
-     * modified versions of query to be generated
-     */
-    public UriBuilder getURIBuilder() {
-       return uriInfo.getRequestUriBuilder(); 
     }
     
     public URI getRequestURI() {

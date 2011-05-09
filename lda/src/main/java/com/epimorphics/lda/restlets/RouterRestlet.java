@@ -100,7 +100,7 @@ import com.epimorphics.util.MediaTypes;
     private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
         APIEndpoint ep = match.getEndpoint();
         VarValues bs = new VarValues( ep.getSpec().getBindings() ).putAll( match.getBindings() );
-        CallContext cc = CallContext.createContext( ui, bs );
+        CallContext cc = CallContext.createContext( ui.getRequestUri(), JerseyUtils.convert(ui.getQueryParameters()), bs );
         log.debug("Info: calling APIEndpoint " + ep.getSpec());
         try {
             Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
@@ -125,7 +125,7 @@ import com.epimorphics.util.MediaTypes;
         }
     }
 
-       // TODO this is probably obsolete
+    // TODO this is probably obsolete
     static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
     
     //** return (revised path, renderer name or null)

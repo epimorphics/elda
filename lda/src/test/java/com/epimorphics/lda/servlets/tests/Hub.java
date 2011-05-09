@@ -2,6 +2,7 @@ package com.epimorphics.lda.servlets.tests;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,23 +14,22 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javax.ws.rs.core.UriInfo;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.renderers.JSONRenderer;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.routing.Match;
-import com.epimorphics.lda.support.MultiValuedMapSupport;
-import com.epimorphics.lda.tests.APITesterUriInfo;
+import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.Couple;
+import com.epimorphics.util.Util;
 
 import static javax.servlet.http.HttpServletResponse.*;
 
@@ -72,8 +72,6 @@ public class Hub extends HttpServlet
 	private void GO( HttpServletRequest req, HttpServletResponse res, String acceptedType ) throws IOException
 		{
 		String pathstub = req.getPathInfo();
-		UriInfo ui = new APITesterUriInfo( "SPOO/FLARN", MultiValuedMapSupport.parseQueryString( "" ) );
-	//
 		// CORS, see http://www.w3.org/wiki/CORS_Enabled
 		res.setHeader( RouterRestlet.ACCESS_CONTROL_ALLOW_ORIGIN, "*" );
 	//
@@ -84,7 +82,9 @@ public class Hub extends HttpServlet
         	} 
         else 
         	{
-            CallContext cc = CallContext.createContext( ui, match.getBindings() );
+        	MultiMap<String, String> map = MakeData.parseQueryString( "" );
+        	URI ru = Util.newURI( "SPOO/FLARN" );
+            CallContext cc = CallContext.createContext( ru, map, match.getBindings() );
             APIEndpoint ep = match.getEndpoint();
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
             try 

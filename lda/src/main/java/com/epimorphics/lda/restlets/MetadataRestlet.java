@@ -63,8 +63,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-@Path("/meta/{path: .*}")
-public class MetadataRestlet {
+@Path("/meta/{path: .*}") public class MetadataRestlet {
     
     @GET @Produces("text/plain")
     public Response requestHandlerPlain( @PathParam("path") String pathstub, @Context UriInfo ui) {
@@ -114,7 +113,7 @@ public class MetadataRestlet {
     static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.EXTRA + "SIBLING" );
     
     private Resource createMetadata(UriInfo ui, String pathStub, SpecRecord rec) {
-        CallContext cc = CallContext.createContext(ui, rec.getBindings());
+        CallContext cc = CallContext.createContext(ui.getRequestUri(), JerseyUtils.convert(ui.getQueryParameters()), rec.getBindings());
         Model metadata = ModelFactory.createDefaultModel();
         Resource meta = rec.getAPIEndpoint().getMetadata( cc, metadata);
     //
@@ -274,14 +273,16 @@ public class MetadataRestlet {
                 sb.append( ")" );
             }
             sb.append( "\n" );
-            List<Statement> properties = S.asResource().listProperties().toList();
-            Collections.sort( properties, byPredicate );
-            for (Statement s: properties) {
-                Property P = s.getPredicate();
-                if (!P.equals(FIXUP.label)  &!P.equals(SIBLING)) {
-                    String p = "<b>" + nicely( prefixes, P ) + "</b>";
-                    renderNicely( prefixes, sb, p, s.getObject(), seen, depth + 1 );
-                }
+            if (seen.add( S )) {
+	            List<Statement> properties = S.asResource().listProperties().toList();
+	            Collections.sort( properties, byPredicate );
+	            for (Statement s: properties) {
+	                Property P = s.getPredicate();
+	                if (!P.equals(FIXUP.label)  &!P.equals(SIBLING)) {
+	                    String p = "<b>" + nicely( prefixes, P ) + "</b>";
+	                    renderNicely( prefixes, sb, p, s.getObject(), seen, depth + 1 );
+	                }
+	            }
             }
         }
     }

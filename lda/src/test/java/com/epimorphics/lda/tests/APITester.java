@@ -18,28 +18,19 @@
 package com.epimorphics.lda.tests;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.ws.rs.core.MultivaluedMap;
-
+import java.util.*;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.VarValues;
-import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.core.APIException;
-import com.epimorphics.lda.core.APIFactory;
-import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
-import com.epimorphics.lda.core.ModelLoaderI;
-import com.epimorphics.lda.specs.APIEndpointSpec;
+
+import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.specs.APISpec;
-import com.epimorphics.lda.support.MultiValuedMapSupport;
+import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
+import com.epimorphics.lda.tests_support.MakeData;
+import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ResIterator;
@@ -134,9 +125,9 @@ public class APITester {
         Match match = getMatch(uriTemplate);
         if (match == null) 
             throw new APIException("Tester failed to find routed endpoint: " + uriTemplate);
-        MultivaluedMap<String, String> map = MultiValuedMapSupport.parseQueryString( queryString );
-        APITesterUriInfo ui = new APITesterUriInfo( uriTemplate, map );
-		CallContext call = CallContext.createContext( ui, fix( match.bindings ) );
+        MultiMap<String, String> map = MakeData.parseQueryString( queryString );
+        // TODO: the template should be a proper URI.
+		CallContext call = CallContext.createContext( Util.newURI(uriTemplate), map, fix( match.bindings ) );
         return match.endpoint.call(call).a;
     }
 

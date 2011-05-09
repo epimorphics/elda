@@ -10,6 +10,8 @@ package com.epimorphics.util;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
@@ -91,5 +93,17 @@ public class Util
     private static String encodeLiteral( Node lit )
         {
         return "\"" + lit.getLiteralLexicalForm() + "\"";
-        }        
+        }       
+
+    /**
+        Answer the URI with the given spelling. If there's a syntax error,
+        throw a wrapped exception.
+    */
+	public static URI newURI( String u ) 
+		{
+		try 
+			{ return new URI( u ); }
+		catch (URISyntaxException e) 
+			{ throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e ); }
+		}	 
     }

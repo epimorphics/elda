@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -107,6 +108,19 @@ public class MakeData
 			r.addProperty( FIXUP.label, b );
 			r.addProperty( RDF.type, RDF.Property );
 			r.addProperty( RDFS.range, integer );
+			}
+		return result;
+		}
+
+	public static MultiMap<String, String> parseQueryString( String queryString ) 
+		{
+		MultiMap<String, String> result = new MultiMap<String, String>();
+		String[] pairs = queryString.split( "&" );
+		for (int i = 0; i < pairs.length; i++) 
+			{
+		    if (pairs[i].isEmpty()) break;
+		    String[] pair = pairs[i].split( "=" );
+		    result.add( pair[0], pair[1] );
 			}
 		return result;
 		}

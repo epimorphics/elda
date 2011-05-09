@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +36,7 @@ import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaTypes;
+import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
@@ -143,30 +143,34 @@ public class APIEndpointImpl implements APIEndpoint {
 
     private Resource resourceForView( Model m, CallContext context, String name ) {
     	URI req = context.getRequestURI();
-    	String alt = replaceQueryParam( req, QueryParameter._VIEW, name );
-        return m.createResource( alt );
+    	return m.createResource( replaceQueryParam( req, QueryParameter._VIEW, name ) );
     }
 
-	private String replaceQueryParam(URI ru, String key, String value) {
+	private String replaceQueryParam(URI ru, String key, String... values) {
 		try {
 			String q = ru.getQuery();
-			// System.err.println( ">> query: " + q );
 			String qa = q == null ? "" : strip( q, key );
-			// System.err.println( ">> qa:    " + qa );
 			String qb = qa.isEmpty() ? "" : qa + "&";
-			String newq = qb + key + "=" + value;
-			// System.err.println( ">> res:   " + newq );
+			String newq = "";
+			for (String value: values) {
+				newq = newq + qb + key + "=" + quoteForValue(value);
+				qb = "&";
+			}
 			return new URI
 				(
 				ru.getScheme(), 
 				ru.getAuthority(), 
 				ru.getPath(),
-				newq, 
+				(newq.isEmpty() ? null : newq), 
 				ru.getFragment() 
 				).toASCIIString();
 		} catch (URISyntaxException e) {			
 			throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e );
 		}
+	}
+
+	private String quoteForValue(String value) {
+		return value.replace( "&", "%??" );
 	}
 
 	private String strip(String query, String key) {
@@ -207,6 +211,25 @@ public class APIEndpointImpl implements APIEndpoint {
 			: oldPath + "." + key
 			;
 	}
+	private Resource resourceForPage(Model m, CallContext context, int page) {
+		URI ru = context.getRequestURI();
+		String newURI = replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) );
+		return m.createResource( newURI );
+    }
+    
+    private Resource resourceForList(Model m, CallContext context) {		
+    	URI ru = context.getRequestURI();
+    	String rqp1 = replaceQueryParam( ru, QueryParameter._PAGE );
+    	String rqp2 = replaceQueryParam( Util.newURI(rqp1), QueryParameter._PAGE_SIZE );
+    	return m.createResource( rqp2 );
+    }
+
+    private Resource resourceForMetaList(Model m, CallContext context) {
+    	URI ru = context.getRequestURI();
+    	String rqp1 = replaceQueryParam( ru, QueryParameter._PAGE );
+    	String rqp2 = replaceQueryParam( Util.newURI(rqp1), QueryParameter._PAGE_SIZE );    	
+    	return m.createResource( rqp2 );
+    }
 
 	private void addVersions( Model m, CallContext c, Resource thisPage ) {
 		for (String viewName: spec.viewNames()) {
@@ -317,43 +340,11 @@ public class APIEndpointImpl implements APIEndpoint {
 		thisPage.addProperty( FIXUP.wasResultOf, exec );
 	}
 
-	private Resource resourceForPage(Model m, CallContext context, int page) {
-        UriBuilder ub = context.getURIBuilder();
-        String uri = ub
-            .replaceQueryParam(QueryParameter._PAGE, Integer.toString(page))
-//            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
-            .build()
-            .toASCIIString();
-        return m.createResource( uri );
-    }
-    
-    private Resource resourceForList(Model m, CallContext context) {
-        UriBuilder ub = context.getURIBuilder();
-        String uri = ub
-            .replaceQueryParam( QueryParameter._PAGE )
-            .replaceQueryParam( QueryParameter._PAGE_SIZE )
-//            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
-            .build().toASCIIString();
-        uri = uri.replaceFirst("/meta/", "/api/");
-        return m.createResource( uri );
-    }
-
-    private Resource resourceForMetaList(Model m, CallContext context) {
-        UriBuilder ub = context.getURIBuilder();
-        String uri = ub
-            .replaceQueryParam(QueryParameter._PAGE)
-            .replaceQueryParam(QueryParameter._PAGE_SIZE)
-//            .replacePath( ub.build().getPath() + context.getMediaSuffix() )
-            .build().toASCIIString();
-        uri = uri.replaceFirst("/api/", "/meta/");
-        return m.createResource( uri );
-    }
 
     /**
      * The URI template at which this APIEndpoint should be attached
      */
-    @Override
-    public String getURITemplate() {
+    @Override public String getURITemplate() {
         return spec.getURITemplate();
     }
     
