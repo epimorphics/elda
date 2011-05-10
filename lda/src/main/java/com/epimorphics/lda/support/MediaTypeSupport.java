@@ -9,7 +9,7 @@ package com.epimorphics.lda.support;
 
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
+import com.epimorphics.util.MediaType;
 
 /**
     Support code for turning a list of media types into a comma-separated
@@ -32,7 +32,7 @@ public class MediaTypeSupport
 		for (MediaType mt: mediaTypes)
 			if (!mt.equals( UNSPECIFIED )) 
 				{
-				result.append( prefix ).append( mt.toString() );
+				result.append( prefix ).append( mt.toPlainString() );
 				prefix = ", ";
 				}
 		return result.toString();

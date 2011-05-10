@@ -10,9 +10,10 @@ package com.epimorphics.lda.tests;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.core.MediaType;
-
 import org.junit.Test;
+
+import com.epimorphics.util.MediaType;
+
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
 import static com.epimorphics.lda.support.MediaTypeSupport.UNSPECIFIED;

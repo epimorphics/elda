@@ -2,8 +2,6 @@ package com.epimorphics.util;
 
 import java.util.HashMap;
 
-import javax.ws.rs.core.MediaType;
-
 public class MediaTypes 
 	{
     public static HashMap<String, MediaType> createMediaExtensions()
@@ -13,9 +11,9 @@ public class MediaTypes
         result.put( "html", MediaType.TEXT_HTML_TYPE );
         result.put( "text", MediaType.TEXT_PLAIN_TYPE );
         result.put( "json", MediaType.APPLICATION_JSON_TYPE );
-        result.put( "ttl", new MediaType( "text", "turtle" ) );
-        result.put( "owl", new MediaType( "application", "rdf+xml" ) );
-        result.put( "rdf", new MediaType( "application", "rdf+xml" ) ); 
+        result.put( "ttl", MediaType.TEXT_TURTLE_TYPE );
+        result.put( "owl", MediaType.RDF_XML_TYPE );
+        result.put( "rdf", MediaType.RDF_XML_TYPE ); 
         return result;
         }  
     

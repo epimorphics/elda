@@ -17,8 +17,6 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.ws.rs.core.MediaType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +33,7 @@ import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.Couple;
+import com.epimorphics.util.MediaType;
 import com.epimorphics.util.MediaTypes;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
@@ -181,7 +180,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	private void addFormats(Model m, CallContext c, Resource thisPage) {
 		for (Map.Entry<String, MediaType> e: MediaTypes.createMediaExtensions().entrySet()) {
 			Resource v = resourceForFormat( m, c, e.getKey() );
-			Resource format = m.createResource().addProperty( RDFS.label, e.getValue().toString() );
+			Resource format = m.createResource().addProperty( RDFS.label, e.getValue().toPlainString() );
 			thisPage.addProperty( DCTerms.hasFormat, v );
 			v.addProperty( DCTerms.isFormatOf, thisPage );
 			v.addProperty( DCTerms.format, format );

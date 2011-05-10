@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,9 +31,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +59,7 @@ import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.util.Couple;
+import com.epimorphics.util.MediaType;
 import com.epimorphics.util.MediaTypes;
 import com.epimorphics.util.Triad;
 import com.hp.hpl.jena.shared.WrappedException;
@@ -100,10 +105,17 @@ import com.hp.hpl.jena.shared.WrappedException;
         if (match == null) {
             return returnNotFound( "ERROR: Failed to find API handler for path " + ("/" + pathAndType.a) );
         } else {
-            List<MediaType> mediaTypes = headers.getAcceptableMediaTypes();
+            List<MediaType> mediaTypes = getAcceptableMediaTypes(headers);
             return runEndpoint( servCon, ui, mediaTypes, pathAndType.b, match ); 
         }
     }
+
+	private List<MediaType> getAcceptableMediaTypes(HttpHeaders headers) {
+		List<MediaType> mediaTypes = new ArrayList<MediaType>();
+		for (javax.ws.rs.core.MediaType mt: headers.getAcceptableMediaTypes())
+			mediaTypes.add( new MediaType( mt.getType(), mt.getSubtype() ) );
+		return mediaTypes;
+	}
 
     private Response runEndpoint( final ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
     	RendererContext.AsURL as = pathAsURLFactory(servCon);

@@ -3,10 +3,6 @@ package com.epimorphics.lda.servlets.tests;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -28,6 +24,7 @@ import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.tests_support.MakeData;
+import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
 
@@ -54,8 +51,8 @@ public class Hub extends HttpServlet
 	@Override public void doGet( HttpServletRequest req, HttpServletResponse res) 
 		throws IOException, ServletException 
 		{
-		@SuppressWarnings("unchecked") List<MT> types = mediaType( req.getHeaders( "accept" ));
-		String acceptedType = accept( types, acceptable );
+		@SuppressWarnings("unchecked") List<MediaType> types = MediaType.mediaType( req.getHeaders( "accept" ));
+		String acceptedType = MediaType.accept( types, acceptable );
 		if (acceptedType == null)
 			{
 			res.sendError( SC_NOT_ACCEPTABLE, "none of " + types.toString() + " are acceptable." );
@@ -115,81 +112,5 @@ public class Hub extends HttpServlet
             	}
         	}
     
-		}	
-	
-	private String accept( List<MT> types, String canHandle ) 
-		{
-		List<MT> served = decodeTypes( canHandle );
-		for (MT t: types)
-			for (MT s: served)
-				if (t.accepts( s )) return s.A + "/" + s.B;
-		return null;
 		}
-
-	static class MT
-		{
-		final String A;
-		final String B;
-		final float Q;
-		
-		MT( String A, String B, float Q )
-			{ this.A = A; this.B = B; this.Q = Q; }
-		
-		public boolean accepts( MT s ) 
-			{
-			return (A.equals("*") || A.equals( s.A )) && (B.equals("*") || B.equals( s.B ));
-			}
-
-		@Override public String toString()
-			{ return A + "/" + B + "; q=" + Q; }
-		}
-
-	private static final Comparator<? super MT> compareMT = new Comparator<MT>() 
-		{
-		@Override public int compare( MT a, MT b ) 
-			{
-			if (a.Q > b.Q) return -1;
-			if (a.Q > b.Q) return +1;
-			if (a.A.equals( "*" )) return -1;
-			if (b.A.equals( "*" )) return +1;
-			if (a.B.equals( "*" )) return -1;
-			if (b.B.equals( "*" )) return +1;
-			return 0;
-			}
-		};
-	
-	private List<MT> mediaType( Enumeration<String> e ) 
-		{
-		List<MT> types = new ArrayList<MT>();
-		while (e.hasMoreElements()) types.addAll( decodeTypes( e.nextElement() ) );
-		Collections.sort( types, compareMT );
-		return types;
-		}
-
-	private List<MT> decodeTypes( String a ) 
-		{
-		List<MT> result = new ArrayList<MT>();
-		if (a.length() > 0)
-			for (String one: a.split( " *, *" ))
-				result.add( decodeType( one ) );
-		return result;
-		}
-
-	private MT decodeType( String one )
-		{
-		float Q = 1.0f;
-		String[] X = one.split( " *; *" );
-		for (int i = 1; i < X.length; i += 1)
-			if (X[i].startsWith("q="))
-				Q = Float.parseFloat( X[1].substring(2));
-		String [] AB = X[0].split( "/" );
-		return new MT( AB[0], AB[1], Q );
-		}
-
-//	private String names( Enumeration<String> e ) 
-//		{
-//		StringBuilder b = new StringBuilder();
-//		while (e.hasMoreElements()) b.append( " | " ).append( e.nextElement() );
-//		return b.toString();
-//		}
 	}
