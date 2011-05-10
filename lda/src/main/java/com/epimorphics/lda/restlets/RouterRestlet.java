@@ -18,6 +18,9 @@
 package com.epimorphics.lda.restlets;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -36,12 +39,15 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererContext;
+import com.epimorphics.lda.renderers.RendererContext.AsURL;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
@@ -50,6 +56,8 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaTypes;
+import com.epimorphics.util.Triad;
+import com.hp.hpl.jena.shared.WrappedException;
 
 /**
  * Handles all incoming API calls and routes to appropriate locations.
@@ -59,7 +67,7 @@ import com.epimorphics.util.MediaTypes;
 */
 @Path("{path: .*}") public class RouterRestlet {
 
-    static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
+    protected static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
 
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
     
@@ -97,21 +105,22 @@ import com.epimorphics.util.MediaTypes;
         }
     }
 
-    private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
-        APIEndpoint ep = match.getEndpoint();
-        VarValues bs = new VarValues( ep.getSpec().getBindings() ).putAll( match.getBindings() );
-        CallContext cc = CallContext.createContext( ui.getRequestUri(), JerseyUtils.convert(ui.getQueryParameters()), bs );
-        log.debug("Info: calling APIEndpoint " + ep.getSpec());
+    private Response runEndpoint( final ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
+    	RendererContext.AsURL as = pathAsURLFactory(servCon);
+    	String contextPath = servCon.getContextPath();
+    	URI requestUri = ui.getRequestUri();
+    	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
+//
         try {
-            Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
+        	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, requestUri, queryParams );
             APIResultSet results = resultsAndFormat.a;
             if (results == null) {
-                return returnNotFound("No answer back from " + ep.getSpec());
+                return returnNotFound("No answer back from " + match.getEndpoint().getSpec());
             } else {
-                RendererContext rc = new RendererContext( paramsFromContext( cc ), servCon );
+            	RendererContext rc = new RendererContext( paramsFromContext( resultsAndFormat.c ), contextPath, as, servCon );
 				String _format = resultsAndFormat.b;
                 String formatter = (_format.equals( "" ) ? suffix : _format);
-				return renderByType( rc, mediaTypes, formatter, ep, results );
+				return renderByType( rc, mediaTypes, formatter, match.getEndpoint(), results );
             }
         } catch (EldaException e) {
         	System.err.println( "Caught exception: " + e.getMessage() );
@@ -124,6 +133,19 @@ import com.epimorphics.util.MediaTypes;
             return returnError(e);
         }
     }
+
+	private static AsURL pathAsURLFactory(final ServletContext servCon) {
+		return new RendererContext.AsURL() 
+			{@Override public URL asResourceURL( String p ) 
+			{ try {
+				URL result = servCon.getResource( p );
+				if (result == null) EldaException.NotFound( "webapp resource", p );
+				return result;
+			} catch (MalformedURLException e) {
+				throw new WrappedException( e );
+			} }
+		};
+	}
 
     // TODO this is probably obsolete
     static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();

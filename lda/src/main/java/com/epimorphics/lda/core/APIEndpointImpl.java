@@ -36,6 +36,7 @@ import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaTypes;
+import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
@@ -74,7 +75,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.toString();
     }
     
-    @Override public Couple<APIResultSet, String> call( CallContext given ) {
+    @Override public Triad<APIResultSet, String, CallContext> call( CallContext given ) {
     	wantsContext = specWantsContext;
     	CallContext context = new CallContext( spec.getBindings(), given );
         log.debug("API " + spec + " called on " + context + " from " + context.getRequestURI());
@@ -85,7 +86,7 @@ public class APIEndpointImpl implements APIEndpoint {
         APIResultSet filtered = filterByView( view, unfiltered );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
         insertResultSetRoot(filtered, context, query);
-        return new Couple<APIResultSet, String>( filtered, format );
+        return new Triad<APIResultSet, String, CallContext>( filtered, format, given );
     }
 
 	protected boolean wantsContext = false;
@@ -173,8 +174,8 @@ public class APIEndpointImpl implements APIEndpoint {
 		return value.replace( "&", "%??" );
 	}
 
-	private String strip(String query, String key) {
-		return query.replaceAll( "(^|[&])" + key + "=[^&]*", "" );
+	private String strip( String query, String key ) {
+		return query.replaceAll( "(^|[&])" + key + "=[^&]*[&]?", "" );
 	}
 
 	private void addFormats(Model m, CallContext c, Resource thisPage) {

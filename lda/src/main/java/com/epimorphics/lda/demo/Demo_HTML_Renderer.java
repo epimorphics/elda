@@ -126,6 +126,7 @@ public class Demo_HTML_Renderer implements Renderer {
         for (String part: parts)
         	{
         	String [] pv = part.split("="); 
+        	if (pv.length == 1) pv = new String[] {pv[0], "UNKNOWN"};
         	textBody
         		.append( "<tr>" )
         		.append( "<td align='right'>" ).append( pv[0] ).append( ": </td>" )

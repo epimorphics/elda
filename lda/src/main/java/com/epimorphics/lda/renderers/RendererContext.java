@@ -30,7 +30,7 @@ public class RendererContext implements Lookup {
 	protected final AsURL s;
 	protected final String contextPath;
 	
-	public RendererContext( VarValues v, final ServletContext sc ) {
+	public RendererContext( VarValues v, String contextPath, AsURL as, final ServletContext sc ) {
 		this.v = v;
 		this.s = new AsURL() 
 			{@Override public URL asResourceURL( String p ) 
@@ -42,7 +42,7 @@ public class RendererContext implements Lookup {
 					throw new WrappedException( e );
 				} }
 			};
-		this.contextPath = sc.getContextPath();
+		this.contextPath = contextPath;
 	}
 	
 	public RendererContext( VarValues v ) {
@@ -52,7 +52,7 @@ public class RendererContext implements Lookup {
 			{@Override public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
 	}
 	
-	interface AsURL {
+	public interface AsURL {
 		URL asResourceURL( String u );
 	}
 	
@@ -81,7 +81,7 @@ public class RendererContext implements Lookup {
 	}
 
 	public URL pathAsURL( String ePath ) {
-		String p = ePath.startsWith( "/" ) ? ePath : "/" + ePath;
+		String p = ePath.startsWith( "/" ) || ePath.startsWith( "http://") ? ePath : "/" + ePath;
 		return s.asResourceURL( p );
 	}
 

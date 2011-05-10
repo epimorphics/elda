@@ -25,7 +25,7 @@ import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Couple;
+import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -77,7 +77,7 @@ public class ExploreTestingForLatAndLongEtc
 		APIEndpoint e = new APIEndpointImpl( spec );
 		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );
 		CallContext cc = CallContext.createContext( Util.newURI("http://dummy/doc/schools"), map, MakeData.variables( settings ) );
-		Couple<APIResultSet, String> resultsAndFormat = e.call( cc );
+		Triad<APIResultSet, String, CallContext> resultsAndFormat = e.call( cc );
 		APIResultSet rs = resultsAndFormat.a;
 		return new HashSet<Resource>( rs.getResultList() );
 		}

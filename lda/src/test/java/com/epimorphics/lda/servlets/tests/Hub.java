@@ -28,7 +28,7 @@ import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Couple;
+import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
 
 import static javax.servlet.http.HttpServletResponse.*;
@@ -89,7 +89,7 @@ public class Hub extends HttpServlet
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
             try 
             	{
-                Couple<APIResultSet, String> resultsAndFormat = ep.call( cc );
+                Triad<APIResultSet, String, CallContext> resultsAndFormat = ep.call( cc );
 				APIResultSet results = resultsAndFormat.a;
                 if (results == null) 
                 	{

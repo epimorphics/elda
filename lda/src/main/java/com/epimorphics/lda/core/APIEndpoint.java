@@ -19,7 +19,7 @@ package com.epimorphics.lda.core;
 
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.specs.APIEndpointSpec;
-import com.epimorphics.util.Couple;
+import com.epimorphics.util.Triad;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -40,11 +40,13 @@ public interface APIEndpoint {
     public String getURITemplate();
     
     /**
-     * Called by the Router to invoke the API and return set of result matches
-     * @param context The call parameters and other context information
-     * @return result set ready for rendering
-     */
-    public Couple<APIResultSet, String> call( CallContext context );
+     	Called by the Router to invoke the API and return set of result matches
+     	
+     	@param context The call parameters and other context information
+     	@return Triad(rs, format, cc): the ResultSet for rendering, the name
+     		of the format, and the call context used for the result set.
+    */
+    public Triad<APIResultSet, String, CallContext> call( CallContext context );
     
     /**
      	Return a metadata description for the query that would be run by this endpoint

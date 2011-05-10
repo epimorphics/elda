@@ -49,7 +49,7 @@ public class APIResultSet {
         this.results = results;
         this.isCompleted = isCompleted;
         if (!results.isEmpty())
-            this.root = results.get(0).inModel(model); 
+            this.root = results.get(0).inModel(model);
     }
 
     /**
