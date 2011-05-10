@@ -57,10 +57,7 @@ public class RendererContext implements Lookup {
 	}
 	
 	public RendererContext() {
-		this.v = new VarValues();
-		this.contextPath = "";
-		this.s = new AsURL() 
-			{@Override public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
+		this( new VarValues() );
 	}
 	
 	public String getAsString( String key, String ifAbsent ) {
