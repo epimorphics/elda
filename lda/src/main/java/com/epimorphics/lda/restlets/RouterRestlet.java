@@ -126,14 +126,15 @@ import com.hp.hpl.jena.shared.WrappedException;
         try {
         	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, requestUri, queryParams );
             APIResultSet results = resultsAndFormat.a;
-            if (results == null) {
-                return returnNotFound("No answer back from " + match.getEndpoint().getSpec());
-            } else {
-            	RendererContext rc = new RendererContext( paramsFromContext( resultsAndFormat.c ), contextPath, as, servCon );
+			if (results == null) {
+			    return returnNotFound("No answer back from " + match.getEndpoint().getSpec());
+			} else {
+				APIEndpoint ep = match.getEndpoint();
+				RendererContext rc = new RendererContext( paramsFromContext( resultsAndFormat.c ), contextPath, as );
 				String _format = resultsAndFormat.b;
-                String formatter = (_format.equals( "" ) ? suffix : _format);
+			    String formatter = (_format.equals( "" ) ? suffix : _format);
 				return renderByType( rc, mediaTypes, formatter, match.getEndpoint(), results );
-            }
+			}
         } catch (EldaException e) {
         	System.err.println( "Caught exception: " + e.getMessage() );
         	e.printStackTrace( System.err );
@@ -188,18 +189,19 @@ import com.hp.hpl.jena.shared.WrappedException;
             if (suppress.equals("no")) {
                 for (MediaType mt: mediaTypes) {
                     String type = mt.getType() + "/" + mt.getSubtype();
+                    if (!type.equals(mt.toPlainString())) throw new RuntimeException( "BOOM" );
                     String name = nameForMimeType( type );
                     Renderer renderer = ep.getRendererNamed( name ); 
                     if (renderer != null) 
-                        return returnAs( relabel( rc, renderer.render( rc, results ) ), type, results.getContentLocation() );
+                        return returnAs( relabel( rc, renderer.render( rc, results ) ), mt, results.getContentLocation() );
                 }
             }
         //
             RendererFactory rf = ep.getSpec().getRendererFactoryTable().getDefaultFactory();
             ShortnameService sns = ep.getSpec().sns();
             Renderer r = rf.buildWith( ep, sns );
-            String mediaType = r.getMediaType();
-            return returnAs( relabel( rc, r.render( rc, results ) ), mediaType, results.getContentLocation() );           
+            MediaType mt = r.getMediaType();
+            return returnAs( relabel( rc, r.render( rc, results ) ), mt, results.getContentLocation() );           
             }
         else
             {
@@ -208,7 +210,7 @@ import com.hp.hpl.jena.shared.WrappedException;
                 String message = "renderer '" + rName + "' is not known to this server.";
                 return enableCORS( Response.status( Status.BAD_REQUEST ).entity( message ) ).build();
             } else {
-                String type = renderer.getMediaType();
+                MediaType type = renderer.getMediaType();
                 return returnAs( relabel( rc, renderer.render( rc, results ) ), type, results.getContentLocation() );
             }
         }
@@ -221,13 +223,12 @@ import com.hp.hpl.jena.shared.WrappedException;
         if (relabel_from == null || relabel_to == null) return rendered;
         return rendered.replace( relabel_from, relabel_to );
     }
-
+    
     public static VarValues paramsFromContext( CallContext cc ) {
         VarValues result = new VarValues();
-           for (Iterator<String> it = cc.parameterNames(); it.hasNext();) {
-               String name = it.next();
-//               System.err.println( ">>  " + name + " = " + cc.getParameterValue( name ) );
-               result.put( name, cc.getStringValue( name ) );
+        for (Iterator<String> it = cc.parameterNames(); it.hasNext();) {
+            String name = it.next();
+            result.put( name, cc.getStringValue( name ) );
         }
         return result;
     }
@@ -240,9 +241,9 @@ import com.hp.hpl.jena.shared.WrappedException;
         return enableCORS( Response.ok(response, mimetype) ).build();
     }
     
-    public static Response returnAs(String response, String mimetype, String contentLocation) {
+    public static Response returnAs(String response, MediaType mimetype, String contentLocation) {
         try {
-            return enableCORS( Response.ok(response, mimetype) )
+            return enableCORS( Response.ok(response, mimetype.toPlainString()) )
                     // .contentLocation( new URI(contentLocation) ) // what does it do & how can we get it back 
                     .build();
         } catch (RuntimeException e) { // (URISyntaxException e) {

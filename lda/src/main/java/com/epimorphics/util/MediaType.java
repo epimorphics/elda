@@ -21,17 +21,19 @@ import java.util.List;
 */
 public class MediaType
 	{
-	public static final MediaType TEXT_XML_TYPE = new MediaType( "text", "xml" );
+	public static final MediaType STAR_STAR = new MediaType( "*", "*" );
 	
-	public static final MediaType TEXT_HTML_TYPE = new MediaType( "text", "html" );
+	public static final MediaType TEXT_XML = new MediaType( "text", "xml" );
 	
-	public static final MediaType TEXT_PLAIN_TYPE = new MediaType( "text", "plain" );
+	public static final MediaType TEXT_HTML = new MediaType( "text", "html" );
 	
-	public static final MediaType APPLICATION_JSON_TYPE = new MediaType( "application", "json" );
+	public static final MediaType TEXT_PLAIN = new MediaType( "text", "plain" );
 	
-	public static final MediaType TEXT_TURTLE_TYPE = new MediaType( "text", "turtle" );
+	public static final MediaType APPLICATION_JSON = new MediaType( "application", "json" );
 	
-	public static final MediaType RDF_XML_TYPE = new MediaType( "application", "rdf+xml" );
+	public static final MediaType TEXT_TURTLE = new MediaType( "text", "turtle" );
+	
+	public static final MediaType APPLICATION_RDF_XML = new MediaType( "application", "rdf+xml" );
 
 	public MediaType( String A, String B, float Q )
 		{ this.type = A; this.subType = B; this.Q = Q; }

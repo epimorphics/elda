@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.util.MediaType;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -29,7 +30,7 @@ public class BuiltinRendererTable {
 			return this;
 		}
 		
-		@Override public RendererFactory withMediaType( String type ) {
+		@Override public RendererFactory withMediaType( MediaType mt ) {
 			return this;
 		}
 	}
@@ -38,12 +39,12 @@ public class BuiltinRendererTable {
 	
 	static private Map<Resource, RendererFactory> builtins = new HashMap<Resource, RendererFactory>();
 	
-	static void putFactory( String name, Resource type, String mime, RendererFactory rf ) {
+	static void putFactory( String name, Resource type, MediaType mime, RendererFactory rf ) {
 		factoryTable.putFactory( name, null, mime, rf );
 		builtins.put( type, rf );
 	}
 	
-	static void putDefaultFactory( String name, Resource type, String mime, RendererFactory rf ) {
+	static void putDefaultFactory( String name, Resource type, MediaType mime, RendererFactory rf ) {
 		factoryTable.putFactory( name, null, mime, rf, true );
 		builtins.put( type, rf );
 	}
@@ -53,44 +54,44 @@ public class BuiltinRendererTable {
 	}
 	
 	static {
-		putFactory( "text", API.RdfXmlFormatter, "text/plain", new DoingWith() 
+		putFactory( "text", API.RdfXmlFormatter, MediaType.TEXT_PLAIN, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-				return new JSONRenderer( ep, "text/plain");
+				return new JSONRenderer( ep, MediaType.TEXT_PLAIN );
 			}
 			} );
 		
-		putFactory( "ttl", API.TurtleFormatter, "text/turtle", new DoingWith() 
+		putFactory( "ttl", API.TurtleFormatter, MediaType.TEXT_TURTLE, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new TurtleRenderer();
 			}
 			} );
 		
-		 putFactory( "rdf", API.RdfXmlFormatter, "application/rdf+xml", new DoingWith() 
+		 putFactory( "rdf", API.RdfXmlFormatter, MediaType.APPLICATION_RDF_XML, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new RDFXMLRenderer();
 			}
 			} );
 		
-		putDefaultFactory( "json", API.JsonFormatter, "application/json", new DoingWith() 
+		putDefaultFactory( "json", API.JsonFormatter, MediaType.APPLICATION_JSON, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new JSONRenderer( ep );
 			}
 			} );
 		
-		putFactory( "xml", API.XmlFormatter, "application/xml", new DoingWith() 
+		putFactory( "xml", API.XmlFormatter, MediaType.APPLICATION_RDF_XML, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new XMLRenderer( sns );
 			}
 			} );
 		
-		putFactory( "_xslt", API.XsltFormatter, "*/*", new XSLT_RendererFactory( null, "*/*" ) );
+		putFactory( "_xslt", API.XsltFormatter, MediaType.STAR_STAR, new XSLT_RendererFactory( null, MediaType.STAR_STAR ) );
 		
-		putFactory( "html", FIXUP.HtmlFormatter, "text/html", new DoingWith() 
+		putFactory( "html", FIXUP.HtmlFormatter, MediaType.TEXT_HTML, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new HTMLRenderer();

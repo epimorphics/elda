@@ -18,6 +18,7 @@ import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.XHV;
+import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.FIXUP;
@@ -46,8 +47,8 @@ public class Demo_HTML_Renderer implements Renderer {
     	this.endpoint = ep;
     }
 
-	@Override public String getMediaType() {
-        return "text/html";
+	@Override public MediaType getMediaType() {
+        return MediaType.TEXT_HTML;
     }
 
     @Override public String render( RendererContext ignored, APIResultSet results ) {

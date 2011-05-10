@@ -18,24 +18,24 @@
 package com.epimorphics.lda.renderers;
 
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.util.MediaType;
 
 /**
  * Abstraction for renderer
  * 
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
- */
+*/
 public interface Renderer {
 
     /**
-     * @return  the mimetype which this renderer returns
-     * TODO should this be some class instead of a string?
-     */
-    public String getMediaType();
+     	@return  the mimetype which this renderer returns
+    */
+    public MediaType getMediaType();
     
     /**
-     * Render a result set
-     */
+     	Render a result set
+    */
     public String render( RendererContext rc, APIResultSet results );
 }
 

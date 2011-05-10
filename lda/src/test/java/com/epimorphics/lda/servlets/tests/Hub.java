@@ -17,10 +17,8 @@ import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.MultiMap;
-import com.epimorphics.lda.renderers.JSONRenderer;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererContext;
-import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -43,8 +41,8 @@ public class Hub extends HttpServlet
 		"text/plain"
 		+ ", text/turtle"
 		+ ", application/rdf+xml"
-		+ ", " + JSONRenderer.JSON_MIME
-		+ ", " + XMLRenderer.XML_MIME
+		+ ", " + MediaType.APPLICATION_JSON.toPlainString()
+		+ ", " + MediaType.APPLICATION_RDF_XML.toPlainString()
 		+ ", text/html"
 		;
 	

@@ -30,30 +30,29 @@ import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.ParseWrapper;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class JSONRenderer implements Renderer {
 
-    public static final String JSON_MIME = "application/json";
-
     static Logger log = LoggerFactory.getLogger(JSONRenderer.class);
     
     final APIEndpoint api;
-    final String mime;
+    final MediaType mt;
     final boolean wantContext;
     
     public JSONRenderer( APIEndpoint api ) {
-        this( api, JSON_MIME );
+        this( api, MediaType.APPLICATION_JSON );
     }
     
-    public JSONRenderer( APIEndpoint api, String mime ) {
+    public JSONRenderer( APIEndpoint api, MediaType mt ) {
         this.api = api;
-        this.mime = mime;
+        this.mt = mt;
         this.wantContext = api.wantContext();
     }
     
-    @Override public String getMediaType() {
-        return mime;
+    @Override public MediaType getMediaType() {
+        return MediaType.APPLICATION_JSON;
     }
 
     @Override public String render( RendererContext ignored, APIResultSet results) {

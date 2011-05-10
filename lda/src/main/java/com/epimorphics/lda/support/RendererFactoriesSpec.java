@@ -14,6 +14,7 @@ import com.epimorphics.lda.renderers.BuiltinRendererTable;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.util.MediaType;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -52,17 +53,17 @@ public class RendererFactoriesSpec {
 	private static void addEntry( Factories result, Resource r, boolean isDefault ) {
 		String name = getName( r );
 		String className = getClassName( r );
-		String mimeType = getMimeType( r );
+		MediaType mt = getMimeType( r );
 		Resource type = getRendererType( r );
 		if (type == null) EldaException.BadSpecification
 			(
 			"no renderer type for "
 			+ (name != null ? name 
-			  : mimeType != null ? ("spec with mime type " + mimeType)
+			  : mt != null ? ("spec with mime type " + mt)
 			  : "node " + r.toString() )
 			);
 		RendererFactory rfx = BuiltinRendererTable.getFactory( type ); 
-		result.putFactory( name, r, mimeType, pickFactory( className, rfx ), isDefault );
+		result.putFactory( name, r, mt, pickFactory( className, rfx ), isDefault );
 	}
 
 	private static Resource getRendererType( Resource r ) {
@@ -73,8 +74,10 @@ public class RendererFactoriesSpec {
 		return null;
 	}
 
-	private static String getMimeType(Resource r) {
-		return r.hasProperty( API.mimeType ) ? r.getProperty( API.mimeType ).getString() : "text/plain";
+	private static MediaType getMimeType(Resource r) {
+		return r.hasProperty( API.mimeType ) 
+			? MediaType.decodeType( r.getProperty( API.mimeType ).getString() ) 
+			: MediaType.TEXT_PLAIN;
 	}
 
 	private static RendererFactory pickFactory( String className, RendererFactory rfx ) {

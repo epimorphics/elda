@@ -3,6 +3,7 @@ package com.epimorphics.lda.renderers;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
@@ -26,12 +27,12 @@ public class Factories {
 		return result;
 	}
 
-	public void putFactory( String name, Resource uri, String mimeType, RendererFactory factory ) {
-		putFactory( name, uri, mimeType, factory, false );
+	public void putFactory( String name, Resource uri, MediaType mt, RendererFactory factory ) {
+		putFactory( name, uri, mt, factory, false );
 	}
 
-	public void putFactory( String name, Resource uri, String mediaType, RendererFactory factory, boolean isDefault ) {
-		RendererFactory f = factory.withRoot( uri ).withMediaType( mediaType );
+	public void putFactory( String name, Resource uri, MediaType mt, RendererFactory factory, boolean isDefault ) {
+		RendererFactory f = factory.withRoot( uri ).withMediaType( mt );
 		table.put( name, f );
 		if (isDefault) theDefault = f;
 	}

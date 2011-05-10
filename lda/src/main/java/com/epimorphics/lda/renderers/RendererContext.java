@@ -7,17 +7,12 @@
 */
 package com.epimorphics.lda.renderers;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
-
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.bindings.Lookup;
-import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.shared.WrappedException;
 
 /**
 	The context in which a rendering takes place. It provides access to the value
@@ -27,31 +22,33 @@ import com.hp.hpl.jena.shared.WrappedException;
 public class RendererContext implements Lookup {
 
 	protected final VarValues v;
-	protected final AsURL s;
+	protected final AsURL as;
 	protected final String contextPath;
 	
-	public RendererContext( VarValues v, String contextPath, AsURL as, final ServletContext sc ) {
+	/**
+	    Initialise this RendererContext with a bunch of variable bindings
+	    <code>v</code>, a string to use as the <code>contextPath</code>, and
+	    an AsURL object which converts (partial) paths to full URLs.    
+	*/
+	public RendererContext( VarValues v, String contextPath, AsURL as ) {
 		this.v = v;
-		this.s = new AsURL() 
-			{@Override public URL asResourceURL( String p ) 
-				{ try {
-					URL result = sc.getResource( p );
-					if (result == null) EldaException.NotFound( "webapp resource", p );
-					return result;
-				} catch (MalformedURLException e) {
-					throw new WrappedException( e );
-				} }
-			};
+		this.as = as;
 		this.contextPath = contextPath;
 	}
 	
 	public RendererContext( VarValues v ) {
 		this.v = v;
 		this.contextPath = "";
-		this.s = new AsURL() 
+		this.as = new AsURL() 
 			{@Override public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
 	}
 	
+	/**
+	    A interface of one method which maps a possibly partial path
+	    to a URL.
+	    
+	 	@author chris
+	*/
 	public interface AsURL {
 		URL asResourceURL( String u );
 	}
@@ -82,7 +79,7 @@ public class RendererContext implements Lookup {
 
 	public URL pathAsURL( String ePath ) {
 		String p = ePath.startsWith( "/" ) || ePath.startsWith( "http://") ? ePath : "/" + ePath;
-		return s.asResourceURL( p );
+		return as.asResourceURL( p );
 	}
 
 	@Override public Set<String> getStringValues( String name ) {

@@ -9,6 +9,7 @@ package com.epimorphics.lda.renderers;
 
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
@@ -33,5 +34,5 @@ public interface RendererFactory
 	    Answer a new RendererFactory just like this one, but producing
 	    renderers that announce the given media type.
 	*/
-	public RendererFactory withMediaType( String mediaType );
+	public RendererFactory withMediaType( MediaType mt );
 	}

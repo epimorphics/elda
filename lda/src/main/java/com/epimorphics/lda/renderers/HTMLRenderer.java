@@ -20,14 +20,15 @@ import java.util.List;
 
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.vocabularies.XHV;
+import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
 
 public class HTMLRenderer implements Renderer {
 	
-    @Override public String getMediaType() {
-        return "text/html";
+    @Override public MediaType getMediaType() {
+        return MediaType.TEXT_HTML;
     }
 
     @Override public String render( RendererContext ignored, APIResultSet results ) {
