@@ -376,7 +376,83 @@ Linux system; cd into <code>deliver-elda</code> and run the
 script <code>deliver.bash</code>.)
 </p>
 
-<h2>formatting extensions</h2>
+<h2>Using Elda directly</h2>
+
+<p>You don't need to go through a servlet (or restlet)
+framework to exploit Elda. You can call the components
+yourself and supply whatever glue you like.
+</p>
+
+<h3>Creating an APISpec</h3>
+
+<p>
+The constructor
+<pre>
+APISpec(Resource config, ModelLoaderI forVocab)
+</pre>
+
+delivers a new APISpec object configured from the given
+Resource. You may have chosen a Resource with a known 
+URI in a config model, or found one with <code>rdf:type</code>
+<code>api:API</code>, depending on your usecase. The
+<code>ModelLoaderI</code> is only used if the config has
+<code>api:vocabulary</code> elements, in which case it
+loads a model for its API vocabulary.
+</p>
+
+<p>
+Given an APISpec, the method <code>getEndpoints()</code>
+delivers a list of <code>APIEndpoint</code> objects corresponding
+(in no defined order) with the endpoint descriptions in the
+config model. 
+</p>
+
+<h3>Running an endpoint</h3>
+
+<p>
+You can then invoke
+<pre>
+APIEndpointUtil.call( match, requestUri, queryParams )
+</pre>
+
+to have the endpoint handle a "request" from the given
+<code>requestURI</code> with the given <code>queryParams</code>.
+The <code>match</code> wraps the endpoint itself and any
+variable bindings that have been made by matching the
+endpoint's UriTemplate against the request URI.
+</p>
+
+<p>
+The call returns a three-element object which contains the
+<code>ResultSet</code> of the query execution (the result
+model and selected items), the name of the result formatter
+that has been selected by the endpoint, and the CallContext
+variable bindings.
+</p>
+
+<h3>Rendering results</h3>
+
+<p>
+Once you have chosen a renderer <code>R</code> to use for the 
+result set, the invocation
+
+<pre>
+R.render( rc, results )
+</pre>
+
+delivers a String which is the rendering of <code>results</code>
+according to the RenderContext <code>rc</code>, which you can
+construct from the <code>VarValues</code> embedded in the call
+context, the context path, and an AsURL object to convert URI
+fragments into full URIs.
+</p>
+
+<p>
+The method call <code>R.getMediaType()</code> returns the media
+type for the renderer's result. 
+</p>
+
+<h2>Formatting extensions</h2>
 
 <p>
 If the object of an <code>api:stylesheet</code> directive starts
@@ -395,10 +471,10 @@ to deliver a Renderer, and that Renderer is used to render the
 result set.
 </p>
 
-<h2><a name="implementation-state">state of the implementation</a></h2>
+<h2><a name="implementation-state">State of the implementation</a></h2>
 
 <p>
-Elda provides a complete implementation of the Linked Data API,
+Elda aims to provide a complete implementation of the Linked Data API,
 but the following minor features are not currently provided.
 Future releases will include them. Problems with Elda should 
 be reported to the 
@@ -410,14 +486,14 @@ Elda issues list
 </a>.
 </p>
 
-<h3>formatting</h3>
+<h3>Formatting</h3>
 
 <p>
 Not all of the detailed language-tag and literal-type features
 work as specified.
 </p>
 
-<h3>cache</h3>
+<h3>Cache</h3>
 
 <p>
 Elda caches the results of queries so that they may be re-served
