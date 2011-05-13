@@ -84,8 +84,8 @@ public class CallContext implements Lookup {
      	Return all the values for a parameter.
     */
     @Override public Set<String> getStringValues( String param ) {
-        Set<Value> vs = new HashSet<Value>( parameters.getAll( param ) );
-		Set<String> values = new HashSet<String>( queryParameters.getAll( param ) );
+        Set<Value> vs = parameters.getAll( param );
+		Set<String> values = queryParameters.getAll( param );
 		return vs == null ? values : asStrings( vs );
     }
     

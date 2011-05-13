@@ -18,16 +18,16 @@ import java.util.*;
 */
 public class MultiMap<K, V> {
 	
-	protected final HashMap<K, List<V>> underlying = new HashMap<K, List<V>>();
+	protected final HashMap<K, Set<V>> underlying = new HashMap<K, Set<V>>();
 
 	public Iterator<K> keyIterator() {
 		return underlying.keySet().iterator();
 	}
 	
-	final List<V> NoValues = new ArrayList<V>();
+	final Set<V> NoValues = new HashSet<V>();
 	
-	public List<V> getAll(K key) {
-		List<V> values = underlying.get(key);
+	public Set<V> getAll(K key) {
+		Set<V> values = underlying.get(key);
 		return values == null ? NoValues : values;
 	}
 
@@ -36,14 +36,14 @@ public class MultiMap<K, V> {
 	}
 	
 	public V getOne(K key) {
-		List<V> values = underlying.get(key);
-		return values == null ? null : values.get(0);
+		Set<V> values = underlying.get(key);
+		return values == null ? null : values.iterator().next();
 	}
 	
 	public void add(K key, V value) {
 //		System.err.println( ">> add " + key + " => " + value );
-		List<V> values = underlying.get(key);
-		if (values == null) underlying.put(key, values = new ArrayList<V>() );
+		Set<V> values = underlying.get(key);
+		if (values == null) underlying.put(key, values = new HashSet<V>() );
 		values.add(value);
 	}
 	
@@ -52,8 +52,8 @@ public class MultiMap<K, V> {
 	   <code>values</code> to this MultiMap.
 	*/
 	public void add(K key, Set<V> value) {
-		List<V> values = underlying.get(key);
-		if (values == null) underlying.put(key, values = new ArrayList<V>() );
+		Set<V> values = underlying.get(key);
+		if (values == null) underlying.put(key, values = new HashSet<V>() );
 		values.addAll(value);
 	}
 
@@ -67,8 +67,12 @@ public class MultiMap<K, V> {
 		}
 	}
 
-	public void putAll(MultiMap<K, V> vars) {
-		for (Map.Entry<K, List<V>> e: vars.underlying.entrySet()) {
+	/**
+	    Add all the entries from the MultiMap <code>map</code>
+	    to this MultiMap.
+	*/
+	public void putAll(MultiMap<K, V> map) {
+		for (Map.Entry<K, Set<V>> e: map.underlying.entrySet()) {
 			for (V v: e.getValue()) add( e.getKey(), v );
 		}
 	}
