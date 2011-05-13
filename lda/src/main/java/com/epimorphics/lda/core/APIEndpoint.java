@@ -66,6 +66,7 @@ public interface APIEndpoint {
 
     /**
         Return the renderer known by the given media type.
+        TODO: consider the possibility that there's more than one.
     */
 	public Renderer getRendererByType( MediaType mt );
 

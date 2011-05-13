@@ -8,13 +8,17 @@
 package com.epimorphics.lda.core;
 
 import java.net.URI;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 
 public class APIEndpointUtil {
@@ -39,5 +43,38 @@ public class APIEndpointUtil {
 		log.debug("Info: calling APIEndpoint " + spec);
 		VarValues vs = new VarValues( spec.getBindings() ).putAll( match.getBindings() );
 		return ep.call( CallContext.createContext( requestUri, queryParams, vs ) );
+	}
+
+	/**
+	    <p>
+	    Answer the renderer particular to the endpoint <code>ep</code>. If name is
+	    not null, then the renderer is the one with that name in the endpoint itself.
+	    Otherwise, if the endpoint has any renderers with a media type in the list
+	    <code>types</code>, it picks the first such renderer. Otherwise it falls
+	    back to the default renderer (which, by default, is JSON).
+	    </p>
+	    
+	    <p>
+	    Epimorphic extension:
+	    If the endooint's spec has a binding other than "no" for the variable
+	    <code>_suppress_media_type</code>, then the search of media types is
+	    not done, so that name=null will fall through to the default renderer.
+	    </p>
+	*/
+	public static Renderer getRenderer( APIEndpoint ep, String name, List<MediaType> types ) {
+		APIEndpointSpec spec = ep.getSpec();
+		if (name == null) {
+			String suppress = spec.getBindings().getAsString( "_supress_media_type", "no" );
+	        if (suppress.equals("no")) {
+	            for (MediaType mt: types) {
+	                Renderer byType = ep.getRendererByType( mt );
+	                if (byType != null) return byType;
+	            }
+	        }
+	        RendererFactory rf = spec.getRendererFactoryTable().getDefaultFactory();
+			return rf.buildWith( ep, spec.sns() );           
+	        }
+	    else
+	        return ep.getRendererNamed( name );
 	}
 }

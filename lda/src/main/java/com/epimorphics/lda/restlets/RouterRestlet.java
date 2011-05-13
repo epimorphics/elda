@@ -41,7 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.VarValues;
-import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
@@ -51,7 +50,6 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.renderers.RendererContext.AsURL;
-import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
@@ -114,7 +112,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 		return mediaTypes;
 	}
 
-    private Response runEndpoint( final ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
+    private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
     	RendererContext.AsURL as = pathAsURLFactory(servCon);
     	String contextPath = servCon.getContextPath();
     	URI requestUri = ui.getRequestUri();
@@ -129,8 +127,8 @@ import com.hp.hpl.jena.shared.WrappedException;
 				// APIEndpoint ep = match.getEndpoint();
 				RendererContext rc = new RendererContext( paramsFromContext( resultsAndFormat.c ), contextPath, as );
 				String _format = resultsAndFormat.b;
-			    String formatter = (_format.equals( "" ) ? suffix : _format);
-				Renderer r = getRenderer( mediaTypes, formatter, match.getEndpoint() );
+				String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
+				Renderer r = APIEndpointUtil.getRenderer( match.getEndpoint(), formatter, mediaTypes );
 				return doRendering( rc, formatter, results, r );
 			}
         } catch (EldaException e) {
@@ -169,23 +167,6 @@ import com.hp.hpl.jena.shared.WrappedException;
         return new Couple<String, String>( path, type );
         }
 
-    private Renderer getRenderer( List<MediaType> mediaTypes, String rName, APIEndpoint ep ) {
-    	if (rName == null) {
-    		String suppress = ep.getSpec().getBindings().getAsString( "_supress_media_type", "no" );
-	        if (suppress.equals("no")) {
-	            for (MediaType mt: mediaTypes) {
-	                Renderer byType = ep.getRendererByType( mt );
-	                if (byType != null) return byType;
-	            }
-	        }
-	    //
-	        RendererFactory rf = ep.getSpec().getRendererFactoryTable().getDefaultFactory();
-	        return rf.buildWith( ep, ep.getSpec().sns() );           
-	        }
-	    else
-	        return ep.getRendererNamed( rName );
-    }
-    
     private Response doRendering( RendererContext rc, String rName, APIResultSet results, Renderer r ) {
 		if (r == null) {
             String message = rName == null
