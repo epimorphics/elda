@@ -50,7 +50,7 @@ public class Hub extends HttpServlet
 		throws IOException, ServletException 
 		{
 		@SuppressWarnings("unchecked") List<MediaType> types = MediaType.mediaType( req.getHeaders( "accept" ));
-		String acceptedType = MediaType.accept( types, acceptable );
+		MediaType acceptedType = MediaType.accept( types, acceptable );
 		if (acceptedType == null)
 			{
 			res.sendError( SC_NOT_ACCEPTABLE, "none of " + types.toString() + " are acceptable." );
@@ -64,7 +64,7 @@ public class Hub extends HttpServlet
 
     static Logger log = LoggerFactory.getLogger( Hub.class );
     
-	private void GO( HttpServletRequest req, HttpServletResponse res, String acceptedType ) throws IOException
+	private void GO( HttpServletRequest req, HttpServletResponse res, MediaType acceptedType ) throws IOException
 		{
 		String pathstub = req.getPathInfo();
 		// CORS, see http://www.w3.org/wiki/CORS_Enabled
@@ -92,12 +92,12 @@ public class Hub extends HttpServlet
                 	} 
                 else 
                 	{ // TODO fix the switch from media types to named renderers.
-                	Renderer r = ep.getRendererNamed( acceptedType );
+                	Renderer r = ep.getRendererByType( acceptedType );
                 	System.err.println( "r = " + r + " for " + acceptedType );
                 	RendererContext rp = new RendererContext( RouterRestlet.paramsFromContext( cc ) );
                 	String result = r.render( rp, results );
 //                	String cl = results.getContentLocation();
-                	res.setContentType( acceptedType );
+                	res.setContentType( acceptedType.toString() );
             		PrintWriter out = res.getWriter();
             		out.print( result );
                 	out.close();
