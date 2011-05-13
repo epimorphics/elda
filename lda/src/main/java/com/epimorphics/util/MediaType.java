@@ -58,7 +58,22 @@ public class MediaType
 			return 0;
 			}
 		};
+
+	public String getType()
+		{ return type; }
 	
+	public String getSubtype()
+		{ return subType; }
+	
+	@Override public int hashCode()
+		{ return type.hashCode() ^ subType.hashCode(); }
+	
+	@Override public boolean equals( Object other ) 
+		{ return other instanceof MediaType && same( (MediaType) other ); }
+	
+	private boolean same( MediaType other ) 
+		{ return type.equals(other.type) && subType.equals(other.subType); }
+
 	public boolean accepts( MediaType s ) 
 		{
 		return (type.equals("*") || type.equals( s.type )) && (subType.equals("*") || subType.equals( s.subType ));
@@ -106,10 +121,4 @@ public class MediaType
 		String [] AB = X[0].split( "/" );
 		return new MediaType( AB[0], AB[1], Q );
 		}
-
-	public String getType()
-		{ return type; }
-	
-	public String getSubtype()
-		{ return subType; }
 	}

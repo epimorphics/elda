@@ -129,7 +129,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 			if (results == null) {
 			    return returnNotFound("No answer back from " + match.getEndpoint().getSpec());
 			} else {
-				APIEndpoint ep = match.getEndpoint();
+				// APIEndpoint ep = match.getEndpoint();
 				RendererContext rc = new RendererContext( paramsFromContext( resultsAndFormat.c ), contextPath, as );
 				String _format = resultsAndFormat.b;
 			    String formatter = (_format.equals( "" ) ? suffix : _format);
