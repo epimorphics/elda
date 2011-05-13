@@ -79,12 +79,24 @@ public class MediaType
 		return (type.equals("*") || type.equals( s.type )) && (subType.equals("*") || subType.equals( s.subType ));
 		}
 	
+	/**
+	    Answer the string type/subType, ignoring the Q-value.
+	*/
 	@Override public String toString()
-		{ return type + "/" + subType + "; q=" + Q; }
-	
-	public String toPlainString()
 		{ return type + "/" + subType; }
+	
+	/**
+	    Answer the string type/subType; q=Q.
+	*/
+	public String toFullString()
+		{ return type + "/" + subType + "; q=" + Q; }
 
+	/**
+	 * 
+	 * @param types
+	 * @param canHandle
+	 * @return
+	 */
 	public static String accept( List<MediaType> types, String canHandle ) 
 		{
 		List<MediaType> served = decodeTypes( canHandle );

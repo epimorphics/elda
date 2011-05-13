@@ -180,7 +180,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	private void addFormats(Model m, CallContext c, Resource thisPage) {
 		for (Map.Entry<String, MediaType> e: MediaTypes.createMediaExtensions().entrySet()) {
 			Resource v = resourceForFormat( m, c, e.getKey() );
-			Resource format = m.createResource().addProperty( RDFS.label, e.getValue().toPlainString() );
+			Resource format = m.createResource().addProperty( RDFS.label, e.getValue().toString() );
 			thisPage.addProperty( DCTerms.hasFormat, v );
 			v.addProperty( DCTerms.isFormatOf, thisPage );
 			v.addProperty( DCTerms.format, format );

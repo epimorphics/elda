@@ -41,8 +41,8 @@ public class Hub extends HttpServlet
 		"text/plain"
 		+ ", text/turtle"
 		+ ", application/rdf+xml"
-		+ ", " + MediaType.APPLICATION_JSON.toPlainString()
-		+ ", " + MediaType.APPLICATION_RDF_XML.toPlainString()
+		+ ", " + MediaType.APPLICATION_JSON.toString()
+		+ ", " + MediaType.APPLICATION_RDF_XML.toString()
 		+ ", text/html"
 		;
 	

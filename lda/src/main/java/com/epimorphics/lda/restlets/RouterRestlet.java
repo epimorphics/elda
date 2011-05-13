@@ -110,6 +110,10 @@ import com.hp.hpl.jena.shared.WrappedException;
 		for (javax.ws.rs.core.MediaType mt: headers.getAcceptableMediaTypes())
 			mediaTypes.add( new MediaType( mt.getType(), mt.getSubtype() ) );
 		return mediaTypes;
+
+
+
+
 	}
 
     private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
@@ -207,7 +211,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     
     public static Response returnAs(String response, MediaType mimetype, String contentLocation) {
         try {
-            return enableCORS( Response.ok(response, mimetype.toPlainString()) )
+            return enableCORS( Response.ok(response, mimetype.toString()) )
                     // .contentLocation( new URI(contentLocation) ) // what does it do & how can we get it back 
                     .build();
         } catch (RuntimeException e) { // (URISyntaxException e) {

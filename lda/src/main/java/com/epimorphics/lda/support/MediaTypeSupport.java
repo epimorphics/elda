@@ -32,7 +32,7 @@ public class MediaTypeSupport
 		for (MediaType mt: mediaTypes)
 			if (!mt.equals( UNSPECIFIED )) 
 				{
-				result.append( prefix ).append( mt.toPlainString() );
+				result.append( prefix ).append( mt.toString() );
 				prefix = ", ";
 				}
 		return result.toString();
