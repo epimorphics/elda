@@ -355,15 +355,35 @@ public class APIEndpointImpl implements APIEndpoint {
         return spec;
     }
 
+    /**
+        Answer the SELECT query that would be used in the current
+        state of this endpoint to find the iterms of interest.
+    */
 	public String getSelectQuery() {
 		PrefixMapping noPrefixes = PrefixMapping.Factory.create();
 		return spec.getBaseQuery().assembleSelectQuery( noPrefixes );
 	}
 	
+	/**
+	    Answer a Renderer of the format named <code>name</code>, configured
+	    with the appropriate shortname service.
+	*/
 	@Override public Renderer getRendererNamed( String name ) {
 		RendererFactory s = spec.getRendererFactoryTable().getFactoryByName( name );
-		if (s == null) return null;
-		return s.buildWith( this, getSpec().getAPISpec().getShortnameService() );		
+		return configure( s );		
+	}
+	
+	/**
+	    Answer a Renderer appropriate to the given MediaType <code>mt</code>,
+	    configured with the appropriate shortname service.
+	*/
+	@Override public Renderer getRendererByType( MediaType mt ) {
+		RendererFactory s = spec.getRendererFactoryTable().getFactoryByType( mt );
+		return configure( s );	
+	}
+
+	private Renderer configure(RendererFactory s) {
+		return s == null ? null : s.buildWith( this, getSpec().getAPISpec().getShortnameService() );
 	}
 }
 

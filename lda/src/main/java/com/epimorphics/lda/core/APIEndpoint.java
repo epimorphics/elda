@@ -19,6 +19,7 @@ package com.epimorphics.lda.core;
 
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -62,6 +63,11 @@ public interface APIEndpoint {
         Return the renderer known by the given name.
     */
 	public Renderer getRendererNamed( String name );
+
+    /**
+        Return the renderer known by the given media type.
+    */
+	public Renderer getRendererByType( MediaType mt );
 
     /**
         For an Epimorphics extension. Answer true iff this API endpoint

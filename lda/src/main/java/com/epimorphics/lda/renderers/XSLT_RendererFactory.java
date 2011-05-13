@@ -28,8 +28,6 @@ public class XSLT_RendererFactory implements RendererFactory {
 	}
 	
 	@Override public Renderer buildWith( final APIEndpoint ep, final ShortnameService sns ) {
-		final String sheet = root.getProperty( API.stylesheet ).getString();
-		final XMLRenderer xr = new XMLRenderer( sns, mt, sheet );
 		return new Renderer() {
 
 			@Override public MediaType getMediaType() {
@@ -37,6 +35,8 @@ public class XSLT_RendererFactory implements RendererFactory {
 			}
 
 			@Override public String render( RendererContext rc, APIResultSet results ) {
+				final String sheet = root.getProperty( API.stylesheet ).getString();
+				final XMLRenderer xr = new XMLRenderer( sns, mt, sheet );
 				String rendered = xr.render( rc, results );			
 				return rendered.replaceAll( "\"_ROOT", "\"" + rc.getContextPath() );
 			}

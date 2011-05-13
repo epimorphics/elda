@@ -47,15 +47,23 @@ public class MultiMap<K, V> {
 		values.add(value);
 	}
 	
+	/**
+	   Add all the bindings from <code>key</code> to the elements of 
+	   <code>values</code> to this MultiMap.
+	*/
 	public void add(K key, Set<V> value) {
 		List<V> values = underlying.get(key);
 		if (values == null) underlying.put(key, values = new ArrayList<V>() );
 		values.addAll(value);
 	}
 
-	public void putAll(Map<K, V> vars) {
-		for (Map.Entry<K, V> e: vars.entrySet()) {
-			add(e.getKey(), e.getValue());
+	/**
+	    Add all the entries from <code>map</code> to this
+	    MultiMap.
+	*/
+	public void putAll(Map<K, V> map) {
+		for (Map.Entry<K, V> e: map.entrySet()) {
+			add( e.getKey(), e.getValue() );
 		}
 	}
 

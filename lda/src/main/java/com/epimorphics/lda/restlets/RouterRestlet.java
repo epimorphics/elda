@@ -22,7 +22,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,11 +55,9 @@ import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
-import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
-import com.epimorphics.util.MediaTypes;
 import com.epimorphics.util.Triad;
 import com.hp.hpl.jena.shared.WrappedException;
 
@@ -133,7 +130,8 @@ import com.hp.hpl.jena.shared.WrappedException;
 				RendererContext rc = new RendererContext( paramsFromContext( resultsAndFormat.c ), contextPath, as );
 				String _format = resultsAndFormat.b;
 			    String formatter = (_format.equals( "" ) ? suffix : _format);
-				return renderByType( rc, mediaTypes, formatter, match.getEndpoint(), results );
+				Renderer r = getRenderer( mediaTypes, formatter, match.getEndpoint() );
+				return doRendering( rc, formatter, results, r );
 			}
         } catch (EldaException e) {
         	System.err.println( "Caught exception: " + e.getMessage() );
@@ -159,9 +157,6 @@ import com.hp.hpl.jena.shared.WrappedException;
 			} }
 		};
 	}
-
-    // TODO this is probably obsolete
-    static HashMap<String, MediaType> types = MediaTypes.createMediaExtensions();
     
     //** return (revised path, renderer name or null)
     // TODO work out a spec-conformant method for this lookup
@@ -173,48 +168,36 @@ import com.hp.hpl.jena.shared.WrappedException;
             { path = pathstub.substring(0, dot - 1); type = pathstub.substring(dot); }        
         return new Couple<String, String>( path, type );
         }
-    
-    private String nameForMimeType( String type )
-        {
-        for (String name: types.keySet())
-            if (types.get(name).toString().equals( type )) return name;
-        return null;
-        }
 
-    private Response renderByType( RendererContext rc, List<MediaType> mediaTypes, String rName, APIEndpoint ep, APIResultSet results ) {
-        if (rName == null)
-            {
-            String suppress = rc.getAsString("_supress_media_type", "no");
-            // System.err.println( ">> suppress = " + suppress );
-            if (suppress.equals("no")) {
-                for (MediaType mt: mediaTypes) {
-                    String type = mt.getType() + "/" + mt.getSubtype();
-                    if (!type.equals(mt.toPlainString())) throw new RuntimeException( "BOOM" );
-                    String name = nameForMimeType( type );
-                    Renderer renderer = ep.getRendererNamed( name ); 
-                    if (renderer != null) 
-                        return returnAs( relabel( rc, renderer.render( rc, results ) ), mt, results.getContentLocation() );
-                }
-            }
-        //
-            RendererFactory rf = ep.getSpec().getRendererFactoryTable().getDefaultFactory();
-            ShortnameService sns = ep.getSpec().sns();
-            Renderer r = rf.buildWith( ep, sns );
-            MediaType mt = r.getMediaType();
-            return returnAs( relabel( rc, r.render( rc, results ) ), mt, results.getContentLocation() );           
-            }
-        else
-            {
-            Renderer renderer = ep.getRendererNamed( rName );
-            if (renderer == null) {
-                String message = "renderer '" + rName + "' is not known to this server.";
-                return enableCORS( Response.status( Status.BAD_REQUEST ).entity( message ) ).build();
-            } else {
-                MediaType type = renderer.getMediaType();
-                return returnAs( relabel( rc, renderer.render( rc, results ) ), type, results.getContentLocation() );
-            }
-        }
+    private Renderer getRenderer( List<MediaType> mediaTypes, String rName, APIEndpoint ep ) {
+    	if (rName == null) {
+    		String suppress = ep.getSpec().getBindings().getAsString( "_supress_media_type", "no" );
+	        if (suppress.equals("no")) {
+	            for (MediaType mt: mediaTypes) {
+	                Renderer byType = ep.getRendererByType( mt );
+	                if (byType != null) return byType;
+	            }
+	        }
+	    //
+	        RendererFactory rf = ep.getSpec().getRendererFactoryTable().getDefaultFactory();
+	        return rf.buildWith( ep, ep.getSpec().sns() );           
+	        }
+	    else
+	        return ep.getRendererNamed( rName );
     }
+    
+    private Response doRendering( RendererContext rc, String rName, APIResultSet results, Renderer r ) {
+		if (r == null) {
+            String message = rName == null
+            	? "no suitable media type was provided for rendering."
+            	: "renderer '" + rName + "' is not known to this server."
+            	;
+            return enableCORS( Response.status( Status.BAD_REQUEST ).entity( message ) ).build();
+        } else {
+            MediaType mt = r.getMediaType();
+            return returnAs( relabel( rc, r.render( rc, results ) ), mt, results.getContentLocation() );
+        }
+	}
     
     // HACK for bootstrapping. Should be endpoint-driven somehow.
     private String relabel( RendererContext rc, String rendered ) {
