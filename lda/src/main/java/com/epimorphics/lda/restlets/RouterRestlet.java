@@ -110,10 +110,6 @@ import com.hp.hpl.jena.shared.WrappedException;
 		for (javax.ws.rs.core.MediaType mt: headers.getAcceptableMediaTypes())
 			mediaTypes.add( new MediaType( mt.getType(), mt.getSubtype() ) );
 		return mediaTypes;
-
-
-
-
 	}
 
     private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
