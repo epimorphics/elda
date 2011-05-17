@@ -76,16 +76,16 @@ public class APIEndpointImpl implements APIEndpoint {
     
     @Override public Triad<APIResultSet, String, CallContext> call( CallContext given ) {
     	wantsContext = specWantsContext;
-    	CallContext context = new CallContext( spec.getBindings(), given );
-        log.debug("API " + spec + " called on " + context + " from " + context.getRequestURI());
+    	CallContext cc = new CallContext( spec.getBindings(), given );
+        log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
         APIQuery query = spec.getBaseQuery();
-        Couple<View, String> viewAndFormat = buildQueryAndView( context, query );
+        Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
         View view = viewAndFormat.a; String format = viewAndFormat.b;
-        APIResultSet unfiltered = query.runQuery( spec.getAPISpec(), cache, context, view );
+        APIResultSet unfiltered = query.runQuery( spec.getAPISpec(), cache, cc, view );
         APIResultSet filtered = filterByView( view, unfiltered );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
-        insertResultSetRoot(filtered, context, query);
-        return new Triad<APIResultSet, String, CallContext>( filtered, format, given );
+        insertResultSetRoot(filtered, cc, query);
+        return new Triad<APIResultSet, String, CallContext>( filtered, format, cc );
     }
 
 	protected boolean wantsContext = false;
