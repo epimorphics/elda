@@ -51,6 +51,8 @@ public class StandardShortnameService implements ShortnameService {
     protected Context context;
     protected PrefixMapping prefixes;
     
+    protected final NameMap nameMap = new NameMap();
+    
     /**
      * Construct a ShortnameService
      * @param prefixes the prefixes to use for localname disambiguation
@@ -59,14 +61,17 @@ public class StandardShortnameService implements ShortnameService {
      */
     public StandardShortnameService(Resource specification, PrefixMapping prefixes, ModelLoaderI loader) {
         Model specM = specification.getModel();
+        PrefixMapping pm = specM;
         context = new Context(specM);
         this.prefixes = prefixes;
         for (NodeIterator i = specM.listObjectsOfProperty(specification, API.vocabulary); i.hasNext();) {
             String vocabLoc = getLexicalForm(i.next());
             Model vocab = loader.loadModel(vocabLoc);
 //            Model vocab = FileManager.get().loadModel(vocabLoc);
+            nameMap.load( pm, vocab );
             context.loadVocabularyAnnotations(vocab, prefixes);
         }
+        nameMap.load( pm, specM );
     }
     
     /**
@@ -74,6 +79,13 @@ public class StandardShortnameService implements ShortnameService {
      */
     public PrefixMapping getPrefixes() {
         return prefixes;
+    }
+    
+    /**
+        Answer the NameMap of this Shortname Service.
+    */
+    public NameMap nameMap() {
+    	return nameMap;
     }
     
     /**

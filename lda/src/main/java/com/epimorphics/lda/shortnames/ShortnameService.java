@@ -57,6 +57,13 @@ public interface ShortnameService
 	    constructed.
 	*/
 	public Context asContext();
+	
+	/**
+	    Answer the NameMap of this shortname service. A NameMap just maps
+	    the long names to short names and back. It does not make the
+	    commitments that Context does.
+	*/
+	public NameMap nameMap();
 
 	/**
 	    If r is a resource, answer r; if it is a literal with lexical form l,

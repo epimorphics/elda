@@ -11,6 +11,7 @@ package com.epimorphics.lda.tests_support;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.Term;
+import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -78,4 +79,8 @@ public class ShortnameFake implements ShortnameService
 	@Override public Any normalizeNodeToRDFQ(String prop, String val, String language) {
 		throw new NotImplementedException();
 		}
+
+	@Override public NameMap nameMap() {
+		throw new NotImplementedException();
+	}
 }

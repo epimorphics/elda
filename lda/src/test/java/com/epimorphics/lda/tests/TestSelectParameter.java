@@ -16,6 +16,7 @@ import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.core.APIQuery;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.Term;
+import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -79,6 +80,9 @@ public class TestSelectParameter
 				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
 
 			@Override public Any normalizeNodeToRDFQ(String prop, String val, String language) 
+				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
+
+			@Override public NameMap nameMap() 
 				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
 
     		};

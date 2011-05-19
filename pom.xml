@@ -26,7 +26,15 @@
             </plugin>
       </plugins>
     </pluginManagement>
+
   </build>
+                               
+  <distributionManagement>
+      <repository>
+          <id>ftp-repo-epi</id>
+          <url>ftp://ftp.epimorphics.org/public_html/maven2</url>
+      </repository>
+  </distributionManagement>
 
   <dependencies>
 
