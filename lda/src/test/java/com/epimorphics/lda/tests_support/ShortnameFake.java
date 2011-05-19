@@ -81,6 +81,6 @@ public class ShortnameFake implements ShortnameService
 		}
 
 	@Override public NameMap nameMap() {
-		throw new NotImplementedException();
+		return new NameMap();
 	}
 }

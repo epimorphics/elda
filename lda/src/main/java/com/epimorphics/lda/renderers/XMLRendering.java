@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.epimorphics.jsonrdf.Context.Prop;
+import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
 /**
@@ -85,11 +86,13 @@ public class XMLRendering {
 	private final Document d;
 	private final Model m;
 	private final ShortnameService sns;
+	private final Map<String, String> nameMap;
 	
 	public XMLRendering( Model m, ShortnameService sns, Document d ) {
 		this.d = d;
 		this.m = m;
 		this.sns = sns;
+		this.nameMap = sns.nameMap().stage2().load(m, m).result();
 	}
 	
 	private final Set<Resource> seen = new HashSet<Resource>();

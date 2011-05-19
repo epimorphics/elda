@@ -7,6 +7,8 @@
 */
 package com.epimorphics.lda.shortnames;
 
+import java.util.Map;
+
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
@@ -55,5 +57,33 @@ public class NameMap {
 
 	private String asString( Node n ) {
 		return n.isLiteral() ? n.getLiteralLexicalForm() : n.getURI();
+	}
+
+//	public NameMap copy() {
+//		NameMap result = new NameMap();
+//		result.prefixes.setNsPrefixes( prefixes );
+//		result.map.putAll( map );
+//		return result;
+//	}
+
+	public static class SafeMap {
+
+		public SafeMap load( PrefixMapping pm, Model m ) {
+			// TODO Auto-generated method stub
+			return this;
+		}
+
+		public Map<String, String> result() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	}
+	
+	/**
+	    During Stage2, clashing shortnames are resolved rather than permitted.
+	*/
+	public SafeMap stage2() {
+		return new SafeMap();
 	}
 }
