@@ -15,7 +15,6 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.core.MultiMap;
-import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
 /**
@@ -171,8 +170,6 @@ public class XMLRendering {
 	}
 
 	private Element elementForValue( Element e, RDFNode v ) {
-		// Element e = d.createElement( "item" );
-		// if (v.isAnon()) e.setAttribute( "ANON", v.asNode().getBlankNodeLabel() );
 		if (v.isLiteral()) {
 			addLiteralToElement( e, (Literal) v );
 		} else if (isRDFList( v )){
@@ -203,6 +200,7 @@ public class XMLRendering {
 		return px != null && px.isMultivalued();
 	}
 
+	// obsolete [if new shortname code is OK]
 	final Map<String, String> shortNames = new HashMap<String, String>();
 	
 	private String shortNameFor( Resource r ) {
@@ -217,6 +215,7 @@ public class XMLRendering {
 		return other;
 	}
 
+	// obsolete [if new shortname code is OK]
 	private String createShortName( String URI ) {
 		return sns.asContext().findNameForProperty( m.getResource( URI ) );
 	}

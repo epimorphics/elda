@@ -9,7 +9,6 @@ package com.epimorphics.lda.shortnames;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,29 +18,42 @@ import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
     Another class maintaining shortnames, this one avoids
-    commitments made in Context.
+    commitments made in Context. It is layered; the first stage is
+    what binds shortnames from the LDA config model, and stage2
+    handles the model to be rendered. (The difference is that the
+    shortnames from the config file are for query, but the ones
+    that come later are for rendering.) 
     
     @author chris
 */
 public class NameMap {
 
+	/** to make listStatements readable */
 	private static final Resource ANY = null;
 	
+	/** mapping short names to sets of full names */
 	private final MultiMap<String, String> map = new MultiMap<String, String>();
 	
+	/** combined prefix mapping from all sources */
 	private final PrefixMapping prefixes = PrefixMapping.Factory.create();
 
+	/** 
+	 	load a given prefix mapping and model into the map. Looks in the
+	 	model for anything with an rdfs:label, api:label, or api:name
+	 	property.
+	*/
 	public void load( PrefixMapping pm, Model m ) {
 		prefixes.withDefaultMappings( pm );
 		load( pm, m.listStatements( ANY, RDFS.label, ANY ) );
@@ -55,44 +67,66 @@ public class NameMap {
 
 	private void load(PrefixMapping pm, Statement s) {
 		Resource r = s.getSubject();
-		String name = asString( s.getObject().asNode() );
-		fullNameToShortName( r.getURI(), name );
+		String name = asString( s.getObject() );
+		map.add( r.getURI(), name );
 	}
-
-	private void fullNameToShortName(String uri, String name) {
-		map.add( uri, name );
-	}
-
-	private String asString( Node n ) {
+	
+	/**
+	    The string version of a node, being its URI if it's a
+	    Resource, and its lexical form if it's a Literal.
+	*/
+	private String asString( RDFNode r ) {
+		Node n = r.asNode();
 		return n.isLiteral() ? n.getLiteralLexicalForm() : n.getURI();
 	}
+	
+	/**
+	    During Stage2, clashing shortnames are resolved rather than permitted.
+	*/
+	public Stage2NameMap stage2() {
+		return new Stage2NameMap( this );
+	}
 
-//	public NameMap copy() {
-//		NameMap result = new NameMap();
-//		result.prefixes.setNsPrefixes( prefixes );
-//		result.map.putAll( map );
-//		return result;
-//	}
-
-	public static class SafeMap {
+	/**
+	    A Stage2 NameMap adds names to the map, but arranges that if 
+	    several full names map to the same localname, then the short
+	    forms are prefixed by the declared prefixes of their namespaces.
+	    It scans the entire model for properties and datatypes so that
+	    the mapping doesn't depend on the (random) order that different
+	    full names are encountered in.
+	*/
+	public static class Stage2NameMap {
 		
+		/**
+		    We need to ensure that the terms used by Elda will always
+		    have prefixes available, so we build an automatic prefix
+		    mapping which will be used as default.
+		*/
 		private static PrefixMapping automatic = PrefixMapping.Factory.create()
 			.setNsPrefix( "rdf", RDF.getURI() )
 			.setNsPrefix( "rdfs", RDFS.getURI() )
 			.setNsPrefix( "xhv", XHV.getURI() )
+			.setNsPrefix( "dct", DCTerms.getURI() )
 			;
 
+		/** The combined namespace prefixes from all models. */
 		private PrefixMapping prefixes = PrefixMapping.Factory.create();
+		
+		/** The terms -- predicates and literal types -- of the models. */
 		private Set<String> terms = new HashSet<String>();
+		
+		/** the mapping from full URIs to all their allowed shortnames.*/
 		private MultiMap<String, String> uriToName = new MultiMap<String, String>();
 		
-		public SafeMap( NameMap nm ) {
+		/** Construct a Stage2 map from a NameMap. */
+		public Stage2NameMap( NameMap nm ) {
 			prefixes.setNsPrefixes( nm.prefixes );
 			prefixes.setNsPrefixes( automatic );
 			uriToName.addAll( nm.map );
 		}
 
-		public SafeMap load( PrefixMapping pm, Model m ) {
+		/** Load a prefix mapping and the terms of a model */
+		public Stage2NameMap load( PrefixMapping pm, Model m ) {
 			prefixes.withDefaultMappings( pm );
 			loadPredicatesOf( m );
 			return this;
@@ -110,6 +144,15 @@ public class NameMap {
 			}
 		}
 
+		/**
+		    Answer a map from full URIs to sets of short names. The sets
+		    will always be singletons. If a URI already has a short name,
+		    that's what will be used. URIs that don't yet have one will
+		    be given their local name if it's unambiguous, or their prefixed
+		    local name if needed to disambiguate.
+		    
+		    TODO: deal with labels with bad syntax.
+		*/
 		public MultiMap<String, String> result() {
 			Map<String, Set<String>> shorts = new HashMap<String, Set<String>>();
 			for (String p: terms) {
@@ -153,6 +196,13 @@ public class NameMap {
 			return uri.substring(0, split);
 		}
 
+		/**
+		    Answer a prefix for a namespace. If there's one in the
+		    prefixes, use that. If there aren't any, use "none_".
+		    If the prefix is magic, ie MUST NOT be used on pain of
+		    confusing certain renderers, omit it entirely and live 
+		    with ambiguity.
+		*/
 		private String prefixFor( String nameSpace ) {
 			String prefix = prefixes.getNsURIPrefix( nameSpace );
 			return
@@ -165,12 +215,5 @@ public class NameMap {
 		private boolean isMagic(String prefix) {
 			return prefix.equals("xhv") || prefix.equals("rdf") || prefix.equals("rdfs");
 		}
-	}
-	
-	/**
-	    During Stage2, clashing shortnames are resolved rather than permitted.
-	*/
-	public SafeMap stage2() {
-		return new SafeMap( this );
 	}
 }
