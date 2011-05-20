@@ -80,4 +80,10 @@ public class MultiMap<K, V> {
 	@Override public String toString() {
 		return "<MultiMap " + underlying + ">"; 
 	}
+
+	public void addAll( MultiMap<K, V> map ) {
+		for (Map.Entry<K, Set<V>> e: map.underlying.entrySet()) {
+			add( e.getKey(), e.getValue() );
+		}
+	}
 }

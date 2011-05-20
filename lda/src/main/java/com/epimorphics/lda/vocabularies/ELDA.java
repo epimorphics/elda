@@ -26,19 +26,17 @@ public class ELDA
 	{
 	static final private Model m = ModelFactory.createDefaultModel();
 	
-	static private final String NS = EXTRAS.EXTRA;
-	
-	static private Resource resource( String local ) 
+	static private Resource resource( String NS, String local ) 
 		{ return m.createResource( NS + local ); }
 	
 	static private Property property( String NS, String local ) 
 		{ return m.createProperty( NS + local ); }
 	
-	public static final Resource Elda = resource( EXTRAS.EXTRA + "Elda" );
+	public static final Resource Elda = resource( EXTRAS.EXTRA, "Elda" );
 	
-	public static final Resource ThisElda = resource( EXTRAS.EXTRA + "Elda_1.1.4-SNAPSHOT" );
+	public static final Resource ThisElda = resource( EXTRAS.EXTRA, "Elda_1.1.4-SNAPSHOT" );
 	
-	public static final Resource EldaRepository = resource( "https://ehog.hedge@elda.googlecode.com/hg/" );
+	public static final Resource EldaRepository = resource( "https://ehog.hedge@elda.googlecode.com/hg/", "" );
 
 	public static class DOAP_EXTRAS 
 		{

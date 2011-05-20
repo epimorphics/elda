@@ -92,15 +92,15 @@ spec:api
 		, [ api:name "webapp"; api:value "/elda"]
 	; api:formatter 
 		[a api:XsltFormatter
-		; api:name 'styled'
+		; api:name 'html'
 		; api:stylesheet 'xsltsheets/ashtml.xsl'
-		; api:mimeType 'text/htmlx'
+		; api:mimeType 'text/html'
 		] 
 	; api:formatter
 		[a api:HtmlFormatter
 		; extras:className "com.epimorphics.lda.demo.Demo_HTML_RendererFactory"
-		; api:name "html"
-		; api:mimeType 'text/html'
+		; api:name "plainhtml"
+		; api:mimeType 'text/htmlx'
 		]
 	; api:endpoint 
 	   spec:schools
@@ -116,7 +116,7 @@ spec:api
     	[api:name "x_change_to"; api:value "http://localhost:8080/elda/api/education/"]
     # suppress media-type selection
     ; api:variable
-    	[api:name "_supress_media_type"; api:value "yes"]
+    	[api:name "_supress_media_type"; api:value "no"]
     .
     	
 #ENDPOINTS

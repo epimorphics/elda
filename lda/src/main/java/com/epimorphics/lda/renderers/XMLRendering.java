@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.epimorphics.jsonrdf.Context.Prop;
+import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
@@ -86,7 +87,7 @@ public class XMLRendering {
 	private final Document d;
 	private final Model m;
 	private final ShortnameService sns;
-	private final Map<String, String> nameMap;
+	private final MultiMap<String, String> nameMap;
 	
 	public XMLRendering( Model m, ShortnameService sns, Document d ) {
 		this.d = d;
@@ -208,10 +209,12 @@ public class XMLRendering {
 		return shortNameFor( r.getURI() );
 	}
 	
+	// using NameMap results now.
 	private String shortNameFor( String URI ) {
 		String s = shortNames.get( URI );
 		if (s == null) shortNames.put( URI, s = createShortName( URI ) );
-		return s;
+		String other = nameMap.getOne( URI );
+		return other;
 	}
 
 	private String createShortName( String URI ) {
