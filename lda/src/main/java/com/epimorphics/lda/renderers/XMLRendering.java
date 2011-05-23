@@ -88,11 +88,11 @@ public class XMLRendering {
 	private final ShortnameService sns;
 	private final MultiMap<String, String> nameMap;
 	
-	public XMLRendering( Model m, ShortnameService sns, Document d ) {
+	public XMLRendering( Model m, ShortnameService sns, boolean stripHas, Document d ) {
 		this.d = d;
 		this.m = m;
 		this.sns = sns;
-		this.nameMap = sns.nameMap().stage2().load(m, m).result();
+		this.nameMap = sns.nameMap().stage2(stripHas).load(m, m).result();
 	}
 	
 	private final Set<Resource> seen = new HashSet<Resource>();

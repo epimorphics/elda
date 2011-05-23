@@ -83,8 +83,8 @@ public class NameMap {
 	/**
 	    During Stage2, clashing shortnames are resolved rather than permitted.
 	*/
-	public Stage2NameMap stage2() {
-		return new Stage2NameMap( this );
+	public Stage2NameMap stage2(boolean stripHas) {
+		return new Stage2NameMap( stripHas, this );
 	}
 
 	/**
@@ -118,11 +118,15 @@ public class NameMap {
 		/** the mapping from full URIs to all their allowed shortnames.*/
 		private MultiMap<String, String> uriToName = new MultiMap<String, String>();
 		
+		/** true if we have to convert "hasSpoo" to "spoo". */
+		private boolean stripHas;
+		
 		/** Construct a Stage2 map from a NameMap. */
-		public Stage2NameMap( NameMap nm ) {
-			prefixes.setNsPrefixes( nm.prefixes );
-			prefixes.setNsPrefixes( automatic );
-			uriToName.addAll( nm.map );
+		public Stage2NameMap( boolean stripHas, NameMap nm ) {
+			this.stripHas = stripHas;
+			this.prefixes.setNsPrefixes( nm.prefixes );
+			this.prefixes.setNsPrefixes( automatic );
+			this.uriToName.addAll( nm.map );
 		}
 
 		/** Load a prefix mapping and the terms of a model */
@@ -178,7 +182,7 @@ public class NameMap {
 
 		// just a HACK to handle has-stripping
 		private String t(String x) {
-			if (x.startsWith("has") && x.length() > 3) {
+			if (stripHas && x.startsWith("has") && x.length() > 3) {
 				char ch = x.charAt(3);
 				if (Character.isUpperCase(ch))
 					return Character.toLowerCase(ch) + x.substring(4);
