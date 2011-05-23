@@ -1,3 +1,4 @@
+URI=anchor_me?_metadata=formats
 ASK
 {
 	?thing dcterms:hasFormat

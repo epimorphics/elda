@@ -1,1 +1,2 @@
+URI=anchor_me
 ASK {?s ?p ?o}

@@ -1,3 +1,4 @@
+URI=anchor_me?min-p=4&max-q=2
 ASK
 {	
 FILTER NOT EXISTS 

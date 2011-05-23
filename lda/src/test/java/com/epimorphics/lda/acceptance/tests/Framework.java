@@ -80,9 +80,10 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 			for (File f: d.listFiles( endsWith( "-test.ask") )) 
 				{
 				String fileName = f.toString();
-				Query probe = loadQuery( spec.b, fileName );
-				String name = fileName.replaceAll( ".*/", "" ).replaceAll( "!.*", "" ).replace( "-test.ask", "" );
-				String [] parts = name.split( "\\?" );
+				Couple<String, Query> uriAndQuery = loadQuery( spec.b, fileName );
+				Query probe = uriAndQuery.b;
+				String uri = uriAndQuery.a;
+				String [] parts = uri.split( "\\?" );
 				String path = parts[0].replaceAll( "_", "/" );
 				String queryParams = parts.length > 1 ? parts[1] : "";
 			//
@@ -107,12 +108,16 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 				if (f.isDirectory()) findTestsFromRoot( items, f );
 		}
 
-	private static Query loadQuery( Model spec, String fileName ) 
+	private static Couple<String, Query> loadQuery( Model spec, String fileName ) 
 		{
 //		System.err.println( ">> loading query " + fileName );
-		String body = FileManager.get().readWholeFileAsUTF8( fileName );
+		String uriAndQuery = FileManager.get().readWholeFileAsUTF8( fileName );
+		String [] parts = uriAndQuery.split( "\n", 2 );
+		String uri = parts[0], query = parts[1];
 		String prefixes = sparqlPrefixesFrom( spec );
-		return QueryFactory.create( prefixes + body );
+		if (!uri.startsWith("URI=")) 
+			throw new RuntimeException( "bad query file, first line doe not start 'URI=': " + uri );
+		return new Couple<String, Query>( uri.substring(4), QueryFactory.create( prefixes + query ) );
 		}
 
 	private static Couple<String, Model> getModelNamedEnding( File d, String end ) 

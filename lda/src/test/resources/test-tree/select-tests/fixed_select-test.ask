@@ -1,3 +1,4 @@
+URI=fixed_select
 ASK
 {
 	{ :yes :p 1 .}
