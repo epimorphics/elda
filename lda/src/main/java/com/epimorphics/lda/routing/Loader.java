@@ -95,6 +95,12 @@ public class Loader extends HttpServlet {
              loadSpecFromFile(spec);
         }
     }
+    
+    public void osgiInit(String filepath) {
+        baseFilePath = filepath;
+        modelLoader = new APIModelLoader(baseFilePath);
+        FileManager.get().addLocatorFile( baseFilePath );
+    }
 
 	public void loadSpecFromFile( String spec ) {
 		Model init = getSpecModel( spec );
