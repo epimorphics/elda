@@ -27,12 +27,20 @@
       </plugins>
     </pluginManagement>
 
+    <extensions>
+      <extension>
+	<groupId>org.apache.maven.wagon</groupId>
+	<artifactId>wagon-ftp</artifactId>
+	<version>1.0-beta-6</version>
+      </extension>
+    </extensions>
+
   </build>
                                
   <distributionManagement>
       <repository>
           <id>ftp-repo-epi</id>
-          <url>ftp://ftp.epimorphics.org/public_html/maven2</url>
+          <url>ftp://ftp.epimorphics.org/</url>
       </repository>
   </distributionManagement>
 
@@ -121,6 +129,15 @@
         <name>Java.net Maven 1 Repository (legacy)</name>
         <url>http://download.java.net/maven/1</url>
         <layout>legacy</layout>
+    </repository>
+    <repository>
+      <id>repo-epi</id>
+      <name>Epimorphics repository</name>
+      <layout>default</layout>
+      <url>http://www.epimorphics.com/maven2</url>
+      <snapshots>
+	<enabled>true</enabled>
+      </snapshots>
     </repository>
 
   </repositories>
