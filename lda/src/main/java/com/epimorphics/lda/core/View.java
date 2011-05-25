@@ -47,7 +47,7 @@ public class View {
 
     public static final String SHOW_DESCRIPTION = "description";
     
-    public static final String SHOW_DEFAULT_INTERNAL = "###default";
+    public static final String SHOW_DEFAULT_INTERNAL = "default";
 
     /**
         View that does DESCRIBE plus labels of all objects.
