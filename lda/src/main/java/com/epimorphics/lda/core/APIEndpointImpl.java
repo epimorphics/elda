@@ -150,7 +150,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		try {
 			String q = ru.getQuery();
 			String qa = q == null ? "" : strip( q, key );
-			String qb = qa.isEmpty() ? "" : qa + "&";
+			String qb = qa.isEmpty() ? "" : qa + "?";
 			String newq = "";
 			for (String value: values) {
 				newq = newq + qb + key + "=" + quoteForValue(value);
