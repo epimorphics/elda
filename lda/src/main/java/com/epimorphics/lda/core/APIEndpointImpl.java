@@ -307,10 +307,18 @@ public class APIEndpointImpl implements APIEndpoint {
     	Resource QueryResult = rsm.createResource( SPARQL + "QueryResult" );
     	Property query = rsm.createProperty( SPARQL + "query" );
     	Property viewingResult = rsm.createProperty( API.NS, "viewingResult" );
+    	Property selectionResult = rsm.createProperty( API.NS, "selectionResult" );
+    //
+    	Resource sr = rsm.createResource();
+    	sr.addProperty( RDF.type, QueryResult );    	
+    	sr.addProperty( query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) );
+    //
     	Resource vr = rsm.createResource();
     	vr.addProperty( RDF.type, QueryResult );
-    	vr.addProperty( query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) );
+    	vr.addProperty( query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) ); // WRONG ONE
+    //
 		exec.addProperty( viewingResult, vr );
+		exec.addProperty( selectionResult, sr );
 	}
 
 	private Resource inValue(Model rsm, String s) {
