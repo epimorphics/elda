@@ -16,6 +16,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,8 @@ import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.*;
+import com.epimorphics.lda.shortnames.NameMap;
+import com.epimorphics.lda.shortnames.NameMap.Stage2NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
@@ -285,7 +288,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		.addProperty( DCTerms.hasPart, thisPage )
 	    		.addProperty( FIXUP.definition, uriForDefinition ) 
 	    		.addProperty( RDF.type, API.ListEndpoint )
-	    		.addProperty( RDFS.label, "should be a description of this list" )
+	    		// .addProperty( RDFS.label, "should be a description of this list" )
 	    		;
     		rs.setContentLocation( listRoot.getURI() );
         } else if (rs.getResultList().isEmpty()) {
@@ -320,6 +323,33 @@ public class APIEndpointImpl implements APIEndpoint {
 	private void addBindings( Model rsm, Resource exec, CallContext cc, Resource thisPage ) {
 		exec.addProperty( RDF.type, FIXUP.Execution );
 	//
+		addVariableBindings(rsm, exec, cc);
+	//
+		NameMap nm = spec.getAPISpec().getShortnameService().nameMap();
+		Stage2NameMap s2 = nm.stage2(false);
+		MultiMap<String, String> mm = s2.result();
+		for (String uri: mm.keySet()) {
+    		Resource term = rsm.createResource( uri );
+    		if (rsm.containsResource( term )) {
+    			Set<String> shorties = mm.getAll( uri );
+    			String shorty = shorties.iterator().next();
+    			if (shorties.size() > 1) {
+    				log.warn( "URI <" + uri + "> has several short names, viz: " + shorties + "; picked " + shorty );
+    			}
+	    		Resource tb = rsm.createResource();
+	    		exec.addProperty( FIXUP.TB, tb );
+				tb.addProperty( FIXUP.label, shorty );
+				tb.addProperty( API.property, term );
+    		}
+    	}
+		
+	//
+		if (false) addTermBindings(rsm, exec);
+	//
+		thisPage.addProperty( FIXUP.wasResultOf, exec );
+	}
+
+	private void addVariableBindings(Model rsm, Resource exec, CallContext cc) {
 		for (Iterator<String> names = cc.parameters.keyIterator(); names.hasNext();) {
 			String name = names.next();
 			Resource vb = rsm.createResource();
@@ -327,8 +357,10 @@ public class APIEndpointImpl implements APIEndpoint {
 			vb.addProperty( FIXUP.label, name );
 			vb.addProperty( FIXUP.value, cc.getStringValue( name ) );
 		}
-	//
-    	Context c = spec.getAPISpec().getShortnameService().asContext();
+	}
+
+	private void addTermBindings(Model rsm, Resource exec) {
+		Context c = spec.getAPISpec().getShortnameService().asContext();
     	for (String name: c.allNames()) {
     		Resource term = rsm.createResource( c.getURIfromName( name ) );
     		if (rsm.containsResource( term )) {
@@ -338,8 +370,6 @@ public class APIEndpointImpl implements APIEndpoint {
 				tb.addProperty( API.property, term );
     		}
     	}
-	//
-		thisPage.addProperty( FIXUP.wasResultOf, exec );
 	}
 
 
