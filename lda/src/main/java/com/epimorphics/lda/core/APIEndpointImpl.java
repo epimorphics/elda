@@ -83,7 +83,8 @@ public class APIEndpointImpl implements APIEndpoint {
         log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
         APIQuery query = spec.getBaseQuery();
         Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
-        View view = viewAndFormat.a; String format = viewAndFormat.b;
+        View view = viewAndFormat.a; 
+        String format = viewAndFormat.b;
         APIResultSet unfiltered = query.runQuery( spec.getAPISpec(), cache, cc, view );
         APIResultSet filtered = filterByView( view, unfiltered );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
@@ -312,13 +313,12 @@ public class APIEndpointImpl implements APIEndpoint {
     	Resource sr = rsm.createResource();
     	sr.addProperty( RDF.type, QueryResult );    	
     	sr.addProperty( query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) );
+    	exec.addProperty( selectionResult, sr );
     //
-    	Resource vr = rsm.createResource();
-    	vr.addProperty( RDF.type, QueryResult );
-    	vr.addProperty( query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) ); // WRONG ONE
-    //
-		exec.addProperty( viewingResult, vr );
-		exec.addProperty( selectionResult, sr );
+//    	Resource vr = rsm.createResource();
+//    	vr.addProperty( RDF.type, QueryResult );
+//    	vr.addProperty( query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) ); // WRONG ONE
+//    	exec.addProperty( viewingResult, vr );
 	}
 
 	private Resource inValue(Model rsm, String s) {

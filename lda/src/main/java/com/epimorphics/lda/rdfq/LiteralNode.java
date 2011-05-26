@@ -24,9 +24,10 @@ public class LiteralNode extends Term
 		this.spelling = spelling; 
 		this.language = language == null ? "" : language; 
 		this.datatype = datatype == null ? "" : datatype; 
+		// if (datatype.startsWith(" ")) throw new RuntimeException( "BAD DT! NO BISCUIT!" );
 		}
 	
-	public String toString() 
+	@Override public String toString() 
 		{
 		return "{" + spelling + "|" + language + "|" + datatype + "}";
 		}
@@ -34,7 +35,9 @@ public class LiteralNode extends Term
 	@Override public String asSparqlTerm()
 		{ 
 		String lf = "\"" + spelling.replaceAll( "\\\\", "\\\\" ) + "\"";
+		// System.err.println( ">> DATATYPE: " + datatype );
 		if (datatype.equals( XSD.integer.getURI() )) return spelling;
+		if (datatype.equals( XSD.xint.getURI() )) return spelling;
 		if (language.length() > 0) return lf + "@" + language;
 		if (datatype.length() > 0) return lf + "^^<" + datatype + ">";
 		return lf;

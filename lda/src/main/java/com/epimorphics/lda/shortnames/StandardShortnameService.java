@@ -239,6 +239,7 @@ public class StandardShortnameService implements ShortnameService {
     		{
     		// if there's a type, the language (which was a default) is unnecessary.
     		String type = n.getLiteralDatatypeURI();
+    		// if (type != null && type.startsWith(" ")) throw new RuntimeException( "BARKIES!" );
     		String form = n.getLiteralLexicalForm();
     		return RDFQ.literal( form, (type == null ? language : ""), type );
     		}	

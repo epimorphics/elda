@@ -230,6 +230,9 @@ public class View {
 		}
 	}
 
+	/**
+	    Property chains: [RDF.type] and [RDFS.label].
+	*/
 	static final List<PropertyChain> BasicChains = 
 		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
 

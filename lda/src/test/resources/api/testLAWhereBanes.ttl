@@ -9,13 +9,6 @@
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
-ex:school_50
-      a       school-ont:School ;
-      school-ont:localAuthority
-              <http://admin.data.gov.uk/def/localAythority#123> ;
-      ex:name "Name50" ;
-      ex:size 100 .
-
 ex:school_1
       a       school-ont:School ;
       school-ont:localAuthority
@@ -30,26 +23,11 @@ ex:school_51
       ex:name "Name51" ;
       ex:size 100 .
 
-ex:school_2
-      a       school-ont:School ;
-      school-ont:localAuthority
-              <http://admin.data.gov.uk/def/localAythority#123> ;
-      ex:name "Name2" ;
-      ex:size 100 .
-
 <http://dummy/doc/schools/laWhere/BANES>
       a       api:ListEndpoint ;
-      rdfs:label "should be a description of this list" ;
       <http://purl.org/dc/terms/hasPart>
               <http://dummy/doc/schools/laWhere/BANES?_page=0> ;
       api:definition <http://dummy/doc/schools/laWhere/{name}/meta> .
-
-ex:school_52
-      a       school-ont:School ;
-      school-ont:localAuthority
-              <http://admin.data.gov.uk/def/localAythority#123> ;
-      ex:name "Name52" ;
-      ex:size 100 .
 
 ex:school_5
       a       school-ont:School ;
@@ -63,13 +41,6 @@ ex:school_3
       school-ont:localAuthority
               <http://admin.data.gov.uk/def/localAythority#123> ;
       ex:name "Name3" ;
-      ex:size 100 .
-
-ex:school_4
-      a       school-ont:School ;
-      school-ont:localAuthority
-              <http://admin.data.gov.uk/def/localAythority#123> ;
-      ex:name "Name4" ;
       ex:size 100 .
 
 <http://dummy/doc/schools/laWhere/BANES?_page=0>
@@ -90,13 +61,23 @@ ex:school_4
       <http://www.w3.org/1999/xhtml/vocab#next>
               <http://dummy/doc/schools/laWhere/BANES?_page=1> .
 
-ex:school_100
-      a       school-ont:School ;
-      school-ont:localAuthority
-              <http://admin.data.gov.uk/def/localAythority#123> ;
-      ex:name "Name100" ;
-      ex:size 100 ;
-      ex:type ex:Secondary .
+[]    api:selectionResult
+              [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;
+                <http://purl.org/net/opmv/types/sparql#query>
+                        [ rdf:value """PREFIX spec: <http://www.epimorphics.com/examples/spec1#>
+PREFIX ex: <http://www.epimorphics.com/examples/eg1#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX school-ont: <http://education.data.gov.uk/def/school/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX api: <http://purl.org/linked-data/api/vocab#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?item WHERE {
+?item <http://education.data.gov.uk/def/school/localAuthority> [<http://www.w3.org/2000/01/rdf-schema#label> 'BANES']. ?item <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://education.data.gov.uk/def/school/School> .
+}  ORDER BY ?item OFFSET 0 LIMIT 10"""
+                        ]
+              ] .
 
 ex:school_49
       a       school-ont:School ;
@@ -104,3 +85,39 @@ ex:school_49
               <http://admin.data.gov.uk/def/localAythority#123> ;
       ex:name "Name49" ;
       ex:size 100 .
+
+ex:school_50
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      ex:name "Name50" ;
+      ex:size 100 .
+
+ex:school_2
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      ex:name "Name2" ;
+      ex:size 100 .
+
+ex:school_52
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      ex:name "Name52" ;
+      ex:size 100 .
+
+ex:school_4
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      ex:name "Name4" ;
+      ex:size 100 .
+
+ex:school_100
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      ex:name "Name100" ;
+      ex:size 100 ;
+      ex:type ex:Secondary .

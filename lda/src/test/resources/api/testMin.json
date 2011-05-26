@@ -19,7 +19,7 @@
       , "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_86", "name" : "Name86", "size" : 300, "type" : "School", "localAuthority" : {"_about" : "http://admin.data.gov.uk/def/localAythority#1066", "label" : "1066"}
       , "school_type" : "http://www.epimorphics.com/examples/eg1#Secondary"}
-    ], "isPartOf" : {"_about" : "http://dummy/doc/schools", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://dummy/doc/schools/meta", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools?_page=0"}
+    ], "isPartOf" : {"_about" : "http://dummy/doc/schools", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://dummy/doc/schools/meta", "hasPart" : "http://dummy/doc/schools?_page=0"}
     , "startIndex" : 1}
   ], "context" : {"mapping" : {"school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "school-ont_School" : {"uri" : "http://education.data.gov.uk/def/school/School"}

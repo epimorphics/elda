@@ -8,7 +8,7 @@
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_38", "name" : "Name38", "size" : 400, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#abc", "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_39", "name" : "Name39", "size" : 400, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#abc", "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_40", "name" : "Name40", "size" : 400, "type" : "School", "localAuthority" : "http://admin.data.gov.uk/def/localAythority#abc", "school_type" : "http://www.epimorphics.com/examples/eg1#Primary"}
-    ], "isPartOf" : {"_about" : "http://dummy/doc/schools/primary/big", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://dummy/doc/schools/primary/big/meta", "label" : "should be a description of this list", "hasPart" : "http://dummy/doc/schools/primary/big?_page=0"}
+    ], "isPartOf" : {"_about" : "http://dummy/doc/schools/primary/big", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://dummy/doc/schools/primary/big/meta", "hasPart" : "http://dummy/doc/schools/primary/big?_page=0"}
     , "startIndex" : 1}
   ], "context" : {"mapping" : {"school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "school-ont_School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
@@ -29,10 +29,10 @@
       , "startIndex" : {"uri" : "http://a9.com/-/spec/opensearch/1.1/startIndex", "range" : "http://www.w3.org/2001/XMLSchema#long"}
       , "definition" : {"uri" : "http://purl.org/linked-data/api/vocab#definition", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "ex_Primary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Primary"}
-      , "hasPart" : {"uri" : "http://purl.org/dc/terms/hasPart", "range" : "http://www.w3.org/2002/07/owl#Thing"}
-      , "rdfs_label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
+      , "rdfs_label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label"}
       , "school-ont_localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority", "range" : "http://www.w3.org/2002/07/owl#Thing"}
-      , "label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral"}
+      , "hasPart" : {"uri" : "http://purl.org/dc/terms/hasPart", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label"}
       , "size" : {"uri" : "http://www.epimorphics.com/examples/eg1#size", "range" : "http://www.w3.org/2001/XMLSchema#integer"}
       , "items" : {"uri" : "http://purl.org/linked-data/api/vocab#items", "range" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#List"}
       , "isPartOf" : {"uri" : "http://purl.org/dc/terms/isPartOf", "range" : "http://www.w3.org/2002/07/owl#Thing"}

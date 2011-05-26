@@ -11,7 +11,6 @@
 
 <http://dummy/doc/schools>
       a       api:ListEndpoint ;
-      rdfs:label "should be a description of this list" ;
       <http://purl.org/dc/terms/hasPart>
               <http://dummy/doc/schools?_page=0> ;
       api:definition <http://dummy/doc/schools/meta> .
@@ -21,14 +20,27 @@ ex:school_1
       ex:name "Name1" ;
       ex:size 100 .
 
+[]    api:selectionResult
+              [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;
+                <http://purl.org/net/opmv/types/sparql#query>
+                        [ rdf:value """PREFIX spec: <http://www.epimorphics.com/examples/spec1#>
+PREFIX ex: <http://www.epimorphics.com/examples/eg1#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX school-ont: <http://education.data.gov.uk/def/school/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX api: <http://purl.org/linked-data/api/vocab#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+SELECT DISTINCT ?item WHERE {
+?item <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://education.data.gov.uk/def/school/School> .
+}  ORDER BY ?item OFFSET 0 LIMIT 10"""
+                        ]
+              ] .
+
 ex:school_12
       a       school-ont:School ;
       ex:name "Name12" ;
-      ex:size 100 .
-
-ex:school_13
-      a       school-ont:School ;
-      ex:name "Name13" ;
       ex:size 100 .
 
 ex:school_14
@@ -36,24 +48,9 @@ ex:school_14
       ex:name "Name14" ;
       ex:size 100 .
 
-ex:school_11
-      a       school-ont:School ;
-      ex:name "Name11" ;
-      ex:size 100 .
-
-ex:school_17
-      a       school-ont:School ;
-      ex:name "Name17" ;
-      ex:size 200 .
-
 ex:school_16
       a       school-ont:School ;
       ex:name "Name16" ;
-      ex:size 100 .
-
-ex:school_15
-      a       school-ont:School ;
-      ex:name "Name15" ;
       ex:size 100 .
 
 ex:school_10
@@ -78,6 +75,26 @@ ex:school_10
               <http://dummy/doc/schools?_page=0> ;
       <http://www.w3.org/1999/xhtml/vocab#next>
               <http://dummy/doc/schools?_page=1> .
+
+ex:school_13
+      a       school-ont:School ;
+      ex:name "Name13" ;
+      ex:size 100 .
+
+ex:school_11
+      a       school-ont:School ;
+      ex:name "Name11" ;
+      ex:size 100 .
+
+ex:school_17
+      a       school-ont:School ;
+      ex:name "Name17" ;
+      ex:size 200 .
+
+ex:school_15
+      a       school-ont:School ;
+      ex:name "Name15" ;
+      ex:size 100 .
 
 ex:school_100
       a       school-ont:School ;
