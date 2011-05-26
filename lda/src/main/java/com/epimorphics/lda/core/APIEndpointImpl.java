@@ -262,6 +262,7 @@ public class APIEndpointImpl implements APIEndpoint {
         if (query.wantsMetadata( "formats" )) addFormats( rsm, context, thisPage );
         if (query.wantsMetadata( "bindings" )) addBindings( rsm, exec, context, thisPage );
         if (query.wantsMetadata( "execution" )) addExecution( rsm, exec, context, thisPage );
+        addQueryMetadata( rsm, exec, context, thisPage, query );
     //
         String and = thisPage.getURI().indexOf("?") < 0 ? "?" : "&";
         String emv_uri = thisPage.getURI() + and + "_metadata=all";
@@ -301,7 +302,24 @@ public class APIEndpointImpl implements APIEndpoint {
         }
     }
     
-    private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
+    private void addQueryMetadata( Model rsm, Resource exec, CallContext context, Resource thisPage, APIQuery q ) {
+    	String SPARQL = "http://purl.org/net/opmv/types/sparql#";
+    	Resource QueryResult = rsm.createResource( SPARQL + "QueryResult" );
+    	Property query = rsm.createProperty( SPARQL + "query" );
+    	Property viewingResult = rsm.createProperty( API.NS, "viewingResult" );
+    	Resource vr = rsm.createResource();
+    	vr.addProperty( RDF.type, QueryResult );
+    	vr.addProperty( query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) );
+		exec.addProperty( viewingResult, vr );
+	}
+
+	private Resource inValue(Model rsm, String s) {
+		Resource v = rsm.createResource();
+		v.addProperty( RDF.value, s );
+		return v;
+	}
+
+	private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
     	if (template.startsWith("http:")) {
     		// nasty hackery to avoid nasty hackery in the TestAPI uriTemplates, qv.
     		return rsm.createResource( template + "/meta" );
