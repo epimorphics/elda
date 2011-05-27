@@ -24,7 +24,6 @@ public class LiteralNode extends Term
 		this.spelling = spelling; 
 		this.language = language == null ? "" : language; 
 		this.datatype = datatype == null ? "" : datatype; 
-		// if (datatype.startsWith(" ")) throw new RuntimeException( "BAD DT! NO BISCUIT!" );
 		}
 	
 	@Override public String toString() 

@@ -60,14 +60,14 @@ public class MakeData
 	public static Model specModel( String triples ) 
 		{
 		Model m = ModelFactory.createDefaultModel();
-		m.setNsPrefix( "rdf",  "http://www.w3.org/1999/02/22-rdf-syntax-ns#" );
-		m.setNsPrefix( "rdfs", "http://www.w3.org/2000/01/rdf-schema#" );
-		m.setNsPrefix( "owl",  "http://www.w3.org/2002/07/owl#" );
-		m.setNsPrefix( "api",  "http://purl.org/linked-data/api/vocab#" );
-		m.setNsPrefix( "ex",   "http://www.epimorphics.com/examples/eg1#" );
-		m.setNsPrefix( "spec", "http://www.epimorphics.com/examples/spec1#" );
-		m.setNsPrefix( "foaf", "http://xmlns.com/foaf/0.1/" );
-		m.setNsPrefix( "xsd", " http://www.w3.org/2001/XMLSchema#" );
+		m.setNsPrefix( "rdf",	"http://www.w3.org/1999/02/22-rdf-syntax-ns#" );
+		m.setNsPrefix( "rdfs",	"http://www.w3.org/2000/01/rdf-schema#" );
+		m.setNsPrefix( "owl",	"http://www.w3.org/2002/07/owl#" );
+		m.setNsPrefix( "api",	"http://purl.org/linked-data/api/vocab#" );
+		m.setNsPrefix( "ex",	"http://www.epimorphics.com/examples/eg1#" );
+		m.setNsPrefix( "spec",	"http://www.epimorphics.com/examples/spec1#" );
+		m.setNsPrefix( "foaf",	"http://xmlns.com/foaf/0.1/" );
+		m.setNsPrefix( "xsd",	"http://www.w3.org/2001/XMLSchema#" );
 		m.setNsPrefix( "school-ont", "http://education.data.gov.uk/def/school/" );
 		return ModelTestBase.modelAdd( m, triples );
 		}

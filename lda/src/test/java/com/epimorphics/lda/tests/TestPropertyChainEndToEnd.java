@@ -120,7 +120,7 @@ public class TestPropertyChainEndToEnd
 	
 	@Test public void ensureUnitPropertyHasType()
 		{
-		ensurePropertyThingHasType( "max-size" );
+		ensurePropertyThingHasType( "size" );
 		}
 	
 	@Test public void ensureChainedPropertyHasType()
@@ -128,12 +128,12 @@ public class TestPropertyChainEndToEnd
 		ensurePropertyThingHasType( "max-thing.size" );
 		}
 
-	private void ensurePropertyThingHasType(String propertyThing) 
+	private void ensurePropertyThingHasType( String propertyThing ) 
 		{
 		Model model = MakeData.specModel
 			( "spec:spoo rdf:type api:API"
 			+ "; ex:size rdf:type owl:DatatypeProperty"
-			+ "; ex:size rdfs:range xsd:int"
+			+ "; ex:size rdfs:range xsd:string"
 			+ "; ex:thing rdf:type owl:DatatypeProperty"
 			+ ""
 			);
@@ -142,8 +142,8 @@ public class TestPropertyChainEndToEnd
 		PrefixMapping prefixes = PrefixMapping.Factory.create();
 		ShortnameService sns = new StandardShortnameService( spec, prefixes, loader );
 		APIQuery q = new APIQuery( sns );
-		q.addFilterFromQuery( Param.make(sns, propertyThing), set("17") );
-		assertContains( q.assembleSelectQuery( prefixes ), "\"17\"^^< http://www.w3.org/2001/XMLSchema#int>" );
+		q.addFilterFromQuery( Param.make(sns, propertyThing), set("17.9") );
+		assertContains( q.assembleSelectQuery( prefixes ), "\"17.9\"^^<http://www.w3.org/2001/XMLSchema#string>" );
 		}
 	
 	private void assertContains(String target, String want) 

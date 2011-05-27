@@ -166,8 +166,7 @@ public class Context {
             prop.setType(OWL.Thing.getURI());
         } else {
             String typeURI = getStringValue(res, RDFS.range);
-            if (typeURI != null)
-                prop.setType(typeURI);
+            if (typeURI != null) prop.setType(typeURI);
         }
     }
     
@@ -176,8 +175,7 @@ public class Context {
      * Will only be used when expanding queries, not for generation of shortform listings
      */
     protected void recordAltName(String name, String uri) {
-        if ( ! nameToURI.containsKey(name))
-            nameToURI.put(name, uri);
+        if ( ! nameToURI.containsKey(name)) nameToURI.put(name, uri);
         // Only the preferred name goes in the uriToName mapping
     }
     
@@ -433,7 +431,7 @@ public class Context {
         /** Returns the assumed range of the property as a URI. Values with particular
          * significance for the serialization are rdfs:Resource, rdfs:List and xsd:* */
         public String getType() {
-            return type;
+            return type; 
         }
         
         /** Get the corresponding RDF property, may cache */
