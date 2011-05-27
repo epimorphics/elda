@@ -34,6 +34,7 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.vocabularies.ELDA;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
+import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
@@ -303,17 +304,12 @@ public class APIEndpointImpl implements APIEndpoint {
         }
     }
     
-    private void addQueryMetadata( Model rsm, Resource exec, CallContext context, Resource thisPage, APIQuery q ) {
-    	String SPARQL = "http://purl.org/net/opmv/types/sparql#";
-    	Resource QueryResult = rsm.createResource( SPARQL + "QueryResult" );
-    	Property query = rsm.createProperty( SPARQL + "query" );
-    	Property viewingResult = rsm.createProperty( API.NS, "viewingResult" );
-    	Property selectionResult = rsm.createProperty( API.NS, "selectionResult" );
+    	private void addQueryMetadata( Model rsm, Resource exec, CallContext context, Resource thisPage, APIQuery q ) {
     //
     	Resource sr = rsm.createResource();
-    	sr.addProperty( RDF.type, QueryResult );    	
-    	sr.addProperty( query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) );
-    	exec.addProperty( selectionResult, sr );
+    	sr.addProperty( RDF.type, SPARQL.QueryResult );    	
+    	sr.addProperty( SPARQL.query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) );
+    	exec.addProperty( FIXUP.selectionResult, sr );
     //
 //    	Resource vr = rsm.createResource();
 //    	vr.addProperty( RDF.type, QueryResult );
@@ -321,10 +317,8 @@ public class APIEndpointImpl implements APIEndpoint {
 //    	exec.addProperty( viewingResult, vr );
 	}
 
-	private Resource inValue(Model rsm, String s) {
-		Resource v = rsm.createResource();
-		v.addProperty( RDF.value, s );
-		return v;
+	private Resource inValue( Model rsm, String s ) {
+		return rsm.createResource().addProperty( RDF.value, s );
 	}
 
 	private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
@@ -348,9 +342,13 @@ public class APIEndpointImpl implements APIEndpoint {
 
 	private void addBindings( Model rsm, Resource exec, CallContext cc, Resource thisPage ) {
 		exec.addProperty( RDF.type, FIXUP.Execution );
-	//
 		addVariableBindings(rsm, exec, cc);
-	//
+		if (false) oldAddTermBindings(rsm, exec);
+		addTermBindings(rsm, exec);
+		thisPage.addProperty( FIXUP.wasResultOf, exec );
+	}
+
+	private void addTermBindings( Model rsm, Resource exec ) {
 		NameMap nm = spec.getAPISpec().getShortnameService().nameMap();
 		Stage2NameMap s2 = nm.stage2(false);
 		MultiMap<String, String> mm = s2.result();
@@ -368,32 +366,27 @@ public class APIEndpointImpl implements APIEndpoint {
 				tb.addProperty( API.property, term );
     		}
     	}
-		
-	//
-		if (false) addTermBindings(rsm, exec);
-	//
-		thisPage.addProperty( FIXUP.wasResultOf, exec );
 	}
 
 	private void addVariableBindings(Model rsm, Resource exec, CallContext cc) {
 		for (Iterator<String> names = cc.parameters.keyIterator(); names.hasNext();) {
 			String name = names.next();
 			Resource vb = rsm.createResource();
-			exec.addProperty( FIXUP.VB, vb );
 			vb.addProperty( FIXUP.label, name );
 			vb.addProperty( FIXUP.value, cc.getStringValue( name ) );
+			exec.addProperty( FIXUP.VB, vb );
 		}
 	}
 
-	private void addTermBindings(Model rsm, Resource exec) {
+	private void oldAddTermBindings(Model rsm, Resource exec) {
 		Context c = spec.getAPISpec().getShortnameService().asContext();
     	for (String name: c.allNames()) {
     		Resource term = rsm.createResource( c.getURIfromName( name ) );
     		if (rsm.containsResource( term )) {
 	    		Resource tb = rsm.createResource();
-	    		exec.addProperty( FIXUP.TB, tb );
 	    		tb.addProperty( FIXUP.label, name );
 				tb.addProperty( API.property, term );
+				exec.addProperty( FIXUP.TB, tb );
     		}
     	}
 	}

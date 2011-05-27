@@ -75,4 +75,8 @@ public class FIXUP
 	public static final Resource Execution = resource( API.NS, "Execution" );
 	
     public static final Property extendedMetadata = property( API.NS, "extendedMetadataVersion" );
+
+	public static final Property selectionResult = property( API.NS, "selectionResult" );
+
+	static final Property viewingResult = property( API.NS, "viewingResult" );
 	}
