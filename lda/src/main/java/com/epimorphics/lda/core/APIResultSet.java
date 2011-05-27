@@ -15,28 +15,29 @@ package com.epimorphics.lda.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.epimorphics.lda.support.LanguageFilter;
-import com.epimorphics.lda.vocabularies.ELDA;
-import com.epimorphics.lda.vocabularies.OpenSearch;
-import com.epimorphics.lda.vocabularies.SPARQL;
-import com.epimorphics.lda.vocabularies.XHV;
-import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.sparql.vocabulary.DOAP;
-import com.hp.hpl.jena.vocabulary.DCTerms;
+import com.epimorphics.lda.support.LanguageFilter;
+
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import com.hp.hpl.jena.vocabulary.DCTerms;
+import com.epimorphics.lda.vocabularies.XHV;
+import com.epimorphics.lda.vocabularies.ELDA;
+import com.epimorphics.lda.vocabularies.SPARQL;
+import com.hp.hpl.jena.sparql.vocabulary.DOAP;
+import com.epimorphics.lda.vocabularies.OpenSearch;
 
 /**
- * Wrapper for the results of an API query before rendering.
- * A ResultSet is an ordered list of results and an associated 
- * RDF graph.
- * 
- * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
- * @version $Revision: $
- */
+  	Wrapper for the results of an API query before rendering.
+ 	A ResultSet is an ordered list of results and an associated 
+ 	RDF graph. It may also carry the query used to get the
+ 	detailed information from the remote endpoint(s).
+
+	@author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
+	@version $Revision: $
+*/
 public class APIResultSet {
 
 	protected Resource root;
