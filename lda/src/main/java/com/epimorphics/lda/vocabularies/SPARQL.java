@@ -26,7 +26,16 @@ public class SPARQL {
 
 	public static final String NS = "http://purl.org/net/opmv/types/sparql#";
 	
+	private static final String SERVICE = "http://www.w3.org/ns/sparql-service-description#";
+
 	public static final Resource QueryResult = resource( NS, "QueryResult" );
+	
 	public static final Property query = property( NS, "query" );
+
+	public static final Property endpoint = property( NS, "endpoint" );
+
+	public static final Resource Service = property( SERVICE, "Service" );
+
+	public static final Property url = property( SERVICE, "url" );
 
 }

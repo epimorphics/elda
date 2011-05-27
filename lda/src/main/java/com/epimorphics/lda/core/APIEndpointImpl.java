@@ -323,9 +323,16 @@ public class APIEndpointImpl implements APIEndpoint {
     	sr.addProperty( SPARQL.query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) );
     	exec.addProperty( FIXUP.selectionResult, sr );
     //
+    	Resource EP = rsm.createResource();
+    	EP.addProperty( RDF.type, SPARQL.Service );
+    	spec.getAPISpec().getDataSource().addMetadata( EP ); // spackery
+    	Resource url = EP.getProperty( API.sparqlEndpoint ).getResource(); // hackery
+    	EP.addProperty( SPARQL.url, url );
+    //
     	Resource vr = rsm.createResource();
     	vr.addProperty( RDF.type, SPARQL.QueryResult );
     	vr.addProperty( SPARQL.query, inValue( rsm, detailsQuery ) ); 
+    	vr.addProperty( SPARQL.endpoint, EP );
     	exec.addProperty( FIXUP.viewingResult, vr );
 	}
 
