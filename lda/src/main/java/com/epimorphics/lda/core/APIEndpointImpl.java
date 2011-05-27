@@ -183,15 +183,26 @@ public class APIEndpointImpl implements APIEndpoint {
 	}
 
 	private void addFormats(Model m, CallContext c, Resource thisPage) {
-		for (Map.Entry<String, MediaType> e: MediaTypes.createMediaExtensions().entrySet()) {
-			String formatName = e.getKey();
-			Resource v = resourceForFormat( m, c, formatName );
-			Resource format = m.createResource().addProperty( RDFS.label, e.getValue().toString() );
-			thisPage.addProperty( DCTerms.hasFormat, v );
-			v.addProperty( DCTerms.isFormatOf, thisPage );
-			v.addProperty( DCTerms.format, format );
-			v.addProperty( RDFS.label, formatName );
-		}
+		Factories f = spec.getRendererFactoryTable();
+		for (String formatName: f.formatNames()) 
+			if (formatName.charAt(0) != '_') {
+				String typeForName = f.getTypeForName( formatName ).toString(); 
+				Resource v = resourceForFormat( m, c, formatName );
+				Resource format = m.createResource().addProperty( RDFS.label, typeForName );
+				thisPage.addProperty( DCTerms.hasFormat, v );
+				v.addProperty( DCTerms.isFormatOf, thisPage );
+				v.addProperty( DCTerms.format, format );
+				v.addProperty( RDFS.label, formatName );
+			}
+//		for (Map.Entry<String, MediaType> e: MediaTypes.createMediaExtensions().entrySet()) {
+//			String formatName = e.getKey();
+//			Resource v = resourceForFormat( m, c, formatName );
+//			Resource format = m.createResource().addProperty( RDFS.label, e.getValue().toString() );
+//			thisPage.addProperty( DCTerms.hasFormat, v );
+//			v.addProperty( DCTerms.isFormatOf, thisPage );
+//			v.addProperty( DCTerms.format, format );
+//			v.addProperty( RDFS.label, formatName );
+//		}
 	}
 	
 	private Resource resourceForFormat( Model m, CallContext c, String formatName ) {
@@ -240,10 +251,12 @@ public class APIEndpointImpl implements APIEndpoint {
 
 	private void addVersions( Model m, CallContext c, Resource thisPage ) {
 		for (String viewName: spec.viewNames()) {
-    		Resource v = resourceForView( m, c, viewName );
-			thisPage.addProperty( DCTerms.hasVersion, v	);
-			v.addProperty( DCTerms.isVersionOf, thisPage );
-			v.addProperty( RDFS.label, viewName );
+			if (!viewName.equals( View.SHOW_DEFAULT_INTERNAL )) {
+	    		Resource v = resourceForView( m, c, viewName );
+				thisPage.addProperty( DCTerms.hasVersion, v	);
+				v.addProperty( DCTerms.isVersionOf, thisPage );
+				v.addProperty( RDFS.label, viewName );
+			}
     	}
 	}
     

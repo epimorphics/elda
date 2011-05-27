@@ -2,6 +2,7 @@ package com.epimorphics.lda.renderers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -17,6 +18,8 @@ public class Factories {
 	
 	protected final Map<MediaType, RendererFactory> typeToFactory = new HashMap<MediaType, RendererFactory>();
 	
+	protected final Map<String, MediaType> nameToType = new HashMap<String, MediaType>();
+	
 	protected RendererFactory theDefault; 
 	
 	public Factories() { 
@@ -27,6 +30,7 @@ public class Factories {
 		Factories result = new Factories();
 		result.nameToFactory.putAll( nameToFactory );
 		result.typeToFactory.putAll( typeToFactory );
+		result.nameToType.putAll( nameToType );
 		result.theDefault = theDefault;
 		return result;
 	}
@@ -39,9 +43,18 @@ public class Factories {
 		RendererFactory f = factory.withRoot( uri ).withMediaType( mt );
 		nameToFactory.put( name, f );
 		typeToFactory.put( mt, f );
+		nameToType.put( name, mt );
 		if (isDefault) theDefault = f;
 	}
-
+	
+	public Set<String> formatNames() {
+		return nameToFactory.keySet();
+	}
+	
+	public MediaType getTypeForName( String name ) {
+		return nameToType.get( name );
+	}
+	
 	public RendererFactory getFactoryByType( MediaType mt ) {
 		return typeToFactory.get( mt );
 	}

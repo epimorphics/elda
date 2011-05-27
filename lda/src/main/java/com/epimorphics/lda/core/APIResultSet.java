@@ -16,9 +16,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.epimorphics.lda.support.LanguageFilter;
+import com.epimorphics.lda.vocabularies.ELDA;
+import com.epimorphics.lda.vocabularies.OpenSearch;
+import com.epimorphics.lda.vocabularies.SPARQL;
+import com.epimorphics.lda.vocabularies.XHV;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.sparql.vocabulary.DOAP;
+import com.hp.hpl.jena.vocabulary.DCTerms;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Wrapper for the results of an API query before rendering.
@@ -48,12 +57,30 @@ public class APIResultSet {
 
     public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, String detailsQuery) {
         model = ModelFactory.createModelForGraph( graph );
+        Model resultsModel = results.get(0).getModel();
+		setUsedPrefixes(resultsModel);
         this.results = results;
         this.isCompleted = isCompleted;
         this.detailsQuery = detailsQuery;
         if (!results.isEmpty())
             this.root = results.get(0).inModel(model);
     }
+
+    /**
+        Set prefixes for the namespaces of terms that Elda uses
+        in its generated models.
+    */
+	private void setUsedPrefixes( Model resultsModel ) {
+		model.setNsPrefixes( resultsModel );
+        model.setNsPrefix( "rdf", RDF.getURI() );
+        model.setNsPrefix( "rdfs", RDFS.getURI() );
+        model.setNsPrefix( "dct", DCTerms.getURI() );
+        model.setNsPrefix( "os", OpenSearch.getURI() );
+        model.setNsPrefix( "sparql", SPARQL.NS );
+        model.setNsPrefix( "doap", DOAP.NS );
+        model.setNsPrefix( "xhv", XHV.getURI() );
+        model.setNsPrefix( "opmv", ELDA.COMMON.NS );
+	}
 
     /**
         Answer the model this resultset wraps.

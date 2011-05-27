@@ -39,13 +39,13 @@ public class BuiltinRendererTable {
 	
 	static private Map<Resource, RendererFactory> builtins = new HashMap<Resource, RendererFactory>();
 	
-	static void putFactory( String name, Resource type, MediaType mime, RendererFactory rf ) {
-		factoryTable.putFactory( name, null, mime, rf );
+	static void putFactory( String name, Resource type, MediaType mt, RendererFactory rf ) {
+		factoryTable.putFactory( name, null, mt, rf );
 		builtins.put( type, rf );
 	}
 	
-	static void putDefaultFactory( String name, Resource type, MediaType mime, RendererFactory rf ) {
-		factoryTable.putFactory( name, null, mime, rf, true );
+	static void putDefaultFactory( String name, Resource type, MediaType mt, RendererFactory rf ) {
+		factoryTable.putFactory( name, null, mt, rf, true );
 		builtins.put( type, rf );
 	}
 	
