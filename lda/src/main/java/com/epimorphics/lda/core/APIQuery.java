@@ -666,14 +666,17 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		return sb.toString();
 	}
 
-
-	private void appendPrefixes(StringBuilder q, PrefixMapping prefixes) {
-		for (String prefix: prefixes.getNsPrefixMap().keySet()) {
+	/**
+	    Add SPARQL prefix declarations for all the prefixes in
+	    <code>pm</code> to the StringBuilder <code>q</code>.
+	*/
+	private void appendPrefixes( StringBuilder q, PrefixMapping pm ) {
+		for (String prefix: pm.getNsPrefixMap().keySet()) {
 			q
 				.append( "PREFIX " )
 				.append( prefix )
 				.append( ": <" )
-				.append( prefixes.getNsPrefixURI(prefix).trim() ) // !! TODO
+				.append( pm.getNsPrefixURI(prefix).trim() ) // !! TODO
 				.append( ">\n" );
 		}
 	}
@@ -758,12 +761,14 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		int count = results.size();
 		Model descriptions = ModelFactory.createDefaultModel();
 		Graph gd = descriptions.getGraph();
-		if (count > 0) {
-		    fetchDescriptionsFor( results, view, descriptions, spec );
-		    return new APIResultSet(gd, results, count < pageSize);
-		} else {
-		    return new APIResultSet(gd, results, true);
-		}
+		String detailsQuery = fetchDescriptionsFor( results, view, descriptions, spec );
+		return new APIResultSet(gd, results, count < pageSize, detailsQuery );
+//		if (count > 0) {
+//		    String detailsQuery = fetchDescriptionsFor( results, view, descriptions, spec );
+//		    return new APIResultSet(gd, results, count < pageSize);
+//		} else {
+//		    return new APIResultSet(gd, results, true);
+//		}
 	}
 
     /** Find all current values for the given property on the results and fetch a description of them */
@@ -792,10 +797,11 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
     
     // let's respect property chains ...
-    private void fetchDescriptionsFor( List<Resource> roots, View view, Model m, APISpec spec ) {
-        if (roots.isEmpty() || roots.get(0) == null) return;
+    private String fetchDescriptionsFor( List<Resource> roots, View view, Model m, APISpec spec ) {
+        if (roots.isEmpty() || roots.get(0) == null) return "# no results, no query.";
         List<Source> sources = spec.getDescribeSources();
     //
+        // System.err.println( ">> fetchDescrioptionsFor: viewArgument = " + viewArgument );
         if (viewArgument != null) {
         	// TODO: avoid BRUTE FORCE to get things going
         	for (Resource root: roots) {
@@ -803,12 +809,14 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         		String ta = viewArgument.replaceAll( "\\?item", "<" + root.getURI() + ">" );
         		appendPrefixes( p, spec.getPrefixMap() );
         		String query = "CONSTRUCT {" + ta + "} where {" + ta + "}\n";
-        		Query cq = QueryFactory.create( p.append(query).toString() );
+        		String qq = p.append( query ).toString();
+        		// System.err.println( ">> fetchDescriptionsFor:\n" + qq );
+				Query cq = QueryFactory.create( qq );
         		for (Source x: sources) m.add( x.executeConstruct( cq ) );
         	}
-        	return;
+        	return "# lots of queries, none shown.";
         }
-        view.fetchDescriptions( m, roots, sources, this );
+        return view.fetchDescriptions( m, roots, sources, this );
     }
     
     private List<Resource> fetchRequiredResources( Cache cache, APISpec spec, CallContext call, Source source )

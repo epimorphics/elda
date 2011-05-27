@@ -1,6 +1,5 @@
 # Model from test: http://dummy/doc/schools?localAuthority.label=BANES&_view=all
-{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools?_page=0", "next" : "http://dummy/doc/schools?_page=1", "itemsPerPage" : 10, "page" : 0, "extendedMetadataVersion" : "http://dummy/doc/schools?_page=0&_metadata=all", "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://dummy/doc/schools/meta", "first" : "http://dummy/doc/schools?_page=0", "isPartOf" : {"_about" : "http://dummy/doc/schools", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://dummy/doc/schools/meta", "hasPart" : "http://dummy/doc/schools?_page=0"}
-    , "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#school_1", "name" : "Name1", "size" : 100, "type" : "School", "localAuthority" : {"_about" : "http://admin.data.gov.uk/def/localAythority#123", "label" : "BANES"}
+{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools?_page=0", "next" : "http://dummy/doc/schools?_page=1", "itemsPerPage" : 10, "page" : 0, "extendedMetadataVersion" : "http://dummy/doc/schools?_page=0&_metadata=all", "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://dummy/doc/schools/meta", "first" : "http://dummy/doc/schools?_page=0", "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#school_1", "name" : "Name1", "size" : 100, "type" : "School", "localAuthority" : {"_about" : "http://admin.data.gov.uk/def/localAythority#123", "label" : "BANES"}
     }
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_100", "name" : "Name100", "size" : 100, "type" : "School", "localAuthority" : {"_about" : "http://admin.data.gov.uk/def/localAythority#123", "label" : "BANES"}
       , "school_type" : "http://www.epimorphics.com/examples/eg1#Secondary"}
@@ -20,7 +19,8 @@
     }
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_52", "name" : "Name52", "size" : 100, "type" : "School", "localAuthority" : {"_about" : "http://admin.data.gov.uk/def/localAythority#123", "label" : "BANES"}
     }
-    ], "startIndex" : 1}
+    ], "isPartOf" : {"_about" : "http://dummy/doc/schools", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://dummy/doc/schools/meta", "hasPart" : "http://dummy/doc/schools?_page=0"}
+    , "startIndex" : 1}
   ], "context" : {"mapping" : {"school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
       , "school-ont_School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
       , "ex_Secondary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Secondary"}

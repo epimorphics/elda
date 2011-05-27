@@ -15,40 +15,6 @@
               <http://dummy/doc/schools?_page=1> ;
       api:definition <http://dummy/doc/schools/meta> .
 
-ex:school_25
-      a       school-ont:School ;
-      ex:name "Name25" .
-
-ex:school_23
-      a       school-ont:School ;
-      ex:name "Name23" .
-
-ex:school_21
-      a       school-ont:School ;
-      ex:name "Name21" .
-
-ex:school_18
-      a       school-ont:School ;
-      ex:name "Name18" .
-
-[]    api:selectionResult
-              [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;
-                <http://purl.org/net/opmv/types/sparql#query>
-                        [ rdf:value """PREFIX spec: <http://www.epimorphics.com/examples/spec1#>
-PREFIX ex: <http://www.epimorphics.com/examples/eg1#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX school-ont: <http://education.data.gov.uk/def/school/>
-PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX api: <http://purl.org/linked-data/api/vocab#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-SELECT DISTINCT ?item WHERE {
-?item <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://education.data.gov.uk/def/school/School> .
-}  ORDER BY ?item OFFSET 10 LIMIT 10"""
-                        ]
-              ] .
-
 ex:school_2
       a       school-ont:School ;
       ex:name "Name2" .
@@ -61,9 +27,25 @@ ex:school_26
       a       school-ont:School ;
       ex:name "Name26" .
 
+ex:school_25
+      a       school-ont:School ;
+      ex:name "Name25" .
+
+ex:school_23
+      a       school-ont:School ;
+      ex:name "Name23" .
+
+ex:school_21
+      a       school-ont:School ;
+      ex:name "Name21" .
+
 ex:school_22
       a       school-ont:School ;
       ex:name "Name22" .
+
+ex:school_18
+      a       school-ont:School ;
+      ex:name "Name18" .
 
 ex:school_20
       a       school-ont:School ;

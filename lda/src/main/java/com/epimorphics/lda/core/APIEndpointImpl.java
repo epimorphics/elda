@@ -264,7 +264,7 @@ public class APIEndpointImpl implements APIEndpoint {
         if (query.wantsMetadata( "formats" )) addFormats( rsm, context, thisPage );
         if (query.wantsMetadata( "bindings" )) addBindings( rsm, exec, context, thisPage );
         if (query.wantsMetadata( "execution" )) addExecution( rsm, exec, context, thisPage );
-        addQueryMetadata( rsm, exec, context, thisPage, query );
+        if (query.wantsMetadata( "execution" )) addQueryMetadata( rsm, exec, context, thisPage, query, rs.getDetailsQuery() );
     //
         String and = thisPage.getURI().indexOf("?") < 0 ? "?" : "&";
         String emv_uri = thisPage.getURI() + and + "_metadata=all";
@@ -304,17 +304,16 @@ public class APIEndpointImpl implements APIEndpoint {
         }
     }
     
-    	private void addQueryMetadata( Model rsm, Resource exec, CallContext context, Resource thisPage, APIQuery q ) {
-    //
+    private void addQueryMetadata( Model rsm, Resource exec, CallContext context, Resource thisPage, APIQuery q, String detailsQuery ) {
     	Resource sr = rsm.createResource();
     	sr.addProperty( RDF.type, SPARQL.QueryResult );    	
     	sr.addProperty( SPARQL.query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) );
     	exec.addProperty( FIXUP.selectionResult, sr );
     //
-//    	Resource vr = rsm.createResource();
-//    	vr.addProperty( RDF.type, QueryResult );
-//    	vr.addProperty( query, inValue( rsm, q.getQueryString( spec.getAPISpec(), context ) ) ); // WRONG ONE
-//    	exec.addProperty( viewingResult, vr );
+    	Resource vr = rsm.createResource();
+    	vr.addProperty( RDF.type, SPARQL.QueryResult );
+    	vr.addProperty( SPARQL.query, inValue( rsm, detailsQuery ) ); 
+    	exec.addProperty( FIXUP.viewingResult, vr );
 	}
 
 	private Resource inValue( Model rsm, String s ) {

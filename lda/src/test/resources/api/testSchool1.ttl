@@ -25,13 +25,6 @@ ex:school_1
 <http://admin.data.gov.uk/def/localAythority#123>
       rdfs:label "BANES" .
 
-[]    api:selectionResult
-              [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;
-                <http://purl.org/net/opmv/types/sparql#query>
-                        [ rdf:value "<http://www.epimorphics.com/examples/eg1#school_1>"
-                        ]
-              ] .
-
 <http://dummy/doc/schools?_page=0>
       a       api:Page ;
       <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>

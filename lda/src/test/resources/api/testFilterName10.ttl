@@ -9,25 +9,6 @@
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
-[]    api:selectionResult
-              [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;
-                <http://purl.org/net/opmv/types/sparql#query>
-                        [ rdf:value """PREFIX spec: <http://www.epimorphics.com/examples/spec1#>
-PREFIX ex: <http://www.epimorphics.com/examples/eg1#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX school-ont: <http://education.data.gov.uk/def/school/>
-PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX api: <http://purl.org/linked-data/api/vocab#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-SELECT DISTINCT ?item WHERE {
-?item <http://www.epimorphics.com/examples/eg1#name> \"Name10\" .
-?item <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://education.data.gov.uk/def/school/School> .
-}  ORDER BY ?item OFFSET 0 LIMIT 10"""
-                        ]
-              ] .
-
 <http://dummy/doc/schools>
       a       api:ListEndpoint ;
       <http://purl.org/dc/terms/hasPart>

@@ -78,5 +78,5 @@ public class FIXUP
 
 	public static final Property selectionResult = property( API.NS, "selectionResult" );
 
-	static final Property viewingResult = property( API.NS, "viewingResult" );
+	public static final Property viewingResult = property( API.NS, "viewingResult" );
 	}

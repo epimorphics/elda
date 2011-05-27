@@ -197,37 +197,38 @@ public class View {
         return result;
 	}
 
-	public void fetchDescriptions( Model m, List<Resource> roots, List<Source> sources, VarSupply vars ) {
+	public String fetchDescriptions( Model m, List<Resource> roots, List<Source> sources, VarSupply vars ) {
 //		log.info( "fetchDescriptionsFor: sources = " + sources + " using " + this );
 		switch (type) {
 			case T_DESCRIBE: 
-				fetchBareDescriptions( m, roots, sources );
-				break;
+				return fetchBareDescriptions( m, roots, sources );
 				
-			case T_ALL:			
-				fetchBareDescriptions( m, roots, sources );
+			case T_ALL:	{	
+				String detailsQuery = fetchBareDescriptions( m, roots, sources );
 			    addAllObjectLabels( m, sources );
-			    break;
+			    return detailsQuery;
+			}
 
 			case T_CHAINS:	{
 				long zero = System.currentTimeMillis();
-				fetchByGivenPropertyChains( m, roots, sources, vars, chains );
+				String detailsQuery = fetchByGivenPropertyChains( m, roots, sources, vars, chains );
 				long time = System.currentTimeMillis() - zero;
 				log.debug( "T_CHAINS took " + (time/1000.0) + "s" );
-				break;
+				return detailsQuery;
 			}
 				
 			case T_BASIC: {
 				long zero = System.currentTimeMillis();
-				fetchByGivenPropertyChains( m, roots, sources, vars, BasicChains );
+				String detailsQuery = fetchByGivenPropertyChains( m, roots, sources, vars, BasicChains );
 				long time = System.currentTimeMillis() - zero;
 				log.debug( "T_BASIC took " + (time/1000.0) + "s" );
-				break;
+				return detailsQuery;
 			}
 				
 			default:
 				EldaException.Broken( "unknown view type " + type );				
 		}
+		return "# should be a query here.";
 	}
 
 	/**
@@ -236,7 +237,7 @@ public class View {
 	static final List<PropertyChain> BasicChains = 
 		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
 
-	private void fetchByGivenPropertyChains(Model m, List<Resource> roots, List<Source> sources, VarSupply vars, List<PropertyChain> chains) {
+	private String fetchByGivenPropertyChains(Model m, List<Resource> roots, List<Source> sources, VarSupply vars, List<PropertyChain> chains) {
 		StringBuilder construct = new StringBuilder();
 		construct.append( "CONSTRUCT {" );
 		List<Variable> varsInOrder = new ArrayList<Variable>();
@@ -258,8 +259,10 @@ public class View {
 		}
 		construct.append( "\n}" );
 	//
-		Query constructQuery = QueryFactory.create( construct.toString() );
+		String queryString = construct.toString();
+		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: sources) m.add( x.executeConstruct( constructQuery ) );
+		return queryString;
 	}
 	
 	private void buildConstructClause( StringBuilder construct, Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
@@ -293,16 +296,17 @@ public class View {
 		return varsInOrder.remove(0);
 	}
 
-	private void fetchBareDescriptions( Model m, List<Resource> roots, List<Source> sources ) {
+	private String fetchBareDescriptions( Model m, List<Resource> roots, List<Source> sources ) {
 		long zero = System.currentTimeMillis();
 		String describe = "DESCRIBE";
 		for (Resource r: new HashSet<Resource>( roots )) { // TODO
-			describe += " <" + r.getURI() + ">";
+			describe += "\n  <" + r.getURI() + ">";
 		}
 		Query describeQuery = QueryFactory.create( describe );
 		for (Source x: sources) m.add( x.executeDescribe( describeQuery ) );
 		long time = System.currentTimeMillis() - zero;
 		log.debug( "fetchBareDescriptions took " + (time/1000.0) + "s" );
+		return describe;
 	}		
 	
 	private void addAllObjectLabels( Model m, List<Source> sources ) {

@@ -30,11 +30,13 @@ import com.hp.hpl.jena.shared.PrefixMapping;
  */
 public class APIResultSet {
 
-    protected List<Resource> results;
-    protected Resource root;
-    protected boolean isCompleted;
-    protected String contentLocation;
-    protected Model model;
+	protected Resource root;
+	protected String contentLocation;
+
+	protected final List<Resource> results;
+    protected final boolean isCompleted;
+    protected final Model model;
+    protected final String detailsQuery;
     
     public String getContentLocation() {
         return contentLocation;
@@ -44,10 +46,11 @@ public class APIResultSet {
         this.contentLocation = contentLocation;
     }
 
-    public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted) {
+    public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, String detailsQuery) {
         model = ModelFactory.createModelForGraph( graph );
         this.results = results;
         this.isCompleted = isCompleted;
+        this.detailsQuery = detailsQuery;
         if (!results.isEmpty())
             this.root = results.get(0).inModel(model);
     }
@@ -69,6 +72,14 @@ public class APIResultSet {
     
     public List<Resource> getResultList() {
         return results;
+    }
+    
+    /**
+        Answer the query string, if available, used to get the details
+        of the values of properties of the selected items.
+    */
+    public String getDetailsQuery() {
+    	return detailsQuery;
     }
 
     public void setRoot(Resource root) {
@@ -95,7 +106,7 @@ public class APIResultSet {
         m.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
         for (Resource r : results) mappedResults.add( r.inModel(m) );
-        return new APIResultSet( m.getGraph(), mappedResults, isCompleted );
+        return new APIResultSet( m.getGraph(), mappedResults, isCompleted, detailsQuery );
     }
 
 	/**
@@ -110,7 +121,7 @@ public class APIResultSet {
         Model temp = ModelFactory.createDefaultModel();
         temp.add( model );
         Graph cloneGraph = temp.getGraph();
-        APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted);
+        APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, detailsQuery);
         clone.setRoot(root);
         clone.setContentLocation(contentLocation);
         return clone;

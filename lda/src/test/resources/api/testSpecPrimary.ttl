@@ -43,61 +43,19 @@ ex:school_12
       ex:size 100 ;
       ex:type ex:Primary .
 
-ex:school_14
-      a       school-ont:School ;
-      school-ont:localAuthority
-              <http://admin.data.gov.uk/def/localAythority#456> ;
-      ex:name "Name14" ;
-      ex:size 100 ;
-      ex:type ex:Primary .
-
-ex:school_16
-      a       school-ont:School ;
-      school-ont:localAuthority
-              <http://admin.data.gov.uk/def/localAythority#456> ;
-      ex:name "Name16" ;
-      ex:size 100 ;
-      ex:type ex:Primary .
-
-ex:school_10
-      a       school-ont:School ;
-      school-ont:localAuthority
-              <http://admin.data.gov.uk/def/localAythority#456> ;
-      ex:name "Name10" ;
-      ex:size 100 ;
-      ex:type ex:Primary .
-
-<http://dummy/doc/schools/primary>
-      a       api:ListEndpoint ;
-      <http://purl.org/dc/terms/hasPart>
-              <http://dummy/doc/schools/primary?_page=0> ;
-      api:definition <http://dummy/doc/schools/primary/meta> .
-
-[]    api:selectionResult
-              [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;
-                <http://purl.org/net/opmv/types/sparql#query>
-                        [ rdf:value """PREFIX spec: <http://www.epimorphics.com/examples/spec1#>
-PREFIX ex: <http://www.epimorphics.com/examples/eg1#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX school-ont: <http://education.data.gov.uk/def/school/>
-PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX api: <http://purl.org/linked-data/api/vocab#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-SELECT DISTINCT ?item WHERE {
-?item <http://www.epimorphics.com/examples/eg1#type> <http://www.epimorphics.com/examples/eg1#Primary> .
-?item <http://www.epimorphics.com/examples/eg1#name> ?___0 .
-?item <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://education.data.gov.uk/def/school/School> .
-}  ORDER BY  ?___0  OFFSET 0 LIMIT 10"""
-                        ]
-              ] .
-
 ex:school_13
       a       school-ont:School ;
       school-ont:localAuthority
               <http://admin.data.gov.uk/def/localAythority#456> ;
       ex:name "Name13" ;
+      ex:size 100 ;
+      ex:type ex:Primary .
+
+ex:school_14
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#456> ;
+      ex:name "Name14" ;
       ex:size 100 ;
       ex:type ex:Primary .
 
@@ -117,12 +75,28 @@ ex:school_17
       ex:size 200 ;
       ex:type ex:Primary .
 
+ex:school_16
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#456> ;
+      ex:name "Name16" ;
+      ex:size 100 ;
+      ex:type ex:Primary .
+
 ex:school_19
       a       school-ont:School ;
       school-ont:localAuthority
               <http://admin.data.gov.uk/def/localAythority#456> ;
       ex:name "Name19" ;
       ex:size 200 ;
+      ex:type ex:Primary .
+
+ex:school_10
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#456> ;
+      ex:name "Name10" ;
+      ex:size 100 ;
       ex:type ex:Primary .
 
 ex:school_15
@@ -132,3 +106,9 @@ ex:school_15
       ex:name "Name15" ;
       ex:size 100 ;
       ex:type ex:Primary .
+
+<http://dummy/doc/schools/primary>
+      a       api:ListEndpoint ;
+      <http://purl.org/dc/terms/hasPart>
+              <http://dummy/doc/schools/primary?_page=0> ;
+      api:definition <http://dummy/doc/schools/primary/meta> .
