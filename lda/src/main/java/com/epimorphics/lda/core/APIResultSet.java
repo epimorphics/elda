@@ -57,8 +57,8 @@ public class APIResultSet {
 
     public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, String detailsQuery) {
         model = ModelFactory.createModelForGraph( graph );
-        Model resultsModel = results.get(0).getModel();
-		setUsedPrefixes(resultsModel);
+        PrefixMapping imported = getPrefixes( results );
+		setUsedPrefixes( imported );
         this.results = results;
         this.isCompleted = isCompleted;
         this.detailsQuery = detailsQuery;
@@ -66,12 +66,20 @@ public class APIResultSet {
             this.root = results.get(0).inModel(model);
     }
 
-    /**
+    private static final PrefixMapping none = PrefixMapping.Factory.create().lock();
+    
+    private PrefixMapping getPrefixes( List<Resource> lr ) {
+    	if (lr.isEmpty()) return none;
+    	Model m = lr.get(0).getModel();
+    	return m == null ? none : m;
+	}
+
+	/**
         Set prefixes for the namespaces of terms that Elda uses
         in its generated models.
     */
-	private void setUsedPrefixes( Model resultsModel ) {
-		model.setNsPrefixes( resultsModel );
+	private void setUsedPrefixes( PrefixMapping pm ) {
+		model.setNsPrefixes( pm );
         model.setNsPrefix( "rdf", RDF.getURI() );
         model.setNsPrefix( "rdfs", RDFS.getURI() );
         model.setNsPrefix( "dct", DCTerms.getURI() );
