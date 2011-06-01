@@ -120,7 +120,7 @@ spec:api
     	[api:name "x_change_from"; api:value "http://education.data.gov.uk/"]
     ; api:variable 
     	[api:name "x_change_to"; api:value "http://localhost:8080/elda/api/education/"]
-    # suppress media-type selection
+    # din't suppress media-type selection
     ; api:variable
     	[api:name "_supress_media_type"; api:value "no"]
     .
