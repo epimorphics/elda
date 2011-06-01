@@ -109,12 +109,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected String itemTemplate;
     protected String fixedQueryString = null;
     
-    protected Set<String> metadataOptions = makeMeta();
-
-	private HashSet<String> makeMeta() {
-		System.err.println( ">> creating hashmap for metadataOptions." );
-		return new HashSet<String>();
-	}
+    protected Set<String> metadataOptions = new HashSet<String>();
     
     // TODO replace this by full property chain descriptions
     protected Set<Property> expansionPoints = new HashSet<Property>();
@@ -308,7 +303,11 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		}
 	}
 	
-	private void addMetadataOptions( String [] options ) {
+	public void addMetadataOptions( Set<String> options ) {
+		metadataOptions.addAll( options );
+	}
+	
+	public void addMetadataOptions( String [] options ) {
 		for (String option: options) metadataOptions.add( option.toLowerCase() );
 	}
 	

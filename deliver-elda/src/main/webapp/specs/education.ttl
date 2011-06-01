@@ -111,6 +111,10 @@ spec:api
 	   , spec:schoolsPrimaryDistrict
 	   , spec:schoolsSecondaryDistrict 
 	   , spec:school-by-id
+    #
+    # this Elda special specifies the base metadata options
+    ; extras:metadataOptions "bindings,formats"
+    #
 	# the demo rewriting-URIs hack.
     ; api:variable 
     	[api:name "x_change_from"; api:value "http://education.data.gov.uk/"]

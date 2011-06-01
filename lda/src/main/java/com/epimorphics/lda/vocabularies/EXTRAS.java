@@ -46,6 +46,8 @@ public class EXTRAS
 	public static final Property wantsContext = property( "wantsContext" );
 
 	public static final Property cachePolicyName = property( "cachePolicyName" );
+
+	public static final Property metadataOptions = property( "metadataOptions" );
     
     private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }

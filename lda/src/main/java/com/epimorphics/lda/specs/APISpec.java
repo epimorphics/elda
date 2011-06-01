@@ -14,7 +14,9 @@ package com.epimorphics.lda.specs;
 import static com.epimorphics.util.RDFUtils.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +73,8 @@ public class APISpec {
     protected final List<Source> describeSources;
     protected final VarValues bindings = new VarValues();
     
+    protected final Set<String> metadataOptions = new HashSet<String>();
+    
     public APISpec(Resource specification, ModelLoaderI loader) {
     	specificationURI = specification.getURI();
     	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
@@ -85,7 +89,14 @@ public class APISpec {
         bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
         factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
+        extractMetadataOptions( specification );
         extractEndpointSpecifications( specification );
+    }
+    
+    private void extractMetadataOptions( Resource specification ) {
+    	for (StmtIterator it = specification.listProperties( EXTRAS.metadataOptions ); it.hasNext();)
+    		for (String option: it.next().getString().split(",")) 
+    			metadataOptions.add( option.toLowerCase() );
     }
 
 	/**

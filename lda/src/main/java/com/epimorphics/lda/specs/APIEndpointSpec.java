@@ -69,6 +69,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     
     static Logger log = LoggerFactory.getLogger(APIEndpointSpec.class);
     
+    protected final Set<String> metadataOptions = new HashSet<String>();
+    
     public APIEndpointSpec( APISpec apiSpec, APISpec parent, Resource endpoint ) {
     	checkEndpointType( endpoint );
     	this.apiSpec = apiSpec;
@@ -86,12 +88,20 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         if (uriTemplate == null) EldaException.NoDeploymentURIFor( name ); 
         if (!uriTemplate.startsWith("/") && !uriTemplate.startsWith("http")) uriTemplate = "/" + uriTemplate;
         endpointResource = endpoint;
+        extractMetadataOptions( endpoint );
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
     }
     
-    public boolean isListEndpoint() {
+    private void extractMetadataOptions(Resource endpoint) {
+    	metadataOptions.addAll( apiSpec.metadataOptions );
+    	for (StmtIterator it = endpoint.listProperties( EXTRAS.metadataOptions ); it.hasNext();)
+    		for (String option: it.next().getString().split(",")) 
+    			metadataOptions.add( option.toLowerCase() );
+    }
+
+	public boolean isListEndpoint() {
     	return endpointResource.hasProperty( RDF.type, API.ListEndpoint );
     }
     
@@ -203,6 +213,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	
     private void instantiateBaseQuery( Resource endpoint ) {
         baseQuery = new APIQuery( this );
+        baseQuery.addMetadataOptions( metadataOptions );
         Resource s = getResourceValue( endpoint, API.selector );
         if (s != null) {
 	        StmtIterator i = s.listProperties( API.parent );
