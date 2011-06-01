@@ -15,7 +15,6 @@ package com.epimorphics.lda.core;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -38,7 +37,6 @@ import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
-import com.epimorphics.util.MediaTypes;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
@@ -154,19 +152,18 @@ public class APIEndpointImpl implements APIEndpoint {
 	private String replaceQueryParam(URI ru, String key, String... values) {
 		try {
 			String q = ru.getQuery();
-			String qa = q == null ? "" : strip( q, key );
-			String qb = qa.isEmpty() ? "" : qa + "?";
-			String newq = "";
+			String newQuery = q == null ? "" : strip( q, key );
+			String and = newQuery.isEmpty() ? "" : "&";
 			for (String value: values) {
-				newq = newq + qb + key + "=" + quoteForValue(value);
-				qb = "&";
+				newQuery = newQuery + and + key + "=" + quoteForValue(value);
+				and = "&";
 			}
 			return new URI
 				(
 				ru.getScheme(), 
 				ru.getAuthority(), 
 				ru.getPath(),
-				(newq.isEmpty() ? null : newq), 
+				(newQuery.isEmpty() ? null : newQuery), 
 				ru.getFragment() 
 				).toASCIIString();
 		} catch (URISyntaxException e) {			
@@ -232,6 +229,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	private Resource resourceForPage(Model m, CallContext context, int page) {
 		URI ru = context.getRequestURI();
 		String newURI = replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) );
+		// System.err.println( ">> changed '" + ru + "' to '" + newURI + "'" );
 		return m.createResource( newURI );
     }
     

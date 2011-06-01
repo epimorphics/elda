@@ -303,7 +303,9 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	}
 	
 	private void addMetadataOptions( String [] options ) {
+		System.err.println( ">> addMetadataOptions: " + Arrays.asList(options) );
 		for (String option: options) metadataOptions.add( option );
+		System.err.println( ">> result: " + metadataOptions );
 	}
 	
     /**
@@ -875,7 +877,9 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         }
 
 	public boolean wantsMetadata( String name ) {
-		return metadataOptions.contains( name ) || metadataOptions.contains( "all" );
+		boolean wants = metadataOptions.contains( name ) || metadataOptions.contains( "all" );
+		System.err.println( ">> wants(" + name + ") from '" + metadataOptions + "' => " + wants );
+		return wants;
 	}
 
 }
