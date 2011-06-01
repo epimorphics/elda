@@ -1,4 +1,34 @@
-1.1.4 (SNAPSHOT)
+1.1.4 (1st June 2011)
+
+* Setting variable "_strip_has" to "yes" strips "has"
+  from property shortnames starting hasX with X a capital
+  letter -- hack to allow compatability with Puelia and
+  stylesheet.
+
+* term bindings only generated for properties appearing
+  in the result set, not all possible properties.
+
+* Fixed use of test filenames including "?" which
+  didn't work on Windows clients.
+
+* fixed some issues with defintion of "short names" used
+  for properties.
+
+* Documentation now mentions how to use Elda directly
+  (ie without needign a webapp).
+
+* Elda now has its own internal MediaType type rather
+  than using type/subtype strings.
+
+* Additional metadata -- select and view queries. Versions
+  and formats now off by default. Formats driven from 
+  config file (used to run from a fixed list). Execution
+  context identifies Elda as processor.
+
+* Internals no longer depends on Jersey -- URIInfo and
+  MultivaluedMap have been replaced by local code.
+
+* XML Renderer respects multi-valued-property declarations.
 
 * fixed bug in XML renderer, which was introducing
   <item> nodes when it should not have.
