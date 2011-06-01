@@ -109,7 +109,12 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected String itemTemplate;
     protected String fixedQueryString = null;
     
-    protected Set<String> metadataOptions = new HashSet<String>();
+    protected Set<String> metadataOptions = makeMeta();
+
+	private HashSet<String> makeMeta() {
+		System.err.println( ">> creating hashmap for metadataOptions." );
+		return new HashSet<String>();
+	}
     
     // TODO replace this by full property chain descriptions
     protected Set<Property> expansionPoints = new HashSet<Property>();
@@ -170,6 +175,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             clone.varProps = new HashMap<String, String>( varProps );
             clone.expansionPoints = new HashSet<Property>( expansionPoints );
             clone.deferredFilters = new ArrayList<Deferred>( deferredFilters );
+            clone.metadataOptions = new HashSet<String>( metadataOptions );
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new APIException("Can't happen :)", e);
@@ -303,9 +309,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	}
 	
 	private void addMetadataOptions( String [] options ) {
-		System.err.println( ">> addMetadataOptions: " + Arrays.asList(options) );
-		for (String option: options) metadataOptions.add( option );
-		System.err.println( ">> result: " + metadataOptions );
+		for (String option: options) metadataOptions.add( option.toLowerCase() );
 	}
 	
     /**
@@ -877,9 +881,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         }
 
 	public boolean wantsMetadata( String name ) {
-		boolean wants = metadataOptions.contains( name ) || metadataOptions.contains( "all" );
-		System.err.println( ">> wants(" + name + ") from '" + metadataOptions + "' => " + wants );
-		return wants;
+		return metadataOptions.contains( name ) || metadataOptions.contains( "all" );
 	}
 
 }
