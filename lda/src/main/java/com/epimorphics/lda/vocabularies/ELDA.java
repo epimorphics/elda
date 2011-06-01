@@ -34,7 +34,7 @@ public class ELDA
 	
 	public static final Resource Elda = resource( EXTRAS.EXTRA, "Elda" );
 	
-	public static final Resource ThisElda = resource( EXTRAS.EXTRA, "Elda_1.1.4-SNAPSHOT" );
+	public static final Resource ThisElda = resource( EXTRAS.EXTRA, "Elda_1.1.4d" );
 	
 	public static final Resource EldaRepository = resource( "https://ehog.hedge@elda.googlecode.com/hg/", "" );
 
@@ -65,9 +65,9 @@ public class ELDA
 			.addProperty( COMMON.software, ThisElda )
 			;
 		ThisElda.inModel(m)
-			.addProperty( RDFS.label, "Elda 1.1.4-SNAPSHOT" )
+			.addProperty( RDFS.label, "Elda 1.1.4d" )
 			.addProperty( RDF.type, DOAP.Version )
-			.addProperty( DOAP.revision, "1.1.4-SNAPSHOT" )
+			.addProperty( DOAP.revision, "1.1.4d" )
 			.addProperty( ELDA.DOAP_EXTRAS.releaseOf, Elda );
 		Elda.inModel(m)
 			.addProperty( RDFS.label, "Elda" )
