@@ -177,9 +177,12 @@ public class APIEndpointImpl implements APIEndpoint {
 		Model execution = ModelFactory.createDefaultModel();
 		
 		EndpointMetadata.addVersions( versions, spec.viewNames(), context, thisPage );
-        if (query.wantsMetadata( "versions" )) rsm.add( versions );
+		EndpointMetadata.addFormats( formats, context, thisPage.inModel(formats), spec.getRendererFactoryTable() );
+
         
-        if (query.wantsMetadata( "formats" )) EndpointMetadata.addFormats( rsm, context, thisPage, spec.getRendererFactoryTable() );
+        if (query.wantsMetadata( "versions" )) rsm.add( versions );
+        if (query.wantsMetadata( "formats" )) rsm.add( formats ); 
+        
         if (query.wantsMetadata( "bindings" )) EndpointMetadata.addBindings( rsm, exec, spec.getAPISpec().getShortnameService().nameMap(), context, thisPage );
         if (query.wantsMetadata( "execution" )) EndpointMetadata.addExecution( rsm, exec, context, thisPage );
         if (query.wantsMetadata( "execution" )) EndpointMetadata.addQueryMetadata( rsm, exec, context, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
