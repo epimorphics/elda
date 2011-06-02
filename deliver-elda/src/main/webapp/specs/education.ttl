@@ -95,7 +95,8 @@ spec:api
 	; api:formatter 
 		[a api:XsltFormatter
 		; api:name 'html'
-		; api:stylesheet 'xsltsheets/ashtml.xsl'
+		; api:stylesheet 'xsltsheets/ashtml.xsl'    
+		; extras:metadataOptions "bindings,formats,versions,execution"
 		; api:mimeType 'text/html'
 		] 
 	; api:formatter
@@ -111,9 +112,6 @@ spec:api
 	   , spec:schoolsPrimaryDistrict
 	   , spec:schoolsSecondaryDistrict 
 	   , spec:school-by-id
-    #
-    # this Elda special specifies the base metadata options
-    ; extras:metadataOptions "bindings,formats"
     #
 	# the demo rewriting-URIs hack.
     ; api:variable 

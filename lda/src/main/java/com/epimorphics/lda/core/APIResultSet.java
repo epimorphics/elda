@@ -13,7 +13,12 @@
 package com.epimorphics.lda.core;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.graph.Graph;
@@ -40,6 +45,8 @@ import com.epimorphics.lda.vocabularies.OpenSearch;
 */
 public class APIResultSet {
 
+    static final Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
+    
 	protected Resource root;
 	protected String contentLocation;
 
@@ -47,6 +54,11 @@ public class APIResultSet {
     protected final boolean isCompleted;
     protected final Model model;
     protected final String detailsQuery;
+	
+    /** 
+        Map holding named metadata options. 
+    */
+	protected final Map<String, Model> metadata = new HashMap<String, Model>();
     
     public String getContentLocation() {
         return contentLocation;
@@ -65,6 +77,11 @@ public class APIResultSet {
         this.detailsQuery = detailsQuery;
         if (!results.isEmpty())
             this.root = results.get(0).inModel(model);
+    }
+    
+    protected APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, String detailsQuery, Map<String, Model> meta ) {
+    	this( graph, results, isCompleted, detailsQuery );
+    	this.metadata.putAll( meta );
     }
 
     private static final PrefixMapping none = PrefixMapping.Factory.create().lock();
@@ -142,7 +159,7 @@ public class APIResultSet {
         m.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
         for (Resource r : results) mappedResults.add( r.inModel(m) );
-        return new APIResultSet( m.getGraph(), mappedResults, isCompleted, detailsQuery );
+        return new APIResultSet( m.getGraph(), mappedResults, isCompleted, detailsQuery, metadata );
     }
 
 	/**
@@ -157,14 +174,39 @@ public class APIResultSet {
         Model temp = ModelFactory.createDefaultModel();
         temp.add( model );
         Graph cloneGraph = temp.getGraph();
-        APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, detailsQuery);
+        APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, detailsQuery, metadata );
         clone.setRoot(root);
         clone.setContentLocation(contentLocation);
         return clone;
     }
 
-	public StmtIterator listStatements( Resource S, Property P, RDFNode O) {
+    /**
+        Answer s statement iterator which delivers all statements matching
+        (S, P, O) in the underlying model.
+    */
+	public StmtIterator listStatements( Resource S, Property P, RDFNode O ) {
 		return model.listStatements( S, P, O );
+	}
+	
+	/**
+	    Set the metadata section called <code>option</code> to the model
+	    <code>meta</code>.
+	*/
+	public void setMetadata( String option, Model meta ) {
+		System.err.println( ">> Put metadata " + option );
+		meta.write( System.err, "TTL" );
+		metadata.put( option, meta );		
+	}
+	
+	/**
+	    Add to the main model the metadata named by the options.
+	*/
+	public void includeMetadata( String[] options ) {
+		for (String option: options) {
+			Model meta = metadata.get( option );
+			if (meta == null) log.warn( "Unknown metadata section '" + option + "': ignored." );
+			else model.add( meta );
+		}
 	}    
 }
 
