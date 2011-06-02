@@ -179,15 +179,13 @@ public class APIEndpointImpl implements APIEndpoint {
 		EndpointMetadata.addVersions( versions, spec.viewNames(), context, thisPage );
 		EndpointMetadata.addFormats( formats, context, thisPage.inModel(formats), spec.getRendererFactoryTable() );
 		EndpointMetadata.addBindings( rsm, bindings, exec, spec.getAPISpec().getShortnameService().nameMap(), context, thisPage );
+		EndpointMetadata.addExecution( execution, exec, context, thisPage );
+		EndpointMetadata.addQueryMetadata( execution, exec, context, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
 
-        if (query.wantsMetadata( "versions" )) rsm.add( versions );
-        if (query.wantsMetadata( "formats" )) rsm.add( formats ); 
-        if (query.wantsMetadata( "bindings" )) rsm.add( bindings );
-        if (query.wantsMetadata( "execution" )) rsm.add( execution );
-        
-        EndpointMetadata.addExecution( execution, exec, context, thisPage );
-        EndpointMetadata.addQueryMetadata( execution, exec, context, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
-        
+        if (query.wantsMetadata( "versions" )) rsm.add( versions ); else rs.setMetadata( "versions", versions );
+        if (query.wantsMetadata( "formats" )) rsm.add( formats );  else rs.setMetadata( "formats", formats );
+        if (query.wantsMetadata( "bindings" )) rsm.add( bindings ); else rs.setMetadata( "bindings", bindings );
+        if (query.wantsMetadata( "execution" )) rsm.add( execution ); else rs.setMetadata( "execution", execution );   
     //
         String and = thisPage.getURI().indexOf("?") < 0 ? "?" : "&";
         String emv_uri = thisPage.getURI() + and + "_metadata=all";
