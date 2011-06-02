@@ -28,12 +28,13 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class EndpointMetadata {
 
-	public static void addVersions( Model m, Set<String> viewNames, CallContext c, Resource thisPage ) {
+	public static void addVersions( Model m, Set<String> viewNames, CallContext c, Resource aPage ) {
+		Resource page = aPage.inModel( m );
 		for (String viewName: viewNames) {
 			if (!viewName.equals( View.SHOW_DEFAULT_INTERNAL )) {
 	    		Resource v = EndpointMetadata.resourceForView( m, c, viewName );
-				thisPage.addProperty( DCTerms.hasVersion, v	);
-				v.addProperty( DCTerms.isVersionOf, thisPage );
+				page.addProperty( DCTerms.hasVersion, v	);
+				v.addProperty( DCTerms.isVersionOf, page );
 				v.addProperty( RDFS.label, viewName );
 			}
     	}
@@ -112,11 +113,12 @@ public class EndpointMetadata {
 			}
 	}
 
-	public static void addBindings( Model rsm, Resource exec, NameMap nm, CallContext cc, Resource thisPage ) {
+	public static void addBindings( Model m, Resource anExec, NameMap nm, CallContext cc, Resource aPage ) {
+		Resource exec = anExec.inModel(m), page = aPage.inModel(m);
 		exec.addProperty( RDF.type, FIXUP.Execution );
-		EndpointMetadata.addVariableBindings(rsm, exec, cc);
-		EndpointMetadata.addTermBindings(rsm, exec, nm );
-		thisPage.addProperty( FIXUP.wasResultOf, exec );
+		EndpointMetadata.addVariableBindings( m, exec, cc );
+		EndpointMetadata.addTermBindings( m, exec, nm );
+		page.addProperty( FIXUP.wasResultOf, exec );
 	}
 
 	public static void addVariableBindings(Model rsm, Resource exec, CallContext cc) {
