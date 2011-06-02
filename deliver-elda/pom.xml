@@ -9,7 +9,7 @@
   </parent>
 
   <groupId>com.epimorphics.lda</groupId>
-  <artifactId>elda</artifactId>
+  <artifactId>elda-standalone</artifactId>
   <packaging>war</packaging>
   <name>elda</name>
   <description>instant Elda webapp</description>
