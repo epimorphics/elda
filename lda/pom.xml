@@ -82,4 +82,35 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
+  <build>
+      <plugins>
+          <plugin>
+		        <artifactId>maven-resources-plugin</artifactId>
+		        <version>2.5</version>
+		        <executions>
+		          <execution>
+		            <id>copy-version</id>
+		            <!-- here the phase you need -->
+		            <phase>generate-sources</phase>
+		            <goals>
+		              <goal>copy-resources</goal>
+		            </goals>
+		            <configuration>
+		              <outputDirectory>${basedir}/src/main/java/com/epimorphics/lda</outputDirectory>
+		              <resources>          
+		                <resource>
+		                  <directory>src/pre</directory>
+		                  <includes>
+		                      <include>Version.java</include>
+		                  </includes>
+		                  <filtering>true</filtering>
+		                </resource>
+		              </resources>              
+		            </configuration>            
+		          </execution>
+		        </executions>
+          </plugin>
+      </plugins>
+  </build>
 </project>
