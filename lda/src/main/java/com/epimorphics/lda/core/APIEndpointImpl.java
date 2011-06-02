@@ -171,6 +171,11 @@ public class APIEndpointImpl implements APIEndpoint {
         Resource exec = rsm.createResource();
     //
 		thisPage.addProperty( FIXUP.definition, uriForDefinition );
+		Model versions = ModelFactory.createDefaultModel();
+		Model formats = ModelFactory.createDefaultModel();
+		Model bindings = ModelFactory.createDefaultModel();
+		Model execution = ModelFactory.createDefaultModel();
+		
         if (query.wantsMetadata( "versions" )) EndpointMetadata.addVersions( rsm, spec.viewNames(), context, thisPage );
         if (query.wantsMetadata( "formats" )) EndpointMetadata.addFormats( rsm, context, thisPage, spec.getRendererFactoryTable() );
         if (query.wantsMetadata( "bindings" )) EndpointMetadata.addBindings( rsm, exec, spec.getAPISpec().getShortnameService().nameMap(), context, thisPage );
