@@ -178,14 +178,16 @@ public class APIEndpointImpl implements APIEndpoint {
 		
 		EndpointMetadata.addVersions( versions, spec.viewNames(), context, thisPage );
 		EndpointMetadata.addFormats( formats, context, thisPage.inModel(formats), spec.getRendererFactoryTable() );
+		EndpointMetadata.addBindings( rsm, bindings, exec, spec.getAPISpec().getShortnameService().nameMap(), context, thisPage );
 
-        
         if (query.wantsMetadata( "versions" )) rsm.add( versions );
         if (query.wantsMetadata( "formats" )) rsm.add( formats ); 
+        if (query.wantsMetadata( "bindings" )) rsm.add( bindings );
+        if (query.wantsMetadata( "execution" )) rsm.add( execution );
         
-        if (query.wantsMetadata( "bindings" )) EndpointMetadata.addBindings( rsm, exec, spec.getAPISpec().getShortnameService().nameMap(), context, thisPage );
-        if (query.wantsMetadata( "execution" )) EndpointMetadata.addExecution( rsm, exec, context, thisPage );
-        if (query.wantsMetadata( "execution" )) EndpointMetadata.addQueryMetadata( rsm, exec, context, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
+        EndpointMetadata.addExecution( execution, exec, context, thisPage );
+        EndpointMetadata.addQueryMetadata( execution, exec, context, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
+        
     //
         String and = thisPage.getURI().indexOf("?") < 0 ? "?" : "&";
         String emv_uri = thisPage.getURI() + and + "_metadata=all";
