@@ -193,8 +193,8 @@ public class APIResultSet {
 	    <code>meta</code>.
 	*/
 	public void setMetadata( String option, Model meta ) {
-		System.err.println( ">> Put metadata " + option );
-		meta.write( System.err, "TTL" );
+//		System.err.println( ">> Put metadata " + option );
+//		meta.write( System.err, "TTL" );
 		metadata.put( option, meta );		
 	}
 	

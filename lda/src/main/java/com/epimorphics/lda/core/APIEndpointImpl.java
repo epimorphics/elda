@@ -171,21 +171,11 @@ public class APIEndpointImpl implements APIEndpoint {
         Resource exec = rsm.createResource();
     //
 		thisPage.addProperty( FIXUP.definition, uriForDefinition );
-        Model versions = ModelFactory.createDefaultModel();
-        Model bindings = ModelFactory.createDefaultModel();
-        Model formats = ModelFactory.createDefaultModel();
-        Model execution = ModelFactory.createDefaultModel();
-
-        EndpointMetadata.addVersions( versions, spec.viewNames(), context, thisPage );
-        EndpointMetadata.addFormats( formats, context, thisPage, spec.getRendererFactoryTable() );              
-        EndpointMetadata.addBindings( rsm, exec, spec.getAPISpec().getShortnameService().nameMap(), context, thisPage );
-        EndpointMetadata.addExecution( execution, exec, context, thisPage );
-        EndpointMetadata.addQueryMetadata( execution, exec, context, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
-        
-        if (query.wantsMetadata( "versions" )) rsm.add( versions ); else rs.setMetadata( "versions", versions );
-        if (query.wantsMetadata( "formats" )) rsm.add( formats );  else rs.setMetadata( "formats", formats );
-        if (query.wantsMetadata( "bindings" )) rsm.add( bindings ); else rs.setMetadata( "bindings", bindings );
-        if (query.wantsMetadata( "execution" )) rsm.add( execution ); else rs.setMetadata( "execution", execution );
+        if (query.wantsMetadata( "versions" )) EndpointMetadata.addVersions( rsm, spec.viewNames(), context, thisPage );
+        if (query.wantsMetadata( "formats" )) EndpointMetadata.addFormats( rsm, context, thisPage, spec.getRendererFactoryTable() );
+        if (query.wantsMetadata( "bindings" )) EndpointMetadata.addBindings( rsm, exec, spec.getAPISpec().getShortnameService().nameMap(), context, thisPage );
+        if (query.wantsMetadata( "execution" )) EndpointMetadata.addExecution( rsm, exec, context, thisPage );
+        if (query.wantsMetadata( "execution" )) EndpointMetadata.addQueryMetadata( rsm, exec, context, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
     //
         String and = thisPage.getURI().indexOf("?") < 0 ? "?" : "&";
         String emv_uri = thisPage.getURI() + and + "_metadata=all";
