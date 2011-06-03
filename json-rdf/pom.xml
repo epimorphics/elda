@@ -9,7 +9,7 @@
   <parent>
     <artifactId>lda-top</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.1.4d</version>
+    <version>1.1.4-RC4</version>
   </parent>
 
   <groupId>com.epimorphics.lda</groupId>
@@ -33,7 +33,7 @@
     </dependency>
 
   </dependencies>
-  <version>${elda.version}</version>
+  <version>1.1.4-RC4</version>
   <build>
      <plugins>
        <plugin>
