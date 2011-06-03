@@ -136,7 +136,6 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.isListEndpoint();
     }
 
-
 	private Resource resourceForPage(Model m, CallContext context, int page) {
 		URI ru = context.getRequestURI();
 		String newURI = EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) );
@@ -144,7 +143,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		return m.createResource( newURI );
     }
     
-    private Resource resourceForList(Model m, CallContext context) {		
+    private Resource resourceForList( Model m, CallContext context ) {		
     	URI ru = context.getRequestURI();
     	String rqp1 = EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
     	String rqp2 = EndpointMetadata.replaceQueryParam( Util.newURI(rqp1), QueryParameter._PAGE_SIZE );
@@ -158,34 +157,20 @@ public class APIEndpointImpl implements APIEndpoint {
     	return m.createResource( rqp2 );
     }
     
-	private void insertResultSetRoot( APIResultSet rs, CallContext context, APIQuery query ) {
+	private void insertResultSetRoot( APIResultSet rs, CallContext cc, APIQuery query ) {
     	Model rsm = rs.getModel();
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
-        URI ru = context.getRequestURI();
+        URI ru = cc.getRequestURI();
         Resource uriForDefinition = createDefinitionURI( rsm, ru, uriForSpec, template ); 
-        Resource thisPage = resourceForPage(rsm, context, page);
+        Resource thisPage = resourceForPage(rsm, cc, page);
         rs.setRoot(thisPage);
-        Resource exec = rsm.createResource();
     //
 		thisPage.addProperty( FIXUP.definition, uriForDefinition );
-		Model versions = ModelFactory.createDefaultModel();
-		Model formats = ModelFactory.createDefaultModel();
-		Model bindings = ModelFactory.createDefaultModel();
-		Model execution = ModelFactory.createDefaultModel();
-		
-		EndpointMetadata.addVersions( versions, spec.viewNames(), context, thisPage );
-		EndpointMetadata.addFormats( formats, context, thisPage.inModel(formats), spec.getRendererFactoryTable() );
-		EndpointMetadata.addBindings( rsm, bindings, exec, spec.getAPISpec().getShortnameService().nameMap(), context, thisPage );
-		EndpointMetadata.addExecution( execution, exec, context, thisPage );
-		EndpointMetadata.addQueryMetadata( execution, exec, context, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
-
-        if (query.wantsMetadata( "versions" )) rsm.add( versions ); else rs.setMetadata( "versions", versions );
-        if (query.wantsMetadata( "formats" )) rsm.add( formats );  else rs.setMetadata( "formats", formats );
-        if (query.wantsMetadata( "bindings" )) rsm.add( bindings ); else rs.setMetadata( "bindings", bindings );
-        if (query.wantsMetadata( "execution" )) rsm.add( execution ); else rs.setMetadata( "execution", execution );   
+		EndpointMetadata em = new EndpointMetadata( thisPage, cc );
+		createOptionalMetadata(rs, query, em);   
     //
         String and = thisPage.getURI().indexOf("?") < 0 ? "?" : "&";
         String emv_uri = thisPage.getURI() + and + "_metadata=all";
@@ -201,10 +186,10 @@ public class APIEndpointImpl implements APIEndpoint {
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
         	thisPage.addProperty( FIXUP.items, content );
-    		thisPage.addProperty( XHV.first, resourceForPage( rsm, context, 0 ) );
-    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( rsm, context, page+1 ) );
-    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( rsm, context, page-1 ) );
-    		Resource listRoot = resourceForList(rsm, context);
+    		thisPage.addProperty( XHV.first, resourceForPage( rsm, cc, 0 ) );
+    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( rsm, cc, page+1 ) );
+    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( rsm, cc, page-1 ) );
+    		Resource listRoot = resourceForList(rsm, cc);
     		thisPage
 	    		.addProperty( DCTerms.isPartOf, listRoot )
 	    		;
@@ -224,6 +209,42 @@ public class APIEndpointImpl implements APIEndpoint {
         	// rs.setContentLocation( query.getSubject() );
         }
     }
+
+	/**
+	    <p>
+	    	Create the optional endpoint metadata for this endpoint and query.
+	    	The metadata is in four parts: the other versions (aka views) of
+	    	this page, the other formats (aka renderers) of this page, the
+	    	bindings (values of variables, full URIs of shortnames) for this
+	    	page, and the execution description (which processor etc) for the
+	    	process that built this page.
+	    </p>
+	    <p>
+	    	Metadata that has been requested by the _metadata= query argument 
+	    	is copied into the result-set model. Unrequested metadata is stored
+	    	in the result-sets named metadat models in case it is requested by
+	    	a renderer (ie, the xslt renderer in the education example).
+	    </p>
+	*/
+	private void createOptionalMetadata( APIResultSet rs, APIQuery query, EndpointMetadata em ) {
+		Model rsm = rs.getModel();
+		Resource exec = rsm.createResource();
+		Model versions = ModelFactory.createDefaultModel();
+		Model formats = ModelFactory.createDefaultModel();
+		Model bindings = ModelFactory.createDefaultModel();
+		Model execution = ModelFactory.createDefaultModel();
+	//	
+		em.addVersions( versions, spec.viewNames() );
+		em.addFormats( formats, spec.getRendererFactoryTable() );
+		em.addBindings( rsm, bindings, exec, spec.getAPISpec().getShortnameService().nameMap() );
+		em.addExecution( execution, exec );
+		em.addQueryMetadata( execution, exec, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
+	//
+        if (query.wantsMetadata( "versions" )) rsm.add( versions ); else rs.setMetadata( "versions", versions );
+        if (query.wantsMetadata( "formats" )) rsm.add( formats );  else rs.setMetadata( "formats", formats );
+        if (query.wantsMetadata( "bindings" )) rsm.add( bindings ); else rs.setMetadata( "bindings", bindings );
+        if (query.wantsMetadata( "execution" )) rsm.add( execution ); else rs.setMetadata( "execution", execution );
+	}
     
     private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
     	if (template.startsWith("http:")) {

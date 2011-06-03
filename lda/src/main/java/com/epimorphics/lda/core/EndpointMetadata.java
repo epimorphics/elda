@@ -28,11 +28,23 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class EndpointMetadata {
 
-	public static void addVersions( Model m, Set<String> viewNames, CallContext c, Resource aPage ) {
-		Resource page = aPage.inModel( m );
+	protected final CallContext cc;
+	protected final Resource thisPage;
+	
+	public EndpointMetadata( Resource thisPage, CallContext cc ) {
+		this.cc = cc;
+		this.thisPage = thisPage;
+	}
+	
+	/**
+	    Create metadata describing the alternative views available
+	    for this endpoint, given their names.
+	*/
+	public void addVersions( Model m, Set<String> viewNames ) {
+		Resource page = thisPage.inModel( m );
 		for (String viewName: viewNames) {
 			if (!viewName.equals( View.SHOW_DEFAULT_INTERNAL )) {
-	    		Resource v = EndpointMetadata.resourceForView( m, c, viewName );
+	    		Resource v = resourceForView( m, viewName );
 				page.addProperty( DCTerms.hasVersion, v	);
 				v.addProperty( DCTerms.isVersionOf, page );
 				v.addProperty( RDFS.label, viewName );
@@ -40,11 +52,19 @@ public class EndpointMetadata {
     	}
 	}
 
-    public static Resource resourceForView( Model m, CallContext context, String name ) {
-    	URI req = context.getRequestURI();
+	/**
+	 	Answer the URL which is the request URL from the context
+	 	modified by replacing the _view with the requested name.
+	*/
+    private Resource resourceForView( Model m, String name ) {
+    	URI req = cc.getRequestURI();
     	return m.createResource( replaceQueryParam( req, QueryParameter._VIEW, name ) );
     }
 
+    /**
+        Answer the URI ru with any existing query parameters named <code>key</code>
+        discarded and replaced by key=value1&key=value2 ...
+    */
 	public static String replaceQueryParam(URI ru, String key, String... values) {
 		try {
 			String q = ru.getQuery();
@@ -84,8 +104,8 @@ public class EndpointMetadata {
 			;
 	}
 
-	public static Resource resourceForFormat( Model m, CallContext c, String formatName ) {
-		URI ru = c.getRequestURI();
+	private Resource resourceForFormat( Model m, String formatName ) {
+		URI ru = cc.getRequestURI();
 		try {
 			URI x = new URI
 				( ru.getScheme()
@@ -100,28 +120,33 @@ public class EndpointMetadata {
 		}
 	}
 
-	public static void addFormats( Model meta, CallContext c, Resource thisPage, Factories f ) {
+	/**
+	    Create metadata which describes the available alternative formats
+	    this page could be presented in.
+	*/
+	public void addFormats( Model meta, Factories f ) {
+		Resource page = thisPage.inModel(meta);
 		for (String formatName: f.formatNames()) 
 			if (formatName.charAt(0) != '_') {
 				String typeForName = f.getTypeForName( formatName ).toString(); 
-				Resource v = EndpointMetadata.resourceForFormat( meta, c, formatName );
+				Resource v = resourceForFormat( meta, formatName );
 				Resource format = meta.createResource().addProperty( RDFS.label, typeForName );
-				thisPage.addProperty( DCTerms.hasFormat, v );
+				page.addProperty( DCTerms.hasFormat, v );
 				v.addProperty( DCTerms.isFormatOf, thisPage );
 				v.addProperty( DCTerms.format, format );
 				v.addProperty( RDFS.label, formatName );
 			}
 	}
 
-	public static void addBindings( Model toScan, Model meta, Resource anExec, NameMap nm, CallContext cc, Resource aPage ) {
-		Resource exec = anExec.inModel(meta), page = aPage.inModel(meta);
+	public void addBindings( Model toScan, Model meta, Resource anExec, NameMap nm ) {
+		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
 		exec.addProperty( RDF.type, FIXUP.Execution );
-		EndpointMetadata.addVariableBindings( meta, exec, cc );
-		EndpointMetadata.addTermBindings( toScan, meta, exec, nm );
+		addVariableBindings( meta, exec );
+		addTermBindings( toScan, meta, exec, nm );
 		page.addProperty( FIXUP.wasResultOf, exec );
 	}
 
-	public static void addVariableBindings( Model meta, Resource exec, CallContext cc) {
+	public void addVariableBindings( Model meta, Resource exec ) {
 		for (Iterator<String> names = cc.parameters.keyIterator(); names.hasNext();) {
 			String name = names.next();
 			Resource vb = meta.createResource();
@@ -131,7 +156,7 @@ public class EndpointMetadata {
 		}
 	}
 
-	public static void addTermBindings( Model toScan, Model meta, Resource exec, NameMap nm ) {
+	public void addTermBindings( Model toScan, Model meta, Resource exec, NameMap nm ) {
 		Stage2NameMap s2 = nm.stage2(false);
 		MultiMap<String, String> mm = s2.result();
 		for (String uri: mm.keySet()) {
@@ -151,8 +176,8 @@ public class EndpointMetadata {
 	}
 
 	// following the Puelia model.
-	public static void addExecution( Model meta, Resource anExec, CallContext cc, Resource aPage ) {
-		Resource exec = anExec.inModel(meta), page = aPage.inModel(meta);
+	public void addExecution( Model meta, Resource anExec ) {
+		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
 		exec.addProperty( RDF.type, FIXUP.Execution );
 		Resource P = meta.createResource();
 		ELDA.addEldaMetadata( P );
@@ -160,12 +185,12 @@ public class EndpointMetadata {
 		page.addProperty( FIXUP.wasResultOf, exec );
 	}
 
-	public static void addQueryMetadata( Model meta, Resource anExec, CallContext context, APIQuery q, String detailsQuery, APISpec apiSpec, boolean listEndpoint ) {
+	public void addQueryMetadata( Model meta, Resource anExec, APIQuery q, String detailsQuery, APISpec apiSpec, boolean listEndpoint ) {
 		Resource exec = anExec.inModel(meta);
 		if (listEndpoint) {
 	    	Resource sr = meta.createResource();
 	    	sr.addProperty( RDF.type, SPARQL.QueryResult );    	
-	    	sr.addProperty( SPARQL.query, EndpointMetadata.inValue( meta, q.getQueryString( apiSpec, context ) ) );
+	    	sr.addProperty( SPARQL.query, EndpointMetadata.inValue( meta, q.getQueryString( apiSpec, cc ) ) );
 	    	exec.addProperty( FIXUP.selectionResult, sr );
 		}
 	//
