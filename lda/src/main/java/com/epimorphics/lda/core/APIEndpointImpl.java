@@ -144,7 +144,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		return m.createResource( newURI );
     }
     
-    private Resource resourceForList(Model m, CallContext context) {		
+    private Resource resourceForList( Model m, CallContext context ) {		
     	URI ru = context.getRequestURI();
     	String rqp1 = EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
     	String rqp2 = EndpointMetadata.replaceQueryParam( Util.newURI(rqp1), QueryParameter._PAGE_SIZE );
@@ -158,29 +158,32 @@ public class APIEndpointImpl implements APIEndpoint {
     	return m.createResource( rqp2 );
     }
     
-	private void insertResultSetRoot( APIResultSet rs, CallContext context, APIQuery query ) {
+	private void insertResultSetRoot( APIResultSet rs, CallContext cc, APIQuery query ) {
     	Model rsm = rs.getModel();
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
-        URI ru = context.getRequestURI();
+        URI ru = cc.getRequestURI();
         Resource uriForDefinition = createDefinitionURI( rsm, ru, uriForSpec, template ); 
-        Resource thisPage = resourceForPage(rsm, context, page);
+        Resource thisPage = resourceForPage(rsm, cc, page);
         rs.setRoot(thisPage);
         Resource exec = rsm.createResource();
     //
 		thisPage.addProperty( FIXUP.definition, uriForDefinition );
+		
+		EndpointMetadata em = new EndpointMetadata( thisPage, cc );
+		
 		Model versions = ModelFactory.createDefaultModel();
 		Model formats = ModelFactory.createDefaultModel();
 		Model bindings = ModelFactory.createDefaultModel();
 		Model execution = ModelFactory.createDefaultModel();
 		
-		EndpointMetadata.addVersions( versions, spec.viewNames(), context, thisPage );
-		EndpointMetadata.addFormats( formats, context, thisPage.inModel(formats), spec.getRendererFactoryTable() );
-		EndpointMetadata.addBindings( rsm, bindings, exec, spec.getAPISpec().getShortnameService().nameMap(), context, thisPage );
-		EndpointMetadata.addExecution( execution, exec, context, thisPage );
-		EndpointMetadata.addQueryMetadata( execution, exec, context, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
+		em.addVersions( versions, spec.viewNames() );
+		em.addFormats( formats, spec.getRendererFactoryTable() );
+		em.addBindings( rsm, bindings, exec, spec.getAPISpec().getShortnameService().nameMap() );
+		em.addExecution( execution, exec );
+		em.addQueryMetadata( execution, exec, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
 
         if (query.wantsMetadata( "versions" )) rsm.add( versions ); else rs.setMetadata( "versions", versions );
         if (query.wantsMetadata( "formats" )) rsm.add( formats );  else rs.setMetadata( "formats", formats );
@@ -201,10 +204,10 @@ public class APIEndpointImpl implements APIEndpoint {
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
         	thisPage.addProperty( FIXUP.items, content );
-    		thisPage.addProperty( XHV.first, resourceForPage( rsm, context, 0 ) );
-    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( rsm, context, page+1 ) );
-    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( rsm, context, page-1 ) );
-    		Resource listRoot = resourceForList(rsm, context);
+    		thisPage.addProperty( XHV.first, resourceForPage( rsm, cc, 0 ) );
+    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( rsm, cc, page+1 ) );
+    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( rsm, cc, page-1 ) );
+    		Resource listRoot = resourceForList(rsm, cc);
     		thisPage
 	    		.addProperty( DCTerms.isPartOf, listRoot )
 	    		;
