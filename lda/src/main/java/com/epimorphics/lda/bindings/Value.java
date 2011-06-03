@@ -11,13 +11,16 @@ package com.epimorphics.lda.bindings;
 /**
     A Value (of an Elda variable) has a type string (the URI of the type),
     a language code, and a value string. The type and language strings may
-    be empty (note: not <code>null</code>, <i>empty</i>).
+    be empty (note: not <code>null</code>, <i>empty</i>). A Value may be
+    marked "pending", which means that its value depends on the value of
+    other variables.
 */
 public class Value
 	{
 	protected final String language;
 	protected final String type;
 	protected final String valueString;
+	protected final boolean pending;
 	
 	/**
 	    A "zero value" for Value -- an untyped, unlanguaged,
@@ -31,14 +34,29 @@ public class Value
 		this.type = type;
 		this.language = language;
 		this.valueString = valueString;
+		this.pending = valueString.contains( "{" );
 		}	
 	
 	public Value( String valueString ) 
 		{ this( valueString, "", "" ); }
 	
+	/**
+	    The lexical form of the Value. If the Value is pending,
+	    may contain {...} variable interpolations.
+	*/
 	public String valueString() 
 		{ return valueString; }
 	
+	/**
+	    true iff the value is still pending.
+	*/
+	public boolean isPending() 
+		{ return pending; }
+	
+	/**
+	    Answer this value except with a different value string.
+	    (Note: a new value, not an update of the existing one.)
+	*/
 	public Value withValueString( String vs ) 
 		{ return new Value( vs, language, type ); }
 	

@@ -182,8 +182,8 @@ public class VarValues implements Lookup
 		}
 
 	/**
-	    Answer a new BindingSet constructed from the given map
-	    by converting the values into a plain string Binding object.
+	    Answer a new VarValues constructed from the given map
+	    by converting the values into a string-valued Value.
 	*/
 	public static VarValues uplift( Map<String, String> bindings ) 
 		{
