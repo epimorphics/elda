@@ -36,11 +36,15 @@ public class EndpointMetadata {
 		this.thisPage = thisPage;
 	}
 	
+	/**
+	    Create metadata describing the alternative views available
+	    for this endpoint, given their names.
+	*/
 	public void addVersions( Model m, Set<String> viewNames ) {
 		Resource page = thisPage.inModel( m );
 		for (String viewName: viewNames) {
 			if (!viewName.equals( View.SHOW_DEFAULT_INTERNAL )) {
-	    		Resource v = EndpointMetadata.resourceForView( m, cc, viewName );
+	    		Resource v = resourceForView( m, viewName );
 				page.addProperty( DCTerms.hasVersion, v	);
 				v.addProperty( DCTerms.isVersionOf, page );
 				v.addProperty( RDFS.label, viewName );
@@ -48,11 +52,19 @@ public class EndpointMetadata {
     	}
 	}
 
-    public static Resource resourceForView( Model m, CallContext context, String name ) {
-    	URI req = context.getRequestURI();
+	/**
+	 	Answer the URL which is the request URL from the context
+	 	modified by replacing the _view with the requested name.
+	*/
+    private Resource resourceForView( Model m, String name ) {
+    	URI req = cc.getRequestURI();
     	return m.createResource( replaceQueryParam( req, QueryParameter._VIEW, name ) );
     }
 
+    /**
+        Answer the URI ru with any existing query parameters named <code>key</code>
+        discarded and replaced by key=value1&key=value2 ...
+    */
 	public static String replaceQueryParam(URI ru, String key, String... values) {
 		try {
 			String q = ru.getQuery();
@@ -92,8 +104,8 @@ public class EndpointMetadata {
 			;
 	}
 
-	public static Resource resourceForFormat( Model m, CallContext c, String formatName ) {
-		URI ru = c.getRequestURI();
+	private Resource resourceForFormat( Model m, String formatName ) {
+		URI ru = cc.getRequestURI();
 		try {
 			URI x = new URI
 				( ru.getScheme()
@@ -108,12 +120,16 @@ public class EndpointMetadata {
 		}
 	}
 
+	/**
+	    Create metadata which describes the available alternative formats
+	    this page could be presented in.
+	*/
 	public void addFormats( Model meta, Factories f ) {
 		Resource page = thisPage.inModel(meta);
 		for (String formatName: f.formatNames()) 
 			if (formatName.charAt(0) != '_') {
 				String typeForName = f.getTypeForName( formatName ).toString(); 
-				Resource v = EndpointMetadata.resourceForFormat( meta, cc, formatName );
+				Resource v = resourceForFormat( meta, formatName );
 				Resource format = meta.createResource().addProperty( RDFS.label, typeForName );
 				page.addProperty( DCTerms.hasFormat, v );
 				v.addProperty( DCTerms.isFormatOf, thisPage );
@@ -125,12 +141,12 @@ public class EndpointMetadata {
 	public void addBindings( Model toScan, Model meta, Resource anExec, NameMap nm ) {
 		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
 		exec.addProperty( RDF.type, FIXUP.Execution );
-		EndpointMetadata.addVariableBindings( meta, exec, cc );
-		EndpointMetadata.addTermBindings( toScan, meta, exec, nm );
+		addVariableBindings( meta, exec );
+		addTermBindings( toScan, meta, exec, nm );
 		page.addProperty( FIXUP.wasResultOf, exec );
 	}
 
-	public static void addVariableBindings( Model meta, Resource exec, CallContext cc) {
+	public void addVariableBindings( Model meta, Resource exec ) {
 		for (Iterator<String> names = cc.parameters.keyIterator(); names.hasNext();) {
 			String name = names.next();
 			Resource vb = meta.createResource();
@@ -140,7 +156,7 @@ public class EndpointMetadata {
 		}
 	}
 
-	public static void addTermBindings( Model toScan, Model meta, Resource exec, NameMap nm ) {
+	public void addTermBindings( Model toScan, Model meta, Resource exec, NameMap nm ) {
 		Stage2NameMap s2 = nm.stage2(false);
 		MultiMap<String, String> mm = s2.result();
 		for (String uri: mm.keySet()) {
