@@ -93,7 +93,7 @@ public class APIEndpointImpl implements APIEndpoint {
     // In simple cases can combine view props into select then
     // run a construct on the results of the select and do less server traffic.
     // HOWEVER, there are two problems with that:
-    // (1) where one (or more) props in view are multi valued then limit/offset 
+    // (1) where one (or more) props in view are multi- valued then limit/offset 
     //     doesn't work and the paging code gets complicated
     // (2) where return value is a bNode and we want automatic bNode closure.
     // Current solution get full description from endpoint and post filter
@@ -138,7 +138,9 @@ public class APIEndpointImpl implements APIEndpoint {
 
 	private Resource resourceForPage(Model m, CallContext context, int page) {
 		URI ru = context.getRequestURI();
-		String newURI = EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) );
+		String newURI = isListEndpoint()
+			? EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
+			: EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
 		// System.err.println( ">> changed '" + ru + "' to '" + newURI + "'" );
 		return m.createResource( newURI );
     }
@@ -205,7 +207,7 @@ public class APIEndpointImpl implements APIEndpoint {
         } else {
         	Resource content = rs.getResultList().get(0);
         	thisPage.addProperty( FOAF.primaryTopic, content );
-        	content.addProperty( FOAF.isPrimaryTopicOf, thisPage );     
+        	content.addProperty( FOAF.isPrimaryTopicOf, thisPage ); 
         	// rs.setContentLocation( query.getSubject() );
         }
     }
@@ -222,7 +224,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    <p>
 	    	Metadata that has been requested by the _metadata= query argument 
 	    	is copied into the result-set model. Unrequested metadata is stored
-	    	in the result-sets named metadat models in case it is requested by
+	    	in the result-sets named metadata models in case it is requested by
 	    	a renderer (ie, the xslt renderer in the education example).
 	    </p>
 	*/
