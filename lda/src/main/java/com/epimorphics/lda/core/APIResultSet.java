@@ -54,6 +54,7 @@ public class APIResultSet {
     protected final boolean isCompleted;
     protected final Model model;
     protected final String detailsQuery;
+    protected String selectQuery = "";
 	
     /** 
         Map holding named metadata options. 
@@ -134,6 +135,10 @@ public class APIResultSet {
     public String getDetailsQuery() {
     	return detailsQuery;
     }
+    
+    public String getSelectQuery() {
+    	return selectQuery;
+    }
 
     public void setRoot(Resource root) {
         this.root = root;
@@ -159,7 +164,7 @@ public class APIResultSet {
         m.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
         for (Resource r : results) mappedResults.add( r.inModel(m) );
-        return new APIResultSet( m.getGraph(), mappedResults, isCompleted, detailsQuery, metadata );
+        return new APIResultSet( m.getGraph(), mappedResults, isCompleted, detailsQuery, metadata ).setSelectQuery( selectQuery );
     }
 
 	/**
@@ -177,6 +182,7 @@ public class APIResultSet {
         APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, detailsQuery, metadata );
         clone.setRoot(root);
         clone.setContentLocation(contentLocation);
+        clone.setSelectQuery( selectQuery );
         return clone;
     }
 
@@ -207,6 +213,12 @@ public class APIResultSet {
 			if (meta == null) log.warn( "Unknown metadata section '" + option + "': ignored." );
 			else model.add( meta );
 		}
+	}
+
+	public APIResultSet setSelectQuery( String selectQuery ) {
+		if (this.selectQuery.length() > 0) throw new RuntimeException( "was " + this.selectQuery + " wants " + selectQuery );
+		this.selectQuery = selectQuery;
+		return this;
 	}    
 }
 

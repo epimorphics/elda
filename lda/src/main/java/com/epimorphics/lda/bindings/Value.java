@@ -35,7 +35,7 @@ public class Value
 		this.language = language;
 		this.valueString = valueString;
 		this.pending = valueString.contains( "{" );
-		}	
+		}
 	
 	public Value( String valueString ) 
 		{ this( valueString, "", "" ); }
@@ -52,6 +52,12 @@ public class Value
 	*/
 	public boolean isPending() 
 		{ return pending; }
+	
+	public boolean isComplete()
+		{ return !pending; }
+	
+	public String type()
+		{ return type; }
 	
 	/**
 	    Answer this value except with a different value string.

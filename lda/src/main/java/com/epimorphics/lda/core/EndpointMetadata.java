@@ -147,7 +147,7 @@ public class EndpointMetadata {
 	}
 
 	public void addVariableBindings( Model meta, Resource exec ) {
-		for (Iterator<String> names = cc.parameters.keyIterator(); names.hasNext();) {
+		for (Iterator<String> names = cc.parameters.keySet().iterator(); names.hasNext();) {
 			String name = names.next();
 			Resource vb = meta.createResource();
 			vb.addProperty( FIXUP.label, name );

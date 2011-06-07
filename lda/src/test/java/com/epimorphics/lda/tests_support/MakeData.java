@@ -80,6 +80,11 @@ public class MakeData
 		return result;
 		}
 
+	/**
+	    Answer a ValueValues initialised with new plain-string-valued
+	    Values from the space-separated name=value components of 
+	    <code>bindings</code>.
+	*/
 	public static VarValues variables( String bindings ) 
 		{
 		VarValues result = new VarValues();

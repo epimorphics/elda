@@ -42,7 +42,8 @@ public class APIEndpointUtil {
 		APIEndpointSpec spec = ep.getSpec();
 		log.debug("Info: calling APIEndpoint " + spec);
 		VarValues vs = new VarValues( spec.getBindings() ).putAll( match.getBindings() );
-		return ep.call( CallContext.createContext( requestUri, queryParams, vs ) );
+		CallContext cc = CallContext.createContext( requestUri, queryParams, vs );
+		return ep.call( cc );
 	}
 
 	/**
