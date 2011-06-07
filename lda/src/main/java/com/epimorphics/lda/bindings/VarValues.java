@@ -88,7 +88,7 @@ public class VarValues implements Lookup
 	@Override public String getStringValue( String name ) 
 		{ 
 		Value v = get( name );
-		System.err.println( ">> getStringValue(" + name + ") => " + v );
+		// System.err.println( ">> getStringValue(" + name + ") => " + v );
 		return v == null ? null : v.valueString(); 
 		}
 	

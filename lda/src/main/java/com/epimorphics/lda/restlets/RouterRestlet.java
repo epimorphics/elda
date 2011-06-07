@@ -119,7 +119,9 @@ import com.hp.hpl.jena.shared.WrappedException;
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
 //
         try {
-        	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, requestUri, queryParams );
+        	String base = match.getEndpoint().getSpec().getAPISpec().getBase();
+        	URI ru = base == null || base.length() == 0 ? requestUri : new URI(base);
+        	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, ru, queryParams );
             APIResultSet results = resultsAndFormat.a;
 			if (results == null) {
 			    return returnNotFound("No answer back from " + match.getEndpoint().getSpec());

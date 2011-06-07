@@ -79,14 +79,14 @@ spec:viewerMedium
 #
 ############################################################################################
 
-spec:api
-	a api:API ;
-	rdfs:label "Edubase API"@en;
-	foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI;
-	api:maxPageSize "50";
-	api:defaultPageSize "10" ;
-	api:sparqlEndpoint <http://services.data.gov.uk/education/sparql> ;
-	api:variable 
+spec:api a api:API 
+    ; rdfs:label "Edubase API"@en
+    ; foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI
+    ; api:maxPageSize "50"
+    ; api:defaultPageSize "10" 
+    ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
+    ; api:base "" # set this to over-ride use of context root 
+    ; api:variable 
 	   [api:name "_strip_has"; api:value "yes"]
 	; api:variable
 		[ api:name "activeImageBase"; api:value "/elda/images/green/16x16"]
