@@ -20,6 +20,7 @@ package com.epimorphics.lda.restlets;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -119,8 +120,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
 //
         try {
-        	String base = match.getEndpoint().getSpec().getAPISpec().getBase();
-        	URI ru = base == null || base.length() == 0 ? requestUri : new URI(base);
+        	URI ru = makeRequestURI(ui, match, requestUri);
         	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, ru, queryParams );
             APIResultSet results = resultsAndFormat.a;
 			if (results == null) {
@@ -144,6 +144,19 @@ import com.hp.hpl.jena.shared.WrappedException;
             return returnError(e);
         }
     }
+
+	private URI makeRequestURI(UriInfo ui, Match match, URI requestUri) throws URISyntaxException {
+//		System.err.println( ">> requestURI: " + requestUri );
+//		System.err.println( ">> path: " + ui.getPath() );
+//		System.err.println( ">> params: " + ui.getQueryParameters() );
+		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
+		if (base == null) return requestUri;
+		String rus = requestUri.toString();
+		int here = rus.indexOf( ui.getPath() );
+		String cons = base + rus.substring(here);
+		System.err.println( ">> constructed " + cons );
+		return new URI(cons);
+	}
 
 	private static AsURL pathAsURLFactory(final ServletContext servCon) {
 		return new RendererContext.AsURL() 
