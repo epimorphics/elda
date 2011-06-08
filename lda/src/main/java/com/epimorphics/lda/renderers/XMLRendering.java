@@ -100,10 +100,21 @@ public class XMLRendering {
 	Element addResourceToElement( Element e, Resource x ) {
 		addIdentification( e, x );
 		if (seen.add( x )) {
-			Set<Property> properties = x.listProperties().mapWith( Statement.Util.getPredicate ).toSet();
+			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 			for (Property p: properties) addPropertyValues( e, x, p );
 		}
 		return e;
+	}
+
+	private List<Property> asSortedList( Set<Property> set ) {
+		List<Property> properties = new ArrayList<Property>( set );
+		Collections.sort( properties, new Comparator<Property>() {
+            @Override
+            public int compare(Property a, Property b) {
+                return nameMap.getOne( a.getURI() ).compareTo( nameMap.getOne( b.getURI() ) );
+            }
+        	} );
+		return properties;
 	}
 
 	private void addIdentification( Element e, Resource x ) {

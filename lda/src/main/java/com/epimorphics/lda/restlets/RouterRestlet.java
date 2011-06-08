@@ -178,7 +178,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 		String rus = requestUri.toString();
 		int here = rus.indexOf( ui.getPath() );
 		String cons = base + rus.substring(here);
-		System.err.println( ">> constructed " + cons );
+//		System.err.println( ">> constructed " + cons );
 		return new URI(cons);
 	}
 
