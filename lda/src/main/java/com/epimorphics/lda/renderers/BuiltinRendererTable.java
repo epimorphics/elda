@@ -14,6 +14,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
@@ -24,6 +25,12 @@ import com.hp.hpl.jena.rdf.model.Resource;
 */
 public class BuiltinRendererTable {
 	
+	/**
+	    Any subclass of DoingWith has withRoot and withMediaType methods
+	    that do nothing, returning their receiver. (Most renderer factories
+	    don't need, or can't have, specialisations with different media
+	    types or config resources; it's the XSLT renderer that does.)
+	*/
 	private abstract static class DoingWith implements RendererFactory {
 		
 		@Override public RendererFactory withRoot( Resource r ) {
@@ -36,6 +43,8 @@ public class BuiltinRendererTable {
 	}
 	
 	static private Factories factoryTable = new Factories();
+	
+	static private Resource Empty = ModelFactory.createDefaultModel().createResource();
 	
 	static private Map<Resource, RendererFactory> builtins = new HashMap<Resource, RendererFactory>();
 	
@@ -89,7 +98,7 @@ public class BuiltinRendererTable {
 			}
 			} );
 		
-		putFactory( "_xslt", API.XsltFormatter, MediaType.STAR_STAR, new XSLT_RendererFactory( null, MediaType.STAR_STAR ) );
+		putFactory( "_xslt", API.XsltFormatter, MediaType.NONE, new XSLT_RendererFactory( Empty, MediaType.NONE ) );
 		
 		putFactory( "html", FIXUP.HtmlFormatter, MediaType.TEXT_HTML, new DoingWith() 
 			{
