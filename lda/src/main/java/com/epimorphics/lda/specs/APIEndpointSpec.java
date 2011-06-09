@@ -144,9 +144,13 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
             RDFNode tNode = ni.next();
             if ( ! tNode.isResource()) 
                 throw new APIException("Found literal " + tNode + " when expecting a template resource");
-            Resource tView = (Resource) tNode;
-            String viewName = getNameWithFallback( tView );
-			result.put( viewName, extractView( m, tView ) );
+            Resource tView = (Resource) tNode;            
+            View builtin = View.getBuiltin( tView );
+            if (builtin == null) {
+	            String viewName = getNameWithFallback( tView );
+				result.put( viewName, getViewByProperties( m, viewName, tView ) );
+            } else 
+            	result.put( builtin.name(), builtin );
         }
         result.put( View.SHOW_ALL, View.ALL );
         result.put( View.SHOW_BASIC, View.BASIC );
@@ -163,7 +167,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     private View getDefaultView( Resource endpoint ) {
         Model model = endpoint.getModel();
 		return endpoint.hasProperty( API.defaultViewer )
-        	? extractView( model, getResourceValue( endpoint, API.defaultViewer ) )
+        	? getViewByProperties( model, "default", getResourceValue( endpoint, API.defaultViewer ) )
         	: View.DESCRIBE
         	;
     }
@@ -171,19 +175,11 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     /**
         both API.property and .properties until TODO the ambiguity gets resolved.
     */
-    private View extractView( Model m, Resource tRes ) {
-    	if (tRes.equals( API.describeViewer )) {
-    		return View.DESCRIBE;
-    	} else if (tRes.equals( API.labelledDescribeViewer )) {
-    		return View.ALL;
-    	} else if (tRes.equals( API.basicViewer )){
-    		return View.BASIC;
-    	} else {
-	        View v = new View(false);
-			addViewProperties( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
-			addViewProperties( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
-	        return v;
-    	}
+    private View getViewByProperties( Model m, String name, Resource tRes ) {
+        View v = new View( name );
+		addViewProperties( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
+		addViewProperties( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
+        return v;
     }
 
 	private void addViewProperties( View v, List<RDFNode> items ) {

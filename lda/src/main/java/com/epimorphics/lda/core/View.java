@@ -22,6 +22,7 @@ import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.PropertyChain;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.*;
@@ -52,39 +53,66 @@ public class View {
     /**
         View that does DESCRIBE plus labels of all objects.
     */
-    public static final View ALL = new View( false, Type.T_ALL );
+    public static final View ALL = new View( false, SHOW_ALL, Type.T_ALL );
     
     /**
         View that does rdf:type and rdfs:label.
     */
-    public static final View BASIC = new View( false, Type.T_BASIC );
+    public static final View BASIC = new View( false, SHOW_BASIC, Type.T_BASIC );
     
     /**
         View that does DESCRIBE.
     */
-    public static final View DESCRIBE = new View(false, Type.T_DESCRIBE );
-
+    public static final View DESCRIBE = new View(false, SHOW_DESCRIPTION, Type.T_DESCRIBE );
+    
+    private static Map<Resource, View> builtins = new HashMap<Resource, View>();
+    
+    static {
+    	builtins.put( API.basicViewer, BASIC );
+    	builtins.put( API.describeViewer, DESCRIBE );
+    	builtins.put( API.labelledDescribeViewer, ALL );
+    }
+    
+    /**
+        Answer the built-in view with the given URI, or null if there
+        isn't one.
+    */
+    public static View getBuiltin( Resource r ) {
+    	return builtins.get(r);
+    }
+    
 	protected boolean doesFiltering = true;
 	
 	static enum Type { T_DESCRIBE, T_ALL, T_CHAINS, T_BASIC };
 	
 	protected Type type = Type.T_DESCRIBE;
     
+	protected String name = null;
+	
     public View() {
     	this(true);
     }
     
     public View( Type type ) {
-    	this( true, type );
+    	this( true, null, type );
+    }
+    
+    public View( String name ) {
+    	this( false, name, Type.T_CHAINS );
     }
     
     public View( boolean doesFiltering ) {
-    	this( doesFiltering, Type.T_DESCRIBE );
+    	this( doesFiltering, null, Type.T_DESCRIBE );
     }
     
-    public View( boolean doesFiltering, Type type ) {
+    public View( boolean doesFiltering, String name, Type type ) {
     	this.type = type;
+    	this.name = name;
     	this.doesFiltering = doesFiltering;
+    }
+    
+    public String name(){
+    	return name;
     }
     
     /**
@@ -98,7 +126,7 @@ public class View {
         original.
     */
     public View copy() {
-    	View r = new View( doesFiltering, type ).addFrom( this );
+    	View r = new View( doesFiltering, null, type ).addFrom( this );
     	// System.err.println( ">> copying " + this + " => " + r );
 		return r;
     }
