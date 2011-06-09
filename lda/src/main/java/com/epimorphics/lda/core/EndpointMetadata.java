@@ -87,12 +87,18 @@ public class EndpointMetadata {
 		}
 	}
 
-	public static String quoteForValue(String value) {
+	public static String quoteForValue( String value ) {
 		return value.replace( "&", "%??" );
 	}
 
 	public static String strip( String query, String key ) {
-		return query.replaceAll( "(^|[&])" + key + "=[^&]*[&]?", "" );
+		String result = 
+			("&" + query)
+			.replaceAll( "[&]" + key + "=[^&]*", "" )
+			.replaceFirst( "^[&]", "" )
+			;
+		// System.err.println( ">> strip '" + query + "'/" + key + " => '" + result + "'" );
+		return result;
 	}
 
 	// TODO should only substitute .foo if it's a renderer or language
