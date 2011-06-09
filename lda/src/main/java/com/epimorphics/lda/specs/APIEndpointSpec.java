@@ -145,18 +145,29 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
             if ( ! tNode.isResource()) 
                 throw new APIException("Found literal " + tNode + " when expecting a template resource");
             Resource tView = (Resource) tNode;            
-            View builtin = View.getBuiltin( tView );
-            if (builtin == null) {
-	            String viewName = getNameWithFallback( tView );
-				result.put( viewName, getViewByProperties( m, viewName, tView ) );
-            } else 
-            	result.put( builtin.name(), builtin );
+            View v = getView( tView );
+            result.put( v.name(), v );
+//            View builtin = View.getBuiltin( tView );
+//            if (builtin == null) {
+//	            String viewName = getNameWithFallback( tView );
+//				result.put( viewName, getViewByProperties( m, viewName, tView ) );
+//            } else 
+//            	result.put( builtin.name(), builtin );
         }
         result.put( View.SHOW_ALL, View.ALL );
         result.put( View.SHOW_BASIC, View.BASIC );
         result.put( View.SHOW_DESCRIPTION, View.DESCRIBE );
         result.put( View.SHOW_DEFAULT_INTERNAL, getDefaultView( endpoint ) );
         return result;
+    }
+    
+    private View getView( Resource v ) {
+    	View builtin = View.getBuiltin( v );
+        if (builtin == null) {
+            String viewName = getNameWithFallback( v );
+			return getViewByProperties( v.getModel(), viewName, v );
+        } else 
+        	return builtin;
     }
 
 	private String getNameWithFallback(Resource tRes) {
@@ -165,11 +176,11 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	}
     
     private View getDefaultView( Resource endpoint ) {
-        Model model = endpoint.getModel();
-		return endpoint.hasProperty( API.defaultViewer )
-        	? getViewByProperties( model, "default", getResourceValue( endpoint, API.defaultViewer ) )
-        	: View.DESCRIBE
-        	;
+    	if (endpoint.hasProperty( API.defaultViewer )) {
+    		Resource x = getResourceValue( endpoint, API.defaultViewer );
+    		return getView( x );   		
+    	} else
+    		return View.DESCRIBE;
     }
 
     /**
