@@ -21,6 +21,7 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.Query;
@@ -267,12 +268,13 @@ public class View {
 
 	private String fetchByGivenPropertyChains(Model m, List<Resource> roots, List<Source> sources, VarSupply vars, List<PropertyChain> chains) {
 		StringBuilder construct = new StringBuilder();
+		PrefixLogger pl = new PrefixLogger( m );
 		construct.append( "CONSTRUCT {" );
 		List<Variable> varsInOrder = new ArrayList<Variable>();
 		for (Resource r: new HashSet<Resource>( roots)) {
 			for (PropertyChain c: chains) {
 				construct.append( "\n  " );
-				buildConstructClause( construct, r, c, vars, varsInOrder );
+				buildConstructClause( pl, construct, r, c, vars, varsInOrder );
 			}
 		}
 	//
@@ -281,39 +283,40 @@ public class View {
 		for (Resource r: new HashSet<Resource>( roots)) {
 			for (PropertyChain c: chains) {
 				construct.append( "\n  " ).append( union );
-				buildWhereClause( construct, r, c, vars, varsInOrder );
+				buildWhereClause( pl, construct, r, c, vars, varsInOrder );
 				union = "UNION ";
 			}
 		}
 		construct.append( "\n}" );
 	//
-		String queryString = construct.toString();
+		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
+		String queryString = prefixes + construct.toString();
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: sources) m.add( x.executeConstruct( constructQuery ) );
 		return queryString;
 	}
 	
-	private void buildConstructClause( StringBuilder construct, Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
-		String S = "<" + r.getURI() + ">";
+	private void buildConstructClause( PrefixLogger pl, StringBuilder construct, Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
+		String S = pl.present( r.getURI() );
 		for (Property p: c.getProperties()) {
 			Variable v = vs.newVar();
 			varsInOrder.add( v );
-			String V = v.asSparqlTerm();
+			String V = v.asSparqlTerm( pl );
 			construct.append( S );
-			construct.append( " " ).append( "<" ).append( p.getURI() ).append( ">" );
+			construct.append( " " ).append( pl.present( p.getURI() ) );
 			construct.append( " " ).append( V );
 			S = " . " + V;
 		}
 		construct.append( " ." );
 	}
 	
-	private void buildWhereClause( StringBuilder construct, Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
-		String S = "<" + r.getURI() + ">";
+	private void buildWhereClause( PrefixLogger pl, StringBuilder construct, Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
+		String S = pl.present( r.getURI() );
 		construct.append( "{" );
 		for (Property p: c.getProperties()) {
-			String V = next( varsInOrder) .asSparqlTerm();
+			String V = next( varsInOrder) .asSparqlTerm( pl );
 			construct.append( S );
-			construct.append( " " ).append( "<" ).append( p.getURI() ).append( ">" );
+			construct.append( " " ).append( pl.present( p.getURI() ) );
 			construct.append( " " ).append( V );
 			S = " OPTIONAL { " + V;
 		}
@@ -326,10 +329,12 @@ public class View {
 
 	private String fetchBareDescriptions( Model m, List<Resource> roots, List<Source> sources ) {
 		long zero = System.currentTimeMillis();
+		PrefixLogger pl = new PrefixLogger( m );
 		String describe = "DESCRIBE";
 		for (Resource r: new HashSet<Resource>( roots )) { // TODO
-			describe += "\n  <" + r.getURI() + ">";
+			describe += "\n  " + pl.present( r.getURI() );
 		}
+		describe = pl.writePrefixes( new StringBuilder() ).toString() + describe;
 		Query describeQuery = QueryFactory.create( describe );
 		for (Source x: sources) m.add( x.executeDescribe( describeQuery ) );
 		long time = System.currentTimeMillis() - zero;

@@ -20,6 +20,8 @@
 
 @prefix extras: <http://www.epimorphics.com/vocabularies/lda#> .
 
+@prefix ids: <http://education.data.gov.uk/id/school/>.
+
 ############################################################################################
 #
 # COMPONENTS

@@ -27,6 +27,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.LARQManager;
+import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.QuerySupport;
 
 import static com.epimorphics.util.CollectionUtils.*;
@@ -628,20 +629,21 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     public String assembleSelectQuery( PrefixMapping prefixes ) {    	
     	if (fixedQueryString == null) {
+    		PrefixLogger pl = new PrefixLogger( prefixes );
 	        StringBuilder q = new StringBuilder();
-	        appendPrefixes( q, prefixes );
+	        // appendPrefixes( q, prefixes );
 	        q.append("SELECT ");
 	        if (orderExpressions.length() > 0) q.append("DISTINCT "); // Hack to work around lack of _select but seems a common pattern
 	        q.append( SELECT_VAR.name() );
 	        q.append(" WHERE {\n");
-	        String bgp = constructBGP();
+	        String bgp = constructBGP( pl );
 	        if (whereExpressions.length() > 0) {
 	            q.append( whereExpressions );
 	        } else {
 		        if (bgp.isEmpty()) bgp = SELECT_VAR.name() + " ?__p ?__v ."; 
 	        }
 	        q.append( bgp );
-	        appendFilterExpressions( q );
+	        appendFilterExpressions( pl, q );
 	        q.append( "} " );
 	        if (orderExpressions.length() > 0) {
 	            q.append(" ORDER BY ");
@@ -650,25 +652,28 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	        q.append(" OFFSET " + (pageNumber * pageSize));
 	        q.append(" LIMIT " + pageSize);
 	        // System.err.println( ">> QUERY IS: \n" + q.toString() );
-	        return q.toString();
+	        StringBuilder x = new StringBuilder();
+	        pl.writePrefixes( x );
+	        x.append( q );
+	        return x.toString();
     	} else {
     		return fixedQueryString;
     	}
     }
 
-	public void appendFilterExpressions( StringBuilder q ) {
+	public void appendFilterExpressions(PrefixLogger pl, StringBuilder q ) {
 		for (RenderExpression i: filterExpressions) {
 			q.append( "FILTER (" );
-			i.render( q );
+			i.render( pl, q );
 			q.append( ")" );
 		}				
 	}
 
-	public String constructBGP() {
+	public String constructBGP( PrefixLogger pl ) {
 		StringBuilder sb = new StringBuilder();
 		for (RDFQ.Triple t: QuerySupport.reorder( basicGraphTriples ))
 			sb
-				.append( t.asSparqlTriple() )
+				.append( t.asSparqlTriple( pl ) )
 				.append( " .\n" )
 				;
 		return sb.toString();
@@ -839,6 +844,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         	}
         	return "# lots of queries, none shown.";
         }
+        m.setNsPrefixes( spec.getPrefixMap() );
         return view.fetchDescriptions( m, roots, sources, this );
     }
     

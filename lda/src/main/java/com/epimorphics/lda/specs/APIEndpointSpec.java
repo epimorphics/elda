@@ -139,27 +139,25 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     */
     private Map<String, View> extractViews( Resource endpoint ) {
     	Model m = endpoint.getModel();
-        Map<String, View> result = new HashMap<String, View>(); 
+        Map<String, View> views = defaultViews(endpoint);
         for (NodeIterator ni =  m.listObjectsOfProperty( endpoint, API.viewer ); ni.hasNext();) {
             RDFNode tNode = ni.next();
-            if ( ! tNode.isResource()) 
+            if (!tNode.isResource()) 
                 throw new APIException("Found literal " + tNode + " when expecting a template resource");
-            Resource tView = (Resource) tNode;            
-            View v = getView( tView );
-            result.put( v.name(), v );
-//            View builtin = View.getBuiltin( tView );
-//            if (builtin == null) {
-//	            String viewName = getNameWithFallback( tView );
-//				result.put( viewName, getViewByProperties( m, viewName, tView ) );
-//            } else 
-//            	result.put( builtin.name(), builtin );
+            View v = getView( (Resource) tNode );
+            views.put( v.name(), v );
         }
+        return views;
+    }
+
+	private Map<String, View> defaultViews( Resource endpoint ) {
+		Map<String, View> result = new HashMap<String, View>(); 
         result.put( View.SHOW_ALL, View.ALL );
         result.put( View.SHOW_BASIC, View.BASIC );
         result.put( View.SHOW_DESCRIPTION, View.DESCRIBE );
         result.put( View.SHOW_DEFAULT_INTERNAL, getDefaultView( endpoint ) );
-        return result;
-    }
+		return result;
+	}
     
     private View getView( Resource v ) {
     	View builtin = View.getBuiltin( v );
