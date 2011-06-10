@@ -192,22 +192,20 @@ public class EndpointMetadata {
 	}
 
 	public void addQueryMetadata( Model meta, Resource anExec, APIQuery q, String detailsQuery, APISpec apiSpec, boolean listEndpoint ) {
-		Resource exec = anExec.inModel(meta);
-		if (listEndpoint) {
-	    	Resource sr = meta.createResource();
-	    	sr.addProperty( RDF.type, SPARQL.QueryResult );    	
-	    	sr.addProperty( SPARQL.query, EndpointMetadata.inValue( meta, q.getQueryString( apiSpec, cc ) ) );
-	    	exec.addProperty( FIXUP.selectionResult, sr );
-		}
-	//
-		Resource EP = meta.createResource();
-		EP.addProperty( RDF.type, SPARQL.Service );
+		Resource EP = meta.createResource( SPARQL.Service );
 		apiSpec.getDataSource().addMetadata( EP ); 
 		Resource url = EP.getProperty( API.sparqlEndpoint ).getResource(); 
 		EP.addProperty( SPARQL.url, url );
 	//
-		Resource vr = meta.createResource();
-		vr.addProperty( RDF.type, SPARQL.QueryResult );
+		Resource exec = anExec.inModel(meta);
+		if (listEndpoint) {
+	    	Resource sr = meta.createResource( SPARQL.QueryResult );    	
+	    	sr.addProperty( SPARQL.query, EndpointMetadata.inValue( meta, q.getQueryString( apiSpec, cc ) ) );
+	    	sr.addProperty( SPARQL.endpoint, EP );
+	    	exec.addProperty( FIXUP.selectionResult, sr );
+		}
+	//
+		Resource vr = meta.createResource( SPARQL.QueryResult );
 		vr.addProperty( SPARQL.query, EndpointMetadata.inValue( meta, detailsQuery ) ); 
 		vr.addProperty( SPARQL.endpoint, EP );
 		exec.addProperty( FIXUP.viewingResult, vr );

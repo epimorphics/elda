@@ -188,7 +188,8 @@ public class VarValues implements Lookup
 			int rb = s.indexOf( '}', lb );
 			sb.append( s.substring( start, lb ) );
 			String name = s.substring( lb + 1, rb );
-			if (seen.contains( name )) throw new RuntimeException( "circularity" );
+			if (seen.contains( name )) 
+				throw new RuntimeException( "circularity involving: " + seen );
 			seen.add( name );
 			Value v = evaluate( name, vars.get(name), seen );
 			seen.remove( seen.size() - 1 );

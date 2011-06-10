@@ -207,6 +207,7 @@ public class XMLRendering {
 	}
 
 	private boolean isMultiValued( Property p ) {
+		if (p.equals( RDF.type )) return true; // HACKERY
 		Prop px = sns.asContext().getPropertyByURI(p.getURI());
 		return px != null && px.isMultivalued();
 	}
