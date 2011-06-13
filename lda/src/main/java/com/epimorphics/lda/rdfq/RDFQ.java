@@ -36,7 +36,7 @@ public class RDFQ
 			{ return optional; }
 		
 		@Override public String toString()
-			{ return asSparqlTriple( PrefixLogger.Empty ); }
+			{ return asSparqlTriple( PrefixLogger.some() ); }
 		
 		public String asSparqlTriple( PrefixLogger pl )
 			{ 

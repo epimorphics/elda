@@ -42,7 +42,7 @@ public class Apply implements RenderExpression
 	@Override public String toString()
 		{
 		StringBuilder b = new StringBuilder();
-		render( PrefixLogger.Empty, b );
+		render( PrefixLogger.some(), b );
 		return b.toString();
 		}
 	}

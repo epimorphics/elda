@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.hp.hpl.jena.shared.PrefixMapping;
 
@@ -12,8 +14,6 @@ import com.hp.hpl.jena.shared.PrefixMapping;
     Prefix mapping
 */
 public class PrefixLogger {
-
-	public static final PrefixLogger Empty = new PrefixLogger( PrefixMapping.Extended );
 
 	protected final PrefixMapping pm;
 	
@@ -42,13 +42,34 @@ public class PrefixLogger {
 		Collections.sort( prefixes );
 		for (String prefix: prefixes) {
 			out
-			.append( "PREFIX " )
-			.append( prefix )
-			.append( ": <" )
-			.append( pm.getNsPrefixURI(prefix).trim() ) 
-			.append( ">\n" );
+				.append( "PREFIX " )
+				.append( prefix )
+				.append( ": <" )
+				.append( pm.getNsPrefixURI(prefix).trim() ) 
+				.append( ">\n" );
 		}
 		return out;
+	}
+
+	/**
+	 	Look for plausible candidates for prefixes in the SPARQL
+	 	fragment an add them to <code>seen</code>.
+	*/
+	public void findPrefixesIn( String fragment ) {
+		Matcher m = qNamePrefix.matcher( fragment );
+		while (m.find()) {
+			String candidate = m.group(1);
+			if (pm.getNsPrefixURI( candidate ) != null) seen.add( candidate );
+		}
+	}
+
+	static final Pattern qNamePrefix = Pattern.compile( "[^<A-Za-z]([A-Za-z_-]+):" );
+	
+	/**
+	    Answer a new PrefixLoggger with a few standard prefixes in it.
+	*/
+	public static PrefixLogger some() {
+		return new PrefixLogger( PrefixMapping.Extended );
 	}
 	
 }

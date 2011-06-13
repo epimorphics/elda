@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import com.epimorphics.lda.core.APIQuery;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestWhereParameter 
 	{
@@ -24,13 +25,13 @@ public class TestWhereParameter
         ShortnameService sns = TestSelectParameter.makeSNS();
         APIQuery q = new APIQuery(sns);
         String theBaseQuery = q.assembleSelectQuery( TestSelectParameter.noPrefixes );
-        String theWhereClause = "?p <spoo:equals> 17";
+        String theWhereClause = "?p rdf:equals 17";
         q.handleReservedParameters( null, null, "_where", theWhereClause );
     //
     // this is horrid -- want something better later. too dependent on
     // string arithmetic.
     //
-        String theUpdatedQuery = q.assembleSelectQuery( TestSelectParameter.noPrefixes);
+        String theUpdatedQuery = q.assembleSelectQuery( TestSelectParameter.noPrefixes );
 //        System.err.println( ">> the updated query: " + theUpdatedQuery );
 //        System.err.println( ">> the base query: " + theBaseQuery );
         assertTrue( theUpdatedQuery.contains( theWhereClause ) );

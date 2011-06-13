@@ -631,14 +631,14 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	if (fixedQueryString == null) {
     		PrefixLogger pl = new PrefixLogger( prefixes );
 	        StringBuilder q = new StringBuilder();
-	        // appendPrefixes( q, prefixes );
 	        q.append("SELECT ");
 	        if (orderExpressions.length() > 0) q.append("DISTINCT "); // Hack to work around lack of _select but seems a common pattern
 	        q.append( SELECT_VAR.name() );
 	        q.append(" WHERE {\n");
 	        String bgp = constructBGP( pl );
 	        if (whereExpressions.length() > 0) {
-	            q.append( whereExpressions );
+	        	q.append( whereExpressions ); 
+	        	pl.findPrefixesIn( whereExpressions.toString() );
 	        } else {
 		        if (bgp.isEmpty()) bgp = SELECT_VAR.name() + " ?__p ?__v ."; 
 	        }

@@ -13,7 +13,7 @@ import com.epimorphics.lda.support.PrefixLogger;
 public abstract class Any implements RenderExpression
 	{
 	@Override public String toString()
-		{ return "<!! " + asSparqlTerm( PrefixLogger.Empty ) + "!!>"; }
+		{ return "<!! " + asSparqlTerm( PrefixLogger.some() ) + "!!>"; }
 	
 	@Override public boolean equals( Object other )
 		{ throw new UnsupportedOperationException(); }
