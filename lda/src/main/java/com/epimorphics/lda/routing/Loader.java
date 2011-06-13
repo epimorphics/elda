@@ -100,6 +100,9 @@ public class Loader extends HttpServlet {
         baseFilePath = filepath;
         modelLoader = new APIModelLoader(baseFilePath);
         FileManager.get().addLocatorFile( baseFilePath );
+        modelLoader = new APIModelLoader(baseFilePath);
+        FileManager.get().addLocatorFile( baseFilePath );
+        SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
     }
 
 	public void loadSpecFromFile( String spec ) {

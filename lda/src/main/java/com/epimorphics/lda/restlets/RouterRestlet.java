@@ -20,6 +20,7 @@ package com.epimorphics.lda.restlets;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -96,14 +97,38 @@ import com.hp.hpl.jena.shared.WrappedException;
             @Context UriInfo ui) throws IOException 
     {
         Couple<String, String> pathAndType = parse( pathstub );
-        Match match = getMatch( "/" + pathAndType.a );
+        Match matchAll = getMatch( "/" + pathstub );
+        Match matchTrimmed = getMatch( "/" + pathAndType.a );
+        Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
+        String type = match == matchAll ? null : pathAndType.b;
         if (match == null) {
-            return returnNotFound( "ERROR: Failed to find API handler for path " + ("/" + pathAndType.a) );
+            String message = "ERROR: Failed to find API handler for path " + ("/" + pathstub);
+            if (pathAndType.b != null) message += " (perhaps '" + pathAndType.b + "' is an incorrect format name?)";
+			return returnNotFound( message );
         } else {
-            List<MediaType> mediaTypes = getAcceptableMediaTypes(headers);
-            return runEndpoint( servCon, ui, mediaTypes, pathAndType.b, match ); 
+            List<MediaType> mediaTypes = getAcceptableMediaTypes( headers );
+            return runEndpoint( servCon, ui, mediaTypes, type, match ); 
         }
     }
+    
+    /**
+        Answer true of m's endpoint has no formatter called type.
+    */
+    private boolean notFormat( Match m, String type ) {
+    	return m.getEndpoint().getRendererNamed( type ) == null;
+	}
+
+	//** return (revised path, renderer name or null)
+    // TODO work out a spec-conformant method for this lookup
+    private Couple<String, String> parse( String pathstub ) 
+        {
+        String path = pathstub, type = null;
+        int dot = pathstub.lastIndexOf( '.' ) + 1;
+        int slash = pathstub.lastIndexOf( '/' );
+        if (dot > slash) 
+            { path = pathstub.substring(0, dot - 1); type = pathstub.substring(dot); }        
+        return new Couple<String, String>( path, type );
+        }
 
 	private List<MediaType> getAcceptableMediaTypes(HttpHeaders headers) {
 		List<MediaType> mediaTypes = new ArrayList<MediaType>();
@@ -119,7 +144,8 @@ import com.hp.hpl.jena.shared.WrappedException;
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
 //
         try {
-        	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, requestUri, queryParams );
+        	URI ru = makeRequestURI(ui, match, requestUri);
+        	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, ru, queryParams );
             APIResultSet results = resultsAndFormat.a;
 			if (results == null) {
 			    return returnNotFound("No answer back from " + match.getEndpoint().getSpec());
@@ -143,6 +169,19 @@ import com.hp.hpl.jena.shared.WrappedException;
         }
     }
 
+	private URI makeRequestURI(UriInfo ui, Match match, URI requestUri) throws URISyntaxException {
+//		System.err.println( ">> requestURI: " + requestUri );
+//		System.err.println( ">> path: " + ui.getPath() );
+//		System.err.println( ">> params: " + ui.getQueryParameters() );
+		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
+		if (base == null) return requestUri;
+		String rus = requestUri.toString();
+		int here = rus.indexOf( ui.getPath() );
+		String cons = base + rus.substring(here);
+//		System.err.println( ">> constructed " + cons );
+		return new URI(cons);
+	}
+
 	private static AsURL pathAsURLFactory(final ServletContext servCon) {
 		return new RendererContext.AsURL() 
 			{@Override public URL asResourceURL( String p ) 
@@ -155,17 +194,6 @@ import com.hp.hpl.jena.shared.WrappedException;
 			} }
 		};
 	}
-    
-    //** return (revised path, renderer name or null)
-    // TODO work out a spec-conformant method for this lookup
-    private Couple<String, String> parse( String pathstub ) 
-        {
-        String path = pathstub, type = null;
-        int dot = pathstub.lastIndexOf( '.' ) + 1;
-        if (dot > 0) //  && types.containsKey( pathstub.substring( dot ) )) 
-            { path = pathstub.substring(0, dot - 1); type = pathstub.substring(dot); }        
-        return new Couple<String, String>( path, type );
-        }
 
     private Response doRendering( RendererContext rc, String rName, APIResultSet results, Renderer r ) {
 		if (r == null) {
@@ -173,7 +201,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             	? "no suitable media type was provided for rendering."
             	: "renderer '" + rName + "' is not known to this server."
             	;
-            return enableCORS( Response.status( Status.BAD_REQUEST ).entity( message ) ).build();
+            return enableCORS( Response.status( Status.BAD_REQUEST ).entity( niceMessage( message ) ) ).build();
         } else {
             MediaType mt = r.getMediaType();
             return returnAs( relabel( rc, r.render( rc, results ) ), mt, results.getContentLocation() );
@@ -228,12 +256,27 @@ import com.hp.hpl.jena.shared.WrappedException;
     public static Response returnNotFound( String message ) {
         log.warn( "Failed to return results: " + message );
         new RuntimeException("returning NotFound: '" + message + "'").printStackTrace( System.err );
-        return enableCORS( Response.status(Status.NOT_FOUND) ).entity(message).build();
+        return enableCORS( Response.status(Status.NOT_FOUND) ).entity( niceMessage( message ) ).build();
     }
 	private Response buildErrorResponse( EldaException e ) {
 		return enableCORS( Response.status(e.code) )
 			.entity( niceMessage( e ) )
 			.build()
+			;
+	}
+    
+	private static String niceMessage( String message ) {
+		return
+			"<html>"
+			+ "\n<head>"
+			+ "\n<title>alas</title>"
+			+ "\n</head>"
+			+ "\n<body style='background-color: #ffdddd'>"
+			+ "\n<h2>there seems to be a problem.</h2>"
+			+ "\n<p>" + message + "</p>"
+			+ "\n</body>"
+			+ "\n</html>"
+			+ "\n"
 			;
 	}
     

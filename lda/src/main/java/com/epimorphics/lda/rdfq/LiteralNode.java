@@ -8,6 +8,7 @@
 
 package com.epimorphics.lda.rdfq;
 
+import com.epimorphics.lda.support.PrefixLogger;
 import com.hp.hpl.jena.vocabulary.XSD;
 
 public class LiteralNode extends Term 
@@ -31,7 +32,7 @@ public class LiteralNode extends Term
 		return "{" + spelling + "|" + language + "|" + datatype + "}";
 		}
 	
-	@Override public String asSparqlTerm()
+	@Override public String asSparqlTerm( PrefixLogger pl )
 		{ 
 		String lf = "\"" + spelling.replaceAll( "\\\\", "\\\\" ) + "\"";
 		// System.err.println( ">> DATATYPE: " + datatype );

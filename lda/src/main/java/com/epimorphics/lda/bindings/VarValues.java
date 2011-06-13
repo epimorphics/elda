@@ -74,7 +74,10 @@ public class VarValues implements Lookup
 	    this VarValues, or null if it is not bound.
 	*/
 	public Value get( String name ) 
-		{ return vars.get( name ); }
+		{ 
+		Value v = vars.get( name );
+		return v == null || v.isComplete() ? v : evaluate( name, v, new ArrayList<String>() ); 
+		}  
 	
 	/**
 	    Answer the lexical form of the value of the
@@ -84,7 +87,8 @@ public class VarValues implements Lookup
 	*/
 	@Override public String getStringValue( String name ) 
 		{ 
-		Value v = vars.get( name );
+		Value v = get( name );
+		// System.err.println( ">> getStringValue(" + name + ") => " + v );
 		return v == null ? null : v.valueString(); 
 		}
 	
@@ -99,7 +103,7 @@ public class VarValues implements Lookup
 	*/
 	@Override public Set<String> getStringValues( String name ) 
 		{ 
-		Value v = vars.get( name );
+		Value v = get( name );
 		return v == null ? NoStrings : unmodifiableSet( CollectionUtils.set( v.valueString() ) ); 
 		}
 	
@@ -108,7 +112,7 @@ public class VarValues implements Lookup
 	    or the value of <code>ifAbsent</code> if it is not bound.
 	*/
 	public String getAsString( String name, String ifAbsent ) 
-		{ return vars.containsKey( name ) ? vars.get( name ).valueString() : ifAbsent; }
+		{ return vars.containsKey( name ) ? get( name ).valueString() : ifAbsent; }
 	
 	/**
 	    Bind <code>name</code> to a Value which is a plain string
@@ -142,17 +146,66 @@ public class VarValues implements Lookup
 		{ return "<variables " + vars.toString() + ">"; }
 	
 	/**
-	    Answer true if <code>other</code> is an instance of VarValues
-	    and they wrap .equals() maps.
+	    Answer true if <code>other</code> is an instance of VarValues,
+	    their maps have the same keys, and the post-evaluation value of
+	    the variables is the same.
 	*/
 	@Override public boolean equals( Object other )
-		{ return other instanceof VarValues && vars.equals( ((VarValues) other).vars ); }
+		{ return other instanceof VarValues && same( (VarValues) other ); }
+
+	private boolean same( VarValues other ) 
+		{
+		Set<String> keys = vars.keySet();
+		if (!keys.equals( other.vars.keySet() )) return false;
+		for (String key: keys)
+			if (!get(key).equals( other.get(key) )) return false;
+		return true;
+		}
 	
 	/**
 	    Answer a suitable hashcode for this VarValues.
 	*/
 	@Override public int hashCode()
 		{ return vars.hashCode(); }
+	
+	private Value evaluate( String name, Value v, List<String> seen ) 
+		{
+		String expanded = expandVariables( v.valueString, seen );
+		if (v.valueString.equals( expanded )) return v;
+		Value newV = v.withValueString( expanded );
+		vars.put( name, newV );
+		return newV;
+		}	
+	
+	public String expandVariables( String s, List<String> seen ) 
+		{
+		int start = 0;
+		StringBuilder sb = new StringBuilder();
+		while (true) 
+			{
+			int lb = s.indexOf( '{', start );
+			if (lb < 0) break;
+			int rb = s.indexOf( '}', lb );
+			sb.append( s.substring( start, lb ) );
+			String name = s.substring( lb + 1, rb );
+			if (seen.contains( name )) 
+				throw new RuntimeException( "circularity involving: " + seen );
+			seen.add( name );
+			Value v = evaluate( name, vars.get(name), seen );
+			seen.remove( seen.size() - 1 );
+			String value = v.valueString; // values.getStringValue( name );
+			if (value == null)
+				{
+				sb.append( "{" ).append( name ).append( "}" );
+				log.warn( "variable " + name + " has no value, not substituted." );
+				}
+			else
+				sb.append( value );
+			start = rb + 1;
+			}
+		sb.append( s.substring( start ) );
+		return sb.toString();
+		}
 	
 	/**
 	    Expands the string <code>s</code> by replacing any
@@ -172,7 +225,10 @@ public class VarValues implements Lookup
 			String name = s.substring( lb + 1, rb );
 			String value = values.getStringValue( name );
 			if (value == null)
-				log.warn( "variable " + name + " has no value, treated as empty string." );
+				{
+				sb.append( "{" ).append( name ).append( "}" );
+				log.warn( "variable " + name + " has no value, not substituted." );
+				}
 			else
 				sb.append( value );
 			start = rb + 1;
@@ -182,8 +238,8 @@ public class VarValues implements Lookup
 		}
 
 	/**
-	    Answer a new BindingSet constructed from the given map
-	    by converting the values into a plain string Binding object.
+	    Answer a new VarValues constructed from the given map
+	    by converting the values into a string-valued Value.
 	*/
 	public static VarValues uplift( Map<String, String> bindings ) 
 		{

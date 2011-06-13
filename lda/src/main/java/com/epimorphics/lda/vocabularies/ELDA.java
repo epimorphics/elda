@@ -24,6 +24,8 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class ELDA 
 	{
+	static final String version = "1.1.5-SNAPSHOT";
+	
 	static final private Model m = ModelFactory.createDefaultModel();
 	
 	static private Resource resource( String NS, String local ) 
@@ -34,7 +36,7 @@ public class ELDA
 	
 	public static final Resource Elda = resource( EXTRAS.EXTRA, "Elda" );
 	
-	public static final Resource ThisElda = resource( EXTRAS.EXTRA, "Elda_1.1.4d" );
+	public static final Resource ThisElda = resource( EXTRAS.EXTRA, "Elda_" + version );
 	
 	public static final Resource EldaRepository = resource( "https://ehog.hedge@elda.googlecode.com/hg/", "" );
 
@@ -65,9 +67,9 @@ public class ELDA
 			.addProperty( COMMON.software, ThisElda )
 			;
 		ThisElda.inModel(m)
-			.addProperty( RDFS.label, "Elda 1.1.4d" )
+			.addProperty( RDFS.label, "Elda " + version )
 			.addProperty( RDF.type, DOAP.Version )
-			.addProperty( DOAP.revision, "1.1.4d" )
+			.addProperty( DOAP.revision, version )
 			.addProperty( ELDA.DOAP_EXTRAS.releaseOf, Elda );
 		Elda.inModel(m)
 			.addProperty( RDFS.label, "Elda" )

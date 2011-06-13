@@ -55,7 +55,7 @@ public class TestAPISpecExtractsVariables
 		{
 		try
 			{
-			testVariableExtraction( "", 
+			testVariableExtraction( "fred=1;tom=2", // force evaluation
 					":my a api:API; api:sparqlEndpoint :spoo; api:variable"
 					+ " [api:name 'fred'; api:value '{tom}']"
 					+ ", [api:name 'tom'; api:value '{fred}']." 
@@ -123,7 +123,6 @@ public class TestAPISpecExtractsVariables
 		APISpec s = new APISpec( root, NoLoader );
 //		System.err.println( ">> expected: " + expected );
 //		System.err.println( ">> got:      " + s.getBindings() );
-		assertThat( s.getBindings(), Is.is( binding( expected ) ) );
 		assertEquals( binding( expected ), s.getBindings() );
 		}
 	

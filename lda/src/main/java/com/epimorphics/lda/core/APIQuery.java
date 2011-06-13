@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.exceptions.EldaException;
@@ -26,9 +27,12 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.LARQManager;
+import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.QuerySupport;
 
 import static com.epimorphics.util.CollectionUtils.*;
+
+import com.epimorphics.util.Couple;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.graph.*;
 import com.hp.hpl.jena.query.*;
@@ -623,22 +627,23 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     		return bindableVars.contains(var);
     }
     
-    public String assembleSelectQuery(PrefixMapping prefixes) {
+    public String assembleSelectQuery( PrefixMapping prefixes ) {    	
     	if (fixedQueryString == null) {
+    		PrefixLogger pl = new PrefixLogger( prefixes );
 	        StringBuilder q = new StringBuilder();
-	        appendPrefixes( q, prefixes );
 	        q.append("SELECT ");
 	        if (orderExpressions.length() > 0) q.append("DISTINCT "); // Hack to work around lack of _select but seems a common pattern
 	        q.append( SELECT_VAR.name() );
 	        q.append(" WHERE {\n");
-	        String bgp = constructBGP();
+	        String bgp = constructBGP( pl );
 	        if (whereExpressions.length() > 0) {
-	            q.append( whereExpressions );
+	        	q.append( whereExpressions ); 
+	        	pl.findPrefixesIn( whereExpressions.toString() );
 	        } else {
 		        if (bgp.isEmpty()) bgp = SELECT_VAR.name() + " ?__p ?__v ."; 
 	        }
 	        q.append( bgp );
-	        appendFilterExpressions( q );
+	        appendFilterExpressions( pl, q );
 	        q.append( "} " );
 	        if (orderExpressions.length() > 0) {
 	            q.append(" ORDER BY ");
@@ -647,25 +652,28 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	        q.append(" OFFSET " + (pageNumber * pageSize));
 	        q.append(" LIMIT " + pageSize);
 	        // System.err.println( ">> QUERY IS: \n" + q.toString() );
-	        return q.toString();
+	        StringBuilder x = new StringBuilder();
+	        pl.writePrefixes( x );
+	        x.append( q );
+	        return x.toString();
     	} else {
     		return fixedQueryString;
     	}
     }
 
-	public void appendFilterExpressions( StringBuilder q ) {
+	public void appendFilterExpressions(PrefixLogger pl, StringBuilder q ) {
 		for (RenderExpression i: filterExpressions) {
 			q.append( "FILTER (" );
-			i.render( q );
+			i.render( pl, q );
 			q.append( ")" );
 		}				
 	}
 
-	public String constructBGP() {
+	public String constructBGP( PrefixLogger pl ) {
 		StringBuilder sb = new StringBuilder();
 		for (RDFQ.Triple t: QuerySupport.reorder( basicGraphTriples ))
 			sb
-				.append( t.asSparqlTriple() )
+				.append( t.asSparqlTriple( pl ) )
 				.append( " .\n" )
 				;
 		return sb.toString();
@@ -690,18 +698,22 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	 propertyChains.append( clause );    	
     }
     
-    protected String boundQuery(String query, CallContext call) {
+    protected String boundQuery( String query, CallContext cc ) {
+//    	System.err.println( ">> boundQuery: bindableVars = " + bindableVars );
+//    	System.err.println( ">> boundQuery: call context = " + cc );
         String bound = query;
         if (!bindableVars.isEmpty()) {
             for (String var : bindableVars) {
-                String val = call.getStringValue(var);
+            	Value v = cc.getParameter( var );
+                String val = cc.getStringValue(var);
+//                System.err.println( ">> " + v );
                 if (val != null) {
                 	String prop = varProps.get(var);
                 	String normalizedValue = 
                 		(prop == null) 
-                		    ? sns.normalizeValue(val, defaultLanguage) 
+                		    ? valueAsSparql( v )
                 		    : sns.normalizeNodeToString(prop, val, defaultLanguage); 
-                    bound = bound.replace("?"+var, normalizedValue);
+                    bound = bound.replace( "?" + var, normalizedValue );
                     // TODO improve this, will fail in case where ? is in nested literals
                     // Right long term answer is to switch to transforming algebra or parse tree
                 } else {
@@ -712,10 +724,25 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
                 }
             }
         }
+        // System.err.println( ">> finally: " + bound );
         return bound;
     }
 
-    /**
+    private String valueAsSparql( Value v ) {
+    	String type = v.type();
+    	if (type.equals( "" )) return "'" + protect(v.valueString()) + "'";
+    	if (type.equals( RDFS.Resource.getURI() )) return "<" + v.valueString() + ">";
+    	throw new RuntimeException( "valueAsSparql: cannot handle type: " + type );
+    }
+
+	private String protect(String valueString) {
+		return valueString
+			.replaceAll( "\\\\", "\\\\" )
+			.replaceAll( "'", "\\'" )
+			;
+	}
+
+	/**
      * Return the select query that would be run or a plain string for the resource
      */
     public String getQueryString(APISpec spec, CallContext call) {
@@ -731,7 +758,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     public APIResultSet runQuery( APISpec spec, Cache cache, CallContext call, View view ) {
         Source source = spec.getDataSource();
         try {
-            List<Resource> results = fetchRequiredResources( cache, spec, call, source );
+            Couple<String, List<Resource>> queryAndResults = selectResources( cache, spec, call, source );
+            List<Resource> results = queryAndResults.b;
             APIResultSet already = cache.getCachedResultSet( results, view.toString() );
             if (already != null && expansionPoints.isEmpty() ) 
                 {
@@ -740,6 +768,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
                 }
             
             APIResultSet rs = fetchDescriptionOfAllResources(spec, view, results);
+            rs.setSelectQuery( queryAndResults.a );
             
             // Expand the labels of all leaf nodes (make this switchable?)
             new ExpandLabels( this ).expand( source, rs );
@@ -768,12 +797,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		Graph gd = descriptions.getGraph();
 		String detailsQuery = fetchDescriptionsFor( results, view, descriptions, spec );
 		return new APIResultSet(gd, results, count < pageSize, detailsQuery );
-//		if (count > 0) {
-//		    String detailsQuery = fetchDescriptionsFor( results, view, descriptions, spec );
-//		    return new APIResultSet(gd, results, count < pageSize);
-//		} else {
-//		    return new APIResultSet(gd, results, true);
-//		}
 	}
 
     /** Find all current values for the given property on the results and fetch a description of them */
@@ -821,23 +844,25 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         	}
         	return "# lots of queries, none shown.";
         }
+        m.setNsPrefixes( spec.getPrefixMap() );
         return view.fetchDescriptions( m, roots, sources, this );
     }
     
-    private List<Resource> fetchRequiredResources( Cache cache, APISpec spec, CallContext call, Source source )
+    private Couple<String, List<Resource>> selectResources( Cache cache, APISpec spec, CallContext call, Source source )
         {
     	log.debug( "fetchRequiredResources()" );
         final List<Resource> results = new ArrayList<Resource>();
+        String select = "";
         if (itemTemplate != null) setSubject( call.expandVariables( itemTemplate ) );
         if ( isFixedSubject() ) {
         	results.add( subjectResource );
         } else {
-            String select = boundQuery( assembleSelectQuery(spec.getPrefixMap()), call);
+            select = boundQuery( assembleSelectQuery(spec.getPrefixMap()), call);
             List<Resource> already = cache.getCachedResources( select );
             if (already != null)
                 {
                 log.debug( "re-using cached results for query " + select );
-                return already;
+                return new Couple<String, List<Resource>>(select, already);
                 }
             Query q = null;
             try {
@@ -876,7 +901,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             } );
             cache.cacheSelection( select, results );
         }
-        return results;
+        return new Couple<String, List<Resource>>( select, results );
         }
 
 	public boolean wantsMetadata( String name ) {

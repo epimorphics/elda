@@ -8,6 +8,8 @@
 
 package com.epimorphics.lda.rdfq;
 
+import com.epimorphics.lda.support.PrefixLogger;
+
 public class Variable extends Any 
 	{
 	final String name;
@@ -24,10 +26,10 @@ public class Variable extends Any
 	@Override public int hashCode()
 		{ return name.hashCode(); }
 	
-	@Override public String asSparqlTerm()
+	@Override public String asSparqlTerm( PrefixLogger pl )
 		{ return name; }
 	
-	@Override public StringBuilder renderWrapped( StringBuilder out ) 
+	@Override public StringBuilder renderWrapped( PrefixLogger pl, StringBuilder out ) 
 		{ return out.append( name ); }
 	
 	@Override public boolean isFinal() 

@@ -7,6 +7,7 @@
 */
 package com.epimorphics.lda.rdfq;
 
+import com.epimorphics.lda.support.PrefixLogger;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 
@@ -35,11 +36,11 @@ public class RDFQ
 			{ return optional; }
 		
 		@Override public String toString()
-			{ return asSparqlTriple(); }
+			{ return asSparqlTriple( PrefixLogger.some() ); }
 		
-		public String asSparqlTriple()
+		public String asSparqlTriple( PrefixLogger pl )
 			{ 
-			String SPO = S.asSparqlTerm() + " " + P.asSparqlTerm() + " " + O.asSparqlTerm();
+			String SPO = S.asSparqlTerm( pl ) + " " + P.asSparqlTerm( pl ) + " " + O.asSparqlTerm( pl );
 			return optional ? "OPTIONAL {" + SPO + "}": SPO; 
 			}
 		}
@@ -49,7 +50,7 @@ public class RDFQ
 		String spelling = Double.toString( d );
 		return new LiteralNode( spelling, "", "" ) 
 			{
-			@Override public String asSparqlTerm() { return spelling; }
+			@Override public String asSparqlTerm( PrefixLogger pl ) { return spelling; }
 			};
 		}
 	

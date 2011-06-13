@@ -20,6 +20,8 @@
 
 @prefix extras: <http://www.epimorphics.com/vocabularies/lda#> .
 
+@prefix ids: <http://education.data.gov.uk/id/school/>.
+
 ############################################################################################
 #
 # COMPONENTS
@@ -79,14 +81,14 @@ spec:viewerMedium
 #
 ############################################################################################
 
-spec:api
-	a api:API ;
-	rdfs:label "Edubase API"@en;
-	foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI;
-	api:maxPageSize "50";
-	api:defaultPageSize "10" ;
-	api:sparqlEndpoint <http://services.data.gov.uk/education/sparql> ;
-	api:variable 
+spec:api a api:API 
+    ; rdfs:label "Edubase API"@en
+    ; foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI
+    ; api:maxPageSize "50"
+    ; api:defaultPageSize "10" 
+    ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
+    # ; api:base "WHATEVER" # set this to over-ride use of context root 
+    ; api:variable 
 	   [api:name "_strip_has"; api:value "yes"]
 	; api:variable
 		[ api:name "activeImageBase"; api:value "/elda/images/green/16x16"]
@@ -95,7 +97,8 @@ spec:api
 	; api:formatter 
 		[a api:XsltFormatter
 		; api:name 'html'
-		; api:stylesheet 'xsltsheets/ashtml.xsl'
+		; api:stylesheet 'xsltsheets/ashtml.xsl'    
+		; extras:metadataOptions "bindings,formats,versions,execution"
 		; api:mimeType 'text/html'
 		] 
 	; api:formatter
@@ -111,9 +114,6 @@ spec:api
 	   , spec:schoolsPrimaryDistrict
 	   , spec:schoolsSecondaryDistrict 
 	   , spec:school-by-id
-    #
-    # this Elda special specifies the base metadata options
-    ; extras:metadataOptions "bindings,formats"
     #
 	# the demo rewriting-URIs hack.
     ; api:variable 

@@ -2,13 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <properties>
-  	<elda.version>1.1.4-RC4</elda.version>
+    <elda.version>1.1.5-SNAPSHOT</elda.version>
   </properties>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>lda-top</artifactId>
-  <version>1.1.4-RC4</version>
+  <version>1.1.5-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>lda-top</name>
   <description>Top level linked data API project</description>
@@ -17,15 +17,14 @@
     <pluginManagement>
       <plugins>
         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-                  <source>1.6</source>
-                  <target>1.6</target>
-            </configuration>
-        </plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
       </plugins>
-      
     </pluginManagement>
 
     <extensions>
@@ -35,10 +34,6 @@
 	<version>1.0-beta-2</version>
       </extension>
     </extensions>
-    
-    <plugins>
-    
-    </plugins>
 
   </build>
                                
@@ -52,12 +47,21 @@
   <dependencies>
 
     <dependency>
+        <groupId>xalan</groupId>
+        <artifactId>xalan</artifactId>
+        <version>2.7.1</version>
+        <type>jar</type>
+        <scope>compile</scope>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.2</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -65,6 +69,7 @@
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
@@ -72,6 +77,7 @@
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
+
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
@@ -129,15 +135,11 @@
         <url>http://download.java.net/maven/2/</url>
         <layout>default</layout>
     </repository>
-    
-    
-
     <repository>
         <id>codehaus.maven.repository</id>
         <name>Codehaus Maven Respository</name>
         <url>http://repository.codehaus.org/</url>
     </repository>
-    
 
   </repositories>
 

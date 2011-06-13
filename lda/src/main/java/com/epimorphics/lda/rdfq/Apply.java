@@ -8,6 +8,8 @@
 
 package com.epimorphics.lda.rdfq;
 
+import com.epimorphics.lda.support.PrefixLogger;
+
 public class Apply implements RenderExpression
 	{
 	private final String f;
@@ -16,17 +18,17 @@ public class Apply implements RenderExpression
 	public Apply( String f, RenderExpression x ) 
 		{ this.f = f; this.x = x; }
 	
-	@Override public StringBuilder render( StringBuilder out ) 
+	@Override public StringBuilder render( PrefixLogger pl, StringBuilder out ) 
 		{
 		out.append( f );
 		out.append( "(" );
-		x.render( out );
+		x.render( pl, out );
 		out.append( ")" );
 		return out;
 		}
 	
-	@Override public StringBuilder renderWrapped( StringBuilder out ) 
-		{ return render( out );	}
+	@Override public StringBuilder renderWrapped( PrefixLogger pl, StringBuilder out ) 
+		{ return render( pl, out );	}
 	
 	@Override public int hashCode() 
 		{ return f.hashCode() ^ x.hashCode(); }
@@ -40,7 +42,7 @@ public class Apply implements RenderExpression
 	@Override public String toString()
 		{
 		StringBuilder b = new StringBuilder();
-		render( b );
+		render( PrefixLogger.some(), b );
 		return b.toString();
 		}
 	}

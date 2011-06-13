@@ -33,7 +33,7 @@ public class CallContext implements Lookup {
 
     static Logger log = LoggerFactory.getLogger( CallContext.class );
     
-    final protected MultiMap<String, Value> parameters = new MultiMap<String, Value>();
+    final protected VarValues parameters = new VarValues();
     
     final protected MultiMap<String, String> queryParameters;
     
@@ -49,7 +49,7 @@ public class CallContext implements Lookup {
         for unset parameters.
     */
     public CallContext( VarValues defaults, CallContext toCopy ) {
-    	defaults.putInto( this.parameters );
+    	this.parameters.putAll( defaults ); // defaults.putInto( this.parameters );
     	this.parameters.putAll( toCopy.parameters );
         this.requestURI = toCopy.requestURI;
         this.queryParameters = toCopy.queryParameters;
@@ -57,26 +57,30 @@ public class CallContext implements Lookup {
 
 	public static CallContext createContext( URI requestURI, MultiMap<String, String> queryParams, VarValues bindings ) {
 	    CallContext cc = new CallContext( requestURI, queryParams );
-	    bindings.putInto( cc.parameters );
+	    cc.parameters.putAll( bindings ); // bindings.putInto( cc.parameters );
 	    for (String name: queryParams.keySet()) {
-			Value basis = cc.parameters.getOne( name );
+			Value basis = cc.parameters.get( name );
 			if (basis == null) basis = Value.emptyPlain;
 	        for (String val : queryParams.getAll( name ))
-				cc.parameters.add( name, basis.withValueString( val ) );
+				cc.parameters.put( name, basis.withValueString( val ) );
 	    }
 	    return cc;
 	}
 	
 	public Iterator<String> parameterNames() {
-		return parameters.keyIterator();
+		return parameters.keySet().iterator();
 	}
 
+	public Value getParameter( String name ) {
+		return parameters.get( name );
+	}
+	
     /**
      * Return a single value for a parameter, if there are multiple values
      * the returned one may be arbitrary
      */
     @Override public String getStringValue( String param ) {
-        Value v = parameters.getOne( param );
+        Value v = parameters.get( param );
 		return v == null ? queryParameters.getOne( param ) : v.valueString();
     }
     
@@ -84,14 +88,14 @@ public class CallContext implements Lookup {
      	Return all the values for a parameter.
     */
     @Override public Set<String> getStringValues( String param ) {
-        Set<Value> vs = parameters.getAll( param );
+        Value v = parameters.get( param );
 		Set<String> values = queryParameters.getAll( param );
-		return vs == null ? values : asStrings( vs );
+		return v == null ? values : asStrings( v );
     }
     
-    private Set<String> asStrings(Set<Value> vs) {
-    	Set<String> result = new HashSet<String>(vs.size());
-    	for (Value v: vs) result.add( v.valueString() );
+    private Set<String> asStrings( Value v) {
+    	Set<String> result = new HashSet<String>();
+    	result.add( v.valueString() );
     	return result;
 	}
     

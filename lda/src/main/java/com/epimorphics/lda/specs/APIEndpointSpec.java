@@ -139,20 +139,33 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     */
     private Map<String, View> extractViews( Resource endpoint ) {
     	Model m = endpoint.getModel();
-        Map<String, View> result = new HashMap<String, View>(); 
+        Map<String, View> views = defaultViews(endpoint);
         for (NodeIterator ni =  m.listObjectsOfProperty( endpoint, API.viewer ); ni.hasNext();) {
             RDFNode tNode = ni.next();
-            if ( ! tNode.isResource()) 
+            if (!tNode.isResource()) 
                 throw new APIException("Found literal " + tNode + " when expecting a template resource");
-            Resource tView = (Resource) tNode;
-            String viewName = getNameWithFallback( tView );
-			result.put( viewName, extractView( m, tView ) );
+            View v = getView( (Resource) tNode );
+            views.put( v.name(), v );
         }
+        return views;
+    }
+
+	private Map<String, View> defaultViews( Resource endpoint ) {
+		Map<String, View> result = new HashMap<String, View>(); 
         result.put( View.SHOW_ALL, View.ALL );
         result.put( View.SHOW_BASIC, View.BASIC );
         result.put( View.SHOW_DESCRIPTION, View.DESCRIBE );
         result.put( View.SHOW_DEFAULT_INTERNAL, getDefaultView( endpoint ) );
-        return result;
+		return result;
+	}
+    
+    private View getView( Resource v ) {
+    	View builtin = View.getBuiltin( v );
+        if (builtin == null) {
+            String viewName = getNameWithFallback( v );
+			return getViewByProperties( v.getModel(), viewName, v );
+        } else 
+        	return builtin;
     }
 
 	private String getNameWithFallback(Resource tRes) {
@@ -161,29 +174,21 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	}
     
     private View getDefaultView( Resource endpoint ) {
-        Model model = endpoint.getModel();
-		return endpoint.hasProperty( API.defaultViewer )
-        	? extractView( model, getResourceValue( endpoint, API.defaultViewer ) )
-        	: View.DESCRIBE
-        	;
+    	if (endpoint.hasProperty( API.defaultViewer )) {
+    		Resource x = getResourceValue( endpoint, API.defaultViewer );
+    		return getView( x );   		
+    	} else
+    		return View.DESCRIBE;
     }
 
     /**
         both API.property and .properties until TODO the ambiguity gets resolved.
     */
-    private View extractView( Model m, Resource tRes ) {
-    	if (tRes.equals( API.describeViewer )) {
-    		return View.DESCRIBE;
-    	} else if (tRes.equals( API.labelledDescribeViewer )) {
-    		return View.ALL;
-    	} else if (tRes.equals( API.basicViewer )){
-    		return View.BASIC;
-    	} else {
-	        View v = new View(false);
-			addViewProperties( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
-			addViewProperties( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
-	        return v;
-    	}
+    private View getViewByProperties( Model m, String name, Resource tRes ) {
+        View v = new View( name );
+		addViewProperties( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
+		addViewProperties( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
+        return v;
     }
 
 	private void addViewProperties( View v, List<RDFNode> items ) {

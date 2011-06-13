@@ -17,10 +17,7 @@
 
 package com.epimorphics.lda.routing;
 
-import com.epimorphics.lda.restlets.RouterRestlet;
-
 /**
-
  	@author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  	@author Chris Dollin [complete revision]
  	@version $Revision: $

@@ -93,7 +93,7 @@ public class APIEndpointImpl implements APIEndpoint {
     // In simple cases can combine view props into select then
     // run a construct on the results of the select and do less server traffic.
     // HOWEVER, there are two problems with that:
-    // (1) where one (or more) props in view are multi valued then limit/offset 
+    // (1) where one (or more) props in view are multi- valued then limit/offset 
     //     doesn't work and the paging code gets complicated
     // (2) where return value is a bNode and we want automatic bNode closure.
     // Current solution get full description from endpoint and post filter
@@ -136,15 +136,16 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.isListEndpoint();
     }
 
-
 	private Resource resourceForPage(Model m, CallContext context, int page) {
 		URI ru = context.getRequestURI();
-		String newURI = EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) );
+		String newURI = isListEndpoint()
+			? EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
+			: EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
 		// System.err.println( ">> changed '" + ru + "' to '" + newURI + "'" );
 		return m.createResource( newURI );
     }
     
-    private Resource resourceForList(Model m, CallContext context) {		
+    private Resource resourceForList( Model m, CallContext context ) {		
     	URI ru = context.getRequestURI();
     	String rqp1 = EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
     	String rqp2 = EndpointMetadata.replaceQueryParam( Util.newURI(rqp1), QueryParameter._PAGE_SIZE );
@@ -158,24 +159,20 @@ public class APIEndpointImpl implements APIEndpoint {
     	return m.createResource( rqp2 );
     }
     
-	private void insertResultSetRoot( APIResultSet rs, CallContext context, APIQuery query ) {
+	private void insertResultSetRoot( APIResultSet rs, CallContext cc, APIQuery query ) {
     	Model rsm = rs.getModel();
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
-        URI ru = context.getRequestURI();
+        URI ru = cc.getRequestURI();
         Resource uriForDefinition = createDefinitionURI( rsm, ru, uriForSpec, template ); 
-        Resource thisPage = resourceForPage(rsm, context, page);
+        Resource thisPage = resourceForPage(rsm, cc, page);
         rs.setRoot(thisPage);
-        Resource exec = rsm.createResource();
     //
 		thisPage.addProperty( FIXUP.definition, uriForDefinition );
-        if (query.wantsMetadata( "versions" )) EndpointMetadata.addVersions( rsm, spec.viewNames(), context, thisPage );
-        if (query.wantsMetadata( "formats" )) EndpointMetadata.addFormats( rsm, context, thisPage, spec.getRendererFactoryTable() );
-        if (query.wantsMetadata( "bindings" )) EndpointMetadata.addBindings( rsm, exec, spec.getAPISpec().getShortnameService().nameMap(), context, thisPage );
-        if (query.wantsMetadata( "execution" )) EndpointMetadata.addExecution( rsm, exec, context, thisPage );
-        if (query.wantsMetadata( "execution" )) EndpointMetadata.addQueryMetadata( rsm, exec, context, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
+		EndpointMetadata em = new EndpointMetadata( thisPage, cc );
+		createOptionalMetadata(rs, query, em);   
     //
         String and = thisPage.getURI().indexOf("?") < 0 ? "?" : "&";
         String emv_uri = thisPage.getURI() + and + "_metadata=all";
@@ -191,10 +188,10 @@ public class APIEndpointImpl implements APIEndpoint {
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
         	thisPage.addProperty( FIXUP.items, content );
-    		thisPage.addProperty( XHV.first, resourceForPage( rsm, context, 0 ) );
-    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( rsm, context, page+1 ) );
-    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( rsm, context, page-1 ) );
-    		Resource listRoot = resourceForList(rsm, context);
+    		thisPage.addProperty( XHV.first, resourceForPage( rsm, cc, 0 ) );
+    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( rsm, cc, page+1 ) );
+    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( rsm, cc, page-1 ) );
+    		Resource listRoot = resourceForList(rsm, cc);
     		thisPage
 	    		.addProperty( DCTerms.isPartOf, listRoot )
 	    		;
@@ -210,10 +207,46 @@ public class APIEndpointImpl implements APIEndpoint {
         } else {
         	Resource content = rs.getResultList().get(0);
         	thisPage.addProperty( FOAF.primaryTopic, content );
-        	content.addProperty( FOAF.isPrimaryTopicOf, thisPage );     
+        	content.addProperty( FOAF.isPrimaryTopicOf, thisPage ); 
         	// rs.setContentLocation( query.getSubject() );
         }
     }
+
+	/**
+	    <p>
+	    	Create the optional endpoint metadata for this endpoint and query.
+	    	The metadata is in four parts: the other versions (aka views) of
+	    	this page, the other formats (aka renderers) of this page, the
+	    	bindings (values of variables, full URIs of shortnames) for this
+	    	page, and the execution description (which processor etc) for the
+	    	process that built this page.
+	    </p>
+	    <p>
+	    	Metadata that has been requested by the _metadata= query argument 
+	    	is copied into the result-set model. Unrequested metadata is stored
+	    	in the result-sets named metadata models in case it is requested by
+	    	a renderer (ie, the xslt renderer in the education example).
+	    </p>
+	*/
+	private void createOptionalMetadata( APIResultSet rs, APIQuery query, EndpointMetadata em ) {
+		Model rsm = rs.getModel();
+		Resource exec = rsm.createResource();
+		Model versions = ModelFactory.createDefaultModel();
+		Model formats = ModelFactory.createDefaultModel();
+		Model bindings = ModelFactory.createDefaultModel();
+		Model execution = ModelFactory.createDefaultModel();
+	//	
+		em.addVersions( versions, spec.viewNames() );
+		em.addFormats( formats, spec.getRendererFactoryTable() );
+		em.addBindings( rsm, bindings, exec, spec.getAPISpec().getShortnameService().nameMap() );
+		em.addExecution( execution, exec );
+		em.addQueryMetadata( execution, exec, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
+	//
+        if (query.wantsMetadata( "versions" )) rsm.add( versions ); else rs.setMetadata( "versions", versions );
+        if (query.wantsMetadata( "formats" )) rsm.add( formats );  else rs.setMetadata( "formats", formats );
+        if (query.wantsMetadata( "bindings" )) rsm.add( bindings ); else rs.setMetadata( "bindings", bindings );
+        if (query.wantsMetadata( "execution" )) rsm.add( execution ); else rs.setMetadata( "execution", execution );
+	}
     
     private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
     	if (template.startsWith("http:")) {

@@ -8,8 +8,10 @@
 
 package com.epimorphics.lda.rdfq;
 
+import com.epimorphics.lda.support.PrefixLogger;
+
 public interface RenderExpression
 	{
-	public StringBuilder render( StringBuilder out );
-	public StringBuilder renderWrapped( StringBuilder out );
+	public StringBuilder render( PrefixLogger pl, StringBuilder out );
+	public StringBuilder renderWrapped( PrefixLogger pl, StringBuilder out );
 	}

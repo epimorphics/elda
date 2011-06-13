@@ -9,7 +9,9 @@ package com.epimorphics.lda.renderers;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.MediaType;
+import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -35,6 +37,8 @@ public class XSLT_RendererFactory implements RendererFactory {
 			}
 
 			@Override public String render( RendererContext rc, APIResultSet results ) {
+				final String meta = RDFUtils.getStringValue( root, EXTRAS.metadataOptions, null );
+				if (meta != null) results.includeMetadata( meta.split( "," ) );
 				final String sheet = root.getProperty( API.stylesheet ).getString();
 				final XMLRenderer xr = new XMLRenderer( sns, mt, sheet );
 				String rendered = xr.render( rc, results );			

@@ -21,6 +21,8 @@ import java.util.List;
 */
 public class MediaType
 	{
+	public static final MediaType NONE = new MediaType( "", "" );
+	
 	public static final MediaType STAR_STAR = new MediaType( "*", "*" );
 	
 	public static final MediaType TEXT_XML = new MediaType( "text", "xml" );

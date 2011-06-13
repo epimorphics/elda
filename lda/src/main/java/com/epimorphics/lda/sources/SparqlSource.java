@@ -64,7 +64,7 @@ public class SparqlSource extends SourceBase implements Source {
     }
     
     /**
-     * Add metdata describing this source to a metdata model 
+     * Add metadata describing this source to a metadata model 
      */
     @Override public void addMetadata(Resource meta) {
         meta.addProperty(API.sparqlEndpoint, ResourceFactory.createResource(sparqlEndpoint));
