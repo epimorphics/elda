@@ -170,15 +170,18 @@ import com.hp.hpl.jena.shared.WrappedException;
     }
 
 	private URI makeRequestURI(UriInfo ui, Match match, URI requestUri) throws URISyntaxException {
-//		System.err.println( ">> requestURI: " + requestUri );
-//		System.err.println( ">> path: " + ui.getPath() );
-//		System.err.println( ">> params: " + ui.getQueryParameters() );
+		System.err.println( ">> requestURI: " + requestUri );
+		System.err.println( ">> path: " + ui.getPath() );
+		System.err.println( ">> params: " + ui.getQueryParameters() );
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
 		if (base == null) return requestUri;
+	//
+	// Make a base URI up
+	//
 		String rus = requestUri.toString();
 		int here = rus.indexOf( ui.getPath() );
 		String cons = base + rus.substring(here);
-//		System.err.println( ">> constructed " + cons );
+		System.err.println( ">> constructed " + cons );
 		return new URI(cons);
 	}
 

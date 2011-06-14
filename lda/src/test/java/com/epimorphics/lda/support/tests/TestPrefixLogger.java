@@ -47,10 +47,10 @@ public class TestPrefixLogger {
 	}
 	
 	@Test public void testH() {
-		assertEquals( JenaTestBase.setOfStrings( "" ), findPrefixes( "" ) );
-	}
-	
-	@Test public void testI() {
+		assertEquals( JenaTestBase.setOfStrings( "my-prefix" ), findPrefixes( "my-prefix:nothing" ) );
+		assertEquals( JenaTestBase.setOfStrings( "my_prefix" ), findPrefixes( "my_prefix:nothing" ) );
+		assertEquals( JenaTestBase.setOfStrings( "my-17prefix" ), findPrefixes( "my-17prefix:nothing" ) );
+		assertEquals( JenaTestBase.setOfStrings( "my.prefix" ), findPrefixes( "my.prefix:nothing" ) );
 	}
 
 	private Set<String> findPrefixes( String s ) {
