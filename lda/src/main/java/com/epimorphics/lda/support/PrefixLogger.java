@@ -56,14 +56,20 @@ public class PrefixLogger {
 	 	fragment an add them to <code>seen</code>.
 	*/
 	public void findPrefixesIn( String fragment ) {
-		Matcher m = qNamePrefix.matcher( fragment );
+		Matcher m = candidatePrefix.matcher( fragment );
 		while (m.find()) {
 			String candidate = m.group(1);
 			if (pm.getNsPrefixURI( candidate ) != null) seen.add( candidate );
 		}
 	}
 
-	static final Pattern qNamePrefix = Pattern.compile( "[^<A-Za-z]([A-Za-z_-]+):" );
+	/**
+	    A pattern that will match candidate prefixes, which will then be checked
+	    against the provided prefix mapping. Note that it does not matter if the
+	    pattern is over-generous in matching so long as it does not <i>miss</i>
+	    any prefixes. Hence, it is not necessary to check for comments or strings.
+	*/
+	public static final Pattern candidatePrefix = Pattern.compile( "([A-Za-z_-]+):" );
 	
 	/**
 	    Answer a new PrefixLoggger with a few standard prefixes in it.
