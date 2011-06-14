@@ -207,8 +207,7 @@ public class APIEndpointImpl implements APIEndpoint {
         } else {
         	Resource content = rs.getResultList().get(0);
         	thisPage.addProperty( FOAF.primaryTopic, content );
-        	if (cc.getParameter( "_suppress_ipto" ) == null) 
-        		content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
+        	content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
         	// rs.setContentLocation( query.getSubject() );
         }
     }

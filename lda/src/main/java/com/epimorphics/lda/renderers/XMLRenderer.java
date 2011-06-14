@@ -47,13 +47,14 @@ public class XMLRenderer implements Renderer {
 	public String render( RendererContext rc, Resource root ) {
 		PrefixMapping pm = root.getModel();
 		boolean stripHas = rc.getAsString( "_strip_has", "no" ).equals( "yes" );
+		boolean suppressIPTO = rc.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		Document d = DOMUtils.newDocument();
-		renderInto( root, d, stripHas );
+		renderInto( root, d, stripHas, suppressIPTO );
 		return DOMUtils.renderNodeToString( d, rc, pm, transformFilePath );
 	}
 
-	public void renderInto( Resource root, Document d, boolean stripHas ) {
-		XMLRendering r = new XMLRendering( root.getModel(), sns, stripHas, d );
+	public void renderInto( Resource root, Document d, boolean stripHas, boolean suppressIPTO ) {
+		XMLRendering r = new XMLRendering( root.getModel(), sns, stripHas, suppressIPTO, d );
 		Element result = d.createElement( "result" );
 		result.setAttribute( "format", "linked-data-api" );
 		result.setAttribute( "version", "0.2" );

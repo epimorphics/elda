@@ -12,6 +12,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.core.MultiMap;
@@ -87,12 +88,14 @@ public class XMLRendering {
 	private final Model m;
 	private final ShortnameService sns;
 	private final MultiMap<String, String> nameMap;
+	private final boolean suppressIPTO;
 	
-	public XMLRendering( Model m, ShortnameService sns, boolean stripHas, Document d ) {
+	public XMLRendering( Model m, ShortnameService sns, boolean stripHas, boolean suppressIPTO, Document d ) {
 		this.d = d;
 		this.m = m;
 		this.sns = sns;
 		this.nameMap = sns.nameMap().stage2(stripHas).load(m, m).result();
+		this.suppressIPTO = suppressIPTO;
 	}
 	
 	private final Set<Resource> seen = new HashSet<Resource>();
@@ -101,6 +104,7 @@ public class XMLRendering {
 		addIdentification( e, x );
 		if (seen.add( x )) {
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+			if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
 			for (Property p: properties) addPropertyValues( e, x, p );
 		}
 		return e;

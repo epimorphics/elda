@@ -115,8 +115,8 @@ spec:api a api:API
 	   , spec:schoolsSecondaryDistrict 
 	   , spec:school-by-id
 	#
-	# _suppress_ipto, if set (to anything), causes the isPrimaryTopicOf item
-	# endpoints to be supressed, to avoid tickling a stylesheet infelicity.
+	# _suppress_ipto, if set to "yes", causes the isPrimaryTopicOf item
+	# endpoints to be suppressed, to avoid tickling a stylesheet infelicity.
 	#
 	; api:variable [api:name "_suppress_ipto"; api:value "yes"]
     #
@@ -125,7 +125,7 @@ spec:api a api:API
     	[api:name "x_change_from"; api:value "http://education.data.gov.uk/"]
     ; api:variable 
     	[api:name "x_change_to"; api:value "http://localhost:8080/elda/api/education/"]
-    # din't suppress media-type selection
+    # don't suppress media-type selection
     ; api:variable
     	[api:name "_supress_media_type"; api:value "no"]
     .
