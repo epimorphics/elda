@@ -114,6 +114,11 @@ spec:api a api:API
 	   , spec:schoolsPrimaryDistrict
 	   , spec:schoolsSecondaryDistrict 
 	   , spec:school-by-id
+	#
+	# _suppress_ipto, if set (to anything), causes the isPrimaryTopicOf item
+	# endpoints to be supressed, to avoid tickling a stylesheet infelicity.
+	#
+	; api:variable [api:name "_suppress_ipto"; api:value "yes"]
     #
 	# the demo rewriting-URIs hack.
     ; api:variable 
