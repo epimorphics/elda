@@ -87,7 +87,7 @@ spec:api a api:API
     ; api:maxPageSize "50"
     ; api:defaultPageSize "10" 
     ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
-    # ; api:base "WHATEVER" # set this to over-ride use of context root 
+    # ; api:base "http://education.gov.uk/" # set this to over-ride use of context root 
     ; api:variable 
 	   [api:name "_strip_has"; api:value "yes"]
 	; api:variable

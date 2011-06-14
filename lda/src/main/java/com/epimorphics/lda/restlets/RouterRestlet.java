@@ -170,19 +170,29 @@ import com.hp.hpl.jena.shared.WrappedException;
     }
 
 	private URI makeRequestURI(UriInfo ui, Match match, URI requestUri) throws URISyntaxException {
-		System.err.println( ">> requestURI: " + requestUri );
-		System.err.println( ">> path: " + ui.getPath() );
-		System.err.println( ">> params: " + ui.getQueryParameters() );
+//		System.err.println( ">>" );
+//		System.err.println( ">> requestURI: " + requestUri );
+//		System.err.println( ">> path: " + ui.getPath() );
+//		System.err.println( ">> params: " + ui.getQueryParameters() );
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
+//		System.err.println( ">> api:base = " + base );
 		if (base == null) return requestUri;
-	//
-	// Make a base URI up
-	//
-		String rus = requestUri.toString();
-		int here = rus.indexOf( ui.getPath() );
-		String cons = base + rus.substring(here);
-		System.err.println( ">> constructed " + cons );
-		return new URI(cons);
+		URI baseAsURI = new URI( base );
+		URI resolved = baseAsURI.isAbsolute() 
+			? baseAsURI.resolve( ui.getPath() ) 
+			: requestUri.resolve( base ).resolve( ui.getPath() )
+			;
+		URI result = new URI(
+			resolved.getScheme(),
+			resolved.getUserInfo(),
+			resolved.getHost(),
+			resolved.getPort(),
+			resolved.getPath(),
+			requestUri.getQuery(),
+			resolved.getFragment()
+		);		
+		System.err.println( ">> manufactured request URI = '" + result + "'" );
+		return result;
 	}
 
 	private static AsURL pathAsURLFactory(final ServletContext servCon) {
