@@ -121,11 +121,6 @@ spec:api a api:API
 	#
 	; api:variable [api:name "_suppress_ipto"; api:value "yes"]
     #
-	# the demo rewriting-URIs hack.
-    ; api:variable 
-    	[api:name "x_change_from"; api:value "http://education.data.gov.uk/"]
-    ; api:variable 
-    	[api:name "x_change_to"; api:value "http://localhost:8080/elda/api/education/"]
     # don't suppress media-type selection
     ; api:variable
     	[api:name "_supress_media_type"; api:value "no"]

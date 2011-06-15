@@ -41,8 +41,7 @@ public class XSLT_RendererFactory implements RendererFactory {
 				if (meta != null) results.includeMetadata( meta.split( "," ) );
 				final String sheet = root.getProperty( API.stylesheet ).getString();
 				final XMLRenderer xr = new XMLRenderer( sns, mt, sheet );
-				String rendered = xr.render( rc, results );			
-				return rendered.replaceAll( "_ROOT", rc.getContextPath() );
+				return xr.render( rc, results ); 
 			}
 		}; 
 	}

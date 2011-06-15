@@ -1,5 +1,11 @@
 1.1.5 (SNAPSHOT)
 
+* updated the documentation, covering some of the magic
+  & stylesheet-driving variables.
+
+* POM does not default to deploying the (large) stanalone
+  jar.
+
 * Updated Elda issues list -- marked several issues as
   fixed.
 

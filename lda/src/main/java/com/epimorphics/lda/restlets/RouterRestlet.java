@@ -223,10 +223,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     
     // HACK for bootstrapping. Should be endpoint-driven somehow.
     private String relabel( RendererContext rc, String rendered ) {
-        String relabel_from = rc.getAsString( "_change_from", null );
-        String relabel_to = rc.getAsString( "_change_to", null );
-        if (relabel_from == null || relabel_to == null) return rendered;
-        return rendered.replace( relabel_from, relabel_to );
+    	return rendered;
     }
     
     public static VarValues paramsFromContext( CallContext cc ) {
