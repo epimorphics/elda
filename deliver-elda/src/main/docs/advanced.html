@@ -19,8 +19,85 @@ pre
 </head>
 <body>
 
-<h1>Elda configuration</h1>
+<h1>Additional Elda features</h1>
 
+<p>
+    Elda reserves LDA variable names that begin "_" for
+    configuration purposes.
+</p>
+
+<p>
+    Elda has a built-in XSL stylesheet available which
+    is a mildly configured version of the original
+    written by Jeni Tennison.
+</p>
+
+<h2>Configuration variables</h2>
+
+<h3>Variables used by the stylesheet</h3>
+
+<p>
+    The built-in Elda stylesheet generates HTML pages
+    that require http access to images, CSS stylesheets,
+    and Javascript served by the Elda server. Because
+    the webapp root isn't fixed, the stylesheet reads
+    location information from LDA variables that are
+    set as part of creating an Elda webapp.
+</p>
+
+<ul>
+    <li>_resourceRoot: the location from which the
+    resources will be served, relative to the server
+    root. May include a domain:port if the resources
+    are on a different server.
+    </li>
+
+    <li>activeImageBase: the location within the
+    resource root where the active (enabled) images
+    used by the styleshhet are fetched from.
+    </li>
+
+    <li>inactiveImageBase: the location within the
+    resource root where the inactive (disabled) images
+    used by the stylesheet are fetched from.
+    </li>
+
+</ul>
+
+<h3>Variables used by the Elda code</h3>
+
+<ul>
+    <li>_strip_has: (OBSOLESCENT) If this variable is defined
+    and has the value "yes", the XML renderer will rename
+    properties "hasWhatever" (ie where the fourth character
+    is upper-case) to "whatever". This is for compatability
+    with Puelia when using a Puelia-specific stylesheet.
+    </li>
+
+    <li>_suppress_media_type: If there is no .formatter
+    suffix in the request URL, and no _format= query
+    parameter, then the prescribed LDA behaviour is to
+    see if the request headers specify an appropriate
+    media type. If the requesting entity is a browser
+    it almost always will (with */*), which is inconvenient
+    when testing for the default default behaviour of
+    sending JSON. Setting this variable to "yes" will
+    cause Elda to ignore the supplied media type.
+    </li>
+
+    <li>x_change_from: OBSOLETE (will be removed soon)
+    </li>
+
+    <li>x_change_to: OBSOLETE (will be removed soon)
+    </li>
+
+    <li>_ROOT: OBSOLETE (will be removed soon)
+    </li>
+</ul>
+
+<h3>api:base</h3>
+
+<h2>Building Elda</h2>
 
 </body>
 </html>
