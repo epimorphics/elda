@@ -89,11 +89,12 @@ spec:api a api:API
     ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
     # ; api:base "http://education.gov.uk/" # set this to over-ride use of context root 
     ; api:variable 
-	   [api:name "_strip_has"; api:value "yes"]
+	   [api:name "_strip_has"; api:value "yes"]        
 	; api:variable
-		[ api:name "activeImageBase"; api:value "/elda/images/green/16x16"]
-		, [ api:name "inactiveImageBase"; api:value "/elda/images/grey/16x16"]
-		, [ api:name "webapp"; api:value "/elda"]
+		[api:name "activeImageBase"; api:value "/elda/images/green/16x16"]
+		, [api:name "inactiveImageBase"; api:value "/elda/images/grey/16x16"]
+		, [api:name "_resourceRoot"; api:value "/elda/"]
+		, [api:name "webapp"; api:value "/elda"]
 	; api:formatter 
 		[a api:XsltFormatter
 		; api:name 'html'

@@ -1,5 +1,5 @@
 body {
-	background-image: url(../images/body_bg_big.png);
+	background-image: url("../images/body_bg_big.png");
 	color:#555555;
 	font-family: Arial,sans-serif;
 	font-size: 0.813em;
@@ -15,12 +15,12 @@ body {
 }
 
 nav.site {
-	background: url(../images/hmg-banner.png) no-repeat 0% 0%;
+	background: url("../images/hmg-banner.png") no-repeat 0% 0%;
 	padding-top: 54px;
 }
 
 header h1 {
-	background: url(../images/molecule.png) no-repeat scroll 0 0 transparent;
+	background: url("../images/molecule.png") no-repeat scroll 0 0 transparent;
 	color: #555555;
 	font-size: 3em;
 	font-weight: 300;
@@ -135,7 +135,7 @@ div.mapInfo {
 	padding: 2px 5px 2px 22px;
 	height: 1.2em;
 	overflow: hidden;
-	background: url(../images/icon_li_arrow.png) no-repeat scroll 10px 4px white;
+	background: url("../images/icon_li_arrow.png") no-repeat scroll 10px 4px white;
 	border: 1px solid #D3D3D3;
 }
 
@@ -167,7 +167,7 @@ nav.topnav section h1 {
 }
 
 nav.topnav section li {
-	background: url(../images/icon_li_arrow.png) no-repeat scroll 3px 4px transparent;
+	background: url("../images/icon_li_arrow.png") no-repeat scroll 3px 4px transparent;
 	display: inline;
 	padding-left: 15px;
 	padding-right: 5px;
@@ -308,7 +308,7 @@ nav section.formats li.last {
 }
 
 section#search {
-	background: url(../images/green/lttomed.png) repeat-x scroll 0 bottom #F2F6EC;
+	background: url("../images/green/lttomed.png") repeat-x scroll 0 bottom #F2F6EC;
 	border: 1px solid #577D00;
 	border-top: none;
 	border-radius: 0;
@@ -347,7 +347,7 @@ section#search td {
 }
 
 button, #openSearch {
-	background-image: url(../images/gradient_nav_item.png);
+	background-image: url("../images/gradient_nav_item.png");
 	background-color: #577D00;
 	border-color: #577D00;
 	color: white;
@@ -378,7 +378,7 @@ footer {
 }
 
 footer .provenance {
- 	background: url(../images/gradient_footer.png) repeat-x scroll 0 bottom #EAEAEA;
+ 	background: url("../images/gradient_footer.png") repeat-x scroll 0 bottom #EAEAEA;
   color: #666666;
   margin-top: 30px;
 	padding: 30px;
@@ -479,7 +479,7 @@ td.nested td.nested {
 }
 
 .nested ul li {
-	background: url(../images/icon_li_arrow.png) no-repeat scroll 5px 7px white;
+	background: url("../images/icon_li_arrow.png") no-repeat scroll 5px 7px white;
 	display: block;
 	padding: 3px 17px;
 }
