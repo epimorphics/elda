@@ -1,23 +1,19 @@
 <html>
 <head>
 <title>Elda -- an implementation of the Linked Data API</title>
-<style>
-h1
-    { background: #ccccff
-    }
-
-h2
-    { background: #ccccff
-    ; padding-left: 1px
-    }
-
-pre
-    { background: #dddddd
-    ; margin-left: 2em
-    }
-</style>
+<link href="style.css" type="text/css" rel="stylesheet"></link>
 </head>
 <body>
+
+<div class="main">
+
+<div class="heading">
+<a href="http://www.epimorphics.com">
+<img class="logo" src="epilogo-240.png">
+</a>
+<h1>Elda</h1>
+<h2>An implementation of the Linked Data API</h2>
+</div>
 
 <h1>Additional Elda features</h1>
 
@@ -30,6 +26,11 @@ pre
     Elda has a built-in XSL stylesheet available which
     is a mildly configured version of the original
     written by Jeni Tennison.
+</p>
+
+<p>
+    Elda uses the <code>api:base</code> property to
+    specify where generated URIs are anchored.
 </p>
 
 <h2>Configuration variables</h2>
@@ -95,7 +96,7 @@ pre
     </li>
 </ul>
 
-<h3>api:base</h3>
+<h2>api:base</h2>
 
 <p>
     An LDA configuration may specify an api:base property.
@@ -112,6 +113,13 @@ pre
 <h2>Building Elda</h2>
 
 <p>TBD</p>
+
+<div class="footer">
+<hr>
+&copy; Copyright 2011 Epimorphics Limited. For licencing conditions see
+<a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
+</div>
+</div>
 
 </body>
 </html>
