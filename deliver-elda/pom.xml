@@ -9,9 +9,10 @@
   </parent>
 
   <groupId>com.epimorphics.lda</groupId>
-  <artifactId>elda</artifactId>
+  <artifactId>elda-standalone</artifactId>
   <packaging>war</packaging>
   <name>elda</name>
+  <version>1.1.5-SNAPSHOT</version>
   <description>instant Elda webapp</description>
 
   <dependencies>
@@ -26,9 +27,30 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.2</version>
-      <scope>test</scope>
     </dependency>
   
+    <dependency>
+    	<groupId>javax.servlet</groupId>
+    	<artifactId>servlet-api</artifactId>
+    	<version>2.5</version>
+    	<type>jar</type>
+    	<scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>com.epimorphics.lda</groupId>
+    	<artifactId>lda</artifactId>
+    	<version>${elda.version}</version>
+    	<classifier>sources</classifier>
+    	<scope>compile</scope>
+    </dependency>
+    <dependency>
+    	<groupId>com.epimorphics.lda</groupId>
+    	<artifactId>json-rdf</artifactId>
+    	<version>${elda.version}</version>
+    	<type>jar</type>
+    	<classifier>sources</classifier>
+    	<scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -37,6 +59,91 @@
         <plugin>
             <artifactId>maven-jetty-plugin</artifactId>
             <groupId>org.mortbay.jetty</groupId>
+        </plugin>        
+ 
+     
+     <!--  copy source files in preparation for running javadoc -->
+	 <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.2</version>
+        <executions>
+          <execution>
+            <id>copy-dependency-sources</id>
+            <phase>prepare-package</phase><goals>
+               <goal>unpack</goal>
+             </goals>
+             <configuration>
+              <outputDirectory>${project.build.directory}/dependencySources</outputDirectory>
+              <classifier>sources</classifier>
+               <artifactItems>
+                 <artifactItem>
+                   <groupId>com.epimorphics.lda</groupId>
+                   <artifactId>lda</artifactId>
+                   <type>jar</type>
+                   <classifier>sources</classifier>
+                 </artifactItem>
+                 <artifactItem>
+                   <groupId>com.epimorphics.lda</groupId>
+                   <artifactId>json-rdf</artifactId>
+                   <type>jar</type>
+                   <classifier>sources</classifier>
+                 </artifactItem>
+               </artifactItems>
+             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <!--  create the javadoc -->
+      <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-javadoc-plugin</artifactId>
+	        <version>2.8</version> 
+	        <executions>
+	            <execution>
+	                <phase>prepare-package</phase>
+	                <goals>
+	                    <goal>javadoc</goal>
+	                </goals>   
+	                <configuration>
+	                    <sourcepath>${basedir}/target/dependencySources</sourcepath>
+	                    <outputDirectory>target/javadoc</outputDirectory>
+                        <subpackages>cmd:com</subpackages>
+                        <quiet>true</quiet>
+                    </configuration> 
+                     
+	            </execution>
+	        </executions>
+	    </plugin>
+        
+        <!--  assemble the final jar file -->
+        <plugin>
+	        <!-- NOTE: We don't need a groupId specification because the group is
+	             org.apache.maven.plugins ...which is assumed by default.
+	         -->
+	        <artifactId>maven-assembly-plugin</artifactId>
+	        <version>2.2.1</version>
+	        <configuration>	
+	            <descriptors>
+	                <descriptor>src/assemble/distribution.xml</descriptor>
+	            </descriptors>
+	            <finalName>elda-standalone-${elda.version}</finalName>
+	            <appendAssemblyId>false</appendAssemblyId>
+	            <archive>
+	                <manifestEntries>
+                        <Main-Class>cmd.run</Main-Class>
+                    </manifestEntries>
+	            </archive>
+	        </configuration>
+	        <executions>
+	            <execution>
+	                <phase>package</phase>
+	                <goals>
+	                    <goal>single</goal>
+	                </goals>
+	            </execution>
+	        </executions>
         </plugin>
     </plugins>
   </build>

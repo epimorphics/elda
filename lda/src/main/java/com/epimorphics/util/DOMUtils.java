@@ -8,12 +8,14 @@ package com.epimorphics.util;
 
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -81,6 +83,8 @@ public class DOMUtils
 		catch (ParserConfigurationException e) { throw new WrappedException( e ); }
 		}
 	
+	protected static HashMap<URL, Templates> cache = new HashMap<URL, Templates>();
+	
 	private static Transformer getTransformer( RendererContext rc, String transformFilePath ) 
 		{
 		try
@@ -91,7 +95,9 @@ public class DOMUtils
 			else 
 				{
 				URL u = rc.pathAsURL( VarValues.expandVariables( rc, transformFilePath ) );
-				return tf.newTransformer( new StreamSource( u.toExternalForm() ) );
+				Templates t = cache.get( u );
+				if (t == null) cache.put( u, t = tf.newTemplates( new StreamSource( u.toExternalForm() ) ) );
+				return t.newTransformer();
 				}
 			}
 		catch (TransformerConfigurationException e) 
