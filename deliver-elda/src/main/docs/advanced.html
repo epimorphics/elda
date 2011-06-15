@@ -97,7 +97,21 @@ pre
 
 <h3>api:base</h3>
 
+<p>
+    An LDA configuration may specify an api:base property.
+    This should, if possible, be used to specify where 
+    the Elda webapp is served from. If specified, all
+    Elda's constructed URIs (such as those for different
+    views or formats of the displayed page) will use
+    that base URI with the path and query parameters
+    supplied in the request. This means that a server
+    at location A can generate URIs as though it were
+    at location B (from which it may have been redirected). 
+</p>
+
 <h2>Building Elda</h2>
+
+<p>TBD</p>
 
 </body>
 </html>
