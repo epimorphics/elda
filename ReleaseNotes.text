@@ -1,3 +1,52 @@
+1.1.5 (SNAPSHOT)
+
+* Updated Elda issues list -- marked several issues as
+  fixed.
+
+* Stylesheet revisions (thanks Stuart) to allow generated
+  URIs to be set from LDA variables.
+
+* Revised POMs (thanks Brian) so that the stand-alone
+  demo jar can be constructed using Maven.
+
+* the api:base from the config, if present, over-rides the
+  fixed part of the request URI used for URI construction
+  (for eg the different formatters and views). This allows
+  Elda endpoints to recover from redirections that may have
+  happened when they are mounted somewhere other than the
+  root webapp.
+
+* for compatability with Puelia output, the isPrimaryTopicOf
+  property for item endpoints can be suppressed by setting
+  the config variable _suppress_ipto to "yes".
+
+* built-in views have their defined names, even when they
+  are specified by `api:viewer api:ThatViewerLocalName` constructs.
+  (Previously their names would have been ThatViewerLocalName.)
+
+* Stylesheets are compiled at their point of first user, rather
+  than every time that they are invoked.
+
+* The XML renderer sorts properties by given shortname in its
+  output.
+
+* Fixed bug in variable bindings: the value of an api:variable
+  can now depend on a parameter from a URI template, as the
+  LDA spec says. Bindings are evaluated when used and, if they
+  are complete, will not be evaluated again.
+
+* Item endpoints no longer have page numbers.
+
+* _metadata metadata is now always generated, but not put into
+  the result model unless specified by a _metadata option or
+  demanded by a renderer; this latter allows the XSLT renderer
+  to pull in metadata it requires without the user having to
+  request it.
+
+* Fixed some bugs in URI construction (eg missing ? or / or &).
+
+* Added some extra micro-vocabulary classes.
+
 1.1.4 (1st June 2011)
 
 * Setting variable "_strip_has" to "yes" strips "has"
@@ -15,7 +64,7 @@
   for properties.
 
 * Documentation now mentions how to use Elda directly
-  (ie without needign a webapp).
+  (ie without needing a webapp).
 
 * Elda now has its own internal MediaType type rather
   than using type/subtype strings.
