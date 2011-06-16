@@ -199,8 +199,6 @@ public class APIResultSet {
 	    <code>meta</code>.
 	*/
 	public void setMetadata( String option, Model meta ) {
-//		System.err.println( ">> Put metadata " + option );
-//		meta.write( System.err, "TTL" );
 		metadata.put( option, meta );		
 	}
 	
@@ -210,7 +208,7 @@ public class APIResultSet {
 	public void includeMetadata( String[] options ) {
 		for (String option: options) {
 			Model meta = metadata.get( option );
-			if (meta == null) log.warn( "Unknown metadata section '" + option + "': ignored." );
+			if (meta == null) log.debug( "Unknown metadata section '" + option + "': ignored." );
 			else model.add( meta );
 		}
 	}
