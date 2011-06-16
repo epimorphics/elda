@@ -24,10 +24,19 @@ public class PrefixLogger {
 	}
 	
 	/**
-	    Present a URI as a SPARQL term, either <>-quoted, or
+	    <p>Present a URI as a SPARQL term, either <>-quoted, or
 	    as a qname if there's a suitable prefix mapping for it.
+	    </p>
+	    
+	    <p>SPARQL qname local names can't end with ".", so we
+	    protect against generating illegal SPARQL by an ad-hoc
+	    check against the URL ending with dot. May need to
+	    consider other characters too, and may want to push
+	    this protection into Jena. 
+	    </p>
 	*/
 	public String present( String URI ) {
+		if (URI.endsWith( ".") ) return "<" + URI + ">";
 		String qName = pm.qnameFor( URI );
 		if (qName == null) return "<" + URI + ">";
 		seen.add( qName.substring( 0, qName.indexOf( ':' ) ) );
