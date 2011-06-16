@@ -34,7 +34,7 @@ public class ELDA
 	static private Property property( String NS, String local ) 
 		{ return m.createProperty( NS + local ); }
 	
-	public static final Resource Elda = resource( EXTRAS.EXTRA, "Elda" );
+	public static final Resource Elda = m.createResource();
 	
 	public static final Resource ThisElda = resource( EXTRAS.EXTRA, "Elda_" + version );
 	
