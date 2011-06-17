@@ -72,7 +72,8 @@ spec:viewerShort
 spec:viewerMedium
 	a api:Viewer ;
 	api:name "medium" ;
-	api:property rdf:type, rdfs:label, school:establishmentStatus, school:typeOfEstablishment, school:schoolCapacity, school:phaseOfEducation, 
+	api:property "type.label", "type.nurseryProvision";
+	api:property rdfs:label, school:establishmentStatus, school:typeOfEstablishment, school:schoolCapacity, school:phaseOfEducation, 
 				   school:districtAdministrative, school:parliamentaryConstituency, school:administrativeWard, school:nurseryProvision .
 
 ############################################################################################

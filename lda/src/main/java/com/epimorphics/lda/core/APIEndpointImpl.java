@@ -142,6 +142,8 @@ public class APIEndpointImpl implements APIEndpoint {
 			? EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
 			: EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
 		// System.err.println( ">> changed '" + ru + "' to '" + newURI + "'" );
+		// MAGICAL HACK
+		if (!isListEndpoint() && newURI.indexOf('?') < 0) newURI += "?";
 		return m.createResource( newURI );
     }
     
