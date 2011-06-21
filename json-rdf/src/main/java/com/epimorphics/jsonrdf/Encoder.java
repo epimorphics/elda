@@ -148,7 +148,6 @@ public class Encoder {
      * Encode the whole of the given RDF model into the writer 
      * @param model The RDF to be encoded
      * @return encoding as a JSON object
-     * @param writer The output writer, ideally platform neutral charset like UTF-8
      */
     public JsonObject encode(Model model) {
         JSONWriterObject jwo = new JSONWriterObject();
@@ -293,8 +292,7 @@ public class Encoder {
     /**
      * Write out a collection of named graphs plus a default graph
      * @param dataset the collection of models
-     * @param writer writer to output to
-     * @param roots the root resources to be encoded
+     * @param jw JSON writer to output to
      * @throws IOException
      */
     protected void encode(Dataset dataset, JSONWriterFacade jw) throws IOException {

@@ -161,9 +161,9 @@ public class APIEndpointImpl implements APIEndpoint {
     		// nasty hackery to avoid nasty hackery in the TestAPI uriTemplates, qv.
     		return rsm.createResource( template + "/meta" );
     	}
-		String remove = "/?" + template.replace("{", "\\{" ).replace( "}", "\\}" ) + "(\\.[-A-Za-z]+)?";
-		String result = ru.toASCIIString().replaceAll( remove, "/meta" + template ) + "!";
-		return rsm.createResource( result );
+		String pattern = template.replaceAll( "\\{[-._A-Za-z]+\\}", "[^/]*" );
+		String replaced = ru.toASCIIString().replaceAll( pattern, "/meta" + template );
+		return rsm.createResource( replaced );
 	}
 
     private Resource resourceForList( Model m, CallContext context ) {		

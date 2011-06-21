@@ -156,10 +156,11 @@ public class APIResultSet {
      * Generate and return a new copy of the model filtered to only include
      * statements reachable from the results via allowed properties in the given set.
      * Will not include any root resource, need to create page information after filtering.
-     * @param string 
+     * @param v the view to filter the results with
+     * @param languages  acceptable language codes for literals
      */
-    public APIResultSet getFilteredSet( View t, String languages ) {
-    	Model m = t.applyTo( model, results );
+    public APIResultSet getFilteredSet( View v, String languages ) {
+    	Model m = v.applyTo( model, results );
     	if (languages != null) LanguageFilter.filterByLanguages( m, languages.split(",") );
         m.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();

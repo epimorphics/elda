@@ -61,8 +61,6 @@ public interface SpecManager {
      * Remove the specification for an API.
      * @param uri The uri for the RDF resource which identifies this API specification.
      * @param key An arbitrary key to identify the provider of the specification. 
-     * @param spec An RDF model containing the specification of the API and its 
-     * associate endpoints. 
      * @throws APISecurityException if the key does match the key used to create the matching existing entry
      */
     public void deleteSpec(String uri, String key)
@@ -74,7 +72,7 @@ public interface SpecManager {
      * This will be called by the router for an unknown incoming request at 
      * enables us to support incremental loading of specifications from 
      * persistent storage.
-     * @param uriTemplate the incoming request with the server root removed
+     * @param uriRequest the incoming request with the server root removed
      */
     public void loadSpecFor(String uriRequest);
     
