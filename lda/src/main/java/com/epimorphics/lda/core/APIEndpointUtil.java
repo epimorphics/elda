@@ -57,7 +57,7 @@ public class APIEndpointUtil {
 	    
 	    <p>
 	    Epimorphic extension:
-	    If the endooint's spec has a binding other than "no" for the variable
+	    If the endpoint's spec has a binding other than "no" for the variable
 	    <code>_suppress_media_type</code>, then the search of media types is
 	    not done, so that name=null will fall through to the default renderer.
 	    </p>

@@ -1,3 +1,8 @@
+#
+# API endpoints for accessing the data at the SPARQL endpoint
+# http://services.data.gov.uk/education/sparql
+#
+
 @prefix spec: <http://services.data.gov.uk/education/api#> .
 
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
@@ -22,16 +27,8 @@
 
 @prefix ids: <http://education.data.gov.uk/id/school/>.
 
-############################################################################################
-#
-# COMPONENTS
-#
-############################################################################################
-
-#SELECTORS
-
-#select schools that are related to a resource, via the school:pageOfEducation property, 
-#whose label is "Primary"
+# select schools that are related to a resource, via the school:pageOfEducation property, 
+# whose label is "Primary"
 #
 # Equivalent sparql (ignoring prefixes):
 #
@@ -46,8 +43,8 @@ spec:schoolsPrimarySelector
 	api:filter "type=School&name-phaseOfEducation=Primary"
 	.
 
-#select schools that are related to a resource, via the school:pageOfEducation property, 
-#whose label is "Secondary"
+# select schools that are related to a resource, via the school:pageOfEducation property, 
+# whose label is "Secondary"
 #
 # Equivalent sparql (ignoring prefixes):
 #
@@ -64,17 +61,20 @@ spec:schoolsSecondarySelector
 
 #VIEWERS
 
-spec:viewerShort
-	a api:Viewer ;
-	api:name "short" ;
-	api:property rdf:type, rdfs:label, school:establishmentStatus, school:typeOfEstablishment.
+spec:viewerShort a api:Viewer 
+    ; api:name "short" 
+    ; api:property 
+        rdf:type, rdfs:label, school:establishmentStatus, school:typeOfEstablishment
+    .
 
-spec:viewerMedium
-	a api:Viewer ;
-	api:name "medium" ;
-	api:property "type.label", "type.nurseryProvision";
-	api:property rdfs:label, school:establishmentStatus, school:typeOfEstablishment, school:schoolCapacity, school:phaseOfEducation, 
-				   school:districtAdministrative, school:parliamentaryConstituency, school:administrativeWard, school:nurseryProvision .
+spec:viewerMedium a api:Viewer 
+    ; api:name "medium" 
+    ; api:property "type.label", "type.nurseryProvision"
+    ; api:property 
+        rdfs:label, school:establishmentStatus, school:typeOfEstablishment, school:schoolCapacity
+        , school:phaseOfEducation, school:districtAdministrative, school:parliamentaryConstituency
+        , school:administrativeWard, school:nurseryProvision 
+    .
 
 ############################################################################################
 #
@@ -191,11 +191,15 @@ spec:schoolsSecondaryDistrict
 	api:defaultViewer spec:viewerShort
 	.
 
-############################################################################################
 #
 # VOCABULARY
 #
-############################################################################################
+# The vocabulary declarations say which properties can be used in queries
+# and by what short name those properties are known. If property P with short
+# name Q has range type T, then a query parameters Q=V is translated to
+# a WHERE clause fragment ?item P V' where V' is a literal which is V
+# with type T. This is especially important for numbers and booleans.
+# 
 
 rdf:type
   api:label "type" .
