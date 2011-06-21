@@ -161,8 +161,10 @@ public class APIEndpointImpl implements APIEndpoint {
     		// nasty hackery to avoid nasty hackery in the TestAPI uriTemplates, qv.
     		return rsm.createResource( template + "/meta" );
     	}
-		String pattern = template.replaceAll( "\\{[-._A-Za-z]+\\}", "[^/]*" );
-		String replaced = ru.toASCIIString().replaceAll( pattern, "/meta" + template );
+		String argPattern = "\\{[-._A-Za-z]+\\}";
+		String pattern = template.replaceAll( argPattern, "[^/]*" );
+		String quasiTemplate = template.replaceAll( "\\{", "(" ).replaceAll( "\\}", ")");
+		String replaced = ru.toASCIIString().replaceAll( pattern, "/meta" + quasiTemplate );
 		return rsm.createResource( replaced );
 	}
 

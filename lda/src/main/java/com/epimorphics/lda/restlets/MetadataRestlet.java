@@ -215,6 +215,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
     private void doSPARQL( StringBuilder sb, String query ) {
 		String [] x = query.split( "\nSELECT " );
+		if (x.length == 1) { System.err.println( "OOPS: " + query ); x = new String[] { "", query }; }
 		String [] prefixes = x[0].split( "\n" );
 		Pattern p = Pattern.compile( "([-A-Za-z]+:)" );
 		String pp = "", alt = "";

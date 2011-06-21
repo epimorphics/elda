@@ -91,7 +91,7 @@ public class BuiltinRendererTable {
 			}
 			} );
 		
-		putFactory( "xml", API.XmlFormatter, MediaType.APPLICATION_RDF_XML, new DoingWith() 
+		putFactory( "xml", API.XmlFormatter, MediaType.TEXT_XML, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new XMLRenderer( sns );

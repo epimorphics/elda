@@ -105,7 +105,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             String message = "ERROR: Failed to find API handler for path " + ("/" + pathstub);
             if (pathAndType.b != null) message += " (perhaps '" + pathAndType.b + "' is an incorrect format name?)";
             message += "<br>available routes:<br>\n";
-            for (String template: router.templates()) {
+            for (String template: reversed(router.templates())) {
             	message += "\n<div style='margin-left: 2ex'>" + template + "</div>";
             }
 			return returnNotFound( message + "\n" );
@@ -115,7 +115,17 @@ import com.hp.hpl.jena.shared.WrappedException;
         }
     }
     
-    /**
+    private List<String> reversed( List<String> x ) {
+    	int size = x.size(), limit = size / 2;
+    	for (int i = 0, j = size; i < limit; i += 1) {
+    		String temp = x.get(i);
+    		x.set(i, x.get(--j) );
+    		x.set( j, temp );
+    	}
+    	return x;
+	}
+
+	/**
         Answer true of m's endpoint has no formatter called type.
     */
     private boolean notFormat( Match m, String type ) {
