@@ -50,6 +50,7 @@ public class XMLRenderer implements Renderer {
 		boolean suppressIPTO = rc.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		Document d = DOMUtils.newDocument();
 		renderInto( root, d, stripHas, suppressIPTO );
+		System.err.println( DOMUtils.renderNodeToString( d, rc, pm, null ) );
 		return DOMUtils.renderNodeToString( d, rc, pm, transformFilePath );
 	}
 

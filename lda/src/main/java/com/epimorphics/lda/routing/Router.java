@@ -17,6 +17,8 @@
 
 package com.epimorphics.lda.routing;
 
+import java.util.List;
+
 import com.epimorphics.lda.core.APIEndpoint;
 
 /**
@@ -50,6 +52,11 @@ public interface Router {
      * or null if the request does not match.
      */
     public Match getMatch( String path );
+    
+    /**
+        Answer a list of URI templates registered with this Router.
+    */
+    public List<String> templates();
     
 }
 

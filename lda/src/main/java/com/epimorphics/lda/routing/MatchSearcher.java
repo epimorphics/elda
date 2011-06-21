@@ -70,4 +70,11 @@ public class MatchSearcher<T> {
         Collections.sort( templates, MatchTemplate.compare );
         needsSorting = false;
     }
+    
+    public List<String> templates() {
+    	List<String> result = new ArrayList<String>();
+    	if (needsSorting) sortTemplates();
+    	for (MatchTemplate<?> t: templates) result.add(t.template());
+    	return result;
+    }
 }

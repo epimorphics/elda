@@ -136,17 +136,36 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.isListEndpoint();
     }
 
-	private Resource resourceForPage(Model m, CallContext context, int page) {
+	private Resource resourceForPage( Resource notThisPlease, Model m, CallContext context, int page) {
 		URI ru = context.getRequestURI();
 		String newURI = isListEndpoint()
 			? EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
 			: EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
+		Resource thisPage = m.createResource( newURI );
 		// System.err.println( ">> changed '" + ru + "' to '" + newURI + "'" );
 		// MAGICAL HACK
-		if (!isListEndpoint() && newURI.indexOf('?') < 0) newURI += "?";
-		return m.createResource( newURI );
+//		if (thisPage.equals( notThisPlease ) && !isListEndpoint()) {
+//			thisPage = m.createResource( newURI + "?" );
+//		}
+		// System.err.println( ">> Perhaps casting a spell ..." );
+		if (!isListEndpoint() && newURI.indexOf('?') < 0) {
+			// System.err.println( ">> ... Magical Hack." );
+			newURI += "?";
+			thisPage = m.createResource( newURI );
+		}
+		return thisPage;
     }
     
+    private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
+    	if (template.startsWith("http:")) {
+    		// nasty hackery to avoid nasty hackery in the TestAPI uriTemplates, qv.
+    		return rsm.createResource( template + "/meta" );
+    	}
+		String remove = "/?" + template.replace("{", "\\{" ).replace( "}", "\\}" ) + "(\\.[-A-Za-z]+)?";
+		String result = ru.toASCIIString().replaceAll( remove, "/meta" + template ) + "!";
+		return rsm.createResource( result );
+	}
+
     private Resource resourceForList( Model m, CallContext context ) {		
     	URI ru = context.getRequestURI();
     	String rqp1 = EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
@@ -169,17 +188,15 @@ public class APIEndpointImpl implements APIEndpoint {
         String template = spec.getURITemplate();
         URI ru = cc.getRequestURI();
         Resource uriForDefinition = createDefinitionURI( rsm, ru, uriForSpec, template ); 
-        Resource thisPage = resourceForPage(rsm, cc, page);
+        Resource thisPage = resourceForPage(uriForDefinition, rsm, cc, page);
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( FIXUP.definition, uriForDefinition );
 		EndpointMetadata em = new EndpointMetadata( thisPage, cc );
 		createOptionalMetadata(rs, query, em);   
     //
-        String and = thisPage.getURI().indexOf("?") < 0 ? "?" : "&";
-        String emv_uri = thisPage.getURI() + and + "_metadata=all";
-        Resource emv = rsm.createResource( emv_uri );
-        thisPage.addProperty( FIXUP.extendedMetadata, emv );
+        String emv_uri = EndpointMetadata.replaceQueryParam( Util.newURI(thisPage.getURI()), "_metadata", "all" );
+        thisPage.addProperty( FIXUP.extendedMetadata, rsm.createResource( emv_uri ) );
     //
         if (isListEndpoint()) {
         	RDFList content = rsm.createList( rs.getResultList().iterator() );
@@ -190,9 +207,9 @@ public class APIEndpointImpl implements APIEndpoint {
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
         	thisPage.addProperty( FIXUP.items, content );
-    		thisPage.addProperty( XHV.first, resourceForPage( rsm, cc, 0 ) );
-    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( rsm, cc, page+1 ) );
-    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( rsm, cc, page-1 ) );
+    		thisPage.addProperty( XHV.first, resourceForPage( uriForDefinition, rsm, cc, 0 ) );
+    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( uriForDefinition, rsm, cc, page+1 ) );
+    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( uriForDefinition, rsm, cc, page-1 ) );
     		Resource listRoot = resourceForList(rsm, cc);
     		thisPage
 	    		.addProperty( DCTerms.isPartOf, listRoot )
@@ -249,17 +266,6 @@ public class APIEndpointImpl implements APIEndpoint {
         if (query.wantsMetadata( "bindings" )) rsm.add( bindings ); else rs.setMetadata( "bindings", bindings );
         if (query.wantsMetadata( "execution" )) rsm.add( execution ); else rs.setMetadata( "execution", execution );
 	}
-    
-    private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
-    	if (template.startsWith("http:")) {
-    		// nasty hackery to avoid nasty hackery in the TestAPI uriTemplates, qv.
-    		return rsm.createResource( template + "/meta" );
-    	}
-		String remove = "/?" + template.replace("{", "\\{" ).replace( "}", "\\}" ) + "(\\.[-A-Za-z]+)?";
-		String result = ru.toASCIIString().replaceAll( remove, "/meta" + template );
-		return rsm.createResource( result );
-	}
-
     /**
      * The URI template at which this APIEndpoint should be attached
      */

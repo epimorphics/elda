@@ -104,7 +104,11 @@ import com.hp.hpl.jena.shared.WrappedException;
         if (match == null) {
             String message = "ERROR: Failed to find API handler for path " + ("/" + pathstub);
             if (pathAndType.b != null) message += " (perhaps '" + pathAndType.b + "' is an incorrect format name?)";
-			return returnNotFound( message );
+            message += "<br>available routes:<br>\n";
+            for (String template: router.templates()) {
+            	message += "\n<div style='margin-left: 2ex'>" + template + "</div>";
+            }
+			return returnNotFound( message + "\n" );
         } else {
             List<MediaType> mediaTypes = getAcceptableMediaTypes( headers );
             return runEndpoint( servCon, ui, mediaTypes, type, match ); 
