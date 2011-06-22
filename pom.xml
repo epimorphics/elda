@@ -17,7 +17,7 @@
   <scm>
     <connection>scm:hg:${hg.root}</connection>
     <developerConnection>scm:hg:${hg.root}</developerConnection>
-    <url>scm:hg:${hg.root}</url>
+    <url>scm:hg:${hg.root}SQUONK</url>
   </scm>
 
   <build>
