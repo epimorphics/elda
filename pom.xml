@@ -13,6 +13,12 @@
   <name>lda-top</name>
   <description>Top level linked data API project</description>
 
+  <scm>
+    <connection>scm:hg:file:///.</connection>
+    <developerConnection>scm:hg:file:///.</developerConnection>
+    <url>scm:hg:///.</url>
+  </scm>
+
   <build>
     <pluginManagement>
       <plugins>

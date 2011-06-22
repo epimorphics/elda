@@ -24,7 +24,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class ELDA 
 	{
-	static final String version = "1.1.5-SNAPSHOT";
+	static final String version = "1.1.5";
 	
 	static final private Model m = ModelFactory.createDefaultModel();
 	
