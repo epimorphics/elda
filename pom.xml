@@ -3,6 +3,7 @@
 
   <properties>
     <elda.version>1.1.5-SNAPSHOT</elda.version>
+    <hg.root>${project.build.directory}</hg.root>
   </properties>
 
   <modelVersion>4.0.0</modelVersion>
@@ -14,9 +15,9 @@
   <description>Top level linked data API project</description>
 
   <scm>
-    <connection>scm:hg:file:///.</connection>
-    <developerConnection>scm:hg:file:///.</developerConnection>
-    <url>scm:hg:///.</url>
+    <connection>scm:hg:${hg.root}</connection>
+    <developerConnection>scm:hg:${hg.root}</developerConnection>
+    <url>scm:hg:${hg.root}</url>
   </scm>
 
   <build>
