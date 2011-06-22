@@ -9,15 +9,15 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>lda-top</artifactId>
-  <version>1.1.5</version>
+  <version>1.1.5-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>lda-top</name>
   <description>Top level linked data API project</description>
 
   <scm>
-    <connection>scm:hg:${hg.root}SQUINK</connection>
-    <developerConnection>scm:hg:${hg.root}SQUANK</developerConnection>
-    <url>scm:hg:${hg.root}SQUONK</url>
+    <connection>scm:hg:${hg.root}</connection>
+    <developerConnection>scm:hg:/tmp/other-elda</developerConnection>
+    <url>scm:hg:${hg.root}</url>
   </scm>
 
   <build>
