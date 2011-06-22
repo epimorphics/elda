@@ -1,9 +1,30 @@
-1.1.5 (SNAPSHOT)
+1.1.5
+
+* mavenisation of release process tested for this release
+
+* added more comments to education.ttl example and rearranged
+  it slightly for clarity; replaced uses of api: prefix with
+  lda: instead.
+
+* Corrected banner on stylesheet-generated page
+
+* fixed bug in media types of built-in renderers (two of them
+  had each other's types).
+
+* fixed a bug in the generated metalink for lda:definition
+  which had accidentally collapsed item URIs and with
+  metalinks and confused the stylesheet.
+
+* fixed some trivial javadoc bugs that made noises in the
+  build process.
+
+* removed the obsolete _ROOT and x_change_(from|to) variables
+  from the config file, code, and documentation.
 
 * updated the documentation, covering some of the magic
   & stylesheet-driving variables.
 
-* POM does not default to deploying the (large) stanalone
+* POM does not default to deploying the (large) standalone
   jar.
 
 * Updated Elda issues list -- marked several issues as
