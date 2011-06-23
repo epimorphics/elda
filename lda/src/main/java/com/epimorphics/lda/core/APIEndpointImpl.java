@@ -194,7 +194,7 @@ public class APIEndpointImpl implements APIEndpoint {
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( FIXUP.definition, uriForDefinition );
-		EndpointMetadata em = new EndpointMetadata( thisPage, cc );
+		EndpointMetadata em = new EndpointMetadata( thisPage, "" + page, cc );
 		createOptionalMetadata(rs, query, em);   
     //
         String emv_uri = EndpointMetadata.replaceQueryParam( Util.newURI(thisPage.getURI()), "_metadata", "all" );

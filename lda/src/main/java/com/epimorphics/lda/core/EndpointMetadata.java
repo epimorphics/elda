@@ -12,6 +12,7 @@ import com.epimorphics.lda.shortnames.NameMap.Stage2NameMap;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.vocabularies.ELDA;
 import com.epimorphics.lda.vocabularies.SPARQL;
+import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -30,10 +31,12 @@ public class EndpointMetadata {
 
 	protected final CallContext cc;
 	protected final Resource thisPage;
+	protected final String pageNumber;
 	
-	public EndpointMetadata( Resource thisPage, CallContext cc ) {
+	public EndpointMetadata( Resource thisPage, String pageNumber, CallContext cc ) {
 		this.cc = cc;
 		this.thisPage = thisPage;
+		this.pageNumber = pageNumber;
 	}
 	
 	/**
@@ -58,7 +61,9 @@ public class EndpointMetadata {
 	*/
     private Resource resourceForView( Model m, String name ) {
     	URI req = cc.getRequestURI();
-    	return m.createResource( replaceQueryParam( req, QueryParameter._VIEW, name ) );
+    	String a = replaceQueryParam( req, QueryParameter._VIEW, name );
+    	String b = replaceQueryParam( Util.newURI( a ), QueryParameter._PAGE, pageNumber );
+		return m.createResource( b );
     }
 
     /**
