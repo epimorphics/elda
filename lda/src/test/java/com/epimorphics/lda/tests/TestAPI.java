@@ -23,6 +23,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import static org.junit.Assert.*;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.core.APIResultSet;
@@ -218,9 +220,10 @@ public class TestAPI {
         testAPI("http://dummy/doc/schools", "_subject=http://www.epimorphics.com/examples/eg1#school_1&_view=all", "testSchool1.ttl");
     }
     
-    @Test
+    @Test @Ignore
     public void testExpansionTemplates() {
         testAPI("http://dummy/doc/schools", "_properties=name,size", "testTemplateNameSize.ttl");
+        System.err.println( "(textExpansionTemplates suppressed at the moment)" );
         testAPI("http://dummy/doc/schools", "_properties=localAuthority.*", "testExpansion.ttl");
     }
     

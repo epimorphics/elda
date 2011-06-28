@@ -13,11 +13,15 @@
 package com.epimorphics.lda.core;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.rdfq.Any;
+import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
@@ -226,7 +230,7 @@ public class View {
         return result;
 	}
 
-	public String fetchDescriptions( Model m, List<Resource> roots, List<Source> sources, VarSupply vars ) {
+	public String fetchDescriptions( String select, Model m, List<Resource> roots, List<Source> sources, VarSupply vars ) {
 //		log.info( "fetchDescriptionsFor: sources = " + sources + " using " + this );
 		switch (type) {
 			case T_DESCRIBE: 
@@ -240,7 +244,7 @@ public class View {
 
 			case T_CHAINS:	{
 				long zero = System.currentTimeMillis();
-				String detailsQuery = fetchByGivenPropertyChains( m, roots, sources, vars, chains );
+				String detailsQuery = fetchByGivenPropertyChains( select, m, roots, sources, vars, chains );
 				long time = System.currentTimeMillis() - zero;
 				log.debug( "T_CHAINS took " + (time/1000.0) + "s" );
 				return detailsQuery;
@@ -248,7 +252,7 @@ public class View {
 				
 			case T_BASIC: {
 				long zero = System.currentTimeMillis();
-				String detailsQuery = fetchByGivenPropertyChains( m, roots, sources, vars, BasicChains );
+				String detailsQuery = fetchByGivenPropertyChains( select, m, roots, sources, vars, BasicChains );
 				long time = System.currentTimeMillis() - zero;
 				log.debug( "T_BASIC took " + (time/1000.0) + "s" );
 				return detailsQuery;
@@ -266,7 +270,10 @@ public class View {
 	static final List<PropertyChain> BasicChains = 
 		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
 
-	private String fetchByGivenPropertyChains(Model m, List<Resource> roots, List<Source> sources, VarSupply vars, List<PropertyChain> chains) {
+	static boolean useNestedSelect = true;
+	
+	private String fetchByGivenPropertyChains( String select, Model m, List<Resource> roots, List<Source> sources, VarSupply vars, List<PropertyChain> chains ) {
+		if (useNestedSelect) return hackery( select, m, roots, sources, vars, chains );
 		StringBuilder construct = new StringBuilder();
 		PrefixLogger pl = new PrefixLogger( m );
 		construct.append( "CONSTRUCT {" );
@@ -274,7 +281,7 @@ public class View {
 		for (Resource r: new HashSet<Resource>( roots)) {
 			for (PropertyChain c: chains) {
 				construct.append( "\n  " );
-				buildConstructClause( pl, construct, r, c, vars, varsInOrder );
+				buildConstructClause( pl, construct, RDFQ.uri( r.getURI() ), c, vars, varsInOrder );
 			}
 		}
 	//
@@ -283,7 +290,7 @@ public class View {
 		for (Resource r: new HashSet<Resource>( roots)) {
 			for (PropertyChain c: chains) {
 				construct.append( "\n  " ).append( union );
-				buildWhereClause( pl, construct, r, c, vars, varsInOrder );
+				buildWhereClause( pl, construct, RDFQ.uri( r.getURI() ), c, vars, varsInOrder );
 				union = "UNION ";
 			}
 		}
@@ -296,8 +303,42 @@ public class View {
 		return queryString;
 	}
 	
-	private void buildConstructClause( PrefixLogger pl, StringBuilder construct, Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
-		String S = pl.present( r.getURI() );
+	private String hackery( String select, Model m, List<Resource> roots, List<Source> sources, VarSupply vars, List<PropertyChain> chains) {
+		PrefixLogger pl = new PrefixLogger( m );
+		StringBuilder construct = new StringBuilder();
+		int s = select.indexOf( "\nSELECT" );
+		String selection = select.substring( s + 1 );
+		String selectPrefixes = select.substring(0, s + 1);
+	//
+		Any r = RDFQ.var( "?item" );
+		construct.append( "CONSTRUCT {" );		
+		List<Variable> varsInOrder = new ArrayList<Variable>();
+		for (PropertyChain c: chains) {
+			construct.append( "\n  " );
+			buildConstructClause( pl, construct, r, c, vars, varsInOrder );
+		}
+	//
+		construct.append( "\n} WHERE {" );
+	//	
+		String union = "";
+		for (PropertyChain c: chains) {
+			construct.append( "\n  " ).append( union );
+			buildWhereClause( pl, construct, r, c, vars, varsInOrder );
+			union = "UNION ";
+		}
+		construct.append( "{" ).append( selection ).append( "}" );
+		construct.append( "\n}" );
+	//
+		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
+		String queryString = selectPrefixes + prefixes + construct.toString();
+		System.err.println( ">> QUERY:\n" + queryString );
+		Query constructQuery = QueryFactory.create( queryString );
+		for (Source x: sources) m.add( x.executeConstruct( constructQuery ) );
+		return queryString;
+	}
+
+	private void buildConstructClause( PrefixLogger pl, StringBuilder construct, Any r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
+		String S = pl.present( r );
 		for (Property p: c.getProperties()) {
 			Variable v = vs.newVar();
 			varsInOrder.add( v );
@@ -310,8 +351,8 @@ public class View {
 		construct.append( " ." );
 	}
 	
-	private void buildWhereClause( PrefixLogger pl, StringBuilder construct, Resource r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
-		String S = pl.present( r.getURI() );
+	private void buildWhereClause( PrefixLogger pl, StringBuilder construct, Any r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
+		String S = pl.present( r );
 		construct.append( "{" );
 		for (Property p: c.getProperties()) {
 			String V = next( varsInOrder) .asSparqlTerm( pl );

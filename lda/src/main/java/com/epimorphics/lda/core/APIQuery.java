@@ -634,7 +634,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	        q.append("SELECT ");
 	        if (orderExpressions.length() > 0) q.append("DISTINCT "); // Hack to work around lack of _select but seems a common pattern
 	        q.append( SELECT_VAR.name() );
-	        q.append(" WHERE {\n");
+	        q.append("\nWHERE {\n");
 	        String bgp = constructBGP( pl );
 	        if (whereExpressions.length() > 0) {
 	        	q.append( whereExpressions ); 
@@ -762,7 +762,9 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             Couple<String, List<Resource>> queryAndResults = selectResources( cache, spec, call, source );
             long afterSelect = System.currentTimeMillis();
             
+            String outerSelect = queryAndResults.a;
             List<Resource> results = queryAndResults.b;
+
             APIResultSet already = cache.getCachedResultSet( results, view.toString() );
             if (already != null && expansionPoints.isEmpty() ) 
                 {
@@ -770,12 +772,12 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
                 return already.clone();
                 }
             
-            APIResultSet rs = fetchDescriptionOfAllResources(spec, view, results);
+            APIResultSet rs = fetchDescriptionOfAllResources(outerSelect, spec, view, results);
             long afterView = System.currentTimeMillis();
             
             log.info( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );
             log.info( "TIMING: view time:   " + (afterView - afterSelect)/1000.0 + "s" );
-            rs.setSelectQuery( queryAndResults.a );
+			rs.setSelectQuery( outerSelect );
             
             // Expand the labels of all leaf nodes (make this switchable?)
             new ExpandLabels( this ).expand( source, rs );
@@ -798,11 +800,11 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         }
     }
 
-	private APIResultSet fetchDescriptionOfAllResources(APISpec spec, View view, List<Resource> results) {
+	private APIResultSet fetchDescriptionOfAllResources(String select, APISpec spec, View view, List<Resource> results) {
 		int count = results.size();
 		Model descriptions = ModelFactory.createDefaultModel();
 		Graph gd = descriptions.getGraph();
-		String detailsQuery = fetchDescriptionsFor( results, view, descriptions, spec );
+		String detailsQuery = fetchDescriptionsFor( select, results, view, descriptions, spec );
 		return new APIResultSet(gd, results, count < pageSize, detailsQuery );
 	}
 
@@ -828,17 +830,18 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
                 }
             }
         }
-        fetchDescriptionsFor(toExpand, view, rsm, spec);
+        System.err.println( "property.* not implemented at the moment." );
+        if (true) throw new UnsupportedOperationException( "property.* not implemented at the moment." ); // TODO
+        fetchDescriptionsFor( "\nSELECT ?item\n WHERE {}", toExpand, view, rsm, spec);
     }
     
     // let's respect property chains ...
-    private String fetchDescriptionsFor( List<Resource> roots, View view, Model m, APISpec spec ) {
+    private String fetchDescriptionsFor( String select, List<Resource> roots, View view, Model m, APISpec spec ) {
         if (roots.isEmpty() || roots.get(0) == null) return "# no results, no query.";
         List<Source> sources = spec.getDescribeSources();
         m.setNsPrefixes( spec.getPrefixMap() );
-    // System.err.println( ">> fetchDescrioptionsFor: viewArgument = " + viewArgument );
         return viewArgument == null
-        	? view.fetchDescriptions( m, roots, sources, this )
+        	? view.fetchDescriptions( select, m, roots, sources, this )
         	: viewByTemplate( roots, m, spec, sources )
         	;
     }
@@ -870,9 +873,9 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     private Couple<String, List<Resource>> selectResources( Cache cache, APISpec spec, CallContext call, Source source )
         {
+    	String select = "";
     	log.debug( "fetchRequiredResources()" );
         final List<Resource> results = new ArrayList<Resource>();
-        String select = "";
         if (itemTemplate != null) setSubject( call.expandVariables( itemTemplate ) );
         if ( isFixedSubject() ) {
         	results.add( subjectResource );

@@ -8,6 +8,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.epimorphics.lda.rdfq.Any;
+import com.epimorphics.lda.rdfq.URINode;
+import com.epimorphics.lda.rdfq.Variable;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
@@ -41,6 +44,11 @@ public class PrefixLogger {
 		if (qName == null) return "<" + URI + ">";
 		seen.add( qName.substring( 0, qName.indexOf( ':' ) ) );
 		return qName;
+	}
+
+	public String present( Any r ) {
+		if (r instanceof Variable) return ((Variable) r).asSparqlTerm(this);
+		return present( ((URINode) r).spelling() );
 	}
 	
 	/**
