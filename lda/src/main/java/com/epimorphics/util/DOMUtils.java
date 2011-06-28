@@ -96,7 +96,13 @@ public class DOMUtils
 				{
 				URL u = rc.pathAsURL( VarValues.expandVariables( rc, transformFilePath ) );
 				Templates t = cache.get( u );
-				if (t == null) cache.put( u, t = tf.newTemplates( new StreamSource( u.toExternalForm() ) ) );
+				if (t == null) {
+					long origin = System.currentTimeMillis();
+					t = tf.newTemplates( new StreamSource( u.toExternalForm() ) );
+					long after = System.currentTimeMillis();
+					log.info( "TIMING: compile stylesheet " + transformFilePath + " " + (after - origin)/1000.0 + "s" );
+					cache.put( u, t );
+				}
 				return t.newTransformer();
 				}
 			}

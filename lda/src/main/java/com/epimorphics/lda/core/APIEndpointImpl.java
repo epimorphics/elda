@@ -69,17 +69,24 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     @Override public Triad<APIResultSet, String, CallContext> call( CallContext given ) {
+    	long origin = System.currentTimeMillis();
     	wantsContext = specWantsContext;
     	CallContext cc = new CallContext( spec.getBindings(), given );
         log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
         APIQuery query = spec.getBaseQuery();
         Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
+        long timeAfterBuild = System.currentTimeMillis();
         View view = viewAndFormat.a; 
         String format = viewAndFormat.b;
         APIResultSet unfiltered = query.runQuery( spec.getAPISpec(), cache, cc, view );
+        long timeAfterRun = System.currentTimeMillis();
         APIResultSet filtered = filterByView( view, unfiltered );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
         insertResultSetRoot(filtered, cc, query);
+        long timeAfterMetadata = System.currentTimeMillis();
+        log.info( "TIMING: build query: " + (timeAfterBuild - origin)/1000.0 + "s" );
+        log.info( "TIMING: run query:   " + (timeAfterRun - timeAfterBuild)/1000.0 + "s" );
+        log.info( "TIMING: view query:  " + (timeAfterMetadata - timeAfterRun)/1000.0 );
         return new Triad<APIResultSet, String, CallContext>( filtered, format, cc );
     }
 

@@ -298,7 +298,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		} else if (p.equals( QueryParameter._DISTANCE )) { 
 			geo.setDistance( val );
 		} else if (p.equals( QueryParameter._TEMPLATE )) {
-			vs.setViewByExplicitClause( val );
+			// vs.setViewByExplicitClause( val );
 			setViewByTemplateClause( val );
 		} else if (p.equals(QueryParameter._SORT)) {
 		    setOrderBy( val );
@@ -758,7 +758,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     public APIResultSet runQuery( APISpec spec, Cache cache, CallContext call, View view ) {
         Source source = spec.getDataSource();
         try {
+        	long origin = System.currentTimeMillis();
             Couple<String, List<Resource>> queryAndResults = selectResources( cache, spec, call, source );
+            long afterSelect = System.currentTimeMillis();
+            
             List<Resource> results = queryAndResults.b;
             APIResultSet already = cache.getCachedResultSet( results, view.toString() );
             if (already != null && expansionPoints.isEmpty() ) 
@@ -768,6 +771,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
                 }
             
             APIResultSet rs = fetchDescriptionOfAllResources(spec, view, results);
+            long afterView = System.currentTimeMillis();
+            
+            log.info( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );
+            log.info( "TIMING: view time:   " + (afterView - afterSelect)/1000.0 + "s" );
             rs.setSelectQuery( queryAndResults.a );
             
             // Expand the labels of all leaf nodes (make this switchable?)
@@ -828,25 +835,38 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     private String fetchDescriptionsFor( List<Resource> roots, View view, Model m, APISpec spec ) {
         if (roots.isEmpty() || roots.get(0) == null) return "# no results, no query.";
         List<Source> sources = spec.getDescribeSources();
-    //
-        // System.err.println( ">> fetchDescrioptionsFor: viewArgument = " + viewArgument );
-        if (viewArgument != null) {
-        	// TODO: avoid BRUTE FORCE to get things going
-        	for (Resource root: roots) {
-        		StringBuilder p = new StringBuilder();
-        		String ta = viewArgument.replaceAll( "\\?item", "<" + root.getURI() + ">" );
-        		appendPrefixes( p, spec.getPrefixMap() );
-        		String query = "CONSTRUCT {" + ta + "} where {" + ta + "}\n";
-        		String qq = p.append( query ).toString();
-        		// System.err.println( ">> fetchDescriptionsFor:\n" + qq );
-				Query cq = QueryFactory.create( qq );
-        		for (Source x: sources) m.add( x.executeConstruct( cq ) );
-        	}
-        	return "# lots of queries, none shown.";
-        }
         m.setNsPrefixes( spec.getPrefixMap() );
-        return view.fetchDescriptions( m, roots, sources, this );
+    // System.err.println( ">> fetchDescrioptionsFor: viewArgument = " + viewArgument );
+        return viewArgument == null
+        	? view.fetchDescriptions( m, roots, sources, this )
+        	: viewByTemplate( roots, m, spec, sources )
+        	;
     }
+
+	private String viewByTemplate(List<Resource> roots, Model m, APISpec spec, List<Source> sources) {
+		System.err.println( ">> viewByTemplate: " + viewArgument );
+		StringBuilder clauses = new StringBuilder();
+		for (Resource root: roots)
+			clauses
+				.append( "  " )
+				.append( viewArgument.replaceAll( "\\?item", "<" + root.getURI() + ">" ) )
+				.append( "\n" )
+				;
+		StringBuilder query = new StringBuilder( clauses.length() * 2 + 17 );
+		appendPrefixes( query, spec.getPrefixMap() );
+		query
+			.append( "CONSTRUCT {\n" )
+			.append( clauses )
+			.append( "} where {" )
+			.append( clauses )
+			.append( "}\n" )
+			;
+		String qq = query.toString();
+		System.err.println( ">> _template query: " + qq );
+		Query cq = QueryFactory.create( qq );
+		for (Source x: sources) m.add( x.executeConstruct( cq ) );		
+		return qq;
+	}
     
     private Couple<String, List<Resource>> selectResources( Cache cache, APISpec spec, CallContext call, Source source )
         {
