@@ -286,7 +286,9 @@ public class View {
 		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
 	
 	private String fetchByGivenPropertyChains( State s, List<PropertyChain> chains ) { 
-		return useNestedSelect(s)
+		boolean uns = useNestedSelect(s);
+		System.err.println(uns ? "chains: using nested selects" : "chains: using repeated clauses");
+		return uns
 			? fetchChainsByNestedSelect( s, chains ) 
 			: fetchChainsByRepeatedClauses( s, chains )
 			;
