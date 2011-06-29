@@ -131,5 +131,24 @@ public class RDFUtils {
 		return s == null ? ifAbsent : s.getInt();
 	}
 
+	/**
+	    Answer the boolean value of property <code>p</code> on resource
+	    <code>r</code>. If there is no p-value, or the p-value is not a
+	    literal, return <code>ifAbsent</code>. Otherwise return true if
+	    the literal has spelling "true" or "yes", false if it has the
+	    spelling "false" or "no", and an unspecified value otherwise.
+	*/
+	public static boolean getBooleanValue( Resource r, Property p, boolean ifAbsent ) {
+		Statement s = r.getProperty( p );
+		if (s == null) return ifAbsent;
+		RDFNode o = s.getObject();
+		if (o.isLiteral()) {
+			Literal ol = (Literal) o;
+			String sp = ol.getLexicalForm();
+			return sp.equalsIgnoreCase("yes") || sp.equalsIgnoreCase("true");
+		}
+		return ifAbsent;
+	}
+
 }
 

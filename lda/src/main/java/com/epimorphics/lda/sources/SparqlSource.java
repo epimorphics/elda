@@ -21,16 +21,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.shared.LockNone;
 
@@ -55,25 +52,13 @@ public class SparqlSource extends SourceBase implements Source {
     public SparqlSource( Resource ep, String sparqlEndpoint ) {
         this.sparqlEndpoint = sparqlEndpoint;
         if (ep != null) {
-        	boolean b = getBooleanValue( ep, EXTRAS.supportsNestedSelect, false );
+        	boolean b = RDFUtils.getBooleanValue( ep, EXTRAS.supportsNestedSelect, false );
         	nestedSelects = (b ? Perhaps.Yes : Perhaps.No);
         }
         log.info( "created SparqlSource{" + sparqlEndpoint + "}" );
     }
     
-    public static boolean getBooleanValue( Resource r, Property p, boolean ifAbsent ) {
-    	Statement s = r.getProperty( p );
-    	if (s == null) return ifAbsent;
-    	RDFNode o = s.getObject();
-    	if (o.isLiteral()) {
-    		Literal ol = (Literal) o;
-    		String sp = ol.getLexicalForm();
-    		return sp.equalsIgnoreCase("yes") || sp.equalsIgnoreCase("true");
-    	}
-    	return ifAbsent;
-	}
-
-	@Override public QueryExecution execute(Query query) {
+    @Override public QueryExecution execute(Query query) {
         if (log.isInfoEnabled()) {
             log.debug("Running query on " + sparqlEndpoint + ":\n" + query);
         }

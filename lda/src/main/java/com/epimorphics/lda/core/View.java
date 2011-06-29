@@ -297,9 +297,9 @@ public class View {
 		return false;
 	}
 
-	private boolean allSupportNestedSelect(List<Source> sources) {
+	private boolean allSupportNestedSelect( List<Source> sources ) {
 		for (Source s: sources) if (!s.supportsNestedSelect()) return false;
-		return false; // true;
+		return true;
 	}
 
 	private String fetchChainsByRepeatedClauses( State s, List<PropertyChain> chains ) { 
