@@ -96,26 +96,32 @@ import com.hp.hpl.jena.shared.WrappedException;
             @Context ServletContext servCon,
             @Context UriInfo ui) throws IOException 
     {
+    	String preamble = servCon.getContextPath() + "/api";
         Couple<String, String> pathAndType = parse( pathstub );
         Match matchAll = getMatch( "/" + pathstub );
         Match matchTrimmed = getMatch( "/" + pathAndType.a );
         Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
         String type = match == matchAll ? null : pathAndType.b;
         if (match == null) {
-            String message = "ERROR: Failed to find API handler for path " + ("/" + pathstub);
+            String message = "Sorry: could not find anything matching " + ("/" + pathstub);
             if (pathAndType.b != null) message += " (perhaps '" + pathAndType.b + "' is an incorrect format name?)";
-            message += "<br>available routes:<br>\n";
+            message += "<div style='margin-bottom: 2px'>you might have meant any of:</div>\n";
             for (String template: reversed(router.templates())) {
-            	message += "\n<div style='margin-left: 2ex'>" + template + "</div>";
+            	message += "\n<div style='margin-left: 2ex'>" + maybeLink(preamble, template) + "</div>";
             }
-			return returnNotFound( message + "\n" );
+			return returnNotFound( message + "\n", "/" + pathstub );
         } else {
             List<MediaType> mediaTypes = getAcceptableMediaTypes( headers );
             return runEndpoint( servCon, ui, mediaTypes, type, match ); 
         }
     }
     
-    private List<String> reversed( List<String> x ) {
+    private String maybeLink( String preamble, String template ) {
+    	if (template.contains( "{")) return template;
+    	return "<a href='" + preamble + template + "'>" + template + "</a>";
+    }
+
+	private List<String> reversed( List<String> x ) {
     	int size = x.size(), limit = size / 2;
     	for (int i = 0, j = size; i < limit; i += 1) {
     		String temp = x.get(i);
@@ -276,11 +282,15 @@ import com.hp.hpl.jena.shared.WrappedException;
         log.error("Exception: " + s );
         return enableCORS( Response.serverError() ).entity( s ).build();
     }
-    
+
     public static Response returnNotFound( String message ) {
+    	return returnNotFound( message, "" );
+    }
+    
+    public static Response returnNotFound( String message, String what ) {
         log.warn( "Failed to return results: " + message );
-        new RuntimeException("returning NotFound: '" + message + "'").printStackTrace( System.err );
-        return enableCORS( Response.status(Status.NOT_FOUND) ).entity( niceMessage( message ) ).build();
+        // new RuntimeException("returning NotFound: '" + message + "'").printStackTrace( System.err );
+        return enableCORS( Response.status(Status.NOT_FOUND) ).entity( niceMessage( message, "404 Resource Not Found: " + what ) ).build();
     }
 	private Response buildErrorResponse( EldaException e ) {
 		return enableCORS( Response.status(e.code) )
@@ -288,15 +298,19 @@ import com.hp.hpl.jena.shared.WrappedException;
 			.build()
 			;
 	}
-    
+
 	private static String niceMessage( String message ) {
+		return niceMessage( message, "there seems to be a problem." );
+	}
+	
+	private static String niceMessage( String message, String subText ) {
 		return
 			"<html>"
 			+ "\n<head>"
 			+ "\n<title>alas</title>"
 			+ "\n</head>"
-			+ "\n<body style='background-color: #ffdddd'>"
-			+ "\n<h2>there seems to be a problem.</h2>"
+			+ "\n<body style='background-color: #ffeeee'>"
+			+ "\n<h2>" + subText + "</h2>"
 			+ "\n<p>" + message + "</p>"
 			+ "\n</body>"
 			+ "\n</html>"
