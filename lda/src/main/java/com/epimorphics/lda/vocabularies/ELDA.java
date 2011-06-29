@@ -38,7 +38,7 @@ public class ELDA
 	
 	public static final Resource ThisElda = resource( EXTRAS.EXTRA, "Elda_" + version );
 	
-	public static final Resource EldaRepository = resource( "https://ehog.hedge@elda.googlecode.com/hg/", "" );
+	public static final Resource EldaRepository = resource( "https://elda.googlecode.com/hg/", "" );
 
 	public static class DOAP_EXTRAS 
 		{
