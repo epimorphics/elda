@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import com.epimorphics.lda.core.APIQuery;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestWhereParameter 
 	{

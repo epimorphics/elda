@@ -841,13 +841,12 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         List<Source> sources = spec.getDescribeSources();
         m.setNsPrefixes( spec.getPrefixMap() );
         return viewArgument == null
-        	? view.fetchDescriptions( select, m, roots, sources, this )
+        	? view.fetchDescriptions( new View.State( select, roots, m, sources, this ) )
         	: viewByTemplate( roots, m, spec, sources )
         	;
     }
 
 	private String viewByTemplate(List<Resource> roots, Model m, APISpec spec, List<Source> sources) {
-		System.err.println( ">> viewByTemplate: " + viewArgument );
 		StringBuilder clauses = new StringBuilder();
 		for (Resource root: roots)
 			clauses
@@ -865,7 +864,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 			.append( "}\n" )
 			;
 		String qq = query.toString();
-		System.err.println( ">> _template query: " + qq );
 		Query cq = QueryFactory.create( qq );
 		for (Source x: sources) m.add( x.executeConstruct( cq ) );		
 		return qq;

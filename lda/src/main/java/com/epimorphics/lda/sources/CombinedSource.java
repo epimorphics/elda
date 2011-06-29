@@ -92,11 +92,11 @@ public class CombinedSource extends SourceBase implements Source
     private Model dataFrom( Source s )
         {
         log.info( "getting model data from source " + s );
-        String queryString = "construct " + zoob( constructs ) + " where " + zoob( matches ) + "";
+        String queryString = "construct " + triplesFor( constructs ) + " where " + triplesFor( matches ) + "";
         return s.executeConstruct( QueryFactory.create( queryString ) );
         }
 
-    private String zoob( List<String> ls )
+    private String triplesFor( List<String> ls )
         {
         if (ls.isEmpty())
             return "{?s ?p ?o}";
@@ -130,6 +130,10 @@ public class CombinedSource extends SourceBase implements Source
     @Override public void addMetadata(Resource meta) {
         meta.addProperty(API.sparqlEndpoint, "a combined source");
     }
+
+	@Override public boolean supportsNestedSelect() {
+		return Source.Util.allSupportNestedSelect( sources );
+	}
 
     }
 

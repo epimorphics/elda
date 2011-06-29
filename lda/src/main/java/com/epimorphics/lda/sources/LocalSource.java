@@ -77,5 +77,13 @@ public class LocalSource extends SourceBase implements Source {
         meta.addProperty(API.sparqlEndpoint, ResourceFactory.createResource(endpoint));
     }
 
+    /**
+        Local sources are held in in-memory models and support nested selects
+        via ARQ.
+    */
+	@Override public boolean supportsNestedSelect() {
+		return true;
+	}
+
 }
 

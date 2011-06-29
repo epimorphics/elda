@@ -17,6 +17,8 @@
 
 package com.epimorphics.lda.sources;
 
+import java.util.List;
+
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.ResultSet;
@@ -68,6 +70,24 @@ public interface Source {
     public interface ResultSetConsumer {
     	void setup( QueryExecution qe );
     	void consume( ResultSet rs );
-    }
+    	}
+
+    /**
+        Answer TRUE iff this source supports nested SELECT queries 
+        (as specified by SPARQL 1.1).
+    */
+	public boolean supportsNestedSelect();
+	
+	static class Util {
+		
+		/**
+		    Answer true iff all of the sources in the list support nested selects.
+		    (If the list is empty, answer true.)
+		*/
+		public static boolean allSupportNestedSelect( List<Source> sources ) {
+			for (Source s: sources) if (!s.supportsNestedSelect()) return false;
+			return true;
+		}
+	}
 }
 

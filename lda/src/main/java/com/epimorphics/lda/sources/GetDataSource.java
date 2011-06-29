@@ -35,13 +35,14 @@ public class GetDataSource
             if (ep.hasProperty( RDF.type, EXTRAS.Combiner )) return new CombinedSource( ep );
             }
         String sparqlEndpoint = getStringValue( specification, API.sparqlEndpoint );
+        Resource ep = specification.getPropertyResourceValue( API.sparqlEndpoint );
         if (sparqlEndpoint == null)
         	EldaException.BadSpecification( "no SPARQL endpoint specified for " + specification );
         return 
             sparqlEndpoint.startsWith( LocalSource.PREFIX ) ? new LocalSource( sparqlEndpoint )
         	: sparqlEndpoint.startsWith( HereSource.PREFIX ) ? new HereSource( specification.getModel(), sparqlEndpoint )
             : sparqlEndpoint.startsWith( TDBManager.PREFIX ) ? new TDBSource( sparqlEndpoint )
-            : new SparqlSource( sparqlEndpoint )
+            : new SparqlSource( ep, sparqlEndpoint )
             ;
         }
     }

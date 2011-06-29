@@ -20,12 +20,17 @@ package com.epimorphics.lda.sources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.shared.LockNone;
 
@@ -43,12 +48,32 @@ public class SparqlSource extends SourceBase implements Source {
     
     protected final Lock lock = new LockNone();
     
-    public SparqlSource(String sparqlEndpoint) {
+    protected Perhaps nestedSelects = Perhaps.DontKnow;
+    
+    protected enum Perhaps {Yes, No, DontKnow, CantTell}
+    
+    public SparqlSource( Resource ep, String sparqlEndpoint ) {
         this.sparqlEndpoint = sparqlEndpoint;
+        if (ep != null) {
+        	boolean b = getBooleanValue( ep, EXTRAS.supportsNestedSelect, false );
+        	nestedSelects = (b ? Perhaps.Yes : Perhaps.No);
+        }
         log.info( "created SparqlSource{" + sparqlEndpoint + "}" );
     }
     
-    @Override public QueryExecution execute(Query query) {
+    public static boolean getBooleanValue( Resource r, Property p, boolean ifAbsent ) {
+    	Statement s = r.getProperty( p );
+    	if (s == null) return ifAbsent;
+    	RDFNode o = s.getObject();
+    	if (o.isLiteral()) {
+    		Literal ol = (Literal) o;
+    		String sp = ol.getLexicalForm();
+    		return sp.equalsIgnoreCase("yes") || sp.equalsIgnoreCase("true");
+    	}
+    	return ifAbsent;
+	}
+
+	@Override public QueryExecution execute(Query query) {
         if (log.isInfoEnabled()) {
             log.debug("Running query on " + sparqlEndpoint + ":\n" + query);
         }
@@ -56,7 +81,7 @@ public class SparqlSource extends SourceBase implements Source {
     }
 
     @Override public String toString() {
-        return "SparqlSource{" + sparqlEndpoint + "}";
+        return "SparqlSource{" + sparqlEndpoint + "; supportsNestedSelect: " + nestedSelects + "}";
     }
     
     @Override public Lock getLock() {
@@ -69,5 +94,20 @@ public class SparqlSource extends SourceBase implements Source {
     @Override public void addMetadata(Resource meta) {
         meta.addProperty(API.sparqlEndpoint, ResourceFactory.createResource(sparqlEndpoint));
     }
+
+    /**
+        It's remote. Try if we can.
+    */
+	@Override public boolean supportsNestedSelect() {
+		if (nestedSelects == Perhaps.DontKnow) probeNestedSelects();
+		return nestedSelects == Perhaps.Yes;
+	}
+
+	/**
+	    Should probe the remote end
+	*/
+	private void probeNestedSelects() {
+		nestedSelects = Perhaps.CantTell;
+	}
 }
 

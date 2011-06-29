@@ -33,6 +33,11 @@
     specify where generated URIs are anchored.
 </p>
 
+<p>
+    Elda can exploit SPARQL 1.1 servers to reduce query
+    size for some views.
+</p>
+
 <h2>Configuration variables</h2>
 
 <h3>Variables used by the stylesheet</h3>
@@ -55,7 +60,7 @@
 
     <li>activeImageBase: the location within the
     resource root where the active (enabled) images
-    used by the styleshhet are fetched from.
+    used by the stylesheet are fetched from.
     </li>
 
     <li>inactiveImageBase: the location within the
@@ -100,6 +105,31 @@
     at location A can generate URIs as though it were
     at location B (from which it may have been redirected). 
 </p>
+
+<h2>SPARQL 1.1 features</h2>
+
+<p>
+    Some generated queries -- those that have view defined by
+    property chains and are applied to many selected items -- 
+    are rather large (exceeding a megabyte). These queries are
+    repetitions of the view property accesses specialised by
+    the selected item. If the SPARQL server supports nested
+    selects (part of, but not limited to, SPARQL 1.1), then
+    these repetitions can be replaced by a single application
+    of the view wrapped round a nested select that fetches
+    the items.
+</p>
+
+<p>
+    Elda automatically uses nested selects if the data source 
+    is a <b>local:</b> or <b>tdb:</b> model, or it the
+    <code>sparqEndpoint</code> value of the API is a
+    resource with an <b>extras:supportsNestedSelects</b>
+    value of true, "true", or "yes". (We anticipate that
+    later versions of Elda will dynamically check the server
+    to see if nested selects work.)
+</p>
+
 
 <h2>Building Elda</h2>
 

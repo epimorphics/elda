@@ -13,8 +13,6 @@
 package com.epimorphics.lda.core;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,21 +228,38 @@ public class View {
         return result;
 	}
 
-	public String fetchDescriptions( String select, Model m, List<Resource> roots, List<Source> sources, VarSupply vars ) {
+	public static class State {
+		
+		final String select;
+		final List<Resource> roots;
+		final Model m; 
+		final List<Source> sources;
+		final VarSupply vars;
+		
+		public State( String select, List<Resource> roots, Model m, List<Source> sources, VarSupply vars ) {
+			this.select = select;
+			this.roots = roots;
+			this.m = m; 
+			this.sources = sources;
+			this.vars = vars;
+		}
+	}
+	
+	public String fetchDescriptions( State s ) {
 //		log.info( "fetchDescriptionsFor: sources = " + sources + " using " + this );
 		switch (type) {
 			case T_DESCRIBE: 
-				return fetchBareDescriptions( m, roots, sources );
+				return fetchBareDescriptions( s ); 
 				
 			case T_ALL:	{	
-				String detailsQuery = fetchBareDescriptions( m, roots, sources );
-			    addAllObjectLabels( m, sources );
+				String detailsQuery = fetchBareDescriptions( s ); 
+			    addAllObjectLabels( s ); // m, sources );
 			    return detailsQuery;
 			}
 
 			case T_CHAINS:	{
 				long zero = System.currentTimeMillis();
-				String detailsQuery = fetchByGivenPropertyChains( select, m, roots, sources, vars, chains );
+				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
 				long time = System.currentTimeMillis() - zero;
 				log.debug( "T_CHAINS took " + (time/1000.0) + "s" );
 				return detailsQuery;
@@ -252,7 +267,7 @@ public class View {
 				
 			case T_BASIC: {
 				long zero = System.currentTimeMillis();
-				String detailsQuery = fetchByGivenPropertyChains( select, m, roots, sources, vars, BasicChains );
+				String detailsQuery = fetchByGivenPropertyChains( s, BasicChains ); 
 				long time = System.currentTimeMillis() - zero;
 				log.debug( "T_BASIC took " + (time/1000.0) + "s" );
 				return detailsQuery;
@@ -269,28 +284,42 @@ public class View {
 	*/
 	static final List<PropertyChain> BasicChains = 
 		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
-
-	static boolean useNestedSelect = true;
 	
-	private String fetchByGivenPropertyChains( String select, Model m, List<Resource> roots, List<Source> sources, VarSupply vars, List<PropertyChain> chains ) {
-		if (useNestedSelect) return hackery( select, m, roots, sources, vars, chains );
+	private String fetchByGivenPropertyChains( State s, List<PropertyChain> chains ) { 
+		return useNestedSelect(s)
+			? fetchChainsByNestedSelect( s, chains ) 
+			: fetchChainsByRepeatedClauses( s, chains )
+			;
+	}
+
+	private boolean useNestedSelect( State st ) {
+		if (allSupportNestedSelect( st.sources )) return true;
+		return false;
+	}
+
+	private boolean allSupportNestedSelect(List<Source> sources) {
+		for (Source s: sources) if (!s.supportsNestedSelect()) return false;
+		return false; // true;
+	}
+
+	private String fetchChainsByRepeatedClauses( State s, List<PropertyChain> chains ) { 
 		StringBuilder construct = new StringBuilder();
-		PrefixLogger pl = new PrefixLogger( m );
+		PrefixLogger pl = new PrefixLogger( s.m );
 		construct.append( "CONSTRUCT {" );
 		List<Variable> varsInOrder = new ArrayList<Variable>();
-		for (Resource r: new HashSet<Resource>( roots)) {
+		for (Resource r: new HashSet<Resource>( s.roots)) {
 			for (PropertyChain c: chains) {
 				construct.append( "\n  " );
-				buildConstructClause( pl, construct, RDFQ.uri( r.getURI() ), c, vars, varsInOrder );
+				buildConstructClause( pl, construct, RDFQ.uri( r.getURI() ), c, s.vars, varsInOrder );
 			}
 		}
 	//
 		construct.append( "\n} WHERE {" );
 		String union = "";
-		for (Resource r: new HashSet<Resource>( roots)) {
+		for (Resource r: new HashSet<Resource>( s.roots)) {
 			for (PropertyChain c: chains) {
 				construct.append( "\n  " ).append( union );
-				buildWhereClause( pl, construct, RDFQ.uri( r.getURI() ), c, vars, varsInOrder );
+				buildWhereClause( pl, construct, RDFQ.uri( r.getURI() ), c, s.vars, varsInOrder );
 				union = "UNION ";
 			}
 		}
@@ -299,23 +328,23 @@ public class View {
 		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
 		String queryString = prefixes + construct.toString();
 		Query constructQuery = QueryFactory.create( queryString );
-		for (Source x: sources) m.add( x.executeConstruct( constructQuery ) );
+		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
 		return queryString;
 	}
 	
-	private String hackery( String select, Model m, List<Resource> roots, List<Source> sources, VarSupply vars, List<PropertyChain> chains) {
-		PrefixLogger pl = new PrefixLogger( m );
+	private String fetchChainsByNestedSelect( State st, List<PropertyChain> chains ) { 
+		PrefixLogger pl = new PrefixLogger( st.m );
 		StringBuilder construct = new StringBuilder();
-		int s = select.indexOf( "\nSELECT" );
-		String selection = select.substring( s + 1 );
-		String selectPrefixes = select.substring(0, s + 1);
+		int s = st.select.indexOf( "\nSELECT" );
+		String selection = st.select.substring( s + 1 );
+		String selectPrefixes = st.select.substring(0, s + 1);
 	//
 		Any r = RDFQ.var( "?item" );
 		construct.append( "CONSTRUCT {" );		
 		List<Variable> varsInOrder = new ArrayList<Variable>();
 		for (PropertyChain c: chains) {
 			construct.append( "\n  " );
-			buildConstructClause( pl, construct, r, c, vars, varsInOrder );
+			buildConstructClause( pl, construct, r, c, st.vars, varsInOrder );
 		}
 	//
 		construct.append( "\n} WHERE {" );
@@ -323,7 +352,7 @@ public class View {
 		String union = "";
 		for (PropertyChain c: chains) {
 			construct.append( "\n  " ).append( union );
-			buildWhereClause( pl, construct, r, c, vars, varsInOrder );
+			buildWhereClause( pl, construct, r, c, st.vars, varsInOrder );
 			union = "UNION ";
 		}
 		construct.append( "{" ).append( selection ).append( "}" );
@@ -331,9 +360,9 @@ public class View {
 	//
 		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
 		String queryString = selectPrefixes + prefixes + construct.toString();
-		System.err.println( ">> QUERY:\n" + queryString );
+		// System.err.println( ">> QUERY:\n" + queryString );
 		Query constructQuery = QueryFactory.create( queryString );
-		for (Source x: sources) m.add( x.executeConstruct( constructQuery ) );
+		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) );
 		return queryString;
 	}
 
@@ -368,26 +397,26 @@ public class View {
 		return varsInOrder.remove(0);
 	}
 
-	private String fetchBareDescriptions( Model m, List<Resource> roots, List<Source> sources ) {
+	private String fetchBareDescriptions( State s ) { 
 		long zero = System.currentTimeMillis();
-		PrefixLogger pl = new PrefixLogger( m );
+		PrefixLogger pl = new PrefixLogger( s.m );
 		String describe = "DESCRIBE";
-		for (Resource r: new HashSet<Resource>( roots )) { // TODO
+		for (Resource r: new HashSet<Resource>( s.roots )) { // TODO
 			describe += "\n  " + pl.present( r.getURI() );
 		}
 		describe = pl.writePrefixes( new StringBuilder() ).toString() + describe;
 		Query describeQuery = QueryFactory.create( describe );
-		for (Source x: sources) m.add( x.executeDescribe( describeQuery ) );
+		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
 		long time = System.currentTimeMillis() - zero;
 		log.debug( "fetchBareDescriptions took " + (time/1000.0) + "s" );
 		return describe;
 	}		
 	
-	private void addAllObjectLabels( Model m, List<Source> sources ) {
+	private void addAllObjectLabels( State s ) { 
 		long zero = System.currentTimeMillis();
 		String construct = "PREFIX rdfs: <" + RDFS.getURI() + ">\nCONSTRUCT { ?x rdfs:label ?l }\nWHERE\n{";
 		String union = "";
-		for (RDFNode n: m.listObjects().toList()) {
+		for (RDFNode n: s.m.listObjects().toList()) {
 			if (n.isURIResource()) {
 				construct += union + "{?x rdfs:label ?l. FILTER(?x = <" + n.asNode().getURI() + ">)" + "}";
 				union = "\nUNION ";
@@ -395,7 +424,7 @@ public class View {
 		}
 		construct += "}\n";
 		Query constructQuery = QueryFactory.create( construct );
-		for (Source x: sources) m.add( x.executeConstruct( constructQuery ) );
+		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
 		long time = System.currentTimeMillis() - zero;
 		log.debug( "addAllObjectLabels took " + (time/1000.0) + "s" );
 	}

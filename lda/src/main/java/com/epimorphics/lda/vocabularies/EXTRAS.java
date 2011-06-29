@@ -25,6 +25,8 @@ public class EXTRAS
     {
 	public static String EXTRA = "http://www.epimorphics.com/vocabularies/lda#";
 
+	public static final Property supportsNestedSelect = property( "supportsNestedSelect" );
+
 	public static final Property className = property( "className" );
 	
     public static final Resource Combiner = resource( "Combiner" );

@@ -56,6 +56,10 @@ public class TestSourceLocking {
 		@Override public Lock getLock() {
 			return lock;
 		}
+
+		@Override public boolean supportsNestedSelect() {
+			return false;
+		}
 	}
 	
 	@Test public void testConstruct() {

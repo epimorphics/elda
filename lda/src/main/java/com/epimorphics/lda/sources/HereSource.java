@@ -44,6 +44,12 @@ public class HereSource extends SourceBase implements Source
 		this.endpoint = endpoint;
 		model = ResourceUtils.reachableClosure( fullModel.createResource( endpoint ) );
 		}
+	
+	/**
+	    HereSources are in-memory models and support nested selects via ARQ.
+	*/
+	@Override public boolean supportsNestedSelect() 
+		{ return true; }
 
 	@Override public void addMetadata( Resource meta ) 
 		{

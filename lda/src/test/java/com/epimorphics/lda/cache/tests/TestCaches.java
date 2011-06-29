@@ -44,6 +44,10 @@ public class TestCaches
 			// TODO Auto-generated method stub
 			return null;
 			}
+
+		@Override public boolean supportsNestedSelect() {
+			return false;
+			}
 		}
 	
 	static final Resource RA = ResourceFactory.createResource( "eh:/A" );
