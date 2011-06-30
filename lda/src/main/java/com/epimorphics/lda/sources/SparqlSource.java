@@ -55,7 +55,7 @@ public class SparqlSource extends SourceBase implements Source {
         	boolean b = RDFUtils.getBooleanValue( ep, EXTRAS.supportsNestedSelect, false );
         	nestedSelects = (b ? Perhaps.Yes : Perhaps.No);
         }
-        log.info( "created SparqlSource{" + sparqlEndpoint + "}" );
+        log.info( "created " + toString() );
     }
     
     @Override public QueryExecution execute(Query query) {
