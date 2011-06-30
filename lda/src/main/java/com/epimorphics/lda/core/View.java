@@ -287,7 +287,7 @@ public class View {
 	
 	private String fetchByGivenPropertyChains( State s, List<PropertyChain> chains ) { 
 		boolean uns = useNestedSelect(s);
-		System.err.println(uns ? "chains: using nested selects" : "chains: using repeated clauses");
+		log.info(uns ? "chains: using nested selects" : "chains: using repeated clauses");
 		return uns
 			? fetchChainsByNestedSelect( s, chains ) 
 			: fetchChainsByRepeatedClauses( s, chains )
