@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.params.Decode;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
@@ -73,6 +74,9 @@ public class APIEndpointImpl implements APIEndpoint {
     	wantsContext = specWantsContext;
     	CallContext cc = new CallContext( spec.getBindings(), given );
         log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
+    //
+        new Decode(true).handleQueryParameters( cc.queryParameters ).reveal();
+    //
         APIQuery query = spec.getBaseQuery();
         Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
         long timeAfterBuild = System.currentTimeMillis();

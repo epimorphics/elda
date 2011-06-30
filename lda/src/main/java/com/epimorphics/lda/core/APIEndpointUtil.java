@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.params.Decode;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
