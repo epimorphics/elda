@@ -350,29 +350,30 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     List<Deferred> deferredFilters = new ArrayList<Deferred>();
     
     public void deferrableAddFilter( Param param, String val ) {
-    	if (param.hasVariable() || val.indexOf('{') >= 0) {
-    		deferredFilters.add( new Deferred( param, val ) );
-    	} else {
-    		addFilterFromQuery( param, set(val) );
-    	}
+    	deferredFilters.add( new Deferred( param, val ) );
+//    	if (true || param.hasVariable() || val.indexOf('{') >= 0) {
+//    		deferredFilters.add( new Deferred( param, val ) );
+//    	} else {
+//    		addFilterFromQuery( param, set(val) );
+//    	}
     }
 
-	public void activateDeferredFilters( CallContext cc ) {
-		for (Deferred d: deferredFilters) {
-			log.debug( "activating deferred filter " + d );
-			addFilterFromQuery( d.param.expand( cc ), set(cc.expandVariables( d.val )) );
-		}
-	}
+//	public void activateDeferredFilters( CallContext cc ) {
+//		for (Deferred d: deferredFilters) {
+//			log.debug( "activating deferred filter " + d );
+//			addFilterFromQuery( d.param.expand( cc ), set(cc.expandVariables( d.val )) );
+//		}
+//	}
     
     public void setViewByTemplateClause( String clause ) {
     	viewArgument = clause;
     }
     
-    public APIQuery addNumericRangeFilter( Variable var, double base, double delta ) {
-       addInfixSparqlFilter( RDFQ.literal( base - delta ), "<", var );
-       addInfixSparqlFilter( var, "<", RDFQ.literal( base + delta) );
-       return this;
-    }
+//    public APIQuery addNumericRangeFilter( Variable var, double base, double delta ) {
+//       addInfixSparqlFilter( RDFQ.literal( base - delta ), "<", var );
+//       addInfixSparqlFilter( var, "<", RDFQ.literal( base + delta) );
+//       return this;
+//    }
 
     protected void addRangeFilter( Param param, String val, String op ) {
         Variable newvar = newVar(); 
@@ -380,7 +381,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         addInfixSparqlFilter( newvar, op, sns.normalizeNodeToRDFQ( prop, val, defaultLanguage ) );
     }
     
-    private void addInfixSparqlFilter( Any l, String op, Any r ) {
+    public void addInfixSparqlFilter( Any l, String op, Any r ) {
     	filterExpressions.add( RDFQ.infix( l, op, r ) );
     }
             

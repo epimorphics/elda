@@ -29,7 +29,7 @@ public class GEOLocation
 	private String nearLong = null;
 	private String nearLat = null;
 	
-	void addLocationQueryIfPresent( APIQuery query )
+	void addLocationQueryIfPresent( ContextQueryUpdater.Q query )
 		{
 	    if (nearLat != null && nearLong != null && distance != null) 
 	    	{
