@@ -315,37 +315,37 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		for (String option: options) metadataOptions.add( option.toLowerCase() );
 	}
 	
-    /**
-     * General interface for extending the query with a specified parameter.
-     * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
-     * @return the name of the final property referencing the val, to allow type sensitive normalization
-    */
-    public String addFilterFromQuery( Param param, Set<String> allVal ) {
-    	String val = allVal.iterator().next();
-    	String prefix = param.prefix();
-    	if (prefix == null) {
-    		addPropertyHasValue( param, allVal );    		
-    	} else if (prefix.equals(QueryParameter.NAME_PREFIX)) {
-            addNameProp(param.plain(), val);
-        } else if (prefix.equals( QueryParameter.LANG_PREFIX )) {
-        	// handled elsewhere
-        } else if (prefix.equals(QueryParameter.MIN_PREFIX)) {
-            addRangeFilter(param.plain(), val, ">=");
-        } else if (prefix.equals(QueryParameter.MIN_EX_PREFIX)) {
-            addRangeFilter(param.plain(), val, ">");
-        } else if (prefix.equals(QueryParameter.MAX_PREFIX)) {
-            addRangeFilter(param.plain(), val, "<=");
-        } else if (prefix.equals(QueryParameter.MAX_EX_PREFIX)) {
-            addRangeFilter(param.plain(), val, "<");
-        } else if (prefix.equals(QueryParameter.EXISTS_PREFIX)) {
-            if (val.equals( "true" )) addPropertyHasValue( param );
-            else if (val.equals( "false" )) addPropertyHasntValue( param );
-            else EldaException.BadBooleanParameter( param.toString(), val );
-        } else {
-        	throw new EldaException( "unrecognised parameter prefix: " + prefix );
-        }
-        return param.lastPropertyOf();
-    }
+//    /**
+//     * General interface for extending the query with a specified parameter.
+//     * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
+//     * @return the name of the final property referencing the val, to allow type sensitive normalization
+//    */
+//    public String addFixlterFromQuery( Param param, Set<String> allVal ) {
+//    	String val = allVal.iterator().next();
+//    	String prefix = param.prefix();
+//    	if (prefix == null) {
+//    		addPropertyHasValue( param, allVal );    		
+//    	} else if (prefix.equals(QueryParameter.NAME_PREFIX)) {
+//            addNameProp(param.plain(), val);
+//        } else if (prefix.equals( QueryParameter.LANG_PREFIX )) {
+//        	// handled elsewhere
+//        } else if (prefix.equals(QueryParameter.MIN_PREFIX)) {
+//            addRangeFilter(param.plain(), val, ">=");
+//        } else if (prefix.equals(QueryParameter.MIN_EX_PREFIX)) {
+//            addRangeFilter(param.plain(), val, ">");
+//        } else if (prefix.equals(QueryParameter.MAX_PREFIX)) {
+//            addRangeFilter(param.plain(), val, "<=");
+//        } else if (prefix.equals(QueryParameter.MAX_EX_PREFIX)) {
+//            addRangeFilter(param.plain(), val, "<");
+//        } else if (prefix.equals(QueryParameter.EXISTS_PREFIX)) {
+//            if (val.equals( "true" )) addPropertyHasValue( param );
+//            else if (val.equals( "false" )) addPropertyHasntValue( param );
+//            else EldaException.BadBooleanParameter( param.toString(), val );
+//        } else {
+//        	throw new EldaException( "unrecognised parameter prefix: " + prefix );
+//        }
+//        return param.lastPropertyOf();
+//    }
     
     List<Deferred> deferredFilters = new ArrayList<Deferred>();
     
@@ -375,11 +375,11 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 //       return this;
 //    }
 
-    protected void addRangeFilter( Param param, String val, String op ) {
-        Variable newvar = newVar(); 
-        String prop = addFilterFromQuery( param, set(newvar.name()) );
-        addInfixSparqlFilter( newvar, op, sns.normalizeNodeToRDFQ( prop, val, defaultLanguage ) );
-    }
+//    protected void addRangeFilter( Param param, String val, String op ) {
+//        Variable newvar = newVar(); 
+//        String prop = addFilterFromQuery( param, set(newvar.name()) );
+//        addInfixSparqlFilter( newvar, op, sns.normalizeNodeToRDFQ( prop, val, defaultLanguage ) );
+//    }
     
     public void addInfixSparqlFilter( Any l, String op, Any r ) {
     	filterExpressions.add( RDFQ.infix( l, op, r ) );

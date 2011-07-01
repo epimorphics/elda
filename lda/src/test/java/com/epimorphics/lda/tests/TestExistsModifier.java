@@ -17,6 +17,9 @@ import java.util.Set;
 import org.junit.Test;
 
 import com.epimorphics.lda.core.APIQuery;
+import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.core.ContextQueryUpdater;
+import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
@@ -58,7 +61,8 @@ public class TestExistsModifier
 		{
 		Shorts sns = new Shorts( "exists-backwards" );
 		APIQuery q = new APIQuery( sns );
-		q.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("true") );
+		ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q );
+		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("true") );
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		assertEquals( 1, triples.size() );
 		RDFQ.Triple t = triples.get(0);
@@ -71,7 +75,8 @@ public class TestExistsModifier
 		{
 		Shorts sns = new Shorts( "exists-backwards" );
 		APIQuery q = new APIQuery( sns );
-		q.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("false") );
+		ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q );
+		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("false") );
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		List<RenderExpression> filters = q.getFilterExpressions();
 	//
@@ -111,9 +116,10 @@ public class TestExistsModifier
 	public void testNotExistsXY( String existsSetting, String expect )
 		{
 		Shorts sns = new Shorts( "type,exists-backwards" );
-		APIQuery q = new APIQuery( sns );
-		q.addFilterFromQuery( Param.make( sns, "type" ), set("Item") );
-		q.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set(existsSetting) );
+		APIQuery q = new APIQuery( sns );		
+		ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q );
+		x.addFilterFromQuery( Param.make( sns, "type" ), set("Item") );
+		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set(existsSetting) );
 	//
 		String query = q.assembleSelectQuery( PrefixMapping.Factory.create() );
 		QueryExecution qx = QueryExecutionFactory.create( query, model );
