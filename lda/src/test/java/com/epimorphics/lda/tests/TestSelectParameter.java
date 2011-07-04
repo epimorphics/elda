@@ -14,6 +14,9 @@ import org.junit.Test;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.core.APIQuery;
+import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.core.ContextQueryUpdater;
+import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.Term;
 import com.epimorphics.lda.shortnames.NameMap;
@@ -29,18 +32,20 @@ public class TestSelectParameter
 	@Test public void testMe()
         {    
         ShortnameService sns = makeSNS();
-        APIQuery q = new APIQuery(sns);
+        APIQuery q = new APIQuery(sns);		
+        ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q );
         String theSelectQuery = "this is a select query";
-        q.handleReservedParameters( null, null, "_select", theSelectQuery );
+        x.handleReservedParameters( null, null, "_select", theSelectQuery );
         assertEquals( theSelectQuery, q.assembleSelectQuery( noPrefixes) );
         }
     
     @Test public void testCloneIncludesFixedQuery()
         {    
         ShortnameService sns = makeSNS();
-        APIQuery q = new APIQuery(sns);
+        APIQuery q = new APIQuery(sns);		
+        ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q );
         String theSelectQuery = "this is a select query";
-        q.handleReservedParameters( null, null, "_select", theSelectQuery );
+        x.handleReservedParameters( null, null, "_select", theSelectQuery );
         APIQuery cloned = q.clone();
         assertEquals( theSelectQuery, cloned.assembleSelectQuery( noPrefixes ) );
         }

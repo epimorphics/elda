@@ -17,6 +17,8 @@
 
 package com.epimorphics.lda.restlets;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -38,6 +40,7 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,9 +141,16 @@ import com.hp.hpl.jena.shared.WrappedException;
     	return m.getEndpoint().getRendererNamed( type ) == null;
 	}
 
+    @Test public void temp() {
+    	Couple<String, String> xy = parse( "/elda/api/items" );
+    	assertEquals( "/elda/api/items", xy.a );
+    	assertEquals( null, xy.b );
+    	
+    }
+    
 	//** return (revised path, renderer name or null)
     // TODO work out a spec-conformant method for this lookup
-    private Couple<String, String> parse( String pathstub ) 
+    public static Couple<String, String> parse( String pathstub ) 
         {
         String path = pathstub, type = null;
         int dot = pathstub.lastIndexOf( '.' ) + 1;

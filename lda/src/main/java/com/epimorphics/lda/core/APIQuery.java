@@ -260,53 +260,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	languagesFor.put( fullParamName, languages );    
     }
  
-    /**
-        handle the reserved, ie, _wossname, parameters. These may update
-        the given <code>geo</code>, the <code>vs</code>, or this query
-        object. <code>p</code> is the property shortname, <code>val</code>
-        is the value string.
-    */
-	public void handleReservedParameters( GEOLocation geo, ViewSetter vs, String p, String val ) {
-		if (p.equals(QueryParameter._PAGE)) {
-		    setPageNumber( Integer.parseInt(val) ); 
-		} else if (p.equals(QueryParameter._PAGE_SIZE)) {
-		    setPageSize( Integer.parseInt(val) );
-		} else if (p.equals( QueryParameter._FORMAT )) {
-			vs.setFormat(val);
-		} else if (p.equals(QueryParameter._METADATA)) {
-			addMetadataOptions(val.split(","));
-        } else if (p.equals(QueryParameter._SEARCH)) {
-            addSearchTriple( val );
-        } else if (p.equals(QueryParameter._SELECT_PARAM )) {
-        	fixedQueryString = val;
-        } else if (p.equals(QueryParameter._LANG)) {
-			setDefaultLanguage( val );
-        } else if (p.equals(QueryParameter._WHERE)) {
-        	addWhere( val );
-		} else if (p.equals(QueryParameter._PROPERTIES)) {
-			vs.setViewByProperties(val);
-		} else if (p.equals(QueryParameter._VIEW)) {
-		    vs.setViewByName(val);
-		} else if (p.equals(QueryParameter._WHERE)) {
-		    addWhere(val);
-		} else if (p.equals(QueryParameter._SUBJECT)) {
-		    setSubject(val);
-		} else if (p.equals( APIQuery.NEAR_LAT)) { 
-			geo.setNearLat( val );
-		} else if (p.equals( APIQuery.NEAR_LONG )) {
-			geo.setNearLong( val );
-		} else if (p.equals( QueryParameter._DISTANCE )) { 
-			geo.setDistance( val );
-		} else if (p.equals( QueryParameter._TEMPLATE )) {
-			// vs.setViewByExplicitClause( val );
-			setViewByTemplateClause( val );
-		} else if (p.equals(QueryParameter._SORT)) {
-		    setOrderBy( val );
-		} else {
-			throw new EldaException( "unrecognised reserved parameter: " + p );
-		}
-	}
-	
 	public void addMetadataOptions( Set<String> options ) {
 		metadataOptions.addAll( options );
 	}
@@ -314,72 +267,16 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	public void addMetadataOptions( String [] options ) {
 		for (String option: options) metadataOptions.add( option.toLowerCase() );
 	}
-	
-//    /**
-//     * General interface for extending the query with a specified parameter.
-//     * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
-//     * @return the name of the final property referencing the val, to allow type sensitive normalization
-//    */
-//    public String addFixlterFromQuery( Param param, Set<String> allVal ) {
-//    	String val = allVal.iterator().next();
-//    	String prefix = param.prefix();
-//    	if (prefix == null) {
-//    		addPropertyHasValue( param, allVal );    		
-//    	} else if (prefix.equals(QueryParameter.NAME_PREFIX)) {
-//            addNameProp(param.plain(), val);
-//        } else if (prefix.equals( QueryParameter.LANG_PREFIX )) {
-//        	// handled elsewhere
-//        } else if (prefix.equals(QueryParameter.MIN_PREFIX)) {
-//            addRangeFilter(param.plain(), val, ">=");
-//        } else if (prefix.equals(QueryParameter.MIN_EX_PREFIX)) {
-//            addRangeFilter(param.plain(), val, ">");
-//        } else if (prefix.equals(QueryParameter.MAX_PREFIX)) {
-//            addRangeFilter(param.plain(), val, "<=");
-//        } else if (prefix.equals(QueryParameter.MAX_EX_PREFIX)) {
-//            addRangeFilter(param.plain(), val, "<");
-//        } else if (prefix.equals(QueryParameter.EXISTS_PREFIX)) {
-//            if (val.equals( "true" )) addPropertyHasValue( param );
-//            else if (val.equals( "false" )) addPropertyHasntValue( param );
-//            else EldaException.BadBooleanParameter( param.toString(), val );
-//        } else {
-//        	throw new EldaException( "unrecognised parameter prefix: " + prefix );
-//        }
-//        return param.lastPropertyOf();
-//    }
     
     List<Deferred> deferredFilters = new ArrayList<Deferred>();
     
     public void deferrableAddFilter( Param param, String val ) {
     	deferredFilters.add( new Deferred( param, val ) );
-//    	if (true || param.hasVariable() || val.indexOf('{') >= 0) {
-//    		deferredFilters.add( new Deferred( param, val ) );
-//    	} else {
-//    		addFilterFromQuery( param, set(val) );
-//    	}
     }
-
-//	public void activateDeferredFilters( CallContext cc ) {
-//		for (Deferred d: deferredFilters) {
-//			log.debug( "activating deferred filter " + d );
-//			addFilterFromQuery( d.param.expand( cc ), set(cc.expandVariables( d.val )) );
-//		}
-//	}
     
     public void setViewByTemplateClause( String clause ) {
     	viewArgument = clause;
     }
-    
-//    public APIQuery addNumericRangeFilter( Variable var, double base, double delta ) {
-//       addInfixSparqlFilter( RDFQ.literal( base - delta ), "<", var );
-//       addInfixSparqlFilter( var, "<", RDFQ.literal( base + delta) );
-//       return this;
-//    }
-
-//    protected void addRangeFilter( Param param, String val, String op ) {
-//        Variable newvar = newVar(); 
-//        String prop = addFilterFromQuery( param, set(newvar.name()) );
-//        addInfixSparqlFilter( newvar, op, sns.normalizeNodeToRDFQ( prop, val, defaultLanguage ) );
-//    }
     
     public void addInfixSparqlFilter( Any l, String op, Any r ) {
     	filterExpressions.add( RDFQ.infix( l, op, r ) );

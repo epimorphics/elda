@@ -65,19 +65,23 @@ public class ContextQueryUpdater implements ViewSetter {
     		this.query = query;
     	}
 
-    	@Override public QQ addSubjectHasProperty(Resource lat, Variable latVar) {
-    		query.addSubjectHasProperty( lat, latVar );
+    	@Override public QQ addSubjectHasProperty( Resource r, Variable v ) {
+    		query.addSubjectHasProperty( r, v );
 			return this;
 		}
 
-		@Override public QQ addNumericRangeFilter(Variable latVar, double lat, double deltaLat) {
-			query.addInfixSparqlFilter( RDFQ.literal( lat - deltaLat ), "<", latVar );
-			   query.addInfixSparqlFilter( latVar, "<", RDFQ.literal( lat + deltaLat) );
+		@Override public QQ addNumericRangeFilter(Variable v, double x, double dx) {
+			query.addInfixSparqlFilter( RDFQ.literal( x - dx ), "<", v );
+			query.addInfixSparqlFilter( v, "<", RDFQ.literal( x + dx) );
 			return this;
 		}
 
 		@Override public Variable newVar() {
 			return query.newVar();
+		}
+
+		public void updateQuery() {
+			
 		}
     }
     
@@ -115,6 +119,7 @@ public class ContextQueryUpdater implements ViewSetter {
         for (String param: context.getFilterPropertyNames()) 
             handleParam( geo, param );
         geo.addLocationQueryIfPresent( qq );
+        qq.updateQuery();
         return new Couple<View, String>( (view == noneSpecified ? defaultView : view), requestedFormat );
     }
 
@@ -150,12 +155,62 @@ public class ContextQueryUpdater implements ViewSetter {
 		} else if (p.startsWith( QueryParameter.LANG_PREFIX )) {
 			// Nothing to do -- done on previous pass 
 		} else if (p.startsWith("_") || p.equals("near-lat") || p.equals("near-long")) {
-			query.handleReservedParameters( geo, this, p, val );
+			handleReservedParameters( geo, this, p, val );
 		} else {
 			log.debug( "handleParam: " + p + " with value: " + val );
 			addFilterFromQuery( Param.make( sns, pString ), allVal );
 		}
-	}    
+	} 
+	
+    /**
+	    handle the reserved, ie, _wossname, parameters. These may update
+	    the given <code>geo</code>, the <code>vs</code>, or this query
+	    object. <code>p</code> is the property shortname, <code>val</code>
+	    is the value string.
+	*/
+	public void handleReservedParameters( GEOLocation geo, ViewSetter vs, String p, String val ) {
+		if (p.equals(QueryParameter._PAGE)) {
+		    query.setPageNumber( Integer.parseInt(val) ); 
+		} else if (p.equals(QueryParameter._PAGE_SIZE)) {
+		    query.setPageSize( Integer.parseInt(val) );
+		} else if (p.equals( QueryParameter._FORMAT )) {
+			vs.setFormat(val);
+		} else if (p.equals(QueryParameter._METADATA)) {
+			query.addMetadataOptions(val.split(","));
+	    } else if (p.equals(QueryParameter._SEARCH)) {
+	        query.addSearchTriple( val );
+	    } else if (p.equals(QueryParameter._SELECT_PARAM )) {
+	    	query.fixedQueryString = val;
+	    } else if (p.equals(QueryParameter._LANG)) {
+			query.setDefaultLanguage( val );
+	    } else if (p.equals(QueryParameter._WHERE)) {
+	    	query.addWhere( val );
+		} else if (p.equals(QueryParameter._PROPERTIES)) {
+			vs.setViewByProperties(val);
+		} else if (p.equals(QueryParameter._VIEW)) {
+		    vs.setViewByName(val);
+		} else if (p.equals(QueryParameter._WHERE)) {
+		    query.addWhere(val);
+		} else if (p.equals(QueryParameter._SUBJECT)) {
+		    query.setSubject(val);
+		} else if (p.equals( APIQuery.NEAR_LAT)) { 
+			geo.setNearLat( val );
+		} else if (p.equals( APIQuery.NEAR_LONG )) {
+			geo.setNearLong( val );
+		} else if (p.equals( QueryParameter._DISTANCE )) { 
+			geo.setDistance( val );
+		} else if (p.equals( QueryParameter._TEMPLATE )) {
+			// vs.setViewByExplicitClause( val );
+			query.setViewByTemplateClause( val );
+		} else if (p.equals(QueryParameter._SORT)) {
+		    query.setOrderBy( val );
+		} else {
+			throw new EldaException( "unrecognised reserved parameter: " + p );
+		}
+	}
+
+
+	
 	
 	/**
      * General interface for extending the query with a specified parameter.

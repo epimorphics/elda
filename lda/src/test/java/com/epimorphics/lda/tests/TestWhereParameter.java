@@ -13,6 +13,9 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.lda.core.APIQuery;
+import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.core.ContextQueryUpdater;
+import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
 public class TestWhereParameter 
@@ -22,10 +25,11 @@ public class TestWhereParameter
 	@Test public void testAddWhereParameter()
 		{    
         ShortnameService sns = TestSelectParameter.makeSNS();
-        APIQuery q = new APIQuery(sns);
+        APIQuery q = new APIQuery(sns);		
+        ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q );
         String theBaseQuery = q.assembleSelectQuery( TestSelectParameter.noPrefixes );
         String theWhereClause = "?p rdf:equals 17";
-        q.handleReservedParameters( null, null, "_where", theWhereClause );
+        x.handleReservedParameters( null, null, "_where", theWhereClause );
     //
     // this is horrid -- want something better later. too dependent on
     // string arithmetic.
