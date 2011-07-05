@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.query.ExpansionPoints;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.Variable;
@@ -350,6 +351,7 @@ public class View {
 		}
 	//
 		construct.append( "\n} WHERE {" );
+		construct.append( "{" ).append( selection ).append( "}" );
 	//	
 		String union = "";
 		for (PropertyChain c: chains) {
@@ -357,7 +359,6 @@ public class View {
 			buildWhereClause( pl, construct, r, c, st.vars, varsInOrder );
 			union = "UNION ";
 		}
-		construct.append( "{" ).append( selection ).append( "}" );
 		construct.append( "\n}" );
 	//
 		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();

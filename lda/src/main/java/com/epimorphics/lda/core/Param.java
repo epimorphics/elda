@@ -115,7 +115,7 @@ public abstract class Param
 	
 	public String asString() { return p; }
 	
-	static class Info
+	public static class Info
 		{
 		public final String shortName;
 		public final Resource asResource;

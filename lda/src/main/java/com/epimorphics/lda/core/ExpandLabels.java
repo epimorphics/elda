@@ -33,7 +33,7 @@ public class ExpandLabels {
 	 	Adds to the ResultSet the labels that can be found by consulting the Source.
 	 	The VarSupply is used to create new, independant variables.
 	*/
-	void expand( Source source, APIResultSet results) {
+	public void expand( Source source, APIResultSet results) {
 	    Set<Resource> varAllocation = buildVarAllocation(results);
 	    if (varAllocation.isEmpty()) return;
 //	    String labelQuery = buildLabelQuery(varAllocation);

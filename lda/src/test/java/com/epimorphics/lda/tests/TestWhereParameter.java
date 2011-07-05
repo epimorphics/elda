@@ -12,10 +12,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.core.APIQuery;
 import com.epimorphics.lda.core.CallContext;
-import com.epimorphics.lda.core.ContextQueryUpdater;
 import com.epimorphics.lda.core.NamedViews;
+import com.epimorphics.lda.query.APIQuery;
+import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
 public class TestWhereParameter 

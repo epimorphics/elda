@@ -9,8 +9,9 @@
 /**
  * 
  */
-package com.epimorphics.lda.core;
+package com.epimorphics.lda.query;
 
+import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.support.NumericArgUtils;
 import com.epimorphics.lda.vocabularies.GEOStub;
@@ -29,7 +30,7 @@ public class GEOLocation
 	private String nearLong = null;
 	private String nearLat = null;
 	
-	void addLocationQueryIfPresent( ContextQueryUpdater.Q query )
+	void addLocationQueryIfPresent( QueryArguments query )
 		{
 	    if (nearLat != null && nearLong != null && distance != null) 
 	    	{
@@ -41,12 +42,10 @@ public class GEOLocation
 			double deltaLong = NumericArgUtils.deltaLong( d, lat, lang );
 		//
 		    Variable latVar = query.newVar(), longVar = query.newVar();
-		    query
-		        .addSubjectHasProperty( GEOStub.LAT, latVar )
-		        .addSubjectHasProperty( GEOStub.LONG, longVar )
-		        .addNumericRangeFilter( latVar, lat, deltaLat )
-		        .addNumericRangeFilter( longVar, lang, deltaLong )
-		        ;
+		    query.addSubjectHasProperty( GEOStub.LAT, latVar );
+		    query.addSubjectHasProperty( GEOStub.LONG, longVar );
+		    query.addNumericRangeFilter( latVar, lat, deltaLat );
+		    query.addNumericRangeFilter( longVar, lang, deltaLong );
 	    	}
 	    else if (nearLat != null || nearLong != null || distance != null)
 	    	{

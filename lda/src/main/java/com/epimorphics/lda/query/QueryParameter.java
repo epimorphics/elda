@@ -5,7 +5,7 @@
     (c) Copyright 2011 Epimorphics Limited
     $Id$
 */
-package com.epimorphics.lda.core;
+package com.epimorphics.lda.query;
 
 /**
     Transparent names for the reserved _spoo query parameters

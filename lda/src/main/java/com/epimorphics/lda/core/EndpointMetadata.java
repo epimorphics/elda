@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.query.APIQuery;
+import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.NameMap.Stage2NameMap;

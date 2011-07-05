@@ -20,7 +20,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.APIQuery;
+import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.LiteralNode;
 import com.epimorphics.lda.rdfq.RDFQ;

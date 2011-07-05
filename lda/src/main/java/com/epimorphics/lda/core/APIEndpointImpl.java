@@ -21,6 +21,9 @@ import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.params.Decode;
+import com.epimorphics.lda.query.APIQuery;
+import com.epimorphics.lda.query.ContextQueryUpdater;
+import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
@@ -123,7 +126,7 @@ public class APIEndpointImpl implements APIEndpoint {
     private Couple<View, String> buildQueryAndView( CallContext context, APIQuery query ) {
     	ShortnameService sns = spec.getAPISpec().getShortnameService();
     	ContextQueryUpdater cq = new ContextQueryUpdater( context, spec, sns, query );
-		try { return cq.updateQueryAndConstructView(); }
+		try { return cq.updateQueryAndConstructView( query.deferredFilters); }
 		catch (APIException e) { throw new QueryParseException( "query construction failed", e ); }
     }
     

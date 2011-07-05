@@ -10,7 +10,7 @@
     Created on:  31 Jan 2010
 */
 
-package com.epimorphics.lda.core;
+package com.epimorphics.lda.query;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -20,7 +20,16 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.cache.Cache;
+import com.epimorphics.lda.core.APIException;
+import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.core.ClauseConsumer;
+import com.epimorphics.lda.core.ExpandLabels;
+import com.epimorphics.lda.core.Param;
+import com.epimorphics.lda.core.VarSupply;
+import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.Param.Info;
+import com.epimorphics.lda.core.View.State;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -268,7 +277,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		for (String option: options) metadataOptions.add( option.toLowerCase() );
 	}
     
-    List<Deferred> deferredFilters = new ArrayList<Deferred>();
+    public List<Deferred> deferredFilters = new ArrayList<Deferred>();
     
     public void deferrableAddFilter( Param param, String val ) {
     	deferredFilters.add( new Deferred( param, val ) );
@@ -276,10 +285,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     public void setViewByTemplateClause( String clause ) {
     	viewArgument = clause;
-    }
-    
-    public void addInfixSparqlFilter( Any l, String op, Any r ) {
-    	filterExpressions.add( RDFQ.infix( l, op, r ) );
     }
             
     /**

@@ -25,7 +25,7 @@ import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.ModelLoaderI;
-import com.epimorphics.lda.core.QueryParameter;
+import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;

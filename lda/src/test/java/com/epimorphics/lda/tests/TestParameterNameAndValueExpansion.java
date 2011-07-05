@@ -13,14 +13,14 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.lda.bindings.VarValues;
-import com.epimorphics.lda.core.APIQuery;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
-import com.epimorphics.lda.core.ContextQueryUpdater;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.View;
+import com.epimorphics.lda.query.APIQuery;
+import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -123,7 +123,7 @@ public class TestParameterNameAndValueExpansion
 		ShortnameService sns = new SNS( "bname=eh:/full-bname" );
 		APIQuery aq = new APIQuery( sns );
 		ContextQueryUpdater cq = new ContextQueryUpdater( cc, nv, sns, aq );
-		cq.updateQueryAndConstructView();
+		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
 		int where = q.indexOf( "?item <eh:/full-bname> \"value\" ." );
 		assertFalse( "deferred property has not appeared in query", where < 0 );

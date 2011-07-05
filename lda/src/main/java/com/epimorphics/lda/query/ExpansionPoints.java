@@ -6,7 +6,7 @@
     $Id$
 */
 
-package com.epimorphics.lda.core;
+package com.epimorphics.lda.query;
 
 /**
     Interface for decoupling expansion points from APIQuery. May inherit
