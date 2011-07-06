@@ -61,16 +61,17 @@ public class ContextQueryUpdater implements ViewSetter {
 	    @param context the context providing the parameters and their values
 	    @param nv a mapping from names to views, with a default
 	    @param sns the ShortnameService to use to translate to URIs
-	    @param query the APIQuery to update
+	    @param eps possibly dead: expansion points
+	    @param args place to build the query arguments
 	*/
-	public ContextQueryUpdater( CallContext context, NamedViews nv, ShortnameService sns, APIQuery query ) {
+	public ContextQueryUpdater( CallContext context, NamedViews nv, ShortnameService sns, ExpansionPoints eps, QueryArguments args ) {
 		this.context = context;
 		this.sns = sns;
 		this.nt = nv;
-		this.eps = query;
+		this.eps = eps;
 		this.defaultView = nv.getDefaultView().copy();
 		this.view = this.noneSpecified = new View();
-		this.args = new QueryArgumentsImpl(query);
+		this.args = args;
 	}
 	
 	/**
@@ -87,7 +88,7 @@ public class ContextQueryUpdater implements ViewSetter {
         for (String param: context.getFilterPropertyNames()) 
             handleParam( geo, param );
         geo.addLocationQueryIfPresent( args );
-        ((QueryArgumentsImpl) args).updateQuery();
+        // ((QueryArgumentsImpl) args).updateQuery();
         return new Couple<View, String>( (view == noneSpecified ? defaultView : view), requestedFormat );
     }
 

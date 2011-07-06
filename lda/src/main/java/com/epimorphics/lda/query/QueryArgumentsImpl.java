@@ -7,6 +7,9 @@
 */
 package com.epimorphics.lda.query;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.epimorphics.lda.core.Param;
@@ -31,8 +34,17 @@ public class QueryArgumentsImpl implements QueryArguments {
 	}
 
 	public void updateQuery() {
+		query.addTriplePatterns( triplePatterns );
+		query.filterExpressions.addAll( filterExpressions );
 	}
+	
+	protected final List<RDFQ.Triple> triplePatterns = new ArrayList<RDFQ.Triple>();
+	protected final List<RenderExpression> filterExpressions = new ArrayList<RenderExpression>();
 
+	@Override public void addFilterExpression( RenderExpression exp ) {
+		filterExpressions.add( exp );			
+	}
+	
 	@Override public void addSubjectHasProperty( Resource r, Variable v ) {
 		query.addSubjectHasProperty( r, v );
 	}
@@ -112,10 +124,6 @@ public class QueryArgumentsImpl implements QueryArguments {
 
 	@Override public void addPropertyHasntValue( Param param ) {
 		query.addPropertyHasntValue( param );
-	}
-
-	@Override public void addFilterExpression( RenderExpression exp ) {
-		query.filterExpressions.add( exp );			
 	}
 
 	@Override public boolean isBindable( String pString ) {

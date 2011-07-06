@@ -13,6 +13,8 @@
 package com.epimorphics.lda.core;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -287,8 +289,10 @@ public class View {
 		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
 	
 	private String fetchByGivenPropertyChains( State s, List<PropertyChain> chains ) { 
-		boolean uns = useNestedSelect(s);
+		boolean uns = useNestedSelect(s) && s.select.length() > 0;
 		log.info(uns ? "chains: using nested selects" : "chains: using repeated clauses");
+		// System.err.println( ">> useNestedSelect: " + useNestedSelect(s) );
+		// System.err.println( ">> uns: " + uns + " (select = '" + s.select + "')" );
 		return uns
 			? fetchChainsByNestedSelect( s, chains ) 
 			: fetchChainsByRepeatedClauses( s, chains )
@@ -351,7 +355,9 @@ public class View {
 		}
 	//
 		construct.append( "\n} WHERE {" );
-		construct.append( "{" ).append( selection ).append( "}" );
+		String hack_selection = hackVars( selection );
+		// System.err.println( ">> nested select: hacking round ARQ bug: " + hack_selection );
+		construct.append( "{" ).append( hack_selection ).append( "}" );
 	//	
 		String union = "";
 		for (PropertyChain c: chains) {
@@ -367,6 +373,26 @@ public class View {
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) );
 		return queryString;
+	}
+
+	private String hackVars( String selection ) {
+		// System.err.println( ">> SELECTION: " + selection + "\nEND\n" );
+		String vars = varsOf( selection.substring( selection.indexOf( "item" ) + 5 ) );
+		return selection.replaceFirst( "\n", "" + vars + "\n" );
+	}
+
+	private String varsOf( String selection ) {
+		String result = "";
+		Pattern p = Pattern.compile( "\\?[A-Za-z_0-9]+" );
+		Matcher m = p.matcher( selection );
+		while (m.find()) {
+			String var = m.group();
+			if (!var.equals( "?item" ) && !result.contains( var ))
+				result += " " + var;
+			
+		}
+			
+		return result;
 	}
 
 	private void buildConstructClause( PrefixLogger pl, StringBuilder construct, Any r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
