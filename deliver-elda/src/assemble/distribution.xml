@@ -34,10 +34,6 @@
           <directory>src/main/docs</directory>
           <outputDirectory>webapps/elda/docs</outputDirectory>
       </fileSet>
-      <fileSet>
-          <directory>target/site/apidocs</directory>
-          <outputDirectory>elda-javadoc</outputDirectory>
-      </fileSet>
   </fileSets>
   <files>
     <file>

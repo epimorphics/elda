@@ -44,7 +44,6 @@
          </executions>
       </plugin>
       
-       <!--  create a source jar for use in aggregating javadoc -->
           <plugin>
 		      <artifactId>maven-source-plugin</artifactId>
 		      <version>2.1.1</version>
