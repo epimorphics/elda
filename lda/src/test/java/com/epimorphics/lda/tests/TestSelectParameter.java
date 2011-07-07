@@ -17,6 +17,7 @@ import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
+import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.Term;
 import com.epimorphics.lda.shortnames.NameMap;
@@ -32,8 +33,10 @@ public class TestSelectParameter
 	@Test public void testMe()
         {    
         ShortnameService sns = makeSNS();
-        APIQuery q = new APIQuery(sns);		
-        ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q );
+        APIQuery q = new APIQuery(sns);	
+    	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
+        ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
+        qa.updateQuery();
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
         assertEquals( theSelectQuery, q.assembleSelectQuery( noPrefixes) );
@@ -42,8 +45,10 @@ public class TestSelectParameter
     @Test public void testCloneIncludesFixedQuery()
         {    
         ShortnameService sns = makeSNS();
-        APIQuery q = new APIQuery(sns);		
-        ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q );
+        APIQuery q = new APIQuery(sns);	
+    	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);	        
+        ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
+        qa.updateQuery();
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
         APIQuery cloned = q.clone();

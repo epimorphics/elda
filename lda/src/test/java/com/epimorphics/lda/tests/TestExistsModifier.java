@@ -21,6 +21,7 @@ import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
+import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.RenderExpression;
@@ -61,8 +62,10 @@ public class TestExistsModifier
 		{
 		Shorts sns = new Shorts( "exists-backwards" );
 		APIQuery q = new APIQuery( sns );
-		ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q );
+    	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
+		ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("true") );
+		qa.updateQuery();
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		assertEquals( 1, triples.size() );
 		RDFQ.Triple t = triples.get(0);
@@ -75,8 +78,10 @@ public class TestExistsModifier
 		{
 		Shorts sns = new Shorts( "exists-backwards" );
 		APIQuery q = new APIQuery( sns );
-		ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q );
-		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("false") );
+    	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
+		ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
+		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("false") );		
+		qa.updateQuery();
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		List<RenderExpression> filters = q.getFilterExpressions();
 	//
@@ -117,9 +122,11 @@ public class TestExistsModifier
 		{
 		Shorts sns = new Shorts( "type,exists-backwards" );
 		APIQuery q = new APIQuery( sns );		
-		ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q );
+    	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
+		ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
 		x.addFilterFromQuery( Param.make( sns, "type" ), set("Item") );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set(existsSetting) );
+		qa.updateQuery();
 	//
 		String query = q.assembleSelectQuery( PrefixMapping.Factory.create() );
 		QueryExecution qx = QueryExecutionFactory.create( query, model );

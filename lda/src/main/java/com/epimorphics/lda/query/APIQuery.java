@@ -313,6 +313,15 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
     
     /**
+         Update this query-generator with a bunch of basic graph triples to
+         use. Note: the argument is a list; the order is preserved apart from
+         the special re-ordering rules.
+    */
+    public void addTriplePatterns( List<RDFQ.Triple> triples ) {
+    	basicGraphTriples.addAll( triples );
+    }
+    
+    /**
      * Add a filter triple pattern.
      * @param var The subject a string ready to insert (e.g. can be a var name)
      * @param prop  The property as a shortname or URI
@@ -566,9 +575,9 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 
 	public void appendFilterExpressions(PrefixLogger pl, StringBuilder q ) {
 		for (RenderExpression i: filterExpressions) {
-			q.append( "FILTER (" );
+			q.append( " FILTER (" );
 			i.render( pl, q );
-			q.append( ")" );
+			q.append( ")\n" );
 		}				
 	}
 
