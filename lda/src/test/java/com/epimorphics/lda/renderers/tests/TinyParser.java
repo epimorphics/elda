@@ -1,17 +1,23 @@
-package com.epimorphics.lda.renderers.tests;
-
 /*
     See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
     for the licence for this software.
     
     (c) Copyright 2011 Epimorphics Limited
 */
+package com.epimorphics.lda.renderers.tests;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.epimorphics.util.DOMUtils;
 
+/**
+    TinyParser constructs DOM tress from S-expression-like
+    strings.
+    
+	@author eh
+*/
 public class TinyParser
 	{
 	protected Node parse( String source ) 

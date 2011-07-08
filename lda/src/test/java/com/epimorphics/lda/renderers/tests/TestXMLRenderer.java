@@ -67,6 +67,17 @@ public class TestXMLRenderer
 		ensureRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
 		}
 	
+	@Test public void testSortingByPredicate()
+		{
+		// FRAGILE. The test may succeed even if value-sorting doesn't work, if the
+		// order that statements come out of the model in has magically sorted. Hence
+		// the choice of 'b' and 'aa' and their order of appearance in the model string.
+		// not sure how to improve this without arranging a pipeline through to the
+		// renderer.
+		ensureRendering( "(R href=eh:/a (P (item 'aa') (item 'b')))", resourceInModel( "root R a; a P 'b'; a P 'aa'" ) );
+//		ensureRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
+		}
+	
 	@Test public void testRootWithSingletonList()
 		{
 		ensureRendering
@@ -101,9 +112,11 @@ public class TestXMLRenderer
 		Node expected = new TinyParser().parse( desired );
 		if (!de.isEqualNode( expected )) 
 			{
-			System.err.println( "expected: " + DOMUtils.renderNodeToString( expected, pm ) );
-			System.err.println( "obtained: " + DOMUtils.renderNodeToString( de, pm ) );
-			fail( "ALAS -- rendering not as expected." );
+			String exp = DOMUtils.renderNodeToString( expected, pm );
+			String obt = DOMUtils.renderNodeToString( de, pm );
+//			System.err.println( "expected:\n" + exp );
+//			System.err.println( "obtained:\n" + obt );
+			fail( "ALAS -- rendering not as expected:\n" + exp + "obtained:\n" + obt );
 			}
 		}
 	

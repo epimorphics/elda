@@ -90,6 +90,9 @@ public class XMLRendering {
 	private final MultiMap<String, String> nameMap;
 	private final boolean suppressIPTO;
 	
+	/** if true, property values will appear in sorted order */
+	private final boolean sortPropertyValues = true;
+	
 	public XMLRendering( Model m, ShortnameService sns, boolean stripHas, boolean suppressIPTO, Document d ) {
 		this.d = d;
 		this.m = m;
@@ -113,12 +116,33 @@ public class XMLRendering {
 	private List<Property> asSortedList( Set<Property> set ) {
 		List<Property> properties = new ArrayList<Property>( set );
 		Collections.sort( properties, new Comparator<Property>() {
-            @Override
-            public int compare(Property a, Property b) {
+            @Override public int compare(Property a, Property b) {
                 return nameMap.getOne( a.getURI() ).compareTo( nameMap.getOne( b.getURI() ) );
             }
         	} );
 		return properties;
+	}
+	
+	private List<RDFNode> sortObjects( Set<RDFNode> objects ) {
+		List<RDFNode> result = new ArrayList<RDFNode>( objects );
+		if (sortPropertyValues)
+			Collections.sort( result, new Comparator<RDFNode>() {
+	            @Override public int compare( RDFNode a, RDFNode b ) {
+	                return spelling( a ).compareTo( spelling( b ) );
+	            }
+	        	} );
+		return result;
+	}
+
+	protected String spelling( RDFNode n ) {
+		if (n.isURIResource()) return resourceSpelling( (Resource) n );
+		if (n.isLiteral()) return ((Literal) n).getLexicalForm();
+		return ((Resource) n).getId().toString();
+	}
+
+	private String resourceSpelling( Resource r ) {
+		String shorter = nameMap.getOne( r.getURI() );
+		return shorter == null ? r.getLocalName() : shorter;
 	}
 
 	private void addIdentification( Element e, Resource x ) {
@@ -139,7 +163,7 @@ public class XMLRendering {
 		// System.err.println( ">> e := " + e );
 		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();
 		if (values.size() > 1 || isMultiValued( p )) {
-			for (RDFNode value: values) appendValueAsItem(pe, value);
+			for (RDFNode value: sortObjects( values )) appendValueAsItem(pe, value);
 		} else if (values.size() == 1) {
 			giveValueToElement( pe, values.iterator().next() );
 		}
