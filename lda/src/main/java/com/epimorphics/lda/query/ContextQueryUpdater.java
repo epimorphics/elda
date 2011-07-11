@@ -10,7 +10,9 @@ package com.epimorphics.lda.query;
 
 import static com.epimorphics.util.CollectionUtils.set;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -30,6 +32,8 @@ import com.epimorphics.lda.query.APIQuery.Deferred;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.PrefixLogger;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
     A ContextQueryUpdater is used to update an APIQuery according to context
@@ -208,13 +212,25 @@ public class ContextQueryUpdater implements ViewSetter {
         return param.lastPropertyOf();
     }
     
+    protected final Map<String,Variable> keepies = new HashMap<String, Variable>();
+    
+    public static final boolean dontSquishVariables = true;
+    
     protected void addRangeFilter( Param param, String val, String op ) {
-        Variable v = args.newVar(); 
-        String prop = param.lastPropertyOf();
-        // String prop = addFilterFromQuery( param, CollectionUtils.set(newvar.name()) );
-        args.addPropertyHasValue( param, CollectionUtils.set(v.name() ) );
-        Any r = sns.normalizeNodeToRDFQ( prop, val, args.getDefaultLanguage() );
-		args.addInfixSparqlFilter( v, op, r );
+    	Variable already = keepies.get(param.asString());
+    	if (already == null || dontSquishVariables) {
+	        Variable v = args.newVar();
+	        keepies.put(param.asString(), v);
+	        String prop = param.lastPropertyOf();
+	        args.addPropertyHasValue( param, CollectionUtils.set(v.name() ) );
+	        Any r = sns.normalizeNodeToRDFQ( prop, val, args.getDefaultLanguage() );
+			args.addInfixSparqlFilter( v, op, r );
+    	} else {
+    		System.err.println( ">> You should not be seeing this." );
+	        String prop = param.lastPropertyOf();
+	        Any r = sns.normalizeNodeToRDFQ( prop, val, args.getDefaultLanguage() );
+			args.addInfixSparqlFilter( already, op, r );
+    	}
     }    
 
 	/**

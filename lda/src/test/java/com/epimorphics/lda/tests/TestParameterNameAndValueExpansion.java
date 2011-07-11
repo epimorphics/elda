@@ -18,20 +18,14 @@ import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
-import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.QueryArgumentsImpl;
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.lda.tests_support.ExpandOnly;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.Util;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
@@ -130,32 +124,5 @@ public class TestParameterNameAndValueExpansion
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
 		int where = q.indexOf( "?item <eh:/full-bname> \"value\" ." );
 		assertFalse( "deferred property has not appeared in query", where < 0 );
-		}
-	
-	private final class SNS extends ExpandOnly
-		{
-		public SNS(String expansions) 
-			{ super( MakeData.modelForBrief( "bname" ), expansions ); }
-
-		@Override public Resource normalizeResource( String s ) 
-			{
-			String u = expand( s );
-//			System.err.println( ">> normalise '" + s + "' to '" + u + "'" );
-			return ResourceFactory.createResource( u );
-			}
-
-		@Override public Any normalizeNodeToRDFQ( String prop, String val, String language ) 
-			{
-			return RDFQ.literal( val );
-			}
-		}
-	
-	private final class FakeNamedViews implements NamedViews 
-		{
-		final View v = new View();
-	
-		@Override public View getView(String viewname) { return v; }
-	
-		@Override public View getDefaultView() { return v; }
 		}
 	}

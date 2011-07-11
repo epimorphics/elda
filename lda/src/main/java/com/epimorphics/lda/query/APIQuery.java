@@ -335,7 +335,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	    		// Record property which points to this variable for us in decoding binding values
 	    		varProps.put(val.substring(1), prop);   
 	    	}
-			addTriplePattern( var, np, sns.normalizeNodeToRDFQ(prop, val, defaultLanguage) ); 
+			Any norm = sns.normalizeNodeToRDFQ(prop, val, defaultLanguage);
+			addTriplePattern( var, np, norm ); 
     	} else {
     		addLanguagedTriplePattern(var, prop, languages, val);
     	}
@@ -505,6 +506,14 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     @Override public Variable newVar() {
         return RDFQ.var( PREFIX_VAR + varcount++ );
+    }
+    
+    /**
+        Answer the number of variables allocated so far (used
+        for testing).
+    */
+    public int countVarsAllocated() {
+    	return varcount;
     }
 
     protected void addNameProp(Param param, String rawObject) {

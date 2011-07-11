@@ -85,23 +85,4 @@ public class QueryExecutionWithHistory implements QueryExecution {
 	@Override public void abort() {
 		qe.abort();
 	}
-
-	@Override public void setTimeout(long arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override public void setTimeout(long arg0, TimeUnit arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override public void setTimeout(long arg0, long arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override public void setTimeout(long arg0, TimeUnit arg1, long arg2, TimeUnit arg3) {
-		
-	}
 }
