@@ -57,6 +57,7 @@ import com.epimorphics.lda.renderers.RendererContext.AsURL;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
+import com.epimorphics.lda.shortnames.ExpansionFailedException;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
@@ -187,6 +188,9 @@ import com.hp.hpl.jena.shared.WrappedException;
 				Renderer r = APIEndpointUtil.getRenderer( match.getEndpoint(), formatter, mediaTypes );
 				return doRendering( rc, formatter, results, r );
 			}
+		
+        } catch (ExpansionFailedException e) {
+        	return buildErrorResponse(e);
         } catch (EldaException e) {
         	System.err.println( "Caught exception: " + e.getMessage() );
         	e.printStackTrace( System.err );
@@ -332,10 +336,10 @@ import com.hp.hpl.jena.shared.WrappedException;
 		return
 			"<html>"
 			+ "\n<head>"
-			+ "\n<title>alas</title>"
+			+ "\n<title>Error " + e.code + "</title>"
 			+ "\n</head>"
 			+ "\n<body style='background-color: #ffdddd'>"
-			+ "\n<h2>there seems to be a problem.</h2>"
+			+ "\n<h2>Error " + e.code + "</h2>"
 			+ "\n<p>" + e.getMessage() + "</p>"
 			+ (e.moreMessage == null ? "" : "<p>" + e.moreMessage + "</p>")
 			+ "\n</body>"

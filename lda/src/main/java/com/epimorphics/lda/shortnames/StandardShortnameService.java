@@ -24,7 +24,6 @@ import java.util.Map;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.Context.Prop;
-import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.LiteralNode;
@@ -116,29 +115,29 @@ public class StandardShortnameService implements ShortnameService {
      * by a shortname in a query string or a literal giving a shortname in a spec
      * file as well as simply being a resource already.
      */
-    @Override public Resource normalizeResource(RDFNode res) {
+    @Override public Resource normalizeResource( RDFNode res ) {
         if (res instanceof Resource) {
             return (Resource)res;
         } else if (res instanceof Literal) {
             return normalizeResource( ((Literal)res).getLexicalForm() );
         }
-        throw new APIException("Failed to expand resource: " + res);
+        throw new ExpansionFailedException( res );
     }
 
 	@Override public Resource normalizeResource( Term r ) {
 		if (r instanceof URINode) return ResourceFactory.createResource( r.spelling() );
 		if (r instanceof LiteralNode) return normalizeResource( r.spelling() );
-        throw new APIException( "Failed to expand resource: " + r );
+        throw new ExpansionFailedException( r );
 	}
 	
-    @Override public Resource normalizeResource(String res) {
+    @Override public Resource normalizeResource( String res ) {
         String uri = expand( res );
         if (uri == null &&  RDFUtil.looksLikeURI(res)) {
             uri = res;
         }
         if (uri != null)
             return ResourceFactory.createResource(uri);
-        throw new APIException("Failed to expand resource: " + res);
+        throw new ExpansionFailedException( res );
     }
     
     /**
