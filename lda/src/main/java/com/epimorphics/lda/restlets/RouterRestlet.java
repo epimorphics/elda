@@ -295,10 +295,16 @@ import com.hp.hpl.jena.shared.WrappedException;
     }
     
     public static Response returnNotFound( String message, String what ) {
-        log.warn( "Failed to return results: " + message );
+        log.warn( "Failed to return results: " + brief( message ) );
         // new RuntimeException("returning NotFound: '" + message + "'").printStackTrace( System.err );
         return enableCORS( Response.status(Status.NOT_FOUND) ).entity( niceMessage( message, "404 Resource Not Found: " + what ) ).build();
     }
+    
+	private static String brief( String message ) {
+		int nl = message.indexOf( '\n' );
+		return nl < 0 ? message : message.substring(0, nl) + "...";
+	}
+
 	private Response buildErrorResponse( EldaException e ) {
 		return enableCORS( Response.status(e.code) )
 			.entity( niceMessage( e ) )
@@ -314,7 +320,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 		return
 			"<html>"
 			+ "\n<head>"
-			+ "\n<title>alas</title>"
+			+ "\n<title>Error</title>"
 			+ "\n</head>"
 			+ "\n<body style='background-color: #ffeeee'>"
 			+ "\n<h2>" + subText + "</h2>"
