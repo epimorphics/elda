@@ -141,13 +141,6 @@ import com.hp.hpl.jena.shared.WrappedException;
     private boolean notFormat( Match m, String type ) {
     	return m.getEndpoint().getRendererNamed( type ) == null;
 	}
-
-    @Test public void temp() {
-    	Couple<String, String> xy = parse( "/elda/api/items" );
-    	assertEquals( "/elda/api/items", xy.a );
-    	assertEquals( null, xy.b );
-    	
-    }
     
 	//** return (revised path, renderer name or null)
     // TODO work out a spec-conformant method for this lookup
@@ -156,7 +149,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         String path = pathstub, type = null;
         int dot = pathstub.lastIndexOf( '.' ) + 1;
         int slash = pathstub.lastIndexOf( '/' );
-        if (dot > slash) 
+        if (dot > 0 && dot > slash) 
             { path = pathstub.substring(0, dot - 1); type = pathstub.substring(dot); }        
         return new Couple<String, String>( path, type );
         }
