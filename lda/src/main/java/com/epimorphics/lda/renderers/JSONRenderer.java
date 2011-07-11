@@ -64,10 +64,16 @@ public class JSONRenderer implements Renderer {
         try {
             Encoder.getForOneResult( context, api.wantContext() ).encodeRecursive(results.getModel(), roots, writer, true);
             String written = writer.toString();
-            ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json
+            try {
+            	ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json
+            } catch (Exception e) {
+            	log.error( "Broken generated JSON:\n" + written );
+            	throw e;
+            }
             return written;
         } catch (Exception e) {
         	log.error( "Failed to encode model: stacktrace follows:", e );
+        	
             return "'ERROR: " + e.getMessage() + "'";
         }
     }
