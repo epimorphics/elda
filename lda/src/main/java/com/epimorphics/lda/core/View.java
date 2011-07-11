@@ -376,6 +376,7 @@ public class View {
 	}
 
 	private String hackVars( String selection ) {
+		if (true) return selection;
 		// System.err.println( ">> SELECTION: " + selection + "\nEND\n" );
 		String vars = varsOf( selection.substring( selection.indexOf( "item" ) + 5 ) );
 		return selection.replaceFirst( "\n", "" + vars + "\n" );

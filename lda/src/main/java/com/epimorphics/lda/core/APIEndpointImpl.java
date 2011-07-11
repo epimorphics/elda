@@ -177,13 +177,13 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
+    	String quasiTemplate = template.replaceAll( "\\{", "(" ).replaceAll( "\\}", ")");
     	if (template.startsWith("http:")) {
     		// nasty hackery to avoid nasty hackery in the TestAPI uriTemplates, qv.
-    		return rsm.createResource( template + "/meta" );
+    		return rsm.createResource( quasiTemplate + "/meta" );
     	}
 		String argPattern = "\\{[-._A-Za-z]+\\}";
 		String pattern = template.replaceAll( argPattern, "[^/]*" );
-		String quasiTemplate = template.replaceAll( "\\{", "(" ).replaceAll( "\\}", ")");
 		String replaced = ru.toASCIIString().replaceAll( pattern, "/meta" + quasiTemplate );
 		return rsm.createResource( replaced );
 	}

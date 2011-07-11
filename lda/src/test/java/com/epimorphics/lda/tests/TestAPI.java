@@ -183,7 +183,6 @@ public class TestAPI {
     @Test
     public void testURLTemplateQueryLiteral() {
         testAPI("http://dummy/doc/schools/la/BANES", "", "testLABanes.ttl");
-        
         // Same thing expressed using where clause, revealed a bug in variable binding for where clauses
         testAPI("http://dummy/doc/schools/laWhere/BANES", "", "testLAWhereBanes.ttl");
     }

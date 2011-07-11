@@ -1,13 +1,23 @@
 # Model from test: http://dummy/doc/schools/laWhere/BANES?
 @prefix spec:    <http://www.epimorphics.com/examples/spec1#> .
+@prefix os:      <http://a9.com/-/spec/opensearch/1.1/> .
 @prefix ex:      <http://www.epimorphics.com/examples/eg1#> .
-@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix school-ont:  <http://education.data.gov.uk/def/school/> .
+@prefix opmv:    <http://purl.org/net/opmv/types/common#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
-@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix lda:     <http://purl.org/linked-data/api/vocab#> .
+@prefix sparql:  <http://purl.org/net/opmv/types/sparql#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix openSearch:  <http://a9.com/-/spec/opensearch/1.1/> .
+@prefix dct:     <http://purl.org/dc/terms/> .
+@prefix proxy:   <http://localhost:8080/sdx-api/proxy/> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
-@prefix api:     <http://purl.org/linked-data/api/vocab#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix la:      <http://admin.data.gov.uk/def/localAythority#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix api:     <http://purl.org/linked-data/api/vocab#> .
+@prefix xhv:     <http://www.w3.org/1999/xhtml/vocab#> .
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
 
 ex:school_50
       a       school-ont:School ;
@@ -39,9 +49,8 @@ ex:school_2
 
 <http://dummy/doc/schools/laWhere/BANES>
       a       api:ListEndpoint ;
-      <http://purl.org/dc/terms/hasPart>
-              <http://dummy/doc/schools/laWhere/BANES?_page=0> ;
-      api:definition <http://dummy/doc/schools/laWhere/{name}/meta> .
+      dct:hasPart <http://dummy/doc/schools/laWhere/BANES?_page=0> ;
+      api:definition <http://dummy/doc/schools/laWhere/(name)/meta> .
 
 ex:school_52
       a       school-ont:School ;
@@ -73,21 +82,18 @@ ex:school_4
 
 <http://dummy/doc/schools/laWhere/BANES?_page=0>
       a       api:Page ;
-      <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>
+      openSearch:itemsPerPage
               "10"^^xsd:long ;
-      <http://a9.com/-/spec/opensearch/1.1/startIndex>
+      openSearch:startIndex
               "1"^^xsd:long ;
-      <http://purl.org/dc/terms/isPartOf>
-              <http://dummy/doc/schools/laWhere/BANES> ;
-      api:definition <http://dummy/doc/schools/laWhere/{name}/meta> ;
+      dct:isPartOf <http://dummy/doc/schools/laWhere/BANES> ;
+      api:definition <http://dummy/doc/schools/laWhere/(name)/meta> ;
       api:extendedMetadataVersion
               <http://dummy/doc/schools/laWhere/BANES?_page=0&_metadata=all> ;
       api:items (ex:school_1 ex:school_100 ex:school_2 ex:school_3 ex:school_4 ex:school_49 ex:school_5 ex:school_50 ex:school_51 ex:school_52) ;
       api:page "0"^^xsd:long ;
-      <http://www.w3.org/1999/xhtml/vocab#first>
-              <http://dummy/doc/schools/laWhere/BANES?_page=0> ;
-      <http://www.w3.org/1999/xhtml/vocab#next>
-              <http://dummy/doc/schools/laWhere/BANES?_page=1> .
+      xhv:first <http://dummy/doc/schools/laWhere/BANES?_page=0> ;
+      xhv:next <http://dummy/doc/schools/laWhere/BANES?_page=1> .
 
 ex:school_100
       a       school-ont:School ;
