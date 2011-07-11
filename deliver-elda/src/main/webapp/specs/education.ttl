@@ -77,7 +77,7 @@ spec:viewerMedium a lda:Viewer
 # API DESCRIPTION
 #
 
-<http://services.data.gov.uk/education/sparql> extras:supportsNestedSelect true.
+<http://services.data.gov.uk/education/sparql> extras:supportsNestedSelect false.
 
 spec:api a lda:API 
     ; rdfs:label "Edubase API"@en
