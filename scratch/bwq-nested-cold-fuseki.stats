@@ -1,0 +1,26 @@
+12:14:42,921 INFO  [APIQuery.java:699] - TIMING: select time: 0.656s
+12:14:42,922 INFO  [APIQuery.java:700] - TIMING: view time:   0.433s
+12:14:42,961 INFO  [APIEndpointImpl.java:95] - TIMING: build query: 0.008s
+12:14:42,962 INFO  [APIEndpointImpl.java:96] - TIMING: run query:   1.096s
+12:14:42,962 INFO  [APIEndpointImpl.java:97] - TIMING: view query:  0.033
+12:14:43,326 INFO  [DOMUtils.java:103] - TIMING: compile stylesheet xslt/location.xsl 0.318s
+12:14:44,243 INFO  [XMLRenderer.java:58] - TIMING: render to DOM: 0.035s
+12:14:44,243 INFO  [XMLRenderer.java:59] - TIMING: DOM to string: 1.242s
+
+12:14:47,264 INFO  [APIEndpointImpl.java:95] - TIMING: build query: 0.001s
+12:14:47,264 INFO  [APIEndpointImpl.java:96] - TIMING: run query:   0.004s
+12:14:47,264 INFO  [APIEndpointImpl.java:97] - TIMING: view query:  0.031
+12:14:47,711 INFO  [XMLRenderer.java:58] - TIMING: render to DOM: 0.033s
+12:14:47,711 INFO  [XMLRenderer.java:59] - TIMING: DOM to string: 0.411s
+
+12:14:58,282 INFO  [APIEndpointImpl.java:95] - TIMING: build query: 0.001s
+12:14:58,282 INFO  [APIEndpointImpl.java:96] - TIMING: run query:   0.004s
+12:14:58,283 INFO  [APIEndpointImpl.java:97] - TIMING: view query:  0.021
+12:14:58,621 INFO  [XMLRenderer.java:58] - TIMING: render to DOM: 0.024s
+12:14:58,623 INFO  [XMLRenderer.java:59] - TIMING: DOM to string: 0.312s
+
+12:15:08,267 INFO  [APIEndpointImpl.java:95] - TIMING: build query: 0.005s
+12:15:08,267 INFO  [APIEndpointImpl.java:96] - TIMING: run query:   0.003s
+12:15:08,267 INFO  [APIEndpointImpl.java:97] - TIMING: view query:  0.016
+12:15:08,551 INFO  [XMLRenderer.java:58] - TIMING: render to DOM: 0.02s
+12:15:08,552 INFO  [XMLRenderer.java:59] - TIMING: DOM to string: 0.262s
