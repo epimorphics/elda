@@ -28,7 +28,7 @@ public class LimitTriplesController extends ControllerBase {
 		}
 
 		@Override protected synchronized boolean exceedsSelectLimit( Map<String, List<Resource>> m ) {
-			return false; // return m.size() > limit;
+			return m.size() > limit;
 		}
 
 		@Override protected synchronized boolean exceedsResultSetLimit(Map<String, APIResultSet> m) {

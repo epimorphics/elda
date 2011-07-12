@@ -126,9 +126,7 @@ public class ControlRestlet {
         }
     }
     
-    @GET
-    @Produces("text/turtle")
-    public Response requestHandlerTurtle(
+    @GET @Produces("text/turtle") public Response requestHandlerTurtle(
             @PathParam("path") String pathstub,
             @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);

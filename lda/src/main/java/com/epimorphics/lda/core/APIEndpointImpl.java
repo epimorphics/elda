@@ -66,6 +66,7 @@ public class APIEndpointImpl implements APIEndpoint {
     public APIEndpointImpl( APIEndpointSpec spec, Cache cache ) {
         this.spec = spec;
         this.cache = cache;
+        // System.err.println( ">> endpoint with cache " + cache.summary() );
         this.specWantsContext = spec.wantsContext();
     }
     

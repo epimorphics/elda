@@ -32,8 +32,4 @@ public class PermaCache extends LimitedCacheBase implements Cache {
     @Override protected synchronized boolean exceedsResultSetLimit( Map<String, APIResultSet> m ) {
         return false;
     }
-
-    public synchronized static void clearAll() {
-        PermaController.caches.clear();
-    }
 }

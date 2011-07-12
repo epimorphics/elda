@@ -38,8 +38,16 @@ public interface Cache {
 	public void cacheSelection(String select, List<Resource> results);
 	
 	public void clear();
+	
+	public void show( StringBuilder sb );
 
 	public int numEntries();
+	
+	/**
+	    Answer a summary description of this cache. In particular, include
+	    a unique ID.
+	*/
+	public String summary();
 	
 	public interface Controller {
 		/**
@@ -57,6 +65,16 @@ public interface Cache {
 		 	Clear and remove all the caches that this maker knows about.
 		*/
 		public void clearAll();
+		
+		/**
+		    Answer a summary of this cache controller's state.
+		*/
+		public String summary();
+
+		/**
+		    Answer an HTML description of all the cache's states.
+		*/
+		public void showAll(StringBuilder sb);
 	}
 	
 	public static class Registry {
@@ -75,6 +93,7 @@ public interface Cache {
 		}
 		
 		public static synchronized Cache cacheFor( String policy, Source source ) {
+			// System.err.println( ">> cacheFor " + policy + " [" + source + "]" );
 			String [] p = policy.split( ":", 2 );
 			String policyName = p[0], policyValue = (p.length == 2 ? p[1] : "");
 			Controller cm = map.get( policyName );
@@ -83,9 +102,25 @@ public interface Cache {
 		}
 		
 		public static void clearAll() {
-			for (Map.Entry<String, Controller> e: map.entrySet())
+			for (Map.Entry<String, Controller> e: map.entrySet()) {
+				// System.err.println( ">> clearing cache controller " + e.getKey() + " (" + e.getValue().summary() + ")" );
 				e.getValue().clearAll();
+			}
 		}
 		
+		public static void showAll( StringBuilder sb ) {
+			for (Map.Entry<String, Controller> e: map.entrySet()) {
+				sb.append( "<h2>details for cache group '" + e.getKey() + "'</h2>\n" );
+				e.getValue().showAll( sb );			
+			}
+		}
+
+		protected static int identityCounter = 0;
+		
+		public static synchronized int newIdentity() {
+			return ++identityCounter;
+		}
 	}
 }
+
+		

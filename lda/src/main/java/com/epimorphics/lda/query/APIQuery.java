@@ -686,6 +686,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             String outerSelect = queryAndResults.a;
             List<Resource> results = queryAndResults.b;
 
+            // System.err.println( ">> looking in cache " + cache.summary() );
             APIResultSet already = cache.getCachedResultSet( results, view.toString() );
             if (already != null && expansionPoints.isEmpty() ) 
                 {
