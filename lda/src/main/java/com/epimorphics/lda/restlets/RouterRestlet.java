@@ -17,8 +17,7 @@
 
 package com.epimorphics.lda.restlets;
 
-import static org.junit.Assert.*;
-
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
@@ -41,7 +40,6 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +62,6 @@ import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.hp.hpl.jena.shared.WrappedException;
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 
 /**
  * Handles all incoming API calls and routes to appropriate locations.
@@ -202,7 +199,7 @@ import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
     }    
 
 	private static String shortStackTrace( Throwable e ) {
-		ByteOutputStream bos = new ByteOutputStream();
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		PrintStream ps = new PrintStream( bos );
 		e.printStackTrace( ps );
 		ps.flush();
