@@ -200,6 +200,7 @@ public class EndpointMetadata {
 
 	public void addQueryMetadata( Model meta, Resource anExec, APIQuery q, String detailsQuery, APISpec apiSpec, boolean listEndpoint ) {
 		Resource EP = meta.createResource( SPARQL.Service );
+	//
 		apiSpec.getDataSource().addMetadata( EP ); 
 		Resource url = EP.getProperty( API.sparqlEndpoint ).getResource(); 
 		EP.addProperty( SPARQL.url, url );

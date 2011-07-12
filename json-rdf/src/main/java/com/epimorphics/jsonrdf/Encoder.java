@@ -434,10 +434,12 @@ public class Encoder {
             }
             while (!roots.isEmpty()) {
                 List<Resource> newRoots = new ArrayList<Resource>( roots );
+                // System.err.println( ">> " + roots + " :: " + oneResult );
                 roots.clear();
-                for (Resource r : newRoots) 
+                for (Resource r : newRoots) {
+                	if (oneResult) jw.key( rules.encodebNodeId(bNodeIdFor(r)) ); 
                     encode(r);
-                
+                }                
             }
         }
         

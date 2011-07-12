@@ -37,6 +37,7 @@ import static com.epimorphics.jsonrdf.utils.ModelIOUtils.modelFromTurtle;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -90,8 +91,7 @@ public class TestEncoder {
         }
         String written = writer.toString();
         // System.out.println( ">> wrote encoding:\n" + written );
-        
-		StringReader reader = new StringReader( written );
+		Reader reader = new StringReader( written );
         
         List<Resource> results = Decoder.decode(reader);
         if (roots != null) {
@@ -117,7 +117,7 @@ public class TestEncoder {
         }
         return writer.toString();
     }
-    
+	
     public static String roundTripTester(String srcTTL, String expectedTTL, String[] roots) throws  IOException {
         Model src = modelFromTurtle(srcTTL);
         Model expected = modelFromTurtle(expectedTTL);

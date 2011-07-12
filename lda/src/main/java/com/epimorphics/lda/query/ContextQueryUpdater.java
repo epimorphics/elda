@@ -212,25 +212,19 @@ public class ContextQueryUpdater implements ViewSetter {
         return param.lastPropertyOf();
     }
     
-    protected final Map<String,Variable> keepies = new HashMap<String, Variable>();
+    protected final Map<String,Variable> seenParamVariables = new HashMap<String, Variable>();
     
-    public static final boolean dontSquishVariables = true;
+    public static final boolean dontSquishVariables = false;
     
     protected void addRangeFilter( Param param, String val, String op ) {
-    	Variable already = keepies.get(param.asString());
+    	Variable already = seenParamVariables.get(param.asString());
+    	String prop = param.lastPropertyOf();
     	if (already == null || dontSquishVariables) {
-	        Variable v = args.newVar();
-	        keepies.put(param.asString(), v);
-	        String prop = param.lastPropertyOf();
-	        args.addPropertyHasValue( param, CollectionUtils.set(v.name() ) );
-	        Any r = sns.normalizeNodeToRDFQ( prop, val, args.getDefaultLanguage() );
-			args.addInfixSparqlFilter( v, op, r );
-    	} else {
-    		System.err.println( ">> You should not be seeing this." );
-	        String prop = param.lastPropertyOf();
-	        Any r = sns.normalizeNodeToRDFQ( prop, val, args.getDefaultLanguage() );
-			args.addInfixSparqlFilter( already, op, r );
+	        seenParamVariables.put( param.asString(), already = args.newVar() );
+	        args.addPropertyHasValue( param, CollectionUtils.set(already.name() ) );
     	}
+	    Any r = sns.normalizeNodeToRDFQ( prop, val, args.getDefaultLanguage() );
+		args.addInfixSparqlFilter( already, op, r );
     }    
 
 	/**

@@ -354,10 +354,10 @@ public class View {
 			buildConstructClause( pl, construct, r, c, st.vars, varsInOrder );
 		}
 	//
-		construct.append( "\n} WHERE {" );
+		construct.append( "\n} WHERE {\n" );
 		String hack_selection = hackVars( selection );
 		// System.err.println( ">> nested select: hacking round ARQ bug: " + hack_selection );
-		construct.append( "{" ).append( hack_selection ).append( "}" );
+		construct.append( "  {" ).append( hack_selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
 	//	
 		String union = "";
 		for (PropertyChain c: chains) {

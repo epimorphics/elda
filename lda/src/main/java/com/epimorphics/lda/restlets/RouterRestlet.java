@@ -20,6 +20,7 @@ package com.epimorphics.lda.restlets;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -63,6 +64,7 @@ import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.hp.hpl.jena.shared.WrappedException;
+import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 
 /**
  * Handles all incoming API calls and routes to appropriate locations.
@@ -181,7 +183,10 @@ import com.hp.hpl.jena.shared.WrappedException;
 				Renderer r = APIEndpointUtil.getRenderer( match.getEndpoint(), formatter, mediaTypes );
 				return doRendering( rc, formatter, results, r );
 			}
-		
+        } catch (StackOverflowError e) {
+            log.error("Stack Overflow Error" );
+            log.debug( shortStackTrace( e ) );
+            return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
         } catch (ExpansionFailedException e) {
         	return buildErrorResponse(e);
         } catch (EldaException e) {
@@ -194,7 +199,21 @@ import com.hp.hpl.jena.shared.WrappedException;
         } catch (Throwable e) {
             return returnError(e);
         }
-    }
+    }    
+
+	private static String shortStackTrace( Throwable e ) {
+		ByteOutputStream bos = new ByteOutputStream();
+		PrintStream ps = new PrintStream( bos );
+		e.printStackTrace( ps );
+		ps.flush();
+		return shorten( bos.toString() );
+	}
+	
+	private static String shorten(String l) {
+		int len = l.length();
+		if (len < 1000) return l;
+		return l.substring(0, 300) + "\n...\n" + l.substring(len - 700, len - 1);
+	}
 
 	private URI makeRequestURI(UriInfo ui, Match match, URI requestUri) throws URISyntaxException {
 //		System.err.println( ">>" );
@@ -234,7 +253,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 			} }
 		};
 	}
-
+	
     private Response doRendering( RendererContext rc, String rName, APIResultSet results, Renderer r ) {
 		if (r == null) {
             String message = rName == null
@@ -244,14 +263,9 @@ import com.hp.hpl.jena.shared.WrappedException;
             return enableCORS( Response.status( Status.BAD_REQUEST ).entity( niceMessage( message ) ) ).build();
         } else {
             MediaType mt = r.getMediaType();
-            return returnAs( relabel( rc, r.render( rc, results ) ), mt, results.getContentLocation() );
+            return returnAs( r.render( rc, results ), mt, results.getContentLocation() );
         }
 	}
-    
-    // HACK for bootstrapping. Should be endpoint-driven somehow.
-    private String relabel( RendererContext rc, String rendered ) {
-    	return rendered;
-    }
     
     public static VarValues paramsFromContext( CallContext cc ) {
         VarValues result = new VarValues();
@@ -280,12 +294,12 @@ import com.hp.hpl.jena.shared.WrappedException;
         }
     }
 
-    public static Response returnError(Throwable e) {
-        log.error("Exception: " + e.getMessage(), e);
+    public static Response returnError( Throwable e ) {
+        log.error("Exception: " + e.getMessage() );
         return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
     }
-    
-    public static Response returnError(String s) {
+
+	public static Response returnError( String s ) {
         log.error("Exception: " + s );
         return enableCORS( Response.serverError() ).entity( s ).build();
     }
