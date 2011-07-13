@@ -319,6 +319,7 @@ public class Encoder {
         
         protected boolean recurseOverResources = false;
         protected static final boolean nestResources = true;     // Could be another config option
+		protected static final boolean deferSharedBNodes = false;  // Could be another another config option
         
         // When nesting we need cycle detection
         protected Set<Resource> cycles;
@@ -587,7 +588,7 @@ public class Encoder {
                             emitNode(i.next(), isStructured, false);
                         }
                         jw.endArray();
-                    } else if (isMultiplyReferencedbNode(r)) {
+                    } else if (isMultiplyReferencedbNode(r) && deferSharedBNodes) {
                         if ( ! seenbNode(r)) {
                             roots.add(r);
                         }
