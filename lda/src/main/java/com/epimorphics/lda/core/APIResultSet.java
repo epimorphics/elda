@@ -110,20 +110,29 @@ public class APIResultSet {
 	}
 
     /**
-        Answer the model this resultset wraps.
+        Answer the model this result-set wraps.
     */
     public Model getModel() {
     	return model;
     }
 
+    /**
+        Answer the size of this result-set's model.
+    */
     public long modelSize() {
 		return model.size();
 	}
     
+    /**
+        Set the prefixes of this result-set's model.
+    */
     public void setNsPrefixes( PrefixMapping pm ) {
     	model.setNsPrefixes( pm );
     }
     
+    /**
+        Answer the list of item resources of this result-set.
+    */
     public List<Resource> getResultList() {
         return results;
     }
@@ -136,14 +145,25 @@ public class APIResultSet {
     	return detailsQuery;
     }
     
+    /**
+        Answer the query string used to select the item resources
+        of this result-set. 
+    */
     public String getSelectQuery() {
     	return selectQuery;
     }
 
-    public void setRoot(Resource root) {
+    /**
+        Set the resource to be used as root in this result-set
+        (returned by getRoot()).
+    */
+    public void setRoot( Resource root ) {
         this.root = root;
     }
     
+    /**
+        Answer the root result of this result-set.
+    */
     public Resource getRoot() {
         return root;
     }

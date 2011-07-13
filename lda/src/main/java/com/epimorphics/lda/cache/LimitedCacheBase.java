@@ -62,8 +62,7 @@ public abstract class LimitedCacheBase implements Cache {
         log.debug( "caching descriptions for resources " + results );
         cd.put( results.toString() + "::" + view, rs );
         if (exceedsResultSetLimit( cd )) {
-            log.info( "clearing description cache for " + label );
-//        	System.err.println( "clearing description cache for " + label );
+            log.debug( "clearing description cache for " + label );
             cd.clear();
         }
     }
@@ -72,7 +71,7 @@ public abstract class LimitedCacheBase implements Cache {
         log.debug( "caching resource selection for query " + select );
         cs.put( select, results );
         if (exceedsSelectLimit( cs )) {
-            log.info( "clearing select cache for " + label );
+            log.debug( "clearing select cache for " + label );
             cs.clear();
         }
     }
