@@ -35,11 +35,13 @@ public class EndpointMetadata {
 	protected final CallContext cc;
 	protected final Resource thisPage;
 	protected final String pageNumber;
+	protected final Set<String> formatNames;
 	
-	public EndpointMetadata( Resource thisPage, String pageNumber, CallContext cc ) {
+	public EndpointMetadata( Resource thisPage, String pageNumber, CallContext cc, Set<String> formatNames ) {
 		this.cc = cc;
 		this.thisPage = thisPage;
 		this.pageNumber = pageNumber;
+		this.formatNames = formatNames;
 	}
 	
 	/**
@@ -108,36 +110,24 @@ public class EndpointMetadata {
 		// System.err.println( ">> strip '" + query + "'/" + key + " => '" + result + "'" );
 		return result;
 	}
-
-	private static Pattern allowedSuffix = Pattern.compile( "^(xml|rdf|ttl|text|json|html|en)$" );
-	
-	private static boolean isReplacable( String suffix ) {
-		return allowedSuffix.matcher( suffix ).find();
-	}
 	
 	// TODO should only substitute .foo if it's a renderer or language
-	public static String replaceSuffix( String newSuffix, String oldPath ) {
+	public String replaceSuffix( String newSuffix, String oldPath ) {
 		int dot_pos = oldPath.lastIndexOf( '.' ), slash_pos = oldPath.lastIndexOf( '/' );
 		if (dot_pos > -1 && dot_pos > slash_pos) {
 			String oldSuffix = oldPath.substring( dot_pos + 1 );
-			if (isReplacable( oldSuffix )) return oldPath.substring(0, dot_pos + 1) + newSuffix;
+			if (formatNames.contains( oldSuffix )) return oldPath.substring(0, dot_pos + 1) + newSuffix;
 		}
 		return oldPath + "." + newSuffix;
 	}
 
-	static String rs( String newSuffix, String oldPath ) {
-		String result = replaceSuffix( newSuffix, oldPath );
-//		System.err.println( ">> " + oldPath + " AS ." + newSuffix + " = " + result );
-		return result;		
-	}
-	
 	private Resource resourceForFormat( Model m, String formatName ) {
 		URI ru = cc.getRequestURI();
 		try {
 			URI x = new URI
 				( ru.getScheme()
 				, ru.getAuthority()
-				, EndpointMetadata.rs( formatName, ru.getPath() )
+				, replaceSuffix( formatName, ru.getPath() )
 				, ru.getQuery()
 				, ru.getFragment() 
 				);

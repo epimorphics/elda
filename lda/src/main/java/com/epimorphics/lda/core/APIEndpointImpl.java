@@ -13,6 +13,7 @@
 package com.epimorphics.lda.core;
 
 import java.net.URI;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -215,7 +216,8 @@ public class APIEndpointImpl implements APIEndpoint {
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( FIXUP.definition, uriForDefinition );
-		EndpointMetadata em = new EndpointMetadata( thisPage, "" + page, cc );
+		Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
+		EndpointMetadata em = new EndpointMetadata( thisPage, "" + page, cc, formatNames );
 		createOptionalMetadata(rs, query, em);   
     //
         String emv_uri = EndpointMetadata.replaceQueryParam( Util.newURI(thisPage.getURI()), "_metadata", "all" );

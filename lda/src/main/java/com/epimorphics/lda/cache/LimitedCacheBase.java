@@ -29,11 +29,11 @@ public abstract class LimitedCacheBase implements Cache {
         this.identity = Cache.Registry.newIdentity();
     }
     
-    public synchronized String summary() {
+    @Override public synchronized String summary() {
     	return "#" + identity + "." + label + " (" + cd.size() + ", " + cs.size() + " entries)";
     }
     
-    public synchronized void show( StringBuilder sb ) {
+    @Override public synchronized void show( StringBuilder sb ) {
     	sb.append( summary() );
     	for (Map.Entry<String, List<Resource>> e: cs.entrySet()) {
     		sb.append( "<pre>" );
