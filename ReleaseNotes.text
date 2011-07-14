@@ -1,7 +1,7 @@
 1.1.7-SNAPSHOT
 
 * The options offered when the supplied URL does not match
-  any template URI should not have correct (non-404ing) URIs.
+  any template URI should now have correct (non-404ing) URIs.
   The previous method of constructing the URIs was not correct,
   as it relied on the demo-specific Elda servlet settings.
 
