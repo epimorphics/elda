@@ -29,7 +29,6 @@ import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.Param.Info;
-import com.epimorphics.lda.core.View.State;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -697,8 +696,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             APIResultSet rs = fetchDescriptionOfAllResources(outerSelect, spec, view, results);
             long afterView = System.currentTimeMillis();
             
-            log.info( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );
-            log.info( "TIMING: view time:   " + (afterView - afterSelect)/1000.0 + "s" );
+            log.debug( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );
+            log.debug( "TIMING: view time:   " + (afterView - afterSelect)/1000.0 + "s" );
 			rs.setSelectQuery( outerSelect );
             
             // Expand the labels of all leaf nodes (make this switchable?)

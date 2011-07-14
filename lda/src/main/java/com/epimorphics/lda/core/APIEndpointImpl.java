@@ -95,9 +95,9 @@ public class APIEndpointImpl implements APIEndpoint {
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
         insertResultSetRoot(filtered, cc, query);
         long timeAfterMetadata = System.currentTimeMillis();
-        log.info( "TIMING: build query: " + (timeAfterBuild - origin)/1000.0 + "s" );
-        log.info( "TIMING: run query:   " + (timeAfterRun - timeAfterBuild)/1000.0 + "s" );
-        log.info( "TIMING: view query:  " + (timeAfterMetadata - timeAfterRun)/1000.0 );
+        log.debug( "TIMING: build query: " + (timeAfterBuild - origin)/1000.0 + "s" );
+        log.debug( "TIMING: run query:   " + (timeAfterRun - timeAfterBuild)/1000.0 + "s" );
+        log.debug( "TIMING: view query:  " + (timeAfterMetadata - timeAfterRun)/1000.0 );
         return new Triad<APIResultSet, String, CallContext>( filtered, format, cc );
     }
 

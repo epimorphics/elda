@@ -8,6 +8,7 @@
 
 package com.epimorphics.lda.vocabularies;
 
+import com.epimorphics.lda.Version;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -24,7 +25,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class ELDA 
 	{
-	static final String version = "1.1.7-SNAPSHOT";
+	static final String version = Version.string;
 	
 	static final private Model m = ModelFactory.createDefaultModel();
 	
