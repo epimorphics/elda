@@ -11,14 +11,14 @@
 
 1.1.6
 
-* The JSON enscoder now unpacks bnodes in-situ rather than
+* The JSON encoder now unpacks bnodes in-situ rather than
   deferring them to the top level for later expansion. (That
   later level no longer generates incorrect syntax for
   deferred items.)
 
 * When Elda adds a formatter suffix to a URI and removes any
   previous formatter suffix, it makes sure that the suffix it
-  removes is a formatter suffix of this endpoint. Previously it
+  removes really is a formatter suffix of this endpoint. Previously it
   would remove anything that looked like a suffix, eg ".ewea".
 
 * The LimitedTriplesCache now recognises that it's time to empty

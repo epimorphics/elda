@@ -182,16 +182,17 @@ import com.hp.hpl.jena.shared.WrappedException;
 			}
         } catch (StackOverflowError e) {
             log.error("Stack Overflow Error" );
-            log.debug( shortStackTrace( e ) );
+            if (log.isDebugEnabled()) log.debug( shortStackTrace( e ) );
             return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
         } catch (ExpansionFailedException e) {
         	return buildErrorResponse(e);
         } catch (EldaException e) {
-        	System.err.println( "Caught exception: " + e.getMessage() );
-        	e.printStackTrace( System.err );
+        	log.error( "Exception: " + e.getMessage() );
+        	if (log.isDebugEnabled())log.debug( shortStackTrace( e ) );
         	return buildErrorResponse(e);
         } catch (QueryParseException e) {
-            e.printStackTrace( System.err );
+            log.error( "Query Parse Exception: " + e.getMessage() );
+            if (log.isDebugEnabled())log.debug( shortStackTrace( e ) );
             return returnNotFound("Failed to parse query request : " + e.getMessage());
         } catch (Throwable e) {
             return returnError(e);
@@ -213,12 +214,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 	}
 
 	private URI makeRequestURI(UriInfo ui, Match match, URI requestUri) throws URISyntaxException {
-//		System.err.println( ">>" );
-//		System.err.println( ">> requestURI: " + requestUri );
-//		System.err.println( ">> path: " + ui.getPath() );
-//		System.err.println( ">> params: " + ui.getQueryParameters() );
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
-//		System.err.println( ">> api:base = " + base );
 		if (base == null) return requestUri;
 		URI baseAsURI = new URI( base );
 		URI resolved = baseAsURI.isAbsolute() 
