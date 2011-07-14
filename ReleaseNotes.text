@@ -1,3 +1,59 @@
+1.1.7-SNAPSHOT
+
+* The options offered when the supplied URL does not match
+  any template URI should not have correct (non-404ing) URIs.
+  The previous method of constructing the URIs was not correct,
+  as it relied on the demo-specific Elda servlet settings.
+
+* When the JSON encoder hits a literal with an unknown datatype,
+  the message is now a log.warn not a System.out.println and
+  mentions the type as well as the literal spelling.
+
+1.1.6
+
+* The JSON enscoder now unpacks bnodes in-situ rather than
+  deferring them to the top level for later expansion. (That
+  later level no longer generates incorrect syntax for
+  deferred items.)
+
+* When Elda adds a formatter suffix to a URI and removes any
+  previous formatter suffix, it makes sure that the suffix it
+  removes is a formatter suffix of this endpoint. Previously it
+  would remove anything that looked like a suffix, eg ".ewea".
+
+* The LimitedTriplesCache now recognises that it's time to empty
+  the resultset cache. (The test had been a literal "false" for
+  debugging purposes that had not been unset.)
+
+* If a stack overflow or out-of-memory exception occurs during Elda 
+  processing, the log entry is more tightly controlled (an 
+  stacktrace is only supplied at DEBUG level) and the message
+  back to the client is clearer.
+
+* A given property chain in the SELECT query binds to a single
+  variable, not a fresh one on every mention (as may happen with
+  eg min-p.q=A&max-p.q=B).
+
+* RouterRestlet.parse() used to crash when the URI fragment supplied
+  to it contained neither "/" nor ".". 
+
+* An unrecognised short property name in a query parameter no longer
+  generates a stack-trace at the op (RouterRestlet) level; the
+  exception is caught and translated to a 400 Bad Query mentioning
+  the unknown name.
+
+* Some places where URI's containing {} were generated have been fixed.
+
+* If a SPARQL endpoint is known to support nested selects, these are
+  used in property-chain view query generation rather than replicating
+  the view template for each different selected ?item. An endpoint
+  can be marked with a property to say that it supports nested
+  selects; local: and tdb: endpoints are automatically known to do
+  this (and that property can be used to switch nested selects off).
+
+* Work is in progress to simplify and decouple the query-generation
+  code.
+
 1.1.5
 
 * mavenisation of release process tested for this release
