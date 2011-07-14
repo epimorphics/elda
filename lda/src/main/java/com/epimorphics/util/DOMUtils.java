@@ -100,7 +100,7 @@ public class DOMUtils
 					long origin = System.currentTimeMillis();
 					t = tf.newTemplates( new StreamSource( u.toExternalForm() ) );
 					long after = System.currentTimeMillis();
-					log.info( "TIMING: compile stylesheet " + transformFilePath + " " + (after - origin)/1000.0 + "s" );
+					log.debug( "TIMING: compile stylesheet " + transformFilePath + " " + (after - origin)/1000.0 + "s" );
 					cache.put( u, t );
 				}
 				return t.newTransformer();

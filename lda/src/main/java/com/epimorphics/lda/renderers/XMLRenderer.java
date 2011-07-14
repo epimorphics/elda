@@ -55,8 +55,8 @@ public class XMLRenderer implements Renderer {
 		long afterRenderToDOM = System.currentTimeMillis();
 		String rendered = DOMUtils.renderNodeToString( d, rc, pm, transformFilePath );
 		long afterRenderedToString = System.currentTimeMillis();
-		log.info( "TIMING: render to DOM: " + (afterRenderToDOM - origin)/1000.0 + "s" );
-		log.info( "TIMING: DOM to string: " + (afterRenderedToString - afterRenderToDOM)/1000.0 + "s" );
+		log.debug( "TIMING: render to DOM: " + (afterRenderToDOM - origin)/1000.0 + "s" );
+		log.debug( "TIMING: DOM to string: " + (afterRenderedToString - afterRenderToDOM)/1000.0 + "s" );
 		return rendered;
 	}
 
