@@ -22,6 +22,8 @@ import org.openjena.atlas.json.JsonException;
 import org.openjena.atlas.json.JsonNumber;
 import org.openjena.atlas.json.JsonObject;
 import org.openjena.atlas.json.JsonString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Decoder;
@@ -50,6 +52,8 @@ import com.hp.hpl.jena.vocabulary.XSD;
  * @version $Revision: $
  */
 public class EncoderDefault implements EncoderPlugin {
+    
+    static Logger log = LoggerFactory.getLogger(EncoderDefault.class);
     
     /** String used as the property name for identifying resources */
     @Override public String getPNResourceID() {
@@ -158,7 +162,7 @@ public class EncoderDefault implements EncoderPlugin {
 			} else {
 				if (showUnhandled)
 					{
-					System.err.println( ">> unhandled datatype in literal, using spelling: " + lit );
+					log.warn( "unhandled datatype '" + dt + "' in literal '" + spelling + "'" );
 					showUnhandled = false;
 					}
 				jw.value( spelling );

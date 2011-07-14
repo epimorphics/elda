@@ -62,6 +62,7 @@ public class APIEndpointImpl implements APIEndpoint {
     
     public APIEndpointImpl( APIEndpointSpec spec ) {
     	this( spec, Registry.cacheFor( spec.getCachePolicyName(), spec.getAPISpec().getDataSource() ) );
+    	// System.err.println( ">> cache is " + cache.summary() );
     }
     
     public APIEndpointImpl( APIEndpointSpec spec, Cache cache ) {

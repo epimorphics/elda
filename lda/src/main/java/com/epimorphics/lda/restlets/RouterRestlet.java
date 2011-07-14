@@ -99,14 +99,14 @@ import com.hp.hpl.jena.shared.WrappedException;
             @Context ServletContext servCon,
             @Context UriInfo ui) throws IOException 
     {
-    	String preamble = servCon.getContextPath() + "/api";
         Couple<String, String> pathAndType = parse( pathstub );
         Match matchAll = getMatch( "/" + pathstub );
         Match matchTrimmed = getMatch( "/" + pathAndType.a );
         Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
         String type = match == matchAll ? null : pathAndType.b;
         if (match == null) {
-            String message = "Sorry: could not find anything matching " + ("/" + pathstub);
+        	String preamble = ui.getBaseUri().toASCIIString();
+            String message = "Could not find anything matching " + ("/" + pathstub);
             if (pathAndType.b != null) message += " (perhaps '" + pathAndType.b + "' is an incorrect format name?)";
             message += "<div style='margin-bottom: 2px'>you might have meant any of:</div>\n";
             for (String template: reversed(router.templates())) {
@@ -121,7 +121,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     
     private String maybeLink( String preamble, String template ) {
     	if (template.contains( "{")) return template;
-    	return "<a href='" + preamble + template + "'>" + template + "</a>";
+    	return "<a href='" + preamble + template.substring(1) + "'>" + template + "</a>";
     }
 
 	private List<String> reversed( List<String> x ) {
@@ -306,8 +306,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     }
     
     public static Response returnNotFound( String message, String what ) {
-        log.warn( "Failed to return results: " + brief( message ) );
-        // new RuntimeException("returning NotFound: '" + message + "'").printStackTrace( System.err );
+        log.debug( "Failed to return results: " + brief( message ) );
         return enableCORS( Response.status(Status.NOT_FOUND) ).entity( niceMessage( message, "404 Resource Not Found: " + what ) ).build();
     }
     
