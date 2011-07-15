@@ -67,7 +67,9 @@ public class TestCaches
 		c.cacheDescription( resources, "view.string", rs );
 		assertEquals( 1, c.numEntries() );
 		c.cacheDescription( resources, "view.string.other", rs );
-		assertEquals( 0, c.numEntries() );
+		assertEquals( 2, c.numEntries() );
+		c.cacheDescription( resources, "view.string.third", rs );
+		assertEquals( 1, c.numEntries() );
 		}
 	
 	@Test public void testLimitTriplesCache() 
@@ -81,6 +83,8 @@ public class TestCaches
 		c.cacheDescription( resources, "view.string", rs );
 		assertEquals( 1, c.numEntries() );
 		c.cacheDescription( resources, "view.string.other", rs );
-		assertEquals( 0, c.numEntries() );
+		assertEquals( 2, c.numEntries() );
+		c.cacheDescription( resources, "view.string.third", rs );
+		assertEquals( 1, c.numEntries() );
 		}
 	}
