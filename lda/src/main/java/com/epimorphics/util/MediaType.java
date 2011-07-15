@@ -32,6 +32,8 @@ public class MediaType
 	public static final MediaType TEXT_PLAIN = new MediaType( "text", "plain" );
 	
 	public static final MediaType APPLICATION_JSON = new MediaType( "application", "json" );
+
+	public static final MediaType APPLICATION_XML = new MediaType( "application", "xml" );
 	
 	public static final MediaType TEXT_TURTLE = new MediaType( "text", "turtle" );
 	

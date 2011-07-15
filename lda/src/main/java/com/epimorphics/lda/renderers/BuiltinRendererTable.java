@@ -94,7 +94,14 @@ public class BuiltinRendererTable {
 		putFactory( "xml", API.XmlFormatter, MediaType.TEXT_XML, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-				return new XMLRenderer( sns );
+				return new XMLRenderer( sns, MediaType.TEXT_XML, null );
+			}
+			} );
+		
+		putFactory( "xml", API.XmlFormatter, MediaType.APPLICATION_XML, new DoingWith() 
+			{
+			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
+				return new XMLRenderer( sns, MediaType.APPLICATION_XML, null );
 			}
 			} );
 		
