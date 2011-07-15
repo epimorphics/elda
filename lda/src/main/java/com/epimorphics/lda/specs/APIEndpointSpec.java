@@ -185,11 +185,18 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         both API.property and .properties until TODO the ambiguity gets resolved.
     */
     private View getViewByProperties( Model m, String name, Resource tRes ) {
-        View v = new View( name );
+        return addViewProperties( m, new HashSet<Resource>(), tRes, new View( name ) );
+	}
+
+	private View addViewProperties( Model m, Set<Resource> seen, Resource tRes, View v ) {
 		addViewProperties( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
 		addViewProperties( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
-        return v;
-    }
+		for (RDFNode n: tRes.listProperties( API.include ).mapWith( Statement.Util.getObject ).toList()) {
+			if (n.isResource() && seen.add( (Resource) n ))
+				addViewProperties( m, seen, (Resource) n, v );
+		}
+		return v;
+	}
 
 	private void addViewProperties( View v, List<RDFNode> items ) {
 		ShortnameService sns = apiSpec.getShortnameService();

@@ -1,5 +1,7 @@
 1.1.7-SNAPSHOT
 
+* The viewer property api:include has been implemented.
+
 * The limited caches now clear themselves /before/ adding
   the new entry, rather than (unhelpfully) afterwards.
 

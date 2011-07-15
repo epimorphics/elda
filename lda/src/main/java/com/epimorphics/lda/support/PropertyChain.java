@@ -33,6 +33,15 @@ public class PropertyChain {
 		this( CollectionUtils.list(ResourceFactory.createProperty( URI ) ) );		
 	}
 	
+	@Override public boolean equals( Object other ) {
+		return other instanceof PropertyChain 
+			&& chain.equals( ((PropertyChain) other).chain );
+	}
+	
+	@Override public int hashCode() {
+		return chain.hashCode();
+	}
+	
 	public PropertyChain( Property p ) {
 		this( CollectionUtils.list( p ) );		
 	}

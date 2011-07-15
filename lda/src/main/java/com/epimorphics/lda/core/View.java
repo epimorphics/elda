@@ -121,6 +121,10 @@ public class View {
     	return name;
     }
     
+    public Set<PropertyChain> chains() {
+    	return new HashSet<PropertyChain>( chains );
+    }
+    
     /**
         Answer true iff this view does filtering, ie, is not ALL.
     */
