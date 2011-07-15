@@ -1,4 +1,4 @@
-package com.epimorphics.lda.scratch;
+package com.epimorphics.lda.exploratory.tests;
 
 import java.net.MalformedURLException;
 import java.net.URL;
