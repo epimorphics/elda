@@ -52,7 +52,7 @@ public class JSONRenderer implements Renderer {
     }
     
     @Override public MediaType getMediaType() {
-        return MediaType.APPLICATION_JSON;
+        return mt;
     }
 
     @Override public String render( RendererContext ignored, APIResultSet results) {
