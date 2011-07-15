@@ -1,5 +1,12 @@
 1.1.7-SNAPSHOT
 
+* The limited caches now clear themselves /before/ adding
+  the new entry, rather than (unhelpfully) afterwards.
+
+* Media type "application/xml" wasn't supported; it has
+  been added to the built-in renderers as well as text/xml
+  (which appears to have been an accident ...)
+
 * The built-in (Elda extra) JSON renderer now respects the
   media type supplied when constructed, rather than always
   producing application/json.
