@@ -1,5 +1,9 @@
 1.1.7-SNAPSHOT
 
+* The built-in (Elda extra) JSON renderer now respects the
+  media type supplied when constructed, rather than always
+  producing application/json.
+
 * The options offered when the supplied URL does not match
   any template URI should now have correct (non-404ing) URIs.
   The previous method of constructing the URIs was not correct,
