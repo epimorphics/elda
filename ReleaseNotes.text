@@ -1,5 +1,11 @@
 1.1.7-SNAPSHOT
 
+* Supplying a lang-P=L query parameter, but no P=V
+  parameter, caused the server to fail with a NullPointer
+  exception. This has been fixed; the setting is silently
+  ignored. (Silently, except that a debug-log entry is
+  generated.)
+
 * The viewer property api:include has been implemented.
 
 * The limited caches now clear themselves /before/ adding

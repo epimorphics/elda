@@ -289,6 +289,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 
     public static Response returnError( Throwable e ) {
         log.error("Exception: " + e.getMessage() );
+        log.debug( shortStackTrace( e ) );
         return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
     }
 

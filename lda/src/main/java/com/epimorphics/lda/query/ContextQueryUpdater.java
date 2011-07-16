@@ -105,7 +105,12 @@ public class ContextQueryUpdater implements ViewSetter {
 
 	private void handleLangPrefix( String taggedParam ) {
 		String param = taggedParam.substring( QueryParameter.LANG_PREFIX.length() );
-		String val = context.expandVariables( context.getStringValue( param ) );
+		String sv = context.getStringValue( param );
+		if (sv == null) {
+			log.debug( taggedParam + " supplied, but no value for " + param );
+			return;
+		}
+		String val = context.expandVariables( sv );
 		String pString = context.expandVariables( param );
 		args.setLanguagesFor( pString, val );
 	}
