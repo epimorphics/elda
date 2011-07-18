@@ -1,4 +1,11 @@
-1.1.7-SNAPSHOT
+1.1.8-SNAPSHOT
+
+1.1.7
+
+* The default languages for a view were set from the config
+  not from the query, which meant that _lang= parameters
+  were ignored for value filtering (but not for item selection).
+  Fixed.
 
 * Supplying a lang-P=L query parameter, but no P=V
   parameter, caused the server to fail with a NullPointer
