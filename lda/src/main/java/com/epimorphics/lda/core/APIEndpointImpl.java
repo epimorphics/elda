@@ -91,7 +91,7 @@ public class APIEndpointImpl implements APIEndpoint {
         String format = viewAndFormat.b;
         APIResultSet unfiltered = query.runQuery( spec.getAPISpec(), cache, cc, view );
         long timeAfterRun = System.currentTimeMillis();
-        APIResultSet filtered = filterByView( view, unfiltered );
+        APIResultSet filtered = filterByView( view, query.getDefaultLanguage(), unfiltered );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
         insertResultSetRoot(filtered, cc, query);
         long timeAfterMetadata = System.currentTimeMillis();
@@ -116,14 +116,14 @@ public class APIEndpointImpl implements APIEndpoint {
     // (2) where return value is a bNode and we want automatic bNode closure.
     // Current solution get full description from endpoint and post filter
 	
-    private APIResultSet filterByView( View view, APIResultSet rs ) {
+    private APIResultSet filterByView( View view, String defaultLanguage, APIResultSet rs ) {
 		if (view == null) {
 			log.warn( "somehow, filterByTemplate got a null view." );
 			return rs;			
 		}
 		else {			
 			log.debug("Applying view: " + view.toString());
-			return rs.getFilteredSet( view, spec.getDefaultLanguage() );
+			return rs.getFilteredSet( view, defaultLanguage );
 		}
 	}
 

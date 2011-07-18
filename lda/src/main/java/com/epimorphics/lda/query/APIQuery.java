@@ -260,6 +260,13 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	defaultLanguage = defaults;
     	}
     
+    /**
+        Answer the (current) default language string.
+    */
+    public String getDefaultLanguage() {
+    	return defaultLanguage;
+    	}
+    
     public void clearLanguages() {
     	languagesFor.clear();
     }
