@@ -35,6 +35,7 @@ import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
+import com.epimorphics.util.RDFUtils;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
@@ -311,8 +312,7 @@ public class APIEndpointImpl implements APIEndpoint {
         state of this endpoint to find the iterms of interest.
     */
 	public String getSelectQuery() {
-		PrefixMapping noPrefixes = PrefixMapping.Factory.create();
-		return spec.getBaseQuery().assembleSelectQuery( noPrefixes );
+		return spec.getBaseQuery().assembleSelectQuery( RDFUtils.noPrefixes );
 	}
 	
 	/**

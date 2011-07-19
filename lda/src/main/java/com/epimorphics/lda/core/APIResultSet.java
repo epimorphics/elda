@@ -33,6 +33,7 @@ import com.epimorphics.lda.vocabularies.ELDA;
 import com.epimorphics.lda.vocabularies.SPARQL;
 import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.epimorphics.lda.vocabularies.OpenSearch;
+import com.epimorphics.util.RDFUtils;
 
 /**
   	Wrapper for the results of an API query before rendering.
@@ -85,12 +86,11 @@ public class APIResultSet {
     	this.metadata.putAll( meta );
     }
 
-    private static final PrefixMapping none = PrefixMapping.Factory.create().lock();
     
     private PrefixMapping getPrefixes( List<Resource> lr ) {
-    	if (lr.isEmpty()) return none;
+    	if (lr.isEmpty()) return RDFUtils.noPrefixes;
     	Model m = lr.get(0).getModel();
-    	return m == null ? none : m;
+    	return m == null ? RDFUtils.noPrefixes : m;
 	}
 
 	/**

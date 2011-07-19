@@ -22,14 +22,12 @@ import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.Term;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestSelectParameter 
     {
-	static final PrefixMapping noPrefixes = PrefixMapping.Factory.create().lock();
-    
 	@Test public void testMe()
         {    
         ShortnameService sns = makeSNS();
@@ -39,7 +37,7 @@ public class TestSelectParameter
         qa.updateQuery();
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
-        assertEquals( theSelectQuery, q.assembleSelectQuery( noPrefixes) );
+        assertEquals( theSelectQuery, q.assembleSelectQuery( RDFUtils.noPrefixes) );
         }
     
     @Test public void testCloneIncludesFixedQuery()
@@ -52,7 +50,7 @@ public class TestSelectParameter
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
         APIQuery cloned = q.clone();
-        assertEquals( theSelectQuery, cloned.assembleSelectQuery( noPrefixes ) );
+        assertEquals( theSelectQuery, cloned.assembleSelectQuery( RDFUtils.noPrefixes ) );
         }
 
     public static ShortnameService makeSNS()

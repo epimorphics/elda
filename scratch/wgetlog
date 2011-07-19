@@ -1,54 +1,199 @@
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.json?_view=medium
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.json?_view=medium
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.json?_view=basic
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/json]
+Saving to: “got/schools-json-medium”
+
+     0K .........                                               390M=0s
+
+2011-07-19 10:57:42 (390 MB/s) - “got/schools-json-medium” saved [10060]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.json?_view=basic
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.json?_view=all
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/json]
+Saving to: “got/schools-json-basic”
+
+     0K ..                                                      251M=0s
+
+2011-07-19 10:57:42 (251 MB/s) - “got/schools-json-basic” saved [2634]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.json?_view=all
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.json?_view=description
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/json]
+Saving to: “got/schools-json-all”
+
+     0K .......... .......... .......... .......... .....       208M=0s
+
+2011-07-19 10:57:42 (208 MB/s) - “got/schools-json-all” saved [46797]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.json?_view=description
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.json?_view=short
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/json]
+Saving to: “got/schools-json-description”
+
+     0K .......... .......... .......... ...                    196M=0s
+
+2011-07-19 10:57:42 (196 MB/s) - “got/schools-json-description” saved [34636]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.json?_view=short
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.json?_view=geo
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/json]
+Saving to: “got/schools-json-short”
+
+     0K ....                                                    526M=0s
+
+2011-07-19 10:57:42 (526 MB/s) - “got/schools-json-short” saved [4722]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.json?_view=geo
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.ttl?_view=medium
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/json]
+Saving to: “got/schools-json-geo”
+
+     0K ...                                                     402M=0s
+
+2011-07-19 10:57:42 (402 MB/s) - “got/schools-json-geo” saved [3911]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.ttl?_view=medium
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.ttl?_view=basic
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/turtle]
+Saving to: “got/schools-ttl-medium”
+
+     0K ..........                                              439M=0s
+
+2011-07-19 10:57:42 (439 MB/s) - “got/schools-ttl-medium” saved [10985]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.ttl?_view=basic
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.ttl?_view=all
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/turtle]
+Saving to: “got/schools-ttl-basic”
+
+     0K ....                                                    468M=0s
+
+2011-07-19 10:57:42 (468 MB/s) - “got/schools-ttl-basic” saved [4478]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.ttl?_view=all
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.ttl?_view=description
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/turtle]
+Saving to: “got/schools-ttl-all”
+
+     0K .......... .......... .......... .......... .........   248M=0s
+
+2011-07-19 10:57:42 (248 MB/s) - “got/schools-ttl-all” saved [50773]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.ttl?_view=description
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.ttl?_view=short
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/turtle]
+Saving to: “got/schools-ttl-description”
+
+     0K .......... .......... .......... .......... .           159M=0s
+
+2011-07-19 10:57:42 (159 MB/s) - “got/schools-ttl-description” saved [42761]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.ttl?_view=short
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.ttl?_view=geo
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/turtle]
+Saving to: “got/schools-ttl-short”
+
+     0K ......                                                  772M=0s
+
+2011-07-19 10:57:42 (772 MB/s) - “got/schools-ttl-short” saved [6346]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.ttl?_view=geo
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.xml?_view=medium
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/turtle]
+Saving to: “got/schools-ttl-geo”
+
+     0K .....                                                   605M=0s
+
+2011-07-19 10:57:42 (605 MB/s) - “got/schools-ttl-geo” saved [5786]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.xml?_view=medium
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.xml?_view=basic
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/xml]
+Saving to: “got/schools-xml-medium”
+
+     0K ..........                                              471M=0s
+
+2011-07-19 10:57:42 (471 MB/s) - “got/schools-xml-medium” saved [11118]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.xml?_view=basic
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.xml?_view=all
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/xml]
+Saving to: “got/schools-xml-basic”
+
+     0K ....                                                    504M=0s
+
+2011-07-19 10:57:42 (504 MB/s) - “got/schools-xml-basic” saved [4529]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.xml?_view=all
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.xml?_view=description
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/xml]
+Saving to: “got/schools-xml-all”
+
+     0K .......... .......... .......... .......... .......... 76.9M
+    50K .                                                      3036G=0.001s
+
+2011-07-19 10:57:42 (79.3 MB/s) - “got/schools-xml-all” saved [52830]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.xml?_view=description
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.xml?_view=short
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/xml]
+Saving to: “got/schools-xml-description”
+
+     0K .......... .......... .......... .......... ......      304M=0s
+
+2011-07-19 10:57:42 (304 MB/s) - “got/schools-xml-description” saved [47172]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.xml?_view=short
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
---2011-07-14 14:24:20--  http://localhost:8080/elda/api/education/schools.xml?_view=geo
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/xml]
+Saving to: “got/schools-xml-short”
+
+     0K ......                                                  638M=0s
+
+2011-07-19 10:57:42 (638 MB/s) - “got/schools-xml-short” saved [6797]
+
+--2011-07-19 10:57:42--  http://localhost:8080/elda/api/education/schools.xml?_view=geo
 Resolving localhost... 127.0.0.1
-Connecting to localhost|127.0.0.1|:8080... failed: Connection refused.
+Connecting to localhost|127.0.0.1|:8080... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [application/xml]
+Saving to: “got/schools-xml-geo”
+
+     0K ......                                                  661M=0s
+
+2011-07-19 10:57:42 (661 MB/s) - “got/schools-xml-geo” saved [6449]
+

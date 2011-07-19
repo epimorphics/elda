@@ -28,6 +28,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
@@ -37,6 +38,11 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @version $Revision: $
  */
 public class RDFUtils {
+
+	/**
+	    An immutable empty prefix mapping.
+	*/
+	public static final PrefixMapping noPrefixes = PrefixMapping.Factory.create().lock();
 
     /**
      * Return one of the values of the property on the resource in string form.
@@ -149,6 +155,5 @@ public class RDFUtils {
 		}
 		return ifAbsent;
 	}
-
 }
 

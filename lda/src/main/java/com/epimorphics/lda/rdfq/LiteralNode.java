@@ -9,7 +9,10 @@
 package com.epimorphics.lda.rdfq;
 
 import com.epimorphics.lda.support.PrefixLogger;
-import com.hp.hpl.jena.vocabulary.XSD;
+import com.epimorphics.util.RDFUtils;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.sparql.util.FmtUtils;
+import com.hp.hpl.jena.sparql.util.NodeFactory;
 
 public class LiteralNode extends Term 
 	{
@@ -34,12 +37,8 @@ public class LiteralNode extends Term
 	
 	@Override public String asSparqlTerm( PrefixLogger pl )
 		{ 
-		String lf = "\"" + spelling.replaceAll( "\\\\", "\\\\" ) + "\"";
-		// System.err.println( ">> DATATYPE: " + datatype );
-		if (datatype.equals( XSD.integer.getURI() )) return spelling;
-		if (datatype.equals( XSD.xint.getURI() )) return spelling;
-		if (language.length() > 0) return lf + "@" + language;
-		if (datatype.length() > 0) return lf + "^^<" + datatype + ">";
+		Node n = NodeFactory.createLiteralNode( spelling, language, datatype );
+		String lf = FmtUtils.stringForNode( n , RDFUtils.noPrefixes ); 
 		return lf;
 		}
 	
