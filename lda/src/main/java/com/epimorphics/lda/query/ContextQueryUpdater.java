@@ -32,8 +32,6 @@ import com.epimorphics.lda.query.APIQuery.Deferred;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.lda.support.PrefixLogger;
-import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
     A ContextQueryUpdater is used to update an APIQuery according to context
@@ -257,7 +255,7 @@ public class ContextQueryUpdater implements ViewSetter {
 		View named  = nt.getView( viewName );
 		if (named == null) EldaException.NotFound( "view", viewName );
 		view = named.copy().addFrom( view );
-		log.info( "view " + viewName + " yields view " + view + " from\n  " + nt );
+		// log.debug( "view " + viewName + " yields view " + view + " from\n  " + nt );
 	}
 
 	@Override public void setViewByProperties(String val) {
