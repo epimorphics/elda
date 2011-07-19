@@ -1,5 +1,8 @@
 1.1.8-SNAPSHOT
 
+* Fixed issue 59. When RDFQ literals are converted to SPARQL
+  terms, they use ARG's own formatter to take care of escaping etc.
+
 1.1.7
 
 * The default languages for a view were set from the config
