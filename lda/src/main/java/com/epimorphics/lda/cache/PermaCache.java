@@ -9,7 +9,6 @@
 package com.epimorphics.lda.cache;
 
 import java.util.List;
-import java.util.Map;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -25,11 +24,11 @@ public class PermaCache extends LimitedCacheBase implements Cache {
         super(label);
     }
 
-    @Override protected synchronized boolean exceedsSelectLimit( Map<String, List<Resource>> m ) {
+    @Override protected synchronized boolean exceedsSelectLimit( Cachelet<String, List<Resource>> m ) {
         return false;
     }
 
-    @Override protected synchronized boolean exceedsResultSetLimit( Map<String, APIResultSet> m ) {
+    @Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, APIResultSet> m ) {
         return false;
     }
 }

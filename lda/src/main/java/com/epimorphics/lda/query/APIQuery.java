@@ -40,6 +40,7 @@ import com.epimorphics.lda.support.QuerySupport;
 
 import static com.epimorphics.util.CollectionUtils.*;
 
+import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.graph.*;
@@ -148,7 +149,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	};
     }
     
-    /**
+
+	/**
         The parameters that form the basis of an API Query.
      
      	@author chris
@@ -680,53 +682,55 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
     
     /**
-     * Run the defined query against the datasource
-     */
+        Run the defined query against the datasource
+    */
     public APIResultSet runQuery( APISpec spec, Cache cache, CallContext call, View view ) {
         Source source = spec.getDataSource();
         try {
-        	long origin = System.currentTimeMillis();
-            Couple<String, List<Resource>> queryAndResults = selectResources( cache, spec, call, source );
-            long afterSelect = System.currentTimeMillis();
-            
-            String outerSelect = queryAndResults.a;
-            List<Resource> results = queryAndResults.b;
-
-            // System.err.println( ">> looking in cache " + cache.summary() );
-            APIResultSet already = cache.getCachedResultSet( results, view.toString() );
-            if (already != null && expansionPoints.isEmpty() ) 
-                {
-                log.debug( "re-using cached results for " + results );
-                return already.clone();
-                }
-            
-            APIResultSet rs = fetchDescriptionOfAllResources(outerSelect, spec, view, results);
-            long afterView = System.currentTimeMillis();
-            
-            log.debug( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );
-            log.debug( "TIMING: view time:   " + (afterView - afterSelect)/1000.0 + "s" );
-			rs.setSelectQuery( outerSelect );
-            
-            // Expand the labels of all leaf nodes (make this switchable?)
-            new ExpandLabels( this ).expand( source, rs );
-            
-            // Expand chained views, if present
-            if ( ! expansionPoints.isEmpty()) {
-                for (Property exp : expansionPoints) {
-                    expandResourcesOf(exp, rs, view, spec );
-                }
-            } else {
-                // Can't cache results which use expansion points
-                cache.cacheDescription( results, view.toString(), rs.clone() );
-            }
-            
-            return rs;
-
-        } catch (QueryExceptionHTTP ie) {
-            EldaException.ARQ_Exception( source, ie );
+        	return runQueryWithSource( spec, cache, call, view, source );
+        } catch (QueryExceptionHTTP e) {
+            EldaException.ARQ_Exception( source, e );
             return /* NEVER */ null;
         }
     }
+
+	private APIResultSet runQueryWithSource( APISpec spec, Cache cache, CallContext call, View view, Source source ) {
+		long origin = System.currentTimeMillis();
+		Couple<String, List<Resource>> queryAndResults = selectResources( cache, spec, call, source );
+		long afterSelect = System.currentTimeMillis();
+		
+		String outerSelect = queryAndResults.a;
+		List<Resource> results = queryAndResults.b;
+
+		// System.err.println( ">> looking in cache " + cache.summary() );
+		APIResultSet already = cache.getCachedResultSet( results, view.toString() );
+		if (already != null && expansionPoints.isEmpty() ) 
+		    {
+		    log.debug( "re-using cached results for " + results );
+		    return already.clone();
+		    }
+		
+		APIResultSet rs = fetchDescriptionOfAllResources(outerSelect, spec, view, results);
+		long afterView = System.currentTimeMillis();
+		
+		log.debug( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );
+		log.debug( "TIMING: view time:   " + (afterView - afterSelect)/1000.0 + "s" );
+		rs.setSelectQuery( outerSelect );
+		
+		// Expand the labels of all leaf nodes (make this switchable?)
+		new ExpandLabels( this ).expand( source, rs );
+		
+		// Expand chained views, if present
+		if ( ! expansionPoints.isEmpty()) {
+		    for (Property exp : expansionPoints) {
+		        expandResourcesOf(exp, rs, view, spec );
+		    }
+		} else {
+		    // Can't cache results which use expansion points
+		    cache.cacheDescription( results, view.toString(), rs.clone() );
+		}
+		return rs;
+	}
 
 	private APIResultSet fetchDescriptionOfAllResources(String select, APISpec spec, View view, List<Resource> results) {
 		int count = results.size();
@@ -796,62 +800,83 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		for (Source x: sources) m.add( x.executeConstruct( cq ) );		
 		return qq;
 	}
-    
-    private Couple<String, List<Resource>> selectResources( Cache cache, APISpec spec, CallContext call, Source source )
-        {
-    	String select = "";
+
+	/**
+	    Answer the select query (if any; otherwise, "") and list of resources obtained by
+	    running that query.
+	*/
+    private Couple<String, List<Resource>> selectResources( Cache cache, APISpec spec, CallContext call, Source source ) {
     	log.debug( "fetchRequiredResources()" );
         final List<Resource> results = new ArrayList<Resource>();
         if (itemTemplate != null) setSubject( call.expandVariables( itemTemplate ) );
-        if ( isFixedSubject() ) {
-        	results.add( subjectResource );
-        } else {
-            select = boundQuery( assembleSelectQuery(spec.getPrefixMap()), call);
-            List<Resource> already = cache.getCachedResources( select );
-            if (already != null)
-                {
-                log.debug( "re-using cached results for query " + select );
-                return new Couple<String, List<Resource>>(select, already);
-                }
-            Query q = null;
-            try {
-                q = QueryFactory.create(select);
-            } catch (Exception e) {
-                throw new APIException("Internal error building query: " + select, e);
-            }
-            
-            log.debug( "Running query: " + select.replaceAll( "\n", " " ) );
-            
-            source.executeSelect( q, new Source.ResultSetConsumer() {
-				
-				@Override public void setup(QueryExecution qe) {
-		            if (needsLARQindex) LARQManager.setLARQIndex( qe );				
+        if ( isFixedSubject() )
+            return new Couple<String, List<Resource>>( "", CollectionUtils.list( subjectResource ) );
+        else
+        	return runGeneralQuery( cache, spec, call, source, results );
+    }
+
+	private Couple<String, List<Resource>> runGeneralQuery( Cache cache, APISpec spec, CallContext call, Source source, final List<Resource> results) {
+		String select = boundQuery( assembleSelectQuery(spec.getPrefixMap()), call );
+		List<Resource> already = cache.getCachedResources( select );
+		if (already != null)
+		    {
+		    log.debug( "re-using cached results for query " + select );
+		    return new Couple<String, List<Resource>>(select, already);
+		    }
+		Query q = createQuery( select );
+		log.debug( "Running query: " + select.replaceAll( "\n", " " ) );
+		source.executeSelect( q, new ResultResourcesReader( results, needsLARQindex ) );
+		cache.cacheSelection( select, results );
+		return new Couple<String, List<Resource>>( select, results );
+	}
+
+	private Query createQuery( String selectQuery ) {
+		try 
+			{ return QueryFactory.create(selectQuery); } 
+		catch (Exception e) {
+		    throw new APIException("Internal error building query: " + selectQuery, e);
+		}
+	}
+	
+	private static final class ResultResourcesReader implements Source.ResultSetConsumer {
+		
+		private final List<Resource> results;
+		private final boolean needsLARQindex;
+
+		private ResultResourcesReader( List<Resource> results, boolean needsLARQindex ) {
+			this.results = results;
+			this.needsLARQindex = needsLARQindex;
+		}
+
+		@Override public void setup( QueryExecution qe ) {
+		    if (needsLARQindex) LARQManager.setLARQIndex( qe );				
+		}
+
+		@Override public void consume( ResultSet rs ) {
+			try {
+				while (rs.hasNext()) {
+					Resource item = rs.next().getResource( SELECT_VAR.name() );
+					if (item == null) {
+						EldaException.BadSpecification
+						( "<br>Oops. No binding for " + SELECT_VAR.name() + " in successful SELECT.\n"
+								+ "<br>Perhaps ?item was mis-spelled in an explicit api:where clause.\n"
+								+ "<br>It's not your fault; contact the API provider."                			
+						);                		
+					}
+					results.add( withoutModel( item ) );
 				}
-				
-				@Override public void consume( ResultSet rs ) {
-					try {
-						while (rs.hasNext()) {
-							Resource item = rs.next().getResource( SELECT_VAR.name() );
-							if (item == null) {
-								EldaException.BadSpecification
-								( "<br>Oops. No binding for " + SELECT_VAR.name() + " in successful SELECT.\n"
-										+ "<br>Perhaps ?item was mis-spelled in an explicit api:where clause.\n"
-										+ "<br>It's not your fault; contact the API provider."                			
-								);                		
-							}
-							results.add( item );
-						}
-					} catch (APIException e) {
-						throw e;
-					} catch (Throwable t) {
-						throw new APIException("Query execution problem on query: " + t, t);
-					}				
-				}
-            } );
-            cache.cacheSelection( select, results );
-        }
-        return new Couple<String, List<Resource>>( select, results );
-        }
+			} catch (APIException e) {
+				throw e;
+			} catch (Throwable t) {
+				throw new APIException("Query execution problem on query: " + t, t);
+			}				
+		}
+
+		// because resource.inModel(null) explodes.
+		private Resource withoutModel(Resource item) {
+			return ResourceFactory.createResource( item.getURI() );
+		}
+	}
 
 	public boolean wantsMetadata( String name ) {
 		return metadataOptions.contains( name ) || metadataOptions.contains( "all" );

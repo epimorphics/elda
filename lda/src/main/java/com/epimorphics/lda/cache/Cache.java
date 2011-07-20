@@ -26,21 +26,42 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public interface Cache {
 
 	/**
-	    Answer the API result set remembered for the given list of results and
-	    view, or null if there isn't one.
+	    Make an entry in the cache that binds the given list of results
+	    to the given select query string.
 	*/
-	public APIResultSet getCachedResultSet(List<Resource> results, String view );
+	public void cacheSelection( String selectQuery, List<Resource> results );
 
+	/**
+	    Answer the list of resources associated with this select query if
+	    any is available (entered and not discarded).
+	*/
 	public List<Resource> getCachedResources( String select );
 
-	public void cacheDescription(List<Resource> results, String view, APIResultSet rs);
-
-	public void cacheSelection(String select, List<Resource> results);
+	/**
+	    Make an entry in the caches that associates the result set <code>rs</code>
+	    with the given list of resources and view.
+	 */
+	public void cacheDescription( List<Resource> results, String view, APIResultSet rs );
 	
+	/**
+	    Answer the API result set remembered for the given list of results and
+	    view, or null if there isn't one.
+	 */
+	public APIResultSet getCachedResultSet(List<Resource> results, String view );
+	
+	/**
+	    Clear this cache.
+	*/
 	public void clear();
 	
+	/**
+	    Append an HTML description of this cache to <code>sb</code>.
+	*/
 	public void show( StringBuilder sb );
 
+	/**
+	    Answer how many entries are in this cache.
+	*/
 	public int numEntries();
 	
 	/**
@@ -77,6 +98,9 @@ public interface Cache {
 		public void showAll(StringBuilder sb);
 	}
 	
+	/**
+	    The registry records named cache policies.
+	*/
 	public static class Registry {
 		
 		protected static final Map<String, Controller> map = new HashMap<String, Controller>();

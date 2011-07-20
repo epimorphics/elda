@@ -170,8 +170,8 @@ import com.hp.hpl.jena.shared.WrappedException;
         	URI ru = makeRequestURI(ui, match, requestUri);
         	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, ru, queryParams );
             APIResultSet results = resultsAndFormat.a;
-			if (results == null) {
-			    return returnNotFound("No answer back from " + match.getEndpoint().getSpec());
+			if (results == null || results.getResultList().size() == 0) {
+			    return returnNotFound( "No items found matching that request." );
 			} else {
 				// APIEndpoint ep = match.getEndpoint();
 				RendererContext rc = new RendererContext( paramsFromContext( resultsAndFormat.c ), contextPath, as );
@@ -289,6 +289,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 
     public static Response returnError( Throwable e ) {
         log.error("Exception: " + e.getMessage() );
+        System.err.println( ">> " + shortStackTrace(e) );
         log.debug( shortStackTrace( e ) );
         return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
     }

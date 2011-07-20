@@ -146,9 +146,9 @@ public class ContextQueryUpdater implements ViewSetter {
 	*/
 	public void handleReservedParameters( GEOLocation geo, ViewSetter vs, String p, String val ) {
 		if (p.equals(QueryParameter._PAGE)) {
-		    args.setPageNumber( Integer.parseInt(val) ); 
+		    args.setPageNumber( positiveInteger(p, val) ); 
 		} else if (p.equals(QueryParameter._PAGE_SIZE)) {
-		    args.setPageSize( Integer.parseInt(val) );
+		    args.setPageSize( positiveInteger(p, val) );
 		} else if (p.equals( QueryParameter._FORMAT )) {
 			vs.setFormat(val);
 		} else if (p.equals(QueryParameter._METADATA)) {
@@ -183,6 +183,13 @@ public class ContextQueryUpdater implements ViewSetter {
 		}
 	}	
 	
+	private int positiveInteger( String param, String val ) {
+		int result = Integer.parseInt( val );
+		if (result < 0) 
+			throw new EldaException( param + "=" + val + ": value must not be negative.", "", EldaException.BAD_REQUEST );
+		return result;
+	}
+
 	/**
      * General interface for extending the query with a specified parameter.
      * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
