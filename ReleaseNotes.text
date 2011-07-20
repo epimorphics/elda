@@ -3,6 +3,16 @@
 * Fixed issue 59. When RDFQ literals are converted to SPARQL
   terms, they use ARG's own formatter to take care of escaping etc.
 
+* Added statistics to Elda caches, accessible via control/show-cache.
+
+* If the select query returns no results, then Elda generates 
+  a status 404.
+
+* If the value of _page or _pageSize is not a positive integer, 
+  a status 400 with descriptive text is generated.
+
+* Stripped out an unnecessary log message for _view.
+
 1.1.7
 
 * The default languages for a view were set from the config
