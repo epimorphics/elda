@@ -184,10 +184,11 @@ public class ContextQueryUpdater implements ViewSetter {
 	}	
 	
 	private int positiveInteger( String param, String val ) {
-		int result = Integer.parseInt( val );
-		if (result < 0) 
-			throw new EldaException( param + "=" + val + ": value must not be negative.", "", EldaException.BAD_REQUEST );
-		return result;
+		try {
+			int result = Integer.parseInt( val );
+			if (0 <= result) return result;
+		} catch (NumberFormatException e) { /* fall-through */ }
+		throw new EldaException( param + "=" + val + ": value must be non-negative integer" );
 	}
 
 	/**
