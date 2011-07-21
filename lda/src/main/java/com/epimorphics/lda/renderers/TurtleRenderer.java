@@ -21,7 +21,7 @@ import com.epimorphics.util.MediaType;
 
 public class TurtleRenderer implements Renderer {
 	
-    @Override public MediaType getMediaType() {
+    @Override public MediaType getMediaType( RendererContext irrelevant ) {
         return MediaType.TEXT_TURTLE;
     }
     

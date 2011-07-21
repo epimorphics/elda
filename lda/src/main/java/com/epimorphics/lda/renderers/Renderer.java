@@ -29,9 +29,10 @@ import com.epimorphics.util.MediaType;
 public interface Renderer {
 
     /**
-     	@return  the mimetype which this renderer returns
+     	@return the mimetype which this renderer returns
+     		in the given renderer context.
     */
-    public MediaType getMediaType();
+    public MediaType getMediaType( RendererContext rc );
     
     /**
      	Render a result set

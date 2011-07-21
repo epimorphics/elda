@@ -30,6 +30,7 @@ public class QueryParameter {
 	public static final String _METADATA= "_metadata";
 	public static final String _FORMAT = "_format";
 	public static final String _LANG = "_lang";
+	public static final String callback = "callback";
 	
 	public static final int DEFAULT_PAGE_SIZE = 10;
 	public static final int MAX_PAGE_SIZE = 250;

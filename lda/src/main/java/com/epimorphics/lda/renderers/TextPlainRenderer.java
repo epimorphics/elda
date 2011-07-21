@@ -19,7 +19,7 @@ import com.epimorphics.util.MediaType;
 
 public final class TextPlainRenderer implements Renderer {
 
-    @Override public MediaType getMediaType() {
+    @Override public MediaType getMediaType( RendererContext irrelevant ) {
         return MediaType.TEXT_PLAIN;
     }
 

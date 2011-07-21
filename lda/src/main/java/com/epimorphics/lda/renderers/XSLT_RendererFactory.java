@@ -32,7 +32,7 @@ public class XSLT_RendererFactory implements RendererFactory {
 	@Override public Renderer buildWith( final APIEndpoint ep, final ShortnameService sns ) {
 		return new Renderer() {
 
-			@Override public MediaType getMediaType() {
+			@Override public MediaType getMediaType( RendererContext irrelevant ) {
 				return mt;
 			}
 

@@ -1,5 +1,9 @@
 1.1.8-SNAPSHOT
 
+* JSONP is now supported. When the chosen renderer is JSON (selected
+  by .json or by an accept-type) and callback=P is supplied as an
+  argument, then the returned text is P(JSON) for the generated JSON.
+
 * Fixed issue 59. When RDFQ literals are converted to SPARQL
   terms, they use ARG's own formatter to take care of escaping etc.
 

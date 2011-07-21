@@ -51,11 +51,12 @@ public class JSONRenderer implements Renderer {
         this.wantContext = api.wantContext();
     }
     
-    @Override public MediaType getMediaType() {
-        return mt;
+    @Override public MediaType getMediaType( RendererContext rc ) {
+    	String callback = rc.getStringValue( "callback" );
+        return callback == null ? mt : MediaType.TEXT_JAVASCRIPT;
     }
 
-    @Override public String render( RendererContext ignored, APIResultSet results) {
+    @Override public String render( RendererContext rc, APIResultSet results) {
         StringWriter writer = new StringWriter();
         List<Resource> roots = new ArrayList<Resource>(1);
         roots.add( results.getRoot() );
@@ -70,10 +71,10 @@ public class JSONRenderer implements Renderer {
             	log.error( "Broken generated JSON:\n" + written );
             	throw e;
             }
-            return written;
+            String callback = rc.getStringValue("callback" );
+            return callback == null ? written : callback + "(" + written + ")";
         } catch (Exception e) {
         	log.error( "Failed to encode model: stacktrace follows:", e );
-        	
             return "'ERROR: " + e.getMessage() + "'";
         }
     }

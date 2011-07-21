@@ -255,7 +255,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             	;
             return enableCORS( Response.status( Status.BAD_REQUEST ).entity( niceMessage( message ) ) ).build();
         } else {
-            MediaType mt = r.getMediaType();
+            MediaType mt = r.getMediaType( rc );
             return returnAs( r.render( rc, results ), mt, results.getContentLocation() );
         }
 	}

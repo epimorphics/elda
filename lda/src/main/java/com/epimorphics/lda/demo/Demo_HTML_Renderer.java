@@ -47,7 +47,7 @@ public class Demo_HTML_Renderer implements Renderer {
     	this.endpoint = ep;
     }
 
-	@Override public MediaType getMediaType() {
+	@Override public MediaType getMediaType( RendererContext irrelevant ) {
         return MediaType.TEXT_HTML;
     }
 

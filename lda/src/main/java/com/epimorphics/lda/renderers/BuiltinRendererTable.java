@@ -91,6 +91,20 @@ public class BuiltinRendererTable {
 			}
 			} );
 		
+		putFactory( "jsonp", API.JsonFormatter, MediaType.TEXT_JAVASCRIPT, new DoingWith() 
+			{
+			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
+				return new JSONRenderer( ep, MediaType.TEXT_JAVASCRIPT );
+			}
+			} );
+		
+		putFactory( "jsonp", API.JsonFormatter, MediaType.APPLICATION_JAVASCRIPT, new DoingWith() 
+			{
+			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
+				return new JSONRenderer( ep, MediaType.APPLICATION_JAVASCRIPT );
+			}
+			} );
+		
 		putFactory( "xml", API.XmlFormatter, MediaType.TEXT_XML, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {

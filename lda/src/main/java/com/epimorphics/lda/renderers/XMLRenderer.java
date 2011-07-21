@@ -36,7 +36,7 @@ public class XMLRenderer implements Renderer {
 		this.transformFilePath = transformFilePath;
 	}
 	
-	@Override public MediaType getMediaType() {
+	@Override public MediaType getMediaType( RendererContext irrelevant ) {
 		return mt;
 	}
 
