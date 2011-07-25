@@ -1,309 +1,309 @@
---2011-07-21 11:26:17--  http://localhost:8080/elda/api/education/schools.json?_view=medium
+--2011-07-25 11:30:31--  http://localhost:8080/elda/api/education/schools.json?_view=medium
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/json]
 Saving to: “got/schools-json-medium”
 
-     0K .........                                               461M=0s
+     0K .........                                               481M=0s
 
-2011-07-21 11:26:20 (461 MB/s) - “got/schools-json-medium” saved [10060]
+2011-07-25 11:30:36 (481 MB/s) - “got/schools-json-medium” saved [10060]
 
---2011-07-21 11:26:20--  http://localhost:8080/elda/api/education/schools.json?_view=basic
+--2011-07-25 11:30:36--  http://localhost:8080/elda/api/education/schools.json?_view=basic
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/json]
 Saving to: “got/schools-json-basic”
 
-     0K ..                                                      318M=0s
+     0K ..                                                      311M=0s
 
-2011-07-21 11:26:20 (318 MB/s) - “got/schools-json-basic” saved [2634]
+2011-07-25 11:30:37 (311 MB/s) - “got/schools-json-basic” saved [2634]
 
---2011-07-21 11:26:20--  http://localhost:8080/elda/api/education/schools.json?_view=all
+--2011-07-25 11:30:37--  http://localhost:8080/elda/api/education/schools.json?_view=all
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/json]
 Saving to: “got/schools-json-all”
 
-     0K .......... .......... .......... .......... .....       157M=0s
+     0K .......... .......... .......... .......... .....       200M=0s
 
-2011-07-21 11:26:22 (157 MB/s) - “got/schools-json-all” saved [46797]
+2011-07-25 11:30:38 (200 MB/s) - “got/schools-json-all” saved [46797]
 
---2011-07-21 11:26:22--  http://localhost:8080/elda/api/education/schools.json?_view=description
+--2011-07-25 11:30:38--  http://localhost:8080/elda/api/education/schools.json?_view=description
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/json]
 Saving to: “got/schools-json-description”
 
-     0K .......... .......... .......... ...                   22.5M=0.001s
+     0K .......... .......... .......... ...                    167M=0s
 
-2011-07-21 11:26:22 (22.5 MB/s) - “got/schools-json-description” saved [34636]
+2011-07-25 11:30:39 (167 MB/s) - “got/schools-json-description” saved [34636]
 
---2011-07-21 11:26:22--  http://localhost:8080/elda/api/education/schools.json?_view=short
+--2011-07-25 11:30:39--  http://localhost:8080/elda/api/education/schools.json?_view=short
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/json]
 Saving to: “got/schools-json-short”
 
-     0K ....                                                    371M=0s
+     0K ....                                                    456M=0s
 
-2011-07-21 11:26:23 (371 MB/s) - “got/schools-json-short” saved [4722]
+2011-07-25 11:30:39 (456 MB/s) - “got/schools-json-short” saved [4722]
 
---2011-07-21 11:26:23--  http://localhost:8080/elda/api/education/schools.json?_view=geo
+--2011-07-25 11:30:39--  http://localhost:8080/elda/api/education/schools.json?_view=geo
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/json]
 Saving to: “got/schools-json-geo”
 
-     0K ...                                                     411M=0s
+     0K ...                                                     357M=0s
 
-2011-07-21 11:26:23 (411 MB/s) - “got/schools-json-geo” saved [3911]
+2011-07-25 11:30:39 (357 MB/s) - “got/schools-json-geo” saved [3911]
 
---2011-07-21 11:26:23--  http://localhost:8080/elda/api/education/schools.json?_view=medium&callback=answer
+--2011-07-25 11:30:39--  http://localhost:8080/elda/api/education/schools.json?_view=medium&callback=answer
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/javascript]
 Saving to: “got/schools-jsonp-medium”
 
-     0K .........                                               600M=0s
+     0K .........                                               595M=0s
 
-2011-07-21 11:26:23 (600 MB/s) - “got/schools-jsonp-medium” saved [10196]
+2011-07-25 11:30:39 (595 MB/s) - “got/schools-jsonp-medium” saved [10196]
 
---2011-07-21 11:26:23--  http://localhost:8080/elda/api/education/schools.json?_view=basic&callback=answer
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.json?_view=basic&callback=answer
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/javascript]
 Saving to: “got/schools-jsonp-basic”
 
-     0K ..                                                      221M=0s
+     0K ..                                                      196M=0s
 
-2011-07-21 11:26:23 (221 MB/s) - “got/schools-jsonp-basic” saved [2770]
+2011-07-25 11:30:40 (196 MB/s) - “got/schools-jsonp-basic” saved [2770]
 
---2011-07-21 11:26:23--  http://localhost:8080/elda/api/education/schools.json?_view=all&callback=answer
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.json?_view=all&callback=answer
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/javascript]
 Saving to: “got/schools-jsonp-all”
 
-     0K .......... .......... .......... .......... .....       197M=0s
+     0K .......... .......... .......... .......... .....       195M=0s
 
-2011-07-21 11:26:23 (197 MB/s) - “got/schools-jsonp-all” saved [46933]
+2011-07-25 11:30:40 (195 MB/s) - “got/schools-jsonp-all” saved [46933]
 
---2011-07-21 11:26:23--  http://localhost:8080/elda/api/education/schools.json?_view=description&callback=answer
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.json?_view=description&callback=answer
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/javascript]
 Saving to: “got/schools-jsonp-description”
 
-     0K .......... .......... .......... ...                    269M=0s
+     0K .......... .......... .......... ...                    171M=0s
 
-2011-07-21 11:26:23 (269 MB/s) - “got/schools-jsonp-description” saved [34772]
+2011-07-25 11:30:40 (171 MB/s) - “got/schools-jsonp-description” saved [34772]
 
---2011-07-21 11:26:23--  http://localhost:8080/elda/api/education/schools.json?_view=short&callback=answer
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.json?_view=short&callback=answer
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/javascript]
 Saving to: “got/schools-jsonp-short”
 
-     0K ....                                                    369M=0s
+     0K ....                                                    391M=0s
 
-2011-07-21 11:26:23 (369 MB/s) - “got/schools-jsonp-short” saved [4858]
+2011-07-25 11:30:40 (391 MB/s) - “got/schools-jsonp-short” saved [4858]
 
---2011-07-21 11:26:23--  http://localhost:8080/elda/api/education/schools.json?_view=geo&callback=answer
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.json?_view=geo&callback=answer
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/javascript]
 Saving to: “got/schools-jsonp-geo”
 
-     0K ...                                                     372M=0s
+     0K ...                                                     333M=0s
 
-2011-07-21 11:26:23 (372 MB/s) - “got/schools-jsonp-geo” saved [4047]
+2011-07-25 11:30:40 (333 MB/s) - “got/schools-jsonp-geo” saved [4047]
 
---2011-07-21 11:26:23--  http://localhost:8080/elda/api/education/schools.ttl?_view=medium
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.ttl?_view=medium
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/turtle]
 Saving to: “got/schools-ttl-medium”
 
-     0K ..........                                              372M=0s
+     0K ..........                                              376M=0s
 
-2011-07-21 11:26:23 (372 MB/s) - “got/schools-ttl-medium” saved [10985]
+2011-07-25 11:30:40 (376 MB/s) - “got/schools-ttl-medium” saved [10985]
 
---2011-07-21 11:26:23--  http://localhost:8080/elda/api/education/schools.ttl?_view=basic
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.ttl?_view=basic
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/turtle]
 Saving to: “got/schools-ttl-basic”
 
-     0K ....                                                    465M=0s
+     0K ....                                                    373M=0s
 
-2011-07-21 11:26:23 (465 MB/s) - “got/schools-ttl-basic” saved [4478]
+2011-07-25 11:30:40 (373 MB/s) - “got/schools-ttl-basic” saved [4478]
 
---2011-07-21 11:26:23--  http://localhost:8080/elda/api/education/schools.ttl?_view=all
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.ttl?_view=all
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/turtle]
 Saving to: “got/schools-ttl-all”
 
-     0K .......... .......... .......... .......... .........   271M=0s
+     0K .......... .......... .......... .......... .........   169M=0s
 
-2011-07-21 11:26:24 (271 MB/s) - “got/schools-ttl-all” saved [50773]
+2011-07-25 11:30:40 (169 MB/s) - “got/schools-ttl-all” saved [50773]
 
---2011-07-21 11:26:24--  http://localhost:8080/elda/api/education/schools.ttl?_view=description
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.ttl?_view=description
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/turtle]
 Saving to: “got/schools-ttl-description”
 
-     0K .......... .......... .......... .......... .           278M=0s
+     0K .......... .......... .......... .......... .           186M=0s
 
-2011-07-21 11:26:24 (278 MB/s) - “got/schools-ttl-description” saved [42761]
+2011-07-25 11:30:40 (186 MB/s) - “got/schools-ttl-description” saved [42761]
 
---2011-07-21 11:26:24--  http://localhost:8080/elda/api/education/schools.ttl?_view=short
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.ttl?_view=short
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/turtle]
 Saving to: “got/schools-ttl-short”
 
-     0K ......                                                  580M=0s
+     0K ......                                                  458M=0s
 
-2011-07-21 11:26:24 (580 MB/s) - “got/schools-ttl-short” saved [6346]
+2011-07-25 11:30:40 (458 MB/s) - “got/schools-ttl-short” saved [6346]
 
---2011-07-21 11:26:24--  http://localhost:8080/elda/api/education/schools.ttl?_view=geo
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.ttl?_view=geo
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [text/turtle]
 Saving to: “got/schools-ttl-geo”
 
-     0K .....                                                   474M=0s
+     0K .....                                                   554M=0s
 
-2011-07-21 11:26:24 (474 MB/s) - “got/schools-ttl-geo” saved [5786]
+2011-07-25 11:30:40 (554 MB/s) - “got/schools-ttl-geo” saved [5786]
 
---2011-07-21 11:26:24--  http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-easting=533552
+--2011-07-25 11:30:40--  http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-easting=533552
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/xml]
 Saving to: “got/schools-xml-medium-A”
 
-     0K .......... .                                            840M=0s
+     0K .......... .                                            816M=0s
 
-2011-07-21 11:26:25 (840 MB/s) - “got/schools-xml-medium-A” saved [11742]
+2011-07-25 11:30:41 (816 MB/s) - “got/schools-xml-medium-A” saved [11742]
 
---2011-07-21 11:26:25--  http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-northing=175275
+--2011-07-25 11:30:41--  http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-northing=175275
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/xml]
 Saving to: “got/schools-xml-medium-B”
 
-     0K .......... .                                            901M=0s
+     0K .......... .                                            685M=0s
 
-2011-07-21 11:26:26 (901 MB/s) - “got/schools-xml-medium-B” saved [11535]
+2011-07-25 11:30:42 (685 MB/s) - “got/schools-xml-medium-B” saved [11535]
 
---2011-07-21 11:26:26--  http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-establishmentNumber=6385
+--2011-07-25 11:30:42--  http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-establishmentNumber=6385
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/xml]
 Saving to: “got/schools-xml-medium-C”
 
-     0K ..........                                              813M=0s
+     0K ..........                                              694M=0s
 
-2011-07-21 11:26:27 (813 MB/s) - “got/schools-xml-medium-C” saved [10683]
+2011-07-25 11:30:43 (694 MB/s) - “got/schools-xml-medium-C” saved [10683]
 
---2011-07-21 11:26:27--  http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-uniqueReferenceNumber=100869
+--2011-07-25 11:30:43--  http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-uniqueReferenceNumber=100869
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/xml]
 Saving to: “got/schools-xml-medium-D”
 
-     0K .......... .                                            625M=0s
+     0K .......... .                                            876M=0s
 
-2011-07-21 11:26:27 (625 MB/s) - “got/schools-xml-medium-D” saved [12245]
+2011-07-25 11:30:44 (876 MB/s) - “got/schools-xml-medium-D” saved [12245]
 
---2011-07-21 11:26:27--  http://localhost:8080/elda/api/education/schools.xml?_view=medium
+--2011-07-25 11:30:44--  http://localhost:8080/elda/api/education/schools.xml?_view=medium
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/xml]
 Saving to: “got/schools-xml-medium”
 
-     0K ..........                                              690M=0s
+     0K ..........                                              527M=0s
 
-2011-07-21 11:26:28 (690 MB/s) - “got/schools-xml-medium” saved [11118]
+2011-07-25 11:30:44 (527 MB/s) - “got/schools-xml-medium” saved [11118]
 
---2011-07-21 11:26:28--  http://localhost:8080/elda/api/education/schools.xml?_view=basic
+--2011-07-25 11:30:44--  http://localhost:8080/elda/api/education/schools.xml?_view=basic
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/xml]
 Saving to: “got/schools-xml-basic”
 
-     0K ....                                                    324M=0s
+     0K ....                                                    188M=0s
 
-2011-07-21 11:26:28 (324 MB/s) - “got/schools-xml-basic” saved [4529]
+2011-07-25 11:30:44 (188 MB/s) - “got/schools-xml-basic” saved [4529]
 
---2011-07-21 11:26:28--  http://localhost:8080/elda/api/education/schools.xml?_view=all
+--2011-07-25 11:30:44--  http://localhost:8080/elda/api/education/schools.xml?_view=all
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/xml]
 Saving to: “got/schools-xml-all”
 
-     0K .......... .......... .......... .......... ..........  187M
+     0K .......... .......... .......... .......... ..........  238M
     50K .                                                      3036G=0s
 
-2011-07-21 11:26:28 (193 MB/s) - “got/schools-xml-all” saved [52830]
+2011-07-25 11:30:44 (246 MB/s) - “got/schools-xml-all” saved [52830]
 
---2011-07-21 11:26:28--  http://localhost:8080/elda/api/education/schools.xml?_view=description
+--2011-07-25 11:30:44--  http://localhost:8080/elda/api/education/schools.xml?_view=description
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/xml]
 Saving to: “got/schools-xml-description”
 
-     0K .......... .......... .......... .......... ......      251M=0s
+     0K .......... .......... .......... .......... ......      281M=0s
 
-2011-07-21 11:26:28 (251 MB/s) - “got/schools-xml-description” saved [47172]
+2011-07-25 11:30:44 (281 MB/s) - “got/schools-xml-description” saved [47172]
 
---2011-07-21 11:26:28--  http://localhost:8080/elda/api/education/schools.xml?_view=short
+--2011-07-25 11:30:44--  http://localhost:8080/elda/api/education/schools.xml?_view=short
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/xml]
 Saving to: “got/schools-xml-short”
 
-     0K ......                                                  640M=0s
+     0K ......                                                  454M=0s
 
-2011-07-21 11:26:28 (640 MB/s) - “got/schools-xml-short” saved [6797]
+2011-07-25 11:30:44 (454 MB/s) - “got/schools-xml-short” saved [6797]
 
---2011-07-21 11:26:28--  http://localhost:8080/elda/api/education/schools.xml?_view=geo
+--2011-07-25 11:30:44--  http://localhost:8080/elda/api/education/schools.xml?_view=geo
 Resolving localhost... 127.0.0.1
 Connecting to localhost|127.0.0.1|:8080... connected.
 HTTP request sent, awaiting response... 200 OK
 Length: unspecified [application/xml]
 Saving to: “got/schools-xml-geo”
 
-     0K ......                                                  407M=0s
+     0K ......                                                  454M=0s
 
-2011-07-21 11:26:28 (407 MB/s) - “got/schools-xml-geo” saved [6449]
+2011-07-25 11:30:44 (454 MB/s) - “got/schools-xml-geo” saved [6449]
 

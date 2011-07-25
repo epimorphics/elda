@@ -294,9 +294,6 @@ public class View {
 	
 	private String fetchByGivenPropertyChains( State s, List<PropertyChain> chains ) { 
 		boolean uns = useNestedSelect(s) && s.select.length() > 0;
-		log.info(uns ? "chains: using nested selects" : "chains: using repeated clauses");
-		// System.err.println( ">> useNestedSelect: " + useNestedSelect(s) );
-		// System.err.println( ">> uns: " + uns + " (select = '" + s.select + "')" );
 		return uns
 			? fetchChainsByNestedSelect( s, chains ) 
 			: fetchChainsByRepeatedClauses( s, chains )
@@ -304,13 +301,7 @@ public class View {
 	}
 
 	private boolean useNestedSelect( State st ) {
-		if (allSupportNestedSelect( st.sources )) return true;
-		return false;
-	}
-
-	private boolean allSupportNestedSelect( List<Source> sources ) {
-		for (Source s: sources) if (!s.supportsNestedSelect()) return false;
-		return true;
+		return Source.Util.allSupportNestedSelect( st.sources );
 	}
 
 	private String fetchChainsByRepeatedClauses( State s, List<PropertyChain> chains ) { 
