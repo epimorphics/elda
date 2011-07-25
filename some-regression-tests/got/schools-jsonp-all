@@ -1,0 +1,240 @@
+answer({ "format" : "linked-data-api", "version" : "0.2", "result" : {"_about" : "http://localhost:8080/elda/api/education/schools.json?_view=all&callback=answer&_page=0", "definition" : "http://localhost:8080/elda/api/meta/education/schools.json?_view=all&callback=answer", "extendedMetadataVersion" : "http://localhost:8080/elda/api/education/schools.json?_view=all&callback=answer&_page=0&_metadata=all", "first" : "http://localhost:8080/elda/api/education/schools.json?_view=all&callback=answer&_page=0", "isPartOf" : {"_about" : "http://localhost:8080/elda/api/education/schools.json?_view=all&callback=answer", "definition" : "http://localhost:8080/elda/api/meta/education/schools.json?_view=all&callback=answer", "hasPart" : "http://localhost:8080/elda/api/education/schools.json?_view=all&callback=answer&_page=0", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint"}
+    , "items" : [{"_about" : "http://education.data.gov.uk/id/school/100869", "LLSC" : {"_about" : "http://statistics.data.gov.uk/id/llsc/GL140", "label" : "London Central"}
+      , "LSOA" : {"_about" : "http://statistics.data.gov.uk/id/lsoa/E01003953", "label" : "Southwark 028A"}
+      , "MSOA" : {"_about" : "http://statistics.data.gov.uk/id/msoa/E02000834", "label" : "Southwark 028"}
+      , "PFI" : false, "address" : "http://api.talis.com/stores/govuk-education/items/1255726359770#self", "administrativeWard" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-ward/00BEGH", "label" : "East Dulwich"}
+      , "admissionsPolicy" : {"_about" : "http://education.data.gov.uk/def/school/AdmissionsPolicy_Non-selective", "label" : "Non-selective"}
+      , "boarders" : {"_about" : "http://education.data.gov.uk/def/school/Boarders_No_Boarders", "label" : "No Boarders"}
+      , "burnhamGroup" : 0, "censusAreaStatisticWard" : {"_about" : "http://statistics.data.gov.uk/id/cas-ward/00BEGH", "label" : "East Dulwich"}
+      , "censusRecord" : "http://education.data.gov.uk/id/school/census/100869", "closeDate" : "Thu, 30 Apr 1998 23:00:00 GMT+0000", "districtAdministrative" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-district/00BE", "label" : "Southwark"}
+      , "easting" : 533552, "establishmentName" : "Southwark Small School", "establishmentNumber" : 6385, "establishmentStatus" : {"_about" : "http://education.data.gov.uk/def/school/EstablishmentStatus_Closed", "label" : "Closed"}
+      , "gender" : {"_about" : "http://education.data.gov.uk/def/school/Gender_Mixed", "label" : "Mixed"}
+      , "hasGOR" : "http://statistics.data.gov.uk/id/government-office-region/H", "investorInPeople" : {"_about" : "http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present", "label" : "Uninvolved at present"}
+      , "label" : "Southwark Small School", "lastChangedDate" : "Wed, 27 Feb 2008 00:00:00 GMT+0000", "lat" : 51.4607, "localAuthority" : {"_about" : "http://statistics.data.gov.uk/id/local-education-authority/210", "label" : "Southwark"}
+      , "long" : -0.07897, "marketingOptInOut" : false, "northing" : 175275, "ofstedSpecialMeasures" : false, "parliamentaryConstituency" : {"_about" : "http://statistics.data.gov.uk/id/parliamentary-constituency/142", "label" : "Dulwich and West Norwood"}
+      , "religiousCharacter" : {"_about" : "http://education.data.gov.uk/def/school/ReligiousCharacter_None", "label" : "None"}
+      , "specialClasses" : false, "specialPupils" : 0, "statutoryHighAge" : 11, "statutoryLowAge" : 3, "superannuationCategory" : {"_about" : "http://education.data.gov.uk/def/school/SuperannuationCategory_Not_Subject", "label" : "Not Subject"}
+      , "type" : [{"_about" : "http://education.data.gov.uk/def/school/School", "label" : "School"}
+      , {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School", "label" : "Other Independent School"}
+      ], "typeOfEstablishment" : {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School", "label" : "Other Independent School"}
+      , "uniqueReferenceNumber" : 100869, "urbanRural" : {"_about" : "http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse", "label" : "Urban > 10k - less sparse"}
+      , "vcard" : "http://api.talis.com/stores/govuk-education/items/1258344546303#self"}
+    , {"_about" : "http://education.data.gov.uk/id/school/100868", "LLSC" : {"_about" : "http://statistics.data.gov.uk/id/llsc/GL140", "label" : "London Central"}
+      , "LSOA" : {"_about" : "http://statistics.data.gov.uk/id/lsoa/E01003916", "label" : "Southwark 020B"}
+      , "MSOA" : {"_about" : "http://statistics.data.gov.uk/id/msoa/E02000826", "label" : "Southwark 020"}
+      , "PFI" : false, "SCUpreferredemail" : "ichtusprimarysc@btconnect.com", "SENNoStat" : 13, "SENStat" : 0, "accomChange" : false, "actionFP" : "Mon, 28 Apr 2008 23:00:00 GMT+0000", "actionGEN" : "Sat, 29 Jul 2006 23:00:00 GMT+0000", "address" : "http://api.talis.com/stores/govuk-education/items/1256037002508#self", "administrativeWard" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-ward/00BEGC", "label" : "Brunswick Park"}
+      , "admissionsPolicy" : {"_about" : "http://education.data.gov.uk/def/school/AdmissionsPolicy_Non-selective", "label" : "Non-selective"}
+      , "boarders" : {"_about" : "http://education.data.gov.uk/def/school/Boarders_No_Boarders", "label" : "No Boarders"}
+      , "burnhamGroup" : 0, "censusAreaStatisticWard" : {"_about" : "http://statistics.data.gov.uk/id/cas-ward/00BEGC", "label" : "Brunswick Park"}
+      , "censusRecord" : "http://education.data.gov.uk/id/school/census/100868", "charity" : {"_about" : "http://education.data.gov.uk/placeholder-id/charity/1104973", "label" : "Hope Primary School"}
+      , "closeDate" : "Tue, 25 Jul 2006 23:00:00 GMT+0000", "compSchoolAge" : 38, "dateofLastFPVisit" : "Thu, 23 Jan 2003 00:00:00 GMT+0000", "dateofLastOfstedVisit" : "Mon, 4 Dec 2000 00:00:00 GMT+0000", "districtAdministrative" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-district/00BE", "label" : "Southwark"}
+      , "easting" : 533027, "establishmentName" : "Hope Primary School", "establishmentNumber" : 6383, "establishmentStatus" : {"_about" : "http://education.data.gov.uk/def/school/EstablishmentStatus_Closed", "label" : "Closed"}
+      , "gender" : {"_about" : "http://education.data.gov.uk/def/school/Gender_Mixed", "label" : "Mixed"}
+      , "hasGOR" : "http://statistics.data.gov.uk/id/government-office-region/H", "highBoardFee" : "http://api.talis.com/stores/govuk-education/items/1257559279322#self", "highDayFee" : "http://api.talis.com/stores/govuk-education/items/1258577816699#self", "investorInPeople" : {"_about" : "http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present", "label" : "Uninvolved at present"}
+      , "label" : "Hope Primary School", "lastChangedDate" : "Fri, 5 Dec 2008 00:00:00 GMT+0000", "lat" : 51.47893, "localAuthority" : {"_about" : "http://statistics.data.gov.uk/id/local-education-authority/210", "label" : "Southwark"}
+      , "long" : -0.08576, "lowBoardFee" : "http://api.talis.com/stores/govuk-education/items/1256169110185#self", "lowDayFee" : "http://api.talis.com/stores/govuk-education/items/1256897046496#self", "marketingOptInOut" : false, "nextHMIorISIvisit" : "Thu, 31 Aug 2006 23:00:00 GMT+0000", "northing" : 177290, "notes" : "Check for closure as it is likely to close", "ofstedSpecialMeasures" : false, "openDate" : "Tue, 21 Jan 1992 00:00:00 GMT+0000", "parliamentaryConstituency" : {"_about" : "http://statistics.data.gov.uk/id/parliamentary-constituency/088", "label" : "Camberwell and Peckham"}
+      , "pupilTeacherRatio" : "49:05:00", "reasonEstablishmentClosed" : {"_about" : "http://education.data.gov.uk/def/school/ReasonEstablishmentClosed_Closure", "label" : "Closure"}
+      , "religiousCharacter" : {"_about" : "http://education.data.gov.uk/def/school/ReligiousCharacter_Christian", "label" : "Christian"}
+      , "schoolCapacity" : 49, "specialClasses" : false, "specialPupils" : 0, "statutoryHighAge" : 10, "statutoryLowAge" : 5, "superannuationCategory" : {"_about" : "http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967", "label" : "T(S) regs 1967"}
+      , "totalPupilsFullTime" : "http://api.talis.com/stores/govuk-education/items/1258304552797#self", "totalPupilsPartTime" : "http://api.talis.com/stores/govuk-education/items/1256141030331#self", "type" : [{"_about" : "http://education.data.gov.uk/def/school/School", "label" : "School"}
+      , {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School", "label" : "Other Independent School"}
+      ], "typeOfEstablishment" : {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School", "label" : "Other Independent School"}
+      , "uniqueReferenceNumber" : 100868, "urbanRural" : {"_about" : "http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse", "label" : "Urban > 10k - less sparse"}
+      , "vcard" : "http://api.talis.com/stores/govuk-education/items/1259294325459#self"}
+    , {"_about" : "http://education.data.gov.uk/id/school/100867", "LLSC" : {"_about" : "http://statistics.data.gov.uk/id/llsc/GL140", "label" : "London Central"}
+      , "LSOA" : {"_about" : "http://statistics.data.gov.uk/id/lsoa/E01003122", "label" : "Lambeth 004D"}
+      , "MSOA" : {"_about" : "http://statistics.data.gov.uk/id/msoa/E02000621", "label" : "Lambeth 004"}
+      , "PFI" : false, "address" : "http://api.talis.com/stores/govuk-education/items/1255520454328#self", "administrativeWard" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-ward/00AYGN", "label" : "Stockwell"}
+      , "admissionsPolicy" : {"_about" : "http://education.data.gov.uk/def/school/AdmissionsPolicy_Non-selective", "label" : "Non-selective"}
+      , "boarders" : {"_about" : "http://education.data.gov.uk/def/school/Boarders_No_Boarders", "label" : "No Boarders"}
+      , "burnhamGroup" : 0, "censusAreaStatisticWard" : {"_about" : "http://statistics.data.gov.uk/id/cas-ward/00AYGN", "label" : "Stockwell"}
+      , "censusRecord" : "http://education.data.gov.uk/id/school/census/100867", "closeDate" : "Fri, 28 Nov 1997 00:00:00 GMT+0000", "districtAdministrative" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-district/00AY", "label" : "Lambeth"}
+      , "easting" : 529879, "establishmentName" : "Alpha Community School At Springfield Methodist Church", "establishmentNumber" : 6376, "establishmentStatus" : {"_about" : "http://education.data.gov.uk/def/school/EstablishmentStatus_Closed", "label" : "Closed"}
+      , "gender" : {"_about" : "http://education.data.gov.uk/def/school/Gender_Mixed", "label" : "Mixed"}
+      , "hasGOR" : "http://statistics.data.gov.uk/id/government-office-region/H", "investorInPeople" : {"_about" : "http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present", "label" : "Uninvolved at present"}
+      , "label" : "Alpha Community School At Springfield Methodist Church", "lastChangedDate" : "Fri, 5 Dec 2008 00:00:00 GMT+0000", "lat" : 51.47597, "localAuthority" : {"_about" : "http://statistics.data.gov.uk/id/local-education-authority/210", "label" : "Southwark"}
+      , "long" : -0.13122, "marketingOptInOut" : false, "northing" : 176879, "ofstedSpecialMeasures" : false, "openDate" : "Wed, 5 Jul 1989 23:00:00 GMT+0000", "parliamentaryConstituency" : {"_about" : "http://statistics.data.gov.uk/id/parliamentary-constituency/476", "label" : "Vauxhall"}
+      , "religiousCharacter" : {"_about" : "http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic", "label" : "Roman Catholic"}
+      , "specialClasses" : false, "specialPupils" : 0, "statutoryHighAge" : 11, "statutoryLowAge" : 4, "superannuationCategory" : {"_about" : "http://education.data.gov.uk/def/school/SuperannuationCategory_Not_Subject", "label" : "Not Subject"}
+      , "type" : [{"_about" : "http://education.data.gov.uk/def/school/School", "label" : "School"}
+      , {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School", "label" : "Other Independent School"}
+      ], "typeOfEstablishment" : {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School", "label" : "Other Independent School"}
+      , "uniqueReferenceNumber" : 100867, "urbanRural" : {"_about" : "http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse", "label" : "Urban > 10k - less sparse"}
+      , "vcard" : "http://api.talis.com/stores/govuk-education/items/1256678751412#self"}
+    , {"_about" : "http://education.data.gov.uk/id/school/100866", "FSM" : 0, "FSMPercentage" : 0, "LLSC" : {"_about" : "http://statistics.data.gov.uk/id/llsc/GL140", "label" : "London Central"}
+      , "LSOA" : {"_about" : "http://statistics.data.gov.uk/id/lsoa/E01004074", "label" : "Southwark 031D"}
+      , "MSOA" : {"_about" : "http://statistics.data.gov.uk/id/msoa/E02000837", "label" : "Southwark 031"}
+      , "PFI" : false, "SCUAlternativeEmail" : "vivien.tabone@hernehillschool.co.uk", "SCUpreferredemail" : "enquiries@hernehillschool.co.uk", "SENNoStat" : 10, "SENStat" : 0, "accomChange" : false, "actionFP" : "Sat, 25 Jan 2014 00:00:00 GMT+0000", "actionGEN" : "Fri, 9 Sep 2011 23:00:00 GMT+0000", "address" : "http://api.talis.com/stores/govuk-education/items/1259149807712#self", "administrativeWard" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-ward/00BEGZ", "label" : "Village"}
+      , "association" : {"_about" : "http://education.data.gov.uk/def/school/Association_ISA", "label" : "ISA"}
+      , "boarders" : {"_about" : "http://education.data.gov.uk/def/school/Boarders_No_Boarders", "label" : "No Boarders"}
+      , "burnhamGroup" : 0, "censusAreaStatisticWard" : {"_about" : "http://statistics.data.gov.uk/id/cas-ward/00BEGZ", "label" : "Village"}
+      , "censusRecord" : "http://education.data.gov.uk/id/school/census/100866", "compSchoolAge" : 98, "dateofLastFPVisit" : "Wed, 26 Apr 1989 23:00:00 GMT+0000", "dateofLastISIVisit" : "Thu, 9 Jun 2005 23:00:00 GMT+0000", "dateofLastOfstedVisit" : "Tue, 25 Jun 1996 23:00:00 GMT+0000", "districtAdministrative" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-district/00BE", "label" : "Southwark"}
+      , "easting" : 532186, "establishmentName" : "Herne Hill School", "establishmentNumber" : 6375, "establishmentStatus" : {"_about" : "http://education.data.gov.uk/def/school/EstablishmentStatus_Open", "label" : "Open"}
+      , "gender" : {"_about" : "http://education.data.gov.uk/def/school/Gender_Mixed", "label" : "Mixed"}
+      , "hasGOR" : "http://statistics.data.gov.uk/id/government-office-region/H", "highDayFee" : "http://api.talis.com/stores/govuk-education/items/1259139762471#self", "inspectorate" : {"_about" : "http://education.data.gov.uk/def/school/Inspectorate_ISI", "label" : "ISI"}
+      , "investorInPeople" : {"_about" : "http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present", "label" : "Uninvolved at present"}
+      , "label" : "Herne Hill School", "lastChangedDate" : "Tue, 17 Feb 2009 00:00:00 GMT+0000", "lat" : 51.45471, "localAuthority" : {"_about" : "http://statistics.data.gov.uk/id/local-education-authority/210", "label" : "Southwark"}
+      , "long" : -0.09888, "lowDayFee" : "http://api.talis.com/stores/govuk-education/items/1255465477331#self", "marketingOptInOut" : false, "nextHMIorISIvisit" : "Thu, 9 Jun 2011 23:00:00 GMT+0000", "northing" : 174572, "notes" : "ISI 6 yr review date Jun '11", "nurseryProvision" : true, "ofstedSpecialMeasures" : false, "openDate" : "Fri, 17 Feb 1989 00:00:00 GMT+0000", "parliamentaryConstituency" : {"_about" : "http://statistics.data.gov.uk/id/parliamentary-constituency/142", "label" : "Dulwich and West Norwood"}
+      , "pupilTeacherRatio" : "257:20:00", "schoolCapacity" : 275, "specialClasses" : false, "specialPupils" : 0, "statutoryHighAge" : 7, "statutoryLowAge" : 2, "superannuationCategory" : {"_about" : "http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967_accepted_schools_The_education_Grants_Music_and_Ballet_Schools_Regs_1981", "label" : "T(S) regs 1967 (accepted schools) The education (Grants) Music and Ballet Schools Regs 1981"}
+      , "totalPupilsFullTime" : "http://api.talis.com/stores/govuk-education/items/1259524821542#self", "totalPupilsPartTime" : "http://api.talis.com/stores/govuk-education/items/1258822388268#self", "type" : [{"_about" : "http://education.data.gov.uk/def/school/School", "label" : "School"}
+      , {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School", "label" : "Other Independent School"}
+      ], "typeOfEstablishment" : {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School", "label" : "Other Independent School"}
+      , "uniqueReferenceNumber" : 100866, "urbanRural" : {"_about" : "http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse", "label" : "Urban > 10k - less sparse"}
+      , "vcard" : "http://api.talis.com/stores/govuk-education/items/1257679070579#self"}
+    , {"_about" : "http://education.data.gov.uk/id/school/100864", "FSM" : 0, "FSMPercentage" : 0, "LLSC" : {"_about" : "http://statistics.data.gov.uk/id/llsc/GL140", "label" : "London Central"}
+      , "LSOA" : {"_about" : "http://statistics.data.gov.uk/id/lsoa/E01004072", "label" : "Southwark 030E"}
+      , "MSOA" : {"_about" : "http://statistics.data.gov.uk/id/msoa/E02000836", "label" : "Southwark 030"}
+      , "PFI" : false, "SCUpreferredemail" : "enquiries@alleyns.org.uk", "SENNoStat" : 12, "SENStat" : 3, "UKPRN" : 10008065, "accomChange" : true, "actionFP" : "Sat, 22 Nov 2014 00:00:00 GMT+0000", "actionGEN" : "Fri, 28 Feb 2014 00:00:00 GMT+0000", "address" : "http://api.talis.com/stores/govuk-education/items/1257393351762#self", "administrativeWard" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-ward/00BEGZ", "label" : "Village"}
+      , "association" : {"_about" : "http://education.data.gov.uk/def/school/Association_IAPS", "label" : "IAPS"}
+      , "boarders" : {"_about" : "http://education.data.gov.uk/def/school/Boarders_No_Boarders", "label" : "No Boarders"}
+      , "burnhamGroup" : 0, "burnhamReport" : {"_about" : "http://education.data.gov.uk/def/school/BurnhamReport_Independent_Schools", "label" : "Independent Schools"}
+      , "censusAreaStatisticWard" : {"_about" : "http://statistics.data.gov.uk/id/cas-ward/00BEGZ", "label" : "Village"}
+      , "censusRecord" : "http://education.data.gov.uk/id/school/census/100864", "charity" : {"_about" : "http://education.data.gov.uk/placeholder-id/charity/1057971", "label" : "Alleyn's School"}
+      , "compSchoolAge" : 1016, "dateofLastFPVisit" : "Thu, 6 Sep 2001 23:00:00 GMT+0000", "dateofLastISIVisit" : "Thu, 31 Jan 2008 00:00:00 GMT+0000", "dateofLastOfstedVisit" : "Mon, 7 Oct 1996 23:00:00 GMT+0000", "districtAdministrative" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-district/00BE", "label" : "Southwark"}
+      , "easting" : 533359, "establishmentName" : "Alleyn's School", "establishmentNumber" : 6312, "establishmentStatus" : {"_about" : "http://education.data.gov.uk/def/school/EstablishmentStatus_Open", "label" : "Open"}
+      , "gender" : {"_about" : "http://education.data.gov.uk/def/school/Gender_Mixed", "label" : "Mixed"}
+      , "hasGOR" : "http://statistics.data.gov.uk/id/government-office-region/H", "highDayFee" : "http://api.talis.com/stores/govuk-education/items/1258364749244#self", "inspectorate" : {"_about" : "http://education.data.gov.uk/def/school/Inspectorate_ISI", "label" : "ISI"}
+      , "investorInPeople" : {"_about" : "http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present", "label" : "Uninvolved at present"}
+      , "label" : "Alleyn's School", "lastChangedDate" : "Mon, 18 May 2009 23:00:00 GMT+0000", "lat" : 51.45478, "localAuthority" : {"_about" : "http://statistics.data.gov.uk/id/local-education-authority/210", "label" : "Southwark"}
+      , "long" : -0.08199, "lowDayFee" : "http://api.talis.com/stores/govuk-education/items/1259499546695#self", "marketingOptInOut" : false, "nextHMIorISIvisit" : "Fri, 31 Jan 2014 00:00:00 GMT+0000", "northing" : 174611, "notes" : "ISI 6 yr review date Feb '08.", "nurseryProvision" : false, "officialSixthForm" : true, "ofstedSpecialMeasures" : false, "openDate" : "Mon, 29 Sep 1980 23:00:00 GMT+0000", "parliamentaryConstituency" : {"_about" : "http://statistics.data.gov.uk/id/parliamentary-constituency/142", "label" : "Dulwich and West Norwood"}
+      , "pupilTeacherRatio" : "1187:140", "religiousCharacter" : {"_about" : "http://education.data.gov.uk/def/school/ReligiousCharacter_Church_of_England", "label" : "Church of England"}
+      , "schoolCapacity" : 1187, "specialClasses" : false, "specialPupils" : 0, "statutoryHighAge" : 18, "statutoryLowAge" : 4, "superannuationCategory" : {"_about" : "http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967_accepted_schools_The_education_Grants_Music_and_Ballet_Schools_Regs_1981", "label" : "T(S) regs 1967 (accepted schools) The education (Grants) Music and Ballet Schools Regs 1981"}
+      , "totalPupilsFullTime" : "http://api.talis.com/stores/govuk-education/items/1255802561452#self", "totalPupilsPartTime" : "http://api.talis.com/stores/govuk-education/items/1255335211666#self", "type" : [{"_about" : "http://education.data.gov.uk/def/school/School", "label" : "School"}
+      , {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School", "label" : "Other Independent School"}
+      ], "typeOfEstablishment" : {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School", "label" : "Other Independent School"}
+      , "uniqueReferenceNumber" : 100864, "urbanRural" : {"_about" : "http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse", "label" : "Urban > 10k - less sparse"}
+      , "vcard" : "http://api.talis.com/stores/govuk-education/items/1255905332866#self"}
+    , {"_about" : "http://education.data.gov.uk/id/school/100862", "FSM" : 0, "FSMPercentage" : 0, "LLSC" : {"_about" : "http://statistics.data.gov.uk/id/llsc/GL140", "label" : "London Central"}
+      , "LSOA" : {"_about" : "http://statistics.data.gov.uk/id/lsoa/E01003946", "label" : "Southwark 033B"}
+      , "MSOA" : {"_about" : "http://statistics.data.gov.uk/id/msoa/E02000839", "label" : "Southwark 033"}
+      , "PFI" : false, "SCUpreferredemail" : "headmaster@dcpslondon.org", "SENNoStat" : 142, "SENStat" : 0, "UKPRN" : 10015655, "accomChange" : true, "actionFP" : "Wed, 20 Aug 2014 23:00:00 GMT+0000", "actionGEN" : "Mon, 6 Feb 2012 00:00:00 GMT+0000", "actionWEL" : "Mon, 14 Jun 2010 23:00:00 GMT+0000", "address" : "http://api.talis.com/stores/govuk-education/items/1257779182886#self", "administrativeWard" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-ward/00BEGG", "label" : "College"}
+      , "association" : {"_about" : "http://education.data.gov.uk/def/school/Association_IAPS", "label" : "IAPS"}
+      , "boarders" : {"_about" : "http://education.data.gov.uk/def/school/Boarders_Boarding_School", "label" : "Boarding School"}
+      , "burnhamGroup" : 0, "censusAreaStatisticWard" : {"_about" : "http://statistics.data.gov.uk/id/cas-ward/00BEGG", "label" : "College"}
+      , "censusRecord" : "http://education.data.gov.uk/id/school/census/100862", "charity" : {"_about" : "http://education.data.gov.uk/placeholder-id/charity/312715", "label" : ["Dulwich College Prep School Trust", "Dulwich College Preparatory School Trust Ltd"]}
+      , "compSchoolAge" : 671, "dateofLastFPVisit" : "Thu, 16 Aug 2001 23:00:00 GMT+0000", "dateofLastISIVisit" : "Thu, 6 Nov 2008 00:00:00 GMT+0000", "dateofLastOfstedVisit" : "Tue, 7 Jun 1994 23:00:00 GMT+0000", "dateofLastWelfareVisit" : "Tue, 13 Mar 2007 00:00:00 GMT+0000", "districtAdministrative" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-district/00BE", "label" : "Southwark"}
+      , "easting" : 533196, "establishmentName" : "Dulwich College Preparatory School", "establishmentNumber" : 6001, "establishmentStatus" : {"_about" : "http://education.data.gov.uk/def/school/EstablishmentStatus_Open", "label" : "Open"}
+      , "gender" : {"_about" : "http://education.data.gov.uk/def/school/Gender_Boys", "label" : "Boys"}
+      , "hasGOR" : "http://statistics.data.gov.uk/id/government-office-region/H", "highBoardFee" : "http://api.talis.com/stores/govuk-education/items/1255392103660#self", "highDayFee" : "http://api.talis.com/stores/govuk-education/items/1255361132328#self", "inspectorate" : {"_about" : "http://education.data.gov.uk/def/school/Inspectorate_ISI", "label" : "ISI"}
+      , "investorInPeople" : {"_about" : "http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present", "label" : "Uninvolved at present"}
+      , "label" : "Dulwich College Preparatory School", "lastChangedDate" : "Sun, 19 Apr 2009 23:00:00 GMT+0000", "lat" : 51.4342, "localAuthority" : {"_about" : "http://statistics.data.gov.uk/id/local-education-authority/210", "label" : "Southwark"}
+      , "long" : -0.0852, "lowBoardFee" : "http://api.talis.com/stores/govuk-education/items/1258968246377#self", "lowDayFee" : "http://api.talis.com/stores/govuk-education/items/1255544466629#self", "marketingOptInOut" : false, "nextHMIorISIvisit" : "Sun, 6 Nov 2011 00:00:00 GMT+0000", "northing" : 172317, "nurseryProvision" : true, "ofstedSpecialMeasures" : false, "openDate" : "Thu, 1 Jan 1920 00:00:00 GMT+0000", "parliamentaryConstituency" : {"_about" : "http://statistics.data.gov.uk/id/parliamentary-constituency/142", "label" : "Dulwich and West Norwood"}
+      , "pupilTeacherRatio" : "280:27:00", "schoolCapacity" : 853, "specialClasses" : false, "specialPupils" : 0, "statutoryHighAge" : 14, "statutoryLowAge" : 2, "superannuationCategory" : {"_about" : "http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967_accepted_schools_The_education_Grants_Music_and_Ballet_Schools_Regs_1981", "label" : "T(S) regs 1967 (accepted schools) The education (Grants) Music and Ballet Schools Regs 1981"}
+      , "totalPupilsFullTime" : "http://api.talis.com/stores/govuk-education/items/1256065064090#self", "totalPupilsPartTime" : "http://api.talis.com/stores/govuk-education/items/1258697026843#self", "type" : [{"_about" : "http://education.data.gov.uk/def/school/School", "label" : "School"}
+      , {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School", "label" : "Other Independent School"}
+      ], "typeOfEstablishment" : {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School", "label" : "Other Independent School"}
+      , "uniqueReferenceNumber" : 100862, "urbanRural" : {"_about" : "http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse", "label" : "Urban > 10k - less sparse"}
+      , "vcard" : "http://api.talis.com/stores/govuk-education/items/1259142273386#self"}
+    , {"_about" : "http://education.data.gov.uk/id/school/100860", "EIC" : {"_about" : "http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary", "label" : "Southwark - Secondary"}
+      , "EICCLS" : true, "EICGroup" : {"_about" : "http://education.data.gov.uk/def/school/EICGroup_Phase_1_Secondary", "label" : "Phase 1 Secondary"}
+      , "FSM" : 167, "FSMPercentage" : 25, "LLSC" : {"_about" : "http://statistics.data.gov.uk/id/llsc/GL140", "label" : "London Central"}
+      , "LSOA" : {"_about" : "http://statistics.data.gov.uk/id/lsoa/E01003919", "label" : "Southwark 021A"}
+      , "MSOA" : {"_about" : "http://statistics.data.gov.uk/id/msoa/E02000827", "label" : "Southwark 021"}
+      , "PFI" : false, "SCUAlternativeEmail" : "dave.goddard@sacredheart.southwark.sch.uk", "SCUpreferredemail" : "office@sacredheart.southwark.sch.uk", "UKPRN" : 10010937, "address" : "http://api.talis.com/stores/govuk-education/items/1255302560316#self", "administrativeWard" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-ward/00BEGD", "label" : "Camberwell Green"}
+      , "admissionsPolicy" : {"_about" : "http://education.data.gov.uk/def/school/AdmissionsPolicy_Comprehensive", "label" : "Comprehensive"}
+      , "boarders" : {"_about" : "http://education.data.gov.uk/def/school/Boarders_No_Boarders", "label" : "No Boarders"}
+      , "burnhamGroup" : 4, "burnhamReport" : {"_about" : "http://education.data.gov.uk/def/school/BurnhamReport_Primary_Secondary_and_Nursery", "label" : "Primary, Secondary and Nursery"}
+      , "censusAreaStatisticWard" : {"_about" : "http://statistics.data.gov.uk/id/cas-ward/00BEGD", "label" : "Camberwell Green"}
+      , "censusRecord" : "http://education.data.gov.uk/id/school/census/100860", "diocese" : {"_about" : "http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark", "label" : "Archdiocese of Southwark"}
+      , "districtAdministrative" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-district/00BE", "label" : "Southwark"}
+      , "easting" : 532238, "establishmentName" : "Sacred Heart Roman Catholic Secondary School", "establishmentNumber" : 5405, "establishmentStatus" : {"_about" : "http://education.data.gov.uk/def/school/EstablishmentStatus_Open", "label" : "Open"}
+      , "gender" : {"_about" : "http://education.data.gov.uk/def/school/Gender_Mixed", "label" : "Mixed"}
+      , "hasGOR" : "http://statistics.data.gov.uk/id/government-office-region/H", "investorInPeople" : {"_about" : "http://education.data.gov.uk/def/school/InvestorInPeople_Committed_IiP_Status", "label" : "Committed IiP Status"}
+      , "label" : "Sacred Heart Roman Catholic Secondary School", "lastChangedDate" : "Mon, 17 Nov 2008 00:00:00 GMT+0000", "lat" : 51.47514, "leadershipIncentiveGrant" : true, "localAuthority" : {"_about" : "http://statistics.data.gov.uk/id/local-education-authority/210", "label" : "Southwark"}
+      , "long" : -0.09728, "mainSpecialism" : {"_about" : "http://education.data.gov.uk/def/school/MainSpecialism_Language_Operational", "label" : "Language (Operational)"}
+      , "marketingOptInOut" : false, "northing" : 176847, "officialSixthForm" : false, "ofstedLastInsp" : "Wed, 7 Feb 2007 00:00:00 GMT+0000", "ofstedSpecialMeasures" : false, "parliamentaryConstituency" : {"_about" : "http://statistics.data.gov.uk/id/parliamentary-constituency/088", "label" : "Camberwell and Peckham"}
+      , "phaseOfEducation" : {"_about" : "http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary", "label" : "Secondary"}
+      , "religiousCharacter" : {"_about" : "http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic", "label" : "Roman Catholic"}
+      , "schoolCapacity" : 600, "secondarySpecialism" : {"_about" : "http://education.data.gov.uk/def/school/SecondarySpecialism_Maths_and_Computing_second_specialism", "label" : "Maths and Computing second specialism"}
+      , "specialClasses" : false, "specialPupils" : 0, "statutoryHighAge" : 16, "statutoryLowAge" : 11, "superannuationCategory" : {"_about" : "http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967", "label" : "T(S) regs 1967"}
+      , "type" : [{"_about" : "http://education.data.gov.uk/def/school/School", "label" : "School"}
+      , {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School", "label" : "Voluntary Aided School"}
+      ], "typeOfEstablishment" : {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School", "label" : "Voluntary Aided School"}
+      , "uniqueReferenceNumber" : 100860, "urbanRural" : {"_about" : "http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse", "label" : "Urban > 10k - less sparse"}
+      , "vcard" : "http://api.talis.com/stores/govuk-education/items/1258164335098#self", "websiteAddress" : "www.sacredheart.southwark.sch.uk"}
+    , {"_about" : "http://education.data.gov.uk/id/school/100859", "EIC" : {"_about" : "http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary", "label" : "Southwark - Secondary"}
+      , "EICCLS" : false, "EICGroup" : {"_about" : "http://education.data.gov.uk/def/school/EICGroup_Phase_1_Secondary", "label" : "Phase 1 Secondary"}
+      , "FSM" : 161, "FSMPercentage" : 25, "HP_Leading_Option" : [{"_about" : "http://education.data.gov.uk/def/school/HP_Leading_Option_Leading_Edge", "label" : "Leading Edge"}
+      , {"_about" : "http://education.data.gov.uk/def/school/HP_Leading_Option_Raising_Achievement_Partnership_Programme_RAPP", "label" : "Raising Achievement Partnership Programme (RAPP)"}
+      ], "LLSC" : {"_about" : "http://statistics.data.gov.uk/id/llsc/GL140", "label" : "London Central"}
+      , "LSOA" : {"_about" : "http://statistics.data.gov.uk/id/lsoa/E01003930", "label" : "Southwark 005B"}
+      , "MSOA" : {"_about" : "http://statistics.data.gov.uk/id/msoa/E02000811", "label" : "Southwark 005"}
+      , "PFI" : false, "SCUAlternativeEmail" : "sam@notredame.southwark.sch.uk", "SCUpreferredemail" : "admin@notredame.southwark.sch.uk", "UKPRN" : 10016723, "address" : "http://api.talis.com/stores/govuk-education/items/1256959443292#self", "administrativeWard" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-ward/00BEGE", "label" : "Cathedrals"}
+      , "admissionsPolicy" : {"_about" : "http://education.data.gov.uk/def/school/AdmissionsPolicy_Comprehensive", "label" : "Comprehensive"}
+      , "boarders" : {"_about" : "http://education.data.gov.uk/def/school/Boarders_No_Boarders", "label" : "No Boarders"}
+      , "burnhamGroup" : 4, "burnhamReport" : {"_about" : "http://education.data.gov.uk/def/school/BurnhamReport_Primary_Secondary_and_Nursery", "label" : "Primary, Secondary and Nursery"}
+      , "censusAreaStatisticWard" : {"_about" : "http://statistics.data.gov.uk/id/cas-ward/00BEGE", "label" : "Cathedrals"}
+      , "censusRecord" : "http://education.data.gov.uk/id/school/census/100859", "diocese" : {"_about" : "http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark", "label" : "Archdiocese of Southwark"}
+      , "districtAdministrative" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-district/00BE", "label" : "Southwark"}
+      , "easting" : 531562, "establishmentName" : "Notre Dame Roman Catholic Girls' School", "establishmentNumber" : 5404, "establishmentStatus" : {"_about" : "http://education.data.gov.uk/def/school/EstablishmentStatus_Open", "label" : "Open"}
+      , "gender" : {"_about" : "http://education.data.gov.uk/def/school/Gender_Girls", "label" : "Girls"}
+      , "hasGOR" : "http://statistics.data.gov.uk/id/government-office-region/H", "investorInPeople" : {"_about" : "http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present", "label" : "Uninvolved at present"}
+      , "label" : "Notre Dame Roman Catholic Girls' School", "lastChangedDate" : "Sun, 10 May 2009 23:00:00 GMT+0000", "lat" : 51.49698, "leadershipIncentiveGrant" : true, "localAuthority" : {"_about" : "http://statistics.data.gov.uk/id/local-education-authority/210", "label" : "Southwark"}
+      , "long" : -0.10611, "mainSpecialism" : {"_about" : "http://education.data.gov.uk/def/school/MainSpecialism_Language_Operational", "label" : "Language (Operational)"}
+      , "marketingOptInOut" : false, "northing" : 179260, "officialSixthForm" : false, "ofstedLastInsp" : "Tue, 10 Jun 2008 23:00:00 GMT+0000", "ofstedSpecialMeasures" : false, "parliamentaryConstituency" : {"_about" : "http://statistics.data.gov.uk/id/parliamentary-constituency/319", "label" : "North Southwark and Bermondsey"}
+      , "phaseOfEducation" : {"_about" : "http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary", "label" : "Secondary"}
+      , "religiousCharacter" : {"_about" : "http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic", "label" : "Roman Catholic"}
+      , "schoolCapacity" : 620, "specialClasses" : false, "specialPupils" : 0, "statutoryHighAge" : 16, "statutoryLowAge" : 11, "superannuationCategory" : {"_about" : "http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967", "label" : "T(S) regs 1967"}
+      , "type" : [{"_about" : "http://education.data.gov.uk/def/school/School", "label" : "School"}
+      , {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School", "label" : "Voluntary Aided School"}
+      ], "typeOfEstablishment" : {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School", "label" : "Voluntary Aided School"}
+      , "uniqueReferenceNumber" : 100859, "urbanRural" : {"_about" : "http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse", "label" : "Urban > 10k - less sparse"}
+      , "vcard" : "http://api.talis.com/stores/govuk-education/items/1258088399958#self"}
+    , {"_about" : "http://education.data.gov.uk/id/school/100858", "EIC" : {"_about" : "http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary", "label" : "Southwark - Secondary"}
+      , "EICCLS" : false, "EICGroup" : {"_about" : "http://education.data.gov.uk/def/school/EICGroup_Phase_1_Secondary", "label" : "Phase 1 Secondary"}
+      , "FSM" : 188, "FSMPercentage" : 29, "HP_Leading_Option" : {"_about" : "http://education.data.gov.uk/def/school/HP_Leading_Option_Training_School", "label" : "Training School"}
+      , "LLSC" : {"_about" : "http://statistics.data.gov.uk/id/llsc/GL140", "label" : "London Central"}
+      , "LSOA" : {"_about" : "http://statistics.data.gov.uk/id/lsoa/E01004028", "label" : "Southwark 004E"}
+      , "MSOA" : {"_about" : "http://statistics.data.gov.uk/id/msoa/E02000810", "label" : "Southwark 004"}
+      , "PFI" : false, "SCUpreferredemail" : "contact@stmichaelsschool.org.uk", "UKPRN" : 10013573, "address" : "http://api.talis.com/stores/govuk-education/items/1255678802041#self", "administrativeWard" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-ward/00BEGS", "label" : "Riverside"}
+      , "admissionsPolicy" : {"_about" : "http://education.data.gov.uk/def/school/AdmissionsPolicy_Comprehensive", "label" : "Comprehensive"}
+      , "boarders" : {"_about" : "http://education.data.gov.uk/def/school/Boarders_No_Boarders", "label" : "No Boarders"}
+      , "burnhamGroup" : 4, "burnhamReport" : {"_about" : "http://education.data.gov.uk/def/school/BurnhamReport_Primary_Secondary_and_Nursery", "label" : "Primary, Secondary and Nursery"}
+      , "censusAreaStatisticWard" : {"_about" : "http://statistics.data.gov.uk/id/cas-ward/00BEGS", "label" : "Riverside"}
+      , "censusRecord" : "http://education.data.gov.uk/id/school/census/100858", "diocese" : {"_about" : "http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark", "label" : "Archdiocese of Southwark"}
+      , "districtAdministrative" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-district/00BE", "label" : "Southwark"}
+      , "easting" : 534205, "establishmentName" : "St Michael's RC School", "establishmentNumber" : 5403, "establishmentStatus" : {"_about" : "http://education.data.gov.uk/def/school/EstablishmentStatus_Open", "label" : "Open"}
+      , "gender" : {"_about" : "http://education.data.gov.uk/def/school/Gender_Mixed", "label" : "Mixed"}
+      , "hasGOR" : "http://statistics.data.gov.uk/id/government-office-region/H", "investorInPeople" : {"_about" : "http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present", "label" : "Uninvolved at present"}
+      , "label" : "St Michael's RC School", "lastChangedDate" : "Sun, 10 May 2009 23:00:00 GMT+0000", "lat" : 51.50045, "leadershipIncentiveGrant" : true, "localAuthority" : {"_about" : "http://statistics.data.gov.uk/id/local-education-authority/210", "label" : "Southwark"}
+      , "long" : -0.06789, "mainSpecialism" : {"_about" : "http://education.data.gov.uk/def/school/MainSpecialism_Business_and_Enterprise_Operational", "label" : "Business and Enterprise (Operational)"}
+      , "marketingOptInOut" : false, "northing" : 179715, "officialSixthForm" : false, "ofstedLastInsp" : "Mon, 8 Oct 2007 23:00:00 GMT+0000", "ofstedSpecialMeasures" : false, "parliamentaryConstituency" : {"_about" : "http://statistics.data.gov.uk/id/parliamentary-constituency/319", "label" : "North Southwark and Bermondsey"}
+      , "phaseOfEducation" : {"_about" : "http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary", "label" : "Secondary"}
+      , "religiousCharacter" : {"_about" : "http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic", "label" : "Roman Catholic"}
+      , "schoolCapacity" : 600, "secondarySpecialism" : {"_about" : "http://education.data.gov.uk/def/school/SecondarySpecialism_Language_second_specialism", "label" : "Language second specialism"}
+      , "specialClasses" : false, "specialPupils" : 0, "statutoryHighAge" : 16, "statutoryLowAge" : 11, "superannuationCategory" : {"_about" : "http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967", "label" : "T(S) regs 1967"}
+      , "type" : [{"_about" : "http://education.data.gov.uk/def/school/School", "label" : "School"}
+      , {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School", "label" : "Voluntary Aided School"}
+      ], "typeOfEstablishment" : {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School", "label" : "Voluntary Aided School"}
+      , "uniqueReferenceNumber" : 100858, "urbanRural" : {"_about" : "http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse", "label" : "Urban > 10k - less sparse"}
+      , "vcard" : "http://api.talis.com/stores/govuk-education/items/1257263556646#self"}
+    , {"_about" : "http://education.data.gov.uk/id/school/100857", "EIC" : {"_about" : "http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary", "label" : "Southwark - Secondary"}
+      , "EICCLS" : false, "EICGroup" : {"_about" : "http://education.data.gov.uk/def/school/EICGroup_Phase_1_Secondary", "label" : "Phase 1 Secondary"}
+      , "FSM" : 156, "FSMPercentage" : 22, "HP_Leading_Option" : {"_about" : "http://education.data.gov.uk/def/school/HP_Leading_Option_Training_School", "label" : "Training School"}
+      , "LLSC" : {"_about" : "http://statistics.data.gov.uk/id/llsc/GL140", "label" : "London Central"}
+      , "LSOA" : {"_about" : "http://statistics.data.gov.uk/id/lsoa/E01004004", "label" : "Southwark 023C"}
+      , "MSOA" : {"_about" : "http://statistics.data.gov.uk/id/msoa/E02000829", "label" : "Southwark 023"}
+      , "PFI" : false, "SCUAlternativeEmail" : "scowdry.staff@stac.southwark.sch.uk", "SCUpreferredemail" : "admin@stac.southwark.sch.uk", "UKPRN" : 10016208, "address" : "http://api.talis.com/stores/govuk-education/items/1255907598512#self", "administrativeWard" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-ward/00BEGP", "label" : "Nunhead"}
+      , "admissionsPolicy" : {"_about" : "http://education.data.gov.uk/def/school/AdmissionsPolicy_Comprehensive", "label" : "Comprehensive"}
+      , "boarders" : {"_about" : "http://education.data.gov.uk/def/school/Boarders_No_Boarders", "label" : "No Boarders"}
+      , "burnhamGroup" : 4, "burnhamReport" : {"_about" : "http://education.data.gov.uk/def/school/BurnhamReport_Primary_Secondary_and_Nursery", "label" : "Primary, Secondary and Nursery"}
+      , "censusAreaStatisticWard" : {"_about" : "http://statistics.data.gov.uk/id/cas-ward/00BEGP", "label" : "Nunhead"}
+      , "censusRecord" : "http://education.data.gov.uk/id/school/census/100857", "diocese" : {"_about" : "http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark", "label" : "Archdiocese of Southwark"}
+      , "districtAdministrative" : {"_about" : "http://statistics.data.gov.uk/id/local-authority-district/00BE", "label" : "Southwark"}
+      , "easting" : 535096, "establishmentName" : "The St Thomas the Apostle College", "establishmentNumber" : 5402, "establishmentStatus" : {"_about" : "http://education.data.gov.uk/def/school/EstablishmentStatus_Open", "label" : "Open"}
+      , "gender" : {"_about" : "http://education.data.gov.uk/def/school/Gender_Boys", "label" : "Boys"}
+      , "hasGOR" : "http://statistics.data.gov.uk/id/government-office-region/H", "investorInPeople" : {"_about" : "http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present", "label" : "Uninvolved at present"}
+      , "label" : "The St Thomas the Apostle College", "lastChangedDate" : "Mon, 16 Feb 2009 00:00:00 GMT+0000", "lat" : 51.47074, "leadershipIncentiveGrant" : true, "localAuthority" : {"_about" : "http://statistics.data.gov.uk/id/local-education-authority/210", "label" : "Southwark"}
+      , "long" : -0.05631, "mainSpecialism" : {"_about" : "http://education.data.gov.uk/def/school/MainSpecialism_Maths_and_Computing_Operational", "label" : "Maths and Computing (Operational)"}
+      , "marketingOptInOut" : false, "northing" : 176433, "officialSixthForm" : false, "ofstedLastInsp" : "Tue, 19 Jun 2007 23:00:00 GMT+0000", "ofstedSpecialMeasures" : false, "parliamentaryConstituency" : {"_about" : "http://statistics.data.gov.uk/id/parliamentary-constituency/088", "label" : "Camberwell and Peckham"}
+      , "phaseOfEducation" : {"_about" : "http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary", "label" : "Secondary"}
+      , "religiousCharacter" : {"_about" : "http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic", "label" : "Roman Catholic"}
+      , "schoolCapacity" : 750, "specialClasses" : false, "specialPupils" : 0, "statutoryHighAge" : 16, "statutoryLowAge" : 11, "superannuationCategory" : {"_about" : "http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967", "label" : "T(S) regs 1967"}
+      , "type" : [{"_about" : "http://education.data.gov.uk/def/school/School", "label" : "School"}
+      , {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School", "label" : "Voluntary Aided School"}
+      ], "typeOfEstablishment" : {"_about" : "http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School", "label" : "Voluntary Aided School"}
+      , "uniqueReferenceNumber" : 100857, "urbanRural" : {"_about" : "http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse", "label" : "Urban > 10k - less sparse"}
+      , "vcard" : "http://api.talis.com/stores/govuk-education/items/1258849890379#self"}
+    ], "itemsPerPage" : 10, "next" : "http://localhost:8080/elda/api/education/schools.json?_view=all&callback=answer&_page=1", "page" : 0, "startIndex" : 1, "type" : "http://purl.org/linked-data/api/vocab#Page"}
+}
+)

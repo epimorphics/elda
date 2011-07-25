@@ -1,0 +1,939 @@
+@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+@prefix spec:    <http://services.data.gov.uk/education/api#> .
+@prefix os:      <http://a9.com/-/spec/opensearch/1.1/> .
+@prefix geo:     <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix opmv:    <http://purl.org/net/opmv/types/common#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix ids:     <http://education.data.gov.uk/id/school/> .
+@prefix spatialrelations:  <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+@prefix sparql:  <http://purl.org/net/opmv/types/sparql#> .
+@prefix lda:     <http://purl.org/linked-data/api/vocab#> .
+@prefix extras:  <http://www.epimorphics.com/vocabularies/lda#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix school:  <http://education.data.gov.uk/def/school/> .
+@prefix dct:     <http://purl.org/dc/terms/> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xhv:     <http://www.w3.org/1999/xhtml/vocab#> .
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+
+<http://education.data.gov.uk/id/school/100864>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Alleyn's School" ;
+      spatialrelations:easting
+              533359 ;
+      spatialrelations:northing
+              174611 ;
+      school:FSM 0 ;
+      school:FSMPercentage
+              0 ;
+      school:LLSC <http://statistics.data.gov.uk/id/llsc/GL140> ;
+      school:LSOA <http://statistics.data.gov.uk/id/lsoa/E01004072> ;
+      school:MSOA <http://statistics.data.gov.uk/id/msoa/E02000836> ;
+      school:PFI "false"^^xsd:boolean ;
+      school:SCUpreferredemail
+              "enquiries@alleyns.org.uk" ;
+      school:SENNoStat 12 ;
+      school:SENStat 3 ;
+      school:UKPRN 10008065 ;
+      school:accomChange "true"^^xsd:boolean ;
+      school:actionFP "2014-11-22"^^xsd:date ;
+      school:actionGEN "2014-02-28"^^xsd:date ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1257393351762#self> ;
+      school:administrativeWard
+              <http://statistics.data.gov.uk/id/local-authority-ward/00BEGZ> ;
+      school:association school:Association_IAPS ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:burnhamGroup 0 ;
+      school:burnhamReport
+              school:BurnhamReport_Independent_Schools ;
+      school:censusAreaStatisticWard
+              <http://statistics.data.gov.uk/id/cas-ward/00BEGZ> ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100864> ;
+      school:charity <http://education.data.gov.uk/placeholder-id/charity/1057971> ;
+      school:compSchoolAge
+              1016 ;
+      school:dateofLastFPVisit
+              "2001-09-07"^^xsd:date ;
+      school:dateofLastISIVisit
+              "2008-01-31"^^xsd:date ;
+      school:dateofLastOfstedVisit
+              "1996-10-08"^^xsd:date ;
+      school:districtAdministrative
+              <http://statistics.data.gov.uk/id/local-authority-district/00BE> ;
+      school:establishmentName
+              "Alleyn's School" ;
+      school:establishmentNumber
+              6312 ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      school:gender school:Gender_Mixed ;
+      school:hasGOR <http://statistics.data.gov.uk/id/government-office-region/H> ;
+      school:highDayFee <http://api.talis.com/stores/govuk-education/items/1258364749244#self> ;
+      school:inspectorate school:Inspectorate_ISI ;
+      school:investorInPeople
+              school:InvestorInPeople_Uninvolved_at_present ;
+      school:lastChangedDate
+              "2009-05-19"^^xsd:date ;
+      school:localAuthority
+              <http://statistics.data.gov.uk/id/local-education-authority/210> ;
+      school:lowDayFee <http://api.talis.com/stores/govuk-education/items/1259499546695#self> ;
+      school:marketingOptInOut
+              "false"^^xsd:boolean ;
+      school:nextHMIorISIvisit
+              "2014-01-31"^^xsd:date ;
+      school:notes "ISI 6 yr review date Feb '08." ;
+      school:nurseryProvision
+              "false"^^xsd:boolean ;
+      school:officialSixthForm
+              "true"^^xsd:boolean ;
+      school:ofstedSpecialMeasures
+              "false"^^xsd:boolean ;
+      school:openDate "1980-09-30"^^xsd:date ;
+      school:parliamentaryConstituency
+              <http://statistics.data.gov.uk/id/parliamentary-constituency/142> ;
+      school:pupilTeacherRatio
+              "1187:140" ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Church_of_England ;
+      school:schoolCapacity
+              1187 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              18 ;
+      school:statutoryLowAge
+              4 ;
+      school:superannuationCategory
+              school:SuperannuationCategory_T_S_regs_1967_accepted_schools_The_education_Grants_Music_and_Ballet_Schools_Regs_1981 ;
+      school:totalPupilsFullTime
+              <http://api.talis.com/stores/govuk-education/items/1255802561452#self> ;
+      school:totalPupilsPartTime
+              <http://api.talis.com/stores/govuk-education/items/1255335211666#self> ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100864 ;
+      school:urbanRural school:UrbanRural_Urban_10k_less_sparse ;
+      school:vcard <http://api.talis.com/stores/govuk-education/items/1255905332866#self> ;
+      geo:lat 51.45478 ;
+      geo:long -0.08199 .
+
+<http://education.data.gov.uk/id/school/100860>
+      a       school:TypeOfEstablishment_Voluntary_Aided_School , school:School ;
+      rdfs:label "Sacred Heart Roman Catholic Secondary School" ;
+      spatialrelations:easting
+              532238 ;
+      spatialrelations:northing
+              176847 ;
+      school:EIC <http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary> ;
+      school:EICCLS "true"^^xsd:boolean ;
+      school:EICGroup school:EICGroup_Phase_1_Secondary ;
+      school:FSM 167 ;
+      school:FSMPercentage
+              25 ;
+      school:LLSC <http://statistics.data.gov.uk/id/llsc/GL140> ;
+      school:LSOA <http://statistics.data.gov.uk/id/lsoa/E01003919> ;
+      school:MSOA <http://statistics.data.gov.uk/id/msoa/E02000827> ;
+      school:PFI "false"^^xsd:boolean ;
+      school:SCUAlternativeEmail
+              "dave.goddard@sacredheart.southwark.sch.uk" ;
+      school:SCUpreferredemail
+              "office@sacredheart.southwark.sch.uk" ;
+      school:UKPRN 10010937 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1255302560316#self> ;
+      school:administrativeWard
+              <http://statistics.data.gov.uk/id/local-authority-ward/00BEGD> ;
+      school:admissionsPolicy
+              school:AdmissionsPolicy_Comprehensive ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:burnhamGroup 4 ;
+      school:burnhamReport
+              school:BurnhamReport_Primary_Secondary_and_Nursery ;
+      school:censusAreaStatisticWard
+              <http://statistics.data.gov.uk/id/cas-ward/00BEGD> ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100860> ;
+      school:diocese <http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark> ;
+      school:districtAdministrative
+              <http://statistics.data.gov.uk/id/local-authority-district/00BE> ;
+      school:establishmentName
+              "Sacred Heart Roman Catholic Secondary School" ;
+      school:establishmentNumber
+              5405 ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      school:gender school:Gender_Mixed ;
+      school:hasGOR <http://statistics.data.gov.uk/id/government-office-region/H> ;
+      school:investorInPeople
+              school:InvestorInPeople_Committed_IiP_Status ;
+      school:lastChangedDate
+              "2008-11-17"^^xsd:date ;
+      school:leadershipIncentiveGrant
+              "true"^^xsd:boolean ;
+      school:localAuthority
+              <http://statistics.data.gov.uk/id/local-education-authority/210> ;
+      school:mainSpecialism
+              school:MainSpecialism_Language_Operational ;
+      school:marketingOptInOut
+              "false"^^xsd:boolean ;
+      school:officialSixthForm
+              "false"^^xsd:boolean ;
+      school:ofstedLastInsp
+              "2007-02-07"^^xsd:date ;
+      school:ofstedSpecialMeasures
+              "false"^^xsd:boolean ;
+      school:parliamentaryConstituency
+              <http://statistics.data.gov.uk/id/parliamentary-constituency/088> ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:schoolCapacity
+              600 ;
+      school:secondarySpecialism
+              school:SecondarySpecialism_Maths_and_Computing_second_specialism ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              16 ;
+      school:statutoryLowAge
+              11 ;
+      school:superannuationCategory
+              school:SuperannuationCategory_T_S_regs_1967 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100860 ;
+      school:urbanRural school:UrbanRural_Urban_10k_less_sparse ;
+      school:vcard <http://api.talis.com/stores/govuk-education/items/1258164335098#self> ;
+      school:websiteAddress
+              "www.sacredheart.southwark.sch.uk" ;
+      geo:lat 51.47514 ;
+      geo:long -0.09728 .
+
+<http://localhost:8080/elda/api/education/schools.ttl?_view=description>
+      a       lda:ListEndpoint ;
+      dct:hasPart <http://localhost:8080/elda/api/education/schools.ttl?_view=description&_page=0> ;
+      lda:definition <http://localhost:8080/elda/api/meta/education/schools.ttl?_view=description> .
+
+<http://localhost:8080/elda/api/education/schools.ttl?_view=description&_page=0>
+      a       lda:Page ;
+      os:itemsPerPage "10"^^xsd:long ;
+      os:startIndex "1"^^xsd:long ;
+      dct:isPartOf <http://localhost:8080/elda/api/education/schools.ttl?_view=description> ;
+      lda:definition <http://localhost:8080/elda/api/meta/education/schools.ttl?_view=description> ;
+      lda:extendedMetadataVersion
+              <http://localhost:8080/elda/api/education/schools.ttl?_view=description&_page=0&_metadata=all> ;
+      lda:items (<http://education.data.gov.uk/id/school/100869> <http://education.data.gov.uk/id/school/100868> <http://education.data.gov.uk/id/school/100867> <http://education.data.gov.uk/id/school/100866> <http://education.data.gov.uk/id/school/100864> <http://education.data.gov.uk/id/school/100862> <http://education.data.gov.uk/id/school/100860> <http://education.data.gov.uk/id/school/100859> <http://education.data.gov.uk/id/school/100858> <http://education.data.gov.uk/id/school/100857>) ;
+      lda:page "0"^^xsd:long ;
+      xhv:first <http://localhost:8080/elda/api/education/schools.ttl?_view=description&_page=0> ;
+      xhv:next <http://localhost:8080/elda/api/education/schools.ttl?_view=description&_page=1> .
+
+<http://education.data.gov.uk/id/school/100862>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Dulwich College Preparatory School" ;
+      spatialrelations:easting
+              533196 ;
+      spatialrelations:northing
+              172317 ;
+      school:FSM 0 ;
+      school:FSMPercentage
+              0 ;
+      school:LLSC <http://statistics.data.gov.uk/id/llsc/GL140> ;
+      school:LSOA <http://statistics.data.gov.uk/id/lsoa/E01003946> ;
+      school:MSOA <http://statistics.data.gov.uk/id/msoa/E02000839> ;
+      school:PFI "false"^^xsd:boolean ;
+      school:SCUpreferredemail
+              "headmaster@dcpslondon.org" ;
+      school:SENNoStat 142 ;
+      school:SENStat 0 ;
+      school:UKPRN 10015655 ;
+      school:accomChange "true"^^xsd:boolean ;
+      school:actionFP "2014-08-21"^^xsd:date ;
+      school:actionGEN "2012-02-06"^^xsd:date ;
+      school:actionWEL "2010-06-15"^^xsd:date ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1257779182886#self> ;
+      school:administrativeWard
+              <http://statistics.data.gov.uk/id/local-authority-ward/00BEGG> ;
+      school:association school:Association_IAPS ;
+      school:boarders school:Boarders_Boarding_School ;
+      school:burnhamGroup 0 ;
+      school:censusAreaStatisticWard
+              <http://statistics.data.gov.uk/id/cas-ward/00BEGG> ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100862> ;
+      school:charity <http://education.data.gov.uk/placeholder-id/charity/312715> ;
+      school:compSchoolAge
+              671 ;
+      school:dateofLastFPVisit
+              "2001-08-17"^^xsd:date ;
+      school:dateofLastISIVisit
+              "2008-11-06"^^xsd:date ;
+      school:dateofLastOfstedVisit
+              "1994-06-08"^^xsd:date ;
+      school:dateofLastWelfareVisit
+              "2007-03-13"^^xsd:date ;
+      school:districtAdministrative
+              <http://statistics.data.gov.uk/id/local-authority-district/00BE> ;
+      school:establishmentName
+              "Dulwich College Preparatory School" ;
+      school:establishmentNumber
+              6001 ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      school:gender school:Gender_Boys ;
+      school:hasGOR <http://statistics.data.gov.uk/id/government-office-region/H> ;
+      school:highBoardFee <http://api.talis.com/stores/govuk-education/items/1255392103660#self> ;
+      school:highDayFee <http://api.talis.com/stores/govuk-education/items/1255361132328#self> ;
+      school:inspectorate school:Inspectorate_ISI ;
+      school:investorInPeople
+              school:InvestorInPeople_Uninvolved_at_present ;
+      school:lastChangedDate
+              "2009-04-20"^^xsd:date ;
+      school:localAuthority
+              <http://statistics.data.gov.uk/id/local-education-authority/210> ;
+      school:lowBoardFee <http://api.talis.com/stores/govuk-education/items/1258968246377#self> ;
+      school:lowDayFee <http://api.talis.com/stores/govuk-education/items/1255544466629#self> ;
+      school:marketingOptInOut
+              "false"^^xsd:boolean ;
+      school:nextHMIorISIvisit
+              "2011-11-06"^^xsd:date ;
+      school:nurseryProvision
+              "true"^^xsd:boolean ;
+      school:ofstedSpecialMeasures
+              "false"^^xsd:boolean ;
+      school:openDate "1920-01-01"^^xsd:date ;
+      school:parliamentaryConstituency
+              <http://statistics.data.gov.uk/id/parliamentary-constituency/142> ;
+      school:pupilTeacherRatio
+              "280:27:00" ;
+      school:schoolCapacity
+              853 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              14 ;
+      school:statutoryLowAge
+              2 ;
+      school:superannuationCategory
+              school:SuperannuationCategory_T_S_regs_1967_accepted_schools_The_education_Grants_Music_and_Ballet_Schools_Regs_1981 ;
+      school:totalPupilsFullTime
+              <http://api.talis.com/stores/govuk-education/items/1256065064090#self> ;
+      school:totalPupilsPartTime
+              <http://api.talis.com/stores/govuk-education/items/1258697026843#self> ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100862 ;
+      school:urbanRural school:UrbanRural_Urban_10k_less_sparse ;
+      school:vcard <http://api.talis.com/stores/govuk-education/items/1259142273386#self> ;
+      geo:lat 51.43420 ;
+      geo:long -0.08520 .
+
+<http://education.data.gov.uk/id/school/100869>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Southwark Small School" ;
+      spatialrelations:easting
+              533552 ;
+      spatialrelations:northing
+              175275 ;
+      school:LLSC <http://statistics.data.gov.uk/id/llsc/GL140> ;
+      school:LSOA <http://statistics.data.gov.uk/id/lsoa/E01003953> ;
+      school:MSOA <http://statistics.data.gov.uk/id/msoa/E02000834> ;
+      school:PFI "false"^^xsd:boolean ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1255726359770#self> ;
+      school:administrativeWard
+              <http://statistics.data.gov.uk/id/local-authority-ward/00BEGH> ;
+      school:admissionsPolicy
+              school:AdmissionsPolicy_Non-selective ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:burnhamGroup 0 ;
+      school:censusAreaStatisticWard
+              <http://statistics.data.gov.uk/id/cas-ward/00BEGH> ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100869> ;
+      school:closeDate "1998-05-01"^^xsd:date ;
+      school:districtAdministrative
+              <http://statistics.data.gov.uk/id/local-authority-district/00BE> ;
+      school:establishmentName
+              "Southwark Small School" ;
+      school:establishmentNumber
+              6385 ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Closed ;
+      school:gender school:Gender_Mixed ;
+      school:hasGOR <http://statistics.data.gov.uk/id/government-office-region/H> ;
+      school:investorInPeople
+              school:InvestorInPeople_Uninvolved_at_present ;
+      school:lastChangedDate
+              "2008-02-27"^^xsd:date ;
+      school:localAuthority
+              <http://statistics.data.gov.uk/id/local-education-authority/210> ;
+      school:marketingOptInOut
+              "false"^^xsd:boolean ;
+      school:ofstedSpecialMeasures
+              "false"^^xsd:boolean ;
+      school:parliamentaryConstituency
+              <http://statistics.data.gov.uk/id/parliamentary-constituency/142> ;
+      school:religiousCharacter
+              school:ReligiousCharacter_None ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              11 ;
+      school:statutoryLowAge
+              3 ;
+      school:superannuationCategory
+              school:SuperannuationCategory_Not_Subject ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100869 ;
+      school:urbanRural school:UrbanRural_Urban_10k_less_sparse ;
+      school:vcard <http://api.talis.com/stores/govuk-education/items/1258344546303#self> ;
+      geo:lat 51.46070 ;
+      geo:long -0.07897 .
+
+<http://education.data.gov.uk/id/school/100857>
+      a       school:TypeOfEstablishment_Voluntary_Aided_School , school:School ;
+      rdfs:label "The St Thomas the Apostle College" ;
+      spatialrelations:easting
+              535096 ;
+      spatialrelations:northing
+              176433 ;
+      school:EIC <http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary> ;
+      school:EICCLS "false"^^xsd:boolean ;
+      school:EICGroup school:EICGroup_Phase_1_Secondary ;
+      school:FSM 156 ;
+      school:FSMPercentage
+              22 ;
+      school:HP_Leading_Option
+              school:HP_Leading_Option_Training_School ;
+      school:LLSC <http://statistics.data.gov.uk/id/llsc/GL140> ;
+      school:LSOA <http://statistics.data.gov.uk/id/lsoa/E01004004> ;
+      school:MSOA <http://statistics.data.gov.uk/id/msoa/E02000829> ;
+      school:PFI "false"^^xsd:boolean ;
+      school:SCUAlternativeEmail
+              "scowdry.staff@stac.southwark.sch.uk" ;
+      school:SCUpreferredemail
+              "admin@stac.southwark.sch.uk" ;
+      school:UKPRN 10016208 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1255907598512#self> ;
+      school:administrativeWard
+              <http://statistics.data.gov.uk/id/local-authority-ward/00BEGP> ;
+      school:admissionsPolicy
+              school:AdmissionsPolicy_Comprehensive ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:burnhamGroup 4 ;
+      school:burnhamReport
+              school:BurnhamReport_Primary_Secondary_and_Nursery ;
+      school:censusAreaStatisticWard
+              <http://statistics.data.gov.uk/id/cas-ward/00BEGP> ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100857> ;
+      school:diocese <http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark> ;
+      school:districtAdministrative
+              <http://statistics.data.gov.uk/id/local-authority-district/00BE> ;
+      school:establishmentName
+              "The St Thomas the Apostle College" ;
+      school:establishmentNumber
+              5402 ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      school:gender school:Gender_Boys ;
+      school:hasGOR <http://statistics.data.gov.uk/id/government-office-region/H> ;
+      school:investorInPeople
+              school:InvestorInPeople_Uninvolved_at_present ;
+      school:lastChangedDate
+              "2009-02-16"^^xsd:date ;
+      school:leadershipIncentiveGrant
+              "true"^^xsd:boolean ;
+      school:localAuthority
+              <http://statistics.data.gov.uk/id/local-education-authority/210> ;
+      school:mainSpecialism
+              school:MainSpecialism_Maths_and_Computing_Operational ;
+      school:marketingOptInOut
+              "false"^^xsd:boolean ;
+      school:officialSixthForm
+              "false"^^xsd:boolean ;
+      school:ofstedLastInsp
+              "2007-06-20"^^xsd:date ;
+      school:ofstedSpecialMeasures
+              "false"^^xsd:boolean ;
+      school:parliamentaryConstituency
+              <http://statistics.data.gov.uk/id/parliamentary-constituency/088> ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:schoolCapacity
+              750 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              16 ;
+      school:statutoryLowAge
+              11 ;
+      school:superannuationCategory
+              school:SuperannuationCategory_T_S_regs_1967 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100857 ;
+      school:urbanRural school:UrbanRural_Urban_10k_less_sparse ;
+      school:vcard <http://api.talis.com/stores/govuk-education/items/1258849890379#self> ;
+      geo:lat 51.47074 ;
+      geo:long -0.05631 .
+
+<http://education.data.gov.uk/id/school/100858>
+      a       school:TypeOfEstablishment_Voluntary_Aided_School , school:School ;
+      rdfs:label "St Michael's RC School" ;
+      spatialrelations:easting
+              534205 ;
+      spatialrelations:northing
+              179715 ;
+      school:EIC <http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary> ;
+      school:EICCLS "false"^^xsd:boolean ;
+      school:EICGroup school:EICGroup_Phase_1_Secondary ;
+      school:FSM 188 ;
+      school:FSMPercentage
+              29 ;
+      school:HP_Leading_Option
+              school:HP_Leading_Option_Training_School ;
+      school:LLSC <http://statistics.data.gov.uk/id/llsc/GL140> ;
+      school:LSOA <http://statistics.data.gov.uk/id/lsoa/E01004028> ;
+      school:MSOA <http://statistics.data.gov.uk/id/msoa/E02000810> ;
+      school:PFI "false"^^xsd:boolean ;
+      school:SCUpreferredemail
+              "contact@stmichaelsschool.org.uk" ;
+      school:UKPRN 10013573 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1255678802041#self> ;
+      school:administrativeWard
+              <http://statistics.data.gov.uk/id/local-authority-ward/00BEGS> ;
+      school:admissionsPolicy
+              school:AdmissionsPolicy_Comprehensive ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:burnhamGroup 4 ;
+      school:burnhamReport
+              school:BurnhamReport_Primary_Secondary_and_Nursery ;
+      school:censusAreaStatisticWard
+              <http://statistics.data.gov.uk/id/cas-ward/00BEGS> ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100858> ;
+      school:diocese <http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark> ;
+      school:districtAdministrative
+              <http://statistics.data.gov.uk/id/local-authority-district/00BE> ;
+      school:establishmentName
+              "St Michael's RC School" ;
+      school:establishmentNumber
+              5403 ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      school:gender school:Gender_Mixed ;
+      school:hasGOR <http://statistics.data.gov.uk/id/government-office-region/H> ;
+      school:investorInPeople
+              school:InvestorInPeople_Uninvolved_at_present ;
+      school:lastChangedDate
+              "2009-05-11"^^xsd:date ;
+      school:leadershipIncentiveGrant
+              "true"^^xsd:boolean ;
+      school:localAuthority
+              <http://statistics.data.gov.uk/id/local-education-authority/210> ;
+      school:mainSpecialism
+              school:MainSpecialism_Business_and_Enterprise_Operational ;
+      school:marketingOptInOut
+              "false"^^xsd:boolean ;
+      school:officialSixthForm
+              "false"^^xsd:boolean ;
+      school:ofstedLastInsp
+              "2007-10-09"^^xsd:date ;
+      school:ofstedSpecialMeasures
+              "false"^^xsd:boolean ;
+      school:parliamentaryConstituency
+              <http://statistics.data.gov.uk/id/parliamentary-constituency/319> ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:schoolCapacity
+              600 ;
+      school:secondarySpecialism
+              school:SecondarySpecialism_Language_second_specialism ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              16 ;
+      school:statutoryLowAge
+              11 ;
+      school:superannuationCategory
+              school:SuperannuationCategory_T_S_regs_1967 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100858 ;
+      school:urbanRural school:UrbanRural_Urban_10k_less_sparse ;
+      school:vcard <http://api.talis.com/stores/govuk-education/items/1257263556646#self> ;
+      geo:lat 51.50045 ;
+      geo:long -0.06789 .
+
+<http://education.data.gov.uk/id/school/100867>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Alpha Community School At Springfield Methodist Church" ;
+      spatialrelations:easting
+              529879 ;
+      spatialrelations:northing
+              176879 ;
+      school:LLSC <http://statistics.data.gov.uk/id/llsc/GL140> ;
+      school:LSOA <http://statistics.data.gov.uk/id/lsoa/E01003122> ;
+      school:MSOA <http://statistics.data.gov.uk/id/msoa/E02000621> ;
+      school:PFI "false"^^xsd:boolean ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1255520454328#self> ;
+      school:administrativeWard
+              <http://statistics.data.gov.uk/id/local-authority-ward/00AYGN> ;
+      school:admissionsPolicy
+              school:AdmissionsPolicy_Non-selective ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:burnhamGroup 0 ;
+      school:censusAreaStatisticWard
+              <http://statistics.data.gov.uk/id/cas-ward/00AYGN> ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100867> ;
+      school:closeDate "1997-11-28"^^xsd:date ;
+      school:districtAdministrative
+              <http://statistics.data.gov.uk/id/local-authority-district/00AY> ;
+      school:establishmentName
+              "Alpha Community School At Springfield Methodist Church" ;
+      school:establishmentNumber
+              6376 ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Closed ;
+      school:gender school:Gender_Mixed ;
+      school:hasGOR <http://statistics.data.gov.uk/id/government-office-region/H> ;
+      school:investorInPeople
+              school:InvestorInPeople_Uninvolved_at_present ;
+      school:lastChangedDate
+              "2008-12-05"^^xsd:date ;
+      school:localAuthority
+              <http://statistics.data.gov.uk/id/local-education-authority/210> ;
+      school:marketingOptInOut
+              "false"^^xsd:boolean ;
+      school:ofstedSpecialMeasures
+              "false"^^xsd:boolean ;
+      school:openDate "1989-07-06"^^xsd:date ;
+      school:parliamentaryConstituency
+              <http://statistics.data.gov.uk/id/parliamentary-constituency/476> ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              11 ;
+      school:statutoryLowAge
+              4 ;
+      school:superannuationCategory
+              school:SuperannuationCategory_Not_Subject ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100867 ;
+      school:urbanRural school:UrbanRural_Urban_10k_less_sparse ;
+      school:vcard <http://api.talis.com/stores/govuk-education/items/1256678751412#self> ;
+      geo:lat 51.47597 ;
+      geo:long -0.13122 .
+
+<http://education.data.gov.uk/id/school/100866>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Herne Hill School" ;
+      spatialrelations:easting
+              532186 ;
+      spatialrelations:northing
+              174572 ;
+      school:FSM 0 ;
+      school:FSMPercentage
+              0 ;
+      school:LLSC <http://statistics.data.gov.uk/id/llsc/GL140> ;
+      school:LSOA <http://statistics.data.gov.uk/id/lsoa/E01004074> ;
+      school:MSOA <http://statistics.data.gov.uk/id/msoa/E02000837> ;
+      school:PFI "false"^^xsd:boolean ;
+      school:SCUAlternativeEmail
+              "vivien.tabone@hernehillschool.co.uk" ;
+      school:SCUpreferredemail
+              "enquiries@hernehillschool.co.uk" ;
+      school:SENNoStat 10 ;
+      school:SENStat 0 ;
+      school:accomChange "false"^^xsd:boolean ;
+      school:actionFP "2014-01-25"^^xsd:date ;
+      school:actionGEN "2011-09-10"^^xsd:date ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1259149807712#self> ;
+      school:administrativeWard
+              <http://statistics.data.gov.uk/id/local-authority-ward/00BEGZ> ;
+      school:association school:Association_ISA ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:burnhamGroup 0 ;
+      school:censusAreaStatisticWard
+              <http://statistics.data.gov.uk/id/cas-ward/00BEGZ> ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100866> ;
+      school:compSchoolAge
+              98 ;
+      school:dateofLastFPVisit
+              "1989-04-27"^^xsd:date ;
+      school:dateofLastISIVisit
+              "2005-06-10"^^xsd:date ;
+      school:dateofLastOfstedVisit
+              "1996-06-26"^^xsd:date ;
+      school:districtAdministrative
+              <http://statistics.data.gov.uk/id/local-authority-district/00BE> ;
+      school:establishmentName
+              "Herne Hill School" ;
+      school:establishmentNumber
+              6375 ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      school:gender school:Gender_Mixed ;
+      school:hasGOR <http://statistics.data.gov.uk/id/government-office-region/H> ;
+      school:highDayFee <http://api.talis.com/stores/govuk-education/items/1259139762471#self> ;
+      school:inspectorate school:Inspectorate_ISI ;
+      school:investorInPeople
+              school:InvestorInPeople_Uninvolved_at_present ;
+      school:lastChangedDate
+              "2009-02-17"^^xsd:date ;
+      school:localAuthority
+              <http://statistics.data.gov.uk/id/local-education-authority/210> ;
+      school:lowDayFee <http://api.talis.com/stores/govuk-education/items/1255465477331#self> ;
+      school:marketingOptInOut
+              "false"^^xsd:boolean ;
+      school:nextHMIorISIvisit
+              "2011-06-10"^^xsd:date ;
+      school:notes "ISI 6 yr review date Jun '11" ;
+      school:nurseryProvision
+              "true"^^xsd:boolean ;
+      school:ofstedSpecialMeasures
+              "false"^^xsd:boolean ;
+      school:openDate "1989-02-17"^^xsd:date ;
+      school:parliamentaryConstituency
+              <http://statistics.data.gov.uk/id/parliamentary-constituency/142> ;
+      school:pupilTeacherRatio
+              "257:20:00" ;
+      school:schoolCapacity
+              275 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              7 ;
+      school:statutoryLowAge
+              2 ;
+      school:superannuationCategory
+              school:SuperannuationCategory_T_S_regs_1967_accepted_schools_The_education_Grants_Music_and_Ballet_Schools_Regs_1981 ;
+      school:totalPupilsFullTime
+              <http://api.talis.com/stores/govuk-education/items/1259524821542#self> ;
+      school:totalPupilsPartTime
+              <http://api.talis.com/stores/govuk-education/items/1258822388268#self> ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100866 ;
+      school:urbanRural school:UrbanRural_Urban_10k_less_sparse ;
+      school:vcard <http://api.talis.com/stores/govuk-education/items/1257679070579#self> ;
+      geo:lat 51.45471 ;
+      geo:long -0.09888 .
+
+<http://education.data.gov.uk/id/school/100868>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Hope Primary School" ;
+      spatialrelations:easting
+              533027 ;
+      spatialrelations:northing
+              177290 ;
+      school:LLSC <http://statistics.data.gov.uk/id/llsc/GL140> ;
+      school:LSOA <http://statistics.data.gov.uk/id/lsoa/E01003916> ;
+      school:MSOA <http://statistics.data.gov.uk/id/msoa/E02000826> ;
+      school:PFI "false"^^xsd:boolean ;
+      school:SCUpreferredemail
+              "ichtusprimarysc@btconnect.com" ;
+      school:SENNoStat 13 ;
+      school:SENStat 0 ;
+      school:accomChange "false"^^xsd:boolean ;
+      school:actionFP "2008-04-29"^^xsd:date ;
+      school:actionGEN "2006-07-30"^^xsd:date ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1256037002508#self> ;
+      school:administrativeWard
+              <http://statistics.data.gov.uk/id/local-authority-ward/00BEGC> ;
+      school:admissionsPolicy
+              school:AdmissionsPolicy_Non-selective ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:burnhamGroup 0 ;
+      school:censusAreaStatisticWard
+              <http://statistics.data.gov.uk/id/cas-ward/00BEGC> ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100868> ;
+      school:charity <http://education.data.gov.uk/placeholder-id/charity/1104973> ;
+      school:closeDate "2006-07-26"^^xsd:date ;
+      school:compSchoolAge
+              38 ;
+      school:dateofLastFPVisit
+              "2003-01-23"^^xsd:date ;
+      school:dateofLastOfstedVisit
+              "2000-12-04"^^xsd:date ;
+      school:districtAdministrative
+              <http://statistics.data.gov.uk/id/local-authority-district/00BE> ;
+      school:establishmentName
+              "Hope Primary School" ;
+      school:establishmentNumber
+              6383 ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Closed ;
+      school:gender school:Gender_Mixed ;
+      school:hasGOR <http://statistics.data.gov.uk/id/government-office-region/H> ;
+      school:highBoardFee <http://api.talis.com/stores/govuk-education/items/1257559279322#self> ;
+      school:highDayFee <http://api.talis.com/stores/govuk-education/items/1258577816699#self> ;
+      school:investorInPeople
+              school:InvestorInPeople_Uninvolved_at_present ;
+      school:lastChangedDate
+              "2008-12-05"^^xsd:date ;
+      school:localAuthority
+              <http://statistics.data.gov.uk/id/local-education-authority/210> ;
+      school:lowBoardFee <http://api.talis.com/stores/govuk-education/items/1256169110185#self> ;
+      school:lowDayFee <http://api.talis.com/stores/govuk-education/items/1256897046496#self> ;
+      school:marketingOptInOut
+              "false"^^xsd:boolean ;
+      school:nextHMIorISIvisit
+              "2006-09-01"^^xsd:date ;
+      school:notes "Check for closure as it is likely to close" ;
+      school:ofstedSpecialMeasures
+              "false"^^xsd:boolean ;
+      school:openDate "1992-01-21"^^xsd:date ;
+      school:parliamentaryConstituency
+              <http://statistics.data.gov.uk/id/parliamentary-constituency/088> ;
+      school:pupilTeacherRatio
+              "49:05:00" ;
+      school:reasonEstablishmentClosed
+              school:ReasonEstablishmentClosed_Closure ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Christian ;
+      school:schoolCapacity
+              49 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              10 ;
+      school:statutoryLowAge
+              5 ;
+      school:superannuationCategory
+              school:SuperannuationCategory_T_S_regs_1967 ;
+      school:totalPupilsFullTime
+              <http://api.talis.com/stores/govuk-education/items/1258304552797#self> ;
+      school:totalPupilsPartTime
+              <http://api.talis.com/stores/govuk-education/items/1256141030331#self> ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100868 ;
+      school:urbanRural school:UrbanRural_Urban_10k_less_sparse ;
+      school:vcard <http://api.talis.com/stores/govuk-education/items/1259294325459#self> ;
+      geo:lat 51.47893 ;
+      geo:long -0.08576 .
+
+<http://education.data.gov.uk/id/school/100859>
+      a       school:TypeOfEstablishment_Voluntary_Aided_School , school:School ;
+      rdfs:label "Notre Dame Roman Catholic Girls' School" ;
+      spatialrelations:easting
+              531562 ;
+      spatialrelations:northing
+              179260 ;
+      school:EIC <http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary> ;
+      school:EICCLS "false"^^xsd:boolean ;
+      school:EICGroup school:EICGroup_Phase_1_Secondary ;
+      school:FSM 161 ;
+      school:FSMPercentage
+              25 ;
+      school:HP_Leading_Option
+              school:HP_Leading_Option_Raising_Achievement_Partnership_Programme_RAPP , school:HP_Leading_Option_Leading_Edge ;
+      school:LLSC <http://statistics.data.gov.uk/id/llsc/GL140> ;
+      school:LSOA <http://statistics.data.gov.uk/id/lsoa/E01003930> ;
+      school:MSOA <http://statistics.data.gov.uk/id/msoa/E02000811> ;
+      school:PFI "false"^^xsd:boolean ;
+      school:SCUAlternativeEmail
+              "sam@notredame.southwark.sch.uk" ;
+      school:SCUpreferredemail
+              "admin@notredame.southwark.sch.uk" ;
+      school:UKPRN 10016723 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1256959443292#self> ;
+      school:administrativeWard
+              <http://statistics.data.gov.uk/id/local-authority-ward/00BEGE> ;
+      school:admissionsPolicy
+              school:AdmissionsPolicy_Comprehensive ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:burnhamGroup 4 ;
+      school:burnhamReport
+              school:BurnhamReport_Primary_Secondary_and_Nursery ;
+      school:censusAreaStatisticWard
+              <http://statistics.data.gov.uk/id/cas-ward/00BEGE> ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100859> ;
+      school:diocese <http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark> ;
+      school:districtAdministrative
+              <http://statistics.data.gov.uk/id/local-authority-district/00BE> ;
+      school:establishmentName
+              "Notre Dame Roman Catholic Girls' School" ;
+      school:establishmentNumber
+              5404 ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      school:gender school:Gender_Girls ;
+      school:hasGOR <http://statistics.data.gov.uk/id/government-office-region/H> ;
+      school:investorInPeople
+              school:InvestorInPeople_Uninvolved_at_present ;
+      school:lastChangedDate
+              "2009-05-11"^^xsd:date ;
+      school:leadershipIncentiveGrant
+              "true"^^xsd:boolean ;
+      school:localAuthority
+              <http://statistics.data.gov.uk/id/local-education-authority/210> ;
+      school:mainSpecialism
+              school:MainSpecialism_Language_Operational ;
+      school:marketingOptInOut
+              "false"^^xsd:boolean ;
+      school:officialSixthForm
+              "false"^^xsd:boolean ;
+      school:ofstedLastInsp
+              "2008-06-11"^^xsd:date ;
+      school:ofstedSpecialMeasures
+              "false"^^xsd:boolean ;
+      school:parliamentaryConstituency
+              <http://statistics.data.gov.uk/id/parliamentary-constituency/319> ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:schoolCapacity
+              620 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              16 ;
+      school:statutoryLowAge
+              11 ;
+      school:superannuationCategory
+              school:SuperannuationCategory_T_S_regs_1967 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100859 ;
+      school:urbanRural school:UrbanRural_Urban_10k_less_sparse ;
+      school:vcard <http://api.talis.com/stores/govuk-education/items/1258088399958#self> ;
+      geo:lat 51.49698 ;
+      geo:long -0.10611 .

@@ -1,0 +1,4 @@
+schools-xml-medium-A;xml;http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-easting=533552
+schools-xml-medium-B;xml;http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-northing=175275
+schools-xml-medium-C;xml;http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-establishmentNumber=6385
+schools-xml-medium-D;xml;http://localhost:8080/elda/api/education/schools.xml?_view=medium&min-uniqueReferenceNumber=100869

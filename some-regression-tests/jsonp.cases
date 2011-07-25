@@ -1,0 +1,6 @@
+schools-jsonp-medium;json;http://localhost:8080/elda/api/education/schools.json?_view=medium&callback=answer
+schools-jsonp-basic;json;http://localhost:8080/elda/api/education/schools.json?_view=basic&callback=answer
+schools-jsonp-all;json;http://localhost:8080/elda/api/education/schools.json?_view=all&callback=answer
+schools-jsonp-description;json;http://localhost:8080/elda/api/education/schools.json?_view=description&callback=answer
+schools-jsonp-short;json;http://localhost:8080/elda/api/education/schools.json?_view=short&callback=answer
+schools-jsonp-geo;json;http://localhost:8080/elda/api/education/schools.json?_view=geo&callback=answer

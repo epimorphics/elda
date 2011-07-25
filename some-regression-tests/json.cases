@@ -1,0 +1,6 @@
+schools-json-medium;json;http://localhost:8080/elda/api/education/schools.json?_view=medium
+schools-json-basic;json;http://localhost:8080/elda/api/education/schools.json?_view=basic
+schools-json-all;json;http://localhost:8080/elda/api/education/schools.json?_view=all
+schools-json-description;json;http://localhost:8080/elda/api/education/schools.json?_view=description
+schools-json-short;json;http://localhost:8080/elda/api/education/schools.json?_view=short
+schools-json-geo;json;http://localhost:8080/elda/api/education/schools.json?_view=geo

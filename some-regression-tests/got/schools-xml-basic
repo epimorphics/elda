@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><result format="linked-data-api" href="http://localhost:8080/elda/api/education/schools.xml?_view=basic&amp;_page=0" version="0.2">
+  <definition href="http://localhost:8080/elda/api/meta/education/schools.xml?_view=basic"/>
+  <extendedMetadataVersion href="http://localhost:8080/elda/api/education/schools.xml?_view=basic&amp;_page=0&amp;_metadata=all"/>
+  <first href="http://localhost:8080/elda/api/education/schools.xml?_view=basic&amp;_page=0"/>
+  <isPartOf href="http://localhost:8080/elda/api/education/schools.xml?_view=basic">
+    <definition href="http://localhost:8080/elda/api/meta/education/schools.xml?_view=basic"/>
+    <part href="http://localhost:8080/elda/api/education/schools.xml?_view=basic&amp;_page=0"/>
+    <type>
+      <item href="http://purl.org/linked-data/api/vocab#ListEndpoint"/>
+    </type>
+  </isPartOf>
+  <items>
+    <item href="http://education.data.gov.uk/id/school/100869">
+      <label>Southwark Small School</label>
+      <type>
+        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+      </type>
+    </item>
+    <item href="http://education.data.gov.uk/id/school/100868">
+      <label>Hope Primary School</label>
+      <type>
+        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+      </type>
+    </item>
+    <item href="http://education.data.gov.uk/id/school/100867">
+      <label>Alpha Community School At Springfield Methodist Church</label>
+      <type>
+        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+      </type>
+    </item>
+    <item href="http://education.data.gov.uk/id/school/100866">
+      <label>Herne Hill School</label>
+      <type>
+        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+      </type>
+    </item>
+    <item href="http://education.data.gov.uk/id/school/100864">
+      <label>Alleyn's School</label>
+      <type>
+        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+      </type>
+    </item>
+    <item href="http://education.data.gov.uk/id/school/100862">
+      <label>Dulwich College Preparatory School</label>
+      <type>
+        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+      </type>
+    </item>
+    <item href="http://education.data.gov.uk/id/school/100860">
+      <label>Sacred Heart Roman Catholic Secondary School</label>
+      <type>
+        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+      </type>
+    </item>
+    <item href="http://education.data.gov.uk/id/school/100859">
+      <label>Notre Dame Roman Catholic Girls' School</label>
+      <type>
+        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+      </type>
+    </item>
+    <item href="http://education.data.gov.uk/id/school/100858">
+      <label>St Michael's RC School</label>
+      <type>
+        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+      </type>
+    </item>
+    <item href="http://education.data.gov.uk/id/school/100857">
+      <label>The St Thomas the Apostle College</label>
+      <type>
+        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+      </type>
+    </item>
+  </items>
+  <itemsPerPage datatype="long">10</itemsPerPage>
+  <next href="http://localhost:8080/elda/api/education/schools.xml?_view=basic&amp;_page=1"/>
+  <page datatype="long">0</page>
+  <startIndex datatype="long">1</startIndex>
+  <type>
+    <item href="http://purl.org/linked-data/api/vocab#Page"/>
+  </type>
+</result>

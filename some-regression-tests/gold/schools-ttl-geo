@@ -1,0 +1,117 @@
+@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+@prefix spec:    <http://services.data.gov.uk/education/api#> .
+@prefix os:      <http://a9.com/-/spec/opensearch/1.1/> .
+@prefix geo:     <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix opmv:    <http://purl.org/net/opmv/types/common#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix ids:     <http://education.data.gov.uk/id/school/> .
+@prefix spatialrelations:  <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+@prefix sparql:  <http://purl.org/net/opmv/types/sparql#> .
+@prefix lda:     <http://purl.org/linked-data/api/vocab#> .
+@prefix extras:  <http://www.epimorphics.com/vocabularies/lda#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix school:  <http://education.data.gov.uk/def/school/> .
+@prefix dct:     <http://purl.org/dc/terms/> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xhv:     <http://www.w3.org/1999/xhtml/vocab#> .
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+
+<http://education.data.gov.uk/id/school/100864>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Alleyn's School" ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      geo:lat 51.45478 ;
+      geo:long -0.08199 .
+
+<http://education.data.gov.uk/id/school/100860>
+      a       school:TypeOfEstablishment_Voluntary_Aided_School , school:School ;
+      rdfs:label "Sacred Heart Roman Catholic Secondary School" ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      geo:lat 51.47514 ;
+      geo:long -0.09728 .
+
+<http://education.data.gov.uk/id/school/100862>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Dulwich College Preparatory School" ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      geo:lat 51.43420 ;
+      geo:long -0.08520 .
+
+<http://localhost:8080/elda/api/education/schools.ttl?_view=geo>
+      a       lda:ListEndpoint ;
+      dct:hasPart <http://localhost:8080/elda/api/education/schools.ttl?_view=geo&_page=0> ;
+      lda:definition <http://localhost:8080/elda/api/meta/education/schools.ttl?_view=geo> .
+
+<http://localhost:8080/elda/api/education/schools.ttl?_view=geo&_page=0>
+      a       lda:Page ;
+      os:itemsPerPage "10"^^xsd:long ;
+      os:startIndex "1"^^xsd:long ;
+      dct:isPartOf <http://localhost:8080/elda/api/education/schools.ttl?_view=geo> ;
+      lda:definition <http://localhost:8080/elda/api/meta/education/schools.ttl?_view=geo> ;
+      lda:extendedMetadataVersion
+              <http://localhost:8080/elda/api/education/schools.ttl?_view=geo&_page=0&_metadata=all> ;
+      lda:items (<http://education.data.gov.uk/id/school/100869> <http://education.data.gov.uk/id/school/100868> <http://education.data.gov.uk/id/school/100867> <http://education.data.gov.uk/id/school/100866> <http://education.data.gov.uk/id/school/100864> <http://education.data.gov.uk/id/school/100862> <http://education.data.gov.uk/id/school/100860> <http://education.data.gov.uk/id/school/100859> <http://education.data.gov.uk/id/school/100858> <http://education.data.gov.uk/id/school/100857>) ;
+      lda:page "0"^^xsd:long ;
+      xhv:first <http://localhost:8080/elda/api/education/schools.ttl?_view=geo&_page=0> ;
+      xhv:next <http://localhost:8080/elda/api/education/schools.ttl?_view=geo&_page=1> .
+
+<http://education.data.gov.uk/id/school/100869>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Southwark Small School" ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Closed ;
+      geo:lat 51.46070 ;
+      geo:long -0.07897 .
+
+<http://education.data.gov.uk/id/school/100857>
+      a       school:TypeOfEstablishment_Voluntary_Aided_School , school:School ;
+      rdfs:label "The St Thomas the Apostle College" ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      geo:lat 51.47074 ;
+      geo:long -0.05631 .
+
+<http://education.data.gov.uk/id/school/100858>
+      a       school:TypeOfEstablishment_Voluntary_Aided_School , school:School ;
+      rdfs:label "St Michael's RC School" ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      geo:lat 51.50045 ;
+      geo:long -0.06789 .
+
+<http://education.data.gov.uk/id/school/100867>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Alpha Community School At Springfield Methodist Church" ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Closed ;
+      geo:lat 51.47597 ;
+      geo:long -0.13122 .
+
+<http://education.data.gov.uk/id/school/100866>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Herne Hill School" ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      geo:lat 51.45471 ;
+      geo:long -0.09888 .
+
+<http://education.data.gov.uk/id/school/100868>
+      a       school:TypeOfEstablishment_Other_Independent_School , school:School ;
+      rdfs:label "Hope Primary School" ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Closed ;
+      geo:lat 51.47893 ;
+      geo:long -0.08576 .
+
+<http://education.data.gov.uk/id/school/100859>
+      a       school:TypeOfEstablishment_Voluntary_Aided_School , school:School ;
+      rdfs:label "Notre Dame Roman Catholic Girls' School" ;
+      school:establishmentStatus
+              school:EstablishmentStatus_Open ;
+      geo:lat 51.49698 ;
+      geo:long -0.10611 .

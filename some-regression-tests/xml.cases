@@ -1,0 +1,6 @@
+schools-xml-medium;xml;http://localhost:8080/elda/api/education/schools.xml?_view=medium
+schools-xml-basic;xml;http://localhost:8080/elda/api/education/schools.xml?_view=basic
+schools-xml-all;xml;http://localhost:8080/elda/api/education/schools.xml?_view=all
+schools-xml-description;xml;http://localhost:8080/elda/api/education/schools.xml?_view=description
+schools-xml-short;xml;http://localhost:8080/elda/api/education/schools.xml?_view=short
+schools-xml-geo;xml;http://localhost:8080/elda/api/education/schools.xml?_view=geo

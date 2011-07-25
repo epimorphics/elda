@@ -1,0 +1,13 @@
+{ "format" : "linked-data-api", "version" : "0.2", "result" : {"_about" : "http://localhost:8080/elda/api/education/schools.json?_view=basic&_page=0", "definition" : "http://localhost:8080/elda/api/meta/education/schools.json?_view=basic", "extendedMetadataVersion" : "http://localhost:8080/elda/api/education/schools.json?_view=basic&_page=0&_metadata=all", "first" : "http://localhost:8080/elda/api/education/schools.json?_view=basic&_page=0", "isPartOf" : {"_about" : "http://localhost:8080/elda/api/education/schools.json?_view=basic", "definition" : "http://localhost:8080/elda/api/meta/education/schools.json?_view=basic", "hasPart" : "http://localhost:8080/elda/api/education/schools.json?_view=basic&_page=0", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint"}
+    , "items" : [{"_about" : "http://education.data.gov.uk/id/school/100869", "label" : "Southwark Small School", "type" : ["School", "Type_Other_Independent_School"]}
+    , {"_about" : "http://education.data.gov.uk/id/school/100868", "label" : "Hope Primary School", "type" : ["School", "Type_Other_Independent_School"]}
+    , {"_about" : "http://education.data.gov.uk/id/school/100867", "label" : "Alpha Community School At Springfield Methodist Church", "type" : ["School", "Type_Other_Independent_School"]}
+    , {"_about" : "http://education.data.gov.uk/id/school/100866", "label" : "Herne Hill School", "type" : ["School", "Type_Other_Independent_School"]}
+    , {"_about" : "http://education.data.gov.uk/id/school/100864", "label" : "Alleyn's School", "type" : ["School", "Type_Other_Independent_School"]}
+    , {"_about" : "http://education.data.gov.uk/id/school/100862", "label" : "Dulwich College Preparatory School", "type" : ["School", "Type_Other_Independent_School"]}
+    , {"_about" : "http://education.data.gov.uk/id/school/100860", "label" : "Sacred Heart Roman Catholic Secondary School", "type" : ["School", "Type_Voluntary_Aided_School"]}
+    , {"_about" : "http://education.data.gov.uk/id/school/100859", "label" : "Notre Dame Roman Catholic Girls' School", "type" : ["School", "Type_Voluntary_Aided_School"]}
+    , {"_about" : "http://education.data.gov.uk/id/school/100858", "label" : "St Michael's RC School", "type" : ["School", "Type_Voluntary_Aided_School"]}
+    , {"_about" : "http://education.data.gov.uk/id/school/100857", "label" : "The St Thomas the Apostle College", "type" : ["School", "Type_Voluntary_Aided_School"]}
+    ], "itemsPerPage" : 10, "next" : "http://localhost:8080/elda/api/education/schools.json?_view=basic&_page=1", "page" : 0, "startIndex" : 1, "type" : "http://purl.org/linked-data/api/vocab#Page"}
+}
