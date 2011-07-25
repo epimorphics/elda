@@ -105,19 +105,27 @@ import com.hp.hpl.jena.shared.WrappedException;
         Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
         String type = match == matchAll ? null : pathAndType.b;
         if (match == null) {
-        	String preamble = ui.getBaseUri().toASCIIString();
-            String message = "Could not find anything matching " + ("/" + pathstub);
-            if (pathAndType.b != null) message += " (perhaps '" + pathAndType.b + "' is an incorrect format name?)";
-            message += "<div style='margin-bottom: 2px'>you might have meant any of:</div>\n";
-            for (String template: reversed(router.templates())) {
-            	message += "\n<div style='margin-left: 2ex'>" + maybeLink(preamble, template) + "</div>";
-            }
-			return returnNotFound( message + "\n", "/" + pathstub );
+        	return noMatchFound( pathstub, ui, pathAndType );
         } else {
             List<MediaType> mediaTypes = getAcceptableMediaTypes( headers );
             return runEndpoint( servCon, ui, mediaTypes, type, match ); 
         }
     }
+    
+    protected static final boolean showMightHaveMeant = false;
+
+	private Response noMatchFound( String pathstub, UriInfo ui, Couple<String, String> pathAndType ) {
+		String preamble = ui.getBaseUri().toASCIIString();
+		String message = "Could not find anything matching " + ("/" + pathstub);
+		if (pathAndType.b != null) message += " (perhaps '" + pathAndType.b + "' is an incorrect format name?)";
+		if (showMightHaveMeant) {
+			message += "<div style='margin-bottom: 2px'>you might have meant any of:</div>\n";
+			for (String template: reversed(router.templates())) {
+				message += "\n<div style='margin-left: 2ex'>" + maybeLink(preamble, template) + "</div>";
+			}
+		}
+		return returnNotFound( message + "\n", "/" + pathstub );
+	}
     
     private String maybeLink( String preamble, String template ) {
     	if (template.contains( "{")) return template;
