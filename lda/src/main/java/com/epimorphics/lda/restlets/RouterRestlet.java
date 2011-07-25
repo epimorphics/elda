@@ -322,7 +322,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 	}
 
 	private Response buildErrorResponse( EldaException e ) {
-		return enableCORS( Response.status(e.code) )
+		return enableCORS( Response.status( e.code ) )
 			.entity( niceMessage( e ) )
 			.build()
 			;

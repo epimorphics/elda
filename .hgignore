@@ -20,6 +20,9 @@ syntax: regexp
 ^lda/scratch/ian\.ttl$
 
 syntax: regexp
+^some-regression-tests/got/*
+
+syntax: regexp
 ^LOCAL/.*
 ^deliver-elda/delivery/.*
 ^deliver-elda/elda.jar
