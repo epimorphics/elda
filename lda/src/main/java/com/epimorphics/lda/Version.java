@@ -9,5 +9,5 @@ package com.epimorphics.lda;
  *
  */
 public interface Version {
-	public final String string = "1.1.8";
+	public final String string = "1.1.9-SNAPSHOT";
 }
