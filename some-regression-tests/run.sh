@@ -1,6 +1,8 @@
 #!/bin/bash
 
 rm -f wgetlog
+mkdir -p got
+rm -f got/*
 
 for data in *.cases; do
     cat $data | while read x
