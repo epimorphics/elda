@@ -203,7 +203,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             if (log.isDebugEnabled())log.debug( shortStackTrace( e ) );
             return returnNotFound("Failed to parse query request : " + e.getMessage());
         } catch (Throwable e) {
-            return returnError(e);
+            return returnError( e );
         }
     }    
 
@@ -296,10 +296,10 @@ import com.hp.hpl.jena.shared.WrappedException;
     }
 
     public static Response returnError( Throwable e ) {
-        log.error("Exception: " + e.getMessage() );
-        System.err.println( ">> " + shortStackTrace(e) );
+        String message = niceMessage( e.getMessage(), "Internal Server error." );
+		log.error("Exception: " + message );
         log.debug( shortStackTrace( e ) );
-        return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
+        return enableCORS( Response.serverError() ).entity( message ).build();
     }
 
 	public static Response returnError( String s ) {
