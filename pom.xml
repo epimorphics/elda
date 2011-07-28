@@ -9,7 +9,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>lda-top</artifactId>
-  <version>1.1.8-SNAPSHOT</version>
+  <version>1.1.9-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>lda-top</name>
   <description>Top level linked data API project</description>
@@ -153,5 +153,6 @@
     <module>json-rdf</module>
     <module>lda</module>
     <module>deliver-elda</module>
+    <module>elda-system-tests</module>
   </modules>
 </project>
