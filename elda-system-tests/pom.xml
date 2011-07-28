@@ -1,28 +1,49 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <artifactId>lda-top</artifactId>
-    <groupId>com.epimorphics.lda</groupId>
-    <version>1.1.9-SNAPSHOT</version>
-  </parent>
+	<parent>
+		<artifactId>lda-top</artifactId>
+		<groupId>com.epimorphics.lda</groupId>
+		<version>1.1.9-SNAPSHOT</version>
+	</parent>
 
-  <groupId>com.epimorphics.lda</groupId>
-  <artifactId>elda-system-tests</artifactId>
-  <name>elda-system-tests</name>
+	<groupId>com.epimorphics.lda</groupId>
+	<artifactId>elda-system-tests</artifactId>
+	<name>elda-system-tests</name>
 
-  <dependencies>
-  
+	<dependencies>
 
 
-  </dependencies>
-  <version>1.1.9-SNAPSHOT</version>
-  <build>
-     <plugins>
-      
-	      
-    </plugins>
-  </build>
 
+	</dependencies>
+	<version>1.1.9-SNAPSHOT</version>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven2-plugin</artifactId>
+				<configuration>
+					<container>
+						<containerId>tomcat6x</containerId>
+
+						<!-- consider replacing zip installer with artifact installer @@ TODO -->
+
+						<zipUrlInstaller>
+							<url>http://apache.favoritelinks.net/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.zip
+					</url>
+						</zipUrlInstaller>
+					</container>
+					<configuration>
+						<type>standalone</type>
+						<home>${project.build.directory}/tomcat6x</home>
+						<properties>
+							<cargo.servlet.port>9090</cargo.servlet.port>
+						</properties>
+					</configuration>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
