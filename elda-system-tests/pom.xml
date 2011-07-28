@@ -17,6 +17,12 @@
 
 
 
+		<dependency>
+			<groupId>com.epimorphics.lda</groupId>
+			<artifactId>elda-standalone</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+		</dependency>
 	</dependencies>
 	<version>1.1.9-SNAPSHOT</version>
 	<build>
@@ -41,6 +47,16 @@
 						<properties>
 							<cargo.servlet.port>9090</cargo.servlet.port>
 						</properties>
+						<deployables>
+							<deployable>
+								<groupId>com.epimorphics.lda</groupId>
+								<artifactId>elda-standalone</artifactId>
+								<type>war</type>
+								<properties>
+								    <context>elda</context>
+								</properties>
+							</deployable>
+						</deployables>
 					</configuration>
 				</configuration>
 			</plugin>
