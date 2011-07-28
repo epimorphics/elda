@@ -1,4 +1,2 @@
 URI=anchor_me?p=3
-# something should have p-value the integer 3.
-
 ASK {?s :p 3}

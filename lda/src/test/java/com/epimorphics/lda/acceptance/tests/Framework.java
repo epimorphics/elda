@@ -41,6 +41,7 @@ import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -58,21 +59,33 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 
     static Logger log = LoggerFactory.getLogger(Framework.class);
     
+    static final Model emptyModel = ModelFactory.createDefaultModel();
+    
 	@Parameters public static Collection<Object[]> data()
 		{
 		List<Object[]> result = new ArrayList<Object[]>();
-		findTestsFromRoot( result, new File( "src/test/resources/test-tree" ) );
+		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree" ) );
 //		System.err.println( ">> " + result.size() + " tests.");
 		return result;
 		}
 	
-	private static void findTestsFromRoot( List<Object[]> items, File d ) 
+	static class Ask 
 		{
-		Couple<String, Model> spec = getModelNamedEnding( d, "-spec.ttl" );
-		Couple<String, Model> data = getModelNamedEnding( d, "-data.ttl" );
+		boolean isPositive;
+		Query ask;
+		
+		public Ask( boolean isPositive, Query ask ) 
+			{ this.isPositive = isPositive; this.ask = ask;	}
+		}
+	
+	private static void findTestsFromRoot( List<Object[]> items, Model givenSpec, Model givenData, File d ) 
+		{
+		Couple<String, Model> spec = getModelNamedEnding( d, givenSpec, "-spec.ttl" );
+		Couple<String, Model> data = getModelNamedEnding( d, givenData, "-data.ttl" );
 		log.debug( "considering: " + d );
 		if (spec == null || data == null)
 			{
+			System.err.println( ">> " + "directory " + d + " ignored" );
 			log.debug( "directory " + d + " ignored" );
 			}
 		else
@@ -80,8 +93,8 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 			for (File f: d.listFiles( endsWith( "-test.ask") )) 
 				{
 				String fileName = f.toString();
-				Couple<String, Query> uriAndQuery = loadQuery( spec.b, fileName );
-				Query probe = uriAndQuery.b;
+				Couple<String, List<Ask>> uriAndQuery = loadQuery( spec.b, fileName );
+				List<Ask> probes = uriAndQuery.b;
 				String uri = uriAndQuery.a;
 				String [] parts = uri.split( "\\?" );
 				String path = parts[0].replaceAll( "_", "/" );
@@ -97,7 +110,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 				w.specModel = spec.b;
 				w.path = path;
 				w.queryParams = queryParams;
-				w.shouldAppear = probe;
+				w.shouldAppear = probes;
 				w.pathToData = d.toString() + "/" + data.a + "-data.ttl";
 			//
 				items.add( new Object[] {w} );
@@ -105,36 +118,65 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 			}
 		if (d != null)
 			for (File f: d.listFiles())
-				if (f.isDirectory()) findTestsFromRoot( items, f );
+				if (f.isDirectory()) findTestsFromRoot( items, spec.b, data.b, f );
 		}
 
-	private static Couple<String, Query> loadQuery( Model spec, String fileName ) 
+	private static Couple<String, List<Ask>> loadQuery( Model spec, String fileName ) 
 		{
 //		System.err.println( ">> loading query " + fileName );
 		String uriAndQuery = FileManager.get().readWholeFileAsUTF8( fileName );
 		String [] parts = uriAndQuery.split( "\n", 2 );
-		String uri = parts[0], query = parts[1];
+		String uri = parts[0], queries = parts[1];
 		String prefixes = sparqlPrefixesFrom( spec );
 		if (!uri.startsWith("URI=")) 
 			throw new RuntimeException( "bad query file, first line doe not start 'URI=': " + uri );
-		return new Couple<String, Query>( uri.substring(4), QueryFactory.create( prefixes + query ) );
+		List<Ask> asks = getQueries( queries, prefixes);
+		return new Couple<String, List<Ask>>( uri.substring(4), asks );
 		}
 
-	private static Couple<String, Model> getModelNamedEnding( File d, String end ) 
+	private static List<Ask> getQueries( String query, String prefixes ) {
+		List<Ask> result = new ArrayList<Ask>();
+		for (String s: query.split( "(\n|^)ASK" ))
+			if (s.length() > 0)
+				{
+				boolean isPositive = true;
+				if (s.startsWith( " NOT" )) { isPositive = false; s = s.substring(4); }
+				result.add( new Ask( isPositive, getQuery( prefixes, s ) ) );
+				}
+		return result;
+	}
+
+	private static Query getQuery(String prefixes, String s) 
+		{
+		try { return QueryFactory.create( prefixes + "ASK " + s ); }
+		catch (Exception e) { throw new RuntimeException( "Could not parse query: " + s, e ); }
+		}
+
+	/**
+	   Answer the name and contents of the model ending with <code>end</code>.
+	   If the name of the model starts 'and-', the result model includes the
+	   model from the previous layer up the directory tree.
+	*/
+	private static Couple<String, Model> getModelNamedEnding( File d, Model given, String end ) 
 		{
 		File [] specFiles = d.listFiles( endsWith( end ) );
-		if (specFiles == null || specFiles.length == 0) 
+		if (specFiles.length == 1) 
 			{
-			return null;
+			String specFile = specFiles[0].getPath();
+			String name = specFiles[0].getName().replace( end, "" );
+			return new Couple<String, Model>( name, loadSpecFile( specFile ) );
 			}
-		else if (specFiles.length > 1) 
-			{
-			return null;
-			}
-		String specFile = specFiles[0].getPath();
-		String name = specFiles[0].getName().replace( end, "" );
+		else
+			return new Couple<String, Model>( "inherited", given );
+		}
+
+	private static Model loadSpecFile( String specFile ) 
+		{
 		String body = FileManager.get().readWholeFileAsUTF8( specFile );
-		return new Couple<String, Model>( name, ModelIOUtils.modelFromTurtle( body ) );
+		try 
+			{ return ModelIOUtils.modelFromTurtle( body ); }
+		catch (Exception e) 
+			{ throw new RuntimeException( "Error loading " + specFile, e ); }
 		}
 
 	private static FilenameFilter endsWith( final String end ) 
@@ -166,7 +208,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		Model specModel;
 		String path;
 		String queryParams;
-		Query shouldAppear;
+		List<Ask> shouldAppear;
 		}
 	
 	@Test public void RUN()
@@ -205,16 +247,19 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		Triad<APIResultSet, String, CallContext> resultsAndFormat = ep.call( cc );
 		Model rsm = resultsAndFormat.a.getModel();
 //		System.err.println( ">> " + rs.getResultList() );
-		QueryExecution qe = QueryExecutionFactory.create( w.shouldAppear, rsm );
-		if (!qe.execAsk())
+		for (Ask a: w.shouldAppear)
 			{
-			fail
-				( "test " + w.title + ": the probe query\n"
-				+ shortStringFor( w.shouldAppear ) + "\n"
-				+ "failed for the result set\n"
-				+ shortStringFor( rsm )
-				)
-				;			
+			QueryExecution qe = QueryExecutionFactory.create( a.ask, rsm );
+			if (qe.execAsk() != a.isPositive)
+				{
+				fail
+					( "test " + w.title + ": the probe query\n"
+					+ shortStringFor( w.shouldAppear ) + "\n"
+					+ "failed for the result set\n"
+					+ shortStringFor( rsm )
+					)
+					;			
+				}
 			}
 		}
 
@@ -225,11 +270,14 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		return bos.toString();
 		}
 
-	private String shortStringFor( Query q ) 
+	private String shortStringFor( List<Ask> queries ) 
 		{
-		return q.toString()
-			.replaceAll( "PREFIX [^\n]*\n", "" )
-			.replaceAll( "\n *", " " )
-			;
+		StringBuilder result = new StringBuilder();
+		for (Ask a: queries) 
+			{
+			result.append( a.isPositive ? "POSITIVE: " : "NEGATIVE: " );
+			result.append( a.ask.toString().replaceAll( "PREFIX [^\n]*\n", "" ).replaceAll( "\n *", " " ) );
+			}
+		return result.toString();
 		}
 	}

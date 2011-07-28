@@ -296,10 +296,11 @@ import com.hp.hpl.jena.shared.WrappedException;
     }
 
     public static Response returnError( Throwable e ) {
-        String message = niceMessage( e.getMessage(), "Internal Server error." );
-		log.error("Exception: " + message );
+        String shortMessage = e.getMessage();
+		String longMessage = niceMessage( shortMessage, "Internal Server error." );
+		log.error("Exception: " + shortMessage );
         log.debug( shortStackTrace( e ) );
-        return enableCORS( Response.serverError() ).entity( message ).build();
+        return enableCORS( Response.serverError() ).entity( longMessage ).build();
     }
 
 	public static Response returnError( String s ) {

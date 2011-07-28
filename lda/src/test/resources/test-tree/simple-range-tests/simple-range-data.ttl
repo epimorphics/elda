@@ -1,0 +1,35 @@
+@prefix : <http://www.epimorphics.com/tools/example#> .
+
+
+:A a :Item
+    ; :eastish 0
+    .
+    
+:B a :Item
+    ; :eastish 10
+    .
+    
+:C a :Item
+    ; :eastish 20
+    .
+    
+:D a :Item
+    ; :eastish 30
+    .
+    
+:E a :Item
+    ; :eastish 0
+    .
+    
+:F a :Item
+    ; :eastish 10
+    .
+    
+:G a :Item
+    ; :eastish 20
+    .
+    
+:H a :Item
+    ; :eastish 30
+    .
+    
