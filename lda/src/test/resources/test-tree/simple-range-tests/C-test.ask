@@ -1,0 +1,9 @@
+URI=/alpha?eastish=10&northish=20
+ASK 
+    { :F a :Item. }
+    
+ASK NOT
+    { :A a :Item. :B a :Item. :C a :Item. :D a :Item. 
+      :E a :Item. :G a :Item. :H a :Item.    
+    }
+    
