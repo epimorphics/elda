@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	
+
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -42,28 +42,28 @@
 	<build>
 
 		<plugins>
-		
-		<!-- The cargo plugin starts an instance of elda for testing and then shuts it down after testing -->
+
+			<!-- The cargo plugin starts an instance of elda for testing and then 
+				shuts it down after testing -->
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
 				<configuration>
-				    <skip>${skip-integration-test}</skip>
+					<skip>${skip-integration-test}</skip>
 					<container>
 						<containerId>tomcat6x</containerId>
 
 						<!-- consider replacing zip installer with artifact installer @@ TODO -->
-
 						<zipUrlInstaller>
-							<url>http://apache.favoritelinks.net/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.zip
-							</url>
+							<url>${tomcat-distribution}</url>
 						</zipUrlInstaller>
 					</container>
 					<configuration>
 						<type>standalone</type>
 						<home>${project.build.directory}/tomcat6x</home>
 						<properties>
-							<cargo.servlet.port>${com.epimorphics.lda.testserver.port}</cargo.servlet.port>
+							<cargo.servlet.port>${com.epimorphics.lda.testserver.port}
+							</cargo.servlet.port>
 						</properties>
 						<deployables>
 							<deployable>
@@ -73,7 +73,8 @@
 								<properties>
 									<context>elda</context>
 								</properties>
-								<pingURL>http://localhost:${com.epimorphics.lda.testserver.port}/elda</pingURL>
+								<pingURL>http://localhost:${com.epimorphics.lda.testserver.port}/elda
+								</pingURL>
 								<pingTimeout>60000</pingTimeout>
 							</deployable>
 						</deployables>
@@ -117,7 +118,7 @@
 				</executions>
 			</plugin>
 
-           <!--  copy test resources -->
+			<!-- copy test resources -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -146,7 +147,7 @@
 							<goal>test</goal>
 						</goals>
 						<configuration>
-						    <skipTests>${skip-integration-test}</skipTests>
+							<skipTests>${skip-integration-test}</skipTests>
 						</configuration>
 					</execution>
 				</executions>
@@ -166,7 +167,8 @@
 						</goals>
 						<configuration>
 							<files>
-								<file>${basedir}/src/test/resources/com.epimorphics.lda.systemtest.config.properties</file>
+								<file>${basedir}/src/test/resources/com.epimorphics.lda.systemtest.config.properties
+								</file>
 							</files>
 						</configuration>
 					</execution>
@@ -175,4 +177,33 @@
 
 		</plugins>
 	</build>
+
+	<profiles>
+	
+		<profile>
+		    <id>unix</id>
+			<activation>
+				<os>
+					<family>Unix</family>
+				</os>
+			</activation>
+			<properties>
+				<tomcat-distribution>http://apache.favoritelinks.net/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.zip</tomcat-distribution>
+			</properties>
+		</profile>
+	
+		<profile>
+		   <id>windows</id>
+			<activation>
+				<os>
+					<family>Windows</family>
+					<arch>AMD64</arch>
+				</os>
+			</activation>
+			<properties>
+				<tomcat-distribution>http://apache.favoritelinks.net/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32-windows-x64.zip</tomcat-distribution>
+			</properties>
+		</profile>
+		
+	</profiles>
 </project>
