@@ -21,11 +21,13 @@ import org.junit.Test;
  */
 
 public class ExampleTest {
+	
+	private static String port = Config.getProperties().getProperty("com.epimorphics.lda.testserver.port");
 
 	@Test
 	public void foobar() throws ClientProtocolException, IOException {
 		HttpClient httpclient = new DefaultHttpClient();
-		HttpGet httpget = new HttpGet("http://localhost:9090/elda/api/education/schools?_view=basic&_page=0");
+		HttpGet httpget = new HttpGet("http://localhost:" + port + "/elda/api/education/schools?_view=basic&_page=0");
 		HttpResponse response = httpclient.execute(httpget);
 		assertEquals(200, response.getStatusLine().getStatusCode());
 		HttpEntity entity = response.getEntity();

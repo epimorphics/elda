@@ -41,6 +41,8 @@
 	<build>
 
 		<plugins>
+		
+		<!-- The cargo plugin starts an instance of elda for testing and then shuts it down after testing -->
 			<plugin>
 				<groupId>org.codehaus.cargo</groupId>
 				<artifactId>cargo-maven2-plugin</artifactId>
@@ -59,7 +61,7 @@
 						<type>standalone</type>
 						<home>${project.build.directory}/tomcat6x</home>
 						<properties>
-							<cargo.servlet.port>9090</cargo.servlet.port>
+							<cargo.servlet.port>${com.epimorphics.lda.testserver.port}</cargo.servlet.port>
 						</properties>
 						<deployables>
 							<deployable>
@@ -69,7 +71,7 @@
 								<properties>
 									<context>elda</context>
 								</properties>
-								<pingURL>http://localhost:9090/elda</pingURL>
+								<pingURL>http://localhost:${com.epimorphics.lda.testserver.port}/elda</pingURL>
 								<pingTimeout>60000</pingTimeout>
 							</deployable>
 						</deployables>
@@ -111,7 +113,23 @@
 				</executions>
 			</plugin>
 
+           <!--  copy test resources -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.5</version>
+				<executions>
+					<execution>
+						<id>copy-test-resources</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>testResources</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 
+			<!-- plugin to run the tests -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -122,6 +140,27 @@
 						<goals>
 							<goal>test</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- plugin to read properties -->
+			<!-- used to configure port number -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0-alpha-2</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${basedir}/src/test/resources/com.epimorphics.lda.systemtest.config.properties</file>
+							</files>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
