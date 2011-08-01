@@ -264,7 +264,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 				{
 				fail
 					( "test " + w.title + ": the probe query\n"
-					+ shortStringFor( w.shouldAppear ) + "\n"
+					+ shortStringFor( a ) + "\n"
 					+ "failed for the result set\n"
 					+ shortStringFor( rsm )
 					)
@@ -279,15 +279,12 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		rs.write( bos, "Turtle" );
 		return bos.toString();
 		}
-
-	private String shortStringFor( List<Ask> queries ) 
+	
+	private String shortStringFor( Ask a )
 		{
 		StringBuilder result = new StringBuilder();
-		for (Ask a: queries) 
-			{
-			result.append( a.isPositive ? "POSITIVE: " : "NEGATIVE: " );
-			result.append( a.ask.toString().replaceAll( "PREFIX [^\n]*\n", "" ).replaceAll( "\n *", " " ) );
-			}
+		result.append( a.isPositive ? "POSITIVE: " : "NEGATIVE: " );
+		result.append( a.ask.toString().replaceAll( "PREFIX [^\n]*\n", "" ).replaceAll( "\n *", " " ) );
 		return result.toString();
 		}
 	}
