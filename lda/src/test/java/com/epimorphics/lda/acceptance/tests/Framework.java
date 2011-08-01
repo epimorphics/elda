@@ -93,27 +93,30 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 			for (File f: d.listFiles( endsWith( "-test.ask") )) 
 				{
 				String fileName = f.toString();
-				Couple<String, List<Ask>> uriAndQuery = loadQuery( spec.b, fileName );
-				List<Ask> probes = uriAndQuery.b;
-				String uri = uriAndQuery.a;
-				String [] parts = uri.split( "\\?" );
-				String path = parts[0].replaceAll( "_", "/" );
-				String queryParams = parts.length > 1 ? parts[1] : "";
-			//
-				WhatToDo w = new WhatToDo();
-				w.title = 
-					"from directory: " + d.toString() 
-					+ ", spec file: " + spec.a 
-					+ ", query path: " + path 
-					+ ", params: " + queryParams
-					;
-				w.specModel = spec.b;
-				w.path = path;
-				w.queryParams = queryParams;
-				w.shouldAppear = probes;
-				w.pathToData = d.toString() + "/" + data.a + "-data.ttl";
-			//
-				items.add( new Object[] {w} );
+				List<Couple<String, List<Ask>>> urisAndQuerys = loadQueries( spec.b, fileName );
+				for (Couple<String, List<Ask>> uriAndQuery: urisAndQuerys) 
+					{
+					List<Ask> probes = uriAndQuery.b;
+					String uri = uriAndQuery.a;
+					String [] parts = uri.split( "\\?" );
+					String path = parts[0].replaceAll( "_", "/" );
+					String queryParams = parts.length > 1 ? parts[1] : "";
+				//
+					WhatToDo w = new WhatToDo();
+					w.title = 
+						"from directory: " + d.toString() 
+						+ ", spec file: " + spec.a 
+						+ ", query path: " + path 
+						+ ", params: " + queryParams
+						;
+					w.specModel = spec.b;
+					w.path = path;
+					w.queryParams = queryParams;
+					w.shouldAppear = probes;
+					w.pathToData = d.toString() + "/" + data.a + "-data.ttl";
+				//
+					items.add( new Object[] {w} );
+					}
 				}
 			}
 		if (d != null)
@@ -121,17 +124,23 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 				if (f.isDirectory()) findTestsFromRoot( items, spec.b, data.b, f );
 		}
 
-	private static Couple<String, List<Ask>> loadQuery( Model spec, String fileName ) 
+	private static List<Couple<String, List<Ask>>> loadQueries( Model spec, String fileName ) 
 		{
+		List<Couple<String, List<Ask>>> result = new ArrayList<Couple<String,List<Ask>>>();
 //		System.err.println( ">> loading query " + fileName );
-		String uriAndQuery = FileManager.get().readWholeFileAsUTF8( fileName );
-		String [] parts = uriAndQuery.split( "\n", 2 );
-		String uri = parts[0], queries = parts[1];
-		String prefixes = sparqlPrefixesFrom( spec );
-		if (!uri.startsWith("URI=")) 
-			throw new RuntimeException( "bad query file, first line doe not start 'URI=': " + uri );
-		List<Ask> asks = getQueries( queries, prefixes);
-		return new Couple<String, List<Ask>>( uri.substring(4), asks );
+		String wholeFile = FileManager.get().readWholeFileAsUTF8( fileName );
+		
+		String [] elements = wholeFile.split( "(^|\n)URI=" );
+		for (String element: elements)
+			if (element.length() > 0)
+				{
+				String [] parts = element.split( "\n", 2 );
+				String uri = parts[0], queries = parts[1];
+				String prefixes = sparqlPrefixesFrom( spec );
+				List<Ask> asks = getQueries( queries, prefixes);
+				result.add( new Couple<String, List<Ask>>( uri, asks ) );
+				}
+		return result;
 		}
 
 	private static List<Ask> getQueries( String query, String prefixes ) {
@@ -249,6 +258,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 //		System.err.println( ">> " + rs.getResultList() );
 		for (Ask a: w.shouldAppear)
 			{
+//			System.err.println( ">>  asking ... " + (a.isPositive ? "ASSERT" : "DENY") );
 			QueryExecution qe = QueryExecutionFactory.create( a.ask, rsm );
 			if (qe.execAsk() != a.isPositive)
 				{
