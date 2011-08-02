@@ -59,6 +59,9 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 
     static Logger log = LoggerFactory.getLogger(Framework.class);
     
+    /**
+        An empty model. Do not put things into it.
+    */
     static final Model emptyModel = ModelFactory.createDefaultModel();
     
 	@Parameters public static Collection<Object[]> data()
@@ -69,6 +72,10 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		return result;
 		}
 	
+	/**
+	    An ASK query, with the expected result: true (Positive) or
+	    false (!isPositive).
+	*/
 	static class Ask 
 		{
 		boolean isPositive;
