@@ -1,0 +1,48 @@
+@prefix api:     <http://purl.org/linked-data/api/vocab#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix : <http://www.epimorphics.com/tools/example#> .
+
+:A a :Item
+    ; :eastish 0
+    ; :northish 0
+    .
+    
+:B a :Item
+    ; :eastish 10
+    ; :northish 0
+    .
+    
+:C a :Item
+    ; :eastish 20
+    ; :northish 10
+    .
+    
+:D a :Item
+    ; :eastish 30
+    ; :northish 10
+    .
+    
+:E a :Item
+    ; :eastish 0
+    ; :northish 20
+    .
+    
+:F a :Item
+    ; :eastish 10
+    ; :northish 20
+    .
+    
+:G a :Item
+    ; :eastish 20
+    ; :northish 30
+    .
+    
+:H a :Item
+    ; :eastish 30
+    ; :northish 30
+    .
+    
