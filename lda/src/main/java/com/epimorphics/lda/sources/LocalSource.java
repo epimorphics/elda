@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIException;
+import com.epimorphics.lda.routing.Loader;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -51,7 +52,7 @@ public class LocalSource extends SourceBase implements Source {
     public LocalSource(String endpoint) {
         if (!endpoint.startsWith(PREFIX))
             throw new APIException("Illegal local endpoint: " + endpoint);
-        source = FileManager.get().loadModel( endpoint.substring( PREFIX.length() ) );
+        source = FileManager.get().loadModel( Loader.getBaseFilePath() + endpoint.substring( PREFIX.length() ) );
         this.endpoint = endpoint;
     }
     

@@ -19,6 +19,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -35,7 +36,7 @@ public class ExampleTest {
 	@Test
 	public void foobar() throws ClientProtocolException, IOException {
 		HttpClient httpclient = new DefaultHttpClient();
-		HttpGet httpget = new HttpGet("http://localhost:" + port + "/elda/api/education/schools?_view=basic&_page=0");
+		HttpGet httpget = new HttpGet("http://localhost:" + port + "/elda/api/alpha?min-eastish=10");
 		HttpResponse response = httpclient.execute(httpget);
 		assertEquals(200, response.getStatusLine().getStatusCode());
 		HttpEntity entity = response.getEntity();
