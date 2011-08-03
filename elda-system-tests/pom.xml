@@ -12,7 +12,7 @@
 
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda-system-tests</artifactId>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
   <name>elda-system-tests</name>
 
   <dependencies>
@@ -157,6 +157,16 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.9</version>
         <executions>
+          <execution>
+            <id>test</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <skipTests>true</skipTests>
+            </configuration>
+          </execution>
           <execution>
             <id>integration-test</id>
             <phase>integration-test</phase>
