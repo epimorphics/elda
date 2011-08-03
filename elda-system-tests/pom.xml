@@ -1,219 +1,226 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<artifactId>lda-top</artifactId>
-		<groupId>com.epimorphics.lda</groupId>
-		<version>1.1.9-SNAPSHOT</version>
-	</parent>
+  <parent>
+    <artifactId>lda-top</artifactId>
+    <groupId>com.epimorphics.lda</groupId>
+    <version>1.1.9-SNAPSHOT</version>
+  </parent>
 
-	<groupId>com.epimorphics.lda</groupId>
-	<artifactId>elda-system-tests</artifactId>
-	<packaging>pom</packaging>
-	<name>elda-system-tests</name>
+  <groupId>com.epimorphics.lda</groupId>
+  <artifactId>elda-system-tests</artifactId>
+  <packaging>jar</packaging>
+  <name>elda-system-tests</name>
 
-	<dependencies>
+  <dependencies>
 
-    	<dependency>
-    		<groupId>com.epimorphics.lda</groupId>
-    		<artifactId>elda-testing-webapp</artifactId>
-    		<version>${project.version}</version>
-    		<type>war</type>
-    	</dependency>
+    <dependency>
+      <groupId>com.epimorphics.lda</groupId>
+      <artifactId>elda-testing-webapp</artifactId>
+      <version>${elda.version}</version>
+      <type>war</type>
+    </dependency>
 
-        <dependency>
-            <groupId>com.hp.hpl.jena</groupId>
-            <artifactId>tdb</artifactId>
-            <version>0.8.9</version>
-            <type>jar</type>
-        </dependency>
-		
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.1.1</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
-	
-	<version>1.1.9-SNAPSHOT</version>
-	<build>
+    <dependency>
+      <groupId>com.epimorphics.lda</groupId>
+      <artifactId>lda</artifactId>
+      <version>${elda.version}</version>
+      <type>jar</type>
+    </dependency>
 
-		<plugins>
+    <dependency>
+      <groupId>com.hp.hpl.jena</groupId>
+      <artifactId>tdb</artifactId>
+      <version>0.8.9</version>
+      <type>jar</type>
+    </dependency>
+    
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.2</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+  
+  <version>1.1.9-SNAPSHOT</version>
+  <build>
 
-			<!-- The cargo plugin starts an instance of elda for testing and then 
-				shuts it down after testing -->
-			<plugin>
-				<groupId>org.codehaus.cargo</groupId>
-				<artifactId>cargo-maven2-plugin</artifactId>
-				<configuration>
-					<skip>${skip-integration-test}</skip>
-					<container>
-						<containerId>tomcat6x</containerId>
+    <plugins>
 
-						<!-- consider replacing zip installer with artifact installer @@ TODO -->
-						<zipUrlInstaller>
-							<url>${tomcat-distribution}</url>
-						</zipUrlInstaller>
-					</container>
-					<configuration>
-						<type>standalone</type>
-						<home>${project.build.directory}/tomcat6x</home>
-						<properties>
-							<cargo.servlet.port>${com.epimorphics.lda.testserver.port}
-							</cargo.servlet.port>
-						</properties>
-						<deployables>
-							<deployable>
-								<groupId>com.epimorphics.lda</groupId>
-								<artifactId>elda-testing-webapp</artifactId>
-								<type>war</type>
-								<properties>
-									<context>elda</context>
-								</properties>
-								<pingURL>http://localhost:${com.epimorphics.lda.testserver.port}/elda
-								</pingURL>
-								<pingTimeout>60000</pingTimeout>
-							</deployable>
-						</deployables>
-					</configuration>
-				</configuration>
-				<version>1.1.1</version>
-				<executions>
-					<execution>
-						<id>start-container</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>start</goal>
-						</goals>
-						<configuration>
-							<deployer>
-								<deployables>
-								</deployables>
-							</deployer>
-						</configuration>
-					</execution>
-					<execution>
-						<id>stop-container</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>stop</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+      <!-- The cargo plugin starts an instance of elda for testing and then 
+        shuts it down after testing -->
+      <plugin>
+        <groupId>org.codehaus.cargo</groupId>
+        <artifactId>cargo-maven2-plugin</artifactId>
+        <configuration>
+          <skip>${skip-integration-test}</skip>
+          <container>
+            <containerId>tomcat6x</containerId>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>testCompile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <!-- consider replacing zip installer with artifact installer @@ TODO -->
+            <zipUrlInstaller>
+              <url>${tomcat-distribution}</url>
+            </zipUrlInstaller>
+          </container>
+          <configuration>
+            <type>standalone</type>
+            <home>${project.build.directory}/tomcat6x</home>
+            <properties>
+              <cargo.servlet.port>${com.epimorphics.lda.testserver.port}
+              </cargo.servlet.port>
+            </properties>
+            <deployables>
+              <deployable>
+                <groupId>com.epimorphics.lda</groupId>
+                <artifactId>elda-testing-webapp</artifactId>
+                <type>war</type>
+                <properties>
+                  <context>elda</context>
+                </properties>
+                <pingURL>http://localhost:${com.epimorphics.lda.testserver.port}/elda
+                </pingURL>
+                <pingTimeout>60000</pingTimeout>
+              </deployable>
+            </deployables>
+          </configuration>
+        </configuration>
+        <version>1.1.1</version>
+        <executions>
+          <execution>
+            <id>start-container</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>start</goal>
+            </goals>
+            <configuration>
+              <deployer>
+                <deployables>
+                </deployables>
+              </deployer>
+            </configuration>
+          </execution>
+          <execution>
+            <id>stop-container</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>stop</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-			<!-- copy test resources -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.5</version>
-				<executions>
-					<execution>
-						<id>copy-test-resources</id>
-						<phase>process-test-resources</phase>
-						<goals>
-							<goal>testResources</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-			<!-- plugin to run the tests -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.9</version>
-				<executions>
-					<execution>
-						<id>integration-test</id>
-						<phase>integration-test</phase>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<skipTests>${skip-integration-test}</skipTests>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+      <!-- copy test resources -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>copy-test-resources</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>testResources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
-			<!-- plugin to read properties -->
-			<!-- used to configure port number -->
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>properties-maven-plugin</artifactId>
-				<version>1.0-alpha-2</version>
-				<executions>
-					<execution>
-						<phase>initialize</phase>
-						<goals>
-							<goal>read-project-properties</goal>
-						</goals>
-						<configuration>
-							<files>
-								<file>${basedir}/src/test/resources/com.epimorphics.lda.systemtest.config.properties
-								</file>
-							</files>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+      <!-- plugin to run the tests -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.9</version>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <skipTests>${skip-integration-test}</skipTests>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-		</plugins>
-	</build>
+      <!-- plugin to read properties -->
+      <!-- used to configure port number -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0-alpha-2</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+            <configuration>
+              <files>
+                <file>${basedir}/src/test/resources/com.epimorphics.lda.systemtest.config.properties
+                </file>
+              </files>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-	<profiles>
-	
-		<profile>
-		    <id>unix</id>
-			<activation>
-				<os>
-					<family>Unix</family>
-				</os>
-			</activation>
-			<properties>
-				<tomcat-distribution>http://apache.favoritelinks.net/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.zip</tomcat-distribution>
-			</properties>
-		</profile>
-	
-		<profile>
-		   <id>windows</id>
-			<activation>
-				<os>
-					<family>Windows</family>
-					<arch>AMD64</arch>
-				</os>
-			</activation>
-			<properties>
-				<tomcat-distribution>http://apache.favoritelinks.net/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32-windows-x64.zip</tomcat-distribution>
-			</properties>
-		</profile>
-		
-	</profiles>
+    </plugins>
+  </build>
+
+  <profiles>
+  
+    <profile>
+      <id>unix</id>
+      <activation>
+        <os>
+          <family>Unix</family>
+        </os>
+      </activation>
+      <properties>
+        <tomcat-distribution>http://apache.favoritelinks.net/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.zip</tomcat-distribution>
+      </properties>
+    </profile>
+  
+    <profile>
+      <id>windows</id>
+      <activation>
+        <os>
+          <family>Windows</family>
+          <arch>AMD64</arch>
+        </os>
+      </activation>
+      <properties>
+        <tomcat-distribution>http://apache.favoritelinks.net/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32-windows-x64.zip</tomcat-distribution>
+      </properties>
+    </profile>
+    
+  </profiles>
 </project>

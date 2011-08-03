@@ -22,6 +22,11 @@ syntax: regexp
 syntax: regexp
 ^some-regression-tests/got/*
 
+synrax: regexp
+^lda/bin/.*
+^deliver-elda/bin/.*
+^elda-system-tests/bin/*
+
 syntax: regexp
 ^LOCAL/.*
 ^deliver-elda/delivery/.*

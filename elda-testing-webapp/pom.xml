@@ -53,7 +53,7 @@
   </dependencies>
 
   <build>
-    <finalName>system-testing</finalName>
+    <finalName>elda-testing-webapp</finalName>
     <plugins>        
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

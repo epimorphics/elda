@@ -18,7 +18,7 @@
     <dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>json-rdf</artifactId>
-      <version>${project.version}</version>
+      <version>${elda.version}</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -26,7 +26,7 @@
     <dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>json-rdf</artifactId>
-      <version>${project.version}</version>
+      <version>${elda.version}</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
