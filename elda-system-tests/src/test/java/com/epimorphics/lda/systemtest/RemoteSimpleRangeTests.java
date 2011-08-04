@@ -11,7 +11,6 @@ package com.epimorphics.lda.systemtest;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 
 import org.apache.http.HttpEntity;
@@ -43,13 +42,13 @@ import com.hp.hpl.jena.rdf.model.Model;
  * 
  */
 
-@RunWith(Parameterized.class) public class ExampleTest {
+@RunWith(Parameterized.class) public class RemoteSimpleRangeTests {
 	
-	static Logger log = LoggerFactory.getLogger(ExampleTest.class);
+	static Logger log = LoggerFactory.getLogger(RemoteSimpleRangeTests.class);
     
 	private final WhatToDo w;
 	
-	public ExampleTest( WhatToDo w )
+	public RemoteSimpleRangeTests( WhatToDo w )
 		{ this.w = w; }
 	
 	@Parameters public static Collection<Object[]> data()
@@ -103,18 +102,18 @@ import com.hp.hpl.jena.rdf.model.Model;
 			}
 		}
 	
-	@Test public void exemplar() throws ClientProtocolException, IOException {
-		HttpClient httpclient = new DefaultHttpClient();
-		HttpGet httpget = new HttpGet("http://localhost:" + Config.port + "/elda/api/alpha?min-eastish=10");
-		HttpResponse response = httpclient.execute(httpget);
-		assertEquals(200, response.getStatusLine().getStatusCode());
-		HttpEntity entity = response.getEntity();
-		if (entity != null) {
-			InputStream instream = entity.getContent();
-			byte[] tmp = new byte[2048];
-			while ((instream.read(tmp)) != -1) {
-			}
-		}
-	}
+//	@Test public void exemplar() throws ClientProtocolException, IOException {
+//		HttpClient httpclient = new DefaultHttpClient();
+//		HttpGet httpget = new HttpGet("http://localhost:" + Config.port + "/elda/api/alpha?min-eastish=10");
+//		HttpResponse response = httpclient.execute(httpget);
+//		assertEquals(200, response.getStatusLine().getStatusCode());
+//		HttpEntity entity = response.getEntity();
+//		if (entity != null) {
+//			InputStream instream = entity.getContent();
+//			byte[] tmp = new byte[2048];
+//			while ((instream.read(tmp)) != -1) {
+//			}
+//		}
+//	}
 	
 }
