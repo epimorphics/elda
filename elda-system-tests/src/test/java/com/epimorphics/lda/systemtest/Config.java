@@ -1,3 +1,10 @@
+/*
+See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+for the licence for this software.
+
+(c) Copyright 2011 Epimorphics Limited
+$Id$
+*/
 package com.epimorphics.lda.systemtest;
 
 import java.io.IOException;
@@ -7,8 +14,10 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 public class Config {
+	
 	private static final String CONFIG_PROPERTIES_PATH_NAME = "com.epimorphics.lda.systemtest.config.properties";
-	static Properties properties;
+	
+	static Properties properties = new Properties();
 	
 	public static Properties getProperties() {
 		return properties;
@@ -17,7 +26,6 @@ public class Config {
     private static final Logger logger = Logger.getLogger(Config.class);
 	
 	static {		
-		properties = new Properties();
 		InputStream istream = Config.class.getClassLoader().getResourceAsStream(CONFIG_PROPERTIES_PATH_NAME);
 		if (istream != null) {
 			try {
@@ -29,4 +37,9 @@ public class Config {
 			logger.warn("failed to read configuration properties file: " + CONFIG_PROPERTIES_PATH_NAME);
 		}
 	}
+
+	/**
+	    Port to run tomcat on / query on.
+	*/
+	public static String port = getProperties().getProperty("com.epimorphics.lda.testserver.port");
 }
