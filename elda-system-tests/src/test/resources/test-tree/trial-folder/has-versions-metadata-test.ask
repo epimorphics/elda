@@ -1,0 +1,21 @@
+URI=anchor_me?_metadata=versions
+ASK 
+	{
+	?thing dcterms:hasVersion 
+		?view_description
+		, ?view_all
+		, ?view_basic
+		.
+
+	?view_description rdfs:label "description"
+		; dcterms:isVersionOf ?thing
+		. 
+		
+	?view_all rdfs:label "all"
+		; dcterms:isVersionOf ?thing
+		.
+		
+	?view_basic rdfs:label "basic"
+		; dcterms:isVersionOf ?thing
+		.
+	}

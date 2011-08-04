@@ -1,0 +1,3 @@
+URI=anchor_me?q=42
+ASK 
+	{ ?x :q 42 }

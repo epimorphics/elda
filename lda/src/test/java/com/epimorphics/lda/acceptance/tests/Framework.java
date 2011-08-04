@@ -11,38 +11,27 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.VarValues;
-import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.core.APIEndpointImpl;
-import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
-import com.epimorphics.lda.core.MultiMap;
+import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.query.*;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 
@@ -65,24 +54,14 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
     static final Model emptyModel = ModelFactory.createDefaultModel();
     
 	@Parameters public static Collection<Object[]> data()
+		{ return data( "" ); }
+	
+	public static Collection<Object[]> data( String path )
 		{
 		List<Object[]> result = new ArrayList<Object[]>();
-		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree" ) );
+		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree" + path ) );
 //		System.err.println( ">> " + result.size() + " tests.");
 		return result;
-		}
-	
-	/**
-	    An ASK query, with the expected result: true (Positive) or
-	    false (!isPositive).
-	*/
-	static class Ask 
-		{
-		boolean isPositive;
-		Query ask;
-		
-		public Ask( boolean isPositive, Query ask ) 
-			{ this.isPositive = isPositive; this.ask = ask;	}
 		}
 	
 	private static void findTestsFromRoot( List<Object[]> items, Model givenSpec, Model givenData, File d ) 
@@ -217,16 +196,6 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		return sb.toString();
 		}
 
-	public static class WhatToDo
-		{
-		String title;
-		String pathToData;
-		Model specModel;
-		String path;
-		String queryParams;
-		List<Ask> shouldAppear;
-		}
-	
 	@Test public void RUN()
 		{ 
 		// Messing around with exceptions because JUnit's Parameterized
@@ -280,14 +249,14 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 			}
 		}
 
-	private String shortStringFor( Model rs ) 
+	public static String shortStringFor( Model rs ) 
 		{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		rs.write( bos, "Turtle" );
 		return bos.toString();
 		}
 	
-	private String shortStringFor( Ask a )
+	public static String shortStringFor( Ask a )
 		{
 		StringBuilder result = new StringBuilder();
 		result.append( a.isPositive ? "POSITIVE: " : "NEGATIVE: " );

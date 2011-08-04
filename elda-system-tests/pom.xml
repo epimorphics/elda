@@ -18,6 +18,15 @@
   <dependencies>
 
     <dependency>
+        <groupId>com.epimorphics.lda</groupId>
+        <artifactId>lda</artifactId>
+        <version>${elda.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>elda-testing-webapp</artifactId>
       <version>${elda.version}</version>
