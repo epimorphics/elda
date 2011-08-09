@@ -48,3 +48,9 @@ rdf:type a rdf:Property
     ; rdfs:range :UNQ
     .
     
+:r a owl:ObjectProperty
+    ; api:label "r"
+    ; rdfs:domain :Q
+    ; rdfs:range :R
+    .
+    
