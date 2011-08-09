@@ -60,7 +60,7 @@ public class TestBindings {
 		Match match = new Match( ep, vv );
 		URI req = new URI( "/driver/cartwheel" );
 		MultiMap<String, String> params = MakeData.parseQueryString( "" );
-		Triad<APIResultSet, String, CallContext> results = APIEndpointUtil.call( match, req, params );
+		Triad<APIResultSet, String, CallContext> results = APIEndpointUtil.call( match, req, "", params );
 //		System.err.println( ">> class: " + results.c.getStringValue( "class" ) );
 		String sq = results.a.getSelectQuery();
 //		System.err.println( ">> " + sq );

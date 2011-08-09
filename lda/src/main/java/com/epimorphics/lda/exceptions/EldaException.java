@@ -37,6 +37,10 @@ public class EldaException extends RuntimeException {
 		throw new EldaException( "no items matching that request were found.", "", NOT_FOUND, null );
 	}
 
+	public static void BadRequest( String message ) {
+		throw new EldaException( message, "", BAD_REQUEST );
+	}
+	
 	public static void NoDeploymentURIFor(String name) {
 		throw new EldaException( "No deployment uri for Endpoint " + name, "", BAD_REQUEST, null );
 	}

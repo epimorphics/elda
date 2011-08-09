@@ -30,6 +30,14 @@ public class ResponseStatusTests {
 		ResponseStatusTests.testHttpRequest( "alpha?nosuch=10", 400, Util.ignore );
 	}
 	
+	@Test public void testCallbackWithoutJSONGeneratesBadRequest() throws ClientProtocolException, IOException {
+		ResponseStatusTests.testHttpRequest( "alpha?callback=wrong", 400, Util.ignore );
+	}
+	
+	@Test public void testCallbackWithJSONReturnsStatusOK() throws ClientProtocolException, IOException {
+		ResponseStatusTests.testHttpRequest( "alpha.json?callback=right", 200, Util.ignore );
+	}
+	
 	public static void testHttpRequest( String x, int status, Util.CheckContent cc ) 
 		throws ClientProtocolException, IOException {
 		HttpClient httpclient = new DefaultHttpClient();
