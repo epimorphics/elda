@@ -70,8 +70,8 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-@Path("/control/{path: .*}")
-public class ControlRestlet {
+
+@Path("/control/{path: .*}") public class ControlRestlet {
 
     static class SpecRecord {
         final Match match;

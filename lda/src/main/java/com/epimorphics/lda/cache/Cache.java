@@ -53,6 +53,11 @@ public interface Cache {
 	    Clear this cache.
 	*/
 	public void clear();
+
+	/**
+	    Reset to suitable zeroes the counts of this cache.
+	*/
+	public void resetCounts();
 	
 	/**
 	    Append an HTML description of this cache to <code>sb</code>.
@@ -96,6 +101,11 @@ public interface Cache {
 		    Answer an HTML description of all the cache's states.
 		*/
 		public void showAll(StringBuilder sb);
+
+		/**
+		    Reset the counts of all the caches in this controller.
+		*/
+		public void resetCounts();
 	}
 	
 	/**
@@ -143,6 +153,15 @@ public interface Cache {
 		
 		public static synchronized int newIdentity() {
 			return ++identityCounter;
+		}
+
+		/**
+		    Reset the counts of all the registered caches.
+		*/
+		public static void resetCounts() {
+			for (Map.Entry<String, Controller> e: map.entrySet()) {
+				e.getValue().resetCounts();			
+			}
 		}
 	}
 }

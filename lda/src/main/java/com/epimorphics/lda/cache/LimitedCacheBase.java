@@ -81,6 +81,11 @@ public abstract class LimitedCacheBase implements Cache {
     	protected int misses = 0;
     	protected int drops = 0;
     	
+    	public void resetCounts() {
+    		baseTime = dropTime = 0;
+    		requests = hits = misses = drops = 0;
+    	}
+    	
 		public V get( String key ) {
 			requests += 1;
 			if (baseTime == 0) baseTime = System.currentTimeMillis();
@@ -140,6 +145,11 @@ public abstract class LimitedCacheBase implements Cache {
             cs.clear();
         }
         cs.put( select, results );
+    }
+
+    @Override public synchronized void resetCounts() {
+        cs.resetCounts();
+        cd.resetCounts();
     }
 
     @Override public synchronized void clear() {

@@ -39,6 +39,12 @@ public class ControllerBase implements Cache.Controller {
 		caches.remove( key );
 	}
 	
+	@Override public synchronized void resetCounts() {
+		for (Map.Entry<String, Cache> e: caches.entrySet()) {
+			e.getValue().resetCounts();
+		}
+	}
+	
 	@Override public synchronized void showAll( StringBuilder sb ) {
 		for (Map.Entry<String, Cache> e: caches.entrySet()) {
 			e.getValue().show( sb );
