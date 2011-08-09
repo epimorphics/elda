@@ -408,7 +408,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	Param.Info [] infos = param.fullParts();
     //
 		String rawValue = rawValues.iterator().next();
-    	if (optional) return generateOptionalTriple(rawValues, optional, infos, rawValue);
+    	if (optional) return generateOptionalTriple(rawValues, infos, rawValue);
     //
     	Variable var = SELECT_VAR;
         int i = 0;
@@ -443,16 +443,30 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		return sns.normalizeNodeToRDFQ( infos[i].shortName, rv, defaultLanguage );
 	}
 
-	private String generateOptionalTriple(Set<String> rawValues, boolean optional, Param.Info[] path, String rawValue) {
-	// TODO clean this up
-		if (rawValues.size() > 1) throw new RuntimeException( "too many (>1) values for optional." );
-		String prop = path[0].shortName;
-		Resource np = sns.normalizeResource(prop);
-		varProps.put(rawValue.substring(1), prop);   
-		basicGraphTriples.add( RDFQ.triple( SELECT_VAR, RDFQ.uri( np.getURI() ), sns.normalizeNodeToRDFQ( prop, rawValue, defaultLanguage ), optional ) ); 
-		noteBindableVar( prop );
-		noteBindableVar( rawValue );
+	private String generateOptionalTriple(Set<String> rawValues, Param.Info[] path, String finalVar) {
+		if (rawValues.size() > 1) EldaException.Broken( "too many (>1) values for optional." );
+		if (finalVar.charAt(0) != '?') EldaException.Broken( "rawValue must be a variable: " + finalVar );
+	//
+		String prop = null;
+		Variable s = SELECT_VAR;
+		int remaining = path.length;
+	//
+		for (Param.Info inf: path) {
+			remaining -= 1;
+			String o = remaining == 0 ? finalVar : newVar().name();
+			onePropertyStep( s, prop = inf.shortName, o );
+			s = RDFQ.var( o );
+		}
 		return prop;
+	}
+
+	private void onePropertyStep( Variable subject, String prop, String var ) {
+		Resource np = sns.normalizeResource( prop );
+		varProps.put( var.substring(1), prop );   
+		Any val = sns.normalizeNodeToRDFQ( prop, var, defaultLanguage );
+		basicGraphTriples.add( RDFQ.triple( subject, RDFQ.uri( np.getURI() ), val, true ) ); 
+		noteBindableVar( prop );
+		noteBindableVar( var );
 	}
 
     /**
