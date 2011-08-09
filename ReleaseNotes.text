@@ -1,8 +1,32 @@
 1.1.8-SNAPSHOT
 
+* The cache counts can be reset by POSTing to /control/reset-counts;
+  there's a button to do this on the /control/show-cach pagelet.
+
+* The exists-P=false parameter modifier now also works when P is
+  a property path p.q...
+
+* `mvn integration-test` runs a bunch of the "acceptance" tests
+  interacting with a local server (courtesy of the cargo plugin)
+  and some response-code tests as well. (More to follow ...)
+
+* Fixed a test Framework bug and added some more test specs.
+
+* For cargo, added profiles for windows and unix to control which 
+  tomcat distribution is installed. 
+
+* Framework now allows for multiple URI= blocks and ASK NOT queries.
+
+* Port number for cargo testing is configurable.
+
+* On a "no match" 404 page, disabled the "maybe these URIs"
+  list. (Developers can still switch it back on.) 
+
 * JSONP is now supported. When the chosen renderer is JSON (selected
   by .json or by an accept-type) and callback=P is supplied as an
   argument, then the returned text is P(JSON) for the generated JSON.
+  If callback= specified when the formatter is not JSON, generates
+  a BAD REQUEST status code.
 
 * Fixed issue 59. When RDFQ literals are converted to SPARQL
   terms, they use ARG's own formatter to take care of escaping etc.
