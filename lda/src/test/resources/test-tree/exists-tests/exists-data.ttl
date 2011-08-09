@@ -4,6 +4,17 @@
 :A a :Item
     ; :eastish 0
     ; :northish 0
+    ; :p :AP1, :AP2
+    .
+    
+:AP1 a :P
+    ; :q :AP1Q1
+    .
+    
+:AP2 a :P
+    .
+    
+:AP1Q1 a :Q
     .
     
 :B a :Item
@@ -40,4 +51,4 @@
     ; :eastish 30
     ; :northish 30
     .
-    
+ 

@@ -1,0 +1,11 @@
+URI=/alpha?exists-eastish=true
+ASK { :A a :Item }
+
+URI=/alpha?exists-absent=true
+ASK NOT { :A a :Item }
+
+URI=/alpha?exists-p.q=true
+ASK { :A a :Item }
+
+# URI=/alpha?exists-p.unq=false
+# ASK { :A a :Item }

@@ -25,3 +25,26 @@ rdf:type a rdf:Property
     ; api:label 'northish'
     ; rdfs:range xsd:integer
     .
+    
+:absent a owl:DatatypeProperty
+    ; api:label "absent"
+    ; rdfs:range xsd:integer
+    .
+    
+:p a owl:ObjectProperty
+    ; api:label "p"
+    ; rdfs:range :P
+    .
+    
+:q a owl:ObjectProperty
+    ; api:label "q"
+    ; rdfs:domain :P
+    ; rdfs:range :Q
+    .
+  
+ :unq a owl:ObjectProperty
+    ; api:label "unq"
+    ; rdfs:domain :P
+    ; rdfs:range :UNQ
+    .
+    
