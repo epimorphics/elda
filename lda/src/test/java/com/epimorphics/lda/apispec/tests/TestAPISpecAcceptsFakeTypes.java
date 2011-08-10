@@ -12,7 +12,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -20,9 +19,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import static org.hamcrest.CoreMatchers.*;
 
 public class TestAPISpecAcceptsFakeTypes 
-	{
-	ModelLoaderI NoLoader = null;
-	
+	{	
 	String spec = 
 		":my a api:API; api:sparqlEndpoint :spoo; api:variable"
 		+ " [api:name 'fred'; api:value '{tom}']"
@@ -42,7 +39,7 @@ public class TestAPISpecAcceptsFakeTypes
 		{
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
-		APISpec s = new APISpec( root, NoLoader );
+		APISpec s = SpecUtil.specFrom( root );
 		String x = s.getShortnameService().normalizeNodeToString( "year", "spoo" );
 		String eg = m.getNsPrefixURI( "" );
 		assertThat( x, is( "'spoo'^^<" + eg + "faketype>" ) );
@@ -52,7 +49,7 @@ public class TestAPISpecAcceptsFakeTypes
 		{
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
-		APISpec s = new APISpec( root, NoLoader );
+		APISpec s = SpecUtil.specFrom( root );
 		String x = s.getShortnameService().normalizeNodeToString( "name", "Frodo" );
 		assertThat( x, is( "'Frodo'" ) );
 		}

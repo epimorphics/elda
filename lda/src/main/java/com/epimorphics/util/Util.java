@@ -8,7 +8,9 @@
 
 package com.epimorphics.util;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,13 +26,13 @@ import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class Util
-    {    
-    protected static String htmlWrapper = readResource( "textlike/html-wrapper.html" );
+    {   
+	protected static String htmlWrapper = readResource( "textlike/html-wrapper.html" );
     
     public static String readResource( String path )
         {
         InputStream in = Util.class.getClassLoader().getResourceAsStream( path );
-        if (in == null) EldaException.NotFound( "resouce", path );
+        if (in == null) EldaException.NotFound( "resource", path );
         return FileManager.get().readWholeFileAsUTF8( in );
         }
     
@@ -105,5 +107,26 @@ public class Util
 			{ return new URI( u ); }
 		catch (URISyntaxException e) 
 			{ throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e ); }
-		}	 
+		} 
+	
+    public static final class EchoStringReader extends Reader 
+    	{
+		private final String text;
+		int i = 0;
+	
+		public EchoStringReader(String text) 
+			{ this.text = text; }
+	
+		@Override public void close() throws IOException 
+			{}
+	
+		@Override public int read( char[] dest, int at, int n ) throws IOException 
+			{
+			if (i == text.length()) return 0;
+			dest[at] = text.charAt(i++);
+			System.err.print(dest[at] );
+			return 1;
+			}
+    	}
+	 
     }

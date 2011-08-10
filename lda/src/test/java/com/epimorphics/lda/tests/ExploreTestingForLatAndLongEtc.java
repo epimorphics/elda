@@ -32,6 +32,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import com.hp.hpl.jena.util.FileManager;
+
 import static com.hp.hpl.jena.rdf.model.test.ModelTestBase.*;
 
 public class ExploreTestingForLatAndLongEtc 
@@ -72,7 +74,7 @@ public class ExploreTestingForLatAndLongEtc
 				}
 			};
 		Resource specification = latLongTestDescription.createResource( "eh:/spec" );
-		APISpec parent = new APISpec( specification, ml );
+		APISpec parent = new APISpec( FileManager.get(), specification, ml );
 		APIEndpointSpec spec = new APIEndpointSpec( parent, parent, endpoint );
 		APIEndpoint e = new APIEndpointImpl( spec );
 		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );

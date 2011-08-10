@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
@@ -46,7 +47,7 @@ public class TestEndpointsHandleSelect
 	
 	@Test public void testEndpointImplUsedFixedSelect()
 		{
-		APISpec a = new APISpec( s, null );
+		APISpec a = SpecUtil.specFrom( s );
 		APIEndpointSpec eps = new APIEndpointSpec( a, a, e );
 		APIEndpointImpl i = new APIEndpointImpl( eps );
 		String q = i.getSelectQuery();

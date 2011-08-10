@@ -14,7 +14,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -33,7 +33,7 @@ public class TestEndpointTypeChecked
 		{
 		try 
 			{ 
-			new APISpec( s, null ); 
+			SpecUtil.specFrom( s ); 
 			fail( "should detect missing endpoint type" ); 
 			}
 		catch (Exception e) 

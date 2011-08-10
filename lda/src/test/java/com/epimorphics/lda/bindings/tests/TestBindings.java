@@ -15,6 +15,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIEndpointUtil;
@@ -53,7 +54,7 @@ public class TestBindings {
 			;
 		Model m = ModelIOUtils.modelFromTurtle( specString );
 		Resource root = m.createResource( m.expandPrefix( "t:chris" ) );
-		APISpec spec = new APISpec( root, null );
+		APISpec spec = SpecUtil.specFrom( root );
 		APIEndpointSpec eps = spec.getEndpoints().get(0);
 		VarValues vv = MakeData.variables( "term=autumn" );
 		APIEndpointImpl ep = new APIEndpointImpl( eps );

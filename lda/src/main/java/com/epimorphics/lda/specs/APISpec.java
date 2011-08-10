@@ -39,6 +39,7 @@ import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Map1;
 
 /**
@@ -75,14 +76,14 @@ public class APISpec {
     
     protected final Set<String> metadataOptions = new HashSet<String>();
     
-    public APISpec(Resource specification, ModelLoaderI loader) {
+    public APISpec( FileManager fm, Resource specification, ModelLoaderI loader) {
     	specificationURI = specification.getURI();
     	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
 		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
         prefixes = ExtractPrefixMapping.from(specification);
         sns = new StandardShortnameService(specification, prefixes, loader);
-        dataSource = GetDataSource.sourceFromSpec( specification );
-        describeSources = extractDescribeSources( specification, dataSource );
+        dataSource = GetDataSource.sourceFromSpec( fm, specification );
+        describeSources = extractDescribeSources( fm, specification, dataSource );
         primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
         defaultLanguage = getStringValue(specification, FIXUP.lang, null);
         base = getStringValue( specification, API.base, null );
@@ -103,19 +104,21 @@ public class APISpec {
         Answer the list of sources that may be used to enhance the view of
         the selected items. Always contains at least the given source.
     */
-    private List<Source> extractDescribeSources( Resource specification, Source dataSource ) {
+    private List<Source> extractDescribeSources( FileManager fm, Resource specification, Source dataSource ) {
 //        System.err.println( ">> extracting enhancements from " + specification );
         List<Source> result = new ArrayList<Source>();
         result.add( dataSource );
-        result.addAll( specification.listProperties( EXTRAS.enhanceViewWith ).mapWith( toSource ).toList() ); 
+        result.addAll( specification.listProperties( EXTRAS.enhanceViewWith ).mapWith( toSource( fm ) ).toList() ); 
 //        System.err.println( ">> describe sources: " + result );
         return result;
     }
 
-    private static final Map1<Statement, Source> toSource = new Map1<Statement, Source>() {
-        @Override public Source map1( Statement o ) { 
-            return GetDataSource.sourceFromSpec( o.getResource() ); 
-        }
+    private static final Map1<Statement, Source> toSource( final FileManager fm ) {
+    	return new Map1<Statement, Source>() {
+    		@Override public Source map1( Statement o ) { 
+    			return GetDataSource.sourceFromSpec( fm, o.getResource() ); 
+    		}
+    	};
     };
     
     private void extractEndpointSpecifications( Resource specification ) {

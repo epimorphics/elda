@@ -17,7 +17,6 @@ import org.hamcrest.core.*;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.VarValues;
-import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.Matchers;
@@ -29,8 +28,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 public class TestAPISpecExtractsVariables 
 	{
 
-	ModelLoaderI NoLoader = null;
-	
 	@Test public void testNoVariablesInRDFMeansNoneInSpec()
 		{
 		testVariableExtraction( "", ":my a api:API; api:sparqlEndpoint :spoo;." );
@@ -90,7 +87,7 @@ public class TestAPISpecExtractsVariables
 			;
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
-		APISpec s = new APISpec( root, NoLoader );
+		APISpec s = SpecUtil.specFrom( root );
 		assertThat( s.getEndpoints(), IsNot.not( Matchers.isEmpty() ) );
 		for (APIEndpointSpec x: s.getEndpoints())
 			assertEquals( s.getBindings(), x.getBindings() );
@@ -111,7 +108,7 @@ public class TestAPISpecExtractsVariables
 			;
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
-		APISpec s = new APISpec( root, NoLoader );
+		APISpec s = SpecUtil.specFrom( root );
 		assertThat( s.getEndpoints(), IsNot.not( Matchers.isEmpty() ) );
 		assertEquals( binding("tom=17;fred='17';harry='x17y'"), s.getEndpoints().get(0).getBindings() );
 		}
@@ -120,7 +117,7 @@ public class TestAPISpecExtractsVariables
 		{
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
-		APISpec s = new APISpec( root, NoLoader );
+		APISpec s = SpecUtil.specFrom( root );
 //		System.err.println( ">> expected: " + expected );
 //		System.err.println( ">> got:      " + s.getBindings() );
 		assertEquals( binding( expected ), s.getBindings() );

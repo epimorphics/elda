@@ -88,7 +88,7 @@ public class Loader extends HttpServlet {
         log.info( "baseFilePath: " + baseFilePath );
         contextPath = getServletContext().getContextPath();
         setupLARQandTDB();
-        modelLoader = new APIModelLoader(baseFilePath);
+        modelLoader = new APIModelLoader( baseFilePath );
         FileManager.get().addLocatorFile( baseFilePath );
         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
         for (String spec : getSpecNamesFromContext()) {
@@ -99,8 +99,8 @@ public class Loader extends HttpServlet {
     public void osgiInit(String filepath) {
         baseFilePath = filepath;
         modelLoader = new APIModelLoader(baseFilePath);
-        FileManager.get().addLocatorFile( baseFilePath );
-        modelLoader = new APIModelLoader(baseFilePath);
+//        FileManager.get().addLocatorFile( baseFilePath );
+//        modelLoader = new APIModelLoader(baseFilePath);
         FileManager.get().addLocatorFile( baseFilePath );
         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
     }

@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.PropertyChain;
@@ -39,7 +40,7 @@ public class TestIncludeViewers {
 			);
 		Resource root = m.createResource( NS + "root" );
 		Resource endpoint = m.createResource( NS + "ep" );
-		APISpec as = new APISpec( root, null );
+		APISpec as = SpecUtil.specFrom( root );
 		APIEndpointSpec es = new APIEndpointSpec( as, as, endpoint );
 		assertEquals(
 			CollectionUtils.set( new PropertyChain( NS + "A" ), new PropertyChain( NS + "B" ) ),

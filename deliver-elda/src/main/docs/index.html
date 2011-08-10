@@ -268,11 +268,26 @@ spec:api
  .
 </pre>
 
-Replace the services URI with <b>local:file-name</b>, 
-where <b>file-name</b> is the name of the RDF file you 
-wish to query. (It's safest to make this an absolute
-filename.) When Elda issues queries to a local: file, 
-it loads (and remembers) the file contents and queries those.
+Replace the services URI with <b>local:content-name</b>, 
+where <b>content-name</b> is the name of the RDF source you 
+wish to query. When Elda issues queries to a local: endpoint, 
+it loads (and remembers) the contents and queries those directly.
+</p>
+
+<p>
+Usually the content-name is a file name. It is resolved against
+the webapps context path (ie the directory from which it serves
+files). If there is no such file, then the content-name is treated
+as a URL and its contents fetched. If that fails, then the content
+is searched for along the webapps classpath. In all of these cases,
+the fetched content is loaded into memory as an RDF model and all
+queries to the endpoint are answered by this model.
+</p>
+
+<p>
+(The name-lookup functionality is supplied by the underlying Jena
+<code>FileManager</code> class; for more details, see the Jena
+documentation currently at openjena.org.)
 </p>
 
 <h2>Using a local TDB datasource</h2>

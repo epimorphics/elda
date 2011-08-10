@@ -29,7 +29,7 @@ public class TestAPISpecExtractsBase
 
 	@Test public void testExtractsBase()
 		{
-		APISpec a = new APISpec( s, null );		
+		APISpec a = SpecUtil.specFrom( s );		
 		assertEquals( "to/be/expunged", a.getBase() );
 		}
 

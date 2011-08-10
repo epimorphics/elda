@@ -13,6 +13,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -31,7 +32,7 @@ public class TestItemEndpoint
 	
 	@Test public void ensureSpecExtractsItemTemplate()
 		{
-		APISpec a = new APISpec( s, null );
+		APISpec a = SpecUtil.specFrom( s );
 		APIEndpointSpec eps = new APIEndpointSpec( a, null, e );
 		assertEquals( "http://fake.domain.org/spoo/{what}", eps.getItemTemplate() );
 		}

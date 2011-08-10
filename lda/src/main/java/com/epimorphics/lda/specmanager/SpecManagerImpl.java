@@ -33,6 +33,7 @@ import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.util.FileManager;
 
 /**
  * Implementation of SpecManager for simple non-GAE environment.
@@ -78,7 +79,7 @@ public class SpecManagerImpl implements SpecManager {
         } else {
             log.info("Creating API spec at: " + uri);
 //            spec.write(System.out, "Turtle");
-            APISpec apiSpec = new APISpec( spec.getResource(uri), modelLoader);
+            APISpec apiSpec = new APISpec( FileManager.get(), spec.getResource(uri), modelLoader);
             synchronized (specs) {
                 specs.put(uri, new SpecEntry(uri, key, apiSpec, spec));
             }

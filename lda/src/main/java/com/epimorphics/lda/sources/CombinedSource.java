@@ -22,6 +22,7 @@ import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.shared.LockMRSW;
+import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Map1;
 
 import org.slf4j.*;
@@ -48,11 +49,13 @@ public class CombinedSource extends SourceBase implements Source
     
     protected final Lock lock = new LockMRSW();
     
-    private static final Map1<Statement, Source> toSource = new Map1<Statement, Source>()
-        {
-        @Override public Source map1( Statement o )
-            { return GetDataSource.sourceFromSpec( o.getResource() ); }
-        };
+    private static final Map1<Statement, Source> toSource( final FileManager fm ) {
+    	return new Map1<Statement, Source>()
+        	{
+    		@Override public Source map1( Statement o )
+            	{ return GetDataSource.sourceFromSpec( fm, o.getResource() ); }
+        	};
+    }
 
     private static final Map1<Statement, String> toString = new Map1<Statement, String>()
         {
@@ -64,11 +67,11 @@ public class CombinedSource extends SourceBase implements Source
         ep is a resource of type Combiner. It has multiple elements, each of
         which themselves represent sub-sources.
     */
-    public CombinedSource( Resource ep )
+    public CombinedSource( FileManager fm, Resource ep )
         {
         constructs = ep.listProperties( EXTRAS.construct ).mapWith( toString ).toList();
         matches = ep.listProperties( EXTRAS.match ).mapWith( toString ).toList();
-        sources = ep.listProperties( EXTRAS.element ).mapWith( toSource ).toList();
+        sources = ep.listProperties( EXTRAS.element ).mapWith( toSource( fm ) ).toList();
         }
 
     @Override public Lock getLock() {
