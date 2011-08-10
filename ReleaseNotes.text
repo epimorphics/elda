@@ -1,5 +1,10 @@
 1.1.8-SNAPSHOT
 
+* The effect of local: SPARQL endpoints is more precisely described
+  (it uses the Jena FileManager). As a side-effect, FileManagers
+  are more often passed down to their point of use rather than
+  using FileManager.get() everywhere.
+
 * The cache counts can be reset by POSTing to /control/reset-counts;
   there's a button to do this on the /control/show-cach pagelet.
 
