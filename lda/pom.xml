@@ -66,7 +66,7 @@
     <dependency>
         <groupId>com.hp.hpl.jena</groupId>
         <artifactId>tdb</artifactId>
-        <version>0.8.9</version>
+        <version>0.8.11-SNAPSHOT</version>
         <type>jar</type>
     </dependency>
 

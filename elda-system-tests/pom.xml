@@ -41,13 +41,6 @@
     </dependency>
 
     <dependency>
-      <groupId>com.hp.hpl.jena</groupId>
-      <artifactId>tdb</artifactId>
-      <version>0.8.9</version>
-      <type>jar</type>
-    </dependency>
-    
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.2</version>

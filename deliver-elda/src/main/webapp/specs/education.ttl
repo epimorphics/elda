@@ -84,6 +84,7 @@ spec:api a lda:API
     ; foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI
     ; lda:maxPageSize "50"
     ; lda:defaultPageSize "10" 
+    # ; lda:sparqlEndpoint <tdb:weWhoAreAboutToDieSaluteYou> 
     ; lda:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
     #
     # normally constructed URIs (for views, formatters, metadata, etc) are based

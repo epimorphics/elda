@@ -1,4 +1,10 @@
-1.1.8-SNAPSHOT
+1.1.9 SNAPSHOT
+
+
+1.1.8
+
+* Updated the POMs to refer to the latest snapshots for ARQ and TDB
+  to clear up Issue 69 on TDB support.
 
 * The effect of local: SPARQL endpoints is more precisely described
   (it uses the Jena FileManager). As a side-effect, FileManagers
