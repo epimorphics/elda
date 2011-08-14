@@ -2,8 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <properties>
-    <elda.version>1.1.9-SNAPSHOT</elda.version>
-    <hg.root>${project.build.directory}</hg.root>
+    <tempSCM>/tmp/tempSCM</tempSCM>
   </properties>
 
   <modelVersion>4.0.0</modelVersion>
@@ -15,9 +14,9 @@
   <description>Top level linked data API project</description>
 
   <scm>
-    <connection>scm:hg:${hg.root}</connection>
-    <developerConnection>scm:hg:/tmp/other-elda</developerConnection>
-    <url>scm:hg:${hg.root}</url>
+    <connection>scm:hg:${tempSCM}</connection>
+    <developerConnection>scm:hg:${tempSCM}</developerConnection>
+    <url>scm:hg:${tempSCM}</url>
   </scm>
 
   <build>

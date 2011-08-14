@@ -19,7 +19,7 @@
     <dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>lda</artifactId>
-      <version>${pom.version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
@@ -38,14 +38,14 @@
     <dependency>
     	<groupId>com.epimorphics.lda</groupId>
     	<artifactId>lda</artifactId>
-    	<version>${pom.version}</version>
+    	<version>${project.version}</version>
     	<classifier>sources</classifier>
     	<scope>compile</scope>
     </dependency>
     <dependency>
     	<groupId>com.epimorphics.lda</groupId>
     	<artifactId>json-rdf</artifactId>
-    	<version>${pom.version}</version>
+    	<version>${project.version}</version>
     	<type>jar</type>
     	<classifier>sources</classifier>
     	<scope>compile</scope>
