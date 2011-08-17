@@ -97,8 +97,8 @@ public class QueryArgumentsImpl implements QueryArguments {
 		query.setViewByTemplateClause( clause );			
 	}
 
-	@Override public void setOrderBy(String term) {
-		query.setOrderBy( term );
+	@Override public void setSortBy(String term) {
+		query.setSortBy( term );
 	}
 
 	@Override public void addPropertyHasValue(Param param, Set<String> allVal) {

@@ -46,7 +46,7 @@ public interface QueryArguments {
 
 	public void setViewByTemplateClause( String clause );
 
-	public void setOrderBy( String term );
+	public void setSortBy( String term );
 
 	public void addPropertyHasValue( Param param, Set<String> allVal );
 

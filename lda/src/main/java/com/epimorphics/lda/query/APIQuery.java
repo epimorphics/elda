@@ -474,7 +474,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         may appear after SPARQL's ORDER BY). Add <code>orderBy</code>
         as the new order expressions.
     */
-    public void setExplicitOrderBy( String orderBy ) {
+    public void setOrderBy( String orderBy ) {
     	orderExpressions.setLength(0);
     	orderExpressions.append( orderBy );
     }
@@ -493,7 +493,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         (?item Property Var) added to the query with the Var
         being the sort field.
     */
-    public void setOrderBy( String orderSpecs ) {
+    public void setSortBy( String orderSpecs ) {
     	orderExpressions.setLength(0);
     	for (String spec: orderSpecs.split(",")) {
 	        boolean descending = spec.startsWith("-"); 

@@ -188,10 +188,11 @@ public class ContextQueryUpdater implements ViewSetter {
 		} else if (p.equals( QueryParameter._DISTANCE )) { 
 			geo.setDistance( val );
 		} else if (p.equals( QueryParameter._TEMPLATE )) {
-			// vs.setViewByExplicitClause( val );
 			args.setViewByTemplateClause( val );
 		} else if (p.equals(QueryParameter._SORT)) {
-		    args.setOrderBy( val );
+		    args.setSortBy( val );
+//		} else if (p.equals(QueryParameter._ORDERBY )) {
+//			args.setCCC( val );
 		} else {
 			throw new EldaException( "unrecognised reserved parameter: " + p );
 		}
