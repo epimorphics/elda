@@ -414,6 +414,7 @@ $prefLabel, $altLabel, $title and $name variables.
 	<section class="formats">
 		<ul>
 			<xsl:for-each select="format/item">
+			<xsl:sort select="label"/>
 				<li>
 					<xsl:if test="position() = 1">
 						<xsl:attribute name="class">first</xsl:attribute>
