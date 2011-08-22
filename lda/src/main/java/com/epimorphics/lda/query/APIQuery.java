@@ -13,18 +13,21 @@
 package com.epimorphics.lda.query;
 
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Value;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ClauseConsumer;
 import com.epimorphics.lda.core.ExpandLabels;
+import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.core.View;
@@ -120,7 +123,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected Resource subjectResource = null;
     
     protected String itemTemplate;
-    protected String fixedQueryString = null;
+    protected String fixedSelect = null;
     
     protected Set<String> metadataOptions = new HashSet<String>();
     
@@ -480,7 +483,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
     
     public void setFixedSelect( String fixedSelect ) {
-    	fixedQueryString = fixedSelect;
+    	this.fixedSelect = fixedSelect;
     }
     
     /**
@@ -569,9 +572,18 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	else
     		return bindableVars.contains(var);
     }
+
+    public String assembleSelectQuery( CallContext cc, PrefixMapping prefixes ) {   
+    	return boundQuery( assembleRawSelectQuery( prefixes ), cc );
+    }
+
+    public String assembleSelectQuery( PrefixMapping prefixes ) {   
+    	CallContext cc = CallContext.createContext( null, new MultiMap<String, String>(), new VarValues() );
+    	return boundQuery( assembleRawSelectQuery( prefixes ), cc );
+    }
     
-    public String assembleSelectQuery( PrefixMapping prefixes ) {    	
-    	if (fixedQueryString == null) {
+    public String assembleRawSelectQuery( PrefixMapping prefixes ) {    	
+    	if (fixedSelect == null) {
     		PrefixLogger pl = new PrefixLogger( prefixes );
 	        StringBuilder q = new StringBuilder();
 	        q.append("SELECT ");
@@ -600,7 +612,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	        x.append( q );
 	        return x.toString();
     	} else {
-    		return fixedQueryString;
+    		// TODO add code for LIMIT/OFFSET when tests exist.
+    		StringBuilder sb = new StringBuilder();
+    		sb.append( fixedSelect );
+    		return sb.toString();
     	}
     }
 
@@ -641,30 +656,77 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	 propertyChains.append( clause );    	
     }
     
+	/**
+	    Take the SPARQL query string <code>query</code> and replace any ?SPOO
+	    where SPOO is a variable bound in <code>cc</code> with the SPARQL
+	    representation of that variable's value. Note that this will include
+	    <i>any</i> occurrences of ?SPOO, including those inside SPARQL quotes.
+	    Fixing this probably should happen earlier, but note that bits of query
+	    are mashed together from strings in the config file, ie, without going
+	    through RDFQ.	    
+	*/
     protected String boundQuery( String query, CallContext cc ) {
+    	String theOld = oldBoundQuery( query, cc );
+    	String theNew = newBoundQuery( query, cc );
+    	if (!theOld.equals( theNew )) {
+    		log.debug( "WARNING: new bound query code does not compute the same result as old code." );
+    		log.debug( " (this code is being worked on. The new value will be used.)" );
+    		log.debug( " OLD: " + theOld );
+    		log.debug( " NEW: " + theNew );
+    	}
+    	return theNew;
+    }
+    
+    protected String newBoundQuery( String query, CallContext cc ) {
+//    	System.err.println( ">> query is: " + query );
+//    	System.err.println( ">> callcontext is: " + cc );
+    	StringBuilder result = new StringBuilder( query.length() );
+    	Matcher m = varPattern.matcher( query );
+    	int start = 0;
+    	while (m.find( start )) {
+    		result.append( query.substring( start, m.start() ) );
+    		String name = m.group().substring(1);
+    		Value v = cc.getParameter( name );
+//    		System.err.println( ">> value of " + name + " is " + v );
+    		if (v == null) {
+    			result.append( m.group() );
+    		} else {
+	    		String prop = varProps.get( name );
+	            String val = cc.getStringValue( name );
+	        	String normalizedValue = 
+	        		(prop == null) 
+	        		    ? valueAsSparql( v )
+	        		    : sns.normalizeNodeToString(prop, val, defaultLanguage); 
+	    		result.append( normalizedValue );
+    		}
+    		start = m.end();
+    	}
+    	result.append( query.substring( start ) );
+    	return result.toString();
+    }
+    
+    protected String oldBoundQuery( String query, CallContext cc ) {
 //    	System.err.println( ">> boundQuery: bindableVars = " + bindableVars );
 //    	System.err.println( ">> boundQuery: call context = " + cc );
         String bound = query;
-        if (!bindableVars.isEmpty()) {
-            for (String var : bindableVars) {
-            	Value v = cc.getParameter( var );
-                String val = cc.getStringValue(var);
+        for (String var : bindableVars) {
+        	Value v = cc.getParameter( var );
+            String val = cc.getStringValue(var);
 //                System.err.println( ">> " + v );
-                if (val != null) {
-                	String prop = varProps.get(var);
-                	String normalizedValue = 
-                		(prop == null) 
-                		    ? valueAsSparql( v )
-                		    : sns.normalizeNodeToString(prop, val, defaultLanguage); 
-                    bound = bound.replace( "?" + var, normalizedValue );
-                    // TODO improve this, will fail in case where ? is in nested literals
-                    // Right long term answer is to switch to transforming algebra or parse tree
-                } else {
-                	// Unbound vars are normally OK, might be there to support orderBy or
-                	// simply an existence check. Warning might not be necessary
-                	if (! var.equals(SELECT_VARNAME))
-                		log.debug("Query has unbound variable: " + var);
-                }
+            if (val != null) {
+            	String prop = varProps.get(var);
+            	String normalizedValue = 
+            		(prop == null) 
+            		    ? valueAsSparql( v )
+            		    : sns.normalizeNodeToString(prop, val, defaultLanguage); 
+                bound = bound.replace( "?" + var, normalizedValue );
+                // TODO improve this, will fail in case where ? is in nested literals
+                // Right long term answer is to switch to transforming algebra or parse tree
+            } else {
+            	// Unbound vars are normally OK, might be there to support orderBy or
+            	// simply an existence check. Warning might not be necessary
+            	if (! var.equals(SELECT_VARNAME))
+            		log.debug("Query has unbound variable: " + var);
             }
         }
         // System.err.println( ">> finally: " + bound );
@@ -691,7 +753,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     public String getQueryString(APISpec spec, CallContext call) {
         return isFixedSubject()
             ? "<" + subjectResource.getURI() + ">"
-            : boundQuery( assembleSelectQuery(spec.getPrefixMap()), call)
+            : assembleSelectQuery( call, spec.getPrefixMap() )
             ;
     }
     
@@ -829,8 +891,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         	return runGeneralQuery( cache, spec, call, source, results );
     }
 
-	private Couple<String, List<Resource>> runGeneralQuery( Cache cache, APISpec spec, CallContext call, Source source, final List<Resource> results) {
-		String select = boundQuery( assembleSelectQuery(spec.getPrefixMap()), call );
+	private Couple<String, List<Resource>> runGeneralQuery( Cache cache, APISpec spec, CallContext cc, Source source, final List<Resource> results) {
+		String select = assembleSelectQuery( cc, spec.getPrefixMap() );
 		List<Resource> already = cache.getCachedResources( select );
 		if (already != null)
 		    {

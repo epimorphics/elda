@@ -48,6 +48,8 @@ public interface QueryArguments {
 
 	public void setSortBy( String term );
 
+	public void setOrderBy(String val);
+
 	public void addPropertyHasValue( Param param, Set<String> allVal );
 
 	public void addNameProp( Param plain, String val );

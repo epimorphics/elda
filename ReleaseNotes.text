@@ -1,5 +1,13 @@
 1.1.9 SNAPSHOT
 
+* Implemented _orderBy and api:orderBy which somehow had fallen
+  off the radar.
+
+* Revised the code that substituted ?variables with their value
+  if there was a value for them in the call context; this means
+  that the substitution happens everywhere.
+  
+
 
 1.1.8
 

@@ -23,6 +23,7 @@ public class QueryParameter {
 	public static final String _WHERE = "_where";
 	public static final String _SUBJECT = "_subject";
 	public static final String _SORT = "_sort";
+	public static final String _ORDERBY = "_orderBy";
 	public static final String _TEMPLATE = "_template";
 	public static final String _VIEW = "_view";
 	public static final String _PROPERTIES = "_properties";

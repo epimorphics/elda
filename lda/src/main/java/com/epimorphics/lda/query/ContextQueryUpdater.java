@@ -191,8 +191,8 @@ public class ContextQueryUpdater implements ViewSetter {
 			args.setViewByTemplateClause( val );
 		} else if (p.equals(QueryParameter._SORT)) {
 		    args.setSortBy( val );
-//		} else if (p.equals(QueryParameter._ORDERBY )) {
-//			args.setCCC( val );
+		} else if (p.equals(QueryParameter._ORDERBY )) {
+			args.setOrderBy( val );
 		} else {
 			throw new EldaException( "unrecognised reserved parameter: " + p );
 		}

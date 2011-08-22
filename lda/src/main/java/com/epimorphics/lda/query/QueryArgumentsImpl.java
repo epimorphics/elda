@@ -78,7 +78,7 @@ public class QueryArgumentsImpl implements QueryArguments {
 	}
 
 	@Override public void setFixedSelect(String select) {
-    	query.fixedQueryString = select;
+    	query.fixedSelect = select;
 	}
 
 	@Override public void setDefaultLanguage( String defaults ) {
@@ -99,6 +99,10 @@ public class QueryArgumentsImpl implements QueryArguments {
 
 	@Override public void setSortBy(String term) {
 		query.setSortBy( term );
+	}
+
+	@Override public void setOrderBy(String term) {
+		query.setOrderBy( term );
 	}
 
 	@Override public void addPropertyHasValue(Param param, Set<String> allVal) {

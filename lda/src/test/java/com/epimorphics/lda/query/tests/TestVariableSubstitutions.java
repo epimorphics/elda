@@ -9,7 +9,6 @@ package com.epimorphics.lda.query.tests;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.bindings.VarValues;
@@ -27,10 +26,10 @@ import com.epimorphics.util.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestVariableSubstitutions {
-	
-	@Test @Ignore public void testShared() {
+
+	@Test public void testOrderByParameterExpandsVariables() {
 		MultiMap<String, String> qp = MakeData.parseQueryString( "_orderBy={x}" );
-		VarValues bindings = MakeData.variables( "x=thingy" );
+		VarValues bindings = MakeData.variables( "x=ordering" );
 		CallContext cc = CallContext.createContext( Util.newURI("my:URI"), qp, bindings );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
@@ -40,9 +39,42 @@ public class TestVariableSubstitutions {
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		qa.updateQuery();
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
-		int count = aq.countVarsAllocated();
-		if (count != 1) {
-			fail( "expected to allocate only one variable, but generated query was:\n" + q + "\nwith " + count + " variables." );
-		}
+		assertMatches( "(?s).*ORDER BY ordering.*", q );
+	}
+	
+	@Test public void testOrderBySettingExpandsVariables() {
+		MultiMap<String, String> qp = MakeData.parseQueryString( "" );
+		VarValues bindings = MakeData.variables( "x=ordering" );
+		CallContext cc = CallContext.createContext( Util.newURI("my:URI"), qp, bindings );
+		NamedViews nv = new FakeNamedViews();
+		ShortnameService sns = new SNS( "" );
+		APIQuery aq = new APIQuery( sns );
+		aq.setOrderBy( "?x" );
+		QueryArgumentsImpl qa = new QueryArgumentsImpl(aq);
+		ContextQueryUpdater cq = new ContextQueryUpdater( cc, nv, sns, aq, qa );
+		cq.updateQueryAndConstructView( aq.deferredFilters );
+		qa.updateQuery();
+		String q = aq.assembleSelectQuery( cc, PrefixMapping.Factory.create() );
+		assertMatches( "(?s).*ORDER BY 'ordering'.*", q );        
+	}
+	
+	@Test public void testSelectExpandsVariables() {
+		MultiMap<String, String> qp = MakeData.parseQueryString( "_select={x}" );
+		VarValues bindings = MakeData.variables( "x=myQueryHere" );
+		CallContext cc = CallContext.createContext( Util.newURI("my:URI"), qp, bindings );
+		NamedViews nv = new FakeNamedViews();
+		ShortnameService sns = new SNS( "" );
+		APIQuery aq = new APIQuery( sns );
+		QueryArgumentsImpl qa = new QueryArgumentsImpl(aq);
+		ContextQueryUpdater cq = new ContextQueryUpdater( cc, nv, sns, aq, qa );
+		cq.updateQueryAndConstructView( aq.deferredFilters );
+		qa.updateQuery();
+		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
+		assertEquals( "myQueryHere", q );
+	}
+
+	private void assertMatches( String pattern, String subject ) {
+		if (!subject.matches( pattern ))
+			fail( "subject does not match pattern '" + pattern + "': " + subject );
 	}
 }
