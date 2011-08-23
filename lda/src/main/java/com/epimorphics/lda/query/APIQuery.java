@@ -562,7 +562,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     private Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
     
-	public void addWhere(String whereClause) {
+	public void addWhere( String whereClause ) {
 		log.debug( "TODO: check the legality of the where clause: " + whereClause );
         if (whereExpressions.length() > 0) whereExpressions.append(" ");
         whereExpressions.append(whereClause);
@@ -590,8 +590,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
     
     public String assembleRawSelectQuery( PrefixMapping prefixes ) {    	
+    	PrefixLogger pl = new PrefixLogger( prefixes );
     	if (fixedSelect == null) {
-    		PrefixLogger pl = new PrefixLogger( prefixes );
 	        StringBuilder q = new StringBuilder();
 	        q.append("SELECT ");
 	        if (orderExpressions.length() > 0) q.append("DISTINCT "); // Hack to work around lack of _select but seems a common pattern
@@ -610,6 +610,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	        if (orderExpressions.length() > 0) {
 	            q.append(" ORDER BY ");
 	            q.append( orderExpressions );
+	        	pl.findPrefixesIn( orderExpressions.toString() );
 	        }
 	        q.append(" OFFSET " + (pageNumber * pageSize));
 	        q.append(" LIMIT " + pageSize);
@@ -620,7 +621,9 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	        return x.toString();
     	} else {
     		// TODO add code for LIMIT/OFFSET when tests exist.
+    		pl.findPrefixesIn( fixedSelect );
     		StringBuilder sb = new StringBuilder();
+    		pl.writePrefixes( sb );
     		sb.append( fixedSelect );
     		return sb.toString();
     	}

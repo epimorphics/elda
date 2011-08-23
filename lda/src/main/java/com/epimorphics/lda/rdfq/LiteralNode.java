@@ -38,7 +38,8 @@ public class LiteralNode extends Term
 	@Override public String asSparqlTerm( PrefixLogger pl )
 		{ 
 		Node n = NodeFactory.createLiteralNode( spelling, language, datatype );
-		String lf = FmtUtils.stringForNode( n , RDFUtils.noPrefixes ); 
+		if (datatype.length() > 0) pl.present( datatype );
+		String lf = FmtUtils.stringForNode( n, RDFUtils.noPrefixes ); 
 		return lf;
 		}
 	

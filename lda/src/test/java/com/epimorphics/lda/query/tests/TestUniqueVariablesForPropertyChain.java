@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 
 public class TestUniqueVariablesForPropertyChain {
 
-	@Test public void testShared() {
+	@Test public void testUnique() {
 		MultiMap<String, String> qp = MakeData.parseQueryString( "first.aname=1&first.bname=2" );
 		VarValues bindings = MakeData.variables( "" );
 		CallContext cc = CallContext.createContext( Util.newURI("my:URI"), qp, bindings );

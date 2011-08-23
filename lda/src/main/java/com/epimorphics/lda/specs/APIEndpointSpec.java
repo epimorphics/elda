@@ -259,9 +259,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	            }
             }
         }
-        if (s.hasProperty(API.where)) {
-            String where = getStringValue(s, API.where);
-            baseQuery.addWhere(where);
+        for (Statement where: s.listProperties( API.where ).toList()) {
+        	baseQuery.addWhere( where.getString() );        	
         }
         if (s.hasProperty(API.orderBy)) {
             baseQuery.setOrderBy( getStringValue( s, API.orderBy ) );
