@@ -18,6 +18,9 @@ public final class SNS extends ExpandOnly
 	{
 	public SNS(String expansions) 
 		{ super( MakeData.modelForBrief( "bname" ), expansions ); }
+	
+	public SNS(String expansions, String others ) 
+		{ super( MakeData.modelForBrief( "bname", others ), expansions ); }
 
 	@Override public Resource normalizeResource( String s ) 
 		{

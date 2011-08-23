@@ -46,6 +46,7 @@ public class TestAPI {
     public APIResultSet testAPI(String uri, String query, String expectedResults) {
         String description = "# Model from test: " + uri + "?" + query + "\n";
         APIResultSet rs = tester.runQuery(uri, query);
+//        System.err.println( ">> QUERY: " + rs.getSelectQuery() );
         Model rsm = rs.getModel();
         if (expectedResults == null) {
             System.out.print(description);

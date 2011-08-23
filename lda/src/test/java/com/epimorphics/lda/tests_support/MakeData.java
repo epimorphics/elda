@@ -21,6 +21,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -103,7 +104,18 @@ public class MakeData
 	    are converted to full fake URIs fake:/S which are declared as 
 	    rdf:Property's with integer ranges and label S.
 	*/
-	public static Model modelForBrief(String brief) 
+	public static Model modelForBrief( String brief ) 
+		{ return modelForBrief( brief, "" ); }
+
+	/**
+	    Answers a model which can be used to establish the short form and type 
+	    of fake properties. The comma-separated shortnames S from <code>brief</code>
+	    are converted to full fake URIs fake:/S which are declared as 
+	    rdf:Property's with integer ranges and label S. Those from 
+	    <code>others</code> are declared as ObjectProperties with no explicit
+	    range.
+	*/
+	public static Model modelForBrief(String brief, String others) 
 		{
 		Model result = ModelFactory.createDefaultModel();
 		Resource integer = result.createResource( XSDDatatype.XSDinteger.getURI() );
@@ -114,6 +126,13 @@ public class MakeData
 			r.addProperty( RDF.type, RDF.Property );
 			r.addProperty( RDFS.range, integer );
 			}
+		if (others.length() > 0)
+			for (String o: others.split(","))
+				{
+				Resource r = result.createResource( "fake:/" + o );
+				r.addProperty( FIXUP.label, o );
+				r.addProperty( RDF.type, OWL.ObjectProperty );
+				}
 		return result;
 		}
 

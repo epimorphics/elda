@@ -194,7 +194,8 @@ public class ContextQueryUpdater implements ViewSetter {
 		} else if (p.equals(QueryParameter._ORDERBY )) {
 			args.setOrderBy( val );
 		} else {
-			throw new EldaException( "unrecognised reserved parameter: " + p );
+			EldaException.BadRequest( "unrecognised reserved parameter: " + p );
+			throw new EldaException( "Can never get here!" );
 		}
 	}	
 	

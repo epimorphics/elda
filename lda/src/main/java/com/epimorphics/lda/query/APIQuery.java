@@ -188,6 +188,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             clone.expansionPoints = new HashSet<Property>( expansionPoints );
             clone.deferredFilters = new ArrayList<Deferred>( deferredFilters );
             clone.metadataOptions = new HashSet<String>( metadataOptions );
+            clone.varsForPropertyChains = new HashMap<String, Variable>( varsForPropertyChains );
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new APIException("Can't happen :)", e);
@@ -402,10 +403,14 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	return addPropertyHasValue( param, rawValues, false );
     }
         
+    protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
+    
     protected String addPropertyHasValue( Param param, Set<String> rawValues, boolean optional ) {
     	String languages = languagesFor.get( param.toString() );
     	if (languages == null) languages = defaultLanguage;
     	Param.Info [] infos = param.fullParts();
+    //
+    	StringBuilder chainName = new StringBuilder();
     //
 		String rawValue = rawValues.iterator().next();
     	if (optional) return generateOptionalTriple(rawValues, infos, rawValue);
@@ -414,10 +419,15 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         int i = 0;
         while (i < infos.length-1) {
         	Param.Info inf = infos[i];
-            Variable newvar = newVar();
-            addTriplePattern(var, inf, newvar );
-            noteBindableVar( inf );
-            var = newvar;
+        	chainName.append( "." ).append( inf.shortName );
+        	Variable v = varsForPropertyChains.get( chainName.toString() );
+        	if (v == null) {
+        		v = RDFQ.var( PREFIX_VAR + chainName.toString().replaceAll( "\\.", "_" ) + "_" + varcount++ );
+        		varsForPropertyChains.put( chainName.toString(), v );
+        		addTriplePattern(var, inf, v );
+        		noteBindableVar( inf );
+        	}
+        	var = v;
             i++;
         }
         noteBindableVar( infos[i].shortName );

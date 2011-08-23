@@ -1,5 +1,12 @@
 1.1.9 SNAPSHOT
 
+* If the same property chain appears as a prefix of multiple
+  P=V property bindings, only one variable per chain is generated
+  (and the binding triples are not repeated).
+
+  [This still needs to be combined with the same trick in
+  prefix-P=V expansion.]
+
 * Adding `item P ?V` triples to APIQuery now correctly handles
   the case where ?V is substituted even when there's a default
   language.
