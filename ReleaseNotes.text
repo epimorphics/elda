@@ -1,13 +1,15 @@
 1.1.9 SNAPSHOT
 
+* Adding `item P ?V` triples to APIQuery now correctly handles
+  the case where ?V is substituted even when there's a default
+  language.
+
 * Implemented _orderBy and api:orderBy which somehow had fallen
   off the radar.
 
 * Revised the code that substituted ?variables with their value
   if there was a value for them in the call context; this means
   that the substitution happens everywhere.
-  
-
 
 1.1.8
 

@@ -18,4 +18,5 @@ public class WhatToDo
 	public String path;
 	public String queryParams;
 	public List<Ask> shouldAppear;
+	public String template;
 	}

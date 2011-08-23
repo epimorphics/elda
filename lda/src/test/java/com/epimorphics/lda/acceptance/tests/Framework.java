@@ -25,11 +25,13 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.*;
+import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.FileManager;
@@ -60,6 +62,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		{
 		List<Object[]> result = new ArrayList<Object[]>();
 		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree" + path ) );
+//		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree/subst-tests" ) );
 //		System.err.println( ">> " + result.size() + " tests.");
 		return result;
 		}
@@ -79,16 +82,18 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 			for (File f: d.listFiles( endsWith( "-test.ask") )) 
 				{
 				String fileName = f.toString();
-				List<Couple<String, List<Ask>>> urisAndQuerys = loadQueries( spec.b, fileName );
-				for (Couple<String, List<Ask>> uriAndQuery: urisAndQuerys) 
+				List<UriAndAsks> urisAndQuerys = loadQueries( spec.b, fileName );
+				String uriTemplate = getUriTemplate( spec.b );
+				for (UriAndAsks uriAndQuery: urisAndQuerys) 
 					{
-					List<Ask> probes = uriAndQuery.b;
-					String uri = uriAndQuery.a;
+					List<Ask> probes = uriAndQuery.asks;
+					String uri = uriAndQuery.uri;
 					String [] parts = uri.split( "\\?" );
 					String path = parts[0].replaceAll( "_", "/" );
 					String queryParams = parts.length > 1 ? parts[1] : "";
 				//
 					WhatToDo w = new WhatToDo();
+					w.template = uriTemplate;
 					w.title = 
 						"from directory: " + d.toString() 
 						+ ", spec file: " + spec.a 
@@ -110,12 +115,19 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 				if (f.isDirectory()) findTestsFromRoot( items, spec.b, data.b, f );
 		}
 
-	private static List<Couple<String, List<Ask>>> loadQueries( Model spec, String fileName ) 
+	private static String getUriTemplate( Model spec ) {
+		StmtIterator s = spec.listStatements( null, API.uriTemplate, (RDFNode) null );
+		if (!s.hasNext()) throw new RuntimeException( "Did not find uri template in test config." );
+		String template = s.next().getString();
+		if (s.hasNext()) throw new RuntimeException( "Multiple uri templates in test config." );
+		return template;
+	}
+
+	private static List<UriAndAsks> loadQueries( Model spec, String fileName ) 
 		{
-		List<Couple<String, List<Ask>>> result = new ArrayList<Couple<String,List<Ask>>>();
+		List<UriAndAsks> result = new ArrayList<UriAndAsks>();
 //		System.err.println( ">> loading query " + fileName );
 		String wholeFile = FileManager.get().readWholeFileAsUTF8( fileName );
-		
 		String [] elements = wholeFile.split( "(^|\n)URI=" );
 		for (String element: elements)
 			if (element.length() > 0)
@@ -124,7 +136,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 				String uri = parts[0], queries = parts[1];
 				String prefixes = sparqlPrefixesFrom( spec );
 				List<Ask> asks = getQueries( queries, prefixes);
-				result.add( new Couple<String, List<Ask>>( uri, asks ) );
+				result.add( new UriAndAsks( uri, asks ) );
 				}
 		return result;
 		}
@@ -226,9 +238,10 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		Model specModel = w.specModel;
 		Resource root = specModel.createResource( specModel.expandPrefix( ":root" ) );
 		APISpec s = SpecUtil.specFrom( root );
-		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) );        
+		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) );   	
 		MultiMap<String, String> map = MakeData.parseQueryString( w.queryParams );
-		CallContext cc = CallContext.createContext( Util.newURI(w.path), map, new VarValues() );
+	map.add( "_metadata", "all" );
+		CallContext cc = CallContext.createContext( Util.newURI(w.path), map, bindTemplate( w.template, w.path ) );
 		Triad<APIResultSet, String, CallContext> resultsAndFormat = ep.call( cc );
 		Model rsm = resultsAndFormat.a.getModel();
 //		System.err.println( ">> " + rs.getResultList() );
@@ -238,6 +251,15 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 			QueryExecution qe = QueryExecutionFactory.create( a.ask, rsm );
 			if (qe.execAsk() != a.isPositive)
 				{
+//				System.err.println( ">> WHOOPS------------------------------------__" );
+//				System.err.println( ">> path: " + w.path );
+//				System.err.println( ">> qp: " + w.queryParams );
+//				System.err.println( ">> template: " + w.template );
+//				System.err.println( ">> ------------------------------------------__" );
+//				System.err.println( resultsAndFormat.a.getSelectQuery() );
+//				System.err.println( ">> ------------------------------------------__" );
+//				System.err.println( ">> cc = " + cc );
+//				System.err.println( ">> ------------------------------------------__" );
 				fail
 					( "test " + w.title + ": the probe query\n"
 					+ shortStringFor( a ) + "\n"
@@ -248,6 +270,17 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 				}
 			}
 		}
+
+	// this seems a bit tedious. There should be a more straightforward way.
+	private VarValues bindTemplate( String template, String path ) {
+		MatchSearcher<String> ms = new MatchSearcher<String>();
+		ms.register( template, "IGNORED" );
+		Map<String, String> bindings = new HashMap<String, String>();
+		ms.lookup( bindings, path );
+		VarValues result = new VarValues();
+		for (String key: bindings.keySet())	result.put( key, bindings.get( key ) );
+		return result;
+	}
 
 	public static String shortStringFor( Model rs ) 
 		{

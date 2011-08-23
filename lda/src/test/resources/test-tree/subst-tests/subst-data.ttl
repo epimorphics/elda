@@ -1,0 +1,6 @@
+@prefix : <http://www.epimorphics.com/tools/example#>.
+
+:alpha a :C; :p 3 .
+:beta a :C; :p 42 .
+:gamma a :C; :q 42 .
+:delta a :C; :p 17 .

@@ -21,7 +21,7 @@ import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
 
 /**
- * Represents the result of a router maching an incoming URL
+ * Represents the result of a router matching an incoming URL
  * against its table of known endpoints.
  * 
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>

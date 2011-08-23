@@ -341,22 +341,19 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
      */
     private void addTriplePattern( Variable var, String prop, String languages, String val ) {
     	Resource np = sns.normalizeResource(prop);
+    	// System.err.println( ">> aTP: prop " + prop + ", val " + val + ", languages: " + languages );
+    	if (val.startsWith("?")) varProps.put( val.substring(1), prop );   
     	if (languages == null) {
-	    	if (val.startsWith("?")) {
-	    		// Record property which points to this variable for us in decoding binding values
-	    		varProps.put(val.substring(1), prop);   
-	    	}
-			Any norm = sns.normalizeNodeToRDFQ(prop, val, defaultLanguage);
+			Any norm = sns.normalizeNodeToRDFQ( prop, val, defaultLanguage );
 			addTriplePattern( var, np, norm ); 
     	} else {
-    		addLanguagedTriplePattern(var, prop, languages, val);
+    		addLanguagedTriplePattern( var, prop, languages, val );
     	}
     }
     
     private void addTriplePattern( Variable var, Info prop, String languages, String val ) {
     	addTriplePattern( var, prop.shortName, languages, val );
     }
-
 
 	private void addLanguagedTriplePattern(Variable var, String prop, String languages, String val) {
 		String[] langArray = languages.split( "," );
@@ -693,6 +690,12 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     		} else {
 	    		String prop = varProps.get( name );
 	            String val = cc.getStringValue( name );
+//	            if (name.equals( "value" )) 
+//	            	{
+//	            	System.err.println( ">> value = " + v );
+//	            	System.err.println( ">> prop = " + prop );
+//	            	System.err.println( ">> val = " + val );
+//	            	}
 	        	String normalizedValue = 
 	        		(prop == null) 
 	        		    ? valueAsSparql( v )
