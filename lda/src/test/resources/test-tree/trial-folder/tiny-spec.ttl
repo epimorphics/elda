@@ -6,6 +6,7 @@
 :ep a api:ListEndpoint
     ; api:uriTemplate 'anchor'
     ; api:selector [api:filter 'type=C']
+    ; api:viewer api:basicViewer
     .
 
 :p api:label 'p'

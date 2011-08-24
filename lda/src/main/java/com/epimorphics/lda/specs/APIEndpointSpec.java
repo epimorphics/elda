@@ -65,6 +65,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 
     protected final VarValues bindings = new VarValues();
     
+    protected final Set<String> explicitViewNames = new HashSet<String>();
+    
     protected final Factories factoryTable;
     
     static Logger log = LoggerFactory.getLogger(APIEndpointSpec.class);
@@ -128,6 +130,10 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         return endpointResource;
     }
     
+    public Set<String> getExplicitViewNames() {
+    	return new HashSet<String>( explicitViewNames );
+    }
+    
     /**
         Answer a map from view names to views as defined by the
         endpoint specification. The map includes the magic key
@@ -146,6 +152,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
                 throw new APIException("Found literal " + tNode + " when expecting a template resource");
             View v = getView( (Resource) tNode );
             views.put( v.name(), v );
+            explicitViewNames.add( v.name() );
         }
         return views;
     }

@@ -285,7 +285,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		Model bindings = ModelFactory.createDefaultModel();
 		Model execution = ModelFactory.createDefaultModel();
 	//	
-		em.addVersions( versions, spec.viewNames() );
+		em.addVersions( versions, spec.getExplicitViewNames() );
 		em.addFormats( formats, spec.getRendererFactoryTable() );
 		em.addBindings( rsm, bindings, exec, spec.getAPISpec().getShortnameService().nameMap() );
 		em.addExecution( execution, exec );

@@ -212,8 +212,12 @@ public class ContextQueryUpdater implements ViewSetter {
      * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
      * @return the name of the final property referencing the val, to allow type sensitive normalization
     */
-    public String addFilterFromQuery( Param param, Set<String> allVal ) {
+    public void addFilterFromQuery( Param param, Set<String> allVal ) {
     	String val = allVal.iterator().next();
+    	if (val.equals( "" )) {
+    		log.debug( "parameter " + param + " given empty value." );
+    		return;
+    	}
     	String prefix = param.prefix();
     	if (prefix == null) {
     		args.addPropertyHasValue( param, allVal );    		
@@ -236,7 +240,6 @@ public class ContextQueryUpdater implements ViewSetter {
         } else {
         	throw new EldaException( "unrecognised parameter prefix: " + prefix );
         }
-        return param.lastPropertyOf();
     }
     
     protected final Map<String,Variable> seenParamVariables = new HashMap<String, Variable>();

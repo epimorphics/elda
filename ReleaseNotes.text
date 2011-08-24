@@ -1,5 +1,9 @@
 1.1.9 SNAPSHOT
 
+* Built-in views only appear in the views metadata of an endpoint 
+  if they are explicitly attached with api:viewer. (But they are
+  still accessible using _view etc.)
+
 * If the same property chain appears as a prefix of multiple
   P=V property bindings, only one variable per chain is generated
   (and the binding triples are not repeated).

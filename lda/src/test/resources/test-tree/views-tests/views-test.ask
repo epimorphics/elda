@@ -1,0 +1,2 @@
+URI=/alpha?_metadata=all
+ASK { ?x dcterms:hasVersion [rdfs:label "included"] }
