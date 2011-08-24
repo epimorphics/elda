@@ -178,7 +178,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         	URI ru = makeRequestURI(ui, match, requestUri);
         	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, ru, suffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
-			if (results == null || results.getResultList().size() == 0) {
+			if (false) { // results == null || results.getResultList().size() == 0) {
 			    return returnNotFound( "No items found matching that request." );
 			} else {
 				// APIEndpoint ep = match.getEndpoint();

@@ -97,6 +97,7 @@ public class Context {
         for(Resource r : PROP_TYPES_TO_SHORTEN) 
             loadAnnotations(m, m.listSubjectsWithProperty(RDF.type, r), true, prefixes);
         loadAnnotations(m, m.listSubjectsWithProperty(FIXUP.label), false, prefixes);
+        loadAnnotations(m, m.listSubjectsWithProperty(RDFS.range), true, prefixes);
     }
     static Resource[] RES_TYPES_TO_SHORTEN = new Resource[] {RDFS.Class, OWL.Class};
         // TODO add SKOS

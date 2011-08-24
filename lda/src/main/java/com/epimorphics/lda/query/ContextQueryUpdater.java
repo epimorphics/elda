@@ -87,6 +87,8 @@ public class ContextQueryUpdater implements ViewSetter {
     	for (String param: context.getFilterPropertyNames()) 
     		if (param.startsWith( QueryParameter.LANG_PREFIX ))
     			handleLangPrefix( param );
+    		else if (param.equals(QueryParameter._LANG)) 
+    			args.setDefaultLanguage( context.getStringValue( param ) );
         GEOLocation geo = new GEOLocation();
         for (String param: context.getFilterPropertyNames()) 
             handleParam( geo, param );
@@ -104,7 +106,7 @@ public class ContextQueryUpdater implements ViewSetter {
 
 	private void handleLangPrefix( String taggedParam ) {
 		String param = taggedParam.substring( QueryParameter.LANG_PREFIX.length() );
-		String sv = context.getStringValue( param );
+		String sv = context.getStringValue( taggedParam );
 		if (sv == null) {
 			log.debug( taggedParam + " supplied, but no value for " + param );
 			return;
@@ -131,6 +133,8 @@ public class ContextQueryUpdater implements ViewSetter {
 			// nothing to do -- report suspect?  
 		} else if (p.startsWith( QueryParameter.LANG_PREFIX )) {
 			// Nothing to do -- done on previous pass 
+	    } else if (p.equals(QueryParameter._LANG)) {
+			// Also done on previous pass
 		} else if (isReserved(p)) {
 			handleReservedParameters( geo, this, p, val );
 		} else {
@@ -168,8 +172,6 @@ public class ContextQueryUpdater implements ViewSetter {
 	        args.addSearchTriple( val );
 	    } else if (p.equals(QueryParameter._SELECT_PARAM )) {
 	    	args.setFixedSelect( val );
-	    } else if (p.equals(QueryParameter._LANG)) {
-			args.setDefaultLanguage( val );
 	    } else if (p.equals(QueryParameter._WHERE)) {
 	    	args.addWhere( val );
 		} else if (p.equals(QueryParameter._PROPERTIES)) {

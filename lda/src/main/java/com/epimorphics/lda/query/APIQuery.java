@@ -262,7 +262,11 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     private Map<String, String> languagesFor = new HashMap<String, String>();
         
+    /**
+        Set the default language, discarding any existing default language.
+    */
     public void setDefaultLanguage( String defaults ) {
+    	System.err.println( ">> set default language(s) to: " + defaults );
     	defaultLanguage = defaults;
     	}
     
@@ -271,7 +275,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     */
     public String getDefaultLanguage() {
     	return defaultLanguage;
-    	}
+    }
     
     public void clearLanguages() {
     	languagesFor.clear();
@@ -373,11 +377,15 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     
     private RenderExpression someOf( Variable v, String[] langArray ) 
     	{
-    	RenderExpression result = RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( langArray[0] ) );
+    	RenderExpression result = RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( notNone( langArray[0] ) ) );
     	for (int i = 1; i < langArray.length; i += 1)
-    		result = RDFQ.infix( result, "||", RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( langArray[i] ) ) );
+    		result = RDFQ.infix( result, "||", RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( notNone( langArray[i] ) ) ) );
     	return result;
     	}
+
+	private String notNone( String lang ) {
+		return lang.equals( "none" ) ? "" : lang;
+	}
 
 	private void addTriplePattern( Variable var, Param.Info prop, Variable val ) {
    		// Record property which points to this variable for us in decoding binding values

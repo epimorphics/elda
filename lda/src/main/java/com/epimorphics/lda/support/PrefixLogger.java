@@ -86,7 +86,7 @@ public class PrefixLogger {
 	    pattern is over-generous in matching so long as it does not <i>miss</i>
 	    any prefixes. Hence, it is not necessary to check for comments or strings.
 	*/
-	public static final Pattern candidatePrefix = Pattern.compile( "([^0-9<>:\\s\\.-][^:<>\\s]+):" );
+	public static final Pattern candidatePrefix = Pattern.compile( "([A-Za-z][-+.A-Za-z0-9]*):" ); // ( "([^0-9<>:\\s\\.-][^:<>\\s]+):" );
 	
 	/**
 	    Answer a new PrefixLoggger with a few standard prefixes in it.

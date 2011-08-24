@@ -37,7 +37,9 @@ public class LiteralNode extends Term
 	
 	@Override public String asSparqlTerm( PrefixLogger pl )
 		{ 
-		Node n = NodeFactory.createLiteralNode( spelling, language, datatype );
+		// System.err.println( ">> aST: " + spelling + "@" + language );
+		String lang = (language.equals("none") ? "" : language);
+		Node n = NodeFactory.createLiteralNode( spelling, lang, datatype );
 		if (datatype.length() > 0) pl.present( datatype );
 		String lf = FmtUtils.stringForNode( n, RDFUtils.noPrefixes ); 
 		return lf;

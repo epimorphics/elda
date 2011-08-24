@@ -80,6 +80,7 @@ spec:viewerMedium a lda:Viewer
 <http://services.data.gov.uk/education/sparql> extras:supportsNestedSelect false.
 
 spec:api a lda:API 
+    ; lda:lang "bz"
     ; rdfs:label "Edubase API"@en
     ; foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI
     ; lda:maxPageSize "50"
@@ -237,6 +238,9 @@ rdf:type
   
 geo:lat
       lda:label "lat" .
+
+school:title lda:label "title"
+    .
 
 school:openDate
 	a owl:DatatypeProperty

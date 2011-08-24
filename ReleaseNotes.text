@@ -1,4 +1,11 @@
-1.1.9 SNAPSHOT
+1.1.10 SNAPSHOT
+
+* Elda now recognises rdfs:range as "declaring" a property's
+  type; it doesn't need to be declared as an owl or rdf Property.
+
+* EXPERIMENT. The fake language code "none" is stripped when
+  testing literals with a language code, allowing the user
+  or developer to say "these language codes or a plain literal".
 
 * Built-in views only appear in the views metadata of an endpoint 
   if they are explicitly attached with api:viewer. (But they are
@@ -21,6 +28,10 @@
 * Revised the code that substituted ?variables with their value
   if there was a value for them in the call context; this means
   that the substitution happens everywhere.
+
+1.1.9
+
+* PLACEHOLDER
 
 1.1.8
 
