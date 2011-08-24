@@ -1,5 +1,8 @@
 1.1.10 SNAPSHOT
 
+* PrefixLogger is now saner about what represents a prefix,
+  allowing it to recognise eg xsd: in ^^xsd:.
+
 * Elda now recognises rdfs:range as "declaring" a property's
   type; it doesn't need to be declared as an owl or rdf Property.
 
