@@ -131,7 +131,8 @@ public class APIEndpointImpl implements APIEndpoint {
     private Couple<View, String> buildQueryAndView( CallContext context, APIQuery query ) {
     	ShortnameService sns = spec.getAPISpec().getShortnameService();
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(query);
-    	ContextQueryUpdater cq = new ContextQueryUpdater( context, spec, sns, query, qa );
+    	int endpointType = isListEndpoint() ? ContextQueryUpdater.ListEndpoint : ContextQueryUpdater.ItemEndpoint;
+    	ContextQueryUpdater cq = new ContextQueryUpdater( endpointType, context, spec, sns, query, qa );
 		try { 
 			Couple<View, String> result = cq.updateQueryAndConstructView( query.deferredFilters);
 			String format = result.b.equals( "" ) ? context.getStringValue( "_suffix") : result.b;

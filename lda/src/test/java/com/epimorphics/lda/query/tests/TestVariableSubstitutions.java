@@ -35,7 +35,7 @@ public class TestVariableSubstitutions {
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );
 		QueryArgumentsImpl qa = new QueryArgumentsImpl(aq);
-		ContextQueryUpdater cq = new ContextQueryUpdater( cc, nv, sns, aq, qa );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, qa );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		qa.updateQuery();
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
@@ -51,7 +51,7 @@ public class TestVariableSubstitutions {
 		APIQuery aq = new APIQuery( sns );
 		aq.setOrderBy( "?x" );
 		QueryArgumentsImpl qa = new QueryArgumentsImpl(aq);
-		ContextQueryUpdater cq = new ContextQueryUpdater( cc, nv, sns, aq, qa );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, qa );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		qa.updateQuery();
 		String q = aq.assembleSelectQuery( cc, PrefixMapping.Factory.create() );
@@ -66,7 +66,7 @@ public class TestVariableSubstitutions {
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );
 		QueryArgumentsImpl qa = new QueryArgumentsImpl(aq);
-		ContextQueryUpdater cq = new ContextQueryUpdater( cc, nv, sns, aq, qa );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, qa );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		qa.updateQuery();
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );

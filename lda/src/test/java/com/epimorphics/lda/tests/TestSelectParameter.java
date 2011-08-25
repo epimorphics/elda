@@ -33,7 +33,7 @@ public class TestSelectParameter
         ShortnameService sns = makeSNS();
         APIQuery q = new APIQuery(sns);	
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
-        ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
         qa.updateQuery();
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
@@ -45,7 +45,7 @@ public class TestSelectParameter
         ShortnameService sns = makeSNS();
         APIQuery q = new APIQuery(sns);	
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);	        
-        ContextQueryUpdater x = new ContextQueryUpdater( (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
         qa.updateQuery();
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );

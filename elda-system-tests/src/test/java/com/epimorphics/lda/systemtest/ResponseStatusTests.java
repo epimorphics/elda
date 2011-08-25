@@ -19,6 +19,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.Test;
 
+import com.epimorphics.lda.exceptions.EldaException;
+
 public class ResponseStatusTests {
 
 	
@@ -27,15 +29,27 @@ public class ResponseStatusTests {
 	}
 	
 	@Test public void testUnknownPropertyGeneratesBadRequest() throws ClientProtocolException, IOException {
-		ResponseStatusTests.testHttpRequest( "alpha?nosuch=10", 400, Util.ignore );
+		ResponseStatusTests.testHttpRequest( "alpha?nosuch=10", EldaException.BAD_REQUEST, Util.ignore );
 	}
 	
 	@Test public void testCallbackWithoutJSONGeneratesBadRequest() throws ClientProtocolException, IOException {
-		ResponseStatusTests.testHttpRequest( "alpha?callback=wrong", 400, Util.ignore );
+		ResponseStatusTests.testHttpRequest( "alpha?callback=wrong", EldaException.BAD_REQUEST, Util.ignore );
 	}
 	
 	@Test public void testCallbackWithJSONReturnsStatusOK() throws ClientProtocolException, IOException {
 		ResponseStatusTests.testHttpRequest( "alpha.json?callback=right", 200, Util.ignore );
+	}
+	
+	@Test public void testItemAccessIsOK() throws ClientProtocolException, IOException {
+		ResponseStatusTests.testHttpRequest( "beta", 200, Util.ignore );
+	}
+	
+	@Test public void testPageOnItemEndpointGeneratesBadRequest() throws ClientProtocolException, IOException {
+		ResponseStatusTests.testHttpRequest( "beta?_page=1", EldaException.BAD_REQUEST, Util.ignore );
+	}
+	
+	@Test public void testPageSizeOnItemEndpointGeneratesBadRequest() throws ClientProtocolException, IOException {
+		ResponseStatusTests.testHttpRequest( "beta?_pageSize=1", EldaException.BAD_REQUEST, Util.ignore );
 	}
 	
 	public static void testHttpRequest( String x, int status, Util.CheckContent cc ) 

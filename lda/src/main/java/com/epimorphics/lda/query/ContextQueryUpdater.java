@@ -48,6 +48,7 @@ public class ContextQueryUpdater implements ViewSetter {
 	private final NamedViews nt;
 	private final ExpansionPoints eps;
 	protected final QueryArguments args;
+	protected final int endpointKind;
 	
 	private View view; // = new view(); -- doesn't work, null is important somewhere
 	protected final View defaultView;
@@ -57,6 +58,8 @@ public class ContextQueryUpdater implements ViewSetter {
 
     static Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
     
+    public static final int ItemEndpoint = 1;
+    public static final int ListEndpoint = 2;
     
 	/**
 		Initialise this ContextQueryUpdater.
@@ -67,13 +70,14 @@ public class ContextQueryUpdater implements ViewSetter {
 	    @param eps possibly dead: expansion points
 	    @param args place to build the query arguments
 	*/
-	public ContextQueryUpdater( CallContext context, NamedViews nv, ShortnameService sns, ExpansionPoints eps, QueryArguments args ) {
+	public ContextQueryUpdater( int endpointKind, CallContext context, NamedViews nv, ShortnameService sns, ExpansionPoints eps, QueryArguments args ) {
 		this.context = context;
 		this.sns = sns;
 		this.nt = nv;
 		this.eps = eps;
 		this.defaultView = nv.getDefaultView().copy();
 		this.view = this.noneSpecified = new View();
+		this.endpointKind = endpointKind;
 		this.args = args;
 	}
 	
@@ -161,8 +165,10 @@ public class ContextQueryUpdater implements ViewSetter {
 	*/
 	public void handleReservedParameters( GEOLocation geo, ViewSetter vs, String p, String val ) {
 		if (p.equals(QueryParameter._PAGE)) {
+			mustBeListEndpoint( p );
 		    args.setPageNumber( positiveInteger(p, val) ); 
 		} else if (p.equals(QueryParameter._PAGE_SIZE)) {
+			mustBeListEndpoint( p );
 		    args.setPageSize( positiveInteger(p, val) );
 		} else if (p.equals( QueryParameter._FORMAT )) {
 			vs.setFormat(val);
@@ -201,6 +207,11 @@ public class ContextQueryUpdater implements ViewSetter {
 		}
 	}	
 	
+	private void mustBeListEndpoint( String p ) {
+		if (endpointKind != ListEndpoint)
+			EldaException.BadRequest( p + " can only be used with a list endpoint." );
+	}
+
 	private int positiveInteger( String param, String val ) {
 		try {
 			int result = Integer.parseInt( val );

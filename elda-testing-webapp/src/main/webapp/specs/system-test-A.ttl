@@ -8,11 +8,15 @@
 
 :root a api:API 
     ; api:sparqlEndpoint <local:system-test-data-A.ttl>
-    ; api:endpoint :ep
+    ; api:endpoint :ep, :epitem
     .
 
 :ep a api:ListEndpoint
     ; api:uriTemplate '/alpha'
+    .
+    
+:epitem a api:ItemEndpoint
+    ; api:uriTemplate '/beta'
     .
     
 rdf:type a rdf:Property
