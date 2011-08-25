@@ -364,8 +364,11 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		String[] langArray = languages.split( "," );
 		Resource np = sns.normalizeResource( prop );
 		Prop p = sns.asContext().getPropertyByName( prop );
-		System.err.println( ">> " + prop + " has type " + p.getType() );
-		if (langArray.length == 1 || p.getType() != null) {
+		if (p == null) 
+			System.err.println( ">> " + prop + " has no property record" );
+		else
+			System.err.println( ">> " + prop + " has type " + p.getType() );
+		if (langArray.length == 1 || (p != null && p.getType() != null)) {
 			addTriplePattern( var, np, sns.normalizeNodeToRDFQ( prop, val, langArray[0] ) ); 
 		} else {
 			Variable v = newVar();
