@@ -1,5 +1,8 @@
 1.1.10 SNAPSHOT
 
+* Elda will quietly ignore empty elements of a _property=x,y,z
+  query parameter.
+
 * OFFSET-LIMIT is now applied to fixed select queries, ie, those
   specified by api:select configs or _select= query parameters.
 

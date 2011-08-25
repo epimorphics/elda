@@ -489,7 +489,7 @@ school:totalPupilsInPublicCare
 
 spatialrelations:easting
       a       owl:DatatypeProperty ;
-      rdfs:range xsd:int ;
+      rdfs:range xsd:integer ;
       lda:label "easting" .
 
 school:PTGirls4b

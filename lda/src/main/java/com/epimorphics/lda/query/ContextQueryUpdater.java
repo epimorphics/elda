@@ -301,7 +301,8 @@ public class ContextQueryUpdater implements ViewSetter {
 	@Override public void setViewByProperties(String val) {
 		view = nt.getDefaultView().copy();
 		for (String prop: val.split(","))
-			view.addViewFromParameterValue( prop, eps, sns );
+			if (prop.length() > 0)
+				view.addViewFromParameterValue( prop, eps, sns );
 //		System.err.println( ">> >> setViewByProperties from " + val + " => " + view );
 	}
 }

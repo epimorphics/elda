@@ -268,7 +268,7 @@ $prefLabel, $altLabel, $title and $name variables.
                         <xsl:apply-templates select="wasResultOf/processor" mode="footer" />
                         <xsl:text>an implementation of the </xsl:text>
                         <a href="http://code.google.com/p/linked-data-api">Linked Data API</a><br />
-                        <a href="http://www.axialis.com/free/icons">Icons</a> by <a href="http://www.axialis.com">Axialis Team</a>
+                        <a href="http://www.axialis.com/free/icons/">Icons</a> by <a href="http://www.axialis.com">Axialis Team</a>
                 </p>
         </footer>
 </xsl:template>
