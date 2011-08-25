@@ -620,8 +620,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	            q.append( orderExpressions );
 	        	pl.findPrefixesIn( orderExpressions.toString() );
 	        }
-	        q.append(" OFFSET " + (pageNumber * pageSize));
-	        q.append(" LIMIT " + pageSize);
+	        appendOffsetAndLimit( q );
 	        // System.err.println( ">> QUERY IS: \n" + q.toString() );
 	        StringBuilder x = new StringBuilder();
 	        pl.writePrefixes( x );
@@ -633,9 +632,15 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     		StringBuilder sb = new StringBuilder();
     		pl.writePrefixes( sb );
     		sb.append( fixedSelect );
+    		appendOffsetAndLimit( sb );
     		return sb.toString();
     	}
     }
+
+	private void appendOffsetAndLimit(StringBuilder q) {
+		q.append(" OFFSET " + (pageNumber * pageSize));
+		q.append(" LIMIT " + pageSize);
+	}
 
 	public void appendFilterExpressions(PrefixLogger pl, StringBuilder q ) {
 		for (RenderExpression i: filterExpressions) {

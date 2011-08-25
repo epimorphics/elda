@@ -70,7 +70,7 @@ public class TestVariableSubstitutions {
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		qa.updateQuery();
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
-		assertEquals( "myQueryHere", q );
+		assertEquals( "myQueryHere OFFSET 0 LIMIT 10", q );
 	}
 
 	private void assertMatches( String pattern, String subject ) {

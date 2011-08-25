@@ -1,5 +1,8 @@
 1.1.10 SNAPSHOT
 
+* OFFSET-LIMIT is now applied to fixed select queries, ie, those
+  specified by api:select configs or _select= query parameters.
+
 * PrefixLogger is now saner about what represents a prefix,
   allowing it to recognise eg xsd: in ^^xsd:.
 

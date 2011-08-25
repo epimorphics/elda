@@ -51,6 +51,6 @@ public class TestEndpointsHandleSelect
 		APIEndpointSpec eps = new APIEndpointSpec( a, a, e );
 		APIEndpointImpl i = new APIEndpointImpl( eps );
 		String q = i.getSelectQuery();
-		assertEquals( "GROCID", q );
+		assertEquals( "GROCID OFFSET 0 LIMIT 10", q );
 		}
 	}

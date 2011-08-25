@@ -37,7 +37,7 @@ public class TestSelectParameter
         qa.updateQuery();
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
-        assertEquals( theSelectQuery, q.assembleSelectQuery( RDFUtils.noPrefixes) );
+        assertEquals( theSelectQuery + " OFFSET 0 LIMIT 10", q.assembleSelectQuery( RDFUtils.noPrefixes) );
         }
     
     @Test public void testCloneIncludesFixedQuery()
@@ -50,7 +50,7 @@ public class TestSelectParameter
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
         APIQuery cloned = q.clone();
-        assertEquals( theSelectQuery, cloned.assembleSelectQuery( RDFUtils.noPrefixes ) );
+        assertEquals( theSelectQuery + " OFFSET 0 LIMIT 10", cloned.assembleSelectQuery( RDFUtils.noPrefixes ) );
         }
 
     public static ShortnameService makeSNS()
