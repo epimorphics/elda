@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.cache.Cache;
@@ -266,7 +267,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         Set the default language, discarding any existing default language.
     */
     public void setDefaultLanguage( String defaults ) {
-    	System.err.println( ">> set default language(s) to: " + defaults );
     	defaultLanguage = defaults;
     	}
     
@@ -362,8 +362,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 
 	private void addLanguagedTriplePattern(Variable var, String prop, String languages, String val) {
 		String[] langArray = languages.split( "," );
-		Resource np = sns.normalizeResource(prop);
-		if (langArray.length == 1) {
+		Resource np = sns.normalizeResource( prop );
+		Prop p = sns.asContext().getPropertyByName( prop );
+		System.err.println( ">> " + prop + " has type " + p.getType() );
+		if (langArray.length == 1 || p.getType() != null) {
 			addTriplePattern( var, np, sns.normalizeNodeToRDFQ( prop, val, langArray[0] ) ); 
 		} else {
 			Variable v = newVar();

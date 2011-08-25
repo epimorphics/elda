@@ -80,12 +80,10 @@ spec:viewerMedium a lda:Viewer
 <http://services.data.gov.uk/education/sparql> extras:supportsNestedSelect false.
 
 spec:api a lda:API 
-    ; lda:lang "bz"
     ; rdfs:label "Edubase API"@en
     ; foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI
     ; lda:maxPageSize "50"
     ; lda:defaultPageSize "10" 
-    # ; lda:sparqlEndpoint <tdb:weWhoAreAboutToDieSaluteYou> 
     ; lda:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
     #
     # normally constructed URIs (for views, formatters, metadata, etc) are based
@@ -489,7 +487,7 @@ school:totalPupilsInPublicCare
 
 spatialrelations:easting
       a       owl:DatatypeProperty ;
-      rdfs:range xsd:integer ;
+      rdfs:range xsd:int ;
       lda:label "easting" .
 
 school:PTGirls4b

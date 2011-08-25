@@ -1,3 +1,11 @@
+/*
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011 Epimorphics Limited
+    $Id$
+*/
+
 package com.epimorphics.lda.query.tests;
 
 import static org.junit.Assert.*;
@@ -8,7 +16,6 @@ import org.junit.Test;
 
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.CallContext;
-import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.query.APIQuery.Deferred;

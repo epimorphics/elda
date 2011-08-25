@@ -106,7 +106,7 @@ public class Util
 		try 
 			{ return new URI( u ); }
 		catch (URISyntaxException e) 
-			{ throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e ); }
+			{ throw new EldaException( "created a broken URI: " + u, "", EldaException.SERVER_ERROR, e ); }
 		} 
 	
     public static final class EchoStringReader extends Reader 
