@@ -1,0 +1,6 @@
+URI=/itemic?_metadata=all&_view=basic
+ASK NOT
+    {
+    ?otherView rdfs:label "all"
+    FILTER (regex( str(?otherView), ".*_page=.*"))
+    }

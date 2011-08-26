@@ -260,6 +260,8 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 //				System.err.println( ">> ------------------------------------------__" );
 //				System.err.println( ">> cc = " + cc );
 //				System.err.println( ">> ------------------------------------------__" );
+				System.err.println( ">> RESULT:" );
+				rsm.write( System.err, "TTL" );
 				fail
 					( "test " + w.title + ": the probe query\n"
 					+ shortStringFor( a ) + "\n"

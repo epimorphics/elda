@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.APIQuery;
@@ -36,12 +35,14 @@ public class EndpointMetadata {
 	protected final Resource thisPage;
 	protected final String pageNumber;
 	protected final Set<String> formatNames;
+	protected final boolean isListEndpoint;
 	
-	public EndpointMetadata( Resource thisPage, String pageNumber, CallContext cc, Set<String> formatNames ) {
+	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, CallContext cc, Set<String> formatNames ) {
 		this.cc = cc;
 		this.thisPage = thisPage;
 		this.pageNumber = pageNumber;
 		this.formatNames = formatNames;
+		this.isListEndpoint = isListEndpoint;
 	}
 	
 	/**
@@ -67,7 +68,7 @@ public class EndpointMetadata {
     private Resource resourceForView( Model m, String name ) {
     	URI req = cc.getRequestURI();
     	String a = replaceQueryParam( req, QueryParameter._VIEW, name );
-    	String b = replaceQueryParam( Util.newURI( a ), QueryParameter._PAGE, pageNumber );
+    	String b = isListEndpoint ? replaceQueryParam( Util.newURI( a ), QueryParameter._PAGE, pageNumber ) : a;
 		return m.createResource( b );
     }
 

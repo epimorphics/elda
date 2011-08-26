@@ -1,5 +1,8 @@
 1.1.10 SNAPSHOT
 
+* Elda does not generate _page= metadata for views if the
+  endpoint is an item endpoint.
+
 * Elda will quietly ignore empty elements of a _property=x,y,z
   query parameter.
 

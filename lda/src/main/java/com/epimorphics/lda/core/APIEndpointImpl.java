@@ -223,7 +223,7 @@ public class APIEndpointImpl implements APIEndpoint {
     //
 		thisPage.addProperty( FIXUP.definition, uriForDefinition );
 		Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
-		EndpointMetadata em = new EndpointMetadata( thisPage, "" + page, cc, formatNames );
+		EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, cc, formatNames );
 		createOptionalMetadata(rs, query, em);   
     //
         String emv_uri = EndpointMetadata.replaceQueryParam( Util.newURI(thisPage.getURI()), "_metadata", "all" );

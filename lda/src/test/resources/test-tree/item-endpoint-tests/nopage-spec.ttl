@@ -1,12 +1,11 @@
 :root a api:API 
     ; api:sparqlEndpoint <local:CURRENT-TEST>
-    ; api:endpoint :ep
+    ; api:endpoint :epitem
     .
 
-:ep a api:ListEndpoint
-    ; api:uriTemplate 'anchor'
-    ; api:selector [api:filter 'type=C']
-    ; api:viewer api:basicViewer
+:epitem a api:ItemEndpoint
+    ; api:uriTemplate 'itemic'
+    ; api:viewer api:labelledDescribeViewer
     .
     
 :p api:label 'p'
