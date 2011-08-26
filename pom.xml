@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>lda-top</artifactId>
-  <version>1.1.10-SNAPSHOT</version>
+  <version>1.1.10</version>
   <packaging>pom</packaging>
   <name>lda-top</name>
   <description>Top level linked data API project</description>
