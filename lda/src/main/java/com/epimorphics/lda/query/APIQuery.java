@@ -518,19 +518,20 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     */
     public void setSortBy( String orderSpecs ) {
     	orderExpressions.setLength(0);
-    	for (String spec: orderSpecs.split(",")) {
-	        boolean descending = spec.startsWith("-"); 
-	        if (descending) spec = spec.substring(1);
-	        boolean varOrder = spec.startsWith("?");
-	        String var = varOrder ? spec : newVar().name(); // TODO
-	        if (descending) {
-	        	orderExpressions.append(" DESC(" + var + ") ");
-	        } else {
-	            orderExpressions.append(" " + var + " ");
-	        }
-	        if (!varOrder)
-	            addPropertyHasValue(Param.make(sns, spec), set(var)); // TODO fix use of make
-    	}
+    	for (String spec: orderSpecs.split(",")) 
+    		if (spec.length() > 0){
+		        boolean descending = spec.startsWith("-"); 
+		        if (descending) spec = spec.substring(1);
+		        boolean varOrder = spec.startsWith("?");
+		        String var = varOrder ? spec : newVar().name(); // TODO
+		        if (descending) {
+		        	orderExpressions.append(" DESC(" + var + ") ");
+		        } else {
+		            orderExpressions.append(" " + var + " ");
+		        }
+		        if (!varOrder)
+		            addPropertyHasValue(Param.make(sns, spec), set(var)); // TODO fix use of make
+	    	}
     }
 
     protected void noteBindableVar(Param p) {

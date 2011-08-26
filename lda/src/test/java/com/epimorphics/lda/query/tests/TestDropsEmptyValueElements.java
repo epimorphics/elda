@@ -28,10 +28,11 @@ import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
-public class TestDropsEmptyViewProperties {
+public class TestDropsEmptyValueElements {
 
-	@Test public void ensureEmpytPropertiesIgnored() {
+	@Test public void ensureEmptyPropertiesIgnored() {
 		NamedViews nv = NamedViews.noNamedViews;
 		SNS sns = new SNS("a=eh:/A");
 		CallContext cc = CallContext.createContext( null, MakeData.parseQueryString("_properties=,a," ), new VarValues() );
@@ -46,5 +47,23 @@ public class TestDropsEmptyViewProperties {
 			); 
 		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<Deferred>() );
 		assertEquals( CollectionUtils.set( new PropertyChain( "eh:/A" ) ), ans.a.chains() );
+	}
+
+	@Test public void ensureEmptySortsIgnored() {
+		NamedViews nv = NamedViews.noNamedViews;
+		SNS sns = new SNS("a=eh:/A;b=eh:/B");
+		CallContext cc = CallContext.createContext( null, MakeData.parseQueryString("_sort=,b," ), new VarValues() );
+		APIQuery aq = new APIQuery( sns );
+		ContextQueryUpdater cu = new ContextQueryUpdater
+			( ContextQueryUpdater.ListEndpoint 
+			, cc
+			, nv
+			, sns 
+			, (ExpansionPoints) null 
+			, new QueryArgumentsImpl( aq )
+			); 
+		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<Deferred>() );
+		String q = aq.assembleSelectQuery( PrefixMapping.Standard );
+		assertTrue( "empty sort string element not discarded", q.matches( "(?s).*item <eh:/B> \\?___0.*ORDER BY +\\?___0.*" ) );
 	}
 }
