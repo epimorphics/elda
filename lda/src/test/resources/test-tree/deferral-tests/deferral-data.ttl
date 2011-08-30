@@ -1,0 +1,3 @@
+@prefix : <http://www.epimorphics.com/tools/example#> .
+
+:x a :X; :p "v"@cy.

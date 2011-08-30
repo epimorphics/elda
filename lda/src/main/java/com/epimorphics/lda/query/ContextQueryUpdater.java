@@ -86,7 +86,6 @@ public class ContextQueryUpdater implements ViewSetter {
 	    specified.
 	*/
     public Couple<View, String> updateQueryAndConstructView( List<Deferred> deferredFilters ) {	  
-    	activateDeferredFilters( deferredFilters );
     	args.clearLanguages();
     	for (String param: context.getFilterPropertyNames()) 
     		if (param.startsWith( QueryParameter.LANG_PREFIX ))
@@ -98,6 +97,7 @@ public class ContextQueryUpdater implements ViewSetter {
             handleParam( geo, param );
         geo.addLocationQueryIfPresent( args );
         // ((QueryArgumentsImpl) args).updateQuery();
+        activateDeferredFilters( deferredFilters );
         return new Couple<View, String>( (view == noneSpecified ? defaultView : view), requestedFormat );
     }
 

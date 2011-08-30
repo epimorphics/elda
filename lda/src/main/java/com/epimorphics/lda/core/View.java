@@ -439,19 +439,24 @@ public class View {
 	
 	private void addAllObjectLabels( State s ) { 
 		long zero = System.currentTimeMillis();
-		String construct = "PREFIX rdfs: <" + RDFS.getURI() + ">\nCONSTRUCT { ?x rdfs:label ?l }\nWHERE\n{";
+		StringBuilder sb = new StringBuilder();
+		sb.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">\nCONSTRUCT { ?x rdfs:label ?l }\nWHERE\n{" );
 		String union = "";
 		for (RDFNode n: s.m.listObjects().toList()) {
 			if (n.isURIResource()) {
-				construct += union + "{?x rdfs:label ?l. FILTER(?x = <" + n.asNode().getURI() + ">)" + "}";
+				sb.append( union )
+					.append( "{?x rdfs:label ?l. FILTER(?x = <" )
+					.append( n.asNode().getURI() )
+					.append( ">)" + "}" );
 				union = "\nUNION ";
 			}
 		}
-		construct += "}\n";
-		Query constructQuery = QueryFactory.create( construct );
+		sb.append( "}\n" );
+		Query constructQuery = QueryFactory.create( sb.toString() );
+		long midTime = System.currentTimeMillis();
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
-		long time = System.currentTimeMillis() - zero;
-		log.debug( "addAllObjectLabels took " + (time/1000.0) + "s" );
+		long aTime = midTime - zero, bTime = System.currentTimeMillis() - midTime; 
+		log.debug( "addAllObjectLabels took " + (aTime/1000.0) + "s making, " + (bTime/1000.0) + "s fetching." );
 	}
 }
 

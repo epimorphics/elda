@@ -1,4 +1,12 @@
-1.1.10 SNAPSHOT
+1.1.11 SNAPSHOT
+
+* Deferred filters are run /after/ query parameters applied;
+  this means that _lang correctly over-rides api:lang.
+
+* Performance fix: View.addAllObjectLabels had a quadratic
+  string concatenation loop. Replaced with StringBuilder.
+
+1.1.10
 
 * Elda does not generate _page= metadata for views if the
   endpoint is an item endpoint.

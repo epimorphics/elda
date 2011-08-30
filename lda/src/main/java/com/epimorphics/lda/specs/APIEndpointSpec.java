@@ -262,7 +262,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	            if (paramValue.length == 2) {
 	                baseQuery.deferrableAddFilter( Param.make( sns, paramValue[0] ), paramValue[1] );
 	            } else {
-	                APISpec.log.error("View specification contained unintepretable query string: " + q);
+	                APISpec.log.error("Filter specification contained unintepretable query string: " + q );
 	            }
             }
         }
