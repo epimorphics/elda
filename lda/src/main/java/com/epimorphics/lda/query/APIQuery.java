@@ -316,7 +316,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected void addSearchTriple( String val ) {
     	needsLARQindex = true;
         log.debug( "enabled LARQ indexing to search for " + val );
-        addTriplePattern( SELECT_VAR, PF_TEXT_MATCH, RDFQ.literal( val ) );
+        addTriplePattern( SELECT_VAR, PF_TEXT_MATCH, valAsTerm(val) );
     }
     
     public APIQuery addSubjectHasProperty( Resource P, Any O ) {
@@ -346,7 +346,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
      */
     private void addTriplePattern( Variable var, String prop, String languages, String val ) {
     	Resource np = sns.normalizeResource(prop);
-    	// System.err.println( ">> aTP: prop " + prop + ", val " + val + ", languages: " + languages );
+    	// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
     	if (val.startsWith("?")) varProps.put( val.substring(1), prop );   
     	if (languages == null) {
 			Any norm = sns.normalizeNodeToRDFQ( prop, val, defaultLanguage );
@@ -370,14 +370,23 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 //			System.err.println( ">> " + prop + " has type " + p.getType() );
 		if (langArray.length == 1 || (p != null && p.getType() != null)) {
 			addTriplePattern( var, np, sns.normalizeNodeToRDFQ( prop, val, langArray[0] ) ); 
+		} else if (val.startsWith( "?" )) {
+			Variable v = RDFQ.var( val );
+			addTriplePattern( var, np, v );
+			filterExpressions.add( someOf( v, langArray ) );
 		} else {
 			Variable v = newVar();
 			addTriplePattern( var, np, v );
 			Apply stringOf = RDFQ.apply( "str", v );
-			Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
+			Infix equals = RDFQ.infix( stringOf, "=", valAsTerm(val) );
 			Infix filter = RDFQ.infix( equals, "&&", someOf( v, langArray ) );
 			filterExpressions.add( filter );
 		}
+	}
+
+	// HACK. Need to be better behaved in general WRT values for properties.
+	private Any valAsTerm( String val ) {
+		return val.startsWith( "?" ) ? RDFQ.var( val ) : RDFQ.literal( val );
 	}
     
     private RenderExpression someOf( Variable v, String[] langArray ) 
@@ -445,6 +454,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         }
         noteBindableVar( infos[i].shortName );
         if (rawValues.size() == 1) {
+        	// System.err.println( ">> addPropertyHasValue(" + infos[i].shortName + " " + rawValue + ")" );
         	addTriplePattern(var, infos[i], languages, rawValue );
         	noteBindableVar( rawValue );        	
         } else {
@@ -529,9 +539,13 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		        } else {
 		            orderExpressions.append(" " + var + " ");
 		        }
-		        if (!varOrder)
-		            addPropertyHasValue(Param.make(sns, spec), set(var)); // TODO fix use of make
-	    	}
+		        if (!varOrder) {
+		        	Param p = Param.make(sns, spec);
+		        	Set<String> s = set(var);
+		        	// System.err.println( ">> setSortBy(..." + spec + "...) generates (?item " + p + " " + s + ")" );
+					addPropertyHasValue(p, s); // TODO fix use of make
+		        }
+    		}
     }
 
     protected void noteBindableVar(Param p) {
@@ -571,7 +585,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     }
 
 	public Any asRDFQ( String rawObject ) {
-		return rawObject.startsWith("?") ? RDFQ.var( rawObject ) : RDFQ.literal( rawObject );
+		return rawObject.startsWith("?") ? RDFQ.var( rawObject ) : valAsTerm(rawObject);
 	}
     
     private Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
@@ -812,7 +826,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		
 		String outerSelect = queryAndResults.a;
 		List<Resource> results = queryAndResults.b;
-
+		
 		// System.err.println( ">> looking in cache " + cache.summary() );
 		APIResultSet already = cache.getCachedResultSet( results, view.toString() );
 		if (already != null && expansionPoints.isEmpty() ) 
@@ -822,6 +836,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		    }
 		
 		APIResultSet rs = fetchDescriptionOfAllResources(outerSelect, spec, view, results);
+		
 		long afterView = System.currentTimeMillis();
 		
 		log.debug( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );

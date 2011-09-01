@@ -1,3 +1,5 @@
+@prefix : <http://www.epimorphics.com/tools/example#> .
+
 :root a api:API 
     ; api:sparqlEndpoint <local:CURRENT-TEST>
     ; api:endpoint :ep

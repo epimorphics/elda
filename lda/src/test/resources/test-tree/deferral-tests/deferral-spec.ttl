@@ -20,6 +20,9 @@ rdf:type a rdf:Property
     .
 
 :p api:label 'p'
-	; a owl:DatatypeProperty
+    .
+    
+:q api:label 'q'
+    ; rdfs:range xsd:int
     .
     

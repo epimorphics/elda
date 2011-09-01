@@ -26,6 +26,7 @@ import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.routing.MatchSearcher;
+import com.epimorphics.lda.sources.LocalSource;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.Couple;
@@ -62,7 +63,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		{
 		List<Object[]> result = new ArrayList<Object[]>();
 		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree" + path ) );
-//		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree/subst-tests" ) );
+//		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree/select-tests" ) );
 //		System.err.println( ">> " + result.size() + " tests.");
 		return result;
 		}
@@ -240,7 +241,6 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		APISpec s = SpecUtil.specFrom( root );
 		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) );   	
 		MultiMap<String, String> map = MakeData.parseQueryString( w.queryParams );
-	map.add( "_metadata", "all" );
 		CallContext cc = CallContext.createContext( Util.newURI(w.path), map, bindTemplate( w.template, w.path ) );
 		Triad<APIResultSet, String, CallContext> resultsAndFormat = ep.call( cc );
 		Model rsm = resultsAndFormat.a.getModel();
@@ -260,8 +260,8 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 //				System.err.println( ">> ------------------------------------------__" );
 //				System.err.println( ">> cc = " + cc );
 //				System.err.println( ">> ------------------------------------------__" );
-				System.err.println( ">> RESULT:" );
-				rsm.write( System.err, "TTL" );
+				// System.err.println( ">>\n>> Failing result model for " + w.title + ":" );
+				// rsm.write( System.err, "TTL" );
 				fail
 					( "test " + w.title + ": the probe query\n"
 					+ shortStringFor( a ) + "\n"

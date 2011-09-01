@@ -1,5 +1,8 @@
 1.1.11 SNAPSHOT
 
+* Further fixes to _lang=A,B... issues with sorting: fixed some
+  problems where ?X not recognised as meaning a variable.
+
 * Deferred filters are run /after/ query parameters applied;
   this means that _lang correctly over-rides api:lang.
 
