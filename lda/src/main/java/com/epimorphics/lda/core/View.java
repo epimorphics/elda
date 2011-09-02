@@ -149,13 +149,14 @@ public class View {
     	cannotUpdateALL();		
     	doesFiltering = true;
         if (spec.canAs(RDFList.class)) {
+        	List<Property> properties = new ArrayList<Property>();
             RDFList list = spec.as(RDFList.class);
             for (Iterator<RDFNode> i = list.iterator(); i.hasNext();) {
-                String uri = sns.normalizeResource( i.next() ).getURI();
-                chains.add( new PropertyChain( uri ) );
+                properties.add( i.next().as( Property.class ) ); 
             }
+            chains.add( new PropertyChain( properties ) );
         } else {
-            String uri = sns.normalizeResource(spec).getURI();
+            String uri = spec.asResource().getURI();
             chains.add( new PropertyChain( uri ) );
         }
         if (chains.size() > 0) type = Type.T_CHAINS;
