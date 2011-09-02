@@ -344,7 +344,8 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
      * @param val  The value as a string, shortname. The expansion should take into
      * account the type of the property and created typed literals if necessary.
      */
-    private void addTriplePattern( Variable var, String prop, String languages, String val ) {
+    private void addTriplePattern( Variable var, Info inf, String languages, String val ) {
+    	String prop = inf.shortName;
     	Resource np = sns.normalizeResource(prop);
     	// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
     	if (val.startsWith("?")) varProps.put( val.substring(1), prop );   
@@ -352,22 +353,28 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 			Any norm = sns.normalizeNodeToRDFQ( prop, val, defaultLanguage );
 			addTriplePattern( var, np, norm ); 
     	} else {
-    		addLanguagedTriplePattern( var, prop, languages, val );
+    		addLanguagedTriplePattern( var, inf, languages, val );
     	}
     }
-    
-    private void addTriplePattern( Variable var, Info prop, String languages, String val ) {
-    	addTriplePattern( var, prop.shortName, languages, val );
-    }
 
-	private void addLanguagedTriplePattern(Variable var, String prop, String languages, String val) {
+	private void addLanguagedTriplePattern(Variable var, Info inf, String languages, String val) {
+		String prop = inf.shortName;
 		String[] langArray = languages.split( "," );
 		Resource np = sns.normalizeResource( prop );
 		Prop p = sns.asContext().getPropertyByName( prop );
-//		if (p == null) 
-//			System.err.println( ">> " + prop + " has no property record" );
-//		else
-//			System.err.println( ">> " + prop + " has type " + p.getType() );
+		if (false) {
+			// Some sanity checking before code revisions.
+			if (p == null) {
+				System.err.println( ">> Odd: p is null for " + prop + "; info is " + inf );
+				throw new RuntimeException();
+			}
+			else if (p.getType() == null) {
+				if (inf.typeURI != null) System.err.println( ">> Odd: p.getType is null, but inf.typeURI is " + inf.typeURI );
+			} else {
+				if (inf.typeURI == null) System.err.println( ">> Odd: p.getType is not null, byt inf.typeURI is." );
+				else if (!inf.typeURI.equals( p.getType())) System.err.println( ">> Odd: p.getType is " + p.getType() + " but inf.typeURI is " + inf.typeURI );
+			}
+		}
 		if (langArray.length == 1 || (p != null && p.getType() != null)) {
 			addTriplePattern( var, np, sns.normalizeNodeToRDFQ( prop, val, langArray[0] ) ); 
 		} else if (val.startsWith( "?" )) {

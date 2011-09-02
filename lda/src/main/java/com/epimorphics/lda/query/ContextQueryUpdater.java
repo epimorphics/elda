@@ -143,7 +143,15 @@ public class ContextQueryUpdater implements ViewSetter {
 			handleReservedParameters( geo, this, p, val );
 		} else {
 			log.debug( "handleParam: " + p + " with value: " + val );
+			contemplation( pString, allVal );
 			addFilterFromQuery( Param.make( sns, pString ), allVal );
+		}
+	}
+
+	private void contemplation( String pString, Set<String> allVal ) {
+		// HERE
+		if (false) {
+			System.err.println( ">> contemplating " + pString + "=" + allVal );
 		}
 	}
 
@@ -160,16 +168,16 @@ public class ContextQueryUpdater implements ViewSetter {
     /**
 	    handle the reserved, ie, _wossname, parameters. These may update
 	    the given <code>geo</code>, the <code>vs</code>, or this query
-	    object. <code>p</code> is the property shortname, <code>val</code>
+	    object. <code>p</code> is the reserved-property name, <code>val</code>
 	    is the value string.
 	*/
 	public void handleReservedParameters( GEOLocation geo, ViewSetter vs, String p, String val ) {
 		if (p.equals(QueryParameter._PAGE)) {
 			mustBeListEndpoint( p );
-		    args.setPageNumber( positiveInteger(p, val) ); 
+		    args.setPageNumber( positiveInteger( p, val ) ); 
 		} else if (p.equals(QueryParameter._PAGE_SIZE)) {
 			mustBeListEndpoint( p );
-		    args.setPageSize( positiveInteger(p, val) );
+		    args.setPageSize( positiveInteger( p, val ) );
 		} else if (p.equals( QueryParameter._FORMAT )) {
 			vs.setFormat(val);
 		} else if (p.equals(QueryParameter._METADATA)) {

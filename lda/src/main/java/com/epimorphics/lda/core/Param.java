@@ -120,17 +120,27 @@ public abstract class Param
 		public final String shortName;
 		public final Resource asResource;
 		public final URINode asURI;
+		public final String typeURI;
 		
-		public Info(Resource r, String p) 
+		private Info(Resource r, String p, String typeURI) 
 			{
 			this.asResource = r;
 			this.shortName = p;
+			this.typeURI = typeURI;
 			this.asURI = RDFQ.uri( r.getURI() );
 			}
 
 		public static Info create( ShortnameService sns, String p ) 
 			{
-			return new Info(sns.normalizeResource(p), p);
+			Resource r = sns.normalizeResource(p);
+			Prop prop = sns.asContext().getPropertyByURI( r.getURI() );
+			String type = prop == null ? null : prop.getType();
+			return new Info(r, p, type);
+			}
+		
+		@Override public String toString() 
+			{
+			return "<Info " + shortName + " is " + asResource + ", with type " + typeURI + ">";
 			}
 		}
 	
