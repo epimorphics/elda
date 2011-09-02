@@ -1,4 +1,12 @@
-1.1.11 SNAPSHOT
+1.1.12 SNAPSHOT
+
+* Fixed bug in views constructed from lists of properties, ie
+  api:property (a:p b:q ...)
+
+* PrefixLogger now allows _ and Unicode letters as per the SPARQL
+  syntax for prefixes.
+
+1.1.11 
 
 * Further fixes to _lang=A,B... issues with sorting: fixed some
   problems where ?X not recognised as meaning a variable.
