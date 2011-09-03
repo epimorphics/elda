@@ -188,19 +188,33 @@ public class VarValues implements Lookup
 			int rb = s.indexOf( '}', lb );
 			sb.append( s.substring( start, lb ) );
 			String name = s.substring( lb + 1, rb );
+						
 			if (seen.contains( name )) 
 				throw new RuntimeException( "circularity involving: " + seen );
-			seen.add( name );
-			Value v = evaluate( name, vars.get(name), seen );
-			seen.remove( seen.size() - 1 );
-			String value = v.valueString; // values.getStringValue( name );
-			if (value == null)
+			
+			Value thisV = vars.get(name);
+
+			// Patch to allow missing variables (which blow up evaluate, so
+			// we're bypassing for now).
+			if (thisV == null) 
 				{
 				sb.append( "{" ).append( name ).append( "}" );
-				log.warn( "variable " + name + " has no value, not substituted." );
+				// log.warn( "variable " + name + " has no value, not substituted." );
 				}
 			else
-				sb.append( value );
+				{
+				seen.add( name );
+				Value v = evaluate( name, thisV, seen );
+				seen.remove( seen.size() - 1 );
+				String value = v.valueString; // values.getStringValue( name );
+				if (value == null)
+					{
+					sb.append( "{" ).append( name ).append( "}" );
+					log.warn( "variable " + name + " has no value, not substituted." );
+					}
+				else
+					sb.append( value );
+				}
 			start = rb + 1;
 			}
 		sb.append( s.substring( start ) );
