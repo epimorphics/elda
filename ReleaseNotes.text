@@ -1,4 +1,10 @@
-1.1.12 SNAPSHOT
+1.1.13-SNAPSHOT
+
+* Fixed bug in XML renderer -- cycle-breaking code meant that
+  resources used in several places in the graph only got their
+  properties unpacked once.
+
+1.1.12
 
 * Fixed bug in views constructed from lists of properties, ie
   api:property (a:p b:q ...)
