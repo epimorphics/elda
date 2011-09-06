@@ -5,7 +5,7 @@
   <parent>
     <artifactId>lda-top</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.1.13</version>
+    <version>1.1.14-SNAPSHOT</version>
   </parent>
 
   <groupId>com.epimorphics.lda</groupId>
@@ -29,7 +29,7 @@
     </dependency>
 
   </dependencies>
-  <version>1.1.13</version>
+  <version>1.1.14-SNAPSHOT</version>
   <build>
      <plugins>
        <plugin>
