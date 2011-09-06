@@ -78,6 +78,18 @@ public class TestXMLRenderer
 //		ensureRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
 		}
 	
+	/*
+	    Test that a shared graph node is unpacked at all (here, both) of its occurrences,
+	    rather than at only the first.
+	*/
+	@Test public void testUnpackingRepeatedResources()
+		{
+		ensureRendering
+			( "(R href=eh:/a (P (item href=eh:/b (HAS href=eh:/value)) (item href=eh:/c (Q href=eh:/b (HAS href=eh:/value)))))"
+			, resourceInModel( "root R a; a P b; b HAS value; a P c; c Q b" )
+			);
+		}
+	
 	@Test public void testRootWithSingletonList()
 		{
 		ensureRendering

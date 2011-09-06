@@ -109,6 +109,7 @@ public class XMLRendering {
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 			if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
 			for (Property p: properties) addPropertyValues( e, x, p );
+			seen.remove( x );
 		}
 		return e;
 	}
