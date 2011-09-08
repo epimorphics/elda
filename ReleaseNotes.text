@@ -1,4 +1,6 @@
-1.1.13-SNAPSHOT
+1.1.14-SNAPSHOT
+
+1.1.13
 
 * Fixed bug in XML renderer -- cycle-breaking code meant that
   resources used in several places in the graph only got their
