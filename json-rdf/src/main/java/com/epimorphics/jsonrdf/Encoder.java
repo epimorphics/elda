@@ -544,10 +544,15 @@ public class Encoder {
 			return props;
 		}
 
+		/**
+		    TODO: Retain this for a while, then go through and collapse the code.
+		*/
+		protected static final boolean shortenTypes = false;
+		
         private void writePropertyValues( OneToManyMap<Property, RDFNode> vals, Property p, Context.Prop prop ) {                
         	Iterator<RDFNode> i = vals.getAll(p);
             boolean multi = prop.isMultivalued();
-            boolean isType = p.equals(RDF.type);
+            boolean isType = shortenTypes && p.equals(RDF.type);
             boolean isStructured = prop.isStructured();
             RDFNode first = i.next();
             prop.addType(first);

@@ -1,5 +1,9 @@
 1.1.14-SNAPSHOT
 
+* Bug fix: Elda shortened the objects of rdf:type in the JSON
+  encoding (a hangover from pre-spec days). Now it includes
+  the full URI.
+
 1.1.13
 
 * Fixed bug in XML renderer -- cycle-breaking code meant that
