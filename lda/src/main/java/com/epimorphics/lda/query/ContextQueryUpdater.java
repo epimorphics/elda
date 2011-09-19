@@ -137,9 +137,7 @@ public class ContextQueryUpdater implements ViewSetter {
 		String pString = context.expandVariables( p );
 		if (val == null) EldaException.NullParameter( p );
 	//
-		if (args.isBindable(pString)) {
-			// nothing to do -- report suspect?  
-		} else if (p.startsWith( QueryParameter.LANG_PREFIX )) {
+		if (p.startsWith( QueryParameter.LANG_PREFIX )) {
 			// Nothing to do -- done on previous pass 
 	    } else if (p.equals(QueryParameter._LANG)) {
 			// Also done on previous pass

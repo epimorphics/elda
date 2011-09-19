@@ -103,8 +103,13 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     			metadataOptions.add( option.toLowerCase() );
     }
 
+
 	public boolean isListEndpoint() {
     	return endpointResource.hasProperty( RDF.type, API.ListEndpoint );
+    }
+	
+	public boolean isItemEndpoint() {
+    	return endpointResource.hasProperty( RDF.type, API.ItemEndpoint );
     }
     
     private void checkEndpointType(Resource endpoint) {

@@ -129,10 +129,6 @@ public class QueryArgumentsImpl implements QueryArguments {
 		query.addPropertyHasntValue( param );
 	}
 
-	@Override public boolean isBindable( String pString ) {
-		return query.isBindable( pString );
-	}
-
 	@Override public String getDefaultLanguage() {
 		return query.defaultLanguage;
 	}

@@ -66,7 +66,5 @@ public interface QueryArguments {
 
 	public void addInfixSparqlFilter( Any l, String op,	Any r );
 
-	public boolean isBindable(String pString);
-
 	public String getDefaultLanguage();
 }

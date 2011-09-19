@@ -251,7 +251,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		// .addProperty( RDFS.label, "should be a description of this list" )
 	    		;
     		rs.setContentLocation( listRoot.getURI() );
-        } else if (rs.getResultList().isEmpty()) {
+        } else if (rs.isEmpty()) {
         	EldaException.NoItemFound();
         } else {
         	Resource content = rs.getResultList().get(0);

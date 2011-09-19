@@ -238,6 +238,16 @@ public class APIResultSet {
 		if (this.selectQuery.length() > 0) throw new RuntimeException( "was " + this.selectQuery + " wants " + selectQuery );
 		this.selectQuery = selectQuery;
 		return this;
+	}
+
+	/**
+	    Answer true if this result set is empty, ie, it has no result values
+	    or the results have no properties.
+	*/
+	public boolean isEmpty() {
+		for (Resource item: results)
+			if (item.listProperties().hasNext()) return false;
+		return true;
 	}    
 }
 

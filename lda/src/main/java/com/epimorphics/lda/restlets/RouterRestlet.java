@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
@@ -112,7 +113,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         }
     }
     
-    protected static final boolean showMightHaveMeant = false;
+    protected static final boolean showMightHaveMeant = true;
 
 	private Response noMatchFound( String pathstub, UriInfo ui, Couple<String, String> pathAndType ) {
 		String preamble = ui.getBaseUri().toASCIIString();
@@ -178,16 +179,14 @@ import com.hp.hpl.jena.shared.WrappedException;
         	URI ru = makeRequestURI(ui, match, requestUri);
         	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, ru, suffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
-			if (false) { // results == null || results.getResultList().size() == 0) {
-			    return returnNotFound( "No items found matching that request." );
-			} else {
-				// APIEndpoint ep = match.getEndpoint();
-				RendererContext rc = new RendererContext( paramsFromContext( resultsAndFormat.c ), contextPath, as );
-				String _format = resultsAndFormat.b;
-				String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
-				Renderer r = APIEndpointUtil.getRenderer( match.getEndpoint(), formatter, mediaTypes );
-				return doRendering( rc, formatter, results, r );
-			}
+            if (results == null)
+            	throw new RuntimeException( "ResultSet is null -- this should never happen." );
+            APIEndpoint ep = match.getEndpoint();
+			RendererContext rc = new RendererContext( paramsFromContext( resultsAndFormat.c ), contextPath, as );
+			String _format = resultsAndFormat.b;
+			String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
+			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
+			return doRendering( rc, formatter, results, r );
         } catch (StackOverflowError e) {
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( shortStackTrace( e ) );
