@@ -26,7 +26,6 @@ import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.routing.MatchSearcher;
-import com.epimorphics.lda.sources.LocalSource;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.Couple;
@@ -262,8 +261,6 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 //				System.err.println( ">> ------------------------------------------__" );
 				// System.err.println( ">>\n>> Failing result model for " + w.title + ":" );
 				// rsm.write( System.err, "TTL" );
-				System.err.println( resultsAndFormat.a.getSelectQuery() );
-				System.err.println( resultsAndFormat.a.getDetailsQuery() );
 				fail
 					( "test " + w.title + ": the probe query\n"
 					+ shortStringFor( a ) + "\n"

@@ -241,12 +241,10 @@ public class View {
         view is ALL, answers the given model with no filtering. 
     */
 	public Model applyTo( Model source, List<Resource> roots ) {
-//		System.err.println( ">> applyTo: view = " + this );
         Model result = doesFiltering() && false
         	? ChainScanner.onlyMatchingChains( source, roots, chains ) // TODO this may well be dead dead dead
         	: source
         	;
-//        result.write( System.err, "Turtle" );
         return result;
 	}
 
@@ -286,14 +284,6 @@ public class View {
 				log.debug( "T_CHAINS took " + (time/1000.0) + "s" );
 				return detailsQuery;
 			}
-				
-//			case T_BASIC: {
-//				long zero = System.currentTimeMillis();
-//				String detailsQuery = fetchByGivenPropertyChains( s, BasicChains ); 
-//				long time = System.currentTimeMillis() - zero;
-//				log.debug( "T_BASIC took " + (time/1000.0) + "s" );
-//				return detailsQuery;
-//			}
 				
 			default:
 				EldaException.Broken( "unknown view type " + type );				
@@ -359,9 +349,8 @@ public class View {
 		}
 	//
 		construct.append( "\n} WHERE {\n" );
-		String hack_selection = hackVars( selection );
 		// System.err.println( ">> nested select: hacking round ARQ bug: " + hack_selection );
-		construct.append( "  {" ).append( hack_selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
+		construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
 	//	
 		String union = "";
 		for (PropertyChain c: chains) {
@@ -377,27 +366,6 @@ public class View {
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) );
 		return queryString;
-	}
-
-	private String hackVars( String selection ) {
-		if (true) return selection;
-		// System.err.println( ">> SELECTION: " + selection + "\nEND\n" );
-		String vars = varsOf( selection.substring( selection.indexOf( "item" ) + 5 ) );
-		return selection.replaceFirst( "\n", "" + vars + "\n" );
-	}
-
-	private String varsOf( String selection ) {
-		String result = "";
-		Pattern p = Pattern.compile( "\\?[A-Za-z_0-9]+" );
-		Matcher m = p.matcher( selection );
-		while (m.find()) {
-			String var = m.group();
-			if (!var.equals( "?item" ) && !result.contains( var ))
-				result += " " + var;
-			
-		}
-			
-		return result;
 	}
 
 	private void buildConstructClause( PrefixLogger pl, StringBuilder construct, Any r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {

@@ -18,7 +18,6 @@ import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
-import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.QueryArgumentsImpl;

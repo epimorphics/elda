@@ -41,7 +41,6 @@ import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;

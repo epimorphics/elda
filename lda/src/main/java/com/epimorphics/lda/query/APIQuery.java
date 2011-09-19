@@ -27,7 +27,6 @@ import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ClauseConsumer;
-import com.epimorphics.lda.core.ExpandLabels;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.VarSupply;
@@ -849,9 +848,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		log.debug( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );
 		log.debug( "TIMING: view time:   " + (afterView - afterSelect)/1000.0 + "s" );
 		rs.setSelectQuery( outerSelect );
-		
-		// Expand the labels of all leaf nodes (make this switchable?)
-		new ExpandLabels( this ).expand( source, rs );
 		
 		// Expand chained views, if present
 		if ( ! expansionPoints.isEmpty()) {
