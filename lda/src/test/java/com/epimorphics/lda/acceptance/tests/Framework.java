@@ -262,6 +262,8 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 //				System.err.println( ">> ------------------------------------------__" );
 				// System.err.println( ">>\n>> Failing result model for " + w.title + ":" );
 				// rsm.write( System.err, "TTL" );
+				System.err.println( resultsAndFormat.a.getSelectQuery() );
+				System.err.println( resultsAndFormat.a.getDetailsQuery() );
 				fail
 					( "test " + w.title + ": the probe query\n"
 					+ shortStringFor( a ) + "\n"

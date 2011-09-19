@@ -1,4 +1,4 @@
-# Model from test: http://dummy/doc/schools?_properties=name,size
+# Model from test: http://dummy/doc/schools?_properties=name,size,rdf_type
 @prefix spec:    <http://www.epimorphics.com/examples/spec1#> .
 @prefix os:      <http://a9.com/-/spec/opensearch/1.1/> .
 @prefix ex:      <http://www.epimorphics.com/examples/eg1#> .

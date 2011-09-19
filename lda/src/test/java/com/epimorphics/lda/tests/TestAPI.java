@@ -190,8 +190,8 @@ public class TestAPI {
     
     @Test
     public void testQueryTemplates() {
+    	testAPI("http://dummy/doc/schools", "_properties=name,size,rdf_type", "testTemplateNameSizeType.ttl");
         testAPI("http://dummy/doc/schools", "_properties=name,size", "testTemplateNameSize.ttl");
-        testAPI("http://dummy/doc/schools", "_properties=name,size,rdf_type", "testTemplateNameSize.ttl");
     }
     
     @Test
@@ -229,7 +229,7 @@ public class TestAPI {
     
     @Test
     public void testExists() {
-        testAPI("http://dummy/doc/schools", "_properties=name,size,school_type&size=100&_pageSize=50&exists-school_type=true", "testExistsType.ttl");
+        testAPI("http://dummy/doc/schools", "_properties=rdf_type,name,size,school_type&size=100&_pageSize=50&exists-school_type=true", "testExistsType.ttl");
     }
     
     @Test

@@ -371,7 +371,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 			else if (p.getType() == null) {
 				if (inf.typeURI != null) System.err.println( ">> Odd: p.getType is null, but inf.typeURI is " + inf.typeURI );
 			} else {
-				if (inf.typeURI == null) System.err.println( ">> Odd: p.getType is not null, byt inf.typeURI is." );
+				if (inf.typeURI == null) System.err.println( ">> Odd: p.getType is not null, but inf.typeURI is." );
 				else if (!inf.typeURI.equals( p.getType())) System.err.println( ">> Odd: p.getType is " + p.getType() + " but inf.typeURI is " + inf.typeURI );
 			}
 		}

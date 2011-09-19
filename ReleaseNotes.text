@@ -4,6 +4,15 @@
   encoding (a hangover from pre-spec days). Now it includes
   the full URI.
 
+* Elda's view arithmetic was buggy (and internally complicated).
+  It should now use the _view setting as a base if present, and
+  otherwise the default view, and correctly over-ride the view with
+  the properties and not vice-versa.
+
+  Adding properties to a describe viewer (still) does not work as
+  (probably) intended; a describe viewer has not property chains.
+  This will be fixed soon.
+
 1.1.13
 
 * Fixed bug in XML renderer -- cycle-breaking code meant that

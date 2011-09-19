@@ -31,7 +31,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestParameterNameAndValueExpansion 
 	{
-	@Test public void ensureFlarn()
+	@Test public void ensure_PropertiesRespected()
 		{
 		Model model = MakeData.specModel
 			( "spec:spoo rdf:type api:API"

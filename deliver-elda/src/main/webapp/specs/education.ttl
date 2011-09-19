@@ -173,7 +173,7 @@ spec:schools
 	lda:selector [ 
 		lda:filter "type=School"
 	] ;
-	lda:defaultViewer lda:labelledDescribeViewer ;
+	lda:defaultViewer spec:viewerMedium ; # lda:labelledDescribeViewer ;
 	lda:viewer spec:viewerShort ;
 	lda:viewer spec:viewerMedium ;
 	lda:viewer [ 

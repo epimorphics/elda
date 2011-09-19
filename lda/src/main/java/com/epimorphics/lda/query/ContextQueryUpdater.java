@@ -51,8 +51,8 @@ public class ContextQueryUpdater implements ViewSetter {
 	protected final int endpointKind;
 	
 	private View view; // = new view(); -- doesn't work, null is important somewhere
-	protected final View defaultView;
-	protected final View noneSpecified;
+	// protected final View defaultView;
+	// protected final View noneSpecified;
 	
 	protected String requestedFormat = "";
 
@@ -75,8 +75,8 @@ public class ContextQueryUpdater implements ViewSetter {
 		this.sns = sns;
 		this.nt = nv;
 		this.eps = eps;
-		this.defaultView = nv.getDefaultView().copy();
-		this.view = this.noneSpecified = new View();
+		// this.defaultView = nv.getDefaultView().copy();
+		this.view = nv.getDefaultView().copy();
 		this.endpointKind = endpointKind;
 		this.args = args;
 	}
@@ -87,18 +87,22 @@ public class ContextQueryUpdater implements ViewSetter {
 	*/
     public Couple<View, String> updateQueryAndConstructView( List<Deferred> deferredFilters ) {	  
     	args.clearLanguages();
-    	for (String param: context.getFilterPropertyNames()) 
+    	Set<String> allParamNames = context.getFilterPropertyNames();
+    	if (allParamNames.contains( QueryParameter._VIEW )) {
+    		view = new View( "empty, will be replaced" );
+    	}
+		for (String param: allParamNames) 
     		if (param.startsWith( QueryParameter.LANG_PREFIX ))
     			handleLangPrefix( param );
     		else if (param.equals(QueryParameter._LANG)) 
     			args.setDefaultLanguage( context.getStringValue( param ) );
         GEOLocation geo = new GEOLocation();
-        for (String param: context.getFilterPropertyNames()) 
+        for (String param: allParamNames) 
             handleParam( geo, param );
         geo.addLocationQueryIfPresent( args );
         // ((QueryArgumentsImpl) args).updateQuery();
         activateDeferredFilters( deferredFilters );
-        return new Couple<View, String>( (view == noneSpecified ? defaultView : view), requestedFormat );
+        return new Couple<View, String>( view, requestedFormat );
     }
 
 	private void activateDeferredFilters( List<Deferred> deferred ) {
@@ -291,8 +295,6 @@ public class ContextQueryUpdater implements ViewSetter {
 				view.addViewFromParameterValue( prop, null, sns );
 			}
 		}
-		// view.addviewFromParameterValue( "type", null, sns ); // HACK
-//		System.err.println( ">> clause '" + clause + "' generates view " + view );
 	}
 	
 	@Override public void setFormat( String format ) {
@@ -303,14 +305,14 @@ public class ContextQueryUpdater implements ViewSetter {
 		View named  = nt.getView( viewName );
 		if (named == null) EldaException.NotFound( "view", viewName );
 		view = named.copy().addFrom( view );
-		// log.debug( "view " + viewName + " yields view " + view + " from\n  " + nt );
 	}
 
 	@Override public void setViewByProperties(String val) {
-		view = nt.getDefaultView().copy();
+//		System.err.println( ">> setViewByProperties: base is " + view );
+		view = view.copy(); 
 		for (String prop: val.split(","))
-			if (prop.length() > 0)
+			if (prop.length() > 0) 
 				view.addViewFromParameterValue( prop, eps, sns );
-//		System.err.println( ">> >> setViewByProperties from " + val + " => " + view );
+//		System.err.println( ">> ... view becomes " + view );
 	}
 }

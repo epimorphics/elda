@@ -1,4 +1,4 @@
-# Model from test: http://dummy/doc/schools?_properties=name,size
+# Model from test: http://dummy/doc/schools?_properties=name,size,rdf_type
 { "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools?_page=0", "next" : "http://dummy/doc/schools?_page=1", "itemsPerPage" : 10, "page" : 0, "extendedMetadataVersion" : "http://dummy/doc/schools?_page=0&_metadata=all", "type" : "http://purl.org/linked-data/api/vocab#Page", "definition" : "http://dummy/doc/schools/meta", "first" : "http://dummy/doc/schools?_page=0", "isPartOf" : {"_about" : "http://dummy/doc/schools", "type" : "http://purl.org/linked-data/api/vocab#ListEndpoint", "definition" : "http://dummy/doc/schools/meta", "hasPart" : "http://dummy/doc/schools?_page=0"}
     , "items" : [{"_about" : "http://www.epimorphics.com/examples/eg1#school_1", "name" : "Name1", "size" : 100, "type" : "http://education.data.gov.uk/def/school/School"}
     , {"_about" : "http://www.epimorphics.com/examples/eg1#school_10", "name" : "Name10", "size" : 100, "type" : "http://education.data.gov.uk/def/school/School"}

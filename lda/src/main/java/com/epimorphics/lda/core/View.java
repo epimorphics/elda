@@ -55,16 +55,25 @@ public class View {
     public static final String SHOW_DESCRIPTION = "description";
     
     public static final String SHOW_DEFAULT_INTERNAL = "default";
+    
+    protected static final List<PropertyChain> emptyChain = new ArrayList<PropertyChain>();
 
     /**
         View that does DESCRIBE plus labels of all objects.
     */
     public static final View ALL = new View( false, SHOW_ALL, Type.T_ALL );
+
+	/**
+	    Property chains: [RDF.type] and [RDFS.label].
+	*/
+	static final List<PropertyChain> BasicChains = 
+		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
     
-    /**
+	/**
         View that does rdf:type and rdfs:label.
     */
-    public static final View BASIC = new View( false, SHOW_BASIC, Type.T_BASIC );
+    // public static final View BASIC = new View( false, SHOW_BASIC, Type.T_BASIC );
+    public static final View BASIC = new View( false, SHOW_BASIC, Type.T_CHAINS, BasicChains );
     
     /**
         View that does DESCRIBE.
@@ -89,7 +98,7 @@ public class View {
     
 	protected boolean doesFiltering = true;
 	
-	static enum Type { T_DESCRIBE, T_ALL, T_CHAINS, T_BASIC };
+	static enum Type { T_DESCRIBE, T_ALL, T_CHAINS };
 	
 	protected Type type = Type.T_DESCRIBE;
     
@@ -112,9 +121,14 @@ public class View {
     }
     
     public View( boolean doesFiltering, String name, Type type ) {
+    	this( doesFiltering, name, type, emptyChain );
+    }
+    
+    public View( boolean doesFiltering, String name, Type type, List<PropertyChain> initial ) {
     	this.type = type;
     	this.name = name;
     	this.doesFiltering = doesFiltering;
+    	this.chains.addAll( initial );
     }
     
     public String name(){
@@ -273,25 +287,19 @@ public class View {
 				return detailsQuery;
 			}
 				
-			case T_BASIC: {
-				long zero = System.currentTimeMillis();
-				String detailsQuery = fetchByGivenPropertyChains( s, BasicChains ); 
-				long time = System.currentTimeMillis() - zero;
-				log.debug( "T_BASIC took " + (time/1000.0) + "s" );
-				return detailsQuery;
-			}
+//			case T_BASIC: {
+//				long zero = System.currentTimeMillis();
+//				String detailsQuery = fetchByGivenPropertyChains( s, BasicChains ); 
+//				long time = System.currentTimeMillis() - zero;
+//				log.debug( "T_BASIC took " + (time/1000.0) + "s" );
+//				return detailsQuery;
+//			}
 				
 			default:
 				EldaException.Broken( "unknown view type " + type );				
 		}
 		return "# should be a query here.";
 	}
-
-	/**
-	    Property chains: [RDF.type] and [RDFS.label].
-	*/
-	static final List<PropertyChain> BasicChains = 
-		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
 	
 	private String fetchByGivenPropertyChains( State s, List<PropertyChain> chains ) { 
 		boolean uns = useNestedSelect(s) && s.select.length() > 0;
