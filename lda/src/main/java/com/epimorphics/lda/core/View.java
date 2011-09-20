@@ -135,6 +135,10 @@ public class View {
     	return name;
     }
     
+    public Type getType() {
+    	return type;
+    }
+    
     public Set<PropertyChain> chains() {
     	return new HashSet<PropertyChain>( chains );
     }
@@ -205,7 +209,7 @@ public class View {
         	expansion = false;
         }
         if (expansion) ep.addExpansion(uri);
-        if (chains.size() > 0) type = Type.T_CHAINS;
+        // if (chains.size() > 0) type = Type.T_CHAINS;
         return this;
     }
     
@@ -267,18 +271,21 @@ public class View {
 	
 	public String fetchDescriptions( State s ) {
 //		log.info( "fetchDescriptionsFor: sources = " + sources + " using " + this );
+		long zero = System.currentTimeMillis();
 		switch (type) {
-			case T_DESCRIBE: 
+			case T_DESCRIBE: {
+				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
 				return fetchBareDescriptions( s ); 
+			}
 				
 			case T_ALL:	{	
-				String detailsQuery = fetchBareDescriptions( s ); 
-			    addAllObjectLabels( s ); // m, sources );
+				String detailsQuery = fetchBareDescriptions( s ); 				
+				String chainsQuery = fetchByGivenPropertyChains( s, chains ); 
+			    addAllObjectLabels( s );
 			    return detailsQuery;
 			}
 
 			case T_CHAINS:	{
-				long zero = System.currentTimeMillis();
 				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
 				long time = System.currentTimeMillis() - zero;
 				log.debug( "T_CHAINS took " + (time/1000.0) + "s" );
@@ -333,12 +340,17 @@ public class View {
 		return queryString;
 	}
 	
+	static final Pattern SELECT = Pattern.compile( "SELECT", Pattern.CASE_INSENSITIVE );
+	
 	private String fetchChainsByNestedSelect( State st, List<PropertyChain> chains ) { 
 		PrefixLogger pl = new PrefixLogger( st.m );
 		StringBuilder construct = new StringBuilder();
-		int s = st.select.indexOf( "\nSELECT" );
-		String selection = st.select.substring( s + 1 );
-		String selectPrefixes = st.select.substring(0, s + 1);
+	//
+		Matcher m = SELECT.matcher( st.select );
+		if (!m.find()) EldaException.Broken( "No SELECT in nested query." );
+		int s = m.start();
+		String selection = st.select.substring( s );
+		String selectPrefixes = st.select.substring(0, s);
 	//
 		Any r = RDFQ.var( "?item" );
 		construct.append( "CONSTRUCT {" );		
@@ -349,7 +361,6 @@ public class View {
 		}
 	//
 		construct.append( "\n} WHERE {\n" );
-		// System.err.println( ">> nested select: hacking round ARQ bug: " + hack_selection );
 		construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
 	//	
 		String union = "";

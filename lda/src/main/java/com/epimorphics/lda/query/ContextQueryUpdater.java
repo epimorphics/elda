@@ -50,9 +50,7 @@ public class ContextQueryUpdater implements ViewSetter {
 	protected final QueryArguments args;
 	protected final int endpointKind;
 	
-	private View view; // = new view(); -- doesn't work, null is important somewhere
-	// protected final View defaultView;
-	// protected final View noneSpecified;
+	private View view;
 	
 	protected String requestedFormat = "";
 
@@ -75,7 +73,6 @@ public class ContextQueryUpdater implements ViewSetter {
 		this.sns = sns;
 		this.nt = nv;
 		this.eps = eps;
-		// this.defaultView = nv.getDefaultView().copy();
 		this.view = nv.getDefaultView().copy();
 		this.endpointKind = endpointKind;
 		this.args = args;
@@ -89,7 +86,7 @@ public class ContextQueryUpdater implements ViewSetter {
     	args.clearLanguages();
     	Set<String> allParamNames = context.getFilterPropertyNames();
     	if (allParamNames.contains( QueryParameter._VIEW )) {
-    		view = new View( "empty, will be replaced" );
+    		setViewByName( context.getStringValue(QueryParameter._VIEW ) );
     	}
 		for (String param: allParamNames) 
     		if (param.startsWith( QueryParameter.LANG_PREFIX ))
@@ -193,7 +190,7 @@ public class ContextQueryUpdater implements ViewSetter {
 		} else if (p.equals(QueryParameter._PROPERTIES)) {
 			vs.setViewByProperties(val);
 		} else if (p.equals(QueryParameter._VIEW)) {
-		    vs.setViewByName(val);
+			// already done
 		} else if (p.equals(QueryParameter._SUBJECT)) {
 		    args.setSubject(val);
 		} else if (p.equals( QueryParameter.callback )) {
@@ -279,21 +276,6 @@ public class ContextQueryUpdater implements ViewSetter {
 	    Any r = sns.normalizeNodeToRDFQ( prop, val, args.getDefaultLanguage() );
 		args.addInfixSparqlFilter( already, op, r );
     }    
-
-	/**
-	    Half-baked construction of a view given a clause.
-	    Make that tenth-baked. Maybe epsilon-baked.
-	*/
-	@Override public void setViewByExplicitClause( String clause ) {
-		view = new View();
-		String [] parts = clause.replaceAll( "[\\[\\],;]", " " ).split( " +" );
-		for (String p: parts) {
-			if (!p.startsWith("?")) {
-				String prop = p.replaceFirst( "^.*[/#:]", "" );
-				view.addViewFromParameterValue( prop, null, sns );
-			}
-		}
-	}
 	
 	@Override public void setFormat( String format ) {
 		requestedFormat = format;
@@ -302,15 +284,12 @@ public class ContextQueryUpdater implements ViewSetter {
 	@Override public void setViewByName( String viewName ) {
 		View named  = nt.getView( viewName );
 		if (named == null) EldaException.NotFound( "view", viewName );
-		view = named.copy().addFrom( view );
+		view = named.copy();
 	}
 
 	@Override public void setViewByProperties(String val) {
-//		System.err.println( ">> setViewByProperties: base is " + view );
-		view = view.copy(); 
 		for (String prop: val.split(","))
 			if (prop.length() > 0) 
 				view.addViewFromParameterValue( prop, eps, sns );
-//		System.err.println( ">> ... view becomes " + view );
 	}
 }

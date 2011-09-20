@@ -113,7 +113,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         }
     }
     
-    protected static final boolean showMightHaveMeant = true;
+    protected static final boolean showMightHaveMeant = false;
 
 	private Response noMatchFound( String pathstub, UriInfo ui, Couple<String, String> pathAndType ) {
 		String preamble = ui.getBaseUri().toASCIIString();

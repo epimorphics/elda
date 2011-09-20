@@ -7,7 +7,7 @@
 
 :ep a api:ListEndpoint
     ; api:uriTemplate '/fixed/select'
-    ; api:selector [api:select 'prefix : <http://www.epimorphics.com/tools/example#>\nselect * where { ?item :p 1 .}']
+    ; api:selector [api:select 'prefix : <http://www.epimorphics.com/tools/example#>\nSELECT * where { ?item :p 1 .}']
     .
     
 rdf:type a rdf:Property

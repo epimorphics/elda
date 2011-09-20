@@ -14,7 +14,6 @@ package com.epimorphics.lda.core;
  	@author chris
 */
 public interface ViewSetter {
-	public void setViewByExplicitClause( String clause );
 	public void setViewByName( String viewName );
 	public void setViewByProperties(String val);
 	public void setFormat(String val);
