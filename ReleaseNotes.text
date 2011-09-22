@@ -1,4 +1,6 @@
-1.1.14-SNAPSHOT
+1.1.15-SNAPSHOT
+
+1.1.14
 
 * Bug fix: Elda shortened the objects of rdf:type in the JSON
   encoding (a hangover from pre-spec days). Now it includes
@@ -12,6 +14,23 @@
   Adding properties to a DESCRIBE-based viewer works; Elda makes
   additional queries to the SPARQL endpoint. (These do not show
   up in the view query panel produced by the XSLT renderer.)
+
+* WARNING Changes to Elda's conversion of parameter values to
+  SPARQL literals has CHANGED (and will change some more). Previously
+  given a parameter binding P=V if P had an rdfs:range T (other than
+  rdfs:Resource or owl:Thing) then Elda generated "V"^^T. This was
+  incorrect, since the LDA spec specifically allows for object
+  "literals".
+
+  Elda now generates "V"^^T only when T is a "known datatype",
+  which it does when:
+
+    * T is in the xsd: namespace
+    * T has rdf:type rdfs:Datatype
+    * The property named by P is an owl:DatatypeProperty.
+
+  * Various unused classes (MediaTypes, ClauseConsumer) have
+    been deleted.
 
 1.1.13
 
