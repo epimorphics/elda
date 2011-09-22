@@ -287,8 +287,7 @@ public class View {
 
 			case T_CHAINS:	{
 				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
-				long time = System.currentTimeMillis() - zero;
-				log.debug( "T_CHAINS took " + (time/1000.0) + "s" );
+				log.debug( "T_CHAINS took " + ((System.currentTimeMillis() - zero)/1000.0) + "s" );
 				return detailsQuery;
 			}
 				
@@ -412,19 +411,48 @@ public class View {
 
 	private String fetchBareDescriptions( State s ) { 
 		long zero = System.currentTimeMillis();
-		PrefixLogger pl = new PrefixLogger( s.m );
-		String describe = "DESCRIBE";
-		for (Resource r: new HashSet<Resource>( s.roots )) { // TODO
-			describe += "\n  " + pl.present( r.getURI() );
-		}
-		describe = pl.writePrefixes( new StringBuilder() ).toString() + describe;
-		Query describeQuery = QueryFactory.create( describe );
-		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
+		String describe = fetchUntimedByDescribe( s.m, s.roots, s.sources );
 		long time = System.currentTimeMillis() - zero;
 		log.debug( "fetchBareDescriptions took " + (time/1000.0) + "s" );
 		return describe;
+	}
+
+	private String fetchUntimedByDescribe( Model sm, List<Resource> allRoots, List<Source> sources ) {
+		List<List<Resource>> chunks = chunkify( allRoots );
+		StringBuilder describe = new StringBuilder();
+		for (List<Resource> roots: chunks) {
+			PrefixLogger pl = new PrefixLogger( sm );
+			describe.setLength(0);
+			describe.append( "DESCRIBE" );
+			for (Resource r: new HashSet<Resource>( roots )) { // TODO
+				describe.append( "\n  " ).append( pl.present( r.getURI() ) );
+			}
+			String query = pl.writePrefixes( new StringBuilder() ).toString() + describe;
+			Query describeQuery = QueryFactory.create( query );
+			for (Source x: sources) sm.add( x.executeDescribe( describeQuery ) );
+		}
+		return describe.toString();
 	}		
 	
+	static final int CHUNK_SIZE = 1000;
+	static final boolean slice_describes = false;
+	
+	private List<List<Resource>> chunkify(List<Resource> roots) {
+		List<List<Resource>> result = new ArrayList<List<Resource>>();
+		if (slice_describes) {
+			int size = roots.size();
+			for (int i = 0; i < size; i += CHUNK_SIZE) {
+				int lim = Math.min( size, i + CHUNK_SIZE );
+				result.add( roots.subList( i, lim ) );
+			}
+			if (result.size() > 1)
+				log.debug( "large DESCRIBE: " + result.size() + " chunks of size " + CHUNK_SIZE );
+		} else {
+			result.add( roots );
+		}
+		return result;
+	}
+
 	private void addAllObjectLabels( State s ) { 
 		long zero = System.currentTimeMillis();
 		StringBuilder sb = new StringBuilder();

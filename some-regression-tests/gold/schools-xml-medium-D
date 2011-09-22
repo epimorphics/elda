@@ -36,7 +36,9 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Primary"/>
       <schoolCapacity datatype="integer">210</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
         <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
           <label>Voluntary Aided School</label>
         </item>
@@ -53,8 +55,12 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Primary"/>
       <schoolCapacity datatype="integer">259</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
     </item>
@@ -68,8 +74,12 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Primary"/>
       <schoolCapacity datatype="integer">208</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
     </item>
@@ -83,8 +93,12 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Primary"/>
       <schoolCapacity datatype="integer">210</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
     </item>
@@ -97,8 +111,12 @@
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/363"/>
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Primary"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
     </item>
@@ -112,8 +130,12 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Primary"/>
       <schoolCapacity datatype="integer">210</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
     </item>
@@ -127,8 +149,12 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Primary"/>
       <schoolCapacity datatype="integer">210</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
     </item>
@@ -141,7 +167,9 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/>
       <schoolCapacity datatype="integer">1359</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
         <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_School">
           <label>Community School</label>
         </item>
@@ -157,7 +185,9 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/>
       <schoolCapacity datatype="integer">1341</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
         <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Foundation_School">
           <label>Foundation School</label>
         </item>

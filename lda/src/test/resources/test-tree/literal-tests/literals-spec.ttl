@@ -1,0 +1,17 @@
+:root a api:API 
+    ; api:sparqlEndpoint <local:CURRENT-TEST>
+    ; api:endpoint :ep
+    .
+
+:ep a api:ListEndpoint
+    ; api:uriTemplate "/literality"
+    .
+    
+rdf:type a rdf:Property
+    ; api:label 'type'
+    .
+
+rdfs:label a rdf:Property
+    ; api:label 'label'
+    .
+    

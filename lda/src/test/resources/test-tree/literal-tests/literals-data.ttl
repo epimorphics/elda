@@ -1,0 +1,14 @@
+@prefix : <http://www.epimorphics.com/tools/example#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+:litA a :Item
+    ; rdfs:label "chat"@en
+    .
+    
+:litB a :Item
+    ; rdfs:label "chat"@fr
+    .
+    
+:litC a :Item
+    ; rdfs:label "chat"@cy
+    .

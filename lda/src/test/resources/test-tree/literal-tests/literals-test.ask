@@ -1,0 +1,5 @@
+URI=/literality?_lang=fr,en&label=chat
+
+ASK { :litA a :Item }
+ASK { :litB a :Item }
+ASK NOT { :litC a :Item }

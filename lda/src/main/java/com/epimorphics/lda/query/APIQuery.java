@@ -26,7 +26,6 @@ import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.CallContext;
-import com.epimorphics.lda.core.ClauseConsumer;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.VarSupply;
@@ -61,7 +60,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, ExpansionPoints {
+public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     
 	public static final String NEAR_LAT = "near-lat";
 	
@@ -78,7 +77,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     //  but not sure how well that plays with JDO persistance for GAE
     //  so stick to string bashing for ease of debug and persistence
     
-    protected StringBuffer propertyChains = new StringBuffer();
     protected StringBuffer whereExpressions = new StringBuffer();
     
     private StringBuffer orderExpressions = new StringBuffer();
@@ -180,7 +178,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
             clone.filterExpressions = new ArrayList<RenderExpression>( filterExpressions );
             clone.orderExpressions = new StringBuffer( orderExpressions );
             clone.whereExpressions = new StringBuffer( whereExpressions );
-            clone.propertyChains = new StringBuffer( propertyChains );
             clone.varProps = new HashMap<String, String>( varProps );
             clone.expansionPoints = new HashSet<Property>( expansionPoints );
             clone.deferredFilters = new ArrayList<Deferred>( deferredFilters );
@@ -355,25 +352,14 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 
 	private void addLanguagedTriplePattern(Variable var, Info inf, String languages, String val) {
 		String prop = inf.shortName;
+		// System.err.println( ">> addLTP: " + inf + " " + languages + " " + val );
 		String[] langArray = languages.split( "," );
 		Resource np = sns.normalizeResource( prop );
 		Prop p = sns.asContext().getPropertyByName( prop );
-		if (false) {
-			// Some sanity checking before code revisions.
-			if (p == null) {
-				System.err.println( ">> Odd: p is null for " + prop + "; info is " + inf );
-				throw new RuntimeException();
-			}
-			else if (p.getType() == null) {
-				if (inf.typeURI != null) System.err.println( ">> Odd: p.getType is null, but inf.typeURI is " + inf.typeURI );
-			} else {
-				if (inf.typeURI == null) System.err.println( ">> Odd: p.getType is not null, but inf.typeURI is." );
-				else if (!inf.typeURI.equals( p.getType())) System.err.println( ">> Odd: p.getType is " + p.getType() + " but inf.typeURI is " + inf.typeURI );
-			}
-		}
 		if (langArray.length == 1 || (p != null && p.getType() != null)) {
 			addTriplePattern( var, np, sns.normalizeNodeToRDFQ( prop, val, langArray[0] ) ); 
 		} else if (val.startsWith( "?" )) {
+			// if (true) throw new RuntimeException( "where did the variable come from? : " + val );
 			Variable v = RDFQ.var( val );
 			addTriplePattern( var, np, v );
 			filterExpressions.add( someOf( v, langArray ) );
@@ -540,7 +526,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		        	Param p = Param.make(sns, spec);
 		        	Set<String> s = set(var);
 		        	// System.err.println( ">> setSortBy(..." + spec + "...) generates (?item " + p + " " + s + ")" );
-					addPropertyHasValue(p, s); // TODO fix use of make
+					addPropertyHasValue( p, s, false );
 		        }
     		}
     }
@@ -661,10 +647,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 				.append( ">\n" );
 		}
 	}
-
-	@Override public void consumeClause( String clause ) {
-    	 propertyChains.append( clause );    	
-    }
     
 	/**
 	    Take the SPARQL query string <code>query</code> and replace any ?SPOO

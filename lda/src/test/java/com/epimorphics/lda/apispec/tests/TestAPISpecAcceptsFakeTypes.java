@@ -15,6 +15,9 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.OWL;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 import static org.hamcrest.CoreMatchers.*;
 
@@ -35,15 +38,30 @@ public class TestAPISpecAcceptsFakeTypes
 		+ "\n"
 		;
 	
-	@Test public void testFakeType() 
+	@Test public void ensureRespectsDataypesByType() 
 		{
 		Model m = ModelIOUtils.modelFromTurtle( spec );
+		m.removeAll( null, RDF.type, OWL.DatatypeProperty );
+		Resource ft = m.createResource( m.expandPrefix( ":faketype" ) );
+		m.add( ft, RDF.type, RDFS.Datatype );
+	//
+		ensureRespectsDatatypes( m );
+		}
+	
+	@Test public void ensureRespectsDataypesByPropertyType() 
+		{
+		Model m = ModelIOUtils.modelFromTurtle( spec );
+	//
+		ensureRespectsDatatypes( m );
+		}
+
+	private void ensureRespectsDatatypes(Model m) {
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
 		APISpec s = SpecUtil.specFrom( root );
 		String x = s.getShortnameService().normalizeNodeToString( "year", "spoo" );
 		String eg = m.getNsPrefixURI( "" );
 		assertThat( x, is( "'spoo'^^<" + eg + "faketype>" ) );
-		}
+	}
 	
 	@Test public void testPlainLiteral() 
 		{

@@ -41,6 +41,9 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Map1;
+import com.hp.hpl.jena.vocabulary.OWL;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Encapsulates a specification of a single API instance.
@@ -81,7 +84,7 @@ public class APISpec {
     	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
 		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
         prefixes = ExtractPrefixMapping.from(specification);
-        sns = new StandardShortnameService(specification, prefixes, loader);
+        sns = loadShortnames(specification, loader);
         dataSource = GetDataSource.sourceFromSpec( fm, specification );
         describeSources = extractDescribeSources( fm, specification, dataSource );
         primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
@@ -93,6 +96,19 @@ public class APISpec {
         extractMetadataOptions( specification );
         extractEndpointSpecifications( specification );
     }
+
+	private StandardShortnameService loadShortnames( Resource specification, ModelLoaderI loader ) {
+		Model m = specification.getModel();
+		StandardShortnameService result = new StandardShortnameService(specification, prefixes, loader);
+		List<Resource> dataTypes = m.listStatements( null, RDF.type, RDFS.Datatype ).mapWith( Statement.Util.getSubject ).toList();
+		for (Resource t: dataTypes) result.declareDatatype( t.getURI() );
+		for (Resource p: m.listSubjectsWithProperty( RDF.type, OWL.DatatypeProperty ).toList()) {
+			for (RDFNode t: m.listObjectsOfProperty( p, RDFS.range ).toList()) {
+				result.declareDatatype( t.asResource().getURI() );
+			}
+		}
+		return result;
+	}
     
     private void extractMetadataOptions( Resource specification ) {
     	for (StmtIterator it = specification.listProperties( EXTRAS.metadataOptions ); it.hasNext();)

@@ -38,7 +38,9 @@
         <item href="http://education.data.gov.uk/def/school/IndependentSchoolType_Foreign">
           <label>Foreign</label>
         </item>
-        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
         <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_Special_School">
           <label>Other Independent Special School</label>
         </item>
@@ -52,7 +54,9 @@
       <label>College Park School</label>
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/107"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
         <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School">
           <label>Community Special School</label>
         </item>
@@ -66,8 +70,12 @@
       <label>Wanstead House School</label>
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/321"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School">
+          <label>Community Special School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Community_Special_School"/>
     </item>
@@ -78,8 +86,12 @@
       <label>Queen Elizabeth II Jubilee School</label>
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/363"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School">
+          <label>Community Special School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Community_Special_School"/>
     </item>
@@ -90,8 +102,12 @@
       <label>Faircross School</label>
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/011"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School">
+          <label>Community Special School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Community_Special_School"/>
     </item>
@@ -102,8 +118,12 @@
       <label>Castle School</label>
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/011"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School">
+          <label>Community Special School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Community_Special_School"/>
     </item>
@@ -115,8 +135,12 @@
       <nurseryProvision datatype="boolean">true</nurseryProvision>
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/259"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School">
+          <label>Community Special School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Community_Special_School"/>
     </item>
@@ -127,8 +151,12 @@
       <label>Meadowgate School</label>
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/257"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School">
+          <label>Community Special School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Community_Special_School"/>
     </item>
@@ -140,8 +168,12 @@
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/258"/>
       <schoolCapacity datatype="integer">46</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School">
+          <label>Community Special School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Community_Special_School"/>
     </item>

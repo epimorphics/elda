@@ -19,7 +19,9 @@ package com.epimorphics.lda.shortnames;
 import static com.epimorphics.util.RDFUtils.*;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.RDFUtil;
@@ -152,47 +154,48 @@ public class StandardShortnameService implements ShortnameService {
      * to typing information. If the value is a variable then leave it as such.
      */
     private Node normalizeNode(String p, String nodeValue) {
-        if (nodeValue.startsWith("?")) {
+        if (nodeValue.startsWith("?"))
             return Node.createVariable(nodeValue.substring(1));
+        String full = expand( nodeValue );
+        Prop prop = context.getPropertyByName( p );
+        if (full != null) 
+            return Node.createURI(full); 
+        if (prop == null) {
+            if (RDFUtil.looksLikeURI( nodeValue )) {
+                return Node.createURI( nodeValue ); 
+            }
         } else {
-            String full = expand(nodeValue);
-            if (full != null) {
-                // Able to expand so assume it is a resource and now have the URI
-                return Node.createURI(full); 
-            } else {
-                Prop prop = context.getPropertyByName(p);
-//                System.err.println( ">> property information for " + p + " is " + prop );
-//                System.err.println( ">> (URI: " + context.getURIfromName( p ) + ")" );
-                if (prop == null) {
-                    // No typing information 
-                    if (RDFUtil.looksLikeURI(nodeValue)) {
-                        return Node.createURI(nodeValue); 
-                    } else {
-                        return Node.createLiteral(nodeValue);
-                    }
-                } else {
-                    String type = prop.getType();
-                    if (type != null) {
-                        if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
-                            return Node.createURI(nodeValue); 
-                        } else {
-                        	RDFDatatype dt = TypeMapper.getInstance().getTypeByName(type);
-                        	if (dt == null) dt = fakeDatatype( type );
-                        	if (dt.getURI().equals( RDFUtil.RDFPlainLiteral ))
-                        		return Node.createLiteral( nodeValue );
-                        	else
-                        		return Node.createLiteral( nodeValue, null, dt );
-                        }
-                    } else {
-                        return Node.createLiteral(nodeValue);
-                    }
-                    // TODO other type cases
+            String type = prop.getType();
+            if (type != null) {
+                if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
+                    return Node.createURI(nodeValue); 
+                } else if (isDatatype( type )) {
+                	RDFDatatype dt = TypeMapper.getInstance().getTypeByName(type);
+                	if (dt == null) dt = fakeDatatype( type );
+                	if (!dt.getURI().equals( RDFUtil.RDFPlainLiteral ))
+                		return Node.createLiteral( nodeValue, null, dt );
                 }
             }
         }
+        return Node.createLiteral( nodeValue );
     }
     
-    private final Map<String, RDFDatatype> fakeTypes = new HashMap<String, RDFDatatype>();
+    protected final Set<String> datatypes = new HashSet<String>();
+    
+    public void declareDatatype( String type ) {
+    	datatypes.add( type );
+    }
+    
+    static final boolean everythingIsADatatype = false;
+    
+    private boolean isDatatype( String type ) {
+    	if (everythingIsADatatype) return true;
+    	if (datatypes.contains( type )) return true;
+    	if (type.startsWith( XSD.getURI() )) return true;
+    	return false;
+	}
+
+	private final Map<String, RDFDatatype> fakeTypes = new HashMap<String, RDFDatatype>();
     
     private RDFDatatype fakeDatatype( String type ) {
     	RDFDatatype result = fakeTypes.get( type );
