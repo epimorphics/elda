@@ -343,7 +343,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
     	if (val.startsWith("?")) varProps.put( val.substring(1), prop );   
     	if (languages == null) {
-			Any norm = sns.normalizeNodeToRDFQ( prop, val, defaultLanguage );
+			Any norm = sns.normalizeNodeToRDFQ( prop, val, null );
 			addTriplePattern( var, np, norm ); 
     	} else {
     		addLanguagedTriplePattern( var, inf, languages, val );

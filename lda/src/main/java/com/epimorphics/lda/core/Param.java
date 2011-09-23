@@ -26,7 +26,6 @@ public abstract class Param
 	
 	public static Param make( ShortnameService sns, String p ) 
 		{ 
-		if (p.charAt(0) == '_') return new ReservedParam( p );
 		int hyphen = p.indexOf('-');
 		if (hyphen < 0)
 			{
@@ -38,37 +37,6 @@ public abstract class Param
 			String name = p.substring(hyphen+1);
 			return new PrefixedParam( sns, prefix, name );
 			}
-		}
-
-	protected static void munge( ShortnameService sns, String p ) 
-		{
-		String [] parts = p.split("\\.");
-		for (String part: parts)
-			{
-			if (part.charAt(0) == '{')
-				{ /* deferred */ }
-			else
-				{
-				Prop prop = sns.asContext().getPropertyByName( part );
-				if (prop == null) throw new RuntimeException( "property '" + part + "' isn't defined." );
-				else System.err.println( "]]  type: " + prop.getType() );
-				}
-			}
-		}
-	    	
-	static class ReservedParam extends Param 
-		{
-		protected ReservedParam( String p ) 
-			{ super( null, p ); }
-
-		@Override public Param expand(CallContext cc) 
-			{ throw new RuntimeException( "cannot expand reserved parameter " + p );}
-
-		@Override public String prefix()
-			{ return null; }
-
-		@Override public Param plain() 
-			 { throw new RuntimeException( "cannot make plain a reserved parameter: " + p ); }
 		}
 	    	
 	static class PrefixedParam extends Param 
