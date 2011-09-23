@@ -95,13 +95,6 @@ public interface ShortnameService
 	/**
 	    Answer a string which is the SPARQL representation of the value
 	    val. If val can be expanded to a URI, it is; otherwise it is assumed
-	    to be the spelling of a plain string.
-	*/
-	public String normalizeValue( String val );
-
-	/**
-	    Answer a string which is the SPARQL representation of the value
-	    val. If val can be expanded to a URI, it is; otherwise it is assumed
 	    to be the spelling of a plain string. The language
 	    (if non-null) will be used as the language encoding for any
 	    plain literals

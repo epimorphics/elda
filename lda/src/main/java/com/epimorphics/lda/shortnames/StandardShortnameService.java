@@ -227,15 +227,6 @@ public class StandardShortnameService implements ShortnameService {
      * then return as <uri> string else quote it for insertion in a query.
      * TODO Review how to add typing information to this.
      */
-    @Override public String normalizeValue(String val) {
-    	return normalizeValue(val, null);
-    }
-    
-    /**
-     * Normalize a simple untyped string, if it is a known resource
-     * then return as <uri> string else quote it for insertion in a query.
-     * TODO Review how to add typing information to this.
-     */
     @Override public String normalizeValue(String val, String language) {
         String uri = expand(val);
         if (uri == null) {

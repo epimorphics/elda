@@ -60,9 +60,6 @@ public class TestSelectParameter
 			@Override public String shorten(String u) 
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			
-			@Override public String normalizeValue(String val)
-				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
-			
 			@Override public Resource normalizeResource(String s)
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			
