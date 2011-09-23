@@ -28,7 +28,7 @@ public final class SNS extends ExpandOnly
 		return ResourceFactory.createResource( u );
 		}
 
-	@Override public Any normalizeNodeToRDFQ( String prop, String val, String language ) 
+	@Override public Any valueAsRDFQ( String prop, String val, String language ) 
 		{
 		return val.startsWith("?") ? RDFQ.var( val ) : RDFQ.literal( val );
 		}

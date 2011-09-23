@@ -56,7 +56,7 @@ public class ShortnameFake implements ShortnameService
 		return c;
 		}
 
-	@Override public Any normalizeNodeToRDFQ(String prop, String val, String language) {
+	@Override public Any valueAsRDFQ(String prop, String val, String language) {
 		throw new NotImplementedException();
 		}
 

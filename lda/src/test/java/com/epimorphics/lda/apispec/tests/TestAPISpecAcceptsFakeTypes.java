@@ -61,7 +61,7 @@ public class TestAPISpecAcceptsFakeTypes
 		PrefixLogger pl = new PrefixLogger();
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
 		APISpec s = SpecUtil.specFrom( root );
-		Any x = s.getShortnameService().normalizeNodeToRDFQ( "year", "spoo", null );
+		Any x = s.getShortnameService().valueAsRDFQ( "year", "spoo", null );
 		String eg = m.getNsPrefixURI( "" );
 		assertThat( x.asSparqlTerm(pl), is( "\"spoo\"^^<" + eg + "faketype>" ) );
 	}
@@ -71,7 +71,7 @@ public class TestAPISpecAcceptsFakeTypes
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
 		APISpec s = SpecUtil.specFrom( root );
-		Any x = s.getShortnameService().normalizeNodeToRDFQ( "name", "Frodo", null );
+		Any x = s.getShortnameService().valueAsRDFQ( "name", "Frodo", null );
 		assertThat( x.asSparqlTerm(pl), is( "\"Frodo\"" ) );
 	}
 

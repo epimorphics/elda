@@ -72,7 +72,7 @@ public class TestSelectParameter
 			@Override public Context asContext() 
 		 		{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 
-			@Override public Any normalizeNodeToRDFQ(String prop, String val, String language) 
+			@Override public Any valueAsRDFQ(String prop, String val, String language) 
 				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
 
 			@Override public NameMap nameMap() 

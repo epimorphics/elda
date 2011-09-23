@@ -84,7 +84,7 @@ public interface ShortnameService
 	    (if non-null) will be used as the language encoding for any
 	    plain literals
 	*/
-	public Any normalizeNodeToRDFQ( String prop, String val, String language );
+	public Any valueAsRDFQ( String prop, String val, String language );
 
 	/**
 	    Answer the full name (URI) corresponding to the short name s.

@@ -56,7 +56,7 @@ public class TestShortnameServices
 		Resource root = m.createResource( EX + "root" );
 		PrefixMapping pm = PrefixMapping.Factory.create();
 		ShortnameService sns = new StandardShortnameService( root, pm, LoadsNothing.instance );
-		Any a = sns.normalizeNodeToRDFQ( "P", "17", "en" );
+		Any a = sns.valueAsRDFQ( "P", "17", "en" );
 		assertEquals( RDFQ.literal( "17", "", XSDinteger ), a );
 		}
 	}

@@ -343,7 +343,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
     	if (val.startsWith("?")) varProps.put( val.substring(1), prop );   
     	if (languages == null) {
-			Any norm = sns.normalizeNodeToRDFQ( prop, val, null );
+			Any norm = sns.valueAsRDFQ( prop, val, null );
 			addTriplePattern( var, np, norm ); 
     	} else {
     		addLanguagedTriplePattern( var, inf, languages, val );
@@ -357,7 +357,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		Resource np = sns.asResource( prop );
 		Prop p = sns.asContext().getPropertyByName( prop );
 		if (langArray.length == 1 || (p != null && p.getType() != null)) {
-			addTriplePattern( var, np, sns.normalizeNodeToRDFQ( prop, val, langArray[0] ) ); 
+			addTriplePattern( var, np, sns.valueAsRDFQ( prop, val, langArray[0] ) ); 
 		} else if (val.startsWith( "?" )) {
 			// if (true) throw new RuntimeException( "where did the variable come from? : " + val );
 			Variable v = RDFQ.var( val );
@@ -458,7 +458,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     }
 
 	private Any asRDFQ(Param.Info[] infos, int i, String rv) {
-		return sns.normalizeNodeToRDFQ( infos[i].shortName, rv, defaultLanguage );
+		return sns.valueAsRDFQ( infos[i].shortName, rv, defaultLanguage );
 	}
 
 	private String generateOptionalTriple(Set<String> rawValues, Param.Info[] path, String finalVar) {
@@ -481,7 +481,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	private void onePropertyStep( Variable subject, String prop, String var ) {
 		Resource np = sns.asResource( prop );
 		varProps.put( var.substring(1), prop );   
-		Any val = sns.normalizeNodeToRDFQ( prop, var, defaultLanguage );
+		Any val = sns.valueAsRDFQ( prop, var, defaultLanguage );
 		basicGraphTriples.add( RDFQ.triple( subject, RDFQ.uri( np.getURI() ), val, true ) ); 
 	}
 
@@ -685,7 +685,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	        	String normalizedValue = 
 	        		(prop == null) 
 	        		    ? valueAsSparql( v )
-	        		    : sns.normalizeNodeToRDFQ(prop, val, defaultLanguage).asSparqlTerm(pl); 
+	        		    : sns.valueAsRDFQ(prop, val, defaultLanguage).asSparqlTerm(pl); 
 	    		result.append( normalizedValue );
     		}
     		start = m.end();

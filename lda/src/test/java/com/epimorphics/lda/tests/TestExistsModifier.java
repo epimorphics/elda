@@ -49,7 +49,7 @@ public class TestExistsModifier
 		@Override public Resource asResource( String shortName ) 
 			{ return ResourceFactory.createResource( NS + shortName ); }
 
-		@Override public Any normalizeNodeToRDFQ( String prop, String val, String language ) 
+		@Override public Any valueAsRDFQ( String prop, String val, String language ) 
 			{
 			if (prop.equals( "type" )) return RDFQ.uri( NS + val );
 			if (val.equals("true")) return RDFQ.literal( val );

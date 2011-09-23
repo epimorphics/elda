@@ -147,7 +147,7 @@ public class StandardShortnameService implements ShortnameService {
         RDFQ node which has the spelling from valueString and is typed
         according to the property type.
     */
-    @Override public Any normalizeNodeToRDFQ( String p, String nodeValue, String language ) {
+    @Override public Any valueAsRDFQ( String p, String nodeValue, String language ) {
 		if (nodeValue.startsWith("?"))
             return RDFQ.var( nodeValue );
         String full = expand( nodeValue );
