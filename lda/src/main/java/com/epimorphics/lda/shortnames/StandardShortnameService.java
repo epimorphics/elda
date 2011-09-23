@@ -221,16 +221,12 @@ public class StandardShortnameService implements ShortnameService {
     	@Override public String toString() 
     		{ return "Datatype[fake: " + uri + "]"; }
     }
-
-	/**
-     * Normalize a node value, using the given property name as a guide
-     * to typing information. If the value is a variable then leave it as such.
-     * @return a string suitable for embedding in a SPARQL query
-     */
-    @Override public String normalizeNodeToString(String p, String nodeValue) {
-    	return normalizeNodeToString(p, nodeValue, null);
-    }
     
+    /**
+        Normalise a property-valuestring pair with a given language to an
+        RDFQ node which has the spelling from valueString and is typed
+        according to the property type.
+    */
     @Override public Any normalizeNodeToRDFQ( String p, String nodeValue, String language ) {
         Node n = normalizeNode( p, nodeValue );
     	if (n.isURI()) 

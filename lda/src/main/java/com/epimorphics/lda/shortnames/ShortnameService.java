@@ -86,12 +86,6 @@ public interface ShortnameService
 
 	/**
 	    Answer a string which is the SPARQL representation of the thing
-	    val treated as the object of the property prop.
-	*/
-	public String normalizeNodeToString( String prop, String val );
-
-	/**
-	    Answer a string which is the SPARQL representation of the thing
 	    val treated as the object of the property prop. The language
 	    (if non-null) will be used as the language encoding for any
 	    plain literals

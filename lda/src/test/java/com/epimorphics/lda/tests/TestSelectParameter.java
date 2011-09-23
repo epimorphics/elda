@@ -72,9 +72,6 @@ public class TestSelectParameter
 			@Override public Resource normalizeResource(Term r) 
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			
-			@Override public String normalizeNodeToString(String prop, String val) 
-				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
-			
 			@Override public String expand(String s)
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			
