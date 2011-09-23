@@ -596,16 +596,18 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	        }
 	        appendOffsetAndLimit( q );
 //	         System.err.println( ">> QUERY IS: \n" + q.toString() );
+	        String bound = bindDefinedvariables( pl, q.toString(), cc );
 	        StringBuilder x = new StringBuilder();
 	        pl.writePrefixes( x );
-	        x.append( bindDefinedvariables( q.toString(), cc ) );
+			x.append( bound );
 	        return x.toString();
     	} else {
     		// TODO add code for LIMIT/OFFSET when tests exist.
     		pl.findPrefixesIn( fixedSelect );
+    		String bound = bindDefinedvariables( pl, fixedSelect, cc );
     		StringBuilder sb = new StringBuilder();
     		pl.writePrefixes( sb );
-    		sb.append( bindDefinedvariables( fixedSelect, cc ) );
+			sb.append( bound );
     		appendOffsetAndLimit( sb );
     		return sb.toString();
     	}
@@ -658,7 +660,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    are mashed together from strings in the config file, ie, without going
 	    through RDFQ.	    
 	*/
-    protected String bindDefinedvariables( String query, CallContext cc ) {
+    protected String bindDefinedvariables( PrefixLogger pl, String query, CallContext cc ) {
 //    	System.err.println( ">> query is: " + query );
 //    	System.err.println( ">> callcontext is: " + cc );
     	StringBuilder result = new StringBuilder( query.length() );
@@ -683,7 +685,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	        	String normalizedValue = 
 	        		(prop == null) 
 	        		    ? valueAsSparql( v )
-	        		    : sns.normalizeNodeToString(prop, val, defaultLanguage); 
+	        		    : sns.normalizeNodeToRDFQ(prop, val, defaultLanguage).asSparqlTerm(pl); 
 	    		result.append( normalizedValue );
     		}
     		start = m.end();
