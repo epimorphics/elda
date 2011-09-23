@@ -64,10 +64,6 @@ public class ShortnameFake implements ShortnameService
 		return c;
 		}
 
-	@Override public String normalizeNodeToString(String prop, String val, String language) {
-		throw new NotImplementedException();
-		}
-
 	@Override public String normalizeValue(String val, String language) {
 		throw new NotImplementedException();
 		}

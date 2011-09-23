@@ -85,14 +85,6 @@ public interface ShortnameService
 	public Resource normalizeResource( String s );
 
 	/**
-	    Answer a string which is the SPARQL representation of the thing
-	    val treated as the object of the property prop. The language
-	    (if non-null) will be used as the language encoding for any
-	    plain literals
-	*/
-	public String normalizeNodeToString( String prop, String val, String language );
-
-	/**
 	    Answer a RDFQ node which has the SPARQL representation of the thing
 	    val treated as the object of the property prop. The language
 	    (if non-null) will be used as the language encoding for any

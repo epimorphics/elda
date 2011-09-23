@@ -244,26 +244,6 @@ public class StandardShortnameService implements ShortnameService {
     }
     
     /**
-     * Normalize a node value, using the given property name as a guide
-     * to typing information. If the value is a variable then leave it as such.
-     * @return a string suitable for embedding in a SPARQL query
-     */
-    @Override public String normalizeNodeToString(String p, String nodeValue, String language) {
-        Node n = normalizeNode(p, nodeValue);
-        if (n.isURI()) {
-            return "<" + n.getURI() + ">";
-        } else if (n.isLiteral()) {
-            String dt = n.getLiteralDatatypeURI();
-            if (dt != null && !dt.isEmpty()) {
-                return "'" + nodeValue +"'^^<" + dt + ">";
-            } else {
-                return "'" + nodeValue + (language == null ? "'" : "'@" + language);
-            }
-        }
-        return n.toString();
-    }
-    
-    /**
      * Normalize a simple untyped string, if it is a known resource
      * then return as <uri> string else quote it for insertion in a query.
      * TODO Review how to add typing information to this.
