@@ -26,6 +26,10 @@ public class PrefixLogger {
 		this.pm = pm;
 	}
 	
+	public PrefixLogger() {
+		this( PrefixMapping.Factory.create() );
+	}
+	
 	/**
 	    <p>Present a URI as a SPARQL term, either <>-quoted, or
 	    as a qname if there's a suitable prefix mapping for it.

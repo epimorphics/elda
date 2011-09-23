@@ -12,7 +12,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.PrefixLogger;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.OWL;
@@ -56,20 +58,21 @@ public class TestAPISpecAcceptsFakeTypes
 		}
 
 	private void ensureRespectsDatatypes(Model m) {
+		PrefixLogger pl = new PrefixLogger();
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
 		APISpec s = SpecUtil.specFrom( root );
-		String x = s.getShortnameService().normalizeNodeToString( "year", "spoo" );
+		Any x = s.getShortnameService().normalizeNodeToRDFQ( "year", "spoo", null );
 		String eg = m.getNsPrefixURI( "" );
-		assertThat( x, is( "'spoo'^^<" + eg + "faketype>" ) );
+		assertThat( x.asSparqlTerm(pl), is( "\"spoo\"^^<" + eg + "faketype>" ) );
 	}
 	
-	@Test public void testPlainLiteral() 
-		{
+	@Test public void testPlainLiteral() {
+		PrefixLogger pl = new PrefixLogger();
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
 		APISpec s = SpecUtil.specFrom( root );
-		String x = s.getShortnameService().normalizeNodeToString( "name", "Frodo" );
-		assertThat( x, is( "'Frodo'" ) );
-		}
-
+		Any x = s.getShortnameService().normalizeNodeToRDFQ( "name", "Frodo", null );
+		assertThat( x.asSparqlTerm(pl), is( "\"Frodo\"" ) );
 	}
+
+}
