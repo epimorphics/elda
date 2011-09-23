@@ -36,7 +36,6 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.datatypes.BaseDatatype;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.TypeMapper;
-import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.*;
@@ -150,35 +149,36 @@ public class StandardShortnameService implements ShortnameService {
     }
     
     /**
-     * Normalize a node value, using the given property name as a guide
-     * to typing information. If the value is a variable then leave it as such.
-     */
-    private Node normalizeNode(String p, String nodeValue) {
-        if (nodeValue.startsWith("?"))
-            return Node.createVariable(nodeValue.substring(1));
+        Normalise a property-valuestring pair with a given language to an
+        RDFQ node which has the spelling from valueString and is typed
+        according to the property type.
+    */
+    @Override public Any normalizeNodeToRDFQ( String p, String nodeValue, String language ) {
+		if (nodeValue.startsWith("?"))
+            return RDFQ.var( nodeValue );
         String full = expand( nodeValue );
         Prop prop = context.getPropertyByName( p );
         if (full != null) 
-            return Node.createURI(full); 
+            return RDFQ.uri(full); 
         if (prop == null) {
             if (RDFUtil.looksLikeURI( nodeValue )) {
-                return Node.createURI( nodeValue ); 
+                return RDFQ.uri( nodeValue ); 
             }
         } else {
             String type = prop.getType();
             if (type != null) {
                 if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
-                    return Node.createURI(nodeValue); 
+                    return RDFQ.uri(nodeValue); 
                 } else if (isDatatype( type )) {
                 	RDFDatatype dt = TypeMapper.getInstance().getTypeByName(type);
                 	if (dt == null) dt = fakeDatatype( type );
                 	if (!dt.getURI().equals( RDFUtil.RDFPlainLiteral ))
-                		return Node.createLiteral( nodeValue, null, dt );
+                		return RDFQ.literal( nodeValue, null, dt.getURI() );
                 }
             }
         }
-        return Node.createLiteral( nodeValue );
-    }
+        return RDFQ.literal( nodeValue, language, "" );
+	}
     
     protected final Set<String> datatypes = new HashSet<String>();
     
@@ -220,27 +220,6 @@ public class StandardShortnameService implements ShortnameService {
     	
     	@Override public String toString() 
     		{ return "Datatype[fake: " + uri + "]"; }
-    }
-    
-    /**
-        Normalise a property-valuestring pair with a given language to an
-        RDFQ node which has the spelling from valueString and is typed
-        according to the property type.
-    */
-    @Override public Any normalizeNodeToRDFQ( String p, String nodeValue, String language ) {
-        Node n = normalizeNode( p, nodeValue );
-    	if (n.isURI()) 
-    		return RDFQ.uri( n.getURI() );
-    	if (n.isVariable()) 
-    		return RDFQ.var( "?" + n.getName() );
-    	if (n.isLiteral()) 
-    		{
-    		// if there's a type, the language (which was a default) is unnecessary.
-    		String type = n.getLiteralDatatypeURI();
-    		String form = n.getLiteralLexicalForm();
-    		return RDFQ.literal( form, (type == null ? language : ""), type );
-    		}	
-    	throw new IllegalArgumentException( "cannot normalise: " + n.toString() );
     }
     
     /**
