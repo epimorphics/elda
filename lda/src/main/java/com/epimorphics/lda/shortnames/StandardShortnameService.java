@@ -124,12 +124,6 @@ public class StandardShortnameService implements ShortnameService {
         }
         throw new ExpansionFailedException( res );
     }
-
-	@Override public Resource normalizeResource( Term r ) {
-		if (r instanceof URINode) return ResourceFactory.createResource( r.spelling() );
-		if (r instanceof LiteralNode) return normalizeResource( r.spelling() );
-        throw new ExpansionFailedException( r );
-	}
 	
     @Override public Resource normalizeResource( String res ) {
         String uri = expand( res );
@@ -149,7 +143,7 @@ public class StandardShortnameService implements ShortnameService {
     }
     
     /**
-        Normalise a property-valuestring pair with a given language to an
+        Normalise a property-valueString pair with a given language to an
         RDFQ node which has the spelling from valueString and is typed
         according to the property type.
     */

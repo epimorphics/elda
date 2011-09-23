@@ -70,12 +70,6 @@ public interface ShortnameService
 	    answer normaliseResource(l); otherwise throw an API exception.
 	*/
 	public Resource normalizeResource( RDFNode r );
-
-	/**
-	    If r is a resource, answer r; if it is a literal with lexical form l,
-	    answer normaliseResource(l); otherwise throw an API exception.
-	*/
-	public Resource normalizeResource( Term r );
 	
 	/**
 	    Answer a resource with uri = expand(s). If there's no such expansion

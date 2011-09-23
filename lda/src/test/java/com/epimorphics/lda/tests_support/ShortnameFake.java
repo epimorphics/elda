@@ -48,10 +48,6 @@ public class ShortnameFake implements ShortnameService
 		throw new NotImplementedException();
 		}
 
-	@Override public Resource normalizeResource( Term r ) {
-		throw new NotImplementedException();
-		}
-
 	@Override public String expand(String s) {
 		throw new NotImplementedException();
 		}
