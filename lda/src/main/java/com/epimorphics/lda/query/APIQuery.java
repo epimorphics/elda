@@ -594,7 +594,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	        	pl.findPrefixesIn( orderExpressions.toString() );
 	        }
 	        appendOffsetAndLimit( q );
-	        // System.err.println( ">> QUERY IS: \n" + q.toString() );
+//	         System.err.println( ">> QUERY IS: \n" + q.toString() );
 	        StringBuilder x = new StringBuilder();
 	        pl.writePrefixes( x );
 	        x.append( q );

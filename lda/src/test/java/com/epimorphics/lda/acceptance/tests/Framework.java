@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.specs.APISpec;
@@ -231,6 +232,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 	
 	public void RunTestAllowingFailures()
 		{
+		Cache.Registry.clearAll();
 		log.debug( "running test " + w.title );
 //		System.err.println( "running test " + w.title );
 //		System.err.println( ">> " + w.pathToData );
