@@ -563,13 +563,13 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 
     public String assembleSelectQuery( CallContext cc, PrefixMapping prefixes ) {  	
     	PrefixLogger pl = new PrefixLogger( prefixes );   
-    	return boundQuery( assembleRawSelectQuery( pl, cc ), cc );
+    	return assembleRawSelectQuery( pl, cc );
     }
 
     public String assembleSelectQuery( PrefixMapping prefixes ) {     	
     	PrefixLogger pl = new PrefixLogger( prefixes );
     	CallContext cc = CallContext.createContext( null, new MultiMap<String, String>(), new VarValues() );
-    	return boundQuery( assembleRawSelectQuery( pl, cc ), cc );
+    	return assembleRawSelectQuery( pl, cc );
     }
     
     public String assembleRawSelectQuery( PrefixLogger pl, CallContext cc ) { 
@@ -598,14 +598,14 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 //	         System.err.println( ">> QUERY IS: \n" + q.toString() );
 	        StringBuilder x = new StringBuilder();
 	        pl.writePrefixes( x );
-	        x.append( q );
+	        x.append( bindDefinedvariables( q.toString(), cc ) );
 	        return x.toString();
     	} else {
     		// TODO add code for LIMIT/OFFSET when tests exist.
     		pl.findPrefixesIn( fixedSelect );
     		StringBuilder sb = new StringBuilder();
     		pl.writePrefixes( sb );
-    		sb.append( fixedSelect );
+    		sb.append( bindDefinedvariables( fixedSelect, cc ) );
     		appendOffsetAndLimit( sb );
     		return sb.toString();
     	}
@@ -658,7 +658,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    are mashed together from strings in the config file, ie, without going
 	    through RDFQ.	    
 	*/
-    protected String boundQuery( String query, CallContext cc ) {
+    protected String bindDefinedvariables( String query, CallContext cc ) {
 //    	System.err.println( ">> query is: " + query );
 //    	System.err.println( ">> callcontext is: " + cc );
     	StringBuilder result = new StringBuilder( query.length() );
