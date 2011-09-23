@@ -221,25 +221,5 @@ public class StandardShortnameService implements ShortnameService {
     	@Override public String toString() 
     		{ return "Datatype[fake: " + uri + "]"; }
     }
-    
-    /**
-     * Normalize a simple untyped string, if it is a known resource
-     * then return as <uri> string else quote it for insertion in a query.
-     * TODO Review how to add typing information to this.
-     */
-    @Override public String normalizeValue(String val, String language) {
-        String uri = expand(val);
-        if (uri == null) {
-        	try {
-        		Integer.parseInt(val);
-        		return val ;
-        	} catch (NumberFormatException e) {
-        		return "'" + val +  (language == null ? "'" : "'@" + language);
-        	}
-        } else {
-            return "<" + uri + ">";
-        }
-    }
-
 }
 

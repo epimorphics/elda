@@ -93,15 +93,6 @@ public interface ShortnameService
 	public Any normalizeNodeToRDFQ( String prop, String val, String language );
 
 	/**
-	    Answer a string which is the SPARQL representation of the value
-	    val. If val can be expanded to a URI, it is; otherwise it is assumed
-	    to be the spelling of a plain string. The language
-	    (if non-null) will be used as the language encoding for any
-	    plain literals
-	*/
-	public String normalizeValue( String val, String language );
-
-	/**
 	    Answer the full name (URI) corresponding to the short name s.
 	*/
 	public String expand( String s );
