@@ -561,17 +561,18 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         whereExpressions.append(whereClause);
     }
 
-    public String assembleSelectQuery( CallContext cc, PrefixMapping prefixes ) {   
-    	return boundQuery( assembleRawSelectQuery( prefixes ), cc );
+    public String assembleSelectQuery( CallContext cc, PrefixMapping prefixes ) {  	
+    	PrefixLogger pl = new PrefixLogger( prefixes );   
+    	return boundQuery( assembleRawSelectQuery( pl, cc ), cc );
     }
 
-    public String assembleSelectQuery( PrefixMapping prefixes ) {   
+    public String assembleSelectQuery( PrefixMapping prefixes ) {     	
+    	PrefixLogger pl = new PrefixLogger( prefixes );
     	CallContext cc = CallContext.createContext( null, new MultiMap<String, String>(), new VarValues() );
-    	return boundQuery( assembleRawSelectQuery( prefixes ), cc );
+    	return boundQuery( assembleRawSelectQuery( pl, cc ), cc );
     }
     
-    public String assembleRawSelectQuery( PrefixMapping prefixes ) {    	
-    	PrefixLogger pl = new PrefixLogger( prefixes );
+    public String assembleRawSelectQuery( PrefixLogger pl, CallContext cc ) { 
     	if (fixedSelect == null) {
 	        StringBuilder q = new StringBuilder();
 	        q.append("SELECT ");
