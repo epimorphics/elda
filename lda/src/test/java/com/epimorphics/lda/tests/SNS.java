@@ -22,7 +22,7 @@ public final class SNS extends ExpandOnly
 	public SNS(String expansions, String others ) 
 		{ super( MakeData.modelForBrief( "bname", others ), expansions ); }
 
-	@Override public Resource normalizeResource( String s ) 
+	@Override public Resource asResource( String s ) 
 		{
 		String u = expand( s );
 		return ResourceFactory.createResource( u );

@@ -222,7 +222,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
      * @param subj the target resource as either a prefix_name string or as a full URI
      */
     public void setSubject(String subj) {
-        subjectResource = sns.normalizeResource(subj);
+        subjectResource = sns.asResource(subj);
     }
     
     /**
@@ -339,7 +339,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
      */
     private void addTriplePattern( Variable var, Info inf, String languages, String val ) {
     	String prop = inf.shortName;
-    	Resource np = sns.normalizeResource(prop);
+    	Resource np = sns.asResource(prop);
     	// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
     	if (val.startsWith("?")) varProps.put( val.substring(1), prop );   
     	if (languages == null) {
@@ -354,7 +354,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		String prop = inf.shortName;
 		// System.err.println( ">> addLTP: " + inf + " " + languages + " " + val );
 		String[] langArray = languages.split( "," );
-		Resource np = sns.normalizeResource( prop );
+		Resource np = sns.asResource( prop );
 		Prop p = sns.asContext().getPropertyByName( prop );
 		if (langArray.length == 1 || (p != null && p.getType() != null)) {
 			addTriplePattern( var, np, sns.normalizeNodeToRDFQ( prop, val, langArray[0] ) ); 
@@ -479,7 +479,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	}
 
 	private void onePropertyStep( Variable subject, String prop, String var ) {
-		Resource np = sns.normalizeResource( prop );
+		Resource np = sns.asResource( prop );
 		varProps.put( var.substring(1), prop );   
 		Any val = sns.normalizeNodeToRDFQ( prop, var, defaultLanguage );
 		basicGraphTriples.add( RDFQ.triple( subject, RDFQ.uri( np.getURI() ), val, true ) ); 

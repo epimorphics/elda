@@ -40,11 +40,11 @@ public class ShortnameFake implements ShortnameService
 		throw new NotImplementedException();
 	}
 
-	@Override public Resource normalizeResource(String s) {
+	@Override public Resource asResource(String s) {
 		throw new NotImplementedException();
 		}
 
-	@Override public Resource normalizeResource(RDFNode r) {
+	@Override public Resource asResource(RDFNode r) {
 		throw new NotImplementedException();
 		}
 

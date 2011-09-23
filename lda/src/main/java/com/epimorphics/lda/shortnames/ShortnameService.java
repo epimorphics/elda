@@ -69,14 +69,14 @@ public interface ShortnameService
 	    If r is a resource, answer r; if it is a literal with lexical form l,
 	    answer normaliseResource(l); otherwise throw an API exception.
 	*/
-	public Resource normalizeResource( RDFNode r );
+	public Resource asResource( RDFNode r );
 	
 	/**
 	    Answer a resource with uri = expand(s). If there's no such expansion
 	    but s "looks like" a uri, return a resource with uri = s. Otherwise
 	    throw an API exception.
 	*/
-	public Resource normalizeResource( String s );
+	public Resource asResource( String s );
 
 	/**
 	    Answer a RDFQ node which has the SPARQL representation of the thing

@@ -100,7 +100,7 @@ public abstract class Param
 
 		public static Info create( ShortnameService sns, String p ) 
 			{
-			Resource r = sns.normalizeResource(p);
+			Resource r = sns.asResource(p);
 			Prop prop = sns.asContext().getPropertyByURI( r.getURI() );
 			String type = prop == null ? null : prop.getType();
 			return new Info(r, p, type);

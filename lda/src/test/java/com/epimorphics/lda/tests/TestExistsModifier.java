@@ -46,7 +46,7 @@ public class TestExistsModifier
 		public Shorts(String brief) 
 			{ super( MakeData.modelForBrief( brief ) ); }
 		
-		@Override public Resource normalizeResource( String shortName ) 
+		@Override public Resource asResource( String shortName ) 
 			{ return ResourceFactory.createResource( NS + shortName ); }
 
 		@Override public Any normalizeNodeToRDFQ( String prop, String val, String language ) 

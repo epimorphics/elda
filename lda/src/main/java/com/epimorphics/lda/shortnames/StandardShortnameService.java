@@ -116,16 +116,16 @@ public class StandardShortnameService implements ShortnameService {
      * by a shortname in a query string or a literal giving a shortname in a spec
      * file as well as simply being a resource already.
      */
-    @Override public Resource normalizeResource( RDFNode res ) {
+    @Override public Resource asResource( RDFNode res ) {
         if (res instanceof Resource) {
             return (Resource)res;
         } else if (res instanceof Literal) {
-            return normalizeResource( ((Literal)res).getLexicalForm() );
+            return asResource( ((Literal)res).getLexicalForm() );
         }
         throw new ExpansionFailedException( res );
     }
 	
-    @Override public Resource normalizeResource( String res ) {
+    @Override public Resource asResource( String res ) {
         String uri = expand( res );
         if (uri == null &&  RDFUtil.looksLikeURI(res)) {
             uri = res;

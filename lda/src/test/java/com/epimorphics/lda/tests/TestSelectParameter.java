@@ -60,10 +60,10 @@ public class TestSelectParameter
 			@Override public String shorten(String u) 
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			
-			@Override public Resource normalizeResource(String s)
+			@Override public Resource asResource(String s)
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			
-			@Override public Resource normalizeResource(RDFNode r) 
+			@Override public Resource asResource(RDFNode r) 
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			
 			@Override public String expand(String s)

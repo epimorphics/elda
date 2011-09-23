@@ -257,7 +257,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         Model m = s.getModel();
         ShortnameService sns = this.apiSpec.sns;
         if (s.hasProperty(FIXUP.type)) {
-			Resource ty = sns.normalizeResource( s.getProperty(FIXUP.type).getObject() );
+			Resource ty = sns.asResource( s.getProperty(FIXUP.type).getObject() );
             baseQuery.setTypeConstraint( ty );
         }
         for (NodeIterator ni = m.listObjectsOfProperty(s, API.filter); ni.hasNext();) {
