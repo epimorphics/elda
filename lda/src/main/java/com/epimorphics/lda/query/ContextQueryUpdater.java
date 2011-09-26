@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,33 +137,15 @@ public class ContextQueryUpdater implements ViewSetter {
 			// Nothing to do -- done on previous pass 
 	    } else if (p.equals(QueryParameter._LANG)) {
 			// Also done on previous pass
-		} else if (isReserved(p)) {
+		} else if (QueryParameter.isReserved(p)) {
 			handleReservedParameters( geo, this, p, val );
 		} else {
 			log.debug( "handleParam: " + p + " with value: " + val );
-			contemplation( pString, allVal );
 			addFilterFromQuery( Param.make( sns, pString ), allVal );
 		}
 	}
 
-	private void contemplation( String pString, Set<String> allVal ) {
-		// HERE
-		if (false) {
-			System.err.println( ">> contemplating " + pString + "=" + allVal );
-		}
-	}
-
-	private boolean isReserved(String p) {
-		return 
-			p.startsWith("_") 
-			|| p.equals("near-lat") || p.equals("near-long") 
-			|| p.equals( QueryParameter.callback )
-			;
-	} 
-	
-	static final Pattern callbackPattern = Pattern.compile( "^[a-zA-Z_][a-zA-Z0-9]*$" );
-	
-    /**
+	/**
 	    handle the reserved, ie, _wossname, parameters. These may update
 	    the given <code>geo</code>, the <code>vs</code>, or this query
 	    object. <code>p</code> is the reserved-property name, <code>val</code>
@@ -194,7 +175,7 @@ public class ContextQueryUpdater implements ViewSetter {
 		} else if (p.equals(QueryParameter._SUBJECT)) {
 		    args.setSubject(val);
 		} else if (p.equals( QueryParameter.callback )) {
-			if (!callbackPattern.matcher( val ).matches())
+			if (!QueryParameter.callbackPattern.matcher( val ).matches())
 				throw new EldaException( "illegal callback name", val, EldaException.BAD_REQUEST );
 		} else if (p.equals( APIQuery.NEAR_LAT)) { 
 			geo.setNearLat( val );
