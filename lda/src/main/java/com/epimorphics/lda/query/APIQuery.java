@@ -39,8 +39,6 @@ import com.epimorphics.lda.support.LARQManager;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.QuerySupport;
 
-import static com.epimorphics.util.CollectionUtils.*;
-
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.graph.*;

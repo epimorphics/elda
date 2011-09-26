@@ -8,8 +8,6 @@
 
 package com.epimorphics.lda.query;
 
-import static com.epimorphics.util.CollectionUtils.set;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +16,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpointImpl;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.View;

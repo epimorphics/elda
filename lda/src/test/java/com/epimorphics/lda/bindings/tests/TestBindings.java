@@ -20,7 +20,6 @@ import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specs.APIEndpointSpec;
