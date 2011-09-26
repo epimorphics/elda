@@ -25,7 +25,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -43,7 +42,6 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
@@ -182,7 +180,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             if (results == null)
             	throw new RuntimeException( "ResultSet is null -- this should never happen." );
             APIEndpoint ep = match.getEndpoint();
-			RendererContext rc = new RendererContext( paramsFromContext( resultsAndFormat.c ), contextPath, as );
+			RendererContext rc = new RendererContext( resultsAndFormat.c.copyValues(), contextPath, as );
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
@@ -266,15 +264,6 @@ import com.hp.hpl.jena.shared.WrappedException;
             return returnAs( r.render( rc, results ), mt, results.getContentLocation() );
         }
 	}
-    
-    public static VarValues paramsFromContext( CallContext cc ) {
-        VarValues result = new VarValues();
-        for (Iterator<String> it = cc.parameterNames(); it.hasNext();) {
-            String name = it.next();
-            result.put( name, cc.getValueString( name ) );
-        }
-        return result;
-    }
 
     public static ResponseBuilder enableCORS( ResponseBuilder rb ) {
         return rb.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" );

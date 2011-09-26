@@ -62,11 +62,11 @@ public class CallContext implements Lookup {
 	    }
 	    return cc;
 	}
-	
-	public Iterator<String> parameterNames() {
-		return values.keySet().iterator();
-	}
 
+	public VarValues copyValues() {
+		return new VarValues( values );
+	}
+	
 	public Value getValue( String name ) {
 		return values.get( name );
 	}

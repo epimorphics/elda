@@ -94,7 +94,7 @@ public class Hub extends HttpServlet
                 	{ // TODO fix the switch from media types to named renderers.
                 	Renderer r = ep.getRendererByType( acceptedType );
                 	System.err.println( "r = " + r + " for " + acceptedType );
-                	RendererContext rp = new RendererContext( RouterRestlet.paramsFromContext( cc ) );
+                	RendererContext rp = new RendererContext( cc.copyValues() );
                 	String result = r.render( rp, results );
 //                	String cl = results.getContentLocation();
                 	res.setContentType( acceptedType.toString() );
