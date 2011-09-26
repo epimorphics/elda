@@ -309,7 +309,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected void addSearchTriple( String val ) {
     	needsLARQindex = true;
         log.debug( "enabled LARQ indexing to search for " + val );
-        addTriplePattern( SELECT_VAR, PF_TEXT_MATCH, valAsTerm(val) );
+        addTriplePattern( SELECT_VAR, PF_TEXT_MATCH, asStringLiteral(val) );
     }
     
     public APIQuery addSubjectHasProperty( Resource P, Any O ) {
@@ -348,6 +348,19 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	} else {
     		addLanguagedTriplePattern( var, inf, languages, val );
     	}
+    }    
+    
+    private void addTriplePattern( Variable var, Info inf, String languages, Variable val ) {
+    	String prop = inf.shortName;
+    	Resource np = sns.asResource(prop);
+    	// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
+    	// if (val.startsWith("?")) varProps.put( val.substring(1), prop );   
+    	if (val instanceof Variable) varProps.put( val.name(), prop );
+    	if (languages == null) {
+			addTriplePattern( var, np, val ); 
+    	} else {
+    		addLanguagedTriplePattern( var, inf, languages, "?" + val.name() );
+    	}
     }
 
 	private void addLanguagedTriplePattern(Variable var, Info inf, String languages, String val) {
@@ -359,7 +372,6 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		if (langArray.length == 1 || (p != null && p.getType() != null)) {
 			addTriplePattern( var, np, sns.valueAsRDFQ( prop, val, langArray[0] ) ); 
 		} else if (val.startsWith( "?" )) {
-			// if (true) throw new RuntimeException( "where did the variable come from? : " + val );
 			Variable v = RDFQ.var( val );
 			addTriplePattern( var, np, v );
 			filterExpressions.add( someOf( v, langArray ) );
@@ -367,27 +379,27 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 			Variable v = newVar();
 			addTriplePattern( var, np, v );
 			Apply stringOf = RDFQ.apply( "str", v );
-			Infix equals = RDFQ.infix( stringOf, "=", valAsTerm(val) );
+			Infix equals = RDFQ.infix( stringOf, "=", asStringLiteral(val) );
 			Infix filter = RDFQ.infix( equals, "&&", someOf( v, langArray ) );
 			filterExpressions.add( filter );
 		}
 	}
 
-	// HACK. Need to be better behaved in general WRT values for properties.
-	private Any valAsTerm( String val ) {
-		return val.startsWith( "?" ) ? RDFQ.var( val ) : RDFQ.literal( val );
+	public Any asStringLiteral( String val ) {
+		return RDFQ.literal( val );
 	}
     
     private RenderExpression someOf( Variable v, String[] langArray ) 
     	{
-    	RenderExpression result = RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( notNone( langArray[0] ) ) );
+    	Apply langOf = RDFQ.apply( "lang", v );
+		RenderExpression result = RDFQ.infix( langOf, "=", squelchNone( langArray[0] ) );
     	for (int i = 1; i < langArray.length; i += 1)
-    		result = RDFQ.infix( result, "||", RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( notNone( langArray[i] ) ) ) );
+    		result = RDFQ.infix( result, "||", RDFQ.infix( langOf, "=", squelchNone( langArray[i] ) ) );
     	return result;
     	}
 
-	private String notNone( String lang ) {
-		return lang.equals( "none" ) ? "" : lang;
+	private Any squelchNone( String lang ) {
+		return RDFQ.literal( lang.equals( "none" ) ? "" : lang );
 	}
 
 	private void addTriplePattern( Variable var, Param.Info prop, Variable val ) {
@@ -445,7 +457,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         	addTriplePattern(var, infos[i], languages, rawValue );
         } else {
         	Variable v = newVar();
-        	addTriplePattern( var, infos[i], languages, v.name() );
+        	addTriplePattern( var, infos[i], languages, v );
         	Infix ors = null;
         	for (String rv: rawValues) {
         		Any R = asRDFQ(infos, i, rv);
@@ -543,17 +555,13 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	return varcount;
     }
 
-    protected void addNameProp(Param param, String rawObject) {
+    protected void addNameProp(Param param, String literal) {
         Variable newvar = newVar();
         addPropertyHasValue( param, newvar );
-        addTriplePattern( newvar, RDFS.label, asRDFQ( rawObject ) );
+        addTriplePattern( newvar, RDFS.label, asStringLiteral( literal ) );
     }
-
-	public Any asRDFQ( String rawObject ) {
-		return rawObject.startsWith("?") ? RDFQ.var( rawObject ) : valAsTerm(rawObject);
-	}
     
-    private Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
+    private static final Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
     
 	public void addWhere( String whereClause ) {
 		log.debug( "TODO: check the legality of the where clause: " + whereClause );
