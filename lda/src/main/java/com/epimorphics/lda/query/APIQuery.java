@@ -349,19 +349,6 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     		addLanguagedTriplePattern( var, inf, languages, val );
     	}
     }    
-    
-    private void addTriplePattern( Variable var, Info inf, String languages, Variable val ) {
-    	String prop = inf.shortName;
-    	Resource np = sns.asResource(prop);
-    	// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
-    	// if (val.startsWith("?")) varProps.put( val.substring(1), prop );   
-    	if (val instanceof Variable) varProps.put( val.name(), prop );
-    	if (languages == null) {
-			addTriplePattern( var, np, val ); 
-    	} else {
-    		addLanguagedTriplePattern( var, inf, languages, "?" + val.name() );
-    	}
-    }
 
 	private void addLanguagedTriplePattern(Variable var, Info inf, String languages, String val) {
 		String prop = inf.shortName;
@@ -411,7 +398,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected String addPropertyHasntValue( Param param ) {
     	Variable var = newVar();
     	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
-		return addPropertyHasValue( param, set(var.name()), true );
+		return addPropertyHasValue( param, var.name(), true );
     }
 
     protected String addPropertyHasValue( Param param ) {
@@ -423,20 +410,20 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     }
 
     protected String addPropertyHasValue( Param param, String val ) {
-    	return addPropertyHasValue( param, set(val), false );
+    	return addPropertyHasValue( param, val, false );
     }
         
     protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
     
-    protected String addPropertyHasValue( Param param, Set<String> rawValues, boolean optional ) {
+    protected String addPropertyHasValue( Param param, String val, boolean optional ) {
     	String languages = languagesFor.get( param.toString() );
     	if (languages == null) languages = defaultLanguage;
     	Param.Info [] infos = param.fullParts();
     //
     	StringBuilder chainName = new StringBuilder();
     //
-		String rawValue = rawValues.iterator().next();
-    	if (optional) return generateOptionalTriple(rawValues, infos, rawValue);
+		String rawValue = val;
+    	if (optional) return generateOptionalTriple(set(val), infos, rawValue);
     //
     	Variable var = SELECT_VAR;
         int i = 0;
@@ -452,26 +439,9 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         	var = v;
             i++;
         }
-        if (rawValues.size() == 1) {
-        	// System.err.println( ">> addPropertyHasValue(" + infos[i].shortName + " " + rawValue + ")" );
-        	addTriplePattern(var, infos[i], languages, rawValue );
-        } else {
-        	Variable v = newVar();
-        	addTriplePattern( var, infos[i], languages, v );
-        	Infix ors = null;
-        	for (String rv: rawValues) {
-        		Any R = asRDFQ(infos, i, rv);
-        		Infix eq = RDFQ.infix( v, "=", R );
-        		if (ors == null) ors = eq; else ors = RDFQ.infix(ors, "||", eq );
-        	}
-        	filterExpressions.add( ors );
-        }
+        addTriplePattern(var, infos[i], languages, rawValue );
         return infos[i].shortName;
     }
-
-	private Any asRDFQ(Param.Info[] infos, int i, String rv) {
-		return sns.valueAsRDFQ( infos[i].shortName, rv, defaultLanguage );
-	}
 
 	private String generateOptionalTriple(Set<String> rawValues, Param.Info[] path, String finalVar) {
 		if (rawValues.size() > 1) EldaException.Broken( "too many (>1) values for optional." );
@@ -536,9 +506,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		        }
 		        if (!varOrder) {
 		        	Param p = Param.make(sns, spec);
-		        	Set<String> s = set(var);
-		        	// System.err.println( ">> setSortBy(..." + spec + "...) generates (?item " + p + " " + s + ")" );
-					addPropertyHasValue( p, s, false );
+					addPropertyHasValue( p, var, false );
 		        }
     		}
     }
