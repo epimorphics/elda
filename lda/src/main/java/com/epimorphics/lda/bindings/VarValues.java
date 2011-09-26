@@ -14,9 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.MultiMap;
-import com.epimorphics.util.CollectionUtils;
-
-import static java.util.Collections.unmodifiableSet;
 
 /**
     A VarValues maps variables (identified by their string names) to
@@ -90,21 +87,6 @@ public class VarValues implements Lookup
 		Value v = get( name );
 		// System.err.println( ">> getStringValue(" + name + ") => " + v );
 		return v == null ? null : v.valueString(); 
-		}
-	
-	/**
-	    An immutable Set of no strings.
-	*/ 
-	static final Set<String> NoStrings = unmodifiableSet( new HashSet<String>() );
-	
-	/**
-	    Answer an immutable set of the lexical form of the variable
-	    <code>name</code> or an empty set if it is unbound. 
-	*/
-	@Override public Set<String> getStringValues( String name ) 
-		{ 
-		Value v = get( name );
-		return v == null ? NoStrings : unmodifiableSet( CollectionUtils.set( v.valueString() ) ); 
 		}
 	
 	/**

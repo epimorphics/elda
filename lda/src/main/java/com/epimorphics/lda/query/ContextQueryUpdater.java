@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +103,7 @@ public class ContextQueryUpdater implements ViewSetter {
 	private void activateDeferredFilters( List<Deferred> deferred ) {
 		for (Deferred d: deferred) {
 			APIQuery.log.debug( "activating deferred filter " + d );
-			addFilterFromQuery( d.param.expand( context ), set(context.expandVariables( d.val )) );
+			addFilterFromQuery( d.param.expand( context ), context.expandVariables( d.val ) );
 		}
 	}
 
@@ -119,17 +118,9 @@ public class ContextQueryUpdater implements ViewSetter {
 		String pString = context.expandVariables( param );
 		args.setLanguagesFor( pString, val );
 	}
-	
-	private Set<String> expandVariables( Set<String> s ) {
-		Set<String> result = new HashSet<String>(s.size());
-		for (String x: s) result.add( context.expandVariables( x ) );
-		return result;
-	}
 
 	private void handleParam( GEOLocation geo, String p ) {
-		Set<String> values = context.getStringValues(p);
-		Set<String> allVal = expandVariables( values );
-		String val = allVal.iterator().next();
+		String val = context.expandVariables( context.getStringValue(p) );
 		String pString = context.expandVariables( p );
 		if (val == null) EldaException.NullParameter( p );
 	//
@@ -141,7 +132,7 @@ public class ContextQueryUpdater implements ViewSetter {
 			handleReservedParameters( geo, this, p, val );
 		} else {
 			log.debug( "handleParam: " + p + " with value: " + val );
-			addFilterFromQuery( Param.make( sns, pString ), allVal );
+			addFilterFromQuery( Param.make( sns, pString ), val );
 		}
 	}
 
@@ -213,15 +204,14 @@ public class ContextQueryUpdater implements ViewSetter {
      * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
      * @return the name of the final property referencing the val, to allow type sensitive normalization
     */
-    public void addFilterFromQuery( Param param, Set<String> allVal ) {
-    	String val = allVal.iterator().next();
+    public void addFilterFromQuery( Param param, String val ) {
     	if (val.equals( "" )) {
     		log.debug( "parameter " + param + " given empty value." );
     		return;
     	}
     	String prefix = param.prefix();
     	if (prefix == null) {
-    		args.addPropertyHasValue( param, allVal );    		
+    		args.addPropertyHasValue( param, val );    		
     	} else if (prefix.equals(QueryParameter.NAME_PREFIX)) {
             args.addNameProp(param.plain(), val);
         } else if (prefix.equals( QueryParameter.LANG_PREFIX )) {
@@ -252,7 +242,7 @@ public class ContextQueryUpdater implements ViewSetter {
     	String prop = param.lastPropertyOf();
     	if (already == null || dontSquishVariables) {
 	        seenParamVariables.put( param.asString(), already = args.newVar() );
-	        args.addPropertyHasValue( param, CollectionUtils.set(already.name() ) );
+	        args.addPropertyHasValue( param, already.name() );
     	}
 	    Any r = sns.valueAsRDFQ( prop, val, args.getDefaultLanguage() );
 		args.addInfixSparqlFilter( already, op, r );

@@ -7,7 +7,6 @@
 */
 package com.epimorphics.lda.tests;
 
-import static com.epimorphics.util.CollectionUtils.set;
 import static org.junit.Assert.*;
 
 import java.util.HashSet;
@@ -64,7 +63,7 @@ public class TestExistsModifier
 		APIQuery q = new APIQuery( sns );
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
-		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("true") );
+		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "true" );
 		qa.updateQuery();
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		assertEquals( 1, triples.size() );
@@ -80,7 +79,7 @@ public class TestExistsModifier
 		APIQuery q = new APIQuery( sns );
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
-		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("false") );		
+		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "false" );		
 		qa.updateQuery();
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		List<RenderExpression> filters = q.getFilterExpressions();
@@ -124,8 +123,8 @@ public class TestExistsModifier
 		APIQuery q = new APIQuery( sns );		
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
-		x.addFilterFromQuery( Param.make( sns, "type" ), set("Item") );
-		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set(existsSetting) );
+		x.addFilterFromQuery( Param.make( sns, "type" ), "Item" );
+		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), existsSetting );
 		qa.updateQuery();
 	//
 		String query = q.assembleSelectQuery( PrefixMapping.Factory.create() );

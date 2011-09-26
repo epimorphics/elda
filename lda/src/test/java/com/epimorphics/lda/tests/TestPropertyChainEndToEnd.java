@@ -10,7 +10,6 @@ package com.epimorphics.lda.tests;
 
 import org.junit.Test;
 
-import static com.epimorphics.util.CollectionUtils.set;
 import static org.junit.Assert.*;
 
 import com.epimorphics.lda.core.APIResultSet;
@@ -148,7 +147,7 @@ public class TestPropertyChainEndToEnd
 		APIQuery q = new APIQuery( sns );
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
-		x.addFilterFromQuery( Param.make(sns, propertyThing), set("17.9") );
+		x.addFilterFromQuery( Param.make(sns, propertyThing), "17.9" );
 		qa.updateQuery();
 		assertContains( q.assembleSelectQuery( prefixes ), "\"17.9\"^^<http://www.w3.org/2001/XMLSchema#string>" );
 		}

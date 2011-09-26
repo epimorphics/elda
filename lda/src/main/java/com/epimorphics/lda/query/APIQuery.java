@@ -415,15 +415,15 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     }
 
     protected String addPropertyHasValue( Param param ) {
-    	return addPropertyHasValue( param, set(newVar().name()) );
+    	return addPropertyHasValue( param, newVar().name() );
     }
     
     protected String addPropertyHasValue( Param param, Variable O ) {
-    	return addPropertyHasValue( param, set(O.name()) );    	
+    	return addPropertyHasValue( param, O.name() );    	
     }
 
-    protected String addPropertyHasValue( Param param, Set<String> rawValues ) {
-    	return addPropertyHasValue( param, rawValues, false );
+    protected String addPropertyHasValue( Param param, String val ) {
+    	return addPropertyHasValue( param, set(val), false );
     }
         
     protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();

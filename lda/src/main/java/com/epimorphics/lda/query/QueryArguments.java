@@ -7,8 +7,6 @@
 */
 package com.epimorphics.lda.query;
 
-import java.util.Set;
-
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RenderExpression;
@@ -50,7 +48,7 @@ public interface QueryArguments {
 
 	public void setOrderBy(String val);
 
-	public void addPropertyHasValue( Param param, Set<String> allVal );
+	public void addPropertyHasValue( Param param, String val );
 
 	public void addNameProp( Param plain, String val );
 

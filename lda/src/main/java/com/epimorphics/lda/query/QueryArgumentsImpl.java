@@ -8,7 +8,6 @@
 package com.epimorphics.lda.query;
 
 import java.util.List;
-import java.util.Set;
 import java.util.ArrayList;
 
 import com.epimorphics.lda.core.Param;
@@ -105,8 +104,8 @@ public class QueryArgumentsImpl implements QueryArguments {
 		query.setOrderBy( term );
 	}
 
-	@Override public void addPropertyHasValue(Param param, Set<String> allVal) {
-		query.addPropertyHasValue( param, allVal );
+	@Override public void addPropertyHasValue(Param param, String val ) {
+		query.addPropertyHasValue( param, val );
 	}
 
 	@Override public void addNameProp(Param plain, String val) {

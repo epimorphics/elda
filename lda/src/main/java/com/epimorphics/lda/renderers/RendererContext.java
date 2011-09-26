@@ -12,7 +12,6 @@ import java.util.Set;
 
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.bindings.Lookup;
-import com.epimorphics.util.CollectionUtils;
 
 /**
 	The context in which a rendering takes place. It provides access to the value
@@ -81,9 +80,4 @@ public class RendererContext implements Lookup {
 		String p = ePath.startsWith( "/" ) || ePath.startsWith( "http://") ? ePath : "/" + ePath;
 		return as.asResourceURL( p );
 	}
-
-	@Override public Set<String> getStringValues( String name ) {
-		return CollectionUtils.set( getStringValue( name ) );
-	}
-
 }
