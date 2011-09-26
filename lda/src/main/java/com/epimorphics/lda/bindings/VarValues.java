@@ -13,6 +13,10 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.core.MultiMap;
+import com.epimorphics.lda.exceptions.EldaException;
+
 /**
     A VarValues maps variables (identified by their string names) to
     their Value (a lexical form with type & language annotation).
@@ -47,7 +51,27 @@ public class VarValues implements Lookup
 	    Initialise this ValueValues to have no bindings.
 	*/
 	public VarValues()
-		{}
+		{}    
+	
+	public VarValues copyWithDefaults( VarValues defaults ) {
+    	VarValues result = new VarValues( this.parameterNames() );
+    	result.putAll( defaults ); 
+    	result.putAll( this );
+        return result;
+    }
+
+	public static VarValues createContext( VarValues bindings, MultiMap<String, String> queryParams ) {
+	    VarValues cc = new VarValues( queryParams.keySet() );
+	    cc.putAll( bindings ); 
+	    for (String name: queryParams.keySet()) {
+	    	Set<String> values = queryParams.getAll( name );
+	    	if (values.size() > 1) EldaException.BadRequest("Multiple values for parameter '" + name + "': feature not implemented.");
+			Value basis = cc.get( name );
+			if (basis == null) basis = Value.emptyPlain;
+			cc.put( name, basis.withValueString( values.iterator().next() ) );
+	    }
+	    return cc;
+	}
 	
 	/**
 	    Add all the entries from <code>other</code> to this 
