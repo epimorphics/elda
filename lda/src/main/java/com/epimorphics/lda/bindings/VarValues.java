@@ -21,17 +21,24 @@ public class VarValues implements Lookup
 	{
     static Logger log = LoggerFactory.getLogger( VarValues.class );
     
+    protected static final Set<String> emptySet = new HashSet<String>();
+    
 	protected final Map<String, Value> vars = new HashMap<String, Value>();
+    
+    protected final Set<String> parameterNames = new HashSet<String>();
 	
+    public VarValues( Set<String> parameterNames, VarValues initial ) 
+    	{
+    	this.putAll( initial );
+    	this.parameterNames.addAll( parameterNames );
+    	}
+
 	/**
 	    Initialise this VarValues by copying the entries from
 	    <code>other</code>.
 	*/
-	public VarValues( VarValues other ) 
-		{ 
-		this();
-		putAll( other );
-		}
+	public VarValues( VarValues initial ) 
+		{ this.putAll( initial ); }
 	
 	/**
 	    Initialise this ValueValues to have no bindings.
@@ -57,6 +64,13 @@ public class VarValues implements Lookup
 	public Set<String> keySet() 
 		{ return vars.keySet(); }
 	
+	/**
+	    Answer the set of parameter names (a subset of the
+	    variable names).
+	*/
+	public Set<String> parameterNames() 
+		{ return new HashSet<String>( parameterNames ); }
+		
 	/**
 	    Answer true iff there is a binding for the variable
 	    called <code>name</code> in this VarValues.
