@@ -79,7 +79,7 @@ public class Hub extends HttpServlet
         	{
         	MultiMap<String, String> map = MakeData.parseQueryString( "" );
         	URI ru = Util.newURI( "SPOO/FLARN" );
-            CallContext cc = CallContext.createContext( map, match.getBindings() );
+            CallContext cc = CallContext.createContext( match.getBindings(), map );
             APIEndpoint ep = match.getEndpoint();
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
             try 

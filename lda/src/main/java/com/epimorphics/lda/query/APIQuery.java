@@ -576,7 +576,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 
     public String assembleSelectQuery( PrefixMapping prefixes ) {     	
     	PrefixLogger pl = new PrefixLogger( prefixes );
-    	CallContext cc = CallContext.createContext( new MultiMap<String, String>(), new VarValues() );
+    	CallContext cc = CallContext.createContext( new VarValues(), new MultiMap<String, String>() );
     	return assembleRawSelectQuery( pl, cc );
     }
     

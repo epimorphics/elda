@@ -28,7 +28,7 @@ public class TestUniqueVariablesForPropertyChain {
 	@Test public void testUnique() {
 		MultiMap<String, String> qp = MakeData.parseQueryString( "first.aname=1&first.bname=2" );
 		VarValues bindings = MakeData.variables( "" );
-		CallContext cc = CallContext.createContext( qp, bindings );
+		CallContext cc = CallContext.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "first=eh:/first;aname=eh:/full-aname;bname=eh:/full-bname", "first" );
 		APIQuery aq = new APIQuery( sns );

@@ -113,7 +113,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.EXTRA + "SIBLING" );
     
     private Resource createMetadata(UriInfo ui, String pathStub, SpecRecord rec) {
-        CallContext cc = CallContext.createContext( JerseyUtils.convert(ui.getQueryParameters()), rec.getBindings());
+        CallContext cc = CallContext.createContext( rec.getBindings(), JerseyUtils.convert(ui.getQueryParameters()));
         Model metadata = ModelFactory.createDefaultModel();
         Resource meta = rec.getAPIEndpoint().getMetadata( cc, ui.getRequestUri(), metadata);
     //

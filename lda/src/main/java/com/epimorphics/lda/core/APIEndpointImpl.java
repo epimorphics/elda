@@ -79,7 +79,7 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public Triad<APIResultSet, String, CallContext> call( URI reqURI, CallContext given ) {
     	long origin = System.currentTimeMillis();
     	wantsContext = specWantsContext;
-    	CallContext cc = new CallContext( spec.getBindings(), given );
+    	CallContext cc = given.copyWithDefaults( spec.getBindings() );
         // HERE log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
     //
         new Decode(true).handleQueryParameters( cc.queryParameters ).reveal();

@@ -24,7 +24,7 @@ public class TestCallContext
 	@Test public void ensureContextCreatedEmptyIsEmpty()
 		{
 		MultiMap<String, String> map = MakeData.parseQueryString("");
-		CallContext cc = CallContext.createContext( map, MakeData.variables( "" ) );
+		CallContext cc = CallContext.createContext( MakeData.variables( "" ), map );
 		assertThat( cc.getFilterPropertyNames(), Matchers.isEmpty() );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		}
@@ -32,7 +32,7 @@ public class TestCallContext
 	@Test public void ensureContextRecallsParameterNames()
 		{
 		MultiMap<String, String> map = MakeData.parseQueryString("spoo=fresh&space=cold");
-		CallContext cc = CallContext.createContext( map, MakeData.variables( "" ) );
+		CallContext cc = CallContext.createContext( MakeData.variables( "" ), map );
 		assertThat( cc.getFilterPropertyNames(), is( JenaTestBase.setOfStrings( "spoo space" ) ) );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		}
@@ -40,7 +40,7 @@ public class TestCallContext
 	@Test public void ensureContextRecallsBindingNames()
 		{
 		MultiMap<String, String> map = MakeData.parseQueryString("");
-		CallContext cc = CallContext.createContext( map, MakeData.variables( "a=b c=d" ) );
+		CallContext cc = CallContext.createContext( MakeData.variables( "a=b c=d" ), map );
 		assertThat( cc.getFilterPropertyNames(), Matchers.isEmpty() );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		assertThat( cc.getStringValue( "a" ), is( "b" ) );
@@ -50,7 +50,7 @@ public class TestCallContext
 	@Test public void ensureContextGetsAppropriateValues()
 		{
 		MultiMap<String, String> map = MakeData.parseQueryString("p1=v1&p2=v2");
-		CallContext cc = CallContext.createContext( map, MakeData.variables( "x=y" ) );
+		CallContext cc = CallContext.createContext( MakeData.variables( "x=y" ), map );
 		assertThat( cc.getFilterPropertyNames(), is( JenaTestBase.setOfStrings( "p1 p2" ) ) );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		assertThat( cc.getStringValue( "x" ), is( "y" ) );
@@ -60,8 +60,8 @@ public class TestCallContext
 	@Test public void ensureCopyingConstructorPreservesValues()
 		{
 		MultiMap<String, String> map = MakeData.parseQueryString( "p1=v1&p2=v2" );
-		CallContext base = CallContext.createContext( map, MakeData.variables( "" ) );
-		CallContext cc = new CallContext( MakeData.variables( "fly=fishing" ), base );
+		CallContext base = CallContext.createContext( MakeData.variables( "" ), map );
+		CallContext cc = base.copyWithDefaults( MakeData.variables( "fly=fishing" ) );
 //		assertThat( cc.getUriInfo(), is( base.getUriInfo() ) );
 		assertThat( cc.getStringValue( "fly" ), is( "fishing" ) );
 //		assertThat( cc.getMediaSuffix(), is( mediaSuffix ) );

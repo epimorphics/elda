@@ -244,7 +244,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) );   	
 		MultiMap<String, String> map = MakeData.parseQueryString( w.queryParams );
 		URI ru = Util.newURI(w.path);
-		CallContext cc = CallContext.createContext( map, bindTemplate( w.template, w.path ) );
+		CallContext cc = CallContext.createContext( bindTemplate( w.template, w.path ), map );
 		Triad<APIResultSet, String, CallContext> resultsAndFormat = ep.call( ru, cc );
 		Model rsm = resultsAndFormat.a.getModel();
 //		System.err.println( ">> " + rs.getResultList() );

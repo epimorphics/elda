@@ -35,7 +35,7 @@ public class TestDropsEmptyValueElements {
 	@Test public void ensureEmptyPropertiesIgnored() {
 		NamedViews nv = NamedViews.noNamedViews;
 		SNS sns = new SNS("a=eh:/A");
-		CallContext cc = CallContext.createContext( MakeData.parseQueryString("_properties=,a," ), new VarValues() );
+		CallContext cc = CallContext.createContext( new VarValues(), MakeData.parseQueryString("_properties=,a," ) );
 		APIQuery aq = new APIQuery( sns );
 		ContextQueryUpdater cu = new ContextQueryUpdater
 			( ContextQueryUpdater.ListEndpoint 
@@ -52,7 +52,7 @@ public class TestDropsEmptyValueElements {
 	@Test public void ensureEmptySortsIgnored() {
 		NamedViews nv = NamedViews.noNamedViews;
 		SNS sns = new SNS("a=eh:/A;b=eh:/B");
-		CallContext cc = CallContext.createContext( MakeData.parseQueryString("_sort=,b," ), new VarValues() );
+		CallContext cc = CallContext.createContext( new VarValues(), MakeData.parseQueryString("_sort=,b," ) );
 		APIQuery aq = new APIQuery( sns );
 		ContextQueryUpdater cu = new ContextQueryUpdater
 			( ContextQueryUpdater.ListEndpoint 

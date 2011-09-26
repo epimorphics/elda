@@ -41,16 +41,17 @@ public class CallContext implements Lookup {
     }
     
     /**
-        Copy the given call-context, but add any bindings from the map
-        for unset parameters.
+        Take a copy of this context. All the VarValues in the
+        defaults are added unless they are already bound.
     */
-    public CallContext( VarValues defaults, CallContext toCopy ) {
-    	this.parameters.putAll( defaults ); // defaults.putInto( this.parameters );
-    	this.parameters.putAll( toCopy.parameters );
-        this.queryParameters = toCopy.queryParameters;
+    public CallContext copyWithDefaults( VarValues defaults ) {
+    	CallContext result = new CallContext( this.queryParameters );
+    	result.parameters.putAll( defaults ); 
+    	result.parameters.putAll( this.parameters );
+        return result;
     }
 
-	public static CallContext createContext( MultiMap<String, String> queryParams, VarValues bindings ) {
+	public static CallContext createContext( VarValues bindings, MultiMap<String, String> queryParams ) {
 	    CallContext cc = new CallContext( queryParams );
 	    cc.parameters.putAll( bindings ); // bindings.putInto( cc.parameters );
 	    for (String name: queryParams.keySet()) {

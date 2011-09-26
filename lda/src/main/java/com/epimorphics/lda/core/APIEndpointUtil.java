@@ -43,7 +43,7 @@ public class APIEndpointUtil {
 		log.debug("Info: calling APIEndpoint " + spec);
 		VarValues vs = new VarValues( spec.getBindings() ).putAll( match.getBindings() );
 		if (suffix != null) vs.put( "_suffix", suffix );
-		CallContext cc = CallContext.createContext( queryParams, vs );
+		CallContext cc = CallContext.createContext( vs, queryParams );
 		return ep.call( requestUri, cc );
 	}
 

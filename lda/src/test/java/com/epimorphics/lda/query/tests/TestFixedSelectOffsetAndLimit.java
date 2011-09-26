@@ -35,7 +35,7 @@ public class TestFixedSelectOffsetAndLimit {
 	private void ensureOffsetAndLimit(String expected, String queryArgs) {
 		MultiMap<String, String> qp = MakeData.parseQueryString( queryArgs );
 		VarValues bindings = MakeData.variables( "" );
-		CallContext cc = CallContext.createContext( qp, bindings );
+		CallContext cc = CallContext.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );

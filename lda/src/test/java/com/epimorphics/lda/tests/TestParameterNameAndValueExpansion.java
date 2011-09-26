@@ -112,7 +112,7 @@ public class TestParameterNameAndValueExpansion
 		{
 		MultiMap<String, String> qp = MakeData.parseQueryString( "{aname}=value" );
 		VarValues bindings = MakeData.variables( "aname=bname" );
-		CallContext cc = CallContext.createContext( qp, bindings );
+		CallContext cc = CallContext.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "bname=eh:/full-bname" );
 		APIQuery aq = new APIQuery( sns );

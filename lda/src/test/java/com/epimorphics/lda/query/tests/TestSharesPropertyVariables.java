@@ -30,7 +30,7 @@ public class TestSharesPropertyVariables {
 		if (ContextQueryUpdater.dontSquishVariables == true) return;
 		MultiMap<String, String> qp = MakeData.parseQueryString( "min-aname=1&max-aname=3" );
 		VarValues bindings = MakeData.variables( "aname=17" );
-		CallContext cc = CallContext.createContext( qp, bindings );
+		CallContext cc = CallContext.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "aname=eh:/full-aname" );
 		APIQuery aq = new APIQuery( sns );
