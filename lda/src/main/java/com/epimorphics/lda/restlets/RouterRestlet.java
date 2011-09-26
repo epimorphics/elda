@@ -271,7 +271,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         VarValues result = new VarValues();
         for (Iterator<String> it = cc.parameterNames(); it.hasNext();) {
             String name = it.next();
-            result.put( name, cc.getStringValue( name ) );
+            result.put( name, cc.getValueString( name ) );
         }
         return result;
     }

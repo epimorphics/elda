@@ -84,13 +84,13 @@ public class ContextQueryUpdater implements ViewSetter {
     	args.clearLanguages();
     	Set<String> allParamNames = context.getFilterPropertyNames();
     	if (allParamNames.contains( QueryParameter._VIEW )) {
-    		setViewByName( context.getStringValue(QueryParameter._VIEW ) );
+    		setViewByName( context.getValueString(QueryParameter._VIEW ) );
     	}
 		for (String param: allParamNames) 
     		if (param.startsWith( QueryParameter.LANG_PREFIX ))
     			handleLangPrefix( param );
     		else if (param.equals(QueryParameter._LANG)) 
-    			args.setDefaultLanguage( context.getStringValue( param ) );
+    			args.setDefaultLanguage( context.getValueString( param ) );
         GEOLocation geo = new GEOLocation();
         for (String param: allParamNames) 
             handleParam( geo, param );
@@ -109,7 +109,7 @@ public class ContextQueryUpdater implements ViewSetter {
 
 	private void handleLangPrefix( String taggedParam ) {
 		String param = taggedParam.substring( QueryParameter.LANG_PREFIX.length() );
-		String sv = context.getStringValue( taggedParam );
+		String sv = context.getValueString( taggedParam );
 		if (sv == null) {
 			log.debug( taggedParam + " supplied, but no value for " + param );
 			return;
@@ -120,7 +120,7 @@ public class ContextQueryUpdater implements ViewSetter {
 	}
 
 	private void handleParam( GEOLocation geo, String p ) {
-		String val = context.expandVariables( context.getStringValue(p) );
+		String val = context.expandVariables( context.getValueString(p) );
 		String pString = context.expandVariables( p );
 		if (val == null) EldaException.NullParameter( p );
 	//

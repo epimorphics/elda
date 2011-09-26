@@ -169,7 +169,7 @@ public class EndpointMetadata {
 			String name = names.next();
 			Resource vb = meta.createResource();
 			vb.addProperty( FIXUP.label, name );
-			vb.addProperty( FIXUP.value, cc.getStringValue( name ) );
+			vb.addProperty( FIXUP.value, cc.getValueString( name ) );
 			exec.addProperty( FIXUP.VB, vb );
 		}
 	}

@@ -67,17 +67,16 @@ public class CallContext implements Lookup {
 		return values.keySet().iterator();
 	}
 
-	public Value getParameter( String name ) {
+	public Value getValue( String name ) {
 		return values.get( name );
 	}
 	
     /**
-     * Return a single value for a parameter, if there are multiple values
-     * the returned one may be arbitrary
-     */
-    @Override public String getStringValue( String param ) {
-        Value v = values.get( param );
-		return v == null ? queryParameters.getOne( param ) : v.valueString();
+    	Return the value of a variable as a string, or null
+    	if there's no such variable.
+    */
+    @Override public String getValueString( String param ) {
+    	return values.getValueString( param );
     }
     
     @Override public String toString() {

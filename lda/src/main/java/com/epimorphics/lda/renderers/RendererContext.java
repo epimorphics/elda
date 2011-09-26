@@ -60,8 +60,8 @@ public class RendererContext implements Lookup {
 		return v.getAsString( key, ifAbsent );
 	}
 
-	@Override public String getStringValue( String key ) {
-		return v.getStringValue( key );
+	@Override public String getValueString( String key ) {
+		return v.getValueString( key );
 	}
 
 	public Set<String> keySet() {

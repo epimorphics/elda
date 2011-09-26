@@ -8,5 +8,5 @@ public interface Lookup {
 	/**
 	    Answer the value of the named variable.
 	*/
-	public String getStringValue( String name );
+	public String getValueString( String name );
 }

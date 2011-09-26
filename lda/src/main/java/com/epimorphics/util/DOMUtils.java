@@ -67,7 +67,7 @@ public class DOMUtils
 		t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
 		for (String name: rc.keySet()) 
 			{
-			String value = rc.getStringValue( name );
+			String value = rc.getValueString( name );
 			t.setParameter( name, value );
 			log.debug( "set xslt parameter " + name + " = " + value );
 			}

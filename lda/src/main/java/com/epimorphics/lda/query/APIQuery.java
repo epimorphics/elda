@@ -642,13 +642,13 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	while (m.find( start )) {
     		result.append( query.substring( start, m.start() ) );
     		String name = m.group().substring(1);
-    		Value v = cc.getParameter( name );
+    		Value v = cc.getValue( name );
 //    		System.err.println( ">> value of " + name + " is " + v );
     		if (v == null) {
     			result.append( m.group() );
     		} else {
 	    		String prop = varProps.get( name );
-	            String val = cc.getStringValue( name );
+	            String val = cc.getValueString( name );
 //	            if (name.equals( "value" )) 
 //	            	{
 //	            	System.err.println( ">> value = " + v );

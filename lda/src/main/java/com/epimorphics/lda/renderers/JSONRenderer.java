@@ -52,7 +52,7 @@ public class JSONRenderer implements Renderer {
     }
     
     @Override public MediaType getMediaType( RendererContext rc ) {
-    	String callback = rc.getStringValue( "callback" );
+    	String callback = rc.getValueString( "callback" );
         return callback == null ? mt : MediaType.TEXT_JAVASCRIPT;
     }
 
@@ -71,7 +71,7 @@ public class JSONRenderer implements Renderer {
             	log.error( "Broken generated JSON:\n" + written );
             	throw e;
             }
-            String callback = rc.getStringValue("callback" );
+            String callback = rc.getValueString("callback" );
             return callback == null ? written : callback + "(" + written + ")";
         } catch (Exception e) {
         	log.error( "Failed to encode model: stacktrace follows:", e );

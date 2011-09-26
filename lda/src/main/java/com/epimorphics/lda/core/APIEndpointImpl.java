@@ -134,8 +134,8 @@ public class APIEndpointImpl implements APIEndpoint {
     	ContextQueryUpdater cq = new ContextQueryUpdater( endpointType, context, spec, sns, query, qa );
 		try { 
 			Couple<View, String> result = cq.updateQueryAndConstructView( query.deferredFilters);
-			String format = result.b.equals( "" ) ? context.getStringValue( "_suffix") : result.b;
-			if (context.getStringValue( "callback" ) != null && !"json".equals( format ))
+			String format = result.b.equals( "" ) ? context.getValueString( "_suffix") : result.b;
+			if (context.getValueString( "callback" ) != null && !"json".equals( format ))
 				EldaException.BadRequest( "callback specified but format '" + format + "' is not JSON." );
 			qa.updateQuery();
 			return result; 

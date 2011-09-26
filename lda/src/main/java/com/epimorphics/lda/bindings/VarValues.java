@@ -82,10 +82,9 @@ public class VarValues implements Lookup
 	    null if it is not bound. Part of the implementation
 	    of <code>Lookup</code>.
 	*/
-	@Override public String getStringValue( String name ) 
+	@Override public String getValueString( String name ) 
 		{ 
 		Value v = get( name );
-		// System.err.println( ">> getStringValue(" + name + ") => " + v );
 		return v == null ? null : v.valueString(); 
 		}
 	
@@ -219,7 +218,7 @@ public class VarValues implements Lookup
 			int rb = s.indexOf( '}', lb );
 			sb.append( s.substring( start, lb ) );
 			String name = s.substring( lb + 1, rb );
-			String value = values.getStringValue( name );
+			String value = values.getValueString( name );
 			if (value == null)
 				{
 				sb.append( "{" ).append( name ).append( "}" );
