@@ -7,7 +7,7 @@
 */
 package com.epimorphics.lda.params;
 
-import com.epimorphics.lda.core.MultiMap;
+import java.util.Set;
 
 /**
     New (or relocated) code for handling parameters. Pulling it out
@@ -25,7 +25,7 @@ public class Decode {
 		this.chatty = chatty;
 	}
 
-	public Decode handleQueryParameters( MultiMap<String, String> qp ) {
+	public Decode handleQueryParameters( Set<String> parameterNames ) {
 		
 		return this;
 	}

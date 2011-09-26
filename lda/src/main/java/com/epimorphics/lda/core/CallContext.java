@@ -30,13 +30,10 @@ public class CallContext implements Lookup {
     
     final protected VarValues values = new VarValues();
     
-    final protected MultiMap<String, String> queryParameters;
-    
     final protected Set<String> parameterNames;
         
-    private CallContext( MultiMap<String, String> queryParameters ) {
-        this.queryParameters = queryParameters;
-        this.parameterNames = new HashSet<String>( queryParameters.keySet() );
+    private CallContext( Set<String> parameterNames ) {
+        this.parameterNames = new HashSet<String>( parameterNames );
     }
     
     /**
@@ -44,14 +41,14 @@ public class CallContext implements Lookup {
         defaults are added unless they are already bound.
     */
     public CallContext copyWithDefaults( VarValues defaults ) {
-    	CallContext result = new CallContext( this.queryParameters );
+    	CallContext result = new CallContext( this.parameterNames );
     	result.values.putAll( defaults ); 
     	result.values.putAll( this.values );
         return result;
     }
 
 	public static CallContext createContext( VarValues bindings, MultiMap<String, String> queryParams ) {
-	    CallContext cc = new CallContext( queryParams );
+	    CallContext cc = new CallContext( queryParams.keySet() );
 	    cc.values.putAll( bindings ); 
 	    for (String name: queryParams.keySet()) {
 	    	Set<String> values = queryParams.getAll( name );

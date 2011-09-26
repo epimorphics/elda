@@ -82,7 +82,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	CallContext cc = given.copyWithDefaults( spec.getBindings() );
         // HERE log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
     //
-        new Decode(true).handleQueryParameters( cc.queryParameters ).reveal();
+        new Decode(true).handleQueryParameters( cc.getFilterPropertyNames() ).reveal();
     //
         APIQuery query = spec.getBaseQuery();
         Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );

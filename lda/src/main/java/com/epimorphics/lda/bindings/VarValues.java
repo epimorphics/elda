@@ -13,8 +13,6 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.MultiMap;
-
 /**
     A VarValues maps variables (identified by their string names) to
     their Value (a lexical form with type & language annotation).
@@ -113,13 +111,6 @@ public class VarValues implements Lookup
 		{ vars.put( name, v ); return this; }
 	
 	/**
-	    Add to the MultiMap <code>map</code> all of the
-	    bindings in this VarValues.
-	*/
-	public void putInto( MultiMap<String, Value> map ) 
-		{ map.putAll( vars ); }
-	
-	/**
 	    Answer a String which displays the content of this
 	    VarValues.
 	*/
@@ -134,10 +125,13 @@ public class VarValues implements Lookup
 	@Override public boolean equals( Object other )
 		{ return other instanceof VarValues && same( (VarValues) other ); }
 
+	/**
+	    The long way round, because it will force evaluation of {...} variables.
+	*/
 	private boolean same( VarValues other ) 
 		{
 		Set<String> keys = vars.keySet();
-		if (!keys.equals( other.vars.keySet() )) return false;
+		if (!keys.equals( other.vars.keySet() )) 	return false;
 		for (String key: keys)
 			if (!get(key).equals( other.get(key) )) return false;
 		return true;
