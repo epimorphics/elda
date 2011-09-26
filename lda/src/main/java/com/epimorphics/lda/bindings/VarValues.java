@@ -40,6 +40,9 @@ public class VarValues implements Lookup
 	public VarValues( VarValues initial ) 
 		{ this.putAll( initial ); }
 	
+	public VarValues( Set<String> parameterNames ) 
+		{ this.parameterNames.addAll( parameterNames ); }
+	
 	/**
 	    Initialise this ValueValues to have no bindings.
 	*/

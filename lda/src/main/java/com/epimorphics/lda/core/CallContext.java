@@ -28,12 +28,10 @@ import com.epimorphics.lda.exceptions.EldaException;
 */
 public class CallContext implements Lookup {
     
-    final protected VarValues values = new VarValues();
-    
-    final protected Set<String> parameterNames;
-        
+    final protected VarValues values;
+            
     private CallContext( Set<String> parameterNames ) {
-        this.parameterNames = new HashSet<String>( parameterNames );
+    	values = new VarValues( parameterNames );
     }
     
     /**
@@ -41,7 +39,7 @@ public class CallContext implements Lookup {
         defaults are added unless they are already bound.
     */
     public CallContext copyWithDefaults( VarValues defaults ) {
-    	CallContext result = new CallContext( this.parameterNames );
+    	CallContext result = new CallContext( values.parameterNames() );
     	result.values.putAll( defaults ); 
     	result.values.putAll( this.values );
         return result;
@@ -84,7 +82,7 @@ public class CallContext implements Lookup {
         Answer the set of filter names from the call context query parameters.
     */
     public Set<String> getFilterPropertyNames() {
-    	return new HashSet<String>( parameterNames );    	
+    	return new HashSet<String>( values.parameterNames() );    	
     }
 
     /**
