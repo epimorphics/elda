@@ -22,7 +22,6 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.tests.FakeNamedViews;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestFixedSelectOffsetAndLimit {
@@ -36,7 +35,7 @@ public class TestFixedSelectOffsetAndLimit {
 	private void ensureOffsetAndLimit(String expected, String queryArgs) {
 		MultiMap<String, String> qp = MakeData.parseQueryString( queryArgs );
 		VarValues bindings = MakeData.variables( "" );
-		CallContext cc = CallContext.createContext( Util.newURI("my:URI"), qp, bindings );
+		CallContext cc = CallContext.createContext( qp, bindings );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );

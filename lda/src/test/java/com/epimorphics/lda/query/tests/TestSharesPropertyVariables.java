@@ -22,7 +22,6 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.tests.FakeNamedViews;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestSharesPropertyVariables {
@@ -31,7 +30,7 @@ public class TestSharesPropertyVariables {
 		if (ContextQueryUpdater.dontSquishVariables == true) return;
 		MultiMap<String, String> qp = MakeData.parseQueryString( "min-aname=1&max-aname=3" );
 		VarValues bindings = MakeData.variables( "aname=17" );
-		CallContext cc = CallContext.createContext( Util.newURI("my:URI"), qp, bindings );
+		CallContext cc = CallContext.createContext( qp, bindings );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "aname=eh:/full-aname" );
 		APIQuery aq = new APIQuery( sns );

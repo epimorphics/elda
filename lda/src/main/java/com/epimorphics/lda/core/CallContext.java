@@ -12,7 +12,6 @@
 
 package com.epimorphics.lda.core;
 
-import java.net.URI;
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -36,11 +35,8 @@ public class CallContext implements Lookup {
     final protected VarValues parameters = new VarValues();
     
     final protected MultiMap<String, String> queryParameters;
-    
-    final protected URI requestURI;
-    
-    private CallContext( URI requestURI, MultiMap<String, String> queryParameters ) {
-        this.requestURI = requestURI;
+        
+    private CallContext( MultiMap<String, String> queryParameters ) {
         this.queryParameters = queryParameters;
     }
     
@@ -51,12 +47,11 @@ public class CallContext implements Lookup {
     public CallContext( VarValues defaults, CallContext toCopy ) {
     	this.parameters.putAll( defaults ); // defaults.putInto( this.parameters );
     	this.parameters.putAll( toCopy.parameters );
-        this.requestURI = toCopy.requestURI;
         this.queryParameters = toCopy.queryParameters;
     }
 
-	public static CallContext createContext( URI requestURI, MultiMap<String, String> queryParams, VarValues bindings ) {
-	    CallContext cc = new CallContext( requestURI, queryParams );
+	public static CallContext createContext( MultiMap<String, String> queryParams, VarValues bindings ) {
+	    CallContext cc = new CallContext( queryParams );
 	    cc.parameters.putAll( bindings ); // bindings.putInto( cc.parameters );
 	    for (String name: queryParams.keySet()) {
 			Value basis = cc.parameters.get( name );
@@ -101,10 +96,6 @@ public class CallContext implements Lookup {
     
     @Override public String toString() {
         return parameters.toString();
-    }
-    
-    public URI getRequestURI() {
-    	return requestURI;
     }
     
     /**

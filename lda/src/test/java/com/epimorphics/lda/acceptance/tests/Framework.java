@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.net.URI;
 import java.util.*;
 
 import org.junit.Test;
@@ -242,8 +243,9 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		APISpec s = SpecUtil.specFrom( root );
 		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) );   	
 		MultiMap<String, String> map = MakeData.parseQueryString( w.queryParams );
-		CallContext cc = CallContext.createContext( Util.newURI(w.path), map, bindTemplate( w.template, w.path ) );
-		Triad<APIResultSet, String, CallContext> resultsAndFormat = ep.call( cc );
+		URI ru = Util.newURI(w.path);
+		CallContext cc = CallContext.createContext( map, bindTemplate( w.template, w.path ) );
+		Triad<APIResultSet, String, CallContext> resultsAndFormat = ep.call( ru, cc );
 		Model rsm = resultsAndFormat.a.getModel();
 //		System.err.println( ">> " + rs.getResultList() );
 		for (Ask a: w.shouldAppear)

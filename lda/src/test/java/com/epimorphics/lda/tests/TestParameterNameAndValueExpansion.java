@@ -24,7 +24,6 @@ import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Util;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -113,7 +112,7 @@ public class TestParameterNameAndValueExpansion
 		{
 		MultiMap<String, String> qp = MakeData.parseQueryString( "{aname}=value" );
 		VarValues bindings = MakeData.variables( "aname=bname" );
-		CallContext cc = CallContext.createContext( Util.newURI("my:URI"), qp, bindings );
+		CallContext cc = CallContext.createContext( qp, bindings );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "bname=eh:/full-bname" );
 		APIQuery aq = new APIQuery( sns );

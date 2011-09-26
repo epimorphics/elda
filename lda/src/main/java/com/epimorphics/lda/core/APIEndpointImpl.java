@@ -76,11 +76,11 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.toString();
     }
     
-    @Override public Triad<APIResultSet, String, CallContext> call( CallContext given ) {
+    @Override public Triad<APIResultSet, String, CallContext> call( URI reqURI, CallContext given ) {
     	long origin = System.currentTimeMillis();
     	wantsContext = specWantsContext;
     	CallContext cc = new CallContext( spec.getBindings(), given );
-        log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
+        // HERE log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
     //
         new Decode(true).handleQueryParameters( cc.queryParameters ).reveal();
     //
@@ -93,7 +93,7 @@ public class APIEndpointImpl implements APIEndpoint {
         long timeAfterRun = System.currentTimeMillis();
         APIResultSet filtered = filterByView( view, query.getDefaultLanguage(), unfiltered );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
-        insertResultSetRoot(filtered, cc, query);
+        insertResultSetRoot(filtered, reqURI, cc, query);
         long timeAfterMetadata = System.currentTimeMillis();
         log.debug( "TIMING: build query: " + (timeAfterBuild - origin)/1000.0 + "s" );
         log.debug( "TIMING: run query:   " + (timeAfterRun - timeAfterBuild)/1000.0 + "s" );
@@ -146,16 +146,16 @@ public class APIEndpointImpl implements APIEndpoint {
     /**
      * Return a metadata description for the query that would be run by this endpoint
      */
-    @Override public Resource getMetadata(CallContext context, Model metadata) {
+    @Override public Resource getMetadata(CallContext context, URI ru, Model metadata) {
         APIQuery query = spec.getBaseQuery();
         buildQueryAndView(context, query);
         metadata.setNsPrefix("api", API.getURI());
-        Resource meta = resourceForMetaList(metadata, context);
+		Resource meta = resourceForMetaList(metadata, ru );
         APISpec aSpec = spec.getAPISpec();
         meta.addProperty(EXTRAS.sparqlQuery, query.getQueryString(aSpec, context));
         aSpec.getDataSource().addMetadata(meta);
-        meta.addProperty(EXTRAS.listURL, resourceForList(metadata, context));
-        meta.addProperty(RDFS.comment, "Metadata describing the query and source for endpoint " + spec.getURITemplate());
+        meta.addProperty( EXTRAS.listURL, resourceForList(metadata, ru) );
+        meta.addProperty( RDFS.comment, "Metadata describing the query and source for endpoint " + spec.getURITemplate() );
         return meta;
     }
     
@@ -163,8 +163,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.isListEndpoint();
     }
 
-	private Resource resourceForPage( Resource notThisPlease, Model m, CallContext context, int page) {
-		URI ru = context.getRequestURI();
+	private Resource resourceForPage( Resource notThisPlease, Model m, URI ru, int page) {
 		String newURI = isListEndpoint()
 			? EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
 			: EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
@@ -195,34 +194,31 @@ public class APIEndpointImpl implements APIEndpoint {
 		return rsm.createResource( replaced );
 	}
 
-    private Resource resourceForList( Model m, CallContext context ) {		
-    	URI ru = context.getRequestURI();
+    private Resource resourceForList( Model m, URI ru ) {
     	String rqp1 = EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
     	String rqp2 = EndpointMetadata.replaceQueryParam( Util.newURI(rqp1), QueryParameter._PAGE_SIZE );
     	return m.createResource( rqp2 );
     }
 
-    private Resource resourceForMetaList( Model m, CallContext context ) {
-    	URI ru = context.getRequestURI();
+    private Resource resourceForMetaList( Model m, URI ru ) {
     	String rqp1 = EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
     	String rqp2 = EndpointMetadata.replaceQueryParam( Util.newURI(rqp1), QueryParameter._PAGE_SIZE );    	
     	return m.createResource( rqp2 );
     }
     
-	private void insertResultSetRoot( APIResultSet rs, CallContext cc, APIQuery query ) {
+	private void insertResultSetRoot( APIResultSet rs, URI ru, CallContext cc, APIQuery query ) {
     	Model rsm = rs.getModel();
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
-        URI ru = cc.getRequestURI();
         Resource uriForDefinition = createDefinitionURI( rsm, ru, uriForSpec, template ); 
-        Resource thisPage = resourceForPage(uriForDefinition, rsm, cc, page);
+        Resource thisPage = resourceForPage(uriForDefinition, rsm, ru, page);
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( FIXUP.definition, uriForDefinition );
 		Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
-		EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, cc, formatNames );
+		EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, cc, ru, formatNames );
 		createOptionalMetadata(rs, query, em);   
     //
         String emv_uri = EndpointMetadata.replaceQueryParam( Util.newURI(thisPage.getURI()), "_metadata", "all" );
@@ -237,10 +233,10 @@ public class APIEndpointImpl implements APIEndpoint {
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
         	thisPage.addProperty( FIXUP.items, content );
-    		thisPage.addProperty( XHV.first, resourceForPage( uriForDefinition, rsm, cc, 0 ) );
-    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( uriForDefinition, rsm, cc, page+1 ) );
-    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( uriForDefinition, rsm, cc, page-1 ) );
-    		Resource listRoot = resourceForList(rsm, cc);
+    		thisPage.addProperty( XHV.first, resourceForPage( uriForDefinition, rsm, ru, 0 ) );
+    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( uriForDefinition, rsm, ru, page+1 ) );
+    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( uriForDefinition, rsm, ru, page-1 ) );
+    		Resource listRoot = resourceForList(rsm, ru);
     		thisPage
 	    		.addProperty( DCTerms.isPartOf, listRoot )
 	    		;

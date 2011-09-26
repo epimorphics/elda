@@ -10,6 +10,7 @@ package com.epimorphics.lda.tests;
 
 import static org.junit.Assert.*;
 
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -78,8 +79,9 @@ public class ExploreTestingForLatAndLongEtc
 		APIEndpointSpec spec = new APIEndpointSpec( parent, parent, endpoint );
 		APIEndpoint e = new APIEndpointImpl( spec );
 		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );
-		CallContext cc = CallContext.createContext( Util.newURI("http://dummy/doc/schools"), map, MakeData.variables( settings ) );
-		Triad<APIResultSet, String, CallContext> resultsAndFormat = e.call( cc );
+		URI ru = Util.newURI("http://dummy/doc/schools");
+		CallContext cc = CallContext.createContext( map, MakeData.variables( settings ) );
+		Triad<APIResultSet, String, CallContext> resultsAndFormat = e.call( ru, cc );
 		APIResultSet rs = resultsAndFormat.a;
 		return new HashSet<Resource>( rs.getResultList() );
 		}

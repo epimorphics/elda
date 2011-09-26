@@ -36,9 +36,11 @@ public class EndpointMetadata {
 	protected final String pageNumber;
 	protected final Set<String> formatNames;
 	protected final boolean isListEndpoint;
+	protected final URI reqURI; 
 	
-	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, CallContext cc, Set<String> formatNames ) {
+	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, CallContext cc, URI reqURI, Set<String> formatNames ) {
 		this.cc = cc;
+		this.reqURI = reqURI;
 		this.thisPage = thisPage;
 		this.pageNumber = pageNumber;
 		this.formatNames = formatNames;
@@ -66,8 +68,7 @@ public class EndpointMetadata {
 	 	modified by replacing the _view with the requested name.
 	*/
     private Resource resourceForView( Model m, String name ) {
-    	URI req = cc.getRequestURI();
-    	String a = replaceQueryParam( req, QueryParameter._VIEW, name );
+    	String a = replaceQueryParam( reqURI, QueryParameter._VIEW, name );
     	String b = isListEndpoint ? replaceQueryParam( Util.newURI( a ), QueryParameter._PAGE, pageNumber ) : a;
 		return m.createResource( b );
     }
@@ -123,14 +124,13 @@ public class EndpointMetadata {
 	}
 
 	private Resource resourceForFormat( Model m, String formatName ) {
-		URI ru = cc.getRequestURI();
 		try {
 			URI x = new URI
-				( ru.getScheme()
-				, ru.getAuthority()
-				, replaceSuffix( formatName, ru.getPath() )
-				, ru.getQuery()
-				, ru.getFragment() 
+				( reqURI.getScheme()
+				, reqURI.getAuthority()
+				, replaceSuffix( formatName, reqURI.getPath() )
+				, reqURI.getQuery()
+				, reqURI.getFragment() 
 				);
 			return m.createResource( x.toASCIIString() );
 		} catch (URISyntaxException e) {

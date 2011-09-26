@@ -18,6 +18,7 @@
 package com.epimorphics.lda.tests;
 
 import java.io.StringWriter;
+import java.net.URI;
 import java.util.*;
 
 import com.epimorphics.jsonrdf.Context;
@@ -127,8 +128,9 @@ public class APITester {
             throw new APIException("Tester failed to find routed endpoint: " + uriTemplate);
         MultiMap<String, String> map = MakeData.parseQueryString( queryString );
         // TODO: the template should be a proper URI.
-		CallContext call = CallContext.createContext( Util.newURI(uriTemplate), map, fix( match.bindings ) );
-        return match.endpoint.call(call).a;
+		URI ru = Util.newURI(uriTemplate);
+		CallContext call = CallContext.createContext( map, fix( match.bindings ) );
+        return match.endpoint.call(ru, call).a;
     }
 
 	private VarValues fix(Map<String, String> bindings) {

@@ -79,12 +79,12 @@ public class Hub extends HttpServlet
         	{
         	MultiMap<String, String> map = MakeData.parseQueryString( "" );
         	URI ru = Util.newURI( "SPOO/FLARN" );
-            CallContext cc = CallContext.createContext( ru, map, match.getBindings() );
+            CallContext cc = CallContext.createContext( map, match.getBindings() );
             APIEndpoint ep = match.getEndpoint();
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
             try 
             	{
-                Triad<APIResultSet, String, CallContext> resultsAndFormat = ep.call( cc );
+                Triad<APIResultSet, String, CallContext> resultsAndFormat = ep.call( ru, cc );
 				APIResultSet results = resultsAndFormat.a;
                 if (results == null) 
                 	{
