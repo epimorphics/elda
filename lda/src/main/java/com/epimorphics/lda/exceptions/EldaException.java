@@ -37,6 +37,9 @@ public class EldaException extends RuntimeException {
 		throw new EldaException( "no items matching that request were found.", "", NOT_FOUND, null );
 	}
 
+	/**
+	    Throw a BAD REQUEST exception with the given message.
+	*/
 	public static void BadRequest( String message ) {
 		throw new EldaException( message, "", BAD_REQUEST );
 	}

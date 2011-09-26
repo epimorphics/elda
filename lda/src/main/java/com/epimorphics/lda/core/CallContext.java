@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.exceptions.EldaException;
 
 /**
  * Encapsulates all the information which define a particular
@@ -35,9 +36,12 @@ public class CallContext implements Lookup {
     final protected VarValues parameters = new VarValues();
     
     final protected MultiMap<String, String> queryParameters;
+    
+    final protected Set<String> parameterNames;
         
     private CallContext( MultiMap<String, String> queryParameters ) {
         this.queryParameters = queryParameters;
+        this.parameterNames = new HashSet<String>( queryParameters.keySet() );
     }
     
     /**
@@ -53,12 +57,13 @@ public class CallContext implements Lookup {
 
 	public static CallContext createContext( VarValues bindings, MultiMap<String, String> queryParams ) {
 	    CallContext cc = new CallContext( queryParams );
-	    cc.parameters.putAll( bindings ); // bindings.putInto( cc.parameters );
+	    cc.parameters.putAll( bindings ); 
 	    for (String name: queryParams.keySet()) {
+	    	Set<String> values = queryParams.getAll( name );
+	    	if (values.size() > 1) EldaException.BadRequest("Multiple values for parameter '" + name + "': feature not implemented.");
 			Value basis = cc.parameters.get( name );
 			if (basis == null) basis = Value.emptyPlain;
-	        for (String val : queryParams.getAll( name ))
-				cc.parameters.put( name, basis.withValueString( val ) );
+			cc.parameters.put( name, basis.withValueString( values.iterator().next() ) );
 	    }
 	    return cc;
 	}
@@ -103,7 +108,7 @@ public class CallContext implements Lookup {
         Answer the set of filter names from the call context query parameters.
     */
     public Set<String> getFilterPropertyNames() {
-    	return new HashSet<String>( queryParameters.keySet() );    	
+    	return new HashSet<String>( parameterNames );    	
     }
 
     /**
