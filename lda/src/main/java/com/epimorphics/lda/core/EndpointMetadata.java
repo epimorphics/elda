@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.QueryParameter;
@@ -31,14 +32,14 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class EndpointMetadata {
 
-	protected final CallContext cc;
+	protected final VarValues cc;
 	protected final Resource thisPage;
 	protected final String pageNumber;
 	protected final Set<String> formatNames;
 	protected final boolean isListEndpoint;
 	protected final URI reqURI; 
 	
-	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, CallContext cc, URI reqURI, Set<String> formatNames ) {
+	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, VarValues cc, URI reqURI, Set<String> formatNames ) {
 		this.cc = cc;
 		this.reqURI = reqURI;
 		this.thisPage = thisPage;
@@ -165,7 +166,7 @@ public class EndpointMetadata {
 	}
 
 	public void addVariableBindings( Model meta, Resource exec ) {
-		for (Iterator<String> names = cc.values.keySet().iterator(); names.hasNext();) {
+		for (Iterator<String> names = cc.keySet().iterator(); names.hasNext();) {
 			String name = names.next();
 			Resource vb = meta.createResource();
 			vb.addProperty( FIXUP.label, name );

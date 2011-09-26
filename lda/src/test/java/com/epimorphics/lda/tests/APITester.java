@@ -129,7 +129,7 @@ public class APITester {
         MultiMap<String, String> map = MakeData.parseQueryString( queryString );
         // TODO: the template should be a proper URI.
 		URI ru = Util.newURI(uriTemplate);
-		CallContext call = CallContext.createContext( fix( match.bindings ), map );
+		VarValues call = VarValues.createContext( fix( match.bindings ), map );
         return match.endpoint.call(ru, call).a;
     }
 

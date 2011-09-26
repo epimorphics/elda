@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
@@ -112,7 +111,7 @@ public class TestParameterNameAndValueExpansion
 		{
 		MultiMap<String, String> qp = MakeData.parseQueryString( "{aname}=value" );
 		VarValues bindings = MakeData.variables( "aname=bname" );
-		CallContext cc = CallContext.createContext( bindings, qp );
+		VarValues cc = VarValues.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "bname=eh:/full-bname" );
 		APIQuery aq = new APIQuery( sns );

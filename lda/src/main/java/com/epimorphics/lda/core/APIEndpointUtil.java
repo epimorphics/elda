@@ -37,13 +37,13 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Triad<APIResultSet, String, CallContext> call( Match match, URI requestUri, String suffix, MultiMap<String, String> queryParams ) {
+	public static Triad<APIResultSet, String, VarValues> call( Match match, URI requestUri, String suffix, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		APIEndpointSpec spec = ep.getSpec();
 		log.debug("Info: calling APIEndpoint " + spec);
 		VarValues vs = new VarValues( spec.getBindings() ).putAll( match.getBindings() );
 		if (suffix != null) vs.put( "_suffix", suffix );
-		CallContext cc = CallContext.createContext( vs, queryParams );
+		VarValues cc = VarValues.createContext( vs, queryParams );
 		return ep.call( requestUri, cc );
 	}
 

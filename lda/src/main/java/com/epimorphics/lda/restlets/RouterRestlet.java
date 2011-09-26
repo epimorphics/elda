@@ -42,10 +42,10 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.exceptions.EldaException;
@@ -175,12 +175,12 @@ import com.hp.hpl.jena.shared.WrappedException;
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
-        	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, ru, suffix, queryParams );
+        	Triad<APIResultSet, String, VarValues> resultsAndFormat = APIEndpointUtil.call( match, ru, suffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
             if (results == null)
             	throw new RuntimeException( "ResultSet is null -- this should never happen." );
             APIEndpoint ep = match.getEndpoint();
-			RendererContext rc = new RendererContext( resultsAndFormat.c.copyValues(), contextPath, as );
+			RendererContext rc = new RendererContext( resultsAndFormat.c.copy(), contextPath, as );
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );

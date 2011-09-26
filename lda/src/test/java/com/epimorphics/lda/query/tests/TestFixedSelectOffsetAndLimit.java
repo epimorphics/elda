@@ -12,7 +12,6 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 import com.epimorphics.lda.bindings.VarValues;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
@@ -35,7 +34,7 @@ public class TestFixedSelectOffsetAndLimit {
 	private void ensureOffsetAndLimit(String expected, String queryArgs) {
 		MultiMap<String, String> qp = MakeData.parseQueryString( queryArgs );
 		VarValues bindings = MakeData.variables( "" );
-		CallContext cc = CallContext.createContext( bindings, qp );
+		VarValues cc = VarValues.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );

@@ -41,7 +41,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.restlets.ControlRestlet.SpecRecord;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
@@ -113,7 +113,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.EXTRA + "SIBLING" );
     
     private Resource createMetadata(UriInfo ui, String pathStub, SpecRecord rec) {
-        CallContext cc = CallContext.createContext( rec.getBindings(), JerseyUtils.convert(ui.getQueryParameters()));
+        VarValues cc = VarValues.createContext( rec.getBindings(), JerseyUtils.convert(ui.getQueryParameters()));
         Model metadata = ModelFactory.createDefaultModel();
         Resource meta = rec.getAPIEndpoint().getMetadata( cc, ui.getRequestUri(), metadata);
     //

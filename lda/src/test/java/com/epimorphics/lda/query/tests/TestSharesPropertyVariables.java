@@ -12,7 +12,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.lda.bindings.VarValues;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
@@ -30,7 +29,7 @@ public class TestSharesPropertyVariables {
 		if (ContextQueryUpdater.dontSquishVariables == true) return;
 		MultiMap<String, String> qp = MakeData.parseQueryString( "min-aname=1&max-aname=3" );
 		VarValues bindings = MakeData.variables( "aname=17" );
-		CallContext cc = CallContext.createContext( bindings, qp );
+		VarValues cc = VarValues.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "aname=eh:/full-aname" );
 		APIQuery aq = new APIQuery( sns );

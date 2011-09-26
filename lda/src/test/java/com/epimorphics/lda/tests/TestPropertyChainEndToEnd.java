@@ -12,8 +12,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
@@ -146,7 +146,7 @@ public class TestPropertyChainEndToEnd
 		ShortnameService sns = new StandardShortnameService( spec, prefixes, loader );
 		APIQuery q = new APIQuery( sns );
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
-		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
+		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (VarValues) null, NamedViews.noNamedViews, sns, q, qa );
 		x.addFilterFromQuery( Param.make(sns, propertyThing), "17.9" );
 		qa.updateQuery();
 		assertContains( q.assembleSelectQuery( prefixes ), "\"17.9\"^^<http://www.w3.org/2001/XMLSchema#string>" );

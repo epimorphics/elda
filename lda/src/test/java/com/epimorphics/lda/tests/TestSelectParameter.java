@@ -13,13 +13,12 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.Term;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.RDFUtils;
@@ -33,7 +32,7 @@ public class TestSelectParameter
         ShortnameService sns = makeSNS();
         APIQuery q = new APIQuery(sns);	
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
-        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (VarValues) null, NamedViews.noNamedViews, sns, q, qa );
         qa.updateQuery();
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
@@ -45,7 +44,7 @@ public class TestSelectParameter
         ShortnameService sns = makeSNS();
         APIQuery q = new APIQuery(sns);	
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);	        
-        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (VarValues) null, NamedViews.noNamedViews, sns, q, qa );
         qa.updateQuery();
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );

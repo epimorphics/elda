@@ -19,6 +19,7 @@ package com.epimorphics.lda.core;
 
 import java.net.URI;
 
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.util.MediaType;
@@ -49,12 +50,12 @@ public interface APIEndpoint {
      	@return Triad(rs, format, cc): the ResultSet for rendering, the name
      		of the format, and the call context used for the result set.
     */
-    public Triad<APIResultSet, String, CallContext> call( URI reqestURI, CallContext context );
+    public Triad<APIResultSet, String, VarValues> call( URI reqestURI, VarValues context );
     
     /**
      	Return a metadata description for the query that would be run by this endpoint
     */
-    public Resource getMetadata( CallContext context, URI requestURI, Model metadata );
+    public Resource getMetadata( VarValues context, URI requestURI, Model metadata );
     
     /**
         Return the specification for this endpoint

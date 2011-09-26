@@ -13,7 +13,6 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.exceptions.EldaException;
 
@@ -59,6 +58,9 @@ public class VarValues implements Lookup
     	result.putAll( this );
         return result;
     }
+	
+	public VarValues copy()
+		{ return new VarValues( this ); }
 
 	public static VarValues createContext( VarValues bindings, MultiMap<String, String> queryParams ) {
 	    VarValues cc = new VarValues( queryParams.keySet() );
@@ -277,5 +279,10 @@ public class VarValues implements Lookup
 		for (String key: bindings.keySet())
 			result.put( key, new Value( bindings.get( key ) ) );
 		return result;
+		}
+
+	public String expandVariables( String val ) 
+		{
+		return expandVariables( this, val );
 		}
 	}
