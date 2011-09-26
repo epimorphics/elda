@@ -421,9 +421,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	Param.Info [] infos = param.fullParts();
     //
     	StringBuilder chainName = new StringBuilder();
-    //
-		String rawValue = val;
-    	if (optional) return generateOptionalTriple(set(val), infos, rawValue);
+    	if (optional) return generateOptionalTriple(infos, val);
     //
     	Variable var = SELECT_VAR;
         int i = 0;
@@ -439,12 +437,11 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         	var = v;
             i++;
         }
-        addTriplePattern(var, infos[i], languages, rawValue );
+        addTriplePattern(var, infos[i], languages, val );
         return infos[i].shortName;
     }
 
-	private String generateOptionalTriple(Set<String> rawValues, Param.Info[] path, String finalVar) {
-		if (rawValues.size() > 1) EldaException.Broken( "too many (>1) values for optional." );
+	private String generateOptionalTriple( Param.Info[] path, String finalVar) {
 		if (finalVar.charAt(0) != '?') EldaException.Broken( "rawValue must be a variable: " + finalVar );
 	//
 		String prop = null;
