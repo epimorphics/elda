@@ -1,5 +1,14 @@
 1.1.15-SNAPSHOT
 
+* The classes CallContext, RenderContext, and VarValues
+  have been removed and replaced by the single class Bindings
+  (which has the union of their features).
+
+* The interface RenderContext.AsURL is now named URLforResource.
+
+* some ShortnameService method names have changed. Several have
+  been removed, since they were used nowhere in the Elda codebase.
+
 1.1.14
 
 * Bug fix: Elda shortened the objects of rdf:type in the JSON

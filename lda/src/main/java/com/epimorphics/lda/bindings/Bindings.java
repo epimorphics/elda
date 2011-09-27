@@ -21,7 +21,8 @@ import com.epimorphics.lda.exceptions.EldaException;
     A Bindings maps variables (identified by their string names) to
     their Value (a lexical form with type & language annotation).
     It also has a set of parameter names, which correspond to the
-    query parameter names.
+    query parameter names, and can map partial resource names to
+    their URLs.
 */
 public class Bindings
 	{
