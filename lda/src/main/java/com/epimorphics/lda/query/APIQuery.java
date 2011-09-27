@@ -112,7 +112,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected final int maxPageSize;
     
     protected int pageNumber = 0;
-    protected Map<String, String> varProps= new HashMap<String, String>();   // Property names for bindableVars
+    protected Map<String, Info> varProps = new HashMap<String, Info>();   // Property names for bindableVars
     protected Resource subjectResource = null;
     
     protected String itemTemplate;
@@ -175,7 +175,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
             clone.filterExpressions = new ArrayList<RenderExpression>( filterExpressions );
             clone.orderExpressions = new StringBuffer( orderExpressions );
             clone.whereExpressions = new StringBuffer( whereExpressions );
-            clone.varProps = new HashMap<String, String>( varProps );
+            clone.varProps = new HashMap<String, Info>( varProps );
             clone.expansionPoints = new HashSet<Property>( expansionPoints );
             clone.deferredFilters = new ArrayList<Deferred>( deferredFilters );
             clone.metadataOptions = new HashSet<String>( metadataOptions );
@@ -325,28 +325,60 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     */
     public void addTriplePatterns( List<RDFQ.Triple> triples ) {
     	basicGraphTriples.addAll( triples );
+    }   
+
+	private void addTriplePattern( Variable var, Param.Info prop, Variable val ) {
+   		// Record property which points to this variable for us in decoding binding values
+   		varProps.put( val.name().substring(1), prop );   
+        basicGraphTriples.add( RDFQ.triple( var, prop.asURI, val ) );
+    }
+
+    protected void addPropertyHasValue( Param param ) {
+    	addPropertyHasValue( param, newVar() );
     }
     
-    /**
-     * Add a filter triple pattern.
-     * @param var The subject a string ready to insert (e.g. can be a var name)
-     * @param prop  The property as a shortname or URI
-     * @param val  The value as a string, shortname. The expansion should take into
-     * account the type of the property and created typed literals if necessary.
-     */
-    private void addTriplePattern( Variable var, Info inf, String languages, String val ) {
-    	String prop = inf.shortName;
-    	Resource np = sns.asResource(prop);
-    	// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
-    	if (val.startsWith("?")) varProps.put( val.substring(1), prop );   
-    	if (languages == null) {
-			Any norm = sns.valueAsRDFQ( prop, val, null );
-			addTriplePattern( var, np, norm ); 
-    	} else {
-    		addLanguagedTriplePattern( var, inf, languages, val );
-    	}
-    }    
+    protected void addPropertyHasValue( Param param, Variable O ) {
+    	addPropertyHasValue( param, O.name() );    	
+    }
 
+    // These next two are very similar. We should be able to share most of the
+    // code. 
+
+    protected void addPropertyHasValue( Param param, String val ) {
+    	String languages = languagesFor.get( param.toString() );
+		if (languages == null) languages = defaultLanguage;
+		Param.Info [] infos = param.fullParts();
+		
+	//
+		StringBuilder chainName = new StringBuilder();
+	//
+		Variable var = SELECT_VAR;
+	    int i = 0;
+	    while (i < infos.length-1) {
+	    	Param.Info inf = infos[i];
+	    	chainName.append( "." ).append( inf.shortName );
+	    	Variable v = varsForPropertyChains.get( chainName.toString() );
+	    	if (v == null) {
+	    		v = RDFQ.var( PREFIX_VAR + chainName.toString().replaceAll( "\\.", "_" ) + "_" + varcount++ );
+	    		varsForPropertyChains.put( chainName.toString(), v );
+	    		addTriplePattern(var, inf, v );
+	    	}
+	    	var = v;
+	        i++;
+	    }
+	    Info inf = infos[i];
+	    String prop = inf.shortName;
+	    if (val.startsWith("?")) varProps.put( val.substring(1), inf );   
+	    if (languages == null) {
+			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
+			Any norm = sns.valueAsRDFQ( prop, val, null );
+			addTriplePattern( var, inf.asResource, norm ); 
+	    } else {
+			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
+			addLanguagedTriplePattern( var, inf, languages, val );
+	    }
+    }
+	
 	private void addLanguagedTriplePattern(Variable var, Info inf, String languages, String val) {
 		String prop = inf.shortName;
 		// System.err.println( ">> addLTP: " + inf + " " + languages + " " + val );
@@ -368,7 +400,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 			filterExpressions.add( filter );
 		}
 	}
-
+	
 	public Any asStringLiteral( String val ) {
 		return RDFQ.literal( val );
 	}
@@ -385,80 +417,31 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	private Any squelchNone( String lang ) {
 		return RDFQ.literal( lang.equals( "none" ) ? "" : lang );
 	}
-
-	private void addTriplePattern( Variable var, Param.Info prop, Variable val ) {
-   		// Record property which points to this variable for us in decoding binding values
-   		varProps.put( val.name().substring(1), prop.shortName );   
-        basicGraphTriples.add( RDFQ.triple( var, prop.asURI, val ) );
-    }
-
-    protected String addPropertyHasntValue( Param param ) {
+    
+    protected void addPropertyHasntValue( Param param ) {
     	Variable var = newVar();
     	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
-		return addPropertyHasValue( param, var.name(), true );
-    }
-
-    protected String addPropertyHasValue( Param param ) {
-    	return addPropertyHasValue( param, newVar().name() );
-    }
-    
-    protected String addPropertyHasValue( Param param, Variable O ) {
-    	return addPropertyHasValue( param, O.name() );    	
-    }
-
-    protected String addPropertyHasValue( Param param, String val ) {
-    	return addPropertyHasValue( param, val, false );
-    }
+		String languages = languagesFor.get( param.toString() );
+		if (languages == null) languages = defaultLanguage;
+		Param.Info [] infos = param.fullParts();
+	//
+		Variable s = SELECT_VAR;
+		int remaining = infos.length;
+	//
+		for (Param.Info inf: infos) {
+			remaining -= 1;
+			Variable o = remaining == 0 ? var : newVar();
+			onePropertyStep( s, inf, o );
+			s = o;
+		}
+    }  
         
     protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
-    
-    protected String addPropertyHasValue( Param param, String val, boolean optional ) {
-    	String languages = languagesFor.get( param.toString() );
-    	if (languages == null) languages = defaultLanguage;
-    	Param.Info [] infos = param.fullParts();
-    //
-    	StringBuilder chainName = new StringBuilder();
-    	if (optional) return generateOptionalTriple(infos, val);
-    //
-    	Variable var = SELECT_VAR;
-        int i = 0;
-        while (i < infos.length-1) {
-        	Param.Info inf = infos[i];
-        	chainName.append( "." ).append( inf.shortName );
-        	Variable v = varsForPropertyChains.get( chainName.toString() );
-        	if (v == null) {
-        		v = RDFQ.var( PREFIX_VAR + chainName.toString().replaceAll( "\\.", "_" ) + "_" + varcount++ );
-        		varsForPropertyChains.put( chainName.toString(), v );
-        		addTriplePattern(var, inf, v );
-        	}
-        	var = v;
-            i++;
-        }
-        addTriplePattern(var, infos[i], languages, val );
-        return infos[i].shortName;
-    }
 
-	private String generateOptionalTriple( Param.Info[] path, String finalVar) {
-		if (finalVar.charAt(0) != '?') EldaException.Broken( "rawValue must be a variable: " + finalVar );
-	//
-		String prop = null;
-		Variable s = SELECT_VAR;
-		int remaining = path.length;
-	//
-		for (Param.Info inf: path) {
-			remaining -= 1;
-			String o = remaining == 0 ? finalVar : newVar().name();
-			onePropertyStep( s, prop = inf.shortName, o );
-			s = RDFQ.var( o );
-		}
-		return prop;
-	}
-
-	private void onePropertyStep( Variable subject, String prop, String var ) {
-		Resource np = sns.asResource( prop );
-		varProps.put( var.substring(1), prop );   
-		Any val = sns.valueAsRDFQ( prop, var, defaultLanguage );
-		basicGraphTriples.add( RDFQ.triple( subject, RDFQ.uri( np.getURI() ), val, true ) ); 
+	private void onePropertyStep( Variable subject, Info prop, Variable var ) {
+		Resource np = prop.asResource;
+		varProps.put( var.name().substring(1), prop );   
+		basicGraphTriples.add( RDFQ.triple( subject, RDFQ.uri( np.getURI() ), var, true ) ); 
 	}
 
     /**
@@ -493,6 +476,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		        if (descending) spec = spec.substring(1);
 		        boolean varOrder = spec.startsWith("?");
 		        String var = varOrder ? spec : newVar().name(); // TODO
+		        Variable v = RDFQ.var( var );
 		        if (descending) {
 		        	orderExpressions.append(" DESC(" + var + ") ");
 		        } else {
@@ -500,7 +484,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		        }
 		        if (!varOrder) {
 		        	Param p = Param.make(sns, spec);
-					addPropertyHasValue( p, var, false );
+					addPropertyHasValue( p, v );
 		        }
     		}
     }
@@ -644,7 +628,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     		if (v == null) {
     			result.append( m.group() );
     		} else {
-	    		String prop = varProps.get( name );
+	    		Info prop = varProps.get( name );
 	            String val = cc.getValueString( name );
 //	            if (name.equals( "value" )) 
 //	            	{
@@ -655,7 +639,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	        	String normalizedValue = 
 	        		(prop == null) 
 	        		    ? valueAsSparql( v )
-	        		    : sns.valueAsRDFQ(prop, val, defaultLanguage).asSparqlTerm(pl); 
+	        		    : sns.valueAsRDFQ(prop.shortName, val, defaultLanguage).asSparqlTerm(pl); 
 	    		result.append( normalizedValue );
     		}
     		start = m.end();
