@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.ParseWrapper;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.util.MediaType;
@@ -51,12 +52,12 @@ public class JSONRenderer implements Renderer {
         this.wantContext = api.wantContext();
     }
     
-    @Override public MediaType getMediaType( RendererContext rc ) {
+    @Override public MediaType getMediaType( VarValues rc ) {
     	String callback = rc.getValueString( "callback" );
         return callback == null ? mt : MediaType.TEXT_JAVASCRIPT;
     }
 
-    @Override public String render( RendererContext rc, APIResultSet results) {
+    @Override public String render( VarValues rc, APIResultSet results) {
         StringWriter writer = new StringWriter();
         List<Resource> roots = new ArrayList<Resource>(1);
         roots.add( results.getRoot() );

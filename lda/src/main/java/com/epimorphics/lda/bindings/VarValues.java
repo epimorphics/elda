@@ -8,6 +8,7 @@
 
 package com.epimorphics.lda.bindings;
 
+import java.net.URL;
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -39,6 +40,13 @@ public class VarValues implements Lookup
     	this.parameterNames.addAll( parameterNames );
     	}
 	
+    public VarValues( VarValues initial, URLforResource ufr ) 
+    	{
+    	this.ufr = ufr;
+    	this.putAll( initial );
+    	this.parameterNames.addAll( initial.parameterNames );
+    	}
+	
     public VarValues( Set<String> parameterNames, VarValues initial ) 
     	{ this( initial, parameterNames, initial.ufr ); }
 
@@ -57,15 +65,27 @@ public class VarValues implements Lookup
 	public VarValues( VarValues bindings, Set<String> parameterNames ) 
 		{ this( bindings, parameterNames, bindings.ufr ); }
 
+	/**
+	    Answer a copy of this VarValues with the given defaults.
+	*/
 	public VarValues copyWithDefaults( VarValues defaults ) {
     	VarValues result = new VarValues( defaults, this.parameterNames() );
     	result.putAll( this );
         return result;
     }
 	
+	/**
+	    Answer a copy of this ValValues. Changes to the copy do not
+	    affect this VarValues.
+	*/
 	public VarValues copy()
 		{ return new VarValues( this ); }
 
+	/**
+	    Answer a new VarValues based on <code>bindings</code> with additional
+	    bindings from the query parameters. Query parameters that do not
+	    correspond to existing bindings are treated as plain literals.
+	*/
 	public static VarValues createContext( VarValues bindings, MultiMap<String, String> queryParams ) {
 	    VarValues cc = new VarValues( bindings, queryParams.keySet() );
 	    for (String name: queryParams.keySet()) {
@@ -155,6 +175,14 @@ public class VarValues implements Lookup
 	*/
 	public VarValues put( String name, Value v ) 
 		{ vars.put( name, v ); return this; }
+	
+	/**
+	    Answer the URL for the resource named with the given partial
+	    path. If there is no such URL, an exception is thrown.
+	*/
+	public URL pathAsURL( String path ) {
+		return ufr.asResourceURL( path );
+	}
 	
 	/**
 	    Answer a String which displays the content of this

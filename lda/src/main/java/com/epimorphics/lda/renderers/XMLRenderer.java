@@ -15,6 +15,7 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
@@ -36,15 +37,15 @@ public class XMLRenderer implements Renderer {
 		this.transformFilePath = transformFilePath;
 	}
 	
-	@Override public MediaType getMediaType( RendererContext irrelevant ) {
+	@Override public MediaType getMediaType( VarValues irrelevant ) {
 		return mt;
 	}
 
-	@Override public synchronized String render( RendererContext rc, APIResultSet results ) {
+	@Override public synchronized String render( VarValues rc, APIResultSet results ) {
 		return render( rc, results.getRoot() );
 	}
 
-	public String render( RendererContext rc, Resource root ) {
+	public String render( VarValues rc, Resource root ) {
 		PrefixMapping pm = root.getModel();
 		boolean stripHas = rc.getAsString( "_strip_has", "no" ).equals( "yes" );
 		boolean suppressIPTO = rc.getAsString( "_suppress_ipto", "no" ).equals( "yes" );

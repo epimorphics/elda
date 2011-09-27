@@ -17,6 +17,7 @@
 
 package com.epimorphics.lda.renderers;
 
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.util.MediaType;
 
@@ -32,11 +33,11 @@ public interface Renderer {
      	@return the mimetype which this renderer returns
      		in the given renderer context.
     */
-    public MediaType getMediaType( RendererContext rc );
+    public MediaType getMediaType( VarValues rc );
     
     /**
      	Render a result set
     */
-    public String render( RendererContext rc, APIResultSet results );
+    public String render( VarValues rc, APIResultSet results );
 }
 

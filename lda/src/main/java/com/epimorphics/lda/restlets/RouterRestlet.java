@@ -51,7 +51,6 @@ import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
@@ -179,7 +178,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             if (results == null)
             	throw new RuntimeException( "ResultSet is null -- this should never happen." );
             APIEndpoint ep = match.getEndpoint();
-			RendererContext rc = new RendererContext( resultsAndFormat.c.copy(), as );
+			VarValues rc = new VarValues( resultsAndFormat.c.copy(), as );
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
@@ -256,7 +255,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 		};
 	}
 	
-    private Response doRendering( RendererContext rc, String rName, APIResultSet results, Renderer r ) {
+    private Response doRendering( VarValues rc, String rName, APIResultSet results, Renderer r ) {
 		if (r == null) {
             String message = rName == null
             	? "no suitable media type was provided for rendering."

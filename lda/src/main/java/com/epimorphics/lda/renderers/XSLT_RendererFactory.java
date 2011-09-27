@@ -6,6 +6,7 @@
 */
 package com.epimorphics.lda.renderers;
 
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -32,11 +33,11 @@ public class XSLT_RendererFactory implements RendererFactory {
 	@Override public Renderer buildWith( final APIEndpoint ep, final ShortnameService sns ) {
 		return new Renderer() {
 
-			@Override public MediaType getMediaType( RendererContext irrelevant ) {
+			@Override public MediaType getMediaType( VarValues irrelevant ) {
 				return mt;
 			}
 
-			@Override public String render( RendererContext rc, APIResultSet results ) {
+			@Override public String render( VarValues rc, APIResultSet results ) {
 				final String meta = RDFUtils.getStringValue( root, EXTRAS.metadataOptions, null );
 				if (meta != null) results.includeMetadata( meta.split( "," ) );
 				final String sheet = root.getProperty( API.stylesheet ).getString();

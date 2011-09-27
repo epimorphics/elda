@@ -18,7 +18,6 @@ import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -94,7 +93,7 @@ public class Hub extends HttpServlet
                 	{ // TODO fix the switch from media types to named renderers.
                 	Renderer r = ep.getRendererByType( acceptedType );
                 	System.err.println( "r = " + r + " for " + acceptedType );
-                	RendererContext rp = new RendererContext( cc.copy() );
+                	VarValues rp = new VarValues( cc.copy() );
                 	String result = r.render( rp, results );
 //                	String cl = results.getContentLocation();
                 	res.setContentType( acceptedType.toString() );

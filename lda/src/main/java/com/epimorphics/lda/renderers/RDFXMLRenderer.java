@@ -16,16 +16,17 @@ package com.epimorphics.lda.renderers;
 
 import java.io.ByteArrayOutputStream;
 
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.util.MediaType;
 
 public class RDFXMLRenderer implements Renderer {
 	
-    @Override public MediaType getMediaType( RendererContext irrelevant ) {
+    @Override public MediaType getMediaType( VarValues irrelevant ) {
        return MediaType.APPLICATION_RDF_XML;
     }
 
-    @Override public String render( RendererContext ignored, APIResultSet results ) {
+    @Override public String render( VarValues ignored, APIResultSet results ) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         results.getModel().write( bos, "RDF/XML-ABBREV" );
         return bos.toString();

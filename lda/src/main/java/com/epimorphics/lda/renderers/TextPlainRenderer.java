@@ -14,16 +14,17 @@
 
 package com.epimorphics.lda.renderers;
 
+import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.util.MediaType;
 
 public final class TextPlainRenderer implements Renderer {
 
-    @Override public MediaType getMediaType( RendererContext irrelevant ) {
+    @Override public MediaType getMediaType( VarValues irrelevant ) {
         return MediaType.TEXT_PLAIN;
     }
 
-    @Override public String render( RendererContext ignored, APIResultSet results ) {
+    @Override public String render( VarValues ignored, APIResultSet results ) {
         return results.toString();
     }
 }
