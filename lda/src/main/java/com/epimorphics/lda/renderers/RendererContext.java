@@ -22,7 +22,7 @@ import com.epimorphics.lda.bindings.Lookup;
 public class RendererContext implements Lookup {
 
 	protected final VarValues v;
-	protected final URLforResource as;
+	protected final URLforResource ufr;
 	
 	/**
 	    Initialise this RendererContext with a bunch of variable bindings
@@ -31,12 +31,12 @@ public class RendererContext implements Lookup {
 	*/
 	public RendererContext( VarValues v, URLforResource as ) {
 		this.v = v;
-		this.as = as;
+		this.ufr = as;
 	}
 	
 	public RendererContext( VarValues v ) {
 		this.v = v;
-		this.as = URLforResource.alwaysFails; 
+		this.ufr = URLforResource.alwaysFails; 
 	}
 	
 	public RendererContext() {
@@ -56,6 +56,6 @@ public class RendererContext implements Lookup {
 	}
 	
 	public URL pathAsURL( String p ) {
-		return as.asResourceURL( p );
+		return ufr.asResourceURL( p );
 	}
 }

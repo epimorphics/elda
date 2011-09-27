@@ -29,32 +29,36 @@ public class VarValues implements Lookup
 	protected final Map<String, Value> vars = new HashMap<String, Value>();
     
     protected final Set<String> parameterNames = new HashSet<String>();
+    
+	protected final URLforResource ufr;
 	
-    public VarValues( Set<String> parameterNames, VarValues initial ) 
+    public VarValues( VarValues initial, Set<String> parameterNames, URLforResource ufr ) 
     	{
+    	this.ufr = ufr;
     	this.putAll( initial );
     	this.parameterNames.addAll( parameterNames );
     	}
+	
+    public VarValues( Set<String> parameterNames, VarValues initial ) 
+    	{ this( initial, parameterNames, initial.ufr ); }
 
-	/**
-	    Initialise this VarValues by copying the entries from
-	    <code>other</code>.
-	*/
 	public VarValues( VarValues initial ) 
-		{ this.putAll( initial ); }
+		{ this( initial, initial.parameterNames, initial.ufr ); }
 	
 	public VarValues( Set<String> parameterNames ) 
-		{ this.parameterNames.addAll( parameterNames ); }
+		{ 
+		this.ufr = URLforResource.alwaysFails;
+		this.parameterNames.addAll( parameterNames ); 
+		}
 	
-	/**
-	    Initialise this ValueValues to have no bindings.
-	*/
 	public VarValues()
-		{}    
+		{ this.ufr = URLforResource.alwaysFails; }    
 	
+	public VarValues( VarValues bindings, Set<String> parameterNames ) 
+		{ this( bindings, parameterNames, bindings.ufr ); }
+
 	public VarValues copyWithDefaults( VarValues defaults ) {
-    	VarValues result = new VarValues( this.parameterNames() );
-    	result.putAll( defaults ); 
+    	VarValues result = new VarValues( defaults, this.parameterNames() );
     	result.putAll( this );
         return result;
     }
@@ -63,8 +67,7 @@ public class VarValues implements Lookup
 		{ return new VarValues( this ); }
 
 	public static VarValues createContext( VarValues bindings, MultiMap<String, String> queryParams ) {
-	    VarValues cc = new VarValues( queryParams.keySet() );
-	    cc.putAll( bindings ); 
+	    VarValues cc = new VarValues( bindings, queryParams.keySet() );
 	    for (String name: queryParams.keySet()) {
 	    	Set<String> values = queryParams.getAll( name );
 	    	if (values.size() > 1) EldaException.BadRequest("Multiple values for parameter '" + name + "': feature not implemented.");
