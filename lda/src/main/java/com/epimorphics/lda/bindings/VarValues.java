@@ -23,7 +23,7 @@ import com.epimorphics.lda.exceptions.EldaException;
     It also has a set of parameter names, which correspond to the
     query parameter names.
 */
-public class VarValues implements Lookup
+public class VarValues
 	{
     static Logger log = LoggerFactory.getLogger( VarValues.class );
     
@@ -146,7 +146,7 @@ public class VarValues implements Lookup
 	    null if it is not bound. Part of the implementation
 	    of <code>Lookup</code>.
 	*/
-	@Override public String getValueString( String name ) 
+	public String getValueString( String name ) 
 		{ 
 		Value v = get( name );
 		return v == null ? null : v.valueString(); 
@@ -275,7 +275,7 @@ public class VarValues implements Lookup
 	    occurrence of {wossname} by the value of wossname as
 	    given by the Lookup <code>values</code>.
 	*/
-	public static String expandVariables( Lookup values, String s ) 
+	public static String expandVariables( VarValues values, String s ) 
 		{
 		int start = 0;
 		StringBuilder sb = new StringBuilder();
