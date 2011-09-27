@@ -112,7 +112,9 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected final int maxPageSize;
     
     protected int pageNumber = 0;
-    protected Map<String, Info> varProps = new HashMap<String, Info>();   // Property names for bindableVars
+        
+    protected Map<Variable, Info> varInfo = new HashMap<Variable, Info>();
+    
     protected Resource subjectResource = null;
     
     protected String itemTemplate;
@@ -175,7 +177,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
             clone.filterExpressions = new ArrayList<RenderExpression>( filterExpressions );
             clone.orderExpressions = new StringBuffer( orderExpressions );
             clone.whereExpressions = new StringBuffer( whereExpressions );
-            clone.varProps = new HashMap<String, Info>( varProps );
+            clone.varInfo = new HashMap<Variable, Info>( varInfo );
             clone.expansionPoints = new HashSet<Property>( expansionPoints );
             clone.deferredFilters = new ArrayList<Deferred>( deferredFilters );
             clone.metadataOptions = new HashSet<String>( metadataOptions );
@@ -329,7 +331,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 
 	private void addTriplePattern( Variable var, Param.Info prop, Variable val ) {
    		// Record property which points to this variable for us in decoding binding values
-   		varProps.put( val.name().substring(1), prop );   
+   		varInfo.put( val, prop );
         basicGraphTriples.add( RDFQ.triple( var, prop.asURI, val ) );
     }
 
@@ -368,7 +370,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    }
 	    Info inf = infos[i];
 	    String prop = inf.shortName;
-	    if (val.startsWith("?")) varProps.put( val.substring(1), inf );   
+	    if (val.startsWith("?")) varInfo.put( RDFQ.var(val), inf );
 	    if (languages == null) {
 			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
 			Any norm = sns.valueAsRDFQ( prop, val, null );
@@ -440,7 +442,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 
 	private void onePropertyStep( Variable subject, Info prop, Variable var ) {
 		Resource np = prop.asResource;
-		varProps.put( var.name().substring(1), prop );   
+		varInfo.put( var, prop );
 		basicGraphTriples.add( RDFQ.triple( subject, RDFQ.uri( np.getURI() ), var, true ) ); 
 	}
 
@@ -628,7 +630,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     		if (v == null) {
     			result.append( m.group() );
     		} else {
-	    		Info prop = varProps.get( name );
+	    		Info prop = varInfo.get( RDFQ.var( "?" + name ) );
 	            String val = cc.getValueString( name );
 //	            if (name.equals( "value" )) 
 //	            	{
