@@ -18,14 +18,14 @@ import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.exceptions.EldaException;
 
 /**
-    A VarValues maps variables (identified by their string names) to
+    A Bindings maps variables (identified by their string names) to
     their Value (a lexical form with type & language annotation).
     It also has a set of parameter names, which correspond to the
     query parameter names.
 */
-public class VarValues
+public class Bindings
 	{
-    static Logger log = LoggerFactory.getLogger( VarValues.class );
+    static Logger log = LoggerFactory.getLogger( Bindings.class );
     
 	protected final Map<String, Value> vars = new HashMap<String, Value>();
     
@@ -33,61 +33,61 @@ public class VarValues
     
 	protected final URLforResource ufr;
 	
-    public VarValues( VarValues initial, Set<String> parameterNames, URLforResource ufr ) 
+    public Bindings( Bindings initial, Set<String> parameterNames, URLforResource ufr ) 
     	{
     	this.ufr = ufr;
     	this.putAll( initial );
     	this.parameterNames.addAll( parameterNames );
     	}
 	
-    public VarValues( VarValues initial, URLforResource ufr ) 
+    public Bindings( Bindings initial, URLforResource ufr ) 
     	{
     	this.ufr = ufr;
     	this.putAll( initial );
     	this.parameterNames.addAll( initial.parameterNames );
     	}
 	
-    public VarValues( Set<String> parameterNames, VarValues initial ) 
+    public Bindings( Set<String> parameterNames, Bindings initial ) 
     	{ this( initial, parameterNames, initial.ufr ); }
 
-	public VarValues( VarValues initial ) 
+	public Bindings( Bindings initial ) 
 		{ this( initial, initial.parameterNames, initial.ufr ); }
 	
-	public VarValues( Set<String> parameterNames ) 
+	public Bindings( Set<String> parameterNames ) 
 		{ 
 		this.ufr = URLforResource.alwaysFails;
 		this.parameterNames.addAll( parameterNames ); 
 		}
 	
-	public VarValues()
+	public Bindings()
 		{ this.ufr = URLforResource.alwaysFails; }    
 	
-	public VarValues( VarValues bindings, Set<String> parameterNames ) 
+	public Bindings( Bindings bindings, Set<String> parameterNames ) 
 		{ this( bindings, parameterNames, bindings.ufr ); }
 
 	/**
-	    Answer a copy of this VarValues with the given defaults.
+	    Answer a copy of this Bindings with the given defaults.
 	*/
-	public VarValues copyWithDefaults( VarValues defaults ) {
-    	VarValues result = new VarValues( defaults, this.parameterNames() );
+	public Bindings copyWithDefaults( Bindings defaults ) {
+    	Bindings result = new Bindings( defaults, this.parameterNames() );
     	result.putAll( this );
         return result;
     }
 	
 	/**
 	    Answer a copy of this ValValues. Changes to the copy do not
-	    affect this VarValues.
+	    affect this Bindings.
 	*/
-	public VarValues copy()
-		{ return new VarValues( this ); }
+	public Bindings copy()
+		{ return new Bindings( this ); }
 
 	/**
-	    Answer a new VarValues based on <code>bindings</code> with additional
+	    Answer a new Bindings based on <code>bindings</code> with additional
 	    bindings from the query parameters. Query parameters that do not
 	    correspond to existing bindings are treated as plain literals.
 	*/
-	public static VarValues createContext( VarValues bindings, MultiMap<String, String> queryParams ) {
-	    VarValues cc = new VarValues( bindings, queryParams.keySet() );
+	public static Bindings createContext( Bindings bindings, MultiMap<String, String> queryParams ) {
+	    Bindings cc = new Bindings( bindings, queryParams.keySet() );
 	    for (String name: queryParams.keySet()) {
 	    	Set<String> values = queryParams.getAll( name );
 	    	if (values.size() > 1) EldaException.BadRequest("Multiple values for parameter '" + name + "': feature not implemented.");
@@ -101,9 +101,9 @@ public class VarValues
 	/**
 	    Add all the entries from <code>other</code> to this 
 	    ValValues, overwriting any existing bindings with 
-	    the same names. Answer this VarValues.
+	    the same names. Answer this Bindings.
 	*/
-	public VarValues putAll( VarValues other ) 
+	public Bindings putAll( Bindings other ) 
 		{
 		vars.putAll( other.vars );
 		return this;
@@ -125,14 +125,14 @@ public class VarValues
 		
 	/**
 	    Answer true iff there is a binding for the variable
-	    called <code>name</code> in this VarValues.
+	    called <code>name</code> in this Bindings.
 	*/
 	public boolean hasVariable( String name ) 
 		{ return vars.containsKey( name ); }
 	
 	/**
 	    Answer the Value of the variable <code>name</code> in
-	    this VarValues, or null if it is not bound.
+	    this Bindings, or null if it is not bound.
 	*/
 	public Value get( String name ) 
 		{ 
@@ -142,7 +142,7 @@ public class VarValues
 	
 	/**
 	    Answer the lexical form of the value of the
-	    variable <code>name</code> in this VarValues, or
+	    variable <code>name</code> in this Bindings, or
 	    null if it is not bound. Part of the implementation
 	    of <code>Lookup</code>.
 	*/
@@ -163,17 +163,17 @@ public class VarValues
 	    Bind <code>name</code> to a Value which is a plain string
 	    with the given <code>valueString</code> as its lexical form.
 	    Any existing binding for <code>name</code> is discarded.
-	    Answer this VarValues.
+	    Answer this Bindings.
 	*/
-	public VarValues put( String name, String valueString )
+	public Bindings put( String name, String valueString )
 		{ return put( name, new Value( valueString ) ); }
 		
 	/**
 	    Bind <code>name</code> to the value <code>v</code>.
 	    Discard any existing binding for <code>name</code>.
-	    Answer this VarValues.
+	    Answer this Bindings.
 	*/
-	public VarValues put( String name, Value v ) 
+	public Bindings put( String name, Value v ) 
 		{ vars.put( name, v ); return this; }
 	
 	/**
@@ -186,23 +186,23 @@ public class VarValues
 	
 	/**
 	    Answer a String which displays the content of this
-	    VarValues.
+	    Bindings.
 	*/
 	@Override public String toString()
 		{ return "<variables " + vars.toString() + ">"; }
 	
 	/**
-	    Answer true if <code>other</code> is an instance of VarValues,
+	    Answer true if <code>other</code> is an instance of Bindings,
 	    their maps have the same keys, and the post-evaluation value of
 	    the variables is the same.
 	*/
 	@Override public boolean equals( Object other )
-		{ return other instanceof VarValues && same( (VarValues) other ); }
+		{ return other instanceof Bindings && same( (Bindings) other ); }
 
 	/**
 	    The long way round, because it will force evaluation of {...} variables.
 	*/
-	private boolean same( VarValues other ) 
+	private boolean same( Bindings other ) 
 		{
 		Set<String> keys = vars.keySet();
 		if (!keys.equals( other.vars.keySet() )) 	return false;
@@ -212,7 +212,7 @@ public class VarValues
 		}
 	
 	/**
-	    Answer a suitable hashcode for this VarValues.
+	    Answer a suitable hashcode for this Bindings.
 	*/
 	@Override public int hashCode()
 		{ return vars.hashCode(); }
@@ -275,7 +275,7 @@ public class VarValues
 	    occurrence of {wossname} by the value of wossname as
 	    given by the Lookup <code>values</code>.
 	*/
-	public static String expandVariables( VarValues values, String s ) 
+	public static String expandVariables( Bindings values, String s ) 
 		{
 		int start = 0;
 		StringBuilder sb = new StringBuilder();
@@ -301,12 +301,12 @@ public class VarValues
 		}
 
 	/**
-	    Answer a new VarValues constructed from the given map
+	    Answer a new Bindings constructed from the given map
 	    by converting the values into a string-valued Value.
 	*/
-	public static VarValues uplift( Map<String, String> bindings ) 
+	public static Bindings uplift( Map<String, String> bindings ) 
 		{
-		VarValues result = new VarValues();
+		Bindings result = new Bindings();
 		for (String key: bindings.keySet())
 			result.put( key, new Value( bindings.get( key ) ) );
 		return result;

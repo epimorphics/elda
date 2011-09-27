@@ -24,7 +24,7 @@ import java.util.*;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.lda.bindings.Value;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.specs.APISpec;
@@ -129,12 +129,12 @@ public class APITester {
         MultiMap<String, String> map = MakeData.parseQueryString( queryString );
         // TODO: the template should be a proper URI.
 		URI ru = Util.newURI(uriTemplate);
-		VarValues call = VarValues.createContext( fix( match.bindings ), map );
+		Bindings call = Bindings.createContext( fix( match.bindings ), map );
         return match.endpoint.call(ru, call).a;
     }
 
-	private VarValues fix(Map<String, String> bindings) {
-		VarValues result = new VarValues();
+	private Bindings fix(Map<String, String> bindings) {
+		Bindings result = new Bindings();
 		for (String key: bindings.keySet())
 			result.put( key, new Value( bindings.get(key) ) );
 		return result;

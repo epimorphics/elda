@@ -16,7 +16,7 @@ import org.hamcrest.core.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Value;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.Matchers;
@@ -140,9 +140,9 @@ public class TestAPISpecExtractsVariables
 	private String fixNull(String u) 
 		{ return u == null ? "" : u; }
 
-	private VarValues binding( String desc ) 
+	private Bindings binding( String desc ) 
 		{
-		VarValues result = new VarValues();
+		Bindings result = new Bindings();
 		if (desc.length() > 0)
 			for (String bind: desc.split(" *; *" ))
 				{

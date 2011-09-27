@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 import org.junit.Test;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.tests_support.Matchers;
@@ -24,7 +24,7 @@ public class TestCallContext
 	@Test public void ensureContextCreatedEmptyIsEmpty()
 		{
 		MultiMap<String, String> map = MakeData.parseQueryString("");
-		VarValues cc = VarValues.createContext( MakeData.variables( "" ), map );
+		Bindings cc = Bindings.createContext( MakeData.variables( "" ), map );
 		assertThat( cc.parameterNames(), Matchers.isEmpty() );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		}
@@ -32,7 +32,7 @@ public class TestCallContext
 	@Test public void ensureContextRecallsParameterNames()
 		{
 		MultiMap<String, String> map = MakeData.parseQueryString("spoo=fresh&space=cold");
-		VarValues cc = VarValues.createContext( MakeData.variables( "" ), map );
+		Bindings cc = Bindings.createContext( MakeData.variables( "" ), map );
 		assertThat( cc.parameterNames(), is( JenaTestBase.setOfStrings( "spoo space" ) ) );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		}
@@ -40,7 +40,7 @@ public class TestCallContext
 	@Test public void ensureContextRecallsBindingNames()
 		{
 		MultiMap<String, String> map = MakeData.parseQueryString("");
-		VarValues cc = VarValues.createContext( MakeData.variables( "a=b c=d" ), map );
+		Bindings cc = Bindings.createContext( MakeData.variables( "a=b c=d" ), map );
 		assertThat( cc.parameterNames(), Matchers.isEmpty() );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		assertThat( cc.getValueString( "a" ), is( "b" ) );
@@ -50,7 +50,7 @@ public class TestCallContext
 	@Test public void ensureContextGetsAppropriateValues()
 		{
 		MultiMap<String, String> map = MakeData.parseQueryString("p1=v1&p2=v2");
-		VarValues cc = VarValues.createContext( MakeData.variables( "x=y" ), map );
+		Bindings cc = Bindings.createContext( MakeData.variables( "x=y" ), map );
 		assertThat( cc.parameterNames(), is( JenaTestBase.setOfStrings( "p1 p2" ) ) );
 //		assertThat( cc.getUriInfo(), sameInstance(ui) );
 		assertThat( cc.getValueString( "x" ), is( "y" ) );
@@ -60,8 +60,8 @@ public class TestCallContext
 	@Test public void ensureCopyingConstructorPreservesValues()
 		{
 		MultiMap<String, String> map = MakeData.parseQueryString( "p1=v1&p2=v2" );
-		VarValues base = VarValues.createContext( MakeData.variables( "" ), map );
-		VarValues cc = base.copyWithDefaults( MakeData.variables( "fly=fishing" ) );
+		Bindings base = Bindings.createContext( MakeData.variables( "" ), map );
+		Bindings cc = base.copyWithDefaults( MakeData.variables( "fly=fishing" ) );
 //		assertThat( cc.getUriInfo(), is( base.getUriInfo() ) );
 		assertThat( cc.getValueString( "fly" ), is( "fishing" ) );
 //		assertThat( cc.getMediaSuffix(), is( mediaSuffix ) );

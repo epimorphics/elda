@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.MultiMap;
@@ -110,8 +110,8 @@ public class TestParameterNameAndValueExpansion
 	@Test public void deferredPropertyShouldAppearInQuery()
 		{
 		MultiMap<String, String> qp = MakeData.parseQueryString( "{aname}=value" );
-		VarValues bindings = MakeData.variables( "aname=bname" );
-		VarValues cc = VarValues.createContext( bindings, qp );
+		Bindings bindings = MakeData.variables( "aname=bname" );
+		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "bname=eh:/full-bname" );
 		APIQuery aq = new APIQuery( sns );

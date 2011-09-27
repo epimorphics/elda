@@ -8,7 +8,7 @@
 package com.epimorphics.lda.core;
 
 import com.epimorphics.jsonrdf.Context.Prop;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.URINode;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -50,7 +50,7 @@ public abstract class Param
 		@Override public String toString()
 			{ return prefix + "--" + p; }
 
-		@Override public Param expand(VarValues cc) 
+		@Override public Param expand(Bindings cc) 
 			{ return new PrefixedParam( sns, prefix, cc.expandVariables( p ) ); }
 
 		@Override public String prefix() 
@@ -65,7 +65,7 @@ public abstract class Param
 		protected PlainParam( ShortnameService sns, String p )
 			{ super( sns, p ); }
 
-		@Override public Param expand(VarValues cc) 
+		@Override public Param expand(Bindings cc) 
 			{ return new PlainParam( sns, cc.expandVariables( p ) ); }
 
 		@Override public String prefix()
@@ -123,7 +123,7 @@ public abstract class Param
 	
 	public boolean hasVariable() { return p.indexOf('{') >= 0; }
 	
-	public abstract Param expand( VarValues cc );
+	public abstract Param expand( Bindings cc );
 
 	public abstract String prefix();
 

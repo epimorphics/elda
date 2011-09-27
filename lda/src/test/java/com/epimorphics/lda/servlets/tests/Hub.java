@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.MultiMap;
@@ -78,12 +78,12 @@ public class Hub extends HttpServlet
         	{
         	MultiMap<String, String> map = MakeData.parseQueryString( "" );
         	URI ru = Util.newURI( "SPOO/FLARN" );
-            VarValues cc = VarValues.createContext( match.getBindings(), map );
+            Bindings cc = Bindings.createContext( match.getBindings(), map );
             APIEndpoint ep = match.getEndpoint();
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
             try 
             	{
-                Triad<APIResultSet, String, VarValues> resultsAndFormat = ep.call( ru, cc );
+                Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( ru, cc );
 				APIResultSet results = resultsAndFormat.a;
                 if (results == null) 
                 	{
@@ -93,7 +93,7 @@ public class Hub extends HttpServlet
                 	{ // TODO fix the switch from media types to named renderers.
                 	Renderer r = ep.getRendererByType( acceptedType );
                 	System.err.println( "r = " + r + " for " + acceptedType );
-                	VarValues rp = new VarValues( cc.copy() );
+                	Bindings rp = new Bindings( cc.copy() );
                 	String result = r.render( rp, results );
 //                	String cl = results.getContentLocation();
                 	res.setContentType( acceptedType.toString() );

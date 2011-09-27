@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.util.Couple;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
@@ -38,7 +38,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 */
 public class ContextQueryUpdater implements ViewSetter {
 	
-	private final VarValues context;
+	private final Bindings context;
 	private final ShortnameService sns;
 	private final NamedViews nt;
 	private final ExpansionPoints eps;
@@ -63,7 +63,7 @@ public class ContextQueryUpdater implements ViewSetter {
 	    @param eps possibly dead: expansion points
 	    @param args place to build the query arguments
 	*/
-	public ContextQueryUpdater( int endpointKind, VarValues context, NamedViews nv, ShortnameService sns, ExpansionPoints eps, QueryArguments args ) {
+	public ContextQueryUpdater( int endpointKind, Bindings context, NamedViews nv, ShortnameService sns, ExpansionPoints eps, QueryArguments args ) {
 		this.context = context;
 		this.sns = sns;
 		this.nt = nv;

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.MediaType;
@@ -28,11 +28,11 @@ import com.hp.hpl.jena.rdf.model.*;
 
 public class HTMLRenderer implements Renderer {
 	
-    @Override public MediaType getMediaType( VarValues irrelevant ) {
+    @Override public MediaType getMediaType( Bindings irrelevant ) {
         return MediaType.TEXT_HTML;
     }
 
-    @Override public String render( VarValues ignored, APIResultSet results ) {
+    @Override public String render( Bindings ignored, APIResultSet results ) {
     	boolean isItemRendering = results.listStatements( null, FIXUP.items, (RDFNode) null ).hasNext() == false;
         return isItemRendering ? renderItem(results) : renderList(results);
     }

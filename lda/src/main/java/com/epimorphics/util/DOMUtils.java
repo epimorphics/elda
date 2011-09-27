@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.shared.WrappedException;
 
@@ -45,9 +45,9 @@ public class DOMUtils
 		{ return getBuilder().newDocument(); }
 	
 	public static String renderNodeToString( Node d, PrefixMapping pm ) 
-		{ return renderNodeToString( d, new VarValues(), pm, null ); }
+		{ return renderNodeToString( d, new Bindings(), pm, null ); }
 	
-	public static String renderNodeToString( Node d, VarValues rc, PrefixMapping pm, String transformFilePath ) 
+	public static String renderNodeToString( Node d, Bindings rc, PrefixMapping pm, String transformFilePath ) 
 		{
 		Transformer t = setPropertiesAndParams(  rc, pm, transformFilePath );
 		StringWriter sw = new StringWriter();
@@ -59,7 +59,7 @@ public class DOMUtils
     
     static Logger log = LoggerFactory.getLogger(DOMUtils.class);
 
-	private static Transformer setPropertiesAndParams( VarValues rc, PrefixMapping pm, String transformFilePath ) 
+	private static Transformer setPropertiesAndParams( Bindings rc, PrefixMapping pm, String transformFilePath ) 
 		{
 		Transformer t = getTransformer( rc, transformFilePath );
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );
@@ -84,7 +84,7 @@ public class DOMUtils
 	
 	protected static HashMap<URL, Templates> cache = new HashMap<URL, Templates>();
 	
-	private static Transformer getTransformer( VarValues rc, String transformFilePath ) 
+	private static Transformer getTransformer( Bindings rc, String transformFilePath ) 
 		{
 		try
 			{
@@ -93,7 +93,7 @@ public class DOMUtils
 				return tf.newTransformer();
 			else 
 				{
-				URL u = rc.pathAsURL( VarValues.expandVariables( rc, transformFilePath ) );
+				URL u = rc.pathAsURL( Bindings.expandVariables( rc, transformFilePath ) );
 				Templates t = cache.get( u );
 				if (t == null) {
 					long origin = System.currentTimeMillis();

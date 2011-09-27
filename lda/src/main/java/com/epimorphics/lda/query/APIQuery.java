@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.bindings.Value;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.APIResultSet;
@@ -531,18 +531,18 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         whereExpressions.append(whereClause);
     }
 
-    public String assembleSelectQuery( VarValues cc, PrefixMapping prefixes ) {  	
+    public String assembleSelectQuery( Bindings cc, PrefixMapping prefixes ) {  	
     	PrefixLogger pl = new PrefixLogger( prefixes );   
     	return assembleRawSelectQuery( pl, cc );
     }
 
     public String assembleSelectQuery( PrefixMapping prefixes ) {     	
     	PrefixLogger pl = new PrefixLogger( prefixes );
-    	VarValues cc = VarValues.createContext( new VarValues(), new MultiMap<String, String>() );
+    	Bindings cc = Bindings.createContext( new Bindings(), new MultiMap<String, String>() );
     	return assembleRawSelectQuery( pl, cc );
     }
     
-    public String assembleRawSelectQuery( PrefixLogger pl, VarValues cc ) { 
+    public String assembleRawSelectQuery( PrefixLogger pl, Bindings cc ) { 
     	if (fixedSelect == null) {
 	        StringBuilder q = new StringBuilder();
 	        q.append("SELECT ");
@@ -630,7 +630,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    are mashed together from strings in the config file, ie, without going
 	    through RDFQ.	    
 	*/
-    protected String bindDefinedvariables( PrefixLogger pl, String query, VarValues cc ) {
+    protected String bindDefinedvariables( PrefixLogger pl, String query, Bindings cc ) {
 //    	System.err.println( ">> query is: " + query );
 //    	System.err.println( ">> VarValues is: " + cc );
     	StringBuilder result = new StringBuilder( query.length() );
@@ -681,7 +681,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	/**
      * Return the select query that would be run or a plain string for the resource
      */
-    public String getQueryString(APISpec spec, VarValues call) {
+    public String getQueryString(APISpec spec, Bindings call) {
         return isFixedSubject()
             ? "<" + subjectResource.getURI() + ">"
             : assembleSelectQuery( call, spec.getPrefixMap() )
@@ -691,7 +691,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     /**
         Run the defined query against the datasource
     */
-    public APIResultSet runQuery( APISpec spec, Cache cache, VarValues call, View view ) {
+    public APIResultSet runQuery( APISpec spec, Cache cache, Bindings call, View view ) {
         Source source = spec.getDataSource();
         try {
         	return runQueryWithSource( spec, cache, call, view, source );
@@ -701,7 +701,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         }
     }
 
-	private APIResultSet runQueryWithSource( APISpec spec, Cache cache, VarValues call, View view, Source source ) {
+	private APIResultSet runQueryWithSource( APISpec spec, Cache cache, Bindings call, View view, Source source ) {
 		long origin = System.currentTimeMillis();
 		Couple<String, List<Resource>> queryAndResults = selectResources( cache, spec, call, source );
 		long afterSelect = System.currentTimeMillis();
@@ -810,7 +810,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    Answer the select query (if any; otherwise, "") and list of resources obtained by
 	    running that query.
 	*/
-    private Couple<String, List<Resource>> selectResources( Cache cache, APISpec spec, VarValues call, Source source ) {
+    private Couple<String, List<Resource>> selectResources( Cache cache, APISpec spec, Bindings call, Source source ) {
     	log.debug( "fetchRequiredResources()" );
         final List<Resource> results = new ArrayList<Resource>();
         if (itemTemplate != null) setSubject( call.expandVariables( itemTemplate ) );
@@ -820,7 +820,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         	return runGeneralQuery( cache, spec, call, source, results );
     }
 
-	private Couple<String, List<Resource>> runGeneralQuery( Cache cache, APISpec spec, VarValues cc, Source source, final List<Resource> results) {
+	private Couple<String, List<Resource>> runGeneralQuery( Cache cache, APISpec spec, Bindings cc, Source source, final List<Resource> results) {
 		String select = assembleSelectQuery( cc, spec.getPrefixMap() );
 		List<Resource> already = cache.getCachedResources( select );
 		if (already != null)

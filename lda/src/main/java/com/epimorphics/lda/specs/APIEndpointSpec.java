@@ -19,7 +19,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.NamedViews;
@@ -63,7 +63,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     public final int defaultPageSize;
     public final int maxPageSize;
 
-    protected final VarValues bindings = new VarValues();
+    protected final Bindings bindings = new Bindings();
     
     protected final Set<String> explicitViewNames = new HashSet<String>();
     
@@ -337,7 +337,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         return views.get( View.SHOW_DEFAULT_INTERNAL );
     }
 
-	public VarValues getBindings() {
+	public Bindings getBindings() {
 		return bindings;
 	}
 

@@ -21,7 +21,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.ModelLoaderI;
@@ -75,7 +75,7 @@ public class APISpec {
     protected final Factories factoryTable;
     protected final boolean hasParameterBasedContentNegotiation;
     protected final List<Source> describeSources;
-    protected final VarValues bindings = new VarValues();
+    protected final Bindings bindings = new Bindings();
     
     protected final Set<String> metadataOptions = new HashSet<String>();
     
@@ -212,7 +212,7 @@ public class APISpec {
         return describeSources;
     }
 
-	public VarValues getBindings() {
+	public Bindings getBindings() {
 		return bindings;
 	}
 

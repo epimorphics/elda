@@ -17,7 +17,7 @@ import java.util.Set;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIResultSet;
@@ -80,8 +80,8 @@ public class ExploreTestingForLatAndLongEtc
 		APIEndpoint e = new APIEndpointImpl( spec );
 		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );
 		URI ru = Util.newURI("http://dummy/doc/schools");
-		VarValues cc = VarValues.createContext( MakeData.variables( settings ), map );
-		Triad<APIResultSet, String, VarValues> resultsAndFormat = e.call( ru, cc );
+		Bindings cc = Bindings.createContext( MakeData.variables( settings ), map );
+		Triad<APIResultSet, String, Bindings> resultsAndFormat = e.call( ru, cc );
 		APIResultSet rs = resultsAndFormat.a;
 		return new HashSet<Resource>( rs.getResultList() );
 		}

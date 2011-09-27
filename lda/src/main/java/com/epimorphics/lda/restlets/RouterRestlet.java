@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.URLforResource;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
@@ -173,12 +173,12 @@ import com.hp.hpl.jena.shared.WrappedException;
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
-        	Triad<APIResultSet, String, VarValues> resultsAndFormat = APIEndpointUtil.call( match, ru, suffix, queryParams );
+        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( match, ru, suffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
             if (results == null)
             	throw new RuntimeException( "ResultSet is null -- this should never happen." );
             APIEndpoint ep = match.getEndpoint();
-			VarValues rc = new VarValues( resultsAndFormat.c.copy(), as );
+			Bindings rc = new Bindings( resultsAndFormat.c.copy(), as );
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
@@ -255,7 +255,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 		};
 	}
 	
-    private Response doRendering( VarValues rc, String rName, APIResultSet results, Renderer r ) {
+    private Response doRendering( Bindings rc, String rName, APIResultSet results, Renderer r ) {
 		if (r == null) {
             String message = rName == null
             	? "no suitable media type was provided for rendering."

@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.QueryParameter;
@@ -32,14 +32,14 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class EndpointMetadata {
 
-	protected final VarValues cc;
+	protected final Bindings cc;
 	protected final Resource thisPage;
 	protected final String pageNumber;
 	protected final Set<String> formatNames;
 	protected final boolean isListEndpoint;
 	protected final URI reqURI; 
 	
-	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, VarValues cc, URI reqURI, Set<String> formatNames ) {
+	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, Bindings cc, URI reqURI, Set<String> formatNames ) {
 		this.cc = cc;
 		this.reqURI = reqURI;
 		this.thisPage = thisPage;

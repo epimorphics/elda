@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.epimorphics.lda.bindings.Value;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
@@ -86,9 +86,9 @@ public class MakeData
 	    Values from the space-separated name=value components of 
 	    <code>bindings</code>.
 	*/
-	public static VarValues variables( String bindings ) 
+	public static Bindings variables( String bindings ) 
 		{
-		VarValues result = new VarValues();
+		Bindings result = new Bindings();
 		if (bindings.length() > 0)
 			for (String b: bindings.split( " +" ))
 				{

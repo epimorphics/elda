@@ -18,7 +18,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.exceptions.EldaException;
@@ -77,10 +77,10 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.toString();
     }
     
-    @Override public Triad<APIResultSet, String, VarValues> call( URI reqURI, VarValues given ) {
+    @Override public Triad<APIResultSet, String, Bindings> call( URI reqURI, Bindings given ) {
     	long origin = System.currentTimeMillis();
     	wantsContext = specWantsContext;
-    	VarValues cc = given.copyWithDefaults( spec.getBindings() );
+    	Bindings cc = given.copyWithDefaults( spec.getBindings() );
         // HERE log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
     //
         new Decode(true).handleQueryParameters( cc.parameterNames() ).reveal();
@@ -99,7 +99,7 @@ public class APIEndpointImpl implements APIEndpoint {
         log.debug( "TIMING: build query: " + (timeAfterBuild - origin)/1000.0 + "s" );
         log.debug( "TIMING: run query:   " + (timeAfterRun - timeAfterBuild)/1000.0 + "s" );
         log.debug( "TIMING: view query:  " + (timeAfterMetadata - timeAfterRun)/1000.0 );
-        return new Triad<APIResultSet, String, VarValues>( filtered, format, cc );
+        return new Triad<APIResultSet, String, Bindings>( filtered, format, cc );
     }
 
 	protected boolean wantsContext = false;
@@ -128,7 +128,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		}
 	}
 
-    private Couple<View, String> buildQueryAndView( VarValues context, APIQuery query ) {
+    private Couple<View, String> buildQueryAndView( Bindings context, APIQuery query ) {
     	ShortnameService sns = spec.getAPISpec().getShortnameService();
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(query);
     	int endpointType = isListEndpoint() ? ContextQueryUpdater.ListEndpoint : ContextQueryUpdater.ItemEndpoint;
@@ -147,7 +147,7 @@ public class APIEndpointImpl implements APIEndpoint {
     /**
      * Return a metadata description for the query that would be run by this endpoint
      */
-    @Override public Resource getMetadata(VarValues context, URI ru, Model metadata) {
+    @Override public Resource getMetadata(Bindings context, URI ru, Model metadata) {
         APIQuery query = spec.getBaseQuery();
         buildQueryAndView(context, query);
         metadata.setNsPrefix("api", API.getURI());
@@ -207,7 +207,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	return m.createResource( rqp2 );
     }
     
-	private void insertResultSetRoot( APIResultSet rs, URI ru, VarValues cc, APIQuery query ) {
+	private void insertResultSetRoot( APIResultSet rs, URI ru, Bindings cc, APIQuery query ) {
     	Model rsm = rs.getModel();
         int page = query.getPageNumber();
         int perPage = query.getPageSize();

@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
@@ -29,7 +29,7 @@ public class TestWhereParameter
         ShortnameService sns = TestSelectParameter.makeSNS();
         APIQuery q = new APIQuery(sns);		
     	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
-        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (VarValues) null, NamedViews.noNamedViews, sns, q, qa );
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, qa );
         qa.updateQuery();
         String theBaseQuery = q.assembleSelectQuery( RDFUtils.noPrefixes );
         String theWhereClause = "?p rdf:equals 17";

@@ -13,7 +13,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
@@ -37,13 +37,13 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Triad<APIResultSet, String, VarValues> call( Match match, URI requestUri, String suffix, MultiMap<String, String> queryParams ) {
+	public static Triad<APIResultSet, String, Bindings> call( Match match, URI requestUri, String suffix, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		APIEndpointSpec spec = ep.getSpec();
 		log.debug("Info: calling APIEndpoint " + spec);
-		VarValues vs = new VarValues( spec.getBindings() ).putAll( match.getBindings() );
+		Bindings vs = new Bindings( spec.getBindings() ).putAll( match.getBindings() );
 		if (suffix != null) vs.put( "_suffix", suffix );
-		VarValues cc = VarValues.createContext( vs, queryParams );
+		Bindings cc = Bindings.createContext( vs, queryParams );
 		return ep.call( requestUri, cc );
 	}
 

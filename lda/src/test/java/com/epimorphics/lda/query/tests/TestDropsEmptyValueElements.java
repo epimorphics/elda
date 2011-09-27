@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.query.APIQuery.Deferred;
@@ -34,7 +34,7 @@ public class TestDropsEmptyValueElements {
 	@Test public void ensureEmptyPropertiesIgnored() {
 		NamedViews nv = NamedViews.noNamedViews;
 		SNS sns = new SNS("a=eh:/A");
-		VarValues cc = VarValues.createContext( new VarValues(), MakeData.parseQueryString("_properties=,a," ) );
+		Bindings cc = Bindings.createContext( new Bindings(), MakeData.parseQueryString("_properties=,a," ) );
 		APIQuery aq = new APIQuery( sns );
 		ContextQueryUpdater cu = new ContextQueryUpdater
 			( ContextQueryUpdater.ListEndpoint 
@@ -51,7 +51,7 @@ public class TestDropsEmptyValueElements {
 	@Test public void ensureEmptySortsIgnored() {
 		NamedViews nv = NamedViews.noNamedViews;
 		SNS sns = new SNS("a=eh:/A;b=eh:/B");
-		VarValues cc = VarValues.createContext( new VarValues(), MakeData.parseQueryString("_sort=,b," ) );
+		Bindings cc = Bindings.createContext( new Bindings(), MakeData.parseQueryString("_sort=,b," ) );
 		APIQuery aq = new APIQuery( sns );
 		ContextQueryUpdater cu = new ContextQueryUpdater
 			( ContextQueryUpdater.ListEndpoint 

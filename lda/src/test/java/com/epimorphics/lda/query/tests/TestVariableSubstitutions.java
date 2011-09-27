@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
@@ -27,8 +27,8 @@ public class TestVariableSubstitutions {
 
 	@Test public void testOrderByParameterExpandsVariables() {
 		MultiMap<String, String> qp = MakeData.parseQueryString( "_orderBy={x}" );
-		VarValues bindings = MakeData.variables( "x=ordering" );
-		VarValues cc = VarValues.createContext( bindings, qp );
+		Bindings bindings = MakeData.variables( "x=ordering" );
+		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );
@@ -42,8 +42,8 @@ public class TestVariableSubstitutions {
 	
 	@Test public void testOrderBySettingExpandsVariables() {
 		MultiMap<String, String> qp = MakeData.parseQueryString( "" );
-		VarValues bindings = MakeData.variables( "x=ordering" );
-		VarValues cc = VarValues.createContext( bindings, qp );
+		Bindings bindings = MakeData.variables( "x=ordering" );
+		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );
@@ -58,8 +58,8 @@ public class TestVariableSubstitutions {
 	
 	@Test public void testSelectExpandsVariables() {
 		MultiMap<String, String> qp = MakeData.parseQueryString( "_select={x}" );
-		VarValues bindings = MakeData.variables( "x=myQueryHere" );
-		VarValues cc = VarValues.createContext( bindings, qp );
+		Bindings bindings = MakeData.variables( "x=myQueryHere" );
+		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );

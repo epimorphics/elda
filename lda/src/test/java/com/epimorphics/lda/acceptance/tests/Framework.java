@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.apispec.tests.SpecUtil;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.routing.MatchSearcher;
@@ -244,8 +244,8 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) );   	
 		MultiMap<String, String> map = MakeData.parseQueryString( w.queryParams );
 		URI ru = Util.newURI(w.path);
-		VarValues cc = VarValues.createContext( bindTemplate( w.template, w.path ), map );
-		Triad<APIResultSet, String, VarValues> resultsAndFormat = ep.call( ru, cc );
+		Bindings cc = Bindings.createContext( bindTemplate( w.template, w.path ), map );
+		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( ru, cc );
 		Model rsm = resultsAndFormat.a.getModel();
 //		System.err.println( ">> " + rs.getResultList() );
 		for (Ask a: w.shouldAppear)
@@ -277,12 +277,12 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		}
 
 	// this seems a bit tedious. There should be a more straightforward way.
-	private VarValues bindTemplate( String template, String path ) {
+	private Bindings bindTemplate( String template, String path ) {
 		MatchSearcher<String> ms = new MatchSearcher<String>();
 		ms.register( template, "IGNORED" );
 		Map<String, String> bindings = new HashMap<String, String>();
 		ms.lookup( bindings, path );
-		VarValues result = new VarValues();
+		Bindings result = new Bindings();
 		for (String key: bindings.keySet())	result.put( key, bindings.get( key ) );
 		return result;
 	}

@@ -31,11 +31,11 @@ public class VariableExtractor {
 	
 	static Logger log = LoggerFactory.getLogger(VariableExtractor.class);
     
-	public static VarValues findAndBindVariables( Resource root ) {
-		return findAndBindVariables( new VarValues(), root ); 
+	public static Bindings findAndBindVariables( Resource root ) {
+		return findAndBindVariables( new Bindings(), root ); 
 	}	
 
-	public static VarValues findAndBindVariables( VarValues bound, Resource root) {
+	public static Bindings findAndBindVariables( Bindings bound, Resource root) {
     	findVariables( root, bound );
 		return bound;
 	}
@@ -46,7 +46,7 @@ public class VariableExtractor {
 	    <code>bound</code>. Otherwise, the name and its literal value are
 	    stored into <code>toDo</code> for later evaluation.
 	*/
-	public static void findVariables( Resource root, VarValues bound ) {
+	public static void findVariables( Resource root, Bindings bound ) {
 		for (Statement s: root.listProperties( FIXUP.variable ).toList()) {
 			Resource v = s.getResource();
 			String name = getStringValue( v, API.name, null );

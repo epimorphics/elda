@@ -7,7 +7,7 @@
 */
 package com.epimorphics.lda.query.tests;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
@@ -26,8 +26,8 @@ public class TestUniqueVariablesForPropertyChain {
 
 	@Test public void testUnique() {
 		MultiMap<String, String> qp = MakeData.parseQueryString( "first.aname=1&first.bname=2" );
-		VarValues bindings = MakeData.variables( "" );
-		VarValues cc = VarValues.createContext( bindings, qp );
+		Bindings bindings = MakeData.variables( "" );
+		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "first=eh:/first;aname=eh:/full-aname;bname=eh:/full-bname", "first" );
 		APIQuery aq = new APIQuery( sns );
