@@ -95,6 +95,7 @@ public class DOMUtils
 			else 
 				{
 				URL u = rc.pathAsURL( VarValues.expandVariables( rc, transformFilePath ) );
+				System.err.println( ">> derived URL " + u + " from " + transformFilePath );
 				Templates t = cache.get( u );
 				if (t == null) {
 					long origin = System.currentTimeMillis();

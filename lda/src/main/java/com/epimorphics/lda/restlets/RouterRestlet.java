@@ -42,6 +42,7 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.bindings.VarValues;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointUtil;
@@ -51,7 +52,6 @@ import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererContext;
-import com.epimorphics.lda.renderers.RendererContext.AsURL;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
@@ -168,7 +168,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 	}
 
     private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
-    	RendererContext.AsURL as = pathAsURLFactory(servCon);
+    	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
 //
@@ -238,16 +238,21 @@ import com.hp.hpl.jena.shared.WrappedException;
 		return result;
 	}
 
-	private static AsURL pathAsURLFactory(final ServletContext servCon) {
-		return new RendererContext.AsURL() 
-			{@Override public URL asResourceURL( String p ) 
-			{ try {
+	private static URLforResource pathAsURLFactory( final ServletContext servCon ) {
+		return new URLforResource() 
+			{
+			@Override public URL asResourceURL( String ePath ) { 		
+			String p = ePath.startsWith( "/" ) || ePath.startsWith( "http://") ? ePath : "/" + ePath;
+			try {
 				URL result = servCon.getResource( p );
-				if (result == null) EldaException.NotFound( "webapp resource", p );
+				if (result == null) EldaException.NotFound( "webapp resource", ePath );
 				return result;
-			} catch (MalformedURLException e) {
+				}
+			catch (MalformedURLException e) 
+				{
 				throw new WrappedException( e );
-			} }
+				} 
+			}
 		};
 	}
 	
