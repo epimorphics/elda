@@ -169,7 +169,6 @@ import com.hp.hpl.jena.shared.WrappedException;
 
     private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
     	RendererContext.AsURL as = pathAsURLFactory(servCon);
-    	String contextPath = servCon.getContextPath();
     	URI requestUri = ui.getRequestUri();
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
 //
@@ -180,7 +179,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             if (results == null)
             	throw new RuntimeException( "ResultSet is null -- this should never happen." );
             APIEndpoint ep = match.getEndpoint();
-			RendererContext rc = new RendererContext( resultsAndFormat.c.copy(), contextPath, as );
+			RendererContext rc = new RendererContext( resultsAndFormat.c.copy(), as );
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );

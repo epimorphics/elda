@@ -22,22 +22,19 @@ public class RendererContext implements Lookup {
 
 	protected final VarValues v;
 	protected final AsURL as;
-	protected final String contextPath;
 	
 	/**
 	    Initialise this RendererContext with a bunch of variable bindings
 	    <code>v</code>, a string to use as the <code>contextPath</code>, and
 	    an AsURL object which converts (partial) paths to full URLs.    
 	*/
-	public RendererContext( VarValues v, String contextPath, AsURL as ) {
+	public RendererContext( VarValues v, AsURL as ) {
 		this.v = v;
 		this.as = as;
-		this.contextPath = contextPath;
 	}
 	
 	public RendererContext( VarValues v ) {
 		this.v = v;
-		this.contextPath = "";
 		this.as = new AsURL() 
 			{@Override public URL asResourceURL( String p ) { throw new RuntimeException( "this context can't make a URL for " + p ); }};
 	}
@@ -71,11 +68,6 @@ public class RendererContext implements Lookup {
 	public void put( String key, String value ) {
 		v.put( key, value );		
 	}
-	
-	public String getContextPath() {
-		return contextPath;
-	}
-
 	public URL pathAsURL( String ePath ) {
 		String p = ePath.startsWith( "/" ) || ePath.startsWith( "http://") ? ePath : "/" + ePath;
 		return as.asResourceURL( p );

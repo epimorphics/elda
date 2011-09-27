@@ -19,12 +19,12 @@ import com.epimorphics.lda.exceptions.EldaException;
 /**
     A VarValues maps variables (identified by their string names) to
     their Value (a lexical form with type & language annotation).
+    It also has a set of parameter names, which correspond to the
+    query parameter names.
 */
 public class VarValues implements Lookup
 	{
     static Logger log = LoggerFactory.getLogger( VarValues.class );
-    
-    protected static final Set<String> emptySet = new HashSet<String>();
     
 	protected final Map<String, Value> vars = new HashMap<String, Value>();
     
