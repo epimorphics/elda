@@ -342,15 +342,14 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected void addPropertyHasValue( Param param, Variable O ) {
     	addPropertyHasValue( param, O.name() );    	
     }
-
-    // These next two are very similar. We should be able to share most of the
-    // code. 
-
+    
+    protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
+    
     protected void addPropertyHasValue( Param param, String val ) {
     	String languages = languagesFor.get( param.toString() );
 		if (languages == null) languages = defaultLanguage;
 		Param.Info [] infos = param.fullParts();
-		
+		String dot = "";
 	//
 		StringBuilder chainName = new StringBuilder();
 	//
@@ -358,16 +357,19 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    int i = 0;
 	    while (i < infos.length-1) {
 	    	Param.Info inf = infos[i];
-	    	chainName.append( "." ).append( inf.shortName );
+	    	chainName.append( dot ).append( inf.shortName );
 	    	Variable v = varsForPropertyChains.get( chainName.toString() );
 	    	if (v == null) {
 	    		v = RDFQ.var( PREFIX_VAR + chainName.toString().replaceAll( "\\.", "_" ) + "_" + varcount++ );
 	    		varsForPropertyChains.put( chainName.toString(), v );
 	    		addTriplePattern(var, inf, v );
 	    	}
+	    	dot = ".";
 	    	var = v;
 	        i++;
 	    }
+	    // System.err.println( varsForPropertyChains );
+	//
 	    Info inf = infos[i];
 	    String prop = inf.shortName;
 	    if (val.startsWith("?")) varInfo.put( RDFQ.var(val), inf );
@@ -423,8 +425,6 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected void addPropertyHasntValue( Param param ) {
     	Variable var = newVar();
     	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
-		String languages = languagesFor.get( param.toString() );
-		if (languages == null) languages = defaultLanguage;
 		Param.Info [] infos = param.fullParts();
 	//
 		Variable s = SELECT_VAR;
@@ -437,8 +437,6 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 			s = o;
 		}
     }  
-        
-    protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
 
 	private void onePropertyStep( Variable subject, Info prop, Variable var ) {
 		Resource np = prop.asResource;
