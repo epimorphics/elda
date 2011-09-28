@@ -186,6 +186,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
             clone.deferredFilters = new ArrayList<PendingParameterValue>( deferredFilters );
             clone.metadataOptions = new HashSet<String>( metadataOptions );
             clone.varsForPropertyChains = new HashMap<String, Variable>( varsForPropertyChains );
+            clone.seenParamVariables = new HashMap<String, Variable>( seenParamVariables );
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new APIException("Can't happen :)", e);
@@ -303,7 +304,26 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     public APIQuery addSubjectHasProperty( Resource P, Any O ) {
         addTriplePattern( SELECT_VAR, P, O );
         return this;
-    }
+    }    
+    
+    protected Map<String,Variable> seenParamVariables = new HashMap<String, Variable>();
+    
+    public static final boolean dontSquishVariables = false;
+    
+    protected void addRangeFilter( Param param, String val, String op ) {
+    	Variable already = seenParamVariables.get(param.asString());
+    	String prop = param.lastPropertyOf();
+    	if (already == null || dontSquishVariables) {
+	        seenParamVariables.put( param.asString(), already = newVar() );
+	        addPropertyHasValue( param, already );
+    	}
+	    Any r = sns.valueAsRDFQ( prop, val, getDefaultLanguage() );
+	    addInfixSparqlFilter( already, op, r );
+    }    
+	
+	private void addInfixSparqlFilter(Variable already, String op, Any r) {
+		addFilterExpression( RDFQ.infix( already, op, r ) );
+	}
 
 	public void addNumericRangeFilter( Variable v, double x, double dx ) {
 		addInfixSparqlFilter( RDFQ.literal( x - dx ), "<", v );

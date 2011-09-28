@@ -25,7 +25,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 public class TestSharesPropertyVariables {
 
 	@Test public void testShared() {
-		if (ContextQueryUpdater.dontSquishVariables == true) return;
+		if (APIQuery.dontSquishVariables == true) return;
 		MultiMap<String, String> qp = MakeData.parseQueryString( "min-aname=1&max-aname=3" );
 		Bindings bindings = MakeData.variables( "aname=17" );
 		Bindings cc = Bindings.createContext( bindings, qp );

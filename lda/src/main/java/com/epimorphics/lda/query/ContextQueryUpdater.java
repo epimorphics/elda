@@ -214,13 +214,13 @@ public class ContextQueryUpdater implements ViewSetter {
         } else if (prefix.equals( QueryParameter.LANG_PREFIX )) {
         	// handled elsewhere
         } else if (prefix.equals(QueryParameter.MIN_PREFIX)) {
-            addRangeFilter(param.plain(), val, ">=");
+            args.addRangeFilter(param.plain(), val, ">=");
         } else if (prefix.equals(QueryParameter.MIN_EX_PREFIX)) {
-            addRangeFilter(param.plain(), val, ">");
+        	args.addRangeFilter(param.plain(), val, ">");
         } else if (prefix.equals(QueryParameter.MAX_PREFIX)) {
-            addRangeFilter(param.plain(), val, "<=");
+        	args.addRangeFilter(param.plain(), val, "<=");
         } else if (prefix.equals(QueryParameter.MAX_EX_PREFIX)) {
-            addRangeFilter(param.plain(), val, "<");
+        	args.addRangeFilter(param.plain(), val, "<");
         } else if (prefix.equals(QueryParameter.EXISTS_PREFIX)) {
             if (val.equals( "true" )) args.addPropertyHasValue( param );
             else if (val.equals( "false" )) args.addPropertyHasntValue( param );
@@ -229,25 +229,6 @@ public class ContextQueryUpdater implements ViewSetter {
         	throw new EldaException( "unrecognised parameter prefix: " + prefix );
         }
     }
-    
-    protected final Map<String,Variable> seenParamVariables = new HashMap<String, Variable>();
-    
-    public static final boolean dontSquishVariables = false;
-    
-    protected void addRangeFilter( Param param, String val, String op ) {
-    	Variable already = seenParamVariables.get(param.asString());
-    	String prop = param.lastPropertyOf();
-    	if (already == null || dontSquishVariables) {
-	        seenParamVariables.put( param.asString(), already = args.newVar() );
-	        args.addPropertyHasValue( param, already );
-    	}
-	    Any r = sns.valueAsRDFQ( prop, val, args.getDefaultLanguage() );
-		addInfixSparqlFilter( already, op, r );
-    }    
-	
-	private void addInfixSparqlFilter(Variable already, String op, Any r) {
-		args.addFilterExpression( RDFQ.infix( already, op, r ) );
-	}
 
 	@Override public void setFormat( String format ) {
 		requestedFormat = format;
