@@ -238,7 +238,7 @@ public class ContextQueryUpdater implements ViewSetter {
     	String prop = param.lastPropertyOf();
     	if (already == null || dontSquishVariables) {
 	        seenParamVariables.put( param.asString(), already = args.newVar() );
-	        args.addPropertyHasValue( param, already.name() );
+	        args.addPropertyHasValue( param, already );
     	}
 	    Any r = sns.valueAsRDFQ( prop, val, args.getDefaultLanguage() );
 		args.addInfixSparqlFilter( already, op, r );

@@ -370,10 +370,10 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	
 	private void addLanguagedTriplePattern(Variable var, Info inf, String languages, String val) {
 		String prop = inf.shortName;
-		// System.err.println( ">> addLTP: " + inf + " " + languages + " " + val );
+		Resource np = inf.asResource;
 		String[] langArray = languages.split( "," );
-		Resource np = sns.asResource( prop );
 		Prop p = sns.asContext().getPropertyByName( prop );
+	//
 		if (langArray.length == 1 || (p != null && p.getType() != null)) {
 			addTriplePattern( var, np, sns.valueAsRDFQ( prop, val, langArray[0] ) ); 
 		} else if (val.startsWith( "?" )) {

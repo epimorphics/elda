@@ -37,6 +37,7 @@ public class QueryArgumentsImpl implements QueryArguments {
 	}
 	
 	protected final List<RDFQ.Triple> triplePatterns = new ArrayList<RDFQ.Triple>();
+	
 	protected final List<RenderExpression> filterExpressions = new ArrayList<RenderExpression>();
 
 	@Override public void addFilterExpression( RenderExpression exp ) {
@@ -106,6 +107,10 @@ public class QueryArgumentsImpl implements QueryArguments {
 
 	@Override public void addPropertyHasValue(Param param, String val ) {
 		query.addPropertyHasValue( param, val );
+	}
+
+	@Override public void addPropertyHasValue(Param param, Variable var ) {
+		query.addPropertyHasValue( param, var );
 	}
 
 	@Override public void addNameProp(Param plain, String val) {

@@ -19,12 +19,13 @@ import com.hp.hpl.jena.rdf.model.Resource;
  	@author chris
 */
 public interface QueryArguments {
+	public Variable newVar();
+
+	public String getDefaultLanguage();
 
 	public void addSubjectHasProperty( Resource r, Variable v );
 
 	public void addNumericRangeFilter( Variable v, double x, double dx );
-
-	public Variable newVar();
 
 	public void setPageSize( int size );
 
@@ -50,6 +51,8 @@ public interface QueryArguments {
 
 	public void addPropertyHasValue( Param param, String val );
 
+	public void addPropertyHasValue(Param param, Variable var);
+
 	public void addNameProp( Param plain, String val );
 
 	public void setLanguagesFor( String fullParamName, String languages );
@@ -63,6 +66,4 @@ public interface QueryArguments {
 	public void addFilterExpression( RenderExpression exp );
 
 	public void addInfixSparqlFilter( Any l, String op,	Any r );
-
-	public String getDefaultLanguage();
 }
