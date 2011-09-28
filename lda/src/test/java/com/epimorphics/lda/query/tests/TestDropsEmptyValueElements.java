@@ -17,10 +17,10 @@ import org.junit.Test;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.View;
-import com.epimorphics.lda.query.APIQuery.Deferred;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.ExpansionPoints;
+import com.epimorphics.lda.query.PendingParameterValue;
 import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.tests.SNS;
@@ -44,7 +44,7 @@ public class TestDropsEmptyValueElements {
 			, (ExpansionPoints) null 
 			, new QueryArgumentsImpl( aq )
 			); 
-		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<Deferred>() );
+		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
 		assertEquals( CollectionUtils.set( new PropertyChain( "eh:/A" ) ), ans.a.chains() );
 	}
 
@@ -61,7 +61,7 @@ public class TestDropsEmptyValueElements {
 			, (ExpansionPoints) null 
 			, new QueryArgumentsImpl( aq )
 			); 
-		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<Deferred>() );
+		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
 		String q = aq.assembleSelectQuery( PrefixMapping.Standard );
 		assertTrue( "empty sort string element not discarded", q.matches( "(?s).*item <eh:/B> \\?___0.*ORDER BY +\\?___0.*" ) );
 	}

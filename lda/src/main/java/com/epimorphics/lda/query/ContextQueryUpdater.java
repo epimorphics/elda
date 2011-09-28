@@ -24,7 +24,6 @@ import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.ViewSetter;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.query.APIQuery.Deferred;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -77,7 +76,7 @@ public class ContextQueryUpdater implements ViewSetter {
 	    Apply the context updates to the query, and answer the view
 	    specified.
 	*/
-    public Couple<View, String> updateQueryAndConstructView( List<Deferred> deferredFilters ) {	  
+    public Couple<View, String> updateQueryAndConstructView( List<PendingParameterValue> deferredFilters ) {	  
     	args.clearLanguages();
     	Set<String> allParamNames = context.parameterNames();
     	if (allParamNames.contains( QueryParameter._VIEW )) {
@@ -97,8 +96,8 @@ public class ContextQueryUpdater implements ViewSetter {
         return new Couple<View, String>( view, requestedFormat );
     }
 
-	private void activateDeferredFilters( List<Deferred> deferred ) {
-		for (Deferred d: deferred) {
+	private void activateDeferredFilters( List<PendingParameterValue> deferred ) {
+		for (PendingParameterValue d: deferred) {
 			APIQuery.log.debug( "activating deferred filter " + d );
 			addFilterFromQuery( d.param.expand( context ), context.expandVariables( d.val ) );
 		}

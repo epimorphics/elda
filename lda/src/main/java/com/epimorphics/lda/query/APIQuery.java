@@ -179,7 +179,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
             clone.whereExpressions = new StringBuffer( whereExpressions );
             clone.varInfo = new HashMap<Variable, Info>( varInfo );
             clone.expansionPoints = new HashSet<Property>( expansionPoints );
-            clone.deferredFilters = new ArrayList<Deferred>( deferredFilters );
+            clone.deferredFilters = new ArrayList<PendingParameterValue>( deferredFilters );
             clone.metadataOptions = new HashSet<String>( metadataOptions );
             clone.varsForPropertyChains = new HashMap<String, Variable>( varsForPropertyChains );
             return clone;
@@ -238,21 +238,6 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         return subjectResource.getURI();
     }
     
-    public static class Deferred
-    	{
-    	final Param param;
-    	final String val;
-    	
-    	public Deferred( Param param, String val ) 
-    		{
-    		this.param = param;
-    		this.val = val;
-    		}
-    	
-    	@Override public String toString() 
-    		{ return "<deferred " + param + "=" + val + ">"; }
-    	}
-    
     private Map<String, String> languagesFor = new HashMap<String, String>();
         
     /**
@@ -285,10 +270,10 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		for (String option: options) metadataOptions.add( option.toLowerCase() );
 	}
     
-    public List<Deferred> deferredFilters = new ArrayList<Deferred>();
+    public List<PendingParameterValue> deferredFilters = new ArrayList<PendingParameterValue>();
     
     public void deferrableAddFilter( Param param, String val ) {
-    	deferredFilters.add( new Deferred( param, val ) );
+    	deferredFilters.add( new PendingParameterValue( param, val ) );
     }
     
     public void setViewByTemplateClause( String clause ) {
