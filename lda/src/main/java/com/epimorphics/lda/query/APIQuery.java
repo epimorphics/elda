@@ -388,7 +388,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    }
 	    // System.err.println( varsForPropertyChains );
 	//
-	    Info inf = infos[i];
+	    Info inf = infos[infos.length - 1];
 	    String prop = inf.shortName;
 	    if (val.startsWith("?")) varInfo.put( RDFQ.var(val), inf );
 	    if (languages == null) {
