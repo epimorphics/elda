@@ -100,6 +100,10 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	return filterExpressions;
     }
     
+    public void addFilterExpression( RenderExpression e ) {
+    	filterExpressions.add( e );
+    }
+    
     protected String viewArgument = null;
     
     protected final ShortnameService sns;
@@ -300,8 +304,17 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         addTriplePattern( SELECT_VAR, P, O );
         return this;
     }
+
+	public void addNumericRangeFilter( Variable v, double x, double dx ) {
+		addInfixSparqlFilter( RDFQ.literal( x - dx ), "<", v );
+		addInfixSparqlFilter( v, "<", RDFQ.literal( x + dx) );
+	}
     
-    private void addTriplePattern( Variable varname, Resource P, Any O ) {
+    private void addInfixSparqlFilter( Any v, String op, Any literal ) {
+    	addFilterExpression( RDFQ.infix( v, op, literal ) );
+	}
+
+	private void addTriplePattern( Variable varname, Resource P, Any O ) {
         basicGraphTriples.add( RDFQ.triple( varname, RDFQ.uri( P.getURI() ), O ) );
     }
     

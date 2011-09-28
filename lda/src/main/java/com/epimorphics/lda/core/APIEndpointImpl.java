@@ -25,7 +25,6 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.params.Decode;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -130,15 +129,13 @@ public class APIEndpointImpl implements APIEndpoint {
 
     private Couple<View, String> buildQueryAndView( Bindings context, APIQuery query ) {
     	ShortnameService sns = spec.getAPISpec().getShortnameService();
-    	QueryArgumentsImpl qa = new QueryArgumentsImpl(query);
     	int endpointType = isListEndpoint() ? ContextQueryUpdater.ListEndpoint : ContextQueryUpdater.ItemEndpoint;
-    	ContextQueryUpdater cq = new ContextQueryUpdater( endpointType, context, spec, sns, query, qa );
+    	ContextQueryUpdater cq = new ContextQueryUpdater( endpointType, context, spec, sns, query, query );
 		try { 
 			Couple<View, String> result = cq.updateQueryAndConstructView( query.deferredFilters);
 			String format = result.b.equals( "" ) ? context.getValueString( "_suffix") : result.b;
 			if (context.getValueString( "callback" ) != null && !"json".equals( format ))
 				EldaException.BadRequest( "callback specified but format '" + format + "' is not JSON." );
-			qa.updateQuery();
 			return result; 
 		}
 		catch (APIException e) { throw new QueryParseException( "query construction failed", e ); }

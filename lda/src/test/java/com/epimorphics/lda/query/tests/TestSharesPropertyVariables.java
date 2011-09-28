@@ -16,7 +16,6 @@ import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.tests.FakeNamedViews;
 import com.epimorphics.lda.tests.SNS;
@@ -33,10 +32,8 @@ public class TestSharesPropertyVariables {
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "aname=eh:/full-aname" );
 		APIQuery aq = new APIQuery( sns );
-		QueryArgumentsImpl qa = new QueryArgumentsImpl(aq);
-		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, qa );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
-		qa.updateQuery();
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
 		int count = aq.countVarsAllocated();
 		if (count != 1) {

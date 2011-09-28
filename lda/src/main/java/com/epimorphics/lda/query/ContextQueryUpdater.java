@@ -25,6 +25,7 @@ import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.ViewSetter;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.Any;
+import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
@@ -41,7 +42,7 @@ public class ContextQueryUpdater implements ViewSetter {
 	private final ShortnameService sns;
 	private final NamedViews nt;
 	private final ExpansionPoints eps;
-	protected final QueryArguments args;
+	protected final APIQuery args;
 	protected final int endpointKind;
 	
 	private View view;
@@ -62,7 +63,7 @@ public class ContextQueryUpdater implements ViewSetter {
 	    @param eps possibly dead: expansion points
 	    @param args place to build the query arguments
 	*/
-	public ContextQueryUpdater( int endpointKind, Bindings context, NamedViews nv, ShortnameService sns, ExpansionPoints eps, QueryArguments args ) {
+	public ContextQueryUpdater( int endpointKind, Bindings context, NamedViews nv, ShortnameService sns, ExpansionPoints eps, APIQuery args ) {
 		this.context = context;
 		this.sns = sns;
 		this.nt = nv;
@@ -241,9 +242,13 @@ public class ContextQueryUpdater implements ViewSetter {
 	        args.addPropertyHasValue( param, already );
     	}
 	    Any r = sns.valueAsRDFQ( prop, val, args.getDefaultLanguage() );
-		args.addInfixSparqlFilter( already, op, r );
+		addInfixSparqlFilter( already, op, r );
     }    
 	
+	private void addInfixSparqlFilter(Variable already, String op, Any r) {
+		args.addFilterExpression( RDFQ.infix( already, op, r ) );
+	}
+
 	@Override public void setFormat( String format ) {
 		requestedFormat = format;
 	}

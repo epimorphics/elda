@@ -30,7 +30,7 @@ public class GEOLocation
 	private String nearLong = null;
 	private String nearLat = null;
 	
-	void addLocationQueryIfPresent( QueryArguments query )
+	void addLocationQueryIfPresent( APIQuery query )
 		{
 	    if (nearLat != null && nearLong != null && distance != null) 
 	    	{

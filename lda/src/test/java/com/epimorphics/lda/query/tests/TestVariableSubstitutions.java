@@ -16,7 +16,6 @@ import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.tests.FakeNamedViews;
 import com.epimorphics.lda.tests.SNS;
@@ -32,10 +31,8 @@ public class TestVariableSubstitutions {
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );
-		QueryArgumentsImpl qa = new QueryArgumentsImpl(aq);
-		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, qa );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
-		qa.updateQuery();
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
 		assertMatches( "(?s).*ORDER BY ordering.*", q );
 	}
@@ -48,10 +45,8 @@ public class TestVariableSubstitutions {
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );
 		aq.setOrderBy( "?x" );
-		QueryArgumentsImpl qa = new QueryArgumentsImpl(aq);
-		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, qa );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
-		qa.updateQuery();
 		String q = aq.assembleSelectQuery( cc, PrefixMapping.Factory.create() );
 		assertMatches( "(?s).*ORDER BY 'ordering'.*", q );        
 	}
@@ -63,10 +58,8 @@ public class TestVariableSubstitutions {
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );
-		QueryArgumentsImpl qa = new QueryArgumentsImpl(aq);
-		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, qa );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
-		qa.updateQuery();
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
 		assertEquals( "myQueryHere OFFSET 0 LIMIT 10", q );
 	}

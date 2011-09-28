@@ -21,7 +21,6 @@ import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.ExpansionPoints;
 import com.epimorphics.lda.query.PendingParameterValue;
-import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -42,7 +41,7 @@ public class TestDropsEmptyValueElements {
 			, nv
 			, sns 
 			, (ExpansionPoints) null 
-			, new QueryArgumentsImpl( aq )
+			, aq
 			); 
 		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
 		assertEquals( CollectionUtils.set( new PropertyChain( "eh:/A" ) ), ans.a.chains() );
@@ -59,7 +58,7 @@ public class TestDropsEmptyValueElements {
 			, nv
 			, sns 
 			, (ExpansionPoints) null 
-			, new QueryArgumentsImpl( aq )
+			, aq
 			); 
 		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
 		String q = aq.assembleSelectQuery( PrefixMapping.Standard );
