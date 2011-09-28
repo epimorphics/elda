@@ -71,6 +71,7 @@ spec:viewerMedium a lda:Viewer
         rdfs:label, school:establishmentStatus, school:typeOfEstablishment, school:schoolCapacity
         , school:phaseOfEducation, school:districtAdministrative, school:parliamentaryConstituency
         , school:administrativeWard, school:nurseryProvision 
+        , spatialrelations:easting, spatialrelations:northing
     .
 
 #
