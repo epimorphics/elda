@@ -266,6 +266,12 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     public void setLanguagesFor( String fullParamName, String languages ) {
     	languagesFor.put( fullParamName, languages );    
     }
+    
+	private String languagesFor( Param param ) {
+		String languages = languagesFor.get( param.toString() );
+	    if (languages == null) languages = defaultLanguage;
+		return languages;
+	}
  
 	public void addMetadataOptions( Set<String> options ) {
 		metadataOptions.addAll( options );
@@ -347,13 +353,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	basicGraphTriples.addAll( triples );
     }   
 
-	private void addTriplePattern( Variable var, Param.Info prop, Variable val ) {
-   		// Record property which points to this variable for us in decoding binding values
-   		varInfo.put( val, prop );
-        basicGraphTriples.add( RDFQ.triple( var, prop.asURI, val ) );
-    }
-
-    protected void addPropertyHasValue( Param param ) {
+	protected void addPropertyHasValue( Param param ) {
     	addPropertyHasValue( param, newVar() );
     }
     
@@ -364,13 +364,52 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
     
     protected void addPropertyHasValue( Param param, String val ) {
-    	String languages = languagesFor.get( param.toString() );
-		if (languages == null) languages = defaultLanguage;
 		Param.Info [] infos = param.fullParts();
-		String dot = "";
+		Variable var = expandParameterPrefix( infos );
 	//
+	    Info inf = infos[infos.length - 1];
+	    if (val.startsWith("?")) varInfo.put( RDFQ.var(val), inf );
+	    Any o = objectForValue( inf, val, languagesFor(param) );
+	    addTriplePattern( var, inf.asResource, o );
+    }
+
+    /**
+        Answer the RDFQ item which is the appropriate object to use in
+        a triple with predicate defined by <code>inf</code> and with
+        lexical form <code>val</code>. Any language codes that should be
+        used appear in <code>languages</code>. May update this APIQuery's
+        filter expressions.
+    */
+	private Any objectForValue(Info inf, String val, String languages) {
+	    String prop = inf.shortName;
+	    if (languages == null) {
+			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
+			return sns.valueAsRDFQ( prop, val, null );
+	    } else {
+			// handle language codes
+			String[] langArray = languages.split( "," );
+			Prop p = sns.asContext().getPropertyByName( prop );
+		//
+			if (langArray.length == 1 || (p != null && p.getType() != null)) {
+				return sns.valueAsRDFQ( prop, val, langArray[0] ); 
+			} else if (val.startsWith( "?" )) {
+				Variable o = RDFQ.var( val );
+				filterExpressions.add( someOf( o, langArray ) );
+				return o;
+			} else {
+				Variable o = newVar();
+				Apply stringOf = RDFQ.apply( "str", o );
+				Infix equals = RDFQ.infix( stringOf, "=", asStringLiteral(val) );
+				Infix filter = RDFQ.infix( equals, "&&", someOf( o, langArray ) );
+				filterExpressions.add( filter );
+				return o;
+			}
+	    }
+	}
+
+	private Variable expandParameterPrefix( Param.Info[] infos ) {
 		StringBuilder chainName = new StringBuilder();
-	//
+		String dot = "";
 		Variable var = SELECT_VAR;
 	    int i = 0;
 	    while (i < infos.length-1) {
@@ -380,54 +419,21 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    	if (v == null) {
 	    		v = RDFQ.var( PREFIX_VAR + chainName.toString().replaceAll( "\\.", "_" ) + "_" + varcount++ );
 	    		varsForPropertyChains.put( chainName.toString(), v );
-	    		addTriplePattern(var, inf, v );
+				varInfo.put( v, inf );
+				basicGraphTriples.add( RDFQ.triple( var, inf.asURI, v ) );
 	    	}
 	    	dot = ".";
 	    	var = v;
-	        i++;
+	        i += 1;
 	    }
-	    // System.err.println( varsForPropertyChains );
-	//
-	    Info inf = infos[infos.length - 1];
-	    String prop = inf.shortName;
-	    if (val.startsWith("?")) varInfo.put( RDFQ.var(val), inf );
-	    if (languages == null) {
-			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
-			Any norm = sns.valueAsRDFQ( prop, val, null );
-			addTriplePattern( var, inf.asResource, norm ); 
-	    } else {
-			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
-			addLanguagedTriplePattern( var, inf, languages, val );
-	    }
-    }
-	
-	private void addLanguagedTriplePattern(Variable var, Info inf, String languages, String val) {
-		String prop = inf.shortName;
-		Resource np = inf.asResource;
-		String[] langArray = languages.split( "," );
-		Prop p = sns.asContext().getPropertyByName( prop );
-	//
-		if (langArray.length == 1 || (p != null && p.getType() != null)) {
-			addTriplePattern( var, np, sns.valueAsRDFQ( prop, val, langArray[0] ) ); 
-		} else if (val.startsWith( "?" )) {
-			Variable v = RDFQ.var( val );
-			addTriplePattern( var, np, v );
-			filterExpressions.add( someOf( v, langArray ) );
-		} else {
-			Variable v = newVar();
-			addTriplePattern( var, np, v );
-			Apply stringOf = RDFQ.apply( "str", v );
-			Infix equals = RDFQ.infix( stringOf, "=", asStringLiteral(val) );
-			Infix filter = RDFQ.infix( equals, "&&", someOf( v, langArray ) );
-			filterExpressions.add( filter );
-		}
+		return var;
 	}
 	
 	public Any asStringLiteral( String val ) {
 		return RDFQ.literal( val );
 	}
     
-    private RenderExpression someOf( Variable v, String[] langArray ) 
+    private RenderExpression someOf( Any v, String[] langArray ) 
     	{
     	Apply langOf = RDFQ.apply( "lang", v );
 		RenderExpression result = RDFQ.infix( langOf, "=", squelchNone( langArray[0] ) );
