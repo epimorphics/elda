@@ -220,7 +220,7 @@
         </os>
       </activation>
       <properties>
-        <tomcat-distribution>http://apache.favoritelinks.net/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32.zip</tomcat-distribution>
+        <tomcat-distribution>http://mirror.rmg.io/apache/tomcat/tomcat-6/v6.0.33/bin/apache-tomcat-6.0.33.zip</tomcat-distribution>
       </properties>
     </profile>
   
@@ -233,7 +233,7 @@
         </os>
       </activation>
       <properties>
-        <tomcat-distribution>http://apache.favoritelinks.net/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.32-windows-x64.zip</tomcat-distribution>
+        <tomcat-distribution>http://apache.favoritelinks.net/tomcat/tomcat-6/v6.0.32/bin/apache-tomcat-6.0.33-windows-x64.zip</tomcat-distribution>
       </properties>
     </profile>
     
