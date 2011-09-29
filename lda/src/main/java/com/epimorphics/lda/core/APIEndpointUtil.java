@@ -70,9 +70,7 @@ public class APIEndpointUtil {
 	        if (suppress.equals("no")) {
 	            for (MediaType mt: types) {
 	                Renderer byType = ep.getRendererByType( mt );
-	                if (byType != null) {
-	                	return byType;
-	                }
+	                if (byType != null) return byType;
 	            }
 	        }
 	        RendererFactory rf = spec.getRendererFactoryTable().getDefaultFactory();
