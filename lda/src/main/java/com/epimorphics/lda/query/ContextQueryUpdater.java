@@ -8,9 +8,7 @@
 
 package com.epimorphics.lda.query;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -24,9 +22,6 @@ import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.ViewSetter;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.RDFQ;
-import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
 /**

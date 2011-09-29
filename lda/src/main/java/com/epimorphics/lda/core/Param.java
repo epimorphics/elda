@@ -121,8 +121,6 @@ public abstract class Param
 		return result;
 		}
 	
-	public boolean hasVariable() { return p.indexOf('{') >= 0; }
-	
 	public abstract Param expand( Bindings cc );
 
 	public abstract String prefix();
