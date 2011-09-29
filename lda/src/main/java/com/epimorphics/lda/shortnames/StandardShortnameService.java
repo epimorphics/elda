@@ -45,9 +45,8 @@ import com.hp.hpl.jena.vocabulary.*;
 */
 public class StandardShortnameService implements ShortnameService {
 
-    protected Context context;
-    protected PrefixMapping prefixes;
-    
+    protected final Context context;
+    protected final PrefixMapping prefixes;
     protected final NameMap nameMap = new NameMap();
     
     /**

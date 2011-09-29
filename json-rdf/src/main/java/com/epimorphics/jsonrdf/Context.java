@@ -78,16 +78,6 @@ public class Context {
     }
 
     /**
-     * Construct context with both a base and an ontology defined. 
-     * @param base URI used for relative referencing
-     * @param ontology ontology model used for naming, and annotation to control serializations
-     */
-    public Context(String base, Model ontology) {
-        this.base = base;
-        loadVocabularyAnnotations(ontology);
-    }
-
-    /**
      * Scan the given vocabulary file to find shortname and property type
      * annotations
      */

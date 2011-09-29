@@ -13,7 +13,6 @@ import java.util.List;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.Term;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
