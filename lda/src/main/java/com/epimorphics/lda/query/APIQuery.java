@@ -318,11 +318,11 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     
     protected void addRangeFilter( Param param, String val, String op ) {
     	Variable already = seenParamVariables.get(param.asString());
-    	String prop = param.lastPropertyOf();
     	if (already == null || dontSquishVariables) {
 	        seenParamVariables.put( param.asString(), already = newVar() );
 	        addPropertyHasValue( param, already );
     	}
+    	String prop = param.lastPropertyOf();
 	    Any r = sns.valueAsRDFQ( prop, val, getDefaultLanguage() );
 	    addInfixSparqlFilter( already, op, r );
     }    
@@ -368,8 +368,8 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		Variable var = expandParameterPrefix( infos );
 	//
 	    Info inf = infos[infos.length - 1];
-	    if (val.startsWith("?")) varInfo.put( RDFQ.var(val), inf );
 	    Any o = objectForValue( inf, val, languagesFor(param) );
+	    if (o instanceof Variable) varInfo.put( (Variable) o, inf );
 	    addTriplePattern( var, inf.asResource, o );
     }
 
