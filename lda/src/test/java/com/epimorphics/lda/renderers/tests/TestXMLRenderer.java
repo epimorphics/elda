@@ -23,13 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 public class TestXMLRenderer 
-	{
-	private static class ForceShorten extends ShortnameFake 
-		{
-		@Override public String shorten( String uri ) 
-			{ return uri.replaceAll( "^.*[/#]", "" ); }
-		}
-	
+	{	
 	@Test public void testParser() 
 		{
 //		System.err.println( ">> " + parse( "'hello'" ) );
@@ -116,7 +110,7 @@ public class TestXMLRenderer
 	private void ensureRendering( String desired, Resource root ) 
 		{
 		PrefixMapping pm = root.getModel();
-		ShortnameService sns = new ForceShorten();
+		ShortnameService sns = new ShortnameFake();
 		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
 		xr.renderInto( root, d, false, false );

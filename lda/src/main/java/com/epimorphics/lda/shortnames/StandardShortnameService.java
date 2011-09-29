@@ -98,15 +98,6 @@ public class StandardShortnameService implements ShortnameService {
         }
         return uri;
     }
-    
-    /**
-     * Find the preferred shortname for a given URI.
-     * Note that shorten(expand(s)) may not yield s in the cases
-     * where s is a valid but non-preferred shortname.
-     */
-    @Override public String shorten(String uri) {
-        return context.getNameForURI(uri);
-    }
 
     /**
      * Convert a resource specification to a resource. A resource may be specified 

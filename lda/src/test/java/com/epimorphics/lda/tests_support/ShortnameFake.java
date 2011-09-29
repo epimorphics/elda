@@ -10,7 +10,6 @@ package com.epimorphics.lda.tests_support;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.Term;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -34,10 +33,6 @@ public class ShortnameFake implements ShortnameService
 	
 	public ShortnameFake(Model config) {
 		this.c = new Context(config);
-	}
-	
-	@Override public String shorten(String u) {
-		throw new NotImplementedException();
 	}
 
 	@Override public Resource asResource(String s) {

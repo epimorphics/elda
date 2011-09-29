@@ -56,6 +56,10 @@ public class Demo_HTML_Renderer implements Renderer {
     	boolean isItemRendering = results.listStatements( null, FIXUP.items, (RDFNode) null ).hasNext() == false;
         return isItemRendering ? renderItem(results) : renderList(results);
     }
+    
+    private String shorten( String uri ) {
+    	return sns.asContext().getNameForURI( uri );
+    }
 
     // Attempt to bypass the Talis unBNode hack
 	private void hackBnodes(Model m) {
@@ -164,7 +168,7 @@ public class Demo_HTML_Renderer implements Renderer {
 		for (Statement s: e.listProperties().toList()) {
 		    Property p = s.getPredicate();
 		    String value = makeEntry(x, s, p, brief( s.getObject() ));
-		    String shortP = sns.shorten(p.getURI());
+		    String shortP = shorten(p.getURI());
 		    String title = "click to try and get definition details for " + shortP;
 			String pd =	"<a href='" + p.getURI() + "' title='" + title + "'>" + shortP + "</a>"
 		    	;
@@ -258,7 +262,7 @@ public class Demo_HTML_Renderer implements Renderer {
 	private String shortPropertyName( Statement st ) 
 		{
 		String uri = st.getPredicate().getURI();
-		String shorter = sns.shorten( uri );
+		String shorter = shorten( uri );
 		return shorter == null ? st.getModel().shortForm( uri ) : shorter;
 		}
 	
@@ -277,9 +281,9 @@ public class Demo_HTML_Renderer implements Renderer {
 
     private String resRequest(String base, Property p, Resource o )
     	{
-    	String shortP = sns.shorten( p.getURI() );
+    	String shortP = shorten( p.getURI() );
     	String oURI = o.getURI();
-		String shortO = sns.shorten( oURI );
+		String shortO = shorten( oURI );
     	if (shortO == null) shortO = oURI;
     	String uri = withArgs( base, shortP + "=" + shortO );
     	String image = "[similar]";
@@ -295,7 +299,7 @@ public class Demo_HTML_Renderer implements Renderer {
 
 	private String intRequest(String base, Mode m, Property p, String value ) 
     	{
-    	String shortP = sns.shorten( p.getURI() );
+    	String shortP = shorten( p.getURI() );
     	String uri = withArgs( base,  m.prefix + shortP + "=" + value );
     	String image = 
     		m == Mode.MAX ? "&#0171;" 
@@ -354,7 +358,7 @@ public class Demo_HTML_Renderer implements Renderer {
 
 	private String qname( Resource x )
         { 
-    	String s = sns.shorten( x.getURI() );
+    	String s = shorten( x.getURI() );
     	return s == null ? x.getModel().shortForm( x.getURI() ) : s;
         }
 

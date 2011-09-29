@@ -92,11 +92,6 @@ public interface ShortnameService
 	public String expand( String s );
 	
 	/**
-	    Answer the preferred short name for the full URI u.
-	*/
-	public String shorten( String u );
-	
-	/**
 	    Utilities on ShortnameService's.
 	 
 	 	@author chris

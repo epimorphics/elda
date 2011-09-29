@@ -50,10 +50,7 @@ public class TestSelectParameter
     public static ShortnameService makeSNS()
         {
     	return new ShortnameService() 
-    		{
-			@Override public String shorten(String u) 
-				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
-			
+    		{			
 			@Override public Resource asResource(String s)
 				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
 			
