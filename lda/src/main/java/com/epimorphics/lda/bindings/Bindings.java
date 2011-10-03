@@ -190,7 +190,7 @@ public class Bindings
 	    Bindings.
 	*/
 	@Override public String toString()
-		{ return "<variables " + vars.toString() + ">"; }
+		{ return "<bindings " + parameterNames + "|" + vars.toString() + ">"; }
 	
 	/**
 	    Answer true if <code>other</code> is an instance of Bindings,
