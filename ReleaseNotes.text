@@ -9,6 +9,16 @@
 * some ShortnameService method names have changed. Several have
   been removed, since they were used nowhere in the Elda codebase.
 
+* The FIXUP vocabulary has been merged into the API vocabulary.
+  The latter's generation from a .ttl vocabulary file has been
+  (slightly) documented.
+
+* ShortnameService.shorten has been removed -- it was only used in
+  DemoHTMLRenderer and we're trying to prune interfaces.
+
+* QueryArguments[Impl] have been removed; they were not pulling
+  their weight. Their functionality has been returned to APIQuery.
+
 1.1.14
 
 * Bug fix: Elda shortened the objects of rdf:type in the JSON
