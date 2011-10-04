@@ -33,6 +33,7 @@ public class QueryParameter {
 	public static final String _METADATA= "_metadata";
 	public static final String _FORMAT = "_format";
 	public static final String _LANG = "_lang";
+	
 	public static final String callback = "callback";
 	
 	public static final int DEFAULT_PAGE_SIZE = 10;
@@ -46,6 +47,11 @@ public class QueryParameter {
 	public static final String MAX_EX_PREFIX = "maxEx-";
 	public static final String EXISTS_PREFIX = "exists-";
 	
+	public static final String NEAR_LAT = "near-lat";
+	public static final String NEAR_LONG = "near-long";
+	
+	public static final Pattern callbackPattern = Pattern.compile( "^[a-zA-Z_][a-zA-Z0-9]*$" );
+
 	/**
 	    Answer true iff <code>p</code> is one of the reserved parameters:
 	    starts with "_", is "near-lat" or "near-long", or is "callback".
@@ -61,6 +67,5 @@ public class QueryParameter {
 	/**
 	    Regular expression matching the names allowed for the callback function.
 	*/
-	public static final Pattern callbackPattern = Pattern.compile( "^[a-zA-Z_][a-zA-Z0-9]*$" );
 
 }

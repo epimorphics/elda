@@ -171,7 +171,7 @@ public class EndpointMetadata {
 			Resource vb = meta.createResource();
 			vb.addProperty( FIXUP.label, name );
 			vb.addProperty( FIXUP.value, cc.getValueString( name ) );
-			exec.addProperty( FIXUP.VB, vb );
+			exec.addProperty( FIXUP.variableBinding, vb );
 		}
 	}
 
@@ -187,7 +187,7 @@ public class EndpointMetadata {
 					APIEndpointImpl.log.warn( "URI <" + uri + "> has several short names, viz: " + shorties + "; picked " + shorty );
 				}
 	    		Resource tb = meta.createResource();
-	    		exec.addProperty( FIXUP.TB, tb );
+	    		exec.addProperty( FIXUP.termBinding, tb );
 				tb.addProperty( FIXUP.label, shorty );
 				tb.addProperty( API.property, term );
 			}

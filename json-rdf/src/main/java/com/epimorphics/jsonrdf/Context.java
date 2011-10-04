@@ -147,15 +147,12 @@ public class Context {
             prop = makeProp(uri, name);
             uriToProp.put(uri, prop);
         }
-        if (res.hasProperty(RDF.type, FIXUP.Multivalued)) 
-            prop.setMultivalued(true);
-        if (res.hasProperty( FIXUP.structured, Literal_TRUE ) )
-        	prop.setStructured( true );
-        if (res.hasProperty(RDF.type, FIXUP.Hidden))
-            prop.setHidden(true);
-        if (res.hasProperty(RDF.type, OWL.ObjectProperty)) { 
-            prop.setType(OWL.Thing.getURI());
-        } else {
+        if (res.hasProperty(RDF.type, FIXUP.Multivalued)) prop.setMultivalued(true);
+        if (res.hasProperty( FIXUP.structured, Literal_TRUE ) ) prop.setStructured( true );
+        if (res.hasProperty(RDF.type, FIXUP.Hidden)) prop.setHidden(true);
+        if (res.hasProperty(RDF.type, OWL.ObjectProperty)) 
+        	prop.setType(OWL.Thing.getURI());
+        else {
             String typeURI = getStringValue(res, RDFS.range);
             if (typeURI != null) prop.setType(typeURI);
         }

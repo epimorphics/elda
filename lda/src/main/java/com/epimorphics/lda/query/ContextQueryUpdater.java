@@ -160,9 +160,9 @@ public class ContextQueryUpdater implements ViewSetter {
 		} else if (p.equals( QueryParameter.callback )) {
 			if (!QueryParameter.callbackPattern.matcher( val ).matches())
 				throw new EldaException( "illegal callback name", val, EldaException.BAD_REQUEST );
-		} else if (p.equals( APIQuery.NEAR_LAT)) { 
+		} else if (p.equals( QueryParameter.NEAR_LAT)) { 
 			geo.setNearLat( val );
-		} else if (p.equals( APIQuery.NEAR_LONG )) {
+		} else if (p.equals( QueryParameter.NEAR_LONG )) {
 			geo.setNearLong( val );
 		} else if (p.equals( QueryParameter._DISTANCE )) { 
 			geo.setDistance( val );

@@ -59,10 +59,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  */
 public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     
-	public static final String NEAR_LAT = "near-lat";
-	
-	public static final String NEAR_LONG = "near-long";
-    
 	public static final String SELECT_VARNAME = "item";
     
     public static final Variable SELECT_VAR = RDFQ.var( "?" + SELECT_VARNAME );
@@ -198,7 +194,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
      * If this is not called then a default size will be used.
      */
     public void setPageSize( int pageSize ) {
-        this.pageSize = (pageSize > maxPageSize ? defaultPageSize : pageSize); // Math.min(pageSize, maxPageSize );
+        this.pageSize = (pageSize > maxPageSize ? defaultPageSize : pageSize);
     }
     
     public int getPageSize() {

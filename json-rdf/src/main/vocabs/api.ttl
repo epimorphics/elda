@@ -317,4 +317,54 @@ api:stylesheet a rdf:Property ;
   rdfs:domain api:XsltFormatter ;
   rdfs:range rdfs:Resource .
 
+# Add commentary to these.
 
+api:extendedMetadata a rdf:Property.
+
+api:selectionResult a rdf:Property.
+
+api:viewingResult a rdf:Property.
+
+api:prefixMapping a rdf:Property.
+
+api:prefix a rdf:Property.
+
+api:namespace a rdf:Property.
+
+api:lang a rdf:Property.
+
+api:items a rdf:Property.
+
+api:type a rdf:Property.
+
+api:label a rdf:Property.
+
+api:page a rdf:Property.
+
+api:definition a rdf:Property.
+
+api:structured a rdf:Property.
+
+api:variable a rdf:Property.
+
+api:value a rdf:Property.
+
+api:processor a rdf:Property.
+
+api:wasResultOf a rdf:Property.
+
+api:variableBinding a rdf:Property.
+
+api:termBinding a rdf:Property.
+
+api:Page a rdfs:Class.
+
+api:HtmlFormatter a rdfs:Class.
+
+api:Service a rdfs:Class.
+
+api:Execution a rdfs:Class.
+
+api:Hidden a rdfs:Class.
+
+api:Multivalued a rdfs:Class.

@@ -29,6 +29,12 @@ public class FIXUP
 
     private static Resource resource( String ns, String local )
         { return ResourceFactory.createResource( ns + local ); }
+    
+    public static final Property extendedMetadata = property( NS, "extendedMetadataVersion" );
+    
+    public static final Property selectionResult = property( NS, "selectionResult" );
+    
+    public static final Property viewingResult = property( NS, "viewingResult" );
 	
 	public static final Property prefixMapping = property( NS, "prefixMapping" );
 	
@@ -38,10 +44,6 @@ public class FIXUP
 	
 	public static final Property lang = property( NS, "lang" );
 
-	public static final Resource Hidden = resource( NS, "Hidden" );
-
-	public static final Resource Multivalued = resource( NS, "Multivalued" );
-
 	public static final Property items = property( NS, "items" );
 
 	public static final Property type = property( NS, "type" );
@@ -50,8 +52,6 @@ public class FIXUP
 
 	public static final Property page = property( NS, "page" );
 
-	public static final Resource Page = resource( NS, "Page" );
-
 	public static final Property definition = property( NS, "definition" );
 
 	public static final Property structured = property( NS, "structured" );
@@ -59,24 +59,24 @@ public class FIXUP
 	public static final Property variable = property( NS, "variable" );
 
 	public static final Property value = property( NS, "value" );
+	
+	public static final Property processor = property( NS, "processor" );
+	
+	public static final Property wasResultOf = property( NS, "wasResultOf" );
+	
+	public static final Property variableBinding = property( NS, "variableBinding" );
+	
+	public static final Property termBinding = property( NS, "termBinding" );
+	
+	public static final Resource Page = resource( NS, "Page" );
 
 	public static final Resource HtmlFormatter = property( NS, "HtmlFormatter" );
 
-	public static final Resource Service = resource( API.NS, "processor" );
-
-	public static final Property processor = property( API.NS, "processor" );
-
-	public static final Property wasResultOf = property( API.NS, "wasResultOf" );
-
-	public static final Property VB = property( API.NS, "variableBinding" );
+	public static final Resource Service = resource( NS, "processor" );
 	
-	public static final Property TB = property( API.NS, "termBinding" );
+	public static final Resource Execution = resource( NS, "Execution" );
 	
-	public static final Resource Execution = resource( API.NS, "Execution" );
+	public static final Resource Hidden = resource( NS, "Hidden" );
 	
-    public static final Property extendedMetadata = property( API.NS, "extendedMetadataVersion" );
-
-	public static final Property selectionResult = property( API.NS, "selectionResult" );
-
-	public static final Property viewingResult = property( API.NS, "viewingResult" );
+	public static final Resource Multivalued = resource( NS, "Multivalued" );
 	}
