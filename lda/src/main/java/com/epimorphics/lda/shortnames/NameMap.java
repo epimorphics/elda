@@ -15,7 +15,6 @@ import java.util.Set;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -57,7 +56,7 @@ public class NameMap {
 	public void load( PrefixMapping pm, Model m ) {
 		prefixes.withDefaultMappings( pm );
 		load( pm, m.listStatements( ANY, RDFS.label, ANY ) );
-		load( pm, m.listStatements( ANY, FIXUP.label, ANY ) );
+		load( pm, m.listStatements( ANY, API.label, ANY ) );
 		load( pm, m.listStatements( ANY, API.name, ANY ) );
 	}
 

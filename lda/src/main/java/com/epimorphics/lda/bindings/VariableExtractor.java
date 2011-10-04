@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
@@ -47,12 +46,12 @@ public class VariableExtractor {
 	    stored into <code>toDo</code> for later evaluation.
 	*/
 	public static void findVariables( Resource root, Bindings bound ) {
-		for (Statement s: root.listProperties( FIXUP.variable ).toList()) {
+		for (Statement s: root.listProperties( API.variable ).toList()) {
 			Resource v = s.getResource();
 			String name = getStringValue( v, API.name, null );
-			String language = getStringValue( v, FIXUP.lang, "" );
-			String type = getStringValue( v, FIXUP.type, null );
-			Statement value = v.getProperty( FIXUP.value );
+			String language = getStringValue( v, API.lang, "" );
+			String type = getStringValue( v, API.type, null );
+			Statement value = v.getProperty( API.value );
 			if (type == null && value != null && value.getObject().isLiteral())
 				type = emptyIfNull( value.getObject().asNode().getLiteralDatatypeURI() );
 			if (type == null && value != null && value.getObject().isURIResource())
@@ -72,7 +71,7 @@ public class VariableExtractor {
 	}
 
 	private static String getValueString(Resource v, String language, String type) {
-		Statement s = v.getProperty( FIXUP.value );
+		Statement s = v.getProperty( API.value );
 		if (s == null) return null;
 		Node object = s.getObject().asNode();
 		if (object.isURI()) return object.getURI();

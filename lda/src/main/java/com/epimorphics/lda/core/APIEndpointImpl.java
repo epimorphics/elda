@@ -39,7 +39,6 @@ import com.epimorphics.util.RDFUtils;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -214,23 +213,23 @@ public class APIEndpointImpl implements APIEndpoint {
         Resource thisPage = resourceForPage(uriForDefinition, rsm, ru, page);
         rs.setRoot(thisPage);
     //
-		thisPage.addProperty( FIXUP.definition, uriForDefinition );
+		thisPage.addProperty( API.definition, uriForDefinition );
 		Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
 		EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, cc, ru, formatNames );
 		createOptionalMetadata(rs, query, em);   
     //
         String emv_uri = EndpointMetadata.replaceQueryParam( Util.newURI(thisPage.getURI()), "_metadata", "all" );
-        thisPage.addProperty( FIXUP.extendedMetadata, rsm.createResource( emv_uri ) );
+        thisPage.addProperty( API.extendedMetadataVersion, rsm.createResource( emv_uri ) );
     //
         if (isListEndpoint()) {
         	RDFList content = rsm.createList( rs.getResultList().iterator() );
         	thisPage
-	        	.addProperty( RDF.type, FIXUP.Page )
-	        	.addLiteral( FIXUP.page, page )
+	        	.addProperty( RDF.type, API.Page )
+	        	.addLiteral( API.page, page )
 	        	.addLiteral( OpenSearch.itemsPerPage, perPage )
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
-        	thisPage.addProperty( FIXUP.items, content );
+        	thisPage.addProperty( API.items, content );
     		thisPage.addProperty( XHV.first, resourceForPage( uriForDefinition, rsm, ru, 0 ) );
     		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( uriForDefinition, rsm, ru, page+1 ) );
     		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( uriForDefinition, rsm, ru, page-1 ) );
@@ -240,7 +239,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		;
     		listRoot
 	    		.addProperty( DCTerms.hasPart, thisPage )
-	    		.addProperty( FIXUP.definition, uriForDefinition ) 
+	    		.addProperty( API.definition, uriForDefinition ) 
 	    		.addProperty( RDF.type, API.ListEndpoint )
 	    		// .addProperty( RDFS.label, "should be a description of this list" )
 	    		;

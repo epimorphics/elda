@@ -17,7 +17,6 @@ import com.epimorphics.lda.vocabularies.ELDA;
 import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -159,19 +158,19 @@ public class EndpointMetadata {
 
 	public void addBindings( Model toScan, Model meta, Resource anExec, NameMap nm ) {
 		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
-		exec.addProperty( RDF.type, FIXUP.Execution );
+		exec.addProperty( RDF.type, API.Execution );
 		addVariableBindings( meta, exec );
 		addTermBindings( toScan, meta, exec, nm );
-		page.addProperty( FIXUP.wasResultOf, exec );
+		page.addProperty( API.wasResultOf, exec );
 	}
 
 	public void addVariableBindings( Model meta, Resource exec ) {
 		for (Iterator<String> names = cc.keySet().iterator(); names.hasNext();) {
 			String name = names.next();
 			Resource vb = meta.createResource();
-			vb.addProperty( FIXUP.label, name );
-			vb.addProperty( FIXUP.value, cc.getValueString( name ) );
-			exec.addProperty( FIXUP.variableBinding, vb );
+			vb.addProperty( API.label, name );
+			vb.addProperty( API.value, cc.getValueString( name ) );
+			exec.addProperty( API.variableBinding, vb );
 		}
 	}
 
@@ -187,8 +186,8 @@ public class EndpointMetadata {
 					APIEndpointImpl.log.warn( "URI <" + uri + "> has several short names, viz: " + shorties + "; picked " + shorty );
 				}
 	    		Resource tb = meta.createResource();
-	    		exec.addProperty( FIXUP.termBinding, tb );
-				tb.addProperty( FIXUP.label, shorty );
+	    		exec.addProperty( API.termBinding, tb );
+				tb.addProperty( API.label, shorty );
 				tb.addProperty( API.property, term );
 			}
 		}
@@ -197,11 +196,11 @@ public class EndpointMetadata {
 	// following the Puelia model.
 	public void addExecution( Model meta, Resource anExec ) {
 		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
-		exec.addProperty( RDF.type, FIXUP.Execution );
+		exec.addProperty( RDF.type, API.Execution );
 		Resource P = meta.createResource();
 		ELDA.addEldaMetadata( P );
-		exec.addProperty( FIXUP.processor, P );
-		page.addProperty( FIXUP.wasResultOf, exec );
+		exec.addProperty( API.processor, P );
+		page.addProperty( API.wasResultOf, exec );
 	}
 
 	public void addQueryMetadata( Model meta, Resource anExec, APIQuery q, String detailsQuery, APISpec apiSpec, boolean listEndpoint ) {
@@ -216,13 +215,13 @@ public class EndpointMetadata {
 	    	Resource sr = meta.createResource( SPARQL.QueryResult );    	
 	    	sr.addProperty( SPARQL.query, EndpointMetadata.inValue( meta, q.getQueryString( apiSpec, cc ) ) );
 	    	sr.addProperty( SPARQL.endpoint, EP );
-	    	exec.addProperty( FIXUP.selectionResult, sr );
+	    	exec.addProperty( API.selectionResult, sr );
 		}
 	//
 		Resource vr = meta.createResource( SPARQL.QueryResult );
 		vr.addProperty( SPARQL.query, EndpointMetadata.inValue( meta, detailsQuery ) ); 
 		vr.addProperty( SPARQL.endpoint, EP );
-		exec.addProperty( FIXUP.viewingResult, vr );
+		exec.addProperty( API.viewingResult, vr );
 	}
 
 	public static Resource inValue( Model rsm, String s ) {

@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -41,7 +40,7 @@ public class TestLinkedDataVocabulary
 //        assertThat( API.resourceVar, isAPIResource( Property.class, "resourceVar" ) );
 //        assertThat( API.paramVar, isAPIResource( Property.class, "paramVar" ) );
         assertThat( API.viewer, isAPIResource( Property.class, "viewer" ) );
-        assertThat( FIXUP.items, isAPIResource( Property.class, "items" ) );
+        assertThat( API.items, isAPIResource( Property.class, "items" ) );
         }
     
     private Matcher<Resource> isAPIResource( final Class<? extends Resource> c, final String localName )

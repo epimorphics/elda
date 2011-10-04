@@ -15,7 +15,7 @@ import java.util.Properties;
 import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.MultiMap;
-import com.epimorphics.vocabs.FIXUP;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -122,7 +122,7 @@ public class MakeData
 		for (String b: brief.split(",")) 
 			{
 			Resource r = result.createResource( "fake:/" + b );
-			r.addProperty( FIXUP.label, b );
+			r.addProperty( API.label, b );
 			r.addProperty( RDF.type, RDF.Property );
 			r.addProperty( RDFS.range, integer );
 			}
@@ -130,7 +130,7 @@ public class MakeData
 			for (String o: others.split(","))
 				{
 				Resource r = result.createResource( "fake:/" + o );
-				r.addProperty( FIXUP.label, o );
+				r.addProperty( API.label, o );
 				r.addProperty( RDF.type, OWL.ObjectProperty );
 				}
 		return result;

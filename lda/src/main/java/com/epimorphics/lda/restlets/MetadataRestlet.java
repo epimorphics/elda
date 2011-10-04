@@ -47,7 +47,6 @@ import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.util.ResourceUtils;
@@ -258,7 +257,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
             sb.append( "\n" );
         } else {
             if (S.isAnon()) sb.append( "[] ..." ); else sb.append( nicely(prefixes, S) );
-            List<RDFNode> labels = S.asResource().listProperties(FIXUP.label).mapWith(Statement.Util.getObject).toList();
+            List<RDFNode> labels = S.asResource().listProperties(API.label).mapWith(Statement.Util.getObject).toList();
             if (labels.size() > 0) {
                 String space = "";
                 sb.append( " (" );
@@ -279,7 +278,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 	            Collections.sort( properties, byPredicate );
 	            for (Statement s: properties) {
 	                Property P = s.getPredicate();
-	                if (!P.equals(FIXUP.label)  &!P.equals(SIBLING)) {
+	                if (!P.equals(API.label)  &!P.equals(SIBLING)) {
 	                    String p = "<b>" + nicely( prefixes, P ) + "</b>";
 	                    renderNicely( prefixes, sb, p, s.getObject(), seen, depth + 1 );
 	                }

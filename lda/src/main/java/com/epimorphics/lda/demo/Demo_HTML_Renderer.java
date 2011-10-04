@@ -21,7 +21,7 @@ import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
-import com.epimorphics.vocabs.FIXUP;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFList;
@@ -53,7 +53,7 @@ public class Demo_HTML_Renderer implements Renderer {
 
     @Override public String render( Bindings ignored, APIResultSet results ) {
     	hackBnodes( results.getModel() );
-    	boolean isItemRendering = results.listStatements( null, FIXUP.items, (RDFNode) null ).hasNext() == false;
+    	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
         return isItemRendering ? renderItem(results) : renderList(results);
     }
     
@@ -95,8 +95,8 @@ public class Demo_HTML_Renderer implements Renderer {
         renderParameters(textBody, rootURI);
         renderMetadata( textBody, results.getModel() );
     //    
-        Resource anchor = results.listStatements( null, FIXUP.items, (RDFNode) null ).next().getSubject();
-        for (RDFNode elem: anchor.getProperty( FIXUP.items ).getResource().as( RDFList.class ).asJavaList())
+        Resource anchor = results.listStatements( null, API.items, (RDFNode) null ).next().getSubject();
+        for (RDFNode elem: anchor.getProperty( API.items ).getResource().as( RDFList.class ).asJavaList())
             {
         	textBody.append( "\n<div class='one-item'>\n" );
             Resource e = (Resource) elem;
@@ -110,7 +110,7 @@ public class Demo_HTML_Renderer implements Renderer {
 	}
 
 	private void renderMetadata( StringBuilder textBody, Model rsm ) {
-		StmtIterator sit = rsm.listStatements( null, FIXUP.definition, (RDFNode) null );
+		StmtIterator sit = rsm.listStatements( null, API.definition, (RDFNode) null );
 		if (sit.hasNext()) {
 			String def = sit.next().getResource().getURI();
 			textBody

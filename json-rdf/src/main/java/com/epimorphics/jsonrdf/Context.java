@@ -17,7 +17,7 @@ import static com.epimorphics.jsonrdf.RDFUtil.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import com.epimorphics.vocabs.FIXUP;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -86,12 +86,12 @@ public class Context {
             loadAnnotations(m, m.listSubjectsWithProperty(RDF.type, r), false, prefixes);
         for(Resource r : PROP_TYPES_TO_SHORTEN) 
             loadAnnotations(m, m.listSubjectsWithProperty(RDF.type, r), true, prefixes);
-        loadAnnotations(m, m.listSubjectsWithProperty(FIXUP.label), false, prefixes);
+        loadAnnotations(m, m.listSubjectsWithProperty(API.label), false, prefixes);
         loadAnnotations(m, m.listSubjectsWithProperty(RDFS.range), true, prefixes);
     }
     static Resource[] RES_TYPES_TO_SHORTEN = new Resource[] {RDFS.Class, OWL.Class};
         // TODO add SKOS
-    static Resource[] PROP_TYPES_TO_SHORTEN = new Resource[] {RDF.Property, OWL.DatatypeProperty, OWL.ObjectProperty, FIXUP.Hidden};
+    static Resource[] PROP_TYPES_TO_SHORTEN = new Resource[] {RDF.Property, OWL.DatatypeProperty, OWL.ObjectProperty, API.Hidden};
     static Pattern labelPattern = Pattern.compile("[_a-zA-Z][0-9a-zA-Z_]*");
     
     protected void loadAnnotations(Model m, ResIterator ri, boolean isProperty, PrefixMapping prefixes) {
@@ -101,8 +101,8 @@ public class Context {
             String shortform = null;
             if (uri != null) {
                 recordAltName(uri, prefixes);
-                if (res.hasProperty(FIXUP.label)) {
-                    shortform = getStringValue(res, FIXUP.label);
+                if (res.hasProperty(API.label)) {
+                    shortform = getStringValue(res, API.label);
                     recordPreferredName(shortform, uri);
                 } else if (res.hasProperty(RDFS.label)) {
                     shortform = getStringValue(res, RDFS.label);
@@ -147,9 +147,9 @@ public class Context {
             prop = makeProp(uri, name);
             uriToProp.put(uri, prop);
         }
-        if (res.hasProperty(RDF.type, FIXUP.Multivalued)) prop.setMultivalued(true);
-        if (res.hasProperty( FIXUP.structured, Literal_TRUE ) ) prop.setStructured( true );
-        if (res.hasProperty(RDF.type, FIXUP.Hidden)) prop.setHidden(true);
+        if (res.hasProperty(RDF.type, API.Multivalued)) prop.setMultivalued(true);
+        if (res.hasProperty( API.structured, Literal_TRUE ) ) prop.setStructured( true );
+        if (res.hasProperty(RDF.type, API.Hidden)) prop.setHidden(true);
         if (res.hasProperty(RDF.type, OWL.ObjectProperty)) 
         	prop.setType(OWL.Thing.getURI());
         else {

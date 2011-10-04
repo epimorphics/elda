@@ -32,7 +32,6 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -79,7 +78,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     	wantsContext = endpoint.hasLiteral( EXTRAS.wantsContext, true );
     	bindings.putAll( apiSpec.bindings );
         bindings.putAll( VariableExtractor.findAndBindVariables( bindings, endpoint ) );
-        defaultLanguage = getStringValue(endpoint, FIXUP.lang, apiSpec.getDefaultLanguage());
+        defaultLanguage = getStringValue(endpoint, API.lang, apiSpec.getDefaultLanguage());
     	defaultPageSize = getIntValue( endpoint, API.defaultPageSize, apiSpec.defaultPageSize );
 		maxPageSize = getIntValue( endpoint, API.maxPageSize, apiSpec.maxPageSize );
 		cachePolicyName = getStringValue( endpoint, EXTRAS.cachePolicyName, "default" );
@@ -256,8 +255,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     private void addSelectorInfo( Resource s ) {
         Model m = s.getModel();
         ShortnameService sns = this.apiSpec.sns;
-        if (s.hasProperty(FIXUP.type)) {
-			Resource ty = sns.asResource( s.getProperty(FIXUP.type).getObject() );
+        if (s.hasProperty(API.type)) {
+			Resource ty = sns.asResource( s.getProperty(API.type).getObject() );
             baseQuery.setTypeConstraint( ty );
         }
         for (NodeIterator ni = m.listObjectsOfProperty(s, API.filter); ni.hasNext();) {

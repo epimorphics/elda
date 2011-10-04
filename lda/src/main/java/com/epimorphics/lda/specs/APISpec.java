@@ -35,7 +35,6 @@ import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
@@ -88,7 +87,7 @@ public class APISpec {
         dataSource = GetDataSource.sourceFromSpec( fm, specification );
         describeSources = extractDescribeSources( fm, specification, dataSource );
         primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
-        defaultLanguage = getStringValue(specification, FIXUP.lang, null);
+        defaultLanguage = getStringValue(specification, API.lang, null);
         base = getStringValue( specification, API.base, null );
         bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
         factoryTable = RendererFactoriesSpec.createFactoryTable( specification );

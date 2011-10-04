@@ -23,7 +23,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Util;
-import com.epimorphics.vocabs.FIXUP;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 
 public class HTMLRenderer implements Renderer {
@@ -33,7 +33,7 @@ public class HTMLRenderer implements Renderer {
     }
 
     @Override public String render( Bindings ignored, APIResultSet results ) {
-    	boolean isItemRendering = results.listStatements( null, FIXUP.items, (RDFNode) null ).hasNext() == false;
+    	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
         return isItemRendering ? renderItem(results) : renderList(results);
     }
 
@@ -50,8 +50,8 @@ public class HTMLRenderer implements Renderer {
         Resource root = results.getRoot();
         String main = root.getURI() ;
         h1( textBody, "result-set for query " + main );
-        Resource anchor = results.listStatements( null, FIXUP.items, (RDFNode) null ).next().getSubject();
-        for (RDFNode elem: anchor.getProperty( FIXUP.items ).getResource().as( RDFList.class ).asJavaList())
+        Resource anchor = results.listStatements( null, API.items, (RDFNode) null ).next().getSubject();
+        for (RDFNode elem: anchor.getProperty( API.items ).getResource().as( RDFList.class ).asJavaList())
             {
             Resource e = (Resource) elem;
             h2( textBody, e.getURI() );

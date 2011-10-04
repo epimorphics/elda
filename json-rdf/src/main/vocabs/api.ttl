@@ -319,7 +319,7 @@ api:stylesheet a rdf:Property ;
 
 # Add commentary to these.
 
-api:extendedMetadata a rdf:Property.
+api:extendedMetadataVersion a rdf:Property.
 
 api:selectionResult a rdf:Property.
 
