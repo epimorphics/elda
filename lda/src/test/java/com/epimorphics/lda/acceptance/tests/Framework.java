@@ -63,8 +63,8 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 	public static Collection<Object[]> data( String path )
 		{
 		List<Object[]> result = new ArrayList<Object[]>();
-//		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree" + path ) );
-		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree/elda-talk-example" ) );
+		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree" + path ) );
+//		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree/elda-talk-example" ) );
 //		System.err.println( ">> " + result.size() + " tests.");
 		return result;
 		}
