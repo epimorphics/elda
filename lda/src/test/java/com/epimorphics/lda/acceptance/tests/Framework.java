@@ -247,7 +247,9 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		Bindings cc = Bindings.createContext( bindTemplate( w.template, w.path ), map );
 		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( ru, cc );
 		Model rsm = resultsAndFormat.a.getModel();
-//		System.err.println( ">> " + rs.getResultList() );
+//		System.err.println( ">> " + rs.getResultList() );				
+//		System.err.println( "||>> " + resultsAndFormat.a.getSelectQuery() );
+
 		for (Ask a: w.shouldAppear)
 			{
 //			System.err.println( ">>  asking ... " + (a.isPositive ? "ASSERT" : "DENY") );

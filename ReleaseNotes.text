@@ -19,6 +19,11 @@
 * QueryArguments[Impl] have been removed; they were not pulling
   their weight. Their functionality has been returned to APIQuery.
 
+* The (UNDOCUMENTED - beware of the leopard) LARQ search functionality
+  has been updated to use the separated-out LARQ artifact. IT IS NOT
+  TESTED and may no longer work as expected. If you use this functionality
+  let us know.
+
 1.1.14
 
 * Bug fix: Elda shortened the objects of rdf:type in the JSON

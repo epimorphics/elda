@@ -388,7 +388,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		//
 			if (langArray.length == 1 || (p != null && p.getType() != null)) {
 				return sns.valueAsRDFQ( prop, val, langArray[0] ); 
-			} else if (val.startsWith( "?" )) {
+			} else  if (val.startsWith( "?" )) {
 				Variable o = RDFQ.var( val );
 				filterExpressions.add( someOf( o, langArray ) );
 				return o;
