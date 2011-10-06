@@ -479,17 +479,13 @@ public class Encoder {
         }
         
         private void encode(Resource r) {
-            encode(r, false);
-        }
-        
-        private void encode(Resource r, boolean isType) {
             if (! needEncodeResource(r, true)) {
                 if (r.isAnon()) {
                     // Case of an empty bNode, for URI nodes we will already have output URI reference
                     jw.object(); 
                     jw.endObject();
                 } else {
-                    jw.value( rules.encodeResourceURI(r.getURI(), context, isType) );
+                    jw.value( rules.encodeResourceURI(r.getURI(), context, false) );
                 }
             } else {
             	jw.object();
@@ -543,23 +539,17 @@ public class Encoder {
             }
 			return props;
 		}
-
-		/**
-		    TODO: Retain this for a while, then go through and collapse the code.
-		*/
-		protected static final boolean shortenTypes = false;
 		
         private void writePropertyValues( OneToManyMap<Property, RDFNode> vals, Property p, Context.Prop prop ) {                
         	Iterator<RDFNode> i = vals.getAll(p);
             boolean multi = prop.isMultivalued();
-            boolean isType = shortenTypes && p.equals(RDF.type);
             boolean isStructured = prop.isStructured();
             RDFNode first = i.next();
             prop.addType(first);
             if (!i.hasNext() && !multi) {
                 // just emit single value
             	jw.key(prop.getName());
-                emitNode(first, isStructured, isType);
+                emitNode(first, isStructured);
             } else {
                 // Emit as array, do so with sorting
                 List<RDFNode> nvals = new ArrayList<RDFNode>();
@@ -574,13 +564,13 @@ public class Encoder {
             	jw.key(prop.getName());
                 jw.array();
                 for (RDFNode node : nvals) {
-					emitNode(node, isStructured, isType);
+					emitNode(node, isStructured);
 				}
                 jw.endArray();
             }
         }
         
-        private void emitNode(RDFNode valNode, boolean isStructured, boolean isType) {
+        private void emitNode(RDFNode valNode, boolean isStructured) {
             if (valNode.isLiteral()) {
             	rules.encodeLiteral( jw, isStructured, (Literal) valNode, context );
             } else {
@@ -590,7 +580,7 @@ public class Encoder {
                         RDFList list = r.as(RDFList.class);
                         jw.array();
                         for (Iterator<RDFNode> i = list.iterator(); i.hasNext();) {
-                            emitNode(i.next(), isStructured, false);
+                            emitNode(i.next(), isStructured);
                         }
                         jw.endArray();
                     } else if (isMultiplyReferencedbNode(r) && deferSharedBNodes) {
@@ -605,10 +595,10 @@ public class Encoder {
                     jw.array(); jw.endArray();
                 } else {
                     if (recurseOverResources && nestResources) {
-                        encode(r, isType);
+                        encode(r);
                     } else {
                         visitResource(r);
-                        jw.value( rules.encodeResourceURI(r.getURI(), context, isType) );
+                        jw.value( rules.encodeResourceURI(r.getURI(), context, false) );
                     }
                 }
             }
