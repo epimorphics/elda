@@ -40,7 +40,6 @@ public class JSONRenderer implements Renderer {
     
     final APIEndpoint api;
     final MediaType mt;
-    final boolean wantContext;
     
     public JSONRenderer( APIEndpoint api ) {
         this( api, MediaType.APPLICATION_JSON );
@@ -49,7 +48,6 @@ public class JSONRenderer implements Renderer {
     public JSONRenderer( APIEndpoint api, MediaType mt ) {
         this.api = api;
         this.mt = mt;
-        this.wantContext = api.wantContext();
     }
     
     @Override public MediaType getMediaType( Bindings rc ) {
@@ -64,7 +62,7 @@ public class JSONRenderer implements Renderer {
         Context context = api.getSpec().getAPISpec().getShortnameService().asContext();
         context.setSorted(true);
         try {
-            Encoder.getForOneResult( context, api.wantContext() ).encodeRecursive(results.getModel(), roots, writer, true);
+            Encoder.getForOneResult( context, false ).encodeRecursive(results.getModel(), roots, writer, true);
             String written = writer.toString();
             try {
             	ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json

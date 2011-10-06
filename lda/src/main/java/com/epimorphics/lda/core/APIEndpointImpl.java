@@ -77,7 +77,6 @@ public class APIEndpointImpl implements APIEndpoint {
     
     @Override public Triad<APIResultSet, String, Bindings> call( URI reqURI, Bindings given ) {
     	long origin = System.currentTimeMillis();
-    	wantsContext = specWantsContext;
     	Bindings cc = given.copyWithDefaults( spec.getBindings() );
         // HERE log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
     //
@@ -98,12 +97,6 @@ public class APIEndpointImpl implements APIEndpoint {
         log.debug( "TIMING: run query:   " + (timeAfterRun - timeAfterBuild)/1000.0 + "s" );
         log.debug( "TIMING: view query:  " + (timeAfterMetadata - timeAfterRun)/1000.0 );
         return new Triad<APIResultSet, String, Bindings>( filtered, format, cc );
-    }
-
-	protected boolean wantsContext = false;
-    
-    @Override public boolean wantContext() {
-    	return wantsContext;
     }
 
     // Filter by any views

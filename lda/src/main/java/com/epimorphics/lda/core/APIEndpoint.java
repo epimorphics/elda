@@ -72,12 +72,5 @@ public interface APIEndpoint {
         TODO: consider the possibility that there's more than one.
     */
 	public Renderer getRendererByType( MediaType mt );
-
-    /**
-        For an Epimorphics extension. Answer true iff this API endpoint
-        would like the round-trip context added to the JSON encoding.
-     	(Dynamic; its value may depend on query parameters.)
-    */
-	public boolean wantContext();
 }
 
