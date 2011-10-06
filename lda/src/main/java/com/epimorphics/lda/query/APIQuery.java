@@ -319,7 +319,9 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	        addPropertyHasValue( param, already );
     	}
     	String prop = param.lastPropertyOf();
-	    Any r = sns.valueAsRDFQ( prop, val, getDefaultLanguage() );
+	    Info inf = param.fullParts()[param.fullParts().length - 1];
+//	     Any r = sns.valueAsRDFQ( prop, val, getDefaultLanguage() );
+	    Any r = objectForValue( inf, val, getDefaultLanguage() );
 	    addInfixSparqlFilter( already, op, r );
     }    
 	
@@ -386,7 +388,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 			String[] langArray = languages.split( "," );
 			Prop p = sns.asContext().getPropertyByName( prop );
 		//
-			if (langArray.length == 1 || (p != null && p.getType() != null)) {
+			if (langArray.length == 1 || (p != null && p.getType() != null) || sns.expand(val) != null) {
 				return sns.valueAsRDFQ( prop, val, langArray[0] ); 
 			} else  if (val.startsWith( "?" )) {
 				Variable o = RDFQ.var( val );
