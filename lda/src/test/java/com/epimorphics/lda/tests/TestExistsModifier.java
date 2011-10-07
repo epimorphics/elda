@@ -20,11 +20,10 @@ import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.RenderExpression;
 import com.epimorphics.lda.rdfq.Variable;
-import com.epimorphics.lda.shortnames.StandardShortnameService;
+import com.epimorphics.lda.tests_support.ExpandOnly;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -37,23 +36,15 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestExistsModifier 
 	{
-	private static final class Shorts extends StandardShortnameService 
+	private static final class Shorts extends ExpandOnly 
 		{
 		static final String NS = "fake:";
 		
-		public Shorts(String brief) 
-			{ super( MakeData.modelForBrief( brief ) ); }
+		public Shorts( String brief ) 
+			{ super( MakeData.modelForBrief( brief ), "Item=fake:Item" ); }
 		
 		@Override public Resource asResource( String shortName ) 
 			{ return ResourceFactory.createResource( NS + shortName ); }
-
-		@Override public Any valueAsRDFQ( String prop, String val, String language ) 
-			{
-			if (prop.equals( "type" )) return RDFQ.uri( NS + val );
-			if (val.equals("true")) return RDFQ.literal( val );
-			if (val.startsWith( "?" )) return RDFQ.var( val );
-			throw new RuntimeException( "prop: " + prop + ", val: " + val );
-			}
 		}
 	
 	@Test public void testExists()
