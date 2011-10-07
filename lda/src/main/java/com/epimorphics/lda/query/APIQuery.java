@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
@@ -40,12 +41,15 @@ import com.epimorphics.lda.support.QuerySupport;
 
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
+import com.hp.hpl.jena.datatypes.RDFDatatype;
+import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.graph.*;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -380,7 +384,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    String prop = inf.shortName;
 	    if (languages == null) {
 			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
-			return sns.valueAsRDFQ( prop, val, null );
+			return valueAsRDFQ( prop, val, null );
 	    } else {
 			// handle language codes
 			String[] langArray = languages.split( "," );
@@ -389,7 +393,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 			String type = (p == null ? null : p.getType());
 		//
 			if (langArray.length == 1 || (type != null) || sns.expand(val) != null) {
-				return sns.valueAsRDFQ( prop, val, langArray[0] ); 
+				return valueAsRDFQ( prop, val, langArray[0] ); 
 			} else  if (val.startsWith( "?" )) {
 				Variable o = RDFQ.var( val );
 				filterExpressions.add( someOf( o, langArray ) );
@@ -404,6 +408,14 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 			}
 	    }
 	}
+
+	private Any valueAsRDFQ(String prop, String val, String language ) {
+		return sns.valueAsRDFQ( prop, val, language );
+	}
+
+//	public static Any valueAsRDFQ( ShortnameService sns, String p, String nodeValue, String language) {
+
+//	}
 
 	private Variable expandParameterPrefix( Param.Info[] infos ) {
 		StringBuilder chainName = new StringBuilder();
@@ -661,7 +673,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	        	String normalizedValue = 
 	        		(prop == null) 
 	        		    ? valueAsSparql( v )
-	        		    : sns.valueAsRDFQ(prop.shortName, val, defaultLanguage).asSparqlTerm(pl); 
+	        		    : valueAsRDFQ(prop.shortName, val, defaultLanguage).asSparqlTerm(pl); 
 	    		result.append( normalizedValue );
     		}
     		start = m.end();

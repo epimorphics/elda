@@ -63,6 +63,12 @@ public interface ShortnameService
 	    commitments that Context does.
 	*/
 	public NameMap nameMap();
+	
+	/**
+	    Answer true iff the named type has been declared (or is by default)
+	    to be a datatype (rather than an object type).
+	*/
+	public boolean isDatatype( String type );
 
 	/**
 	    If r is a resource, answer r; if it is a literal with lexical form l,

@@ -27,7 +27,7 @@ public interface ModelLoaderI {
     /**
      * Load a model from the given uri. Implementations may handle
      * uri prefixes in special ways.
-     */
+    */
     public Model loadModel(String uri);
 }
 

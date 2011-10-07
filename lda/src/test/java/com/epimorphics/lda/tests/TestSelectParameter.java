@@ -69,6 +69,8 @@ public class TestSelectParameter
 			@Override public NameMap nameMap() 
 				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
 
+			@Override public boolean isDatatype(String type)
+				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
     		};
         }
     }

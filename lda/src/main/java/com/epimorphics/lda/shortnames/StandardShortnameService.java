@@ -18,9 +18,7 @@
 package com.epimorphics.lda.shortnames;
 import static com.epimorphics.util.RDFUtils.*;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.epimorphics.jsonrdf.Context;
@@ -30,9 +28,6 @@ import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.datatypes.BaseDatatype;
-import com.hp.hpl.jena.datatypes.RDFDatatype;
-import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.*;
@@ -151,10 +146,8 @@ public class StandardShortnameService implements ShortnameService {
                 if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
                     return RDFQ.uri(nodeValue); 
                 } else if (isDatatype( type )) {
-                	RDFDatatype dt = TypeMapper.getInstance().getTypeByName(type);
-                	if (dt == null) dt = fakeDatatype( type );
-                	if (!dt.getURI().equals( RDFUtil.RDFPlainLiteral ))
-                		return RDFQ.literal( nodeValue, null, dt.getURI() );
+                	if (!type.equals( RDFUtil.RDFPlainLiteral ))
+                		return RDFQ.literal( nodeValue, null, type );
                 }
             }
         }
@@ -167,40 +160,10 @@ public class StandardShortnameService implements ShortnameService {
     	datatypes.add( type );
     }
     
-    static final boolean everythingIsADatatype = false;
-    
-    private boolean isDatatype( String type ) {
-    	if (everythingIsADatatype) return true;
+    @Override public boolean isDatatype( String type ) {
     	if (datatypes.contains( type )) return true;
     	if (type.startsWith( XSD.getURI() )) return true;
     	return false;
 	}
-
-	private final Map<String, RDFDatatype> fakeTypes = new HashMap<String, RDFDatatype>();
-    
-    private RDFDatatype fakeDatatype( String type ) {
-    	RDFDatatype result = fakeTypes.get( type );
-    	if (result == null) fakeTypes.put( type, result = new FakeDatatype( type ) );
-		return result;
-	}
-    
-    static private class FakeDatatype extends BaseDatatype {	
-    	public FakeDatatype( String type ) {
-    		super( type );
-    	}
-    	
-    	@Override public boolean isValidValue( Object value )
-    		{ throw new RuntimeException( "unimplemented: isValidValue of fake RDF datatype for " + uri ); }
-    	
-    	@Override public Class<?> getJavaClass() 
-    		{ throw new RuntimeException( "unimplemented: getJavaClass of fake RDF datatype for " + uri ); }
-    	
-    	@Override public Object parse( String lexicalForm ) 
-    		//{ throw new IllegalArgumentException( "don't know how to parse a " + uri ); }
-    		{ return lexicalForm; }
-    	
-    	@Override public String toString() 
-    		{ return "Datatype[fake: " + uri + "]"; }
-    }
 }
 

@@ -58,4 +58,8 @@ public class ShortnameFake implements ShortnameService
 	@Override public NameMap nameMap() {
 		return new NameMap();
 	}
+
+	@Override public boolean isDatatype(String type) {
+		throw new NotImplementedException();
+		}
 }
