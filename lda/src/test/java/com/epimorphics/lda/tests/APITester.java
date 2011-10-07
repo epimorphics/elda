@@ -23,10 +23,10 @@ import java.util.*;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
-import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.Bindings;
 
 import com.epimorphics.lda.core.*;
+import com.epimorphics.lda.rdfq.LiteralNode;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
@@ -136,7 +136,7 @@ public class APITester {
 	private Bindings fix(Map<String, String> bindings) {
 		Bindings result = new Bindings();
 		for (String key: bindings.keySet())
-			result.put( key, new Value( bindings.get(key) ) );
+			result.put( key, new LiteralNode( bindings.get(key) ) );
 		return result;
 	}
 

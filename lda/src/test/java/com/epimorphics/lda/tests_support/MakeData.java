@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.MultiMap;
+import com.epimorphics.lda.rdfq.LiteralNode;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -93,7 +93,7 @@ public class MakeData
 			for (String b: bindings.split( " +" ))
 				{
 				String [] parts = b.split( "=" );
-				result.put( parts[0], new Value( parts[1] ) );
+				result.put( parts[0], new LiteralNode( parts[1] ) );
 				}
 		return result;
 		}

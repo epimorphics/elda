@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.rdfq.LiteralNode;
 
 /**
     A Bindings maps variables (identified by their string names) to
@@ -28,7 +29,7 @@ public class Bindings
 	{
     static Logger log = LoggerFactory.getLogger( Bindings.class );
     
-	protected final Map<String, Value> vars = new HashMap<String, Value>();
+	protected final Map<String, LiteralNode> vars = new HashMap<String, LiteralNode>();
     
     protected final Set<String> parameterNames = new HashSet<String>();
     
@@ -92,9 +93,9 @@ public class Bindings
 	    for (String name: queryParams.keySet()) {
 	    	Set<String> values = queryParams.getAll( name );
 	    	if (values.size() > 1) EldaException.BadRequest("Multiple values for parameter '" + name + "': feature not implemented.");
-			Value basis = cc.get( name );
-			if (basis == null) basis = Value.emptyPlain;
-			cc.put( name, basis.withValueString( values.iterator().next() ) );
+			LiteralNode basis = cc.get( name );
+			if (basis == null) basis = LiteralNode.emptyPlain;
+			cc.put( name, basis.replaceBy( values.iterator().next() ) );
 	    }
 	    return cc;
 	}
@@ -132,12 +133,12 @@ public class Bindings
 		{ return vars.containsKey( name ); }
 	
 	/**
-	    Answer the Value of the variable <code>name</code> in
+	    Answer the LiteralNode of the variable <code>name</code> in
 	    this Bindings, or null if it is not bound.
 	*/
-	public Value get( String name ) 
+	public LiteralNode get( String name ) 
 		{ 
-		Value v = vars.get( name );
+		LiteralNode v = vars.get( name );
 		return v == null ? v : evaluate( name, v, new ArrayList<String>() ); 
 		}  
 	
@@ -149,8 +150,8 @@ public class Bindings
 	*/
 	public String getValueString( String name ) 
 		{ 
-		Value v = get( name );
-		return v == null ? null : v.valueString(); 
+		LiteralNode v = get( name );
+		return v == null ? null : v.spelling(); 
 		}
 	
 	/**
@@ -158,23 +159,23 @@ public class Bindings
 	    or the value of <code>ifAbsent</code> if it is not bound.
 	*/
 	public String getAsString( String name, String ifAbsent ) 
-		{ return vars.containsKey( name ) ? get( name ).valueString() : ifAbsent; }
+		{ return vars.containsKey( name ) ? get( name ).spelling() : ifAbsent; }
 	
 	/**
-	    Bind <code>name</code> to a Value which is a plain string
+	    Bind <code>name</code> to a LiteralNode which is a plain string
 	    with the given <code>valueString</code> as its lexical form.
 	    Any existing binding for <code>name</code> is discarded.
 	    Answer this Bindings.
 	*/
 	public Bindings put( String name, String valueString )
-		{ return put( name, new Value( valueString ) ); }
+		{ return put( name, new LiteralNode( valueString ) ); }
 		
 	/**
 	    Bind <code>name</code> to the value <code>v</code>.
 	    Discard any existing binding for <code>name</code>.
 	    Answer this Bindings.
 	*/
-	public Bindings put( String name, Value v ) 
+	public Bindings put( String name, LiteralNode v ) 
 		{ vars.put( name, v ); return this; }
 	
 	/**
@@ -218,11 +219,12 @@ public class Bindings
 	@Override public int hashCode()
 		{ return vars.hashCode(); }
 	
-	private Value evaluate( String name, Value v, List<String> seen ) 
+	private LiteralNode evaluate( String name, LiteralNode v, List<String> seen ) 
 		{
-		if (v.valueString.indexOf( '{' ) < 0) return v;
-		String expanded = expandVariables( v.valueString, seen );
-		Value newV = v.withValueString( expanded );
+		String vs = v.spelling();
+		if (vs.indexOf( '{' ) < 0) return v;
+		String expanded = expandVariables( vs, seen );
+		LiteralNode newV = v.replaceBy( expanded );
 		vars.put( name, newV );
 		return newV;
 		}	
@@ -242,7 +244,7 @@ public class Bindings
 			if (seen.contains( name )) 
 				throw new RuntimeException( "circularity involving: " + seen );
 			
-			Value thisV = vars.get(name);
+			LiteralNode thisV = vars.get(name);
 
 			// Patch to allow missing variables (which blow up evaluate, so
 			// we're bypassing for now).
@@ -254,9 +256,9 @@ public class Bindings
 			else
 				{
 				seen.add( name );
-				Value v = evaluate( name, thisV, seen );
+				LiteralNode v = evaluate( name, thisV, seen );
 				seen.remove( seen.size() - 1 );
-				String value = v.valueString; // values.getStringValue( name );
+				String value = v.spelling(); // values.getStringValue( name );
 				if (value == null)
 					{
 					sb.append( "{" ).append( name ).append( "}" );
@@ -309,7 +311,7 @@ public class Bindings
 		{
 		Bindings result = new Bindings();
 		for (String key: bindings.keySet())
-			result.put( key, new Value( bindings.get( key ) ) );
+			result.put( key, new LiteralNode( bindings.get( key ) ) );
 		return result;
 		}
 

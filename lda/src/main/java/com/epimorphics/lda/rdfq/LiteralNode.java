@@ -20,6 +20,8 @@ public class LiteralNode extends Term
 	final String language;
 	final String datatype;
 	
+	public static final LiteralNode emptyPlain = new LiteralNode("");
+	
 	public LiteralNode( String spelling ) 
 		{ this( spelling, "", "" ); }
 	
@@ -50,6 +52,9 @@ public class LiteralNode extends Term
 	
 	@Override public String spelling() 
 		 { return spelling; }
+	
+	public String type()
+		{ return datatype; }
 	
 	@Override public boolean equals( Object other )
 		{ return other instanceof LiteralNode && same( (LiteralNode) other ); }

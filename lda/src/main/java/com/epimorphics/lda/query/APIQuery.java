@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.Context.Prop;
-import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.APIException;
@@ -648,7 +647,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	while (m.find( start )) {
     		result.append( query.substring( start, m.start() ) );
     		String name = m.group().substring(1);
-    		Value v = cc.get( name );
+    		LiteralNode v = cc.get( name );
 //    		System.err.println( ">> value of " + name + " is " + v );
     		if (v == null) {
     			result.append( m.group() );
@@ -673,10 +672,10 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	return result.toString();
     }
 
-    private String valueAsSparql( Value v ) {
+    private String valueAsSparql( LiteralNode v ) {
     	String type = v.type();
-    	if (type.equals( "" )) return "'" + protect(v.valueString()) + "'";
-    	if (type.equals( RDFS.Resource.getURI() )) return "<" + v.valueString() + ">";
+    	if (type.equals( "" )) return "'" + protect(v.spelling()) + "'";
+    	if (type.equals( RDFS.Resource.getURI() )) return "<" + v.spelling() + ">";
     	throw new RuntimeException( "valueAsSparql: cannot handle type: " + type );
     }
 

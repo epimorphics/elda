@@ -15,8 +15,8 @@ import org.junit.Test;
 import org.hamcrest.core.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.bindings.Value;
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.rdfq.LiteralNode;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.Matchers;
@@ -129,10 +129,10 @@ public class TestAPISpecExtractsVariables
 		return m.listStatements().toList().get(0).getObject().asNode();
 		}
 
-	private Value asVar( String name, Node n ) 
+	private LiteralNode asVar( String name, Node n ) 
 		{
-		if (n.isURI()) return new Value( n.getURI(), "", RDFS.Resource.getURI() );
-		if (n.isLiteral()) return new Value
+		if (n.isURI()) return new LiteralNode( n.getURI(), "", RDFS.Resource.getURI() );
+		if (n.isLiteral()) return new LiteralNode
 			( n.getLiteralLexicalForm(), n.getLiteralLanguage(), fixNull(n.getLiteralDatatypeURI()) );
 		throw new RuntimeException( "cannot convert " + n + " to an RDFQ node" );
 		}

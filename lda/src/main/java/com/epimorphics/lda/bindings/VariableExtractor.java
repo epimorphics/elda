@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.rdfq.LiteralNode;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -61,7 +62,7 @@ public class VariableExtractor {
 				type = "";
 			}
 			String valueString = getValueString( v, language, type );
-			Value var = new Value( valueString, language, type );
+			LiteralNode var = new LiteralNode( valueString, language, type );
 			bound.put( name, var ); 			
 			}
 		}
