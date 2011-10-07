@@ -20,9 +20,6 @@ public class URINode extends Term
 	@Override public String asSparqlTerm( PrefixLogger pl )
 		{ return pl.present( URI ); }
 	
-	@Override public boolean isFinal() 
-		{ return !URI.contains( "{" ); }
-	
 	@Override public URINode replaceBy( String r ) 
 		{ return new URINode( r ); }
 	

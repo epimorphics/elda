@@ -45,9 +45,6 @@ public class LiteralNode extends Term
 		return lf;
 		}
 	
-	@Override public boolean isFinal() 
-		{ return !spelling.contains( "{" ); }
-	
 	@Override public LiteralNode replaceBy( String r ) 
 		{ return new LiteralNode( r, language, datatype ); }
 	
