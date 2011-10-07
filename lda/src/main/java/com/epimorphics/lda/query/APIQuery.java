@@ -310,11 +310,9 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     
     protected Map<String,Variable> seenParamVariables = new HashMap<String, Variable>();
     
-    public static final boolean dontSquishVariables = false;
-    
     protected void addRangeFilter( Param param, String val, String op ) {
     	Variable already = seenParamVariables.get(param.asString());
-    	if (already == null || dontSquishVariables) {
+    	if (already == null) {
 	        seenParamVariables.put( param.asString(), already = newVar() );
 	        addPropertyHasValue( param, already );
     	}
