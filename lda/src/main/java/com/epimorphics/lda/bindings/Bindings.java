@@ -138,7 +138,7 @@ public class Bindings
 	public Value get( String name ) 
 		{ 
 		Value v = vars.get( name );
-		return v == null || v.isComplete() ? v : evaluate( name, v, new ArrayList<String>() ); 
+		return v == null ? v : evaluate( name, v, new ArrayList<String>() ); 
 		}  
 	
 	/**
@@ -220,8 +220,8 @@ public class Bindings
 	
 	private Value evaluate( String name, Value v, List<String> seen ) 
 		{
+		if (v.valueString.indexOf( '{' ) < 0) return v;
 		String expanded = expandVariables( v.valueString, seen );
-		if (v.valueString.equals( expanded )) return v;
 		Value newV = v.withValueString( expanded );
 		vars.put( name, newV );
 		return newV;

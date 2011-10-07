@@ -103,6 +103,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected String viewArgument = null;
     
     protected final ShortnameService sns;
+    
     protected String defaultLanguage = null;
     
     protected int varcount = 0;
@@ -386,9 +387,11 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    } else {
 			// handle language codes
 			String[] langArray = languages.split( "," );
+			
 			Prop p = sns.asContext().getPropertyByName( prop );
+			String type = (p == null ? null : p.getType());
 		//
-			if (langArray.length == 1 || (p != null && p.getType() != null) || sns.expand(val) != null) {
+			if (langArray.length == 1 || (type != null) || sns.expand(val) != null) {
 				return sns.valueAsRDFQ( prop, val, langArray[0] ); 
 			} else  if (val.startsWith( "?" )) {
 				Variable o = RDFQ.var( val );

@@ -20,7 +20,6 @@ public class Value
 	protected final String language;
 	protected final String type;
 	protected final String valueString;
-	protected final boolean pending;
 	
 	/**
 	    A "zero value" for Value -- an untyped, unlanguaged,
@@ -34,27 +33,13 @@ public class Value
 		this.type = type;
 		this.language = language;
 		this.valueString = valueString;
-		this.pending = valueString.contains( "{" );
 		}
 	
 	public Value( String valueString ) 
 		{ this( valueString, "", "" ); }
 	
-	/**
-	    The lexical form of the Value. If the Value is pending,
-	    may contain {...} variable interpolations.
-	*/
 	public String valueString() 
 		{ return valueString; }
-	
-	/**
-	    true iff the value is still pending.
-	*/
-	public boolean isPending() 
-		{ return pending; }
-	
-	public boolean isComplete()
-		{ return !pending; }
 	
 	public String type()
 		{ return type; }
