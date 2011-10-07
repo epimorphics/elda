@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.rdfq.LiteralNode;
+import com.epimorphics.lda.rdfq.Value;
 
 /**
     A Bindings maps variables (identified by their string names) to
@@ -29,7 +29,7 @@ public class Bindings
 	{
     static Logger log = LoggerFactory.getLogger( Bindings.class );
     
-	protected final Map<String, LiteralNode> vars = new HashMap<String, LiteralNode>();
+	protected final Map<String, Value> vars = new HashMap<String, Value>();
     
     protected final Set<String> parameterNames = new HashSet<String>();
     
@@ -93,8 +93,8 @@ public class Bindings
 	    for (String name: queryParams.keySet()) {
 	    	Set<String> values = queryParams.getAll( name );
 	    	if (values.size() > 1) EldaException.BadRequest("Multiple values for parameter '" + name + "': feature not implemented.");
-			LiteralNode basis = cc.get( name );
-			if (basis == null) basis = LiteralNode.emptyPlain;
+			Value basis = cc.get( name );
+			if (basis == null) basis = Value.emptyPlain;
 			cc.put( name, basis.replaceBy( values.iterator().next() ) );
 	    }
 	    return cc;
@@ -136,9 +136,9 @@ public class Bindings
 	    Answer the LiteralNode of the variable <code>name</code> in
 	    this Bindings, or null if it is not bound.
 	*/
-	public LiteralNode get( String name ) 
+	public Value get( String name ) 
 		{ 
-		LiteralNode v = vars.get( name );
+		Value v = vars.get( name );
 		return v == null ? v : evaluate( name, v, new ArrayList<String>() ); 
 		}  
 	
@@ -150,7 +150,7 @@ public class Bindings
 	*/
 	public String getValueString( String name ) 
 		{ 
-		LiteralNode v = get( name );
+		Value v = get( name );
 		return v == null ? null : v.spelling(); 
 		}
 	
@@ -168,14 +168,14 @@ public class Bindings
 	    Answer this Bindings.
 	*/
 	public Bindings put( String name, String valueString )
-		{ return put( name, new LiteralNode( valueString ) ); }
+		{ return put( name, new Value( valueString ) ); }
 		
 	/**
 	    Bind <code>name</code> to the value <code>v</code>.
 	    Discard any existing binding for <code>name</code>.
 	    Answer this Bindings.
 	*/
-	public Bindings put( String name, LiteralNode v ) 
+	public Bindings put( String name, Value v ) 
 		{ vars.put( name, v ); return this; }
 	
 	/**
@@ -219,12 +219,12 @@ public class Bindings
 	@Override public int hashCode()
 		{ return vars.hashCode(); }
 	
-	private LiteralNode evaluate( String name, LiteralNode v, List<String> seen ) 
+	private Value evaluate( String name, Value v, List<String> seen ) 
 		{
 		String vs = v.spelling();
 		if (vs.indexOf( '{' ) < 0) return v;
 		String expanded = expandVariables( vs, seen );
-		LiteralNode newV = v.replaceBy( expanded );
+		Value newV = v.replaceBy( expanded );
 		vars.put( name, newV );
 		return newV;
 		}	
@@ -244,7 +244,7 @@ public class Bindings
 			if (seen.contains( name )) 
 				throw new RuntimeException( "circularity involving: " + seen );
 			
-			LiteralNode thisV = vars.get(name);
+			Value thisV = vars.get(name);
 
 			// Patch to allow missing variables (which blow up evaluate, so
 			// we're bypassing for now).
@@ -256,7 +256,7 @@ public class Bindings
 			else
 				{
 				seen.add( name );
-				LiteralNode v = evaluate( name, thisV, seen );
+				Value v = evaluate( name, thisV, seen );
 				seen.remove( seen.size() - 1 );
 				String value = v.spelling(); // values.getStringValue( name );
 				if (value == null)
@@ -311,7 +311,7 @@ public class Bindings
 		{
 		Bindings result = new Bindings();
 		for (String key: bindings.keySet())
-			result.put( key, new LiteralNode( bindings.get( key ) ) );
+			result.put( key, new Value( bindings.get( key ) ) );
 		return result;
 		}
 

@@ -45,10 +45,10 @@ public class RDFQ
 			}
 		}
 	
-	public static LiteralNode literal( double d )
+	public static Value literal( double d )
 		{
 		String spelling = Double.toString( d );
-		return new LiteralNode( spelling, "", "" ) 
+		return new Value( spelling, "", "" ) 
 			{
 			@Override public String asSparqlTerm( PrefixLogger pl ) { return spelling; }
 			};
@@ -63,11 +63,11 @@ public class RDFQ
 	public static URINode uri( String URI ) 
 		{ return new URINode( URI ); }
 	
-	public static LiteralNode literal( String spelling ) 
-		{ return new LiteralNode( spelling ); }
+	public static Value literal( String spelling ) 
+		{ return new Value( spelling ); }
 	
-	public static LiteralNode literal( String spelling, String language, String datatype ) 
-		{ return new LiteralNode( spelling, language, datatype ); }
+	public static Value literal( String spelling, String language, String datatype ) 
+		{ return new Value( spelling, language, datatype ); }
 	
 	public static Variable var( String name ) 
 		{ return new Variable( name ); }

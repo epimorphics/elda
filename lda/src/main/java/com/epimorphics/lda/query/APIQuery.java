@@ -647,7 +647,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	while (m.find( start )) {
     		result.append( query.substring( start, m.start() ) );
     		String name = m.group().substring(1);
-    		LiteralNode v = cc.get( name );
+    		Value v = cc.get( name );
 //    		System.err.println( ">> value of " + name + " is " + v );
     		if (v == null) {
     			result.append( m.group() );
@@ -672,7 +672,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	return result.toString();
     }
 
-    private String valueAsSparql( LiteralNode v ) {
+    private String valueAsSparql( Value v ) {
     	String type = v.type();
     	if (type.equals( "" )) return "'" + protect(v.spelling()) + "'";
     	if (type.equals( RDFS.Resource.getURI() )) return "<" + v.spelling() + ">";

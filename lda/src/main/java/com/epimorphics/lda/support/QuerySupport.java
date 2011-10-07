@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.LiteralNode;
+import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
@@ -76,7 +76,7 @@ public class QuerySupport
     	List<Triple> type = new ArrayList<Triple>(triples.size());
     	for (Triple t: triples) 
     		{
-    		if (t.O instanceof LiteralNode && canPromoteSubject( t.S ))
+    		if (t.O instanceof Value && canPromoteSubject( t.S ))
     			result.add( t );
     		else if (t.P.equals( RDFQ.RDF_TYPE ))
     			type.add( t );
