@@ -7,8 +7,6 @@
 */
 package com.epimorphics.lda.tests;
 
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.tests_support.ExpandOnly;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -26,10 +24,5 @@ public final class SNS extends ExpandOnly
 		{
 		String u = expand( s );
 		return ResourceFactory.createResource( u );
-		}
-
-	@Override public Any valueAsRDFQ( String prop, String val, String language ) 
-		{
-		return val.startsWith("?") ? RDFQ.var( val ) : RDFQ.literal( val );
 		}
 	}

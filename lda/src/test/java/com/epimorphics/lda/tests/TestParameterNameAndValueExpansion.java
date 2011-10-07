@@ -117,7 +117,7 @@ public class TestParameterNameAndValueExpansion
 		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
-		int where = q.indexOf( "?item <eh:/full-bname> \"value\" ." );
+		int where = q.indexOf( "?item <eh:/full-bname> \"value\"" );
 		assertFalse( "deferred property has not appeared in query", where < 0 );
 		}
 	}

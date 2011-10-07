@@ -411,7 +411,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 
 	private Any valueAsRDFQ(String prop, String val, String language ) {
 		Any a = sns.valueAsRDFQ(prop, val, language);
-//		Any b = valueAsRDFQ( sns, prop, val, language );
+		Any b = valueAsRDFQ( sns, prop, val, language );
 		return a;
 	}
 

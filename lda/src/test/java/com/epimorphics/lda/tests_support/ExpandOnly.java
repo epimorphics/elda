@@ -51,10 +51,7 @@ public class ExpandOnly extends StandardShortnameService
 		if (result == null) 
 			{
 			String star = map.get( "*" );
-			if (star == null)
-				throw new IllegalArgumentException( "missing key: " + key );
-			else
-				return star.replaceAll( "\\*", key );
+			return star == null ? super.expand( key ) : star.replaceAll( "\\*", key );
 			}
 		else
 			return result;
