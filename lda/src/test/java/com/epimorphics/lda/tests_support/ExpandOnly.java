@@ -15,8 +15,8 @@ import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.hp.hpl.jena.rdf.model.Model;
 
 /**
-    An implementation of ShortnameService that only implements expand()
-    and which is initialised from a string of short=full pairs.
+    An implementation of ShortnameService that implements expand()
+    directly from a string of short=full pairs.
  
  	@author chris
 */
