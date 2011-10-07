@@ -27,6 +27,7 @@ import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -62,6 +63,18 @@ public class StandardShortnameService implements ShortnameService {
             context.loadVocabularyAnnotations(vocab, prefixes);
         }
         nameMap.load( pm, specM );
+    }
+    
+    protected static final Model emptyModel = ModelFactory.createDefaultModel();
+    
+    protected static final Resource rootResource = emptyModel.createResource( "elda:root/" );
+    
+    public StandardShortnameService() {
+    	this( rootResource, RDFUtils.noPrefixes, null );
+    }
+    
+    public StandardShortnameService( Model config ) {
+    	this( config.createResource( "elda:root" ), config, null );
     }
     
     /**

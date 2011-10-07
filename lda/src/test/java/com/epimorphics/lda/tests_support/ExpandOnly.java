@@ -11,6 +11,7 @@ package com.epimorphics.lda.tests_support;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.hp.hpl.jena.rdf.model.Model;
 
 /**
@@ -19,7 +20,7 @@ import com.hp.hpl.jena.rdf.model.Model;
  
  	@author chris
 */
-public class ExpandOnly extends ShortnameFake 
+public class ExpandOnly extends StandardShortnameService 
 	{
 	private final Map<String, String> map = new HashMap<String, String>();
 

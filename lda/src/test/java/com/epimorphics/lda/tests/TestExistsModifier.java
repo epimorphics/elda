@@ -24,8 +24,8 @@ import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.RenderExpression;
 import com.epimorphics.lda.rdfq.Variable;
+import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.lda.tests_support.ShortnameFake;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -37,7 +37,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestExistsModifier 
 	{
-	private static final class Shorts extends ShortnameFake 
+	private static final class Shorts extends StandardShortnameService 
 		{
 		static final String NS = "fake:";
 		

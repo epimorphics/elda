@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.lda.tests_support.ShortnameFake;
+import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.util.DOMUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -110,7 +110,7 @@ public class TestXMLRenderer
 	private void ensureRendering( String desired, Resource root ) 
 		{
 		PrefixMapping pm = root.getModel();
-		ShortnameService sns = new ShortnameFake();
+		ShortnameService sns = new StandardShortnameService();
 		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
 		xr.renderInto( root, d, false, false );

@@ -410,12 +410,35 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	}
 
 	private Any valueAsRDFQ(String prop, String val, String language ) {
-		return sns.valueAsRDFQ( prop, val, language );
+		Any a = sns.valueAsRDFQ(prop, val, language);
+//		Any b = valueAsRDFQ( sns, prop, val, language );
+		return a;
 	}
 
-//	public static Any valueAsRDFQ( ShortnameService sns, String p, String nodeValue, String language) {
-
-//	}
+	public static Any valueAsRDFQ( ShortnameService sns, String p, String nodeValue, String language) {
+		if (nodeValue.startsWith("?"))
+	        return RDFQ.var( nodeValue );
+	    String full = sns.expand( nodeValue );
+	    Prop prop = sns.asContext().getPropertyByName( p );
+	    if (full != null) 
+	        return RDFQ.uri(full); 
+	    if (prop == null) {
+	        if (RDFUtil.looksLikeURI( nodeValue )) {
+	            return RDFQ.uri( nodeValue ); 
+	        }
+	    } else {
+	        String type = prop.getType();
+	        if (type != null) {
+	            if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
+	                return RDFQ.uri(nodeValue); 
+	            } else if (sns.isDatatype( type )) {
+	            	if (!type.equals( RDFUtil.RDFPlainLiteral ))
+	            		return RDFQ.literal( nodeValue, null, type );
+	            }
+	        }
+	    }
+	    return RDFQ.literal( nodeValue, language, "" );
+	}
 
 	private Variable expandParameterPrefix( Param.Info[] infos ) {
 		StringBuilder chainName = new StringBuilder();
