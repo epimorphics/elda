@@ -17,8 +17,6 @@ import static com.epimorphics.jsonrdf.RDFUtil.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
-import javax.management.RuntimeErrorException;
-
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.impl.Util;

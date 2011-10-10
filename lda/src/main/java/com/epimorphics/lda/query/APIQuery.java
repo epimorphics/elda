@@ -41,8 +41,6 @@ import com.epimorphics.lda.support.QuerySupport;
 
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
-import com.hp.hpl.jena.datatypes.RDFDatatype;
-import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.graph.*;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;

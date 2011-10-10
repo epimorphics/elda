@@ -85,7 +85,6 @@ Each RDF value is mapped onto some XML content as follows:
 public class XMLRendering {
 	
 	private final Document d;
-	private final Model m;
 	private final ShortnameService sns;
 	private final MultiMap<String, String> nameMap;
 	private final boolean suppressIPTO;
@@ -95,10 +94,9 @@ public class XMLRendering {
 	
 	public XMLRendering( Model m, ShortnameService sns, boolean stripHas, boolean suppressIPTO, Document d ) {
 		this.d = d;
-		this.m = m;
 		this.sns = sns;
-		this.nameMap = sns.nameMap().stage2(stripHas).load(m, m).result();
 		this.suppressIPTO = suppressIPTO;
+		this.nameMap = sns.nameMap().stage2(stripHas).load(m, m).result();
 	}
 	
 	private final Set<Resource> seen = new HashSet<Resource>();
