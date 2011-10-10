@@ -102,7 +102,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     
     protected final ShortnameService sns;
     
-    protected ValTranslator ofv;
+    protected ValTranslator vt;
     
     protected String defaultLanguage = null;
     
@@ -174,7 +174,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	
     public APIQuery( QueryBasis qb ) {
         this.sns = qb.sns();
-        this.ofv = new ValTranslator( this, new FilterExpressions( filterExpressions ), qb.sns() );
+        this.vt = new ValTranslator( this, new FilterExpressions( filterExpressions ), qb.sns() );
         this.defaultLanguage = qb.getDefaultLanguage();
         this.pageSize = qb.getDefaultPageSize();
         this.defaultPageSize = qb.getDefaultPageSize();
@@ -195,7 +195,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
             clone.metadataOptions = new HashSet<String>( metadataOptions );
             clone.varsForPropertyChains = new HashMap<String, Variable>( varsForPropertyChains );
             clone.seenParamVariables = new HashMap<String, Variable>( seenParamVariables );
-            clone.ofv = new ValTranslator( clone, new FilterExpressions( clone.filterExpressions ), sns );
+            clone.vt = new ValTranslator( clone, new FilterExpressions( clone.filterExpressions ), sns );
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new APIException("Can't happen :)", e);
@@ -367,19 +367,28 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     }
     
     protected void addPropertyHasValue( Param param, Variable O ) {
-    	addPropertyHasValue( param, O.name() );    	
+    	Param.Info [] infos = param.fullParts();
+		Variable var = expandParameterPrefix( infos );
+	//
+	    Info inf = infos[infos.length - 1];
+	    varInfo.put( O, inf );
+	    addTriplePattern( var, inf.asResource, O );    	
     }
     
     protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
     
     protected void addPropertyHasValue( Param param, String val ) {
-		Param.Info [] infos = param.fullParts();
-		Variable var = expandParameterPrefix( infos );
-	//
-	    Info inf = infos[infos.length - 1];
-	    Any o = objectForValue( inf, val, languagesFor(param) );
-	    if (o instanceof Variable) varInfo.put( (Variable) o, inf );
-	    addTriplePattern( var, inf.asResource, o );
+    	if (val.startsWith( "?" ))
+    		addPropertyHasValue( param, RDFQ.var( val ) );
+    	else {
+			Param.Info [] infos = param.fullParts();
+			Variable var = expandParameterPrefix( infos );
+		//
+		    Info inf = infos[infos.length - 1];
+		    Any o = objectForValue( inf, val, languagesFor(param) );
+		    if (o instanceof Variable) varInfo.put( (Variable) o, inf );
+		    addTriplePattern( var, inf.asResource, o );
+    	}
     }
 
     /**
@@ -390,11 +399,11 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         filter expressions.
     */
 	private Any objectForValue(Info inf, String val, String languages) {
-		return ofv.objectForValue( inf, val, languages );
+		return vt.objectForValue( inf, val, languages );
 	}
 	
 	public Any valueAsRDFQ(String prop, String val, String language ) {
-		return ofv.valueAsRDFQ( prop, val, language );
+		return vt.valueAsRDFQ( prop, val, language );
 	}
 
 	private Variable expandParameterPrefix( Param.Info[] infos ) {
@@ -459,11 +468,9 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         Discard any existing order expressions. Decode
         <code>orderSpec</code> to produce a new order expression.
         orderSpec is a comma-separated list of sort fields,
-        each optionally proceeded by - for DESC. If the field
-        is a variable, it is used as-is, otherwise it is assumed
-        to be a short property name and an additional triple
-        (?item Property Var) added to the query with the Var
-        being the sort field.
+        each optionally proceeded by - for DESC. Each field is 
+        a property chain used to bind a new variable v when is used
+        as the ORDERY BY field.
     */
     public void setSortBy( String orderSpecs ) {
     	orderExpressions.setLength(0);
@@ -471,18 +478,13 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     		if (spec.length() > 0){
 		        boolean descending = spec.startsWith("-"); 
 		        if (descending) spec = spec.substring(1);
-		        boolean varOrder = spec.startsWith("?");
-		        String var = varOrder ? spec : newVar().name(); // TODO
-		        Variable v = RDFQ.var( var );
+		        Variable v = newVar();
 		        if (descending) {
-		        	orderExpressions.append(" DESC(" + var + ") ");
+		        	orderExpressions.append(" DESC(" + v.name() + ") ");
 		        } else {
-		            orderExpressions.append(" " + var + " ");
+		            orderExpressions.append(" " + v.name() + " ");
 		        }
-		        if (!varOrder) {
-		        	Param p = Param.make(sns, spec);
-					addPropertyHasValue( p, v );
-		        }
+	        	addPropertyHasValue( Param.make( sns, spec ), v );
     		}
     }
     

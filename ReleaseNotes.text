@@ -40,6 +40,10 @@
 * Legacy code that allowed type-names to be shortened by the JSON
   writer has been eliminated.
 
+* PRUNE: the (undocumented, not in the spec) ability to make a
+  _sort value be a variable has been removed as part of the process
+  of clarifying how values are turned into literals.
+
 1.1.14
 
 * Bug fix: Elda shortened the objects of rdf:type in the JSON

@@ -80,7 +80,11 @@ public class ValTranslator {
 
 	public Any valueAsRDFQ( String p, String nodeValue, String language) {
 		if (nodeValue.startsWith("?"))
-	        return RDFQ.var( nodeValue );
+			{
+			// System.err.println( ">> OOPS, a variable: " + nodeValue );
+			// if (true) throw new RuntimeException();
+			return RDFQ.var( nodeValue );
+			}
 	    String full = sns.expand( nodeValue );
 	    Prop prop = sns.asContext().getPropertyByName( p );
 	    if (full != null) 
@@ -103,6 +107,9 @@ public class ValTranslator {
 	    return RDFQ.literal( nodeValue, language, "" );
 	}
 
+	/**
+	 	Generates lang(v) = l1 || lang(v) = l2 ... for each l1... in langArray.
+	*/
 	static RenderExpression someOf( Any v, String[] langArray ) {
 		Apply langOf = RDFQ.apply( "lang", v );
 		RenderExpression result = RDFQ.infix( langOf, "=", ValTranslator.omitNone( langArray[0] ) );
@@ -111,6 +118,9 @@ public class ValTranslator {
 		return result;
 	}
 
+	/**
+	     Answers lang unless it is "none", in which case it answers "".
+	*/
 	static Any omitNone( String lang ) {
 		return RDFQ.literal( lang.equals( "none" ) ? "" : lang );
 	}

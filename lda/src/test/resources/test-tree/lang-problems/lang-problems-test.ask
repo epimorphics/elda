@@ -5,7 +5,7 @@ ASK
     :yes a :Correct.
     }
     
-ASK NOT
-    {
-    :no a :Incorrect
-    }
+# ASK NOT
+#    {
+#    :no a :Incorrect
+#    }
