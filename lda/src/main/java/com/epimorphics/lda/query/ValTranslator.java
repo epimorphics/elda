@@ -8,8 +8,6 @@
 
 package com.epimorphics.lda.query;
 
-import java.util.List;
-
 import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.Param.Info;
@@ -37,21 +35,21 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class ValTranslator {
 	
-	public interface Expressions {
+	public interface Filters {
 		public void add( RenderExpression e );
 	}
 	
 	protected final ShortnameService sns;
 	protected final VarSupply vs;
-	protected final Expressions expressions;
+	protected final Filters expressions;
 	
-	public ValTranslator(VarSupply vs, Expressions expressions, ShortnameService sns) {
+	public ValTranslator(VarSupply vs, Filters expressions, ShortnameService sns) {
 		this.vs = vs;
 		this.sns = sns;
 		this.expressions = expressions;
 	}
 
-	public Any objectForValue( List<RenderExpression> filterExpressions, Info inf, String val, String languages) {
+	public Any objectForValue( Info inf, String val, String languages) {
 	    String prop = inf.shortName;
 	    if (languages == null) {
 			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
@@ -67,14 +65,14 @@ public class ValTranslator {
 				return valueAsRDFQ( prop, val, langArray[0] ); 
 			} else  if (val.startsWith( "?" )) {
 				Variable o = RDFQ.var( val );
-				filterExpressions.add( ValTranslator.someOf( o, langArray ) );
+				expressions.add( ValTranslator.someOf( o, langArray ) );
 				return o;
 			} else {
 				Variable o = vs.newVar();
 				Apply stringOf = RDFQ.apply( "str", o );
 				Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
 				Infix filter = RDFQ.infix( equals, "&&", ValTranslator.someOf( o, langArray ) );
-				filterExpressions.add( filter );
+				expressions.add( filter );
 				return o;
 			}
 	    }
@@ -107,13 +105,13 @@ public class ValTranslator {
 
 	static RenderExpression someOf( Any v, String[] langArray ) {
 		Apply langOf = RDFQ.apply( "lang", v );
-		RenderExpression result = RDFQ.infix( langOf, "=", ValTranslator.squelchNone( langArray[0] ) );
+		RenderExpression result = RDFQ.infix( langOf, "=", ValTranslator.omitNone( langArray[0] ) );
 		for (int i = 1; i < langArray.length; i += 1)
-			result = RDFQ.infix( result, "||", RDFQ.infix( langOf, "=", ValTranslator.squelchNone( langArray[i] ) ) );
+			result = RDFQ.infix( result, "||", RDFQ.infix( langOf, "=", ValTranslator.omitNone( langArray[i] ) ) );
 		return result;
 	}
 
-	static Any squelchNone( String lang ) {
+	static Any omitNone( String lang ) {
 		return RDFQ.literal( lang.equals( "none" ) ? "" : lang );
 	}
 

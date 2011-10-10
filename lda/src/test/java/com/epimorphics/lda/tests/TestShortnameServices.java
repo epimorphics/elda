@@ -15,6 +15,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -56,7 +57,8 @@ public class TestShortnameServices
 		Resource root = m.createResource( EX + "root" );
 		PrefixMapping pm = PrefixMapping.Factory.create();
 		ShortnameService sns = new StandardShortnameService( root, pm, LoadsNothing.instance );
-		Any a = sns.valueAsRDFQ( "P", "17", "en" );
+		APIQuery aq = new APIQuery( sns );
+		Any a = aq.valueAsRDFQ( "P", "17", "en" );
 		assertEquals( RDFQ.literal( "17", "", XSDinteger ), a );
 		}
 	}

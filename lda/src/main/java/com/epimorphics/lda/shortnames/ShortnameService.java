@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.lda.rdfq.Any;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -82,14 +81,6 @@ public interface ShortnameService
 	    throw an API exception.
 	*/
 	public Resource asResource( String s );
-
-	/**
-	    Answer a RDFQ node which has the SPARQL representation of the thing
-	    val treated as the object of the property prop. The language
-	    (if non-null) will be used as the language encoding for any
-	    plain literals
-	*/
-	public Any valueAsRDFQ( String prop, String val, String language );
 
 	/**
 	    Answer the full name (URI) corresponding to the short name s.

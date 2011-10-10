@@ -102,7 +102,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     
     protected final ShortnameService sns;
     
-    protected final ValTranslator ofv;
+    protected ValTranslator ofv;
     
     protected String defaultLanguage = null;
     
@@ -147,7 +147,6 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     		@Override public final int getDefaultPageSize() { return QueryParameter.DEFAULT_PAGE_SIZE; }
     	};
     }
-    
 
 	/**
         The parameters that form the basis of an API Query.
@@ -162,15 +161,20 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		String getItemTemplate();
     }
 
+    protected static class FilterExpressions implements ValTranslator.Filters {
+    	
+    	public FilterExpressions(List<RenderExpression> expressions ) {
+    		this.expressions = expressions;
+    	}
+    	
+    	protected final List<RenderExpression> expressions;
+    	
+		@Override public void add(RenderExpression e) {	expressions.add( e ); }
+	}
+	
     public APIQuery( QueryBasis qb ) {
         this.sns = qb.sns();
-        this.ofv = new ValTranslator( 
-        	this, 
-        	new ValTranslator.Expressions() {
-        		@Override public void add(RenderExpression e) {	filterExpressions.add( e ); }
-        	}, 
-			qb.sns() 
-			);
+        this.ofv = new ValTranslator( this, new FilterExpressions( filterExpressions ), qb.sns() );
         this.defaultLanguage = qb.getDefaultLanguage();
         this.pageSize = qb.getDefaultPageSize();
         this.defaultPageSize = qb.getDefaultPageSize();
@@ -191,6 +195,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
             clone.metadataOptions = new HashSet<String>( metadataOptions );
             clone.varsForPropertyChains = new HashMap<String, Variable>( varsForPropertyChains );
             clone.seenParamVariables = new HashMap<String, Variable>( seenParamVariables );
+            clone.ofv = new ValTranslator( clone, new FilterExpressions( clone.filterExpressions ), sns );
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new APIException("Can't happen :)", e);
@@ -385,10 +390,10 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         filter expressions.
     */
 	private Any objectForValue(Info inf, String val, String languages) {
-		return ofv.objectForValue( filterExpressions, inf, val, languages );
+		return ofv.objectForValue( inf, val, languages );
 	}
 	
-	private Any valueAsRDFQ(String prop, String val, String language ) {
+	public Any valueAsRDFQ(String prop, String val, String language ) {
 		return ofv.valueAsRDFQ( prop, val, language );
 	}
 

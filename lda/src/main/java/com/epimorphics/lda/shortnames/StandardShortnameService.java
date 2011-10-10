@@ -23,10 +23,7 @@ import java.util.Set;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.RDFUtil;
-import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.core.ModelLoaderI;
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -136,36 +133,6 @@ public class StandardShortnameService implements ShortnameService {
     @Override public Context asContext() {
         return context;
     }
-    
-    /**
-        Normalise a property-valueString pair with a given language to an
-        RDFQ node which has the spelling from valueString and is typed
-        according to the property type.
-    */
-    @Override public Any valueAsRDFQ( String p, String nodeValue, String language ) {
-		if (nodeValue.startsWith("?"))
-            return RDFQ.var( nodeValue );
-        String full = expand( nodeValue );
-        Prop prop = context.getPropertyByName( p );
-        if (full != null) 
-            return RDFQ.uri(full); 
-        if (prop == null) {
-            if (RDFUtil.looksLikeURI( nodeValue )) {
-                return RDFQ.uri( nodeValue ); 
-            }
-        } else {
-            String type = prop.getType();
-            if (type != null) {
-                if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
-                    return RDFQ.uri(nodeValue); 
-                } else if (isDatatype( type )) {
-                	if (!type.equals( RDFUtil.RDFPlainLiteral ))
-                		return RDFQ.literal( nodeValue, null, type );
-                }
-            }
-        }
-        return RDFQ.literal( nodeValue, language, "" );
-	}
     
     protected final Set<String> datatypes = new HashSet<String>();
     
