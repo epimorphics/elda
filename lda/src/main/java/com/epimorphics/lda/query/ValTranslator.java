@@ -1,0 +1,120 @@
+/*
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011 Epimorphics Limited
+    $Id$
+*/
+
+package com.epimorphics.lda.query;
+
+import java.util.List;
+
+import com.epimorphics.jsonrdf.Context.Prop;
+import com.epimorphics.jsonrdf.RDFUtil;
+import com.epimorphics.lda.core.Param.Info;
+import com.epimorphics.lda.core.VarSupply;
+import com.epimorphics.lda.rdfq.Any;
+import com.epimorphics.lda.rdfq.Apply;
+import com.epimorphics.lda.rdfq.Infix;
+import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.RenderExpression;
+import com.epimorphics.lda.rdfq.Variable;
+import com.epimorphics.lda.shortnames.ShortnameService;
+import com.hp.hpl.jena.vocabulary.OWL;
+import com.hp.hpl.jena.vocabulary.RDFS;
+
+/**
+    ValTranslator handles the translation of the V in ?P=V
+    to a suitable RDFQ node, usually (but not always) some
+    kind of literal. It may need to add new expressions to
+    the query filter (via the Expressions member), generate new
+    variables (via the VarSupply member), and look at the
+    type information of properties (via the ShortnameService
+    member).
+    
+ 	@author chris
+*/
+public class ValTranslator {
+	
+	public interface Expressions {
+		public void add( RenderExpression e );
+	}
+	
+	protected final ShortnameService sns;
+	protected final VarSupply vs;
+	protected final Expressions expressions;
+	
+	public ValTranslator(VarSupply vs, Expressions expressions, ShortnameService sns) {
+		this.vs = vs;
+		this.sns = sns;
+		this.expressions = expressions;
+	}
+
+	public Any objectForValue( List<RenderExpression> filterExpressions, Info inf, String val, String languages) {
+	    String prop = inf.shortName;
+	    if (languages == null) {
+			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
+			return valueAsRDFQ( prop, val, null );
+	    } else {
+			// handle language codes
+			String[] langArray = languages.split( "," );
+			
+			Prop p = sns.asContext().getPropertyByName( prop );
+			String type = (p == null ? null : p.getType());
+		//
+			if (langArray.length == 1 || (type != null) || sns.expand(val) != null) {
+				return valueAsRDFQ( prop, val, langArray[0] ); 
+			} else  if (val.startsWith( "?" )) {
+				Variable o = RDFQ.var( val );
+				filterExpressions.add( ValTranslator.someOf( o, langArray ) );
+				return o;
+			} else {
+				Variable o = vs.newVar();
+				Apply stringOf = RDFQ.apply( "str", o );
+				Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
+				Infix filter = RDFQ.infix( equals, "&&", ValTranslator.someOf( o, langArray ) );
+				filterExpressions.add( filter );
+				return o;
+			}
+	    }
+	}
+
+	public Any valueAsRDFQ( String p, String nodeValue, String language) {
+		if (nodeValue.startsWith("?"))
+	        return RDFQ.var( nodeValue );
+	    String full = sns.expand( nodeValue );
+	    Prop prop = sns.asContext().getPropertyByName( p );
+	    if (full != null) 
+	        return RDFQ.uri(full); 
+	    if (prop == null) {
+	        if (RDFUtil.looksLikeURI( nodeValue )) {
+	            return RDFQ.uri( nodeValue ); 
+	        }
+	    } else {
+	        String type = prop.getType();
+	        if (type != null) {
+	            if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
+	                return RDFQ.uri(nodeValue); 
+	            } else if (sns.isDatatype( type )) {
+	            	if (!type.equals( RDFUtil.RDFPlainLiteral ))
+	            		return RDFQ.literal( nodeValue, null, type );
+	            }
+	        }
+	    }
+	    return RDFQ.literal( nodeValue, language, "" );
+	}
+
+	static RenderExpression someOf( Any v, String[] langArray ) {
+		Apply langOf = RDFQ.apply( "lang", v );
+		RenderExpression result = RDFQ.infix( langOf, "=", ValTranslator.squelchNone( langArray[0] ) );
+		for (int i = 1; i < langArray.length; i += 1)
+			result = RDFQ.infix( result, "||", RDFQ.infix( langOf, "=", ValTranslator.squelchNone( langArray[i] ) ) );
+		return result;
+	}
+
+	static Any squelchNone( String lang ) {
+		return RDFQ.literal( lang.equals( "none" ) ? "" : lang );
+	}
+
+}

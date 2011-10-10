@@ -19,8 +19,6 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.jsonrdf.RDFUtil;
-import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.APIException;
@@ -47,7 +45,6 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
-import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -104,6 +101,8 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected String viewArgument = null;
     
     protected final ShortnameService sns;
+    
+    protected final ValTranslator ofv;
     
     protected String defaultLanguage = null;
     
@@ -165,6 +164,13 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 
     public APIQuery( QueryBasis qb ) {
         this.sns = qb.sns();
+        this.ofv = new ValTranslator( 
+        	this, 
+        	new ValTranslator.Expressions() {
+        		@Override public void add(RenderExpression e) {	filterExpressions.add( e ); }
+        	}, 
+			qb.sns() 
+			);
         this.defaultLanguage = qb.getDefaultLanguage();
         this.pageSize = qb.getDefaultPageSize();
         this.defaultPageSize = qb.getDefaultPageSize();
@@ -302,7 +308,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected void addSearchTriple( String val ) {
     	needsLARQindex = true;
         log.debug( "enabled LARQ indexing to search for " + val );
-        addTriplePattern( SELECT_VAR, PF_TEXT_MATCH, asStringLiteral(val) );
+        addTriplePattern( SELECT_VAR, PF_TEXT_MATCH, RDFQ.literal( val ) );
     }
     
     public APIQuery addSubjectHasProperty( Resource P, Any O ) {
@@ -379,61 +385,11 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         filter expressions.
     */
 	private Any objectForValue(Info inf, String val, String languages) {
-	    String prop = inf.shortName;
-	    if (languages == null) {
-			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
-			return valueAsRDFQ( prop, val, null );
-	    } else {
-			// handle language codes
-			String[] langArray = languages.split( "," );
-			
-			Prop p = sns.asContext().getPropertyByName( prop );
-			String type = (p == null ? null : p.getType());
-		//
-			if (langArray.length == 1 || (type != null) || sns.expand(val) != null) {
-				return valueAsRDFQ( prop, val, langArray[0] ); 
-			} else  if (val.startsWith( "?" )) {
-				Variable o = RDFQ.var( val );
-				filterExpressions.add( someOf( o, langArray ) );
-				return o;
-			} else {
-				Variable o = newVar();
-				Apply stringOf = RDFQ.apply( "str", o );
-				Infix equals = RDFQ.infix( stringOf, "=", asStringLiteral(val) );
-				Infix filter = RDFQ.infix( equals, "&&", someOf( o, langArray ) );
-				filterExpressions.add( filter );
-				return o;
-			}
-	    }
+		return ofv.objectForValue( filterExpressions, inf, val, languages );
 	}
-
+	
 	private Any valueAsRDFQ(String prop, String val, String language ) {
-		return valueAsRDFQ( sns, prop, val, language );
-	}
-
-	public static Any valueAsRDFQ( ShortnameService sns, String p, String nodeValue, String language) {
-		if (nodeValue.startsWith("?"))
-	        return RDFQ.var( nodeValue );
-	    String full = sns.expand( nodeValue );
-	    Prop prop = sns.asContext().getPropertyByName( p );
-	    if (full != null) 
-	        return RDFQ.uri(full); 
-	    if (prop == null) {
-	        if (RDFUtil.looksLikeURI( nodeValue )) {
-	            return RDFQ.uri( nodeValue ); 
-	        }
-	    } else {
-	        String type = prop.getType();
-	        if (type != null) {
-	            if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
-	                return RDFQ.uri(nodeValue); 
-	            } else if (sns.isDatatype( type )) {
-	            	if (!type.equals( RDFUtil.RDFPlainLiteral ))
-	            		return RDFQ.literal( nodeValue, null, type );
-	            }
-	        }
-	    }
-	    return RDFQ.literal( nodeValue, language, "" );
+		return ofv.valueAsRDFQ( prop, val, language );
 	}
 
 	private Variable expandParameterPrefix( Param.Info[] infos ) {
@@ -458,24 +414,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		return var;
 	}
 	
-	public Any asStringLiteral( String val ) {
-		return RDFQ.literal( val );
-	}
-    
-    private RenderExpression someOf( Any v, String[] langArray ) 
-    	{
-    	Apply langOf = RDFQ.apply( "lang", v );
-		RenderExpression result = RDFQ.infix( langOf, "=", squelchNone( langArray[0] ) );
-    	for (int i = 1; i < langArray.length; i += 1)
-    		result = RDFQ.infix( result, "||", RDFQ.infix( langOf, "=", squelchNone( langArray[i] ) ) );
-    	return result;
-    	}
-
-	private Any squelchNone( String lang ) {
-		return RDFQ.literal( lang.equals( "none" ) ? "" : lang );
-	}
-    
-    protected void addPropertyHasntValue( Param param ) {
+	protected void addPropertyHasntValue( Param param ) {
     	Variable var = newVar();
     	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
 		Param.Info [] infos = param.fullParts();
@@ -557,7 +496,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected void addNameProp(Param param, String literal) {
         Variable newvar = newVar();
         addPropertyHasValue( param, newvar );
-        addTriplePattern( newvar, RDFS.label, asStringLiteral( literal ) );
+        addTriplePattern( newvar, RDFS.label, RDFQ.literal( literal ) );
     }
     
     private static final Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
