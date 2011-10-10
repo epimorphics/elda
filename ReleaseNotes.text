@@ -24,6 +24,22 @@
   TESTED and may no longer work as expected. If you use this functionality
   let us know.
 
+* Bug to do with sharing of Context state in XML and JSON renderers
+  has been fixed -- the XML renderer no longer uses the context for new
+  short names, and the JSON renderer clones the Context before using it
+  so that modifications don't affect the (shared) original.
+
+* Various ShortnameService classes are now all subclasses of
+  StandardShortnameService, which means they don't need their own
+  valueAsRDFQ methods, which will allow us to extract that method
+  completely.
+
+* The old Value and LiteralNode have been collapsed into a single
+  RDFQ.Value class.
+
+* Legacy code that allowed type-names to be shortened by the JSON
+  writer has been eliminated.
+
 1.1.14
 
 * Bug fix: Elda shortened the objects of rdf:type in the JSON

@@ -17,6 +17,8 @@ import static com.epimorphics.jsonrdf.RDFUtil.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import javax.management.RuntimeErrorException;
+
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.impl.Util;
@@ -35,7 +37,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-public class Context {
+public class Context implements Cloneable {
 
     protected String base;
     protected Map<String, Prop> uriToProp = new HashMap<String, Prop>();
@@ -76,6 +78,19 @@ public class Context {
     public Context(String base) {
         this.base = base;
     }
+    
+    @Override public Context clone() {
+    	try {
+    		Context result = (Context) super.clone();
+    		result.uriToName = new HashMap<String, String>( uriToName );
+    		result.uriToProp = new HashMap<String, Prop>( uriToProp );
+    		result.nameToURI = new HashMap<String, String>( nameToURI );
+    		return result;
+    	} catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Can't happen :)", e);
+    	}
+    }
+    
 
     /**
      * Scan the given vocabulary file to find shortname and property type

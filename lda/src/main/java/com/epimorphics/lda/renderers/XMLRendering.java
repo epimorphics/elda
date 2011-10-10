@@ -240,25 +240,13 @@ public class XMLRendering {
 		Prop px = sns.asContext().getPropertyByURI(p.getURI());
 		return px != null && px.isMultivalued();
 	}
-
-	// obsolete [if new shortname code is OK]
-	final Map<String, String> shortNames = new HashMap<String, String>();
 	
 	private String shortNameFor( Resource r ) {
 		return shortNameFor( r.getURI() );
 	}
 	
-	// using NameMap results now.
 	private String shortNameFor( String URI ) {
-		String s = shortNames.get( URI );
-		if (s == null) shortNames.put( URI, s = createShortName( URI ) );
-		String other = nameMap.getOne( URI );
-		return other;
-	}
-
-	// obsolete [if new shortname code is OK]
-	private String createShortName( String URI ) {
-		return sns.asContext().findNameForProperty( m.getResource( URI ) );
+		return nameMap.getOne( URI );
 	}
 
 	final Map<AnonId, String> idMap = new HashMap<AnonId, String>();
