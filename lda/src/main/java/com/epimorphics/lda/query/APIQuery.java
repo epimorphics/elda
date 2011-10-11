@@ -401,10 +401,6 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	private Any objectForValue(Info inf, String val, String languages) {
 		return vt.objectForValue( inf, val, languages );
 	}
-	
-	public Any valueAsRDFQ(String prop, String val, String language ) {
-		return vt.valueAsRDFQ( prop, val, language );
-	}
 
 	private Variable expandParameterPrefix( Param.Info[] infos ) {
 		StringBuilder chainName = new StringBuilder();
@@ -470,7 +466,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         orderSpec is a comma-separated list of sort fields,
         each optionally proceeded by - for DESC. Each field is 
         a property chain used to bind a new variable v when is used
-        as the ORDERY BY field.
+        as the ORDER BY field.
     */
     public void setSortBy( String orderSpecs ) {
     	orderExpressions.setLength(0);
@@ -638,7 +634,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	        	String normalizedValue = 
 	        		(prop == null) 
 	        		    ? valueAsSparql( v )
-	        		    : valueAsRDFQ(prop.shortName, val, defaultLanguage).asSparqlTerm(pl); 
+	        		    : objectForValue( prop, val, defaultLanguage ).asSparqlTerm(pl);
 	    		result.append( normalizedValue );
     		}
     		start = m.end();

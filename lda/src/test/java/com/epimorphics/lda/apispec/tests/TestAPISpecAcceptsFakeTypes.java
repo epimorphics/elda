@@ -12,7 +12,12 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.core.Param;
+import com.epimorphics.lda.core.Param.Info;
+import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.query.APIQuery;
+import com.epimorphics.lda.query.ValTranslator;
+import com.epimorphics.lda.query.ValTranslator.Filters;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.PrefixLogger;
@@ -62,19 +67,24 @@ public class TestAPISpecAcceptsFakeTypes
 		PrefixLogger pl = new PrefixLogger();
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
 		APISpec s = SpecUtil.specFrom( root );
-		APIQuery aq = new APIQuery(s.getShortnameService());
-		Any x = aq.valueAsRDFQ( "year", "spoo", null );
+		ValTranslator vt = new ValTranslator( vs, expressions, s.getShortnameService() );
+		Info yearInf = Param.make(s.getShortnameService(), "year" ).fullParts()[0];
+		Any x = vt.objectForValue( yearInf, "spoo", null );
 		String eg = m.getNsPrefixURI( "" );
 		assertThat( x.asSparqlTerm(pl), is( "\"spoo\"^^<" + eg + "faketype>" ) );
 	}
+
+	final VarSupply vs = null;
+	final Filters expressions = null;
 	
 	@Test public void testPlainLiteral() {
 		PrefixLogger pl = new PrefixLogger();
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
 		APISpec s = SpecUtil.specFrom( root );
-		APIQuery aq = new APIQuery(s.getShortnameService());
-		Any x = aq.valueAsRDFQ( "name", "Frodo", null );
+		ValTranslator vt = new ValTranslator(vs, expressions, s.getShortnameService() );
+		Info nameInf = Param.make(s.getShortnameService(), "name" ).fullParts()[0];
+		Any x = vt.objectForValue( nameInf, "Frodo", null );
 		assertThat( x.asSparqlTerm(pl), is( "\"Frodo\"" ) );
 	}
 

@@ -49,7 +49,7 @@ public class ValTranslator {
 		this.expressions = expressions;
 	}
 
-	public Any objectForValue( Info inf, String val, String languages) {
+	public Any objectForValue( Info inf, String val, String languages ) {
 	    String prop = inf.shortName;
 	    if (languages == null) {
 			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
@@ -61,12 +61,13 @@ public class ValTranslator {
 			Prop p = sns.asContext().getPropertyByName( prop );
 			String type = (p == null ? null : p.getType());
 		//
+			if (!equals( inf.typeURI, type )) {
+				System.err.println( ">> BINGO: inf.type = " + inf.typeURI );
+				System.err.println( ">> BUT prop.type   = " + type );
+			}
+		//
 			if (langArray.length == 1 || (type != null) || sns.expand(val) != null) {
-				return valueAsRDFQ( prop, val, langArray[0] ); 
-			} else  if (val.startsWith( "?" )) {
-				Variable o = RDFQ.var( val );
-				expressions.add( ValTranslator.someOf( o, langArray ) );
-				return o;
+				return valueAsRDFQ( prop, val, langArray[0] );
 			} else {
 				Variable o = vs.newVar();
 				Apply stringOf = RDFQ.apply( "str", o );
@@ -78,10 +79,14 @@ public class ValTranslator {
 	    }
 	}
 
-	public Any valueAsRDFQ( String p, String nodeValue, String language) {
+	private static boolean equals( String a, String b ) {
+		return a == null ? b == null : a.equals(b);
+	}
+
+	private Any valueAsRDFQ( String p, String nodeValue, String language) {
 		if (nodeValue.startsWith("?"))
 			{
-			// System.err.println( ">> OOPS, a variable: " + nodeValue );
+			 // System.err.println( ">> OOPS, a variable: " + nodeValue );
 			// if (true) throw new RuntimeException();
 			return RDFQ.var( nodeValue );
 			}
