@@ -49,33 +49,43 @@ public class ValTranslator {
 		this.expressions = expressions;
 	}
 
+	private static final String[] JUSTEMPTY = new String[]{""};
+
 	public Any objectForValue( Info inf, String val, String languages ) {
 	    String prop = inf.shortName;
-	    if (languages == null) {
-			// System.err.println( ">> addTriplePattern(" + prop + "," + val + ", " + languages + ")" );
-			return valueAsRDFQ( prop, val, null );
-	    } else {
-			// handle language codes
-			String[] langArray = languages.split( "," );
-			
-			Prop p = sns.asContext().getPropertyByName( prop );
-			String type = (p == null ? null : p.getType());
-		//
-			if (!equals( inf.typeURI, type )) {
-				System.err.println( ">> BINGO: inf.type = " + inf.typeURI );
-				System.err.println( ">> BUT prop.type   = " + type );
-			}
-		//
-			if (langArray.length == 1 || (type != null) || sns.expand(val) != null) {
-				return valueAsRDFQ( prop, val, langArray[0] );
-			} else {
-				Variable o = vs.newVar();
-				Apply stringOf = RDFQ.apply( "str", o );
-				Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
-				Infix filter = RDFQ.infix( equals, "&&", ValTranslator.someOf( o, langArray ) );
-				expressions.add( filter );
-				return o;
-			}
+		String[] langArray = languages == null ? JUSTEMPTY : languages.split( "," );
+		String type = inf.typeURI;
+		String expanded = sns.expand(val);
+	//
+//		if (type == null) {
+//			if (langArray.length == 1) 
+//				return RDFQ.literal( val, langArray[0], "" );
+//			Variable o = vs.newVar();
+//			Apply stringOf = RDFQ.apply( "str", o );
+//			Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
+//			Infix filter = RDFQ.infix( equals, "&&", ValTranslator.someOf( o, langArray ) );
+//			expressions.add( filter );
+//			return o;
+//		}
+		if (expanded != null) {
+			return RDFQ.uri( expanded );
+		} else if (type != null) {
+            if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
+                return RDFQ.uri( val ); 
+            } else if (sns.isDatatype( type )) {
+            	if (!type.equals( RDFUtil.RDFPlainLiteral ))
+            		return RDFQ.literal( val, null, type );
+            }	    
+            return RDFQ.literal( val, langArray[0], "" );
+		} else if (langArray.length == 1) {
+			return valueAsRDFQ( prop, val, langArray[0] );
+		} else {
+			Variable o = vs.newVar();
+			Apply stringOf = RDFQ.apply( "str", o );
+			Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
+			Infix filter = RDFQ.infix( equals, "&&", ValTranslator.someOf( o, langArray ) );
+			expressions.add( filter );
+			return o;
 	    }
 	}
 
@@ -84,16 +94,7 @@ public class ValTranslator {
 	}
 
 	private Any valueAsRDFQ( String p, String nodeValue, String language) {
-		if (nodeValue.startsWith("?"))
-			{
-			 // System.err.println( ">> OOPS, a variable: " + nodeValue );
-			// if (true) throw new RuntimeException();
-			return RDFQ.var( nodeValue );
-			}
-	    String full = sns.expand( nodeValue );
-	    Prop prop = sns.asContext().getPropertyByName( p );
-	    if (full != null) 
-	        return RDFQ.uri(full); 
+	    Prop prop = sns.asContext().getPropertyByName( p ); 
 	    if (prop == null) {
 	        if (RDFUtil.looksLikeURI( nodeValue )) {
 	            return RDFQ.uri( nodeValue ); 
