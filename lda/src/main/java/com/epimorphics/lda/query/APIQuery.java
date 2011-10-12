@@ -686,6 +686,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		long afterSelect = System.currentTimeMillis();
 		
 		String outerSelect = queryAndResults.a;
+//		 System.err.println( ">> " + outerSelect );
 		List<Resource> results = queryAndResults.b;
 		
 		// System.err.println( ">> looking in cache " + cache.summary() );

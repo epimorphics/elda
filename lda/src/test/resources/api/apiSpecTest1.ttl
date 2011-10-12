@@ -153,7 +153,11 @@ spec:departmentsFr
 school-ont:School a owl:Class; api:label "School" .
 ex:size a owl:DatatypeProperty; api:label "size" ; rdfs:range xsd:int .
 ex:name a owl:DatatypeProperty; api:label "name" .
-ex:type a owl:ObjectProperty; api:label "school_type" .
+
+ex:type a owl:ObjectProperty
+    ; api:label "school_type" 
+    ; rdfs:range ex:SomeObjectType 
+    .
 
 ex:Primary api:label "Primary" .
 ex:Secondary api:label "Secondary" .

@@ -8,7 +8,6 @@
 
 package com.epimorphics.lda.query;
 
-import com.epimorphics.jsonrdf.Context.Prop;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.core.VarSupply;
@@ -65,8 +64,8 @@ public class ValTranslator {
 			Infix filter = RDFQ.infix( equals, "&&", ValTranslator.someOf( o, langArray ) );
 			expressions.add( filter );
 			return o;
-//		} else if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
-//			return RDFQ.uri( val );
+		} else if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
+			return RDFQ.uri( val );
 		} else if (expanded != null) {
 			return RDFQ.uri( expanded );
 		} else {

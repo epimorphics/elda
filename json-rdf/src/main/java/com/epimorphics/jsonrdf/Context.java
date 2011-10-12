@@ -77,18 +77,24 @@ public class Context implements Cloneable {
         this.base = base;
     }
     
+    /**
+        Clone this context, so that JSON rendering using the clone does
+        not affect this context. Each Prop object must also be cloned.
+    */
     @Override public Context clone() {
     	try {
     		Context result = (Context) super.clone();
     		result.uriToName = new HashMap<String, String>( uriToName );
-    		result.uriToProp = new HashMap<String, Prop>( uriToProp );
+    		result.uriToProp = new HashMap<String, Prop>();
+    		for (Map.Entry<String, Prop> e: uriToProp.entrySet()) {
+    			result.uriToProp.put( e.getKey(), e.getValue().clone() );
+    		}
     		result.nameToURI = new HashMap<String, String>( nameToURI );
     		return result;
     	} catch (CloneNotSupportedException e) {
             throw new RuntimeException("Can't happen :)", e);
     	}
     }
-    
 
     /**
      * Scan the given vocabulary file to find shortname and property type
@@ -331,12 +337,24 @@ public class Context implements Cloneable {
     }
     
     /** Sub interface used to describe a mapped property */
-    public static class Prop implements Comparable<Prop> {
+    public static class Prop implements Comparable<Prop>, Cloneable {
         protected String uri;
         protected String name;
         protected boolean multivalued = false;
         protected boolean hidden = false;
         protected boolean structured = false;
+        
+        /**
+            Clone this Prop -- used by Context.clone() to avoid updating
+            a shared Context object.
+        */
+        @Override public Prop clone() {
+        	try { 
+        		return (Prop) super.clone();
+			} catch (CloneNotSupportedException e) {
+				throw new RuntimeException( "Cannot happen." );
+			}
+        }
         
         public boolean isHidden() {
             return hidden;
