@@ -44,6 +44,12 @@
   _sort value be a variable has been removed as part of the process
   of clarifying how values are turned into literals.
 
+* The logic that decides how to translate the V in &P=V has
+  been consolidated into ValTranslator and made to conform
+  more closely to the spec. This has resulted in various
+  test updates and a SIGNIFICANT EXTERNAL CHANGE that is being
+  reviewed before release.
+
 1.1.14
 
 * Bug fix: Elda shortened the objects of rdf:type in the JSON
