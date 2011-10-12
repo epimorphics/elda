@@ -61,7 +61,6 @@ public class TestShortnameServices
 		Resource root = m.createResource( EX + "root" );
 		PrefixMapping pm = PrefixMapping.Factory.create();
 		ShortnameService sns = new StandardShortnameService( root, pm, LoadsNothing.instance );
-		APIQuery aq = new APIQuery( sns );
 		VarSupply vs = null;
 		Filters expressions = null;
 		ValTranslator vt = new ValTranslator( vs, expressions, sns );

@@ -40,8 +40,11 @@ public class TestExistsModifier
 		{
 		static final String NS = "fake:";
 		
-		public Shorts( String brief ) 
-			{ super( MakeData.modelForBrief( brief ), "Item=fake:Item" ); }
+		public Shorts( String intBrief ) 
+			{ this( intBrief, "" ); }
+		
+		public Shorts( String intBrief, String otherBrief ) 
+			{ super( MakeData.modelForBrief( intBrief, otherBrief ), "Item=fake:Item" ); }
 		
 		@Override public Resource asResource( String shortName ) 
 			{ return ResourceFactory.createResource( NS + shortName ); }
@@ -105,10 +108,12 @@ public class TestExistsModifier
 	*/
 	public void testNotExistsXY( String existsSetting, String expect )
 		{
-		Shorts sns = new Shorts( "type,exists-backwards" );
+		Shorts sns = new Shorts( "exists-backwards", "type" );
+		// System.err.println( ">> info: " + sns.asContext().getPropertyByName("type" ).getType() ) ;
 		APIQuery q = new APIQuery( sns );		
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
-		x.addFilterFromQuery( Param.make( sns, "type" ), "Item" );
+		Param ptype = Param.make( sns, "type" );
+		x.addFilterFromQuery( ptype, "Item" );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), existsSetting );
 	//
 		String query = q.assembleSelectQuery( PrefixMapping.Factory.create() );

@@ -163,12 +163,8 @@ public class Context implements Cloneable {
         if (res.hasProperty(RDF.type, API.Multivalued)) prop.setMultivalued(true);
         if (res.hasProperty( API.structured, Literal_TRUE ) ) prop.setStructured( true );
         if (res.hasProperty(RDF.type, API.Hidden)) prop.setHidden(true);
-        if (res.hasProperty(RDF.type, OWL.ObjectProperty)) 
-        	prop.setType(OWL.Thing.getURI());
-        else {
-            String typeURI = getStringValue(res, RDFS.range);
-            if (typeURI != null) prop.setType(typeURI);
-        }
+        if (res.hasProperty(RDF.type, OWL.ObjectProperty)) prop.setType(OWL.Thing.getURI());
+        if (res.hasProperty( RDFS.range )) prop.setType( getStringValue(res, RDFS.range) );
     }
     
     /**

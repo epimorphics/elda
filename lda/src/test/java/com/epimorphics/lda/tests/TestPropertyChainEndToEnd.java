@@ -52,6 +52,7 @@ public class TestPropertyChainEndToEnd
 			+ "; ex:number api:label 'number'"
 			+ "; ex:name api:label 'name'"
 			+ "; rdf:type rdf:type rdf:Property"
+			+ "; rdf:type rdfs:range spec:SomeObjectProperty"
 			+ "; rdf:type api:label 'type'"
 			+ "; ex:Class api:label 'class'"
 		//

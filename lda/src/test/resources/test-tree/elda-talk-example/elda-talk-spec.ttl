@@ -24,6 +24,7 @@
   
 rdf:type a rdf:Property
     ; api:label 'type'
+    ; rdfs:range :SomeObjectType
     .  
 
 :C api:label 'C'.
