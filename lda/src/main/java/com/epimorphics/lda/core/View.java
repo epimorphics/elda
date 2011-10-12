@@ -298,6 +298,8 @@ public class View {
 	}
 	
 	private String fetchByGivenPropertyChains( State s, List<PropertyChain> chains ) { 
+		if (chains.isEmpty()) 
+			return "CONSTRUCT {} WHERE {}\n";
 		boolean uns = useNestedSelect(s) && s.select.length() > 0;
 		return uns
 			? fetchChainsByNestedSelect( s, chains ) 

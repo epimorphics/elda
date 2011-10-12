@@ -140,10 +140,14 @@ public class StandardShortnameService implements ShortnameService {
     	datatypes.add( type );
     }
     
+    protected final static String rdf_XMLLiteral = RDF.getURI() + "XMLLiteral";
+    
     @Override public boolean isDatatype( String type ) {
-    	if (datatypes.contains( type )) return true;
-    	if (type.startsWith( XSD.getURI() )) return true;
-    	return false;
+    	return 
+    		datatypes.contains( type )
+    		|| type.startsWith( XSD.getURI() )
+    		|| type.equals( rdf_XMLLiteral )
+    		;
 	}
 }
 

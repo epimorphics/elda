@@ -317,6 +317,12 @@ api:stylesheet a rdf:Property ;
   rdfs:domain api:XsltFormatter ;
   rdfs:range rdfs:Resource .
 
+api:RawLiteral a rdfs:Class
+    ; rdfs:label "RawLiteral"@en
+    ; rdfs:comment "A datatype to mark the values of a property as being untyped, unlanguaged literals."
+    .
+
+
 # Add commentary to these.
 
 api:extendedMetadataVersion a rdf:Property.

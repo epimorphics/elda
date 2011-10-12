@@ -18,6 +18,7 @@ import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.RenderExpression;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -66,16 +67,12 @@ public class ValTranslator {
 			return o;
 		} else if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
 			return RDFQ.uri( val );
-		} else if (expanded != null) {
-			return RDFQ.uri( expanded );
+		} else if (type.equals( API.RawLiteral.getURI())) {
+			return RDFQ.literal(val);
+		} else if (sns.isDatatype(type)) {
+			return RDFQ.literal( val, null, type );
 		} else {
-            if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
-                return RDFQ.uri( val ); 
-            } else if (sns.isDatatype( type )) {
-            	if (!type.equals( RDFUtil.RDFPlainLiteral ))
-            		return RDFQ.literal( val, null, type );
-            }	    
-            return RDFQ.literal( val, langArray[0], "" );
+			return RDFQ.uri( expanded == null ? val : expanded );
 		}
 	}
 
