@@ -57,6 +57,11 @@ public class ValTranslator {
 		String expanded = sns.expand(val);
 	//
 		if (type == null) {
+//			if (expanded != null)
+//			{
+//				System.err.println( ">> " + val + " ==> " + expanded );
+//				return RDFQ.uri( expanded );
+//			}
 			if (langArray.length == 1) 
 				return RDFQ.literal( val, langArray[0], "" );
 			Variable o = vs.newVar();

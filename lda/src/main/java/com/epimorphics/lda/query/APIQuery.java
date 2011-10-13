@@ -631,10 +631,14 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 //	            	System.err.println( ">> prop = " + prop );
 //	            	System.err.println( ">> val = " + val );
 //	            	}
+	            String XXX = cc.get( name ).asSparqlTerm( pl );
 	        	String normalizedValue = 
 	        		(prop == null) 
 	        		    ? valueAsSparql( v )
 	        		    : objectForValue( prop, val, defaultLanguage ).asSparqlTerm(pl);
+//	            if (XXX.equals( normalizedValue )) {} else {
+//	            	System.err.println( ">> on the one hand, " + XXX + "\n>> but on the other, " + normalizedValue );
+//	            }
 	    		result.append( normalizedValue );
     		}
     		start = m.end();
