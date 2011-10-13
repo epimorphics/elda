@@ -40,9 +40,6 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Map1;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Encapsulates a specification of a single API instance.
@@ -97,16 +94,7 @@ public class APISpec {
     }
 
 	private StandardShortnameService loadShortnames( Resource specification, ModelLoaderI loader ) {
-		Model m = specification.getModel();
-		StandardShortnameService result = new StandardShortnameService(specification, prefixes, loader);
-		List<Resource> dataTypes = m.listStatements( null, RDF.type, RDFS.Datatype ).mapWith( Statement.Util.getSubject ).toList();
-		for (Resource t: dataTypes) result.declareDatatype( t.getURI() );
-		for (Resource p: m.listSubjectsWithProperty( RDF.type, OWL.DatatypeProperty ).toList()) {
-			for (RDFNode t: m.listObjectsOfProperty( p, RDFS.range ).toList()) {
-				result.declareDatatype( t.asResource().getURI() );
-			}
-		}
-		return result;
+		return new StandardShortnameService(specification, prefixes, loader);
 	}
     
     private void extractMetadataOptions( Resource specification ) {

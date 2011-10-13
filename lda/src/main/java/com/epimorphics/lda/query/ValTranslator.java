@@ -8,7 +8,6 @@
 
 package com.epimorphics.lda.query;
 
-import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.Any;
@@ -57,9 +56,7 @@ public class ValTranslator {
 		String expanded = sns.expand(val);
 	//
 		if (type == null) {
-			if (expanded != null)
-				return RDFQ.uri( expanded );
-			return languagedLiteral(langArray, val);
+			return expanded == null ? languagedLiteral(langArray, val) : RDFQ.uri( expanded );
 		} else if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
 			return RDFQ.uri( val );
 		} else if (type.equals( API.RawLiteral.getURI())) {
@@ -74,8 +71,7 @@ public class ValTranslator {
 	}
 
 	private Any languagedLiteral(String[] langArray, String val) {
-		if (langArray.length == 1) 
-			return RDFQ.literal( val, langArray[0], "" );
+		if (langArray.length == 1) return RDFQ.literal( val, langArray[0], "" );
 		Variable o = vs.newVar();
 		Apply stringOf = RDFQ.apply( "str", o );
 		Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );

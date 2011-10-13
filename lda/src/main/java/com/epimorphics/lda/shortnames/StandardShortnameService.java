@@ -19,6 +19,7 @@ package com.epimorphics.lda.shortnames;
 import static com.epimorphics.util.RDFUtils.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.epimorphics.jsonrdf.Context;
@@ -53,13 +54,25 @@ public class StandardShortnameService implements ShortnameService {
         PrefixMapping pm = specM;
         context = new Context(specM);
         this.prefixes = prefixes;
+        extractDatatypes( specM );
         for (NodeIterator i = specM.listObjectsOfProperty(specification, API.vocabulary); i.hasNext();) {
             String vocabLoc = getLexicalForm(i.next());
             Model vocab = loader.loadModel(vocabLoc);
+            extractDatatypes( vocab );
             nameMap.load( pm, vocab );
             context.loadVocabularyAnnotations(vocab, prefixes);
         }
         nameMap.load( pm, specM );
+    }
+    
+    private void extractDatatypes( Model m ) {
+	    List<Resource> dataTypes = m.listStatements( null, RDF.type, RDFS.Datatype ).mapWith( Statement.Util.getSubject ).toList();
+		for (Resource t: dataTypes) declareDatatype( t.getURI() );
+		for (Resource p: m.listSubjectsWithProperty( RDF.type, OWL.DatatypeProperty ).toList()) {
+			for (RDFNode t: m.listObjectsOfProperty( p, RDFS.range ).toList()) {
+				declareDatatype( t.asResource().getURI() );
+			}
+		}
     }
     
     protected static final Model emptyModel = ModelFactory.createDefaultModel();
