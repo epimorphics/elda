@@ -282,5 +282,7 @@ public class API {
     public static final Resource xmlFormatter = m_model.createResource( "http://purl.org/linked-data/api/vocab#xmlFormatter" );
 
 	public static final Resource RawLiteral = m_model.createResource( "http://purl.org/linked-data/api/vocab#RawLiteral" );
+
+	public static final Resource PlainLiteral = m_model.createResource( "http://purl.org/linked-data/api/vocab#PlainLiteral" );
     
 }

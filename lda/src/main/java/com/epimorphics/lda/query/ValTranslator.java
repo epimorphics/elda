@@ -57,28 +57,31 @@ public class ValTranslator {
 		String expanded = sns.expand(val);
 	//
 		if (type == null) {
-//			if (expanded != null)
-//			{
-//				System.err.println( ">> " + val + " ==> " + expanded );
-//				return RDFQ.uri( expanded );
-//			}
-			if (langArray.length == 1) 
-				return RDFQ.literal( val, langArray[0], "" );
-			Variable o = vs.newVar();
-			Apply stringOf = RDFQ.apply( "str", o );
-			Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
-			Infix filter = RDFQ.infix( equals, "&&", ValTranslator.someOf( o, langArray ) );
-			expressions.add( filter );
-			return o;
+			if (expanded != null)
+				return RDFQ.uri( expanded );
+			return languagedLiteral(langArray, val);
 		} else if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
 			return RDFQ.uri( val );
 		} else if (type.equals( API.RawLiteral.getURI())) {
 			return RDFQ.literal(val);
+		} else if (type.equals( API.PlainLiteral.getURI())) {
+			return languagedLiteral( langArray, val );
 		} else if (sns.isDatatype(type)) {
 			return RDFQ.literal( val, null, type );
 		} else {
 			return RDFQ.uri( expanded == null ? val : expanded );
 		}
+	}
+
+	private Any languagedLiteral(String[] langArray, String val) {
+		if (langArray.length == 1) 
+			return RDFQ.literal( val, langArray[0], "" );
+		Variable o = vs.newVar();
+		Apply stringOf = RDFQ.apply( "str", o );
+		Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
+		Infix filter = RDFQ.infix( equals, "&&", ValTranslator.someOf( o, langArray ) );
+		expressions.add( filter );
+		return o;
 	}
 
 	/**
