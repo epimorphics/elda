@@ -641,13 +641,15 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 //	            	System.err.println( ">> prop = " + prop );
 //	            	System.err.println( ">> val = " + val );
 //	            	}
-	            String OTHER = cc.get( name ).asSparqlTerm( pl );
-	        	String normalizedValue = 
+//	            String OTHER = vt.objectForValue( v.type(), val, defaultLanguage ).asSparqlTerm( pl ) ; // cc.get( name ).asSparqlTerm( pl );
+//	        	System.err.println( "-->> " + OTHER );
+	            String normalizedValue = 
 	        		(prop == null) 
-	        		    ? valueAsSparql( v )
+	        		    ? valueAsSparql( "<not used>", v )
 	        		    : objectForValue( prop, val, defaultLanguage ).asSparqlTerm(pl);
 //	            if (OTHER.equals( normalizedValue )) {} else {
-//	            	System.err.println( ">> on the one hand, " + XXX + "\n>> but on the other, " + normalizedValue );
+//	            	System.err.println( ">> on the one hand, " + OTHER + "\n>> but on the other, " + normalizedValue );
+//	            	throw new RuntimeException( ">> on the one hand, " + OTHER + "\n>> but on the other, " + normalizedValue );
 //	            }
 	    		result.append( normalizedValue );
     		}
@@ -657,11 +659,11 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	return result.toString();
     }
 
-    private String valueAsSparql( Value v ) {
+    private String valueAsSparql( String OTHER, Value v ) {
     	String type = v.type();
-    	if (type.equals( "" )) return "'" + protect(v.spelling()) + "'";
+    	if (type.equals( "" )) return "\"" + protect(v.spelling()) + "\"";
     	if (type.equals( RDFS.Resource.getURI() )) return "<" + v.spelling() + ">";
-    	throw new RuntimeException( "valueAsSparql: cannot handle type: " + type );
+    	throw new RuntimeException( "valueAsSparql: cannot handle type: " + type + "; maybe try " + OTHER + "?" );
     }
 
 	private String protect(String valueString) {

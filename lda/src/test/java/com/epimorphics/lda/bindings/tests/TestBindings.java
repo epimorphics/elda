@@ -35,7 +35,7 @@ public class TestBindings {
 	    Test that declared variables can have values that depend on
 	    bindings made during URI matching.
 	*/
-	@Test public void testIt() throws URISyntaxException {
+	@Test public void testDeclaredVariablesCanDependOnURIMatches() throws URISyntaxException {
 		String specString =
 			"@prefix t: <http://example.com/t#>."
 			+ "t:chris a api:API ;"
@@ -47,7 +47,7 @@ public class TestBindings {
 			+ "\n api:variable ["
 			+ "\n     api:name 'class' ;"
 			+ "\n     api:value 'http://environment.data.gov.uk/def/bathing-water-quality/{term}' ;"
-			+ "\n     api:type rdfs:Resource"
+			+ "\n     api:type rdfs:Resource" 
 			+ "\n ];"
 			+ "\n api:selector [api:where '[] a ?class ; ?item [] .']."
 			;

@@ -48,7 +48,7 @@ public class TestVariableSubstitutions {
 		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( cc, PrefixMapping.Factory.create() );
-		assertMatches( "(?s).*ORDER BY 'ordering'.*", q );        
+		assertMatches( "(?s).*ORDER BY \"ordering\".*", q );        
 	}
 	
 	@Test public void testSelectExpandsVariables() {

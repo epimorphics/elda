@@ -51,8 +51,11 @@ public class ValTranslator {
 	private static final String[] JUSTEMPTY = new String[]{""};
 
 	public Any objectForValue( Info inf, String val, String languages ) {
+		return objectForValue(inf.typeURI, val, languages);
+	}
+
+	public Any objectForValue( String type, String val, String languages ) {
 		String[] langArray = languages == null ? JUSTEMPTY : languages.split( "," );
-		String type = inf.typeURI;
 		String expanded = sns.expand(val);
 	//
 		if (type == null) {
