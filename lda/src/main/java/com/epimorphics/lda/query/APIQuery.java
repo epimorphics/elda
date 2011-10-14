@@ -424,9 +424,12 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		return var;
 	}
 	
-	protected void addPropertyHasntValue( Param param ) {
-    	Variable var = newVar();
-    	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
+	/**
+	    Generate triples to bind <code>var</code> to the value of the
+	    <code>param</code> property chain if it exists (ie all of the
+	    triples are OPTIONAL).
+	*/
+	protected void optionalProperty( Param param, Variable var ) {
 		Param.Info [] infos = param.fullParts();
 	//
 		Variable s = SELECT_VAR;
@@ -438,7 +441,13 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 			onePropertyStep( s, inf, o );
 			s = o;
 		}
-    }  
+    }
+	
+	protected void addPropertyHasntValue( Param param ) {
+    	Variable var = newVar();
+    	optionalProperty( param, var );
+    	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
+    }  	  
 
 	private void onePropertyStep( Variable subject, Info prop, Variable var ) {
 		Resource np = prop.asResource;
@@ -480,7 +489,8 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		        } else {
 		            orderExpressions.append(" " + v.name() + " ");
 		        }
-	        	addPropertyHasValue( Param.make( sns, spec ), v );
+	        	// addPropertyHasValue( Param.make( sns, spec ), v );
+	        	optionalProperty( Param.make( sns, spec ), v );
     		}
     }
     
