@@ -1,3 +1,9 @@
+/*
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011 Epimorphics Limited
+*/
 package com.epimorphics.lda.core;
 
 import java.net.URI;
@@ -175,7 +181,7 @@ public class EndpointMetadata {
 	}
 
 	public void addTermBindings( Model toScan, Model meta, Resource exec, NameMap nm ) {
-		Stage2NameMap s2 = nm.stage2(false);
+		Stage2NameMap s2 = nm.stage2(false).load( toScan, toScan );
 		MultiMap<String, String> mm = s2.result();
 		for (String uri: mm.keySet()) {
 			Resource term = meta.createResource( uri );
