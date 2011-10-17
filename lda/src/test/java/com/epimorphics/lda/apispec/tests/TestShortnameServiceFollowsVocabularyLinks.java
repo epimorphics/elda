@@ -30,7 +30,12 @@ public class TestShortnameServiceFollowsVocabularyLinks {
 	};
 	
 	static final Model modelA = ModelIOUtils.modelFromTurtle
-		( ":dt_A a rdfs:Datatype." );
+		( ":dt_A a rdfs:Datatype." 
+		+ "\n:d api:label 'name_d'." 
+		+ "\n:e a rdf:Property; rdfs:label 'name_e'."
+		+ "\n:f api:label 'f_api_label'; rdfs:label 'f_rdf_label'."
+		+ "\n:g api:label 'g_from_A'."
+		);
 	
 	static final Model modelB = ModelIOUtils.modelFromTurtle
 		( ":p a owl:DatatypeProperty; rdfs:range :dt_B." );
@@ -41,15 +46,56 @@ public class TestShortnameServiceFollowsVocabularyLinks {
 		( "<fake:root> a api:API." 
 		+ "\n<fake:root> api:vocabulary 'A', 'B'."
 		+ "\n:dt_main a rdfs:Datatype."
+		+ "\n:a api:label 'name_a'."
+		+ "\n:b a rdf:Property; rdfs:label 'name_b'."
+		+ "\n:c api:label 'c_api_label'; rdfs:label 'c_rdf_label'."
+		+ "\n:g api:label 'g_from_spec'."
 		);
 
-	@Test public void testFollowsVocabularyLinks() {
+	@Test public void testRecognisesDatatypesInSpec() {
 		Resource root = model.createResource( "fake:root" );
 		ShortnameService sns = new StandardShortnameService(root, model, loader);
-		assertTrue( ":dt_main should be a dadatype", sns.isDatatype( NS + "dt_main" ) );
+		assertTrue( ":dt_main should be a datatype", sns.isDatatype( NS + "dt_main" ) );
+		assertFalse( ":nowhere should not be a datatype", sns.isDatatype( NS + "nowhere" ) );
+	}
+
+	@Test public void testRecognisesDatatypesFromVocab() {
+		Resource root = model.createResource( "fake:root" );
+		ShortnameService sns = new StandardShortnameService(root, model, loader);
 		assertFalse( ":nowhere should not be a datatype", sns.isDatatype( NS + "nowhere" ) );
 		assertTrue( ":dt_A should be a datatype", sns.isDatatype( NS + "dt_A" ) );
+	}
+
+	@Test public void testRecognisesImplicitDatatypeFromVocab() {
+		Resource root = model.createResource( "fake:root" );
+		ShortnameService sns = new StandardShortnameService(root, model, loader);
+		assertFalse( ":nowhere should not be a datatype", sns.isDatatype( NS + "nowhere" ) );
 		assertTrue( ":dt_B should be a datatype", sns.isDatatype( NS + "dt_B" ) );
+	}
+
+	@Test public void testRecognisesLabelsInSpec() {
+		Resource root = model.createResource( "fake:root" );
+		ShortnameService sns = new StandardShortnameService( root, model, loader );
+		assertEquals( NS + "a", sns.expand( "name_a" ) );
+		assertEquals( NS + "b", sns.expand( "name_b" ) );
+		assertEquals( NS + "c", sns.expand( "c_api_label" ) );
+		assertEquals( null, sns.expand( "c_rdf_label" ) );
+	}
+	
+	@Test public void testRecognisesLabelsFromVocabSpec() {
+		Resource root = model.createResource( "fake:root" );
+		ShortnameService sns = new StandardShortnameService( root, model, loader );
+		assertEquals( NS + "d", sns.expand( "name_d" ) );
+		assertEquals( NS + "e", sns.expand( "name_e" ) );	
+		assertEquals( NS + "f", sns.expand( "f_api_label" ) );
+		assertEquals( null, sns.expand( "f_rdf_label" ) );			
+	}
+	
+	@Test public void testSpecOverridesVocabName() {
+		Resource root = model.createResource( "fake:root" );
+		ShortnameService sns = new StandardShortnameService( root, model, loader );
+		assertEquals( NS + "g", sns.expand( "g_from_spec" ) );
+	//	assertEquals( null, sns.expand( "g_from_A" ) );		
 	}
 
 }

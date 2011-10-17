@@ -46,23 +46,24 @@ public class StandardShortnameService implements ShortnameService {
     /**
      * Construct a ShortnameService
      * @param prefixes the prefixes to use for localname disambiguation
-     * @param specification the API specification with may both contain and further 
+     * @param specRoot the API specification with may both contain and further 
      * reference vocabulary information
      */
-    public StandardShortnameService(Resource specification, PrefixMapping prefixes, ModelLoaderI loader) {
-        Model specM = specification.getModel();
-        PrefixMapping pm = specM;
-        context = new Context(specM);
-        this.prefixes = prefixes;
-        extractDatatypes( specM );
-        for (NodeIterator i = specM.listObjectsOfProperty(specification, API.vocabulary); i.hasNext();) {
+    public StandardShortnameService( Resource specRoot, PrefixMapping prefixes, ModelLoaderI loader ) {
+    	this.prefixes = prefixes;
+        Model specModel = specRoot.getModel();
+        PrefixMapping pm = specModel;
+        context = new Context();
+        for (NodeIterator i = specModel.listObjectsOfProperty(specRoot, API.vocabulary); i.hasNext();) {
             String vocabLoc = getLexicalForm(i.next());
             Model vocab = loader.loadModel(vocabLoc);
             extractDatatypes( vocab );
             nameMap.load( pm, vocab );
             context.loadVocabularyAnnotations(vocab, prefixes);
         }
-        nameMap.load( pm, specM );
+        context.loadVocabularyAnnotations( specModel );
+        extractDatatypes( specModel );
+        nameMap.load( pm, specModel );
     }
     
     private void extractDatatypes( Model m ) {

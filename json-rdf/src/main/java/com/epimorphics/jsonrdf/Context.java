@@ -37,12 +37,18 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  */
 public class Context implements Cloneable {
 
-    protected String base;
+    protected String base = null;
+    
     protected Map<String, Prop> uriToProp = new HashMap<String, Prop>();
+    
     protected Map<String, String> uriToName = new HashMap<String, String>();
+    
     protected Map<String, String> nameToURI = new HashMap<String, String>();
+    
     protected int nameCount = 0;
+    
     protected boolean sortProperties = false;
+    
     protected boolean completedMappingTable = false;
     
     @Override public String toString() {
@@ -58,7 +64,6 @@ public class Context implements Cloneable {
      * Construct an empty context
      */
     public Context() {
-        base = null;
     }
     
     /**
@@ -108,9 +113,12 @@ public class Context implements Cloneable {
         loadAnnotations(m, m.listSubjectsWithProperty(API.label), false, prefixes);
         loadAnnotations(m, m.listSubjectsWithProperty(RDFS.range), true, prefixes);
     }
+    
     static Resource[] RES_TYPES_TO_SHORTEN = new Resource[] {RDFS.Class, OWL.Class};
         // TODO add SKOS
+    
     static Resource[] PROP_TYPES_TO_SHORTEN = new Resource[] {RDF.Property, OWL.DatatypeProperty, OWL.ObjectProperty, API.Hidden};
+    
     static Pattern labelPattern = Pattern.compile("[_a-zA-Z][0-9a-zA-Z_]*");
     
     protected void loadAnnotations(Model m, ResIterator ri, boolean isProperty, PrefixMapping prefixes) {

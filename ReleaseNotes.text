@@ -59,6 +59,9 @@
 * Added tests in ValTranslator for the special types api:PlainLiteral
   and api:RawLiteral.
 
+* The generated TermBindings contains entries for predicates that
+  were not given shortnames in the API config.
+
 
 1.1.14
 
