@@ -1,0 +1,5 @@
+URI=/anchor?_sort=p
+
+ASK { :alpha a :C }
+ASK { :beta a :C }
+ASK { :gamma a :C }

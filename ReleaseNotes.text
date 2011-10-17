@@ -50,6 +50,16 @@
   test updates and a SIGNIFICANT EXTERNAL CHANGE that is being
   reviewed before release.
 
+* sorting on a property P does not require that ?item actually have
+  that property -- the "value of P" clause is now OPTIONAL.
+
+* the code that defines the "datatype" types has been moved out of
+  APISpec into shortnameservice.
+
+* Added tests in ValTranslator for the special types api:PlainLiteral
+  and api:RawLiteral.
+
+
 1.1.14
 
 * Bug fix: Elda shortened the objects of rdf:type in the JSON
