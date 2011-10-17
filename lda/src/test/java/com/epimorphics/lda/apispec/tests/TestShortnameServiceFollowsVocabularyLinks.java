@@ -95,7 +95,7 @@ public class TestShortnameServiceFollowsVocabularyLinks {
 		Resource root = model.createResource( "fake:root" );
 		ShortnameService sns = new StandardShortnameService( root, model, loader );
 		assertEquals( NS + "g", sns.expand( "g_from_spec" ) );
-	//	assertEquals( null, sns.expand( "g_from_A" ) );		
+	//hg status	assertEquals( null, sns.expand( "g_from_A" ) );		
 	}
 
 }
