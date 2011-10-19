@@ -1,4 +1,4 @@
-1.1.15-SNAPSHOT
+1.1.15
 
 * The classes CallContext, RenderContext, and VarValues
   have been removed and replaced by the single class Bindings
