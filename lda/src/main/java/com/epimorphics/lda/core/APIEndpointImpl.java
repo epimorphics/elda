@@ -91,7 +91,7 @@ public class APIEndpointImpl implements APIEndpoint {
         long timeAfterRun = System.currentTimeMillis();
         APIResultSet filtered = filterByView( view, query.getDefaultLanguage(), unfiltered );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
-        insertResultSetRoot(filtered, reqURI, cc, query);
+        insertResultSetRoot(filtered, reqURI, format, cc, query);
         long timeAfterMetadata = System.currentTimeMillis();
         log.debug( "TIMING: build query: " + (timeAfterBuild - origin)/1000.0 + "s" );
         log.debug( "TIMING: run query:   " + (timeAfterRun - timeAfterBuild)/1000.0 + "s" );
@@ -153,7 +153,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.isListEndpoint();
     }
 
-	private Resource resourceForPage( Resource notThisPlease, Model m, URI ru, int page) {
+	private Resource resourceForPage( Resource notThisPlease, String format, Model m, URI ru, int page) {
 		String newURI = isListEndpoint()
 			? EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
 			: EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
@@ -166,7 +166,8 @@ public class APIEndpointImpl implements APIEndpoint {
 		// System.err.println( ">> Perhaps casting a spell ..." );
 		if (!isListEndpoint() && newURI.indexOf('?') < 0) {
 			// System.err.println( ">> ... Magical Hack." );
-			newURI += "?";
+			 newURI += "?";
+//			newURI = newURI + "." + format;
 			thisPage = m.createResource( newURI );
 		}
 		return thisPage;
@@ -196,14 +197,14 @@ public class APIEndpointImpl implements APIEndpoint {
     	return m.createResource( rqp2 );
     }
     
-	private void insertResultSetRoot( APIResultSet rs, URI ru, Bindings cc, APIQuery query ) {
+	private void insertResultSetRoot( APIResultSet rs, URI ru, String format, Bindings cc, APIQuery query ) {
     	Model rsm = rs.getModel();
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
         Resource uriForDefinition = createDefinitionURI( rsm, ru, uriForSpec, template ); 
-        Resource thisPage = resourceForPage(uriForDefinition, rsm, ru, page);
+        Resource thisPage = resourceForPage(uriForDefinition, format, rsm, ru, page);
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( API.definition, uriForDefinition );
@@ -223,9 +224,9 @@ public class APIEndpointImpl implements APIEndpoint {
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
         	thisPage.addProperty( API.items, content );
-    		thisPage.addProperty( XHV.first, resourceForPage( uriForDefinition, rsm, ru, 0 ) );
-    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( uriForDefinition, rsm, ru, page+1 ) );
-    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( uriForDefinition, rsm, ru, page-1 ) );
+    		thisPage.addProperty( XHV.first, resourceForPage( uriForDefinition, format, rsm, ru, 0 ) );
+    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( uriForDefinition, format, rsm, ru, page+1 ) );
+    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( uriForDefinition, format, rsm, ru, page-1 ) );
     		Resource listRoot = resourceForList(rsm, ru);
     		thisPage
 	    		.addProperty( DCTerms.isPartOf, listRoot )

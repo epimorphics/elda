@@ -281,7 +281,7 @@ public class API {
     /** <p>A formatter that gives the default simple XML representation of an RDF graph</p> */
     public static final Resource xmlFormatter = m_model.createResource( "http://purl.org/linked-data/api/vocab#xmlFormatter" );
 
-	public static final Resource RawLiteral = m_model.createResource( "http://purl.org/linked-data/api/vocab#RawLiteral" );
+	public static final Resource SimpleLiteral = m_model.createResource( "http://purl.org/linked-data/api/vocab#SimpleLiteral" );
 
 	public static final Resource PlainLiteral = m_model.createResource( "http://purl.org/linked-data/api/vocab#PlainLiteral" );
     

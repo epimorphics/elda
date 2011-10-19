@@ -233,7 +233,7 @@ spec:schoolsSecondaryDistrict
 # 
 
 rdf:type
-  lda:label "type" .
+  lda:label "type"; rdfs:range [] .
   
 geo:lat
       lda:label "lat" .

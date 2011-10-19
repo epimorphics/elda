@@ -82,7 +82,7 @@ public class TestShortnameServiceFollowsVocabularyLinks {
 		assertEquals( null, sns.expand( "c_rdf_label" ) );
 	}
 	
-	@Test public void testRecognisesLabelsFromVocabSpec() {
+	@Test public void testRecognisesLabelsFromVocab() {
 		Resource root = model.createResource( "fake:root" );
 		ShortnameService sns = new StandardShortnameService( root, model, loader );
 		assertEquals( NS + "d", sns.expand( "name_d" ) );

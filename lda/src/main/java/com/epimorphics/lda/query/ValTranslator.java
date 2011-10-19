@@ -56,19 +56,18 @@ public class ValTranslator {
 
 	public Any objectForValue( String type, String val, String languages ) {
 		String[] langArray = languages == null ? JUSTEMPTY : languages.split( "," );
-		String expanded = sns.expand(val);
-	//
 		if (type == null) {
-			return expanded == null ? languagedLiteral(langArray, val) : RDFQ.uri( expanded );
+			return languagedLiteral(langArray, val);
 		} else if (type.equals(OWL.Thing.getURI()) || type.equals(RDFS.Resource.getURI())) {
 			return RDFQ.uri( val );
-		} else if (type.equals( API.RawLiteral.getURI())) {
+		} else if (type.equals( API.SimpleLiteral.getURI())) {
 			return RDFQ.literal(val);
 		} else if (type.equals( API.PlainLiteral.getURI())) {
 			return languagedLiteral( langArray, val );
 		} else if (sns.isDatatype(type)) {
 			return RDFQ.literal( val, null, type );
 		} else {
+			String expanded = sns.expand(val);
 			return RDFQ.uri( expanded == null ? val : expanded );
 		}
 	}
