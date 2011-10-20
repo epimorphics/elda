@@ -21,6 +21,14 @@
               <exclude>contexts*/**</exclude>            
           </excludes>
           <outputDirectory>/</outputDirectory>
+      </fileSet>      
+      <fileSet>
+          <directory>../Notelets</directory>
+          <outputDirectory>webapps/elda/docs/Notelets</outputDirectory>
+      </fileSet>
+      <fileSet>
+        <directory>../ReleaseNotes</directory>
+        <outputDirectory>webapps/elda/docs/ReleaseNotes</outputDirectory>
       </fileSet>
       <fileSet>
           <directory>jetty-distribution-7.0.2.v20100331/javadoc</directory>
@@ -73,10 +81,6 @@
         <source>../README-demo.text</source>
         <destName>elda-README-demo.text</destName>
     </file>
-    <file>
-        <source>../ReleaseNotes.text</source>
-        <destName>elda-ReleaseNotes.text</destName>
-    </file>    
   </files>  
   
   <dependencySets>  
