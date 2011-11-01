@@ -1,3 +1,8 @@
+1.1.16-SNAPSHOT
+
+* The shortname utilities now generates an error 400 (bad request)
+  when expanding a property path with a bad name, rather than an error 500.
+
 1.1.15
 
 * The classes CallContext, RenderContext, and VarValues

@@ -108,7 +108,7 @@ public interface ShortnameService
 				if (e.length() > 0)
 					{
 					String expanded = sns.expand( e );
-					if (expanded == null) throw new IllegalArgumentException( "no long name for '" + e + "'" );
+					if (expanded == null) throw new ExpansionFailedException( e );
 					result.add( ResourceFactory.createProperty( expanded ) );
 					}
 			return result;
