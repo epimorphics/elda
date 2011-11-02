@@ -132,30 +132,33 @@ public class Context implements Cloneable {
         while (ri.hasNext()) {
             Resource res = ri.next();
             String uri = res.getURI();
-            if (uri != null && !notThese.contains(uri)) {
+            if (uri != null) {
+            	String shortForm = null;
             	seen.add( uri );
-            	setShortForms( isProperty, prefixes, res, uri );
+            	if (!notThese.contains(uri)) {
+            		shortForm = setShortForms( prefixes, res, uri );
+            	}
+            	if (isProperty) {
+        		    if (shortForm == null) shortForm = getLocalName(uri);
+        		    createPropertyRecord( shortForm, res );
+            	}
             }
         }
     }
 
-	private void setShortForms(boolean isProperty, PrefixMapping prefixes, Resource res, String uri) {
-		String shortform = null;
+	private String setShortForms( PrefixMapping prefixes, Resource res, String uri) {
+		String shortForm = null;
 		recordAltName(uri, prefixes);
 		if (res.hasProperty(API.label)) {
-		    shortform = getStringValue(res, API.label);
-		    recordPreferredName(shortform, uri);
+		    shortForm = getStringValue(res, API.label);
+		    recordPreferredName(shortForm, uri);
 		} else if (res.hasProperty(RDFS.label)) {
-		    shortform = getStringValue(res, RDFS.label);
-		    if (labelPattern.matcher(shortform).matches()) {
-		        recordPreferredName(shortform, uri);
+		    shortForm = getStringValue(res, RDFS.label);
+		    if (labelPattern.matcher(shortForm).matches()) {
+		        recordPreferredName(shortForm, uri);
 		    }
 		}
-		if (isProperty) {
-		    // Make sure there is a property record of some sort
-		    if (shortform == null) shortform = getLocalName(uri);
-		    createPropertyRecord(shortform, res);
-		}
+		return shortForm;
 	}
     
     /**
@@ -175,18 +178,18 @@ public class Context implements Cloneable {
     
     static final Literal Literal_TRUE = ResourceFactory.createTypedLiteral( true );
     
-    protected void createPropertyRecord(String name, Resource res) {
+    protected void createPropertyRecord( String name, Resource res ) {
         String uri = res.getURI();
         ContextPropertyInfo prop = uriToProp.get(uri);
         if (prop == null) {
             prop = new ContextPropertyInfo(uri, name);
             uriToProp.put(uri, prop);
         }
-        if (res.hasProperty(RDF.type, API.Multivalued)) prop.setMultivalued(true);
+        if (res.hasProperty( RDF.type, API.Multivalued)) prop.setMultivalued(true);
         if (res.hasProperty( API.structured, Literal_TRUE ) ) prop.setStructured( true );
-        if (res.hasProperty(RDF.type, API.Hidden)) prop.setHidden(true);
-        if (res.hasProperty(RDF.type, OWL.ObjectProperty)) prop.setType(OWL.Thing.getURI());
-        if (res.hasProperty( RDFS.range )) prop.setType( getStringValue(res, RDFS.range) );
+        if (res.hasProperty( RDF.type, API.Hidden)) prop.setHidden(true);
+        if (res.hasProperty( RDF.type, OWL.ObjectProperty)) prop.setType(OWL.Thing.getURI());
+        if (res.hasProperty( RDFS.range ) && prop.getType() == null) prop.setType( getStringValue(res, RDFS.range) );
     }
     
     /**
