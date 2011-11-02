@@ -39,7 +39,7 @@ public class Context implements Cloneable {
 
     protected String base = null;
     
-    protected Map<String, Prop> uriToProp = new HashMap<String, Prop>();
+    protected Map<String, ContextPropertyInfo> uriToProp = new HashMap<String, ContextPropertyInfo>();
     
     protected Map<String, String> uriToName = new HashMap<String, String>();
     
@@ -71,7 +71,7 @@ public class Context implements Cloneable {
      * @param ontology ontology model used for naming, and annotation to control serializations
      */
     public Context(Model ontology) {
-        loadVocabularyAnnotations(ontology);
+        loadVocabularyAnnotations( new HashSet<String>(), ontology);
     }
     
     /**
@@ -90,8 +90,8 @@ public class Context implements Cloneable {
     	try {
     		Context result = (Context) super.clone();
     		result.uriToName = new HashMap<String, String>( uriToName );
-    		result.uriToProp = new HashMap<String, Prop>();
-    		for (Map.Entry<String, Prop> e: uriToProp.entrySet()) {
+    		result.uriToProp = new HashMap<String, ContextPropertyInfo>();
+    		for (Map.Entry<String, ContextPropertyInfo> e: uriToProp.entrySet()) {
     			result.uriToProp.put( e.getKey(), e.getValue().clone() );
     		}
     		result.nameToURI = new HashMap<String, String>( nameToURI );
@@ -101,17 +101,24 @@ public class Context implements Cloneable {
     	}
     }
 
+    
+    public void loadVocabularyAnnotations(Set<String> seen, Model m) {
+        loadVocabularyAnnotations(seen, m, m);
+    }
     /**
-     * Scan the given vocabulary file to find shortname and property type
-     * annotations
-     */
-    public void loadVocabularyAnnotations(Model m, PrefixMapping prefixes) {                
+     	Scan the given vocabulary file to find shortname and property type
+     	annotations. Ignore any URIs in <code>notThese</code>. Update
+     	notThese with any new URIs once we're done.
+    */
+    public void loadVocabularyAnnotations( Set<String> notThese, Model m, PrefixMapping prefixes) {  
+    	Set<String> seen = new HashSet<String>();
         for(Resource r : RES_TYPES_TO_SHORTEN) 
-            loadAnnotations(m, m.listSubjectsWithProperty(RDF.type, r), false, prefixes);
+            loadAnnotations(notThese, seen, m, m.listSubjectsWithProperty(RDF.type, r), false, prefixes);
         for(Resource r : PROP_TYPES_TO_SHORTEN) 
-            loadAnnotations(m, m.listSubjectsWithProperty(RDF.type, r), true, prefixes);
-        loadAnnotations(m, m.listSubjectsWithProperty(API.label), false, prefixes);
-        loadAnnotations(m, m.listSubjectsWithProperty(RDFS.range), true, prefixes);
+            loadAnnotations(notThese, seen, m, m.listSubjectsWithProperty(RDF.type, r), true, prefixes);
+        loadAnnotations(notThese, seen, m, m.listSubjectsWithProperty(API.label), false, prefixes);
+        loadAnnotations(notThese, seen, m, m.listSubjectsWithProperty(RDFS.range), true, prefixes);
+        notThese.addAll( seen );
     }
     
     static Resource[] RES_TYPES_TO_SHORTEN = new Resource[] {RDFS.Class, OWL.Class};
@@ -121,44 +128,45 @@ public class Context implements Cloneable {
     
     static Pattern labelPattern = Pattern.compile("[_a-zA-Z][0-9a-zA-Z_]*");
     
-    protected void loadAnnotations(Model m, ResIterator ri, boolean isProperty, PrefixMapping prefixes) {
+    protected void loadAnnotations( Set<String> notThese, Set<String> seen, Model m, ResIterator ri, boolean isProperty, PrefixMapping prefixes) {
         while (ri.hasNext()) {
             Resource res = ri.next();
             String uri = res.getURI();
-            String shortform = null;
-            if (uri != null) {
-                recordAltName(uri, prefixes);
-                if (res.hasProperty(API.label)) {
-                    shortform = getStringValue(res, API.label);
-                    recordPreferredName(shortform, uri);
-                } else if (res.hasProperty(RDFS.label)) {
-                    shortform = getStringValue(res, RDFS.label);
-                    if (labelPattern.matcher(shortform).matches()) {
-                        recordPreferredName(shortform, uri);
-                    }
-                }
-                if (isProperty) {
-                    // Make sure there is a property record of some sort
-                    if (shortform == null) shortform = getLocalName(uri);
-                    createPropertyRecord(shortform, res);
-                }
+            if (uri != null && !notThese.contains(uri)) {
+            	seen.add( uri );
+            	setShortForms( isProperty, prefixes, res, uri );
             }
         }
     }
-    
-    public void loadVocabularyAnnotations(Model m) {
-        loadVocabularyAnnotations(m, m);
-    }
+
+	private void setShortForms(boolean isProperty, PrefixMapping prefixes, Resource res, String uri) {
+		String shortform = null;
+		recordAltName(uri, prefixes);
+		if (res.hasProperty(API.label)) {
+		    shortform = getStringValue(res, API.label);
+		    recordPreferredName(shortform, uri);
+		} else if (res.hasProperty(RDFS.label)) {
+		    shortform = getStringValue(res, RDFS.label);
+		    if (labelPattern.matcher(shortform).matches()) {
+		        recordPreferredName(shortform, uri);
+		    }
+		}
+		if (isProperty) {
+		    // Make sure there is a property record of some sort
+		    if (shortform == null) shortform = getLocalName(uri);
+		    createPropertyRecord(shortform, res);
+		}
+	}
     
     /**
      * Record the preferred name to use to shorten a URI.
      * If the name is already in use then only record as an alternate name
      */
     public void recordPreferredName(String name, String uri) {
-        if (isNameFree(name)) {
+        if (isNameFree(name)) { 
             nameToURI.put(name, uri);
             uriToName.put(uri, name);
-            Prop prop = uriToProp.get(uri);
+            ContextPropertyInfo prop = uriToProp.get(uri);
             if (prop != null && !prop.getName().equals(name)) {
                 prop.setName(name);
             }
@@ -169,9 +177,9 @@ public class Context implements Cloneable {
     
     protected void createPropertyRecord(String name, Resource res) {
         String uri = res.getURI();
-        Prop prop = uriToProp.get(uri);
+        ContextPropertyInfo prop = uriToProp.get(uri);
         if (prop == null) {
-            prop = makeProp(uri, name);
+            prop = new ContextPropertyInfo(uri, name);
             uriToProp.put(uri, prop);
         }
         if (res.hasProperty(RDF.type, API.Multivalued)) prop.setMultivalued(true);
@@ -247,12 +255,12 @@ public class Context implements Cloneable {
     }
     
     /** Lookup the definition of a property based on its URI */
-    public Prop getPropertyByURI(String uri) {
+    public ContextPropertyInfo getPropertyByURI(String uri) {
         return uriToProp.get(uri);
     }
     
     /** Lookup the definition of a property based on its mapped name */
-    public Prop getPropertyByName(String name) {
+    public ContextPropertyInfo getPropertyByName(String name) {
         return getPropertyByURI( getURIfromName(name) );
     }
     
@@ -309,14 +317,14 @@ public class Context implements Cloneable {
      * Determine record for a property, creating a new
      * context entry if required.
      */
-    public Prop findProperty(Property p) {
+    public ContextPropertyInfo findProperty(Property p) {
         String uri = p.getURI();
-        Prop prop = getPropertyByURI(uri);
+        ContextPropertyInfo prop = getPropertyByURI(uri);
         if (prop == null) {
             String name = findNameForProperty(p);
             prop = getPropertyByURI(uri);
             if (prop == null) {
-                prop = makeProp(uri, name);
+                prop = new ContextPropertyInfo(uri, name);
                 uriToProp.put(uri, prop);
             }
         }
@@ -336,144 +344,7 @@ public class Context implements Cloneable {
         }
     }
     
-    /**
-     * Construct and register a Prop record for a newly named resource 
-     */
-    protected Prop makeProp(String uri, String name) {
-        Prop prop = new Prop(uri, name);
-        return prop;
-    }
-    
-    /** Sub interface used to describe a mapped property */
-    public static class Prop implements Comparable<Prop>, Cloneable {
-        protected String uri;
-        protected String name;
-        protected boolean multivalued = false;
-        protected boolean hidden = false;
-        protected boolean structured = false;
-        
-        /**
-            Clone this Prop -- used by Context.clone() to avoid updating
-            a shared Context object.
-        */
-        @Override public Prop clone() {
-        	try { 
-        		return (Prop) super.clone();
-			} catch (CloneNotSupportedException e) {
-				throw new RuntimeException( "Cannot happen." );
-			}
-        }
-        
-        public boolean isHidden() {
-            return hidden;
-        }
-		public void setHidden(boolean hidden) {
-            this.hidden = hidden;
-        }
-
-        public void setStructured(boolean b) {
-			this.structured = b;			
-		}
-        
-		public boolean isStructured() {
-			return structured;
-		}
-
-        protected String type = null;
-        protected Property p;
-        
-        public Prop(String uri, String name) {
-            this.uri = uri;
-            this.name = name;
-        }
-        
-        /** The absolute URI of the property */
-        public String getURI() {
-            return uri;
-        }
-        
-        /** The shortened name to use in serialization */
-        public String getName() {
-            return name;
-        }
-        
-        /** True if the property should be treated as multi-valued */
-        public boolean isMultivalued() {
-            return multivalued;
-        }
-        
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public void setMultivalued(boolean multivalued) {
-            this.multivalued = multivalued;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-        
-        /** Record the type of a sample value, if there is a clash with prior type then default to rdfs:Resource */
-        public void addType(RDFNode value) {
-            if (type == null) {
-                type = decideType(value);
-            } else {
-                String ty = decideType(value);
-                if ( ! this.type.equals(ty) ) {
-                    if (TypeUtil.isSubTypeOf(ty, type)) {
-                        // Current type is OK
-                    } if (TypeUtil.isSubTypeOf(type, ty)) {
-                        type = ty;
-                    } else {
-                        // Generalize type
-                        type = RDFS.Resource.getURI();
-                    }
-                }
-            }
-        }
-        
-        private String decideType(RDFNode value) {
-            if (value instanceof Resource) {
-                if (RDFUtil.isList(value) || value.equals(RDF.nil)) {
-                    return RDF.List.getURI();
-                } else {
-                    return OWL.Thing.getURI();
-                }
-            } else {
-                Literal l = (Literal)value;
-                String ty = l.getDatatypeURI();
-                if (ty == null || ty.isEmpty()) {
-                    return RDFUtil.RDFPlainLiteral;
-                } else {
-                    return ty;
-                }
-            }
-        }
-
-        /** Returns the assumed range of the property as a URI. Values with particular
-         * significance for the serialization are rdfs:Resource, rdfs:List and xsd:* */
-        public String getType() {
-            return type; 
-        }
-        
-        /** Get the corresponding RDF property, may cache */
-        public Property getProperty(Model m) {
-            if (p == null) {
-                p = m.getProperty(uri);
-            }
-            return p;
-        }
-
-        /**
-         * Compare on names to permit sorting.
-         */
-        @Override public int compareTo(Prop o) {
-           return name.compareTo(o.name);     
-        }
-    }
-
-    public void setProperty(String uri, Prop prop) {
+    public void setProperty(String uri, ContextPropertyInfo prop) {
         uriToProp.put(uri, prop);
         String name = prop.getName();
         recordPreferredName(name, uri);  // False to isProperty because we are registering an externally created prop ourselves

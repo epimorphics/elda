@@ -160,7 +160,7 @@ public class Decoder {
             String key = keys.next();
             if (key.equals( encoder.getPNResourceID()) ) continue;
             
-            Context.Prop prop = context.getPropertyByName(key);
+            ContextPropertyInfo prop = context.getPropertyByName(key);
             Property p = null;
             if (prop == null) {
                 String uri = context.getURIfromName(key);

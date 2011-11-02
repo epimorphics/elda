@@ -14,7 +14,7 @@ import org.w3c.dom.Element;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDF;
-import com.epimorphics.jsonrdf.Context.Prop;
+import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
@@ -235,7 +235,7 @@ public class XMLRendering {
 
 	private boolean isMultiValued( Property p ) {
 		if (p.equals( RDF.type )) return true; // HACKERY
-		Prop px = sns.asContext().getPropertyByURI(p.getURI());
+		ContextPropertyInfo px = sns.asContext().getPropertyByURI(p.getURI());
 		return px != null && px.isMultivalued();
 	}
 	

@@ -86,16 +86,20 @@ public class TestShortnameServiceFollowsVocabularyLinks {
 		Resource root = model.createResource( "fake:root" );
 		ShortnameService sns = new StandardShortnameService( root, model, loader );
 		assertEquals( NS + "d", sns.expand( "name_d" ) );
+		assertEquals( "name_d", sns.asContext().getNameForURI( NS + "d" ) );
 		assertEquals( NS + "e", sns.expand( "name_e" ) );	
+		assertEquals( "name_e", sns.asContext().getNameForURI( NS + "e" ) );
 		assertEquals( NS + "f", sns.expand( "f_api_label" ) );
-		assertEquals( null, sns.expand( "f_rdf_label" ) );			
+		assertEquals( null, sns.expand( "f_rdf_label" ) );		
+		assertEquals( "f_api_label", sns.asContext().getNameForURI( NS + "f" ) );
 	}
 	
 	@Test public void testSpecOverridesVocabName() {
 		Resource root = model.createResource( "fake:root" );
 		ShortnameService sns = new StandardShortnameService( root, model, loader );
+		assertEquals( null, sns.expand( "g_from_A" ) );		
 		assertEquals( NS + "g", sns.expand( "g_from_spec" ) );
-	//hg status	assertEquals( null, sns.expand( "g_from_A" ) );		
+		assertEquals( "g_from_spec", sns.asContext().getNameForURI( NS + "g" ) );
 	}
 
 }

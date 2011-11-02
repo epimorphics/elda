@@ -7,7 +7,7 @@
 */
 package com.epimorphics.lda.core;
 
-import com.epimorphics.jsonrdf.Context.Prop;
+import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.URINode;
@@ -102,7 +102,7 @@ public abstract class Param
 		public static Info create( ShortnameService sns, String p ) 
 			{
 			Resource r = sns.asResource(p);
-			Prop prop = sns.asContext().getPropertyByName( p );
+			ContextPropertyInfo prop = sns.asContext().getPropertyByName( p );
 			String type = prop == null ? null : prop.getType();
 			return new Info(r, p, type);
 			}

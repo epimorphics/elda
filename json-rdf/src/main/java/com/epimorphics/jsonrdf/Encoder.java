@@ -513,7 +513,7 @@ public class Encoder {
             List<Property> props = getSortedProperties(vals);
 
             for (Property p : props) {
-                Context.Prop prop = context.findProperty(p);
+                ContextPropertyInfo prop = context.findProperty(p);
                 if (!prop.isHidden()) writePropertyValues( vals, p, prop );
             }
 		}
@@ -540,7 +540,7 @@ public class Encoder {
 			return props;
 		}
 		
-        private void writePropertyValues( OneToManyMap<Property, RDFNode> vals, Property p, Context.Prop prop ) {                
+        private void writePropertyValues( OneToManyMap<Property, RDFNode> vals, Property p, ContextPropertyInfo prop ) {                
         	Iterator<RDFNode> i = vals.getAll(p);
             boolean multi = prop.isMultivalued();
             boolean isStructured = prop.isStructured();

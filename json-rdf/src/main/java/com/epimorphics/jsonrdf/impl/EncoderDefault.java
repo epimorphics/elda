@@ -30,6 +30,7 @@ import com.epimorphics.jsonrdf.Decoder;
 import com.epimorphics.jsonrdf.EncoderPlugin;
 import com.epimorphics.jsonrdf.EncodingException;
 import com.epimorphics.jsonrdf.JSONWriterFacade;
+import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.extras.JsonUtils;
 import com.hp.hpl.jena.datatypes.BaseDatatype;
@@ -205,7 +206,7 @@ public class EncoderDefault implements EncoderPlugin {
             jw.key(name);
             jw.object();
             jw.key(PNuri).value( context.getURIfromName(name) );
-            Context.Prop prop = context.getPropertyByName(name);
+            ContextPropertyInfo prop = context.getPropertyByName(name);
             if (prop != null) {
                 if (prop.getType() != null)
                     jw.key(PNrange).value( prop.getType() );
@@ -306,7 +307,7 @@ public class EncoderDefault implements EncoderPlugin {
             String uri = JsonUtils.optString( map, PNuri, null );
             String range = JsonUtils.optString( map, PNrange, null );
             if (range != null) {
-                Context.Prop prop = new Context.Prop(uri, key);
+                ContextPropertyInfo prop = new ContextPropertyInfo(uri, key);
                 prop.setType(range);
                 context.setProperty(uri, prop);
             } else {
