@@ -1,0 +1,5 @@
+URI=/ignored?_metadata=all
+
+ASK { [api:termBinding [api:label "definition"; api:property :definition]] }
+
+ASK NOT { [api:termBinding [api:label "definition"; api:property api:definition]] }

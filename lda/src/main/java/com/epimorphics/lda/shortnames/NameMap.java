@@ -158,6 +158,7 @@ public class NameMap {
 		*/
 		public MultiMap<String, String> result() {
 			Map<String, Set<String>> shorts = new HashMap<String, Set<String>>();
+			Set<String> already = new HashSet<String>();
 			for (String p: terms) {
 				String givenShort = uriToName.getOne( p );
 				if (givenShort == null) {
@@ -165,15 +166,17 @@ public class NameMap {
 					Set<String> ps = shorts.get(local);
 					if (ps == null) shorts.put( local, ps = new HashSet<String>() );
 					ps.add( p );
+				} else {
+					already.add( givenShort );
 				}
 			}
 			for (String shortName: shorts.keySet()) {
 				Set<String> ps = shorts.get(shortName);
-				if (ps.size() == 1) {
-					uriToName.add( ps.iterator().next(), t(shortName) );
-				} else {
+				if (already.contains( shortName ) || ps.size() > 1) {
 					for (String uri: ps) 
 						uriToName.add( uri, prefixFor( getNameSpace(uri) ) + t(shortName) );
+				} else {
+					uriToName.add( ps.iterator().next(), t(shortName) );
 				}
 			}
 			return uriToName;
