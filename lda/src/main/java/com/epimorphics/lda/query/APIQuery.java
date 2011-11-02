@@ -16,6 +16,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.SortOrder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -478,20 +480,35 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         as the ORDER BY field.
     */
     public void setSortBy( String orderSpecs ) {
-    	orderExpressions.setLength(0);
-    	for (String spec: orderSpecs.split(",")) 
-    		if (spec.length() > 0){
-		        boolean descending = spec.startsWith("-"); 
-		        if (descending) spec = spec.substring(1);
-		        Variable v = newVar();
-		        if (descending) {
-		        	orderExpressions.append(" DESC(" + v.name() + ") ");
-		        } else {
-		            orderExpressions.append(" " + v.name() + " ");
-		        }
-	        	// addPropertyHasValue( Param.make( sns, spec ), v );
-	        	optionalProperty( Param.make( sns, spec ), v );
-    		}
+    	if (sortByOrderSpecsFrozen) 
+    			EldaException.Broken( "Elda attempted to set a sort order after generating the select query." );
+    	sortByOrderSpecs = orderSpecs;
+    }
+    
+    protected String sortByOrderSpecs = "";
+    
+    protected boolean sortByOrderSpecsFrozen = false;
+    
+    protected void unpackSortByOrderSpecs() {
+    	if (sortByOrderSpecsFrozen) 
+    		EldaException.Broken( "Elda attempted to unpack the sort order after generating the select query." );
+    	if (sortByOrderSpecs.length() > 0) {
+    		orderExpressions.setLength(0);
+	    	for (String spec: sortByOrderSpecs.split(",")) {
+	    		if (spec.length() > 0) {
+			        boolean descending = spec.startsWith("-"); 
+			        if (descending) spec = spec.substring(1);
+			        Variable v = newVar();
+			        if (descending) {
+			        	orderExpressions.append(" DESC(" + v.name() + ") ");
+			        } else {
+			            orderExpressions.append(" " + v.name() + " ");
+			        }
+		        	optionalProperty( Param.make( sns, spec ), v );
+	    		}
+	    	}
+    	sortByOrderSpecsFrozen = true;
+    	}
     }
     
     @Override public Variable newVar() {
@@ -532,6 +549,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     }
     
     public String assembleRawSelectQuery( PrefixLogger pl, Bindings cc ) { 
+    	if (!sortByOrderSpecsFrozen) unpackSortByOrderSpecs();
     	if (fixedSelect == null) {
 	        StringBuilder q = new StringBuilder();
 	        q.append("SELECT ");
