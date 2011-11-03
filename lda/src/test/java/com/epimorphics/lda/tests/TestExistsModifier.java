@@ -71,15 +71,17 @@ public class TestExistsModifier
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "false" );		
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
+		List<List<RDFQ.Triple>> optionals = q.getOptionalGraphTriples();
 		List<RenderExpression> filters = q.getFilterExpressions();
 	//
-		assertEquals( "should be only one triple in pattern", 1, triples.size() );
-		RDFQ.Triple t = triples.get(0);
+		assertEquals( "should be no mandatory triples in pattern", 0, triples.size() );
+		assertEquals( "should be one optional chain", 1, optionals.size() );
+		assertEquals( "the single optional chain should have one element", 1, optionals.get(0).size() );
+		RDFQ.Triple t = optionals.get(0).get(0);
 	//
 		assertEquals( RDFQ.var( "?item" ), t.S );
 		assertEquals( RDFQ.uri( Shorts.NS + "backwards" ), t.P );
 		assertTrue( t.O instanceof Variable );
-		assertTrue( "result triple must be OPTIONAL", t.isOptional() );
 	//
 		assertEquals( "should be one filter expression", 1, filters.size() );
 		assertEquals( RDFQ.apply("!", RDFQ.apply( "bound", t.O ) ), filters.get(0) );

@@ -80,9 +80,16 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     */
     protected List<RDFQ.Triple> basicGraphTriples = new ArrayList<RDFQ.Triple>();
     
+    protected List<List<RDFQ.Triple>> optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>(); 
+    
     public List<RDFQ.Triple> getBasicGraphTriples() {
     	// FOR TESTING ONLY
     	return basicGraphTriples;
+    }
+    
+    public List<List<RDFQ.Triple>> getOptionalGraphTriples() {
+    	// FOR TESTING ONLY
+    	return optionalGraphTriples;
     }
     
     /**
@@ -188,6 +195,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         try {
             APIQuery clone = (APIQuery) super.clone();
             clone.basicGraphTriples = new ArrayList<RDFQ.Triple>( basicGraphTriples );
+            clone.optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>( optionalGraphTriples );
             clone.filterExpressions = new ArrayList<RenderExpression>( filterExpressions );
             clone.orderExpressions = new StringBuffer( orderExpressions );
             clone.whereExpressions = new StringBuffer( whereExpressions );
@@ -436,13 +444,15 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	//
 		Variable s = SELECT_VAR;
 		int remaining = infos.length;
+		List<RDFQ.Triple> chain = new ArrayList<RDFQ.Triple>(infos.length);
 	//
 		for (Param.Info inf: infos) {
 			remaining -= 1;
 			Variable o = remaining == 0 ? var : newVar();
-			onePropertyStep( s, inf, o );
+			onePropertyStep( chain, s, inf, o );
 			s = o;
 		}
+		optionalGraphTriples.add( chain );
     }
 	
 	protected void addPropertyHasntValue( Param param ) {
@@ -451,10 +461,10 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
     }  	  
 
-	private void onePropertyStep( Variable subject, Info prop, Variable var ) {
+	private void onePropertyStep( List<RDFQ.Triple> chain, Variable subject, Info prop, Variable var ) {
 		Resource np = prop.asResource;
 		varInfo.put( var, prop );
-		basicGraphTriples.add( RDFQ.triple( subject, RDFQ.uri( np.getURI() ), var, true ) ); 
+		chain.add( RDFQ.triple( subject, RDFQ.uri( np.getURI() ), var ) ); 
 	}
 
     /**
@@ -561,7 +571,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	        	q.append( whereExpressions ); 
 	        	pl.findPrefixesIn( whereExpressions.toString() );
 	        } else {
-		        if (bgp.isEmpty()) bgp = SELECT_VAR.name() + " ?__p ?__v ."; 
+		        if (basicGraphTriples.isEmpty()) bgp = SELECT_VAR.name() + " ?__p ?__v .\n" + bgp; 
 	        }
 	        q.append( bgp );
 	        appendFilterExpressions( pl, q );
@@ -610,6 +620,13 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 				.append( t.asSparqlTriple( pl ) )
 				.append( " .\n" )
 				;
+		for (List<RDFQ.Triple> optional: optionalGraphTriples) {
+			sb.append( "OPTIONAL { " );
+			for (RDFQ.Triple t: optional) {
+				sb.append( t.asSparqlTriple( pl ) ).append( " . " );
+			}
+			sb.append( "}\n" );
+		}
 		return sb.toString();
 	}
 
