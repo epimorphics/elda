@@ -548,7 +548,7 @@ public class Encoder {
             prop.addType(first);
             if (!i.hasNext() && !multi) {
                 // just emit single value
-            	jw.key(prop.getName());
+            	jw.key(prop.getSerialisationName());
                 emitNode(first, isStructured);
             } else {
                 // Emit as array, do so with sorting
@@ -561,7 +561,7 @@ public class Encoder {
                         return getLexicalForm(arg0).compareTo(getLexicalForm(arg1));
                     }
                 });
-            	jw.key(prop.getName());
+            	jw.key(prop.getSerialisationName());
                 jw.array();
                 for (RDFNode node : nvals) {
 					emitNode(node, isStructured);

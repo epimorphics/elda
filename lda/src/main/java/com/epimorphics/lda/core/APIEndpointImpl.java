@@ -207,10 +207,13 @@ public class APIEndpointImpl implements APIEndpoint {
         Resource thisPage = resourceForPage(uriForDefinition, format, rsm, ru, page);
         rs.setRoot(thisPage);
     //
-		thisPage.addProperty( API.definition, uriForDefinition );
 		Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
 		EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, cc, ru, formatNames );
 		createOptionalMetadata(rs, query, em);   
+	//
+	// important this comes AFTER metadata creation.
+	//
+		thisPage.addProperty( API.definition, uriForDefinition );
     //
         String emv_uri = EndpointMetadata.replaceQueryParam( Util.newURI(thisPage.getURI()), "_metadata", "all" );
         thisPage.addProperty( API.extendedMetadataVersion, rsm.createResource( emv_uri ) );

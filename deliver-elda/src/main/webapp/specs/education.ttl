@@ -235,6 +235,10 @@ spec:schoolsSecondaryDistrict
 rdf:type
   lda:label "type"; rdfs:range [] .
   
+lda:definition a rdf:Property
+    ; lda:label "definition"
+    .  
+
 geo:lat
       lda:label "lat" .
 

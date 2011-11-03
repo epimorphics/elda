@@ -1,5 +1,6 @@
 package com.epimorphics.jsonrdf;
 
+import com.epimorphics.vocabs.NsUtils;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -49,6 +50,7 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
 	}
 
     protected String type = null;
+    
     protected Property p;
     
     public ContextPropertyInfo(String uri, String name) {
@@ -64,6 +66,11 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
     /** The shortened name to use in serialization */
     public String getName() {
         return name;
+    }
+    
+    public String getSerialisationName() {
+    	if (NsUtils.isMagic( NsUtils.getNameSpace(uri ) )) return NsUtils.getLocalName( uri );
+    	return name;
     }
     
     /** True if the property should be treated as multi-valued */
