@@ -49,7 +49,7 @@ public class TestPrefixLogger {
 	
 	@Test public void testH() {
 		assertEquals( set( "my-prefix" ), findPrefixes( "my-prefix:nothing" ) );
-		assertEquals( set( "my+prefix" ), findPrefixes( "my+prefix:nothing" ) );
+		// assertEquals( set( "my+prefix" ), findPrefixes( "my+prefix:nothing" ) );
 		assertEquals( set( "my-17prefix" ), findPrefixes( "my-17prefix:nothing" ) );
 		assertEquals( set( "my.prefix" ), findPrefixes( "my.prefix:nothing" ) );
 	}
@@ -58,8 +58,17 @@ public class TestPrefixLogger {
 		assertEquals( set( "A" ), findPrefixes( "[A:]" ) );
 		assertEquals( set( "a-b" ), findPrefixes( "<a-b:>" ) );
 		assertEquals( set( "a.b.c" ), findPrefixes( "(a.b.c:::]" ) );
-		assertEquals( set( "a+.b" ), findPrefixes( ">[a+.b:a+.c;" ) );
+		// assertEquals( set( "a+.b" ), findPrefixes( ">[a+.b:a+.c;" ) );
 	}
+	
+	@Test public void testJ() {
+		assertEquals( set( "A" ), findPrefixes( "[A:]" ) );
+		assertEquals( set( "a_b" ), findPrefixes( "<a_b:>" ) );
+		assertEquals( set( "a_b_c" ), findPrefixes( "(a_b_c:::]" ) );
+		assertEquals( set( "a" ), findPrefixes( ">[_a:" ) );
+	}
+	
+	// TODO test cases with actual non-ascii letters in them.
 
 	private Set<String> findPrefixes( String s ) {
 		Set<String> result = new HashSet<String>();

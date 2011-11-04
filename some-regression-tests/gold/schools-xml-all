@@ -94,7 +94,9 @@
       <vcard href="http://api.talis.com/stores/govuk-education/items/1258344546303#self"/>
     </item>
     <item href="http://education.data.gov.uk/id/school/100868">
-      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140"/>
+      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140">
+        <label>London Central</label>
+      </LLSC>
       <LSOA href="http://statistics.data.gov.uk/id/lsoa/E01003916">
         <label>Southwark 020B</label>
       </LSOA>
@@ -112,8 +114,12 @@
       <administrativeWard href="http://statistics.data.gov.uk/id/local-authority-ward/00BEGC">
         <label>Brunswick Park</label>
       </administrativeWard>
-      <admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Non-selective"/>
-      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders"/>
+      <admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Non-selective">
+        <label>Non-selective</label>
+      </admissionsPolicy>
+      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders">
+        <label>No Boarders</label>
+      </boarders>
       <burnhamGroup datatype="integer">0</burnhamGroup>
       <censusAreaStatisticWard href="http://statistics.data.gov.uk/id/cas-ward/00BEGC">
         <label>Brunswick Park</label>
@@ -126,20 +132,30 @@
       <compSchoolAge datatype="integer">38</compSchoolAge>
       <dateofLastFPVisit datatype="date">2003-01-23</dateofLastFPVisit>
       <dateofLastOfstedVisit datatype="date">2000-12-04</dateofLastOfstedVisit>
-      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE"/>
+      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE">
+        <label>Southwark</label>
+      </districtAdministrative>
       <easting datatype="integer">533027</easting>
       <establishmentName>Hope Primary School</establishmentName>
       <establishmentNumber datatype="integer">6383</establishmentNumber>
-      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Closed"/>
-      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed"/>
+      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Closed">
+        <label>Closed</label>
+      </establishmentStatus>
+      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed">
+        <label>Mixed</label>
+      </gender>
       <hasGOR href="http://statistics.data.gov.uk/id/government-office-region/H"/>
       <highBoardFee href="http://api.talis.com/stores/govuk-education/items/1257559279322#self"/>
       <highDayFee href="http://api.talis.com/stores/govuk-education/items/1258577816699#self"/>
-      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present"/>
+      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present">
+        <label>Uninvolved at present</label>
+      </investorInPeople>
       <label>Hope Primary School</label>
       <lastChangedDate datatype="date">2008-12-05</lastChangedDate>
       <lat datatype="decimal">51.47893</lat>
-      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210"/>
+      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210">
+        <label>Southwark</label>
+      </localAuthority>
       <long datatype="decimal">-0.08576</long>
       <lowBoardFee href="http://api.talis.com/stores/govuk-education/items/1256169110185#self"/>
       <lowDayFee href="http://api.talis.com/stores/govuk-education/items/1256897046496#self"/>
@@ -170,16 +186,26 @@
       <totalPupilsFullTime href="http://api.talis.com/stores/govuk-education/items/1258304552797#self"/>
       <totalPupilsPartTime href="http://api.talis.com/stores/govuk-education/items/1256141030331#self"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School">
+          <label>Other Independent School</label>
+        </item>
       </type>
-      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/>
+      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School">
+        <label>Other Independent School</label>
+      </typeOfEstablishment>
       <uniqueReferenceNumber datatype="integer">100868</uniqueReferenceNumber>
-      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse"/>
+      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse">
+        <label>Urban &gt; 10k - less sparse</label>
+      </urbanRural>
       <vcard href="http://api.talis.com/stores/govuk-education/items/1259294325459#self"/>
     </item>
     <item href="http://education.data.gov.uk/id/school/100867">
-      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140"/>
+      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140">
+        <label>London Central</label>
+      </LLSC>
       <LSOA href="http://statistics.data.gov.uk/id/lsoa/E01003122">
         <label>Lambeth 004D</label>
       </LSOA>
@@ -191,8 +217,12 @@
       <administrativeWard href="http://statistics.data.gov.uk/id/local-authority-ward/00AYGN">
         <label>Stockwell</label>
       </administrativeWard>
-      <admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Non-selective"/>
-      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders"/>
+      <admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Non-selective">
+        <label>Non-selective</label>
+      </admissionsPolicy>
+      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders">
+        <label>No Boarders</label>
+      </boarders>
       <burnhamGroup datatype="integer">0</burnhamGroup>
       <censusAreaStatisticWard href="http://statistics.data.gov.uk/id/cas-ward/00AYGN">
         <label>Stockwell</label>
@@ -205,14 +235,22 @@
       <easting datatype="integer">529879</easting>
       <establishmentName>Alpha Community School At Springfield Methodist Church</establishmentName>
       <establishmentNumber datatype="integer">6376</establishmentNumber>
-      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Closed"/>
-      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed"/>
+      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Closed">
+        <label>Closed</label>
+      </establishmentStatus>
+      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed">
+        <label>Mixed</label>
+      </gender>
       <hasGOR href="http://statistics.data.gov.uk/id/government-office-region/H"/>
-      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present"/>
+      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present">
+        <label>Uninvolved at present</label>
+      </investorInPeople>
       <label>Alpha Community School At Springfield Methodist Church</label>
       <lastChangedDate datatype="date">2008-12-05</lastChangedDate>
       <lat datatype="decimal">51.47597</lat>
-      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210"/>
+      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210">
+        <label>Southwark</label>
+      </localAuthority>
       <long datatype="decimal">-0.13122</long>
       <marketingOptInOut datatype="boolean">false</marketingOptInOut>
       <northing datatype="integer">176879</northing>
@@ -228,20 +266,32 @@
       <specialPupils datatype="integer">0</specialPupils>
       <statutoryHighAge datatype="integer">11</statutoryHighAge>
       <statutoryLowAge datatype="integer">4</statutoryLowAge>
-      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_Not_Subject"/>
+      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_Not_Subject">
+        <label>Not Subject</label>
+      </superannuationCategory>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School">
+          <label>Other Independent School</label>
+        </item>
       </type>
-      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/>
+      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School">
+        <label>Other Independent School</label>
+      </typeOfEstablishment>
       <uniqueReferenceNumber datatype="integer">100867</uniqueReferenceNumber>
-      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse"/>
+      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse">
+        <label>Urban &gt; 10k - less sparse</label>
+      </urbanRural>
       <vcard href="http://api.talis.com/stores/govuk-education/items/1256678751412#self"/>
     </item>
     <item href="http://education.data.gov.uk/id/school/100866">
       <FSM datatype="integer">0</FSM>
       <FSMPercentage datatype="integer">0</FSMPercentage>
-      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140"/>
+      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140">
+        <label>London Central</label>
+      </LLSC>
       <LSOA href="http://statistics.data.gov.uk/id/lsoa/E01004074">
         <label>Southwark 031D</label>
       </LSOA>
@@ -263,7 +313,9 @@
       <association href="http://education.data.gov.uk/def/school/Association_ISA">
         <label>ISA</label>
       </association>
-      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders"/>
+      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders">
+        <label>No Boarders</label>
+      </boarders>
       <burnhamGroup datatype="integer">0</burnhamGroup>
       <censusAreaStatisticWard href="http://statistics.data.gov.uk/id/cas-ward/00BEGZ">
         <label>Village</label>
@@ -273,24 +325,32 @@
       <dateofLastFPVisit datatype="date">1989-04-27</dateofLastFPVisit>
       <dateofLastISIVisit datatype="date">2005-06-10</dateofLastISIVisit>
       <dateofLastOfstedVisit datatype="date">1996-06-26</dateofLastOfstedVisit>
-      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE"/>
+      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE">
+        <label>Southwark</label>
+      </districtAdministrative>
       <easting datatype="integer">532186</easting>
       <establishmentName>Herne Hill School</establishmentName>
       <establishmentNumber datatype="integer">6375</establishmentNumber>
       <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open">
         <label>Open</label>
       </establishmentStatus>
-      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed"/>
+      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed">
+        <label>Mixed</label>
+      </gender>
       <hasGOR href="http://statistics.data.gov.uk/id/government-office-region/H"/>
       <highDayFee href="http://api.talis.com/stores/govuk-education/items/1259139762471#self"/>
       <inspectorate href="http://education.data.gov.uk/def/school/Inspectorate_ISI">
         <label>ISI</label>
       </inspectorate>
-      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present"/>
+      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present">
+        <label>Uninvolved at present</label>
+      </investorInPeople>
       <label>Herne Hill School</label>
       <lastChangedDate datatype="date">2009-02-17</lastChangedDate>
       <lat datatype="decimal">51.45471</lat>
-      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210"/>
+      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210">
+        <label>Southwark</label>
+      </localAuthority>
       <long datatype="decimal">-0.09888</long>
       <lowDayFee href="http://api.talis.com/stores/govuk-education/items/1255465477331#self"/>
       <marketingOptInOut datatype="boolean">false</marketingOptInOut>
@@ -300,7 +360,9 @@
       <nurseryProvision datatype="boolean">true</nurseryProvision>
       <ofstedSpecialMeasures datatype="boolean">false</ofstedSpecialMeasures>
       <openDate datatype="date">1989-02-17</openDate>
-      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/142"/>
+      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/142">
+        <label>Dulwich and West Norwood</label>
+      </parliamentaryConstituency>
       <pupilTeacherRatio>257:20:00</pupilTeacherRatio>
       <schoolCapacity datatype="integer">275</schoolCapacity>
       <specialClasses datatype="boolean">false</specialClasses>
@@ -313,18 +375,28 @@
       <totalPupilsFullTime href="http://api.talis.com/stores/govuk-education/items/1259524821542#self"/>
       <totalPupilsPartTime href="http://api.talis.com/stores/govuk-education/items/1258822388268#self"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School">
+          <label>Other Independent School</label>
+        </item>
       </type>
-      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/>
+      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School">
+        <label>Other Independent School</label>
+      </typeOfEstablishment>
       <uniqueReferenceNumber datatype="integer">100866</uniqueReferenceNumber>
-      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse"/>
+      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse">
+        <label>Urban &gt; 10k - less sparse</label>
+      </urbanRural>
       <vcard href="http://api.talis.com/stores/govuk-education/items/1257679070579#self"/>
     </item>
     <item href="http://education.data.gov.uk/id/school/100864">
       <FSM datatype="integer">0</FSM>
       <FSMPercentage datatype="integer">0</FSMPercentage>
-      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140"/>
+      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140">
+        <label>London Central</label>
+      </LLSC>
       <LSOA href="http://statistics.data.gov.uk/id/lsoa/E01004072">
         <label>Southwark 030E</label>
       </LSOA>
@@ -340,16 +412,22 @@
       <actionFP datatype="date">2014-11-22</actionFP>
       <actionGEN datatype="date">2014-02-28</actionGEN>
       <address href="http://api.talis.com/stores/govuk-education/items/1257393351762#self"/>
-      <administrativeWard href="http://statistics.data.gov.uk/id/local-authority-ward/00BEGZ"/>
+      <administrativeWard href="http://statistics.data.gov.uk/id/local-authority-ward/00BEGZ">
+        <label>Village</label>
+      </administrativeWard>
       <association href="http://education.data.gov.uk/def/school/Association_IAPS">
         <label>IAPS</label>
       </association>
-      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders"/>
+      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders">
+        <label>No Boarders</label>
+      </boarders>
       <burnhamGroup datatype="integer">0</burnhamGroup>
       <burnhamReport href="http://education.data.gov.uk/def/school/BurnhamReport_Independent_Schools">
         <label>Independent Schools</label>
       </burnhamReport>
-      <censusAreaStatisticWard href="http://statistics.data.gov.uk/id/cas-ward/00BEGZ"/>
+      <censusAreaStatisticWard href="http://statistics.data.gov.uk/id/cas-ward/00BEGZ">
+        <label>Village</label>
+      </censusAreaStatisticWard>
       <censusRecord href="http://education.data.gov.uk/id/school/census/100864"/>
       <charity href="http://education.data.gov.uk/placeholder-id/charity/1057971">
         <label>Alleyn's School</label>
@@ -358,20 +436,32 @@
       <dateofLastFPVisit datatype="date">2001-09-07</dateofLastFPVisit>
       <dateofLastISIVisit datatype="date">2008-01-31</dateofLastISIVisit>
       <dateofLastOfstedVisit datatype="date">1996-10-08</dateofLastOfstedVisit>
-      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE"/>
+      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE">
+        <label>Southwark</label>
+      </districtAdministrative>
       <easting datatype="integer">533359</easting>
       <establishmentName>Alleyn's School</establishmentName>
       <establishmentNumber datatype="integer">6312</establishmentNumber>
-      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open"/>
-      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed"/>
+      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open">
+        <label>Open</label>
+      </establishmentStatus>
+      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed">
+        <label>Mixed</label>
+      </gender>
       <hasGOR href="http://statistics.data.gov.uk/id/government-office-region/H"/>
       <highDayFee href="http://api.talis.com/stores/govuk-education/items/1258364749244#self"/>
-      <inspectorate href="http://education.data.gov.uk/def/school/Inspectorate_ISI"/>
-      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present"/>
+      <inspectorate href="http://education.data.gov.uk/def/school/Inspectorate_ISI">
+        <label>ISI</label>
+      </inspectorate>
+      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present">
+        <label>Uninvolved at present</label>
+      </investorInPeople>
       <label>Alleyn's School</label>
       <lastChangedDate datatype="date">2009-05-19</lastChangedDate>
       <lat datatype="decimal">51.45478</lat>
-      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210"/>
+      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210">
+        <label>Southwark</label>
+      </localAuthority>
       <long datatype="decimal">-0.08199</long>
       <lowDayFee href="http://api.talis.com/stores/govuk-education/items/1259499546695#self"/>
       <marketingOptInOut datatype="boolean">false</marketingOptInOut>
@@ -382,7 +472,9 @@
       <officialSixthForm datatype="boolean">true</officialSixthForm>
       <ofstedSpecialMeasures datatype="boolean">false</ofstedSpecialMeasures>
       <openDate datatype="date">1980-09-30</openDate>
-      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/142"/>
+      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/142">
+        <label>Dulwich and West Norwood</label>
+      </parliamentaryConstituency>
       <pupilTeacherRatio>1187:140</pupilTeacherRatio>
       <religiousCharacter href="http://education.data.gov.uk/def/school/ReligiousCharacter_Church_of_England">
         <label>Church of England</label>
@@ -392,22 +484,34 @@
       <specialPupils datatype="integer">0</specialPupils>
       <statutoryHighAge datatype="integer">18</statutoryHighAge>
       <statutoryLowAge datatype="integer">4</statutoryLowAge>
-      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967_accepted_schools_The_education_Grants_Music_and_Ballet_Schools_Regs_1981"/>
+      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967_accepted_schools_The_education_Grants_Music_and_Ballet_Schools_Regs_1981">
+        <label>T(S) regs 1967 (accepted schools) The education (Grants) Music and Ballet Schools Regs 1981</label>
+      </superannuationCategory>
       <totalPupilsFullTime href="http://api.talis.com/stores/govuk-education/items/1255802561452#self"/>
       <totalPupilsPartTime href="http://api.talis.com/stores/govuk-education/items/1255335211666#self"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School">
+          <label>Other Independent School</label>
+        </item>
       </type>
-      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/>
+      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School">
+        <label>Other Independent School</label>
+      </typeOfEstablishment>
       <uniqueReferenceNumber datatype="integer">100864</uniqueReferenceNumber>
-      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse"/>
+      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse">
+        <label>Urban &gt; 10k - less sparse</label>
+      </urbanRural>
       <vcard href="http://api.talis.com/stores/govuk-education/items/1255905332866#self"/>
     </item>
     <item href="http://education.data.gov.uk/id/school/100862">
       <FSM datatype="integer">0</FSM>
       <FSMPercentage datatype="integer">0</FSMPercentage>
-      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140"/>
+      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140">
+        <label>London Central</label>
+      </LLSC>
       <LSOA href="http://statistics.data.gov.uk/id/lsoa/E01003946">
         <label>Southwark 033B</label>
       </LSOA>
@@ -427,7 +531,9 @@
       <administrativeWard href="http://statistics.data.gov.uk/id/local-authority-ward/00BEGG">
         <label>College</label>
       </administrativeWard>
-      <association href="http://education.data.gov.uk/def/school/Association_IAPS"/>
+      <association href="http://education.data.gov.uk/def/school/Association_IAPS">
+        <label>IAPS</label>
+      </association>
       <boarders href="http://education.data.gov.uk/def/school/Boarders_Boarding_School">
         <label>Boarding School</label>
       </boarders>
@@ -447,23 +553,33 @@
       <dateofLastISIVisit datatype="date">2008-11-06</dateofLastISIVisit>
       <dateofLastOfstedVisit datatype="date">1994-06-08</dateofLastOfstedVisit>
       <dateofLastWelfareVisit datatype="date">2007-03-13</dateofLastWelfareVisit>
-      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE"/>
+      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE">
+        <label>Southwark</label>
+      </districtAdministrative>
       <easting datatype="integer">533196</easting>
       <establishmentName>Dulwich College Preparatory School</establishmentName>
       <establishmentNumber datatype="integer">6001</establishmentNumber>
-      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open"/>
+      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open">
+        <label>Open</label>
+      </establishmentStatus>
       <gender href="http://education.data.gov.uk/def/school/Gender_Boys">
         <label>Boys</label>
       </gender>
       <hasGOR href="http://statistics.data.gov.uk/id/government-office-region/H"/>
       <highBoardFee href="http://api.talis.com/stores/govuk-education/items/1255392103660#self"/>
       <highDayFee href="http://api.talis.com/stores/govuk-education/items/1255361132328#self"/>
-      <inspectorate href="http://education.data.gov.uk/def/school/Inspectorate_ISI"/>
-      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present"/>
+      <inspectorate href="http://education.data.gov.uk/def/school/Inspectorate_ISI">
+        <label>ISI</label>
+      </inspectorate>
+      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present">
+        <label>Uninvolved at present</label>
+      </investorInPeople>
       <label>Dulwich College Preparatory School</label>
       <lastChangedDate datatype="date">2009-04-20</lastChangedDate>
       <lat datatype="decimal">51.43420</lat>
-      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210"/>
+      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210">
+        <label>Southwark</label>
+      </localAuthority>
       <long datatype="decimal">-0.08520</long>
       <lowBoardFee href="http://api.talis.com/stores/govuk-education/items/1258968246377#self"/>
       <lowDayFee href="http://api.talis.com/stores/govuk-education/items/1255544466629#self"/>
@@ -473,23 +589,35 @@
       <nurseryProvision datatype="boolean">true</nurseryProvision>
       <ofstedSpecialMeasures datatype="boolean">false</ofstedSpecialMeasures>
       <openDate datatype="date">1920-01-01</openDate>
-      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/142"/>
+      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/142">
+        <label>Dulwich and West Norwood</label>
+      </parliamentaryConstituency>
       <pupilTeacherRatio>280:27:00</pupilTeacherRatio>
       <schoolCapacity datatype="integer">853</schoolCapacity>
       <specialClasses datatype="boolean">false</specialClasses>
       <specialPupils datatype="integer">0</specialPupils>
       <statutoryHighAge datatype="integer">14</statutoryHighAge>
       <statutoryLowAge datatype="integer">2</statutoryLowAge>
-      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967_accepted_schools_The_education_Grants_Music_and_Ballet_Schools_Regs_1981"/>
+      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967_accepted_schools_The_education_Grants_Music_and_Ballet_Schools_Regs_1981">
+        <label>T(S) regs 1967 (accepted schools) The education (Grants) Music and Ballet Schools Regs 1981</label>
+      </superannuationCategory>
       <totalPupilsFullTime href="http://api.talis.com/stores/govuk-education/items/1256065064090#self"/>
       <totalPupilsPartTime href="http://api.talis.com/stores/govuk-education/items/1258697026843#self"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School">
+          <label>Other Independent School</label>
+        </item>
       </type>
-      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/>
+      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School">
+        <label>Other Independent School</label>
+      </typeOfEstablishment>
       <uniqueReferenceNumber datatype="integer">100862</uniqueReferenceNumber>
-      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse"/>
+      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse">
+        <label>Urban &gt; 10k - less sparse</label>
+      </urbanRural>
       <vcard href="http://api.talis.com/stores/govuk-education/items/1259142273386#self"/>
     </item>
     <item href="http://education.data.gov.uk/id/school/100860">
@@ -502,7 +630,9 @@
       </EICGroup>
       <FSM datatype="integer">167</FSM>
       <FSMPercentage datatype="integer">25</FSMPercentage>
-      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140"/>
+      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140">
+        <label>London Central</label>
+      </LLSC>
       <LSOA href="http://statistics.data.gov.uk/id/lsoa/E01003919">
         <label>Southwark 021A</label>
       </LSOA>
@@ -520,7 +650,9 @@
       <admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Comprehensive">
         <label>Comprehensive</label>
       </admissionsPolicy>
-      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders"/>
+      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders">
+        <label>No Boarders</label>
+      </boarders>
       <burnhamGroup datatype="integer">4</burnhamGroup>
       <burnhamReport href="http://education.data.gov.uk/def/school/BurnhamReport_Primary_Secondary_and_Nursery">
         <label>Primary, Secondary and Nursery</label>
@@ -532,12 +664,18 @@
       <diocese href="http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark">
         <label>Archdiocese of Southwark</label>
       </diocese>
-      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE"/>
+      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE">
+        <label>Southwark</label>
+      </districtAdministrative>
       <easting datatype="integer">532238</easting>
       <establishmentName>Sacred Heart Roman Catholic Secondary School</establishmentName>
       <establishmentNumber datatype="integer">5405</establishmentNumber>
-      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open"/>
-      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed"/>
+      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open">
+        <label>Open</label>
+      </establishmentStatus>
+      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed">
+        <label>Mixed</label>
+      </gender>
       <hasGOR href="http://statistics.data.gov.uk/id/government-office-region/H"/>
       <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Committed_IiP_Status">
         <label>Committed IiP Status</label>
@@ -546,7 +684,9 @@
       <lastChangedDate datatype="date">2008-11-17</lastChangedDate>
       <lat datatype="decimal">51.47514</lat>
       <leadershipIncentiveGrant datatype="boolean">true</leadershipIncentiveGrant>
-      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210"/>
+      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210">
+        <label>Southwark</label>
+      </localAuthority>
       <long datatype="decimal">-0.09728</long>
       <mainSpecialism href="http://education.data.gov.uk/def/school/MainSpecialism_Language_Operational">
         <label>Language (Operational)</label>
@@ -556,11 +696,15 @@
       <officialSixthForm datatype="boolean">false</officialSixthForm>
       <ofstedLastInsp datatype="date">2007-02-07</ofstedLastInsp>
       <ofstedSpecialMeasures datatype="boolean">false</ofstedSpecialMeasures>
-      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/088"/>
+      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/088">
+        <label>Camberwell and Peckham</label>
+      </parliamentaryConstituency>
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary">
         <label>Secondary</label>
       </phaseOfEducation>
-      <religiousCharacter href="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic"/>
+      <religiousCharacter href="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic">
+        <label>Roman Catholic</label>
+      </religiousCharacter>
       <schoolCapacity datatype="integer">600</schoolCapacity>
       <secondarySpecialism href="http://education.data.gov.uk/def/school/SecondarySpecialism_Maths_and_Computing_second_specialism">
         <label>Maths and Computing second specialism</label>
@@ -569,9 +713,13 @@
       <specialPupils datatype="integer">0</specialPupils>
       <statutoryHighAge datatype="integer">16</statutoryHighAge>
       <statutoryLowAge datatype="integer">11</statutoryLowAge>
-      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967"/>
+      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967">
+        <label>T(S) regs 1967</label>
+      </superannuationCategory>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
         <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
           <label>Voluntary Aided School</label>
         </item>
@@ -580,14 +728,20 @@
         <label>Voluntary Aided School</label>
       </typeOfEstablishment>
       <uniqueReferenceNumber datatype="integer">100860</uniqueReferenceNumber>
-      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse"/>
+      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse">
+        <label>Urban &gt; 10k - less sparse</label>
+      </urbanRural>
       <vcard href="http://api.talis.com/stores/govuk-education/items/1258164335098#self"/>
       <websiteAddress>www.sacredheart.southwark.sch.uk</websiteAddress>
     </item>
     <item href="http://education.data.gov.uk/id/school/100859">
-      <EIC href="http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary"/>
+      <EIC href="http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary">
+        <label>Southwark - Secondary</label>
+      </EIC>
       <EICCLS datatype="boolean">false</EICCLS>
-      <EICGroup href="http://education.data.gov.uk/def/school/EICGroup_Phase_1_Secondary"/>
+      <EICGroup href="http://education.data.gov.uk/def/school/EICGroup_Phase_1_Secondary">
+        <label>Phase 1 Secondary</label>
+      </EICGroup>
       <FSM datatype="integer">161</FSM>
       <FSMPercentage datatype="integer">25</FSMPercentage>
       <HP_Leading_Option>
@@ -598,7 +752,9 @@
           <label>Raising Achievement Partnership Programme (RAPP)</label>
         </item>
       </HP_Leading_Option>
-      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140"/>
+      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140">
+        <label>London Central</label>
+      </LLSC>
       <LSOA href="http://statistics.data.gov.uk/id/lsoa/E01003930">
         <label>Southwark 005B</label>
       </LSOA>
@@ -613,32 +769,50 @@
       <administrativeWard href="http://statistics.data.gov.uk/id/local-authority-ward/00BEGE">
         <label>Cathedrals</label>
       </administrativeWard>
-      <admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Comprehensive"/>
-      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders"/>
+      <admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Comprehensive">
+        <label>Comprehensive</label>
+      </admissionsPolicy>
+      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders">
+        <label>No Boarders</label>
+      </boarders>
       <burnhamGroup datatype="integer">4</burnhamGroup>
-      <burnhamReport href="http://education.data.gov.uk/def/school/BurnhamReport_Primary_Secondary_and_Nursery"/>
+      <burnhamReport href="http://education.data.gov.uk/def/school/BurnhamReport_Primary_Secondary_and_Nursery">
+        <label>Primary, Secondary and Nursery</label>
+      </burnhamReport>
       <censusAreaStatisticWard href="http://statistics.data.gov.uk/id/cas-ward/00BEGE">
         <label>Cathedrals</label>
       </censusAreaStatisticWard>
       <censusRecord href="http://education.data.gov.uk/id/school/census/100859"/>
-      <diocese href="http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark"/>
-      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE"/>
+      <diocese href="http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark">
+        <label>Archdiocese of Southwark</label>
+      </diocese>
+      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE">
+        <label>Southwark</label>
+      </districtAdministrative>
       <easting datatype="integer">531562</easting>
       <establishmentName>Notre Dame Roman Catholic Girls' School</establishmentName>
       <establishmentNumber datatype="integer">5404</establishmentNumber>
-      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open"/>
+      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open">
+        <label>Open</label>
+      </establishmentStatus>
       <gender href="http://education.data.gov.uk/def/school/Gender_Girls">
         <label>Girls</label>
       </gender>
       <hasGOR href="http://statistics.data.gov.uk/id/government-office-region/H"/>
-      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present"/>
+      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present">
+        <label>Uninvolved at present</label>
+      </investorInPeople>
       <label>Notre Dame Roman Catholic Girls' School</label>
       <lastChangedDate datatype="date">2009-05-11</lastChangedDate>
       <lat datatype="decimal">51.49698</lat>
       <leadershipIncentiveGrant datatype="boolean">true</leadershipIncentiveGrant>
-      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210"/>
+      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210">
+        <label>Southwark</label>
+      </localAuthority>
       <long datatype="decimal">-0.10611</long>
-      <mainSpecialism href="http://education.data.gov.uk/def/school/MainSpecialism_Language_Operational"/>
+      <mainSpecialism href="http://education.data.gov.uk/def/school/MainSpecialism_Language_Operational">
+        <label>Language (Operational)</label>
+      </mainSpecialism>
       <marketingOptInOut datatype="boolean">false</marketingOptInOut>
       <northing datatype="integer">179260</northing>
       <officialSixthForm datatype="boolean">false</officialSixthForm>
@@ -647,33 +821,53 @@
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/319">
         <label>North Southwark and Bermondsey</label>
       </parliamentaryConstituency>
-      <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/>
-      <religiousCharacter href="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic"/>
+      <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary">
+        <label>Secondary</label>
+      </phaseOfEducation>
+      <religiousCharacter href="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic">
+        <label>Roman Catholic</label>
+      </religiousCharacter>
       <schoolCapacity datatype="integer">620</schoolCapacity>
       <specialClasses datatype="boolean">false</specialClasses>
       <specialPupils datatype="integer">0</specialPupils>
       <statutoryHighAge datatype="integer">16</statutoryHighAge>
       <statutoryLowAge datatype="integer">11</statutoryLowAge>
-      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967"/>
+      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967">
+        <label>T(S) regs 1967</label>
+      </superannuationCategory>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
-      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
+      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School">
+        <label>Voluntary Aided School</label>
+      </typeOfEstablishment>
       <uniqueReferenceNumber datatype="integer">100859</uniqueReferenceNumber>
-      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse"/>
+      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse">
+        <label>Urban &gt; 10k - less sparse</label>
+      </urbanRural>
       <vcard href="http://api.talis.com/stores/govuk-education/items/1258088399958#self"/>
     </item>
     <item href="http://education.data.gov.uk/id/school/100858">
-      <EIC href="http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary"/>
+      <EIC href="http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary">
+        <label>Southwark - Secondary</label>
+      </EIC>
       <EICCLS datatype="boolean">false</EICCLS>
-      <EICGroup href="http://education.data.gov.uk/def/school/EICGroup_Phase_1_Secondary"/>
+      <EICGroup href="http://education.data.gov.uk/def/school/EICGroup_Phase_1_Secondary">
+        <label>Phase 1 Secondary</label>
+      </EICGroup>
       <FSM datatype="integer">188</FSM>
       <FSMPercentage datatype="integer">29</FSMPercentage>
       <HP_Leading_Option href="http://education.data.gov.uk/def/school/HP_Leading_Option_Training_School">
         <label>Training School</label>
       </HP_Leading_Option>
-      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140"/>
+      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140">
+        <label>London Central</label>
+      </LLSC>
       <LSOA href="http://statistics.data.gov.uk/id/lsoa/E01004028">
         <label>Southwark 004E</label>
       </LSOA>
@@ -687,28 +881,46 @@
       <administrativeWard href="http://statistics.data.gov.uk/id/local-authority-ward/00BEGS">
         <label>Riverside</label>
       </administrativeWard>
-      <admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Comprehensive"/>
-      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders"/>
+      <admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Comprehensive">
+        <label>Comprehensive</label>
+      </admissionsPolicy>
+      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders">
+        <label>No Boarders</label>
+      </boarders>
       <burnhamGroup datatype="integer">4</burnhamGroup>
-      <burnhamReport href="http://education.data.gov.uk/def/school/BurnhamReport_Primary_Secondary_and_Nursery"/>
+      <burnhamReport href="http://education.data.gov.uk/def/school/BurnhamReport_Primary_Secondary_and_Nursery">
+        <label>Primary, Secondary and Nursery</label>
+      </burnhamReport>
       <censusAreaStatisticWard href="http://statistics.data.gov.uk/id/cas-ward/00BEGS">
         <label>Riverside</label>
       </censusAreaStatisticWard>
       <censusRecord href="http://education.data.gov.uk/id/school/census/100858"/>
-      <diocese href="http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark"/>
-      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE"/>
+      <diocese href="http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark">
+        <label>Archdiocese of Southwark</label>
+      </diocese>
+      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE">
+        <label>Southwark</label>
+      </districtAdministrative>
       <easting datatype="integer">534205</easting>
       <establishmentName>St Michael's RC School</establishmentName>
       <establishmentNumber datatype="integer">5403</establishmentNumber>
-      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open"/>
-      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed"/>
+      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open">
+        <label>Open</label>
+      </establishmentStatus>
+      <gender href="http://education.data.gov.uk/def/school/Gender_Mixed">
+        <label>Mixed</label>
+      </gender>
       <hasGOR href="http://statistics.data.gov.uk/id/government-office-region/H"/>
-      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present"/>
+      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present">
+        <label>Uninvolved at present</label>
+      </investorInPeople>
       <label>St Michael's RC School</label>
       <lastChangedDate datatype="date">2009-05-11</lastChangedDate>
       <lat datatype="decimal">51.50045</lat>
       <leadershipIncentiveGrant datatype="boolean">true</leadershipIncentiveGrant>
-      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210"/>
+      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210">
+        <label>Southwark</label>
+      </localAuthority>
       <long datatype="decimal">-0.06789</long>
       <mainSpecialism href="http://education.data.gov.uk/def/school/MainSpecialism_Business_and_Enterprise_Operational">
         <label>Business and Enterprise (Operational)</label>
@@ -718,9 +930,15 @@
       <officialSixthForm datatype="boolean">false</officialSixthForm>
       <ofstedLastInsp datatype="date">2007-10-09</ofstedLastInsp>
       <ofstedSpecialMeasures datatype="boolean">false</ofstedSpecialMeasures>
-      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/319"/>
-      <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/>
-      <religiousCharacter href="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic"/>
+      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/319">
+        <label>North Southwark and Bermondsey</label>
+      </parliamentaryConstituency>
+      <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary">
+        <label>Secondary</label>
+      </phaseOfEducation>
+      <religiousCharacter href="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic">
+        <label>Roman Catholic</label>
+      </religiousCharacter>
       <schoolCapacity datatype="integer">600</schoolCapacity>
       <secondarySpecialism href="http://education.data.gov.uk/def/school/SecondarySpecialism_Language_second_specialism">
         <label>Language second specialism</label>
@@ -729,24 +947,42 @@
       <specialPupils datatype="integer">0</specialPupils>
       <statutoryHighAge datatype="integer">16</statutoryHighAge>
       <statutoryLowAge datatype="integer">11</statutoryLowAge>
-      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967"/>
+      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967">
+        <label>T(S) regs 1967</label>
+      </superannuationCategory>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
-      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
+      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School">
+        <label>Voluntary Aided School</label>
+      </typeOfEstablishment>
       <uniqueReferenceNumber datatype="integer">100858</uniqueReferenceNumber>
-      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse"/>
+      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse">
+        <label>Urban &gt; 10k - less sparse</label>
+      </urbanRural>
       <vcard href="http://api.talis.com/stores/govuk-education/items/1257263556646#self"/>
     </item>
     <item href="http://education.data.gov.uk/id/school/100857">
-      <EIC href="http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary"/>
+      <EIC href="http://education.data.gov.uk/placeholder-id/EIC/Southwark-Secondary">
+        <label>Southwark - Secondary</label>
+      </EIC>
       <EICCLS datatype="boolean">false</EICCLS>
-      <EICGroup href="http://education.data.gov.uk/def/school/EICGroup_Phase_1_Secondary"/>
+      <EICGroup href="http://education.data.gov.uk/def/school/EICGroup_Phase_1_Secondary">
+        <label>Phase 1 Secondary</label>
+      </EICGroup>
       <FSM datatype="integer">156</FSM>
       <FSMPercentage datatype="integer">22</FSMPercentage>
-      <HP_Leading_Option href="http://education.data.gov.uk/def/school/HP_Leading_Option_Training_School"/>
-      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140"/>
+      <HP_Leading_Option href="http://education.data.gov.uk/def/school/HP_Leading_Option_Training_School">
+        <label>Training School</label>
+      </HP_Leading_Option>
+      <LLSC href="http://statistics.data.gov.uk/id/llsc/GL140">
+        <label>London Central</label>
+      </LLSC>
       <LSOA href="http://statistics.data.gov.uk/id/lsoa/E01004004">
         <label>Southwark 023C</label>
       </LSOA>
@@ -761,28 +997,46 @@
       <administrativeWard href="http://statistics.data.gov.uk/id/local-authority-ward/00BEGP">
         <label>Nunhead</label>
       </administrativeWard>
-      <admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Comprehensive"/>
-      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders"/>
+      <admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Comprehensive">
+        <label>Comprehensive</label>
+      </admissionsPolicy>
+      <boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders">
+        <label>No Boarders</label>
+      </boarders>
       <burnhamGroup datatype="integer">4</burnhamGroup>
-      <burnhamReport href="http://education.data.gov.uk/def/school/BurnhamReport_Primary_Secondary_and_Nursery"/>
+      <burnhamReport href="http://education.data.gov.uk/def/school/BurnhamReport_Primary_Secondary_and_Nursery">
+        <label>Primary, Secondary and Nursery</label>
+      </burnhamReport>
       <censusAreaStatisticWard href="http://statistics.data.gov.uk/id/cas-ward/00BEGP">
         <label>Nunhead</label>
       </censusAreaStatisticWard>
       <censusRecord href="http://education.data.gov.uk/id/school/census/100857"/>
-      <diocese href="http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark"/>
-      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE"/>
+      <diocese href="http://education.data.gov.uk/placeholder-id/diocese/Archdiocese-of-Southwark">
+        <label>Archdiocese of Southwark</label>
+      </diocese>
+      <districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE">
+        <label>Southwark</label>
+      </districtAdministrative>
       <easting datatype="integer">535096</easting>
       <establishmentName>The St Thomas the Apostle College</establishmentName>
       <establishmentNumber datatype="integer">5402</establishmentNumber>
-      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open"/>
-      <gender href="http://education.data.gov.uk/def/school/Gender_Boys"/>
+      <establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Open">
+        <label>Open</label>
+      </establishmentStatus>
+      <gender href="http://education.data.gov.uk/def/school/Gender_Boys">
+        <label>Boys</label>
+      </gender>
       <hasGOR href="http://statistics.data.gov.uk/id/government-office-region/H"/>
-      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present"/>
+      <investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present">
+        <label>Uninvolved at present</label>
+      </investorInPeople>
       <label>The St Thomas the Apostle College</label>
       <lastChangedDate datatype="date">2009-02-16</lastChangedDate>
       <lat datatype="decimal">51.47074</lat>
       <leadershipIncentiveGrant datatype="boolean">true</leadershipIncentiveGrant>
-      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210"/>
+      <localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210">
+        <label>Southwark</label>
+      </localAuthority>
       <long datatype="decimal">-0.05631</long>
       <mainSpecialism href="http://education.data.gov.uk/def/school/MainSpecialism_Maths_and_Computing_Operational">
         <label>Maths and Computing (Operational)</label>
@@ -792,22 +1046,38 @@
       <officialSixthForm datatype="boolean">false</officialSixthForm>
       <ofstedLastInsp datatype="date">2007-06-20</ofstedLastInsp>
       <ofstedSpecialMeasures datatype="boolean">false</ofstedSpecialMeasures>
-      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/088"/>
-      <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/>
-      <religiousCharacter href="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic"/>
+      <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/088">
+        <label>Camberwell and Peckham</label>
+      </parliamentaryConstituency>
+      <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary">
+        <label>Secondary</label>
+      </phaseOfEducation>
+      <religiousCharacter href="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic">
+        <label>Roman Catholic</label>
+      </religiousCharacter>
       <schoolCapacity datatype="integer">750</schoolCapacity>
       <specialClasses datatype="boolean">false</specialClasses>
       <specialPupils datatype="integer">0</specialPupils>
       <statutoryHighAge datatype="integer">16</statutoryHighAge>
       <statutoryLowAge datatype="integer">11</statutoryLowAge>
-      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967"/>
+      <superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_T_S_regs_1967">
+        <label>T(S) regs 1967</label>
+      </superannuationCategory>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
-      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
+      <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School">
+        <label>Voluntary Aided School</label>
+      </typeOfEstablishment>
       <uniqueReferenceNumber datatype="integer">100857</uniqueReferenceNumber>
-      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse"/>
+      <urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse">
+        <label>Urban &gt; 10k - less sparse</label>
+      </urbanRural>
       <vcard href="http://api.talis.com/stores/govuk-education/items/1258849890379#self"/>
     </item>
   </items>

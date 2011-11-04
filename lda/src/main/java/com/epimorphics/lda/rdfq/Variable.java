@@ -31,7 +31,4 @@ public class Variable extends Any
 	
 	@Override public StringBuilder renderWrapped( PrefixLogger pl, StringBuilder out ) 
 		{ return out.append( name ); }
-	
-	@Override public boolean isFinal() 
-		{ return false; }
 	}

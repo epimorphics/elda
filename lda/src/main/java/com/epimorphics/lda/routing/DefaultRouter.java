@@ -10,7 +10,7 @@ package com.epimorphics.lda.routing;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 
 /**
@@ -25,6 +25,6 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
         Map<String, String> bindings = new HashMap<String, String>();
         APIEndpoint e = lookup( bindings, path );
         if (e == null) return null;
-        else return new Match( e, VarValues.uplift( bindings ) );
+        else return new Match( e, Bindings.uplift( bindings ) );
 	}
 }

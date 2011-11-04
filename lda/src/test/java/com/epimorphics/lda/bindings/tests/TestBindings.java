@@ -16,11 +16,10 @@ import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.apispec.tests.SpecUtil;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specs.APIEndpointSpec;
@@ -36,7 +35,7 @@ public class TestBindings {
 	    Test that declared variables can have values that depend on
 	    bindings made during URI matching.
 	*/
-	@Test public void testIt() throws URISyntaxException {
+	@Test public void testDeclaredVariablesCanDependOnURIMatches() throws URISyntaxException {
 		String specString =
 			"@prefix t: <http://example.com/t#>."
 			+ "t:chris a api:API ;"
@@ -48,7 +47,7 @@ public class TestBindings {
 			+ "\n api:variable ["
 			+ "\n     api:name 'class' ;"
 			+ "\n     api:value 'http://environment.data.gov.uk/def/bathing-water-quality/{term}' ;"
-			+ "\n     api:type rdfs:Resource"
+			+ "\n     api:type rdfs:Resource" 
 			+ "\n ];"
 			+ "\n api:selector [api:where '[] a ?class ; ?item [] .']."
 			;
@@ -56,12 +55,12 @@ public class TestBindings {
 		Resource root = m.createResource( m.expandPrefix( "t:chris" ) );
 		APISpec spec = SpecUtil.specFrom( root );
 		APIEndpointSpec eps = spec.getEndpoints().get(0);
-		VarValues vv = MakeData.variables( "term=autumn" );
+		Bindings vv = MakeData.variables( "term=autumn" );
 		APIEndpointImpl ep = new APIEndpointImpl( eps );
 		Match match = new Match( ep, vv );
 		URI req = new URI( "/driver/cartwheel" );
 		MultiMap<String, String> params = MakeData.parseQueryString( "" );
-		Triad<APIResultSet, String, CallContext> results = APIEndpointUtil.call( match, req, "", params );
+		Triad<APIResultSet, String, Bindings> results = APIEndpointUtil.call( match, req, "", params );
 //		System.err.println( ">> class: " + results.c.getStringValue( "class" ) );
 		String sq = results.a.getSelectQuery();
 //		System.err.println( ">> " + sq );

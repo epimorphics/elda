@@ -19,7 +19,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.NamedViews;
@@ -32,7 +32,6 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -63,7 +62,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     public final int defaultPageSize;
     public final int maxPageSize;
 
-    protected final VarValues bindings = new VarValues();
+    protected final Bindings bindings = new Bindings();
     
     protected final Set<String> explicitViewNames = new HashSet<String>();
     
@@ -79,7 +78,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     	wantsContext = endpoint.hasLiteral( EXTRAS.wantsContext, true );
     	bindings.putAll( apiSpec.bindings );
         bindings.putAll( VariableExtractor.findAndBindVariables( bindings, endpoint ) );
-        defaultLanguage = getStringValue(endpoint, FIXUP.lang, apiSpec.getDefaultLanguage());
+        defaultLanguage = getStringValue(endpoint, API.lang, apiSpec.getDefaultLanguage());
     	defaultPageSize = getIntValue( endpoint, API.defaultPageSize, apiSpec.defaultPageSize );
 		maxPageSize = getIntValue( endpoint, API.maxPageSize, apiSpec.maxPageSize );
 		cachePolicyName = getStringValue( endpoint, EXTRAS.cachePolicyName, "default" );
@@ -103,8 +102,13 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     			metadataOptions.add( option.toLowerCase() );
     }
 
+
 	public boolean isListEndpoint() {
     	return endpointResource.hasProperty( RDF.type, API.ListEndpoint );
+    }
+	
+	public boolean isItemEndpoint() {
+    	return endpointResource.hasProperty( RDF.type, API.ItemEndpoint );
     }
     
     private void checkEndpointType(Resource endpoint) {
@@ -251,8 +255,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     private void addSelectorInfo( Resource s ) {
         Model m = s.getModel();
         ShortnameService sns = this.apiSpec.sns;
-        if (s.hasProperty(FIXUP.type)) {
-			Resource ty = sns.normalizeResource( s.getProperty(FIXUP.type).getObject() );
+        if (s.hasProperty(API.type)) {
+			Resource ty = sns.asResource( s.getProperty(API.type).getObject() );
             baseQuery.setTypeConstraint( ty );
         }
         for (NodeIterator ni = m.listObjectsOfProperty(s, API.filter); ni.hasNext();) {
@@ -262,7 +266,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	            if (paramValue.length == 2) {
 	                baseQuery.deferrableAddFilter( Param.make( sns, paramValue[0] ), paramValue[1] );
 	            } else {
-	                APISpec.log.error("View specification contained unintepretable query string: " + q);
+	                APISpec.log.error("Filter specification contained unintepretable query string: " + q );
 	            }
             }
         }
@@ -332,7 +336,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         return views.get( View.SHOW_DEFAULT_INTERNAL );
     }
 
-	public VarValues getBindings() {
+	public Bindings getBindings() {
 		return bindings;
 	}
 

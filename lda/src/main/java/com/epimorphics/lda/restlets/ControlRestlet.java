@@ -36,7 +36,7 @@ import org.openjena.atlas.json.JsonException;
 
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.routing.Match;
@@ -110,7 +110,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
             return isAPI;
         }
         
-        public VarValues getBindings() {
+        public Bindings getBindings() {
             return match.getBindings();
         }
     }

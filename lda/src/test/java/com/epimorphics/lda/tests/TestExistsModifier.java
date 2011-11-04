@@ -7,7 +7,6 @@
 */
 package com.epimorphics.lda.tests;
 
-import static com.epimorphics.util.CollectionUtils.set;
 import static org.junit.Assert.*;
 
 import java.util.HashSet;
@@ -16,18 +15,16 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.query.QueryArgumentsImpl;
-import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.RenderExpression;
 import com.epimorphics.lda.rdfq.Variable;
+import com.epimorphics.lda.tests_support.ExpandOnly;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.lda.tests_support.ShortnameFake;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -39,33 +36,26 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestExistsModifier 
 	{
-	private static final class Shorts extends ShortnameFake 
+	private static final class Shorts extends ExpandOnly 
 		{
 		static final String NS = "fake:";
 		
-		public Shorts(String brief) 
-			{ super( MakeData.modelForBrief( brief ) ); }
+		public Shorts( String intBrief ) 
+			{ this( intBrief, "" ); }
 		
-		@Override public Resource normalizeResource( String shortName ) 
+		public Shorts( String intBrief, String otherBrief ) 
+			{ super( MakeData.modelForBrief( intBrief, otherBrief ), "Item=fake:Item" ); }
+		
+		@Override public Resource asResource( String shortName ) 
 			{ return ResourceFactory.createResource( NS + shortName ); }
-
-		@Override public Any normalizeNodeToRDFQ( String prop, String val, String language ) 
-			{
-			if (prop.equals( "type" )) return RDFQ.uri( NS + val );
-			if (val.equals("true")) return RDFQ.literal( val );
-			if (val.startsWith( "?" )) return RDFQ.var( val );
-			throw new RuntimeException( "prop: " + prop + ", val: " + val );
-			}
 		}
 	
 	@Test public void testExists()
 		{
 		Shorts sns = new Shorts( "exists-backwards" );
 		APIQuery q = new APIQuery( sns );
-    	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
-		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
-		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("true") );
-		qa.updateQuery();
+		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
+		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "true" );
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		assertEquals( 1, triples.size() );
 		RDFQ.Triple t = triples.get(0);
@@ -78,20 +68,20 @@ public class TestExistsModifier
 		{
 		Shorts sns = new Shorts( "exists-backwards" );
 		APIQuery q = new APIQuery( sns );
-    	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
-		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
-		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set("false") );		
-		qa.updateQuery();
+		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
+		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "false" );		
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
+		List<List<RDFQ.Triple>> optionals = q.getOptionalGraphTriples();
 		List<RenderExpression> filters = q.getFilterExpressions();
 	//
-		assertEquals( "should be only one triple in pattern", 1, triples.size() );
-		RDFQ.Triple t = triples.get(0);
+		assertEquals( "should be no mandatory triples in pattern", 0, triples.size() );
+		assertEquals( "should be one optional chain", 1, optionals.size() );
+		assertEquals( "the single optional chain should have one element", 1, optionals.get(0).size() );
+		RDFQ.Triple t = optionals.get(0).get(0);
 	//
 		assertEquals( RDFQ.var( "?item" ), t.S );
 		assertEquals( RDFQ.uri( Shorts.NS + "backwards" ), t.P );
 		assertTrue( t.O instanceof Variable );
-		assertTrue( "result triple must be OPTIONAL", t.isOptional() );
 	//
 		assertEquals( "should be one filter expression", 1, filters.size() );
 		assertEquals( RDFQ.apply("!", RDFQ.apply( "bound", t.O ) ), filters.get(0) );
@@ -120,13 +110,13 @@ public class TestExistsModifier
 	*/
 	public void testNotExistsXY( String existsSetting, String expect )
 		{
-		Shorts sns = new Shorts( "type,exists-backwards" );
+		Shorts sns = new Shorts( "exists-backwards", "type" );
+		// System.err.println( ">> info: " + sns.asContext().getPropertyByName("type" ).getType() ) ;
 		APIQuery q = new APIQuery( sns );		
-    	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
-		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
-		x.addFilterFromQuery( Param.make( sns, "type" ), set("Item") );
-		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), set(existsSetting) );
-		qa.updateQuery();
+		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
+		Param ptype = Param.make( sns, "type" );
+		x.addFilterFromQuery( ptype, "Item" );
+		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), existsSetting );
 	//
 		String query = q.assembleSelectQuery( PrefixMapping.Factory.create() );
 		QueryExecution qx = QueryExecutionFactory.create( query, model );

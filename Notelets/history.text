@@ -1,4 +1,160 @@
-1.1.10 SNAPSHOT
+1.1.17-SNAPSHOT
+
+1.1.16
+
+* The shortname utilities now generates an error 400 (bad request)
+  when expanding a property path with a bad name, rather than an error 500.
+
+* The XML and JSON renderers have been modified so that the shortnames
+  for any API, RDF, RDFS, or XHV term are the local names of that term
+  (unless it has been given an explicit shortname). This ensures that the
+  structural properties, eg termBinding, versionOf, etc, can be understood
+  by client code -- such as the stylesheet -- without having to consult
+  the term bindings (which may be absent, or consider having to find the
+  term binding for termBinding).
+
+* api:name and rdfs:label in the config file override any present in
+  any vocab file.
+
+* shortnames generated on-the-fly by the XML renderer now respect existing
+  shortnames from the context even if only one new shortname needs to be
+  generated. 
+
+* The SPARQL generated for optional triples in exists-propertychain-false
+  and _sort=propertychains has been improved and corrected: it now
+  generates a single OPTIONAL for each chain rather than an OPTIONAL
+  for each predicate. Also, triple debris from earlier sort specifications
+  (when an api:sort in the config has been overriden by an _sort in the
+  request URI) has been eliminated. This can significantly improve
+  performance in some cases.
+
+* The ValTranslator rule has been made to conform to the proposal  on
+  the LDA wiki. (This means that special rules for rdfs:Resource and
+  owl:Thing are no longer necessary.)
+
+1.1.15
+
+* The classes CallContext, RenderContext, and VarValues
+  have been removed and replaced by the single class Bindings
+  (which has the union of their features).
+
+* The interface RenderContext.AsURL is now named URLforResource.
+
+* some ShortnameService method names have changed. Several have
+  been removed, since they were used nowhere in the Elda codebase.
+
+* The FIXUP vocabulary has been merged into the API vocabulary.
+  The latter's generation from a .ttl vocabulary file has been
+  (slightly) documented.
+
+* ShortnameService.shorten has been removed -- it was only used in
+  DemoHTMLRenderer and we're trying to prune interfaces.
+
+* QueryArguments[Impl] have been removed; they were not pulling
+  their weight. Their functionality has been returned to APIQuery.
+
+* The (UNDOCUMENTED - beware of the leopard) LARQ search functionality
+  has been updated to use the separated-out LARQ artifact. IT IS NOT
+  TESTED and may no longer work as expected. If you use this functionality
+  let us know.
+
+* Bug to do with sharing of Context state in XML and JSON renderers
+  has been fixed -- the XML renderer no longer uses the context for new
+  short names, and the JSON renderer clones the Context before using it
+  so that modifications don't affect the (shared) original.
+
+* Various ShortnameService classes are now all subclasses of
+  StandardShortnameService, which means they don't need their own
+  valueAsRDFQ methods, which will allow us to extract that method
+  completely.
+
+* The old Value and LiteralNode have been collapsed into a single
+  RDFQ.Value class.
+
+* Legacy code that allowed type-names to be shortened by the JSON
+  writer has been eliminated.
+
+* PRUNE: the (undocumented, not in the spec) ability to make a
+  _sort value be a variable has been removed as part of the process
+  of clarifying how values are turned into literals.
+
+* The logic that decides how to translate the V in &P=V has
+  been consolidated into ValTranslator and made to conform
+  more closely to the spec. This has resulted in various
+  test updates and a SIGNIFICANT EXTERNAL CHANGE that is being
+  reviewed before release.
+
+* sorting on a property P does not require that ?item actually have
+  that property -- the "value of P" clause is now OPTIONAL.
+
+* the code that defines the "datatype" types has been moved out of
+  APISpec into shortnameservice.
+
+* Added tests in ValTranslator for the special types api:PlainLiteral
+  and api:RawLiteral.
+
+* The generated TermBindings contains entries for predicates that
+  were not given shortnames in the API config.
+
+
+1.1.14
+
+* Bug fix: Elda shortened the objects of rdf:type in the JSON
+  encoding (a hangover from pre-spec days). Now it includes
+  the full URI.
+
+* Elda's view arithmetic was buggy (and internally complicated).
+  It should now use the _view setting as a base if present, and
+  otherwise the default view, and correctly over-ride the view with
+  the properties and not vice-versa.
+
+  Adding properties to a DESCRIBE-based viewer works; Elda makes
+  additional queries to the SPARQL endpoint. (These do not show
+  up in the view query panel produced by the XSLT renderer.)
+
+* WARNING Changes to Elda's conversion of parameter values to
+  SPARQL literals has CHANGED (and will change some more). Previously
+  given a parameter binding P=V if P had an rdfs:range T (other than
+  rdfs:Resource or owl:Thing) then Elda generated "V"^^T. This was
+  incorrect, since the LDA spec specifically allows for object
+  "literals".
+
+  Elda now generates "V"^^T only when T is a "known datatype",
+  which it does when:
+
+    * T is in the xsd: namespace
+    * T has rdf:type rdfs:Datatype
+    * The property named by P is an owl:DatatypeProperty.
+
+  * Various unused classes (MediaTypes, ClauseConsumer) have
+    been deleted.
+
+1.1.13
+
+* Fixed bug in XML renderer -- cycle-breaking code meant that
+  resources used in several places in the graph only got their
+  properties unpacked once.
+
+1.1.12
+
+* Fixed bug in views constructed from lists of properties, ie
+  api:property (a:p b:q ...)
+
+* PrefixLogger now allows _ and Unicode letters as per the SPARQL
+  syntax for prefixes.
+
+1.1.11 
+
+* Further fixes to _lang=A,B... issues with sorting: fixed some
+  problems where ?X not recognised as meaning a variable.
+
+* Deferred filters are run /after/ query parameters applied;
+  this means that _lang correctly over-rides api:lang.
+
+* Performance fix: View.addAllObjectLabels had a quadratic
+  string concatenation loop. Replaced with StringBuilder.
+
+1.1.10
 
 * Elda does not generate _page= metadata for views if the
   endpoint is an item endpoint.

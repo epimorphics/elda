@@ -12,14 +12,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import com.epimorphics.lda.bindings.Value;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.MultiMap;
-import com.epimorphics.vocabs.FIXUP;
+import com.epimorphics.lda.rdfq.Value;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -86,9 +87,9 @@ public class MakeData
 	    Values from the space-separated name=value components of 
 	    <code>bindings</code>.
 	*/
-	public static VarValues variables( String bindings ) 
+	public static Bindings variables( String bindings ) 
 		{
-		VarValues result = new VarValues();
+		Bindings result = new Bindings();
 		if (bindings.length() > 0)
 			for (String b: bindings.split( " +" ))
 				{
@@ -104,16 +105,16 @@ public class MakeData
 	    are converted to full fake URIs fake:/S which are declared as 
 	    rdf:Property's with integer ranges and label S.
 	*/
-	public static Model modelForBrief( String brief ) 
-		{ return modelForBrief( brief, "" ); }
+	public static Model modelForBrief( String intBrief ) 
+		{ return modelForBrief( intBrief, "" ); }
 
 	/**
 	    Answers a model which can be used to establish the short form and type 
 	    of fake properties. The comma-separated shortnames S from <code>brief</code>
 	    are converted to full fake URIs fake:/S which are declared as 
 	    rdf:Property's with integer ranges and label S. Those from 
-	    <code>others</code> are declared as ObjectProperties with no explicit
-	    range.
+	    <code>others</code> are declared as ObjectProperties with a
+	    non-datatype range.
 	*/
 	public static Model modelForBrief(String brief, String others) 
 		{
@@ -122,7 +123,7 @@ public class MakeData
 		for (String b: brief.split(",")) 
 			{
 			Resource r = result.createResource( "fake:/" + b );
-			r.addProperty( FIXUP.label, b );
+			r.addProperty( API.label, b );
 			r.addProperty( RDF.type, RDF.Property );
 			r.addProperty( RDFS.range, integer );
 			}
@@ -130,11 +131,14 @@ public class MakeData
 			for (String o: others.split(","))
 				{
 				Resource r = result.createResource( "fake:/" + o );
-				r.addProperty( FIXUP.label, o );
+				r.addProperty( API.label, o );
 				r.addProperty( RDF.type, OWL.ObjectProperty );
+				r.addProperty( RDFS.range, SomeObjectRange );
 				}
 		return result;
 		}
+	
+	static final Resource SomeObjectRange = ResourceFactory.createResource( "fake:/SomeObjectRange" );
 
 	public static MultiMap<String, String> parseQueryString( String queryString ) 
 		{

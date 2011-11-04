@@ -11,15 +11,16 @@ package com.epimorphics.lda.tests_support;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.hp.hpl.jena.rdf.model.Model;
 
 /**
-    An implementation of ShortnameService that only implements expand()
-    and which is initialised from a string of short=full pairs.
+    An implementation of ShortnameService that implements expand()
+    directly from a string of short=full pairs.
  
  	@author chris
 */
-public class ExpandOnly extends ShortnameFake 
+public class ExpandOnly extends StandardShortnameService 
 	{
 	private final Map<String, String> map = new HashMap<String, String>();
 
@@ -50,10 +51,7 @@ public class ExpandOnly extends ShortnameFake
 		if (result == null) 
 			{
 			String star = map.get( "*" );
-			if (star == null)
-				throw new IllegalArgumentException( "missing key: " + key );
-			else
-				return star.replaceAll( "\\*", key );
+			return star == null ? super.expand( key ) : star.replaceAll( "\\*", key );
 			}
 		else
 			return result;

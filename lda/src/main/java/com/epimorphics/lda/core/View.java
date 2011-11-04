@@ -55,16 +55,25 @@ public class View {
     public static final String SHOW_DESCRIPTION = "description";
     
     public static final String SHOW_DEFAULT_INTERNAL = "default";
+    
+    protected static final List<PropertyChain> emptyChain = new ArrayList<PropertyChain>();
 
     /**
         View that does DESCRIBE plus labels of all objects.
     */
     public static final View ALL = new View( false, SHOW_ALL, Type.T_ALL );
+
+	/**
+	    Property chains: [RDF.type] and [RDFS.label].
+	*/
+	static final List<PropertyChain> BasicChains = 
+		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
     
-    /**
+	/**
         View that does rdf:type and rdfs:label.
     */
-    public static final View BASIC = new View( false, SHOW_BASIC, Type.T_BASIC );
+    // public static final View BASIC = new View( false, SHOW_BASIC, Type.T_BASIC );
+    public static final View BASIC = new View( false, SHOW_BASIC, Type.T_CHAINS, BasicChains );
     
     /**
         View that does DESCRIBE.
@@ -89,7 +98,7 @@ public class View {
     
 	protected boolean doesFiltering = true;
 	
-	static enum Type { T_DESCRIBE, T_ALL, T_CHAINS, T_BASIC };
+	static enum Type { T_DESCRIBE, T_ALL, T_CHAINS };
 	
 	protected Type type = Type.T_DESCRIBE;
     
@@ -112,13 +121,22 @@ public class View {
     }
     
     public View( boolean doesFiltering, String name, Type type ) {
+    	this( doesFiltering, name, type, emptyChain );
+    }
+    
+    public View( boolean doesFiltering, String name, Type type, List<PropertyChain> initial ) {
     	this.type = type;
     	this.name = name;
     	this.doesFiltering = doesFiltering;
+    	this.chains.addAll( initial );
     }
     
     public String name(){
     	return name;
+    }
+    
+    public Type getType() {
+    	return type;
     }
     
     public Set<PropertyChain> chains() {
@@ -149,13 +167,14 @@ public class View {
     	cannotUpdateALL();		
     	doesFiltering = true;
         if (spec.canAs(RDFList.class)) {
+        	List<Property> properties = new ArrayList<Property>();
             RDFList list = spec.as(RDFList.class);
             for (Iterator<RDFNode> i = list.iterator(); i.hasNext();) {
-                String uri = sns.normalizeResource( i.next() ).getURI();
-                chains.add( new PropertyChain( uri ) );
+                properties.add( i.next().as( Property.class ) ); 
             }
+            chains.add( new PropertyChain( properties ) );
         } else {
-            String uri = sns.normalizeResource(spec).getURI();
+            String uri = spec.asResource().getURI();
             chains.add( new PropertyChain( uri ) );
         }
         if (chains.size() > 0) type = Type.T_CHAINS;
@@ -190,7 +209,7 @@ public class View {
         	expansion = false;
         }
         if (expansion) ep.addExpansion(uri);
-        if (chains.size() > 0) type = Type.T_CHAINS;
+        // if (chains.size() > 0) type = Type.T_CHAINS;
         return this;
     }
     
@@ -226,12 +245,10 @@ public class View {
         view is ALL, answers the given model with no filtering. 
     */
 	public Model applyTo( Model source, List<Resource> roots ) {
-//		System.err.println( ">> applyTo: view = " + this );
         Model result = doesFiltering() && false
         	? ChainScanner.onlyMatchingChains( source, roots, chains ) // TODO this may well be dead dead dead
         	: source
         	;
-//        result.write( System.err, "Turtle" );
         return result;
 	}
 
@@ -254,29 +271,23 @@ public class View {
 	
 	public String fetchDescriptions( State s ) {
 //		log.info( "fetchDescriptionsFor: sources = " + sources + " using " + this );
+		long zero = System.currentTimeMillis();
 		switch (type) {
-			case T_DESCRIBE: 
+			case T_DESCRIBE: {
+				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
 				return fetchBareDescriptions( s ); 
+			}
 				
 			case T_ALL:	{	
-				String detailsQuery = fetchBareDescriptions( s ); 
-			    addAllObjectLabels( s ); // m, sources );
+				String detailsQuery = fetchBareDescriptions( s ); 				
+				String chainsQuery = fetchByGivenPropertyChains( s, chains ); 
+			    addAllObjectLabels( s );
 			    return detailsQuery;
 			}
 
 			case T_CHAINS:	{
-				long zero = System.currentTimeMillis();
 				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
-				long time = System.currentTimeMillis() - zero;
-				log.debug( "T_CHAINS took " + (time/1000.0) + "s" );
-				return detailsQuery;
-			}
-				
-			case T_BASIC: {
-				long zero = System.currentTimeMillis();
-				String detailsQuery = fetchByGivenPropertyChains( s, BasicChains ); 
-				long time = System.currentTimeMillis() - zero;
-				log.debug( "T_BASIC took " + (time/1000.0) + "s" );
+				log.debug( "T_CHAINS took " + ((System.currentTimeMillis() - zero)/1000.0) + "s" );
 				return detailsQuery;
 			}
 				
@@ -285,14 +296,10 @@ public class View {
 		}
 		return "# should be a query here.";
 	}
-
-	/**
-	    Property chains: [RDF.type] and [RDFS.label].
-	*/
-	static final List<PropertyChain> BasicChains = 
-		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
 	
 	private String fetchByGivenPropertyChains( State s, List<PropertyChain> chains ) { 
+		if (chains.isEmpty()) 
+			return "CONSTRUCT {} WHERE {}\n";
 		boolean uns = useNestedSelect(s) && s.select.length() > 0;
 		return uns
 			? fetchChainsByNestedSelect( s, chains ) 
@@ -334,12 +341,17 @@ public class View {
 		return queryString;
 	}
 	
+	static final Pattern SELECT = Pattern.compile( "SELECT", Pattern.CASE_INSENSITIVE );
+	
 	private String fetchChainsByNestedSelect( State st, List<PropertyChain> chains ) { 
 		PrefixLogger pl = new PrefixLogger( st.m );
 		StringBuilder construct = new StringBuilder();
-		int s = st.select.indexOf( "\nSELECT" );
-		String selection = st.select.substring( s + 1 );
-		String selectPrefixes = st.select.substring(0, s + 1);
+	//
+		Matcher m = SELECT.matcher( st.select );
+		if (!m.find()) EldaException.Broken( "No SELECT in nested query." );
+		int s = m.start();
+		String selection = st.select.substring( s );
+		String selectPrefixes = st.select.substring(0, s);
 	//
 		Any r = RDFQ.var( "?item" );
 		construct.append( "CONSTRUCT {" );		
@@ -350,9 +362,7 @@ public class View {
 		}
 	//
 		construct.append( "\n} WHERE {\n" );
-		String hack_selection = hackVars( selection );
-		// System.err.println( ">> nested select: hacking round ARQ bug: " + hack_selection );
-		construct.append( "  {" ).append( hack_selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
+		construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
 	//	
 		String union = "";
 		for (PropertyChain c: chains) {
@@ -368,27 +378,6 @@ public class View {
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) );
 		return queryString;
-	}
-
-	private String hackVars( String selection ) {
-		if (true) return selection;
-		// System.err.println( ">> SELECTION: " + selection + "\nEND\n" );
-		String vars = varsOf( selection.substring( selection.indexOf( "item" ) + 5 ) );
-		return selection.replaceFirst( "\n", "" + vars + "\n" );
-	}
-
-	private String varsOf( String selection ) {
-		String result = "";
-		Pattern p = Pattern.compile( "\\?[A-Za-z_0-9]+" );
-		Matcher m = p.matcher( selection );
-		while (m.find()) {
-			String var = m.group();
-			if (!var.equals( "?item" ) && !result.contains( var ))
-				result += " " + var;
-			
-		}
-			
-		return result;
 	}
 
 	private void buildConstructClause( PrefixLogger pl, StringBuilder construct, Any r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
@@ -424,34 +413,68 @@ public class View {
 
 	private String fetchBareDescriptions( State s ) { 
 		long zero = System.currentTimeMillis();
-		PrefixLogger pl = new PrefixLogger( s.m );
-		String describe = "DESCRIBE";
-		for (Resource r: new HashSet<Resource>( s.roots )) { // TODO
-			describe += "\n  " + pl.present( r.getURI() );
-		}
-		describe = pl.writePrefixes( new StringBuilder() ).toString() + describe;
-		Query describeQuery = QueryFactory.create( describe );
-		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
+		String describe = fetchUntimedByDescribe( s.m, s.roots, s.sources );
 		long time = System.currentTimeMillis() - zero;
 		log.debug( "fetchBareDescriptions took " + (time/1000.0) + "s" );
 		return describe;
+	}
+
+	private String fetchUntimedByDescribe( Model sm, List<Resource> allRoots, List<Source> sources ) {
+		List<List<Resource>> chunks = chunkify( allRoots );
+		StringBuilder describe = new StringBuilder();
+		for (List<Resource> roots: chunks) {
+			PrefixLogger pl = new PrefixLogger( sm );
+			describe.setLength(0);
+			describe.append( "DESCRIBE" );
+			for (Resource r: new HashSet<Resource>( roots )) { // TODO
+				describe.append( "\n  " ).append( pl.present( r.getURI() ) );
+			}
+			String query = pl.writePrefixes( new StringBuilder() ).toString() + describe;
+			Query describeQuery = QueryFactory.create( query );
+			for (Source x: sources) sm.add( x.executeDescribe( describeQuery ) );
+		}
+		return describe.toString();
 	}		
 	
+	static final int CHUNK_SIZE = 1000;
+	static final boolean slice_describes = false;
+	
+	private List<List<Resource>> chunkify(List<Resource> roots) {
+		List<List<Resource>> result = new ArrayList<List<Resource>>();
+		if (slice_describes) {
+			int size = roots.size();
+			for (int i = 0; i < size; i += CHUNK_SIZE) {
+				int lim = Math.min( size, i + CHUNK_SIZE );
+				result.add( roots.subList( i, lim ) );
+			}
+			if (result.size() > 1)
+				log.debug( "large DESCRIBE: " + result.size() + " chunks of size " + CHUNK_SIZE );
+		} else {
+			result.add( roots );
+		}
+		return result;
+	}
+
 	private void addAllObjectLabels( State s ) { 
 		long zero = System.currentTimeMillis();
-		String construct = "PREFIX rdfs: <" + RDFS.getURI() + ">\nCONSTRUCT { ?x rdfs:label ?l }\nWHERE\n{";
+		StringBuilder sb = new StringBuilder();
+		sb.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">\nCONSTRUCT { ?x rdfs:label ?l }\nWHERE\n{" );
 		String union = "";
 		for (RDFNode n: s.m.listObjects().toList()) {
 			if (n.isURIResource()) {
-				construct += union + "{?x rdfs:label ?l. FILTER(?x = <" + n.asNode().getURI() + ">)" + "}";
+				sb.append( union )
+					.append( "{?x rdfs:label ?l. FILTER(?x = <" )
+					.append( n.asNode().getURI() )
+					.append( ">)" + "}" );
 				union = "\nUNION ";
 			}
 		}
-		construct += "}\n";
-		Query constructQuery = QueryFactory.create( construct );
+		sb.append( "}\n" );
+		Query constructQuery = QueryFactory.create( sb.toString() );
+		long midTime = System.currentTimeMillis();
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
-		long time = System.currentTimeMillis() - zero;
-		log.debug( "addAllObjectLabels took " + (time/1000.0) + "s" );
+		long aTime = midTime - zero, bTime = System.currentTimeMillis() - midTime; 
+		log.debug( "addAllObjectLabels took " + (aTime/1000.0) + "s making, " + (bTime/1000.0) + "s fetching." );
 	}
 }
 

@@ -15,14 +15,22 @@
 package com.epimorphics.lda.support;
 
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.larq.*;
+import org.apache.jena.larq.*;
 import com.hp.hpl.jena.shared.WrappedException;
 
 public class LARQManager {
@@ -30,13 +38,17 @@ public class LARQManager {
     public static final String LARQ_DIRECTORY_KEY = "com.epimorphics.api.LARQ-base-directory";
     
     public static void setLARQIndexDirectory( String value ) {
-        larqIndexDirectory = value;    
-        log.info( "setLARQIndexDirectory " + value );
+        try {
+        	larqIndexDirectory = FSDirectory.open( new File(value ));    
+        	log.info( "setLARQIndexDirectory " + value );
+        } catch (IOException e) {
+        	throw new WrappedException( e );
+        }
     }
     
     static Logger log = LoggerFactory.getLogger( LARQManager.class );
     
-    protected static String larqIndexDirectory = "";
+    protected static Directory larqIndexDirectory = null;
     
     public static void setLARQIndex( QueryExecution qx ) {
         log.info( "setting LARQ index [in " + larqIndexDirectory + "] on query " + qx.toString() );
@@ -64,7 +76,10 @@ public class LARQManager {
     }
 
     private static IndexWriter getWriter() {
-        try { return new IndexWriter( larqIndexDirectory, new StandardAnalyzer() ); }
+    	Version v = Version.LUCENE_30;
+    	Analyzer a = new StandardAnalyzer(v);
+    	IndexWriterConfig iwc = new IndexWriterConfig( v, a );
+        try { return new IndexWriter( larqIndexDirectory, iwc ); }
         catch (Exception e) { throw new WrappedException( e ); }
     }
 }

@@ -10,18 +10,15 @@ package com.epimorphics.lda.tests;
 
 import org.junit.Test;
 
-import static com.epimorphics.util.CollectionUtils.set;
 import static org.junit.Assert.*;
 
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
-import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.tests_support.LoadsNothing;
@@ -55,6 +52,7 @@ public class TestPropertyChainEndToEnd
 			+ "; ex:number api:label 'number'"
 			+ "; ex:name api:label 'name'"
 			+ "; rdf:type rdf:type rdf:Property"
+			+ "; rdf:type rdfs:range spec:SomeObjectProperty"
 			+ "; rdf:type api:label 'type'"
 			+ "; ex:Class api:label 'class'"
 		//
@@ -147,10 +145,8 @@ public class TestPropertyChainEndToEnd
 		PrefixMapping prefixes = PrefixMapping.Factory.create();
 		ShortnameService sns = new StandardShortnameService( spec, prefixes, loader );
 		APIQuery q = new APIQuery( sns );
-    	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
-		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
-		x.addFilterFromQuery( Param.make(sns, propertyThing), set("17.9") );
-		qa.updateQuery();
+		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
+		x.addFilterFromQuery( Param.make(sns, propertyThing), "17.9" );
 		assertContains( q.assembleSelectQuery( prefixes ), "\"17.9\"^^<http://www.w3.org/2001/XMLSchema#string>" );
 		}
 	

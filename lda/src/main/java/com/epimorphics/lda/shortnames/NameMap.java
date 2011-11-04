@@ -15,14 +15,13 @@ import java.util.Set;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
+import com.epimorphics.vocabs.NsUtils;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -57,7 +56,7 @@ public class NameMap {
 	public void load( PrefixMapping pm, Model m ) {
 		prefixes.withDefaultMappings( pm );
 		load( pm, m.listStatements( ANY, RDFS.label, ANY ) );
-		load( pm, m.listStatements( ANY, FIXUP.label, ANY ) );
+		load( pm, m.listStatements( ANY, API.label, ANY ) );
 		load( pm, m.listStatements( ANY, API.name, ANY ) );
 	}
 
@@ -159,22 +158,25 @@ public class NameMap {
 		*/
 		public MultiMap<String, String> result() {
 			Map<String, Set<String>> shorts = new HashMap<String, Set<String>>();
+			Set<String> already = new HashSet<String>();
 			for (String p: terms) {
 				String givenShort = uriToName.getOne( p );
 				if (givenShort == null) {
-					String local = getLocalName(p);
+					String local = NsUtils.getLocalName(p);
 					Set<String> ps = shorts.get(local);
 					if (ps == null) shorts.put( local, ps = new HashSet<String>() );
 					ps.add( p );
+				} else {
+					already.add( givenShort );
 				}
 			}
 			for (String shortName: shorts.keySet()) {
 				Set<String> ps = shorts.get(shortName);
-				if (ps.size() == 1) {
-					uriToName.add( ps.iterator().next(), t(shortName) );
-				} else {
+				if (already.contains( shortName ) || ps.size() > 1) {
 					for (String uri: ps) 
-						uriToName.add( uri, prefixFor( getNameSpace(uri) ) + t(shortName) );
+						uriToName.add( uri, prefixFor( NsUtils.getNameSpace(uri) ) + t(shortName) );
+				} else {
+					uriToName.add( ps.iterator().next(), t(shortName) );
 				}
 			}
 			return uriToName;
@@ -190,34 +192,17 @@ public class NameMap {
 			return x;
 		}
 
-		private String getLocalName(String uri) {
-			int split = Util.splitNamespace(uri);
-			return uri.substring(split);
-		}
-
-		private String getNameSpace(String uri) {
-			int split = Util.splitNamespace(uri);
-			return uri.substring(0, split);
-		}
-
 		/**
 		    Answer a prefix for a namespace. If there's one in the
 		    prefixes, use that. If there aren't any, use "none_".
-		    If the prefix is magic, ie MUST NOT be used on pain of
-		    confusing certain renderers, omit it entirely and live 
-		    with ambiguity.
+		    If the namespace is magic, ie its prefix MUST NOT be used 
+		    on pain of confusing certain renderers, omit it entirely and 
+		    live with ambiguity.
 		*/
 		private String prefixFor( String nameSpace ) {
+			if (NsUtils.isMagic( nameSpace )) return "";
 			String prefix = prefixes.getNsURIPrefix( nameSpace );
-			return
-				prefix == null ? "none_"
-				: isMagic(prefix) ? ""
-				: prefix + "_"
-				;
-		}
-
-		private boolean isMagic(String prefix) {
-			return prefix.equals("xhv") || prefix.equals("rdf") || prefix.equals("rdfs");
+			return prefix == null ? "none_" : prefix + "_";
 		}
 	}
 }

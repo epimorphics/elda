@@ -1,0 +1,4 @@
+@prefix : <http://www.epimorphics.com/tools/example#>.
+
+:a a :A; :definition "An A.".
+:b a :B; :definition "A B.".

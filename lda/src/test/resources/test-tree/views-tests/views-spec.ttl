@@ -12,10 +12,15 @@
     ; api:name "excluded"
     ; api:property :q
     .
+    
+:empty a api:Viewer
+    ; api:name "empty"
+    .
 
 :ep a api:ListEndpoint
     ; api:uriTemplate '/alpha'
-    ; api:viewer :included
+    ; api:viewer :included, :empty
+    ; api:defaultViewer :included
     .
     
 rdf:type a rdf:Property

@@ -21,7 +21,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.ModelLoaderI;
@@ -35,7 +35,6 @@ import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
@@ -72,7 +71,7 @@ public class APISpec {
     protected final Factories factoryTable;
     protected final boolean hasParameterBasedContentNegotiation;
     protected final List<Source> describeSources;
-    protected final VarValues bindings = new VarValues();
+    protected final Bindings bindings = new Bindings();
     
     protected final Set<String> metadataOptions = new HashSet<String>();
     
@@ -81,11 +80,11 @@ public class APISpec {
     	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
 		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
         prefixes = ExtractPrefixMapping.from(specification);
-        sns = new StandardShortnameService(specification, prefixes, loader);
+        sns = loadShortnames(specification, loader);
         dataSource = GetDataSource.sourceFromSpec( fm, specification );
         describeSources = extractDescribeSources( fm, specification, dataSource );
         primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
-        defaultLanguage = getStringValue(specification, FIXUP.lang, null);
+        defaultLanguage = getStringValue(specification, API.lang, null);
         base = getStringValue( specification, API.base, null );
         bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
         factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
@@ -93,6 +92,10 @@ public class APISpec {
         extractMetadataOptions( specification );
         extractEndpointSpecifications( specification );
     }
+
+	private StandardShortnameService loadShortnames( Resource specification, ModelLoaderI loader ) {
+		return new StandardShortnameService(specification, prefixes, loader);
+	}
     
     private void extractMetadataOptions( Resource specification ) {
     	for (StmtIterator it = specification.listProperties( EXTRAS.metadataOptions ); it.hasNext();)
@@ -196,7 +199,7 @@ public class APISpec {
         return describeSources;
     }
 
-	public VarValues getBindings() {
+	public Bindings getBindings() {
 		return bindings;
 	}
 

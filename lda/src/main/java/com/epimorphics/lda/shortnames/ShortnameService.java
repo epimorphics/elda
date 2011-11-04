@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.Term;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -64,73 +62,30 @@ public interface ShortnameService
 	    commitments that Context does.
 	*/
 	public NameMap nameMap();
+	
+	/**
+	    Answer true iff the named type has been declared (or is by default)
+	    to be a datatype (rather than an object type).
+	*/
+	public boolean isDatatype( String type );
 
 	/**
 	    If r is a resource, answer r; if it is a literal with lexical form l,
 	    answer normaliseResource(l); otherwise throw an API exception.
 	*/
-	public Resource normalizeResource( RDFNode r );
-
-	/**
-	    If r is a resource, answer r; if it is a literal with lexical form l,
-	    answer normaliseResource(l); otherwise throw an API exception.
-	*/
-	public Resource normalizeResource( Term r );
+	public Resource asResource( RDFNode r );
 	
 	/**
 	    Answer a resource with uri = expand(s). If there's no such expansion
 	    but s "looks like" a uri, return a resource with uri = s. Otherwise
 	    throw an API exception.
 	*/
-	public Resource normalizeResource( String s );
-
-	/**
-	    Answer a string which is the SPARQL representation of the thing
-	    val treated as the object of the property prop.
-	*/
-	public String normalizeNodeToString( String prop, String val );
-
-	/**
-	    Answer a string which is the SPARQL representation of the thing
-	    val treated as the object of the property prop. The language
-	    (if non-null) will be used as the language encoding for any
-	    plain literals
-	*/
-	public String normalizeNodeToString( String prop, String val, String language );
-
-	/**
-	    Answer a RDFQ node which has the SPARQL representation of the thing
-	    val treated as the object of the property prop. The language
-	    (if non-null) will be used as the language encoding for any
-	    plain literals
-	*/
-	public Any normalizeNodeToRDFQ( String prop, String val, String language );
-
-	/**
-	    Answer a string which is the SPARQL representation of the value
-	    val. If val can be expanded to a URI, it is; otherwise it is assumed
-	    to be the spelling of a plain string.
-	*/
-	public String normalizeValue( String val );
-
-	/**
-	    Answer a string which is the SPARQL representation of the value
-	    val. If val can be expanded to a URI, it is; otherwise it is assumed
-	    to be the spelling of a plain string. The language
-	    (if non-null) will be used as the language encoding for any
-	    plain literals
-	*/
-	public String normalizeValue( String val, String language );
+	public Resource asResource( String s );
 
 	/**
 	    Answer the full name (URI) corresponding to the short name s.
 	*/
 	public String expand( String s );
-	
-	/**
-	    Answer the preferred short name for the full URI u.
-	*/
-	public String shorten( String u );
 	
 	/**
 	    Utilities on ShortnameService's.
@@ -153,7 +108,7 @@ public interface ShortnameService
 				if (e.length() > 0)
 					{
 					String expanded = sns.expand( e );
-					if (expanded == null) throw new IllegalArgumentException( "no long name for '" + e + "'" );
+					if (expanded == null) throw new ExpansionFailedException( e );
 					result.add( ResourceFactory.createProperty( expanded ) );
 					}
 			return result;

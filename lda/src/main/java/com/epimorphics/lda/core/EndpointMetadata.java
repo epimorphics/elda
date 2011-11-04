@@ -1,3 +1,9 @@
+/*
+    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011 Epimorphics Limited
+*/
 package com.epimorphics.lda.core;
 
 import java.net.URI;
@@ -5,6 +11,7 @@ import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.QueryParameter;
@@ -16,7 +23,6 @@ import com.epimorphics.lda.vocabularies.ELDA;
 import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.FIXUP;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -31,14 +37,16 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class EndpointMetadata {
 
-	protected final CallContext cc;
+	protected final Bindings cc;
 	protected final Resource thisPage;
 	protected final String pageNumber;
 	protected final Set<String> formatNames;
 	protected final boolean isListEndpoint;
+	protected final URI reqURI; 
 	
-	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, CallContext cc, Set<String> formatNames ) {
+	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, Bindings cc, URI reqURI, Set<String> formatNames ) {
 		this.cc = cc;
+		this.reqURI = reqURI;
 		this.thisPage = thisPage;
 		this.pageNumber = pageNumber;
 		this.formatNames = formatNames;
@@ -66,8 +74,7 @@ public class EndpointMetadata {
 	 	modified by replacing the _view with the requested name.
 	*/
     private Resource resourceForView( Model m, String name ) {
-    	URI req = cc.getRequestURI();
-    	String a = replaceQueryParam( req, QueryParameter._VIEW, name );
+    	String a = replaceQueryParam( reqURI, QueryParameter._VIEW, name );
     	String b = isListEndpoint ? replaceQueryParam( Util.newURI( a ), QueryParameter._PAGE, pageNumber ) : a;
 		return m.createResource( b );
     }
@@ -123,14 +130,13 @@ public class EndpointMetadata {
 	}
 
 	private Resource resourceForFormat( Model m, String formatName ) {
-		URI ru = cc.getRequestURI();
 		try {
 			URI x = new URI
-				( ru.getScheme()
-				, ru.getAuthority()
-				, replaceSuffix( formatName, ru.getPath() )
-				, ru.getQuery()
-				, ru.getFragment() 
+				( reqURI.getScheme()
+				, reqURI.getAuthority()
+				, replaceSuffix( formatName, reqURI.getPath() )
+				, reqURI.getQuery()
+				, reqURI.getFragment() 
 				);
 			return m.createResource( x.toASCIIString() );
 		} catch (URISyntaxException e) {
@@ -158,24 +164,24 @@ public class EndpointMetadata {
 
 	public void addBindings( Model toScan, Model meta, Resource anExec, NameMap nm ) {
 		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
-		exec.addProperty( RDF.type, FIXUP.Execution );
+		exec.addProperty( RDF.type, API.Execution );
 		addVariableBindings( meta, exec );
 		addTermBindings( toScan, meta, exec, nm );
-		page.addProperty( FIXUP.wasResultOf, exec );
+		page.addProperty( API.wasResultOf, exec );
 	}
 
 	public void addVariableBindings( Model meta, Resource exec ) {
-		for (Iterator<String> names = cc.parameters.keySet().iterator(); names.hasNext();) {
+		for (Iterator<String> names = cc.keySet().iterator(); names.hasNext();) {
 			String name = names.next();
 			Resource vb = meta.createResource();
-			vb.addProperty( FIXUP.label, name );
-			vb.addProperty( FIXUP.value, cc.getStringValue( name ) );
-			exec.addProperty( FIXUP.VB, vb );
+			vb.addProperty( API.label, name );
+			vb.addProperty( API.value, cc.getValueString( name ) );
+			exec.addProperty( API.variableBinding, vb );
 		}
 	}
 
 	public void addTermBindings( Model toScan, Model meta, Resource exec, NameMap nm ) {
-		Stage2NameMap s2 = nm.stage2(false);
+		Stage2NameMap s2 = nm.stage2(false).load( toScan, toScan );
 		MultiMap<String, String> mm = s2.result();
 		for (String uri: mm.keySet()) {
 			Resource term = meta.createResource( uri );
@@ -186,8 +192,8 @@ public class EndpointMetadata {
 					APIEndpointImpl.log.warn( "URI <" + uri + "> has several short names, viz: " + shorties + "; picked " + shorty );
 				}
 	    		Resource tb = meta.createResource();
-	    		exec.addProperty( FIXUP.TB, tb );
-				tb.addProperty( FIXUP.label, shorty );
+	    		exec.addProperty( API.termBinding, tb );
+				tb.addProperty( API.label, shorty );
 				tb.addProperty( API.property, term );
 			}
 		}
@@ -196,11 +202,11 @@ public class EndpointMetadata {
 	// following the Puelia model.
 	public void addExecution( Model meta, Resource anExec ) {
 		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
-		exec.addProperty( RDF.type, FIXUP.Execution );
+		exec.addProperty( RDF.type, API.Execution );
 		Resource P = meta.createResource();
 		ELDA.addEldaMetadata( P );
-		exec.addProperty( FIXUP.processor, P );
-		page.addProperty( FIXUP.wasResultOf, exec );
+		exec.addProperty( API.processor, P );
+		page.addProperty( API.wasResultOf, exec );
 	}
 
 	public void addQueryMetadata( Model meta, Resource anExec, APIQuery q, String detailsQuery, APISpec apiSpec, boolean listEndpoint ) {
@@ -215,13 +221,13 @@ public class EndpointMetadata {
 	    	Resource sr = meta.createResource( SPARQL.QueryResult );    	
 	    	sr.addProperty( SPARQL.query, EndpointMetadata.inValue( meta, q.getQueryString( apiSpec, cc ) ) );
 	    	sr.addProperty( SPARQL.endpoint, EP );
-	    	exec.addProperty( FIXUP.selectionResult, sr );
+	    	exec.addProperty( API.selectionResult, sr );
 		}
 	//
 		Resource vr = meta.createResource( SPARQL.QueryResult );
 		vr.addProperty( SPARQL.query, EndpointMetadata.inValue( meta, detailsQuery ) ); 
 		vr.addProperty( SPARQL.endpoint, EP );
-		exec.addProperty( FIXUP.viewingResult, vr );
+		exec.addProperty( API.viewingResult, vr );
 	}
 
 	public static Resource inValue( Model rsm, String s ) {

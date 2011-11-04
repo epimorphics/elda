@@ -14,7 +14,7 @@ import org.w3c.dom.Element;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDF;
-import com.epimorphics.jsonrdf.Context.Prop;
+import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
@@ -85,7 +85,6 @@ Each RDF value is mapped onto some XML content as follows:
 public class XMLRendering {
 	
 	private final Document d;
-	private final Model m;
 	private final ShortnameService sns;
 	private final MultiMap<String, String> nameMap;
 	private final boolean suppressIPTO;
@@ -95,10 +94,9 @@ public class XMLRendering {
 	
 	public XMLRendering( Model m, ShortnameService sns, boolean stripHas, boolean suppressIPTO, Document d ) {
 		this.d = d;
-		this.m = m;
 		this.sns = sns;
-		this.nameMap = sns.nameMap().stage2(stripHas).load(m, m).result();
 		this.suppressIPTO = suppressIPTO;
+		this.nameMap = sns.nameMap().stage2(stripHas).load(m, m).result();
 	}
 	
 	private final Set<Resource> seen = new HashSet<Resource>();
@@ -109,6 +107,7 @@ public class XMLRendering {
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 			if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
 			for (Property p: properties) addPropertyValues( e, x, p );
+			seen.remove( x );
 		}
 		return e;
 	}
@@ -236,28 +235,16 @@ public class XMLRendering {
 
 	private boolean isMultiValued( Property p ) {
 		if (p.equals( RDF.type )) return true; // HACKERY
-		Prop px = sns.asContext().getPropertyByURI(p.getURI());
+		ContextPropertyInfo px = sns.asContext().getPropertyByURI(p.getURI());
 		return px != null && px.isMultivalued();
 	}
-
-	// obsolete [if new shortname code is OK]
-	final Map<String, String> shortNames = new HashMap<String, String>();
 	
 	private String shortNameFor( Resource r ) {
 		return shortNameFor( r.getURI() );
 	}
 	
-	// using NameMap results now.
 	private String shortNameFor( String URI ) {
-		String s = shortNames.get( URI );
-		if (s == null) shortNames.put( URI, s = createShortName( URI ) );
-		String other = nameMap.getOne( URI );
-		return other;
-	}
-
-	// obsolete [if new shortname code is OK]
-	private String createShortName( String URI ) {
-		return sns.asContext().findNameForProperty( m.getResource( URI ) );
+		return nameMap.getOne( URI );
 	}
 
 	final Map<AnonId, String> idMap = new HashMap<AnonId, String>();

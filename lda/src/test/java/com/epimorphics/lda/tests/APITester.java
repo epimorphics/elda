@@ -18,14 +18,15 @@
 package com.epimorphics.lda.tests;
 
 import java.io.StringWriter;
+import java.net.URI;
 import java.util.*;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
-import com.epimorphics.lda.bindings.Value;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 
 import com.epimorphics.lda.core.*;
+import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
@@ -127,12 +128,13 @@ public class APITester {
             throw new APIException("Tester failed to find routed endpoint: " + uriTemplate);
         MultiMap<String, String> map = MakeData.parseQueryString( queryString );
         // TODO: the template should be a proper URI.
-		CallContext call = CallContext.createContext( Util.newURI(uriTemplate), map, fix( match.bindings ) );
-        return match.endpoint.call(call).a;
+		URI ru = Util.newURI(uriTemplate);
+		Bindings call = Bindings.createContext( fix( match.bindings ), map );
+        return match.endpoint.call(ru, call).a;
     }
 
-	private VarValues fix(Map<String, String> bindings) {
-		VarValues result = new VarValues();
+	private Bindings fix(Map<String, String> bindings) {
+		Bindings result = new Bindings();
 		for (String key: bindings.keySet())
 			result.put( key, new Value( bindings.get(key) ) );
 		return result;
@@ -140,13 +142,13 @@ public class APITester {
 
 	/**
      * Render  results as JSON, using context mappings from the API
-     * (denoted by its localName).
+     * (denoted by its localName). Clones the context to avoid corruption.
      */
     public String renderAsJSON(String api, APIResultSet results) {
         StringWriter writer = new StringWriter();
         List<Resource> roots = new ArrayList<Resource>(1);
         roots.add( results.getRoot() );
-        Context context = specifications.get(api).getShortnameService().asContext();
+        Context context = specifications.get(api).getShortnameService().asContext().clone();
         Encoder.get( context ).encodeRecursive(results.getModel(), roots, writer, true);
         return writer.toString();
     }

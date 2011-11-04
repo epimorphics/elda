@@ -12,26 +12,23 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Util;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestParameterNameAndValueExpansion 
 	{
-	@Test public void ensureFlarn()
+	@Test public void ensure_PropertiesRespected()
 		{
 		Model model = MakeData.specModel
 			( "spec:spoo rdf:type api:API"
@@ -112,17 +109,15 @@ public class TestParameterNameAndValueExpansion
 	@Test public void deferredPropertyShouldAppearInQuery()
 		{
 		MultiMap<String, String> qp = MakeData.parseQueryString( "{aname}=value" );
-		VarValues bindings = MakeData.variables( "aname=bname" );
-		CallContext cc = CallContext.createContext( Util.newURI("my:URI"), qp, bindings );
+		Bindings bindings = MakeData.variables( "aname=bname" );
+		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "bname=eh:/full-bname" );
 		APIQuery aq = new APIQuery( sns );
-    	QueryArgumentsImpl qa = new QueryArgumentsImpl(aq);
-		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, qa );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
-		qa.updateQuery();
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
-		int where = q.indexOf( "?item <eh:/full-bname> \"value\" ." );
+		int where = q.indexOf( "?item <eh:/full-bname> \"value\"" );
 		assertFalse( "deferred property has not appeared in query", where < 0 );
 		}
 	}

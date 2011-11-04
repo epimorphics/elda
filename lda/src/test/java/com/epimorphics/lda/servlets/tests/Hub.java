@@ -13,12 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -79,12 +78,12 @@ public class Hub extends HttpServlet
         	{
         	MultiMap<String, String> map = MakeData.parseQueryString( "" );
         	URI ru = Util.newURI( "SPOO/FLARN" );
-            CallContext cc = CallContext.createContext( ru, map, match.getBindings() );
+            Bindings cc = Bindings.createContext( match.getBindings(), map );
             APIEndpoint ep = match.getEndpoint();
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
             try 
             	{
-                Triad<APIResultSet, String, CallContext> resultsAndFormat = ep.call( cc );
+                Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( ru, cc );
 				APIResultSet results = resultsAndFormat.a;
                 if (results == null) 
                 	{
@@ -94,7 +93,7 @@ public class Hub extends HttpServlet
                 	{ // TODO fix the switch from media types to named renderers.
                 	Renderer r = ep.getRendererByType( acceptedType );
                 	System.err.println( "r = " + r + " for " + acceptedType );
-                	RendererContext rp = new RendererContext( RouterRestlet.paramsFromContext( cc ) );
+                	Bindings rp = new Bindings( cc.copy() );
                 	String result = r.render( rp, results );
 //                	String cl = results.getContentLocation();
                 	res.setContentType( acceptedType.toString() );

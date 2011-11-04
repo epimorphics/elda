@@ -10,7 +10,7 @@ package com.epimorphics.lda.specs;
 
 import static com.epimorphics.util.RDFUtils.getStringValue;
 
-import com.epimorphics.vocabs.FIXUP;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.NodeIterator;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -29,13 +29,13 @@ public class ExtractPrefixMapping {
 	    PrefixMapping pm = PrefixMapping.Factory.create();
 	    Model model = specification.getModel();
 		pm.setNsPrefixes(model);
-	    NodeIterator ni = model.listObjectsOfProperty(specification, FIXUP.prefixMapping);
+	    NodeIterator ni = model.listObjectsOfProperty(specification, API.prefixMapping);
 	    while (ni.hasNext()) {
 	        RDFNode n = ni.next();
 	        if (n.isResource()) {
 	            Resource pmr = (Resource)n;
-	            String prefix = getStringValue(pmr, FIXUP.prefix);
-	            String uri = getStringValue(pmr, FIXUP.namespace);
+	            String prefix = getStringValue(pmr, API.prefix);
+	            String uri = getStringValue(pmr, API.namespace);
 	            if (prefix != null && uri != null) {
 	                pm.setNsPrefix(prefix, uri);
 	            } else {

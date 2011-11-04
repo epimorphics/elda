@@ -71,6 +71,7 @@ spec:viewerMedium a lda:Viewer
         rdfs:label, school:establishmentStatus, school:typeOfEstablishment, school:schoolCapacity
         , school:phaseOfEducation, school:districtAdministrative, school:parliamentaryConstituency
         , school:administrativeWard, school:nurseryProvision 
+        , spatialrelations:easting, spatialrelations:northing
     .
 
 #
@@ -173,7 +174,7 @@ spec:schools
 	lda:selector [ 
 		lda:filter "type=School"
 	] ;
-	lda:defaultViewer lda:labelledDescribeViewer ;
+	lda:defaultViewer spec:viewerMedium ; # lda:labelledDescribeViewer ;
 	lda:viewer spec:viewerShort ;
 	lda:viewer spec:viewerMedium ;
 	lda:viewer [ 
@@ -232,8 +233,12 @@ spec:schoolsSecondaryDistrict
 # 
 
 rdf:type
-  lda:label "type" .
+  lda:label "type"; rdfs:range [] .
   
+lda:definition a rdf:Property
+    ; lda:label "definition"
+    .  
+
 geo:lat
       lda:label "lat" .
 

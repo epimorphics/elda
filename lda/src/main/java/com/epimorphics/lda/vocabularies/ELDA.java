@@ -9,7 +9,7 @@
 package com.epimorphics.lda.vocabularies;
 
 import com.epimorphics.lda.Version;
-import com.epimorphics.vocabs.FIXUP;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -64,7 +64,7 @@ public class ELDA
 		{
 		Model m = P.getModel();
 		P
-			.addProperty( RDF.type, FIXUP.Service )
+			.addProperty( RDF.type, API.Service )
 			.addProperty( COMMON.software, ThisElda )
 			;
 		ThisElda.inModel(m)

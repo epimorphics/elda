@@ -25,6 +25,4 @@ public abstract class Any implements RenderExpression
 		{ return render( pl, out.append( "(" ) ).append( ")" ); }
 	
 	public abstract String asSparqlTerm( PrefixLogger pl );
-	
-	public abstract boolean isFinal();
 	}

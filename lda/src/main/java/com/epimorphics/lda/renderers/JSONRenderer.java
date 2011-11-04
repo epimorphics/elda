@@ -28,9 +28,11 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.ParseWrapper;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.util.MediaType;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class JSONRenderer implements Renderer {
@@ -39,7 +41,6 @@ public class JSONRenderer implements Renderer {
     
     final APIEndpoint api;
     final MediaType mt;
-    final boolean wantContext;
     
     public JSONRenderer( APIEndpoint api ) {
         this( api, MediaType.APPLICATION_JSON );
@@ -48,36 +49,44 @@ public class JSONRenderer implements Renderer {
     public JSONRenderer( APIEndpoint api, MediaType mt ) {
         this.api = api;
         this.mt = mt;
-        this.wantContext = api.wantContext();
     }
     
-    @Override public MediaType getMediaType( RendererContext rc ) {
-    	String callback = rc.getStringValue( "callback" );
+    @Override public MediaType getMediaType( Bindings rc ) {
+    	String callback = rc.getValueString( "callback" );
         return callback == null ? mt : MediaType.TEXT_JAVASCRIPT;
     }
 
-    @Override public String render( RendererContext rc, APIResultSet results) {
-        StringWriter writer = new StringWriter();
-        List<Resource> roots = new ArrayList<Resource>(1);
-        roots.add( results.getRoot() );
-        Context context = api.getSpec().getAPISpec().getShortnameService().asContext();
-        context.setSorted(true);
+    @Override public String render( Bindings b, APIResultSet results) {
+        Context context = api.getSpec().getAPISpec().getShortnameService().asContext(); 
+        return renderFromModelAndContext( b, results.getModel(), results.getRoot(), context );
+    }
+
+	public String renderFromModelAndContext( Bindings b, Model model, Resource root, Context given ) {
+		List<Resource> roots = new ArrayList<Resource>(1);
+		roots.add( root );
+		StringWriter writer = new StringWriter();
+		Context context = given.clone();
+		context.setSorted(true);
         try {
-            Encoder.getForOneResult( context, api.wantContext() ).encodeRecursive(results.getModel(), roots, writer, true);
+            Encoder.getForOneResult( context, false ).encodeRecursive( model, roots, writer, true );
             String written = writer.toString();
-            try {
-            	ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json
-            } catch (Exception e) {
-            	log.error( "Broken generated JSON:\n" + written );
-            	throw e;
-            }
-            String callback = rc.getStringValue("callback" );
+            paranoiaCheckForLegalJSON( written );
+            String callback = b.getValueString("callback" );
             return callback == null ? written : callback + "(" + written + ")";
         } catch (Exception e) {
         	log.error( "Failed to encode model: stacktrace follows:", e );
             return "'ERROR: " + e.getMessage() + "'";
         }
-    }
+	}
+
+	private void paranoiaCheckForLegalJSON(String written) throws Exception {
+		try {
+			ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json
+		} catch (Exception e) {
+			log.error( "Broken generated JSON:\n" + written );
+			throw e;
+		}
+	}
 
 }
 

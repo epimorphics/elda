@@ -34,8 +34,12 @@
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/088"/>
       <schoolCapacity datatype="integer">49</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School">
+          <label>Other Independent School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/>
     </item>
@@ -46,8 +50,12 @@
       <label>Alpha Community School At Springfield Methodist Church</label>
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/476"/>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School">
+          <label>Other Independent School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/>
     </item>
@@ -60,8 +68,12 @@
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/142"/>
       <schoolCapacity datatype="integer">275</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School">
+          <label>Other Independent School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/>
     </item>
@@ -74,8 +86,12 @@
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/142"/>
       <schoolCapacity datatype="integer">1187</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School">
+          <label>Other Independent School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/>
     </item>
@@ -88,8 +104,12 @@
       <parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/142"/>
       <schoolCapacity datatype="integer">853</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School">
+          <label>Other Independent School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/>
     </item>
@@ -102,7 +122,9 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/>
       <schoolCapacity datatype="integer">600</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
         <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
           <label>Voluntary Aided School</label>
         </item>
@@ -118,8 +140,12 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/>
       <schoolCapacity datatype="integer">620</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
     </item>
@@ -132,8 +158,12 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/>
       <schoolCapacity datatype="integer">600</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
     </item>
@@ -146,8 +176,12 @@
       <phaseOfEducation href="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/>
       <schoolCapacity datatype="integer">750</schoolCapacity>
       <type>
-        <item href="http://education.data.gov.uk/def/school/School"/>
-        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School"/>
+        <item href="http://education.data.gov.uk/def/school/School">
+          <label>School</label>
+        </item>
+        <item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Voluntary_Aided_School">
+          <label>Voluntary Aided School</label>
+        </item>
       </type>
       <typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/>
     </item>

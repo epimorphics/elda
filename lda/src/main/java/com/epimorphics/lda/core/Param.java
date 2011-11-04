@@ -7,7 +7,8 @@
 */
 package com.epimorphics.lda.core;
 
-import com.epimorphics.jsonrdf.Context.Prop;
+import com.epimorphics.jsonrdf.ContextPropertyInfo;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.URINode;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -26,7 +27,6 @@ public abstract class Param
 	
 	public static Param make( ShortnameService sns, String p ) 
 		{ 
-		if (p.charAt(0) == '_') return new ReservedParam( p );
 		int hyphen = p.indexOf('-');
 		if (hyphen < 0)
 			{
@@ -39,37 +39,6 @@ public abstract class Param
 			return new PrefixedParam( sns, prefix, name );
 			}
 		}
-
-	protected static void munge( ShortnameService sns, String p ) 
-		{
-		String [] parts = p.split("\\.");
-		for (String part: parts)
-			{
-			if (part.charAt(0) == '{')
-				{ /* deferred */ }
-			else
-				{
-				Prop prop = sns.asContext().getPropertyByName( part );
-				if (prop == null) throw new RuntimeException( "property '" + part + "' isn't defined." );
-				else System.err.println( "]]  type: " + prop.getType() );
-				}
-			}
-		}
-	    	
-	static class ReservedParam extends Param 
-		{
-		protected ReservedParam( String p ) 
-			{ super( null, p ); }
-
-		@Override public Param expand(CallContext cc) 
-			{ throw new RuntimeException( "cannot expand reserved parameter " + p );}
-
-		@Override public String prefix()
-			{ return null; }
-
-		@Override public Param plain() 
-			 { throw new RuntimeException( "cannot make plain a reserved parameter: " + p ); }
-		}
 	    	
 	static class PrefixedParam extends Param 
 		{
@@ -81,7 +50,7 @@ public abstract class Param
 		@Override public String toString()
 			{ return prefix + "--" + p; }
 
-		@Override public Param expand(CallContext cc) 
+		@Override public Param expand(Bindings cc) 
 			{ return new PrefixedParam( sns, prefix, cc.expandVariables( p ) ); }
 
 		@Override public String prefix() 
@@ -96,7 +65,7 @@ public abstract class Param
 		protected PlainParam( ShortnameService sns, String p )
 			{ super( sns, p ); }
 
-		@Override public Param expand(CallContext cc) 
+		@Override public Param expand(Bindings cc) 
 			{ return new PlainParam( sns, cc.expandVariables( p ) ); }
 
 		@Override public String prefix()
@@ -120,17 +89,27 @@ public abstract class Param
 		public final String shortName;
 		public final Resource asResource;
 		public final URINode asURI;
+		public final String typeURI;
 		
-		public Info(Resource r, String p) 
+		private Info(Resource r, String p, String typeURI) 
 			{
 			this.asResource = r;
 			this.shortName = p;
+			this.typeURI = typeURI;
 			this.asURI = RDFQ.uri( r.getURI() );
 			}
 
 		public static Info create( ShortnameService sns, String p ) 
 			{
-			return new Info(sns.normalizeResource(p), p);
+			Resource r = sns.asResource(p);
+			ContextPropertyInfo prop = sns.asContext().getPropertyByName( p );
+			String type = prop == null ? null : prop.getType();
+			return new Info(r, p, type);
+			}
+		
+		@Override public String toString() 
+			{
+			return "<Info " + shortName + " is " + asResource + ", with type " + typeURI + ">";
 			}
 		}
 	
@@ -142,9 +121,7 @@ public abstract class Param
 		return result;
 		}
 	
-	public boolean hasVariable() { return p.indexOf('{') >= 0; }
-	
-	public abstract Param expand( CallContext cc );
+	public abstract Param expand( Bindings cc );
 
 	public abstract String prefix();
 

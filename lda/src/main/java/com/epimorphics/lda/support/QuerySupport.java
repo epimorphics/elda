@@ -6,12 +6,6 @@
     $Id$
 */
 
-/*
-	(c) Copyright 2010 Epimorphics Limited
-	[see end of file]
-	$Id$
-*/
-
 package com.epimorphics.lda.support;
 
 import java.util.ArrayList;
@@ -22,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.LiteralNode;
+import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
@@ -64,7 +58,8 @@ public class QuerySupport
 	   	silly queries. So rdf:type statements (which are usually
 	   	less useful than specific properties) are moved down the
 	   	order, and triples with literal objects (which often only
-	   	appear a few times) are moved up.
+	   	appear a few times) are moved up. All optional triples
+	   	are moved to the end regardless of their structure.
 	   	
 	 	@param triples the list of triples to re-order.
 	 	@return a fresh list of triples, a reordered version of triples.
@@ -74,9 +69,12 @@ public class QuerySupport
     	List<Triple> result = new ArrayList<Triple>(triples.size());
     	List<Triple> plain = new ArrayList<Triple>(triples.size());
     	List<Triple> type = new ArrayList<Triple>(triples.size());
+    	List<Triple> optional = new ArrayList<Triple>(triples.size());
     	for (Triple t: triples) 
     		{
-    		if (t.O instanceof LiteralNode && canPromoteSubject( t.S ))
+    		if (t.isOptional())
+    			optional.add( t );
+    		else if (t.O instanceof Value && canPromoteSubject( t.S ))
     			result.add( t );
     		else if (t.P.equals( RDFQ.RDF_TYPE ))
     			type.add( t );
@@ -85,6 +83,7 @@ public class QuerySupport
     		}
     	result.addAll( plain );
     	result.addAll( type );
+    	result.addAll( optional );
     	if (!result.equals( triples ))
     		log.debug( "reordered\n    " + triples + "\nto\n    " + result );
     	return result;

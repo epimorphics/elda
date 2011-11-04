@@ -26,6 +26,10 @@ public class PrefixLogger {
 		this.pm = pm;
 	}
 	
+	public PrefixLogger() {
+		this( PrefixMapping.Factory.create() );
+	}
+	
 	/**
 	    <p>Present a URI as a SPARQL term, either <>-quoted, or
 	    as a qname if there's a suitable prefix mapping for it.
@@ -70,7 +74,7 @@ public class PrefixLogger {
 
 	/**
 	 	Look for plausible candidates for prefixes in the SPARQL
-	 	fragment an add them to <code>seen</code>.
+	 	fragment and add them to <code>seen</code>.
 	*/
 	public void findPrefixesIn( String fragment ) {
 		Matcher m = candidatePrefix.matcher( fragment );
@@ -79,15 +83,35 @@ public class PrefixLogger {
 			if (pm.getNsPrefixURI( candidate ) != null) seen.add( candidate );
 		}
 	}
+	
+	/*
+	    Taken from http://www.w3.org/TR/rdf-sparql-query/#rPN_CHARS_BASE
+	    and modified to suit Java regexps. Note the exclusion of the
+	    [#x10000-#xEFFFF] range because that's outside the 16-bit range.
+	*/
 
+	private static final String PN_CHARS_BASE = 
+		"A-Z a-z"
+		+ " \u00C0-\u00D6 \u00D8-\u00F6 \u00F8-\u02FF"
+		+ " \u0370-\u037D \u037F-\u1FFF \u200C-\u200D \u2070-\u218F"
+		+ " \u2C00-\u2FEF \u3001-\uD7FF \uF900-\uFDCF \uFDF0-\uFFFD"
+		;
+	                                                                                                                                                                                                                                                                   
+	private static final String PN_CHARS_U = PN_CHARS_BASE + "_";
+	
+	private static final String PN_CHARS = PN_CHARS_U + " 0-9 - \u00b7 \u0300-\u036f \u203f-\u2040";
+	
+	private static final String PN_PREFIX = "[" + PN_CHARS_BASE + "]([" + PN_CHARS + ".]*" + "[" + PN_CHARS + "])?";
+	
 	/**
 	    A pattern that will match candidate prefixes, which will then be checked
 	    against the provided prefix mapping. Note that it does not matter if the
 	    pattern is over-generous in matching so long as it does not <i>miss</i>
 	    any prefixes. Hence, it is not necessary to check for comments or strings.
 	*/
-	public static final Pattern candidatePrefix = Pattern.compile( "([A-Za-z][-+.A-Za-z0-9]*):" ); // ( "([^0-9<>:\\s\\.-][^:<>\\s]+):" );
-	
+	 public static final Pattern candidatePrefix = Pattern.compile( "(" + PN_PREFIX.replaceAll( " ", "" ) + "):" ); 
+//	public static final Pattern candidatePrefix = Pattern.compile( "([A-Za-z][-+.A-Z_a-z0-9]*):" ); // ( "([^0-9<>:\\s\\.-][^:<>\\s]+):" );
+
 	/**
 	    Answer a new PrefixLoggger with a few standard prefixes in it.
 	*/

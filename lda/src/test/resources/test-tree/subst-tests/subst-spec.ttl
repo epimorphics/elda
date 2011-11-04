@@ -1,6 +1,6 @@
 :root a api:API 
     ; api:sparqlEndpoint <local:CURRENT-TEST>
-    ; api:lang "en"
+    ; api:lang "en,none"
     ; api:endpoint :ep
     .
 

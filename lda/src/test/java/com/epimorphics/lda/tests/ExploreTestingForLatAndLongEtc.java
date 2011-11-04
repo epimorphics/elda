@@ -10,16 +10,17 @@ package com.epimorphics.lda.tests;
 
 import static org.junit.Assert.*;
 
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.specs.APIEndpointSpec;
@@ -78,8 +79,9 @@ public class ExploreTestingForLatAndLongEtc
 		APIEndpointSpec spec = new APIEndpointSpec( parent, parent, endpoint );
 		APIEndpoint e = new APIEndpointImpl( spec );
 		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );
-		CallContext cc = CallContext.createContext( Util.newURI("http://dummy/doc/schools"), map, MakeData.variables( settings ) );
-		Triad<APIResultSet, String, CallContext> resultsAndFormat = e.call( cc );
+		URI ru = Util.newURI("http://dummy/doc/schools");
+		Bindings cc = Bindings.createContext( MakeData.variables( settings ), map );
+		Triad<APIResultSet, String, Bindings> resultsAndFormat = e.call( ru, cc );
 		APIResultSet rs = resultsAndFormat.a;
 		return new HashSet<Resource>( rs.getResultList() );
 		}

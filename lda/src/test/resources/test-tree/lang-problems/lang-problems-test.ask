@@ -1,0 +1,11 @@
+URI=doc/bathing-water?_lang=en,none&_sort=-name
+
+ASK 
+    {
+    :yes a :Correct.
+    }
+    
+# ASK NOT
+#    {
+#    :no a :Incorrect
+#    }

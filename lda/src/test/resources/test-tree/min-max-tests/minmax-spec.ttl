@@ -7,6 +7,10 @@
     ; api:uriTemplate 'anchor'
     ; api:selector [api:filter 'type=C']
     .
+    
+:object api:label "object"
+    ; a owl:ObjectProperty
+    .
 
 :p api:label 'p'
 	; a owl:DatatypeProperty
@@ -20,6 +24,7 @@
   
 rdf:type a rdf:Property
     ; api:label 'type'
+    ; rdfs:range :SomeObjectProperty
     .  
 
 :C api:label 'C'.

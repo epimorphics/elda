@@ -12,16 +12,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.renderers.RendererContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.Util;
-import com.epimorphics.vocabs.FIXUP;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFList;
@@ -47,14 +47,18 @@ public class Demo_HTML_Renderer implements Renderer {
     	this.endpoint = ep;
     }
 
-	@Override public MediaType getMediaType( RendererContext irrelevant ) {
+	@Override public MediaType getMediaType( Bindings irrelevant ) {
         return MediaType.TEXT_HTML;
     }
 
-    @Override public String render( RendererContext ignored, APIResultSet results ) {
+    @Override public String render( Bindings ignored, APIResultSet results ) {
     	hackBnodes( results.getModel() );
-    	boolean isItemRendering = results.listStatements( null, FIXUP.items, (RDFNode) null ).hasNext() == false;
+    	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
         return isItemRendering ? renderItem(results) : renderList(results);
+    }
+    
+    private String shorten( String uri ) {
+    	return sns.asContext().getNameForURI( uri );
     }
 
     // Attempt to bypass the Talis unBNode hack
@@ -91,8 +95,8 @@ public class Demo_HTML_Renderer implements Renderer {
         renderParameters(textBody, rootURI);
         renderMetadata( textBody, results.getModel() );
     //    
-        Resource anchor = results.listStatements( null, FIXUP.items, (RDFNode) null ).next().getSubject();
-        for (RDFNode elem: anchor.getProperty( FIXUP.items ).getResource().as( RDFList.class ).asJavaList())
+        Resource anchor = results.listStatements( null, API.items, (RDFNode) null ).next().getSubject();
+        for (RDFNode elem: anchor.getProperty( API.items ).getResource().as( RDFList.class ).asJavaList())
             {
         	textBody.append( "\n<div class='one-item'>\n" );
             Resource e = (Resource) elem;
@@ -106,7 +110,7 @@ public class Demo_HTML_Renderer implements Renderer {
 	}
 
 	private void renderMetadata( StringBuilder textBody, Model rsm ) {
-		StmtIterator sit = rsm.listStatements( null, FIXUP.definition, (RDFNode) null );
+		StmtIterator sit = rsm.listStatements( null, API.definition, (RDFNode) null );
 		if (sit.hasNext()) {
 			String def = sit.next().getResource().getURI();
 			textBody
@@ -164,7 +168,7 @@ public class Demo_HTML_Renderer implements Renderer {
 		for (Statement s: e.listProperties().toList()) {
 		    Property p = s.getPredicate();
 		    String value = makeEntry(x, s, p, brief( s.getObject() ));
-		    String shortP = sns.shorten(p.getURI());
+		    String shortP = shorten(p.getURI());
 		    String title = "click to try and get definition details for " + shortP;
 			String pd =	"<a href='" + p.getURI() + "' title='" + title + "'>" + shortP + "</a>"
 		    	;
@@ -258,7 +262,7 @@ public class Demo_HTML_Renderer implements Renderer {
 	private String shortPropertyName( Statement st ) 
 		{
 		String uri = st.getPredicate().getURI();
-		String shorter = sns.shorten( uri );
+		String shorter = shorten( uri );
 		return shorter == null ? st.getModel().shortForm( uri ) : shorter;
 		}
 	
@@ -277,9 +281,9 @@ public class Demo_HTML_Renderer implements Renderer {
 
     private String resRequest(String base, Property p, Resource o )
     	{
-    	String shortP = sns.shorten( p.getURI() );
+    	String shortP = shorten( p.getURI() );
     	String oURI = o.getURI();
-		String shortO = sns.shorten( oURI );
+		String shortO = shorten( oURI );
     	if (shortO == null) shortO = oURI;
     	String uri = withArgs( base, shortP + "=" + shortO );
     	String image = "[similar]";
@@ -295,7 +299,7 @@ public class Demo_HTML_Renderer implements Renderer {
 
 	private String intRequest(String base, Mode m, Property p, String value ) 
     	{
-    	String shortP = sns.shorten( p.getURI() );
+    	String shortP = shorten( p.getURI() );
     	String uri = withArgs( base,  m.prefix + shortP + "=" + value );
     	String image = 
     		m == Mode.MAX ? "&#0171;" 
@@ -354,7 +358,7 @@ public class Demo_HTML_Renderer implements Renderer {
 
 	private String qname( Resource x )
         { 
-    	String s = sns.shorten( x.getURI() );
+    	String s = shorten( x.getURI() );
     	return s == null ? x.getModel().shortForm( x.getURI() ) : s;
         }
 

@@ -11,18 +11,15 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.bindings.VarValues;
-import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.tests.FakeNamedViews;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestFixedSelectOffsetAndLimit {
@@ -35,15 +32,13 @@ public class TestFixedSelectOffsetAndLimit {
 
 	private void ensureOffsetAndLimit(String expected, String queryArgs) {
 		MultiMap<String, String> qp = MakeData.parseQueryString( queryArgs );
-		VarValues bindings = MakeData.variables( "" );
-		CallContext cc = CallContext.createContext( Util.newURI("my:URI"), qp, bindings );
+		Bindings bindings = MakeData.variables( "" );
+		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );
-		QueryArgumentsImpl qa = new QueryArgumentsImpl(aq);
-		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, qa );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
-		qa.updateQuery();
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
 		assertMatches( expected, q );
 	}

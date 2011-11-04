@@ -37,8 +37,8 @@ public class RDFUtil {
     /**
      * Return one of the values of the property on the resource in string form.
      * If there are no values return the defaultValue. If the value is not
-     * a String but is a literal return it's lexical form. If it is a resource
-     * return it's URI. 
+     * a String but is a literal return its lexical form. If it is a resource
+     * return its URI. 
      */
     public static String getStringValue(Resource r, Property p, String defaultValue) {
         Statement s = r.getProperty(p);

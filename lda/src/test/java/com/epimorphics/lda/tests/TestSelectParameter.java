@@ -13,15 +13,14 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.query.QueryArgumentsImpl;
 import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.Term;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -30,11 +29,9 @@ public class TestSelectParameter
     {
 	@Test public void testMe()
         {    
-        ShortnameService sns = makeSNS();
+        ShortnameService sns = new StandardShortnameService();
         APIQuery q = new APIQuery(sns);	
-    	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);
-        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
-        qa.updateQuery();
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
         assertEquals( theSelectQuery + " OFFSET 0 LIMIT 10", q.assembleSelectQuery( RDFUtils.noPrefixes) );
@@ -42,57 +39,12 @@ public class TestSelectParameter
     
     @Test public void testCloneIncludesFixedQuery()
         {    
-        ShortnameService sns = makeSNS();
+        ShortnameService sns = new StandardShortnameService();
         APIQuery q = new APIQuery(sns);	
-    	QueryArgumentsImpl qa = new QueryArgumentsImpl(q);	        
-        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (CallContext) null, NamedViews.noNamedViews, sns, q, qa );
-        qa.updateQuery();
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
         APIQuery cloned = q.clone();
         assertEquals( theSelectQuery + " OFFSET 0 LIMIT 10", cloned.assembleSelectQuery( RDFUtils.noPrefixes ) );
-        }
-
-    public static ShortnameService makeSNS()
-        {
-    	return new ShortnameService() 
-    		{
-			@Override public String shorten(String u) 
-				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
-			
-			@Override public String normalizeValue(String val)
-				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
-			
-			@Override public Resource normalizeResource(String s)
-				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
-			
-			@Override public Resource normalizeResource(RDFNode r) 
-				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
-			
-			@Override public Resource normalizeResource(Term r) 
-				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
-			
-			@Override public String normalizeNodeToString(String prop, String val) 
-				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
-			
-			@Override public String expand(String s)
-				{ throw new RuntimeException( "I wasn't expecting to be called." );	}
-			
-			@Override public Context asContext() 
-		 		{ throw new RuntimeException( "I wasn't expecting to be called." );	}
-
-			@Override public String normalizeNodeToString(String prop, String val, String language)
-				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
-
-			@Override public String normalizeValue(String val, String language) 
-				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
-
-			@Override public Any normalizeNodeToRDFQ(String prop, String val, String language) 
-				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
-
-			@Override public NameMap nameMap() 
-				{ throw new RuntimeException( "I wasn't expecting to be called." ); }
-
-    		};
         }
     }

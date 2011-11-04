@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.lda.tests_support.ShortnameFake;
+import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.util.DOMUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -23,13 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 public class TestXMLRenderer 
-	{
-	private static class ForceShorten extends ShortnameFake 
-		{
-		@Override public String shorten( String uri ) 
-			{ return uri.replaceAll( "^.*[/#]", "" ); }
-		}
-	
+	{	
 	@Test public void testParser() 
 		{
 //		System.err.println( ">> " + parse( "'hello'" ) );
@@ -78,6 +72,18 @@ public class TestXMLRenderer
 //		ensureRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
 		}
 	
+	/*
+	    Test that a shared graph node is unpacked at all (here, both) of its occurrences,
+	    rather than at only the first.
+	*/
+	@Test public void testUnpackingRepeatedResources()
+		{
+		ensureRendering
+			( "(R href=eh:/a (P (item href=eh:/b (HAS href=eh:/value)) (item href=eh:/c (Q href=eh:/b (HAS href=eh:/value)))))"
+			, resourceInModel( "root R a; a P b; b HAS value; a P c; c Q b" )
+			);
+		}
+	
 	@Test public void testRootWithSingletonList()
 		{
 		ensureRendering
@@ -104,7 +110,7 @@ public class TestXMLRenderer
 	private void ensureRendering( String desired, Resource root ) 
 		{
 		PrefixMapping pm = root.getModel();
-		ShortnameService sns = new ForceShorten();
+		ShortnameService sns = new StandardShortnameService();
 		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
 		xr.renderInto( root, d, false, false );

@@ -25,7 +25,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -43,16 +42,15 @@ import javax.ws.rs.core.UriInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.URLforResource;
+import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.QueryParseException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.renderers.RendererContext;
-import com.epimorphics.lda.renderers.RendererContext.AsURL;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
@@ -161,33 +159,41 @@ import com.hp.hpl.jena.shared.WrappedException;
         return new Couple<String, String>( path, type );
         }
 
+    /**
+     	Translate the Jersey media types into Elda media types (because there will
+     	be Jersey-less versions of Elda). Also, if text/html is present, prefer it
+     	regardless of the given order, for those browsers still out there that
+     	"prefer" XML to HTML. They may, but their readers don't.
+    */
 	private List<MediaType> getAcceptableMediaTypes(HttpHeaders headers) {
+		boolean preferHTML = false;
 		List<MediaType> mediaTypes = new ArrayList<MediaType>();
-		for (javax.ws.rs.core.MediaType mt: headers.getAcceptableMediaTypes())
-			mediaTypes.add( new MediaType( mt.getType(), mt.getSubtype() ) );
+		for (javax.ws.rs.core.MediaType mt: headers.getAcceptableMediaTypes()) {
+			MediaType newMT = new MediaType( mt.getType(), mt.getSubtype() );
+			if (newMT.equals( MediaType.TEXT_HTML)) preferHTML = true;
+			else mediaTypes.add( newMT );
+		}
+		if (preferHTML) mediaTypes.add( 0, MediaType.TEXT_HTML );
 		return mediaTypes;
 	}
 
     private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
-    	RendererContext.AsURL as = pathAsURLFactory(servCon);
-    	String contextPath = servCon.getContextPath();
+    	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
-        	Triad<APIResultSet, String, CallContext> resultsAndFormat = APIEndpointUtil.call( match, ru, suffix, queryParams );
+        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( match, ru, suffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
-			if (false) { // results == null || results.getResultList().size() == 0) {
-			    return returnNotFound( "No items found matching that request." );
-			} else {
-				// APIEndpoint ep = match.getEndpoint();
-				RendererContext rc = new RendererContext( paramsFromContext( resultsAndFormat.c ), contextPath, as );
-				String _format = resultsAndFormat.b;
-				String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
-				Renderer r = APIEndpointUtil.getRenderer( match.getEndpoint(), formatter, mediaTypes );
-				return doRendering( rc, formatter, results, r );
-			}
+            if (results == null)
+            	throw new RuntimeException( "ResultSet is null -- this should never happen." );
+            APIEndpoint ep = match.getEndpoint();
+			Bindings rc = new Bindings( resultsAndFormat.c.copy(), as );
+			String _format = resultsAndFormat.b;
+			String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
+			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
+			return doRendering( rc, formatter, results, r );
         } catch (StackOverflowError e) {
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( shortStackTrace( e ) );
@@ -242,20 +248,25 @@ import com.hp.hpl.jena.shared.WrappedException;
 		return result;
 	}
 
-	private static AsURL pathAsURLFactory(final ServletContext servCon) {
-		return new RendererContext.AsURL() 
-			{@Override public URL asResourceURL( String p ) 
-			{ try {
+	private static URLforResource pathAsURLFactory( final ServletContext servCon ) {
+		return new URLforResource() 
+			{
+			@Override public URL asResourceURL( String ePath ) { 		
+			String p = ePath.startsWith( "/" ) || ePath.startsWith( "http://") ? ePath : "/" + ePath;
+			try {
 				URL result = servCon.getResource( p );
-				if (result == null) EldaException.NotFound( "webapp resource", p );
+				if (result == null) EldaException.NotFound( "webapp resource", ePath );
 				return result;
-			} catch (MalformedURLException e) {
+				}
+			catch (MalformedURLException e) 
+				{
 				throw new WrappedException( e );
-			} }
+				} 
+			}
 		};
 	}
 	
-    private Response doRendering( RendererContext rc, String rName, APIResultSet results, Renderer r ) {
+    private Response doRendering( Bindings rc, String rName, APIResultSet results, Renderer r ) {
 		if (r == null) {
             String message = rName == null
             	? "no suitable media type was provided for rendering."
@@ -267,15 +278,6 @@ import com.hp.hpl.jena.shared.WrappedException;
             return returnAs( r.render( rc, results ), mt, results.getContentLocation() );
         }
 	}
-    
-    public static VarValues paramsFromContext( CallContext cc ) {
-        VarValues result = new VarValues();
-        for (Iterator<String> it = cc.parameterNames(); it.hasNext();) {
-            String name = it.next();
-            result.put( name, cc.getStringValue( name ) );
-        }
-        return result;
-    }
 
     public static ResponseBuilder enableCORS( ResponseBuilder rb ) {
         return rb.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" );

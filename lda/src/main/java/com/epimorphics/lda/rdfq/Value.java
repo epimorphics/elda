@@ -14,16 +14,18 @@ import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.sparql.util.FmtUtils;
 import com.hp.hpl.jena.sparql.util.NodeFactory;
 
-public class LiteralNode extends Term 
+public class Value extends Term 
 	{
 	final String spelling;
 	final String language;
 	final String datatype;
 	
-	public LiteralNode( String spelling ) 
+	public static final Value emptyPlain = new Value("");
+	
+	public Value( String spelling ) 
 		{ this( spelling, "", "" ); }
 	
-	public LiteralNode( String spelling, String language, String datatype ) 
+	public Value( String spelling, String language, String datatype ) 
 		{ 
 		this.spelling = spelling; 
 		this.language = language == null ? "" : language; 
@@ -45,19 +47,19 @@ public class LiteralNode extends Term
 		return lf;
 		}
 	
-	@Override public boolean isFinal() 
-		{ return !spelling.contains( "{" ); }
-	
-	@Override public LiteralNode replaceBy( String r ) 
-		{ return new LiteralNode( r, language, datatype ); }
+	@Override public Value replaceBy( String r ) 
+		{ return new Value( r, language, datatype ); }
 	
 	@Override public String spelling() 
 		 { return spelling; }
 	
-	@Override public boolean equals( Object other )
-		{ return other instanceof LiteralNode && same( (LiteralNode) other ); }
+	public String type()
+		{ return datatype; }
 	
-	private boolean same( LiteralNode other ) 
+	@Override public boolean equals( Object other )
+		{ return other instanceof Value && same( (Value) other ); }
+	
+	private boolean same( Value other ) 
 		{ 
 		return 
 			spelling.equals( other.spelling ) 

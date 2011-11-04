@@ -16,18 +16,15 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.SortOrder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.jsonrdf.Context.Prop;
-import com.epimorphics.lda.bindings.Value;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.CallContext;
-import com.epimorphics.lda.core.ClauseConsumer;
-import com.epimorphics.lda.core.ExpandLabels;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.VarSupply;
@@ -42,11 +39,8 @@ import com.epimorphics.lda.support.LARQManager;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.QuerySupport;
 
-import static com.epimorphics.util.CollectionUtils.*;
-
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
-import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.graph.*;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
@@ -63,11 +57,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, ExpansionPoints {
-    
-	public static final String NEAR_LAT = "near-lat";
-	
-	public static final String NEAR_LONG = "near-long";
+public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     
 	public static final String SELECT_VARNAME = "item";
     
@@ -80,7 +70,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     //  but not sure how well that plays with JDO persistance for GAE
     //  so stick to string bashing for ease of debug and persistence
     
-    protected StringBuffer propertyChains = new StringBuffer();
     protected StringBuffer whereExpressions = new StringBuffer();
     
     private StringBuffer orderExpressions = new StringBuffer();
@@ -91,9 +80,16 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     */
     protected List<RDFQ.Triple> basicGraphTriples = new ArrayList<RDFQ.Triple>();
     
+    protected List<List<RDFQ.Triple>> optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>(); 
+    
     public List<RDFQ.Triple> getBasicGraphTriples() {
     	// FOR TESTING ONLY
     	return basicGraphTriples;
+    }
+    
+    public List<List<RDFQ.Triple>> getOptionalGraphTriples() {
+    	// FOR TESTING ONLY
+    	return optionalGraphTriples;
     }
     
     /**
@@ -107,9 +103,16 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	return filterExpressions;
     }
     
+    public void addFilterExpression( RenderExpression e ) {
+    	filterExpressions.add( e );
+    }
+    
     protected String viewArgument = null;
     
     protected final ShortnameService sns;
+    
+    protected ValTranslator vt;
+    
     protected String defaultLanguage = null;
     
     protected int varcount = 0;
@@ -119,8 +122,9 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     protected final int maxPageSize;
     
     protected int pageNumber = 0;
-    protected Set<String> bindableVars = new HashSet<String>();
-    protected Map<String, String> varProps= new HashMap<String, String>();   // Property names for bindableVars
+        
+    protected Map<Variable, Info> varInfo = new HashMap<Variable, Info>();
+    
     protected Resource subjectResource = null;
     
     protected String itemTemplate;
@@ -152,7 +156,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     		@Override public final int getDefaultPageSize() { return QueryParameter.DEFAULT_PAGE_SIZE; }
     	};
     }
-    
 
 	/**
         The parameters that form the basis of an API Query.
@@ -167,8 +170,20 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		String getItemTemplate();
     }
 
+    protected static class FilterExpressions implements ValTranslator.Filters {
+    	
+    	public FilterExpressions(List<RenderExpression> expressions ) {
+    		this.expressions = expressions;
+    	}
+    	
+    	protected final List<RenderExpression> expressions;
+    	
+		@Override public void add(RenderExpression e) {	expressions.add( e ); }
+	}
+	
     public APIQuery( QueryBasis qb ) {
         this.sns = qb.sns();
+        this.vt = new ValTranslator( this, new FilterExpressions( filterExpressions ), qb.sns() );
         this.defaultLanguage = qb.getDefaultLanguage();
         this.pageSize = qb.getDefaultPageSize();
         this.defaultPageSize = qb.getDefaultPageSize();
@@ -180,16 +195,17 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         try {
             APIQuery clone = (APIQuery) super.clone();
             clone.basicGraphTriples = new ArrayList<RDFQ.Triple>( basicGraphTriples );
+            clone.optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>( optionalGraphTriples );
             clone.filterExpressions = new ArrayList<RenderExpression>( filterExpressions );
             clone.orderExpressions = new StringBuffer( orderExpressions );
             clone.whereExpressions = new StringBuffer( whereExpressions );
-            clone.bindableVars = new HashSet<String>( bindableVars );
-            clone.propertyChains = new StringBuffer( propertyChains );
-            clone.varProps = new HashMap<String, String>( varProps );
+            clone.varInfo = new HashMap<Variable, Info>( varInfo );
             clone.expansionPoints = new HashSet<Property>( expansionPoints );
-            clone.deferredFilters = new ArrayList<Deferred>( deferredFilters );
+            clone.deferredFilters = new ArrayList<PendingParameterValue>( deferredFilters );
             clone.metadataOptions = new HashSet<String>( metadataOptions );
             clone.varsForPropertyChains = new HashMap<String, Variable>( varsForPropertyChains );
+            clone.seenParamVariables = new HashMap<String, Variable>( seenParamVariables );
+            clone.vt = new ValTranslator( clone, new FilterExpressions( clone.filterExpressions ), sns );
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new APIException("Can't happen :)", e);
@@ -201,7 +217,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
      * If this is not called then a default size will be used.
      */
     public void setPageSize( int pageSize ) {
-        this.pageSize = (pageSize > maxPageSize ? defaultPageSize : pageSize); // Math.min(pageSize, maxPageSize );
+        this.pageSize = (pageSize > maxPageSize ? defaultPageSize : pageSize);
     }
     
     public int getPageSize() {
@@ -229,7 +245,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
      * @param subj the target resource as either a prefix_name string or as a full URI
      */
     public void setSubject(String subj) {
-        subjectResource = sns.normalizeResource(subj);
+        subjectResource = sns.asResource(subj);
     }
     
     /**
@@ -245,21 +261,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     public String getSubject() {
         return subjectResource.getURI();
     }
-    
-    public static class Deferred
-    	{
-    	final Param param;
-    	final String val;
-    	
-    	public Deferred( Param param, String val ) 
-    		{
-    		this.param = param;
-    		this.val = val;
-    		}
-    	
-    	@Override public String toString() 
-    		{ return "<deferred " + param + "=" + val + ">"; }
-    	}
     
     private Map<String, String> languagesFor = new HashMap<String, String>();
         
@@ -284,6 +285,12 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     public void setLanguagesFor( String fullParamName, String languages ) {
     	languagesFor.put( fullParamName, languages );    
     }
+    
+	private String languagesFor( Param param ) {
+		String languages = languagesFor.get( param.toString() );
+	    if (languages == null) languages = defaultLanguage;
+		return languages;
+	}
  
 	public void addMetadataOptions( Set<String> options ) {
 		metadataOptions.addAll( options );
@@ -293,10 +300,10 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		for (String option: options) metadataOptions.add( option.toLowerCase() );
 	}
     
-    public List<Deferred> deferredFilters = new ArrayList<Deferred>();
+    public List<PendingParameterValue> deferredFilters = new ArrayList<PendingParameterValue>();
     
     public void deferrableAddFilter( Param param, String val ) {
-    	deferredFilters.add( new Deferred( param, val ) );
+    	deferredFilters.add( new PendingParameterValue( param, val ) );
     }
     
     public void setViewByTemplateClause( String clause ) {
@@ -322,9 +329,37 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     public APIQuery addSubjectHasProperty( Resource P, Any O ) {
         addTriplePattern( SELECT_VAR, P, O );
         return this;
-    }
+    }    
     
-    private void addTriplePattern( Variable varname, Resource P, Any O ) {
+    protected Map<String,Variable> seenParamVariables = new HashMap<String, Variable>();
+    
+    protected void addRangeFilter( Param param, String val, String op ) {
+    	Variable already = seenParamVariables.get(param.asString());
+    	if (already == null) {
+	        seenParamVariables.put( param.asString(), already = newVar() );
+	        addPropertyHasValue( param, already );
+    	}
+    	String prop = param.lastPropertyOf();
+	    Info inf = param.fullParts()[param.fullParts().length - 1];
+//	     Any r = sns.valueAsRDFQ( prop, val, getDefaultLanguage() );
+	    Any r = objectForValue( inf, val, getDefaultLanguage() );
+	    addInfixSparqlFilter( already, op, r );
+    }    
+	
+	private void addInfixSparqlFilter(Variable already, String op, Any r) {
+		addFilterExpression( RDFQ.infix( already, op, r ) );
+	}
+
+	public void addNumericRangeFilter( Variable v, double x, double dx ) {
+		addInfixSparqlFilter( RDFQ.literal( x - dx ), "<", v );
+		addInfixSparqlFilter( v, "<", RDFQ.literal( x + dx) );
+	}
+    
+    private void addInfixSparqlFilter( Any v, String op, Any literal ) {
+    	addFilterExpression( RDFQ.infix( v, op, literal ) );
+	}
+
+	private void addTriplePattern( Variable varname, Resource P, Any O ) {
         basicGraphTriples.add( RDFQ.triple( varname, RDFQ.uri( P.getURI() ), O ) );
     }
     
@@ -335,161 +370,101 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     */
     public void addTriplePatterns( List<RDFQ.Triple> triples ) {
     	basicGraphTriples.addAll( triples );
+    }   
+
+	protected void addPropertyHasValue( Param param ) {
+    	addPropertyHasValue( param, newVar() );
     }
     
-    /**
-     * Add a filter triple pattern.
-     * @param var The subject a string ready to insert (e.g. can be a var name)
-     * @param prop  The property as a shortname or URI
-     * @param val  The value as a string, shortname. The expansion should take into
-     * account the type of the property and created typed literals if necessary.
-     */
-    private void addTriplePattern( Variable var, String prop, String languages, String val ) {
-    	Resource np = sns.normalizeResource(prop);
-    	// System.err.println( ">> aTP: prop " + prop + ", val " + val + ", languages: " + languages );
-    	if (val.startsWith("?")) varProps.put( val.substring(1), prop );   
-    	if (languages == null) {
-			Any norm = sns.normalizeNodeToRDFQ( prop, val, defaultLanguage );
-			addTriplePattern( var, np, norm ); 
-    	} else {
-    		addLanguagedTriplePattern( var, prop, languages, val );
-    	}
+    protected void addPropertyHasValue( Param param, Variable O ) {
+    	Param.Info [] infos = param.fullParts();
+		Variable var = expandParameterPrefix( infos );
+	//
+	    Info inf = infos[infos.length - 1];
+	    varInfo.put( O, inf );
+	    addTriplePattern( var, inf.asResource, O );    	
     }
     
-    private void addTriplePattern( Variable var, Info prop, String languages, String val ) {
-    	addTriplePattern( var, prop.shortName, languages, val );
-    }
-
-	private void addLanguagedTriplePattern(Variable var, String prop, String languages, String val) {
-		String[] langArray = languages.split( "," );
-		Resource np = sns.normalizeResource( prop );
-		Prop p = sns.asContext().getPropertyByName( prop );
-//		if (p == null) 
-//			System.err.println( ">> " + prop + " has no property record" );
-//		else
-//			System.err.println( ">> " + prop + " has type " + p.getType() );
-		if (langArray.length == 1 || (p != null && p.getType() != null)) {
-			addTriplePattern( var, np, sns.normalizeNodeToRDFQ( prop, val, langArray[0] ) ); 
-		} else {
-			Variable v = newVar();
-			addTriplePattern( var, np, v );
-			Apply stringOf = RDFQ.apply( "str", v );
-			Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
-			Infix filter = RDFQ.infix( equals, "&&", someOf( v, langArray ) );
-			filterExpressions.add( filter );
-		}
-	}
-    
-    private RenderExpression someOf( Variable v, String[] langArray ) 
-    	{
-    	RenderExpression result = RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( notNone( langArray[0] ) ) );
-    	for (int i = 1; i < langArray.length; i += 1)
-    		result = RDFQ.infix( result, "||", RDFQ.infix( RDFQ.apply( "lang", v ), "=", RDFQ.literal( notNone( langArray[i] ) ) ) );
-    	return result;
-    	}
-
-	private String notNone( String lang ) {
-		return lang.equals( "none" ) ? "" : lang;
-	}
-
-	private void addTriplePattern( Variable var, Param.Info prop, Variable val ) {
-   		// Record property which points to this variable for us in decoding binding values
-   		varProps.put( val.name().substring(1), prop.shortName );   
-        basicGraphTriples.add( RDFQ.triple( var, prop.asURI, val ) );
-    }
-
-    protected String addPropertyHasntValue( Param param ) {
-    	Variable var = newVar();
-    	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
-		return addPropertyHasValue( param, set(var.name()), true );
-    }
-
-    protected String addPropertyHasValue( Param param ) {
-    	return addPropertyHasValue( param, set(newVar().name()) );
-    }
-    
-    protected String addPropertyHasValue( Param param, Variable O ) {
-    	return addPropertyHasValue( param, set(O.name()) );    	
-    }
-
-    protected String addPropertyHasValue( Param param, Set<String> rawValues ) {
-    	return addPropertyHasValue( param, rawValues, false );
-    }
-        
     protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
     
-    protected String addPropertyHasValue( Param param, Set<String> rawValues, boolean optional ) {
-    	String languages = languagesFor.get( param.toString() );
-    	if (languages == null) languages = defaultLanguage;
-    	Param.Info [] infos = param.fullParts();
-    //
-    	StringBuilder chainName = new StringBuilder();
-    //
-		String rawValue = rawValues.iterator().next();
-    	if (optional) return generateOptionalTriple(rawValues, infos, rawValue);
-    //
-    	Variable var = SELECT_VAR;
-        int i = 0;
-        while (i < infos.length-1) {
-        	Param.Info inf = infos[i];
-        	chainName.append( "." ).append( inf.shortName );
-        	Variable v = varsForPropertyChains.get( chainName.toString() );
-        	if (v == null) {
-        		v = RDFQ.var( PREFIX_VAR + chainName.toString().replaceAll( "\\.", "_" ) + "_" + varcount++ );
-        		varsForPropertyChains.put( chainName.toString(), v );
-        		addTriplePattern(var, inf, v );
-        		noteBindableVar( inf );
-        	}
-        	var = v;
-            i++;
-        }
-        noteBindableVar( infos[i].shortName );
-        if (rawValues.size() == 1) {
-        	addTriplePattern(var, infos[i], languages, rawValue );
-        	noteBindableVar( rawValue );        	
-        } else {
-        	Variable v = newVar();
-        	addTriplePattern( var, infos[i], languages, v.name() );
-        	noteBindableVar( v.name() );
-        	Infix ors = null;
-        	for (String rv: rawValues) {
-        		Any R = asRDFQ(infos, i, rv);
-        		Infix eq = RDFQ.infix( v, "=", R );
-        		if (ors == null) ors = eq; else ors = RDFQ.infix(ors, "||", eq );
-        	}
-        	filterExpressions.add( ors );
-        }
-        return infos[i].shortName;
+    protected void addPropertyHasValue( Param param, String val ) {
+    	if (val.startsWith( "?" ))
+    		addPropertyHasValue( param, RDFQ.var( val ) );
+    	else {
+			Param.Info [] infos = param.fullParts();
+			Variable var = expandParameterPrefix( infos );
+		//
+		    Info inf = infos[infos.length - 1];
+		    Any o = objectForValue( inf, val, languagesFor(param) );
+		    if (o instanceof Variable) varInfo.put( (Variable) o, inf );
+		    addTriplePattern( var, inf.asResource, o );
+    	}
     }
 
-	private Any asRDFQ(Param.Info[] infos, int i, String rv) {
-		return sns.normalizeNodeToRDFQ( infos[i].shortName, rv, defaultLanguage );
+    /**
+        Answer the RDFQ item which is the appropriate object to use in
+        a triple with predicate defined by <code>inf</code> and with
+        lexical form <code>val</code>. Any language codes that should be
+        used appear in <code>languages</code>. May update this APIQuery's
+        filter expressions.
+    */
+	private Any objectForValue(Info inf, String val, String languages) {
+		return vt.objectForValue( inf, val, languages );
 	}
 
-	private String generateOptionalTriple(Set<String> rawValues, Param.Info[] path, String finalVar) {
-		if (rawValues.size() > 1) EldaException.Broken( "too many (>1) values for optional." );
-		if (finalVar.charAt(0) != '?') EldaException.Broken( "rawValue must be a variable: " + finalVar );
+	private Variable expandParameterPrefix( Param.Info[] infos ) {
+		StringBuilder chainName = new StringBuilder();
+		String dot = "";
+		Variable var = SELECT_VAR;
+	    int i = 0;
+	    while (i < infos.length-1) {
+	    	Param.Info inf = infos[i];
+	    	chainName.append( dot ).append( inf.shortName );
+	    	Variable v = varsForPropertyChains.get( chainName.toString() );
+	    	if (v == null) {
+	    		v = RDFQ.var( PREFIX_VAR + chainName.toString().replaceAll( "\\.", "_" ) + "_" + varcount++ );
+	    		varsForPropertyChains.put( chainName.toString(), v );
+				varInfo.put( v, inf );
+				basicGraphTriples.add( RDFQ.triple( var, inf.asURI, v ) );
+	    	}
+	    	dot = ".";
+	    	var = v;
+	        i += 1;
+	    }
+		return var;
+	}
+	
+	/**
+	    Generate triples to bind <code>var</code> to the value of the
+	    <code>param</code> property chain if it exists (ie all of the
+	    triples are OPTIONAL).
+	*/
+	protected void optionalProperty( Param param, Variable var ) {
+		Param.Info [] infos = param.fullParts();
 	//
-		String prop = null;
 		Variable s = SELECT_VAR;
-		int remaining = path.length;
+		int remaining = infos.length;
+		List<RDFQ.Triple> chain = new ArrayList<RDFQ.Triple>(infos.length);
 	//
-		for (Param.Info inf: path) {
+		for (Param.Info inf: infos) {
 			remaining -= 1;
-			String o = remaining == 0 ? finalVar : newVar().name();
-			onePropertyStep( s, prop = inf.shortName, o );
-			s = RDFQ.var( o );
+			Variable o = remaining == 0 ? var : newVar();
+			onePropertyStep( chain, s, inf, o );
+			s = o;
 		}
-		return prop;
-	}
+		optionalGraphTriples.add( chain );
+    }
+	
+	protected void addPropertyHasntValue( Param param ) {
+    	Variable var = newVar();
+    	optionalProperty( param, var );
+    	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
+    }  	  
 
-	private void onePropertyStep( Variable subject, String prop, String var ) {
-		Resource np = sns.normalizeResource( prop );
-		varProps.put( var.substring(1), prop );   
-		Any val = sns.normalizeNodeToRDFQ( prop, var, defaultLanguage );
-		basicGraphTriples.add( RDFQ.triple( subject, RDFQ.uri( np.getURI() ), val, true ) ); 
-		noteBindableVar( prop );
-		noteBindableVar( var );
+	private void onePropertyStep( List<RDFQ.Triple> chain, Variable subject, Info prop, Variable var ) {
+		Resource np = prop.asResource;
+		varInfo.put( var, prop );
+		chain.add( RDFQ.triple( subject, RDFQ.uri( np.getURI() ), var ) ); 
 	}
 
     /**
@@ -510,44 +485,40 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         Discard any existing order expressions. Decode
         <code>orderSpec</code> to produce a new order expression.
         orderSpec is a comma-separated list of sort fields,
-        each optionally proceeded by - for DESC. If the field
-        is a variable, it is used as-is, otherwise it is assumed
-        to be a short property name and an additional triple
-        (?item Property Var) added to the query with the Var
-        being the sort field.
+        each optionally proceeded by - for DESC. Each field is 
+        a property chain used to bind a new variable v when is used
+        as the ORDER BY field.
     */
     public void setSortBy( String orderSpecs ) {
-    	orderExpressions.setLength(0);
-    	for (String spec: orderSpecs.split(",")) 
-    		if (spec.length() > 0){
-		        boolean descending = spec.startsWith("-"); 
-		        if (descending) spec = spec.substring(1);
-		        boolean varOrder = spec.startsWith("?");
-		        String var = varOrder ? spec : newVar().name(); // TODO
-		        if (descending) {
-		        	orderExpressions.append(" DESC(" + var + ") ");
-		        } else {
-		            orderExpressions.append(" " + var + " ");
-		        }
-		        if (!varOrder)
-		            addPropertyHasValue(Param.make(sns, spec), set(var)); // TODO fix use of make
+    	if (sortByOrderSpecsFrozen) 
+    			EldaException.Broken( "Elda attempted to set a sort order after generating the select query." );
+    	sortByOrderSpecs = orderSpecs;
+    }
+    
+    protected String sortByOrderSpecs = "";
+    
+    protected boolean sortByOrderSpecsFrozen = false;
+    
+    protected void unpackSortByOrderSpecs() {
+    	if (sortByOrderSpecsFrozen) 
+    		EldaException.Broken( "Elda attempted to unpack the sort order after generating the select query." );
+    	if (sortByOrderSpecs.length() > 0) {
+    		orderExpressions.setLength(0);
+	    	for (String spec: sortByOrderSpecs.split(",")) {
+	    		if (spec.length() > 0) {
+			        boolean descending = spec.startsWith("-"); 
+			        if (descending) spec = spec.substring(1);
+			        Variable v = newVar();
+			        if (descending) {
+			        	orderExpressions.append(" DESC(" + v.name() + ") ");
+			        } else {
+			            orderExpressions.append(" " + v.name() + " ");
+			        }
+		        	optionalProperty( Param.make( sns, spec ), v );
+	    		}
 	    	}
-    }
-
-    protected void noteBindableVar(Param p) {
-    	// TODO fix to work properly
-    	noteBindableVar( p.lastPropertyOf() );
-    }
-
-    protected void noteBindableVar( Param.Info inf ) {
-    	bindableVars.add(inf.shortName);
-    }
-
-    protected void noteBindableVar(String propname) {
-        if (propname.startsWith("?")) {
-            if ( ! propname.startsWith(PREFIX_VAR) )
-                bindableVars.add(propname.substring(1));
-        }
+    	sortByOrderSpecsFrozen = true;
+    	}
     }
     
     @Override public Variable newVar() {
@@ -562,49 +533,33 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	return varcount;
     }
 
-    protected void addNameProp(Param param, String rawObject) {
-        noteBindableVar(param);
-        noteBindableVar(rawObject);
+    protected void addNameProp(Param param, String literal) {
         Variable newvar = newVar();
         addPropertyHasValue( param, newvar );
-        addTriplePattern( newvar, RDFS.label, asRDFQ( rawObject ) );
+        addTriplePattern( newvar, RDFS.label, RDFQ.literal( literal ) );
     }
-
-	public Any asRDFQ( String rawObject ) {
-		return rawObject.startsWith("?") ? RDFQ.var( rawObject ) : RDFQ.literal( rawObject );
-	}
     
-    private Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
+    private static final Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
     
 	public void addWhere( String whereClause ) {
 		log.debug( "TODO: check the legality of the where clause: " + whereClause );
         if (whereExpressions.length() > 0) whereExpressions.append(" ");
         whereExpressions.append(whereClause);
-        for (String var : RDFUtils.allMatches(varPattern, whereClause)) 
-            noteBindableVar(var);
     }
 
-    /**
-     * Test if a parameter is supposed to be late-bound
-     */
-    public boolean isBindable(String var) {
-    	if (var.startsWith("?"))
-    		return bindableVars.contains(var.substring(1));
-    	else
-    		return bindableVars.contains(var);
+    public String assembleSelectQuery( Bindings cc, PrefixMapping prefixes ) {  	
+    	PrefixLogger pl = new PrefixLogger( prefixes );   
+    	return assembleRawSelectQuery( pl, cc );
     }
 
-    public String assembleSelectQuery( CallContext cc, PrefixMapping prefixes ) {   
-    	return boundQuery( assembleRawSelectQuery( prefixes ), cc );
-    }
-
-    public String assembleSelectQuery( PrefixMapping prefixes ) {   
-    	CallContext cc = CallContext.createContext( null, new MultiMap<String, String>(), new VarValues() );
-    	return boundQuery( assembleRawSelectQuery( prefixes ), cc );
+    public String assembleSelectQuery( PrefixMapping prefixes ) {     	
+    	PrefixLogger pl = new PrefixLogger( prefixes );
+    	Bindings cc = Bindings.createContext( new Bindings(), new MultiMap<String, String>() );
+    	return assembleRawSelectQuery( pl, cc );
     }
     
-    public String assembleRawSelectQuery( PrefixMapping prefixes ) {    	
-    	PrefixLogger pl = new PrefixLogger( prefixes );
+    public String assembleRawSelectQuery( PrefixLogger pl, Bindings cc ) { 
+    	if (!sortByOrderSpecsFrozen) unpackSortByOrderSpecs();
     	if (fixedSelect == null) {
 	        StringBuilder q = new StringBuilder();
 	        q.append("SELECT ");
@@ -616,7 +571,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	        	q.append( whereExpressions ); 
 	        	pl.findPrefixesIn( whereExpressions.toString() );
 	        } else {
-		        if (bgp.isEmpty()) bgp = SELECT_VAR.name() + " ?__p ?__v ."; 
+		        if (basicGraphTriples.isEmpty()) bgp = SELECT_VAR.name() + " ?__p ?__v .\n" + bgp; 
 	        }
 	        q.append( bgp );
 	        appendFilterExpressions( pl, q );
@@ -627,17 +582,19 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	        	pl.findPrefixesIn( orderExpressions.toString() );
 	        }
 	        appendOffsetAndLimit( q );
-	        // System.err.println( ">> QUERY IS: \n" + q.toString() );
+//	         System.err.println( ">> QUERY IS: \n" + q.toString() );
+	        String bound = bindDefinedvariables( pl, q.toString(), cc );
 	        StringBuilder x = new StringBuilder();
 	        pl.writePrefixes( x );
-	        x.append( q );
+			x.append( bound );
 	        return x.toString();
     	} else {
     		// TODO add code for LIMIT/OFFSET when tests exist.
     		pl.findPrefixesIn( fixedSelect );
+    		String bound = bindDefinedvariables( pl, fixedSelect, cc );
     		StringBuilder sb = new StringBuilder();
     		pl.writePrefixes( sb );
-    		sb.append( fixedSelect );
+			sb.append( bound );
     		appendOffsetAndLimit( sb );
     		return sb.toString();
     	}
@@ -663,6 +620,13 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 				.append( t.asSparqlTriple( pl ) )
 				.append( " .\n" )
 				;
+		for (List<RDFQ.Triple> optional: optionalGraphTriples) {
+			sb.append( "OPTIONAL { " );
+			for (RDFQ.Triple t: optional) {
+				sb.append( t.asSparqlTriple( pl ) ).append( " . " );
+			}
+			sb.append( "}\n" );
+		}
 		return sb.toString();
 	}
 
@@ -680,10 +644,6 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 				.append( ">\n" );
 		}
 	}
-
-	@Override public void consumeClause( String clause ) {
-    	 propertyChains.append( clause );    	
-    }
     
 	/**
 	    Take the SPARQL query string <code>query</code> and replace any ?SPOO
@@ -694,44 +654,38 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	    are mashed together from strings in the config file, ie, without going
 	    through RDFQ.	    
 	*/
-    protected String boundQuery( String query, CallContext cc ) {
-    	String theOld = oldBoundQuery( query, cc );
-    	String theNew = newBoundQuery( query, cc );
-    	if (!theOld.equals( theNew )) {
-    		log.debug( "WARNING: new bound query code does not compute the same result as old code." );
-    		log.debug( " (this code is being worked on. The new value will be used.)" );
-    		log.debug( " OLD: " + theOld );
-    		log.debug( " NEW: " + theNew );
-    	}
-    	return theNew;
-    }
-    
-    protected String newBoundQuery( String query, CallContext cc ) {
+    protected String bindDefinedvariables( PrefixLogger pl, String query, Bindings cc ) {
 //    	System.err.println( ">> query is: " + query );
-//    	System.err.println( ">> callcontext is: " + cc );
+//    	System.err.println( ">> VarValues is: " + cc );
     	StringBuilder result = new StringBuilder( query.length() );
     	Matcher m = varPattern.matcher( query );
     	int start = 0;
     	while (m.find( start )) {
     		result.append( query.substring( start, m.start() ) );
     		String name = m.group().substring(1);
-    		Value v = cc.getParameter( name );
+    		Value v = cc.get( name );
 //    		System.err.println( ">> value of " + name + " is " + v );
     		if (v == null) {
     			result.append( m.group() );
     		} else {
-	    		String prop = varProps.get( name );
-	            String val = cc.getStringValue( name );
+	    		Info prop = varInfo.get( RDFQ.var( "?" + name ) );
+	            String val = cc.getValueString( name );
 //	            if (name.equals( "value" )) 
 //	            	{
 //	            	System.err.println( ">> value = " + v );
 //	            	System.err.println( ">> prop = " + prop );
 //	            	System.err.println( ">> val = " + val );
 //	            	}
-	        	String normalizedValue = 
+//	            String OTHER = vt.objectForValue( v.type(), val, defaultLanguage ).asSparqlTerm( pl ) ; // cc.get( name ).asSparqlTerm( pl );
+//	        	System.err.println( "-->> " + OTHER );
+	            String normalizedValue = 
 	        		(prop == null) 
-	        		    ? valueAsSparql( v )
-	        		    : sns.normalizeNodeToString(prop, val, defaultLanguage); 
+	        		    ? valueAsSparql( "<not used>", v )
+	        		    : objectForValue( prop, val, defaultLanguage ).asSparqlTerm(pl);
+//	            if (OTHER.equals( normalizedValue )) {} else {
+//	            	System.err.println( ">> on the one hand, " + OTHER + "\n>> but on the other, " + normalizedValue );
+//	            	throw new RuntimeException( ">> on the one hand, " + OTHER + "\n>> but on the other, " + normalizedValue );
+//	            }
 	    		result.append( normalizedValue );
     		}
     		start = m.end();
@@ -739,40 +693,12 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     	result.append( query.substring( start ) );
     	return result.toString();
     }
-    
-    protected String oldBoundQuery( String query, CallContext cc ) {
-//    	System.err.println( ">> boundQuery: bindableVars = " + bindableVars );
-//    	System.err.println( ">> boundQuery: call context = " + cc );
-        String bound = query;
-        for (String var : bindableVars) {
-        	Value v = cc.getParameter( var );
-            String val = cc.getStringValue(var);
-//                System.err.println( ">> " + v );
-            if (val != null) {
-            	String prop = varProps.get(var);
-            	String normalizedValue = 
-            		(prop == null) 
-            		    ? valueAsSparql( v )
-            		    : sns.normalizeNodeToString(prop, val, defaultLanguage); 
-                bound = bound.replace( "?" + var, normalizedValue );
-                // TODO improve this, will fail in case where ? is in nested literals
-                // Right long term answer is to switch to transforming algebra or parse tree
-            } else {
-            	// Unbound vars are normally OK, might be there to support orderBy or
-            	// simply an existence check. Warning might not be necessary
-            	if (! var.equals(SELECT_VARNAME))
-            		log.debug("Query has unbound variable: " + var);
-            }
-        }
-        // System.err.println( ">> finally: " + bound );
-        return bound;
-    }
 
-    private String valueAsSparql( Value v ) {
+    private String valueAsSparql( String OTHER, Value v ) {
     	String type = v.type();
-    	if (type.equals( "" )) return "'" + protect(v.valueString()) + "'";
-    	if (type.equals( RDFS.Resource.getURI() )) return "<" + v.valueString() + ">";
-    	throw new RuntimeException( "valueAsSparql: cannot handle type: " + type );
+    	if (type.equals( "" )) return "\"" + protect(v.spelling()) + "\"";
+    	if (type.equals( RDFS.Resource.getURI() )) return "<" + v.spelling() + ">";
+    	throw new RuntimeException( "valueAsSparql: cannot handle type: " + type + "; maybe try " + OTHER + "?" );
     }
 
 	private String protect(String valueString) {
@@ -785,7 +711,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	/**
      * Return the select query that would be run or a plain string for the resource
      */
-    public String getQueryString(APISpec spec, CallContext call) {
+    public String getQueryString(APISpec spec, Bindings call) {
         return isFixedSubject()
             ? "<" + subjectResource.getURI() + ">"
             : assembleSelectQuery( call, spec.getPrefixMap() )
@@ -795,7 +721,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
     /**
         Run the defined query against the datasource
     */
-    public APIResultSet runQuery( APISpec spec, Cache cache, CallContext call, View view ) {
+    public APIResultSet runQuery( APISpec spec, Cache cache, Bindings call, View view ) {
         Source source = spec.getDataSource();
         try {
         	return runQueryWithSource( spec, cache, call, view, source );
@@ -805,14 +731,15 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         }
     }
 
-	private APIResultSet runQueryWithSource( APISpec spec, Cache cache, CallContext call, View view, Source source ) {
+	private APIResultSet runQueryWithSource( APISpec spec, Cache cache, Bindings call, View view, Source source ) {
 		long origin = System.currentTimeMillis();
 		Couple<String, List<Resource>> queryAndResults = selectResources( cache, spec, call, source );
 		long afterSelect = System.currentTimeMillis();
 		
 		String outerSelect = queryAndResults.a;
+//		 System.err.println( ">> " + outerSelect );
 		List<Resource> results = queryAndResults.b;
-
+		
 		// System.err.println( ">> looking in cache " + cache.summary() );
 		APIResultSet already = cache.getCachedResultSet( results, view.toString() );
 		if (already != null && expansionPoints.isEmpty() ) 
@@ -822,14 +749,12 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 		    }
 		
 		APIResultSet rs = fetchDescriptionOfAllResources(outerSelect, spec, view, results);
+		
 		long afterView = System.currentTimeMillis();
 		
 		log.debug( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );
 		log.debug( "TIMING: view time:   " + (afterView - afterSelect)/1000.0 + "s" );
 		rs.setSelectQuery( outerSelect );
-		
-		// Expand the labels of all leaf nodes (make this switchable?)
-		new ExpandLabels( this ).expand( source, rs );
 		
 		// Expand chained views, if present
 		if ( ! expansionPoints.isEmpty()) {
@@ -916,7 +841,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
 	    Answer the select query (if any; otherwise, "") and list of resources obtained by
 	    running that query.
 	*/
-    private Couple<String, List<Resource>> selectResources( Cache cache, APISpec spec, CallContext call, Source source ) {
+    private Couple<String, List<Resource>> selectResources( Cache cache, APISpec spec, Bindings call, Source source ) {
     	log.debug( "fetchRequiredResources()" );
         final List<Resource> results = new ArrayList<Resource>();
         if (itemTemplate != null) setSubject( call.expandVariables( itemTemplate ) );
@@ -926,7 +851,7 @@ public class APIQuery implements Cloneable, VarSupply, ClauseConsumer, Expansion
         	return runGeneralQuery( cache, spec, call, source, results );
     }
 
-	private Couple<String, List<Resource>> runGeneralQuery( Cache cache, APISpec spec, CallContext cc, Source source, final List<Resource> results) {
+	private Couple<String, List<Resource>> runGeneralQuery( Cache cache, APISpec spec, Bindings cc, Source source, final List<Resource> results) {
 		String select = assembleSelectQuery( cc, spec.getPrefixMap() );
 		List<Resource> already = cache.getCachedResources( select );
 		if (already != null)

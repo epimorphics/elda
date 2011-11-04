@@ -8,30 +8,20 @@
 
 package com.epimorphics.lda.query;
 
-import static com.epimorphics.util.CollectionUtils.set;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpointImpl;
-import com.epimorphics.lda.core.CallContext;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.ViewSetter;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.query.APIQuery.Deferred;
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
 /**
@@ -43,16 +33,14 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 */
 public class ContextQueryUpdater implements ViewSetter {
 	
-	private final CallContext context;
+	private final Bindings context;
 	private final ShortnameService sns;
 	private final NamedViews nt;
 	private final ExpansionPoints eps;
-	protected final QueryArguments args;
+	protected final APIQuery aq;
 	protected final int endpointKind;
 	
-	private View view; // = new view(); -- doesn't work, null is important somewhere
-	protected final View defaultView;
-	protected final View noneSpecified;
+	private View view;
 	
 	protected String requestedFormat = "";
 
@@ -70,137 +58,120 @@ public class ContextQueryUpdater implements ViewSetter {
 	    @param eps possibly dead: expansion points
 	    @param args place to build the query arguments
 	*/
-	public ContextQueryUpdater( int endpointKind, CallContext context, NamedViews nv, ShortnameService sns, ExpansionPoints eps, QueryArguments args ) {
+	public ContextQueryUpdater( int endpointKind, Bindings context, NamedViews nv, ShortnameService sns, ExpansionPoints eps, APIQuery args ) {
 		this.context = context;
 		this.sns = sns;
 		this.nt = nv;
 		this.eps = eps;
-		this.defaultView = nv.getDefaultView().copy();
-		this.view = this.noneSpecified = new View();
+		this.view = nv.getDefaultView().copy();
 		this.endpointKind = endpointKind;
-		this.args = args;
+		this.aq = args;
 	}
 	
 	/**
 	    Apply the context updates to the query, and answer the view
 	    specified.
 	*/
-    public Couple<View, String> updateQueryAndConstructView( List<Deferred> deferredFilters ) {	  
-    	activateDeferredFilters( deferredFilters );
-    	args.clearLanguages();
-    	for (String param: context.getFilterPropertyNames()) 
+    public Couple<View, String> updateQueryAndConstructView( List<PendingParameterValue> deferredFilters ) {	  
+    	aq.clearLanguages();
+    	Set<String> allParamNames = context.parameterNames();
+    	if (allParamNames.contains( QueryParameter._VIEW )) {
+    		setViewByName( context.getValueString(QueryParameter._VIEW ) );
+    	}
+		for (String param: allParamNames) 
     		if (param.startsWith( QueryParameter.LANG_PREFIX ))
     			handleLangPrefix( param );
     		else if (param.equals(QueryParameter._LANG)) 
-    			args.setDefaultLanguage( context.getStringValue( param ) );
+    			aq.setDefaultLanguage( context.getValueString( param ) );
         GEOLocation geo = new GEOLocation();
-        for (String param: context.getFilterPropertyNames()) 
+        for (String param: allParamNames) 
             handleParam( geo, param );
-        geo.addLocationQueryIfPresent( args );
+        geo.addLocationQueryIfPresent( aq );
         // ((QueryArgumentsImpl) args).updateQuery();
-        return new Couple<View, String>( (view == noneSpecified ? defaultView : view), requestedFormat );
+        activateDeferredFilters( deferredFilters );
+        return new Couple<View, String>( view, requestedFormat );
     }
 
-	private void activateDeferredFilters( List<Deferred> deferred ) {
-		for (Deferred d: deferred) {
+	private void activateDeferredFilters( List<PendingParameterValue> deferred ) {
+		for (PendingParameterValue d: deferred) {
 			APIQuery.log.debug( "activating deferred filter " + d );
-			addFilterFromQuery( d.param.expand( context ), set(context.expandVariables( d.val )) );
+			addFilterFromQuery( d.param.expand( context ), context.expandVariables( d.val ) );
 		}
 	}
 
 	private void handleLangPrefix( String taggedParam ) {
 		String param = taggedParam.substring( QueryParameter.LANG_PREFIX.length() );
-		String sv = context.getStringValue( taggedParam );
+		String sv = context.getValueString( taggedParam );
 		if (sv == null) {
 			log.debug( taggedParam + " supplied, but no value for " + param );
 			return;
 		}
 		String val = context.expandVariables( sv );
 		String pString = context.expandVariables( param );
-		args.setLanguagesFor( pString, val );
-	}
-	
-	private Set<String> expandVariables( Set<String> s ) {
-		Set<String> result = new HashSet<String>(s.size());
-		for (String x: s) result.add( context.expandVariables( x ) );
-		return result;
+		aq.setLanguagesFor( pString, val );
 	}
 
 	private void handleParam( GEOLocation geo, String p ) {
-		Set<String> values = context.getStringValues(p);
-		Set<String> allVal = expandVariables( values );
-		String val = allVal.iterator().next();
+		String val = context.expandVariables( context.getValueString(p) );
 		String pString = context.expandVariables( p );
 		if (val == null) EldaException.NullParameter( p );
 	//
-		if (args.isBindable(pString)) {
-			// nothing to do -- report suspect?  
-		} else if (p.startsWith( QueryParameter.LANG_PREFIX )) {
+		if (p.startsWith( QueryParameter.LANG_PREFIX )) {
 			// Nothing to do -- done on previous pass 
 	    } else if (p.equals(QueryParameter._LANG)) {
 			// Also done on previous pass
-		} else if (isReserved(p)) {
+		} else if (QueryParameter.isReserved(p)) {
 			handleReservedParameters( geo, this, p, val );
 		} else {
 			log.debug( "handleParam: " + p + " with value: " + val );
-			addFilterFromQuery( Param.make( sns, pString ), allVal );
+			addFilterFromQuery( Param.make( sns, pString ), val );
 		}
 	}
 
-	private boolean isReserved(String p) {
-		return 
-			p.startsWith("_") 
-			|| p.equals("near-lat") || p.equals("near-long") 
-			|| p.equals( QueryParameter.callback )
-			;
-	} 
-	
-	static final Pattern callbackPattern = Pattern.compile( "^[a-zA-Z_][a-zA-Z0-9]*$" );
-	
-    /**
+	/**
 	    handle the reserved, ie, _wossname, parameters. These may update
 	    the given <code>geo</code>, the <code>vs</code>, or this query
-	    object. <code>p</code> is the property shortname, <code>val</code>
+	    object. <code>p</code> is the reserved-property name, <code>val</code>
 	    is the value string.
 	*/
 	public void handleReservedParameters( GEOLocation geo, ViewSetter vs, String p, String val ) {
 		if (p.equals(QueryParameter._PAGE)) {
 			mustBeListEndpoint( p );
-		    args.setPageNumber( positiveInteger(p, val) ); 
+		    aq.setPageNumber( positiveInteger( p, val ) ); 
 		} else if (p.equals(QueryParameter._PAGE_SIZE)) {
 			mustBeListEndpoint( p );
-		    args.setPageSize( positiveInteger(p, val) );
+		    aq.setPageSize( positiveInteger( p, val ) );
 		} else if (p.equals( QueryParameter._FORMAT )) {
 			vs.setFormat(val);
 		} else if (p.equals(QueryParameter._METADATA)) {
-			args.addMetadataOptions( val.split(",") );
+			aq.addMetadataOptions( val.split(",") );
 	    } else if (p.equals(QueryParameter._SEARCH)) {
-	        args.addSearchTriple( val );
+	        aq.addSearchTriple( val );
 	    } else if (p.equals(QueryParameter._SELECT_PARAM )) {
-	    	args.setFixedSelect( val );
+	    	aq.setFixedSelect( val );
 	    } else if (p.equals(QueryParameter._WHERE)) {
-	    	args.addWhere( val );
+	    	aq.addWhere( val );
 		} else if (p.equals(QueryParameter._PROPERTIES)) {
 			vs.setViewByProperties(val);
 		} else if (p.equals(QueryParameter._VIEW)) {
-		    vs.setViewByName(val);
+			// already done
 		} else if (p.equals(QueryParameter._SUBJECT)) {
-		    args.setSubject(val);
+		    aq.setSubject(val);
 		} else if (p.equals( QueryParameter.callback )) {
-			if (!callbackPattern.matcher( val ).matches())
+			if (!QueryParameter.callbackPattern.matcher( val ).matches())
 				throw new EldaException( "illegal callback name", val, EldaException.BAD_REQUEST );
-		} else if (p.equals( APIQuery.NEAR_LAT)) { 
+		} else if (p.equals( QueryParameter.NEAR_LAT)) { 
 			geo.setNearLat( val );
-		} else if (p.equals( APIQuery.NEAR_LONG )) {
+		} else if (p.equals( QueryParameter.NEAR_LONG )) {
 			geo.setNearLong( val );
 		} else if (p.equals( QueryParameter._DISTANCE )) { 
 			geo.setDistance( val );
 		} else if (p.equals( QueryParameter._TEMPLATE )) {
-			args.setViewByTemplateClause( val );
+			aq.setViewByTemplateClause( val );
 		} else if (p.equals(QueryParameter._SORT)) {
-		    args.setSortBy( val );
+		    aq.setSortBy( val );
 		} else if (p.equals(QueryParameter._ORDERBY )) {
-			args.setOrderBy( val );
+			aq.setOrderBy( val );
 		} else {
 			EldaException.BadRequest( "unrecognised reserved parameter: " + p );
 			throw new EldaException( "Can never get here!" );
@@ -225,68 +196,35 @@ public class ContextQueryUpdater implements ViewSetter {
      * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
      * @return the name of the final property referencing the val, to allow type sensitive normalization
     */
-    public void addFilterFromQuery( Param param, Set<String> allVal ) {
-    	String val = allVal.iterator().next();
+    public void addFilterFromQuery( Param param, String val ) {
     	if (val.equals( "" )) {
     		log.debug( "parameter " + param + " given empty value." );
     		return;
     	}
     	String prefix = param.prefix();
     	if (prefix == null) {
-    		args.addPropertyHasValue( param, allVal );    		
+    		aq.addPropertyHasValue( param, val );    		
     	} else if (prefix.equals(QueryParameter.NAME_PREFIX)) {
-            args.addNameProp(param.plain(), val);
+            aq.addNameProp(param.plain(), val);
         } else if (prefix.equals( QueryParameter.LANG_PREFIX )) {
         	// handled elsewhere
         } else if (prefix.equals(QueryParameter.MIN_PREFIX)) {
-            addRangeFilter(param.plain(), val, ">=");
+            aq.addRangeFilter(param.plain(), val, ">=");
         } else if (prefix.equals(QueryParameter.MIN_EX_PREFIX)) {
-            addRangeFilter(param.plain(), val, ">");
+        	aq.addRangeFilter(param.plain(), val, ">");
         } else if (prefix.equals(QueryParameter.MAX_PREFIX)) {
-            addRangeFilter(param.plain(), val, "<=");
+        	aq.addRangeFilter(param.plain(), val, "<=");
         } else if (prefix.equals(QueryParameter.MAX_EX_PREFIX)) {
-            addRangeFilter(param.plain(), val, "<");
+        	aq.addRangeFilter(param.plain(), val, "<");
         } else if (prefix.equals(QueryParameter.EXISTS_PREFIX)) {
-            if (val.equals( "true" )) args.addPropertyHasValue( param );
-            else if (val.equals( "false" )) args.addPropertyHasntValue( param );
+            if (val.equals( "true" )) aq.addPropertyHasValue( param );
+            else if (val.equals( "false" )) aq.addPropertyHasntValue( param );
             else EldaException.BadBooleanParameter( param.toString(), val );
         } else {
         	throw new EldaException( "unrecognised parameter prefix: " + prefix );
         }
     }
-    
-    protected final Map<String,Variable> seenParamVariables = new HashMap<String, Variable>();
-    
-    public static final boolean dontSquishVariables = false;
-    
-    protected void addRangeFilter( Param param, String val, String op ) {
-    	Variable already = seenParamVariables.get(param.asString());
-    	String prop = param.lastPropertyOf();
-    	if (already == null || dontSquishVariables) {
-	        seenParamVariables.put( param.asString(), already = args.newVar() );
-	        args.addPropertyHasValue( param, CollectionUtils.set(already.name() ) );
-    	}
-	    Any r = sns.normalizeNodeToRDFQ( prop, val, args.getDefaultLanguage() );
-		args.addInfixSparqlFilter( already, op, r );
-    }    
 
-	/**
-	    Half-baked construction of a view given a clause.
-	    Make that tenth-baked. Maybe epsilon-baked.
-	*/
-	@Override public void setViewByExplicitClause( String clause ) {
-		view = new View();
-		String [] parts = clause.replaceAll( "[\\[\\],;]", " " ).split( " +" );
-		for (String p: parts) {
-			if (!p.startsWith("?")) {
-				String prop = p.replaceFirst( "^.*[/#:]", "" );
-				view.addViewFromParameterValue( prop, null, sns );
-			}
-		}
-		// view.addviewFromParameterValue( "type", null, sns ); // HACK
-//		System.err.println( ">> clause '" + clause + "' generates view " + view );
-	}
-	
 	@Override public void setFormat( String format ) {
 		requestedFormat = format;
 	}
@@ -294,15 +232,12 @@ public class ContextQueryUpdater implements ViewSetter {
 	@Override public void setViewByName( String viewName ) {
 		View named  = nt.getView( viewName );
 		if (named == null) EldaException.NotFound( "view", viewName );
-		view = named.copy().addFrom( view );
-		// log.debug( "view " + viewName + " yields view " + view + " from\n  " + nt );
+		view = named.copy();
 	}
 
 	@Override public void setViewByProperties(String val) {
-		view = nt.getDefaultView().copy();
 		for (String prop: val.split(","))
-			if (prop.length() > 0)
+			if (prop.length() > 0) 
 				view.addViewFromParameterValue( prop, eps, sns );
-//		System.err.println( ">> >> setViewByProperties from " + val + " => " + view );
 	}
 }

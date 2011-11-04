@@ -12,9 +12,19 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.core.Param;
+import com.epimorphics.lda.core.Param.Info;
+import com.epimorphics.lda.core.VarSupply;
+import com.epimorphics.lda.query.ValTranslator;
+import com.epimorphics.lda.query.ValTranslator.Filters;
+import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.PrefixLogger;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.OWL;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 import static org.hamcrest.CoreMatchers.*;
 
@@ -35,23 +45,46 @@ public class TestAPISpecAcceptsFakeTypes
 		+ "\n"
 		;
 	
-	@Test public void testFakeType() 
+	@Test public void ensureRespectsDataypesByType() 
 		{
 		Model m = ModelIOUtils.modelFromTurtle( spec );
-		Resource root = m.createResource( m.expandPrefix( ":my" ) );
-		APISpec s = SpecUtil.specFrom( root );
-		String x = s.getShortnameService().normalizeNodeToString( "year", "spoo" );
-		String eg = m.getNsPrefixURI( "" );
-		assertThat( x, is( "'spoo'^^<" + eg + "faketype>" ) );
+		m.removeAll( null, RDF.type, OWL.DatatypeProperty );
+		Resource ft = m.createResource( m.expandPrefix( ":faketype" ) );
+		m.add( ft, RDF.type, RDFS.Datatype );
+	//
+		ensureRespectsDatatypes( m );
 		}
 	
-	@Test public void testPlainLiteral() 
+	@Test public void ensureRespectsDataypesByPropertyType() 
 		{
+		Model m = ModelIOUtils.modelFromTurtle( spec );
+	//
+		ensureRespectsDatatypes( m );
+		}
+
+	private void ensureRespectsDatatypes(Model m) {
+		PrefixLogger pl = new PrefixLogger();
+		Resource root = m.createResource( m.expandPrefix( ":my" ) );
+		APISpec s = SpecUtil.specFrom( root );
+		ValTranslator vt = new ValTranslator( vs, expressions, s.getShortnameService() );
+		Info yearInf = Param.make(s.getShortnameService(), "year" ).fullParts()[0];
+		Any x = vt.objectForValue( yearInf, "spoo", null );
+		String eg = m.getNsPrefixURI( "" );
+		assertThat( x.asSparqlTerm(pl), is( "\"spoo\"^^<" + eg + "faketype>" ) );
+	}
+
+	final VarSupply vs = null;
+	final Filters expressions = null;
+	
+	@Test public void testPlainLiteral() {
+		PrefixLogger pl = new PrefixLogger();
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
 		APISpec s = SpecUtil.specFrom( root );
-		String x = s.getShortnameService().normalizeNodeToString( "name", "Frodo" );
-		assertThat( x, is( "'Frodo'" ) );
-		}
-
+		ValTranslator vt = new ValTranslator(vs, expressions, s.getShortnameService() );
+		Info nameInf = Param.make(s.getShortnameService(), "name" ).fullParts()[0];
+		Any x = vt.objectForValue( nameInf, "Frodo", null );
+		assertThat( x.asSparqlTerm(pl), is( "\"Frodo\"" ) );
 	}
+
+}

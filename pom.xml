@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>lda-top</artifactId>
-  <version>1.1.10</version>
+  <version>1.1.17-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>lda-top</name>
   <description>Top level linked data API project</description>
@@ -76,6 +76,14 @@
     </dependency>
 
     <dependency>
+        <groupId>org.apache.jena</groupId>
+        <artifactId>larq</artifactId>
+        <type>jar</type>
+        <version>0.2.2-incubating-SNAPSHOT</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <version>1.6.1</version>
@@ -89,7 +97,8 @@
       <version>1.2.16</version>
       <type>jar</type>
       <scope>compile</scope>
-    <exclusions>
+
+      <exclusions>
         <exclusion>
           <groupId>javax.mail</groupId>
           <artifactId>mail</artifactId>
@@ -107,6 +116,7 @@
           <artifactId>jmxri</artifactId>
         </exclusion>
       </exclusions>
+
     </dependency>
   </dependencies>
 

@@ -14,15 +14,13 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.bindings.VarValues;
-import com.epimorphics.lda.core.CallContext;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.View;
-import com.epimorphics.lda.query.APIQuery.Deferred;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.ExpansionPoints;
-import com.epimorphics.lda.query.QueryArgumentsImpl;
+import com.epimorphics.lda.query.PendingParameterValue;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -35,7 +33,7 @@ public class TestDropsEmptyValueElements {
 	@Test public void ensureEmptyPropertiesIgnored() {
 		NamedViews nv = NamedViews.noNamedViews;
 		SNS sns = new SNS("a=eh:/A");
-		CallContext cc = CallContext.createContext( null, MakeData.parseQueryString("_properties=,a," ), new VarValues() );
+		Bindings cc = Bindings.createContext( new Bindings(), MakeData.parseQueryString("_properties=,a," ) );
 		APIQuery aq = new APIQuery( sns );
 		ContextQueryUpdater cu = new ContextQueryUpdater
 			( ContextQueryUpdater.ListEndpoint 
@@ -43,16 +41,16 @@ public class TestDropsEmptyValueElements {
 			, nv
 			, sns 
 			, (ExpansionPoints) null 
-			, new QueryArgumentsImpl( aq )
+			, aq
 			); 
-		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<Deferred>() );
+		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
 		assertEquals( CollectionUtils.set( new PropertyChain( "eh:/A" ) ), ans.a.chains() );
 	}
 
 	@Test public void ensureEmptySortsIgnored() {
 		NamedViews nv = NamedViews.noNamedViews;
 		SNS sns = new SNS("a=eh:/A;b=eh:/B");
-		CallContext cc = CallContext.createContext( null, MakeData.parseQueryString("_sort=,b," ), new VarValues() );
+		Bindings cc = Bindings.createContext( new Bindings(), MakeData.parseQueryString("_sort=,b," ) );
 		APIQuery aq = new APIQuery( sns );
 		ContextQueryUpdater cu = new ContextQueryUpdater
 			( ContextQueryUpdater.ListEndpoint 
@@ -60,9 +58,9 @@ public class TestDropsEmptyValueElements {
 			, nv
 			, sns 
 			, (ExpansionPoints) null 
-			, new QueryArgumentsImpl( aq )
+			, aq
 			); 
-		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<Deferred>() );
+		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
 		String q = aq.assembleSelectQuery( PrefixMapping.Standard );
 		assertTrue( "empty sort string element not discarded", q.matches( "(?s).*item <eh:/B> \\?___0.*ORDER BY +\\?___0.*" ) );
 	}

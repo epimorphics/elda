@@ -1,2 +1,9 @@
 URI=/alpha?_metadata=all
 ASK { ?x dcterms:hasVersion [rdfs:label "included"] }
+
+URI=/alpha?_properties=eastish&_sort=eastish
+ASK { ?something :eastish ?e; :p ?p }
+
+URI=/alpha?_view=empty&_properties=eastish&_sort=eastish
+ASK { ?something :eastish ?e }
+ASK NOT {?something :p ?value}

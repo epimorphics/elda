@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.net.URI;
 import java.util.*;
 
 import org.junit.Test;
@@ -23,7 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.apispec.tests.SpecUtil;
-import com.epimorphics.lda.bindings.VarValues;
+import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.specs.APISpec;
@@ -62,7 +64,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		{
 		List<Object[]> result = new ArrayList<Object[]>();
 		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree" + path ) );
-//		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree/subst-tests" ) );
+//		findTestsFromRoot( result, emptyModel, emptyModel, new File( "src/test/resources/test-tree/elda-talk-example" ) );
 //		System.err.println( ">> " + result.size() + " tests.");
 		return result;
 		}
@@ -231,6 +233,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 	
 	public void RunTestAllowingFailures()
 		{
+		Cache.Registry.clearAll();
 		log.debug( "running test " + w.title );
 //		System.err.println( "running test " + w.title );
 //		System.err.println( ">> " + w.pathToData );
@@ -240,11 +243,13 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		APISpec s = SpecUtil.specFrom( root );
 		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) );   	
 		MultiMap<String, String> map = MakeData.parseQueryString( w.queryParams );
-	map.add( "_metadata", "all" );
-		CallContext cc = CallContext.createContext( Util.newURI(w.path), map, bindTemplate( w.template, w.path ) );
-		Triad<APIResultSet, String, CallContext> resultsAndFormat = ep.call( cc );
+		URI ru = Util.newURI(w.path);
+		Bindings cc = Bindings.createContext( bindTemplate( w.template, w.path ), map );
+		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( ru, cc );
 		Model rsm = resultsAndFormat.a.getModel();
-//		System.err.println( ">> " + rs.getResultList() );
+//		System.err.println( ">> " + rs.getResultList() );				
+//		System.err.println( "||>> " + resultsAndFormat.a.getSelectQuery() );
+
 		for (Ask a: w.shouldAppear)
 			{
 //			System.err.println( ">>  asking ... " + (a.isPositive ? "ASSERT" : "DENY") );
@@ -260,8 +265,8 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 //				System.err.println( ">> ------------------------------------------__" );
 //				System.err.println( ">> cc = " + cc );
 //				System.err.println( ">> ------------------------------------------__" );
-				System.err.println( ">> RESULT:" );
-				rsm.write( System.err, "TTL" );
+				// System.err.println( ">>\n>> Failing result model for " + w.title + ":" );
+				// rsm.write( System.err, "TTL" );
 				fail
 					( "test " + w.title + ": the probe query\n"
 					+ shortStringFor( a ) + "\n"
@@ -274,12 +279,12 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		}
 
 	// this seems a bit tedious. There should be a more straightforward way.
-	private VarValues bindTemplate( String template, String path ) {
+	private Bindings bindTemplate( String template, String path ) {
 		MatchSearcher<String> ms = new MatchSearcher<String>();
 		ms.register( template, "IGNORED" );
 		Map<String, String> bindings = new HashMap<String, String>();
 		ms.lookup( bindings, path );
-		VarValues result = new VarValues();
+		Bindings result = new Bindings();
 		for (String key: bindings.keySet())	result.put( key, bindings.get( key ) );
 		return result;
 	}

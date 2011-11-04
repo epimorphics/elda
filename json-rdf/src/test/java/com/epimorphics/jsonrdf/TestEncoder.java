@@ -278,6 +278,16 @@ public class TestEncoder {
                 new String[]{":r"}, "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'foo','q':'bar','s':'baz'}]");
     }
     
+    // Objects of RDF.type used to get shortened. Now they should not be.
+    @Test public void testTypesDontShorten() throws IOException {
+        Context context = new Context();
+        context.recordPreferredName( "T", "http://www.epimorphics.com/tools/example#t" );
+        context.recordPreferredName( "U", "http://www.epimorphics.com/tools/example#u" );
+        context.setSorted(true);
+        testEncoding(":r rdf:type :t, :u.", Encoder.get( context ), 
+                new String[]{":r"}, "[{'_about':'http://www.epimorphics.com/tools/example#r', 'type':['http://www.epimorphics.com/tools/example#t', 'http://www.epimorphics.com/tools/example#u']}]");
+        }
+    
     /*
         This is the no-language-tags version of the encoding. The older test is below.
      */
