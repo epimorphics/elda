@@ -17,7 +17,7 @@
   any vocab file.
 
 * shortnames generated on-the-fly by the XML renderer now respect existing
-  shortnames from the context even iof only one new shortname needs to be
+  shortnames from the context even if only one new shortname needs to be
   generated. 
 
 * The SPARQL generated for optional triples in exists-propertychain-false
