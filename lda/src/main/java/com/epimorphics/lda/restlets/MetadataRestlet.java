@@ -50,6 +50,7 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.util.ResourceUtils;
+import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 
@@ -132,6 +133,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     // Extract the endpoint specification
         Model spec = rec.getSpecModel();
         Resource endpointSpec = rec.getAPIEndpoint().getSpec().getResource().inModel(spec);
+        metadata.setNsPrefixes( spec );
         metadata.add( ResourceUtils.reachableClosure( endpointSpec ) );
         meta.getModel().withDefaultMappings( PrefixMapping.Extended );
         meta.addProperty( API.endpoint, endpointSpec );
@@ -193,6 +195,15 @@ import com.hp.hpl.jena.vocabulary.RDFS;
             }
         //
             h2( textBody, "LDA spec for this endpoint" );
+        //
+            if (true) {
+	            StringBuilder specBuilder = new StringBuilder();
+	            textBody.append( "\n<pre>\n" );
+	            renderSpec( specBuilder, meta );
+	            textBody.append( specBuilder.toString() );
+	            textBody.append( "\n</pre>\n" );
+            }
+        //
             StringBuilder nice = new StringBuilder();
             StringBuilder prefixes = new StringBuilder();
             renderNicely( prefixes, nice, "", meta, new HashSet<RDFNode>(), 0 );
@@ -210,6 +221,29 @@ import com.hp.hpl.jena.vocabulary.RDFS;
                 ;
             return returnAs( Util.withBody( "Metadata", textBody.toString() ), "text/html" );
         }
+    }
+    
+    void renderSpec( StringBuilder sb, Resource meta ) {
+    	Resource ep = meta.getProperty( API.endpoint ).getResource();
+    	String name = ep.getModel().shortForm( ep.getURI() );
+    	String kind = ep.hasProperty( RDF.type, API.ListEndpoint ) ? "list" : "item";
+    	sb.append( "<h2>" ).append( kind ).append( " endpoint " ).append( name ).append( "</h2>\n" );
+    //
+    	String ut = ep.getProperty( API.uriTemplate ).getString(); // TODO make safe
+    	sb.append( "<b>uri template</b>: " ).append( ut ).append( "\n" );
+    //
+    	sb.append( "<b>available views:</b>\n" );
+    	for (RDFNode viewer: ep.listProperties( API.viewer ).mapWith( Statement.Util.getObject ).toSet()) {
+    		Resource v = (Resource) viewer;
+    		String u = v.getURI();
+    		if (u == null) u = "anonymous";
+    		sb.append( "  " ).append( v.getModel().shortForm( u ) ).append( "\n" );
+    		
+    	}
+//    	for (Property p : ep.listProperties().mapWith( Statement.Util.getPredicate ).toSet()) {
+//    		sb.append( " =- " ).append( p.getURI() ).append( "\n" );
+//    	}
+    	
     }
 
     private void doSPARQL( StringBuilder sb, String query ) {
