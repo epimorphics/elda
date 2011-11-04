@@ -1,7 +1,36 @@
-1.1.16-SNAPSHOT
+1.1.17-SNAPSHOT
+
+1.1.16
 
 * The shortname utilities now generates an error 400 (bad request)
   when expanding a property path with a bad name, rather than an error 500.
+
+* The XML and JSON renderers have been modified so that the shortnames
+  for any API, RDF, RDFS, or XHV term are the local names of that term
+  (unless it has been given an explicit shortname). This ensures that the
+  structural properties, eg termBinding, versionOf, etc, can be understood
+  by client code -- such as the stylesheet -- without having to consult
+  the term bindings (which may be absent, or consider having to find the
+  term binding for termBinding).
+
+* api:name and rdfs:label in the config file override any present in
+  any vocab file.
+
+* shortnames generated on-the-fly by the XML renderer now respect existing
+  shortnames from the context even iof only one new shortname needs to be
+  generated. 
+
+* The SPARQL generated for optional triples in exists-propertychain-false
+  and _sort=propertychains has been improved and corrected: it now
+  generates a single OPTIONAL for each chain rather than an OPTIONAL
+  for each predicate. Also, triple debris from earlier sort specifications
+  (when an api:sort in the config has been overriden by an _sort in the
+  request URI) has been eliminated. This can significantly improve
+  performance in some cases.
+
+* The ValTranslator rule has been made to conform to the proposal  on
+  the LDA wiki. (This means that special rules for rdfs:Resource and
+  owl:Thing are no longer necessary.)
 
 1.1.15
 

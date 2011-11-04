@@ -1,0 +1,24 @@
+Elda 1.1.16 Release Notes
+
+Three significant changes have taken place since 1.1.15:
+
+(1) In a parameter binding P=V, where P has range rdfs:Resource or
+    owl:Thing, V is expanded if it is a shortname. (That it was not 
+    in 1.1.15 was an oversight.) This makes the behaviour of non-
+    datatype non-special range types uniform.
+
+(2) The generated SPARQL for sort specifications has been improved;
+    overridden sorts from the config no longer leave extra redundant
+    triples in the query and OPTIONALs are used over complete property
+    chains, not individual triples. These changes also improve the
+    generated SPARQL for exists-propertyChain=false.
+
+(3) Shortnames for some property P defined in the config file
+    completely override any shortnames (eg as introduced by rdfs:label)
+    defined in any included vocab file. Ranges for P from vocab files
+    are independantly over-riden in the config file.
+
+    [A "vocab file" is an ontology reference by the api:vocabulary
+    property in a config.]
+
+
