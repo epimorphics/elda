@@ -144,4 +144,15 @@ public class RDFUtil {
         return uriPattern.matcher(s).matches();
     }
 
+    /**
+        Answer true if <code>v</code> is a list, which here is defined to
+        be "nil, a resource with a first." 
+    */
+	public static boolean isRDFList( RDFNode v ) {
+		return 
+			v.equals( RDF.nil )
+			|| (v.isResource() && v.asResource().hasProperty( RDF.first ))
+			;
+	}
+
 }

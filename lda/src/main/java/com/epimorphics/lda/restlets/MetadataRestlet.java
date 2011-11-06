@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,6 +41,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.epimorphics.jsonrdf.Encoder;
+import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.restlets.ControlRestlet.SpecRecord;
@@ -225,20 +227,32 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     
     void renderSpec( StringBuilder sb, Resource meta ) {
     	Resource ep = meta.getProperty( API.endpoint ).getResource();
-    	String name = ep.getModel().shortForm( ep.getURI() );
+    	String name = shortForm( ep ); // ep.getModel().shortForm( ep.getURI() );
     	String kind = ep.hasProperty( RDF.type, API.ListEndpoint ) ? "list" : "item";
     	sb.append( "<h2>" ).append( kind ).append( " endpoint " ).append( name ).append( "</h2>\n" );
     //
     	String ut = ep.getProperty( API.uriTemplate ).getString(); // TODO make safe
     	sb.append( "<b>uri template</b>: " ).append( ut ).append( "\n" );
     //
+    	Resource sel = ep.getProperty( API.selector ).getResource();
+    	// TODO also want: parents
+    	if (sel != null) {
+    		sb.append( "<b>selector:</b>\n" );
+    		Set<String> filters = allFiltersOf( new HashSet<String>(), sel );
+    		for (String filter : filters)
+    			sb.append( "  " ).append( "filter " ).append( filter ).append( "\n" );
+    		Statement where = sel.getProperty( API.where );
+    		if (where != null)
+    			sb.append( "  " ).append( "where " ).append( where.getString() ).append( "\n" );
+    	}
+    //
     	sb.append( "<b>available views:</b>\n" );
+    	Statement dv = ep.getProperty( API.defaultViewer );
+    	if (dv != null)
+    		showView( sb, dv.getObject(), true );
+    	RDFNode dvo = dv == null ? null : dv.getObject();
     	for (RDFNode viewer: ep.listProperties( API.viewer ).mapWith( Statement.Util.getObject ).toSet()) {
-    		Resource v = (Resource) viewer;
-    		String u = v.getURI();
-    		if (u == null) u = "anonymous";
-    		sb.append( "  " ).append( v.getModel().shortForm( u ) ).append( "\n" );
-    		
+    		if (!viewer.equals( dvo )) showView( sb, viewer, false );
     	}
 //    	for (Property p : ep.listProperties().mapWith( Statement.Util.getPredicate ).toSet()) {
 //    		sb.append( " =- " ).append( p.getURI() ).append( "\n" );
@@ -246,7 +260,53 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	
     }
 
-    private void doSPARQL( StringBuilder sb, String query ) {
+	private void showView(StringBuilder sb, RDFNode viewer, boolean isDefault) {
+		Resource v = (Resource) viewer;
+		String u = v.getURI();
+		String viewName = RDFUtil.getStringValue( v, API.name );
+		if (viewName == null) viewName = "";
+		if (u == null) u = "anonymous";
+		sb.append( "  " )
+			.append( isDefault ? "<b>default</b> " : "" )
+			.append( "<i style='color: red'>" ).append( viewName ).append( "</i>" )
+			.append( " " ).append( v.getModel().shortForm( u ) )
+			.append( "\n" )
+			;
+		for (Statement s : v.listProperties( API.property ).toList()) {
+			sb.append( "    " ).append( propertyChain( s.getObject() ) ).append( "\n" );
+		}
+	}
+    
+    protected Set<String> allFiltersOf( Set<String> them, Resource sel) {
+    	for (RDFNode p: sel.listProperties( API.parent ).mapWith( Statement.Util.getObject ).toList()) {
+    		allFiltersOf( them, (Resource) p );
+    	}
+    	for (RDFNode f: sel.listProperties( API.filter ).mapWith( Statement.Util.getObject).toList()) {
+    		them.add( ((Literal) f).getLexicalForm() );
+    	}
+    	return them;
+	}
+
+    protected String propertyChain( RDFNode node ) {
+    	if (RDFUtil.isList(node)) return propertyList( (Resource) node );
+    	if (node.isResource()) return shortForm( (Resource) node );
+    	if (node.isLiteral()) return ((Literal) node).getLexicalForm();
+    	return "Unexpected property chain '" + node + "'";
+    }
+
+    protected String propertyList(Resource node) {
+    	String result = "";
+    	for (RDFNode p: node.as(RDFList.class).asJavaList()) {
+    		result = result + " " + shortForm( (Resource) p );
+    	}
+    	return result;
+	}
+
+	protected String shortForm(Resource r) {
+		return r.getModel().shortForm( r.getURI() );
+	}
+
+	private void doSPARQL( StringBuilder sb, String query ) {
 		String [] x = query.split( "\nSELECT " );
 		if (x.length == 1) { System.err.println( "OOPS: " + query ); x = new String[] { "", query }; }
 		String [] prefixes = x[0].split( "\n" );

@@ -15,6 +15,7 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
+import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
@@ -181,7 +182,7 @@ public class XMLRendering {
 			Resource r = v.asResource();
 			if (inPlace( r ))
 				addIdentification(pe, r);
-			else if (isRDFList( r )) 
+			else if (RDFUtil.isRDFList( r )) 
 				addItems( pe, r.as(RDFList.class).asJavaList() );
 			else 
 				elementForValue( pe, v );
@@ -210,7 +211,7 @@ public class XMLRendering {
 	private Element elementForValue( Element e, RDFNode v ) {
 		if (v.isLiteral()) {
 			addLiteralToElement( e, (Literal) v );
-		} else if (isRDFList( v )){
+		} else if (RDFUtil.isRDFList( v )){
 			List<RDFNode> items = v.as(RDFList.class).asJavaList();
 			for (RDFNode item: items) {
 				giveValueToElement( e, item );
@@ -227,10 +228,6 @@ public class XMLRendering {
 
 	private boolean needsId( RDFNode v ) {
 		return false;
-	}
-
-	private boolean isRDFList(RDFNode v) {
-		return v.isResource() && v.asResource().hasProperty( RDF.first );
 	}
 
 	private boolean isMultiValued( Property p ) {
