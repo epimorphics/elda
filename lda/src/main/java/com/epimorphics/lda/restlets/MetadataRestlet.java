@@ -80,9 +80,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     }
     
     @GET @Produces("text/turtle")
-    public Response requestHandlerTurtle(
-            @PathParam("path") String pathstub,
-            @Context UriInfo ui) {
+    public Response requestHandlerTurtle( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
@@ -93,9 +91,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     }
     
     @GET @Produces("application/json")
-    public Response requestHandlerJson(
-            @PathParam("path") String pathstub,
-            @Context UriInfo ui) {
+    public Response requestHandlerJson( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
@@ -206,31 +202,12 @@ import com.hp.hpl.jena.vocabulary.RDFS;
                 }
             }
         //
-            h2( textBody, "LDA spec for this endpoint" );
+            StringBuilder specBuilder = new StringBuilder();
+            List<APIEndpointSpec> endpoints = rec.getAPIEndpoint().getSpec().getAPISpec().getEndpoints();
+            Collections.sort( endpoints, sortByEndpointResource );
+			for (APIEndpointSpec s: endpoints) renderSpec( specBuilder, s.getResource() );  
+            textBody.append( specBuilder.toString() );
         //
-            if (true) {
-	            StringBuilder specBuilder = new StringBuilder();
-	            textBody.append( "\n<pre>\n" );
-	            renderSpec( specBuilder, meta );
-	            textBody.append( specBuilder.toString() );
-	            textBody.append( "\n</pre>\n" );
-            }
-        //
-            StringBuilder nice = new StringBuilder();
-            StringBuilder prefixes = new StringBuilder();
-            renderNicely( prefixes, nice, "", meta, new HashSet<RDFNode>(), 0 );
-            textBody.append( "\n<pre>\n" );
-            textBody.append( prefixes );
-            textBody.append( nice );
-            textBody.append( "\n</pre>\n" );
-        //
-            String it = ModelIOUtils.renderModelAs(meta.getModel(), "Turtle");
-            h2( textBody, "LDA spec for this endpoint as raw Turtle" );
-            textBody
-                .append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" )
-                .append( safe( it ) )
-                .append( "\n</pre>\n" )
-                ;
             return returnAs( Util.withBody( "Metadata", textBody.toString() ), "text/html" );
         }
     }
@@ -239,38 +216,43 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     // TODO: default language, page size, maxPageSioze, itemTemplate 
     // TODO: metadataoptions, factories
     // link to parent
-    void renderSpec( StringBuilder sb, Resource meta ) {
-    	Resource ep = meta.getProperty( API.endpoint ).getResource();
-    	String name = shortForm( ep ); // ep.getModel().shortForm( ep.getURI() );
+    void renderSpec( StringBuilder sb, Resource ep ) {
+    	String name = shortForm( ep ); 
     	String kind = ep.hasProperty( RDF.type, API.ListEndpoint ) ? "list" : "item";
-    	sb.append( "<h2>" ).append( kind ).append( " endpoint " ).append( name ).append( "</h2>\n" );
+    	sb.append( "<h2>" )
+    		.append( kind ).append( " endpoint " ).append( name )
+    		.append( " <a href='javascript:toggle(\"" + name + "\")'>&nabla; show/hide</a>" )
+    		.append( " </h2>\n" )
+    		;
+    	sb.append( "<div id='" + name + "' class='hide'>" );
     //
     	String ut = ep.getProperty( API.uriTemplate ).getString(); // TODO make safe
-    	sb.append( "<b>uri template</b>: " ).append( ut ).append( "\n" );
+    	sb.append( "<h3>uri template</h3>\n" );
+    	sb.append( "<div class='indent'>" ).append( ut ).append( "</div>\n" );
     //
     	Resource sel = ep.getProperty( API.selector ).getResource();
     	if (sel != null) renderSelectors(sb, sel);
     //
-    	sb.append( "<b>available views:</b>\n" );
+    	sb.append( "<h3>views</h3>\n" );
     	Statement dv = ep.getProperty( API.defaultViewer );
     	if (dv != null) showView( sb, dv.getObject(), true );
     	RDFNode dvo = dv == null ? null : dv.getObject();
     	for (RDFNode viewer: ep.listProperties( API.viewer ).mapWith( Statement.Util.getObject ).toSet()) {
     		if (!viewer.equals( dvo )) showView( sb, viewer, false );
     	}
-    	
+    	sb.append( "</div>\n" );
     }
 
 	private void renderSelectors(StringBuilder sb, Resource sel) {
-		sb.append( "<b>selector:</b>\n" );
+		sb.append( "<h3>selectors</h3>\n" );
 		Set<Couple<String, Resource>> filters = allFiltersOf( new HashSet<Couple<String, Resource>>(), sel );
 		for (Couple<String, Resource> filter: filters) {
 			String from = (filter.b.equals( sel ) ? "" : " (from " + shortForm( filter.b ) + ")");
-			sb.append( "  " )
+			sb.append( "<div class='indent'>" )
 				.append( "<b>" ).append( "filter " ).append( "</b>" )
 				.append( filter.a )
 				.append( from )
-				.append( "\n" )
+				.append( "</div>\n" )
 				;
 		}
 		Statement where = sel.getProperty( API.where );
@@ -284,15 +266,17 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		String viewName = RDFUtil.getStringValue( v, API.name );
 		if (viewName == null) viewName = "";
 		if (u == null) u = "anonymous";
-		sb.append( "  " )
+		sb.append( "<div class='indent'>" );
+		sb
 			.append( isDefault ? "<b>default</b> " : "" )
 			.append( "<i style='color: red'>" ).append( viewName ).append( "</i>" )
 			.append( " " ).append( v.getModel().shortForm( u ) )
 			.append( "\n" )
 			;
 		for (Statement s : v.listProperties( API.property ).toList()) {
-			sb.append( "    " ).append( propertyChain( s.getObject() ) ).append( "\n" );
+			sb.append( "<div class='indent'>" ).append( propertyChain( s.getObject() ) ).append( "</div>\n" );
 		}
+		sb.append( "\n</div>\n" );
 	}
     
     protected Set<Couple<String, Resource>> allFiltersOf( Set<Couple<String, Resource>> them, Resource sel) {
@@ -322,10 +306,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	return result;
 	}
 
-	protected String shortForm(Resource r) {
-		return r.getModel().shortForm( r.getURI() );
-	}
-
 	private void doSPARQL( StringBuilder sb, String query ) {
 		String [] x = query.split( "\nSELECT " );
 		if (x.length == 1) { System.err.println( "OOPS: " + query ); x = new String[] { "", query }; }
@@ -341,102 +321,25 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		sb.append( safe( "SELECT " + x[1] ) );
 	}
 
-	private void renderNicely( StringBuilder prefixes, StringBuilder sb, String property, RDFNode S, HashSet<RDFNode> seen, int depth ) {
-        indent( sb, depth );
-        sb.append( property );
-        sb.append( " " );
-        if (S.isLiteral()) {
-            Literal literal = S.asLiteral();
-            String lf = literal.getLexicalForm();
-            if (lf.indexOf('\n') > -1) {
-                sb.append( "\n" );
-                for (String line: lf.split("\n" )) {
-                    indent( sb, depth + 1 );
-                    sb
-                        .append( "<span class='literal'>" )
-                        .append( safe( line ) )
-                        .append( "</span>" )
-                        .append( "\n" )
-                        ;
-                }
-            } else {                
-                sb.append( "<span class='literal'>" );
-                sb.append( safe( lf ) );
-                sb.append( "</span>" );                
-            }
-            String lang = literal.getLanguage();
-            String dt = literal.getDatatypeURI();
-            if (lang.length() > 0) sb.append( "@" ).append( lang );
-            if (dt != null) sb.append( "^^" ).append( dt );
-            sb.append( "\n" );
-        } else {
-            if (S.isAnon()) sb.append( "[] ..." ); else sb.append( nicely(prefixes, S) );
-            List<RDFNode> labels = S.asResource().listProperties(API.label).mapWith(Statement.Util.getObject).toList();
-            if (labels.size() > 0) {
-                String space = "";
-                sb.append( " (" );
-                for (RDFNode label: labels) {
-                    sb            
-                        .append( space )
-                        .append( "<span class='literal'>" )
-                        .append( safe( label.asLiteral().getLexicalForm() ) )            
-                        .append( "</span>" )
-                        ;
-                    space = " ";
-                }
-                sb.append( ")" );
-            }
-            sb.append( "\n" );
-            if (seen.add( S )) {
-	            List<Statement> properties = S.asResource().listProperties().toList();
-	            Collections.sort( properties, byPredicate );
-	            for (Statement s: properties) {
-	                Property P = s.getPredicate();
-	                if (!P.equals(API.label)  &!P.equals(SIBLING)) {
-	                    String p = "<b>" + nicely( prefixes, P ) + "</b>";
-	                    renderNicely( prefixes, sb, p, s.getObject(), seen, depth + 1 );
-	                }
-	            }
-            }
-        }
-    }
-
     static final Comparator<Statement> byPredicate = new Comparator<Statement>() 
         {
         @Override public int compare( Statement x, Statement y ) 
             { return x.getPredicate().getURI().compareTo( y.getPredicate().getURI() );
             }
         };
-        
 
-    private int count = 0;
-    
-    private String nicely( StringBuilder prefixes, RDFNode S ) {
-        Resource r = S.asResource();
-        String u = r.getURI();
-        Model m = r.getModel();
-        String q = m.shortForm( u );
-        if (u.equals(q)) {
-            String prefix = "p" + ++count, ns = r.getNameSpace();
-            m.setNsPrefix( prefix, ns );
-            prefixes
-                .append( "<span class='keyword'>" )
-                .append( "prefix " )
-                .append( "</span>" )
-                .append( prefix )
-                .append( ": &lt;" )
-                .append( safe(ns) )
-                .append("&gt;\n" )
-                ;
-            q = m.shortForm( u );
-        }
-        return safe( q );
-    }
-    
-    private void indent(StringBuilder sb, int depth) {
-        for (int i = 0; i < depth; i += 1) sb.append(' ');
-    }
+    static final Comparator<APIEndpointSpec> sortByEndpointResource = new Comparator<APIEndpointSpec>() {
 
+		@Override public int compare( APIEndpointSpec ep1, APIEndpointSpec ep2 ) {
+			return shortForm(ep1.getResource() ).compareTo( shortForm( ep2.getResource() ) );
+		}
+    	
+    };
+
+	protected static String shortForm(Resource r) {
+		return r.getModel().shortForm( r.getURI() );
+	}
+	
     private void h1( StringBuilder textBody, String s ) {  
        textBody.append( "\n<h1>" ).append( safe( s ) ).append( "</h1>" );   
     }
@@ -450,7 +353,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         	val.replaceAll( "&", "&amp;" )
         	.replaceAll("<", "&lt;")
         	.replaceAll(">", "&gt;")
-        	.replaceAll( "[{]([^}]*)[}]", "a_$1" )
+        	.replaceAll( "[{]([A-Za-z0-9_]+)[}]", "a_$1" )
         	;
     }
 }
