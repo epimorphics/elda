@@ -114,7 +114,9 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.EXTRA + "SIBLING" );
     
     private Resource createMetadata(UriInfo ui, String pathStub, SpecRecord rec) {
-        Bindings cc = Bindings.createContext( rec.getBindings(), JerseyUtils.convert(ui.getQueryParameters()));
+    	System.err.println( ">> bindings: " + rec.getBindings() );
+    	System.err.println( ">> parameters: " + ui.getQueryParameters() );
+        Bindings cc = Bindings.createContext( rec.getBindings(), JerseyUtils.convert( ui.getQueryParameters() ) );
         Model metadata = ModelFactory.createDefaultModel();
         Resource meta = rec.getAPIEndpoint().getMetadata( cc, ui.getRequestUri(), metadata);
     //
@@ -151,6 +153,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     
     @GET @Produces("text/html") public Response requestHandlerHTML( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
+        System.err.println( ">> stub: " + pathstub );
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
@@ -194,20 +197,10 @@ import com.hp.hpl.jena.vocabulary.RDFS;
                 }
             }
         //
-            StmtIterator queries = meta.listProperties( EXTRAS.sparqlQuery );
-            if (queries.hasNext()) {
-                h2( textBody, "generated SPARQL query for item selection" );
-                while (queries.hasNext()) {
-                    textBody.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" );
-                    doSPARQL( textBody, queries.next().getString() );
-                    textBody.append( "\n</pre>\n" );
-                }
-            }
-        //
             StringBuilder specBuilder = new StringBuilder();
             List<APIEndpointSpec> endpoints = rec.getAPIEndpoint().getSpec().getAPISpec().getEndpoints();
             Collections.sort( endpoints, sortByEndpointResource );
-			for (APIEndpointSpec s: endpoints) renderEndpoint( specBuilder, s.getResource() );  
+			for (APIEndpointSpec s: endpoints) renderEndpoint( specBuilder, ui, s.getResource() );  
             textBody.append( specBuilder.toString() );
         //
             renderDictionary( textBody, meta.getModel(), rec.getAPIEndpoint().getSpec().getAPISpec().getShortnameService() );
@@ -249,7 +242,14 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     // TODO: default language, page size, maxPageSioze, itemTemplate 
     // TODO: metadataoptions, factories
     // link to parent
-    void renderEndpoint( StringBuilder sb, Resource ep ) {
+    void renderEndpoint( StringBuilder sb, UriInfo ui, Resource ep ) {
+    	String ut = ep.getProperty( API.uriTemplate ).getString(); 
+    	SpecRecord rec = lookupRequest( safe(ut.substring(1)), ui );
+    	System.err.println( ">> rec for " + ut + " is " + rec );
+        Resource meta = createMetadata( ui, ut, rec );
+        Statement q = meta.getProperty(EXTRAS.sparqlQuery );
+    //
+    //
     	String name = shortForm( ep ); 
     	String kind = ep.hasProperty( RDF.type, API.ListEndpoint ) ? "list" : "item";
     	sb.append( "<h2>" )
@@ -259,12 +259,11 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     		;
     	sb.append( "<div id='" + name + "' class='hide'>" );
     //
-    	String ut = ep.getProperty( API.uriTemplate ).getString(); // TODO make safe
     	sb.append( "<h3>uri template</h3>\n" );
     	sb.append( "<div class='indent'>" ).append( ut ).append( "</div>\n" );
     //
     	Resource sel = ep.getProperty( API.selector ).getResource();
-    	if (sel != null) renderSelectors(sb, sel);
+    	if (sel != null) renderSelectors(sb, sel, q.getString() );
     //
     	sb.append( "<h3>views</h3>\n" );
     	Statement dv = ep.getProperty( API.defaultViewer );
@@ -276,7 +275,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	sb.append( "</div>\n" );
     }
 
-	private void renderSelectors(StringBuilder sb, Resource sel) {
+	private void renderSelectors(StringBuilder sb, Resource sel, String query) {
 		sb.append( "<h3>selectors</h3>\n" );
 		Set<Couple<String, Resource>> filters = allFiltersOf( new HashSet<Couple<String, Resource>>(), sel );
 		for (Couple<String, Resource> filter: filters) {
@@ -291,6 +290,10 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		Statement where = sel.getProperty( API.where );
 		if (where != null)
 			sb.append( "  " ).append( "where " ).append( where.getString() ).append( "\n" );
+		sb.append( "<h4>generated query</h4> " );
+        sb.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" );
+		doSPARQL( sb, query );
+		sb.append( "</pre>\n" );
 	}
 
 	private void showView(StringBuilder sb, RDFNode viewer, boolean isDefault) {
