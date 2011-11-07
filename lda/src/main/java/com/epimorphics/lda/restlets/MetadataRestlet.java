@@ -40,11 +40,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.restlets.ControlRestlet.SpecRecord;
+import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.Couple;
@@ -205,18 +207,49 @@ import com.hp.hpl.jena.vocabulary.RDFS;
             StringBuilder specBuilder = new StringBuilder();
             List<APIEndpointSpec> endpoints = rec.getAPIEndpoint().getSpec().getAPISpec().getEndpoints();
             Collections.sort( endpoints, sortByEndpointResource );
-			for (APIEndpointSpec s: endpoints) renderSpec( specBuilder, s.getResource() );  
+			for (APIEndpointSpec s: endpoints) renderEndpoint( specBuilder, s.getResource() );  
             textBody.append( specBuilder.toString() );
+        //
+            renderDictionary( textBody, meta.getModel(), rec.getAPIEndpoint().getSpec().getAPISpec().getShortnameService() );
         //
             return returnAs( Util.withBody( "Metadata", textBody.toString() ), "text/html" );
         }
     }
     
-    // TODO: variable bindings
+    private void renderDictionary( StringBuilder sb, PrefixMapping pm, ShortnameService sns ) {
+    	String name = "api:shortNameDoctionary";
+		sb.append( "<h2>Dictionary <a href='javascript:toggle(\"" + name + "\")'>&nabla; show/hide</a>" ).append( " </h2>\n" );
+		sb.append( "<div id='" + name + "' class='hide'>" );
+		List<String> names = new ArrayList<String>( sns.asContext().allNames() );
+		Collections.sort( names, String.CASE_INSENSITIVE_ORDER );
+		sb.append( "<table>\n" );
+		sb.append( "<thead><tr><th>short name</th><th>range (if property)</th><th>qname</th></tr></thead>\n" );
+		for (String n: names ) {
+			String uri = sns.asContext().getURIfromName( n );
+			String sf = pm.shortForm( uri );
+			ContextPropertyInfo cpi = sns.asContext().getPropertyByName( n );
+			String range = (cpi == null ? "-" : rangeType( pm, cpi.getType() ) );
+			sb.append( "<tr class='zebra'>" )
+				.append( "<td>" ).append( n ).append( "</td>" )
+				.append( "<td>" ).append( range ).append( "</td>" )
+				.append( "<td>" ).append( sf ).append( "</td>\n" )
+				.append( "<tr>\n" )
+				;
+		}
+		sb.append( "</table>" );
+		sb.append( "</div>\n" );
+	}
+    
+    protected String rangeType( PrefixMapping pm, String uri ) {
+    	if (uri == null) return "unspecified";
+    	return pm.shortForm( uri );    	
+    }
+
+	// TODO: variable bindings
     // TODO: default language, page size, maxPageSioze, itemTemplate 
     // TODO: metadataoptions, factories
     // link to parent
-    void renderSpec( StringBuilder sb, Resource ep ) {
+    void renderEndpoint( StringBuilder sb, Resource ep ) {
     	String name = shortForm( ep ); 
     	String kind = ep.hasProperty( RDF.type, API.ListEndpoint ) ? "list" : "item";
     	sb.append( "<h2>" )
@@ -336,7 +369,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	
     };
 
-	protected static String shortForm(Resource r) {
+	protected static String shortForm( Resource r ) {
 		return r.getModel().shortForm( r.getURI() );
 	}
 	
