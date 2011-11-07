@@ -47,6 +47,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.restlets.ControlRestlet.SpecRecord;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.util.Couple;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -142,6 +143,14 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         return meta;
     }
     
+    Comparator<Statement> sortByStatementObjectResource = new Comparator<Statement> () {
+
+		@Override public int compare( Statement a, Statement b ) {
+			return a.getResource().getURI().compareTo( b.getResource().getURI() );
+		}
+    	
+    };
+    
     @GET @Produces("text/html") public Response requestHandlerHTML( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
         if (rec == null) {
@@ -153,6 +162,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         //
             List<Statement> sibs = meta.listProperties( SIBLING ).toList();
             if (sibs.size() > 0) {
+            	Collections.sort( sibs, sortByStatementObjectResource );
                 h2( textBody, "other endpoints in the same API" );
                 for (Statement sib: sibs) {
                     String u = safe( sib.getResource().getURI() );
@@ -225,6 +235,10 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         }
     }
     
+    // TODO: variable bindings
+    // TODO: default language, page size, maxPageSioze, itemTemplate 
+    // TODO: metadataoptions, factories
+    // link to parent
     void renderSpec( StringBuilder sb, Resource meta ) {
     	Resource ep = meta.getProperty( API.endpoint ).getResource();
     	String name = shortForm( ep ); // ep.getModel().shortForm( ep.getURI() );
@@ -235,30 +249,34 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	sb.append( "<b>uri template</b>: " ).append( ut ).append( "\n" );
     //
     	Resource sel = ep.getProperty( API.selector ).getResource();
-    	// TODO also want: parents
-    	if (sel != null) {
-    		sb.append( "<b>selector:</b>\n" );
-    		Set<String> filters = allFiltersOf( new HashSet<String>(), sel );
-    		for (String filter : filters)
-    			sb.append( "  " ).append( "filter " ).append( filter ).append( "\n" );
-    		Statement where = sel.getProperty( API.where );
-    		if (where != null)
-    			sb.append( "  " ).append( "where " ).append( where.getString() ).append( "\n" );
-    	}
+    	if (sel != null) renderSelectors(sb, sel);
     //
     	sb.append( "<b>available views:</b>\n" );
     	Statement dv = ep.getProperty( API.defaultViewer );
-    	if (dv != null)
-    		showView( sb, dv.getObject(), true );
+    	if (dv != null) showView( sb, dv.getObject(), true );
     	RDFNode dvo = dv == null ? null : dv.getObject();
     	for (RDFNode viewer: ep.listProperties( API.viewer ).mapWith( Statement.Util.getObject ).toSet()) {
     		if (!viewer.equals( dvo )) showView( sb, viewer, false );
     	}
-//    	for (Property p : ep.listProperties().mapWith( Statement.Util.getPredicate ).toSet()) {
-//    		sb.append( " =- " ).append( p.getURI() ).append( "\n" );
-//    	}
     	
     }
+
+	private void renderSelectors(StringBuilder sb, Resource sel) {
+		sb.append( "<b>selector:</b>\n" );
+		Set<Couple<String, Resource>> filters = allFiltersOf( new HashSet<Couple<String, Resource>>(), sel );
+		for (Couple<String, Resource> filter: filters) {
+			String from = (filter.b.equals( sel ) ? "" : " (from " + shortForm( filter.b ) + ")");
+			sb.append( "  " )
+				.append( "<b>" ).append( "filter " ).append( "</b>" )
+				.append( filter.a )
+				.append( from )
+				.append( "\n" )
+				;
+		}
+		Statement where = sel.getProperty( API.where );
+		if (where != null)
+			sb.append( "  " ).append( "where " ).append( where.getString() ).append( "\n" );
+	}
 
 	private void showView(StringBuilder sb, RDFNode viewer, boolean isDefault) {
 		Resource v = (Resource) viewer;
@@ -277,12 +295,14 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		}
 	}
     
-    protected Set<String> allFiltersOf( Set<String> them, Resource sel) {
+    protected Set<Couple<String, Resource>> allFiltersOf( Set<Couple<String, Resource>> them, Resource sel) {
     	for (RDFNode p: sel.listProperties( API.parent ).mapWith( Statement.Util.getObject ).toList()) {
     		allFiltersOf( them, (Resource) p );
     	}
     	for (RDFNode f: sel.listProperties( API.filter ).mapWith( Statement.Util.getObject).toList()) {
-    		them.add( ((Literal) f).getLexicalForm() );
+    		String pvs = ((Literal) f).getLexicalForm();
+    		for (String filter: pvs.split( "&" ))
+    			them.add( new Couple<String, Resource>( filter, sel ) );
     	}
     	return them;
 	}
@@ -426,7 +446,12 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     }
     
     private String safe(String val) {
-        return val.replaceAll( "&", "&amp;" ).replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+        return 
+        	val.replaceAll( "&", "&amp;" )
+        	.replaceAll("<", "&lt;")
+        	.replaceAll(">", "&gt;")
+        	.replaceAll( "[{]([^}]*)[}]", "a_$1" )
+        	;
     }
 }
 
