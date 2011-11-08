@@ -208,7 +208,7 @@ spec:schoolsPrimaryDistrict
 		api:parent spec:schoolsPrimarySelector ;
 		api:filter "name-districtAdministrative={district}"
 	] ;
-	api:defaultViewer spec:viewershort
+	api:defaultViewer spec:viewerShort
     .
 
 spec:schoolsSecondaryDistrict

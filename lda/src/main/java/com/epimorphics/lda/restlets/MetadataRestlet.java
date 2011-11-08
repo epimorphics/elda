@@ -45,11 +45,14 @@ import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.core.View;
+import com.epimorphics.lda.core.View.Type;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.restlets.ControlRestlet.SpecRecord;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.PrefixLogger;
+import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.Util;
@@ -258,7 +261,19 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         Statement q = meta.getProperty(EXTRAS.sparqlQuery );
         ShortnameService sns = s.sns();
     //
-    	String name = ut;
+    	renderHeader(sb, s, ut);
+    	renderComments(sb, s);
+    	renderExampleRequestPath(sb, ep);
+    	renderSettings(sb, s);    	
+    	renderItemTemplate(sb, s);
+    	renderSelectors( sb, ep, q );
+    	renderVariables(sb, "h3", "variable bindings for this endpoint", b );
+    	renderViews(sb, ep, s.getExplicitViewNames(), s, sns);
+    	sb.append( "</div>\n" );
+    }
+
+	private void renderHeader(StringBuilder sb, APIEndpointSpec s, String ut) {
+		String name = ut;
     	String kind = s.isListEndpoint() ? "list" : "item";
     	sb.append( "<div style='font-size: 150%; margin-top: 1ex'>" )
     		.append( " <a href='javascript:toggle(\"" + name + "\")'>" ).append( name ).append( "</a>" )
@@ -266,8 +281,10 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     		.append( " </div>\n" )
     		;
     	sb.append( "<div id='" + name + "' class='hide'>" );
-    //
-    	List<Statement> commentStatements = s.getResource().listProperties( RDFS.comment ).toList();
+	}
+
+	private void renderComments(StringBuilder sb, APIEndpointSpec s) {
+		List<Statement> commentStatements = s.getResource().listProperties( RDFS.comment ).toList();
     	if (commentStatements.size() > 0) {
     		sb.append( "<h3>comments</h3>\n" );
     		for (Statement cs: commentStatements) {
@@ -276,8 +293,10 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     			sb.append( "</p>\n" );
     		}
     	}
-    //
-    	Property API_exampleRequestPath = ep.getModel().createProperty( API.NS, "exampleRequestPath" );
+	}
+
+	private void renderExampleRequestPath(StringBuilder sb, Resource ep) {
+		Property API_exampleRequestPath = ep.getModel().createProperty( API.NS, "exampleRequestPath" );
     	List<Statement> examples = ep.listProperties( API_exampleRequestPath ).toList();
     	if (examples.size() > 0) {
     		sb.append( "<h3>example request path(s)" );
@@ -285,34 +304,64 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     			sb.append( "<div class='indent'>" ).append( safe( exs.getString() ) ).append( "</div>\n" );
     		}
     	}
-    //
-    	String dl = s.getDefaultLanguage();
+	}
+
+	private void renderSettings(StringBuilder sb, APIEndpointSpec s) {
+		String dl = s.getDefaultLanguage();
     	sb.append( "<h3>settings</h3>\n" );
     	sb.append( "<div class='indent'>" );
     	sb.append( "default page size: " ).append( s.getDefaultPageSize() );
     	sb.append( ", max page size: " ).append( s.getMaxPageSize() );
     	if (dl != null ) sb.append( ", default languages: " ).append( dl );
-    	sb.append( ".\n</div>\n" );    	
-    //
-    	String it = s.getItemTemplate();
+    	sb.append( ".\n</div>\n" );
+	}
+
+	private void renderItemTemplate(StringBuilder sb, APIEndpointSpec s) {
+		String it = s.getItemTemplate();
     	if (it != null) {
     		sb.append( "<h3>item template</h3>\n" );
     		sb.append( "<div class='indent'>" ).append( safe( it ) ).append( "</div>\n" );
     	}
-    //
-    	renderSelectors( sb, ep, q );
-    //
-    	renderVariables(sb, "h3", "variable bindings for this endpoint", b );
-    //
-    	sb.append( "<h3>views</h3>\n" );
-    	Statement dv = ep.getProperty( API.defaultViewer );
-    	if (dv != null) showView( sb, sns, dv.getObject(), true );
-    	RDFNode dvo = dv == null ? null : dv.getObject();
-    	for (RDFNode viewer: ep.listProperties( API.viewer ).mapWith( Statement.Util.getObject ).toSet()) {
-    		if (!viewer.equals( dvo )) showView( sb, sns, viewer, false );
-    	}
-    	sb.append( "</div>\n" );
-    }
+	}
+
+	private void renderViews(StringBuilder sb, Resource ep, Set<String> viewNames, APIEndpointSpec spec, ShortnameService sns) {
+		sb.append( "<h3>views</h3>\n" );
+		for (String vn: viewNames) {
+			View v = spec.getView( vn );
+			String type = typeAsString( v.getType() );
+			sb.append( "<div style='margin-top: 1ex' class='indent'>\n" );
+			sb.append( "<div><i style='color: red'>" ).append( vn ).append( "</i>" ).append( type ).append( "</div>" );
+			List<PropertyChain> chains = new ArrayList<PropertyChain>( v.chains() );
+			List<String> stringedChains = new ArrayList<String>(chains.size());
+			for (PropertyChain pc: chains) stringedChains.add( chainToString( sns, pc ) );
+			Collections.sort( stringedChains );
+			sb.append( "<div class='indent'>\n" );
+			for (String pc: stringedChains) {
+				sb.append( "<div>").append( pc ).append( "</div>\n" );
+			}
+			sb.append( "</div>\n" );
+			sb.append( "</div>\n" );
+		}
+	}
+
+	private String typeAsString(Type type) {
+		switch (type) {
+			case T_ALL: return " (DESCRIBE + labels)";
+			case T_DESCRIBE: return " (DESCRIBE)";
+			case T_CHAINS: return " (just these properties)";
+		}
+		return "IMPOSSIBLE";
+	}
+
+	private String chainToString( ShortnameService sns, PropertyChain pc ) {
+		StringBuilder sb = new StringBuilder();
+		String dot = "";
+		for (Property p: pc.getProperties()) {
+			sb.append( dot ).append( shortForm( sns, p ) );
+			dot = ".";
+		}
+		return sb.toString();
+	}
 
 	private void renderSelectors( StringBuilder sb, Resource ep, Statement query ) {
 		List<Statement> selectors = ep.listProperties( API.selector ).toList();
@@ -349,30 +398,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 				.append( "</div>\n" )
 				;			
 		}
-	}
-
-	private void showView(StringBuilder sb, ShortnameService sns, RDFNode viewer, boolean isDefault) {
-		Resource v = (Resource) viewer;
-		String u = v.getURI();
-		String viewName = RDFUtil.getStringValue( v, API.name );
-		if (viewName == null) viewName = "";
-		if (u == null) u = "";
-		sb.append( "<div class='indent'>" );
-		sb
-			.append( isDefault ? "<b>default</b> " : "" )
-			.append( "<i style='color: red'>" ).append( viewName ).append( "</i>" )
-			.append( " " ).append( v.getModel().shortForm( u ) )
-			.append( "\n" )
-			;
-		List<String> chains = new ArrayList<String>();
-		for (Statement s : v.listProperties( API.property ).toList()) {
-			chains.add( propertyChain( sns, s.getObject() ) );
-		}
-		Collections.sort( chains );
-		for (String chain: chains) {
-			sb.append( "<div class='indent'>" ).append( chain ).append( "</div>\n" );
-		}
-		sb.append( "\n</div>\n" );
 	}
     
     protected Set<Couple<String, Resource>> allFiltersOf( Set<Couple<String, Resource>> them, Resource sel) {

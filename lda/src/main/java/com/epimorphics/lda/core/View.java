@@ -98,7 +98,7 @@ public class View {
     
 	protected boolean doesFiltering = true;
 	
-	static enum Type { T_DESCRIBE, T_ALL, T_CHAINS };
+	public static enum Type { T_DESCRIBE, T_ALL, T_CHAINS };
 	
 	protected Type type = Type.T_DESCRIBE;
     
