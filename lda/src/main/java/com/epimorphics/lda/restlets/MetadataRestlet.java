@@ -268,6 +268,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	SpecRecord rec = lookupRequest( safe(ut.substring(1)), ui );
         Resource meta = createMetadata( ui, ut, rec );
         Statement q = meta.getProperty(EXTRAS.sparqlQuery );
+        ShortnameService sns = s.sns();
     //
     	String name = shortForm( ep ); 
     	String kind = s.isListEndpoint() ? "list" : "item";
@@ -303,10 +304,10 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     //
     	sb.append( "<h3>views</h3>\n" );
     	Statement dv = ep.getProperty( API.defaultViewer );
-    	if (dv != null) showView( sb, dv.getObject(), true );
+    	if (dv != null) showView( sb, sns, dv.getObject(), true );
     	RDFNode dvo = dv == null ? null : dv.getObject();
     	for (RDFNode viewer: ep.listProperties( API.viewer ).mapWith( Statement.Util.getObject ).toSet()) {
-    		if (!viewer.equals( dvo )) showView( sb, viewer, false );
+    		if (!viewer.equals( dvo )) showView( sb, sns, viewer, false );
     	}
     	sb.append( "</div>\n" );
     }
@@ -332,7 +333,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		sb.append( "</pre>\n" );
 	}
 
-	private void showView(StringBuilder sb, RDFNode viewer, boolean isDefault) {
+	private void showView(StringBuilder sb, ShortnameService sns, RDFNode viewer, boolean isDefault) {
 		Resource v = (Resource) viewer;
 		String u = v.getURI();
 		String viewName = RDFUtil.getStringValue( v, API.name );
@@ -345,8 +346,13 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 			.append( " " ).append( v.getModel().shortForm( u ) )
 			.append( "\n" )
 			;
+		List<String> chains = new ArrayList<String>();
 		for (Statement s : v.listProperties( API.property ).toList()) {
-			sb.append( "<div class='indent'>" ).append( propertyChain( s.getObject() ) ).append( "</div>\n" );
+			chains.add( propertyChain( sns, s.getObject() ) );
+		}
+		Collections.sort( chains );
+		for (String chain: chains) {
+			sb.append( "<div class='indent'>" ).append( chain ).append( "</div>\n" );
 		}
 		sb.append( "\n</div>\n" );
 	}
@@ -363,17 +369,17 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	return them;
 	}
 
-    protected String propertyChain( RDFNode node ) {
-    	if (RDFUtil.isList(node)) return propertyList( (Resource) node );
-    	if (node.isResource()) return shortForm( (Resource) node );
+    protected String propertyChain( ShortnameService sns, RDFNode node ) {
+    	if (RDFUtil.isList(node)) return propertyList( sns, (Resource) node );
+    	if (node.isResource()) return shortForm( sns, (Resource) node );
     	if (node.isLiteral()) return ((Literal) node).getLexicalForm();
     	return "Unexpected property chain '" + node + "'";
     }
 
-    protected String propertyList(Resource node) {
+    protected String propertyList(ShortnameService sns, Resource node) {
     	String result = "";
     	for (RDFNode p: node.as(RDFList.class).asJavaList()) {
-    		result = result + " " + shortForm( (Resource) p );
+    		result = result + "." + shortForm( sns, (Resource) p );
     	}
     	return result;
 	}
@@ -407,6 +413,11 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		}
     	
     };
+    
+    protected static String shortForm( ShortnameService sns, Resource r ) {
+    	String x = sns.asContext().getNameForURI( r.getURI() );
+    	return x == null ? shortForm( r ) : x;
+    }
 
 	protected static String shortForm( Resource r ) {
 		return r.getModel().shortForm( r.getURI() );
