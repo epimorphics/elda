@@ -9,7 +9,7 @@
 
 @prefix spec: <http://services.data.gov.uk/education/api#> .
 
-@prefix lda:     <http://purl.org/linked-data/api/vocab#> .
+@prefix api:     <http://purl.org/linked-data/api/vocab#> .
 
 @prefix dc:      <http://purl.org/dc/elements/1.1/> .
 @prefix geo:     <http://www.w3.org/2003/01/geo/wgs84_pos#> .
@@ -36,8 +36,8 @@
 # }
 #
 spec:schoolsPrimarySelector
-	a lda:Selector ;
-	lda:filter "type=School&name-phaseOfEducation=Primary"
+	a api:Selector ;
+	api:filter "type=School&name-phaseOfEducation=Primary"
 	.
 
 # select schools that are related to a resource, via the school:pageOfEducation property, 
@@ -52,22 +52,22 @@ spec:schoolsPrimarySelector
 # }
 #
 spec:schoolsSecondarySelector
-	a lda:Selector ;
-	lda:filter "type=School&name-phaseOfEducation=Secondary"
+	a api:Selector ;
+	api:filter "type=School&name-phaseOfEducation=Secondary"
 	.
 
 #VIEWERS
 
-spec:viewerShort a lda:Viewer 
-    ; lda:name "short" 
-    ; lda:property 
+spec:viewerShort a api:Viewer 
+    ; api:name "short" 
+    ; api:property 
         rdf:type, rdfs:label, school:establishmentStatus, school:typeOfEstablishment
     .
 
-spec:viewerMedium a lda:Viewer 
-    ; lda:name "medium" 
-    ; lda:property "type.label", "type.nurseryProvision"
-    ; lda:property 
+spec:viewerMedium a api:Viewer 
+    ; api:name "medium" 
+    ; api:property "type.label", "type.nurseryProvision"
+    ; api:property 
         rdfs:label, school:establishmentStatus, school:typeOfEstablishment, school:schoolCapacity
         , school:phaseOfEducation, school:districtAdministrative, school:parliamentaryConstituency
         , school:administrativeWard, school:nurseryProvision 
@@ -80,18 +80,18 @@ spec:viewerMedium a lda:Viewer
 
 <http://services.data.gov.uk/education/sparql> extras:supportsNestedSelect false.
 
-spec:api a lda:API 
+spec:api a api:API 
     ; rdfs:label "Edubase API"@en
     ; foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI
-    ; lda:maxPageSize "50"
-    ; lda:defaultPageSize "10" 
-    ; lda:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
+    ; api:maxPageSize "50"
+    ; api:defaultPageSize "10" 
+    ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
     #
     # normally constructed URIs (for views, formatters, metadata, etc) are based
-    # on the context root of the request. If lda:base is set, then it is used as
+    # on the context root of the request. If api:base is set, then it is used as
     # the root instead.
     #
-    #- ; lda:base "http://education.gov.uk/" 
+    #- ; api:base "http://education.gov.uk/" 
     #
     # activeImageBase is used by the stylesheet to specify the server-relative
     # location for active image icons; likewise inactiveImageBase for inactive
@@ -99,22 +99,22 @@ spec:api a lda:API
     # constructed by the stylesheet for possibly-shared resources. webapp is
     # the webapp root name.
     #
-	; lda:variable
-		[lda:name "activeImageBase"; lda:value "/elda/images/green/16x16"]
-		, [lda:name "inactiveImageBase"; lda:value "/elda/images/grey/16x16"]
-		, [lda:name "_resourceRoot"; lda:value "/elda/"]
-		, [lda:name "webapp"; lda:value "/elda"]
+	; api:variable
+		[api:name "activeImageBase"; api:value "/elda/images/green/16x16"]
+		, [api:name "inactiveImageBase"; api:value "/elda/images/grey/16x16"]
+		, [api:name "_resourceRoot"; api:value "/elda/"]
+		, [api:name "webapp"; api:value "/elda"]
 	#
 	# the default html formatter invokes the XSLT stylesheet. It will normally
 	# be pulled in by a browsers default accept-header, but it can be specified
 	# explicitly using the .html suffix on the URI path.
 	#
-	; lda:formatter 
-		[a lda:XsltFormatter
-		; lda:name 'html'
-		; lda:stylesheet 'xsltsheets/ashtml.xsl'    
+	; api:formatter 
+		[a api:XsltFormatter
+		; api:name 'html'
+		; api:stylesheet 'xsltsheets/ashtml.xsl'    
 		; extras:metadataOptions "bindings,formats,versions,execution"
-		; lda:mimeType 'text/html'
+		; api:mimeType 'text/html'
 		] 
 	#
 	# as an alternative, a non-default html formatter with the name
@@ -123,16 +123,16 @@ spec:api a lda:API
 	# the turtle, rdf/xml, and json renderers are builtin and don't
 	# need specification in this config file.
 	#
-	; lda:formatter
-		[a lda:HtmlFormatter
+	; api:formatter
+		[a api:HtmlFormatter
 		; extras:className "com.epimorphics.lda.demo.Demo_HTML_RendererFactory"
-		; lda:name "plainhtml"
-		; lda:mimeType 'text/htmlx'
+		; api:name "plainhtml"
+		; api:mimeType 'text/htmlx'
 		]
 	#
 	# a bunch of school-type-specific endpoints.
 	#
-	; lda:endpoint 
+	; api:endpoint 
 	   spec:schools
 	   , spec:schoolsPrimary
 	   , spec:schoolsSecondary
@@ -145,81 +145,80 @@ spec:api a lda:API
 	# _suppress_ipto, if set to "yes", causes the isPrimaryTopicOf item
 	# endpoints to be suppressed, to avoid tickling a stylesheet infelicity.
 	#
-	; lda:variable [lda:name "_suppress_ipto"; lda:value "yes"]
+	; api:variable [api:name "_suppress_ipto"; api:value "yes"]
     #
     # causes property names starting "hasX", with some capital letter
     # 'X', to start with 'x' instead, to bypass a stylesheet infelicity.
     #
-    ; lda:variable [lda:name "_strip_has"; lda:value "yes"]        
+    ; api:variable [api:name "_strip_has"; api:value "yes"]        
     #
     # don't suppress media-type selection of renderer
     # (if you need to, set it to "yes")
     #
-    ; lda:variable [lda:name "_supress_media_type"; lda:value "no"]
+    ; api:variable [api:name "_supress_media_type"; api:value "no"]
     .
     	
 #ENDPOINTS
 
 spec:school-by-id
-	a lda:ItemEndpoint
-	; lda:uriTemplate "/education/id/school/{id}"
-	; lda:selector [lda:filter "uniqueReferenceNumber={id}"]
-	; lda:viewer lda:describeViewer
+	a api:ItemEndpoint
+	; api:uriTemplate "/education/id/school/{id}"
+	; api:selector [api:filter "uniqueReferenceNumber={id}"]
+	; api:viewer api:describeViewer
 	.
 
 #List all schools
 spec:schools
-	a lda:ListEndpoint ;
-	lda:uriTemplate "/education/schools" ;
-	lda:selector [ 
-		lda:filter "type=School"
-	] ;
-	lda:defaultViewer spec:viewerMedium ; # lda:labelledDescribeViewer ;
-	lda:viewer spec:viewerShort ;
-	lda:viewer spec:viewerMedium ;
-	lda:viewer [ 
-		lda:name "geo" ;
-		lda:property rdf:type, rdfs:label, school:establishmentStatus, geo:lat, geo:long
+	a api:ListEndpoint
+	; rdfs:comment "This endpoint displays any kind of school." 
+	; api:uriTemplate "/education/schools" 
+	; api:selector [ api:filter "type=School" ] 
+	; api:defaultViewer spec:viewerMedium 
+	; api:viewer spec:viewerShort
+	; api:viewer spec:viewerMedium
+	; api:viewer [ 
+		api:name "geo" ;
+		api:property rdf:type, rdfs:label, school:establishmentStatus, geo:lat, geo:long
 	]
 	.
 
 #List all primary schools
 spec:schoolsPrimary
-	a lda:ListEndpoint ;
-	lda:uriTemplate "/education/schools/primary" ;
-	lda:selector spec:schoolsPrimarySelector ;
-	lda:defaultViewer spec:viewerShort
+	a api:ListEndpoint ;
+	api:uriTemplate "/education/schools/primary" ;
+	api:selector spec:schoolsPrimarySelector ;
+	api:defaultViewer spec:viewerShort
 	.
 
 #List all secondary schools
 spec:schoolsSecondary
-	a lda:ListEndpoint ;
-	lda:uriTemplate "/education/schools/secondary" ;
-	lda:selector spec:schoolsSecondarySelector;
-	lda:defaultViewer spec:viewerShort
+	a api:ListEndpoint ;
+	api:uriTemplate "/education/schools/secondary" ;
+	api:selector spec:schoolsSecondarySelector;
+	api:defaultViewer spec:viewerShort
 	.
 
 #List primary schools for a specific district
 #District is identified by a token in the URL
 #Selector builds on the primary school selector, narrowing query to matching region from uri template
 spec:schoolsPrimaryDistrict
-	a lda:ListEndpoint ;
-	lda:uriTemplate "/education/schools/primary/district/{district}" ;
-    lda:selector [ 
-		lda:parent spec:schoolsPrimarySelector ;
-		lda:filter "name-districtAdministrative={district}"
+	a api:ListEndpoint ;
+	api:uriTemplate "/education/schools/primary/district/{district}" ;
+    api:selector [ 
+		api:parent spec:schoolsPrimarySelector ;
+		api:filter "name-districtAdministrative={district}"
 	] ;
-	lda:defaultViewer spec:viewershort
+	api:defaultViewer spec:viewershort
     .
 
 spec:schoolsSecondaryDistrict
-	a lda:ListEndpoint ;
-	lda:uriTemplate "/education/schools/secondary/district/{district}" ;
-    lda:selector [ 
-		lda:parent spec:schoolsSecondarySelector ;
-		lda:filter "name-districtAdministrative={district}"
+	a api:ListEndpoint ;
+	api:uriTemplate "/education/schools/secondary/district/{district}" ;
+    api:selector [ 
+		api:parent spec:schoolsSecondarySelector ;
+		api:filter "name-districtAdministrative={district}"
 	] ;
-	lda:defaultViewer spec:viewerShort
+	api:defaultViewer spec:viewerShort
 	.
 
 #
@@ -233,502 +232,502 @@ spec:schoolsSecondaryDistrict
 # 
 
 rdf:type
-  lda:label "type"; rdfs:range [] .
+  api:label "type"; rdfs:range [] .
   
-lda:definition a rdf:Property
-    ; lda:label "definition"
+api:definition a rdf:Property
+    ; api:label "definition"
     .  
 
 geo:lat
-      lda:label "lat" .
+      api:label "lat" .
 
-school:title lda:label "title"
+school:title api:label "title"
     .
 
 school:openDate
 	a owl:DatatypeProperty
 	; rdfs:range xsd:date
-    ; lda:label "openDate" 
+    ; api:label "openDate" 
     .
 
 school:EICLSU
    	a owl:DatatypeProperty ;
     rdfs:range xsd:boolean ;
-    lda:label "EICLSU" .
+    api:label "EICLSU" .
 
 school:highDayFee
-      lda:label "highDayFee" .
+      api:label "highDayFee" .
 
 school:admissionsPolicy
-      lda:label "admissionsPolicy" .
+      api:label "admissionsPolicy" .
 
 school:dateofLastISIVisit
 	a owl:DatatypeProperty
 	; rdfs:range xsd:date
-    ; lda:label "dateofLastISIVisit" 
+    ; api:label "dateofLastISIVisit" 
     .
 
 school:region
-      lda:label "region" .
+      api:label "region" .
 
 school:nextHMIorISIvisit
-      lda:label "nextHMIorISIvisit" .
+      api:label "nextHMIorISIvisit" .
 
 school:teenageMotherPlaces
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "teenageMotherPlaces" .
+      api:label "teenageMotherPlaces" .
 
 school:girls18
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls18" .
+      api:label "girls18" .
 
 school:boys10
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys10" .
+      api:label "boys10" .
 
 school:PFI
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "PFI" .
+      api:label "PFI" .
 
 school:HP_Leading_Option
-      lda:label "HP_Leading_Option" .
+      api:label "HP_Leading_Option" .
 
 school:TypeOfEstablishment_City_Technology_College
-      lda:label "Type_City_Technology_College" .
+      api:label "Type_City_Technology_College" .
 
 school:TypeOfEstablishment_Foundation_Special_School
-      lda:label "Type_Foundation_Special_School" .
+      api:label "Type_Foundation_Special_School" .
 
 school:parliamentaryConstituency
-      lda:label "parliamentaryConstituency" .
+      api:label "parliamentaryConstituency" .
 
 school:TypeOfEstablishment_European_Schools
-      lda:label "Type_European_Schools" .
+      api:label "Type_European_Schools" .
 
 spatialrelations:northing
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "northing" .
+      api:label "northing" .
 
 school:association
-      lda:label "association" .
+      api:label "association" .
 
 school:LSOA
-      lda:label "LSOA" .
+      api:label "LSOA" .
 
 school:lastChangedDate
 	a owl:DatatypeProperty
-    ; lda:label "lastChangedDate" 
+    ; api:label "lastChangedDate" 
     ; rdfs:range xsd:date
     .
 
 school:administrativeWard
-      lda:label "administrativeWard" .
+      api:label "administrativeWard" .
 
 school:boys9
       a owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys9" .
+      api:label "boys9" .
 
 school:trust
-      lda:label "trust" .
+      api:label "trust" .
 
 school:UKPRN
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "UKPRN" .
+      api:label "UKPRN" .
 
 school:totalHoursPerWeekPTStaff
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "totalHoursPerWeekPTStaff" .
+      api:label "totalHoursPerWeekPTStaff" .
 
 school:mainSpecialism
-      lda:label "mainSpecialism" .
+      api:label "mainSpecialism" .
 
 school:Foundation
-      lda:label "Foundation" .
+      api:label "Foundation" .
 
 school:districtAdministrative
-      lda:label "districtAdministrative" .
+      api:label "districtAdministrative" .
 
 school:girls16
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls16" .
+      api:label "girls16" .
 
 school:phaseOfEducation
-      lda:label "phaseOfEducation" .
+      api:label "phaseOfEducation" .
 
 school:town
-      lda:label "town" .
+      api:label "town" .
 
 school:EICGroup
-      lda:label "EICGroup" .
+      api:label "EICGroup" .
 
 school:LLSC
-      lda:label "LLSC" .
+      api:label "LLSC" .
 
 school:approvedNumberBoardersSpecial
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "approvedNumberBoardersSpecial" .
+      api:label "approvedNumberBoardersSpecial" .
 
 school:IndependentSchoolType_Steiner
-      lda:label "IndependentSchoolType_Steiner" .
+      api:label "IndependentSchoolType_Steiner" .
 
 school:TypeOfEstablishment_Other_Independent_Special_School
-      lda:label "Type_Other_Independent_Special_School" .
+      api:label "Type_Other_Independent_Special_School" .
 
 school:boarders
-      lda:label "boarders" .
+      api:label "boarders" .
 
 school:TypeOfEstablishment_Special_College
-      lda:label "Type_Special_College" .
+      api:label "Type_Special_College" .
 
 school:totalGirlBoarders
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "totalGirlBoarders" .
+      api:label "totalGirlBoarders" .
 
 school:websiteAddress
-      lda:label "websiteAddress" .
+      api:label "websiteAddress" .
 
 school:boys19plus
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys19plus" .
+      api:label "boys19plus" .
 
 school:dateofLastFPVisit
 	a owl:DatatypeProperty
     ; rdfs:range xsd:date
-    ; lda:label "dateofLastFPVisit" 
+    ; api:label "dateofLastFPVisit" 
     .
 
 geo:long
-      lda:label "long" .
+      api:label "long" .
 
 school:hasTeenageMothers
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "hasTeenageMothers" .
+      api:label "hasTeenageMothers" .
 
 school:girls17
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls17" .
+      api:label "girls17" .
 
 school:PTGirls3
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "PTGirls3" .
+      api:label "PTGirls3" .
 
 school:PTBoys4c
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "PTBoys4c" .
+      api:label "PTBoys4c" .
 
 school:dateofLastOfstedVisit
 	a owl:DatatypeProperty
 	; rdfs:range xsd:date
-	; lda:label "dateofLastOfstedVisit" 
+	; api:label "dateofLastOfstedVisit" 
 	.
 
 school:secondarySpecialism
-      lda:label "secondarySpecialism" .
+      api:label "secondarySpecialism" .
 
 school:PTGirls4c
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "PTGirls4c" .
+      api:label "PTGirls4c" .
 
 school:PTGirls2andUnder
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "PTGirls2andUnder" .
+      api:label "PTGirls2andUnder" .
 
 school:burnhamReport
-      lda:label "burnhamReport" .
+      api:label "burnhamReport" .
 
 school:hasGOR
-      lda:label "hasGOR" .
+      api:label "hasGOR" .
 
 school:boys14
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys14" .
+      api:label "boys14" .
 
 school:address1
-      lda:label "address1" .
+      api:label "address1" .
 
 school:boys6
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys6" .
+      api:label "boys6" .
 
 school:beacon
-      lda:label "beacon" .
+      api:label "beacon" .
 
 school:vcard
-      lda:label "vcard" .
+      api:label "vcard" .
 
 school:censusRecord
-      lda:label "censusRecord" .
+      api:label "censusRecord" .
 
 school:address
-      lda:label "address" .
+      api:label "address" .
 
 school:TypeOfEstablishment_Community_School
-      lda:label "Type_Community_School" .
+      api:label "Type_Community_School" .
 
 school:totalPupilsInPublicCare
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "totalPupilsInPublicCare" .
+      api:label "totalPupilsInPublicCare" .
 
 spatialrelations:easting
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "easting" .
+      api:label "easting" .
 
 school:PTGirls4b
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "PTGirls4b" .
+      api:label "PTGirls4b" .
 
 school:numberOfPupils
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "numberOfPupils" .
+      api:label "numberOfPupils" .
 
 school:TypeOfEstablishment_Welsh_Establishment
-      lda:label "Type_Welsh_Establishment" .
+      api:label "Type_Welsh_Establishment" .
 
 school:placesPRU
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "placesPRU" .
+      api:label "placesPRU" .
 
 school:TypeOfEstablishment_Further_Education
-      lda:label "Type_Further_Education" .
+      api:label "Type_Further_Education" .
 
 school:furtherEducationType
-      lda:label "furtherEducationType" .
+      api:label "furtherEducationType" .
 
 school:girls19plus
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls19plus" .
+      api:label "girls19plus" .
 
 school:boys13
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys13" .
+      api:label "boys13" .
 
 school:boys5
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys5" .
+      api:label "boys5" .
 
 school:address2
-      lda:label "address2" .
+      api:label "address2" .
 
 school:ofstedSpecialMeasures
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "ofstedSpecialMeasures" .
+      api:label "ofstedSpecialMeasures" .
 
 school:boys4a
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys4a" .
+      api:label "boys4a" .
 
 school:compSchoolAge
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "compSchoolAge" .
+      api:label "compSchoolAge" .
 
 school:PTBoys4a
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "PTBoys4a" .
+      api:label "PTBoys4a" .
 
 
 school:marketingOptInOut
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "marketingOptInOut" .
+      api:label "marketingOptInOut" .
 
 school:PTGirls4a
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "PTGirls4a" .
+      api:label "PTGirls4a" .
 
 school:EIC
-      lda:label "EIC" .
+      api:label "EIC" .
 
 school:nurseryProvision
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "nurseryProvision" .
+      api:label "nurseryProvision" .
 
 school:totalPupilsFullTime
-      lda:label "totalPupilsFullTime" .
+      api:label "totalPupilsFullTime" .
 
 school:censusAreaStatisticWard
-      lda:label "censusAreaStatisticWard" .
+      api:label "censusAreaStatisticWard" .
 
 school:specialPupils
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "specialPupils" .
+      api:label "specialPupils" .
 
 school:address3
-      lda:label "address3" .
+      api:label "address3" .
 
 school:boys12
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys12" .
+      api:label "boys12" .
 
 school:notes
-      lda:label "notes" .
+      api:label "notes" .
 
 school:boys4b
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys4b" .
+      api:label "boys4b" .
 
 school:boys8
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys8" .
+      api:label "boys8" .
 
 school:statutoryHighAge
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "statutoryHighAge" .
+      api:label "statutoryHighAge" .
 
 school:TypeOfEstablishment_Voluntary_Controlled_School
-      lda:label "Type_Voluntary_Controlled_School" .
+      api:label "Type_Voluntary_Controlled_School" .
 
 school:postcode
-      lda:label "postcode" .
+      api:label "postcode" .
 
 school:actionFP
-      lda:label "actionFP" .
+      api:label "actionFP" .
 
 school:closeDate
 	a owl:DatatypeProperty
-    ; lda:label "closeDate" 
+    ; api:label "closeDate" 
 	; rdfs:range xsd:date
     .
 
 school:leadershipIncentiveGrant
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "leadershipIncentiveGrant" .
+      api:label "leadershipIncentiveGrant" .
 
 school:PTBoys4b
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "PTBoys4b" .
+      api:label "PTBoys4b" .
 
 school:EICCLS
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "EICCLS" .
+      api:label "EICCLS" .
 
 school:totalBoyBoarders
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "totalBoyBoarders" .
+      api:label "totalBoyBoarders" .
 
 school:TypeOfEstablishment_Sixth_Form_Centres
-      lda:label "Type_Sixth_Form_Centres" .
+      api:label "Type_Sixth_Form_Centres" .
 
 school:totalStaffPartTime
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "totalStaffPartTime" .
+      api:label "totalStaffPartTime" .
 
 school:registeredEY
-      lda:label "registeredEY" .
+      api:label "registeredEY" .
 
 school:admingeo
-      lda:label "admingeo" .
+      api:label "admingeo" .
 
 school:boys11
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys11" .
+      api:label "boys11" .
 
 school:lowBoardFee
-      lda:label "lowBoardFee" .
+      api:label "lowBoardFee" .
 
 school:FTProv
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "FTProv" .
+      api:label "FTProv" .
 
 school:boys7
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys7" .
+      api:label "boys7" .
 
 school:hasCCF
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "hasCCF" .
+      api:label "hasCCF" .
 
 school:boys4c
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys4c" .
+      api:label "boys4c" .
 
 school:TypeOfEstablishment_Other_Independent_School
-      lda:label "Type_Other_Independent_School" .
+      api:label "Type_Other_Independent_School" .
 
 school:boys2
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys2" .
+      api:label "boys2" .
 
 school:establishmentNumber
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "establishmentNumber" .
+      api:label "establishmentNumber" .
 
 school:dateofLastWelfareVisit
 	a owl:DatatypeProperty
 	; rdfs:range xsd:date
-    ; lda:label "dateofLastWelfareVisit" 
+    ; api:label "dateofLastWelfareVisit" 
     .
 
 school:gender
-      lda:label "gender" .
+      api:label "gender" .
 
 school:IndependentSchoolType_Music
-      lda:label "IndependentSchoolType_Music" .
+      api:label "IndependentSchoolType_Music" .
 
 school:girls10
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls10" .
+      api:label "girls10" .
 
 school:burnhamGroup
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "burnhamGroup" .
+      api:label "burnhamGroup" .
 
 school:girls2andUnder
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls2andUnder" .
+      api:label "girls2andUnder" .
 
 school:TrainingSchool
       a       owl:DatatypeProperty ;
@@ -737,416 +736,416 @@ school:TrainingSchool
 dc:date
 	# a owl:DatatypeProperty
 	# ; rdfs:range xsd:date
-    lda:label "date" 
+    api:label "date" 
     .
 
 school:ASCHighestAge
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "ASCHighestAge" .
+      api:label "ASCHighestAge" .
 
 school:boys18
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys18" .
+      api:label "boys18" .
 
 school:totalPupilsPartTime
-      lda:label "totalPupilsPartTime" .
+      api:label "totalPupilsPartTime" .
 
 school:FSM
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "FSM" .
+      api:label "FSM" .
 
 school:TypeOfEstablishment_Higher_Education_Institutions
-      lda:label "Type_Higher_Education_Institutions" .
+      api:label "Type_Higher_Education_Institutions" .
 
 school:girls5
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls5" .
+      api:label "girls5" .
 
 school:uniqueReferenceNumber
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "uniqueReferenceNumber" .
+      api:label "uniqueReferenceNumber" .
 
 school:IndependentSchoolType_Unusual
-      lda:label "IndependentSchoolType_Unusual" .
+      api:label "IndependentSchoolType_Unusual" .
 
 school:EBD
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "EBD" .
+      api:label "EBD" .
 
 school:edByOther
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "edByOther" .
+      api:label "edByOther" .
 
 school:girls3
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls3" .
+      api:label "girls3" .
 
 school:girls11
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls11" .
+      api:label "girls11" .
 
 school:typeOfEstablishment
-      lda:label "typeOfEstablishment" .
+      api:label "typeOfEstablishment" .
 
 school:TypeOfEstablishment_LA_Nursery_School
-      lda:label "Type_LA_Nursery_School" .
+      api:label "Type_LA_Nursery_School" .
 
 school:establishmentName
-      lda:label "establishmentName" .
+      api:label "establishmentName" .
 
 school:eaz
-      lda:label "eaz" .
+      api:label "eaz" .
 
 school:IndependentSchoolType_Tutorial
-      lda:label "IndependentSchoolType_Tutorial" .
+      api:label "IndependentSchoolType_Tutorial" .
 
 school:ASCLowestAge
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "ASCLowestAge" .
+      api:label "ASCLowestAge" .
 
 school:sen
-      lda:label "sen" .
+      api:label "sen" .
 
 school:FSMPercentage
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "FSMPercentage" .
+      api:label "FSMPercentage" .
 
 school:SENStat
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "SENStat" .
+      api:label "SENStat" .
 
 school:boys17
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys17" .
+      api:label "boys17" .
 
 school:localAuthority
-      lda:label "localAuthority" .
+      api:label "localAuthority" .
 
 school:IndependentSchoolType_Montessori_School
-      lda:label "IndependentSchoolType_Montessori_School" .
+      api:label "IndependentSchoolType_Montessori_School" .
 
 school:inspectorate
-      lda:label "inspectorate" .
+      api:label "inspectorate" .
 
 school:Trust
-      lda:label "Trust" .
+      api:label "Trust" .
 
 school:previousLA
-      lda:label "previousLA" .
+      api:label "previousLA" .
 
 school:accomChange
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "accomChange" .
+      api:label "accomChange" .
 
 school:TypeOfEstablishment_Playing_for_Success_Centres
-      lda:label "Type_Playing_for_Success_Centres" .
+      api:label "Type_Playing_for_Success_Centres" .
 
 school:boys16
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys16" .
+      api:label "boys16" .
 
 school:CensusRecord
-      lda:label "CensusRecord" .
+      api:label "CensusRecord" .
 
 school:specialClasses
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "specialClasses" .
+      api:label "specialClasses" .
 
 school:lowDayFee
-      lda:label "lowDayFee" .
+      api:label "lowDayFee" .
 
 school:girls7
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls7" .
+      api:label "girls7" .
 
 school:TypeOfEstablishment_Independent_School_Approved_for_SEN_Pupils
-      lda:label "Type_Independent_School_Approved_for_SEN_Pupils" .
+      api:label "Type_Independent_School_Approved_for_SEN_Pupils" .
 
 school:reasonEstablishmentOpened
-      lda:label "reasonEstablishmentOpened" .
+      api:label "reasonEstablishmentOpened" .
 
 school:boys3
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys3" .
+      api:label "boys3" .
 
 school:investorInPeople
-      lda:label "investorInPeople" .
+      api:label "investorInPeople" .
 
 school:statutoryLowAge
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "statutoryLowAge" .
+      api:label "statutoryLowAge" .
 
 school:eiCActionZone
-      lda:label "eiCActionZone" .
+      api:label "eiCActionZone" .
 
 school:SCUpreferredemail
-      lda:label "SCUpreferredemail" .
+      api:label "SCUpreferredemail" .
 
 school:freshStart
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "freshStart" .
+      api:label "freshStart" .
 
 school:SENPRU
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "SENPRU" .
+      api:label "SENPRU" .
 
 school:boys15
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "boys15" .
+      api:label "boys15" .
 
 school:dateofLastBridgeVisit
 	a owl:DatatypeProperty
 	; rdfs:range xsd:date
-    ; lda:label "dateofLastBridgeVisit" 
+    ; api:label "dateofLastBridgeVisit" 
     .
 
 school:TypeOfEstablishment_Voluntary_Aided_School
-      lda:label "Type_Voluntary_Aided_School" .
+      api:label "Type_Voluntary_Aided_School" .
 
 school:previousEstablishmentNumber
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "previousEstablishmentNumber" .
+      api:label "previousEstablishmentNumber" .
 
 school:TypeOfEstablishment_Community_Special_School
-      lda:label "Type_Community_Special_School" .
+      api:label "Type_Community_Special_School" .
 
 school:IndependentSchoolType_Foreign
-      lda:label "IndependentSchoolType_Foreign" .
+      api:label "IndependentSchoolType_Foreign" .
 
 school:TypeOfEstablishment_Secure_Units
-      lda:label "Type_Secure_Units" .
+      api:label "Type_Secure_Units" .
 
 school:girls6
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls6" .
+      api:label "girls6" .
 
 school:SCUAlternativeEmail
-      lda:label "SCUAlternativeEmail" .
+      api:label "SCUAlternativeEmail" .
 
 school:officialSixthForm
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "officialSixthForm" .
+      api:label "officialSixthForm" .
 
 school:independentSchoolType
-      lda:label "independentSchoolType" .
+      api:label "independentSchoolType" .
 
 school:TypeOfEstablishment_EY_Setting
-      lda:label "Type_EY_Setting" .
+      api:label "Type_EY_Setting" .
 
 school:TypeOfEstablishment_Legacy_types
-      lda:label "Type_Legacy_types" .
+      api:label "Type_Legacy_types" .
 
 school:TypeOfEstablishment_Institution_funded_by_other_Government_Department
-      lda:label "Type_Institution_funded_by_other_Government_Department" .
+      api:label "Type_Institution_funded_by_other_Government_Department" .
 
 school:FEHEIdentifier
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "FEHEIdentifier" .
+      api:label "FEHEIdentifier" .
 
 rdfs:label
-      lda:label "label" .
+      api:label "label" .
 
 school:girls14
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls14" .
+      api:label "girls14" .
 
 school:BoardingEstablishment
-      lda:label "BoardingEstablishment" .
+      api:label "BoardingEstablishment" .
 
 school:establishmentStatus
-      lda:label "establishmentStatus" .
+      api:label "establishmentStatus" .
 
 school:actionGEN
-      lda:label "actionGEN" .
+      api:label "actionGEN" .
 
 school:ofstedLastInsp
-      lda:label "ofstedLastInsp" .
+      api:label "ofstedLastInsp" .
 
 school:superannuationCategory
-      lda:label "superannuationCategory" .
+      api:label "superannuationCategory" .
 
 school:TypeOfEstablishment_Foundation_School
-      lda:label "Type_Foundation_School" .
+      api:label "Type_Foundation_School" .
 
 school:girls9
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls9" .
+      api:label "girls9" .
 
 school:highBoardFee
-      lda:label "highBoardFee" .
+      api:label "highBoardFee" .
 
 school:totalStaffFullTime
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "totalStaffFullTime" .
+      api:label "totalStaffFullTime" .
 
 school:TypeOfEstablishment_Pupil_Referral_Unit
-      lda:label "Type_Pupil_Referral_Unit" .
+      api:label "Type_Pupil_Referral_Unit" .
 
 school:TypeOfEstablishment_Miscellaneous
-      lda:label "Type_Miscellaneous" .
+      api:label "Type_Miscellaneous" .
 
 school:girls15
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls15" .
+      api:label "girls15" .
 
 school:TypeOfEstablishment_Service_Childrens_Education
-      lda:label "Type_Service_Childrens_Education" .
+      api:label "Type_Service_Childrens_Education" .
 
 school:PTBoys3
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "PTBoys3" .
+      api:label "PTBoys3" .
 
 school:girls8
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls8" .
+      api:label "girls8" .
 
 school:pupilTeacherRatio
-      lda:label "pupilTeacherRatio" .
+      api:label "pupilTeacherRatio" .
 
 school:PTBoys2andUnder
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "PTBoys2andUnder" .
+      api:label "PTBoys2andUnder" .
 
 school:urbanRural
-      lda:label "urbanRural" .
+      api:label "urbanRural" .
 
 
 school:reasonEstablishmentClosed
-      lda:label "reasonEstablishmentClosed" .
+      api:label "reasonEstablishmentClosed" .
 
 school:dateofLastSISVisit
 	a owl:DatatypeProperty
 	; rdfs:range xsd:date
-    ; lda:label "dateofLastSISVisit" 
+    ; api:label "dateofLastSISVisit" 
     .
 
 school:girls12
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls12" .
+      api:label "girls12" .
 
 school:girls4c
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls4c" .
+      api:label "girls4c" .
 
 school:federation
-      lda:label "federation" .
+      api:label "federation" .
 
 school:School
-      lda:label "School" .
+      api:label "School" .
 
 school:numberOfBoys
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "numberOfBoys" .
+      api:label "numberOfBoys" .
 
 school:charity
-      lda:label "charity" .
+      api:label "charity" .
 
 school:IndependentSchoolType_Arts
-      lda:label "IndependentSchoolType_Arts" .
+      api:label "IndependentSchoolType_Arts" .
 
 school:religiousCharacter
-      lda:label "religiousCharacter" .
+      api:label "religiousCharacter" .
 
 school:diocese
-      lda:label "diocese" .
+      api:label "diocese" .
 
 school:TypeOfEstablishment_Offshore_Schools
-      lda:label "Type_Offshore_Schools" .
+      api:label "Type_Offshore_Schools" .
 
 school:TypeOfEstablishment_Non-Maintained_Special_School
-      lda:label "Type_Non-Maintained_Special_School" .
+      api:label "Type_Non-Maintained_Special_School" .
 
 school:MSOA
-      lda:label "MSOA" .
+      api:label "MSOA" .
 
 school:Diocese
-      lda:label "Diocese" .
+      api:label "Diocese" .
 
 school:earlyExcellence
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "earlyExcellence" .
+      api:label "earlyExcellence" .
 
 school:girls4b
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls4b" .
+      api:label "girls4b" .
 
 school:actionWEL
-      lda:label "actionWEL" .
+      api:label "actionWEL" .
 
 school:girls13
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls13" .
+      api:label "girls13" .
 
 school:trustSchool
       a       owl:DatatypeProperty ;
       rdfs:range xsd:boolean ;
-      lda:label "trustSchool" .
+      api:label "trustSchool" .
 
 school:numberOfGirls
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "numberOfGirls" .
+      api:label "numberOfGirls" .
 
 school:girls4a
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "girls4a" .
+      api:label "girls4a" .
 
 school:schoolCapacity
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "schoolCapacity" .
+      api:label "schoolCapacity" .
 
 school:TypeOfEstablishment_Academies
-      lda:label "Type_Academies" .
+      api:label "Type_Academies" .
 
 school:SENNoStat
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "SENNoStat" .
+      api:label "SENNoStat" .
 
 school:EYGovernmentFundedChildren
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
-      lda:label "EYGovernmentFundedChildren" .
+      api:label "EYGovernmentFundedChildren" .
 
 	

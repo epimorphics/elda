@@ -57,7 +57,6 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.util.ResourceUtils;
-import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 
@@ -198,9 +197,10 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         //
             renderVariables( textBody, "h2", "API variables", rec.getAPIEndpoint().getSpec().getAPISpec().getBindings() );
         //
+            textBody.append( "<h2>endpoints for this API</h2>\n" );
             StringBuilder specBuilder = new StringBuilder();
             List<APIEndpointSpec> endpoints = rec.getAPIEndpoint().getSpec().getAPISpec().getEndpoints();
-            Collections.sort( endpoints, sortByEndpointResource );
+            Collections.sort( endpoints, sortByEndpointURITemplate );
 			for (APIEndpointSpec s: endpoints) renderEndpoint( specBuilder, ui, s );  
             textBody.append( specBuilder.toString() );
         //
@@ -242,11 +242,11 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 			String sf = pm.shortForm( uri );
 			ContextPropertyInfo cpi = sns.asContext().getPropertyByName( n );
 			String range = (cpi == null ? "-" : rangeType( pm, cpi.getType() ) );
-			sb.append( "<tr class='zebra'>" )
+			sb.append( "<tr>" )
 				.append( "<td>" ).append( n ).append( "</td>" )
 				.append( "<td>" ).append( range ).append( "</td>" )
 				.append( "<td>" ).append( sf ).append( "</td>\n" )
-				.append( "<tr>\n" )
+				.append( "</tr>\n" )
 				;
 		}
 		sb.append( "</table>" );
@@ -258,7 +258,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	return pm.shortForm( uri );    	
     }
 
-    // TODO: default language, page size, maxPageSioze, itemTemplate 
     // TODO: metadataoptions, factories
     // link to parent
     void renderEndpoint( StringBuilder sb, UriInfo ui, APIEndpointSpec s ) {
@@ -270,15 +269,33 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         Statement q = meta.getProperty(EXTRAS.sparqlQuery );
         ShortnameService sns = s.sns();
     //
-    	String name = shortForm( ep ); 
+    	String name = ut;
     	String kind = s.isListEndpoint() ? "list" : "item";
-    	sb.append( "<h2>" )
-    		.append( kind ).append( " endpoint " ).append( name )
-    		.append( " <a href='javascript:toggle(\"" + name + "\")'>&nabla; show/hide</a>" )
-    		.append( " </h2>\n" )
+    	sb.append( "<div style='font-size: 150%; margin-top: 1ex'>" )
+    		.append( " <a href='javascript:toggle(\"" + name + "\")'>" ).append( name ).append( "</a>" )
+    		.append( " [" ).append( kind ).append( " endpoint] " )
+    		.append( " </div>\n" )
     		;
     	sb.append( "<div id='" + name + "' class='hide'>" );
-    	
+    //
+    	List<Statement> commentStatements = s.getResource().listProperties( RDFS.comment ).toList();
+    	if (commentStatements.size() > 0) {
+    		sb.append( "<h3>comments</h3>\n" );
+    		for (Statement cs: commentStatements) {
+    			sb.append( "<p>\n" );
+    			sb.append( safe( cs.getString() ) );
+    			sb.append( "</p>\n" );
+    		}
+    	}
+    //
+    	Property API_exampleRequestPath = ep.getModel().createProperty( API.NS, "exampleRequestPath" );
+    	List<Statement> examples = ep.listProperties( API_exampleRequestPath ).toList();
+    	if (examples.size() > 0) {
+    		sb.append( "<h3>example request path(s)" );
+    		for (Statement exs: examples) {
+    			sb.append( "<div class='indent'>" ).append( safe( exs.getString() ) ).append( "</div>\n" );
+    		}
+    	}
     //
     	String dl = s.getDefaultLanguage();
     	sb.append( "<h3>settings</h3>\n" );
@@ -288,19 +305,16 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	if (dl != null ) sb.append( ", default languages: " ).append( dl );
     	sb.append( ".\n</div>\n" );    	
     //
-    	sb.append( "<h3>uri template</h3>\n" );
-    	sb.append( "<div class='indent'>" ).append( ut ).append( "</div>\n" );
-    //
     	String it = s.getItemTemplate();
     	if (it != null) {
     		sb.append( "<h3>item template</h3>\n" );
     		sb.append( "<div class='indent'>" ).append( safe( it ) ).append( "</div>\n" );
     	}
     //
-    	Resource sel = ep.getProperty( API.selector ).getResource();
-    	if (sel != null) renderSelectors(sb, sel, q.getString() );
+    	Statement sel = ep.getProperty( API.selector );
+    	if (sel != null) renderSelectors(sb, sel.getResource(), q.getString() );
     //
-    	renderVariables(sb, "h3", "endpoint variables", b );
+    	renderVariables(sb, "h3", "variable bindings for this endpoint", b );
     //
     	sb.append( "<h3>views</h3>\n" );
     	Statement dv = ep.getProperty( API.defaultViewer );
@@ -318,15 +332,22 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		for (Couple<String, Resource> filter: filters) {
 			String from = (filter.b.equals( sel ) ? "" : " (from " + shortForm( filter.b ) + ")");
 			sb.append( "<div class='indent'>" )
-				.append( "<b>" ).append( "filter " ).append( "</b>" )
+				.append( "<b>filter</b> " )
 				.append( filter.a )
 				.append( from )
 				.append( "</div>\n" )
 				;
 		}
-		Statement where = sel.getProperty( API.where );
-		if (where != null)
-			sb.append( "  " ).append( "where " ).append( where.getString() ).append( "\n" );
+		List<Statement> wheres = sel.listProperties( API.where ).toList();
+		for (Statement where: wheres) {
+			sb.append( "<div class='indent'>" )
+				.append( "<b>where</b>\n" )
+				.append( "<pre>" )
+				.append( where.getString() )
+				.append( "</pre>\n" )
+				.append( "</div>\n" )
+				;			
+		}
 		sb.append( "<h4>generated query</h4> " );
         sb.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" );
 		doSPARQL( sb, query );
@@ -338,7 +359,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		String u = v.getURI();
 		String viewName = RDFUtil.getStringValue( v, API.name );
 		if (viewName == null) viewName = "";
-		if (u == null) u = "anonymous";
+		if (u == null) u = "";
 		sb.append( "<div class='indent'>" );
 		sb
 			.append( isDefault ? "<b>default</b> " : "" )
@@ -411,7 +432,13 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		@Override public int compare( APIEndpointSpec ep1, APIEndpointSpec ep2 ) {
 			return shortForm(ep1.getResource() ).compareTo( shortForm( ep2.getResource() ) );
 		}
-    	
+    };
+
+    static final Comparator<APIEndpointSpec> sortByEndpointURITemplate = new Comparator<APIEndpointSpec>() {
+
+		@Override public int compare( APIEndpointSpec ep1, APIEndpointSpec ep2 ) {
+			return ep1.getURITemplate().compareTo( ep2.getURITemplate() );
+		}
     };
     
     protected static String shortForm( ShortnameService sns, Resource r ) {
