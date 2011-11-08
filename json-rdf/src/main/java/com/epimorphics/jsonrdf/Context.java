@@ -289,7 +289,7 @@ public class Context implements Cloneable {
         if (name == null) {
             // Try just using localname
             String localname = r.getLocalName(); 
-            if ( nameUpdateOK(localname, uri) ) return localname;
+            if ( nameUpdateOK(localname, uri) ) return localname; 
             
             // See if we can generate a prefix form
             name = r.getModel().shortForm(uri);

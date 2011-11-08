@@ -207,13 +207,12 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 	private void renderDictionary( StringBuilder sb, PrefixMapping pm, ShortnameService sns ) {
     	String name = "api:shortNameDictionary";
+    	List<String> shortNames = preferredShortnamesInOrder( sns );
 		sb.append( "<h2>shortname dictionary <a href='javascript:toggle(\"" + name + "\")'>show/hide</a>" ).append( " </h2>\n" );
 		sb.append( "<div id='" + name + "' class='hide'>" );
-		List<String> names = new ArrayList<String>( sns.asContext().allNames() );
-		Collections.sort( names, String.CASE_INSENSITIVE_ORDER );
 		sb.append( "<table>\n" );
 		sb.append( "<thead><tr><th>short name</th><th>range (if property)</th><th>qname</th></tr></thead>\n" );
-		for (String n: names ) {
+		for (String n: shortNames ) {
 			String uri = sns.asContext().getURIfromName( n );
 			String sf = pm.shortForm( uri );
 			ContextPropertyInfo cpi = sns.asContext().getPropertyByName( n );
@@ -227,6 +226,20 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		}
 		sb.append( "</table>" );
 		sb.append( "</div>\n" );
+	}
+
+	private List<String> preferredShortnamesInOrder(ShortnameService sns) {
+		Set<String> allNames = new HashSet<String>( sns.asContext().allNames() );
+		Set<String> toRemove = new HashSet<String>();
+		for (String oneName: allNames) {
+			String uri = sns.asContext().getURIfromName( oneName );
+			String preferred = sns.asContext().getNameForURI( uri );
+			if (!oneName.equals(preferred)) toRemove.add( oneName );
+		}
+		allNames.removeAll( toRemove );
+		List<String> names = new ArrayList<String>( allNames );
+		Collections.sort( names, String.CASE_INSENSITIVE_ORDER );
+		return names;
 	}
     
     protected String rangeType( PrefixMapping pm, String uri ) {
