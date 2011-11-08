@@ -45,9 +45,11 @@ import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.restlets.ControlRestlet.SpecRecord;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.Util;
@@ -194,10 +196,12 @@ import com.hp.hpl.jena.vocabulary.RDFS;
                 }
             }
         //
+            renderVariables( textBody, "h2", "API variables", rec.getAPIEndpoint().getSpec().getAPISpec().getBindings() );
+        //
             StringBuilder specBuilder = new StringBuilder();
             List<APIEndpointSpec> endpoints = rec.getAPIEndpoint().getSpec().getAPISpec().getEndpoints();
             Collections.sort( endpoints, sortByEndpointResource );
-			for (APIEndpointSpec s: endpoints) renderEndpoint( specBuilder, ui, s.getResource() );  
+			for (APIEndpointSpec s: endpoints) renderEndpoint( specBuilder, ui, s );  
             textBody.append( specBuilder.toString() );
         //
             renderDictionary( textBody, meta.getModel(), rec.getAPIEndpoint().getSpec().getAPISpec().getShortnameService() );
@@ -206,7 +210,26 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         }
     }
     
-    private void renderDictionary( StringBuilder sb, PrefixMapping pm, ShortnameService sns ) {
+    private void renderVariables( StringBuilder sb, String tag, String title, Bindings b ) {
+    	List<String> names = new ArrayList<String>( b.keySet() );
+    	if (names.size() > 0) {
+	    	sb.append( "<" + tag + ">" ).append( title ).append( "</" + tag + ">\n" );
+	    	PrefixLogger pl = new PrefixLogger();
+	    	Collections.sort( names );
+	    	sb.append( "<table>\n" );
+			for (String name: names) {
+				Value v = b.get( name );
+				sb.append( "<tr>" )
+					.append( "<td>" ).append( name ).append( "</td>" )
+					.append( "<td>" ).append( v.asSparqlTerm(pl) ).append( "</td>" )
+					.append( "</tr>\n" )
+					;
+			}
+			sb.append( "</table>\n" );
+    	}
+	}
+
+	private void renderDictionary( StringBuilder sb, PrefixMapping pm, ShortnameService sns ) {
     	String name = "api:shortNameDoctionary";
 		sb.append( "<h2>Dictionary <a href='javascript:toggle(\"" + name + "\")'>&nabla; show/hide</a>" ).append( " </h2>\n" );
 		sb.append( "<div id='" + name + "' class='hide'>" );
@@ -235,31 +258,48 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	return pm.shortForm( uri );    	
     }
 
-	// TODO: variable bindings
     // TODO: default language, page size, maxPageSioze, itemTemplate 
     // TODO: metadataoptions, factories
     // link to parent
-    void renderEndpoint( StringBuilder sb, UriInfo ui, Resource ep ) {
+    void renderEndpoint( StringBuilder sb, UriInfo ui, APIEndpointSpec s ) {
+    	Resource ep = s.getResource();
+    	Bindings b = s.getBindings();
     	String ut = ep.getProperty( API.uriTemplate ).getString(); 
     	SpecRecord rec = lookupRequest( safe(ut.substring(1)), ui );
         Resource meta = createMetadata( ui, ut, rec );
         Statement q = meta.getProperty(EXTRAS.sparqlQuery );
     //
-    //
     	String name = shortForm( ep ); 
-    	String kind = ep.hasProperty( RDF.type, API.ListEndpoint ) ? "list" : "item";
+    	String kind = s.isListEndpoint() ? "list" : "item";
     	sb.append( "<h2>" )
     		.append( kind ).append( " endpoint " ).append( name )
     		.append( " <a href='javascript:toggle(\"" + name + "\")'>&nabla; show/hide</a>" )
     		.append( " </h2>\n" )
     		;
     	sb.append( "<div id='" + name + "' class='hide'>" );
+    	
+    //
+    	String dl = s.getDefaultLanguage();
+    	sb.append( "<h3>settings</h3>\n" );
+    	sb.append( "<div class='indent'>" );
+    	sb.append( "default page size: " ).append( s.getDefaultPageSize() );
+    	sb.append( ", max page size: " ).append( s.getMaxPageSize() );
+    	if (dl != null ) sb.append( ", default languages: " ).append( dl );
+    	sb.append( ".\n</div>\n" );    	
     //
     	sb.append( "<h3>uri template</h3>\n" );
     	sb.append( "<div class='indent'>" ).append( ut ).append( "</div>\n" );
     //
+    	String it = s.getItemTemplate();
+    	if (it != null) {
+    		sb.append( "<h3>item template</h3>\n" );
+    		sb.append( "<div class='indent'>" ).append( safe( it ) ).append( "</div>\n" );
+    	}
+    //
     	Resource sel = ep.getProperty( API.selector ).getResource();
     	if (sel != null) renderSelectors(sb, sel, q.getString() );
+    //
+    	renderVariables(sb, "h3", "endpoint variables", b );
     //
     	sb.append( "<h3>views</h3>\n" );
     	Statement dv = ep.getProperty( API.defaultViewer );
