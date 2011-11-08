@@ -142,14 +142,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         return meta;
     }
     
-    Comparator<Statement> sortByStatementObjectResource = new Comparator<Statement> () {
-
-		@Override public int compare( Statement a, Statement b ) {
-			return a.getResource().getURI().compareTo( b.getResource().getURI() );
-		}
-    	
-    };
-    
     @GET @Produces("text/html") public Response requestHandlerHTML( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
         if (rec == null) {
@@ -158,22 +150,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
             Resource meta = createMetadata( ui, pathstub, rec );
             StringBuilder textBody = new StringBuilder();
             h1( textBody, "metadata for " + pathstub );
-        //
-            List<Statement> sibs = meta.listProperties( SIBLING ).toList();
-            if (sibs.size() > 0) {
-            	Collections.sort( sibs, sortByStatementObjectResource );
-                h2( textBody, "other endpoints in the same API" );
-                for (Statement sib: sibs) {
-                    String u = safe( sib.getResource().getURI() );
-                    textBody.append( "\n<div class='link'>" );
-                    textBody.append( "<a href='" );
-                    textBody.append( u );
-                    textBody.append( "'>" );
-                    textBody.append( u );
-                    textBody.append( "</a>" );                    
-                    textBody.append( "</div>\n" );
-                }
-            }
         //
             Statement ep = meta.getProperty( API.sparqlEndpoint );
             h2( textBody, "SPARQL endpoint for queries" );
@@ -230,8 +206,8 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 	}
 
 	private void renderDictionary( StringBuilder sb, PrefixMapping pm, ShortnameService sns ) {
-    	String name = "api:shortNameDoctionary";
-		sb.append( "<h2>Dictionary <a href='javascript:toggle(\"" + name + "\")'>&nabla; show/hide</a>" ).append( " </h2>\n" );
+    	String name = "api:shortNameDictionary";
+		sb.append( "<h2>shortname dictionary <a href='javascript:toggle(\"" + name + "\")'>show/hide</a>" ).append( " </h2>\n" );
 		sb.append( "<div id='" + name + "' class='hide'>" );
 		List<String> names = new ArrayList<String>( sns.asContext().allNames() );
 		Collections.sort( names, String.CASE_INSENSITIVE_ORDER );
@@ -311,8 +287,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     		sb.append( "<div class='indent'>" ).append( safe( it ) ).append( "</div>\n" );
     	}
     //
-    	Statement sel = ep.getProperty( API.selector );
-    	if (sel != null) renderSelectors(sb, sel.getResource(), q.getString() );
+    	renderSelectors( sb, ep, q );
     //
     	renderVariables(sb, "h3", "variable bindings for this endpoint", b );
     //
@@ -326,8 +301,21 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	sb.append( "</div>\n" );
     }
 
-	private void renderSelectors(StringBuilder sb, Resource sel, String query) {
-		sb.append( "<h3>selectors</h3>\n" );
+	private void renderSelectors( StringBuilder sb, Resource ep, Statement query ) {
+		List<Statement> selectors = ep.listProperties( API.selector ).toList();
+		if (selectors.size() > 0) {
+			sb.append( "<h3>selectors</h3>\n" );
+			for (Statement selector: selectors) 
+				renderSelectors(sb, selector.getResource() );
+				
+		}
+		sb.append( "<h4>generated query</h4> " );
+        sb.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" );
+		doSPARQL( sb, query.getString() );
+		sb.append( "</pre>\n" );
+	}
+
+	private void renderSelectors( StringBuilder sb, Resource sel ) {
 		Set<Couple<String, Resource>> filters = allFiltersOf( new HashSet<Couple<String, Resource>>(), sel );
 		for (Couple<String, Resource> filter: filters) {
 			String from = (filter.b.equals( sel ) ? "" : " (from " + shortForm( filter.b ) + ")");
@@ -348,10 +336,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 				.append( "</div>\n" )
 				;			
 		}
-		sb.append( "<h4>generated query</h4> " );
-        sb.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" );
-		doSPARQL( sb, query );
-		sb.append( "</pre>\n" );
 	}
 
 	private void showView(StringBuilder sb, ShortnameService sns, RDFNode viewer, boolean isDefault) {
@@ -438,6 +422,13 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 		@Override public int compare( APIEndpointSpec ep1, APIEndpointSpec ep2 ) {
 			return ep1.getURITemplate().compareTo( ep2.getURITemplate() );
+		}
+    };
+    
+    static final Comparator<Statement> sortByStatementObjectResource = new Comparator<Statement> () {
+
+		@Override public int compare( Statement a, Statement b ) {
+			return a.getResource().getURI().compareTo( b.getResource().getURI() );
 		}
     };
     
