@@ -114,8 +114,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.EXTRA + "SIBLING" );
     
     private Resource createMetadata(UriInfo ui, String pathStub, SpecRecord rec) {
-    	System.err.println( ">> bindings: " + rec.getBindings() );
-    	System.err.println( ">> parameters: " + ui.getQueryParameters() );
         Bindings cc = Bindings.createContext( rec.getBindings(), JerseyUtils.convert( ui.getQueryParameters() ) );
         Model metadata = ModelFactory.createDefaultModel();
         Resource meta = rec.getAPIEndpoint().getMetadata( cc, ui.getRequestUri(), metadata);
@@ -153,7 +151,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     
     @GET @Produces("text/html") public Response requestHandlerHTML( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
-        System.err.println( ">> stub: " + pathstub );
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
@@ -245,7 +242,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     void renderEndpoint( StringBuilder sb, UriInfo ui, Resource ep ) {
     	String ut = ep.getProperty( API.uriTemplate ).getString(); 
     	SpecRecord rec = lookupRequest( safe(ut.substring(1)), ui );
-    	System.err.println( ">> rec for " + ut + " is " + rec );
         Resource meta = createMetadata( ui, ut, rec );
         Statement q = meta.getProperty(EXTRAS.sparqlQuery );
     //
