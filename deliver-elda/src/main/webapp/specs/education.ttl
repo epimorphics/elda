@@ -232,8 +232,14 @@ spec:schoolsSecondaryDistrict
 # 
 
 rdf:type
-  api:label "type"; rdfs:range [] .
+    api:label "type"
+    ; rdfs:range rdfs:Class
+    .
   
+rdfs:label a rdf:Property
+    ; api:label "label" 
+    .
+      
 api:definition a rdf:Property
     ; api:label "definition"
     .  
@@ -967,9 +973,6 @@ school:FEHEIdentifier
       a       owl:DatatypeProperty ;
       rdfs:range xsd:int ;
       api:label "FEHEIdentifier" .
-
-rdfs:label
-      api:label "label" .
 
 school:girls14
       a       owl:DatatypeProperty ;

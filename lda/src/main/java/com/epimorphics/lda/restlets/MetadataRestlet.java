@@ -23,12 +23,7 @@ import static com.epimorphics.lda.restlets.RouterRestlet.returnAs;
 import static com.epimorphics.lda.restlets.RouterRestlet.returnNotFound;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +37,6 @@ import javax.ws.rs.core.UriInfo;
 
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.Encoder;
-import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.View;
@@ -180,7 +174,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
             StringBuilder specBuilder = new StringBuilder();
             List<APIEndpointSpec> endpoints = rec.getAPIEndpoint().getSpec().getAPISpec().getEndpoints();
             Collections.sort( endpoints, sortByEndpointURITemplate );
-			for (APIEndpointSpec s: endpoints) renderEndpoint( specBuilder, ui, s );  
+			for (APIEndpointSpec s: endpoints) renderEndpoint( specBuilder, ui, meta.getModel(), s );  
             textBody.append( specBuilder.toString() );
         //
             renderDictionary( textBody, meta.getModel(), rec.getAPIEndpoint().getSpec().getAPISpec().getShortnameService() );
@@ -217,18 +211,21 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		sb.append( "<thead><tr><th>short name</th><th>range (if property)</th><th>qname</th></tr></thead>\n" );
 		for (String n: shortNames ) {
 			String uri = sns.asContext().getURIfromName( n );
-			String sf = pm.shortForm( uri );
 			ContextPropertyInfo cpi = sns.asContext().getPropertyByName( n );
 			String range = (cpi == null ? "-" : rangeType( pm, cpi.getType() ) );
 			sb.append( "<tr>" )
 				.append( "<td>" ).append( n ).append( "</td>" )
 				.append( "<td>" ).append( range ).append( "</td>" )
-				.append( "<td>" ).append( sf ).append( "</td>\n" )
+				.append( "<td>" ).append( linkFor( pm, uri ) ).append( "</td>\n" )
 				.append( "</tr>\n" )
 				;
 		}
 		sb.append( "</table>" );
 		sb.append( "</div>\n" );
+	}
+
+	private Object linkFor(PrefixMapping pm, String uri) {
+		return "<a href='" + uri + "'>" + pm.shortForm( uri ) + "</a>";
 	}
 
 	private List<String> preferredShortnamesInOrder(ShortnameService sns) {
@@ -252,7 +249,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
     // TODO: metadataoptions, factories
     // link to parent
-    void renderEndpoint( StringBuilder sb, UriInfo ui, APIEndpointSpec s ) {
+    void renderEndpoint( StringBuilder sb, UriInfo ui, PrefixMapping pm, APIEndpointSpec s ) {
     	Resource ep = s.getResource();
     	Bindings b = s.getBindings();
     	String ut = ep.getProperty( API.uriTemplate ).getString(); 
@@ -268,7 +265,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	renderItemTemplate(sb, s);
     	renderSelectors( sb, ep, q );
     	renderVariables(sb, "h3", "variable bindings for this endpoint", b );
-    	renderViews(sb, ep, s, sns);
+    	renderViews(sb, ep, pm, s, sns);
     	sb.append( "</div>\n" );
     }
 
@@ -324,7 +321,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	}
 	}
 
-	private void renderViews(StringBuilder sb, Resource ep,  APIEndpointSpec spec, ShortnameService sns) {
+	private void renderViews(StringBuilder sb, Resource ep,  PrefixMapping pm, APIEndpointSpec spec, ShortnameService sns) {
 		Set<String> viewNames = spec.getExplicitViewNames();
 		View dv = spec.getDefaultView();
 		boolean seenDefault = false;
@@ -332,14 +329,14 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		for (String vn: viewNames) {
 			View v = spec.getView( vn );
 			boolean isDefault = v.equals( dv );
-			renderView(sb, sns, isDefault, vn, v);
+			renderView(sb, sns, pm, isDefault, v);
 			if (isDefault) seenDefault = true;
 		}
-		if (dv != null && !seenDefault) renderView( sb, sns, true, "xxx", dv);
+		if (dv != null && !seenDefault) renderView( sb, sns, pm, true, dv);
 	}
 
-	private void renderView(StringBuilder sb, ShortnameService sns, boolean isDefault, String vn, View v) {
-		vn = v.name();
+	private void renderView(StringBuilder sb, ShortnameService sns, PrefixMapping pm, boolean isDefault, View v) {
+		String vn = v.name();
 		String type = typeAsString( v.getType() );
 		sb.append( "<div style='margin-top: 1ex' class='indent'>\n" );
 		sb.append( "<div>" );
@@ -348,7 +345,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		sb.append( "</div>" );
 		List<PropertyChain> chains = new ArrayList<PropertyChain>( v.chains() );
 		List<String> stringedChains = new ArrayList<String>(chains.size());
-		for (PropertyChain pc: chains) stringedChains.add( chainToString( sns, pc ) );
+		for (PropertyChain pc: chains) stringedChains.add( chainToString( sns, pm, pc ) );
 		Collections.sort( stringedChains );
 		sb.append( "<div class='indent'>\n" );
 		for (String pc: stringedChains) {
@@ -367,12 +364,22 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 		return "IMPOSSIBLE";
 	}
 
-	private String chainToString( ShortnameService sns, PropertyChain pc ) {
+	private String chainToString( ShortnameService sns, PrefixMapping pm, PropertyChain pc ) {
 		StringBuilder sb = new StringBuilder();
+		List<Property> properties = pc.getProperties();
+		Property last = properties.get( properties.size() - 1 );
 		String dot = "";
-		for (Property p: pc.getProperties()) {
+		for (Property p: properties) {
 			sb.append( dot ).append( shortForm( sns, p ) );
 			dot = ".";
+		}
+		ContextPropertyInfo cpi = sns.asContext().findProperty( last );
+		if (cpi != null) {
+			String type = cpi.getType();
+			if (type != null && type.startsWith( "http:" )) {
+				String shortName = rangeType( pm, type );
+				sb.append( " <i style='color: blue'>" ).append( shortName ).append( "</i>" );
+			}
 		}
 		return sb.toString();
 	}
@@ -424,14 +431,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     			them.add( new Couple<String, Resource>( filter, sel ) );
     	}
     	return them;
-	}
-
-    protected String propertyList(ShortnameService sns, Resource node) {
-    	String result = "";
-    	for (RDFNode p: node.as(RDFList.class).asJavaList()) {
-    		result = result + "." + shortForm( sns, (Resource) p );
-    	}
-    	return result;
 	}
 
 	private void doSPARQL( StringBuilder sb, String query ) {
