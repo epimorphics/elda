@@ -268,7 +268,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	renderItemTemplate(sb, s);
     	renderSelectors( sb, ep, q );
     	renderVariables(sb, "h3", "variable bindings for this endpoint", b );
-    	renderViews(sb, ep, s.getExplicitViewNames(), s, sns);
+    	renderViews(sb, ep, s, sns);
     	sb.append( "</div>\n" );
     }
 
@@ -324,24 +324,38 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	}
 	}
 
-	private void renderViews(StringBuilder sb, Resource ep, Set<String> viewNames, APIEndpointSpec spec, ShortnameService sns) {
+	private void renderViews(StringBuilder sb, Resource ep,  APIEndpointSpec spec, ShortnameService sns) {
+		Set<String> viewNames = spec.getExplicitViewNames();
+		View dv = spec.getDefaultView();
+		boolean seenDefault = false;
 		sb.append( "<h3>views</h3>\n" );
 		for (String vn: viewNames) {
 			View v = spec.getView( vn );
-			String type = typeAsString( v.getType() );
-			sb.append( "<div style='margin-top: 1ex' class='indent'>\n" );
-			sb.append( "<div><i style='color: red'>" ).append( vn ).append( "</i>" ).append( type ).append( "</div>" );
-			List<PropertyChain> chains = new ArrayList<PropertyChain>( v.chains() );
-			List<String> stringedChains = new ArrayList<String>(chains.size());
-			for (PropertyChain pc: chains) stringedChains.add( chainToString( sns, pc ) );
-			Collections.sort( stringedChains );
-			sb.append( "<div class='indent'>\n" );
-			for (String pc: stringedChains) {
-				sb.append( "<div>").append( pc ).append( "</div>\n" );
-			}
-			sb.append( "</div>\n" );
-			sb.append( "</div>\n" );
+			boolean isDefault = v.equals( dv );
+			renderView(sb, sns, isDefault, vn, v);
+			if (isDefault) seenDefault = true;
 		}
+		if (dv != null && !seenDefault) renderView( sb, sns, true, "xxx", dv);
+	}
+
+	private void renderView(StringBuilder sb, ShortnameService sns, boolean isDefault, String vn, View v) {
+		vn = v.name();
+		String type = typeAsString( v.getType() );
+		sb.append( "<div style='margin-top: 1ex' class='indent'>\n" );
+		sb.append( "<div>" );
+		if (isDefault) sb.append( "<b>default</b> " );
+		sb.append( "<i style='color: red'>" ).append( vn ).append( "</i>" ).append( type );
+		sb.append( "</div>" );
+		List<PropertyChain> chains = new ArrayList<PropertyChain>( v.chains() );
+		List<String> stringedChains = new ArrayList<String>(chains.size());
+		for (PropertyChain pc: chains) stringedChains.add( chainToString( sns, pc ) );
+		Collections.sort( stringedChains );
+		sb.append( "<div class='indent'>\n" );
+		for (String pc: stringedChains) {
+			sb.append( "<div>").append( pc ).append( "</div>\n" );
+		}
+		sb.append( "</div>\n" );
+		sb.append( "</div>\n" );
 	}
 
 	private String typeAsString(Type type) {
@@ -411,13 +425,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	}
     	return them;
 	}
-
-    protected String propertyChain( ShortnameService sns, RDFNode node ) {
-    	if (RDFUtil.isList(node)) return propertyList( sns, (Resource) node );
-    	if (node.isResource()) return shortForm( sns, (Resource) node );
-    	if (node.isLiteral()) return ((Literal) node).getLexicalForm();
-    	return "Unexpected property chain '" + node + "'";
-    }
 
     protected String propertyList(ShortnameService sns, Resource node) {
     	String result = "";

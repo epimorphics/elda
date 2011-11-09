@@ -131,7 +131,15 @@ public class View {
     	this.chains.addAll( initial );
     }
     
-    public String name(){
+    @Override public boolean equals( Object other ) {
+    	return other instanceof View && same( (View) other );
+    }
+    
+    private boolean same(View other) {
+		return this.type == other.type && this.chains.equals( other.chains );
+	}
+
+	public String name(){
     	return name;
     }
     
