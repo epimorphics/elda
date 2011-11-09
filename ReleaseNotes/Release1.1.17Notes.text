@@ -1,0 +1,22 @@
+Elda 1.1.17 Release Notes
+
+The metadata information accessible by prefixing a path with "meta/"
+has been significantly rewritten to be more accessible.
+
+All endpoints for the API from which the selected endpoint is
+taken appear on the same page, with the details hidden for all but
+the selected endpoint. Clicking on the uri template will open up
+the details, which include
+
+  * any rdfs:comments about this endpoint
+  * the page size settings
+  * any default languages
+  * any filter or where selectors
+  * the generated query template for those selectors
+  * the variables declared for this endpoint
+  * all the views declared for the endpoint
+
+The shortname dictionary is available and can be clicked open;
+it shows the declared shortnames of this API, the associated URI
+(clickable for the case where it is itself GETtable) and, if the
+shortnamed entity is a property, its declared range if any.

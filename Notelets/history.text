@@ -1,5 +1,7 @@
 1.1.17-SNAPSHOT
 
+* A significant rewrite of the HTML metadata page. 
+
 1.1.16
 
 * The shortname utilities now generates an error 400 (bad request)
