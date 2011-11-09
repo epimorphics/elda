@@ -86,6 +86,7 @@ spec:api a api:API
     ; api:maxPageSize "50"
     ; api:defaultPageSize "10" 
     ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
+    ; rdfs:comment "An API around sparql-provided education data."
     #
     # normally constructed URIs (for views, formatters, metadata, etc) are based
     # on the context root of the request. If api:base is set, then it is used as

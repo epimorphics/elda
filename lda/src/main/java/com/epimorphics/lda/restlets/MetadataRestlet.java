@@ -146,36 +146,26 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         } else {
             Resource meta = createMetadata( ui, pathstub, rec );
             StringBuilder textBody = new StringBuilder();
-            h1( textBody, "metadata for " + pathstub );
+            h2( textBody, "metadata for the API offering " + pathstub );
+        //
+            renderComments( textBody, rec.getApiRoot() );
         //
             Statement ep = meta.getProperty( API.sparqlEndpoint );
-            h2( textBody, "SPARQL endpoint for queries" );
+            h3( textBody, "SPARQL endpoint for queries" );
             textBody
                 .append( "<div style='margin-left: 2ex; background-color: #dddddd'>" )
                 .append( safe( ep.getResource().getURI() ) )
                 .append( "</div>" )
                 ;
         //
-            StmtIterator comments = meta.listProperties( RDFS.comment );
-            if (comments.hasNext()) {
-                h2( textBody, "comments on the specification" );
-                while (comments.hasNext()) {
-                    textBody
-                        .append( "\n<div style='margin-left: 2ex; background-color: #dddddd'>\n" )
-                        .append( safe( comments.next().getString() ) )
-                        .append( "</div>\n" )
-                        ;
-                }
-            }
+            // renderVariables( textBody, "h2", "API variables", rec.getAPIEndpoint().getSpec().getAPISpec().getBindings() );
         //
-            renderVariables( textBody, "h2", "API variables", rec.getAPIEndpoint().getSpec().getAPISpec().getBindings() );
-        //
-            textBody.append( "<h2>endpoints for this API</h2>\n" );
+            textBody.append( "<h2>endpoints</h2>\n" );
             StringBuilder specBuilder = new StringBuilder();
             List<APIEndpointSpec> endpoints = rec.getAPIEndpoint().getSpec().getAPISpec().getEndpoints();
             Collections.sort( endpoints, sortByEndpointURITemplate );
-			for (APIEndpointSpec s: endpoints) renderEndpoint( specBuilder, ui, meta.getModel(), s );  
-            textBody.append( specBuilder.toString() );
+			for (APIEndpointSpec s: endpoints) renderEndpoint( specBuilder, pathstub, ui, meta.getModel(), s );  
+            textBody.append( specBuilder );
         //
             renderDictionary( textBody, meta.getModel(), rec.getAPIEndpoint().getSpec().getAPISpec().getShortnameService() );
         //
@@ -249,7 +239,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
     // TODO: metadataoptions, factories
     // link to parent
-    void renderEndpoint( StringBuilder sb, UriInfo ui, PrefixMapping pm, APIEndpointSpec s ) {
+    void renderEndpoint( StringBuilder sb, String pathStub, UriInfo ui, PrefixMapping pm, APIEndpointSpec s ) {
     	Resource ep = s.getResource();
     	Bindings b = s.getBindings();
     	String ut = ep.getProperty( API.uriTemplate ).getString(); 
@@ -258,8 +248,8 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         Statement q = meta.getProperty(EXTRAS.sparqlQuery );
         ShortnameService sns = s.sns();
     //
-    	renderHeader(sb, s, ut);
-    	renderComments(sb, s);
+    	renderHeader(sb, s, pathStub, ut);
+    	renderComments(sb, s.getResource());
     	renderExampleRequestPath(sb, ep);
     	renderSettings(sb, s);    	
     	renderItemTemplate(sb, s);
@@ -269,7 +259,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	sb.append( "</div>\n" );
     }
 
-	private void renderHeader(StringBuilder sb, APIEndpointSpec s, String ut) {
+	private void renderHeader(StringBuilder sb, APIEndpointSpec s, String pathStub, String ut) {
 		String name = ut;
     	String kind = s.isListEndpoint() ? "list" : "item";
     	sb.append( "<div style='font-size: 150%; margin-top: 1ex'>" )
@@ -277,11 +267,16 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     		.append( " [" ).append( kind ).append( " endpoint] " )
     		.append( " </div>\n" )
     		;
-    	sb.append( "<div id='" + name + "' class='hide'>" );
+    	String visibility = matches( pathStub, ut.substring(1) ) ? "show" : "hide";
+    	sb.append( "<div id='" + name + "' class='" + visibility + "'>" );
 	}
 
-	private void renderComments(StringBuilder sb, APIEndpointSpec s) {
-		List<Statement> commentStatements = s.getResource().listProperties( RDFS.comment ).toList();
+	private boolean matches( String actual, String pattern ) {
+		return actual.matches( pattern.replaceAll( "\\{[^}/]*\\}", "[^/]*" ) );
+	}
+
+	private void renderComments(StringBuilder sb, Resource spec) {
+		List<Statement> commentStatements = spec.listProperties( RDFS.comment ).toList();
     	if (commentStatements.size() > 0) {
     		sb.append( "<h3>comments</h3>\n" );
     		for (Statement cs: commentStatements) {
@@ -491,6 +486,10 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         
     private void h2( StringBuilder textBody, String s ) {  
         textBody.append( "\n<h2>" ).append( safe( s ) ).append( "</h2>\n" );        
+    }
+        
+    private void h3( StringBuilder textBody, String s ) {  
+        textBody.append( "\n<h3>" ).append( safe( s ) ).append( "</h3>\n" );        
     }
     
     private String safe(String val) {
