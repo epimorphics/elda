@@ -84,7 +84,7 @@ spec:laSchools
     foaf:primaryTopic "http://education.data.gov.uk/set/schools";
     api:selector [
     	api:type school-ont:School;
-    	api:filter "localAuthority.label=?name";
+    	api:filter "localAuthority.label={name}";
     	api:orderBy "?item";
     ] .
          
@@ -116,7 +116,7 @@ spec:schoolSize
     foaf:primaryTopic "http://education.data.gov.uk/set/schools";
     api:selector [
     	api:type school-ont:School;
-    	api:filter "size=?size";
+    	api:filter "size={size}";
     ] .
     
 spec:typedSchools
@@ -126,7 +126,7 @@ spec:typedSchools
     foaf:primaryTopic "http://education.data.gov.uk/set/schools";
     api:selector [
     	api:type school-ont:School;
-    	api:filter "school_type=?type";
+    	api:filter "school_type={type}";
     ] .
          
 spec:departmentsEn

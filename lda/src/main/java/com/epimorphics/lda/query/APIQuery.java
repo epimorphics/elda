@@ -336,12 +336,10 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected void addRangeFilter( Param param, String val, String op ) {
     	Variable already = seenParamVariables.get(param.asString());
     	if (already == null) {
-	        seenParamVariables.put( param.asString(), already = newVar() );
-	        addPropertyHasValue( param, already );
+    		already = addPropertyHasValue_REV( param );
+	        seenParamVariables.put( param.asString(), already );
     	}
-    	String prop = param.lastPropertyOf();
 	    Info inf = param.fullParts()[param.fullParts().length - 1];
-//	     Any r = sns.valueAsRDFQ( prop, val, getDefaultLanguage() );
 	    Any r = objectForValue( inf, val, getDefaultLanguage() );
 	    addInfixSparqlFilter( already, op, r );
     }    
@@ -373,51 +371,20 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     }   
 
 	protected void addPropertyHasValue( Param param ) {
-    	addPropertyHasValue( param, newVar() );
+    	addPropertyHasValue_REV( param );
     }
     
-    protected void addPropertyHasValue( Param param, Variable O ) {
+    protected Variable addPropertyHasValue_REV( Param param ) {
     	Param.Info [] infos = param.fullParts();
-		Variable var = expandParameterPrefix( infos );
-	//
-	    Info inf = infos[infos.length - 1];
-	    varInfo.put( O, inf );
-	    addTriplePattern( var, inf.asResource, O );    	
+		return expandParameterPrefix( infos );
     }
-    
-    protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
-    
-    protected void addPropertyHasValue( Param param, String val ) {
-    	if (val.startsWith( "?" ))
-    		addPropertyHasValue( param, RDFQ.var( val ) );
-    	else {
-			Param.Info [] infos = param.fullParts();
-			Variable var = expandParameterPrefix( infos );
-		//
-		    Info inf = infos[infos.length - 1];
-		    Any o = objectForValue( inf, val, languagesFor(param) );
-		    if (o instanceof Variable) varInfo.put( (Variable) o, inf );
-		    addTriplePattern( var, inf.asResource, o );
-    	}
-    }
-
-    /**
-        Answer the RDFQ item which is the appropriate object to use in
-        a triple with predicate defined by <code>inf</code> and with
-        lexical form <code>val</code>. Any language codes that should be
-        used appear in <code>languages</code>. May update this APIQuery's
-        filter expressions.
-    */
-	private Any objectForValue(Info inf, String val, String languages) {
-		return vt.objectForValue( inf, val, languages );
-	}
 
 	private Variable expandParameterPrefix( Param.Info[] infos ) {
 		StringBuilder chainName = new StringBuilder();
 		String dot = "";
 		Variable var = SELECT_VAR;
 	    int i = 0;
-	    while (i < infos.length-1) {
+	    while (i < infos.length) {
 	    	Param.Info inf = infos[i];
 	    	chainName.append( dot ).append( inf.shortName );
 	    	Variable v = varsForPropertyChains.get( chainName.toString() );
@@ -432,6 +399,42 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	        i += 1;
 	    }
 		return var;
+	}
+    
+    protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
+    
+    protected void addPropertyHasValue( Param param, String val ) {
+    	if (val.startsWith( "?" )) {
+    		throw new EldaException( "property cannot be given variable as value", val, EldaException.SERVER_ERROR );
+    		// addPropertyHasValue_REV( param, RDFQ.var( val ) );
+    	}
+    	else {
+			Param.Info [] infos = param.fullParts();
+			Variable var = expandParameterPrefix( allButLast( infos ) );
+		//
+		    Info inf = infos[infos.length - 1];
+		    Any o = objectForValue( inf, val, languagesFor(param) );
+		    if (o instanceof Variable) varInfo.put( (Variable) o, inf );
+		    addTriplePattern( var, inf.asResource, o );
+    	}
+    }
+
+    private Info[] allButLast(Info[] infos) {
+    	int n = infos.length;
+    	Info [] result = new Info[n - 1];
+    	System.arraycopy( infos, 0, result, 0, n - 1 );
+		return result;
+	}
+
+	/**
+        Answer the RDFQ item which is the appropriate object to use in
+        a triple with predicate defined by <code>inf</code> and with
+        lexical form <code>val</code>. Any language codes that should be
+        used appear in <code>languages</code>. May update this APIQuery's
+        filter expressions.
+    */
+	private Any objectForValue(Info inf, String val, String languages) {
+		return vt.objectForValue( inf, val, languages );
 	}
 	
 	/**
@@ -508,13 +511,13 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    		if (spec.length() > 0) {
 			        boolean descending = spec.startsWith("-"); 
 			        if (descending) spec = spec.substring(1);
-			        Variable v = newVar();
+			        Variable v = varsForPropertyChains.get( spec );
+			        if (v == null) optionalProperty( Param.make( sns, spec ), v = newVar() );
 			        if (descending) {
 			        	orderExpressions.append(" DESC(" + v.name() + ") ");
 			        } else {
 			            orderExpressions.append(" " + v.name() + " ");
 			        }
-		        	optionalProperty( Param.make( sns, spec ), v );
 	    		}
 	    	}
     	sortByOrderSpecsFrozen = true;
@@ -534,8 +537,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     }
 
     protected void addNameProp(Param param, String literal) {
-        Variable newvar = newVar();
-        addPropertyHasValue( param, newvar );
+        Variable newvar = addPropertyHasValue_REV( param );
         addTriplePattern( newvar, RDFS.label, RDFQ.literal( literal ) );
     }
     

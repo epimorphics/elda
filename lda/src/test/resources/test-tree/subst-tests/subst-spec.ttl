@@ -6,7 +6,7 @@
 
 :ep a api:ListEndpoint
     ; api:uriTemplate '/alpha/{value}'
-    ; api:selector [api:filter 'p=?value']
+    ; api:selector [api:filter 'p={value}']
     .
 
 :p api:label 'p'
