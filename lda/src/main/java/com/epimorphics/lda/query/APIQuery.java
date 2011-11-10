@@ -442,10 +442,9 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    <code>param</code> property chain if it exists (ie all of the
 	    triples are OPTIONAL).
 	*/
-	protected void optionalProperty( Param param, Variable var ) {
+	protected void optionalProperty( Variable startFrom, Param param, Variable var ) {
 		Param.Info [] infos = param.fullParts();
-	//
-		Variable s = SELECT_VAR;
+		Variable s = startFrom;
 		int remaining = infos.length;
 		List<RDFQ.Triple> chain = new ArrayList<RDFQ.Triple>(infos.length);
 	//
@@ -460,7 +459,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	
 	protected void addPropertyHasntValue( Param param ) {
     	Variable var = newVar();
-    	optionalProperty( param, var );
+    	optionalProperty( SELECT_VAR, param, var );
     	filterExpressions.add( RDFQ.apply( "!", RDFQ.apply( "bound", var ) ) );
     }  	  
 
@@ -494,7 +493,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     */
     public void setSortBy( String orderSpecs ) {
     	if (sortByOrderSpecsFrozen) 
-    			EldaException.Broken( "Elda attempted to set a sort order after generating the select query." );
+    		EldaException.Broken( "Elda attempted to set a sort order after generating the select query." );
     	sortByOrderSpecs = orderSpecs;
     }
     
@@ -511,8 +510,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    		if (spec.length() > 0) {
 			        boolean descending = spec.startsWith("-"); 
 			        if (descending) spec = spec.substring(1);
-			        Variable v = varsForPropertyChains.get( spec );
-			        if (v == null) optionalProperty( Param.make( sns, spec ), v = newVar() );
+			        Variable v = generateSortVariable( spec );
 			        if (descending) {
 			        	orderExpressions.append(" DESC(" + v.name() + ") ");
 			        } else {
@@ -521,6 +519,25 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    		}
 	    	}
     	sortByOrderSpecsFrozen = true;
+    	}
+    }
+
+	private Variable generateSortVariable( String spec ) {
+		return generateSortVariable( SELECT_VAR, spec + ".", 0 );
+	}
+    
+    private Variable generateSortVariable( Variable anchor, String spec, int where ) {
+    	if (where == spec.length()) return anchor;
+    //
+    	int dot = spec.indexOf( '.', where );
+    	String thing = spec.substring(0, dot);
+    	Variable v = varsForPropertyChains.get( thing );
+    	if (v == null) {
+    		v = newVar();
+    		optionalProperty( anchor, Param.make( sns, spec.substring( where ) ), v );
+    		return v;
+    	} else {
+    		return generateSortVariable( v, spec, dot + 1 );
     	}
     }
     

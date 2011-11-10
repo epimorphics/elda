@@ -60,7 +60,7 @@ public class TestDropsEmptyValueElements {
 			, (ExpansionPoints) null 
 			, aq
 			); 
-		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
+		cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
 		String q = aq.assembleSelectQuery( PrefixMapping.Standard );
 		assertTrue( "empty sort string element not discarded", q.matches( "(?s).*item <eh:/B> \\?___0.*ORDER BY +\\?___0.*" ) );
 	}
