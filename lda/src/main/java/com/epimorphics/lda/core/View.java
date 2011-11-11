@@ -361,7 +361,7 @@ public class View {
 		String selection = st.select.substring( s );
 		String selectPrefixes = st.select.substring(0, s);
 	//
-		Any r = RDFQ.var( "?item" );
+		final Any r = RDFQ.var( "?item" );
 		construct.append( "CONSTRUCT {" );		
 		List<Variable> varsInOrder = new ArrayList<Variable>();
 		for (PropertyChain c: chains) {
@@ -372,6 +372,12 @@ public class View {
 		construct.append( "\n} WHERE {\n" );
 		construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
 	//	
+		if (false) {
+			StringBuilder sb = new StringBuilder();
+			sharingPropertyChains( sb, r, st, chains );
+			System.err.println( ">> " + sb.toString().replaceAll( "OPTIONAL \\{ \\}", "" ) );
+		}
+	//
 		String union = "";
 		for (PropertyChain c: chains) {
 			construct.append( "\n  " ).append( union );
@@ -386,6 +392,39 @@ public class View {
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) );
 		return queryString;
+	}
+
+	private void sharingPropertyChains( StringBuilder sb, Any r, State st, List<PropertyChain> chains ) {
+		PrefixLogger pl = new PrefixLogger();
+		Map<Property, List<PropertyChain>> them = new HashMap<Property, List<PropertyChain>>();
+	//
+		for (PropertyChain chain: chains) {
+			List<Property> properties = chain.getProperties();
+			if (properties.size() > 0) {
+				Property key = properties.get(0);
+				PropertyChain rest = tail(chain);
+				List<PropertyChain> entries = them.get(key);
+				if (entries == null) them.put( key, entries = new ArrayList<PropertyChain>() );
+				entries.add( rest );
+			}
+		}
+	//
+		String union = "";
+		for (Map.Entry<Property, List<PropertyChain>> entry: them.entrySet()) {
+			Variable nv = st.vars.newVar();
+			String property = RDFQ.uri( entry.getKey().getURI() ).asSparqlTerm( pl );
+			sb.append( union ).append( "{" );
+			union = " UNION ";
+			sb.append( r.asSparqlTerm( pl ) ).append( " " ).append( property ).append( " " ).append( nv.asSparqlTerm( pl ) );
+			sb.append( " OPTIONAL {" );
+			sharingPropertyChains( sb, nv, st, entry.getValue() );
+			sb.append( " } }" );
+		}
+	}
+
+	private PropertyChain tail(PropertyChain chain) {
+		List<Property> properties = chain.getProperties();
+		return new PropertyChain( properties.subList( 1, properties.size() ) );
 	}
 
 	private void buildConstructClause( PrefixLogger pl, StringBuilder construct, Any r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
