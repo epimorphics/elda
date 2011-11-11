@@ -45,7 +45,6 @@ import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.restlets.ControlRestlet.SpecRecord;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
-import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.Couple;
@@ -173,22 +172,31 @@ import com.hp.hpl.jena.vocabulary.RDFS;
         }
     }
     
-    private void renderVariables( StringBuilder sb, String tag, String title, Bindings b ) {
+    private void renderVariables( StringBuilder sb, PrefixMapping pm, String tag, String title, Bindings b ) {
     	List<String> names = new ArrayList<String>( b.keySet() );
     	if (names.size() > 0) {
 	    	sb.append( "<" + tag + ">" ).append( title ).append( "</" + tag + ">\n" );
-	    	PrefixLogger pl = new PrefixLogger();
 	    	Collections.sort( names );
+	    	sb.append( "<div class='indent'>\n" );
 	    	sb.append( "<table>\n" );
+	    	sb.append( "<thead><tr><th>name</th><th>lexical form</th><th>type or language</th></tr></thead>\n" );
 			for (String name: names) {
 				Value v = b.get( name );
+				String lf = v.spelling() == null ? "<i>none</i>" : v.spelling();
+				String type =
+					v.type().length() > 0 ? pm.shortForm( v.type() )
+					: v.lang().length() > 0 ? v.lang()
+					: ""
+					;
 				sb.append( "<tr>" )
 					.append( "<td>" ).append( name ).append( "</td>" )
-					.append( "<td>" ).append( v.asSparqlTerm(pl) ).append( "</td>" )
+					.append( "<td>" ).append( safe(lf) ).append( "</td>" )
+					.append( "<td>" ).append( type ).append( "</td>" )
 					.append( "</tr>\n" )
 					;
 			}
 			sb.append( "</table>\n" );
+			sb.append( "</div>\n" );
     	}
 	}
 
@@ -254,7 +262,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     	renderSettings(sb, s);    	
     	renderItemTemplate(sb, s);
     	renderSelectors( sb, ep, q );
-    	renderVariables(sb, "h3", "variable bindings for this endpoint", b );
+    	renderVariables(sb, pm, "h3", "variable bindings for this endpoint", b );
     	renderViews(sb, ep, pm, s, sns);
     	sb.append( "</div>\n" );
     }
@@ -387,10 +395,10 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 				renderSelectors(sb, selector.getResource() );
 				
 		}
-		sb.append( "<h4>generated query</h4> " );
-        sb.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" );
-		doSPARQL( sb, query.getString() );
-		sb.append( "</pre>\n" );
+//		sb.append( "<h4>generated query</h4> " );
+//        sb.append( "\n<pre style='margin-left: 2ex; background-color: #dddddd'>\n" );
+//		doSPARQL( sb, query.getString() );
+//		sb.append( "</pre>\n" );
 	}
 
 	private void renderSelectors( StringBuilder sb, Resource sel ) {

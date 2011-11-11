@@ -169,8 +169,10 @@ spec:school-by-id
 	.
 
 #List all schools
+
 spec:schools
 	a api:ListEndpoint
+	; api:variable [api:name "unset"; api:type xsd:decimal]
 	; rdfs:comment "This endpoint displays any kind of school." 
 	; api:uriTemplate "/education/schools" 
 	; api:selector [ api:filter "type=School" ] 

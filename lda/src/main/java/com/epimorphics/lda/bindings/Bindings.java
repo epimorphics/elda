@@ -133,7 +133,7 @@ public class Bindings
 		{ return vars.containsKey( name ); }
 	
 	/**
-	    Answer the LiteralNode of the variable <code>name</code> in
+	    Answer the Value of the variable <code>name</code> in
 	    this Bindings, or null if it is not bound.
 	*/
 	public Value get( String name ) 
@@ -222,7 +222,7 @@ public class Bindings
 	private Value evaluate( String name, Value v, List<String> seen ) 
 		{
 		String vs = v.spelling();
-		if (vs.indexOf( '{' ) < 0) return v;
+		if (vs == null || vs.indexOf( '{' ) < 0) return v;
 		String expanded = expandVariables( vs, seen );
 		Value newV = v.replaceBy( expanded );
 		vars.put( name, newV );

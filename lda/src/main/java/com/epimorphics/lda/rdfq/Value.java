@@ -39,7 +39,6 @@ public class Value extends Term
 	
 	@Override public String asSparqlTerm( PrefixLogger pl )
 		{ 
-		// System.err.println( ">> aST: " + spelling + "@" + language );
 		String lang = (language.equals("none") ? "" : language);
 		Node n = NodeFactory.createLiteralNode( spelling, lang, datatype );
 		if (datatype.length() > 0) pl.present( datatype );
@@ -52,6 +51,9 @@ public class Value extends Term
 	
 	@Override public String spelling() 
 		 { return spelling; }
+	
+	public String lang() 
+	 	{ return language; }
 	
 	public String type()
 		{ return datatype; }
