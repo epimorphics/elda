@@ -318,7 +318,7 @@ public class View {
 	private boolean useNestedSelect( State st ) {
 		return Source.Util.allSupportNestedSelect( st.sources );
 	}
-
+	
 	boolean oldWay = false;
 	
 	private String fetchChainsByRepeatedClauses( State s, List<PropertyChain> chains ) { 
