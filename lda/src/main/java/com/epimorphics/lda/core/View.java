@@ -319,83 +319,147 @@ public class View {
 		return Source.Util.allSupportNestedSelect( st.sources );
 	}
 
+	boolean oldWay = false;
+	
 	private String fetchChainsByRepeatedClauses( State s, List<PropertyChain> chains ) { 
-		StringBuilder construct = new StringBuilder();
-		PrefixLogger pl = new PrefixLogger( s.m );
-		construct.append( "CONSTRUCT {" );
-		List<Variable> varsInOrder = new ArrayList<Variable>();
-		for (Resource r: new HashSet<Resource>( s.roots)) {
-			for (PropertyChain c: chains) {
-				construct.append( "\n  " );
-				buildConstructClause( pl, construct, RDFQ.uri( r.getURI() ), c, s.vars, varsInOrder );
+		if (oldWay) {
+			StringBuilder construct = new StringBuilder();
+			PrefixLogger pl = new PrefixLogger( s.m );
+			construct.append( "CONSTRUCT {" );
+			List<Variable> varsInOrder = new ArrayList<Variable>();		
+			for (Resource r: new HashSet<Resource>( s.roots)) {
+				for (PropertyChain c: chains) {
+					construct.append( "\n  " );
+					buildConstructClause( pl, construct, RDFQ.uri( r.getURI() ), c, s.vars, varsInOrder );
+				}
 			}
-		}
-	//
-		construct.append( "\n} WHERE {" );
-		String union = "";
-		for (Resource r: new HashSet<Resource>( s.roots)) {
-			for (PropertyChain c: chains) {
-				construct.append( "\n  " ).append( union );
-				buildWhereClause( pl, construct, RDFQ.uri( r.getURI() ), c, s.vars, varsInOrder );
-				union = "UNION ";
+		//
+			construct.append( "\n} WHERE {" );
+			String union = "";
+			for (Resource r: new HashSet<Resource>( s.roots)) {
+				for (PropertyChain c: chains) {
+					construct.append( "\n  " ).append( union );
+					buildWhereClause( pl, construct, RDFQ.uri( r.getURI() ), c, s.vars, varsInOrder );
+					union = "UNION ";
+				}
 			}
+			construct.append( "\n}" );
+		//
+			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
+			String queryString = prefixes + construct.toString();
+			// System.err.println( ">> Query string [old-style] is " + queryString );
+			Query constructQuery = QueryFactory.create( queryString );
+			for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
+			return queryString;
+		} else {
+			// the new way
+			StringBuilder construct = new StringBuilder();
+			PrefixLogger pl = new PrefixLogger( s.m );
+			construct.append( "CONSTRUCT {" );
+		//
+			StringBuilder sb = new StringBuilder();
+			String union = "";
+			
+			for (Resource r: new HashSet<Resource>( s.roots)) {
+				sb.append( union ).append( " { " );
+				sharingPropertyChains( sb, pl, RDFQ.uri( r.getURI() ), s, chains );
+				sb.append( "}" );
+				union = "UNION";
+			}
+			String template = sb.toString().replaceAll( "OPTIONAL \\{ \\}", "" ).replaceAll( "\\}", "}\n" );
+		//
+			String cons = template.replaceAll( "UNION|OPTIONAL|[{}]", "" );
+//			System.err.println( ">> cons: " + cons );
+			construct.append( cons );
+		//
+			construct.append( "\n} WHERE {" );
+			construct.append( template );
+			construct.append( "\n}" );
+		//
+			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
+			String queryString = prefixes + construct.toString();
+			// System.err.println( ">> Query string is [new-style]" + queryString );
+			Query constructQuery = QueryFactory.create( queryString );
+			for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
+			return queryString;
 		}
-		construct.append( "\n}" );
-	//
-		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
-		String queryString = prefixes + construct.toString();
-		Query constructQuery = QueryFactory.create( queryString );
-		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
-		return queryString;
 	}
 	
 	static final Pattern SELECT = Pattern.compile( "SELECT", Pattern.CASE_INSENSITIVE );
 	
 	private String fetchChainsByNestedSelect( State st, List<PropertyChain> chains ) { 
-		PrefixLogger pl = new PrefixLogger( st.m );
-		StringBuilder construct = new StringBuilder();
-	//
-		Matcher m = SELECT.matcher( st.select );
-		if (!m.find()) EldaException.Broken( "No SELECT in nested query." );
-		int s = m.start();
-		String selection = st.select.substring( s );
-		String selectPrefixes = st.select.substring(0, s);
-	//
-		final Any r = RDFQ.var( "?item" );
-		construct.append( "CONSTRUCT {" );		
-		List<Variable> varsInOrder = new ArrayList<Variable>();
-		for (PropertyChain c: chains) {
-			construct.append( "\n  " );
-			buildConstructClause( pl, construct, r, c, st.vars, varsInOrder );
-		}
-	//
-		construct.append( "\n} WHERE {\n" );
-		construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
-	//	
-		if (false) {
+		if (oldWay) {
+			PrefixLogger pl = new PrefixLogger( st.m );
+			StringBuilder construct = new StringBuilder();
+		//
+			Matcher m = SELECT.matcher( st.select );
+			if (!m.find()) EldaException.Broken( "No SELECT in nested query." );
+			int s = m.start();
+			String selection = st.select.substring( s );
+			String selectPrefixes = st.select.substring(0, s);
+		//
+			final Any r = RDFQ.var( "?item" );
+			construct.append( "CONSTRUCT {" );		
+			List<Variable> varsInOrder = new ArrayList<Variable>();
+			for (PropertyChain c: chains) {
+				construct.append( "\n  " );
+				buildConstructClause( pl, construct, r, c, st.vars, varsInOrder );
+			}
+		//
+			construct.append( "\n} WHERE {\n" );
+			construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
+		//
+			String union = "";
+			for (PropertyChain c: chains) {
+				construct.append( "\n  " ).append( union );
+				buildWhereClause( pl, construct, r, c, st.vars, varsInOrder );
+				union = "UNION ";
+			}
+			construct.append( "\n}" );
+		//
+			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
+			String queryString = selectPrefixes + prefixes + construct.toString();
+			// System.err.println( ">> QUERY:\n" + queryString );
+			Query constructQuery = QueryFactory.create( queryString );
+			for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) );
+			return queryString;
+		} else {
+			PrefixLogger pl = new PrefixLogger( st.m );
+			StringBuilder construct = new StringBuilder();
+		//
+			Matcher m = SELECT.matcher( st.select );
+			if (!m.find()) EldaException.Broken( "No SELECT in nested query." );
+			int s = m.start();
+			String selection = st.select.substring( s );
+			String selectPrefixes = st.select.substring(0, s);
+		//
+			final Any r = RDFQ.var( "?item" );
 			StringBuilder sb = new StringBuilder();
-			sharingPropertyChains( sb, r, st, chains );
-			System.err.println( ">> " + sb.toString().replaceAll( "OPTIONAL \\{ \\}", "" ) );
+			
+			sb.append( "{" );
+			sharingPropertyChains( sb, pl, r, st, chains );
+			sb.append( "}" );
+			
+			String template = sb.toString().replaceAll( "OPTIONAL \\{ \\}", "" ).replaceAll( "\\}", "}\n" );
+			String cons = template.replaceAll( "UNION|OPTIONAL|[{}]", "" );
+
+			construct.append( "CONSTRUCT {" );
+			construct.append( cons );
+			construct.append( "\n} WHERE {\n" );			
+			construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
+			construct.append( "  {" ).append( template ).append( "\n}" );
+			construct.append( "\n}" );
+		//
+			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
+			String queryString = selectPrefixes + prefixes + construct.toString();
+			// System.err.println( ">> QUERY:\n" + queryString );
+			Query constructQuery = QueryFactory.create( queryString );
+			for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) );
+			return queryString;
 		}
-	//
-		String union = "";
-		for (PropertyChain c: chains) {
-			construct.append( "\n  " ).append( union );
-			buildWhereClause( pl, construct, r, c, st.vars, varsInOrder );
-			union = "UNION ";
-		}
-		construct.append( "\n}" );
-	//
-		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
-		String queryString = selectPrefixes + prefixes + construct.toString();
-		// System.err.println( ">> QUERY:\n" + queryString );
-		Query constructQuery = QueryFactory.create( queryString );
-		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) );
-		return queryString;
 	}
 
-	private void sharingPropertyChains( StringBuilder sb, Any r, State st, List<PropertyChain> chains ) {
-		PrefixLogger pl = new PrefixLogger();
+	private void sharingPropertyChains( StringBuilder sb, PrefixLogger pl, Any r, State st, List<PropertyChain> chains ) {
 		Map<Property, List<PropertyChain>> them = new HashMap<Property, List<PropertyChain>>();
 	//
 		for (PropertyChain chain: chains) {
@@ -416,8 +480,8 @@ public class View {
 			sb.append( union ).append( "{" );
 			union = " UNION ";
 			sb.append( r.asSparqlTerm( pl ) ).append( " " ).append( property ).append( " " ).append( nv.asSparqlTerm( pl ) );
-			sb.append( " OPTIONAL {" );
-			sharingPropertyChains( sb, nv, st, entry.getValue() );
+			sb.append( " . OPTIONAL {" );
+			sharingPropertyChains( sb, pl, nv, st, entry.getValue() );
 			sb.append( " } }" );
 		}
 	}

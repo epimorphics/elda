@@ -174,8 +174,10 @@ public class EncoderDefault implements EncoderPlugin {
     private boolean showUnhandled = true;
 
 	private String shortName( Context c, RDFDatatype dt) {
-		String sn = c.getNameForURI( dt.getURI() );
-		if (sn == null) throw new EncodingException( "could not find shortname for datatype " + dt.getURI() );
+		String uri = dt.getURI();
+		String sn = c.getNameForURI( uri );
+		if (sn == null) sn = c.forceShorten( uri );
+		if (sn == null) throw new EncodingException( "could not find shortname for datatype " + uri );
 		return sn;
 	}
 

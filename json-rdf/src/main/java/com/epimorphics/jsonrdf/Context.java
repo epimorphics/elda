@@ -105,12 +105,15 @@ public class Context implements Cloneable {
     public void loadVocabularyAnnotations(Set<String> seen, Model m) {
         loadVocabularyAnnotations(seen, m, m);
     }
+    
+    protected final PrefixMapping allPrefixes = PrefixMapping.Factory.create();
     /**
      	Scan the given vocabulary file to find shortname and property type
      	annotations. Ignore any URIs in <code>notThese</code>. Update
      	notThese with any new URIs once we're done.
     */
     public void loadVocabularyAnnotations( Set<String> notThese, Model m, PrefixMapping prefixes) {  
+    	allPrefixes.withDefaultMappings( prefixes );
     	Set<String> seen = new HashSet<String>();
         for(Resource r : RES_TYPES_TO_SHORTEN) 
             loadAnnotations(notThese, seen, m, m.listSubjectsWithProperty(RDF.type, r), false, prefixes);
@@ -271,6 +274,11 @@ public class Context implements Cloneable {
     public String getNameForURI(String uri) {
         completeContext();
         return uriToName.get(uri);
+    }
+    
+    public String forceShorten( String uri ) {
+    	String shorter = allPrefixes.shortForm( uri );
+    	return shorter.equals( uri ) ? null : shorter.replace( ':', '_' );
     }
     
     /** Lookup the URI for a shortened name. Returns null if no mapping is known */
