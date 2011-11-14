@@ -140,7 +140,7 @@ public class ContextQueryUpdater implements ViewSetter {
 		    aq.setPageNumber( positiveInteger( p, val ) ); 
 		} else if (p.equals(QueryParameter._PAGE_SIZE)) {
 			mustBeListEndpoint( p );
-		    aq.setPageSize( positiveInteger( p, val ) );
+		    aq.setPageSize( integerOneOrMore( p, val ) );
 		} else if (p.equals( QueryParameter._FORMAT )) {
 			vs.setFormat(val);
 		} else if (p.equals(QueryParameter._METADATA)) {
@@ -189,6 +189,14 @@ public class ContextQueryUpdater implements ViewSetter {
 			if (0 <= result) return result;
 		} catch (NumberFormatException e) { /* fall-through */ }
 		throw new EldaException( param + "=" + val, "value must be non-negative integer.", EldaException.BAD_REQUEST );
+	}
+
+	private int integerOneOrMore( String param, String val ) {
+		try {
+			int result = Integer.parseInt( val );
+			if (0 < result) return result;
+		} catch (NumberFormatException e) { /* fall-through */ }
+		throw new EldaException( param + "=" + val, "value must be positive integer.", EldaException.BAD_REQUEST );
 	}
 
 	/**
