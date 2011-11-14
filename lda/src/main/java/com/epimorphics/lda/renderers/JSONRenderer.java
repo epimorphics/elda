@@ -34,6 +34,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.shared.WrappedException;
 
 public class JSONRenderer implements Renderer {
 
@@ -75,7 +76,7 @@ public class JSONRenderer implements Renderer {
             return callback == null ? written : callback + "(" + written + ")";
         } catch (Exception e) {
         	log.error( "Failed to encode model: stacktrace follows:", e );
-            return "'ERROR: " + e.getMessage() + "'";
+            throw new WrappedException( e ); //  "'ERROR: " + e.getMessage() + "'";
         }
 	}
 
