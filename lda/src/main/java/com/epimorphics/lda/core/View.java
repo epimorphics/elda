@@ -357,7 +357,7 @@ public class View {
 			// the new way
 			StringBuilder construct = new StringBuilder();
 			PrefixLogger pl = new PrefixLogger( s.m );
-			construct.append( "CONSTRUCT {" );
+			construct.append( "CONSTRUCT {\n" );
 		//
 			StringBuilder sb = new StringBuilder();
 			String union = "";
@@ -371,20 +371,27 @@ public class View {
 				union = "UNION";
 			}
 			
+			ChainTrees chainTrees = new ChainTrees();
+			for (Resource r: new HashSet<Resource>( s.roots )) {
+				chainTrees.addAll( makeChainTrees( RDFQ.uri( r.getURI() ), s, chains ) );
+			}
+			
 			
 			String template = sb.toString().replaceAll( "OPTIONAL \\{ \\}", "" ).replaceAll( "\\}", "}\n" );
 		//
 			String cons = template.replaceAll( "UNION|OPTIONAL|[{}]", "" );
 //			System.err.println( ">> cons: " + cons );
-			construct.append( cons );
+			// construct.append( cons );
+			chainTrees.renderTriples( construct, pl );
 		//
-			construct.append( "\n} WHERE {" );
-			construct.append( template );
+			construct.append( "\n} WHERE {\n" );
+			// construct.append( template );
+			renderChainy( construct, pl, "", chainTrees );
 			construct.append( "\n}" );
 		//
 			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
 			String queryString = prefixes + construct.toString();
-			// System.err.println( ">> Query string is [new-style]" + queryString );
+//			System.err.println( ">> Query string is [new-style]" + queryString );
 			Query constructQuery = QueryFactory.create( queryString );
 			for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
 			return queryString;
@@ -493,9 +500,11 @@ public class View {
 	}
 
 	private void renderChainy( StringBuilder sb, PrefixLogger pl, int depth, ChainTree c ) {
+		boolean isComplex = c.followers.size() > 0;
 		for (int i = 0; i < depth; i += 1) sb.append( "  " );
+		if (isComplex) sb.append( "{" );
 		sb.append( "{ " ).append( c.triple.asSparqlTriple(pl) ).append( " . } " );
-		if (c.followers.size() > 0) {
+		if (isComplex) {
 			sb.append( " OPTIONAL {\n" );
 			for (ChainTree cc: c.followers) {
 				renderChainy( sb, pl, depth + 1, cc );
@@ -503,6 +512,7 @@ public class View {
 			for (int i = 0; i < depth; i += 1) sb.append( "  " );
 			sb.append( "}" );
 		}
+		if (isComplex) sb.append( "}" );
 		sb.append( "\n" );
 	}
 
