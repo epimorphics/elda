@@ -501,16 +501,19 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     
     protected boolean sortByOrderSpecsFrozen = false;
     
+    static class Bool { boolean value; public Bool(boolean value) {this.value = value; }}
+    
     protected void unpackSortByOrderSpecs() {
     	if (sortByOrderSpecsFrozen) 
     		EldaException.Broken( "Elda attempted to unpack the sort order after generating the select query." );
     	if (sortByOrderSpecs.length() > 0) {
     		orderExpressions.setLength(0);
+    		Bool mightBeUnbound = new Bool(false);
 	    	for (String spec: sortByOrderSpecs.split(",")) {
 	    		if (spec.length() > 0) {
 			        boolean descending = spec.startsWith("-"); 
 			        if (descending) spec = spec.substring(1);
-			        Variable v = generateSortVariable( spec );
+			        Variable v = generateSortVariable( spec, mightBeUnbound );
 			        if (descending) {
 			        	orderExpressions.append(" DESC(" + v.name() + ") ");
 			        } else {
@@ -518,15 +521,16 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 			        }
 	    		}
 	    	}
-    	sortByOrderSpecsFrozen = true;
+	    	if (true) orderExpressions.append( " str(?item)" );
     	}
+   	sortByOrderSpecsFrozen = true;
     }
 
-	private Variable generateSortVariable( String spec ) {
-		return generateSortVariable( SELECT_VAR, spec + ".", 0 );
+	private Variable generateSortVariable( String spec, Bool mightBeUnbound ) {
+		return generateSortVariable( SELECT_VAR, spec + ".", 0, mightBeUnbound );
 	}
     
-    private Variable generateSortVariable( Variable anchor, String spec, int where ) {
+    private Variable generateSortVariable( Variable anchor, String spec, int where, Bool mightBeUnbound ) {
     	if (where == spec.length()) return anchor;
     //
     	int dot = spec.indexOf( '.', where );
@@ -535,9 +539,10 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     	if (v == null) {
     		v = newVar();
     		optionalProperty( anchor, Param.make( sns, spec.substring( where ) ), v );
+    		mightBeUnbound.value = true;
     		return v;
     	} else {
-    		return generateSortVariable( v, spec, dot + 1 );
+    		return generateSortVariable( v, spec, dot + 1, mightBeUnbound );
     	}
     }
     
