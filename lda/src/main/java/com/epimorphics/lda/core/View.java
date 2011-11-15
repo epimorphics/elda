@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.View.ChainTree;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.ExpansionPoints;
 import com.epimorphics.lda.rdfq.Any;
@@ -358,7 +357,7 @@ public class View {
 		//
 			ChainTrees chainTrees = new ChainTrees();
 			for (Resource r: new HashSet<Resource>( s.roots )) {
-				chainTrees.addAll( makeChainTrees( RDFQ.uri( r.getURI() ), s, chains ) );
+				chainTrees.addAll( ChainTree.make( RDFQ.uri( r.getURI() ), s, chains ) );
 			}
 		//
 			StringBuilder construct = new StringBuilder();
@@ -366,7 +365,7 @@ public class View {
 			construct.append( "CONSTRUCT {\n" );
 			chainTrees.renderTriples( construct, pl );
 			construct.append( "\n} WHERE {\n" );
-			renderChainy( construct, pl, "", chainTrees );
+			chainTrees.renderWhere( construct, pl, "" );
 			construct.append( "\n}" );
 		//
 			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
@@ -425,13 +424,13 @@ public class View {
 			int s = m.start();
 			String selection = st.select.substring( s );
 			String selectPrefixes = st.select.substring(0, s);
-			ChainTrees trees = makeChainTrees( RDFQ.var( "?item" ), st, chains );
+			ChainTrees trees = ChainTree.make( RDFQ.var( "?item" ), st, chains );
 		//
 			construct.append( "CONSTRUCT {" );
 			trees.renderTriples( construct, pl );
 			construct.append( "\n} WHERE {\n" );			
 			construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
-			renderChainy( construct, pl, "", trees );			
+			trees.renderWhere( construct, pl, "" );			
 			construct.append( "\n}" );
 		//
 			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
@@ -447,110 +446,6 @@ public class View {
 		}
 	}
 	
-	@SuppressWarnings("serial") static class ChainTrees extends ArrayList<ChainTree> {
-		
-		public void renderTriples( StringBuilder sb, PrefixLogger pl ) {
-			for (ChainTree c: this) c.renderTriples( sb, pl );
-		}
-	}
-	
-	static class ChainTree {
-		
-		protected final RDFQ.Triple triple;
-		protected final ChainTrees followers;
-		
-		ChainTree( RDFQ.Triple triple, ChainTrees followers ) {
-			this.triple = triple;
-			this.followers = followers;
-		}
-		
-		public void renderTriples( StringBuilder sb, PrefixLogger pl ) {
-			sb.append( triple.asSparqlTriple(pl) ).append( " .\n" );
-			followers.renderTriples( sb, pl );
-		}
-	}
-	
-	private String renderChainy( StringBuilder sb, PrefixLogger pl, String u, ChainTrees chains ) {
-		for (ChainTree c: chains) {
-			sb.append( u );
-			renderChainy( sb, pl, 0, c );
-			u = "UNION ";
-		}
-		return u;
-	}
-
-	private void renderChainy( StringBuilder sb, PrefixLogger pl, int depth, ChainTree c ) {
-		boolean isComplex = c.followers.size() > 0;
-		for (int i = 0; i < depth; i += 1) sb.append( "  " );
-		if (isComplex) sb.append( "{" );
-		sb.append( "{ " ).append( c.triple.asSparqlTriple(pl) ).append( " . } " );
-		if (isComplex) {
-			sb.append( " OPTIONAL {\n" );
-			for (ChainTree cc: c.followers) {
-				renderChainy( sb, pl, depth + 1, cc );
-			}
-			for (int i = 0; i < depth; i += 1) sb.append( "  " );
-			sb.append( "}" );
-		}
-		if (isComplex) sb.append( "}" );
-		sb.append( "\n" );
-	}
-
-	private ChainTrees makeChainTrees( Any r, State st, List<PropertyChain> chains ) {
-		Map<Property, List<PropertyChain>> them = new HashMap<Property, List<PropertyChain>>();
-		//
-			for (PropertyChain chain: chains) {
-				List<Property> properties = chain.getProperties();
-				if (properties.size() > 0) {
-					Property key = properties.get(0);
-					PropertyChain rest = tail(chain);
-					List<PropertyChain> entries = them.get(key);
-					if (entries == null) them.put( key, entries = new ArrayList<PropertyChain>() );
-					entries.add( rest );
-				}
-			}		
-		ChainTrees result = new ChainTrees();
-		for (Map.Entry<Property, List<PropertyChain>> entry: them.entrySet()) {
-			Variable nv = st.vars.newVar();
-			RDFQ.Triple triple = RDFQ.triple( r, RDFQ.uri( entry.getKey().getURI() ), nv );
-			ChainTrees followers = makeChainTrees( nv, st, entry.getValue() );
-			result.add( new ChainTree( triple, followers ) );
-		}
-		return result;
-	}
-
-//	private void sharingPropertyChains( StringBuilder sb, PrefixLogger pl, Any r, State st, List<PropertyChain> chains ) {
-//		Map<Property, List<PropertyChain>> them = new HashMap<Property, List<PropertyChain>>();
-//	//
-//		for (PropertyChain chain: chains) {
-//			List<Property> properties = chain.getProperties();
-//			if (properties.size() > 0) {
-//				Property key = properties.get(0);
-//				PropertyChain rest = tail(chain);
-//				List<PropertyChain> entries = them.get(key);
-//				if (entries == null) them.put( key, entries = new ArrayList<PropertyChain>() );
-//				entries.add( rest );
-//			}
-//		}
-//	//
-//		String union = "";
-//		for (Map.Entry<Property, List<PropertyChain>> entry: them.entrySet()) {
-//			Variable nv = st.vars.newVar();
-//			String property = RDFQ.uri( entry.getKey().getURI() ).asSparqlTerm( pl );
-//			sb.append( union ).append( "{" );
-//			union = " UNION ";
-//			sb.append( r.asSparqlTerm( pl ) ).append( " " ).append( property ).append( " " ).append( nv.asSparqlTerm( pl ) );
-//			sb.append( " . OPTIONAL {" );
-//			sharingPropertyChains( sb, pl, nv, st, entry.getValue() );
-//			sb.append( " } }" );
-//		}
-//	}
-
-	private PropertyChain tail(PropertyChain chain) {
-		List<Property> properties = chain.getProperties();
-		return new PropertyChain( properties.subList( 1, properties.size() ) );
-	}
-
 	private void buildConstructClause( PrefixLogger pl, StringBuilder construct, Any r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
 		String S = pl.present( r );
 		for (Property p: c.getProperties()) {
