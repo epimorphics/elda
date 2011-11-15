@@ -311,7 +311,7 @@ public class View {
 		if (chains.isEmpty()) 
 			return "CONSTRUCT {} WHERE {}\n";
 		boolean uns = useNestedSelect(s) && s.select.length() > 0;
-		return uns && false
+		return uns // && false
 			? fetchChainsByNestedSelect( s, chains ) 
 			: fetchChainsByRepeatedClauses( s, chains )
 			;
@@ -355,37 +355,17 @@ public class View {
 			return queryString;
 		} else {
 			// the new way
-			StringBuilder construct = new StringBuilder();
-			PrefixLogger pl = new PrefixLogger( s.m );
-			construct.append( "CONSTRUCT {\n" );
 		//
-			StringBuilder sb = new StringBuilder();
-			String union = "";
-			
-			for (Resource r: new HashSet<Resource>( s.roots)) {
-				sb.append( union ).append( " { " );
-//				sharingPropertyChains( sb, pl, RDFQ.uri( r.getURI() ), s, chains );
-				ChainTrees chainys = makeChainTrees( RDFQ.uri( r.getURI() ), s, chains );
-				String u = renderChainy( sb, pl, "", chainys );
-				sb.append( "}" );
-				union = "UNION";
-			}
-			
 			ChainTrees chainTrees = new ChainTrees();
 			for (Resource r: new HashSet<Resource>( s.roots )) {
 				chainTrees.addAll( makeChainTrees( RDFQ.uri( r.getURI() ), s, chains ) );
 			}
-			
-			
-			String template = sb.toString().replaceAll( "OPTIONAL \\{ \\}", "" ).replaceAll( "\\}", "}\n" );
 		//
-			String cons = template.replaceAll( "UNION|OPTIONAL|[{}]", "" );
-//			System.err.println( ">> cons: " + cons );
-			// construct.append( cons );
+			StringBuilder construct = new StringBuilder();
+			PrefixLogger pl = new PrefixLogger( s.m );
+			construct.append( "CONSTRUCT {\n" );
 			chainTrees.renderTriples( construct, pl );
-		//
 			construct.append( "\n} WHERE {\n" );
-			// construct.append( template );
 			renderChainy( construct, pl, "", chainTrees );
 			construct.append( "\n}" );
 		//
