@@ -17,6 +17,8 @@
 
 package com.epimorphics.lda.specmanager;
 
+import java.util.List;
+
 import com.epimorphics.lda.core.APISecurityException;
 import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -87,5 +89,10 @@ public interface SpecManager {
      * and endpoint matching the given URL. Or null if there is no match.
      */
     public Model getSpecForEndpoint(String url);
+
+    /**
+        Answer a list of all the specs in this manager.
+    */
+	public List<SpecEntry> allSpecs();
 }
 

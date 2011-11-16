@@ -19,7 +19,9 @@ package com.epimorphics.lda.specmanager;
 
 import static com.epimorphics.lda.specmanager.SpecUtils.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -50,20 +52,6 @@ public class SpecManagerImpl implements SpecManager {
     protected Router router;
     protected ModelLoaderI modelLoader;
     
-    static class SpecEntry {
-        String uri;
-        APISpec spec;
-        byte[] keyDigest;
-        Model model;
-        
-        SpecEntry(String uri, String key, APISpec spec, Model model) {
-            this.uri = uri;
-            this.keyDigest = digestKey(uri, key);
-            this.spec = spec;
-            this.model = model;
-        }
-    }
-    
     protected Map<String, SpecEntry> specs = new HashMap<String, SpecEntry>();
     
     public SpecManagerImpl(Router router, ModelLoaderI modelLoader) {
@@ -71,9 +59,7 @@ public class SpecManagerImpl implements SpecManager {
         this.modelLoader = modelLoader;
     }
     
-    @Override
-    public APISpec addSpec(String uri, String key, Model spec)
-            throws APISecurityException {
+    @Override public APISpec addSpec(String uri, String key, Model spec) throws APISecurityException {
         if (specs.containsKey(uri)) {
             return updateSpec(uri, key, spec);
         } else {
@@ -88,8 +74,7 @@ public class SpecManagerImpl implements SpecManager {
         }
     }
 
-    @Override
-    public void deleteSpec(String uri, String key) throws APISecurityException {
+    @Override public void deleteSpec(String uri, String key) throws APISecurityException {
         SpecEntry entry = specs.get(uri);
         if (entry == null) {
             // no error if nothing to delete so we can use update safely for create
@@ -107,29 +92,24 @@ public class SpecManagerImpl implements SpecManager {
         }
     }
 
-    @Override
-    public void loadSpecFor(String uriRequest) {
+    @Override public void loadSpecFor(String uriRequest) {
         // Nothing to do in this environment,  all known specs are permanently loaded
     }
 
-    @Override
-    public APISpec updateSpec(String uri, String key, Model spec)
-            throws APISecurityException {
+    @Override public APISpec updateSpec(String uri, String key, Model spec) throws APISecurityException {
         log.info("Udating spec: " + uri);
         deleteSpec(uri, key);
         return addSpec(uri, key, spec);
     }
 
-    @Override
-    public Model getSpecForAPI(String api) {
+    @Override public Model getSpecForAPI(String api) {
         SpecEntry entry = specs.get(api);
         if (entry != null) 
             return entry.model;
         return null;
     }
 
-    @Override
-    public Model getSpecForEndpoint(String url) {
+    @Override public Model getSpecForEndpoint(String url) {
         Match match = router.getMatch(url);
         if (match != null) {
             String apiURI = match.getEndpoint().getSpec().getAPISpec().getSpecURI();
@@ -137,6 +117,12 @@ public class SpecManagerImpl implements SpecManager {
         } 
         return null;
     }
+
+	@Override synchronized public List<SpecEntry> allSpecs() {
+		List<SpecEntry> result = new ArrayList<SpecEntry>();
+		for (Map.Entry<String, SpecEntry> e: specs.entrySet() ) result.add( e.getValue() );
+		return result;
+	}
 
 }
 
