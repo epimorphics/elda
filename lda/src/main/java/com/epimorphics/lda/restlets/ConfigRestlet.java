@@ -189,7 +189,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 	}
 
 	private boolean matches( String actual, String pattern ) {
-		System.err.println( ">> actual: " + actual + "; pattern: " + pattern );
 		return actual.matches( pattern.replaceAll( "\\{[^}/]*\\}", "[^/]*" ) );
 	}
 

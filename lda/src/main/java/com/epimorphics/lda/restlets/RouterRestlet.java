@@ -103,10 +103,15 @@ import com.hp.hpl.jena.shared.WrappedException;
         Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
         String type = match == matchAll ? null : pathAndType.b;
         if (match == null) {
+        	ShowStats.endpointNoMatch();
         	return noMatchFound( pathstub, ui, pathAndType );
         } else {
+        	long base = System.currentTimeMillis();
             List<MediaType> mediaTypes = getAcceptableMediaTypes( headers );
-            return runEndpoint( servCon, ui, mediaTypes, type, match ); 
+            Response r = runEndpoint( servCon, ui, mediaTypes, type, match );
+            long time = System.currentTimeMillis() - base;
+            ShowStats.endpointTookMs( time );
+			return r; 
         }
     }
     
