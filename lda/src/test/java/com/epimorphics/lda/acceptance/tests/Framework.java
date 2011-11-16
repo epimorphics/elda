@@ -27,6 +27,7 @@ import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -51,6 +52,8 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		{ this.w = w; }
 
     static Logger log = LoggerFactory.getLogger(Framework.class);
+    
+	static final RouterRestlet.Times times = new RouterRestlet.Times();
     
     /**
         An empty model. Do not put things into it.
@@ -245,7 +248,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		MultiMap<String, String> map = MakeData.parseQueryString( w.queryParams );
 		URI ru = Util.newURI(w.path);
 		Bindings cc = Bindings.createContext( bindTemplate( w.template, w.path ), map );
-		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( ru, cc );
+		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( times, ru, cc );
 		Model rsm = resultsAndFormat.a.getModel();
 //		System.err.println( ">> " + rs.getResultList() );				
 //		System.err.println( "||>> " + resultsAndFormat.a.getSelectQuery() );

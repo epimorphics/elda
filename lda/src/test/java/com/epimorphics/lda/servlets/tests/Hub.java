@@ -35,6 +35,8 @@ import static javax.servlet.http.HttpServletResponse.*;
 public class Hub extends HttpServlet
 	{
 	private static final long serialVersionUID = 719130733256615295L;
+
+	static final RouterRestlet.Times times = new RouterRestlet.Times();
 	
 	static final String acceptable = 
 		"text/plain"
@@ -83,7 +85,7 @@ public class Hub extends HttpServlet
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
             try 
             	{
-                Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( ru, cc );
+                Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( times, ru, cc );
 				APIResultSet results = resultsAndFormat.a;
                 if (results == null) 
                 	{

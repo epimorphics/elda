@@ -106,13 +106,22 @@ import com.hp.hpl.jena.shared.WrappedException;
         	ShowStats.endpointNoMatch();
         	return noMatchFound( pathstub, ui, pathAndType );
         } else {
+        	Times t = new Times();
         	long base = System.currentTimeMillis();
             List<MediaType> mediaTypes = getAcceptableMediaTypes( headers );
-            Response r = runEndpoint( servCon, ui, mediaTypes, type, match );
+            Response r = runEndpoint( t, servCon, ui, mediaTypes, type, match );
             long time = System.currentTimeMillis() - base;
-            ShowStats.endpointTookMs( time );
+            ShowStats.endpointTookMs( time, t.sparqlTime );
 			return r; 
         }
+    }
+    
+    public static class Times {
+    	long sparqlTime;
+    	
+    	public void moreSparqlTime( long time ) {
+    		sparqlTime += time;
+    	}
     }
     
     protected static final boolean showMightHaveMeant = false;
@@ -182,14 +191,14 @@ import com.hp.hpl.jena.shared.WrappedException;
 		return mediaTypes;
 	}
 
-    private Response runEndpoint( ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
+    private Response runEndpoint( Times t, ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
-        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( match, ru, suffix, queryParams );
+        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( t, match, ru, suffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
             if (results == null)
             	throw new RuntimeException( "ResultSet is null -- this should never happen." );

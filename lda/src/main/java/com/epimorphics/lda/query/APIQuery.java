@@ -32,6 +32,7 @@ import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
@@ -745,21 +746,22 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     /**
         Run the defined query against the datasource
     */
-    public APIResultSet runQuery( APISpec spec, Cache cache, Bindings call, View view ) {
+    public APIResultSet runQuery( RouterRestlet.Times t, APISpec spec, Cache cache, Bindings call, View view ) {
         Source source = spec.getDataSource();
         try {
-        	return runQueryWithSource( spec, cache, call, view, source );
+        	return runQueryWithSource( t, spec, cache, call, view, source );
         } catch (QueryExceptionHTTP e) {
             EldaException.ARQ_Exception( source, e );
             return /* NEVER */ null;
         }
     }
 
-	private APIResultSet runQueryWithSource( APISpec spec, Cache cache, Bindings call, View view, Source source ) {
+	private APIResultSet runQueryWithSource( RouterRestlet.Times t, APISpec spec, Cache cache, Bindings call, View view, Source source ) {
 		long origin = System.currentTimeMillis();
 		Couple<String, List<Resource>> queryAndResults = selectResources( cache, spec, call, source );
 		long afterSelect = System.currentTimeMillis();
 		
+		t.moreSparqlTime( afterSelect - origin );
 		String outerSelect = queryAndResults.a;
 //		 System.err.println( ">> " + outerSelect );
 		List<Resource> results = queryAndResults.b;
@@ -775,6 +777,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		APIResultSet rs = fetchDescriptionOfAllResources(outerSelect, spec, view, results);
 		
 		long afterView = System.currentTimeMillis();
+		t.moreSparqlTime( afterView - afterSelect );
 		
 		log.debug( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );
 		log.debug( "TIMING: view time:   " + (afterView - afterSelect)/1000.0 + "s" );

@@ -19,11 +19,17 @@ import com.epimorphics.util.Util;
 	@GET @Produces("text/html") public Response showStats() {
 		StringBuilder sb = new StringBuilder();
 		sb.append( "<h1>Elda: endpoint timings.</h2>" );
-		sb.append( "<div>failures to match: " ).append( matchFailures ).append( "</div>\n" );
-		sb.append( "<div>successful matches: " ).append( matchFound ).append( "</div>\n" );
-		sb.append( "<div>total elapsed time: " ).append( totalTime ).append( "ms </div>\n" );
-		if (matchFound > 0)
-			sb.append( "<div>mean time per success: " ).append( totalTime / matchFound ).append( " ms</div>\n" );
+		sb.append( "<table>\n" );
+		sb.append( "<tr><td>failures to match" ).append( "</td><td>" ).append( matchFailures ).append( "</td></tr>\n" );
+		sb.append( "<tr><td>successful matches" ).append( "</td><td>" ).append( matchFound ).append( "</td></tr>\n" );
+		sb.append( "<tr><td>total elapsed time" ).append( "</td><td>" ).append( totalTime ).append( "ms </td></tr>\n" );
+		sb.append( "<tr><td>total SPARQL time" ).append( "</td><td>" ).append( sparqlTime ).append( "ms </td></tr>\n" );
+		sb.append( "<tr><td>elapsed - SPARQL time" ).append( "</td><td>" ).append( totalTime - sparqlTime ).append( "ms </td></tr>\n" );
+		if (matchFound > 0) {
+			sb.append( "<tr><td>mean time per success" ).append( "</td><td>" ).append( totalTime / matchFound ).append( " ms</td></tr>\n" );
+			sb.append( "<tr><td>mean non-SPARQL per success" ).append( "</td><td>" ).append( (totalTime - sparqlTime) / matchFound ).append( " ms</td></tr>\n" );
+		}
+		sb.append( "</table>\n" );
 		String html = Util.withBody( "Metadata", sb.toString() );
 		return RouterRestlet.returnAs( html, "text/html" );
 	}
@@ -31,13 +37,15 @@ import com.epimorphics.util.Util;
 	static int matchFailures = 0;
 	static int matchFound = 0;
 	static long totalTime = 0;
+	static long sparqlTime = 0;
 	
 	public static synchronized void endpointNoMatch() {
 		matchFailures += 1;
 	}
 
-	public static synchronized void endpointTookMs( long time ) {
+	public static synchronized void endpointTookMs( long time, long sparql ) {
 		matchFound += 1;
 		totalTime += time;
+		sparqlTime += sparql;
 	}
 }

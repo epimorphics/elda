@@ -23,6 +23,7 @@ import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.MultiMap;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -39,6 +40,8 @@ import static com.hp.hpl.jena.rdf.model.test.ModelTestBase.*;
 
 public class ExploreTestingForLatAndLongEtc 
 	{	
+
+	static final RouterRestlet.Times times = new RouterRestlet.Times();
 	
 	private final static Model latLongTestDescription = model
 		( "spec rdf:type api:API" 
@@ -81,7 +84,7 @@ public class ExploreTestingForLatAndLongEtc
 		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );
 		URI ru = Util.newURI("http://dummy/doc/schools");
 		Bindings cc = Bindings.createContext( MakeData.variables( settings ), map );
-		Triad<APIResultSet, String, Bindings> resultsAndFormat = e.call( ru, cc );
+		Triad<APIResultSet, String, Bindings> resultsAndFormat = e.call( times, ru, cc );
 		APIResultSet rs = resultsAndFormat.a;
 		return new HashSet<Resource>( rs.getResultList() );
 		}
