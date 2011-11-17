@@ -1,0 +1,6 @@
+URI=anchor_me?min-p=4&max-q=2
+ASK
+	{
+	:f a :C; :p 6 ; :q 1 .
+	:g a :C; :p 7 ; :q 2 .
+	}

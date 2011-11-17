@@ -1,0 +1,27 @@
+URI=/alpha?max-eastish=10
+ASK  { :A a :Item. :B a :Item. :E a :Item. :F a :Item. }
+
+ASK NOT { :C a :Item. }
+ASK NOT { :D a :Item. }
+ASK NOT { :G a :Item. }
+ASK NOT { :H a :Item. }
+    
+URI=/alpha?max-northish=10
+ASK { :A a :Item. :B a :Item. :C a :Item. :D a :Item. }
+
+ASK NOT { :E a :Item. }
+ASK NOT { :F a :Item. }
+ASK NOT { :G a :Item. }
+ASK NOT { :H a :Item. }
+  
+URI=/alpha?max-eastish=10&max-northish=10
+ASK { :A a :Item. }
+ASK { :B a :Item. }
+
+ASK NOT { :C a :Item. }
+ASK NOT { :D a :Item. }
+ASK NOT { :E a :Item. }
+ASK NOT { :F a :Item. }
+ASK NOT { :G a :Item. }
+ASK NOT { :H a :Item. }
+  

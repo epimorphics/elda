@@ -1,0 +1,15 @@
+@prefix : <http://www.epimorphics.com/tools/example#> .
+
+:a a :C; :p 1 .
+:b a :C; :p 2 .
+:c a :C; :p 3 .
+:d a :C; :p 4 .
+:e a :C; :p 5 .
+:f a :C; :p 6 ; :q 1 .
+:g a :C; :p 7 ; :q 2 .
+
+:j a :C; :q 3 .
+:k a :C; :q 4 .
+:l a :C; :q 5 .
+:m a :C; :q 6 .
+:n a :C; :q 7 .

@@ -1,0 +1,27 @@
+:root a api:API 
+    ; api:sparqlEndpoint <local:CURRENT-TEST>
+    ; api:endpoint :ep
+    .
+
+:ep a api:ListEndpoint
+    ; api:uriTemplate '/alpha'
+    .
+    
+rdf:type a rdf:Property
+    ; api:label 'type'
+    .
+
+:p api:label 'p'
+	; a owl:DatatypeProperty
+    ; rdfs:range xsd:integer
+    .
+    
+:eastish a owl:DatatypeProperty
+    ; api:label 'eastish'
+    ; rdfs:range xsd:integer
+    .
+    
+:northish a owl:DatatypeProperty
+    ; api:label 'northish'
+    ; rdfs:range xsd:integer
+    .

@@ -1,0 +1,6 @@
+URI=anchor_me?max-p=2
+ASK
+{
+	:a a :C; :p 1 .
+	:b a :C; :p 2 .
+}

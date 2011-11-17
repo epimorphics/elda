@@ -1,0 +1,8 @@
+URI=fixed_select
+ASK
+{
+	{ :yes :p 1 .}
+
+FILTER NOT EXISTS
+	{ :no :p 2 .}
+}
