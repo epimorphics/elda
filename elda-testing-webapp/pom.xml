@@ -7,7 +7,6 @@
     <version>1.1.17-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda-testing-webapp</artifactId>
   <packaging>war</packaging>
   <name>elda-testing-webapp</name>
@@ -20,6 +19,23 @@
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>lda</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    
+    <dependency>
+        <groupId>com.epimorphics.lda</groupId>
+        <artifactId>lda</artifactId>
+        <version>${project.version}</version>
+        <classifier>sources</classifier>
+        <scope>compile</scope>
+    </dependency>
+    
+    <dependency>
+        <groupId>com.epimorphics.lda</groupId>
+        <artifactId>json-rdf</artifactId>
+        <version>${project.version}</version>
+        <type>jar</type>
+        <classifier>sources</classifier>
+        <scope>compile</scope>
     </dependency>
 
     <dependency>
@@ -35,26 +51,152 @@
     	<type>jar</type>
     	<scope>compile</scope>
     </dependency>
+
     <dependency>
-    	<groupId>com.epimorphics.lda</groupId>
-    	<artifactId>lda</artifactId>
-    	<version>${project.version}</version>
-    	<classifier>sources</classifier>
-    	<scope>compile</scope>
+        <groupId>com.epimorphics.lda</groupId>
+        <artifactId>lda</artifactId>
+        <version>${project.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
     </dependency>
+    
     <dependency>
-    	<groupId>com.epimorphics.lda</groupId>
-    	<artifactId>json-rdf</artifactId>
-    	<version>${project.version}</version>
-    	<type>jar</type>
-    	<classifier>sources</classifier>
-    	<scope>compile</scope>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.1.1</version>
+      <type>jar</type>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 
   <build>
     <finalName>elda-testing-webapp</finalName>
-    <plugins>        
+    <plugins>  
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- copy test resources -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>copy-test-resources</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>testResources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin> 
+      
+	   <plugin>
+			<groupId>org.mortbay.jetty</groupId>
+			<artifactId>maven-jetty-plugin</artifactId>
+			<version>6.1.25</version>
+			<configuration>
+				<scanIntervalSeconds>10</scanIntervalSeconds>
+				<stopKey>foo</stopKey>
+				<stopPort>${com.epimorphics.lda.testserver.stopPort}</stopPort>
+				<connectors>
+					<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+						<port>${com.epimorphics.lda.testserver.port}</port>
+						<maxIdleTime>60000</maxIdleTime>
+					</connector>
+				</connectors>
+				<webApp>${basedir}/target/elda-testing-webapp.war</webApp>
+				<contextPath>/elda</contextPath>
+			</configuration>
+			<executions>
+				<execution>
+					<id>start-jetty</id>
+					<phase>pre-integration-test</phase>
+					<goals>
+						<goal>deploy-war</goal>
+					</goals>
+					<configuration>
+						<daemon>true</daemon>
+					</configuration>
+				</execution>
+				<execution>
+					<id>stop-jetty</id>
+					<phase>post-integration-test</phase>
+					<goals>
+						<goal>stop</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>     
+
+      <!-- plugin to read properties -->
+      <!-- used to configure port numbers -->
+      
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0-alpha-2</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+            <configuration>
+              <files>
+                <file>${basedir}/src/test/resources/com.epimorphics.lda.systemtest.config.properties
+                </file>
+              </files>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin> 
+      
+      <!-- plugin to run the tests -->
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.9</version>
+        <executions>
+        
+          <execution>
+            <id>test</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <skipTests>true</skipTests>
+            </configuration>
+          </execution>
+          
+          <execution>
+            <id>integration-test</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <includes><include>**/*Tests.java</include></includes>
+              <skipTests>${skip-integration-test}</skipTests>
+            </configuration>
+          </execution>
+          
+        </executions>
+      </plugin>
+        
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
@@ -64,6 +206,43 @@
           </configuration>
         </plugin>
     </plugins>
+    
+    
+    <pluginManagement>
+    	<plugins>
+    		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    		<plugin>
+    			<groupId>org.eclipse.m2e</groupId>
+    			<artifactId>lifecycle-mapping</artifactId>
+    			<version>1.0.0</version>
+    			<configuration>
+    				<lifecycleMappingMetadata>
+    					<pluginExecutions>
+    						<pluginExecution>
+    							<pluginExecutionFilter>
+    								<groupId>org.codehaus.mojo</groupId>
+    								<artifactId>
+    									properties-maven-plugin
+    								</artifactId>
+    								<versionRange>
+    									[1.0-alpha-2,)
+    								</versionRange>
+    								<goals>
+    									<goal>
+    										read-project-properties
+    									</goal>
+    								</goals>
+    							</pluginExecutionFilter>
+    							<action>
+    								<ignore></ignore>
+    							</action>
+    						</pluginExecution>
+    					</pluginExecutions>
+    				</lifecycleMappingMetadata>
+    			</configuration>
+    		</plugin>
+    	</plugins>
+    </pluginManagement>
   </build>
 
 </project>
