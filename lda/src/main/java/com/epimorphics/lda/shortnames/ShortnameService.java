@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.epimorphics.jsonrdf.Context;
+import com.epimorphics.lda.exceptions.ExpansionFailedException;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;

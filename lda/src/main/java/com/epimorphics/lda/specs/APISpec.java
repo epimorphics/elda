@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.VariableExtractor;
-import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;

@@ -15,10 +15,19 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.Util;
 
+/**
+	The ShowStats restlet stores some statistics about Elda's
+	query times and cache hits, and renders it on demand into
+	HTML.	
+*/
 @Path( "/control/show-stats") public class ShowStats {
 	
+	/**
+	    Render the statistics into HTML and respond with it.
+	*/
 	@GET @Produces("text/html") public synchronized Response showStats() {
 		StringBuilder sb = new StringBuilder();
 		sb.append( "<h1>Elda: endpoint timings.</h2>" );
@@ -73,10 +82,6 @@ import com.epimorphics.util.Util;
 		sb.append( "<tr><td>" ).append( label ).append( ":</td><td align='right'>" ).append( duration ).append( " ms </td></tr>\n" );
 	}
 
-	static long matchFailures = 0;
-	static long requestCount = 0;
-	static long totalTime = 0;
-	
 	static class Interval {
 		long min = Long.MAX_VALUE, total = 0, max = Long.MIN_VALUE;
 		
@@ -99,17 +104,27 @@ import com.epimorphics.util.Util;
 		i.update( duration );
 	}
 	
+	static long matchFailures = 0;
+	static long requestCount = 0;
+	static long totalViewCacheHits = 0;
+	static long totalSelectCacheHits = 0;
+	static long totalTime = 0;
+	
 	static Interval totalSelectionTime = new Interval();
 	static Interval totalViewTime = new Interval();
 	static Interval totalRenderTime = new Interval();
-	
-	static long totalViewCacheHits = 0;
-	static long totalSelectCacheHits = 0;
-	
+		
+	/**
+	    Record an occurence of a non-matched URI.
+	*/
 	public static synchronized void endpointNoMatch() {
 		matchFailures += 1;
 	}
 
+	/**
+	    Accumulate more statistics information from the given Times
+	    object.
+	*/
 	public static synchronized void accumulate( Times t ) {
 		requestCount += 1;
 		totalTime += t.totalTime();

@@ -19,7 +19,7 @@ package com.epimorphics.lda.specmanager;
 
 import java.util.List;
 
-import com.epimorphics.lda.core.APISecurityException;
+import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Model;
 

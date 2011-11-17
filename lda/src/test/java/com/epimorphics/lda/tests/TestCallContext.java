@@ -14,7 +14,7 @@ import static org.hamcrest.CoreMatchers.*;
 import org.junit.Test;
 
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.core.MultiMap;
+import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.tests_support.Matchers;
 import com.hp.hpl.jena.test.JenaTestBase;

@@ -11,7 +11,7 @@ package com.epimorphics.lda.sources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.APIException;
+import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;

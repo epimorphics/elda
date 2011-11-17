@@ -15,7 +15,7 @@
  * $Id:  $
  *****************************************************************/
 
-package com.epimorphics.lda.core;
+package com.epimorphics.lda.exceptions;
 
 public class APIException extends RuntimeException {
 

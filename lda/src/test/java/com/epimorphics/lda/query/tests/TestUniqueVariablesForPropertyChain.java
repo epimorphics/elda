@@ -8,11 +8,11 @@
 package com.epimorphics.lda.query.tests;
 
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.tests.FakeNamedViews;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.tests_support.MakeData;

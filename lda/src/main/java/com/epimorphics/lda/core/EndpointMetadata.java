@@ -19,6 +19,7 @@ import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.NameMap.Stage2NameMap;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.vocabularies.ELDA;
 import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.util.Util;

@@ -21,16 +21,17 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
+import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.params.Decode;
+import com.epimorphics.lda.exceptions.QueryParseException;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.*;
-import com.epimorphics.lda.restlets.Times;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.XHV;
@@ -79,10 +80,6 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public Triad<APIResultSet, String, Bindings> call( Times t, URI reqURI, Bindings given ) {
     	long origin = System.currentTimeMillis();
     	Bindings cc = given.copyWithDefaults( spec.getBindings() );
-        // HERE log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
-    //
-        new Decode(true).handleQueryParameters( cc.parameterNames() ).reveal();
-    //
         APIQuery query = spec.getBaseQuery();
         Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
         long timeAfterBuild = System.currentTimeMillis();

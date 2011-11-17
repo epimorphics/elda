@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.epimorphics.lda.core.MultiMap;
+import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.NsUtils;

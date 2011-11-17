@@ -28,8 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIFactory;
-import com.epimorphics.lda.core.APISecurityException;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.specs.APIEndpointSpec;

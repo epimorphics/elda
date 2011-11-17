@@ -5,18 +5,22 @@
     (c) Copyright 2011 Epimorphics Limited
     $Id$
 */
-package com.epimorphics.lda.restlets;
+package com.epimorphics.lda.support;
 
+/**
+    A Times object holds information about the times (and mayhap other
+    details) associated with an Elda query.
+*/
 public class Times {
 	long selectionDuration;
 	long viewDuration;
 	long startTime;
 	long renderDuration;
-	String renderFormat;
+	public String renderFormat;
 	String forPath;
 	long endTime;
-	boolean usedSelectionCache;
-	boolean usedViewCache;
+	public boolean usedSelectionCache;
+	public boolean usedViewCache;
 
 	public Times( String forPath ) {
 		this.forPath = forPath;

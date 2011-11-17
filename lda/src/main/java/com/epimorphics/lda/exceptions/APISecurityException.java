@@ -10,7 +10,7 @@
     Created on:  7 Feb 2010
 */
 
-package com.epimorphics.lda.core;
+package com.epimorphics.lda.exceptions;
 
 /**
  * Used to indicated an update/delete operation on an API

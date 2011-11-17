@@ -63,9 +63,4 @@ public class QueryParameter {
 			|| p.equals( callback )
 			;
 	}
-
-	/**
-	    Regular expression matching the names allowed for the callback function.
-	*/
-
 }

@@ -6,9 +6,8 @@
     $Id$
 */
 
-package com.epimorphics.lda.shortnames;
+package com.epimorphics.lda.exceptions;
 
-import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.Term;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 

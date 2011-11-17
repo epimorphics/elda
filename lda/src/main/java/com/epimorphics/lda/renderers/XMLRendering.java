@@ -16,8 +16,8 @@ import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
-import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.MultiMap;
 
 /**
 From the spec: 

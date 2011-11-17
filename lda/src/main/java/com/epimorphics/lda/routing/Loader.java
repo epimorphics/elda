@@ -30,9 +30,9 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.APIException;
-import com.epimorphics.lda.core.APISecurityException;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.exceptions.APIException;
+import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specmanager.SpecManagerImpl;
 import com.epimorphics.lda.support.LARQManager;

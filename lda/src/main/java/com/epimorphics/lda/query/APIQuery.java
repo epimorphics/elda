@@ -21,22 +21,22 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
-import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.Param.Info;
+import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
-import com.epimorphics.lda.restlets.Times;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.LARQManager;
+import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.QuerySupport;
+import com.epimorphics.lda.support.Times;
 
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;

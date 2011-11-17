@@ -9,7 +9,7 @@ package com.epimorphics.lda.restlets;
 
 import javax.ws.rs.core.MultivaluedMap;
 
-import com.epimorphics.lda.core.MultiMap;
+import com.epimorphics.lda.support.MultiMap;
 
 public class JerseyUtils {
 

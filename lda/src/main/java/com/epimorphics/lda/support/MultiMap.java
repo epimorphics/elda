@@ -6,7 +6,7 @@
     $Id$
 */
 
-package com.epimorphics.lda.core;
+package com.epimorphics.lda.support;
 
 import java.util.*;
 

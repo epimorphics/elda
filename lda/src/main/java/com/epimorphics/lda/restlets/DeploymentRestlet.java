@@ -32,7 +32,7 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.APISecurityException;
+import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;

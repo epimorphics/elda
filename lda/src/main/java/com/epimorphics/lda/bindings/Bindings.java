@@ -14,9 +14,9 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.Value;
+import com.epimorphics.lda.support.MultiMap;
 
 /**
     A Bindings maps variables (identified by their string names) to

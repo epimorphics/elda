@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.exceptions.QueryParseException;
 import com.epimorphics.lda.query.ExpansionPoints;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;

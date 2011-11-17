@@ -11,7 +11,7 @@
  */
 package com.epimorphics.lda.query;
 
-import com.epimorphics.lda.core.QueryParseException;
+import com.epimorphics.lda.exceptions.QueryParseException;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.support.NumericArgUtils;
 import com.epimorphics.lda.vocabularies.GEOStub;

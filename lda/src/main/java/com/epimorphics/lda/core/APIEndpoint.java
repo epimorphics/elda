@@ -21,8 +21,8 @@ import java.net.URI;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.restlets.Times;
 import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.hp.hpl.jena.rdf.model.Model;

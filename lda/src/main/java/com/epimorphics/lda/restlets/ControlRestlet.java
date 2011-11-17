@@ -38,7 +38,7 @@ import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.core.APIException;
+import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;

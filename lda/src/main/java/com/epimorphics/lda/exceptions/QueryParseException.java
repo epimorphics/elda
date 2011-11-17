@@ -10,7 +10,7 @@
     Created on:  4 Feb 2010
 */
 
-package com.epimorphics.lda.core;
+package com.epimorphics.lda.exceptions;
 
 /**
  * Used to indicate problems with parsing request structure,

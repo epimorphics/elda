@@ -25,6 +25,7 @@ import java.util.Set;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.exceptions.ExpansionFailedException;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;

@@ -21,10 +21,10 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.VariableExtractor;
-import com.epimorphics.lda.core.APIException;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.View;
+import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.renderers.Factories;

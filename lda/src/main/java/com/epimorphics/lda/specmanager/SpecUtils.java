@@ -21,7 +21,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-import com.epimorphics.lda.core.APIException;
+import com.epimorphics.lda.exceptions.APIException;
 
 /**
  * Random utility methods for the implementing SpecManagers
