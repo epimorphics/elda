@@ -21,7 +21,7 @@ import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.MultiMap;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.restlets.Times;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
@@ -32,7 +32,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 public class TestBindings {
 	
-	static final RouterRestlet.Times times = new RouterRestlet.Times();
+	static final Times times = new Times();
 	
 	/**
 	    Test that declared variables can have values that depend on

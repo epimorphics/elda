@@ -27,7 +27,7 @@ import com.epimorphics.lda.bindings.Bindings;
 
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.rdfq.Value;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.restlets.Times;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
@@ -134,7 +134,7 @@ public class APITester {
         return match.endpoint.call(times, ru, call).a;
     }
     
-	static final RouterRestlet.Times times = new RouterRestlet.Times();
+	static final Times times = new Times();
 
 	private Bindings fix(Map<String, String> bindings) {
 		Bindings result = new Bindings();

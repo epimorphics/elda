@@ -23,7 +23,7 @@ import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ModelLoaderI;
 import com.epimorphics.lda.core.MultiMap;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.restlets.Times;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -41,7 +41,7 @@ import static com.hp.hpl.jena.rdf.model.test.ModelTestBase.*;
 public class ExploreTestingForLatAndLongEtc 
 	{	
 
-	static final RouterRestlet.Times times = new RouterRestlet.Times();
+	static final Times times = new Times();
 	
 	private final static Model latLongTestDescription = model
 		( "spec rdf:type api:API" 

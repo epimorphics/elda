@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererFactory;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.restlets.Times;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.util.MediaType;
@@ -38,7 +38,7 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Triad<APIResultSet, String, Bindings> call( RouterRestlet.Times t, Match match, URI requestUri, String suffix, MultiMap<String, String> queryParams ) {
+	public static Triad<APIResultSet, String, Bindings> call( Times t, Match match, URI requestUri, String suffix, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		APIEndpointSpec spec = ep.getSpec();
 		log.debug("Info: calling APIEndpoint " + spec);

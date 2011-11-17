@@ -16,8 +16,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.SortOrder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +30,7 @@ import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.restlets.Times;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
@@ -522,7 +520,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 			        }
 	    		}
 	    	}
-	    	if (true) orderExpressions.append( " str(?item)" );
+	    	if (true) orderExpressions.append( " ?item" );
     	}
    	sortByOrderSpecsFrozen = true;
     }
@@ -746,7 +744,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     /**
         Run the defined query against the datasource
     */
-    public APIResultSet runQuery( RouterRestlet.Times t, APISpec spec, Cache cache, Bindings call, View view ) {
+    public APIResultSet runQuery( Times t, APISpec spec, Cache cache, Bindings call, View view ) {
         Source source = spec.getDataSource();
         try {
         	return runQueryWithSource( t, spec, cache, call, view, source );
@@ -756,12 +754,12 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         }
     }
 
-	private APIResultSet runQueryWithSource( RouterRestlet.Times t, APISpec spec, Cache cache, Bindings call, View view, Source source ) {
+	private APIResultSet runQueryWithSource( Times t, APISpec spec, Cache cache, Bindings call, View view, Source source ) {
 		long origin = System.currentTimeMillis();
-		Couple<String, List<Resource>> queryAndResults = selectResources( cache, spec, call, source );
+		Couple<String, List<Resource>> queryAndResults = selectResources( t, cache, spec, call, source );
 		long afterSelect = System.currentTimeMillis();
 		
-		t.moreSparqlTime( afterSelect - origin );
+		t.setSelectionDuration( afterSelect - origin );
 		String outerSelect = queryAndResults.a;
 //		 System.err.println( ">> " + outerSelect );
 		List<Resource> results = queryAndResults.b;
@@ -770,6 +768,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		APIResultSet already = cache.getCachedResultSet( results, view.toString() );
 		if (already != null && expansionPoints.isEmpty() ) 
 		    {
+			t.usedViewCache();
 		    log.debug( "re-using cached results for " + results );
 		    return already.clone();
 		    }
@@ -777,7 +776,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		APIResultSet rs = fetchDescriptionOfAllResources(outerSelect, spec, view, results);
 		
 		long afterView = System.currentTimeMillis();
-		t.moreSparqlTime( afterView - afterSelect );
+		t.setViewDuration( afterView - afterSelect );
 		
 		log.debug( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );
 		log.debug( "TIMING: view time:   " + (afterView - afterSelect)/1000.0 + "s" );
@@ -868,21 +867,22 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    Answer the select query (if any; otherwise, "") and list of resources obtained by
 	    running that query.
 	*/
-    private Couple<String, List<Resource>> selectResources( Cache cache, APISpec spec, Bindings call, Source source ) {
+    private Couple<String, List<Resource>> selectResources( Times t, Cache cache, APISpec spec, Bindings call, Source source ) {
     	log.debug( "fetchRequiredResources()" );
         final List<Resource> results = new ArrayList<Resource>();
         if (itemTemplate != null) setSubject( call.expandVariables( itemTemplate ) );
         if ( isFixedSubject() )
             return new Couple<String, List<Resource>>( "", CollectionUtils.list( subjectResource ) );
         else
-        	return runGeneralQuery( cache, spec, call, source, results );
+        	return runGeneralQuery( t, cache, spec, call, source, results );
     }
 
-	private Couple<String, List<Resource>> runGeneralQuery( Cache cache, APISpec spec, Bindings cc, Source source, final List<Resource> results) {
+	private Couple<String, List<Resource>> runGeneralQuery( Times t, Cache cache, APISpec spec, Bindings cc, Source source, final List<Resource> results) {
 		String select = assembleSelectQuery( cc, spec.getPrefixMap() );
 		List<Resource> already = cache.getCachedResources( select );
 		if (already != null)
 		    {
+			t.usedSelectionCache();
 		    log.debug( "re-using cached results for query " + select );
 		    return new Couple<String, List<Resource>>(select, already);
 		    }

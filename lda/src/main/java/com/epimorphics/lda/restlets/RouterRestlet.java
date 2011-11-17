@@ -106,22 +106,12 @@ import com.hp.hpl.jena.shared.WrappedException;
         	ShowStats.endpointNoMatch();
         	return noMatchFound( pathstub, ui, pathAndType );
         } else {
-        	Times t = new Times();
-        	long base = System.currentTimeMillis();
+        	Times t = new Times( pathstub );
             List<MediaType> mediaTypes = getAcceptableMediaTypes( headers );
             Response r = runEndpoint( t, servCon, ui, mediaTypes, type, match );
-            long time = System.currentTimeMillis() - base;
-            ShowStats.endpointTookMs( time, t.sparqlTime );
+            ShowStats.accumulate( t.done() );
 			return r; 
         }
-    }
-    
-    public static class Times {
-    	long sparqlTime;
-    	
-    	public void moreSparqlTime( long time ) {
-    		sparqlTime += time;
-    	}
     }
     
     protected static final boolean showMightHaveMeant = false;
@@ -207,7 +197,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
-			return doRendering( rc, formatter, results, r );
+			return doRendering( t, rc, formatter, results, r );
         } catch (StackOverflowError e) {
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( shortStackTrace( e ) );
@@ -280,7 +270,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 		};
 	}
 	
-    private Response doRendering( Bindings rc, String rName, APIResultSet results, Renderer r ) {
+    private Response doRendering( Times t, Bindings rc, String rName, APIResultSet results, Renderer r ) {
 		if (r == null) {
             String message = rName == null
             	? "no suitable media type was provided for rendering."
@@ -289,7 +279,10 @@ import com.hp.hpl.jena.shared.WrappedException;
             return enableCORS( Response.status( Status.BAD_REQUEST ).entity( niceMessage( message ) ) ).build();
         } else {
             MediaType mt = r.getMediaType( rc );
-            return returnAs( r.render( rc, results ), mt, results.getContentLocation() );
+            long base = System.currentTimeMillis();
+            String rendering = r.render( rc, results );
+            t.setRenderDuration( System.currentTimeMillis() - base, rName );
+			return returnAs( rendering, mt, results.getContentLocation() );
         }
 	}
 

@@ -19,6 +19,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.MultiMap;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.restlets.Times;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.MediaType;
@@ -36,7 +37,7 @@ public class Hub extends HttpServlet
 	{
 	private static final long serialVersionUID = 719130733256615295L;
 
-	static final RouterRestlet.Times times = new RouterRestlet.Times();
+	static final Times times = new Times();
 	
 	static final String acceptable = 
 		"text/plain"

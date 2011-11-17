@@ -27,7 +27,7 @@ import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.*;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.restlets.Times;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
@@ -76,7 +76,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.toString();
     }
     
-    @Override public Triad<APIResultSet, String, Bindings> call( RouterRestlet.Times t, URI reqURI, Bindings given ) {
+    @Override public Triad<APIResultSet, String, Bindings> call( Times t, URI reqURI, Bindings given ) {
     	long origin = System.currentTimeMillis();
     	Bindings cc = given.copyWithDefaults( spec.getBindings() );
         // HERE log.debug("API " + spec + " called on " + cc + " from " + cc.getRequestURI());
