@@ -32,6 +32,7 @@ import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.LARQManager;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.PrefixLogger;
@@ -744,19 +745,20 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     /**
         Run the defined query against the datasource
     */
-    public APIResultSet runQuery( Times t, APISpec spec, Cache cache, Bindings call, View view ) {
+    public APIResultSet runQuery( Controls c, APISpec spec, Cache cache, Bindings call, View view ) {
         Source source = spec.getDataSource();
         try {
-        	return runQueryWithSource( t, spec, cache, call, view, source );
+        	return runQueryWithSource( c, spec, cache, call, view, source );
         } catch (QueryExceptionHTTP e) {
             EldaException.ARQ_Exception( source, e );
             return /* NEVER */ null;
         }
     }
 
-	private APIResultSet runQueryWithSource( Times t, APISpec spec, Cache cache, Bindings call, View view, Source source ) {
+	private APIResultSet runQueryWithSource( Controls c, APISpec spec, Cache cache, Bindings call, View view, Source source ) {
+		Times t = c.times;
 		long origin = System.currentTimeMillis();
-		Couple<String, List<Resource>> queryAndResults = selectResources( t, cache, spec, call, source );
+		Couple<String, List<Resource>> queryAndResults = selectResources( c, cache, spec, call, source );
 		long afterSelect = System.currentTimeMillis();
 		
 		t.setSelectionDuration( afterSelect - origin );
@@ -766,7 +768,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		
 		// System.err.println( ">> looking in cache " + cache.summary() );
 		APIResultSet already = cache.getCachedResultSet( results, view.toString() );
-		if (already != null && expansionPoints.isEmpty() ) 
+		if (c.allowCache && already != null && expansionPoints.isEmpty()) 
 		    {
 			t.usedViewCache();
 		    log.debug( "re-using cached results for " + results );
@@ -867,22 +869,22 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 	    Answer the select query (if any; otherwise, "") and list of resources obtained by
 	    running that query.
 	*/
-    private Couple<String, List<Resource>> selectResources( Times t, Cache cache, APISpec spec, Bindings call, Source source ) {
+    private Couple<String, List<Resource>> selectResources( Controls c, Cache cache, APISpec spec, Bindings call, Source source ) {
     	log.debug( "fetchRequiredResources()" );
         final List<Resource> results = new ArrayList<Resource>();
         if (itemTemplate != null) setSubject( call.expandVariables( itemTemplate ) );
         if ( isFixedSubject() )
             return new Couple<String, List<Resource>>( "", CollectionUtils.list( subjectResource ) );
         else
-        	return runGeneralQuery( t, cache, spec, call, source, results );
+        	return runGeneralQuery( c, cache, spec, call, source, results );
     }
 
-	private Couple<String, List<Resource>> runGeneralQuery( Times t, Cache cache, APISpec spec, Bindings cc, Source source, final List<Resource> results) {
+	private Couple<String, List<Resource>> runGeneralQuery( Controls c, Cache cache, APISpec spec, Bindings cc, Source source, final List<Resource> results) {
 		String select = assembleSelectQuery( cc, spec.getPrefixMap() );
 		List<Resource> already = cache.getCachedResources( select );
-		if (already != null)
+		if (c.allowCache && already != null)
 		    {
-			t.usedSelectionCache();
+			c.times.usedSelectionCache();
 		    log.debug( "re-using cached results for query " + select );
 		    return new Couple<String, List<Resource>>(select, already);
 		    }

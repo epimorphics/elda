@@ -6,12 +6,6 @@
     $Id$
 */
 
-/*
-	(c) Copyright 2010 Epimorphics Limited
-	[see end of file]
-	$Id$
-*/
-
 package com.epimorphics.lda.support;
 
 

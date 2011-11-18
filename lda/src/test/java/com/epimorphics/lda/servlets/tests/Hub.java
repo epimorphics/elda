@@ -19,6 +19,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.routing.Match;
+import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -37,7 +38,7 @@ public class Hub extends HttpServlet
 	{
 	private static final long serialVersionUID = 719130733256615295L;
 
-	static final Times times = new Times();
+	static final Controls controls = new Controls( true, new Times() );
 	
 	static final String acceptable = 
 		"text/plain"
@@ -86,7 +87,7 @@ public class Hub extends HttpServlet
             log.debug("Info: calling APIEndpoint " + ep.getSpec());
             try 
             	{
-                Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( times, ru, cc );
+                Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( controls, ru, cc );
 				APIResultSet results = resultsAndFormat.a;
                 if (results == null) 
                 	{

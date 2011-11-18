@@ -22,6 +22,7 @@ import java.net.URI;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
@@ -51,7 +52,7 @@ public interface APIEndpoint {
      	@return Triad(rs, format, cc): the ResultSet for rendering, the name
      		of the format, and the call context used for the result set.
     */
-    public Triad<APIResultSet, String, Bindings> call( Times t, URI reqestURI, Bindings context );
+    public Triad<APIResultSet, String, Bindings> call( Controls c, URI reqestURI, Bindings context );
     
     /**
      	Return a metadata description for the query that would be run by this endpoint

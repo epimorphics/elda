@@ -31,6 +31,7 @@ import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
@@ -77,7 +78,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.toString();
     }
     
-    @Override public Triad<APIResultSet, String, Bindings> call( Times t, URI reqURI, Bindings given ) {
+    @Override public Triad<APIResultSet, String, Bindings> call( Controls c, URI reqURI, Bindings given ) {
     	long origin = System.currentTimeMillis();
     	Bindings cc = given.copyWithDefaults( spec.getBindings() );
         APIQuery query = spec.getBaseQuery();
@@ -85,7 +86,7 @@ public class APIEndpointImpl implements APIEndpoint {
         long timeAfterBuild = System.currentTimeMillis();
         View view = viewAndFormat.a; 
         String format = viewAndFormat.b;
-        APIResultSet unfiltered = query.runQuery( t, spec.getAPISpec(), cache, cc, view );
+        APIResultSet unfiltered = query.runQuery( c, spec.getAPISpec(), cache, cc, view );
         long timeAfterRun = System.currentTimeMillis();
         APIResultSet filtered = filterByView( view, query.getDefaultLanguage(), unfiltered );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );

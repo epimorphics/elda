@@ -23,6 +23,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -32,7 +33,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 public class TestBindings {
 	
-	static final Times times = new Times();
+	static final Controls controls = new Controls( true, new Times() );
 	
 	/**
 	    Test that declared variables can have values that depend on
@@ -63,7 +64,7 @@ public class TestBindings {
 		Match match = new Match( ep, vv );
 		URI req = new URI( "/driver/cartwheel" );
 		MultiMap<String, String> params = MakeData.parseQueryString( "" );
-		Triad<APIResultSet, String, Bindings> results = APIEndpointUtil.call( times, match, req, "", params );
+		Triad<APIResultSet, String, Bindings> results = APIEndpointUtil.call( controls, match, req, "", params );
 //		System.err.println( ">> class: " + results.c.getStringValue( "class" ) );
 		String sq = results.a.getSelectQuery();
 //		System.err.println( ">> " + sq );

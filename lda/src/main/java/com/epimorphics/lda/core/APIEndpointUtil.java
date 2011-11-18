@@ -18,8 +18,8 @@ import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
-import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 
@@ -39,14 +39,14 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Triad<APIResultSet, String, Bindings> call( Times t, Match match, URI requestUri, String suffix, MultiMap<String, String> queryParams ) {
+	public static Triad<APIResultSet, String, Bindings> call( Controls c, Match match, URI requestUri, String suffix, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		APIEndpointSpec spec = ep.getSpec();
 		log.debug("Info: calling APIEndpoint " + spec);
 		Bindings vs = new Bindings( spec.getBindings() ).putAll( match.getBindings() );
 		if (suffix != null) vs.put( "_suffix", suffix );
 		Bindings cc = Bindings.createContext( vs, queryParams );
-		return ep.call( t, requestUri, cc );
+		return ep.call( c, requestUri, cc );
 	}
 
 	/**

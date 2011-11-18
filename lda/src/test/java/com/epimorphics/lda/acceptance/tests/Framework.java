@@ -29,6 +29,7 @@ import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -54,7 +55,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 
     static Logger log = LoggerFactory.getLogger(Framework.class);
     
-	static final Times times = new Times();
+	static final Controls controls = new Controls( true, new Times() );
     
     /**
         An empty model. Do not put things into it.
@@ -249,7 +250,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		MultiMap<String, String> map = MakeData.parseQueryString( w.queryParams );
 		URI ru = Util.newURI(w.path);
 		Bindings cc = Bindings.createContext( bindTemplate( w.template, w.path ), map );
-		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( times, ru, cc );
+		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( controls, ru, cc );
 		Model rsm = resultsAndFormat.a.getModel();
 //		System.err.println( ">> " + rs.getResultList() );				
 //		System.err.println( "||>> " + resultsAndFormat.a.getSelectQuery() );

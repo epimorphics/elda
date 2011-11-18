@@ -30,6 +30,7 @@ import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
@@ -133,10 +134,10 @@ public class APITester {
         // TODO: the template should be a proper URI.
 		URI ru = Util.newURI(uriTemplate);
 		Bindings call = Bindings.createContext( fix( match.bindings ), map );
-        return match.endpoint.call(times, ru, call).a;
+        return match.endpoint.call(controls, ru, call).a;
     }
-    
-	static final Times times = new Times();
+
+	static final Controls controls = new Controls( true, new Times() );
 
 	private Bindings fix(Map<String, String> bindings) {
 		Bindings result = new Bindings();

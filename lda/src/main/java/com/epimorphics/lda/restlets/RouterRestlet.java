@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
@@ -34,6 +35,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
@@ -55,6 +57,7 @@ import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
+import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.Couple;
@@ -98,6 +101,8 @@ import com.hp.hpl.jena.shared.WrappedException;
             @Context ServletContext servCon,
             @Context UriInfo ui) throws IOException 
     {
+    	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
+    	boolean dontCache = has( rh, "pragma", "no-cache" ) || has( rh, "cache-control", "no-cache" );
         Couple<String, String> pathAndType = parse( pathstub );
         Match matchAll = getMatch( "/" + pathstub );
         Match matchTrimmed = getMatch( "/" + pathAndType.a );
@@ -108,14 +113,20 @@ import com.hp.hpl.jena.shared.WrappedException;
         	return noMatchFound( pathstub, ui, pathAndType );
         } else {
         	Times t = new Times( pathstub );
+        	Controls c = new Controls( !dontCache, t );
             List<MediaType> mediaTypes = getAcceptableMediaTypes( headers );
-            Response r = runEndpoint( t, servCon, ui, mediaTypes, type, match );
+            Response r = runEndpoint( c, servCon, ui, mediaTypes, type, match );
             ShowStats.accumulate( t.done() );
 			return r; 
         }
     }
     
-    protected static final boolean showMightHaveMeant = false;
+    private boolean has( MultivaluedMap<String, String> rh, String key, String value ) {
+    	List<String> values = rh.get( key );
+		return values != null && values.contains( value );
+	}
+
+	protected static final boolean showMightHaveMeant = false;
 
 	private Response noMatchFound( String pathstub, UriInfo ui, Couple<String, String> pathAndType ) {
 		String preamble = ui.getBaseUri().toASCIIString();
@@ -182,14 +193,14 @@ import com.hp.hpl.jena.shared.WrappedException;
 		return mediaTypes;
 	}
 
-    private Response runEndpoint( Times t, ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
+    private Response runEndpoint( Controls c, ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
-        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( t, match, ru, suffix, queryParams );
+        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, suffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
             if (results == null)
             	throw new RuntimeException( "ResultSet is null -- this should never happen." );
@@ -198,7 +209,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
-			return doRendering( t, rc, formatter, results, r );
+			return doRendering( c, rc, formatter, results, r );
         } catch (StackOverflowError e) {
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( shortStackTrace( e ) );
@@ -271,7 +282,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 		};
 	}
 	
-    private Response doRendering( Times t, Bindings rc, String rName, APIResultSet results, Renderer r ) {
+    private Response doRendering( Controls c, Bindings rc, String rName, APIResultSet results, Renderer r ) {
 		if (r == null) {
             String message = rName == null
             	? "no suitable media type was provided for rendering."
@@ -282,7 +293,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             MediaType mt = r.getMediaType( rc );
             long base = System.currentTimeMillis();
             String rendering = r.render( rc, results );
-            t.setRenderDuration( System.currentTimeMillis() - base, rName );
+            c.times.setRenderDuration( System.currentTimeMillis() - base, rName );
 			return returnAs( rendering, mt, results.getContentLocation() );
         }
 	}

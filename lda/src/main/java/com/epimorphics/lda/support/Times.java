@@ -12,6 +12,7 @@ package com.epimorphics.lda.support;
     details) associated with an Elda query.
 */
 public class Times {
+	
 	long selectionDuration;
 	long viewDuration;
 	long startTime;
