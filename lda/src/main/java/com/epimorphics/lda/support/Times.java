@@ -20,6 +20,7 @@ public class Times {
 	public String renderFormat;
 	String forPath;
 	long endTime;
+	long renderSize;
 	public boolean usedSelectionCache;
 	public boolean usedViewCache;
 
@@ -76,5 +77,13 @@ public class Times {
 
 	public long viewDuration() {
 		return viewDuration;
+	}
+	
+	public long renderSize() {
+		return renderSize;
+	}
+
+	public void setRenderedSize( long renderSize ) {
+		this.renderSize = renderSize;
 	}
 }

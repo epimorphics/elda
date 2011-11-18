@@ -293,6 +293,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             MediaType mt = r.getMediaType( rc );
             long base = System.currentTimeMillis();
             String rendering = r.render( rc, results );
+            c.times.setRenderedSize( rendering.length() * 2 );
             c.times.setRenderDuration( System.currentTimeMillis() - base, rName );
 			return returnAs( rendering, mt, results.getContentLocation() );
         }
