@@ -20,6 +20,8 @@ public class Times {
 	public String renderFormat;
 	String forPath;
 	long endTime;
+	long selectQuerySize;
+	long viewQuerySize;
 	long renderSize;
 	public boolean usedSelectionCache;
 	public boolean usedViewCache;
@@ -79,11 +81,46 @@ public class Times {
 		return viewDuration;
 	}
 	
+	/**
+	    Answer the size of the rendered result, in bytes.
+	*/
 	public long renderSize() {
 		return renderSize;
 	}
 
+	/**
+	    Record the size in bytes of the rendered output.
+	*/
 	public void setRenderedSize( long renderSize ) {
 		this.renderSize = renderSize;
+	}
+	
+	/**
+	    Answer the recorded size in bytes of the select query.
+	*/
+	public long selectQuerySize() { 
+		return selectQuerySize; 
+	}
+	
+	/**
+	    Answer the recorded size in bytes of all the queries
+	    contributing to the view.
+	*/
+	public long viewQuerySize() { 
+		return viewQuerySize; 
+	}
+
+	/**
+	    Record the size in bytes of a piece of the view query.
+	*/
+	public void addToViewQuerySize( String fragment ) {
+		this.viewQuerySize = fragment.length() * 2;
+	}
+
+	/**
+	    Record the size in bytes of the select query.
+	*/
+	public void setSelectQuerySize( String selectQuery ) {
+		this.selectQuerySize = selectQuery.length() * 2;
 	}
 }

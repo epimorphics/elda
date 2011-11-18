@@ -51,17 +51,15 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
- * Query abstraction that supports assembling multiple filter/order/view
- * specifications into a set of working sparql queries.
- * 
- * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
- * @version $Revision: $
- */
+ 	Query abstraction that supports assembling multiple filter/order/view
+ 	specifications into a set of working sparql queries.
+  
+ 	@author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
+ 	@version $Revision: $
+*/
 public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     
-	public static final String SELECT_VARNAME = "item";
-    
-    public static final Variable SELECT_VAR = RDFQ.var( "?" + SELECT_VARNAME );
+    public static final Variable SELECT_VAR = RDFQ.var( "?item" );
     
     public static final String PREFIX_VAR = "?___";
     
@@ -694,22 +692,10 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     		} else {
 	    		Info prop = varInfo.get( RDFQ.var( "?" + name ) );
 	            String val = cc.getValueString( name );
-//	            if (name.equals( "value" )) 
-//	            	{
-//	            	System.err.println( ">> value = " + v );
-//	            	System.err.println( ">> prop = " + prop );
-//	            	System.err.println( ">> val = " + val );
-//	            	}
-//	            String OTHER = vt.objectForValue( v.type(), val, defaultLanguage ).asSparqlTerm( pl ) ; // cc.get( name ).asSparqlTerm( pl );
-//	        	System.err.println( "-->> " + OTHER );
 	            String normalizedValue = 
 	        		(prop == null) 
 	        		    ? valueAsSparql( "<not used>", v )
 	        		    : objectForValue( prop, val, defaultLanguage ).asSparqlTerm(pl);
-//	            if (OTHER.equals( normalizedValue )) {} else {
-//	            	System.err.println( ">> on the one hand, " + OTHER + "\n>> but on the other, " + normalizedValue );
-//	            	throw new RuntimeException( ">> on the one hand, " + OTHER + "\n>> but on the other, " + normalizedValue );
-//	            }
 	    		result.append( normalizedValue );
     		}
     		start = m.end();
@@ -763,10 +749,8 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		
 		t.setSelectionDuration( afterSelect - origin );
 		String outerSelect = queryAndResults.a;
-//		 System.err.println( ">> " + outerSelect );
 		List<Resource> results = queryAndResults.b;
 		
-		// System.err.println( ">> looking in cache " + cache.summary() );
 		APIResultSet already = cache.getCachedResultSet( results, view.toString() );
 		if (c.allowCache && already != null && expansionPoints.isEmpty()) 
 		    {
@@ -775,7 +759,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		    return already.clone();
 		    }
 		
-		APIResultSet rs = fetchDescriptionOfAllResources(outerSelect, spec, view, results);
+		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, view, results);
 		
 		long afterView = System.currentTimeMillis();
 		t.setViewDuration( afterView - afterSelect );
@@ -787,7 +771,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		// Expand chained views, if present
 		if ( ! expansionPoints.isEmpty()) {
 		    for (Property exp : expansionPoints) {
-		        expandResourcesOf(exp, rs, view, spec );
+		        expandResourcesOf(c, exp, rs, view, spec );
 		    }
 		} else {
 		    // Can't cache results which use expansion points
@@ -796,16 +780,16 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		return rs;
 	}
 
-	private APIResultSet fetchDescriptionOfAllResources(String select, APISpec spec, View view, List<Resource> results) {
+	private APIResultSet fetchDescriptionOfAllResources( Controls c, String select, APISpec spec, View view, List<Resource> results) {
 		int count = results.size();
 		Model descriptions = ModelFactory.createDefaultModel();
 		Graph gd = descriptions.getGraph();
-		String detailsQuery = fetchDescriptionsFor( select, results, view, descriptions, spec );
+		String detailsQuery = fetchDescriptionsFor( c, select, results, view, descriptions, spec );
 		return new APIResultSet(gd, results, count < pageSize, detailsQuery );
 	}
 
     /** Find all current values for the given property on the results and fetch a description of them */
-    private void expandResourcesOf(Property exp, APIResultSet rs, View view, APISpec spec ) {
+    private void expandResourcesOf( Controls c, Property exp, APIResultSet rs, View view, APISpec spec ) {
     	Model rsm = rs.getModel();
         List<Resource> toExpand = new ArrayList<Resource>();
         for (Resource root : rs.getResultList()) {
@@ -828,16 +812,16 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
         }
         System.err.println( "property.* not implemented at the moment." );
         if (true) throw new UnsupportedOperationException( "property.* not implemented at the moment." ); // TODO
-        fetchDescriptionsFor( "\nSELECT ?item\n WHERE {}", toExpand, view, rsm, spec);
+        fetchDescriptionsFor( c, "\nSELECT ?item\n WHERE {}", toExpand, view, rsm, spec);
     }
     
     // let's respect property chains ...
-    private String fetchDescriptionsFor( String select, List<Resource> roots, View view, Model m, APISpec spec ) {
+    private String fetchDescriptionsFor( Controls c, String select, List<Resource> roots, View view, Model m, APISpec spec ) {
         if (roots.isEmpty() || roots.get(0) == null) return "# no results, no query.";
         List<Source> sources = spec.getDescribeSources();
         m.setNsPrefixes( spec.getPrefixMap() );
         return viewArgument == null
-        	? view.fetchDescriptions( new View.State( select, roots, m, sources, this ) )
+        	? view.fetchDescriptions( c, new View.State( select, roots, m, sources, this ) )
         	: viewByTemplate( roots, m, spec, sources )
         	;
     }
@@ -880,19 +864,20 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     }
 
 	private Couple<String, List<Resource>> runGeneralQuery( Controls c, Cache cache, APISpec spec, Bindings cc, Source source, final List<Resource> results) {
-		String select = assembleSelectQuery( cc, spec.getPrefixMap() );
-		List<Resource> already = cache.getCachedResources( select );
+		String selectQuery = assembleSelectQuery( cc, spec.getPrefixMap() );
+		c.times.setSelectQuerySize( selectQuery );
+		List<Resource> already = cache.getCachedResources( selectQuery );
 		if (c.allowCache && already != null)
 		    {
 			c.times.usedSelectionCache();
-		    log.debug( "re-using cached results for query " + select );
-		    return new Couple<String, List<Resource>>(select, already);
+		    log.debug( "re-using cached results for query " + selectQuery );
+		    return new Couple<String, List<Resource>>(selectQuery, already);
 		    }
-		Query q = createQuery( select );
-		log.debug( "Running query: " + select.replaceAll( "\n", " " ) );
+		Query q = createQuery( selectQuery );
+		log.debug( "Running query: " + selectQuery.replaceAll( "\n", " " ) );
 		source.executeSelect( q, new ResultResourcesReader( results, needsLARQindex ) );
-		cache.cacheSelection( select, results );
-		return new Couple<String, List<Resource>>( select, results );
+		cache.cacheSelection( selectQuery, results );
+		return new Couple<String, List<Resource>>( selectQuery, results );
 	}
 
 	private Query createQuery( String selectQuery ) {
@@ -937,8 +922,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 			}				
 		}
 
-		// because resource.inModel(null) explodes.
-		private Resource withoutModel(Resource item) {
+		private Resource withoutModel( Resource item ) {
 			return ResourceFactory.createResource( item.getURI() );
 		}
 	}

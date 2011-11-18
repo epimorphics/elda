@@ -28,8 +28,10 @@ import com.epimorphics.lda.rdfq.URINode;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.PropertyChain;
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
@@ -279,25 +281,31 @@ public class View {
 		}
 	}
 	
-	public String fetchDescriptions( State s ) {
-//		log.info( "fetchDescriptionsFor: sources = " + sources + " using " + this );
+	public String fetchDescriptions( Controls c, State s ) {
+		Times t = c.times;
 		long zero = System.currentTimeMillis();
 		switch (type) {
 			case T_DESCRIBE: {
 				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
-				return fetchBareDescriptions( s ); 
+				String describeQuery = fetchBareDescriptions( s );
+				t.addToViewQuerySize( detailsQuery );
+				t.addToViewQuerySize( describeQuery );
+				return describeQuery; 
 			}
 				
 			case T_ALL:	{	
 				String detailsQuery = fetchBareDescriptions( s ); 				
 				String chainsQuery = fetchByGivenPropertyChains( s, chains ); 
-			    addAllObjectLabels( s );
+			    addAllObjectLabels( c, s );
+				t.addToViewQuerySize( detailsQuery );
+				t.addToViewQuerySize( chainsQuery );
 			    return detailsQuery;
 			}
 
 			case T_CHAINS:	{
 				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
 				log.debug( "T_CHAINS took " + ((System.currentTimeMillis() - zero)/1000.0) + "s" );
+				t.addToViewQuerySize( detailsQuery );
 				return detailsQuery;
 			}
 				
@@ -522,7 +530,7 @@ public class View {
 		return result;
 	}
 
-	private void addAllObjectLabels( State s ) { 
+	private void addAllObjectLabels( Controls c, State s ) { 
 		long zero = System.currentTimeMillis();
 		StringBuilder sb = new StringBuilder();
 		sb.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">\nCONSTRUCT { ?x rdfs:label ?l }\nWHERE\n{" );
@@ -537,7 +545,8 @@ public class View {
 			}
 		}
 		sb.append( "}\n" );
-		Query constructQuery = QueryFactory.create( sb.toString() );
+		String queryString = sb.toString();
+		Query constructQuery = QueryFactory.create( queryString );
 		long midTime = System.currentTimeMillis();
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
 		long aTime = midTime - zero, bTime = System.currentTimeMillis() - midTime; 

@@ -30,24 +30,38 @@ import com.epimorphics.util.Util;
 	*/
 	@GET @Produces("text/html") public synchronized Response showStats() {
 		StringBuilder sb = new StringBuilder();
-		sb.append( "<h1>Elda: endpoint timings.</h2>" );
+		sb.append( "<h1>Elda: endpoint statistics.</h2>" );
 	//
 		if (requestCount == 0) {
 			sb.append( "<i>No requests have been processed yet.</i>" );
 		} else {
 			long totalSparqlTime = totalSelectionTime.total + totalViewTime.total;
+			sb.append( "<h2>requests and hits</h2>\n" );
 			sb.append( "<table>\n" );
-			sb.append( "<thead><tr><th>label</th><th>value</th><th>min</th><th>mean</th><th>max</th></tr></thead>" );
-			countRow( sb, "satisfied requests", requestCount );
+			sb.append( "<thead><tr><th>label</th><th>value</th></tr></thead>" );
+			countRow( sb, "total requests", requestCount );
+			countRow( sb, "failed requests", failedRequestCount );
 			countRow( sb, "selection cache hits", totalSelectCacheHits );
 			countRow( sb, "view cache hits", totalViewCacheHits );
+			sb.append( "</table>\n" );
+		//
+			sb.append( "<h2>query and rendering timings.</h2>\n" );
+			sb.append( "<table>\n" );			
+			sb.append( "<thead><tr><th>label</th><th>value</th><th>min</th><th>mean</th><th>max</th></tr></thead>" );
 			timeRow( sb, "total elapsed time", totalTime );
 			timeRow( sb, "total item selection time", totalSelectionTime );
 			timeRow( sb, "total view generation time", totalViewTime );
 			timeRow( sb, "total SPARQL time", totalSparqlTime );
 			timeRow( sb, "total rendering time", totalRenderTime );
 			timeRow( sb, "remaining Elda time", totalTime - totalSparqlTime - totalRenderTime.total );
+			sb.append( "</table>\n" );
+		//
+			sb.append( "<h2>query and rendering sizes.</h2>\n" );
+			sb.append( "<table>\n" );
+			sb.append( "<thead><tr><th>label</th><th>value</th><th>min</th><th>mean</th><th>max</th></tr></thead>" );
 			sizeRow( sb, "total rendered size", totalRenderSize );
+			sizeRow( sb, "total select query size", totalSelectQuerySize );
+			sizeRow( sb, "total view query size", totalViewQuerySize );
 			sb.append( "</table>\n" );
 		}
 	//
@@ -67,7 +81,7 @@ import com.epimorphics.util.Util;
 		}
 		sb.append( "</table>\n" );
 	//
-		String html = Util.withBody( "Elda timings", sb.toString() );
+		String html = Util.withBody( "Elda statistics", sb.toString() );
 		return RouterRestlet.returnAs( html, "text/html" );
 	}
 
@@ -94,6 +108,7 @@ import com.epimorphics.util.Util;
 	}
 
 	private String kb(long b) {
+		if (b < 1024) return Long.toString(b) + " b";
 		return Long.toString((b + 512)/1024) + " kb";
 	}
 
@@ -119,12 +134,13 @@ import com.epimorphics.util.Util;
 		
 		void update( long duration, boolean suppressMin ) {
 			total += duration;
+			count += 1;
 			if (duration > max) max = duration;
 			if (duration < min && suppressMin == false) min = duration;
 		}
 		
 		long mean() {
-			return count == 0 ? 0 : total/count;
+			return count == 0 ? -1 : total/count;
 		}
 	}
 	
@@ -146,8 +162,9 @@ import com.epimorphics.util.Util;
 		i.update( duration );
 	}
 	
-	static long matchFailures = 0;
+	static long failedMatchCount = 0;
 	static long requestCount = 0;
+	static long failedRequestCount = 0;
 	static long totalViewCacheHits = 0;
 	static long totalSelectCacheHits = 0;
 	static long totalTime = 0;
@@ -156,12 +173,18 @@ import com.epimorphics.util.Util;
 	static Interval totalViewTime = new Interval();
 	static Interval totalRenderTime = new Interval();
 	static Interval totalRenderSize = new Interval();
+	static Interval totalSelectQuerySize = new Interval();
+	static Interval totalViewQuerySize = new Interval();
 		
 	/**
 	    Record an occurence of a non-matched URI.
 	*/
 	public static synchronized void endpointNoMatch() {
-		matchFailures += 1;
+		failedMatchCount += 1;
+	}
+	
+	public static synchronized void endpointException() {
+		failedRequestCount += 1;
 	}
 
 	/**
@@ -175,6 +198,8 @@ import com.epimorphics.util.Util;
 		totalViewTime.update( t.viewDuration(), t.usedViewCache );
 		totalRenderTime.update( t.renderDuration() );
 		totalRenderSize.update( t.renderSize() );
+		totalSelectQuerySize.update( t.selectQuerySize() );
+		totalViewQuerySize.update( t.viewQuerySize() );
 		updateFormatDurations( t.renderFormat, t.renderDuration() );
 		updateFormatSizes( t.renderFormat, t.renderSize() );
 		if (t.usedViewCache) totalViewCacheHits += 1;

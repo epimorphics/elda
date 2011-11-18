@@ -26,7 +26,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
@@ -211,20 +210,25 @@ import com.hp.hpl.jena.shared.WrappedException;
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
 			return doRendering( c, rc, formatter, results, r );
         } catch (StackOverflowError e) {
+        	ShowStats.endpointException();
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( shortStackTrace( e ) );
             return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
         } catch (ExpansionFailedException e) {
+        	ShowStats.endpointException();
         	return buildErrorResponse(e);
         } catch (EldaException e) {
+        	ShowStats.endpointException();
         	log.error( "Exception: " + e.getMessage() );
         	if (log.isDebugEnabled())log.debug( shortStackTrace( e ) );
         	return buildErrorResponse(e);
         } catch (QueryParseException e) {
+        	ShowStats.endpointException();
             log.error( "Query Parse Exception: " + e.getMessage() );
             if (log.isDebugEnabled())log.debug( shortStackTrace( e ) );
             return returnNotFound("Failed to parse query request : " + e.getMessage());
         } catch (Throwable e) {
+        	ShowStats.endpointException();
             return returnError( e );
         }
     }    
@@ -294,7 +298,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             long base = System.currentTimeMillis();
             String rendering = r.render( rc, results );
             c.times.setRenderedSize( rendering.length() * 2 );
-            c.times.setRenderDuration( System.currentTimeMillis() - base, rName );
+            c.times.setRenderDuration( System.currentTimeMillis() - base, (rName == null ? r.getMediaType(rc).toString() : rName) );
 			return returnAs( rendering, mt, results.getContentLocation() );
         }
 	}
