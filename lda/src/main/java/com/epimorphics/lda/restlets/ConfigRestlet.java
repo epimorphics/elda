@@ -50,7 +50,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 			String label = getLabelled( root, shortName );
 			List<APIEndpointSpec> endpoints = se.getSpec().getEndpoints();
 			boolean showThis = occursIn( pathstub, endpoints );
-			textBody.append( "<h2>metadata for the API " + label + " <a href='javascript:toggle(\"" + shortName + "\")'>show/hide</a></h2>" );
+			textBody.append( "<h2>" + label + " <a href='javascript:toggle(\"" + shortName + "\")'>show/hide</a></h2>" );
 			textBody.append( "<div id='" + shortName + "' class='" + (showThis ? "show" : "hide") + "'>\n" );
 	        renderComments( textBody, root );
 	    //
