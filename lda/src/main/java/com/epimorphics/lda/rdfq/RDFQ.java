@@ -24,24 +24,16 @@ public class RDFQ
 	public static class Triple 
 		{
 		public final Any S, P, O;
-		public final boolean optional;
 		
 		public Triple( Any S, Any P, Any O )
-			{ this( S, P, O, false ); }
-		
-		public Triple( Any S, Any P, Any O, boolean optional )
-			{ this.S = S; this.P = P; this.O = O; this.optional = optional; }
-		
-		public boolean isOptional()
-			{ return optional; }
+			{ this.S = S; this.P = P; this.O = O; }
 		
 		@Override public String toString()
 			{ return asSparqlTriple( PrefixLogger.some() ); }
 		
 		public String asSparqlTriple( PrefixLogger pl )
 			{ 
-			String SPO = S.asSparqlTerm( pl ) + " " + P.asSparqlTerm( pl ) + " " + O.asSparqlTerm( pl );
-			return optional ? "OPTIONAL {" + SPO + "}": SPO; 
+			return S.asSparqlTerm( pl ) + " " + P.asSparqlTerm( pl ) + " " + O.asSparqlTerm( pl ); 
 			}
 		}
 	
@@ -74,8 +66,5 @@ public class RDFQ
 	
 	public static Triple triple( Any S, Any P, Any O ) 
 		{ return new Triple( S, P, O ); }
-	
-	public static Triple triple( Any S, Any P, Any O, boolean optional ) 
-		{ return new Triple( S, P, O, optional ); }
 
 	}

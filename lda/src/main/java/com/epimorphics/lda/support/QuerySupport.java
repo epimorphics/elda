@@ -72,9 +72,7 @@ public class QuerySupport
     	List<Triple> optional = new ArrayList<Triple>(triples.size());
     	for (Triple t: triples) 
     		{
-    		if (t.isOptional())
-    			optional.add( t );
-    		else if (t.O instanceof Value && canPromoteSubject( t.S ))
+    		if (t.O instanceof Value && canPromoteSubject( t.S ))
     			result.add( t );
     		else if (t.P.equals( RDFQ.RDF_TYPE ))
     			type.add( t );
