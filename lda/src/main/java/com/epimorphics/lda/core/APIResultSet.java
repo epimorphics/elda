@@ -180,12 +180,11 @@ public class APIResultSet {
      * @param languages  acceptable language codes for literals
      */
     public APIResultSet getFilteredSet( View v, String languages ) {
-    	Model m = v.applyTo( model, results );
-    	if (languages != null) LanguageFilter.filterByLanguages( m, languages.split(",") );
-        m.setNsPrefixes( model );
+    	if (languages != null) LanguageFilter.filterByLanguages( model, languages.split(",") );
+        model.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
-        for (Resource r : results) mappedResults.add( r.inModel(m) );
-        return new APIResultSet( m.getGraph(), mappedResults, isCompleted, detailsQuery, metadata ).setSelectQuery( selectQuery );
+        for (Resource r : results) mappedResults.add( r.inModel(model) );
+        return new APIResultSet( model.getGraph(), mappedResults, isCompleted, detailsQuery, metadata ).setSelectQuery( selectQuery );
     }
 
 	/**

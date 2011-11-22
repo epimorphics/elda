@@ -24,7 +24,6 @@ import com.epimorphics.lda.exceptions.QueryParseException;
 import com.epimorphics.lda.query.ExpansionPoints;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
-import com.epimorphics.lda.rdfq.URINode;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
@@ -249,21 +248,7 @@ public class View {
     		+ chains.toString().replaceAll( ",", ",\n  " )
     		;    	
     }
-
-    /**
-        Filter the given model to contain only the subgraph which consists
-        of the triples starting with the root nodes and extending down this
-        views property chains. Answer the new restricted model. If this
-        view is ALL, answers the given model with no filtering. 
-    */
-	public Model applyTo( Model source, List<Resource> roots ) {
-        Model result = doesFiltering() && false
-        	? ChainScanner.onlyMatchingChains( source, roots, chains ) // TODO this may well be dead dead dead
-        	: source
-        	;
-        return result;
-	}
-
+    
 	public static class State {
 		
 		final String select;

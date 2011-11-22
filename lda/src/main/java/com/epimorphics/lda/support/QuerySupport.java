@@ -19,36 +19,11 @@ import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
 
 public class QuerySupport
     {
     
     static Logger log = LoggerFactory.getLogger( APIQuery.class );
-    
-    /**
-        Answer the ResultSet obtained by running the query in queryString
-        over the given model with the given initial variable bindings. The
-        ResultSet will contain no more than limit items, starting at from.
-    */
-    public static ResultSet runQuery( Model model, String queryString, int from, int limit, QuerySolution given )
-        {
-        // System.err.println( ">> map = " + given );
-        Query query = QueryFactory.create( queryString );
-        // System.err.println( ">> query = " + query );
-        query.setOffset( from );
-        query.setLimit( limit );
-        return QueryExecutionFactory.create( query, model, given ).execSelect();
-        }
-
-    static public QuerySolution mapToStringLiteral( String name, String value )
-        {
-        System.err.println( ">> mapToStringLiteral: " + value );
-        final Literal literal = ResourceFactory.createTypedLiteral( value, XSDDatatype.XSDstring );
-        return new InitialParameter( name, literal );
-        }    
     
 	private static boolean promoteAnySubject = true;
 	
@@ -92,7 +67,6 @@ public class QuerySupport
 		return promoteAnySubject || S.equals( APIQuery.SELECT_VAR );
 		}
     }
-
     
 /*
     (c) Copyright 2010 Epimorphics Limited
