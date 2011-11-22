@@ -20,7 +20,7 @@ import com.epimorphics.lda.support.PrefixLogger;
 	public String renderWhere( StringBuilder sb, PrefixLogger pl, String u ) {
 		for (ChainTree c: this) {
 			sb.append( u );
-			c.renderWhere( sb, pl, 0 );
+			c.renderWhere( sb, pl );
 			u = "UNION ";
 		}
 		return u;

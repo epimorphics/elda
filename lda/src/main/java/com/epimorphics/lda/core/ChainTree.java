@@ -36,15 +36,21 @@ public class ChainTree {
 		followers.renderTriples( sb, pl );
 	}
 
-	public void renderWhere( StringBuilder sb, PrefixLogger pl, int depth ) {
+	public void renderWhere( StringBuilder sb, PrefixLogger pl ) {
+		renderWhere( sb, pl, "", 0 );
+	}
+	
+	private void renderWhere( StringBuilder sb, PrefixLogger pl, String union, int depth ) {
 		boolean isComplex = followers.size() > 0;
 		for (int i = 0; i < depth; i += 1) sb.append( "  " );
+		sb.append( union );
 		if (isComplex) sb.append( "{" );
 		sb.append( "{ " ).append( triple.asSparqlTriple(pl) ).append( " . } " );
 		if (isComplex) {
+			int index = 0;
 			sb.append( " OPTIONAL {\n" );
 			for (ChainTree cc: followers) {
-				cc.renderWhere( sb, pl, depth + 1 );
+				cc.renderWhere( sb, pl, (index ++ == 0 ? "" : "UNION "), depth + 1 );
 			}
 			for (int i = 0; i < depth; i += 1) sb.append( "  " );
 			sb.append( "}" );
@@ -55,17 +61,17 @@ public class ChainTree {
 
 	public static ChainTrees make( Any r, State st, List<PropertyChain> chains ) {
 		Map<Property, List<PropertyChain>> them = new HashMap<Property, List<PropertyChain>>();
-		//
-			for (PropertyChain chain: chains) {
-				List<Property> properties = chain.getProperties();
-				if (properties.size() > 0) {
-					Property key = properties.get(0);
-					PropertyChain rest = tail(chain);
-					List<PropertyChain> entries = them.get(key);
-					if (entries == null) them.put( key, entries = new ArrayList<PropertyChain>() );
-					entries.add( rest );
-				}
-			}		
+		for (PropertyChain chain: chains) {
+			List<Property> properties = chain.getProperties();
+			if (properties.size() > 0) {
+				Property key = properties.get(0);
+				PropertyChain rest = tail(chain);
+				List<PropertyChain> entries = them.get(key);
+				if (entries == null) them.put( key, entries = new ArrayList<PropertyChain>() );
+				entries.add( rest );
+			}
+		}		
+	//
 		ChainTrees result = new ChainTrees();
 		for (Map.Entry<Property, List<PropertyChain>> entry: them.entrySet()) {
 			Variable nv = st.vars.newVar();
