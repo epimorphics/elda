@@ -46,7 +46,6 @@ import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -763,33 +762,6 @@ public class APIQuery implements Cloneable, VarSupply {
 		String detailsQuery = fetchDescriptionsFor( c, select, results, view, descriptions, spec );
 		return new APIResultSet(gd, results, count < pageSize, detailsQuery );
 	}
-
-    /** Find all current values for the given property on the results and fetch a description of them */
-    private void expandResourcesOf( Controls c, Property exp, APIResultSet rs, View view, APISpec spec ) {
-    	Model rsm = rs.getModel();
-        List<Resource> toExpand = new ArrayList<Resource>();
-        for (Resource root : rs.getResultList()) {
-            NodeIterator ni = rsm.listObjectsOfProperty(root, exp);
-            while (ni.hasNext()) {
-                RDFNode n = ni.next();
-                if (n.isAnon()) {
-                    if (n.canAs(RDFList.class)) {
-                        RDFList list = n.as(RDFList.class);
-                        ExtendedIterator<RDFNode> li = list.iterator();
-                        while (li.hasNext()) {
-                            RDFNode l = li.next();
-                            if (l.isURIResource()) toExpand.add( (Resource)l );
-                        }
-                    }
-                } else if (n.isURIResource()) {
-                    toExpand.add( (Resource)n );
-                }
-            }
-        }
-        System.err.println( "property.* not implemented at the moment." );
-        if (true) throw new UnsupportedOperationException( "property.* not implemented at the moment." ); // TODO
-        fetchDescriptionsFor( c, "\nSELECT ?item\n WHERE {}", toExpand, view, rsm, spec);
-    }
     
     // let's respect property chains ...
     private String fetchDescriptionsFor( Controls c, String select, List<Resource> roots, View view, Model m, APISpec spec ) {

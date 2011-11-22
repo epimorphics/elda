@@ -8,21 +8,14 @@
 
 package com.epimorphics.lda.support;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.rdf.model.*;
 
+/**
+    This class implements the language-filtering rules of LDA views.
+*/
 public class LanguageFilter {
 	/**
         Filter the model m according to the view-languages rules 
@@ -66,14 +59,8 @@ public class LanguageFilter {
 		if (hasLanguagedObjects) m.remove( plains );
         m.remove( removes );        
     }
-
-    private static final String XSDString = XSDDatatype.XSDstring.getURI();
     
 	private static boolean isStringLiteral(Node o) {
-		if (o.isLiteral()) {
-			String type = o.getLiteralDatatypeURI();
-			return type == null ; // || type.equals( XSDString );
-		}
-		return false;
+		return o.isLiteral() && o.getLiteralDatatypeURI() == null; 
 	}
 }
