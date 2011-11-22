@@ -19,7 +19,6 @@ import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.query.ExpansionPoints;
 import com.epimorphics.lda.query.PendingParameterValue;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.tests.SNS;
@@ -40,7 +39,6 @@ public class TestDropsEmptyValueElements {
 			, cc
 			, nv
 			, sns 
-			, (ExpansionPoints) null 
 			, aq
 			); 
 		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
@@ -57,7 +55,6 @@ public class TestDropsEmptyValueElements {
 			, cc
 			, nv
 			, sns 
-			, (ExpansionPoints) null 
 			, aq
 			); 
 		cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );

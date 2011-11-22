@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.View;
-import com.epimorphics.lda.query.ExpansionPoints;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.tests.SNS;
@@ -31,11 +30,10 @@ public class TestPropertyChain {
 	static Property Q = ResourceFactory.createProperty( "eh:/q" );
 
 	static ShortnameService sns = new SNS( "p=eh:/p;q=eh:/q;p.q=NEVER" );
-	static ExpansionPoints ep = null;
 	
 	@Test public void testBuildFromDottedNames() {
 		View v = new View();
-		v.addViewFromParameterValue( "p.q", ep, sns);
+		v.addViewFromParameterValue( "p.q", sns);
 		PropertyChain pc = new PropertyChain( CollectionUtils.list( P, Q ) );
 		assertEquals( CollectionUtils.set( pc ), v.chains() );
 	}

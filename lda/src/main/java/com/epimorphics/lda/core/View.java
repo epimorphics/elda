@@ -20,8 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.exceptions.QueryParseException;
-import com.epimorphics.lda.query.ExpansionPoints;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.Variable;
@@ -64,7 +62,7 @@ public class View {
     /**
         View that does DESCRIBE plus labels of all objects.
     */
-    public static final View ALL = new View( false, SHOW_ALL, Type.T_ALL );
+    public static final View ALL = new View( SHOW_ALL, Type.T_ALL );
 
 	/**
 	    Property chains: [RDF.type] and [RDFS.label].
@@ -76,12 +74,12 @@ public class View {
         View that does rdf:type and rdfs:label.
     */
     // public static final View BASIC = new View( false, SHOW_BASIC, Type.T_BASIC );
-    public static final View BASIC = new View( false, SHOW_BASIC, Type.T_CHAINS, BasicChains );
+    public static final View BASIC = new View( SHOW_BASIC, Type.T_CHAINS, BasicChains );
     
     /**
         View that does DESCRIBE.
     */
-    public static final View DESCRIBE = new View(false, SHOW_DESCRIPTION, Type.T_DESCRIBE );
+    public static final View DESCRIBE = new View( SHOW_DESCRIPTION, Type.T_DESCRIBE );
     
     private static Map<Resource, View> builtins = new HashMap<Resource, View>();
     
@@ -98,8 +96,6 @@ public class View {
     public static View getBuiltin( Resource r ) {
     	return builtins.get(r);
     }
-    
-	protected boolean doesFiltering = true;
 	
 	public static enum Type { T_DESCRIBE, T_ALL, T_CHAINS };
 	
@@ -112,25 +108,24 @@ public class View {
     }
     
     public View( Type type ) {
-    	this( true, null, type );
+    	this( null, type );
     }
     
     public View( String name ) {
-    	this( false, name, Type.T_CHAINS );
+    	this( name, Type.T_CHAINS );
     }
     
     public View( boolean doesFiltering ) {
-    	this( doesFiltering, null, Type.T_DESCRIBE );
+    	this( null, Type.T_DESCRIBE );
     }
     
-    public View( boolean doesFiltering, String name, Type type ) {
-    	this( doesFiltering, name, type, emptyChain );
+    public View( String name, Type type ) {
+    	this( name, type, emptyChain );
     }
     
-    public View( boolean doesFiltering, String name, Type type, List<PropertyChain> initial ) {
+    public View( String name, Type type, List<PropertyChain> initial ) {
     	this.type = type;
     	this.name = name;
-    	this.doesFiltering = doesFiltering;
     	this.chains.addAll( initial );
     }
     
@@ -155,18 +150,12 @@ public class View {
     }
     
     /**
-        Answer true iff this view does filtering, ie, is not ALL.
-    */
-    public boolean doesFiltering() { return doesFiltering; }
-    
-    /**
         Answer this view if it is ALL, otherwise a new view that
         does the same filtering and is mutable without affecting the
         original.
     */
     public View copy() {
-    	View r = new View( doesFiltering, null, type ).addFrom( this );
-    	// System.err.println( ">> copying " + this + " => " + r );
+    	View r = new View( null, type ).addFrom( this );
 		return r;
     }
     
@@ -176,7 +165,6 @@ public class View {
     */
     public View addViewFromRDFList(Resource spec, ShortnameService sns) {
     	cannotUpdateALL();		
-    	doesFiltering = true;
         if (spec.canAs(RDFList.class)) {
         	List<Property> properties = new ArrayList<Property>();
             RDFList list = spec.as(RDFList.class);
@@ -198,41 +186,23 @@ public class View {
     
     /**
         Answer this view after updating it with the given property string.
-        The string may end in ".*", in which case the corresponding URI is
-        marked as an expansion point. The property name may be dotted; it
-        defines a property chain.
+        The property name may be dotted; it defines a property chain.
     */
-    public View addViewFromParameterValue(String prop, ExpansionPoints ep, ShortnameService sns) {
-    	cannotUpdateALL();		
-    	doesFiltering = true;
-    	boolean expansion = false;
-        if (prop.endsWith(".*")) {
-            prop = prop.substring(0, prop.length()-2);
-            expansion = true;
-        }
-        // System.err.println( ">> aTFPV: prop = " + prop );
+    public View addViewFromParameterValue( String prop, ShortnameService sns ) {
+    	cannotUpdateALL();
         List<Property> chain = ShortnameService.Util.expandProperties( prop, sns );
-        // System.err.println( ">> aTFPV: chain = " + chain );
         chains.add( new PropertyChain( chain ) );
-        String uri = sns.expand(prop);
-        if (uri == null) {
-        	if (expansion) throw new QueryParseException("Can't expand view property: " + prop);
-        	expansion = false;
-        }
-        if (expansion) ep.addExpansion(uri);
-        // if (chains.size() > 0) type = Type.T_CHAINS;
         return this;
     }
     
     /**
         Answer this view after updating it by adding all the property chains
-        of the argument view, which must not be null.
+        of the argument view (which must not be null).
     */
     public View addFrom( View t ) {
     	if (t == null) throw new IllegalArgumentException( "addFrom does not accept null views" );
     	cannotUpdateALL();
     	chains.addAll( t.chains );
-    	if (chains.size() > 0) doesFiltering = true;
     	if (chains.size() > 0) type = Type.T_CHAINS;
         return this;
     }
@@ -242,11 +212,7 @@ public class View {
         property chains, possibly in an abbreviated form.
     */
     @Override public String toString() {
-    	return 
-    		(doesFiltering ? "only " : "ALL." )
-    		+ " " + type + " "
-    		+ chains.toString().replaceAll( ",", ",\n  " )
-    		;    	
+    	return type + " " + chains.toString().replaceAll( ",", ",\n  " );    	
     }
     
 	public static class State {

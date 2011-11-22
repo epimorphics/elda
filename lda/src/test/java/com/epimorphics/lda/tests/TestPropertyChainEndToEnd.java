@@ -145,7 +145,7 @@ public class TestPropertyChainEndToEnd
 		PrefixMapping prefixes = PrefixMapping.Factory.create();
 		ShortnameService sns = new StandardShortnameService( spec, prefixes, loader );
 		APIQuery q = new APIQuery( sns );
-		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
+		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
 		x.addFilterFromQuery( Param.make(sns, propertyThing), "17.9" );
 		assertContains( q.assembleSelectQuery( prefixes ), "\"17.9\"^^<http://www.w3.org/2001/XMLSchema#string>" );
 		}

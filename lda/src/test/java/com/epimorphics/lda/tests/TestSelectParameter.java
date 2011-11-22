@@ -12,18 +12,13 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
 
 public class TestSelectParameter 
     {
@@ -31,7 +26,7 @@ public class TestSelectParameter
         {    
         ShortnameService sns = new StandardShortnameService();
         APIQuery q = new APIQuery(sns);	
-        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
         assertEquals( theSelectQuery + " OFFSET 0 LIMIT 10", q.assembleSelectQuery( RDFUtils.noPrefixes) );
@@ -41,7 +36,7 @@ public class TestSelectParameter
         {    
         ShortnameService sns = new StandardShortnameService();
         APIQuery q = new APIQuery(sns);	
-        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
         APIQuery cloned = q.clone();

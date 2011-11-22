@@ -31,7 +31,7 @@ public class TestVariableSubstitutions {
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );
-		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
 		assertMatches( "(?s).*ORDER BY ordering.*", q );
@@ -45,7 +45,7 @@ public class TestVariableSubstitutions {
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );
 		aq.setOrderBy( "?x" );
-		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( cc, PrefixMapping.Factory.create() );
 		assertMatches( "(?s).*ORDER BY \"ordering\".*", q );        
@@ -58,7 +58,7 @@ public class TestVariableSubstitutions {
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
 		APIQuery aq = new APIQuery( sns );
-		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
 		assertEquals( "myQueryHere OFFSET 0 LIMIT 10", q );

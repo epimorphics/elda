@@ -57,7 +57,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  	@author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  	@version $Revision: $
 */
-public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
+public class APIQuery implements Cloneable, VarSupply {
     
     public static final Variable SELECT_VAR = RDFQ.var( "?item" );
     
@@ -129,9 +129,6 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     protected String fixedSelect = null;
     
     protected Set<String> metadataOptions = new HashSet<String>();
-    
-    // TODO replace this by full property chain descriptions
-    protected Set<Property> expansionPoints = new HashSet<Property>();
 
     /**
         Set to true to switch on LARQ indexing for this query, ie when an
@@ -198,7 +195,6 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
             clone.orderExpressions = new StringBuffer( orderExpressions );
             clone.whereExpressions = new StringBuffer( whereExpressions );
             clone.varInfo = new HashMap<Variable, Info>( varInfo );
-            clone.expansionPoints = new HashSet<Property>( expansionPoints );
             clone.deferredFilters = new ArrayList<PendingParameterValue>( deferredFilters );
             clone.metadataOptions = new HashSet<String>( metadataOptions );
             clone.varsForPropertyChains = new HashMap<String, Variable>( varsForPropertyChains );
@@ -306,14 +302,6 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
     
     public void setViewByTemplateClause( String clause ) {
     	viewArgument = clause;
-    }
-            
-    /**
-     * Record a required expansion point, i.e. a view path prop.*
-     * TODO Extend to full paths instead of just single step 
-     */
-    @Override public void addExpansion(String uri) {
-        expansionPoints.add( ResourceFactory.createProperty(uri) );
     }
     
     protected final static Resource PF_TEXT_MATCH = ResourceFactory.createProperty( "http://jena.hpl.hp.com/ARQ/property#textMatch" );
@@ -752,7 +740,7 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		List<Resource> results = queryAndResults.b;
 		
 		APIResultSet already = cache.getCachedResultSet( results, view.toString() );
-		if (c.allowCache && already != null && expansionPoints.isEmpty()) 
+		if (c.allowCache && already != null) 
 		    {
 			t.usedViewCache();
 		    log.debug( "re-using cached results for " + results );
@@ -762,21 +750,9 @@ public class APIQuery implements Cloneable, VarSupply, ExpansionPoints {
 		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, view, results);
 		
 		long afterView = System.currentTimeMillis();
-		t.setViewDuration( afterView - afterSelect );
-		
-		log.debug( "TIMING: select time: " + (afterSelect - origin)/1000.0 + "s" );
-		log.debug( "TIMING: view time:   " + (afterView - afterSelect)/1000.0 + "s" );
+		t.setViewDuration( afterView - afterSelect );		
 		rs.setSelectQuery( outerSelect );
-		
-		// Expand chained views, if present
-		if ( ! expansionPoints.isEmpty()) {
-		    for (Property exp : expansionPoints) {
-		        expandResourcesOf(c, exp, rs, view, spec );
-		    }
-		} else {
-		    // Can't cache results which use expansion points
-		    cache.cacheDescription( results, view.toString(), rs.clone() );
-		}
+	    cache.cacheDescription( results, view.toString(), rs.clone() );
 		return rs;
 	}
 

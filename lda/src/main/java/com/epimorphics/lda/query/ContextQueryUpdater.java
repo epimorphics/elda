@@ -36,7 +36,6 @@ public class ContextQueryUpdater implements ViewSetter {
 	private final Bindings context;
 	private final ShortnameService sns;
 	private final NamedViews nt;
-	private final ExpansionPoints eps;
 	protected final APIQuery aq;
 	protected final int endpointKind;
 	
@@ -58,11 +57,10 @@ public class ContextQueryUpdater implements ViewSetter {
 	    @param eps possibly dead: expansion points
 	    @param args place to build the query arguments
 	*/
-	public ContextQueryUpdater( int endpointKind, Bindings context, NamedViews nv, ShortnameService sns, ExpansionPoints eps, APIQuery args ) {
+	public ContextQueryUpdater( int endpointKind, Bindings context, NamedViews nv, ShortnameService sns, APIQuery args ) {
 		this.context = context;
 		this.sns = sns;
 		this.nt = nv;
-		this.eps = eps;
 		this.view = nv.getDefaultView().copy();
 		this.endpointKind = endpointKind;
 		this.aq = args;
@@ -246,6 +244,6 @@ public class ContextQueryUpdater implements ViewSetter {
 	@Override public void setViewByProperties(String val) {
 		for (String prop: val.split(","))
 			if (prop.length() > 0) 
-				view.addViewFromParameterValue( prop, eps, sns );
+				view.addViewFromParameterValue( prop, sns );
 	}
 }

@@ -30,7 +30,7 @@ public class TestUniqueVariablesForPropertyChain {
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "first=eh:/first;aname=eh:/full-aname;bname=eh:/full-bname", "first" );
 		APIQuery aq = new APIQuery( sns );
-		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq, aq );
+		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
 		int count = aq.countVarsAllocated();

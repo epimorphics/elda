@@ -54,7 +54,7 @@ public class TestExistsModifier
 		{
 		Shorts sns = new Shorts( "exists-backwards" );
 		APIQuery q = new APIQuery( sns );
-		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
+		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "true" );
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		assertEquals( 1, triples.size() );
@@ -68,7 +68,7 @@ public class TestExistsModifier
 		{
 		Shorts sns = new Shorts( "exists-backwards" );
 		APIQuery q = new APIQuery( sns );
-		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
+		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "false" );		
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
 		List<List<RDFQ.Triple>> optionals = q.getOptionalGraphTriples();
@@ -113,7 +113,7 @@ public class TestExistsModifier
 		Shorts sns = new Shorts( "exists-backwards", "type" );
 		// System.err.println( ">> info: " + sns.asContext().getPropertyByName("type" ).getType() ) ;
 		APIQuery q = new APIQuery( sns );		
-		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q, q );
+		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
 		Param ptype = Param.make( sns, "type" );
 		x.addFilterFromQuery( ptype, "Item" );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), existsSetting );

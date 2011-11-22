@@ -216,7 +216,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
                 v.addViewFromRDFList((Resource)pNode, sns);
             } else if (pNode.isLiteral()) {
             	for(String dotted : pNode.asNode().getLiteralLexicalForm().split(" *, *")) {
-					v.addViewFromParameterValue(dotted, baseQuery, sns);
+					v.addViewFromParameterValue(dotted, sns);
 	        	}
 	        }
 	    }

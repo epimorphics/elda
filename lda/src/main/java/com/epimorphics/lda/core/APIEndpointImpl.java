@@ -120,7 +120,7 @@ public class APIEndpointImpl implements APIEndpoint {
     private Couple<View, String> buildQueryAndView( Bindings context, APIQuery query ) {
     	ShortnameService sns = spec.getAPISpec().getShortnameService();
     	int endpointType = isListEndpoint() ? ContextQueryUpdater.ListEndpoint : ContextQueryUpdater.ItemEndpoint;
-    	ContextQueryUpdater cq = new ContextQueryUpdater( endpointType, context, spec, sns, query, query );
+    	ContextQueryUpdater cq = new ContextQueryUpdater( endpointType, context, spec, sns, query );
 		try { 
 			Couple<View, String> result = cq.updateQueryAndConstructView( query.deferredFilters);
 			String format = result.b.equals( "" ) ? context.getValueString( "_suffix") : result.b;
