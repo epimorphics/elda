@@ -38,6 +38,16 @@
     size for some views.
 </p>
 
+<p>
+    Elda provides a human-readable rendering of the available
+    API endpoints that it is serving.
+</p>
+
+<p>
+    Elda provides summary statistics about the requests
+    that it has served.
+</p>
+
 <h2>Configuration variables</h2>
 
 <h3>Variables used by the stylesheet</h3>
@@ -130,6 +140,76 @@
     to see if nested selects work.)
 </p>
 
+<h2>configuration rendering</h2>
+
+<p>
+    Elda provides the api:base-relative URI path <code>/api-config</code>.
+    Browsing this URI delivers a rendering of the various APIs that
+    the Elda instance provides. Each API description shows the
+    different endpoints, with their variable bindings and named views,
+    and the dictionary of shortnames appropriate to this endpoint.
+    By default the descriptions are hidden (for compactness) and
+    are revealed by clicking on the section titles.
+</p>
+
+<p>
+    The api:base-relative URI path 
+    <code>/meta/<span style='color: blue'>some/uri/template</span></code>
+    provides the same configuration description as <code>/api-config</code>,
+    but the API and endpoint for 
+    <span style='color: blue'>some/uri/template</span>
+    are already opened.
+</p>
+
+<h2>statistics</h2>
+
+<p>
+    The api:base-relative URI path <code>/control/show-stats</code> displays
+    statistics about the queries that this Elda instance has handled, including:
+</p>
+
+<ul>
+    <li>the total number of requests made</li>
+    <li>the number of requests that failed</li>
+    <li>the number of selection cache hits</li>
+    <li>the number of view cache hits</li>
+</ul>
+
+<p>
+    (Elda maintains two internal caches, one mapping the computed selection
+    query to the list of items it generates, the other mapping (list of
+    item, view) pairs to generated result sets. These are independant of
+    any caches provided by <i>eg</i> an Apache server wrapping Elda.)
+</p>
+
+<ul>
+    <li>the elapsed time dealing with all requests</li>
+    <li>the elapsed time taken for item-selection queries</li>
+    <li>the elapsed time taken for view-display queries</li>
+    <li>the elapsed time taken to render an Elda result</li>
+    <li>any remaining non-query non-rendering time</li>
+</ul>
+
+<p>
+    All of these results show the total time, the mean time over all
+    requests, and the maximum and minimum times over all requests.
+</p>
+
+<ul>
+    <li>the size of the rendered results</li>
+    <li>the size of the select queries</li>
+    <li>the size of the view queries</li>
+</ul>
+
+<p>
+    All of these results show the total size (in [kilo-]bytes),
+    and the mean, maximum, and minimum over all requests.
+</p>
+
+<p>
+    The display also breaks down rendering sizes and times by
+    the rendering format (ie JSON/XML/HTML ...).
+</p>
 
 <h2>Building Elda</h2>
 
