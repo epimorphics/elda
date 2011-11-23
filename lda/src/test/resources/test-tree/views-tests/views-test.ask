@@ -7,3 +7,6 @@ ASK { ?something :eastish ?e; :p ?p }
 URI=/alpha?_view=empty&_properties=eastish&_sort=eastish
 ASK { ?something :eastish ?e }
 ASK NOT {?something :p ?value}
+
+URI=/alpha?_view=empty&_properties=p.q,p.r&_pageSize=100&_metadata=all
+ASK { :A :p [:q ?x] }
