@@ -17,9 +17,7 @@
 
 package com.epimorphics.lda.restlets;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -58,6 +56,7 @@ import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
+import com.epimorphics.lda.support.ServingSupport;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
@@ -212,7 +211,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         } catch (StackOverflowError e) {
         	ShowStats.endpointException();
             log.error("Stack Overflow Error" );
-            if (log.isDebugEnabled()) log.debug( shortStackTrace( e ) );
+            if (log.isDebugEnabled()) log.debug( ServingSupport.shortStackTrace( e ) );
             return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
         } catch (ExpansionFailedException e) {
         	ShowStats.endpointException();
@@ -220,32 +219,18 @@ import com.hp.hpl.jena.shared.WrappedException;
         } catch (EldaException e) {
         	ShowStats.endpointException();
         	log.error( "Exception: " + e.getMessage() );
-        	if (log.isDebugEnabled())log.debug( shortStackTrace( e ) );
+        	if (log.isDebugEnabled())log.debug( ServingSupport.shortStackTrace( e ) );
         	return buildErrorResponse(e);
         } catch (QueryParseException e) {
         	ShowStats.endpointException();
             log.error( "Query Parse Exception: " + e.getMessage() );
-            if (log.isDebugEnabled())log.debug( shortStackTrace( e ) );
+            if (log.isDebugEnabled())log.debug( ServingSupport.shortStackTrace( e ) );
             return returnNotFound("Failed to parse query request : " + e.getMessage());
         } catch (Throwable e) {
         	ShowStats.endpointException();
             return returnError( e );
         }
     }    
-
-	private static String shortStackTrace( Throwable e ) {
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		PrintStream ps = new PrintStream( bos );
-		e.printStackTrace( ps );
-		ps.flush();
-		return shorten( bos.toString() );
-	}
-	
-	private static String shorten(String l) {
-		int len = l.length();
-		if (len < 1000) return l;
-		return l.substring(0, 300) + "\n...\n" + l.substring(len - 700, len - 1);
-	}
 
 	private URI makeRequestURI(UriInfo ui, Match match, URI requestUri) throws URISyntaxException {
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
@@ -292,7 +277,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             	? "no suitable media type was provided for rendering."
             	: "renderer '" + rName + "' is not known to this server."
             	;
-            return enableCORS( Response.status( Status.BAD_REQUEST ).entity( niceMessage( message ) ) ).build();
+            return enableCORS( Response.status( Status.BAD_REQUEST ).entity( ServingSupport.niceMessage( message ) ) ).build();
         } else {
             MediaType mt = r.getMediaType( rc );
             long base = System.currentTimeMillis();
@@ -323,9 +308,9 @@ import com.hp.hpl.jena.shared.WrappedException;
 
     public static Response returnError( Throwable e ) {
         String shortMessage = e.getMessage();
-		String longMessage = niceMessage( shortMessage, "Internal Server error." );
+		String longMessage = ServingSupport.niceMessage( shortMessage, "Internal Server error." );
 		log.error("Exception: " + shortMessage );
-        log.debug( shortStackTrace( e ) );
+        log.debug( ServingSupport.shortStackTrace( e ) );
         return enableCORS( Response.serverError() ).entity( longMessage ).build();
     }
 
@@ -339,54 +324,14 @@ import com.hp.hpl.jena.shared.WrappedException;
     }
     
     public static Response returnNotFound( String message, String what ) {
-        log.debug( "Failed to return results: " + brief( message ) );
-        return enableCORS( Response.status(Status.NOT_FOUND) ).entity( niceMessage( message, "404 Resource Not Found: " + what ) ).build();
+        log.debug( "Failed to return results: " + ServingSupport.brief( message ) );
+        return enableCORS( Response.status(Status.NOT_FOUND) ).entity( ServingSupport.niceMessage( message, "404 Resource Not Found: " + what ) ).build();
     }
     
-	private static String brief( String message ) {
-		int nl = message.indexOf( '\n' );
-		return nl < 0 ? message : message.substring(0, nl) + "...";
-	}
-
 	private Response buildErrorResponse( EldaException e ) {
 		return enableCORS( Response.status( e.code ) )
-			.entity( niceMessage( e ) )
+			.entity( ServingSupport.niceMessage( e ) )
 			.build()
-			;
-	}
-
-	private static String niceMessage( String message ) {
-		return niceMessage( message, "there seems to be a problem." );
-	}
-	
-	private static String niceMessage( String message, String subText ) {
-		return
-			"<html>"
-			+ "\n<head>"
-			+ "\n<title>Error</title>"
-			+ "\n</head>"
-			+ "\n<body style='background-color: #ffeeee'>"
-			+ "\n<h2>" + subText + "</h2>"
-			+ "\n<p>" + message + "</p>"
-			+ "\n</body>"
-			+ "\n</html>"
-			+ "\n"
-			;
-	}
-    
-   private String niceMessage( EldaException e ) {
-		return
-			"<html>"
-			+ "\n<head>"
-			+ "\n<title>Error " + e.code + "</title>"
-			+ "\n</head>"
-			+ "\n<body style='background-color: #ffdddd'>"
-			+ "\n<h2>Error " + e.code + "</h2>"
-			+ "\n<p>" + e.getMessage() + "</p>"
-			+ (e.moreMessage == null ? "" : "<p>" + e.moreMessage + "</p>")
-			+ "\n</body>"
-			+ "\n</html>"
-			+ "\n"
 			;
 	}
 }

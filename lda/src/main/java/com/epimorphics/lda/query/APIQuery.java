@@ -801,14 +801,14 @@ public class APIQuery implements Cloneable, VarSupply {
 	    Answer the select query (if any; otherwise, "") and list of resources obtained by
 	    running that query.
 	*/
-    private Couple<String, List<Resource>> selectResources( Controls c, Cache cache, APISpec spec, Bindings call, Source source ) {
+    private Couple<String, List<Resource>> selectResources( Controls c, Cache cache, APISpec spec, Bindings b, Source source ) {
     	log.debug( "fetchRequiredResources()" );
         final List<Resource> results = new ArrayList<Resource>();
-        if (itemTemplate != null) setSubject( call.expandVariables( itemTemplate ) );
+        if (itemTemplate != null) setSubject( b.expandVariables( itemTemplate ) );
         if ( isFixedSubject() )
             return new Couple<String, List<Resource>>( "", CollectionUtils.list( subjectResource ) );
         else
-        	return runGeneralQuery( c, cache, spec, call, source, results );
+        	return runGeneralQuery( c, cache, spec, b, source, results );
     }
 
 	private Couple<String, List<Resource>> runGeneralQuery( Controls c, Cache cache, APISpec spec, Bindings cc, Source source, final List<Resource> results) {

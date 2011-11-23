@@ -5,16 +5,6 @@
     (c) Copyright 2011 Epimorphics Limited
     $Id$
 */
-
-/******************************************************************
-    File:        MetadataRestlet.java
-    Created by:  Dave Reynolds
-    Created on:  8 Feb 2010
- * 
- * (c) Copyright 2010, Epimorphics Limited
- * $Id:  $
- *****************************************************************/
-
 package com.epimorphics.lda.restlets;
 
 import static com.epimorphics.lda.restlets.RouterRestlet.returnAs;
