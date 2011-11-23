@@ -58,6 +58,10 @@ spec:schoolsSecondarySelector
 
 #VIEWERS
 
+spec:viewerNone a api:Viewer
+    ; api:name "none"
+    .
+
 spec:viewerShort a api:Viewer 
     ; api:name "short" 
     ; api:property 
@@ -178,6 +182,7 @@ spec:schools
 	; api:defaultViewer spec:viewerMedium 
 	; api:viewer spec:viewerShort
 	; api:viewer spec:viewerMedium
+	; api:viewer spec:viewerNone
 	; api:viewer [ 
 		api:name "geo" ;
 		api:property rdf:type, rdfs:label, school:establishmentStatus, geo:lat, geo:long

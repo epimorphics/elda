@@ -95,25 +95,30 @@ public interface ShortnameService
 	*/
 	public class Util
 		{
+		public static final Property propertySTAR = ResourceFactory.createProperty( "_magic:ANY" );
+		
 		/**
 		    Answer a list of properties, where each property's URI is the
 		    expansion according to sns of the corresponding element in the
-		    dotted string shortNames.
+		    dotted string shortNames. The special element * is translated to
+		    the magic property <code>propertySTAR</code>.
 		*/
 		public static List<Property> expandProperties( String shortNames, ShortnameService sns ) 
 			{
-			// System.err.println( ">> expandProperties: " + shortNames );
 			String [] elements = shortNames.split( "\\." );
 			List<Property> result = new ArrayList<Property>( elements.length );
 			for (String e: elements) 
 				if (e.length() > 0)
 					{
-					String expanded = sns.expand( e );
-					if (expanded == null) throw new ExpansionFailedException( e );
-					result.add( ResourceFactory.createProperty( expanded ) );
+					if (e.equals( "*" )) {
+						result.add( propertySTAR );
+					} else {
+						String expanded = sns.expand( e );
+						if (expanded == null) throw new ExpansionFailedException( e );
+						result.add( ResourceFactory.createProperty( expanded ) );
+						}
 					}
 			return result;
 			}
-		
 		}
 	}

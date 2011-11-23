@@ -23,6 +23,11 @@
 </p>
 
 <p>
+    Elda allows the special element '*', meaning "any property",
+    in view property chains.
+</p>
+
+<p>
     Elda has a built-in XSL stylesheet available which
     is a mildly configured version of the original
     written by Jeni Tennison.
@@ -101,6 +106,16 @@
     cause Elda to ignore the supplied media type.
     </li>
 </ul>
+
+<h2>wildcard '*' in view property chains</h2>
+
+<p>
+    A property chain appearing in a view specification
+    may contain the special element '*', meaning "any
+    property". In the generated query it is replaced by
+    a fresh variable. There can be any number of *-elements,
+    anywhere within the chain.
+</p>
 
 <h2>api:base</h2>
 
