@@ -17,7 +17,6 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.core.VarSupply;
-import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ValTranslator;
 import com.epimorphics.lda.query.ValTranslator.Filters;
 import com.epimorphics.lda.rdfq.Any;
