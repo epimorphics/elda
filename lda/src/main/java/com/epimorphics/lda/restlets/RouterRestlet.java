@@ -58,6 +58,7 @@ import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.support.pageComposition.Messages;
+import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
@@ -107,14 +108,14 @@ import com.hp.hpl.jena.shared.WrappedException;
         Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
         String type = match == matchAll ? null : pathAndType.b;
         if (match == null) {
-        	ShowStats.endpointNoMatch();
+        	StatsValues.endpointNoMatch();
         	return noMatchFound( pathstub, ui, pathAndType );
         } else {
         	Times t = new Times( pathstub );
         	Controls c = new Controls( !dontCache, t );
             List<MediaType> mediaTypes = getAcceptableMediaTypes( headers );
             Response r = runEndpoint( c, servCon, ui, mediaTypes, type, match );
-            ShowStats.accumulate( t.done() );
+            StatsValues.accumulate( t.done() );
 			return r; 
         }
     }
@@ -209,25 +210,25 @@ import com.hp.hpl.jena.shared.WrappedException;
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
 			return doRendering( c, rc, formatter, results, r );
         } catch (StackOverflowError e) {
-        	ShowStats.endpointException();
+        	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
             return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
         } catch (ExpansionFailedException e) {
-        	ShowStats.endpointException();
+        	StatsValues.endpointException();
         	return buildErrorResponse(e);
         } catch (EldaException e) {
-        	ShowStats.endpointException();
+        	StatsValues.endpointException();
         	log.error( "Exception: " + e.getMessage() );
         	if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
         	return buildErrorResponse(e);
         } catch (QueryParseException e) {
-        	ShowStats.endpointException();
+        	StatsValues.endpointException();
             log.error( "Query Parse Exception: " + e.getMessage() );
             if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
             return returnNotFound("Failed to parse query request : " + e.getMessage());
         } catch (Throwable e) {
-        	ShowStats.endpointException();
+        	StatsValues.endpointException();
             return returnError( e );
         }
     }    
