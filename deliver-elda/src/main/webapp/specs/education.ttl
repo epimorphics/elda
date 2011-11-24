@@ -144,6 +144,7 @@ spec:api a api:API
 	   , spec:schoolsPrimaryDistrict
 	   , spec:schoolsSecondaryDistrict 
 	   , spec:school-by-id
+	   , spec:school-with-redirect
 	#
 	# Magic variables.
 	#
@@ -164,6 +165,13 @@ spec:api a api:API
     .
     	
 #ENDPOINTS
+
+spec:school-with-redirect
+    a api:ItemEndpoint
+    ; api:viewer api:describeViewer
+    ; api:uriTemplate "/redirected/education/id/school/{id}"
+    ; api:itemTemplate "/id/school/{id}"
+    .
 
 spec:school-by-id
 	a api:ItemEndpoint
