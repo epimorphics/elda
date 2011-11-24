@@ -376,14 +376,6 @@ public class ComposeConfigDisplay {
 	protected static String shortForm( Resource r ) {
 		return r.getModel().shortForm( r.getURI() );
 	}
-	
-    private void h1( StringBuilder textBody, String s ) {  
-       textBody.append( "\n<h1>" ).append( safe( s ) ).append( "</h1>" );   
-    }
-        
-    private void h2( StringBuilder textBody, String s ) {  
-        textBody.append( "\n<h2>" ).append( safe( s ) ).append( "</h2>\n" );        
-    }
         
     private void h3( StringBuilder textBody, String s ) {  
         textBody.append( "\n<h3>" ).append( safe( s ) ).append( "</h3>\n" );        
