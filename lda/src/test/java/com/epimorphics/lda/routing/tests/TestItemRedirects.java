@@ -25,20 +25,23 @@ import com.hp.hpl.jena.util.FileManager;
 
 public class TestItemRedirects {
 	
+	private static final String apiBase = "http://example.com/preamble";
+	
 	Model specModel = ModelIOUtils.modelFromTurtle
-		( ":root a api:API"
+		(( ":root a api:API"
+		+ "\n  ; api:base '$BASE$'"
 		+ "\n  ; api:sparqlEndpoint <unused:endpoint>"
 		+ "\n  ; api:endpoint :A, :B"
 		+ "\n."
 		+ "\n:A a api:ItemEndpoint"
 		+ "\n  ; api:uriTemplate '/other/{item}'"
-		+ "\n  ; api:itemTemplate '/not/this/{item}'"
+		+ "\n  ; api:itemTemplate '$BASE$/not/this/{item}'"
 		+ "\n."
 		+ "\n:B a api:ItemEndpoint"
 		+ "\n  ; api:uriTemplate '/item/{item}'"
-		+ "\n  ; api:itemTemplate '/look/for/{item}'"
+		+ "\n  ; api:itemTemplate '$BASE$/look/for/{item}'"
 		+ "\n."
-		);
+		).replace( "$BASE$", apiBase ));
 	
 	/**
 	    Test that a (Default) Router will find the correct URI template associated
@@ -49,8 +52,8 @@ public class TestItemRedirects {
 		APISpec spec = new APISpec( FileManager.get(), root, LoadsNothing.instance );
 		Router r = new DefaultRouter();
 		loadRouter( r, spec );
-		assertEquals( "/item/1066", r.findItemURIPath( "/look/for/1066" ) );
-		assertEquals( "/other/2001", r.findItemURIPath( "/not/this/2001" ) );
+		assertEquals( apiBase + "/item/1066", r.findItemURIPath( "/look/for/1066" ) );
+		assertEquals( apiBase + "/other/2001", r.findItemURIPath( "/not/this/2001" ) );
 	}
 
 	private void loadRouter( Router r, APISpec spec ) {

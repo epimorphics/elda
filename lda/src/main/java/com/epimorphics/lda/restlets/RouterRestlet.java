@@ -98,7 +98,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
             @Context ServletContext servCon,
-            @Context UriInfo ui) throws IOException 
+            @Context UriInfo ui) throws IOException, URISyntaxException 
     {
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	boolean dontCache = has( rh, "pragma", "no-cache" ) || has( rh, "cache-control", "no-cache" );
@@ -109,7 +109,14 @@ import com.hp.hpl.jena.shared.WrappedException;
         String type = match == matchAll ? null : pathAndType.b;
         if (match == null) {
         	StatsValues.endpointNoMatch();
-        	return noMatchFound( pathstub, ui, pathAndType );
+        	String x = router.findItemURIPath( "/" + pathstub );
+        	if (x == null) 
+        		return noMatchFound( pathstub, ui, pathAndType );
+        	else {
+        		URI loc = new URI( x );
+        		System.err.println( ">> redirecting to " + loc );
+        		return enableCORS( Response.seeOther( loc ) ).build();
+        	}
         } else {
         	Times t = new Times( pathstub );
         	Controls c = new Controls( !dontCache, t );
@@ -299,10 +306,8 @@ import com.hp.hpl.jena.shared.WrappedException;
     
     public static Response returnAs(String response, MediaType mimetype, String contentLocation) {
         try {
-            return enableCORS( Response.ok(response, mimetype.toString()) )
-                    // .contentLocation( new URI(contentLocation) ) // what does it do & how can we get it back 
-                    .build();
-        } catch (RuntimeException e) { // (URISyntaxException e) {
+            return enableCORS( Response.ok( response, mimetype.toString() ) ).build();
+        } catch (RuntimeException e) {
             return returnError(e);
         }
     }

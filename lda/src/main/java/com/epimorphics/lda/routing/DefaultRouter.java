@@ -33,7 +33,16 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
         return e == null ? null : new Match( e, Bindings.uplift( bindings ) );
 	}
 	
-	protected MatchSearcher<String> ms = new MatchSearcher<String>();
+	static class BaseAndTemplate {
+		final String base;
+		final String template;
+		
+		BaseAndTemplate( String base, String template ) { 
+			this.base = base; this.template = template; 
+		}
+	}
+	
+	protected MatchSearcher<BaseAndTemplate> ms = new MatchSearcher<BaseAndTemplate>();
 	
 	/**
 	    Answer the filled-in URI template associated with the given
@@ -41,9 +50,10 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	*/
 	@Override public String findItemURIPath( String path ) {
 		Map<String, String> bindings = new HashMap<String, String>();
-		String ut = ms.lookup( bindings, path );
-		if (ut != null) {
-			return Bindings.expandVariables( Lookup.Util.asLookup( bindings ), ut );
+		BaseAndTemplate bt = ms.lookup( bindings, path );
+		if (bt != null) {
+			String apiBase = bt.base == null ? "" : bt.base;
+			return apiBase + Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template );
 		}
 		return null;
 	}
@@ -56,6 +66,10 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	@Override public void register( String ut, APIEndpoint ep ) {
 		super.register( ut, ep );
 		String it = ep.getSpec().getItemTemplate();
-		if (it != null) ms.register( it, ep.getURITemplate() );
+		if (it != null) {
+			String apiBase = ep.getSpec().getAPISpec().getBase();
+			if (apiBase != null && it.startsWith( apiBase )) it = it.substring( apiBase.length() );
+			ms.register( it, new BaseAndTemplate( apiBase, ep.getURITemplate() ) );
+		}
 	}
 }
