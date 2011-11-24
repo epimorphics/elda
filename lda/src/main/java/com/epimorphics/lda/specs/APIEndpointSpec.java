@@ -316,30 +316,38 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     }
     
     /**
-     * Printable summary for debugging
-     */
+        Printable summary for debugging
+    */
     @Override public String toString() {
         return "[Endpoint " + name + " for " + this.apiSpec.specificationURI + "]";
     }
 
     /**
-     * Return the view template definition for the given named view
-     */
+        Return the view template definition for the given named view
+    */
     @Override public View getView(String viewname) {
         return views.get(viewname);
     }
 
     /**
-     * Return the default view template definition, if any
-     */
+        Return the default view template definition, if any
+    */
     @Override public View getDefaultView() {
         return views.get( View.SHOW_DEFAULT_INTERNAL );
     }
 
+    /**
+        Answer the variable bindings of this endpoint. Never
+        null, but of course the bindings may be empty.
+    */
 	public Bindings getBindings() {
 		return bindings;
 	}
 
+	/**
+	    Answer the item template of this endpoint, or null if there
+	    isn't one (eg it's a list endpoint).
+	*/
 	@Override public String getItemTemplate() {
 		return itemTemplate;
 	}

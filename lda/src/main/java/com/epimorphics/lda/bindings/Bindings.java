@@ -25,7 +25,7 @@ import com.epimorphics.lda.support.MultiMap;
     query parameter names, and can map partial resource names to
     their URLs.
 */
-public class Bindings
+public class Bindings implements Lookup
 	{
     static Logger log = LoggerFactory.getLogger( Bindings.class );
     
@@ -35,7 +35,7 @@ public class Bindings
     
 	protected final URLforResource ufr;
 	
-    public Bindings( Bindings initial, Set<String> parameterNames, URLforResource ufr ) 
+	public Bindings( Bindings initial, Set<String> parameterNames, URLforResource ufr ) 
     	{
     	this.ufr = ufr;
     	this.putAll( initial );
@@ -148,7 +148,7 @@ public class Bindings
 	    null if it is not bound. Part of the implementation
 	    of <code>Lookup</code>.
 	*/
-	public String getValueString( String name ) 
+	@Override public String getValueString( String name ) 
 		{ 
 		Value v = get( name );
 		return v == null ? null : v.spelling(); 
@@ -278,7 +278,7 @@ public class Bindings
 	    occurrence of {wossname} by the value of wossname as
 	    given by the Lookup <code>values</code>.
 	*/
-	public static String expandVariables( Bindings values, String s ) 
+	public static String expandVariables( Lookup values, String s ) 
 		{
 		int start = 0;
 		StringBuilder sb = new StringBuilder();
