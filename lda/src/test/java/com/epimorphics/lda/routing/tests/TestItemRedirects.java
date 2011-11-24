@@ -9,15 +9,13 @@ package com.epimorphics.lda.routing.tests;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.bindings.Lookup;
-import com.epimorphics.lda.routing.MatchSearcher;
+import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.core.APIEndpointImpl;
+import com.epimorphics.lda.routing.DefaultRouter;
+import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.LoadsNothing;
@@ -42,33 +40,24 @@ public class TestItemRedirects {
 		+ "\n."
 		);
 	
-	@Test public void testRecognisesRedirect() {
+	/**
+	    Test that a (Default) Router will find the correct URI template associated
+	    with an ItemTemplate that matches a given path.
+	*/
+	@Test public void testFindsURITemplateForItem() {
 		Resource root = specModel.createResource( specModel.expandPrefix( ":root" ) );
 		APISpec spec = new APISpec( FileManager.get(), root, LoadsNothing.instance );
-		assertEquals( "/item/1066", findItemURI( spec, "/look/for/1066" ) );
-		assertEquals( "/other/2001", findItemURI( spec, "/not/this/2001" ) );
+		Router r = new DefaultRouter();
+		loadRouter( r, spec );
+		assertEquals( "/item/1066", r.findItemURIPath( "/look/for/1066" ) );
+		assertEquals( "/other/2001", r.findItemURIPath( "/not/this/2001" ) );
 	}
 
-	private String findItemURI( APISpec spec, String path ) {
-		MatchSearcher<String> ms = new MatchSearcher<String>();
+	private void loadRouter( Router r, APISpec spec ) {
 		for (APIEndpointSpec eps: spec.getEndpoints()) {
-			String it = eps.getItemTemplate();
-			if (it != null) ms.register( it, eps.getURITemplate() );
-		}
-		Map<String, String> bindings = new HashMap<String, String>();
-		String ut = ms.lookup( bindings, path );
-		if (ut != null) {
-			return Bindings.expandVariables( asLookup( bindings ), ut );
-		}
-		return null;
-	}
-
-	private Lookup asLookup( final Map<String, String> bindings ) {
-		return new Lookup() {
-			@Override public String getValueString(String name) {
-				return bindings.get( name );
-			}
-		};
+			APIEndpoint ep = new APIEndpointImpl( eps );
+			r.register( ep.getURITemplate(), ep );
+		}	
 	}
 
 }

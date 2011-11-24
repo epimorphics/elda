@@ -58,5 +58,11 @@ public interface Router {
     */
     public List<String> templates();
     
+    /**
+        Answer the URI template of an endpoint in this Router
+        which has an ItemEndpoint matchinf the itemPath.
+    */
+    public String findItemURIPath( String itemPath  );
+    
 }
 
