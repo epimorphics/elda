@@ -68,8 +68,8 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 		String it = ep.getSpec().getItemTemplate();
 		if (it != null) {
 			String apiBase = ep.getSpec().getAPISpec().getBase();
-			if (apiBase != null && it.startsWith( apiBase )) it = it.substring( apiBase.length() );
-			ms.register( it, new BaseAndTemplate( apiBase, ep.getURITemplate() ) );
+			String path = it.replaceFirst( "https?://[^/]*/", "/" );
+			ms.register( path, new BaseAndTemplate( apiBase, ep.getURITemplate() ) );
 		}
 	}
 }

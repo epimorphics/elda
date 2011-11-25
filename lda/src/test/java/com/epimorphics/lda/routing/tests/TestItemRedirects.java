@@ -25,7 +25,7 @@ import com.hp.hpl.jena.util.FileManager;
 
 public class TestItemRedirects {
 	
-	private static final String apiBase = "http://example.com/preamble";
+	private static final String apiBase = "http://example.com/";
 	
 	Model specModel = ModelIOUtils.modelFromTurtle
 		(( ":root a api:API"
@@ -35,11 +35,11 @@ public class TestItemRedirects {
 		+ "\n."
 		+ "\n:A a api:ItemEndpoint"
 		+ "\n  ; api:uriTemplate '/other/{item}'"
-		+ "\n  ; api:itemTemplate '$BASE$/not/this/{item}'"
+		+ "\n  ; api:itemTemplate '$BASE$not/this/{item}'"
 		+ "\n."
 		+ "\n:B a api:ItemEndpoint"
 		+ "\n  ; api:uriTemplate '/item/{item}'"
-		+ "\n  ; api:itemTemplate '$BASE$/look/for/{item}'"
+		+ "\n  ; api:itemTemplate '$BASE$look/for/{item}'"
 		+ "\n."
 		).replace( "$BASE$", apiBase ));
 	
