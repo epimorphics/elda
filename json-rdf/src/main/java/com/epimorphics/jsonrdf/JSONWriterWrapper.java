@@ -37,15 +37,12 @@ public class JSONWriterWrapper implements JSONWriterFacade {
     
     public JSONWriterWrapper(Writer writer, boolean pretty) {
         jw = new JSStreamingWriter(writer);
-        // jw.setPrettyPrint(pretty);
     }
         
     public void setPrettyPrint(boolean pretty) {
-        // jw.setPrettyPrint(pretty);
     }
     
-    @Override
-    public JSONWriterFacade array() {
+    @Override public JSONWriterFacade array() {
         try {
             jw.startArray();
         } catch (JsonException e) {
@@ -54,8 +51,7 @@ public class JSONWriterWrapper implements JSONWriterFacade {
         return this;
     }
 
-    @Override
-    public JSONWriterFacade endArray() {
+    @Override public JSONWriterFacade endArray() {
         try {
             jw.finishArray();
         } catch (JsonException e) {
@@ -64,8 +60,7 @@ public class JSONWriterWrapper implements JSONWriterFacade {
         return this;
     }
 
-    @Override
-    public JSONWriterFacade endObject() {
+    @Override public JSONWriterFacade endObject() {
         try {
             jw.finishObject();
         } catch (JsonException e) {
@@ -74,8 +69,7 @@ public class JSONWriterWrapper implements JSONWriterFacade {
         return this;
     }
 
-    @Override
-    public JSONWriterFacade key(String s) {
+    @Override public JSONWriterFacade key(String s) {
         try {
             jw.key(s);
         } catch (JsonException e) {
@@ -84,8 +78,7 @@ public class JSONWriterWrapper implements JSONWriterFacade {
         return this;
     }
 
-    @Override
-    public JSONWriterFacade object() {
+    @Override public JSONWriterFacade object() {
         try {
             jw.startObject();
         } catch (JsonException e) {
@@ -94,8 +87,7 @@ public class JSONWriterWrapper implements JSONWriterFacade {
         return this;
     }
 
-    @Override
-    public JSONWriterFacade value(boolean b) {
+    @Override public JSONWriterFacade value(boolean b) {
         try {
             jw.value(b);
         } catch (JsonException e) {
@@ -127,10 +119,9 @@ public class JSONWriterWrapper implements JSONWriterFacade {
         	if (o instanceof String) jw.value( (String) o );
         	else if (o instanceof Double) jw.value( ((Double) o).doubleValue() );
         	else if (o instanceof Integer) jw.value( ((Integer) o).intValue() );
-        	 else if (o instanceof Float) jw.value( ((Float) o).doubleValue() );
-        	 else if (o instanceof Boolean) jw.value( ((Boolean) o).booleanValue() );
-        	 else if (o instanceof BigDecimal) jw.value( ((BigDecimal) o).doubleValue() ); // TODO is this right?
-            // jw.value(o);
+        	else if (o instanceof Float) jw.value( ((Float) o).doubleValue() );
+        	else if (o instanceof Boolean) jw.value( ((Boolean) o).booleanValue() );
+        	else if (o instanceof BigDecimal) jw.value( ((BigDecimal) o).doubleValue() ); 
         	else 
         		throw new RuntimeException( "given value: " + o + " [class " + o.getClass().getSimpleName() + "]" );
         } catch (JsonException e) {
