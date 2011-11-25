@@ -35,11 +35,11 @@ spec:schools
     ] ;
     api:defaultViewer [
         rdfs:label "default";
-        api:properties rdf:type, rdfs:label, ex:name;
+        api:property rdf:type, rdfs:label, ex:name;
         ];
     api:viewer [
         rdfs:label "medium";
-        api:properties rdf:type, ex:name, ex:type, school-ont:localAuthority;
+        api:property rdf:type, ex:name, ex:type, school-ont:localAuthority;
         ];
     .
 

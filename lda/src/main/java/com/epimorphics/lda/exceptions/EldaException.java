@@ -57,7 +57,7 @@ public class EldaException extends RuntimeException {
 	}
 
 	public static void BadSpecification( String message ) {
-		throw new EldaException( message );
+		throw new EldaException( "bad specification: " + message );
 	}
 
 	public static void BadBooleanParameter( String param, String val) {

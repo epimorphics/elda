@@ -192,16 +192,13 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     		return View.DESCRIBE;
     }
 
-    /**
-        both API.property and .properties until TODO the ambiguity gets resolved.
-    */
     private View getViewByProperties( Model m, String name, Resource tRes ) {
         return addViewProperties( m, new HashSet<Resource>(), tRes, new View( name ) );
 	}
 
 	private View addViewProperties( Model m, Set<Resource> seen, Resource tRes, View v ) {
-		addViewProperties( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
-		addViewProperties( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
+		addViewPropertiesByString( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
+		addViewPropertiesByResource( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
 		for (RDFNode n: tRes.listProperties( API.include ).mapWith( Statement.Util.getObject ).toList()) {
 			if (n.isResource() && seen.add( (Resource) n ))
 				addViewProperties( m, seen, (Resource) n, v );
@@ -209,16 +206,27 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 		return v;
 	}
 
-	private void addViewProperties( View v, List<RDFNode> items ) {
+	private void addViewPropertiesByString( View v, List<RDFNode> items ) {
+		ShortnameService sns = apiSpec.getShortnameService();
+		for (RDFNode pNode: items) {
+            if (pNode.isLiteral()) {
+            	for(String dotted : pNode.asNode().getLiteralLexicalForm().split(" *, *")) {
+					v.addViewFromParameterValue(dotted, sns);
+	        	}
+	        } else {
+	        	EldaException.BadSpecification( "object of api:properties not a literal: " + pNode );
+	        }
+	    }
+	}   
+
+	private void addViewPropertiesByResource( View v, List<RDFNode> items ) {
 		ShortnameService sns = apiSpec.getShortnameService();
 		for (RDFNode pNode: items) {
             if (pNode.isResource()) {
                 v.addViewFromRDFList((Resource)pNode, sns);
-            } else if (pNode.isLiteral()) {
-            	for(String dotted : pNode.asNode().getLiteralLexicalForm().split(" *, *")) {
-					v.addViewFromParameterValue(dotted, sns);
-	        	}
-	        }
+            } else 
+	        	EldaException.BadSpecification( "object of api:property is a literalt: " + pNode );
+	
 	    }
 	}    
 
@@ -261,7 +269,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         }
         for (NodeIterator ni = m.listObjectsOfProperty(s, API.filter); ni.hasNext();) {
             String q = getLexicalForm( ni.next() );
-            for (String query : q.split("[,&]")) { // TODO -- remove this compatability HACK
+            for (String query : q.split("[&]")) { 
 	            String[] paramValue = query.split("=");
 	            if (paramValue.length == 2) {
 	                baseQuery.deferrableAddFilter( Param.make( sns, paramValue[0] ), paramValue[1] );

@@ -33,8 +33,8 @@ public class TestIncludeViewers {
 			+ "\n:ep a api:ListEndpoint; api:uriTemplate '/alpha/beta'."
 			+ "\n:ep api:viewer :v."
 			+ "\n:v a api:Viewer; api:name 'v'; api:include :va, :vb." 
-			+ "\n:va a api:Viewer; api:name 'va'; api:property 'a'."
-			+ "\n:vb a api:Viewer; api:name 'vb'; api:property 'b'."
+			+ "\n:va a api:Viewer; api:name 'va'; api:properties 'a'."
+			+ "\n:vb a api:Viewer; api:name 'vb'; api:properties 'b'."
 			+ "\n:A a rdf:Property; rdfs:label 'a'."
 			+ "\n:B a rdf:Property; rdfs:label 'b'."
 			);

@@ -44,7 +44,7 @@ public class TestPropertyChainEndToEnd
 			+ "; _selector api:filter 'type=class'"
 		//
 			+ "; spec:my-viewer rdfs:label 'mine'"
-			+ "; spec:my-viewer api:properties ex:size"
+			+ "; spec:my-viewer api:property ex:size"
 		//	
 			+ "; ex:size rdf:type owl:DatatypeProperty"
 			+ "; ex:size api:label 'size'"
