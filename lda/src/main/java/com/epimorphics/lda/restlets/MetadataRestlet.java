@@ -120,7 +120,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
     @GET @Produces("text/html") public Response requestHandlerHTML( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
         String stub = rec == null ? "" : pathstub;
-        return new ConfigRestlet().generateConfigPage( stub );
+        return new ConfigRestlet().generateConfigPage( stub, ui );
     }
 }
 

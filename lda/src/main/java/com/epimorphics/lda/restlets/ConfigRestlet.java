@@ -13,7 +13,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import com.epimorphics.lda.specmanager.SpecEntry;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
@@ -22,9 +24,10 @@ import com.epimorphics.util.Util;
 
 @Path("/api-config") public class ConfigRestlet {
 
-	@GET @Produces("text/html") public Response generateConfigPage( @PathParam("path") String pathstub ) {
+	@GET @Produces("text/html") public Response generateConfigPage( @PathParam("path") String pathstub, @Context UriInfo ui ) {
+		String base = ui.getBaseUri().toASCIIString();
 		List<SpecEntry> specs = SpecManagerFactory.get().allSpecs();
-		String page = new ComposeConfigDisplay().configPageMentioning( specs, pathstub );
+		String page = new ComposeConfigDisplay().configPageMentioning( specs, base, pathstub );
 		return RouterRestlet.returnAs( Util.withBody( "API configuration", page ), "text/html" );
 	}
 	

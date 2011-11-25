@@ -175,6 +175,7 @@ spec:school-with-redirect
 
 spec:school-by-id
 	a api:ItemEndpoint
+	; api:exampleRequestPath "/education/id/school/100869"
 	; api:uriTemplate "/education/id/school/{id}"
 	; api:selector [api:filter "uniqueReferenceNumber={id}"]
 	; api:viewer api:describeViewer

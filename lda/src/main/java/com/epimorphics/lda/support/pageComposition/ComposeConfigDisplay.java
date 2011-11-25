@@ -38,7 +38,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class ComposeConfigDisplay {
 	
-	public String configPageMentioning(List<SpecEntry> entries, String pathstub) {
+	public String configPageMentioning( List<SpecEntry> entries, String base, String pathstub ) {
 		StringBuilder textBody = new StringBuilder();
 		if (pathstub == null) pathstub = "";
 	//
@@ -63,7 +63,7 @@ public class ComposeConfigDisplay {
 	    // renderVariables( textBody, "h2", "API variables", rec.getAPIEndpoint().getSpec().getAPISpec().getBindings() );
 	        textBody.append( "<h2>endpoints</h2>\n" );
 	        Collections.sort( endpoints, sortByEndpointURITemplate );
-			for (APIEndpointSpec s: endpoints) renderEndpoint( textBody, pathstub, pm, s );  
+			for (APIEndpointSpec s: endpoints) renderEndpoint( textBody, base, pathstub, pm, s );  
 	    //
 	        renderDictionary( textBody, pm, se.getSpec().getShortnameService() );
 	        textBody.append( "</div>\n" );
@@ -133,7 +133,7 @@ public class ComposeConfigDisplay {
 		sb.append( "</div>\n" );
 	}
 
-	private Object linkFor(PrefixMapping pm, String uri) {
+	private String linkFor(PrefixMapping pm, String uri) {
 		return "<a href='" + uri + "'>" + pm.shortForm( uri ) + "</a>";
 	}
 
@@ -158,15 +158,16 @@ public class ComposeConfigDisplay {
 
     // TODO: metadataoptions, factories
     // link to parent
-    void renderEndpoint( StringBuilder sb, String pathStub, PrefixMapping pm, APIEndpointSpec s ) {
+    void renderEndpoint( StringBuilder sb, String base, String pathStub, PrefixMapping pm, APIEndpointSpec s ) {
     	Resource ep = s.getResource();
     	Bindings b = s.getBindings();
     	String ut = ep.getProperty( API.uriTemplate ).getString(); 
         ShortnameService sns = s.sns();
+        System.err.println( ">> base: " + base );
     //
     	renderHeader(sb, s, pathStub, ut);
     	renderComments(sb, s.getResource());
-    	renderExampleRequestPath(sb, ep);
+    	renderExampleRequestPath(sb, base, ep);
     	renderSettings(sb, s);    	
     	renderItemTemplate(sb, s);
     	renderAllSelectors( sb, ep );
@@ -203,15 +204,26 @@ public class ComposeConfigDisplay {
     	}
 	}
 
-	private void renderExampleRequestPath(StringBuilder sb, Resource ep) {
+	private void renderExampleRequestPath( StringBuilder sb, String base, Resource ep ) {
 		Property API_exampleRequestPath = ep.getModel().createProperty( API.NS, "exampleRequestPath" );
     	List<Statement> examples = ep.listProperties( API_exampleRequestPath ).toList();
     	if (examples.size() > 0) {
-    		sb.append( "<h3>example request path(s)" );
+    		sb.append( "<h3>example request path(s)</h3>" );
     		for (Statement exs: examples) {
-    			sb.append( "<div class='indent'>" ).append( safe( exs.getString() ) ).append( "</div>\n" );
+    			sb.append( "<div class='indent'>" );
+    			sb.append( linkTo( base, exs.getString() ) );
+    			sb.append( "</div>\n" );
     		}
     	}
+	}
+
+	private String linkTo( String base, String path ) {
+		return "<a href='" + compose( base, path ) + "'>" + safe(path) + "</a>";
+	}
+
+	private String compose(String base, String path) {
+		if (base.endsWith("/") && path.startsWith( "/" )) path = path.substring(1);
+		return base + path;
 	}
 
 	private void renderSettings(StringBuilder sb, APIEndpointSpec s) {
