@@ -109,13 +109,11 @@ import com.hp.hpl.jena.shared.WrappedException;
         String type = match == matchAll ? null : pathAndType.b;
         if (match == null) {
         	StatsValues.endpointNoMatch();
-        	String x = router.findItemURIPath( "/" + pathstub );
-        	if (x == null) 
+        	String item = router.findItemURIPath( "/" + pathstub );
+        	if (item == null) 
         		return noMatchFound( pathstub, ui, pathAndType );
         	else {
-        		URI loc = new URI( x );
-        		System.err.println( ">> redirecting to " + loc );
-        		return enableCORS( Response.seeOther( loc ) ).build();
+        		return enableCORS( Response.seeOther( new URI( item ) ) ).build();
         	}
         } else {
         	Times t = new Times( pathstub );
