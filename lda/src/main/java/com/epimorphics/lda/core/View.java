@@ -20,9 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
-import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.Controls;
@@ -277,158 +275,58 @@ public class View {
 	private boolean useNestedSelect( State st ) {
 		return Source.Util.allSupportNestedSelect( st.sources );
 	}
-	
-	boolean oldWay = false;
-	
+		
 	private String fetchChainsByRepeatedClauses( State s, List<PropertyChain> chains ) { 
-		if (oldWay) {
-			StringBuilder construct = new StringBuilder();
-			PrefixLogger pl = new PrefixLogger( s.m );
-			construct.append( "CONSTRUCT {" );
-			List<Variable> varsInOrder = new ArrayList<Variable>();		
-			for (Resource r: new HashSet<Resource>( s.roots)) {
-				for (PropertyChain c: chains) {
-					construct.append( "\n  " );
-					buildConstructClause( pl, construct, RDFQ.uri( r.getURI() ), c, s.vars, varsInOrder );
-				}
-			}
-		//
-			construct.append( "\n} WHERE {" );
-			String union = "";
-			for (Resource r: new HashSet<Resource>( s.roots)) {
-				for (PropertyChain c: chains) {
-					construct.append( "\n  " ).append( union );
-					buildWhereClause( pl, construct, RDFQ.uri( r.getURI() ), c, s.vars, varsInOrder );
-					union = "UNION ";
-				}
-			}
-			construct.append( "\n}" );
-		//
-			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
-			String queryString = prefixes + construct.toString();
-			// System.err.println( ">> Query string [old-style] is " + queryString );
-			Query constructQuery = QueryFactory.create( queryString );
-			for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
-			return queryString;
-		} else {
-			// the new way
-		//
-			ChainTrees chainTrees = new ChainTrees();
-			for (Resource r: new HashSet<Resource>( s.roots )) {
-				chainTrees.addAll( ChainTree.make( RDFQ.uri( r.getURI() ), s, chains ) );
-			}
-		//
-			StringBuilder construct = new StringBuilder();
-			PrefixLogger pl = new PrefixLogger( s.m );
-			construct.append( "CONSTRUCT {\n" );
-			chainTrees.renderTriples( construct, pl );
-			construct.append( "\n} WHERE {\n" );
-			chainTrees.renderWhere( construct, pl, "" );
-			construct.append( "\n}" );
-		//
-			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
-			String queryString = prefixes + construct.toString();
-//			System.err.println( ">> Query string is [new-style]" + queryString );
-			Query constructQuery = QueryFactory.create( queryString );
-			for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
-			return queryString;
+		ChainTrees chainTrees = new ChainTrees();
+		for (Resource r: new HashSet<Resource>( s.roots )) {
+			chainTrees.addAll( ChainTree.make( RDFQ.uri( r.getURI() ), s, chains ) );
 		}
+	//
+		StringBuilder construct = new StringBuilder();
+		PrefixLogger pl = new PrefixLogger( s.m );
+		construct.append( "CONSTRUCT {\n" );
+		chainTrees.renderTriples( construct, pl );
+		construct.append( "\n} WHERE {\n" );
+		chainTrees.renderWhere( construct, pl, "" );
+		construct.append( "\n}" );
+	//
+		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
+		String queryString = prefixes + construct.toString();
+		Query constructQuery = QueryFactory.create( queryString );
+		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
+		return queryString;
 	}
 
 	static final Pattern SELECT = Pattern.compile( "SELECT", Pattern.CASE_INSENSITIVE );
 	
 	private String fetchChainsByNestedSelect( State st, List<PropertyChain> chains ) { 
-		if (oldWay) {
-			PrefixLogger pl = new PrefixLogger( st.m );
-			StringBuilder construct = new StringBuilder();
-		//
-			Matcher m = SELECT.matcher( st.select );
-			if (!m.find()) EldaException.Broken( "No SELECT in nested query." );
-			int s = m.start();
-			String selection = st.select.substring( s );
-			String selectPrefixes = st.select.substring(0, s);
-		//
-			final Any r = RDFQ.var( "?item" );
-			construct.append( "CONSTRUCT {" );		
-			List<Variable> varsInOrder = new ArrayList<Variable>();
-			for (PropertyChain c: chains) {
-				construct.append( "\n  " );
-				buildConstructClause( pl, construct, r, c, st.vars, varsInOrder );
-			}
-		//
-			construct.append( "\n} WHERE {\n" );
-			construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
-		//
-			String union = "";
-			for (PropertyChain c: chains) {
-				construct.append( "\n  " ).append( union );
-				buildWhereClause( pl, construct, r, c, st.vars, varsInOrder );
-				union = "UNION ";
-			}
-			construct.append( "\n}" );
-		//
-			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
-			String queryString = selectPrefixes + prefixes + construct.toString();
-			// System.err.println( ">> QUERY:\n" + queryString );
-			Query constructQuery = QueryFactory.create( queryString );
-			for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) );
-			return queryString;
-		} else {
-			PrefixLogger pl = new PrefixLogger( st.m );
-			StringBuilder construct = new StringBuilder();
-		//
-			Matcher m = SELECT.matcher( st.select );
-			if (!m.find()) EldaException.Broken( "No SELECT in nested query." );
-			int s = m.start();
-			String selection = st.select.substring( s );
-			String selectPrefixes = st.select.substring(0, s);
-			ChainTrees trees = ChainTree.make( RDFQ.var( "?item" ), st, chains );
-		//
-			construct.append( "CONSTRUCT {" );
-			trees.renderTriples( construct, pl );
-			construct.append( "\n} WHERE {\n" );			
-			construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
-			trees.renderWhere( construct, pl, "" );			
-			construct.append( "\n}" );
-		//
-			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
-			String queryString = selectPrefixes + prefixes + construct.toString();
-			// System.err.println( ">> QUERY:\n" + queryString );
-			Query constructQuery = QueryFactory.create( queryString );
-			for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) ); 
-			return queryString;
+		PrefixLogger pl = new PrefixLogger( st.m );
+		StringBuilder construct = new StringBuilder();
+	//
+		Matcher m = SELECT.matcher( st.select );
+		if (!m.find()) EldaException.Broken( "No SELECT in nested query." );
+		int s = m.start();
+		String selection = st.select.substring( s );
+		String selectPrefixes = st.select.substring(0, s);
+		ChainTrees trees = ChainTree.make( RDFQ.var( "?item" ), st, chains );
+	//
+		construct.append( "CONSTRUCT {" );
+		trees.renderTriples( construct, pl );
+		construct.append( "\n} WHERE {\n" );			
+		construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
+		trees.renderWhere( construct, pl, "" );			
+		construct.append( "\n}" );
+	//
+		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
+		String queryString = selectPrefixes + prefixes + construct.toString();
+		// System.err.println( ">> QUERY:\n" + queryString );
+		try { Query constructQuery = QueryFactory.create( queryString );
+		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) ); }
+		catch (RuntimeException e) {
+			System.err.println( ">> OOPS: " + queryString );
+			throw e;
 		}
-	}
-	
-	private void buildConstructClause( PrefixLogger pl, StringBuilder construct, Any r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
-		String S = pl.present( r );
-		for (Property p: c.getProperties()) {
-			Variable v = vs.newVar();
-			varsInOrder.add( v );
-			String V = v.asSparqlTerm( pl );
-			construct.append( S );
-			construct.append( " " ).append( pl.present( p.getURI() ) );
-			construct.append( " " ).append( V );
-			S = " . " + V;
-		}
-		construct.append( " ." );
-	}
-	
-	private void buildWhereClause( PrefixLogger pl, StringBuilder construct, Any r, PropertyChain c, VarSupply vs, List<Variable> varsInOrder ) {
-		String S = pl.present( r );
-		construct.append( "{" );
-		for (Property p: c.getProperties()) {
-			String V = next( varsInOrder) .asSparqlTerm( pl );
-			construct.append( S );
-			construct.append( " " ).append( pl.present( p.getURI() ) );
-			construct.append( " " ).append( V );
-			S = " OPTIONAL { " + V;
-		}
-		for (int i = 0; i < c.getProperties().size(); i += 1) construct.append( "}" );
-	}
-
-	private Variable next(List<Variable> varsInOrder) {
-		return varsInOrder.remove(0);
+		return queryString;
 	}
 
 	private String fetchUntimedByDescribe( Model sm, List<Resource> allRoots, List<Source> sources ) {

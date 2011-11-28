@@ -247,8 +247,6 @@ public class Decoder {
     }
     
     public Resource resourceForURI(String uri) {
-//        return model.createResource( context.exapandURIfromName(uri) );
-        // TODO check
         return model.createResource( encoder.decodeResourceURI(uri, context) );
     }
     

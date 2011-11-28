@@ -304,7 +304,6 @@ public class Encoder {
             String name = i.next();
             Model model = dataset.getNamedModel(name);
             ei.encodeNamedModel(name, model);
-            // TODO Consider support for embedded contexts per-graph
         }
         ei.finishEncode();
     }

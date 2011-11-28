@@ -70,7 +70,6 @@ public class PropertyChainTranslator
 			for (List<Property> lp: choppedChains) translateAsUNION( result, vars, subjectVar, lp );
 			result.append( "}" );			
 			}
-		// System.err.println( "\n>> translated " + Arrays.asList(chains) + " to " + result + "\n" );
 		return result.toString();
 	}
 
@@ -135,7 +134,7 @@ public class PropertyChainTranslator
 		public String var(int i) 
 			{
 			String v = map.get(i);
-			if (v == null) map.put(i, v = stripAnyLeadingQMark(vs.newVar().name() ) ); // TODO
+			if (v == null) map.put(i, v = stripAnyLeadingQMark(vs.newVar().name() ) ); 
 			return v;
 			}
 		

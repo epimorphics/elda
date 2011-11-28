@@ -551,7 +551,6 @@ public class APIQuery implements Cloneable, VarSupply {
     private static final Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
     
 	public void addWhere( String whereClause ) {
-		if (log.isDebugEnabled()) log.debug( "TODO: check the legality of the where clause: " + whereClause );
         if (whereExpressions.length() > 0) whereExpressions.append(" ");
         whereExpressions.append(whereClause);
     }
@@ -598,7 +597,6 @@ public class APIQuery implements Cloneable, VarSupply {
 			x.append( bound );
 	        return x.toString();
     	} else {
-    		// TODO add code for LIMIT/OFFSET when tests exist.
     		pl.findPrefixesIn( fixedSelect );
     		String bound = bindDefinedvariables( pl, fixedSelect, cc );
     		StringBuilder sb = new StringBuilder();
@@ -649,7 +647,7 @@ public class APIQuery implements Cloneable, VarSupply {
 				.append( "PREFIX " )
 				.append( prefix )
 				.append( ": <" )
-				.append( pm.getNsPrefixURI(prefix).trim() ) // !! TODO
+				.append( pm.getNsPrefixURI(prefix) )
 				.append( ">\n" );
 		}
 	}
