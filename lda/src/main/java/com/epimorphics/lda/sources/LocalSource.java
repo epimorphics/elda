@@ -57,9 +57,7 @@ public class LocalSource extends SourceBase implements Source {
     }
     
     @Override public QueryExecution execute(Query query) {
-        if (log.isDebugEnabled()) {
-            log.debug("Running query: " + query);
-        }
+        if (log.isDebugEnabled()) log.debug("Running query: " + query);
         return QueryExecutionFactory.create(query, source);
     }
     

@@ -78,44 +78,17 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     @Override public Triad<APIResultSet, String, Bindings> call( Controls c, URI reqURI, Bindings given ) {
-    	long origin = System.currentTimeMillis();
     	Bindings cc = given.copyWithDefaults( spec.getBindings() );
         APIQuery query = spec.getBaseQuery();
         Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
-        long timeAfterBuild = System.currentTimeMillis();
         View view = viewAndFormat.a; 
         String format = viewAndFormat.b;
         APIResultSet unfiltered = query.runQuery( c, spec.getAPISpec(), cache, cc, view );
-        long timeAfterRun = System.currentTimeMillis();
-        APIResultSet filtered = filterByView( view, query.getDefaultLanguage(), unfiltered );
+        APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
         insertResultSetRoot(filtered, reqURI, format, cc, query);
-        long timeAfterMetadata = System.currentTimeMillis();
-        log.debug( "TIMING: build query: " + (timeAfterBuild - origin)/1000.0 + "s" );
-        log.debug( "TIMING: run query:   " + (timeAfterRun - timeAfterBuild)/1000.0 + "s" );
-        log.debug( "TIMING: view query:  " + (timeAfterMetadata - timeAfterRun)/1000.0 );
         return new Triad<APIResultSet, String, Bindings>( filtered, format, cc );
     }
-
-    // Filter by any views
-    // In simple cases can combine view props into select then
-    // run a construct on the results of the select and do less server traffic.
-    // HOWEVER, there are two problems with that:
-    // (1) where one (or more) props in view are multi- valued then limit/offset 
-    //     doesn't work and the paging code gets complicated
-    // (2) where return value is a bNode and we want automatic bNode closure.
-    // Current solution get full description from endpoint and post filter
-	
-    private APIResultSet filterByView( View view, String defaultLanguage, APIResultSet rs ) {
-		if (view == null) {
-			log.warn( "somehow, filterByTemplate got a null view." );
-			return rs;			
-		}
-		else {			
-			log.debug("Applying view: " + view.toString());
-			return rs.getFilteredSet( view, defaultLanguage );
-		}
-	}
 
     private Couple<View, String> buildQueryAndView( Bindings context, APIQuery query ) {
     	ShortnameService sns = spec.getAPISpec().getShortnameService();

@@ -234,18 +234,17 @@ public class View {
 	
 	public String fetchDescriptions( Controls c, State s ) {
 		Times t = c.times;
-		long zero = System.currentTimeMillis();
 		switch (type) {
 			case T_DESCRIBE: {
 				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
-				String describeQuery = fetchBareDescriptions( s );
+				String describeQuery = fetchUntimedByDescribe( s.m, s.roots, s.sources );
 				t.addToViewQuerySize( detailsQuery );
 				t.addToViewQuerySize( describeQuery );
 				return describeQuery; 
 			}
 				
 			case T_ALL:	{	
-				String detailsQuery = fetchBareDescriptions( s ); 				
+				String detailsQuery = fetchUntimedByDescribe( s.m, s.roots, s.sources ); 				
 				String chainsQuery = fetchByGivenPropertyChains( s, chains ); 
 			    addAllObjectLabels( c, s );
 				t.addToViewQuerySize( detailsQuery );
@@ -255,7 +254,6 @@ public class View {
 
 			case T_CHAINS:	{
 				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
-				log.debug( "T_CHAINS took " + ((System.currentTimeMillis() - zero)/1000.0) + "s" );
 				t.addToViewQuerySize( detailsQuery );
 				return detailsQuery;
 			}
@@ -433,14 +431,6 @@ public class View {
 		return varsInOrder.remove(0);
 	}
 
-	private String fetchBareDescriptions( State s ) { 
-		long zero = System.currentTimeMillis();
-		String describe = fetchUntimedByDescribe( s.m, s.roots, s.sources );
-		long time = System.currentTimeMillis() - zero;
-		log.debug( "fetchBareDescriptions took " + (time/1000.0) + "s" );
-		return describe;
-	}
-
 	private String fetchUntimedByDescribe( Model sm, List<Resource> allRoots, List<Source> sources ) {
 		List<List<Resource>> chunks = chunkify( allRoots );
 		StringBuilder describe = new StringBuilder();
@@ -478,7 +468,6 @@ public class View {
 	}
 
 	private void addAllObjectLabels( Controls c, State s ) { 
-		long zero = System.currentTimeMillis();
 		StringBuilder sb = new StringBuilder();
 		sb.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">\nCONSTRUCT { ?x rdfs:label ?l }\nWHERE\n{" );
 		String union = "";
@@ -494,10 +483,7 @@ public class View {
 		sb.append( "}\n" );
 		String queryString = sb.toString();
 		Query constructQuery = QueryFactory.create( queryString );
-		long midTime = System.currentTimeMillis();
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
-		long aTime = midTime - zero, bTime = System.currentTimeMillis() - midTime; 
-		log.debug( "addAllObjectLabels took " + (aTime/1000.0) + "s making, " + (bTime/1000.0) + "s fetching." );
 	}
 }
 

@@ -92,7 +92,6 @@ public class ContextQueryUpdater implements ViewSetter {
 
 	private void activateDeferredFilters( List<PendingParameterValue> deferred ) {
 		for (PendingParameterValue d: deferred) {
-			APIQuery.log.debug( "activating deferred filter " + d );
 			addFilterFromQuery( d.param.expand( context ), context.expandVariables( d.val ) );
 		}
 	}
@@ -101,7 +100,7 @@ public class ContextQueryUpdater implements ViewSetter {
 		String param = taggedParam.substring( QueryParameter.LANG_PREFIX.length() );
 		String sv = context.getValueString( taggedParam );
 		if (sv == null) {
-			log.debug( taggedParam + " supplied, but no value for " + param );
+			log.warn( taggedParam + " supplied, but no value for " + param );
 			return;
 		}
 		String val = context.expandVariables( sv );
@@ -121,7 +120,6 @@ public class ContextQueryUpdater implements ViewSetter {
 		} else if (QueryParameter.isReserved(p)) {
 			handleReservedParameters( geo, this, p, val );
 		} else {
-			log.debug( "handleParam: " + p + " with value: " + val );
 			addFilterFromQuery( Param.make( sns, pString ), val );
 		}
 	}
@@ -204,7 +202,7 @@ public class ContextQueryUpdater implements ViewSetter {
     */
     public void addFilterFromQuery( Param param, String val ) {
     	if (val.equals( "" )) {
-    		log.debug( "parameter " + param + " given empty value." );
+    		log.warn( "parameter " + param + " given empty value." );
     		return;
     	}
     	String prefix = param.prefix();

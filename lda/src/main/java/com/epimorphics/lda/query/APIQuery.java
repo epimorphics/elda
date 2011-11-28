@@ -551,7 +551,7 @@ public class APIQuery implements Cloneable, VarSupply {
     private static final Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
     
 	public void addWhere( String whereClause ) {
-		log.debug( "TODO: check the legality of the where clause: " + whereClause );
+		if (log.isDebugEnabled()) log.debug( "TODO: check the legality of the where clause: " + whereClause );
         if (whereExpressions.length() > 0) whereExpressions.append(" ");
         whereExpressions.append(whereClause);
     }
@@ -739,12 +739,11 @@ public class APIQuery implements Cloneable, VarSupply {
 		List<Resource> results = queryAndResults.b;
 		
 		APIResultSet already = cache.getCachedResultSet( results, view.toString() );
-		if (c.allowCache && already != null) 
-		    {
+		if (c.allowCache && already != null) {
 			t.usedViewCache();
-		    log.debug( "re-using cached results for " + results );
+		    if (log.isDebugEnabled()) log.debug( "re-using cached results for " + results );
 		    return already.clone();
-		    }
+		}
 		
 		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, view, results);
 		
@@ -802,7 +801,6 @@ public class APIQuery implements Cloneable, VarSupply {
 	    running that query.
 	*/
     private Couple<String, List<Resource>> selectResources( Controls c, Cache cache, APISpec spec, Bindings b, Source source ) {
-    	log.debug( "fetchRequiredResources()" );
         final List<Resource> results = new ArrayList<Resource>();
         if (itemTemplate != null) setSubject( b.expandVariables( itemTemplate ) );
         if ( isFixedSubject() )
@@ -818,11 +816,11 @@ public class APIQuery implements Cloneable, VarSupply {
 		if (c.allowCache && already != null)
 		    {
 			c.times.usedSelectionCache();
-		    log.debug( "re-using cached results for query " + selectQuery );
+		    if (log.isDebugEnabled()) log.debug( "re-using cached results for query " + selectQuery );
 		    return new Couple<String, List<Resource>>(selectQuery, already);
 		    }
 		Query q = createQuery( selectQuery );
-		log.debug( "Running query: " + selectQuery.replaceAll( "\n", " " ) );
+		if (log.isDebugEnabled()) log.debug( "Running query: " + selectQuery.replaceAll( "\n", " " ) );
 		source.executeSelect( q, new ResultResourcesReader( results, needsLARQindex ) );
 		cache.cacheSelection( selectQuery, results );
 		return new Couple<String, List<Resource>>( selectQuery, results );
