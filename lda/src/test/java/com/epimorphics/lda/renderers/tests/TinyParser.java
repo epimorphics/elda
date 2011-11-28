@@ -64,7 +64,7 @@ public class TinyParser
 			try { return d.createTextNode( t.spelling.substring(1, t.spelling.length() - 1) ); } finally { t.advance(); }
 			}
 		else
-			throw new RuntimeException( "OOPS -- bad token for parse: " + t.type + " " + t.spelling );
+			throw new RuntimeException( "bad token for parse: " + t.type + " " + t.spelling );
 		}
 
 	private String parseWord(Document d, TinyTokens t)

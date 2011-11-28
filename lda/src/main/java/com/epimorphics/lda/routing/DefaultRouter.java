@@ -7,12 +7,15 @@
 */
 package com.epimorphics.lda.routing;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.exceptions.EldaException;
 
 /**
     The default router is a wrapper around a MatchSearcher, qv.
@@ -52,8 +55,8 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 		Map<String, String> bindings = new HashMap<String, String>();
 		BaseAndTemplate bt = ms.lookup( bindings, path );
 		if (bt != null) {
-			String apiBase = bt.base == null ? "" : bt.base;
-			return apiBase + Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template );
+			String et = Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template );
+			return resolvePath( bt.base, et );
 		}
 		return null;
 	}
@@ -68,8 +71,29 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 		String it = ep.getSpec().getItemTemplate();
 		if (it != null) {
 			String apiBase = ep.getSpec().getAPISpec().getBase();
-			String path = it.replaceFirst( "https?://[^/]*/", "/" );
+			String path = removeBase( apiBase, it );
 			ms.register( path, new BaseAndTemplate( apiBase, ep.getURITemplate() ) );
 		}
+	}
+
+	private String resolvePath( String base, String path) {
+		if (base == null) {
+			return path;
+		} else {
+			try {
+				String result = new URI(base).resolve(path).toASCIIString();
+				return result;
+			} catch (URISyntaxException e) {
+				EldaException.Broken( "constructed a bad URI from " + base + " prefixing " + path );
+				return null;
+			}
+		}
+	}
+	
+	private String removeBase( String base, String it ) {
+		return base == null || !it.startsWith( base ) 
+			? it.replaceFirst( "https?://[^/]*/", "/" )
+			: "/" + it.substring( base.length() )
+			;
 	}
 }

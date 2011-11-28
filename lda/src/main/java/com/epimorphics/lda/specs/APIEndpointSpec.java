@@ -225,7 +225,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
             if (pNode.isResource()) {
                 v.addViewFromRDFList((Resource)pNode, sns);
             } else 
-	        	EldaException.BadSpecification( "object of api:property is a literalt: " + pNode );
+	        	EldaException.BadSpecification( "object of api:property is a literal: " + pNode );
 	
 	    }
 	}    

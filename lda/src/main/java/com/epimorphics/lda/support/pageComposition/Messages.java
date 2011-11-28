@@ -60,7 +60,7 @@ public class Messages {
 
 	public static String shorten(String l) {
 		int len = l.length();
-		if (len < 1000) return l;
+		if (len < 1000000) return l;
 		return l.substring(0, 300) + "\n...\n" + l.substring(len - 700, len - 1);
 	}
 

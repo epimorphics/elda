@@ -152,45 +152,44 @@ public class APISpec {
     }
     
     /**
-     * Return list of individual instances which make up this API.
-     * An 
-     */
+        Return list of individual instances which make up this API.
+    */
     public List<APIEndpointSpec> getEndpoints() {
         return endpoints;
     }
     
     /**
-     * Return the data source (remote or local) which this 
-     * API wraps.
-     */
+        Return the data source (remote or local) which this 
+        API wraps.
+    */
     public Source getDataSource() {
         return dataSource;
     }
     
     /**
-     * Return the primary topic of this list/set, or null if none is specified
-     */
+        Return the primary topic of this list/set, or null if none is specified
+    */
     public String getPrimaryTopic() {
         return primaryTopic;
     }
     
     /**
-     * The URI for the RDF resource which specifies this API 
-     */
+        The URI for the RDF resource which specifies this API 
+    */
     public String getSpecURI() {
         return specificationURI;
     }
     
     /**
-     * The default language for encoding plain literals (null if no default).
-     */
+        The default language for encoding plain literals (null if no default).
+    */
     public String getDefaultLanguage() {
     	return defaultLanguage;
     }
     
     /**
-     * Printable representation for debugging
-     */
+        Printable representation for debugging
+    */
     @Override public String toString() {
         return "API-" + specificationURI;
     }
@@ -199,10 +198,18 @@ public class APISpec {
         return describeSources;
     }
 
+    /**
+        Answer the bindings of variables for this API configuration.
+        Never null, but may be empty.
+    */
 	public Bindings getBindings() {
 		return bindings;
 	}
 
+	/**
+	    Answer the value of api:base for this configuration, or null if
+	    no api:base was provided.
+	*/
 	public String getBase() {
 		return base;
 	}

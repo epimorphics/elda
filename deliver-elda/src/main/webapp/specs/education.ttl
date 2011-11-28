@@ -70,7 +70,7 @@ spec:viewerShort a api:Viewer
 
 spec:viewerMedium a api:Viewer 
     ; api:name "medium" 
-    ; api:property "type.label", "type.nurseryProvision"
+    ; api:properties "type.label", "type.nurseryProvision"
     ; api:property 
         rdfs:label, school:establishmentStatus, school:typeOfEstablishment, school:schoolCapacity
         , school:phaseOfEducation, school:districtAdministrative, school:parliamentaryConstituency
@@ -170,7 +170,7 @@ spec:school-with-redirect
     a api:ItemEndpoint
     ; api:viewer api:describeViewer
     ; api:uriTemplate "/redirected/education/id/school/{id}"
-    ; api:itemTemplate "/id/school/{id}"
+    ; api:itemTemplate "http://education.data.gov.uk/id/school/{id}"
     .
 
 spec:school-by-id

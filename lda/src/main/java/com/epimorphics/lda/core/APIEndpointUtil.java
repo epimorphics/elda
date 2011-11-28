@@ -42,7 +42,7 @@ public class APIEndpointUtil {
 	public static Triad<APIResultSet, String, Bindings> call( Controls c, Match match, URI requestUri, String suffix, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		APIEndpointSpec spec = ep.getSpec();
-		log.debug("Info: calling APIEndpoint " + spec);
+		log.info("Info: calling APIEndpoint " + spec);
 		Bindings vs = new Bindings( spec.getBindings() ).putAll( match.getBindings() );
 		if (suffix != null) vs.put( "_suffix", suffix );
 		Bindings cc = Bindings.createContext( vs, queryParams );

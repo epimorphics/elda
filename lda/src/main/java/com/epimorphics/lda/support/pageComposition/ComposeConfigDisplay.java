@@ -163,7 +163,6 @@ public class ComposeConfigDisplay {
     	Bindings b = s.getBindings();
     	String ut = ep.getProperty( API.uriTemplate ).getString(); 
         ShortnameService sns = s.sns();
-        System.err.println( ">> base: " + base );
     //
     	renderHeader(sb, s, pathStub, ut);
     	renderComments(sb, s.getResource());

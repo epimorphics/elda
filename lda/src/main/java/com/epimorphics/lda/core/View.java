@@ -396,12 +396,8 @@ public class View {
 			String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
 			String queryString = selectPrefixes + prefixes + construct.toString();
 			// System.err.println( ">> QUERY:\n" + queryString );
-			try { Query constructQuery = QueryFactory.create( queryString );
-			for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) ); }
-			catch (RuntimeException e) {
-				System.err.println( ">> OOPS: " + queryString );
-				throw e;
-			}
+			Query constructQuery = QueryFactory.create( queryString );
+			for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) ); 
 			return queryString;
 		}
 	}

@@ -114,7 +114,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         		return noMatchFound( pathstub, ui, pathAndType );
         	else {
         		URI loc = new URI( x );
-        		System.err.println( ">> redirecting to " + loc );
+        		log.debug( "redirecting to " + loc );
         		return enableCORS( Response.seeOther( loc ) ).build();
         	}
         } else {
@@ -222,6 +222,8 @@ import com.hp.hpl.jena.shared.WrappedException;
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
             return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
         } catch (ExpansionFailedException e) {
+        	log.error( "ExpansionFailedException" );
+            if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
         	StatsValues.endpointException();
         	return buildErrorResponse(e);
         } catch (EldaException e) {
