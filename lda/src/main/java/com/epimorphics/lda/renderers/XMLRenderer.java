@@ -51,15 +51,8 @@ public class XMLRenderer implements Renderer {
 		boolean stripHas = rc.getAsString( "_strip_has", "no" ).equals( "yes" );
 		boolean suppressIPTO = rc.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		Document d = DOMUtils.newDocument();
-		long origin = System.currentTimeMillis();
 		renderInto( root, d, stripHas, suppressIPTO );
-		// System.err.println( DOMUtils.renderNodeToString( d, rc, pm, null ) );
-		long afterRenderToDOM = System.currentTimeMillis();
-		String rendered = DOMUtils.renderNodeToString( t, d, rc, pm, transformFilePath );
-		long afterRenderedToString = System.currentTimeMillis();
-		log.debug( "TIMING: render to DOM: " + (afterRenderToDOM - origin)/1000.0 + "s" );
-		log.debug( "TIMING: DOM to string: " + (afterRenderedToString - afterRenderToDOM)/1000.0 + "s" );
-		return rendered;
+		return DOMUtils.renderNodeToString( t, d, rc, pm, transformFilePath );
 	}
 
 	public void renderInto( Resource root, Document d, boolean stripHas, boolean suppressIPTO ) {
