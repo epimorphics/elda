@@ -569,10 +569,6 @@ public class APIQuery implements Cloneable, VarSupply {
     }
     
     public String assembleRawSelectQuery( PrefixLogger pl, Bindings cc ) {
-//    	System.err.println( ">> ----------------------------" );
-//    	System.err.println( ">> sPV: " + seenParamVariables );
-//    	System.err.println( ">> vfPC: " + varsForPropertyChains );
-    //
     	if (!sortByOrderSpecsFrozen) unpackSortByOrderSpecs();
     	if (fixedSelect == null) {
 	        StringBuilder q = new StringBuilder();

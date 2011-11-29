@@ -1,112 +1,41 @@
 # Model from test: http://dummy/doc/deptsFr?name=département
 @prefix spec:    <http://www.epimorphics.com/examples/spec1#> .
+@prefix os:      <http://a9.com/-/spec/opensearch/1.1/> .
 @prefix ex:      <http://www.epimorphics.com/examples/eg1#> .
-@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix school-ont:  <http://education.data.gov.uk/def/school/> .
+@prefix opmv:    <http://purl.org/net/opmv/types/common#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix sparql:  <http://purl.org/net/opmv/types/sparql#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct:     <http://purl.org/dc/terms/> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+@prefix xhv:     <http://www.w3.org/1999/xhtml/vocab#> .
 
 <http://dummy/doc/deptsFr?_page=0>
       a       api:Page ;
-      <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>
-              "10"^^xsd:long ;
-      <http://a9.com/-/spec/opensearch/1.1/startIndex>
-              "1"^^xsd:long ;
-      <http://purl.org/dc/terms/hasFormat>
-              <http://dummy//doc/deptsFr.html> , <http://dummy//doc/deptsFr.rdf> , <http://dummy//doc/deptsFr.json> , <http://dummy//doc/deptsFr.ttl> , <http://dummy//doc/deptsFr.owl> , <http://dummy//doc/deptsFr.xml> , <http://dummy//doc/deptsFr.text> ;
-      <http://purl.org/dc/terms/hasVersion>
-              <http://dummy/doc/deptsFr?_view=all> , <http://dummy/doc/deptsFr?_view=description> , <http://dummy/doc/deptsFr?_view=basic> , <http://dummy/doc/deptsFr?_view=%23%23%23default> ;
-      <http://purl.org/dc/terms/isPartOf>
-              <http://dummy/doc/deptsFr> ;
-      api:definition spec:api1 ;
+      os:itemsPerPage "10"^^xsd:long ;
+      os:startIndex "1"^^xsd:long ;
+      dct:isPartOf <http://dummy/doc/deptsFr> ;
+      api:definition <http://dummy/doc/deptsFr/meta> ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/deptsFr?_page=0&_metadata=all> ;
       api:items (ex:dept4 ex:dept1) ;
       api:page "0"^^xsd:long ;
-      <http://www.w3.org/1999/xhtml/vocab#first>
-              <http://dummy/doc/deptsFr?_page=0> .
-
-<http://dummy//doc/deptsFr.html>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/html"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/deptsFr?_page=0> .
+      xhv:first <http://dummy/doc/deptsFr?_page=0> .
 
 <http://dummy/doc/deptsFr>
       a       api:ListEndpoint ;
-      rdfs:label "should be a description of this list" ;
-      <http://purl.org/dc/terms/hasPart>
-              <http://dummy/doc/deptsFr?_page=0> ;
-      api:definition spec:api1 .
-
-<http://dummy/doc/deptsFr?_view=all>
-      rdfs:label "all" ;
-      <http://purl.org/dc/terms/isVersionOf>
-              <http://dummy/doc/deptsFr?_page=0> .
-
-<http://dummy/doc/deptsFr?_view=description>
-      rdfs:label "description" ;
-      <http://purl.org/dc/terms/isVersionOf>
-              <http://dummy/doc/deptsFr?_page=0> .
-
-<http://dummy/doc/deptsFr?_view=basic>
-      rdfs:label "basic" ;
-      <http://purl.org/dc/terms/isVersionOf>
-              <http://dummy/doc/deptsFr?_page=0> .
-
-<http://dummy//doc/deptsFr.ttl>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/turtle"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/deptsFr?_page=0> .
+      dct:hasPart <http://dummy/doc/deptsFr?_page=0> ;
+      api:definition <http://dummy/doc/deptsFr/meta> .
 
 ex:dept4
       a       school-ont:Department ;
       ex:name "département"@fr .
 
-<http://dummy/doc/deptsFr?_view=%23%23%23default>
-      rdfs:label "###default" ;
-      <http://purl.org/dc/terms/isVersionOf>
-              <http://dummy/doc/deptsFr?_page=0> .
-
-<http://dummy//doc/deptsFr.rdf>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/rdf+xml"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/deptsFr?_page=0> .
-
-<http://dummy//doc/deptsFr.json>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/json"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/deptsFr?_page=0> .
-
-<http://dummy//doc/deptsFr.owl>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "application/rdf+xml"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/deptsFr?_page=0> .
-
 ex:dept1
       a       school-ont:Department ;
-      ex:name "département"@fr , "department"@en .
-
-<http://dummy//doc/deptsFr.text>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/plain"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/deptsFr?_page=0> .
-
-<http://dummy//doc/deptsFr.xml>
-      <http://purl.org/dc/terms/format>
-              [ rdfs:label "text/xml"
-              ] ;
-      <http://purl.org/dc/terms/isFormatOf>
-              <http://dummy/doc/deptsFr?_page=0> .
+      ex:name "département"@fr .
