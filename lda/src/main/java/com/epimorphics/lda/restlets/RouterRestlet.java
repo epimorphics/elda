@@ -256,7 +256,6 @@ import com.hp.hpl.jena.shared.WrappedException;
 			requestUri.getQuery(),
 			resolved.getFragment()
 		);		
-//		System.err.println( ">> manufactured request URI = '" + result + "'" );
 		return result;
 	}
 
