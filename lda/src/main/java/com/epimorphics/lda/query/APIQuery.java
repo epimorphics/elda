@@ -128,6 +128,13 @@ public class APIQuery implements Cloneable, VarSupply {
     protected String fixedSelect = null;
     
     protected Set<String> metadataOptions = new HashSet<String>();
+    
+    /**
+        Map from property chain names (ie dotted strings) to the variable at
+        the end of that chain. Allows different instances of a property chain
+        (in the same APIQuery) to share the variable.
+    */
+    protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
 
     /**
         Set to true to switch on LARQ indexing for this query, ie when an
@@ -197,7 +204,6 @@ public class APIQuery implements Cloneable, VarSupply {
             clone.deferredFilters = new ArrayList<PendingParameterValue>( deferredFilters );
             clone.metadataOptions = new HashSet<String>( metadataOptions );
             clone.varsForPropertyChains = new HashMap<String, Variable>( varsForPropertyChains );
-            clone.seenParamVariables = new HashMap<String, Variable>( seenParamVariables );
             clone.vt = new ValTranslator( clone, new FilterExpressions( clone.filterExpressions ), sns );
             return clone;
         } catch (CloneNotSupportedException e) {
@@ -316,13 +322,11 @@ public class APIQuery implements Cloneable, VarSupply {
         return this;
     }    
     
-    protected Map<String,Variable> seenParamVariables = new HashMap<String, Variable>();
-    
     protected void addRangeFilter( Param param, String val, String op ) {
-    	Variable already = seenParamVariables.get(param.asString());
+    	Variable already = varsForPropertyChains.get(param.asString());
     	if (already == null) {
     		already = addPropertyHasValue_REV( param );
-	        seenParamVariables.put( param.asString(), already );
+    		varsForPropertyChains.put( param.asString(), already );
     	}
 	    Info inf = param.fullParts()[param.fullParts().length - 1];
 	    Any r = objectForValue( inf, val, getDefaultLanguage() );
@@ -385,8 +389,6 @@ public class APIQuery implements Cloneable, VarSupply {
 	    }
 		return var;
 	}
-    
-    protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
     
     protected void addPropertyHasValue( Param param, String val ) {
     	if (val.startsWith( "?" )) {
@@ -566,7 +568,11 @@ public class APIQuery implements Cloneable, VarSupply {
     	return assembleRawSelectQuery( pl, cc );
     }
     
-    public String assembleRawSelectQuery( PrefixLogger pl, Bindings cc ) { 
+    public String assembleRawSelectQuery( PrefixLogger pl, Bindings cc ) {
+//    	System.err.println( ">> ----------------------------" );
+//    	System.err.println( ">> sPV: " + seenParamVariables );
+//    	System.err.println( ">> vfPC: " + varsForPropertyChains );
+    //
     	if (!sortByOrderSpecsFrozen) unpackSortByOrderSpecs();
     	if (fixedSelect == null) {
 	        StringBuilder q = new StringBuilder();
