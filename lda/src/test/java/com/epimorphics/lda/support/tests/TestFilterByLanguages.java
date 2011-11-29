@@ -51,6 +51,13 @@ public class TestFilterByLanguages {
 		LanguageFilter.filterByLanguages( m, "en,cw".split(",") );
 		ModelTestBase.assertIsoModels( expected, m );
 	}
+	
+	@Test public void testFilteringWithNone() {
+		Model m = model( ":s :p 'omit'@en; :p 'keep'; :p 'also'@cy ." );
+		Model expected = model( ":s :p 'keep'; :p 'also'@cy ." );
+		LanguageFilter.filterByLanguages( m, "none,cy".split(",") );
+		ModelTestBase.assertIsoModels( expected, m );
+	}
 
 	private Model model( String ttl ) {
 		return ModelIOUtils.modelFromTurtle( ttl );

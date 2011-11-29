@@ -30,6 +30,7 @@ public class LanguageFilter {
     */
     public static void filterByLanguages( Model m, String[] split) {
         Set<String> allowed = new HashSet<String>( Arrays.asList( split ) );
+        if (allowed.contains( "none" )) allowed.add( "" );
         for (Resource sub: m.listSubjects().toList()) {
             for (Property prop: sub.listProperties().mapWith( Statement.Util.getPredicate ).toSet())
                 removeUnwantedPropertyValues( allowed, sub, prop );
@@ -50,8 +51,8 @@ public class LanguageFilter {
             Node o = mo.asNode();
             if (isStringLiteral(o)) {
                 String lang = o.getLiteralLanguage();
-                if (lang.equals( "" )) plains.add( s );
-                else if (allowed.contains( lang )) hasLanguagedObjects = true;                          
+                if (allowed.contains( lang )) hasLanguagedObjects = true; 
+                else if (lang.equals( "" )) plains.add( s );                        
                 else removes.add( s );
             }
         }
