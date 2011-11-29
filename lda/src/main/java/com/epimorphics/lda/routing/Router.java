@@ -17,6 +17,7 @@
 
 package com.epimorphics.lda.routing;
 
+import java.net.URI;
 import java.util.List;
 
 import com.epimorphics.lda.core.APIEndpoint;
@@ -62,7 +63,7 @@ public interface Router {
         Answer the URI template of an endpoint in this Router
         which has an ItemEndpoint matchinf the itemPath.
     */
-    public String findItemURIPath( String itemPath  );
+    public String findItemURIPath( URI requestURI, String itemPath  );
     
 }
 

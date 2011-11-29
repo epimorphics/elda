@@ -62,6 +62,7 @@ import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
+import com.epimorphics.util.Util;
 import com.hp.hpl.jena.shared.WrappedException;
 
 /**
@@ -109,7 +110,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         String type = match == matchAll ? null : pathAndType.b;
         if (match == null) {
         	StatsValues.endpointNoMatch();
-        	String item = router.findItemURIPath( "/" + pathstub );
+        	String item = router.findItemURIPath( ui.getRequestUri(), "/" + pathstub );
         	if (item == null) 
         		return noMatchFound( pathstub, ui, pathAndType );
         	else 
@@ -239,15 +240,19 @@ import com.hp.hpl.jena.shared.WrappedException;
         }
     }    
 
-	private URI makeRequestURI(UriInfo ui, Match match, URI requestUri) throws URISyntaxException {
+	public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
 		if (base == null) return requestUri;
-		URI baseAsURI = new URI( base );
-		URI resolved = baseAsURI.isAbsolute() 
-			? baseAsURI.resolve( ui.getPath() ) 
-			: requestUri.resolve( base ).resolve( ui.getPath() )
+		return resolveAgainstBase( requestUri, Util.newURI( base ), ui.getPath() );
+	}
+
+	public static URI resolveAgainstBase( URI requestUri, URI baseAsURI, String uiPath ) {
+		URI resolved = 
+			(baseAsURI.isAbsolute() ? baseAsURI : requestUri.resolve( baseAsURI ))
+			.resolve( uiPath )
 			;
-		URI result = new URI(
+		try {
+			return new URI(
 			resolved.getScheme(),
 			resolved.getUserInfo(),
 			resolved.getHost(),
@@ -255,8 +260,10 @@ import com.hp.hpl.jena.shared.WrappedException;
 			resolved.getPath(),
 			requestUri.getQuery(),
 			resolved.getFragment()
-		);		
-		return result;
+			);		
+		} catch (URISyntaxException e) {
+			throw new WrappedException( e );
+		}
 	}
 
 	private static URLforResource pathAsURLFactory( final ServletContext servCon ) {

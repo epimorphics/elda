@@ -8,14 +8,14 @@
 package com.epimorphics.lda.routing;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.util.Util;
 
 /**
     The default router is a wrapper around a MatchSearcher, qv.
@@ -48,20 +48,6 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	protected MatchSearcher<BaseAndTemplate> ms = new MatchSearcher<BaseAndTemplate>();
 	
 	/**
-	    Answer the filled-in URI template associated with the given
-	    item path, or null if there isn't one.
-	*/
-	@Override public String findItemURIPath( String path ) {
-		Map<String, String> bindings = new HashMap<String, String>();
-		BaseAndTemplate bt = ms.lookup( bindings, path );
-		if (bt != null) {
-			String et = Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template );
-			return resolvePath( bt.base, et );
-		}
-		return null;
-	}
-	
-	/**
 	    Register the endpoint ep associated with the URI template ut.
 	    Also record the association between the item template (if any)
 	    and that URI template, for use in findItemURIPath.
@@ -74,20 +60,21 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 			String path = removeBase( apiBase, it );
 			ms.register( path, new BaseAndTemplate( apiBase, ep.getURITemplate() ) );
 		}
-	}
-
-	private String resolvePath( String base, String path) {
-		if (base == null) {
-			return path;
-		} else {
-			try {
-				String result = new URI(base).resolve(path).toASCIIString();
-				return result;
-			} catch (URISyntaxException e) {
-				EldaException.Broken( "constructed a bad URI from " + base + " prefixing " + path );
-				return null;
-			}
+	}	
+	/**
+	    Answer the filled-in URI template associated with the given
+	    item path, or null if there isn't one.
+	*/
+	@Override public String findItemURIPath( URI requestURI, String path ) {
+		Map<String, String> bindings = new HashMap<String, String>();
+		BaseAndTemplate bt = ms.lookup( bindings, path );
+		if (bt != null) {
+			String et = Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template );
+			// return resolvePath( bt.base, et );
+			if (bt.base == null) return et;
+			return RouterRestlet.resolveAgainstBase( requestURI, Util.newURI( bt.base ), et ).toASCIIString();
 		}
+		return null;
 	}
 	
 	private String removeBase( String base, String it ) {

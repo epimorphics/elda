@@ -9,6 +9,8 @@ package com.epimorphics.lda.routing.tests;
 
 import static org.junit.Assert.*;
 
+import java.net.URI;
+
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
@@ -19,6 +21,7 @@ import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.LoadsNothing;
+import com.epimorphics.util.Util;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.FileManager;
@@ -48,12 +51,13 @@ public class TestItemRedirects {
 	    with an ItemTemplate that matches a given path.
 	*/
 	@Test public void testFindsURITemplateForItem() {
+		URI req = Util.newURI( "" );
 		Resource root = specModel.createResource( specModel.expandPrefix( ":root" ) );
 		APISpec spec = new APISpec( FileManager.get(), root, LoadsNothing.instance );
 		Router r = new DefaultRouter();
 		loadRouter( r, spec );
-		assertEquals( apiBase + "item/1066", r.findItemURIPath( "/look/for/1066" ) );
-		assertEquals( apiBase + "other/2001", r.findItemURIPath( "/not/this/2001" ) );
+		assertEquals( apiBase + "item/1066", r.findItemURIPath( req, "/look/for/1066" ) );
+		assertEquals( apiBase + "other/2001", r.findItemURIPath( req, "/not/this/2001" ) );
 	}
 
 	private void loadRouter( Router r, APISpec spec ) {
