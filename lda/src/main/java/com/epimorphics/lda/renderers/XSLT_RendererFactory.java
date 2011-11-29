@@ -10,6 +10,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.RDFUtils;
@@ -37,12 +38,12 @@ public class XSLT_RendererFactory implements RendererFactory {
 				return mt;
 			}
 
-			@Override public String render( Bindings rc, APIResultSet results ) {
+			@Override public String render( Times t, Bindings rc, APIResultSet results ) {
 				final String meta = RDFUtils.getStringValue( root, EXTRAS.metadataOptions, null );
 				if (meta != null) results.includeMetadata( meta.split( "," ) );
 				final String sheet = root.getProperty( API.stylesheet ).getString();
 				final XMLRenderer xr = new XMLRenderer( sns, mt, sheet );
-				return xr.render( rc, results ); 
+				return xr.render( t, rc, results ); 
 			}
 		}; 
 	}

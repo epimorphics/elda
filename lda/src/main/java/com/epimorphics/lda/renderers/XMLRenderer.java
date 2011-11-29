@@ -18,6 +18,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.Times;
 
 public class XMLRenderer implements Renderer {
 	
@@ -41,11 +42,11 @@ public class XMLRenderer implements Renderer {
 		return mt;
 	}
 
-	@Override public synchronized String render( Bindings rc, APIResultSet results ) {
-		return render( rc, results.getRoot() );
+	@Override public synchronized String render( Times t, Bindings rc, APIResultSet results ) {
+		return render( t, rc, results.getRoot() );
 	}
 
-	public String render( Bindings rc, Resource root ) {
+	public String render( Times t, Bindings rc, Resource root ) {
 		PrefixMapping pm = root.getModel();
 		boolean stripHas = rc.getAsString( "_strip_has", "no" ).equals( "yes" );
 		boolean suppressIPTO = rc.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
@@ -54,7 +55,7 @@ public class XMLRenderer implements Renderer {
 		renderInto( root, d, stripHas, suppressIPTO );
 		// System.err.println( DOMUtils.renderNodeToString( d, rc, pm, null ) );
 		long afterRenderToDOM = System.currentTimeMillis();
-		String rendered = DOMUtils.renderNodeToString( d, rc, pm, transformFilePath );
+		String rendered = DOMUtils.renderNodeToString( t, d, rc, pm, transformFilePath );
 		long afterRenderedToString = System.currentTimeMillis();
 		log.debug( "TIMING: render to DOM: " + (afterRenderToDOM - origin)/1000.0 + "s" );
 		log.debug( "TIMING: DOM to string: " + (afterRenderedToString - afterRenderToDOM)/1000.0 + "s" );

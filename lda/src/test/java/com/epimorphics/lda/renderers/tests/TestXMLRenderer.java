@@ -13,6 +13,7 @@ import org.junit.Test;
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.DOMUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -118,8 +119,8 @@ public class TestXMLRenderer
 		Node expected = new TinyParser().parse( desired );
 		if (!de.isEqualNode( expected )) 
 			{
-			String exp = DOMUtils.renderNodeToString( expected, pm );
-			String obt = DOMUtils.renderNodeToString( de, pm );
+			String exp = DOMUtils.renderNodeToString( new Times(), expected, pm );
+			String obt = DOMUtils.renderNodeToString( new Times(), de, pm );
 //			System.err.println( "expected:\n" + exp );
 //			System.err.println( "obtained:\n" + obt );
 			fail( "ALAS -- rendering not as expected:\n" + exp + "obtained:\n" + obt );

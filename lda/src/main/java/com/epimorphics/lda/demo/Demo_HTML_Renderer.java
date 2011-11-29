@@ -17,6 +17,7 @@ import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
@@ -51,7 +52,7 @@ public class Demo_HTML_Renderer implements Renderer {
         return MediaType.TEXT_HTML;
     }
 
-    @Override public String render( Bindings ignored, APIResultSet results ) {
+    @Override public String render( Times t, Bindings ignored, APIResultSet results ) {
     	hackBnodes( results.getModel() );
     	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
         return isItemRendering ? renderItem(results) : renderList(results);

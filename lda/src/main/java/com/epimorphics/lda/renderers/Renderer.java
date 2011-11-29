@@ -19,6 +19,7 @@ package com.epimorphics.lda.renderers;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 
 /**
@@ -36,8 +37,8 @@ public interface Renderer {
     public MediaType getMediaType( Bindings rc );
     
     /**
-     	Render a result set
+     	Render a result set. Use t to log times if required.
     */
-    public String render( Bindings rc, APIResultSet results );
+    public String render( Times t, Bindings rc, APIResultSet results );
 }
 

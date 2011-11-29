@@ -23,6 +23,7 @@ public class Times {
 	long selectQuerySize;
 	long viewQuerySize;
 	long renderSize;
+	long stylesheetCompileTime;
 	public boolean usedSelectionCache;
 	public boolean usedViewCache;
 
@@ -81,6 +82,10 @@ public class Times {
 		return viewDuration;
 	}
 	
+	public long stylesheetCompileDuration() {
+		return stylesheetCompileTime;
+	}
+	
 	/**
 	    Answer the size of the rendered result, in bytes.
 	*/
@@ -122,5 +127,12 @@ public class Times {
 	*/
 	public void setSelectQuerySize( String selectQuery ) {
 		this.selectQuerySize = selectQuery.length() * 2;
+	}
+
+	/**
+	    Set the duration of a stylesheet compilation.
+	*/
+	public void setStylesheetCompileTime( long duration ) {
+		stylesheetCompileTime = duration;
 	}
 }

@@ -30,6 +30,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.support.Times;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.shared.WrappedException;
 
@@ -44,12 +45,12 @@ public class DOMUtils
 	public static Document newDocument() 
 		{ return getBuilder().newDocument(); }
 	
-	public static String renderNodeToString( Node d, PrefixMapping pm ) 
-		{ return renderNodeToString( d, new Bindings(), pm, null ); }
+	public static String renderNodeToString( Times times, Node d, PrefixMapping pm ) 
+		{ return renderNodeToString( times, d, new Bindings(), pm, null ); }
 	
-	public static String renderNodeToString( Node d, Bindings rc, PrefixMapping pm, String transformFilePath ) 
+	public static String renderNodeToString( Times times, Node d, Bindings rc, PrefixMapping pm, String transformFilePath ) 
 		{
-		Transformer t = setPropertiesAndParams(  rc, pm, transformFilePath );
+		Transformer t = setPropertiesAndParams( times, rc, pm, transformFilePath );
 		StringWriter sw = new StringWriter();
 		StreamResult sr = new StreamResult( sw );
 		try { t.transform( new DOMSource( d ), sr ); } 
@@ -59,9 +60,9 @@ public class DOMUtils
     
     static Logger log = LoggerFactory.getLogger(DOMUtils.class);
 
-	private static Transformer setPropertiesAndParams( Bindings rc, PrefixMapping pm, String transformFilePath ) 
+	private static Transformer setPropertiesAndParams( Times times, Bindings rc, PrefixMapping pm, String transformFilePath ) 
 		{
-		Transformer t = getTransformer( rc, transformFilePath );
+		Transformer t = getTransformer( times, rc, transformFilePath );
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );
 		t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
 		for (String name: rc.keySet()) 
@@ -84,7 +85,7 @@ public class DOMUtils
 	
 	protected static HashMap<URL, Templates> cache = new HashMap<URL, Templates>();
 	
-	private static Transformer getTransformer( Bindings rc, String transformFilePath ) 
+	private static Transformer getTransformer( Times times, Bindings rc, String transformFilePath ) 
 		{
 		try
 			{
@@ -99,7 +100,8 @@ public class DOMUtils
 					long origin = System.currentTimeMillis();
 					t = tf.newTemplates( new StreamSource( u.toExternalForm() ) );
 					long after = System.currentTimeMillis();
-					log.debug( "TIMING: compile stylesheet " + transformFilePath + " " + (after - origin)/1000.0 + "s" );
+					times.setStylesheetCompileTime( after - origin );
+					// log.debug( "TIMING: compile stylesheet " + transformFilePath + " " + (after - origin)/1000.0 + "s" );
 					cache.put( u, t );
 				}
 				return t.newTransformer();

@@ -292,11 +292,12 @@ import com.hp.hpl.jena.shared.WrappedException;
             	;
             return enableCORS( Response.status( Status.BAD_REQUEST ).entity( Messages.niceMessage( message ) ) ).build();
         } else {
+        	Times times = c.times;
             MediaType mt = r.getMediaType( rc );
             long base = System.currentTimeMillis();
-            String rendering = r.render( rc, results );
-            c.times.setRenderedSize( rendering.length() * 2 );
-            c.times.setRenderDuration( System.currentTimeMillis() - base, (rName == null ? r.getMediaType(rc).toString() : rName) );
+			String rendering = r.render( times, rc, results );
+            times.setRenderedSize( rendering.length() * 2 );
+            times.setRenderDuration( System.currentTimeMillis() - base, (rName == null ? r.getMediaType(rc).toString() : rName) );
 			return returnAs( rendering, mt, results.getContentLocation() );
         }
 	}

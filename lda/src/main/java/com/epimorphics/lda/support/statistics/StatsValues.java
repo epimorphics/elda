@@ -27,6 +27,7 @@ public class StatsValues {
 	public static Interval totalRenderSize = new Interval();
 	public static Interval totalSelectQuerySize = new Interval();
 	public static Interval totalViewQuerySize = new Interval();
+	public static Interval totalStylesheetCompileTime = new Interval();
 	
 	/**
 	    Record an occurence of a non-matched URI.
@@ -52,6 +53,7 @@ public class StatsValues {
 		totalRenderSize.update( t.renderSize() );
 		totalSelectQuerySize.update( t.selectQuerySize() );
 		totalViewQuerySize.update( t.viewQuerySize() );
+		totalStylesheetCompileTime.update( t.stylesheetCompileDuration() );
 		StatsValues.updateFormatDurations( t.renderFormat, t.renderDuration() );
 		StatsValues.updateFormatSizes( t.renderFormat, t.renderSize() );
 		if (t.usedViewCache) totalViewCacheHits += 1;

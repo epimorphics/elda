@@ -31,6 +31,7 @@ import com.epimorphics.jsonrdf.ParseWrapper;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -57,7 +58,7 @@ public class JSONRenderer implements Renderer {
         return callback == null ? mt : MediaType.TEXT_JAVASCRIPT;
     }
 
-    @Override public String render( Bindings b, APIResultSet results) {
+    @Override public String render( Times t, Bindings b, APIResultSet results) {
         Context context = api.getSpec().getAPISpec().getShortnameService().asContext(); 
         return renderFromModelAndContext( b, results.getModel(), results.getRoot(), context );
     }

@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 
 public class RDFXMLRenderer implements Renderer {
@@ -26,7 +27,7 @@ public class RDFXMLRenderer implements Renderer {
        return MediaType.APPLICATION_RDF_XML;
     }
 
-    @Override public String render( Bindings ignored, APIResultSet results ) {
+    @Override public String render( Times t, Bindings ignored, APIResultSet results ) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         results.getModel().write( bos, "RDF/XML-ABBREV" );
         return bos.toString();

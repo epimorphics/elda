@@ -16,6 +16,7 @@ package com.epimorphics.lda.renderers;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 
 public final class TextPlainRenderer implements Renderer {
@@ -24,7 +25,7 @@ public final class TextPlainRenderer implements Renderer {
         return MediaType.TEXT_PLAIN;
     }
 
-    @Override public String render( Bindings ignored, APIResultSet results ) {
+    @Override public String render( Times t, Bindings ignored, APIResultSet results ) {
         return results.toString();
     }
 }

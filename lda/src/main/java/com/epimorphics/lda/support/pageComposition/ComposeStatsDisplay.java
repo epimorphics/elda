@@ -38,6 +38,7 @@ public class ComposeStatsDisplay {
 			timeRow( sb, "total elapsed time", StatsValues.totalTime );
 			timeRow( sb, "total item selection time", StatsValues.totalSelectionTime );
 			timeRow( sb, "total view generation time", StatsValues.totalViewTime );
+			timeRow( sb, "total stylesheet compile time", StatsValues.totalStylesheetCompileTime );
 			timeRow( sb, "total SPARQL time", totalSparqlTime );
 			timeRow( sb, "total rendering time", StatsValues.totalRenderTime );
 			timeRow( sb, "remaining Elda time", StatsValues.totalTime - totalSparqlTime - StatsValues.totalRenderTime.total );
