@@ -152,7 +152,7 @@ public class ContextQueryUpdater implements ViewSetter {
 		} else if (p.equals(QueryParameter._VIEW)) {
 			// already done
 		} else if (p.equals(QueryParameter._SUBJECT)) {
-		    aq.setSubject(val);
+		    aq.setSubjectAsItemEndpoint(val);
 		} else if (p.equals( QueryParameter.callback )) {
 			if (!QueryParameter.callbackPattern.matcher( val ).matches())
 				throw new EldaException( "illegal callback name", val, EldaException.BAD_REQUEST );

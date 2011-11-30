@@ -167,7 +167,7 @@ spec:api a api:API
 #ENDPOINTS
 
 spec:school-with-redirect
-    a api:ItemEndpoint
+    a api:ListEndpoint
     ; api:viewer api:describeViewer
     ; api:uriTemplate "/redirected/education/id/school/{id}"
     ; api:itemTemplate "http://education.data.gov.uk/id/school/{id}"

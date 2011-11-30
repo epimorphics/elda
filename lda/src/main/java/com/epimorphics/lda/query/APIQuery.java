@@ -71,6 +71,8 @@ public class APIQuery implements Cloneable, VarSupply {
     
     private StringBuffer orderExpressions = new StringBuffer();
     
+    private boolean isItemEndpoint;
+    
     /**
         List of pseudo-triples which form the basic graph pattern element
         of this query.
@@ -108,7 +110,7 @@ public class APIQuery implements Cloneable, VarSupply {
     
     protected final ShortnameService sns;
     
-    protected ValTranslator vt;
+    protected ValTranslator vt = null;
     
     protected String defaultLanguage = null;
     
@@ -124,7 +126,7 @@ public class APIQuery implements Cloneable, VarSupply {
     
     protected Resource subjectResource = null;
     
-    protected String itemTemplate;
+    protected String itemTemplate = null;
     protected String fixedSelect = null;
     
     protected Set<String> metadataOptions = new HashSet<String>();
@@ -155,6 +157,7 @@ public class APIQuery implements Cloneable, VarSupply {
     		@Override public String getItemTemplate() { return null; }
     		@Override public final int getMaxPageSize() { return QueryParameter.MAX_PAGE_SIZE; }
     		@Override public final int getDefaultPageSize() { return QueryParameter.DEFAULT_PAGE_SIZE; }
+			@Override public boolean isItemEndpoint() {	return false; }
     	};
     }
 
@@ -169,6 +172,7 @@ public class APIQuery implements Cloneable, VarSupply {
     	int getMaxPageSize();
     	int getDefaultPageSize();
 		String getItemTemplate();
+		boolean isItemEndpoint();
     }
 
     protected static class FilterExpressions implements ValTranslator.Filters {
@@ -190,6 +194,7 @@ public class APIQuery implements Cloneable, VarSupply {
         this.defaultPageSize = qb.getDefaultPageSize();
         this.maxPageSize = qb.getMaxPageSize();
         this.itemTemplate = qb.getItemTemplate();
+        this.isItemEndpoint = qb.isItemEndpoint();
     }
 
     @Override public APIQuery clone() {
@@ -243,7 +248,12 @@ public class APIQuery implements Cloneable, VarSupply {
      * search for a list
      * @param subj the target resource as either a prefix_name string or as a full URI
      */
-    public void setSubject(String subj) {
+    public void setSubjectAsItemEndpoint( String subj ) {
+        subjectResource = sns.asResource(subj);
+        isItemEndpoint = true;
+    }
+    
+    public void setSubject( String subj ) {
         subjectResource = sns.asResource(subj);
     }
     
@@ -605,6 +615,8 @@ public class APIQuery implements Cloneable, VarSupply {
     		pl.writePrefixes( sb );
 			sb.append( bound );
     		appendOffsetAndLimit( sb );
+//	         System.err.println( ">> QUERY IS: \n" + sb.toString() );
+//	          if (true) throw new RuntimeException();
     		return sb.toString();
     	}
     }
@@ -709,7 +721,7 @@ public class APIQuery implements Cloneable, VarSupply {
      * Return the select query that would be run or a plain string for the resource
      */
     public String getQueryString(APISpec spec, Bindings call) {
-        return isFixedSubject()
+        return isFixedSubject() && isItemEndpoint
             ? "<" + subjectResource.getURI() + ">"
             : assembleSelectQuery( call, spec.getPrefixMap() )
             ;
@@ -737,7 +749,7 @@ public class APIQuery implements Cloneable, VarSupply {
 		t.setSelectionDuration( afterSelect - origin );
 		String outerSelect = queryAndResults.a;
 		List<Resource> results = queryAndResults.b;
-		
+				
 		APIResultSet already = cache.getCachedResultSet( results, view.toString() );
 		if (c.allowCache && already != null) {
 			t.usedViewCache();
@@ -803,7 +815,7 @@ public class APIQuery implements Cloneable, VarSupply {
     private Couple<String, List<Resource>> selectResources( Controls c, Cache cache, APISpec spec, Bindings b, Source source ) {
         final List<Resource> results = new ArrayList<Resource>();
         if (itemTemplate != null) setSubject( b.expandVariables( itemTemplate ) );
-        if ( isFixedSubject() )
+        if (isFixedSubject() && isItemEndpoint) 
             return new Couple<String, List<Resource>>( "", CollectionUtils.list( subjectResource ) );
         else
         	return runGeneralQuery( c, cache, spec, b, source, results );
