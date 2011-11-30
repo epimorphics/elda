@@ -24,7 +24,7 @@ import java.util.Set;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.RDFUtil;
-import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.ExpansionFailedException;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
@@ -50,7 +50,7 @@ public class StandardShortnameService implements ShortnameService {
      * @param specRoot the API specification with may both contain and further 
      * reference vocabulary information
      */
-    public StandardShortnameService( Resource specRoot, PrefixMapping prefixes, ModelLoaderI loader ) {
+    public StandardShortnameService( Resource specRoot, PrefixMapping prefixes, ModelLoader loader ) {
     	this.prefixes = prefixes;
         Model specModel = specRoot.getModel();
         PrefixMapping pm = specModel;

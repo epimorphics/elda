@@ -11,7 +11,7 @@
 */
 package com.epimorphics.lda.tests_support;
 
-import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.hp.hpl.jena.rdf.model.Model;
 
@@ -21,7 +21,7 @@ import com.hp.hpl.jena.rdf.model.Model;
  
 	@author chris
 */
-public class LoadsNothing implements ModelLoaderI
+public class LoadsNothing implements ModelLoader
 	{
 	public static final LoadsNothing instance = new LoadsNothing();
 	

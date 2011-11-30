@@ -30,7 +30,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
@@ -70,7 +70,7 @@ public class Loader extends HttpServlet {
     protected static String baseFilePath = "";
     protected static String contextPath = "";
 
-    protected static ModelLoaderI modelLoader;
+    protected static ModelLoader modelLoader;
 
     static Logger log = LoggerFactory.getLogger(Loader.class);
 
@@ -193,7 +193,7 @@ public class Loader extends HttpServlet {
         }
     }
 
-    class APIModelLoader implements ModelLoaderI {
+    class APIModelLoader implements ModelLoader {
 
         String baseFilePathLocal;
 

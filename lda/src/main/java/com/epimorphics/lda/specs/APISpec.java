@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.VariableExtractor;
-import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
@@ -75,7 +75,7 @@ public class APISpec {
     
     protected final Set<String> metadataOptions = new HashSet<String>();
     
-    public APISpec( FileManager fm, Resource specification, ModelLoaderI loader) {
+    public APISpec( FileManager fm, Resource specification, ModelLoader loader) {
     	specificationURI = specification.getURI();
     	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
 		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
@@ -93,7 +93,7 @@ public class APISpec {
         extractEndpointSpecifications( specification );
     }
 
-	private StandardShortnameService loadShortnames( Resource specification, ModelLoaderI loader ) {
+	private StandardShortnameService loadShortnames( Resource specification, ModelLoader loader ) {
 		return new StandardShortnameService(specification, prefixes, loader);
 	}
     

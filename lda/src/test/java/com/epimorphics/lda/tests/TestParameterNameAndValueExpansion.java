@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
@@ -66,7 +66,7 @@ public class TestParameterNameAndValueExpansion
 			( "ex:A school-ont:localAuthority ex:LA-1"
 			+ "; ex:LA-1 ex:number 17"					
 			);
-		ModelLoaderI loader = LoadsNothing.instance;
+		ModelLoader loader = LoadsNothing.instance;
 		APITester t = new APITester( model, loader );
 		String uriTemplate = "http://dummy/doc/schools";
 		String queryString = "_properties=type,localAuthority.number";

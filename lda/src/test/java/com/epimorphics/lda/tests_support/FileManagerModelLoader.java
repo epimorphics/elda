@@ -8,7 +8,7 @@
 
 package com.epimorphics.lda.tests_support;
 
-import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.ModelLoader;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.util.FileManager;
 
@@ -17,7 +17,7 @@ import com.hp.hpl.jena.util.FileManager;
     
  	@author chris
 */
-public final class FileManagerModelLoader implements ModelLoaderI {
+public final class FileManagerModelLoader implements ModelLoader {
 	/**
 	    Load the model named by the uri using the FileManager's global
 	    instance.

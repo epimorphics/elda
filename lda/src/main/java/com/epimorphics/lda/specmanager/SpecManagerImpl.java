@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIFactory;
-import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
@@ -50,11 +50,11 @@ public class SpecManagerImpl implements SpecManager {
     static Logger log = LoggerFactory.getLogger(SpecManagerImpl.class);
     
     protected Router router;
-    protected ModelLoaderI modelLoader;
+    protected ModelLoader modelLoader;
     
     protected Map<String, SpecEntry> specs = new HashMap<String, SpecEntry>();
     
-    public SpecManagerImpl(Router router, ModelLoaderI modelLoader) {
+    public SpecManagerImpl(Router router, ModelLoader modelLoader) {
         this.router = router;
         this.modelLoader = modelLoader;
     }

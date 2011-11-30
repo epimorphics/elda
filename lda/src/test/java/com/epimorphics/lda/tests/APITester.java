@@ -64,7 +64,7 @@ public class APITester {
 		this( model, new FileManagerModelLoader() );
 	}
 
-	public APITester( Model model, ModelLoaderI loader ) {
+	public APITester( Model model, ModelLoader loader ) {
 		for (ResIterator ri = model.listSubjectsWithProperty(RDF.type, API.API); ri.hasNext();) {
             Resource api = ri.next();
             APISpec spec = new APISpec( FileManager.get(), api, loader );

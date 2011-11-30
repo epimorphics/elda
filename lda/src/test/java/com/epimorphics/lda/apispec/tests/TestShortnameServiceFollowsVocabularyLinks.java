@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -22,7 +22,7 @@ import com.hp.hpl.jena.vocabulary.XSD;
 
 public class TestShortnameServiceFollowsVocabularyLinks {
 	
-	ModelLoaderI loader = new ModelLoaderI() {
+	ModelLoader loader = new ModelLoader() {
 		
 		@Override public Model loadModel( String uri ) {
 			if (uri.equals( "A" )) return namesVocabA;

@@ -21,7 +21,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.Controls;
@@ -71,7 +71,7 @@ public class ExploreTestingForLatAndLongEtc
 	private Set<Resource> resourcesFor( String settings ) 
 		{
 		Resource endpoint = latLongTestDescription.createResource( "eh:/End" );
-		ModelLoaderI ml = new ModelLoaderI() 
+		ModelLoader ml = new ModelLoader() 
 			{
 			@Override public Model loadModel(String uri) 
 				{

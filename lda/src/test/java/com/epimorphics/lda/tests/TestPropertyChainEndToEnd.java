@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.ModelLoaderI;
+import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.query.APIQuery;
@@ -71,7 +71,7 @@ public class TestPropertyChainEndToEnd
 			( "ex:A school-ont:localAuthority ex:LA-1"
 			+ "; ex:LA-1 ex:number 17"					
 			);
-		ModelLoaderI loader = LoadsNothing.instance;
+		ModelLoader loader = LoadsNothing.instance;
 		APITester t = new APITester( model, loader );
 		String uriTemplate = "http://dummy/doc/schools";
 		String queryString = "_properties=type,localAuthority.number";
@@ -114,7 +114,7 @@ public class TestPropertyChainEndToEnd
 			( "ex:A school-ont:localAuthority ex:LA-1"
 			+ "; ex:LA-1 ex:number 17"					
 			);
-		ModelLoaderI loader = LoadsNothing.instance;
+		ModelLoader loader = LoadsNothing.instance;
 		APITester t = new APITester( model, loader );
 		String uriTemplate = "http://dummy/doc/schools";
 		APIResultSet rs = t.runQuery( uriTemplate, "" );
@@ -141,7 +141,7 @@ public class TestPropertyChainEndToEnd
 			+ ""
 			);
 		Resource spec = model.createResource( model.expandPrefix( "spec:spoo" ) );
-		ModelLoaderI loader = LoadsNothing.instance;
+		ModelLoader loader = LoadsNothing.instance;
 		PrefixMapping prefixes = PrefixMapping.Factory.create();
 		ShortnameService sns = new StandardShortnameService( spec, prefixes, loader );
 		APIQuery q = new APIQuery( sns );

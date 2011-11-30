@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<div class="main">
+<p class="main">
 
 <div class="heading">
 <a href="http://www.epimorphics.com">
@@ -145,6 +145,26 @@
     are already opened.
 </p>
 
+<h2>Formatting extensions</h2>
+
+<p>
+If the object of an <code>api:stylesheet</code> directive starts
+with the prefix "xsl:", then the stylesheet is loaded from Elda's
+stylesheet directory, wherever that is. (By default it is 
+<code>webapp/xsltsheets</code>, but this will become configurable.)
+</p>
+
+<p>
+If a formatter has the property 
+<code>http://www.epimorphics.com/vocabularies/lda#className</code>,
+then the (String) object of that property must be the name of a Java
+class that implements the <code>RendererFactory</code> interface.
+When rendering is required, an instance of that class is invoked
+to deliver a Renderer, and that Renderer is used to render the
+result set.
+</p>
+
+
 <h2>statistics</h2>
 
 <p>
@@ -195,11 +215,119 @@
     the rendering format (ie JSON/XML/HTML ...).
 </p>
 
+<h2>Cache</h2>
+
+<p>
+Elda caches the results of queries so that they may be re-served
+quickly. When the cache gets "too full", it is reset. "Too full"
+by default is measured by the number of triples in the cache.
+</p>
+
+<h2>Using Elda directly</h2>
+
+<p>You don't need to go through a servlet (or restlet)
+framework to exploit Elda. You can call the components
+yourself and supply whatever glue you like.
+</p>
+
+<h3>Creating an APISpec</h3>
+
+<p>
+The constructor
+<pre>
+APISpec(Resource config, ModelLoader forVocab)
+</pre>
+
+delivers a new APISpec object configured from the given
+Resource. You may have chosen a Resource with a known 
+URI in a config model, or found one with <code>rdf:type</code>
+<code>api:API</code>, depending on your usecase. The
+<code>ModelLoader</code> is only used if the config has
+<code>api:vocabulary</code> elements, in which case it
+loads the models for its API vocabulary.
+</p>
+
+<p>
+Given an APISpec, the method <code>getEndpoints()</code>
+delivers a list of <code>APIEndpoint</code> objects corresponding
+(in no defined order) with the endpoint descriptions in the
+config model. 
+</p>
+
+<h3>Running an endpoint</h3>
+
+<p>
+You can then invoke
+<pre>
+APIEndpointUtil.call( control, match, requestUri, formatSuffix, queryParams )
+</pre>
+where
+</p>
+
+<ul>
+  <li><i>Controls c</i> is a Controls object that controls whether the
+    Elda cache can be used for this request and records timing information;
+    <code>new Controls()</code>	will do fine.
+  </li>
+
+  <li><i>Match match</i> wraps the endpoint object and the variable bindings that
+    made when matching the endpoint's <code>api:uriTemplate</code> against the
+    request URI. The usual way to get a Match object is to call <code>getMatch</code>
+    on a suitable <code>Router</code> value.
+  </li>
+
+  <li><i>URI requestURI</i> is the request URI for this request.
+  </li>
+
+  <li><i>String formatSuffix</i> is the format suffix associated with this request,
+    to be returned as the format name if the endpoint <code>call</code> does not
+    supply an alternative. The usual way to get the format suffix is from the end
+    of the request URIs path.
+  </li>
+
+  <li><i>MultiMap queryParams</i> is a map from query parameter names to their
+    (string) values.
+  </li>
+
+</ul>
+
+<p>
+The call returns a three-element object which contains the
+<code>ResultSet</code> of the query execution (the result
+model and selected items), the name of the result formatter
+that has been selected by the endpoint, and the variable
+Bindings.
+</p>
+
+<h3>Rendering results</h3>
+
+<p>
+Once you have chosen a renderer <code>R</code> to use for the 
+result set, the invocation
+
+<pre>
+R.render( t, rc, results )
+</pre>
+
+where <code>t</code> is a <code>Times</code> object,
+delivers a String which is the rendering of <code>results</code>
+according to the RenderContext <code>rc</code>, which you can
+construct from the <code>VarValues</code> embedded in the call
+context, the context path, and an AsURL object to convert URI
+fragments into full URIs.
+</p>
+
+
+<p>
+The method call <code>R.getMediaType()</code> returns the media
+type for the renderer's result. 
+</p>
+
+
 <h2>Building Elda</h2>
 
 <p>
-
-
+  In progress.
 </p>
 
 <div class="footer">

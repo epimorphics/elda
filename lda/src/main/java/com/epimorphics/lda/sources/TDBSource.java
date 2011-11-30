@@ -33,7 +33,7 @@ public class TDBSource extends SourceBase implements Source
     protected final String endpoint;
     
     public TDBSource(String endpoint) {
-        String name = endpoint.substring(TDBManager.PREFIX.length());
+        String name = endpoint.substring( TDBManager.PREFIX.length() );
         this.endpoint = endpoint;
         this.sourceSet = TDBManager.getDataset();
         if (name != null && !name.isEmpty()) {

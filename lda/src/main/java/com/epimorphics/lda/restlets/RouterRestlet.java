@@ -107,7 +107,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         Match matchAll = getMatch( "/" + pathstub );
         Match matchTrimmed = getMatch( "/" + pathAndType.a );
         Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
-        String type = match == matchAll ? null : pathAndType.b;
+        String formatSuffix = match == matchAll ? null : pathAndType.b;
         if (match == null) {
         	StatsValues.endpointNoMatch();
         	String item = router.findItemURIPath( ui.getRequestUri(), "/" + pathstub );
@@ -119,7 +119,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         	Times t = new Times( pathstub );
         	Controls c = new Controls( !dontCache, t );
             List<MediaType> mediaTypes = getAcceptableMediaTypes( headers );
-            Response r = runEndpoint( c, servCon, ui, mediaTypes, type, match );
+            Response r = runEndpoint( c, servCon, ui, mediaTypes, formatSuffix, match );
             StatsValues.accumulate( t.done() );
 			return r; 
         }
@@ -197,21 +197,21 @@ import com.hp.hpl.jena.shared.WrappedException;
 		return mediaTypes;
 	}
 
-    private Response runEndpoint( Controls c, ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String suffix, Match match) {
+    private Response runEndpoint( Controls c, ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String formatSuffix, Match match) {
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
-        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, suffix, queryParams );
+        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatSuffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
             if (results == null)
             	throw new RuntimeException( "ResultSet is null -- this should never happen." );
             APIEndpoint ep = match.getEndpoint();
 			Bindings rc = new Bindings( resultsAndFormat.c.copy(), as );
 			String _format = resultsAndFormat.b;
-			String formatter = (_format.equals( "" ) ? suffix : resultsAndFormat.b);
+			String formatter = (_format.equals( "" ) ? formatSuffix : resultsAndFormat.b);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
 			return doRendering( c, rc, formatter, results, r );
         } catch (StackOverflowError e) {

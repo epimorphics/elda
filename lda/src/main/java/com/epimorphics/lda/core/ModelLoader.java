@@ -22,7 +22,7 @@ import com.hp.hpl.jena.rdf.model.Model;
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-public interface ModelLoaderI {
+public interface ModelLoader {
 
     /**
      * Load a model from the given uri. Implementations may handle
