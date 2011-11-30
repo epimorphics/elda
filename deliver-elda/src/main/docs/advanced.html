@@ -3,7 +3,7 @@
 <title>Elda -- an implementation of the Linked Data API</title>
 <link href="style.css" type="text/css" rel="stylesheet"></link>
 </head>
-<body>
+<p>
 
 <p class="main">
 
@@ -327,7 +327,37 @@ type for the renderer's result.
 <h2>Building Elda</h2>
 
 <p>
-  In progress.
+  Prerequisites: 
+  <a href="http://java.com/">Java</a> (underlying platform),
+  <a href="http://mercurial.selenic.com/">Mercurial</a> (to fetch the sources),
+  <a href="http://maven.apache.org/Maven">Maven</a> (build management).
+  Maven will download remaining necessary jars for Jena, Jersey, etc.
+</p>
+
+<p>
+  Download the Elda sources:
+
+<pre>
+hg clone https://elda.googlecode.com/hg/ elda  
+</pre>
+
+places the Elda sources in ./elda (which is created if necessary).
+</p>
+
+<p>
+Running
+<pre>
+mvn clean install
+</pre>
+will now build the Elda jars and put them into your local
+Maven repository, along with all the jars that they depend
+on.
+</p>
+
+<p>
+Look in the (automatically created) file
+<code>/lda/src/main/java/com/epimorphics/lda/Version.java</code>
+to see which version of Elda is being built.
 </p>
 
 <div class="footer">
