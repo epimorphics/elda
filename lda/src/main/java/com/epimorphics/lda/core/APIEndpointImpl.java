@@ -39,7 +39,7 @@ import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.util.Triad;
-import com.epimorphics.util.Util;
+import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
@@ -126,8 +126,8 @@ public class APIEndpointImpl implements APIEndpoint {
 
 	private Resource resourceForPage( Resource notThisPlease, String format, Model m, URI ru, int page) {
 		String newURI = isListEndpoint()
-			? EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
-			: EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
+			? URIUtils.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
+			: URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
 		Resource thisPage = m.createResource( newURI );
 		// System.err.println( ">> changed '" + ru + "' to '" + newURI + "'" );
 		// MAGICAL HACK
@@ -157,14 +157,14 @@ public class APIEndpointImpl implements APIEndpoint {
 	}
 
     private Resource resourceForList( Model m, URI ru ) {
-    	String rqp1 = EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
-    	String rqp2 = EndpointMetadata.replaceQueryParam( Util.newURI(rqp1), QueryParameter._PAGE_SIZE );
+    	String rqp1 = URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
+    	String rqp2 = URIUtils.replaceQueryParam( URIUtils.newURI(rqp1), QueryParameter._PAGE_SIZE );
     	return m.createResource( rqp2 );
     }
 
     private Resource resourceForMetaList( Model m, URI ru ) {
-    	String rqp1 = EndpointMetadata.replaceQueryParam( ru, QueryParameter._PAGE );
-    	String rqp2 = EndpointMetadata.replaceQueryParam( Util.newURI(rqp1), QueryParameter._PAGE_SIZE );    	
+    	String rqp1 = URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
+    	String rqp2 = URIUtils.replaceQueryParam( URIUtils.newURI(rqp1), QueryParameter._PAGE_SIZE );    	
     	return m.createResource( rqp2 );
     }
     
@@ -186,7 +186,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
 		thisPage.addProperty( API.definition, uriForDefinition );
     //
-        String emv_uri = EndpointMetadata.replaceQueryParam( Util.newURI(thisPage.getURI()), "_metadata", "all" );
+        String emv_uri = URIUtils.replaceQueryParam( URIUtils.newURI(thisPage.getURI()), "_metadata", "all" );
         thisPage.addProperty( API.extendedMetadataVersion, rsm.createResource( emv_uri ) );
     //
         if (isListEndpoint()) {

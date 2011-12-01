@@ -14,8 +14,7 @@ import java.util.Map;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.restlets.RouterRestlet;
-import com.epimorphics.util.Util;
+import com.epimorphics.util.URIUtils;
 
 /**
     The default router is a wrapper around a MatchSearcher, qv.
@@ -72,7 +71,7 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 			String et = Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template );
 			// return resolvePath( bt.base, et );
 			if (bt.base == null) return et;
-			return RouterRestlet.resolveAgainstBase( requestURI, Util.newURI( bt.base ), et ).toASCIIString();
+			return URIUtils.resolveAgainstBase( requestURI, URIUtils.newURI( bt.base ), et ).toASCIIString();
 		}
 		return null;
 	}

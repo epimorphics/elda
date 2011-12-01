@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -62,7 +63,7 @@ import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
-import com.epimorphics.util.Util;
+import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.shared.WrappedException;
 
 /**
@@ -138,7 +139,9 @@ import com.hp.hpl.jena.shared.WrappedException;
 		if (pathAndType.b != null) message += " (perhaps '" + pathAndType.b + "' is an incorrect format name?)";
 		if (showMightHaveMeant) {
 			message += "<div style='margin-bottom: 2px'>you might have meant any of:</div>\n";
-			for (String template: reversed(router.templates())) {
+			List<String> templates = router.templates();
+			Collections.reverse( templates );
+			for (String template: templates) {
 				message += "\n<div style='margin-left: 2ex'>" + maybeLink(preamble, template) + "</div>";
 			}
 		}
@@ -149,16 +152,6 @@ import com.hp.hpl.jena.shared.WrappedException;
     	if (template.contains( "{")) return template;
     	return "<a href='" + preamble + template.substring(1) + "'>" + template + "</a>";
     }
-
-	private List<String> reversed( List<String> x ) {
-    	int size = x.size(), limit = size / 2;
-    	for (int i = 0, j = size; i < limit; i += 1) {
-    		String temp = x.get(i);
-    		x.set(i, x.get(--j) );
-    		x.set( j, temp );
-    	}
-    	return x;
-	}
 
 	/**
         Answer true of m's endpoint has no formatter called type.
@@ -243,27 +236,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 	public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
 		if (base == null) return requestUri;
-		return resolveAgainstBase( requestUri, Util.newURI( base ), ui.getPath() );
-	}
-
-	public static URI resolveAgainstBase( URI requestUri, URI baseAsURI, String uiPath ) {
-		URI resolved = 
-			(baseAsURI.isAbsolute() ? baseAsURI : requestUri.resolve( baseAsURI ))
-			.resolve( uiPath )
-			;
-		try {
-			return new URI(
-			resolved.getScheme(),
-			resolved.getUserInfo(),
-			resolved.getHost(),
-			resolved.getPort(),
-			resolved.getPath(),
-			requestUri.getQuery(),
-			resolved.getFragment()
-			);		
-		} catch (URISyntaxException e) {
-			throw new WrappedException( e );
-		}
+		return URIUtils.resolveAgainstBase( requestUri, URIUtils.newURI( base ), ui.getPath() );
 	}
 
 	private static URLforResource pathAsURLFactory( final ServletContext servCon ) {

@@ -7,12 +7,10 @@
 package com.epimorphics.lda.core;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Set;
 
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
@@ -22,7 +20,7 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.vocabularies.ELDA;
 import com.epimorphics.lda.vocabularies.SPARQL;
-import com.epimorphics.util.Util;
+import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -75,74 +73,13 @@ public class EndpointMetadata {
 	 	modified by replacing the _view with the requested name.
 	*/
     private Resource resourceForView( Model m, String name ) {
-    	String a = replaceQueryParam( reqURI, QueryParameter._VIEW, name );
-    	String b = isListEndpoint ? replaceQueryParam( Util.newURI( a ), QueryParameter._PAGE, pageNumber ) : a;
+    	String a = URIUtils.replaceQueryParam( reqURI, QueryParameter._VIEW, name );
+    	String b = isListEndpoint ? URIUtils.replaceQueryParam( URIUtils.newURI( a ), QueryParameter._PAGE, pageNumber ) : a;
 		return m.createResource( b );
     }
 
-    /**
-        Answer the URI ru with any existing query parameters named <code>key</code>
-        discarded and replaced by key=value1&key=value2 ...
-    */
-	public static String replaceQueryParam(URI ru, String key, String... values) {
-		try {
-			String q = ru.getQuery();
-			String newQuery = q == null ? "" : strip( q, key );
-			String and = newQuery.isEmpty() ? "" : "&";
-			for (String value: values) {
-				newQuery = newQuery + and + key + "=" + quoteForValue(value);
-				and = "&";
-			}
-			return new URI
-				(
-				ru.getScheme(), 
-				ru.getAuthority(), 
-				ru.getPath(),
-				(newQuery.isEmpty() ? null : newQuery), 
-				ru.getFragment() 
-				).toASCIIString();
-		} catch (URISyntaxException e) {			
-			throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e );
-		}
-	}
-
-	public static String quoteForValue( String value ) {
-		return value.replace( "&", "%??" );
-	}
-
-	public static String strip( String query, String key ) {
-		String result = 
-			("&" + query)
-			.replaceAll( "[&]" + key + "=[^&]*", "" )
-			.replaceFirst( "^[&]", "" )
-			;
-		// System.err.println( ">> strip '" + query + "'/" + key + " => '" + result + "'" );
-		return result;
-	}
-	
-	// TODO should only substitute .foo if it's a renderer or language
-	public String replaceSuffix( String newSuffix, String oldPath ) {
-		int dot_pos = oldPath.lastIndexOf( '.' ), slash_pos = oldPath.lastIndexOf( '/' );
-		if (dot_pos > -1 && dot_pos > slash_pos) {
-			String oldSuffix = oldPath.substring( dot_pos + 1 );
-			if (formatNames.contains( oldSuffix )) return oldPath.substring(0, dot_pos + 1) + newSuffix;
-		}
-		return oldPath + "." + newSuffix;
-	}
-
-	private Resource resourceForFormat( Model m, String formatName ) {
-		try {
-			URI x = new URI
-				( reqURI.getScheme()
-				, reqURI.getAuthority()
-				, replaceSuffix( formatName, reqURI.getPath() )
-				, reqURI.getQuery()
-				, reqURI.getFragment() 
-				);
-			return m.createResource( x.toASCIIString() );
-		} catch (URISyntaxException e) {
-			throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e );
-		}
+	private Resource resourceForFormat( URI reqURI, Model m, Set<String> knownFormats, String formatName ) {
+		return m.createResource( URIUtils.changeFormatSuffix(reqURI, knownFormats, formatName) );
 	}
 
 	/**
@@ -154,7 +91,7 @@ public class EndpointMetadata {
 		for (String formatName: f.formatNames()) 
 			if (formatName.charAt(0) != '_') {
 				String typeForName = f.getTypeForName( formatName ).toString(); 
-				Resource v = resourceForFormat( meta, formatName );
+				Resource v = resourceForFormat( reqURI, meta, formatNames, formatName );
 				Resource format = meta.createResource().addProperty( RDFS.label, typeForName );
 				page.addProperty( DCTerms.hasFormat, v );
 				v.addProperty( DCTerms.isFormatOf, thisPage );
@@ -220,13 +157,13 @@ public class EndpointMetadata {
 		Resource exec = anExec.inModel(meta);
 		if (listEndpoint) {
 	    	Resource sr = meta.createResource( SPARQL.QueryResult );    	
-	    	sr.addProperty( SPARQL.query, EndpointMetadata.inValue( meta, q.getQueryString( apiSpec, cc ) ) );
+	    	sr.addProperty( SPARQL.query, inValue( meta, q.getQueryString( apiSpec, cc ) ) );
 	    	sr.addProperty( SPARQL.endpoint, EP );
 	    	exec.addProperty( API.selectionResult, sr );
 		}
 	//
 		Resource vr = meta.createResource( SPARQL.QueryResult );
-		vr.addProperty( SPARQL.query, EndpointMetadata.inValue( meta, detailsQuery ) ); 
+		vr.addProperty( SPARQL.query, inValue( meta, detailsQuery ) ); 
 		vr.addProperty( SPARQL.endpoint, EP );
 		exec.addProperty( API.viewingResult, vr );
 	}

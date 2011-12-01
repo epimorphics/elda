@@ -35,7 +35,7 @@ import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Util;
+import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ResIterator;
@@ -132,7 +132,7 @@ public class APITester {
             throw new APIException("Tester failed to find routed endpoint: " + uriTemplate);
         MultiMap<String, String> map = MakeData.parseQueryString( queryString );
         // TODO: the template should be a proper URI.
-		URI ru = Util.newURI(uriTemplate);
+		URI ru = URIUtils.newURI(uriTemplate);
 		Bindings call = Bindings.createContext( fix( match.bindings ), map );
         return match.endpoint.call(controls, ru, call).a;
     }
