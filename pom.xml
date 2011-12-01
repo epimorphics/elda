@@ -62,7 +62,6 @@
             <goals>
               <goal>aggregate</goal>
             </goals>
-            <phase>prepare-package</phase>
             <configuration>
             </configuration>
           </execution>
