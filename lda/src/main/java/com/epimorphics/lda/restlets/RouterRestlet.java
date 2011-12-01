@@ -22,7 +22,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -119,7 +118,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         } else {
         	Times t = new Times( pathstub );
         	Controls c = new Controls( !dontCache, t );
-            List<MediaType> mediaTypes = getAcceptableMediaTypes( headers );
+            List<MediaType> mediaTypes = JerseyUtils.getAcceptableMediaTypes( headers );
             Response r = runEndpoint( c, servCon, ui, mediaTypes, formatSuffix, match );
             StatsValues.accumulate( t.done() );
 			return r; 
@@ -171,24 +170,6 @@ import com.hp.hpl.jena.shared.WrappedException;
             { path = pathstub.substring(0, dot - 1); type = pathstub.substring(dot); }        
         return new Couple<String, String>( path, type );
         }
-
-    /**
-     	Translate the Jersey media types into Elda media types (because there will
-     	be Jersey-less versions of Elda). Also, if text/html is present, prefer it
-     	regardless of the given order, for those browsers still out there that
-     	"prefer" XML to HTML. They may, but their readers don't.
-    */
-	private List<MediaType> getAcceptableMediaTypes(HttpHeaders headers) {
-		boolean preferHTML = false;
-		List<MediaType> mediaTypes = new ArrayList<MediaType>();
-		for (javax.ws.rs.core.MediaType mt: headers.getAcceptableMediaTypes()) {
-			MediaType newMT = new MediaType( mt.getType(), mt.getSubtype() );
-			if (newMT.equals( MediaType.TEXT_HTML)) preferHTML = true;
-			else mediaTypes.add( newMT );
-		}
-		if (preferHTML) mediaTypes.add( 0, MediaType.TEXT_HTML );
-		return mediaTypes;
-	}
 
     private Response runEndpoint( Controls c, ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String formatSuffix, Match match) {
     	URLforResource as = pathAsURLFactory(servCon);
