@@ -129,16 +129,8 @@ public class APIEndpointImpl implements APIEndpoint {
 			? URIUtils.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
 			: URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
 		Resource thisPage = m.createResource( newURI );
-		// System.err.println( ">> changed '" + ru + "' to '" + newURI + "'" );
-		// MAGICAL HACK
-//		if (thisPage.equals( notThisPlease ) && !isListEndpoint()) {
-//			thisPage = m.createResource( newURI + "?" );
-//		}
-		// System.err.println( ">> Perhaps casting a spell ..." );
 		if (!isListEndpoint() && newURI.indexOf('?') < 0) {
-			// System.err.println( ">> ... Magical Hack." );
 			 newURI += "?";
-//			newURI = newURI + "." + format;
 			thisPage = m.createResource( newURI );
 		}
 		return thisPage;
@@ -147,7 +139,7 @@ public class APIEndpointImpl implements APIEndpoint {
     private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
     	String quasiTemplate = template.replaceAll( "\\{", "(" ).replaceAll( "\\}", ")");
     	if (template.startsWith("http:")) {
-    		// nasty hackery to avoid nasty hackery in the TestAPI uriTemplates, qv.
+    		// Avoid special case from the TestAPI uriTemplates, qv.
     		return rsm.createResource( quasiTemplate + "/meta" );
     	}
 		String argPattern = "\\{[-._A-Za-z]+\\}";

@@ -77,7 +77,7 @@ public class DeploymentRestlet {
             } else {
                 return returnError("Didn't recognize action request " + action);
             }
-            return returnAs(hackTogetherSummaryPage(ui.getBaseUri().toASCIIString(), newSpec), "text/html");
+            return returnAs(constructSummaryPage(ui.getBaseUri().toASCIIString(), newSpec), "text/html");
 
         } catch (APISecurityException e)  {
             log.warn("Security exception", e);
@@ -89,7 +89,7 @@ public class DeploymentRestlet {
         }
     }
     
-    private String hackTogetherSummaryPage(String base, APISpec spec) {
+    private String constructSummaryPage(String base, APISpec spec) {
         StringBuilder content = new StringBuilder();
         String description = "Endpoints for " + spec.getSpecURI();
         content.append("<h1>" + description + "</h1>\n");

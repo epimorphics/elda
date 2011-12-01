@@ -17,7 +17,7 @@ package com.epimorphics.lda.vocabularies;
 import com.hp.hpl.jena.rdf.model.*;
 
 /**
-    Hack vocab bits while experimenting
+    Place for new Elda vocabulary items.
  
     @author chris
 */

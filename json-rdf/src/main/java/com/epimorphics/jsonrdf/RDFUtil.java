@@ -123,7 +123,6 @@ public class RDFUtil {
     public static Literal parseDateTime(String lex, String type) throws ParseException {
         Date date = dateFormat().parse(lex);
         if (XSD.date.getURI().equals(type)) {
-            // Doing this by string hacking is evil but avoids dependence on Jena innards
             return ResourceFactory.createTypedLiteral(xsdDateFormat().format(date), XSDDatatype.XSDdate);
         } else {
             // Default to dateTime

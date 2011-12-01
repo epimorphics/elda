@@ -583,7 +583,7 @@ public class APIQuery implements Cloneable, VarSupply {
     	if (fixedSelect == null) {
 	        StringBuilder q = new StringBuilder();
 	        q.append("SELECT ");
-	        if (orderExpressions.length() > 0) q.append("DISTINCT "); // Hack to work around lack of _select but seems a common pattern
+	        if (orderExpressions.length() > 0) q.append("DISTINCT "); 
 	        q.append( SELECT_VAR.name() );
 	        q.append("\nWHERE {\n");
 	        String bgp = constructBGP( pl );

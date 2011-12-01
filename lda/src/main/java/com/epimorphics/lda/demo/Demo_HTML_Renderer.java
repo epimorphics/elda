@@ -53,7 +53,7 @@ public class Demo_HTML_Renderer implements Renderer {
     }
 
     @Override public String render( Times t, Bindings ignored, APIResultSet results ) {
-    	hackBnodes( results.getModel() );
+    	handleFakeBnodes( results.getModel() );
     	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
         return isItemRendering ? renderItem(results) : renderList(results);
     }
@@ -62,8 +62,7 @@ public class Demo_HTML_Renderer implements Renderer {
     	return sns.asContext().getNameForURI( uri );
     }
 
-    // Attempt to bypass the Talis unBNode hack
-	private void hackBnodes(Model m) {
+	private void handleFakeBnodes(Model m) {
 		List<RDFNode> nodes = m.listObjects().filterKeep( fakeBNode ).toList();
 		for (RDFNode n: nodes) m.add( modelFor(n) );
 	}

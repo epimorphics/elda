@@ -137,8 +137,8 @@ public class Loader extends HttpServlet {
     // This is an attempt to force logging configuration to be loaded
     private void configureLog4J() throws FactoryConfigurationError {
         String file = getInitParameter(LOG4J_PARAM_NAME);
-        if (file == null) file = "log4j.properties"; // hackery
-        if(file != null) {
+        if (file == null) file = "log4j.properties";
+        if (file != null) {
             if (file.endsWith( ".xml" )) {
                 DOMConfigurator.configure( baseFilePath + file );
             }

@@ -182,7 +182,7 @@ public class NameMap {
 			return uriToName;
 		}
 
-		// just a HACK to handle has-stripping
+		// compatability (with Puelia) code to handle has-stripping
 		private String t(String x) {
 			if (stripHas && x.startsWith("has") && x.length() > 3) {
 				char ch = x.charAt(3);

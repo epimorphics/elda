@@ -23,15 +23,15 @@ import java.util.List;
 import com.epimorphics.lda.core.APIEndpoint;
 
 /**
- * Abstraction for the dispatch part of the API. Supports dynamic
- * registration of URI templates against API instances. Could
- * be implemented directly by a servlet, via Restlet or via
- * a JAX-RS hack. Initially assume JAX-RS, just need to work out how.
- * 
- * TODO: determine how to persist the routing table when running under GAE-JDO
- * 
- * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
- * @version $Revision: $
+ 	Abstraction for the dispatch part of the API. Supports dynamic
+ 	registration of URI templates against API instances. Could
+ 	be implemented directly by a servlet, via Restlet or via
+ 	JAX-RS. Initially assume JAX-RS, just need to work out how.
+
+ 	TODO: determine how to persist the routing table when running under GAE-JDO
+  
+ 	@author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
+ 	@version $Revision: $
  */
 public interface Router {
 
