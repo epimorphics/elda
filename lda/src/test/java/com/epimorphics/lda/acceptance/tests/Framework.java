@@ -288,7 +288,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		MatchSearcher<String> ms = new MatchSearcher<String>();
 		ms.register( template, "IGNORED" );
 		Map<String, String> bindings = new HashMap<String, String>();
-		ms.lookup( bindings, path );
+		ms.lookup( bindings, path, null );
 		Bindings result = new Bindings();
 		for (String key: bindings.keySet())	result.put( key, bindings.get( key ) );
 		return result;

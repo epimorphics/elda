@@ -102,7 +102,6 @@ public class DeploymentRestlet {
             content.append("</li>\n");
         }
         content.append("</ul>\n");
-        
         return Util.withBody(description, content.toString());
     }
     

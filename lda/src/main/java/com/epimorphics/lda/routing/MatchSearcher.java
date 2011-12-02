@@ -17,6 +17,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.support.MultiMap;
+
 /**
     A MatchSearcher<T> maintains a collection of MatchTemplate<T>s.
     The collection can be added to and removed from [TBD]. It can be 
@@ -58,11 +60,12 @@ public class MatchSearcher<T> {
         matches <code>path</code>. If there isn't one, return null.
         If there is, return the associated value, and update the
         bindings with the matches variables.
+     * @param queryParams 
     */
-    public T lookup( Map<String, String> bindings, String path ) {
+    public T lookup( Map<String, String> bindings, String path, MultiMap<String, String> queryParams ) {
         if (needsSorting) sortTemplates();    
         for (MatchTemplate<T> t: templates)
-        	if (t.match(bindings, path)) return t.value();
+        	if (t.match( bindings, path, queryParams )) return t.value();
         return null;
     }
 

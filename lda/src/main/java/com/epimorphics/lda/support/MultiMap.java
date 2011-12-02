@@ -26,6 +26,10 @@ public class MultiMap<K, V> {
 	
 	final Set<V> NoValues = new HashSet<V>();
 	
+	public boolean containsKey( K key ) {
+		return underlying.containsKey( key );
+	}
+	
 	public Set<V> getAll(K key) {
 		Set<V> values = underlying.get(key);
 		return values == null ? NoValues : values;
@@ -85,5 +89,9 @@ public class MultiMap<K, V> {
 		for (Map.Entry<K, Set<V>> e: map.underlying.entrySet()) {
 			add( e.getKey(), e.getValue() );
 		}
+	}
+
+	public void remove(String key) {
+		underlying.remove( key );
 	}
 }

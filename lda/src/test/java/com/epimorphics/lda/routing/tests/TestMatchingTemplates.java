@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.routing.MatchTemplate;
+import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.tests_support.MakeData;
 
 public class TestMatchingTemplates {
@@ -28,9 +29,32 @@ public class TestMatchingTemplates {
 		r.register(path2, "C" ); 
 		r.register(path1, "D" ); 
 		Map<String, String> b = new HashMap<String, String>();
-		assertEquals("D", r.lookup(b, "/abc/def") );
-		assertEquals("C", r.lookup(b, "/abc/27" ) );
-		assertEquals("A", r.lookup(b, "/other" ) );
+		assertEquals("D", r.lookup(b, "/abc/def", null) );
+		assertEquals("C", r.lookup(b, "/abc/27", null ) );
+		assertEquals("A", r.lookup(b, "/other", null ) );
+	}
+	
+	@Test public void ensure_matching_for_fixed_query_parameters() {
+		MatchSearcher<String> r = new MatchSearcher<String>();
+		Map<String, String> bindings = new HashMap<String, String>();
+		MultiMap<String, String> params = new MultiMap<String, String>();
+		r.register( "/anchor?k=v", "A" );
+	//
+		assertEquals( null, r.lookup( bindings, "/anchor", params ) );
+		params.add( "k", "v" );
+		assertEquals( "A", r.lookup( bindings, "/anchor", params ) );
+	}
+	
+	@Test public void ensure_matching_for_variable_query_parameters() {
+		MatchSearcher<String> r = new MatchSearcher<String>();
+		Map<String, String> bindings = new HashMap<String, String>();
+		MultiMap<String, String> params = new MultiMap<String, String>();
+		r.register( "/anchor?k={v}", "A" );
+	//
+		assertEquals( null, r.lookup( bindings, "/anchor", params ) );
+		params.add( "k", "value" );
+		assertEquals( "A", r.lookup( bindings, "/anchor", params ) );
+		assertEquals( "value", bindings.get( "v" ) );
 	}
 	
 	@Test public void ensure_MatchSearcher_can_remove_template() {		
@@ -38,9 +62,9 @@ public class TestMatchingTemplates {
 		MatchSearcher<String> r = new MatchSearcher<String>();
 		String path = "/going/away/";
 		r.register( path, "GA" );
-		assertEquals( "GA", r.lookup( b, path ) );
+		assertEquals( "GA", r.lookup( b, path, null ) );
 		r.unregister( path );
-		assertEquals( null, r.lookup( b, path ) );
+		assertEquals( null, r.lookup( b, path, null ) );
 	}
 	
 	@Test public void ensure_matching_captures_variables() {
@@ -49,7 +73,7 @@ public class TestMatchingTemplates {
 		Map<String, String> map = new HashMap<String, String>();
 		Map<String, String> expected = MakeData.hashMap( "alpha=99 beta=100 gamma=boggle" );
 		MatchTemplate<String> ut = MatchTemplate.prepare( template, "SPOO" );
-		assertTrue( "the uri should match the pattern", ut.match(map, uri ) );
+		assertTrue( "the uri should match the pattern", ut.match(map, uri, null ) );
 		assertEquals( expected, map );
 	}
 	

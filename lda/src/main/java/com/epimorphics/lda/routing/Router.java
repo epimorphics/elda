@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.List;
 
 import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.support.MultiMap;
 
 /**
  	Abstraction for the dispatch part of the API. Supports dynamic
@@ -51,8 +52,9 @@ public interface Router {
      * Match the request path to the known endpoints and return
      * a Match object (giving the APIEndpoint and any template bindings)
      * or null if the request does not match.
+     * @param queryParams 
      */
-    public Match getMatch( String path );
+    public Match getMatch( String path, MultiMap<String, String> queryParams );
     
     /**
         Answer a list of URI templates registered with this Router.

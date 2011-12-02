@@ -10,6 +10,7 @@ package com.epimorphics.lda.routing;
 import java.util.*;
 import java.util.regex.*;
 
+import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.util.Couple;
 
 /**
@@ -26,14 +27,24 @@ public class MatchTemplate<T> {
 	private final int literals;
 	private final int patterns;
 	private final T value;
+	private final Map<String, String> params;
 	
-	private MatchTemplate( int literals, int patterns, String template, Pattern compiled, List<Couple<String, Integer>> where, T value ) {
+	private MatchTemplate
+		( int literals
+		, int patterns
+		, String template
+		, Pattern compiled
+		, Map<String, String> params
+		, List<Couple<String, Integer>> where
+		, T value 
+		) {
 		this.where = where;
 		this.value = value;
 		this.patterns = patterns;
 		this.literals = literals;
 		this.compiled = compiled;
 		this.template = template;
+		this.params = params;
 	}
 
 	/**
@@ -76,25 +87,56 @@ public class MatchTemplate<T> {
 	    Match the given uri string. If it matches, add entries to the
 	    bindings map so that a template variable X maps to the corresponding
 	    piece Y of the uri.
+	 * @param queryParams 
 	*/
-	public boolean match( Map<String, String> bindings, String uri ) {
+	public boolean match( Map<String, String> bindings, String uri, MultiMap<String, String> queryParams ) {
 		Matcher mu = compiled.matcher( uri );
 		if (mu.matches()) {
-			for (Couple<String, Integer> c: where) {
-				bindings.put(c.a, mu.group(c.b) );
+			if (paramsMatch( bindings, queryParams )) {
+				for (Couple<String, Integer> c: where) {
+					bindings.put(c.a, mu.group(c.b) );
+				}
+				return true;
 			}
-			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 	
+	private boolean paramsMatch( Map<String, String> bindings, MultiMap<String, String> queryParams ) {
+		Map<String, String> perhaps = new HashMap<String, String>();
+		List<String> toRemove = new ArrayList<String>();
+		for (String key: params.keySet()) {
+			if (queryParams.containsKey( key )) {
+				toRemove.add( key );
+				String v = queryParams.getOne( key );
+				String p = params.get( key );
+				if (p.startsWith( "{" )) {
+					String varName = p.substring(1, p.length() - 1);
+					perhaps.put(varName, v);
+				} else if (!p.equals(v)) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+		for (String key: toRemove) queryParams.remove( key );
+		bindings.putAll( perhaps );
+		return true;
+	}
+
 	private static final Pattern varPattern = Pattern.compile( "\\{([a-zA-Z]*)\\}" );
 	
 	/**
 	    Answer a MatchTemplate corresponding to the template string.
 	*/
 	public static <T> MatchTemplate<T> prepare( String template, T value ) {
+		int q = template.indexOf( '?' );
+		Map<String, String> params = new HashMap<String, String>();
+		if (q > -1) {
+			fillParams( params, template.substring(q + 1) );
+			template = template.substring(0, q);
+		}
 		Matcher m = varPattern.matcher( template );
 		int start = 0;
 		int index = 0;
@@ -117,6 +159,14 @@ public class MatchTemplate<T> {
 		sb.append( literal );
 		literals += literal.length();
 		Pattern compiled = Pattern.compile( sb.toString() );
-		return new MatchTemplate<T>( literals, patterns, template, compiled, where, value );
+		return new MatchTemplate<T>( literals, patterns, template, compiled, params, where, value );
+	}
+
+	private static void fillParams( Map<String, String> params, String template ) {
+		String [] fields = template.split( "&" );
+		for (String f: fields) {
+			String [] kv = f.split( "=", 2 );
+			params.put( kv[0], kv[1] );
+		}
 	}
 }

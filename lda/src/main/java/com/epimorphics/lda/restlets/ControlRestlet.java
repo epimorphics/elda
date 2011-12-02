@@ -33,6 +33,7 @@ import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.util.Util;
@@ -177,7 +178,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
     
     public static SpecRecord lookupRequest(String pathstub, UriInfo ui) {
         String path = "/" + pathstub;
-        Match match = RouterFactory.getDefaultRouter().getMatch(path);
+        Match match = RouterFactory.getDefaultRouter().getMatch(path, new MultiMap<String, String>() );
         if (match == null)  {
             return null;        
         } else {

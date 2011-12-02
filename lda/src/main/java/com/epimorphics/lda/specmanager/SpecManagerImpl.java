@@ -34,6 +34,7 @@ import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.MultiMap;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.util.FileManager;
 
@@ -110,7 +111,7 @@ public class SpecManagerImpl implements SpecManager {
     }
 
     @Override public Model getSpecForEndpoint(String url) {
-        Match match = router.getMatch(url);
+        Match match = router.getMatch(url, new MultiMap<String, String>() );
         if (match != null) {
             String apiURI = match.getEndpoint().getSpec().getAPISpec().getSpecURI();
             return getSpecForAPI(apiURI);

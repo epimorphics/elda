@@ -82,14 +82,14 @@ import com.hp.hpl.jena.shared.WrappedException;
    
     static final Router router = RouterFactory.getDefaultRouter();
     
-    public static Match getMatch( String path ) {
-        Match match = router.getMatch( path );
+    public static Match getMatch( String path, MultiMap<String, String> queryParams ) {
+        Match match = router.getMatch( path, queryParams );
         if (match == null) {
             // No match in the table at the moment, but check the persistence
             // manager to see if it can restore an API spec which would enable this endpoint
             // System.err.println( ">> ----------------- " + SpecManagerFactory.get() );
             SpecManagerFactory.get().loadSpecFor(path);
-            match = router.getMatch( path );
+            match = router.getMatch( path, queryParams );
         }
         return match;
     }
@@ -102,10 +102,11 @@ import com.hp.hpl.jena.shared.WrappedException;
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
+    	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
     	boolean dontCache = has( rh, "pragma", "no-cache" ) || has( rh, "cache-control", "no-cache" );
         Couple<String, String> pathAndType = parse( pathstub );
-        Match matchAll = getMatch( "/" + pathstub );
-        Match matchTrimmed = getMatch( "/" + pathAndType.a );
+        Match matchAll = getMatch( "/" + pathstub, queryParams );
+        Match matchTrimmed = getMatch( "/" + pathAndType.a, queryParams );
         Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
         String formatSuffix = match == matchAll ? null : pathAndType.b;
         if (match == null) {
@@ -119,7 +120,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         	Times t = new Times( pathstub );
         	Controls c = new Controls( !dontCache, t );
             List<MediaType> mediaTypes = JerseyUtils.getAcceptableMediaTypes( headers );
-            Response r = runEndpoint( c, servCon, ui, mediaTypes, formatSuffix, match );
+            Response r = runEndpoint( c, servCon, ui, queryParams, mediaTypes, formatSuffix, match );
             StatsValues.accumulate( t.done() );
 			return r; 
         }
@@ -171,10 +172,17 @@ import com.hp.hpl.jena.shared.WrappedException;
         return new Couple<String, String>( path, type );
         }
 
-    private Response runEndpoint( Controls c, ServletContext servCon, UriInfo ui, List<MediaType> mediaTypes, String formatSuffix, Match match) {
+    private Response runEndpoint
+    	( Controls c
+    	, ServletContext servCon
+    	, UriInfo ui
+    	, MultiMap<String, String> queryParams
+    	, List<MediaType> mediaTypes
+    	, String formatSuffix
+    	, Match match
+    	) {
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
-    	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);

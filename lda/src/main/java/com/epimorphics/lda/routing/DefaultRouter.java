@@ -14,6 +14,7 @@ import java.util.Map;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.util.URIUtils;
 
 /**
@@ -29,9 +30,9 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	    Answer the (endpoint, bindings) Match for the given path,
 	    or null if there isn't one.
 	*/
-	@Override public Match getMatch( String path ) {
+	@Override public Match getMatch( String path, MultiMap<String, String> queryParams ) {
         Map<String, String> bindings = new HashMap<String, String>();
-        APIEndpoint e = lookup( bindings, path );
+        APIEndpoint e = lookup( bindings, path, queryParams );
         return e == null ? null : new Match( e, Bindings.uplift( bindings ) );
 	}
 	
@@ -66,7 +67,7 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	*/
 	@Override public String findItemURIPath( URI requestURI, String path ) {
 		Map<String, String> bindings = new HashMap<String, String>();
-		BaseAndTemplate bt = ms.lookup( bindings, path );
+		BaseAndTemplate bt = ms.lookup( bindings, path, null );
 		if (bt != null) {
 			String et = Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template );
 			// return resolvePath( bt.base, et );
