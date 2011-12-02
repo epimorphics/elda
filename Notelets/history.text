@@ -1,3 +1,33 @@
+1.2.1
+
+* Fixed pom.xml so that javadoc isn't generated until after
+  the Elda jars have been produced.
+
+* Stripped out dead code, dead TODOs, etc, and moved non-Jersey 
+  code out of Restlet classes.
+
+* Enabled Javadoc, added many package.html files.
+
+* Moved URI-generating code to its own utility classes
+  (to help fix encoding/decoding issues).
+
+* Added build instructions to Elda documentation.
+
+* Eliminated the redundant property chain -> variable map
+  in APIQuery.
+
+* Stripped some log.debug calls, guarded other (potentially large)
+  ones with isDebugEnabled.
+
+* Added item template redirection code.
+
+* property chains may now include *.
+
+* Elda now has a server statistics page.
+
+* Sorting doe not require that values exist for the
+  sort field.
+
 1.1.17-SNAPSHOT
 
 * A significant rewrite of the HTML metadata page. 

@@ -1,0 +1,20 @@
+Elda 1.2.1 Release Notes
+
+This release of Elda is the baseline "feature complete" version.
+
+New features:
+
+The relative URI /api-config, or relative URIs starting /meta, generate
+a (human-readable) description of all of the APIs and endpoints served
+by that Elda instance, including the values of predefined LDA variables
+and the short-name dictionary.
+
+The new relative URI /control/show-stats displays timing and size
+information about the queries that have been made since the Elda 
+server started.
+
+Property chains for views may now include the special property name
+"*" standing for any property.
+
+The Elda documentation now describes how to build Elda. 
+
