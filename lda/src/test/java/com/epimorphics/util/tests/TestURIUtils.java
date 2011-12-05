@@ -24,6 +24,10 @@ import com.epimorphics.util.URIUtils;
 
 public class TestURIUtils {
 	
+	@Test public void toHoldASpecialCharacter() {
+		URI u = URIUtils.newURI( "http://example.com/spa%20cé" );
+	}
+	
 	@Test public void testReplacesKnownFormat() {
 		URI req = URIUtils.newURI( "http://example.com/anchor/thing.rdf" );
 		Set<String> knownFormats = CollectionUtils.set( "rdf", "ttl" );
