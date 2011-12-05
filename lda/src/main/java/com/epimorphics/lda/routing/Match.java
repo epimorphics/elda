@@ -17,7 +17,8 @@
 
 package com.epimorphics.lda.routing;
 
-import com.epimorphics.lda.bindings.Bindings;
+import java.util.Map;
+
 import com.epimorphics.lda.core.APIEndpoint;
 
 /**
@@ -29,16 +30,16 @@ import com.epimorphics.lda.core.APIEndpoint;
  */
 public class Match {
     final APIEndpoint endpoint;
-    final Bindings bindings;
+    final Map<String, String> bindings;
 
-    public Match( APIEndpoint endpoint, Bindings bindings )
+    public Match( APIEndpoint endpoint, Map<String, String> bindings )
         { this.endpoint = endpoint; this.bindings = bindings; }
 
     public APIEndpoint getEndpoint() {
         return endpoint;
     }
     
-    public Bindings getBindings() {
+    public Map<String, String> getBindings() {
         return bindings;
     }
 }

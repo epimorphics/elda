@@ -319,4 +319,19 @@ public class Bindings implements Lookup
 		{
 		return expandVariables( this, val );
 		}
+	
+	/**
+	    Update all the entries in this Bindings to have the values
+	    that are mentioned in update.
+	*/
+	public Bindings updateAll( Map<String, String> update ) 
+		{
+		for (Map.Entry<String, String> e: update.entrySet()) 
+			{
+			String name = e.getKey();
+			Value v = this.get( name );
+			this.put( name, (v == null ? new Value( e.getValue() ) : v.replaceBy( e.getValue() )) );
+			}
+		return this;
+		}
 	}

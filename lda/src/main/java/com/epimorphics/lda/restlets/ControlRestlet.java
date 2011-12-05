@@ -13,6 +13,7 @@ import static com.epimorphics.lda.restlets.RouterRestlet.returnNotFound;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -101,7 +102,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
             return isAPI;
         }
         
-        public Bindings getBindings() {
+        public Map<String, String> getBindings() {
             return match.getBindings();
         }
     }

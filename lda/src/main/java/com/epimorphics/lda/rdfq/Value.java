@@ -46,8 +46,12 @@ public class Value extends Term
 		return lf;
 		}
 	
-	@Override public Value replaceBy( String r ) 
-		{ return new Value( r, language, datatype ); }
+	/**
+	    Answer a new Value with the same language and datatype as this
+	    one, but with a new lexical form aka valueString vs.
+	 */
+	@Override public Value replaceBy( String vs ) 
+		{ return new Value( vs, language, datatype ); }
 	
 	@Override public String spelling() 
 		 { return spelling; }

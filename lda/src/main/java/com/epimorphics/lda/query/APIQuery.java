@@ -690,7 +690,7 @@ public class APIQuery implements Cloneable, VarSupply {
     			result.append( m.group() );
     		} else {
 	    		Info prop = varInfo.get( RDFQ.var( "?" + name ) );
-	            String val = cc.getValueString( name );
+	            String val = v.spelling();
 	            String normalizedValue = 
 	        		(prop == null) 
 	        		    ? valueAsSparql( "<not used>", v )

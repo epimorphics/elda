@@ -33,7 +33,7 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	@Override public Match getMatch( String path, MultiMap<String, String> queryParams ) {
         Map<String, String> bindings = new HashMap<String, String>();
         APIEndpoint e = lookup( bindings, path, queryParams );
-        return e == null ? null : new Match( e, Bindings.uplift( bindings ) );
+        return e == null ? null : new Match( e, bindings );
 	}
 	
 	static class BaseAndTemplate {

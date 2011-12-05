@@ -246,10 +246,11 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		Model specModel = w.specModel;
 		Resource root = specModel.createResource( specModel.expandPrefix( ":root" ) );
 		APISpec s = SpecUtil.specFrom( root );
-		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) );   	
+		APIEndpoint ep = new APIEndpointImpl( s.getEndpoints().get(0) ); 
+		Bindings epBindings = ep.getSpec().getBindings();
 		MultiMap<String, String> map = MakeData.parseQueryString( w.queryParams );
 		URI ru = URIUtils.newURI(w.path);
-		Bindings cc = Bindings.createContext( bindTemplate( w.template, w.path ), map );
+		Bindings cc = Bindings.createContext( bindTemplate( epBindings, w.template, w.path, map ), map );
 		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( controls, ru, cc );
 		Model rsm = resultsAndFormat.a.getModel();
 //		System.err.println( ">> " + rs.getResultList() );				
@@ -284,14 +285,12 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		}
 
 	// this seems a bit tedious. There should be a more straightforward way.
-	private Bindings bindTemplate( String template, String path ) {
+	private Bindings bindTemplate( Bindings epBindings, String template, String path, MultiMap<String, String> qp ) {
 		MatchSearcher<String> ms = new MatchSearcher<String>();
 		ms.register( template, "IGNORED" );
 		Map<String, String> bindings = new HashMap<String, String>();
-		ms.lookup( bindings, path, null );
-		Bindings result = new Bindings();
-		for (String key: bindings.keySet())	result.put( key, bindings.get( key ) );
-		return result;
+		ms.lookup( bindings, path, qp );
+		return epBindings.updateAll( bindings ); 
 	}
 
 	public static String shortStringFor( Model rs ) 

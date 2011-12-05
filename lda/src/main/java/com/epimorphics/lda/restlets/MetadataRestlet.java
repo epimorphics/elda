@@ -90,7 +90,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
     static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.EXTRA + "SIBLING" );
     
     private Resource createMetadata(UriInfo ui, String pathStub, SpecRecord rec) {
-        Bindings cc = Bindings.createContext( rec.getBindings(), JerseyUtils.convert( ui.getQueryParameters() ) );
+        Bindings cc = Bindings.createContext( Bindings.uplift( rec.getBindings() ), JerseyUtils.convert( ui.getQueryParameters() ) );
         Model metadata = ModelFactory.createDefaultModel();
         Resource meta = rec.getAPIEndpoint().getMetadata( cc, ui.getRequestUri(), metadata);
     //
