@@ -79,7 +79,8 @@ public class EndpointMetadata {
     }
 
 	private Resource resourceForFormat( URI reqURI, Model m, Set<String> knownFormats, String formatName ) {
-		return m.createResource( URIUtils.changeFormatSuffix(reqURI, knownFormats, formatName) );
+		URI u = URIUtils.changeFormatSuffix(reqURI, knownFormats, formatName);
+		return m.createResource( u.toASCIIString() );
 	}
 
 	/**

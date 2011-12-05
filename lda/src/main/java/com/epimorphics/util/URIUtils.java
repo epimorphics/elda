@@ -76,16 +76,15 @@ public class URIUtils {
 		return oldPath + "." + newSuffix;
 	}
 
-	public static String changeFormatSuffix(URI reqURI, Set<String> knownFormats, String formatName)  {
+	public static URI changeFormatSuffix(URI reqURI, Set<String> knownFormats, String formatName)  {
 		try {
-			URI x = new URI
+			return new URI
 				( reqURI.getScheme()
 				, reqURI.getAuthority()
 				, replaceSuffix( knownFormats, formatName, reqURI.getPath() )
 				, reqURI.getQuery()
 				, reqURI.getFragment() 
 				);
-			return x.toASCIIString();
 		} catch  (URISyntaxException e) {
 			throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e );
 		}
