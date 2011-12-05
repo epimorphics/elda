@@ -40,7 +40,6 @@ public class TestURIUtils {
 	
 	@Test public void testChangeFormatSuffixPreservesEncoding() {
 		URI req = URIUtils.newURI( "http://example.com/anc%20hor/thing.rdf" );
-		System.err.println( ">> req: '" + req.toString() + " ' OR '" + req.toASCIIString() );
 		Set<String> knownFormats = CollectionUtils.set( "n3", "ttl" );
 		URI got = URIUtils.changeFormatSuffix( req, knownFormats, "ttl" );
 		assertEquals( URIUtils.newURI("http://example.com/anc%20hor/thing.rdf.ttl"), got );
