@@ -26,6 +26,7 @@ import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 
 public class HTMLRenderer implements Renderer {
 	
@@ -40,7 +41,7 @@ public class HTMLRenderer implements Renderer {
 
 	private String renderItem( APIResultSet results ) {
 		StringBuilder textBody = new StringBuilder();
-        Resource root = results.getRoot();
+        Resource root = results.getRoot().getProperty(FOAF.primaryTopic).getResource();
         h1( textBody, "properties of " + root.getURI() );
         renderResourceDetails( textBody, root );
 		return Util.withBody( "description of " + root, textBody.toString() );
