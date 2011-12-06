@@ -185,9 +185,6 @@ where NNNN is the port number of your choice.
 
 <h2>Using other LDA specifications</h2>
 
-<p>
-</p>
-
 <h3>From the command line</h3>
 
 <p>
@@ -215,6 +212,29 @@ If you use <code>elda.spec</code>, then Elda ignores the
 default specification (the education LDA) wired into it.
 </p>
 
+<h3>html formatters</h3>
+
+<p>
+The default formatter supplied by Elda is a very simple
+HTML formatter showing the properties and their values of
+the selected items. Elda also ships with a renderer that
+uses XSLT (and Javascript at the client end) to produce
+pages with additional controls and a richer appearance.
+To use this as your html renderer, add:
+<pre>	
+; api:formatter 
+  [a api:XsltFormatter
+  ; api:name 'html'
+  ; api:stylesheet 'xsltsheets/ashtml.xsl'
+  ; api:mimeType 'text/html'
+] 
+
+</pre>
+
+to your API root in your configuration file and arrange that
+the webapps/elda directory contents are served as static files.
+</p>
+
 <h3>By editing web.xml</h3>
 
 <p>
@@ -236,7 +256,7 @@ servlet configuration
 </pre>
 
 Replace <b>specs/education.ttl</b> with the name of the LDA
-specification files you wish to load, separated by commas. 
+specification files you wish to load, separated by commas.
 </p>
 
 <h2>Querying a local file</h2>
@@ -359,7 +379,7 @@ spec:api
    , spec:schoolsPrimary
    , spec:schoolsSecondary
    , spec:schoolsPrimaryDistrict
-   , spec:schoolsSecondaryDistrict 
+   , spec:schoolsSecondaryDistrict
  .
 </pre>
 
@@ -387,7 +407,8 @@ in <code>webapps/elda/WEB-INF/lib</code>.
 If you have downloaded the Elda repository, then you can
 rebuild the Elda working jars 
 (json-rdf-VERSION.jar and lda-VERSION.jar) 
-and webapp using <a href="http://maven.apache.org/">Maven</a>. 
+and webapp using <a href="http://maven.apache.org/">Maven</a>;
+see the <a href="advanced.html">advanced documentation</a>.
 </p>
 
 <p>
