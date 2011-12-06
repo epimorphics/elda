@@ -1,5 +1,11 @@
 1.2.1
 
+* variables declared in the config file don't get /replaced/
+  by (typeless) variables from the URI, so they preserve their 
+  types while their values are updated.
+
+* uri templates may now include a query parameter section.
+
 * Fixed pom.xml so that javadoc isn't generated until after
   the Elda jars have been produced.
 
