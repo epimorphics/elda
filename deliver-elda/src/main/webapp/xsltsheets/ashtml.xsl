@@ -17,7 +17,7 @@ $prefLabel, $altLabel, $title and $name variables.
 <xsl:param name="inactiveImageBase" select="concat($_resourceRoot,'images/grey/16x16')" />
 
 <xsl:param name="graphColour" select="'#577D00'" />
-<xsl:variable name="openSpaceAPIkey" select="'91BDD27E0581EC9FE0405F0ACA603BCF'" />
+<xsl:variable name="openSpaceAPIkey" select="'your openspace API key here.'" />
 
 <xsl:template match="/">
 	<xsl:apply-templates select="result" />
