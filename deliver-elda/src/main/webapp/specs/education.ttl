@@ -177,7 +177,7 @@ spec:showing-uri-template-with-query-params
 spec:school-with-redirect
     a api:ListEndpoint
     ; api:viewer api:describeViewer
-    ; api:uriTemplate "/redirected/education/id/school/{id}"
+    ; api:uriTemplate "/redirected/education/id/schoolé/{id}"
     ; api:itemTemplate "http://education.data.gov.uk/id/school/{id}"
     .
 
