@@ -75,7 +75,8 @@ spec:viewerMedium a api:Viewer
         rdfs:label, school:establishmentStatus, school:typeOfEstablishment, school:schoolCapacity
         , school:phaseOfEducation, school:districtAdministrative, school:parliamentaryConstituency
         , school:administrativeWard, school:nurseryProvision 
-        , spatialrelations:easting, spatialrelations:northing
+        # , spatialrelations:easting, spatialrelations:northing
+        , geo:lat, geo:long
     .
 
 #
@@ -117,7 +118,8 @@ spec:api a api:API
 	; api:formatter 
 		[a api:XsltFormatter
 		; api:name 'html'
-		; api:stylesheet 'xsltsheets/ashtml.xsl'    
+		; api:stylesheet 'xsltsheets/result-osm.xsl' 
+        # ; api:stylesheet 'xsltsheets/ashtml.xsl'    
 		; extras:metadataOptions "bindings,formats,versions,execution"
 		; api:mimeType 'text/html'
 		] 
