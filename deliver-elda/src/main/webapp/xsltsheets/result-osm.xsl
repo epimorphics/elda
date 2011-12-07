@@ -814,9 +814,9 @@ $prefLabel, $altLabel, $title and $name variables.
 					</xsl:call-template>
 				</xsl:variable>
 				<tr>
-					<th class="label">
+					<td class="label">
 						<xsl:apply-templates select="." mode="contextLabel" />
-					</th>
+					</td>
 					<td class="barchart" id="barchart{generate-id(.)}">
 						<script type="text/javascript">
 						$('#barchart<xsl:value-of select="generate-id(.)"/>').sparkline([<xsl:value-of select="$grouped" />], { type: 'bar', barColor: '<xsl:value-of select="$graphColour"/>' });
@@ -846,9 +846,9 @@ $prefLabel, $altLabel, $title and $name variables.
 					<xsl:text>]</xsl:text>
 				</xsl:variable>
 				<tr>
-					<th class="label">
+					<td class="label">
 						<xsl:apply-templates select="." mode="contextLabel" />
-					</th>
+					</td>
 					<td class="linegraph" id="linegraph{generate-id(.)}">
 						<script type="text/javascript">
 						$('#linegraph<xsl:value-of select="generate-id(.)"/>').sparkline(<xsl:value-of select="$valueArray" />, { lineColor: '<xsl:value-of select="$graphColour"/>', fillColor: false, width: '100%' });
@@ -1075,7 +1075,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		<tr>
 			<xsl:choose>
 				<xsl:when test="$paramName = concat('min-', $long)">
-					<th class="label" colspan="2">area of map</th>
+					<td class="label" colspan="2">area of map</td>
 					<td class="filter">
 						<a title="remove filter">
 							<xsl:attribute name="href">
@@ -1090,7 +1090,7 @@ $prefLabel, $altLabel, $title and $name variables.
 					</td>
 				</xsl:when>
 				<xsl:otherwise>
-					<th class="label">
+					<td class="label">
 						<xsl:choose>
 							<xsl:when test="$isLabelParam = 'true'">
 								<xsl:value-of select="$paramName" />
@@ -1102,7 +1102,7 @@ $prefLabel, $altLabel, $title and $name variables.
 								</xsl:call-template>
 							</xsl:otherwise>
 						</xsl:choose>
-					</th>
+					</td>
 					<td class="value">
 						<xsl:call-template name="unescapeValue">
 							<xsl:with-param name="value" select="substring-after($param, '=')" />
@@ -2059,11 +2059,11 @@ $prefLabel, $altLabel, $title and $name variables.
 					</xsl:apply-templates>
 				</td>
 			</xsl:if>
-			<th class="label">
+			<td class="label">
 				<xsl:apply-templates select="." mode="label">
 					<xsl:with-param name="addLink" select="true()" />
 				</xsl:apply-templates>
-			</th>
+			</td>
 			<xsl:choose>
 				<xsl:when test="name(.) = $long and $showMap = 'true'">
 					<td class="value">
@@ -2071,7 +2071,7 @@ $prefLabel, $altLabel, $title and $name variables.
 					</td>
 					<td class="map" colspan="2">
 						<xsl:choose>
-							<xsl:when test="../*[name(.) = $northing] and ../*[name(.) = $easting]">
+							<xsl:when test="../*[name(.) = $northing] or ../*[name(.) = $easting]">
 								<xsl:attribute name="rowspan">4</xsl:attribute>
 							</xsl:when>
 							<xsl:otherwise>
@@ -2774,9 +2774,9 @@ $prefLabel, $altLabel, $title and $name variables.
 					<xsl:if test="$last">
 						<xsl:attribute name="class">last</xsl:attribute>
 					</xsl:if>
-					<th class="label">
+					<td class="label">
 						<xsl:apply-templates select="." mode="label" />
-					</th>
+					</td>
 					<td class="input nested">
 						<table>
 							<colgroup>
@@ -2812,11 +2812,11 @@ $prefLabel, $altLabel, $title and $name variables.
 				<xsl:if test="$last">
 					<xsl:attribute name="class">last</xsl:attribute>
 				</xsl:if>
-				<th class="label">
+				<td class="label">
 					<label for="{$paramName}">
 						<xsl:apply-templates select="." mode="label" />
 					</label>
-				</th>
+				</td>
 				<td class="input">
 					<xsl:apply-templates select="." mode="input">
 						<xsl:with-param name="name" select="$paramName" />
