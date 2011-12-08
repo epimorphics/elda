@@ -15,11 +15,14 @@
 package com.epimorphics.lda.renderers;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
+import com.hp.hpl.jena.shared.JenaException;
+import com.hp.hpl.jena.shared.WrappedException;
 
 public class TurtleRenderer implements Renderer {
 	
@@ -30,7 +33,11 @@ public class TurtleRenderer implements Renderer {
     @Override public String render( Times t, Bindings ignored, APIResultSet results ) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         results.getModel().write( bos, "TTL" );
-        return bos.toString();
+        try {
+			return bos.toString( "UTF-8" );
+		} catch (UnsupportedEncodingException e) {
+			throw new WrappedException( e );
+		}
     }
 
 }
