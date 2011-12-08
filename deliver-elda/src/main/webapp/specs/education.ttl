@@ -97,7 +97,7 @@ spec:api a api:API
     # on the context root of the request. If api:base is set, then it is used as
     # the root instead.
     #
-    #- ; api:base "http://education.gov.uk/" 
+    # ; api:base "http://education.gov.uk/" 
     #
     # activeImageBase is used by the stylesheet to specify the server-relative
     # location for active image icons; likewise inactiveImageBase for inactive
