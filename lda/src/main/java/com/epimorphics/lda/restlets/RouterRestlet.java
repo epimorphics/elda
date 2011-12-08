@@ -274,7 +274,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     
     public static Response returnAs(String response, MediaType mimetype, String contentLocation) {
         try {
-            return enableCORS( Response.ok( response, mimetype.toString() ) ).build();
+            return enableCORS( Response.ok( response, mimetype.toFullString() ) ).build();
         } catch (RuntimeException e) {
             return returnError(e);
         }

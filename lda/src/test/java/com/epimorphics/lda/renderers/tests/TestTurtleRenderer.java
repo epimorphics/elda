@@ -9,8 +9,6 @@ package com.epimorphics.lda.renderers.tests;
 
 import static org.junit.Assert.*;
 
-import java.util.regex.Pattern;
-
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;

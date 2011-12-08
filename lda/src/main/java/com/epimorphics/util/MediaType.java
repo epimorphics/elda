@@ -35,7 +35,7 @@ public class MediaType
 
 	public static final MediaType APPLICATION_XML = new MediaType( "application", "xml" );
 	
-	public static final MediaType TEXT_TURTLE = new MediaType( "text", "turtle" );
+	public static final MediaType TEXT_TURTLE = new MediaType( "text", "turtle", "; charset=utf-8" );
 	
 	public static final MediaType APPLICATION_RDF_XML = new MediaType( "application", "rdf+xml" );
 
@@ -49,7 +49,13 @@ public class MediaType
 	    Q-value.
 	*/	
 	public MediaType( String A, String B, float Q )
-		{ this.type = A; this.subType = B; this.Q = Q; }
+		{ this( A, B, Q, "" ); }
+	
+	public MediaType( String A, String B, String params )
+		{ this( A, B, 0.0f, params ); }
+	
+	public MediaType( String A, String B, float Q, String params )
+		{ this.type = A; this.subType = B; this.Q = Q; this.params = params; }
 
 	/**
 	    Initialise this MediaType with the given type and subtype and
@@ -60,6 +66,7 @@ public class MediaType
 	
 	final String type;
 	final String subType;
+	final String params;
 	final float Q;
 	
 	/**
@@ -129,7 +136,7 @@ public class MediaType
 	    Answer the string type/subType; q=Q.
 	*/
 	public String toFullString()
-		{ return type + "/" + subType + "; q=" + Q; }
+		{ return type + "/" + subType + params; }
 
 	/**
 	    Answer one of the media types described in <code>canHandle</code>

@@ -21,7 +21,6 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.shared.JenaException;
 import com.hp.hpl.jena.shared.WrappedException;
 
 public class TurtleRenderer implements Renderer {
