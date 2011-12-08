@@ -40,6 +40,8 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class ComposeConfigDisplay {
 	
+	private final static PrefixMapping empty = PrefixMapping.Factory.create().lock();
+	
 	public String configPageMentioning( List<SpecEntry> entries, URI base, String pathstub ) {
 		StringBuilder textBody = new StringBuilder();
 		if (pathstub == null) pathstub = "";
@@ -295,7 +297,7 @@ public class ComposeConfigDisplay {
 		Property last = properties.get( properties.size() - 1 );
 		String dot = "";
 		for (Property p: properties) {
-			sb.append( dot ).append( shortForm( sns, p ) );
+			sb.append( dot ).append( shortForm( sns, pm, p ) );
 			dot = ".";
 		}
 		ContextPropertyInfo cpi = sns.asContext().findProperty( last );
@@ -322,7 +324,7 @@ public class ComposeConfigDisplay {
 	private void renderSelectors( StringBuilder sb, Resource sel ) {
 		Set<Couple<String, Resource>> filters = allFiltersOf( new HashSet<Couple<String, Resource>>(), sel );
 		for (Couple<String, Resource> filter: filters) {
-			String from = (filter.b.equals( sel ) ? "" : " (from " + shortForm( filter.b ) + ")");
+			String from = (filter.b.equals( sel ) ? "" : " (from " + shortForm( empty, filter.b ) + ")");
 			sb.append( "<div class='indent'>" )
 				.append( "<b>filter</b> " )
 				.append( filter.a )
@@ -364,7 +366,7 @@ public class ComposeConfigDisplay {
     static final Comparator<APIEndpointSpec> sortByEndpointResource = new Comparator<APIEndpointSpec>() {
 
 		@Override public int compare( APIEndpointSpec ep1, APIEndpointSpec ep2 ) {
-			return shortForm(ep1.getResource() ).compareTo( shortForm( ep2.getResource() ) );
+			return shortForm( empty, ep1.getResource() ).compareTo( shortForm( empty, ep2.getResource() ) );
 		}
     };
 
@@ -382,13 +384,13 @@ public class ComposeConfigDisplay {
 		}
     };
     
-    protected static String shortForm( ShortnameService sns, Resource r ) {
+    protected static String shortForm( ShortnameService sns, PrefixMapping pm, Resource r ) {
     	String x = sns.asContext().getNameForURI( r.getURI() );
-    	return x == null ? shortForm( r ) : x;
+    	return x == null ? shortForm( pm, r ) : x;
     }
 
-	protected static String shortForm( Resource r ) {
-		return r.getModel().shortForm( r.getURI() );
+	protected static String shortForm( PrefixMapping pm, Resource r ) {
+		return pm.shortForm( r.getURI() );
 	}
         
     private void h3( StringBuilder textBody, String s ) {  
