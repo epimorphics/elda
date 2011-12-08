@@ -7,6 +7,7 @@
 */
 package com.epimorphics.lda.support.pageComposition;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,6 +25,7 @@ import com.epimorphics.lda.specmanager.SpecEntry;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.util.Couple;
+import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -38,7 +40,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class ComposeConfigDisplay {
 	
-	public String configPageMentioning( List<SpecEntry> entries, String base, String pathstub ) {
+	public String configPageMentioning( List<SpecEntry> entries, URI base, String pathstub ) {
 		StringBuilder textBody = new StringBuilder();
 		if (pathstub == null) pathstub = "";
 	//
@@ -60,7 +62,6 @@ public class ComposeConfigDisplay {
 	            .append( safe( ep.getResource().getURI() ) )
 	            .append( "</div>" )
 	            ;
-	    // renderVariables( textBody, "h2", "API variables", rec.getAPIEndpoint().getSpec().getAPISpec().getBindings() );
 	        textBody.append( "<h2>endpoints</h2>\n" );
 	        Collections.sort( endpoints, sortByEndpointURITemplate );
 			for (APIEndpointSpec s: endpoints) renderEndpoint( textBody, base, pathstub, pm, s );  
@@ -158,7 +159,7 @@ public class ComposeConfigDisplay {
 
     // TODO: metadataoptions, factories
     // link to parent
-    void renderEndpoint( StringBuilder sb, String base, String pathStub, PrefixMapping pm, APIEndpointSpec s ) {
+    void renderEndpoint( StringBuilder sb, URI base, String pathStub, PrefixMapping pm, APIEndpointSpec s ) {
     	Resource ep = s.getResource();
     	Bindings b = s.getBindings();
     	String ut = ep.getProperty( API.uriTemplate ).getString(); 
@@ -166,7 +167,8 @@ public class ComposeConfigDisplay {
     //
     	renderHeader(sb, s, pathStub, ut);
     	renderComments(sb, s.getResource());
-    	renderExampleRequestPath(sb, base, ep);
+    	String api_base = s.getAPISpec().getBase();
+		renderExampleRequestPath( sb, api_base, base, ep );
     	renderSettings(sb, s);    	
     	renderItemTemplate(sb, s);
     	renderAllSelectors( sb, ep );
@@ -203,26 +205,27 @@ public class ComposeConfigDisplay {
     	}
 	}
 
-	private void renderExampleRequestPath( StringBuilder sb, String base, Resource ep ) {
+	private void renderExampleRequestPath( StringBuilder sb, String api_base, URI base, Resource ep ) {
 		Property API_exampleRequestPath = ep.getModel().createProperty( API.NS, "exampleRequestPath" );
     	List<Statement> examples = ep.listProperties( API_exampleRequestPath ).toList();
     	if (examples.size() > 0) {
     		sb.append( "<h3>example request path(s)</h3>" );
     		for (Statement exs: examples) {
     			sb.append( "<div class='indent'>" );
-    			sb.append( linkTo( base, exs.getString() ) );
+    			sb.append( linkTo( api_base, base, exs.getString() ) );
     			sb.append( "</div>\n" );
     		}
     	}
 	}
 
-	private String linkTo( String base, String path ) {
-		return "<a href='" + compose( base, path ) + "'>" + safe(path) + "</a>";
+	private String linkTo( String api_base, URI base, String path ) {
+		return "<a href='" + compose( api_base, base, path ).toString() + "'>" + safe(path) + "</a>";
 	}
 
-	private String compose(String base, String path) {
-		if (base.endsWith("/") && path.startsWith( "/" )) path = path.substring(1);
-		return base + path;
+	private URI compose( String api_base, URI base, String path ) {
+		if (path.startsWith( "/" )) path = path.substring(1);
+		if (api_base == null) return base.resolve( path );
+		return URIUtils.newURI( api_base ).resolve( path );
 	}
 
 	private void renderSettings(StringBuilder sb, APIEndpointSpec s) {

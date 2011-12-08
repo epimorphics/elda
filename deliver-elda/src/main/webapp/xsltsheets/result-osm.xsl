@@ -651,7 +651,7 @@ $prefLabel, $altLabel, $title and $name variables.
 							</xsl:when>
 							<xsl:when test="$markers">
 								var center = new OpenLayers.LonLat(<xsl:value-of select="$markers/*[name(.) = $long]" />, <xsl:value-of select="$markers/*[name(.) = $lat]" />).transform(wgs84,summaryMap.getProjectionObject());
-								summaryMap.setCenter(center, 7);
+								summaryMap.setCenter(center, 13);
 							</xsl:when>
 							<xsl:otherwise>
 								var bounds = new OpenLayers.Bounds(<xsl:value-of select="$minLong"/>, <xsl:value-of select="$minLat"/>, <xsl:value-of select="$maxLong"/>, <xsl:value-of select="$maxLat"/>).transform(wgs84,summaryMap.getProjectionObject());
@@ -681,7 +681,9 @@ $prefLabel, $altLabel, $title and $name variables.
 				      -->
 				      markers.addMarker(marker);
 			      </xsl:for-each>
+<!--
                         var controls, center, markers, size, offset, icon;
+-->
 			            <!-- 
 						<xsl:if test="$multipleMarkers">
 							info = new OpenLayers.Layer.Boxes("info");
@@ -691,18 +693,18 @@ $prefLabel, $altLabel, $title and $name variables.
 						</xsl:if>
 						-->
 						<xsl:for-each select="$markers">
-							controls = [new OpenLayers.Control.ArgParser()];
+							var controls = [new OpenLayers.Control.ArgParser()];
 							osMap = new OpenLayers.Map('<xsl:value-of select="concat('map', generate-id(.))"/>', {controls: controls});
                             osMap.addLayer(new OpenLayers.Layer.OSM.Mapnik());
-							center = new OpenLayers.LonLat(<xsl:value-of select="*[name(.) = $long]" />, <xsl:value-of select="*[name(.) = $lat]" />).transform(wgs84,osMap.getProjectionObject());
+							var center = new OpenLayers.LonLat(<xsl:value-of select="*[name(.) = $long]" />, <xsl:value-of select="*[name(.) = $lat]" />).transform(wgs84,osMap.getProjectionObject());
                             osMap.setCenter(center, 13);
-                            markers = new OpenLayers.Layer.Markers("Markers");
+                            var markers = new OpenLayers.Layer.Markers("Markers");
                             osMap.addLayer(markers);
-                            size = new OpenLayers.Size(16,16);
-							offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-							icon = new OpenLayers.Icon('<xsl:value-of select="$activeImageBase"/>/Target.png', size, offset);
-                            pos = new OpenLayers.LonLat(<xsl:value-of select="*[name(.) = $long]" />, <xsl:value-of select="*[name(.) = $lat]"/>).transform(wgs84,osMap.getProjectionObject());
-                            marker = new OpenLayers.Marker(pos, icon);
+                            var size = new OpenLayers.Size(16,16);
+							var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+							var icon = new OpenLayers.Icon('<xsl:value-of select="$activeImageBase"/>/Target.png', size, offset);
+                            var pos = new OpenLayers.LonLat(<xsl:value-of select="*[name(.) = $long]" />, <xsl:value-of select="*[name(.) = $lat]"/>).transform(wgs84,osMap.getProjectionObject());
+                            var marker = new OpenLayers.Marker(pos, icon);
                             markers.addMarker(marker);
 						</xsl:for-each>
 					};
@@ -1203,10 +1205,10 @@ $prefLabel, $altLabel, $title and $name variables.
 				<xsl:sort select="name(.) = $title" order="descending" />
 				<xsl:sort select="name(.) = $label" order="descending" />
 				<xsl:sort select="name(.) = $altLabel" order="descending" />
+				<xsl:sort select="name(.) = $long" order="descending" />
+				<xsl:sort select="name(.) = $lat" order="descending" />
 				<xsl:sort select="name(.) = $easting" order="descending" />
 				<xsl:sort select="name(.) = $northing" order="descending" />
-				<xsl:sort select="name(.) = $lat" order="descending" />
-				<xsl:sort select="name(.) = $long" order="descending" />
 				<xsl:sort select="boolean(@datatype)" order="descending" />
 				<xsl:sort select="@datatype" />
 				<xsl:sort select="boolean(@href)" />
@@ -1300,10 +1302,10 @@ $prefLabel, $altLabel, $title and $name variables.
 		<xsl:when test="$hasNonLabelProperties = 'true'">
 			<xsl:for-each select="key('properties', $propertyName)/*[name() != 'item' and generate-id(key('properties', concat($propertyName, '.', name(.)))[1]) = generate-id(.)] |
 				key('properties', concat($propertyName, '.item'))/*[generate-id(key('properties', concat($propertyName, '.item.', name(.)))[1]) = generate-id(.)]">
+				<xsl:sort select="name(.) = $long" order="descending" />
+				<xsl:sort select="name(.) = $lat" order="descending" />
 				<xsl:sort select="name(.) = $easting" order="descending" />
 				<xsl:sort select="name(.) = $northing" order="descending" />
-				<xsl:sort select="name(.) = $lat" order="descending" />
-				<xsl:sort select="name(.) = $long" order="descending" />
 				<xsl:sort select="boolean(@datatype)" order="descending" />
 				<xsl:sort select="@datatype" />
 				<xsl:sort select="boolean(@href)" />
@@ -1540,10 +1542,10 @@ $prefLabel, $altLabel, $title and $name variables.
 				<xsl:sort select="name(.) = $title" order="descending" />
 				<xsl:sort select="name(.) = $label" order="descending" />
 				<xsl:sort select="name(.) = $altLabel" order="descending" />
+				<xsl:sort select="name(.) = $long" order="descending" />
+				<xsl:sort select="name(.) = $lat" order="descending" />
 				<xsl:sort select="name(.) = $easting" order="descending" />
 				<xsl:sort select="name(.) = $northing" order="descending" />
-				<xsl:sort select="name(.) = $lat" order="descending" />
-				<xsl:sort select="name(.) = $long" order="descending" />
 				<xsl:sort select="boolean(@datatype)" order="descending" />
 				<xsl:sort select="@datatype" />
 				<xsl:sort select="boolean(@href)" />
@@ -1673,10 +1675,10 @@ $prefLabel, $altLabel, $title and $name variables.
 		<xsl:when test="$hasNonLabelProperties = 'true'">
 			<xsl:for-each select="key('properties', $propertyName)/*[name() != 'item' and generate-id(key('properties', concat($propertyName, '.', name(.)))[1]) = generate-id(.)] |
 				key('properties', concat($propertyName, '.item'))/*[generate-id(key('properties', concat($propertyName, '.item.', name(.)))[1]) = generate-id(.)]">
+				<xsl:sort select="name(.) = $long" order="descending" />
+				<xsl:sort select="name(.) = $lat" order="descending" />
 				<xsl:sort select="name(.) = $easting" order="descending" />
 				<xsl:sort select="name(.) = $northing" order="descending" />
-				<xsl:sort select="name(.) = $lat" order="descending" />
-				<xsl:sort select="name(.) = $long" order="descending" />
 				<xsl:sort select="boolean(@datatype)" order="descending" />
 				<xsl:sort select="@datatype" />
 				<xsl:sort select="boolean(@href)" />
@@ -1965,10 +1967,10 @@ $prefLabel, $altLabel, $title and $name variables.
 		<!-- This for-each is a hack around what seems to be a bug in older versions
 			of libxslt, which ignores ordering in an xsl:apply-templates -->
 		<xsl:for-each select="*">
+            <xsl:sort select="name(.) = $long" order="descending" />
+            <xsl:sort select="name(.) = $lat" order="descending" />
 			<xsl:sort select="name(.) = $easting" order="descending" />
 			<xsl:sort select="name(.) = $northing" order="descending" />
-			<xsl:sort select="name(.) = $lat" order="descending" />
-			<xsl:sort select="name(.) = $long" order="descending" />
 			<xsl:sort select="name(.) = $prefLabel" order="descending" />
 			<xsl:sort select="name(.) = $name" order="descending" />
 			<xsl:sort select="name(.) = $title" order="descending" />
@@ -2071,7 +2073,7 @@ $prefLabel, $altLabel, $title and $name variables.
 					</td>
 					<td class="map" colspan="2">
 						<xsl:choose>
-							<xsl:when test="../*[name(.) = $northing] or ../*[name(.) = $easting]">
+							<xsl:when test="../*[name(.) = $northing] and ../*[name(.) = $easting]">
 								<xsl:attribute name="rowspan">4</xsl:attribute>
 							</xsl:when>
 							<xsl:otherwise>
@@ -2339,10 +2341,10 @@ $prefLabel, $altLabel, $title and $name variables.
 				<xsl:sort select="*[name(.) = $title]" />
 				<xsl:sort select="*[name(.) = $label]" />
 				<xsl:sort select="*[name(.) = $altLabel]" />
+				<xsl:sort select="*[name(.) = $long]" order="descending" />
+				<xsl:sort select="*[name(.) = $lat]" order="descending" />
 				<xsl:sort select="*[name(.) = $easting]" order="descending" />
 				<xsl:sort select="*[name(.) = $northing]" order="descending" />
-				<xsl:sort select="*[name(.) = $lat]" order="descending" />
-				<xsl:sort select="*[name(.) = $long]" order="descending" />
 				<xsl:sort select="@href" />
 				<xsl:apply-templates select="." mode="content">
 					<xsl:with-param name="nested" select="$nested" />
@@ -2357,10 +2359,10 @@ $prefLabel, $altLabel, $title and $name variables.
 					<xsl:sort select="*[name(.) = $title]" />
 					<xsl:sort select="*[name(.) = $label]" />
 					<xsl:sort select="*[name(.) = $altLabel]" />
+					<xsl:sort select="*[name(.) = $long]" order="descending" />
+					<xsl:sort select="*[name(.) = $lat]" order="descending" />
 					<xsl:sort select="*[name(.) = $easting]" order="descending" />
 					<xsl:sort select="*[name(.) = $northing]" order="descending" />
-					<xsl:sort select="*[name(.) = $lat]" order="descending" />
-					<xsl:sort select="*[name(.) = $long]" order="descending" />
 					<xsl:sort select="@href" />
 					<xsl:apply-templates select="." mode="row" />
 				</xsl:for-each>
@@ -2706,10 +2708,10 @@ $prefLabel, $altLabel, $title and $name variables.
 						<xsl:sort select="name(.) = $title" order="descending" />
 						<xsl:sort select="name(.) = $label" order="descending" />
 						<xsl:sort select="name(.) = $altLabel" order="descending" />
-						<xsl:sort select="name(.) = $easting" order="descending" />
-						<xsl:sort select="name(.) = $northing" order="descending" />
 						<xsl:sort select="name(.) = $lat" order="descending" />
 						<xsl:sort select="name(.) = $long" order="descending" />
+						<xsl:sort select="name(.) = $easting" order="descending" />
+						<xsl:sort select="name(.) = $northing" order="descending" />
 						<xsl:sort select="boolean(@datatype)" order="descending" />
 						<xsl:sort select="@datatype" />
 						<xsl:sort select="boolean(@href)" />
@@ -2786,10 +2788,10 @@ $prefLabel, $altLabel, $title and $name variables.
 							<xsl:for-each 
 								select="key('properties', $propertyName)/*[name() != 'item' and generate-id(key('properties', concat($propertyName, '.', name(.)))[1]) = generate-id(.)] | 
 								key('properties', concat($propertyName, '.item'))/*[generate-id(key('properties', concat($propertyName, '.item.', name(.)))[1]) = generate-id(.)]">
+                                <xsl:sort select="name(.) = $long" order="descending" />
+                                <xsl:sort select="name(.) = $lat" order="descending" />
 								<xsl:sort select="name(.) = $easting" order="descending" />
 								<xsl:sort select="name(.) = $northing" order="descending" />
-								<xsl:sort select="name(.) = $lat" order="descending" />
-								<xsl:sort select="name(.) = $long" order="descending" />
 								<xsl:sort select="boolean(@datatype)" order="descending" />
 								<xsl:sort select="@datatype" />
 								<xsl:sort select="boolean(@href)" />
