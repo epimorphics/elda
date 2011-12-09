@@ -27,9 +27,9 @@ public class RDFXMLRenderer implements Renderer {
        return MediaType.APPLICATION_RDF_XML;
     }
 
-    @Override public String render( Times t, Bindings ignored, APIResultSet results ) {
+    @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         results.getModel().write( bos, "RDF/XML-ABBREV" );
-        return bos.toString();
+        return new Renderer.BytesOutString( bos.toString() );
     }
 }

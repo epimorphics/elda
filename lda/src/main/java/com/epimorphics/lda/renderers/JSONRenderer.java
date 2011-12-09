@@ -58,9 +58,9 @@ public class JSONRenderer implements Renderer {
         return callback == null ? mt : MediaType.TEXT_JAVASCRIPT;
     }
 
-    @Override public String render( Times t, Bindings b, APIResultSet results) {
+    @Override public Renderer.BytesOut render( Times t, Bindings b, APIResultSet results) {
         Context context = api.getSpec().getAPISpec().getShortnameService().asContext(); 
-        return renderFromModelAndContext( b, results.getModel(), results.getRoot(), context );
+        return new Renderer.BytesOutString( renderFromModelAndContext( b, results.getModel(), results.getRoot(), context ) );
     }
 
 	public String renderFromModelAndContext( Bindings b, Model model, Resource root, Context given ) {

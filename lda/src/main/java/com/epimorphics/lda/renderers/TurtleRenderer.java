@@ -29,11 +29,11 @@ public class TurtleRenderer implements Renderer {
         return MediaType.TEXT_TURTLE;
     }
     
-    @Override public String render( Times t, Bindings ignored, APIResultSet results ) {
+    @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         results.getModel().write( bos, "TTL" );
         try {
-			return bos.toString( "UTF-8" );
+			return new Renderer.BytesOutString( bos.toString( "UTF-8" ) );
 		} catch (UnsupportedEncodingException e) {
 			throw new WrappedException( e );
 		}

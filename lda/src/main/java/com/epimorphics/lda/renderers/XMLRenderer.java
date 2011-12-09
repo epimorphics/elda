@@ -42,8 +42,8 @@ public class XMLRenderer implements Renderer {
 		return mt;
 	}
 
-	@Override public synchronized String render( Times t, Bindings rc, APIResultSet results ) {
-		return render( t, rc, results.getRoot() );
+	@Override public synchronized Renderer.BytesOut render( Times t, Bindings rc, APIResultSet results ) {
+		return new Renderer.BytesOutString( render( t, rc, results.getRoot() ) );
 	}
 
 	public String render( Times t, Bindings rc, Resource root ) {

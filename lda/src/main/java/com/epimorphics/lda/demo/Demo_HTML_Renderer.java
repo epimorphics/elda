@@ -52,10 +52,10 @@ public class Demo_HTML_Renderer implements Renderer {
         return MediaType.TEXT_HTML;
     }
 
-    @Override public String render( Times t, Bindings ignored, APIResultSet results ) {
+    @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
     	handleFakeBnodes( results.getModel() );
     	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
-        return isItemRendering ? renderItem(results) : renderList(results);
+        return new Renderer.BytesOutString( isItemRendering ? renderItem(results) : renderList(results) );
     }
     
     private String shorten( String uri ) {

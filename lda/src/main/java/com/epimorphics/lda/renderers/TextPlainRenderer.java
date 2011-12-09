@@ -25,8 +25,8 @@ public final class TextPlainRenderer implements Renderer {
         return MediaType.TEXT_PLAIN;
     }
 
-    @Override public String render( Times t, Bindings ignored, APIResultSet results ) {
-        return results.toString();
+    @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
+        return new Renderer.BytesOutString( results.toString() );
     }
 }
     

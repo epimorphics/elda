@@ -18,6 +18,7 @@
 package com.epimorphics.lda.restlets;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -30,12 +31,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
 import org.slf4j.Logger;
@@ -50,6 +53,7 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.exceptions.ExpansionFailedException;
 import com.epimorphics.lda.exceptions.QueryParseException;
 import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
@@ -256,11 +260,11 @@ import com.hp.hpl.jena.shared.WrappedException;
         } else {
         	Times times = c.times;
             MediaType mt = r.getMediaType( rc );
-            long base = System.currentTimeMillis();
-			String rendering = r.render( times, rc, results );
-            times.setRenderedSize( rendering.length() * 2 );
-            times.setRenderDuration( System.currentTimeMillis() - base, (rName == null ? r.getMediaType(rc).toString() : rName) );
-			return returnAs( rendering, mt, results.getContentLocation() );
+//            long base = System.currentTimeMillis();
+			Renderer.BytesOut bo = r.render( times, rc, results );
+//            times.setRenderedSize( rendering.length() * 2 );
+//            times.setRenderDuration( System.currentTimeMillis() - base, (rName == null ? r.getMediaType(rc).toString() : rName) );
+			return returnAs( bo, mt, results.getContentLocation() );
         }
 	}
 
@@ -272,15 +276,25 @@ import com.hp.hpl.jena.shared.WrappedException;
         return enableCORS( Response.ok(response, mimetype) ).build();
     }
     
-    public static Response returnAs(String response, MediaType mimetype, String contentLocation) {
+    public static Response returnAs(Renderer.BytesOut response, MediaType mimetype, String contentLocation) {
         try {
-            return enableCORS( Response.ok( response, mimetype.toFullString() ) ).build();
+            return enableCORS( Response.ok( wrap(response), mimetype.toFullString() ) ).build();
         } catch (RuntimeException e) {
             return returnError(e);
         }
     }
 
-    public static Response returnError( Throwable e ) {
+    private static StreamingOutput wrap( final BytesOut response ) {
+		return new StreamingOutput() {
+			
+			@Override public void write(OutputStream os) throws IOException, WebApplicationException {
+				response.writeAll(new Times(), os);
+				
+			}
+		};
+	}
+
+	public static Response returnError( Throwable e ) {
         String shortMessage = e.getMessage();
 		String longMessage = Messages.niceMessage( shortMessage, "Internal Server error." );
 		log.error("Exception: " + shortMessage );

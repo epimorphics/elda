@@ -17,10 +17,16 @@
 
 package com.epimorphics.lda.renderers;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
+import com.hp.hpl.jena.shared.WrappedException;
 
 /**
  * Abstraction for renderer
@@ -30,6 +36,32 @@ import com.epimorphics.util.MediaType;
 */
 public interface Renderer {
 
+	public interface BytesOut {
+		public void writeAll(Times t, OutputStream os);
+	}
+	
+	public class BytesOutString implements BytesOut {
+
+		final String content;
+		
+		public BytesOutString( String content ) {
+			this.content = content;
+		}
+
+		@Override public void writeAll(Times t, OutputStream os) {
+			try {
+				OutputStream bos = new BufferedOutputStream(os);
+				OutputStreamWriter osw = new OutputStreamWriter(bos, "UTF-8" );
+				osw.write( content );
+				osw.flush();
+				osw.close();
+			} catch (IOException e) {
+				throw new WrappedException( e );
+			}
+		}
+		
+	}
+	
     /**
      	@return the mimetype which this renderer returns
      		in the given renderer context.
@@ -39,6 +71,6 @@ public interface Renderer {
     /**
      	Render a result set. Use t to log times if required.
     */
-    public String render( Times t, Bindings rc, APIResultSet results );
+    public BytesOut render( Times t, Bindings rc, APIResultSet results );
 }
 
