@@ -72,7 +72,7 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 			String et = Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template );
 			// return resolvePath( bt.base, et );
 			if (bt.base == null) return et;
-			return URIUtils.resolveAgainstBase( requestURI, URIUtils.newURI( bt.base ), et ).toASCIIString();
+			return URIUtils.resolveAgainstBase( requestURI, URIUtils.newURI( bt.base ), et ).toString();
 		}
 		return null;
 	}

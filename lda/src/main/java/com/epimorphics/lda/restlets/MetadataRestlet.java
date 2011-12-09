@@ -99,7 +99,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
             if (!ut.equals(pathStub)) {
                 String sib = ui
                     .getRequestUri()
-                    .toASCIIString()
+                    .toString()
                     .replace( pathStub, ut )
                     .replace( "%7B", "{" )
                     .replace( "%7D", "}" )

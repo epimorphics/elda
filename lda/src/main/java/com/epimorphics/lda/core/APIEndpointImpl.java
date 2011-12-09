@@ -125,14 +125,14 @@ public class APIEndpointImpl implements APIEndpoint {
     }
 
 	private Resource resourceForPage( Resource notThisPlease, String format, Model m, URI ru, int page) {
-		String newURI = isListEndpoint()
+		URI newURI = isListEndpoint()
 			? URIUtils.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
 			: URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
-		Resource thisPage = m.createResource( newURI );
-		if (!isListEndpoint() && newURI.indexOf('?') < 0) {
-			 newURI += "?";
-			thisPage = m.createResource( newURI );
-		}
+		Resource thisPage = m.createResource( newURI.toString() );
+//		if (!isListEndpoint() && newURI.indexOf('?') < 0) {
+//			 newURI += "?";
+//			thisPage = m.createResource( newURI.toString() );
+//		}
 		return thisPage;
     }
     
@@ -144,20 +144,20 @@ public class APIEndpointImpl implements APIEndpoint {
     	}
 		String argPattern = "\\{[-._A-Za-z]+\\}";
 		String pattern = template.replaceAll( argPattern, "[^/]*" );
-		String replaced = ru.toASCIIString().replaceAll( pattern, "/meta" + quasiTemplate );
+		String replaced = ru.toString().replaceAll( pattern, "/meta" + quasiTemplate );
 		return rsm.createResource( replaced );
 	}
 
     private Resource resourceForList( Model m, URI ru ) {
-    	String rqp1 = URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
-    	String rqp2 = URIUtils.replaceQueryParam( URIUtils.newURI(rqp1), QueryParameter._PAGE_SIZE );
-    	return m.createResource( rqp2 );
+    	URI rqp1 = URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
+    	URI rqp2 = URIUtils.replaceQueryParam( rqp1, QueryParameter._PAGE_SIZE );
+    	return m.createResource( rqp2.toString() );
     }
 
     private Resource resourceForMetaList( Model m, URI ru ) {
-    	String rqp1 = URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
-    	String rqp2 = URIUtils.replaceQueryParam( URIUtils.newURI(rqp1), QueryParameter._PAGE_SIZE );    	
-    	return m.createResource( rqp2 );
+    	URI rqp1 = URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
+    	URI rqp2 = URIUtils.replaceQueryParam( rqp1, QueryParameter._PAGE_SIZE );    	
+    	return m.createResource( rqp2.toString() );
     }
     
 	private void insertResultSetRoot( APIResultSet rs, URI ru, String format, Bindings cc, APIQuery query ) {
@@ -178,8 +178,8 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
 		thisPage.addProperty( API.definition, uriForDefinition );
     //
-        String emv_uri = URIUtils.replaceQueryParam( URIUtils.newURI(thisPage.getURI()), "_metadata", "all" );
-        thisPage.addProperty( API.extendedMetadataVersion, rsm.createResource( emv_uri ) );
+        URI emv_uri = URIUtils.replaceQueryParam( URIUtils.newURI(thisPage.getURI()), "_metadata", "all" );
+        thisPage.addProperty( API.extendedMetadataVersion, rsm.createResource( emv_uri.toString() ) );
     //
         if (isListEndpoint()) {
         	RDFList content = rsm.createList( rs.getResultList().iterator() );

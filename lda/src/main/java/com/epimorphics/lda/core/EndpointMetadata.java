@@ -73,14 +73,14 @@ public class EndpointMetadata {
 	 	modified by replacing the _view with the requested name.
 	*/
     private Resource resourceForView( Model m, String name ) {
-    	String a = URIUtils.replaceQueryParam( reqURI, QueryParameter._VIEW, name );
-    	String b = isListEndpoint ? URIUtils.replaceQueryParam( URIUtils.newURI( a ), QueryParameter._PAGE, pageNumber ) : a;
-		return m.createResource( b );
+    	URI a = URIUtils.replaceQueryParam( reqURI, QueryParameter._VIEW, name );
+    	URI b = isListEndpoint ? URIUtils.replaceQueryParam( a, QueryParameter._PAGE, pageNumber ) : a;
+		return m.createResource( b.toString() );
     }
 
 	private Resource resourceForFormat( URI reqURI, Model m, Set<String> knownFormats, String formatName ) {
 		URI u = URIUtils.changeFormatSuffix(reqURI, knownFormats, formatName);
-		return m.createResource( u.toASCIIString() );
+		return m.createResource( u.toString() );
 	}
 
 	/**

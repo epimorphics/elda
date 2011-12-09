@@ -32,7 +32,7 @@ public class URIUtils {
 	    Answer the URI ru with any existing query parameters named <code>key</code>
 	    discarded and replaced by key=value1&key=value2 ...
 	*/
-	public static String replaceQueryParam(URI ru, String key, String... values) {
+	public static URI replaceQueryParam(URI ru, String key, String... values) {
 		try {
 			String q = ru.getQuery();
 			String newQuery = q == null ? "" : URIUtils.strip( q, key );
@@ -48,7 +48,7 @@ public class URIUtils {
 				ru.getPath(),
 				(newQuery.isEmpty() ? null : newQuery), 
 				ru.getFragment() 
-				).toASCIIString();
+				);
 		} catch (URISyntaxException e) {			
 			throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e );
 		}

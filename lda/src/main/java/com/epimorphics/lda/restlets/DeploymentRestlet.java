@@ -77,7 +77,7 @@ public class DeploymentRestlet {
             } else {
                 return returnError("Didn't recognize action request " + action);
             }
-            return returnAs(constructSummaryPage(ui.getBaseUri().toASCIIString(), newSpec), "text/html");
+            return returnAs(constructSummaryPage(ui.getBaseUri().toString(), newSpec), "text/html");
 
         } catch (APISecurityException e)  {
             log.warn("Security exception", e);

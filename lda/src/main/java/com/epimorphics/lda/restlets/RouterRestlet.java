@@ -134,7 +134,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 	protected static final boolean showMightHaveMeant = false;
 
 	private Response noMatchFound( String pathstub, UriInfo ui, Couple<String, String> pathAndType ) {
-		String preamble = ui.getBaseUri().toASCIIString();
+		String preamble = ui.getBaseUri().toString();
 		String message = "Could not find anything matching " + ("/" + pathstub);
 		if (pathAndType.b != null) message += " (perhaps '" + pathAndType.b + "' is an incorrect format name?)";
 		if (showMightHaveMeant) {
