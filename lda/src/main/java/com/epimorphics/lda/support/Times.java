@@ -25,7 +25,7 @@ public class Times {
 	long renderSize;
 	long stylesheetCompileTime;
 	public boolean usedSelectionCache;
-	public boolean usedViewCache;
+	public boolean usedViewCache;	
 
 	public Times( String forPath ) {
 		this.forPath = forPath;

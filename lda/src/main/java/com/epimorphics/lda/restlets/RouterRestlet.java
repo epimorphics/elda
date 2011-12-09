@@ -125,7 +125,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         	Controls c = new Controls( !dontCache, t );
             List<MediaType> mediaTypes = JerseyUtils.getAcceptableMediaTypes( headers );
             Response r = runEndpoint( c, servCon, ui, queryParams, mediaTypes, formatSuffix, match );
-            StatsValues.accumulate( t.done() );
+            // StatsValues.accumulate( t.done() );
 			return r; 
         }
     }
@@ -286,6 +286,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 			
 			@Override public void write(OutputStream os) throws IOException, WebApplicationException {
 				response.writeAll(t, os);
+				StatsValues.accumulate( t );
 			}
 		};
 	}
