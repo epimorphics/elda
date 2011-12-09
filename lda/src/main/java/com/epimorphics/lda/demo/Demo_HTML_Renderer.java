@@ -34,6 +34,7 @@ import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
+// TODO needs rewriting so that it can stream
 public class Demo_HTML_Renderer implements Renderer {
 
 	protected final APIEndpoint endpoint;
@@ -52,6 +53,7 @@ public class Demo_HTML_Renderer implements Renderer {
         return MediaType.TEXT_HTML;
     }
 
+	// TODO rewrite for streaming output
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
     	handleFakeBnodes( results.getModel() );
     	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
@@ -170,8 +172,7 @@ public class Demo_HTML_Renderer implements Renderer {
 		    String value = makeEntry(x, s, p, brief( s.getObject() ));
 		    String shortP = shorten(p.getURI());
 		    String title = "click to try and get definition details for " + shortP;
-			String pd =	"<a href='" + p.getURI() + "' title='" + title + "'>" + shortP + "</a>"
-		    	;
+			String pd =	"<a href='" + p.getURI() + "' title='" + title + "'>" + shortP + "</a>";
 		    props.add( new Triad<String, String, String>( "", pd, value ) );
 		}
 		Collections.sort( props, compareStringTriad );

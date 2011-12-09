@@ -43,16 +43,13 @@ public class XMLRenderer implements Renderer {
 	}
 
 	@Override public synchronized Renderer.BytesOut render( Times t, Bindings rc, APIResultSet results ) {
-		return new Renderer.BytesOutString( render( t, rc, results.getRoot() ) );
-	}
-
-	public String render( Times t, Bindings rc, Resource root ) {
+		Resource root = results.getRoot();
 		PrefixMapping pm = root.getModel();
 		boolean stripHas = rc.getAsString( "_strip_has", "no" ).equals( "yes" );
 		boolean suppressIPTO = rc.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		Document d = DOMUtils.newDocument();
 		renderInto( root, d, stripHas, suppressIPTO );
-		return DOMUtils.renderNodeToString( t, d, rc, pm, transformFilePath );
+		return DOMUtils.renderNodeToBytesOut( t, d, rc, pm, transformFilePath );
 	}
 
 	public void renderInto( Resource root, Document d, boolean stripHas, boolean suppressIPTO ) {

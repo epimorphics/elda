@@ -264,7 +264,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 			Renderer.BytesOut bo = r.render( times, rc, results );
 //            times.setRenderedSize( rendering.length() * 2 );
 //            times.setRenderDuration( System.currentTimeMillis() - base, (rName == null ? r.getMediaType(rc).toString() : rName) );
-			return returnAs( bo, mt, results.getContentLocation() );
+			return returnAs( wrap(times, bo), mt, results.getContentLocation() );
         }
 	}
 
@@ -276,19 +276,19 @@ import com.hp.hpl.jena.shared.WrappedException;
         return enableCORS( Response.ok(response, mimetype) ).build();
     }
     
-    public static Response returnAs(Renderer.BytesOut response, MediaType mimetype, String contentLocation) {
+    public static Response returnAs(StreamingOutput response, MediaType mimetype, String contentLocation) {
         try {
-            return enableCORS( Response.ok( wrap(response), mimetype.toFullString() ) ).build();
+            return enableCORS( Response.ok( response, mimetype.toFullString() ) ).build();
         } catch (RuntimeException e) {
             return returnError(e);
         }
     }
 
-    private static StreamingOutput wrap( final BytesOut response ) {
+    private static StreamingOutput wrap( final Times t, final BytesOut response ) {
 		return new StreamingOutput() {
 			
 			@Override public void write(OutputStream os) throws IOException, WebApplicationException {
-				response.writeAll(new Times(), os);
+				response.writeAll(t, os);
 				
 			}
 		};

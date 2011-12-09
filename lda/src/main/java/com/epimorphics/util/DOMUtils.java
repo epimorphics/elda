@@ -6,6 +6,9 @@
 */
 package com.epimorphics.util;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
@@ -30,6 +33,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.support.Times;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.shared.WrappedException;
@@ -47,7 +51,34 @@ public class DOMUtils
 	
 	public static String renderNodeToString( Times times, Node d, PrefixMapping pm ) 
 		{ return renderNodeToString( times, d, new Bindings(), pm, null ); }
+
+
+	public static Renderer.BytesOut renderNodeToBytesOut(
+		final Times t
+		, final Document d 
+		, final Bindings rc
+		, final PrefixMapping pm
+		, final String transformFilePath) {
+		return new Renderer.BytesOut() {
+
+			@Override public void writeAll( Times t, OutputStream os ) {
+				Transformer tr = setPropertiesAndParams( t, rc, pm, transformFilePath );
+				OutputStreamWriter u = Renderer.StreamUtils.asUTF8(os);
+				StreamResult sr = new StreamResult( u );
+				try { 
+					tr.transform( new DOMSource( d ), sr ); 
+					u.flush();
+					u.close();
+					} 
+				catch (TransformerException e) 
+					{ throw new WrappedException( e ); } 
+				catch (IOException e) 					
+					{ throw new WrappedException( e ); } 
+			}			
+		};
+	}
 	
+	// TODO OBSOLETE
 	public static String renderNodeToString( Times times, Node d, Bindings rc, PrefixMapping pm, String transformFilePath ) 
 		{
 		Transformer t = setPropertiesAndParams( times, rc, pm, transformFilePath );

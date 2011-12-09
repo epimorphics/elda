@@ -17,8 +17,9 @@
 
 package com.epimorphics.lda.renderers;
 
-import java.io.StringReader;
+import java.io.OutputStream;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
-import com.epimorphics.jsonrdf.ParseWrapper;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
@@ -59,36 +59,49 @@ public class JSONRenderer implements Renderer {
     }
 
     @Override public Renderer.BytesOut render( Times t, Bindings b, APIResultSet results) {
-        Context context = api.getSpec().getAPISpec().getShortnameService().asContext(); 
-        return new Renderer.BytesOutString( renderFromModelAndContext( b, results.getModel(), results.getRoot(), context ) );
+        Context given = api.getSpec().getAPISpec().getShortnameService().asContext();
+        
+        final Resource root = results.getRoot();
+        final Model model = results.getModel();
+        final Context context = given.clone();
+		final List<Resource> roots = new ArrayList<Resource>(1);
+		roots.add( root );
+		context.setSorted(true);
+		
+		return new Renderer.BytesOut() {
+
+			@Override public void writeAll(Times t, OutputStream os) {
+				try {
+					Writer writer = StreamUtils.asUTF8( os );
+					Encoder.getForOneResult( context, false ).encodeRecursive( model, roots, writer, true );
+					StreamUtils.flush( os );
+				} catch (Exception e) {
+					log.error( "Failed to encode model: stacktrace follows:", e );
+					throw new WrappedException( e );
+				}				
+			}
+			
+		};
     }
 
-	public String renderFromModelAndContext( Bindings b, Model model, Resource root, Context given ) {
+    // testing only.
+	public void renderAndDiscard( Bindings b, Model model, Resource root, Context given ) {
 		List<Resource> roots = new ArrayList<Resource>(1);
 		roots.add( root );
 		StringWriter writer = new StringWriter();
 		Context context = given.clone();
 		context.setSorted(true);
-        try {
-            Encoder.getForOneResult( context, false ).encodeRecursive( model, roots, writer, true );
-            String written = writer.toString();
-            paranoiaCheckForLegalJSON( written );
-            String callback = b.getValueString("callback" );
-            return callback == null ? written : callback + "(" + written + ")";
-        } catch (Exception e) {
-        	log.error( "Failed to encode model: stacktrace follows:", e );
-            throw new WrappedException( e ); //  "'ERROR: " + e.getMessage() + "'";
-        }
+        Encoder.getForOneResult( context, false ).encodeRecursive( model, roots, writer, true );
 	}
 
-	private void paranoiaCheckForLegalJSON(String written) throws Exception {
-		try {
-			ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json
-		} catch (Exception e) {
-			log.error( "Broken generated JSON:\n" + written );
-			throw e;
-		}
-	}
+//	private void paranoiaCheckForLegalJSON(String written) throws Exception {
+//		try {
+//			ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json
+//		} catch (Exception e) {
+//			log.error( "Broken generated JSON:\n" + written );
+//			throw e;
+//		}
+//	}
 
 }
 

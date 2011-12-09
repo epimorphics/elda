@@ -21,12 +21,12 @@ import com.hp.hpl.jena.rdf.model.Resource;
 */
 public class TestJsonRenderer {
 	
-	@Test public void testIt() {
+	@Test public void testDoesntUpdateContext() {
 		Bindings b = new Bindings();
 		Model model = ModelIOUtils.modelFromTurtle( "<fake:root> <fake:property> 17 ." );
 		Resource root = model.createResource( "fake:root" );
 		Context given = new Context();
-		String rendered = new JSONRenderer( null ).renderFromModelAndContext( b, model, root, given );
+		new JSONRenderer( null ).renderAndDiscard( b, model, root, given );
 		Set<String> allShortNames = given.allNames();
 		assertEquals( "rendering should not update the context", Collections.EMPTY_SET, allShortNames );
 	}

@@ -27,10 +27,9 @@ public class TestTurtleRenderer {
 		Resource it = m.createResource( "<eh:/example>" );
 		APIResultSet rs = new APIResultSet( m.getGraph(), CollectionUtils.list(it), true, "notUsed" );
 		Renderer.BytesOut rbo = new TurtleRenderer().render( new Times(), null, rs );
-//		
-//		String unwrapped = rendered.replaceFirst( "(.|[\n])*<<", "" ).replaceAll( ">>(.|[\n])*", "" );
-//		assertEquals( "Unicode character did not survive rendering", "\u03ff", unwrapped );
-		System.err.println( ">> suppressed uniocode rendering test for turtle till BytesOut is done." );
+		String rendered = Renderer.StreamUtils.pullString( rbo );
+		String unwrapped = rendered.replaceFirst( "(.|[\r\n])*<<", "" ).replaceAll( ">>(.|[\r\n])*", "" );
+		assertEquals( "Unicode character did not survive rendering", "\u03ff", unwrapped );
 	}
 
 }

@@ -18,9 +18,11 @@
 package com.epimorphics.lda.renderers;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
@@ -38,6 +40,29 @@ public interface Renderer {
 
 	public interface BytesOut {
 		public void writeAll(Times t, OutputStream os);
+	}
+	
+	public class StreamUtils {
+
+		public static OutputStreamWriter asUTF8(OutputStream os) {
+			try { 
+				return new OutputStreamWriter( os, "UTF-8" );
+			} catch (UnsupportedEncodingException e) {
+				throw new WrappedException( e );
+			}
+		}
+
+		public static void flush(OutputStream os) {
+			try { os.flush(); } 
+			catch (IOException e) { throw new WrappedException( e  ); }
+		}
+
+		public static String pullString(BytesOut rbo) {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			rbo.writeAll( new Times(), bos );
+			return bos.toString();
+		}
+		
 	}
 	
 	public class BytesOutString implements BytesOut {

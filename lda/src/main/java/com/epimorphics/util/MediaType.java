@@ -27,7 +27,7 @@ public class MediaType
 	
 	public static final MediaType TEXT_XML = new MediaType( "text", "xml" );
 	
-	public static final MediaType TEXT_HTML = new MediaType( "text", "html" );
+	public static final MediaType TEXT_HTML = new MediaType( "text", "html", "; charset=utf-8" );
 	
 	public static final MediaType TEXT_PLAIN = new MediaType( "text", "plain" );
 	

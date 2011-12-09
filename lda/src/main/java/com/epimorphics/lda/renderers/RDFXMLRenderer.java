@@ -14,7 +14,7 @@
 
 package com.epimorphics.lda.renderers;
 
-import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
@@ -27,9 +27,13 @@ public class RDFXMLRenderer implements Renderer {
        return MediaType.APPLICATION_RDF_XML;
     }
 
-    @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        results.getModel().write( bos, "RDF/XML-ABBREV" );
-        return new Renderer.BytesOutString( bos.toString() );
+    @Override public Renderer.BytesOut render( Times t, Bindings ignored, final APIResultSet results ) {
+    	return new Renderer.BytesOut() {
+			
+			@Override public void writeAll(Times t, OutputStream os) {
+				results.getModel().write( os, "RDF/XML-ABBREV" );
+				Renderer.StreamUtils.flush( os );
+			}
+		};
     }
 }
