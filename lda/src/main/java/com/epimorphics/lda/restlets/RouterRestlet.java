@@ -206,7 +206,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
             return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
         } catch (ExpansionFailedException e) {
-        	log.error( "ExpansionFailedException" );
+        	log.error( "ExpansionFailedException: " + e.getMessage() );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
         	StatsValues.endpointException();
         	return buildErrorResponse(e);
