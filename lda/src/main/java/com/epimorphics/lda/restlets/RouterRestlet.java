@@ -260,10 +260,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         } else {
         	Times times = c.times;
             MediaType mt = r.getMediaType( rc );
-//            long base = System.currentTimeMillis();
 			Renderer.BytesOut bo = r.render( times, rc, results );
-//            times.setRenderedSize( rendering.length() * 2 );
-//            times.setRenderDuration( System.currentTimeMillis() - base, (rName == null ? r.getMediaType(rc).toString() : rName) );
 			return returnAs( wrap(times, bo), mt, results.getContentLocation() );
         }
 	}
@@ -289,7 +286,6 @@ import com.hp.hpl.jena.shared.WrappedException;
 			
 			@Override public void write(OutputStream os) throws IOException, WebApplicationException {
 				response.writeAll(t, os);
-				
 			}
 		};
 	}

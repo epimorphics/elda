@@ -59,9 +59,9 @@ public class DOMUtils
 		, final Bindings rc
 		, final PrefixMapping pm
 		, final String transformFilePath) {
-		return new Renderer.BytesOut() {
+		return new Renderer.BytesOutTimed() {
 
-			@Override public void writeAll( Times t, OutputStream os ) {
+			@Override public void writeAll( OutputStream os ) {
 				Transformer tr = setPropertiesAndParams( t, rc, pm, transformFilePath );
 				OutputStreamWriter u = Renderer.StreamUtils.asUTF8(os);
 				StreamResult sr = new StreamResult( u );
@@ -74,6 +74,11 @@ public class DOMUtils
 					{ throw new WrappedException( e ); } 
 				catch (IOException e) 					
 					{ throw new WrappedException( e ); } 
+			}
+
+			@Override protected String getFormat() {
+				// TODO extract from rendered result
+				return "html";
 			}			
 		};
 	}

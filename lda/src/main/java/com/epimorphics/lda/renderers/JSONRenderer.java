@@ -68,17 +68,20 @@ public class JSONRenderer implements Renderer {
 		roots.add( root );
 		context.setSorted(true);
 		
-		return new Renderer.BytesOut() {
+		return new Renderer.BytesOutTimed() {
 
-			@Override public void writeAll(Times t, OutputStream os) {
+			@Override public void writeAll( OutputStream os ) {
 				try {
 					Writer writer = StreamUtils.asUTF8( os );
 					Encoder.getForOneResult( context, false ).encodeRecursive( model, roots, writer, true );
-					StreamUtils.flush( os );
 				} catch (Exception e) {
 					log.error( "Failed to encode model: stacktrace follows:", e );
 					throw new WrappedException( e );
 				}				
+			}
+
+			@Override protected String getFormat() {
+				return "json";
 			}
 			
 		};

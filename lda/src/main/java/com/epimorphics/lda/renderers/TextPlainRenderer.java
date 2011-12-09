@@ -28,11 +28,14 @@ public final class TextPlainRenderer implements Renderer {
     }
 
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, final APIResultSet results ) {
-    	return new BytesOut() {
+    	return new BytesOutTimed() {
 			
-			@Override public void writeAll(Times t, OutputStream os) {
+			@Override public void writeAll(OutputStream os) {
 				results.getModel().write(os, "RDF/XML" );
-				StreamUtils.flush(os);
+			}
+
+			@Override protected String getFormat() {
+				return "text";
 			}
 		};
     }

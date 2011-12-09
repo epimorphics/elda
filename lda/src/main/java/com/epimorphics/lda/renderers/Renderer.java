@@ -57,10 +57,51 @@ public interface Renderer {
 			catch (IOException e) { throw new WrappedException( e  ); }
 		}
 
-		public static String pullString(BytesOut rbo) {
+		public static String pullString( BytesOut rbo ) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			rbo.writeAll( new Times(), bos );
 			return bos.toString();
+		}
+		
+	}
+	
+	public abstract class BytesOutTimed implements BytesOut {
+
+		@Override public final void writeAll( Times t, OutputStream os ) {
+			long base = System.currentTimeMillis();
+			CountStream cos = new CountStream( os );
+			writeAll( cos );
+			StreamUtils.flush( os );
+            t.setRenderedSize( cos.size() );
+            t.setRenderDuration( System.currentTimeMillis() - base, getFormat() );
+		}
+		
+		protected abstract void writeAll( OutputStream is );
+		
+		protected abstract String getFormat();
+	}
+	
+	public class CountStream extends OutputStream {
+
+		long count = 0;
+		final OutputStream os;
+		
+		public CountStream(OutputStream os) {
+			this.os = os;
+		}
+
+		public long size() {
+			return count;
+		}
+
+		@Override public void write(int b) throws IOException {
+			count += 1;
+			os.write( b );
+		}
+	    
+		@Override public void write(byte b[], int off, int len) throws IOException {
+			count += len;
+			os.write( b, off, len );
 		}
 		
 	}
