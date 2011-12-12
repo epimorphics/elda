@@ -38,7 +38,7 @@ public class HTMLRenderer implements Renderer {
     // TODO rewrite so that it can stream
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
     	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
-        return new Renderer.BytesOutString( isItemRendering ? renderItem(results) : renderList(results) );
+        return new BytesOutString( isItemRendering ? renderItem(results) : renderList(results) );
     }
 
 	private String renderItem( APIResultSet results ) {

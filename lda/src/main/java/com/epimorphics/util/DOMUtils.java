@@ -33,6 +33,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.renderers.BytesOutTimed;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.support.Times;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -59,11 +60,11 @@ public class DOMUtils
 		, final Bindings rc
 		, final PrefixMapping pm
 		, final String transformFilePath) {
-		return new Renderer.BytesOutTimed() {
+		return new BytesOutTimed() {
 
 			@Override public void writeAll( OutputStream os ) {
 				Transformer tr = setPropertiesAndParams( t, rc, pm, transformFilePath );
-				OutputStreamWriter u = Renderer.StreamUtils.asUTF8(os);
+				OutputStreamWriter u = StreamUtils.asUTF8(os);
 				StreamResult sr = new StreamResult( u );
 				try { 
 					tr.transform( new DOMSource( d ), sr ); 

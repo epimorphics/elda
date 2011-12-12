@@ -9,16 +9,21 @@ package com.epimorphics.lda.renderers.tests;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.TurtleRenderer;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.shared.WrappedException;
 
 public class TestTurtleRenderer {
 	
@@ -27,9 +32,19 @@ public class TestTurtleRenderer {
 		Resource it = m.createResource( "<eh:/example>" );
 		APIResultSet rs = new APIResultSet( m.getGraph(), CollectionUtils.list(it), true, "notUsed" );
 		Renderer.BytesOut rbo = new TurtleRenderer().render( new Times(), null, rs );
-		String rendered = Renderer.StreamUtils.pullString( rbo );
+		String rendered = TestTurtleRenderer.pullString( rbo );
 		String unwrapped = rendered.replaceFirst( "(.|[\r\n])*<<", "" ).replaceAll( ">>(.|[\r\n])*", "" );
 		assertEquals( "Unicode character did not survive rendering", "\u03ff", unwrapped );
+	}
+
+	public static String pullString( BytesOut rbo ) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		rbo.writeAll( new Times(), bos );
+		try { 
+			return bos.toString( "UTF-8" );
+		} catch (UnsupportedEncodingException e) {
+			throw new WrappedException( e );
+		}
 	}
 
 }

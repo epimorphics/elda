@@ -28,7 +28,7 @@ public class RDFXMLRenderer implements Renderer {
     }
 
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, final APIResultSet results ) {
-    	return new Renderer.BytesOutTimed() {
+    	return new BytesOutTimed() {
 			
 			@Override public void writeAll(OutputStream os) {
 				results.getModel().write( os, "RDF/XML-ABBREV" );

@@ -33,6 +33,7 @@ import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
+import com.epimorphics.util.StreamUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.WrappedException;
@@ -68,7 +69,7 @@ public class JSONRenderer implements Renderer {
 		roots.add( root );
 		context.setSorted(true);
 		
-		return new Renderer.BytesOutTimed() {
+		return new BytesOutTimed() {
 
 			@Override public void writeAll( OutputStream os ) {
 				try {

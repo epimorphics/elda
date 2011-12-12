@@ -15,6 +15,7 @@ import java.util.List;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.renderers.BytesOutString;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
@@ -57,7 +58,7 @@ public class Demo_HTML_Renderer implements Renderer {
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
     	handleFakeBnodes( results.getModel() );
     	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
-        return new Renderer.BytesOutString( isItemRendering ? renderItem(results) : renderList(results) );
+        return new BytesOutString( isItemRendering ? renderItem(results) : renderList(results) );
     }
     
     private String shorten( String uri ) {
