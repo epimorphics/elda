@@ -60,7 +60,11 @@ public interface Renderer {
 		public static String pullString( BytesOut rbo ) {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			rbo.writeAll( new Times(), bos );
-			return bos.toString();
+			try { 
+				return bos.toString( "UTF-8" );
+			} catch (UnsupportedEncodingException e) {
+				throw new WrappedException( e );
+			}
 		}
 		
 	}
