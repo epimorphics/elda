@@ -6,15 +6,6 @@
     $Id$
 */
 
-/******************************************************************
-    File:        Renderer.java
-    Created by:  Dave Reynolds
-    Created on:  2 Feb 2010
- * 
- * (c) Copyright 2010, Epimorphics Limited
- * $Id:  $
- *****************************************************************/
-
 package com.epimorphics.lda.renderers;
 
 import java.io.OutputStream;
@@ -25,13 +16,18 @@ import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 
 /**
- * Abstraction for renderer
- * 
- * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
- * @version $Revision: $
+    Renderers -- turning result sets into byte streams.
+ 	@author chris, dave
 */
 public interface Renderer {
 
+	/**
+	    Renderers produce BytesOut objects which will then
+	    stream the rendering to a provided output stream
+	    later.
+	 
+	 	@author chris
+	*/
 	public interface BytesOut {
 		public void writeAll(Times t, OutputStream os);
 	}
