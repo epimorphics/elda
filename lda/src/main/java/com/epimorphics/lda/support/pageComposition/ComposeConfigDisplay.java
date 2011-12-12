@@ -15,12 +15,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.View.Type;
 import com.epimorphics.lda.rdfq.Value;
-import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specmanager.SpecEntry;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.PropertyChain;
@@ -68,7 +68,7 @@ public class ComposeConfigDisplay {
 	        Collections.sort( endpoints, sortByEndpointURITemplate );
 			for (APIEndpointSpec s: endpoints) renderEndpoint( textBody, base, pathstub, pm, s );  
 	    //
-	        renderDictionary( textBody, pm, se.getSpec().getShortnameService() );
+	        renderDictionary( textBody, pm, se.getSpec().getShortnameService().asContext().clone() );
 	        textBody.append( "</div>\n" );
 		}
 		
@@ -114,7 +114,7 @@ public class ComposeConfigDisplay {
     	}
 	}
 
-	private void renderDictionary( StringBuilder sb, PrefixMapping pm, ShortnameService sns ) {
+	private void renderDictionary( StringBuilder sb, PrefixMapping pm, Context sns ) {
     	String name = "api:shortNameDictionary";
     	List<String> shortNames = preferredShortnamesInOrder( sns );
 		sb.append( "<h2>shortname dictionary <a href='javascript:toggle(\"" + name + "\")'>show/hide</a>" ).append( " </h2>\n" );
@@ -122,8 +122,8 @@ public class ComposeConfigDisplay {
 		sb.append( "<table>\n" );
 		sb.append( "<thead><tr><th>short name</th><th>range (if property)</th><th>qname</th></tr></thead>\n" );
 		for (String n: shortNames ) {
-			String uri = sns.asContext().getURIfromName( n );
-			ContextPropertyInfo cpi = sns.asContext().getPropertyByName( n );
+			String uri = sns.getURIfromName( n );
+			ContextPropertyInfo cpi = sns.getPropertyByName( n );
 			String range = (cpi == null ? "-" : rangeType( pm, cpi.getType() ) );
 			sb.append( "<tr>" )
 				.append( "<td>" ).append( n ).append( "</td>" )
@@ -140,12 +140,12 @@ public class ComposeConfigDisplay {
 		return "<a href='" + uri + "'>" + pm.shortForm( uri ) + "</a>";
 	}
 
-	private List<String> preferredShortnamesInOrder(ShortnameService sns) {
-		Set<String> allNames = new HashSet<String>( sns.asContext().allNames() );
+	private List<String> preferredShortnamesInOrder(Context sns) {
+		Set<String> allNames = new HashSet<String>( sns.allNames() );
 		Set<String> toRemove = new HashSet<String>();
 		for (String oneName: allNames) {
-			String uri = sns.asContext().getURIfromName( oneName );
-			String preferred = sns.asContext().getNameForURI( uri );
+			String uri = sns.getURIfromName( oneName );
+			String preferred = sns.getNameForURI( uri );
 			if (!oneName.equals(preferred)) toRemove.add( oneName );
 		}
 		allNames.removeAll( toRemove );
@@ -165,7 +165,7 @@ public class ComposeConfigDisplay {
     	Resource ep = s.getResource();
     	Bindings b = s.getBindings();
     	String ut = ep.getProperty( API.uriTemplate ).getString(); 
-        ShortnameService sns = s.sns();
+        Context sns = s.sns().asContext().clone();
     //
     	renderHeader(sb, s, pathStub, ut);
     	renderComments(sb, s.getResource());
@@ -248,7 +248,7 @@ public class ComposeConfigDisplay {
     	}
 	}
 
-	private void renderViews(StringBuilder sb, Resource ep,  PrefixMapping pm, APIEndpointSpec spec, ShortnameService sns) {
+	private void renderViews(StringBuilder sb, Resource ep,  PrefixMapping pm, APIEndpointSpec spec, Context sns) {
 		Set<String> viewNames = spec.getExplicitViewNames();
 		View dv = spec.getDefaultView();
 		boolean seenDefault = false;
@@ -262,7 +262,7 @@ public class ComposeConfigDisplay {
 		if (dv != null && !seenDefault) renderView( sb, sns, pm, true, dv);
 	}
 
-	private void renderView(StringBuilder sb, ShortnameService sns, PrefixMapping pm, boolean isDefault, View v) {
+	private void renderView(StringBuilder sb, Context sns, PrefixMapping pm, boolean isDefault, View v) {
 		String vn = v.name();
 		String type = typeAsString( v.getType() );
 		sb.append( "<div style='margin-top: 1ex' class='indent'>\n" );
@@ -291,7 +291,7 @@ public class ComposeConfigDisplay {
 		return "IMPOSSIBLE";
 	}
 
-	private String chainToString( ShortnameService sns, PrefixMapping pm, PropertyChain pc ) {
+	private String chainToString( Context sns, PrefixMapping pm, PropertyChain pc ) {
 		StringBuilder sb = new StringBuilder();
 		List<Property> properties = pc.getProperties();
 		Property last = properties.get( properties.size() - 1 );
@@ -300,7 +300,7 @@ public class ComposeConfigDisplay {
 			sb.append( dot ).append( shortForm( sns, pm, p ) );
 			dot = ".";
 		}
-		ContextPropertyInfo cpi = sns.asContext().findProperty( last );
+		ContextPropertyInfo cpi = sns.findProperty( last );
 		if (cpi != null) {
 			String type = cpi.getType();
 			if (type != null && type.startsWith( "http:" )) {
@@ -384,8 +384,8 @@ public class ComposeConfigDisplay {
 		}
     };
     
-    protected static String shortForm( ShortnameService sns, PrefixMapping pm, Resource r ) {
-    	String x = sns.asContext().getNameForURI( r.getURI() );
+    protected static String shortForm( Context sns, PrefixMapping pm, Resource r ) {
+    	String x = sns.getNameForURI( r.getURI() );
     	return x == null ? shortForm( pm, r ) : x;
     }
 
