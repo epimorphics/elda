@@ -110,4 +110,21 @@ public class URIUtils {
 		}
 	}
 
+	public static URI forceDecode(URI u) {
+		try {
+			return new URI
+				( 
+				u.getScheme(),
+				u.getUserInfo(),
+				u.getHost(),
+				u.getPort(),
+				u.getPath(),
+				u.getQuery(),
+				u.getFragment()
+				);
+		} catch (URISyntaxException e) {
+			throw new WrappedException( e );
+		}
+	}
+
 }

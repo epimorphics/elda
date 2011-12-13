@@ -105,6 +105,17 @@ import com.hp.hpl.jena.shared.WrappedException;
             @Context ServletContext servCon,
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
+//    	System.err.println( ">> ui.getRequestURI(): " + ui.getRequestUri() );
+//    	System.err.println( ">> fiddled:            " + URIUtils.newURI( ui.getRequestUri().toString() ) );
+//    	System.err.println( ">> other:              " + URIUtils.newURI( ui.getRequestUriBuilder().build().toString() ) );
+    	
+    	System.err.println( ">> " + ui.getRequestUri() );
+    	System.err.println( ">> " + ui.getRequestUri().getQuery() );
+    	System.err.println( ">> " + ui.getBaseUri() );
+    	System.err.println( ">> " + ui.getPath() );
+    	System.err.println( ">> " + ui.getQueryParameters() );
+    	
+    	
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
     	boolean dontCache = has( rh, "pragma", "no-cache" ) || has( rh, "cache-control", "no-cache" );
@@ -186,7 +197,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     	, Match match
     	) {
     	URLforResource as = pathAsURLFactory(servCon);
-    	URI requestUri = ui.getRequestUri();
+    	URI requestUri = URIUtils.forceDecode( ui.getRequestUri() );
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
