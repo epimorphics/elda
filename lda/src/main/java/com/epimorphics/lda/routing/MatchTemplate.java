@@ -40,11 +40,18 @@ public class MatchTemplate<T> {
 		) {
 		this.where = where;
 		this.value = value;
-		this.patterns = patterns;
+		this.patterns = patterns + patternCount(params);
 		this.literals = literals;
 		this.compiled = compiled;
 		this.template = template;
 		this.params = params;
+	}
+
+	private int patternCount(Map<String, String> params ) {
+		int result = 0;
+		for (Map.Entry<String, String> e: params.entrySet())
+			if (e.getValue().startsWith("{")) result += 1;
+		return result;
 	}
 
 	/**
