@@ -11,8 +11,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.epimorphics.jsonrdf.Context;
@@ -53,8 +55,8 @@ public class ComposeConfigDisplay {
 			String label = getLabelled( root, shortName );
 			List<APIEndpointSpec> endpoints = se.getSpec().getEndpoints();
 			boolean showThis = occursIn( pathstub, endpoints );
-			textBody.append( "<h2>" + label + " <a href='javascript:toggle(\"" + shortName + "\")'>show/hide</a></h2>" );
-			textBody.append( "<div id='" + shortName + "' class='" + (showThis ? "show" : "hide") + "'>\n" );
+			textBody.append( "<h2>" + label + " <a href='javascript:toggle(\"" + idFor(shortName) + "\")'>show/hide</a></h2>" );
+			textBody.append( "<div id='" + idFor(shortName) + "' class='" + (showThis ? "show" : "hide") + "'>\n" );
 	        renderComments( textBody, root );
 	    //
 	        Statement ep = root.getProperty( API.sparqlEndpoint );
@@ -75,7 +77,17 @@ public class ComposeConfigDisplay {
         return textBody.toString();
 	}  
     
-    private boolean occursIn( String pathstub, List<APIEndpointSpec> endpoints ) {
+	private final Map<String, String> idMap = new HashMap<String, String>();
+	
+	private int idCount = 1000;
+	
+    private String idFor( String shortName ) {
+    	String result = idMap.get(shortName);
+    	if (result == null) idMap.put(shortName, result = "id_" + idCount++ );
+    	return result;
+	}
+
+	private boolean occursIn( String pathstub, List<APIEndpointSpec> endpoints ) {
     	for (APIEndpointSpec es: endpoints)
     		if (matches( pathstub, es.getURITemplate().substring(1) )) return true;
 		return false;
@@ -117,8 +129,8 @@ public class ComposeConfigDisplay {
 	private void renderDictionary( StringBuilder sb, PrefixMapping pm, Context sns ) {
     	String name = "api:shortNameDictionary";
     	List<String> shortNames = preferredShortnamesInOrder( sns );
-		sb.append( "<h2>shortname dictionary <a href='javascript:toggle(\"" + name + "\")'>show/hide</a>" ).append( " </h2>\n" );
-		sb.append( "<div id='" + name + "' class='hide'>" );
+		sb.append( "<h2>shortname dictionary <a href='javascript:toggle(\"" + idFor(name) + "\")'>show/hide</a>" ).append( " </h2>\n" );
+		sb.append( "<div id='" + idFor(name) + "' class='hide'>" );
 		sb.append( "<table>\n" );
 		sb.append( "<thead><tr><th>short name</th><th>range (if property)</th><th>qname</th></tr></thead>\n" );
 		for (String n: shortNames ) {
@@ -183,12 +195,12 @@ public class ComposeConfigDisplay {
 		String name = ut;
     	String kind = s.isListEndpoint() ? "list" : "item";
     	sb.append( "<div style='font-size: 150%; margin-top: 1ex'>" )
-    		.append( " <a href='javascript:toggle(\"" + name + "\")'>" ).append( name ).append( "</a>" )
+    		.append( " <a href='javascript:toggle(\"" + idFor(name) + "\")'>" ).append( name ).append( "</a>" )
     		.append( " [" ).append( kind ).append( " endpoint] " )
     		.append( " </div>\n" )
     		;
     	String visibility = matches( pathStub, ut.substring(1) ) ? "show" : "hide";
-    	sb.append( "<div id='" + name + "' class='" + visibility + "'>" );
+    	sb.append( "<div id='" + idFor(name) + "' class='" + visibility + "'>" );
 	}
 
 	private boolean matches( String actual, String pattern ) {
