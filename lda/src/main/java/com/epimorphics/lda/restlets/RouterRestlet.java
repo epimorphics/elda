@@ -124,9 +124,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         	Times t = new Times( pathstub );
         	Controls c = new Controls( !dontCache, t );
             List<MediaType> mediaTypes = JerseyUtils.getAcceptableMediaTypes( headers );
-            Response r = runEndpoint( c, servCon, ui, queryParams, mediaTypes, formatSuffix, match );
-            // StatsValues.accumulate( t.done() );
-			return r; 
+            return runEndpoint( c, servCon, ui, queryParams, mediaTypes, formatSuffix, match ); 
         }
     }
     
@@ -187,6 +185,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     	) {
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = URIUtils.forceDecode( ui.getRequestUri() );
+    	log.info( "handling request " + requestUri );
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
@@ -199,6 +198,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? formatSuffix : resultsAndFormat.b);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
+			log.info( "rendering with formatter " + r.getMediaType(rc) );
 			return doRendering( c, rc, formatter, results, r );
         } catch (StackOverflowError e) {
         	StatsValues.endpointException();

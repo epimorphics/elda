@@ -24,12 +24,16 @@ import com.epimorphics.util.StreamUtils;
 public abstract class BytesOutTimed implements BytesOut {
 
 	@Override public final void writeAll( Times t, OutputStream os ) {
-		long base = System.currentTimeMillis();
-		CountStream cos = new CountStream( os );
-		writeAll( cos );
-		StreamUtils.flush( os );
-        t.setRenderedSize( cos.size() );
-        t.setRenderDuration( System.currentTimeMillis() - base, getFormat() );
+		try {
+			long base = System.currentTimeMillis();
+			CountStream cos = new CountStream( os );
+			writeAll( cos );
+			StreamUtils.flush( os );
+	        t.setRenderedSize( cos.size() );
+	        t.setRenderDuration( System.currentTimeMillis() - base, getFormat() );
+		} catch (RuntimeException e) {
+			throw new RuntimeException( "exception during streaming: " + e.getMessage() );
+		}
 	}
 	
 	/**
