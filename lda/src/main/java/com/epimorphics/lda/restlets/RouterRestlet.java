@@ -50,7 +50,7 @@ import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.exceptions.ExpansionFailedException;
+import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.exceptions.QueryParseException;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
@@ -205,8 +205,8 @@ import com.hp.hpl.jena.shared.WrappedException;
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
             return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
-        } catch (ExpansionFailedException e) {
-        	log.error( "ExpansionFailedException: " + e.getMessage() );
+        } catch (UnknownShortnameException e) {
+        	log.error( "UnknownShortnameException: " + e.getMessage() );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
         	StatsValues.endpointException();
         	return buildErrorResponse(e);

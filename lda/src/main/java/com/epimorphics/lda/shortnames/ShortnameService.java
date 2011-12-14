@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.lda.exceptions.ExpansionFailedException;
+import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -114,7 +114,7 @@ public interface ShortnameService
 						result.add( propertySTAR );
 					} else {
 						String expanded = sns.expand( e );
-						if (expanded == null) throw new ExpansionFailedException( e );
+						if (expanded == null) throw new UnknownShortnameException( e );
 						result.add( ResourceFactory.createProperty( expanded ) );
 						}
 					}

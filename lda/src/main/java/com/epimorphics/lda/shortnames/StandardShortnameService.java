@@ -25,7 +25,7 @@ import java.util.Set;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.ModelLoader;
-import com.epimorphics.lda.exceptions.ExpansionFailedException;
+import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -132,7 +132,7 @@ public class StandardShortnameService implements ShortnameService {
         } else if (res instanceof Literal) {
             return asResource( ((Literal)res).getLexicalForm() );
         }
-        throw new ExpansionFailedException( res );
+        throw new UnknownShortnameException( res );
     }
 	
     @Override public Resource asResource( String res ) {
@@ -142,7 +142,7 @@ public class StandardShortnameService implements ShortnameService {
         }
         if (uri != null)
             return ResourceFactory.createResource(uri);
-        throw new ExpansionFailedException( res );
+        throw new UnknownShortnameException( res );
     }
     
     /**
