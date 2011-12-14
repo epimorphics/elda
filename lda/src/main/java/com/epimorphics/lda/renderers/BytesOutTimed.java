@@ -10,7 +10,6 @@ package com.epimorphics.lda.renderers;
 
 import java.io.OutputStream;
 
-import org.openjena.atlas.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,9 @@ public abstract class BytesOutTimed implements BytesOut {
 	        t.setRenderDuration( System.currentTimeMillis() - base, getFormat() );
 		} catch (Throwable e) {
 			// throw new RuntimeException( "exception during streaming: " + e.getMessage() );
-			log.warn( "exception during streaming: " + e.getMessage() );
+			if (e.getClass().getName().equals("ClientAbortException")) log.warn( "client exception during streaming: " + e.getMessage() );
+			else if (e instanceof RuntimeException) throw (RuntimeException) e;
+			else throw new RuntimeException( "unexpected: " + e );
 		}
 	}
 	
