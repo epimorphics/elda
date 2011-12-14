@@ -10,6 +10,10 @@ package com.epimorphics.lda.renderers;
 
 import java.io.OutputStream;
 
+import org.openjena.atlas.logging.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.CountStream;
@@ -23,6 +27,8 @@ import com.epimorphics.util.StreamUtils;
 */
 public abstract class BytesOutTimed implements BytesOut {
 
+    protected static Logger log = LoggerFactory.getLogger(BytesOutTimed.class);
+    
 	@Override public final void writeAll( Times t, OutputStream os ) {
 		try {
 			long base = System.currentTimeMillis();
@@ -32,7 +38,8 @@ public abstract class BytesOutTimed implements BytesOut {
 	        t.setRenderedSize( cos.size() );
 	        t.setRenderDuration( System.currentTimeMillis() - base, getFormat() );
 		} catch (Throwable e) {
-			throw new RuntimeException( "exception during streaming: " + e.getMessage() );
+			// throw new RuntimeException( "exception during streaming: " + e.getMessage() );
+			log.warn( "exception during streaming: " + e.getMessage() );
 		}
 	}
 	
