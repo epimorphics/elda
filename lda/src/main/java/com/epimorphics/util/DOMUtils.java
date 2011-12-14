@@ -110,7 +110,6 @@ public class DOMUtils
 			}
 		String nsd = namespacesDocument( pm );
 		t.setParameter( "api:namespaces", nsd );
-		// log.debug( "set xslt parameter api:namespaces = " + nsd );
 		return t;
 		}
 	
@@ -138,7 +137,6 @@ public class DOMUtils
 					t = tf.newTemplates( new StreamSource( u.toExternalForm() ) );
 					long after = System.currentTimeMillis();
 					times.setStylesheetCompileTime( after - origin );
-					// log.debug( "TIMING: compile stylesheet " + transformFilePath + " " + (after - origin)/1000.0 + "s" );
 					cache.put( u, t );
 				}
 				return t.newTransformer();

@@ -121,7 +121,7 @@ spec:api a api:API
 		; api:stylesheet 'xsltsheets/result-osm.xsl' 
         # ; api:stylesheet 'xsltsheets/ashtml.xsl'    
 		; extras:metadataOptions "bindings,formats,versions,execution"
-		; api:mimeType 'text/html'
+		; api:mimeType 'text/html; charset=utf-8'
 		] 
 	#
 	# as an alternative, a non-default html formatter with the name

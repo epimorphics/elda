@@ -183,11 +183,14 @@ public class MediaType
 	public static MediaType decodeType( String one )
 		{
 		float Q = 1.0f;
+		String params = "";
 		String[] X = one.split( " *; *" );
 		for (int i = 1; i < X.length; i += 1)
 			if (X[i].startsWith("q="))
 				Q = Float.parseFloat( X[1].substring(2));
+			else 
+				params = params + "; " + X[i];
 		String [] AB = X[0].split( "/" );
-		return new MediaType( AB[0], AB[1], Q );
+		return new MediaType( AB[0], AB[1], Q, params );
 		}
 	}
