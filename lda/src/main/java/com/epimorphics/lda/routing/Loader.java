@@ -30,6 +30,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.Version;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.APISecurityException;
@@ -84,6 +85,7 @@ public class Loader extends HttpServlet {
 
     @Override public void init() {
     	baseFilePath = withTrailingSlash( getServletContext().getRealPath("/") );
+    	log.info( "Starting Elda " + Version.string );
     	configureLog4J();
         log.info( "baseFilePath: " + baseFilePath );
         contextPath = getServletContext().getContextPath();
