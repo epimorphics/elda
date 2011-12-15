@@ -67,13 +67,18 @@ public class URIUtils {
 		return value.replace( "&", "%??" );
 	}
 
-	public static String replaceSuffix( Set<String> knownFormats, String newSuffix, String oldPath ) {
+	private static String replaceSuffix( Set<String> knownFormats, String newSuffix, String oldPath ) {
 		int dot_pos = oldPath.lastIndexOf( '.' ), slash_pos = oldPath.lastIndexOf( '/' );
 		if (dot_pos > -1 && dot_pos > slash_pos) {
 			String oldSuffix = oldPath.substring( dot_pos + 1 );
-			if (knownFormats.contains( oldSuffix )) return oldPath.substring(0, dot_pos + 1) + newSuffix;
+			if (knownFormats.contains( oldSuffix )) 
+				return appendSuffix( oldPath.substring(0, dot_pos), newSuffix );
 		}
-		return oldPath + "." + newSuffix;
+		return appendSuffix( oldPath, newSuffix );
+	}
+
+	private static String appendSuffix( String oldPath, String newSuffix ) {
+		return newSuffix.equals("") ? oldPath : oldPath + "." + newSuffix;
 	}
 
 	public static URI changeFormatSuffix(URI reqURI, Set<String> knownFormats, String formatName)  {
