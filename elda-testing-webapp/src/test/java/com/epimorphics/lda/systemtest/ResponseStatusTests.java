@@ -32,8 +32,8 @@ public class ResponseStatusTests {
 		ResponseStatusTests.testHttpRequest( "alpha?nosuch=10", EldaException.BAD_REQUEST, Util.ignore );
 	}
 	
-	@Test public void testCallbackWithoutJSONGeneratesBadRequest() throws ClientProtocolException, IOException {
-		ResponseStatusTests.testHttpRequest( "alpha?callback=wrong", EldaException.BAD_REQUEST, Util.ignore );
+	@Test public void testCallbackWithNonJSONGeneratesBadRequest() throws ClientProtocolException, IOException {
+		ResponseStatusTests.testHttpRequest( "alpha.html?callback=wrong", EldaException.BAD_REQUEST, Util.ignore );
 	}
 	
 	@Test public void testCallbackWithJSONReturnsStatusOK() throws ClientProtocolException, IOException {

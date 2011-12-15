@@ -26,6 +26,10 @@ public class TurtleRenderer implements Renderer {
     @Override public MediaType getMediaType( Bindings irrelevant ) {
         return MediaType.TEXT_TURTLE;
     }
+
+    @Override public String getPreferredSuffix() {
+    	return "ttl";
+    }
     
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, final APIResultSet results ) {
     	return new BytesOutTimed() {

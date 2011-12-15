@@ -42,6 +42,10 @@ public class XMLRenderer implements Renderer {
 		return mt;
 	}
 
+    @Override public String getPreferredSuffix() {
+    	return "xml";
+    }
+
 	@Override public synchronized Renderer.BytesOut render( Times t, Bindings rc, APIResultSet results ) {
 		Resource root = results.getRoot();
 		PrefixMapping pm = root.getModel();

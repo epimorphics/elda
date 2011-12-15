@@ -50,6 +50,10 @@ public class Demo_HTML_Renderer implements Renderer {
     	this.endpoint = ep;
     }
 
+    @Override public String getPreferredSuffix() {
+    	return "html";
+    }
+    
 	@Override public MediaType getMediaType( Bindings irrelevant ) {
         return MediaType.TEXT_HTML;
     }

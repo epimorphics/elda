@@ -27,6 +27,10 @@ public class RDFXMLRenderer implements Renderer {
        return MediaType.APPLICATION_RDF_XML;
     }
 
+    @Override public String getPreferredSuffix() {
+    	return "rdf";
+    }
+
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, final APIResultSet results ) {
     	return new BytesOutTimed() {
 			

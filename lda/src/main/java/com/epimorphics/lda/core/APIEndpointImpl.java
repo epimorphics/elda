@@ -82,7 +82,10 @@ public class APIEndpointImpl implements APIEndpoint {
         APIQuery query = spec.getBaseQuery();
         Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
         View view = viewAndFormat.a; 
+    //
         String format = viewAndFormat.b;
+        if (format == null || format.equals("")) format = given.getAsString( "_suffix", "" );
+    //    
         APIResultSet unfiltered = query.runQuery( c, spec.getAPISpec(), cache, cc, view );
         APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
@@ -124,15 +127,19 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.isListEndpoint();
     }
 
-	private Resource resourceForPage( Resource notThisPlease, String format, Model m, URI ru, int page) {
-		URI newURI = isListEndpoint()
+	private Resource resourceForPage( Resource notThisPlease, Set<String> formatNames, String format, Model m, URI ru, int page) {
+		URI x = isListEndpoint()
 			? URIUtils.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
 			: URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
+		URI newURI = URIUtils.changeFormatSuffix(x, formatNames, format );
+	//
 		Resource thisPage = m.createResource( newURI.toString() );
-//		if (!isListEndpoint() && newURI.indexOf('?') < 0) {
+		if (!isListEndpoint() && newURI.toString().indexOf('?') < 0) {
 //			 newURI += "?";
 //			thisPage = m.createResource( newURI.toString() );
-//		}
+		}
+//		System.err.println( ">> notThisPlease: " + notThisPlease );
+//		System.err.println( ">> thisPage:      " + thisPage );
 		return thisPage;
     }
     
@@ -167,10 +174,10 @@ public class APIEndpointImpl implements APIEndpoint {
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
         Resource uriForDefinition = createDefinitionURI( rsm, ru, uriForSpec, template ); 
-        Resource thisPage = resourceForPage(uriForDefinition, format, rsm, ru, page);
+        Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
+        Resource thisPage = resourceForPage(uriForDefinition, formatNames, format, rsm, ru, page);
         rs.setRoot(thisPage);
     //
-		Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
 		EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, cc, ru, formatNames );
 		createOptionalMetadata(rs, query, em);   
 	//
@@ -190,9 +197,9 @@ public class APIEndpointImpl implements APIEndpoint {
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
         	thisPage.addProperty( API.items, content );
-    		thisPage.addProperty( XHV.first, resourceForPage( uriForDefinition, format, rsm, ru, 0 ) );
-    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( uriForDefinition, format, rsm, ru, page+1 ) );
-    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( uriForDefinition, format, rsm, ru, page-1 ) );
+    		thisPage.addProperty( XHV.first, resourceForPage( uriForDefinition, formatNames, format, rsm, ru, 0 ) );
+    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, resourceForPage( uriForDefinition, formatNames,format, rsm, ru, page+1 ) );
+    		if (page > 0) thisPage.addProperty( XHV.prev, resourceForPage( uriForDefinition, formatNames, format, rsm, ru, page-1 ) );
     		Resource listRoot = resourceForList(rsm, ru);
     		thisPage
 	    		.addProperty( DCTerms.isPartOf, listRoot )

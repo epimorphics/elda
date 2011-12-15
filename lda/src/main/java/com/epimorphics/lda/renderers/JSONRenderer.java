@@ -59,6 +59,10 @@ public class JSONRenderer implements Renderer {
         return callback == null ? mt : MediaType.TEXT_JAVASCRIPT;
     }
 
+    @Override public String getPreferredSuffix() {
+    	return "json";
+    }
+
     @Override public Renderer.BytesOut render( Times t, Bindings b, APIResultSet results) {
         Context given = api.getSpec().getAPISpec().getShortnameService().asContext();
         

@@ -189,14 +189,16 @@ import com.hp.hpl.jena.shared.WrappedException;
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
+        	APIEndpoint ep = match.getEndpoint();
+        	Renderer _default = APIEndpointUtil.getRenderer( ep, formatSuffix, mediaTypes );
+        	if (formatSuffix == null && _default != null) formatSuffix = _default.getPreferredSuffix();
         	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatSuffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
             if (results == null)
             	throw new RuntimeException( "ResultSet is null -- this should never happen." );
-            APIEndpoint ep = match.getEndpoint();
 			Bindings rc = new Bindings( resultsAndFormat.c.copy(), as );
 			String _format = resultsAndFormat.b;
-			String formatter = (_format.equals( "" ) ? formatSuffix : resultsAndFormat.b);
+			String formatter = (_format.equals( "" ) ? formatSuffix : _format);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
 			log.info( "rendering with formatter " + r.getMediaType(rc) );
 			return doRendering( c, rc, formatter, results, r );

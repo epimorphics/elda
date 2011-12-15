@@ -35,6 +35,10 @@ public class HTMLRenderer implements Renderer {
         return MediaType.TEXT_HTML;
     }
 
+    @Override public String getPreferredSuffix() {
+    	return "html";
+    }
+
     // TODO rewrite so that it can stream
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
     	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;

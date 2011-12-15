@@ -27,6 +27,10 @@ public final class TextPlainRenderer implements Renderer {
         return MediaType.TEXT_PLAIN;
     }
 
+    @Override public String getPreferredSuffix() {
+    	return "text";
+    }
+
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, final APIResultSet results ) {
     	return new BytesOutTimed() {
 			

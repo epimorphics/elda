@@ -42,5 +42,10 @@ public interface Renderer {
      	Render a result set. Use t to log times if required.
     */
     public BytesOut render( Times t, Bindings rc, APIResultSet results );
+
+    /**
+     	Answer the format suffix associated with this renderer.
+    */
+	public String getPreferredSuffix();
 }
 

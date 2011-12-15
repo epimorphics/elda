@@ -154,7 +154,7 @@ spec:api a api:API
 	# _suppress_ipto, if set to "yes", causes the isPrimaryTopicOf item
 	# endpoints to be suppressed, to avoid tickling a stylesheet infelicity.
 	#
-	; api:variable [api:name "_suppress_ipto"; api:value "yes"]
+	; api:variable [api:name "_suppress_ipto"; api:value "no"]
     #
     # causes property names starting "hasX", with some capital letter
     # 'X', to start with 'x' instead, to bypass a stylesheet infelicity.

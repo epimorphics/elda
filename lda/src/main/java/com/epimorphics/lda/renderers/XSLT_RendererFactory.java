@@ -38,6 +38,10 @@ public class XSLT_RendererFactory implements RendererFactory {
 				return mt;
 			}
 
+		    @Override public String getPreferredSuffix() {
+		    	return "html"; // TODO handle other suffixes
+		    }
+
 			@Override public Renderer.BytesOut render( Times t, Bindings rc, APIResultSet results ) {
 				final String meta = RDFUtils.getStringValue( root, EXTRAS.metadataOptions, null );
 				if (meta != null) results.includeMetadata( meta.split( "," ) );
