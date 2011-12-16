@@ -41,11 +41,11 @@ public class EndpointMetadata {
 	protected final String pageNumber;
 	protected final Set<String> formatNames;
 	protected final boolean isListEndpoint;
-	protected final URI reqURI; 
+	protected final URI pageURI; 
 	
-	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, Bindings cc, URI reqURI, Set<String> formatNames ) {
+	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, Bindings cc, URI pageURI, Set<String> formatNames ) {
 		this.cc = cc;
-		this.reqURI = reqURI;
+		this.pageURI = pageURI;
 		this.thisPage = thisPage;
 		this.pageNumber = pageNumber;
 		this.formatNames = formatNames;
@@ -73,7 +73,7 @@ public class EndpointMetadata {
 	 	modified by replacing the _view with the requested name.
 	*/
     private Resource resourceForView( Model m, String name ) {
-    	URI a = URIUtils.replaceQueryParam( reqURI, QueryParameter._VIEW, name );
+    	URI a = URIUtils.replaceQueryParam( pageURI, QueryParameter._VIEW, name );
     	URI b = isListEndpoint ? URIUtils.replaceQueryParam( a, QueryParameter._PAGE, pageNumber ) : a;
 		return m.createResource( b.toString() );
     }
@@ -92,7 +92,7 @@ public class EndpointMetadata {
 		for (String formatName: f.formatNames()) 
 			if (formatName.charAt(0) != '_') {
 				String typeForName = f.getTypeForName( formatName ).toString(); 
-				Resource v = resourceForFormat( reqURI, meta, formatNames, formatName );
+				Resource v = resourceForFormat( pageURI, meta, formatNames, formatName );
 				Resource format = meta.createResource().addProperty( RDFS.label, typeForName );
 				page.addProperty( DCTerms.hasFormat, v );
 				v.addProperty( DCTerms.isFormatOf, thisPage );

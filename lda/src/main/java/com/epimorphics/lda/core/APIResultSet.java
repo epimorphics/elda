@@ -12,6 +12,7 @@
 
 package com.epimorphics.lda.core;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,7 @@ public class APIResultSet {
     static final Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
     
 	protected Resource root;
-	protected String contentLocation;
+	protected URI contentLocation;
 
 	protected final List<Resource> results;
     protected final boolean isCompleted;
@@ -62,11 +63,11 @@ public class APIResultSet {
     */
 	protected final Map<String, Model> metadata = new HashMap<String, Model>();
     
-    public String getContentLocation() {
+    public URI getContentLocation() {
         return contentLocation;
     }
 
-    public void setContentLocation(String contentLocation) {
+    public void setContentLocation(URI contentLocation) {
         this.contentLocation = contentLocation;
     }
 

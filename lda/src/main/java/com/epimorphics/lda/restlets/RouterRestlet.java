@@ -223,6 +223,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
             return returnNotFound("Failed to parse query request : " + e.getMessage());
         } catch (Throwable e) {
+        	log.error( "General failure: " + e.getMessage() );
         	StatsValues.endpointException();
             return returnError( e );
         }
@@ -275,9 +276,12 @@ import com.hp.hpl.jena.shared.WrappedException;
         return enableCORS( Response.ok(response, mimetype) ).build();
     }
     
-    public static Response returnAs(StreamingOutput response, MediaType mimetype, String contentLocation) {
+    public static Response returnAs(StreamingOutput response, MediaType mimetype, URI contentLocation) {
         try {
-            return enableCORS( Response.ok( response, mimetype.toFullString() ) ).build();
+            return enableCORS( Response.ok( response, mimetype.toFullString() ) )
+            	.contentLocation( contentLocation )
+            	.build()
+            	;
         } catch (RuntimeException e) {
             return returnError(e);
         }
