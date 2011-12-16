@@ -174,7 +174,6 @@ public class APIEndpointImpl implements APIEndpoint {
         thisPage.addProperty( API.extendedMetadataVersion, rsm.createResource( emv_uri.toString() ) );
     //
         URI unPagedURI = withoutPageParameters( pageBase );
-        rs.setContentLocation( unPagedURI );
         if (isListEndpoint()) {
         	RDFList content = rsm.createList( rs.getResultList().iterator() );
         	thisPage
@@ -196,12 +195,14 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		.addProperty( API.definition, uriForDefinition ) 
 	    		.addProperty( RDF.type, API.ListEndpoint )
 	    		;
+    		rs.setContentLocation( pageBase );
         } else if (rs.isEmpty()) {
         	EldaException.NoItemFound();
         } else {
         	Resource content = rs.getResultList().get(0);
         	thisPage.addProperty( FOAF.primaryTopic, content );
         	content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
+        	rs.setContentLocation( unPagedURI );
         }
     }
 
