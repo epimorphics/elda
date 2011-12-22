@@ -32,12 +32,12 @@ public class LARQManager {
     public static final String LARQ_DIRECTORY_KEY = "com.epimorphics.api.LARQ-base-directory";
     
     public static void setLARQIndexDirectory( String value ) {
-//        try {
-//        	larqIndexDirectory = FSDirectory.open( new File(value ));    
-//        	log.info( "setLARQIndexDirectory " + value );
-//        } catch (IOException e) {
-//        	throw new WrappedException( e );
-//        }
+        try {
+        	larqIndexDirectory = FSDirectory.open( new File(value ));    
+        	log.info( "setLARQIndexDirectory " + value );
+        } catch (IOException e) {
+        	throw new WrappedException( e );
+        }
     }
     
     static Logger log = LoggerFactory.getLogger( LARQManager.class );
