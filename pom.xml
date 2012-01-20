@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <properties>
-    <tempSCM>/tmp/tempSCM</tempSCM>    
+    <tempSCM>/tmp/tempSCM</tempSCM>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -22,7 +22,7 @@
 
   <build>
     <pluginManagement>
-      <plugins>     
+      <plugins>
 
       <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -43,9 +43,9 @@
 
     <extensions>
       <extension>
-	<groupId>org.apache.maven.wagon</groupId>
-	<artifactId>wagon-ftp</artifactId>
-	<version>1.0-beta-2</version>
+  <groupId>org.apache.maven.wagon</groupId>
+  <artifactId>wagon-ftp</artifactId>
+  <version>1.0-beta-2</version>
       </extension>
     </extensions>
     <plugins>
@@ -69,7 +69,7 @@
       </plugin>
     </plugins>
   </build>
-                               
+
   <distributionManagement>
       <repository>
           <id>ftp-repo-epi</id>
@@ -97,10 +97,8 @@
 
     <dependency>
         <groupId>org.apache.jena</groupId>
-        <artifactId>larq</artifactId>
-        <type>jar</type>
-        <version>0.2.2-incubating-SNAPSHOT</version>
-        <scope>compile</scope>
+        <artifactId>jena-larq</artifactId>
+        <version>1.0.0-incubating-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -142,7 +140,7 @@
 
  <repositories>
     <!-- jena-repo is mirrored to Maven central repository -->
-    <!-- In case mirroring has not happened yet ... -->
+    <!-- In case mirroring has not happened yet ... - ->
     <repository>
       <id>repo-jena</id>
       <name>Jena Maven - Repository</name>
@@ -153,7 +151,7 @@
       </snapshots>
     </repository>
 
-    <!-- jena-repo-dev is where SNAPSHOTs and RCs are published -->
+    <!- - jena-repo-dev is where SNAPSHOTs and RCs are published - ->
     <repository>
       <id>repo-jena-dev</id>
       <name>Jena Maven - Development Repository</name>
@@ -162,6 +160,26 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
+    </repository>
+    -->
+
+    <repository>
+      <id>apache-repo-snapshots</id>
+      <url>https://repository.apache.org/content/repositories/snapshots/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+
+    <repository>
+      <id>apache-repo-releases</id>
+      <url>https://repository.apache.org/content/repositories/releases/</url>
+      <releases>
+       <enabled>true</enabled>
+      </releases>
     </repository>
 
     <repository>
@@ -182,7 +200,7 @@
     <module>json-rdf</module>
     <module>lda</module>
     <module>deliver-elda</module>
-    
+
     <module>elda-testing-webapp</module>
   </modules>
 
