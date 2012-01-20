@@ -685,17 +685,18 @@ public class APIQuery implements Cloneable, VarSupply {
     		result.append( query.substring( start, m.start() ) );
     		String name = m.group().substring(1);
     		Value v = cc.get( name );
-//    		System.err.println( ">> value of " + name + " is " + v );
     		if (v == null) {
     			result.append( m.group() );
     		} else {
 	    		Info prop = varInfo.get( RDFQ.var( "?" + name ) );
 	            String val = v.spelling();
+	            
 	            String normalizedValue = 
 	        		(prop == null) 
-	        		    ? valueAsSparql( "<not used>", v )
+	        		    ? valueAsSparql( v, pl )
 	        		    : objectForValue( prop, val, defaultLanguage ).asSparqlTerm(pl);
-	    		result.append( normalizedValue );
+	    		
+	        	result.append( normalizedValue );
     		}
     		start = m.end();
     	}
@@ -703,19 +704,12 @@ public class APIQuery implements Cloneable, VarSupply {
     	return result.toString();
     }
 
-    private String valueAsSparql( String OTHER, Value v ) {
-    	String type = v.type();
-    	if (type.equals( "" )) return "\"" + protect(v.spelling()) + "\"";
-    	if (type.equals( RDFS.Resource.getURI() )) return "<" + v.spelling() + ">";
-    	throw new RuntimeException( "valueAsSparql: cannot handle type: " + type + "; maybe try " + OTHER + "?" );
+    private String valueAsSparql( Value v, PrefixLogger pl ) {
+    	return v.type().equals( RDFS.Resource.getURI() ) 
+    		? "<" + v.spelling() + ">"
+    		: v.asSparqlTerm(pl)
+    		;
     }
-
-	private String protect(String valueString) {
-		return valueString
-			.replaceAll( "\\\\", "\\\\" )
-			.replaceAll( "'", "\\'" )
-			;
-	}
 
 	/**
      * Return the select query that would be run or a plain string for the resource
