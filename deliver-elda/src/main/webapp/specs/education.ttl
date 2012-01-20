@@ -172,14 +172,15 @@ spec:api a api:API
 spec:showing-uri-template-with-query-params
     a api:ListEndpoint
     ; api:viewer api:describeViewer
-    ; api:uriTemplate "/education/example?thing={uri}"
+    ; api:variable [api:name "uri"; api:type rdfs:Resource]
+    ; api:uriTemplate "/education/example?resource={uri}&p2={param2}"
     ; api:selector [api:filter "type={uri}"]
     .
 
 spec:school-with-redirect
     a api:ListEndpoint
     ; api:viewer api:describeViewer
-    ; api:uriTemplate "/redirected/education/id/schoolé/{id}"
+    ; api:uriTemplate "/redirected/education/id/school��/{id}"
     ; api:itemTemplate "http://education.data.gov.uk/id/school/{id}"
     .
 

@@ -141,7 +141,7 @@ public class APIEndpointImpl implements APIEndpoint {
     		return rsm.createResource( quasiTemplate + "/meta" );
     	}
 		String argPattern = "\\{[-._A-Za-z]+\\}";
-		String pattern = template.replaceAll( argPattern, "[^/]*" );
+		String pattern = quasiTemplate.replaceAll( argPattern, "[^/]*" );
 		String replaced = ru.toString().replaceAll( pattern, "/meta" + quasiTemplate );
 		return rsm.createResource( replaced );
 	}
