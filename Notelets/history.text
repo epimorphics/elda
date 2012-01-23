@@ -1,3 +1,21 @@
+1.2.5
+
+* Elda logs its version information when it starts up.
+
+* Elda now allows renderers to stream their output. This
+  is an INTERFACE CHANGE affecting anyone who has built 
+  their own renderers.
+
+* Mediatype decoding in formatter configuration now preserves
+  parameters.
+
+* The HTML, XML, Turtle, and JSON renderers force charset UTF-8.
+
+* Avoided mutiply-encoded characters in URIs with non-ASCII
+  characters.
+
+* Elda sets the content-location property of the response.
+
 1.2.1
 
 * variables declared in the config file don't get /replaced/
