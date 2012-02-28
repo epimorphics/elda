@@ -89,6 +89,7 @@ public class XMLRendering {
 	private final ShortnameService sns;
 	private final MultiMap<String, String> nameMap;
 	private final boolean suppressIPTO;
+	private final Set<Resource> seen = new HashSet<Resource>();
 	
 	/** if true, property values will appear in sorted order */
 	private final boolean sortPropertyValues = true;
@@ -99,10 +100,8 @@ public class XMLRendering {
 		this.suppressIPTO = suppressIPTO;
 		this.nameMap = sns.nameMap().stage2(stripHas).load(m, m).result();
 	}
-	
-	private final Set<Resource> seen = new HashSet<Resource>();
 
-	Element addResourceToElement( Element e, Resource x ) {
+	public Element addResourceToElement( Element e, Resource x ) {
 		addIdentification( e, x );
 		if (seen.add( x )) {
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
@@ -111,6 +110,29 @@ public class XMLRendering {
 			seen.remove( x );
 		}
 		return e;
+	}
+
+	/**
+	    Attach a value to a property element.
+	*/
+	private Element giveValueToElement( Element pe, RDFNode v ) {
+		if (v.isLiteral()) {
+			addLiteralToElement( pe, (Literal) v );
+		} else {
+			Resource r = v.asResource();
+			if (inPlace( r ))
+				addIdentification( pe, r );
+			else if (RDFUtil.isRDFList( r )) 
+				addItems( pe, r.as(RDFList.class).asJavaList() );
+			else if (r.listProperties().hasNext()) 
+				addResourceToElement( pe, r );
+			else if (v.isAnon()) {
+				if (needsId( v )) pe.setAttribute( "id", idFor( pe, r ) );
+			} else {
+				pe.setAttribute( "href", r.getURI() );
+			}
+		}
+		return pe;
 	}
 
 	private List<Property> asSortedList( Set<Property> set ) {
@@ -171,22 +193,8 @@ public class XMLRendering {
 
 	private void appendValueAsItem( Element pe, RDFNode value ) {
 		Element item = d.createElement( "item" );
-		elementForValue( item, value );
+		giveValueToElement( item, value );
 		pe.appendChild( item );
-	}
-
-	public void giveValueToElement( Element pe, RDFNode v ) {
-		if (v.isLiteral()) {
-			addLiteralToElement( pe, (Literal) v );
-		} else {
-			Resource r = v.asResource();
-			if (inPlace( r ))
-				addIdentification(pe, r);
-			else if (RDFUtil.isRDFList( r )) 
-				addItems( pe, r.as(RDFList.class).asJavaList() );
-			else 
-				elementForValue( pe, v );
-		}
 	}
 
 	private void addItems( Element pe, List<RDFNode> jl ) {	
@@ -206,24 +214,6 @@ public class XMLRendering {
 		String type = L.getDatatypeURI();
 		if (type != null) e.setAttribute( "datatype", shortNameFor( type ) );
 		e.appendChild( d.createTextNode( L.getLexicalForm() ) );
-	}
-
-	private Element elementForValue( Element e, RDFNode v ) {
-		if (v.isLiteral()) {
-			addLiteralToElement( e, (Literal) v );
-		} else if (RDFUtil.isRDFList( v )){
-			List<RDFNode> items = v.as(RDFList.class).asJavaList();
-			for (RDFNode item: items) {
-				giveValueToElement( e, item );
-			}
-		} else if (v.isResource() && v.asResource().listProperties().hasNext()){
-			return addResourceToElement( e, v.asResource() );
-		} else if (v.isAnon() && !v.asResource().listProperties().hasNext()) {
-			if (needsId( v )) e.setAttribute( "id", idFor( e, v.asResource() ));
-		} else {
-			e.setAttribute( "href", v.asResource().getURI() );
-		}
-    return e;
 	}
 
 	private boolean needsId( RDFNode v ) {

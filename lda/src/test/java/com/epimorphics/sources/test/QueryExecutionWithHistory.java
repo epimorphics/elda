@@ -98,9 +98,4 @@ public class QueryExecutionWithHistory implements QueryExecution {
     @Override public void setTimeout(long time1, TimeUnit unit1, long time2, TimeUnit unit2) {
         qe.setTimeout( time1, unit1, time2, unit2 );
     }
-
-    @Override
-    public Query getQuery() {
-        return qe.getQuery();
-    }
 }
