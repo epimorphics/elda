@@ -478,19 +478,19 @@ public class Encoder {
         }
         
         private void encode(Resource r) {
-            if (! needEncodeResource(r, true)) {
-                if (r.isAnon()) {
-                    // Case of an empty bNode, for URI nodes we will already have output URI reference
-                    jw.object(); 
-                    jw.endObject();
-                } else {
-                    jw.value( rules.encodeResourceURI(r.getURI(), context, false) );
-                }
-            } else {
+            if (needEncodeResource( r, true )) {
             	jw.object();
-	            encodeResource(r);
-	            jw.endObject();
-	            markVisitcompleted(r);
+            	encodeResource(r);
+            	jw.endObject();
+            	markVisitcompleted(r);
+            } else {
+            	if (r.isAnon()) {
+            		// Case of an empty bNode, for URI nodes we will already have output URI reference
+            		jw.object(); 
+            		jw.endObject();
+            	} else {
+            		jw.value( rules.encodeResourceURI(r.getURI(), context, false) );
+            	}
             }
         }
 
