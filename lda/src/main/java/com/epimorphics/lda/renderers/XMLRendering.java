@@ -17,6 +17,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.lda.support.MultiMap;
 
 /**
@@ -101,7 +102,15 @@ public class XMLRendering {
 		this.nameMap = sns.nameMap().stage2(stripHas).load(m, m).result();
 	}
 
+	// The way in -- all external uses come via this method, so we can
+	// compute useful things before doing the actual rendering
 	public Element addResourceToElement( Element e, Resource x ) {
+//		CycleFinder p = new CycleFinder();
+//		p.crawl( x );
+		return elementAddResource( e, x );
+	}
+	
+	private Element elementAddResource( Element e, Resource x ) {
 		addIdentification( e, x );
 		if (seen.add( x )) {
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
@@ -125,7 +134,7 @@ public class XMLRendering {
 			else if (RDFUtil.isRDFList( r )) 
 				addItems( pe, r.as(RDFList.class).asJavaList() );
 			else if (r.listProperties().hasNext()) 
-				addResourceToElement( pe, r );
+				elementAddResource( pe, r );
 			else if (v.isAnon()) {
 				if (needsId( v )) pe.setAttribute( "id", idFor( pe, r ) );
 			} else {
