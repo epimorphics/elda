@@ -112,11 +112,16 @@ public class XMLRendering {
 	// compute useful things before doing the actual rendering
 	public Element addResourceToElement( Element e, Resource x ) {
 		itemsBNode = getItems( x );
-		List<RDFNode> items = x.listProperties( API.items ).next().getObject().as( RDFList.class ).asJavaList();
+		List<RDFNode> items = getMagic(x);
 		magic.addAll( items );
 		for (RDFNode m: magic) seen.add( m.asResource() );
 		cyclic.addAll( CycleFinder.findCycles( x ) );
 		return elementAddResource( e, x, false );
+	}
+
+	private List<RDFNode> getMagic(Resource x) {
+		StmtIterator items = x.listProperties( API.items );
+		return items.hasNext() ? items.next().getObject().as( RDFList.class ).asJavaList() : new ArrayList<RDFNode>();
 	}
 	
 	private Resource getItems(Resource x) {
