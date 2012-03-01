@@ -16,9 +16,8 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 */
 public class CycleFinder {
 
-	CycleFinder.Cons trace = null;
-	
-	Set<Resource> seen = new HashSet<Resource>();
+	CycleFinder.Trace trace = null;
+	Set<Resource> inTrace = new HashSet<Resource>();
 	Set<Resource> cyclic = new HashSet<Resource>();
 	
 	/**
@@ -32,47 +31,48 @@ public class CycleFinder {
 	}
 	
 	public void crawl( Resource x ) {
-		if (seen( x )) {
-			markCyclic( x );
-		} else {
-			add( x );
-			for (StmtIterator sit = x.listProperties(); sit.hasNext();) {
-				RDFNode n = sit.next().getObject();
-				if (n.isResource()) crawl( n.asResource() );
+		if (!cyclic.contains( x )) {
+			if (inTrace.contains( x )) {
+				markCyclic( x );
+			} else {
+				add( x );
+				for (StmtIterator sit = x.listProperties(); sit.hasNext();) {
+					RDFNode n = sit.next().getObject();
+					if (n.isResource()) crawl( n.asResource() );
+				}
+				remove( x );
 			}
-			remove( x );
 		}
 	}
 	
-	public boolean seen( Resource x ) {
-		return seen.contains( x );
+	public boolean inTrail( Resource x ) {
+		return inTrace.contains( x );
 	}
 
 	public void remove(Resource x) {
-		seen.remove( x );
 		trace = trace.tail;
+		inTrace.remove( x );
 	}
 
 	public void add( Resource x ) {
-		seen.add( x );
-		trace = new Cons( x, trace );
+		inTrace.add( x );
+		trace = new Trace( x, trace );
 	}
 
 	public void markCyclic(Resource x) {
-		CycleFinder.Cons t = trace;
+		CycleFinder.Trace t = trace;
 		while (true) {
 			cyclic.add( t.head );
 			if (t.head.equals(x)) break;
 			t = t.tail;
 		}
-		cyclic.add( x );
 	}
 
-	static class Cons {
+	static class Trace {
 		Resource head;
-		CycleFinder.Cons tail;
+		CycleFinder.Trace tail;
 		
-		Cons(Resource head, CycleFinder.Cons tail) {
+		Trace(Resource head, CycleFinder.Trace tail) {
 			this.head = head; this.tail = tail;
 		}
 	}

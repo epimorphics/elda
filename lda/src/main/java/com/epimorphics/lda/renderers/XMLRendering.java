@@ -91,6 +91,7 @@ public class XMLRendering {
 	private final MultiMap<String, String> nameMap;
 	private final boolean suppressIPTO;
 	private final Set<Resource> seen = new HashSet<Resource>();
+	private final Set<Resource> cyclic = new HashSet<Resource>();
 	
 	/** if true, property values will appear in sorted order */
 	private final boolean sortPropertyValues = true;
@@ -105,20 +106,40 @@ public class XMLRendering {
 	// The way in -- all external uses come via this method, so we can
 	// compute useful things before doing the actual rendering
 	public Element addResourceToElement( Element e, Resource x ) {
-//		CycleFinder p = new CycleFinder();
-//		p.crawl( x );
-		return elementAddResource( e, x );
+		cyclic.addAll( CycleFinder.findCycles( x ) );
+		elementAddResource( e, x );
+		return e;
 	}
+	
+	static boolean newWay = true;
 	
 	private Element elementAddResource( Element e, Resource x ) {
 		addIdentification( e, x );
-		if (seen.add( x )) {
-			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
-			if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
-			for (Property p: properties) addPropertyValues( e, x, p );
-			seen.remove( x );
+		if (newWay) {
+			if (!cyclic.contains( x ) || seen.add( x )) {
+				List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+				if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
+				for (Property p: properties) addPropertyValues( e, x, p );		
+			}
+		} else {
+			if (seen.add( x )) {
+				List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+				if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
+				for (Property p: properties) addPropertyValues( e, x, p );
+				seen.remove( x );
+			}
 		}
 		return e;
+	}
+
+	private void addIdentification( Element e, Resource x ) {
+		if (x.isURIResource())  
+			e.setAttribute( "href", x.getURI() );
+		else if (seen.contains( x )) {
+			e.setAttribute( "ref", idFor( e, x ) );
+		} else {
+			e.setAttribute( "id", idFor( e, x ) );
+		}
 	}
 
 	/**
@@ -174,16 +195,6 @@ public class XMLRendering {
 	private String resourceSpelling( Resource r ) {
 		String shorter = nameMap.getOne( r.getURI() );
 		return shorter == null ? r.getLocalName() : shorter;
-	}
-
-	private void addIdentification( Element e, Resource x ) {
-		if (x.isURIResource())  
-			e.setAttribute( "href", x.getURI() );
-		else if (seen.contains( x )) {
-			e.setAttribute( "ref", idFor( e, x ) );
-		} else {
-			e.setAttribute( "id", idFor( e, x ) );
-		}
 	}
 
 	private void addPropertyValues( Element e, Resource x, Property p ) {
