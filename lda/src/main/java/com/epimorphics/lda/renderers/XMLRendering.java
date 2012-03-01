@@ -19,6 +19,7 @@ import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.lda.support.MultiMap;
+import com.epimorphics.vocabs.API;
 
 /**
 From the spec: 
@@ -90,6 +91,10 @@ public class XMLRendering {
 	private final ShortnameService sns;
 	private final MultiMap<String, String> nameMap;
 	private final boolean suppressIPTO;
+	
+	private final Set<RDFNode> magic = new HashSet<RDFNode>();
+	private Resource itemsBNode = null;
+	
 	private final Set<Resource> seen = new HashSet<Resource>();
 	private final Set<Resource> cyclic = new HashSet<Resource>();
 	
@@ -106,26 +111,34 @@ public class XMLRendering {
 	// The way in -- all external uses come via this method, so we can
 	// compute useful things before doing the actual rendering
 	public Element addResourceToElement( Element e, Resource x ) {
+		itemsBNode = getItems( x );
+		List<RDFNode> items = x.listProperties( API.items ).next().getObject().as( RDFList.class ).asJavaList();
+		magic.addAll( items );
+		for (RDFNode m: magic) seen.add( m.asResource() );
 		cyclic.addAll( CycleFinder.findCycles( x ) );
-		elementAddResource( e, x );
-		return e;
+		return elementAddResource( e, x, false );
 	}
 	
+	private Resource getItems(Resource x) {
+		StmtIterator sit = x.listProperties( API.items );
+		return sit.hasNext() ? sit.next().getResource() : null;
+	}
+
 	static boolean newWay = true;
 	
-	private Element elementAddResource( Element e, Resource x ) {
+	private Element elementAddResource( Element e, Resource x, boolean expandRegardless ) {
 		addIdentification( e, x );
 		if (newWay) {
-			if (!cyclic.contains( x ) || seen.add( x )) {
+			if (!cyclic.contains( x ) || seen.add( x ) || expandRegardless) {
 				List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 				if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
-				for (Property p: properties) addPropertyValues( e, x, p );		
+				for (Property p: properties) addPropertyValues( e, x, p, false );		
 			}
 		} else {
 			if (seen.add( x )) {
 				List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 				if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
-				for (Property p: properties) addPropertyValues( e, x, p );
+				for (Property p: properties) addPropertyValues( e, x, p, false );
 				seen.remove( x );
 			}
 		}
@@ -145,17 +158,18 @@ public class XMLRendering {
 	/**
 	    Attach a value to a property element.
 	*/
-	private Element giveValueToElement( Element pe, RDFNode v ) {
+	private Element giveValueToElement( Element pe, RDFNode v, boolean expandRegardless ) {
 		if (v.isLiteral()) {
 			addLiteralToElement( pe, (Literal) v );
 		} else {
 			Resource r = v.asResource();
-			if (inPlace( r ))
+			if (inPlace( r )) {
 				addIdentification( pe, r );
-			else if (RDFUtil.isRDFList( r )) 
-				addItems( pe, r.as(RDFList.class).asJavaList() );
-			else if (r.listProperties().hasNext()) 
-				elementAddResource( pe, r );
+				if (expandRegardless) elementAddResource( pe, r, expandRegardless );
+			} else if (RDFUtil.isRDFList( r )) {
+				addItems( pe, r.as(RDFList.class).asJavaList(), r.equals(itemsBNode) );
+			} else if (r.listProperties().hasNext()) 
+				elementAddResource( pe, r, expandRegardless );
 			else if (v.isAnon()) {
 				if (needsId( v )) pe.setAttribute( "id", idFor( pe, r ) );
 			} else {
@@ -197,7 +211,7 @@ public class XMLRendering {
 		return shorter == null ? r.getLocalName() : shorter;
 	}
 
-	private void addPropertyValues( Element e, Resource x, Property p ) {
+	private void addPropertyValues( Element e, Resource x, Property p, boolean expandRegardless ) {
 		// System.err.println( ">> add property values for " + p );
 		Element pe = d.createElement( shortNameFor( p ) );
 		// System.err.println( ">> pe := " + pe );
@@ -205,20 +219,20 @@ public class XMLRendering {
 		// System.err.println( ">> e := " + e );
 		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();
 		if (values.size() > 1 || isMultiValued( p )) {
-			for (RDFNode value: sortObjects( values )) appendValueAsItem(pe, value);
+			for (RDFNode value: sortObjects( values )) appendValueAsItem(pe, value, expandRegardless);
 		} else if (values.size() == 1) {
-			giveValueToElement( pe, values.iterator().next() );
+			giveValueToElement( pe, values.iterator().next(), expandRegardless );
 		}
 	}
 
-	private void appendValueAsItem( Element pe, RDFNode value ) {
+	private void appendValueAsItem( Element pe, RDFNode value, boolean expandRegardless ) {
 		Element item = d.createElement( "item" );
-		giveValueToElement( item, value );
+		giveValueToElement( item, value, expandRegardless );
 		pe.appendChild( item );
 	}
 
-	private void addItems( Element pe, List<RDFNode> jl ) {	
-		for (RDFNode item: jl) appendValueAsItem( pe, item );
+	private void addItems( Element pe, List<RDFNode> jl, boolean expandRegardless ) {	
+		for (RDFNode item: jl) appendValueAsItem( pe, item, expandRegardless );
 	}
 
 	private boolean inPlace( Resource r ) {
