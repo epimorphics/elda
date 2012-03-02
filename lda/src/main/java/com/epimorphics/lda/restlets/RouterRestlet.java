@@ -80,6 +80,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     protected static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
 
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+    public static final String VARY = "Vary";
     
     public RouterRestlet() {
     }
@@ -119,7 +120,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         	if (item == null) 
         		return noMatchFound( pathstub, ui, pathAndType );
         	else 
-        		return enableCORS( Response.seeOther( new URI( item ) ) ).build();
+        		return standardHeaders( Response.seeOther( new URI( item ) ) ).build();
         } else {
         	Times t = new Times( pathstub );
         	Controls c = new Controls( !dontCache, t );
@@ -206,7 +207,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
-            return enableCORS( Response.serverError() ).entity( e.getMessage() ).build();
+            return standardHeaders( Response.serverError() ).entity( e.getMessage() ).build();
         } catch (UnknownShortnameException e) {
         	log.error( "UnknownShortnameException: " + e.getMessage() );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
@@ -259,7 +260,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             	? "no suitable media type was provided for rendering."
             	: "renderer '" + rName + "' is not known to this server."
             	;
-            return enableCORS( Response.status( Status.BAD_REQUEST ).entity( Messages.niceMessage( message ) ) ).build();
+            return standardHeaders( Response.status( Status.BAD_REQUEST ).entity( Messages.niceMessage( message ) ) ).build();
         } else {
         	Times times = c.times;
             MediaType mt = r.getMediaType( rc );
@@ -268,17 +269,20 @@ import com.hp.hpl.jena.shared.WrappedException;
         }
 	}
 
-    public static ResponseBuilder enableCORS( ResponseBuilder rb ) {
-        return rb.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" );
+    public static ResponseBuilder standardHeaders( ResponseBuilder rb ) {
+        return rb
+        		.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" )
+        		.header( VARY, "Accept" )
+        	;
     }
     
     public static Response returnAs(String response, String mimetype) {
-        return enableCORS( Response.ok(response, mimetype) ).build();
+        return standardHeaders( Response.ok(response, mimetype) ).build();
     }
     
     public static Response returnAs(StreamingOutput response, MediaType mimetype, URI contentLocation) {
         try {
-            return enableCORS( Response.ok( response, mimetype.toFullString() ) )
+            return standardHeaders( Response.ok( response, mimetype.toFullString() ) )
             	.contentLocation( contentLocation )
             	.build()
             	;
@@ -302,12 +306,12 @@ import com.hp.hpl.jena.shared.WrappedException;
 		String longMessage = Messages.niceMessage( shortMessage, "Internal Server error." );
 		log.error("Exception: " + shortMessage );
         log.debug( Messages.shortStackTrace( e ) );
-        return enableCORS( Response.serverError() ).entity( longMessage ).build();
+        return standardHeaders( Response.serverError() ).entity( longMessage ).build();
     }
 
 	public static Response returnError( String s ) {
         log.error("Exception: " + s );
-        return enableCORS( Response.serverError() ).entity( s ).build();
+        return standardHeaders( Response.serverError() ).entity( s ).build();
     }
 
     public static Response returnNotFound( String message ) {
@@ -316,11 +320,11 @@ import com.hp.hpl.jena.shared.WrappedException;
     
     public static Response returnNotFound( String message, String what ) {
         log.debug( "Failed to return results: " + Messages.brief( message ) );
-        return enableCORS( Response.status(Status.NOT_FOUND) ).entity( Messages.niceMessage( message, "404 Resource Not Found: " + what ) ).build();
+        return standardHeaders( Response.status(Status.NOT_FOUND) ).entity( Messages.niceMessage( message, "404 Resource Not Found: " + what ) ).build();
     }
     
 	private Response buildErrorResponse( EldaException e ) {
-		return enableCORS( Response.status( e.code ) )
+		return standardHeaders( Response.status( e.code ) )
 			.entity( Messages.niceMessage( e ) )
 			.build()
 			;
