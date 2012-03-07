@@ -63,7 +63,7 @@ public interface Router {
     
     /**
         Answer the URI template of an endpoint in this Router
-        which has an ItemEndpoint matchinf the itemPath.
+        which has an ItemEndpoint matching the itemPath.
     */
     public String findItemURIPath( URI requestURI, String itemPath  );
     

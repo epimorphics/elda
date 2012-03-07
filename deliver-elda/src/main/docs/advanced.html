@@ -119,6 +119,20 @@
     a legal URI and that is the URI of the property used.)
 </p>
 
+<h2>item template fallback</h2>
+
+<p>
+    If an inbound URI does not match any of the uriTemplates
+    of the endpoints, Elda attempts to match that URI against
+    any item templates of the endpoints. If it finds a match,
+    then the query is redirected to that item endpoint.
+</p>
+
+<p>
+    This behaviour is currently not configurable.
+</p>
+
+
 <h2>SPARQL 1.1 features</h2>
 
 <p>
