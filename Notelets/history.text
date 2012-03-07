@@ -1,5 +1,11 @@
 1.2.6
 
+* The value of the endpoint/API config property 
+  elda:describeAllLabel, if present, specifies
+  a property to use in place of rdfs:label for
+  labelled-describe viewers. (If the object is a literal,
+  its lexical form is used as the URI of that property.)
+
 * The standalone jar attaches Elda to the root
   / rather than /elda.
 

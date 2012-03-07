@@ -220,13 +220,15 @@ public class View {
 		final Model m; 
 		final List<Source> sources;
 		final VarSupply vars;
+		final String labelURI;
 		
-		public State( String select, List<Resource> roots, Model m, List<Source> sources, VarSupply vars ) {
+		public State( String select, List<Resource> roots, Model m, List<Source> sources, VarSupply vars, String labelURI ) {
 			this.select = select;
 			this.roots = roots;
 			this.m = m; 
 			this.sources = sources;
 			this.vars = vars;
+			this.labelURI = labelURI;
 		}
 	}
 	
@@ -362,15 +364,17 @@ public class View {
 	}
 
 	private void addAllObjectLabels( Controls c, State s ) { 
+		String labelURI = s.labelURI; 
 		StringBuilder sb = new StringBuilder();
-		sb.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">\nCONSTRUCT { ?x rdfs:label ?l }\nWHERE\n{" );
+		sb.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">" )
+			.append( "\nCONSTRUCT { ?x <" ).append( labelURI ).append( "> ?l }\nWHERE\n{" );
 		String union = "";
 		for (RDFNode n: s.m.listObjects().toList()) {
 			if (n.isURIResource()) {
 				sb.append( union )
-					.append( "{?x rdfs:label ?l. FILTER(?x = <" )
-					.append( n.asNode().getURI() )
-					.append( ">)" + "}" );
+					.append( "{?x <" ).append( labelURI ).append( "> ?l. " )
+					.append( "FILTER(?x = <" ).append( n.asNode().getURI() ).append( ">)" )
+					.append( "}" );
 				union = "\nUNION ";
 			}
 		}

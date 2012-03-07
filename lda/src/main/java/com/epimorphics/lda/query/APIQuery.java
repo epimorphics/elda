@@ -132,6 +132,12 @@ public class APIQuery implements Cloneable, VarSupply {
     protected Set<String> metadataOptions = new HashSet<String>();
     
     /**
+        The URI to use for the label in a describe-with-labels view.
+        Defaults to rdfs:label.
+     */
+    public String labelURI = RDFS.label.getURI();
+    
+    /**
         Map from property chain names (ie dotted strings) to the variable at
         the end of that chain. Allows different instances of a property chain
         (in the same APIQuery) to share the variable.
@@ -217,24 +223,30 @@ public class APIQuery implements Cloneable, VarSupply {
     }
     
     /**
-     * Set the page size to use when paging through results.
-     * If this is not called then a default size will be used.
-     */
+    	Set the page size to use when paging through results.
+    	If this is not called then a default size will be used.
+    */
     public void setPageSize( int pageSize ) {
         this.pageSize = (pageSize > maxPageSize ? defaultPageSize : pageSize);
     }
     
+    /**
+        Answer the currently-set page size.
+    */
     public int getPageSize() {
         return pageSize;
     }
 
     /**
-     * Set which page should be returned.
-     */
+    	Set which page should be returned.
+    */
     public void setPageNumber(int page) {
         this.pageNumber = page;
     }
 
+    /**
+        Answer the currenty-set page number.
+    */
     public int getPageNumber() {
         return pageNumber;
     }
@@ -255,6 +267,14 @@ public class APIQuery implements Cloneable, VarSupply {
     
     public void setSubject( String subj ) {
         subjectResource = sns.asResource(subj);
+    }
+    
+    /**
+        Set the URI for the predicate to use when a DESCRIBE-with-labels
+        view requests labels.
+    */
+    public void setDescribeLabelURI( String labelURI ) {
+    	this.labelURI = labelURI;
     }
     
     /**
@@ -774,7 +794,7 @@ public class APIQuery implements Cloneable, VarSupply {
         List<Source> sources = spec.getDescribeSources();
         m.setNsPrefixes( spec.getPrefixMap() );
         return viewArgument == null
-        	? view.fetchDescriptions( c, new View.State( select, roots, m, sources, this ) )
+        	? view.fetchDescriptions( c, new View.State( select, roots, m, sources, this, labelURI ) )
         	: viewByTemplate( roots, m, spec, sources )
         	;
     }

@@ -37,6 +37,8 @@ public class EXTRAS
 
     public static final Property match = property( "match" );
 
+    public static final Property describeAllLabel = property( "describeAllLabel" );
+
     public static final Property enhanceViewWith = property( "enhanceViewWith" );
 
 	public static final Property sparqlQuery = property( "sparqlQuery" );

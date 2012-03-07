@@ -18,6 +18,11 @@ The standalone jar attaches the Elda example to the
 root (/) rather than /elda, making it easier to get
 to a working example.
 
+The labelling predicate used by labelled-describe 
+viewers can be changed by using the elda:describeAllLabel
+property on the endpoint or API. Its value should be
+the label property to use.
+
 Elda now depends on Jena versions from Apache incubation
 rather than development snapshots.
 
