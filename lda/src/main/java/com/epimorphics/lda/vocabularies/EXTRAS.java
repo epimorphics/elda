@@ -52,6 +52,8 @@ public class EXTRAS
 	public static final Property cachePolicyName = property( "cachePolicyName" );
 
 	public static final Property metadataOptions = property( "metadataOptions" );
+
+	public static final Property threshold = property( "threshold" );
     
     private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }

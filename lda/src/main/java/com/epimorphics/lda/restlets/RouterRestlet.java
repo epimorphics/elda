@@ -119,8 +119,9 @@ import com.hp.hpl.jena.shared.WrappedException;
         	String item = router.findItemURIPath( ui.getRequestUri(), "/" + pathstub );
         	if (item == null) 
         		return noMatchFound( pathstub, ui, pathAndType );
-        	else 
+        	else {
         		return usualHeaders( Response.seeOther( new URI( item ) ) ).build();
+        	}
         } else {
         	Times t = new Times( pathstub );
         	Controls c = new Controls( !dontCache, t );

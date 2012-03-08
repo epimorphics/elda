@@ -56,7 +56,9 @@ public class PrefixLogger {
 	}
 	
 	/**
-	    Write out the used prefixes as SPARQL prefix declarations.
+	    Write out the used prefixes as SPARQL prefix declarations
+	    into the StringBuilder <code>out</code>. Answer that same
+	    StringBuilder.
 	*/
 	public StringBuilder writePrefixes( StringBuilder out ) {
 		List<String> prefixes = new ArrayList<String>( seen );

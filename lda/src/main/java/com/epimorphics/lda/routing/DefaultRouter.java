@@ -36,6 +36,9 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
         return e == null ? null : new Match( e, bindings );
 	}
 	
+	/**
+		Struct holding an api:base value and a URI template.
+	*/
 	static class BaseAndTemplate {
 		final String base;
 		final String template;
@@ -61,6 +64,7 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 			ms.register( path, new BaseAndTemplate( apiBase, ep.getURITemplate() ) );
 		}
 	}	
+	
 	/**
 	    Answer the filled-in URI template associated with the given
 	    item path, or null if there isn't one.
@@ -77,10 +81,16 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 		return null;
 	}
 	
-	private String removeBase( String base, String it ) {
-		return base == null || !it.startsWith( base ) 
-			? it.replaceFirst( "https?://[^/]*/", "/" )
-			: "/" + it.substring( base.length() )
+	/**
+		Remove the base from the uri. If the uri starts
+		with the base, replace the base in the uri with "/",
+		otherwise remove the scheme and authority parts
+		of the uri and replace them with "/". 
+	*/
+	private String removeBase( String base, String uri ) {
+		return base == null || !uri.startsWith( base ) 
+			? uri.replaceFirst( "https?://[^/]*/", "/" )
+			: "/" + uri.substring( base.length() )
 			;
 	}
 }

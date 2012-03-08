@@ -221,14 +221,24 @@ public class View {
 		final List<Source> sources;
 		final VarSupply vars;
 		final String labelURI;
+		final int threshold;
 		
-		public State( String select, List<Resource> roots, Model m, List<Source> sources, VarSupply vars, String labelURI ) {
+		public State
+			( String select
+			, List<Resource> roots
+			, Model m
+			, List<Source> sources
+			, VarSupply vars
+			, String labelURI
+			, int threshold
+			) {
 			this.select = select;
 			this.roots = roots;
 			this.m = m; 
 			this.sources = sources;
 			this.vars = vars;
 			this.labelURI = labelURI;
+			this.threshold = threshold;
 		}
 	}
 	
@@ -237,14 +247,14 @@ public class View {
 		switch (type) {
 			case T_DESCRIBE: {
 				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
-				String describeQuery = fetchUntimedByDescribe( s.m, s.roots, s.sources );
+				String describeQuery = fetchUntimedByDescribe( s );
 				t.addToViewQuerySize( detailsQuery );
 				t.addToViewQuerySize( describeQuery );
 				return describeQuery; 
 			}
 				
 			case T_ALL:	{	
-				String detailsQuery = fetchUntimedByDescribe( s.m, s.roots, s.sources ); 				
+				String detailsQuery = fetchUntimedByDescribe( s ); 				
 				String chainsQuery = fetchByGivenPropertyChains( s, chains ); 
 			    addAllObjectLabels( c, s );
 				t.addToViewQuerySize( detailsQuery );
@@ -326,12 +336,23 @@ public class View {
 		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) ); 
 		return queryString;
 	}
+	
+	private String fetchUntimedByDescribe( State s ) {
+		List<Resource> allRoots = s.roots;
+		boolean uns = useNestedSelect(s) && s.select.length() > 0;
+	//
+		if (uns && allRoots.size() > s.threshold) {
+			return describeByNestedSelect( s );
+		} else {
+			return describeBySelectedItems( s, allRoots );
+		}
+	}
 
-	private String fetchUntimedByDescribe( Model sm, List<Resource> allRoots, List<Source> sources ) {
-		List<List<Resource>> chunks = chunkify( allRoots );
+	private String describeBySelectedItems(State s, List<Resource> allRoots) {
 		StringBuilder describe = new StringBuilder();
+		List<List<Resource>> chunks = chunkify( allRoots );
 		for (List<Resource> roots: chunks) {
-			PrefixLogger pl = new PrefixLogger( sm );
+			PrefixLogger pl = new PrefixLogger( s.m );
 			describe.setLength(0);
 			describe.append( "DESCRIBE" );
 			for (Resource r: new HashSet<Resource>( roots )) { // TODO
@@ -339,8 +360,30 @@ public class View {
 			}
 			String query = pl.writePrefixes( new StringBuilder() ).toString() + describe;
 			Query describeQuery = QueryFactory.create( query );
-			for (Source x: sources) sm.add( x.executeDescribe( describeQuery ) );
+			for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
 		}
+		return describe.toString();
+	}
+
+	private String describeByNestedSelect( State s ) {
+		StringBuilder describe = new StringBuilder();
+		Matcher m = SELECT.matcher( s.select );
+		if (!m.find()) EldaException.Broken( "No SELECT in nested query." );
+		int start = m.start();
+		String selection = s.select.substring( start );
+		String selectPrefixes = s.select.substring(0, start);
+		describe.append( "DESCRIBE ?item" );
+		PrefixLogger pl = new PrefixLogger( s.m );
+		describe.append( "\n WHERE {\n" );			
+		describe.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
+		describe.append( "\n}" );			
+		String query = 
+			selectPrefixes
+			+ pl.writePrefixes( new StringBuilder() ).toString() 
+			+ describe
+			;
+		Query describeQuery = QueryFactory.create( query );
+		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
 		return describe.toString();
 	}		
 	

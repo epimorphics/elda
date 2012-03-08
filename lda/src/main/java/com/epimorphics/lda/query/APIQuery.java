@@ -138,6 +138,12 @@ public class APIQuery implements Cloneable, VarSupply {
     public String labelURI = RDFS.label.getURI();
     
     /**
+        The number of roots required to make describe use nested selects
+        if that is possible.
+    */
+    public int threshold = 100;
+    
+    /**
         Map from property chain names (ie dotted strings) to the variable at
         the end of that chain. Allows different instances of a property chain
         (in the same APIQuery) to share the variable.
@@ -275,6 +281,14 @@ public class APIQuery implements Cloneable, VarSupply {
     */
     public void setDescribeLabelURI( String labelURI ) {
     	this.labelURI = labelURI;
+    }
+    
+    /**
+        Set the threshold for the number of roots required to
+        exploit nested selects if available.
+    */
+    public void setThreshold( int threshold ) {
+    	this.threshold = threshold;
     }
     
     /**
@@ -794,7 +808,7 @@ public class APIQuery implements Cloneable, VarSupply {
         List<Source> sources = spec.getDescribeSources();
         m.setNsPrefixes( spec.getPrefixMap() );
         return viewArgument == null
-        	? view.fetchDescriptions( c, new View.State( select, roots, m, sources, this, labelURI ) )
+        	? view.fetchDescriptions( c, new View.State( select, roots, m, sources, this, labelURI, threshold ) )
         	: viewByTemplate( roots, m, spec, sources )
         	;
     }
