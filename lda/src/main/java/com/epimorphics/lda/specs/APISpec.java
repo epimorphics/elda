@@ -77,15 +77,15 @@ public class APISpec {
     
     protected final Set<String> metadataOptions = new HashSet<String>();
 
-	protected final int threshold;
+	protected final int describeThreshold;
 	
-	static final int DEFAULT_THRESHOLD = 100;
+	static final int DEFAULT_DESCRIBE_THRESHOLD = 100;
     
     public APISpec( FileManager fm, Resource specification, ModelLoader loader) {
     	specificationURI = specification.getURI();
     	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
 		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
-        threshold = RDFUtils.getIntValue( specification, EXTRAS.threshold, DEFAULT_THRESHOLD );
+        describeThreshold = RDFUtils.getIntValue( specification, EXTRAS.describeThreshold, DEFAULT_DESCRIBE_THRESHOLD );
 		prefixes = ExtractPrefixMapping.from(specification);
         sns = loadShortnames(specification, loader);
         dataSource = GetDataSource.sourceFromSpec( fm, specification );

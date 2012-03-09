@@ -141,7 +141,7 @@ public class APIQuery implements Cloneable, VarSupply {
         The number of roots required to make describe use nested selects
         if that is possible.
     */
-    public int threshold = 100;
+    public int describeThreshold = 100;
     
     /**
         Map from property chain names (ie dotted strings) to the variable at
@@ -287,8 +287,8 @@ public class APIQuery implements Cloneable, VarSupply {
         Set the threshold for the number of roots required to
         exploit nested selects if available.
     */
-    public void setThreshold( int threshold ) {
-    	this.threshold = threshold;
+    public void setDescribeThreshold( int threshold ) {
+    	this.describeThreshold = threshold;
     }
     
     /**
@@ -808,7 +808,7 @@ public class APIQuery implements Cloneable, VarSupply {
         List<Source> sources = spec.getDescribeSources();
         m.setNsPrefixes( spec.getPrefixMap() );
         return viewArgument == null
-        	? view.fetchDescriptions( c, new View.State( select, roots, m, sources, this, labelURI, threshold ) )
+        	? view.fetchDescriptions( c, new View.State( select, roots, m, sources, this, labelURI, describeThreshold ) )
         	: viewByTemplate( roots, m, spec, sources )
         	;
     }

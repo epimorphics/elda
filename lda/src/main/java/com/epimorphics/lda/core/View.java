@@ -221,7 +221,7 @@ public class View {
 		final List<Source> sources;
 		final VarSupply vars;
 		final String labelURI;
-		final int threshold;
+		final int describeThreshold;
 		
 		public State
 			( String select
@@ -238,7 +238,7 @@ public class View {
 			this.sources = sources;
 			this.vars = vars;
 			this.labelURI = labelURI;
-			this.threshold = threshold;
+			this.describeThreshold = threshold;
 		}
 	}
 	
@@ -341,7 +341,7 @@ public class View {
 		List<Resource> allRoots = s.roots;
 		boolean uns = useNestedSelect(s) && s.select.length() > 0;
 	//
-		if (uns && allRoots.size() > s.threshold) {
+		if (uns && allRoots.size() > s.describeThreshold) {
 			return describeByNestedSelect( s );
 		} else {
 			return describeBySelectedItems( s, allRoots );

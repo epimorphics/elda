@@ -62,7 +62,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     
     protected final String describeLabelURI;
     
-    protected final int threshold;
+    protected final int describeThreshold;
     
     public final int defaultPageSize;
     public final int maxPageSize;
@@ -95,7 +95,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         if (!uriTemplate.startsWith("/") && !uriTemplate.startsWith("http")) uriTemplate = "/" + uriTemplate;
         endpointResource = endpoint;
         describeLabelURI = getStringValue( endpoint, EXTRAS.describeAllLabel, apiSpec.describeLabelURI );
-        threshold = getIntValue( endpoint, EXTRAS.threshold, apiSpec.threshold );
+        describeThreshold = getIntValue( endpoint, EXTRAS.describeThreshold, apiSpec.describeThreshold );
     //
         extractMetadataOptions( endpoint );
         instantiateBaseQuery( endpoint ); 
@@ -254,7 +254,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         baseQuery = new APIQuery( this );
         baseQuery.addMetadataOptions( metadataOptions );
         baseQuery.setDescribeLabelURI( describeLabelURI );
-        baseQuery.setThreshold( threshold );
+        baseQuery.setDescribeThreshold( describeThreshold );
         Resource s = getResourceValue( endpoint, API.selector );
         if (s != null) {
 	        StmtIterator i = s.listProperties( API.parent );
