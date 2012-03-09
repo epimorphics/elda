@@ -34,6 +34,7 @@ import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Encapsulates the specification of the particular List/Set within
@@ -58,6 +59,10 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     protected final boolean wantsContext;
     
     protected final String cachePolicyName;
+    
+    protected final String describeLabelURI;
+    
+    protected final int threshold;
     
     public final int defaultPageSize;
     public final int maxPageSize;
@@ -89,6 +94,9 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         if (uriTemplate == null) EldaException.NoDeploymentURIFor( name ); 
         if (!uriTemplate.startsWith("/") && !uriTemplate.startsWith("http")) uriTemplate = "/" + uriTemplate;
         endpointResource = endpoint;
+        describeLabelURI = getStringValue( endpoint, EXTRAS.describeAllLabel, apiSpec.describeLabelURI );
+        threshold = getIntValue( endpoint, EXTRAS.threshold, apiSpec.threshold );
+    //
         extractMetadataOptions( endpoint );
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
@@ -153,7 +161,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         for (NodeIterator ni =  m.listObjectsOfProperty( endpoint, API.viewer ); ni.hasNext();) {
             RDFNode tNode = ni.next();
             if (!tNode.isResource()) 
-                throw new APIException("Found literal " + tNode + " when expecting a template resource");
+                throw new APIException("Found literal " + tNode + " when expecting a view resource");
             View v = getView( (Resource) tNode );
             views.put( v.name(), v );
             explicitViewNames.add( v.name() );
@@ -245,6 +253,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     private void instantiateBaseQuery( Resource endpoint ) {
         baseQuery = new APIQuery( this );
         baseQuery.addMetadataOptions( metadataOptions );
+        baseQuery.setDescribeLabelURI( describeLabelURI );
+        baseQuery.setThreshold( threshold );
         Resource s = getResourceValue( endpoint, API.selector );
         if (s != null) {
 	        StmtIterator i = s.listProperties( API.parent );
@@ -259,8 +269,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	        addSelectorInfo(s);
         }
     }
-
-    private void addSelectorInfo( Resource s ) {
+    
+	private void addSelectorInfo( Resource s ) {
         Model m = s.getModel();
         ShortnameService sns = this.apiSpec.sns;
         if (s.hasProperty(API.type)) {

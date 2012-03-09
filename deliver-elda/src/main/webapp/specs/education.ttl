@@ -19,7 +19,10 @@
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
 @prefix school:  <http://education.data.gov.uk/def/school/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
 @prefix spatialrelations:  <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+
 
 @prefix extras: <http://www.epimorphics.com/vocabularies/lda#> .
 @prefix ids: <http://education.data.gov.uk/id/school/>.
@@ -92,6 +95,7 @@ spec:api a api:API
     ; api:defaultPageSize "10" 
     ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
     ; rdfs:comment "An API around sparql-provided education data."
+    # ; extras:describeAllLabel skos:prefLabel
     #
     # normally constructed URIs (for views, formatters, metadata, etc) are based
     # on the context root of the request. If api:base is set, then it is used as

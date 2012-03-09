@@ -40,6 +40,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Map1;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Encapsulates a specification of a single API instance.
@@ -64,6 +65,7 @@ public class APISpec {
     protected final String specificationURI;
     protected final String defaultLanguage;
     protected final String base;
+    protected final String describeLabelURI;
     
     public final int defaultPageSize;
     public final int maxPageSize;
@@ -74,12 +76,17 @@ public class APISpec {
     protected final Bindings bindings = new Bindings();
     
     protected final Set<String> metadataOptions = new HashSet<String>();
+
+	protected final int threshold;
+	
+	static final int DEFAULT_THRESHOLD = 100;
     
     public APISpec( FileManager fm, Resource specification, ModelLoader loader) {
     	specificationURI = specification.getURI();
     	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
 		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
-        prefixes = ExtractPrefixMapping.from(specification);
+        threshold = RDFUtils.getIntValue( specification, EXTRAS.threshold, DEFAULT_THRESHOLD );
+		prefixes = ExtractPrefixMapping.from(specification);
         sns = loadShortnames(specification, loader);
         dataSource = GetDataSource.sourceFromSpec( fm, specification );
         describeSources = extractDescribeSources( fm, specification, dataSource );
@@ -89,6 +96,7 @@ public class APISpec {
         bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
         factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
+        describeLabelURI = getStringValue( specification, EXTRAS.describeAllLabel, RDFS.label.getURI() );
         extractMetadataOptions( specification );
         extractEndpointSpecifications( specification );
     }

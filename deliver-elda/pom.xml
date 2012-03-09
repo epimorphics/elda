@@ -10,7 +10,7 @@
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda-standalone</artifactId>
   <packaging>war</packaging>
-  <name>elda</name>
+  <name>root</name>
   <version> 1.2.6-SNAPSHOT</version>
   <description>instant Elda webapp</description>
 
@@ -53,7 +53,7 @@
   </dependencies>
 
   <build>
-    <finalName>elda</finalName>
+    <finalName>root</finalName>
     <plugins>
         <plugin>
             <artifactId>maven-jetty-plugin</artifactId>

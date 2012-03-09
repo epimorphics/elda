@@ -109,13 +109,17 @@ public class EndpointMetadata {
 		page.addProperty( API.wasResultOf, exec );
 	}
 
+	// don't add variables that are not bound!
 	public void addVariableBindings( Model meta, Resource exec ) {
 		for (Iterator<String> names = cc.keySet().iterator(); names.hasNext();) {
 			String name = names.next();
-			Resource vb = meta.createResource();
-			vb.addProperty( API.label, name );
-			vb.addProperty( API.value, cc.getValueString( name ) );
-			exec.addProperty( API.variableBinding, vb );
+			String valueString = cc.getValueString( name );
+			if (valueString != null) {
+				Resource vb = meta.createResource();
+				vb.addProperty( API.label, name );
+				vb.addProperty( API.value, valueString );
+				exec.addProperty( API.variableBinding, vb );
+			}
 		}
 	}
 
