@@ -65,7 +65,6 @@ public class APISpec {
     protected final String specificationURI;
     protected final String defaultLanguage;
     protected final String base;
-    protected final String describeLabelURI;
     
     public final int defaultPageSize;
     public final int maxPageSize;
@@ -96,7 +95,6 @@ public class APISpec {
         bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
         factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
-        describeLabelURI = getStringValue( specification, EXTRAS.describeAllLabel, RDFS.label.getURI() );
         extractMetadataOptions( specification );
         extractEndpointSpecifications( specification );
     }

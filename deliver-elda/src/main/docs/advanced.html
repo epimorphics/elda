@@ -103,20 +103,11 @@
 <h2>elda:describeAllLabel</h2>
 
 <p>
-    The LDA spec defines that the viewer "all", the
-    labelledDescribeViewer, takes the results of a
-    DESCRIBE on the selected items and for each
-    resource <code>R</code> in that result adds any 
-    <code>R rdfs:label L</code>
-    statements that exist.
-</p>
-
-<p>
-    If the endpoint has a property <code>elda:describeAllLabel X</code>,
-    where <code>X</code> may be a literal or a resource, then the property
-    used is <code>X</code> rather than <code>rdfs:label</code>.
-    (If <code>X</code> is a literal, its lexical form should be
-    a legal URI and that is the URI of the property used.)
+    If a new viewer is declared with the property
+    <code>elda:describeAllLabel</code>, it becomes a
+    variant of the <code>describeAllViewer</code>
+    where the label property used is the object of
+    that property rather than <code>rdfs:label</code>.
 </p>
 
 <h2>item template fallback</h2>

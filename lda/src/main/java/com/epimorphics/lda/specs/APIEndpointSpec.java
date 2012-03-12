@@ -60,8 +60,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     
     protected final String cachePolicyName;
     
-    protected final String describeLabelURI;
-    
     protected final int describeThreshold;
     
     public final int defaultPageSize;
@@ -94,7 +92,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         if (uriTemplate == null) EldaException.NoDeploymentURIFor( name ); 
         if (!uriTemplate.startsWith("/") && !uriTemplate.startsWith("http")) uriTemplate = "/" + uriTemplate;
         endpointResource = endpoint;
-        describeLabelURI = getStringValue( endpoint, EXTRAS.describeAllLabel, apiSpec.describeLabelURI );
         describeThreshold = getIntValue( endpoint, EXTRAS.describeThreshold, apiSpec.describeThreshold );
     //
         extractMetadataOptions( endpoint );
@@ -178,6 +175,13 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 		return result;
 	}
     
+	/**
+	    Extract a view based on the resource <code>v</code>. v may
+	    name a builtin view, in which case it is returned unchanged
+	    (any properties are ignored). Otherwise a view is constructed,
+	    given a name, installed into the view table, and returned.
+	
+	*/
     private View getView( Resource v ) {
     	View builtin = View.getBuiltin( v );
         if (builtin == null) {
@@ -204,7 +208,12 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         return addViewProperties( m, new HashSet<Resource>(), tRes, new View( name ) );
 	}
 
+    /**
+        Add properties to the view, setting the property chains and possibly
+        the labelled-describe label property URI.
+    */
 	private View addViewProperties( Model m, Set<Resource> seen, Resource tRes, View v ) {
+		setDescribeLabel( tRes, v );
 		addViewPropertiesByString( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
 		addViewPropertiesByResource( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
 		for (RDFNode n: tRes.listProperties( API.include ).mapWith( Statement.Util.getObject ).toList()) {
@@ -212,6 +221,10 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 				addViewProperties( m, seen, (Resource) n, v );
 		}
 		return v;
+	}
+
+	private void setDescribeLabel(Resource tRes, View v) {
+		if (tRes.hasProperty( EXTRAS.describeAllLabel )) v.setDescribeLabel( getStringValue( tRes, EXTRAS.describeAllLabel, RDFS.label.getURI() ) );
 	}
 
 	private void addViewPropertiesByString( View v, List<RDFNode> items ) {
@@ -253,7 +266,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     private void instantiateBaseQuery( Resource endpoint ) {
         baseQuery = new APIQuery( this );
         baseQuery.addMetadataOptions( metadataOptions );
-        baseQuery.setDescribeLabelURI( describeLabelURI );
         baseQuery.setDescribeThreshold( describeThreshold );
         Resource s = getResourceValue( endpoint, API.selector );
         if (s != null) {

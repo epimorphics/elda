@@ -132,12 +132,6 @@ public class APIQuery implements Cloneable, VarSupply {
     protected Set<String> metadataOptions = new HashSet<String>();
     
     /**
-        The URI to use for the label in a describe-with-labels view.
-        Defaults to rdfs:label.
-     */
-    public String labelURI = RDFS.label.getURI();
-    
-    /**
         The number of roots required to make describe use nested selects
         if that is possible.
     */
@@ -273,14 +267,6 @@ public class APIQuery implements Cloneable, VarSupply {
     
     public void setSubject( String subj ) {
         subjectResource = sns.asResource(subj);
-    }
-    
-    /**
-        Set the URI for the predicate to use when a DESCRIBE-with-labels
-        view requests labels.
-    */
-    public void setDescribeLabelURI( String labelURI ) {
-    	this.labelURI = labelURI;
     }
     
     /**
@@ -808,7 +794,7 @@ public class APIQuery implements Cloneable, VarSupply {
         List<Source> sources = spec.getDescribeSources();
         m.setNsPrefixes( spec.getPrefixMap() );
         return viewArgument == null
-        	? view.fetchDescriptions( c, new View.State( select, roots, m, sources, this, labelURI, describeThreshold ) )
+        	? view.fetchDescriptions( c, new View.State( select, roots, m, sources, this, describeThreshold ) )
         	: viewByTemplate( roots, m, spec, sources )
         	;
     }

@@ -8,8 +8,7 @@
     
 :endpoint a api:ListEndpoint
     ; api:uriTemplate 'endpointlike'
-    ; api:viewer api:labelledDescribeViewer
-    ; extras:describeAllLabel skos:prefLabel
+    ; api:viewer [api:name 'skossy'; extras:describeAllLabel skos:prefLabel]
     .
 
 :p api:label 'p'

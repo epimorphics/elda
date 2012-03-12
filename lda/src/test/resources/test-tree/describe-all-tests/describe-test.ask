@@ -1,4 +1,4 @@
-URI=/endpointlike?exists-p=true&_view=all
+URI=/endpointlike?exists-p=true&_view=skossy
 
 ASK 
     {

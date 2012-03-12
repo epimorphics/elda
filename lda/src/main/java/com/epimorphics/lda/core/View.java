@@ -101,6 +101,8 @@ public class View {
     
 	protected String name = null;
 	
+	protected String labelPropertyURI = RDFS.label.getURI();
+	
     public View() {
     	this(true);
     }
@@ -156,6 +158,15 @@ public class View {
     	View r = new View( null, type ).addFrom( this );
 		return r;
     }
+
+    /**
+        Set the describe label used by this viewer. The viewer type
+        becomes ALL.
+    */
+	public void setDescribeLabel( String labelPropertyURI ) {
+		this.type = Type.T_ALL;
+		this.labelPropertyURI = labelPropertyURI;
+	}
     
     /**
         Answer this view after modifying it to contain all the property
@@ -201,7 +212,9 @@ public class View {
     	if (t == null) throw new IllegalArgumentException( "addFrom does not accept null views" );
     	cannotUpdateALL();
     	chains.addAll( t.chains );
+    	this.labelPropertyURI = t.labelPropertyURI;
     	if (chains.size() > 0) type = Type.T_CHAINS;
+    	if (t.type == Type.T_ALL) type = Type.T_ALL;
         return this;
     }
     
@@ -220,7 +233,6 @@ public class View {
 		final Model m; 
 		final List<Source> sources;
 		final VarSupply vars;
-		final String labelURI;
 		final int describeThreshold;
 		
 		public State
@@ -229,7 +241,6 @@ public class View {
 			, Model m
 			, List<Source> sources
 			, VarSupply vars
-			, String labelURI
 			, int threshold
 			) {
 			this.select = select;
@@ -237,7 +248,6 @@ public class View {
 			this.m = m; 
 			this.sources = sources;
 			this.vars = vars;
-			this.labelURI = labelURI;
 			this.describeThreshold = threshold;
 		}
 	}
@@ -407,15 +417,14 @@ public class View {
 	}
 
 	private void addAllObjectLabels( Controls c, State s ) { 
-		String labelURI = s.labelURI; 
 		StringBuilder sb = new StringBuilder();
 		sb.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">" )
-			.append( "\nCONSTRUCT { ?x <" ).append( labelURI ).append( "> ?l }\nWHERE\n{" );
+			.append( "\nCONSTRUCT { ?x <" ).append( labelPropertyURI ).append( "> ?l }\nWHERE\n{" );
 		String union = "";
 		for (RDFNode n: s.m.listObjects().toList()) {
 			if (n.isURIResource()) {
 				sb.append( union )
-					.append( "{?x <" ).append( labelURI ).append( "> ?l. " )
+					.append( "{?x <" ).append( labelPropertyURI ).append( "> ?l. " )
 					.append( "FILTER(?x = <" ).append( n.asNode().getURI() ).append( ">)" )
 					.append( "}" );
 				union = "\nUNION ";
