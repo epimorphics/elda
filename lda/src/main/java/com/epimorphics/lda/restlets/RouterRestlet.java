@@ -265,24 +265,27 @@ import com.hp.hpl.jena.shared.WrappedException;
         	Times times = c.times;
             MediaType mt = r.getMediaType( rc );
 			Renderer.BytesOut bo = r.render( times, rc, results );
-			return returnAs( wrap(times, bo), mt, results.getContentLocation() );
+			return returnAs( wrap(times, bo), rName == null, mt, results.getContentLocation() );
         }
 	}
 
     public static ResponseBuilder standardHeaders( ResponseBuilder rb ) {
-        return rb
-        		.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" )
-        		.header( VARY, "Accept" )
-        	;
+        return standardHeaders( false, rb );
+    }
+
+    public static ResponseBuilder standardHeaders( boolean varyAccept, ResponseBuilder rb ) {
+    	rb = rb.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" );
+        if (varyAccept) rb = rb.header( VARY, "Accept" );
+   		return rb;
     }
     
     public static Response returnAs(String response, String mimetype) {
         return standardHeaders( Response.ok(response, mimetype) ).build();
     }
     
-    public static Response returnAs(StreamingOutput response, MediaType mimetype, URI contentLocation) {
+    public static Response returnAs(StreamingOutput response, boolean varyAccept, MediaType mimetype, URI contentLocation) {
         try {
-            return standardHeaders( Response.ok( response, mimetype.toFullString() ) )
+            return standardHeaders( varyAccept, Response.ok( response, mimetype.toFullString() ) )
             	.contentLocation( contentLocation )
             	.build()
             	;
