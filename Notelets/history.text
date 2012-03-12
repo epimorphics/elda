@@ -1,10 +1,24 @@
 1.2.6
 
-* The value of the endpoint/API config property 
-  elda:describeAllLabel, if present, specifies
-  a property to use in place of rdfs:label for
-  labelled-describe viewers. (If the object is a literal,
-  its lexical form is used as the URI of that property.)
+* If a viewer is defined with the property elda:describeAllLabel,
+  it becomes a variant of the describeAllViewer (_all) where the
+  label property used is the value of the describeAllLabel
+  property. (If the object is a literal, its lexical form is used
+  as the URI of that property.)
+
+* Correction to the api-config display: the IDs used for linking
+  and en/dis-abling are now local to the config being displayed.
+
+* Incorporated a fix to the JSON renderer to avoid horrible
+  and unbalanced expansions for tangled graphs especially
+  when routed through the selected items.
+
+* Added a POM to elda-system-test.
+
+* Used a non-SNAPSHOT version of TDB.
+
+* Setting a page size ridiculously large sets it back to
+  the maximum allowed page size (not the default).
 
 * The standalone jar attaches Elda to the root
   / rather than /elda.
