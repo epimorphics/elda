@@ -47,16 +47,19 @@ public class ComposeConfigDisplay {
 	public String configPageMentioning( List<SpecEntry> entries, URI base, String pathstub ) {
 		StringBuilder textBody = new StringBuilder();
 		if (pathstub == null) pathstub = "";
+		int count = 0;
 	//
 		for (SpecEntry se: entries) {
+			count += 1;
+			Which w = new Which(count);
 			Resource root = se.getRoot();
 			PrefixMapping pm = se.getSpec().getPrefixMap();
 			String shortName = root.getModel().shortForm( root.getURI() );
 			String label = getLabelled( root, shortName );
 			List<APIEndpointSpec> endpoints = se.getSpec().getEndpoints();
 			boolean showThis = occursIn( pathstub, endpoints );
-			textBody.append( "<h2>" + label + "[" + shortName + "]" + " <a href='javascript:toggle(\"" + idFor(shortName) + "\")'>show/hide</a></h2>" );
-			textBody.append( "<div id='" + idFor(shortName) + "' class='" + (showThis ? "show" : "hide") + "'>\n" );
+			textBody.append( "<h2>" + label + "[" + shortName + "]" + " <a href='javascript:toggle(\"" + w.idFor(shortName) + "\")'>show/hide</a></h2>" );
+			textBody.append( "<div id='" + w.idFor(shortName) + "' class='" + (showThis ? "show" : "hide") + "'>\n" );
 	        renderComments( textBody, root );
 	    //
 	        Statement ep = root.getProperty( API.sparqlEndpoint );
@@ -68,25 +71,30 @@ public class ComposeConfigDisplay {
 	            ;
 	        textBody.append( "<h2>endpoints</h2>\n" );
 	        Collections.sort( endpoints, sortByEndpointURITemplate );
-			for (APIEndpointSpec s: endpoints) renderEndpoint( textBody, base, pathstub, pm, s );  
+			for (APIEndpointSpec s: endpoints) renderEndpoint( textBody, w, base, pathstub, pm, s );  
 	    //
-	        renderDictionary( textBody, pm, se.getSpec().getShortnameService().asContext().clone() );
+	        renderDictionary( textBody, w, pm, se.getSpec().getShortnameService().asContext().clone() );
 	        textBody.append( "</div>\n" );
 		}
 		
         return textBody.toString();
 	}  
     
-	private final Map<String, String> idMap = new HashMap<String, String>();
-	
-	private int idCount = 1000;
-	
-    private String idFor( String shortName ) {
-    	String result = idMap.get(shortName);
-    	if (result == null) idMap.put(shortName, result = "id_" + idCount++ );
-    	return result;
-	}
+	static class Which {
 
+		final int n;
+		private final Map<String, String> idMap = new HashMap<String, String>();
+		private int idCount = 1000;
+
+		Which(int n) { this.n = n; }
+		
+		private String idFor( String shortName ) {
+			String result = idMap.get(shortName);
+			if (result == null) idMap.put(shortName, result = "id_" + n + "_" + idCount++ );
+			return result;
+		}
+	}
+	
 	private boolean occursIn( String pathstub, List<APIEndpointSpec> endpoints ) {
     	for (APIEndpointSpec es: endpoints)
     		if (matches( pathstub, es.getURITemplate().substring(1) )) return true;
@@ -126,11 +134,11 @@ public class ComposeConfigDisplay {
     	}
 	}
 
-	private void renderDictionary( StringBuilder sb, PrefixMapping pm, Context sns ) {
+	private void renderDictionary( StringBuilder sb, Which w, PrefixMapping pm, Context sns ) {
     	String name = "api:shortNameDictionary";
     	List<String> shortNames = preferredShortnamesInOrder( sns );
-		sb.append( "<h2>shortname dictionary <a href='javascript:toggle(\"" + idFor(name) + "\")'>show/hide</a>" ).append( " </h2>\n" );
-		sb.append( "<div id='" + idFor(name) + "' class='hide'>" );
+		sb.append( "<h2>shortname dictionary <a href='javascript:toggle(\"" + w.idFor(name) + "\")'>show/hide</a>" ).append( " </h2>\n" );
+		sb.append( "<div id='" + w.idFor(name) + "' class='hide'>" );
 		sb.append( "<table>\n" );
 		sb.append( "<thead><tr><th>short name</th><th>range (if property)</th><th>qname</th></tr></thead>\n" );
 		for (String n: shortNames ) {
@@ -173,13 +181,13 @@ public class ComposeConfigDisplay {
 
     // TODO: metadataoptions, factories
     // link to parent
-    void renderEndpoint( StringBuilder sb, URI base, String pathStub, PrefixMapping pm, APIEndpointSpec s ) {
+    void renderEndpoint( StringBuilder sb, Which w, URI base, String pathStub, PrefixMapping pm, APIEndpointSpec s ) {
     	Resource ep = s.getResource();
     	Bindings b = s.getBindings();
     	String ut = ep.getProperty( API.uriTemplate ).getString(); 
         Context sns = s.sns().asContext().clone();
     //
-    	renderHeader(sb, s, pathStub, ut);
+    	renderHeader(sb, w, s, pathStub, ut);
     	renderComments(sb, s.getResource());
     	String api_base = s.getAPISpec().getBase();
 		renderExampleRequestPath( sb, api_base, base, ep );
@@ -191,16 +199,16 @@ public class ComposeConfigDisplay {
     	sb.append( "</div>\n" );
     }
 
-	private void renderHeader(StringBuilder sb, APIEndpointSpec s, String pathStub, String ut) {
+	private void renderHeader(StringBuilder sb, Which w, APIEndpointSpec s, String pathStub, String ut) {
 		String name = ut;
     	String kind = s.isListEndpoint() ? "list" : "item";
     	sb.append( "<div style='font-size: 150%; margin-top: 1ex'>" )
-    		.append( " <a href='javascript:toggle(\"" + idFor(name) + "\")'>" ).append( name ).append( "</a>" )
+    		.append( " <a href='javascript:toggle(\"" + w.idFor(name) + "\")'>" ).append( name ).append( "</a>" )
     		.append( " [" ).append( kind ).append( " endpoint] " )
     		.append( " </div>\n" )
     		;
     	String visibility = matches( pathStub, ut.substring(1) ) ? "show" : "hide";
-    	sb.append( "<div id='" + idFor(name) + "' class='" + visibility + "'>" );
+    	sb.append( "<div id='" + w.idFor(name) + "' class='" + visibility + "'>" );
 	}
 
 	private boolean matches( String actual, String pattern ) {
