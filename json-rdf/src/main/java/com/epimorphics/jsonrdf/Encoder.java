@@ -21,9 +21,14 @@ import org.openjena.atlas.json.JsonObject;
 import static com.epimorphics.jsonrdf.RDFUtil.getLexicalForm;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
+import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.reasoner.rulesys.impl.TopLevelTripleMatchFrame;
 import com.hp.hpl.jena.util.OneToManyMap;
+import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+import com.hp.hpl.jena.util.iterator.Map1;
+import com.hp.hpl.jena.util.iterator.Map1Iterator;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
@@ -325,6 +330,11 @@ public class Encoder {
         protected Set<Resource> noCycles;
         protected Map<Resource, Set<Resource>> visitedFrom;
         
+        protected ArrayList<RDFList> topItemLists=null;
+        protected HashSet<Resource>  topItems=null;
+        protected long depth = 0;
+        
+        
         // When not nesting just track visits
         protected Set<Resource> encoded;
         
@@ -356,12 +366,45 @@ public class Encoder {
                     encoded = new HashSet<Resource>();
                 }
             }
+            setTopItems(roots);
             startEncode();
             encode(roots);
             finishModelEncode();
             finishEncode();
         }
         
+		void setTopItems(List<Resource> roots) {
+			ArrayList<RDFList> res = new ArrayList<RDFList>(10);
+			HashSet<Resource> res2 = new HashSet<Resource>(10);
+			
+			if(roots!=null) for (Resource root : roots) {
+				ExtendedIterator<Resource> i = root.listProperties(API.items)
+						.mapWith(new Map1<Statement, Resource>() {
+							@Override
+							public Resource map1(Statement o) {
+								return o.getResource();
+							}
+						});
+				while (i.hasNext()) {
+					Resource list = i.next();
+					if (RDFUtil.isRDFList(list))
+						res.add(list.as(RDFList.class));
+				}
+				topItemLists = res;
+				for (RDFList list : topItemLists) {
+					ExtendedIterator<Resource> iter = list.iterator().mapWith(new Map1<RDFNode, Resource>(){
+
+						@Override
+						public Resource map1(RDFNode o) {
+							return o.asResource();
+						}
+					});
+					res2.addAll(iter.toList());
+				}
+			}
+			topItems = res2;
+		}
+		
         /**
          * Test if the resource needs encoding (has any values, hasn't already been
          * encoded) and optionally mark as now-encoded
@@ -372,6 +415,11 @@ public class Encoder {
                     if (nestResources) {
                         if (cycles.contains(r)) {
                             return false;
+                        } else if(topItems!=null && topItems.contains(r) && depth!=2 ) {
+                        	// Don't encode top level api:items except when encoding items
+                        	// depth = 1 => root
+                        	// depth = 2 => root.items (if present - if not topItems will be empty)
+                        	return false;
                         } else if (noCycles.contains(r)) {
                             return true;
                         }
@@ -478,20 +526,22 @@ public class Encoder {
         }
         
         private void encode(Resource r) {
-            if (needEncodeResource( r, true )) {
-            	jw.object();
-            	encodeResource(r);
-            	jw.endObject();
-            	markVisitcompleted(r);
+        	depth++;
+            if (! needEncodeResource(r, true)) {
+                if (r.isAnon()) {
+                    // Case of an empty bNode, for URI nodes we will already have output URI reference
+                    jw.object(); 
+                    jw.endObject();
+                } else {
+                    jw.value( rules.encodeResourceURI(r.getURI(), context, false) );
+                }
             } else {
-            	if (r.isAnon()) {
-            		// Case of an empty bNode, for URI nodes we will already have output URI reference
-            		jw.object(); 
-            		jw.endObject();
-            	} else {
-            		jw.value( rules.encodeResourceURI(r.getURI(), context, false) );
-            	}
+            	jw.object();
+	            encodeResource(r);
+	            jw.endObject();
+	            markVisitcompleted(r);
             }
+            depth--;
         }
 
 		private void encodeResource(Resource r) {
