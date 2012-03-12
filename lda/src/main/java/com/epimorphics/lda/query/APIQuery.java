@@ -233,7 +233,7 @@ public class APIQuery implements Cloneable, VarSupply {
     	If this is not called then a default size will be used.
     */
     public void setPageSize( int pageSize ) {
-        this.pageSize = (pageSize > maxPageSize ? defaultPageSize : pageSize);
+        this.pageSize = (pageSize > maxPageSize ? maxPageSize : pageSize);
     }
     
     /**
