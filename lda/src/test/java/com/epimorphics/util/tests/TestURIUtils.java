@@ -12,6 +12,8 @@
 
 package com.epimorphics.util.tests;
 
+import static com.epimorphics.util.URIUtils.changeFormatSuffix;
+import static com.epimorphics.util.URIUtils.newURI;
 import static org.junit.Assert.*;
 
 import java.net.URI;
@@ -25,28 +27,64 @@ import com.epimorphics.util.URIUtils;
 public class TestURIUtils {
 	
 	@Test public void toHoldASpecialCharacter() {
-		URI u = URIUtils.newURI( "http://example.com/spa%20cé" );
+		URI u = newURI( "http://example.com/spa%20cé" );
 	}
 	
 	@Test public void testReplacesKnownFormat() {
-		URI req = URIUtils.newURI( "http://example.com/anchor/thing.rdf" );
+		URI req = newURI( "http://example.com/anchor/thing.rdf" );
 		Set<String> knownFormats = CollectionUtils.set( "rdf", "ttl" );
-		URI got = URIUtils.changeFormatSuffix( req, knownFormats, "ttl" );
-		assertEquals( URIUtils.newURI("http://example.com/anchor/thing.ttl"), got );
+		URI got = changeFormatSuffix( req, knownFormats, "ttl" );
+		assertEquals( newURI("http://example.com/anchor/thing.ttl"), got );
 	}
 	
 	@Test public void testPreservesUnknownFormat() {
-		URI req = URIUtils.newURI( "http://example.com/anchor/thing.rdf" );
+		URI req = newURI( "http://example.com/anchor/thing.rdf" );
 		Set<String> knownFormats = CollectionUtils.set( "n3", "ttl" );
-		URI got = URIUtils.changeFormatSuffix( req, knownFormats, "ttl" );
-		assertEquals( URIUtils.newURI("http://example.com/anchor/thing.rdf.ttl"), got );
+		URI got = changeFormatSuffix( req, knownFormats, "ttl" );
+		assertEquals( newURI("http://example.com/anchor/thing.rdf.ttl"), got );
 	}
 	
 	@Test public void testChangeFormatSuffixPreservesEncoding() {
-		URI req = URIUtils.newURI( "http://example.com/anc%20hor/thing.rdf" );
+		URI req = newURI( "http://example.com/anc%20hor/thing.rdf" );
 		Set<String> knownFormats = CollectionUtils.set( "n3", "ttl" );
-		URI got = URIUtils.changeFormatSuffix( req, knownFormats, "ttl" );
-		assertEquals( URIUtils.newURI("http://example.com/anc%20hor/thing.rdf.ttl"), got );
+		URI got = changeFormatSuffix( req, knownFormats, "ttl" );
+		assertEquals( newURI("http://example.com/anc%20hor/thing.rdf.ttl"), got );
+	}
+	
+	static class Case {
+		String expect;
+		String apiBase;
+		String requestURI;
+		String uiPath;
+		
+		Case(String e, String a, String r, String u) { expect = e; apiBase = a; requestURI = r; uiPath = u; }
+	}
+	
+	static final Case[] cases = new Case[] {
+		//        RESULT                                                             API:BASE                                 REQUEST URI                                                        PATH
+		new Case( "http://education.gov.uk/redirected/education/id/school/100869", "http://education.gov.uk/", "http://localhost:8080/elda/api/redirected/education/id/school/100869", "redirected/education/id/school/100869" )
+	};
+	
+	@Test public void testResolution() {
+		for (Case c: cases) {
+			URI result = URIUtils.resolveAgainstBase( newURI(c.requestURI), newURI(c.apiBase), c.uiPath );
+			assertEquals( c.expect, result.toString() );
+		}
+	}
+	
+	@Test public void testIt() {
+		String RU = "http://localhost:8080/elda/api/redirected/education/id/school/100869";
+		for (String apiBase: "/ /environment /environment/ http://localhost http://localhost/".split( " +" )) 
+			for (String mrp: "/doc/bathing-water doc/bathing-water".split(" +" )) {	
+				URI result = URIUtils.resolveAgainstBase( newURI(RU), newURI(apiBase), mrp );
+				// System.err.println( "!! " + apiBase + ", " + mrp + ", " + result.toString() );
+		}
 	}
 
+	@Test public void testThat() {
+		URI mid = newURI( "http://localhost:8080/environment/" );
+		URI resolved = mid.resolve( "doc/bathing-water" );
+		// System.err.println( ")) " + resolved.toString() );
+	}
+	
 }

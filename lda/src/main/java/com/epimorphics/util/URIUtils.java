@@ -94,12 +94,26 @@ public class URIUtils {
 			throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e );
 		}
 	}
+	
+	private static String noLeadingSlash( String path ) {
+		return path.startsWith("/") ? path.substring(1) : path;
+	}
 
 	public static URI resolveAgainstBase( URI requestUri, URI baseAsURI, String uiPath ) {
+		
+		String baseAsString = baseAsURI.toString();
+		if (!baseAsString.endsWith("/")) 
+			baseAsURI = newURI( baseAsString + "/" );
+				
+		System.err.println();
+		URI mid = baseAsURI.isAbsolute() ? baseAsURI : requestUri.resolve( baseAsURI );
+		
+		
 		URI resolved = 
-			(baseAsURI.isAbsolute() ? baseAsURI : requestUri.resolve( baseAsURI ))
-			.resolve( uiPath )
+			mid
+			.resolve( noLeadingSlash( uiPath ) )
 			;
+		
 		try {
 			return new URI(
 			resolved.getScheme(),

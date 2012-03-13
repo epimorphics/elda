@@ -117,6 +117,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         if (match == null) {
         	StatsValues.endpointNoMatch();
         	String item = router.findItemURIPath( ui.getRequestUri(), "/" + pathstub );
+        	System.err.println( ">> item = " + item );
         	if (item == null) 
         		return noMatchFound( pathstub, ui, pathAndType );
         	else 
@@ -190,6 +191,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
+        	System.err.println( ">> ru = " + ru );
         	APIEndpoint ep = match.getEndpoint();
         	Renderer _default = APIEndpointUtil.getRenderer( ep, formatSuffix, mediaTypes );
         	if (formatSuffix == null && _default != null) formatSuffix = _default.getPreferredSuffix();

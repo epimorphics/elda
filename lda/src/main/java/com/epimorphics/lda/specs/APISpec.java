@@ -40,7 +40,6 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Map1;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Encapsulates a specification of a single API instance.
@@ -78,7 +77,11 @@ public class APISpec {
 
 	protected final int describeThreshold;
 	
-	static final int DEFAULT_DESCRIBE_THRESHOLD = 100;
+	/**
+	    The default number of selected items required for a DESCRIBE
+	    query to use nested selects if they are available.
+	*/
+	public static final int DEFAULT_DESCRIBE_THRESHOLD = 10;
     
     public APISpec( FileManager fm, Resource specification, ModelLoader loader) {
     	specificationURI = specification.getURI();

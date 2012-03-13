@@ -23,6 +23,7 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.PropertyChain;
@@ -103,7 +104,7 @@ public class View {
 	
 	protected String labelPropertyURI = RDFS.label.getURI();
 	
-	protected int describeThreshold = 100;
+	protected int describeThreshold = APISpec.DEFAULT_DESCRIBE_THRESHOLD;
 	
     public View() {
     	this(true);
