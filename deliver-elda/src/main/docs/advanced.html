@@ -148,6 +148,15 @@
     to see if nested selects work.)
 </p>
 
+<p>
+    Support for nested selects applies to DESCRIBE queries as well.
+    To give greater control over the use of nested selects for
+    DESCRIBE, a view may be defined with the property
+    <code>extras:describeThreshold</code>. Nested selects
+    are then only used if the number of selected items exceeds
+    the value of this property.
+</p>
+
 <h2>configuration rendering</h2>
 
 <p>

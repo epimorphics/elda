@@ -213,7 +213,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         the labelled-describe label property URI.
     */
 	private View addViewProperties( Model m, Set<Resource> seen, Resource tRes, View v ) {
-		setDescribeLabel( tRes, v );
+		setDescribeLabelIfPresent( tRes, v );
+		setDescribeThreshold( tRes, v );
 		addViewPropertiesByString( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
 		addViewPropertiesByResource( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
 		for (RDFNode n: tRes.listProperties( API.include ).mapWith( Statement.Util.getObject ).toList()) {
@@ -223,8 +224,14 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 		return v;
 	}
 
-	private void setDescribeLabel(Resource tRes, View v) {
-		if (tRes.hasProperty( EXTRAS.describeAllLabel )) v.setDescribeLabel( getStringValue( tRes, EXTRAS.describeAllLabel, RDFS.label.getURI() ) );
+	private void setDescribeThreshold(Resource tRes, View v) {
+		if (tRes.hasProperty( EXTRAS.describeThreshold ))
+			v.setDescribeThreshold( getIntValue( tRes, EXTRAS.describeThreshold, describeThreshold ) );
+	}
+
+	private void setDescribeLabelIfPresent(Resource tRes, View v) {
+		if (tRes.hasProperty( EXTRAS.describeAllLabel )) 
+			v.setDescribeLabel( getStringValue( tRes, EXTRAS.describeAllLabel, RDFS.label.getURI() ) );
 	}
 
 	private void addViewPropertiesByString( View v, List<RDFNode> items ) {
@@ -266,7 +273,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     private void instantiateBaseQuery( Resource endpoint ) {
         baseQuery = new APIQuery( this );
         baseQuery.addMetadataOptions( metadataOptions );
-        baseQuery.setDescribeThreshold( describeThreshold );
         Resource s = getResourceValue( endpoint, API.selector );
         if (s != null) {
 	        StmtIterator i = s.listProperties( API.parent );

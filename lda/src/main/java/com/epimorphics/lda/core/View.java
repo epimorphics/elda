@@ -103,6 +103,8 @@ public class View {
 	
 	protected String labelPropertyURI = RDFS.label.getURI();
 	
+	protected int describeThreshold = 100;
+	
     public View() {
     	this(true);
     }
@@ -167,6 +169,10 @@ public class View {
 		this.type = Type.T_ALL;
 		this.labelPropertyURI = labelPropertyURI;
 	}
+
+	public void setDescribeThreshold( int threshold ) {
+		this.describeThreshold = threshold;
+	}
     
     /**
         Answer this view after modifying it to contain all the property
@@ -213,6 +219,7 @@ public class View {
     	cannotUpdateALL();
     	chains.addAll( t.chains );
     	this.labelPropertyURI = t.labelPropertyURI;
+    	this.describeThreshold = t.describeThreshold;
     	if (chains.size() > 0) type = Type.T_CHAINS;
     	if (t.type == Type.T_ALL) type = Type.T_ALL;
         return this;
@@ -233,7 +240,6 @@ public class View {
 		final Model m; 
 		final List<Source> sources;
 		final VarSupply vars;
-		final int describeThreshold;
 		
 		public State
 			( String select
@@ -241,14 +247,12 @@ public class View {
 			, Model m
 			, List<Source> sources
 			, VarSupply vars
-			, int threshold
 			) {
 			this.select = select;
 			this.roots = roots;
 			this.m = m; 
 			this.sources = sources;
 			this.vars = vars;
-			this.describeThreshold = threshold;
 		}
 	}
 	
@@ -351,7 +355,7 @@ public class View {
 		List<Resource> allRoots = s.roots;
 		boolean uns = useNestedSelect(s) && s.select.length() > 0;
 	//
-		if (uns && allRoots.size() > s.describeThreshold) {
+		if (uns && allRoots.size() > describeThreshold) {
 			return describeByNestedSelect( s );
 		} else {
 			return describeBySelectedItems( s, allRoots );
