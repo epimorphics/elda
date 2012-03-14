@@ -190,7 +190,6 @@ import com.hp.hpl.jena.shared.WrappedException;
 //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
-        	System.err.println( ">> ru = " + ru );
         	APIEndpoint ep = match.getEndpoint();
         	Renderer _default = APIEndpointUtil.getRenderer( ep, formatSuffix, mediaTypes );
         	if (formatSuffix == null && _default != null) formatSuffix = _default.getPreferredSuffix();
