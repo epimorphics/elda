@@ -34,6 +34,12 @@
           <directory>jetty-distribution-7.0.2.v20100331/javadoc</directory>
           <outputDirectory>jetty-javadoc</outputDirectory>          
       </fileSet>
+      
+      <fileSet>
+          <directory>../deliver-elda/root</directory>
+          <outputDirectory>webapps/root</outputDirectory>
+      </fileSet>
+
       <fileSet>
           <directory>target/elda</directory>
           <outputDirectory>webapps/elda</outputDirectory>
