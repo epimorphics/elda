@@ -117,7 +117,6 @@ import com.hp.hpl.jena.shared.WrappedException;
         if (match == null) {
         	StatsValues.endpointNoMatch();
         	String item = router.findItemURIPath( ui.getRequestUri(), "/" + pathstub );
-        	System.err.println( ">> item = " + item );
         	if (item == null) 
         		return noMatchFound( pathstub, ui, pathAndType );
         	else 

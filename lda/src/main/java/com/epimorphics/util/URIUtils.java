@@ -105,10 +105,8 @@ public class URIUtils {
 		if (!baseAsString.endsWith("/")) 
 			baseAsURI = newURI( baseAsString + "/" );
 				
-		System.err.println();
 		URI mid = baseAsURI.isAbsolute() ? baseAsURI : requestUri.resolve( baseAsURI );
-		
-		
+				
 		URI resolved = 
 			mid
 			.resolve( noLeadingSlash( uiPath ) )

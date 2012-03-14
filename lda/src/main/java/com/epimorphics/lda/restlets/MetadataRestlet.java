@@ -122,5 +122,15 @@ import com.hp.hpl.jena.util.ResourceUtils;
         String stub = rec == null ? "" : pathstub;
         return new ConfigRestlet().generateConfigPage( stub, ui );
     }
+    
+    @GET public Response requestHandlerAny( @PathParam("path") String pathstub, @Context UriInfo ui) {
+        try {SpecRecord rec = lookupRequest(pathstub, ui);
+        String stub = rec == null ? "" : pathstub;
+        return new ConfigRestlet().generateConfigPage( stub, ui ); }
+        catch (RuntimeException e) {
+        	System.err.println( "OOPS" );
+        	throw new RuntimeException( e );
+        }
+    }
 }
 
