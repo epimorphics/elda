@@ -192,6 +192,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         	URI ru = makeRequestURI(ui, match, requestUri);
         	APIEndpoint ep = match.getEndpoint();
         	Renderer _default = APIEndpointUtil.getRenderer( ep, formatSuffix, mediaTypes );
+        	boolean needsVaryAccept = formatSuffix == null && queryParams.containsKey( "_format" ) == false;
         	if (formatSuffix == null && _default != null) formatSuffix = _default.getPreferredSuffix();
         	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatSuffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
@@ -201,8 +202,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? formatSuffix : _format);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
-			log.info( "rendering with formatter " + r.getMediaType(rc) );
-			return doRendering( c, rc, formatter, results, r );
+			return doRendering( c, rc, needsVaryAccept, formatter, results, r );
         } catch (StackOverflowError e) {
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
@@ -254,7 +254,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 		};
 	}
 	
-    private Response doRendering( Controls c, Bindings rc, String rName, APIResultSet results, Renderer r ) {
+    private Response doRendering( Controls c, Bindings rc, boolean needsVaryAccept, String rName, APIResultSet results, Renderer r ) {
 		if (r == null) {
             String message = rName == null
             	? "no suitable media type was provided for rendering."
@@ -262,10 +262,11 @@ import com.hp.hpl.jena.shared.WrappedException;
             	;
             return standardHeaders( Response.status( Status.BAD_REQUEST ).entity( Messages.niceMessage( message ) ) ).build();
         } else {
+			log.info( "rendering with formatter " + r.getMediaType(rc) );
         	Times times = c.times;
             MediaType mt = r.getMediaType( rc );
 			Renderer.BytesOut bo = r.render( times, rc, results );
-			return returnAs( wrap(times, bo), rName == null, mt, results.getContentLocation() );
+			return returnAs( wrap(times, bo), needsVaryAccept, mt, results.getContentLocation() );
         }
 	}
 
@@ -273,9 +274,9 @@ import com.hp.hpl.jena.shared.WrappedException;
         return standardHeaders( false, rb );
     }
 
-    public static ResponseBuilder standardHeaders( boolean varyAccept, ResponseBuilder rb ) {
+    public static ResponseBuilder standardHeaders( boolean needsVaryAccept, ResponseBuilder rb ) {
     	rb = rb.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" );
-        if (varyAccept) rb = rb.header( VARY, "Accept" );
+        if (needsVaryAccept) rb = rb.header( VARY, "Accept" );
    		return rb;
     }
     

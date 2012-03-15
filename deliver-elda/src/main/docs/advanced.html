@@ -148,13 +148,31 @@
     to see if nested selects work.)
 </p>
 
+<h2>DESCRIBE thresholds</h2>
+
 <p>
-    Support for nested selects applies to DESCRIBE queries as well.
-    To give greater control over the use of nested selects for
-    DESCRIBE, a view may be defined with the property
-    <code>extras:describeThreshold</code>. Nested selects
-    are then only used if the number of selected items exceeds
-    the value of this property.
+    Support for nested selects applies to DESCRIBE queries as well,
+    which may consist of a great many URIs when the selection
+    phase generates many items. To give greater control over 
+    the use of nested selects for DESCRIBE, a view may be defined 
+    with the property <code>extras:describeThreshold</code>. This
+    makes that view a DESCRIBE view on which nested selects
+    (if available) are then only used if the number of selected 
+    items exceeds the value of this property.
+</p>
+
+<p>
+    The default default threshold value is 10. However, it can be
+    changed. Setting the <code>extras:describeThreshold</code>
+    property on an <i>endpoint</i> makes all the (describe) viewers 
+    created for that endpoint have that value for their threshold.
+    Setting that property on an <code>api:API</code> makes the
+    default for all its endpoints be that value. 
+</p>
+
+<p>
+    (Values and defaulting rules may change in leater releases
+    of Elda according to reported experience.)
 </p>
 
 <h2>configuration rendering</h2>
