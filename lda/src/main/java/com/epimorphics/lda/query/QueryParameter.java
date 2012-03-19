@@ -50,7 +50,7 @@ public class QueryParameter {
 	public static final String NEAR_LAT = "near-lat";
 	public static final String NEAR_LONG = "near-long";
 	
-	public static final Pattern callbackPattern = Pattern.compile( "^[a-zA-Z_][a-zA-Z0-9]*$" );
+	public static final Pattern callbackPattern = Pattern.compile( "^[a-zA-Z_][a-zA-Z_0-9]*$" );
 
 	/**
 	    Answer true iff <code>p</code> is one of the reserved parameters:
