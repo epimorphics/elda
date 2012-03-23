@@ -10,7 +10,6 @@
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix openSearch:  <http://a9.com/-/spec/opensearch/1.1/> .
 @prefix dct:     <http://purl.org/dc/terms/> .
-@prefix proxy:   <http://localhost:8080/sdx-api/proxy/> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix la:      <http://admin.data.gov.uk/def/localAythority#> .

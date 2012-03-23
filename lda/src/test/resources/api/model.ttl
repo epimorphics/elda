@@ -9,7 +9,6 @@
 @prefix xhv:        <http://www.w3.org/1999/xhtml/vocab#> .
 @prefix openSearch: <http://a9.com/-/spec/opensearch/1.1/> .
 @prefix ex:         <http://www.epimorphics.com/examples/eg1#> .
-@prefix proxy:      <http://localhost:8080/sdx-api/proxy/> .
 @prefix school-ont: <http://education.data.gov.uk/def/school/> .
 @prefix la:      <http://admin.data.gov.uk/def/localAythority#> .
 
