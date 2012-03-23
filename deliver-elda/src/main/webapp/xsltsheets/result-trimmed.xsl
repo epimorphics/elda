@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 Note: in at least some versions of libxslt (used by PHP), you can't set global
 variables based on values retrieved by a key. Therefore this code contains
 lots of redeclarations of the $northing, $easting, $lat, $long, $label,
@@ -17,6 +17,7 @@ $prefLabel, $altLabel, $title and $name variables.
 <xsl:param name="inactiveImageBase" select="concat($_resourceRoot,'images/grey/16x16')" />
 
 <xsl:param name="graphColour" select="'#577D00'" />
+<xsl:variable name="openSpaceAPIkey" select="'91BDD27E0581EC9FE0405F0ACA603BCF'" />
 
 <xsl:template match="/">
 	<xsl:apply-templates select="result" />
@@ -30,9 +31,9 @@ $prefLabel, $altLabel, $title and $name variables.
 		<head>
 			<xsl:apply-templates select="." mode="title" />
 			<xsl:apply-templates select="." mode="meta" />
-                        <xsl:apply-templates select="." mode="script" />
+			<xsl:apply-templates select="." mode="script" />
 			<xsl:apply-templates select="." mode="style" />
-                        <xsl:apply-templates select="." mode="extension" />
+			<xsl:apply-templates select="." mode="extension" />
 		</head>
 		<body>
 			<div id="page">
@@ -77,8 +78,6 @@ $prefLabel, $altLabel, $title and $name variables.
 <xsl:template match="result" mode="script">
 	<xsl:variable name="northing" select="key('propertyTerms', $northing-uri)/label" />
 	<xsl:variable name="easting" select="key('propertyTerms', $easting-uri)/label" />
-    <xsl:variable name="lat" select="key('propertyTerms', $lat-uri)/label" />
-    <xsl:variable name="long" select="key('propertyTerms', $long-uri)/label" />
 	<xsl:variable name="showMap">
 		<xsl:apply-templates select="." mode="showMap" />
 	</xsl:variable>
@@ -88,11 +87,8 @@ $prefLabel, $altLabel, $title and $name variables.
 		<xsl:text>&lt;![endif]</xsl:text>
 	</xsl:comment>
 	<xsl:if test="$showMap = 'true'">
-        <script src="{$_resourceRoot}openlayers/OpenLayers.js"></script>
-        <script src="{$_resourceRoot}openlayers/OpenStreetMap.js"></script>
-        <script src="{$_resourceRoot}openlayers/proj4js-combined.js"></script>
-        <script src="http://spatialreference.org/ref/epsg/27700/proj4js/"></script>
-        <script src="http://spatialreference.org/ref/epsg/4326/proj4js/"></script>
+		<script type="text/javascript"
+     src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key={$openSpaceAPIkey}"></script>
 	</xsl:if>
 	<script type="text/javascript" src="{$_resourceRoot}scripts/jquery.min.js"></script>
 	<script type="text/javascript" src="{$_resourceRoot}scripts/jquery-ui.min.js"></script>
@@ -162,42 +158,43 @@ $prefLabel, $altLabel, $title and $name variables.
 						<xsl:otherwise>?</xsl:otherwise>
 					</xsl:choose>
 				</xsl:variable>
-				<xsl:variable name="mapProperty" select="(//*[*[name(.) = $long] and *[name(.) = $lat]])[1]" />
+				<xsl:variable name="mapProperty" select="(//*[*[name(.) = $easting] and *[name(.) = $northing]])[1]" />
 				<xsl:variable name="mapParam">
 					<xsl:apply-templates select="$mapProperty" mode="paramHierarchy" />
 				</xsl:variable>
-				<xsl:variable name="longParam" select="concat($mapParam, '.', $long)" />
-				<xsl:variable name="latParam" select="concat($mapParam, '.', $lat)" />
+				<xsl:variable name="eastingParam" select="concat($mapParam, '.', $easting)" />
+				<xsl:variable name="northingParam" select="concat($mapParam, '.', $northing)" />
 				<xsl:variable name="properties">
-					<xsl:if test="not(/result/items)">_properties=<xsl:value-of select="$longParam"/>,<xsl:value-of select="$latParam"/>&amp;</xsl:if>
+					<xsl:if test="not(/result/items)">_properties=<xsl:value-of select="$eastingParam"/>,<xsl:value-of select="$northingParam"/>&amp;</xsl:if>
 				</xsl:variable>
 				initMap();
 				
 				$('.map .search').click(function() {
-					var bounds = summaryMap.getExtent().transform(summaryMap.getProjectionObject(),wgs84);
-					var minLong = Math.floor(bounds.left*1000)/1000;
-					var maxLong = Math.ceil(bounds.right*1000)/1000;
-					var minLat  = Math.floor(bounds.bottom*1000)/1000;
-					var maxLat  = Math.ceil(bounds.top*1000)/1000;
-					var midLong = minLong + ((maxLong - minLong) / 2);
-					var midLat  = minLat + ((maxLat - minLat) / 2);
+					var bounds = summaryMap.getExtent();
+					var minEasting = Math.ceil(bounds.left);
+					var maxEasting = Math.floor(bounds.right);
+					var minNorthing = Math.ceil(bounds.bottom);
+					var maxNorthing = Math.floor(bounds.top);
+					var midEasting = minEasting + ((maxEasting - minEasting) / 2);
+					var midNorthing = minNorthing + ((maxNorthing - minNorthing) / 2);
+					var orderBy = <xsl:if test="not(contains($uri, '_sort='))">(maxEasting - minEasting) &lt; 2000 ? '&amp;_orderBy=(((?<xsl:value-of select="$easting"/> - ' + midEasting + ')*(?<xsl:value-of select="$easting"/>- ' + midEasting + '))%2B((?<xsl:value-of select="$northing"/> - ' + midNorthing + ')*(?<xsl:value-of select="$northing"/> - ' + midNorthing + ')))' : </xsl:if>'';
 					<!-- skw 17/10/2011 Remove any bounding-box params from the base URI. -->				
                     <xsl:variable name="windowUri">
                        <xsl:call-template name="substituteParam">
                           <xsl:with-param name="value" select="''"/>
-                          <xsl:with-param name="param">min-<xsl:value-of select="$longParam"/></xsl:with-param>
+                          <xsl:with-param name="param">min-<xsl:value-of select="$eastingParam"/></xsl:with-param>
                           <xsl:with-param name="uri">
                              <xsl:call-template name="substituteParam">
                                <xsl:with-param name="value" select="''"/>
-                               <xsl:with-param name="param">max-<xsl:value-of select="$longParam"/></xsl:with-param>
+                               <xsl:with-param name="param">max-<xsl:value-of select="$eastingParam"/></xsl:with-param>
                                <xsl:with-param name="uri">
                                  <xsl:call-template name="substituteParam">
                                    <xsl:with-param name="value" select="''"/>
-                                   <xsl:with-param name="param">min-<xsl:value-of select="$latParam"/></xsl:with-param>
+                                   <xsl:with-param name="param">min-<xsl:value-of select="$northingParam"/></xsl:with-param>
                                    <xsl:with-param name="uri">
                                       <xsl:call-template name="substituteParam">
                                         <xsl:with-param name="value" select="''"/>
-                                        <xsl:with-param name="param">max-<xsl:value-of select="$latParam"/></xsl:with-param>
+                                        <xsl:with-param name="param">max-<xsl:value-of select="$northingParam"/></xsl:with-param>
                                         <xsl:with-param name="uri" select="$uri"/>            
                                       </xsl:call-template>
                                    </xsl:with-param>
@@ -207,7 +204,7 @@ $prefLabel, $altLabel, $title and $name variables.
                           </xsl:with-param>
                        </xsl:call-template>
                     </xsl:variable>
-					window.location = '<xsl:value-of select="concat($windowUri, $sep, $properties)"/>min-<xsl:value-of select="$longParam"/>=' + minLong + '&amp;max-<xsl:value-of select="$longParam"/>=' + maxLong + '&amp;min-<xsl:value-of select="$latParam"/>=' + minLat + '&amp;max-<xsl:value-of select="$latParam"/>=' + maxLat;
+					window.location = '<xsl:value-of select="concat($windowUri, $sep, $properties)"/>min-<xsl:value-of select="$eastingParam"/>=' + minEasting + '&amp;max-<xsl:value-of select="$eastingParam"/>=' + maxEasting + '&amp;min-<xsl:value-of select="$northingParam"/>=' + minNorthing + '&amp;max-<xsl:value-of select="$northingParam"/>=' + maxNorthing + orderBy;
 				});
 			</xsl:if>
 		});
@@ -216,8 +213,8 @@ $prefLabel, $altLabel, $title and $name variables.
 
 <xsl:template name="clearPosition">
 	<xsl:param name="uri" />
-	<xsl:variable name="lat" select="key('propertyTerms', $lat-uri)/label" />
-	<xsl:variable name="long" select="key('propertyTerms', $long-uri)/label" />
+	<xsl:variable name="northing" select="key('propertyTerms', $northing-uri)/label" />
+	<xsl:variable name="easting" select="key('propertyTerms', $easting-uri)/label" />
 	<xsl:call-template name="substituteParam">
 		<xsl:with-param name="uri">
 			<xsl:call-template name="substituteParam">
@@ -226,35 +223,35 @@ $prefLabel, $altLabel, $title and $name variables.
 						<xsl:with-param name="uri">
 							<xsl:call-template name="substituteParam">
 								<xsl:with-param name="uri" select="$uri" />
-								<xsl:with-param name="param" select="concat('max-', $lat)" />
+								<xsl:with-param name="param" select="concat('max-', $northing)" />
 								<xsl:with-param name="value" select="''" />
 							</xsl:call-template>
 						</xsl:with-param>
-						<xsl:with-param name="param" select="concat('min-', $lat)" />
+						<xsl:with-param name="param" select="concat('min-', $northing)" />
 						<xsl:with-param name="value" select="''" />
 					</xsl:call-template>
 				</xsl:with-param>
-				<xsl:with-param name="param" select="concat('max-', $long)" />
+				<xsl:with-param name="param" select="concat('max-', $easting)" />
 				<xsl:with-param name="value" select="''" />
 			</xsl:call-template>
 		</xsl:with-param>
-		<xsl:with-param name="param" select="concat('min-', $long)" />
+		<xsl:with-param name="param" select="concat('min-', $easting)" />
 		<xsl:with-param name="value" select="''" />
 	</xsl:call-template>
 </xsl:template>
 
 <xsl:template match="result" mode="showMap">
 	<xsl:param name="items" select="items/item[position() &lt;= 10]/descendant-or-self::*[*] | primaryTopic[not(../items)]/descendant-or-self::*[*]" />
-	<xsl:variable name="long" select="key('propertyTerms', $long-uri)/label" />
+	<xsl:variable name="easting" select="key('propertyTerms', $easting-uri)/label" />
 	<xsl:choose>
 		<xsl:when test="not($items)">
-			<xsl:variable name="minLong">
+			<xsl:variable name="minEasting">
 				<xsl:call-template name="paramValue">
 					<xsl:with-param name="uri" select="@href" />
-					<xsl:with-param name="param" select="concat('min-', $long)" />
+					<xsl:with-param name="param" select="concat('min-', $easting)" />
 				</xsl:call-template>
 			</xsl:variable>
-			<xsl:value-of select="$minLong != ''" />
+			<xsl:value-of select="$minEasting != ''" />
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:apply-templates select="." mode="showMapForItems">
@@ -281,10 +278,10 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 
 <xsl:template match="*" mode="showMap">
-	<xsl:variable name="lat" select="key('propertyTerms', $lat-uri)/label" />
-	<xsl:variable name="long" select="key('propertyTerms', $long-uri)/label" />
+	<xsl:variable name="northing" select="key('propertyTerms', $northing-uri)/label" />
+	<xsl:variable name="easting" select="key('propertyTerms', $easting-uri)/label" />
 	<xsl:choose>
-		<xsl:when test="*[name(.) = $long] and *[name(.) = $lat]">true</xsl:when>
+		<xsl:when test="*[name(.) = $easting] and *[name(.) = $northing]">true</xsl:when>
 		<xsl:otherwise>false</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -320,16 +317,16 @@ $prefLabel, $altLabel, $title and $name variables.
 
 <xsl:template match="viewingResult | selectionResult" mode="footer">
 	<div>
-        <xsl:attribute name="class">
+		<xsl:attribute name="class">
             <xsl:variable name="selquery">
                <xsl:value-of select="self::viewingResult[../selectionResult/query/value]"/>
             </xsl:variable>
-            <xsl:text> query col</xsl:text>
-            <xsl:choose>
-                <xsl:when test="$selquery != ''">2</xsl:when>
-                <xsl:otherwise>1</xsl:otherwise>
-            </xsl:choose>
-        </xsl:attribute>
+			<xsl:text> query col</xsl:text>
+			<xsl:choose>
+			    <xsl:when test="$selquery != ''">2</xsl:when>
+				<xsl:otherwise>1</xsl:otherwise>
+			</xsl:choose>
+		</xsl:attribute>
 		<h2>
 			<xsl:choose>
 				<xsl:when test="self::viewingResult">Viewer</xsl:when>
@@ -525,89 +522,89 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 	
 <xsl:template match="result" mode="map">
-	<xsl:variable name="lat" select="key('propertyTerms', $lat-uri)/label" />
-	<xsl:variable name="long" select="key('propertyTerms', $long-uri)/label" />
+	<xsl:variable name="northing" select="key('propertyTerms', $northing-uri)/label" />
+	<xsl:variable name="easting" select="key('propertyTerms', $easting-uri)/label" />
 	<xsl:variable name="showMap">
 		<xsl:apply-templates select="." mode="showMap" />
 	</xsl:variable>
 	<xsl:choose>
 		<xsl:when test="$showMap = 'true'">
-			<xsl:variable name="markers" select="items//*[*[name(.) = $long] and *[name(.) = $lat]] | primaryTopic[not(../items)]/descendant-or-self::*[*[name(.) = $long] and *[name(.) = $lat]]" />
+			<xsl:variable name="markers" select="items//*[*[name(.) = $easting] and *[name(.) = $northing]] | primaryTopic[not(../items)]/descendant-or-self::*[*[name(.) = $easting] and *[name(.) = $northing]]" />
 			<xsl:variable name="multipleMarkers" select="count($markers) > 1" />
-			<xsl:variable name="minLong">
+			<xsl:variable name="minEasting">
 				<xsl:choose>
 					<xsl:when test="$multipleMarkers">
 						<xsl:call-template name="min">
-							<xsl:with-param name="values" select="$markers/*[name(.) = $long]" />
+							<xsl:with-param name="values" select="$markers/*[name(.) = $easting]" />
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:when test="$markers">
-						<xsl:value-of select="$markers/*[name(.) = $long]" />
+						<xsl:value-of select="$markers/*[name(.) = $easting]" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="paramValue">
 							<xsl:with-param name="uri" select="/result/@href" />
-							<xsl:with-param name="param" select="concat('min-', $long)" />
+							<xsl:with-param name="param" select="concat('min-', $easting)" />
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-			<xsl:variable name="maxLong">
+			<xsl:variable name="maxEasting">
 				<xsl:choose>
 					<xsl:when test="$multipleMarkers">
 						<xsl:call-template name="max">
-							<xsl:with-param name="values" select="$markers/*[name(.) = $long]" />
+							<xsl:with-param name="values" select="$markers/*[name(.) = $easting]" />
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:when test="$markers">
-						<xsl:value-of select="$markers/*[name(.) = $long]" />
+						<xsl:value-of select="$markers/*[name(.) = $easting]" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="paramValue">
 							<xsl:with-param name="uri" select="/result/@href" />
-							<xsl:with-param name="param" select="concat('max-', $long)" />
+							<xsl:with-param name="param" select="concat('max-', $easting)" />
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-			<xsl:variable name="minLat">
+			<xsl:variable name="minNorthing">
 				<xsl:choose>
 					<xsl:when test="$multipleMarkers">
 						<xsl:call-template name="min">
-							<xsl:with-param name="values" select="$markers/*[name(.) = $lat]" />
+							<xsl:with-param name="values" select="$markers/*[name(.) = $northing]" />
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:when test="$markers">
-						<xsl:value-of select="$markers/*[name(.) = $lat]" />
+						<xsl:value-of select="$markers/*[name(.) = $northing]" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="paramValue">
 							<xsl:with-param name="uri" select="/result/@href" />
-							<xsl:with-param name="param" select="concat('min-', $lat)" />
+							<xsl:with-param name="param" select="concat('min-', $northing)" />
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-			<xsl:variable name="maxLat">
+			<xsl:variable name="maxNorthing">
 				<xsl:choose>
 					<xsl:when test="$multipleMarkers">
 						<xsl:call-template name="max">
-							<xsl:with-param name="values" select="$markers/*[name(.) = $lat]" />
+							<xsl:with-param name="values" select="$markers/*[name(.) = $northing]" />
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:when test="$markers">
-						<xsl:value-of select="$markers/*[name(.) = $lat]" />
+						<xsl:value-of select="$markers/*[name(.) = $northing]" />
 					</xsl:when>
 					<xsl:otherwise>
 						<xsl:call-template name="paramValue">
 							<xsl:with-param name="uri" select="/result/@href" />
-							<xsl:with-param name="param" select="concat('max-', $lat)" />
+							<xsl:with-param name="param" select="concat('max-', $northing)" />
 						</xsl:call-template>
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
 			<xsl:variable name="searchMap" 
-				select="//*[*[name(.) = $long] and *[name(.) = $lat]]" />
+				select="//*[*[name(.) = $easting] and *[name(.) = $northing]]" />
 			<section class="map">
 				<h1>Map</h1>
 				<xsl:call-template name="createInfo">
@@ -636,44 +633,40 @@ $prefLabel, $altLabel, $title and $name variables.
 						var controls = [
 							new OpenLayers.Control.Navigation(),
 							new OpenLayers.Control.KeyboardDefaults(),
-                            new OpenLayers.Control.ZoomBox(),
-                            new OpenLayers.Control.ZoomPanel(),
-							new OpenLayers.Control.Attribution()
+							new OpenSpace.Control.CopyrightCollection({displayClass:"osCopyright"}),
+							new OpenLayers.Control.ArgParser()
 						];
-						wgs84 = new OpenLayers.Projection("EPSG:4326");
-						summaryMap = new OpenLayers.Map('map', {controls: controls});
-//						summaryMap.addControl(new OpenSpace.Control.SmallMapControl());
-                        summaryMap.addLayer(new OpenLayers.Layer.OSM.Mapnik());
+						summaryMap = new OpenSpace.Map('map', {controls: controls});
+						summaryMap.addControl(new OpenSpace.Control.SmallMapControl());
 						var info;
 						<xsl:choose>
 							<xsl:when test="$multipleMarkers">
-                                var bounds = new OpenLayers.Bounds(<xsl:value-of select="$minLong"/>, <xsl:value-of select="$minLat"/>, <xsl:value-of select="$maxLong"/>, <xsl:value-of select="$maxLat"/>).transform(wgs84,summaryMap.getProjectionObject());
-                                var zoom = summaryMap.getZoomForExtent(bounds);
-								var center = new OpenLayers.LonLat(<xsl:value-of select="$minLong + (($maxLong - $minLong) div 2)" />, <xsl:value-of select="$minLat + (($maxLat - $minLat) div 2)" />).transform(wgs84,summaryMap.getProjectionObject());
-								summaryMap.setCenter(center, zoom &lt; 14 ? zoom : 14 );
+					      var bounds = new OpenLayers.Bounds(<xsl:value-of select="$minEasting"/>, <xsl:value-of select="$minNorthing"/>, <xsl:value-of select="$maxEasting"/>, <xsl:value-of select="$maxNorthing"/>);
+								var zoom = Math.min(<xsl:choose><xsl:when test="/result/next">7</xsl:when><xsl:otherwise>10</xsl:otherwise></xsl:choose>, summaryMap.getZoomForExtent(bounds));
+								var center = new OpenSpace.MapPoint(<xsl:value-of select="$minEasting + floor(($maxEasting - $minEasting) div 2)" />, <xsl:value-of select="$minNorthing + floor(($maxNorthing - $minNorthing) div 2)" />);
+								summaryMap.setCenter(center, zoom);
 							</xsl:when>
 							<xsl:when test="$markers">
-								var center = new OpenLayers.LonLat(<xsl:value-of select="$markers/*[name(.) = $long]" />, <xsl:value-of select="$markers/*[name(.) = $lat]" />).transform(wgs84,summaryMap.getProjectionObject());
-								summaryMap.setCenter(center, 14);
+								var center = new OpenSpace.MapPoint(<xsl:value-of select="$markers/*[name(.) = $easting]" />, <xsl:value-of select="$markers/*[name(.) = $northing]" />);
+								summaryMap.setCenter(center, 7);
 							</xsl:when>
 							<xsl:otherwise>
-								var bounds = new OpenLayers.Bounds(<xsl:value-of select="$minLong"/>, <xsl:value-of select="$minLat"/>, <xsl:value-of select="$maxLong"/>, <xsl:value-of select="$maxLat"/>).transform(wgs84,summaryMap.getProjectionObject());
+								var bounds = new OpenLayers.Bounds(<xsl:value-of select="$minEasting"/>, <xsl:value-of select="$minNorthing"/>, <xsl:value-of select="$maxEasting"/>, <xsl:value-of select="$maxNorthing"/>);
 								summaryMap.zoomToExtent(bounds);
 							</xsl:otherwise>
 						</xsl:choose>
 			      var markers = new OpenLayers.Layer.Markers("Markers");
 			      summaryMap.addLayer(markers);
 			      var size = new OpenLayers.Size(16,16);
-                  var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-                  var icon = new OpenLayers.Icon('<xsl:value-of select="$activeImageBase"/>/Target.png', size, offset);
+						var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+						var icon = new OpenLayers.Icon('<xsl:value-of select="$activeImageBase"/>/Target.png', size, offset);
 			      var pos;
 			      var marker;
 			      <xsl:for-each select="$markers">
-			      	<xsl:sort select="*[name(.) = $lat]" order="descending" data-type="number" />
-			      	<xsl:sort select="*[name(.) = $long]" order="descending" data-type="number" />
-				      pos = new OpenLayers.LonLat(<xsl:value-of select="*[name(.) = $long]" />, <xsl:value-of select="*[name(.) = $lat]"/>).transform(wgs84,summaryMap.getProjectionObject());
+			      	<xsl:sort select="*[name(.) = $northing]" order="descending" data-type="number" />
+			      	<xsl:sort select="*[name(.) = $easting]" order="descending" data-type="number" />
+				      pos = new OpenSpace.MapPoint(<xsl:value-of select="*[name(.) = $easting]" />, <xsl:value-of select="*[name(.) = $northing]"/>);
 				      marker = new OpenLayers.Marker(pos, icon.clone());
-				      <!-- 
 				      <xsl:if test="/result/items">
 					      marker.events.on({
 					      	mouseover: function () {
@@ -681,34 +674,27 @@ $prefLabel, $altLabel, $title and $name variables.
 					      	}
 					      });
 				      </xsl:if>
-				      -->
 				      markers.addMarker(marker);
 			      </xsl:for-each>
-<!--
-                        var controls, center, markers, size, offset, icon;
--->
-			            <!-- 
 						<xsl:if test="$multipleMarkers">
-							info = new OpenLayers.Layer.Boxes("info");
+							info = new OpenSpace.Layer.ScreenOverlay("info");
 							info.setPosition(new OpenLayers.Pixel(85, 0));
 							summaryMap.addLayer(info);
 							info.setHTML('&lt;div class=\"mapInfo\">Mouse over a marker&lt;/div>');
 						</xsl:if>
-						-->
 						<xsl:for-each select="$markers">
 							var controls = [new OpenLayers.Control.ArgParser()];
-							osMap = new OpenLayers.Map('<xsl:value-of select="concat('map', generate-id(.))"/>', {controls: controls});
-                            osMap.addLayer(new OpenLayers.Layer.OSM.Mapnik());
-							var center = new OpenLayers.LonLat(<xsl:value-of select="*[name(.) = $long]" />, <xsl:value-of select="*[name(.) = $lat]" />).transform(wgs84,osMap.getProjectionObject());
-                            osMap.setCenter(center, 13);
-                            var markers = new OpenLayers.Layer.Markers("Markers");
-                            osMap.addLayer(markers);
-                            var size = new OpenLayers.Size(16,16);
+							osMap = new OpenSpace.Map('<xsl:value-of select="concat('map', generate-id(.))"/>', {controls: controls});
+							var center = new OpenSpace.MapPoint(<xsl:value-of select="*[name(.) = $easting]" />, <xsl:value-of select="*[name(.) = $northing]" />);
+					    osMap.setCenter(center, 9);
+					    var markers = new OpenLayers.Layer.Markers("Markers");
+					    osMap.addLayer(markers);
+					    var size = new OpenLayers.Size(16,16);
 							var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 							var icon = new OpenLayers.Icon('<xsl:value-of select="$activeImageBase"/>/Target.png', size, offset);
-                            var pos = new OpenLayers.LonLat(<xsl:value-of select="*[name(.) = $long]" />, <xsl:value-of select="*[name(.) = $lat]"/>).transform(wgs84,osMap.getProjectionObject());
-                            var marker = new OpenLayers.Marker(pos, icon);
-                            markers.addMarker(marker);
+					    pos = new OpenSpace.MapPoint(<xsl:value-of select="*[name(.) = $easting]" />, <xsl:value-of select="*[name(.) = $northing]"/>);
+					    marker = new OpenLayers.Marker(pos, icon);
+					    markers.addMarker(marker);
 						</xsl:for-each>
 					};
 				} else {
@@ -1058,8 +1044,6 @@ $prefLabel, $altLabel, $title and $name variables.
 	<xsl:param name="params" />
 	<xsl:variable name="northing" select="key('propertyTerms', $northing-uri)/label" />
 	<xsl:variable name="easting" select="key('propertyTerms', $easting-uri)/label" />
-    <xsl:variable name="lat" select="key('propertyTerms', $lat-uri)/label" />
-    <xsl:variable name="long" select="key('propertyTerms', $long-uri)/label" />
 	<xsl:variable name="param">
 		<xsl:choose>
 			<xsl:when test="contains($params, '&amp;')">
@@ -1070,7 +1054,7 @@ $prefLabel, $altLabel, $title and $name variables.
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<xsl:if test="not(starts-with($param, '_')) and not(starts-with($param, concat('max-', $long, '=')) or starts-with($param, concat('min-', $lat, '=')) or starts-with($param, concat('max-', $lat, '=')))">
+	<xsl:if test="not(starts-with($param, '_')) and not(starts-with($param, concat('max-', $easting, '=')) or starts-with($param, concat('min-', $northing, '=')) or starts-with($param, concat('max-', $northing, '=')))">
 		<xsl:variable name="paramName" select="substring-before($param, '=')" />
 		<xsl:variable name="isLabelParam">
 			<xsl:call-template name="isLabelParam">
@@ -1079,7 +1063,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		</xsl:variable>
 		<tr>
 			<xsl:choose>
-				<xsl:when test="$paramName = concat('min-', $long)">
+				<xsl:when test="$paramName = concat('min-', $easting)">
 					<th class="label" colspan="2">area of map</th>
 					<td class="filter">
 						<a title="remove filter">
@@ -1100,7 +1084,7 @@ $prefLabel, $altLabel, $title and $name variables.
 							<xsl:when test="$isLabelParam = 'true'">
 								<xsl:value-of select="$paramName" />
 							</xsl:when>
-							<xsl:when test="$paramName = concat('min-', $long)">area on map</xsl:when>
+							<xsl:when test="$paramName = concat('min-', $easting)">area on map</xsl:when>
 							<xsl:otherwise>
 								<xsl:call-template name="splitPath">
 									<xsl:with-param name="paramName" select="$paramName" />
@@ -1208,10 +1192,10 @@ $prefLabel, $altLabel, $title and $name variables.
 				<xsl:sort select="name(.) = $title" order="descending" />
 				<xsl:sort select="name(.) = $label" order="descending" />
 				<xsl:sort select="name(.) = $altLabel" order="descending" />
-				<xsl:sort select="name(.) = $long" order="descending" />
-				<xsl:sort select="name(.) = $lat" order="descending" />
 				<xsl:sort select="name(.) = $easting" order="descending" />
 				<xsl:sort select="name(.) = $northing" order="descending" />
+				<xsl:sort select="name(.) = $lat" order="descending" />
+				<xsl:sort select="name(.) = $long" order="descending" />
 				<xsl:sort select="boolean(@datatype)" order="descending" />
 				<xsl:sort select="@datatype" />
 				<xsl:sort select="boolean(@href)" />
@@ -1305,10 +1289,10 @@ $prefLabel, $altLabel, $title and $name variables.
 		<xsl:when test="$hasNonLabelProperties = 'true'">
 			<xsl:for-each select="key('properties', $propertyName)/*[name() != 'item' and generate-id(key('properties', concat($propertyName, '.', name(.)))[1]) = generate-id(.)] |
 				key('properties', concat($propertyName, '.item'))/*[generate-id(key('properties', concat($propertyName, '.item.', name(.)))[1]) = generate-id(.)]">
-				<xsl:sort select="name(.) = $long" order="descending" />
-				<xsl:sort select="name(.) = $lat" order="descending" />
 				<xsl:sort select="name(.) = $easting" order="descending" />
 				<xsl:sort select="name(.) = $northing" order="descending" />
+				<xsl:sort select="name(.) = $lat" order="descending" />
+				<xsl:sort select="name(.) = $long" order="descending" />
 				<xsl:sort select="boolean(@datatype)" order="descending" />
 				<xsl:sort select="@datatype" />
 				<xsl:sort select="boolean(@href)" />
@@ -1480,7 +1464,7 @@ $prefLabel, $altLabel, $title and $name variables.
 				<xsl:when test="$orderBy != ''">
 					<xsl:variable name="description">
 						<xsl:choose>
-							<xsl:when test="starts-with($orderBy, concat('(((?', $long, ' - ')) or starts-with($orderBy, concat('desc(((?', $long, ' - '))"> proximity to centre of map</xsl:when>
+							<xsl:when test="starts-with($orderBy, concat('(((?', $easting, ' - ')) or starts-with($orderBy, concat('desc(((?', $easting, ' - '))"> proximity to centre of map</xsl:when>
 							<xsl:otherwise> custom sort</xsl:otherwise>
 						</xsl:choose>
 					</xsl:variable>
@@ -1545,10 +1529,10 @@ $prefLabel, $altLabel, $title and $name variables.
 				<xsl:sort select="name(.) = $title" order="descending" />
 				<xsl:sort select="name(.) = $label" order="descending" />
 				<xsl:sort select="name(.) = $altLabel" order="descending" />
-				<xsl:sort select="name(.) = $long" order="descending" />
-				<xsl:sort select="name(.) = $lat" order="descending" />
 				<xsl:sort select="name(.) = $easting" order="descending" />
 				<xsl:sort select="name(.) = $northing" order="descending" />
+				<xsl:sort select="name(.) = $lat" order="descending" />
+				<xsl:sort select="name(.) = $long" order="descending" />
 				<xsl:sort select="boolean(@datatype)" order="descending" />
 				<xsl:sort select="@datatype" />
 				<xsl:sort select="boolean(@href)" />
@@ -1678,10 +1662,10 @@ $prefLabel, $altLabel, $title and $name variables.
 		<xsl:when test="$hasNonLabelProperties = 'true'">
 			<xsl:for-each select="key('properties', $propertyName)/*[name() != 'item' and generate-id(key('properties', concat($propertyName, '.', name(.)))[1]) = generate-id(.)] |
 				key('properties', concat($propertyName, '.item'))/*[generate-id(key('properties', concat($propertyName, '.item.', name(.)))[1]) = generate-id(.)]">
-				<xsl:sort select="name(.) = $long" order="descending" />
-				<xsl:sort select="name(.) = $lat" order="descending" />
 				<xsl:sort select="name(.) = $easting" order="descending" />
 				<xsl:sort select="name(.) = $northing" order="descending" />
+				<xsl:sort select="name(.) = $lat" order="descending" />
+				<xsl:sort select="name(.) = $long" order="descending" />
 				<xsl:sort select="boolean(@datatype)" order="descending" />
 				<xsl:sort select="@datatype" />
 				<xsl:sort select="boolean(@href)" />
@@ -1970,10 +1954,10 @@ $prefLabel, $altLabel, $title and $name variables.
 		<!-- This for-each is a hack around what seems to be a bug in older versions
 			of libxslt, which ignores ordering in an xsl:apply-templates -->
 		<xsl:for-each select="*">
-            <xsl:sort select="name(.) = $long" order="descending" />
-            <xsl:sort select="name(.) = $lat" order="descending" />
 			<xsl:sort select="name(.) = $easting" order="descending" />
 			<xsl:sort select="name(.) = $northing" order="descending" />
+			<xsl:sort select="name(.) = $lat" order="descending" />
+			<xsl:sort select="name(.) = $long" order="descending" />
 			<xsl:sort select="name(.) = $prefLabel" order="descending" />
 			<xsl:sort select="name(.) = $name" order="descending" />
 			<xsl:sort select="name(.) = $title" order="descending" />
@@ -2070,13 +2054,13 @@ $prefLabel, $altLabel, $title and $name variables.
 				</xsl:apply-templates>
 			</th>
 			<xsl:choose>
-				<xsl:when test="name(.) = $long and $showMap = 'true'">
+				<xsl:when test="name(.) = $easting and $showMap = 'true'">
 					<td class="value">
 						<xsl:apply-templates select="." mode="display" />
 					</td>
 					<td class="map" colspan="2">
 						<xsl:choose>
-							<xsl:when test="../*[name(.) = $northing] and ../*[name(.) = $easting]">
+							<xsl:when test="../*[name(.) = $lat] and ../*[name(.) = $long]">
 								<xsl:attribute name="rowspan">4</xsl:attribute>
 							</xsl:when>
 							<xsl:otherwise>
@@ -2086,7 +2070,7 @@ $prefLabel, $altLabel, $title and $name variables.
 						<xsl:apply-templates select="parent::*" mode="map" />
 					</td>
 				</xsl:when>
-				<xsl:when test="(name(.) = $lat or name(.) = $northing or name(.) = $easting) and $showMap = 'true'">
+				<xsl:when test="(name(.) = $northing or name(.) = $lat or name(.) = $long) and $showMap = 'true'">
 					<td class="value">
 						<xsl:apply-templates select="." mode="display" />
 					</td>
@@ -2330,24 +2314,29 @@ $prefLabel, $altLabel, $title and $name variables.
 	<xsl:variable name="isLabelParam">
 		<xsl:apply-templates select="." mode="isLabelParam" />
 	</xsl:variable>
-	<xsl:variable name="anyItemHasNonLabelProperties">
+ 	<xsl:variable name="anyItemHasNonLabelProperties">
 		<xsl:apply-templates select="." mode="anyItemHasNonLabelProperties" />
 	</xsl:variable>
+<!-- skw skipping highestDescription stuff
 	<xsl:variable name="anyItemIsHighestDescription">
 		<xsl:apply-templates select="." mode="anyItemIsHighestDescription" />
 	</xsl:variable>
+-->
 	<xsl:choose>
-		<xsl:when test="$anyItemHasNonLabelProperties = 'true' and $anyItemIsHighestDescription = 'true'">
+<!-- skw
+		<xsl:when test="$anyItemHasNonLabelProperties = 'true' and $anyItemIsHighestDescription = 'true' ">
+-->
+        <xsl:when test="$anyItemHasNonLabelProperties = 'true'">
 			<xsl:for-each select="item">
 				<xsl:sort select="*[name(.) = $prefLabel]" />
 				<xsl:sort select="*[name(.) = $name]" />
 				<xsl:sort select="*[name(.) = $title]" />
 				<xsl:sort select="*[name(.) = $label]" />
 				<xsl:sort select="*[name(.) = $altLabel]" />
-				<xsl:sort select="*[name(.) = $long]" order="descending" />
-				<xsl:sort select="*[name(.) = $lat]" order="descending" />
 				<xsl:sort select="*[name(.) = $easting]" order="descending" />
 				<xsl:sort select="*[name(.) = $northing]" order="descending" />
+				<xsl:sort select="*[name(.) = $lat]" order="descending" />
+				<xsl:sort select="*[name(.) = $long]" order="descending" />
 				<xsl:sort select="@href" />
 				<xsl:apply-templates select="." mode="content">
 					<xsl:with-param name="nested" select="$nested" />
@@ -2362,10 +2351,10 @@ $prefLabel, $altLabel, $title and $name variables.
 					<xsl:sort select="*[name(.) = $title]" />
 					<xsl:sort select="*[name(.) = $label]" />
 					<xsl:sort select="*[name(.) = $altLabel]" />
-					<xsl:sort select="*[name(.) = $long]" order="descending" />
-					<xsl:sort select="*[name(.) = $lat]" order="descending" />
 					<xsl:sort select="*[name(.) = $easting]" order="descending" />
 					<xsl:sort select="*[name(.) = $northing]" order="descending" />
+					<xsl:sort select="*[name(.) = $lat]" order="descending" />
+					<xsl:sort select="*[name(.) = $long]" order="descending" />
 					<xsl:sort select="@href" />
 					<xsl:apply-templates select="." mode="row" />
 				</xsl:for-each>
@@ -2379,11 +2368,16 @@ $prefLabel, $altLabel, $title and $name variables.
 	<xsl:variable name="hasNonLabelProperties">
 		<xsl:apply-templates select="." mode="hasNonLabelProperties" />
 	</xsl:variable>
+<!-- skw 
 	<xsl:variable name="isHighestDescription">
 		<xsl:apply-templates select="." mode="isHighestDescription" />
 	</xsl:variable>
+ -->
 	<xsl:choose>
-		<xsl:when test="$nested or ($hasNonLabelProperties = 'true' and $isHighestDescription = 'true')">
+<!--  skw 
+        <xsl:when test="$nested or ($hasNonLabelProperties = 'true' and $isHighestDescription = 'true')">
+-->
+		<xsl:when test="$nested or ($hasNonLabelProperties = 'true') ">
 			<xsl:apply-templates select="." mode="table" />
 		</xsl:when>
 		<xsl:otherwise>
@@ -2633,6 +2627,8 @@ $prefLabel, $altLabel, $title and $name variables.
 	<xsl:param name="content" />
 	<xsl:choose>
 		<xsl:when test="@href and not(starts-with(@href, 'http://api.talis.com'))">
+
+<!-- skw removed repeated highestDescription computation (very bad on large pages)
 			<xsl:variable name="highestDescription">
 				<xsl:apply-templates select="." mode="highestDescription" />
 			</xsl:variable>
@@ -2643,6 +2639,7 @@ $prefLabel, $altLabel, $title and $name variables.
 					</a>
 				</xsl:when>
 				<xsl:otherwise>
+-->
 					<xsl:variable name="adjustedHref">
 						<xsl:apply-templates select="@href" mode="uri" />
 					</xsl:variable>
@@ -2672,8 +2669,10 @@ $prefLabel, $altLabel, $title and $name variables.
 							</xsl:if>
 						</xsl:otherwise>
 					</xsl:choose>
+<!--  skw					
 				</xsl:otherwise>
 			</xsl:choose>
+-->
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:copy-of select="$content" />
@@ -2711,10 +2710,10 @@ $prefLabel, $altLabel, $title and $name variables.
 						<xsl:sort select="name(.) = $title" order="descending" />
 						<xsl:sort select="name(.) = $label" order="descending" />
 						<xsl:sort select="name(.) = $altLabel" order="descending" />
-						<xsl:sort select="name(.) = $lat" order="descending" />
-						<xsl:sort select="name(.) = $long" order="descending" />
 						<xsl:sort select="name(.) = $easting" order="descending" />
 						<xsl:sort select="name(.) = $northing" order="descending" />
+						<xsl:sort select="name(.) = $lat" order="descending" />
+						<xsl:sort select="name(.) = $long" order="descending" />
 						<xsl:sort select="boolean(@datatype)" order="descending" />
 						<xsl:sort select="@datatype" />
 						<xsl:sort select="boolean(@href)" />
@@ -2791,10 +2790,10 @@ $prefLabel, $altLabel, $title and $name variables.
 							<xsl:for-each 
 								select="key('properties', $propertyName)/*[name() != 'item' and generate-id(key('properties', concat($propertyName, '.', name(.)))[1]) = generate-id(.)] | 
 								key('properties', concat($propertyName, '.item'))/*[generate-id(key('properties', concat($propertyName, '.item.', name(.)))[1]) = generate-id(.)]">
-                                <xsl:sort select="name(.) = $long" order="descending" />
-                                <xsl:sort select="name(.) = $lat" order="descending" />
 								<xsl:sort select="name(.) = $easting" order="descending" />
 								<xsl:sort select="name(.) = $northing" order="descending" />
+								<xsl:sort select="name(.) = $lat" order="descending" />
+								<xsl:sort select="name(.) = $long" order="descending" />
 								<xsl:sort select="boolean(@datatype)" order="descending" />
 								<xsl:sort select="@datatype" />
 								<xsl:sort select="boolean(@href)" />
