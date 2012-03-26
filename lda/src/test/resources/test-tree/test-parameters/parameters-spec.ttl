@@ -1,0 +1,14 @@
+@prefix extras: <http://www.epimorphics.com/vocabularies/lda#>.
+@prefix : <http://example.com/parameters#>.
+
+:root a api:API
+    ; api:sparqlEndpoint <local:CURRENT-TEST>
+    ; api:endpoint :epA
+    ; extras:allowReserved '_root'
+    .
+    
+:epA a api:ListEndpoint
+    ; api:uriTemplate 'template'
+    ; extras:allowReserved '_epA'
+    .
+    

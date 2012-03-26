@@ -54,6 +54,8 @@ public class EXTRAS
 	public static final Property metadataOptions = property( "metadataOptions" );
 
 	public static final Property describeThreshold = property( "describeThreshold" );
+	
+	public static final Property allowReserved = property( "allowReserved" );
     
     private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }

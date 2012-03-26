@@ -1,0 +1,36 @@
+<project name="Elda" default="schemagen" basedir=".">
+	<description>
+        Ant script extension called from Maven to perform build tasks.
+    </description>
+	<!-- set global properties for this build -->
+	<property name="src" location="${basedir}/src" />
+
+	<target name="testWhatUptodate">
+		<uptodate property="schemagen${what}UptoDate" 
+			      srcfile="src/main/vocabs/${what}.${format}" 
+				  targetfile="src/main/java/com/epimorphics/vocabs/${CLASSNAME}.java" />
+	</target>
+
+	<target name="schemagenWhatNoSource" unless="schemagen${what}UptoDate" depends="testWhatUptodate">
+		<java className="jena.schemagen" classPath="${classpath}" failonerror="true">
+			<arg value="-i" />
+			<arg value="${src}/main/vocabs/${what}.${format}" />
+			<arg value="-o" />
+			<arg value="${src}/main/java/" />
+			<arg value="--package" />
+			<arg value="com.epimorphics.vocabs" />
+			<arg value="-n" />
+			<arg value="${CLASSNAME}" />
+			<arg value="--inference" />
+		</java>
+		<echo>schemagen ${CLASSNAME} completed</echo>
+	</target>
+
+	<target name="schemagen">
+		<antcall target="schemagenWhatNoSource">
+			<param name="what" value="api"/>
+			<param name="format" value="ttl"/>
+			<param name="CLASSNAME" value="API"/>
+		</antcall>	
+	</target>
+</project>

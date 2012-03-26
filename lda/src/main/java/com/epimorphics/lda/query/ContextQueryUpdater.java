@@ -168,11 +168,15 @@ public class ContextQueryUpdater implements ViewSetter {
 		    aq.setSortBy( val );
 		} else if (p.equals(QueryParameter._ORDERBY )) {
 			aq.setOrderBy( val );
-		} else {
+		} else if (!allowedReserved( p )){
 			EldaException.BadRequest( "unrecognised reserved parameter: " + p );
 			throw new EldaException( "Can never get here!" );
 		}
 	}	
+	
+	private boolean allowedReserved( String name ) {
+		return aq.allowReserved( name );
+	}
 	
 	private void mustBeListEndpoint( String p ) {
 		if (endpointKind != ListEndpoint)

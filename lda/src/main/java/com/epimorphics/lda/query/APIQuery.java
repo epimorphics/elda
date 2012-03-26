@@ -129,6 +129,8 @@ public class APIQuery implements Cloneable, VarSupply {
     protected String itemTemplate = null;
     protected String fixedSelect = null;
     
+    protected Set<String> allowedReserved = new HashSet<String>();
+    
     protected Set<String> metadataOptions = new HashSet<String>();
     
     /**
@@ -210,6 +212,7 @@ public class APIQuery implements Cloneable, VarSupply {
             clone.metadataOptions = new HashSet<String>( metadataOptions );
             clone.varsForPropertyChains = new HashMap<String, Variable>( varsForPropertyChains );
             clone.vt = new ValTranslator( clone, new FilterExpressions( clone.filterExpressions ), sns );
+            clone.allowedReserved = new HashSet<String>( allowedReserved );
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new APIException("Can't happen :)", e);
@@ -261,6 +264,10 @@ public class APIQuery implements Cloneable, VarSupply {
     
     public void setSubject( String subj ) {
         subjectResource = sns.asResource(subj);
+    }
+    
+    public void addAllowReserved( String name ) {
+    	allowedReserved.add( name );
     }
     
     /**
@@ -887,6 +894,14 @@ public class APIQuery implements Cloneable, VarSupply {
 
 	public boolean wantsMetadata( String name ) {
 		return metadataOptions.contains( name ) || metadataOptions.contains( "all" );
+	}
+
+	/**
+	    Answer true if <code>name</code> is a reserved name (_whatever) that is
+	    allowed to be used (and ignored).
+	*/
+	public boolean allowReserved( String name ) {
+		return allowedReserved.contains( name );
 	}
 
 }

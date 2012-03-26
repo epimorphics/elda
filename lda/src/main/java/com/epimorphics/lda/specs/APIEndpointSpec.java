@@ -273,7 +273,27 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     private void instantiateBaseQuery( Resource endpoint ) {
         baseQuery = new APIQuery( this );
         baseQuery.addMetadataOptions( metadataOptions );
-        Resource s = getResourceValue( endpoint, API.selector );
+        setAllowedReserved( endpoint, baseQuery );
+        addSelectors(endpoint);
+    }
+
+	private void setAllowedReserved( Resource endpoint, APIQuery q ) {
+		setAllowedReservedFrom( endpoint, q );
+		setAllowedReservedFrom( specForEndpoint( endpoint ), q );
+	}
+
+	private Resource specForEndpoint(Resource endpoint) {
+		return endpoint.getModel().listStatements( null, API.endpoint, endpoint ).next().getSubject();
+	}
+
+	private void setAllowedReservedFrom( Resource r, APIQuery q ) {
+		for (Statement s: r.listProperties( EXTRAS.allowReserved ).toSet()) {
+			q.addAllowReserved( s.getString() );
+		}
+	}
+
+	private void addSelectors(Resource endpoint) {
+		Resource s = getResourceValue( endpoint, API.selector );
         if (s != null) {
 	        StmtIterator i = s.listProperties( API.parent );
 	        while (i.hasNext()) {
@@ -286,7 +306,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	        }
 	        addSelectorInfo(s);
         }
-    }
+	}
     
 	private void addSelectorInfo( Resource s ) {
         Model m = s.getModel();
