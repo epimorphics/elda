@@ -110,6 +110,29 @@
     that property rather than <code>rdfs:label</code>.
 </p>
 
+<h2>elda:allowedReserved</h2>
+
+<b>Experimental</b>: may be revised or removed.
+
+<p>
+    Normally (and as prescribed by the spec) Elda will
+    generate a 400 status for queries that try and use
+    unknown reserved parameter names (those beginning
+    with _), eg <code>?_example=17</code>.
+</p>
+
+<p>
+    The property <code>elda:allowReserved</code> may be
+    attached to an API or to an endpoint. Its values
+    are the names of reserved parameters that should be
+    ignored rather than generating status 400.
+</p>
+
+<p>
+    Attachments to the API apply to all endpoints; attachments
+    to one endpoint affect only that endpoint. 
+</p>
+
 <h2>item template fallback</h2>
 
 <p>
