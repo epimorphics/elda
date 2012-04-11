@@ -137,26 +137,13 @@ public class APIEndpointImpl implements APIEndpoint {
     private String createDefinitionURI( URI ru, Resource uriForSpec, String template, String expanded ) {
     	
     	String pseudoTemplate = template.replaceAll( "\\{([A-Za-z0-9]+)\\}", "_$1" );
-    	
-    	String base = spec.getAPISpec().getBase();
-    	
-//    	System.err.println( ">> BASE: " + base );
-    	
+            	
        	if (pseudoTemplate.startsWith("http:")) {
     		// Avoid special case from the TestAPI uriTemplates, qv.
     		return pseudoTemplate + "/meta";
     	}
-       	
-		String argPattern = "\\{[-._A-Za-z]+\\}";
-		
-		String pattern = pseudoTemplate.replaceAll( argPattern, "[^/]*" );
-		
-		String replaced = ru.toString().replaceAll( pattern, "/meta" + pseudoTemplate );
-		
-		String other = base == null
-			? ru.toString().replace( expanded, "/meta" + pseudoTemplate )
-			: base + "meta" + pseudoTemplate
-			;
+       							
+		String other = ru.toString().replace( expanded, "/meta" + pseudoTemplate );
 		
 //		System.err.println( ">> createDefinitionURI" );
 //		System.err.println( ">> ru: " + ru );
@@ -181,9 +168,9 @@ public class APIEndpointImpl implements APIEndpoint {
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
-        Resource uriForDefinition = rsm.createResource( createDefinitionURI( ru, uriForSpec, template, cc.expandVariables( template ) ) ); 
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
         URI pageBase = URIUtils.changeFormatSuffix(ru, formatNames, format);
+        Resource uriForDefinition = rsm.createResource( createDefinitionURI( pageBase, uriForSpec, template, cc.expandVariables( template ) ) ); 
         Resource thisPage = adjustPageParameter( rsm, pageBase, page );
         rs.setRoot(thisPage);
     //
