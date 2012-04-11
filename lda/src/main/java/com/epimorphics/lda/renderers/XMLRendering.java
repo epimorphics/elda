@@ -92,7 +92,6 @@ public class XMLRendering {
 	private final MultiMap<String, String> nameMap;
 	private final boolean suppressIPTO;
 	
-	private Set<RDFNode> selectedItems = null;
 	private Resource itemsResource = null;
 	
 	private final Set<Resource> dontExpand = new HashSet<Resource>();
@@ -124,7 +123,7 @@ public class XMLRendering {
 	 */
 	public Element addResourceToElement( Element e, Resource x ) {
 		itemsResource = getItemsResource( x );
-		selectedItems = getItemsList( itemsResource );
+		Set<RDFNode> selectedItems = getItemsList( itemsResource );
 		for (RDFNode m: selectedItems) dontExpand.add( m.asResource() );
 		cyclicOrSelected.addAll( CycleFinder.findCycles( x ) );
 		cyclicOrSelected.addAll( dontExpand );
