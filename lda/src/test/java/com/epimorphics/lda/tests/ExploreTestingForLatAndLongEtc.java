@@ -14,6 +14,7 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -58,7 +59,7 @@ public class ExploreTestingForLatAndLongEtc
 		+ "; D geo:lat '-0.5'xsd:float; D geo:long '-0.5'xsd:float"
 		);
 
-	@Test public void testFindsResourceByLatAndLong()
+	@Test @Ignore public void testFindsResourceByLatAndLong()
 		{
 		assertThat( resourcesFor( "near-lat=0.5 near-long=0.5 _distance=30" ), is( resourceSet( "A" ) ) );
 		assertThat( resourcesFor( "near-lat=0.5 near-long=-0.5 _distance=30" ), is( resourceSet( "B" ) ) );

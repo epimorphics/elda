@@ -134,16 +134,29 @@ public class APIEndpointImpl implements APIEndpoint {
 		return m.createResource( x.toString() );
     }
     
-    private Resource createDefinitionURI( Model rsm, URI ru, Resource uriForSpec, String template ) {
+    private String createDefinitionURI( URI ru, Resource uriForSpec, String template ) {
+    	
+    	String base = spec.getAPISpec().getBase();
+    	
+//    	System.err.println( ">> BASE: " + base );
+    	
+    	
+    	
     	String quasiTemplate = template.replaceAll( "\\{", "(" ).replaceAll( "\\}", ")");
     	if (template.startsWith("http:")) {
     		// Avoid special case from the TestAPI uriTemplates, qv.
-    		return rsm.createResource( quasiTemplate + "/meta" );
+    		return quasiTemplate + "/meta";
     	}
 		String argPattern = "\\{[-._A-Za-z]+\\}";
 		String pattern = quasiTemplate.replaceAll( argPattern, "[^/]*" );
 		String replaced = ru.toString().replaceAll( pattern, "/meta" + quasiTemplate );
-		return rsm.createResource( replaced );
+//		System.err.println( ">> createDefinitionURI" );
+//		System.err.println( ">> ru: " + ru );
+//		System.err.println( ">> template: " + template );
+//		System.err.println( ">> uriForSpec: " + uriForSpec );
+//		System.err.println( ">> RESULT: " + replaced );
+//		System.err.println( ">>" );
+		return replaced;
 	}
 
     private URI withoutPageParameters( URI ru ) {
@@ -157,7 +170,7 @@ public class APIEndpointImpl implements APIEndpoint {
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
-        Resource uriForDefinition = createDefinitionURI( rsm, ru, uriForSpec, template ); 
+        Resource uriForDefinition = rsm.createResource( createDefinitionURI( ru, uriForSpec, cc.expandVariables( template ) ) ); 
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
         URI pageBase = URIUtils.changeFormatSuffix(ru, formatNames, format);
         Resource thisPage = adjustPageParameter( rsm, pageBase, page );

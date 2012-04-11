@@ -1,18 +1,15 @@
 # Model from test: http://dummy/doc/schools/laWhere/BANES?
 @prefix spec:    <http://www.epimorphics.com/examples/spec1#> .
-@prefix os:      <http://a9.com/-/spec/opensearch/1.1/> .
 @prefix ex:      <http://www.epimorphics.com/examples/eg1#> .
+@prefix os:      <http://a9.com/-/spec/opensearch/1.1/> .
 @prefix school-ont:  <http://education.data.gov.uk/def/school/> .
 @prefix opmv:    <http://purl.org/net/opmv/types/common#> .
 @prefix foaf:    <http://xmlns.com/foaf/0.1/> .
-@prefix lda:     <http://purl.org/linked-data/api/vocab#> .
 @prefix sparql:  <http://purl.org/net/opmv/types/sparql#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix openSearch:  <http://a9.com/-/spec/opensearch/1.1/> .
 @prefix dct:     <http://purl.org/dc/terms/> .
-@prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
-@prefix la:      <http://admin.data.gov.uk/def/localAythority#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix api:     <http://purl.org/linked-data/api/vocab#> .
 @prefix xhv:     <http://www.w3.org/1999/xhtml/vocab#> .
@@ -49,7 +46,7 @@ ex:school_2
 <http://dummy/doc/schools/laWhere/BANES>
       a       api:ListEndpoint ;
       dct:hasPart <http://dummy/doc/schools/laWhere/BANES?_page=0> ;
-      api:definition <http://dummy/doc/schools/laWhere/(name)/meta> .
+      api:definition <http://dummy/doc/schools/laWhere/BANES/meta> .
 
 ex:school_52
       a       school-ont:School ;
@@ -81,12 +78,10 @@ ex:school_4
 
 <http://dummy/doc/schools/laWhere/BANES?_page=0>
       a       api:Page ;
-      openSearch:itemsPerPage
-              "10"^^xsd:long ;
-      openSearch:startIndex
-              "1"^^xsd:long ;
+      os:itemsPerPage "10"^^xsd:long ;
+      os:startIndex "1"^^xsd:long ;
       dct:isPartOf <http://dummy/doc/schools/laWhere/BANES> ;
-      api:definition <http://dummy/doc/schools/laWhere/(name)/meta> ;
+      api:definition <http://dummy/doc/schools/laWhere/BANES/meta> ;
       api:extendedMetadataVersion
               <http://dummy/doc/schools/laWhere/BANES?_page=0&_metadata=all> ;
       api:items (ex:school_1 ex:school_100 ex:school_2 ex:school_3 ex:school_4 ex:school_49 ex:school_5 ex:school_50 ex:school_51 ex:school_52) ;

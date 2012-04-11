@@ -56,9 +56,9 @@ public class TestAPI {
                 Model expected = FileManager.get().loadModel(TEST_BASE + expectedResults);
                 if ( ! compareNormalized(expected, rsm)) {
                     // Print out to help debugging
-//                    System.out.println("** FAILED output for " + description + " [" + expectedResults + "]");
-//                    rs.write(System.out, "Turtle");
-//                    System.out.println( "** EXPECTED:" );
+//                    System.out.println(">>  FAILED output for " + description + " [" + expectedResults + "]");
+//                    rs.getModel().write(System.out, "Turtle");
+//                    System.out.println( ">> EXPECTED:" );
 //                    expected.write(System.out, "Turtle" );
                     assertTrue("Failed model comparison for " + expectedResults, false);
                 }
