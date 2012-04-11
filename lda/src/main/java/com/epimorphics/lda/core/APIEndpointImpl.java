@@ -174,11 +174,6 @@ public class APIEndpointImpl implements APIEndpoint {
         Resource thisPage = adjustPageParameter( rsm, pageBase, page );
         rs.setRoot(thisPage);
     //
-		EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, cc, pageBase, formatNames );
-		createOptionalMetadata(rs, query, em);   
-	//
-	// important this comes AFTER metadata creation.
-	//
 		thisPage.addProperty( API.definition, uriForDefinition );
     //
         URI emv_uri = URIUtils.replaceQueryParam( URIUtils.newURI(thisPage.getURI()), "_metadata", "all" );
@@ -215,6 +210,8 @@ public class APIEndpointImpl implements APIEndpoint {
         	content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
         	rs.setContentLocation( unPagedURI );
         }
+        EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, cc, pageBase, formatNames );
+        createOptionalMetadata(rs, query, em);   
     }
 
 	/**
