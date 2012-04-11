@@ -134,29 +134,40 @@ public class APIEndpointImpl implements APIEndpoint {
 		return m.createResource( x.toString() );
     }
     
-    private String createDefinitionURI( URI ru, Resource uriForSpec, String template ) {
+    private String createDefinitionURI( URI ru, Resource uriForSpec, String template, String expanded ) {
+    	
+    	String pseudoTemplate = template.replaceAll( "\\{([A-Za-z0-9]+)\\}", "_$1" );
     	
     	String base = spec.getAPISpec().getBase();
     	
 //    	System.err.println( ">> BASE: " + base );
     	
-    	
-    	
-    	String quasiTemplate = template.replaceAll( "\\{", "(" ).replaceAll( "\\}", ")");
-    	if (template.startsWith("http:")) {
+       	if (pseudoTemplate.startsWith("http:")) {
     		// Avoid special case from the TestAPI uriTemplates, qv.
-    		return quasiTemplate + "/meta";
+    		return pseudoTemplate + "/meta";
     	}
+       	
 		String argPattern = "\\{[-._A-Za-z]+\\}";
-		String pattern = quasiTemplate.replaceAll( argPattern, "[^/]*" );
-		String replaced = ru.toString().replaceAll( pattern, "/meta" + quasiTemplate );
+		
+		String pattern = pseudoTemplate.replaceAll( argPattern, "[^/]*" );
+		
+		String replaced = ru.toString().replaceAll( pattern, "/meta" + pseudoTemplate );
+		
+		String other = base == null
+			? ru.toString().replace( expanded, "/meta" + pseudoTemplate )
+			: base + "meta" + pseudoTemplate
+			;
+		
 //		System.err.println( ">> createDefinitionURI" );
 //		System.err.println( ">> ru: " + ru );
-//		System.err.println( ">> template: " + template );
+//		System.err.println( ">> pseudoTemplate: " + template );
+//		System.err.println( ">> template: " + pseudoTemplate );
 //		System.err.println( ">> uriForSpec: " + uriForSpec );
 //		System.err.println( ">> RESULT: " + replaced );
+//		System.err.println( ">> OTHER:  " + other );
 //		System.err.println( ">>" );
-		return replaced;
+		
+		return other;
 	}
 
     private URI withoutPageParameters( URI ru ) {
@@ -170,7 +181,7 @@ public class APIEndpointImpl implements APIEndpoint {
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
-        Resource uriForDefinition = rsm.createResource( createDefinitionURI( ru, uriForSpec, cc.expandVariables( template ) ) ); 
+        Resource uriForDefinition = rsm.createResource( createDefinitionURI( ru, uriForSpec, template, cc.expandVariables( template ) ) ); 
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
         URI pageBase = URIUtils.changeFormatSuffix(ru, formatNames, format);
         Resource thisPage = adjustPageParameter( rsm, pageBase, page );
