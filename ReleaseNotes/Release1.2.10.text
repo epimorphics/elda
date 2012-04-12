@@ -1,0 +1,11 @@
+Elda 1.2.10
+
+The URI for definition metadata has been changed. In recent versions
+a bug allowed the generated URI to be spelled the same as the URI
+for the page, resulting in confusingly incorrect sets of property
+values in some (but not all) cases: typically, when this occurred
+all the properties of the subject were instead attached to the
+meta-definition. This has been fixed: the generated uri will always
+contain the /meta path element. Also, variables {foo} in the template
+are replaced by _foo in the URI (rather than (foo), as was).
+
