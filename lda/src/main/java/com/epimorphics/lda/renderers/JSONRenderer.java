@@ -54,8 +54,8 @@ public class JSONRenderer implements Renderer {
         this.mt = mt;
     }
     
-    @Override public MediaType getMediaType( Bindings rc ) {
-    	String callback = rc.getValueString( "callback" );
+    @Override public MediaType getMediaType( Bindings b ) {
+    	String callback = b.getValueString( "callback" );
         return callback == null ? mt : MediaType.TEXT_JAVASCRIPT;
     }
 
@@ -65,7 +65,9 @@ public class JSONRenderer implements Renderer {
 
     @Override public Renderer.BytesOut render( Times t, Bindings b, APIResultSet results) {
         Context given = api.getSpec().getAPISpec().getShortnameService().asContext();
-        
+        String callback = b.getValueString( "callback" );
+        final String before = (callback == null ? "" : callback + "(");
+        final String after = (callback == null ? "" : ")");
         final Resource root = results.getRoot();
         final Model model = results.getModel();
         final Context context = given.clone();
@@ -78,7 +80,10 @@ public class JSONRenderer implements Renderer {
 			@Override public void writeAll( OutputStream os ) {
 				try {
 					Writer writer = StreamUtils.asUTF8( os );
+					writer.write( before );
 					Encoder.getForOneResult( context, false ).encodeRecursive( model, roots, writer, true );
+					writer.write( after );
+					writer.flush();
 				} catch (Exception e) {
 					log.error( "Failed to encode model: stacktrace follows:", e );
 					throw new WrappedException( e );

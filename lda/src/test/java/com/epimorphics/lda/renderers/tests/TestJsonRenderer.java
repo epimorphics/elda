@@ -2,7 +2,9 @@ package com.epimorphics.lda.renderers.tests;
 
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
@@ -10,8 +12,17 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.core.APIEndpointImpl;
+import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.renderers.JSONRenderer;
+import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.specs.APIEndpointSpec;
+import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.Times;
+import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
@@ -29,6 +40,50 @@ public class TestJsonRenderer {
 		new JSONRenderer( null ).renderAndDiscard( b, model, root, given );
 		Set<String> allShortNames = given.allNames();
 		assertEquals( "rendering should not update the context", Collections.EMPTY_SET, allShortNames );
+	}
+	
+	static final Model tinySpec = ModelIOUtils.modelFromTurtle
+	( "<eh:/API> a api:API"
+			+ "\n; api:endpoint <eh:/endpoint>"
+			+ "\n; api:sparqlEndpoint <eh:/not-really>"
+			+ "\n."
+			+ "\n<eh:/endpoint> a api:ListEndpoint"
+			+ "\n; api:uriTemplate '/foo'"
+			+ "\n." 
+			+ "\n"
+	);
+	
+	@Test public void testCallbackConstruction() {
+		Bindings b = new Bindings();
+		String jsonNoCallback = runTinyRenderer( b );
+		b.put( "callback", "flounce" );
+		String jsonWithCallback = runTinyRenderer( b );
+		if (!jsonWithCallback.equals( "flounce(" + jsonNoCallback + ")" )) {
+			fail("JSON callback failure: did not wrap output with function name." );
+		}
+	}
+
+	private String runTinyRenderer( Bindings b ) {
+		JSONRenderer jr = createTinyRenderer();
+		Times t = new Times();
+		Model m = ModelIOUtils.modelFromTurtle( "<fake:root> <fake:property> 17 ." );
+		Resource root = m.createResource( "fake:root" );
+		List<Resource> results = CollectionUtils.list( root );
+		APIResultSet rs = new APIResultSet( m.getGraph(), results, true, "detailsQuery" );
+		Renderer.BytesOut bo = jr.render( t, b, rs );
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		bo.writeAll(t, bos);
+		return bos.toString();
+	}
+
+	private JSONRenderer createTinyRenderer() {
+		Resource specRoot = tinySpec.createResource( "eh:/API" );
+		APISpec s = new APISpec( null, specRoot, null );
+		Resource epResource = tinySpec.createResource( "eh:/endpoint" );
+		APIEndpointSpec spec = new APIEndpointSpec( s, s, epResource );
+		APIEndpoint ep = new APIEndpointImpl( spec );
+		JSONRenderer jr = new JSONRenderer( ep );
+		return jr;
 	}
 
 }
