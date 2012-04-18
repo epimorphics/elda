@@ -1,3 +1,7 @@
+1.2.11
+
+* The JSONP format has been restored.
+
 1.2.10
 
 * The URI for definition metadata has been changed. In recent versions
