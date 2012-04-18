@@ -46,8 +46,8 @@ import com.hp.hpl.jena.util.ResourceUtils;
  */
 @Path("/meta/{path: .*}") public class MetadataRestlet {
     
-    @GET @Produces("text/plain")
-    public Response requestHandlerPlain( @PathParam("path") String pathstub, @Context UriInfo ui) {
+    @GET @Produces("text/plain") public Response requestHandlerPlain
+    	( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
@@ -57,8 +57,19 @@ import com.hp.hpl.jena.util.ResourceUtils;
         }
     }
     
-    @GET @Produces("text/turtle")
-    public Response requestHandlerTurtle( @PathParam("path") String pathstub, @Context UriInfo ui) {
+    @GET @Produces("application/rdf+xml")  public Response requestHandlerRDF_XML
+    	( @PathParam("path") String pathstub, @Context UriInfo ui) {
+        SpecRecord rec = lookupRequest(pathstub, ui);
+        if (rec == null) {
+            return returnNotFound("No specification corresponding to path: /" + pathstub);
+        } else {
+            Resource meta = createMetadata(ui, pathstub, rec);
+            return returnAs(ModelIOUtils.renderModelAs(meta.getModel(), "RDF/XML-ABBREV"), "application/rdf+xml");
+        }
+    }
+    
+    @GET @Produces("text/turtle") public Response requestHandlerTurtle
+    	( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
@@ -68,8 +79,8 @@ import com.hp.hpl.jena.util.ResourceUtils;
         }
     }
     
-    @GET @Produces("application/json")
-    public Response requestHandlerJson( @PathParam("path") String pathstub, @Context UriInfo ui) {
+    @GET @Produces("application/json") public Response requestHandlerJson
+    	( @PathParam("path") String pathstub, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
@@ -84,6 +95,23 @@ import com.hp.hpl.jena.util.ResourceUtils;
             Encoder.getForOneResult( context, false ).encodeRecursive(meta.getModel(), roots, writer, true);
             String enc = writer.toString();
             return returnAs(enc, "application/json");
+        }
+    }
+    
+    @GET @Produces("text/html") public Response requestHandlerHTML
+    	( @PathParam("path") String pathstub, @Context UriInfo ui) {
+        SpecRecord rec = lookupRequest(pathstub, ui);
+        String stub = rec == null ? "" : pathstub;
+        return new ConfigRestlet().generateConfigPage( stub, ui );
+    }
+    
+    @GET public Response requestHandlerAny( @PathParam("path") String pathstub, @Context UriInfo ui) {
+        try {SpecRecord rec = lookupRequest(pathstub, ui);
+        String stub = rec == null ? "" : pathstub;
+        return new ConfigRestlet().generateConfigPage( stub, ui ); }
+        catch (RuntimeException e) {
+        	System.err.println( "OOPS" );
+        	throw new RuntimeException( e );
         }
     }
 
@@ -115,22 +143,6 @@ import com.hp.hpl.jena.util.ResourceUtils;
         meta.getModel().withDefaultMappings( PrefixMapping.Extended );
         meta.addProperty( API.endpoint, endpointSpec );
         return meta;
-    }
-    
-    @GET @Produces("text/html") public Response requestHandlerHTML( @PathParam("path") String pathstub, @Context UriInfo ui) {
-        SpecRecord rec = lookupRequest(pathstub, ui);
-        String stub = rec == null ? "" : pathstub;
-        return new ConfigRestlet().generateConfigPage( stub, ui );
-    }
-    
-    @GET public Response requestHandlerAny( @PathParam("path") String pathstub, @Context UriInfo ui) {
-        try {SpecRecord rec = lookupRequest(pathstub, ui);
-        String stub = rec == null ? "" : pathstub;
-        return new ConfigRestlet().generateConfigPage( stub, ui ); }
-        catch (RuntimeException e) {
-        	System.err.println( "OOPS" );
-        	throw new RuntimeException( e );
-        }
     }
 }
 

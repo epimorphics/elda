@@ -31,6 +31,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.routing.Match;
+import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specs.APIEndpointSpec;
@@ -179,7 +180,10 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
     
     public static SpecRecord lookupRequest(String pathstub, UriInfo ui) {
         String path = "/" + pathstub;
-        Match match = RouterFactory.getDefaultRouter().getMatch(path, new MultiMap<String, String>() );
+        Router r = RouterFactory.getDefaultRouter();
+		MultiMap<String, String> params = new MultiMap<String, String>();
+		Match match = r.getMatch(path, params );
+        if (match == null) match = r.getMatch(trimmed(path), params);
         if (match == null)  {
             return null;        
         } else {
@@ -187,7 +191,14 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
         }
     }
 
-    /**
+    private static String trimmed( String path ) {
+        int dot = path.lastIndexOf( '.' ) + 1;
+        int slash = path.lastIndexOf( '/' );
+        if (dot > 0 && dot > slash) return path.substring(0, dot - 1); 
+		return path;
+	}
+
+	/**
      *  Annotate the endpoints in the model with cross links to the corresponding proxy endpoints
      */
     @SuppressWarnings("unused")	private void annotateEndpoints(Model spec, String baseURI) {
