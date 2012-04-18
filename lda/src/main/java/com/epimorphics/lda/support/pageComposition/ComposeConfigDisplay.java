@@ -26,6 +26,7 @@ import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.specmanager.SpecEntry;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.PropertyChain;
+import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
@@ -60,8 +61,15 @@ public class ComposeConfigDisplay {
 			boolean showThis = occursIn( pathstub, endpoints );
 			textBody.append( "<h2>" + label + " <a href='javascript:toggle(\"" + w.idFor(shortName) + "\")'>show/hide</a></h2>" );
 			textBody.append( "<div id='" + w.idFor(shortName) + "' class='" + (showThis ? "show" : "hide") + "'>\n" );
-	        renderComments( textBody, root );
-	    //
+		//
+			Statement lf = root.getProperty( EXTRAS.loadedFrom );
+			if (lf != null) textBody
+				.append( "<div>\n<b>loaded from</b> " )
+				.append( safe( lf.getObject().toString() ) )
+				.append( "</b></div>\n" )
+				;
+	    //  
+			renderComments( textBody, root );
 	        Statement ep = root.getProperty( API.sparqlEndpoint );
 	        h3( textBody, "SPARQL endpoint for queries" );
 	        textBody

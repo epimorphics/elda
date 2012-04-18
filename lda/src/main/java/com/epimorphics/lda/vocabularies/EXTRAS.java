@@ -42,6 +42,8 @@ public class EXTRAS
     public static final Property enhanceViewWith = property( "enhanceViewWith" );
 
 	public static final Property sparqlQuery = property( "sparqlQuery" );
+	
+	public static final Property loadedFrom = property( "loadedFrom" );
 
 	public static final Property listURL = property( "listURL" );
 

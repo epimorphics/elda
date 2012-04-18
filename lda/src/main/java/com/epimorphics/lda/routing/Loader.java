@@ -17,8 +17,10 @@
 
 package com.epimorphics.lda.routing;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -39,10 +41,12 @@ import com.epimorphics.lda.specmanager.SpecManagerImpl;
 import com.epimorphics.lda.support.LARQManager;
 import com.epimorphics.lda.support.MapMatching;
 import com.epimorphics.lda.support.TDBManager;
+import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -108,10 +112,23 @@ public class Loader extends HttpServlet {
     }
 
 	public void loadSpecFromFile( String spec ) {
+		log.info( "Loading spec file from " + spec );
 		Model init = getSpecModel( spec );
-		String msg = "Loaded initial spec file from " + spec + " - " + init.size() + " statements";
+		addLoadedFrom( init, spec );
+		String msg = "Loaded " + spec + ": " + init.size() + " statements";
 		log.info( msg );
 		registerModel( init );
+	}
+
+	private void addLoadedFrom( Model m, String name ) {
+		List<Statement> toAdd = new ArrayList<Statement>();
+		List<Resource> apis = m
+			.listStatements( null, RDF.type, API.API )
+			.mapWith(Statement.Util.getSubject)
+			.toList()
+			;
+		for (Resource api: apis) toAdd.add( m.createStatement( api, EXTRAS.loadedFrom, name ) );
+		m.add( toAdd );
 	}
 
 	/**
