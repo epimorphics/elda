@@ -14,6 +14,7 @@ package com.epimorphics.lda.core;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,7 @@ import com.epimorphics.lda.vocabularies.ELDA;
 import com.epimorphics.lda.vocabularies.SPARQL;
 import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.epimorphics.lda.vocabularies.OpenSearch;
+import com.epimorphics.util.ModelUtils;
 import com.epimorphics.util.RDFUtils;
 
 /**
@@ -56,7 +58,10 @@ public class APIResultSet {
     protected final boolean isCompleted;
     protected final Model model;
     protected final String detailsQuery;
+    protected final long hash;
+    protected Date timestamp;
     protected String selectQuery = "";
+    protected boolean enableETags = false;
 	
     /** 
         Map holding named metadata options. 
@@ -71,23 +76,24 @@ public class APIResultSet {
         this.contentLocation = contentLocation;
     }
 
-    public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, String detailsQuery) {
+    public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery) {
         model = ModelFactory.createModelForGraph( graph );
         PrefixMapping imported = getPrefixes( results );
 		setUsedPrefixes( imported );
         this.results = results;
         this.isCompleted = isCompleted;
         this.detailsQuery = detailsQuery;
-        if (!results.isEmpty())
-            this.root = results.get(0).inModel(model);
+        this.hash = ModelUtils.hashModel( model ) ^ ((long) results.hashCode() << 32 );
+        this.timestamp = new Date();
+        this.enableETags = enableETags;
+        if (!results.isEmpty()) this.root = results.get(0).inModel(model);
     }
     
-    protected APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, String detailsQuery, Map<String, Model> meta ) {
-    	this( graph, results, isCompleted, detailsQuery );
+    protected APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery, Map<String, Model> meta ) {
+    	this( graph, results, isCompleted, enableETags, detailsQuery );
     	this.metadata.putAll( meta );
     }
 
-    
     private PrefixMapping getPrefixes( List<Resource> lr ) {
     	if (lr.isEmpty()) return RDFUtils.noPrefixes;
     	Model m = lr.get(0).getModel();
@@ -173,6 +179,14 @@ public class APIResultSet {
         return isCompleted;
     }
     
+    public long getHash() {
+    	return hash;
+    }
+    
+    public Date createdAt() {
+    	return timestamp;
+    }
+    
     /**
      * Generate and return a new copy of the model filtered to only include
      * statements reachable from the results via allowed properties in the given set.
@@ -185,7 +199,7 @@ public class APIResultSet {
         model.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
         for (Resource r : results) mappedResults.add( r.inModel(model) );
-        return new APIResultSet( model.getGraph(), mappedResults, isCompleted, detailsQuery, metadata ).setSelectQuery( selectQuery );
+        return new APIResultSet( model.getGraph(), mappedResults, isCompleted, enableETags, detailsQuery, metadata ).setSelectQuery( selectQuery );
     }
 
 	/**
@@ -200,14 +214,15 @@ public class APIResultSet {
         Model temp = ModelFactory.createDefaultModel();
         temp.add( model );
         Graph cloneGraph = temp.getGraph();
-        APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, detailsQuery, metadata );
+        APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, enableETags, detailsQuery, metadata );
         clone.setRoot(root);
         clone.setContentLocation(contentLocation);
         clone.setSelectQuery( selectQuery );
+        clone.timestamp = timestamp;
         return clone;
     }
 
-    /**
+	/**
         Answer s statement iterator which delivers all statements matching
         (S, P, O) in the underlying model.
     */
@@ -248,6 +263,13 @@ public class APIResultSet {
 		for (Resource item: results)
 			if (item.listProperties().hasNext()) return false;
 		return true;
+	}
+
+	/**
+	    Answer true iff this resultset was built with etags enabled
+	*/
+	public boolean enableETags() {
+		return enableETags;
 	}    
 }
 

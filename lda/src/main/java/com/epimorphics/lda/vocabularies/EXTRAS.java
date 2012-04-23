@@ -29,6 +29,8 @@ public class EXTRAS
 
 	public static final Property className = property( "className" );
 	
+	public static final Property enableETags = property( "enableETags" );
+	
     public static final Resource Combiner = resource( "Combiner" );
     
     public static final Property element = property( "element" );

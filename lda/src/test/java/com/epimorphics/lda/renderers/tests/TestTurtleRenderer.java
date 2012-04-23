@@ -30,7 +30,7 @@ public class TestTurtleRenderer {
 	@Test public void testUtf8SurvivesRendering() {
 		Model m = ModelIOUtils.modelFromTurtle( "<eh:/example> <eh:/predicate> '<<\u03ff>>'." );
 		Resource it = m.createResource( "<eh:/example>" );
-		APIResultSet rs = new APIResultSet( m.getGraph(), CollectionUtils.list(it), true, "notUsed" );
+		APIResultSet rs = new APIResultSet( m.getGraph(), CollectionUtils.list(it), true, false, "notUsed" );
 		Renderer.BytesOut rbo = new TurtleRenderer().render( new Times(), null, rs );
 		String rendered = TestTurtleRenderer.pullString( rbo );
 		String unwrapped = rendered.replaceFirst( "(.|[\r\n])*<<", "" ).replaceAll( ">>(.|[\r\n])*", "" );

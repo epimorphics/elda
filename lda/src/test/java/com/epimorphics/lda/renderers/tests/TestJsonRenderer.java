@@ -69,7 +69,7 @@ public class TestJsonRenderer {
 		Model m = ModelIOUtils.modelFromTurtle( "<fake:root> <fake:property> 17 ." );
 		Resource root = m.createResource( "fake:root" );
 		List<Resource> results = CollectionUtils.list( root );
-		APIResultSet rs = new APIResultSet( m.getGraph(), results, true, "detailsQuery" );
+		APIResultSet rs = new APIResultSet( m.getGraph(), results, true, false, "detailsQuery" );
 		Renderer.BytesOut bo = jr.render( t, b, rs );
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		bo.writeAll(t, bos);

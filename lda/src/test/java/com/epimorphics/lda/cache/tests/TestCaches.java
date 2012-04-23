@@ -59,7 +59,7 @@ public class TestCaches
 	@Test public void testLimitEntriesCache() 
 		{
 		Graph g = GraphTestBase.graphWith( "" );
-		APIResultSet rs = new APIResultSet( g, resources, true, "# a details query." );
+		APIResultSet rs = new APIResultSet( g, resources, true, false, "# a details query." );
 		Source s = new FakeSource( "limited.entries" );
 		Controller cm = new LimitEntriesController();
 		Cache c = cm.cacheFor( s, "1" );
@@ -75,7 +75,7 @@ public class TestCaches
 	@Test public void testLimitTriplesCache() 
 		{
 		Graph g = GraphTestBase.graphWith( "a P b; c P d" );
-		APIResultSet rs = new APIResultSet( g, resources, true, "# a details query." );
+		APIResultSet rs = new APIResultSet( g, resources, true, false, "# a details query." );
 		Source s = new FakeSource( "limited.triples" );
 		Controller cm = new LimitTriplesController();
 		Cache c = cm.cacheFor( s, "2" );

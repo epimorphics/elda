@@ -95,6 +95,7 @@ spec:api a api:API
     ; api:defaultPageSize "10" 
     ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
     ; rdfs:comment "An API around sparql-provided education data."
+    ; extras:enableETags true
     # ; extras:describeAllLabel skos:prefLabel
     #
     # normally constructed URIs (for views, formatters, metadata, etc) are based

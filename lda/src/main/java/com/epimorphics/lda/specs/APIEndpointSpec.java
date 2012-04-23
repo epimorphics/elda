@@ -273,9 +273,16 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     private void instantiateBaseQuery( Resource endpoint ) {
         baseQuery = new APIQuery( this );
         baseQuery.addMetadataOptions( metadataOptions );
+        baseQuery.setEnableETags( enableETags( endpoint ) );
         setAllowedReserved( endpoint, baseQuery );
         addSelectors(endpoint);
     }
+
+	private boolean enableETags( Resource ep ) {
+		Statement s = ep.getProperty(EXTRAS.enableETags);
+		if (s == null) s = specForEndpoint(ep).getProperty(EXTRAS.enableETags);
+		return s != null && s.getBoolean();
+	}
 
 	private void setAllowedReserved( Resource endpoint, APIQuery q ) {
 		setAllowedReservedFrom( endpoint, q );

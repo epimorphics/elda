@@ -38,5 +38,5 @@ public class Util
             .replace( "{$title}", title )
             .replace( "{$body}", body )
             ;
-        }	 
-    }
+        }	    
+}

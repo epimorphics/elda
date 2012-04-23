@@ -81,6 +81,8 @@ import com.hp.hpl.jena.shared.WrappedException;
 
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
     public static final String VARY = "Vary";
+    public static final String ETAG = "Etag";
+    public static final String LAST_MODIFIED_DATE = "Last-Modified-Date";
     
     public RouterRestlet() {
     }
@@ -124,8 +126,9 @@ import com.hp.hpl.jena.shared.WrappedException;
         } else {
         	Times t = new Times( pathstub );
         	Controls c = new Controls( !dontCache, t );
+        	int runHash = headers.getAcceptableMediaTypes().hashCode();
             List<MediaType> mediaTypes = JerseyUtils.getAcceptableMediaTypes( headers );
-            return runEndpoint( c, servCon, ui, queryParams, mediaTypes, formatSuffix, match ); 
+            return runEndpoint( c, runHash, servCon, ui, queryParams, mediaTypes, formatSuffix, match ); 
         }
     }
     
@@ -177,6 +180,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 
     private Response runEndpoint
     	( Controls c
+    	, int runHash
     	, ServletContext servCon
     	, UriInfo ui
     	, MultiMap<String, String> queryParams
@@ -202,7 +206,8 @@ import com.hp.hpl.jena.shared.WrappedException;
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? formatSuffix : _format);
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
-			return doRendering( c, rc, needsVaryAccept, formatter, results, r );
+			int mainHash = runHash + ru.toString().hashCode();
+			return doRendering( c, rc, mainHash, needsVaryAccept, formatter, results, r );
         } catch (StackOverflowError e) {
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
@@ -254,7 +259,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 		};
 	}
 	
-    private Response doRendering( Controls c, Bindings rc, boolean needsVaryAccept, String rName, APIResultSet results, Renderer r ) {
+    private Response doRendering( Controls c, Bindings rc, int mainHash, boolean needsVaryAccept, String rName, APIResultSet rs, Renderer r ) {
 		if (r == null) {
             String message = rName == null
             	? "no suitable media type was provided for rendering."
@@ -262,32 +267,42 @@ import com.hp.hpl.jena.shared.WrappedException;
             	;
             return standardHeaders( Response.status( Status.BAD_REQUEST ).entity( Messages.niceMessage( message ) ) ).build();
         } else {
-			log.info( "rendering with formatter " + r.getMediaType(rc) );
+			MediaType mt = r.getMediaType(rc);
+			log.info( "rendering with formatter " + mt );
         	Times times = c.times;
-            MediaType mt = r.getMediaType( rc );
-			Renderer.BytesOut bo = r.render( times, rc, results );
-			return returnAs( wrap(times, bo), needsVaryAccept, mt, results.getContentLocation() );
+			Renderer.BytesOut bo = r.render( times, rc, rs );
+			return returnAs( rs, mainHash + mt.hashCode(), wrap(times, bo), needsVaryAccept, mt );
         }
 	}
 
     public static ResponseBuilder standardHeaders( ResponseBuilder rb ) {
-        return standardHeaders( false, rb );
+        return standardHeaders( null, 0, false, rb );
     }
 
-    public static ResponseBuilder standardHeaders( boolean needsVaryAccept, ResponseBuilder rb ) {
+    public static ResponseBuilder standardHeaders( APIResultSet rs, int envHash, ResponseBuilder rb ) {
+        return standardHeaders( rs, envHash, false, rb );
+    }
+
+    public static ResponseBuilder standardHeaders( APIResultSet rs, int envHash, boolean needsVaryAccept, ResponseBuilder rb ) {
+    	// rs may be null (no resultset for this header build)
     	rb = rb.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" );
         if (needsVaryAccept) rb = rb.header( VARY, "Accept" );
+        if (rs != null && rs.enableETags()) rb = rb.tag( Long.toHexString( etagFor(rs, envHash) ) ); 
    		return rb;
     }
+
+	private static long etagFor(APIResultSet rs, int envHash) {
+		return rs.getHash() ^ envHash;
+	}
     
-    public static Response returnAs(String response, String mimetype) {
+    public static Response returnAs( String response, String mimetype) {
         return standardHeaders( Response.ok(response, mimetype) ).build();
     }
     
-    public static Response returnAs(StreamingOutput response, boolean varyAccept, MediaType mimetype, URI contentLocation) {
+    private static Response returnAs( APIResultSet rs, int envHash, StreamingOutput response, boolean varyAccept, MediaType mt ) {
         try {
-            return standardHeaders( varyAccept, Response.ok( response, mimetype.toFullString() ) )
-            	.contentLocation( contentLocation )
+            return standardHeaders( rs, envHash, varyAccept, Response.ok( response, mt.toFullString() ) )
+            	.contentLocation( rs.getContentLocation() )
             	.build()
             	;
         } catch (RuntimeException e) {

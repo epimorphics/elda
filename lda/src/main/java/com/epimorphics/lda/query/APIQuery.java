@@ -133,6 +133,8 @@ public class APIQuery implements Cloneable, VarSupply {
     
     protected Set<String> metadataOptions = new HashSet<String>();
     
+    protected boolean enableETags = false;
+    
     /**
         Map from property chain names (ie dotted strings) to the variable at
         the end of that chain. Allows different instances of a property chain
@@ -217,6 +219,13 @@ public class APIQuery implements Cloneable, VarSupply {
         } catch (CloneNotSupportedException e) {
             throw new APIException("Can't happen :)", e);
         }
+    }
+    
+    /**
+        Set the etags enable flag; true -> enabled.
+    */
+    public void setEnableETags(boolean e) {
+    	this.enableETags = e;
     }
     
     /**
@@ -778,7 +787,7 @@ public class APIQuery implements Cloneable, VarSupply {
 		Model descriptions = ModelFactory.createDefaultModel();
 		Graph gd = descriptions.getGraph();
 		String detailsQuery = fetchDescriptionsFor( c, select, results, view, descriptions, spec );
-		return new APIResultSet(gd, results, count < pageSize, detailsQuery );
+		return new APIResultSet(gd, results, count < pageSize, enableETags, detailsQuery );
 	}
     
     // let's respect property chains ...
