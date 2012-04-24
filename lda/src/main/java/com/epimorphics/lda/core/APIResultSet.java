@@ -58,7 +58,7 @@ public class APIResultSet {
     protected final boolean isCompleted;
     protected final Model model;
     protected final String detailsQuery;
-    protected final long hash;
+    protected long hash;
     protected Date timestamp;
     protected String selectQuery = "";
     protected boolean enableETags = false;
@@ -83,7 +83,7 @@ public class APIResultSet {
         this.results = results;
         this.isCompleted = isCompleted;
         this.detailsQuery = detailsQuery;
-        this.hash = ModelUtils.hashModel( model ) ^ ((long) results.hashCode() << 32 );
+        this.hash = 0;
         this.timestamp = new Date();
         this.enableETags = enableETags;
         if (!results.isEmpty()) this.root = results.get(0).inModel(model);
@@ -99,6 +99,11 @@ public class APIResultSet {
     	Model m = lr.get(0).getModel();
     	return m == null ? RDFUtils.noPrefixes : m;
 	}
+    
+    public long getHash() {
+    	if (hash == 0) hash = ModelUtils.hashModel( model ) ^ ((long) results.hashCode() << 32 );
+    	return hash;
+    }
 
 	/**
         Set prefixes for the namespaces of terms that Elda uses
@@ -177,10 +182,6 @@ public class APIResultSet {
     
     public boolean isCompleted() {
         return isCompleted;
-    }
-    
-    public long getHash() {
-    	return hash;
     }
     
     public Date createdAt() {
