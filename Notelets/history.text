@@ -1,3 +1,11 @@
+1.2.12
+
+* Elda can now generate etags on contentful responses. It can be
+  enabled for the entire API by attaching `elda:enableETags true`
+  to the API spec, or for an endpoint by attaching it to that
+  endpoint's spec. (Setting it false on an endpoint disables it
+  for that endpoint whatever the setting on the API.)
+
 1.2.11
 
 * The JSONP format has been restored.

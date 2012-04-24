@@ -17,9 +17,9 @@ public class ModelUtils {
 	public static long hashTriple(Triple t) {
 		long result = 0;
 		Node S = t.getSubject(), P = t.getPredicate(), O = t.getObject();
-		if (!S.isBlank()) result = S.hashCode() << 32;
-		if (!P.isBlank()) result ^= P.hashCode() << 16;
-		if (!O.isBlank()) result ^= O.hashCode();
+		if (!S.isBlank()) result = (long) S.hashCode() << 32;
+		if (!P.isBlank()) result ^= (long) P.hashCode() << 16;
+		if (!O.isBlank()) result ^= (long) O.hashCode();
 		return result;
 	}
 

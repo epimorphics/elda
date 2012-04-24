@@ -133,6 +133,27 @@
     to one endpoint affect only that endpoint. 
 </p>
 
+<h2>etag generation</h2>
+
+<b>Experimental</b>: may be revised or removed.
+
+<p>
+    If an endpoint has the property <code>elda:enableETags</code>
+    with value <code>true</code>, or it does not have that
+    property but its parent API spec does with value 
+    <code>true</code>, then Elda will generate an etag
+    on successful responses. The value of the etag is derived
+    from hashes of:
+</p>
+
+<ul>
+    <li>the request URI</li>
+    <li>the Accept header (if present)</li>
+    <li>the Accept-Encoding header (if present)</li>
+    <li>the response's media type</li>
+    <li>the content of the model</li>
+</ul>
+
 <h2>item template fallback</h2>
 
 <p>

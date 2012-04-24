@@ -126,13 +126,19 @@ import com.hp.hpl.jena.shared.WrappedException;
         } else {
         	Times t = new Times( pathstub );
         	Controls c = new Controls( !dontCache, t );
-        	int runHash = headers.getAcceptableMediaTypes().hashCode();
+        	int encodingHash = hashOf( headers.getRequestHeaders().get("Accept-Encoding") );
+        	int mediaHash = hashOf( headers.getAcceptableMediaTypes() );
+			int runHash = mediaHash + encodingHash;
             List<MediaType> mediaTypes = JerseyUtils.getAcceptableMediaTypes( headers );
             return runEndpoint( c, runHash, servCon, ui, queryParams, mediaTypes, formatSuffix, match ); 
         }
     }
     
-    private boolean has( MultivaluedMap<String, String> rh, String key, String value ) {
+    private int hashOf( Object x ) {
+		return x == null ? 0x12345678 : x.hashCode();
+	}
+
+	private boolean has( MultivaluedMap<String, String> rh, String key, String value ) {
     	List<String> values = rh.get( key );
 		return values != null && values.contains( value );
 	}
