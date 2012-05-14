@@ -53,6 +53,10 @@ public class MatchTemplate<T> {
 			if (e.getValue().startsWith("{")) result += 1;
 		return result;
 	}
+	
+	@Override public String toString() {
+		return "<MatchTemplate for '" + template + "' => " + value + ">";
+	}
 
 	/**
 	    Compare this MatchTemplate with another. The one with the most

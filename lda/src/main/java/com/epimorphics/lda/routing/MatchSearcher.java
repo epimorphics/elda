@@ -49,13 +49,21 @@ public class MatchSearcher<T> {
         the collection.
     */
     public void unregister( String path ) {
+    	String trimmedPath = removeQueryPart( path );
         Iterator<MatchTemplate<T>> it = templates.iterator();
-        while (it.hasNext())
-            if (it.next().template().equals( path )) 
+        while (it.hasNext()) {        	
+            String t = it.next().template();
+			if (t.equals( trimmedPath )) 
                 { it.remove(); return; }
+        }
     }
     
-    /**
+    private String removeQueryPart( String path ) {
+    	int qPos = path.indexOf('?');
+		return qPos < 0 ? path : path.substring( 0, qPos );
+	}
+
+	/**
         Search the collection for the most specific entry that
         matches <code>path</code>. If there isn't one, return null.
         If there is, return the associated value, and update the
