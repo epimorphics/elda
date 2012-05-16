@@ -91,8 +91,8 @@ spec:viewerMedium a api:Viewer
 spec:api a api:API 
     ; rdfs:label "Edubase API"@en
     ; foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI
-    ; api:maxPageSize "50"
-    ; api:defaultPageSize "10" 
+    ; api:maxPageSize 50
+    ; api:defaultPageSize 10 
     ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
     ; rdfs:comment "An API around sparql-provided education data."
     ; extras:enableETags true

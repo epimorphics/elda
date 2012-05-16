@@ -28,8 +28,8 @@ t:api
 		api:namespace "http://transport.data.gov.uk/def/naptan/";
 		api:prefix	  "naptan";
 	];
-	api:maxPageSize "100";
-	api:defaultPageSize "10" ;
+	api:maxPageSize 100;
+	api:defaultPageSize 10 ;
 ##	api:sparqlEndpoint <http://example> ;
 ##  api:sparqlEndpoint <tdb:> ;
 ##  api:sparqlEndpoint <http://gov.tso.co.uk/transport/sparql> ;
