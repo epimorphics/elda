@@ -202,7 +202,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		.addProperty( RDF.type, API.ListEndpoint )
 	    		;
     		rs.setContentLocation( pageBase );
-        } else if (rs.isEmpty()) {
+        } else if (rs.isEmpty() && cc.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" )) {
         	EldaException.NoItemFound();
         } else {
         	Resource content = rs.getResultList().get(0);
