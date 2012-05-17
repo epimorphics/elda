@@ -74,6 +74,15 @@
     sending JSON. Setting this variable to "yes" will
     cause Elda to ignore the supplied media type.
     </li>
+
+    <li>_exceptionIfEmpty: by default, if a query for
+    an item template returns no item (because the requested
+    item has none of the required properties) Elda will
+    generate a 404 response rather than displaying an
+    empty item endpoint page. If the variable _exceptionIfEmpty
+    does not have the value "<code>yes</code>", then the
+    empty page is display.  
+    </li>
 </ul>
 
 <h2>wildcard '*' in view property chains</h2>

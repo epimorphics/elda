@@ -1,3 +1,12 @@
+1.2.13
+
+* Unquote numeric size values in examples. 
+
+* Config deletion did not delete endpoints with query parts in
+  their uriTemplates; corrected. (Only visible to uses of the
+  UNSUPPORTED dynamic configuration interface, which has now
+  been removed.)
+
 1.2.12
 
 * Elda can now generate etags on contentful responses. It can be
