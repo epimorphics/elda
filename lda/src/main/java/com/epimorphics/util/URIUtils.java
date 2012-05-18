@@ -95,8 +95,13 @@ public class URIUtils {
 		}
 	}
 	
-	private static String noLeadingSlash( String path ) {
-		return path.startsWith("/") ? path.substring(1) : path;
+	public static URI noLeadingSlash( String path ) {
+		String fixedPath = path.startsWith("/") ? path.substring(1) : path;
+		try {
+			return new URI( null, null, fixedPath, null );
+		} catch (URISyntaxException e) {
+			throw new EldaException( e.getMessage() );
+		}
 	}
 
 	public static URI resolveAgainstBase( URI requestUri, URI baseAsURI, String uiPath ) {

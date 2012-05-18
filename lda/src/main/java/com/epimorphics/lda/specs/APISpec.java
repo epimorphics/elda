@@ -71,11 +71,11 @@ public class APISpec {
     protected final Factories factoryTable;
     protected final boolean hasParameterBasedContentNegotiation;
     protected final List<Source> describeSources;
-    protected final Bindings bindings = new Bindings();
+    public final Bindings bindings = new Bindings();
     
-    protected final Set<String> metadataOptions = new HashSet<String>();
+    public final Set<String> metadataOptions = new HashSet<String>();
 
-	protected final int describeThreshold;
+	public final int describeThreshold;
 	
 	/**
 	    The default number of selected items required for a DESCRIBE

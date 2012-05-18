@@ -65,6 +65,11 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 		}
 	}	
 	
+	@Override public void unregister( String path ) {
+		// TODO here we should also remove the item-template mapping if present.
+		super.unregister( path );
+	}
+	
 	/**
 	    Answer the filled-in URI template associated with the given
 	    item path, or null if there isn't one.
