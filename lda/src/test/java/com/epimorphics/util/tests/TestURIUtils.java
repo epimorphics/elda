@@ -51,6 +51,16 @@ public class TestURIUtils {
 		assertEquals( newURI("http://example.com/anc%20hor/thing.rdf.ttl"), got );
 	}
 	
+	// If any braces (etc) are in the path, they are escaped.
+	@Test public void testURISlashlessFragment() {
+		URI u = URIUtils.noLeadingSlash( "/a{b}c" );
+		assertEquals( "a%7Bb%7Dc", u.getRawPath() );
+		assertNull( u.getScheme() );
+		assertNull( u.getHost() );
+		assertNull( u.getFragment() );
+		assertNull( u.getQuery() );
+	}
+	
 	static class Case {
 		String expect;
 		String apiBase;

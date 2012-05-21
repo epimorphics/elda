@@ -910,7 +910,7 @@ public class APIQuery implements Cloneable, VarSupply {
 	    allowed to be used (and ignored).
 	*/
 	public boolean allowReserved( String name ) {
-		return allowedReserved.contains( name );
+		return name.equals("_") || allowedReserved.contains( name );
 	}
 
 }

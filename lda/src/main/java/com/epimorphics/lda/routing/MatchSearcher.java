@@ -68,12 +68,12 @@ public class MatchSearcher<T> {
         matches <code>path</code>. If there isn't one, return null.
         If there is, return the associated value, and update the
         bindings with the matches variables.
-     * @param queryParams 
     */
     public T lookup( Map<String, String> bindings, String path, MultiMap<String, String> queryParams ) {
         if (needsSorting) sortTemplates();    
-        for (MatchTemplate<T> t: templates)
+        for (MatchTemplate<T> t: templates) {
         	if (t.match( bindings, path, queryParams )) return t.value();
+        }
         return null;
     }
 
@@ -85,7 +85,7 @@ public class MatchSearcher<T> {
     public List<String> templates() {
     	List<String> result = new ArrayList<String>();
     	if (needsSorting) sortTemplates();
-    	for (MatchTemplate<?> t: templates) result.add(t.template());
+    	for (MatchTemplate<?> mt: templates) result.add(mt.template());
     	return result;
     }
 }

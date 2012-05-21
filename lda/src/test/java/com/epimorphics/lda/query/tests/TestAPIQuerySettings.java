@@ -25,4 +25,11 @@ public class TestAPIQuerySettings {
 		assertEquals( QueryParameter.MAX_PAGE_SIZE, q.getPageSize() );
 	}
 
+	@Test public void testAllowReservedDefaultIs_() {
+		APIQuery q = new APIQuery( new SNS("") );
+		assertTrue( "_ should always be allow-reserved.", q.allowReserved( "_" ) );
+		assertFalse( "by default _x is not allowed", q.allowReserved("_x") );
+		q.addAllowReserved( "_x" );
+		assertTrue( "_x should now be allowed", q.allowReserved("_x") );
+	}
 }
