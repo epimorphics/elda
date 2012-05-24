@@ -46,6 +46,11 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 		BaseAndTemplate( String base, String template ) { 
 			this.base = base; this.template = template; 
 		}
+		
+		@Override public String toString() {
+			return "<base: " + base + "; template: " + template + ">";
+			
+		}
 	}
 	
 	protected MatchSearcher<BaseAndTemplate> ms = new MatchSearcher<BaseAndTemplate>();
@@ -94,8 +99,14 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	*/
 	private String removeBase( String base, String uri ) {
 		return base == null || !uri.startsWith( base ) 
-			? uri.replaceFirst( "https?://[^/]*/", "/" )
+			? replaceLike(base, uri)
 			: "/" + uri.substring( base.length() )
 			;
+	}
+
+	private String replaceLike(String base, String uri) {
+		String uriTail = uri.replaceFirst( "https?://[^/]*/", "/" );
+		String baseTail = base.replaceFirst( "https?://[^/]*/", "/" );
+		return uriTail.startsWith( baseTail ) ? "/" + uriTail.substring( baseTail.length() ) : uriTail;
 	}
 }

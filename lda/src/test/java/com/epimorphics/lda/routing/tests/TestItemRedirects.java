@@ -72,16 +72,36 @@ public class TestItemRedirects {
 	}
 	
 	String [][] testCases = new String[][] {
-			{ "1", "base:uri/{A}", "thing/{A}", "/A", "base:uri/", "thing/A" },
+		// tag request URI          itemTemplate           path    uriTemplate  api:base              expected
+			
+		{ "1",  "http://ex.com/A",   "http://ex.com/{A}",   "/A",   "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
+		{ "2",  "http://ex.com/A/B", "http://ex.com/{A}",   "/A/B", "thing/{A}", "http://ex.com/",     null },
+		{ "3",  "http://ex.com/B/A", "http://ex.com/{A}",   "/B/A", "thing/{A}", "http://ex.com/",     null },
+		{ "4",  "http://ex.com/A",   "http://ex.com/{A}",   "/A",   "thing/{A}", "http://ex.com/miff", "http://ex.com/miff/thing/A" },
+		{ "5",  "http://ex.com/A",   "http://ey.com/{A}",   "/A",   "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
+		{ "6",  "http://ex.com/X/A", "http://ex.com/X/{A}", "/X/A", "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
+		
+		{ "1ax", "http://ex.com/A",   "http://ex.com/{A}",   "/A",  "thing/{A}", "/",                  "http://ex.com/thing/A" },
+		{ "1ay", "http://ey.com/A",   "http://ex.com/{A}",   "/A",  "thing/{A}", "/",                  "http://ey.com/thing/A" },
+		
+		{ "2a", "http://ex.com/A/B", "http://ex.com/{A}",   "/A/B", "thing/{A}", "http://ex.com/",     null },
+		{ "3a", "http://ex.com/B/A", "http://ex.com/{A}",   "/B/A", "thing/{A}", "http://ex.com/",     null },
+		
+		// TODO { "6b",  "http://ex.com/X/A", "http://ex.com/X/{A}", "/X/A", "thing/{A}", "http://fy.dun/P/Q",     "http://ex.com/thing/A" },
+		
+		{ "4a", "http://ex.com/A",   "http://ex.com/{A}",   "/A",   "thing/{A}", "http://ex.com/miff", "http://ex.com/miff/thing/A" },
+		{ "5a", "http://ex.com/A",   "http://ey.com/{A}",   "/A",   "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
+		{ "6a", "http://ex.com/X/A", "http://ex.com/X/{A}", "/X/A", "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
+		
 	};
 	
 	@Test public void testing() {
 		StringBuilder errors = new StringBuilder();
 		for (String [] tc: testCases) {
 			try {
-				testInverseLookup( tc[1], tc[2], tc[3], tc[4], tc[5] );
+				testInverseLookup( tc[1], tc[2], tc[4], tc[3], tc[5], tc[6] );
 			} catch (AssertionError e) {
-				errors.append( "\n" ).append( tc[0] ).append( ": " ).append( e.getMessage() );
+				errors.append( "\n" ).append( "case " ).append( tc[0] ).append( ": " ).append( e.getMessage() );
 			}
 		}
 		if (errors.length() > 0) {
@@ -90,9 +110,9 @@ public class TestItemRedirects {
 	}
 
 	private void testInverseLookup
-		( String itemTemplate, String uriTemplate, String path, String baseURI, String expected ) {
+		( String requestURI, String itemTemplate, String uriTemplate, String path, String baseURI, String expected ) {
 		Setup s = Setup.prepare( baseURI, itemTemplate, uriTemplate );
-		String answer = s.invert( path, baseURI );
+		String answer = s.invert( requestURI, path );
 		assertEquals( expected, answer );		
 	}
 	
@@ -137,8 +157,8 @@ public class TestItemRedirects {
 				;
 		}
 
-		String invert( String path, String baseURI ) {
-			return r.findItemURIPath( URIUtils.newURI( baseURI ), path );
+		String invert( String requestURI, String path ) {
+			return r.findItemURIPath( URIUtils.newURI( requestURI ), path );
 		}
 		
 	}

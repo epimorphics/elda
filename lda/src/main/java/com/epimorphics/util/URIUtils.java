@@ -118,7 +118,7 @@ public class URIUtils {
 			;
 		
 		try {
-			return new URI(
+			URI uri = new URI(
 			resolved.getScheme(),
 			resolved.getUserInfo(),
 			resolved.getHost(),
@@ -126,7 +126,8 @@ public class URIUtils {
 			resolved.getPath(),
 			requestUri.getQuery(),
 			resolved.getFragment()
-			);		
+			);
+			return uri;		
 		} catch (URISyntaxException e) {
 			throw new WrappedException( e );
 		}
