@@ -55,6 +55,9 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	
 	protected MatchSearcher<BaseAndTemplate> ms = new MatchSearcher<BaseAndTemplate>();
 	
+	// map from registered uri template to corresponding item template path
+	protected Map<String, String> inverseMap = new HashMap<String, String>();
+	
 	/**
 	    Register the endpoint ep associated with the URI template ut.
 	    Also record the association between the item template (if any)
@@ -66,13 +69,15 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 		if (it != null) {
 			String apiBase = ep.getSpec().getAPISpec().getBase();
 			String path = removeBase( apiBase, it );
+			inverseMap.put( ut, path );
 			ms.register( path, new BaseAndTemplate( apiBase, ep.getURITemplate() ) );
 		}
 	}	
 	
-	@Override public void unregister( String path ) {
-		// TODO here we should also remove the item-template mapping if present.
-		super.unregister( path );
+	@Override public void unregister( String ut ) {
+		String it = inverseMap.get( ut );
+		super.unregister( ut );
+		if (it != null) ms.unregister( it );
 	}
 	
 	/**
