@@ -12,11 +12,16 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.ProtocolException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.protocol.HttpContext;
 import org.junit.Test;
 
 import com.epimorphics.lda.exceptions.EldaException;
@@ -40,6 +45,10 @@ public class ResponseStatusTests {
 		ResponseStatusTests.testHttpRequest( "alpha.json?callback=right", 200, Util.ignore );
 	}
 	
+	@Test public void testMatchingItemTempklateGeneratesRedirection() throws ClientProtocolException, IOException {
+		ResponseStatusTests.testHttpRequest( "handover", 303, Util.ignore );
+	}
+	
 	@Test public void testItemAccessIsOK() throws ClientProtocolException, IOException {
 		ResponseStatusTests.testHttpRequest( "beta", 200, Util.ignore );
 	}
@@ -54,7 +63,19 @@ public class ResponseStatusTests {
 	
 	public static void testHttpRequest( String x, int status, Util.CheckContent cc ) 
 		throws ClientProtocolException, IOException {
-		HttpClient httpclient = new DefaultHttpClient();
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+		httpclient.setRedirectStrategy( new DefaultRedirectStrategy() {
+			 public boolean isRedirected(
+			            final HttpRequest request,
+			            final HttpResponse response,
+			            final HttpContext context) throws ProtocolException {
+
+			    int statusCode = response.getStatusLine().getStatusCode();	 
+				return statusCode == HttpStatus.SC_SEE_OTHER ? false : super.isRedirected(request, response, context);
+			 }
+			
+		} );
+
 		HttpGet httpget = new HttpGet("http://localhost:" + Config.port + "/elda/api/" + x );
 		HttpResponse response = httpclient.execute(httpget);
 	//
