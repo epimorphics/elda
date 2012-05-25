@@ -72,7 +72,7 @@ public class TestItemRedirects {
 	}
 	
 	String [][] testCases = new String[][] {
-		// tag request URI          itemTemplate           path    uriTemplate  api:base              expected
+		// tag request URI           itemTemplate           path    uriTemplate  api:base              expected
 			
 		{ "1",  "http://ex.com/A",   "http://ex.com/{A}",   "/A",   "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
 		{ "2",  "http://ex.com/A/B", "http://ex.com/{A}",   "/A/B", "thing/{A}", "http://ex.com/",     null },
@@ -81,17 +81,17 @@ public class TestItemRedirects {
 		{ "5",  "http://ex.com/A",   "http://ey.com/{A}",   "/A",   "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
 		{ "6",  "http://ex.com/X/A", "http://ex.com/X/{A}", "/X/A", "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
 		
-		{ "1ax", "http://ex.com/A",   "http://ex.com/{A}",   "/A",  "thing/{A}", "/",                  "http://ex.com/thing/A" },
-		{ "1ay", "http://ey.com/A",   "http://ex.com/{A}",   "/A",  "thing/{A}", "/",                  "http://ey.com/thing/A" },
+		{ "7",  "http://ex.com/A",   "http://ex.com/{A}",   "/A",  "thing/{A}", "/",                  "http://ex.com/thing/A" },
+		{ "8",  "http://ey.com/A",   "http://ex.com/{A}",   "/A",  "thing/{A}", "/",                  "http://ey.com/thing/A" },
 		
-		{ "2a", "http://ex.com/A/B", "http://ex.com/{A}",   "/A/B", "thing/{A}", "http://ex.com/",     null },
-		{ "3a", "http://ex.com/B/A", "http://ex.com/{A}",   "/B/A", "thing/{A}", "http://ex.com/",     null },
+		{ "9",  "http://ex.com/A/B", "http://ex.com/{A}",   "/A/B", "thing/{A}", "http://ex.com/",     null },
+		{ "10", "http://ex.com/B/A", "http://ex.com/{A}",   "/B/A", "thing/{A}", "http://ex.com/",     null },
 		
-		// TODO { "6b",  "http://ex.com/X/A", "http://ex.com/X/{A}", "/X/A", "thing/{A}", "http://fy.dun/P/Q",     "http://ex.com/thing/A" },
+		{ "11", "http://ex.com/X/A", "http://ex.com/X/{A}", "/X/A", "thing/{A}", "http://fy.dun/P/Q", "http://fy.dun/P/Q/thing/A" },
 		
-		{ "4a", "http://ex.com/A",   "http://ex.com/{A}",   "/A",   "thing/{A}", "http://ex.com/miff", "http://ex.com/miff/thing/A" },
-		{ "5a", "http://ex.com/A",   "http://ey.com/{A}",   "/A",   "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
-		{ "6a", "http://ex.com/X/A", "http://ex.com/X/{A}", "/X/A", "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
+		{ "12", "http://ex.com/A",   "http://ex.com/{A}",   "/A",   "thing/{A}", "http://ex.com/miff", "http://ex.com/miff/thing/A" },
+		{ "13", "http://ex.com/A",   "http://ey.com/{A}",   "/A",   "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
+		{ "14", "http://ex.com/X/A", "http://ex.com/X/{A}", "/X/A", "thing/{A}", "http://ex.com/",     "http://ex.com/thing/A" },
 		
 	};
 	
