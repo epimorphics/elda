@@ -111,6 +111,7 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 
 	private String replaceLike(String base, String uri) {
 		String uriTail = uri.replaceFirst( "https?://[^/]*/", "/" );
+		if (base == null) return uriTail;
 		String baseTail = base.replaceFirst( "https?://[^/]*/", "/" );
 		return uriTail.startsWith( baseTail ) ? "/" + uriTail.substring( baseTail.length() ) : uriTail;
 	}

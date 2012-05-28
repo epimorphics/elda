@@ -10,8 +10,6 @@ package com.epimorphics.lda.routing.tests;
 import static org.junit.Assert.*;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -26,7 +24,6 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.FileManager;
 
