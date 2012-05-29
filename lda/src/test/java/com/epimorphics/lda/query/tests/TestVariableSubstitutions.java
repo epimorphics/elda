@@ -30,7 +30,7 @@ public class TestVariableSubstitutions {
 		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
-		APIQuery aq = new APIQuery( sns );
+		APIQuery aq = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );
@@ -43,7 +43,7 @@ public class TestVariableSubstitutions {
 		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
-		APIQuery aq = new APIQuery( sns );
+		APIQuery aq = QueryTestUtils.queryFromSNS(sns);
 		aq.setOrderBy( "?x" );
 		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
@@ -57,7 +57,7 @@ public class TestVariableSubstitutions {
 		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "" );
-		APIQuery aq = new APIQuery( sns );
+		APIQuery aq = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );

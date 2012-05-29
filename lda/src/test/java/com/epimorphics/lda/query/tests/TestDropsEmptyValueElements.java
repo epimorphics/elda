@@ -33,7 +33,7 @@ public class TestDropsEmptyValueElements {
 		NamedViews nv = NamedViews.noNamedViews;
 		SNS sns = new SNS("a=eh:/A");
 		Bindings cc = Bindings.createContext( new Bindings(), MakeData.parseQueryString("_properties=,a," ) );
-		APIQuery aq = new APIQuery( sns );
+		APIQuery aq = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater cu = new ContextQueryUpdater
 			( ContextQueryUpdater.ListEndpoint 
 			, cc
@@ -49,7 +49,7 @@ public class TestDropsEmptyValueElements {
 		NamedViews nv = NamedViews.noNamedViews;
 		SNS sns = new SNS("a=eh:/A;b=eh:/B");
 		Bindings cc = Bindings.createContext( new Bindings(), MakeData.parseQueryString("_sort=,b," ) );
-		APIQuery aq = new APIQuery( sns );
+		APIQuery aq = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater cu = new ContextQueryUpdater
 			( ContextQueryUpdater.ListEndpoint 
 			, cc

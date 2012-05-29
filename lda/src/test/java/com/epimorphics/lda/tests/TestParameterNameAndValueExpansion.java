@@ -18,6 +18,7 @@ import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
+import com.epimorphics.lda.query.tests.QueryTestUtils;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.tests_support.LoadsNothing;
@@ -113,7 +114,7 @@ public class TestParameterNameAndValueExpansion
 		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "bname=eh:/full-bname" );
-		APIQuery aq = new APIQuery( sns );
+		APIQuery aq = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );

@@ -16,6 +16,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
+import com.epimorphics.lda.query.tests.QueryTestUtils;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.util.RDFUtils;
@@ -27,7 +28,7 @@ public class TestWhereParameter
 	@Test public void testAddWhereParameter()
 		{    
         ShortnameService sns = new StandardShortnameService();
-        APIQuery q = new APIQuery(sns);		
+        APIQuery q = QueryTestUtils.queryFromSNS(sns);		
         ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
         String theBaseQuery = q.assembleSelectQuery( RDFUtils.noPrefixes );
         String theWhereClause = "?p rdf:equals 17";

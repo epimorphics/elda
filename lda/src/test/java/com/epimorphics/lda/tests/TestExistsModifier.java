@@ -20,6 +20,7 @@ import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
+import com.epimorphics.lda.query.tests.QueryTestUtils;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.RenderExpression;
 import com.epimorphics.lda.rdfq.Variable;
@@ -53,7 +54,7 @@ public class TestExistsModifier
 	@Test public void testExists()
 		{
 		Shorts sns = new Shorts( "exists-backwards" );
-		APIQuery q = new APIQuery( sns );
+		APIQuery q = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "true" );
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
@@ -67,7 +68,7 @@ public class TestExistsModifier
 	@Test public void testNotExists()
 		{
 		Shorts sns = new Shorts( "exists-backwards" );
-		APIQuery q = new APIQuery( sns );
+		APIQuery q = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "false" );		
 		List<RDFQ.Triple> triples = q.getBasicGraphTriples();
@@ -112,7 +113,7 @@ public class TestExistsModifier
 		{
 		Shorts sns = new Shorts( "exists-backwards", "type" );
 		// System.err.println( ">> info: " + sns.asContext().getPropertyByName("type" ).getType() ) ;
-		APIQuery q = new APIQuery( sns );		
+		APIQuery q = QueryTestUtils.queryFromSNS(sns);		
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
 		Param ptype = Param.make( sns, "type" );
 		x.addFilterFromQuery( ptype, "Item" );

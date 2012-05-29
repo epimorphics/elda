@@ -30,7 +30,7 @@ public class TestSharesPropertyVariables {
 		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "aname=eh:/full-aname" );
-		APIQuery aq = new APIQuery( sns );
+		APIQuery aq = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );

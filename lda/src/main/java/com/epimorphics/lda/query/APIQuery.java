@@ -56,22 +56,13 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  	@author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  	@version $Revision: $
 */
-public class APIQuery implements Cloneable, VarSupply {
+public class APIQuery implements VarSupply {
+    
+    static final Logger log = LoggerFactory.getLogger( APIQuery.class );
     
     public static final Variable SELECT_VAR = RDFQ.var( "?item" );
     
     public static final String PREFIX_VAR = "?___";
-    
-    // Partial elements of the SELECT pattern 
-    //  It would more elegant to use ARQ syntax tree Element/Expr
-    //  but not sure how well that plays with JDO persistance for GAE
-    //  so stick to string bashing for ease of debug and persistence
-    
-    protected StringBuffer whereExpressions = new StringBuffer();
-    
-    private StringBuffer orderExpressions = new StringBuffer();
-    
-    private boolean isItemEndpoint;
     
     /**
         List of pseudo-triples which form the basic graph pattern element
@@ -95,7 +86,7 @@ public class APIQuery implements Cloneable, VarSupply {
         List of little infix expressions (operands must be RDFQ.Any's) which
         are SPARQL filters for this query. 
     */
-    protected List<RenderExpression> filterExpressions = new ArrayList<RenderExpression>();
+    protected final List<RenderExpression> filterExpressions;
     
     public List<RenderExpression> getFilterExpressions() {
     	// FOR ETSTING ONLY
@@ -106,66 +97,74 @@ public class APIQuery implements Cloneable, VarSupply {
     	filterExpressions.add( e );
     }
     
+    private boolean isItemEndpoint = false;
+
     protected String viewArgument = null;
-    
-    protected final ShortnameService sns;
-    
-    protected ValTranslator vt = null;
     
     protected String defaultLanguage = null;
     
     protected int varcount = 0;
     
-    protected final int defaultPageSize;
     protected int pageSize = QueryParameter.DEFAULT_PAGE_SIZE;
-    protected final int maxPageSize;
     
     protected int pageNumber = 0;
         
-    protected Map<Variable, Info> varInfo = new HashMap<Variable, Info>();
-    
     protected Resource subjectResource = null;
     
     protected String itemTemplate = null;
+    
     protected String fixedSelect = null;
     
-    protected Set<String> allowedReserved = new HashSet<String>();
-    
-    protected Set<String> metadataOptions = new HashSet<String>();
-    
     protected boolean enableETags = false;
+    
+    /**
+        Set to true to switch on LARQ indexing for this query, ie when an
+        _search wossname is being used.
+     */
+    protected boolean needsLARQindex = false;
+    
+    protected String sortByOrderSpecs = "";
+    
+    protected boolean sortByOrderSpecsFrozen = false;
+        
+    /**
+        Pattern for matching SPARQL query variables (including the leading '?').
+     	Used for finding substitution points in static query strings.
+    */
+    private static final Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
+    
+    protected final static Resource PF_TEXT_MATCH = ResourceFactory.createProperty( "http://jena.hpl.hp.com/ARQ/property#textMatch" );
+    
+    protected final int defaultPageSize;
+
+    protected final int maxPageSize;
+    
+    protected final ShortnameService sns;
+    
+    protected final ValTranslator vt;
+    
+    protected final StringBuffer whereExpressions;
+    
+    private final StringBuffer orderExpressions;
+    
+    protected final Map<Variable, Info> varInfo;
+    
+    protected final Set<String> allowedReserved;
+    
+    protected final Set<String> metadataOptions;
+    
+    private final Map<String, String> languagesFor;
+    
+    public final List<PendingParameterValue> deferredFilters;
     
     /**
         Map from property chain names (ie dotted strings) to the variable at
         the end of that chain. Allows different instances of a property chain
         (in the same APIQuery) to share the variable.
     */
-    protected Map<String, Variable> varsForPropertyChains = new HashMap<String, Variable>();
-
+    protected final Map<String, Variable> varsForPropertyChains;
+    
     /**
-        Set to true to switch on LARQ indexing for this query, ie when an
-        _search wossname is being used.
-    */
-    protected boolean needsLARQindex = false;
-    
-    static Logger log = LoggerFactory.getLogger( APIQuery.class );
-
-    public APIQuery( ShortnameService sns ) {
-        this( fakeQB(sns) );
-    }
-    
-    private static final QueryBasis fakeQB( final ShortnameService sns ) {
-    	return new QueryBasis() {
-    		@Override public final ShortnameService sns() { return sns; }
-    		@Override public final String getDefaultLanguage() { return null; }
-    		@Override public String getItemTemplate() { return null; }
-    		@Override public final int getMaxPageSize() { return QueryParameter.MAX_PAGE_SIZE; }
-    		@Override public final int getDefaultPageSize() { return QueryParameter.DEFAULT_PAGE_SIZE; }
-			@Override public boolean isItemEndpoint() {	return false; }
-    	};
-    }
-
-	/**
         The parameters that form the basis of an API Query.
      
      	@author chris
@@ -192,33 +191,59 @@ public class APIQuery implements Cloneable, VarSupply {
 	
     public APIQuery( QueryBasis qb ) {
         this.sns = qb.sns();
-        this.vt = new ValTranslator( this, new FilterExpressions( filterExpressions ), qb.sns() );
         this.defaultLanguage = qb.getDefaultLanguage();
         this.pageSize = qb.getDefaultPageSize();
         this.defaultPageSize = qb.getDefaultPageSize();
         this.maxPageSize = qb.getMaxPageSize();
         this.itemTemplate = qb.getItemTemplate();
-        this.isItemEndpoint = qb.isItemEndpoint();
+        this.isItemEndpoint = qb.isItemEndpoint(); 
+    //
+        this.deferredFilters = new ArrayList<PendingParameterValue>();
+        this.whereExpressions = new StringBuffer();
+        this.varsForPropertyChains = new HashMap<String, Variable>();
+        this.allowedReserved = new HashSet<String>();
+        this.metadataOptions = new HashSet<String>();
+        this.languagesFor = new HashMap<String, String>(); 
+        this.varInfo = new HashMap<Variable, Info>(); 
+        this.orderExpressions = new StringBuffer();
+        this.filterExpressions = new ArrayList<RenderExpression>();
+        this.vt = new ValTranslator( this, new FilterExpressions( filterExpressions ), sns );
     }
 
-    @Override public APIQuery clone() {
-        try {
-            APIQuery clone = (APIQuery) super.clone();
-            clone.basicGraphTriples = new ArrayList<RDFQ.Triple>( basicGraphTriples );
-            clone.optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>( optionalGraphTriples );
-            clone.filterExpressions = new ArrayList<RenderExpression>( filterExpressions );
-            clone.orderExpressions = new StringBuffer( orderExpressions );
-            clone.whereExpressions = new StringBuffer( whereExpressions );
-            clone.varInfo = new HashMap<Variable, Info>( varInfo );
-            clone.deferredFilters = new ArrayList<PendingParameterValue>( deferredFilters );
-            clone.metadataOptions = new HashSet<String>( metadataOptions );
-            clone.varsForPropertyChains = new HashMap<String, Variable>( varsForPropertyChains );
-            clone.vt = new ValTranslator( clone, new FilterExpressions( clone.filterExpressions ), sns );
-            clone.allowedReserved = new HashSet<String>( allowedReserved );
-            return clone;
-        } catch (CloneNotSupportedException e) {
-            throw new APIException("Can't happen :)", e);
-        }
+    public APIQuery copy() {
+        return new APIQuery( this );
+    }
+    
+    public APIQuery( APIQuery other ) {
+    	this.sns = other.sns;
+    	this.maxPageSize = other.maxPageSize;
+    	this.defaultPageSize = other.defaultPageSize;
+    	this.defaultLanguage = other.defaultLanguage;
+    	this.enableETags = other.enableETags;
+    	this.fixedSelect = other.fixedSelect;
+    	this.isItemEndpoint = other.isItemEndpoint;
+    	this.itemTemplate = other.itemTemplate;
+    	this.needsLARQindex = other.needsLARQindex;
+    	this.pageNumber = other.pageNumber;
+    	this.pageSize = other.pageSize;
+    	this.sortByOrderSpecs = other.sortByOrderSpecs;
+    	this.sortByOrderSpecsFrozen = other.sortByOrderSpecsFrozen;
+    	this.subjectResource = other.subjectResource;
+    	this.varcount = other.varcount;
+    	this.viewArgument = other.viewArgument;
+    //
+    	this.languagesFor = new HashMap<String, String>( other.languagesFor );
+        this.basicGraphTriples = new ArrayList<RDFQ.Triple>( other.basicGraphTriples );
+        this.optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>( other.optionalGraphTriples );
+        this.filterExpressions = new ArrayList<RenderExpression>( other.filterExpressions );
+        this.orderExpressions = new StringBuffer( other.orderExpressions );
+        this.whereExpressions = new StringBuffer( other.whereExpressions );
+        this.varInfo = new HashMap<Variable, Info>( other.varInfo );
+        this.deferredFilters = new ArrayList<PendingParameterValue>( other.deferredFilters );
+        this.metadataOptions = new HashSet<String>( other.metadataOptions );
+        this.varsForPropertyChains = new HashMap<String, Variable>( other.varsForPropertyChains );
+        this.vt = new ValTranslator( this, new FilterExpressions( this.filterExpressions ), this.sns );
+        this.allowedReserved = new HashSet<String>( other.allowedReserved );
     }
     
     /**
@@ -292,8 +317,6 @@ public class APIQuery implements Cloneable, VarSupply {
     public String getSubject() {
         return subjectResource.getURI();
     }
-    
-    private Map<String, String> languagesFor = new HashMap<String, String>();
         
     /**
         Set the default language, discarding any existing default language.
@@ -318,7 +341,11 @@ public class APIQuery implements Cloneable, VarSupply {
     }
     
 	private String languagesFor( Param param ) {
-		String languages = languagesFor.get( param.toString() );
+		return languagesFor( param.toString() );
+	}
+    
+	public String languagesFor( String param ) {
+		String languages = languagesFor.get( param );
 	    if (languages == null) languages = defaultLanguage;
 		return languages;
 	}
@@ -331,8 +358,6 @@ public class APIQuery implements Cloneable, VarSupply {
 		for (String option: options) metadataOptions.add( option.toLowerCase() );
 	}
     
-    public List<PendingParameterValue> deferredFilters = new ArrayList<PendingParameterValue>();
-    
     public void deferrableAddFilter( Param param, String val ) {
     	deferredFilters.add( new PendingParameterValue( param, val ) );
     }
@@ -340,8 +365,6 @@ public class APIQuery implements Cloneable, VarSupply {
     public void setViewByTemplateClause( String clause ) {
     	viewArgument = clause;
     }
-    
-    protected final static Resource PF_TEXT_MATCH = ResourceFactory.createProperty( "http://jena.hpl.hp.com/ARQ/property#textMatch" );
     
     protected void addSearchTriple( String val ) {
     	needsLARQindex = true;
@@ -516,10 +539,6 @@ public class APIQuery implements Cloneable, VarSupply {
     	sortByOrderSpecs = orderSpecs;
     }
     
-    protected String sortByOrderSpecs = "";
-    
-    protected boolean sortByOrderSpecsFrozen = false;
-    
     static class Bool { boolean value; public Bool(boolean value) {this.value = value; }}
     
     protected void unpackSortByOrderSpecs() {
@@ -581,8 +600,6 @@ public class APIQuery implements Cloneable, VarSupply {
         Variable newvar = addPropertyHasValue_REV( param );
         addTriplePattern( newvar, RDFS.label, RDFQ.literal( literal ) );
     }
-    
-    private static final Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
     
 	public void addWhere( String whereClause ) {
         if (whereExpressions.length() > 0) whereExpressions.append(" ");

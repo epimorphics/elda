@@ -19,6 +19,7 @@ import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.Param;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
+import com.epimorphics.lda.query.tests.QueryTestUtils;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.tests_support.LoadsNothing;
@@ -144,7 +145,7 @@ public class TestPropertyChainEndToEnd
 		ModelLoader loader = LoadsNothing.instance;
 		PrefixMapping prefixes = PrefixMapping.Factory.create();
 		ShortnameService sns = new StandardShortnameService( spec, prefixes, loader );
-		APIQuery q = new APIQuery( sns );
+		APIQuery q = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
 		x.addFilterFromQuery( Param.make(sns, propertyThing), "17.9" );
 		assertContains( q.assembleSelectQuery( prefixes ), "\"17.9\"^^<http://www.w3.org/2001/XMLSchema#string>" );

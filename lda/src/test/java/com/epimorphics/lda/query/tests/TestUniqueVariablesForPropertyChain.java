@@ -29,7 +29,7 @@ public class TestUniqueVariablesForPropertyChain {
 		Bindings cc = Bindings.createContext( bindings, qp );
 		NamedViews nv = new FakeNamedViews();
 		ShortnameService sns = new SNS( "first=eh:/first;aname=eh:/full-aname;bname=eh:/full-bname", "first" );
-		APIQuery aq = new APIQuery( sns );
+		APIQuery aq = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater cq = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq );
 		cq.updateQueryAndConstructView( aq.deferredFilters );
 		String q = aq.assembleSelectQuery( PrefixMapping.Factory.create() );

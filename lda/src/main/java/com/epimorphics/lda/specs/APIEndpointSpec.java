@@ -353,7 +353,7 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
      * with call-specific information to build the query
      */
     public APIQuery getBaseQuery() {
-        return baseQuery.clone();
+        return baseQuery.copy();
     }
     
     /** 

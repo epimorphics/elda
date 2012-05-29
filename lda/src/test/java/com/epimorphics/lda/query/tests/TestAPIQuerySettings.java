@@ -15,7 +15,7 @@ public class TestAPIQuerySettings {
 	// trying to set the page size past the maximum
 	// sets it to the maximum (not the default)
 	@Test public void testPageSizeSetting() {
-		APIQuery q = new APIQuery( new SNS("") );
+		APIQuery q = QueryTestUtils.queryFromSNS(new SNS(""));
 		assertTrue
 			( "precondition that default page size < max page size violated."
 			, QueryParameter.DEFAULT_PAGE_SIZE < QueryParameter.MAX_PAGE_SIZE 
@@ -26,7 +26,7 @@ public class TestAPIQuerySettings {
 	}
 
 	@Test public void testAllowReservedDefaultIs_() {
-		APIQuery q = new APIQuery( new SNS("") );
+		APIQuery q = QueryTestUtils.queryFromSNS(new SNS(""));
 		assertTrue( "_ should always be allow-reserved.", q.allowReserved( "_" ) );
 		assertFalse( "by default _x is not allowed", q.allowReserved("_x") );
 		q.addAllowReserved( "_x" );
