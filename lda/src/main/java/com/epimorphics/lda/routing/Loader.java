@@ -115,8 +115,7 @@ public class Loader extends HttpServlet {
 		log.info( "Loading spec file from " + spec );
 		Model init = getSpecModel( spec );
 		addLoadedFrom( init, spec );
-		String msg = "Loaded " + spec + ": " + init.size() + " statements";
-		log.info( msg );
+		log.info( "Loaded " + spec + ": " + init.size() + " statements" );
 		registerModel( init );
 	}
 
