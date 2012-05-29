@@ -28,6 +28,9 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.rdfq.Value;
+import com.epimorphics.lda.routing.DefaultRouter;
+import com.epimorphics.lda.routing.Match;
+import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.Controls;
@@ -42,7 +45,6 @@ import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
-import com.sun.jersey.api.uri.UriTemplate;
 
 /**
  * A test harness for testing the API code
@@ -52,7 +54,7 @@ import com.sun.jersey.api.uri.UriTemplate;
  */
 public class APITester {
 	
-    protected Map<UriTemplate, APIEndpoint> routerTable = new HashMap<UriTemplate, APIEndpoint>();
+	protected Router router = new DefaultRouter();
 
     protected Map<String, APISpec> specifications = new HashMap<String, APISpec>();
 
@@ -80,52 +82,24 @@ public class APITester {
         if (URITemplate == null){
             throw new APIException("Tried to register a null endpoint: " + api.getSpec().toString());
         }
-        routerTable.put(new UriTemplate(URITemplate), api);
+        router.register(URITemplate, api);
     }
-    
-    
-    /**
-        Match bundles up a selected endpoint and the bindings that come with it.
-    */
-    protected static class Match
-        {
-        final APIEndpoint endpoint;
-        final Map<String, String> bindings;
-
-        public Match( APIEndpoint endpoint, Map<String, String> bindings )
-            { this.endpoint = endpoint; this.bindings = bindings; }
-        }
     
     /**
         getMatch looks in the router table for the best match to the given
         path and returns a Match object or null if there's no match at all.
-        TODO replace with something sensibler.
     */
     private Match getMatch( String path ) {
-        int matchlen = 0;
-        Map.Entry<UriTemplate, APIEndpoint> match = null;
-        Map<String, String> bindings = new HashMap<String, String>();
-        for (Map.Entry<UriTemplate, APIEndpoint> e : routerTable.entrySet()) {
-            if (e.getKey().match( path, bindings )) {
-                int len = e.getValue().getURITemplate().length();
-                if (len > matchlen) {
-                    matchlen = len;
-                    match = e;
-                }
-            }
-        }
-        if (match == null) return null; 
-        match.getKey().match( path, bindings );
-        return new Match( match.getValue(), bindings );
+    	MultiMap<String, String> bindings = new MultiMap<String, String>();
+    	return router.getMatch(path, bindings);
     }
     
-
     /**
      * Run a test query against the endpoint which equals the given uriTemplate.
      * @param uriTemplate the URI for the endpoint to test, does not support template parameters
      * @param queryString the query string in "param=value&param=value..." format
      * @return the result set from the query
-     */
+    */
     public APIResultSet runQuery(String uriTemplate, String queryString) {
         Match match = getMatch(uriTemplate);
         if (match == null) 
@@ -133,8 +107,8 @@ public class APITester {
         MultiMap<String, String> map = MakeData.parseQueryString( queryString );
         // TODO: the template should be a proper URI.
 		URI ru = URIUtils.newURI(uriTemplate);
-		Bindings call = Bindings.createContext( fix( match.bindings ), map );
-        return match.endpoint.call(controls, ru, call).a;
+		Bindings call = Bindings.createContext( fix( match.getBindings() ), map );
+        return match.getEndpoint().call(controls, ru, call).a;
     }
 
 	static final Controls controls = new Controls( true, new Times() );

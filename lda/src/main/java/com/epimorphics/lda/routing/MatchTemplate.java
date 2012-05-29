@@ -136,7 +136,7 @@ public class MatchTemplate<T> {
 		return true;
 	}
 
-	private static final Pattern varPattern = Pattern.compile( "\\{([a-zA-Z]*)\\}" );
+	private static final Pattern varPattern = Pattern.compile( "\\{([a-zA-Z][a-zA-Z0-9_]*)\\}" );
 	
 	/**
 	    Answer a MatchTemplate corresponding to the template string.
