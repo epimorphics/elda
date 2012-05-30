@@ -41,6 +41,7 @@ import com.epimorphics.lda.support.Times;
 
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
+import com.epimorphics.util.TemplateUtils;
 import com.hp.hpl.jena.graph.*;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
@@ -99,7 +100,7 @@ public class APIQuery implements VarSupply {
     
     private boolean isItemEndpoint = false;
 
-    protected String viewArgument = null;
+    protected String viewTemplate = null;
     
     protected String defaultLanguage = null;
     
@@ -131,7 +132,7 @@ public class APIQuery implements VarSupply {
         Pattern for matching SPARQL query variables (including the leading '?').
      	Used for finding substitution points in static query strings.
     */
-    private static final Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
+    public static final Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
     
     protected final static Resource PF_TEXT_MATCH = ResourceFactory.createProperty( "http://jena.hpl.hp.com/ARQ/property#textMatch" );
     
@@ -230,7 +231,7 @@ public class APIQuery implements VarSupply {
     	this.sortByOrderSpecsFrozen = other.sortByOrderSpecsFrozen;
     	this.subjectResource = other.subjectResource;
     	this.varcount = other.varcount;
-    	this.viewArgument = other.viewArgument;
+    	this.viewTemplate = other.viewTemplate;
     //
     	this.languagesFor = new HashMap<String, String>( other.languagesFor );
         this.basicGraphTriples = new ArrayList<RDFQ.Triple>( other.basicGraphTriples );
@@ -362,8 +363,8 @@ public class APIQuery implements VarSupply {
     	deferredFilters.add( new PendingParameterValue( param, val ) );
     }
     
-    public void setViewByTemplateClause( String clause ) {
-    	viewArgument = clause;
+    public void setViewByTemplateClause( String viewTemplate ) {
+    	this.viewTemplate = viewTemplate;
     }
     
     protected void addSearchTriple( String val ) {
@@ -812,34 +813,79 @@ public class APIQuery implements VarSupply {
         if (roots.isEmpty() || roots.get(0) == null) return "# no results, no query.";
         List<Source> sources = spec.getDescribeSources();
         m.setNsPrefixes( spec.getPrefixMap() );
-        return viewArgument == null
+        return viewTemplate == null
         	? view.fetchDescriptions( c, new View.State( select, roots, m, sources, this ) )
         	: viewByTemplate( roots, m, spec, sources )
         	;
     }
 
 	private String viewByTemplate(List<Resource> roots, Model m, APISpec spec, List<Source> sources) {
-		StringBuilder clauses = new StringBuilder();
-		for (Resource root: roots)
-			clauses
-				.append( "  " )
-				.append( viewArgument.replaceAll( "\\?item", "<" + root.getURI() + ">" ) )
-				.append( "\n" )
-				;
-		StringBuilder query = new StringBuilder( clauses.length() * 2 + 17 );
-		appendPrefixes( query, spec.getPrefixMap() );
-		query
+		return viewByTemplate( m, roots, sources, spec.getPrefixMap() );
+	}
+
+	private String viewByTemplate(Model result, List<Resource> roots, List<Source> sources,	PrefixMapping pm) {
+		StringBuffer query = new StringBuffer()
 			.append( "CONSTRUCT {\n" )
-			.append( clauses )
-			.append( "} where {" )
-			.append( clauses )
-			.append( "}\n" )
-			;
+				.append( viewTemplate )
+				.append( "} where {\n" )
+				.append( "{ " ).append( viewTemplate ).append( " }\n" )
+				.append( itemsAsFilter( roots ) )
+				.append( "}\n" )
+				;
+//		List<String> parts = TemplateUtils.splitTemplate( viewTemplate );		
+//		StringBuilder constructClauses = new StringBuilder();		
+//		StringBuilder whereClauses = new StringBuilder();
+//		int nth = 0;
+//		String union = "";
+//		for (Resource root: new HashSet<Resource>( roots ) ) {
+//			nth += 1;
+//			String clause = makeVarsUnique( parts, root, nth );
+//			constructClauses.append( "  " ).append( clause ).append( "\n" );
+//			whereClauses
+//				.append( "  " ).append( union ).append( " { " ).append( clause )
+//				.append( " }").append( "\n" )
+//				;
+//			union = "UNION";
+//		}
+//		StringBuilder query = new StringBuilder( constructClauses.length() * 2 + 17 );
+//		appendPrefixes( query, pm );
+//		query
+//			.append( "CONSTRUCT {\n" )
+//			.append( constructClauses )
+//			.append( "} where {\n" )
+//			.append( whereClauses )
+//			.append( "}\n" )
+//			;
 		String qq = query.toString();
 		Query cq = QueryFactory.create( qq );
-		for (Source x: sources) m.add( x.executeConstruct( cq ) );		
+		for (Source x: sources) result.add( x.executeConstruct( cq ) );		
 		return qq;
 	}
+
+	private String itemsAsFilter( List<Resource> roots ) {
+		StringBuffer result = new StringBuffer();
+		String OR = "";
+		result.append( "FILTER(" );
+		for (Resource r: roots) {
+			result.append( OR );
+			result.append( "?item = <" ).append( r.getURI() ).append( ">" );
+			OR = " || ";
+		}
+		result.append( ")" );
+		return result.toString();
+	}
+
+//	private String makeVarsUnique( List<String> parts, Resource root, int nth ) {
+//		StringBuffer sb = new StringBuffer();
+//		String selected = SELECT_VAR.name();
+//		boolean variable = false;
+//		for (String part: parts) {
+//			sb.append( part );
+//			if (variable && !part.equals( selected )) sb.append( "_" + nth );
+//			variable = !variable;
+//		}
+//		return sb.toString();
+//	}
 
 	/**
 	    Answer the select query (if any; otherwise, "") and list of resources obtained by

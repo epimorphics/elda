@@ -43,6 +43,7 @@ public class HereSource extends SourceBase implements Source
             throw new APIException( "Illegal here endpoint: " + endpoint );
 		this.endpoint = endpoint;
 		model = ResourceUtils.reachableClosure( fullModel.createResource( endpoint ) );
+		model.setNsPrefixes( fullModel );
 		}
 	
 	/**
@@ -58,7 +59,7 @@ public class HereSource extends SourceBase implements Source
 
 	@Override public QueryExecution execute( Query query ) 
 		{
-        if (log.isInfoEnabled()) log.info("Creating query:\n" + query);
+        if (log.isInfoEnabled()) log.info("Creating query:\n" + query);    
         return QueryExecutionFactory.create( query, model );
 		}
 
