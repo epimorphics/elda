@@ -102,12 +102,15 @@ public class DOMUtils
 		Transformer t = getTransformer( times, rc, transformFilePath );
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );
 		t.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2" );
-		for (String name: rc.keySet()) 
-			{
+		for (String name: rc.keySet()) {
 			String value = rc.getValueString( name );
-			t.setParameter( name, value );
-			log.debug( "set xslt parameter " + name + " = " + value );
+			if (value == null) {
+				log.debug( "ignored null xslt parameter " + name );
+			} else {
+				t.setParameter( name, value );
+				log.debug( "set xslt parameter " + name + " = " + value );
 			}
+		}
 		String nsd = namespacesDocument( pm );
 		t.setParameter( "api:namespaces", nsd );
 		return t;
