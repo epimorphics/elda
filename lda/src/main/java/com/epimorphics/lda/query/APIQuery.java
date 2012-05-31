@@ -41,7 +41,6 @@ import com.epimorphics.lda.support.Times;
 
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
-import com.epimorphics.util.TemplateUtils;
 import com.hp.hpl.jena.graph.*;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
@@ -823,8 +822,11 @@ public class APIQuery implements VarSupply {
 		return viewByTemplate( m, roots, sources, spec.getPrefixMap() );
 	}
 
-	private String viewByTemplate(Model result, List<Resource> roots, List<Source> sources,	PrefixMapping pm) {
-		StringBuffer query = new StringBuffer()
+	private String viewByTemplate(Model result, List<Resource> roots, List<Source> sources,	PrefixMapping pm) {		
+		int estimatedSize = viewTemplate.length() * 2 + 30 + estimateRootsSize( roots );
+		StringBuilder query = new StringBuilder( estimatedSize );
+		appendPrefixes( query, pm );
+		query
 			.append( "CONSTRUCT {\n" )
 				.append( viewTemplate )
 				.append( "} where {\n" )
@@ -832,38 +834,20 @@ public class APIQuery implements VarSupply {
 				.append( itemsAsFilter( roots ) )
 				.append( "}\n" )
 				;
-//		List<String> parts = TemplateUtils.splitTemplate( viewTemplate );		
-//		StringBuilder constructClauses = new StringBuilder();		
-//		StringBuilder whereClauses = new StringBuilder();
-//		int nth = 0;
-//		String union = "";
-//		for (Resource root: new HashSet<Resource>( roots ) ) {
-//			nth += 1;
-//			String clause = makeVarsUnique( parts, root, nth );
-//			constructClauses.append( "  " ).append( clause ).append( "\n" );
-//			whereClauses
-//				.append( "  " ).append( union ).append( " { " ).append( clause )
-//				.append( " }").append( "\n" )
-//				;
-//			union = "UNION";
-//		}
-//		StringBuilder query = new StringBuilder( constructClauses.length() * 2 + 17 );
-//		appendPrefixes( query, pm );
-//		query
-//			.append( "CONSTRUCT {\n" )
-//			.append( constructClauses )
-//			.append( "} where {\n" )
-//			.append( whereClauses )
-//			.append( "}\n" )
-//			;
-		String qq = query.toString();
-		Query cq = QueryFactory.create( qq );
-		for (Source x: sources) result.add( x.executeConstruct( cq ) );		
-		return qq;
+		String resultQueryString = query.toString();
+		Query q = QueryFactory.create( resultQueryString );
+		for (Source x: sources) result.add( x.executeConstruct( q ) );		
+		return resultQueryString;
 	}
 
-	private String itemsAsFilter( List<Resource> roots ) {
-		StringBuffer result = new StringBuffer();
+	private int estimateRootsSize(List<Resource> roots) {
+		int result = 0;
+		for (Resource r: roots) result += r.getURI().length() + 14;
+		return result + 10;
+	}
+
+	private StringBuilder itemsAsFilter( List<Resource> roots ) {
+		StringBuilder result = new StringBuilder();
 		String OR = "";
 		result.append( "FILTER(" );
 		for (Resource r: roots) {
@@ -872,20 +856,8 @@ public class APIQuery implements VarSupply {
 			OR = " || ";
 		}
 		result.append( ")" );
-		return result.toString();
+		return result;
 	}
-
-//	private String makeVarsUnique( List<String> parts, Resource root, int nth ) {
-//		StringBuffer sb = new StringBuffer();
-//		String selected = SELECT_VAR.name();
-//		boolean variable = false;
-//		for (String part: parts) {
-//			sb.append( part );
-//			if (variable && !part.equals( selected )) sb.append( "_" + nth );
-//			variable = !variable;
-//		}
-//		return sb.toString();
-//	}
 
 	/**
 	    Answer the select query (if any; otherwise, "") and list of resources obtained by
