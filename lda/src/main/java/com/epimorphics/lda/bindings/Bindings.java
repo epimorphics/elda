@@ -55,12 +55,6 @@ public class Bindings implements Lookup
 	public Bindings( Bindings initial ) 
 		{ this( initial, initial.parameterNames, initial.ufr ); }
 	
-	public Bindings( Set<String> parameterNames ) 
-		{ 
-		this.ufr = URLforResource.alwaysFails;
-		this.parameterNames.addAll( parameterNames ); 
-		}
-	
 	public Bindings()
 		{ this.ufr = URLforResource.alwaysFails; }    
 	
@@ -124,13 +118,6 @@ public class Bindings implements Lookup
 	*/
 	public Set<String> parameterNames() 
 		{ return new HashSet<String>( parameterNames ); }
-		
-	/**
-	    Answer true iff there is a binding for the variable
-	    called <code>name</code> in this Bindings.
-	*/
-	public boolean hasVariable( String name ) 
-		{ return vars.containsKey( name ); }
 	
 	/**
 	    Answer the Value of the variable <code>name</code> in
@@ -194,17 +181,10 @@ public class Bindings implements Lookup
 		{ return "<bindings " + parameterNames + "|" + vars.toString() + ">"; }
 	
 	/**
-	    Answer true if <code>other</code> is an instance of Bindings,
-	    their maps have the same keys, and the post-evaluation value of
-	    the variables is the same.
+	    Compare this binding with the other one, forcing evaluations along
+	    the way.
 	*/
-	@Override public boolean equals( Object other )
-		{ return other instanceof Bindings && same( (Bindings) other ); }
-
-	/**
-	    The long way round, because it will force evaluation of {...} variables.
-	*/
-	private boolean same( Bindings other ) 
+	public boolean sameValuesAs( Bindings other ) 
 		{
 		Set<String> keys = vars.keySet();
 		if (!keys.equals( other.vars.keySet() )) 	return false;
@@ -212,12 +192,6 @@ public class Bindings implements Lookup
 			if (!get(key).equals( other.get(key) )) return false;
 		return true;
 		}
-	
-	/**
-	    Answer a suitable hashcode for this Bindings.
-	*/
-	@Override public int hashCode()
-		{ return vars.hashCode(); }
 	
 	private Value evaluate( String name, Value v, List<String> seen ) 
 		{

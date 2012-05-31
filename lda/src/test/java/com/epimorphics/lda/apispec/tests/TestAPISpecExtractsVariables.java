@@ -90,7 +90,7 @@ public class TestAPISpecExtractsVariables
 		APISpec s = SpecUtil.specFrom( root );
 		assertThat( s.getEndpoints(), IsNot.not( Matchers.isEmpty() ) );
 		for (APIEndpointSpec x: s.getEndpoints())
-			assertEquals( s.getBindings(), x.getBindings() );
+			assertEqualBindings( s.getBindings(), x.getBindings() );
 		}
 	
 	@Test public void ensureEndpointsAddVariables()
@@ -110,7 +110,7 @@ public class TestAPISpecExtractsVariables
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
 		APISpec s = SpecUtil.specFrom( root );
 		assertThat( s.getEndpoints(), IsNot.not( Matchers.isEmpty() ) );
-		assertEquals( binding("tom=17;fred='17';harry='x17y'"), s.getEndpoints().get(0).getBindings() );
+		assertEqualBindings( binding("tom=17;fred='17';harry='x17y'"), s.getEndpoints().get(0).getBindings() );
 		}
 	
 	public void testVariableExtraction( String expected, String spec ) 
@@ -118,9 +118,7 @@ public class TestAPISpecExtractsVariables
 		Model m = ModelIOUtils.modelFromTurtle( spec );
 		Resource root = m.createResource( m.expandPrefix( ":my" ) );
 		APISpec s = SpecUtil.specFrom( root );
-//		System.err.println( ">> expected: " + expected );
-//		System.err.println( ">> got:      " + s.getBindings() );
-		assertEquals( binding( expected ), s.getBindings() );
+		assertEqualBindings( binding( expected ), s.getBindings() );
 		}
 	
 	private Node term( String term )
@@ -151,4 +149,10 @@ public class TestAPISpecExtractsVariables
 				}
 		return result;
 		}
+	
+	protected void assertEqualBindings( Bindings expected, Bindings actual )
+		{
+		if (!expected.sameValuesAs( actual )) 
+			fail( "Expected bindings:\n" + expected + "\nbut got:\n" + actual + "\n" );
+		}	
 	}
