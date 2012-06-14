@@ -32,7 +32,7 @@ import com.hp.hpl.jena.vocabulary.XSD;
 
 public class RDFUtil {
 
-    public static final String RDFPlainLiteral = RDF.getURI() + "PlainLiteral";
+	public static final String RDFPlainLiteral = RDF.getURI() + "PlainLiteral";
 
     /**
      * Return one of the values of the property on the resource in string form.
@@ -97,8 +97,16 @@ public class RDFUtil {
         mean that we can't have a single shared constant -- it has mutable state.
     */
     protected static SimpleDateFormat dateFormat() {
-    	SimpleDateFormat df = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss 'GMT'Z");
-    	df.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
+    	return dateFormat(true);
+    }    
+
+    private static final SimpleDateFormat withTimezone = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss 'GMT'Z");
+    
+    private static final SimpleDateFormat withoutTimezone = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+    
+    protected static SimpleDateFormat dateFormat(boolean keepZone) {
+    	SimpleDateFormat df = (keepZone ? withTimezone : withoutTimezone);
+    	if (keepZone) df.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
     	return df;
     }
     
@@ -110,18 +118,24 @@ public class RDFUtil {
         Object val = l.getValue();
         if (val instanceof XSDDateTime) {
             Date date =  ((XSDDateTime)val).asCalendar().getTime();
-            return dateFormat().format(date);
+            return dateFormat(hasTimeZone(l.getLexicalForm())).format(date);
         } else {
             return null;
         }
     }
     
-    /**
+    static final Pattern matchTimeZone = Pattern.compile( "(Z|[-+]\\d\\d(\\d\\d|:\\d\\d)?)$" );
+    
+    private static boolean hasTimeZone(String lexicalForm) {
+		return matchTimeZone.matcher(lexicalForm).find();
+	}
+
+	/**
      * Convert an javascript date string to an xsd:datetime or xsd:date
      * @throws ParseException 
      */
     public static Literal parseDateTime(String lex, String type) throws ParseException {
-        Date date = dateFormat().parse(lex);
+        Date date = dateFormat(hasTimeZone(lex)).parse(lex);
         if (XSD.date.getURI().equals(type)) {
             return ResourceFactory.createTypedLiteral(xsdDateFormat().format(date), XSDDatatype.XSDdate);
         } else {
@@ -130,7 +144,8 @@ public class RDFUtil {
             Calendar cal  = Calendar.getInstance( TimeZone.getTimeZone("GMT") );
             cal.setTime(date);
             XSDDateTime dt = new XSDDateTime(cal);
-            return ResourceFactory.createTypedLiteral( dt );
+            Literal tl = ResourceFactory.createTypedLiteral( dt );
+			return tl;
         }
     }
     
@@ -139,6 +154,7 @@ public class RDFUtil {
      * Check whether a string looks like an (absolute) URI
      */
     private static final Pattern uriPattern = Pattern.compile("(mailto:|file:|https?://|ftp://|urn:)\\S+");
+    
     public static boolean looksLikeURI(String s) {
         return uriPattern.matcher(s).matches();
     }

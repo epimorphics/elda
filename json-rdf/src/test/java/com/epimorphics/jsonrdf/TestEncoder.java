@@ -43,6 +43,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.junit.*;
 import org.openjena.atlas.json.JsonArray;
@@ -53,6 +54,11 @@ import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.jsonrdf.utils.ModelCompareUtils;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.vocabs.API;
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
+import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
+import com.hp.hpl.jena.datatypes.xsd.impl.XSDDateTimeType;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -90,7 +96,6 @@ public class TestEncoder {
             enc.encode(src, roots, writer);
         }
         String written = writer.toString();
-        // System.out.println( ">> wrote encoding:\n" + written );
 		Reader reader = new StringReader( written );
         
         List<Resource> results = Decoder.decode(reader);
@@ -368,6 +373,26 @@ public class TestEncoder {
                 Encoder.get(),
                 new String[]{":r"}, 
                 "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'Mon, 31 May 1999 02:09:32 GMT+0000'}]" );
+    }
+
+    /**
+        Test that a datetime with no timezone IN THE LEXICAL FORM renders without a timezone
+        in the JSON. We can't run this as a roundtrip; the resource in the generated model
+        always ends up with a timezone.
+    */
+    @Test public void testZonelessDateLiterals() throws IOException {
+    	String srcTTL = ":r :p '1999-05-31T02:09:32'^^xsd:dateTime.";
+    	Encoder enc = Encoder.get();
+    	String [] roots = new String[]{":r"};
+    	String expectedEncoding = "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'Mon, 31 May 1999 02:09:32'}]";
+        Model src = modelFromTurtle(srcTTL);
+		List<Resource> roots1 = modelRoots(roots, src);
+		StringWriter writer = new StringWriter();
+		enc.encode(src, roots1, writer);
+        String encoding = writer.toString();
+        JsonArray actual = parseJSON(encoding).get(EncoderDefault.PNContent).getAsArray();
+        JsonArray expected = ParseWrapper.stringToJsonArray(expectedEncoding);
+        assertEquals(expected, actual);
     }
     
     @Test public void testWholeModels() throws IOException, JsonException {
