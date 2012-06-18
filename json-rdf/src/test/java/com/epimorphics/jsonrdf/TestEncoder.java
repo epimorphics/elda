@@ -368,17 +368,24 @@ public class TestEncoder {
     	return Encoder.get( Encoder.defaultPlugin, new Context(ontology) );
 	}
 
-    @Test public void testDateLiterals() throws IOException {
+    @Test public void testDateLiteral() throws IOException {
         testEncoding(":r :p '1999-05-31T02:09:32Z'^^xsd:dateTime.", 
                 Encoder.get(),
                 new String[]{":r"}, 
                 "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'Mon, 31 May 1999 02:09:32 GMT+0000'}]" );
     }
 
+    @Test public void testUnzonedDateLiteral() throws IOException {
+        testEncoding(":r :p '1999-05-31T02:09:32'^^xsd:dateTime.", 
+                Encoder.get(),
+                new String[]{":r"}, 
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'Mon, 31 May 1999 02:09:32'}]" );
+    }
+
     /**
         Test that a datetime with no timezone IN THE LEXICAL FORM renders without a timezone
-        in the JSON. We can't run this as a roundtrip; the resource in the generated model
-        always ends up with a timezone.
+        in the JSON. (This test pre-dates getting the timezone right for the round-trip
+        test above.)
     */
     @Test public void testZonelessDateLiterals() throws IOException {
     	String srcTTL = ":r :p '1999-05-31T02:09:32'^^xsd:dateTime.";

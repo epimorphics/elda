@@ -39,11 +39,29 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
+import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.XSD;
 
 public class TestDateTime {
+	
+//	@Test public void testNoTimeZone() {
+//		Literal l = ResourceFactory.createTypedLiteral("1999-05-31T02:09:32", XSDDatatype.XSDdateTime);
+//		System.err.println( ">> " + l );
+//		XSDDateTime t = (XSDDateTime) l.getValue();
+//		System.err.println( ">> " + t );
+//		// EEE, d MMM yyyy HH:mm:ss 'GMT'Z
+//		System.err.println( ">> " + t.getDays() );
+//		System.err.println( ">> " + t.getFullSeconds() );
+//		System.err.println( ">> " + t.getHours() );
+//		System.err.println( ">> " + t.getMinutes() );
+//		System.err.println( ">> " + t.getMonths() );
+//		System.err.println( ">> " + t.getSeconds() );
+//		System.err.println( ">> " + t.getYears() );
+//		t.
+//		
+//	}
 
     @Test public void testBasicSerialization() {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31T02:09:32Z", XSDDatatype.XSDdateTime);

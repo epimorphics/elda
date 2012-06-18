@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
+import com.hp.hpl.jena.datatypes.xsd.impl.XSDDateTimeType;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -99,13 +100,9 @@ public class RDFUtil {
     protected static SimpleDateFormat dateFormat() {
     	return dateFormat(true);
     }    
-
-    private static final SimpleDateFormat withTimezone = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss 'GMT'Z");
-    
-    private static final SimpleDateFormat withoutTimezone = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
     
     protected static SimpleDateFormat dateFormat(boolean keepZone) {
-    	SimpleDateFormat df = (keepZone ? withTimezone : withoutTimezone);
+    	SimpleDateFormat df = (keepZone ? new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss 'GMT'Z") : new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"));
     	if (keepZone) df.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
     	return df;
     }
@@ -131,24 +128,31 @@ public class RDFUtil {
 	}
 
 	/**
-     * Convert an javascript date string to an xsd:datetime or xsd:date
-     * @throws ParseException 
-     */
+     	Convert an javascript date string to an xsd:datetime or xsd:date.
+     	Dancing around to ensure that we can construct zoneless times
+     	(going via Date forcibly introduces a timezone, which we eliminate by
+     	turning it into an xsd:dateTime lexical form).
+     	@throws ParseException 
+    */
     public static Literal parseDateTime(String lex, String type) throws ParseException {
-        Date date = dateFormat(hasTimeZone(lex)).parse(lex);
+        boolean hasTimeZone = hasTimeZone(lex);
+		Date date = dateFormat(hasTimeZone).parse(lex);
         if (XSD.date.getURI().equals(type)) {
             return ResourceFactory.createTypedLiteral(xsdDateFormat().format(date), XSDDatatype.XSDdate);
         } else {
-            // Default to dateTime
-            // Note this loses time zone info, don't know how get parser to extract that
-            Calendar cal  = Calendar.getInstance( TimeZone.getTimeZone("GMT") );
-            cal.setTime(date);
-            XSDDateTime dt = new XSDDateTime(cal);
-            Literal tl = ResourceFactory.createTypedLiteral( dt );
-			return tl;
+        	if (hasTimeZone) {
+        		Calendar cal  = Calendar.getInstance( TimeZone.getTimeZone("GMT") );
+        		cal.setTime(date);
+        		XSDDateTime dt = new XSDDateTime(cal);
+        		return ResourceFactory.createTypedLiteral( dt );        		
+        	} else {
+        		SimpleDateFormat f = new SimpleDateFormat( "yyyy-MM-dd'T'hh:mm:ss" );
+        		String lf = f.format(date);
+				Literal l = ResourceFactory.createTypedLiteral( lf, XSDDatatype.XSDdateTime );
+				return l;
+        	}
         }
     }
-    
     
     /**
      * Check whether a string looks like an (absolute) URI
