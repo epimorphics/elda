@@ -7,6 +7,25 @@
   UNSUPPORTED dynamic configuration interface, which has now
   been removed.)
 
+* JSON rendering of zoneless dateTime literals does not have
+  a time zone (despite what the LDA spec specifies).
+
+* clean up APITester to use DefaultRouter.
+
+* Drop use of APIQuery::clone().
+
+* Edubase RDF fragment moved into test rather than main to
+  reduce size of non-test jar.
+
+* Unregistering uri templates now correctly unregisters
+  the inverse item-template redirection.
+
+* By default, the reserved parameter name `_` is permitted
+  (and ignored) (used in some JSONP enquiries).
+
+* Deployment restlets removed. They were there only as 
+  legacy code and allowed unprotected updates to configurations.
+
 1.2.12
 
 * Elda can now generate etags on contentful responses. It can be
