@@ -4,13 +4,13 @@
   <parent>
     <artifactId>lda-top</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.2.13-SNAPSHOT</version>
+    <version>1.2.13</version>
   </parent>
 
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>lda</artifactId>
   <name>lda</name>  
-  <version> 1.2.13-SNAPSHOT</version>
+  <version> 1.2.13</version>
 
   <url>http://maven.apache.org</url>
 
