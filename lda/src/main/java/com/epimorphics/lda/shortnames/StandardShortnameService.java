@@ -18,6 +18,7 @@
 package com.epimorphics.lda.shortnames;
 import static com.epimorphics.util.RDFUtils.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,6 +58,8 @@ public class StandardShortnameService implements ShortnameService {
         context = new Context();
         Set<String> seen = new HashSet<String>();
     //
+        // context.loadVocabularyAnnotations( seen, reservedModel() );
+        
         context.loadVocabularyAnnotations( seen, specModel );
         extractDatatypes( specModel );
         nameMap.load( pm, specModel );
@@ -70,7 +73,22 @@ public class StandardShortnameService implements ShortnameService {
         }
     }
     
-    private void extractDatatypes( Model m ) {
+    private Model reservedModel() {
+		Model result = ModelFactory.createDefaultModel();
+		for (Resource reserved: allReservedResouces()) {
+			result.add( reserved, API.name, reserved.getLocalName() );
+			result.add( reserved, RDF.type, RDF.Property );
+		}
+		return result;
+	}
+
+	private List<Resource> allReservedResouces() {
+		List<Resource> result = new ArrayList<Resource>();
+		for (String r: "result item items".split( " " )) result.add( ResourceFactory.createResource( API.NS + r ) );
+		return result;
+	}
+
+	private void extractDatatypes( Model m ) {
 	    List<Resource> dataTypes = m.listStatements( null, RDF.type, RDFS.Datatype ).mapWith( Statement.Util.getSubject ).toList();
 		for (Resource t: dataTypes) declareDatatype( t.getURI() );
 		for (Resource p: m.listSubjectsWithProperty( RDF.type, OWL.DatatypeProperty ).toList()) {
