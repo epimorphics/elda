@@ -8,6 +8,7 @@ package com.epimorphics.lda.core;
 
 import java.net.URI;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.epimorphics.lda.bindings.Bindings;
@@ -17,7 +18,6 @@ import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.NameMap.Stage2NameMap;
 import com.epimorphics.lda.specs.APISpec;
-import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.vocabularies.ELDA;
 import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.util.URIUtils;
@@ -125,15 +125,11 @@ public class EndpointMetadata {
 
 	public void addTermBindings( Model toScan, Model meta, Resource exec, NameMap nm ) {
 		Stage2NameMap s2 = nm.stage2(false).load( toScan, toScan );
-		MultiMap<String, String> mm = s2.result();
+		Map<String, String> mm = s2.result();
 		for (String uri: mm.keySet()) {
 			Resource term = meta.createResource( uri );
 			if (toScan.containsResource( term )) {
-				Set<String> shorties = mm.getAll( uri );
-				String shorty = shorties.iterator().next();
-				if (shorties.size() > 1) {
-					APIEndpointImpl.log.warn( "URI <" + uri + "> has several short names, viz: " + shorties + "; picked " + shorty );
-				}
+				String shorty = mm.get( uri );
 	    		Resource tb = meta.createResource();
 	    		exec.addProperty( API.termBinding, tb );
 				tb.addProperty( API.label, shorty );

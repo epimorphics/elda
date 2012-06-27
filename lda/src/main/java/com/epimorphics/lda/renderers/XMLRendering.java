@@ -18,7 +18,6 @@ import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.CycleFinder;
-import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.vocabs.API;
 
 /**
@@ -89,7 +88,7 @@ public class XMLRendering {
 	
 	private final Document d;
 	private final ShortnameService sns;
-	private final MultiMap<String, String> nameMap;
+	private final Map<String, String> nameMap;
 	private final boolean suppressIPTO;
 	
 	private Resource itemsResource = null;
@@ -225,7 +224,7 @@ public class XMLRendering {
 		List<Property> properties = new ArrayList<Property>( set );
 		Collections.sort( properties, new Comparator<Property>() {
             @Override public int compare(Property a, Property b) {
-                return nameMap.getOne( a.getURI() ).compareTo( nameMap.getOne( b.getURI() ) );
+                return nameMap.get( a.getURI() ).compareTo( nameMap.get( b.getURI() ) );
             }
         	} );
 		return properties;
@@ -249,7 +248,7 @@ public class XMLRendering {
 	}
 
 	private String resourceSpelling( Resource r ) {
-		String shorter = nameMap.getOne( r.getURI() );
+		String shorter = nameMap.get( r.getURI() );
 		return shorter == null ? r.getLocalName() : shorter;
 	}
 
@@ -303,7 +302,7 @@ public class XMLRendering {
 	}
 	
 	private String shortNameFor( String URI ) {
-		return nameMap.getOne( URI );
+		return nameMap.get( URI );
 	}
 
 	final Map<AnonId, String> idMap = new HashMap<AnonId, String>();

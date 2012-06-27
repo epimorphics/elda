@@ -65,9 +65,8 @@ public class NameMap {
 	}
 
 	private void load(PrefixMapping pm, Statement s) {
-		Resource r = s.getSubject();
-		String name = asString( s.getObject() );
-		map.add( r.getURI(), name );
+		Resource S = s.getSubject();
+		if (S.isURIResource()) map.add( S.getURI(), asString( s.getObject() ) );
 	}
 	
 	/**
@@ -148,42 +147,54 @@ public class NameMap {
 		}
 
 		/**
-		    Answer a map from full URIs to sets of short names. The sets
-		    will always be singletons. If a URI already has a short name,
-		    that's what will be used. URIs that don't yet have one will
-		    be given their local name if it's unambiguous, or their prefixed
-		    local name if needed to disambiguate.
+		    Answer a map from full URIs to the corresponding short names.
+		    If a URI already has a short name, that's what will be used. 
+		    URIs that don't yet have one will be given their local name if 
+		    it's unambiguous, or their prefixed local name if needed to 
+		    disambiguate.
 		    
 		    TODO: deal with labels with bad syntax.
 		*/
-		public MultiMap<String, String> result() {
-			Map<String, Set<String>> shorts = new HashMap<String, Set<String>>();
-			Set<String> already = new HashSet<String>();
+		public Map<String, String> result() {
+			Map<String, Set<String>> shortnameToURIs = new HashMap<String, Set<String>>();
+			Set<String> usedShortNames = new HashSet<String>();
+			for (String uri: uriToName.keySet()) {
+				addAnother( shortnameToURIs, uri, uriToName.getAll(uri) );
+				usedShortNames.addAll( uriToName.getAll( uri ) );
+			}
 			for (String p: terms) {
 				String givenShort = uriToName.getOne( p );
-				if (givenShort == null) {
-					String local = NsUtils.getLocalName(p);
-					Set<String> ps = shorts.get(local);
-					if (ps == null) shorts.put( local, ps = new HashSet<String>() );
-					ps.add( p );
-				} else {
-					already.add( givenShort );
-				}
+				if (givenShort == null) addURIforShortname( shortnameToURIs, NsUtils.getLocalName(p), p );
 			}
-			for (String shortName: shorts.keySet()) {
-				Set<String> ps = shorts.get(shortName);
-				if (already.contains( shortName ) || ps.size() > 1) {
-					for (String uri: ps) 
-						uriToName.add( uri, prefixFor( NsUtils.getNameSpace(uri) ) + t(shortName) );
-				} else {
-					uriToName.add( ps.iterator().next(), t(shortName) );
-				}
+		//
+			Map<String, String> result = new HashMap<String, String>();
+			for (String shortName: shortnameToURIs.keySet()) {
+				Set<String> uris = shortnameToURIs.get(shortName);	
+				if (uris.size() == 1 && !usedShortNames.contains( shortName ))
+					result.put( uris.iterator().next(), stripHas(shortName) );
+				else
+					for (String uri: uris)
+						result.put( uri, prefixFor( NsUtils.getNameSpace(uri) ) + stripHas(shortName) );
 			}
-			return uriToName;
+			return result;
+		}
+
+		private void addURIforShortname(Map<String, Set<String>> shortnameToURIs, String shortName, String uri) {
+			Set<String> already = shortnameToURIs.get(shortName);
+			if (already == null) shortnameToURIs.put(shortName, already = new HashSet<String>() );
+			already.add(uri);
+		}
+
+		private void addAnother(Map<String, Set<String>> shortnameToURIs, String uri, Set<String> shortNames) {			
+			for (String sn: shortNames) {
+				Set<String> already = shortnameToURIs.get(sn);
+				if (already == null) shortnameToURIs.put(sn, already = new HashSet<String>() );
+				already.add(uri);				
+			}
 		}
 
 		// compatability (with Puelia) code to handle has-stripping
-		private String t(String x) {
+		private String stripHas(String x) {
 			if (stripHas && x.startsWith("has") && x.length() > 3) {
 				char ch = x.charAt(3);
 				if (Character.isUpperCase(ch))

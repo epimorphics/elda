@@ -37,10 +37,19 @@ public class TestShortNames {
 //		assertEquals( "p_other", mm.getOne( "http://example.com/ns#other" ) );
 //	}
 	
-	@Test public void ensure_sensitive_result_is_converted() {
-		Model m = ModelIOUtils.modelFromTurtle( "<eh:/A> <eh:/result> <eh:/C>." );
-		Resource root = m.createResource( "eh:/root" ).addProperty( EXTRAS.forcePrefix, "result" );
-		Renderer r = new XMLRenderer( new SNS( "" ), root );
+	@Test public void ensure_sensitive_result_without_prefix_is_converted() {
+		Model m = ModelIOUtils.modelFromTurtle( "<eh:/A> <http://example.com/result> <eh:/C>." );
+		ensure_result_converted("<none_result ", m);
+	}
+	
+	@Test public void ensure_sensitive_result_with_prefix_is_converted() {
+		Model m = ModelIOUtils.modelFromTurtle( "<eh:/A> <http://example.com/result> <eh:/C>." );
+		m.setNsPrefix( "my", "http://example.com/" );
+		ensure_result_converted("<my_result ", m);
+	}
+
+	private void ensure_result_converted(String expectContains, Model m) {
+		Renderer r = new XMLRenderer( new SNS( "" ) );
 	//
 		Times t = new Times();
 		Resource rx = m.createResource( "eh:/A" );
@@ -50,7 +59,7 @@ public class TestShortNames {
 		Renderer.BytesOut bo = r.render(t, new Bindings(), rs);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		bo.writeAll(t, bos);
-		assertContains( "<none_result ", bos.toString() );
+		assertContains( expectContains, bos.toString() );
 	}
 
 	private void assertContains(String sub, String subject) {

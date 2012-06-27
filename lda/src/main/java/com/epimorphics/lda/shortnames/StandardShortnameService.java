@@ -58,10 +58,12 @@ public class StandardShortnameService implements ShortnameService {
         context = new Context();
         Set<String> seen = new HashSet<String>();
     //
-        // context.loadVocabularyAnnotations( seen, reservedModel() );
-        
+        Model rp = reservedProperties;
+		context.loadVocabularyAnnotations( seen, rp );
         context.loadVocabularyAnnotations( seen, specModel );
+    //
         extractDatatypes( specModel );
+        nameMap.load( pm, rp );
         nameMap.load( pm, specModel );
     //
         for (NodeIterator i = specModel.listObjectsOfProperty(specRoot, API.vocabulary); i.hasNext();) {
@@ -73,16 +75,18 @@ public class StandardShortnameService implements ShortnameService {
         }
     }
     
-    private Model reservedModel() {
+    private static final Model reservedProperties = createReservedModel();
+    
+    private static Model createReservedModel() {
 		Model result = ModelFactory.createDefaultModel();
 		for (Resource reserved: allReservedResouces()) {
-			result.add( reserved, API.name, reserved.getLocalName() );
+			result.add( reserved, API.label, reserved.getLocalName() );
 			result.add( reserved, RDF.type, RDF.Property );
 		}
 		return result;
 	}
 
-	private List<Resource> allReservedResouces() {
+	private static List<Resource> allReservedResouces() {
 		List<Resource> result = new ArrayList<Resource>();
 		for (String r: "result item items".split( " " )) result.add( ResourceFactory.createResource( API.NS + r ) );
 		return result;
