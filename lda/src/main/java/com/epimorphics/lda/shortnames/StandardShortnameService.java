@@ -18,7 +18,6 @@
 package com.epimorphics.lda.shortnames;
 import static com.epimorphics.util.RDFUtils.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,6 +26,7 @@ import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.UnknownShortnameException;
+import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -58,7 +58,7 @@ public class StandardShortnameService implements ShortnameService {
         context = new Context();
         Set<String> seen = new HashSet<String>();
     //
-        Model rp = reservedProperties;
+        Model rp = getAnyReservedProperties( specRoot );
 		context.loadVocabularyAnnotations( seen, rp );
         context.loadVocabularyAnnotations( seen, specModel );
     //
@@ -74,25 +74,17 @@ public class StandardShortnameService implements ShortnameService {
             context.loadVocabularyAnnotations( seen, vocab, prefixes);
         }
     }
-    
-    private static final Model reservedProperties = createReservedModel();
-    
-    private static Model createReservedModel() {
-		Model result = ModelFactory.createDefaultModel();
-		for (Resource reserved: allReservedResouces()) {
-			result.add( reserved, API.label, reserved.getLocalName() );
-			result.add( reserved, RDF.type, RDF.Property );
-		}
-		return result;
-	}
 
-	private static List<Resource> allReservedResouces() {
-		List<Resource> result = new ArrayList<Resource>();
-		for (String r: "result item items".split( " " )) result.add( ResourceFactory.createResource( API.NS + r ) );
-		return result;
+    /**
+        Answer a model containing the reserved properties (result, etc) as
+        shortname declarations in a model, or an empty model if the legacy
+        compatability property is set on the spec.
+    */
+	private Model getAnyReservedProperties( Resource root ) {
+		return root.hasLiteral( EXTRAS.allowSyntaxProperties, true ) ? emptyModel : Reserved.reservedProperties;
 	}
-
-	private void extractDatatypes( Model m ) {
+    
+    private void extractDatatypes( Model m ) {
 	    List<Resource> dataTypes = m.listStatements( null, RDF.type, RDFS.Datatype ).mapWith( Statement.Util.getSubject ).toList();
 		for (Resource t: dataTypes) declareDatatype( t.getURI() );
 		for (Resource p: m.listSubjectsWithProperty( RDF.type, OWL.DatatypeProperty ).toList()) {

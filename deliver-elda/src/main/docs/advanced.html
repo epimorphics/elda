@@ -168,6 +168,31 @@ Elda accepts the following content types by default.
     to one endpoint affect only that endpoint. 
 </p>
 
+<h2>elda:allowSyntaxProperties</h2>
+
+<b>temporary</b>: will be removed.
+
+<p>
+In Elda 1.2.14, the property shortnames <i>result</i>,
+<i>item</i>, and <i>items</i> became reserved because
+of their syntactic significance in the XML rendering
+and manipulation by the standard XSLT stylesheet.
+Their reservation is accomplished by predefined
+shortname declarations. 
+</p>
+
+<p>
+If it is important that this reservation be avoided
+while configurations are being changed, the property
+<code>elda:allowSyntaxProperties</code> of the API
+may be given the value <b>true</b>.
+</p>
+
+<p>
+The property will be withdrawn in some later version
+of Elda no earlier than 1.2.16.
+</p>
+
 <h2>etag generation</h2>
 
 <b>Experimental</b>: may be revised or removed.

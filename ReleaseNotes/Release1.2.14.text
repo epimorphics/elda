@@ -1,0 +1,12 @@
+Release 1.2.14
+
+In this release of Elda, the property shortnames `result`, `item`, and
+`items` have become reserved, to prevent ambiguities in the XML and
+XSLT renderers.
+
+Attaching the property elda:allowSyntaxProperties with value true to
+the config API resource will disable the reservation but may cause
+problems with XSLT rendering; this special configuration property is
+intended to make the transition to the reserved state easier and will
+be withdrawn in a later version of Elda.
+

@@ -6,12 +6,6 @@
     $Id$
 */
 
-/*
-	(c) Copyright 2010 Epimorphics Limited
-	[see end of file]
-	$Id$
-*/
-
 package com.epimorphics.lda.vocabularies;
 
 import com.hp.hpl.jena.rdf.model.*;
@@ -60,6 +54,8 @@ public class EXTRAS
 	public static final Property describeThreshold = property( "describeThreshold" );
 	
 	public static final Property allowReserved = property( "allowReserved" );
+
+	public static final Property allowSyntaxProperties = property( "allowSyntaxProperties" );
     
     private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }
