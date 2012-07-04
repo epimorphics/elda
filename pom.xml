@@ -212,7 +212,7 @@
     <module>json-rdf</module>
     <module>lda</module>
     <module>deliver-elda</module>
-
+    <module>elda-system-tests</module>
     <module>elda-testing-webapp</module>
   </modules>
 

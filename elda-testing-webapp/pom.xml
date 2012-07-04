@@ -10,7 +10,7 @@
   <artifactId>elda-testing-webapp</artifactId>
   <packaging>war</packaging>
   <name>elda-testing-webapp</name>
-  <version> 1.2.14-SNAPSHOT</version>
+  <version>1.2.14-SNAPSHOT</version>
   <description>webapp for Elda system tests</description>
 
   <dependencies>

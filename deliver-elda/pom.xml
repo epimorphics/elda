@@ -10,7 +10,7 @@
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda-standalone</artifactId>
   <packaging>war</packaging>
-  <name>elda</name>
+  <name>elda-standalone</name>
   <version> 1.2.14-SNAPSHOT</version>
   <description>instant Elda webapp</description>
 
