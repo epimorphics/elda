@@ -1,3 +1,17 @@
+1.2.14
+
+* Pages constructed by Util.withBody now embed the styles
+  directly rather than as a css file [because of difficulties
+  making sure that file is served with the correct name].
+
+* changed some artifact names [not ids] in the POMs to make
+  the build processes easier, eg not thaving several things
+  all called 'elda'.
+
+* Got rid of a duff reference to 1.2.6-SBAPSHOT.
+
+* result/item/items are all now reserved shortnames.
+
 1.2.13
 
 * Unquote numeric size values in examples. 
