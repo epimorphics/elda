@@ -8,7 +8,7 @@
   the build processes easier, eg not thaving several things
   all called 'elda'.
 
-* Got rid of a duff reference to 1.2.6-SNAPSHOT.
+* Got rid of a duff reference to Elda 1.2.6-SNAPSHOT.
 
 * result/item/items are all now reserved shortnames.
 
