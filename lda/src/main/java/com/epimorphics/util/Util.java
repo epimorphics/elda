@@ -16,8 +16,11 @@ import com.hp.hpl.jena.util.FileManager;
 
 public class Util
     {   
-	protected static String htmlWrapper = readResource( "textlike/html-wrapper.html" );
-    
+	
+	protected static final String style = readResource( "textlike/style.css" );
+	
+	protected static final String htmlWrapper = readResource( "textlike/html-wrapper.html" );
+    	
     public static String readResource( String path )
         {
         InputStream in = Util.class.getClassLoader().getResourceAsStream( path );
@@ -36,6 +39,7 @@ public class Util
         {
         return htmlWrapper
             .replace( "{$title}", title )
+            .replace( "{$style}", "<style>\n" + style + "</style>\n" )
             .replace( "{$body}", body )
             ;
         }	    
