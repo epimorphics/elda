@@ -34,6 +34,12 @@ syntax: regexp
 ^deliver-elda/target
 
 syntax: regexp
+^.*/\.tomcatplugin$
+^.*/\.#webclasspath$
+^.*/SESSIONS.ser$
+
+
+syntax: regexp
 ^deliver-elda/src/main/webapp/log4j\.properties$
 syntax: regexp
 ^deliver-elda/elda-0\.9\.7\.jar$
