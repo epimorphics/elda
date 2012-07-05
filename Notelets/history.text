@@ -1,5 +1,17 @@
 1.2.14
 
+* Revisions to the standard stylesheets.
+
+  These versions fix a bug when using the 'inspector' 
+  icon on the summary map where the subject items or 
+  primaryTopic item are the things that directly carry the 
+  point coordinates.
+
+  Previous versions worked in the case where it was 
+  a related thing eg. a sampling point, that carried the 
+  position information for an item eg. a bathing water, 
+  but not directly for the sampling points themselves.
+
 * Pages constructed by Util.withBody now embed the styles
   directly rather than as a css file [because of difficulties
   making sure that file is served with the correct name].

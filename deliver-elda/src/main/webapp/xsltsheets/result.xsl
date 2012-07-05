@@ -162,8 +162,23 @@ $prefLabel, $altLabel, $title and $name variables.
 				<xsl:variable name="mapParam">
 					<xsl:apply-templates select="$mapProperty" mode="paramHierarchy" />
 				</xsl:variable>
-				<xsl:variable name="eastingParam" select="concat($mapParam, '.', $easting)" />
-				<xsl:variable name="northingParam" select="concat($mapParam, '.', $northing)" />
+				<!-- skw --> 
+                <xsl:variable name="eastingParam">
+                    <xsl:choose>
+                        <xsl:when test="$mapParam=''"><xsl:value-of select="$easting"/></xsl:when>
+                        <xsl:otherwise><xsl:value-of select="concat($mapParam, '.', $easting)"/></xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:variable name="northingParam">
+                    <xsl:choose>
+                        <xsl:when test="$mapParam=''"><xsl:value-of select="$northing"/></xsl:when>
+                        <xsl:otherwise><xsl:value-of select="concat($mapParam, '.', $northing)"/></xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+                <!-- skw
+                <xsl:variable name="eastingParam" select="concat($mapParam, '.', $easting)" />
+                <xsl:variable name="northingParam" select="concat($mapParam, '.', $northing)" />
+                -->
 				<xsl:variable name="properties">
 					<xsl:if test="not(/result/items)">_properties=<xsl:value-of select="$eastingParam"/>,<xsl:value-of select="$northingParam"/>&amp;</xsl:if>
 				</xsl:variable>
@@ -1735,14 +1750,29 @@ $prefLabel, $altLabel, $title and $name variables.
 	</xsl:if>
 </xsl:template>
 
+<!-- skw replacement below
 <xsl:template match="*" mode="paramHierarchy">
-	<xsl:if test="not(parent::item/parent::items/parent::result or parent::primaryTopic/parent::result)">
-		<xsl:apply-templates select="parent::*" mode="paramHierarchy" />
-		<xsl:if test="not(self::item)">.</xsl:if>
-	</xsl:if>
-	<xsl:if test="not(self::item)">
-		<xsl:value-of select="name(.)" />
-	</xsl:if>
+    <xsl:if test="not(parent::item/parent::items/parent::result or parent::primaryTopic/parent::result)">
+        <xsl:apply-templates select="parent::*" mode="paramHierarchy" />
+        <xsl:if test="not(self::item)">.</xsl:if>
+    </xsl:if>
+    <xsl:if test="not(self::item)">
+        <xsl:value-of select="name(.)" />
+    </xsl:if>
+</xsl:template>
+-->
+
+<xsl:template match="*" mode="paramHierarchy">
+    <xsl:if test="not(self::item/parent::items/parent::result or self::primaryTopic/parent::result)">
+        <xsl:apply-templates select="parent::*" mode="paramHierarchy" />
+        <xsl:if test="not(parent::item or parent::primaryTopic)">.</xsl:if>       
+        <!-- 
+        <xsl:if test="not(self::item)">.</xsl:if>
+        -->
+    </xsl:if>
+    <xsl:if test="not(self::item or self::primaryTopic)">
+        <xsl:value-of select="name(.)" />
+    </xsl:if>
 </xsl:template>
 
 <xsl:template match="*" mode="paramName">
