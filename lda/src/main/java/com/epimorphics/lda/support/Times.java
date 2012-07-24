@@ -30,6 +30,7 @@ public class Times {
 	public Times( String forPath ) {
 		this.forPath = forPath;
 		this.startTime = System.currentTimeMillis();
+		this.endTime = this.startTime;
 	}
 	
 	public Times() {
@@ -71,7 +72,7 @@ public class Times {
 	}
 
 	public long totalTime() {
-		return  endTime - startTime;
+		return endTime - startTime;
 	}
 
 	public long selectionDuration() {

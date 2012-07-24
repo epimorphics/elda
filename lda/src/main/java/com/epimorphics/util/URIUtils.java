@@ -81,15 +81,17 @@ public class URIUtils {
 		return newSuffix.equals("") ? oldPath : oldPath + "." + newSuffix;
 	}
 
+	// TODO issue with URI not handling illegally unescaped [] when unescaping
 	public static URI changeFormatSuffix(URI reqURI, Set<String> knownFormats, String formatName)  {
 		try {
-			return new URI
+			URI result = new URI
 				( reqURI.getScheme()
 				, reqURI.getAuthority()
 				, replaceSuffix( knownFormats, formatName, reqURI.getPath() )
 				, reqURI.getQuery()
 				, reqURI.getFragment() 
 				);
+			return result;
 		} catch  (URISyntaxException e) {
 			throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e );
 		}

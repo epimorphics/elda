@@ -157,11 +157,12 @@ public class NameMap {
 		*/
 		public Map<String, String> result() {
 			Map<String, Set<String>> shortnameToURIs = new HashMap<String, Set<String>>();
-			Set<String> usedShortNames = new HashSet<String>();
+			Map<String, Set<String>> predefinedShortNames = new HashMap<String, Set<String>>();
 			for (String uri: uriToName.keySet()) {
 				addAnother( shortnameToURIs, uri, uriToName.getAll(uri) );
-				usedShortNames.addAll( uriToName.getAll( uri ) );
+				addPredefined( uriToName, predefinedShortNames, uri );
 			}
+			
 			for (String p: terms) {
 				String givenShort = uriToName.getOne( p );
 				if (givenShort == null) addURIforShortname( shortnameToURIs, NsUtils.getLocalName(p), p );
@@ -170,19 +171,26 @@ public class NameMap {
 			Map<String, String> result = new HashMap<String, String>();
 			for (String shortName: shortnameToURIs.keySet()) {
 				Set<String> uris = shortnameToURIs.get(shortName);	
-				if (uris.size() == 1 && !usedShortNames.contains( shortName ))
-					result.put( uris.iterator().next(), stripHas(shortName) );
-				else
+				String it = uris.iterator().next();
+				// if this is a declared shortname, then go with it, otherwise prefix it
+				Set<String> fullNames = predefinedShortNames.get( shortName );
+				if (uris.size() == 1 && (fullNames == null || fullNames.contains( it )))
+					result.put( it, stripHas(shortName) );
+				else {
 					for (String uri: uris)
 						result.put( uri, prefixFor( NsUtils.getNameSpace(uri) ) + stripHas(shortName) );
+				}
 			}
 			return result;
 		}
 
-		private void addURIforShortname(Map<String, Set<String>> shortnameToURIs, String shortName, String uri) {
-			Set<String> already = shortnameToURIs.get(shortName);
-			if (already == null) shortnameToURIs.put(shortName, already = new HashSet<String>() );
-			already.add(uri);
+		// add mappings to predefined short name
+		private void addPredefined( MultiMap<String, String> uriToName,	Map<String, Set<String>> predefinedShortNames, String uri) {
+			for (String shortName: uriToName.getAll( uri )) {
+				Set <String> already = predefinedShortNames.get( shortName );
+				if (already == null) predefinedShortNames.put( shortName, already = new HashSet<String>() );
+				already.add( uri );
+			}
 		}
 
 		private void addAnother(Map<String, Set<String>> shortnameToURIs, String uri, Set<String> shortNames) {			
@@ -191,6 +199,12 @@ public class NameMap {
 				if (already == null) shortnameToURIs.put(sn, already = new HashSet<String>() );
 				already.add(uri);				
 			}
+		}
+
+		private void addURIforShortname(Map<String, Set<String>> shortnameToURIs, String shortName, String uri) {
+			Set<String> already = shortnameToURIs.get(shortName);
+			if (already == null) shortnameToURIs.put(shortName, already = new HashSet<String>() );
+			already.add(uri);
 		}
 
 		// compatability (with Puelia) code to handle has-stripping

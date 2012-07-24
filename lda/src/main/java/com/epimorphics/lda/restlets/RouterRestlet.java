@@ -130,7 +130,9 @@ import com.hp.hpl.jena.shared.WrappedException;
         	int mediaHash = hashOf( headers.getAcceptableMediaTypes() );
 			int runHash = mediaHash + encodingHash;
             List<MediaType> mediaTypes = JerseyUtils.getAcceptableMediaTypes( headers );
-            return runEndpoint( c, runHash, servCon, ui, queryParams, mediaTypes, formatSuffix, match ); 
+            Response answer = runEndpoint( c, runHash, servCon, ui, queryParams, mediaTypes, formatSuffix, match );
+            t.done();
+            return answer;
         }
     }
     

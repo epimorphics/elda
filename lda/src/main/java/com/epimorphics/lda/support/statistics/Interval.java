@@ -40,4 +40,14 @@ public class Interval {
 	public long mean() {
 		return count == 0 ? -1 : total/count;
 	}
+	
+	@Override public String toString() {
+		return "<Interval" 
+			+ " min: " + min
+			+ " max: " + max
+			+ " tot: " + total
+			+ " num: " + count
+			+ ">"
+		;
+	}
 }

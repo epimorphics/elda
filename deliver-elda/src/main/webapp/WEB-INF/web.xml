@@ -26,6 +26,12 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   
+  <listener>
+  	<!-- -->
+    <!-- <listener-class>com.epimorphics.lda.jmx.Statistics</listener-class> -->
+    <!-- <listener-class>com.epimorphics.lda.jmx.CacheControl</listener-class> -->
+  </listener>
+  
   <!--
   <servlet>
   	<servlet-name>hub-handler</servlet-name>

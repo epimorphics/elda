@@ -53,7 +53,7 @@ public class ValTranslator {
 	}
 
 	public Any objectForValue( String type, String val, String languages ) {
-		String[] langArray = languages == null ? JUSTEMPTY : languages.split( "," );
+		String[] langArray = languages == null ? JUSTEMPTY : languages.split( ",", -1 );
 		String expanded = sns.expand(val);
 		if (type == null) {
 			return languagedLiteral(langArray, val);
