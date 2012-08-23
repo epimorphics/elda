@@ -86,16 +86,17 @@ spec:viewerMedium a api:Viewer
 # API DESCRIPTION
 #
 
-<http://services.data.gov.uk/education/sparql> extras:supportsNestedSelect false.
+<http://education.data.gov.uk/sparql/education/query> extras:supportsNestedSelect true.
 
 spec:api a api:API 
     ; rdfs:label "Edubase API"@en
     ; foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI
     ; api:maxPageSize 50
     ; api:defaultPageSize 10 
-    ; api:sparqlEndpoint <http://services.data.gov.uk/education/sparql>
+    ; api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query>
     ; rdfs:comment "An API around sparql-provided education data."
-    ; extras:enableETags true
+    ; extras:enableETags true       
+    ; api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"]
     # ; extras:describeAllLabel skos:prefLabel
     #
     # normally constructed URIs (for views, formatters, metadata, etc) are based
@@ -276,9 +277,6 @@ api:definition a rdf:Property
     ; api:label "definition"
     .  
 
-geo:lat
-      api:label "lat" .
-
 school:title api:label "title"
     .
 
@@ -446,8 +444,13 @@ school:dateofLastFPVisit
     ; api:label "dateofLastFPVisit" 
     .
 
-geo:long
-      api:label "long" .
+geo:long a owl:DatatypeProperty
+	; api:label "longitude" 
+	.
+
+geo:lat a owl:DatatypeProperty
+  	; api:label "latitude" 
+  	.
 
 school:hasTeenageMothers
       a       owl:DatatypeProperty ;
