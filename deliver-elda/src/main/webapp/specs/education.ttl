@@ -445,11 +445,11 @@ school:dateofLastFPVisit
     .
 
 geo:long a owl:DatatypeProperty
-	; api:label "longitude" 
+	; api:label "long" 
 	.
 
 geo:lat a owl:DatatypeProperty
-  	; api:label "latitude" 
+  	; api:label "lat" 
   	.
 
 school:hasTeenageMothers

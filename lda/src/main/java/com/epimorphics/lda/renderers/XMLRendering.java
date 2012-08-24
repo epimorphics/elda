@@ -103,7 +103,7 @@ public class XMLRendering {
 		this.d = d;
 		this.sns = sns;
 		this.suppressIPTO = suppressIPTO;
-		this.nameMap = sns.nameMap().stage2(stripHas).load(m, m).result();
+		this.nameMap = sns.nameMap().stage2(stripHas).loadPredicates(m, m).result();
 	}
 
 	/** 
@@ -254,6 +254,7 @@ public class XMLRendering {
 
 	private void addPropertyValues( Element e, Resource x, Property p, boolean expandRegardless ) {
 		// System.err.println( ">> add property values for " + p );
+		// System.err.println( ">> name: " + shortNameFor(p) + " for " + p );
 		Element pe = d.createElement( shortNameFor( p ) );
 		// System.err.println( ">> pe := " + pe );
 		e.appendChild( pe );

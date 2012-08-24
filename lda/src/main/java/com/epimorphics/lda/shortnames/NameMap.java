@@ -13,6 +13,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.epimorphics.lda.support.MultiMap;
+import com.epimorphics.lda.vocabularies.ELDA;
+import com.epimorphics.lda.vocabularies.OpenSearch;
+import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.vocabs.NsUtils;
@@ -22,7 +25,9 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -57,7 +62,21 @@ public class NameMap {
 		prefixes.withDefaultMappings( pm );
 		load( pm, m.listStatements( ANY, RDFS.label, ANY ) );
 		load( pm, m.listStatements( ANY, API.label, ANY ) );
-		load( pm, m.listStatements( ANY, API.name, ANY ) );
+		// load( pm, m.listStatements( ANY, API.name, ANY ) );
+	}
+	
+	/**
+	    load vocabulary elements from m that are not already
+	    defined in this NameMap.
+	*/
+	public void loadIfNotDefined( PrefixMapping pm, Model m ) {
+		NameMap inner = new NameMap();
+		inner.load( pm, m );
+		for (String shortName: inner.map.keySet()) {
+			if (!map.containsKey(shortName)) {
+				map.add(shortName, inner.map.getAll( shortName ) );
+			}
+		}
 	}
 
 	private void load( PrefixMapping pm, StmtIterator si ) {
@@ -110,8 +129,10 @@ public class NameMap {
 		/** The combined namespace prefixes from all models. */
 		private PrefixMapping prefixes = PrefixMapping.Factory.create();
 		
-		/** The terms -- predicates and literal types -- of the models. */
-		private Set<String> terms = new HashSet<String>();
+		/** Terms which arrive only in the model and hence are subordinate
+		 	to terms that have been define explicitly.
+		 */
+		private Set<String> modelTerms = new HashSet<String>();
 		
 		/** the mapping from full URIs to all their allowed shortnames.*/
 		private MultiMap<String, String> uriToName = new MultiMap<String, String>();
@@ -128,7 +149,7 @@ public class NameMap {
 		}
 
 		/** Load a prefix mapping and the terms of a model */
-		public Stage2NameMap load( PrefixMapping pm, Model m ) {
+		public Stage2NameMap loadPredicates( PrefixMapping pm, Model m ) {
 			prefixes.withDefaultMappings( pm );
 			loadPredicatesOf( m );
 			return this;
@@ -137,11 +158,11 @@ public class NameMap {
 		private void loadPredicatesOf( Model m ) {
 			for (StmtIterator sit = m.listStatements(); sit.hasNext();) {
 				Statement s = sit.next();
-				terms.add( s.getPredicate().getURI() );
+				modelTerms.add( s.getPredicate().getURI() );
 				Node o = s.getObject().asNode();
 				if (o.isLiteral()) {
 					String type = o.getLiteralDatatypeURI();
-					if (type != null) terms.add( type );
+					if (type != null) modelTerms.add( type );
 				}
 			}
 		}
@@ -163,10 +184,10 @@ public class NameMap {
 				addPredefined( uriToName, predefinedShortNames, uri );
 			}
 			
-			for (String p: terms) {
-				String givenShort = uriToName.getOne( p );
-				if (givenShort == null) addURIforShortname( shortnameToURIs, NsUtils.getLocalName(p), p );
-			}
+//			for (String p: terms) {
+//				String givenShort = uriToName.getOne( p );
+//				if (givenShort == null) addURIforShortname( shortnameToURIs, NsUtils.getLocalName(p), p );
+//			}
 		//
 			Map<String, String> result = new HashMap<String, String>();
 			for (String shortName: shortnameToURIs.keySet()) {
@@ -174,6 +195,7 @@ public class NameMap {
 				String it = uris.iterator().next();
 				// if this is a declared shortname, then go with it, otherwise prefix it
 				Set<String> fullNames = predefinedShortNames.get( shortName );
+				if (uris.size() > 1) System.err.println( ">> AMBIGUOUS: " + shortName + " FOR " + uris );
 				if (uris.size() == 1 && (fullNames == null || fullNames.contains( it )))
 					result.put( it, stripHas(shortName) );
 				else {
@@ -181,7 +203,33 @@ public class NameMap {
 						result.put( uri, prefixFor( NsUtils.getNameSpace(uri) ) + stripHas(shortName) );
 				}
 			}
+			Set <String> terms = result.keySet();
+//			System.err.println( ";;; -- defined terms --------------------" );
+//			for (String t: terms) System.err.println( ">> term: " + t );
+			modelTerms.removeAll( terms );
+//			System.err.println( ";;; -- model terms --------------------------");
+//			for (String mt: modelTerms) System.err.println( ">> mt: " + mt );
+			for (String mt: modelTerms) {
+				int cut = Util.splitNamespace( mt );
+				String namespace = mt.substring( 0, cut );
+				String shortName = mt.substring( cut );
+				if (isMagic( namespace )) {
+					result.put( mt, stripHas(shortName) );
+				} else {					
+					result.put( mt, prefixFor( NsUtils.getNameSpace(mt) ) + stripHas(shortName) );
+				}
+			}
 			return result;
+		}
+
+		private boolean isMagic(String namespace) {
+			if (namespace.equals(DCTerms.getURI())) return true;
+			if (namespace.equals("eh:/")) return true;
+			if (namespace.equals(SPARQL.NS)) return true;
+			if (namespace.equals(ELDA.COMMON.NS)) return true;
+			if (namespace.equals(OpenSearch.getURI())) return true;
+			if (namespace.equals(DOAP.NS)) return true;
+			return false;
 		}
 
 		// add mappings to predefined short name

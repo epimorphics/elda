@@ -124,7 +124,7 @@ public class EndpointMetadata {
 	}
 
 	public void addTermBindings( Model toScan, Model meta, Resource exec, NameMap nm ) {
-		Stage2NameMap s2 = nm.stage2(false).load( toScan, toScan );
+		Stage2NameMap s2 = nm.stage2(false).loadPredicates( toScan, toScan );
 		Map<String, String> mm = s2.result();
 		for (String uri: mm.keySet()) {
 			Resource term = meta.createResource( uri );
