@@ -73,6 +73,7 @@ public class StandardShortnameService implements ShortnameService {
             nameMap.loadIfNotDefined( pm, vocab );
             context.loadVocabularyAnnotations( seen, vocab, prefixes);
         }
+        nameMap.done();
     }
 
     /**

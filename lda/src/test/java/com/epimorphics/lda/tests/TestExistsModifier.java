@@ -53,7 +53,7 @@ public class TestExistsModifier
 	
 	@Test public void testExists()
 		{
-		Shorts sns = new Shorts( "exists-backwards" );
+		Shorts sns = new Shorts( "backwards" );
 		APIQuery q = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "true" );
@@ -67,7 +67,7 @@ public class TestExistsModifier
 	
 	@Test public void testNotExists()
 		{
-		Shorts sns = new Shorts( "exists-backwards" );
+		Shorts sns = new Shorts( "backwards" );
 		APIQuery q = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
 		x.addFilterFromQuery( Param.make( sns, "exists-backwards" ), "false" );		
@@ -111,7 +111,7 @@ public class TestExistsModifier
 	*/
 	public void testNotExistsXY( String existsSetting, String expect )
 		{
-		Shorts sns = new Shorts( "exists-backwards", "type" );
+		Shorts sns = new Shorts( "backwards", "type" );
 		// System.err.println( ">> info: " + sns.asContext().getPropertyByName("type" ).getType() ) ;
 		APIQuery q = QueryTestUtils.queryFromSNS(sns);		
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );

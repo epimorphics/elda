@@ -17,7 +17,8 @@ public class NsUtils {
 	public static boolean isMagic( String ns ) {
 		return 
 			ns.equals(NsUtils.XHV_ns) 
-			|| ns.equals(RDF.getURI()) || ns.equals(RDFS.getURI()) 
+			|| ns.equals(RDF.getURI()) 
+			|| ns.equals(RDFS.getURI()) 
 			|| ns.equals(API.NS)
 			;
 	}
