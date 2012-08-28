@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
@@ -21,6 +22,7 @@ import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 
@@ -36,6 +38,42 @@ public class TestShortNames {
 //		assertEquals( "p_thing", mm.getOne( "http://example.com/ns#thing" ) );
 //		assertEquals( "p_other", mm.getOne( "http://example.com/ns#other" ) );
 //	}
+	
+	@Test public void ensureUndeclatedURIUsesPrefix() {
+		NameMap nm = new NameMap();
+		Model m = ModelIOUtils.modelFromTurtle( "@prefix p: <http://example.com/ns#>. p:a p:thing p:b; p:other p:d; p:thong p:c." );
+		Map<String, String> mm = nm.stage2(false).loadPredicates(m, m).result();
+		assertEquals( "p_thing", mm.get( m.expandPrefix( "p:thing" ) ) );
+	}
+	
+	@Test public void ensureConfigShortnameIsUsed() {
+		Model empty = ModelFactory.createDefaultModel();
+		NameMap nm = new NameMap();
+		Model m = ModelIOUtils.modelFromTurtle
+			( "@prefix p: <http://example.com/ns#>."
+			+ "\np:a p:thing p:b; p:other p:d; p:thong p:c." 
+			+ "\np:thing rdfs:label 'labelled'."
+			);
+		nm.load(m, m);
+		nm.done();
+		Map<String, String> mm = nm.stage2(false).loadPredicates(empty, empty).result();
+		assertEquals( "labelled", mm.get( m.expandPrefix( "p:thing" ) ) );
+	}
+	
+	@Test public void ensureApiLabelWinsOverRDFSLabel() {
+		Model empty = ModelFactory.createDefaultModel();
+		NameMap nm = new NameMap();
+		Model m = ModelIOUtils.modelFromTurtle
+			( "@prefix p: <http://example.com/ns#>."
+			+ "\np:a p:thing p:b; p:other p:d; p:thong p:c." 
+			+ "\np:thing rdfs:label 'labelled'." 
+			+ "\np:thing api:label 'REALLY_labelled'."
+			);
+		nm.load(m, m);
+		nm.done();
+		Map<String, String> mm = nm.stage2(false).loadPredicates(empty, empty).result();
+		assertEquals( "REALLY_labelled", mm.get( m.expandPrefix( "p:thing" ) ) );
+	}	
 	
 	@Test public void ensure_sensitive_result_without_prefix_is_converted() {
 		Model m = ModelIOUtils.modelFromTurtle( "<eh:/A> <http://example.com/result> <eh:/C>." );
