@@ -116,9 +116,9 @@ public class NameMap {
 			}
 	}
 	
-	private final Pattern shortSyntax = Pattern.compile( "^[a-zA-Z][a-zA-Z0-9_]*$" );
+	static private final Pattern shortSyntax = Pattern.compile( "^[a-zA-Z][a-zA-Z0-9_]*$" );
 	
-	private boolean checkLegal( String shortName ) {
+	public static boolean checkLegal( String shortName ) {
 		return shortSyntax.matcher( shortName ).find(); 
 	}
 
@@ -212,29 +212,32 @@ public class NameMap {
 		*/
 		
 		public Map<String, String> result() {
-			Map<String, String> mapToShortName = new HashMap<String, String>();
-			mapToShortName.putAll( uriToName );
-			modelTerms.removeAll( mapToShortName.keySet() );
+			Map<String, String> mapURItoShortName = new HashMap<String, String>();
+			mapURItoShortName.putAll( uriToName );
+			modelTerms.removeAll( mapURItoShortName.keySet() );
 			for (String mt: modelTerms) {
 				int cut = Util.splitNamespace( mt );
 				String namespace = mt.substring( 0, cut );
 				String shortName = mt.substring( cut );
 				if (isMagic( namespace )) {
-					mapToShortName.put( mt, stripHas(shortName) );
-				} else {					
-					mapToShortName.put( mt, prefixFor( NsUtils.getNameSpace(mt) ) + stripHas(shortName) );
+					mapURItoShortName.put( mt, stripHas(shortName) );
+				} else {						
+					mapURItoShortName.put( mt, Transcoding.encode( prefixes, mt ) );
 				}
 			}
-			return mapToShortName;
+			return mapURItoShortName;
 		}
 
-		private boolean isMagic(String namespace) {
+		private boolean isMagic( String namespace ) {
+			if (namespace.equals(XHV.getURI())) return true; 
+			// if (true) return false;
 			if (namespace.equals(DCTerms.getURI())) return true;
 			if (namespace.equals("eh:/")) return true;
 			if (namespace.equals(SPARQL.NS)) return true;
 			if (namespace.equals(ELDA.COMMON.NS)) return true;
 			if (namespace.equals(OpenSearch.getURI())) return true;
 			if (namespace.equals(DOAP.NS)) return true;
+			if (namespace.equals(API.NS)) return true;
 			return false;
 		}
 

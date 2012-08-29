@@ -125,6 +125,8 @@ public class StandardShortnameService implements ShortnameService {
      * Find the file URI for the given shortname
      */
     @Override public String expand(String shortname) {
+    	String decoded = Transcoding.decode( prefixes, shortname );
+    	if (decoded != null) return decoded;
         String uri = context.getURIfromName(shortname);
         if (uri == null && shortname.contains("_")) {
             // check for prefix form
@@ -136,7 +138,7 @@ public class StandardShortnameService implements ShortnameService {
         return uri;
     }
 
-    /**
+	/**
      * Convert a resource specification to a resource. A resource may be specified 
      * by a shortname in a query string or a literal giving a shortname in a spec
      * file as well as simply being a resource already.
