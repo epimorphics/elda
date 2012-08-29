@@ -200,9 +200,8 @@ public class NameMap {
 		    If a URI already has a short name, that's what will be used. 
 		    URIs that don't yet have one will be given their local name if 
 		    it's unambiguous, or their prefixed local name if needed to 
-		    disambiguate.
-		    
-		    TODO: deal with labels with bad syntax.
+		    disambiguate. If the local name isn't a legal shortname, the
+		    Transcoder will hex-escape it.
 		*/
 		
 		public Map<String, String> result() {
@@ -222,11 +221,17 @@ public class NameMap {
 			return mapURItoShortName;
 		}
 
+		/**
+		    There are too many of these. Really we only ought to shorten
+		    the specific ones the stylesheet needs.
+		*/
 		private boolean isMagic( String namespace ) {
 			if (namespace.equals(XHV.getURI())) return true; 
-			// if (true) return false;
 			if (namespace.equals(DCTerms.getURI())) return true;
 			if (namespace.equals("eh:/")) return true;
+			if (namespace.equals(SPARQL.NS)) return true;
+			if (namespace.equals(RDF.getURI())) return true;
+			if (namespace.equals(RDFS.getURI())) return true;
 			if (namespace.equals(SPARQL.NS)) return true;
 			if (namespace.equals(ELDA.COMMON.NS)) return true;
 			if (namespace.equals(OpenSearch.getURI())) return true;

@@ -168,6 +168,45 @@ Elda accepts the following content types by default.
     to one endpoint affect only that endpoint. 
 </p>
 
+<h2> Elda special generated shortnames - uri_* and pre_*</h2>
+
+<p>
+    When Elda is rendering a model into XML (which may then
+    be rendered to HTML by the XSLT stylesheet), it has to
+    convert URIs into names suitable as both XML element
+    names and LDA property shortnames.
+</p>
+
+<p>
+    If the URI has a given shortname (api:label or rdfs:label
+    of the right syntax), that is used. 
+</p>
+
+<p>
+    If the namespace of the URI has a prefix P, and the localname
+    is already a legal shortname L, then P_L is used.
+</p>
+
+<p>
+    Otherwise, if there is a prefix P for then namespace, then
+    pre_P_X is used, where X is a hexadecimal encoding of the
+    localname; and if there is no available prefix, uri_U is
+    used, where U is the hexadecimal encoding of the URI. 
+</p>
+
+<p>
+    The chosen encoding, which is <b>experimental</b> at this
+    time, is to encode every non-lower-case-letter as two
+    upper-case hexadecimal digits.
+</p>
+
+<p>
+    We encourage developers to not rely on the particular
+    form of the encoding. Elda will decode the generated
+    short (or not-so-short) names to their URIs if they
+    are used as property names in a query.
+</p>
+
 <h2>elda:allowSyntaxProperties</h2>
 
 <b>temporary</b>: will be removed.
@@ -246,7 +285,7 @@ of Elda no earlier than 1.2.16.
     Elda automatically uses nested selects if the data source 
     is a <b>local:</b> or <b>tdb:</b> model, or it the
     <code>sparqEndpoint</code> value of the API is a
-    resource with an <b>extras:supportsNestedSelects</b>
+    resource with an <b>extras:supportsNestedSelect</b>
     value of true, "true", or "yes". (We anticipate that
     later versions of Elda will dynamically check the server
     to see if nested selects work.)

@@ -97,10 +97,18 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         extractMetadataOptions( endpoint );
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
+        handleViewTemplate( endpoint );
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
     }
     
-    private void extractMetadataOptions(Resource endpoint) {
+    private void handleViewTemplate(Resource endpoint) {
+    	if (endpoint.hasProperty( API.template )) {
+    		String t = endpoint.getProperty( API.template ).getString();
+    		baseQuery.setViewByTemplateClause( t );
+    	}
+	}
+
+	private void extractMetadataOptions(Resource endpoint) {
     	metadataOptions.addAll( apiSpec.metadataOptions );
     	for (StmtIterator it = endpoint.listProperties( EXTRAS.metadataOptions ); it.hasNext();)
     		for (String option: it.next().getString().split(",")) 
