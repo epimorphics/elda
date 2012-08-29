@@ -14,8 +14,9 @@ public class TestTranscoding {
 		.setNsPrefix( "rdf", RDF.getURI() );
 
 	@Test public void testUnprefixed() {
-		assertEquals( null, Transcoding.decode( pm, "rdf_something" ) );
 		assertEquals( null, Transcoding.decode( pm, "something" ) );
+		assertEquals( null, Transcoding.decode( pm, "not_something" ) );
+		assertEquals( RDF.getURI() + "something", Transcoding.decode( pm, "rdf_something" ) );
 	}
 	
 	@Test public void testEncodedURI() {

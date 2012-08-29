@@ -122,20 +122,12 @@ public class StandardShortnameService implements ShortnameService {
     }
     
     /**
-     * Find the file URI for the given shortname
-     */
-    @Override public String expand(String shortname) {
-    	String decoded = Transcoding.decode( prefixes, shortname );
-    	if (decoded != null) return decoded;
-        String uri = context.getURIfromName(shortname);
-        if (uri == null && shortname.contains("_")) {
-            // check for prefix form
-            String pform = shortname.replaceFirst("_", ":");
-            String exp = prefixes.expandPrefix(pform);
-            if ( ! exp.equals(pform)) 
-                uri = exp;
-        }
-        return uri;
+        Find the full URI for the given short name, or null if we can't
+        find one.
+    */
+    @Override public String expand( String shortName ) {
+    	String uri = context.getURIfromName(shortName);
+    	return uri == null ? Transcoding.decode( prefixes, shortName ) : uri;
     }
 
 	/**

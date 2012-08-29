@@ -109,17 +109,11 @@ public class NameMap {
 		if (S.isURIResource()) {
 			String shortName = asString( s.getObject() );
 			String uri = S.getURI();
-			if (checkLegal( shortName )) 
+			if (ShortnameUtils.isLegalShortname( shortName )) 
 				mapShortnameToURIs.add( shortName, uri );
 			else if (s.getPredicate().equals( API.label ))
 				log.warn( "ignored bad shortname " + shortName + " for " + s.getModel().shortForm( uri ) ); 
 			}
-	}
-	
-	static private final Pattern shortSyntax = Pattern.compile( "^[a-zA-Z][a-zA-Z0-9_]*$" );
-	
-	public static boolean checkLegal( String shortName ) {
-		return shortSyntax.matcher( shortName ).find(); 
 	}
 
 	/**
@@ -249,19 +243,6 @@ public class NameMap {
 					return Character.toLowerCase(ch) + x.substring(4);
 			}
 			return x;
-		}
-
-		/**
-		    Answer a prefix for a namespace. If there's one in the
-		    prefixes, use that. If there aren't any, use "none_".
-		    If the namespace is magic, ie its prefix MUST NOT be used 
-		    on pain of confusing certain renderers, omit it entirely and 
-		    live with ambiguity.
-		*/
-		private String prefixFor( String nameSpace ) {
-			if (NsUtils.isMagic( nameSpace )) return "";
-			String prefix = prefixes.getNsURIPrefix( nameSpace );
-			return prefix == null ? "none_" : prefix + "_";
 		}
 	}
 }
