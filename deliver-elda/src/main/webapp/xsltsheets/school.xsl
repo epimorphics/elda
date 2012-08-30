@@ -2,6 +2,7 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:import href="result.xsl" />
+<script type="text/javascript" src="{$_resourceRoot}scripts/school-staging.js"></script>
 
 <xsl:template match="establishmentNumber | uniqueReferenceNumber" mode="showBarchart">false</xsl:template>
 <xsl:template match="establishmentNumber | uniqueReferenceNumber" mode="showBoxplot">false</xsl:template>
