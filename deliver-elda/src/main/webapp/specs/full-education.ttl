@@ -107,7 +107,7 @@ spec:api a api:API ;
 	api:lang "en,none";
 	elda:enableETags true ;
 	api:variable [api:name "_exceptionIfEmpty"; api:value "no"] ;
-	api:variable [ api:name "_resourceRoot"; api:value "/education/lda-assets/" ];
+	api:variable [ api:name "_resourceRoot"; api:value "/elda/" ];
 	elda:metadataOptions "bindings,formats,versions,execution" ;
 	rdfs:label "Edubase API"@en;
 	api:maxPageSize 50;
