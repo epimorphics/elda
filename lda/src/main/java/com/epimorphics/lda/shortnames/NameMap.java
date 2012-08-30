@@ -69,8 +69,8 @@ public class NameMap {
 	*/
 	public void load( PrefixMapping pm, Model m ) {
 		prefixes.withDefaultMappings( pm );
-		load( m.listStatements( ANY, RDFS.label, ANY ) );
-		load( m.listStatements( ANY, API.label, ANY ) );
+		load( true, m.listStatements( ANY, API.label, ANY ) );
+		load( false, m.listStatements( ANY, RDFS.label, ANY ) );
 	}
 	
 	/**
@@ -88,6 +88,32 @@ public class NameMap {
 			}
 		}
 	}
+
+	private void load( boolean strongBinding, StmtIterator si ) {
+		while (si.hasNext()) load( strongBinding, si.next() );
+	}
+
+	/**
+	    S is (r, someLabelPredicate, someLabel). Give the resource r the
+	    shortname someLabel. The binding may be strong (API.label, done first)
+	    or weak (RDFS.label, done after all the API.label's). A weak label
+	    is ignored if there are any strong labels. Attempted strong bindings to
+	    bad shortnames generate a warning message.
+	*/
+	private void load( boolean strongBinding, Statement s ) {
+		Resource r = s.getSubject();
+		if (r.isURIResource()) {
+			String shortName = asString( s.getObject() );
+			String uri = r.getURI();
+			if (ShortnameUtils.isLegalShortname( shortName )) {
+				if (strongBinding || mapShortnameToURIs.getAll( shortName ).isEmpty())
+					mapShortnameToURIs.add( shortName, uri );
+				
+			}
+			else if (strongBinding)
+				log.warn( "ignored bad shortname " + shortName + " for " + s.getModel().shortForm( uri ) ); 
+			}
+	}
 	
 	/**
 	    No more updates to make: check what we've got.
@@ -98,22 +124,6 @@ public class NameMap {
 			if (uris.size() > 1) throw new ReusedShortnameException( shortName, uris );
 			mapURItoShortName.put( uris.iterator().next(), shortName );
 		}
-	}
-
-	private void load( StmtIterator si ) {
-		while (si.hasNext()) load( si.next() );
-	}
-
-	private void load( Statement s ) {
-		Resource S = s.getSubject();
-		if (S.isURIResource()) {
-			String shortName = asString( s.getObject() );
-			String uri = S.getURI();
-			if (ShortnameUtils.isLegalShortname( shortName )) 
-				mapShortnameToURIs.add( shortName, uri );
-			else if (s.getPredicate().equals( API.label ))
-				log.warn( "ignored bad shortname " + shortName + " for " + s.getModel().shortForm( uri ) ); 
-			}
 	}
 
 	/**
