@@ -21,7 +21,7 @@
   	<servlet-class>com.epimorphics.lda.routing.Loader</servlet-class>
   	<init-param>
 	<param-name>com.epimorphics.api.initialSpecFile</param-name>
-        <param-value>specs/full-education.ttl</param-value>
+        <param-value>specs/mini-education.ttl</param-value>
   	</init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>

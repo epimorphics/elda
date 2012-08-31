@@ -12,36 +12,66 @@
 @prefix spec: <http://www.epimorphics.com/examples/specSchools#> .
 @prefix climb: <http://climb.dataincubator.org/vocabs/climb/> .
 
-<#MyAPI> a api:API ;
-	rdfs:label "Test API"@en ;
-	api:maxPageSize "50";
-	api:defaultPageSize "10" ;
-	api:endpoint [
-		a api:ItemEndpoint ;
-		api:uriTemplate "/Mountain/{name}" ;
-	    api:itemTemplate "http://dbpedia.org/resource/{name}" 
-		], 
-		<#routesEndpoint> , <#HVSRoutes> ;
-	api:sparqlEndpoint <http://api.talis.com/stores/kwijibo-dev3/services/sparql> ;
-	api:defaultViewer api:describeViewer 
+@prefix extras: <http://www.epimorphics.com/vocabularies/lda#> .
+
+<#MyAPI> a api:API 
+	; rdfs:label "Test API"@en 
+	; api:maxPageSize 50
+	; api:defaultPageSize 10 
+	; api:endpoint 
+		[ a api:ItemEndpoint 
+		; api:uriTemplate "/Mountain/{name}" 
+		; api:itemTemplate "http://dbpedia.org/resource/{name}" 
+		]
+		, <#routesEndpoint> 
+		, <#HVSRoutes> 
+	; api:sparqlEndpoint <http://api.talis.com/stores/kwijibo-dev3/services/sparql> 
+	; api:defaultViewer api:describeViewer 
+        ; api:formatter
+                [a api:XsltFormatter
+                ; api:name "html"
+                ; api:stylesheet "xslt/result-osm.xsl"
+                ; extras:metadataOptions "bindings,formats,versions,execution"
+                ; api:mimeType "text/html; charset=utf-8"
+                ]        
+	; api:variable
+                [api:name "activeImageBase"; api:value "/elda/images/green/16x16"]
+                , [api:name "inactiveImageBase"; api:value "/elda/images/grey/16x16"]
+                , [api:name "_resourceRoot"; api:value "/elda/"]
+                , [api:name "webapp"; api:value "/elda"]
 	.
 	
-# hack because otherwise the shortnames aren't recognised.
+<#HVSRoutes> a api:ListEndpoint 
+	; api:uriTemplate "/routes/HVS" 
+	; api:selector 
+		[ api:parent <#routesEndpoint> 
+		; api:filter "type=Route", "grading.value=HVS"
+		] 
+	.
 
-climb:grading a owl:ObjectProperty; rdfs:label "grading".
-climb:value a owl:ObjectProperty; rdfs:label "value".
-rdf:type a owl:ObjectProperty; rdfs:label "type".
+<#routesEndpoint> a api:ListEndpoint 
+	; api:uriTemplate "/routes" 
+	; api:selector 
+		[ api:filter "type=Route,?x=Route.label" 
+		; api:orderBy "STR(?item)"
+		] 
+	.
 
-<#routesEndpoint> a api:ListEndpoint ;
-		api:uriTemplate "/Routes" ;
-		api:selector [
-			api:where " ?item a climb:Route "
-#			api:filter "type=Route"
-		] .
+# Vocabulary.
 
-<#HVSRoutes> a api:ListEndpoint ;
-	api:uriTemplate "/Routes/HVS" ;
-	api:selector [
-			api:parent <#routesEndpoint> ;
-			api:filter "type=Route", "grading.value=HVS"
-		] .
+climb:grading a owl:ObjectProperty
+	; rdfs:label "grading"
+	.
+
+climb:value a owl:ObjectProperty
+	; rdfs:label "value"
+	.
+
+climb:Route a owl:Class
+	; rdfs:label "Route"
+	.
+
+rdf:type a owl:ObjectProperty
+	; rdfs:label "type"
+	.
+
