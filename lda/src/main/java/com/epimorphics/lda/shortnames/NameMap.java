@@ -33,6 +33,7 @@ import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.DOAP;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -237,6 +238,7 @@ public class NameMap {
 		*/
 		private boolean isMagic( String namespace ) {
 			if (namespace.equals(XHV.getURI())) return true; 
+			if (namespace.equals(FOAF.getURI())) return true; 
 			if (namespace.equals(DCTerms.getURI())) return true;
 			if (namespace.equals("eh:/")) return true;
 			if (namespace.equals(SPARQL.NS)) return true;
