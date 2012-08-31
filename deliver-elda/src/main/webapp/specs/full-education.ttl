@@ -83,14 +83,14 @@ spec:HtmlFormatter
 	a api:XsltFormatter ;
 	api:name "html" ;
 	api:mimeType "text/html; charset=utf-8" ;
-	api:stylesheet "xsltsheets/school.xsl"
+	api:stylesheet "xslt/school.xsl"
 	.
 
 spec:CsvFormatter
 	a api:XsltFormatter ;
 	api:name "csv" ;
 	api:mimeType "text/csv; charset=utf-8" ;
-	api:stylesheet "xsltsheets/school-csv.xsl" .
+	api:stylesheet "xslt/school-csv.xsl" .
 
 ############################################################################################
 #
