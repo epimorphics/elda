@@ -58,7 +58,7 @@ spec:api a api:API
 	; api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"]
 	# compatability with Puelia
 	; api:variable [api:name "_strip_has"; api:value "yes"]
-	#
+	# paths which are rewritten away from education.data.gov.uk
 	; api:variable [api:name "_stagePattern"; api:value "^/doc/school$"]
 	.
     

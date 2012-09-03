@@ -114,24 +114,68 @@ education example URIs.
 </p>
 
 <p>
-You should now be able to browse to LDA URIs:
+You should now be able to browse to the example LDA URIs and 
+see presentations of selected schools data.
+</p>
 
 <pre>
-<a href="http://localhost:8080/elda/api/education/schools.json">http://localhost:8080/elda/api/education/schools.json</a>
-
-<a href="http://localhost:8080/elda/api/education/schools.xml">http://localhost:8080/elda/api/education/schools.xml</a>
-
-<a href="http://localhost:8080/elda/api/education/schools.html">http://localhost:8080/elda/api/education/schools.html</a>
-
-<a href="http://localhost:8080/elda/api/education/schools.xml?label=Hope+Primary+School">http://localhost:8080/elda/api/education/schools.xml?label=Hope+Primary+School</a>
-
-<a href="http://localhost:8080/elda/api/education/schools.xml?max-schoolCapacity=100">http://localhost:8080/elda/api/education/schools.xml?max-schoolCapacity=100</a>
+<a href="http://localhost:8080/elda/api/doc/school.xml">http://localhost:8080/elda/api/doc/school.xml</a>
 </pre>
 
-and see presentations of selected schools' data. The html rendering
-(which is provided by an XSLT transform of the xml rendering)
-has many interesting features.
+<p>
+This is an XML presentation of a list of 10 schools
+and some information about them, plus metadata about
+the result. The school data is all within the 
+<code>items</code> element, with each school being
+one <code>item</code> element; the metadata includes
+the details of the alternative views (aka versions)
+of that data, alternative formats (aka renderings)
+of that data, and the term bindings (aka shortnames)
+and variable bindings used.
 </p>
+
+<pre>
+<a href="http://localhost:8080/elda/api/doc/school.json">http://localhost:8080/elda/api/doc/school.json</a>
+</pre>
+
+<p>
+This is a JSON representation of the same data.
+</p>
+
+<pre>
+<a href="http://localhost:8080/elda/api/doc/school.html">http://localhost:8080/elda/api/doc/school.html</a>
+</pre>
+
+<p>
+This is an HTML presentation of the same school data. It
+is produced by processing the XML representation with a
+family of XSLT stylesheets. The various alternative format
+and view links are displayed, as well as options to sort
+by different property values. Selecting the <i>location</i>
+view switches on the map view.
+</p>
+
+<pre>
+<a href="http://localhost:8080/elda/api/doc/school?max-schoolCapacity=100">http://localhost:8080/elda/api/doc/school?max-schoolCapacity=100</a>
+</pre>
+
+<p>
+This URL filters the data by requiring that the schools in
+the list have a <code>schoolCapacity</code> no more than 100.
+</p>
+
+<pre>
+<a href="http://localhost:8080/elda/api/api-config">http://localhost:8080/elda/api/api-config</a>
+</pre>
+
+<p>
+This URL shows information about the loaded configs this
+Elda supports. Click <code>show/hide</code> to reveal/conceal
+information about any particular endpoint; click on the displayed
+path fragments to show information about that template.
+</p>
+
+<h2>Carrying on</h2>
 
 <p>
 Once Elda has unzipped itself, you can run it from the Elda
