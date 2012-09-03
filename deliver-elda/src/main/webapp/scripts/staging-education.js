@@ -10,6 +10,6 @@ $(function() {
 	editTo = document.URL.slice(0, apiStart + 4) + "/" 
 
 	$("a[href^=" + editFrom + "]").each( function( a ) {
-		this.href = this.href.replace( editFrom, editTo )
+		// this.href = this.href.replace( editFrom, editTo )
 	})
 })

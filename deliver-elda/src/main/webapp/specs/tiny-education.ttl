@@ -1,5 +1,5 @@
 #
-# mini education config template. 
+# tiny education config template. 
 #
 
 # Assorted prefix declarations. Some of them are for the structuring
@@ -30,15 +30,55 @@
 
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
 
-#
-# This is a selector which selects only items of type School and whose
-# status has the label Open.
-# 
+#############################################################################
+# API config
 
-spec:schoolsSelector
-	a api:Selector 
-	; api:filter "type=School&establishmentStatus.label=Open"
+spec:api a api:API 
+	; rdfs:label "Tiny Edubase API"@en
+	# Name the SPARQL endpoint which supplies the data we present
+	; api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query>
+	# the page size can't be set higher than this 
+	; api:maxPageSize 50
+	# and this is the default page size
+	; api:defaultPageSize 10 
+	# the viewer to use by default, a DESCRIBE plus labels for all the
+	# resources that have them.
+	; api:defaultViewer api:labelledDescribeViewer
+	# the default formatter is the XSLT formatter defined above 
+	; api:defaultFormatter spec:HtmlFormatter 
+	# one endpoint in this config
+	; api:endpoint spec:schools 
+	#
+	# Elda magic follows
+	#
+	; elda:metadataOptions "bindings,formats,versions,execution" 
+	# tells Elda where its scripts and stylesheets are as a relative URI
+	; api:variable [ api:name "_resourceRoot"; api:value "/elda/" ]
+	# tells Elda where the SPARQL endpoint's form page is, if it has one
+	; api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"]
+	# compatability with Puelia
+	; api:variable [api:name "_strip_has"; api:value "yes"]
+	#
+	; api:variable [api:name "_stagePattern"; api:value "^/doc/school$"]
 	.
+    
+# Endpoint definitions: just the one, list all schools
+
+spec:schools a api:ListEndpoint 
+	; rdfs:label "Schools" 
+	; api:uriTemplate "/doc/school" 
+	; api:selector [api:filter "type=School&establishmentStatus.label=Open"]
+	; api:defaultViewer spec:viewerShort 
+	; api:viewer
+	    spec:viewerShort
+	    , spec:viewerMedium
+	    , spec:viewerLocation
+	.		
+	
+# Tells Elda that the SPARQL endpoint understands nested SELECTS in SPARQL.
+# This can significantly reduce the size of queries.
+
+<http://education.data.gov.uk/sparql/education/query> elda:supportsNestedSelect true.
 
 # There are several defined viewers in this config. Most noteably, using 
 # viewerLocation will add lat/long easting/northing location values to
@@ -63,22 +103,6 @@ spec:viewerMedium
 		, "prefEmail,altEmail,notes,openDate,schoolCapacity,PFI" 
 	.
 
-spec:viewerProvision
-	a api:Viewer 
-	; api:name "provision" 
-	; api:properties 
-		"label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label"
-		, "phaseOfEducation.label,gender.label,religiousCharacter.label"
-		, "address.address1,address.address2,address.address3,address.town"
-		, "address.region,address.postcode"
-		, "schoolCapacity,nurseryProvision,totalPupilsPartTime.datum.val"
-		, "totalPupilsFullTime.datum.date,totalPupilsFullTime.datum.val"
-		, "totalPupilsPartTime.datum.date,highDayFee.datum.date,lowDayFee.datum.val,highDayFee.datum.val"
-		, "SENStat,SENNoStat,specialPupils,boarders.label"
-		, "censusRecord.dated,censusRecord.numberOfBoys,censusRecord.numberOfGirls,censusRecord.numberOfPupils"
-		, "specialClasses,FSM,FSMPercentage,compSchoolAge,statutoryLowAge,statutoryHighAge,pupilTeacherRatio" 
-		.
-
 spec:viewerLocation
 	a api:Viewer 
 	; api:name "location" 
@@ -100,98 +124,6 @@ spec:HtmlFormatter a api:XsltFormatter
 	; api:mimeType "text/html; charset=utf-8" 
 	; api:stylesheet "xslt/school.xsl"
 	.
-
-############################################################################################
-#
-# API DESCRIPTION
-#
-
-spec:api a api:API 
-	; rdfs:label "Mini Edubase API"@en
-	# Name the SPARQL endpoint which supplies the data we present
-	; api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query>
-	# the page size can't be set higher than this 
-	; api:maxPageSize 50
-	# and this is the default page size
-	; api:defaultPageSize 10 
-	# the viewer to use by default, a DESCRIBE plus labels for all the
-	# resources that have them.
-	; api:defaultViewer api:labelledDescribeViewer
-	# the default formatter is the XSLT formatter defined above 
-	; api:defaultFormatter spec:HtmlFormatter 
-	# two conveniently-available viewers
-	; api:viewer 
-		api:describeViewer
-		, api:labelledDescribeViewer 
-	# three endpoints in this config
-	; api:endpoint 
-		spec:school
-		, spec:schools 
-		, spec:schoolsPrimary
-	#
-	# Elda magic follows
-	#
-	; elda:metadataOptions "bindings,formats,versions,execution" 
-	# tells Elda where its scripts and stylesheets are as a relative URI
-	; api:variable [ api:name "_resourceRoot"; api:value "/elda/" ]
-	# tells Elda where the SPARQL endpoint's form page is, if it has one
-	; api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"]
-	# compatability with Puelia
-	; api:variable [api:name "_strip_has"; api:value "yes"]
-	#
-	; api:variable [api:name "_stagePattern"; api:value "^/doc/school|/doc/school/phase/primary|/(id|doc)/school/[^/]*$"]
-	.
-    
-# Tells Elda that the SPARQL endpoint understands nested SELECTS in SPARQL.
-# This can significantly reduce the size of queries.
-
-<http://education.data.gov.uk/sparql/education/query> elda:supportsNestedSelect true.
-
-# Endpoint definitions. We have three: an item endpoint to describe a
-# single school, a list endpoint to describe all schools, and a list
-# endpoint to describe all primary schools.
-
-# Describe a single school
-
-spec:school a api:ItemEndpoint 
-  	; rdfs:label "School" 
-  	; api:uriTemplate "/doc/school/{number}" 
-  	; api:itemTemplate "http://education.data.gov.uk/id/school/{number}" 
-  	; api:defaultViewer spec:viewerMedium 
-  	; api:viewer
-    	spec:viewerProvision
-    	, spec:viewerLocation
-    .
-
-# List all schools
-
-spec:schools a api:ListEndpoint 
-	; rdfs:label "Schools" 
-	; api:uriTemplate "/doc/school" 
-	; api:selector spec:schoolsSelector 
-	; api:defaultViewer spec:viewerShort 
-	; api:viewer
-	    spec:viewerShort
-	    , spec:viewerMedium
-	    , spec:viewerProvision
-	    , spec:viewerLocation
-	.	
-
-# List all primary schools
-
-spec:schoolsPrimary a api:ListEndpoint 
-	; api:uriTemplate "/doc/school/phase/primary" 
-	; api:selector 
-		[ api:parent spec:schoolsSelector 
-	  	; api:filter "phaseOfEducation.label=Primary"
-		] 
-	; api:defaultViewer spec:viewerShort 
-	; api:viewer
-    	spec:viewerShort
-    	, spec:viewerMedium
-    	, spec:viewerProvision
-    	, spec:viewerLocation
-    	.	
 
 ############################################################################
 # The rest of this config is vocabulary definitions.
