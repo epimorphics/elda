@@ -38,7 +38,8 @@ spec:api a api:API
 	; api:defaultPageSize 10 
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:defaultFormatter spec:HtmlFormatter 
-	; api:endpoint spec:publishers 
+	; api:endpoint 
+		spec:publishers, spec:games 
 	#
 	# Elda magic follows
 	#
@@ -53,20 +54,21 @@ spec:api a api:API
 	; api:variable [api:name "_stagePattern"; api:value "^/doc/school$"]
 	.
     
-# Endpoint definitions: just the one, list all schools
+# Endpoint definitions
 
 spec:publishers a api:ListEndpoint 
 	; rdfs:label "Publishers" 
 	; api:uriTemplate "/publishers" 
-	; api:selector [api:filter "type=Publisher"]
+	; api:selector [api:filter "type=Publisher"; api:sort "label"]
+	; api:defaultViewer api:labelledDescribeViewer
 	.	
 	
 spec:games a api:ListEndpoint 
 	; rdfs:label "Games" 
 	; api:uriTemplate "/games" 
-	; api:selector [api:filter "type=BoardGame"]
+	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
+	; api:defaultViewer api:labelledDescribeViewer
 	.		
-		
 	
 # Tells Elda that the SPARQL endpoint understands nested SELECTS in SPARQL.
 # This can significantly reduce the size of queries.
@@ -85,6 +87,11 @@ spec:HtmlFormatter a api:XsltFormatter
 	
 hello:BoardGame a rdfs:Class
 	; api:label "Board Game"
+	.
+	
+hello:players a rdf:Property
+	; api:label "players"
+	; rdfs:range xsd:int
 	.
 	
 hello:Publisher a rdfs:Class
