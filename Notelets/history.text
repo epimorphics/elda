@@ -1,5 +1,19 @@
 1.2.14
 
+* Revised the standalone examples: three variations of
+  the (full) education config plus one hello-world.
+
+* xsltsheets has been collapsed into xslt.
+
+* URLs can be rewritten by a staging script, making it easier
+  to test configs without installing them on their live site.
+
+* Shortname generation for XML from models has been revised.
+  Elda now generates either prefix_localname, pre_prefix_hexlocal,
+  or uri_hexfullname as appropriate.
+
+* Elda has some JMX stats reporting. This is EXPERIMENTAL.
+
 * Revisions to the standard stylesheets.
 
   These versions fix a bug when using the 'inspector' 

@@ -10,3 +10,37 @@ problems with XSLT rendering; this special configuration property is
 intended to make the transition to the reserved state easier and will
 be withdrawn in a later version of Elda.
 
+Elda currently contains some experimental JMX statistics reporting.
+
+XML CHANGE. The rules by which Elda generates round-tripping shortnames
+from URIs in result models have been simplified and now take account of
+edge cases. Given some URI U:
+
+* if there is a declared shortname S for U, use S. "Declared" means
+  has an api:label (preferred) or rdfs:label in the config or (not
+  preferred) in an imported vocabulary with allowed shortname syntax.
+
+* otherwise if U has a namespace N with prefix P and localname L
+  with shortname syntax, use P_L.
+
+* otherwise, if U has N with P and L does not have legal shortname
+  syntax, use pre_P_L' where L' is the encoding of L (below). Note
+  that this reserves any prefix `pre`.
+
+* otherwise, use uri_U' where U' is the encoding of U. Note that
+  this reserves the prefix `uri`.
+
+* The encoding X' of X is a reversible translation into shortname
+  syntax. In general, code using shortnames SHOULD NOT rely on the
+  details of this translation; shortnames that come out of the
+  XML rendering will be translated back to the correct URIs when
+  they are used elsewhere. 
+
+  The current scheme converts every non-lowercase-ascii-letter
+  into two hex digits.
+
+EXAMPLES CHANGE. Elda's start-up examples have changed. There
+are three new variants of the education config and one hello-world
+example intended to produce a small obvious config file.
+
+
