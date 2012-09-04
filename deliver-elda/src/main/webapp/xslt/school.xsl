@@ -2,6 +2,7 @@
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:import href="result.xsl" />
+<xsl:param name="_stagePattern">.*</xsl:param> 
 
 <xsl:template match="establishmentNumber | uniqueReferenceNumber" mode="showBarchart">false</xsl:template>
 <xsl:template match="establishmentNumber | uniqueReferenceNumber" mode="showBoxplot">false</xsl:template>
@@ -12,7 +13,26 @@
 	<xsl:call-template name="educationLinks">
 		<xsl:with-param name="base" select="$path" />
 	</xsl:call-template>
-</xsl:template>
+</xsl:template>	
+
+
+<script type="text/javascript" src="{$_resourceRoot}scripdguts/staging-education.js"></script>
+<script type="text/javascript">
+  $(function() {
+	  apiStart = document.URL.indexOf( "/api" )
+	  if (apiStart &lt; 0) return
+
+	  stagePattern = new RegExp('<xsl:value-of select="$_stagePattern"/>')
+
+	  editFrom = "http://education.data.gov.uk/"
+	  editTo = document.URL.slice(0, apiStart + 4) + "/"
+
+	  $("a[href^=" + editFrom + "]").each( function( a ) {
+		edited = this.href.replace( editFrom, editTo )
+		if (stagePattern.exec(edited)) this.href = edited 
+	  })
+  })
+</script>
 
 <xsl:template match="primaryTopic" mode="moreinfo">
 	<xsl:call-template name="educationLinks">

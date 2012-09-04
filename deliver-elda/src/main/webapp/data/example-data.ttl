@@ -1,0 +1,31 @@
+#
+# hello-world example data.
+#
+
+# Assorted prefix declarations. Some of them are for the structuring
+# of the API config, others are for the vocabulary definitions.
+#
+
+@prefix spec:               <http://education.data.gov.uk/api-config#> .
+@prefix api:                <http://purl.org/linked-data/api/vocab#> .
+@prefix dc:                 <http://purl.org/dc/elements/1.1/> .
+
+@prefix foaf:               <http://xmlns.com/foaf/0.1/> .
+@prefix geo:                <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix os-admingeo:        <http://data.ordnancesurvey.co.uk/ontology/admingeo/> .
+
+@prefix owl:                <http://www.w3.org/2002/07/owl#> .
+@prefix school:             <http://education.data.gov.uk/def/school/> .
+@prefix foundation:         <http://statistics.data.gov.uk/def/Foundation/> .
+@prefix spatialrelations:   <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+
+@prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:                <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:               <http://www.w3.org/2004/02/skos/core#> .
+
+@prefix so:                 <http://education.data.gov.uk/def/school/> .
+
+# The elda namespace/prefix is for Elda extensions to the LDA specification.
+
+@prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .

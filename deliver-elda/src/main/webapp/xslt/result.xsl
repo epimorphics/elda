@@ -95,23 +95,6 @@ $prefLabel, $altLabel, $title and $name variables.
 	<script type="text/javascript" src="{$_resourceRoot}scripts/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="{$_resourceRoot}scripts/jquery.sparkline.js"></script>
 	<script type="text/javascript" src="{$_resourceRoot}scripts/codemirror/codemirror_min.js"></script>
-	<script type="text/javascript" src="{$_resourceRoot}scripts/staging-education.js"></script>
-	<script type="text/javascript">
-	  $(function() {
-			  apiStart = document.URL.indexOf( "/api" )
-			  if (apiStart &lt; 0) return
-
-			  stagePattern = new RegExp('<xsl:value-of select="$_stagePattern"/>')
-
-			  editFrom = "http://education.data.gov.uk/"
-			  editTo = document.URL.slice(0, apiStart + 4) + "/"
-
-			  $("a[href^=" + editFrom + "]").each( function( a ) {
-					  edited = this.href.replace( editFrom, editTo )
-					  if (stagePattern.exec(edited)) this.href = edited 
-			  })
-	  })
-	</script>
 	<script type="text/javascript">
 		$(function() {
 			$('.info img')
