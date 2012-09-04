@@ -29,3 +29,24 @@
 # The elda namespace/prefix is for Elda extensions to the LDA specification.
 
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
+
+@prefix hello:				<http://www.epimorphics.com/vocabulary/ex#>.
+
+<http://www.hans-im-glueck.de/> a hello:Publisher
+	.
+	
+<http://www.treefroggames.com/> a hello:Publisher
+	.
+
+<http://www.riograndegames.com/> a hello:Publisher
+	.
+	
+<http://www.ragnarbrothers.co.uk/> a hello:Publisher
+	.
+	
+<http://www.daysofwonder.com/> a hello:Publisher
+	.
+
+	
+	
+	
