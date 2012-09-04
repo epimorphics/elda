@@ -6,64 +6,50 @@
 # of the API config, others are for the vocabulary definitions.
 #
 
-@prefix spec:               <http://something.uk/api-config#> .
-
 @prefix api:                <http://purl.org/linked-data/api/vocab#> .
 @prefix dc:                 <http://purl.org/dc/elements/1.1/> .
 @prefix dct:				<http://purl.org/dc/terms/> .
 
-@prefix foaf:               <http://xmlns.com/foaf/0.1/> .
-
-@prefix owl:                <http://www.w3.org/2002/07/owl#> .
-
 @prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:                <http://www.w3.org/2001/XMLSchema#> .
-@prefix skos:               <http://www.w3.org/2004/02/skos/core#> .
 
 # The elda namespace/prefix is for Elda extensions to the LDA specification.
-
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
 
+# Prefix for example-local entities.
 @prefix hello:				<http://localhost:8080/elda/vocabulary/>.
 
-#############################################################################
+# ---------------------------------------------------------------------
 # API config
 
-spec:api a api:API 
+hello:api a api:API 
 	; rdfs:label "Hello World example"@en
 	# Name the SPARQL endpoint which supplies the data we present
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	; api:maxPageSize 50
 	; api:defaultPageSize 10 
 	; api:defaultViewer api:labelledDescribeViewer
-	; api:defaultFormatter spec:HtmlFormatter 
+	; api:defaultFormatter hello:HtmlFormatter 
 	; api:endpoint 
-		spec:publishers, spec:games 
-	#
-	# Elda magic follows
-	#
-	; elda:metadataOptions "bindings,formats,versions,execution" 
+		hello:publishers, hello:games 
 	# tells Elda where its scripts and stylesheets are as a relative URI
 	; api:variable [ api:name "_resourceRoot"; api:value "/elda/" ]
-	# tells Elda where the SPARQL endpoint's form page is, if it has one
-	; api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"]
 	# compatability with Puelia
 	; api:variable [api:name "_strip_has"; api:value "yes"]
-	# paths which are rewritten away from education.data.gov.uk
-	; api:variable [api:name "_stagePattern"; api:value "^/doc/school$"]
+	; elda:metadataOptions "bindings,formats,versions,execution"
 	.
     
 # Endpoint definitions
 
-spec:publishers a api:ListEndpoint 
+hello:publishers a api:ListEndpoint 
 	; rdfs:label "Publishers" 
 	; api:uriTemplate "/publishers" 
 	; api:selector [api:filter "type=Publisher"; api:sort "label"]
 	; api:defaultViewer api:labelledDescribeViewer
 	.	
 	
-spec:games a api:ListEndpoint 
+hello:games a api:ListEndpoint 
 	; rdfs:label "Games" 
 	; api:uriTemplate "/games" 
 	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
@@ -79,7 +65,7 @@ spec:games a api:ListEndpoint
 # This XSLT formatter produces rich HTML from the viewer properties.
 #
 
-spec:HtmlFormatter a api:XsltFormatter 
+hello:HtmlFormatter a api:XsltFormatter 
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
 	; api:stylesheet "xslt/result.xsl"
