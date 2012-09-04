@@ -15,7 +15,35 @@
 <h2>An implementation of the Linked Data API</h2>
 </div>
 
-<h1>Accepted content types</h1>
+<h1>Additional Elda features</h1>
+
+<h2>html formatters</h2>
+
+<p>
+The default formatter supplied by Elda is a very simple
+HTML formatter showing the properties and their values of
+the selected items. Elda also ships with a renderer that
+uses XSLT (and Javascript at the client end) to produce
+pages with additional controls and a richer appearance.
+To use this as your html renderer, add:
+</p>
+
+<pre>	
+; api:formatter 
+  [a api:XsltFormatter
+  ; api:name 'html'
+  ; api:stylesheet 'xsltsheets/result-osm.xsl'
+  ; api:mimeType 'text/html'
+] 
+
+</pre>
+
+<p>
+to your API root in your configuration file and arrange that
+the webapps/elda directory contents are served as static files.
+</p>
+
+<h2>Accepted content types</h2>
 
 <p>
 Elda accepts the following content types by default.
@@ -40,8 +68,6 @@ Elda accepts the following content types by default.
         model rendered by stylesheet applied to XML rendering.
     </li>
 </ul>
-
-<h1>Additional Elda features</h1>
 
 <h2>Configuration variables</h2>
 

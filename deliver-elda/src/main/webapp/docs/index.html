@@ -259,29 +259,6 @@ If you use <code>elda.spec</code>, then Elda ignores the
 default specification (the education LDA) wired into it.
 </p>
 
-<h3>html formatters</h3>
-
-<p>
-The default formatter supplied by Elda is a very simple
-HTML formatter showing the properties and their values of
-the selected items. Elda also ships with a renderer that
-uses XSLT (and Javascript at the client end) to produce
-pages with additional controls and a richer appearance.
-To use this as your html renderer, add:
-<pre>	
-; api:formatter 
-  [a api:XsltFormatter
-  ; api:name 'html'
-  ; api:stylesheet 'xsltsheets/result-osm.xsl'
-  ; api:mimeType 'text/html'
-] 
-
-</pre>
-
-to your API root in your configuration file and arrange that
-the webapps/elda directory contents are served as static files.
-</p>
-
 <h3>By editing web.xml</h3>
 
 <p>
