@@ -28,7 +28,8 @@ hello:api a api:API
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:defaultFormatter hello:HtmlFormatter 
-	; api:endpoint hello:games 
+	; api:endpoint 
+		hello:publishers, hello:games 
 	# tells Elda where its scripts and stylesheets are as a relative URI
 	; api:variable [ api:name "_resourceRoot"; api:value "/elda/" ]
 	# compatability with Puelia
@@ -36,13 +37,20 @@ hello:api a api:API
 	; elda:metadataOptions "bindings,formats,versions,execution"
 	.
     
-# Endpoint definition	
+# Endpoint definitions
+
+hello:publishers a api:ListEndpoint 
+	; rdfs:label "Publishers" 
+	; api:uriTemplate "/publishers" 
+	; api:selector [api:filter "type=Publisher"; api:sort "label"]
+	; api:defaultViewer api:labelledDescribeViewer
+	.	
 	
 hello:games a api:ListEndpoint 
 	; rdfs:label "Games" 
 	; api:uriTemplate "/games" 
 	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
-	# ; api:defaultViewer api:labelledDescribeViewer
+	; api:defaultViewer api:labelledDescribeViewer
 	.	
 #
 # This XSLT formatter produces rich HTML from the viewer properties.

@@ -32,7 +32,7 @@ To use this as your html renderer, add:
 ; api:formatter 
   [a api:XsltFormatter
   ; api:name 'html'
-  ; api:stylesheet 'xsltsheets/result-osm.xsl'
+  ; api:stylesheet 'xslt/result.xsl'
   ; api:mimeType 'text/html'
 ] 
 
@@ -366,13 +366,6 @@ of Elda no earlier than 1.2.16.
 </p>
 
 <h2>Formatting extensions</h2>
-
-<p>
-If the object of an <code>api:stylesheet</code> directive starts
-with the prefix "xsl:", then the stylesheet is loaded from Elda's
-stylesheet directory, wherever that is. (By default it is 
-<code>webapp/xsltsheets</code>, but this will become configurable.)
-</p>
 
 <p>
 If a formatter has the property 
