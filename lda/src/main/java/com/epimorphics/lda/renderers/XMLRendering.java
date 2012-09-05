@@ -99,11 +99,11 @@ public class XMLRendering {
 	/** if true, property values will appear in sorted order */
 	private final boolean sortPropertyValues = true;
 	
-	public XMLRendering( Model m, ShortnameService sns, boolean stripHas, boolean suppressIPTO, Document d ) {
+	public XMLRendering( Model m, ShortnameService sns, boolean suppressIPTO, Document d ) {
 		this.d = d;
 		this.sns = sns;
 		this.suppressIPTO = suppressIPTO;
-		this.nameMap = sns.nameMap().stage2(stripHas).loadPredicates(m, m).result();
+		this.nameMap = sns.nameMap().stage2().loadPredicates(m, m).result();
 	}
 
 	/** 

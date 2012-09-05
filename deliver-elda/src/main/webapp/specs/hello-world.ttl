@@ -53,30 +53,12 @@ hello:HtmlFormatter a api:XsltFormatter
 	.
 	
 hello:BoardGame a rdfs:Class
-	; api:label "Board Game"
+	; rdfs:label "Board Game"
+	; api:label "BoardGame"
 	.
 	
 hello:players a rdf:Property
 	; api:label "players"
 	; rdfs:range xsd:int
-	.
-	
-hello:Publisher a rdfs:Class
-	; api:label "Publisher"
-	.
-	
-dct:publisher a rdf:Property
-	; api:label "publishes"
-	.
-	
-rdfs:label a rdf:Property
-	; api:multiValued true
-	; api:label "label"
-	.
-	
-rdf:type a rdf:Property
-    ; api:multiValued true 
-    ; rdfs:range rdfs:Class 
-	; api:label "type"
 	.
 		

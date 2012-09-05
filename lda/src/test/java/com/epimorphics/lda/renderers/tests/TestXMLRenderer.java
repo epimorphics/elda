@@ -115,7 +115,7 @@ public class TestXMLRenderer
 		ShortnameService sns = new StandardShortnameService();
 		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
-		xr.renderInto( root, d, false, false );
+		xr.renderInto( root, d, false );
 		Node de = d.getDocumentElement().getFirstChild();
 		Node expected = new TinyParser().parse( desired );
 		if (!de.isEqualNode( expected )) 

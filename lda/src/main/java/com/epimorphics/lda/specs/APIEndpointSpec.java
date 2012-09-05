@@ -10,6 +10,7 @@ package com.epimorphics.lda.specs;
 
 import static com.epimorphics.util.RDFUtils.*;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -100,8 +101,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         handleViewTemplate( endpoint );
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
     }
-    
-    private void handleViewTemplate(Resource endpoint) {
+
+	private void handleViewTemplate(Resource endpoint) {
     	if (endpoint.hasProperty( API.template )) {
     		String t = endpoint.getProperty( API.template ).getString();
     		baseQuery.setViewByTemplateClause( t );

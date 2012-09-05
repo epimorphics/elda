@@ -137,8 +137,8 @@ public class NameMap {
 	/**
 	    During Stage2, clashing shortnames are resolved rather than permitted.
 	*/
-	public Stage2NameMap stage2(boolean stripHas) {
-		return new Stage2NameMap( stripHas, this );
+	public Stage2NameMap stage2() {
+		return new Stage2NameMap( this );
 	}
 
 	/**
@@ -174,12 +174,8 @@ public class NameMap {
 		/** the mapping from full URIs to all their allowed shortnames.*/
 		private Map<String, String> uriToName = new HashMap<String, String>();
 		
-		/** true if we have to convert "hasSpoo" to "spoo". */
-		private boolean stripHas;
-		
 		/** Construct a Stage2 map from a NameMap. */
-		public Stage2NameMap( boolean stripHas, NameMap nm ) {
-			this.stripHas = stripHas;
+		public Stage2NameMap( NameMap nm ) {
 			this.prefixes.setNsPrefixes( nm.prefixes );
 			this.prefixes.setNsPrefixes( automatic );
 			this.uriToName.putAll( nm.mapURItoShortName );
@@ -255,18 +251,6 @@ public class NameMap {
 			if (namespace.equals(DOAP.NS)) return true;
 			if (namespace.equals(API.NS)) return true;
 			return false;
-		}
-
-		// compatability (with Puelia) code to handle has-stripping
-		private String stripHas(String NS, String x) {
-			if (stripHas && x.startsWith("has") && x.length() > 3) {
-				char ch = x.charAt(3);
-				if (Character.isUpperCase(ch)) {
-					System.err.println( ">> stripHas: " + NS + "  " + x );
-					return Character.toLowerCase(ch) + x.substring(4);
-				}
-			}
-			return x;
 		}
 	}
 }

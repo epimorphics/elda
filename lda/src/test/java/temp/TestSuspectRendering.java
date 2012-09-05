@@ -28,7 +28,7 @@ public class TestSuspectRendering {
 		ShortnameService sns = new StandardShortnameService();
 		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
-		xr.renderInto( root, d, false, false );
+		xr.renderInto( root, d, false );
 		Node de = d.getDocumentElement(); // .getFirstChild();
 		String obt = DOMUtils.renderNodeToString( new Times(), de, pm );
 		System.err.println( ">> " + obt );
