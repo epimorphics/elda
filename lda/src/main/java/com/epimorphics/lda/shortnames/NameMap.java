@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.vocabs.API;
-import com.epimorphics.vocabs.NsUtils;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -217,6 +215,7 @@ public class NameMap {
 		
 		public Map<String, String> result() {
 			Map<String, String> mapURItoShortName = new HashMap<String, String>();
+			loadMagic( mapURItoShortName );
 			mapURItoShortName.putAll( uriToName );
 			modelTerms.removeAll( mapURItoShortName.keySet() );
 			for (String mt: modelTerms) {
@@ -224,12 +223,18 @@ public class NameMap {
 				String namespace = mt.substring( 0, cut );
 				String shortName = mt.substring( cut );
 				if (isMagic( namespace )) {
-					mapURItoShortName.put( mt, stripHas(shortName) );
+					mapURItoShortName.put( mt, shortName /* stripHas(namespace, shortName) */ );
 				} else {						
 					mapURItoShortName.put( mt, Transcoding.encode( prefixes, mt ) );
 				}
 			}
 			return mapURItoShortName;
+		}
+
+		private void loadMagic( Map<String, String> map ) {
+			map.put( DCTerms.hasFormat.getURI(), "format" );
+			map.put( DCTerms.hasVersion.getURI(), "version" );
+			map.put( DCTerms.hasPart.getURI(), "part" );
 		}
 
 		/**
@@ -253,11 +258,13 @@ public class NameMap {
 		}
 
 		// compatability (with Puelia) code to handle has-stripping
-		private String stripHas(String x) {
+		private String stripHas(String NS, String x) {
 			if (stripHas && x.startsWith("has") && x.length() > 3) {
 				char ch = x.charAt(3);
-				if (Character.isUpperCase(ch))
+				if (Character.isUpperCase(ch)) {
+					System.err.println( ">> stripHas: " + NS + "  " + x );
 					return Character.toLowerCase(ch) + x.substring(4);
+				}
 			}
 			return x;
 		}

@@ -32,7 +32,6 @@ hello:api a api:API
 	# tells Elda where its scripts and stylesheets are as a relative URI
 	; api:variable [ api:name "_resourceRoot"; api:value "/elda/" ]
 	# compatability with Puelia
-	; api:variable [api:name "_strip_has"; api:value "yes"]
 	; elda:metadataOptions "bindings,formats,versions,execution"
 	.
     
@@ -42,7 +41,6 @@ hello:games a api:ListEndpoint
 	; rdfs:label "Games" 
 	; api:uriTemplate "/games" 
 	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
-	# ; api:defaultViewer api:labelledDescribeViewer
 	.	
 #
 # This XSLT formatter produces rich HTML from the viewer properties.

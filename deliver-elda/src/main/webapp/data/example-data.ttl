@@ -14,6 +14,11 @@
 	; dct:publisher <http://www.hans-im-glueck.de/el-grande>
 	.
 	
+<http://www.queen-games.de/> a hello:Publisher
+	; rdfs:label "Queen Games"
+	; dct:publisher <http://queen-games.de/games.aspx?ProductId=45>
+	.
+	
 <http://www.treefroggames.com/> a hello:Publisher
 	; rdfs:label "Treefrog Games"@en
 	; dct:publisher <http://www.treefroggames.com/age-of-industry>
@@ -30,6 +35,7 @@
 <http://www.ragnarbrothers.co.uk/> a hello:Publisher
 	; rdfs:label "Ragnar Brothers"
 	; dct:publisher <http://www.ragnarbrothers.co.uk/html/canal_mania.html>
+	; dct:publisher <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html>
 	.
 	
 <http://www.daysofwonder.com/> a hello:Publisher
@@ -38,6 +44,17 @@
 	.
 	
 # boardgames
+
+<http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> a hello:BoardGame
+	; rdfs:label "A Brief History of the World"
+	; hello:players 3, 4, 5, 6
+	.
+
+<http://queen-games.de/games.aspx?ProductId=45> a hello:BoardGame
+	; rdfs:label "Kingdom Builder"
+	; hello:players 2, 3, 4
+	; rdfs:seeAlso <http://boardgamegeek.com/boardgame/107529/kingdom-builder>
+	.
 
 <http://www.daysofwonder.com/tickettoride> a hello:BoardGame
 	; rdfs:label "Ticket To Ride"@en
