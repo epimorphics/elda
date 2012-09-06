@@ -111,14 +111,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     	}
 	}
 
-//	private void extractMetadataOptions(Resource endpoint) {
-//    	metadataOptions.addAll( apiSpec.metadataOptions );
-//    	for (StmtIterator it = endpoint.listProperties( EXTRAS.metadataOptions ); it.hasNext();)
-//    		for (String option: it.next().getString().split(",")) 
-//    			metadataOptions.add( option.toLowerCase() );
-//    }
-
-
 	public boolean isListEndpoint() {
     	return endpointResource.hasProperty( RDF.type, API.ListEndpoint );
     }

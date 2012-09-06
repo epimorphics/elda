@@ -1,5 +1,6 @@
 package com.epimorphics.lda.specs;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -31,5 +32,14 @@ public class MetadataOptions {
 		if (mdo.length() > 0)
 			for (String option: mdo.split( " *, *" ))
 				metadataOptions.add( option.toLowerCase() );
+	}
+
+	public static String[] get( Resource R ) {
+		List<String> result = new ArrayList<String>();
+		List<Statement> options = R.listProperties( EXTRAS.metadataOptions ).toList();
+    	if (options.size() > 0) 
+    		for (Statement os: options)
+    			result.add( os.getString() );
+		return result.toArray( new String[result.size()]);
 	}
 }

@@ -245,7 +245,7 @@ public class APIResultSet {
 	public void includeMetadata( String[] options ) {
 		for (String option: options) {
 			Model meta = metadata.get( option );
-			if (meta == null) log.debug( "Unknown metadata section '" + option + "': ignored." );
+			if (meta == null) log.warn( "Unknown metadata section '" + option + "': ignored." );
 			else model.add( meta );
 		}
 	}
