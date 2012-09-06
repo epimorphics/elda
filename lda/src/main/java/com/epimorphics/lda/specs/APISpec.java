@@ -33,6 +33,7 @@ import com.epimorphics.lda.sources.GetDataSource;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -54,7 +55,7 @@ public class APISpec {
 
     static Logger log = LoggerFactory.getLogger(APISpec.class);
     
-    protected List<APIEndpointSpec> endpoints = new ArrayList<APIEndpointSpec>();
+    protected final List<APIEndpointSpec> endpoints = new ArrayList<APIEndpointSpec>();
     
     protected final PrefixMapping prefixes;
     protected final ShortnameService sns;
@@ -73,7 +74,7 @@ public class APISpec {
     protected final List<Source> describeSources;
     public final Bindings bindings = new Bindings();
     
-    public final Set<String> metadataOptions = new HashSet<String>();
+    public final Set<String> metadataOptions = new HashSet<String>(); // CollectionUtils.set( "bindings", "formats", "versions", "execution" );
 
 	public final int describeThreshold;
 	
@@ -82,8 +83,12 @@ public class APISpec {
 	    query to use nested selects if they are available.
 	*/
 	public static final int DEFAULT_DESCRIBE_THRESHOLD = 10;
-    
+
     public APISpec( FileManager fm, Resource specification, ModelLoader loader) {
+    	this( fm, specification, loader, "bindings,formats,versions,execution" );
+    }
+    
+    public APISpec( FileManager fm, Resource specification, ModelLoader loader, String metadataOptionsString ) {
     	specificationURI = specification.getURI();
     	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
 		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
@@ -98,7 +103,8 @@ public class APISpec {
         bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
         factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
-        extractMetadataOptions( specification );
+        MetadataOptions.set( metadataOptions, metadataOptionsString );        
+        MetadataOptions.extract( metadataOptions, specification );
         extractEndpointSpecifications( specification );
     }
 
@@ -106,11 +112,15 @@ public class APISpec {
 		return new StandardShortnameService(specification, prefixes, loader);
 	}
     
-    private void extractMetadataOptions( Resource specification ) {
-    	for (StmtIterator it = specification.listProperties( EXTRAS.metadataOptions ); it.hasNext();)
-    		for (String option: it.next().getString().split(",")) 
-    			metadataOptions.add( option.toLowerCase() );
-    }
+//    private void extractMetadataOptions( Resource specification ) {
+//    	List<Statement> options = specification.listProperties( EXTRAS.metadataOptions ).toList();
+//    	if (options.size() > 0) {
+//    		metadataOptions.clear();
+//    		for (Statement os: options)
+//    			for (String option: os.getString().split( " *, *" ))
+//        			metadataOptions.add( option.toLowerCase() );
+//    	}
+//    }
 
 	/**
         Answer the list of sources that may be used to enhance the view of

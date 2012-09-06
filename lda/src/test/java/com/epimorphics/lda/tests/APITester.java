@@ -66,10 +66,11 @@ public class APITester {
 		this( model, new FileManagerModelLoader() );
 	}
 
+	// this API spec disables the metadata options. We might consider accomodating them.
 	public APITester( Model model, ModelLoader loader ) {
 		for (ResIterator ri = model.listSubjectsWithProperty(RDF.type, API.API); ri.hasNext();) {
             Resource api = ri.next();
-            APISpec spec = new APISpec( FileManager.get(), api, loader );
+            APISpec spec = new APISpec( FileManager.get(), api, loader, "" );
             specifications.put(api.getLocalName(), spec);
             for (APIEndpointSpec eps : spec.getEndpoints()) {
                 APIEndpoint ep = APIFactory.makeApiEndpoint(eps);

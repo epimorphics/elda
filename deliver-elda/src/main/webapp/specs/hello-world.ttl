@@ -31,8 +31,6 @@ hello:api a api:API
 	; api:endpoint hello:games 
 	# tells Elda where its scripts and stylesheets are as a relative URI
 	; api:variable [ api:name "_resourceRoot"; api:value "/elda/" ]
-	# compatability with Puelia
-	; elda:metadataOptions "bindings,formats,versions,execution"
 	.
     
 # Endpoint definition	

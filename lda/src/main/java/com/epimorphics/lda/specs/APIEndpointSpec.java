@@ -95,7 +95,9 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         endpointResource = endpoint;
         describeThreshold = getIntValue( endpoint, EXTRAS.describeThreshold, apiSpec.describeThreshold );
     //
-        extractMetadataOptions( endpoint );
+        metadataOptions.addAll( apiSpec.metadataOptions );
+        MetadataOptions.extract( metadataOptions, endpoint );
+    //        
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
         handleViewTemplate( endpoint );
@@ -109,12 +111,12 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     	}
 	}
 
-	private void extractMetadataOptions(Resource endpoint) {
-    	metadataOptions.addAll( apiSpec.metadataOptions );
-    	for (StmtIterator it = endpoint.listProperties( EXTRAS.metadataOptions ); it.hasNext();)
-    		for (String option: it.next().getString().split(",")) 
-    			metadataOptions.add( option.toLowerCase() );
-    }
+//	private void extractMetadataOptions(Resource endpoint) {
+//    	metadataOptions.addAll( apiSpec.metadataOptions );
+//    	for (StmtIterator it = endpoint.listProperties( EXTRAS.metadataOptions ); it.hasNext();)
+//    		for (String option: it.next().getString().split(",")) 
+//    			metadataOptions.add( option.toLowerCase() );
+//    }
 
 
 	public boolean isListEndpoint() {

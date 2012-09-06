@@ -131,7 +131,6 @@ spec:api a api:API
 	#
 	# Elda magic follows
 	#
-	; elda:metadataOptions "bindings,formats,versions,execution" 
 	# tells Elda where its scripts and stylesheets are as a relative URI
 	; api:variable [ api:name "_resourceRoot"; api:value "/elda/" ]
 	# tells Elda where the SPARQL endpoint's form page is, if it has one

@@ -126,7 +126,6 @@ spec:api a api:API
 		; api:name "html"
 		; api:stylesheet "xslt/result-osm.xsl" 
         # ; api:stylesheet "xslt/ashtml.xsl"    
-		; extras:metadataOptions "bindings,formats,versions,execution"
 		; api:mimeType "text/html; charset=utf-8"
 		] 
 	#
