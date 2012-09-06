@@ -5,17 +5,45 @@
 </head>
 <p>
 
-<p class="main">
+<div class="main">
 
 <div class="heading">
 <a href="http://www.epimorphics.com">
 <img class="logo" src="epilogo-240.png">
 </a>
-<h1>Elda 1.2.13 CURRENT</h1>
+<h1>Elda 1.2.14 SNAPSHOT</h1>
 <h2>An implementation of the Linked Data API</h2>
 </div>
 
-<h1>Accepted content types</h1>
+<h1>Additional Elda features</h1>
+
+<h2>html formatters</h2>
+
+<p>
+The default formatter supplied by Elda is a very simple
+HTML formatter showing the properties and their values of
+the selected items. Elda also ships with a renderer that
+uses XSLT (and Javascript at the client end) to produce
+pages with additional controls and a richer appearance.
+To use this as your html renderer, add:
+</p>
+
+<pre>	
+; api:formatter 
+  [a api:XsltFormatter
+  ; api:name 'html'
+  ; api:stylesheet 'xslt/result.xsl'
+  ; api:mimeType 'text/html'
+] 
+
+</pre>
+
+<p>
+to your API root in your configuration file and arrange that
+the webapps/elda directory contents are served as static files.
+</p>
+
+<h2>Accepted content types</h2>
 
 <p>
 Elda accepts the following content types by default.
@@ -40,8 +68,6 @@ Elda accepts the following content types by default.
         model rendered by stylesheet applied to XML rendering.
     </li>
 </ul>
-
-<h1>Additional Elda features</h1>
 
 <h2>Configuration variables</h2>
 
@@ -168,6 +194,70 @@ Elda accepts the following content types by default.
     to one endpoint affect only that endpoint. 
 </p>
 
+<h2> Elda special generated shortnames - uri_* and pre_*</h2>
+
+<p>
+    When Elda is rendering a model into XML (which may then
+    be rendered to HTML by the XSLT stylesheet), it has to
+    convert URIs into names suitable as both XML element
+    names and LDA property shortnames.
+</p>
+
+<p>
+    If the URI has a given shortname (api:label or rdfs:label
+    of the right syntax), that is used. 
+</p>
+
+<p>
+    If the namespace of the URI has a prefix P, and the localname
+    is already a legal shortname L, then P_L is used.
+</p>
+
+<p>
+    Otherwise, if there is a prefix P for then namespace, then
+    pre_P_X is used, where X is a hexadecimal encoding of the
+    localname; and if there is no available prefix, uri_U is
+    used, where U is the hexadecimal encoding of the URI. 
+</p>
+
+<p>
+    The chosen encoding, which is <b>experimental</b> at this
+    time, is to encode every non-lower-case-letter as two
+    upper-case hexadecimal digits.
+</p>
+
+<p>
+    We encourage developers to not rely on the particular
+    form of the encoding. Elda will decode the generated
+    short (or not-so-short) names to their URIs if they
+    are used as property names in a query.
+</p>
+
+<h2>elda:allowSyntaxProperties</h2>
+
+<b>temporary</b>: will be removed.
+
+<p>
+In Elda 1.2.14, the property shortnames <i>result</i>,
+<i>item</i>, and <i>items</i> became reserved because
+of their syntactic significance in the XML rendering
+and manipulation by the standard XSLT stylesheet.
+Their reservation is accomplished by predefined
+shortname declarations. 
+</p>
+
+<p>
+If it is important that this reservation be avoided
+while configurations are being changed, the property
+<code>elda:allowSyntaxProperties</code> of the API
+may be given the value <b>true</b>.
+</p>
+
+<p>
+The property will be withdrawn in some later version
+of Elda no earlier than 1.2.16.
+</p>
+
 <h2>etag generation</h2>
 
 <b>Experimental</b>: may be revised or removed.
@@ -221,7 +311,7 @@ Elda accepts the following content types by default.
     Elda automatically uses nested selects if the data source 
     is a <b>local:</b> or <b>tdb:</b> model, or it the
     <code>sparqEndpoint</code> value of the API is a
-    resource with an <b>extras:supportsNestedSelects</b>
+    resource with an <b>extras:supportsNestedSelect</b>
     value of true, "true", or "yes". (We anticipate that
     later versions of Elda will dynamically check the server
     to see if nested selects work.)
@@ -276,13 +366,6 @@ Elda accepts the following content types by default.
 </p>
 
 <h2>Formatting extensions</h2>
-
-<p>
-If the object of an <code>api:stylesheet</code> directive starts
-with the prefix "xsl:", then the stylesheet is loaded from Elda's
-stylesheet directory, wherever that is. (By default it is 
-<code>webapp/xsltsheets</code>, but this will become configurable.)
-</p>
 
 <p>
 If a formatter has the property 
