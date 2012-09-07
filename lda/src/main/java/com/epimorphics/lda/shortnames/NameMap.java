@@ -219,7 +219,7 @@ public class NameMap {
 				String namespace = mt.substring( 0, cut );
 				String shortName = mt.substring( cut );
 				if (isMagic( namespace )) {
-					mapURItoShortName.put( mt, shortName /* stripHas(namespace, shortName) */ );
+					mapURItoShortName.put( mt, shortName );
 				} else {						
 					mapURItoShortName.put( mt, Transcoding.encode( prefixes, mt ) );
 				}
@@ -240,7 +240,6 @@ public class NameMap {
 		private boolean isMagic( String namespace ) {
 			if (namespace.equals(XHV.getURI())) return true; 
 			if (namespace.equals(FOAF.getURI())) return true; 
-			if (namespace.equals(DCTerms.getURI())) return true;
 			if (namespace.equals("eh:/")) return true;
 			if (namespace.equals(SPARQL.NS)) return true;
 			if (namespace.equals(RDF.getURI())) return true;
