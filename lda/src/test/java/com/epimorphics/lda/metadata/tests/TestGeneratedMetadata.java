@@ -26,6 +26,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestGeneratedMetadata {
 	
@@ -33,7 +34,7 @@ public class TestGeneratedMetadata {
 	
 	/**
 	    Check that a predicate for which no shortnames are defined in name map still
-	    gets a term binding in the metadata.
+	    gets a term binding in the metadata with the appropriate prefixed name.
 	*/
 	@Test public void testTermBindingsCoverAllPredicates() throws URISyntaxException {
 		Resource thisPage = ResourceFactory.createResource( "elda:thisPage" );
@@ -50,12 +51,13 @@ public class TestGeneratedMetadata {
 		Model meta = ModelFactory.createDefaultModel();
 		Resource exec = meta.createResource( "fake:exec" );
 		NameMap nm = new NameMap();
+		PrefixMapping pm = PrefixMapping.Factory.create().setNsPrefix( "res", "http://example.com/root#" );
+		nm.load( pm,  ModelFactory.createDefaultModel() );
 		em.addTermBindings( toScan, meta, exec, nm );
 	//
 		Resource tb = meta.listStatements( null, API.termBinding, Any ).nextStatement().getResource();
-//		assertTrue( meta.contains( tb, API.label, "predicate" ) );
-//		assertTrue( meta.contains( tb, API.property, predicate ) );
-		System.err.println( ">> TODO: get testTermBindingsCoverAllPredicates working again." );
+		assertTrue( meta.contains( tb, API.label, "res_predicate" ) );
+		assertTrue( meta.contains( tb, API.property, predicate ) );
 	}
 
 }
