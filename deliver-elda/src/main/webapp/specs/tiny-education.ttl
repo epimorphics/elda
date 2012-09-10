@@ -33,7 +33,7 @@
 #############################################################################
 # API config
 
-spec:api a api:API 
+spec:tiny-education-api a api:API 
 	; rdfs:label "Tiny Edubase API"@en
 	# Name the SPARQL endpoint which supplies the data we present
 	; api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query>
@@ -51,12 +51,8 @@ spec:api a api:API
 	#
 	# Elda magic follows
 	#
-	# tells Elda where its scripts and stylesheets are as a relative URI
-	; api:variable [ api:name "_resourceRoot"; api:value "/elda/" ]
 	# tells Elda where the SPARQL endpoint's form page is, if it has one
 	; api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"]
-	# compatability with Puelia
-	; api:variable [api:name "_strip_has"; api:value "yes"]
 	# paths which are rewritten away from education.data.gov.uk
 	; api:variable [api:name "_stagePattern"; api:value "^/doc/school$"]
 	.

@@ -19,6 +19,8 @@ package com.epimorphics.lda.specmanager;
 
 import static com.epimorphics.lda.specmanager.SpecUtils.*;
 
+import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIFactory;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APISecurityException;
@@ -35,7 +38,10 @@ import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.MultiMap;
+import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.util.FileManager;
 
 /**
@@ -65,17 +71,51 @@ public class SpecManagerImpl implements SpecManager {
             return updateSpec(uri, key, spec);
         } else {
             log.info("Creating API spec at: " + uri);
-//            spec.write(System.out, "Turtle");
-            APISpec apiSpec = new APISpec( FileManager.get(), spec.getResource(uri), modelLoader);
-            synchronized (specs) {
-                specs.put(uri, new SpecEntry(uri, key, apiSpec, spec));
-            }
-            APIFactory.registerApi(router, apiSpec);
+            Resource specRoot = spec.getResource(uri);
+            String prePath = getPrePath( specRoot );
+			APISpec apiSpec = new APISpec( FileManager.get(), specRoot, modelLoader );
+            synchronized (specs) { specs.put(uri, new SpecEntry(uri, key, apiSpec, spec)); }
+            if (prePath.length() > 0) log.info( "prePath defined: " + prePath );
+            APIFactory.registerApi( withPrePath(router, prePath), apiSpec );
             return apiSpec;
         }
     }
 
-    @Override public void deleteSpec(String uri, String key) throws APISecurityException {
+    private Router withPrePath( final Router r, final String prePath ) {
+		return new Router() {
+
+			@Override public void register(String URITemplate, APIEndpoint api) {
+				r.register( prePath + URITemplate, api );
+			}
+
+			@Override public void unregister(String URITemplate) {
+				r.unregister( prePath + URITemplate );
+			}
+
+			@Override public Match getMatch(String path, MultiMap<String, String> queryParams) {
+				return r.getMatch( path, queryParams );
+			}
+
+			@Override public List<String> templates() {
+				return r.templates();
+			}
+
+			@Override public String findItemURIPath(URI requestURI, String itemPath) {
+				return r.findItemURIPath( requestURI, itemPath );
+			}
+			
+		};
+	}
+
+	private String getPrePath( Resource specRoot ) {
+    	Statement x = specRoot.getProperty( EXTRAS.prePath );
+    	if (x != null) return x.getString();
+    	Statement y = specRoot.getProperty(EXTRAS.loadedFrom);
+    	if (y != null) return "/" + new File(y.getString()).getName().replace(".ttl", "");
+		return "";
+	}
+
+	@Override public void deleteSpec(String uri, String key) throws APISecurityException {
         SpecEntry entry = specs.get(uri);
         if (entry == null) {
             // no error if nothing to delete so we can use update safely for create

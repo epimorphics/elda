@@ -22,8 +22,8 @@
 # ---------------------------------------------------------------------
 # API config
 
-hello:api a api:API 
-	; rdfs:label "Hello World example"@en
+hello:hello-world a api:API 
+	; rdfs:label "Hello World example API -- games"@en
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	# ; api:defaultViewer api:labelledDescribeViewer
 	; api:defaultFormatter hello:HtmlFormatter 

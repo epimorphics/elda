@@ -171,7 +171,10 @@ public class Loader extends HttpServlet {
     }
 
     private String[] safeSplit(String s) {
-        return s == null || s.equals("") ? new String[] {} : s.split(" *, *");
+        return s == null || s.equals("") 
+        	? new String[] {} 
+        	: s.replaceAll( "[ \n\t]", "" ).split(",")
+        	;
     }
 
     public static final String DATASTORE_KEY = "com.epimorphics.api.dataStoreDirectory";
