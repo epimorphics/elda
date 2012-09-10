@@ -26,6 +26,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestGeneratedMetadata {
 	
@@ -45,7 +46,9 @@ public class TestGeneratedMetadata {
 	//
 		EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint, pageNumber, cc, reqURI, formatNames );
 	//
+		PrefixMapping pm = PrefixMapping.Factory.create().setNsPrefix( "this", "http://example.com/root#" );
 		Model toScan = ModelIOUtils.modelFromTurtle( ":a <http://example.com/root#predicate> :b." );
+		toScan.setNsPrefixes( pm );
 		Resource predicate = toScan.createProperty( "http://example.com/root#predicate" );
 		Model meta = ModelFactory.createDefaultModel();
 		Resource exec = meta.createResource( "fake:exec" );
@@ -53,9 +56,8 @@ public class TestGeneratedMetadata {
 		em.addTermBindings( toScan, meta, exec, nm );
 	//
 		Resource tb = meta.listStatements( null, API.termBinding, Any ).nextStatement().getResource();
-//		assertTrue( meta.contains( tb, API.label, "predicate" ) );
-//		assertTrue( meta.contains( tb, API.property, predicate ) );
-		System.err.println( ">> TODO: get testTermBindingsCoverAllPredicates working again." );
+		assertTrue( meta.contains( tb, API.label, "this_predicate" ) );
+		assertTrue( meta.contains( tb, API.property, predicate ) );
 	}
 
 }

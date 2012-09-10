@@ -59,8 +59,7 @@ public class TestXMLRenderer
 	
 	@Test public void testSingleDataStatementWithType()
 		{
-		// ensureRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
-		System.err.println( ">> TODO get testSingleDataStatementWithType working again." );
+		ensureRendering( "(P datatype=xsd_string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
 		}
 	
 	@Test public void testSortingByPredicate()
@@ -71,7 +70,7 @@ public class TestXMLRenderer
 		// not sure how to improve this without arranging a pipeline through to the
 		// renderer.
 		ensureRendering( "(R href=eh:/a (P (item 'aa') (item 'b')))", resourceInModel( "root R a; a P 'b'; a P 'aa'" ) );
-//		ensureRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
+		ensureRendering( "(P datatype=xsd_string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
 		}
 	
 	/*

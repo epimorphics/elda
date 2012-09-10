@@ -76,6 +76,12 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public String toString() {
     	return spec.toString();
     }
+	
+	static final Bindings defaults = new Bindings().put( "_resourceRoot", "/elda/" );
+	
+    @Override public Bindings defaults() {
+    	return defaults;
+    }
     
     @Override public Triad<APIResultSet, String, Bindings> call( Controls c, URI reqURI, Bindings given ) {
     	Bindings cc = given.copyWithDefaults( spec.getBindings() );
@@ -135,16 +141,12 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     private String createDefinitionURI( URI ru, Resource uriForSpec, String template, String expanded ) {
-    	
     	String pseudoTemplate = template.replaceAll( "\\{([A-Za-z0-9]+)\\}", "_$1" );
-            	
        	if (pseudoTemplate.startsWith("http:")) {
     		// Avoid special case from the TestAPI uriTemplates, qv.
     		return pseudoTemplate + "/meta";
     	}
-       							
 		String other = ru.toString().replace( expanded, "/meta" + pseudoTemplate );
-		
 //		System.err.println( ">> createDefinitionURI" );
 //		System.err.println( ">> ru: " + ru );
 //		System.err.println( ">> pseudoTemplate: " + template );
@@ -153,7 +155,6 @@ public class APIEndpointImpl implements APIEndpoint {
 //		System.err.println( ">> RESULT: " + replaced );
 //		System.err.println( ">> OTHER:  " + other );
 //		System.err.println( ">>" );
-		
 		return other;
 	}
 
