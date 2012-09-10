@@ -30,7 +30,7 @@ hello:api a api:API
 	; api:defaultFormatter hello:HtmlFormatter 
 	; api:endpoint hello:games 
 	# tells Elda where its scripts and stylesheets are as a relative URI
-	; api:variable [ api:name "_resourceRoot"; api:value "/elda/" ]
+	#; api:variable [ api:name "_resourceRoot"; api:value "/elda/" ]
 	.
     
 # Endpoint definition	

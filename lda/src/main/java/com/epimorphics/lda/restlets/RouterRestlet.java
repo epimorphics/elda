@@ -200,6 +200,9 @@ import com.hp.hpl.jena.shared.WrappedException;
     	URI requestUri = URIUtils.forceDecode( ui.getRequestUri() );
     	log.info( "handling request " + requestUri );
 //
+    	Bindings b = match.getEndpoint().getSpec().getBindings();
+    	b.put( "_resourceRoot", "/elda/" );
+		System.err.println( ">> " + b );
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
         	APIEndpoint ep = match.getEndpoint();
