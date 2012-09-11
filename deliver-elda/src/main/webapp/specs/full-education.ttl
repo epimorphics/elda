@@ -100,15 +100,13 @@ spec:CsvFormatter
 
 <http://education.data.gov.uk/sparql/education/query> elda:supportsNestedSelect true.
 
-spec:api a api:API ;
+spec:full-education-api a api:API ;
 	api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query> ;
 	api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"];
 	api:variable [api:name "_suppress_ipto"; api:value "yes"];
 	api:lang "en,none";
 	elda:enableETags true ;
-	api:variable [api:name "_exceptionIfEmpty"; api:value "no"] ;
-	api:variable [ api:name "_resourceRoot"; api:value "/elda/" ];
-	rdfs:label "Edubase API"@en;
+	rdfs:label "Edubase Full API"@en;
 	api:maxPageSize 50;
 	api:defaultPageSize 10 ;
 	api:defaultViewer api:labelledDescribeViewer ;

@@ -88,8 +88,8 @@ spec:viewerMedium a api:Viewer
 
 <http://education.data.gov.uk/sparql/education/query> extras:supportsNestedSelect true.
 
-spec:api a api:API 
-    ; rdfs:label "Edubase API"@en
+spec:old-edubase-API a api:API 
+    ; rdfs:label "Edubase API (old version)"@en
     ; foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI
     ; api:maxPageSize 50
     ; api:defaultPageSize 10 

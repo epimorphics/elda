@@ -20,8 +20,20 @@
   	<servlet-name>loader-init</servlet-name>
   	<servlet-class>com.epimorphics.lda.routing.Loader</servlet-class>
   	<init-param>
-	<param-name>com.epimorphics.api.initialSpecFile</param-name>
-        <param-value>specs/hello-world.ttl</param-value>
+  		<param-name>com.epimorphics.api.enableSPUDULIKE</param-name>
+  		<param-value>true</param-value>
+  	</init-param>
+  	<init-param>
+		<param-name>com.epimorphics.api.initialSpecFile</param-name>
+        <param-value>
+        	specs/hello-world.ttl
+        	, specs/hello-again-world.ttl
+        	, specs/tiny-education.ttl
+        	, specs/mini-education.ttl
+        	, specs/full-education.ttl
+        	, specs/old-education.ttl
+        	, specs/mountain.ttl
+        </param-value>
   	</init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -31,24 +43,31 @@
     <!-- <listener-class>com.epimorphics.lda.jmx.Statistics</listener-class> -->
     <!-- <listener-class>com.epimorphics.lda.jmx.CacheControl</listener-class> -->
   </listener>
-  
-  <!--
-  <servlet>
-  	<servlet-name>hub-handler</servlet-name>
-  	<servlet-class>com.epimorphics.lda.servlets.Hub</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-  	<servlet-name>hub-handler</servlet-name>
-  	<url-pattern>/hub/*</url-pattern>
-  </servlet-mapping>
-  -->
 
+  <!--
+    This default servlet mapping catches all the resource directories that
+    Elda uses (because references to them are created by the XSLT stylesheet).
+  -->
+  
   <servlet-mapping>
     <servlet-name>default</servlet-name>
+    <!--
+    <url-pattern>/data/*</url-pattern>
+    <url-pattern>/docs/*</url-pattern>
+    <url-pattern>/images/*</url-pattern>
+    <url-pattern>/openlayers/*</url-pattern>
+    <url-pattern>/scripts/*</url-pattern>
+    <url-pattern>/specs/*</url-pattern>
+    <url-pattern>/specs/*</url-pattern>
+    <url-pattern>/xslt/*</url-pattern>
+    -->
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
+  <!--
+    Everything else is passed to Elda's dispatch. Different configs will
+    typically have different pre-paths to avoid getting confused. 
+  -->
   <servlet-mapping>
     <servlet-name>jersey</servlet-name>
     <url-pattern>/api/*</url-pattern>

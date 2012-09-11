@@ -12,9 +12,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.Times;
-import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.MediaType;
-import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -47,7 +45,7 @@ public class XSLT_RendererFactory implements RendererFactory {
 				handleMetadata(results);
 				final String sheet = root.getProperty( API.stylesheet ).getString();
 				final XMLRenderer xr = new XMLRenderer( sns, mt, sheet );
-				return xr.render( t, rc, results ); 
+				return xr.render( t, rc.copyWithDefaults( ep.defaults() ), results ); 
 			}
 
 			public void handleMetadata(APIResultSet results) {

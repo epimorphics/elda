@@ -65,7 +65,7 @@ public class Bindings implements Lookup
 	    Answer a copy of this Bindings with the given defaults.
 	*/
 	public Bindings copyWithDefaults( Bindings defaults ) {
-    	Bindings result = new Bindings( defaults, this.parameterNames() );
+    	Bindings result = new Bindings( defaults, this.parameterNames(), ufr );
     	result.putAll( this );
         return result;
     }

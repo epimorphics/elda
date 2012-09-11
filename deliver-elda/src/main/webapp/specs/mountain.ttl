@@ -14,8 +14,8 @@
 
 @prefix extras: <http://www.epimorphics.com/vocabularies/lda#> .
 
-<#MyAPI> a api:API 
-	; rdfs:label "Test API"@en 
+<#MyMountainAPI> a api:API 
+	; rdfs:label "Test API with mountain theme"@en 
 	; api:maxPageSize 50
 	; api:defaultPageSize 10 
 	; api:endpoint 

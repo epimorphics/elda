@@ -58,6 +58,7 @@ import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
+import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
@@ -199,10 +200,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = URIUtils.forceDecode( ui.getRequestUri() );
     	log.info( "handling request " + requestUri );
-//
-    	Bindings b = match.getEndpoint().getSpec().getBindings();
-    	b.put( "_resourceRoot", "/elda/" );
-		System.err.println( ">> " + b );
+    //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
         	APIEndpoint ep = match.getEndpoint();

@@ -145,8 +145,6 @@ public class XMLRendering {
 		StmtIterator sit = x.listProperties( API.items );
 		return sit.hasNext() ? sit.next().getResource() : null;
 	}
-
-	static boolean newWay = true;
 	
 	/**
 	    Add a resource <code>x</code> to the DOM element <code>e</code>.
@@ -168,19 +166,10 @@ public class XMLRendering {
 	*/
 	private Element elementAddResource( Element e, Resource x, boolean expandRegardless ) {
 		addIdentification( e, x );
-		if (newWay) {
-			if (!cyclicOrSelected.contains( x ) || dontExpand.add( x ) || expandRegardless) {
-				List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
-				if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
-				for (Property p: properties) addPropertyValues( e, x, p, false );		
-			}
-		} else {
-			if (dontExpand.add( x )) {
-				List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
-				if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
-				for (Property p: properties) addPropertyValues( e, x, p, false );
-				dontExpand.remove( x );
-			}
+		if (!cyclicOrSelected.contains( x ) || dontExpand.add( x ) || expandRegardless) {
+			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+			if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
+			for (Property p: properties) addPropertyValues( e, x, p, false );		
 		}
 		return e;
 	}

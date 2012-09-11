@@ -22,15 +22,12 @@
 # ---------------------------------------------------------------------
 # API config
 
-hello:api a api:API 
-	; rdfs:label "Hello World example"@en
-	# Name the SPARQL endpoint which supplies the data we present
+hello:hello-world a api:API 
+	; rdfs:label "Hello World example API -- games"@en
 	; api:sparqlEndpoint <local:data/example-data.ttl>
-	; api:defaultViewer api:labelledDescribeViewer
+	# ; api:defaultViewer api:labelledDescribeViewer
 	; api:defaultFormatter hello:HtmlFormatter 
 	; api:endpoint hello:games 
-	# tells Elda where its scripts and stylesheets are as a relative URI
-	#; api:variable [ api:name "_resourceRoot"; api:value "/elda/" ]
 	.
     
 # Endpoint definition	

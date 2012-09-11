@@ -22,7 +22,7 @@ import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 
 /**
- * Factory for creating ApiInstances form a specification and 
+ * Factory for creating ApiInstances from a specification and 
  * registering them.
  * 
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>

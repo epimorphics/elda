@@ -76,6 +76,12 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public String toString() {
     	return spec.toString();
     }
+	
+	static final Bindings defaults = new Bindings().put( "_resourceRoot", "/elda/" );
+	
+    @Override public Bindings defaults() {
+    	return defaults;
+    }
     
     @Override public Triad<APIResultSet, String, Bindings> call( Controls c, URI reqURI, Bindings given ) {
     	Bindings cc = given.copyWithDefaults( spec.getBindings() );
@@ -135,16 +141,12 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     private String createDefinitionURI( URI ru, Resource uriForSpec, String template, String expanded ) {
-    	
     	String pseudoTemplate = template.replaceAll( "\\{([A-Za-z0-9]+)\\}", "_$1" );
-            	
        	if (pseudoTemplate.startsWith("http:")) {
     		// Avoid special case from the TestAPI uriTemplates, qv.
     		return pseudoTemplate + "/meta";
     	}
-       							
 		String other = ru.toString().replace( expanded, "/meta" + pseudoTemplate );
-		
 //		System.err.println( ">> createDefinitionURI" );
 //		System.err.println( ">> ru: " + ru );
 //		System.err.println( ">> pseudoTemplate: " + template );
@@ -153,7 +155,6 @@ public class APIEndpointImpl implements APIEndpoint {
 //		System.err.println( ">> RESULT: " + replaced );
 //		System.err.println( ">> OTHER:  " + other );
 //		System.err.println( ">>" );
-		
 		return other;
 	}
 
@@ -162,15 +163,18 @@ public class APIEndpointImpl implements APIEndpoint {
     	return URIUtils.replaceQueryParam( rqp1, QueryParameter._PAGE_SIZE );
     }
     
-	private void insertResultSetRoot( APIResultSet rs, URI ru, String format, Bindings cc, APIQuery query ) {
-    	Model rsm = rs.getModel();
+	private void insertResultSetRoot( APIResultSet rs, URI ru, String format, Bindings b, APIQuery query ) {
+		boolean suppress_IPTO = b.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
+		boolean exceptionIfEmpty = b.getAsString( "_exceptionIfEmpty", "no" ).equals( "yes" );
+	//
+		Model rsm = rs.getModel();
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
         URI pageBase = URIUtils.changeFormatSuffix(ru, formatNames, format);
-        Resource uriForDefinition = rsm.createResource( createDefinitionURI( pageBase, uriForSpec, template, cc.expandVariables( template ) ) ); 
+        Resource uriForDefinition = rsm.createResource( createDefinitionURI( pageBase, uriForSpec, template, b.expandVariables( template ) ) ); 
         Resource thisPage = adjustPageParameter( rsm, pageBase, page );
         rs.setRoot(thisPage);
     //
@@ -202,15 +206,17 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		.addProperty( RDF.type, API.ListEndpoint )
 	    		;
     		rs.setContentLocation( pageBase );
-        } else if (rs.isEmpty() && cc.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" )) {
-        	EldaException.NoItemFound();
         } else {
-        	Resource content = rs.getResultList().get(0);
-        	thisPage.addProperty( FOAF.primaryTopic, content );
-        	content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
-        	rs.setContentLocation( unPagedURI );
-        }
-        EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, cc, pageBase, formatNames );
+			if (rs.isEmpty() && exceptionIfEmpty) {
+				EldaException.NoItemFound();
+			} else {
+				Resource content = rs.getResultList().get(0);
+				thisPage.addProperty( FOAF.primaryTopic, content );
+				if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
+				rs.setContentLocation( unPagedURI );
+			}
+		}
+        EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, b, pageBase, formatNames );
         createOptionalMetadata(rs, query, em);   
     }
 

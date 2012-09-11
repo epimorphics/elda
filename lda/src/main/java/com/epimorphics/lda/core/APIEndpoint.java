@@ -73,5 +73,11 @@ public interface APIEndpoint {
         TODO: consider the possibility that there's more than one.
     */
 	public Renderer getRendererByType( MediaType mt );
+	
+	/**
+	    Return any default bindings that this endpoint has set up (which need
+	    not be ones specified by a config).
+	*/
+	public Bindings defaults();
 }
 

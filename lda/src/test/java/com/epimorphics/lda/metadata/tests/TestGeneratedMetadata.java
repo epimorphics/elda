@@ -34,7 +34,7 @@ public class TestGeneratedMetadata {
 	
 	/**
 	    Check that a predicate for which no shortnames are defined in name map still
-	    gets a term binding in the metadata with the appropriate prefixed name.
+	    gets a term binding in the metadata.
 	*/
 	@Test public void testTermBindingsCoverAllPredicates() throws URISyntaxException {
 		Resource thisPage = ResourceFactory.createResource( "elda:thisPage" );
@@ -46,17 +46,17 @@ public class TestGeneratedMetadata {
 	//
 		EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint, pageNumber, cc, reqURI, formatNames );
 	//
+		PrefixMapping pm = PrefixMapping.Factory.create().setNsPrefix( "this", "http://example.com/root#" );
 		Model toScan = ModelIOUtils.modelFromTurtle( ":a <http://example.com/root#predicate> :b." );
+		toScan.setNsPrefixes( pm );
 		Resource predicate = toScan.createProperty( "http://example.com/root#predicate" );
 		Model meta = ModelFactory.createDefaultModel();
 		Resource exec = meta.createResource( "fake:exec" );
 		NameMap nm = new NameMap();
-		PrefixMapping pm = PrefixMapping.Factory.create().setNsPrefix( "res", "http://example.com/root#" );
-		nm.load( pm,  ModelFactory.createDefaultModel() );
 		em.addTermBindings( toScan, meta, exec, nm );
 	//
 		Resource tb = meta.listStatements( null, API.termBinding, Any ).nextStatement().getResource();
-		assertTrue( meta.contains( tb, API.label, "res_predicate" ) );
+		assertTrue( meta.contains( tb, API.label, "this_predicate" ) );
 		assertTrue( meta.contains( tb, API.property, predicate ) );
 	}
 
