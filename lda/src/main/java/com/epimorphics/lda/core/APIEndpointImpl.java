@@ -163,15 +163,18 @@ public class APIEndpointImpl implements APIEndpoint {
     	return URIUtils.replaceQueryParam( rqp1, QueryParameter._PAGE_SIZE );
     }
     
-	private void insertResultSetRoot( APIResultSet rs, URI ru, String format, Bindings cc, APIQuery query ) {
-    	Model rsm = rs.getModel();
+	private void insertResultSetRoot( APIResultSet rs, URI ru, String format, Bindings b, APIQuery query ) {
+		boolean suppress_IPTO = b.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
+		boolean exceptionIfEmpty = b.getAsString( "_exceptionIfEmpty", "no" ).equals( "yes" );
+	//
+		Model rsm = rs.getModel();
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
         URI pageBase = URIUtils.changeFormatSuffix(ru, formatNames, format);
-        Resource uriForDefinition = rsm.createResource( createDefinitionURI( pageBase, uriForSpec, template, cc.expandVariables( template ) ) ); 
+        Resource uriForDefinition = rsm.createResource( createDefinitionURI( pageBase, uriForSpec, template, b.expandVariables( template ) ) ); 
         Resource thisPage = adjustPageParameter( rsm, pageBase, page );
         rs.setRoot(thisPage);
     //
@@ -203,15 +206,17 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		.addProperty( RDF.type, API.ListEndpoint )
 	    		;
     		rs.setContentLocation( pageBase );
-        } else if (rs.isEmpty() && cc.getAsString( "_exceptionIfEmpty", "no" ).equals( "yes" )) {
-        	EldaException.NoItemFound();
         } else {
-        	Resource content = rs.getResultList().get(0);
-        	thisPage.addProperty( FOAF.primaryTopic, content );
-        	content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
-        	rs.setContentLocation( unPagedURI );
-        }
-        EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, cc, pageBase, formatNames );
+			if (rs.isEmpty() && exceptionIfEmpty) {
+				EldaException.NoItemFound();
+			} else {
+				Resource content = rs.getResultList().get(0);
+				thisPage.addProperty( FOAF.primaryTopic, content );
+				if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
+				rs.setContentLocation( unPagedURI );
+			}
+		}
+        EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, b, pageBase, formatNames );
         createOptionalMetadata(rs, query, em);   
     }
 

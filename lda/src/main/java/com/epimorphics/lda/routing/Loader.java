@@ -64,7 +64,7 @@ public class Loader extends HttpServlet {
     private static final long serialVersionUID = 4184390033676415261L;
 
     public static final String INITIAL_SPECS_PARAM_NAME = "com.epimorphics.api.initialSpecFile";
-    
+        
     public static final String ELDA_SPEC_SYSTEM_PROPERTY_NAME = "elda.spec";
 
     public static final String LOG4J_PARAM_NAME = "log4j-init-file";
@@ -98,7 +98,7 @@ public class Loader extends HttpServlet {
         FileManager.get().addLocatorFile( baseFilePath );
         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
         for (String spec : getSpecNamesFromContext()) {
-             loadSpecFromFile(spec);
+             loadSpecFromFile( spec );
         }
     }
     
@@ -147,7 +147,7 @@ public class Loader extends HttpServlet {
 	}
 
     private Set<String> specNamesFromInitParam() {
-    	return new HashSet<String>( Arrays.asList( safeSplit(getInitParameter(INITIAL_SPECS_PARAM_NAME ) ) ) );
+    	return new HashSet<String>( Arrays.asList( safeSplit(getInitParameter( INITIAL_SPECS_PARAM_NAME ) ) ) );
 	}
 
 	// Putting log4j.properties in the classes root as normal doesn't
@@ -203,7 +203,7 @@ public class Loader extends HttpServlet {
      * router.
      * @param model
      */
-    public static void registerModel(Model model) {
+    public static void registerModel( Model model) {
         for (ResIterator ri = model.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
             Resource api = ri.next();
             try {

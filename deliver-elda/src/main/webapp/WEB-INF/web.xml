@@ -20,7 +20,11 @@
   	<servlet-name>loader-init</servlet-name>
   	<servlet-class>com.epimorphics.lda.routing.Loader</servlet-class>
   	<init-param>
-	<param-name>com.epimorphics.api.initialSpecFile</param-name>
+  		<param-name>com.epimorphics.api.enableSPUDULIKE</param-name>
+  		<param-value>true</param-value>
+  	</init-param>
+  	<init-param>
+		<param-name>com.epimorphics.api.initialSpecFile</param-name>
         <param-value>
         	specs/hello-world.ttl
         	, specs/hello-again-world.ttl
@@ -39,25 +43,15 @@
     <!-- <listener-class>com.epimorphics.lda.jmx.Statistics</listener-class> -->
     <!-- <listener-class>com.epimorphics.lda.jmx.CacheControl</listener-class> -->
   </listener>
-  
-  <!--
-  <servlet>
-  	<servlet-name>hub-handler</servlet-name>
-  	<servlet-class>com.epimorphics.lda.servlets.Hub</servlet-class>
-  </servlet>
-  
-  <servlet-mapping>
-  	<servlet-name>hub-handler</servlet-name>
-  	<url-pattern>/hub/*</url-pattern>
-  </servlet-mapping>
-  -->
 
   <!--
     This default servlet mapping catches all the resource directories that
     Elda uses (because references to them are created by the XSLT stylesheet).
   -->
+  
   <servlet-mapping>
     <servlet-name>default</servlet-name>
+    <!--
     <url-pattern>/data/*</url-pattern>
     <url-pattern>/docs/*</url-pattern>
     <url-pattern>/images/*</url-pattern>
@@ -66,6 +60,8 @@
     <url-pattern>/specs/*</url-pattern>
     <url-pattern>/specs/*</url-pattern>
     <url-pattern>/xslt/*</url-pattern>
+    -->
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
   <!--
@@ -74,7 +70,7 @@
   -->
   <servlet-mapping>
     <servlet-name>jersey</servlet-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>
