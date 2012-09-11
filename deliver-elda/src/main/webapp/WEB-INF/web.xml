@@ -20,19 +20,16 @@
   	<servlet-name>loader-init</servlet-name>
   	<servlet-class>com.epimorphics.lda.routing.Loader</servlet-class>
   	<init-param>
-  		<param-name>com.epimorphics.api.enableSPUDULIKE</param-name>
-  		<param-value>true</param-value>
-  	</init-param>
-  	<init-param>
 		<param-name>com.epimorphics.api.initialSpecFile</param-name>
         <param-value>
         	specs/hello-world.ttl
-        	, specs/hello-again-world.ttl
+        	<!-- , specs/hello-again-world.ttl
         	, specs/tiny-education.ttl
         	, specs/mini-education.ttl
         	, specs/full-education.ttl
         	, specs/old-education.ttl
         	, specs/mountain.ttl
+        	-->
         </param-value>
   	</init-param>
     <load-on-startup>1</load-on-startup>
@@ -45,8 +42,6 @@
   </listener>
 
   <!--
-    This default servlet mapping catches all the resource directories that
-    Elda uses (because references to them are created by the XSLT stylesheet).
   -->
   
   <servlet-mapping>
@@ -64,9 +59,7 @@
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
 
-  <!--
-    Everything else is passed to Elda's dispatch. Different configs will
-    typically have different pre-paths to avoid getting confused. 
+  <!-- 
   -->
   <servlet-mapping>
     <servlet-name>jersey</servlet-name>
