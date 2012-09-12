@@ -1,5 +1,7 @@
 package com.epimorphics.lda.routing;
 
+import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.Version;
+import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.APISecurityException;
@@ -22,6 +25,7 @@ import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specmanager.SpecManagerImpl;
 import com.epimorphics.lda.support.LARQManager;
 import com.epimorphics.lda.support.MapMatching;
+import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
@@ -37,29 +41,73 @@ public class Container extends ServletContainer {
 	
 	private static final long serialVersionUID = 1L;
 
+	public static final String LOCAL_PREFIX = "local:";
+
+	public static final String LOG4J_PARAM_NAME = "log4j-init-file";
+
+	public static final String ELDA_SPEC_SYSTEM_PROPERTY_NAME = "elda.spec";
+
+	public static final String INITIAL_SPECS_PARAM_NAME = "com.epimorphics.api.initialSpecFile";
+	
+	public static final String INITIAL_SPECS_PREFIX_PATH_NAME = "com.epimorphics.api.prefixPath";
+	
 	static Logger log = LoggerFactory.getLogger( Container.class );
 
 	String baseFilePath = "";
 
 	String contextPath = "";
 	
-	ModelLoader modelLoader;
+	String prefixPath = "";
 	
+	Router router = null;
+	
+	ModelLoader modelLoader;
+
     @Override public void init() throws ServletException { 
     	super.init();
     	// configureLog4J();
     	String name = getServletName();
 		log.info( "Starting servlet " + name + " for Elda " + Version.string );
-    	Router router = new DefaultRouter();
-    	routers.put( name,  router );
     	baseFilePath = withTrailingSlash( getServletContext().getRealPath( "/" ) );
     	contextPath = getServletContext().getContextPath();
     	modelLoader = new APIModelLoader( baseFilePath );
+    	prefixPath = getInitParameter( INITIAL_SPECS_PREFIX_PATH_NAME );
+    	routers.put( name,  router = new DefaultRouter() );
     	FileManager.get().addLocatorFile( baseFilePath );
     	setupLARQandTDB();
 		SpecManagerFactory.set( new SpecManagerImpl( router, modelLoader ) );
-    	for (String spec : getSpecNamesFromContext()) loadSpecFromFile( spec );
+    	for (String spec : getSpecNamesFromContext()) loadSpecFromFile( prefixPath, spec );
     } 
+    
+//    static class PrefixingRouter implements Router {
+//
+//    	final String prefixPath;
+//    	final Router base = new DefaultRouter();
+//    	
+//    	PrefixingRouter( String prefixPath ) {
+//    		this.prefixPath = prefixPath;
+//    	}
+//    	
+//		@Override public void register(String URITemplate, APIEndpoint api) {
+//			base.register(prefixPath + URITemplate, api);
+//		}
+//
+//		@Override public void unregister(String URITemplate) {
+//			base.unregister( prefixPath + URITemplate );
+//		}
+//
+//		@Override public Match getMatch(String path, MultiMap<String, String> queryParams) {
+//			return base.getMatch( prefixPath + path, queryParams );
+//		}
+//
+//		@Override public List<String> templates() {
+//			return base.templates();
+//		}
+//
+//		@Override public String findItemURIPath(URI requestURI, String itemPath) {
+//			return base.findItemURIPath( requestURI, itemPath );
+//		}
+//    }
 
     
 	/**
@@ -75,11 +123,11 @@ public class Container extends ServletContainer {
 	
 	public Set<String> specNamesFromSystemProperties() {
 		Properties p = System.getProperties();
-		return MapMatching.allValuesWithMatchingKey( Loader.ELDA_SPEC_SYSTEM_PROPERTY_NAME, p );
+		return MapMatching.allValuesWithMatchingKey( ELDA_SPEC_SYSTEM_PROPERTY_NAME, p );
 	}
 	
 	private Set<String> specNamesFromInitParam() {
-		return new HashSet<String>( Arrays.asList( safeSplit(getInitParameter( Loader.INITIAL_SPECS_PARAM_NAME ) ) ) );
+		return new HashSet<String>( Arrays.asList( safeSplit(getInitParameter( Container.INITIAL_SPECS_PARAM_NAME ) ) ) );
 	}
     
     public void osgiInit(String filepath) {
@@ -88,15 +136,15 @@ public class Container extends ServletContainer {
 //        FileManager.get().addLocatorFile( baseFilePath );
 //        modelLoader = new APIModelLoader(baseFilePath);
         FileManager.get().addLocatorFile( baseFilePath );
-        SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
+        SpecManagerFactory.set( new SpecManagerImpl( RouterFactory.getDefaultRouter(), modelLoader) );
     }
 
-	public void loadSpecFromFile( String spec ) {
-		log.info( "Loading spec file from " + spec );
-		Model init = getSpecModel( spec );
-		addLoadedFrom( init, spec );
-		log.info( "Loaded " + spec + ": " + init.size() + " statements" );
-		registerModel( init );
+	public void loadSpecFromFile( String prefixPath, String specPath ) {
+		log.info( "Loading spec file from " + specPath );
+		Model init = getSpecModel( specPath );
+		addLoadedFrom( init, specPath );
+		log.info( "Loaded " + specPath + ": " + init.size() + " statements" );
+		registerModel( prefixPath, specPath, init );
 	}
 
 	private void addLoadedFrom( Model m, String name ) {
@@ -152,7 +200,7 @@ public class Container extends ServletContainer {
     private String expandLocal( String s ) {
 //        return s.replaceFirst( "^" + LOCAL_PREFIX, baseFilePath );
 //        Reg version blows up with a char out of range
-        return s.replace( Loader.LOCAL_PREFIX, baseFilePath );
+        return s.replace( Container.LOCAL_PREFIX, baseFilePath );
     }
 
     private Model getSpecModel( String initialSpec ) {
@@ -164,18 +212,28 @@ public class Container extends ServletContainer {
      * router.
      * @param model
      */
-    public static void registerModel( Model model ) {
+    public static void registerModel( String prefixPath, String filePath, Model model ) {
         for (ResIterator ri = model.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
             Resource api = ri.next();
             try {
-                SpecManagerFactory.get().addSpec(api.getURI(), "", model);
+            	setPrefix( prefixPath, filePath, api );
+                SpecManagerFactory.get().addSpec( api.getURI(), "", model);
             } catch (APISecurityException e) {
                 throw new APIException( "Internal error. Got security exception duing bootstrap. Not possible!", e );
             }
         }
     }
 
-    class APIModelLoader implements ModelLoader {
+    private static void setPrefix(String prefixPath, String filePath, Resource root) {
+    	if (prefixPath == null) return;
+    	String prefix = prefixPath
+    		.replaceAll( "\\{file\\}", "/" + new File(filePath).getName().replace( ".ttl", "" ) )
+    		.replaceAll( "\\{api\\}", "/" + root.getLocalName() )
+    		;
+    	root.addProperty( EXTRAS.uriTemplatePrefix, prefix );
+	}
+
+	class APIModelLoader implements ModelLoader {
 
         String baseFilePathLocal;
 
@@ -185,8 +243,8 @@ public class Container extends ServletContainer {
 
         @Override public Model loadModel(String uri) {
             log.info( "loadModel: " + uri );
-            if (uri.startsWith(Loader.LOCAL_PREFIX)) {
-                String specFile = "file:///" + baseFilePathLocal + uri.substring(Loader.LOCAL_PREFIX.length());
+            if (uri.startsWith(Container.LOCAL_PREFIX)) {
+                String specFile = "file:///" + baseFilePathLocal + uri.substring(Container.LOCAL_PREFIX.length());
                 return FileManager.get().loadModel( specFile );
 
             } else if (uri.startsWith( TDBManager.PREFIX )) {

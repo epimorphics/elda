@@ -63,15 +63,6 @@ public class Loader extends HttpServlet {
 	
     private static final long serialVersionUID = 4184390033676415261L;
 
-    public static final String INITIAL_SPECS_PARAM_NAME = "com.epimorphics.api.initialSpecFile";
-        
-    public static final String ELDA_SPEC_SYSTEM_PROPERTY_NAME = "elda.spec";
-
-    public static final String LOG4J_PARAM_NAME = "log4j-init-file";
-
-    /** prefix used to indicate file resources relative to the webapp root */
-    public static final String LOCAL_PREFIX = "local:";
-
     protected static String baseFilePath = "";
     protected static String contextPath = "";
 
@@ -135,18 +126,18 @@ public class Loader extends HttpServlet {
 
 	public Set<String> specNamesFromSystemProperties() {
 		Properties p = System.getProperties();
-		return MapMatching.allValuesWithMatchingKey( ELDA_SPEC_SYSTEM_PROPERTY_NAME, p );
+		return MapMatching.allValuesWithMatchingKey( Container.ELDA_SPEC_SYSTEM_PROPERTY_NAME, p );
 	}
 
     private Set<String> specNamesFromInitParam() {
-    	return new HashSet<String>( Arrays.asList( safeSplit(getInitParameter( INITIAL_SPECS_PARAM_NAME ) ) ) );
+    	return new HashSet<String>( Arrays.asList( safeSplit(getInitParameter( Container.INITIAL_SPECS_PARAM_NAME ) ) ) );
 	}
 
 	// Putting log4j.properties in the classes root as normal doesn't
     // seem to work in WTP even though it does for normal tomcat usage
     // This is an attempt to force logging configuration to be loaded
     private void configureLog4J() throws FactoryConfigurationError {
-        String file = getInitParameter(LOG4J_PARAM_NAME);
+        String file = getInitParameter(Container.LOG4J_PARAM_NAME);
         if (file == null) file = "log4j.properties";
         if (file != null) {
             if (file.endsWith( ".xml" )) {
@@ -183,7 +174,7 @@ public class Loader extends HttpServlet {
     private String expandLocal( String s ) {
 //        return s.replaceFirst( "^" + LOCAL_PREFIX, baseFilePath );
 //        Reg version blows up with a char out of range
-        return s.replace( LOCAL_PREFIX, baseFilePath );
+        return s.replace( Container.LOCAL_PREFIX, baseFilePath );
     }
 
     private Model getSpecModel( String initialSpec ) {
@@ -216,8 +207,8 @@ public class Loader extends HttpServlet {
 
         @Override public Model loadModel(String uri) {
             log.info( "loadModel: " + uri );
-            if (uri.startsWith(LOCAL_PREFIX)) {
-                String specFile = "file:///" + baseFilePathLocal + uri.substring(LOCAL_PREFIX.length());
+            if (uri.startsWith(Container.LOCAL_PREFIX)) {
+                String specFile = "file:///" + baseFilePathLocal + uri.substring(Container.LOCAL_PREFIX.length());
                 return FileManager.get().loadModel( specFile );
 
             } else if (uri.startsWith( TDBManager.PREFIX )) {

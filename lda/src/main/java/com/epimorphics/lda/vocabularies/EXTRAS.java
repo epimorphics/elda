@@ -56,6 +56,8 @@ public class EXTRAS
 	public static final Property allowReserved = property( "allowReserved" );
 
 	public static final Property allowSyntaxProperties = property( "allowSyntaxProperties" );
+
+	public static final Property uriTemplatePrefix = property( "uriTemplatePrefix" );
     
     private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }

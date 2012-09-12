@@ -51,7 +51,7 @@
 <#routesEndpoint> a api:ListEndpoint 
 	; api:uriTemplate "/routes" 
 	; api:selector 
-		[ api:filter "type=Route,?x=Route.label" 
+		[ api:filter "type=Route" 
 		; api:orderBy "STR(?item)"
 		] 
 	.

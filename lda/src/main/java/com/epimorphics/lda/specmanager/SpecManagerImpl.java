@@ -74,32 +74,6 @@ public class SpecManagerImpl implements SpecManager {
         }
     }
 
-//    private Router withPrePath( final Router r, final String prePath ) {
-//		return new Router() {
-//
-//			@Override public void register(String URITemplate, APIEndpoint api) {
-//				r.register( prePath + URITemplate, api );
-//			}
-//
-//			@Override public void unregister(String URITemplate) {
-//				r.unregister( prePath + URITemplate );
-//			}
-//
-//			@Override public Match getMatch(String path, MultiMap<String, String> queryParams) {
-//				return r.getMatch( path, queryParams );
-//			}
-//
-//			@Override public List<String> templates() {
-//				return r.templates();
-//			}
-//
-//			@Override public String findItemURIPath(URI requestURI, String itemPath) {
-//				return r.findItemURIPath( requestURI, itemPath );
-//			}
-//			
-//		};
-//	}
-
 	@Override public void deleteSpec(String uri, String key) throws APISecurityException {
         SpecEntry entry = specs.get(uri);
         if (entry == null) {

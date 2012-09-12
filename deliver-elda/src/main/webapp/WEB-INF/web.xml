@@ -5,7 +5,7 @@
 <web-app>
 
   <servlet>
-    <servlet-name>hello-world</servlet-name>
+    <servlet-name>hello</servlet-name>
     <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
     
     <init-param> 
@@ -150,6 +150,39 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
     
+  
+  <!-- ==================================================================== -->
+
+  <servlet>
+    <servlet-name>all</servlet-name>
+    <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
+    
+    <init-param>
+    	<param-name>com.epimorphics.api.prefixPath</param-name>
+    	<param-value>{file}</param-value>
+    </init-param>
+    
+    <init-param> 
+    	<param-name>com.epimorphics.api.initialSpecFile</param-name> 
+    	<param-value>
+        	specs/hello-world.ttl
+        	, specs/hello-again-world.ttl
+        	, specs/tiny-education.ttl
+        	, specs/mini-education.ttl
+        	, specs/full-education.ttl
+        	, specs/old-education.ttl
+        	, specs/mountain.ttl
+    	</param-value>
+    </init-param>
+    
+    <init-param>
+    	<param-name>com.sun.jersey.config.property.packages</param-name>
+    	<param-value>com.epimorphics.lda.restlets</param-value>
+    </init-param>
+    
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+    
   <!-- ==================================================================== -->
 
   <servlet>
@@ -199,7 +232,7 @@
   <!-- ==================================================================== -->
 
   <servlet-mapping>
-     <url-pattern>/hello-world/*</url-pattern> <servlet-name>hello-world</servlet-name>
+     <url-pattern>/hello/*</url-pattern> <servlet-name>hello</servlet-name>
   </servlet-mapping>
   
   <servlet-mapping>
@@ -224,6 +257,10 @@
   
   <servlet-mapping>
      <url-pattern>/old-ed/*</url-pattern> <servlet-name>old-ed</servlet-name>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+     <url-pattern>/all/*</url-pattern> <servlet-name>all</servlet-name>
   </servlet-mapping>
   
   <!-- ==================================================================== -->

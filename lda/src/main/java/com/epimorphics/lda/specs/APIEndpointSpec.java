@@ -10,7 +10,6 @@ package com.epimorphics.lda.specs;
 
 import static com.epimorphics.util.RDFUtils.*;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -88,10 +87,8 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 		cachePolicyName = getStringValue( endpoint, EXTRAS.cachePolicyName, "default" );
 		parentApi = parent;
         name = endpoint.getLocalName();
-        uriTemplate = getStringValue(endpoint, API.uriTemplate, null);
         itemTemplate = getStringValue( endpoint, API.itemTemplate, null );
-        if (uriTemplate == null) EldaException.NoDeploymentURIFor( name ); 
-        if (!uriTemplate.startsWith("/") && !uriTemplate.startsWith("http")) uriTemplate = "/" + uriTemplate;
+        uriTemplate = createURITemplate( endpoint );
         endpointResource = endpoint;
         describeThreshold = getIntValue( endpoint, EXTRAS.describeThreshold, apiSpec.describeThreshold );
     //
@@ -103,6 +100,15 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         handleViewTemplate( endpoint );
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
     }
+
+	public String createURITemplate( Resource endpoint ) {
+		Resource spec = specForEndpoint(endpoint);
+		String ut = getStringValue(endpoint, API.uriTemplate, null);
+        if (ut == null) EldaException.NoDeploymentURIFor( name );
+        String prefix = getStringValue( spec, EXTRAS.uriTemplatePrefix, "" );
+        if (!ut.startsWith("/") && !ut.startsWith("http")) ut = "/" + ut;
+        return prefix + ut;
+	}
 
 	private void handleViewTemplate(Resource endpoint) {
     	if (endpoint.hasProperty( API.template )) {
