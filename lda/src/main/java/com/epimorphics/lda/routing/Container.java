@@ -33,11 +33,11 @@ import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
-public class JerseyContainer extends ServletContainer {
+public class Container extends ServletContainer {
 	
 	private static final long serialVersionUID = 1L;
 
-	static Logger log = LoggerFactory.getLogger( JerseyContainer.class );
+	static Logger log = LoggerFactory.getLogger( Container.class );
 
 	String baseFilePath = "";
 

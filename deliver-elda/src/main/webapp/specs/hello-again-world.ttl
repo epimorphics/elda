@@ -58,7 +58,8 @@ hello:HtmlFormatter a api:XsltFormatter
 	.
 	
 hello:BoardGame a rdfs:Class
-	; api:label "Board Game"
+	; rdfs:label "Board Game"
+	; api:label "BoardGame"
 	.
 	
 hello:players a rdf:Property

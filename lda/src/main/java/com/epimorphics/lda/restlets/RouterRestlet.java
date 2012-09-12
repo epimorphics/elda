@@ -55,7 +55,7 @@ import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.exceptions.QueryParseException;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
-import com.epimorphics.lda.routing.JerseyContainer;
+import com.epimorphics.lda.routing.Container;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
@@ -91,7 +91,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     
     public RouterRestlet( @Context ServletConfig servFig ) {
     	String name = servFig.getServletName();
-    	Router r = JerseyContainer.routerForServlet( name );
+    	Router r = Container.routerForServlet( name );
     	router = r;
     }
    
@@ -116,7 +116,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
     	String name = servFig.getServletName();
-    	Router r = JerseyContainer.routerForServlet( name );
+    	Router r = Container.routerForServlet( name );
     	
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
