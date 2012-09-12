@@ -26,6 +26,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -54,6 +55,7 @@ import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.exceptions.QueryParseException;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
+import com.epimorphics.lda.routing.JerseyContainer;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
@@ -85,12 +87,15 @@ import com.hp.hpl.jena.shared.WrappedException;
     public static final String ETAG = "Etag";
     public static final String LAST_MODIFIED_DATE = "Last-Modified-Date";
     
-    public RouterRestlet() {
+    final Router router;
+    
+    public RouterRestlet( @Context ServletConfig servFig ) {
+    	String name = servFig.getServletName();
+    	Router r = JerseyContainer.routerForServlet( name );
+    	router = r;
     }
    
-    static final Router router = RouterFactory.getDefaultRouter();
-    
-    public static Match getMatch( String path, MultiMap<String, String> queryParams ) {
+    public Match getMatch( String path, MultiMap<String, String> queryParams ) {
         Match match = router.getMatch( path, queryParams );
         if (match == null) {
             // No match in the table at the moment, but check the persistence
@@ -107,8 +112,12 @@ import com.hp.hpl.jena.shared.WrappedException;
             @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
             @Context ServletContext servCon,
+            @Context ServletConfig servFig,
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
+    	String name = servFig.getServletName();
+    	Router r = JerseyContainer.routerForServlet( name );
+    	
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
     	boolean dontCache = has( rh, "pragma", "no-cache" ) || has( rh, "cache-control", "no-cache" );

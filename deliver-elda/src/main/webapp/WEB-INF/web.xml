@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE web-app PUBLIC
-  '-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN'
-  'http://java.sun.com/dtd/web-app_2_3.dtd'>
+<!DOCTYPE web-app PUBLIC 
+	'-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN'
+	'http://java.sun.com/dtd/web-app_2_3.dtd'>
 <web-app>
 
   <servlet>
-    <servlet-name>jersey</servlet-name>
-    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <servlet-name>hello-world</servlet-name>
+    <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
+    
+    <init-param> 
+    	<param-name>com.epimorphics.api.initialSpecFile</param-name> 
+    	<param-value>
+    		specs/hello-world.ttl
+    	</param-value>
+    </init-param>
     
     <init-param>
     	<param-name>com.sun.jersey.config.property.packages</param-name>
@@ -16,6 +23,135 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   
+  <!-- ==================================================================== -->
+
+  <servlet>
+    <servlet-name>hello-again</servlet-name>
+    <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
+    
+    <init-param> 
+    	<param-name>com.epimorphics.api.initialSpecFile</param-name> 
+    	<param-value>
+    		specs/hello-again-world.ttl
+    	</param-value>
+    </init-param>
+    
+    <init-param>
+    	<param-name>com.sun.jersey.config.property.packages</param-name>
+    	<param-value>com.epimorphics.lda.restlets</param-value>
+    </init-param>
+    
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <!-- ==================================================================== -->
+
+  <servlet>
+    <servlet-name>tiny-ed</servlet-name>
+    <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
+    
+    <init-param> 
+    	<param-name>com.epimorphics.api.initialSpecFile</param-name> 
+    	<param-value>
+    		specs/tiny-education.ttl
+    	</param-value>
+    </init-param>
+    
+    <init-param>
+    	<param-name>com.sun.jersey.config.property.packages</param-name>
+    	<param-value>com.epimorphics.lda.restlets</param-value>
+    </init-param>
+    
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  
+  <!-- ==================================================================== -->
+
+  <servlet>
+    <servlet-name>mini-ed</servlet-name>
+    <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
+    
+    <init-param> 
+    	<param-name>com.epimorphics.api.initialSpecFile</param-name> 
+    	<param-value>
+    		specs/mini-education.ttl
+    	</param-value>
+    </init-param>
+    
+    <init-param>
+    	<param-name>com.sun.jersey.config.property.packages</param-name>
+    	<param-value>com.epimorphics.lda.restlets</param-value>
+    </init-param>
+    
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <!-- ==================================================================== -->
+
+  <servlet>
+    <servlet-name>full-ed</servlet-name>
+    <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
+    
+    <init-param> 
+    	<param-name>com.epimorphics.api.initialSpecFile</param-name> 
+    	<param-value>
+    		specs/full-education.ttl
+    	</param-value>
+    </init-param>
+    
+    <init-param>
+    	<param-name>com.sun.jersey.config.property.packages</param-name>
+    	<param-value>com.epimorphics.lda.restlets</param-value>
+    </init-param>
+    
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <!-- ==================================================================== -->
+
+  <servlet>
+    <servlet-name>old-ed</servlet-name>
+    <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
+    
+    <init-param> 
+    	<param-name>com.epimorphics.api.initialSpecFile</param-name> 
+    	<param-value>
+    		specs/old-education.ttl
+    	</param-value>
+    </init-param>
+    
+    <init-param>
+    	<param-name>com.sun.jersey.config.property.packages</param-name>
+    	<param-value>com.epimorphics.lda.restlets</param-value>
+    </init-param>
+    
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <!-- ==================================================================== -->
+
+  <servlet>
+    <servlet-name>mountain</servlet-name>
+    <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
+    
+    <init-param> 
+    	<param-name>com.epimorphics.api.initialSpecFile</param-name> 
+    	<param-value>
+    		specs/mountain.ttl
+    	</param-value>
+    </init-param>
+    
+    <init-param>
+    	<param-name>com.sun.jersey.config.property.packages</param-name>
+    	<param-value>com.epimorphics.lda.restlets</param-value>
+    </init-param>
+    
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+    
+  <!-- ==================================================================== -->
+
   <servlet>
   	<servlet-name>loader-init</servlet-name>
   	<servlet-class>com.epimorphics.lda.routing.Loader</servlet-class>
@@ -35,14 +171,15 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   
+  <!-- ==================================================================== -->
+  
   <listener>
   	<!-- -->
     <!-- <listener-class>com.epimorphics.lda.jmx.Statistics</listener-class> -->
     <!-- <listener-class>com.epimorphics.lda.jmx.CacheControl</listener-class> -->
   </listener>
-
-  <!--
-  -->
+  
+  <!-- ==================================================================== -->
   
   <servlet-mapping>
     <servlet-name>default</servlet-name>
@@ -58,13 +195,38 @@
     -->
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
+  
+  <!-- ==================================================================== -->
 
-  <!-- 
-  -->
   <servlet-mapping>
-    <servlet-name>jersey</servlet-name>
-    <url-pattern>/api/*</url-pattern>
+     <url-pattern>/hello-world/*</url-pattern> <servlet-name>hello-world</servlet-name>
   </servlet-mapping>
+  
+  <servlet-mapping>
+     <url-pattern>/hello-again/*</url-pattern> <servlet-name>hello-again</servlet-name>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+     <url-pattern>/tiny-ed/*</url-pattern> <servlet-name>tiny-ed</servlet-name>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+     <url-pattern>/mini-ed/*</url-pattern> <servlet-name>mini-ed</servlet-name>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+     <url-pattern>/full-ed/*</url-pattern> <servlet-name>full-ed</servlet-name>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+     <url-pattern>/mountain/*</url-pattern> <servlet-name>mountain</servlet-name>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+     <url-pattern>/old-ed/*</url-pattern> <servlet-name>old-ed</servlet-name>
+  </servlet-mapping>
+  
+  <!-- ==================================================================== -->
 
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>

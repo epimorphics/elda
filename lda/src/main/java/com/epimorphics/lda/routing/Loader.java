@@ -79,14 +79,6 @@ public class Loader extends HttpServlet {
 
     static Logger log = LoggerFactory.getLogger(Loader.class);
 
-    public static String getBaseFilePath() {
-        return baseFilePath;
-    }
-    
-    public static String getContextPath() {
-    	return contextPath;
-    }
-
     @Override public void init() {
     	baseFilePath = withTrailingSlash( getServletContext().getRealPath("/") );
     	log.info( "Starting Elda " + Version.string );
