@@ -60,6 +60,7 @@ public class Loader extends HttpServlet {
         ServletUtils.setupLARQandTDB( new ServletSpecContext( this ) );
         modelLoader = new APIModelLoader( baseFilePath );
         FileManager.get().addLocatorFile( baseFilePath );
+    //
         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
         for (String spec : ServletUtils.getSpecNamesFromContext(new ServletUtils.ServletSpecContext(this))) {
              ServletUtils.loadSpecFromFile( modelLoader, prefixPath, spec );

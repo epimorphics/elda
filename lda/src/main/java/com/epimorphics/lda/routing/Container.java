@@ -9,10 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.Version;
 import com.epimorphics.lda.core.ModelLoader;
+import com.epimorphics.lda.routing.ServletUtils.ServletSpecContext;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specmanager.SpecManagerImpl;
-import com.epimorphics.lda.support.LARQManager;
-import com.epimorphics.lda.support.TDBManager;
 import com.hp.hpl.jena.util.FileManager;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
@@ -53,9 +52,15 @@ public class Container extends ServletContainer {
     	routers.put( name,  router = new DefaultRouter() );
     	FileManager.get().addLocatorFile( baseFilePath );
     	ServletUtils.setupLARQandTDB( new ServletUtils.ServletSpecContext( this ) );
-		SpecManagerFactory.set( new SpecManagerImpl( router, modelLoader ) );
-    	for (String spec : ServletUtils.getSpecNamesFromContext(new ServletUtils.ServletSpecContext(this))) ServletUtils.loadSpecFromFile( modelLoader, prefixPath, spec );
-    } 
+	//
+    	loadModels( new ServletUtils.ServletSpecContext(this), router, modelLoader, prefixPath );
+    }
+
+	public static void loadModels( ServletSpecContext ssc, Router r, ModelLoader ml, String prefixPath ) {
+		SpecManagerFactory.set( new SpecManagerImpl( r, ml ) );
+    	for (String specPath : ServletUtils.getSpecNamesFromContext( ssc )) 
+    		ServletUtils.loadSpecFromFile( ml, prefixPath, specPath );
+	} 
 
     public void osgiInit(String filepath) {
         baseFilePath = filepath;
