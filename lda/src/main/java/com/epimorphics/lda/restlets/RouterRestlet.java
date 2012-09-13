@@ -58,9 +58,7 @@ import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.Container;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
-import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
-import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
@@ -115,9 +113,6 @@ import com.hp.hpl.jena.shared.WrappedException;
             @Context ServletConfig servFig,
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
-    	String name = servFig.getServletName();
-    	Router r = Container.routerForServlet( name );
-    	
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
     	boolean dontCache = has( rh, "pragma", "no-cache" ) || has( rh, "cache-control", "no-cache" );
