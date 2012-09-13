@@ -2,15 +2,21 @@ package com.epimorphics.lda.routing;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+
+import javax.servlet.http.HttpServlet;
 
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
+import com.epimorphics.lda.support.LARQManager;
 import com.epimorphics.lda.support.MapMatching;
+import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -24,6 +30,23 @@ import com.hp.hpl.jena.vocabulary.RDF;
     of the routing classes.
 */
 public class ServletUtils {
+
+	public interface SpecContext {
+		String getInitParameter( String name );
+	}
+
+	public static class ServletSpecContext implements ServletUtils.SpecContext {
+		
+		final HttpServlet underlying;
+		
+		ServletSpecContext(HttpServlet underlying) {
+			this.underlying = underlying;
+		}
+		
+		public String getInitParameter( String name ) {
+			return underlying.getInitParameter( name );
+		}
+	}
 
 	public static String withTrailingSlash(String path) {
 	    return path.endsWith("/") ? path : path + "/";
@@ -50,23 +73,6 @@ public class ServletUtils {
 		root.addProperty( EXTRAS.uriTemplatePrefix, prefix );
 	}
 
-	/**
-	 * Register all API endpoints specified in the given model with the
-	 * router.
-	 * @param model
-	 */
-	public static void registerModel( String prefixPath, String filePath, Model model ) {
-	    for (ResIterator ri = model.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
-	        Resource api = ri.next();
-	        try {
-	        	setPrefix( prefixPath, filePath, api );
-	            SpecManagerFactory.get().addSpec( api.getURI(), "", model);
-	        } catch (APISecurityException e) {
-	            throw new APIException( "Internal error. Got security exception duing bootstrap. Not possible!", e );
-	        }
-	    }
-	}
-
 	public static void addLoadedFrom( Model m, String name ) {
 		List<Statement> toAdd = new ArrayList<Statement>();
 		List<Resource> apis = m
@@ -85,5 +91,53 @@ public class ServletUtils {
 		Container.log.info( "Loaded " + specPath + ": " + init.size() + " statements" );
 		registerModel( prefixPath, specPath, init );
 	}
+
+	/**
+	 * Register all API endpoints specified in the given model with the
+	 * router.
+	 * @param model
+	 */
+	public static void registerModel( String prefixPath, String filePath, Model model ) {
+	    for (ResIterator ri = model.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
+	        Resource api = ri.next();
+	        try {
+	        	setPrefix( prefixPath, filePath, api );
+	            SpecManagerFactory.get().addSpec( api.getURI(), "", model);
+	        } catch (APISecurityException e) {
+	            throw new APIException( "Internal error. Got security exception duing bootstrap. Not possible!", e );
+	        }
+	    }
+	}
+
+	public static Set<String> specNamesFromInitParam(ServletSpecContext f) {
+		return new HashSet<String>( Arrays.asList( safeSplit(f.getInitParameter( Container.INITIAL_SPECS_PARAM_NAME ) ) ) );
+	}
+
+	/**
+	    The spec names can come from the init parameter set in the web.xml,
+	    or they may preferentially be set from system properties. 
+	
+	 	@return 
+	*/
+	public static Set<String> getSpecNamesFromContext(ServletSpecContext f) {
+		Set<String> found = specNamesFromSystemProperties();
+		return found.size() > 0 ? found : specNamesFromInitParam(f);
+	}
+
+	public static String expandLocal( String baseFilePath, String given, String ifNull ) {
+		String s = (given == null ? ifNull : given);
+	    return s.replaceFirst( "^" + Container.LOCAL_PREFIX, baseFilePath );
+	}
+
+	public static void setupLARQandTDB( ServletSpecContext me ) {
+	    String locStore = me.getInitParameter( ServletUtils.DATASTORE_KEY );
+	    String defaultTDB = locStore + "/tdb", defaultLARQ = locStore + "/larq";
+	    String givenTDB = me.getInitParameter( TDBManager.TDB_BASE_DIRECTORY );
+	    String givenLARQ =  me.getInitParameter( LARQManager.LARQ_DIRECTORY_KEY );
+	    TDBManager.setBaseTDBPath( expandLocal( Loader.baseFilePath, givenTDB , defaultTDB ) );
+	    LARQManager.setLARQIndexDirectory( expandLocal( Loader.baseFilePath, givenLARQ, defaultLARQ ) );
+	}
+
+	public static final String DATASTORE_KEY = "com.epimorphics.api.dataStoreDirectory";
 
 }

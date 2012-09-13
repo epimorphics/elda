@@ -52,27 +52,11 @@ public class Container extends ServletContainer {
     	prefixPath = getInitParameter( INITIAL_SPECS_PREFIX_PATH_NAME );
     	routers.put( name,  router = new DefaultRouter() );
     	FileManager.get().addLocatorFile( baseFilePath );
-    	setupLARQandTDB();
+    	ServletUtils.setupLARQandTDB( new ServletUtils.ServletSpecContext( this ) );
 		SpecManagerFactory.set( new SpecManagerImpl( router, modelLoader ) );
-    	for (String spec : getSpecNamesFromContext()) ServletUtils.loadSpecFromFile( modelLoader, prefixPath, spec );
+    	for (String spec : ServletUtils.getSpecNamesFromContext(new ServletUtils.ServletSpecContext(this))) ServletUtils.loadSpecFromFile( modelLoader, prefixPath, spec );
     } 
 
-    
-	/**
-	    The spec names can come from the init parameter set in the web.xml,
-	    or they may preferentially be set from system properties. 
-	 
-	 	@return 
-	*/
-	private Set<String> getSpecNamesFromContext() {
-		Set<String> found = ServletUtils.specNamesFromSystemProperties();
-		return found.size() > 0 ? found : specNamesFromInitParam();
-	}
-	
-	private Set<String> specNamesFromInitParam() {
-		return new HashSet<String>( Arrays.asList( ServletUtils.safeSplit(getInitParameter( Container.INITIAL_SPECS_PARAM_NAME ) ) ) );
-	}
-    
     public void osgiInit(String filepath) {
         baseFilePath = filepath;
         modelLoader = new APIModelLoader(baseFilePath);
@@ -97,23 +81,6 @@ public class Container extends ServletContainer {
 //            }
 //        }
 //	}
-
-    public static final String DATASTORE_KEY = "com.epimorphics.api.dataStoreDirectory";
-
-    private void setupLARQandTDB() {
-        String locStore = getInitParameter( DATASTORE_KEY );
-        String defaultTDB = locStore + "/tdb", defaultLARQ = locStore + "/larq";
-        String givenTDB = getInitParameter( TDBManager.TDB_BASE_DIRECTORY );
-        String givenLARQ =  getInitParameter( LARQManager.LARQ_DIRECTORY_KEY );
-        TDBManager.setBaseTDBPath( expandLocal( givenTDB == null ? defaultTDB : givenTDB ) );
-        LARQManager.setLARQIndexDirectory( expandLocal( givenLARQ == null ? defaultLARQ : givenLARQ ) );
-    }
-
-    private String expandLocal( String s ) {
-//        return s.replaceFirst( "^" + LOCAL_PREFIX, baseFilePath );
-//        Reg version blows up with a char out of range
-        return s.replace( Container.LOCAL_PREFIX, baseFilePath );
-    }
 
     public static Router routerForServlet( String name ) {
 		return routers.get(name);
