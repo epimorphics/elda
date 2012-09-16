@@ -5,6 +5,25 @@
 <web-app>
 
   <servlet>
+    <servlet-name>app</servlet-name>
+    <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
+    
+    <init-param> 
+    	<param-name>com.epimorphics.api.initialSpecFile</param-name> 
+    	<param-value>
+    		specs/hello-world.ttl
+    	</param-value>
+    </init-param>
+    
+    <init-param>
+    	<param-name>com.sun.jersey.config.property.packages</param-name>
+    	<param-value>com.epimorphics.lda.restlets</param-value>
+    </init-param>
+    
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet>
     <servlet-name>hello</servlet-name>
     <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
     
@@ -257,6 +276,10 @@
   
   <servlet-mapping>
      <url-pattern>/old-ed/*</url-pattern> <servlet-name>old-ed</servlet-name>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+     <url-pattern>/all/*</url-pattern> <servlet-name>all</servlet-name>
   </servlet-mapping>
   
   <servlet-mapping>
