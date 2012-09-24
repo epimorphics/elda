@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?> 
+    <!DOCTYPE urlrewrite
+        PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite3.2.dtd">
+
+<urlrewrite decode-using="null" use-query-string="true">
+
+    <!--
+    	Everything that's part of the resource set is rewritten to
+    	be under "static" so that it can be dealt with with a single
+    	trivial servlet mapping. All the other URLs are assumed to
+    	belong to a set of Elda URI templates.
+    -->
+    
+    <rule>
+        <from>^/(data|docs|images|openlayers|scripts|css|specs|xslt)/(.*)$</from>
+        <to last="true" type="forward">/lda-assets/$1/$2</to>
+    </rule>
+
+</urlrewrite>

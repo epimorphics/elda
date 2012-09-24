@@ -56,8 +56,10 @@ import com.epimorphics.lda.exceptions.QueryParseException;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.Container;
+import com.epimorphics.lda.routing.DefaultRouter;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
+import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
@@ -89,8 +91,10 @@ import com.hp.hpl.jena.shared.WrappedException;
     
     public RouterRestlet( @Context ServletConfig servFig ) {
     	String name = servFig.getServletName();
-    	Router r = Container.routerForServlet( name );
-    	router = r;
+//    	Router r = Container.routerForServlet( name );
+//    	router = r;
+    	router = RouterFactory.getDefaultRouter();
+    	
     }
    
     public Match getMatch( String path, MultiMap<String, String> queryParams ) {
