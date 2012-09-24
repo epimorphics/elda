@@ -22,18 +22,9 @@
     </filter-mapping>
 
   <servlet>
-    <servlet-name>app</servlet-name>
+    <servlet-name>elda</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
-    
-    <!--
-    <init-param> 
-    	<param-name>com.epimorphics.api.initialSpecFile</param-name> 
-    	<param-value>
-    		specs/hello-world.ttl
-    	</param-value>
-    </init-param>
-    -->
-    
+       
     <init-param>
     	<param-name>com.sun.jersey.config.property.packages</param-name>
     	<param-value>com.epimorphics.lda.restlets</param-value>
@@ -50,14 +41,13 @@
   	<init-param>
 		<param-name>com.epimorphics.api.initialSpecFile</param-name>
         <param-value>
-        	specs/hello-world.ttl
-        	<!-- , specs/hello-again-world.ttl
-        	, specs/tiny-education.ttl
-        	, specs/mini-education.ttl
-        	, specs/full-education.ttl
-        	, specs/old-education.ttl
-        	, specs/mountain.ttl
-        	-->
+        	hello::specs/hello-world.ttl
+        	, again::specs/hello-again-world.ttl
+        	, tiny::specs/tiny-education.ttl
+        	, mini::specs/mini-education.ttl
+        	, full::specs/full-education.ttl
+        	, old::specs/old-education.ttl
+        	, mountain::specs/mountain.ttl
         </param-value>
   	</init-param>
     <load-on-startup>1</load-on-startup>
@@ -74,14 +64,15 @@
   <!-- ==================================================================== -->
   
   <servlet-mapping>
-    <servlet-name>default</servlet-name>
     <url-pattern>/lda-assets/*</url-pattern>
+    <servlet-name>default</servlet-name>
   </servlet-mapping>
   
   <!-- ==================================================================== -->
 
   <servlet-mapping>
-     <url-pattern>/*</url-pattern> <servlet-name>app</servlet-name>
+     <url-pattern>/*</url-pattern> 
+     <servlet-name>elda</servlet-name>
   </servlet-mapping>  
   
   <!-- ==================================================================== -->

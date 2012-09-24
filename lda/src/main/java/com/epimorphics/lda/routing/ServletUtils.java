@@ -85,7 +85,13 @@ public class ServletUtils {
 	}
 
 	public static void loadSpecFromFile( ModelLoader ml, String prefixPath, String specPath ) {
-		Container.log.info( "Loading spec file from " + specPath );
+		int chop = specPath.indexOf( "::" );
+		if (chop >= 0) {
+			// prefixPath :: fileName
+			prefixPath = "/" + specPath.substring(0, chop);
+			specPath = specPath.substring( chop + 2 );
+		}
+		Container.log.info( "Loading spec file from " + specPath + " with prefix path " + prefixPath );
 		Model init = ml.loadModel( specPath );
 		addLoadedFrom( init, specPath );
 		Container.log.info( "Loaded " + specPath + ": " + init.size() + " statements" );
