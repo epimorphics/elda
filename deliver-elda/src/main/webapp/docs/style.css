@@ -30,7 +30,7 @@ pre
     }
 
 body
-    { padding: 0}
+    { padding: 0 }
 
 img.logo
     { float: right 
@@ -43,3 +43,22 @@ div.main
     ; margin-right: 5%
     ; clear: both
     }
+
+table {
+  border-color : black ;
+  border: 1px solid black;
+}
+
+th {
+    text-align: left
+    ; color: black
+    ; background: #aaaaaa 
+}
+
+tr:nth-child(2n) 
+    { background: #ffeeee }
+
+tr:nth-child(2n+1) 
+    { background: #ffffee }
+
+
