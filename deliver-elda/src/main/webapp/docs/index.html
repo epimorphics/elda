@@ -609,6 +609,13 @@ by the "mvn install" process.
 
 <h3>Loading the LDA configuration</h3>
 
+<p>
+	The LDA configurations that are to be part of this webapp
+	are specified to a servlet that invokes Elda's
+	<code>com.epimorphics.lda.routing.Loader</code>
+	class.
+</p>
+
 <pre>
 &lt;servlet>
   &lt;servlet-name>loader-init&lt;/servlet-name>
@@ -627,6 +634,24 @@ by the "mvn install" process.
   &lt;load-on-startup>1&lt;/load-on-startup>
 &lt;/servlet>
 </pre>
+
+<p>
+	The configurations are loaded according to the value of the
+	<code>initialSpecFile</code> parameter, which is a comma-separated
+	list of configuration directives. (All spaces, tabs, and newlines
+	in the value are ignored to make big configurations easy to
+	read and write.)
+</p>
+
+<p>
+	Each directive is a filename, with an optional leading
+	prefix specification consisting of a name followed by 
+	<code>::</code>. The filename is webapp-relative.
+	If the prefix is supplied, then all of the URI templates
+	in the configuration are implicitly prefixed with it;
+	this allows different configurations to be loaded together
+	even if they happen to share URI templates. 
+</p>
 
 
 
