@@ -107,24 +107,22 @@ In either case, Elda unzips itself from that jar into a
 new directory, Elda_VERSION, from which it starts
 itself as a Jetty server running on port 8080.
 You may immediately go to that URL in your browser:
-it provides links to Elda's documentation and the
-education example URIs.
+it provides links to Elda's documentation and example
+Elda URIs:
 </p>
 
-<p>
-You should now be able to browse to Elda's demonstration LDA URIs:
-</p>
 
-<table style="margin-left: 3em" width="80%">
+<table style="margin-left: 2em">
 	<thead>
 		<tr>
-			<th>description</th>
-			<th>config file</th>
-			<th>sample URLs</th>
+			<th width="30%">description</th>
+			<th width="20%">config file</th>
+			<th width="50%">sample URLs</th>
 		</tr>
 	</thead>
+
 	<tr>
-		<td>tiny games example</td>
+		<td>one-template games example, local SPARQL endpoint.</td>
 		<td>
 			<a href="http://localhost:8080/elda/specs/hello-world.ttl">hello-world.ttl</a>	
 		</td>
@@ -136,7 +134,7 @@ You should now be able to browse to Elda's demonstration LDA URIs:
 
 
 	<tr>
-		<td>larger games example</td>
+		<td>two-template games example, local SPARQL endpoint.</td>
 		<td>
 			<a href="http://localhost:8080/elda/specs/hello-again-world.ttl">hello-again-world.ttl</a>	
 		</td>
@@ -149,7 +147,7 @@ You should now be able to browse to Elda's demonstration LDA URIs:
 
 
 	<tr>
-		<td>tiny education example</td>
+		<td>one-template education example, external SPARQL endpoint.</td>
 		<td>
 			<a href="http://localhost:8080/elda/specs/tiny-education.ttl">tiny-education.ttl</a>	
 		</td>
@@ -160,7 +158,7 @@ You should now be able to browse to Elda's demonstration LDA URIs:
 
 
 	<tr>
-		<td>mini education example</td>
+		<td>multi-template education example, external SPARQL endpoint.</td>
 		<td>
 			<a href="http://localhost:8080/elda/specs/mini-education.ttl">mini-education.ttl</a>	
 		</td>
@@ -172,7 +170,7 @@ You should now be able to browse to Elda's demonstration LDA URIs:
 	</tr>
 
 	<tr>
-		<td>full education example</td>
+		<td>full education example, external SPARQL endpoint.</td>
 		<td>
 			<a href="http://localhost:8080/elda/specs/full-education.ttl">full-education.ttl</a>	
 		</td>
@@ -180,14 +178,14 @@ You should now be able to browse to Elda's demonstration LDA URIs:
 			<div> <a href="http://localhost:8080/elda/full/doc/school">elda/full/doc/school</a> </div>
 			<div> <a href="http://localhost:8080/elda/full/def">elda/full/def</a> </div>
 			<div> <a href="http://localhost:8080/elda/full/def/school">elda/full/def/school</a> </div>
-			<div> <a href="http://localhost:8080/elda/full/doc/school?max-schoolCapacity=100">http://localhost:8080/elda/full/doc/school?max-schoolCapacity=100</a> </div>
+			<div> <a href="http://localhost:8080/elda/full/doc/school?max-schoolCapacity=100">elda/full/doc/school?max-schoolCapacity=100</a> </div>
 			<div> ... </div>
 		</td>
 	</tr>
 
 
 	<tr>
-		<td>old education example [for comparison]</td>
+		<td>old education example [for comparison], external SPARQ endpoint.</td>
 		<td>
 			<a href="http://localhost:8080/elda/specs/old-education.ttl">old-education.ttl</a>	
 		</td>
@@ -286,7 +284,37 @@ If you use <code>elda.spec</code>, then Elda ignores the
 default specification (the education LDA) wired into it.
 </p>
 
-<h3>html formatters</h3>
+
+<h3>By editing web.xml</h3>
+
+<p>
+To change the specification used without having to use
+a <code>-Delda.spec</code> command line option every time, edit the
+Elda <code>webapps/elda/WEB-INF/web.xml</code>. Find the
+servlet configuration
+</p>
+
+<pre>
+&lt;servlet&gt;
+  &lt;servlet-name&gt;loader-init&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;com.epimorphics.lda.routing.Loader&lt;/servlet-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;com.epimorphics.api.initialSpecFile&lt;/param-name&gt;
+    &lt;param-value&gt;<b>assorted specs here</b>&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
+&lt;/servlet&gt;
+</pre>
+
+<p>
+Replace the <b>assorted specs here</b> with the name of the LDA
+specification files you wish to load, separated by commas.
+Spaces and newlines are ignored. (For more explanation of
+the structure of the <code>web.xml</code> file, see
+<a href="E1.2.14-advanced.html">the advanced documentation</a>).
+</p>
+
+<h2>Fancy HTML formatting using XSLT stylesheets</h2>
 
 <p>
 The default formatter supplied by Elda is a very simple
@@ -309,29 +337,6 @@ to your API root in your configuration file and arrange that
 the webapps/elda directory contents are served as static files.
 </p>
 
-<h3>By editing web.xml</h3>
-
-<p>
-To change the specification used without having to use
-a <code>-Delda.spec</code> command line option every time, edit the
-Elda <code>webapps/elda/WEB-INF/web.xml</code>. Find the
-servlet configuration
-
-<pre>
-&lt;servlet&gt;
-  &lt;servlet-name&gt;loader-init&lt;/servlet-name&gt;
-  &lt;servlet-class&gt;com.epimorphics.lda.routing.Loader&lt;/servlet-class&gt;
-  &lt;init-param&gt;
-    &lt;param-name&gt;com.epimorphics.api.initialSpecFile&lt;/param-name&gt;
-    &lt;param-value&gt;<b>specs/education.ttl</b>&lt;/param-value&gt;
-  &lt;/init-param&gt;
-  &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
-&lt;/servlet&gt;
-</pre>
-
-Replace <b>specs/education.ttl</b> with the name of the LDA
-specification files you wish to load, separated by commas.
-</p>
 
 <h2>Querying a local file</h2>
 
@@ -353,7 +358,7 @@ spec:api
   rdfs:label "Edubase API"@en;
   api:maxPageSize 50;
   api:defaultPageSize 10 ;
-  <b>api:sparqlEndpoint &lt;http://services.data.gov.uk/education/sparql&gt;</b> ;
+  <b>api:sparqlEndpoint &lt;http://education.data.gov.uk/sparql/education/query&gt;</b> ;
   api:endpoint 
    spec:schools
    , spec:schoolsPrimary
@@ -363,7 +368,7 @@ spec:api
  .
 </pre>
 
-Replace the services URI with <b>local:content-name</b>, 
+Replace the endpoint URI with <b>local:content-name</b>, 
 where <b>content-name</b> is the name of the RDF source you 
 wish to query. When Elda issues queries to a local: endpoint, 
 it loads (and remembers) the contents and queries those directly.
