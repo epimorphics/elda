@@ -3,7 +3,7 @@
 <title>Elda -- an implementation of the Linked Data API</title>
 <link href="style.css" type="text/css" rel="stylesheet"></link>
 </head>
-<p>
+<body>
 
 <div class="main">
 
@@ -15,35 +15,190 @@
 <h2>An implementation of the Linked Data API</h2>
 </div>
 
-<h1>Additional Elda features</h1>
-
-<h2>html formatters</h2>
+<h1>Beyond the stand-alone jar</h1>
 
 <p>
-The default formatter supplied by Elda is a very simple
-HTML formatter showing the properties and their values of
-the selected items. Elda also ships with a renderer that
-uses XSLT (and Javascript at the client end) to produce
-pages with additional controls and a richer appearance.
-To use this as your html renderer, add:
+The Elda standalone jar is just a delivery mechanism for getting
+started with LDA functionality: it packs together the Elda code
+and a Jetty server running an Elda webapp. 
 </p>
 
-<pre>	
-; api:formatter 
-  [a api:XsltFormatter
-  ; api:name 'html'
-  ; api:stylesheet 'xslt/result.xsl'
-  ; api:mimeType 'text/html'
-] 
+<p>
+To use Elda in your own webapps, you can copy the constructed
+Elda webapp from the unzipped Elda-VERSION/webapps/elda directory
+and edit its web.xml as you require. The necessary jars are all
+in <code>webapps/elda/WEB-INF/lib</code>.
+</p>
+
+<p>
+If you have downloaded the Elda repository, then you can
+rebuild the Elda working jars 
+(json-rdf-VERSION.jar and lda-VERSION.jar) 
+and webapp using <a href="http://maven.apache.org/">Maven</a>;
+see the <a href="advanced.html">advanced documentation</a>.
+</p>
+
+<p>
+The demo jar is given the name <i>elda-standalone-VERSION.jar</i>
+by the "mvn install" process.
+</p>
+
+<p>
+
+
+
+</p>
+
+<h2>Anatomy of the standalone web.xml</h2>
+
+
+<h3>The Elda servlet</h3>
+
+<pre>
+&lt;servlet>
+  &lt;servlet-name>elda&lt;/servlet-name>
+  &lt;servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer&lt;/servlet-class>
+
+  &lt;init-param>
+      &lt;param-name>com.sun.jersey.config.property.packages&lt;/param-name>
+      &lt;param-value>com.epimorphics.lda.restlets&lt;/param-value>
+  &lt;/init-param>
+
+  &lt;load-on-startup>1&lt;/load-on-startup>
+&lt;/servlet>
 
 </pre>
 
 <p>
-to your API root in your configuration file and arrange that
-the webapps/elda directory contents are served as static files.
+	The Elda servlet is just boilerplate to invoke Jersey; it
+	requests that JAX-RS resources be loaded from the
+	package <code>com.epimorphics.lda.restlets</code>.
+	LDA requests to Elda are handled by the class 
+	<code>RouterRestlet</code> from that package.
 </p>
 
-<h2>Accepted content types</h2>
+<h3>Invoking the servlet</h3>
+
+<pre>
+&lt;servlet-mapping>
+   &lt;url-pattern>/*&lt;/url-pattern>
+   &lt;servlet-name>elda&lt;/servlet-name>
+&lt;/servlet-mapping>
+</pre>
+
+<p>
+	Any URL passed to the Elda webapp is handled by the
+	Elda servlet unless it is handled by some more
+	specific servlet.
+</p>
+
+<h3>Assets</h3>
+
+<pre>
+&lt;servlet-mapping>
+  &lt;url-pattern>/lda-assets/*&lt;/url-pattern>
+  &lt;servlet-name>default&lt;/servlet-name>
+&lt;/servlet-mapping>
+</pre>
+
+
+<h3>URL rewriting</h3>
+
+<p>
+	URL paths handled by the Elda webapp are first rewritten using
+	the <code>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</code>.
+	This extra layer of flexibility makes it easier to control what
+	URL paths map to what. The boilerplate filter in <code>web.xml</code>
+	enables rewriting on all URLs according to the rules found in
+	<code>urlrewrite.xml</code>.
+</p>
+
+<pre>
+&lt;filter>
+  &lt;filter-name>UrlRewriteFilter&lt;/filter-name>
+  &lt;filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter&lt;/filter-class>
+&lt;/filter>
+
+&lt;filter-mapping>
+  &lt;filter-name>UrlRewriteFilter&lt;/filter-name>
+  &lt;url-pattern>/*&lt;/url-pattern>
+&lt;/filter-mapping>
+</pre>
+
+<p>
+	Two rewrite rules are used in this configuration. The first
+	puts all of the asset paths &mdash; all the fixed resources such
+	as scripts and stylesheets &mdash; under a common heading (from
+	where the servlet mappings will send them on to the default
+	servlet for static content). The second rule just forwards
+	the empty path to <code>lda-assets/index.html</code>.
+</p>
+
+<pre>
+&lt;urlrewrite decode-using="null" use-query-string="true">
+
+    &lt;rule>
+        &lt;from>^/(data|docs|images|openlayers|scripts|css|specs|xslt)/(.*)$&lt;/from>
+        &lt;to last="true" type="forward">/lda-assets/$1/$2&lt;/to>
+    &lt;/rule>
+
+    &lt;rule>
+        &lt;from>^/$&lt;/from>
+        &lt;to last="true" type="forward">/lda-assets/index.html&lt;/to>
+    &lt;/rule>
+
+&lt;/urlrewrite>
+</pre>
+
+<h3>Loading the LDA configuration</h3>
+
+<p>
+	The LDA configurations that are to be part of this webapp
+	are specified to a servlet that invokes Elda's
+	<code>com.epimorphics.lda.routing.Loader</code>
+	class.
+</p>
+
+<pre>
+&lt;servlet>
+  &lt;servlet-name>loader-init&lt;/servlet-name>
+  &lt;servlet-class>com.epimorphics.lda.routing.Loader&lt;/servlet-class>
+  &lt;init-param>
+    &lt;param-name>com.epimorphics.api.initialSpecFile&lt;/param-name>
+    &lt;param-value>
+       	hello::specs/hello-world.ttl
+       	, again::specs/hello-again-world.ttl
+       	, tiny::specs/tiny-education.ttl
+       	, mini::specs/mini-education.ttl
+       	, full::specs/full-education.ttl
+       	, old::specs/old-education.ttl
+    &lt;/param-value>
+  &lt;/init-param>
+  &lt;load-on-startup>1&lt;/load-on-startup>
+&lt;/servlet>
+</pre>
+
+<p>
+	The configurations are loaded according to the value of the
+	<code>initialSpecFile</code> parameter, which is a comma-separated
+	list of configuration directives. (All spaces, tabs, and newlines
+	in the value are ignored to make big configurations easy to
+	read and write.)
+</p>
+
+<p>
+	Each directive is a filename, with an optional leading
+	prefix specification consisting of a name followed by 
+	<code>::</code>. The filename is webapp-relative.
+	If the prefix is supplied, then all of the URI templates
+	in the configuration are implicitly prefixed with it;
+	this allows different configurations to be loaded together
+	even if they happen to share URI templates. 
+</p>
+
+
+
+<h1>Accepted content types</h1>
 
 <p>
 Elda accepts the following content types by default.
@@ -68,6 +223,8 @@ Elda accepts the following content types by default.
         model rendered by stylesheet applied to XML rendering.
     </li>
 </ul>
+
+<h1>Additional Elda features</h1>
 
 <h2>Configuration variables</h2>
 
@@ -194,70 +351,6 @@ Elda accepts the following content types by default.
     to one endpoint affect only that endpoint. 
 </p>
 
-<h2> Elda special generated shortnames - uri_* and pre_*</h2>
-
-<p>
-    When Elda is rendering a model into XML (which may then
-    be rendered to HTML by the XSLT stylesheet), it has to
-    convert URIs into names suitable as both XML element
-    names and LDA property shortnames.
-</p>
-
-<p>
-    If the URI has a given shortname (api:label or rdfs:label
-    of the right syntax), that is used. 
-</p>
-
-<p>
-    If the namespace of the URI has a prefix P, and the localname
-    is already a legal shortname L, then P_L is used.
-</p>
-
-<p>
-    Otherwise, if there is a prefix P for then namespace, then
-    pre_P_X is used, where X is a hexadecimal encoding of the
-    localname; and if there is no available prefix, uri_U is
-    used, where U is the hexadecimal encoding of the URI. 
-</p>
-
-<p>
-    The chosen encoding, which is <b>experimental</b> at this
-    time, is to encode every non-lower-case-letter as two
-    upper-case hexadecimal digits.
-</p>
-
-<p>
-    We encourage developers to not rely on the particular
-    form of the encoding. Elda will decode the generated
-    short (or not-so-short) names to their URIs if they
-    are used as property names in a query.
-</p>
-
-<h2>elda:allowSyntaxProperties</h2>
-
-<b>temporary</b>: will be removed.
-
-<p>
-In Elda 1.2.14, the property shortnames <i>result</i>,
-<i>item</i>, and <i>items</i> became reserved because
-of their syntactic significance in the XML rendering
-and manipulation by the standard XSLT stylesheet.
-Their reservation is accomplished by predefined
-shortname declarations. 
-</p>
-
-<p>
-If it is important that this reservation be avoided
-while configurations are being changed, the property
-<code>elda:allowSyntaxProperties</code> of the API
-may be given the value <b>true</b>.
-</p>
-
-<p>
-The property will be withdrawn in some later version
-of Elda no earlier than 1.2.16.
-</p>
-
 <h2>etag generation</h2>
 
 <b>Experimental</b>: may be revised or removed.
@@ -311,7 +404,7 @@ of Elda no earlier than 1.2.16.
     Elda automatically uses nested selects if the data source 
     is a <b>local:</b> or <b>tdb:</b> model, or it the
     <code>sparqEndpoint</code> value of the API is a
-    resource with an <b>extras:supportsNestedSelect</b>
+    resource with an <b>extras:supportsNestedSelects</b>
     value of true, "true", or "yes". (We anticipate that
     later versions of Elda will dynamically check the server
     to see if nested selects work.)
@@ -366,6 +459,13 @@ of Elda no earlier than 1.2.16.
 </p>
 
 <h2>Formatting extensions</h2>
+
+<p>
+If the object of an <code>api:stylesheet</code> directive starts
+with the prefix "xsl:", then the stylesheet is loaded from Elda's
+stylesheet directory, wherever that is. (By default it is 
+<code>webapp/xsltsheets</code>, but this will become configurable.)
+</p>
 
 <p>
 If a formatter has the property 
