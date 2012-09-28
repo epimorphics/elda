@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
+import com.hp.hpl.jena.datatypes.xsd.impl.XSDDateType;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -97,11 +98,16 @@ public class RDFUtil {
         mean that we can't have a single shared constant -- it has mutable state.
     */
     protected static SimpleDateFormat dateFormat() {
-    	return dateFormat(true);
+    	return dateFormat(true, false);
     }    
     
-    protected static SimpleDateFormat dateFormat(boolean keepZone) {
-    	SimpleDateFormat df = (keepZone ? new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss 'GMT'Z") : new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss"));
+    public static SimpleDateFormat dateFormat(boolean keepZone, boolean dropTime) {
+    	boolean keepTime = !dropTime;
+    	String timeFormat = " HH:mm:ss", dateFormat = "EEE, dd MMM yyyy";
+    	String formatString = dateFormat;
+    	if (keepTime) formatString += timeFormat;
+    	if (keepZone && keepTime) formatString += " 'GMT'Z";
+    	SimpleDateFormat df = new SimpleDateFormat( formatString ); 
     	if (keepZone) df.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
     	return df;
     }
@@ -113,15 +119,23 @@ public class RDFUtil {
     public static String formatDateTime(Literal l) {
         Object val = l.getValue();
         if (val instanceof XSDDateTime) {
-            Date date =  ((XSDDateTime)val).asCalendar().getTime();
-            return dateFormat(hasTimeZone(l.getLexicalForm())).format(date);
+        	boolean isDate = l.getDatatype().equals(XSDDatatype.XSDdate);
+            Date date = ((XSDDateTime)val).asCalendar().getTime();
+            return dateFormat(hasTimeZone(l.getLexicalForm()), isDate).format(date);
         } else {
             return null;
         }
     }
     
-    static final Pattern matchTimeZone = Pattern.compile( "(Z|[-+]\\d\\d(\\d\\d|:\\d\\d)?)$" );
-    
+    public static final Pattern matchTimeZone = Pattern.compile( "(Z|[^-0-9][-+]\\d\\d(\\d\\d|:\\d\\d)?)$" );
+        
+    /**
+        Answer true iff this lexical form looks like it ends with a time
+        zone. Mild trickery is required so that partial dates are not
+        interpreted as time zones as per the syntax expressed in the
+        <code>matchTimeZone</code> regular expression -- currently a
+        Jena XSDDateTime object may have a lexical form which is partial.
+    */
     private static boolean hasTimeZone(String lexicalForm) {
 		return matchTimeZone.matcher(lexicalForm).find();
 	}
@@ -135,8 +149,10 @@ public class RDFUtil {
     */
     public static Literal parseDateTime(String lex, String type) throws ParseException {
         boolean hasTimeZone = hasTimeZone(lex);
-		Date date = dateFormat(hasTimeZone).parse(lex);
-        if (XSD.date.getURI().equals(type)) {
+        boolean isXSDDate = XSD.date.getURI().equals(type);
+		SimpleDateFormat sdf = dateFormat(hasTimeZone, isXSDDate);
+		Date date = sdf.parse(lex);
+		if (isXSDDate) {
             return ResourceFactory.createTypedLiteral(xsdDateFormat().format(date), XSDDatatype.XSDdate);
         } else {
         	if (hasTimeZone) {

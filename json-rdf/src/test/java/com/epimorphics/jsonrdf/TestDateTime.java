@@ -39,10 +39,8 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.vocabulary.XSD;
 
 public class TestDateTime {
 	
@@ -78,8 +76,13 @@ public class TestDateTime {
     @Test public void testRoundTripDate() throws ParseException {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31", XSDDatatype.XSDdate);
         String date = RDFUtil.formatDateTime(l);
-        Literal lret = RDFUtil.parseDateTime(date, XSD.date.getURI());
+        Literal lret = RDFUtil.parseDateTime(date, l.getDatatypeURI() );
         assertEquals(l, lret);
+    }
+    
+    @Test public void testTimelessDatetimeRendering() {
+        Literal l = ResourceFactory.createTypedLiteral("1999-05-31Z", XSDDatatype.XSDdate);
+    	assertEquals( "Mon, 31 May 1999", RDFUtil.formatDateTime( l ) );
     }
 }
 
