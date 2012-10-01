@@ -14,12 +14,12 @@
     
     <rule>
         <from>^/(data|docs|images|openlayers|scripts|css|specs|xslt)/(.*)$</from>
-        <to last="true" type="forward">/lda-assets/$1/$2</to>
+        <to last="true" type="forward">/$1/$2</to>
     </rule>
     
     <rule>
-        <from>^/$</from>
-        <to last="true" type="forward">/lda-assets/index.html</to>
+        <from>^/(.*)$</from>
+        <to last="true" type="forward">/spec/$1</to>
     </rule>
     
 

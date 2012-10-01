@@ -64,14 +64,14 @@
   <!-- ==================================================================== -->
   
   <servlet-mapping>
-    <url-pattern>/lda-assets/*</url-pattern>
+    <url-pattern>/</url-pattern>
     <servlet-name>default</servlet-name>
   </servlet-mapping>
   
   <!-- ==================================================================== -->
 
   <servlet-mapping>
-     <url-pattern>/*</url-pattern> 
+     <url-pattern>/spec/*</url-pattern> 
      <servlet-name>elda</servlet-name>
   </servlet-mapping>  
   
