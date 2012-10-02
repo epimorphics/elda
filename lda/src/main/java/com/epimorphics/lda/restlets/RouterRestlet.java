@@ -28,6 +28,7 @@ import java.util.List;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -115,6 +116,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             @Context HttpHeaders headers, 
             @Context ServletContext servCon,
             @Context ServletConfig servFig,
+            @Context HttpServletRequest zombies,
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();

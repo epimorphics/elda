@@ -55,24 +55,25 @@
   
   <!-- ==================================================================== -->
   
+  <!--
   <listener>
-  	<!-- -->
-    <!-- <listener-class>com.epimorphics.lda.jmx.Statistics</listener-class> -->
-    <!-- <listener-class>com.epimorphics.lda.jmx.CacheControl</listener-class> -->
+    <listener-class>com.epimorphics.lda.jmx.Statistics</listener-class>
+    <listener-class>com.epimorphics.lda.jmx.CacheControl</listener-class>
   </listener>
+  -->
   
   <!-- ==================================================================== -->
   
   <servlet-mapping>
-    <url-pattern>/</url-pattern>
     <servlet-name>default</servlet-name>
+    <url-pattern>/</url-pattern>
   </servlet-mapping>
   
   <!-- ==================================================================== -->
 
   <servlet-mapping>
-     <url-pattern>/spec/*</url-pattern> 
      <servlet-name>elda</servlet-name>
+     <url-pattern>/API/*</url-pattern> 
   </servlet-mapping>  
   
   <!-- ==================================================================== -->

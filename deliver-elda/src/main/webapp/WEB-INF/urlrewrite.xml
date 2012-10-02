@@ -13,14 +13,13 @@
     -->
     
     <rule>
-        <from>^/(data|docs|images|openlayers|scripts|css|specs|xslt)/(.*)$</from>
+        <from>^/(lda-assets)/(.*)$</from>
         <to last="true" type="forward">/$1/$2</to>
     </rule>
     
     <rule>
         <from>^/(.*)$</from>
-        <to last="true" type="forward">/spec/$1</to>
+        <to last="true" type="forward">/API/$1</to>
     </rule>
-    
 
 </urlrewrite>

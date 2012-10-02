@@ -1392,15 +1392,15 @@ $prefLabel, $altLabel, $title and $name variables.
 		<xsl:call-template name="createInfo">
 			<xsl:with-param name="text">
 				<xsl:text>This list shows the properties that you can sort by. Click on </xsl:text>
-				<img src="{$inactiveImageBase}/Arrow3 Up.png" alt="sort in ascending order" />
+				<img src="{$inactiveImageBase}/Arrow3_Up.png" alt="sort in ascending order" />
 				<xsl:text> to sort in ascending order and </xsl:text>
-				<img src="{$inactiveImageBase}/Arrow3 Down.png" alt="sort in descending order" />
+				<img src="{$inactiveImageBase}/Arrow3_Down.png" alt="sort in descending order" />
 				<xsl:text> to sort in descending order. The properties that you're currently sorting by are shown at the top of the list. Click on </xsl:text>
 				<img src="{$activeImageBase}/Cancel.png" alt="remove this sort" />
 				<xsl:text> to remove a sort and </xsl:text>
-				<img src="{$activeImageBase}/Arrow3 Up.png" alt="sort in descending order" />
+				<img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
 				<xsl:text> or </xsl:text>
-				<img src="{$activeImageBase}/Arrow3 Down.png" alt="sort in ascending order" />
+				<img src="{$activeImageBase}/Arrow3_Down.png" alt="sort in ascending order" />
 				<xsl:text> to reverse the current sort order. </xsl:text>
 				<xsl:text>Click on the </xsl:text>
 				<img src="{$activeImageBase}/Back.png" alt="remove all sorting" />
@@ -1446,7 +1446,7 @@ $prefLabel, $altLabel, $title and $name variables.
 											<xsl:with-param name="value" select="substring-after($orderBy, 'desc')" />
 										</xsl:call-template>
 									</xsl:attribute>
-									<img src="{$activeImageBase}/Arrow3 Down.png" alt="sort in ascending order" />
+									<img src="{$activeImageBase}/Arrow3_Down.png" alt="sort in ascending order" />
 								</a>
 								<xsl:value-of select="$description" />
 							</xsl:when>
@@ -1459,7 +1459,7 @@ $prefLabel, $altLabel, $title and $name variables.
 											<xsl:with-param name="value" select="concat('desc', substring-after($orderBy, 'asc'))" />
 										</xsl:call-template>
 									</xsl:attribute>
-									<img src="{$activeImageBase}/Arrow3 Up.png" alt="sort in descending order" />
+									<img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
 								</a>
 								<xsl:value-of select="$description" />
 							</xsl:when>
@@ -1472,7 +1472,7 @@ $prefLabel, $altLabel, $title and $name variables.
 											<xsl:with-param name="value" select="concat('desc', $orderBy)" />
 										</xsl:call-template>
 									</xsl:attribute>
-									<img src="{$activeImageBase}/Arrow3 Up.png" alt="sort in descending order" />
+									<img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
 								</a>
 								<xsl:value-of select="$description" />
 							</xsl:otherwise>
@@ -1575,10 +1575,10 @@ $prefLabel, $altLabel, $title and $name variables.
 			</xsl:attribute>
 			<xsl:choose>
 				<xsl:when test="starts-with($sort, '-')">
-					<img src="{$activeImageBase}/Arrow3 Down.png" alt="sort in ascending order" />
+					<img src="{$activeImageBase}/Arrow3_Down.png" alt="sort in ascending order" />
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$activeImageBase}/Arrow3 Up.png" alt="sort in descending order" />
+					<img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
 				</xsl:otherwise>
 			</xsl:choose>
 		</a>
@@ -1671,7 +1671,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		</xsl:variable>
 		<li>
 			<a rel="nofollow" href="{$ascending}" title="sort in ascending order">
-				<img src="{$inactiveImageBase}/Arrow3 Up.png" alt="sort in ascending order" />
+				<img src="{$inactiveImageBase}/Arrow3_Up.png" alt="sort in ascending order" />
 			</a>
 			<a rel="nofollow" title="sort in descending order">
 				<xsl:attribute name="href">
@@ -1688,7 +1688,7 @@ $prefLabel, $altLabel, $title and $name variables.
 						</xsl:with-param>
 					</xsl:call-template>
 				</xsl:attribute>
-				<img src="{$inactiveImageBase}/Arrow3 Down.png" alt="sort in descending order" />
+				<img src="{$inactiveImageBase}/Arrow3_Down.png" alt="sort in descending order" />
 			</a>
 			<xsl:text> </xsl:text>
 			<a rel="nofollow" href="{$ascending}" title="sort in ascending order">
@@ -2500,10 +2500,10 @@ $prefLabel, $altLabel, $title and $name variables.
 						</xsl:attribute>
 						<xsl:choose>
 							<xsl:when test="$max != ''">
-								<img src="{$activeImageBase}/Arrow3 Left.png" alt="less than {$value}" />
+								<img src="{$activeImageBase}/Arrow3_Left.png" alt="less than {$value}" />
 							</xsl:when>
 							<xsl:otherwise>
-								<img src="{$inactiveImageBase}/Arrow3 Left.png" alt="less than {$value}" />
+								<img src="{$inactiveImageBase}/Arrow3_Left.png" alt="less than {$value}" />
 							</xsl:otherwise>
 						</xsl:choose>
 					</a>
@@ -2549,10 +2549,10 @@ $prefLabel, $altLabel, $title and $name variables.
 						</xsl:attribute>
 						<xsl:choose>
 							<xsl:when test="$min != ''">
-								<img src="{$activeImageBase}/Arrow3 Right.png" alt="more than {$value}" />
+								<img src="{$activeImageBase}/Arrow3_Right.png" alt="more than {$value}" />
 							</xsl:when>
 							<xsl:otherwise>
-								<img src="{$inactiveImageBase}/Arrow3 Right.png" alt="more than {$value}" />
+								<img src="{$inactiveImageBase}/Arrow3_Right.png" alt="more than {$value}" />
 							</xsl:otherwise>
 						</xsl:choose>
 					</a>
