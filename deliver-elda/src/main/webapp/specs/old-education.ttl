@@ -112,9 +112,8 @@ spec:old-edubase-API a api:API
     # the webapp root name.
     #
 	; api:variable
-		[api:name "activeImageBase"; api:value "/elda/images/green/16x16"]
-		, [api:name "inactiveImageBase"; api:value "/elda/images/grey/16x16"]
-		, [api:name "_resourceRoot"; api:value "/elda/"]
+		[api:name "activeImageBase"; api:value "/elda/lda-assets/images/green/16x16"]
+		, [api:name "inactiveImageBase"; api:value "/elda/lda-assets/images/grey/16x16"]
 		, [api:name "webapp"; api:value "/elda"]
 	#
 	# the default html formatter invokes the XSLT stylesheet. It will normally
