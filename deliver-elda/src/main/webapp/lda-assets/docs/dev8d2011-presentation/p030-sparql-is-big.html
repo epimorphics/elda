@@ -1,0 +1,52 @@
+<html>
+<head>
+<title>dev8d Elda presentation</title>
+<link href="style.css" type="text/css" rel="stylesheet"></link>
+</head>
+<body>
+<div class="main">
+
+<div class="heading">
+<a href="http://www.epimorphics.com">
+<img class="logo" src="epilogo-240.png">
+</a>
+<h1>Elda</h1>
+<h2>An implementation of the Linked Data API</h2>
+</div>
+
+<a href="p000-and-so-it-begins.html">FIRST</a>
+<a href="p020-plan-of-talk.html">PREV</a>
+<a href="p040-result-sets.html">NEXT</a>
+<h2>SPARQL is BIG</h2>
+
+<p>
+Names of closed schools known to the SPARQL endpoint
+at <b>http://services.data.gov.uk/education/sparql</b>.
+</p>
+
+<pre class="chunky">
+prefix school: &lt;http://education.data.gov.uk/def/school/&gt; 
+select * where
+{
+    ?school 
+        ; school:establishmentStatus 
+            school:EstablishmentStatus_Closed
+        ; rdfs:label ?label
+        .
+}
+</pre>
+
+<p>
+(And then you URL-encode it for GET, or wimp out and POST it.)
+</p>
+
+<div class="footer">
+<hr>
+&copy; Copyright 2011 Epimorphics Limited. For licencing conditions see
+<a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
+</div>
+</div>
+
+</body>
+</html>
+

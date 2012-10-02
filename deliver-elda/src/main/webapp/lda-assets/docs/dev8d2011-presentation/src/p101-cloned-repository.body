@@ -1,0 +1,7 @@
+<h2>Using the cloned repository</h2>
+
+<p class="chunky">
+Elda is managed using Maven; you can create
+a webapp and plug it into your favourite server.
+</p>
+

@@ -1,0 +1,20 @@
+<html>
+<head>
+<link href="../docs/style.css" type="text/css" rel="stylesheet"></link>
+</head>
+<body>
+
+<div class="heading">
+<h1>Publisher</h1>
+<a href="http://www.epimorphics.com">
+<h2> http://localhost:8080/elda/vocabulary/Publisher </h2>
+</a>
+</div>
+
+
+<p>
+    One who publishes; in this example, specifically, board/card games.
+</p>
+
+</body>
+</html>

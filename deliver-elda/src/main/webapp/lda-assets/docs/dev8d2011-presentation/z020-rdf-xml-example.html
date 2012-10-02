@@ -1,0 +1,322 @@
+<html>
+<head>
+<title>dev8d Elda presentation</title>
+<link href="style.css" type="text/css" rel="stylesheet"></link>
+</head>
+<body>
+<div class="main">
+
+<div class="heading">
+<a href="http://www.epimorphics.com">
+<img class="logo" src="epilogo-240.png">
+</a>
+<h1>Elda</h1>
+<h2>An implementation of the Linked Data API</h2>
+</div>
+
+<a href="p000-and-so-it-begins.html">FIRST</a>
+<a href="z010-big-sparql-query.html">PREV</a>
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:school="http://education.data.gov.uk/def/school/"
+  xmlns:dct="http://purl.org/dc/terms/"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml/vocab#"
+  xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/"
+  xmlns:linked-data="http://purl.org/linked-data/api/vocab#"&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"&gt;
+    &lt;rdfs:label&gt;Secondary&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/id/school/100864"&gt;
+    &lt;school:typeOfEstablishment rdf:resource="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/&gt;
+    &lt;school:gender rdf:resource="http://education.data.gov.uk/def/school/Gender_Mixed"/&gt;
+    &lt;school:religiousCharacter rdf:resource="http://education.data.gov.uk/def/school/ReligiousCharacter_Church_of_England"/&gt;
+    &lt;school:establishmentNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;6312&lt;/school:establishmentNumber&gt;
+    &lt;rdfs:label&gt;Alleyn's School&lt;/rdfs:label&gt;
+    &lt;school:uniqueReferenceNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;100864&lt;/school:uniqueReferenceNumber&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/def/school/Gender_Girls"&gt;
+    &lt;rdfs:label&gt;Girls&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/id/school/100860"&gt;
+    &lt;rdfs:label&gt;Sacred Heart Roman Catholic Secondary School&lt;/rdfs:label&gt;
+    &lt;school:phaseOfEducation rdf:resource="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/&gt;
+    &lt;school:establishmentNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;5405&lt;/school:establishmentNumber&gt;
+    &lt;school:religiousCharacter rdf:resource="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic"/&gt;
+    &lt;school:gender rdf:resource="http://education.data.gov.uk/def/school/Gender_Mixed"/&gt;
+    &lt;school:uniqueReferenceNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;100860&lt;/school:uniqueReferenceNumber&gt;
+    &lt;school:typeOfEstablishment rdf:resource="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/id/school/100851"&gt;
+    &lt;school:phaseOfEducation rdf:resource="http://education.data.gov.uk/def/school/PhaseOfEducation_Primary"/&gt;
+    &lt;rdfs:label&gt;St Francesca Cabrini Primary School&lt;/rdfs:label&gt;
+    &lt;school:uniqueReferenceNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;100851&lt;/school:uniqueReferenceNumber&gt;
+    &lt;school:establishmentNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;5200&lt;/school:establishmentNumber&gt;
+    &lt;school:religiousCharacter rdf:resource="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic"/&gt;
+    &lt;school:gender rdf:resource="http://education.data.gov.uk/def/school/Gender_Mixed"/&gt;
+    &lt;school:typeOfEstablishment rdf:resource="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/id/school/100852"&gt;
+    &lt;school:phaseOfEducation rdf:resource="http://education.data.gov.uk/def/school/PhaseOfEducation_Primary"/&gt;
+    &lt;school:establishmentNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;5201&lt;/school:establishmentNumber&gt;
+    &lt;school:religiousCharacter rdf:resource="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic"/&gt;
+    &lt;school:typeOfEstablishment rdf:resource="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/&gt;
+    &lt;school:gender rdf:resource="http://education.data.gov.uk/def/school/Gender_Mixed"/&gt;
+    &lt;rdfs:label&gt;St Anthony's Catholic Primary School&lt;/rdfs:label&gt;
+    &lt;school:uniqueReferenceNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;100852&lt;/school:uniqueReferenceNumber&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Foundation_School"&gt;
+    &lt;rdfs:label&gt;Foundation School&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/def/school/ReligiousCharacter_Does_not_apply"&gt;
+    &lt;rdfs:label&gt;Does not apply&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/def/school/Gender_Mixed"&gt;
+    &lt;rdfs:label&gt;Mixed&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/id/school/100862"&gt;
+    &lt;rdfs:label&gt;Dulwich College Preparatory School&lt;/rdfs:label&gt;
+    &lt;school:establishmentNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;6001&lt;/school:establishmentNumber&gt;
+    &lt;school:gender rdf:resource="http://education.data.gov.uk/def/school/Gender_Boys"/&gt;
+    &lt;school:uniqueReferenceNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;100862&lt;/school:uniqueReferenceNumber&gt;
+    &lt;school:typeOfEstablishment rdf:resource="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/def/school/ReligiousCharacter_Church_of_England"&gt;
+    &lt;rdfs:label&gt;Church of England&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/def/school/Gender_Boys"&gt;
+    &lt;rdfs:label&gt;Boys&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"&gt;
+    &lt;rdfs:label&gt;Other Independent School&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/id/school/100855"&gt;
+    &lt;school:gender rdf:resource="http://education.data.gov.uk/def/school/Gender_Mixed"/&gt;
+    &lt;school:uniqueReferenceNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;100855&lt;/school:uniqueReferenceNumber&gt;
+    &lt;rdfs:label&gt;Friars Primary Foundation School&lt;/rdfs:label&gt;
+    &lt;school:establishmentNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;5205&lt;/school:establishmentNumber&gt;
+    &lt;school:religiousCharacter rdf:resource="http://education.data.gov.uk/def/school/ReligiousCharacter_Does_not_apply"/&gt;
+    &lt;school:phaseOfEducation rdf:resource="http://education.data.gov.uk/def/school/PhaseOfEducation_Primary"/&gt;
+    &lt;school:typeOfEstablishment rdf:resource="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Foundation_School"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic"&gt;
+    &lt;rdfs:label&gt;Roman Catholic&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"&gt;
+    &lt;rdfs:label&gt;Voluntary Aided School&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/id/school/100857"&gt;
+    &lt;rdfs:label&gt;The St Thomas the Apostle College&lt;/rdfs:label&gt;
+    &lt;school:uniqueReferenceNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;100857&lt;/school:uniqueReferenceNumber&gt;
+    &lt;school:establishmentNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;5402&lt;/school:establishmentNumber&gt;
+    &lt;school:typeOfEstablishment rdf:resource="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/&gt;
+    &lt;school:religiousCharacter rdf:resource="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic"/&gt;
+    &lt;school:phaseOfEducation rdf:resource="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/&gt;
+    &lt;school:gender rdf:resource="http://education.data.gov.uk/def/school/Gender_Boys"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/id/school/100858"&gt;
+    &lt;school:typeOfEstablishment rdf:resource="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/&gt;
+    &lt;rdfs:label&gt;St Michael's RC School&lt;/rdfs:label&gt;
+    &lt;school:gender rdf:resource="http://education.data.gov.uk/def/school/Gender_Mixed"/&gt;
+    &lt;school:religiousCharacter rdf:resource="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic"/&gt;
+    &lt;school:phaseOfEducation rdf:resource="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/&gt;
+    &lt;school:uniqueReferenceNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;100858&lt;/school:uniqueReferenceNumber&gt;
+    &lt;school:establishmentNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;5403&lt;/school:establishmentNumber&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/def/school/PhaseOfEducation_Primary"&gt;
+    &lt;rdfs:label&gt;Primary&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/id/school/100866"&gt;
+    &lt;rdfs:label&gt;Herne Hill School&lt;/rdfs:label&gt;
+    &lt;school:typeOfEstablishment rdf:resource="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/&gt;
+    &lt;school:gender rdf:resource="http://education.data.gov.uk/def/school/Gender_Mixed"/&gt;
+    &lt;school:establishmentNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;6375&lt;/school:establishmentNumber&gt;
+    &lt;school:uniqueReferenceNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;100866&lt;/school:uniqueReferenceNumber&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://education.data.gov.uk/id/school/100859"&gt;
+    &lt;rdfs:label&gt;Notre Dame Roman Catholic Girls' School&lt;/rdfs:label&gt;
+    &lt;school:gender rdf:resource="http://education.data.gov.uk/def/school/Gender_Girls"/&gt;
+    &lt;school:typeOfEstablishment rdf:resource="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Voluntary_Aided_School"/&gt;
+    &lt;school:phaseOfEducation rdf:resource="http://education.data.gov.uk/def/school/PhaseOfEducation_Secondary"/&gt;
+    &lt;school:religiousCharacter rdf:resource="http://education.data.gov.uk/def/school/ReligiousCharacter_Roman_Catholic"/&gt;
+    &lt;school:uniqueReferenceNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;100859&lt;/school:uniqueReferenceNumber&gt;
+    &lt;school:establishmentNumber rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;5404&lt;/school:establishmentNumber&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school"&gt;
+    &lt;rdf:type rdf:resource="http://purl.org/linked-data/api/vocab#List"/&gt;
+    &lt;dct:hasPart rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school.rdf?_page=1"&gt;
+    &lt;rdf:type rdf:resource="http://purl.org/linked-data/api/vocab#Page"/&gt;
+    &lt;dct:isPartOf rdf:resource="http://services.data.gov.uk/education/api/school"/&gt;
+    &lt;xhtml:first rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+    &lt;xhtml:next rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=2"/&gt;
+    &lt;opensearch:itemsPerPage rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;10&lt;/opensearch:itemsPerPage&gt;
+    &lt;opensearch:startIndex rdf:datatype="http://www.w3.org/2001/XMLSchema#integer"&gt;0&lt;/opensearch:startIndex&gt;
+    &lt;dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime"&gt;2011-02-15T16:09:54&lt;/dct:modified&gt;
+    &lt;linked-data:items rdf:nodeID="itemsList"/&gt;
+    &lt;linked-data:definition rdf:resource="http://services.data.gov.uk/education/api#schools"/&gt;
+    &lt;dct:hasVersion rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_view=short"/&gt;
+    &lt;dct:hasVersion rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_view=medium"/&gt;
+    &lt;dct:hasVersion rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_view=provision"/&gt;
+    &lt;dct:hasVersion rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_view=location"/&gt;
+    &lt;dct:hasVersion rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_view="/&gt;
+    &lt;dct:hasVersion rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_view=description"/&gt;
+    &lt;dct:hasVersion rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_view=all"/&gt;
+    &lt;dct:hasFormat rdf:resource="http://services.data.gov.uk/education/api/school.ttl?_page=1"/&gt;
+    &lt;dct:hasFormat rdf:resource="http://services.data.gov.uk/education/api/school.json?_page=1"/&gt;
+    &lt;dct:hasFormat rdf:resource="http://services.data.gov.uk/education/api/school.xml?_page=1"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="itemsList"&gt;
+    &lt;rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#List"/&gt;
+    &lt;rdf:first rdf:resource="http://education.data.gov.uk/id/school/100866"/&gt;
+    &lt;rdf:rest rdf:nodeID="itemsList1"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="itemsList1"&gt;
+    &lt;rdf:first rdf:resource="http://education.data.gov.uk/id/school/100864"/&gt;
+    &lt;rdf:rest rdf:nodeID="itemsList2"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="itemsList2"&gt;
+    &lt;rdf:first rdf:resource="http://education.data.gov.uk/id/school/100862"/&gt;
+    &lt;rdf:rest rdf:nodeID="itemsList3"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="itemsList3"&gt;
+    &lt;rdf:first rdf:resource="http://education.data.gov.uk/id/school/100860"/&gt;
+    &lt;rdf:rest rdf:nodeID="itemsList4"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="itemsList4"&gt;
+    &lt;rdf:first rdf:resource="http://education.data.gov.uk/id/school/100859"/&gt;
+    &lt;rdf:rest rdf:nodeID="itemsList5"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="itemsList5"&gt;
+    &lt;rdf:first rdf:resource="http://education.data.gov.uk/id/school/100858"/&gt;
+    &lt;rdf:rest rdf:nodeID="itemsList6"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="itemsList6"&gt;
+    &lt;rdf:first rdf:resource="http://education.data.gov.uk/id/school/100857"/&gt;
+    &lt;rdf:rest rdf:nodeID="itemsList7"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="itemsList7"&gt;
+    &lt;rdf:first rdf:resource="http://education.data.gov.uk/id/school/100855"/&gt;
+    &lt;rdf:rest rdf:nodeID="itemsList8"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="itemsList8"&gt;
+    &lt;rdf:first rdf:resource="http://education.data.gov.uk/id/school/100852"/&gt;
+    &lt;rdf:rest rdf:nodeID="itemsList9"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="itemsList9"&gt;
+    &lt;rdf:first rdf:resource="http://education.data.gov.uk/id/school/100851"/&gt;
+    &lt;rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school.rdf?_view=short"&gt;
+    &lt;dct:isVersionOf rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+    &lt;rdfs:label&gt;short&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school.rdf?_view=medium"&gt;
+    &lt;dct:isVersionOf rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+    &lt;rdfs:label&gt;medium&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school.rdf?_view=provision"&gt;
+    &lt;dct:isVersionOf rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+    &lt;rdfs:label&gt;provision&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school.rdf?_view=location"&gt;
+    &lt;dct:isVersionOf rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+    &lt;rdfs:label&gt;location&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school.rdf?_view="&gt;
+    &lt;dct:isVersionOf rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+    &lt;rdfs:label&gt;&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school.rdf?_view=description"&gt;
+    &lt;dct:isVersionOf rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+    &lt;rdfs:label&gt;description&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school.rdf?_view=all"&gt;
+    &lt;dct:isVersionOf rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+    &lt;rdfs:label&gt;all&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school.ttl?_page=1"&gt;
+    &lt;dct:isFormatOf rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+    &lt;dct:format rdf:nodeID="format_ttl"/&gt;
+    &lt;rdfs:label&gt;ttl&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="format_ttl"&gt;
+    &lt;rdfs:label&gt;text/turtle&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school.json?_page=1"&gt;
+    &lt;dct:isFormatOf rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+    &lt;dct:format rdf:nodeID="format_json"/&gt;
+    &lt;rdfs:label&gt;json&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="format_json"&gt;
+    &lt;rdfs:label&gt;application/json&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:about="http://services.data.gov.uk/education/api/school.xml?_page=1"&gt;
+    &lt;dct:isFormatOf rdf:resource="http://services.data.gov.uk/education/api/school.rdf?_page=1"/&gt;
+    &lt;dct:format rdf:nodeID="format_xml"/&gt;
+    &lt;rdfs:label&gt;xml&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+  &lt;rdf:Description rdf:nodeID="format_xml"&gt;
+    &lt;rdfs:label&gt;application/xml&lt;/rdfs:label&gt;
+  &lt;/rdf:Description&gt;
+
+&lt;/rdf:RDF&gt;
+</pre>
+<div class="footer">
+<hr>
+&copy; Copyright 2011 Epimorphics Limited. For licencing conditions see
+<a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
+</div>
+</div>
+
+</body>
+</html>
+

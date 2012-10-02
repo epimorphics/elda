@@ -1,0 +1,64 @@
+h1
+    { padding: 0
+    ; margin: 0
+    }
+
+.heading
+    {
+    background: #9ecae1
+    ; padding-left: 1ex
+    ; padding-right: 1ex
+    ; border-radius: 5px
+    ; -moz-border-radius: 5px
+    }
+
+.main h2
+    { padding-left: 1px
+    ; border-top: 3px solid #9ecae1
+    ; margin-top: 0.6ex
+    }
+
+h3
+    { background: white
+    ; padding-left: 1px
+    }
+
+pre 
+    { background: #dddddd 
+    ; margin-left: 2em
+    ; margin-right: 2em
+    }
+
+body
+    { padding: 0 }
+
+img.logo
+    { float: right 
+    ; border:0 
+    }
+    
+div.main
+    { font-family: verdana, arial, sans-serif
+    ; margin-left: 5%
+    ; margin-right: 5%
+    ; clear: both
+    }
+
+table {
+  border-color : black ;
+  border: 1px solid black;
+}
+
+th {
+    text-align: left
+    ; color: black
+    ; background: #aaaaaa 
+}
+
+tr:nth-child(2n) 
+    { background: #ffeeee }
+
+tr:nth-child(2n+1) 
+    { background: #ffffee }
+
+
