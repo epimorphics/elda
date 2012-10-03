@@ -18,6 +18,11 @@
     </rule>
     
     <rule>
+        <from>^/$</from>
+        <to last="true" type="forward">index.html</to>
+    </rule>
+    
+    <rule>
         <from>^/(.*)$</from>
         <to last="true" type="forward">/API/$1</to>
     </rule>
