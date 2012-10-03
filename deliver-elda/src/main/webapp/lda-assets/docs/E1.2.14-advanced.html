@@ -43,12 +43,7 @@ The demo jar is given the name <i>elda-standalone-VERSION.jar</i>
 by the "mvn install" process.
 </p>
 
-<p>
-
-</p>
-
 <h2>Anatomy of the standalone web.xml</h2>
-
 
 <h3>The Elda servlet</h3>
 
@@ -79,14 +74,15 @@ by the "mvn install" process.
 
 <pre>
 &lt;servlet-mapping>
-   &lt;url-pattern>/spec/*&lt;/url-pattern>
+   &lt;url-pattern>/API/*&lt;/url-pattern>
    &lt;servlet-name>elda&lt;/servlet-name>
 &lt;/servlet-mapping>
 </pre>
 
 <p>
-	Any URL staring <b>spec</b> is passed to the Elda webapp 
-	and handled by the Elda servlet.
+	URLs for this webapp who's path starts <b>API</b> 
+	is handled by the Elda servlet. (Below we see how
+	this is set up.)
 </p>
 
 <h3>Assets</h3>
@@ -131,9 +127,11 @@ by the "mvn install" process.
 	Two rewrite rules are used in this configuration. 
 	The first leaves unchanged all the asset paths &mdash; 
 	all the fixed resources such as scripts and stylesheets &mdash; 
-	so that the servlet mappings will send them on to the default
+	that start with <code>specs</code> (LDA configuration files)
+	or <code>lda-assets</code> (which holds images, css, scripts,
+	etc) so that the servlet mappings will send them on to the default
 	servlet for static content. The second rule then rewrites
-	everything else to start with <b>spec</b> so that it is
+	everything else to start with <b>API</b> so that it is
 	captured by the Elda servlet.
 </p>
 
@@ -141,13 +139,13 @@ by the "mvn install" process.
 &lt;urlrewrite decode-using="null" use-query-string="true">
 
     &lt;rule>
-        &lt;from>^/(data|docs|images|openlayers|scripts|css|specs|xslt)/(.*)$&lt;/from>
+        &lt;from>^/(lda-assets|specs)/(.*)$&lt;/from>
         &lt;to last="true" type="forward">/$1/$2&lt;/to>
     &lt;/rule>
 
     &lt;rule>
         &lt;from>^/(.*)$&lt;/from>
-        &lt;to last="true" type="forward">/spec/$1&lt;/to>
+        &lt;to last="true" type="forward">/API/$1&lt;/to>
     &lt;/rule>
 
 &lt;/urlrewrite>
