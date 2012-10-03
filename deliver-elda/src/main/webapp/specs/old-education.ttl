@@ -123,8 +123,8 @@ spec:old-edubase-API a api:API
 	; api:formatter 
 		[a api:XsltFormatter
 		; api:name "html"
-		; api:stylesheet "xslt/result-osm.xsl" 
-        # ; api:stylesheet "xslt/ashtml.xsl"    
+		; api:stylesheet "lda-assets/xslt/result-osm.xsl" 
+        # ; api:stylesheet "lda-assets/xslt/ashtml.xsl"    
 		; api:mimeType "text/html; charset=utf-8"
 		] 
 	#

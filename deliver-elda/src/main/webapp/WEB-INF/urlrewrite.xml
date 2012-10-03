@@ -13,7 +13,7 @@
     -->
     
     <rule>
-        <from>^/(lda-assets)/(.*)$</from>
+        <from>^/(lda-assets|specs)/(.*)$</from>
         <to last="true" type="forward">/$1/$2</to>
     </rule>
     

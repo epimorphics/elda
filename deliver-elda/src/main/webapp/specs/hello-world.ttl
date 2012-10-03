@@ -44,7 +44,7 @@ hello:games a api:ListEndpoint
 hello:HtmlFormatter a api:XsltFormatter 
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "xslt/result.xsl"
+	; api:stylesheet "lda-assets/xslt/result.xsl"
 	.
 	
 hello:BoardGame a rdfs:Class

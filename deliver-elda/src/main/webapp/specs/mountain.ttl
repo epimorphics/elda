@@ -30,7 +30,7 @@
         ; api:formatter
                 [a api:XsltFormatter
                 ; api:name "html"
-                ; api:stylesheet "xslt/result-osm.xsl"
+                ; api:stylesheet "lda-assets/xslt/result-osm.xsl"
                 ; api:mimeType "text/html; charset=utf-8"
                 ]        
 	; api:variable
