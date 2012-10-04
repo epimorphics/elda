@@ -50,7 +50,7 @@ spec:schoolsSelector
 spec:viewerShort
 	a api:Viewer ;
 	api:name "short" ;
-	api:properties "label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label" .
+	api:properties "lat,long,label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label" .
 
 spec:viewerMedium
 	a api:Viewer ;
@@ -83,7 +83,7 @@ spec:HtmlFormatter
 	a api:XsltFormatter ;
 	api:name "html" ;
 	api:mimeType "text/html; charset=utf-8" ;
-	api:stylesheet "lda-assets/xslt/school.xsl"
+	api:stylesheet "lda-assets/xslt/result-osm.xsl"
 	.
 
 spec:CsvFormatter

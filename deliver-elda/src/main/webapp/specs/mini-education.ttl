@@ -48,7 +48,8 @@ spec:viewerShort
 	a api:Viewer 
 	; api:name "short" 
 	; api:properties 
-		"label,uniqueReferenceNumber,establishmentNumber"
+                "lat,long" # to pull in the map
+		, "label,uniqueReferenceNumber,establishmentNumber"
 		, "typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label" 
 	.
 
@@ -98,7 +99,7 @@ spec:viewerLocation
 spec:HtmlFormatter a api:XsltFormatter 
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "lda-assets/xslt/school.xsl"
+	; api:stylesheet "lda-assets/xslt/result-osm.xsl"
 	.
 
 ############################################################################################
