@@ -12,6 +12,47 @@ be withdrawn in a later version of Elda.
 
 Elda currently contains some experimental JMX statistics reporting.
 
+* _stripHas
+
+  This is now obsolete. The old enormously general rule that
+  converted hasX to x (eg hasVersion to version) has been discarded;
+  it was only required for dct:hasVersion, :hasFormat, and hasPart
+  to be available to the XSL stylesheet.
+
+* metadataOptions
+
+  (a) metadata options set on the API over-ride any that are built in
+     [none are]
+
+  (b) if metadata options are set on an endpoint, they replace any
+      that were set on the parent API.
+
+  (c) The XSLT formatter sets all the metadata options by default.
+      Options set on the formatter replace that default.
+
+* _resourceRoot
+
+  The XSLT stylesheets used within Elda prefix their requests for
+  various assets (scripts, images, css, etc) with the value of the
+  LDA variable _resourceRoot. The default value for this variable
+  is /elda/lda-assets, which matches the URL structure used by the
+  standalone jar. 
+
+* _exceptionIfEmpty
+
+  If this variable is set to "yes", then an item endpoint that fails
+  to find any properties for its item will raise an exception that
+  results in a 404 status. The default value is "no" to make
+  development easier (since the query that is getting no results is
+  visible in the usual place).
+
+* URI paths for Elda
+
+  The internal URL/directory structure used by the standalone jar
+  has changed. See 
+  
+  http://elda.googlecode.com/hg/deliver-elda/src/main/webapp/lda-assets/docs/E1.2.14-advanced.html
+
 XML CHANGE. The rules by which Elda generates round-tripping shortnames
 from URIs in result models have been simplified and now take account of
 edge cases. Given some URI U:
