@@ -1,16 +1,21 @@
 Release 1.2.14
 
-In this release of Elda, the property shortnames `result`, `item`, and
-`items` have become reserved, to prevent ambiguities in the XML and
-XSLT renderers.
+NOTICE. Some changes in this release of Elda are NOT 
+backwards-compatible. Please read these notes carefully.
 
-Attaching the property elda:allowSyntaxProperties with value true to
-the config API resource will disable the reservation but may cause
-problems with XSLT rendering; this special configuration property is
-intended to make the transition to the reserved state easier and will
-be withdrawn in a later version of Elda.
+* The Elda maven artifact now has thename 'elda', not 'lda-top'.
 
-Elda currently contains some experimental JMX statistics reporting.
+* The property shortnames `result`, `item`, and
+  `items` have become reserved, to prevent ambiguities in the XML and
+  XSLT renderers.
+
+  Attaching the property elda:allowSyntaxProperties with value true to
+  the config API resource will disable the reservation but may cause
+  problems with XSLT rendering; this special configuration property is
+  intended to make the transition to the reserved state easier and will
+  be withdrawn in a later version of Elda.
+
+* Elda currently contains some experimental JMX statistics reporting.
 
 * _stripHas
 
@@ -81,7 +86,7 @@ edge cases. Given some URI U:
   into two hex digits.
 
 EXAMPLES CHANGE. Elda's start-up examples have changed. There
-are three new variants of the education config and one hello-world
-example intended to produce a small obvious config file.
+are three new variants of the education config and itwo hello-world
+examples intended to produce small obvious config files.
 
 
