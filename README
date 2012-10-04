@@ -3,10 +3,12 @@ associated JSON encoding.
 
 This is organized as a multi-module Maven project with
 the follow modules:
-  o json-rdf   - usable standalone as a JSON encode/decode
-  o lda        - linked data API as a vanilla web app
-  o lda-proxy  - packaged version of lda that can be used as a dynamic proxy
-                 (To be created)
+
+  o json-rdf            - usable standalone as a JSON encode/decode
+  o lda                 - core code for Elda
+  o deliver-elda        - deliverable webapp with standalone jar
+  o elda-system-tests   - test client
+  o elda-testing-webapp - server for system tests
 
 Eclipse project and settings should not be in the repository.
 If not using m2clipse then create the Eclipse settings using:

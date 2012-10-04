@@ -1,3 +1,9 @@
 For documentation on the Elda (linked data API) demo deliverable,
-see src/main/docs/index.html.
+see 
 
+    deliver-elda/src/main/webapp/lda-assets/docs/E(VERSION)-index.html
+
+and
+
+    deliver-elda/src/main/webapp/lda-assets/docs/E(VERSION)-advanced.html
+    
