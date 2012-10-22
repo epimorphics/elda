@@ -34,6 +34,12 @@ public class Item {
 		return label;
 	}
 	
+	public String getId( Map<Resource, String> ids ) {
+		String id = ids.get( r );
+		if (id == null) ids.put( r,  id = "ID-" + (ids.size() + 10000) );
+		return id;
+	}
+	
 	public String shortForm( Map<Resource, String> shortNames ) {
 		if (r == null) return shortLiteral( shortNames );
 		return shortURI( shortNames );

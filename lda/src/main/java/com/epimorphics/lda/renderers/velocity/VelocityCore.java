@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ public class VelocityCore {
 		vc.put( "names", sn );
 		vc.put( "items", itemise( results.getResultList() ) );
 		vc.put( "meta",  Help.getMetadataFrom( results.getModel() ) );
+		vc.put( "ids",  new HashMap<Resource, String>() );
 //
 		Template t = ve.getTemplate( "page-shell.vm" );
 		try {

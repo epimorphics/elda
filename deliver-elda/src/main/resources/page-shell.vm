@@ -80,7 +80,7 @@
 	
 	#foreach ($item in $items) 
 		<div class="itembox">
-			<h2><a href="$item.URI" >$item.label</a></h2>
+			<h2><a href="$item.URI" id="$item.getId($ids)">$item.label</a></h2>
 			
 			#foreach ($property in $item.properties)
 				<hr style="color: #fff">
@@ -103,7 +103,7 @@
 	<div class="bordered-panel">
 		<div class="right-header">on this page</div>
 		#foreach ($item in $items)
-			<div style="margin-left: 1ex">&raquo; <a href="">$item.label</a></div>
+			<div style="margin-left: 1ex">&raquo; <a href="#$item.getId($ids)">$item.label</a></div>
 		#end
 	</div>
 </div>
