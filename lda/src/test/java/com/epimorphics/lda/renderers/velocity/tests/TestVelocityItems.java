@@ -15,7 +15,7 @@ public class TestVelocityItems {
 	
 	Model m = ModelFactory.createDefaultModel();
 	
-	@Test public void testMe() {
+	@Test public void ensureItemPreservesResourceURI() {
 		Resource r = m.createResource( NS + "leafName" );
 		Item i = new Item( r );
 		assertEquals( r.getURI(), i.getURI() );

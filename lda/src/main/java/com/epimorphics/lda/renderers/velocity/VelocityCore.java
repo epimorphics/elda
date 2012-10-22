@@ -30,6 +30,7 @@ public class VelocityCore {
 //
 		VelocityContext vc = new VelocityContext();
 		vc.put( "items", itemise( results.getResultList() ) );
+		vc.put( "meta",  "" );
 //
 		Template t = ve.getTemplate( "page-shell.vm" );
 		try {

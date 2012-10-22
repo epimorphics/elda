@@ -24,12 +24,29 @@
 		; margin-bottom: 1ex
 	}
 	
+	header h1 {
+		background: url("../lda-assets/images/molecule.png") no-repeat scroll 0px 0px transparent
+		; color: rgb(85, 85, 85)
+		; font-size: 2.3em
+		; font-weight: 300
+		; font-family: Gill Sans, Arial, sans-serif
+		; padding: 10px 66px
+	}
+	
+	footer {
+		background: #aaa
+		; text-align: right
+	}
 </style>	
 	
 </head>
 <body>
 
 <img src="/elda/lda-assets/images/elda-banner.png" alt="Elda banner" />
+
+<header>
+	<h1>Linked Data API</h1>
+</header>
 
 <h1>Search Results</h1>
 
@@ -52,6 +69,20 @@
 		
 	</div>
 #end
+
+<footer>
+	<p>
+		Powered by 
+			<a href="$meta.implementation.link">$meta.implementation.name</a>,
+		an implementation of the
+			<a href="http://code.google.com/p/linked-data-api">Linked Data API</a>
+	</p>
+	<p>
+		<a href="http://www.axialis.com/free/icons">Icons</a>
+		by <a href="http://www.axialis.com">Axialis Team</a>
+	</p>
+</footer>
+
 
 
 </body>

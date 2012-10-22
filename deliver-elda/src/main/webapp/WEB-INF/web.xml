@@ -43,6 +43,7 @@
         <param-value>
         	hello::specs/hello-world.ttl
         	, again::specs/hello-again-world.ttl
+        	, velocity::specs/hello-velocity.ttl
         	, tiny::specs/tiny-education.ttl
         	, mini::specs/mini-education.ttl
         	, full::specs/full-education.ttl

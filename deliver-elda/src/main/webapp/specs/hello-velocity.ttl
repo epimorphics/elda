@@ -22,12 +22,18 @@
 # ---------------------------------------------------------------------
 # API config
 
-hello:hello-world a api:API 
+hello:velocity-world a api:API 
 	; rdfs:label "Hello World example API -- games"@en
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	# ; api:defaultViewer api:labelledDescribeViewer
-	; api:defaultFormatter hello:HtmlFormatter 
+	; api:defaultFormatterIGNORE hello:HtmlFormatter 
 	; api:endpoint hello:games 
+	; api:formatter
+		[a api:XsltFormatter
+		; api:name "html"
+		; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
+		; api:mimeType "text/html"
+		]
 	.
     
 # Endpoint definition	
