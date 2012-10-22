@@ -1,0 +1,53 @@
+package com.epimorphics.lda.renderers.velocity;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+
+import sun.org.mozilla.javascript.internal.WrappedException;
+
+import com.epimorphics.lda.core.APIResultSet;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.shared.BrokenException;
+import com.hp.hpl.jena.vocabulary.RDFS;
+
+public class VelocityCore {
+
+	public void render( APIResultSet results, OutputStream os ) {
+		VelocityEngine ve = new VelocityEngine(); 
+		ve.setProperty( "resource.loader",  "class" );
+		ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
+		ve.init();
+//
+		VelocityContext vc = new VelocityContext();
+		vc.put( "items", itemise( results.getResultList() ) );
+//
+		Template t = ve.getTemplate( "page-shell.vm" );
+		try {
+			Writer w = new OutputStreamWriter( os, "UTF-8" );
+			t.merge( vc,  w );
+			w.close();
+		} catch (UnsupportedEncodingException e) {
+			throw new BrokenException( e );
+		} catch (IOException e) {
+			throw new WrappedException( e );
+		}
+	}
+	
+	private List<Item> itemise( List<Resource> items ) {
+		List<Item> result = new ArrayList<Item>( items.size() );
+		for (Resource item: items) result.add( new Item( item ) );
+		return result;
+	}
+	
+
+}

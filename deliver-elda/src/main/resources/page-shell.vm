@@ -1,0 +1,58 @@
+<html>
+<head>
+<title>Elda with Velocity</title>
+<style>
+	h1 {
+		background-color: #444
+		; color: white
+		; padding: 1ex
+		; border-radius: 1ex
+	}
+	
+	h2 {
+		font-size: 1em
+		; margin-left: 1ex
+	}
+	
+	.indented {
+		margin-left: 1ex
+	}
+	
+	.itembox {
+		border: 1px solid black
+		; border-radius: 1ex
+		; margin-bottom: 1ex
+	}
+	
+</style>	
+	
+</head>
+<body>
+
+<img src="/elda/lda-assets/images/elda-banner.png" alt="Elda banner" />
+
+<h1>Search Results</h1>
+
+#foreach ($item in $items) 
+	<div class="itembox">
+		<h2><a href="$item.URI">$item.label</a></h2>
+		
+		#foreach ($property in $item.properties)
+			<hr style="color: #fff">
+			<div class="indented">
+				<a href="$property.URI">$property.label</a>
+				#foreach ($value in ${property.getValues($item)})
+					<div class="indented">
+						$value.objectString
+					</div>
+				#end
+			</div>
+		#end
+		
+		
+	</div>
+#end
+
+
+</body>
+</html>

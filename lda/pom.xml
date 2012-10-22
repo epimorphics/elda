@@ -15,6 +15,15 @@
   <url>http://maven.apache.org</url>
 
   <dependencies>
+
+
+      <dependency>
+          <groupId>org.apache.velocity</groupId>
+          <artifactId>velocity</artifactId>
+          <version>1.7</version>
+      </dependency>
+
+
     <dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>json-rdf</artifactId>

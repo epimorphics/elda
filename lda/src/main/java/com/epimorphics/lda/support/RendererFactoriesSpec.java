@@ -63,7 +63,8 @@ public class RendererFactoriesSpec {
 			  : "node " + r.toString() )
 			);
 		RendererFactory rfx = BuiltinRendererTable.getFactory( type ); 
-		result.putFactory( name, r, mt, pickFactory( className, rfx ), isDefault );
+		RendererFactory fac = pickFactory( className, rfx );
+		result.putFactory( name, r, mt, fac, isDefault );
 	}
 
 	private static Resource getRendererType( Resource r ) {
