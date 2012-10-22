@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -29,8 +30,10 @@ public class VelocityCore {
 		ve.init();
 //
 		VelocityContext vc = new VelocityContext();
+		Map<Resource, String> sn = Help.getShortnames( results.getModel() );
+		vc.put( "names", sn );
 		vc.put( "items", itemise( results.getResultList() ) );
-		vc.put( "meta",  "" );
+		vc.put( "meta",  Help.getMetadataFrom( results.getModel() ) );
 //
 		Template t = ve.getTemplate( "page-shell.vm" );
 		try {

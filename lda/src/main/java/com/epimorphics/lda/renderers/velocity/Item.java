@@ -34,6 +34,20 @@ public class Item {
 		return label;
 	}
 	
+	public String shortForm( Map<Resource, String> shortNames ) {
+		if (r == null) return shortLiteral( shortNames );
+		return shortURI( shortNames );
+	}
+	
+	private String shortURI(Map<Resource, String> shortNames) {
+		String sn = shortNames.get(r);
+		return sn == null ? r.getLocalName() : sn;
+	}
+
+	private String shortLiteral(Map<Resource, String> shortNames) {
+		return basis.asLiteral().getLexicalForm();
+	}
+
 	public String getObjectString() {
 		if (r == null) {
 			return basis.asLiteral().getLexicalForm();

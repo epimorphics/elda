@@ -33,8 +33,34 @@
 		; padding: 10px 66px
 	}
 	
+	#search-results {
+		width: 70%
+		; float: left
+	}
+	
+	.bordered-panel {
+		border: 1px solid black
+		; border-radius: 2ex 
+		; background-color: cyanic
+	}
+	
+	.right-header {
+		background-color: #444
+		; border-radius: 1ex
+		; color: white
+		; font-size: 140%
+		; font-family: Gill Sans, Arial, sans-serif
+		; padding: 10px 66px
+	}
+	
+	.rightside-extras {
+		float: right
+		; margin-right: 1ex
+		; margin-top: 3ex
+	}
+	
 	footer {
-		background: #aaa
+		background: #888
 		; text-align: right
 	}
 </style>	
@@ -48,27 +74,41 @@
 	<h1>Linked Data API</h1>
 </header>
 
-<h1>Search Results</h1>
+<div id="search-results">
 
-#foreach ($item in $items) 
-	<div class="itembox">
-		<h2><a href="$item.URI">$item.label</a></h2>
-		
-		#foreach ($property in $item.properties)
-			<hr style="color: #fff">
-			<div class="indented">
-				<a href="$property.URI">$property.label</a>
-				#foreach ($value in ${property.getValues($item)})
-					<div class="indented">
-						$value.objectString
-					</div>
-				#end
-			</div>
+	<h1>Search Results</h1>
+	
+	#foreach ($item in $items) 
+		<div class="itembox">
+			<h2><a href="$item.URI" >$item.label</a></h2>
+			
+			#foreach ($property in $item.properties)
+				<hr style="color: #fff">
+				<div class="indented">
+					<a href="$property.URI">$property.label</a>
+					#foreach ($value in ${property.getValues($item)})
+						<div class="indented">
+							$value.shortForm($names)
+						</div>
+					#end
+				</div>
+			#end
+			
+		</div>
+	#end
+</div>
+
+
+<div class="rightside-extras">
+	<div class="bordered-panel">
+		<div class="right-header">on this page</div>
+		#foreach ($item in $items)
+			<div style="margin-left: 1ex">&raquo; <a href="">$item.label</a></div>
 		#end
-		
-		
 	</div>
-#end
+</div>
+
+<div style="clear: both" />
 
 <footer>
 	<p>
@@ -82,8 +122,6 @@
 		by <a href="http://www.axialis.com">Axialis Team</a>
 	</p>
 </footer>
-
-
 
 </body>
 </html>
