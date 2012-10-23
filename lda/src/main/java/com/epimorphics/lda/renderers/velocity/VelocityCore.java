@@ -33,12 +33,12 @@ public class VelocityCore {
 //
 		VelocityContext vc = new VelocityContext();
 		Model m = results.getModel();
-		m.write( System.out, "TTL" );
 		Map<Resource, String> names = Help.getShortnames( m );
 		vc.put( "names", names );
 		vc.put( "formats", Help.getFormats( m ) );
 		vc.put( "items", itemise( results.getResultList() ) );
 		vc.put( "meta",  Help.getMetadataFrom( names, m ) );
+		vc.put( "vars",  Help.getVarsFrom( names, m ) );
 		vc.put( "ids",  new HashMap<Resource, String>() );
 //
 		Template t = ve.getTemplate( "page-shell.vm" );
