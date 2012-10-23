@@ -1,13 +1,16 @@
 package com.epimorphics.lda.renderers.velocity;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -38,5 +41,36 @@ public class Help {
 			}
 		}
 		return uriToShortname;
+	}
+
+	public static class Format {
+		final String linkUsing;
+		final String name;
+		final String mediaType;
+		
+		public Format( String linkUsing, String name, String mediaType ) {
+			this.linkUsing = linkUsing;
+			this.name = name;
+			this.mediaType = mediaType;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public String getLink() {
+			return linkUsing;
+		}
+	}
+	
+	public static Set<Format> getFormats( Model m ) {
+		HashSet<Format> result = new HashSet<Format>();
+		List<Resource> links = m.listSubjectsWithProperty( DCTerms.format ).toList();
+		for (Resource link: links) {
+			String name = labelFor( link );
+			String type = labelFor( link.getProperty(DCTerms.format).getResource() );
+			result.add( new Format( link.getURI(), name, type ) );
+		}
+		return result;
 	}
 }

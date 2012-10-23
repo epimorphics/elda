@@ -17,6 +17,7 @@ import org.apache.velocity.app.VelocityEngine;
 import sun.org.mozilla.javascript.internal.WrappedException;
 
 import com.epimorphics.lda.core.APIResultSet;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.BrokenException;
@@ -31,10 +32,12 @@ public class VelocityCore {
 		ve.init();
 //
 		VelocityContext vc = new VelocityContext();
-		Map<Resource, String> sn = Help.getShortnames( results.getModel() );
-		vc.put( "names", sn );
+		Model m = results.getModel();
+		m.write( System.out, "TTL" );
+		vc.put( "names", Help.getShortnames( m ) );
+		vc.put( "formats", Help.getFormats( m ) );
 		vc.put( "items", itemise( results.getResultList() ) );
-		vc.put( "meta",  Help.getMetadataFrom( results.getModel() ) );
+		vc.put( "meta",  Help.getMetadataFrom( m ) );
 		vc.put( "ids",  new HashMap<Resource, String>() );
 //
 		Template t = ve.getTemplate( "page-shell.vm" );

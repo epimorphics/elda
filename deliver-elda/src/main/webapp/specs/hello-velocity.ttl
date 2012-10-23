@@ -26,9 +26,9 @@ hello:velocity-world a api:API
 	; rdfs:label "Hello World example API -- games"@en
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	# ; api:defaultViewer api:labelledDescribeViewer
-	; api:defaultFormatterIGNORE hello:HtmlFormatter 
+	; api:base "/elda"
 	; api:endpoint hello:games 
-	; api:formatter
+	; api:defaultFormatter
 		[a api:XsltFormatter
 		; api:name "html"
 		; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
