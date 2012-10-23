@@ -8,6 +8,8 @@ import java.util.Set;
 
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -21,9 +23,35 @@ public class Help {
 		return s == null ? r.getLocalName() : s.getString();
 	}
 
-	public static Map<String, Object> getMetadataFrom( Model m ) {
+	public static Map<String, Object> getMetadataFrom( Map<Resource, String> shortNames, Model m ) {
 		Map<String, Object> result = new HashMap<String, Object>();
+		List<Resource> pages = m.listSubjectsWithProperty( RDF.type, API.Page ).toList();
+		for (Resource p: pages) {
+			List<Statement> wrs = p.listProperties( API.wasResultOf ).toList();
+			for (Statement wr: wrs) {
+				descend( shortNames, result, "", wr.getResource() );
+			}
+		}
 		return result;
+	}
+
+	private static void descend( Map<Resource, String> shortNames, Map<String, Object> result, String prefix, RDFNode r) {
+		if (r.isResource() && hasProperties( r.asResource() )) {
+			Resource rr = r.asResource();
+			for (Statement s: rr.listProperties().toList()) {
+				Resource p = s.getPredicate();
+				String pn = shortNames.get(p);
+				if (pn == null) pn = p.getLocalName();
+				descend( shortNames, result, (prefix.isEmpty() ? pn : prefix + "." + pn), s.getObject() );
+			}
+		} else 
+			result.put( prefix, new Item( r ) );
+	}
+
+	static final Property ANY = null;
+	
+	private static boolean hasProperties(Resource r) {
+		return r.getModel().listStatements( r, ANY, ANY ).hasNext();
 	}
 
 	public static Map<Resource, String> getShortnames( Model m ) {

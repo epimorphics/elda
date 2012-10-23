@@ -125,7 +125,7 @@
 <footer>
 	<p>
 		Powered by 
-			<a href="$meta.implementation.link">$meta.implementation.name</a>,
+			<a href="${meta['processor.software.releaseOf.homepage'].URI}">$meta["processor.software.label"]</a>,
 		an implementation of the
 			<a href="http://code.google.com/p/linked-data-api">Linked Data API</a>
 	</p>

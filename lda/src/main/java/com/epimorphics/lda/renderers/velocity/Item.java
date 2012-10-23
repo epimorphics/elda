@@ -11,7 +11,7 @@ public class Item {
 	final RDFNode basis;
 	
 	public int hashCode() {
-		return r.hashCode();
+		return basis.hashCode();
 	}
 	
 	public boolean equals( Object other ) {
@@ -52,6 +52,11 @@ public class Item {
 
 	private String shortLiteral(Map<Resource, String> shortNames) {
 		return basis.asLiteral().getLexicalForm();
+	}
+	
+	public String toString() {
+		if (basis.isLiteral()) return basis.asLiteral().getLexicalForm();
+		return basis.asResource().getLocalName();
 	}
 
 	public String getObjectString() {
