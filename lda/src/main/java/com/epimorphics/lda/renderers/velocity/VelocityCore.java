@@ -14,23 +14,23 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
-import sun.org.mozilla.javascript.internal.WrappedException;
-
 import com.epimorphics.lda.core.APIResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.BrokenException;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import com.hp.hpl.jena.shared.WrappedException;
 
 public class VelocityCore {
+	
+	final VelocityEngine ve;
+	final String templateName;
+	
+	public VelocityCore( VelocityEngine ve, String templateName ) {
+		this.ve = ve;
+		this.templateName = templateName;
+	}
 
 	public void render( APIResultSet results, OutputStream os ) {
-		VelocityEngine ve = new VelocityEngine(); 
-		ve.setProperty( "resource.loader",  "class" );
-		ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
-		ve.init();
-//
 		VelocityContext vc = new VelocityContext();
 		Model m = results.getModel();
 		Map<Resource, String> names = Help.getShortnames( m );
@@ -41,7 +41,7 @@ public class VelocityCore {
 		vc.put( "vars",  Help.getVarsFrom( names, m ) );
 		vc.put( "ids",  new HashMap<Resource, String>() );
 //
-		Template t = ve.getTemplate( "page-shell.vm" );
+		Template t = ve.getTemplate( templateName );
 		try {
 			Writer w = new OutputStreamWriter( os, "UTF-8" );
 			t.merge( vc,  w );

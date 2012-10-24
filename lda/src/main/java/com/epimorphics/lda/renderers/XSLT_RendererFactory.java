@@ -48,7 +48,7 @@ public class XSLT_RendererFactory implements RendererFactory {
 				return xr.render( t, rc.copyWithDefaults( ep.defaults() ), results ); 
 			}
 
-			public void handleMetadata(APIResultSet results) {
+			public void handleMetadata( APIResultSet results ) {
 				String [] options = MetadataOptions.get( root );
 				if (options.length == 0) options = "bindings,formats,versions,execution".split(",");
 				results.includeMetadata( options );

@@ -70,6 +70,37 @@ public class Item {
 		return r.getURI();
 	}
 	
+	public boolean isLiteral() {
+		return basis.isLiteral();
+	}
+	
+	public boolean isResource() {
+		return basis.isResource();
+	}
+	
+	public boolean isAnon() {
+		return basis.isAnon();
+	}
+	
+	public String getLanguage() {
+		return basis.asLiteral().getLanguage();
+	}
+	
+	public String getType( Map<Resource, String> shortNames ) {
+		return basis.asLiteral().getDatatypeURI();
+	}
+	
+	public boolean isList() {
+		return basis.isAnon() && basis.asResource().canAs( RDFList.class );
+	}
+	
+	public List<Item> asList() {
+        List<RDFNode> rawlist = basis.as( RDFList.class ).asJavaList();
+        List<Item> result = new ArrayList<Item>( rawlist.size() );
+        for (RDFNode n : rawlist) result.add( new Item( n ) );
+        return result;
+	}
+	
 	public List<Item> getValues( Item subject ) {
 		List<Item> values = new ArrayList<Item>();
 		for (Statement s: subject.r.listProperties( asProperty(r) ).toList()) {

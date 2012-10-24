@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.velocity.app.VelocityEngine;
+
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -17,6 +19,14 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class Help {
+
+	public static VelocityEngine createVelocityEngine( Resource config ) {
+		VelocityEngine ve = new VelocityEngine(); 
+		ve.setProperty( "resource.loader",  "class" );
+		ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
+		ve.init();
+		return ve;
+	}
 
 	static String labelFor( Resource r ) {
 		Statement s = r.getProperty( RDFS.label );
@@ -57,6 +67,7 @@ public class Help {
 				}
 			}
 		} else {
+			// System.err.println( ">> " + prefix + " = " + r );
 			result.put( prefix, new Item( r ) );
 		}
 	}

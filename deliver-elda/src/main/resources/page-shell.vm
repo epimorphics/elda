@@ -122,6 +122,10 @@
 <div style="clear: both" />
 
 
+<textarea>
+$meta['selectionResult.query.value']
+</textarea>
+
 <footer>
 	<p>
 		Powered by 

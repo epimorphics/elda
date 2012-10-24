@@ -10,14 +10,17 @@ public class VelocityRendererFactory implements RendererFactory {
 
 	private MediaType mt = MediaType.TEXT_HTML;
 	
+	private Resource config = null;
+	
 	public VelocityRendererFactory() {
 	}
 	
 	@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-		return new VelocityRenderer( mt );
+		return new VelocityRenderer( mt, config );
 	}
 
-	@Override public RendererFactory withRoot( Resource uri ) {
+	@Override public RendererFactory withRoot( Resource config ) {
+		this.config = config;
 		return this;
 	}
 

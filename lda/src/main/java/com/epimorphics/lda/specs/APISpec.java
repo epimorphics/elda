@@ -111,11 +111,9 @@ public class APISpec {
         the selected items. Always contains at least the given source.
     */
     private List<Source> extractDescribeSources( FileManager fm, Resource specification, Source dataSource ) {
-//        System.err.println( ">> extracting enhancements from " + specification );
         List<Source> result = new ArrayList<Source>();
         result.add( dataSource );
         result.addAll( specification.listProperties( EXTRAS.enhanceViewWith ).mapWith( toSource( fm ) ).toList() ); 
-//        System.err.println( ">> describe sources: " + result );
         return result;
     }
 
