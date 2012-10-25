@@ -1,12 +1,17 @@
 package com.epimorphics.lda.renderers.velocity;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.velocity.app.VelocityEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -14,18 +19,42 @@ import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.shared.WrappedIOException;
+import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class Help {
+	
+    private static final String velocityPropertiesFileName = "velocity.properties";
+    
+	static final Logger log = LoggerFactory.getLogger( Help.class );
 
 	public static VelocityEngine createVelocityEngine( Resource config ) {
+		Properties p = getProperties( velocityPropertiesFileName );
 		VelocityEngine ve = new VelocityEngine(); 
-		ve.setProperty( "resource.loader",  "class" );
-		ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
+		if (p.isEmpty()) {
+			log.info( "using default velocity properties." );
+			ve.setProperty( "resource.loader",  "class" );
+			ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
+		} else {
+			log.info( "loaded properties file " + velocityPropertiesFileName );
+		}
 		ve.init();
 		return ve;
+	}
+	
+	static Properties getProperties( String fileName ) {
+		Properties p = new Properties();
+		InputStream is = FileManager.get().open( fileName );
+		if (is != null) loadNicely( p, is );
+		return p;
+	}
+
+	private static void loadNicely(Properties p, InputStream is) {
+		try { p.load( is ); is.close(); } 
+		catch (IOException e) {	throw new WrappedIOException( e ); }
 	}
 
 	static String labelFor( Resource r ) {
