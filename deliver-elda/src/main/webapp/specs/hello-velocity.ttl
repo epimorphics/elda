@@ -23,7 +23,7 @@
 # API config
 
 hello:velocity-world a api:API 
-	; rdfs:label "Hello World example API -- games"@en
+	; rdfs:label "Hello World example API -- games, rendered with Velocity"@en
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	# ; api:defaultViewer api:labelledDescribeViewer
 	; api:base "/elda"

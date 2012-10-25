@@ -16,7 +16,7 @@
 </xsl:template>	
 
 
-<script type="text/javascript" src="{$_resourceRoot}scripdguts/staging-education.js"></script>
+<script type="text/javascript" src="{$_resourceRoot}scripts/staging-education.js"></script>
 <script type="text/javascript">
   $(function() {
 	  apiStart = document.URL.indexOf( "/api" )

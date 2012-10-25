@@ -3,7 +3,7 @@ Release 1.2.14
 NOTICE. Some changes in this release of Elda are NOT 
 backwards-compatible. Please read these notes carefully.
 
-* The Elda maven artifact now has thename 'elda', not 'lda-top'.
+* The Elda maven artifact now has the name 'elda', not 'lda-top'.
 
 * The property shortnames `result`, `item`, and
   `items` have become reserved, to prevent ambiguities in the XML and
