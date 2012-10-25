@@ -2,6 +2,9 @@ package com.epimorphics.lda.renderers.velocity;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.collections.comparators.ComparableComparator;
 import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,7 +158,7 @@ public class Help {
 	    name, its media type (as a string), and the URL of the "corresponding"
 	    page to link to to see it in that representation.
 	*/
-	public static class Format {
+	public static class Format implements Comparable<Format> {
 		final String linkUsing;
 		final String name;
 		final String mediaType;
@@ -172,20 +176,25 @@ public class Help {
 		public String getLink() {
 			return linkUsing;
 		}
+
+		@Override public int compareTo( Format o ) {
+			return name.compareTo( o.name );
+		}
 	}
 	
 	/**
 	    Answer a set of all the formats available, extracted from the
 	    DCTerms metadata of the model.
 	*/
-	public static Set<Format> getFormats( Model m ) {
-		HashSet<Format> result = new HashSet<Format>();
+	public static List<Format> getFormats( Model m ) {
+		List<Format> result = new ArrayList<Format>();
 		List<Resource> links = m.listSubjectsWithProperty( DCTerms.format ).toList();
 		for (Resource link: links) {
 			String name = labelFor( link );
 			String type = labelFor( link.getProperty(DCTerms.format).getResource() );
 			result.add( new Format( link.getURI(), name, type ) );
 		}
+		Collections.sort( result );
 		return result;
 	}
 }

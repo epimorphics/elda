@@ -13,6 +13,8 @@
 package com.epimorphics.lda.core;
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -295,8 +297,16 @@ public class APIEndpointImpl implements APIEndpoint {
 		return configure( s );	
 	}
 
+	private Map<RendererFactory, Renderer> ready = new HashMap<RendererFactory, Renderer>();
+	
+	/**
+	    Only build a renderer for a given factory once.
+	*/
 	private Renderer configure(RendererFactory s) {
-		return s == null ? null : s.buildWith( this, getSpec().getAPISpec().getShortnameService() );
+		if (s == null) return null;
+		Renderer r = ready.get( s );
+		if (r == null) ready.put( s,  r = s.buildWith( this, getSpec().getAPISpec().getShortnameService() ) );
+		return r;
 	}
 }
 
