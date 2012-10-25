@@ -73,8 +73,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     
     static Logger log = LoggerFactory.getLogger(APIEndpointSpec.class);
     
-    protected final Set<String> metadataOptions = new HashSet<String>();
-    
     public APIEndpointSpec( APISpec apiSpec, APISpec parent, Resource endpoint ) {
     	checkEndpointType( endpoint );
     	this.apiSpec = apiSpec;
@@ -91,9 +89,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         uriTemplate = createURITemplate( endpoint );
         endpointResource = endpoint;
         describeThreshold = getIntValue( endpoint, EXTRAS.describeThreshold, apiSpec.describeThreshold );
-    //
-        metadataOptions.addAll( apiSpec.metadataOptions );
-        MetadataOptions.extract( metadataOptions, endpoint );
     //        
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
@@ -281,7 +276,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	
     private void instantiateBaseQuery( Resource endpoint ) {
         baseQuery = new APIQuery( this );
-        baseQuery.addMetadataOptions( metadataOptions );
         baseQuery.setEnableETags( enableETags( endpoint ) );
         setAllowedReserved( endpoint, baseQuery );
         addSelectors(endpoint);

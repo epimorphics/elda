@@ -349,10 +349,6 @@ public class APIQuery implements VarSupply {
 	    if (languages == null) languages = defaultLanguage;
 		return languages;
 	}
- 
-	public void addMetadataOptions( Set<String> options ) {
-		metadataOptions.addAll( options );
-	}
 	
 	public void addMetadataOptions( String [] options ) {
 		for (String option: options) metadataOptions.add( option.toLowerCase() );

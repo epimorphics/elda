@@ -72,8 +72,6 @@ public class APISpec {
     protected final boolean hasParameterBasedContentNegotiation;
     protected final List<Source> describeSources;
     public final Bindings bindings = new Bindings();
-    
-    public final Set<String> metadataOptions = new HashSet<String>(); 
 
 	public final int describeThreshold;
 	
@@ -98,7 +96,6 @@ public class APISpec {
         bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
         factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
-        MetadataOptions.extract( metadataOptions, specification );
         extractEndpointSpecifications( specification );
     }
 
