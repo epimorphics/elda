@@ -2,27 +2,15 @@ package com.epimorphics.lda.renderers.velocity;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
-import org.apache.commons.collections.comparators.ComparableComparator;
-import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.apache.velocity.app.VelocityEngine;
+
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.WrappedIOException;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -35,6 +23,12 @@ public class Help {
     
 	static final Logger log = LoggerFactory.getLogger( Help.class );
 
+	/**
+	    Create a new VelocityEngine. Initialise it with properties from
+	    the file named by velocityPropertiesFileName, and if that is absent
+	    or defines no properties, with a default classpath resource loader.
+	    The <code>config</code> resource is currently unused.
+	*/
 	public static VelocityEngine createVelocityEngine( Resource config ) {
 		Properties p = getProperties( velocityPropertiesFileName );
 		VelocityEngine ve = new VelocityEngine(); 
@@ -101,7 +95,7 @@ public class Help {
 			}
 		} else {
 			// System.err.println( ">> " + prefix + " = " + r );
-			result.put( prefix, new Item( r ) );
+			result.put( prefix, new WrappedNode( r ) );
 		}
 	}
 
@@ -136,8 +130,8 @@ public class Help {
 	    Answer a map from variable names to their values represented as Items,
 	    built from the variableBindings in the model's metadata.
 	*/
-	public static Map<String, Item> getVarsFrom(Map<Resource, String> names, Model m) {
-			Map<String, Item> varValue = new HashMap<String, Item>();
+	public static Map<String, WrappedNode> getVarsFrom(Map<Resource, String> names, Model m) {
+			Map<String, WrappedNode> varValue = new HashMap<String, WrappedNode>();
 			List<Resource> pages = m.listSubjectsWithProperty( RDF.type, API.Page ).toList();
 			if (pages.size() == 1) {
 				List<Statement> results = pages.get(0).listProperties( API.wasResultOf ).toList();
@@ -146,7 +140,7 @@ public class Help {
 					for (Statement sb: bindings) {
 						String sn = sb.getProperty( API.label ).getString();
 						RDFNode fn = sb.getProperty( API.value ).getObject();
-						varValue.put( sn, new Item( fn ) );
+						varValue.put( sn, new WrappedNode( fn ) );
 					}
 				}
 			}

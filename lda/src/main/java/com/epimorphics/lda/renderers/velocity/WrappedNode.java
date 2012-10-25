@@ -4,7 +4,7 @@ import java.util.*;
 
 import com.hp.hpl.jena.rdf.model.*;
 
-public class Item {
+public class WrappedNode {
 	
 	final Resource r;
 	final String label;
@@ -15,16 +15,16 @@ public class Item {
 	}
 	
 	public boolean equals( Object other ) {
-		return other instanceof Item && r.equals( ((Item) other).r );
+		return other instanceof WrappedNode && r.equals( ((WrappedNode) other).r );
 	}
 	
-	public Item( RDFNode r ) {
+	public WrappedNode( RDFNode r ) {
 		this.r = (r.isResource() ? r.asResource() : null);
 		this.label = "LIT";
 		this.basis = r;
 	}
 	
-	public Item( Resource r ) {
+	public WrappedNode( Resource r ) {
 		this.basis = r;
 		this.r = r;
 		this.label = Help.labelFor( r );
@@ -94,17 +94,17 @@ public class Item {
 		return basis.isAnon() && basis.asResource().canAs( RDFList.class );
 	}
 	
-	public List<Item> asList() {
+	public List<WrappedNode> asList() {
         List<RDFNode> rawlist = basis.as( RDFList.class ).asJavaList();
-        List<Item> result = new ArrayList<Item>( rawlist.size() );
-        for (RDFNode n : rawlist) result.add( new Item( n ) );
+        List<WrappedNode> result = new ArrayList<WrappedNode>( rawlist.size() );
+        for (RDFNode n : rawlist) result.add( new WrappedNode( n ) );
         return result;
 	}
 	
-	public List<Item> getValues( Item subject ) {
-		List<Item> values = new ArrayList<Item>();
+	public List<WrappedNode> getValues( WrappedNode subject ) {
+		List<WrappedNode> values = new ArrayList<WrappedNode>();
 		for (Statement s: subject.r.listProperties( asProperty(r) ).toList()) {
-			values.add( new Item( s.getObject() ) );
+			values.add( new WrappedNode( s.getObject() ) );
 		}
 		return values;
 	}
@@ -113,9 +113,9 @@ public class Item {
 		return r.getModel().createProperty( r.getURI() );
 	}
 
-	public List<Item> getProperties() {
-		Set<Item> properties = new HashSet<Item>();
-		for (Statement s: r.listProperties().toList()) properties.add( new Item(s.getPredicate()) );
-		return new ArrayList<Item>( properties );
+	public List<WrappedNode> getProperties() {
+		Set<WrappedNode> properties = new HashSet<WrappedNode>();
+		for (Statement s: r.listProperties().toList()) properties.add( new WrappedNode(s.getPredicate()) );
+		return new ArrayList<WrappedNode>( properties );
 	}		
 }

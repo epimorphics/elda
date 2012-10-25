@@ -53,9 +53,9 @@ public class VelocityCore {
 		}
 	}
 	
-	private List<Item> itemise( List<Resource> items ) {
-		List<Item> result = new ArrayList<Item>( items.size() );
-		for (Resource item: items) result.add( new Item( item ) );
+	private List<WrappedNode> itemise( List<Resource> items ) {
+		List<WrappedNode> result = new ArrayList<WrappedNode>( items.size() );
+		for (Resource item: items) result.add( new WrappedNode( item ) );
 		return result;
 	}
 	
