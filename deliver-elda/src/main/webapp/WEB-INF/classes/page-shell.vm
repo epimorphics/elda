@@ -89,17 +89,13 @@
 	#end
 #end
 
-#macro(present, $item)
-	<h2><a href="$item.URI" id="$item.getId($ids)">$item.label</a></h2>
-	#nesting($item)
-#end
-
 <div id="search-results">
 	<h1>Search Results</h1>
 	
 	#foreach ($item in $items) 
 		<div class="itembox">
-		#present($item)
+		<h2><a href="$item.URI" id="$item.getId($ids)">$item.label</a></h2>
+		#nesting($item)
 		</div>
 	#end
 </div>

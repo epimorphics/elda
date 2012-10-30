@@ -416,21 +416,22 @@ by the "mvn install" process.
 </tr>
 
 <tr>
-	<td>getValues(WrappedNode subject)</td>
-	<td>
-		Answer a Java list of WrappedNodes which are the
-		objects of all statements with wrapped subject and
-		this WrappedNode as predicate. The list is in
-		no particular order.
-	</td>
-</tr>
-
-<tr>
 	<td>getProperties</td>
 	<td>
 		Answer a Java list of WrappedNodes which are the 
 		wrapped form of the different properties of this
 		WrappedNode.
+	</td>
+</tr>
+
+<tr>
+	<td>getValues(WrappedNode property)</td>
+	<td>
+		Answer a Java list of WrappedNodes which are the
+		objects of all statements for which this WrappedNode
+		is the subject and the argument <code>property</code>
+		is the predicate. (This argument will typically be
+		an element from the <code>getProperties</code> list.)
 	</td>
 </tr>
 
