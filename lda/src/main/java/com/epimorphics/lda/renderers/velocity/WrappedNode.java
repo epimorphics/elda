@@ -16,7 +16,7 @@ public class WrappedNode {
 	}
 	
 	public boolean equals( Object other ) {
-		return other instanceof WrappedNode && r.equals( ((WrappedNode) other).r );
+		return other instanceof WrappedNode && basis.equals( ((WrappedNode) other).basis );
 	}
 	
 	public WrappedNode( RDFNode r ) {
@@ -102,12 +102,9 @@ public class WrappedNode {
         return result;
 	}
 	
-	public List<WrappedNode> getValues( WrappedNode subject ) {
-		List<WrappedNode> values = new ArrayList<WrappedNode>();
-		for (Statement s: subject.r.listProperties( asProperty(r) ).toList()) {
-			values.add( new WrappedNode( s.getObject() ) );
-		}
-		return values;
+	public List<WrappedNode> getValues( WrappedNode p ) {
+		List<WrappedNode> result = propertyValues.get(p);
+		return result;
 	}
 	
 	private Property asProperty(Resource r) {
@@ -116,42 +113,39 @@ public class WrappedNode {
 
 	public List<WrappedNode> getProperties() {
 		Set<WrappedNode> properties = new HashSet<WrappedNode>();
-		for (Statement s: r.listProperties().toList()) properties.add( new WrappedNode(s.getPredicate()) );
-		return new ArrayList<WrappedNode>( properties );
+		for (WrappedNode wp: propertyValues.keySet()) properties.add( wp );
+		ArrayList<WrappedNode> result = new ArrayList<WrappedNode>( properties );
+		return result;
 	}
 
 	public Resource asResource() {
 		return r;
 	}
 	
-	public static class PropertyValue {
+	final Map<WrappedNode, List<WrappedNode>> propertyValues = 
+		new HashMap<WrappedNode, List<WrappedNode>>();
 	
-		final WrappedNode p;
-		final WrappedNode o;
-		
-		public PropertyValue( WrappedNode p, WrappedNode o ) {
-			this.p = p; this.o = o;
-		}
-	}
-	
-	final List<PropertyValue> propertyValues = new ArrayList<PropertyValue>();
-
-	public void addPropertyValue(Property p, WrappedNode o) {
-		propertyValues.add( new PropertyValue( new WrappedNode( p ), o ) );
+	public void addPropertyValue( WrappedNode wp, WrappedNode o) {
+		List<WrappedNode> values = propertyValues.get( wp );
+		if (values == null)
+			propertyValues.put( wp, values = new ArrayList<WrappedNode>() );
+		values.add( o );
 	}
 
 	public void debugShow(PrintStream ps) {
 		if (isLiteral()) {
 			ps.print( " '" + basis.asLiteral().getLexicalForm() + "'" );
 		} else {
-			ps.print( r.getURI() );
+			ps.print( "<<" + getLabel() + ">>" );
 			ps.print( " (" );
 			String and = "";
-			for (PropertyValue pv: propertyValues) {
-				ps.print( and ); and = "; ";
-				ps.print( pv.p.getURI() );
-				ps.print( " " );
-				pv.o.debugShow( ps );
+			for (WrappedNode wp: propertyValues.keySet()) {
+				for (WrappedNode w: propertyValues.get( wp )) {					
+					ps.print( and ); and = "; ";
+					ps.print( wp.r.getLocalName() );
+					ps.print( " " );
+					w.debugShow( ps );
+				}
 			}
 			ps.print( ")" );
 		}

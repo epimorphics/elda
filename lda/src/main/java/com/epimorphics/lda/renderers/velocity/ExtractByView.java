@@ -38,7 +38,7 @@ public class ExtractByView {
 				for (Statement s: w.asResource().listProperties(p).toList()) {
 					WrappedNode o = new WrappedNode( s.getObject() );
 					copy( o, rest );
-					w.addPropertyValue( s.getPredicate(), o );
+					w.addPropertyValue( new WrappedNode(s.getPredicate()), o );
 				}
 			}			
 		}

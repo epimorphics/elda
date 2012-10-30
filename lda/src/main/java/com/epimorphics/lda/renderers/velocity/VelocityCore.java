@@ -33,21 +33,12 @@ public class VelocityCore {
 
 	public void render( APIResultSet results, OutputStream os ) {
 		View v = results.getView();
-		
 		List<WrappedNode> itemised = new ExtractByView( v ).itemise( results.getResultList() );
-
-		System.err.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" );
-		for (WrappedNode wn: itemised ) {
-			wn.debugShow( System.err ); System.err.println();
-		}
-		System.err.println( "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" );
-		
 		VelocityContext vc = new VelocityContext();
 		Model m = results.getModel();
 		Map<Resource, String> names = Help.getShortnames( m );
 		vc.put( "names", names );
 		vc.put( "formats", Help.getFormats( m ) );
-//		vc.put( "items", itemise( results.getResultList() ) );
 		vc.put( "items", itemised );
 		vc.put( "meta",  Help.getMetadataFrom( names, m ) );
 		vc.put( "vars",  Help.getVarsFrom( names, m ) );

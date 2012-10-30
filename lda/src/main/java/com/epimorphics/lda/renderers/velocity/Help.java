@@ -34,8 +34,12 @@ public class Help {
 		VelocityEngine ve = new VelocityEngine(); 
 		if (p.isEmpty()) {
 			log.info( "using default velocity properties." );
+			ve.setProperty( "runtime.references.strict", "true" );
 			ve.setProperty( "resource.loader",  "class" );
 			ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
+		//
+			ve.setProperty( "class.resource.loader.cache", "false" );
+			ve.setProperty( "velocimacro.library.autoreload", "true" );
 		} else {
 			log.info( "loaded properties file " + velocityPropertiesFileName );
 		}
