@@ -799,7 +799,7 @@ public class APIQuery implements VarSupply {
 		Model descriptions = ModelFactory.createDefaultModel();
 		Graph gd = descriptions.getGraph();
 		String detailsQuery = fetchDescriptionsFor( c, select, results, view, descriptions, spec );
-		return new APIResultSet(gd, results, count < pageSize, enableETags, detailsQuery );
+		return new APIResultSet(gd, results, count < pageSize, enableETags, detailsQuery, view );
 	}
     
     // let's respect property chains ...

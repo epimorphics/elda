@@ -74,31 +74,30 @@
 	<h1>Linked Data API</h1>
 </header>
 
-<div id="search-results">
+#macro(present, $item)
+	<h2><a href="$item.URI" id="$item.getId($ids)">$item.label</a></h2>
+	#foreach ($property in $item.properties)
+		<hr style="color: #fff">
+		<div class="indented">
+			<a href="$property.URI">$property.label</a>
+			#foreach ($value in ${property.getValues($item)})
+				<div class="indented">
+					$value.shortForm($names)
+				</div>
+			#end
+		</div>
+	#end
+#end
 
+<div id="search-results">
 	<h1>Search Results</h1>
 	
 	#foreach ($item in $items) 
 		<div class="itembox">
-			<h2><a href="$item.URI" id="$item.getId($ids)">$item.label</a></h2>
-			
-			#foreach ($property in $item.properties)
-				<hr style="color: #fff">
-				<div class="indented">
-					<a href="$property.URI">$property.label</a>
-					#foreach ($value in ${property.getValues($item)})
-						<div class="indented">
-							$value.shortForm($names)
-						</div>
-					#end
-				</div>
-			#end
-			
+		#present($item)
 		</div>
 	#end
 </div>
-
-
 
 <div class="rightside-extras">
 	<div>

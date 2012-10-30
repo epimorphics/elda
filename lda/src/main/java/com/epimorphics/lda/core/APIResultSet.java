@@ -62,6 +62,8 @@ public class APIResultSet {
     protected Date timestamp;
     protected String selectQuery = "";
     protected boolean enableETags = false;
+    
+    final View view;
 	
     /** 
         Map holding named metadata options. 
@@ -76,7 +78,7 @@ public class APIResultSet {
         this.contentLocation = contentLocation;
     }
 
-    public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery) {
+    public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery, View v) {
         model = ModelFactory.createModelForGraph( graph );
         PrefixMapping imported = getPrefixes( results );
 		setUsedPrefixes( imported );
@@ -86,11 +88,12 @@ public class APIResultSet {
         this.hash = 0;
         this.timestamp = new Date();
         this.enableETags = enableETags;
+        this.view = v;
         if (!results.isEmpty()) this.root = results.get(0).inModel(model);
     }
     
-    protected APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery, Map<String, Model> meta ) {
-    	this( graph, results, isCompleted, enableETags, detailsQuery );
+    protected APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery, Map<String, Model> meta, View v ) {
+    	this( graph, results, isCompleted, enableETags, detailsQuery, v );
     	this.metadata.putAll( meta );
     }
 
@@ -200,7 +203,7 @@ public class APIResultSet {
         model.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
         for (Resource r : results) mappedResults.add( r.inModel(model) );
-        return new APIResultSet( model.getGraph(), mappedResults, isCompleted, enableETags, detailsQuery, metadata ).setSelectQuery( selectQuery );
+        return new APIResultSet( model.getGraph(), mappedResults, isCompleted, enableETags, detailsQuery, metadata, v ).setSelectQuery( selectQuery );
     }
 
 	/**
@@ -215,7 +218,7 @@ public class APIResultSet {
         Model temp = ModelFactory.createDefaultModel();
         temp.add( model );
         Graph cloneGraph = temp.getGraph();
-        APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, enableETags, detailsQuery, metadata );
+        APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, enableETags, detailsQuery, metadata, view );
         clone.setRoot(root);
         clone.setContentLocation(contentLocation);
         clone.setSelectQuery( selectQuery );
@@ -271,6 +274,10 @@ public class APIResultSet {
 	*/
 	public boolean enableETags() {
 		return enableETags;
+	}
+
+	public View getView() {
+		return view;
 	}    
 }
 

@@ -43,12 +43,13 @@
         <param-value>
         	hello::specs/hello-world.ttl
         	, again::specs/hello-again-world.ttl
-        	, velocity::specs/hello-velocity.ttl
         	, tiny::specs/tiny-education.ttl
         	, mini::specs/mini-education.ttl
         	, full::specs/full-education.ttl
         	, old::specs/old-education.ttl
         	, mountain::specs/mountain.ttl
+        	, velocity::specs/hello-velocity.ttl
+        	, ved::specs/mini-education-velocity.ttl
         </param-value>
   	</init-param>
     <load-on-startup>1</load-on-startup>

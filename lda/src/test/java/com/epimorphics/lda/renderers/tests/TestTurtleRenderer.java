@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.TurtleRenderer;
@@ -30,7 +31,7 @@ public class TestTurtleRenderer {
 	@Test public void testUtf8SurvivesRendering() {
 		Model m = ModelIOUtils.modelFromTurtle( "<eh:/example> <eh:/predicate> '<<\u03ff>>'." );
 		Resource it = m.createResource( "<eh:/example>" );
-		APIResultSet rs = new APIResultSet( m.getGraph(), CollectionUtils.list(it), true, false, "notUsed" );
+		APIResultSet rs = new APIResultSet( m.getGraph(), CollectionUtils.list(it), true, false, "notUsed", new View() );
 		Renderer.BytesOut rbo = new TurtleRenderer().render( new Times(), null, rs );
 		String rendered = TestTurtleRenderer.pullString( rbo );
 		String unwrapped = rendered.replaceFirst( "(.|[\r\n])*<<", "" ).replaceAll( ">>(.|[\r\n])*", "" );

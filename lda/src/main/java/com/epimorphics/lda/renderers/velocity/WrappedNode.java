@@ -1,5 +1,6 @@
 package com.epimorphics.lda.renderers.velocity;
 
+import java.io.PrintStream;
 import java.util.*;
 
 import com.hp.hpl.jena.rdf.model.*;
@@ -117,5 +118,42 @@ public class WrappedNode {
 		Set<WrappedNode> properties = new HashSet<WrappedNode>();
 		for (Statement s: r.listProperties().toList()) properties.add( new WrappedNode(s.getPredicate()) );
 		return new ArrayList<WrappedNode>( properties );
+	}
+
+	public Resource asResource() {
+		return r;
+	}
+	
+	public static class PropertyValue {
+	
+		final WrappedNode p;
+		final WrappedNode o;
+		
+		public PropertyValue( WrappedNode p, WrappedNode o ) {
+			this.p = p; this.o = o;
+		}
+	}
+	
+	final List<PropertyValue> propertyValues = new ArrayList<PropertyValue>();
+
+	public void addPropertyValue(Property p, WrappedNode o) {
+		propertyValues.add( new PropertyValue( new WrappedNode( p ), o ) );
+	}
+
+	public void debugShow(PrintStream ps) {
+		if (isLiteral()) {
+			ps.print( " '" + basis.asLiteral().getLexicalForm() + "'" );
+		} else {
+			ps.print( r.getURI() );
+			ps.print( " (" );
+			String and = "";
+			for (PropertyValue pv: propertyValues) {
+				ps.print( and ); and = "; ";
+				ps.print( pv.p.getURI() );
+				ps.print( " " );
+				pv.o.debugShow( ps );
+			}
+			ps.print( ")" );
+		}
 	}		
 }

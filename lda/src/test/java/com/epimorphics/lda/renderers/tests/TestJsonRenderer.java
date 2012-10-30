@@ -15,6 +15,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.renderers.JSONRenderer;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.specs.APIEndpointSpec;
@@ -69,7 +70,7 @@ public class TestJsonRenderer {
 		Model m = ModelIOUtils.modelFromTurtle( "<fake:root> <fake:property> 17 ." );
 		Resource root = m.createResource( "fake:root" );
 		List<Resource> results = CollectionUtils.list( root );
-		APIResultSet rs = new APIResultSet( m.getGraph(), results, true, false, "detailsQuery" );
+		APIResultSet rs = new APIResultSet( m.getGraph(), results, true, false, "detailsQuery", new View() );
 		Renderer.BytesOut bo = jr.render( t, b, rs );
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		bo.writeAll(t, bos);

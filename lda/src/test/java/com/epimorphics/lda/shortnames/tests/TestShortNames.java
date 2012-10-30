@@ -14,6 +14,7 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.NameMap;
@@ -92,7 +93,7 @@ public class TestShortNames {
 		Times t = new Times();
 		Resource rx = m.createResource( "eh:/A" );
 		List<Resource> results = new ArrayList<Resource>(); results.add( rx );
-		APIResultSet rs = new APIResultSet(m.getGraph(), results, true, false, "detailsQuery" );
+		APIResultSet rs = new APIResultSet(m.getGraph(), results, true, false, "detailsQuery", new View() );
 	//
 		Renderer.BytesOut bo = r.render(t, new Bindings(), rs);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();

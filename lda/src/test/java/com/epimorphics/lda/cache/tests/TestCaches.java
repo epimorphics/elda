@@ -11,6 +11,7 @@ import com.epimorphics.lda.cache.Cache.Controller;
 import com.epimorphics.lda.cache.LimitEntriesController;
 import com.epimorphics.lda.cache.LimitTriplesController;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.sources.SourceBase;
 import com.epimorphics.util.CollectionUtils;
@@ -56,10 +57,12 @@ public class TestCaches
 	
 	static final List<Resource> resources = CollectionUtils.list( RA, RB );
 	
+	static final View fakeView = new View();
+	
 	@Test public void testLimitEntriesCache() 
 		{
 		Graph g = GraphTestBase.graphWith( "" );
-		APIResultSet rs = new APIResultSet( g, resources, true, false, "# a details query." );
+		APIResultSet rs = new APIResultSet( g, resources, true, false, "# a details query.", fakeView );
 		Source s = new FakeSource( "limited.entries" );
 		Controller cm = new LimitEntriesController();
 		Cache c = cm.cacheFor( s, "1" );
@@ -75,7 +78,7 @@ public class TestCaches
 	@Test public void testLimitTriplesCache() 
 		{
 		Graph g = GraphTestBase.graphWith( "a P b; c P d" );
-		APIResultSet rs = new APIResultSet( g, resources, true, false, "# a details query." );
+		APIResultSet rs = new APIResultSet( g, resources, true, false, "# a details query.", fakeView );
 		Source s = new FakeSource( "limited.triples" );
 		Controller cm = new LimitTriplesController();
 		Cache c = cm.cacheFor( s, "2" );
