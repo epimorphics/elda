@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,12 +54,4 @@ public class VelocityCore {
 			throw new WrappedException( e );
 		}
 	}
-	
-	private List<WrappedNode> itemise( List<Resource> items ) {
-		List<WrappedNode> result = new ArrayList<WrappedNode>( items.size() );
-		for (Resource item: items) result.add( new WrappedNode( item ) );
-		return result;
-	}
-	
-
 }
