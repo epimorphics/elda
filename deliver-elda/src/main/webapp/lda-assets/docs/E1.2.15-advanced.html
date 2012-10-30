@@ -211,8 +211,8 @@ by the "mvn install" process.
 
 <p>
     This release of Elda includes the ability to use 
-    <a href="http://velocity.apache.org/">Velocity</a> 
-    templates for rendering. This feature is <i>provisional</i>; 
+    <a href="http://velocity.apache.org/">Velocity</a>
+    templates for rendering. This feature is <i>provisional</i>;
     it may change significantly in future releases.
 </p>
 
@@ -320,6 +320,12 @@ by the "mvn install" process.
 </p>
 
 <table>
+	<thead>
+		<tr>
+			<th>signature</th>
+			<th>description</th>
+		</tr>
+	</thead>
 <tr>
 	<td>getId(Map&lt;Resource, String> ids</td>
 	<td>
@@ -327,6 +333,107 @@ by the "mvn install" process.
 		one in ids if necessary.
 	</td>
 </tr>
+
+<tr>
+	<td>getLabel</td>
+	<td>
+		Answer one of the <code>rdfs:label</code>s of this
+		WrappedNode if it has any, otherwise answer this
+		WrappedNode's local name.
+	</td>
+</tr>
+
+<tr>
+	<td>shortForm(Map&lt;Resource, String> shortNames)</td>
+	<td>
+		If this node is a wrapped Resource, answer the
+		shortname associated with that Resource or its
+		localname if it has no shortname. If this node
+		is a wrapped Literal, answer the lexical form of
+		that literal.
+	</td>
+</tr>
+
+<tr>
+	<td>getURI</td>
+	<td>
+		If this WrappedNode is a Resource, answer its URI.
+	</td>
+</tr>
+
+<tr>
+	<td>isLiteral</td>
+	<td>
+		Answer true iff this WrappedNode is a wrapped Literal.
+	</td>
+</tr>
+
+<tr>
+	<td>isResource</td>
+	<td>
+		Answer true iff this WrappedNode is a wrapped Resource
+		(which may be a blank node).
+	</td>
+</tr>
+
+<tr>
+	<td>isAnon</td>
+	<td>
+		Answer true iff this WrappedNode is a blank node.
+	</td>
+</tr>
+
+<tr>
+	<td>getLanguage</td>
+	<td>
+		If this node is a wrapped Literal, return its language
+		if any, otherwise answer the empty string.
+	</td>
+</tr>
+
+<tr>
+	<td>getType( Map&lt;Resource, String> shortNames )</td>
+	<td>
+		Answer the URI representing the type of this wrapped
+		literal node.
+	</td>
+</tr>
+
+<tr>
+	<td>isList</td>
+	<td>
+		Answer true iff this WrappedNode wraps a Resource representing
+		an RDF list.
+	</td>
+</tr>
+
+<tr>
+	<td>asList</td>
+	<td>
+		Answer a Java list of WrappedNodes wrapping the elements of
+		the RDF list represented by this WrappedNode.
+	</td>
+</tr>
+
+<tr>
+	<td>getValues(WrappedNode subject)</td>
+	<td>
+		Answer a Java list of WrappedNodes which are the
+		objects of all statements with wrapped subject and
+		this WrappedNode as predicate. The list is in
+		no particular order.
+	</td>
+</tr>
+
+<tr>
+	<td>getProperties</td>
+	<td>
+		Answer a Java list of WrappedNodes which are the 
+		wrapped form of the different properties of this
+		WrappedNode.
+	</td>
+</tr>
+
 </table>
 
 <h1>Additional Elda features</h1>
