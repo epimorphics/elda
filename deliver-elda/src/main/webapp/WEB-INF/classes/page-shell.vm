@@ -1,71 +1,5 @@
 <html>
-<head>
-<title>Elda with Velocity</title>
-<style>
-	h1 {
-		background-color: #444
-		; color: white
-		; padding: 1ex
-		; border-radius: 1ex
-	}
-	
-	h2 {
-		font-size: 1em
-		; margin-left: 1ex
-	}
-	
-	.indented {
-		margin-left: 1ex
-	}
-	
-	.itembox {
-		border: 1px solid black
-		; border-radius: 1ex
-		; margin-bottom: 1ex
-	}
-	
-	header h1 {
-		background: url("../lda-assets/images/molecule.png") no-repeat scroll 0px 0px transparent
-		; color: rgb(85, 85, 85)
-		; font-size: 2.3em
-		; font-weight: 300
-		; font-family: Gill Sans, Arial, sans-serif
-		; padding: 10px 66px
-	}
-	
-	#search-results {
-		width: 70%
-		; float: left
-	}
-	
-	.bordered-panel {
-		border: 1px solid black
-		; border-radius: 2ex 
-	}
-	
-	.right-header {
-		background-color: #444
-		; min-width: 3cm
-		; border-radius: 1ex
-		; color: white
-		; font-size: 140%
-		; font-family: Gill Sans, Arial, sans-serif
-		; padding: 10px 66px
-	}
-	
-	.rightside-extras {
-		float: right
-		; margin-right: 1ex
-		; margin-top: 3ex
-	}
-	
-	footer {
-		background: #888
-		; text-align: right
-	}
-</style>	
-	
-</head>
+#parse("page-head-shell.vm")
 <body>
 
 <img src="/elda/lda-assets/images/elda-banner.png" alt="Elda banner" />
@@ -126,18 +60,7 @@
 $meta['selectionResult.query.value']
 </textarea>
 
-<footer>
-	<p>
-		Powered by 
-			<a href="${meta['processor.software.releaseOf.homepage'].URI}">$meta["processor.software.label"]</a>,
-		an implementation of the
-			<a href="http://code.google.com/p/linked-data-api">Linked Data API</a>
-	</p>
-	<p>
-		<a href="http://www.axialis.com/free/icons">Icons</a>
-		by <a href="http://www.axialis.com">Axialis Team</a>
-	</p>
-</footer>
+#parse("page-foot-shell.vm")
 
 </body>
 </html>
