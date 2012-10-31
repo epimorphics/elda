@@ -37,7 +37,7 @@ public class WrappedNode {
 		this.labels = Help.labelsFor( r );
 	}
 	
-	public String getLabel() {
+	public WrappedString getLabel() {
 		return getLabel( "" );
 	}
 	
@@ -48,14 +48,15 @@ public class WrappedNode {
 	    isn't one, answer the local name of the resource with any
 	    _s replaced by spaces.
 	*/
-	public String getLabel( String wantLanguage ) {
+	public WrappedString getLabel( String wantLanguage ) {
 		Literal plain = null;
 		for (Literal l: labels) {
 			String thisLanguage = l.getLanguage();
-			if (thisLanguage.equals(wantLanguage)) return l.getLexicalForm();
+			if (thisLanguage.equals(wantLanguage)) return new WrappedString( l.getLexicalForm() );
 			if (thisLanguage.equals("")) plain = l;
 		}
-		return plain == null ? r.getLocalName().replaceAll("_", " ") : plain.getLexicalForm();
+		String raw = plain == null ? r.getLocalName().replaceAll("_", " ") : plain.getLexicalForm();
+		return new WrappedString(raw);
 	}
 	
 	public String getId( Map<Resource, String> ids ) {
@@ -64,17 +65,17 @@ public class WrappedNode {
 		return id;
 	}
 	
-	public String shortForm() {
+	public WrappedString shortForm() {
 		if (r == null) return shortLiteral();
 		return shortURI();
 	}
 	
-	private String shortURI() {
-		return sn.get(r);
+	private WrappedString shortURI() {
+		return new WrappedString( sn.get(r) );
 	}
 
-	private String shortLiteral() {
-		return basis.asLiteral().getLexicalForm();
+	private WrappedString shortLiteral() {
+		return new WrappedString( basis.asLiteral().getLexicalForm() );
 	}
 	
 	public String toString() {
@@ -89,8 +90,8 @@ public class WrappedNode {
 		return r.getURI();
 	}
 	
-	public String getURI() {
-		return r.getURI();
+	public WrappedString getURI() {
+		return new WrappedString( r.getURI() );
 	}
 	
 	public boolean isLiteral() {
@@ -109,8 +110,8 @@ public class WrappedNode {
 		return basis.asLiteral().getLanguage();
 	}
 	
-	public String getLiteralType() {
-		return sn.get( basis.asLiteral().getDatatypeURI() );
+	public WrappedString getLiteralType() {
+		return new WrappedString( sn.get( basis.asLiteral().getDatatypeURI() ) );
 	}
 	
 	public boolean isList() {

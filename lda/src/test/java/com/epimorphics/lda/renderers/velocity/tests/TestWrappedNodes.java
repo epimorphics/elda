@@ -62,7 +62,7 @@ public class TestWrappedNodes {
 		Set<String> expect = new HashSet<String>();
 		for (String s: expected.split( " *, *" )) expect.add( s );
 	//
-		String result = new WrappedNode( sn, r ).getLabel( language );
+		String result = new WrappedNode( sn, r ).getLabel( language ).raw();
 		assertTrue( "'" + result + "' expected to be one of " + expect, expect.contains( result ) );
 	}
 	
