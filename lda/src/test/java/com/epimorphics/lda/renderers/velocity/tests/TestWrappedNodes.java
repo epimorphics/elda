@@ -26,7 +26,7 @@ public class TestWrappedNodes {
 		Model m = ModelFactory.createDefaultModel();
 		Resource r = m.createResource( NS + "leafName" );
 		WrappedNode i = new WrappedNode( sn, r );
-		assertEquals( r.getURI(), i.getURI() );
+		assertEquals( r.getURI(), i.getURI().raw() );
 	}
 	
 //	@Test public void ensureFindsSingleLabel() {
