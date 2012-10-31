@@ -38,8 +38,12 @@ public class Help {
 			ve.setProperty( "resource.loader",  "class" );
 			ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
 		//
-			ve.setProperty( "class.resource.loader.cache", "false" );
-			ve.setProperty( "velocimacro.library.autoreload", "true" );
+			ve.setProperty( "class.resource.loader.cache", false );
+			ve.setProperty( "velocimacro.library.autoreload", true );
+		//
+			ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
+			ve.setProperty("runtime.log.logsystem.log4j.category", "velocity");
+			ve.setProperty("runtime.log.logsystem.log4j.logger", "velocity");
 		} else {
 			log.info( "loaded properties file " + velocityPropertiesFileName );
 		}

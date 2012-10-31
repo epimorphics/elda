@@ -5,10 +5,15 @@ import java.util.List;
 import java.util.Set;
 
 import com.epimorphics.lda.core.View;
+import com.epimorphics.lda.core.View.Type;
+import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.PropertyChain;
+import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
     <p>
@@ -40,17 +45,44 @@ public class ExtractByView {
 	*/
 	public List<WrappedNode> itemise( List<Resource> items ) {
 		List<WrappedNode> result = new ArrayList<WrappedNode>( items.size() );
-		for (Resource i: items) result.add( copy( i, v.chains() ) );
+		int describeState = createDescribeState( v.getType() );
+		for (Resource i: items) result.add( copy( i, getChains(), describeState ) );
 		return result;
+	}
+
+	static final Property fakeProperty = ResourceFactory.createProperty( "fake:/property" );
+	
+	static final PropertyChain fakeChain = makeFakeChain();
+	
+	private Set<PropertyChain> getChains() {
+		Set<PropertyChain> result = v.chains();
+		if (result.isEmpty()) result = CollectionUtils.set( fakeChain );
+		return result;
+	}
+
+	private static PropertyChain makeFakeChain() {
+		List<Property> properties = new ArrayList<Property>();
+		properties.add( fakeProperty );
+		properties.add( fakeProperty );
+		properties.add( fakeProperty );
+		return new PropertyChain( properties );
+	}
+
+	private int createDescribeState( Type type ) {
+		switch (type) {
+		case T_ALL: return 1;
+		case T_DESCRIBE: return 0;
+		default: return -1;
+		}
 	}
 
 	/**
 	    Answer a new WrappedNode wrapping <code>r</code> and with the properties
 	    available to it from the supplied property chains.
 	*/
-	private WrappedNode copy(Resource r, Set<PropertyChain> chains) {
+	private WrappedNode copy(Resource r, Set<PropertyChain> chains, int describeState) {
 		WrappedNode result = new WrappedNode( r );
-		for (PropertyChain chain: chains) copy( result, chain.getProperties() );
+		for (PropertyChain chain: chains) copy( result, chain.getProperties(), describeState );
 		return result;
 	}
 
@@ -59,17 +91,38 @@ public class ExtractByView {
 	 	list, if it is non-empty. Any values that are resources are wrapped
 	 	and have their properties copied in turn. 
 	*/
-	private void copy(WrappedNode w, List<Property> properties) {
+	private void copy(WrappedNode w, List<Property> properties, int describeState) {
 		if (properties.size() > 0) {
 			Property p = properties.get(0);
 			List<Property> rest = properties.subList( 1, properties.size() );
 			if (w.isResource()) {
-				for (Statement s: w.asResource().listProperties(p).toList()) {
+				int nextState = w.isAnon() ? describeState : describeState - 1;
+				for (Statement s: statementsFor(w, p, describeState)) {
 					WrappedNode o = new WrappedNode( s.getObject() );
-					copy( o, rest );
+					copy( o, rest, nextState );
 					w.addPropertyValue( new WrappedNode(s.getPredicate()), o );
 				}
 			}			
+		}
+	}
+
+	/**
+	    <p>
+	    Answer the statements with subject [the resource of] <code>w</code> 
+	    and predicate <code>p</code>. If <code>p</code> is <code>propertySTAR</code>,
+	    or these statements are for a DESCRIBE, allow any property. If we're doing the
+	    trailing labels of a DESCRIBE ALL, allow any rdfs:labels as well as whatever
+	    <code>p</code> allows.
+	    </p>
+	*/
+	private List<Statement> statementsFor( WrappedNode w, Property p, int describeState ) {
+		Resource r = w.asResource();
+		if (describeState == 1 || p.equals( ShortnameService.Util.propertySTAR)) 
+			return r.listProperties().toList();
+		else {
+			Set<Statement> result = r.listProperties(p).toSet();
+			if (describeState == 0) result.addAll( r.listProperties( RDFS.label).toSet() );
+			return new ArrayList<Statement>( result );
 		}
 	}
 
