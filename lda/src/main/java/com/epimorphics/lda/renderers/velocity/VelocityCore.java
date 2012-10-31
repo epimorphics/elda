@@ -32,10 +32,10 @@ public class VelocityCore {
 
 	public void render( APIResultSet results, OutputStream os ) {
 		View v = results.getView();
+		Model m = results.getModel();
+		ShortNames names = Help.getShortnames( m );
 		List<WrappedNode> itemised = new ExtractByView( v ).itemise( results.getResultList() );
 		VelocityContext vc = new VelocityContext();
-		Model m = results.getModel();
-		Map<Resource, String> names = Help.getShortnames( m );
 		vc.put( "names", names );
 		vc.put( "formats", Help.getFormats( m ) );
 		vc.put( "items", itemised );

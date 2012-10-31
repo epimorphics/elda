@@ -2,11 +2,10 @@ package com.epimorphics.lda.renderers.velocity.tests;
 
 import static org.junit.Assert.*;
 
-import java.util.Map;
-
 import org.junit.Test;
 
 import com.epimorphics.lda.renderers.velocity.Help;
+import com.epimorphics.lda.renderers.velocity.ShortNames;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -23,7 +22,7 @@ public class TestVelocityShortnames {
 			.addProperty( API.wasResultOf, execution )
 			;
 		execution.addProperty( API.termBinding, tb( m, RDF.type, "TYPE" ) );
-		Map<Resource, String> shortNames = Help.getShortnames( m );
+		ShortNames shortNames = Help.getShortnames( m );
 		assertEquals( null, shortNames.get( RDF.first ) );
 		assertEquals( "TYPE", shortNames.get( RDF.type ) );
 	}

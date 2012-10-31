@@ -38,8 +38,8 @@ public class Help {
 			ve.setProperty( "resource.loader",  "class" );
 			ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
 		//
-			ve.setProperty( "class.resource.loader.cache", false );
-			ve.setProperty( "velocimacro.library.autoreload", true );
+//			ve.setProperty( "class.resource.loader.cache", false );
+//			ve.setProperty( "velocimacro.library.autoreload", true );
 		//
 			ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
 			ve.setProperty("runtime.log.logsystem.log4j.category", "velocity");
@@ -67,6 +67,12 @@ public class Help {
 		Statement s = r.getProperty( RDFS.label );
 		return s == null ? r.getLocalName() : s.getString();
 	}
+	
+	static List<Literal> labelsFor( Resource r ) {
+		List<Literal> result = new ArrayList<Literal>();
+		for (Statement s: r.listProperties( RDFS.label).toList()) result.add( s.getLiteral() );
+		return result;
+	}
 
 	/**
 	    Answer a map from metadata item names to Item values. The model's
@@ -78,7 +84,7 @@ public class Help {
 	    discarded (their content is recorded in the shortnames and varvalues
 	    maps produces elsewhere in this class.)
 	*/
-	public static Map<String, Object> getMetadataFrom( Map<Resource, String> shortNames, Model m ) {
+	public static Map<String, Object> getMetadataFrom( ShortNames shortNames, Model m ) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		List<Resource> pages = m.listSubjectsWithProperty( RDF.type, API.Page ).toList();
 		for (Resource p: pages) {
@@ -87,17 +93,19 @@ public class Help {
 				descend( shortNames, result, "", wr.getResource() );
 			}
 		}
+//		for (String k: result.keySet()) {
+//			System.err.println( ">> meta: " + k + " => " + result.get(k) );
+//		}
 		return result;
 	}
 
-	private static void descend( Map<Resource, String> shortNames, Map<String, Object> result, String prefix, RDFNode r) {
+	private static void descend( ShortNames shortNames, Map<String, Object> result, String prefix, RDFNode r) {
 		if (r.isResource() && hasProperties( r.asResource() )) {
 			Resource rr = r.asResource();
 			for (Statement s: rr.listProperties().toList()) {
 				Resource p = s.getPredicate();
 				if (!p.equals( API.termBinding ) && !p.equals( API.variableBinding)) {
-					String pn = shortNames.get(p);
-					if (pn == null) pn = p.getLocalName();
+					String pn = shortNames.getMetaName(p);
 					descend( shortNames, result, (prefix.isEmpty() ? pn : prefix + "." + pn), s.getObject() );
 				}
 			}
@@ -117,7 +125,7 @@ public class Help {
 	    Answer a map from Resources (for their URIs) to their String shortname,
 	    if any, built from the termBindings in the model's metadata.
 	*/
-	public static Map<Resource, String> getShortnames( Model m ) {
+	public static ShortNames getShortnames( Model m ) {
 		Map<Resource, String> uriToShortname = new HashMap<Resource, String>();
 		List<Resource> pages = m.listSubjectsWithProperty( RDF.type, API.Page ).toList();
 		if (pages.size() == 1) {
@@ -131,14 +139,14 @@ public class Help {
 				}
 			}
 		}
-		return uriToShortname;
+		return new ShortNames(m, uriToShortname);
 	}
 
 	/**
 	    Answer a map from variable names to their values represented as Items,
 	    built from the variableBindings in the model's metadata.
 	*/
-	public static Map<String, WrappedNode> getVarsFrom(Map<Resource, String> names, Model m) {
+	public static Map<String, WrappedNode> getVarsFrom(ShortNames names, Model m) {
 			Map<String, WrappedNode> varValue = new HashMap<String, WrappedNode>();
 			List<Resource> pages = m.listSubjectsWithProperty( RDF.type, API.Page ).toList();
 			if (pages.size() == 1) {

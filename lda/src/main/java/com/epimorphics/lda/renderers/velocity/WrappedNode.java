@@ -10,6 +10,7 @@ public class WrappedNode {
 	final Resource r;
 	final String label;
 	final RDFNode basis;
+	final List<Literal> labels;
 	
 	public int hashCode() {
 		return basis.hashCode();
@@ -23,16 +24,35 @@ public class WrappedNode {
 		this.r = (r.isResource() ? r.asResource() : null);
 		this.label = "LIT";
 		this.basis = r;
+		this.labels = this.r == null ? new ArrayList<Literal>() : Help.labelsFor( this.r );
 	}
 	
 	public WrappedNode( Resource r ) {
 		this.basis = r;
 		this.r = r;
 		this.label = Help.labelFor( r );
+		this.labels = Help.labelsFor( r );
 	}
 	
 	public String getLabel() {
-		return label;
+		return getLabel( "" );
+	}
+	
+	/**
+	    Answer the lexical form of some label of this wrapped 
+	    resource which has <code>wantLanguage</code>. If there isn't
+	    one, answer some lexical form with no language. If there
+	    isn't one, answer the local name of the resource with any
+	    _s replaced by spaces.
+	*/
+	public String getLabel( String wantLanguage ) {
+		Literal plain = null;
+		for (Literal l: labels) {
+			String thisLanguage = l.getLanguage();
+			if (thisLanguage.equals(wantLanguage)) return l.getLexicalForm();
+			if (thisLanguage.equals("")) plain = l;
+		}
+		return plain == null ? r.getLocalName().replaceAll("_", " ") : plain.getLexicalForm();
 	}
 	
 	public String getId( Map<Resource, String> ids ) {
@@ -41,17 +61,16 @@ public class WrappedNode {
 		return id;
 	}
 	
-	public String shortForm( Map<Resource, String> shortNames ) {
-		if (r == null) return shortLiteral( shortNames );
-		return shortURI( shortNames );
+	public String shortForm( ShortNames shorts ) {
+		if (r == null) return shortLiteral( shorts );
+		return shortURI( shorts );
 	}
 	
-	private String shortURI(Map<Resource, String> shortNames) {
-		String sn = shortNames.get(r);
-		return sn == null ? r.getLocalName() : sn;
+	private String shortURI(ShortNames shorts) {
+		return shorts.get(r);
 	}
 
-	private String shortLiteral(Map<Resource, String> shortNames) {
+	private String shortLiteral(ShortNames shorts) {
 		return basis.asLiteral().getLexicalForm();
 	}
 	
