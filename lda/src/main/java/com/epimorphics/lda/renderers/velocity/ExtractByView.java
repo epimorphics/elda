@@ -31,13 +31,15 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 public class ExtractByView {
 	
 	final View v;
+	final ShortNames sn;
 	
 	/**
 	    Initialise this ExtractByView with the view that defines what
 	    it will extract.
 	*/
-	public ExtractByView( View view ) {
-		this.v = view;
+	public ExtractByView( ShortNames sn, View v ) {
+		this.sn = sn;
+		this.v = v;
 	}
 	
 	/**
@@ -81,7 +83,7 @@ public class ExtractByView {
 	    available to it from the supplied property chains.
 	*/
 	private WrappedNode copy(Resource r, Set<PropertyChain> chains, int describeState) {
-		WrappedNode result = new WrappedNode( r );
+		WrappedNode result = new WrappedNode( sn, r );
 		for (PropertyChain chain: chains) copy( result, chain.getProperties(), describeState );
 		return result;
 	}
@@ -98,9 +100,9 @@ public class ExtractByView {
 			if (w.isResource()) {
 				int nextState = w.isAnon() ? describeState : describeState - 1;
 				for (Statement s: statementsFor(w, p, describeState)) {
-					WrappedNode o = new WrappedNode( s.getObject() );
+					WrappedNode o = new WrappedNode( sn, s.getObject() );
 					copy( o, rest, nextState );
-					w.addPropertyValue( new WrappedNode(s.getPredicate()), o );
+					w.addPropertyValue( new WrappedNode( sn, s.getPredicate()), o );
 				}
 			}			
 		}

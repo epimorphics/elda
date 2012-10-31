@@ -315,8 +315,9 @@ by the "mvn install" process.
 </table>
 
 <p>
-	WrappedNodes are wrappers round Jena RDFNodes and have the
-	following methods:
+	WrappedNodes are wrappers round Jena RDFNodes. When they are created,
+	they are given a ShortNames object to allow them to render their short
+	names. They have the following methods:
 </p>
 
 <table>
@@ -355,7 +356,7 @@ by the "mvn install" process.
 </tr>
 
 <tr>
-	<td>shortForm(Map&lt;Resource, String> shortNames)</td>
+	<td>shortForm()</td>
 	<td>
 		If this node is a wrapped Resource, answer the
 		shortname associated with that Resource or its
@@ -403,10 +404,10 @@ by the "mvn install" process.
 </tr>
 
 <tr>
-	<td>getType( Map&lt;Resource, String> shortNames )</td>
+	<td>getLiteralType()</td>
 	<td>
-		Answer the URI representing the type of this wrapped
-		literal node.
+		Answer the short form of the URI representing the type 
+		of this wrapped literal node.
 	</td>
 </tr>
 

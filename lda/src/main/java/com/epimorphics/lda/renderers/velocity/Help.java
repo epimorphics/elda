@@ -111,7 +111,7 @@ public class Help {
 			}
 		} else {
 			// System.err.println( ">> " + prefix + " = " + r );
-			result.put( prefix, new WrappedNode( r ) );
+			result.put( prefix, new WrappedNode( shortNames, r ) );
 		}
 	}
 
@@ -156,7 +156,7 @@ public class Help {
 					for (Statement sb: bindings) {
 						String sn = sb.getProperty( API.label ).getString();
 						RDFNode fn = sb.getProperty( API.value ).getObject();
-						varValue.put( sn, new WrappedNode( fn ) );
+						varValue.put( sn, new WrappedNode( names, fn ) );
 					}
 				}
 			}

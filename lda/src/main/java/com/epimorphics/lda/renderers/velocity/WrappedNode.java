@@ -11,6 +11,7 @@ public class WrappedNode {
 	final String label;
 	final RDFNode basis;
 	final List<Literal> labels;
+	final ShortNames sn;
 	
 	public int hashCode() {
 		return basis.hashCode();
@@ -20,14 +21,16 @@ public class WrappedNode {
 		return other instanceof WrappedNode && basis.equals( ((WrappedNode) other).basis );
 	}
 	
-	public WrappedNode( RDFNode r ) {
+	public WrappedNode( ShortNames sn, RDFNode r ) {
+		this.sn = sn;
 		this.r = (r.isResource() ? r.asResource() : null);
 		this.label = "LIT";
 		this.basis = r;
 		this.labels = this.r == null ? new ArrayList<Literal>() : Help.labelsFor( this.r );
 	}
 	
-	public WrappedNode( Resource r ) {
+	public WrappedNode( ShortNames sn, Resource r ) {
+		this.sn = sn;
 		this.basis = r;
 		this.r = r;
 		this.label = Help.labelFor( r );
@@ -61,16 +64,16 @@ public class WrappedNode {
 		return id;
 	}
 	
-	public String shortForm( ShortNames shorts ) {
-		if (r == null) return shortLiteral( shorts );
-		return shortURI( shorts );
+	public String shortForm() {
+		if (r == null) return shortLiteral();
+		return shortURI();
 	}
 	
-	private String shortURI(ShortNames shorts) {
-		return shorts.get(r);
+	private String shortURI() {
+		return sn.get(r);
 	}
 
-	private String shortLiteral(ShortNames shorts) {
+	private String shortLiteral() {
 		return basis.asLiteral().getLexicalForm();
 	}
 	
@@ -106,8 +109,8 @@ public class WrappedNode {
 		return basis.asLiteral().getLanguage();
 	}
 	
-	public String getType( Map<Resource, String> shortNames ) {
-		return basis.asLiteral().getDatatypeURI();
+	public String getLiteralType() {
+		return sn.get( basis.asLiteral().getDatatypeURI() );
 	}
 	
 	public boolean isList() {
@@ -117,17 +120,13 @@ public class WrappedNode {
 	public List<WrappedNode> asList() {
         List<RDFNode> rawlist = basis.as( RDFList.class ).asJavaList();
         List<WrappedNode> result = new ArrayList<WrappedNode>( rawlist.size() );
-        for (RDFNode n : rawlist) result.add( new WrappedNode( n ) );
+        for (RDFNode n : rawlist) result.add( new WrappedNode( sn, n ) );
         return result;
 	}
 	
 	public List<WrappedNode> getValues( WrappedNode p ) {
 		List<WrappedNode> result = propertyValues.get(p);
 		return result;
-	}
-	
-	private Property asProperty(Resource r) {
-		return r.getModel().createProperty( r.getURI() );
 	}
 
 	public List<WrappedNode> getProperties() {

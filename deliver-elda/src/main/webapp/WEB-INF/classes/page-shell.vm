@@ -81,7 +81,7 @@
 			<a href="$property.URI">$property.label</a>
 			#foreach ($value in ${item.getValues($property)})
 				<div class="indented">
-					$value.shortForm($names)
+					$value.shortForm()
 					#if ($value.isResource()) #nesting($value) #end
 				</div>
 			#end

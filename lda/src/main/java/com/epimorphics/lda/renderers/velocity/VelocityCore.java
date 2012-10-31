@@ -7,7 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -34,7 +33,7 @@ public class VelocityCore {
 		View v = results.getView();
 		Model m = results.getModel();
 		ShortNames names = Help.getShortnames( m );
-		List<WrappedNode> itemised = new ExtractByView( v ).itemise( results.getResultList() );
+		List<WrappedNode> itemised = new ExtractByView( names, v ).itemise( results.getResultList() );
 		VelocityContext vc = new VelocityContext();
 		vc.put( "names", names );
 		vc.put( "formats", Help.getFormats( m ) );

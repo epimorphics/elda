@@ -7,22 +7,25 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.epimorphics.lda.renderers.velocity.ShortNames;
 import com.epimorphics.lda.renderers.velocity.WrappedNode;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class TestWrappedNodes {
 
 	static final String NS = "http://junit/epimorphics.com/ns#";
 	
+	ShortNames sn = new ShortNames( PrefixMapping.Factory.create() );
 	
 	@Test public void ensureItemPreservesResourceURI() {		
 		Model m = ModelFactory.createDefaultModel();
 		Resource r = m.createResource( NS + "leafName" );
-		WrappedNode i = new WrappedNode( r );
+		WrappedNode i = new WrappedNode( sn, r );
 		assertEquals( r.getURI(), i.getURI() );
 	}
 	
@@ -59,7 +62,7 @@ public class TestWrappedNodes {
 		Set<String> expect = new HashSet<String>();
 		for (String s: expected.split( " *, *" )) expect.add( s );
 	//
-		String result = new WrappedNode( r ).getLabel( language );
+		String result = new WrappedNode( sn, r ).getLabel( language );
 		assertTrue( "'" + result + "' expected to be one of " + expect, expect.contains( result ) );
 	}
 	
