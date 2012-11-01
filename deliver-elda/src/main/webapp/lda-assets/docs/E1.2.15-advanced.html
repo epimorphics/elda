@@ -328,7 +328,15 @@ by the "mvn install" process.
 		</tr>
 	</thead>
 <tr>
-	<td>getId(Map&lt;Resource, String> ids</td>
+	<td>boolean equals(Object other)</td>
+	<td>
+		A WrappedNode is .equals to another object if
+		that object is a WrappedNode and their underlying
+		RDFNodes are equal.
+	</td>
+</tr>
+<tr>
+	<td>String getId(Map&lt;Resource, String> ids</td>
 	<td>
 		Answer the id of this WrappedNode, allocating a new
 		one in ids if necessary.
@@ -336,52 +344,52 @@ by the "mvn install" process.
 </tr>
 
 <tr>
-	<td>getLabel</td>
+	<td>WrappedString getLabel</td>
 	<td>
 		Answer one of the <code>rdfs:label</code>s with no
-		language code of this WrappedNode if it has any, 
-		otherwise answer this WrappedNode's local name.
+		language code of this WrappedNode if it has any,
+		otherwise return this WrappedNode's local name.
 	</td>
 </tr>
 
 <tr>
-	<td>getLabel(String wantlanguage)</td>
+	<td>WrappedString getLabel(String wantlanguage)</td>
 	<td>
 	    Answer the lexical form of some label of this wrapped 
     	    resource which has <code>wantLanguage</code>. If there isn't
-    	    one, answer some lexical form with no language. If there
-    	    isn't one, answer the local name of the resource with any
+    	    one, return some lexical form with no language. If there
+    	    isn't one, return the local name of the resource with any
     	    _s replaced by spaces.
 	</td>
 </tr>
 
 <tr>
-	<td>shortForm()</td>
+	<td>WrappedString shortForm()</td>
 	<td>
-		If this node is a wrapped Resource, answer the
+		If this node is a wrapped Resource, return the
 		shortname associated with that Resource or its
 		localname if it has no shortname. If this node
-		is a wrapped Literal, answer the lexical form of
+		is a wrapped Literal, return the lexical form of
 		that literal.
 	</td>
 </tr>
 
 <tr>
-	<td>getURI</td>
+	<td>WrappedString getURI</td>
 	<td>
-		If this WrappedNode is a Resource, answer its URI.
+		If this WrappedNode is a Resource, return its URI.
 	</td>
 </tr>
 
 <tr>
-	<td>isLiteral</td>
+	<td>boolean isLiteral</td>
 	<td>
 		Answer true iff this WrappedNode is a wrapped Literal.
 	</td>
 </tr>
 
 <tr>
-	<td>isResource</td>
+	<td>boolean isResource</td>
 	<td>
 		Answer true iff this WrappedNode is a wrapped Resource
 		(which may be a blank node).
@@ -389,57 +397,64 @@ by the "mvn install" process.
 </tr>
 
 <tr>
-	<td>isAnon</td>
+	<td>boolean isAnon</td>
 	<td>
 		Answer true iff this WrappedNode is a blank node.
 	</td>
 </tr>
 
 <tr>
-	<td>getLanguage</td>
+	<td>String getLanguage</td>
 	<td>
 		If this node is a wrapped Literal, return its language
-		if any, otherwise answer the empty string.
+		if any, otherwise return the empty string.
 	</td>
 </tr>
 
 <tr>
-	<td>getLiteralType()</td>
+	<td>WrappedString getLiteralType()</td>
 	<td>
-		Answer the short form of the URI representing the type 
+		Return the short form of the URI representing the type
 		of this wrapped literal node.
 	</td>
 </tr>
 
 <tr>
-	<td>isList</td>
+	<td>Object getLiteralValue()</td>
 	<td>
-		Answer true iff this WrappedNode wraps a Resource representing
+		Return the unadorned value of this literal.
+	</td>
+</tr>
+
+<tr>
+	<td>boolean isList</td>
+	<td>
+		Return true iff this WrappedNode wraps a Resource representing
 		an RDF list.
 	</td>
 </tr>
 
 <tr>
-	<td>asList</td>
+	<td>List&lt;WrappedNode>asList</td>
 	<td>
-		Answer a Java list of WrappedNodes wrapping the elements of
+		Return a Java list of WrappedNodes wrapping the elements of
 		the RDF list represented by this WrappedNode.
 	</td>
 </tr>
 
 <tr>
-	<td>getProperties</td>
+	<td>List&lt;WrappedNode> getProperties</td>
 	<td>
-		Answer a Java list of WrappedNodes which are the 
+		Return a Java list of WrappedNodes which are the 
 		wrapped form of the different properties of this
 		WrappedNode.
 	</td>
 </tr>
 
 <tr>
-	<td>getValues(WrappedNode property)</td>
+	<td>List&lt;WrappedNode> getValues(WrappedNode property)</td>
 	<td>
-		Answer a Java list of WrappedNodes which are the
+		Return a Java list of WrappedNodes which are the
 		objects of all statements for which this WrappedNode
 		is the subject and the argument <code>property</code>
 		is the predicate. (This argument will typically be
@@ -448,6 +463,36 @@ by the "mvn install" process.
 </tr>
 
 </table>
+
+<p>
+	Where a String result might contain HTML-significant characters,
+	WrappedNodes return a WrappedString object.
+</p>
+
+<table>
+	<thead>
+		<tr>
+			<th>signature</th>
+			<th>description</th>
+		</tr>
+	</thead>
+<tr>
+	<td>String toString()</td>
+	<td>
+		Return the content of this WrappedString,
+		performing HTML escaping.
+	</td>
+</tr>
+
+<tr>
+	<td>String raw()</td>
+	<td>
+		Return the content of this WrappedString
+		without escaping.
+	</td>
+</tr>
+</table>
+
 
 <h1>Additional Elda features</h1>
 

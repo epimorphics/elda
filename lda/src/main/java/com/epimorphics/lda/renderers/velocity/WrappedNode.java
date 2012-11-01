@@ -114,6 +114,13 @@ public class WrappedNode {
 		return new WrappedString( sn.get( basis.asLiteral().getDatatypeURI() ) );
 	}
 	
+	/**
+	    Answer the value of the wrapped literal
+	*/
+	public Object getLiteralValue() {
+		return basis.asLiteral().getValue();
+	}
+	
 	public boolean isList() {
 		return basis.isAnon() && basis.asResource().canAs( RDFList.class );
 	}
