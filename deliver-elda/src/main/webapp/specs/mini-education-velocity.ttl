@@ -10,6 +10,7 @@
 @prefix api:                <http://purl.org/linked-data/api/vocab#> .
 @prefix dc:                 <http://purl.org/dc/elements/1.1/> .
 
+@prefix vcard:				<http://www.w3.org/2006/vcard/ns#> .
 @prefix foaf:               <http://xmlns.com/foaf/0.1/> .
 @prefix geo:                <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix os-admingeo:        <http://data.ordnancesurvey.co.uk/ontology/admingeo/> .

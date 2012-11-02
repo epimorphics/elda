@@ -36,9 +36,12 @@ public class ShortNames {
 		return result;
 	}
 
+	// hackery to deal with blank nodes and nodes with no short form.
 	private String shortForm(String uri) {
-		if (uri.endsWith("#self") && uri.startsWith("http://api.talis.com/")) return "A BLANK NODE";
-		return Transcoding.encode(pm, uri);
+		if (uri.endsWith("#self") && uri.startsWith("http://api.talis.com/")) return "[more ...]";
+		String t = Transcoding.encode(pm, uri);
+		if (t.startsWith("uri_")) return uri;
+		return t;
 	}
 
 	public String getMetaName(Resource p) {
