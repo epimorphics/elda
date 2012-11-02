@@ -34,6 +34,7 @@ public class VelocityCore {
 		Model m = results.getModel();
 		ShortNames names = Help.getShortnames( m );
 		List<WrappedNode> itemised = new ExtractByView( names, v ).itemise( results.getResultList() );
+	//
 		VelocityContext vc = new VelocityContext();
 		vc.put( "names", names );
 		vc.put( "formats", Help.getFormats( m ) );
@@ -41,7 +42,7 @@ public class VelocityCore {
 		vc.put( "meta",  Help.getMetadataFrom( names, m ) );
 		vc.put( "vars",  Help.getVarsFrom( names, m ) );
 		vc.put( "ids",  new HashMap<Resource, String>() );
-//
+	//
 		Template t = ve.getTemplate( templateName );
 		try {
 			Writer w = new OutputStreamWriter( os, "UTF-8" );
