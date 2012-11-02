@@ -22,4 +22,40 @@ public class WrappedString {
 	public String raw() {
 		return content;
 	}
+
+	/**
+	    The content with spaces inserted (a) in place of any run of '_'
+	    characters (b) between a lower-case letter and an upper-case one.
+	*/
+	public WrappedString cut() {
+		StringBuilder sb = new StringBuilder();
+		char prev = 0;
+		int startBig = 0;
+		for (int i = 0; i < content.length(); i += 1) {
+			char ch = content.charAt(i);
+			boolean onUpper = Character.isUpperCase( ch );
+			if (startBig > 0) {
+				if (!onUpper) {
+					if (i == startBig + 1) {
+						sb.append( Character.toLowerCase( content.charAt(startBig) ) );
+					} else {
+						for (int j = startBig; j < i; j += 1) sb.append( content.charAt(j) );
+						sb.append(' ');
+					}
+					sb.append( ch );
+					startBig = 0;
+				}
+			} else if (ch == '_') {
+				if (prev != '_') sb.append( ' ' );
+			} else if (onUpper && Character.isLowerCase( prev )) {
+				startBig = i;
+				sb.append(' ');
+			
+			} else {
+				sb.append( ch );
+			}
+			prev = ch;
+		}
+		return new WrappedString( sb.toString() );
+	}
 }
