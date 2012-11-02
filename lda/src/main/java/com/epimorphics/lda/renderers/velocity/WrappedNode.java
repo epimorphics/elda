@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.*;
 
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class WrappedNode {
 	
@@ -63,6 +64,16 @@ public class WrappedNode {
 		String id = ids.get( r );
 		if (id == null) ids.put( r,  id = "ID-" + (ids.size() + 10000) );
 		return id;
+	}
+	
+	/**
+	     True iff this WrappedNode is a Resource with just one label and no 
+	     other properties.
+	*/
+	public boolean isJustALabel() {
+		if (r == null) return false;
+		List<Statement> properties = r.listProperties().toList();
+		return properties.size() == 1 && properties.get(0).getPredicate().equals(RDFS.label);
 	}
 	
 	public WrappedString shortForm() {

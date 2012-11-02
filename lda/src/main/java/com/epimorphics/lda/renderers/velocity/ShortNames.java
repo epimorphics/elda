@@ -37,6 +37,7 @@ public class ShortNames {
 	}
 
 	private String shortForm(String uri) {
+		if (uri.endsWith("#self") && uri.startsWith("http://api.talis.com/")) return "A BLANK NODE";
 		return Transcoding.encode(pm, uri);
 	}
 

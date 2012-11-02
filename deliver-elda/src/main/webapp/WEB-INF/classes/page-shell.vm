@@ -15,8 +15,12 @@
 			<a href="$property.URI">$property.label</a>
 			#foreach ($value in ${item.getValues($property)})
 				<div class="indented">
-					$value.shortForm()
-					#if ($value.isResource()) #nesting($value) #end
+					#if ($value.justALabel)
+						<a href="$value.URI">$value.label</a>
+					#else
+						$value.shortForm()
+						#if ($value.isResource()) #nesting($value) #end
+					#end
 				</div>
 			#end
 		</div>

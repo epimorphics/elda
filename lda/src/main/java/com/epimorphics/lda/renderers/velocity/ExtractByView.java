@@ -70,11 +70,23 @@ public class ExtractByView {
 		return new PropertyChain( properties );
 	}
 
+	static final int stateDESC = 1, stateALL = 2, stateLABEL = 3, statePLAIN = 4;
+	
 	private int createDescribeState( Type type ) {
 		switch (type) {
-		case T_ALL: return 1;
-		case T_DESCRIBE: return 0;
-		default: return -1;
+		case T_ALL: return stateALL;
+		case T_DESCRIBE: return stateDESC;
+		default: return statePLAIN;
+		}
+	}
+
+	private static int nextState(WrappedNode w, int describeState) {
+		if (w.isAnon()) {
+			return describeState;
+		} else if (describeState == stateALL) {
+			return stateLABEL;
+		} else {
+			return statePLAIN;
 		}
 	}
 
@@ -98,7 +110,7 @@ public class ExtractByView {
 			Property p = properties.get(0);
 			List<Property> rest = properties.subList( 1, properties.size() );
 			if (w.isResource()) {
-				int nextState = w.isAnon() ? describeState : describeState - 1;
+				int nextState = nextState(w, describeState);
 				for (Statement s: statementsFor(w, p, describeState)) {
 					WrappedNode o = new WrappedNode( sn, s.getObject() );
 					copy( o, rest, nextState );
@@ -119,11 +131,11 @@ public class ExtractByView {
 	*/
 	private List<Statement> statementsFor( WrappedNode w, Property p, int describeState ) {
 		Resource r = w.asResource();
-		if (describeState == 1 || p.equals( ShortnameService.Util.propertySTAR)) 
+		if (describeState == stateALL || describeState == stateDESC || p.equals( ShortnameService.Util.propertySTAR)) 
 			return r.listProperties().toList();
 		else {
 			Set<Statement> result = r.listProperties(p).toSet();
-			if (describeState == 0) result.addAll( r.listProperties( RDFS.label).toSet() );
+			if (describeState == stateLABEL) result.addAll( r.listProperties( RDFS.label).toSet() );
 			return new ArrayList<Statement>( result );
 		}
 	}
