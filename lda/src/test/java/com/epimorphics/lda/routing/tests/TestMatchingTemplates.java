@@ -18,8 +18,19 @@ import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.routing.MatchTemplate;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.tests_support.MakeData;
+import com.epimorphics.util.CollectionUtils;
 
 public class TestMatchingTemplates {
+	
+	@Test public void testTemplateSorting() {
+		MatchSearcher<String> s = new MatchSearcher<String>();
+		String path_A = "/def/hospital/Hospital/instances";
+		String path_B = "/def/hospital/Hospital/instances/lat/{lat}/long/{long}";
+		s.register( path_A, "A" );
+		s.register( path_B, "B" );
+		assertEquals( CollectionUtils.list(path_B, path_A), s.templates() );
+	}
+	
 	
 	@Test public void ensure_searcher_finds_correct_value() {
 		String path1 = "/abc/def", path2 = "/abc/{xyz}", path3 = "/other", path4 = "/abc/{x}{y}{z}";

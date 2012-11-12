@@ -61,8 +61,8 @@ public class MatchTemplate<T> {
 	/**
 	    Compare this MatchTemplate with another. The one with the most
 	    literal characters is the lesser; if they have the same number
-	    of literals, the one with the fewer number of path segments --
-	    well, slashes actually -- is the lesser.
+	    of literals, the one with the fewer patterns is the lesser.
+	    (Hence a sort will put "more specific" templates earlier.)
 	*/
 	public int compareTo( MatchTemplate<?> other ) {
 		int result = other.literals - literals;
