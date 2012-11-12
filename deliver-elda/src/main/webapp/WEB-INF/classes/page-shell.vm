@@ -14,7 +14,7 @@
 		<div class="indented">
 			<a href="$property.URI">$property.label.cut()</a>
 			#set ($values = ${item.getValues($property)})
-			#if ($values.size() < 2) OPT #else MANY #end
+			#if ($values.size() < 2) #else #end
 			#foreach ($value in ${item.getValues($property)})
 				<div class="indented">
 					#if ($value.justALabel)
@@ -34,7 +34,7 @@
 	
 	#foreach ($item in $items) 
 		<div class="itembox">
-		<h2><a href="$item.URI" id="$item.getId($ids)">$item.label</a></h2>
+		<h2><a href="$item.URI" id="$item.id">$item.label</a></h2>
 		#nesting($item)
 		</div>
 	#end
@@ -53,7 +53,7 @@
 	<div class="bordered-panel">
 		<div class="right-header">on this page</div>
 		#foreach ($item in $items)
-			<div style="margin-left: 1ex">&raquo; <a href="#$item.getId($ids)">$item.label</a></div>
+			<div style="margin-left: 1ex">&raquo; <a href="#$item.id">$item.label</a></div>
 		#end
 	</div>
 

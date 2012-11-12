@@ -58,6 +58,8 @@ public class EXTRAS
 	public static final Property allowSyntaxProperties = property( "allowSyntaxProperties" );
 
 	public static final Property uriTemplatePrefix = property( "uriTemplatePrefix" );
+
+	public static final Resource VelocityFormatter = resource( "VelocityFormatter" );
     
     private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }

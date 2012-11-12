@@ -29,12 +29,11 @@ hello:velocity-world a api:API
 	; api:base "/elda"
 	; api:endpoint hello:games 
 	; api:defaultFormatter
-		[a api:XsltFormatter
+		[a elda:VelocityFormatter
 		; api:name "html"
 		; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
 		; api:mimeType "text/html"
 		# ; api:stylesheet "page-shell.vm"
-		# ; elda:metadataOptions "bindings,formats,versions,execution"
 		]
 	.
     

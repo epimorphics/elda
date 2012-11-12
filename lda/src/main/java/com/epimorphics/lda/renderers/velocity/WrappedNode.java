@@ -13,6 +13,7 @@ public class WrappedNode {
 	final RDFNode basis;
 	final List<Literal> labels;
 	final ShortNames sn;
+	final IdMap ids;
 	
 	public int hashCode() {
 		return basis.hashCode();
@@ -22,7 +23,8 @@ public class WrappedNode {
 		return other instanceof WrappedNode && basis.equals( ((WrappedNode) other).basis );
 	}
 	
-	public WrappedNode( ShortNames sn, RDFNode r ) {
+	public WrappedNode( ShortNames sn, IdMap ids, RDFNode r ) {
+		this.ids = ids;
 		this.sn = sn;
 		this.r = (r.isResource() ? r.asResource() : null);
 		this.label = "LIT";
@@ -30,7 +32,8 @@ public class WrappedNode {
 		this.labels = this.r == null ? new ArrayList<Literal>() : Help.labelsFor( this.r );
 	}
 	
-	public WrappedNode( ShortNames sn, Resource r ) {
+	public WrappedNode( ShortNames sn, IdMap ids, Resource r ) {
+		this.ids = ids;
 		this.sn = sn;
 		this.basis = r;
 		this.r = r;
@@ -60,10 +63,11 @@ public class WrappedNode {
 		return new WrappedString(raw);
 	}
 	
-	public String getId( Map<Resource, String> ids ) {
-		String id = ids.get( r );
-		if (id == null) ids.put( r,  id = "ID-" + (ids.size() + 10000) );
-		return id;
+	public String getId() {
+		return ids.get(r);
+//		String id = ids.map.get( r );
+//		if (id == null) ids.map.put( r,  id = "ID-" + (ids.map.size() + 10000) );
+//		return id;
 	}
 	
 	/**
@@ -139,7 +143,7 @@ public class WrappedNode {
 	public List<WrappedNode> asList() {
         List<RDFNode> rawlist = basis.as( RDFList.class ).asJavaList();
         List<WrappedNode> result = new ArrayList<WrappedNode>( rawlist.size() );
-        for (RDFNode n : rawlist) result.add( new WrappedNode( sn, n ) );
+        for (RDFNode n : rawlist) result.add( new WrappedNode( sn, ids, n ) );
         return result;
 	}
 	

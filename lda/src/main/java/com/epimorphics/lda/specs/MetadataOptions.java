@@ -39,7 +39,8 @@ public class MetadataOptions {
 		List<Statement> options = R.listProperties( EXTRAS.metadataOptions ).toList();
     	if (options.size() > 0) 
     		for (Statement os: options)
-    			result.add( os.getString() );
+    			for (String opt: os.getString().split( " *, *" ))
+    				result.add( opt.toLowerCase() );
 		return result.toArray( new String[result.size()]);
 	}
 }

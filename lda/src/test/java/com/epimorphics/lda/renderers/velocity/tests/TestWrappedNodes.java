@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import com.epimorphics.lda.renderers.velocity.IdMap;
 import com.epimorphics.lda.renderers.velocity.ShortNames;
 import com.epimorphics.lda.renderers.velocity.WrappedNode;
 import com.hp.hpl.jena.rdf.model.Literal;
@@ -22,10 +23,11 @@ public class TestWrappedNodes {
 	
 	ShortNames sn = new ShortNames( PrefixMapping.Factory.create() );
 	
-	@Test public void ensureItemPreservesResourceURI() {		
+	@Test public void ensureItemPreservesResourceURI() {
+		IdMap ids = new IdMap();		
 		Model m = ModelFactory.createDefaultModel();
 		Resource r = m.createResource( NS + "leafName" );
-		WrappedNode i = new WrappedNode( sn, r );
+		WrappedNode i = new WrappedNode( sn, ids, r );
 		assertEquals( r.getURI(), i.getURI().raw() );
 	}
 	
@@ -47,6 +49,7 @@ public class TestWrappedNodes {
 	}
 
 	private void ensureLabels( String expected, String provided, String language ) {
+		IdMap ids = new IdMap();
 		Model m = ModelFactory.createDefaultModel();
 		Resource r = m.createResource( NS + "root" );
 		if (provided.length() > 0)
@@ -62,7 +65,7 @@ public class TestWrappedNodes {
 		Set<String> expect = new HashSet<String>();
 		for (String s: expected.split( " *, *" )) expect.add( s );
 	//
-		String result = new WrappedNode( sn, r ).getLabel( language ).raw();
+		String result = new WrappedNode( sn, ids, r ).getLabel( language ).raw();
 		assertTrue( "'" + result + "' expected to be one of " + expect, expect.contains( result ) );
 	}
 	

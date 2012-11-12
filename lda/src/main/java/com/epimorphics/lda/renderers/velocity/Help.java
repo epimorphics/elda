@@ -84,13 +84,13 @@ public class Help {
 	    discarded (their content is recorded in the shortnames and varvalues
 	    maps produces elsewhere in this class.)
 	*/
-	public static Map<String, Object> getMetadataFrom( ShortNames shortNames, Model m ) {
+	public static Map<String, Object> getMetadataFrom( ShortNames shortNames, IdMap ids, Model m ) {
 		Map<String, Object> result = new HashMap<String, Object>();
 		List<Resource> pages = m.listSubjectsWithProperty( RDF.type, API.Page ).toList();
 		for (Resource p: pages) {
 			List<Statement> wrs = p.listProperties( API.wasResultOf ).toList();
 			for (Statement wr: wrs) {
-				descend( shortNames, result, "", wr.getResource() );
+				descend( shortNames, ids, result, "", wr.getResource() );
 			}
 		}
 //		for (String k: result.keySet()) {
@@ -99,19 +99,19 @@ public class Help {
 		return result;
 	}
 
-	private static void descend( ShortNames shortNames, Map<String, Object> result, String prefix, RDFNode r) {
+	private static void descend( ShortNames shortNames, IdMap ids, Map<String, Object> result, String prefix, RDFNode r) {
 		if (r.isResource() && hasProperties( r.asResource() )) {
 			Resource rr = r.asResource();
 			for (Statement s: rr.listProperties().toList()) {
 				Resource p = s.getPredicate();
 				if (!p.equals( API.termBinding ) && !p.equals( API.variableBinding)) {
 					String pn = shortNames.getMetaName(p);
-					descend( shortNames, result, (prefix.isEmpty() ? pn : prefix + "." + pn), s.getObject() );
+					descend( shortNames, ids, result, (prefix.isEmpty() ? pn : prefix + "." + pn), s.getObject() );
 				}
 			}
 		} else {
 			// System.err.println( ">> " + prefix + " = " + r );
-			result.put( prefix, new WrappedNode( shortNames, r ) );
+			result.put( prefix, new WrappedNode( shortNames, ids, r ) );
 		}
 	}
 
@@ -146,7 +146,7 @@ public class Help {
 	    Answer a map from variable names to their values represented as Items,
 	    built from the variableBindings in the model's metadata.
 	*/
-	public static Map<String, WrappedNode> getVarsFrom(ShortNames names, Model m) {
+	public static Map<String, WrappedNode> getVarsFrom(ShortNames names, IdMap ids, Model m) {
 			Map<String, WrappedNode> varValue = new HashMap<String, WrappedNode>();
 			List<Resource> pages = m.listSubjectsWithProperty( RDF.type, API.Page ).toList();
 			if (pages.size() == 1) {
@@ -156,7 +156,7 @@ public class Help {
 					for (Statement sb: bindings) {
 						String sn = sb.getProperty( API.label ).getString();
 						RDFNode fn = sb.getProperty( API.value ).getObject();
-						varValue.put( sn, new WrappedNode( names, fn ) );
+						varValue.put( sn, new WrappedNode( names, ids, fn ) );
 					}
 				}
 			}

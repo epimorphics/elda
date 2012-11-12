@@ -308,8 +308,8 @@ by the "mvn install" process.
     <tr>
 	<td>ids</td>
 	<td>
-		A map from Resources to their identifiers for use in
-		HTML <code>id=</code> attributes.
+		An IdMap object which contains a map from Resources to their 
+		identifiers for use in HTML <code>id=</code> attributes.
 	</td>
     </tr>
 </table>
@@ -317,7 +317,7 @@ by the "mvn install" process.
 <p>
 	WrappedNodes are wrappers round Jena RDFNodes. When they are created,
 	they are given a ShortNames object to allow them to render their short
-	names. They have the following methods:
+	names and an IdMap object to hold their allocated Id. They have the following methods:
 </p>
 
 <table>
@@ -336,10 +336,10 @@ by the "mvn install" process.
 	</td>
 </tr>
 <tr>
-	<td>String getId(Map&lt;Resource, String> ids</td>
+	<td>String getId()</td>
 	<td>
-		Answer the id of this WrappedNode, allocating a new
-		one in ids if necessary.
+		Answer the id of this WrappedNode, allocating a
+		fresh one if necessary.
 	</td>
 </tr>
 

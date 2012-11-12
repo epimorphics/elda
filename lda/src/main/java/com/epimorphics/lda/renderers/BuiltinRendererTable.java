@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -117,6 +118,8 @@ public class BuiltinRendererTable {
 				return new XMLRenderer( sns, MediaType.APPLICATION_XML, null );
 			}
 			} );
+		
+		putFactory( "_velocity", EXTRAS.VelocityFormatter, MediaType.NONE, new VelocityRendererFactory() );
 		
 		putFactory( "_xslt", API.XsltFormatter, MediaType.NONE, new XSLT_RendererFactory( Empty, MediaType.NONE ) );
 		

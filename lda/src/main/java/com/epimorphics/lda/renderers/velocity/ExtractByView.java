@@ -45,10 +45,10 @@ public class ExtractByView {
 	/**
 	     Answer a list of the top-level tree copies of the selected items.
 	*/
-	public List<WrappedNode> itemise( List<Resource> items ) {
+	public List<WrappedNode> itemise( IdMap ids, List<Resource> items ) {
 		List<WrappedNode> result = new ArrayList<WrappedNode>( items.size() );
 		int describeState = createDescribeState( v.getType() );
-		for (Resource i: items) result.add( copy( i, getChains(), describeState ) );
+		for (Resource i: items) result.add( copy( i, ids, getChains(), describeState ) );
 		return result;
 	}
 
@@ -94,8 +94,8 @@ public class ExtractByView {
 	    Answer a new WrappedNode wrapping <code>r</code> and with the properties
 	    available to it from the supplied property chains.
 	*/
-	private WrappedNode copy(Resource r, Set<PropertyChain> chains, int describeState) {
-		WrappedNode result = new WrappedNode( sn, r );
+	private WrappedNode copy(Resource r, IdMap ids, Set<PropertyChain> chains, int describeState) {
+		WrappedNode result = new WrappedNode( sn, ids, r );
 		for (PropertyChain chain: chains) copy( result, chain.getProperties(), describeState );
 		return result;
 	}
@@ -112,9 +112,9 @@ public class ExtractByView {
 			if (w.isResource()) {
 				int nextState = nextState(w, describeState);
 				for (Statement s: statementsFor(w, p, describeState)) {
-					WrappedNode o = new WrappedNode( sn, s.getObject() );
+					WrappedNode o = new WrappedNode( sn, w.ids, s.getObject() );
 					copy( o, rest, nextState );
-					w.addPropertyValue( new WrappedNode( sn, s.getPredicate()), o );
+					w.addPropertyValue( new WrappedNode( sn, w.ids, s.getPredicate()), o );
 				}
 			}			
 		}

@@ -32,16 +32,17 @@ public class VelocityCore {
 	public void render( APIResultSet results, OutputStream os ) {
 		View v = results.getView();
 		Model m = results.getModel();
+		IdMap ids = new IdMap();
 		ShortNames names = Help.getShortnames( m );
-		List<WrappedNode> itemised = new ExtractByView( names, v ).itemise( results.getResultList() );
+		List<WrappedNode> itemised = new ExtractByView( names, v ).itemise( ids, results.getResultList() );
 	//
 		VelocityContext vc = new VelocityContext();
+		vc.put( "ids",  ids );
 		vc.put( "names", names );
 		vc.put( "formats", Help.getFormats( m ) );
 		vc.put( "items", itemised );
-		vc.put( "meta",  Help.getMetadataFrom( names, m ) );
-		vc.put( "vars",  Help.getVarsFrom( names, m ) );
-		vc.put( "ids",  new HashMap<Resource, String>() );
+		vc.put( "meta",  Help.getMetadataFrom( names, ids, m ) );
+		vc.put( "vars",  Help.getVarsFrom( names, ids, m ) );
 	//
 		Template t = ve.getTemplate( templateName );
 		try {
