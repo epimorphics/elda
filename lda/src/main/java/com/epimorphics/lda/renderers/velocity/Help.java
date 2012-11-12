@@ -63,12 +63,46 @@ public class Help {
 		catch (IOException e) {	throw new WrappedIOException( e ); }
 	}
 
-	static String labelFor( Resource r ) {
-		Statement s = r.getProperty( RDFS.label );
-		return s == null ? r.getLocalName() : s.getString();
+	static final String SKOS = "http://www.w3.org/2004/02/skos/core#";
+	
+	static final Property SKOS_prefLabel = ResourceFactory.createProperty( SKOS + "prefLabel" );
+	
+	/**
+	    Return the "preferred" label of this resource. The definition of
+	    "preferred" is:
+	    
+	    <p>The lexical form of some literal which is the value of the
+	    	property <code>skos:prefLabel</code>;
+	    	
+	    <p>failing that, the lexical form of some literal with no
+	    	language code which is the value of the property
+	    	<code>rdfs:label</code>;
+	    
+	    <p>failing that, the lexical form of some literal with a language
+	    	code which is the value of the property	<code>rdfs:label</code>;
+	    	
+	    <p>failing that, the local name of the resource.	
+	*/
+	public static String labelFor( Resource r ) {
+		Statement pref = r.getProperty( SKOS_prefLabel );
+		if (pref != null && pref.getObject().isLiteral())
+			return ((Literal) pref.getObject()).getLexicalForm();
+	//
+		String langLabel = null;
+		for (Statement s: r.listProperties( RDFS.label ).toList()) {
+			RDFNode o = s.getObject();
+			if (o.isLiteral()) {
+				Literal label = (Literal) o;
+				String spelling = label.getLexicalForm();
+				if (label.getLanguage().equals("")) return spelling;
+				else langLabel = spelling;
+			}
+		}
+		if (langLabel != null) return langLabel;
+		return r.getLocalName();
 	}
 	
-	static List<Literal> labelsFor( Resource r ) {
+	public static List<Literal> labelsFor( Resource r ) {
 		List<Literal> result = new ArrayList<Literal>();
 		for (Statement s: r.listProperties( RDFS.label).toList()) result.add( s.getLiteral() );
 		return result;

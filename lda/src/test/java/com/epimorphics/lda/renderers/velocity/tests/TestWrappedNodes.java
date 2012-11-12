@@ -46,6 +46,7 @@ public class TestWrappedNodes {
 		ensureLabels( "labelB,labelA", "labelA,labelB", "" );
 		ensureLabels( "label", "label@en,chat@fr", "en" );
 		ensureLabels( "root", "label@en,chat@fr", "de" );
+		ensureLabels( "wanted", "wanted@en", "" );
 	}
 
 	private void ensureLabels( String expected, String provided, String language ) {

@@ -15,6 +15,8 @@ public class WrappedNode {
 	final ShortNames sn;
 	final IdMap ids;
 	
+	static final List<Literal> noLabels = new ArrayList<Literal>();
+	
 	public int hashCode() {
 		return basis.hashCode();
 	}
@@ -29,7 +31,7 @@ public class WrappedNode {
 		this.r = (r.isResource() ? r.asResource() : null);
 		this.label = "LIT";
 		this.basis = r;
-		this.labels = this.r == null ? new ArrayList<Literal>() : Help.labelsFor( this.r );
+		this.labels = this.r == null ? noLabels : Help.labelsFor( this.r );
 	}
 	
 	public WrappedNode( ShortNames sn, IdMap ids, Resource r ) {
@@ -42,17 +44,19 @@ public class WrappedNode {
 	}
 	
 	public WrappedString getLabel() {
-		return getLabel( "" );
+		return new WrappedString( label );
 	}
 	
 	/**
-	    Answer the lexical form of some label of this wrapped 
+	    Return the lexical form of some label of this wrapped 
 	    resource which has <code>wantLanguage</code>. If there isn't
-	    one, answer some lexical form with no language. If there
-	    isn't one, answer the local name of the resource with any
+	    one, return some lexical form with no language. If there
+	    isn't one, return the local name of the resource with any
 	    _s replaced by spaces.
 	*/
 	public WrappedString getLabel( String wantLanguage ) {
+		if (wantLanguage.equals("")) return getLabel();
+	//
 		Literal plain = null;
 		for (Literal l: labels) {
 			String thisLanguage = l.getLanguage();
@@ -63,11 +67,11 @@ public class WrappedNode {
 		return new WrappedString(raw);
 	}
 	
+	/**
+	    Return the ID of this WrappedNode by appealing to the shared IdMap.
+	 */
 	public String getId() {
 		return ids.get(r);
-//		String id = ids.map.get( r );
-//		if (id == null) ids.map.put( r,  id = "ID-" + (ids.map.size() + 10000) );
-//		return id;
 	}
 	
 	/**
@@ -130,7 +134,7 @@ public class WrappedNode {
 	}
 	
 	/**
-	    Answer the value of the wrapped literal
+	    Return the value of the wrapped literal
 	*/
 	public Object getLiteralValue() {
 		return basis.asLiteral().getValue();
