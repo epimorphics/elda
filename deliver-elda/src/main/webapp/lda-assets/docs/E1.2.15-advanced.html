@@ -344,22 +344,23 @@ by the "mvn install" process.
 </tr>
 
 <tr>
-	<td>WrappedString getLabel</td>
+	<td>WrappedString getLabel()</td>
 	<td>
-		Answer one of the <code>rdfs:label</code>s with no
-		language code of this WrappedNode if it has any,
-		otherwise return this WrappedNode's local name.
+		Return this wrapped resource's preferred label;
+		the first literal of (a) this resources skos:prefLabel,
+ 		(b) an unlanguaged rdfs:label, (c) a languaged
+		rdfs:label, (d) the local name of this resource.
 	</td>
 </tr>
 
 <tr>
 	<td>WrappedString getLabel(String wantlanguage)</td>
 	<td>
-	    Answer the lexical form of some label of this wrapped 
+	    If wantLanguage is "", return getLabel(). Otherwise, 
+	    return the lexical form of some label of this wrapped 
     	    resource which has <code>wantLanguage</code>. If there isn't
     	    one, return some lexical form with no language. If there
-    	    isn't one, return the local name of the resource with any
-    	    _s replaced by spaces.
+    	    isn't one, return the local name of the resource.
 	</td>
 </tr>
 
