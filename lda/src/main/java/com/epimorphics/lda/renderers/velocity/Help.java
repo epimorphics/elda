@@ -102,9 +102,14 @@ public class Help {
 		return r.getLocalName();
 	}
 	
+	/**
+	    Answer a list of all the literals which are the objects of skos:prefLabel
+	    or rdfs:label, with the skos labels coming first.
+	*/
 	public static List<Literal> labelsFor( Resource r ) {
 		List<Literal> result = new ArrayList<Literal>();
-		for (Statement s: r.listProperties( RDFS.label).toList()) result.add( s.getLiteral() );
+		for (Statement s: r.listProperties( SKOS_prefLabel ).toList()) result.add( s.getLiteral() );
+		for (Statement s: r.listProperties( RDFS.label ).toList()) result.add( s.getLiteral() );
 		return result;
 	}
 

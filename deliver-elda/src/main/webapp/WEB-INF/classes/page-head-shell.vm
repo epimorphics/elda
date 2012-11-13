@@ -52,12 +52,6 @@
 		; padding: 10px 66px
 	}
 	
-	.rightside-extras {
-		float: right
-		; margin-right: 1ex
-		; margin-top: 3ex
-	}
-	
 	footer {
 		background: #888
 		; text-align: right

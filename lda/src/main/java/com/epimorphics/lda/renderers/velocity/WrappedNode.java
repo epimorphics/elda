@@ -1,8 +1,10 @@
 package com.epimorphics.lda.renderers.velocity;
 
 import java.io.PrintStream;
+import java.net.URI;
 import java.util.*;
 
+import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -107,6 +109,19 @@ public class WrappedNode {
 			return basis.asLiteral().getLexicalForm();
 		}
 		return r.getURI();
+	}
+	
+	public WrappedNode change( WrappedNode p, WrappedNode v ) {
+		URI ru = URIUtils.newURI( r.getURI() );
+		String key = p.shortForm().content;
+		String value = v.toString();
+		URI u = URIUtils.replaceQueryParam( ru, key, value );	
+	//
+		String xxx = u.toString(); // r.getURI() + "_CAHNGED";
+		Resource changed = r.getModel().createResource( xxx );
+//		System.err.println( ">> xxx = " + xxx );
+//		System.err.println( ">> changed " + r + " to " + changed );
+		return new WrappedNode( sn, ids, changed );
 	}
 	
 	public WrappedString getURI() {

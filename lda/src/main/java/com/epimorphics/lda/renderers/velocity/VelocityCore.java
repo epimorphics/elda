@@ -30,6 +30,7 @@ public class VelocityCore {
 	}
 
 	public void render( APIResultSet results, OutputStream os ) {
+		Resource thisPage = results.getRoot();
 		View v = results.getView();
 		Model m = results.getModel();
 		IdMap ids = new IdMap();
@@ -37,6 +38,7 @@ public class VelocityCore {
 		List<WrappedNode> itemised = new ExtractByView( names, v ).itemise( ids, results.getResultList() );
 	//
 		VelocityContext vc = new VelocityContext();
+		vc.put( "thisPage", new WrappedNode( names, ids, thisPage ) );
 		vc.put( "ids",  ids );
 		vc.put( "names", names );
 		vc.put( "formats", Help.getFormats( m ) );

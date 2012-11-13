@@ -21,6 +21,11 @@
 						<a href="$value.URI">$value.label</a>
 					#else
 						$value.shortForm().cut()
+						
+						#if ($value.isLiteral())
+							<a href="$thisPage.change($property, $value).getURI()">OTHERS</a>
+						#end
+						
 						#if ($value.isResource()) #nesting($value) #end
 					#end
 				</div>
@@ -29,37 +34,45 @@
 	#end
 #end
 
-<div id="search-results">
-	<h1>Search Results</h1>
-	
-	#foreach ($item in $items) 
-		<div class="itembox">
-		<h2><a href="$item.URI" id="$item.id">$item.label</a></h2>
-		#nesting($item)
-		</div>
-	#end
-</div>
+<table>
+<tr>
+<td width="80%">
 
-<div class="rightside-extras">
-	<div>
-		<div class="right-header">formats</div>
-		<div class="indented" style="margin-top: 1ex; margin-bottom: 1ex">
-			#foreach ($f in $formats)
-				<a href="$f.link">$f.name</a>
-			#end
-		</div>
-	</div>
-	
-	<div class="bordered-panel">
-		<div class="right-header">on this page</div>
-		#foreach ($item in $items)
-			<div style="margin-left: 1ex">&raquo; <a href="#$item.id">$item.label</a></div>
+	<div width="100%" id="search-results">
+		<h1>Search Results</h1>
+		
+		#foreach ($item in $items) 
+			<div class="itembox">
+			<h2><a href="$item.URI" id="$item.id">$item.label</a></h2>
+			#nesting($item)
+			</div>
 		#end
 	</div>
+	
+</td>
+<td valign="top" width="20%">
+	<div>
+		<div>
+			<div style="margin-top: 3ex" class="right-header">formats</div>
+			<div class="indented" style="margin-top: 1ex; margin-bottom: 1ex">
+				#foreach ($f in $formats)
+					<a href="$f.link">$f.name</a>
+				#end
+			</div>
+		</div>
+		
+		<div class="bordered-panel">
+			<div class="right-header">on this page</div>
+			#foreach ($item in $items)
+				<div style="margin-left: 1ex">&raquo; <a href="#$item.id">$item.label</a></div>
+			#end
+		</div>
+	
+	</div>
 
-</div>
-
-<div style="clear: both" />
+</td>
+</tr>
+</table>
 
 
 <textarea>
