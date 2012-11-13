@@ -8,6 +8,19 @@
 	<h1>Linked Data API</h1>
 </header>
 
+#macro (tag, $property, $value)
+    "Select items with $property.shortForm() less than $value"
+#end
+
+#macro (selection, $prefix, $symbol, $wording, $property, $value)					
+    <a
+    	title="Select items with $property.shortForm() $wording $value"
+    	href="$thisPage.change($prefix, $property, $value).getURI()"
+    > 
+    	$symbol 
+    </a>
+#end
+
 #macro(nesting, $item)
 	#foreach ($property in $item.properties)
 		<hr style="color: #fff">
@@ -20,11 +33,19 @@
 					#if ($value.justALabel)
 						<a href="$value.URI">$value.label</a>
 					#else
-						$value.shortForm().cut()
+						<div style="float: left"> $value.shortForm().cut() </div>
 						
 						#if ($value.isLiteral())
-							<a href="$thisPage.change($property, $value).getURI()">OTHERS</a>
+							<div style="float: right; margin-right: 1ex">
+								#selection("maxEx-", "&lt;", "less than", $property, $value)
+								#selection("max-", "&le;", "less or equal to", $property, $value)
+								#selection("", "=", "equal to", $property, $value)
+								#selection("min-", "&ge;", "greater or equal to", $property, $value)
+								#selection("minEx-", "&gt;", "greater than", $property, $value)
+							</div>
 						#end
+						
+						<div style="clear: both"> </div>
 						
 						#if ($value.isResource()) #nesting($value) #end
 					#end

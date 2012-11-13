@@ -111,9 +111,9 @@ public class WrappedNode {
 		return r.getURI();
 	}
 	
-	public WrappedNode change( WrappedNode p, WrappedNode v ) {
+	public WrappedNode change( String prefix, WrappedNode p, WrappedNode v ) {
 		URI ru = URIUtils.newURI( r.getURI() );
-		String key = p.shortForm().content;
+		String key = prefix + p.shortForm().content;
 		String value = v.toString();
 		URI u = URIUtils.replaceQueryParam( ru, key, value );	
 	//
