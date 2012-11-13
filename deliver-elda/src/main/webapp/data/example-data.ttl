@@ -57,7 +57,7 @@
 	.
 
 <http://www.daysofwonder.com/tickettoride> a hello:BoardGame
-	; rdfs:label "Ticket To Ride"@en
+	; rdfs:label "Ticket To Ride"
 	; hello:players 2, 3, 4, 5
 	.
 

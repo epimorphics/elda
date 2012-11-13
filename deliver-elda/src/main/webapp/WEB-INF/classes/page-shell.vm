@@ -96,7 +96,7 @@
 </table>
 
 
-<textarea>
+<textarea class="provenance" name="query" style="width: 45%">
 $meta['selectionResult.query.value']
 </textarea>
 

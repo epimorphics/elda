@@ -259,6 +259,14 @@ by the "mvn install" process.
     <thead><tr><th>name</th><th>value</th></tr></thead>
 
     <tr>
+	<td>thisPage</td>
+	<td>
+		A WrappedNode for a resource with the URI of this
+		page.
+	</td>
+    </tr>
+
+    <tr>
 	<td>names</td>
 	<td>
 		a map from resources to their short names, passed
@@ -473,6 +481,17 @@ by the "mvn install" process.
 	</td>
 </tr>
 
+<tr>
+	<td>WrappedNode change(String prefix, WrappedNode p, WrappedNode v)</td>
+	<td>
+		Return a new WrappedNode wrapping a resource with the same URI
+		as this one, except that all query parameters whose name is
+		<code>prefix</code> prefixed onto p's shortname have been 
+		discarded and replaced by a parameter with that name and with 
+		value v.toString().
+	</td>
+</tr>
+
 </table>
 
 <p>
@@ -608,7 +627,7 @@ by the "mvn install" process.
     that base URI with the path and query parameters
     supplied in the request. This means that a server
     at location A can generate URIs as though it were
-    at location B (from which it may have been redirected). 
+    at location B (from which it may have been redirected).
 </p>
 
 <h2>elda:describeAllLabel</h2>

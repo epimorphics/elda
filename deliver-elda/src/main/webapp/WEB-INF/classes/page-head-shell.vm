@@ -1,5 +1,29 @@
 <head>
 <title>Elda with Velocity</title>
+
+<script type="text/javascript" src="/elda/lda-assets/scripts/jquery.min.js"> </script>
+<script type="text/javascript" src="/elda/lda-assets/scripts/jquery-ui.min.js"> </script>
+<script src="../lda-assets/scripts/codemirror/codemirror_min.js" type="text/javascript"> </script>
+
+<script type="text/javascript">
+
+$(function() {
+	$('textarea').each(function() {
+		var cm = CodeMirror.fromTextArea(this, 
+			{
+			basefiles: ["/elda/lda-assets/scripts/codemirror/codemirror_base_sparql.js"],
+			stylesheet: "/elda/lda-assets/css/sparql.css",
+			textWrapping: false
+			})
+		$(cm.frame)
+			.css('border', '1px solid #D3D3D3')
+			.css('border-radius', '5px')
+			.css('-moz-border-radius', '5px')
+	})
+})
+
+</script>
+
 <style>
 	h1 {
 		background-color: #444
