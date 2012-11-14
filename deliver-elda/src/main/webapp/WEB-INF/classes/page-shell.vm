@@ -55,7 +55,7 @@
 
 <table width="100%">
 <tr>
-<td width="80%">
+<td valign="top" width="80%">
 
 	<div valign="top" width="100%" id="search-results">
 		<h1>Search Results</h1>
@@ -120,7 +120,7 @@ chains of the view for this page.
 </p>
 <hr>
 <textarea class="provenance" name="query" width="45%">
-$meta['selectionResult.query.value']
+$meta['viewingResult.query.value']
 </textarea>
 </td>
 
