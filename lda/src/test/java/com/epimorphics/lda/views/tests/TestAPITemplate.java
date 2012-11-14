@@ -26,8 +26,6 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
-import com.hp.hpl.jena.test.JenaTestBase;
 
 public class TestAPITemplate {
 	
@@ -57,7 +55,7 @@ public class TestAPITemplate {
 			, ":ep a api:ListEndpoint"
 			, "; api:uriTemplate '/this'"
 			, "; api:selector [ api:filter 'type=Item' ]" 
-			, "; api:viewer [api:template '?item :predicate ?v']"
+			, "; api:defaultViewer [api:template '?item :predicate ?v']"
 			, "."
 		//
 			, "<here:dataPart> :elements :A, :B"
@@ -68,12 +66,6 @@ public class TestAPITemplate {
 		//
 			, ":Item a rdfs:Class"
 			, "."
-			);
-		
-		Model wanted = modelFrom
-			(
-			eh_prefix
-			, ":A :predicate :X."		
 			);
 
 		Resource root = specModel.createResource( specModel.expandPrefix( ":root" ) );
@@ -92,10 +84,7 @@ public class TestAPITemplate {
 		obtained.add( rsm );
 		
 		assertHas( obtained, eh_prefix, ":A :predicate :X." );
-		assertHasnt( obtained, eh_prefix, ":B :catiprede :Y." );
-		
-		ModelTestBase.assertIsoModels( wanted, obtained );
-		
+		assertHasnt( obtained, eh_prefix, ":B :catiprede :Y." );		
 	}	
 	
 	private void assertHas( Model obtained, String ... lines ) {

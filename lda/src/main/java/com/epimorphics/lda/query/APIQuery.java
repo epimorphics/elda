@@ -98,8 +98,6 @@ public class APIQuery implements VarSupply {
     }
     
     private boolean isItemEndpoint = false;
-
-    protected String viewTemplate = null;
     
     protected String defaultLanguage = null;
     
@@ -230,7 +228,6 @@ public class APIQuery implements VarSupply {
     	this.sortByOrderSpecsFrozen = other.sortByOrderSpecsFrozen;
     	this.subjectResource = other.subjectResource;
     	this.varcount = other.varcount;
-    	this.viewTemplate = other.viewTemplate;
     //
     	this.languagesFor = new HashMap<String, String>( other.languagesFor );
         this.basicGraphTriples = new ArrayList<RDFQ.Triple>( other.basicGraphTriples );
@@ -356,10 +353,6 @@ public class APIQuery implements VarSupply {
     
     public void deferrableAddFilter( Param param, String val ) {
     	deferredFilters.add( new PendingParameterValue( param, val ) );
-    }
-    
-    public void setViewByTemplateClause( String viewTemplate ) {
-    	this.viewTemplate = viewTemplate;
     }
     
     protected void addSearchTriple( String val ) {
@@ -807,17 +800,18 @@ public class APIQuery implements VarSupply {
         if (roots.isEmpty() || roots.get(0) == null) return "# no results, no query.";
         List<Source> sources = spec.getDescribeSources();
         m.setNsPrefixes( spec.getPrefixMap() );
-        return viewTemplate == null
-        	? view.fetchDescriptions( c, new View.State( select, roots, m, sources, this ) )
-        	: viewByTemplate( roots, m, spec, sources )
+        return view.isTemplateView()
+        	? viewByTemplate( view, roots, m, spec, sources )
+        	: view.fetchDescriptions( c, new View.State( select, roots, m, sources, this ) )
         	;
     }
 
-	private String viewByTemplate(List<Resource> roots, Model m, APISpec spec, List<Source> sources) {
-		return viewByTemplate( m, roots, sources, spec.getPrefixMap() );
+	private String viewByTemplate(View v, List<Resource> roots, Model m, APISpec spec, List<Source> sources) {
+		return viewByTemplate( v, m, roots, sources, spec.getPrefixMap() );
 	}
 
-	private String viewByTemplate(Model result, List<Resource> roots, List<Source> sources,	PrefixMapping pm) {		
+	private String viewByTemplate(View v, Model result, List<Resource> roots, List<Source> sources,	PrefixMapping pm) {		
+		String viewTemplate = v.getTemplate();
 		int estimatedSize = viewTemplate.length() * 2 + 30 + estimateRootsSize( roots );
 		StringBuilder query = new StringBuilder( estimatedSize );
 		appendPrefixes( query, pm );

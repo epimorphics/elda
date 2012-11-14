@@ -92,7 +92,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     //        
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
-        handleViewTemplate( endpoint );
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
     }
 
@@ -103,13 +102,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         String prefix = getStringValue( spec, EXTRAS.uriTemplatePrefix, "" );
         if (!ut.startsWith("/") && !ut.startsWith("http")) ut = "/" + ut;
         return prefix + ut;
-	}
-
-	private void handleViewTemplate(Resource endpoint) {
-    	if (endpoint.hasProperty( API.template )) {
-    		String t = endpoint.getProperty( API.template ).getString();
-    		baseQuery.setViewByTemplateClause( t );
-    	}
 	}
 
 	public boolean isListEndpoint() {
@@ -189,8 +181,13 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
     private View getView( Resource v ) {
     	View builtin = View.getBuiltin( v );
         if (builtin == null) {
-            String viewName = getNameWithFallback( v );
-			return getViewByProperties( v.getModel(), viewName, v );
+        	String viewName = getNameWithFallback( v );
+        	if (v.hasProperty( API.template )) {
+        		String t = v.getProperty( API.template ).getString();
+        		return View.newTemplateView( viewName, t );
+        	} else {
+        		return getViewByProperties( v.getModel(), viewName, v );
+        	}
         } else 
         	return builtin;
     }

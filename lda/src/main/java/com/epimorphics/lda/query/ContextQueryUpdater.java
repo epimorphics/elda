@@ -76,6 +76,9 @@ public class ContextQueryUpdater implements ViewSetter {
     	if (allParamNames.contains( QueryParameter._VIEW )) {
     		setViewByName( context.getValueString(QueryParameter._VIEW ) );
     	}
+    	if (allParamNames.contains( QueryParameter._TEMPLATE )) {
+    		setViewByTemplate( context.getValueString(QueryParameter._TEMPLATE ) );
+    	}
 		for (String param: allParamNames) 
     		if (param.startsWith( QueryParameter.LANG_PREFIX ))
     			handleLangPrefix( param );
@@ -149,7 +152,7 @@ public class ContextQueryUpdater implements ViewSetter {
 	    	aq.addWhere( val );
 		} else if (p.equals(QueryParameter._PROPERTIES)) {
 			vs.setViewByProperties(val);
-		} else if (p.equals(QueryParameter._VIEW)) {
+		} else if (p.equals(QueryParameter._VIEW) || p.equals( QueryParameter._TEMPLATE )) {
 			// already done
 		} else if (p.equals(QueryParameter._SUBJECT)) {
 		    aq.setSubjectAsItemEndpoint(val);
@@ -162,8 +165,6 @@ public class ContextQueryUpdater implements ViewSetter {
 			geo.setNearLong( val );
 		} else if (p.equals( QueryParameter._DISTANCE )) { 
 			geo.setDistance( val );
-		} else if (p.equals( QueryParameter._TEMPLATE )) {
-			aq.setViewByTemplateClause( val );
 		} else if (p.equals(QueryParameter._SORT)) {
 		    aq.setSortBy( val );
 		} else if (p.equals(QueryParameter._ORDERBY )) {
@@ -235,6 +236,10 @@ public class ContextQueryUpdater implements ViewSetter {
 
 	@Override public void setFormat( String format ) {
 		requestedFormat = format;
+	}
+
+	public void setViewByTemplate( String template ) {
+		view = View.newTemplateView( "_template", template );
 	}
 
 	@Override public void setViewByName( String viewName ) {

@@ -27,13 +27,13 @@ public class TestQueryTemplate {
 	@Test public void test_template_generates_correct_query() {
 		APIQuery q = QueryTestUtils.queryFromSNS( new SNS( "" ) );
 		q.addSubjectHasProperty( RDF.type, RDFQ.var( "?type" ) );
-		q.setViewByTemplateClause( "?item <{{NS}}hasData> ?val.".replace("{{NS}}", NS ) );
+		View v = View.newTemplateView( "_template", "?item <{{NS}}hasData> ?val.".replace("{{NS}}", NS ) );
 		APIResultSet rs = q.runQuery
 			( new Controls()
 			, spec
 			, Registry.cacheFor( "default", spec.getDataSource() )
 			, new Bindings()
-			, new View() 
+			, v
 			);
 		ModelTestBase.assertIsoModels( expectedModel(), rs.getModel() );
 	}

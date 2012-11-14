@@ -96,11 +96,13 @@ public class View {
     	return builtins.get(r);
     }
 	
-	public static enum Type { T_DESCRIBE, T_ALL, T_CHAINS };
+	public static enum Type { T_DESCRIBE, T_ALL, T_CHAINS, T_TEMPLATE };
 	
 	protected Type type = Type.T_DESCRIBE;
     
 	protected String name = null;
+	
+	protected String template = null;
 	
 	protected String labelPropertyURI = RDFS.label.getURI();
 	
@@ -131,6 +133,12 @@ public class View {
     	this.name = name;
     	this.chains.addAll( initial );
     }
+
+	public static View newTemplateView( String viewName, String template ) {
+		View result = new View( viewName, Type.T_TEMPLATE );
+		result.template = template;
+		return result;
+	}
     
     @Override public boolean equals( Object other ) {
     	return other instanceof View && same( (View) other );
@@ -223,6 +231,7 @@ public class View {
     	this.describeThreshold = t.describeThreshold;
     	if (chains.size() > 0) type = Type.T_CHAINS;
     	if (t.type == Type.T_ALL) type = Type.T_ALL;
+    	template = t.template;
         return this;
     }
     
@@ -439,6 +448,14 @@ public class View {
 		String queryString = sb.toString();
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
+	}
+
+	public boolean isTemplateView() {
+		return type == Type.T_TEMPLATE;
+	}
+
+	public String getTemplate() {
+		return template;
 	}
 }
 
