@@ -57,8 +57,6 @@ $(function() {
 	}
 	
 	#search-results {
-		width: 70%
-		; float: left
 	}
 	
 	.bordered-panel {

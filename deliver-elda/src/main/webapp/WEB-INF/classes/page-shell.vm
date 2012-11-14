@@ -1,6 +1,6 @@
 <html>
 #parse("page-head-shell.vm")
-<body>
+<body style="background: #eee">
 
 <img src="/elda/lda-assets/images/elda-banner.png" alt="Elda banner" />
 
@@ -33,8 +33,7 @@
 					#if ($value.justALabel)
 						<a href="$value.URI">$value.label</a>
 					#else
-						<div style="float: left"> $value.shortForm().cut() </div>
-						
+						<div style="float: left"> $value.shortForm().cut() </div>						
 						#if ($value.isLiteral())
 							<div style="float: right; margin-right: 1ex">
 								#selection("maxEx-", "&lt;", "less than", $property, $value)
@@ -43,11 +42,10 @@
 								#selection("min-", "&ge;", "greater or equal to", $property, $value)
 								#selection("minEx-", "&gt;", "greater than", $property, $value)
 							</div>
+						#else
+							#nesting($value)
 						#end
-						
 						<div style="clear: both"> </div>
-						
-						#if ($value.isResource()) #nesting($value) #end
 					#end
 				</div>
 			#end
@@ -55,11 +53,11 @@
 	#end
 #end
 
-<table>
+<table width="100%">
 <tr>
 <td width="80%">
 
-	<div width="100%" id="search-results">
+	<div valign="top" width="100%" id="search-results">
 		<h1>Search Results</h1>
 		
 		#foreach ($item in $items) 
@@ -71,10 +69,11 @@
 	</div>
 	
 </td>
+
 <td valign="top" width="20%">
 	<div>
 		<div>
-			<div style="margin-top: 3ex" class="right-header">formats</div>
+			<div class="right-header">formats</div>
 			<div class="indented" style="margin-top: 1ex; margin-bottom: 1ex">
 				#foreach ($f in $formats)
 					<a href="$f.link">$f.name</a>
@@ -95,10 +94,39 @@
 </tr>
 </table>
 
+<hr>
+<table width="100%">
+<tr>
 
-<textarea class="provenance" name="query" style="width: 45%">
+<td width="50%">
+<h3>selection query</h3>
+<hr>
+<p>
+This is the SPARQL query that was issued to select the items
+of interest for this page.
+</p>
+<hr>
+<textarea class="provenance" name="query" width="45%">
 $meta['selectionResult.query.value']
 </textarea>
+</td>
+
+<td width="50%">
+<h3>view query</h3>
+<hr>
+<p>
+This is the SPARQL query that was issued for the property
+chains of the view for this page.
+</p>
+<hr>
+<textarea class="provenance" name="query" width="45%">
+$meta['selectionResult.query.value']
+</textarea>
+</td>
+
+</tr>
+</table>
+
 
 #parse("page-foot-shell.vm")
 

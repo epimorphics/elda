@@ -117,10 +117,7 @@ public class WrappedNode {
 		String value = v.toString();
 		URI u = URIUtils.replaceQueryParam( ru, key, value );	
 	//
-		String xxx = u.toString(); // r.getURI() + "_CAHNGED";
-		Resource changed = r.getModel().createResource( xxx );
-//		System.err.println( ">> xxx = " + xxx );
-//		System.err.println( ">> changed " + r + " to " + changed );
+		Resource changed = r.getModel().createResource( u.toString() );
 		return new WrappedNode( sn, ids, changed );
 	}
 	
