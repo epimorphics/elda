@@ -29,7 +29,48 @@ import com.hp.hpl.jena.rdf.model.Statement;
 
 public class TestAPITemplate {
 	
-	@Test public void testTemplate() {
+	@Test public void testDefaultTemplateInSpec() {
+		testTemplate
+			( ""
+			, "; api:defaultViewer [api:template '?item :predicate ?v']" 
+			, ""
+			);
+	}
+	
+	@Test public void testDefaultTemplateInEndpoint() {
+		testTemplate
+			( ""
+			, ""
+			, "; api:defaultViewer [api:template '?item :predicate ?v']" 
+			);
+	}
+	
+	@Test public void testNamedTemplateInSpec() {
+		testTemplate
+			( "_view=NAMED"
+			, "; api:viewer [api:name 'NAMED'; api:template '?item :predicate ?v']" 
+			, ""
+			);
+	}
+	
+	@Test public void testNamedTemplateInEndpoint() {
+		testTemplate
+			( "_view=NAMED"
+			, ""
+			, "; api:viewer [api:name 'NAMED'; api:template '?item :predicate ?v']" 
+			);
+	}
+	
+	/**
+		Ensure that running the configured endpoint correctly exposes in
+		the view the :predicate item from the model but not the :catiprede.
+		
+		<p><code>params</code> may be applied to the query part of the URL
+		to select a specific view. <code>inSpec</code> is a Turtle fragment
+		inserted into the API declaration. <code>inEndpoint</code> is a
+		Turtle fragment inserted into the endpoint declaration.
+	*/
+	public void testTemplate( String params, String inSpec, String inEndpoint ) {
 		
 		String eh_prefix = "@prefix : <eh:/>.";
 		
@@ -49,13 +90,14 @@ public class TestAPITemplate {
 		//
 			, ":root a api:API"
 			, "; api:sparqlEndpoint <here:dataPart>"
+			, inSpec
 			, "; api:endpoint :ep"
 			, "."
 		//
 			, ":ep a api:ListEndpoint"
 			, "; api:uriTemplate '/this'"
+			, inEndpoint
 			, "; api:selector [ api:filter 'type=Item' ]" 
-			, "; api:defaultViewer [api:template '?item :predicate ?v']"
 			, "."
 		//
 			, "<here:dataPart> :elements :A, :B"
@@ -74,7 +116,7 @@ public class TestAPITemplate {
 				
 		APIEndpoint ep = new APIEndpointImpl( spec.getEndpoints().get(0) );
 		Bindings epBindings = ep.getSpec().getBindings();
-		MultiMap<String, String> map = MakeData.parseQueryString( "" );
+		MultiMap<String, String> map = MakeData.parseQueryString( params );
 		URI ru = URIUtils.newURI( "/this" );
 		Bindings cc = Bindings.createContext( bindTemplate( epBindings, "/this", "/path", map ), map );
 		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( controls, ru, cc );
@@ -116,7 +158,4 @@ public class TestAPITemplate {
 		for (String line: lines) ttl.append( line ).append( '\n' );
 		return ModelIOUtils.modelFromTurtle( ttl.toString() );
 	}
-	
-	
-
 }

@@ -149,9 +149,33 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
         this provides a minor simplification in that code.        
     */
     private Map<String, View> extractViews( Resource endpoint ) {
-    	Model m = endpoint.getModel();
-        Map<String, View> views = defaultViews(endpoint);
-        for (NodeIterator ni =  m.listObjectsOfProperty( endpoint, API.viewer ); ni.hasNext();) {
+    	Resource parent = specForEndpoint( endpoint );
+    	
+    	Map<String, View> result = new HashMap<String, View>(); 
+    	
+		result.put( View.SHOW_ALL, View.ALL );
+		result.put( View.SHOW_BASIC, View.BASIC );
+		result.put( View.SHOW_DESCRIPTION, View.DESCRIBE );
+		
+		View a = getDefaultView( parent, View.DESCRIBE );
+		View b = getDefaultView( endpoint, a );
+		
+		result.put( View.SHOW_DEFAULT_INTERNAL, b );
+		
+		result.put( a.name(), a );
+		result.put( b.name(), b );
+		
+		Map<String, View> views = result;
+		addViewers( parent, views );
+    	addViewers( endpoint, views );
+    	
+        return views;
+    }
+
+	public void addViewers(Resource root, Map<String, View> views) {
+		Model m = root.getModel();
+				
+        for (NodeIterator ni =  m.listObjectsOfProperty( root, API.viewer ); ni.hasNext();) {
             RDFNode tNode = ni.next();
             if (!tNode.isResource()) 
                 throw new APIException("Found literal " + tNode + " when expecting a view resource");
@@ -159,16 +183,6 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
             views.put( v.name(), v );
             explicitViewNames.add( v.name() );
         }
-        return views;
-    }
-
-	private Map<String, View> defaultViews( Resource endpoint ) {
-		Map<String, View> result = new HashMap<String, View>(); 
-        result.put( View.SHOW_ALL, View.ALL );
-        result.put( View.SHOW_BASIC, View.BASIC );
-        result.put( View.SHOW_DESCRIPTION, View.DESCRIBE );
-        result.put( View.SHOW_DEFAULT_INTERNAL, getDefaultView( endpoint ) );
-		return result;
 	}
     
 	/**
@@ -197,12 +211,12 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 		return s == null ? getNameFor(tRes) : s;
 	}
     
-    private View getDefaultView( Resource endpoint ) {
-    	if (endpoint.hasProperty( API.defaultViewer )) {
-    		Resource x = getResourceValue( endpoint, API.defaultViewer );
+    private View getDefaultView( Resource root, View ifAbsent ) {
+    	if (root.hasProperty( API.defaultViewer )) {
+    		Resource x = getResourceValue( root, API.defaultViewer );
     		return getView( x );   		
     	} else
-    		return View.DESCRIBE;
+    		return ifAbsent;
     }
 
     private View getViewByProperties( Model m, String name, Resource tRes ) {

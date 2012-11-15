@@ -28,12 +28,20 @@ hello:hello-world a api:API
 	# ; api:defaultViewer api:labelledDescribeViewer
 	; api:defaultFormatter hello:HtmlFormatter 
 	; api:endpoint hello:games 
+	# ; api:defaultViewer hello:templated
+	# ; api:viewer hello:templated
+	.
+	
+hello:templated a api:Viewer
+	; rdfs:label "templated"
+	; api:template "?item rdf:type hello:World"
 	.
     
 # Endpoint definition	
 	
 hello:games a api:ListEndpoint 
 	; rdfs:label "Games" 
+	; api:viewer hello:templated
 	; api:uriTemplate "/games" 
 	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
 	.	
