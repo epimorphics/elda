@@ -61,20 +61,20 @@ public class SpecManagerImpl implements SpecManager {
         this.modelLoader = modelLoader;
     }
     
-    @Override public APISpec addSpec( String uri, String key, Model spec ) throws APISecurityException {
+    @Override public APISpec addSpec( String context, String uri, String key, Model spec ) throws APISecurityException {
         if (specs.containsKey(uri)) {
-            return updateSpec(uri, key, spec);
+            return updateSpec(context, uri, key, spec);
         } else {
             log.info("Creating API spec at: " + uri);
             Resource specRoot = spec.getResource(uri);
 			APISpec apiSpec = new APISpec( FileManager.get(), specRoot, modelLoader );
             synchronized (specs) { specs.put(uri, new SpecEntry(uri, key, apiSpec, spec)); }
-            APIFactory.registerApi( router, apiSpec );
+            APIFactory.registerApi( router, context, apiSpec );
             return apiSpec;
         }
     }
 
-	@Override public void deleteSpec(String uri, String key) throws APISecurityException {
+	@Override public void deleteSpec( String context, String uri, String key) throws APISecurityException {
         SpecEntry entry = specs.get(uri);
         if (entry == null) {
             // no error if nothing to delete so we can use update safely for create
@@ -85,7 +85,7 @@ public class SpecManagerImpl implements SpecManager {
         }
         log.info("Delete API sepc: " + uri);
         for (APIEndpointSpec eps : entry.spec.getEndpoints()) {
-            router.unregister(eps.getURITemplate());
+            router.unregister( context, eps.getURITemplate());
         }
         synchronized (specs) {
             specs.remove(uri);
@@ -96,10 +96,10 @@ public class SpecManagerImpl implements SpecManager {
         // Nothing to do in this environment,  all known specs are permanently loaded
     }
 
-    @Override public APISpec updateSpec(String uri, String key, Model spec) throws APISecurityException {
+    @Override public APISpec updateSpec(String context, String uri, String key, Model spec) throws APISecurityException {
         log.info("Udating spec: " + uri);
-        deleteSpec(uri, key);
-        return addSpec(uri, key, spec);
+        deleteSpec(context, uri, key);
+        return addSpec(context, uri, key, spec);
     }
 
     @Override public Model getSpecForAPI(String api) {

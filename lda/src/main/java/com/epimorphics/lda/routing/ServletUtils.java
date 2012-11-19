@@ -64,6 +64,12 @@ public class ServletUtils {
 		return MapMatching.allValuesWithMatchingKey( Container.ELDA_SPEC_SYSTEM_PROPERTY_NAME, p );
 	}
 
+	/**
+	    If the prefix path is not null, update the root to have a
+	    uriTemplatePrefix derived from the prefix path by substituting
+	    {file} with the leafname of the file loaded from and (b) {api}
+	    with the local name of the root.
+	*/
 	public static void setPrefix( String prefixPath, String filePath, Resource root) {
 		if (prefixPath == null) return;
 		String prefix = prefixPath
@@ -108,7 +114,7 @@ public class ServletUtils {
 	        Resource api = ri.next();
 	        try {
 	        	setPrefix( prefixPath, filePath, api );
-	            SpecManagerFactory.get().addSpec( api.getURI(), "", model);
+	            SpecManagerFactory.get().addSpec( prefixPath, api.getURI(), "", model);
 	        } catch (APISecurityException e) {
 	            throw new APIException( "Internal error. Got security exception duing bootstrap. Not possible!", e );
 	        }

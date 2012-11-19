@@ -45,7 +45,7 @@ public interface SpecManager {
      * associate endpoints. 
      * @throws APISecurityException if the key does match the key used to create the matching existing entry
      */
-    public APISpec addSpec(String uri, String key, Model spec) 
+    public APISpec addSpec(String context, String uri, String key, Model spec) 
     throws APISecurityException;
     
     /**
@@ -56,7 +56,7 @@ public interface SpecManager {
      * associate endpoints. 
      * @throws APISecurityException if the key does match the key used to create the matching existing entry
      */
-    public APISpec updateSpec(String uri, String key, Model spec)
+    public APISpec updateSpec(String context, String uri, String key, Model spec)
     throws APISecurityException;
     
     /**
@@ -65,7 +65,7 @@ public interface SpecManager {
      * @param key An arbitrary key to identify the provider of the specification. 
      * @throws APISecurityException if the key does match the key used to create the matching existing entry
      */
-    public void deleteSpec(String uri, String key)
+    public void deleteSpec(String context, String uri, String key)
     throws APISecurityException;
 
     /**

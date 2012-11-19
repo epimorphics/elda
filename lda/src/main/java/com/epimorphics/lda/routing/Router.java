@@ -41,12 +41,12 @@ public interface Router {
      * @param URITemplate the path template, relative server root
      * @param api the api implementation
      */
-    void register(String URITemplate, APIEndpoint api);
+    void register(String context, String URITemplate, APIEndpoint api);
     
     /**
      * Remove a registered api
      */
-    void unregister(String URITemplate);
+    void unregister(String context, String URITemplate);
     
     /**
      * Match the request path to the known endpoints and return

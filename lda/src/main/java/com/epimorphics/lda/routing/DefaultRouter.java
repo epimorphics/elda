@@ -63,7 +63,7 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	    Also record the association between the item template (if any)
 	    and that URI template, for use in findItemURIPath.
 	*/
-	@Override public void register( String ut, APIEndpoint ep ) {
+	@Override public void register( String context, String ut, APIEndpoint ep ) {
 		super.register( ut, ep );
 		String it = ep.getSpec().getItemTemplate();
 		if (it != null) {
@@ -74,7 +74,7 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 		}
 	}	
 	
-	@Override public void unregister( String ut ) {
+	@Override public void unregister( String context, String ut ) {
 		String it = inverseMap.get( ut );
 		super.unregister( ut );
 		if (it != null) ms.unregister( it );

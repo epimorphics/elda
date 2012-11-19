@@ -64,7 +64,7 @@ public class TestItemRedirects {
 	private static void loadRouter( Router r, APISpec spec ) {
 		for (APIEndpointSpec eps: spec.getEndpoints()) {
 			APIEndpoint ep = new APIEndpointImpl( eps );
-			r.register( ep.getURITemplate(), ep );
+			r.register( null, ep.getURITemplate(), ep );
 		}	
 	}
 	

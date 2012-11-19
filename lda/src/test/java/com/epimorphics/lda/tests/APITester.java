@@ -83,7 +83,7 @@ public class APITester {
         if (URITemplate == null){
             throw new APIException("Tried to register a null endpoint: " + api.getSpec().toString());
         }
-        router.register(URITemplate, api);
+        router.register(null, URITemplate, api);
     }
     
     /**

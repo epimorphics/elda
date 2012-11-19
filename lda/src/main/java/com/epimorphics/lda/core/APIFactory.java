@@ -38,10 +38,10 @@ public class APIFactory {
      * Manufacture ApiInstances for each instance defined in the
      * given API and register them with the router.
      */
-    public static void registerApi(Router router, APISpec spec) {
+    public static void registerApi(Router router, String context, APISpec spec) {
         for (APIEndpointSpec eps : spec.getEndpoints()) {
             APIEndpoint ep = makeApiEndpoint(eps);
-            router.register(ep.getURITemplate(), ep);
+            router.register(context, ep.getURITemplate(), ep);
         }
     }
     
