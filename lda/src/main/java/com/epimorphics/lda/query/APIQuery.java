@@ -678,21 +678,6 @@ public class APIQuery implements VarSupply {
 		}
 		return sb.toString();
 	}
-
-	/**
-	    Add SPARQL prefix declarations for all the prefixes in
-	    <code>pm</code> to the StringBuilder <code>q</code>.
-	*/
-	private void appendPrefixes( StringBuilder q, PrefixMapping pm ) {
-		for (String prefix: pm.getNsPrefixMap().keySet()) {
-			q
-				.append( "PREFIX " )
-				.append( prefix )
-				.append( ": <" )
-				.append( pm.getNsPrefixURI(prefix) )
-				.append( ">\n" );
-		}
-	}
     
 	/**
 	    Take the SPARQL query string <code>query</code> and replace any ?SPOO
@@ -790,62 +775,13 @@ public class APIQuery implements VarSupply {
 	private APIResultSet fetchDescriptionOfAllResources( Controls c, String select, APISpec spec, View view, List<Resource> results) {
 		int count = results.size();
 		Model descriptions = ModelFactory.createDefaultModel();
+		descriptions.setNsPrefixes( spec.getPrefixMap() );
 		Graph gd = descriptions.getGraph();
-		String detailsQuery = fetchDescriptionsFor( c, select, results, view, descriptions, spec );
+		String detailsQuery = results.isEmpty() || results.get(0) == null
+			? "# no results, no query."
+			: view.fetchDescriptionsFor(c, select, results, descriptions, spec, this)
+			;
 		return new APIResultSet(gd, results, count < pageSize, enableETags, detailsQuery, view );
-	}
-    
-    // let's respect property chains ...
-    private String fetchDescriptionsFor( Controls c, String select, List<Resource> roots, View view, Model m, APISpec spec ) {
-        if (roots.isEmpty() || roots.get(0) == null) return "# no results, no query.";
-        List<Source> sources = spec.getDescribeSources();
-        m.setNsPrefixes( spec.getPrefixMap() );
-        return view.isTemplateView()
-        	? viewByTemplate( view, roots, m, spec, sources )
-        	: view.fetchDescriptions( c, new View.State( select, roots, m, sources, this ) )
-        	;
-    }
-
-	private String viewByTemplate(View v, List<Resource> roots, Model m, APISpec spec, List<Source> sources) {
-		return viewByTemplate( v, m, roots, sources, spec.getPrefixMap() );
-	}
-
-	private String viewByTemplate(View v, Model result, List<Resource> roots, List<Source> sources,	PrefixMapping pm) {		
-		String viewTemplate = v.getTemplate();
-		int estimatedSize = viewTemplate.length() * 2 + 30 + estimateRootsSize( roots );
-		StringBuilder query = new StringBuilder( estimatedSize );
-		appendPrefixes( query, pm );
-		query
-			.append( "CONSTRUCT {\n" )
-				.append( viewTemplate )
-				.append( "} where {\n" )
-				.append( "{ " ).append( viewTemplate ).append( " }\n" )
-				.append( itemsAsFilter( roots ) )
-				.append( "}\n" )
-				;
-		String resultQueryString = query.toString();
-		Query q = QueryFactory.create( resultQueryString );
-		for (Source x: sources) result.add( x.executeConstruct( q ) );		
-		return resultQueryString;
-	}
-
-	private int estimateRootsSize(List<Resource> roots) {
-		int result = 0;
-		for (Resource r: roots) result += r.getURI().length() + 14;
-		return result + 10;
-	}
-
-	private StringBuilder itemsAsFilter( List<Resource> roots ) {
-		StringBuilder result = new StringBuilder();
-		String OR = "";
-		result.append( "FILTER(" );
-		for (Resource r: roots) {
-			result.append( OR );
-			result.append( "?item = <" ).append( r.getURI() ).append( ">" );
-			OR = " || ";
-		}
-		result.append( ")" );
-		return result;
 	}
 
 	/**

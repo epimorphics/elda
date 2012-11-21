@@ -9,6 +9,7 @@ package com.epimorphics.lda.routing;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
@@ -24,7 +25,9 @@ import com.epimorphics.util.URIUtils;
   
   	@author eh
 */
-public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router {
+public class DefaultRouter implements Router {
+	
+	final MatchSearcher<APIEndpoint> self = new MatchSearcher<APIEndpoint>();
 
 	/**
 	    Answer the (endpoint, bindings) Match for the given path,
@@ -32,7 +35,7 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	*/
 	@Override public Match getMatch( String path, MultiMap<String, String> queryParams ) {
         Map<String, String> bindings = new HashMap<String, String>();
-        APIEndpoint e = lookup( bindings, path, queryParams );
+        APIEndpoint e = self.lookup( bindings, path, queryParams );
         return e == null ? null : new Match( e, bindings );
 	}
 	
@@ -64,7 +67,7 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	    and that URI template, for use in findItemURIPath.
 	*/
 	@Override public void register( String context, String ut, APIEndpoint ep ) {
-		super.register( ut, ep );
+		self.register( ut, ep );
 		String it = ep.getSpec().getItemTemplate();
 		if (it != null) {
 			String apiBase = ep.getSpec().getAPISpec().getBase();
@@ -76,7 +79,7 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 	
 	@Override public void unregister( String context, String ut ) {
 		String it = inverseMap.get( ut );
-		super.unregister( ut );
+		self.unregister( ut );
 		if (it != null) ms.unregister( it );
 	}
 	
@@ -114,5 +117,9 @@ public class DefaultRouter extends MatchSearcher<APIEndpoint> implements Router 
 		if (base == null) return uriTail;
 		String baseTail = base.replaceFirst( "https?://[^/]*/", "/" );
 		return uriTail.startsWith( baseTail ) ? "/" + uriTail.substring( baseTail.length() ) : uriTail;
+	}
+
+	@Override public List<String> templates() {
+		return self.templates();
 	}
 }

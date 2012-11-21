@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.SparqlSupport;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
@@ -32,6 +33,7 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -170,6 +172,14 @@ public class View {
 		return r;
     }
 
+	public boolean isTemplateView() {
+		return type == Type.T_TEMPLATE;
+	}
+
+	public String getTemplate() {
+		return template;
+	}
+	
     /**
         Set the describe label used by this viewer. The viewer type
         becomes ALL.
@@ -448,14 +458,41 @@ public class View {
 		String queryString = sb.toString();
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
+	}	
+
+	public String fetchDescriptionsFor(Controls c, String select, List<Resource> roots,
+			Model m, APISpec spec,
+			VarSupply vars) {        
+		List<Source> sources = spec.getDescribeSources();
+		return this.isTemplateView()
+        	? this.viewByTemplate( roots, m, spec, sources )
+        	: this.fetchDescriptions( c, new View.State( select, roots, m, sources, vars ) );
+	}
+	
+	public String viewByTemplate(List<Resource> roots, Model m, APISpec spec, List<Source> sources) {
+		String viewTemplate = this.getTemplate();
+		int estimatedSize = viewTemplate.length() * 2 + 30 + estimateRootsSize( roots );
+		StringBuilder query = new StringBuilder( estimatedSize );
+		SparqlSupport.appendPrefixes( query, spec.getPrefixMap() );
+		query
+			.append( "CONSTRUCT {\n" )
+				.append( viewTemplate )
+				.append( "} where {\n" )
+				.append( "{ " ).append( viewTemplate ).append( " }\n" )
+				.append( SparqlSupport.itemsAsFilter( roots ) )
+				.append( "}\n" )
+				;
+		String resultQueryString = query.toString();
+		Query q = QueryFactory.create( resultQueryString );
+		for (Source x: sources) m.add( x.executeConstruct( q ) );		
+		return resultQueryString;
 	}
 
-	public boolean isTemplateView() {
-		return type == Type.T_TEMPLATE;
+	private int estimateRootsSize(List<Resource> roots) {
+		int result = 0;
+		for (Resource r: roots) result += r.getURI().length() + 14;
+		return result + 10;
 	}
-
-	public String getTemplate() {
-		return template;
-	}
+	
 }
 
