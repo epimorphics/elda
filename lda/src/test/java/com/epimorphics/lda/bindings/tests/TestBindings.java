@@ -60,7 +60,7 @@ public class TestBindings {
 		APISpec spec = SpecUtil.specFrom( root );
 		APIEndpointSpec eps = spec.getEndpoints().get(0);
 		APIEndpointImpl ep = new APIEndpointImpl( eps );
-		Match match = new Match( ep, MakeData.hashMap( "term=autumn" ) );
+		Match match = new Match( "_", ep, MakeData.hashMap( "term=autumn" ) );
 		URI req = new URI( "/driver/cartwheel" );
 		MultiMap<String, String> params = MakeData.parseQueryString( "" );
 		Triad<APIResultSet, String, Bindings> results = APIEndpointUtil.call( controls, match, req, "", params );

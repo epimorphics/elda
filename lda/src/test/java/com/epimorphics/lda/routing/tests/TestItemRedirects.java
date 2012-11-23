@@ -57,8 +57,8 @@ public class TestItemRedirects {
 		APISpec spec = new APISpec( FileManager.get(), root, LoadsNothing.instance );
 		Router r = new DefaultRouter();
 		loadRouter( r, spec );
-		assertEquals( apiBase + "item/1066", r.findItemURIPath( req, "/look/for/1066" ) );
-		assertEquals( apiBase + "other/2001", r.findItemURIPath( req, "/not/this/2001" ) );
+		assertEquals( apiBase + "item/1066", r.findItemURIPath( "_", req, "/look/for/1066" ) );
+		assertEquals( apiBase + "other/2001", r.findItemURIPath( "_", req, "/not/this/2001" ) );
 	}
 
 	private static void loadRouter( Router r, APISpec spec ) {
@@ -155,7 +155,7 @@ public class TestItemRedirects {
 		}
 
 		String invert( String requestURI, String path ) {
-			return r.findItemURIPath( URIUtils.newURI( requestURI ), path );
+			return r.findItemURIPath( "_", URIUtils.newURI( requestURI ), path );
 		}
 		
 	}

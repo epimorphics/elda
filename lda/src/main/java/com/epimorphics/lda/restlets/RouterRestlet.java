@@ -126,7 +126,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         String formatSuffix = match == matchAll ? null : pathAndType.b;
         if (match == null) {
         	StatsValues.endpointNoMatch();
-        	String item = router.findItemURIPath( ui.getRequestUri(), "/" + pathstub );
+        	String item = router.findItemURIPath( "_", ui.getRequestUri(), "/" + pathstub );
         	if (item == null) 
         		return noMatchFound( pathstub, ui, pathAndType );
         	else 
