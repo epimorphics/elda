@@ -27,16 +27,25 @@ import com.epimorphics.util.URIUtils;
 */
 public class DefaultRouter implements Router {
 	
-	final MatchSearcher<APIEndpoint> self = new MatchSearcher<APIEndpoint>();
-
 	/**
 	    Answer the (endpoint, bindings) Match for the given path,
 	    or null if there isn't one.
 	*/
-	@Override public Match getMatch( String path, MultiMap<String, String> queryParams ) {
+	@Override public Match getMatch( String path, MultiMap<String, String> queryParams ) {		
+		int slash = path.indexOf('/', 1);
+		Searcher b = searchers.get("_");
+	//
+		if (slash >= 0) {
+			Searcher candidate = searchers.get( path.substring(0, slash ) );
+			if (candidate != null) {				
+				b = candidate;
+				path = path.substring( slash );
+			}
+		}
+	//
         Map<String, String> bindings = new HashMap<String, String>();
-        APIEndpoint e = self.lookup( bindings, path, queryParams );
-        return e == null ? null : new Match( e, bindings );
+        APIEndpoint e = b.self.lookup( bindings, path, queryParams );
+        return e == null ? null : new Match( "_", e, bindings );
 	}
 	
 	/**
@@ -56,40 +65,63 @@ public class DefaultRouter implements Router {
 		}
 	}
 	
-	protected MatchSearcher<BaseAndTemplate> ms = new MatchSearcher<BaseAndTemplate>();
+	static class Searcher {
+		final MatchSearcher<APIEndpoint> self = new MatchSearcher<APIEndpoint>();
+		final Map<String, String> inverseMap = new HashMap<String, String>();
+		final MatchSearcher<BaseAndTemplate> ms = new MatchSearcher<BaseAndTemplate>();
+	}
 	
-	// map from registered uri template to corresponding item template path
-	protected Map<String, String> inverseMap = new HashMap<String, String>();
+	final Searcher searcher = new Searcher();
+	
+	final Map<String, Searcher> searchers = createSearchers();
+
+	private HashMap<String, Searcher> createSearchers() {
+		HashMap<String, Searcher> result = new HashMap<String, Searcher>();
+		result.put( "_", new Searcher() );
+		return result;
+	}
+	
 	
 	/**
 	    Register the endpoint ep associated with the URI template ut.
 	    Also record the association between the item template (if any)
 	    and that URI template, for use in findItemURIPath.
 	*/
-	@Override public void register( String context, String ut, APIEndpoint ep ) {
-		self.register( ut, ep );
+	@Override public void register( String context, String ut, APIEndpoint ep ) {		
+		if (context == null) context = "_";
+		Searcher s = searchers.get(context); 
+		if (s == null) searchers.put( context, s = new Searcher() );
+	//
+		s.self.register( ut, ep );
 		String it = ep.getSpec().getItemTemplate();
 		if (it != null) {
 			String apiBase = ep.getSpec().getAPISpec().getBase();
 			String path = removeBase( apiBase, it );
-			inverseMap.put( ut, path );
-			ms.register( path, new BaseAndTemplate( apiBase, ep.getURITemplate() ) );
+			s.inverseMap.put( ut, path );
+			s.ms.register( path, new BaseAndTemplate( apiBase, ep.getURITemplate() ) );
 		}
 	}	
 	
 	@Override public void unregister( String context, String ut ) {
-		String it = inverseMap.get( ut );
-		self.unregister( ut );
-		if (it != null) ms.unregister( it );
+		if (context == null) context = "_";
+		Searcher b = searchers.get(context); 
+		if (b == null) b = searchers.get("_");
+	//
+		String it = b.inverseMap.get( ut );
+		b.self.unregister( ut );
+		if (it != null) b.ms.unregister( it );
 	}
 	
 	/**
 	    Answer the filled-in URI template associated with the given
 	    item path, or null if there isn't one.
 	*/
-	@Override public String findItemURIPath( URI requestURI, String path ) {
+	@Override public String findItemURIPath( String context, URI requestURI, String path ) {
+		
+		Searcher s = searchers.get("_");
+		
 		Map<String, String> bindings = new HashMap<String, String>();
-		BaseAndTemplate bt = ms.lookup( bindings, path, null );
+		BaseAndTemplate bt = s.ms.lookup( bindings, path, null );
 		if (bt != null) {
 			String et = Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template );
 			// return resolvePath( bt.base, et );
@@ -120,6 +152,6 @@ public class DefaultRouter implements Router {
 	}
 
 	@Override public List<String> templates() {
-		return self.templates();
+		return searcher.self.templates();
 	}
 }

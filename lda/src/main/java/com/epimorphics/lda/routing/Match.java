@@ -31,9 +31,17 @@ import com.epimorphics.lda.core.APIEndpoint;
 public class Match {
     final APIEndpoint endpoint;
     final Map<String, String> bindings;
+    final String context;
 
-    public Match( APIEndpoint endpoint, Map<String, String> bindings )
-        { this.endpoint = endpoint; this.bindings = bindings; }
+    public Match( String context, APIEndpoint endpoint, Map<String, String> bindings )
+        { this.endpoint = endpoint
+        ; this.bindings = bindings
+        ; this.context = context
+        ; }
+    
+    public String getContext() {
+    	return context;
+    }
 
     public APIEndpoint getEndpoint() {
         return endpoint;
