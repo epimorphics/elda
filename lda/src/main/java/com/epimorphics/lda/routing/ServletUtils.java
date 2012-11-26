@@ -10,6 +10,9 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServlet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.APISecurityException;
@@ -26,11 +29,14 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
-    Some methods useful in the two servley-handling components
+    Some methods useful in the two servlet-handling components
     of the routing classes.
 */
 public class ServletUtils {
 
+	
+	static Logger log = LoggerFactory.getLogger( ServletUtils.class );
+	
 	public interface SpecContext {
 		String getInitParameter( String name );
 	}
@@ -97,10 +103,10 @@ public class ServletUtils {
 			prefixPath = "/" + specPath.substring(0, chop);
 			specPath = specPath.substring( chop + 2 );
 		}
-		Container.log.info( "Loading spec file from " + specPath + " with prefix path " + prefixPath );
+		log.info( "Loading spec file from " + specPath + " with prefix path " + prefixPath );
 		Model init = ml.loadModel( specPath );
 		addLoadedFrom( init, specPath );
-		Container.log.info( "Loaded " + specPath + ": " + init.size() + " statements" );
+		log.info( "Loaded " + specPath + ": " + init.size() + " statements" );
 		registerModel( prefixPath, specPath, init );
 	}
 
@@ -116,7 +122,7 @@ public class ServletUtils {
 	        	if (false) setUriTemplatePrefix( prefixPath, filePath, api );
 	            SpecManagerFactory.get().addSpec( prefixPath, api.getURI(), "", model);
 	        } catch (APISecurityException e) {
-	            throw new APIException( "Internal error. Got security exception duing bootstrap. Not possible!", e );
+	            throw new APIException( "Internal error. Got security exception during bootstrap. Not possible!", e );
 	        }
 	    }
 	}

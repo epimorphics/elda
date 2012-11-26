@@ -6,18 +6,13 @@
 
   <servlet>
     <servlet-name>jersey</servlet-name>
-    <servlet-class>com.epimorphics.lda.routing.Container</servlet-class>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
     
     <init-param>
     	<param-name>com.sun.jersey.config.property.packages</param-name>
     	<param-value>com.epimorphics.lda.restlets</param-value>
     </init-param>
 
-    <init-param> 
-        <param-name>com.epimorphics.api.initialSpecFile</param-name> 
-        <param-value>specs/system-test-A.ttl</param-value>
-    </init-param>
-    
     <load-on-startup>1</load-on-startup>
   </servlet>
   
