@@ -460,9 +460,14 @@ public class View {
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
 	}	
 
-	public String fetchDescriptionsFor(Controls c, String select, List<Resource> roots,
-			Model m, APISpec spec,
-			VarSupply vars) {        
+	public String fetchDescriptionsFor
+		( Controls c
+		, String select
+		, List<Resource> roots
+		, Model m
+		, APISpec spec
+		, VarSupply vars
+		) {        
 		List<Source> sources = spec.getDescribeSources();
 		return this.isTemplateView()
         	? this.viewByTemplate( roots, m, spec, sources )
@@ -470,7 +475,7 @@ public class View {
 	}
 	
 	public String viewByTemplate(List<Resource> roots, Model m, APISpec spec, List<Source> sources) {
-		String viewTemplate = this.getTemplate();
+		String viewTemplate = getTemplate();
 		int estimatedSize = viewTemplate.length() * 2 + 30 + estimateRootsSize( roots );
 		StringBuilder query = new StringBuilder( estimatedSize );
 		SparqlSupport.appendPrefixes( query, spec.getPrefixMap() );
