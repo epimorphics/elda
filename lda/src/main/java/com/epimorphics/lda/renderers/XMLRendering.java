@@ -134,10 +134,26 @@ public class XMLRendering {
 	private Set<RDFNode> getItemsList( Resource itemsResource ) {
 		return itemsResource == null 
 			? new HashSet<RDFNode>() 
-			: new HashSet<RDFNode>( itemsResource.as( RDFList.class ).asJavaList() )
+			: new HashSet<RDFNode>( asJavaList( itemsResource.as( RDFList.class ) ) )
 			;
 	}
 	
+	/**
+	    Answer the Java list rooted at <code>l</code>, but if the list is
+	    incomplete, just deliver the existing elements.
+	*/
+	private List<RDFNode> asJavaList( RDFList l ) {
+		List<RDFNode> result = new ArrayList<RDFNode>();
+		while (!l.equals( RDF.nil )) {
+			Statement first = l.getProperty( RDF.first );
+			Statement rest = l.getProperty( RDF.rest );
+			if (first != null) result.add( first.getObject() );
+			if (rest == null) break;
+			l = rest.getObject().as( RDFList.class );
+		}
+		return result;
+	}
+
 	// Answer the resource I that is the value of an api:items property
 	// of x, if there is one, and null otherwise. If x is the root
 	// of a resultset graph, I is the list of selected items.
@@ -196,7 +212,7 @@ public class XMLRendering {
 				addIdentification( pe, r );
 				if (expandRegardless) elementAddResource( pe, r, expandRegardless );
 			} else if (RDFUtil.isRDFList( r )) {
-				for (RDFNode item: r.as(RDFList.class).asJavaList()) 
+				for (RDFNode item: asJavaList( r.as(RDFList.class) ) ) 
 					appendValueAsItem( pe, item, r.equals(itemsResource) );
 			} else if (r.listProperties().hasNext()) 
 				elementAddResource( pe, r, expandRegardless );

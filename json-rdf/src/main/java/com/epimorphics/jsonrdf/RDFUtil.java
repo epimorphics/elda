@@ -75,11 +75,9 @@ public class RDFUtil {
     /**
      * test if a node corresponds to an RDF List
      */
-    public static boolean isList(RDFNode value) {
-        return value.isAnon() &&
-                (  ((Resource) value).hasProperty(RDF.type, RDF.List)
-                 || ((Resource)value).hasProperty(RDF.first)
-                );
+    public static boolean isList(RDFNode l) {
+        Resource r = (Resource) l;
+		return r.hasProperty( RDF.type, RDF.List ) || r.hasProperty(RDF.first);
     }
     
     /**

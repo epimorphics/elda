@@ -624,15 +624,15 @@ public class Encoder {
             	rules.encodeLiteral( jw, isStructured, (Literal) valNode, context );
             } else {
                 Resource r = (Resource)valNode;
-                if (r.isAnon()) {
-                    if (RDFUtil.isList(r)) {
-                        RDFList list = r.as(RDFList.class);
-                        jw.array();
-                        for (Iterator<RDFNode> i = list.iterator(); i.hasNext();) {
-                            emitNode(i.next(), isStructured);
-                        }
-                        jw.endArray();
-                    } else if (isMultiplyReferencedbNode(r) && deferSharedBNodes) {
+                if (RDFUtil.isList(r)) {
+                    RDFList list = r.as(RDFList.class);
+                    jw.array();
+                    for (Iterator<RDFNode> i = list.iterator(); i.hasNext();) {
+                        emitNode(i.next(), isStructured);
+                    }
+                    jw.endArray();
+                } else if (r.isAnon()) {
+                    if (isMultiplyReferencedbNode(r) && deferSharedBNodes) {
                         if ( ! seenbNode(r)) {
                             roots.add(r);
                         }
