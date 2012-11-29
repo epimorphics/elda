@@ -170,9 +170,10 @@ public class RDFUtil {
     }
     
     /**
-     * Check whether a string looks like an (absolute) URI
-     */
-    private static final Pattern uriPattern = Pattern.compile("(mailto:|file:|https?://|ftp://|urn:)\\S+");
+        Check whether a string looks like an (absolute) URI. "Looks like" is
+        very sketchy: it means "start with a scheme".
+    */
+    private static final Pattern uriPattern = Pattern.compile( "[A-Za-z][-+.A-Za-z0-9]*:.*" );
     
     public static boolean looksLikeURI(String s) {
         return uriPattern.matcher(s).matches();

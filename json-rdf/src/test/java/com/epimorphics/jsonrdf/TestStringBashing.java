@@ -63,7 +63,7 @@ public class TestStringBashing {
         assertEquals(true, RDFUtil.looksLikeURI("mailto:dave@epimorphics.com"));
         assertEquals(true, RDFUtil.looksLikeURI("file://c:\\mydrive/foo.bar"));
         assertEquals(true, RDFUtil.looksLikeURI("urn:isbn:12345908"));
-        assertEquals(false, RDFUtil.looksLikeURI("foo:baz"));
+        assertEquals(false, RDFUtil.looksLikeURI("fo_o:baz"));
         assertEquals(false, RDFUtil.looksLikeURI("http//fool"));
     }
 }
