@@ -147,8 +147,15 @@ public class XMLRendering {
 		while (!l.equals( RDF.nil )) {
 			Statement first = l.getProperty( RDF.first );
 			Statement rest = l.getProperty( RDF.rest );
-			if (first != null) result.add( first.getObject() );
-			if (rest == null) break;
+			if (first == null) {
+				result.add( ResourceFactory.createPlainLiteral( "???" ) );
+			} else {
+				result.add( first.getObject() );				
+			}
+			if (rest == null) {
+				result.add( ResourceFactory.createPlainLiteral( "..." ) );
+				break;
+			}
 			l = rest.getResource();
 		}
 		return result;
