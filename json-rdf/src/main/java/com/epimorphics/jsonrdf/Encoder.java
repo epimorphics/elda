@@ -618,7 +618,42 @@ public class Encoder {
                 jw.endArray();
             }
         }
-        
+
+    // This is the old version for compare-and-contrast.
+    private void oldEmitNode(RDFNode valNode, boolean isStructured) {
+        if (valNode.isLiteral()) {
+        	rules.encodeLiteral( jw, isStructured, (Literal) valNode, context );
+        } else {
+            Resource r = (Resource)valNode;
+            if (r.isAnon()) {
+                if (RDFUtil.isList(r)) {
+                    RDFList list = r.as(RDFList.class);
+                    jw.array();
+                    for (Iterator<RDFNode> i = list.iterator(); i.hasNext();) {
+                        emitNode(i.next(), isStructured);
+                    }
+                    jw.endArray();
+                } else if (isMultiplyReferencedbNode(r) && deferSharedBNodes) {
+                    if ( ! seenbNode(r)) {
+                        roots.add(r);
+                    }
+                    jw.value( rules.encodebNodeId(bNodeIdFor(r)) );
+                } else {
+                    encode(r);
+                }
+            } else if (r.equals(RDF.nil)) {
+                jw.array(); jw.endArray();
+            } else {
+                if (recurseOverResources && nestResources) {
+                    encode(r);
+                } else {
+                    visitResource(r);
+                    jw.value( rules.encodeResourceURI(r.getURI(), context, false) );
+                }
+            }
+        }
+    }
+    
         private void emitNode(RDFNode valNode, boolean isStructured) {
             if (valNode.isLiteral()) {
             	rules.encodeLiteral( jw, isStructured, (Literal) valNode, context );

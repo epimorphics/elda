@@ -142,14 +142,14 @@ public class XMLRendering {
 	    Answer the Java list rooted at <code>l</code>, but if the list is
 	    incomplete, just deliver the existing elements.
 	*/
-	private List<RDFNode> asJavaList( RDFList l ) {
+	private List<RDFNode> asJavaList( Resource l ) {
 		List<RDFNode> result = new ArrayList<RDFNode>();
 		while (!l.equals( RDF.nil )) {
 			Statement first = l.getProperty( RDF.first );
 			Statement rest = l.getProperty( RDF.rest );
 			if (first != null) result.add( first.getObject() );
 			if (rest == null) break;
-			l = rest.getObject().as( RDFList.class );
+			l = rest.getResource();
 		}
 		return result;
 	}
