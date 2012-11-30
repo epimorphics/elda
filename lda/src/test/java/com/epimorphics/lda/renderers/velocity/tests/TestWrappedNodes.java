@@ -15,6 +15,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class TestWrappedNodes {
@@ -70,6 +71,19 @@ public class TestWrappedNodes {
 		WrappedNode.Bundle b = new WrappedNode.Bundle( sn,  ids );
 		String result = new WrappedNode( b, r ).getLabel( language ).raw();
 		assertTrue( "'" + result + "' expected to be one of " + expect, expect.contains( result ) );
+	}
+	
+	@Test public void ensure_finds_properties() {
+		WrappedNode.Bundle b = new WrappedNode.Bundle( sn,  new IdMap() );
+		Model m = ModelFactory.createDefaultModel();
+		Resource r = m.createResource( NS + "S" );
+		r.addProperty( RDFS.label, "hello" ).addLiteral( RDF.first, 10 );
+		WrappedNode w = new WrappedNode( b, r );
+	//
+		Set<WrappedNode> expected = new HashSet<WrappedNode>();
+		expected.add( new WrappedNode( b, RDF.first.inModel( m ) ) );
+		expected.add( new WrappedNode( b, RDFS.label.inModel( m ) ) );
+		assertEquals( expected, new HashSet<WrappedNode>( w.getProperties() ) );
 	}
 	
 }

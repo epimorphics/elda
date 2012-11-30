@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.util.*;
 
-import com.epimorphics.lda.renderers.velocity.WrappedNode.Bundle;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -17,6 +16,9 @@ public class WrappedNode {
 	final List<Literal> labels;
 	
 	final Bundle bundle;
+
+	// created on demand
+	protected List<WrappedNode> properties = null;
 	
 	public static class Bundle {
 		final ShortNames sn;
@@ -183,39 +185,42 @@ public class WrappedNode {
         return result;
 	}
 	
-	public List<WrappedNode> getValues( WrappedNode p ) {
-		
-		// List<WrappedNode> result = propertyValues.get(p);
-		
+	public List<WrappedNode> getValues( WrappedNode p ) {	
 		List<WrappedNode> result = new ArrayList<WrappedNode>();
-		
-		for (Statement s: r.listProperties( p.r.as(Property.class) ).toList() ) {
-			
+	//
+		for (Statement s: r.listProperties( p.r.as(Property.class) ).toList() ) {	
 			result.add( new WrappedNode( bundle, s.getObject() ) );
 		}
-		
+	//
 		return result;
 	}
-
+	
+	/**
+	    Return a list of WrappedNodes corresponding to the distinct
+	    predicates of properties of this WrappedNode. The order is
+	    not [yet] specified. The property list is computed on first
+	    request.
+	*/
 	public List<WrappedNode> getProperties() {
+		if (properties == null) properties = coreGetProperties();
+		return properties;
+	}
+	
+	/**
+	    Return a list of WrappedNodes corresponding to the distinct
+	    predicates of properties of this WrappedNode.
+	    
+	*/
+	private List<WrappedNode> coreGetProperties() {
 		Set<WrappedNode> properties = new HashSet<WrappedNode>();
-
 		ArrayList<WrappedNode> result = new ArrayList<WrappedNode>( properties );
-		
-		Map<Resource, WrappedNode> seen = new HashMap<Resource, WrappedNode>();
-		
-		// for (WrappedNode wp: propertyValues.keySet()) properties.add( wp );
-		
+		Set<Resource> seen = new HashSet<Resource>();
+	//
 		for (Statement s: r.listProperties().toList()) {
 			Property p = s.getPredicate();
-			WrappedNode wp = seen.get(p);
-			if (wp == null) {
-				WrappedNode xxx = new WrappedNode( bundle, p );
-				seen.put(p, wp = xxx );
-				result.add( xxx );
-			}
+			if (seen.add(p)) result.add( new WrappedNode( bundle, p ) );
 		}
-		
+	//
 		return result;
 	}
 
