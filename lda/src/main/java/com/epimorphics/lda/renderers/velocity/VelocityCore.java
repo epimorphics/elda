@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.velocity.Template;
@@ -13,7 +12,6 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.View;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.BrokenException;
@@ -31,7 +29,6 @@ public class VelocityCore {
 
 	public void render( APIResultSet results, OutputStream os ) {
 		Resource thisPage = results.getRoot();
-		View v = results.getView();
 		Model m = results.getModel();
 		IdMap ids = new IdMap();
 		ShortNames names = Help.getShortnames( m );

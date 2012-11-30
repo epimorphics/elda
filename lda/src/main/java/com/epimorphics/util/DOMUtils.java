@@ -51,7 +51,14 @@ public class DOMUtils
 		{ return getBuilder().newDocument(); }
 	
 	public static String renderNodeToString( Times times, Node d, PrefixMapping pm ) 
-		{ return renderNodeToString( times, d, new Bindings(), pm, null ); }
+		{ 
+		Transformer t = setPropertiesAndParams( times, new Bindings(), pm, null );
+		StringWriter sw = new StringWriter();
+		StreamResult sr = new StreamResult( sw );
+		try { t.transform( new DOMSource( d ), sr ); } 
+		catch (TransformerException e) { throw new WrappedException( e ); }
+		return sw.toString(); 
+		}
 
 
 	public static Renderer.BytesOut renderNodeToBytesOut(
@@ -78,22 +85,10 @@ public class DOMUtils
 			}
 
 			@Override protected String getFormat() {
-				// TODO extract from rendered result
 				return "html";
 			}			
 		};
 	}
-	
-	// TODO OBSOLETE
-	public static String renderNodeToString( Times times, Node d, Bindings rc, PrefixMapping pm, String transformFilePath ) 
-		{
-		Transformer t = setPropertiesAndParams( times, rc, pm, transformFilePath );
-		StringWriter sw = new StringWriter();
-		StreamResult sr = new StreamResult( sw );
-		try { t.transform( new DOMSource( d ), sr ); } 
-		catch (TransformerException e) { throw new WrappedException( e ); }
-		return sw.toString();
-		}
     
     static Logger log = LoggerFactory.getLogger(DOMUtils.class);
 
