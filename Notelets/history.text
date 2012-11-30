@@ -1,3 +1,26 @@
+1.2.15
+
+* pre_localname decoding no longer incorrectly applies
+  transcoding to the localname.
+
+* Elda use to throw exceptions if lists in the data were
+  not complete. This has been fixed.
+
+* the test for "looks like a URI" was way more broken than
+  it had to be.
+
+* now using Jersey 1.12.
+
+* tidied up view-by-template code; it's now all in View.
+
+* corrected viewer defaults and point-of-api-attachment.
+  corrected API:templates.
+
+* routing set by tag:: in the web.xml is now implemented
+  by two-layer routers, not changing the uri templates.
+
+* added velocity templating.
+
 1.2.14
 
 * Revised the (internal) URL layout of the standalone example.
