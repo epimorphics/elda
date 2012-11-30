@@ -35,10 +35,11 @@ public class VelocityCore {
 		Model m = results.getModel();
 		IdMap ids = new IdMap();
 		ShortNames names = Help.getShortnames( m );
-		List<WrappedNode> itemised = new ExtractByView( names, v ).itemise( ids, results.getResultList() );
+		WrappedNode.Bundle b = new WrappedNode.Bundle( names,  ids );
+		List<WrappedNode> itemised = WrappedNode.itemise( b, results.getResultList() ); // new ExtractByView( names, v ).itemise( ids, results.getResultList() );
 	//
 		VelocityContext vc = new VelocityContext();
-		vc.put( "thisPage", new WrappedNode( names, ids, thisPage ) );
+		vc.put( "thisPage", new WrappedNode( b, thisPage ) );
 		vc.put( "ids",  ids );
 		vc.put( "names", names );
 		vc.put( "formats", Help.getFormats( m ) );

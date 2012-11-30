@@ -16,6 +16,11 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
+    <p><b>
+    	OBSOLETE CODE, retained for the moment just in case it provokes 
+    	any useful ideas.
+    </b></p>
+     
     <p>
     	ExtractByView makes a nested structure of WrappedNodes which is
     	the view property chains overload on the result model.
@@ -112,9 +117,9 @@ public class ExtractByView {
 			if (w.isResource()) {
 				int nextState = nextState(w, describeState);
 				for (Statement s: statementsFor(w, p, describeState)) {
-					WrappedNode o = new WrappedNode( sn, w.ids, s.getObject() );
+					WrappedNode o = new WrappedNode( sn, w.bundle.ids, s.getObject() );
 					copy( o, rest, nextState );
-					w.addPropertyValue( new WrappedNode( sn, w.ids, s.getPredicate()), o );
+					w.addPropertyValue( new WrappedNode( sn, w.bundle.ids, s.getPredicate()), o );
 				}
 			}			
 		}

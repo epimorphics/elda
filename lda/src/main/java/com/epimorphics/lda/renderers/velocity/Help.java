@@ -150,7 +150,8 @@ public class Help {
 			}
 		} else {
 			// System.err.println( ">> " + prefix + " = " + r );
-			result.put( prefix, new WrappedNode( shortNames, ids, r ) );
+			WrappedNode.Bundle b = new WrappedNode.Bundle( shortNames, ids );
+			result.put( prefix, new WrappedNode( b, r ) );
 		}
 	}
 
@@ -195,7 +196,8 @@ public class Help {
 					for (Statement sb: bindings) {
 						String sn = sb.getProperty( API.label ).getString();
 						RDFNode fn = sb.getProperty( API.value ).getObject();
-						varValue.put( sn, new WrappedNode( names, ids, fn ) );
+						WrappedNode.Bundle b = new WrappedNode.Bundle( names, ids );
+						varValue.put( sn, new WrappedNode( b, fn ) );
 					}
 				}
 			}

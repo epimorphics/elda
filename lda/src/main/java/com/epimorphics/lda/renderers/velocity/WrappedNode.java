@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.util.*;
 
+import com.epimorphics.lda.renderers.velocity.WrappedNode.Bundle;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -14,8 +15,24 @@ public class WrappedNode {
 	final String label;
 	final RDFNode basis;
 	final List<Literal> labels;
-	final ShortNames sn;
-	final IdMap ids;
+	
+	final Bundle bundle;
+	
+	public static class Bundle {
+		final ShortNames sn;
+		final IdMap ids;
+		
+		public Bundle(ShortNames sn, IdMap ids) {
+			this.sn = sn;
+			this.ids = ids;
+		}
+	}
+
+	public static List<WrappedNode> itemise(Bundle b, List<Resource> items) {
+		List<WrappedNode> result = new ArrayList<WrappedNode>( items.size() );;
+		for (Resource i: items) result.add( new WrappedNode(b, i) );
+		return result;
+	}
 	
 	static final List<Literal> noLabels = new ArrayList<Literal>();
 	
@@ -28,17 +45,20 @@ public class WrappedNode {
 	}
 	
 	public WrappedNode( ShortNames sn, IdMap ids, RDFNode r ) {
-		this.ids = ids;
-		this.sn = sn;
+		// TODO may be obsolete
+		this( new Bundle( sn, ids ), r );
+	}
+	
+	public WrappedNode( Bundle b, RDFNode r ) {
+		this.bundle = b;
 		this.r = (r.isResource() ? r.asResource() : null);
 		this.label = "LIT";
 		this.basis = r;
 		this.labels = this.r == null ? noLabels : Help.labelsFor( this.r );
 	}
 	
-	public WrappedNode( ShortNames sn, IdMap ids, Resource r ) {
-		this.ids = ids;
-		this.sn = sn;
+	public WrappedNode( Bundle b, Resource r ) {
+		this.bundle = b;
 		this.basis = r;
 		this.r = r;
 		this.label = Help.labelFor( r );
@@ -73,7 +93,7 @@ public class WrappedNode {
 	    Return the ID of this WrappedNode by appealing to the shared IdMap.
 	 */
 	public String getId() {
-		return ids.get(r);
+		return bundle.ids.get(r);
 	}
 	
 	/**
@@ -92,7 +112,7 @@ public class WrappedNode {
 	}
 	
 	private WrappedString shortURI() {
-		return new WrappedString( sn.get(r) );
+		return new WrappedString( bundle.sn.get(r) );
 	}
 
 	private WrappedString shortLiteral() {
@@ -118,7 +138,7 @@ public class WrappedNode {
 		URI u = URIUtils.replaceQueryParam( ru, key, value );	
 	//
 		Resource changed = r.getModel().createResource( u.toString() );
-		return new WrappedNode( sn, ids, changed );
+		return new WrappedNode( bundle, changed );
 	}
 	
 	public WrappedString getURI() {
@@ -142,7 +162,7 @@ public class WrappedNode {
 	}
 	
 	public WrappedString getLiteralType() {
-		return new WrappedString( sn.get( basis.asLiteral().getDatatypeURI() ) );
+		return new WrappedString( bundle.sn.get( basis.asLiteral().getDatatypeURI() ) );
 	}
 	
 	/**
@@ -159,19 +179,43 @@ public class WrappedNode {
 	public List<WrappedNode> asList() {
         List<RDFNode> rawlist = basis.as( RDFList.class ).asJavaList();
         List<WrappedNode> result = new ArrayList<WrappedNode>( rawlist.size() );
-        for (RDFNode n : rawlist) result.add( new WrappedNode( sn, ids, n ) );
+        for (RDFNode n : rawlist) result.add( new WrappedNode( bundle, n ) );
         return result;
 	}
 	
 	public List<WrappedNode> getValues( WrappedNode p ) {
-		List<WrappedNode> result = propertyValues.get(p);
+		
+		// List<WrappedNode> result = propertyValues.get(p);
+		
+		List<WrappedNode> result = new ArrayList<WrappedNode>();
+		
+		for (Statement s: r.listProperties( p.r.as(Property.class) ).toList() ) {
+			
+			result.add( new WrappedNode( bundle, s.getObject() ) );
+		}
+		
 		return result;
 	}
 
 	public List<WrappedNode> getProperties() {
 		Set<WrappedNode> properties = new HashSet<WrappedNode>();
-		for (WrappedNode wp: propertyValues.keySet()) properties.add( wp );
+
 		ArrayList<WrappedNode> result = new ArrayList<WrappedNode>( properties );
+		
+		Map<Resource, WrappedNode> seen = new HashMap<Resource, WrappedNode>();
+		
+		// for (WrappedNode wp: propertyValues.keySet()) properties.add( wp );
+		
+		for (Statement s: r.listProperties().toList()) {
+			Property p = s.getPredicate();
+			WrappedNode wp = seen.get(p);
+			if (wp == null) {
+				WrappedNode xxx = new WrappedNode( bundle, p );
+				seen.put(p, wp = xxx );
+				result.add( xxx );
+			}
+		}
+		
 		return result;
 	}
 
@@ -179,32 +223,32 @@ public class WrappedNode {
 		return r;
 	}
 	
-	final Map<WrappedNode, List<WrappedNode>> propertyValues = 
-		new HashMap<WrappedNode, List<WrappedNode>>();
+//	final Map<WrappedNode, List<WrappedNode>> propertyValues = 
+//		new HashMap<WrappedNode, List<WrappedNode>>();
 	
 	public void addPropertyValue( WrappedNode wp, WrappedNode o) {
-		List<WrappedNode> values = propertyValues.get( wp );
-		if (values == null)
-			propertyValues.put( wp, values = new ArrayList<WrappedNode>() );
-		values.add( o );
+//		List<WrappedNode> values = propertyValues.get( wp );
+//		if (values == null)
+//			propertyValues.put( wp, values = new ArrayList<WrappedNode>() );
+//		values.add( o );
 	}
 
 	public void debugShow(PrintStream ps) {
-		if (isLiteral()) {
-			ps.print( " '" + basis.asLiteral().getLexicalForm() + "'" );
-		} else {
-			ps.print( "<<" + getLabel() + ">>" );
-			ps.print( " (" );
-			String and = "";
-			for (WrappedNode wp: propertyValues.keySet()) {
-				for (WrappedNode w: propertyValues.get( wp )) {					
-					ps.print( and ); and = "; ";
-					ps.print( wp.r.getLocalName() );
-					ps.print( " " );
-					w.debugShow( ps );
-				}
-			}
-			ps.print( ")" );
-		}
+//		if (isLiteral()) {
+//			ps.print( " '" + basis.asLiteral().getLexicalForm() + "'" );
+//		} else {
+//			ps.print( "<<" + getLabel() + ">>" );
+//			ps.print( " (" );
+//			String and = "";
+//			for (WrappedNode wp: propertyValues.keySet()) {
+//				for (WrappedNode w: propertyValues.get( wp )) {					
+//					ps.print( and ); and = "; ";
+//					ps.print( wp.r.getLocalName() );
+//					ps.print( " " );
+//					w.debugShow( ps );
+//				}
+//			}
+//			ps.print( ")" );
+//		}
 	}		
 }

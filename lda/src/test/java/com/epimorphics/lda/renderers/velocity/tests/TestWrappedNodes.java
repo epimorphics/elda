@@ -27,7 +27,8 @@ public class TestWrappedNodes {
 		IdMap ids = new IdMap();		
 		Model m = ModelFactory.createDefaultModel();
 		Resource r = m.createResource( NS + "leafName" );
-		WrappedNode i = new WrappedNode( sn, ids, r );
+		WrappedNode.Bundle b = new WrappedNode.Bundle( sn, ids );
+		WrappedNode i = new WrappedNode( b, r );
 		assertEquals( r.getURI(), i.getURI().raw() );
 	}
 	
@@ -66,7 +67,8 @@ public class TestWrappedNodes {
 		Set<String> expect = new HashSet<String>();
 		for (String s: expected.split( " *, *" )) expect.add( s );
 	//
-		String result = new WrappedNode( sn, ids, r ).getLabel( language ).raw();
+		WrappedNode.Bundle b = new WrappedNode.Bundle( sn,  ids );
+		String result = new WrappedNode( b, r ).getLabel( language ).raw();
 		assertTrue( "'" + result + "' expected to be one of " + expect, expect.contains( result ) );
 	}
 	
