@@ -23,8 +23,8 @@ public class TestVelocityShortnames {
 			;
 		execution.addProperty( API.termBinding, tb( m, RDF.type, "TYPE" ) );
 		ShortNames shortNames = Help.getShortnames( m );
-		// TODO assertEquals( null, shortNames.get( RDF.first ) );
-		assertEquals( "TYPE", shortNames.get( RDF.type ) );
+		assertEquals( null, shortNames.getEntry( RDF.value ) );
+		assertEquals( "TYPE", shortNames.getEntry( RDF.type ) );
 	}
 
 	private Resource tb(Model m, Resource r, String shortName ) {

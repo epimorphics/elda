@@ -115,7 +115,7 @@ public class WrappedNode {
 	}
 	
 	private WrappedString shortURI() {
-		return new WrappedString( bundle.sn.get(r) );
+		return new WrappedString( bundle.sn.getWithUpdate(r) );
 	}
 
 	private WrappedString shortLiteral() {
@@ -165,7 +165,7 @@ public class WrappedNode {
 	}
 	
 	public WrappedString getLiteralType() {
-		return new WrappedString( bundle.sn.get( basis.asLiteral().getDatatypeURI() ) );
+		return new WrappedString( bundle.sn.getWithUpdate( basis.asLiteral().getDatatypeURI() ) );
 	}
 	
 	/**

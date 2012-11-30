@@ -9,9 +9,9 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class ShortNames {
 
-	private final Map<String, String> map = new HashMap<String, String>();
+	protected final Map<String, String> map = new HashMap<String, String>();
 	
-	private final PrefixMapping pm;
+	protected final PrefixMapping pm;
 	
 	public ShortNames( PrefixMapping pm, Map<Resource, String> map ) {
 		this.pm = pm;
@@ -26,14 +26,30 @@ public class ShortNames {
 		this.pm = pm;
 	}
 	
-	public String get( Resource r ) {
-		return get(r.getURI());
+	public String getWithUpdate( Resource r ) {
+		return getWithUpdate(r.getURI());
 	}
 	
-	public String get( String uri ) {
-		String result = map.get(uri);
+	public String getEntry( Resource r ) {
+		return getEntry(r.getURI());
+	}
+	
+	/**
+	    Return the short name for the given uri. Allocate a new
+	    one according to the transcoding rule if there isn't one yet.
+	*/
+	public String getWithUpdate( String uri ) {
+		String result = getEntry( uri );
 		if (result == null) map.put(uri, result = shortForm(uri) );
 		return result;
+	}
+	
+	/**
+	    Return the short name for the given uri, or null if there
+	    isn't one [yet]. (This is to allow a safe test probe.)
+	*/
+	public String getEntry( String uri ) {
+		return map.get(uri);
 	}
 
 	// hackery to deal with blank nodes and nodes with no short form.

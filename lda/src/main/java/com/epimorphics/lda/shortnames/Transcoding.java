@@ -75,6 +75,15 @@ public class Transcoding {
 		return c - 'A' + 10;
 	}
 
+	/**
+	    Encode the URI string <code>any</code> into a "short"name.
+	    If any can be expressed as a legal shortname pre_local where
+	    pre is the prefix for any's namespace and local is the
+	    local name of any, return that. Otherwise, if the local
+	    name isn't a legal shortname but a prefix exists, return
+	    pre_thatPrefix_localnameEncoded. Otherwise, return
+	    uri_theEntireURIendcoded.
+	*/
 	public static String encode( PrefixMapping pm, String any ) {
 		int cut = Util.splitNamespace( any );
 		String ns = any.substring( 0, cut );
