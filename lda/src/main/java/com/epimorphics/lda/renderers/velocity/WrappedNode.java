@@ -19,6 +19,7 @@ public class WrappedNode {
 
 	// created on demand
 	protected List<WrappedNode> properties = null;
+	protected List<WrappedNode> inverses = null;
 	
 	public static class Bundle {
 		final ShortNames sn;
@@ -195,6 +196,16 @@ public class WrappedNode {
 		return result;
 	}
 	
+	public List<WrappedNode> getInverseValues( WrappedNode p ) {	
+		List<WrappedNode> result = new ArrayList<WrappedNode>();
+	//
+		for (Statement s: r.getModel().listStatements(null, p.r.as(Property.class), basis).toList()) {	
+			result.add( new WrappedNode( bundle, s.getSubject() ) );
+		}
+	//
+		return result;
+	}
+	
 	/**
 	    Return a list of WrappedNodes corresponding to the distinct
 	    predicates of properties of this WrappedNode. The order is
@@ -204,6 +215,11 @@ public class WrappedNode {
 	public List<WrappedNode> getProperties() {
 		if (properties == null) properties = coreGetProperties();
 		return properties;
+	}
+	
+	public List<WrappedNode> getInverseProperties() {
+		if (inverses == null) inverses = coreGetInverseProperties();
+		return inverses;
 	}
 	
 	/**
@@ -223,13 +239,23 @@ public class WrappedNode {
 	//
 		return result;
 	}
+	
+	private List<WrappedNode> coreGetInverseProperties() {
+		Set<WrappedNode> properties = new HashSet<WrappedNode>();
+		ArrayList<WrappedNode> result = new ArrayList<WrappedNode>( properties );
+		Set<Resource> seen = new HashSet<Resource>();
+	//
+		for (Statement s: r.getModel().listStatements(null, null, basis).toList()) {
+			Property p = s.getPredicate();
+			if (seen.add(p)) result.add( new WrappedNode( bundle, p ) );
+		}
+	//
+		return result;
+	}
 
 	public Resource asResource() {
 		return r;
 	}
-	
-//	final Map<WrappedNode, List<WrappedNode>> propertyValues = 
-//		new HashMap<WrappedNode, List<WrappedNode>>();
 	
 	public void addPropertyValue( WrappedNode wp, WrappedNode o) {
 //		List<WrappedNode> values = propertyValues.get( wp );

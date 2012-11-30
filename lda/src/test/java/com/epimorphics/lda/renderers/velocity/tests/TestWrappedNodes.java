@@ -3,6 +3,7 @@ package com.epimorphics.lda.renderers.velocity.tests;
 import static org.junit.Assert.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import com.epimorphics.lda.renderers.velocity.IdMap;
 import com.epimorphics.lda.renderers.velocity.ShortNames;
 import com.epimorphics.lda.renderers.velocity.WrappedNode;
+import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -84,6 +86,41 @@ public class TestWrappedNodes {
 		expected.add( new WrappedNode( b, RDF.first.inModel( m ) ) );
 		expected.add( new WrappedNode( b, RDFS.label.inModel( m ) ) );
 		assertEquals( expected, new HashSet<WrappedNode>( w.getProperties() ) );
+	}
+	
+	@Test public void ensure_finds_inverse_properties() {
+		WrappedNode.Bundle b = new WrappedNode.Bundle( sn,  new IdMap() );
+		Model m = ModelFactory.createDefaultModel();
+		Resource Sa = m.createResource( NS + "Sa" );
+		Resource Sb = m.createResource( NS + "Sb" );
+		Resource O = m.createResource( NS + "O" );
+	//
+		Sa.addProperty( RDF.first, O );
+		Sb.addProperty( RDFS.domain, O );
+		WrappedNode w = new WrappedNode( b, O );
+	//
+		Set<WrappedNode> expected = new HashSet<WrappedNode>();
+		expected.add( new WrappedNode( b, RDF.first.inModel( m ) ) );
+		expected.add( new WrappedNode( b, RDFS.domain.inModel( m ) ) );
+		assertEquals( expected, new HashSet<WrappedNode>( w.getInverseProperties() ) );
+	}
+	
+	@Test public void ensure_follows_inverse_properties() {
+		WrappedNode.Bundle b = new WrappedNode.Bundle( sn,  new IdMap() );
+		Model m = ModelFactory.createDefaultModel();
+	//
+		Resource Sa = m.createResource( NS + "Sa" );
+		Resource Sb = m.createResource( NS + "Sb" );
+		Resource O = m.createResource( NS + "O" );
+	//
+		Sa.addProperty( RDF.first, O );
+		Sb.addProperty( RDF.value, O );
+	//
+		WrappedNode w = new WrappedNode( b, O );
+	//
+		List<WrappedNode> got = w.getInverseValues( new WrappedNode( b, RDF.value.inModel( m ) ) );
+		assertEquals( CollectionUtils.list( new WrappedNode( b, Sb ) ), got );
+	
 	}
 	
 }

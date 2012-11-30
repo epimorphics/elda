@@ -471,6 +471,15 @@ by the "mvn install" process.
 </tr>
 
 <tr>
+	<td>List&lt;WrappedNode> getInverseProperties</td>
+	<td>
+		Return a Java list of WrappedNodes which are
+		the wrapped form of predicates P where there is some
+		subject S such that (S, P, this wrapped node).
+	</td>
+</tr>
+
+<tr>
 	<td>List&lt;WrappedNode> getValues(WrappedNode property)</td>
 	<td>
 		Return a Java list of WrappedNodes which are the
@@ -478,6 +487,17 @@ by the "mvn install" process.
 		is the subject and the argument <code>property</code>
 		is the predicate. (This argument will typically be
 		an element from the <code>getProperties</code> list.)
+	</td>
+</tr>
+
+<tr>
+	<td>List&lt;WrappedNode> getInverseValues(WrappedNode property)</td>
+	<td>
+		Return a Java list of WrappedNodes which are the
+		subjects of all statements for which this WrappedNode
+		is the object and the argument <code>property</code>
+		is the predicate. (This argument will typically be
+		an element from the <code>getInverseProperties</code> list.)
 	</td>
 </tr>
 
