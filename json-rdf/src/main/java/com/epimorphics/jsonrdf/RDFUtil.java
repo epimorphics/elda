@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -92,16 +93,17 @@ public class RDFUtil {
 	 */
     public static List<RDFNode> asJavaList( Resource l ) {
 		List<RDFNode> result = new ArrayList<RDFNode>();
+		Model m = l.getModel();
 		while (!l.equals( RDF.nil )) {
 			Statement first = l.getProperty( RDF.first );
 			Statement rest = l.getProperty( RDF.rest );
 			if (first == null) {
-				result.add(Vocab.missingListElement );
+				result.add(Vocab.missingListElement.inModel( m ) );
 			} else {
 				result.add( first.getObject() );				
 			}
 			if (rest == null) {
-				result.add( Vocab.missingListTail );
+				result.add( Vocab.missingListTail.inModel( m ) );
 				break;
 			}
 			l = rest.getResource();
