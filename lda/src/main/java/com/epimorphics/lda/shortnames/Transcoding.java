@@ -40,7 +40,7 @@ public class Transcoding {
 		String prefix = shortName.substring(0, cut - 1);
 		String nameSpace = pm.getNsPrefixURI( prefix );
 		if (nameSpace == null) return null;
-		return nameSpace + decodeAny( shortName.substring(cut) );
+		return nameSpace + shortName.substring(cut) ; 
 	}
 
 	private static String decodeMarkedPrefix( PrefixMapping pm, String prefix_encoded ) {
@@ -51,11 +51,11 @@ public class Transcoding {
 		return nameSpace + decodeAny( prefix_encoded.substring(ubar + 1) );
 	}
 	
-	private static String decodeAny( String s ) {
-    	StringBuilder result = new StringBuilder( s.length() );
+	private static String decodeAny( String shortName ) {
+    	StringBuilder result = new StringBuilder( shortName.length() );
     	char previous = 0;
-    	for(int i = 0, limit = s.length() ; i < limit ; i += 1) { 
-    	    char c = s.charAt(i);
+    	for(int i = 0, limit = shortName.length() ; i < limit ; i += 1) { 
+    	    char c = shortName.charAt(i);
     	    if ('A' <= c && c <= 'F' || '0' <= c && c <= '9') {
     	    	if (previous == 0) {
     	    		previous = c;
