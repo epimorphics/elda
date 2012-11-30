@@ -134,31 +134,8 @@ public class XMLRendering {
 	private Set<RDFNode> getItemsList( Resource itemsResource ) {
 		return itemsResource == null 
 			? new HashSet<RDFNode>() 
-			: new HashSet<RDFNode>( asJavaList( itemsResource.as( RDFList.class ) ) )
+			: new HashSet<RDFNode>( RDFUtil.asJavaList( itemsResource ) )
 			;
-	}
-	
-	/**
-	    Answer the Java list rooted at <code>l</code>, but if the list is
-	    incomplete, just deliver the existing elements.
-	*/
-	private List<RDFNode> asJavaList( Resource l ) {
-		List<RDFNode> result = new ArrayList<RDFNode>();
-		while (!l.equals( RDF.nil )) {
-			Statement first = l.getProperty( RDF.first );
-			Statement rest = l.getProperty( RDF.rest );
-			if (first == null) {
-				result.add( ResourceFactory.createPlainLiteral( "???" ) );
-			} else {
-				result.add( first.getObject() );				
-			}
-			if (rest == null) {
-				result.add( ResourceFactory.createPlainLiteral( "..." ) );
-				break;
-			}
-			l = rest.getResource();
-		}
-		return result;
 	}
 
 	// Answer the resource I that is the value of an api:items property
@@ -218,8 +195,8 @@ public class XMLRendering {
 			if (inPlace( r )) {
 				addIdentification( pe, r );
 				if (expandRegardless) elementAddResource( pe, r, expandRegardless );
-			} else if (RDFUtil.isRDFList( r )) {
-				for (RDFNode item: asJavaList( r.as(RDFList.class) ) ) 
+			} else if (RDFUtil.isList( r )) {
+				for (RDFNode item: RDFUtil.asJavaList( r ) ) 
 					appendValueAsItem( pe, item, r.equals(itemsResource) );
 			} else if (r.listProperties().hasNext()) 
 				elementAddResource( pe, r, expandRegardless );

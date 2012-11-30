@@ -24,11 +24,9 @@ import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.reasoner.rulesys.impl.TopLevelTripleMatchFrame;
 import com.hp.hpl.jena.util.OneToManyMap;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 import com.hp.hpl.jena.util.iterator.Map1;
-import com.hp.hpl.jena.util.iterator.Map1Iterator;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
@@ -387,7 +385,7 @@ public class Encoder {
 						});
 				while (i.hasNext()) {
 					Resource list = i.next();
-					if (RDFUtil.isRDFList(list))
+					if (RDFUtil.isList(list))
 						res.add(list.as(RDFList.class));
 				}
 				topItemLists = res;

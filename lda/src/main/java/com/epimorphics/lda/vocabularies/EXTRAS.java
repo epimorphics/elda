@@ -8,16 +8,28 @@
 
 package com.epimorphics.lda.vocabularies;
 
+import com.epimorphics.jsonrdf.RDFUtil;
 import com.hp.hpl.jena.rdf.model.*;
 
 /**
     Place for new Elda vocabulary items.
  
-    @author chris
+ 	<p>
+ 	Two items are copied from RDFUtil.Vocab to avoid a circular dependency
+ 	between lda and json-rdf. Moving this vocab into json-rdf would make this
+ 	unnecessary but that would be a significant externally-visible code change
+ 	that I am reluctant to do at this time.
+ 	</p>
 */
 public class EXTRAS
     {
 	public static String EXTRA = "http://www.epimorphics.com/vocabularies/lda#";
+
+	// trampolined over from RDFUtil
+	public static final Resource missingListElement = RDFUtil.Vocab.missingListElement;
+
+	// trampolined over from RDFUtil
+	public static final Resource missingListTail = RDFUtil.Vocab.missingListTail;
 
 	public static final Property supportsNestedSelect = property( "supportsNestedSelect" );
 

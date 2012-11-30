@@ -14,14 +14,15 @@ package com.epimorphics.jsonrdf;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
-import com.hp.hpl.jena.datatypes.xsd.impl.XSDDateType;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -34,6 +35,19 @@ import com.hp.hpl.jena.vocabulary.XSD;
 public class RDFUtil {
 
 	public static final String RDFPlainLiteral = RDF.getURI() + "PlainLiteral";
+	
+	public static class Vocab {
+
+		public static final Resource missingListElement = r( "missingListElement" );
+		
+		public static final Resource missingListTail = r( "missingListTail" );
+		
+		public static final String NS = "http://www.epimorphics.com/vocabularies/lda#";
+		
+		public static Resource r( String localName ) {
+			return ResourceFactory.createResource( NS + localName );
+		}
+	}
 
     /**
      * Return one of the values of the property on the resource in string form.
@@ -72,12 +86,41 @@ public class RDFUtil {
         }
     }
     
+	/**
+    	Answer the Java list rooted at <code>l</code>, but if the list is
+    	incomplete, just deliver the existing elements.
+	 */
+    public static List<RDFNode> asJavaList( Resource l ) {
+		List<RDFNode> result = new ArrayList<RDFNode>();
+		while (!l.equals( RDF.nil )) {
+			Statement first = l.getProperty( RDF.first );
+			Statement rest = l.getProperty( RDF.rest );
+			if (first == null) {
+				result.add(Vocab.missingListElement );
+			} else {
+				result.add( first.getObject() );				
+			}
+			if (rest == null) {
+				result.add( Vocab.missingListTail );
+				break;
+			}
+			l = rest.getResource();
+		}
+		return result;
+	}
+
     /**
-     * test if a node corresponds to an RDF List
-     */
+        Answer true if <code>v</code> is a list, which here is defined to
+        be "a resource which is nil or has an rdf:first or is of type rdf:List". 
+    */
     public static boolean isList(RDFNode l) {
+    	if (l.isLiteral()) return false;    	
         Resource r = (Resource) l;
-		return r.hasProperty( RDF.type, RDF.List ) || r.hasProperty(RDF.first);
+		return 
+			r.equals( RDF.nil )
+			|| r.hasProperty( RDF.first )
+			|| r.hasProperty( RDF.type, RDF.List ) 
+			;   
     }
     
     /**
@@ -176,16 +219,5 @@ public class RDFUtil {
     public static boolean looksLikeURI(String s) {
         return uriPattern.matcher(s).matches();
     }
-
-    /**
-        Answer true if <code>v</code> is a list, which here is defined to
-        be "nil, a resource with a first." 
-    */
-	public static boolean isRDFList( RDFNode v ) {
-		return 
-			v.equals( RDF.nil )
-			|| (v.isResource() && v.asResource().hasProperty( RDF.first ))
-			;
-	}
 
 }
