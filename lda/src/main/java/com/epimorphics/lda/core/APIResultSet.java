@@ -81,7 +81,7 @@ public class APIResultSet {
     public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery, View v) {
         model = ModelFactory.createModelForGraph( graph );
         PrefixMapping imported = getPrefixes( results );
-		setUsedPrefixes( imported );
+		setUsedPrefixes( model, imported );
         this.results = results;
         this.isCompleted = isCompleted;
         this.detailsQuery = detailsQuery;
@@ -110,10 +110,10 @@ public class APIResultSet {
 
 	/**
         Set prefixes for the namespaces of terms that Elda uses
-        in its generated models.
+        in its generated models. THey may be over-ridden by the
+        supplied mapping.
     */
-	private void setUsedPrefixes( PrefixMapping pm ) {
-		model.setNsPrefixes( pm );
+	public static  void setUsedPrefixes( Model model, PrefixMapping supplied ) {
         model.setNsPrefix( "rdf", RDF.getURI() );
         model.setNsPrefix( "rdfs", RDFS.getURI() );
         model.setNsPrefix( "dct", DCTerms.getURI() );
@@ -122,6 +122,7 @@ public class APIResultSet {
         model.setNsPrefix( "doap", DOAP.NS );
         model.setNsPrefix( "xhv", XHV.getURI() );
         model.setNsPrefix( "opmv", ELDA.COMMON.NS );
+        model.setNsPrefixes( supplied );
 	}
 
     /**
