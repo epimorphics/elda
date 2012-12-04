@@ -49,7 +49,7 @@ public class Transcoding {
 		if (ubar < 0) return null;
 		String nameSpace = pm.getNsPrefixURI( prefix_encoded.substring(0, ubar) );
 		if (nameSpace == null) return null;
-		return nameSpace + decodeAny( prefix_encoded.substring(ubar + 1) );
+		return nameSpace + decodeLightly( prefix_encoded.substring(ubar + 1) );
 	}
 	
 	private static String decodeAny( String shortName ) {
@@ -73,7 +73,7 @@ public class Transcoding {
 
 	private static int unhex(char c) {
 		if ('0' <= c && c <= '9') return c - '0';
-		return c - 'A' + 10;
+		return c - 'a' + 10;
 	}
 
 	/**
@@ -91,19 +91,29 @@ public class Transcoding {
 		String ln = any.substring( cut );
 		String prefix = pm.getNsURIPrefix( ns );
 		return
-			prefix == null ? encodeLightly(any) // any // "uri" + zap( any )
+			prefix == null ? "unknown_" + encodeLightly(any) // any // "uri" + zap( any )
 			: ShortnameUtils.isLegalShortname( ln ) ? prefix + "_" + ln
-			: "pre_" + prefix + "_" + encodeAny( ln )
+			: "pre_" + prefix + "_" + encodeLightly( ln )
 			;
 	}
 
 	private static String decodeLightly( String encoded ) {
 		StringBuilder sb = new StringBuilder();
-		boolean underbar = false;
+		char pending = 0;
+		boolean underbar = false, inHex = false;
 		for (int i = 0, limit = encoded.length() ; i < limit ; i += 1) {
     		char c = encoded.charAt(i);
-    		if (underbar) {
-    			// TBD
+    		if (inHex) {
+    			sb.append( (char)( (unhex(pending) << 4) | unhex(c) ) );
+    			inHex = false;
+    		} else if (underbar) {
+    			if (Character.isUpperCase(c)) {
+    				sb.append(c);
+    			} else {
+    				pending = c;
+    				inHex = true;
+    			}
+    			underbar = false;
     		} else if (c == 'S') {
     			sb.append( '/');
     		} else if (c == 'C') {
@@ -134,7 +144,7 @@ public class Transcoding {
 	}
 	
 	private static String encodeLightly(String any) {
-		StringBuilder sb = new StringBuilder("unknown_");
+		StringBuilder sb = new StringBuilder();
 		if (any.startsWith("http://")) {
 			sb.append("httpX");	any = any.substring(7);
 		}
@@ -208,7 +218,7 @@ public class Transcoding {
 	static int uri_counter = 1000;
 	
 
-	private static char [] hex = "0123456789ABCDEF".toCharArray();
+	private static char [] hex = "0123456789abcdef".toCharArray();
 	
 	public static String encodeAny( String any ) {
 		StringBuilder result = new StringBuilder();

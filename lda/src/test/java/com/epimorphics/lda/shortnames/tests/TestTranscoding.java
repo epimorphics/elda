@@ -2,7 +2,6 @@ package com.epimorphics.lda.shortnames.tests;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.shortnames.Transcoding;
@@ -21,24 +20,24 @@ public class TestTranscoding {
 	}
 	
 	@Test public void testEncodedURI() {
-		assertEquals( "unencoded", Transcoding.decode( pm, "uri_unencoded" ) );
-		assertEquals( "en\u00AAcoded", Transcoding.decode( pm, "uri_enAAcoded" ) );
-		assertEquals( "en\u00BBcoded", Transcoding.decode( pm, "uri_enBBcoded" ) );
-		assertEquals( "en\u00AA\u00BBcoded", Transcoding.decode( pm, "uri_enAABBcoded" ) );
-		assertEquals( "en\u0012coded", Transcoding.decode( pm, "uri_en12coded" ) );
+		assertEquals( "unencoded", Transcoding.decode( pm, "unknown_unencoded" ) );
+		assertEquals( "en\u00AAcoded", Transcoding.decode( pm, "unknown_en_aacoded" ) );
+		assertEquals( "en\u00BBcoded", Transcoding.decode( pm, "unknown_en_bbcoded" ) );
+		assertEquals( "en\u00AA\u00BBcoded", Transcoding.decode( pm, "unknown_en_aa_bbcoded" ) );
+		assertEquals( "en\u0012coded", Transcoding.decode( pm, "unknown_en_12coded" ) );
 	}
 	
 	@Test public void testEncodedLocalname() {
 		assertEquals( RDF.getURI() + "something", Transcoding.decode( pm, "pre_rdf_something" ) );
-		assertEquals( RDF.getURI() + "some\u0055ing", Transcoding.decode( pm, "pre_rdf_some55ing" ) );
-		assertEquals( RDF.getURI() + "somethin\u003Fg", Transcoding.decode( pm, "pre_rdf_somethin3Fg" ) );
+		assertEquals( RDF.getURI() + "some\u0055ing", Transcoding.decode( pm, "pre_rdf_some_55ing" ) );
+		assertEquals( RDF.getURI() + "somethin\u003Fg", Transcoding.decode( pm, "pre_rdf_somethin_3fg" ) );
 	}
 	
-	@Ignore @Test public void testEncode() {
-		assertEquals( "uri_http3A2F2Fdomain", Transcoding.encode( pm, "http://domain" ) );
-		assertEquals( "uri_http3A2F2Fdomain2Fother", Transcoding.encode( pm, "http://domain/other" ) );
+	@Test public void testEncode() {
+		assertEquals( "unknown_httpXdomain", Transcoding.encode( pm, "http://domain" ) );
+		assertEquals( "unknown_httpXdomainSother", Transcoding.encode( pm, "http://domain/other" ) );
 		assertEquals( "rdf_first", Transcoding.encode( pm, RDF.first.getURI() ) );
-		assertEquals( "pre_rdf_a2Db", Transcoding.encode( pm, RDF.getURI() + "a-b") );
+		assertEquals( "pre_rdf_aMb", Transcoding.encode( pm, RDF.getURI() + "a-b") );
 	}
 	
 }
