@@ -23,7 +23,9 @@ import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -123,6 +125,10 @@ public class EndpointMetadata {
 		}
 	}
 
+	static final Property SKOSprefLabel = ResourceFactory.createProperty
+		( "http://www.w3.org/2004/02/skos/core#" + "prefLabel" )
+		;
+	
 	public void addTermBindings( Model toScan, Model meta, Resource exec, NameMap nm ) {
 		Stage2NameMap s2 = nm.stage2().loadPredicates( toScan, toScan );
 		Map<String, String> mm = s2.result();

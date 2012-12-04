@@ -27,9 +27,15 @@ hello:hello-world-again a api:API
 	# Name the SPARQL endpoint which supplies the data we present
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	; api:defaultViewer api:labelledDescribeViewer
-	; api:defaultFormatter hello:HtmlFormatter 
 	; api:endpoint 
 		hello:publishers, hello:games 
+	; api:defaultFormatter
+		[a elda:VelocityFormatter
+		; api:name "html"
+		; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
+		; api:mimeType "text/html"
+		# ; api:stylesheet "page-shell.vm"
+		]
 	.
     
 # Endpoint definitions
@@ -47,15 +53,6 @@ hello:games a api:ListEndpoint
 	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
 	; api:defaultViewer api:labelledDescribeViewer
 	.	
-#
-# This XSLT formatter produces rich HTML from the viewer properties.
-#
-
-hello:HtmlFormatter a api:XsltFormatter 
-	; api:name "html" 
-	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "lda-assets/xslt/result.xsl"
-	.
 	
 hello:BoardGame a rdfs:Class
 	; rdfs:label "Board Game"

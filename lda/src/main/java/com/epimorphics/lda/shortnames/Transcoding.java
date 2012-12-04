@@ -30,6 +30,7 @@ public class Transcoding {
 	*/
 	public static String decode( PrefixMapping pm, String shortName ) {
 		if (shortName.startsWith( "uri_")) return decodeAny(shortName.substring(4));
+		if (shortName.startsWith( "unknown_")) return decodeLightly(shortName.substring(8));
 		if (shortName.startsWith( "pre_" )) return decodeMarkedPrefix(pm, shortName.substring(4));
 		return decodeMaybePrefixed(pm, shortName);
 	}
@@ -82,7 +83,7 @@ public class Transcoding {
 	    local name of any, return that. Otherwise, if the local
 	    name isn't a legal shortname but a prefix exists, return
 	    pre_thatPrefix_localnameEncoded. Otherwise, return
-	    uri_theEntireURIendcoded.
+	    uri_theEntireURIencoded.
 	*/
 	public static String encode( PrefixMapping pm, String any ) {
 		int cut = Util.splitNamespace( any );
@@ -90,12 +91,123 @@ public class Transcoding {
 		String ln = any.substring( cut );
 		String prefix = pm.getNsURIPrefix( ns );
 		return
-			prefix == null ? "uri_" + encodeAny( any )
+			prefix == null ? encodeLightly(any) // any // "uri" + zap( any )
 			: ShortnameUtils.isLegalShortname( ln ) ? prefix + "_" + ln
 			: "pre_" + prefix + "_" + encodeAny( ln )
 			;
 	}
+
+	private static String decodeLightly( String encoded ) {
+		StringBuilder sb = new StringBuilder();
+		boolean underbar = false;
+		for (int i = 0, limit = encoded.length() ; i < limit ; i += 1) {
+    		char c = encoded.charAt(i);
+    		if (underbar) {
+    			// TBD
+    		} else if (c == 'S') {
+    			sb.append( '/');
+    		} else if (c == 'C') {
+    			sb.append( ':');    			
+    		} else if (c == 'D') {
+    			sb.append( '.');    			
+    		} else if (c == 'H') {
+    			sb.append( '#');
+    		} else if (c == 'M') {
+    			sb.append( '-');
+    		} else if (c == 'A') {
+    			sb.append( '&' );
+    		} else if (c == 'Q') {
+    			sb.append( '?' );
+    		} else if (c == 'E') {
+    			sb.append( '=' );
+    		} else if (c == 'X') {
+    			sb.append( "://" );
+    		} else if (c == '_') {
+    			underbar = true;
+    		} else {
+    			sb.append( c );
+    		}
+		}		
+//		System.err.println( ">> decoded " + encoded );
+//		System.err.println( ">> to:     " + sb );
+		return sb.toString();
+	}
 	
+	private static String encodeLightly(String any) {
+		StringBuilder sb = new StringBuilder("unknown_");
+		if (any.startsWith("http://")) {
+			sb.append("httpX");	any = any.substring(7);
+		}
+		for (int i = 0, limit = any.length() ; i < limit ; i += 1) {
+    		char c = any.charAt(i);
+    		if ('a' <= c && c <= 'z' || '0' <= c && c <= '9') {
+    			sb.append( c );
+    		} else if (c == '/') {
+    			sb.append( 'S' );
+    		} else if (c == ':') {
+    			sb.append( 'C' );
+    		} else if (c == '.') {
+    			sb.append( 'D' );
+    		} else if (c == '#') {
+    			sb.append( 'H' );
+    		} else if (c == '-') {
+    			sb.append( 'M' );
+    		} else if (c == '&') {
+    			sb.append( 'A' );
+    		} else if (c == '?') {
+    			sb.append( 'Q' );
+    		} else if (c == 'E') {
+    			sb.append( '=' );
+    		} else if (c == '_') {
+    			sb.append( '_' ).append( '_' );
+    		} else if ('A' <= c && c <= 'Z') {
+    			sb.append( '_' ).append( c );
+    		} else {
+    			sb.append( '_' ).append( hex[c >> 4] ).append( hex[c & 0xf] );
+    		}
+		}
+		return sb.toString();
+	}
+
+	private static String zap(String any) {		
+		StringBuilder sb = new StringBuilder();
+		boolean upcase = true;
+		for (int i = 0, limit = any.length() ; i < limit ; i += 1) {
+    		char c = any.charAt(i);
+    		if ('a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || '0' <= c && c <= '9') {
+    			sb.append( upcase ? Character.toUpperCase( c ) : c );
+    			upcase = false;
+    		} else {
+    			upcase = true;
+    		}
+		}
+		return sb.toString();
+	}
+
+	private static String synthesiseShortname(String ln) {
+		String c = "c" + uri_counter++ + "d"; // "cmiyc"; // int c = uri_counter++;
+		if (ShortnameUtils.isLegalShortname( ln )) return c + "_" + ln;
+		return c + "_" + twiddle( ln );
+	}
+
+	private static String twiddle(String ln) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0, limit = ln.length() ; i < limit ; i += 1) {
+    		char c = ln.charAt(i);
+    		if ('a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || '0' <= c && c <= '9') {
+    			sb.append( c );
+    		} else if (c == '_') {
+    			sb.append( '_' ).append( '_' );
+    		} else {
+    			sb.append( '_' ).append( hex[c >> 4] ).append( hex[c & 0xf] );
+    		}
+		}
+		return sb.toString();
+	}
+
+	static int uri_counter = 1000;
+	
+
 	private static char [] hex = "0123456789ABCDEF".toCharArray();
 	
 	public static String encodeAny( String any ) {

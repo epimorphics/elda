@@ -44,15 +44,6 @@ hello:games a api:ListEndpoint
 	; api:uriTemplate "/games" 
 	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
 	.	
-#
-# This XSLT formatter produces rich HTML from the viewer properties.
-#
-
-hello:HtmlFormatter a api:XsltFormatter 
-	; api:name "html" 
-	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "lda-assets/xslt/result.xsl"
-	.
 	
 hello:BoardGame a rdfs:Class
 	; rdfs:label "Board Game"

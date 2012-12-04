@@ -242,9 +242,9 @@ public class NameMap {
 			if (namespace.equals(FOAF.getURI())) return true; 
 			if (namespace.equals("eh:/")) return true;
 			if (namespace.equals(SPARQL.NS)) return true;
+			if (namespace.equals(SPARQL.SERVICE)) return true;
 			if (namespace.equals(RDF.getURI())) return true;
 			if (namespace.equals(RDFS.getURI())) return true;
-			if (namespace.equals(SPARQL.NS)) return true;
 			if (namespace.equals(ELDA.COMMON.NS)) return true;
 			if (namespace.equals(OpenSearch.getURI())) return true;
 			if (namespace.equals(DOAP.NS)) return true;
