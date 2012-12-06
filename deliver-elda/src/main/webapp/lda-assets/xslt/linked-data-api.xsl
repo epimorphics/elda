@@ -62,6 +62,9 @@
                         <xsl:when test="translate($label, $uppercase, '') = ''">
                                 <xsl:value-of select="$label" />
                         </xsl:when>
+						<xsl:when test="starts-with($label, 'unknown')">
+						  unknown <xsl:value-of select="substring-after($label, 'Z')"/>
+						</xsl:when>
                         <xsl:otherwise>
                                 <xsl:call-template name="splitOnCapital">
                                         <xsl:with-param name="string" select="$label" />

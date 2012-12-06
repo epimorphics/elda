@@ -91,9 +91,9 @@ public class Transcoding {
 		String ln = any.substring( cut );
 		String prefix = pm.getNsURIPrefix( ns );
 		return
-			prefix == null ? "unknown_" + encodeLightly(any) // any // "uri" + zap( any )
+			prefix == null ? "unknown_" + encodeLightly(true, any) // any // "uri" + zap( any )
 			: ShortnameUtils.isLegalShortname( ln ) ? prefix + "_" + ln
-			: "pre_" + prefix + "_" + encodeLightly( ln )
+			: "pre_" + prefix + "_" + encodeLightly(false, ln)
 			;
 	}
 
@@ -132,6 +132,8 @@ public class Transcoding {
     			sb.append( '=' );
     		} else if (c == 'X') {
     			sb.append( "://" );
+    		} else if (c == 'Z') {
+    			// Nothing -- it's the localName marker
     		} else if (c == '_') {
     			underbar = true;
     		} else {
@@ -143,12 +145,16 @@ public class Transcoding {
 		return sb.toString();
 	}
 	
-	private static String encodeLightly(String any) {
+	private static String encodeLightly(boolean useZ, String any) {
 		StringBuilder sb = new StringBuilder();
 		if (any.startsWith("http://")) {
 			sb.append("httpX");	any = any.substring(7);
 		}
+		int lastSlash = any.lastIndexOf( '/' );
+		int firstHash = any.indexOf( '#' );
+		int localNameStart = (firstHash < 0 ? lastSlash : firstHash) + 1;
 		for (int i = 0, limit = any.length() ; i < limit ; i += 1) {
+			if (i == localNameStart && useZ) sb.append( 'Z' );
     		char c = any.charAt(i);
     		if ('a' <= c && c <= 'z' || '0' <= c && c <= '9') {
     			sb.append( c );

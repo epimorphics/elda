@@ -34,8 +34,8 @@ public class TestTranscoding {
 	}
 	
 	@Test public void testEncode() {
-		assertEquals( "unknown_httpXdomain", Transcoding.encode( pm, "http://domain" ) );
-		assertEquals( "unknown_httpXdomainSother", Transcoding.encode( pm, "http://domain/other" ) );
+		assertEquals( "unknown_httpXZdomain", Transcoding.encode( pm, "http://domain" ) );
+		assertEquals( "unknown_httpXdomainSZother", Transcoding.encode( pm, "http://domain/other" ) );
 		assertEquals( "rdf_first", Transcoding.encode( pm, RDF.first.getURI() ) );
 		assertEquals( "pre_rdf_aMb", Transcoding.encode( pm, RDF.getURI() + "a-b") );
 	}
