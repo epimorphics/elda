@@ -23,3 +23,10 @@ elda:missingListElement is returned. If an rdf:next is missing,
 the list is terminated with the additional element elda:missingListTail.
 It is up to the renderers to special-case these resources if required.
 
+The transcoding used to make "short" names out of URIs (when property
+names are present in the data that have not been given shortnames) has
+been changed. (No application should have depended on the details of
+this encoding.) The revised encoding makes transcoded URIs a little
+easier on the human eye and allows the XSLT stylesheet to render it
+more comfortably.
+

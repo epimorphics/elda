@@ -13,19 +13,37 @@ import com.hp.hpl.jena.rdf.model.impl.Util;
     would depend on what renderings had been done since the last server
     restart.)
     </p>
+    
     <p>
-    What we do is to translate any non-lower-case-letters of a URI into
-    their hex encoding and then prefix the translation with "uri_". In the
-    useful case where the namespace has some prefix P, we translate only the
-    local name to L and produce pre_P_L. This reserves two prefix names ("uri"
-    and "pre") but we'll have to live with that. 
+    What we do is to define the /light encoding/ as: leave the lower-case 
+    letters alone and prefix any upper-case letter or "_" with "_". 
+    The well-known special characters (:/.-?&#) are translated to a mnemonic 
+    upper-case letter, and the other special characters are translated to _HH 
+    where the HH are (lower-case) hex digits. Additionally, a leading ://
+    is converted to X (because CSS looks wrong) and a Z is inserted before
+    the first character of the encoded local name. This encoding is reversible.
+    </p>
+    
+    <p>For a URI N:L where N is the namespace and L is the local name, N has
+    prefix P, and L is a legal shortname, we encode as P_L.
+    </p>
+    
+    <p>If L isn't a legal shortname, we encode as pre_P_L', where L' is
+    the light encoding of L.</p>
+    
+    <p>In the remaining case, where there's no prefix for N, we give up
+    and generate unknown_N'L'.</p>
+    
+    <p>
+   	This requisitions the two pseudo-prefix names 'pre' and 'unknown',
+   	but we'll have to live with that.
     </p>
 */
 public class Transcoding {
 
 	/**
 	    Answer the decoding (expansion) of the given shortname if it is in
-	    transcoded form "uri_ENCODED" or "pre_APREFIX_ENCODED", or if it is
+	    transcoded form "unknown_ENCODED" or "pre_APREFIX_ENCODED", or if it is
 	    of the form prefixName_localName, or null if it is not.
 	*/
 	public static String decode( PrefixMapping pm, String shortName ) {
@@ -183,59 +201,8 @@ public class Transcoding {
     		}
 		}
 		return sb.toString();
-	}
-
-	private static String zap(String any) {		
-		StringBuilder sb = new StringBuilder();
-		boolean upcase = true;
-		for (int i = 0, limit = any.length() ; i < limit ; i += 1) {
-    		char c = any.charAt(i);
-    		if ('a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || '0' <= c && c <= '9') {
-    			sb.append( upcase ? Character.toUpperCase( c ) : c );
-    			upcase = false;
-    		} else {
-    			upcase = true;
-    		}
-		}
-		return sb.toString();
-	}
-
-	private static String synthesiseShortname(String ln) {
-		String c = "c" + uri_counter++ + "d"; // "cmiyc"; // int c = uri_counter++;
-		if (ShortnameUtils.isLegalShortname( ln )) return c + "_" + ln;
-		return c + "_" + twiddle( ln );
-	}
-
-	private static String twiddle(String ln) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0, limit = ln.length() ; i < limit ; i += 1) {
-    		char c = ln.charAt(i);
-    		if ('a' <= c && c <= 'z' || 'A' <= c && c <= 'Z' || '0' <= c && c <= '9') {
-    			sb.append( c );
-    		} else if (c == '_') {
-    			sb.append( '_' ).append( '_' );
-    		} else {
-    			sb.append( '_' ).append( hex[c >> 4] ).append( hex[c & 0xf] );
-    		}
-		}
-		return sb.toString();
-	}
-
-	static int uri_counter = 1000;
-	
+	}	
 
 	private static char [] hex = "0123456789abcdef".toCharArray();
-	
-	public static String encodeAny( String any ) {
-		StringBuilder result = new StringBuilder();
-    	for(int i = 0, limit = any.length() ; i < limit ; i += 1) {
-    		char c = any.charAt(i);
-    		if ('a' <= c && c <= 'z') 
-    			result.append( c );
-    		else
-    			result.append( hex[c >> 4] ).append( hex[c & 0xf] );
-    	}
-		return result.toString();
-	}
 
 }

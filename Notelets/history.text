@@ -21,6 +21,9 @@
 
 * added velocity templating.
 
+* changed the encoding use to convert arbitrary URIs into
+  "short" names.
+
 1.2.14
 
 * Revised the (internal) URL layout of the standalone example.
