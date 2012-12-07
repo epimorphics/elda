@@ -232,6 +232,9 @@ public class NameMap {
 			map.put( DCTerms.hasFormat.getURI(), "format" );
 			map.put( DCTerms.hasVersion.getURI(), "version" );
 			map.put( DCTerms.hasPart.getURI(), "part" );
+		//
+			map.put( API.value.getURI(), "value" );
+			map.put( API.label.getURI(), "label" );
 		}
 
 		/**
@@ -249,7 +252,7 @@ public class NameMap {
 //			if (namespace.equals(ELDA.COMMON.NS)) return true;
 //			if (namespace.equals(OpenSearch.getURI())) return true;
 //			if (namespace.equals(DOAP.NS)) return true;
-			if (namespace.equals(API.NS)) return true;
+//			if (namespace.equals(API.NS)) return true;
 			return false;
 		}
 		

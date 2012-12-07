@@ -43,6 +43,15 @@ public class BuiltIn {
 			.addProperty(RDFS.label, "label")
 			.addProperty(RDF.type, API.Multivalued)
 			;
+		RDFS.comment.inModel(result)
+			.addProperty(RDF.type, RDF.Property)
+			.addProperty(RDFS.label, "comment")
+			.addProperty(RDF.type, API.Multivalued)
+			;
+		RDF.value.inModel(result)
+			.addProperty(RDF.type,  RDF.Property)
+			.addProperty(RDFS.label, "value")
+			;
 		return result;
 	}
 	
@@ -62,20 +71,18 @@ public class BuiltIn {
 		magic.add( API.definition.getURI() );
 		magic.add( API.extendedMetadataVersion.getURI() );
 		magic.add( API.items.getURI() );
-		magic.add( API.label.getURI() );
 		magic.add( API.page.getURI() );
 		magic.add( API.processor.getURI() );
 		magic.add( API.property.getURI() );
 		magic.add( API.selectionResult.getURI() );
 		magic.add( API.termBinding.getURI() );
-		magic.add( API.value.getURI() );
 		magic.add( API.variableBinding.getURI() );
 		magic.add( API.viewingResult.getURI() );
 		magic.add( API.wasResultOf.getURI() );
 		magic.add( DCTerms.format.getURI() );
-		magic.add( DCTerms.hasFormat.getURI() );
-		magic.add( DCTerms.hasPart.getURI() );
-		magic.add( DCTerms.hasVersion.getURI() );
+//		magic.add( DCTerms.hasFormat.getURI() );
+//		magic.add( DCTerms.hasPart.getURI() );
+//		magic.add( DCTerms.hasVersion.getURI() );
 		magic.add( DCTerms.isFormatOf.getURI() );
 		magic.add( DCTerms.isPartOf.getURI() );
 		magic.add( DCTerms.isVersionOf.getURI() );
@@ -85,10 +92,6 @@ public class BuiltIn {
 		magic.add( FOAF.primaryTopic.getURI() );
 		magic.add( OpenSearch.itemsPerPage.getURI() );
 		magic.add( OpenSearch.startIndex.getURI() );
-		magic.add( RDFS.comment.getURI() );
-		magic.add( RDFS.label.getURI() );
-		magic.add( RDF.type.getURI() );
-		magic.add( RDF.value.getURI() );
 		magic.add( SPARQL.endpoint.getURI() );
 		magic.add( SPARQL.query.getURI() );
 		magic.add( SPARQL.url.getURI() );
