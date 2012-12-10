@@ -14,6 +14,7 @@ import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.util.DOMUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -111,7 +112,8 @@ public class TestXMLRenderer
 	private void ensureRendering( String desired, Resource root ) 
 		{
 		PrefixMapping pm = root.getModel();
-		ShortnameService sns = new StandardShortnameService();
+		ShortnameService sns = new SNS( "" );
+	//
 		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
 		xr.renderInto( root, d, false );

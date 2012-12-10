@@ -219,7 +219,8 @@ public class NameMap {
 				int cut = Util.splitNamespace( mt );
 				String namespace = mt.substring( 0, cut );
 				String shortName = mt.substring( cut );
-				if (isMagic( namespace )) {
+				if (namespace.equals( "eh:/" )) {
+					// TODO testing hack: fix and remove.
 					mapURItoShortName.put( mt, shortName );
 				} else {						
 					mapURItoShortName.put( mt, Transcoding.encode( prefixes, mt ) );
@@ -235,69 +236,6 @@ public class NameMap {
 		//
 			map.put( API.value.getURI(), "value" );
 			map.put( API.label.getURI(), "label" );
-		}
-
-		/**
-		    There are too many of these. Really we only ought to shorten
-		    the specific ones the stylesheet needs.
-		*/
-		private boolean isMagic( String namespace ) {
-//			if (namespace.equals(XHV.getURI())) return true; 
-//			if (namespace.equals(FOAF.getURI())) return true; 
-			if (namespace.equals("eh:/")) return true;
-//			if (namespace.equals(SPARQL.NS)) return true;
-//			if (namespace.equals(SPARQL.SERVICE)) return true;
-//			if (namespace.equals(RDF.getURI())) return true;
-//			if (namespace.equals(RDFS.getURI())) return true;
-//			if (namespace.equals(ELDA.COMMON.NS)) return true;
-//			if (namespace.equals(OpenSearch.getURI())) return true;
-//			if (namespace.equals(DOAP.NS)) return true;
-//			if (namespace.equals(API.NS)) return true;
-			return false;
-		}
-		
-		static final Set<String> magic = magicURIs();
-		
-		private static Set<String> magicURIs() {
-			Set<String> magic = new HashSet<String>();
-			magic.add( API.definition.getURI() );
-			magic.add( API.extendedMetadataVersion.getURI() );
-			magic.add( API.items.getURI() );
-			magic.add( API.label.getURI() );
-			magic.add( API.page.getURI() );
-			magic.add( API.processor.getURI() );
-			magic.add( API.property.getURI() );
-			magic.add( API.selectionResult.getURI() );
-			magic.add( API.termBinding.getURI() );
-			magic.add( API.value.getURI() );
-			magic.add( API.variableBinding.getURI() );
-			magic.add( API.viewingResult.getURI() );
-			magic.add( API.wasResultOf.getURI() );
-			magic.add( DCTerms.format.getURI() );
-			magic.add( DCTerms.hasFormat.getURI() );
-			magic.add( DCTerms.hasPart.getURI() );
-			magic.add( DCTerms.hasVersion.getURI() );
-			magic.add( DCTerms.isFormatOf.getURI() );
-			magic.add( DCTerms.isPartOf.getURI() );
-			magic.add( DCTerms.isVersionOf.getURI() );
-			magic.add( EXTRAS.listURL.getURI() );
-			magic.add( EXTRAS.sparqlQuery.getURI() );
-			magic.add( FOAF.isPrimaryTopicOf.getURI() );
-			magic.add( FOAF.primaryTopic.getURI() );
-			magic.add( OpenSearch.itemsPerPage.getURI() );
-			magic.add( OpenSearch.startIndex.getURI() );
-			magic.add( RDFS.comment.getURI() );
-			magic.add( RDFS.label.getURI() );
-			magic.add( RDF.type.getURI() );
-			magic.add( RDF.value	.getURI() );
-			magic.add( SPARQL.endpoint.getURI() );
-			magic.add( SPARQL.query.getURI() );
-			magic.add( SPARQL.url.getURI() );
-			magic.add( XHV.first.getURI() );
-			magic.add( XHV.next.getURI() );
-			magic.add( XHV.prev.getURI() );
-			return magic;
-		}
-		
+		}		
 	}
 }
