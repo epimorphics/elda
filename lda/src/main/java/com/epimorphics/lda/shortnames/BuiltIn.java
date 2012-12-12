@@ -56,7 +56,7 @@ public class BuiltIn {
 	
 	private static Model xsltModel() {
 		Model result = ModelFactory.createDefaultModel();
-		for (Property p: magicURIs()) localShortname(p);
+		for (Property p: magicURIs()) localShortname(p.inModel(result));
 		return result;
 	}		
 	
