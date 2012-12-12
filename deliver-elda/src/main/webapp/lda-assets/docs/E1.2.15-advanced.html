@@ -217,13 +217,13 @@ by the "mvn install" process.
 </p>
 
 <p>
-    To use the Velocity renderer, attach this formatter to
+    To use the Velocity renderer to generate HTML, attach this formatter to
     your API spec:
 </p>
 
 <pre>
 &lt;yourSpec> api:defaultFormatter
-	[a api:XsltFormatter
+	[a api:VelocityFormatter
 	; api:name "html"
 	; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
 	; api:mimeType "text/html"
@@ -237,6 +237,17 @@ by the "mvn install" process.
     rendered template, set the <code>api:stylesheet</code>
     property of the formatter to the name of the desired
     template.
+</p>
+
+<p>
+	You may choose to specify a Velocity formatter as a property of an
+	endpoint rather than as the API-wide default.
+</p>
+
+<p>
+	You can change the associated suffix of the formatter by changing the
+	value of its <code>api:name</code> property, and change the content-type
+	of the generated page by changing the value of the api:mimeType property.
 </p>
 
 <p>
