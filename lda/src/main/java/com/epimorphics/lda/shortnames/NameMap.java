@@ -27,9 +27,11 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import com.hp.hpl.jena.vocabulary.XSD;
 
 /**
     Another class maintaining shortnames, this one avoids
@@ -156,6 +158,7 @@ public class NameMap {
 			.setNsPrefix( "rdfs", RDFS.getURI() )
 			.setNsPrefix( "xhv", XHV.getURI() )
 			.setNsPrefix( "dct", DCTerms.getURI() )
+			.setNsPrefix( "doap", DOAP.getURI() )
 			;
 
 		/** The combined namespace prefixes from all models. */

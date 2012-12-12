@@ -20,6 +20,7 @@ import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import com.hp.hpl.jena.vocabulary.XSD;
 
 public class BuiltIn {
 
@@ -35,21 +36,38 @@ public class BuiltIn {
 
 	private static Model rdfModel() {
 		Model result = ModelFactory.createDefaultModel();
-		localShortname(RDF.type.inModel(result))
+		propertyShortname(RDF.type.inModel(result))
 			.addProperty(RDF.type, API.Multivalued)
 			.addProperty(RDFS.range, RDFS.Resource)
 			;
-		localShortname(RDFS.label.inModel(result))
+		propertyShortname(RDFS.label.inModel(result))
 			.addProperty(RDF.type, API.Multivalued)
 			;
-		localShortname(RDFS.comment.inModel(result))
+		propertyShortname(RDFS.comment.inModel(result))
 			.addProperty(RDF.type, API.Multivalued)
 			;
-		localShortname( RDF.value.inModel(result) );
+		propertyShortname( RDF.value.inModel(result) );
+	//
+		classShortname( XSD.integer.inModel(result) );
+		classShortname( XSD.decimal.inModel(result) );
+		classShortname( XSD.xstring.inModel(result) );
+		classShortname( XSD.xboolean.inModel(result) );
+		classShortname( XSD.xint.inModel(result) );
+		classShortname( XSD.xshort.inModel(result) );
+		classShortname( XSD.xbyte.inModel(result) );
+		classShortname( XSD.xlong.inModel(result) );
+		classShortname( XSD.xdouble.inModel(result) );
+		classShortname( XSD.date.inModel(result) );
+		classShortname( XSD.time.inModel(result) );
 		return result;
 	}
 	
-	private static Resource localShortname(Property p) {
+	private static void classShortname(Resource r) {
+		r.addProperty(RDF.type, RDFS.Class );
+		r.addProperty(RDFS.label, r.getLocalName() );
+	}
+
+	private static Resource propertyShortname(Property p) {
 		return p
 			.addProperty(RDF.type,  RDF.Property)
 			.addProperty(RDFS.label, p.getLocalName() )
@@ -58,21 +76,21 @@ public class BuiltIn {
 	
 	private static Model xsltModel() {
 		Model result = ModelFactory.createDefaultModel();
-		for (Property p: magicURIs()) localShortname(p.inModel(result));
+		for (Property p: magicURIs()) propertyShortname(p.inModel(result));
 		
-		localShortname( ELDA.DOAP_EXTRAS._implements.inModel(result) );
-		localShortname( ELDA.DOAP_EXTRAS.releaseOf.inModel(result) );
-		localShortname( DOAP.homepage.inModel(result) );
-		localShortname( DOAP.repository.inModel(result) );
-		localShortname( DOAP.browse.inModel(result) );
-		localShortname( DOAP.location.inModel(result) );
-		localShortname( DOAP.wiki.inModel(result) );
-		localShortname( DOAP.revision.inModel(result) );
+		propertyShortname( ELDA.DOAP_EXTRAS._implements.inModel(result) );
+		propertyShortname( ELDA.DOAP_EXTRAS.releaseOf.inModel(result) );
+		propertyShortname( DOAP.homepage.inModel(result) );
+		propertyShortname( DOAP.repository.inModel(result) );
+		propertyShortname( DOAP.browse.inModel(result) );
+		propertyShortname( DOAP.location.inModel(result) );
+		propertyShortname( DOAP.wiki.inModel(result) );
+		propertyShortname( DOAP.revision.inModel(result) );
 		
 		definedShortname( DOAP.bug_database.inModel(result), "bug_database" );
 		definedShortname( DOAP.programming_language.inModel(result), "programming_language" );
 		
-		localShortname( ELDA.COMMON.software.inModel(result) );
+		propertyShortname( ELDA.COMMON.software.inModel(result) );
 		
 		return result;
 	}		
