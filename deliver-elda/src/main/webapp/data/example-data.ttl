@@ -49,8 +49,6 @@
 <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> a hello:BoardGame
 	; rdfs:label "A Brief History of the World"
 	; hello:players 3, 4, 5, 6
-	; rdf:value "HELLO I AM HERE"
-	; <http://fake.unknown.uri/with/path#thingy> "WOT?"
 	.
 
 <http://queen-games.de/games.aspx?ProductId=45> a hello:BoardGame

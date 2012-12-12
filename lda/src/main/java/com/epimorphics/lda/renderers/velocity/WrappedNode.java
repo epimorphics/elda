@@ -8,6 +8,10 @@ import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
+/**
+    A WrappedNode is an RDF node wrapped in a shell of useful methods to be
+    called from Velocity templates.
+*/
 public class WrappedNode {
 	
 	final Resource r;
@@ -21,6 +25,9 @@ public class WrappedNode {
 	protected List<WrappedNode> properties = null;
 	protected List<WrappedNode> inverses = null;
 	
+	/**
+	    Struct holding the short-names and id maps.
+	*/
 	public static class Bundle {
 		final ShortNames sn;
 		final IdMap ids;
