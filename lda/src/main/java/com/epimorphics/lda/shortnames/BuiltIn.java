@@ -13,6 +13,7 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -32,72 +33,65 @@ public class BuiltIn {
 
 	private static Model rdfModel() {
 		Model result = ModelFactory.createDefaultModel();
-		RDF.type.inModel(result)
-			.addProperty(RDF.type, RDF.Property)
+		localShortname(RDF.type.inModel(result))
 			.addProperty(RDF.type, API.Multivalued)
-			.addProperty(RDFS.label, "type")
-			.addProperty(RDFS.range,  RDFS.Resource)
+			.addProperty(RDFS.range, RDFS.Resource)
 			;
-		RDFS.label.inModel(result)
-			.addProperty(RDF.type, RDF.Property)
-			.addProperty(RDFS.label, "label")
+		localShortname(RDFS.label.inModel(result))
 			.addProperty(RDF.type, API.Multivalued)
 			;
-		RDFS.comment.inModel(result)
-			.addProperty(RDF.type, RDF.Property)
-			.addProperty(RDFS.label, "comment")
+		localShortname(RDFS.comment.inModel(result))
 			.addProperty(RDF.type, API.Multivalued)
 			;
-		RDF.value.inModel(result)
-			.addProperty(RDF.type,  RDF.Property)
-			.addProperty(RDFS.label, "value")
-			;
+		localShortname( RDF.value.inModel(result) );
 		return result;
+	}
+	
+	private static Resource localShortname(Property p) {
+		return p
+			.addProperty(RDF.type,  RDF.Property)
+			.addProperty(RDFS.label, p.getLocalName() )
+		;
 	}
 	
 	private static Model xsltModel() {
 		Model result = ModelFactory.createDefaultModel();
-		for (String s: magicURIs()) {
-			Property p = result.createProperty( s );
-			p
-				.addProperty( RDF.type, RDF.Property )
-				.addProperty( RDFS.label,  p.getLocalName() );
-		}
+		for (Property p: magicURIs()) localShortname(p);
 		return result;
 	}		
 	
-	private static Set<String> magicURIs() {
-		Set<String> magic = new HashSet<String>();
-		magic.add( API.definition.getURI() );
-		magic.add( API.extendedMetadataVersion.getURI() );
-		magic.add( API.items.getURI() );
-		magic.add( API.page.getURI() );
-		magic.add( API.processor.getURI() );
-		magic.add( API.property.getURI() );
-		magic.add( API.selectionResult.getURI() );
-		magic.add( API.termBinding.getURI() );
-		magic.add( API.variableBinding.getURI() );
-		magic.add( API.viewingResult.getURI() );
-		magic.add( API.wasResultOf.getURI() );
-		magic.add( DCTerms.format.getURI() );
-//		magic.add( DCTerms.hasFormat.getURI() );
-//		magic.add( DCTerms.hasPart.getURI() );
-//		magic.add( DCTerms.hasVersion.getURI() );
-		magic.add( DCTerms.isFormatOf.getURI() );
-		magic.add( DCTerms.isPartOf.getURI() );
-		magic.add( DCTerms.isVersionOf.getURI() );
-		magic.add( EXTRAS.listURL.getURI() );
-		magic.add( EXTRAS.sparqlQuery.getURI() );
-		magic.add( FOAF.isPrimaryTopicOf.getURI() );
-		magic.add( FOAF.primaryTopic.getURI() );
-		magic.add( OpenSearch.itemsPerPage.getURI() );
-		magic.add( OpenSearch.startIndex.getURI() );
-		magic.add( SPARQL.endpoint.getURI() );
-		magic.add( SPARQL.query.getURI() );
-		magic.add( SPARQL.url.getURI() );
-		magic.add( XHV.first.getURI() );
-		magic.add( XHV.next.getURI() );
-		magic.add( XHV.prev.getURI() );
+	private static Set<Property> magicURIs() {
+		Set<Property> magic = new HashSet<Property>();
+		magic.add( API.definition );
+		magic.add( API.extendedMetadataVersion );
+		magic.add( API.items );
+		magic.add( API.page );
+		magic.add( API.processor );
+		magic.add( API.property );
+		magic.add( API.selectionResult );
+		magic.add( API.termBinding );
+		magic.add( API.variableBinding );
+		magic.add( API.viewingResult );
+		magic.add( API.wasResultOf );
+		magic.add( DCTerms.format );
+		magic.add( DCTerms.hasFormat );
+		magic.add( DCTerms.hasPart );
+		magic.add( DCTerms.hasVersion );
+		magic.add( DCTerms.isFormatOf );
+		magic.add( DCTerms.isPartOf );
+		magic.add( DCTerms.isVersionOf );
+		magic.add( EXTRAS.listURL );
+		magic.add( EXTRAS.sparqlQuery );
+		magic.add( FOAF.isPrimaryTopicOf );
+		magic.add( FOAF.primaryTopic );
+		magic.add( OpenSearch.itemsPerPage );
+		magic.add( OpenSearch.startIndex );
+		magic.add( SPARQL.endpoint );
+		magic.add( SPARQL.query );
+		magic.add( SPARQL.url );
+		magic.add( XHV.first );
+		magic.add( XHV.next );
+		magic.add( XHV.prev );
 		return magic;
 	}
 

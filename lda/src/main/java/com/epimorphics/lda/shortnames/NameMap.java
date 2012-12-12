@@ -17,10 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.ReusedShortnameException;
 import com.epimorphics.lda.support.MultiMap;
-import com.epimorphics.lda.vocabularies.ELDA;
-import com.epimorphics.lda.vocabularies.EXTRAS;
-import com.epimorphics.lda.vocabularies.OpenSearch;
-import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.graph.Node;
@@ -31,8 +27,6 @@ import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.sparql.vocabulary.DOAP;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -207,7 +201,7 @@ public class NameMap {
 		    URIs that don't yet have one will be given their local name if 
 		    it's unambiguous, or their prefixed local name if needed to 
 		    disambiguate. If the local name isn't a legal shortname, the
-		    Transcoder will hex-escape it.
+		    Transcoder will escape it.
 		*/
 		
 		public Map<String, String> result() {
@@ -230,10 +224,6 @@ public class NameMap {
 		}
 
 		private void loadMagic( Map<String, String> map ) {
-			map.put( DCTerms.hasFormat.getURI(), "format" );
-			map.put( DCTerms.hasVersion.getURI(), "version" );
-			map.put( DCTerms.hasPart.getURI(), "part" );
-		//
 			map.put( API.value.getURI(), "value" );
 			map.put( API.label.getURI(), "label" );
 		}		

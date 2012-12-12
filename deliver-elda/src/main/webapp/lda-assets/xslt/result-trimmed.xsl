@@ -52,14 +52,14 @@ $prefLabel, $altLabel, $title and $name variables.
 <xsl:template match="result" mode="meta">
 	<link rel="shortcut icon" href="{$_resourceRoot}images/datagovuk_favicon.png" type="image/x-icon" /> 
 	<xsl:apply-templates select="first | prev | next | last" mode="metalink" />
-	<xsl:apply-templates select="format/item" mode="metalink" />
+	<xsl:apply-templates select="hasFormat/item" mode="metalink" />
 </xsl:template>
 
 <xsl:template match="first | prev | next | last" mode="metalink">
 	<link rel="{local-name(.)}" href="{@href}" />
 </xsl:template>
 
-<xsl:template match="format/item" mode="metalink">
+<xsl:template match="hasFormat/item" mode="metalink">
 	<link rel="alternate" href="{@href}" type="{format/label}" />
 </xsl:template>
 
@@ -461,7 +461,7 @@ $prefLabel, $altLabel, $title and $name variables.
 <xsl:template match="result" mode="formats">
 	<section class="formats">
 		<ul>
-			<xsl:for-each select="format/item">
+			<xsl:for-each select="hasFormat/item">
 				<xsl:sort select="label"/>
 				<li>
 					<xsl:if test="position() = 1">
@@ -1187,7 +1187,7 @@ $prefLabel, $altLabel, $title and $name variables.
 			</p>
 		</xsl:if>
 		<ul>
-			<xsl:for-each select="version/item | version[not(item)]">
+			<xsl:for-each select="hasVersion/item | version[not(item)]">
 				<li>
 					<xsl:apply-templates select="." mode="nav">
 						<xsl:with-param name="current" select="$view" />
@@ -1823,7 +1823,7 @@ $prefLabel, $altLabel, $title and $name variables.
 	</a>
 </xsl:template>
 
-<xsl:template match="format/item" mode="nav">
+<xsl:template match="hasFormat/item" mode="nav">
 	<xsl:variable name="name">
 		<xsl:apply-templates select="." mode="name" />
 	</xsl:variable>
@@ -1832,7 +1832,7 @@ $prefLabel, $altLabel, $title and $name variables.
 	</a>
 </xsl:template>
 
-<xsl:template match="version/item | version[not(item)]" mode="nav">
+<xsl:template match="hasVersion/item | version[not(item)]" mode="nav">
 	<xsl:param name="current" />
 	<xsl:variable name="label">
 		<xsl:choose>
