@@ -124,7 +124,7 @@ public class Help {
 	    maps produces elsewhere in this class.)
 	*/
 	public static Map<String, Object> getMetadataFrom( ShortNames shortNames, IdMap ids, Model m ) {
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<String, Object>();		
 		List<Resource> pages = m.listSubjectsWithProperty( RDF.type, API.Page ).toList();
 		for (Resource p: pages) {
 			List<Statement> wrs = p.listProperties( API.wasResultOf ).toList();

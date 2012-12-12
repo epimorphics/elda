@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
@@ -241,7 +242,9 @@ public class WrappedNode {
 	//
 		for (Statement s: r.listProperties().toList()) {
 			Property p = s.getPredicate();
-			if (seen.add(p)) result.add( new WrappedNode( bundle, p ) );
+			// Brutal ad-hoc suppression of a known item endpoint loop.
+			if (!p.equals(FOAF.isPrimaryTopicOf))
+				if (seen.add(p)) result.add( new WrappedNode( bundle, p ) );
 		}
 	//
 		return result;

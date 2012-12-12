@@ -98,18 +98,20 @@
 <table width="100%">
 <tr>
 
-<td width="50%">
-<h3>selection query</h3>
-<hr>
-<p>
-This is the SPARQL query that was issued to select the items
-of interest for this page.
-</p>
-<hr>
-<textarea class="provenance" name="query" width="45%">
-$meta['selectionResult.query.value']
-</textarea>
-</td>
+#if ($isListEndpoint)
+	<td width="50%">
+	<h3>selection query</h3>
+	<hr>
+	<p>
+	This is the SPARQL query that was issued to select the items
+	of interest for this page.
+	</p>
+	<hr>
+	<textarea class="provenance" name="query" width="45%">
+	$meta['selectionResult.query.value']
+	</textarea>
+	</td>
+#end
 
 <td width="50%">
 <h3>view query</h3>

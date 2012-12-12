@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.epimorphics.lda.vocabularies.ELDA;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.lda.vocabularies.SPARQL;
@@ -14,6 +15,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -57,9 +59,31 @@ public class BuiltIn {
 	private static Model xsltModel() {
 		Model result = ModelFactory.createDefaultModel();
 		for (Property p: magicURIs()) localShortname(p.inModel(result));
+		
+		localShortname( ELDA.DOAP_EXTRAS._implements.inModel(result) );
+		localShortname( ELDA.DOAP_EXTRAS.releaseOf.inModel(result) );
+		localShortname( DOAP.homepage.inModel(result) );
+		localShortname( DOAP.repository.inModel(result) );
+		localShortname( DOAP.browse.inModel(result) );
+		localShortname( DOAP.location.inModel(result) );
+		localShortname( DOAP.wiki.inModel(result) );
+		localShortname( DOAP.revision.inModel(result) );
+		
+		definedShortname( DOAP.bug_database.inModel(result), "bug_database" );
+		definedShortname( DOAP.programming_language.inModel(result), "programming_language" );
+		
+		localShortname( ELDA.COMMON.software.inModel(result) );
+		
 		return result;
 	}		
 	
+	private static void definedShortname( Property p, String shortName ) {
+		p
+			.addProperty(RDF.type, RDF.Property)
+			.addProperty(RDFS.label, shortName)
+			;
+	}
+
 	private static Set<Property> magicURIs() {
 		Set<Property> magic = new HashSet<Property>();
 		magic.add( API.definition );

@@ -186,6 +186,7 @@ public class APIEndpointImpl implements APIEndpoint {
         thisPage.addProperty( API.extendedMetadataVersion, rsm.createResource( emv_uri.toString() ) );
     //
         URI unPagedURI = withoutPageParameters( pageBase );
+        thisPage.addProperty( RDF.type, API.Page );
         if (isListEndpoint()) {
         	RDFList content = rsm.createList( rs.getResultList().iterator() );
         	thisPage
