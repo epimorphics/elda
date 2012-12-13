@@ -13,7 +13,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
     A WrappedNode is an RDF node wrapped in a shell of useful methods to be
     called from Velocity templates.
 */
-public class WrappedNode {
+public class WrappedNode implements Comparable<WrappedNode> {
 	
 	final Resource r;
 	final String label;
@@ -79,7 +79,10 @@ public class WrappedNode {
 	public WrappedString getLabel() {
 		return new WrappedString( label );
 	}
-	
+
+	@Override public int compareTo( WrappedNode o ) {
+		return toString().compareToIgnoreCase( o.toString() );
+	}
 	/**
 	    Return the lexical form of some label of this wrapped 
 	    resource which has <code>wantLanguage</code>. If there isn't
@@ -247,7 +250,7 @@ public class WrappedNode {
 				if (seen.add(p)) result.add( new WrappedNode( bundle, p ) );
 		}
 	//
-		return result;
+		return sort( result );
 	}
 	
 	private List<WrappedNode> coreGetInverseProperties() {
@@ -260,7 +263,12 @@ public class WrappedNode {
 			if (seen.add(p)) result.add( new WrappedNode( bundle, p ) );
 		}
 	//
-		return result;
+		return sort( result );
+	}
+	
+	private List<WrappedNode> sort(ArrayList<WrappedNode> nodes) {
+		Collections.sort( nodes );
+		return nodes;
 	}
 
 	public Resource asResource() {
