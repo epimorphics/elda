@@ -207,6 +207,64 @@ by the "mvn install" process.
 	by the local name(s) of the API resouce(s) in the spec.
 </p>
 
+<h1>Restrictions on shortname selection</h1>
+
+<p>
+    In an (E)lda configuration file, the configurer may define 
+    "short names" for properties and resources. However, the
+    current supplied example XSLT stylesheets expect that the
+    properties used to define the metadata about a query and
+    its results have certain specified shortnames.
+</p>
+
+<p>
+    Elda reserves and predefines those shortnames; the configuation
+    writer should not attempt to define them themselves.
+</p>
+
+<p>
+    The reserved names are the local names (except where otherwise
+    indicated) of the properties:
+</p>
+
+<table style="margin-left: 2ex">
+	<thead> <tr><th>prefix</th> <th>term</th> <th>term</th> <th>term</th></tr></thead>
+	<tr> <td>rdf</td>  <td>type</td> <td>value</td> <td>&nbsp;</td> </tr>
+	<tr> <td>rdfs</td>  <td>label</td> <td>comment</td> <td>&nbsp;</td> </tr>
+
+	<tr> <td>xsd</td>  <td>integer</td> <td>decimal</td> <td>string</td> </tr>
+	<tr> <td>xsd</td>  <td>boolean</td> <td>int</td> <td>short</td> </tr>
+	<tr> <td>xsd</td>  <td>byte</td> <td>long</td> <td>double</td> </tr>
+	<tr> <td>xsd</td>  <td>date</td> <td>time</td> <td>&nbsp;</td> </tr>
+
+	<tr> <td>doap</td>  <td>implements</td> <td>releaseOf</td> <td>homepage</td> </tr>
+	<tr> <td>doap</td>  <td>repository</td> <td>browse</td> <td>location</td> </tr>
+	<tr> <td>doap</td>  <td>wiki</td> <td>revision</td> <td>&nbsp;</td> </tr>
+	<tr> <td>doap</td>  
+		<td>bug-database <br>(as bug_database)</td> 
+		<td>programming-language <br>(as programming_language)</td> 
+		<td>&nbsp;</td> 
+	</tr>
+
+	<tr> <td>opmv</td>  <td>software</td> <td>&nbsp;</td> <td>&nbsp;</td> </tr>
+
+	<tr> <td>api</td>  <td>definition</td> <td>extendedMetadataVersion</td> <td>page</td> </tr>
+	<tr> <td>api</td>  <td>items</td> <td>item</td> <td>processor</td> </tr>
+	<tr> <td>api</td>  <td>property</td> <td>selectionResult</td> <td>termBinding</td> </tr>
+	<tr> <td>api</td>  <td>variableBinding</td> <td>viewingResult</td> <td>wasResultOf</td> </tr>
+	<tr> <td>dct</td>  <td>format</td> <td>hasFormat</td> <td>hasPart</td> </tr>
+	<tr> <td>dct</td>  <td>hasVersion</td> <td>isFormatOf</td> <td>isPartOf</td> </tr>
+	<tr> <td>dct</td>  <td>isVersionOf</td> <td>&nbsp;</td> <td>&nbsp;</td> </tr>
+	<tr> <td>elda</td>  <td>listURL</td> <td>sparqlQuery</td> <td>&nbsp;</td> </tr>
+	<tr> <td>foaf</td>  <td>isPrimaryTopicOf</td> <td>primaryTopic</td> <td>&nbsp;</td> </tr>
+	<tr> <td>OpenSearch</td>  <td>itemsPerPage </td> <td>startIndex</td> <td>&nbsp;</td> </tr>
+	<tr> <td>sparql</td>  <td>endpoint</td> <td>query</td> <td>url</td> </tr>
+	<tr> <td>xhv</td>  <td>first</td> <td>next</td> <td>prev</td> </tr>
+
+</table>
+
+
+
 <h1>Velocity template rendering</h1>
 
 <p>
