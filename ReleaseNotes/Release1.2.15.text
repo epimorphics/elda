@@ -30,3 +30,6 @@ this encoding.) The revised encoding makes transcoded URIs a little
 easier on the human eye and allows the XSLT stylesheet to render it
 more comfortably.
 
+The documentation now specifies which shortnames are reserved by Elda
+to allow the supplied XSLT stylesheets to find metadata in the
+results being rendered.

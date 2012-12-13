@@ -241,8 +241,8 @@ by the "mvn install" process.
 	<tr> <td>doap</td>  <td>repository</td> <td>browse</td> <td>location</td> </tr>
 	<tr> <td>doap</td>  <td>wiki</td> <td>revision</td> <td>&nbsp;</td> </tr>
 	<tr> <td>doap</td>  
-		<td>bug-database <br>(as bug_database)</td> 
-		<td>programming-language <br>(as programming_language)</td> 
+		<td>bug-database <div>(as bug_database)</div></td> 
+		<td>programming-language <div>(as programming_language)</div></td> 
 		<td>&nbsp;</td> 
 	</tr>
 
@@ -262,8 +262,6 @@ by the "mvn install" process.
 	<tr> <td>xhv</td>  <td>first</td> <td>next</td> <td>prev</td> </tr>
 
 </table>
-
-
 
 <h1>Velocity template rendering</h1>
 
@@ -291,7 +289,8 @@ by the "mvn install" process.
 <p>
     By default, this will render the template
     <code>page-shell.vm</code> found in 
-    <code>webapp/WEB-INF/classes</code>. To change the
+    <code>webapp/WEB-INF/classes</code>; Elda supplies an
+    example template there. To change the
     rendered template, set the <code>api:stylesheet</code>
     property of the formatter to the name of the desired
     template.
@@ -464,7 +463,7 @@ by the "mvn install" process.
 </tr>
 
 <tr>
-	<td>boolean isJustLabel()</td>
+	<td>boolean isJustALabel()</td>
 	<td>
 		Returns true if this WrappedNode is a Resource node
 		which has exactly one property, and that property
@@ -494,14 +493,14 @@ by the "mvn install" process.
 <tr>
 	<td>boolean isLiteral</td>
 	<td>
-		Answer true iff this WrappedNode is a wrapped Literal.
+		Return true iff this WrappedNode is a wrapped Literal.
 	</td>
 </tr>
 
 <tr>
 	<td>boolean isResource</td>
 	<td>
-		Answer true iff this WrappedNode is a wrapped Resource
+		Return true iff this WrappedNode is a wrapped Resource
 		(which may be a blank node).
 	</td>
 </tr>
@@ -509,7 +508,7 @@ by the "mvn install" process.
 <tr>
 	<td>boolean isAnon</td>
 	<td>
-		Answer true iff this WrappedNode is a blank node.
+		Return true iff this WrappedNode is a blank node.
 	</td>
 </tr>
 

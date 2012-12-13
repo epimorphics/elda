@@ -51,6 +51,11 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		return basis.hashCode();
 	}
 	
+	/**
+		A WrappedNode is .equals to another object if
+		that object is a WrappedNode and their underlying
+		RDFNodes are equal.
+	*/
 	public boolean equals( Object other ) {
 		return other instanceof WrappedNode && basis.equals( ((WrappedNode) other).basis );
 	}
@@ -76,6 +81,12 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		this.labels = Help.labelsFor( r );
 	}
 	
+	/**
+		Return this wrapped resource's preferred label;
+		the first literal of (a) this resources skos:prefLabel,
+		(b) an unlanguaged rdfs:label, (c) a languaged
+		rdfs:label, (d) the local name of this resource.
+	*/
 	public WrappedString getLabel() {
 		return new WrappedString( label );
 	}
@@ -83,6 +94,7 @@ public class WrappedNode implements Comparable<WrappedNode> {
 	@Override public int compareTo( WrappedNode o ) {
 		return toString().compareToIgnoreCase( o.toString() );
 	}
+	
 	/**
 	    Return the lexical form of some label of this wrapped 
 	    resource which has <code>wantLanguage</code>. If there isn't
@@ -120,6 +132,13 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		return properties.size() == 1 && properties.get(0).getPredicate().equals(RDFS.label);
 	}
 	
+	/**
+		If this node is a wrapped Resource, return the
+		shortname associated with that Resource or its
+		localname if it has no shortname. If this node
+		is a wrapped Literal, return the lexical form of
+		that literal.
+	*/
 	public WrappedString shortForm() {
 		if (r == null) return shortLiteral();
 		return shortURI();
@@ -155,26 +174,47 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		return new WrappedNode( bundle, changed );
 	}
 	
+	/**
+	 	If this WrappedNode is a Resource, return its URI.
+	*/
 	public WrappedString getURI() {
 		return new WrappedString( r.getURI() );
 	}
 	
+	/**
+	 	Return true iff this WrappedNode is a wrapped Literal.
+	*/
 	public boolean isLiteral() {
 		return basis.isLiteral();
 	}
 	
+	/**
+	 	Return true iff this WrappedNode is a wrapped Resource
+	 	(which might be a blank node).
+	*/
 	public boolean isResource() {
 		return basis.isResource();
 	}
-	
+
+	/**
+	 	Return true iff this WrappedNode is a wrapped blank node.
+	*/
 	public boolean isAnon() {
 		return basis.isAnon();
 	}
 	
+	/**
+		If this node is a wrapped Literal, return its language
+		if any, otherwise return the empty string.
+	*/
 	public String getLanguage() {
 		return basis.asLiteral().getLanguage();
 	}
 	
+	/**
+	 	Return the short form of the URI representing the type
+		of this wrapped literal node.
+	*/
 	public WrappedString getLiteralType() {
 		return new WrappedString( bundle.sn.getWithUpdate( basis.asLiteral().getDatatypeURI() ) );
 	}
@@ -186,10 +226,18 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		return basis.asLiteral().getValue();
 	}
 	
+	/**
+	    Return true iff this WrappedNode wraps a Resource representing
+		an RDF list.
+	*/
 	public boolean isList() {
 		return basis.isAnon() && basis.asResource().canAs( RDFList.class );
 	}
 	
+	/**
+	    Return a Java list of WrappedNodes wrapping the elements of
+		the RDF list represented by this WrappedNode.
+	*/
 	public List<WrappedNode> asList() {
         List<RDFNode> rawlist = basis.as( RDFList.class ).asJavaList();
         List<WrappedNode> result = new ArrayList<WrappedNode>( rawlist.size() );
@@ -197,6 +245,13 @@ public class WrappedNode implements Comparable<WrappedNode> {
         return result;
 	}
 	
+	/**
+	    Return a Java list of WrappedNodes which are the
+		objects of all statements for which this WrappedNode
+		is the subject and the argument <code>property</code>
+		is the predicate. (This argument will typically be
+		an element from the <code>getProperties</code> list.)
+	*/
 	public List<WrappedNode> getValues( WrappedNode p ) {	
 		List<WrappedNode> result = new ArrayList<WrappedNode>();
 	//
@@ -207,6 +262,13 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		return result;
 	}
 	
+	/**
+		Return a Java list of WrappedNodes which are the
+		subjects of all statements for which this WrappedNode
+		is the object and the argument <code>property</code>
+		is the predicate. (This argument will typically be
+		an element from the <code>getInverseProperties</code> list.)
+	*/
 	public List<WrappedNode> getInverseValues( WrappedNode p ) {	
 		List<WrappedNode> result = new ArrayList<WrappedNode>();
 	//
@@ -228,6 +290,11 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		return properties;
 	}
 	
+	/**
+	    Return a Java list of WrappedNodes which are
+		the wrapped form of predicates P where there is some
+		subject S such that (S, P, this wrapped node).
+	*/
 	public List<WrappedNode> getInverseProperties() {
 		if (inverses == null) inverses = coreGetInverseProperties();
 		return inverses;
@@ -252,7 +319,12 @@ public class WrappedNode implements Comparable<WrappedNode> {
 	//
 		return sort( result );
 	}
-	
+
+	/**
+	    Return a list of WrappedNodes corresponding to the distinct
+	    predicates of inverse properties of this WrappedNode.
+	    
+	*/
 	private List<WrappedNode> coreGetInverseProperties() {
 		Set<WrappedNode> properties = new HashSet<WrappedNode>();
 		ArrayList<WrappedNode> result = new ArrayList<WrappedNode>( properties );
@@ -273,31 +345,5 @@ public class WrappedNode implements Comparable<WrappedNode> {
 
 	public Resource asResource() {
 		return r;
-	}
-	
-	public void addPropertyValue( WrappedNode wp, WrappedNode o) {
-//		List<WrappedNode> values = propertyValues.get( wp );
-//		if (values == null)
-//			propertyValues.put( wp, values = new ArrayList<WrappedNode>() );
-//		values.add( o );
-	}
-
-	public void debugShow(PrintStream ps) {
-//		if (isLiteral()) {
-//			ps.print( " '" + basis.asLiteral().getLexicalForm() + "'" );
-//		} else {
-//			ps.print( "<<" + getLabel() + ">>" );
-//			ps.print( " (" );
-//			String and = "";
-//			for (WrappedNode wp: propertyValues.keySet()) {
-//				for (WrappedNode w: propertyValues.get( wp )) {					
-//					ps.print( and ); and = "; ";
-//					ps.print( wp.r.getLocalName() );
-//					ps.print( " " );
-//					w.debugShow( ps );
-//				}
-//			}
-//			ps.print( ")" );
-//		}
-	}		
+	}	
 }
