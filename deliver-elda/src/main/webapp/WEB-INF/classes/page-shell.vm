@@ -31,7 +31,6 @@
 				<div class="indented" stylex="border-left: 1px solid black">
 					#if ($value.isLiteral())
 						<div style="float: left"> $value.shortForm().cut() </div>
-						
 						<div style="float: right; margin-right: 1ex">
 						#selection("maxEx-", "&lt;", "less than", $property, $value)
 						#selection("max-", "&le;", "less or equal to", $property, $value)
@@ -39,46 +38,18 @@
 						#selection("min-", "&ge;", "greater or equal to", $property, $value)
 						#selection("minEx-", "&gt;", "greater than", $property, $value)
 						</div>
-						
 						<div style="clear: both"> </div>
 					#else
-						#nesting($value)
-					#end
-				</div>
-			#end
-		</div>
-	#end
-#*
-	#foreach ($property in $item.properties)
-		<hr style="color: #fff">
-		<div class="indented">
-			<a href="$property.URI">$property.label.cut()</a>
-			#set ($values = ${item.getValues($property)})
-			#if ($values.size() < 2) #else #end
-			#foreach ($value in ${item.getValues($property)})
-				<div class="indented">
-					#if ($value.justALabel)
-						<a href="$value.URI">$value.label</a>
-					#else
-						<div style="float: left"> $value.shortForm().cut() </div>						
-						#if ($value.isLiteral())
-							<div style="float: right; margin-right: 1ex">
-								#selection("maxEx-", "&lt;", "less than", $property, $value)
-								#selection("max-", "&le;", "less or equal to", $property, $value)
-								#selection("", "=", "equal to", $property, $value)
-								#selection("min-", "&ge;", "greater or equal to", $property, $value)
-								#selection("minEx-", "&gt;", "greater than", $property, $value)
-							</div>
+						#if ($value.justALabel)
+							$value.label.cut()
 						#else
 							#nesting($value)
 						#end
-						<div style="clear: both"> </div>
 					#end
 				</div>
 			#end
 		</div>
 	#end
-*#
 #end
 
 <table width="100%">

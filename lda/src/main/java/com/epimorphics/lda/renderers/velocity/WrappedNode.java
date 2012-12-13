@@ -63,7 +63,7 @@ public class WrappedNode {
 	public WrappedNode( Bundle b, RDFNode r ) {
 		this.bundle = b;
 		this.r = (r.isResource() ? r.asResource() : null);
-		this.label = "LIT";
+		this.label = (this.r == null ? "NONE" : Help.labelFor( this.r ) );
 		this.basis = r;
 		this.labels = this.r == null ? noLabels : Help.labelsFor( this.r );
 	}
