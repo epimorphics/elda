@@ -106,7 +106,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	int endpointType = isListEndpoint() ? ContextQueryUpdater.ListEndpoint : ContextQueryUpdater.ItemEndpoint;
     	ContextQueryUpdater cq = new ContextQueryUpdater( endpointType, context, spec, sns, query );
 		try { 
-			Couple<View, String> result = cq.updateQueryAndConstructView( query.deferredFilters);
+			Couple<View, String> result = cq.updateQueryAndConstructView( query.deferredFilters );
 			String format = result.b.equals( "" ) ? context.getValueString( "_suffix") : result.b;
 			if (context.getValueString( "callback" ) != null && !"json".equals( format ))
 				EldaException.BadRequest( "callback specified but format '" + format + "' is not JSON." );
@@ -169,6 +169,8 @@ public class APIEndpointImpl implements APIEndpoint {
 		boolean suppress_IPTO = b.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		boolean exceptionIfEmpty = b.getAsString( "_exceptionIfEmpty", "no" ).equals( "yes" );
 	//
+		if (rs.isEmpty() && exceptionIfEmpty) EldaException.NoItemFound();
+	//
 		Model rsm = rs.getModel();
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
@@ -187,6 +189,7 @@ public class APIEndpointImpl implements APIEndpoint {
     //
         URI unPagedURI = withoutPageParameters( pageBase );
         thisPage.addProperty( RDF.type, API.Page );
+    //
         if (isListEndpoint()) {
         	RDFList content = rsm.createList( rs.getResultList().iterator() );
         	thisPage
@@ -210,14 +213,10 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		;
     		rs.setContentLocation( pageBase );
         } else {
-			if (rs.isEmpty() && exceptionIfEmpty) {
-				EldaException.NoItemFound();
-			} else {
-				Resource content = rs.getResultList().get(0);
-				thisPage.addProperty( FOAF.primaryTopic, content );
-				if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
-				rs.setContentLocation( unPagedURI );
-			}
+			Resource content = rs.getResultList().get(0);
+			thisPage.addProperty( FOAF.primaryTopic, content );
+			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
+			rs.setContentLocation( unPagedURI );
 		}
         EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, b, pageBase, formatNames );
         createOptionalMetadata(rs, query, em);   

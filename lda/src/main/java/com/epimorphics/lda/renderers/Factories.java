@@ -63,7 +63,8 @@ public class Factories {
 	}
 	
 	public RendererFactory getFactoryByType( MediaType mt ) {
-		return typeToFactory.get( mt );
+		RendererFactory result = typeToFactory.get( mt );
+		return result;
 	}
 	
 	public RendererFactory getFactoryByName( String name ) {

@@ -32,6 +32,7 @@ import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
+import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.MultiMap;
@@ -61,13 +62,13 @@ public class SpecManagerImpl implements SpecManager {
         this.modelLoader = modelLoader;
     }
     
-    @Override public APISpec addSpec( String context, String uri, String key, Model spec ) throws APISecurityException {
+    @Override public APISpec addSpec( AuthMap am, String context, String uri, String key, Model spec ) throws APISecurityException {
         if (specs.containsKey(uri)) {
-            return updateSpec(context, uri, key, spec);
+            return updateSpec( am, context, uri, key, spec );
         } else {
             log.info("Creating API spec at: " + uri);
             Resource specRoot = spec.getResource(uri);
-			APISpec apiSpec = new APISpec( FileManager.get(), specRoot, modelLoader );
+			APISpec apiSpec = new APISpec( am, FileManager.get(), specRoot, modelLoader );
             synchronized (specs) { specs.put(uri, new SpecEntry(uri, key, apiSpec, spec)); }
             APIFactory.registerApi( router, context, apiSpec );
             return apiSpec;
@@ -96,10 +97,10 @@ public class SpecManagerImpl implements SpecManager {
         // Nothing to do in this environment,  all known specs are permanently loaded
     }
 
-    @Override public APISpec updateSpec(String context, String uri, String key, Model spec) throws APISecurityException {
+    @Override public APISpec updateSpec(AuthMap am, String context, String uri, String key, Model spec) throws APISecurityException {
         log.info("Udating spec: " + uri);
         deleteSpec(context, uri, key);
-        return addSpec(context, uri, key, spec);
+        return addSpec(am, context, uri, key, spec);
     }
 
     @Override public Model getSpecForAPI(String api) {

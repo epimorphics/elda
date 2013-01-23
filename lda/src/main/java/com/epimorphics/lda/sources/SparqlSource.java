@@ -30,6 +30,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.shared.LockNone;
+import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 /**
  * Data source representing and external SPARQL endpoint.
@@ -49,18 +50,40 @@ public class SparqlSource extends SourceBase implements Source {
     
     protected enum Perhaps {Yes, No, DontKnow, CantTell}
     
-    public SparqlSource( Resource ep, String sparqlEndpoint ) {
+    protected final String basicUser;
+    
+    protected final char[] basicPassword;
+    
+    public SparqlSource( Resource ep, String sparqlEndpoint, AuthMap am ) {
         this.sparqlEndpoint = sparqlEndpoint;
+        String user = null;
+        char [] password = null;
         if (ep != null) {
         	boolean b = RDFUtils.getBooleanValue( ep, EXTRAS.supportsNestedSelect, false );
         	nestedSelects = (b ? Perhaps.Yes : Perhaps.No);
+        //
+        	String authKey = RDFUtils.getStringValue( ep, EXTRAS.authKey, null );
+        	// System.err.println( ">> AUTH KEY: " + authKey );
+        	if (authKey != null) {
+        		AuthInfo ai = am.get( authKey );
+        		if (ai != null) {
+        			user = ai.get("basic.user");
+        			password = ai.get("basic.password").toCharArray();
+        		}
+        	}
         }
+        this.basicUser = user;
+        this.basicPassword = password;
         log.info( "created " + toString() );
     }
     
     @Override public QueryExecution execute(Query query) {
         if (log.isDebugEnabled()) log.debug("Running query on " + sparqlEndpoint + ":\n" + query);
-        return QueryExecutionFactory.sparqlService(sparqlEndpoint, query);
+		QueryEngineHTTP qe = new QueryEngineHTTP(sparqlEndpoint, query) ;
+		// System.err.println( ">> basic user: " + basicUser );
+		// System.err.println( ">> basic password: " + new String(basicPassword));
+		if (basicUser != null) qe.setBasicAuthentication( basicUser, basicPassword );
+		return qe ;
     }
 
     @Override public String toString() {

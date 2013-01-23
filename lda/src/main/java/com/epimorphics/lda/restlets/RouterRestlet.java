@@ -107,7 +107,18 @@ import com.hp.hpl.jena.shared.WrappedException;
         return match;
     }
     
-    @GET @Produces( { "text/javascript", "application/javascript", "text/plain", "application/rdf+xml", "application/json", "text/turtle", "text/html", "text/xml" })
+    @GET @Produces
+    	( { 
+    		"text/javascript"
+    		, "application/javascript"
+    		, "application/rdf+xml"
+    		, "application/json"
+    		, "application/xml"
+    		, "text/turtle"
+    		, "text/html"
+    		, "text/xml" 
+    		, "text/plain"
+    	} )
     public Response requestHandler(
             @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
@@ -212,16 +223,25 @@ import com.hp.hpl.jena.shared.WrappedException;
         	URI ru = makeRequestURI(ui, match, requestUri);
         	APIEndpoint ep = match.getEndpoint();
         	Renderer _default = APIEndpointUtil.getRenderer( ep, formatSuffix, mediaTypes );
+        	        	
         	boolean needsVaryAccept = formatSuffix == null && queryParams.containsKey( "_format" ) == false;
         	if (formatSuffix == null && _default != null) formatSuffix = _default.getPreferredSuffix();
         	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatSuffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
-            if (results == null)
-            	throw new RuntimeException( "ResultSet is null -- this should never happen." );
+            
 			Bindings rc = new Bindings( resultsAndFormat.c.copy(), as );
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? formatSuffix : _format);
+			
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
+        	
+        	if (_default.getPreferredSuffix().equals( r.getPreferredSuffix())) {
+        		MediaType dmt = _default.getMediaType(rc);
+        		if (!dmt.equals(r.getMediaType(rc))) {
+        			r = changeMediaType( r, dmt );
+        		}
+        	}
+			
 			int mainHash = runHash + ru.toString().hashCode();
 			return doRendering( c, rc, mainHash, needsVaryAccept, formatter, results, r );
         } catch (StackOverflowError e) {
@@ -251,6 +271,31 @@ import com.hp.hpl.jena.shared.WrappedException;
             return returnError( e );
         }
     }    
+    
+    /**
+        Given a renderer r and a media type mt, return a new renderer which
+        behaves like r except that it announces its media type as mt. r
+        itself is not changed.
+        
+        This code should be somewhere more sensible. In fact the whole
+        renderer-choosing machinery needs a good cleanup.
+    */
+    protected Renderer changeMediaType( final Renderer r, final MediaType mt ) {
+    	return new Renderer() {
+
+			@Override public MediaType getMediaType(Bindings unused) {
+				return mt;
+			}
+
+			@Override public BytesOut render(Times t, Bindings rc, APIResultSet results) {
+				return r.render(t, rc, results);
+			}
+
+			@Override public String getPreferredSuffix() {
+				return r.getPreferredSuffix();
+			}    		
+    	};
+    }
 
 	public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();

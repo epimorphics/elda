@@ -49,11 +49,11 @@ public class CombinedSource extends SourceBase implements Source
     
     protected final Lock lock = new LockMRSW();
     
-    private static final Map1<Statement, Source> toSource( final FileManager fm ) {
+    private static final Map1<Statement, Source> toSource( final FileManager fm, final AuthMap am ) {
     	return new Map1<Statement, Source>()
         	{
     		@Override public Source map1( Statement o )
-            	{ return GetDataSource.sourceFromSpec( fm, o.getResource() ); }
+            	{ return GetDataSource.sourceFromSpec( fm, o.getResource(), am ); }
         	};
     }
 
@@ -67,11 +67,11 @@ public class CombinedSource extends SourceBase implements Source
         ep is a resource of type Combiner. It has multiple elements, each of
         which themselves represent sub-sources.
     */
-    public CombinedSource( FileManager fm, Resource ep )
+    public CombinedSource( FileManager fm, AuthMap am, Resource ep )
         {
         constructs = ep.listProperties( EXTRAS.construct ).mapWith( toString ).toList();
         matches = ep.listProperties( EXTRAS.match ).mapWith( toString ).toList();
-        sources = ep.listProperties( EXTRAS.element ).mapWith( toSource( fm ) ).toList();
+        sources = ep.listProperties( EXTRAS.element ).mapWith( toSource( fm, am ) ).toList();
         }
 
     @Override public Lock getLock() {

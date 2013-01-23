@@ -71,7 +71,7 @@ public interface Source {
     	void setup( QueryExecution qe );
     	void consume( ResultSet rs );
     	}
-
+    
     /**
         Answer TRUE iff this source supports nested SELECT queries 
         (as specified by SPARQL 1.1).

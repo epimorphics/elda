@@ -7,6 +7,7 @@
 */
 package com.epimorphics.lda.apispec.tests;
 
+import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.FileManager;
@@ -19,7 +20,7 @@ public class SpecUtil {
 	    default FileManager to resolve files to load.
 	*/
 	public static APISpec specFrom( Resource root ) {
-		return new APISpec( FileManager.get(), root, null );
+		return new APISpec( new AuthMap(), FileManager.get(), root, null );
 	}
 
 }

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.APISecurityException;
+import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.LARQManager;
 import com.epimorphics.lda.support.MapMatching;
@@ -96,7 +97,7 @@ public class ServletUtils {
 		m.add( toAdd );
 	}
 
-	public static void loadSpecFromFile( ModelLoader ml, String prefixPath, String specPath ) {
+	public static void loadSpecFromFile( AuthMap am, ModelLoader ml, String prefixPath, String specPath ) {
 		int chop = specPath.indexOf( "::" );
 		if (chop >= 0) {
 			// prefixPath :: fileName
@@ -107,7 +108,7 @@ public class ServletUtils {
 		Model init = ml.loadModel( specPath );
 		addLoadedFrom( init, specPath );
 		log.info( "Loaded " + specPath + ": " + init.size() + " statements" );
-		registerModel( prefixPath, specPath, init );
+		registerModel( am, prefixPath, specPath, init );
 	}
 
 	/**
@@ -115,12 +116,12 @@ public class ServletUtils {
 	 * router.
 	 * @param model
 	 */
-	public static void registerModel( String prefixPath, String filePath, Model model ) {
+	public static void registerModel( AuthMap am, String prefixPath, String filePath, Model model ) {
 	    for (ResIterator ri = model.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
 	        Resource api = ri.next();
 	        try {
 	        	if (false) setUriTemplatePrefix( prefixPath, filePath, api );
-	            SpecManagerFactory.get().addSpec( prefixPath, api.getURI(), "", model);
+	            SpecManagerFactory.get().addSpec( am, prefixPath, api.getURI(), "", model);
 	        } catch (APISecurityException e) {
 	            throw new APIException( "Internal error. Got security exception during bootstrap. Not possible!", e );
 	        }

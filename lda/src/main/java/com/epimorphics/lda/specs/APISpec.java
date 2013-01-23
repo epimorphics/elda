@@ -27,6 +27,7 @@ import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
+import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.sources.GetDataSource;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
@@ -78,16 +79,20 @@ public class APISpec {
 	    query to use nested selects if they are available.
 	*/
 	public static final int DEFAULT_DESCRIBE_THRESHOLD = 10;
-    
+	
     public APISpec( FileManager fm, Resource specification, ModelLoader loader ) {
+    	this(new AuthMap(), fm, specification, loader ); 
+    }
+    
+    public APISpec( AuthMap am, FileManager fm, Resource specification, ModelLoader loader ) {
     	specificationURI = specification.getURI();
     	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
 		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
         describeThreshold = RDFUtils.getIntValue( specification, EXTRAS.describeThreshold, DEFAULT_DESCRIBE_THRESHOLD );
 		prefixes = ExtractPrefixMapping.from(specification);
         sns = loadShortnames(specification, loader);
-        dataSource = GetDataSource.sourceFromSpec( fm, specification );
-        describeSources = extractDescribeSources( fm, specification, dataSource );
+        dataSource = GetDataSource.sourceFromSpec( fm, specification, am );
+        describeSources = extractDescribeSources( fm, am, specification, dataSource );
         primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
         defaultLanguage = getStringValue(specification, API.lang, null);
         base = getStringValue( specification, API.base, null );
@@ -105,17 +110,17 @@ public class APISpec {
         Answer the list of sources that may be used to enhance the view of
         the selected items. Always contains at least the given source.
     */
-    private List<Source> extractDescribeSources( FileManager fm, Resource specification, Source dataSource ) {
+    private List<Source> extractDescribeSources( FileManager fm, AuthMap am, Resource specification, Source dataSource ) {
         List<Source> result = new ArrayList<Source>();
         result.add( dataSource );
-        result.addAll( specification.listProperties( EXTRAS.enhanceViewWith ).mapWith( toSource( fm ) ).toList() ); 
+        result.addAll( specification.listProperties( EXTRAS.enhanceViewWith ).mapWith( toSource( fm, am ) ).toList() ); 
         return result;
     }
 
-    private static final Map1<Statement, Source> toSource( final FileManager fm ) {
+    private static final Map1<Statement, Source> toSource( final FileManager fm, final AuthMap am ) {
     	return new Map1<Statement, Source>() {
     		@Override public Source map1( Statement o ) { 
-    			return GetDataSource.sourceFromSpec( fm, o.getResource() ); 
+    			return GetDataSource.sourceFromSpec( fm, o.getResource(), am ); 
     		}
     	};
     };

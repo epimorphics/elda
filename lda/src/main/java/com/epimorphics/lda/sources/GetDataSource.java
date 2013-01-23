@@ -27,13 +27,13 @@ import static com.epimorphics.util.RDFUtils.*;
 
 public class GetDataSource
     {
-    public static Source sourceFromSpec( FileManager fm, Resource specification ) 
+    public static Source sourceFromSpec( FileManager fm, Resource specification, AuthMap am ) 
         {
         Statement s = specification.getProperty( API.sparqlEndpoint );
         if (s != null)
             {
             Resource ep = s.getResource();
-            if (ep.hasProperty( RDF.type, EXTRAS.Combiner )) return new CombinedSource( fm, ep );
+            if (ep.hasProperty( RDF.type, EXTRAS.Combiner )) return new CombinedSource( fm, am, ep );
             }
         String sparqlEndpoint = getStringValue( specification, API.sparqlEndpoint );
         Resource ep = specification.getPropertyResourceValue( API.sparqlEndpoint );
@@ -43,7 +43,7 @@ public class GetDataSource
             sparqlEndpoint.startsWith( LocalSource.PREFIX ) ? new LocalSource( fm, sparqlEndpoint )
         	: sparqlEndpoint.startsWith( HereSource.PREFIX ) ? new HereSource( specification.getModel(), sparqlEndpoint )
             : sparqlEndpoint.startsWith( TDBManager.PREFIX ) ? new TDBSource( sparqlEndpoint )
-            : new SparqlSource( ep, sparqlEndpoint )
+            : new SparqlSource( ep, sparqlEndpoint, am )
             ;
         }
     }

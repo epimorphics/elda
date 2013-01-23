@@ -17,6 +17,10 @@
 
 package com.epimorphics.lda.routing;
 
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+
 import javax.servlet.http.HttpServlet;
 import javax.xml.parsers.FactoryConfigurationError;
 
@@ -28,6 +32,8 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.Version;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.routing.ServletUtils.ServletSpecContext;
+import com.epimorphics.lda.sources.AuthMap;
+import com.epimorphics.lda.sources.AuthMap.NamesAndValues;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specmanager.SpecManagerImpl;
 import com.hp.hpl.jena.util.FileManager;
@@ -61,11 +67,33 @@ public class Loader extends HttpServlet {
         modelLoader = new APIModelLoader( baseFilePath );
         FileManager.get().addLocatorFile( baseFilePath );
     //
+        AuthMap am = AuthMap.loadAuthMap( FileManager.get(), wrapParameters() );
+    //
         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
         for (String spec : ServletUtils.getSpecNamesFromContext(new ServletUtils.ServletSpecContext(this))) {
-             ServletUtils.loadSpecFromFile( modelLoader, prefixPath, spec );
+             ServletUtils.loadSpecFromFile( am, modelLoader, prefixPath, spec );
         }
     }
+
+    /**
+        Return a NamesAndValues which wraps the init parameters of this Loader
+        servlet.
+    */
+	public NamesAndValues wrapParameters() {
+		return new AuthMap.NamesAndValues() {
+
+			@Override public String getParameter(String name) {
+				return getInitParameter( name );
+			}
+
+			@Override public List<String> getParameterNames() {
+				List<String> result = new ArrayList<String>();
+				Enumeration<String> names = getInitParameterNames();
+				while (names.hasMoreElements()) result.add( names.nextElement() );
+				return result;
+			}
+        };
+	}
     
     public void osgiInit(String filepath) {
         baseFilePath = filepath;

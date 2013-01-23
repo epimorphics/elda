@@ -106,6 +106,7 @@ spec:HtmlFormatter a api:XsltFormatter
 #
 # API DESCRIPTION
 #
+<http://education.data.gov.uk/sparql/education/query> elda:authKey "example".
 
 spec:mini-education-api a api:API 
 	; rdfs:label "Mini Edubase API"@en

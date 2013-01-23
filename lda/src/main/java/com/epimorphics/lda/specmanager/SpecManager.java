@@ -20,6 +20,7 @@ package com.epimorphics.lda.specmanager;
 import java.util.List;
 
 import com.epimorphics.lda.exceptions.APISecurityException;
+import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Model;
 
@@ -45,7 +46,7 @@ public interface SpecManager {
      * associate endpoints. 
      * @throws APISecurityException if the key does match the key used to create the matching existing entry
      */
-    public APISpec addSpec(String context, String uri, String key, Model spec) 
+    public APISpec addSpec(AuthMap am, String context, String uri, String key, Model spec) 
     throws APISecurityException;
     
     /**
@@ -56,7 +57,7 @@ public interface SpecManager {
      * associate endpoints. 
      * @throws APISecurityException if the key does match the key used to create the matching existing entry
      */
-    public APISpec updateSpec(String context, String uri, String key, Model spec)
+    public APISpec updateSpec(AuthMap am, String context, String uri, String key, Model spec)
     throws APISecurityException;
     
     /**

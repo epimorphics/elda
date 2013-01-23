@@ -72,6 +72,8 @@ public class EXTRAS
 	public static final Property uriTemplatePrefix = property( "uriTemplatePrefix" );
 
 	public static final Resource VelocityFormatter = resource( "VelocityFormatter" );
+
+	public static final Property authKey = property( "authKey" );
     
     private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }
@@ -79,7 +81,6 @@ public class EXTRAS
     private static Resource resource( String local )
         { return ResourceFactory.createResource( EXTRA + local ); }
     }
-
     
 /*
     (c) Copyright 2010 Epimorphics Limited
