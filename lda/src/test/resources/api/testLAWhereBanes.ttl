@@ -45,7 +45,7 @@ ex:school_2
 
 <http://dummy/doc/schools/laWhere/BANES>
       a       api:ListEndpoint ;
-      dct:hasPart <http://dummy/doc/schools/laWhere/BANES?_page=0> ;
+      dct:hasPart <http://dummy/doc/schools/laWhere/BANES?_page=0&_mark=yes> ;
       api:definition <http://dummy/doc/schools/laWhere/_name/meta> .
 
 ex:school_52
@@ -76,14 +76,14 @@ ex:school_4
       ex:name "Name4" ;
       ex:size 100 .
 
-<http://dummy/doc/schools/laWhere/BANES?_page=0>
+<http://dummy/doc/schools/laWhere/BANES?_page=0&_mark=yes>
       a       api:Page ;
       os:itemsPerPage "10"^^xsd:long ;
       os:startIndex "1"^^xsd:long ;
       dct:isPartOf <http://dummy/doc/schools/laWhere/BANES> ;
       api:definition <http://dummy/doc/schools/laWhere/_name/meta> ;
       api:extendedMetadataVersion
-              <http://dummy/doc/schools/laWhere/BANES?_page=0&_metadata=all> ;
+              <http://dummy/doc/schools/laWhere/BANES?_page=0&_mark=yes&_metadata=all> ;
       api:items (ex:school_1 ex:school_100 ex:school_2 ex:school_3 ex:school_4 ex:school_49 ex:school_5 ex:school_50 ex:school_51 ex:school_52) ;
       api:page "0"^^xsd:long ;
       xhv:first <http://dummy/doc/schools/laWhere/BANES?_page=0> ;

@@ -31,18 +31,6 @@ ex:school_38
       ex:size 400 ;
       ex:type ex:Primary .
 
-<http://dummy/doc/schools/size/400?_page=0>
-      a       api:Page ;
-      os:itemsPerPage "10"^^xsd:long ;
-      os:startIndex "1"^^xsd:long ;
-      dct:isPartOf <http://dummy/doc/schools/size/400> ;
-      api:definition <http://dummy/doc/schools/size/_size/meta> ;
-      api:extendedMetadataVersion
-              <http://dummy/doc/schools/size/400?_page=0&_metadata=all> ;
-      api:items (ex:school_40 ex:school_39 ex:school_38 ex:school_37 ex:school_36 ex:school_35 ex:school_34 ex:school_33 ex:school_32) ;
-      api:page "0"^^xsd:long ;
-      xhv:first <http://dummy/doc/schools/size/400?_page=0> .
-
 ex:school_37
       a       school-ont:School ;
       school-ont:localAuthority
@@ -93,8 +81,20 @@ ex:school_40
 
 <http://dummy/doc/schools/size/400>
       a       api:ListEndpoint ;
-      dct:hasPart <http://dummy/doc/schools/size/400?_page=0> ;
+      dct:hasPart <http://dummy/doc/schools/size/400?_page=0&_mark=yes> ;
       api:definition <http://dummy/doc/schools/size/_size/meta> .
+
+<http://dummy/doc/schools/size/400?_page=0&_mark=yes>
+      a       api:Page ;
+      os:itemsPerPage "10"^^xsd:long ;
+      os:startIndex "1"^^xsd:long ;
+      dct:isPartOf <http://dummy/doc/schools/size/400> ;
+      api:definition <http://dummy/doc/schools/size/_size/meta> ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/schools/size/400?_page=0&_mark=yes&_metadata=all> ;
+      api:items (ex:school_40 ex:school_39 ex:school_38 ex:school_37 ex:school_36 ex:school_35 ex:school_34 ex:school_33 ex:school_32) ;
+      api:page "0"^^xsd:long ;
+      xhv:first <http://dummy/doc/schools/size/400?_page=0> .
 
 ex:school_32
       a       school-ont:School ;
