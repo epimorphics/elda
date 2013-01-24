@@ -154,6 +154,8 @@ public class ContextQueryUpdater implements ViewSetter {
 			vs.setViewByProperties(val);
 		} else if (p.equals(QueryParameter._VIEW) || p.equals( QueryParameter._TEMPLATE )) {
 			// already done
+		} else if (p.equals( QueryParameter._MARK)) {
+			// ignored
 		} else if (p.equals(QueryParameter._SUBJECT)) {
 		    aq.setSubjectAsItemEndpoint(val);
 		} else if (p.equals( QueryParameter.callback )) {

@@ -185,7 +185,12 @@ public class APIEndpointImpl implements APIEndpoint {
     //
         String x = adjustPageParameter( rsm, pageBase, page ).getURI();
         URI noView = URIUtils.replaceQueryParam( URIUtils.newURI( x ), QueryParameter._VIEW );
-        Resource thisPage = rsm.createResource( noView.toString() ) ; 
+        
+        Resource thisPage = rsm.createResource( noView.toString() ) ;         
+        
+        if (rsm.containsResource( thisPage ) || true) {
+        	thisPage = rsm.createResource( URIUtils.replaceQueryParam( URIUtils.newURI( thisPage.getURI() ), QueryParameter._MARK, "yes" ).toString() );
+        }
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( API.definition, uriForDefinition );
