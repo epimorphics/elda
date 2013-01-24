@@ -167,9 +167,9 @@ public class APIEndpointImpl implements APIEndpoint {
     
 	private void insertResultSetRoot( APIResultSet rs, URI ru, String format, Bindings b, APIQuery query ) {
 		boolean suppress_IPTO = b.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
-		boolean exceptionIfEmpty = b.getAsString( "_exceptionIfEmpty", "no" ).equals( "yes" );
+		boolean exceptionIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
 	//
-		if (rs.isEmpty() && exceptionIfEmpty) EldaException.NoItemFound();
+		if (rs.isEmpty() && exceptionIfEmpty && !isListEndpoint()) EldaException.NoItemFound();
 	//
 		Model rsm = rs.getModel();
         int page = query.getPageNumber();
@@ -179,7 +179,7 @@ public class APIEndpointImpl implements APIEndpoint {
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
     //
         URI pageBase = URIUtils.changeFormatSuffix(ru, formatNames, "");
-    //  
+    //        
         Resource uriForDefinition = rsm.createResource( createDefinitionURI( pageBase, uriForSpec, template, b.expandVariables( template ) ) ); 
     //
         String x = adjustPageParameter( rsm, pageBase, page ).getURI();
