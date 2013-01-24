@@ -170,6 +170,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		boolean exceptionIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
 	//
 		if (rs.isEmpty() && exceptionIfEmpty && !isListEndpoint()) EldaException.NoItemFound();
+		rs.setContentLocation( ru );
 	//
 		Model rsm = rs.getModel();
         int page = query.getPageNumber();
@@ -216,12 +217,10 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		.addProperty( API.definition, uriForDefinition ) 
 	    		.addProperty( RDF.type, API.ListEndpoint )
 	    		;
-    		rs.setContentLocation( pageBase );
         } else {
 			Resource content = rs.getResultList().get(0);
 			thisPage.addProperty( FOAF.primaryTopic, content );
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
-			rs.setContentLocation( unPagedURI );
 		}
         EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, b, pageBase, formatNames );
         createOptionalMetadata(rs, query, em);   
