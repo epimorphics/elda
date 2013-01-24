@@ -6,10 +6,18 @@
 */
 package com.epimorphics.lda.renderers;
 
+//import java.io.IOException;
+//import java.io.StringWriter;
+//import java.io.Writer;
+
+//import org.apache.xml.serialize.OutputFormat;
+//import org.apache.xml.serialize.XMLSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+//import sun.org.mozilla.javascript.internal.WrappedException;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.epimorphics.util.DOMUtils;
@@ -61,7 +69,21 @@ public class XMLRenderer implements Renderer {
 		result.setAttribute( "format", "linked-data-api" );
 		result.setAttribute( "version", "0.2" );
 		r.addResourceToElement( result, root );
-		d.appendChild( result );
+		d.appendChild( result );            
+	//
+//		OutputFormat format = new OutputFormat(d);
+//        format.setLineWidth(65);
+//        format.setIndenting(true);
+//        format.setIndent(2);
+//        Writer out = new StringWriter();
+//        XMLSerializer serializer = new XMLSerializer(out, format);
+//        try {
+//			serializer.serialize(d);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			throw new WrappedException(e);
+//		}
+//        System.err.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>\n" + out.toString() );
 	}
 	
 }

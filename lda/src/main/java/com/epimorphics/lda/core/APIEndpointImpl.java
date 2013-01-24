@@ -177,9 +177,14 @@ public class APIEndpointImpl implements APIEndpoint {
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
-        URI pageBase = URIUtils.changeFormatSuffix(ru, formatNames, format);
+    //
+        URI pageBase = URIUtils.changeFormatSuffix(ru, formatNames, "");
+    //  
         Resource uriForDefinition = rsm.createResource( createDefinitionURI( pageBase, uriForSpec, template, b.expandVariables( template ) ) ); 
-        Resource thisPage = adjustPageParameter( rsm, pageBase, page );
+    //
+        String x = adjustPageParameter( rsm, pageBase, page ).getURI();
+        URI noView = URIUtils.replaceQueryParam( URIUtils.newURI( x ), QueryParameter._VIEW );
+        Resource thisPage = rsm.createResource( noView.toString() ) ; 
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( API.definition, uriForDefinition );

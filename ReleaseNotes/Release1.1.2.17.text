@@ -1,0 +1,29 @@
+Elda 1.2.17
+
+The default for the behaviour of _exceptionIfEmpty has changed.
+Elda will by default return a 404 for items that are not
+found or lists that are empty.
+
+Elda used to rejected requests for application/xml in the Accept:
+header, and accept requests for text/xml which were answered with
+content with media type application/xml.
+
+Elda now accepts both text/xml and application/xml, and respond
+with whichever content type it was asked for. The XML content is
+identical.
+
+Various complications in the XML and JSON rendering, to do with
+at which position in the tree proprties were attached for URIs
+that appeared in more than one place in the tree, have been
+simplified by making the root resource different from any
+URI with an explicit .formattingsuffix or _view query parameter.
+This removes odd behaviour with the XSLT renderer [1]. The
+"making different" is done by removing any .suffix or _view
+from that root URI.
+
+
+[1] EG the XSLT renderer's list of available formatters would
+include the current view name (if there was one) and formatter
+name (ditto) or both, concatenated; or selecting a view from
+the right-column View menu would replace its name with "default".
+

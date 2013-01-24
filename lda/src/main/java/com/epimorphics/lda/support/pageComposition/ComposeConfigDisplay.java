@@ -71,12 +71,16 @@ public class ComposeConfigDisplay {
 	    //  
 			renderComments( textBody, root );
 	        Statement ep = root.getProperty( API.sparqlEndpoint );
-	        h3( textBody, "SPARQL endpoint for queries" );
-	        textBody
-	            .append( "<div style='margin-left: 2ex; background-color: #dddddd'>" )
-	            .append( safe( ep.getResource().getURI() ) )
-	            .append( "</div>" )
-	            ;
+	        
+	        // SUPPRESS for now -- issue about escaping endpoint.
+	        
+//	        h3( textBody, "SPARQL endpoint for queries" );
+//	        textBody
+//	            .append( "<div style='margin-left: 2ex; background-color: #dddddd'>" )
+//	            .append( safe( ep.getResource().getURI() ) )
+//	            .append( "</div>" )
+//	            ;
+	        
 	        textBody.append( "<h2>endpoints</h2>\n" );
 	        Collections.sort( endpoints, sortByEndpointURITemplate );
 			for (APIEndpointSpec s: endpoints) renderEndpoint( textBody, w, base, pathstub, pm, s );  
