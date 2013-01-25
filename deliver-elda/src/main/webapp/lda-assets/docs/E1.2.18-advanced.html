@@ -15,7 +15,7 @@
 <h2>An implementation of the Linked Data API</h2>
 </div>
 
-<h1>Beyond the stand-alone jar</h1>
+<h1><a name="beyond"></a>Beyond the stand-alone jar</h1>
 
 <p>
 The Elda standalone jar is just a delivery mechanism for getting
@@ -43,9 +43,9 @@ The demo jar is given the name <i>elda-standalone-VERSION.jar</i>
 by the "mvn install" process.
 </p>
 
-<h2>Anatomy of the standalone web.xml</h2>
+<h2><a name="anatomy"></a>Anatomy of the standalone web.xml</h2>
 
-<h3>The Elda servlet</h3>
+<h3><a name="servlet"></a>The Elda servlet</h3>
 
 <pre>
 &lt;servlet>
@@ -70,7 +70,7 @@ by the "mvn install" process.
 	<code>RouterRestlet</code> from that package.
 </p>
 
-<h3>Invoking the servlet</h3>
+<h3><a name="invoking"></a>Invoking the servlet</h3>
 
 <pre>
 &lt;servlet-mapping>
@@ -85,7 +85,7 @@ by the "mvn install" process.
 	this is set up.)
 </p>
 
-<h3>Assets</h3>
+<h3><a name="assets"></a>Assets</h3>
 
 <pre>
 &lt;servlet-mapping>
@@ -100,7 +100,7 @@ by the "mvn install" process.
 </p>
 
 
-<h3>URL rewriting</h3>
+<h3><a name="rewriting"></a>URL rewriting</h3>
 
 <p>
 	URL paths handled by the Elda webapp are first rewritten using
@@ -151,7 +151,7 @@ by the "mvn install" process.
 &lt;/urlrewrite>
 </pre>
 
-<h3>Loading the LDA configuration</h3>
+<h3><a name="loading-config"></a>Loading the LDA configuration</h3>
 
 <p>
 	The LDA configurations that are to be part of this webapp
@@ -207,7 +207,7 @@ by the "mvn install" process.
 	by the local name(s) of the API resouce(s) in the spec.
 </p>
 
-<h1>Restrictions on shortname selection</h1>
+<h1><a name="shortname-restrictions"></a>Restrictions on shortname selection</h1>
 
 <p>
     In an (E)lda configuration file, the configurer may define 
@@ -263,7 +263,7 @@ by the "mvn install" process.
 
 </table>
 
-<h1>Velocity template rendering</h1>
+<h1><a name="velocity"></a>Velocity template rendering</h1>
 
 <p>
     This release of Elda includes the ability to use 
@@ -646,9 +646,9 @@ by the "mvn install" process.
 </table>
 
 
-<h1>Additional Elda features</h1>
+<h1><a name="additional-elda-features"></a>Additional Elda features</h1>
 
-<h2>Configuration variables</h2>
+<h2><a name="variables"></a>Configuration variables</h2>
 
 <p>
     Elda reserves LDA variable names that begin "_" for
@@ -716,7 +716,7 @@ by the "mvn install" process.
     </li>
 </ul>
 
-<h2>wildcard '*' in view property chains</h2>
+<h2><a name="wildcard-properties"></a>wildcard '*' in view property chains</h2>
 
 <p>
     A property chain appearing in a view specification
@@ -726,7 +726,7 @@ by the "mvn install" process.
     anywhere within the chain.
 </p>
 
-<h2>api:base</h2>
+<h2><a name="api-base"></a>api:base</h2>
 
 <p>
     An LDA configuration may specify an api:base property.
@@ -740,7 +740,7 @@ by the "mvn install" process.
     at location B (from which it may have been redirected).
 </p>
 
-<h2>elda:describeAllLabel</h2>
+<h2><a name="describe-all-label"></a>elda:describeAllLabel</h2>
 
 <p>
     If a new viewer is declared with the property
@@ -750,7 +750,7 @@ by the "mvn install" process.
     that property rather than <code>rdfs:label</code>.
 </p>
 
-<h2>elda:allowedReserved</h2>
+<h2><a name="allow-reserved"></a>elda:allowedReserved</h2>
 
 <b>Experimental</b>: may be revised or removed.
 
@@ -773,7 +773,7 @@ by the "mvn install" process.
     to one endpoint affect only that endpoint. 
 </p>
 
-<h2>etag generation</h2>
+<h2><a name="etags"></a>etag generation</h2>
 
 <b>Experimental</b>: may be revised or removed.
 
@@ -794,7 +794,7 @@ by the "mvn install" process.
     <li>the content of the model</li>
 </ul>
 
-<h2>item template fallback</h2>
+<h2><a name="item-template-fallback"></a>item template fallback</h2>
 
 <p>
     If an inbound URI does not match any of the uriTemplates
@@ -808,7 +808,7 @@ by the "mvn install" process.
 </p>
 
 
-<h2>SPARQL 1.1 features</h2>
+<h2><a name="sparql-1.1-features"></a>SPARQL 1.1 features</h2>
 
 <p>
     Some generated queries -- those that have view defined by
@@ -832,7 +832,7 @@ by the "mvn install" process.
     to see if nested selects work.)
 </p>
 
-<h2>DESCRIBE thresholds</h2>
+<h2><a name="describe-thresholds"></a>DESCRIBE thresholds</h2>
 
 <p>
     Support for nested selects applies to DESCRIBE queries as well,
@@ -859,7 +859,7 @@ by the "mvn install" process.
     of Elda according to reported experience.)
 </p>
 
-<h2>configuration rendering</h2>
+<h2><a name="configuration-rendering"></a>configuration rendering</h2>
 
 <p>
     Elda provides the api:base-relative URI path <code>/api-config</code>.
@@ -880,7 +880,7 @@ by the "mvn install" process.
     are already opened.
 </p>
 
-<h2>Formatting extensions</h2>
+<h2><a name="formatting-extensions"><a/>Formatting extensions</h2>
 
 <p>
 If the object of an <code>api:stylesheet</code> directive starts
@@ -900,7 +900,7 @@ result set.
 </p>
 
 
-<h2>statistics</h2>
+<h2><a name="staistics"></a>statistics</h2>
 
 <p>
     The api:base-relative URI path <code>/control/show-stats</code> displays
@@ -950,7 +950,7 @@ result set.
     the rendering format (ie JSON/XML/HTML ...).
 </p>
 
-<h2>Cache</h2>
+<h2><a name="cache"></a>Cache</h2>
 
 <p>
 Elda caches the results of queries so that they may be re-served
@@ -958,7 +958,7 @@ quickly. When the cache gets "too full", it is reset. "Too full"
 by default is measured by the number of triples in the cache.
 </p>
 
-<h2>Using Elda directly</h2>
+<h2><a name="using-elda-from-java"></a>Using Elda directly</h2>
 
 <p>You don't need to go through a servlet (or restlet)
 framework to exploit Elda. You can call the components
@@ -1059,7 +1059,7 @@ type for the renderer's result.
 </p>
 
 
-<h2>Building Elda</h2>
+<h2><a name="building-elda"></a>Building Elda</h2>
 
 <p>
   Prerequisites: 
@@ -1111,7 +1111,7 @@ hg tags
 and selecting a tag that looks like <code>elda-1.X.Y</code>;
 that is the shape of tag generated by the Elda release process.
 </p>
-<h1>Accepted content types</h1>
+<h1><a name="accepted-content-types"></a>Accepted content types</h1>
 
 <p>
 Elda accepts the following content types by default.
