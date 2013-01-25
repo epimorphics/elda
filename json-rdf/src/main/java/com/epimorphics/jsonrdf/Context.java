@@ -188,6 +188,7 @@ public class Context implements Cloneable {
             uriToProp.put(uri, prop);
         }
         if (res.hasProperty( RDF.type, API.Multivalued)) prop.setMultivalued(true);
+        if (res.hasProperty( API.multiValued, Literal_TRUE )) prop.setMultivalued(true);
         if (res.hasProperty( API.structured, Literal_TRUE ) ) prop.setStructured( true );
         if (res.hasProperty( RDF.type, API.Hidden)) prop.setHidden(true);
         if (res.hasProperty( RDF.type, OWL.ObjectProperty)) prop.setType(OWL.Thing.getURI());
