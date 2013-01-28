@@ -1129,8 +1129,9 @@ Elda accepts the following content types by default.
     </li>
     <li>application/json: model rendered as JSON.
     </li>
-    <li>text/xml;
-        model rendered as XML.
+    <li>text/xml, application/xml:
+		model rendered as XML with whichever content type was
+		asked for. (The renderings are identical.)
     </li>
     <li>text/html:
         model rendered by stylesheet applied to XML rendering.
