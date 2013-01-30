@@ -383,20 +383,20 @@ public class View {
 	}
 
 	private String describeBySelectedItems(State s, List<Resource> allRoots) {
+		String query = createDescribeQueryForItems( s.m, allRoots );
+		Query describeQuery = QueryFactory.create( query );
+		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
+		return query.toString();
+	}
+
+	public static String createDescribeQueryForItems( PrefixMapping pm, List<Resource> allRoots ) {
 		StringBuilder describe = new StringBuilder();
-		List<List<Resource>> chunks = chunkify( allRoots );
-		for (List<Resource> roots: chunks) {
-			PrefixLogger pl = new PrefixLogger( s.m );
-			describe.setLength(0);
-			describe.append( "DESCRIBE" );
-			for (Resource r: new HashSet<Resource>( roots )) { // TODO
-				describe.append( "\n  " ).append( pl.present( r.getURI() ) );
-			}
-			String query = pl.writePrefixes( new StringBuilder() ).toString() + describe;
-			Query describeQuery = QueryFactory.create( query );
-			for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
-		}
-		return describe.toString();
+		PrefixLogger pl = new PrefixLogger( pm );
+		describe.append( "DESCRIBE" );
+		for (Resource r: new HashSet<Resource>( allRoots )) 
+			describe.append( "\n  " ).append( pl.present( r.getURI() ) );
+		String query = pl.writePrefixes( new StringBuilder() ).toString() + describe;
+		return query;
 	}
 
 	private String describeByNestedSelect( State s ) {
@@ -418,7 +418,7 @@ public class View {
 			;
 		Query describeQuery = QueryFactory.create( query );
 		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
-		return describe.toString();
+		return query.toString();
 	}		
 	
 	static final int CHUNK_SIZE = 1000;
