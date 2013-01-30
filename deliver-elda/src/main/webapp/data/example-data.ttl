@@ -65,6 +65,7 @@
 <http://www.hans-im-glueck.de/euphrat-tigris> a hello:BoardGame
 	; rdfs:label "Tigris and Euphrates"@en
 	; hello:players 2, 3, 4
+	; hello:title "Tigris & Euphrates"
 	.
 	
 <http://www.hans-im-glueck.de/el-grande> a hello:BoardGame
