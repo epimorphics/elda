@@ -19,6 +19,8 @@
 # Prefix for example-local entities.
 @prefix hello:				<http://localhost:8080/elda/vocabulary/>.
 
+@prefix hig:				<http://www.hans-im-glueck.de/> .
+
 # ---------------------------------------------------------------------
 # API config
 
