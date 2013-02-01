@@ -13,11 +13,13 @@ import org.w3c.dom.Element;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
+import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.lda.support.CycleFinder;
+//import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.vocabs.API;
 
 /**
@@ -94,7 +96,7 @@ public class XMLRendering {
 	private Resource itemsResource = null;
 	
 	private final Set<Resource> dontExpand = new HashSet<Resource>();
-	private final Set<Resource> cyclicOrSelected = new HashSet<Resource>();
+	// private final Set<Resource> cyclicOrSelected = new HashSet<Resource>();
 	
 	/** if true, property values will appear in sorted order */
 	private final boolean sortPropertyValues = true;
@@ -117,16 +119,45 @@ public class XMLRendering {
 		as having been "seen", ie they are not expanded, except at their
 		appearance in the items list. Otherwise cyclic items are expanded
 		on their first encounter in a top-down left-to-right-sorted walk
-		of the graph,
+		of the graph.
 		</p>
-	 */
-	public Element addResourceToElement( Element e, Resource x ) {
+	*/
+	public Element addResourceToElement( Element e, Resource x, MergedModels mm ) {
+				
 		itemsResource = getItemsResource( x );
 		Set<RDFNode> selectedItems = getItemsList( itemsResource );
+		
+//		System.err.println( ">> object model is:" ); mm.getObjectModel().write( System.err, "TTL" );
+//		System.err.println( ">> meta   model is:" ); mm.getMetaModel().write( System.err, "TTL" );
+		
+		
 		for (RDFNode m: selectedItems) dontExpand.add( m.asResource() );
-		cyclicOrSelected.addAll( CycleFinder.findCycles( x ) );
-		cyclicOrSelected.addAll( dontExpand );
-		return elementAddResource( e, x, false );
+		
+		Resource xInObjectModel = x.inModel(mm.getObjectModel() );
+		
+		Resource xInMetaModel = x.inModel(mm.getMetaModel() );
+	//
+	// This is the top-level expansion: we know which properties are meta-data
+	// and which are not. We expand the items separately from the rest of the
+	// properties.	
+	//
+		addIdentification( e, x );
+		dontExpand.add( x );
+	//
+//		List<Property> objectProperties = asSortedList( xInObjectModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+	//
+		// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
+		Trail t2 = new Trail();
+		t2.see(xInMetaModel);
+	//	
+		Trail t = new Trail();
+		addPropertyValues( t, e, xInObjectModel, API.items, false );		
+	//
+		for (Property p: metaProperties)			
+			addPropertyValues( t2, e, xInMetaModel, p, false );
+	//
+		return e;
 	}
 
 	// Answer a List of all the items hanging off the RDF list
@@ -146,31 +177,52 @@ public class XMLRendering {
 		return sit.hasNext() ? sit.next().getResource() : null;
 	}
 	
+	static class Trail {
+		
+		final Set<Resource> seen = new HashSet<Resource>();
+		
+		boolean unseen( Resource x ) {
+			return !seen.contains( x );
+		}
+		
+		void see( Resource x ) {
+			seen.add( x );
+		}
+		
+		void unsee( Resource x ) {
+			seen.remove( x );
+		}		
+		
+		@Override public String toString() {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < seen.size(); i += 1) sb.append( "  " );
+			for (Resource x: seen) sb.append( " " ).append( nice( x ) );
+			return sb.toString();
+		}
+		
+		public String nice( Resource x ) {
+			if (x.isAnon()) return "__";
+			String s = x.getModel().shortForm( x.getURI() );
+			return s == null || s.equals(x.getURI())? x.getLocalName() : s;
+		}
+	}
+	
 	/**
 	    Add a resource <code>x</code> to the DOM element <code>e</code>.
-	    x's properties are added to e if:
 	    
-	    <ul>
-	    	<li>
-	    		x is not involved in a cycle, and x is not a selected item.
-	    	</li>
-	    	<li>
-	    		x is cyclic (or a selected item) which hasn't already been
-	    		encountered and marked as dontExpand (which selected items are).
-	    	</li>
-	    	<li>
-	    		We've been told to expand it regardless, because this is a selected
-	    		item appearing in the selected-items list.
-	    	</li>
-	    </ul>
 	*/
-	private Element elementAddResource( Element e, Resource x, boolean expandRegardless ) {
+	
+	private Element elementAddResource( Trail t, Element e, Resource x, boolean expandRegardless ) {
 		addIdentification( e, x );
-		if (!cyclicOrSelected.contains( x ) || dontExpand.add( x ) || expandRegardless) {
+						
+		if (t.unseen( x ) || expandRegardless) {
+			t.see(x);
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
-			if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
-			for (Property p: properties) addPropertyValues( e, x, p, false );		
-		}
+			// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
+			for (Property p: properties) addPropertyValues( t, e, x, p, false );		
+			t.unsee( x );
+		}		
+		
 		return e;
 	}
 
@@ -187,19 +239,19 @@ public class XMLRendering {
 	/**
 	    Attach a value to a property element.
 	*/
-	private Element giveValueToElement( Element pe, RDFNode v, boolean expandRegardless ) {
+	private Element giveValueToElement( Trail t, Element pe, RDFNode v, boolean expandRegardless ) {
 		if (v.isLiteral()) {
 			addLiteralToElement( pe, (Literal) v );
 		} else {
 			Resource r = v.asResource();
 			if (inPlace( r )) {
 				addIdentification( pe, r );
-				if (expandRegardless) elementAddResource( pe, r, expandRegardless );
+				if (expandRegardless) elementAddResource( t, pe, r, expandRegardless );
 			} else if (RDFUtil.isList( r )) {
 				for (RDFNode item: RDFUtil.asJavaList( r ) ) 
-					appendValueAsItem( pe, item, r.equals(itemsResource) );
+					appendValueAsItem( t, pe, item, r.equals(itemsResource) );
 			} else if (r.listProperties().hasNext()) 
-				elementAddResource( pe, r, expandRegardless );
+				elementAddResource( t, pe, r, expandRegardless );
 			else if (v.isAnon()) {
 				if (needsId( v )) pe.setAttribute( "id", idFor( pe, r ) );
 			} else {
@@ -213,6 +265,20 @@ public class XMLRendering {
 		List<Property> properties = new ArrayList<Property>( set );
 		Collections.sort( properties, new Comparator<Property>() {
             @Override public int compare(Property a, Property b) {
+            	
+//            	System.err.println( ">> a " + a.getURI() );
+            	String x = nameMap.get( a.getURI() );
+            	if (x == null) {
+            		x = a.getLocalName();
+            		System.err.println( ">> " + a.getURI() + " had to be forced to " + x );
+            	}
+
+//            	System.err.println( ">> b " + b.getURI() );
+            	String y = nameMap.get( b.getURI() );
+            	if (y == null) y = a.getLocalName();
+            	
+            	if (true) return x.compareTo( y );
+            	
                 return nameMap.get( a.getURI() ).compareTo( nameMap.get( b.getURI() ) );
             }
         	} );
@@ -241,24 +307,33 @@ public class XMLRendering {
 		return shorter == null ? r.getLocalName() : shorter;
 	}
 
-	private void addPropertyValues( Element e, Resource x, Property p, boolean expandRegardless ) {
-		// System.err.println( ">> add property values for " + p );
-		// System.err.println( ">> name: " + shortNameFor(p) + " for " + p );
+	private void addPropertyValues( Trail t, Element e, Resource x, Property p, boolean expandRegardless ) {
+//		 System.err.println( ">> add property values for " + p );
+//		System.err.println( ">> addPropertyValues for " + shortNameFor(p) );
+		
+//		System.err.println( ">> short name is " + shortNameFor( p ) + " for " + p );
+		
 		Element pe = d.createElement( shortNameFor( p ) );
 		// System.err.println( ">> pe := " + pe );
 		e.appendChild( pe );
 		// System.err.println( ">> e := " + e );
-		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();
+		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();		
+		
+//		if (p.equals( DCTerms.hasVersion)) {
+//			System.err.println( ">> hasVersion: " + values.size() );
+//			for (RDFNode v: values) System.err.println( ">>    " + v + ", " + (t.unseen(v.asResource()) ? "UNSEEN" : "SEEN") );
+//		}
+		
 		if (values.size() > 1 || isMultiValued( p )) {
-			for (RDFNode value: sortObjects( values )) appendValueAsItem(pe, value, expandRegardless);
+			for (RDFNode value: sortObjects( values )) appendValueAsItem(t, pe, value, expandRegardless);
 		} else if (values.size() == 1) {
-			giveValueToElement( pe, values.iterator().next(), expandRegardless );
+			giveValueToElement( t, pe, values.iterator().next(), expandRegardless );
 		}
 	}
 
-	private void appendValueAsItem( Element pe, RDFNode value, boolean expandRegardless ) {
+	private void appendValueAsItem( Trail t, Element pe, RDFNode value, boolean expandRegardless ) {
 		Element item = d.createElement( "item" );
-		giveValueToElement( item, value, expandRegardless );
+		giveValueToElement( t, item, value, expandRegardless );
 		pe.appendChild( item );
 	}
 
@@ -292,7 +367,9 @@ public class XMLRendering {
 	}
 	
 	private String shortNameFor( String URI ) {
-		return nameMap.get( URI );
+		String s = nameMap.get( URI );
+		if (s == null) s = URI.replaceFirst( ".*[#/]",  "" );
+		return s;
 	}
 
 	final Map<AnonId, String> idMap = new HashMap<AnonId, String>();

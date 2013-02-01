@@ -35,7 +35,7 @@ public class TurtleRenderer implements Renderer {
     	return new BytesOutTimed() {
 
 			@Override public void writeAll(OutputStream os) {
-				results.getModel().write( os, "TTL" );
+				results.getMergedModel().write( os, "TTL" );
 			}
 
 			@Override protected String getFormat() {

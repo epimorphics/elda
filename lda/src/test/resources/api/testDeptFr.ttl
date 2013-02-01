@@ -15,22 +15,18 @@
 @prefix doap:    <http://usefulinc.com/ns/doap#> .
 @prefix xhv:     <http://www.w3.org/1999/xhtml/vocab#> .
 
-<http://dummy/doc/deptsFr?_page=0&_mark=yes>
-      a       api:Page ;
+<http://dummy/doc/deptsFr>
+      a       api:Page , api:ListEndpoint ;
       os:itemsPerPage "10"^^xsd:long ;
       os:startIndex "1"^^xsd:long ;
+      dct:hasPart <http://dummy/doc/deptsFr> ;
       dct:isPartOf <http://dummy/doc/deptsFr> ;
       api:definition <http://dummy/doc/deptsFr/meta> ;
       api:extendedMetadataVersion
-              <http://dummy/doc/deptsFr?_page=0&_mark=yes&_metadata=all> ;
+              <http://dummy/doc/deptsFr?_metadata=all> ;
       api:items (ex:dept4 ex:dept1) ;
       api:page "0"^^xsd:long ;
       xhv:first <http://dummy/doc/deptsFr?_page=0> .
-
-<http://dummy/doc/deptsFr>
-      a       api:ListEndpoint ;
-      dct:hasPart <http://dummy/doc/deptsFr?_page=0&_mark=yes> ;
-      api:definition <http://dummy/doc/deptsFr/meta> .
 
 ex:dept4
       a       school-ont:Department ;

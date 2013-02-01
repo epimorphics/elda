@@ -35,7 +35,7 @@ public class TestQueryTemplate {
 			, new Bindings()
 			, v
 			);
-		ModelTestBase.assertIsoModels( expectedModel(), rs.getModel() );
+		ModelTestBase.assertIsoModels( expectedModel(), rs.getMergedModel() );
 	}
 	
 	private Model expectedModel() {

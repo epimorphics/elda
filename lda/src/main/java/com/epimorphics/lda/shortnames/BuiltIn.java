@@ -41,7 +41,7 @@ public class BuiltIn {
 			.addProperty(RDFS.range, RDFS.Resource)
 			;
 		propertyShortname(RDFS.label.inModel(result))
-			.addProperty(RDF.type, API.Multivalued)
+			// mini.addProperty(RDF.type, API.Multivalued)
 			;
 		propertyShortname(RDFS.comment.inModel(result))
 			.addProperty(RDF.type, API.Multivalued)

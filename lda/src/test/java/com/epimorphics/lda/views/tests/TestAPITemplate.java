@@ -120,7 +120,7 @@ public class TestAPITemplate {
 		URI ru = URIUtils.newURI( "/this" );
 		Bindings cc = Bindings.createContext( bindTemplate( epBindings, "/this", "/path", map ), map );
 		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( controls, ru, cc );
-		Model rsm = resultsAndFormat.a.getModel();
+		Model rsm = resultsAndFormat.a.getMergedModel();
 		
 		Model obtained = ModelFactory.createDefaultModel();
 		obtained.add( rsm );

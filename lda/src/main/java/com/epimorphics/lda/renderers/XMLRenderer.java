@@ -6,12 +6,11 @@
 */
 package com.epimorphics.lda.renderers;
 
-//import java.io.IOException;
-//import java.io.StringWriter;
-//import java.io.Writer;
-
-//import org.apache.xml.serialize.OutputFormat;
-//import org.apache.xml.serialize.XMLSerializer;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -25,6 +24,7 @@ import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
 
@@ -56,19 +56,18 @@ public class XMLRenderer implements Renderer {
 
 	@Override public synchronized Renderer.BytesOut render( Times t, Bindings rc, APIResultSet results ) {
 		Resource root = results.getRoot();
-		PrefixMapping pm = root.getModel();
 		boolean suppressIPTO = rc.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		Document d = DOMUtils.newDocument();
-		renderInto( root, d, suppressIPTO );
-		return DOMUtils.renderNodeToBytesOut( t, d, rc, pm, transformFilePath );
+		renderInto( root, results.getModels(), d, suppressIPTO );
+		return DOMUtils.renderNodeToBytesOut( t, d, rc, results.getModelPrefixes(), transformFilePath );
 	}
 
-	public void renderInto( Resource root, Document d, boolean suppressIPTO ) {
+	public void renderInto( Resource root, MergedModels mm, Document d, boolean suppressIPTO ) {
 		XMLRendering r = new XMLRendering( root.getModel(), sns, suppressIPTO, d );
 		Element result = d.createElement( "result" );
 		result.setAttribute( "format", "linked-data-api" );
 		result.setAttribute( "version", "0.2" );
-		r.addResourceToElement( result, root );
+		r.addResourceToElement( result, root, mm );
 		d.appendChild( result );            
 	//
 //		OutputFormat format = new OutputFormat(d);

@@ -30,7 +30,7 @@ public class VelocityCore {
 
 	public void render( APIResultSet results, OutputStream os ) {
 		Resource thisPage = results.getRoot();
-		Model m = results.getModel();
+		Model m = results.getMergedModel();
 		IdMap ids = new IdMap();
 		ShortNames names = Help.getShortnames( m );
 		boolean isItemEndpoint = thisPage.hasProperty(FOAF.primaryTopic);

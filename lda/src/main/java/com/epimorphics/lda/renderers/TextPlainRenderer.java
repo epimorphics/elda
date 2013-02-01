@@ -35,7 +35,7 @@ public final class TextPlainRenderer implements Renderer {
     	return new BytesOutTimed() {
 			
 			@Override public void writeAll(OutputStream os) {
-				results.getModel().write(os, "RDF/XML" );
+				results.getMergedModel().write(os, "RDF/XML" );
 			}
 
 			@Override protected String getFormat() {

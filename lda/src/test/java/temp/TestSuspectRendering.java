@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
@@ -23,12 +24,14 @@ public class TestSuspectRendering {
 		Resource root = m.createResource( "http://environment.data.gov.uk/def/bathing-water/BathingWater" );
 		
 		m.write( System.out, "TTL" );
+		
+		MergedModels mm = new MergedModels( m );
 
 		PrefixMapping pm = root.getModel();
 		ShortnameService sns = new StandardShortnameService();
 		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
-		xr.renderInto( root, d, false );
+		xr.renderInto( root, mm, d, false );
 		Node de = d.getDocumentElement(); // .getFirstChild();
 		String obt = DOMUtils.renderNodeToString( new Times(), de, pm );
 		System.err.println( ">> " + obt );

@@ -170,27 +170,39 @@ public class APIEndpointImpl implements APIEndpoint {
 		boolean exceptionIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
 	//
 		if (rs.isEmpty() && exceptionIfEmpty && !isListEndpoint()) EldaException.NoItemFound();
-		rs.setContentLocation( ru );
+		
 	//
-		Model rsm = rs.getModel();
+		Model rsm = rs.getModels().getMetaModel();
+		Model om = rs.getModels().getObjectModel();
+		
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
+        
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
     //
-        URI pageBase = URIUtils.changeFormatSuffix(ru, formatNames, "");
-    //        
-        Resource uriForDefinition = rsm.createResource( createDefinitionURI( pageBase, uriForSpec, template, b.expandVariables( template ) ) ); 
+        URI uriForList = withoutPageParameters( ru );
+        
+        Resource thisPage = rsm.createResource( ru.toString() ); // adjustPageParameter( rsm, ru, page );
+        
+        Resource thisObjectPage = thisPage.inModel( rs.getModels().getObjectModel() );
+        
+        // Resource thisPage = rsm.createResource( ru.toString() ); // rsm.createResource( uriForList.toString() ); // rsm.createResource( noView.toString() ) ;   
+       
     //
-        String x = adjustPageParameter( rsm, pageBase, page ).getURI();
-        URI noView = URIUtils.replaceQueryParam( URIUtils.newURI( x ), QueryParameter._VIEW );
+        rs.setContentLocation( URIUtils.changeFormatSuffix( ru, formatNames, format ) );
+    //        
+        Resource uriForDefinition = rsm.createResource( createDefinitionURI( uriForList, uriForSpec, template, b.expandVariables( template ) ) ); 
+    //
+        // String x = adjustPageParameter( rsm, pageBase, page ).getURI();
         
-        Resource thisPage = rsm.createResource( noView.toString() ) ;         
+        // URI noView = URIUtils.replaceQueryParam( URIUtils.newURI( x ), QueryParameter._VIEW );        
         
-        if (rsm.containsResource( thisPage ) || true) {
-        	thisPage = rsm.createResource( URIUtils.replaceQueryParam( URIUtils.newURI( thisPage.getURI() ), QueryParameter._MARK, "yes" ).toString() );
-        }
+//        if (rsm.containsResource( thisPage ) || true) {
+//        	thisPage = rsm.createResource( URIUtils.replaceQueryParam( URIUtils.newURI( thisPage.getURI() ), QueryParameter._MARK, "yes" ).toString() );
+//        }
+        
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( API.definition, uriForDefinition );
@@ -198,27 +210,37 @@ public class APIEndpointImpl implements APIEndpoint {
         URI emv_uri = URIUtils.replaceQueryParam( URIUtils.newURI(thisPage.getURI()), "_metadata", "all" );
         thisPage.addProperty( API.extendedMetadataVersion, rsm.createResource( emv_uri.toString() ) );
     //
-        URI unPagedURI = withoutPageParameters( pageBase );
+        // withoutPageParameters( uriForList );
         thisPage.addProperty( RDF.type, API.Page );
     //
         if (isListEndpoint()) {
-        	RDFList content = rsm.createList( rs.getResultList().iterator() );
+        	RDFList content = om.createList( rs.getResultList().iterator() );
         	thisPage
-	        	.addProperty( RDF.type, API.Page )
 	        	.addLiteral( API.page, page )
 	        	.addLiteral( OpenSearch.itemsPerPage, perPage )
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
-        	thisPage.addProperty( API.items, content );
-    		thisPage.addProperty( XHV.first, adjustPageParameter( rsm, pageBase, 0 ) );
-    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, adjustPageParameter( rsm, pageBase, page+1 ) );
-    		if (page > 0) thisPage.addProperty( XHV.prev, adjustPageParameter( rsm, pageBase, page-1 ) );
-			Resource listRoot = rsm.createResource( unPagedURI.toString() );
+        	
+        	thisObjectPage.addProperty( API.items, content );
+        	
+//        	thisPage.addProperty( XHV.first, adjustPageParameter( rsm, uriForList, 0 ) );
+//    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, adjustPageParameter( rsm, uriForList, page+1 ) );
+//    		if (page > 0) thisPage.addProperty( XHV.prev, adjustPageParameter( rsm, uriForList, page-1 ) );
+
+        	Resource firstPage = adjustPageParameter( rsm, ru, 0 );
+        	Resource nextPage = adjustPageParameter( rsm, ru, page + 1 );
+        	Resource prevPage = adjustPageParameter( rsm, ru, page - 1 );
+
+        	thisPage.addProperty( XHV.first, firstPage );
+    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, nextPage );
+    		if (page > 0) thisPage.addProperty( XHV.prev, prevPage );
+    		
+			Resource listRoot = rsm.createResource( uriForList.toString() );
     		thisPage
-	    		.addProperty( DCTerms.isPartOf, listRoot )
+	    		.addProperty( DCTerms.hasPart, listRoot )
 	    		;
     		listRoot
-	    		.addProperty( DCTerms.hasPart, thisPage )
+	    		.addProperty( DCTerms.isPartOf, thisPage )
 	    		.addProperty( API.definition, uriForDefinition ) 
 	    		.addProperty( RDF.type, API.ListEndpoint )
 	    		;
@@ -227,7 +249,7 @@ public class APIEndpointImpl implements APIEndpoint {
 			thisPage.addProperty( FOAF.primaryTopic, content );
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
 		}
-        EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint(), "" + page, b, pageBase, formatNames );
+        EndpointMetadata em = new EndpointMetadata( spec, thisPage, "" + page, b, uriForList, formatNames );
         createOptionalMetadata(rs, query, em);   
     }
 
@@ -248,7 +270,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    </p>
 	*/
 	private void createOptionalMetadata( APIResultSet rs, APIQuery query, EndpointMetadata em ) {
-		Model rsm = rs.getModel();
+		Model rsm = rs.getModels().getMetaModel();
 		Resource exec = rsm.createResource();
 		Model versions = ModelFactory.createDefaultModel();
 		Model formats = ModelFactory.createDefaultModel();

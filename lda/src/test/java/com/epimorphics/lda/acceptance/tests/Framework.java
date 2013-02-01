@@ -252,7 +252,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		URI ru = URIUtils.newURI(w.path);
 		Bindings cc = Bindings.createContext( bindTemplate( epBindings, w.template, w.path, map ), map );
 		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( controls, ru, cc );
-		Model rsm = resultsAndFormat.a.getModel();
+		Model rsm = resultsAndFormat.a.getMergedModel();
 //		System.err.println( ">> " + rs.getResultList() );				
 //		System.err.println( "||>> " + resultsAndFormat.a.getSelectQuery() );
 

@@ -222,5 +222,9 @@ public class APISpec {
 	public Factories getRendererFactoryTable() {
 		return factoryTable.copy();
 	}
+	
+	public boolean hasParameterBasedContentNegotiation() {
+		return hasParameterBasedContentNegotiation;
+	}
 }
 

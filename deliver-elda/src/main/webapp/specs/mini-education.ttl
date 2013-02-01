@@ -125,6 +125,7 @@ spec:mini-education-api a api:API
 	; api:viewer 
 		api:describeViewer
 		, api:labelledDescribeViewer 
+		, api:basicViewer
 	# three endpoints in this config
 	; api:endpoint 
 		spec:school

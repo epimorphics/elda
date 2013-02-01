@@ -60,7 +60,7 @@ public class Demo_HTML_Renderer implements Renderer {
 
 	// TODO rewrite for streaming output
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
-    	handleFakeBnodes( results.getModel() );
+    	handleFakeBnodes( results.getMergedModel() );
     	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
         return new BytesOutString( isItemRendering ? renderItem(results) : renderList(results) );
     }
@@ -100,7 +100,7 @@ public class Demo_HTML_Renderer implements Renderer {
         String rootURI = results.getRoot().getURI();
         h1( textBody, "Elda query results" );
         renderParameters(textBody, rootURI);
-        renderMetadata( textBody, results.getModel() );
+        renderMetadata( textBody, results.getMergedModel() );
     //    
         Resource anchor = results.listStatements( null, API.items, (RDFNode) null ).next().getSubject();
         for (RDFNode elem: anchor.getProperty( API.items ).getResource().as( RDFList.class ).asJavaList())

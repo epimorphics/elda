@@ -77,7 +77,7 @@ public class TestPropertyChainEndToEnd
 		String uriTemplate = "http://dummy/doc/schools";
 		String queryString = "_properties=type,localAuthority.number";
 		APIResultSet rs = t.runQuery( uriTemplate, queryString );
-		assertContains( expect, rs.getModel() );
+		assertContains( expect, rs.getMergedModel() );
 		}
 
 	@Test public void testPropertyChainInSpecBuildsResultChain()
@@ -119,7 +119,7 @@ public class TestPropertyChainEndToEnd
 		APITester t = new APITester( model, loader );
 		String uriTemplate = "http://dummy/doc/schools";
 		APIResultSet rs = t.runQuery( uriTemplate, "" );
-		assertContains( expect, rs.getModel() );
+		assertContains( expect, rs.getMergedModel() );
 		}
 	
 	@Test public void ensureUnitPropertyHasType()

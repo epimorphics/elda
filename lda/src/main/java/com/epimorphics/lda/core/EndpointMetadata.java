@@ -18,6 +18,7 @@ import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.NameMap.Stage2NameMap;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.vocabularies.ELDA;
 import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.util.URIUtils;
@@ -38,20 +39,25 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 */
 public class EndpointMetadata {
 
-	protected final Bindings cc;
+	protected final Bindings bindings;
 	protected final Resource thisPage;
+	protected final URI thisPageAsURI;
+	
 	protected final String pageNumber;
 	protected final Set<String> formatNames;
 	protected final boolean isListEndpoint;
-	protected final URI pageURI; 
+	protected final URI pageURI;
+	protected final boolean isParameterBasedFormat;
 	
-	public EndpointMetadata( Resource thisPage, boolean isListEndpoint, String pageNumber, Bindings cc, URI pageURI, Set<String> formatNames ) {
-		this.cc = cc;
+	public EndpointMetadata( EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings, URI pageURI, Set<String> formatNames ) {
+		this.bindings = bindings;
 		this.pageURI = pageURI;
 		this.thisPage = thisPage;
 		this.pageNumber = pageNumber;
 		this.formatNames = formatNames;
-		this.isListEndpoint = isListEndpoint;
+		this.isListEndpoint = ep.isListEndpoint();
+		this.isParameterBasedFormat = ep.hasParameterBasedContentNegotiation();
+    	this.thisPageAsURI = URIUtils.newURI( thisPage.getURI() );
 	}
 	
 	/**
@@ -63,9 +69,11 @@ public class EndpointMetadata {
 		for (String viewName: viewNames) {
 			if (!viewName.equals( View.SHOW_DEFAULT_INTERNAL )) {
 	    		Resource v = resourceForView( m, viewName );
-				page.addProperty( DCTerms.hasVersion, v	);
+	    		// REVISE LATER to allow stylesheet to see it but
+	    		// not interfere with cycle cutoff.
+	    		if (!v.equals(page)) page.addProperty( DCTerms.hasVersion, v );
 				v.addProperty( DCTerms.isVersionOf, page );
-				v.addProperty( RDFS.label, viewName );
+				v.addProperty( RDFS.label, viewName ); 
 			}
     	}
 	}
@@ -75,14 +83,19 @@ public class EndpointMetadata {
 	 	modified by replacing the _view with the requested name.
 	*/
     private Resource resourceForView( Model m, String name ) {
-    	URI a = URIUtils.replaceQueryParam( pageURI, QueryParameter._VIEW, name );
+    	URI a = URIUtils.replaceQueryParam( thisPageAsURI, QueryParameter._VIEW, name );
     	URI b = isListEndpoint ? URIUtils.replaceQueryParam( a, QueryParameter._PAGE, pageNumber ) : a;
 		return m.createResource( b.toString() );
     }
-
+    
 	private Resource resourceForFormat( URI reqURI, Model m, Set<String> knownFormats, String formatName ) {
-		URI u = URIUtils.changeFormatSuffix(reqURI, knownFormats, formatName);
-		return m.createResource( u.toString() );
+		if (isParameterBasedFormat) {
+			URI u = URIUtils.replaceQueryParam(reqURI, QueryParameter._FORMAT, formatName);
+			return m.createResource( u.toString() );
+		} else {
+			URI u = URIUtils.changeFormatSuffix(reqURI, knownFormats, formatName);
+			return m.createResource( u.toString() );
+		}
 	}
 
 	/**
@@ -113,9 +126,9 @@ public class EndpointMetadata {
 
 	// don't add variables that are not bound!
 	public void addVariableBindings( Model meta, Resource exec ) {
-		for (Iterator<String> names = cc.keySet().iterator(); names.hasNext();) {
+		for (Iterator<String> names = bindings.keySet().iterator(); names.hasNext();) {
 			String name = names.next();
-			String valueString = cc.getValueString( name );
+			String valueString = bindings.getValueString( name );
 			if (valueString != null) {
 				Resource vb = meta.createResource();
 				vb.addProperty( API.label, name );
@@ -164,7 +177,7 @@ public class EndpointMetadata {
 		Resource exec = anExec.inModel(meta);
 		if (listEndpoint) {
 	    	Resource sr = meta.createResource( SPARQL.QueryResult );    	
-	    	sr.addProperty( SPARQL.query, inValue( meta, q.getQueryString( apiSpec, cc ) ) );
+	    	sr.addProperty( SPARQL.query, inValue( meta, q.getQueryString( apiSpec, bindings ) ) );
 	    	sr.addProperty( SPARQL.endpoint, EP );
 	    	exec.addProperty( API.selectionResult, sr );
 		}

@@ -40,8 +40,8 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * Encapsulates the specification of the particular List/Set within
  * a particular API. 
  */
-public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
-
+public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.QueryBasis {
+	
 	private final APISpec apiSpec;
 	
     protected final APISpec parentApi;
@@ -447,6 +447,10 @@ public class APIEndpointSpec implements NamedViews, APIQuery.QueryBasis {
 	*/
 	public String getSpecificationURI() {
 		return getAPISpec().specificationURI;
+	}
+
+	@Override public boolean hasParameterBasedContentNegotiation() {
+		return getAPISpec().hasParameterBasedContentNegotiation();
 	}
 	
 }

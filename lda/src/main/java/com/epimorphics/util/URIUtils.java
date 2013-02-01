@@ -64,7 +64,7 @@ public class URIUtils {
 	}
 
 	public static String quoteForValue( String value ) {
-		return value.replace( "&", "%??" );
+		return value.replace( "&", "%26" );
 	}
 
 	private static String replaceSuffix( Set<String> knownFormats, String newSuffix, String oldPath ) {

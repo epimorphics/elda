@@ -47,7 +47,7 @@ public class TestAPI {
         String description = "# Model from test: " + uri + "?" + query + "\n";
         APIResultSet rs = tester.runQuery(uri, query);
 //        System.err.println( ">> QUERY: " + rs.getSelectQuery() );
-        Model rsm = rs.getModel();
+        Model rsm = rs.getMergedModel();
         if (expectedResults == null) {
             System.out.print(description);
             rsm.write(System.out, "Turtle");

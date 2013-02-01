@@ -80,9 +80,18 @@ ex:school_27
       ex:type ex:Primary .
 
 <http://dummy/doc/schools/london>
-      a       api:ListEndpoint ;
-      dct:hasPart <http://dummy/doc/schools/london?_page=0&_mark=yes> ;
-      api:definition <http://dummy/doc/schools/london/meta> .
+      a       api:Page , api:ListEndpoint ;
+      os:itemsPerPage "10"^^xsd:long ;
+      os:startIndex "1"^^xsd:long ;
+      dct:hasPart <http://dummy/doc/schools/london> ;
+      dct:isPartOf <http://dummy/doc/schools/london> ;
+      api:definition <http://dummy/doc/schools/london/meta> ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/schools/london?_metadata=all> ;
+      api:items (ex:school_21 ex:school_22 ex:school_23 ex:school_24 ex:school_25 ex:school_26 ex:school_27 ex:school_28 ex:school_29 ex:school_30) ;
+      api:page "0"^^xsd:long ;
+      xhv:first <http://dummy/doc/schools/london?_page=0> ;
+      xhv:next <http://dummy/doc/schools/london?_page=1> .
 
 ex:school_29
       a       school-ont:School ;
@@ -99,16 +108,3 @@ ex:school_30
       ex:name "Name30" ;
       ex:size 100 ;
       ex:type ex:Primary .
-
-<http://dummy/doc/schools/london?_page=0&_mark=yes>
-      a       api:Page ;
-      os:itemsPerPage "10"^^xsd:long ;
-      os:startIndex "1"^^xsd:long ;
-      dct:isPartOf <http://dummy/doc/schools/london> ;
-      api:definition <http://dummy/doc/schools/london/meta> ;
-      api:extendedMetadataVersion
-              <http://dummy/doc/schools/london?_page=0&_mark=yes&_metadata=all> ;
-      api:items (ex:school_21 ex:school_22 ex:school_23 ex:school_24 ex:school_25 ex:school_26 ex:school_27 ex:school_28 ex:school_29 ex:school_30) ;
-      api:page "0"^^xsd:long ;
-      xhv:first <http://dummy/doc/schools/london?_page=0> ;
-      xhv:next <http://dummy/doc/schools/london?_page=1> .

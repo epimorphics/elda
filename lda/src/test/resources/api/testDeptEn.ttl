@@ -15,18 +15,6 @@
 @prefix doap:    <http://usefulinc.com/ns/doap#> .
 @prefix xhv:     <http://www.w3.org/1999/xhtml/vocab#> .
 
-<http://dummy/doc/deptsEn?_page=0&_mark=yes>
-      a       api:Page ;
-      os:itemsPerPage "10"^^xsd:long ;
-      os:startIndex "1"^^xsd:long ;
-      dct:isPartOf <http://dummy/doc/deptsEn> ;
-      api:definition <http://dummy/doc/deptsEn/meta> ;
-      api:extendedMetadataVersion
-              <http://dummy/doc/deptsEn?_page=0&_mark=yes&_metadata=all> ;
-      api:items (ex:dept3 ex:dept2 ex:dept1) ;
-      api:page "0"^^xsd:long ;
-      xhv:first <http://dummy/doc/deptsEn?_page=0> .
-
 ex:dept3
       a       school-ont:Department ;
       ex:name "department"@en .
@@ -36,9 +24,17 @@ ex:dept2
       ex:name "department"@en .
 
 <http://dummy/doc/deptsEn>
-      a       api:ListEndpoint ;
-      dct:hasPart <http://dummy/doc/deptsEn?_page=0&_mark=yes> ;
-      api:definition <http://dummy/doc/deptsEn/meta> .
+      a       api:Page , api:ListEndpoint ;
+      os:itemsPerPage "10"^^xsd:long ;
+      os:startIndex "1"^^xsd:long ;
+      dct:hasPart <http://dummy/doc/deptsEn> ;
+      dct:isPartOf <http://dummy/doc/deptsEn> ;
+      api:definition <http://dummy/doc/deptsEn/meta> ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/deptsEn?_metadata=all> ;
+      api:items (ex:dept3 ex:dept2 ex:dept1) ;
+      api:page "0"^^xsd:long ;
+      xhv:first <http://dummy/doc/deptsEn?_page=0> .
 
 ex:dept1
       a       school-ont:Department ;

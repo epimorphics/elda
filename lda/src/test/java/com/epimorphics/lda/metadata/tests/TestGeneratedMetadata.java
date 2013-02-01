@@ -19,6 +19,7 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.EndpointMetadata;
 import com.epimorphics.lda.shortnames.NameMap;
+import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -38,13 +39,22 @@ public class TestGeneratedMetadata {
 	*/
 	@Test public void testTermBindingsCoverAllPredicates() throws URISyntaxException {
 		Resource thisPage = ResourceFactory.createResource( "elda:thisPage" );
-		boolean isListEndpoint = true;
 		String pageNumber = "1";
 		Bindings cc = new Bindings();
 		URI reqURI = new URI( "" );
 		Set<String> formatNames = CollectionUtils.set( "rdf" );
 	//
-		EndpointMetadata em = new EndpointMetadata( thisPage, isListEndpoint, pageNumber, cc, reqURI, formatNames );
+		EndpointDetails spec = new EndpointDetails() {
+
+			@Override public boolean isListEndpoint() {
+				return true;
+			}
+
+			@Override public boolean hasParameterBasedContentNegotiation() {
+				return false;
+			}
+		};
+		EndpointMetadata em = new EndpointMetadata( spec, thisPage, pageNumber, cc, reqURI, formatNames );
 	//
 		PrefixMapping pm = PrefixMapping.Factory.create().setNsPrefix( "this", "http://example.com/root#" );
 		Model toScan = ModelIOUtils.modelFromTurtle( ":a <http://example.com/root#predicate> :b." );

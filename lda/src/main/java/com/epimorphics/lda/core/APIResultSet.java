@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.graph.Graph;
+import com.hp.hpl.jena.graph.compose.Union;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.epimorphics.lda.support.LanguageFilter;
 
@@ -56,7 +57,7 @@ public class APIResultSet {
 
 	protected final List<Resource> results;
     protected final boolean isCompleted;
-    protected final Model model;
+    protected final MergedModels model;
     protected final String detailsQuery;
     protected long hash;
     protected Date timestamp;
@@ -64,7 +65,40 @@ public class APIResultSet {
     protected boolean enableETags = false;
     
     final View view;
-	
+    
+    public static class MergedModels {
+    	
+    	protected final Model merged;
+    	protected final Model object;
+    	protected final Model meta;
+    	
+    	public MergedModels( Model objectModel ) {
+    		this.object = objectModel;
+    		this.meta = ModelFactory.createDefaultModel();
+    		this.merged = ModelFactory.createUnion( this.object,  this.meta );
+    	}
+    	
+    	public Model getObjectModel() {
+    		return object;
+    	}
+    	
+    	public Model getMetaModel() {
+    		return meta;
+    	}
+    	
+    	public Model getMergedModel() {
+    		return merged;
+    	}
+
+		public void setNsPrefix(String prefix, String uri) {
+			object.setNsPrefix( prefix, uri );
+		}
+
+		public void setNsPrefixes(PrefixMapping supplied) {
+			object.setNsPrefixes( supplied );
+		}
+    }
+    	
     /** 
         Map holding named metadata options. 
     */
@@ -79,7 +113,9 @@ public class APIResultSet {
     }
 
     public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery, View v) {
-        model = ModelFactory.createModelForGraph( graph );
+    	
+        model = new MergedModels( ModelFactory.createModelForGraph( graph ) );
+        
         PrefixMapping imported = getPrefixes( results );
 		setUsedPrefixes( model, imported );
         this.results = results;
@@ -89,7 +125,7 @@ public class APIResultSet {
         this.timestamp = new Date();
         this.enableETags = enableETags;
         this.view = v;
-        if (!results.isEmpty()) this.root = results.get(0).inModel(model);
+        if (!results.isEmpty()) this.root = results.get(0).inModel(model.merged);
     }
     
     protected APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery, Map<String, Model> meta, View v ) {
@@ -104,7 +140,7 @@ public class APIResultSet {
 	}
     
     public long getHash() {
-    	if (hash == 0) hash = ModelUtils.hashModel( model ) ^ ((long) results.hashCode() << 32 );
+    	if (hash == 0) hash = ModelUtils.hashModel( model.merged ) ^ ((long) results.hashCode() << 32 );
     	return hash;
     }
 
@@ -113,7 +149,11 @@ public class APIResultSet {
         in its generated models. THey may be over-ridden by the
         supplied mapping.
     */
-	public static  void setUsedPrefixes( Model model, PrefixMapping supplied ) {
+	public static void setUsedPrefixes( MergedModels model, PrefixMapping supplied ) {
+		setUsedPrefixes( model.merged, supplied );
+	}
+	
+	public static void setUsedPrefixes( Model model, PrefixMapping supplied ) {
         model.setNsPrefix( "rdf", RDF.getURI() );
         model.setNsPrefix( "rdfs", RDFS.getURI() );
         model.setNsPrefix( "dct", DCTerms.getURI() );
@@ -128,15 +168,19 @@ public class APIResultSet {
     /**
         Answer the model this result-set wraps.
     */
-    public Model getModel() {
+    public MergedModels getModels() {
     	return model;
+    }
+    
+    public Model getMergedModel() {
+    	return model.merged;
     }
 
     /**
         Answer the size of this result-set's model.
     */
     public long modelSize() {
-		return model.size();
+		return model.merged.size();
 	}
     
     /**
@@ -200,11 +244,11 @@ public class APIResultSet {
      * @param languages  acceptable language codes for literals
      */
     public APIResultSet getFilteredSet( View v, String languages ) {
-    	if (languages != null) LanguageFilter.filterByLanguages( model, languages.split(",") );
-        model.setNsPrefixes( model );
+    	if (languages != null) LanguageFilter.filterByLanguages( model.object, languages.split(",") );
+        // model.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
-        for (Resource r : results) mappedResults.add( r.inModel(model) );
-        return new APIResultSet( model.getGraph(), mappedResults, isCompleted, enableETags, detailsQuery, metadata, v ).setSelectQuery( selectQuery );
+        for (Resource r : results) mappedResults.add( r.inModel(model.object) );
+        return new APIResultSet( model.object.getGraph(), mappedResults, isCompleted, enableETags, detailsQuery, metadata, v ).setSelectQuery( selectQuery );
     }
 
 	/**
@@ -217,7 +261,7 @@ public class APIResultSet {
 //        Graph additions = ModelFactory.createDefaultModel().getGraph();
 //        Graph cloneGraph = new Union(additions, graph);
         Model temp = ModelFactory.createDefaultModel();
-        temp.add( model );
+        temp.add( model.merged );
         Graph cloneGraph = temp.getGraph();
         APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, enableETags, detailsQuery, metadata, view );
         clone.setRoot(root);
@@ -229,10 +273,10 @@ public class APIResultSet {
 
 	/**
         Answer s statement iterator which delivers all statements matching
-        (S, P, O) in the underlying model.
+        (S, P, O) in the merged model.
     */
 	public StmtIterator listStatements( Resource S, Property P, RDFNode O ) {
-		return model.listStatements( S, P, O );
+		return model.merged.listStatements( S, P, O );
 	}
 	
 	/**
@@ -250,7 +294,7 @@ public class APIResultSet {
 		for (String option: options) {
 			Model meta = metadata.get( option );
 			if (meta == null) log.warn( "Unknown metadata section '" + option + "': ignored." );
-			else model.add( meta );
+			else model.meta.add( meta );
 		}
 	}
 
@@ -279,6 +323,10 @@ public class APIResultSet {
 
 	public View getView() {
 		return view;
+	}
+
+	public PrefixMapping getModelPrefixes() {
+		return model.merged;
 	}    
 }
 

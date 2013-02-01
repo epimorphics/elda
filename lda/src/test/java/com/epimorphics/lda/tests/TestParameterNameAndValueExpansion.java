@@ -76,7 +76,7 @@ public class TestParameterNameAndValueExpansion
 		}
 	
 	private void assertContains( Model expect, APIResultSet rs) {
-		Model m = rs.getModel();
+		Model m = rs.getMergedModel();
 		if (!m.containsAll( expect )) {
 			PrefixMapping pm = prefixes(rs);
 			String message = "result set " 
@@ -90,7 +90,7 @@ public class TestParameterNameAndValueExpansion
 
 	private PrefixMapping prefixes( APIResultSet rs ) {
 		return PrefixMapping.Factory.create()
-			.setNsPrefixes(rs.getModel())
+			.setNsPrefixes(rs.getMergedModel())
 			.setNsPrefixes( PrefixMapping.Extended )
 			.setNsPrefix( "terms", "http://purl.org/dc/terms/" )
 			.setNsPrefix( "dum", "http://dummy/doc/schools" )

@@ -35,7 +35,7 @@ public class RDFXMLRenderer implements Renderer {
     	return new BytesOutTimed() {
 			
 			@Override public void writeAll(OutputStream os) {
-				results.getModel().write( os, "RDF/XML-ABBREV" );
+				results.getMergedModel().write( os, "RDF/XML-ABBREV" );
 			}
 
 			@Override protected String getFormat() {
