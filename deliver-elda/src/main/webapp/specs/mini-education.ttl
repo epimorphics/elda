@@ -99,7 +99,7 @@ spec:viewerLocation
 spec:HtmlFormatter a api:XsltFormatter 
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "lda-assets/xslt/result-osm.xsl"
+	; api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
 	.
 
 ############################################################################################

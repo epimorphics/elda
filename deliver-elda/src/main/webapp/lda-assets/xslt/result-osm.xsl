@@ -1,4 +1,4 @@
-﻿<!--
+<!--
 Note: in at least some versions of libxslt (used by PHP), you can't set global
 variables based on values retrieved by a key. Therefore this code contains
 lots of redeclarations of the $northing, $easting, $lat, $long, $label,
@@ -8,6 +8,16 @@ $prefLabel, $altLabel, $title and $name variables.
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 <xsl:import href="linked-data-api.xsl" />
+
+<xsl:output method="html" encoding="utf-8" indent="yes" />
+
+<!--
+  <xsl:output method="html" version="4.01"
+    encoding="UTF-8" 
+    doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" 
+    doctype-system="http://www.w3.org/TR/html4/loose.dtd" 
+    indent="yes"/>
+-->
 
 <xsl:param name="_resourceRoot">/</xsl:param> 
 
@@ -19,7 +29,8 @@ $prefLabel, $altLabel, $title and $name variables.
 <xsl:param name="graphColour" select="'#577D00'" />
 
 <xsl:template match="/">
-	<xsl:apply-templates select="result" />
+    <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
+    <xsl:apply-templates select="result" />
 </xsl:template>
 
 <!-- default do nothing extensions -->
@@ -27,20 +38,21 @@ $prefLabel, $altLabel, $title and $name variables.
 
 <xsl:template match="result">
 	<html>
-		<head>
-			<xsl:apply-templates select="." mode="title" />
-			<xsl:apply-templates select="." mode="meta" />
-                        <xsl:apply-templates select="." mode="script" />
-			<xsl:apply-templates select="." mode="style" />
-                        <xsl:apply-templates select="." mode="extension" />
-		</head>
-		<body>
-			<div id="page">
-				<xsl:apply-templates select="." mode="header" />
-				<xsl:apply-templates select="." mode="content" />
-				<xsl:apply-templates select="." mode="footer" />
-			</div>
-		</body>
+	<head>
+		<xsl:apply-templates select="." mode="title" />
+		<xsl:apply-templates select="." mode="meta" />
+		<xsl:apply-templates select="." mode="script" />
+		<xsl:apply-templates select="." mode="style" />
+		<xsl:apply-templates select="." mode="extension" />
+	</head>
+	<body>
+		<div id="page">
+			<xsl:apply-templates select="." mode="header" />
+			<xsl:apply-templates select="." mode="content" />
+			<xsl:apply-templates select="." mode="footer" />
+		</div>
+        <xsl:apply-templates select="." mode="analytics"/>
+	</body>
 	</html>
 </xsl:template>
 
@@ -55,11 +67,20 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 
 <xsl:template match="first | prev | next | last" mode="metalink">
-	<link rel="{local-name(.)}" href="{@href}" />
+    <xsl:variable name="rel">
+         <xsl:choose>
+            <xsl:when test="name(.)='first'">start</xsl:when>
+            <xsl:when test="name(.)='last'">end</xsl:when>
+            <xsl:otherwise><xsl:value-of select="local-name(.)" /></xsl:otherwise>
+         </xsl:choose>
+    </xsl:variable>
+    <link rel="{$rel}" href="{@href}" />
 </xsl:template>
 
 <xsl:template match="hasFormat/item" mode="metalink">
-	<link rel="alternate" href="{@href}" type="{format/label}" />
+    <xsl:if test="format/label and /result/@href != @href">
+	   <link rel="alternate" href="{@href}" type="{format/label}" />
+    </xsl:if>
 </xsl:template>
 
 <xsl:template match="result" mode="style">
@@ -91,8 +112,13 @@ $prefLabel, $altLabel, $title and $name variables.
         <script src="{$_resourceRoot}openlayers/OpenLayers.js"></script>
         <script src="{$_resourceRoot}openlayers/OpenStreetMap.js"></script>
         <script src="{$_resourceRoot}openlayers/proj4js-combined.js"></script>
+        <script type="text/javascript">
+            Proj4js.libPath='<xsl:value-of select="$_resourceRoot"/>openlayers/';
+        </script>
+        <!-- 
         <script src="http://spatialreference.org/ref/epsg/27700/proj4js/"></script>
         <script src="http://spatialreference.org/ref/epsg/4326/proj4js/"></script>
+        -->
 	</xsl:if>
 	<script type="text/javascript" src="{$_resourceRoot}scripts/jquery.min.js"></script>
 	<script type="text/javascript" src="{$_resourceRoot}scripts/jquery-ui.min.js"></script>
@@ -395,7 +421,7 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 
 <xsl:template match="query" mode="footer">
-	<textarea name="query" wrap="off">
+	<textarea name="query" wrap="soft">
 		<xsl:attribute name="data-skip-lines">
 			<xsl:apply-templates select="." mode="skipLines" />
 		</xsl:attribute>
@@ -1092,6 +1118,7 @@ $prefLabel, $altLabel, $title and $name variables.
 				<xsl:with-param name="paramName" select="$paramName" />
 			</xsl:call-template>
 		</xsl:variable>
+	<xsl:if test="substring-after($param, '=') !=''">
 		<tr>
 			<xsl:choose>
 				<xsl:when test="$paramName = concat('min-', $long)">
@@ -1101,7 +1128,7 @@ $prefLabel, $altLabel, $title and $name variables.
 							<xsl:attribute name="href">
 								<xsl:call-template name="clearPosition">
 									<xsl:with-param name="uri">
-										<xsl:apply-templates select="/result" mode="searchURI" />
+                                        <xsl:apply-templates select="/result" mode="searchURI" />
 									</xsl:with-param>
 								</xsl:call-template>
 							</xsl:attribute>
@@ -1125,7 +1152,7 @@ $prefLabel, $altLabel, $title and $name variables.
 					</th>
 					<td class="value">
 						<xsl:call-template name="unescapeValue">
-							<xsl:with-param name="value" select="substring-after($param, '=')" />
+                            <xsl:with-param name="value" select="substring-after($param, '=')" />
 						</xsl:call-template>
 					</td>
 					<td class="filter">
@@ -1133,7 +1160,7 @@ $prefLabel, $altLabel, $title and $name variables.
 							<xsl:attribute name="href">
 								<xsl:call-template name="substituteParam">
 									<xsl:with-param name="uri">
-										<xsl:apply-templates select="/result" mode="searchURI" />
+                                        <xsl:apply-templates select="/result" mode="searchURI" />
 									</xsl:with-param>
 									<xsl:with-param name="param" select="$paramName" />
 									<xsl:with-param name="value" select="''" />
@@ -1146,6 +1173,7 @@ $prefLabel, $altLabel, $title and $name variables.
 			</xsl:choose>
 		</tr>
 	</xsl:if>
+    </xsl:if>
 	<xsl:if test="contains($params, '&amp;')">
 		<xsl:call-template name="extractFilters">
 			<xsl:with-param name="params" select="substring-after($params, '&amp;')" />
@@ -1203,7 +1231,7 @@ $prefLabel, $altLabel, $title and $name variables.
 			</p>
 		</xsl:if>
 		<ul>
-			<xsl:for-each select="hasVersion/item | version[not(item)]">
+			<xsl:for-each select="hasVersion/item | hasVersion[not(item)]">
 				<li>
 					<xsl:apply-templates select="." mode="nav">
 						<xsl:with-param name="current" select="$view" />
@@ -1253,45 +1281,58 @@ $prefLabel, $altLabel, $title and $name variables.
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
-	<xsl:variable name="isLabelParam">
-		<xsl:call-template name="isLabelParam">
-			<xsl:with-param name="paramName" select="$paramName" />
-		</xsl:call-template>
-	</xsl:variable>
-	<li class="selected">
-		<a rel="nofollow" title="remove this property">
-			<xsl:attribute name="href">
+	<xsl:if test="$property != ''">
+		<xsl:variable name="isLabelParam">
+			<xsl:call-template name="isLabelParam">
+				<xsl:with-param name="paramName" select="$paramName" />
+			</xsl:call-template>
+		</xsl:variable>
+		<li class="selected">
+			<a rel="nofollow" title="remove this property">
+				<xsl:attribute name="href">
 				<xsl:call-template name="substituteParam">
 					<xsl:with-param name="uri" select="@href" />
 					<xsl:with-param name="param" select="'_properties'" />
 					<xsl:with-param name="value">
 						<xsl:if test="$previousProperties != ''">
 							<xsl:value-of select="$previousProperties" />
-							<xsl:text>,</xsl:text>
-						</xsl:if>
+                            <xsl:if test="substring-after($properties, ',')!=''">
+							    <xsl:text>,</xsl:text>
+						    </xsl:if>
+                        </xsl:if>
 						<xsl:value-of select="substring-after($properties, ',')" />
 					</xsl:with-param> 
 				</xsl:call-template>
 			</xsl:attribute>
-			<img src="{$activeImageBase}/Star.png" alt="unstar this property" />
-		</a>
-		<xsl:text> </xsl:text>
-		<xsl:choose>
-			<xsl:when test="$isLabelParam = 'true'">
-				<xsl:value-of select="$paramName" />
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:call-template name="splitPath">
-					<xsl:with-param name="paramName" select="$paramName" />
-					<xsl:with-param name="omitLabel" select="false()" />
-				</xsl:call-template>
-			</xsl:otherwise>
-		</xsl:choose>
-	</li>
+				<img src="{$activeImageBase}/Star.png" alt="unstar this property" />
+			</a>
+			<xsl:text> </xsl:text>
+			<xsl:choose>
+				<xsl:when test="$isLabelParam = 'true'">
+					<xsl:value-of select="$paramName" />
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="splitPath">
+						<xsl:with-param name="paramName" select="$paramName" />
+						<xsl:with-param name="omitLabel" select="false()" />
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
+		</li>
+	</xsl:if>
 	<xsl:if test="contains($properties, ',')">
 		<xsl:apply-templates select="." mode="selectedProperties">
 			<xsl:with-param name="properties" select="substring-after($properties, ',')" />
-			<xsl:with-param name="previousProperties" select="concat($previousProperties, ',', $property)" />
+            <xsl:with-param name="previousProperties">
+               <xsl:choose>
+                  <xsl:when test="$previousProperties = ''">
+                     <xsl:value-of select="$property" />
+                  </xsl:when>
+                  <xsl:otherwise>
+                     <xsl:value-of select="concat($previousProperties, ',', $property)" />
+                  </xsl:otherwise>
+               </xsl:choose>
+            </xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:if>
 </xsl:template>
@@ -1460,15 +1501,15 @@ $prefLabel, $altLabel, $title and $name variables.
 		<xsl:call-template name="createInfo">
 			<xsl:with-param name="text">
 				<xsl:text>This list shows the properties that you can sort by. Click on </xsl:text>
-				<img src="{$inactiveImageBase}/Arrow3_Up.png" alt="sort in ascending order" />
+                <img src="{$inactiveImageBase}/Arrow3%20Up.png" alt="sort in ascending order" />
 				<xsl:text> to sort in ascending order and </xsl:text>
-				<img src="{$inactiveImageBase}/Arrow3_Down.png" alt="sort in descending order" />
+                <img src="{$inactiveImageBase}/Arrow3%20Down.png" alt="sort in descending order" />
 				<xsl:text> to sort in descending order. The properties that you're currently sorting by are shown at the top of the list. Click on </xsl:text>
 				<img src="{$activeImageBase}/Cancel.png" alt="remove this sort" />
 				<xsl:text> to remove a sort and </xsl:text>
-				<img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
+                <img src="{$activeImageBase}/Arrow3%20Up.png" alt="sort in descending order" />
 				<xsl:text> or </xsl:text>
-				<img src="{$activeImageBase}/Arrow3_Down.png" alt="sort in ascending order" />
+                <img src="{$activeImageBase}/Arrow3%20Down.png" alt="sort in ascending order" />
 				<xsl:text> to reverse the current sort order. </xsl:text>
 				<xsl:text>Click on the </xsl:text>
 				<img src="{$activeImageBase}/Back.png" alt="remove all sorting" />
@@ -1514,7 +1555,7 @@ $prefLabel, $altLabel, $title and $name variables.
 											<xsl:with-param name="value" select="substring-after($orderBy, 'desc')" />
 										</xsl:call-template>
 									</xsl:attribute>
-									<img src="{$activeImageBase}/Arrow3_Down.png" alt="sort in ascending order" />
+                                    <img src="{$activeImageBase}/Arrow3%20Down.png" alt="sort in ascending order" />
 								</a>
 								<xsl:value-of select="$description" />
 							</xsl:when>
@@ -1527,7 +1568,7 @@ $prefLabel, $altLabel, $title and $name variables.
 											<xsl:with-param name="value" select="concat('desc', substring-after($orderBy, 'asc'))" />
 										</xsl:call-template>
 									</xsl:attribute>
-									<img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
+                                    <img src="{$activeImageBase}/Arrow3%20Up.png" alt="sort in descending order" />
 								</a>
 								<xsl:value-of select="$description" />
 							</xsl:when>
@@ -1540,7 +1581,7 @@ $prefLabel, $altLabel, $title and $name variables.
 											<xsl:with-param name="value" select="concat('desc', $orderBy)" />
 										</xsl:call-template>
 									</xsl:attribute>
-									<img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
+                                    <img src="{$activeImageBase}/Arrow3%20Up.png" alt="sort in descending order" />
 								</a>
 								<xsl:value-of select="$description" />
 							</xsl:otherwise>
@@ -1643,10 +1684,10 @@ $prefLabel, $altLabel, $title and $name variables.
 			</xsl:attribute>
 			<xsl:choose>
 				<xsl:when test="starts-with($sort, '-')">
-					<img src="{$activeImageBase}/Arrow3_Down.png" alt="sort in ascending order" />
+                    <img src="{$activeImageBase}/Arrow3%20Down.png" alt="sort in ascending order" />
 				</xsl:when>
 				<xsl:otherwise>
-					<img src="{$activeImageBase}/Arrow3_Up.png" alt="sort in descending order" />
+                    <img src="{$activeImageBase}/Arrow3%20Up.png" alt="sort in descending order" />
 				</xsl:otherwise>
 			</xsl:choose>
 		</a>
@@ -1739,7 +1780,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		</xsl:variable>
 		<li>
 			<a rel="nofollow" href="{$ascending}" title="sort in ascending order">
-				<img src="{$inactiveImageBase}/Arrow3_Up.png" alt="sort in ascending order" />
+                <img src="{$inactiveImageBase}/Arrow3%20Up.png" alt="sort in ascending order" />
 			</a>
 			<a rel="nofollow" title="sort in descending order">
 				<xsl:attribute name="href">
@@ -1756,7 +1797,7 @@ $prefLabel, $altLabel, $title and $name variables.
 						</xsl:with-param>
 					</xsl:call-template>
 				</xsl:attribute>
-				<img src="{$inactiveImageBase}/Arrow3_Down.png" alt="sort in descending order" />
+                <img src="{$inactiveImageBase}/Arrow3%20Down.png" alt="sort in descending order" />
 			</a>
 			<xsl:text> </xsl:text>
 			<a rel="nofollow" href="{$ascending}" title="sort in ascending order">
@@ -1841,35 +1882,64 @@ $prefLabel, $altLabel, $title and $name variables.
 
 <xsl:template match="hasFormat/item" mode="nav">
 	<xsl:variable name="name">
-		<xsl:apply-templates select="." mode="name" />
+        <xsl:choose>
+           <xsl:when test="format">
+		       <xsl:apply-templates select="." mode="name" />
+           </xsl:when>
+           <!-- pick up best label from misplaced result -->
+           <xsl:otherwise>
+               <xsl:apply-templates select="/result" mode="name" />
+           </xsl:otherwise>
+        </xsl:choose>
 	</xsl:variable>
-	<a href="{@href}" type="{format/label}" rel="alternate" title="view in {$name} format">
-		<xsl:value-of select="label" />
-	</a>
+    
+    <xsl:choose>
+        <xsl:when test="format">
+            <a href="{@href}" type="{format/label}" rel="alternate"
+                title="view in {$name} format">
+		        <xsl:value-of select="label" />
+	        </a>
+        </xsl:when>
+        <xsl:when test="/result/format/label and /result/label">
+            <a href="{@href}" type="{/result/format/label}" rel="alternate"
+                title="view in {$name} format">
+                <xsl:value-of select="/result/label" />
+            </a>
+        </xsl:when>
+    </xsl:choose>
 </xsl:template>
 
-<xsl:template match="hasVersion/item | version[not(item)]" mode="nav">
-	<xsl:param name="current" />
-	<xsl:variable name="label">
-		<xsl:choose>
-			<xsl:when test="label != ''">
-				<xsl:value-of select="label" />
-			</xsl:when>
-			<xsl:otherwise>default</xsl:otherwise>
-		</xsl:choose>
-	</xsl:variable>
-	<xsl:choose>
-		<xsl:when test="$current = label">
-			<span class="current">
-				<xsl:value-of select="$label" />
-			</span>
-		</xsl:when>
-		<xsl:otherwise>
-			<a href="{@href}" title="switch to {$label} view">
-				<xsl:value-of select="$label" />
-			</a>
-		</xsl:otherwise>
-	</xsl:choose>
+<xsl:template match="hasVersion/item | hasVersion[not(item)]" mode="nav">
+    <xsl:param name="current" />
+    <xsl:variable name="label">
+        <xsl:choose>
+            <!-- label missing because versionOf and result URI are identical -->
+            <xsl:when test="not(label) and $current !=''">
+                <xsl:value-of select="$current"/>
+            </xsl:when>
+            <!--  item wrapped label -->
+            <xsl:when test="label/item and label/item!=''" >
+                <xsl:value-of select="label/item"/>
+            </xsl:when>
+            <!-- direct label -->
+            <xsl:when test="label[not(item)] and label != ''">
+                <xsl:value-of select="label" />
+            </xsl:when>
+            <xsl:otherwise>default</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+    <xsl:choose>
+        <xsl:when test="$current = $label">
+            <span class="current">
+                <xsl:value-of select="$label" />
+            </span>
+        </xsl:when>
+        <xsl:otherwise>
+            <a href="{@href}" title="switch to {$label} view">
+                <xsl:value-of select="$label" />
+            </a>
+        </xsl:otherwise>
+    </xsl:choose>
 </xsl:template>
 
 <xsl:template match="/result/primaryTopic" mode="content" priority="10">
@@ -1900,7 +1970,8 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 
 <xsl:template match="item" mode="section">
-	<section id="{generate-id(.)}">
+<!--     <section id="{generate-id(.)}"> -->
+    <section>
 		<xsl:apply-templates select="." mode="header" />
 		<xsl:apply-templates select="." mode="content" />
 		<xsl:apply-templates select="." mode="footer" />
@@ -1986,17 +2057,19 @@ $prefLabel, $altLabel, $title and $name variables.
 				</caption>
 			</xsl:when>
 		</xsl:choose>
+        <xsl:if test="./*">
 		<colgroup>
 			<xsl:if test="$properties != ''">
-				<col width="20" />
+                <col class="propWidth" />
 			</xsl:if>
-			<col width="25%" />
-			<col width="*" />
+            <col class="labelWidth" />
+            <col class="autoWidth" />
 			<xsl:if test="$showMap = 'true'">
-				<col width="47" />
+                <col class="mapWidth" />
 			</xsl:if>
-			<col width="54" />
+            <col class="filterWidth" />
 		</colgroup>
+        </xsl:if>
 		<!-- This for-each is a hack around what seems to be a bug in older versions
 			of libxslt, which ignores ordering in an xsl:apply-templates -->
 		<xsl:for-each select="*">
@@ -2538,7 +2611,7 @@ $prefLabel, $altLabel, $title and $name variables.
 				<img src="{$activeImageBase}/Back.png" alt="remove filter" />
 			</a>
 		</xsl:when>
-		<xsl:when test="$datatype = 'integer' or $datatype = 'decimal' or $datatype = 'float' or $datatype = 'int' or $datatype = 'date' or $datatype = 'dateTime' or $datatype = 'time'">
+		<xsl:when test="$datatype = 'integer' or $datatype = 'decimal' or $datatype = 'float' or $datatype = 'double' or $datatype = 'int' or $datatype = 'date' or $datatype = 'dateTime' or $datatype = 'time'">
 			<xsl:variable name="min">
 				<xsl:call-template name="paramValue">
 					<xsl:with-param name="uri">
@@ -2583,10 +2656,10 @@ $prefLabel, $altLabel, $title and $name variables.
 						</xsl:attribute>
 						<xsl:choose>
 							<xsl:when test="$max != ''">
-								<img src="{$activeImageBase}/Arrow3_Left.png" alt="less than {$value}" />
+                                <img src="{$activeImageBase}/Arrow3%20Left.png" alt="less than {$value}" />
 							</xsl:when>
 							<xsl:otherwise>
-								<img src="{$inactiveImageBase}/Arrow3_Left.png" alt="less than {$value}" />
+                                <img src="{$inactiveImageBase}/Arrow3%20Left.png" alt="less than {$value}" />
 							</xsl:otherwise>
 						</xsl:choose>
 					</a>
@@ -2632,10 +2705,10 @@ $prefLabel, $altLabel, $title and $name variables.
 						</xsl:attribute>
 						<xsl:choose>
 							<xsl:when test="$min != ''">
-								<img src="{$activeImageBase}/Arrow3_Right.png" alt="more than {$value}" />
+                                <img src="{$activeImageBase}/Arrow3%20Right.png" alt="more than {$value}" />
 							</xsl:when>
 							<xsl:otherwise>
-								<img src="{$inactiveImageBase}/Arrow3_Right.png" alt="more than {$value}" />
+                                <img src="{$inactiveImageBase}/Arrow3%20Right.png" alt="more than {$value}" />
 							</xsl:otherwise>
 						</xsl:choose>
 					</a>
@@ -2731,10 +2804,12 @@ $prefLabel, $altLabel, $title and $name variables.
 					<xsl:with-param name="params" select="substring-after($searchURI, '?')" />
 				</xsl:call-template>
 				<table>
+                    <xsl:if test="./*">
 					<colgroup>
-						<col width="25%" />
-						<col width="70%" />
+                        <col class="labelWidth" />
+                        <col class="valueWidth" />
 					</colgroup>
+                    </xsl:if>
 					<xsl:for-each select="(items/item/* | primaryTopic/*)[generate-id(key('properties', name(.))[1]) = generate-id(.)]">
 						<xsl:sort select="name(.) = $prefLabel" order="descending" />
 						<xsl:sort select="name(.) = $name" order="descending" />
@@ -2814,10 +2889,12 @@ $prefLabel, $altLabel, $title and $name variables.
 					</th>
 					<td class="input nested">
 						<table>
+                            <xsl:if test="./*">
 							<colgroup>
-								<col width="25%" />
-								<col width="75%" />
+                                <col class="labelWidth" />
+                                <col class="nestedValueWidth" />
 							</colgroup>
+                            </xsl:if>
 							<xsl:for-each 
 								select="key('properties', $propertyName)/*[name() != 'item' and generate-id(key('properties', concat($propertyName, '.', name(.)))[1]) = generate-id(.)] | 
 								key('properties', concat($propertyName, '.item'))/*[generate-id(key('properties', concat($propertyName, '.item.', name(.)))[1]) = generate-id(.)]">
@@ -2874,7 +2951,7 @@ $prefLabel, $altLabel, $title and $name variables.
 	</xsl:variable>
 	<xsl:choose>
 		<xsl:when test="@datatype = 'boolean'">
-			<select name="{$name}">
+            <select name="{$name}" id="{$name}">
 				<option value="">
 					<xsl:if test="$default = ''">
 						<xsl:attribute name="selected">selected</xsl:attribute>
@@ -2912,7 +2989,10 @@ $prefLabel, $altLabel, $title and $name variables.
 				</xsl:call-template>
 			</xsl:variable>
 			<xsl:text>exactly: </xsl:text>
-			<input name="{$name}" type="number" size="7">
+<!--
+           Removed  size="7" because HTML5 doesn't allow size when type="number"
+-->
+            <input name="{$name}" id="{$name}" type="number" >
 				<xsl:apply-templates select="." mode="inputAtts" />
 				<xsl:if test="$default != ''">
 					<xsl:attribute name="value">
@@ -2944,7 +3024,7 @@ $prefLabel, $altLabel, $title and $name variables.
 			</input>
 		</xsl:when>
 		<xsl:otherwise>
-			<input name="{$name}" size="25">
+            <input name="{$name}" id="{$name}" size="25">
 				<xsl:if test="$default != ''">
 					<xsl:attribute name="value">
 						<xsl:value-of select="$default" />
@@ -2959,25 +3039,25 @@ $prefLabel, $altLabel, $title and $name variables.
 	<xsl:choose>
 		<xsl:when test="@datatype = 'date'">
 			<xsl:attribute name="type">date</xsl:attribute>
-			<xsl:attribute name="size">10</xsl:attribute>
+<!--             <xsl:attribute name="size">10</xsl:attribute> -->
 			<xsl:attribute name="placeholder">YYYY-MM-DD</xsl:attribute>
 			<xsl:attribute name="pattern">[0-9]{4}-[0-9]{2}-[0-9]{2}</xsl:attribute>
 		</xsl:when>
 		<xsl:when test="@datatype = 'time'">
 			<xsl:attribute name="type">time</xsl:attribute>
-			<xsl:attribute name="size">8</xsl:attribute>
+<!--             <xsl:attribute name="size">8</xsl:attribute> -->
 			<xsl:attribute name="placeholder">hh:mm:ss</xsl:attribute>
 			<xsl:attribute name="pattern">[0-9]{2}:[0-9]{2}:[0-9]{2}</xsl:attribute>
 		</xsl:when>
 		<xsl:when test="@datatype = 'dateTime'">
 			<xsl:attribute name="type">datetime</xsl:attribute>
-			<xsl:attribute name="size">19</xsl:attribute>
+<!--             <xsl:attribute name="size">19</xsl:attribute> -->
 			<xsl:attribute name="placeholder">YYYY-MM-DDThh:mm:ss</xsl:attribute>
 			<xsl:attribute name="pattern">[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}</xsl:attribute>
 		</xsl:when>
 		<xsl:when test="@datatype = 'integer' or @datatype = 'decimal' or @datatype = 'float' or @datatype = 'double' or @datatype = 'int'">
 			<xsl:attribute name="type">number</xsl:attribute>
-			<xsl:attribute name="size">7</xsl:attribute>
+<!--             <xsl:attribute name="size">7</xsl:attribute> -->
 		</xsl:when>
 	</xsl:choose>
 </xsl:template>

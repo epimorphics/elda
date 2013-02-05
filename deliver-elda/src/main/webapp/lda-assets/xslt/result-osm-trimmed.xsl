@@ -1231,6 +1231,7 @@ $prefLabel, $altLabel, $title and $name variables.
         </xsl:if>
         <ul>
             <xsl:for-each select="hasVersion/item | hasVersion[not(item)]">
+                <xsl:sort order="ascending"/>
                 <li>
                     <xsl:apply-templates select="." mode="nav">
                         <xsl:with-param name="current" select="$view" />
@@ -1922,14 +1923,23 @@ $prefLabel, $altLabel, $title and $name variables.
     <xsl:param name="current" />
     <xsl:variable name="label">
         <xsl:choose>
-            <xsl:when test="label != ''">
+            <!-- label missing because versionOf and result URI are identical -->
+            <xsl:when test="not(label) and $current !=''">
+                <xsl:value-of select="$current"/>
+            </xsl:when>
+            <!--  item wrapped label -->
+            <xsl:when test="label/item and label/item!=''" >
+                <xsl:value-of select="label/item"/>
+            </xsl:when>
+            <!-- direct label -->
+            <xsl:when test="label[not(item)] and label != ''">
                 <xsl:value-of select="label" />
             </xsl:when>
             <xsl:otherwise>default</xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
     <xsl:choose>
-        <xsl:when test="$current = label">
+        <xsl:when test="$current = $label">
             <span class="current">
                 <xsl:value-of select="$label" />
             </span>
@@ -2069,7 +2079,7 @@ $prefLabel, $altLabel, $title and $name variables.
             </xsl:if>
             <col class="filterWidth" />
         </colgroup>
-        <!--  try a dummy 'empty' row to get make the table valid - starting in all columns -->
+        <!--  try a dummy 'empty' row to make the table valid - starting in all columns -->
         <tr>
             <xsl:if test="$properties != ''">
                 <td/>

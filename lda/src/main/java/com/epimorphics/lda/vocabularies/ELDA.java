@@ -27,6 +27,8 @@ public class ELDA
 	{
 	static final String version = Version.string;
 	
+	static final String tag = " [5Feb/A]";
+	
 	static final private Model m = ModelFactory.createDefaultModel();
 	
 	static private Resource resource( String NS, String local ) 
@@ -68,7 +70,7 @@ public class ELDA
 			.addProperty( COMMON.software, ThisElda )
 			;
 		ThisElda.inModel(m)
-			.addProperty( RDFS.label, "Elda " + version )
+			.addProperty( RDFS.label, "Elda " + version + tag )
 			.addProperty( RDF.type, DOAP.Version )
 			.addProperty( DOAP.revision, version )
 			.addProperty( ELDA.DOAP_EXTRAS.releaseOf, Elda );
