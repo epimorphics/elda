@@ -64,7 +64,7 @@ public class XMLRenderer implements Renderer {
 	}
 
 	public void renderInto( Resource root, MergedModels mm, Document d, boolean suppressIPTO ) {
-		XMLRendering r = new XMLRendering( root.getModel(), sns, suppressIPTO, d );
+		XMLRendering r = new XMLRendering( mm.getMergedModel(), sns, suppressIPTO, d );
 		Element result = d.createElement( "result" );
 		result.setAttribute( "format", "linked-data-api" );
 		result.setAttribute( "version", "0.2" );

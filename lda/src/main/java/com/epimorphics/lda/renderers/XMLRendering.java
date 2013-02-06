@@ -257,17 +257,17 @@ public class XMLRendering {
             @Override public int compare(Property a, Property b) {
             	
 //            	System.err.println( ">> a " + a.getURI() );
-            	String x = nameMap.get( a.getURI() );
-            	if (x == null) {
-            		x = a.getLocalName();
-            		System.err.println( ">> " + a.getURI() + " had to be forced to " + x );
-            	}
-
-//            	System.err.println( ">> b " + b.getURI() );
-            	String y = nameMap.get( b.getURI() );
-            	if (y == null) y = a.getLocalName();
-            	
-            	if (true) return x.compareTo( y );
+//            	String x = nameMap.get( a.getURI() );
+//            	if (x == null) {
+//            		x = a.getLocalName();
+//            		System.err.println( ">> " + a.getURI() + " had to be forced to " + x );
+//            	}
+//
+////            	System.err.println( ">> b " + b.getURI() );
+//            	String y = nameMap.get( b.getURI() );
+//            	if (y == null) y = a.getLocalName();
+//            	
+//            	if (true) return x.compareTo( y );
             	
                 return nameMap.get( a.getURI() ).compareTo( nameMap.get( b.getURI() ) );
             }
