@@ -43,7 +43,7 @@ public class TestXMLRenderer
 	
 	@Test public void testSingleStatement() 
 		{
-		ensureRendering( "(P href=eh:/b))", resourceInModel( "a P b" ) );
+		ensureWrappedRendering( "(P href=eh:/b))", resourceInModel( "a P b" ) );
 		}
 	
 	protected String wrapA( String lispy ) 
@@ -56,34 +56,33 @@ public class TestXMLRenderer
 	
 	@Test public void testSimpleChain() 
 		{
-		ensureRendering( "(P href=eh:/b (Q href=eh:/c))", resourceInModel( "a P b; b Q c" ) );
+		ensureWrappedRendering( "(P href=eh:/b (Q href=eh:/c))", resourceInModel( "a P b; b Q c" ) );
 		}
 	
 	@Test public void testSingleDataStatement()
 		{
-		ensureRendering( "(P 'b')", resourceInModel( "a P 'b'" ) );
+		ensureWrappedRendering( "(P 'b')", resourceInModel( "a P 'b'" ) );
 		}
 	
 	@Test public void testSingleDataStatementWithLanguage()
 		{
-		ensureRendering( "(P lang=en-uk 'b')", resourceInModel( "a P 'b'en-uk" ) );
+		ensureWrappedRendering( "(P lang=en-uk 'b')", resourceInModel( "a P 'b'en-uk" ) );
 		}
 	
 	@Test public void testSingleDataStatementWithType()
 		{
-		ensureRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
+		ensureWrappedRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
 		}
 	
 	@Test public void testSortingByPredicate()
 		{
-		System.err.println( ">> TODO: fix this test." ); if (true) return;
 		// FRAGILE. The test may succeed even if value-sorting doesn't work, if the
 		// order that statements come out of the model in has magically sorted. Hence
 		// the choice of 'b' and 'aa' and their order of appearance in the model string.
 		// not sure how to improve this without arranging a pipeline through to the
 		// renderer.
-		ensureRendering( "(R href=eh:/a (P (item 'aa') (item 'b')))", resourceInModel( "root R a; a P 'b'; a P 'aa'" ) );
-		ensureRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
+		ensureRendering( wrap("eh:/root", "(R href=eh:/a (P (item 'aa') (item 'b')))" ), resourceInModel( "root R a; a P 'b'; a P 'aa'" ) );
+		ensureWrappedRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
 		}
 	
 	/*
@@ -92,16 +91,16 @@ public class TestXMLRenderer
 	*/
 	@Test public void testUnpackingRepeatedResources()
 		{
-		System.err.println( ">> TODO: fix this test." ); if (true) return;
+		String unwrapped = "(R href=eh:/a (P (item href=eh:/b (HAS href=eh:/value)) (item href=eh:/c (Q href=eh:/b (HAS href=eh:/value)))))";
 		ensureRendering
-			( "(R href=eh:/a (P (item href=eh:/b (HAS href=eh:/value)) (item href=eh:/c (Q href=eh:/b (HAS href=eh:/value)))))"
+			( wrap( "eh:/root", unwrapped )
 			, resourceInModel( "root R a; a P b; b HAS value; a P c; c Q b" )
 			);
 		}
 	
 	@Test public void testRootWithSingletonList()
 		{
-		ensureRendering
+		ensureWrappedRendering
 			( "(P (item href=eh:/A))", 
 			resourceInModel( "a P _b; _b rdf:first A; _b rdf:rest rdf:nil" ) 
 			);
@@ -109,7 +108,7 @@ public class TestXMLRenderer
 	
 	@Test public void testRootWithDoubletonList()
 		{
-		ensureRendering
+		ensureWrappedRendering
 			( "(P (item href=eh:/A) (item href=eh:/B))", 
 			resourceInModel( "a P _b; _b rdf:first A; _b rdf:rest _c; _c rdf:first B; _c rdf:rest rdf:nil" ) 
 			);
@@ -145,8 +144,10 @@ public class TestXMLRenderer
         return item.inModel( m );        
         }
     
-	private void ensureRendering( String desired, Resource root ) 
-		{
+	private void ensureWrappedRendering( String desired, Resource root ) 
+		{ ensureRendering( wrapA( desired ), root ); }
+	
+	private void ensureRendering( String wrapped, Resource root ) {
 		Model m = root.getModel();
 		PrefixMapping pm = root.getModel();
 		ShortnameService sns = new SNS( "" );
@@ -157,7 +158,7 @@ public class TestXMLRenderer
 	//
 		xr.renderInto( root.inModel( mm.getObjectModel() ), mm, d, false );
 		Node de = d.getDocumentElement().getFirstChild();
-		Node expected = new TinyParser().parse( wrapA( desired ) );
+		Node expected = new TinyParser().parse( wrapped );
 	//
 		if (!de.isEqualNode( expected )) 
 			{

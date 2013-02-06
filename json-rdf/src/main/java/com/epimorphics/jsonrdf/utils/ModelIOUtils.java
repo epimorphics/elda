@@ -17,6 +17,7 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.shared.JenaException;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.XSD;
 
 public class ModelIOUtils {
@@ -30,6 +31,7 @@ public class ModelIOUtils {
 	    + "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"
 	    + "@prefix xsd: <" + XSD.getURI() + "> .\n"
 	    + "@prefix api: <" + API.getURI() + "> .\n"
+	    + "@prefix foaf: <" + FOAF.getURI() + "> .\n"
 	    + "@prefix alt: <http://www.epimorphics.com/tools/exampleAlt#> .\n"
 	    + "@prefix : <http://www.epimorphics.com/tools/example#> .\n";
 
