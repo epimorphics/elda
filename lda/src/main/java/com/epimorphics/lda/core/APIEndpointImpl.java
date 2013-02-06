@@ -162,10 +162,14 @@ public class APIEndpointImpl implements APIEndpoint {
 
     private URI withoutPageParameters( URI ru ) {
     	URI rqp1 = URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
+//    	System.err.println( ">> withoutPageParameters: rqp1 = " + rqp1 );
     	return URIUtils.replaceQueryParam( rqp1, QueryParameter._PAGE_SIZE );
     }
     
 	private void insertResultSetRoot( APIResultSet rs, URI ru, String format, Bindings b, APIQuery query ) {
+		
+//		System.err.println( ">> insertResultSetRoot: ru = " + ru );
+		
 		boolean suppress_IPTO = b.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		boolean exceptionIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
 	//

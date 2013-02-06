@@ -58,4 +58,9 @@ hello:players a rdf:Property
 	; api:label "players"
 	; rdfs:range xsd:int
 	.
+	
+hello:title a rdf:Property
+	; api:label "title"
+	.
+	
 		
