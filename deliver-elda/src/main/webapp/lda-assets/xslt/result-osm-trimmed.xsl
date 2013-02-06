@@ -1231,7 +1231,8 @@ $prefLabel, $altLabel, $title and $name variables.
         </xsl:if>
         <ul>
             <xsl:for-each select="hasVersion/item | hasVersion[not(item)]">
-                <xsl:sort order="ascending"/>
+                <!-- concat label and view incase either is missing. Give precidenced to labels -->
+                <xsl:sort select="concat(./label, $view)" order="ascending"/>
                 <li>
                     <xsl:apply-templates select="." mode="nav">
                         <xsl:with-param name="current" select="$view" />

@@ -174,35 +174,24 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
 		Model rsm = rs.getModels().getMetaModel();
 		Model om = rs.getModels().getObjectModel();
-		
+	//
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
-        
+    //
         Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
     //
         URI uriForList = withoutPageParameters( ru );
-        
+    //  
         Resource thisPage = rsm.createResource( ru.toString() ); // adjustPageParameter( rsm, ru, page );
-        
+    //
         Resource thisObjectPage = thisPage.inModel( rs.getModels().getObjectModel() );
-        
-        // Resource thisPage = rsm.createResource( ru.toString() ); // rsm.createResource( uriForList.toString() ); // rsm.createResource( noView.toString() ) ;   
-       
     //
         rs.setContentLocation( URIUtils.changeFormatSuffix( ru, formatNames, format ) );
     //        
         Resource uriForDefinition = rsm.createResource( createDefinitionURI( uriForList, uriForSpec, template, b.expandVariables( template ) ) ); 
     //
-        // String x = adjustPageParameter( rsm, pageBase, page ).getURI();
-        
-        // URI noView = URIUtils.replaceQueryParam( URIUtils.newURI( x ), QueryParameter._VIEW );        
-        
-//        if (rsm.containsResource( thisPage ) || true) {
-//        	thisPage = rsm.createResource( URIUtils.replaceQueryParam( URIUtils.newURI( thisPage.getURI() ), QueryParameter._MARK, "yes" ).toString() );
-//        }
-        
         rs.setRoot(thisPage);
     //
 		thisPage.addProperty( API.definition, uriForDefinition );
@@ -210,7 +199,6 @@ public class APIEndpointImpl implements APIEndpoint {
         URI emv_uri = URIUtils.replaceQueryParam( URIUtils.newURI(thisPage.getURI()), "_metadata", "all" );
         thisPage.addProperty( API.extendedMetadataVersion, rsm.createResource( emv_uri.toString() ) );
     //
-        // withoutPageParameters( uriForList );
         thisPage.addProperty( RDF.type, API.Page );
     //
         if (isListEndpoint()) {
@@ -223,10 +211,6 @@ public class APIEndpointImpl implements APIEndpoint {
         	
         	thisObjectPage.addProperty( API.items, content );
         	
-//        	thisPage.addProperty( XHV.first, adjustPageParameter( rsm, uriForList, 0 ) );
-//    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, adjustPageParameter( rsm, uriForList, page+1 ) );
-//    		if (page > 0) thisPage.addProperty( XHV.prev, adjustPageParameter( rsm, uriForList, page-1 ) );
-
         	Resource firstPage = adjustPageParameter( rsm, ru, 0 );
         	Resource nextPage = adjustPageParameter( rsm, ru, page + 1 );
         	Resource prevPage = adjustPageParameter( rsm, ru, page - 1 );
@@ -246,7 +230,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    		;
         } else {
 			Resource content = rs.getResultList().get(0);
-			thisPage.addProperty( FOAF.primaryTopic, content );
+			thisObjectPage.addProperty( FOAF.primaryTopic, content );
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
 		}
         EndpointMetadata em = new EndpointMetadata( spec, thisPage, "" + page, b, uriForList, formatNames );

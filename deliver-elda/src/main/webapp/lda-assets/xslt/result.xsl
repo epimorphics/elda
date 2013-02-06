@@ -7,7 +7,6 @@ $prefLabel, $altLabel, $title and $name variables.
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<xsl:import href="lr-ga.xsl" />
 <xsl:import href="linked-data-api.xsl" />
 
 <xsl:output method="html" encoding="utf-8" indent="yes" />
@@ -53,7 +52,6 @@ $prefLabel, $altLabel, $title and $name variables.
 				<xsl:apply-templates select="." mode="content" />
 				<xsl:apply-templates select="." mode="footer" />
 			</div>
-            <xsl:apply-templates select="." mode="analytics"/>
 		</body>
 	</html>
 </xsl:template>
@@ -1212,6 +1210,8 @@ $prefLabel, $altLabel, $title and $name variables.
 		</xsl:if>
 		<ul>
 			<xsl:for-each select="hasVersion/item | hasVersion[not(item)]">
+                <!-- concat label and view incase either is missing. Give precidenced to labels -->
+                <xsl:sort select="concat(./label, $view)" order="ascending"/>
 				<li>
 					<xsl:apply-templates select="." mode="nav">
 						<xsl:with-param name="current" select="$view" />

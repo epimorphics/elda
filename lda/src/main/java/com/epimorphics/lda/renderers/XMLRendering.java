@@ -96,7 +96,6 @@ public class XMLRendering {
 	private Resource itemsResource = null;
 	
 	private final Set<Resource> dontExpand = new HashSet<Resource>();
-	// private final Set<Resource> cyclicOrSelected = new HashSet<Resource>();
 	
 	/** if true, property values will appear in sorted order */
 	private final boolean sortPropertyValues = true;
@@ -111,26 +110,12 @@ public class XMLRendering {
 	/** 
 		The way in -- all external uses come via this method, so we can
 		compute useful things before doing the actual rendering.
-		
-		<p>
-		We identify the items resource, ie the list of selected items,
-		and all the resources in it, as well as all the resources that
-		are part of a cycle in the graph. The selected items are treated
-		as having been "seen", ie they are not expanded, except at their
-		appearance in the items list. Otherwise cyclic items are expanded
-		on their first encounter in a top-down left-to-right-sorted walk
-		of the graph.
-		</p>
 	*/
 	public Element addResourceToElement( Element e, Resource x, MergedModels mm ) {
 				
 		itemsResource = getItemsResource( x );
 		Set<RDFNode> selectedItems = getItemsList( itemsResource );
-		
-//		System.err.println( ">> object model is:" ); mm.getObjectModel().write( System.err, "TTL" );
-//		System.err.println( ">> meta   model is:" ); mm.getMetaModel().write( System.err, "TTL" );
-		
-		
+				
 		for (RDFNode m: selectedItems) dontExpand.add( m.asResource() );
 		
 		Resource xInObjectModel = x.inModel(mm.getObjectModel() );
@@ -142,17 +127,22 @@ public class XMLRendering {
 	// properties.	
 	//
 		addIdentification( e, x );
-		dontExpand.add( x );
+		// dontExpand.add( x );
 	//
-//		List<Property> objectProperties = asSortedList( xInObjectModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 	//
 		// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
 		Trail t2 = new Trail();
 		t2.see(xInMetaModel);
 	//	
+		boolean hasPrimaryTopic = xInObjectModel.hasProperty( FOAF.primaryTopic );
+
 		Trail t = new Trail();
-		addPropertyValues( t, e, xInObjectModel, API.items, false );		
+		if (hasPrimaryTopic) 
+			addPropertyValues( t, e, xInObjectModel, FOAF.primaryTopic, false );
+		else
+			addPropertyValues( t, e, xInObjectModel, API.items, false );
+		
 	//
 		for (Property p: metaProperties)			
 			addPropertyValues( t2, e, xInMetaModel, p, false );
@@ -214,7 +204,7 @@ public class XMLRendering {
 	
 	private Element elementAddResource( Trail t, Element e, Resource x, boolean expandRegardless ) {
 		addIdentification( e, x );
-						
+								
 		if (t.unseen( x ) || expandRegardless) {
 			t.see(x);
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
@@ -318,11 +308,6 @@ public class XMLRendering {
 		e.appendChild( pe );
 		// System.err.println( ">> e := " + e );
 		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();		
-		
-//		if (p.equals( DCTerms.hasVersion)) {
-//			System.err.println( ">> hasVersion: " + values.size() );
-//			for (RDFNode v: values) System.err.println( ">>    " + v + ", " + (t.unseen(v.asResource()) ? "UNSEEN" : "SEEN") );
-//		}
 		
 		if (values.size() > 1 || isMultiValued( p )) {
 			for (RDFNode value: sortObjects( values )) appendValueAsItem(t, pe, value, expandRegardless);

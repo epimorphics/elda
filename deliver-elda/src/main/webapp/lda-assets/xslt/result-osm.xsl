@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 Note: in at least some versions of libxslt (used by PHP), you can't set global
 variables based on values retrieved by a key. Therefore this code contains
 lots of redeclarations of the $northing, $easting, $lat, $long, $label,
@@ -51,7 +51,6 @@ $prefLabel, $altLabel, $title and $name variables.
 			<xsl:apply-templates select="." mode="content" />
 			<xsl:apply-templates select="." mode="footer" />
 		</div>
-        <xsl:apply-templates select="." mode="analytics"/>
 	</body>
 	</html>
 </xsl:template>
@@ -1232,6 +1231,8 @@ $prefLabel, $altLabel, $title and $name variables.
 		</xsl:if>
 		<ul>
 			<xsl:for-each select="hasVersion/item | hasVersion[not(item)]">
+                <!-- concat label and view incase either is missing. Give precidenced to labels -->
+                <xsl:sort select="concat(./label, $view)" order="ascending"/>			
 				<li>
 					<xsl:apply-templates select="." mode="nav">
 						<xsl:with-param name="current" select="$view" />

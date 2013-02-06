@@ -22,6 +22,7 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.shared.WrappedException;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;

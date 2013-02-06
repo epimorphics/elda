@@ -71,7 +71,7 @@ public class EndpointMetadata {
 	    		Resource v = resourceForView( m, viewName );
 	    		// REVISE LATER to allow stylesheet to see it but
 	    		// not interfere with cycle cutoff.	    		if (!v.equals(page)) page.addProperty( DCTerms.hasVersion, v );
-	    		if (true || !v.equals(page)) page.addProperty( DCTerms.hasVersion, v );
+	    		page.addProperty( DCTerms.hasVersion, v );
 				v.addProperty( DCTerms.isVersionOf, page );
 				v.addProperty( RDFS.label, viewName ); 
 			}
