@@ -591,8 +591,20 @@
 				<xsl:with-param name="value" select="substring-after($value, '%3A')" />
 			</xsl:call-template>
 		</xsl:when>
-		<xsl:when test="contains($value, '%2B')">
-			<xsl:value-of select="substring-before($value, '%2B')"/>
+        <xsl:when test="contains($value, '%26')">
+            <xsl:call-template name="unescapeValue">
+                <xsl:with-param name="value" select="substring-before($value, '%26')" />
+            </xsl:call-template>
+            <xsl:text>&amp;</xsl:text>
+            <xsl:call-template name="unescapeValue">
+                <xsl:with-param name="value" select="substring-after($value, '%26')" />
+            </xsl:call-template>
+        </xsl:when>
+   		<xsl:when test="contains($value, '%2B')">
+            <xsl:call-template name="unescapeValue">
+                <xsl:with-param name="value" select="substring-before($value, '%2B')" />
+            </xsl:call-template>
+<!--   			<xsl:value-of select="substring-before($value, '%2B')"/> -->
 			<xsl:text>+</xsl:text>
 			<xsl:call-template name="unescapeValue">
 				<xsl:with-param name="value" select="substring-after($value, '%2B')" />

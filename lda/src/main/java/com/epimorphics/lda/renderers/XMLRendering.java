@@ -148,6 +148,8 @@ public class XMLRendering {
 	//
 		boolean hasPrimaryTopic = xInMetaModel.hasProperty( FOAF.primaryTopic );
 		
+//		System.err.println( ">> has primary topic: " + hasPrimaryTopic );
+		
 		Trail t = new Trail();
 		if (hasPrimaryTopic) { 			
 			Element pt = findByNodeName( e, "primaryTopic" );
@@ -170,6 +172,7 @@ public class XMLRendering {
 			}
 		}
 	//
+//		System.err.println( ">> main rendering work completed." );
 		return e;
 	}
 	
@@ -184,7 +187,7 @@ public class XMLRendering {
 			if (it.getNodeName().equals( name ))
 				return (Element) it;
 		}
-		System.err.println( ">> could not find " + name );
+//		System.err.println( ">> could not find " + name );
 		return null;
 	}
 
@@ -243,7 +246,10 @@ public class XMLRendering {
 	private Element elementAddResource( Trail t, Element e, Resource x, boolean expandRegardless ) {
 		addIdentification( e, x );
 								
-		if (t.unseen( x ) || expandRegardless) {
+		// System.err.println( ">> elementAddResource: " + x );
+		// System.err.println( ">>  trail:" + t );
+		
+		if (t.unseen( x )) {
 			t.see(x);
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 			// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );

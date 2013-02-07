@@ -1896,7 +1896,7 @@ $prefLabel, $altLabel, $title and $name variables.
 	<xsl:variable name="name">
         <xsl:choose>
            <xsl:when test="format">
-		<xsl:apply-templates select="." mode="name" />
+		      <xsl:apply-templates select="." mode="name" />
            </xsl:when>
            <!-- pick up best label from misplaced result -->
            <xsl:otherwise>

@@ -32,10 +32,10 @@
 			<xsl:sort select="name(.) = $northing" order="descending" />
 			<xsl:sort select="name(.) = $lat" order="descending" />
 			<xsl:sort select="name(.) = $long" order="descending" />
+            <xsl:sort select="local-name()" />
 			<xsl:sort select="boolean(@datatype)" order="descending" />
 			<xsl:sort select="@datatype" />
 			<xsl:sort select="boolean(@href)" />
-			<xsl:sort select="local-name()" />
 			<xsl:apply-templates select="." mode="properties" />
 		</xsl:for-each>
 	</xsl:variable>
@@ -91,7 +91,8 @@
 		<xsl:otherwise>
 			<xsl:value-of select="$propertyName" />
 			<xsl:text>,</xsl:text>
-			<xsl:if test="@href">
+			<!-- skw added or item/@href -->
+			<xsl:if test="@href or item/@href">
 				<xsl:value-of select="$propertyName" />
 				<xsl:text>.@href,</xsl:text>
 			</xsl:if>
@@ -252,6 +253,18 @@
 								<xsl:with-param name="uri" select="$propertyElement/@href" />
 							</xsl:call-template>
 						</xsl:when>
+						<xsl:when test="$propertyElement/*">
+						      <xsl:for-each select="$propertyElement/*">
+						          <xsl:choose>
+						              <xsl:when test="./item">
+						                  <xsl:value-of select="./item"/>					           
+						              </xsl:when>
+						              <xsl:otherwise>
+						                  <xsl:value-of select="."/>
+						              </xsl:otherwise>
+						          </xsl:choose>
+						      </xsl:for-each>
+						</xsl:when>
 						<xsl:otherwise>
 							<xsl:value-of select="$propertyElement" />
 						</xsl:otherwise>
@@ -264,6 +277,7 @@
 					</xsl:for-each>
 				</xsl:when>
 				<xsl:when test="count($propertyElement/item) >= $number">
+				<!-- skw come back here... need to hand nul values -->
 					<xsl:value-of select="$propertyElement/item[position() = $number]" />
 				</xsl:when>
 				<xsl:when test="$propertyElement/item[1] = '' and $propertyElement/item[1]/@href">

@@ -8,7 +8,10 @@
     <version>1.2.18-SNAPSHOT</version>
   </parent>
 
+  <!--
   <groupId>com.epimorphics.lda</groupId>
+  -->
+
   <artifactId>json-rdf</artifactId>
   <name>json-rdf</name>
 
@@ -28,8 +31,11 @@
     	<version>2.9.0-incubating</version>
     </dependency>
 
-  </dependencies>
+</dependencies>
+<!--
   <version>1.2.18-SNAPSHOT</version>
+-->
+
   <build>
      <plugins>
        <plugin>

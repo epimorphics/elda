@@ -676,9 +676,9 @@ $prefLabel, $altLabel, $title and $name variables.
 						var info;
 						<xsl:choose>
 							<xsl:when test="$multipleMarkers">
-                          var bounds = new OpenLayers.Bounds(<xsl:value-of select="$minEasting"/>, <xsl:value-of select="$minNorthing"/>, <xsl:value-of select="$maxEasting"/>, <xsl:value-of select="$maxNorthing"/>);
-                          var zoom = Math.min(<xsl:choose><xsl:when test="/result/next">7</xsl:when><xsl:otherwise>10</xsl:otherwise></xsl:choose>, summaryMap.getZoomForExtent(bounds));
-                          var center = new OpenSpace.MapPoint(<xsl:value-of select="$minEasting + floor(($maxEasting - $minEasting) div 2)" />, <xsl:value-of select="$minNorthing + floor(($maxNorthing - $minNorthing) div 2)" />);
+					      var bounds = new OpenLayers.Bounds(<xsl:value-of select="$minEasting"/>, <xsl:value-of select="$minNorthing"/>, <xsl:value-of select="$maxEasting"/>, <xsl:value-of select="$maxNorthing"/>);
+								var zoom = Math.min(<xsl:choose><xsl:when test="/result/next">7</xsl:when><xsl:otherwise>10</xsl:otherwise></xsl:choose>, summaryMap.getZoomForExtent(bounds));
+								var center = new OpenSpace.MapPoint(<xsl:value-of select="$minEasting + floor(($maxEasting - $minEasting) div 2)" />, <xsl:value-of select="$minNorthing + floor(($maxNorthing - $minNorthing) div 2)" />);
 								summaryMap.setCenter(center, zoom);
 							</xsl:when>
 							<xsl:when test="$markers">
@@ -1096,7 +1096,7 @@ $prefLabel, $altLabel, $title and $name variables.
 				<xsl:with-param name="paramName" select="$paramName" />
 			</xsl:call-template>
 		</xsl:variable>
-	    <xsl:if test="substring-after($param, '=') !=''">
+        <xsl:if test="substring-after($param, '=') !=''">
 		<tr>
 			<xsl:choose>
 				<xsl:when test="$paramName = concat('min-', $easting)">
@@ -1618,6 +1618,7 @@ $prefLabel, $altLabel, $title and $name variables.
 			<xsl:with-param name="paramName" select="$paramName" />
 		</xsl:call-template>
 	</xsl:variable>
+    <xsl:if test="$sort != ''">
 	<li class="selected">
 		<a rel="nofollow" title="remove this sort">
 			<xsl:attribute name="href">
@@ -1683,11 +1684,21 @@ $prefLabel, $altLabel, $title and $name variables.
 			</xsl:otherwise>
 		</xsl:choose>
 	</li>
+    </xsl:if>
 	<xsl:if test="contains($sorts, ',')">
 		<xsl:apply-templates select="." mode="selectedSorts">
 			<xsl:with-param name="uri" select="$uri" />
 			<xsl:with-param name="sorts" select="substring-after($sorts, ',')" />
-			<xsl:with-param name="previousSorts" select="concat($previousSorts, ',', $sort)" />
+            <xsl:with-param name="previousSorts">
+                <xsl:choose>
+                    <xsl:when test="$previousSorts = ''">
+                       <xsl:value-of select="$sort"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                       <xsl:value-of select="concat($previousSorts, ',', $sort)"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:if>
 </xsl:template>
@@ -1864,29 +1875,28 @@ $prefLabel, $altLabel, $title and $name variables.
 	<xsl:variable name="name">
         <xsl:choose>
            <xsl:when test="format">
-		       <xsl:apply-templates select="." mode="name" />
+		      <xsl:apply-templates select="." mode="name" />
            </xsl:when>
            <!-- pick up best label from misplaced result -->
            <xsl:otherwise>
-               <xsl:apply-templates select="/result" mode="name" />
+              <xsl:apply-templates select="/result" mode="name" />
            </xsl:otherwise>
         </xsl:choose>
 	</xsl:variable>
-    
-    <xsl:choose>
+	<xsl:choose>
         <xsl:when test="format">
-            <a href="{@href}" type="{format/label}" rel="alternate"
-                title="view in {$name} format">
+			<a href="{@href}" type="{format/label}" rel="alternate"
+				title="view in {$name} format">
 		        <xsl:value-of select="label" />
 	        </a>
-        </xsl:when>
-        <xsl:when test="/result/format/label and /result/label">
-            <a href="{@href}" type="{/result/format/label}" rel="alternate"
-                title="view in {$name} format">
-                <xsl:value-of select="/result/label" />
-            </a>
-        </xsl:when>
-    </xsl:choose>
+		</xsl:when>
+		<xsl:when test="/result/format/label and /result/label">
+			<a href="{@href}" type="{/result/format/label}" rel="alternate"
+				title="view in {$name} format">
+				<xsl:value-of select="/result/label" />
+			</a>
+		</xsl:when>
+	</xsl:choose>
 </xsl:template>
 
 <xsl:template match="hasVersion/item | hasVersion[not(item)]" mode="nav">
@@ -2049,7 +2059,19 @@ $prefLabel, $altLabel, $title and $name variables.
 			</xsl:if>
             <col class="filterWidth" />
 		</colgroup>
-		</xsl:if>
+        <!--  try a dummy 'empty' row to make the table valid - starting in all columns -->
+        <tr>
+            <xsl:if test="$properties != ''">
+                <td/>
+            </xsl:if>
+                <td/>
+                <td/>
+            <xsl:if test="$showMap = 'true'">
+                <td/>
+            </xsl:if>
+            <td/>       
+        </tr>
+        </xsl:if>
 		<!-- This for-each is a hack around what seems to be a bug in older versions
 			of libxslt, which ignores ordering in an xsl:apply-templates -->
 		<xsl:for-each select="*">
@@ -2652,8 +2674,12 @@ $prefLabel, $altLabel, $title and $name variables.
 							<xsl:apply-templates select="/result" mode="searchURI" />
 						</xsl:with-param>
 						<xsl:with-param name="param" select="$paramName" />
-						<xsl:with-param name="value" select="$value" />
-					</xsl:call-template>
+                        <xsl:with-param name="value">
+                            <xsl:call-template name="escapeValue">
+						        <xsl:with-param name="value" select="$value" />
+					        </xsl:call-template>
+                        </xsl:with-param>
+                    </xsl:call-template>
 				</xsl:attribute>
 				<img src="{$inactiveImageBase}/Search.png" alt="more like this" />
 			</a>
@@ -2703,8 +2729,12 @@ $prefLabel, $altLabel, $title and $name variables.
 							<xsl:apply-templates select="/result" mode="searchURI" />
 						</xsl:with-param>
 						<xsl:with-param name="param" select="$paramName" />
-						<xsl:with-param name="value" select="$label" />
-					</xsl:call-template>
+                        <xsl:with-param name="value">
+                            <xsl:call-template name="escapeValue">
+						       <xsl:with-param name="value" select="$label" />
+					        </xsl:call-template>
+                        </xsl:with-param>                        
+                    </xsl:call-template>
 				</xsl:attribute>
 				<img src="{$inactiveImageBase}/Search.png" alt="more like this" />
 			</a>
