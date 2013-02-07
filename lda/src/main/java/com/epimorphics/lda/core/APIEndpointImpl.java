@@ -258,8 +258,9 @@ public class APIEndpointImpl implements APIEndpoint {
 	    </p>
 	*/
 	private void createOptionalMetadata( APIResultSet rs, APIQuery query, EndpointMetadata em ) {
-		Model rsm = rs.getModels().getMetaModel();
-		Resource exec = rsm.createResource();
+		Model metaModel = rs.getModels().getMetaModel();
+		Model mergedModels = rs.getModels().getMergedModel();
+		Resource exec = metaModel.createResource();
 		Model versions = ModelFactory.createDefaultModel();
 		Model formats = ModelFactory.createDefaultModel();
 		Model bindings = ModelFactory.createDefaultModel();
@@ -267,14 +268,14 @@ public class APIEndpointImpl implements APIEndpoint {
 	//	
 		em.addVersions( versions, spec.getExplicitViewNames() );
 		em.addFormats( formats, spec.getRendererFactoryTable() );
-		em.addBindings( rsm, bindings, exec, spec.getAPISpec().getShortnameService().nameMap() );
+		em.addBindings( mergedModels, bindings, exec, spec.getAPISpec().getShortnameService().nameMap() );
 		em.addExecution( execution, exec );
 		em.addQueryMetadata( execution, exec, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
 	//
-        if (query.wantsMetadata( "versions" )) rsm.add( versions ); else rs.setMetadata( "versions", versions );
-        if (query.wantsMetadata( "formats" )) rsm.add( formats );  else rs.setMetadata( "formats", formats );
-        if (query.wantsMetadata( "bindings" )) rsm.add( bindings ); else rs.setMetadata( "bindings", bindings );
-        if (query.wantsMetadata( "execution" )) rsm.add( execution ); else rs.setMetadata( "execution", execution );
+        if (query.wantsMetadata( "versions" )) metaModel.add( versions ); else rs.setMetadata( "versions", versions );
+        if (query.wantsMetadata( "formats" )) metaModel.add( formats );  else rs.setMetadata( "formats", formats );
+        if (query.wantsMetadata( "bindings" )) metaModel.add( bindings ); else rs.setMetadata( "bindings", bindings );
+        if (query.wantsMetadata( "execution" )) metaModel.add( execution ); else rs.setMetadata( "execution", execution );
 	}
     /**
      * The URI template at which this APIEndpoint should be attached
