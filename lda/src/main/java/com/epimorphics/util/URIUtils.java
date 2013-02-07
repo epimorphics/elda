@@ -154,11 +154,11 @@ public class URIUtils {
 			requestUri.getQuery(),
 			resolved.getFragment()
 			);
-			if (!built.equals(uri)) 
-				log.warn( "resolveAgainstBase:" 
-					+ "\n  old code delivers "  + uri 
-					+ "\n  but new code delivers: " + built 
-				);
+//			if (!built.equals(uri)) 
+//				log.warn( "resolveAgainstBase:" 
+//					+ "\n  old code delivers "  + uri 
+//					+ "\n  but new code delivers: " + built 
+//				);
 			return built;
 		} catch (URISyntaxException e) {
 			throw new WrappedException( e );
