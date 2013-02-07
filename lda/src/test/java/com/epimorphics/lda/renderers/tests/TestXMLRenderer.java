@@ -27,7 +27,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-public class TestXMLRenderer 
+@Ignore public class TestXMLRenderer 
 	{	
 	@Test public void testParser() 
 		{

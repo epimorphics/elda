@@ -10,6 +10,8 @@ import java.util.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
@@ -110,6 +112,9 @@ public class XMLRendering {
 	/** 
 		The way in -- all external uses come via this method, so we can
 		compute useful things before doing the actual rendering.
+		
+		NOTE. This code was written hastily and will be pruned and
+		simplified as soon as possible, but not today.	
 	*/
 	public Element addResourceToElement( Element e, Resource x, MergedModels mm ) {
 				
@@ -118,7 +123,9 @@ public class XMLRendering {
 				
 		for (RDFNode m: selectedItems) dontExpand.add( m.asResource() );
 		
-		Resource xInObjectModel = x.inModel(mm.getObjectModel() );
+		Model objectModel = mm.getObjectModel();
+		
+		Resource xInObjectModel = x.inModel(objectModel );
 		
 		Resource xInMetaModel = x.inModel(mm.getMetaModel() );
 	//
@@ -135,19 +142,50 @@ public class XMLRendering {
 		Trail t2 = new Trail();
 		t2.see(xInMetaModel);
 	//	
-		boolean hasPrimaryTopic = xInObjectModel.hasProperty( FOAF.primaryTopic );
-
-		Trail t = new Trail();
-		if (hasPrimaryTopic) 
-			addPropertyValues( t, e, xInObjectModel, FOAF.primaryTopic, false );
-		else
-			addPropertyValues( t, e, xInObjectModel, API.items, false );
-		
 	//
 		for (Property p: metaProperties)			
 			addPropertyValues( t2, e, xInMetaModel, p, false );
 	//
+		boolean hasPrimaryTopic = xInMetaModel.hasProperty( FOAF.primaryTopic );
+		
+		Trail t = new Trail();
+		if (hasPrimaryTopic) { 			
+			Element pt = findByNodeName( e, "primaryTopic" );
+			String itemUri = pt.getAttribute( "href" );
+			Resource item = objectModel.createResource( itemUri );
+			List<Property> itemProperties = asSortedList( item.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+			for (Property ip: itemProperties) {
+				addPropertyValues( t, pt, item, ip, true );
+			}			
+		} else {			
+			NodeList nl = findItems( e ).getChildNodes();
+			for (int i = 0; i < nl.getLength(); i += 1) {
+				Element anItem = (Element) nl.item(i);
+				String itemUri = anItem.getAttribute( "href" );
+				Resource item = objectModel.createResource( itemUri );
+				List<Property> itemProperties = asSortedList( item.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+				for (Property ip: itemProperties) {
+					addPropertyValues( t, anItem, item, ip, true );
+				}
+			}
+		}
+	//
 		return e;
+	}
+	
+	private Element findItems( Element e ) {
+		return findByNodeName( e, "items" );
+	}
+	
+	private Element findByNodeName( Element e, String name ) {
+		NodeList nl = e.getChildNodes();
+		for (int i = 0; i < nl.getLength(); i += 1) {
+			Node it = nl.item(i);
+			if (it.getNodeName().equals( name ))
+				return (Element) it;
+		}
+		System.err.println( ">> could not find " + name );
+		return null;
 	}
 
 	// Answer a List of all the items hanging off the RDF list

@@ -28,7 +28,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 
-public class TestShortNames {
+@Ignore public class TestShortNames {
 
 //	@Test public void ensure_prefixing_of_sensitive_names() {
 //		NameMap nm = new NameMap();

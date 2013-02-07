@@ -176,68 +176,69 @@ public class APIEndpointImpl implements APIEndpoint {
 		if (rs.isEmpty() && exceptionIfEmpty && !isListEndpoint()) EldaException.NoItemFound();
 		
 	//
-		Model rsm = rs.getModels().getMetaModel();
-		Model om = rs.getModels().getObjectModel();
+		Model metaModel = rs.getModels().getMetaModel();
+		Model objectModel = rs.getModels().getObjectModel();
 	//
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
     //
-        Resource uriForSpec = rsm.createResource( spec.getSpecificationURI() ); 
+        Resource uriForSpec = metaModel.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
     //
         URI uriForList = withoutPageParameters( ru );
     //  
-        Resource thisPage = rsm.createResource( ru.toString() ); // adjustPageParameter( rsm, ru, page );
-    //
-        Resource thisObjectPage = thisPage.inModel( rs.getModels().getObjectModel() );
+        Resource thisMetaPage = metaModel.createResource( ru.toString() ); 
+        Resource thisObjectPage = thisMetaPage.inModel( objectModel );
     //
         rs.setContentLocation( URIUtils.changeFormatSuffix( ru, formatNames, format ) );
     //        
-        Resource uriForDefinition = rsm.createResource( createDefinitionURI( uriForList, uriForSpec, template, b.expandVariables( template ) ) ); 
+        Resource uriForDefinition = metaModel.createResource( createDefinitionURI( uriForList, uriForSpec, template, b.expandVariables( template ) ) ); 
     //
-        rs.setRoot(thisPage);
+        rs.setRoot(thisMetaPage);
     //
-		thisPage.addProperty( API.definition, uriForDefinition );
+		thisMetaPage.addProperty( API.definition, uriForDefinition );
     //
-        URI emv_uri = URIUtils.replaceQueryParam( URIUtils.newURI(thisPage.getURI()), "_metadata", "all" );
-        thisPage.addProperty( API.extendedMetadataVersion, rsm.createResource( emv_uri.toString() ) );
+        URI emv_uri = URIUtils.replaceQueryParam( URIUtils.newURI(thisMetaPage.getURI()), "_metadata", "all" );
+        thisMetaPage.addProperty( API.extendedMetadataVersion, metaModel.createResource( emv_uri.toString() ) );
     //
-        thisPage.addProperty( RDF.type, API.Page );
+        thisMetaPage.addProperty( RDF.type, API.Page );
     //
         if (isListEndpoint()) {
-        	RDFList content = om.createList( rs.getResultList().iterator() );
-        	thisPage
+        	
+        	RDFList content = metaModel.createList( rs.getResultList().iterator() );
+        	
+        	thisMetaPage
 	        	.addLiteral( API.page, page )
 	        	.addLiteral( OpenSearch.itemsPerPage, perPage )
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
         	
-        	thisObjectPage.addProperty( API.items, content );
+        	thisMetaPage.addProperty( API.items, content );
         	
-        	Resource firstPage = adjustPageParameter( rsm, ru, 0 );
-        	Resource nextPage = adjustPageParameter( rsm, ru, page + 1 );
-        	Resource prevPage = adjustPageParameter( rsm, ru, page - 1 );
+        	Resource firstPage = adjustPageParameter( metaModel, ru, 0 );
+        	Resource nextPage = adjustPageParameter( metaModel, ru, page + 1 );
+        	Resource prevPage = adjustPageParameter( metaModel, ru, page - 1 );
 
-        	thisPage.addProperty( XHV.first, firstPage );
-    		if (!rs.isCompleted) thisPage.addProperty( XHV.next, nextPage );
-    		if (page > 0) thisPage.addProperty( XHV.prev, prevPage );
+        	thisMetaPage.addProperty( XHV.first, firstPage );
+    		if (!rs.isCompleted) thisMetaPage.addProperty( XHV.next, nextPage );
+    		if (page > 0) thisMetaPage.addProperty( XHV.prev, prevPage );
     		
-			Resource listRoot = rsm.createResource( uriForList.toString() );
-    		thisPage
+			Resource listRoot = metaModel.createResource( uriForList.toString() );
+    		thisMetaPage
 	    		.addProperty( DCTerms.hasPart, listRoot )
 	    		;
     		listRoot
-	    		.addProperty( DCTerms.isPartOf, thisPage )
+	    		.addProperty( DCTerms.isPartOf, thisMetaPage )
 	    		.addProperty( API.definition, uriForDefinition ) 
 	    		.addProperty( RDF.type, API.ListEndpoint )
 	    		;
         } else {
-			Resource content = rs.getResultList().get(0);
-			thisObjectPage.addProperty( FOAF.primaryTopic, content );
-			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisPage );
+			Resource content = rs.getResultList().get(0).inModel(metaModel);
+			thisMetaPage.addProperty( FOAF.primaryTopic, content );
+			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
 		}
-        EndpointMetadata em = new EndpointMetadata( spec, thisPage, "" + page, b, uriForList, formatNames );
+        EndpointMetadata em = new EndpointMetadata( spec, thisMetaPage, "" + page, b, uriForList, formatNames );
         createOptionalMetadata(rs, query, em);   
     }
 
