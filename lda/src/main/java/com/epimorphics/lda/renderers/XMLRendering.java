@@ -121,8 +121,6 @@ public class XMLRendering {
 		itemsResource = getItemsResource( x );
 		Set<RDFNode> selectedItems = getItemsList( itemsResource );
 				
-		for (RDFNode m: selectedItems) dontExpand.add( m.asResource() );
-		
 		Model objectModel = mm.getObjectModel();
 		
 		Resource xInObjectModel = x.inModel(objectModel );
@@ -136,55 +134,47 @@ public class XMLRendering {
 		addIdentification( e, x );
 		// dontExpand.add( x );
 	//
-		expandMetaData(e, xInMetaModel);
-	//
-		boolean hasPrimaryTopic = xInMetaModel.hasProperty( FOAF.primaryTopic );
-		expandObjectData( e, hasPrimaryTopic, objectModel );
-	//
-//		System.err.println( ">> main rendering work completed." );
-		return e;
-	}
-
-	private void expandMetaData(Element e, Resource xInMetaModel) {
+		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 	//
 		// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
-		Trail t = new Trail();
-		// t.see(xInMetaModel);
+		Trail t2 = new Trail();
+		t2.see(xInMetaModel);
 	//	
-		expandItemProperties( t, e, xInMetaModel );
-	}
+	//
+		for (Property p: metaProperties)			
+			addPropertyValues( t2, e, xInMetaModel, p, false );
+	//
+		dontExpand.clear();
+		for (RDFNode m: selectedItems) dontExpand.add( m.asResource() );
 
-	private void expandObjectData( Element e, boolean hasPrimaryTopic, Model objectModel ) {
-		//		System.err.println( ">> has primary topic: " + hasPrimaryTopic );
+		boolean hasPrimaryTopic = xInMetaModel.hasProperty( FOAF.primaryTopic );
+		
+//		System.err.println( ">> has primary topic: " + hasPrimaryTopic );
+		
 		Trail t = new Trail();
 		if (hasPrimaryTopic) { 			
-			expandByHref(t, findByNodeName( e, "primaryTopic" ), objectModel);			
+			Element pt = findByNodeName( e, "primaryTopic" );
+			String itemUri = pt.getAttribute( "href" );
+			Resource item = objectModel.createResource( itemUri );
+			List<Property> itemProperties = asSortedList( item.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+			for (Property ip: itemProperties) {
+				addPropertyValues( t, pt, item, ip, true );
+			}			
 		} else {			
 			NodeList nl = findItems( e ).getChildNodes();
 			for (int i = 0; i < nl.getLength(); i += 1) {
-				expandByHref( t, (Element) nl.item(i), objectModel );
+				Element anItem = (Element) nl.item(i);
+				String itemUri = anItem.getAttribute( "href" );
+				Resource item = objectModel.createResource( itemUri );
+				List<Property> itemProperties = asSortedList( item.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+				for (Property ip: itemProperties) {
+					addPropertyValues( t, anItem, item, ip, true );
+				}
 			}
 		}
-	}
-
-	/**
-	    Expand e with the properties of the resource named by
-	    e's href attribute as seen in the itemModel.
-	*/
-	private void expandByHref( Trail t, Element e, Model itemModel ) {
-		String itemUri = e.getAttribute( "href" );
-		Resource item = itemModel.createResource( itemUri );
-		expandItemProperties(t, e, item);
-	}
-
-	/**
-	    Expand e with the properties of item, passing along the trail.
-	*/
-	private void expandItemProperties( Trail t, Element e, Resource item ) {
-		List<Property> itemProperties = asSortedList( item.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
-		for (Property ip: itemProperties) {
-			addPropertyValues( t, e, item, ip, true );
-		}
+	//
+//		System.err.println( ">> main rendering work completed." );
+		return e;
 	}
 	
 	private Element findItems( Element e ) {
@@ -259,9 +249,10 @@ public class XMLRendering {
 								
 		// System.err.println( ">> elementAddResource: " + x );
 		// System.err.println( ">>  trail:" + t );
-		
-		if (t.unseen( x )) {
+
+		if (t.unseen( x ) && !dontExpand.contains( x )) {
 			t.see(x);
+			dontExpand.add( x );
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 			// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
 			for (Property p: properties) addPropertyValues( t, e, x, p, false );		
