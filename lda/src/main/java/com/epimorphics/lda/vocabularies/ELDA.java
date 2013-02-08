@@ -27,7 +27,7 @@ public class ELDA
 	{
 	static final String version = Version.string;
 	
-	static final String tag = "";
+	static final String tag = " [A]";
 	
 	static final private Model m = ModelFactory.createDefaultModel();
 	
