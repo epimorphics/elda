@@ -4,14 +4,14 @@
   <parent>
     <artifactId>elda</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.2.20-SNAPSHOT</version>
+    <version>1.2.20</version>
   </parent>
 
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda-standalone</artifactId>
   <packaging>war</packaging>
   <name>elda-standalone</name>
-  <version>1.2.20-SNAPSHOT</version>
+  <version>1.2.20</version>
   <description>instant Elda webapp</description>
 
   <dependencies>
