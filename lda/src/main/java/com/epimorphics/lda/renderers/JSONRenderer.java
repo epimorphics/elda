@@ -68,8 +68,8 @@ public class JSONRenderer implements Renderer {
         String callback = b.getValueString( "callback" );
         final String before = (callback == null ? "" : callback + "(");
         final String after = (callback == null ? "" : ")");
-        final Resource root = results.getRoot();
         final Model model = results.getMergedModel();
+        final Resource root = results.getRoot().inModel(model);
         final Context context = given.clone();
 		final List<Resource> roots = new ArrayList<Resource>(1);
 		roots.add( root );

@@ -121,8 +121,6 @@ public class XMLRendering {
 		itemsResource = getItemsResource( x );
 		Set<RDFNode> selectedItems = getItemsList( itemsResource );
 				
-		for (RDFNode m: selectedItems) dontExpand.add( m.asResource() );
-		
 		Model objectModel = mm.getObjectModel();
 		
 		Resource xInObjectModel = x.inModel(objectModel );
@@ -146,6 +144,9 @@ public class XMLRendering {
 		for (Property p: metaProperties)			
 			addPropertyValues( t2, e, xInMetaModel, p, false );
 	//
+		dontExpand.clear();
+		for (RDFNode m: selectedItems) dontExpand.add( m.asResource() );
+
 		boolean hasPrimaryTopic = xInMetaModel.hasProperty( FOAF.primaryTopic );
 		
 //		System.err.println( ">> has primary topic: " + hasPrimaryTopic );
@@ -248,9 +249,10 @@ public class XMLRendering {
 								
 		// System.err.println( ">> elementAddResource: " + x );
 		// System.err.println( ">>  trail:" + t );
-		
-		if (t.unseen( x )) {
+
+		if (t.unseen( x ) && !dontExpand.contains( x )) {
 			t.see(x);
+			dontExpand.add( x );
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 			// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
 			for (Property p: properties) addPropertyValues( t, e, x, p, false );		
