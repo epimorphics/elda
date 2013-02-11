@@ -16,7 +16,7 @@ public class TestRenderingExperiments extends XMLTestCase {
 	
 	public void testIt() throws ParserConfigurationException, SAXException, IOException {
 		Document d1 = parse("<outside> A <inside> B </inside> C </outside>");
-		Document d2 = parse("<outside> A <inside> X </inside> C </outside>");
+		Document d2 = parse("<outside> A <inside> B </inside> C </outside>");
 		assertXMLEqual( d1, d2 );
 	}
 
