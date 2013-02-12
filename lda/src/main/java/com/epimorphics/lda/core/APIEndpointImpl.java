@@ -241,7 +241,7 @@ public class APIEndpointImpl implements APIEndpoint {
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
 		}
         EndpointMetadata em = new EndpointMetadata( spec, thisMetaPage, "" + page, b, uriForList, formatNames );
-        createOptionalMetadata(mergedModels, rs, rs.getDetailsQuery(), query, em);   
+        createOptionalMetadata( b, mergedModels, rs, rs.getDetailsQuery(), query, em);   
     }
 
 	/**
@@ -260,7 +260,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    	a renderer (ie, the xslt renderer in the education example).
 	    </p>
 	*/
-	private void createOptionalMetadata( MergedModels mm, SetsMetadata rs, String viewQuery, APIQuery query, EndpointMetadata em ) {
+	private void createOptionalMetadata( Bindings b, MergedModels mm, SetsMetadata rs, String viewQuery, APIQuery query, EndpointMetadata em ) {
 		Model metaModel = mm.getMetaModel();
 		Model mergedModels = mm.getMergedModel();
 	//
@@ -272,9 +272,12 @@ public class APIEndpointImpl implements APIEndpoint {
 	//	
 		em.addVersions( versions, spec.getExplicitViewNames() );
 		em.addFormats( formats, spec.getRendererFactoryTable() );
-		em.addBindings( mergedModels, bindings, exec, spec.getAPISpec().getShortnameService().nameMap() );
+		APISpec apiSpec = spec.getAPISpec();
+		em.addBindings( mergedModels, bindings, exec, apiSpec.getShortnameService().nameMap() );
 		em.addExecution( execution, exec );
-		em.addQueryMetadata( execution, exec, query, viewQuery, spec.getAPISpec(), isListEndpoint() );
+				
+		String selectQuery = query.getQueryString( apiSpec, b );
+		em.addQueryMetadata( execution, exec, query, selectQuery, viewQuery, apiSpec, isListEndpoint() );
 	//
         if (query.wantsMetadata( "versions" )) metaModel.add( versions ); else rs.setMetadata( "versions", versions );
         if (query.wantsMetadata( "formats" )) metaModel.add( formats );  else rs.setMetadata( "formats", formats );

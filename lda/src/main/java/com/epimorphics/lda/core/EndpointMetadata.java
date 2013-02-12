@@ -165,7 +165,8 @@ public class EndpointMetadata {
 		page.addProperty( API.wasResultOf, exec );
 	}
 
-	public void addQueryMetadata( Model meta, Resource anExec, APIQuery q, String detailsQuery, APISpec apiSpec, boolean listEndpoint ) {
+	public void addQueryMetadata( Model meta, Resource anExec, APIQuery q, String selectQuery, String viewQuery, APISpec apiSpec, boolean listEndpoint ) {
+		// String selectQuery = q.getQueryString( apiSpec, bindings );
 		Resource EP = meta.createResource( SPARQL.Service );
 	//
 		apiSpec.getDataSource().addMetadata( EP ); 
@@ -175,13 +176,13 @@ public class EndpointMetadata {
 		Resource exec = anExec.inModel(meta);
 		if (listEndpoint) {
 	    	Resource sr = meta.createResource( SPARQL.QueryResult );    	
-	    	sr.addProperty( SPARQL.query, inValue( meta, q.getQueryString( apiSpec, bindings ) ) );
+			sr.addProperty( SPARQL.query, inValue( meta, selectQuery ) );
 	    	sr.addProperty( SPARQL.endpoint, EP );
 	    	exec.addProperty( API.selectionResult, sr );
 		}
 	//
 		Resource vr = meta.createResource( SPARQL.QueryResult );
-		vr.addProperty( SPARQL.query, inValue( meta, detailsQuery ) ); 
+		vr.addProperty( SPARQL.query, inValue( meta, viewQuery ) ); 
 		vr.addProperty( SPARQL.endpoint, EP );
 		exec.addProperty( API.viewingResult, vr );
 	}
