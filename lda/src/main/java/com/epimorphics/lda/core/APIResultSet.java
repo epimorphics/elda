@@ -48,7 +48,7 @@ import com.epimorphics.util.RDFUtils;
 	@author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
 	@version $Revision: $
 */
-public class APIResultSet {
+public class APIResultSet implements SetsMetadata {
 
     static final Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
     

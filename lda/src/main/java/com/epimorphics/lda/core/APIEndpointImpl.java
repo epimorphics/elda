@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
+import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.exceptions.QueryParseException;
@@ -43,6 +44,7 @@ import com.epimorphics.util.RDFUtils;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
+import com.hp.hpl.jena.rdf.arp.states.WantsObjectFrameI;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -174,10 +176,10 @@ public class APIEndpointImpl implements APIEndpoint {
 		boolean exceptionIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
 	//
 		if (rs.isEmpty() && exceptionIfEmpty && !isListEndpoint()) EldaException.NoItemFound();
-		
 	//
-		Model metaModel = rs.getModels().getMetaModel();
-		Model objectModel = rs.getModels().getObjectModel();
+		MergedModels mergedModels = rs.getModels();
+		Model metaModel = mergedModels.getMetaModel();
+		Model objectModel = mergedModels.getObjectModel();
 	//
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
@@ -239,7 +241,7 @@ public class APIEndpointImpl implements APIEndpoint {
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
 		}
         EndpointMetadata em = new EndpointMetadata( spec, thisMetaPage, "" + page, b, uriForList, formatNames );
-        createOptionalMetadata(rs, query, em);   
+        createOptionalMetadata(mergedModels, rs, rs.getDetailsQuery(), query, em);   
     }
 
 	/**
@@ -258,9 +260,10 @@ public class APIEndpointImpl implements APIEndpoint {
 	    	a renderer (ie, the xslt renderer in the education example).
 	    </p>
 	*/
-	private void createOptionalMetadata( APIResultSet rs, APIQuery query, EndpointMetadata em ) {
-		Model metaModel = rs.getModels().getMetaModel();
-		Model mergedModels = rs.getModels().getMergedModel();
+	private void createOptionalMetadata( MergedModels mm, SetsMetadata rs, String viewQuery, APIQuery query, EndpointMetadata em ) {
+		Model metaModel = mm.getMetaModel();
+		Model mergedModels = mm.getMergedModel();
+	//
 		Resource exec = metaModel.createResource();
 		Model versions = ModelFactory.createDefaultModel();
 		Model formats = ModelFactory.createDefaultModel();
@@ -271,7 +274,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		em.addFormats( formats, spec.getRendererFactoryTable() );
 		em.addBindings( mergedModels, bindings, exec, spec.getAPISpec().getShortnameService().nameMap() );
 		em.addExecution( execution, exec );
-		em.addQueryMetadata( execution, exec, query, rs.getDetailsQuery(), spec.getAPISpec(), isListEndpoint() );
+		em.addQueryMetadata( execution, exec, query, viewQuery, spec.getAPISpec(), isListEndpoint() );
 	//
         if (query.wantsMetadata( "versions" )) metaModel.add( versions ); else rs.setMetadata( "versions", versions );
         if (query.wantsMetadata( "formats" )) metaModel.add( formats );  else rs.setMetadata( "formats", formats );
