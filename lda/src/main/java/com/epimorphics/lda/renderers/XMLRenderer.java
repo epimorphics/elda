@@ -6,22 +6,23 @@
 */
 package com.epimorphics.lda.renderers;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-//import sun.org.mozilla.javascript.internal.WrappedException;
-
 import com.hp.hpl.jena.rdf.model.*;
 import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.shared.WrappedException;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
@@ -71,19 +72,23 @@ public class XMLRenderer implements Renderer {
 		r.addResourceToElement( result, root, mm );
 		d.appendChild( result );            
 	//
-//		OutputFormat format = new OutputFormat(d);
-//        format.setLineWidth(65);
-//        format.setIndenting(true);
-//        format.setIndent(2);
-//        Writer out = new StringWriter();
-//        XMLSerializer serializer = new XMLSerializer(out, format);
-//        try {
-//			serializer.serialize(d);
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			throw new WrappedException(e);
-//		}
-//        System.err.println( ">>>>>>>>>>>>>>>>>>>>>>>>>>>\n" + out.toString() );
+		try {	
+			// save the xml for later analysis or use in gold tests.
+			if (true) {			
+				System.err.println( ">> saving rendering to /tmp/xml_rendering.xml" );
+				TransformerFactory tFactory = TransformerFactory.newInstance();
+				Transformer transformer = tFactory.newTransformer();
+				transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
+				transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2");
+				DOMSource source = new DOMSource( d );
+				OutputStream out = new FileOutputStream( "/tmp/xml-rendering.xml" );
+				StreamResult stream = new StreamResult( out );
+				transformer.transform( source, stream );
+				out.close();
+			}
+		} catch (Exception e) {
+			throw new WrappedException( e );
+		}
 	}
 	
 }

@@ -1,0 +1,95 @@
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix os:      <http://a9.com/-/spec/opensearch/1.1/> .
+@prefix opmv:    <http://purl.org/net/opmv/types/common#> .
+@prefix dct:     <http://purl.org/dc/terms/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+@prefix xhv:     <http://www.w3.org/1999/xhtml/vocab#> .
+@prefix sparql:  <http://purl.org/net/opmv/types/sparql#> .
+
+<http://landregistry.data.gov.uk/data/ppi/transaction/4EC1D2A7-B6E4-4D08-8A36-61BCB38AD8B8>
+      a       <http://landregistry.data.gov.uk/def/ppi/Transaction> ;
+      <http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord>
+              <http://landregistry.data.gov.uk/data/ppi/transaction/4EC1D2A7-B6E4-4D08-8A36-61BCB38AD8B8/2012-11-41580> ;
+      <http://landregistry.data.gov.uk/def/ppi/transactionId>
+              "4EC1D2A7-B6E4-4D08-8A36-61BCB38AD8B8"^^<http://landregistry.data.gov.uk/def/ppi/TransactionIdDatatype> .
+
+<http://landregistry.data.gov.uk/data/ppi/transaction/407F87D5-E54B-4BA3-8CB6-455C96109B63>
+      a       <http://landregistry.data.gov.uk/def/ppi/Transaction> ;
+      <http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord>
+              <http://landregistry.data.gov.uk/data/ppi/transaction/407F87D5-E54B-4BA3-8CB6-455C96109B63/2012-11-13401> ;
+      <http://landregistry.data.gov.uk/def/ppi/transactionId>
+              "407F87D5-E54B-4BA3-8CB6-455C96109B63"^^<http://landregistry.data.gov.uk/def/ppi/TransactionIdDatatype> .
+
+<http://landregistry.data.gov.uk/data/ppi/transaction/3B3E9500-D094-4747-9434-542A81F1990B>
+      a       <http://landregistry.data.gov.uk/def/ppi/Transaction> ;
+      <http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord>
+              <http://landregistry.data.gov.uk/data/ppi/transaction/3B3E9500-D094-4747-9434-542A81F1990B/2012-11-26302> ;
+      <http://landregistry.data.gov.uk/def/ppi/transactionId>
+              "3B3E9500-D094-4747-9434-542A81F1990B"^^<http://landregistry.data.gov.uk/def/ppi/TransactionIdDatatype> .
+
+<http://landregistry.data.gov.uk/data/ppi/transaction/7235D3F7-3B24-42C2-ADEE-20BA628886A2>
+      a       <http://landregistry.data.gov.uk/def/ppi/Transaction> ;
+      <http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord>
+              <http://landregistry.data.gov.uk/data/ppi/transaction/7235D3F7-3B24-42C2-ADEE-20BA628886A2/2012-11-65440> ;
+      <http://landregistry.data.gov.uk/def/ppi/transactionId>
+              "7235D3F7-3B24-42C2-ADEE-20BA628886A2"^^<http://landregistry.data.gov.uk/def/ppi/TransactionIdDatatype> .
+
+<http://landregistry.data.gov.uk/data/ppi/transaction/01D708E7-F982-4A19-9A55-AEA000CB4426>
+      a       <http://landregistry.data.gov.uk/def/ppi/Transaction> ;
+      <http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord>
+              <http://landregistry.data.gov.uk/data/ppi/transaction/01D708E7-F982-4A19-9A55-AEA000CB4426/2012-11-31850> ;
+      <http://landregistry.data.gov.uk/def/ppi/transactionId>
+              "01D708E7-F982-4A19-9A55-AEA000CB4426"^^<http://landregistry.data.gov.uk/def/ppi/TransactionIdDatatype> .
+
+<http://landregistry.data.gov.uk/data/ppi/transaction/5001880F-F082-4424-9B11-F5771FBA6006>
+      a       <http://landregistry.data.gov.uk/def/ppi/Transaction> ;
+      <http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord>
+              <http://landregistry.data.gov.uk/data/ppi/transaction/5001880F-F082-4424-9B11-F5771FBA6006/2012-11-10340> ;
+      <http://landregistry.data.gov.uk/def/ppi/transactionId>
+              "5001880F-F082-4424-9B11-F5771FBA6006"^^<http://landregistry.data.gov.uk/def/ppi/TransactionIdDatatype> .
+
+<http://landregistry.data.gov.uk/data/ppi/transaction/9DA12BDB-3497-49F9-93DE-47AE922A2FD7>
+      a       <http://landregistry.data.gov.uk/def/ppi/Transaction> ;
+      <http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord>
+              <http://landregistry.data.gov.uk/data/ppi/transaction/9DA12BDB-3497-49F9-93DE-47AE922A2FD7/2012-11-61095> ;
+      <http://landregistry.data.gov.uk/def/ppi/transactionId>
+              "9DA12BDB-3497-49F9-93DE-47AE922A2FD7"^^<http://landregistry.data.gov.uk/def/ppi/TransactionIdDatatype> .
+
+<http://landregistry.data.gov.uk/data/ppi/transaction/AB393402-2265-4A0A-81CA-64523DF04878>
+      a       <http://landregistry.data.gov.uk/def/ppi/Transaction> ;
+      <http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord>
+              <http://landregistry.data.gov.uk/data/ppi/transaction/AB393402-2265-4A0A-81CA-64523DF04878/2012-11-08767> ;
+      <http://landregistry.data.gov.uk/def/ppi/transactionId>
+              "AB393402-2265-4A0A-81CA-64523DF04878"^^<http://landregistry.data.gov.uk/def/ppi/TransactionIdDatatype> .
+
+<http://landregistry.data.gov.uk/data/ppi/transaction/4CE0C18F-C8F3-4897-87C4-9721E32BEE16>
+      a       <http://landregistry.data.gov.uk/def/ppi/Transaction> ;
+      <http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord>
+              <http://landregistry.data.gov.uk/data/ppi/transaction/4CE0C18F-C8F3-4897-87C4-9721E32BEE16/2012-11-15358> ;
+      <http://landregistry.data.gov.uk/def/ppi/transactionId>
+              "4CE0C18F-C8F3-4897-87C4-9721E32BEE16"^^<http://landregistry.data.gov.uk/def/ppi/TransactionIdDatatype> .
+
+<http://landregistry.data.gov.uk/data/ppi/transaction.ttl>
+      a       <http://purl.org/linked-data/api/vocab#Page> , <http://purl.org/linked-data/api/vocab#ListEndpoint> ;
+      os:itemsPerPage "10"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      os:startIndex "1"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      dct:hasPart <http://landregistry.data.gov.uk/data/ppi/transaction.ttl> ;
+      dct:isPartOf <http://landregistry.data.gov.uk/data/ppi/transaction.ttl> ;
+      <http://purl.org/linked-data/api/vocab#definition>
+              <http://landregistry.data.gov.uk/meta/data/ppi/transaction.ttl> ;
+      <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>
+              <http://landregistry.data.gov.uk/data/ppi/transaction.ttl?_metadata=all> ;
+      <http://purl.org/linked-data/api/vocab#items>
+              (<http://landregistry.data.gov.uk/data/ppi/transaction/AB393402-2265-4A0A-81CA-64523DF04878> <http://landregistry.data.gov.uk/data/ppi/transaction/5001880F-F082-4424-9B11-F5771FBA6006> <http://landregistry.data.gov.uk/data/ppi/transaction/056E052F-4193-4FBF-9956-24D46E9CCBA5> <http://landregistry.data.gov.uk/data/ppi/transaction/3B3E9500-D094-4747-9434-542A81F1990B> <http://landregistry.data.gov.uk/data/ppi/transaction/7235D3F7-3B24-42C2-ADEE-20BA628886A2> <http://landregistry.data.gov.uk/data/ppi/transaction/9DA12BDB-3497-49F9-93DE-47AE922A2FD7> <http://landregistry.data.gov.uk/data/ppi/transaction/407F87D5-E54B-4BA3-8CB6-455C96109B63> <http://landregistry.data.gov.uk/data/ppi/transaction/4EC1D2A7-B6E4-4D08-8A36-61BCB38AD8B8> <http://landregistry.data.gov.uk/data/ppi/transaction/01D708E7-F982-4A19-9A55-AEA000CB4426> <http://landregistry.data.gov.uk/data/ppi/transaction/4CE0C18F-C8F3-4897-87C4-9721E32BEE16>) ;
+      <http://purl.org/linked-data/api/vocab#page>
+              "0"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      xhv:first <http://landregistry.data.gov.uk/data/ppi/transaction.ttl?_page=0> ;
+      xhv:next <http://landregistry.data.gov.uk/data/ppi/transaction.ttl?_page=1> .
+
+<http://landregistry.data.gov.uk/data/ppi/transaction/056E052F-4193-4FBF-9956-24D46E9CCBA5>
+      a       <http://landregistry.data.gov.uk/def/ppi/Transaction> ;
+      <http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord>
+              <http://landregistry.data.gov.uk/data/ppi/transaction/056E052F-4193-4FBF-9956-24D46E9CCBA5/2012-11-09749> ;
+      <http://landregistry.data.gov.uk/def/ppi/transactionId>
+              "056E052F-4193-4FBF-9956-24D46E9CCBA5"^^<http://landregistry.data.gov.uk/def/ppi/TransactionIdDatatype> .
