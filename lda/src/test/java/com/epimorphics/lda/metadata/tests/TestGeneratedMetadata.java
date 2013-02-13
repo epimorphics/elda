@@ -11,7 +11,6 @@ import static org.junit.Assert.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Set;
 
 import org.junit.Test;
 
@@ -20,7 +19,6 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.EndpointMetadata;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.specs.EndpointDetails;
-import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -42,7 +40,6 @@ public class TestGeneratedMetadata {
 		String pageNumber = "1";
 		Bindings cc = new Bindings();
 		URI reqURI = new URI( "" );
-		Set<String> formatNames = CollectionUtils.set( "rdf" );
 	//
 		EndpointDetails spec = new EndpointDetails() {
 
@@ -54,7 +51,7 @@ public class TestGeneratedMetadata {
 				return false;
 			}
 		};
-		EndpointMetadata em = new EndpointMetadata( spec, thisPage, pageNumber, cc, reqURI, formatNames );
+		EndpointMetadata em = new EndpointMetadata( spec, thisPage, pageNumber, cc, reqURI );
 	//
 		PrefixMapping pm = PrefixMapping.Factory.create().setNsPrefix( "this", "http://example.com/root#" );
 		Model toScan = ModelIOUtils.modelFromTurtle( ":a <http://example.com/root#predicate> :b." );

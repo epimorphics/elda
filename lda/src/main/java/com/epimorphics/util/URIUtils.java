@@ -64,11 +64,9 @@ public class URIUtils {
 		return newSuffix.equals("") ? oldPath : oldPath + "." + newSuffix;
 	}
 
-	// TODO issue with URI not handling illegally unescaped [] when unescaping
 	public static URI changeFormatSuffix(URI reqURI, Set<String> knownFormats, String formatName)  {
 		String newPath = replaceSuffix( knownFormats, formatName, reqURI.getPath() );
 		URI result = UriBuilder.fromUri( reqURI ).replacePath( newPath ).build();
-//		System.err.println( ">> changeFormatSuffix returns " + result );
 		return result;
 	}
 	
@@ -121,10 +119,6 @@ public class URIUtils {
 		}
 	}
 
-	public static URI forceDecode(URI u) {
-		return u;
-	}
-
 	/**
 	    Return a Resource in <code>m</code> who's URI is based on 
 	    <code>ru</code>, but with the _page parameter removed (for an item 
@@ -135,6 +129,15 @@ public class URIUtils {
 			? replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
 			: replaceQueryParam( ru, QueryParameter._PAGE );
 		return m.createResource( x.toString() );
+	}
+
+	/**
+	    Return a URI based on <code>ru</code> with any _page or _pageSize
+	    query settings removed. 
+	*/
+	public static URI withoutPageParameters( URI ru ) {
+    	URI rqp1 = replaceQueryParam( ru, QueryParameter._PAGE );
+    	return replaceQueryParam( rqp1, QueryParameter._PAGE_SIZE );
 	}
 
 }
