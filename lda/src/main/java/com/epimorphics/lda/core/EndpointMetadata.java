@@ -15,6 +15,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
+import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.NameMap.Stage2NameMap;
 import com.epimorphics.lda.specs.APISpec;
@@ -100,18 +101,16 @@ public class EndpointMetadata {
 	    Create metadata which describes the available alternative formats
 	    this page could be presented in.
 	*/
-	public void addFormats( Model meta, Factories f ) {
+	public void addFormats( Model meta, Set<FormatNameAndType> formats ) {
 		Resource page = thisPage.inModel(meta);
-		for (String formatName: f.formatNames()) 
-			if (formatName.charAt(0) != '_') {
-				String typeForName = f.getTypeForName( formatName ).toString(); 
-				Resource v = resourceForFormat( pageURI, meta, formatNames, formatName );
-				Resource format = meta.createResource().addProperty( RDFS.label, typeForName );
-				page.addProperty( DCTerms.hasFormat, v );
-				v.addProperty( DCTerms.isFormatOf, thisPage );
-				v.addProperty( DCTerms.format, format );
-				v.addProperty( RDFS.label, formatName );
-			}
+		for (FormatNameAndType format: formats) {
+			Resource v = resourceForFormat( pageURI, meta, formatNames, format.name );
+			Resource formatNode = meta.createResource().addProperty( RDFS.label, format.mediaType );
+			page.addProperty( DCTerms.hasFormat, v );
+			v.addProperty( DCTerms.isFormatOf, thisPage );
+			v.addProperty( DCTerms.format, formatNode );
+			v.addProperty( RDFS.label, format.name );
+		}
 	}
 
 	public void addBindings( Model toScan, Model meta, Resource anExec, NameMap nm ) {

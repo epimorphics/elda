@@ -31,6 +31,8 @@ import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.*;
+import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
+import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
@@ -260,28 +262,39 @@ public class APIEndpointImpl implements APIEndpoint {
 	    	a renderer (ie, the xslt renderer in the education example).
 	    </p>
 	*/
-	private void createOptionalMetadata( Bindings b, MergedModels mm, SetsMetadata rs, String viewQuery, APIQuery query, EndpointMetadata em ) {
+	private void createOptionalMetadata
+		( Bindings b
+		, MergedModels mm
+		, SetsMetadata rs
+		, String viewQuery
+		, APIQuery query
+		, EndpointMetadata em 
+		) {
+		Set<String> viewNames = spec.getExplicitViewNames();
+		Set<FormatNameAndType> formats = spec.getRendererFactoryTable().getFormatNamesAndTypes();
+		APISpec apiSpec = spec.getAPISpec();
+		NameMap nameMap = apiSpec.getShortnameService().nameMap();
+	//
 		Model metaModel = mm.getMetaModel();
 		Model mergedModels = mm.getMergedModel();
 	//
 		Resource exec = metaModel.createResource();
-		Model versions = ModelFactory.createDefaultModel();
-		Model formats = ModelFactory.createDefaultModel();
-		Model bindings = ModelFactory.createDefaultModel();
+		Model versionsModel = ModelFactory.createDefaultModel();
+		Model formatsModel = ModelFactory.createDefaultModel();
+		Model bindingsModel = ModelFactory.createDefaultModel();
 		Model execution = ModelFactory.createDefaultModel();
 	//	
-		em.addVersions( versions, spec.getExplicitViewNames() );
-		em.addFormats( formats, spec.getRendererFactoryTable() );
-		APISpec apiSpec = spec.getAPISpec();
-		em.addBindings( mergedModels, bindings, exec, apiSpec.getShortnameService().nameMap() );
+		em.addVersions( versionsModel, viewNames );
+		em.addFormats( formatsModel, formats );
+		em.addBindings( mergedModels, bindingsModel, exec, nameMap );
 		em.addExecution( execution, exec );
 				
 		String selectQuery = query.getQueryString( apiSpec, b );
 		em.addQueryMetadata( execution, exec, query, selectQuery, viewQuery, apiSpec, isListEndpoint() );
 	//
-        if (query.wantsMetadata( "versions" )) metaModel.add( versions ); else rs.setMetadata( "versions", versions );
-        if (query.wantsMetadata( "formats" )) metaModel.add( formats );  else rs.setMetadata( "formats", formats );
-        if (query.wantsMetadata( "bindings" )) metaModel.add( bindings ); else rs.setMetadata( "bindings", bindings );
+        if (query.wantsMetadata( "versions" )) metaModel.add( versionsModel ); else rs.setMetadata( "versions", versionsModel );
+        if (query.wantsMetadata( "formats" )) metaModel.add( formatsModel );  else rs.setMetadata( "formats", formatsModel );
+        if (query.wantsMetadata( "bindings" )) metaModel.add( bindingsModel ); else rs.setMetadata( "bindings", bindingsModel );
         if (query.wantsMetadata( "execution" )) metaModel.add( execution ); else rs.setMetadata( "execution", execution );
 	}
     /**
