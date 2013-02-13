@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.compose.Union;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.epimorphics.lda.support.LanguageFilter;
 

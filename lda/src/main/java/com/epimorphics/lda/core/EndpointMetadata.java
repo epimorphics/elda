@@ -48,12 +48,12 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 public class EndpointMetadata {
 
 	public static void addAllMetadata
-		( URI ru
+		( MergedModels mergedModels
+		, URI ru
 		, Resource uriForDefinition
 		, Bindings bindings
 		, NameMap nameMap
 		, boolean suppress_IPTO
-		, MergedModels mergedModels
 		, Resource thisMetaPage
 		, int page
 		, int perPage
@@ -115,19 +115,26 @@ public class EndpointMetadata {
 		}
 	//
 		EndpointMetadata em = new EndpointMetadata( details, thisMetaPage, "" + page, bindings, uriForList );
-		createOptionalMetadata
-			( nameMap
-			, details.isListEndpoint()
-			, viewNames
-			, formats
-			, mergedModels
-			, wantsMeta
-			, setsMeta
-			, selectQuery
-			, viewQuery
-			, source
-			, em
-			);
+		Model metaModel1 = mergedModels.getMetaModel();
+		Model mergedModels1 = mergedModels.getMergedModel();
+	//
+		Resource exec = metaModel1.createResource();
+		Model versionsModel = ModelFactory.createDefaultModel();
+		Model formatsModel = ModelFactory.createDefaultModel();
+		Model bindingsModel = ModelFactory.createDefaultModel();
+		Model execution = ModelFactory.createDefaultModel();
+	//	
+		em.addVersions( versionsModel, viewNames );
+		em.addFormats( formatsModel, formats );
+		em.addBindings( mergedModels1, bindingsModel, exec, nameMap );
+		em.addExecution( execution, exec );
+	//
+		em.addQueryMetadata( execution, exec, selectQuery, viewQuery, source, details.isListEndpoint() );
+	//
+	    if (wantsMeta.wantsMetadata( "versions" )) metaModel1.add( versionsModel ); else setsMeta.setMetadata( "versions", versionsModel );
+	    if (wantsMeta.wantsMetadata( "formats" )) metaModel1.add( formatsModel );  else setsMeta.setMetadata( "formats", formatsModel );
+	    if (wantsMeta.wantsMetadata( "bindings" )) metaModel1.add( bindingsModel ); else setsMeta.setMetadata( "bindings", bindingsModel );
+	    if (wantsMeta.wantsMetadata( "execution" )) metaModel1.add( execution ); else setsMeta.setMetadata( "execution", execution );
 	}
 
 	protected final Bindings bindings;
