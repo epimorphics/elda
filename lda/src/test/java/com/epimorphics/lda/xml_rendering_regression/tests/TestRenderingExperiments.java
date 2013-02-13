@@ -141,25 +141,25 @@ public class TestRenderingExperiments extends XMLTestCase {
 			.addProperty( API.label, "transactionId" )
 			;
 		maps
-			.createResource( "http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord" )
-			.addProperty( API.label, "hasTransactionRecord" )
+			.createResource( "http://landregistry.data.gov.uk/def/ppi/TransactionIdDatatype" )
+			.addProperty( API.label, "ppi_TransactionIdDatatype" )
 			;
-		maps
-			.createResource( "http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord" )
-			.addProperty( API.label, "hasTransactionRecord" )
-			;
-		maps
-			.createResource( "http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord" )
-			.addProperty( API.label, "hasTransactionRecord" )
-			;
-		maps
-			.createResource( "http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord" )
-			.addProperty( API.label, "hasTransactionRecord" )
-			;
-		maps
-			.createResource( "http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord" )
-			.addProperty( API.label, "hasTransactionRecord" )
-			;
+//		maps
+//			.createResource( "http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord" )
+//			.addProperty( API.label, "hasTransactionRecord" )
+//			;
+//		maps
+//			.createResource( "http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord" )
+//			.addProperty( API.label, "hasTransactionRecord" )
+//			;
+//		maps
+//			.createResource( "http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord" )
+//			.addProperty( API.label, "hasTransactionRecord" )
+//			;
+//		maps
+//			.createResource( "http://landregistry.data.gov.uk/def/ppi/hasTransactionRecord" )
+//			.addProperty( API.label, "hasTransactionRecord" )
+//			;
 
 		StandardShortnameService sns = new StandardShortnameService( maps );
 		
