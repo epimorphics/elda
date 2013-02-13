@@ -18,6 +18,7 @@ import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.NameMap.Stage2NameMap;
+import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.vocabularies.ELDA;
@@ -164,11 +165,10 @@ public class EndpointMetadata {
 		page.addProperty( API.wasResultOf, exec );
 	}
 
-	public void addQueryMetadata( Model meta, Resource anExec, APIQuery q, String selectQuery, String viewQuery, APISpec apiSpec, boolean listEndpoint ) {
-		// String selectQuery = q.getQueryString( apiSpec, bindings );
+	public void addQueryMetadata( Model meta, Resource anExec, String selectQuery, String viewQuery, Source source, boolean listEndpoint ) {
 		Resource EP = meta.createResource( SPARQL.Service );
 	//
-		apiSpec.getDataSource().addMetadata( EP ); 
+		source.addMetadata( EP ); 
 		Resource url = EP.getProperty( API.sparqlEndpoint ).getResource(); 
 		EP.addProperty( SPARQL.url, url );
 	//

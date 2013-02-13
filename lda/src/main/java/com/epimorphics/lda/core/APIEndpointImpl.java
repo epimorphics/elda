@@ -14,6 +14,7 @@ package com.epimorphics.lda.core;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,12 +31,15 @@ import com.epimorphics.lda.exceptions.QueryParseException;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.QueryParameter;
+import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.OpenSearch;
@@ -46,7 +50,6 @@ import com.epimorphics.util.RDFUtils;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.arp.states.WantsObjectFrameI;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -139,14 +142,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.isListEndpoint();
     }
 
-	private Resource adjustPageParameter( Model m, URI ru, int page) {
-		URI x = isListEndpoint()
-			? URIUtils.replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
-			: URIUtils.replaceQueryParam( ru, QueryParameter._PAGE );
-		return m.createResource( x.toString() );
-    }
-    
-    private String createDefinitionURI( URI ru, Resource uriForSpec, String template, String expanded ) {
+	private String createDefinitionURI( URI ru, Resource uriForSpec, String template, String expanded ) {
     	String pseudoTemplate = template.replaceAll( "\\{([A-Za-z0-9]+)\\}", "_$1" );
        	if (pseudoTemplate.startsWith("http:")) {
     		// Avoid special case from the TestAPI uriTemplates, qv.
@@ -177,74 +173,113 @@ public class APIEndpointImpl implements APIEndpoint {
 		boolean suppress_IPTO = b.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		boolean exceptionIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
 	//
-		if (rs.isEmpty() && exceptionIfEmpty && !isListEndpoint()) EldaException.NoItemFound();
+		boolean listEndpoint = isListEndpoint();
+		if (rs.isEmpty() && exceptionIfEmpty && !listEndpoint) EldaException.NoItemFound();
 	//
 		MergedModels mergedModels = rs.getModels();
 		Model metaModel = mergedModels.getMetaModel();
-		Model objectModel = mergedModels.getObjectModel();
+	//
+		Resource thisMetaPage = metaModel.createResource( ru.toString() ); 
+		Resource uriForSpec = metaModel.createResource( spec.getSpecificationURI() ); 
 	//
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
     //
-        Resource uriForSpec = metaModel.createResource( spec.getSpecificationURI() ); 
         String template = spec.getURITemplate();
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
-    //
-        URI uriForList = withoutPageParameters( ru );
-    //  
-        Resource thisMetaPage = metaModel.createResource( ru.toString() ); 
-        Resource thisObjectPage = thisMetaPage.inModel( objectModel );
-    //
         rs.setContentLocation( URIUtils.changeFormatSuffix( ru, formatNames, format ) );
-    //        
-        Resource uriForDefinition = metaModel.createResource( createDefinitionURI( uriForList, uriForSpec, template, b.expandVariables( template ) ) ); 
-    //
         rs.setRoot(thisMetaPage);
     //
-		thisMetaPage.addProperty( API.definition, uriForDefinition );
-    //
-        URI emv_uri = URIUtils.replaceQueryParam( URIUtils.newURI(thisMetaPage.getURI()), "_metadata", "all" );
-        thisMetaPage.addProperty( API.extendedMetadataVersion, metaModel.createResource( emv_uri.toString() ) );
-    //
-        thisMetaPage.addProperty( RDF.type, API.Page );
-    //
-        if (isListEndpoint()) {
-        	
-        	RDFList content = metaModel.createList( rs.getResultList().iterator() );
-        	
-        	thisMetaPage
-	        	.addLiteral( API.page, page )
-	        	.addLiteral( OpenSearch.itemsPerPage, perPage )
-	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
-	        	;
-        	
-        	thisMetaPage.addProperty( API.items, content );
-        	
-        	Resource firstPage = adjustPageParameter( metaModel, ru, 0 );
-        	Resource nextPage = adjustPageParameter( metaModel, ru, page + 1 );
-        	Resource prevPage = adjustPageParameter( metaModel, ru, page - 1 );
-
-        	thisMetaPage.addProperty( XHV.first, firstPage );
-    		if (!rs.isCompleted) thisMetaPage.addProperty( XHV.next, nextPage );
-    		if (page > 0) thisMetaPage.addProperty( XHV.prev, prevPage );
-    		
-			Resource listRoot = metaModel.createResource( uriForList.toString() );
-    		thisMetaPage
-	    		.addProperty( DCTerms.hasPart, listRoot )
-	    		;
-    		listRoot
-	    		.addProperty( DCTerms.isPartOf, thisMetaPage )
-	    		.addProperty( API.definition, uriForDefinition ) 
-	    		.addProperty( RDF.type, API.ListEndpoint )
-	    		;
-        } else {
-			Resource content = rs.getResultList().get(0).inModel(metaModel);
-			thisMetaPage.addProperty( FOAF.primaryTopic, content );
-			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
-		}
-        EndpointMetadata em = new EndpointMetadata( spec, thisMetaPage, "" + page, b, uriForList, formatNames );
-        createOptionalMetadata( b, mergedModels, rs, rs.getDetailsQuery(), query, em);   
+        List<Resource> resultList = rs.getResultList();
+        boolean hasMorePages = !rs.isCompleted;
+        SetsMetadata setsMeta = (SetsMetadata) rs;
+        WantsMetadata wantsMeta = (WantsMetadata) query;
+        String viewQuery = rs.getDetailsQuery();
+        APISpec apiSpec = spec.getAPISpec();
+        Source source = apiSpec.getDataSource();
+        NameMap nameMap = apiSpec.getShortnameService().nameMap();
+        String selectQuery = query.getQueryString( apiSpec, b );
+        Set<String> viewNames = spec.getExplicitViewNames();
+        EndpointDetails details = (EndpointDetails) spec;
+        Set<FormatNameAndType> formats = spec.getRendererFactoryTable().getFormatNamesAndTypes();
+        URI uriForList = withoutPageParameters( ru );
+    //     
+        Resource uriForDefinition = metaModel.createResource( createDefinitionURI( uriForList, uriForSpec, template, b.expandVariables( template ) ) ); 
+    xxx(ru, b, suppress_IPTO, listEndpoint, mergedModels, metaModel,
+			thisMetaPage, page, perPage, formatNames, resultList, hasMorePages,
+			setsMeta, wantsMeta, viewQuery, source, nameMap, selectQuery,
+			viewNames, details, formats, uriForList, uriForDefinition);   
     }
+
+	public static void xxx(URI ru, Bindings b, boolean suppress_IPTO,
+			boolean listEndpoint, MergedModels mergedModels, Model metaModel,
+			Resource thisMetaPage, int page, int perPage,
+			Set<String> formatNames, List<Resource> resultList,
+			boolean hasMorePages, SetsMetadata setsMeta,
+			WantsMetadata wantsMeta, String viewQuery, Source source,
+			NameMap nameMap, String selectQuery, Set<String> viewNames,
+			EndpointDetails details, Set<FormatNameAndType> formats,
+			URI uriForList, Resource uriForDefinition) {
+		//
+			thisMetaPage.addProperty( API.definition, uriForDefinition );
+		//
+		    URI emv_uri = URIUtils.replaceQueryParam( URIUtils.newURI(thisMetaPage.getURI()), "_metadata", "all" );
+		    thisMetaPage.addProperty( API.extendedMetadataVersion, metaModel.createResource( emv_uri.toString() ) );
+		//
+		    thisMetaPage.addProperty( RDF.type, API.Page );
+		//
+			if (listEndpoint) {
+		    	
+		    	RDFList content = metaModel.createList( resultList.iterator() );
+		    	
+		    	thisMetaPage
+		        	.addLiteral( API.page, page )
+		        	.addLiteral( OpenSearch.itemsPerPage, perPage )
+		        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
+		        	;
+		    	
+		    	thisMetaPage.addProperty( API.items, content );
+		    	
+		    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, 0 );
+		    	Resource nextPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, page + 1 );
+		    	Resource prevPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, page - 1 );
+
+		    	thisMetaPage.addProperty( XHV.first, firstPage );
+				if (hasMorePages) thisMetaPage.addProperty( XHV.next, nextPage );
+				if (page > 0) thisMetaPage.addProperty( XHV.prev, prevPage );
+				
+				Resource listRoot = metaModel.createResource( uriForList.toString() );
+				thisMetaPage
+		    		.addProperty( DCTerms.hasPart, listRoot )
+		    		;
+				listRoot
+		    		.addProperty( DCTerms.isPartOf, thisMetaPage )
+		    		.addProperty( API.definition, uriForDefinition ) 
+		    		.addProperty( RDF.type, API.ListEndpoint )
+		    		;
+		    } else {
+				Resource content = resultList.get(0).inModel(metaModel);
+				thisMetaPage.addProperty( FOAF.primaryTopic, content );
+				if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
+			}
+		//
+		    
+			EndpointMetadata em = new EndpointMetadata( details, thisMetaPage, "" + page, b, uriForList, formatNames );
+			createOptionalMetadata
+				( b
+				, nameMap
+				, details.isListEndpoint()
+				, viewNames
+				, formats
+				, mergedModels
+				, wantsMeta
+				, setsMeta
+				, selectQuery
+				, viewQuery
+				, source
+				, em
+				);
+	}
 
 	/**
 	    <p>
@@ -262,19 +297,20 @@ public class APIEndpointImpl implements APIEndpoint {
 	    	a renderer (ie, the xslt renderer in the education example).
 	    </p>
 	*/
-	private void createOptionalMetadata
+	private static void createOptionalMetadata
 		( Bindings b
+		, NameMap nameMap
+		, boolean isListEndpoint
+		, Set<String> viewNames
+		, Set<FormatNameAndType> formats
 		, MergedModels mm
-		, SetsMetadata rs
+		, WantsMetadata wantsMeta
+		, SetsMetadata setsMeta
+		, String selectQuery
 		, String viewQuery
-		, APIQuery query
+		, Source source
 		, EndpointMetadata em 
 		) {
-		Set<String> viewNames = spec.getExplicitViewNames();
-		Set<FormatNameAndType> formats = spec.getRendererFactoryTable().getFormatNamesAndTypes();
-		APISpec apiSpec = spec.getAPISpec();
-		NameMap nameMap = apiSpec.getShortnameService().nameMap();
-	//
 		Model metaModel = mm.getMetaModel();
 		Model mergedModels = mm.getMergedModel();
 	//
@@ -288,15 +324,15 @@ public class APIEndpointImpl implements APIEndpoint {
 		em.addFormats( formatsModel, formats );
 		em.addBindings( mergedModels, bindingsModel, exec, nameMap );
 		em.addExecution( execution, exec );
-				
-		String selectQuery = query.getQueryString( apiSpec, b );
-		em.addQueryMetadata( execution, exec, query, selectQuery, viewQuery, apiSpec, isListEndpoint() );
+	
+		em.addQueryMetadata( execution, exec, selectQuery, viewQuery, source, isListEndpoint );
 	//
-        if (query.wantsMetadata( "versions" )) metaModel.add( versionsModel ); else rs.setMetadata( "versions", versionsModel );
-        if (query.wantsMetadata( "formats" )) metaModel.add( formatsModel );  else rs.setMetadata( "formats", formatsModel );
-        if (query.wantsMetadata( "bindings" )) metaModel.add( bindingsModel ); else rs.setMetadata( "bindings", bindingsModel );
-        if (query.wantsMetadata( "execution" )) metaModel.add( execution ); else rs.setMetadata( "execution", execution );
+        if (wantsMeta.wantsMetadata( "versions" )) metaModel.add( versionsModel ); else setsMeta.setMetadata( "versions", versionsModel );
+        if (wantsMeta.wantsMetadata( "formats" )) metaModel.add( formatsModel );  else setsMeta.setMetadata( "formats", formatsModel );
+        if (wantsMeta.wantsMetadata( "bindings" )) metaModel.add( bindingsModel ); else setsMeta.setMetadata( "bindings", bindingsModel );
+        if (wantsMeta.wantsMetadata( "execution" )) metaModel.add( execution ); else setsMeta.setMetadata( "execution", execution );
 	}
+	
     /**
      * The URI template at which this APIEndpoint should be attached
      */
