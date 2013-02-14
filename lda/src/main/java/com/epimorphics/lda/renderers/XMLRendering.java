@@ -21,6 +21,7 @@ import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.CycleFinder;
 //import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.vocabs.API;
 
@@ -126,6 +127,9 @@ public class XMLRendering {
 		Resource xInObjectModel = x.inModel(objectModel );
 		
 		Resource xInMetaModel = x.inModel(mm.getMetaModel() );
+		
+		Set<Resource> objectCycles = CycleFinder.findCycles( xInObjectModel );
+		Set<Resource> metaCycles = CycleFinder.findCycles( xInMetaModel );
 	//
 	// This is the top-level expansion: we know which properties are meta-data
 	// and which are not. We expand the items separately from the rest of the
@@ -137,7 +141,7 @@ public class XMLRendering {
 		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 	//
 		// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
-		Trail t2 = new Trail();
+		Trail t2 = new Trail( metaCycles );
 		t2.see(xInMetaModel);
 	//	
 	//
@@ -151,7 +155,7 @@ public class XMLRendering {
 		
 //		System.err.println( ">> has primary topic: " + hasPrimaryTopic );
 		
-		Trail t = new Trail();
+		Trail t = new Trail( objectCycles );
 		if (hasPrimaryTopic) { 			
 			Element pt = findByNodeName( e, "primaryTopic" );
 			String itemUri = pt.getAttribute( "href" );
@@ -212,6 +216,17 @@ public class XMLRendering {
 	static class Trail {
 		
 		final Set<Resource> seen = new HashSet<Resource>();
+		final Set<Resource> cyclic;
+		
+		Trail( Set<Resource> cyclic ) {
+			this.cyclic = cyclic;
+		}
+		
+		// TODO ensure that the second choice has the desired behaviour
+		boolean expand( Resource x, Set<Resource> dontExpand, boolean expandRegardless ) {
+			return unseen( x ) && !dontExpand.contains( x );
+			// return !cyclic.contains( x ) || dontExpand.add( x ) || expandRegardless;
+		}
 		
 		boolean unseen( Resource x ) {
 			return !seen.contains( x );
@@ -250,7 +265,7 @@ public class XMLRendering {
 		// System.err.println( ">> elementAddResource: " + x );
 		// System.err.println( ">>  trail:" + t );
 
-		if (t.unseen( x ) && !dontExpand.contains( x )) {
+		if (t.expand( x, dontExpand, expandRegardless )) {
 			t.see(x);
 			dontExpand.add( x );
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
