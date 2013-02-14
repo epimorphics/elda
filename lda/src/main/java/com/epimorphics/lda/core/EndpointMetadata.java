@@ -7,6 +7,8 @@
 package com.epimorphics.lda.core;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +30,7 @@ import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
+import com.hp.hpl.jena.rdf.model.AnonId;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -225,8 +228,9 @@ public class EndpointMetadata {
 
 	// don't add variables that are not bound!
 	public void addVariableBindings( Model meta, Resource exec ) {
-		for (Iterator<String> names = bindings.keySet().iterator(); names.hasNext();) {
-			String name = names.next();
+		List<String> names = new ArrayList<String>( bindings.keySet() );
+		Collections.sort( names );
+		for (String name: names) {
 			String valueString = bindings.getValueString( name );
 			if (valueString != null) {
 				Resource vb = meta.createResource();
@@ -244,12 +248,14 @@ public class EndpointMetadata {
 	public void addTermBindings( Model toScan, Model meta, Resource exec, NameMap nm ) {
 		Stage2NameMap s2 = nm.stage2().loadPredicates( toScan, toScan );
 		Map<String, String> mm = s2.result();
-		for (String uri: mm.keySet()) {
+		List<String> uriList = new ArrayList<String>( mm.keySet() );
+		Collections.sort( uriList );
+		for (String uri: uriList) {
 			Resource term = meta.createResource( uri );
 			if (toScan.containsResource( term )) {
 				String shorty = mm.get( uri );
 	    		Resource tb = meta.createResource();
-	    		exec.addProperty( API.termBinding, tb );
+	    		exec.addProperty( API.termBinding, tb ); 
 				tb.addProperty( API.label, shorty );
 				tb.addProperty( API.property, term );
 			}

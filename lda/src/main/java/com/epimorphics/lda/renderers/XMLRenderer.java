@@ -6,8 +6,13 @@
 */
 package com.epimorphics.lda.renderers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Map;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -74,14 +79,23 @@ public class XMLRenderer implements Renderer {
 	//
 		try {	
 			// save the xml for later analysis or use in gold tests.
-			if (true) {			
-				System.err.println( ">> saving rendering to /tmp/xml_rendering.xml" );
+			if (false) {		
+				new File("/tmp/gold" ).mkdirs();
+				System.err.println( ">> saving rendering to /tmp/gold/*" );
+				
+				writeModel( mm.getObjectModel(), "/tmp/gold/object_model.ttl" );
+				writeModel( mm.getMetaModel(), "/tmp/gold/meta_model.ttl" );
+				writeResource( root, "/tmp/gold/root.uri" );
+				writeBoolean( suppressIPTO, "/tmp/gold/suppress_ipto.bool" );
+				
+				writeShortnames( sns, "/tmp/gold/names.sns" );
+				
 				TransformerFactory tFactory = TransformerFactory.newInstance();
 				Transformer transformer = tFactory.newTransformer();
-				transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
-				transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2");
+//				transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
+//				transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2");
 				DOMSource source = new DOMSource( d );
-				OutputStream out = new FileOutputStream( "/tmp/xml-rendering.xml" );
+				OutputStream out = new FileOutputStream( "/tmp/gold/xml-rendering.xml" );
 				StreamResult stream = new StreamResult( out );
 				transformer.transform( source, stream );
 				out.close();
@@ -89,6 +103,46 @@ public class XMLRenderer implements Renderer {
 		} catch (Exception e) {
 			throw new WrappedException( e );
 		}
+	}
+
+	private void writeShortnames( ShortnameService sns, String fileName ) throws IOException {
+		OutputStream os = new FileOutputStream( new File( fileName ) );
+		PrintStream ps = new PrintStream( os );
+		
+		
+		Map<String, String> uriToName = sns.nameMap().stage2().result();
+		
+		for (String uri: uriToName.keySet()) {
+			ps.print( uriToName.get( uri ) );
+			ps.print( "=" );
+			ps.print( uri );
+			ps.println();
+		}
+		
+		ps.flush();
+		os.close();
+	}
+
+	private void writeBoolean( boolean suppressIPTO, String fileName ) throws IOException {
+		OutputStream os = new FileOutputStream( new File( fileName ) );
+		PrintStream ps = new PrintStream( os );
+		ps.println( suppressIPTO ? "true" : "false" );
+		ps.flush();
+		os.close();
+	}
+
+	private void writeResource(Resource root, String fileName) throws IOException {
+		OutputStream os = new FileOutputStream( new File( fileName ) );
+		PrintStream ps = new PrintStream( os );
+		ps.println( root.getURI() );
+		ps.flush();
+		os.close();
+	}
+
+	private void writeModel(Model objectModel, String fileName) throws IOException {
+		OutputStream os = new FileOutputStream( new File( fileName ) );
+		objectModel.write( os, "TTL" );
+		os.close();
 	}
 	
 }
