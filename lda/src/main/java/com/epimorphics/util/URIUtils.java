@@ -9,7 +9,6 @@ package com.epimorphics.util;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Set;
 
 import javax.ws.rs.core.UriBuilder;
@@ -18,6 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.query.QueryParameter;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.WrappedException;
 
 public class URIUtils {
@@ -46,39 +48,7 @@ public class URIUtils {
 		URI result = UriBuilder.fromUri( ru ).replaceQueryParam( key,  (Object []) values ).build();
 //		System.err.println( ">> replaceQueryParam returns " + result );
 		return result;
-//		try {
-//			String q = ru.getQuery();
-//			String newQuery = q == null ? "" : URIUtils.strip( q, key );
-//			String and = newQuery.isEmpty() ? "" : "&";
-//			for (String value: values) {
-//				newQuery = newQuery + and + key + "=" + URIUtils.quoteForValue(value);
-//				and = "&";
-//			}
-//			return new URI
-//				(
-//				ru.getScheme(), 
-//				ru.getAuthority(), 
-//				ru.getPath(),
-//				(newQuery.isEmpty() ? null : newQuery), 
-//				ru.getFragment() 
-//				);
-//		} catch (URISyntaxException e) {			
-//			throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e );
-//		}
 	}
-
-//	public static String strip( String query, String key ) {
-//		String result = 
-//			("&" + query)
-//			.replaceAll( "[&]" + key + "=[^&]*", "" )
-//			.replaceFirst( "^[&]", "" )
-//			;
-//		return result;
-//	}
-//
-//	public static String quoteForValue( String value ) {
-//		return value.replace( "&", "%26" );
-//	}
 
 	private static String replaceSuffix( Set<String> knownFormats, String newSuffix, String oldPath ) {
 		int dot_pos = oldPath.lastIndexOf( '.' ), slash_pos = oldPath.lastIndexOf( '/' );
@@ -94,23 +64,9 @@ public class URIUtils {
 		return newSuffix.equals("") ? oldPath : oldPath + "." + newSuffix;
 	}
 
-	// TODO issue with URI not handling illegally unescaped [] when unescaping
 	public static URI changeFormatSuffix(URI reqURI, Set<String> knownFormats, String formatName)  {
-//		try {
-//			URI result = new URI
-//				( reqURI.getScheme()
-//				, reqURI.getAuthority()
-//				, replaceSuffix( knownFormats, formatName, reqURI.getPath() )
-//				, reqURI.getQuery()
-//				, reqURI.getFragment() 
-//				);
-//			return result;
-//		} catch  (URISyntaxException e) {
-//			throw new EldaException( "created a broken URI", "", EldaException.SERVER_ERROR, e );
-//		}
 		String newPath = replaceSuffix( knownFormats, formatName, reqURI.getPath() );
 		URI result = UriBuilder.fromUri( reqURI ).replacePath( newPath ).build();
-//		System.err.println( ">> changeFormatSuffix returns " + result );
 		return result;
 	}
 	
@@ -141,8 +97,6 @@ public class URIUtils {
 			.resolve( noLeadingSlash( uiPath ) )
 			;
 		
-//		System.err.println( ">>   => resolved: " + resolved );
-		
 		URI built = UriBuilder.fromUri( resolved ).replaceQuery( requestUri.getRawQuery() ).build();
 		try {
 			URI uri = new URI(
@@ -165,23 +119,25 @@ public class URIUtils {
 		}
 	}
 
-	public static URI forceDecode(URI u) {
-//		System.err.println( ">> forceDecode: " + u );
-//		try {
-//			return new URI
-//				( 
-//				u.getScheme(),
-//				u.getUserInfo(),
-//				u.getHost(),
-//				u.getPort(),
-//				u.getPath(),
-//				u.getQuery(),
-//				u.getFragment()
-//				);
-//		} catch (URISyntaxException e) {
-//			throw new WrappedException( e );
-//		}
-		return u;
+	/**
+	    Return a Resource in <code>m</code> who's URI is based on 
+	    <code>ru</code>, but with the _page parameter removed (for an item 
+	    endpoint) or updated to <code>page</code> (for a list endpoint).
+	*/
+	public static Resource adjustPageParameter( Model m, URI ru, boolean isListEndpoint, int page) {
+		URI x = isListEndpoint
+			? replaceQueryParam( ru, QueryParameter._PAGE, Integer.toString(page) )
+			: replaceQueryParam( ru, QueryParameter._PAGE );
+		return m.createResource( x.toString() );
+	}
+
+	/**
+	    Return a URI based on <code>ru</code> with any _page or _pageSize
+	    query settings removed. 
+	*/
+	public static URI withoutPageParameters( URI ru ) {
+    	URI rqp1 = replaceQueryParam( ru, QueryParameter._PAGE );
+    	return replaceQueryParam( rqp1, QueryParameter._PAGE_SIZE );
 	}
 
 }

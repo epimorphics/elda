@@ -31,7 +31,6 @@ import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
-import com.hp.hpl.jena.vocabulary.XSD;
 
 /**
     Another class maintaining shortnames, this one avoids
@@ -104,7 +103,6 @@ public class NameMap {
 			if (ShortnameUtils.isLegalShortname( shortName )) {
 				if (strongBinding || mapShortnameToURIs.getAll( shortName ).isEmpty())
 					mapShortnameToURIs.add( shortName, uri );
-				
 			}
 			else if (strongBinding)
 				log.warn( "ignored bad shortname " + shortName + " for " + s.getModel().shortForm( uri ) ); 

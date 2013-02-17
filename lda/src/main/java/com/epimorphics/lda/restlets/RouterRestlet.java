@@ -216,7 +216,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     	, Match match
     	) {
     	URLforResource as = pathAsURLFactory(servCon);
-    	URI requestUri = URIUtils.forceDecode( ui.getRequestUri() );
+    	URI requestUri = ui.getRequestUri();
     	log.info( "handling request " + requestUri );
     //
         try {

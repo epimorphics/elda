@@ -1,0 +1,612 @@
+@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+@prefix spec:    <http://education.data.gov.uk/api-config#> .
+@prefix geo:     <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix so:      <http://education.data.gov.uk/def/school/> .
+@prefix spatialrelations:  <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix school:  <http://education.data.gov.uk/def/school/> .
+@prefix elda:    <http://www.epimorphics.com/vocabularies/lda#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix api:     <http://purl.org/linked-data/api/vocab#> .
+@prefix foundation:  <http://statistics.data.gov.uk/def/Foundation/> .
+@prefix os-admingeo:  <http://data.ordnancesurvey.co.uk/ontology/admingeo/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+<http://api.talis.com/stores/govuk-education/items/1256191356854#self>
+      foundation:val 3705 .
+
+<http://api.talis.com/stores/govuk-education/items/1255678802041#self>
+      school:address1 "John Felton Road" ;
+      school:address2 "Bermondsey" ;
+      school:postcode "SE16 4UN" ;
+      school:town "London" .
+
+<http://api.talis.com/stores/govuk-education/items/1257519194909#self>
+      foundation:date "2009-02-17"^^xsd:date ;
+      foundation:val 107 .
+
+<http://api.talis.com/stores/govuk-education/items/1256065064090#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1255580015127#self> .
+
+school:Boarders_Boarding_School
+      rdfs:label "Boarding School" .
+
+<http://api.talis.com/stores/govuk-education/items/1259139762471#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1255511663204#self> .
+
+<http://education.data.gov.uk/id/school/100857>
+      rdfs:label "The St Thomas the Apostle College" ;
+      school:FSM 156 ;
+      school:FSMPercentage
+              22 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1255907598512#self> ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100857> ;
+      school:establishmentNumber
+              5402 ;
+      school:gender school:Gender_Boys ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:schoolCapacity
+              750 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              16 ;
+      school:statutoryLowAge
+              11 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100857 .
+
+<http://api.talis.com/stores/govuk-education/items/1259149807712#self>
+      school:address1 "127 Herne Hill" ;
+      school:address2 "Herne Hill" ;
+      school:postcode "SE24 9LY" ;
+      school:town "London" .
+
+<http://api.talis.com/stores/govuk-education/items/1255379923455#self>
+      foundation:date "2009-05-19"^^xsd:date ;
+      foundation:val 0 .
+
+school:PhaseOfEducation_Primary
+      rdfs:label "Primary" .
+
+<http://api.talis.com/stores/govuk-education/items/1256643304006#self>
+      school:address1 "Webber Street" ;
+      school:address2 "Blackfriars" ;
+      school:postcode "SE1 0RF" ;
+      school:town "London" .
+
+<http://education.data.gov.uk/id/school/census/100857>
+      school:numberOfBoys 725 ;
+      school:numberOfGirls
+              0 ;
+      school:numberOfPupils
+              725 ;
+      dc:date "2008-01-01"^^xsd:date .
+
+<http://education.data.gov.uk/id/school/census/100852>
+      school:numberOfBoys 146 ;
+      school:numberOfGirls
+              154 ;
+      school:numberOfPupils
+              300 ;
+      dc:date "2008-01-01"^^xsd:date .
+
+<http://api.talis.com/stores/govuk-education/items/1257393351762#self>
+      school:address1 "Townley Road" ;
+      school:address2 "Dulwich" ;
+      school:postcode "SE22 8SU" ;
+      school:town "London" .
+
+<http://api.talis.com/stores/govuk-education/items/1255465477331#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1256191356854#self> .
+
+<http://education.data.gov.uk/id/school/100864>
+      rdfs:label "Alleyn's School" ;
+      school:FSM 0 ;
+      school:FSMPercentage
+              0 ;
+      school:SENNoStat 12 ;
+      school:SENStat 3 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1257393351762#self> ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100864> ;
+      school:compSchoolAge
+              1016 ;
+      school:establishmentNumber
+              6312 ;
+      school:gender school:Gender_Mixed ;
+      school:highDayFee <http://api.talis.com/stores/govuk-education/items/1258364749244#self> ;
+      school:lowDayFee <http://api.talis.com/stores/govuk-education/items/1259499546695#self> ;
+      school:nurseryProvision
+              "false"^^xsd:boolean ;
+      school:pupilTeacherRatio
+              "1187:140" ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Church_of_England ;
+      school:schoolCapacity
+              1187 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              18 ;
+      school:statutoryLowAge
+              4 ;
+      school:totalPupilsFullTime
+              <http://api.talis.com/stores/govuk-education/items/1255802561452#self> ;
+      school:totalPupilsPartTime
+              <http://api.talis.com/stores/govuk-education/items/1255335211666#self> ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100864 .
+
+school:Gender_Girls
+      rdfs:label "Girls" .
+
+<http://education.data.gov.uk/id/school/100860>
+      rdfs:label "Sacred Heart Roman Catholic Secondary School" ;
+      school:FSM 167 ;
+      school:FSMPercentage
+              25 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1255302560316#self> ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100860> ;
+      school:establishmentNumber
+              5405 ;
+      school:gender school:Gender_Mixed ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:schoolCapacity
+              600 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              16 ;
+      school:statutoryLowAge
+              11 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100860 .
+
+<http://api.talis.com/stores/govuk-education/items/1255580015127#self>
+      foundation:date "2009-04-20"^^xsd:date ;
+      foundation:val 819 .
+
+school:Gender_Mixed
+      rdfs:label "Mixed" .
+
+school:ReligiousCharacter_Church_of_England
+      rdfs:label "Church of England" .
+
+<http://api.talis.com/stores/govuk-education/items/1256907011655#self>
+      foundation:date "2009-04-20"^^xsd:date ;
+      foundation:val 12582 .
+
+school:Boarders_No_Boarders
+      rdfs:label "No Boarders" .
+
+school:ReligiousCharacter_Roman_Catholic
+      rdfs:label "Roman Catholic" .
+
+<http://education.data.gov.uk/id/school/census/100862>
+      school:numberOfBoys 815 ;
+      school:numberOfGirls
+              25 ;
+      school:numberOfPupils
+              840 ;
+      dc:date "2008-01-01"^^xsd:date .
+
+<http://api.talis.com/stores/govuk-education/items/1255335211666#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1255379923455#self> .
+
+<http://education.data.gov.uk/id/school/census/100866>
+      school:numberOfBoys 111 ;
+      school:numberOfGirls
+              146 ;
+      school:numberOfPupils
+              257 ;
+      dc:date "2008-01-01"^^xsd:date .
+
+<http://api.talis.com/stores/govuk-education/items/1255544466629#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1256348446187#self> .
+
+<http://api.talis.com/stores/govuk-education/items/1255916234986#self>
+      school:address1 "Forest Hill Road" ;
+      school:address2 "Honor Oak" ;
+      school:postcode "SE23 3LE" ;
+      school:town "London" .
+
+<http://education.data.gov.uk/id/school/100858>
+      rdfs:label "St Michael's RC School" ;
+      school:FSM 188 ;
+      school:FSMPercentage
+              29 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1255678802041#self> ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100858> ;
+      school:establishmentNumber
+              5403 ;
+      school:gender school:Gender_Mixed ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:schoolCapacity
+              600 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              16 ;
+      school:statutoryLowAge
+              11 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100858 .
+
+school:PhaseOfEducation_Secondary
+      rdfs:label "Secondary" .
+
+<http://education.data.gov.uk/id/school/census/100855>
+      school:numberOfBoys 117 ;
+      school:numberOfGirls
+              104 ;
+      school:numberOfPupils
+              221 ;
+      dc:date "2008-01-01"^^xsd:date .
+
+<http://api.talis.com/stores/govuk-education/items/1258673513230#self>
+      foundation:date "2009-05-19"^^xsd:date ;
+      foundation:val 1187 .
+
+<http://api.talis.com/stores/govuk-education/items/1258697026843#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1257809094201#self> .
+
+<http://api.talis.com/stores/govuk-education/items/1257779182886#self>
+      school:address1 "42 Alleyn Park" ;
+      school:address2 "Dulwich" ;
+      school:postcode "SE21 7AA" ;
+      school:town "London" .
+
+<http://education.data.gov.uk/id/school/100851>
+      rdfs:label "St Francesca Cabrini Primary School" ;
+      school:FSM 89 ;
+      school:FSMPercentage
+              22 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1255916234986#self> ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100851> ;
+      school:establishmentNumber
+              5200 ;
+      school:gender school:Gender_Mixed ;
+      school:nurseryProvision
+              "true"^^xsd:boolean ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Primary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:schoolCapacity
+              420 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              11 ;
+      school:statutoryLowAge
+              3 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100851 .
+
+school:ReligiousCharacter_Does_not_apply
+      rdfs:label "Does not apply" .
+
+<http://api.talis.com/stores/govuk-education/items/1258956264560#self>
+      foundation:date "2009-05-19"^^xsd:date ;
+      foundation:val 12285 .
+
+<http://education.data.gov.uk/id/school/census/100851>
+      school:numberOfBoys 194 ;
+      school:numberOfGirls
+              205 ;
+      school:numberOfPupils
+              399 ;
+      dc:date "2008-01-01"^^xsd:date .
+
+<http://api.talis.com/stores/govuk-education/items/1256959443292#self>
+      school:address1 "118 St George's Road" ;
+      school:postcode "SE1 6EX" ;
+      school:town "London" .
+
+<http://api.talis.com/stores/govuk-education/items/1255802561452#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1258673513230#self> .
+
+<http://education.data.gov.uk/id/school/100855>
+      rdfs:label "Friars Primary Foundation School" ;
+      school:FSM 67 ;
+      school:FSMPercentage
+              30 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1256643304006#self> ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100855> ;
+      school:establishmentNumber
+              5205 ;
+      school:gender school:Gender_Mixed ;
+      school:nurseryProvision
+              "true"^^xsd:boolean ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Primary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Does_not_apply ;
+      school:schoolCapacity
+              210 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              11 ;
+      school:statutoryLowAge
+              3 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Foundation_School ;
+      school:uniqueReferenceNumber
+              100855 .
+
+<http://api.talis.com/stores/govuk-education/items/1255602377318#self>
+      foundation:val 10116 .
+
+school:TypeOfEstablishment_TERM_Voluntary_Aided_School
+      rdfs:label "Voluntary Aided School" .
+
+<http://api.talis.com/stores/govuk-education/items/1258822388268#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1257519194909#self> .
+
+<http://education.data.gov.uk/id/school/100859>
+      rdfs:label "Notre Dame Roman Catholic Girls' School" ;
+      school:FSM 161 ;
+      school:FSMPercentage
+              25 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1256959443292#self> ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100859> ;
+      school:establishmentNumber
+              5404 ;
+      school:gender school:Gender_Girls ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:schoolCapacity
+              620 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              16 ;
+      school:statutoryLowAge
+              11 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100859 .
+
+<http://api.talis.com/stores/govuk-education/items/1255511663204#self>
+      foundation:date "2009-02-17"^^xsd:date ;
+      foundation:val 9240 .
+
+<http://education.data.gov.uk/id/school/100852>
+      rdfs:label "St Anthony's Catholic Primary School" ;
+      school:FSM 48 ;
+      school:FSMPercentage
+              16 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1256657096402#self> ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100852> ;
+      school:establishmentNumber
+              5201 ;
+      school:gender school:Gender_Mixed ;
+      school:nurseryProvision
+              "true"^^xsd:boolean ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Primary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:schoolCapacity
+              315 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              11 ;
+      school:statutoryLowAge
+              3 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100852 .
+
+school:TypeOfEstablishment_TERM_Foundation_School
+      rdfs:label "Foundation School" .
+
+<http://education.data.gov.uk/id/school/census/100859>
+      school:numberOfBoys 0 ;
+      school:numberOfGirls
+              635 ;
+      school:numberOfPupils
+              635 ;
+      dc:date "2008-01-01"^^xsd:date .
+
+<http://api.talis.com/stores/govuk-education/items/1259524821542#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1259494407213#self> .
+
+<http://api.talis.com/stores/govuk-education/items/1258364749244#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1258956264560#self> .
+
+<http://education.data.gov.uk/id/school/100862>
+      rdfs:label "Dulwich College Preparatory School" ;
+      school:FSM 0 ;
+      school:FSMPercentage
+              0 ;
+      school:SENNoStat 142 ;
+      school:SENStat 0 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1257779182886#self> ;
+      school:boarders school:Boarders_Boarding_School ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100862> ;
+      school:compSchoolAge
+              671 ;
+      school:establishmentNumber
+              6001 ;
+      school:gender school:Gender_Boys ;
+      school:highDayFee <http://api.talis.com/stores/govuk-education/items/1255361132328#self> ;
+      school:lowDayFee <http://api.talis.com/stores/govuk-education/items/1255544466629#self> ;
+      school:nurseryProvision
+              "true"^^xsd:boolean ;
+      school:pupilTeacherRatio
+              "280:27:00" ;
+      school:schoolCapacity
+              853 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              14 ;
+      school:statutoryLowAge
+              2 ;
+      school:totalPupilsFullTime
+              <http://api.talis.com/stores/govuk-education/items/1256065064090#self> ;
+      school:totalPupilsPartTime
+              <http://api.talis.com/stores/govuk-education/items/1258697026843#self> ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100862 .
+
+<http://api.talis.com/stores/govuk-education/items/1256348446187#self>
+      foundation:val 4041 .
+
+school:Gender_Boys
+      rdfs:label "Boys" .
+
+<http://api.talis.com/stores/govuk-education/items/1255907598512#self>
+      school:address1 "Hollydale Road" ;
+      school:address2 "Nunhead" ;
+      school:postcode "SE15 2EB" ;
+      school:town "London" .
+
+<http://api.talis.com/stores/govuk-education/items/1255361132328#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1256907011655#self> .
+
+<http://api.talis.com/stores/govuk-education/items/1257809094201#self>
+      foundation:date "2009-04-20"^^xsd:date ;
+      foundation:val 21 .
+
+school:TypeOfEstablishment_TERM_Other_Independent_School
+      rdfs:label "Other Independent School" .
+
+<http://api.talis.com/stores/govuk-education/items/1259499546695#self>
+      foundation:datum <http://api.talis.com/stores/govuk-education/items/1255602377318#self> .
+
+<http://api.talis.com/stores/govuk-education/items/1256657096402#self>
+      school:address1 "Etherow Street" ;
+      school:address2 "Dulwich" ;
+      school:postcode "SE22 0LA" ;
+      school:town "London" .
+
+<http://education.data.gov.uk/id/school/census/100858>
+      school:numberOfBoys 384 ;
+      school:numberOfGirls
+              257 ;
+      school:numberOfPupils
+              641 ;
+      dc:date "2008-01-01"^^xsd:date .
+
+<http://education.data.gov.uk/id/school/census/100864>
+      school:numberOfBoys 594 ;
+      school:numberOfGirls
+              593 ;
+      school:numberOfPupils
+              1187 ;
+      dc:date "2008-01-01"^^xsd:date .
+
+<http://education.data.gov.uk/id/school/100866>
+      rdfs:label "Herne Hill School" ;
+      school:FSM 0 ;
+      school:FSMPercentage
+              0 ;
+      school:SENNoStat 10 ;
+      school:SENStat 0 ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1259149807712#self> ;
+      school:boarders school:Boarders_No_Boarders ;
+      school:censusRecord <http://education.data.gov.uk/id/school/census/100866> ;
+      school:compSchoolAge
+              98 ;
+      school:establishmentNumber
+              6375 ;
+      school:gender school:Gender_Mixed ;
+      school:highDayFee <http://api.talis.com/stores/govuk-education/items/1259139762471#self> ;
+      school:lowDayFee <http://api.talis.com/stores/govuk-education/items/1255465477331#self> ;
+      school:nurseryProvision
+              "true"^^xsd:boolean ;
+      school:pupilTeacherRatio
+              "257:20:00" ;
+      school:schoolCapacity
+              275 ;
+      school:specialClasses
+              "false"^^xsd:boolean ;
+      school:specialPupils
+              0 ;
+      school:statutoryHighAge
+              7 ;
+      school:statutoryLowAge
+              2 ;
+      school:totalPupilsFullTime
+              <http://api.talis.com/stores/govuk-education/items/1259524821542#self> ;
+      school:totalPupilsPartTime
+              <http://api.talis.com/stores/govuk-education/items/1258822388268#self> ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100866 .
+
+<http://api.talis.com/stores/govuk-education/items/1259494407213#self>
+      foundation:date "2009-02-17"^^xsd:date ;
+      foundation:val 150 .
+
+<http://education.data.gov.uk/id/school/census/100860>
+      school:numberOfBoys 344 ;
+      school:numberOfGirls
+              319 ;
+      school:numberOfPupils
+              663 ;
+      dc:date "2008-01-01"^^xsd:date .
+
+<http://api.talis.com/stores/govuk-education/items/1255302560316#self>
+      school:address1 "Camberwell New Road" ;
+      school:postcode "SE5 0RP" ;
+      school:town "London" .

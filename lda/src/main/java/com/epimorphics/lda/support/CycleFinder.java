@@ -3,8 +3,10 @@ package com.epimorphics.lda.support;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 /**
@@ -37,7 +39,9 @@ public class CycleFinder {
 			} else {
 				add( x );
 				for (StmtIterator sit = x.listProperties(); sit.hasNext();) {
-					RDFNode n = sit.next().getObject();
+					Statement s = sit.next();
+					RDFNode n = s.getObject();
+					trace.property = s.getPredicate();
 					if (n.isResource()) crawl( n.asResource() );
 				}
 				remove( x );
@@ -61,7 +65,9 @@ public class CycleFinder {
 
 	public void markCyclic(Resource x) {
 		CycleFinder.Trace t = trace;
+		System.err.println( ">> CYCLE: " + x );
 		while (true) {
+			System.err.println( ">>        " + t.property.getLocalName() + " <= " + t.head );
 			cyclic.add( t.head );
 			if (t.head.equals(x)) break;
 			t = t.tail;
@@ -70,6 +76,7 @@ public class CycleFinder {
 
 	static class Trace {
 		Resource head;
+		Property property;
 		CycleFinder.Trace tail;
 		
 		Trace(Resource head, CycleFinder.Trace tail) {

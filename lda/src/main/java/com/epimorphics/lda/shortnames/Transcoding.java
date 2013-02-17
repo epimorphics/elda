@@ -109,7 +109,7 @@ public class Transcoding {
 		String ln = any.substring( cut );
 		String prefix = pm.getNsURIPrefix( ns );
 		return
-			prefix == null ? "unknown_" + encodeLightly(true, any) // any // "uri" + zap( any )
+			prefix == null ? "unknown_" + encodeLightly(true, any) 
 			: ShortnameUtils.isLegalShortname( ln ) ? prefix + "_" + ln
 			: "pre_" + prefix + "_" + encodeLightly(false, ln)
 			;
@@ -190,8 +190,8 @@ public class Transcoding {
     			sb.append( 'A' );
     		} else if (c == '?') {
     			sb.append( 'Q' );
-    		} else if (c == 'E') {
-    			sb.append( '=' );
+    		} else if (c == '=') {
+    			sb.append( 'E' );
     		} else if (c == '_') {
     			sb.append( '_' ).append( '_' );
     		} else if ('A' <= c && c <= 'Z') {

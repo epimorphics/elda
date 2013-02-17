@@ -56,7 +56,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  	@author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  	@version $Revision: $
 */
-public class APIQuery implements VarSupply {
+public class APIQuery implements VarSupply, WantsMetadata {
     
     static final Logger log = LoggerFactory.getLogger( APIQuery.class );
     
@@ -861,7 +861,7 @@ public class APIQuery implements VarSupply {
 		}
 	}
 
-	public boolean wantsMetadata( String name ) {
+	@Override public boolean wantsMetadata( String name ) {
 		return metadataOptions.contains( name ) || metadataOptions.contains( "all" );
 	}
 

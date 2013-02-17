@@ -8,6 +8,7 @@
 package com.epimorphics.lda.renderers;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,6 +21,16 @@ import com.hp.hpl.jena.rdf.model.Resource;
     retrieve renderers by their name or their media type. 
 */
 public class Factories {
+	
+	public static class FormatNameAndType {
+		public final String name;
+		public final String mediaType;
+		
+		public FormatNameAndType( String name, String mediaType ) {
+			this.name = name;
+			this.mediaType = mediaType;
+		}
+	}
 	
 	protected final Map<String, RendererFactory> nameToFactory = new HashMap<String, RendererFactory>();
 	
@@ -56,6 +67,16 @@ public class Factories {
 	
 	public Set<String> formatNames() {
 		return nameToFactory.keySet();
+	}
+	
+	public Set<FormatNameAndType> getFormatNamesAndTypes() {
+		Set<FormatNameAndType> result = new HashSet<Factories.FormatNameAndType>();
+		for (String name: formatNames()) 
+			if (name.charAt(0) != '_') {
+				String mediaType = getTypeForName( name ).toString();
+				result.add( new FormatNameAndType(name, mediaType));
+			}
+		return result;
 	}
 	
 	public MediaType getTypeForName( String name ) {

@@ -35,6 +35,9 @@ public class ExpandOnly extends StandardShortnameService
 	
 	public ExpandOnly( String expansions ) 
 		{ define( expansions ); }
+	
+	public ExpandOnly() 
+		{}
 
 	private void define(String expansions) {
 		if (expansions.length() > 0)
@@ -44,6 +47,10 @@ public class ExpandOnly extends StandardShortnameService
 				map.put( parts[0], parts[1] );
 				}
 	}
+	
+//	public void define( String shortName, String fullURI ) {
+//		map.put( shortName, fullURI );
+//	}
 	
 	@Override public String expand( String key ) 
 		{

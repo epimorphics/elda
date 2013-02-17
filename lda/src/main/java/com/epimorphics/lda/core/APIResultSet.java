@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.compose.Union;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.epimorphics.lda.support.LanguageFilter;
 
@@ -48,7 +47,7 @@ import com.epimorphics.util.RDFUtils;
 	@author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
 	@version $Revision: $
 */
-public class APIResultSet {
+public class APIResultSet implements SetsMetadata {
 
     static final Logger log = LoggerFactory.getLogger(APIEndpointImpl.class);
     
