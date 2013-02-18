@@ -65,9 +65,9 @@ public class CycleFinder {
 
 	public void markCyclic(Resource x) {
 		CycleFinder.Trace t = trace;
-		// System.err.println( ">> CYCLE: " + x );
+//		System.err.println( ">> CYCLE: " + x );
 		while (true) {
-			// System.err.println( ">>        " + t.property.getLocalName() + " <= " + t.head );
+//			System.err.println( ">>        " + t.property.getLocalName() + " <= " + t.head );
 			cyclic.add( t.head );
 			if (t.head.equals(x)) break;
 			t = t.tail;

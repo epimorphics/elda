@@ -461,15 +461,15 @@ public class XMLRendering {
 		Set<Resource> objectCycles = CycleFinder.findCycles( xInObjectModel );
 		Set<Resource> metaCycles = CycleFinder.findCycles( xInMetaModel );
 		
-		if (false) {
-			System.err.println( ">> metacyclics: " + metaCycles.size() );
-			for (Resource r: metaCycles) System.err.println( ">>   metaCyclic: " + r );
-			
-			System.err.println();
-			
-			System.err.println( ">> objectCyclics: " + objectCycles.size() );
-			for (Resource r: objectCycles) System.err.println( ">>   objectCyclic: " + r );
-		}
+//		if (true) {
+//			System.err.println( ">> metacyclics: " + metaCycles.size() );
+//			for (Resource r: metaCycles) System.err.println( ">>   metaCyclic: " + r );
+//			
+//			System.err.println();
+//			
+//			System.err.println( ">> objectCyclics: " + objectCycles.size() );
+//			for (Resource r: objectCycles) System.err.println( ">>   objectCyclic: " + r );
+//		}
 				
 	//
 	// This is the top-level expansion: we know which properties are meta-data
@@ -478,14 +478,16 @@ public class XMLRendering {
 	//
 		addIdentification( e, x );
 	//
-	//
-		// dontExpand.add( x );
-	//
 		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 	//
 		// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
 		Trail t2 = new Trail( metaCycles );
 		t2.see(xInMetaModel);
+		
+		dontExpand.add( x );
+		
+		Statement emv = xInMetaModel.getProperty( API.extendedMetadataVersion );
+		if (emv != null) dontExpand.add( emv.getResource() );		
 	//
 		for (Property p: metaProperties)			
 			addPropertyValues( t2, e, xInMetaModel, p, false );
@@ -558,7 +560,7 @@ public class XMLRendering {
 	
 	static class Trail {
 		
-		final Set<Resource> seen = new HashSet<Resource>();
+		final List<Resource> seen = new ArrayList<Resource>();
 		final Set<Resource> cyclic;
 		
 		Trail( Set<Resource> cyclic ) {
@@ -602,11 +604,23 @@ public class XMLRendering {
 	    
 	*/
 	
+	int depth = 0;
+	
 	private Element elementAddResource( Trail t, Element e, Resource x, boolean expandRegardless ) {
 		addIdentification( e, x );
 								
-		// System.err.println( ">> elementAddResource: " + x );
-		// System.err.println( ">>  trail:" + t );
+		depth += 1;
+		
+//		if (depth > 5) {
+//			new RuntimeException().printStackTrace( System.err );
+//			throw new RuntimeException( ">> OVERBLOWN" );
+//		}
+		
+//		 System.err.println( ">> elementAddResource [" + depth + "]: " + x );
+//		 System.err.println( ">> expandRegardless: " + expandRegardless );
+//		 System.err.println( ">> resource is cyclic: " + t.cyclic.contains( x ) );
+//		 System.err.println( ">> resource is dontExpand: " + dontExpand.contains( x ) );
+//		 System.err.println( ">>  trail [" + t.seen.size() + "]:" + t );
 
 		if (t.expand( x, dontExpand, expandRegardless )) {
 			t.see(x);
@@ -616,6 +630,9 @@ public class XMLRendering {
 			for (Property p: properties) addPropertyValues( t, e, x, p, false );		
 			t.unsee( x );
 		}		
+		
+//		System.err.println( ">> leaving [" + depth + "] elementAddResource." );
+		depth -= 1;
 		
 		return e;
 	}
@@ -634,6 +651,7 @@ public class XMLRendering {
 	    Attach a value to a property element.
 	*/
 	private Element giveValueToElement( Trail t, Element pe, RDFNode v, boolean expandRegardless ) {
+//		System.err.println( ">> giveValueToElement.expandRegardless: " + expandRegardless );
 		if (v.isLiteral()) {
 			addLiteralToElement( pe, (Literal) v );
 		} else {
@@ -642,8 +660,10 @@ public class XMLRendering {
 				addIdentification( pe, r );
 				if (expandRegardless) elementAddResource( t, pe, r, expandRegardless );
 			} else if (RDFUtil.isList( r )) {
-				for (RDFNode item: RDFUtil.asJavaList( r ) ) 
-					appendValueAsItem( t, pe, item, r.equals(itemsResource) );
+				for (RDFNode item: RDFUtil.asJavaList( r ) ) {
+					// System.err.println( ">> giveValueToElement(appendValueAsItem).expandRegardless: " + r.equals(itemsResource) );
+					appendValueAsItem( t, pe, item, false ); // r.equals(itemsResource) );
+				}
 			} else if (r.listProperties().hasNext()) 
 				elementAddResource( t, pe, r, expandRegardless );
 			else if (v.isAnon()) {
@@ -703,7 +723,7 @@ public class XMLRendering {
 
 	private void addPropertyValues( Trail t, Element e, Resource x, Property p, boolean expandRegardless ) {
 //		 System.err.println( ">> add property values for " + p );
-//		System.err.println( ">> addPropertyValues for " + shortNameFor(p) );
+//		System.err.println( ">> addPropertyValues for " + shortNameFor(p) + " [" + depth + "]" );
 		
 //		System.err.println( ">> short name is " + shortNameFor( p ) + " for " + p );
 		
