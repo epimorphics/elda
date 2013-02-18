@@ -34,7 +34,8 @@ public class TestTurtleRenderer {
 		APIResultSet rs = new APIResultSet( m.getGraph(), CollectionUtils.list(it), true, false, "notUsed", new View() );
 		Renderer.BytesOut rbo = new TurtleRenderer().render( new Times(), null, rs );
 		String rendered = TestTurtleRenderer.pullString( rbo );
-		String unwrapped = rendered.replaceFirst( "(.|[\r\n])*<<", "" ).replaceAll( ">>(.|[\r\n])*", "" );
+		// String unwrapped = rendered.replaceFirst( "(.|[\r\n])*<<", "" ).replaceAll( ">>(.|[\r\n])*", "" );
+		String unwrapped = rendered.split("<<")[1].split(">>")[0];
 		assertEquals( "Unicode character did not survive rendering", "\u03ff", unwrapped );
 	}
 

@@ -461,15 +461,16 @@ public class XMLRendering {
 		Set<Resource> objectCycles = CycleFinder.findCycles( xInObjectModel );
 		Set<Resource> metaCycles = CycleFinder.findCycles( xInMetaModel );
 		
-		System.err.println( ">> metacyclics: " + metaCycles.size() );
-		for (Resource r: metaCycles) System.err.println( ">>   metaCyclic: " + r );
-		
-		System.err.println();
-		
-		System.err.println( ">> objectCyclics: " + objectCycles.size() );
-		for (Resource r: objectCycles) System.err.println( ">>   objectCyclic: " + r );
-		
-		
+		if (false) {
+			System.err.println( ">> metacyclics: " + metaCycles.size() );
+			for (Resource r: metaCycles) System.err.println( ">>   metaCyclic: " + r );
+			
+			System.err.println();
+			
+			System.err.println( ">> objectCyclics: " + objectCycles.size() );
+			for (Resource r: objectCycles) System.err.println( ">>   objectCyclic: " + r );
+		}
+				
 	//
 	// This is the top-level expansion: we know which properties are meta-data
 	// and which are not. We expand the items separately from the rest of the
