@@ -204,7 +204,7 @@ public class EndpointMetadata {
 		Resource page = thisPage.inModel(meta);
 		for (FormatNameAndType format: formats) {
 			Resource v = resourceForFormat( pageURI, meta, formatNames, format.name );
-			Resource formatNode = meta.createResource().addProperty( RDFS.label, format.mediaType );
+			Resource formatNode = createBNode( meta ).addProperty( RDFS.label, format.mediaType );
 			page.addProperty( DCTerms.hasFormat, v );
 			v.addProperty( DCTerms.isFormatOf, thisPage );
 			v.addProperty( DCTerms.format, formatNode );
@@ -233,12 +233,19 @@ public class EndpointMetadata {
 		for (String name: names) {
 			String valueString = bindings.getValueString( name );
 			if (valueString != null) {
-				Resource vb = meta.createResource();
+				Resource vb = createBNode( meta );
 				vb.addProperty( API.label, name );
 				vb.addProperty( API.value, valueString );
 				exec.addProperty( API.variableBinding, vb );
 			}
 		}
+	}
+
+	int bnodeCounter = 1000;
+	
+	private Resource createBNode(Model m) {
+		Resource b = m.createResource( new AnonId( "bnode-" + bnodeCounter++ ) );
+		return b;
 	}
 
 	static final Property SKOSprefLabel = ResourceFactory.createProperty
@@ -254,7 +261,7 @@ public class EndpointMetadata {
 			Resource term = meta.createResource( uri );
 			if (toScan.containsResource( term )) {
 				String shorty = mm.get( uri );
-	    		Resource tb = meta.createResource();
+	    		Resource tb = createBNode( meta );
 	    		exec.addProperty( API.termBinding, tb ); 
 				tb.addProperty( API.label, shorty );
 				tb.addProperty( API.property, term );
@@ -266,7 +273,7 @@ public class EndpointMetadata {
 	public void addExecution( Model meta, Resource anExec ) {
 		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
 		exec.addProperty( RDF.type, API.Execution );
-		Resource P = meta.createResource();
+		Resource P = createBNode( meta );
 		ELDA.addEldaMetadata( P );
 		exec.addProperty( API.processor, P );
 		page.addProperty( API.wasResultOf, exec );

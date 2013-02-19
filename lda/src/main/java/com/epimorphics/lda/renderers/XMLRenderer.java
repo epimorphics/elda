@@ -92,8 +92,8 @@ public class XMLRenderer implements Renderer {
 				
 				TransformerFactory tFactory = TransformerFactory.newInstance();
 				Transformer transformer = tFactory.newTransformer();
-				transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
-				transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2");
+//				transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
+//				transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "2");
 				DOMSource source = new DOMSource( d );
 				OutputStream out = new FileOutputStream( "/tmp/gold/xml-rendering.xml" );
 				StreamResult stream = new StreamResult( out );

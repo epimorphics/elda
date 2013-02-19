@@ -245,7 +245,7 @@ public class TestRenderingExperiments extends XMLTestCase {
 		
 		writeDocument( "expected.xml", expected );
 		
-		// assertTrue( myDiff.toString(), myDiff.similar() );
+		 assertTrue( myDiff.toString(), myDiff.similar() );
 		
 		
 	}

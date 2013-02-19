@@ -27,7 +27,7 @@ public class ELDA
 	{
 	static final String version = Version.string;
 	
-	static final String tag = " [18Feb/N]";
+	static final String tag = " [19Feb/A]";
 	
 	static final private Model m = ModelFactory.createDefaultModel();
 	

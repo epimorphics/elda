@@ -713,7 +713,8 @@ public class XMLRendering {
 	protected String spelling( RDFNode n ) {
 		if (n.isURIResource()) return resourceSpelling( (Resource) n );
 		if (n.isLiteral()) return ((Literal) n).getLexicalForm();
-		return ((Resource) n).getId().toString();
+		String id = ((Resource) n).getId().toString();
+		return id;
 	}
 
 	private String resourceSpelling( Resource r ) {
