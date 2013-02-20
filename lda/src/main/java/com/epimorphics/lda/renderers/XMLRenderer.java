@@ -79,7 +79,7 @@ public class XMLRenderer implements Renderer {
 	//
 		try {	
 			// save the xml for later analysis or use in gold tests.
-			if (true) {		
+			if (false) {		
 				new File("/tmp/gold" ).mkdirs();
 				System.err.println( ">> saving rendering to /tmp/gold/*" );
 				
