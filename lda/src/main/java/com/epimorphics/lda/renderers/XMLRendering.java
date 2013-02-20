@@ -488,14 +488,14 @@ public class XMLRendering {
 		Statement emv = xInMetaModel.getProperty( API.extendedMetadataVersion );
 		if (emv != null) dontExpand.add( emv.getResource() );		
 		
-		metaBlocked.addAll( dontExpand );		
+		metaBlocked.addAll( dontExpand );
+		dontExpand.clear();
 	//
 		for (Property p: metaProperties)			
 			addPropertyValues( t2, e, xInMetaModel, p, false );
 	//
 	//
 		dontExpand.clear();
-		
 
 		for (RDFNode m: selectedItems) dontExpand.add( m.asResource() );
 
@@ -516,6 +516,7 @@ public class XMLRendering {
 		
 		Set<Resource> objectBlocked = new HashSet<Resource>();
 		objectBlocked.addAll( dontExpand );
+		dontExpand.clear();
 		
 //		System.err.println( ">> Now thinking about the object cycles." );
 		
@@ -601,16 +602,18 @@ public class XMLRendering {
 		// TODO ensure that the second choice has the desired behaviour
 		boolean expand( Resource x, Set<Resource> dontExpand, boolean expandRegardless ) {
 			// return unseen( x ) && !dontExpand.contains( x );
-			return !cyclic.contains( x ) || dontExpand.add( x ) || expandRegardless;
+//			return !cyclic.contains( x ) || dontExpand.add( x ) || expandRegardless;
 			
-//			if (cyclic.contains( x )) {
-//				boolean expand = !expanded.contains( x );
-//				expanded.add( x );
-//				return expand;
-//			}
-//						
-//			return !noExpansion.contains( x );
+			// top-level items are blocked everywhere else
+			if (blocked.contains( x )) return false;
 			
+			if (cyclic.contains( x )) {
+				boolean expand = !dontExpand.contains( x );
+				dontExpand.add( x );
+				return expand;
+			}
+						
+			return true;
 			
 		}
 		
@@ -665,7 +668,7 @@ public class XMLRendering {
 
 		if (t.expand( x, dontExpand, expandRegardless )) {
 			t.see(x);
-			// dontExpand.add( x );
+			dontExpand.add( x );
 			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 			// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
 			for (Property p: properties) addPropertyValues( t, e, x, p, false );		
