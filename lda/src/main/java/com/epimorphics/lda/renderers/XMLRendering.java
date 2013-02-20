@@ -347,11 +347,13 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.CycleFinder;
+import com.epimorphics.util.Couple;
 //import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.vocabs.API;
 
@@ -458,18 +460,13 @@ public class XMLRendering {
 		
 		Resource xInMetaModel = x.inModel(mm.getMetaModel() );
 		
-		Set<Resource> objectCycles = CycleFinder.findCycles( xInObjectModel );
 		Set<Resource> metaCycles = CycleFinder.findCycles( xInMetaModel );
 		
-//		if (true) {
-//			System.err.println( ">> metacyclics: " + metaCycles.size() );
-//			for (Resource r: metaCycles) System.err.println( ">>   metaCyclic: " + r );
-//			
-//			System.err.println();
-//			
-//			System.err.println( ">> objectCyclics: " + objectCycles.size() );
-//			for (Resource r: objectCycles) System.err.println( ">>   objectCyclic: " + r );
-//		}
+		if (false) {
+			System.err.println( ">> metacyclics: " + metaCycles.size() );
+			for (Resource r: metaCycles) System.err.println( ">>   metaCyclic: " + r );
+			
+		}
 				
 	//
 	// This is the top-level expansion: we know which properties are meta-data
@@ -494,11 +491,36 @@ public class XMLRendering {
 	//
 	//
 		dontExpand.clear();
+		
+
 		for (RDFNode m: selectedItems) dontExpand.add( m.asResource() );
 
 		boolean hasPrimaryTopic = xInMetaModel.hasProperty( FOAF.primaryTopic );
-		
 //		System.err.println( ">> has primary topic: " + hasPrimaryTopic );
+		
+		Resource primaryTopic = hasPrimaryTopic 
+			? xInMetaModel.getProperty( FOAF.primaryTopic ).getResource().inModel(objectModel)
+			: null
+			;
+		
+		Set<Resource> selectedObjectItems = new HashSet<Resource>();
+		for (RDFNode item: selectedItems) 
+			if (item.isResource()) selectedObjectItems.add( item.asResource().inModel(objectModel) );
+		
+		dontExpand.addAll( selectedObjectItems );
+		if (hasPrimaryTopic) dontExpand.add( primaryTopic );
+		
+//		System.err.println( ">> Now thinking about the object cycles." );
+		
+		Set<Resource> objectCycles = hasPrimaryTopic
+			? CycleFinder.findCycles( primaryTopic )
+			: CycleFinder.findCycles( selectedObjectItems )
+			;
+		
+		if (false) {
+			System.err.println( ">> objectCyclics: " + objectCycles.size() );
+			for (Resource r: objectCycles) System.err.println( ">>   objectCyclic: " + r );			
+		}
 		
 		Trail t = new Trail( objectCycles );
 		if (hasPrimaryTopic) { 			
@@ -698,16 +720,51 @@ public class XMLRendering {
         	} );
 		return properties;
 	}
+
+	private static final Comparator<? super Couple<RDFNode, String>> compareCouples = new Comparator<Couple<RDFNode, String>>() {
+		@Override public int compare( Couple<RDFNode, String> x, Couple<RDFNode, String> y) {
+			return x.b.compareTo( y.b );
+		}
+	} ;
 	
-	private List<RDFNode> sortObjects( Set<RDFNode> objects ) {
+	private List<RDFNode> sortObjects( Property predicate, Set<RDFNode> objects ) {
 		List<RDFNode> result = new ArrayList<RDFNode>( objects );
-		if (sortPropertyValues)
-			Collections.sort( result, new Comparator<RDFNode>() {
-	            @Override public int compare( RDFNode a, RDFNode b ) {
-	                return spelling( a ).compareTo( spelling( b ) );
-	            }
-	        	} );
+		if (sortPropertyValues) {
+			if (sortValuesByLabel( predicate )) {
+				
+				List<Couple<RDFNode, String>> labelleds = new ArrayList<Couple<RDFNode, String>>();
+				
+				for (RDFNode r: result) labelleds.add( new Couple<RDFNode, String>( r, labelOf( r ) ) ); 
+				
+				Collections.sort( labelleds, compareCouples );				
+				
+				result.clear();
+				for (Couple<RDFNode, String> labelled: labelleds) result.add( labelled.a );
+				
+			} else {
+				Collections.sort( result, new Comparator<RDFNode>() {
+		            @Override public int compare( RDFNode a, RDFNode b ) {
+		                return spelling( a ).compareTo( spelling( b ) );
+		            }       
+		       	} );
+			}
+		}
 		return result;
+	}
+
+	private String labelOf( RDFNode r ) {
+		if (r.isResource()) {
+			Statement labelling = r.asResource().getProperty( API.label );
+			if (labelling != null) {
+				RDFNode label = labelling.getObject();
+				if (label.isLiteral()) return label.asLiteral().getLexicalForm();
+			}
+		}
+		return spelling( r );
+	}
+
+	private boolean sortValuesByLabel(Property predicate) {
+		return false; // predicate.equals( API.termBinding );
 	}
 
 	protected String spelling( RDFNode n ) {
@@ -735,7 +792,7 @@ public class XMLRendering {
 		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();		
 		
 		if (values.size() > 1 || isMultiValued( p )) {
-			for (RDFNode value: sortObjects( values )) appendValueAsItem(t, pe, value, expandRegardless);
+			for (RDFNode value: sortObjects( p, values )) appendValueAsItem(t, pe, value, expandRegardless);
 		} else if (values.size() == 1) {
 			giveValueToElement( t, pe, values.iterator().next(), expandRegardless );
 		}

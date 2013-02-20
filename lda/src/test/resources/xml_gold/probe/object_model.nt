@@ -1,0 +1,59 @@
+<http://www.hans-im-glueck.de/el-grande> <http://localhost:8080/elda/vocabulary/players> "5"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.hans-im-glueck.de/el-grande> <http://localhost:8080/elda/vocabulary/players> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.hans-im-glueck.de/el-grande> <http://localhost:8080/elda/vocabulary/players> "3"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.hans-im-glueck.de/el-grande> <http://localhost:8080/elda/vocabulary/players> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.hans-im-glueck.de/el-grande> <http://www.w3.org/2000/01/rdf-schema#label> "El Grande" .
+<http://www.hans-im-glueck.de/el-grande> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://localhost:8080/elda/vocabulary/BoardGame> .
+<http://www.ragnarbrothers.co.uk/html/canal_mania.html> <http://localhost:8080/elda/vocabulary/players> "5"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ragnarbrothers.co.uk/html/canal_mania.html> <http://localhost:8080/elda/vocabulary/players> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ragnarbrothers.co.uk/html/canal_mania.html> <http://localhost:8080/elda/vocabulary/players> "3"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ragnarbrothers.co.uk/html/canal_mania.html> <http://localhost:8080/elda/vocabulary/players> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ragnarbrothers.co.uk/html/canal_mania.html> <http://www.w3.org/2000/01/rdf-schema#label> "Canal Mania" .
+<http://www.ragnarbrothers.co.uk/html/canal_mania.html> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://localhost:8080/elda/vocabulary/BoardGame> .
+<http://www.treefroggames.com/age-of-industry> <http://localhost:8080/elda/vocabulary/players> "5"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.treefroggames.com/age-of-industry> <http://localhost:8080/elda/vocabulary/players> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.treefroggames.com/age-of-industry> <http://localhost:8080/elda/vocabulary/players> "3"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.treefroggames.com/age-of-industry> <http://localhost:8080/elda/vocabulary/players> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.treefroggames.com/age-of-industry> <http://www.w3.org/2000/01/rdf-schema#label> "Age of Industry" .
+<http://www.treefroggames.com/age-of-industry> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://localhost:8080/elda/vocabulary/BoardGame> .
+<http://www.treefroggames.com/age-of-steam> <http://localhost:8080/elda/vocabulary/players> "6"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.treefroggames.com/age-of-steam> <http://localhost:8080/elda/vocabulary/players> "5"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.treefroggames.com/age-of-steam> <http://localhost:8080/elda/vocabulary/players> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.treefroggames.com/age-of-steam> <http://localhost:8080/elda/vocabulary/players> "3"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.treefroggames.com/age-of-steam> <http://www.w3.org/2000/01/rdf-schema#label> "Age of Steam" .
+<http://www.treefroggames.com/age-of-steam> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://localhost:8080/elda/vocabulary/BoardGame> .
+<http://queen-games.de/games.aspx?ProductId=45> <http://www.w3.org/2000/01/rdf-schema#seeAlso> <http://boardgamegeek.com/boardgame/107529/kingdom-builder> .
+<http://queen-games.de/games.aspx?ProductId=45> <http://localhost:8080/elda/vocabulary/players> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://queen-games.de/games.aspx?ProductId=45> <http://localhost:8080/elda/vocabulary/players> "3"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://queen-games.de/games.aspx?ProductId=45> <http://localhost:8080/elda/vocabulary/players> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://queen-games.de/games.aspx?ProductId=45> <http://www.w3.org/2000/01/rdf-schema#label> "Kingdom Builder" .
+<http://queen-games.de/games.aspx?ProductId=45> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://localhost:8080/elda/vocabulary/BoardGame> .
+<http://www.daysofwonder.com/tickettoride> <http://localhost:8080/elda/vocabulary/players> "5"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.daysofwonder.com/tickettoride> <http://localhost:8080/elda/vocabulary/players> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.daysofwonder.com/tickettoride> <http://localhost:8080/elda/vocabulary/players> "3"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.daysofwonder.com/tickettoride> <http://localhost:8080/elda/vocabulary/players> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.daysofwonder.com/tickettoride> <http://www.w3.org/2000/01/rdf-schema#label> "Ticket To Ride" .
+<http://www.daysofwonder.com/tickettoride> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://localhost:8080/elda/vocabulary/BoardGame> .
+<http://www.riograndegames.com/games.html?id=4> <http://localhost:8080/elda/vocabulary/players> "5"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.riograndegames.com/games.html?id=4> <http://localhost:8080/elda/vocabulary/players> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.riograndegames.com/games.html?id=4> <http://localhost:8080/elda/vocabulary/players> "3"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.riograndegames.com/games.html?id=4> <http://localhost:8080/elda/vocabulary/players> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.riograndegames.com/games.html?id=4> <http://www.w3.org/2000/01/rdf-schema#label> "Puerto Rico" .
+<http://www.riograndegames.com/games.html?id=4> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://localhost:8080/elda/vocabulary/BoardGame> .
+<http://www.riograndegames.com/games.html?id=181> <http://localhost:8080/elda/vocabulary/players> "5"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.riograndegames.com/games.html?id=181> <http://localhost:8080/elda/vocabulary/players> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.riograndegames.com/games.html?id=181> <http://localhost:8080/elda/vocabulary/players> "3"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.riograndegames.com/games.html?id=181> <http://localhost:8080/elda/vocabulary/players> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.riograndegames.com/games.html?id=181> <http://www.w3.org/2000/01/rdf-schema#label> "Taj Mahal" .
+<http://www.riograndegames.com/games.html?id=181> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://localhost:8080/elda/vocabulary/BoardGame> .
+<http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> <http://localhost:8080/elda/vocabulary/players> "6"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> <http://localhost:8080/elda/vocabulary/players> "5"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> <http://localhost:8080/elda/vocabulary/players> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> <http://localhost:8080/elda/vocabulary/players> "3"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> <http://www.w3.org/2000/01/rdf-schema#label> "A Brief History of the World" .
+<http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://localhost:8080/elda/vocabulary/BoardGame> .
+<http://www.treefroggames.com/london> <http://localhost:8080/elda/vocabulary/players> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.treefroggames.com/london> <http://localhost:8080/elda/vocabulary/players> "3"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.treefroggames.com/london> <http://localhost:8080/elda/vocabulary/players> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.treefroggames.com/london> <http://www.w3.org/2000/01/rdf-schema#label> "London" .
+<http://www.treefroggames.com/london> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://localhost:8080/elda/vocabulary/BoardGame> .

@@ -79,12 +79,12 @@ public class XMLRenderer implements Renderer {
 	//
 		try {	
 			// save the xml for later analysis or use in gold tests.
-			if (false) {		
+			if (true) {		
 				new File("/tmp/gold" ).mkdirs();
 				System.err.println( ">> saving rendering to /tmp/gold/*" );
 				
-				writeModel( mm.getObjectModel(), "/tmp/gold/object_model.ttl" );
-				writeModel( mm.getMetaModel(), "/tmp/gold/meta_model.ttl" );
+				writeModel( mm.getObjectModel(), "/tmp/gold/object_model" );
+				writeModel( mm.getMetaModel(), "/tmp/gold/meta_model" );
 				writeResource( root, "/tmp/gold/root.uri" );
 				writeBoolean( suppressIPTO, "/tmp/gold/suppress_ipto.bool" );
 				
@@ -140,8 +140,8 @@ public class XMLRenderer implements Renderer {
 	}
 
 	private void writeModel(Model objectModel, String fileName) throws IOException {
-		OutputStream os = new FileOutputStream( new File( fileName ) );
-		objectModel.write( os, "TTL" );
+		OutputStream os = new FileOutputStream( new File( fileName + ".nt" ) );
+		objectModel.write( os, "N-TRIPLES" );
 		os.close();
 	}
 	
