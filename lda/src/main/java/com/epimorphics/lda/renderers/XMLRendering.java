@@ -477,14 +477,18 @@ public class XMLRendering {
 	//
 		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 	//
+		Set<Resource> metaBlocked = new HashSet<Resource>();
+		
 		// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
-		Trail t2 = new Trail( metaCycles );
+		Trail t2 = new Trail( metaCycles, metaBlocked );
 		t2.see(xInMetaModel);
 		
 		dontExpand.add( x );
 		
 		Statement emv = xInMetaModel.getProperty( API.extendedMetadataVersion );
 		if (emv != null) dontExpand.add( emv.getResource() );		
+		
+		metaBlocked.addAll( dontExpand );		
 	//
 		for (Property p: metaProperties)			
 			addPropertyValues( t2, e, xInMetaModel, p, false );
@@ -510,6 +514,9 @@ public class XMLRendering {
 		dontExpand.addAll( selectedObjectItems );
 		if (hasPrimaryTopic) dontExpand.add( primaryTopic );
 		
+		Set<Resource> objectBlocked = new HashSet<Resource>();
+		objectBlocked.addAll( dontExpand );
+		
 //		System.err.println( ">> Now thinking about the object cycles." );
 		
 		Set<Resource> objectCycles = hasPrimaryTopic
@@ -522,7 +529,7 @@ public class XMLRendering {
 			for (Resource r: objectCycles) System.err.println( ">>   objectCyclic: " + r );			
 		}
 		
-		Trail t = new Trail( objectCycles );
+		Trail t = new Trail( objectCycles, objectBlocked );
 		if (hasPrimaryTopic) { 			
 			Element pt = findByNodeName( e, "primaryTopic" );
 			String itemUri = pt.getAttribute( "href" );
@@ -584,15 +591,27 @@ public class XMLRendering {
 		
 		final List<Resource> seen = new ArrayList<Resource>();
 		final Set<Resource> cyclic;
+		final Set<Resource> blocked;
 		
-		Trail( Set<Resource> cyclic ) {
+		Trail( Set<Resource> cyclic, Set<Resource> blocked ) {
 			this.cyclic = cyclic;
+			this.blocked = blocked;
 		}
 		
 		// TODO ensure that the second choice has the desired behaviour
 		boolean expand( Resource x, Set<Resource> dontExpand, boolean expandRegardless ) {
 			// return unseen( x ) && !dontExpand.contains( x );
 			return !cyclic.contains( x ) || dontExpand.add( x ) || expandRegardless;
+			
+//			if (cyclic.contains( x )) {
+//				boolean expand = !expanded.contains( x );
+//				expanded.add( x );
+//				return expand;
+//			}
+//						
+//			return !noExpansion.contains( x );
+			
+			
 		}
 		
 		boolean unseen( Resource x ) {
@@ -695,6 +714,13 @@ public class XMLRendering {
 			}
 		}
 		return pe;
+	}
+
+	private boolean inPlace( Resource r ) {
+		if (r.isAnon()) return false;
+		if (dontExpand.contains( r )) return true;
+		if (r.listProperties().hasNext()) return false;
+		return true;
 	}
 
 	private List<Property> asSortedList( Set<Property> set ) {
@@ -802,13 +828,6 @@ public class XMLRendering {
 		Element item = d.createElement( "item" );
 		giveValueToElement( t, item, value, expandRegardless );
 		pe.appendChild( item );
-	}
-
-	private boolean inPlace( Resource r ) {
-		if (r.isAnon()) return false;
-		if (dontExpand.contains( r )) return true;
-		if (r.listProperties().hasNext()) return false;
-		return true;
 	}
 
 	private void addLiteralToElement( Element e, Literal L ) {
