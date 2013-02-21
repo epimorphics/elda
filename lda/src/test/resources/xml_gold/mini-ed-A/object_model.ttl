@@ -1,0 +1,199 @@
+@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+@prefix spec:    <http://education.data.gov.uk/api-config#> .
+@prefix geo:     <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix so:      <http://education.data.gov.uk/def/school/> .
+@prefix spatialrelations:  <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix school:  <http://education.data.gov.uk/def/school/> .
+@prefix elda:    <http://www.epimorphics.com/vocabularies/lda#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix api:     <http://purl.org/linked-data/api/vocab#> .
+@prefix foundation:  <http://statistics.data.gov.uk/def/Foundation/> .
+@prefix os-admingeo:  <http://data.ordnancesurvey.co.uk/ontology/admingeo/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+school:PhaseOfEducation_Secondary
+      rdfs:label "Secondary" .
+
+<http://education.data.gov.uk/id/school/100864>
+      rdfs:label "Alleyn's School" ;
+      school:establishmentNumber
+              6312 ;
+      school:gender school:Gender_Mixed ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Church_of_England ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100864 ;
+      geo:lat 51.45478 ;
+      geo:long -0.08199 .
+
+school:Gender_Girls
+      rdfs:label "Girls" .
+
+<http://education.data.gov.uk/id/school/100860>
+      rdfs:label "Sacred Heart Roman Catholic Secondary School" ;
+      school:establishmentNumber
+              5405 ;
+      school:gender school:Gender_Mixed ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100860 ;
+      geo:lat 51.47514 ;
+      geo:long -0.09728 .
+
+<http://education.data.gov.uk/id/school/100851>
+      rdfs:label "St Francesca Cabrini Primary School" ;
+      school:establishmentNumber
+              5200 ;
+      school:gender school:Gender_Mixed ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Primary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100851 ;
+      geo:lat 51.44911 ;
+      geo:long -0.05356 .
+
+<http://education.data.gov.uk/id/school/100852>
+      rdfs:label "St Anthony's Catholic Primary School" ;
+      school:establishmentNumber
+              5201 ;
+      school:gender school:Gender_Mixed ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Primary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100852 ;
+      geo:lat 51.44968 ;
+      geo:long -0.07209 .
+
+school:TypeOfEstablishment_TERM_Foundation_School
+      rdfs:label "Foundation School" .
+
+school:ReligiousCharacter_Does_not_apply
+      rdfs:label "Does not apply" .
+
+school:Gender_Mixed
+      rdfs:label "Mixed" .
+
+<http://education.data.gov.uk/id/school/100862>
+      rdfs:label "Dulwich College Preparatory School" ;
+      school:establishmentNumber
+              6001 ;
+      school:gender school:Gender_Boys ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100862 ;
+      geo:lat 51.43420 ;
+      geo:long -0.08520 .
+
+school:ReligiousCharacter_Church_of_England
+      rdfs:label "Church of England" .
+
+school:Gender_Boys
+      rdfs:label "Boys" .
+
+school:TypeOfEstablishment_TERM_Other_Independent_School
+      rdfs:label "Other Independent School" .
+
+<http://education.data.gov.uk/id/school/100855>
+      rdfs:label "Friars Primary Foundation School" ;
+      school:establishmentNumber
+              5205 ;
+      school:gender school:Gender_Mixed ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Primary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Does_not_apply ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Foundation_School ;
+      school:uniqueReferenceNumber
+              100855 ;
+      geo:lat 51.50150 ;
+      geo:long -0.10337 .
+
+school:ReligiousCharacter_Roman_Catholic
+      rdfs:label "Roman Catholic" .
+
+school:TypeOfEstablishment_TERM_Voluntary_Aided_School
+      rdfs:label "Voluntary Aided School" .
+
+<http://education.data.gov.uk/id/school/100857>
+      rdfs:label "The St Thomas the Apostle College" ;
+      school:establishmentNumber
+              5402 ;
+      school:gender school:Gender_Boys ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100857 ;
+      geo:lat 51.47074 ;
+      geo:long -0.05631 .
+
+<http://education.data.gov.uk/id/school/100858>
+      rdfs:label "St Michael's RC School" ;
+      school:establishmentNumber
+              5403 ;
+      school:gender school:Gender_Mixed ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100858 ;
+      geo:lat 51.50045 ;
+      geo:long -0.06789 .
+
+school:PhaseOfEducation_Primary
+      rdfs:label "Primary" .
+
+<http://education.data.gov.uk/id/school/100866>
+      rdfs:label "Herne Hill School" ;
+      school:establishmentNumber
+              6375 ;
+      school:gender school:Gender_Mixed ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100866 ;
+      geo:lat 51.45471 ;
+      geo:long -0.09888 .
+
+<http://education.data.gov.uk/id/school/100859>
+      rdfs:label "Notre Dame Roman Catholic Girls' School" ;
+      school:establishmentNumber
+              5404 ;
+      school:gender school:Gender_Girls ;
+      school:phaseOfEducation
+              school:PhaseOfEducation_Secondary ;
+      school:religiousCharacter
+              school:ReligiousCharacter_Roman_Catholic ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Voluntary_Aided_School ;
+      school:uniqueReferenceNumber
+              100859 ;
+      geo:lat 51.49698 ;
+      geo:long -0.10611 .

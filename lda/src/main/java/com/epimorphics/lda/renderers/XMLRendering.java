@@ -432,9 +432,6 @@ public class XMLRendering {
 	
 	private final Set<Resource> dontExpand = new HashSet<Resource>();
 	
-	/** if true, property values will appear in sorted order */
-	private final boolean sortPropertyValues = true;
-	
 	public XMLRendering( Model m, ShortnameService sns, boolean suppressIPTO, Document d ) {
 		this.d = d;
 		this.sns = sns;
@@ -757,32 +754,28 @@ public class XMLRendering {
 	} ;
 	
 	private List<RDFNode> sortObjects( Property predicate, Set<RDFNode> objects ) {
-		List<RDFNode> result = new ArrayList<RDFNode>( objects );
-		if (sortPropertyValues) {
-			if (sortValuesByLabel( predicate )) {
-				
-				List<Couple<RDFNode, String>> labelleds = new ArrayList<Couple<RDFNode, String>>();
-				
-				for (RDFNode r: result) labelleds.add( new Couple<RDFNode, String>( r, labelOf( r ) ) ); 
-				
-				Collections.sort( labelleds, compareCouples );				
-				
-				result.clear();
-				for (Couple<RDFNode, String> labelled: labelleds) result.add( labelled.a );
-				
-			} else {
-				Collections.sort( result, new Comparator<RDFNode>() {
-		            @Override public int compare( RDFNode a, RDFNode b ) {
-		                return spelling( a ).compareTo( spelling( b ) );
-		            }       
-		       	} );
-			}
-		}
+			
+		List<Couple<RDFNode, String>> labelleds = new ArrayList<Couple<RDFNode, String>>();
+		
+		for (RDFNode r: objects) labelleds.add( new Couple<RDFNode, String>( r, labelOf( r ) ) ); 
+		
+		Collections.sort( labelleds, compareCouples );				
+		
+		List<RDFNode> result = new ArrayList<RDFNode>();
+		
+		for (Couple<RDFNode, String> labelled: labelleds) result.add( labelled.a );
+		
+//		if (predicate.equals( API.termBinding )) {
+//			System.err.println( ">> sorted term bindings:" );
+//			for (Couple<RDFNode, String> labelled: labelleds) 
+//				System.err.println( ">>  " + labelled );
+//		}
+			
 		return result;
 	}
 
 	private String labelOf( RDFNode r ) {
-		if (r.isResource()) {
+		if (r.isAnon()) {
 			Statement labelling = r.asResource().getProperty( API.label );
 			if (labelling != null) {
 				RDFNode label = labelling.getObject();
@@ -790,10 +783,6 @@ public class XMLRendering {
 			}
 		}
 		return spelling( r );
-	}
-
-	private boolean sortValuesByLabel(Property predicate) {
-		return false; // predicate.equals( API.termBinding );
 	}
 
 	protected String spelling( RDFNode n ) {
@@ -821,7 +810,12 @@ public class XMLRendering {
 		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();		
 		
 		if (values.size() > 1 || isMultiValued( p )) {
-			for (RDFNode value: sortObjects( p, values )) appendValueAsItem(t, pe, value, expandRegardless);
+			for (RDFNode value: sortObjects( p, values )) {
+//				if (p.equals(API.termBinding)) {
+//					System.err.println( ">> term binding for " + value + " [with label " + labelOf( value ) + "]" );
+//				}
+				appendValueAsItem(t, pe, value, expandRegardless);
+			}
 		} else if (values.size() == 1) {
 			giveValueToElement( t, pe, values.iterator().next(), expandRegardless );
 		}

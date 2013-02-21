@@ -140,8 +140,8 @@ public class XMLRenderer implements Renderer {
 	}
 
 	private void writeModel(Model objectModel, String fileName) throws IOException {
-		OutputStream os = new FileOutputStream( new File( fileName + ".nt" ) );
-		objectModel.write( os, "N-TRIPLES" );
+		OutputStream os = new FileOutputStream( new File( fileName + ".ttl" ) );
+		objectModel.write( os, "TTL" );
 		os.close();
 	}
 	

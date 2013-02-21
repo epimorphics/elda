@@ -1,0 +1,48 @@
+@prefix dc:      <http://purl.org/dc/elements/1.1/> .
+@prefix spec:    <http://education.data.gov.uk/api-config#> .
+@prefix geo:     <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix so:      <http://education.data.gov.uk/def/school/> .
+@prefix spatialrelations:  <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix school:  <http://education.data.gov.uk/def/school/> .
+@prefix elda:    <http://www.epimorphics.com/vocabularies/lda#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix api:     <http://purl.org/linked-data/api/vocab#> .
+@prefix foundation:  <http://statistics.data.gov.uk/def/Foundation/> .
+@prefix os-admingeo:  <http://data.ordnancesurvey.co.uk/ontology/admingeo/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+
+school:TypeOfEstablishment_TERM_Other_Independent_School
+      rdfs:label "Other Independent School" .
+
+school:Gender_Mixed
+      rdfs:label "Mixed" .
+
+<http://api.talis.com/stores/govuk-education/items/1259149807712#self>
+      school:address1 "127 Herne Hill" ;
+      school:address2 "Herne Hill" ;
+      school:postcode "SE24 9LY" ;
+      school:town "London" .
+
+<http://education.data.gov.uk/id/school/100866>
+      rdfs:label "Herne Hill School" ;
+      school:PFI "false"^^xsd:boolean ;
+      school:SCUAlternativeEmail
+              "vivien.tabone@hernehillschool.co.uk" ;
+      school:SCUpreferredemail
+              "enquiries@hernehillschool.co.uk" ;
+      school:address <http://api.talis.com/stores/govuk-education/items/1259149807712#self> ;
+      school:establishmentNumber
+              6375 ;
+      school:gender school:Gender_Mixed ;
+      school:notes "ISI 6 yr review date Jun '11" ;
+      school:openDate "1989-02-17"^^xsd:date ;
+      school:schoolCapacity
+              275 ;
+      school:typeOfEstablishment
+              school:TypeOfEstablishment_TERM_Other_Independent_School ;
+      school:uniqueReferenceNumber
+              100866 .

@@ -1,0 +1,59 @@
+@prefix hello:   <http://localhost:8080/elda/vocabulary/> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix hig:     <http://www.hans-im-glueck.de/> .
+@prefix elda:    <http://www.epimorphics.com/vocabularies/lda#> .
+@prefix dct:     <http://purl.org/dc/terms/> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix api:     <http://purl.org/linked-data/api/vocab#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<http://www.ragnarbrothers.co.uk/html/canal_mania.html>
+      a       hello:BoardGame ;
+      rdfs:label "Canal Mania" ;
+      hello:players 5 , 3 , 4 , 2 .
+
+<http://queen-games.de/games.aspx?ProductId=45>
+      a       hello:BoardGame ;
+      rdfs:label "Kingdom Builder" ;
+      rdfs:seeAlso <http://boardgamegeek.com/boardgame/107529/kingdom-builder> ;
+      hello:players 3 , 4 , 2 .
+
+<http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html>
+      a       hello:BoardGame ;
+      rdfs:label "A Brief History of the World" ;
+      hello:players 6 , 5 , 3 , 4 .
+
+<http://www.treefroggames.com/age-of-industry>
+      a       hello:BoardGame ;
+      rdfs:label "Age of Industry" ;
+      hello:players 5 , 3 , 4 , 2 .
+
+<http://www.daysofwonder.com/tickettoride>
+      a       hello:BoardGame ;
+      rdfs:label "Ticket To Ride" ;
+      hello:players 5 , 3 , 4 , 2 .
+
+<http://www.treefroggames.com/age-of-steam>
+      a       hello:BoardGame ;
+      rdfs:label "Age of Steam" ;
+      hello:players 6 , 5 , 3 , 4 .
+
+<http://www.riograndegames.com/games.html?id=4>
+      a       hello:BoardGame ;
+      rdfs:label "Puerto Rico" ;
+      hello:players 5 , 3 , 4 , 2 .
+
+<http://www.riograndegames.com/games.html?id=181>
+      a       hello:BoardGame ;
+      rdfs:label "Taj Mahal" ;
+      hello:players 5 , 3 , 4 , 2 .
+
+<http://www.treefroggames.com/london>
+      a       hello:BoardGame ;
+      rdfs:label "London" ;
+      hello:players 3 , 4 , 2 .
+
+hig:el-grande
+      a       hello:BoardGame ;
+      rdfs:label "El Grande" ;
+      hello:players 5 , 3 , 4 , 2 .
