@@ -1,0 +1,10 @@
+Elda 1.2.21
+
+(Releases 19 and 20 were interim releases without special
+documentation.)
+
+The XML renderer's changes to separate object and meta-data
+did not correctly implement the intended cycle-breaking
+algorithm, and the cycle detection code had a subtle bug
+in it. The bug has been removed and the cycle-breaking
+behaviour is a close match to that found in Elda 12/13.

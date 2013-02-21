@@ -1,3 +1,6 @@
+// Pending cleanup after soak tests and release. Now we have some regression
+// tests, cleanup should be a safer activity.
+
 ///*
 //    See lda-top/LICENCE (or http://elda.googlecode.com/hg/LICENCE)
 //    for the licence for this software.
@@ -392,7 +395,11 @@ name of the XML element is:
      
     * the prefix associated with the namespace of the property (the part
      	before the last hash or slash), concatenated with an underscore, 
-     	concatenated with the local name of the property 
+     	concatenated with the local name of the property, if the local
+     	name is allowable as a shortname;
+     	
+     * [Elda special] if that name isn't allowed as an element name, then
+     	a reversible and almost readable encoding of the URI which is.
 
 The contents of the XML element is a sequence of <item> elements if the RDF 
 property has more than one value in the RDF graph or if the api:multiValued 
