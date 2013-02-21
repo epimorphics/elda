@@ -746,7 +746,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
         }
     }
 
-	private APIResultSet runQueryWithSource( Controls c, APISpec spec, Cache cache, Bindings call, View view, Source source ) {
+    // may be subclassed
+	protected APIResultSet runQueryWithSource( Controls c, APISpec spec, Cache cache, Bindings call, View view, Source source ) {
 		Times t = c.times;
 		long origin = System.currentTimeMillis();
 		Couple<String, List<Resource>> queryAndResults = selectResources( c, cache, spec, call, source );
@@ -772,7 +773,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return rs;
 	}
 
-	private APIResultSet fetchDescriptionOfAllResources( Controls c, String select, APISpec spec, View view, List<Resource> results) {
+	// may be subclassed
+	protected APIResultSet fetchDescriptionOfAllResources( Controls c, String select, APISpec spec, View view, List<Resource> results) {
 		int count = results.size();
 		Model descriptions = ModelFactory.createDefaultModel();
 		descriptions.setNsPrefixes( spec.getPrefixMap() );
@@ -787,8 +789,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	/**
 	    Answer the select query (if any; otherwise, "") and list of resources obtained by
 	    running that query.
+	    
+	    May be subclassed.
 	*/
-    private Couple<String, List<Resource>> selectResources( Controls c, Cache cache, APISpec spec, Bindings b, Source source ) {
+    protected Couple<String, List<Resource>> selectResources( Controls c, Cache cache, APISpec spec, Bindings b, Source source ) {
         final List<Resource> results = new ArrayList<Resource>();
         if (itemTemplate != null) setSubject( b.expandVariables( itemTemplate ) );
         if (isFixedSubject() && isItemEndpoint) 
@@ -814,7 +818,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return new Couple<String, List<Resource>>( selectQuery, results );
 	}
 
-	private Query createQuery( String selectQuery ) {
+	// may be subclasses
+	protected Query createQuery( String selectQuery ) {
 		try 
 			{ return QueryFactory.create(selectQuery); } 
 		catch (Exception e) {

@@ -121,4 +121,11 @@ public class PrefixLogger {
 		return new PrefixLogger( PrefixMapping.Extended );
 	}
 	
+	/**
+	 	PrefixMapping is required by extension queries
+	*/
+	public PrefixMapping getPrefixMapping() {
+		return pm;
+	}
+	
 }

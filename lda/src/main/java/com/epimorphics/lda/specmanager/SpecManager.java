@@ -23,6 +23,7 @@ import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.specs.APISpec;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  * Defines the interface for a storage manager that can preserve and
@@ -94,6 +95,11 @@ public interface SpecManager {
     /**
         Answer a list of all the specs in this manager.
     */
-	public List<SpecEntry> allSpecs();
+	public List<SpecEntry> allSpecs();	
+	
+	/**
+		Get an APISpec object for the given spec
+	*/
+	public APISpec getAPISpec(Resource specRoot);
 }
 

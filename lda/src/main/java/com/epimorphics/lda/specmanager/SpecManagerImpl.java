@@ -123,6 +123,10 @@ public class SpecManagerImpl implements SpecManager {
 		List<SpecEntry> result = new ArrayList<SpecEntry>();
 		for (Map.Entry<String, SpecEntry> e: specs.entrySet() ) result.add( e.getValue() );
 		return result;
+	}	
+	
+	@Override public APISpec getAPISpec(Resource specRoot) {
+		return new APISpec(FileManager.get(), specRoot, modelLoader);
 	}
 
 }

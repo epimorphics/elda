@@ -133,7 +133,8 @@ public class APISpec {
                 throw new APIException("Bad specification file, non-resource definition of Endpoint. " + n);
             }
             Resource endpoint = (Resource) n;
-            endpoints.add( new APIEndpointSpec( this, this, endpoint ) );
+            // endpoints.add( new APIEndpointSpec( this, this, endpoint ) );
+            endpoints.add( getAPIEndpointSpec( endpoint) );
         }
     }
     
@@ -221,6 +222,13 @@ public class APISpec {
 	*/
 	public Factories getRendererFactoryTable() {
 		return factoryTable.copy();
+	}
+	
+	/**
+		Returns a new APIEndpointSpec for this APISpec and the given endpoint
+	*/
+	protected APIEndpointSpec getAPIEndpointSpec( Resource endpoint ) {
+		return new APIEndpointSpec ( this, this, endpoint );
 	}
 	
 	public boolean hasParameterBasedContentNegotiation() {

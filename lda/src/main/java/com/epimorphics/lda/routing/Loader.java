@@ -34,6 +34,7 @@ import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.routing.ServletUtils.ServletSpecContext;
 import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.sources.AuthMap.NamesAndValues;
+import com.epimorphics.lda.specmanager.SpecManager;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specmanager.SpecManagerImpl;
 import com.hp.hpl.jena.util.FileManager;
@@ -120,5 +121,13 @@ public class Loader extends HttpServlet {
             }
         }
 	}
+    
+    /**
+    	Get a new SpecManager implementation.
+    */
+    protected SpecManager getSpecManager() {
+     	return new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader);
+    }
+    
 }
 

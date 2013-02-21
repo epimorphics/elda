@@ -285,20 +285,22 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 		return defaultPageSize;
 	}
 	
-    private void instantiateBaseQuery( Resource endpoint ) {
+	// may be subclassed
+    protected void instantiateBaseQuery( Resource endpoint ) {
         baseQuery = new APIQuery( this );
         baseQuery.setEnableETags( enableETags( endpoint ) );
         setAllowedReserved( endpoint, baseQuery );
         addSelectors(endpoint);
     }
 
-	private boolean enableETags( Resource ep ) {
+    // may be subclassed
+    protected boolean enableETags( Resource ep ) {
 		Statement s = ep.getProperty(EXTRAS.enableETags);
 		if (s == null) s = specForEndpoint(ep).getProperty(EXTRAS.enableETags);
 		return s != null && s.getBoolean();
 	}
 
-	private void setAllowedReserved( Resource endpoint, APIQuery q ) {
+    protected void setAllowedReserved( Resource endpoint, APIQuery q ) {
 		setAllowedReservedFrom( endpoint, q );
 		setAllowedReservedFrom( specForEndpoint( endpoint ), q );
 	}
@@ -313,7 +315,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 		}
 	}
 
-	private void addSelectors(Resource endpoint) {
+	// may be subclassed
+	protected void addSelectors(Resource endpoint) {
 		Resource s = getResourceValue( endpoint, API.selector );
         if (s != null) {
 	        StmtIterator i = s.listProperties( API.parent );
