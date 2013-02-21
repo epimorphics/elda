@@ -534,7 +534,7 @@ public class XMLRendering {
 			Resource item = objectModel.createResource( itemUri );
 			List<Property> itemProperties = asSortedList( item.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 			for (Property ip: itemProperties) {
-				addPropertyValues( t, pt, item, ip, true );
+				addPropertyValues( t, pt, item, ip, false );
 			}			
 		} else {			
 			NodeList nl = findItems( e ).getChildNodes();
@@ -544,7 +544,7 @@ public class XMLRendering {
 				Resource item = objectModel.createResource( itemUri );
 				List<Property> itemProperties = asSortedList( item.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 				for (Property ip: itemProperties) {
-					addPropertyValues( t, anItem, item, ip, true );
+					addPropertyValues( t, anItem, item, ip, false );
 				}
 			}
 		}
@@ -699,7 +699,7 @@ public class XMLRendering {
 			Resource r = v.asResource();
 			if (inPlace( r )) {
 				addIdentification( pe, r );
-				if (expandRegardless) elementAddResource( t, pe, r, expandRegardless );
+				elementAddResource( t, pe, r, expandRegardless );
 			} else if (RDFUtil.isList( r )) {
 				for (RDFNode item: RDFUtil.asJavaList( r ) ) {
 					// System.err.println( ">> giveValueToElement(appendValueAsItem).expandRegardless: " + r.equals(itemsResource) );
@@ -716,6 +716,7 @@ public class XMLRendering {
 		return pe;
 	}
 
+	// true if r is a named resource which has been expanded or has no properties
 	private boolean inPlace( Resource r ) {
 		if (r.isAnon()) return false;
 		if (dontExpand.contains( r )) return true;
