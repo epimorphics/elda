@@ -58,5 +58,19 @@ public class TestCycleFinder {
 		Set<Resource> loops = CycleFinder.findCycles( x );
 		assertEquals( CollectionUtils.set(y, z), loops );
 	}
+	
+	// this is the test case that was missing and allowed the sysle-finder
+	// to miss items on a different path to the same cyclic node. Oops.
+	@Test public void addsBothTraces() {
+		Model m = ModelIOUtils.modelFromTurtle( ":x :P :y. :y :Q :z. :z :R :x. :x :S :a. :a :T :b. :b :U :x." );
+		Resource x = m.createResource( m.expandPrefix( ":x" ) );
+		Resource y = m.createResource( m.expandPrefix( ":y" ) );
+		Resource z = m.createResource( m.expandPrefix( ":z" ) );
+		Resource a = m.createResource( m.expandPrefix( ":a" ) );
+		Resource b = m.createResource( m.expandPrefix( ":b" ) );		
+		Set<Resource> loops = CycleFinder.findCycles( x );
+		assertEquals( CollectionUtils.set(x, y, z, a, b), loops );
+	}
+	
 
 }
