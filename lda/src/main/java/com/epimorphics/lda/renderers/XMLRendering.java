@@ -555,8 +555,6 @@ public class XMLRendering {
 				}
 			}
 		}
-	//
-//		System.err.println( ">> main rendering work completed." );
 		return e;
 	}
 	
@@ -603,12 +601,8 @@ public class XMLRendering {
 			this.blocked = blocked;
 		}
 		
-		// TODO ensure that the second choice has the desired behaviour
 		boolean expand( Resource x, Set<Resource> dontExpand, boolean expandRegardless ) {
-			// return unseen( x ) && !dontExpand.contains( x );
-//			return !cyclic.contains( x ) || dontExpand.add( x ) || expandRegardless;
 			
-			// top-level items are blocked everywhere else
 			if (blocked.contains( x )) return false;
 			
 			if (cyclic.contains( x )) {
@@ -658,17 +652,6 @@ public class XMLRendering {
 		addIdentification( e, x );
 								
 		depth += 1;
-		
-//		if (depth > 5) {
-//			new RuntimeException().printStackTrace( System.err );
-//			throw new RuntimeException( ">> OVERBLOWN" );
-//		}
-		
-//		 System.err.println( ">> elementAddResource [" + depth + "]: " + x );
-//		 System.err.println( ">> expandRegardless: " + expandRegardless );
-//		 System.err.println( ">> resource is cyclic: " + t.cyclic.contains( x ) );
-//		 System.err.println( ">> resource is dontExpand: " + dontExpand.contains( x ) );
-//		 System.err.println( ">>  trail [" + t.seen.size() + "]:" + t );
 
 		if (t.expand( x, dontExpand, expandRegardless )) {
 			t.see(x);
@@ -679,7 +662,6 @@ public class XMLRendering {
 			t.unsee( x );
 		}		
 		
-//		System.err.println( ">> leaving [" + depth + "] elementAddResource." );
 		depth -= 1;
 		
 		return e;
@@ -699,7 +681,6 @@ public class XMLRendering {
 	    Attach a value to a property element.
 	*/
 	private Element giveValueToElement( Trail t, Element pe, RDFNode v, boolean expandRegardless ) {
-//		System.err.println( ">> giveValueToElement.expandRegardless: " + expandRegardless );
 		if (v.isLiteral()) {
 			addLiteralToElement( pe, (Literal) v );
 		} else {
@@ -709,8 +690,7 @@ public class XMLRendering {
 				elementAddResource( t, pe, r, expandRegardless );
 			} else if (RDFUtil.isList( r )) {
 				for (RDFNode item: RDFUtil.asJavaList( r ) ) {
-					// System.err.println( ">> giveValueToElement(appendValueAsItem).expandRegardless: " + r.equals(itemsResource) );
-					appendValueAsItem( t, pe, item, false ); // r.equals(itemsResource) );
+					appendValueAsItem( t, pe, item, false );
 				}
 			} else if (r.listProperties().hasNext()) 
 				elementAddResource( t, pe, r, expandRegardless );
@@ -735,20 +715,6 @@ public class XMLRendering {
 		List<Property> properties = new ArrayList<Property>( set );
 		Collections.sort( properties, new Comparator<Property>() {
             @Override public int compare(Property a, Property b) {
-            	
-//            	System.err.println( ">> a " + a.getURI() );
-//            	String x = nameMap.get( a.getURI() );
-//            	if (x == null) {
-//            		x = a.getLocalName();
-//            		System.err.println( ">> " + a.getURI() + " had to be forced to " + x );
-//            	}
-//
-////            	System.err.println( ">> b " + b.getURI() );
-//            	String y = nameMap.get( b.getURI() );
-//            	if (y == null) y = a.getLocalName();
-//            	
-//            	if (true) return x.compareTo( y );
-            	
                 return nameMap.get( a.getURI() ).compareTo( nameMap.get( b.getURI() ) );
             }
         	} );
@@ -762,23 +728,11 @@ public class XMLRendering {
 	} ;
 	
 	private List<RDFNode> sortObjects( Property predicate, Set<RDFNode> objects ) {
-			
 		List<Couple<RDFNode, String>> labelleds = new ArrayList<Couple<RDFNode, String>>();
-		
 		for (RDFNode r: objects) labelleds.add( new Couple<RDFNode, String>( r, labelOf( r ) ) ); 
-		
 		Collections.sort( labelleds, compareCouples );				
-		
 		List<RDFNode> result = new ArrayList<RDFNode>();
-		
 		for (Couple<RDFNode, String> labelled: labelleds) result.add( labelled.a );
-		
-//		if (predicate.equals( API.termBinding )) {
-//			System.err.println( ">> sorted term bindings:" );
-//			for (Couple<RDFNode, String> labelled: labelleds) 
-//				System.err.println( ">>  " + labelled );
-//		}
-			
 		return result;
 	}
 
