@@ -348,7 +348,6 @@ import org.w3c.dom.NodeList;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
@@ -357,7 +356,6 @@ import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.util.Couple;
-//import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.vocabs.API;
 
 /**
@@ -485,7 +483,7 @@ public class XMLRendering {
 		
 		// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
 		Trail t2 = new Trail( metaCycles, metaBlocked );
-		t2.see(xInMetaModel);
+		// t2.see(xInMetaModel);
 		
 		dontExpand.add( x );
 		
@@ -496,7 +494,7 @@ public class XMLRendering {
 		dontExpand.clear();
 	//
 		for (Property p: metaProperties)			
-			addPropertyValues( t2, e, xInMetaModel, p, false );
+			addPropertyValues( t2, e, xInMetaModel, p );
 	//
 	//
 		dontExpand.clear();
@@ -536,26 +534,24 @@ public class XMLRendering {
 		
 		Trail t = new Trail( objectCycles, objectBlocked );
 		if (hasPrimaryTopic) { 			
-			Element pt = findByNodeName( e, "primaryTopic" );
-			String itemUri = pt.getAttribute( "href" );
-			Resource item = objectModel.createResource( itemUri );
-			List<Property> itemProperties = asSortedList( item.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
-			for (Property ip: itemProperties) {
-				addPropertyValues( t, pt, item, ip, false );
-			}			
+			topLevelExpansion(objectModel, t, findByNodeName( e, "primaryTopic" ));			
 		} else {			
 			NodeList nl = findItems( e ).getChildNodes();
 			for (int i = 0; i < nl.getLength(); i += 1) {
-				Element anItem = (Element) nl.item(i);
-				String itemUri = anItem.getAttribute( "href" );
-				Resource item = objectModel.createResource( itemUri );
-				List<Property> itemProperties = asSortedList( item.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
-				for (Property ip: itemProperties) {
-					addPropertyValues( t, anItem, item, ip, false );
-				}
+				topLevelExpansion(objectModel, t, (Element) nl.item(i));
 			}
 		}
 		return e;
+	}
+
+	private void topLevelExpansion(Model objectModel, Trail t, Element pt) {
+		Resource anItem = objectModel.createResource( pt.getAttribute( "href" ) );
+		expandProperties(t, pt, anItem);
+	}
+
+	private void expandProperties(Trail t, Element pt, Resource anItem) {
+		List<Property> properties = asSortedList( anItem.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+		for (Property ip: properties) addPropertyValues( t, pt, anItem, ip );
 	}
 	
 	private Element findItems( Element e ) {
@@ -592,7 +588,6 @@ public class XMLRendering {
 	
 	static class Trail {
 		
-		final List<Resource> seen = new ArrayList<Resource>();
 		final Set<Resource> cyclic;
 		final Set<Resource> blocked;
 		
@@ -601,68 +596,27 @@ public class XMLRendering {
 			this.blocked = blocked;
 		}
 		
-		boolean expand( Resource x, Set<Resource> dontExpand, boolean expandRegardless ) {
-			
+		boolean expand( Resource x, Set<Resource> dontExpand ) {			
 			if (blocked.contains( x )) return false;
-			
 			if (cyclic.contains( x )) {
 				boolean expand = !dontExpand.contains( x );
 				dontExpand.add( x );
 				return expand;
 			}
-						
 			return true;
-			
-		}
-		
-		boolean unseen( Resource x ) {
-			return !seen.contains( x );
-		}
-		
-		void see( Resource x ) {
-			seen.add( x );
-		}
-		
-		void unsee( Resource x ) {
-			seen.remove( x );
-		}		
-		
-		@Override public String toString() {
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < seen.size(); i += 1) sb.append( "  " );
-			for (Resource x: seen) sb.append( " " ).append( nice( x ) );
-			return sb.toString();
-		}
-		
-		public String nice( Resource x ) {
-			if (x.isAnon()) return "__";
-			String s = x.getModel().shortForm( x.getURI() );
-			return s == null || s.equals(x.getURI())? x.getLocalName() : s;
 		}
 	}
 	
 	/**
 	    Add a resource <code>x</code> to the DOM element <code>e</code>.
-	    
-	*/
-	
-	int depth = 0;
-	
-	private Element elementAddResource( Trail t, Element e, Resource x, boolean expandRegardless ) {
+	*/	
+	private Element elementAddResource( Trail t, Element e, Resource x ) {
 		addIdentification( e, x );
-								
-		depth += 1;
 
-		if (t.expand( x, dontExpand, expandRegardless )) {
-			t.see(x);
+		if (t.expand( x, dontExpand )) {
 			dontExpand.add( x );
-			List<Property> properties = asSortedList( x.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
-			// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
-			for (Property p: properties) addPropertyValues( t, e, x, p, false );		
-			t.unsee( x );
+			expandProperties(t, e, x);		
 		}		
-		
-		depth -= 1;
 		
 		return e;
 	}
@@ -680,20 +634,20 @@ public class XMLRendering {
 	/**
 	    Attach a value to a property element.
 	*/
-	private Element giveValueToElement( Trail t, Element pe, RDFNode v, boolean expandRegardless ) {
+	private Element giveValueToElement( Trail t, Element pe, RDFNode v ) {
 		if (v.isLiteral()) {
 			addLiteralToElement( pe, (Literal) v );
 		} else {
 			Resource r = v.asResource();
 			if (inPlace( r )) {
 				addIdentification( pe, r );
-				elementAddResource( t, pe, r, expandRegardless );
+				elementAddResource( t, pe, r );
 			} else if (RDFUtil.isList( r )) {
 				for (RDFNode item: RDFUtil.asJavaList( r ) ) {
-					appendValueAsItem( t, pe, item, false );
+					appendValueAsItem( t, pe, item );
 				}
 			} else if (r.listProperties().hasNext()) 
-				elementAddResource( t, pe, r, expandRegardless );
+				elementAddResource( t, pe, r );
 			else if (v.isAnon()) {
 				if (needsId( v )) pe.setAttribute( "id", idFor( pe, r ) );
 			} else {
@@ -736,9 +690,18 @@ public class XMLRendering {
 		return result;
 	}
 
+	/**
+	    For sorting values, every node should have a label. That's easy for literals
+	    and URI nodes, but bnode IDs are not stable, and for testing purposes if
+	    nothing else, we want the order of values to be the same every time. So
+	    for a bnode we give it the spelling of the lexical form of its literal label, 
+	    if it has one. We try api:label then rdfs:label and otherwise fall back to
+	    the bnode ID and cross our fingers.
+	*/
 	private String labelOf( RDFNode r ) {
 		if (r.isAnon()) {
 			Statement labelling = r.asResource().getProperty( API.label );
+			if (labelling == null) labelling = r.asResource().getProperty( RDFS.label );
 			if (labelling != null) {
 				RDFNode label = labelling.getObject();
 				if (label.isLiteral()) return label.asLiteral().getLexicalForm();
@@ -759,33 +722,24 @@ public class XMLRendering {
 		return shorter == null ? r.getLocalName() : shorter;
 	}
 
-	private void addPropertyValues( Trail t, Element e, Resource x, Property p, boolean expandRegardless ) {
-//		 System.err.println( ">> add property values for " + p );
-//		System.err.println( ">> addPropertyValues for " + shortNameFor(p) + " [" + depth + "]" );
-		
-//		System.err.println( ">> short name is " + shortNameFor( p ) + " for " + p );
+	private void addPropertyValues( Trail t, Element e, Resource x, Property p ) {		
 		
 		Element pe = d.createElement( shortNameFor( p ) );
-		// System.err.println( ">> pe := " + pe );
 		e.appendChild( pe );
-		// System.err.println( ">> e := " + e );
 		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();		
 		
 		if (values.size() > 1 || isMultiValued( p )) {
 			for (RDFNode value: sortObjects( p, values )) {
-//				if (p.equals(API.termBinding)) {
-//					System.err.println( ">> term binding for " + value + " [with label " + labelOf( value ) + "]" );
-//				}
-				appendValueAsItem(t, pe, value, expandRegardless);
+				appendValueAsItem(t, pe, value);
 			}
 		} else if (values.size() == 1) {
-			giveValueToElement( t, pe, values.iterator().next(), expandRegardless );
+			giveValueToElement( t, pe, values.iterator().next() );
 		}
 	}
 
-	private void appendValueAsItem( Trail t, Element pe, RDFNode value, boolean expandRegardless ) {
+	private void appendValueAsItem( Trail t, Element pe, RDFNode value ) {
 		Element item = d.createElement( "item" );
-		giveValueToElement( t, item, value, expandRegardless );
+		giveValueToElement( t, item, value );
 		pe.appendChild( item );
 	}
 
