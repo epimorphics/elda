@@ -7,13 +7,7 @@
 package com.epimorphics.lda.core;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
@@ -24,19 +18,13 @@ import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.NameMap.Stage2NameMap;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.EndpointDetails;
-import com.epimorphics.lda.vocabularies.ELDA;
-import com.epimorphics.lda.vocabularies.OpenSearch;
-import com.epimorphics.lda.vocabularies.SPARQL;
-import com.epimorphics.lda.vocabularies.XHV;
+
+import com.epimorphics.lda.vocabularies.*;
+
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.AnonId;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFList;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.*;
+
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDF;

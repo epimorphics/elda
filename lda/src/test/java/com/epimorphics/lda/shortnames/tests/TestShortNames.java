@@ -4,12 +4,9 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
@@ -19,27 +16,13 @@ import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.NameMap;
-import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests.SNS;
-import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 
-@Ignore public class TestShortNames {
-
-//	@Test public void ensure_prefixing_of_sensitive_names() {
-//		NameMap nm = new NameMap();
-//		Set<String> sensitives = new HashSet<String>( ModelTestBase.listOfStrings( "thing other" ) );
-//		Model m = ModelIOUtils.modelFromTurtle( "@prefix p: <http://example.com/ns#>. p:a p:thing p:b; p:other p:d; p:thong p:c." );
-//		MultiMap<String, String> mm = nm.stage2(false).load(m, m).result( sensitives );
-//	//	
-//		assertEquals( "thong", mm.getOne( "http://example.com/ns#thong" ) );
-//		assertEquals( "p_thing", mm.getOne( "http://example.com/ns#thing" ) );
-//		assertEquals( "p_other", mm.getOne( "http://example.com/ns#other" ) );
-//	}
+public class TestShortNames {
 	
 	@Test public void ensureUndeclatedURIUsesPrefix() {
 		NameMap nm = new NameMap();
@@ -78,23 +61,26 @@ import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 	}	
 	
 	@Test public void ensure_sensitive_result_without_prefix_is_converted() {
-		Model m = ModelIOUtils.modelFromTurtle( "<eh:/A> foaf:primaryTopic <eh:/B>. <eh:/B> <http://example.com/result> <eh:/C>." );
-		ensure_result_converted("unknown_httpXexampleDcomSZresult ", m);
+		Model meta = ModelIOUtils.modelFromTurtle( "<eh:/A> foaf:primaryTopic <eh:/B>." );
+		Model object = ModelIOUtils.modelFromTurtle( "<eh:/B> <http://example.com/result> <eh:/C>." );
+		ensure_result_converted("unknown_httpXexampleDcomSZresult ", meta, object);
 	}
 	
 	@Test public void ensure_sensitive_result_with_prefix_is_converted() {
-		Model m = ModelIOUtils.modelFromTurtle( "<eh:/A> foaf:primaryTopic <eh:/B>. <eh:/B> <http://example.com/result> <eh:/C>." );
-		m.setNsPrefix( "my", "http://example.com/" );
-		ensure_result_converted("<my_result ", m);
+		Model meta = ModelIOUtils.modelFromTurtle( "<eh:/A> foaf:primaryTopic <eh:/B>." );
+		Model object = ModelIOUtils.modelFromTurtle( "<eh:/B> <http://example.com/result> <eh:/C>." );
+		object.setNsPrefix( "my", "http://example.com/" );
+		ensure_result_converted("<my_result ", meta, object );
 	}
 
-	private void ensure_result_converted(String expectContains, Model m) {
+	private void ensure_result_converted(String expectContains, Model meta, Model object ) {
 		Renderer r = new XMLRenderer( new SNS( "" ) );
 	//
 		Times t = new Times();
-		Resource rx = m.createResource( "eh:/A" );
+		Resource rx = object.createResource( "eh:/A" );
 		List<Resource> results = new ArrayList<Resource>(); results.add( rx );
-		APIResultSet rs = new APIResultSet(m.getGraph(), results, true, false, "detailsQuery", new View() );
+		APIResultSet rs = new APIResultSet(object.getGraph(), results, true, false, "detailsQuery", new View() );
+		rs.getModels().getMetaModel().add( meta );
 	//
 		Renderer.BytesOut bo = r.render(t, new Bindings(), rs);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
