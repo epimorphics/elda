@@ -433,10 +433,6 @@ public class XMLRendering {
 	private final Map<String, String> nameMap;
 	private final boolean suppressIPTO;
 	
-	private Resource itemsResource = null;
-	
-	private final Set<Resource> dontExpand = new HashSet<Resource>();
-	
 	public XMLRendering( Model m, ShortnameService sns, boolean suppressIPTO, Document d ) {
 		this.d = d;
 		this.sns = sns;
@@ -445,103 +441,58 @@ public class XMLRendering {
 	}
 
 	/** 
-		The way in -- all external uses come via this method, so we can
-		compute useful things before doing the actual rendering.
-		
-		NOTE. This code was written hastily and will be pruned and
-		simplified as soon as possible, but not today.	
+		External rendering API. e is the XML element representing the result,
+		x is the root node, and mm comprises the object and meta data.
 	*/
 	public Element addResourceToElement( Element e, Resource x, MergedModels mm ) {
-				
-		itemsResource = getItemsResource( x );
-		Set<RDFNode> selectedItems = getItemsList( itemsResource );
-				
-		Model objectModel = mm.getObjectModel();
-		
-		Resource xInObjectModel = x.inModel(objectModel );
-		
-		Resource xInMetaModel = x.inModel(mm.getMetaModel() );
-		
-		Set<Resource> metaCycles = CycleFinder.findCycles( xInMetaModel );
-		
-		if (false) {
-			System.err.println( ">> metacyclics: " + metaCycles.size() );
-			for (Resource r: metaCycles) System.err.println( ">>   metaCyclic: " + r );
-			
-		}
-				
+		Resource xInMetaModel = x.inModel( mm.getMetaModel() );
+		renderMetadata( e, x, xInMetaModel );
+		renderObjectData( e, x, mm.getObjectModel(), xInMetaModel );
+		return e;
+	}
+
+	public void renderMetadata(Element e, Resource x, Resource xInMetaModel) {
+		Set<Resource> cyclic = CycleFinder.findCycles( xInMetaModel );
+		Set<Resource> blocked = new HashSet<Resource>();
+		Set<Resource> seen = new HashSet<Resource>();
+		Trail t = new Trail( cyclic, seen, blocked );
 	//
-	// This is the top-level expansion: we know which properties are meta-data
-	// and which are not. We expand the items separately from the rest of the
-	// properties.	
-	//
-		addIdentification( e, x );
-	//
-		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
-	//
-		Set<Resource> metaBlocked = new HashSet<Resource>();
-		
-		// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
-		Trail t2 = new Trail( metaCycles, metaBlocked );
-		// t2.see(xInMetaModel);
-		
-		dontExpand.add( x );
-		
+		blocked.add( x );
 		Statement emv = xInMetaModel.getProperty( API.extendedMetadataVersion );
-		if (emv != null) dontExpand.add( emv.getResource() );		
-		
-		metaBlocked.addAll( dontExpand );
-		dontExpand.clear();
+		if (emv != null) blocked.add( emv.getResource() );		
 	//
-		for (Property p: metaProperties)			
-			addPropertyValues( t2, e, xInMetaModel, p );
-	//
-	//
-		dontExpand.clear();
+		addIdentification( t, e, x );
+		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+		// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
+		for (Property p: metaProperties) addPropertyValues( t, e, xInMetaModel, p );
+	}
+	
+	public void renderObjectData(Element e, Resource x, Model objectModel, Resource xInMetaModel) {
+		Set<Resource> blocked = new HashSet<Resource>();
 
-		for (RDFNode m: selectedItems) dontExpand.add( m.asResource() );
-
-		boolean hasPrimaryTopic = xInMetaModel.hasProperty( FOAF.primaryTopic );
-//		System.err.println( ">> has primary topic: " + hasPrimaryTopic );
-		
-		Resource primaryTopic = hasPrimaryTopic 
-			? xInMetaModel.getProperty( FOAF.primaryTopic ).getResource().inModel(objectModel)
-			: null
-			;
-		
+		Set<RDFNode> selectedItems = getItemsList( getItemsResource( x ) );
+				
 		Set<Resource> selectedObjectItems = new HashSet<Resource>();
 		for (RDFNode item: selectedItems) 
 			if (item.isResource()) selectedObjectItems.add( item.asResource().inModel(objectModel) );
 		
-		dontExpand.addAll( selectedObjectItems );
-		if (hasPrimaryTopic) dontExpand.add( primaryTopic );
+		blocked.addAll( selectedObjectItems );
 		
-		Set<Resource> objectBlocked = new HashSet<Resource>();
-		objectBlocked.addAll( dontExpand );
-		dontExpand.clear();
-		
-//		System.err.println( ">> Now thinking about the object cycles." );
-		
-		Set<Resource> objectCycles = hasPrimaryTopic
-			? CycleFinder.findCycles( primaryTopic )
-			: CycleFinder.findCycles( selectedObjectItems )
-			;
-		
-		if (false) {
-			System.err.println( ">> objectCyclics: " + objectCycles.size() );
-			for (Resource r: objectCycles) System.err.println( ">>   objectCyclic: " + r );			
-		}
-		
-		Trail t = new Trail( objectCycles, objectBlocked );
-		if (hasPrimaryTopic) { 			
+		Set<Resource> cyclic = new HashSet<Resource>();
+		Trail t = new Trail( cyclic, new HashSet<Resource>(), blocked );
+		boolean hasPrimaryTopic = xInMetaModel.hasProperty( FOAF.primaryTopic );
+		if (hasPrimaryTopic) { 	
+			Resource primaryTopic = xInMetaModel.getProperty( FOAF.primaryTopic ).getResource().inModel(objectModel);		
+			blocked.add( primaryTopic );
+			cyclic.addAll( CycleFinder.findCycles( primaryTopic ) );
 			topLevelExpansion(objectModel, t, findByNodeName( e, "primaryTopic" ));			
 		} else {			
+			cyclic.addAll( CycleFinder.findCycles( selectedObjectItems ) );
 			NodeList nl = findItems( e ).getChildNodes();
 			for (int i = 0; i < nl.getLength(); i += 1) {
 				topLevelExpansion(objectModel, t, (Element) nl.item(i));
 			}
 		}
-		return e;
 	}
 
 	private void topLevelExpansion(Model objectModel, Trail t, Element pt) {
@@ -590,19 +541,25 @@ public class XMLRendering {
 		
 		final Set<Resource> cyclic;
 		final Set<Resource> blocked;
+		final Set<Resource> seen;
 		
-		Trail( Set<Resource> cyclic, Set<Resource> blocked ) {
+		Trail( Set<Resource> cyclic, Set<Resource> seen, Set<Resource> blocked ) {
 			this.cyclic = cyclic;
 			this.blocked = blocked;
+			this.seen = seen;
 		}
 		
-		boolean expand( Resource x, Set<Resource> dontExpand ) {			
+		void markSeen( Resource x ) {
+			seen.add( x );
+		}
+		
+		boolean hasSeen( Resource x ) {
+			return seen.contains( x );
+		}
+		
+		boolean expand( Resource x ) {			
 			if (blocked.contains( x )) return false;
-			if (cyclic.contains( x )) {
-				boolean expand = !dontExpand.contains( x );
-				dontExpand.add( x );
-				return expand;
-			}
+			if (cyclic.contains( x )) return !seen.contains( x );
 			return true;
 		}
 	}
@@ -611,20 +568,20 @@ public class XMLRendering {
 	    Add a resource <code>x</code> to the DOM element <code>e</code>.
 	*/	
 	private Element elementAddResource( Trail t, Element e, Resource x ) {
-		addIdentification( e, x );
+		addIdentification( t, e, x );
 
-		if (t.expand( x, dontExpand )) {
-			dontExpand.add( x );
+		if (t.expand( x )) {
+			t.markSeen( x );
 			expandProperties(t, e, x);		
 		}		
 		
 		return e;
 	}
 
-	private void addIdentification( Element e, Resource x ) {
+	private void addIdentification( Trail t, Element e, Resource x ) {
 		if (x.isURIResource())  
 			e.setAttribute( "href", x.getURI() );
-		else if (dontExpand.contains( x )) {
+		else if (t.hasSeen( x )) {
 			e.setAttribute( "ref", idFor( e, x ) );
 		} else {
 			e.setAttribute( "id", idFor( e, x ) );
@@ -639,8 +596,8 @@ public class XMLRendering {
 			addLiteralToElement( pe, (Literal) v );
 		} else {
 			Resource r = v.asResource();
-			if (inPlace( r )) {
-				addIdentification( pe, r );
+			if (inPlace( t, r )) {
+				addIdentification( t, pe, r );
 				elementAddResource( t, pe, r );
 			} else if (RDFUtil.isList( r )) {
 				for (RDFNode item: RDFUtil.asJavaList( r ) ) {
@@ -658,9 +615,9 @@ public class XMLRendering {
 	}
 
 	// true if r is a named resource which has been expanded or has no properties
-	private boolean inPlace( Resource r ) {
+	private boolean inPlace( Trail t, Resource r ) {
 		if (r.isAnon()) return false;
-		if (dontExpand.contains( r )) return true;
+		if (t.hasSeen( r )) return true;
 		if (r.listProperties().hasNext()) return false;
 		return true;
 	}

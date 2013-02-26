@@ -10,6 +10,9 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.util.FileManager;
 
+/**
+    Class to hold details of an XML rendering gold test.
+*/
 public class GoldXMLTest {
 	
 	private static final String goldRoot = "src/test/resources/xml_gold/";

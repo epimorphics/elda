@@ -20,14 +20,16 @@ import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.util.DOMUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-@Ignore public class TestXMLRenderer 
+public class TestXMLRenderer 
 	{	
 	@Test public void testParser() 
 		{
@@ -114,49 +116,31 @@ import org.w3c.dom.Node;
 			);
 		}
 
-    protected Resource resourceInModel( String given )
+    protected Resource resourceInModel( String string )
         {
-    	String string = given;
-//    	int space = given.indexOf(' ');
-//    	String itemsInsert = " api:items _inserted; _inserted";
-//    	String string = 
-//    		given.substring(0, space)
-//    		+ itemsInsert
-//    		+ given.substring( space )
-//    		;
-    //
         Model m = ModelTestBase.modelWithStatements( string );
-        
         String firstResourceString = string.substring( 0, string.indexOf( ' ' ) );
-        
-		Resource mr = ModelTestBase.resource( m, firstResourceString );
-        
-		String extras = ("item api:items items; items rdf:rest rdf:nil; items rdf:first " + firstResourceString)
-			.replaceAll( "api:", API.NS )
-			;
-		
-		Model withList = ModelTestBase.modelWithStatements( extras );
-		
-        Resource item = ModelTestBase.resource( "item" );
-        
-        m.add( withList );
-        
-        return item.inModel( m );        
+		Resource r = ModelTestBase.resource( m, firstResourceString );
+        return r.inModel( m );        
         }
     
 	private void ensureWrappedRendering( String desired, Resource root ) 
 		{ ensureRendering( wrapA( desired ), root ); }
 	
 	private void ensureRendering( String wrapped, Resource root ) {
-		Model m = root.getModel();
+		Model m = root.getModel();	
+	//
 		PrefixMapping pm = root.getModel();
 		ShortnameService sns = new SNS( "" );
 	//
 		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
-		MergedModels mm = new MergedModels( root.getModel() );
+		MergedModels mm = new MergedModels( m );
 	//
-		xr.renderInto( root.inModel( mm.getObjectModel() ), mm, d, false );
+		Model meta = mm.getMetaModel();
+		meta.add( root, API.items, meta.createList( new RDFNode[] {root} ) );
+		xr.renderInto( root.inModel( meta ), mm, d, false );
+	//
 		Node de = d.getDocumentElement().getFirstChild();
 		Node expected = new TinyParser().parse( wrapped );
 	//
