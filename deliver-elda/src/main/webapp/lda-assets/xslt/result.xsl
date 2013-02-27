@@ -114,6 +114,7 @@ $prefLabel, $altLabel, $title and $name variables.
 	<script type="text/javascript" src="{$_resourceRoot}scripts/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="{$_resourceRoot}scripts/jquery.sparkline.js"></script>
 	<script type="text/javascript" src="{$_resourceRoot}scripts/codemirror/codemirror_min.js"></script>
+	<xsl:apply-templates select="." mode="outerscript"/>
 	<script type="text/javascript">
 		$(function() {
 			$('.info img')

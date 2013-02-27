@@ -15,17 +15,19 @@
 	</xsl:call-template>
 </xsl:template>	
 
-
-<script type="text/javascript" src="{$_resourceRoot}scripts/staging-education.js"></script>
+<xsl:template match="result" mode="outerscript">
 <script type="text/javascript">
-  $(function() {
-	  apiStart = document.URL.indexOf( "/api" )
+	$(function() {
+
+	  apiStart = document.URL.indexOf( "/elda" )
 	  if (apiStart &lt; 0) return
 
 	  stagePattern = new RegExp('<xsl:value-of select="$_stagePattern"/>')
 
 	  editFrom = "http://education.data.gov.uk/"
-	  editTo = document.URL.slice(0, apiStart + 4) + "/"
+	  editTo = document.URL.slice(0, apiStart + 5) + "/mini/"
+
+	  alert( "FROM " + editFrom + " TO " + editTo )
 
 	  $("a[href^=" + editFrom + "]").each( function( a ) {
 		edited = this.href.replace( editFrom, editTo )
@@ -33,6 +35,7 @@
 	  })
   })
 </script>
+</xsl:template>
 
 <xsl:template match="primaryTopic" mode="moreinfo">
 	<xsl:call-template name="educationLinks">

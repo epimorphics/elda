@@ -99,7 +99,7 @@ spec:viewerLocation
 spec:HtmlFormatter a api:XsltFormatter 
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
+	; api:stylesheet "lda-assets/xslt/school.xsl" # result-osm-trimmed.xsl"
 	.
 
 ############################################################################################
@@ -137,7 +137,7 @@ spec:mini-education-api a api:API
 	# tells Elda where the SPARQL endpoint's form page is, if it has one
 	; api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"]
 	# paths which are rewritten away from education.data.gov.uk
-	; api:variable [api:name "_stagePattern"; api:value "^/doc/school|/doc/school/phase/primary|/(id|doc)/school/[^/]*$"]
+	; api:variable [api:name "_stagePattern"; api:value "/mini(/doc/school|/doc/school/phase/primary|/doc/school/[0-9]*)$"]
 	.
     
 # Tells Elda that the SPARQL endpoint understands nested SELECTS in SPARQL.
