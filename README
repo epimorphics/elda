@@ -21,6 +21,7 @@ are usually excrutiatingly slow to download.]
 Import into Eclipse using the multi-project import tool from:
 http://eclipse-tools.sourceforge.net/updates/
 
-Elda documentation lives in deliver-elda/src/main/webapp/lda-assets/docs/
+Elda documentation lives in deliver-elda/src/main/webapp/lda-assets/docs/.
+Documetation for older releases is retained, but not indefinitely.
 
 
