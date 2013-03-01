@@ -37,7 +37,7 @@ public class BuiltIn {
 	private static Model rdfModel() {
 		Model result = ModelFactory.createDefaultModel();
 		propertyShortname(RDF.type.inModel(result))
-			.addProperty(RDF.type, API.Multivalued)
+			// .addProperty(RDF.type, API.Multivalued)
 			.addProperty(RDFS.range, RDFS.Resource)
 			;
 		propertyShortname(RDFS.label.inModel(result))
