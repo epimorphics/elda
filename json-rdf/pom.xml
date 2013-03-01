@@ -5,7 +5,7 @@
   <parent>
     <artifactId>elda</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.2.22</version>
+    <version>1.2.23-SNAPSHOT</version>
   </parent>
 
   <!--
