@@ -32,6 +32,7 @@ import com.epimorphics.jsonrdf.EncodingException;
 import com.epimorphics.jsonrdf.JSONWriterFacade;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
+import com.epimorphics.jsonrdf.ReadContext;
 import com.epimorphics.jsonrdf.extras.JsonUtils;
 import com.hp.hpl.jena.datatypes.BaseDatatype;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
@@ -104,7 +105,7 @@ public class EncoderDefault implements EncoderPlugin {
     }
     
     /** Encode a resource URI, shortening it if possible */
-    @Override public String encodeResourceURI(String uri, Context context, boolean shorten) {
+    @Override public String encodeResourceURI(String uri, ReadContext context, boolean shorten) {
         if (shorten) {
             String name = context.getNameForURI(uri);
             if (name != null) return name;
@@ -136,7 +137,7 @@ public class EncoderDefault implements EncoderPlugin {
     }
     
     /** Encode a literal as a JSON compatible object */
-    @Override public void encodeLiteral( JSONWriterFacade jw, boolean isStructured, Literal lit, Context c) {
+    @Override public void encodeLiteral( JSONWriterFacade jw, boolean isStructured, Literal lit, ReadContext c) {
     	String spelling = lit.getLexicalForm(), lang = lit.getLanguage();
     	RDFDatatype dt = lit.getDatatype();
     	if (isStructured) {
@@ -173,7 +174,7 @@ public class EncoderDefault implements EncoderPlugin {
     
     private boolean showUnhandled = true;
 
-	private String shortName( Context c, RDFDatatype dt) {
+	private String shortName( ReadContext c, RDFDatatype dt) {
 		String uri = dt.getURI();
 		String sn = c.getNameForURI( uri );
 		if (sn == null) sn = c.forceShorten( uri );
@@ -194,7 +195,7 @@ public class EncoderDefault implements EncoderPlugin {
     }
 
     /** Write the context object to a JSON stream */
-    @Override public void writeContext(Context context, JSONWriterFacade jw) {
+    @Override public void writeContext(ReadContext context, JSONWriterFacade jw) {
         jw.key(PNContext);
         jw.object();
         String base = context.getBase();

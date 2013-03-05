@@ -35,7 +35,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-public class Context implements Cloneable {
+public class Context implements ReadContext, Cloneable {
 
     protected String base = null;
     

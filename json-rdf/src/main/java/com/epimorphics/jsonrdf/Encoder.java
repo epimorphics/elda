@@ -41,7 +41,7 @@ public class Encoder {
     
     protected static EncoderPlugin defaultPlugin = new EncoderDefault();
     
-    public static Encoder getForOneResult( Context c, boolean wantContext ) {
+    public static Encoder getForOneResult( ReadContext c, boolean wantContext ) {
     	return new Encoder( defaultPlugin, wantContext, c, true );
     }
     
@@ -73,7 +73,7 @@ public class Encoder {
         return get(rules, wantsContext, new Context());
     }
     
-    private static Encoder get(EncoderPlugin rules, boolean wantsContext, Context context ) {
+    private static Encoder get(EncoderPlugin rules, boolean wantsContext, ReadContext context ) {
 		return new Encoder( rules, wantsContext, context, false );
 	}
 
@@ -96,14 +96,14 @@ public class Encoder {
     /**
      * Return an encoder using the default rules and the specified Context.
      */
-    public static Encoder get(Context context) {
+    public static Encoder get(ReadContext context) {
         return get(defaultPlugin, context);
     }
     
     /**
      * Return an encoder using the specified rules and the specified Context.
      */
-    public static Encoder get(EncoderPlugin rules, Context context) {
+    public static Encoder get(EncoderPlugin rules, ReadContext context) {
         return new Encoder(rules, true, context, false );
     }
 
@@ -111,7 +111,7 @@ public class Encoder {
      * @param rules
      * @param context
      */
-    private Encoder(EncoderPlugin rules, Context context) {
+    private Encoder(EncoderPlugin rules, ReadContext context) {
     	this( rules, context, false );
     }
 
@@ -120,11 +120,11 @@ public class Encoder {
      * @param context
      * @param oneResult true iff the LDA "result: object" style is required
      */
-    private Encoder(EncoderPlugin rules, Context context, boolean oneResult ) {
+    private Encoder(EncoderPlugin rules, ReadContext context, boolean oneResult ) {
         this( rules, false, context, oneResult );
     }
     
-    private Encoder(EncoderPlugin rules, boolean wantsContext, Context context, boolean oneResult ) {
+    private Encoder(EncoderPlugin rules, boolean wantsContext, ReadContext context, boolean oneResult ) {
         this.rules = rules;
         this.context = context;
         this.oneResult = oneResult;
@@ -132,8 +132,8 @@ public class Encoder {
     }
 
     // Instance data
-    protected EncoderPlugin rules;
-    protected Context context;
+    protected final EncoderPlugin rules;
+    protected final ReadContext context;
     protected final boolean oneResult;
     protected final boolean wantsContext;
     

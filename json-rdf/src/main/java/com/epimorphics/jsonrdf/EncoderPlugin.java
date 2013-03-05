@@ -33,7 +33,7 @@ public interface EncoderPlugin {
     public String encodeResourceURI(String uri);
     
     /** Encode a resource URI, use relative URIs if possible, use shortnames only if flag is set */
-    public String encodeResourceURI(String uri, Context context, boolean shortNames);
+    public String encodeResourceURI(String uri, ReadContext context, boolean shortNames);
     
     /** Encode a reference to a bNode via a mapped identifier number */
     public String encodebNodeId(int id);
@@ -43,7 +43,7 @@ public interface EncoderPlugin {
      	then encode it as an object with _value, _lang, and/or _datatype
      	properties. Use c to shorten type names.
     */
-    public void encodeLiteral( JSONWriterFacade jw, boolean isStructured, Literal lit, Context c );
+    public void encodeLiteral( JSONWriterFacade jw, boolean isStructured, Literal lit, ReadContext c );
     
     /** Write the outer result wrapper.  */
     public void writeHeader(JSONWriterFacade jw);
@@ -55,7 +55,7 @@ public interface EncoderPlugin {
 	public void endResults( JSONWriterFacade jw, boolean oneResult );
     
     /** Write the context object to a JSON stream */
-    public void writeContext(Context context, JSONWriterFacade jw);
+    public void writeContext(ReadContext context, JSONWriterFacade jw);
     
     /** Start a sub-section for outputing named graphs */
     public void startNamedGraphs(JSONWriterFacade jw);
