@@ -123,8 +123,8 @@ import com.hp.hpl.jena.shared.WrappedException;
             @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
             @Context ServletContext servCon,
-            @Context ServletConfig servFig,
-            @Context HttpServletRequest zombies,
+            // @Context ServletConfig servFig,
+            // @Context HttpServletRequest zombies,
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
