@@ -14,15 +14,53 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  	Sub interface used to describe a mapped property 
 */
 public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Cloneable {
-	
-    protected final String uri;
-    
-    protected String name;
+	    
+	protected final String uri;
     protected boolean multivalued = false;
+    protected String name;
     protected boolean hidden = false;
-    protected boolean structured = false;
+    protected boolean structured = false;    
+    protected String type = null;
+    protected Property p;
+
+    @Override public boolean equals( Object other) {
+    	return other instanceof ContextPropertyInfo && same( (ContextPropertyInfo) other );
+    }
     
-    /**
+    private boolean same(ContextPropertyInfo other) {
+    	return
+    		uri.equals( other.uri )
+    		&& multivalued == other.multivalued
+    		&& name.equals( other.name )
+    		&& hidden == other.hidden
+    		&& structured == other.structured
+    		&& eq(p, other.p)
+    		&& eq( type, other.type )
+    		;
+    }
+    
+    @Override public String toString() {
+    	return 
+    		"<CPI short: " + name
+    		+ ", multivalued: " + multivalued
+    		+ ", hidden: " + hidden
+    		+ ", structured: " + structured
+    		+ ", type: " + type
+    		+ ", property: " + p
+    		+ ", uri: " + uri
+    		+ ">"
+    		;
+    }
+    
+    @Override public int hashCode() {
+    	return uri.hashCode();
+    }
+    
+    private boolean eq(Object a, Object b) {
+		return a == null ? b == null : a.equals(b);
+	}
+
+	/**
         Clone this Prop -- used by Context.clone() to avoid updating
         a shared Context object.
     */
@@ -48,13 +86,9 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
 	public boolean isStructured() {
 		return structured;
 	}
-
-    protected String type = null;
-    
-    protected Property p;
     
     public ContextPropertyInfo(String uri, String name) {
-        this.uri = uri;
+    	this.uri = uri;
         this.name = name;
     }
     
@@ -91,6 +125,7 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
     }
     
     /** Record the type of a sample value, if there is a clash with prior type then default to rdfs:Resource */
+    // Only called from JSON renderer, would like to eliminate its use if possible ...
     public void addType(RDFNode value) {
         if (type == null) {
             type = decideType(value);

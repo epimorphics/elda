@@ -23,7 +23,6 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
@@ -35,7 +34,7 @@ public class TestJsonRenderer {
 	
 	@Test public void testDoesntUpdateContext() {
 		Bindings b = new Bindings();
-		Model model = ModelIOUtils.modelFromTurtle( "<fake:root> <fake:property> 17 ." );
+		Model model = ModelIOUtils.modelFromTurtle( "<fake:root> <fake:predicate> 17 ." );
 		Resource root = model.createResource( "fake:root" );
 		Context given = new Context();
 		new JSONRenderer( null ).renderAndDiscard( b, model, root, given );
@@ -67,7 +66,7 @@ public class TestJsonRenderer {
 	private String runTinyRenderer( Bindings b ) {
 		JSONRenderer jr = createTinyRenderer();
 		Times t = new Times();
-		Model m = ModelIOUtils.modelFromTurtle( "<fake:root> <fake:property> 17 ." );
+		Model m = ModelIOUtils.modelFromTurtle( "<fake:root> <fake:predicate> 17 ." );
 		Resource root = m.createResource( "fake:root" );
 		List<Resource> results = CollectionUtils.list( root );
 		APIResultSet rs = new APIResultSet( m.getGraph(), results, true, false, "detailsQuery", new View() );

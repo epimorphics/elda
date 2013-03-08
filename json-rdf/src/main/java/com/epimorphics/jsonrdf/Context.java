@@ -124,11 +124,11 @@ public class Context implements ReadContext, Cloneable {
         notThese.addAll( seen );
     }
     
-    static Resource[] RES_TYPES_TO_SHORTEN = new Resource[] {RDFS.Class, OWL.Class};
+    public static Resource[] RES_TYPES_TO_SHORTEN = new Resource[] {RDFS.Class, OWL.Class};
     
-    static Resource[] PROP_TYPES_TO_SHORTEN = new Resource[] {RDF.Property, OWL.DatatypeProperty, OWL.ObjectProperty, API.Hidden};
+    public static Resource[] PROP_TYPES_TO_SHORTEN = new Resource[] {RDF.Property, OWL.DatatypeProperty, OWL.ObjectProperty, API.Hidden};
     
-    static Pattern labelPattern = Pattern.compile("[_a-zA-Z][0-9a-zA-Z_]*");
+    public static Pattern labelPattern = Pattern.compile("[_a-zA-Z][0-9a-zA-Z_]*");
     
     protected void loadAnnotations( Set<String> notThese, Set<String> seen, Model m, ResIterator ri, boolean isProperty, PrefixMapping prefixes) {
         while (ri.hasNext()) {
@@ -189,9 +189,9 @@ public class Context implements ReadContext, Cloneable {
         }
         if (res.hasProperty( RDF.type, API.Multivalued)) prop.setMultivalued(true);
         if (res.hasProperty( API.multiValued )) prop.setMultivalued( res.getProperty( API.multiValued ).getBoolean() );
-        if (res.hasProperty( API.structured, Literal_TRUE ) ) prop.setStructured( true );
+        if (res.hasProperty( API.structured ) ) prop.setStructured( res.getProperty( API.structured ).getBoolean() );
         if (res.hasProperty( RDF.type, API.Hidden)) prop.setHidden(true);
-        if (res.hasProperty( RDF.type, OWL.ObjectProperty)) prop.setType(OWL.Thing.getURI());
+        if (res.hasProperty( RDF.type, OWL.ObjectProperty )) prop.setType(OWL.Thing.getURI());
         if (res.hasProperty( RDFS.range ) && prop.getType() == null) prop.setType( getStringValue(res, RDFS.range) );
     }
     
@@ -291,11 +291,11 @@ public class Context implements ReadContext, Cloneable {
     public String findNameForProperty(Resource r) {
         String uri = r.getURI();
         String name = getNameForURI( uri );
-        if (name == null) {
-            // Try just using localname
+        
+        if (name == null) {         
+        	// Try just using localname
             String localname = r.getLocalName(); 
             if ( nameUpdateOK(localname, uri) ) return localname; 
-            
             // See if we can generate a prefix form
             name = r.getModel().shortForm(uri);
             if (! name.equals(uri)) {

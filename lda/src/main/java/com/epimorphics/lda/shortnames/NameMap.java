@@ -15,12 +15,16 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.jsonrdf.Context;
+import com.epimorphics.jsonrdf.ContextPropertyInfo;
+import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.exceptions.ReusedShortnameException;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
@@ -29,6 +33,7 @@ import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.vocabulary.DCTerms;
+import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -66,6 +71,66 @@ public class NameMap {
 		prefixes.withDefaultMappings( pm );
 		load( true, m.listStatements( ANY, API.label, ANY ) );
 		load( false, m.listStatements( ANY, RDFS.label, ANY ) );
+		loadClasses( m );
+		loadProperties( m );
+	}
+	
+	protected void loadClasses( Model m ) {
+		for (Resource t: Context.RES_TYPES_TO_SHORTEN) {
+			loadThingsOfType( m, t, false );
+		}
+	}
+	
+	protected void loadProperties( Model m ) {
+		for (Resource t: Context.PROP_TYPES_TO_SHORTEN) {
+			loadThingsOfType( m, t, true );
+		}
+	}
+	
+	protected void loadThingsOfType( Model m, Resource type, boolean isProperty ) {
+		for (Resource r: m.listSubjectsWithProperty( RDF.type, type ).toList())
+			loadThing( r, isProperty );
+	}
+	
+	protected final Map<String, ContextPropertyInfo> uriToPropertyInfo = new HashMap<String, ContextPropertyInfo>();
+	
+	protected void loadThing( Resource r, boolean isProperty ) {
+		if (r.isURIResource()) {
+			String uri = r.getURI();
+			String shortName = r.getLocalName();
+			// if (!mapShortnameToURIs.containsKey(shortName)) mapShortnameToURIs.add(shortName, uri );
+			if (isProperty) {
+				ContextPropertyInfo cpi = uriToPropertyInfo.get(uri);
+				if (cpi == null) uriToPropertyInfo.put(uri,  cpi = new ContextPropertyInfo( uri, shortName ) );
+				if (r.hasProperty( RDF.type, API.Multivalued)) cpi.setMultivalued(true);
+			    if (r.hasProperty( API.multiValued )) cpi.setMultivalued( r.getProperty( API.multiValued ).getBoolean() );
+			    if (r.hasProperty( API.structured )) cpi.setStructured( r.getProperty( API.structured ).getBoolean() );
+			    if (r.hasProperty( RDF.type, API.Hidden)) cpi.setHidden(true);
+			    if (r.hasProperty( RDF.type, OWL.ObjectProperty)) cpi.setType(OWL.Thing.getURI());
+			    if (r.hasProperty( RDFS.range ) && cpi.getType() == null) cpi.setType( RDFUtil.getStringValue(r, RDFS.range) );
+			}
+		}
+	}
+
+	public ContextPropertyInfo getInfo(Property p) {
+		String uri = p.getURI();
+		ContextPropertyInfo cpi = uriToPropertyInfo.get(uri);		
+		if (cpi == null) {
+			String shortName = p.getLocalName();
+			uriToPropertyInfo.put(uri,  cpi = new ContextPropertyInfo( uri, shortName ) );
+		}
+		return cpi;
+	}
+
+	/**
+	    A mutable copy of the uri-to-property-info map.
+	*/
+	public Map<String, ContextPropertyInfo> getInfoMap() {
+		Map<String, ContextPropertyInfo> result = new HashMap<String, ContextPropertyInfo>();
+		for (Map.Entry<String, ContextPropertyInfo> me: uriToPropertyInfo.entrySet()) {
+			result.put(me.getKey(), me.getValue().clone() );
+		}
+		return result;
 	}
 	
 	/**
