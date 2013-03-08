@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
+import com.epimorphics.jsonrdf.ReadContext;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
@@ -81,7 +82,7 @@ public class JSONRenderer implements Renderer {
 				try {
 					Writer writer = StreamUtils.asUTF8( os );
 					writer.write( before );
-					Encoder.getForOneResult( context, false ).encodeRecursive( model, roots, writer, true );
+					Encoder.getForOneResult( (ReadContext) context, false ).encodeRecursive( model, roots, writer, true );
 					writer.write( after );
 					writer.flush();
 				} catch (Exception e) {

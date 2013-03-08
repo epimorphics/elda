@@ -35,7 +35,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-public class Context implements Cloneable {
+public class Context implements ReadContext, Cloneable {
 
     protected String base = null;
     
@@ -206,13 +206,10 @@ public class Context implements Cloneable {
     
     protected void recordAltName(String uri, PrefixMapping pm) {
         // Note local name
-        recordAltName(getLocalName(uri), uri );
+        recordAltName( getLocalName(uri), uri );
         // Note prefixed name
         String sf = pm.shortForm(uri);
-        if ( ! sf.equals(uri)) {
-            sf = sf.replace(':', '_');
-        }
-        recordAltName(sf, uri);
+        if (!sf.equals( uri )) recordAltName( sf.replace(':', '_'), uri );
     }
 
     protected String getLocalName(String uri) {
