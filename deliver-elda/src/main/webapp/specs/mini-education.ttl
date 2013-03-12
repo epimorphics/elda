@@ -401,9 +401,10 @@ school:phaseOfEducation
   api:label "phaseOfEducation"  
   ; rdfs:range rdfs:Resource .
 
-school:town
+school:town a rdf:Property
   # range is literal
-  api:label "town" .
+  ; api:label "town" 
+  .
 
 school:EICGroup
   api:label "EICGroup"  

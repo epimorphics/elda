@@ -71,8 +71,10 @@ public class StandardShortnameService implements ShortnameService {
             loadVocabulary( loader.loadModel( vocabLoc ), seen, prefixes, pm );
         }
     //
-        for (Model vocab: BuiltIn.vocabularies) 
+        for (Model vocab: BuiltIn.vocabularies) {
         	loadVocabulary( vocab, seen, prefixes, pm );
+        	nameMap.load( pm, vocab );
+        }
     //
         nameMap.done();
     }

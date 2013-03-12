@@ -21,6 +21,7 @@ import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.exceptions.ReusedShortnameException;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.vocabularies.XHV;
+import com.epimorphics.util.NameUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -76,20 +77,25 @@ public class NameMap {
 	}
 	
 	protected void loadClasses( Model m ) {
-		for (Resource t: Context.RES_TYPES_TO_SHORTEN) {
+		for (Resource t: Context.RES_TYPES_TO_SHORTEN) 
 			loadThingsOfType( m, t, false );
-		}
 	}
 	
 	protected void loadProperties( Model m ) {
-		for (Resource t: Context.PROP_TYPES_TO_SHORTEN) {
+		for (Resource t: Context.PROP_TYPES_TO_SHORTEN)
 			loadThingsOfType( m, t, true );
-		}
+		for (Resource p: m.listSubjectsWithProperty( RDFS.range ).toList())
+			loadPropertyIfUndefined( p );
 	}
-	
+
 	protected void loadThingsOfType( Model m, Resource type, boolean isProperty ) {
 		for (Resource r: m.listSubjectsWithProperty( RDF.type, type ).toList())
 			loadThing( r, isProperty );
+	}
+	
+	private void loadPropertyIfUndefined(Resource p) {
+		ContextPropertyInfo cpi = uriToPropertyInfo.get(p.getURI());
+		if (cpi == null) loadThing( p, true );
 	}
 	
 	protected final Map<String, ContextPropertyInfo> uriToPropertyInfo = new HashMap<String, ContextPropertyInfo>();
@@ -101,9 +107,13 @@ public class NameMap {
 			// if (!mapShortnameToURIs.containsKey(shortName)) mapShortnameToURIs.add(shortName, uri );
 			if (isProperty) {
 				ContextPropertyInfo cpi = uriToPropertyInfo.get(uri);
-				if (cpi == null) uriToPropertyInfo.put(uri,  cpi = new ContextPropertyInfo( uri, shortName ) );
+				if (cpi == null) uriToPropertyInfo.put(uri,  cpi = new ContextPropertyInfo( uri, null ) );
 				if (r.hasProperty( RDF.type, API.Multivalued)) cpi.setMultivalued(true);
-			    if (r.hasProperty( API.multiValued )) cpi.setMultivalued( r.getProperty( API.multiValued ).getBoolean() );
+			    if (r.hasProperty( API.multiValued )) { 
+			    	boolean multi = r.getProperty( API.multiValued ).getBoolean();
+			    	if (shortName.equals("type")) System.err.println( ">> type is multivalued: " + multi );
+					cpi.setMultivalued( multi );
+			    }
 			    if (r.hasProperty( API.structured )) cpi.setStructured( r.getProperty( API.structured ).getBoolean() );
 			    if (r.hasProperty( RDF.type, API.Hidden)) cpi.setHidden(true);
 			    if (r.hasProperty( RDF.type, OWL.ObjectProperty)) cpi.setType(OWL.Thing.getURI());
@@ -165,7 +175,7 @@ public class NameMap {
 		if (r.isURIResource()) {
 			String shortName = asString( s.getObject() );
 			String uri = r.getURI();
-			if (ShortnameUtils.isLegalShortname( shortName )) {
+			if (NameUtils.isLegalShortname( shortName )) {
 				if (strongBinding || mapShortnameToURIs.getAll( shortName ).isEmpty())
 					mapShortnameToURIs.add( shortName, uri );
 			}
@@ -183,6 +193,22 @@ public class NameMap {
 			if (uris.size() > 1) throw new ReusedShortnameException( shortName, uris );
 			mapURItoShortName.put( uris.iterator().next(), shortName );
 		}
+	//
+		for (Map.Entry<String, ContextPropertyInfo> e: uriToPropertyInfo.entrySet()) {
+			String uri = e.getKey(), sn = mapURItoShortName.get( uri );
+			String ln = NameUtils.localName(uri);
+			if (sn == null && NameUtils.isLegalShortname( ln )) sn = ln;
+			if (sn == null) log.warn( "property " + uri + " has no legal shortname." );
+			e.getValue().setName( sn );
+		}
+	}
+	
+	/**
+	    Answer the current mapping from URIs to short names. This is not a
+	    copy: DO NOT MUTATE.
+	*/
+	public Map<String, String> getURItoShortnameMap() {
+		return mapURItoShortName;
 	}
 
 	/**

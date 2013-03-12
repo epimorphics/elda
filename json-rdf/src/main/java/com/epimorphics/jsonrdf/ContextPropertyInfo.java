@@ -51,6 +51,19 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
     		+ ">"
     		;
     }
+
+	public String diff(ContextPropertyInfo b) {
+		StringBuffer result = new StringBuffer();
+		result.append( "diff[" + name + "] " );
+		if (!name.equals(b.name)) result.append( " name: " ).append(name).append(" vs ").append(b.name);  
+		if (!eq(type, b.type)) result.append( " type: " ).append(type).append(" vs ").append(b.type);  
+		if (multivalued != b.multivalued) result.append( " multivalued: " ).append(multivalued).append(" vs ").append( b.multivalued );  
+		if (!uri.equals(b.uri)) result.append( " uri: " ).append(uri).append(" vs ").append(b.uri);  
+		if (hidden != b.hidden) result.append( " hidden: " ).append(hidden).append(" vs ").append(b.hidden);  
+		if (structured != b.structured) result.append( " structured: " ).append(structured).append(" vs ").append(b.structured);  
+		if (!eq(p, b.p)) result.append( " p: " ).append(p).append(" vs ").append(b.p);  
+		return result.toString();
+	}
     
     @Override public int hashCode() {
     	return uri.hashCode();

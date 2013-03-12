@@ -17,13 +17,8 @@
 
 package com.epimorphics.lda.renderers;
 
-import java.io.OutputStream;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +30,7 @@ import com.epimorphics.jsonrdf.ReadContext;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.renderers.json.JSONPropertyNaming;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
@@ -46,7 +42,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.shared.WrappedException;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class JSONRenderer implements Renderer {
 
@@ -109,17 +104,32 @@ public class JSONRenderer implements Renderer {
 		ShortnameService sns = api.getSpec().getAPISpec().getShortnameService();
 		final NameMap nm = sns.nameMap();
 	//
-		final Map<String, ContextPropertyInfo> infos = nm.getInfoMap();	
+//		Map<String, String> uriToShortname = nm.stage2().loadPredicates(m, m).result();
+		
+		final Map<String, ContextPropertyInfo> infos = nm.getInfoMap();
+		final Map<String, String> givenURItoShortnameMap = nm.getURItoShortnameMap();
+		
+		Set<String> uris = new HashSet<String>();
+		
+		for (StmtIterator statements = m.listStatements(); statements.hasNext();) {
+			uris.add( statements.next().getPredicate().getURI() );
+		}
+		
+		Map<String, String> additionalURItoShortnameMap = new JSONPropertyNaming( m ).complete( givenURItoShortnameMap, uris );
+		
+		additionalURItoShortnameMap.putAll( givenURItoShortnameMap );
+		
 		for (StmtIterator statements = m.listStatements(); statements.hasNext();) {
 			Statement s = statements.next();
 			Property p = s.getPredicate();
-			ContextPropertyInfo cpi = infos.get( p );
+			ContextPropertyInfo cpi = infos.get( p.getURI() );
 			if (cpi == null) {
-				String uri = p.getURI(), shortName = p.getLocalName();
+				String uri = p.getURI(), shortName = additionalURItoShortnameMap.get( uri );
 				infos.put(uri,  cpi = new ContextPropertyInfo( uri, shortName ) );
 			}
 			cpi.addType( s.getObject() );
-		}		
+		}
+		
 	//
 		Context given = sns.asContext();
         final Context context = given.clone();
@@ -156,16 +166,17 @@ public class JSONRenderer implements Renderer {
 			@Override public ContextPropertyInfo findProperty(Property p) {
 				ContextPropertyInfo cpi_old = context.findProperty( p );
 				ContextPropertyInfo cpi_new = infos.get( p.getURI() );				
-				// warnIfNotEqual( cpi_old, cpi_new );
-				ContextPropertyInfo cpi = cpi_new;
+				 warnIfNotEqual( cpi_old, cpi_new );
+				ContextPropertyInfo cpi = cpi_new; // choose one
 				return cpi;
 			}
 			
-			private void warnIfNotEqual(ContextPropertyInfo a, ContextPropertyInfo b) {
-				if (!a.equals(b)) {
+			private void warnIfNotEqual(ContextPropertyInfo oldWay, ContextPropertyInfo newWay) {
+				if (!oldWay.equals(newWay)) {
 					log.warn( "findProperty: internally inconsistent property infos" );
-					log.warn( "  old version: " + a );
-					log.warn( "  new version: " + b );
+					log.warn( "  old vs new: " + oldWay.diff(newWay) );
+//					log.warn( "  old version: " + a );
+//					log.warn( "  new version: " + b );
 //					throw new RuntimeException("BOOM");
 				}
 			}
