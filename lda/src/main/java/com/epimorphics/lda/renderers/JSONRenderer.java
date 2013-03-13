@@ -166,7 +166,7 @@ public class JSONRenderer implements Renderer {
 			@Override public ContextPropertyInfo findProperty(Property p) {
 				ContextPropertyInfo cpi_old = context.findProperty( p );
 				ContextPropertyInfo cpi_new = infos.get( p.getURI() );				
-				 warnIfNotEqual( cpi_old, cpi_new );
+//				 warnIfNotEqual( cpi_old, cpi_new );
 				ContextPropertyInfo cpi = cpi_new; // choose one
 				return cpi;
 			}
