@@ -7,6 +7,7 @@
 */
 package com.epimorphics.lda.shortnames;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.NameUtils;
 import com.epimorphics.vocabs.API;
+import com.epimorphics.vocabs.NsUtils;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -109,11 +111,7 @@ public class NameMap {
 				ContextPropertyInfo cpi = uriToPropertyInfo.get(uri);
 				if (cpi == null) uriToPropertyInfo.put(uri,  cpi = new ContextPropertyInfo( uri, null ) );
 				if (r.hasProperty( RDF.type, API.Multivalued)) cpi.setMultivalued(true);
-			    if (r.hasProperty( API.multiValued )) { 
-			    	boolean multi = r.getProperty( API.multiValued ).getBoolean();
-			    	if (shortName.equals("type")) System.err.println( ">> type is multivalued: " + multi );
-					cpi.setMultivalued( multi );
-			    }
+			    if (r.hasProperty( API.multiValued )) cpi.setMultivalued( r.getProperty( API.multiValued ).getBoolean() );
 			    if (r.hasProperty( API.structured )) cpi.setStructured( r.getProperty( API.structured ).getBoolean() );
 			    if (r.hasProperty( RDF.type, API.Hidden)) cpi.setHidden(true);
 			    if (r.hasProperty( RDF.type, OWL.ObjectProperty)) cpi.setType(OWL.Thing.getURI());
@@ -175,40 +173,68 @@ public class NameMap {
 		if (r.isURIResource()) {
 			String shortName = asString( s.getObject() );
 			String uri = r.getURI();
-			if (NameUtils.isLegalShortname( shortName )) {
-				if (strongBinding || mapShortnameToURIs.getAll( shortName ).isEmpty())
-					mapShortnameToURIs.add( shortName, uri );
+			if (strongBinding || mapShortnameToURIs.getAll( shortName ).isEmpty()) {
+				mapShortnameToURIs.add( shortName, uri );
+				if (!NameUtils.isLegalShortname( shortName )) {
+					log.warn( "ignored bad shortname " + shortName + " for " + s.getModel().shortForm( uri ) ); 	
+				}
 			}
-			else if (strongBinding)
-				log.warn( "ignored bad shortname " + shortName + " for " + s.getModel().shortForm( uri ) ); 
-			}
+		}		
+//			if (NameUtils.isLegalShortname( shortName )) {
+//				if (strongBinding || mapShortnameToURIs.getAll( shortName ).isEmpty())
+//					mapShortnameToURIs.add( shortName, uri );
+//			}
+//			else if (strongBinding)
+//				log.warn( "ignored bad shortname " + shortName + " for " + s.getModel().shortForm( uri ) ); 
+//			}
 	}
 	
 	/**
 	    No more updates to make: check what we've got.
 	*/
 	public void done() {
+//		System.err.println( ">> DONING -------------------------" );
 		for (String shortName: mapShortnameToURIs.keySet()) {
 			Set<String> uris = mapShortnameToURIs.getAll( shortName );
 			if (uris.size() > 1) throw new ReusedShortnameException( shortName, uris );
 			mapURItoShortName.put( uris.iterator().next(), shortName );
 		}
 	//
+		Map<String, Boolean> potentials = new HashMap<String, Boolean>();
+		for (Map.Entry<String, String> e: mapURItoShortName.entrySet()) {
+			String uri = e.getKey(), ln = NsUtils.getLocalName(uri);
+//			System.err.println( ">> maybe: " + ln );
+			if (!mapShortnameToURIs.containsKey(ln)) {
+//				System.err.println( ">>   candidate!" );
+				Boolean b = potentials.get( ln );
+				if (b == null) potentials.put( ln, true );
+				else if (b) potentials.put( ln, false );
+//				System.err.println( ">>   potentials: " + potentials.get(ln) );
+			}
+		}
+		for (Map.Entry<String, String> e: mapURItoShortName.entrySet()) {
+			String sn = e.getValue();
+			if (potentials.containsKey(sn) && potentials.get(sn)) {
+//				System.err.println( ">> adding: " + sn );
+				mapShortnameToURIs.add( sn, e.getKey() );
+			}
+		}
+	//
 		for (Map.Entry<String, ContextPropertyInfo> e: uriToPropertyInfo.entrySet()) {
 			String uri = e.getKey(), sn = mapURItoShortName.get( uri );
 			String ln = NameUtils.localName(uri);
 			if (sn == null && NameUtils.isLegalShortname( ln )) sn = ln;
+//			if (sn == null) sn = ln;
 			if (sn == null) log.warn( "property " + uri + " has no legal shortname." );
 			e.getValue().setName( sn );
 		}
 	}
 	
 	/**
-	    Answer the current mapping from URIs to short names. This is not a
-	    copy: DO NOT MUTATE.
+	    Answer the current mapping from URIs to short names. Immutable.
 	*/
 	public Map<String, String> getURItoShortnameMap() {
-		return mapURItoShortName;
+		return Collections.unmodifiableMap( mapURItoShortName );
 	}
 
 	/**

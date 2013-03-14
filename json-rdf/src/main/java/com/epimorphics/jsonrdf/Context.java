@@ -60,7 +60,47 @@ public class Context implements ReadContext, Cloneable {
     		;
     }
     
-    /**
+    @Override public boolean equals(Object other) {
+    	return other instanceof Context && same( (Context) other );
+    }
+    
+    protected boolean same(Context other) {
+    	return
+    		uriToProp.equals(other.uriToProp)
+    		&& uriToName.equals(other.uriToName)
+    		&& nameToURI.equals(other.nameToURI)
+    		&& sortProperties == other.sortProperties
+    		&& completedMappingTable == other.completedMappingTable
+    		;
+    }
+    
+    public String diff( Context other ) {
+    	StringBuilder sb = new StringBuilder();
+    	if (!uriToProp.equals(other.uriToProp)) diff( sb, "uriToProp", uriToProp, other.uriToProp );
+    	if (!uriToName.equals(other.uriToName)) diff( sb, "uriToName", uriToName, other.uriToName );
+    	if (!nameToURI.equals(other.nameToURI)) diff( sb, "nameToURI", nameToURI, other.nameToURI );
+    	if (sortProperties != other.sortProperties) sb.append( "sortproperties: " ).append(other.sortProperties);
+    	if (completedMappingTable != other.completedMappingTable) sb.append( "completedMappingTable: " ).append(other.completedMappingTable);
+    	return sb.toString();
+    }
+    
+    
+    private static <K, V> void diff( StringBuilder sb, String name, Map<K, V> a, Map<K, V> b) {
+		if (!a.equals(b)) {
+			sb.append( "\n" ).append( name );
+			Set<K> aKeys = a.keySet(), bKeys = b.keySet();
+			if (!aKeys.equals(bKeys)) {
+				Set<K> aKeysOnly = new HashSet<K>( aKeys ); aKeysOnly.removeAll( bKeys );
+				Set<K> bKeysOnly = new HashSet<K>( bKeys ); bKeysOnly.removeAll( aKeys );
+				Set<K> sharedKeys = new HashSet<K>( aKeys ); sharedKeys.retainAll( bKeys );
+				sb.append( "\n  shared: " ).append( sharedKeys );
+				sb.append( "\n  aKeys: " ).append( aKeysOnly );
+				sb.append( "\n  bKeys: " ).append( bKeysOnly );
+			}
+		}
+	}
+
+	/**
      * Construct an empty context
      */
     public Context() {
@@ -141,7 +181,7 @@ public class Context implements ReadContext, Cloneable {
             		shortForm = setShortForms( prefixes, res, uri );
             	}
             	if (isProperty) {
-        		    if (shortForm == null) shortForm = getLocalName(uri);
+//        		    if (shortForm == null) shortForm = getLocalName(uri);
         		    createPropertyRecord( shortForm, res );
             	}
             }
