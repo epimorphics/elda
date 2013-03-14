@@ -16,10 +16,8 @@ public class TestContextFromShortnameService {
 
 	@Test public void testEmptyInitialisation() {
 		
-		ShortnameService sns = new StandardShortnameService();
-		
+		ShortnameService sns = new StandardShortnameService();		
 		Context fromSNS = sns.asContext();
-		
 		Context byConstruction = contextFrom( sns );
 		
 //		System.err.println( fromSNS.diff( byConstruction ) );
