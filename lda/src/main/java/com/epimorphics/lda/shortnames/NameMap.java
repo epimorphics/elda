@@ -142,6 +142,35 @@ public class NameMap {
 	}
 	
 	/**
+	    Answer the current mapping from URIs to short names. Immutable.
+	*/
+	public Map<String, String> getURItoShortnameMap() {
+		return Collections.unmodifiableMap( mapURItoShortName );
+	}
+	
+	public Set<String> allShortNames() {
+		return new HashSet<String>( mapShortnameToURIs.keySet() );
+	}
+	
+	public String getNameForURI(String uri) {
+		String sn = mapURItoShortName.get(uri);
+//		for (String x: mapShortnameToURIs.keySet()) {
+//			if (mapShortnameToURIs.getAll(x).contains( uri )) {
+//			}
+//		}
+		return sn;
+	}
+	
+	public ContextPropertyInfo getPropertyByName(String sn) {
+		String uri = mapShortnameToURIs.getOne(sn);
+		return uriToPropertyInfo.get(uri);
+	}
+	
+	public String getURIfromName(String sn) {
+		return mapShortnameToURIs.getOne(sn);
+	}
+	
+	/**
 	    load vocabulary elements from m that are not already
 	    defined in this NameMap.
 	*/
@@ -228,13 +257,6 @@ public class NameMap {
 			if (sn == null) log.warn( "property " + uri + " has no legal shortname." );
 			e.getValue().setName( sn );
 		}
-	}
-	
-	/**
-	    Answer the current mapping from URIs to short names. Immutable.
-	*/
-	public Map<String, String> getURItoShortnameMap() {
-		return Collections.unmodifiableMap( mapURItoShortName );
 	}
 
 	/**

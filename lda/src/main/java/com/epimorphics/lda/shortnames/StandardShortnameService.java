@@ -68,7 +68,9 @@ public class StandardShortnameService implements ShortnameService {
     //
         for (NodeIterator i = specModel.listObjectsOfProperty(specRoot, API.vocabulary); i.hasNext();) {
         	String vocabLoc = getLexicalForm(i.next());
-            loadVocabulary( loader.loadModel( vocabLoc ), seen, prefixes, pm );
+            Model vocabModel = loader.loadModel( vocabLoc );
+			loadVocabulary( vocabModel, seen, prefixes, pm );
+            nameMap.load( pm, vocabModel );
         }
     //
         for (Model vocab: BuiltIn.vocabularies) {
