@@ -19,6 +19,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.shared.JenaException;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.XSD;
+import com.sun.jersey.server.impl.model.parameter.multivalued.ExtractorContainerException;
 
 public class ModelIOUtils {
 
@@ -33,6 +34,7 @@ public class ModelIOUtils {
 	    + "@prefix api: <" + API.getURI() + "> .\n"
 	    + "@prefix foaf: <" + FOAF.getURI() + "> .\n"
 	    + "@prefix alt: <http://www.epimorphics.com/tools/exampleAlt#> .\n"
+	    + "@prefix elda: <" + "http://www.epimorphics.com/vocabularies/lda#" + "> .\n"
 	    + "@prefix : <http://www.epimorphics.com/tools/example#> .\n";
 
 	/**

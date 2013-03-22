@@ -30,6 +30,7 @@ import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.sources.GetDataSource;
 import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.RDFUtils;
@@ -73,6 +74,8 @@ public class APISpec {
     public final Bindings bindings = new Bindings();
 
 	public final int describeThreshold;
+	
+	protected final ModelPrefixEditor modelPrefixEditor = new ModelPrefixEditor();
 	
 	/**
 	    The default number of selected items required for a DESCRIBE
@@ -233,6 +236,10 @@ public class APISpec {
 	
 	public boolean hasParameterBasedContentNegotiation() {
 		return hasParameterBasedContentNegotiation;
+	}
+
+	public ModelPrefixEditor getModelPrefixEditor() {
+		return modelPrefixEditor;
 	}
 }
 

@@ -26,13 +26,6 @@ public class PrefixEditor {
 		return this;
 	}
 	
-	private void sortRenamingsIfNecessary() {
-		if (sorted == false) {
-			Collections.sort( renamings, compareFromTo );
-			sorted = true;
-		}
-	}
-	
 	public String rename( String subject ) {
 		sortRenamingsIfNecessary();
 		for (PrefixEditor.FromTo ft: renamings) {
@@ -40,6 +33,30 @@ public class PrefixEditor {
 			if (renamed != null) return renamed;
 		}
 		return subject;
+	}
+	
+	@Override public boolean equals(Object other) {
+		return other instanceof PrefixEditor && same( (PrefixEditor) other );
+	}
+	
+	@Override public int hashCode() {
+		return renamings.hashCode();
+	}
+	
+	@Override public String toString() {
+		return "<PrefixEditor " + renamings + ">";
+	}
+	
+	private boolean same(PrefixEditor other) {
+		sortRenamingsIfNecessary();
+		return renamings.equals(other.renamings);
+	}
+
+	private void sortRenamingsIfNecessary() {
+		if (sorted == false) {
+			Collections.sort( renamings, compareFromTo );
+			sorted = true;
+		}
 	}
 
 	private static final Comparator<PrefixEditor.FromTo> compareFromTo = new Comparator<PrefixEditor.FromTo>() {
@@ -58,6 +75,23 @@ public class PrefixEditor {
 			this.to = to;
 		}
 
+		@Override public String toString() {
+			return "<From: " + from + " To: " + to + ">";
+		}
+		
+		@Override public boolean equals(Object other) {
+			return other instanceof FromTo && same( (FromTo) other );
+		}
+		
+		private boolean same(FromTo other) {
+			return from.equals(other.from) && to.equals(other.to);
+		}
+
+		@Override public int hashCode() {
+			return from.hashCode() + to.hashCode();
+		}
+		
+		
 		public String rename(String subject) {
 			if (subject.startsWith( from )) {
 				return to + subject.substring( from.length() );

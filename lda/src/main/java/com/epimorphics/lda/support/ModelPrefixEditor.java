@@ -14,7 +14,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 */
 public class ModelPrefixEditor {
 
-	PrefixEditor pe = new PrefixEditor();
+	protected final PrefixEditor pe = new PrefixEditor();
 	
 	public ModelPrefixEditor() {	
 	}
@@ -24,6 +24,22 @@ public class ModelPrefixEditor {
 		return this;
 	}
 	
+	@Override public boolean equals(Object other) {
+		return other instanceof ModelPrefixEditor && same( (ModelPrefixEditor) other );
+	}
+	
+	@Override public int hashCode() {
+		return pe.hashCode();
+	}
+	
+	@Override public String toString() {
+		return "<Model_" + pe.toString() + ">";
+	}
+	
+	private boolean same(ModelPrefixEditor other) {
+		return pe.equals(other.pe);
+	}
+
 	public Model rename( Model x ) {
 		Model result = ModelFactory.createDefaultModel();
 		Graph from = x.getGraph(), to = result.getGraph();
