@@ -23,6 +23,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -103,7 +104,25 @@ public class APISpec {
         factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
         extractEndpointSpecifications( specification );
+        extractModelPrefixEditor( specification );
     }
+
+	private void extractModelPrefixEditor(Resource specification) {
+		StmtIterator eps = specification.listProperties( EXTRAS.editPrefix );
+		while (eps.hasNext()) extractSingleModelprefixFromTo( eps.next() );
+	}
+
+	private void extractSingleModelprefixFromTo( Statement s ) {
+		Resource S = s.getSubject();
+		if (s.getObject().isLiteral())
+			throw new EldaException( "Object of editPrefix property of " + S + " is a literal." );
+		Resource edit = s.getResource();
+		String from = getStringValue( edit, EXTRAS.from );
+		if (from == null) throw new EldaException( "Missing from for " + S );
+		String to = getStringValue( edit, EXTRAS.to );
+		if (to == null) throw new EldaException( "Missing elda:to for " + S );
+		modelPrefixEditor.set(from, to);
+	}
 
 	private StandardShortnameService loadShortnames( Resource specification, ModelLoader loader ) {
 		return new StandardShortnameService(specification, prefixes, loader);

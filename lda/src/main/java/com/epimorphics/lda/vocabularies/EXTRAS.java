@@ -74,6 +74,12 @@ public class EXTRAS
 	public static final Resource VelocityFormatter = resource( "VelocityFormatter" );
 
 	public static final Property authKey = property( "authKey" );
+	
+	public static final Property from = property( "from" );
+	
+	public static final Property to = property( "to" );
+	
+	public static final Property editPrefix = property( "editPrefix" );
     
     private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }
