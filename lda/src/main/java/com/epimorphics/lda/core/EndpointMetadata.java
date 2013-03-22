@@ -62,7 +62,7 @@ public class EndpointMetadata {
 	//
 		boolean listEndpoint = details.isListEndpoint();
         URI uriForList = URIUtils.withoutPageParameters( ru );
-		Model metaModel = mergedModels.meta;
+		Model metaModel = mergedModels.getMetaModel();
 		thisMetaPage.addProperty( API.definition, uriForDefinition );
 	//
 	    URI emv_uri = URIUtils.replaceQueryParam( URIUtils.newURI(thisMetaPage.getURI()), "_metadata", "all" );

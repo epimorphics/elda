@@ -67,9 +67,9 @@ public class APIResultSet implements SetsMetadata {
     
     public static class MergedModels {
     	
-    	protected final Model merged;
-    	protected final Model object;
-    	protected final Model meta;
+    	private final Model merged;
+    	private final Model object;
+    	private final Model meta;
     	
     	public MergedModels( Model objectModel ) {
     		this.object = objectModel;
