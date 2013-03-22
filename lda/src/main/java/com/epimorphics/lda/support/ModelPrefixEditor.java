@@ -41,11 +41,25 @@ public class ModelPrefixEditor {
 	}
 
 	public Model rename( Model x ) {
+		if (pe.isEmpty()) return x;
 		Model result = ModelFactory.createDefaultModel();
 		Graph from = x.getGraph(), to = result.getGraph();
-		ExtendedIterator<Triple> triples = from.find( Node.ANY, Node.ANY, Node.ANY );
-		while (triples.hasNext()) to.add( rename( triples.next() ) );
+		rename( from, to );
 		return result;
+	}
+
+	private void rename( Graph from, Graph to ) {
+		if (!pe.isEmpty()) {
+			ExtendedIterator<Triple> triples = from.find( Node.ANY, Node.ANY, Node.ANY );
+			while (triples.hasNext()) to.add( rename( triples.next() ) );
+		}
+	}
+
+	public Graph rename( Graph from ) {
+		if (pe.isEmpty()) return from;
+		Graph to = ModelFactory.createDefaultModel().getGraph();
+		rename( from, to );
+		return to;
 	}
 
 	private Triple rename(Triple t) {

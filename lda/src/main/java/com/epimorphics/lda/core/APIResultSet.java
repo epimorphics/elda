@@ -26,6 +26,7 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.epimorphics.lda.support.LanguageFilter;
+import com.epimorphics.lda.support.ModelPrefixEditor;
 
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -239,15 +240,17 @@ public class APIResultSet implements SetsMetadata {
      * Generate and return a new copy of the model filtered to only include
      * statements reachable from the results via allowed properties in the given set.
      * Will not include any root resource, need to create page information after filtering.
+     * Applies the prefix editor to the model if necessary.
      * @param v the view to filter the results with
      * @param languages  acceptable language codes for literals
      */
-    public APIResultSet getFilteredSet( View v, String languages ) {
+    public APIResultSet getFilteredSet( View v, String languages, ModelPrefixEditor mpe ) {
     	if (languages != null) LanguageFilter.filterByLanguages( model.object, languages.split(",") );
         // model.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
         for (Resource r : results) mappedResults.add( r.inModel(model.object) );
-        return new APIResultSet( model.object.getGraph(), mappedResults, isCompleted, enableETags, detailsQuery, metadata, v ).setSelectQuery( selectQuery );
+        Graph objectGraph = mpe.rename( model.object.getGraph() );
+		return new APIResultSet( objectGraph, mappedResults, isCompleted, enableETags, detailsQuery, metadata, v ).setSelectQuery( selectQuery );
     }
 
 	/**

@@ -40,6 +40,7 @@ import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.support.Controls;
+import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
@@ -87,8 +88,10 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     @Override public Triad<APIResultSet, String, Bindings> call( Controls c, URI reqURI, Bindings given ) {
+    	ModelPrefixEditor mpe = spec.getAPISpec().getModelPrefixEditor();
     	Bindings cc = given.copyWithDefaults( spec.getBindings() );
         APIQuery query = spec.getBaseQuery();
+    //
         Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
         View view = viewAndFormat.a; 
     //
@@ -96,9 +99,9 @@ public class APIEndpointImpl implements APIEndpoint {
         if (format == null || format.equals("")) format = given.getAsString( "_suffix", "" );
     //    
         APIResultSet unfiltered = query.runQuery( c, spec.getAPISpec(), cache, cc, view );
-        APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
+        APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage(), mpe );
         filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
-        createMetadata(filtered, reqURI, format, cc, query);
+        createMetadata(filtered, reqURI, format, cc, query);        
         return new Triad<APIResultSet, String, Bindings>( filtered, format, cc );
     }
 
@@ -161,7 +164,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		boolean listEndpoint = isListEndpoint();
 		if (rs.isEmpty() && exceptionIfEmpty && !listEndpoint) EldaException.NoItemFound();
 	//
-		MergedModels mergedModels = rs.getModels();
+		MergedModels mergedModels = rs.getModels();		
 		Model metaModel = mergedModels.getMetaModel();
 	//
 		Resource thisMetaPage = metaModel.createResource( ru.toString() ); 

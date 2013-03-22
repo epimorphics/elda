@@ -26,6 +26,10 @@ public class PrefixEditor {
 		return this;
 	}
 	
+	public boolean isEmpty() {
+		return renamings.isEmpty();
+	}
+	
 	public String rename( String subject ) {
 		sortRenamingsIfNecessary();
 		for (PrefixEditor.FromTo ft: renamings) {
