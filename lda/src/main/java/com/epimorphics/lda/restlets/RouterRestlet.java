@@ -229,8 +229,6 @@ import com.hp.hpl.jena.shared.WrappedException;
         	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatSuffix, queryParams );
             APIResultSet results = resultsAndFormat.a;
             
-            System.err.println( ">> eunEndpoint: results size is " + results.getModels().getObjectModel().size() );
-            
 			Bindings rc = new Bindings( resultsAndFormat.c.copy(), as );
 			String _format = resultsAndFormat.b;
 			String formatter = (_format.equals( "" ) ? formatSuffix : _format);

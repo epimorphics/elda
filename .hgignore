@@ -8,6 +8,13 @@ target/*
 .classpath
 .project
 
+syntax: glob
+elda-regress/Eldas/*
+elda-regress/RESULT
+elda-regress/gold/*
+elda-regress/results/*
+elda-regress/differences/*
+
 syntax: regexp
 ^scratch$
 syntax: regexp

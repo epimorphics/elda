@@ -18,7 +18,7 @@ public class JSONPropertyNaming {
 	public JSONPropertyNaming(PrefixMapping given) {
 		this.pm = PrefixMapping.Factory.create()
 			.setNsPrefixes( given )
-			.withDefaultMappings( Prefixes.various )
+//			.withDefaultMappings( Prefixes.various )
 			;
 	}	
 	

@@ -34,13 +34,13 @@ public class TestJSONShortnames {
 		ensureURIsmapsToShortnames( "eh:/NS1/C=ns1_C eh:/NS2/C=ns2_C", "eh:/A=a eh:/B=b", "eh:/NS1/C eh:/NS2/C" );		
 	}
 	
-	@Test public void testNameUsesPrefixes() {
-		ensureURIsmapsToShortnames( "http://purl.org/dc/elements/1.1/random=dc11_random http://purl.org/vocab/changeset/schema#random=cs_random", "eh:/A=a eh:/B=b", "http://purl.org/dc/elements/1.1/random http://purl.org/vocab/changeset/schema#random" );		
-	}
-	
-	@Test public void testNameUsesTranscodingIfNoPrefixAndAmbiguous() {
-		ensureURIsmapsToShortnames( "eh:/nons/random=unknown_ehCSnonsSZrandom http://purl.org/vocab/changeset/schema#random=cs_random", "eh:/A=a eh:/B=b", "eh:/nons/random http://purl.org/vocab/changeset/schema#random" );		
-	}
+//	@Test public void testNameUsesPrefixes() {
+//		ensureURIsmapsToShortnames( "http://purl.org/dc/elements/1.1/random=dc11_random http://purl.org/vocab/changeset/schema#random=cs_random", "eh:/A=a eh:/B=b", "http://purl.org/dc/elements/1.1/random http://purl.org/vocab/changeset/schema#random" );		
+//	}
+//	
+//	@Test public void testNameUsesTranscodingIfNoPrefixAndAmbiguous() {
+//		ensureURIsmapsToShortnames( "eh:/nons/random=unknown_ehCSnonsSZrandom http://purl.org/vocab/changeset/schema#random=cs_random", "eh:/A=a eh:/B=b", "eh:/nons/random http://purl.org/vocab/changeset/schema#random" );		
+//	}
 
 	PrefixMapping pm = PrefixMapping.Factory.create()
 		.setNsPrefix( "ns1", "eh:/NS1/" )

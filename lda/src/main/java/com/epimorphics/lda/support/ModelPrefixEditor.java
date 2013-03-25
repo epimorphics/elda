@@ -5,12 +5,13 @@ import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 /**
-    Class to edit models by editing all the resource subject and
-    object (not predicate) URIs according to the rules for a 
-    PrefixEditor.
+    Class to edit models by editing all the resource URIs according to the 
+    rules for a PrefixEditor.
 */
 public class ModelPrefixEditor {
 
@@ -63,10 +64,10 @@ public class ModelPrefixEditor {
 	}
 
 	private Triple rename(Triple t) {
-		Node S = t.getSubject(), O = t.getObject();
-		Node newS = rename(S), newO = rename(O);
-		if (newS == S && newO == O) return t;
-		return Triple.create(newS, t.getPredicate(), newO);
+		Node S = t.getSubject(), P = t.getPredicate(), O = t.getObject();
+		Node newS = rename(S), newP = rename(P), newO = rename(O);
+		if (newS == S && newP == P && newO == O) return t;
+		return Triple.create(newS, newP, newO);
 	}
 
 	private Node rename(Node o) {
@@ -74,6 +75,14 @@ public class ModelPrefixEditor {
 		String uri = o.getURI(), newUri = pe.rename(uri);
 		if (newUri == uri) return o;
 		return Node.createURI( newUri );
+	}
+
+	public RDFNode rename( RDFNode n ) {
+		if (n.isAnon() || n.isLiteral()) return n;
+		Resource r = n.asResource();
+		String givenURI = r.getURI();
+		String uri = pe.rename( givenURI );
+		return uri == givenURI ? n : r.getModel().createResource( uri );
 	}
 	
 }

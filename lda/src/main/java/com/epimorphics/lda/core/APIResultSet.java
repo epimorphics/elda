@@ -248,8 +248,10 @@ public class APIResultSet implements SetsMetadata {
     	if (languages != null) LanguageFilter.filterByLanguages( model.object, languages.split(",") );
         // model.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
-        for (Resource r : results) mappedResults.add( r.inModel(model.object) );
         Graph objectGraph = mpe.rename( model.object.getGraph() );
+        Model objectModel = ModelFactory.createModelForGraph( objectGraph );
+        for (Resource r : results)
+        	mappedResults.add( mpe.rename( r.inModel( objectModel ) ).asResource() );
 		return new APIResultSet( objectGraph, mappedResults, isCompleted, enableETags, detailsQuery, metadata, v ).setSelectQuery( selectQuery );
     }
 

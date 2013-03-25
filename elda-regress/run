@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#
+# script to run Elda regression tests
+#
+export PORT=1829
+
+mkdir -p gold results differences
+rm -rf gold/* results/* differences/*
+
+for elda in eldas/*.jar
+do
+	for config_file in configs/*.ttl
+	do
+		echo -e "\\n;;; ------------------------------------------------------------------------"
+		export config=$(echo $config_file | sed -e 's:.*/::' -e 's/\.ttl$//')
+		export e_name=$(echo $elda | sed -e 's/.*-standalone-//' -e 's/.jar//')
+		export c_name=$config
+	#
+		echo ";;; -- java -jar $elda -Delda.spec=$PWD/$config_file -----------------------------"
+		java -jar $elda -Djetty.port=${PORT} -Delda.spec=$PWD/$config_file &
+		# sleep to allow the server time to initialise
+		sleep 10
+	#
+		for uri in $(cat uris/$config)
+		do
+			export u_name=$(echo $uri | sed -e 's/[^A-Za-z0-9._\-]\+/_/g')
+			export r_name=elda-${e_name}_${c_name}_${u_name}
+			export g_name=${c_name}_${u_name}
+		#
+			echo ";;; result filename: $r_name"
+			echo ";;;;; -- wget http://localhost:8080/$uri"
+			wget -O RESULT http://localhost:${PORT}/$uri 
+		#
+			cp RESULT results/${r_name}
+			if [ -e gold/$g_name ]; then
+				if diff gold/$g_name RESULT > DIFFERENCES; then
+					echo OK
+				else
+					echo OH NOES :: $r_name
+					mv DIFFERENCES differences/${g_name}
+				fi
+			else
+				mv RESULT gold/$g_name
+			fi
+		done
+		pkill -f elda.spec
+	done
+done
