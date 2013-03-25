@@ -298,13 +298,9 @@ import com.hp.hpl.jena.shared.WrappedException;
     }
 
 	public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
-//		System.err.println( ">> makeRequestURI: given " + requestUri );
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
 		if (base == null) return requestUri;
-//		System.err.println( ">>   base is: " + base );
-		URI result = URIUtils.resolveAgainstBase( requestUri, URIUtils.newURI( base ), ui.getPath() );
-//		System.err.println( ">>   will deliver " + result );
-		return result;
+		return URIUtils.resolveAgainstBase( requestUri, URIUtils.newURI( base ), ui.getPath() );
 	}
 
 	private static URLforResource pathAsURLFactory( final ServletContext servCon ) {

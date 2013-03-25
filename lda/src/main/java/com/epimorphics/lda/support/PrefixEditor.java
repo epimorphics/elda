@@ -95,7 +95,6 @@ public class PrefixEditor {
 			return from.hashCode() + to.hashCode();
 		}
 		
-		
 		public String rename(String subject) {
 			if (subject.startsWith( from )) {
 				return to + subject.substring( from.length() );

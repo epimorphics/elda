@@ -81,42 +81,14 @@ public class URIUtils {
 
 	public static URI resolveAgainstBase( URI requestUri, URI baseAsURI, String uiPath ) {
 		
-//		System.err.println( ">> resolveAgainstBase: " );
-//		System.err.println( ">>   requestURI: " + requestUri );
-//		System.err.println( ">>   baseAsURI:  " + baseAsURI );
-//		System.err.println( ">>   uiPath:     " + uiPath );
-		
 		String baseAsString = baseAsURI.toString();
-		if (!baseAsString.endsWith("/")) 
-			baseAsURI = newURI( baseAsString + "/" );
+		if (!baseAsString.endsWith("/")) baseAsURI = newURI( baseAsString + "/" );
 				
 		URI mid = baseAsURI.isAbsolute() ? baseAsURI : requestUri.resolve( baseAsURI );
 				
-		URI resolved = 
-			mid
-			.resolve( noLeadingSlash( uiPath ) )
-			;
+		URI resolved = mid.resolve( noLeadingSlash( uiPath ) );
 		
-		URI built = UriBuilder.fromUri( resolved ).replaceQuery( requestUri.getRawQuery() ).build();
-		try {
-			URI uri = new URI(
-			resolved.getScheme(),
-			resolved.getUserInfo(),
-			resolved.getHost(),
-			resolved.getPort(),
-			resolved.getPath(),
-			requestUri.getQuery(),
-			resolved.getFragment()
-			);
-//			if (!built.equals(uri)) 
-//				log.warn( "resolveAgainstBase:" 
-//					+ "\n  old code delivers "  + uri 
-//					+ "\n  but new code delivers: " + built 
-//				);
-			return built;
-		} catch (URISyntaxException e) {
-			throw new WrappedException( e );
-		}
+		return  UriBuilder.fromUri( resolved ).replaceQuery( requestUri.getRawQuery() ).build();
 	}
 
 	/**

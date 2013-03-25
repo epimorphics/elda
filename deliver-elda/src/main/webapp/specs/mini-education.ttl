@@ -142,8 +142,8 @@ spec:mini-education-api a api:API
 	# relabelling education.data.gov.uk URIs 
 	#
 	; elda:editPrefix
-		[ elda:from "http://education.data.gov.uk/doc"
-		; elda:to "http://localhost:8080/elda/doc"
+		[ elda:from "http://education.data.gov.uk/"
+		; elda:to "http://localhost:8080/elda/"
 		]
 	.
     
