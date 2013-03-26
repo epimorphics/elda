@@ -108,7 +108,7 @@ public class APISpec {
     }
 
 	private void extractModelPrefixEditor(Resource specification) {
-		StmtIterator eps = specification.listProperties( EXTRAS.editPrefix );
+		StmtIterator eps = specification.listProperties( EXTRAS.rewriteResultURIs );
 		while (eps.hasNext()) extractSingleModelprefixFromTo( eps.next() );
 	}
 
@@ -117,9 +117,9 @@ public class APISpec {
 		if (s.getObject().isLiteral())
 			throw new EldaException( "Object of editPrefix property of " + S + " is a literal." );
 		Resource edit = s.getResource();
-		String from = getStringValue( edit, EXTRAS.from );
+		String from = getStringValue( edit, EXTRAS.ifStarts );
 		if (from == null) throw new EldaException( "Missing from for " + S );
-		String to = getStringValue( edit, EXTRAS.to );
+		String to = getStringValue( edit, EXTRAS.replaceStartBy );
 		if (to == null) throw new EldaException( "Missing elda:to for " + S );
 		modelPrefixEditor.set(from, to);
 	}

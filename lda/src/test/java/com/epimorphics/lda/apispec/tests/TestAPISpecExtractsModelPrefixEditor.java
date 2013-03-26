@@ -17,8 +17,8 @@ public class TestAPISpecExtractsModelPrefixEditor {
 			( 
 			":s a api:API"
 			+ "\n; api:sparqlEndpoint <http://example.com/none>"
-			+ "\n; elda:editPrefix [elda:from 'fromA'; elda:to 'toA']"
-			+ "\n; elda:editPrefix [elda:from 'fromB'; elda:to 'toB']"
+			+ "\n; elda:rewriteResultURIs [elda:ifStarts 'fromA'; elda:replaceStartBy 'toA']"
+			+ "\n; elda:rewriteResultURIs [elda:ifStarts 'fromB'; elda:replaceStartBy 'toB']"
 			+ "\n."
 			);
 		

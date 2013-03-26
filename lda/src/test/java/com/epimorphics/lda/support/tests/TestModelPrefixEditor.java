@@ -39,6 +39,18 @@ public class TestModelPrefixEditor {
 		ModelTestBase.assertIsoModels( expected, y );
 	}
 	
+	@Test public void testRenamesLiteralType() {
+		Model m = ModelFactory.createDefaultModel();
+		String typeA_URI = "http://alpha.com/renamed";
+		String typeB_URI = "http://unchanged/path";
+		Literal typedA = m.createTypedLiteral( "typed_A", typeA_URI );
+		Literal typedB = m.createTypedLiteral( "typed_B", typeB_URI );
+		Literal renamed = m.createTypedLiteral( "typed_A", "http://localalpha/renamed" );
+		ModelPrefixEditor pe = new ModelPrefixEditor().set( "http://alpha.com/", "http://localalpha/" );
+		assertEquals( renamed, pe.rename( typedA ) );
+		assertEquals( typedB, pe.rename( typedB ) );
+	}
+	
 	@Test public void testRenamesResource() {
 		Model m = ModelFactory.createDefaultModel();
 		Resource blank = m.createResource(new AnonId("http://alpha.com/renamed" ) );

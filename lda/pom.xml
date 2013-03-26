@@ -27,23 +27,6 @@
           <version>1.7</version>
       </dependency>
 
-
-    <dependency>
-      <groupId>com.epimorphics.lda</groupId>
-      <artifactId>json-rdf</artifactId>
-      <version>${project.version}</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.epimorphics.lda</groupId>
-      <artifactId>json-rdf</artifactId>
-      <version>${project.version}</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-
     <dependency>
         <groupId>org.apache.jena</groupId>
         <artifactId>jena-tdb</artifactId>

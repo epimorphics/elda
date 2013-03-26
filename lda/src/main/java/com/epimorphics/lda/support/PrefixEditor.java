@@ -30,6 +30,9 @@ public class PrefixEditor {
 		return renamings.isEmpty();
 	}
 	
+	/**
+	    rename returns the renamed subject, unchanged if no FromTo's apply.
+	*/
 	public String rename( String subject ) {
 		sortRenamingsIfNecessary();
 		for (PrefixEditor.FromTo ft: renamings) {

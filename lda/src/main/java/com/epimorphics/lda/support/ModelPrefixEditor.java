@@ -1,12 +1,17 @@
 package com.epimorphics.lda.support;
 
+import com.hp.hpl.jena.datatypes.RDFDatatype;
+import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.Node_Literal;
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 /**
@@ -71,18 +76,39 @@ public class ModelPrefixEditor {
 	}
 
 	private Node rename(Node o) {
-		if (o.isBlank() || o.isLiteral()) return o;
+		if (o.isBlank()) return o;
+		if (o.isLiteral()) return rename( (Node_Literal) o );
 		String uri = o.getURI(), newUri = pe.rename(uri);
 		if (newUri == uri) return o;
 		return Node.createURI( newUri );
 	}
+	
+	private Node rename( Node_Literal o ) {
+		String typeURI = o.getLiteralDatatypeURI();
+		if (typeURI == null) return o;
+		String newURI = pe.rename( typeURI );
+		if (newURI == typeURI) return o;
+		return Node.createLiteral( o.getLiteralLexicalForm(), typeNamed( newURI ) );
+	}
 
 	public RDFNode rename( RDFNode n ) {
-		if (n.isAnon() || n.isLiteral()) return n;
+		if (n.isAnon()) return n;
+		if (n.isLiteral()) return rename( (Literal) n );
 		Resource r = n.asResource();
 		String givenURI = r.getURI();
 		String uri = pe.rename( givenURI );
 		return uri == givenURI ? n : r.getModel().createResource( uri );
 	}
 	
+	private Literal rename( Literal n ) {
+		String typeURI = n.getDatatypeURI();
+		if (typeURI == null) return n;
+		String newURI = pe.rename( typeURI );
+		if (typeURI == newURI) return n;
+		return ResourceFactory.createTypedLiteral( n.getLexicalForm(), typeNamed(newURI) );
+	}
+	
+	private RDFDatatype typeNamed(String typeURI) {
+		return TypeMapper.getInstance().getSafeTypeByName( typeURI );
+	}
 }

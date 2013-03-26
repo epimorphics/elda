@@ -75,11 +75,11 @@ public class EXTRAS
 
 	public static final Property authKey = property( "authKey" );
 	
-	public static final Property from = property( "from" );
+	public static final Property ifStarts = property( "ifStarts" );
 	
-	public static final Property to = property( "to" );
+	public static final Property replaceStartBy = property( "replaceStartBy" );
 	
-	public static final Property editPrefix = property( "editPrefix" );
+	public static final Property rewriteResultURIs = property( "rewriteResultURIs" );
     
     private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }
