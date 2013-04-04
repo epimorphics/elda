@@ -141,7 +141,7 @@ spec:mini-education-api a api:API
 	#
 	# relabelling education.data.gov.uk URIs 
 	#
-	; elda:rewriteResultURIs
+	; elda:rewriteResultURIsOFF
 		[ elda:ifStarts "http://education.data.gov.uk/"
 		; elda:replaceStartBy "http://localhost:8080/elda/"
 		]

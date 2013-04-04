@@ -26,7 +26,8 @@ if [ ${_CLEAN} == "yes" ]; then
 	rm -rf gold/* 
 	rm -rf results/* 
 	rm -rf differences/*
-	rm -rf meta_differences
+	rm -rf gold_differences/*
+	rm -rf meta_differences/*
 fi
 
 if [ $_JAR == "yes" ]; then
@@ -101,9 +102,10 @@ for config_file in configs/*.ttl; do
 					if diff differences/${d_file} gold_differences/${d_file} > meta_differences/${d_file} ; then
 						echo OK -- the same differences as last time
 					else
-						echo "PROBLEM -- different differences, there's been a change"
+						echo "PROBLEM -- different differences, there's been a change. Oops."
 					fi
 				else
+					echo "OK (ish) -- no existing differences to compare with for" ${d_file}
 					cp differences/${d_file} gold_differences/${d_file}
 				fi
 			fi
