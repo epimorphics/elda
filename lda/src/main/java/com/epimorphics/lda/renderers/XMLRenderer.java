@@ -88,7 +88,7 @@ public class XMLRenderer implements Renderer {
 				writeResource( root, "/tmp/gold/root.uri" );
 				writeBoolean( suppressIPTO, "/tmp/gold/suppress_ipto.bool" );
 				
-				writeShortnames( sns, "/tmp/gold/names.sns" );
+				writeShortnames( sns, mm.getMergedModel(), "/tmp/gold/names.sns" );
 				
 				TransformerFactory tFactory = TransformerFactory.newInstance();
 				Transformer transformer = tFactory.newTransformer();
@@ -105,12 +105,12 @@ public class XMLRenderer implements Renderer {
 		}
 	}
 
-	private void writeShortnames( ShortnameService sns, String fileName ) throws IOException {
+	private void writeShortnames( ShortnameService sns, Model m, String fileName ) throws IOException {
 		OutputStream os = new FileOutputStream( new File( fileName ) );
 		PrintStream ps = new PrintStream( os );
 		
 		
-		Map<String, String> uriToName = sns.nameMap().stage2().result();
+		Map<String, String> uriToName = sns.constructURItoShortnameMap( m, m );
 		
 		for (String uri: uriToName.keySet()) {
 			ps.print( uriToName.get( uri ) );

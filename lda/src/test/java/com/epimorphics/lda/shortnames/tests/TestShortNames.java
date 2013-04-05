@@ -27,7 +27,7 @@ public class TestShortNames {
 	@Test public void ensureUndeclatedURIUsesPrefix() {
 		NameMap nm = new NameMap();
 		Model m = ModelIOUtils.modelFromTurtle( "@prefix p: <http://example.com/ns#>. p:a p:thing p:b; p:other p:d; p:thong p:c." );
-		Map<String, String> mm = nm.stage2().loadPredicates(m, m).result();
+		Map<String, String> mm = nm.stage2().loadPredicates(m, m).constructURItoShortnameMap();
 		assertEquals( "p_thing", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}
 	
@@ -41,7 +41,7 @@ public class TestShortNames {
 			);
 		nm.load(m, m);
 		nm.done();
-		Map<String, String> mm = nm.stage2().loadPredicates(empty, empty).result();
+		Map<String, String> mm = nm.stage2().loadPredicates(empty, empty).constructURItoShortnameMap();
 		assertEquals( "labelled", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}
 	
@@ -56,7 +56,7 @@ public class TestShortNames {
 			);
 		nm.load(m, m);
 		nm.done();
-		Map<String, String> mm = nm.stage2().loadPredicates(empty, empty).result();
+		Map<String, String> mm = nm.stage2().loadPredicates(empty, empty).constructURItoShortnameMap();
 		assertEquals( "REALLY_labelled", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}	
 	

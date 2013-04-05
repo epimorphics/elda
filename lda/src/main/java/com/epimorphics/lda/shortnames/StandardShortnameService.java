@@ -20,9 +20,11 @@ import static com.epimorphics.util.RDFUtils.*;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.epimorphics.jsonrdf.Context;
+import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.UnknownShortnameException;
@@ -126,13 +128,6 @@ public class StandardShortnameService implements ShortnameService {
     }
     
     /**
-        Answer the NameMap of this Shortname Service.
-    */
-    @Override public NameMap nameMap() {
-    	return nameMap;
-    }
-    
-    /**
         Find the full URI for the given short name, or null if we can't
         find one.
     */
@@ -186,6 +181,14 @@ public class StandardShortnameService implements ShortnameService {
     		|| type.startsWith( XSD.getURI() )
     		|| type.equals( rdf_XMLLiteral )
     		;
+	}
+
+	@Override public Map<String, String> constructURItoShortnameMap(Model m, PrefixMapping pm) {
+		return nameMap.stage2().loadPredicates(pm, m).constructURItoShortnameMap();
+	}
+
+	@Override public ContextPropertyInfo getPropertyByName(String shortName) {
+		return nameMap.getPropertyByName(shortName);
 	}
 }
 

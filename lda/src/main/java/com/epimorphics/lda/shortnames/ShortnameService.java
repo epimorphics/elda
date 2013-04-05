@@ -10,13 +10,17 @@ package com.epimorphics.lda.shortnames;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.epimorphics.jsonrdf.Context;
+import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.exceptions.UnknownShortnameException;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
     <p>
@@ -57,12 +61,28 @@ public interface ShortnameService
 	*/
 	public Context asContext();
 	
+//	/**
+//	    Answer the NameMap of this shortname service. A NameMap just maps
+//	    the long names to short names and back. It does not make the
+//	    commitments that Context does.
+//	    
+//	    ON ITS WAY OUT.
+//	*/
+//	public NameMap nameMap();
+	
 	/**
-	    Answer the NameMap of this shortname service. A NameMap just maps
-	    the long names to short names and back. It does not make the
-	    commitments that Context does.
+	 	Answer a freshly-constructed map from URIs to shortnames, based on
+	 	the shortnames declared to this ShortnameService. All URIs in the
+	 	Model have shortnames allocated if they don't have them already.
+	 	The prefixes in the PrefixMapping may be used when constructing these
+	 	new shortnames.
 	*/
-	public NameMap nameMap();
+	public Map<String, String> constructURItoShortnameMap(Model m, PrefixMapping pm);
+	
+	/**
+	    Answer the property info record for the property with this shortname.
+	*/
+	public ContextPropertyInfo getPropertyByName(String shortName);
 	
 	/**
 	    Answer true iff the named type has been declared (or is by default)

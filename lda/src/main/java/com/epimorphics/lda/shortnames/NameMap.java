@@ -344,7 +344,7 @@ public class NameMap {
 		    Transcoder will escape it.
 		*/
 		
-		public Map<String, String> result() {
+		public Map<String, String> constructURItoShortnameMap() {
 			Map<String, String> mapURItoShortName = new HashMap<String, String>();
 			loadMagic( mapURItoShortName );
 			mapURItoShortName.putAll( uriToName );

@@ -185,7 +185,7 @@ public class APIEndpointImpl implements APIEndpoint {
         String viewQuery = rs.getDetailsQuery();
         APISpec apiSpec = spec.getAPISpec();
         Source source = apiSpec.getDataSource();
-        NameMap nameMap = apiSpec.getShortnameService().nameMap();
+        ShortnameService sns = apiSpec.getShortnameService();
         String selectQuery = query.getQueryString( apiSpec, bindings );
         Set<String> viewNames = spec.getExplicitViewNames();
         EndpointDetails details = (EndpointDetails) spec;
@@ -198,7 +198,7 @@ public class APIEndpointImpl implements APIEndpoint {
         	, ru
         	, uriForDefinition
         	, bindings
-        	, nameMap
+        	, sns
         	, suppress_IPTO
         	, thisMetaPage
         	, page

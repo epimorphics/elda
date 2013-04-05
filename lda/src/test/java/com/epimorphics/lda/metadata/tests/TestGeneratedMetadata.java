@@ -18,6 +18,8 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.EndpointMetadata;
 import com.epimorphics.lda.shortnames.NameMap;
+import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -59,8 +61,8 @@ public class TestGeneratedMetadata {
 		Resource predicate = toScan.createProperty( "http://example.com/root#predicate" );
 		Model meta = ModelFactory.createDefaultModel();
 		Resource exec = meta.createResource( "fake:exec" );
-		NameMap nm = new NameMap();
-		em.addTermBindings( toScan, meta, exec, nm );
+		ShortnameService sns = new StandardShortnameService();
+		em.addTermBindings( toScan, meta, exec, sns );
 	//
 		Resource tb = meta.listStatements( null, API.termBinding, Any ).nextStatement().getResource();
 		assertTrue( meta.contains( tb, API.label, "this_predicate" ) );

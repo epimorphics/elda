@@ -9,6 +9,8 @@ package com.epimorphics.lda.apispec.tests;
 
 import static org.junit.Assert.*;
 
+import java.util.Map;
+
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
@@ -88,10 +90,11 @@ public class TestShortnameServiceFollowsVocabularyLinks {
 	@Test public void testRecognisesLabelsFromVocab() {
 		Resource root = namesModel.createResource( "fake:root" );
 		ShortnameService sns = new StandardShortnameService( root, namesModel, loader );
+		Map<String, String> uriToName = sns.constructURItoShortnameMap(namesModel, namesModel);
 		assertEquals( NS + "d", sns.expand( "name_d" ) );
-		assertEquals( "name_d", sns.nameMap().getNameForURI( NS + "d" ) );
+		assertEquals( "name_d", uriToName.get( NS + "d" ) );
 		assertEquals( NS + "e", sns.expand( "name_e" ) );	
-		assertEquals( "name_e", sns.nameMap().getNameForURI( NS + "e" ) );
+		assertEquals( "name_e", uriToName.get( NS + "e" ) );
 		assertEquals( NS + "f", sns.expand( "f_api_label" ) );
 		assertEquals( null, sns.expand( "fRDFlabel" ) );		
 		assertEquals( "f_api_label", sns.asContext().getNameForURI( NS + "f" ) );
@@ -102,7 +105,7 @@ public class TestShortnameServiceFollowsVocabularyLinks {
 		ShortnameService sns = new StandardShortnameService( root, namesModel, loader );
 		assertEquals( null, sns.expand( "gFromA" ) );		
 		assertEquals( NS + "g", sns.expand( "gFromSpec" ) );
-		assertEquals( "gFromSpec", sns.nameMap().getNameForURI( NS + "g" ) );
+		assertEquals( "gFromSpec", sns.constructURItoShortnameMap( namesModel, namesModel).get( NS + "g" ) );
 	}
 
 	static final Model propertiesVocabC = ModelIOUtils.modelFromTurtle
@@ -120,8 +123,10 @@ public class TestShortnameServiceFollowsVocabularyLinks {
 	@Test public void testSeePropertyFromConfig() {
 		Resource root = propertiesModel.createResource( "fake:root" );
 		ShortnameService sns = new StandardShortnameService( root, propertiesModel, loader );
-		ContextPropertyInfo cpi_p = sns.nameMap().getPropertyByName( "name_p" );
-		ContextPropertyInfo cpi_q = sns.nameMap().getPropertyByName( "name_q" );
+		
+		ContextPropertyInfo cpi_p = sns.getPropertyByName( "name_p" );
+		ContextPropertyInfo cpi_q = sns.getPropertyByName( "name_q" );
+		
 		assertEquals( "should see vocab property type", XSD.integer.getURI(), cpi_p.getType() );
 		assertEquals( "should see config property type", XSD.decimal.getURI(), cpi_q.getType() );
 	}

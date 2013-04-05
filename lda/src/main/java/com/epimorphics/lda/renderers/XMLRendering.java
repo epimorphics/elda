@@ -437,7 +437,7 @@ public class XMLRendering {
 		this.d = d;
 		this.sns = sns;
 		this.suppressIPTO = suppressIPTO;
-		this.nameMap = sns.nameMap().stage2().loadPredicates(m, m).result();
+		this.nameMap = sns.constructURItoShortnameMap(m, m);
 	}
 
 	/** 

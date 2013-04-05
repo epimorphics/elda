@@ -15,6 +15,7 @@ import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.NameMap;
+import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.NameMap.Stage2NameMap;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.EndpointDetails;
@@ -43,7 +44,7 @@ public class EndpointMetadata {
 		, URI ru
 		, Resource uriForDefinition
 		, Bindings bindings
-		, NameMap nameMap
+		, ShortnameService sns
 		, boolean suppress_IPTO
 		, Resource thisMetaPage
 		, int page
@@ -117,7 +118,7 @@ public class EndpointMetadata {
 	//	
 		em.addVersions( versionsModel, viewNames );
 		em.addFormats( formatsModel, formats );
-		em.addBindings( mergedModels1, bindingsModel, exec, nameMap );
+		em.addBindings( mergedModels1, bindingsModel, exec, sns );
 		em.addExecution( execution, exec );
 	//
 		em.addQueryMetadata( execution, exec, selectQuery, viewQuery, source, details.isListEndpoint() );
@@ -206,11 +207,11 @@ public class EndpointMetadata {
 		return result;
 	}
 
-	public void addBindings( Model toScan, Model meta, Resource anExec, NameMap nm ) {
+	public void addBindings( Model toScan, Model meta, Resource anExec, ShortnameService sns ) {
 		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
 		exec.addProperty( RDF.type, API.Execution );
 		addVariableBindings( meta, exec );
-		addTermBindings( toScan, meta, exec, nm );
+		addTermBindings( toScan, meta, exec, sns );
 		page.addProperty( API.wasResultOf, exec );
 	}
 
@@ -240,9 +241,8 @@ public class EndpointMetadata {
 		( "http://www.w3.org/2004/02/skos/core#" + "prefLabel" )
 		;
 	
-	public void addTermBindings( Model toScan, Model meta, Resource exec, NameMap nm ) {
-		Stage2NameMap s2 = nm.stage2().loadPredicates( toScan, toScan );
-		Map<String, String> mm = s2.result();
+	public void addTermBindings( Model toScan, Model meta, Resource exec, ShortnameService sns ) {
+		Map<String, String> mm = sns.constructURItoShortnameMap( toScan, toScan );
 		List<String> uriList = new ArrayList<String>( mm.keySet() );
 		Collections.sort( uriList );
 		for (String uri: uriList) {
@@ -306,6 +306,7 @@ public class EndpointMetadata {
 	*/
 	static void createOptionalMetadata
 		( NameMap nameMap
+		, ShortnameService sns
 		, boolean isListEndpoint
 		, Set<String> viewNames
 		, Set<FormatNameAndType> formats
@@ -328,7 +329,7 @@ public class EndpointMetadata {
 	//	
 		em.addVersions( versionsModel, viewNames );
 		em.addFormats( formatsModel, formats );
-		em.addBindings( mergedModels, bindingsModel, exec, nameMap );
+		em.addBindings( mergedModels, bindingsModel, exec, sns );
 		em.addExecution( execution, exec );
 	//
 		em.addQueryMetadata( execution, exec, selectQuery, viewQuery, source, isListEndpoint );
