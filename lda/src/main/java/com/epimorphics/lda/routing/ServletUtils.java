@@ -104,11 +104,13 @@ public class ServletUtils {
 			prefixPath = "/" + specPath.substring(0, chop);
 			specPath = specPath.substring( chop + 2 );
 		}
+	//		
 		log.info( "Loading spec file from " + specPath + " with prefix path " + prefixPath );
 		Model init = ml.loadModel( specPath );
 		addLoadedFrom( init, specPath );
 		log.info( "Loaded " + specPath + ": " + init.size() + " statements" );
 		registerModel( am, prefixPath, specPath, init );
+		
 	}
 
 	/**
