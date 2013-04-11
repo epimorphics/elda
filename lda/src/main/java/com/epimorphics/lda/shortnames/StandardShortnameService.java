@@ -209,10 +209,11 @@ public class StandardShortnameService implements ShortnameService {
 
 	public Map<String, String> copyWithout(Map<String, String> baseMap, Map<String, String> toRemove) {
 		Map<String, String> contextWithoutName = new HashMap<String, String>( baseMap );
-		for (Map.Entry<String, String> e: toRemove.entrySet()) {
-			String key = e.getKey(), value = contextWithoutName.get(key);
-			if (value != null && value.equals(e.getValue())) contextWithoutName.remove(key);
-		}
+		contextWithoutName.entrySet().removeAll( toRemove.entrySet() );
+//		for (Map.Entry<String, String> e: toRemove.entrySet()) {
+//			String key = e.getKey(), value = contextWithoutName.get(key);
+//			if (value != null && value.equals(e.getValue())) contextWithoutName.remove(key);
+//		}
 		return contextWithoutName;
 	}
 
