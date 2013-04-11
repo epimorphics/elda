@@ -18,6 +18,7 @@
 package com.epimorphics.lda.shortnames;
 import static com.epimorphics.util.RDFUtils.*;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -184,11 +185,56 @@ public class StandardShortnameService implements ShortnameService {
 	}
 
 	@Override public Map<String, String> constructURItoShortnameMap(Model m, PrefixMapping pm) {
-		return nameMap.stage2().loadPredicates(pm, m).constructURItoShortnameMap();
+		Map<String, String> byContext = contextToNameMap();
+		Map<String, String> byNameMap = nameMap.stage2().loadPredicates(pm, m).constructURItoShortnameMap();
+		if (true || byContext.equals(byNameMap)) {} else {
+			System.err.println( ">> MISMATCHED URI->SHORTNAME MAP:" );
+			
+			Map<String, String> contextWithoutName = copyWithout(byContext, byNameMap);
+
+			Map<String, String> nameWithoutContext = copyWithout(byNameMap, byContext);
+			
+			System.err.println( ">> elements only in context: " );
+			for (Map.Entry<String, String> e: contextWithoutName.entrySet()) 
+				System.err.println( ">>  " + e );
+			
+			System.err.println( ">> elements only in namemap: " );
+			for (Map.Entry<String, String> e: nameWithoutContext.entrySet()) 
+				System.err.println( ">>  " + e );		
+			
+			throw new RuntimeException("BOOM");
+		}
+		return byNameMap;
+	}
+
+	public Map<String, String> copyWithout(Map<String, String> baseMap, Map<String, String> toRemove) {
+		Map<String, String> contextWithoutName = new HashMap<String, String>( baseMap );
+		for (Map.Entry<String, String> e: toRemove.entrySet()) {
+			String key = e.getKey(), value = contextWithoutName.get(key);
+			if (value != null && value.equals(e.getValue())) contextWithoutName.remove(key);
+		}
+		return contextWithoutName;
+	}
+
+	private Map<String, String> contextToNameMap() {
+		Map<String, String> result = new HashMap<String, String>();
+		for (String key: context.allNames()) {
+			result.put( context.getURIfromName( key ), key );
+		}		
+		return result;
 	}
 
 	@Override public ContextPropertyInfo getPropertyByName(String shortName) {
-		return nameMap.getPropertyByName(shortName);
+		ContextPropertyInfo byContext = context.getPropertyByName( shortName );
+		ContextPropertyInfo byNameMap =  nameMap.getPropertyByName(shortName);
+		if (false && byContext != byNameMap) {
+			System.err.println( ">> MISMATCHED CONTEXT PROPERTY INFO for: " + shortName );
+			if (byContext.equals(byNameMap)) System.err.println( ">>  [but they are .equals()]" );
+			System.err.println( ">>  byContext: " + byContext );
+			System.err.println( ">>  byNameMap: " + byNameMap );
+//			throw new RuntimeException("BOOM");
+		}			
+		return byNameMap;
 	}
 }
 

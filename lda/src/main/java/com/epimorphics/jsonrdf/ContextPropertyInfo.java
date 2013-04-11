@@ -23,21 +23,21 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
     protected String type = null;
     protected Property p;
 
-//    @Override public boolean equals( Object other) {
-//    	return other instanceof ContextPropertyInfo && same( (ContextPropertyInfo) other );
-//    }
-//    
-//    private boolean same(ContextPropertyInfo other) {
-//    	return
-//    		uri.equals( other.uri )
-//    		&& multivalued == other.multivalued
-//    		&& name.equals( other.name )
-//    		&& hidden == other.hidden
-//    		&& structured == other.structured
-//    		&& eq(p, other.p)
-//    		&& eq( type, other.type )
-//    		;
-//    }
+    @Override public boolean equals( Object other) {
+    	return other instanceof ContextPropertyInfo && same( (ContextPropertyInfo) other );
+    }
+    
+    private boolean same(ContextPropertyInfo other) {
+    	return
+    		uri.equals( other.uri )
+    		&& multivalued == other.multivalued
+    		&& name.equals( other.name )
+    		&& hidden == other.hidden
+    		&& structured == other.structured
+    		&& eq(p, other.p)
+    		&& eq( type, other.type )
+    		;
+    }
     
     @Override public String toString() {
     	return 

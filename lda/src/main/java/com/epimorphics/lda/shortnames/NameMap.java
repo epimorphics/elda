@@ -181,7 +181,10 @@ public class NameMap {
 	//
 		for (String shortName: inner.mapShortnameToURIs.keySet()) {
 			if (!mapShortnameToURIs.containsKey(shortName)) {
+				// System.err.println( ">> not already defined: " + shortName );
 				mapShortnameToURIs.add(shortName, inner.mapShortnameToURIs.getAll( shortName ) );
+			} else {
+				// System.err.println( ">> already defined: " + shortName );				
 			}
 		}
 	}
