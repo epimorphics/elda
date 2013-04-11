@@ -190,14 +190,22 @@ by the "mvn install" process.
 <p>
 	Each directive is a filename, with an optional leading
 	prefix specification consisting of a name followed by 
-	<code>::</code>. The filename is webapp-relative.
+	<code>::</code>.
 </p>
 
 <p>
 	If the prefix is supplied, then all of the URI templates
 	in the configuration are implicitly prefixed with it;
 	this allows different configurations to be loaded together
-	even if they happen to share URI templates. 
+	even if they happen to share URI templates.
+</p>
+
+<p>
+	The provided filename is a webapp-relative unless it starts
+	with "/". Any occurence of the string "{APP}" is replaced 
+	by the context path, and the character "*" matches any sequence
+	of characters, allowing multiple configuration files to be
+	specified at one time and appropriately to this webapp.
 </p>
 
 <p>
@@ -205,6 +213,25 @@ by the "mvn install" process.
 	by the base of the filename with any trailing <code>.ttl</code>
 	removed. The string <code>{api}</code> in the prefix is replaced
 	by the local name(s) of the API resouce(s) in the spec.
+</p>
+
+<p>
+	If the prefix contains a '*' character, it is replaced by whatever
+	characters matched any wildcard '*'s in the last segment of the
+	filename. (If there is more than one such '*', the matching groups
+	are separated by '-'.)
+</p>
+
+<h4>example</h4>
+
+<p>
+	Given the directive <code>A*B::/etc/elda/*.ttl</code> and
+	files <code>x.ttl</code>, <code>y.ttl</code> and <code>z.text</code>
+	in <code>/etc/elda</code>, the configuration file <code>x.ttl</code> 
+	will be loaded and given prefix <code>AxB</code> and the
+	file <code>y.ttl</code> will be loaded with prefix <code>AyB</code>.
+	<code>z.text</code> is ignored as it does not match the filename
+	pattern.
 </p>
 
 <h1><a name="shortname-restrictions"></a>Restrictions on shortname selection</h1>
@@ -744,7 +771,9 @@ by the "mvn install" process.
 
 <p>
 	(<i>This feature is experimental and its details
-	may change.</i>)
+	may change. It is not yet completely implemented:
+	it should, but does not, rewrite the shortname maps
+	used by XML, JSON, and HTML renderers.</i>)
 </p>
 
 <p>

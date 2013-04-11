@@ -5,6 +5,7 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -65,6 +66,31 @@ public class Glob {
 		return filesMatching(files, new File(root), Arrays.asList( path.split("/") ) );	
 	}
 
+	/**
+	    Return the portion(s) of name that is matched by the wildcard(s) in
+	    glob, or null if there is no match.
+	*/
+	public String extract( String glob, String name ) {
+		return extract( glob, "", name );
+	}
+
+	public String extract( String glob, String join, String name ) {
+	
+		Pattern g = Pattern.compile(toRegex(glob));
+		Matcher m = g.matcher( name );
+		if (m.matches()) {
+			boolean needsJoin = false;
+			StringBuilder result = new StringBuilder();
+			for (int i = 1; i <= m.groupCount(); i += 1) {
+				if (needsJoin) result.append( join );
+				else needsJoin = true;
+				result.append(m.group(i));				
+			}
+			return result.toString();
+		}
+		return null;
+	}
+	
 	private List<File> filesMatching(List<File> files, File root, List<String> segments ) {
 		if (segments.isEmpty()) {
 			files.add( root );
@@ -92,7 +118,7 @@ public class Glob {
 		StringBuilder re = new StringBuilder( globString.length() * 11 / 10 );
 		for (int i = 0, limit = globString.length(); i < limit; i += 1) {
 			char ch = globString.charAt(i);
-			if (ch == '*') re.append('.').append('*');
+			if (ch == '*') re.append('(').append('.').append('*').append(')');
 			else if ("[].*+()?^$\\".indexOf(ch) > -1) re.append("\\").append(ch);
 			else re.append(ch);
 		}

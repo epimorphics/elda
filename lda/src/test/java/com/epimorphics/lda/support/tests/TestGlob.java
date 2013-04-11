@@ -50,6 +50,24 @@ public class TestGlob {
 		assertEquals( CollectionUtils.set(f2, f3), files );
 	}
 	
+	@Test public void testGetExtractingOnePart() {
+		Glob g = new Glob();
+		String s = g.extract( "*.ttl", "concrete.ttl" );
+		assertEquals( "concrete", s );
+	}
+	
+	@Test public void testGetExtractingTwoParts() {
+		Glob g = new Glob();
+		String s = g.extract( "*cre*.ttl", "concrete.ttl" );
+		assertEquals( "conte", s );
+	}
+	
+	@Test public void testGetExtractingTwoPartsWithJoin() {
+		Glob g = new Glob();
+		String s = g.extract( "*cre*.ttl", "_", "concrete.ttl" );
+		assertEquals( "con_te", s );
+	}
+	
 	static class FakeFSI implements Glob.FileSystemInterface {
 
 		List<String> fileNames = new ArrayList<String>();

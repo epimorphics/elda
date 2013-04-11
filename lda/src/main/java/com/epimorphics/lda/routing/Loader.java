@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.xml.parsers.FactoryConfigurationError;
 
@@ -59,7 +60,8 @@ public class Loader extends HttpServlet {
     static Logger log = LoggerFactory.getLogger(Loader.class);
 
     @Override public void init() {
-    	baseFilePath = ServletUtils.withTrailingSlash( getServletContext().getRealPath("/") );
+    	ServletContext sc = getServletContext();   	
+		baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
     	configureLog4J();
     	log.info( "Starting Elda " + Version.string );
         log.info( "baseFilePath: " + baseFilePath );
@@ -71,12 +73,19 @@ public class Loader extends HttpServlet {
         AuthMap am = AuthMap.loadAuthMap( FileManager.get(), wrapParameters() );
     //
         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
-        for (String spec : ServletUtils.getSpecNamesFromContext(new ServletUtils.ServletSpecContext(this))) {
-             ServletUtils.loadSpecFromFile( am, modelLoader, prefixPath, spec );
+    //
+        String contextName = adaptContextPath( sc.getContextPath() );
+        for (String specTemplate : ServletUtils.getSpecNamesFromContext(new ServletUtils.ServletSpecContext(this))) {
+        	String spec = specTemplate.replaceAll( "\\{APP\\}", contextName );
+            ServletUtils.loadSpecsFromFiles( am, modelLoader, baseFilePath, prefixPath, spec );
         }
     }
 
-    /**
+    private String adaptContextPath(String contextPath) {
+		return contextPath.equals("") ? "ROOT" : contextPath.substring(1);
+	}
+
+	/**
         Return a NamesAndValues which wraps the init parameters of this Loader
         servlet.
     */

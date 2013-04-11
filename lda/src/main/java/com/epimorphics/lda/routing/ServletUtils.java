@@ -18,6 +18,7 @@ import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
+import com.epimorphics.lda.support.Glob;
 import com.epimorphics.lda.support.LARQManager;
 import com.epimorphics.lda.support.MapMatching;
 import com.epimorphics.lda.support.TDBManager;
@@ -97,20 +98,53 @@ public class ServletUtils {
 		m.add( toAdd );
 	}
 
-	public static void loadSpecFromFile( AuthMap am, ModelLoader ml, String prefixPath, String specPath ) {
+	public static void loadSpecsFromFiles( AuthMap am, ModelLoader ml, String baseFilePath, String prefixPath, String specPath ) {
 		int chop = specPath.indexOf( "::" );
 		if (chop >= 0) {
 			// prefixPath :: fileName
 			prefixPath = "/" + specPath.substring(0, chop);
 			specPath = specPath.substring( chop + 2 );
 		}
-	//		
-		log.info( "Loading spec file from " + specPath + " with prefix path " + prefixPath );
-		Model init = ml.loadModel( specPath );
-		addLoadedFrom( init, specPath );
-		log.info( "Loaded " + specPath + ": " + init.size() + " statements" );
-		registerModel( am, prefixPath, specPath, init );
-		
+	//	
+		if (isSpecialName(specPath)) {
+			loadOneConfigFile( am, ml, prefixPath, specPath );
+		} else {
+			String fullPath = specPath.startsWith("/") ? specPath : baseFilePath + specPath;
+			List<File> files = new Glob().filesMatching( fullPath );
+			log.info( "Found " + files.size() + " file(s) matching specPath " + specPath );
+			for (File f: files) {
+				String pp = prefixPath.contains("*") ? nameToPrefix(prefixPath, specPath, f.getName()) : prefixPath;
+				loadOneConfigFile(am, ml, pp, f.getAbsolutePath());
+			}
+		}
+	}
+
+	/**
+	    nameToPrefix matches the last segment of the pathname <code>specPath</code>
+	    against the leafname <code>name</code> and replaces any '*' character 
+	    in <code>wildPrefix</code> with the matched wildcard part(s) (joined
+	    if necessary by the character '-') from the match, returning the
+	    modified result.
+	*/
+	public static String nameToPrefix(String wildPrefix, String specPath, String name) {
+		String wildPart = new File(specPath).getName();
+		String matched = new Glob().extract( wildPart, "-", name );
+		return wildPrefix.replace( "*", matched );
+	}
+
+	// TODO duplication of information. should do better sometime.
+	private static boolean isSpecialName( String specPath ) {
+		return specPath.startsWith( Container.LOCAL_PREFIX ) 
+			|| specPath.startsWith( TDBManager.PREFIX )
+			;
+	}
+
+	public static void loadOneConfigFile(AuthMap am, ModelLoader ml, String prefixPath, String thisSpecPath) {
+		log.info( "Loading spec file from " + thisSpecPath + " with prefix path " + prefixPath );
+		Model init = ml.loadModel( thisSpecPath );
+		addLoadedFrom( init, thisSpecPath );
+		log.info( "Loaded " + thisSpecPath + ": " + init.size() + " statements" );
+		registerModel( am, prefixPath, thisSpecPath, init );
 	}
 
 	/**
