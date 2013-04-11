@@ -113,10 +113,14 @@ public class ServletUtils {
 			List<File> files = new Glob().filesMatching( fullPath );
 			log.info( "Found " + files.size() + " file(s) matching specPath " + specPath );
 			for (File f: files) {
-				String pp = prefixPath.contains("*") ? nameToPrefix(prefixPath, specPath, f.getName()) : prefixPath;
+				String pp = containsStar(prefixPath) ? nameToPrefix(prefixPath, specPath, f.getName()) : prefixPath;
 				loadOneConfigFile(am, ml, pp, f.getAbsolutePath());
 			}
 		}
+	}
+
+	public static boolean containsStar(String prefixPath) {
+		return prefixPath == null ? false : prefixPath.contains("*");
 	}
 
 	/**
@@ -129,7 +133,7 @@ public class ServletUtils {
 	public static String nameToPrefix(String wildPrefix, String specPath, String name) {
 		String wildPart = new File(specPath).getName();
 		String matched = new Glob().extract( wildPart, "-", name );
-		return wildPrefix.replace( "*", matched );
+		return wildPrefix.replace( "*", (matched == null ? "NOMATCH" : matched) );
 	}
 
 	// TODO duplication of information. should do better sometime.
