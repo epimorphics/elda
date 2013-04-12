@@ -18,11 +18,7 @@
 package com.epimorphics.lda.shortnames;
 import static com.epimorphics.util.RDFUtils.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
@@ -32,9 +28,12 @@ import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.*;
+
+import com.hp.hpl.jena.rdf.model.impl.Util;
 
 /**
 	See ShortnameService.
@@ -185,10 +184,17 @@ public class StandardShortnameService implements ShortnameService {
 	}
 
 	@Override public Map<String, String> constructURItoShortnameMap(Model m, PrefixMapping pm) {
-		Map<String, String> byContext = contextToNameMap();
+		
+		String it = "http://purl.org/linked-data/api/vocab#processor";	
+				
+		Map<String, String> byContext = contextToNameMap(m, pm);
 		Map<String, String> byNameMap = nameMap.stage2().loadPredicates(pm, m).constructURItoShortnameMap();
 		if (true || byContext.equals(byNameMap)) {} else {
-			System.err.println( ">> MISMATCHED URI->SHORTNAME MAP:" );
+			System.err.println( "\n>> MISMATCHED URI->SHORTNAME MAP:" );
+			
+			String A = byContext.get( it );
+			String B = byNameMap.get( it );
+			System.err.println( ">> " + A + " vs " + B );			
 			
 			Map<String, String> contextWithoutName = copyWithout(byContext, byNameMap);
 
@@ -202,7 +208,7 @@ public class StandardShortnameService implements ShortnameService {
 			for (Map.Entry<String, String> e: nameWithoutContext.entrySet()) 
 				System.err.println( ">>  " + e );		
 			
-			throw new RuntimeException("BOOM");
+			// throw new RuntimeException("BOOM");
 		}
 		return byNameMap;
 	}
@@ -210,18 +216,53 @@ public class StandardShortnameService implements ShortnameService {
 	public Map<String, String> copyWithout(Map<String, String> baseMap, Map<String, String> toRemove) {
 		Map<String, String> contextWithoutName = new HashMap<String, String>( baseMap );
 		contextWithoutName.entrySet().removeAll( toRemove.entrySet() );
-//		for (Map.Entry<String, String> e: toRemove.entrySet()) {
-//			String key = e.getKey(), value = contextWithoutName.get(key);
-//			if (value != null && value.equals(e.getValue())) contextWithoutName.remove(key);
-//		}
 		return contextWithoutName;
 	}
 
-	private Map<String, String> contextToNameMap() {
+	private Map<String, String> contextToNameMap(Model m, PrefixMapping pm) {
 		Map<String, String> result = new HashMap<String, String>();
 		for (String key: context.allNames()) {
-			result.put( context.getURIfromName( key ), key );
-		}		
+			String uri = context.getURIfromName( key );
+			
+			if (result.containsKey( uri ) == false || result.get( uri ).length() > key.length())
+				result.put( uri, key );
+			
+//			if (result.containsKey( uri )) {
+//				String XXX = result.get( uri );
+//				System.err.println( "-->> NOTE, " + uri + " already has short name " + XXX + " but is being given name " + key );
+//			}
+		}
+		
+		String it = "http://purl.org/linked-data/api/vocab#processor";
+//		for (String name: context.allNames()) System.err.println( ">>    " + name );
+		
+		Set<String> modelTerms = new HashSet<String>();
+		
+		for (StmtIterator sit = m.listStatements(); sit.hasNext();) {
+			Statement s = sit.next();
+			modelTerms.add( s.getPredicate().getURI() );
+			Node o = s.getObject().asNode();
+			if (o.isLiteral()) {
+				String type = o.getLiteralDatatypeURI();
+				if (type != null) modelTerms.add( type );
+			}
+		}
+		
+		// loadMagic( mapURItoShortName );
+		
+		modelTerms.removeAll( result.keySet() );
+		for (String mt: modelTerms) {
+			int cut = com.hp.hpl.jena.rdf.model.impl.Util.splitNamespace( mt );
+			String namespace = mt.substring( 0, cut );
+			String shortName = mt.substring( cut );
+			if (namespace.equals( "eh:/" )) {
+				// TODO testing hack: fix and remove.
+				result.put( mt, shortName );
+			} else {						
+				result.put( mt, Transcoding.encode( prefixes, mt ) );
+			}
+		}
+		
 		return result;
 	}
 
