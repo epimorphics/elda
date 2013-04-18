@@ -31,6 +31,7 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.vocabulary.*;
 
 import com.hp.hpl.jena.rdf.model.impl.Util;
@@ -208,7 +209,7 @@ public class StandardShortnameService implements ShortnameService {
 			for (Map.Entry<String, String> e: nameWithoutContext.entrySet()) 
 				System.err.println( ">>  " + e );		
 			
-			// throw new RuntimeException("BOOM");
+			 throw new RuntimeException("BOOM");
 		}
 		return byNameMap;
 	}
@@ -220,18 +221,37 @@ public class StandardShortnameService implements ShortnameService {
 	}
 
 	private Map<String, String> contextToNameMap(Model m, PrefixMapping pm) {
+		
+		// System.err.println( "\n\n>> (((((((((((((((((((((((((((((((((((((((((((((((((((" );
+		
 		Map<String, String> result = new HashMap<String, String>();
+	//
+		result.put(API.value.getURI(), "value");
+		result.put(API.label.getURI(), "label");
+	//
 		for (String key: context.allNames()) {
 			String uri = context.getURIfromName( key );
 			
-			if (result.containsKey( uri ) == false || result.get( uri ).length() > key.length())
+			if (uri.equals(DOAP.programming_language.getURI())) {
+				result.put(uri, "programming_language" );
+			} else if (result.containsKey( uri )) {
+				String otherKey = result.get(uri);
+//				 System.err.println( ">> CLASH for " + uri + ", might be " + key + ", might be " + otherKey );
+				if (otherKey.length() > key.length()) { String x = key; key = otherKey; otherKey = x; }
+				if (key.endsWith(otherKey)) 
+					result.put(uri, otherKey);
+				else
+					if (false) System.err.println( ">> -- could not resolve clash for " + uri + " -- " + key + " vs " + otherKey + "." );
+			} else {
 				result.put( uri, key );
-			
+			}
 //			if (result.containsKey( uri )) {
 //				String XXX = result.get( uri );
 //				System.err.println( "-->> NOTE, " + uri + " already has short name " + XXX + " but is being given name " + key );
 //			}
 		}
+		
+		// System.err.println( ">> )))))))))))))))))))))))))))))))))))))))))))))))))))))" );
 		
 		String it = "http://purl.org/linked-data/api/vocab#processor";
 //		for (String name: context.allNames()) System.err.println( ">>    " + name );

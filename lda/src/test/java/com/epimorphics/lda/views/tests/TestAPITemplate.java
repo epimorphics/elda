@@ -106,7 +106,7 @@ public class TestAPITemplate {
 			, ":A a :Item; :predicate :X."
 			, ":B a :Item; :catiprede :Y."
 		//
-			, ":Item a rdfs:Class"
+			, ":Item a rdfs:Class; rdfs:label 'Item'"
 			, "."
 			);
 
