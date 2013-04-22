@@ -43,6 +43,7 @@
 		<param-name>com.epimorphics.api.initialSpecFile</param-name>
         <param-value>
         	hello::specs/hello-world.ttl
+        	, minimal::specs/minimal-config.ttl
         	, again::specs/hello-again-world.ttl
         	, tiny::specs/tiny-education.ttl
         	, mini::specs/mini-education.ttl
