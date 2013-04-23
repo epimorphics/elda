@@ -3,7 +3,7 @@ syntax: glob
 *.class
 *.swp
 .metadata
-target/*
+*/target/*
 .settings
 .classpath
 .project
