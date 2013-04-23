@@ -1,0 +1,38 @@
+<html>
+<head>
+<title>Elda -- an implementation of the Linked Data API</title>
+<link href="style.css" type="text/css" rel="stylesheet"></link>
+
+</head>
+<body>
+<h1>Elda -- an implementation of the Linked Data API</h1>
+
+<h2><a name="implementation-state">state of the implementation</a></h2>
+
+<p>
+See the 
+<a href="http://code.google.com/p/elda/issues/list">
+Elda issues list for current issues.
+</a>
+</p>
+
+<h3>exists-P=false where P is a chain</h3>
+
+<p>
+The query specification <code>exists-P=false</code>
+where P is a chain of at least two elements does not work.
+</p>
+
+<h3>cache</h3>
+
+<p>
+Elda caches the results of queries so that they may be re-served
+quickly. When the cache gets "too full", it is reset. "Too full"
+by default is measured by the number of triples in the cache.
+See the more detailed documentation [upcoming] on how to control 
+the cache.
+</p>
+
+</body>
+</html>
+

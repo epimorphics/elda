@@ -28,7 +28,7 @@ public class RouterFactory {
     protected static Router theRouter;
     
     public static Router getDefaultRouter() {
-        if (theRouter == null) theRouter = new DefaultRouter();
+        if (theRouter == null) theRouter = new DefaultRouter();        
         return theRouter;
     }
     

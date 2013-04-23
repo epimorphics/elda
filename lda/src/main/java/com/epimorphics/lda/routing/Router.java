@@ -35,35 +35,39 @@ import com.epimorphics.lda.support.MultiMap;
 public interface Router {
 
     /**
-     * Register a new API instance.
-     * @param URITemplate the path template, relative server root
-     * @param api the api implementation
-     */
+     	Register a new API instance.
+     	@param URITemplate the path template, relative server root
+     	@param api the api implementation
+    */
     void register(String context, String URITemplate, APIEndpoint api);
     
     /**
-     * Remove a registered api
-     */
+     	Remove a registered api
+    */
     void unregister(String context, String URITemplate);
     
     /**
-     * Match the request path to the known endpoints and return
-     * a Match object (giving the APIEndpoint and any template bindings)
-     * or null if the request does not match.
-     * @param queryParams 
-     */
+     	Match the request path to the known endpoints and return
+     	a Match object (giving the APIEndpoint and any template bindings)
+     	or null if the request does not match.
+    */
     public Match getMatch( String path, MultiMap<String, String> queryParams );
     
     /**
-        Answer a list of URI templates registered with this Router.
+        Return a list of URI templates registered with this Router.
     */
     public List<String> templates();
     
     /**
-        Answer the URI template of an endpoint in this Router
+        Return the URI template of an endpoint in this Router
         which has an ItemEndpoint matching the itemPath.
     */
     public String findItemURIPath( String context, URI requestURI, String itemPath  );
+
+    /**
+        Return the number of URI templates served by this Router.
+    */
+	public int countTemplates();
     
 }
 

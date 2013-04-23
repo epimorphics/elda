@@ -24,11 +24,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -58,7 +58,6 @@ import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
-import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
@@ -87,15 +86,35 @@ import com.hp.hpl.jena.shared.WrappedException;
     public static final String LAST_MODIFIED_DATE = "Last-Modified-Date";
     
     final Router router;
+    static final Map<String, Router> routers = new HashMap<String, Router>();
     
+    /**
+        Initialise this RouterRestlet. Happens a lot, so expensive
+        initialisations should be cached. Sets the router used by
+        this instance according to the appropriate LDA configs.
+    */
     public RouterRestlet( @Context ServletConfig servFig ) {
-//    	String name = servFig.getServletName();
-//    	Router r = Container.routerForServlet( name );
-//    	router = r;
-    	router = RouterFactory.getDefaultRouter();
+    	ServletContext sc = servFig.getServletContext();
+    	router = getRouterFor( servFig, sc.getContextPath());
     }
-   
-    public Match getMatch( String path, MultiMap<String, String> queryParams ) {
+       
+    /**
+     	Answer a router initialised with the URI templates appropriate to
+     	this context path. Such a router may already be in the routers table,
+     	in which case it is used, otherwise a new router is created, initialised,
+     	put in the table, and returned.
+    */
+    private synchronized Router getRouterFor( ServletConfig sc, String givenContextPath) {
+    	String contextPath = RouterRestletSupport.flatContextPath(givenContextPath);
+		Router r = routers.get(contextPath);
+		if (r == null) {
+			r = RouterRestletSupport.createRouterFor( sc, contextPath );
+			routers.put(contextPath, r );
+		}
+		return r;
+	}
+
+	public Match getMatch( String path, MultiMap<String, String> queryParams ) {
         Match match = router.getMatch( path, queryParams );
         if (match == null) {
             // No match in the table at the moment, but check the persistence
@@ -238,7 +257,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         	if (_default.getPreferredSuffix().equals( r.getPreferredSuffix())) {
         		MediaType dmt = _default.getMediaType(rc);
         		if (!dmt.equals(r.getMediaType(rc))) {
-        			r = changeMediaType( r, dmt );
+        			r = RouterRestletSupport.changeMediaType( r, dmt );
         		}
         	}
 			
@@ -272,32 +291,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         }
     }    
     
-    /**
-        Given a renderer r and a media type mt, return a new renderer which
-        behaves like r except that it announces its media type as mt. r
-        itself is not changed.
-        
-        This code should be somewhere more sensible. In fact the whole
-        renderer-choosing machinery needs a good cleanup.
-    */
-    protected Renderer changeMediaType( final Renderer r, final MediaType mt ) {
-    	return new Renderer() {
-
-			@Override public MediaType getMediaType(Bindings unused) {
-				return mt;
-			}
-
-			@Override public BytesOut render(Times t, Bindings rc, APIResultSet results) {
-				return r.render(t, rc, results);
-			}
-
-			@Override public String getPreferredSuffix() {
-				return r.getPreferredSuffix();
-			}    		
-    	};
-    }
-
-	public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
+    public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
 		if (base == null) return requestUri;
 		return URIUtils.resolveAgainstBase( requestUri, URIUtils.newURI( base ), ui.getPath() );

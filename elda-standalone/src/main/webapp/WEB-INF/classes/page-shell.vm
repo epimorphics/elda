@@ -1,0 +1,135 @@
+<html>
+#parse("page-head-shell.vm")
+<body style="background: #eee">
+
+<img src="/elda/lda-assets/images/elda-banner.png" alt="Elda banner" />
+
+<header>
+	<h1>Linked Data API</h1>
+</header>
+
+#macro (tag, $property, $value)
+    "Select items with $property.shortForm() less than $value"
+#end
+
+#macro (selection, $prefix, $symbol, $wording, $property, $value)					
+    <a
+    	title="Select items with $property.shortForm() $wording $value"
+    	href="$thisPage.change($prefix, $property, $value).getURI()"
+    > 
+    	$symbol 
+    </a>
+#end
+
+#macro(nesting, $item)
+	#foreach ($property in $item.properties)
+		<hr style="color: #fff">
+		<div class="indented">
+			<a href="$property.URI">$property.label.cut()</a>
+			#set ($values = ${item.getValues($property)})
+			#foreach ($value in $values)
+				<div class="indented" stylex="border-left: 1px solid black">
+					#if ($value.isLiteral())
+						<div style="float: left"> $value.shortForm().cut() </div>
+						<div style="float: right; margin-right: 1ex">
+						#selection("maxEx-", "&lt;", "less than", $property, $value)
+						#selection("max-", "&le;", "less or equal to", $property, $value)
+						#selection("", "=", "equal to", $property, $value)
+						#selection("min-", "&ge;", "greater or equal to", $property, $value)
+						#selection("minEx-", "&gt;", "greater than", $property, $value)
+						</div>
+						<div style="clear: both"> </div>
+					#else
+						#if ($value.justALabel)
+							$value.label.cut()
+						#else
+							#nesting($value)
+						#end
+					#end
+				</div>
+			#end
+		</div>
+	#end
+#end
+
+<table width="100%">
+<tr>
+<td valign="top" width="80%">
+
+	<div valign="top" width="100%" id="search-results">
+		<h1>Search Results</h1>
+		
+		#foreach ($item in $items) 
+			<div class="itembox">
+			<h2><a href="$item.URI" id="$item.id">$item.label</a></h2>
+			#nesting($item)
+			</div>
+		#end
+	</div>
+	
+</td>
+
+<td valign="top" width="20%">
+	<div>
+		<div>
+			<div class="right-header">formats</div>
+			<div class="indented" style="margin-top: 1ex; margin-bottom: 1ex">
+				#foreach ($f in $formats)
+					<a href="$f.link">$f.name</a>
+				#end
+			</div>
+		</div>
+		
+		<div class="bordered-panel">
+			<div class="right-header">on this page</div>
+			#foreach ($item in $items)
+				<div style="margin-left: 1ex">&raquo; <a href="#$item.id">$item.label</a></div>
+			#end
+		</div>
+	
+	</div>
+
+</td>
+</tr>
+</table>
+
+<hr>
+<table width="100%">
+<tr>
+
+#if ($isListEndpoint)
+	<td width="50%">
+	<h3>selection query</h3>
+	<hr>
+	<p>
+	This is the SPARQL query that was issued to select the items
+	of interest for this page.
+	</p>
+	<hr>
+	<textarea class="provenance" name="query" width="45%">
+	$meta['selectionResult.query.value']
+	</textarea>
+	</td>
+#end
+
+<td width="50%">
+<h3>view query</h3>
+<hr>
+<p>
+This is the SPARQL query that was issued for the property
+chains of the view for this page.
+</p>
+<hr>
+<textarea class="provenance" name="query" width="45%">
+$meta['viewingResult.query.value']
+</textarea>
+</td>
+
+</tr>
+</table>
+
+
+#parse("page-foot-shell.vm")
+
+</body>
+</html>

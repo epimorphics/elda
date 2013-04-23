@@ -273,6 +273,7 @@
   <modules>
     <module>lda</module>
     <module>deliver-elda</module>
+    <module>elda-standalone</module>
     <module>elda-system-tests</module>
     <module>elda-testing-webapp</module>
   </modules>

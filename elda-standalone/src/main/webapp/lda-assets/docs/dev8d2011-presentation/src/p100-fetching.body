@@ -1,0 +1,21 @@
+<h2>Fetching Elda</h2>
+
+<p style="font-size: 120%">
+Elda is implemented in Java, so the system hosting
+it needs Java installed.
+</p>
+
+<p class="chunky">
+You may clone the Elda repository:
+<div class="chunky" style="margin-left: 2ex; color: blue">
+hg clone https://elda.googlecode.com/hg/ elda  
+</div>
+</p>
+
+<p class="chunky">
+You may download a complete Elda demo jar:
+<div class="chunky" style="margin-left: 2ex; color: blue">
+http://code.google.com/p/elda/downloads/list
+</div>
+</p>
+

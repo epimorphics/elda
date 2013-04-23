@@ -1,0 +1,76 @@
+@base <http://example.com/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/>.
+@prefix api: <http://purl.org/linked-data/api/vocab#> .
+@prefix gc: <http://puelia-php.googlecode.com/svn/trunk/documents/config.ttl#> .
+@prefix rel: <http://vocab.org/relationship/> .
+@prefix spec: <http://www.epimorphics.com/examples/specSchools#> .
+@prefix climb: <http://climb.dataincubator.org/vocabs/climb/> .
+
+@prefix extras: <http://www.epimorphics.com/vocabularies/lda#> .
+
+<#MyMountainAPI> a api:API 
+	; rdfs:label "Test API with mountain theme"@en 
+	; api:maxPageSize 50
+	; api:defaultPageSize 10 
+	; api:endpoint 
+		[ a api:ItemEndpoint 
+		; api:uriTemplate "/Mountain/{name}" 
+		; api:itemTemplate "http://dbpedia.org/resource/{name}" 
+		]
+		, <#routesEndpoint> 
+		, <#HVSRoutes> 
+	; api:sparqlEndpoint <http://api.talis.com/stores/kwijibo-dev3/services/sparql> 
+	; api:defaultViewer api:describeViewer 
+        ; api:formatter
+                [a api:XsltFormatter
+                ; api:name "html"
+                ; api:stylesheet "lda-assets/xslt/result-osm.xsl"
+                ; api:mimeType "text/html; charset=utf-8"
+                ]        
+	; api:variable
+                [api:name "activeImageBase"; api:value "/elda/images/green/16x16"]
+                , [api:name "inactiveImageBase"; api:value "/elda/images/grey/16x16"]
+                , [api:name "_resourceRoot"; api:value "/elda/"]
+                , [api:name "webapp"; api:value "/elda"]
+	.
+	
+<#HVSRoutes> a api:ListEndpoint 
+	; api:uriTemplate "/routes/HVS" 
+	; api:selector 
+		[ api:parent <#routesEndpoint> 
+		; api:filter "type=Route", "grading.value=HVS"
+		] 
+	.
+
+<#routesEndpoint> a api:ListEndpoint 
+	; api:uriTemplate "/routes" 
+	; api:selector 
+		[ api:filter "type=Route" 
+		; api:orderBy "STR(?item)"
+		] 
+	.
+
+# Vocabulary.
+
+climb:grading a owl:ObjectProperty
+	; rdfs:label "grading"
+	.
+
+climb:value a owl:ObjectProperty
+	; rdfs:label "value"
+	.
+
+climb:Route a owl:Class
+	; rdfs:label "Route"
+	.
+
+rdf:type a owl:ObjectProperty
+	; rdfs:label "type"
+	.
+

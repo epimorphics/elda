@@ -8,31 +8,13 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
       <fileSet>
-          <directory>jetty-distribution-7.0.2.v20100331</directory>
-          <excludes>
-              <exclude>LICENSE-APACHE-2.0.txt</exclude>
-              <exclude>LICENSE-ECLIPSE-1.0.html</exclude>
-              <exclude>javadoc/**</exclude>
-              <exclude>README.txt</exclude>
-              <exclude>VERSION.txt</exclude>
-              <exclude>notice.html</exclude>
-              <exclude>about.html</exclude>  
-              <exclude>webapps/**</exclude>
-              <exclude>contexts*/**</exclude>            
-          </excludes>
-          <outputDirectory>/</outputDirectory>
-      </fileSet>      
-      <fileSet>
           <directory>../Notelets</directory>
           <outputDirectory>webapps/elda/docs/Notelets</outputDirectory>
-      </fileSet>
+  	</fileSet>
+
       <fileSet>
         <directory>../ReleaseNotes</directory>
         <outputDirectory>webapps/elda/docs/ReleaseNotes</outputDirectory>
-      </fileSet>
-      <fileSet>
-          <directory>jetty-distribution-7.0.2.v20100331/javadoc</directory>
-          <outputDirectory>jetty-javadoc</outputDirectory>          
       </fileSet>
       
       <fileSet>
@@ -50,30 +32,6 @@
       </fileSet>
   </fileSets>
   <files>
-    <file>
-        <source>jetty-distribution-7.0.2.v20100331/LICENSE-APACHE-2.0.txt</source>
-        <destName>jetty-LICENSE-APACHE-2.0.txt</destName>
-    </file>
-    <file>
-        <source>jetty-distribution-7.0.2.v20100331/LICENSE-ECLIPSE-1.0.html</source>
-        <destName>jetty-LICENSE-ECLIPSE-1.0.html</destName>
-    </file>
-    <file>
-        <source>jetty-distribution-7.0.2.v20100331/README.txt</source>
-        <destName>jetty-README.txt</destName>
-    </file>
-    <file>
-        <source>jetty-distribution-7.0.2.v20100331/VERSION.txt</source>
-        <destName>jetty-VERSION.txt</destName>
-    </file>
-    <file>
-        <source>jetty-distribution-7.0.2.v20100331/notice.html</source>
-        <destName>jetty-notice.html</destName>
-    </file>
-    <file>
-        <source>jetty-distribution-7.0.2.v20100331/about.html</source>
-        <destName>jetty-about.html</destName>
-    </file>
     
     <file>
         <source>../LICENCE</source>
@@ -82,10 +40,6 @@
     <file>
         <source>../LICENCE.html</source>
         <destName>elda-LICENCE.html</destName>
-    </file>
-    <file>
-        <source>../README-demo.text</source>
-        <destName>elda-README-demo.text</destName>
     </file>
   </files>  
   

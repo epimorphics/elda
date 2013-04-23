@@ -1,0 +1,118 @@
+<html>
+<head>
+<title>dev8d Elda presentation</title>
+<link href="style.css" type="text/css" rel="stylesheet"></link>
+</head>
+<body>
+<div class="main">
+
+<div class="heading">
+<a href="http://www.epimorphics.com">
+<img class="logo" src="epilogo-240.png">
+</a>
+<h1>Elda</h1>
+<h2>An implementation of the Linked Data API</h2>
+</div>
+
+<a href="p000-and-so-it-begins.html">FIRST</a>
+<a href="p070-lda-spec.html">PREV</a>
+<a href="p090-elda.html">NEXT</a>
+<h2>Fragments of an LDA spec</h2>
+
+<pre style="font-size: 120%">
+spec:viewerShort
+  a api:Viewer ;
+  api:name "short" ;
+  api:property rdf:type, 
+    rdfs:label, 
+    school:establishmentStatus,
+    school:typeOfEstablishment.
+
+spec:viewerMedium
+  a api:Viewer ;
+  api:name "medium" ;
+  api:property rdf:type, 
+    rdfs:label, 
+    school:establishmentStatus, 
+    school:typeOfEstablishment, 
+    school:schoolCapacity, 
+    school:phaseOfEducation, 
+    school:districtAdministrative, 
+    school:parliamentaryConstituency, 
+    school:administrativeWard, 
+    school:nurseryProvision .
+
+## API description
+
+spec:api
+  a api:API ;
+  rdfs:label "Edubase API"@en;
+  foaf:primaryTopic school:theUkSchoolsSystemWhichNeedsAProperURI;
+  api:maxPageSize "50";
+  api:defaultPageSize "10" ;
+  api:sparqlEndpoint &lt;http://services.data.gov.uk/education/sparql&gt; ;
+  api:endpoint 
+     spec:schools
+     , spec:schoolsPrimary
+     , spec:schoolsSecondary
+     , spec:schoolsPrimaryDistrict
+     , spec:schoolsSecondaryDistrict 
+     .
+    
+## Endpoint
+
+#List all schools
+spec:schools
+  a api:ListEndpoint ;
+  api:uriTemplate "/education/schools" ;
+  api:selector [ 
+    api:filter "type=School"
+  ] ;
+  api:defaultViewer api:describeViewer ;
+  api:viewer spec:viewerShort ;
+  api:viewer spec:viewerMedium ;
+  api:viewer [ 
+    api:name "geo" ;
+    api:property rdf:type, 
+        rdfs:label, 
+        school:establishmentStatus, 
+        geo:lat, 
+        geo:long
+  ]
+  .
+
+## List all primary schools
+spec:schoolsPrimary
+  a api:ListEndpoint ;
+  api:uriTemplate "/education/schools/primary" ;
+  api:selector spec:schoolsPrimarySelector ;
+  api:defaultViewer spec:viewerShort
+  .
+
+rdf:type
+  api:label "type" .
+  
+geo:lat
+      api:label "lat" .
+
+school:openDate
+      api:label "openDate" .
+
+school:EICLSU
+      a       owl:DatatypeProperty ;
+      rdfs:range xsd:boolean ;
+      api:label "EICLSU" .
+
+school:establishmentStatus
+      api:label "establishmentStatus" .
+</pre>
+<div class="footer">
+<hr>
+&copy; Copyright 2011 Epimorphics Limited. For licencing conditions see
+<a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
+</div>
+</div>
+
+</body>
+</html>
+

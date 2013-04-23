@@ -1,0 +1,16 @@
+<h2>What is Elda?</h2>
+
+<pre style="font-size: 200%">
+The Epimorphics open-source 
+implementation of the Linked 
+Data API.
+
+  elda.googlecode.com
+
+Currently preview release (&lt; 1.*)
+while shaking it down.
+
+Used within Epimorphics; valuable 
+feedback from Stuart Williams and 
+Ian Dickinson.
+</pre>

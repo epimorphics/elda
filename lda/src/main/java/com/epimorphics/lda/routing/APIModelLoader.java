@@ -10,7 +10,7 @@ public class APIModelLoader implements ModelLoader {
 
     final String baseFilePathLocal;
 
-    APIModelLoader(String base) {
+    public APIModelLoader(String base) {
         baseFilePathLocal = base;
     }
 

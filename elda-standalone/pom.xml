@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>elda</artifactId>
+    <groupId>com.epimorphics.lda</groupId>
+    <version>1.2.23-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.epimorphics.lda</groupId>
+  <artifactId>elda-standalone</artifactId>
+  <packaging>war</packaging>
+  <name>elda-standalone</name>
+  <version>1.2.23-SNAPSHOT</version>
+  <description>instant Elda webapp</description>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.epimorphics.lda</groupId>
+      <artifactId>lda</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.2</version>
+    </dependency>
+  
+    <dependency>
+    	<groupId>com.epimorphics.lda</groupId>
+    	<artifactId>lda</artifactId>
+    	<version>${project.version}</version>
+    	<classifier>sources</classifier>
+    	<scope>compile</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <finalName>elda-standalone</finalName>
+    <plugins>
+        <plugin>
+            <artifactId>maven-jetty-plugin</artifactId>
+	    <groupId>org.mortbay.jetty</groupId>
+	    <version>6.1.25</version>
+        </plugin>  
+        
+        <!--  assemble the final jar file -->
+        <plugin>
+	        <!-- NOTE: We don't need a groupId specification because the group is
+	             org.apache.maven.plugins ...which is assumed by default.
+	         -->
+	        <artifactId>maven-assembly-plugin</artifactId>
+	        <version>2.2.1</version>
+	        <configuration>	
+	            <descriptors>
+	                <descriptor>src/assemble/distribution.xml</descriptor>
+	            </descriptors>
+	            <finalName>elda-standalone-${project.version}</finalName>
+	            <appendAssemblyId>false</appendAssemblyId>
+	            <archive>
+	                <manifestEntries>
+                        <Main-Class>cmd.run</Main-Class>
+                    </manifestEntries>
+	            </archive>
+	        </configuration>
+	        <executions>
+	            <execution>
+	                <phase>package</phase>
+	                <goals>
+	                    <goal>single</goal>
+	                </goals>
+	            </execution>
+	        </executions>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.6</version>
+          <configuration>
+              <skip>true</skip>
+          </configuration>
+        </plugin>
+    </plugins>
+  </build>
+
+</project>

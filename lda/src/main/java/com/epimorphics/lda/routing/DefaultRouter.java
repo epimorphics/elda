@@ -27,6 +27,9 @@ import com.epimorphics.util.URIUtils;
 */
 public class DefaultRouter implements Router {
 	
+	public DefaultRouter() {
+	}
+	
 	/**
 	    Answer the (endpoint, bindings) Match for the given path,
 	    or null if there isn't one.
@@ -149,6 +152,13 @@ public class DefaultRouter implements Router {
 		if (base == null) return uriTail;
 		String baseTail = base.replaceFirst( "https?://[^/]*/", "/" );
 		return uriTail.startsWith( baseTail ) ? "/" + uriTail.substring( baseTail.length() ) : uriTail;
+	}
+	
+	@Override public int countTemplates() {
+		int result = 0;
+		for (Map.Entry<String, Searcher> e: searchers.entrySet()) 
+			result += e.getValue().self.templates.size();
+		return result;
 	}
 
 	@Override public List<String> templates() {

@@ -1,0 +1,1187 @@
+#
+# tiny education config template. 
+#
+
+# Assorted prefix declarations. Some of them are for the structuring
+# of the API config, others are for the vocabulary definitions.
+#
+
+@prefix spec:               <http://education.data.gov.uk/api-config#> .
+@prefix api:                <http://purl.org/linked-data/api/vocab#> .
+@prefix dc:                 <http://purl.org/dc/elements/1.1/> .
+
+@prefix foaf:               <http://xmlns.com/foaf/0.1/> .
+@prefix geo:                <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix os-admingeo:        <http://data.ordnancesurvey.co.uk/ontology/admingeo/> .
+
+@prefix owl:                <http://www.w3.org/2002/07/owl#> .
+@prefix school:             <http://education.data.gov.uk/def/school/> .
+@prefix foundation:         <http://statistics.data.gov.uk/def/Foundation/> .
+@prefix spatialrelations:   <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+
+@prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:                <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:               <http://www.w3.org/2004/02/skos/core#> .
+
+@prefix so:                 <http://education.data.gov.uk/def/school/> .
+
+# The elda namespace/prefix is for Elda extensions to the LDA specification.
+
+@prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
+
+#############################################################################
+# API config
+
+spec:tiny-education-api a api:API 
+	; rdfs:label "Tiny Edubase API"@en
+	# Name the SPARQL endpoint which supplies the data we present
+	; api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query>
+	# the page size can't be set higher than this 
+	; api:maxPageSize 50
+	# and this is the default page size
+	; api:defaultPageSize 10 
+	# the viewer to use by default, a DESCRIBE plus labels for all the
+	# resources that have them.
+	; api:defaultViewer api:labelledDescribeViewer
+	# the default formatter is the XSLT formatter defined above 
+	; api:defaultFormatter spec:HtmlFormatter 
+	# one endpoint in this config
+	; api:endpoint spec:schools 
+	#
+	# Elda magic follows
+	#
+	# tells Elda where the SPARQL endpoint's form page is, if it has one
+	; api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"]
+	# paths which are rewritten away from education.data.gov.uk
+	; api:variable [api:name "_stagePattern"; api:value "^/doc/school$"]
+	.
+    
+# Endpoint definitions: just the one, list all schools
+
+spec:schools a api:ListEndpoint 
+	; rdfs:label "Schools" 
+	; api:uriTemplate "/doc/school" 
+	; api:selector [api:filter "type=School&establishmentStatus.label=Open"]
+	; api:defaultViewer spec:viewerShort 
+	; api:viewer
+	    spec:viewerShort
+	    , spec:viewerMedium
+	    , spec:viewerLocation
+	.		
+	
+# Tells Elda that the SPARQL endpoint understands nested SELECTS in SPARQL.
+# This can significantly reduce the size of queries.
+
+<http://education.data.gov.uk/sparql/education/query> elda:supportsNestedSelect true.
+
+# There are several defined viewers in this config. Most noteably, using 
+# viewerLocation will add lat/long easting/northing location values to
+# the view, which will allow the map to be displayed.
+
+spec:viewerShort
+	a api:Viewer 
+	; api:name "short" 
+	; api:properties 
+		"label,uniqueReferenceNumber,establishmentNumber"
+		, "typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label" 
+	.
+
+spec:viewerMedium
+	a api:Viewer 
+	; api:name "medium" 
+	; api:properties 
+		"label,uniqueReferenceNumber,establishmentNumber"
+		, "typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label"
+		, "address.address1,address.address2,address.address3"
+		, "address.town,address.region,address.postcode"
+		, "prefEmail,altEmail,notes,openDate,schoolCapacity,PFI" 
+	.
+
+spec:viewerLocation
+	a api:Viewer 
+	; api:name "location" 
+	; api:properties 
+		"label,uniqueReferenceNumber,establishmentNumber"
+		, "typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label"
+		, "address.address1,address.address2,address.address3"
+		, "address.town,address.region,address.postcode,lat,long,easting,northing"
+		, "censusAreaStatisticWard.label,districtAdministrative.label,localAuthority.label"
+		, "LSOA.label,MSOA.label,LLSC.label,parliamentaryConstituency.label"
+		, "administrativeWard.label,urbanRural.label,hasGOR.label" .
+
+#
+# This XSLT formatter produces rich HTML from the viewer properties.
+#
+
+spec:HtmlFormatter a api:XsltFormatter 
+	; api:name "html" 
+	; api:mimeType "text/html; charset=utf-8" 
+	; api:stylesheet "lda-assets/xslt/result-osm.xsl"
+	.
+
+############################################################################
+# The rest of this config is vocabulary definitions.
+
+rdf:Property api:label "Property" .
+
+rdf:type api:label "type" 
+    ; api:multiValued true 
+    ; rdfs:range rdfs:Class 
+    .
+
+rdf:value api:label "value" .
+
+rdfs:Class api:label "Class" .
+
+rdfs:label api:label "label" ; api:multiValued true .
+
+rdfs:seeAlso api:label "seeAlso" ; api:multiValued true .
+
+rdfs:comment api:label "comment" .
+
+rdfs:range api:label "range" .
+
+rdfs:domain api:label "domain" .
+
+rdfs:isDefinedBy api:label "isDefinedBy" .
+
+rdfs:subClassOf api:label "subClassOf" .
+
+rdfs:subPropertyOf api:label "subPropertyOf" .
+
+owl:sameAs api:label "sameAs" .
+
+owl:imports api:label "imports" .
+
+owl:versionInfo api:label "versionInfo" .
+
+foaf:isPrimaryTopicOf a rdf:Property
+    ; api:label "isPrimaryTopicOf"
+    .
+    
+# appears (incorrectly) in some transport data. 
+skos:prefName api:label "prefName".
+
+skos:Concept api:label "Concept" .
+
+skos:ConceptScheme api:label "ConceptScheme" .
+
+skos:prefLabel api:label "prefLabel" .
+
+skos:altLabel api:label "altLabel" 
+	; api:multiValued true .
+
+skos:note api:label "note" .
+
+skos:notation api:label "notation" .
+
+skos:scopeNote api:label "scopeNote" .
+
+skos:topConceptOf api:label "topConceptOf" 
+	; rdfs:range rdfs:Resource
+	.
+
+skos:hasTopConcept api:label "topConcept"  
+	; rdfs:range rdfs:Resource 
+	; api:multiValued true 
+	.
+
+skos:broader api:label "broader"  
+	; rdfs:range rdfs:Resource
+	.
+
+skos:narrower api:label "narrower"  
+	; rdfs:range rdfs:Resource
+	; api:multiValued true 
+	.
+
+geo:lat
+  a owl:DatatypeProperty 
+  ; api:label "lat" 
+  ; rdfs:range xsd:decimal .
+
+school:openDate
+  a owl:DatatypeProperty 
+  ; api:label "openDate" 
+  ; rdfs:range xsd:date .
+
+school:EICLSU
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:boolean 
+  ; api:label "EICLSU" .
+
+school:highDayFee
+  api:label "highDayFee" 
+  ; rdfs:range rdfs:Resource .
+
+school:admissionsPolicy
+  api:label "admissionsPolicy" 
+  ; rdfs:range rdfs:Resource .
+
+school:dateofLastISIVisit
+  a owl:DatatypeProperty 
+  ; api:label "dateofLastISIVisit" 
+  ; rdfs:range xsd:date .
+
+school:region
+  api:label "region" 
+  ; rdfs:range rdfs:Resource  .
+
+school:nextHMIorISIvisit
+  a owl:DatatypeProperty 
+  ; api:label "nextHMIorISIvisit" 
+  ; rdfs:range xsd:date .
+
+school:teenageMotherPlaces
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "teenageMotherPlaces" .
+
+school:girls18
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "girls18" .
+
+school:boys10
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "boys10" .
+
+school:PFI
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:boolean 
+  ; api:label "PFI" .
+
+school:HP_Leading_Option
+  api:label "HP_Leading_Option" .
+
+school:TypeOfEstablishment_City_Technology_College
+  api:label "Type_City_Technology_College" .
+
+school:TypeOfEstablishment_Foundation_Special_School
+  api:label "Type_Foundation_Special_School" .
+
+school:parliamentaryConstituency
+  api:label "parliamentaryConstituency" 
+  ; rdfs:range rdfs:Resource  .
+
+school:TypeOfEstablishment_European_Schools
+  api:label "Type_European_Schools" .
+
+spatialrelations:northing
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "northing" .
+
+school:association
+  api:label "association"  
+  ; rdfs:range rdfs:Resource .
+
+school:LSOA
+  api:label "LSOA" 
+  ; rdfs:range rdfs:Resource  .
+
+school:lastChangedDate
+  a owl:DatatypeProperty 
+  ; api:label "lastChangedDate" 
+  ; rdfs:range xsd:date .
+
+school:administrativeWard
+  api:label "administrativeWard"  
+  ; rdfs:range rdfs:Resource .
+
+school:boys9
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "boys9" .
+
+school:trust
+  api:label "trust"  
+  ; rdfs:range rdfs:Resource .
+
+school:UKPRN
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "UKPRN" .
+
+school:totalHoursPerWeekPTStaff
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "totalHoursPerWeekPTStaff" .
+
+school:mainSpecialism
+  api:label "mainSpecialism" 
+  ; rdfs:range rdfs:Resource  .
+
+school:Foundation
+  api:label "Foundation" .
+
+school:districtAdministrative
+  api:label "districtAdministrative"
+  ; rdfs:range rdfs:Resource .
+
+school:girls16
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "girls16" .
+
+school:phaseOfEducation
+  api:label "phaseOfEducation"  
+  ; rdfs:range rdfs:Resource .
+
+school:town
+  # range is literal
+  api:label "town" .
+
+school:EICGroup
+  api:label "EICGroup"  
+  ; rdfs:range rdfs:Resource .
+
+school:LLSC
+  api:label "LLSC"  
+  ; rdfs:range rdfs:Resource .
+
+school:approvedNumberBoardersSpecial
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "approvedNumberBoardersSpecial" .
+
+school:IndependentSchoolType_Steiner
+  api:label "IndependentSchoolType_Steiner" .
+
+school:TypeOfEstablishment_Other_Independent_Special_School
+  api:label "Type_Other_Independent_Special_School" .
+
+school:boarders
+  api:label "boarders"  
+  ; rdfs:range rdfs:Resource .
+
+school:TypeOfEstablishment_Special_College
+  api:label "Type_Special_College" .
+
+school:totalGirlBoarders
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "totalGirlBoarders" .
+
+school:websiteAddress
+  # range is literal
+  api:label "websiteAddress" .
+
+school:boys19plus
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "boys19plus" .
+
+school:dateofLastFPVisit
+  a owl:DatatypeProperty 
+  ; api:label "dateofLastFPVisit" 
+  ; rdfs:range xsd:date .
+
+geo:long
+  a owl:DatatypeProperty 
+  ; api:label "long" 
+  ; rdfs:range xsd:decimal .
+
+school:hasTeenageMothers
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:boolean 
+  ; api:label "hasTeenageMothers" .
+
+school:girls17
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "girls17" .
+
+school:PTGirls3
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "PTGirls3" .
+
+school:PTBoys4c
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "PTBoys4c" .
+
+school:dateofLastOfstedVisit
+  a owl:DatatypeProperty 
+  ; api:label "dateofLastOfstedVisit" 
+  ; rdfs:range xsd:date .
+
+school:secondarySpecialism
+  api:label "secondarySpecialism"  
+  ; rdfs:range rdfs:Resource .
+
+school:PTGirls4c
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "PTGirls4c" .
+
+school:PTGirls2andUnder
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "PTGirls2andUnder" .
+
+school:burnhamReport
+  api:label "burnhamReport" 
+  ; rdfs:range rdfs:Resource  .
+
+school:hasGOR
+  api:label "hasGOR"  
+  ; rdfs:range rdfs:Resource .
+
+school:boys14
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "boys14" .
+
+school:address1
+  # range is literal
+  api:label "address1" .
+
+school:boys6
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "boys6" .
+
+school:beacon
+  api:label "beacon"  
+  ; rdfs:range rdfs:Resource .
+
+school:vcard
+  api:label "vcard"  
+  ; rdfs:range rdfs:Resource .
+
+school:censusRecord
+  api:label "censusRecord"  
+  ; rdfs:range rdfs:Resource .
+
+school:address
+  api:label "address"  
+  ; rdfs:range rdfs:Resource .
+
+school:TypeOfEstablishment_Community_School
+  api:label "Type_Community_School" .
+
+school:totalPupilsInPublicCare
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "totalPupilsInPublicCare" .
+
+spatialrelations:easting
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "easting" .
+
+school:PTGirls4b
+  a       owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "PTGirls4b" .
+
+school:numberOfPupils
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "numberOfPupils" .
+
+school:TypeOfEstablishment_Welsh_Establishment
+      api:label "Type_Welsh_Establishment" .
+
+school:placesPRU
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "placesPRU" .
+
+school:TypeOfEstablishment_Further_Education
+      api:label "Type_Further_Education" .
+
+school:furtherEducationType
+      api:label "furtherEducationType"  
+  ; rdfs:range rdfs:Resource .
+
+school:girls19plus
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls19plus" .
+
+school:boys13
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys13" .
+
+school:boys5
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys5" .
+
+school:address2
+  # range is literal
+      api:label "address2" .
+
+school:ofstedSpecialMeasures
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "ofstedSpecialMeasures" .
+
+school:boys4a
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys4a" .
+
+school:compSchoolAge
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "compSchoolAge" .
+
+school:PTBoys4a
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "PTBoys4a" .
+
+
+school:marketingOptInOut
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "marketingOptInOut" .
+
+school:PTGirls4a
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "PTGirls4a" .
+
+school:EIC
+      api:label "EIC"  
+  ; rdfs:range rdfs:Resource .
+
+school:nurseryProvision
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "nurseryProvision" .
+
+school:totalPupilsFullTime
+      api:label "totalPupilsFullTime"  
+  ; rdfs:range rdfs:Resource .
+
+school:censusAreaStatisticWard
+      api:label "censusAreaStatisticWard"  
+  ; rdfs:range rdfs:Resource .
+
+school:specialPupils
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "specialPupils" .
+
+school:address3
+  # range is literal
+      api:label "address3" .
+
+school:boys12
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys12" .
+
+school:notes
+  # range is literal
+      api:label "notes" .
+
+school:boys4b
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys4b" .
+
+school:boys8
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys8" .
+
+school:statutoryHighAge
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "statutoryHighAge" .
+
+school:TypeOfEstablishment_Voluntary_Controlled_School
+      api:label "Type_Voluntary_Controlled_School" .
+
+school:postcode
+  # range is literal
+      api:label "postcode" .
+
+school:actionFP
+      api:label "actionFP"  
+  ; rdfs:range rdfs:Resource .
+
+school:closeDate
+  a owl:DatatypeProperty 
+  ; rdfs:range xsd:date 
+  ; api:label "closeDate" .
+
+school:leadershipIncentiveGrant
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "leadershipIncentiveGrant" .
+
+school:PTBoys4b
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "PTBoys4b" .
+
+school:EICCLS
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "EICCLS" .
+
+school:totalBoyBoarders
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "totalBoyBoarders" .
+
+school:TypeOfEstablishment_Sixth_Form_Centres
+      api:label "Type_Sixth_Form_Centres" .
+
+school:totalStaffPartTime
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "totalStaffPartTime" .
+
+school:registeredEY
+      api:label "registeredEY"  
+  ; rdfs:range rdfs:Resource .
+
+school:admingeo
+  # unknown
+      api:label "admingeo" .
+
+school:boys11
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys11" .
+
+school:lowBoardFee
+      api:label "lowBoardFee"  
+  ; rdfs:range rdfs:Resource .
+
+school:FTProv
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "FTProv" .
+
+school:boys7
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys7" .
+
+school:hasCCF
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "hasCCF" .
+
+school:boys4c
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys4c" .
+
+school:TypeOfEstablishment_Other_Independent_School
+      api:label "Type_Other_Independent_School" .
+
+school:boys2
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys2" .
+
+school:establishmentNumber
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "establishmentNumber" .
+
+school:dateofLastWelfareVisit
+  a owl:DatatypeProperty 
+  ; rdfs:range xsd:date 
+  ; api:label "dateofLastWelfareVisit" .
+
+school:gender
+      api:label "gender"  
+  ; rdfs:range rdfs:Resource .
+
+school:IndependentSchoolType_Music
+      api:label "IndependentSchoolType_Music" .
+
+school:girls10
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls10" .
+
+school:burnhamGroup
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "burnhamGroup" .
+
+school:girls2andUnder
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls2andUnder" .
+
+school:TrainingSchool
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean .
+
+dc:date
+  a owl:DatatypeProperty 
+  ; rdfs:range xsd:date 
+  ; api:label "dated" .
+
+school:ASCHighestAge
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "ASCHighestAge" .
+
+school:boys18
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys18" .
+
+school:totalPupilsPartTime
+      api:label "totalPupilsPartTime"  
+  ; rdfs:range rdfs:Resource .
+
+school:FSM
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "FSM" .
+
+school:TypeOfEstablishment_Higher_Education_Institutions
+      api:label "Type_Higher_Education_Institutions" .
+
+school:girls5
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls5" .
+
+school:uniqueReferenceNumber
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "uniqueReferenceNumber" .
+
+school:IndependentSchoolType_Unusual
+      api:label "IndependentSchoolType_Unusual" .
+
+school:EBD
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "EBD" .
+
+school:edByOther
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "edByOther" .
+
+school:girls3
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls3" .
+
+school:girls11
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls11" .
+
+school:typeOfEstablishment
+      api:label "typeOfEstablishment"  
+  ; rdfs:range rdfs:Resource .
+
+school:TypeOfEstablishment_LA_Nursery_School
+      api:label "Type_LA_Nursery_School" .
+
+school:establishmentName
+  # range is literal
+      api:label "establishmentName" .
+
+school:eaz
+      api:label "eaz" 
+  ; rdfs:range rdfs:Resource  .
+
+school:IndependentSchoolType_Tutorial
+      api:label "IndependentSchoolType_Tutorial" .
+
+school:ASCLowestAge
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "ASCLowestAge" .
+
+school:sen
+      api:label "sen"  
+  ; rdfs:range rdfs:Resource .
+
+school:FSMPercentage
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "FSMPercentage" .
+
+school:SENStat
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "SENStat" .
+
+school:boys17
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys17" .
+
+school:localAuthority
+      api:label "localAuthority"  
+  ; rdfs:range rdfs:Resource .
+
+school:IndependentSchoolType_Montessori_School
+      api:label "IndependentSchoolType_Montessori_School" .
+
+school:inspectorate
+      api:label "inspectorate"  
+  ; rdfs:range rdfs:Resource .
+
+school:Trust
+      api:label "Trust" .
+
+school:previousLA
+      api:label "previousLA" 
+  ; rdfs:range rdfs:Resource  .
+
+school:accomChange
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "accomChange" .
+
+school:TypeOfEstablishment_Playing_for_Success_Centres
+      api:label "Type_Playing_for_Success_Centres" .
+
+school:boys16
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys16" .
+
+school:CensusRecord
+      api:label "CensusRecord" .
+
+school:specialClasses
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "specialClasses" .
+
+school:lowDayFee
+      api:label "lowDayFee"  
+  ; rdfs:range rdfs:Resource  .
+
+school:girls7
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls7" .
+
+school:TypeOfEstablishment_Independent_School_Approved_for_SEN_Pupils
+      api:label "Type_Independent_School_Approved_for_SEN_Pupils" .
+
+school:reasonEstablishmentOpened
+      api:label "reasonEstablishmentOpened"  
+  ; rdfs:range rdfs:Resource .
+
+school:boys3
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys3" .
+
+school:investorInPeople
+      api:label "investorInPeople"  
+  ; rdfs:range rdfs:Resource .
+
+school:statutoryLowAge
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "statutoryLowAge" .
+
+school:eiCActionZone
+      api:label "eiCActionZone"  
+  ; rdfs:range rdfs:Resource .
+
+school:SCUpreferredemail
+  # range is luiteral
+      api:label "prefEmail" .
+
+school:freshStart
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "freshStart" .
+
+school:SENPRU
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "SENPRU" .
+
+school:boys15
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "boys15" .
+
+school:dateofLastBridgeVisit
+  a owl:DatatypeProperty 
+  ; rdfs:range xsd:date 
+  ; api:label "dateofLastBridgeVisit" .
+
+school:TypeOfEstablishment_Voluntary_Aided_School
+      api:label "Type_Voluntary_Aided_School" .
+
+school:previousEstablishmentNumber
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "previousEstablishmentNumber" .
+
+school:TypeOfEstablishment_Community_Special_School
+      api:label "Type_Community_Special_School" .
+
+school:IndependentSchoolType_Foreign
+      api:label "IndependentSchoolType_Foreign" .
+
+school:TypeOfEstablishment_Secure_Units
+      api:label "Type_Secure_Units" .
+
+school:girls6
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls6" .
+
+school:SCUAlternativeEmail
+  # range is literal
+      api:label "altEmail" .
+
+school:officialSixthForm
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "officialSixthForm" .
+
+school:independentSchoolType
+      api:label "independentSchoolType"  
+  ; rdfs:range rdfs:Resource .
+
+school:TypeOfEstablishment_EY_Setting
+      api:label "Type_EY_Setting" .
+
+school:TypeOfEstablishment_Legacy_types
+      api:label "Type_Legacy_types" .
+
+school:TypeOfEstablishment_Institution_funded_by_other_Government_Department
+      api:label "Type_Institution_funded_by_other_Government_Department" .
+
+school:FEHEIdentifier
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "FEHEIdentifier" .
+
+rdfs:label
+      api:label "label" .
+
+school:girls14
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls14" .
+
+school:BoardingEstablishment
+      api:label "BoardingEstablishment" .
+
+school:establishmentStatus
+      api:label "establishmentStatus"  
+  ; rdfs:range rdfs:Resource .
+
+school:actionGEN
+  # range is literal
+      api:label "actionGEN" .
+
+school:ofstedLastInsp
+  a owl:DatatypeProperty 
+  ; rdfs:range xsd:date 
+  ; api:label "ofstedLastInsp" .
+
+school:superannuationCategory
+      api:label "superannuationCategory"  
+  ; rdfs:range rdfs:Resource .
+
+school:TypeOfEstablishment_Foundation_School
+      api:label "Type_Foundation_School" .
+
+school:girls9
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls9" .
+
+school:highBoardFee
+      api:label "highBoardFee"  
+  ; rdfs:range rdfs:Resource .
+
+school:totalStaffFullTime
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "totalStaffFullTime" .
+
+school:TypeOfEstablishment_Pupil_Referral_Unit
+      api:label "Type_Pupil_Referral_Unit" .
+
+school:TypeOfEstablishment_Miscellaneous
+      api:label "Type_Miscellaneous" .
+
+school:girls15
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls15" .
+
+school:TypeOfEstablishment_Service_Childrens_Education
+      api:label "Type_Service_Childrens_Education" .
+
+school:PTBoys3
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "PTBoys3" .
+
+school:girls8
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls8" .
+
+school:pupilTeacherRatio
+  # range is literal
+      api:label "pupilTeacherRatio" .
+
+school:PTBoys2andUnder
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "PTBoys2andUnder" .
+
+school:urbanRural
+      api:label "urbanRural"  
+  ; rdfs:range rdfs:Resource .
+
+
+school:reasonEstablishmentClosed
+      api:label "reasonEstablishmentClosed"  
+  ; rdfs:range rdfs:Resource .
+
+school:dateofLastSISVisit
+      api:label "dateofLastSISVisit" 
+      ; rdfs:range xsd:date .
+
+school:girls12
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls12" .
+
+school:girls4c
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls4c" .
+
+school:federation
+      api:label "federation"  
+  ; rdfs:range rdfs:Resource .
+
+school:School
+      api:label "School" .
+
+school:CensusRecord
+      api:label "CensusRecord" .
+
+school:numberOfBoys
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "numberOfBoys" .
+
+school:charity
+      api:label "charity"  
+  ; rdfs:range rdfs:Resource .
+
+school:IndependentSchoolType_Arts
+      api:label "IndependentSchoolType_Arts" .
+
+school:religiousCharacter
+      api:label "religiousCharacter"  
+  ; rdfs:range rdfs:Resource .
+
+school:diocese
+      api:label "diocese"  
+  ; rdfs:range rdfs:Resource .
+
+school:TypeOfEstablishment_Offshore_Schools
+      api:label "Type_Offshore_Schools" .
+
+school:TypeOfEstablishment_Non-Maintained_Special_School
+      api:label "Type_Non-Maintained_Special_School" .
+
+school:MSOA
+      api:label "MSOA"  
+  ; rdfs:range rdfs:Resource .
+
+school:Diocese
+      api:label "Diocese"  
+  ; rdfs:range rdfs:Resource .
+
+school:earlyExcellence
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "earlyExcellence" .
+
+school:girls4b
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls4b" .
+
+school:actionWEL
+  # range is literal
+      api:label "actionWEL" .
+
+school:girls13
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls13" .
+
+school:trustSchool
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:boolean 
+      ; api:label "trustSchool" .
+
+school:numberOfGirls
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "numberOfGirls" .
+
+school:girls4a
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "girls4a" .
+
+school:schoolCapacity
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "schoolCapacity" .
+
+school:TypeOfEstablishment_Academies
+      api:label "Type_Academies" .
+
+school:SENNoStat
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "SENNoStat" .
+
+school:EYGovernmentFundedChildren
+      a       owl:DatatypeProperty 
+      ; rdfs:range xsd:int 
+      ; api:label "EYGovernmentFundedChildren" .
+
+foundation:datum
+	api:label "datum" .
+
+foundation:val
+  a owl:DatatypeProperty 
+  ; rdfs:range xsd:int 
+  ; api:label "val" .
+
+foundation:date
+  a owl:DatatypeProperty 
+  ; rdfs:range xsd:date 
+  ; api:label "date" .
+
+os-admingeo:hasCensusCode
+  a owl:DatatypeProperty 
+  ; api:label "code" .

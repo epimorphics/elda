@@ -137,7 +137,7 @@ public class ServletUtils {
 	}
 
 	// TODO duplication of information. should do better sometime.
-	private static boolean isSpecialName( String specPath ) {
+	public static boolean isSpecialName( String specPath ) {
 		return specPath.startsWith( Container.LOCAL_PREFIX ) 
 			|| specPath.startsWith( TDBManager.PREFIX )
 			;
@@ -168,7 +168,7 @@ public class ServletUtils {
 	    }
 	}
 
-	public static Set<String> specNamesFromInitParam(ServletSpecContext f) {
+	public static Set<String> specNamesFromInitParam(SpecContext f) {
 		return new HashSet<String>( Arrays.asList( safeSplit(f.getInitParameter( Container.INITIAL_SPECS_PARAM_NAME ) ) ) );
 	}
 
@@ -178,7 +178,7 @@ public class ServletUtils {
 	
 	 	@return 
 	*/
-	public static Set<String> getSpecNamesFromContext(ServletSpecContext f) {
+	public static Set<String> getSpecNamesFromContext(SpecContext f) {
 		Set<String> found = specNamesFromSystemProperties();
 		return found.size() > 0 ? found : specNamesFromInitParam(f);
 	}

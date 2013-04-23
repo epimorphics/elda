@@ -1,0 +1,24 @@
+<h2>Elda extensions</h2>
+
+<ul>
+
+<li class="chunky">
+pseudo-endpoints 
+<span style="color: blue">local:fileName</span>,
+<span style="color: orange">tdb:modelName</span>,
+<span style="color: green">here:rootResource</span>.
+
+<div>
+(tdb requires tweaking web.xml.)
+</div>
+</li>
+
+<li class="chunky">
+multiple sources for properties: <span style="color: red">api:enhanceViewWith</span>
+</li>
+
+<li class="chunky">
+some intended-to-be-pluggable result caching.
+</li>
+
+</ul>
