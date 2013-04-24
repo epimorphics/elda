@@ -189,6 +189,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 		String preamble = ui.getBaseUri().toString();
 		String message = "Could not find anything matching " + ("/" + pathstub);
 		if (pathAndType.b != null) message += " (perhaps '" + pathAndType.b + "' is an incorrect format name?)";
+	//
 		if (showMightHaveMeant) {
 			message += "<div style='margin-bottom: 2px'>you might have meant any of:</div>\n";
 			List<String> templates = router.templates();
