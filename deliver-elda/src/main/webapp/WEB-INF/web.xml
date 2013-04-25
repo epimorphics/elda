@@ -4,22 +4,23 @@
 	'http://java.sun.com/dtd/web-app_2_3.dtd'>
 <web-app> 
 
+	<!--
 	<filter>
     	<filter-name>UrlRewriteFilter</filter-name>
         <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
    
-        <!--
         <init-param>
             <param-name>logLevel</param-name>
             <param-value>DEBUG</param-value>
         </init-param>
-        -->
+        
     </filter>
     
     <filter-mapping>
         <filter-name>UrlRewriteFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    -->
     
   <servlet>
     <servlet-name>elda</servlet-name>
@@ -69,7 +70,7 @@
 
   <servlet-mapping>
      <servlet-name>elda</servlet-name>
-     <url-pattern>/API/*</url-pattern> 
+     <url-pattern>/*</url-pattern> 
   </servlet-mapping>  
   
   <!-- ==================================================================== -->
