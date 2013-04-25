@@ -1,18 +1,45 @@
 <html>
 <head>
-<title>Elda -- an implementation of the Linked Data API</title>
-<meta http-equiv="refresh" content="1;url=http://localhost:8080/elda/lda-assets/docs/quickstart.html">
+<title>Elda Common Webapp</title>
 </head>
 
 <body>
-<h1>Elda &mdash; an implementation of the Linked Data API</h1>
+<h1>Elda Common Webapp</h1>
 
-<h2>Click the link for the documentation.</h2>
+<p>
+Elda is a Java webapp implementation of the
+<a href="http://code.google.com/p/linked-data-api/">Linked Data API</a>.
+This page is the root page of Elda's Common Webapp (CW) minimal web
+application. You've probably got here by dropping the <code>elda-common.war</code>
+file into your local running Tomcat's webapps directory.
+</p>
 
-<a href="http://localhost:8080/elda/lda-assets/docs/quickstart.html">
-    http://localhost:8080/elda/lda-assets/docs/quickstart.html
-</a>
+<p>
+The CW is a single WAR file that fetches its LDA configurations from
+a "well-known" location in the file system. Keeping the LDA configuration
+files outside the CW means that you can update them without having to
+build a new WAR file &mdash; you just need to restart the webapp.
+Similarly, you can update the CW with a new (compatible) version
+without having to disturb the configuration files or build a new
+webapp.
+</p>
 
+<p>
+When the CW requires configuration files, it looks in 
+<code>/etc/elda/configs/{APP}_*ttl</code>. {APP} is
+replaced by the context path of the CW, which in turn is
+(by default) the name of the CW .war file. * is a wildcard
+match of any number of non-/ characters.
+</p>
+
+<h1>Elda Standalone Jar</h1>
+
+<p>
+You can also read the quickstart documentation for the
+<code>elda-standalone</code> jar:
+<a href="http://elda.googlecode.com/hg/deliver-elda/src/main/webapp/lda-assets/docs/quickstart.html">
+quickstart</a>, an alternative way of getting started with Elda.
+</p>
 
 </body>
 </html>
