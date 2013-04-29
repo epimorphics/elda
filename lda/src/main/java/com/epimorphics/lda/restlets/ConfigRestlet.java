@@ -40,7 +40,6 @@ import com.epimorphics.util.Util;
 	//
 		SpecManager sm = SpecManagerFactory.get();
 		List<SpecEntry> specs = sm.allSpecs();
-		System.err.println( ">> there are " + specs.size() + " specs in " + sm + "." );
 		String page = new ComposeConfigDisplay().configPageMentioning( specs, base, pathstub );
 		return RouterRestlet.returnAs( Util.withBody( "API configuration", page ), "text/html" );
 	}

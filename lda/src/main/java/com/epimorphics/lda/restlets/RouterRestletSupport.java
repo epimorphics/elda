@@ -52,8 +52,6 @@ public class RouterRestletSupport {
 	public static Router createRouterFor( ServletConfig sc, String contextName ) {
 		Router result = new DefaultRouter();
 		
-		System.err.println( ">> createRouterFor " + contextName );
-		
 		String baseFilePath = ServletUtils.withTrailingSlash( sc.getServletContext().getRealPath("/") );
 		
         AuthMap am = AuthMap.loadAuthMap( FileManager.get(), noNamesAndValues );
@@ -63,17 +61,13 @@ public class RouterRestletSupport {
 //        SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
         SpecManagerImpl sm = new SpecManagerImpl(result, modelLoader);
 		SpecManagerFactory.set( sm );
-		System.err.println( ">> createRouterFor " + contextName + "; sm = " + sm );
 
     	String prefixPath = sc.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
 		
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(new ServletConfigSpecContext(sc));
 		
-		System.err.println( ">> there are " + specFilenameTemplates.size() + " filename templates." );
-		
 		for (String specTemplate: specFilenameTemplates) {
 			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextName );
-			System.err.println( ">> considering config filename template " + specName + " [from " + specTemplate + "]" );
 			String prefixPath1 = prefixPath;
 			String specPath = specName;
 			int chop = specPath.indexOf( "::" );
@@ -104,9 +98,6 @@ public class RouterRestletSupport {
 	}
 
 	public static void loadOneConfigFile(Router router, AuthMap am, ModelLoader ml, String prefixPath, String thisSpecPath) {
-		
-		System.err.println( ">>  load one config file " + thisSpecPath + " with prefixPath " + prefixPath );
-		
 		log.info( "Loading spec file from " + thisSpecPath + " with prefix path " + prefixPath );
 		Model init = ml.loadModel( thisSpecPath );
 		ServletUtils.addLoadedFrom( init, thisSpecPath );

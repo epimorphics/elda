@@ -57,7 +57,6 @@ public class SpecManagerImpl implements SpecManager {
         if (specs.containsKey(uri)) {
             return updateSpec( am, context, uri, key, spec );
         } else {
-        	System.err.println( ">> SpecManagerImple.addSpec: " + uri );
             log.info("Creating API spec at: " + uri);
             Resource specRoot = spec.getResource(uri);
 			APISpec apiSpec = new APISpec( am, FileManager.get(), specRoot, modelLoader );

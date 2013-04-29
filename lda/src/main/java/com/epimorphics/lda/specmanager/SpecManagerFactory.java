@@ -34,7 +34,6 @@ public class SpecManagerFactory {
     }
     
     public static void set(SpecManager sm) {
-    	System.err.println( ">> SpecManager instance: " + sm );
         instance = sm;
     }
     
