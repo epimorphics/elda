@@ -6,15 +6,6 @@
     $Id$
 */
 
-/******************************************************************
-    File:        SpecManagerImpl.java
-    Created by:  Dave Reynolds
-    Created on:  7 Feb 2010
- * 
- * (c) Copyright 2010, Epimorphics Limited
- * $Id:  $
- *****************************************************************/
-
 package com.epimorphics.lda.specmanager;
 
 import static com.epimorphics.lda.specmanager.SpecUtils.*;
@@ -66,6 +57,7 @@ public class SpecManagerImpl implements SpecManager {
         if (specs.containsKey(uri)) {
             return updateSpec( am, context, uri, key, spec );
         } else {
+        	System.err.println( ">> SpecManagerImple.addSpec: " + uri );
             log.info("Creating API spec at: " + uri);
             Resource specRoot = spec.getResource(uri);
 			APISpec apiSpec = new APISpec( am, FileManager.get(), specRoot, modelLoader );

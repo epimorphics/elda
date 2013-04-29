@@ -104,7 +104,7 @@ import com.hp.hpl.jena.shared.WrappedException;
      	in which case it is used, otherwise a new router is created, initialised,
      	put in the table, and returned.
     */
-    private synchronized Router getRouterFor( ServletConfig sc, String givenContextPath) {
+     static synchronized Router getRouterFor( ServletConfig sc, String givenContextPath) {
     	String contextPath = RouterRestletSupport.flatContextPath(givenContextPath);
 		Router r = routers.get(contextPath);
 		if (r == null) {

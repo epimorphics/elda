@@ -14,6 +14,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIFactory;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ModelLoader;
+import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.routing.APIModelLoader;
 import com.epimorphics.lda.routing.Container;
@@ -33,6 +34,7 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.shared.WrappedException;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -50,20 +52,28 @@ public class RouterRestletSupport {
 	public static Router createRouterFor( ServletConfig sc, String contextName ) {
 		Router result = new DefaultRouter();
 		
+		System.err.println( ">> createRouterFor " + contextName );
+		
 		String baseFilePath = ServletUtils.withTrailingSlash( sc.getServletContext().getRealPath("/") );
 		
         AuthMap am = AuthMap.loadAuthMap( FileManager.get(), noNamesAndValues );
         
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
         
-        SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
+//        SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
+        SpecManagerImpl sm = new SpecManagerImpl(result, modelLoader);
+		SpecManagerFactory.set( sm );
+		System.err.println( ">> createRouterFor " + contextName + "; sm = " + sm );
 
     	String prefixPath = sc.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
 		
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(new ServletConfigSpecContext(sc));
 		
+		System.err.println( ">> there are " + specFilenameTemplates.size() + " filename templates." );
+		
 		for (String specTemplate: specFilenameTemplates) {
 			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextName );
+			System.err.println( ">> considering config filename template " + specName + " [from " + specTemplate + "]" );
 			String prefixPath1 = prefixPath;
 			String specPath = specName;
 			int chop = specPath.indexOf( "::" );
@@ -94,6 +104,9 @@ public class RouterRestletSupport {
 	}
 
 	public static void loadOneConfigFile(Router router, AuthMap am, ModelLoader ml, String prefixPath, String thisSpecPath) {
+		
+		System.err.println( ">>  load one config file " + thisSpecPath + " with prefixPath " + prefixPath );
+		
 		log.info( "Loading spec file from " + thisSpecPath + " with prefix path " + prefixPath );
 		Model init = ml.loadModel( thisSpecPath );
 		ServletUtils.addLoadedFrom( init, thisSpecPath );
@@ -101,6 +114,11 @@ public class RouterRestletSupport {
 		for (ResIterator ri = init.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
 		    Resource api = ri.next();
             Resource specRoot = init.getResource(api.getURI());
+            try {
+				SpecManagerFactory.get().addSpec(am, prefixPath, api.getURI(), "", init );
+			} catch (APISecurityException e) {
+				throw new WrappedException(e);
+			}
 			APISpec apiSpec = new APISpec( am, FileManager.get(), specRoot, ml );
 			APIFactory.registerApi( router, prefixPath, apiSpec );
 		}

@@ -25,11 +25,11 @@ webapp.
 </p>
 
 <p>
-When the CW requires configuration files, it looks in 
-<code>/etc/elda/configs/{APP}_*ttl</code>. {APP} is
-replaced by the context path of the CW, which in turn is
-(by default) the name of the CW .war file. * is a wildcard
-match of any number of non-/ characters.
+When a CW installed with context path {APP} requires configuration files, 
+it looks in <code>/etc/elda/configs/{APP}_*ttl</code>. * is a wildcard
+match of any number of non-/ characters; a single CW can load multiple
+LDA configurations, and different CWs look for different configuration
+files.
 </p>
 
 <h1>Elda Standalone Jar</h1>
