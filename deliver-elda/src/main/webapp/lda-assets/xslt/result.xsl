@@ -101,11 +101,6 @@ $prefLabel, $altLabel, $title and $name variables.
 	<xsl:variable name="showMap">
 		<xsl:apply-templates select="." mode="showMap" />
 	</xsl:variable>
-	<xsl:comment>
-		<xsl:text>[if lt IE 9]&gt;</xsl:text>
-		<xsl:text>&lt;script src="http://html5shiv.googlecode.com/svn/trunk/html5.js">&lt;/script></xsl:text>
-		<xsl:text>&lt;![endif]</xsl:text>
-	</xsl:comment>
 	<xsl:if test="$showMap = 'true'">
 		<script type="text/javascript"
      src="http://openspace.ordnancesurvey.co.uk/osmapapi/openspace.js?key={$openSpaceAPIkey}"></script>

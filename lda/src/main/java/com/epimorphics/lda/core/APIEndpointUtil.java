@@ -39,11 +39,12 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Triad<APIResultSet, String, Bindings> call( Controls c, Match match, URI requestUri, String suffix, MultiMap<String, String> queryParams ) {
+	public static Triad<APIResultSet, String, Bindings> call( Controls c, Match match, URI requestUri, String suffix, String contextPath, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		APIEndpointSpec spec = ep.getSpec();
 		Bindings vs = new Bindings( spec.getBindings() ).updateAll( match.getBindings() );
 		if (suffix != null) vs.put( "_suffix", suffix );
+		vs.put("_APP", contextPath );
 		Bindings cc = Bindings.createContext( vs, queryParams );
 		return ep.call( c, requestUri, cc );
 	}

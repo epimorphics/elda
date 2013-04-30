@@ -23,7 +23,7 @@
     -->
     
   <servlet>
-    <servlet-name>elda</servlet-name>
+    <servlet-name>jersey-for-elda</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
        
     <init-param>
@@ -43,13 +43,13 @@
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
-    <url-pattern>/</url-pattern>
+    <url-pattern>/lda-assets/*</url-pattern>
   </servlet-mapping>
   
   <!-- ==================================================================== -->
 
   <servlet-mapping>
-     <servlet-name>elda</servlet-name>
+     <servlet-name>jersey-for-elda</servlet-name>
      <url-pattern>/*</url-pattern> 
   </servlet-mapping>  
   

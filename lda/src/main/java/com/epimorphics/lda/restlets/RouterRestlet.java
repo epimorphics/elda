@@ -142,11 +142,10 @@ import com.hp.hpl.jena.shared.WrappedException;
             @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
             @Context ServletContext servCon,
-            // @Context ServletConfig servFig,
-            // @Context HttpServletRequest zombies,
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
+    	String contextPath = servCon.getContextPath(); // RouterRestletSupport.flatContextPath(servCon.getContextPath());
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
     	boolean dontCache = has( rh, "pragma", "no-cache" ) || has( rh, "cache-control", "no-cache" );
         Couple<String, String> pathAndType = parse( pathstub );
@@ -168,7 +167,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         	int mediaHash = hashOf( headers.getAcceptableMediaTypes() );
 			int runHash = mediaHash + encodingHash;
             List<MediaType> mediaTypes = JerseyUtils.getAcceptableMediaTypes( headers );
-            Response answer = runEndpoint( c, runHash, servCon, ui, queryParams, mediaTypes, formatSuffix, match );
+            Response answer = runEndpoint( c, contextPath, runHash, servCon, ui, queryParams, mediaTypes, formatSuffix, match );
             t.done();
             return answer;
         }
@@ -227,6 +226,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 
     private Response runEndpoint
     	( Controls c
+    	, String contextPath
     	, int runHash
     	, ServletContext servCon
     	, UriInfo ui
@@ -246,7 +246,7 @@ import com.hp.hpl.jena.shared.WrappedException;
         	        	
         	boolean needsVaryAccept = formatSuffix == null && queryParams.containsKey( "_format" ) == false;
         	if (formatSuffix == null && _default != null) formatSuffix = _default.getPreferredSuffix();
-        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatSuffix, queryParams );
+        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatSuffix, contextPath, queryParams );
             APIResultSet results = resultsAndFormat.a;
             
 			Bindings rc = new Bindings( resultsAndFormat.c.copy(), as );

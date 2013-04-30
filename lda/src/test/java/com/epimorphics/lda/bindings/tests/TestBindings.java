@@ -63,7 +63,7 @@ public class TestBindings {
 		Match match = new Match( "_", ep, MakeData.hashMap( "term=autumn" ) );
 		URI req = new URI( "/driver/cartwheel" );
 		MultiMap<String, String> params = MakeData.parseQueryString( "" );
-		Triad<APIResultSet, String, Bindings> results = APIEndpointUtil.call( controls, match, req, "", params );
+		Triad<APIResultSet, String, Bindings> results = APIEndpointUtil.call( controls, match, req, "", "", params );
 //		System.err.println( ">> class: " + results.c.getStringValue( "class" ) );
 		String sq = results.a.getSelectQuery();
 //		System.err.println( ">> " + sq );

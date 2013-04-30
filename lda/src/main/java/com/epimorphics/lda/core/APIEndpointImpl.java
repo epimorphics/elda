@@ -81,7 +81,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.toString();
     }
 	
-	static final Bindings defaults = new Bindings().put( "_resourceRoot", "/elda/lda-assets/" );
+	static final Bindings defaults = new Bindings().put( "_resourceRoot", "{_APP}/lda-assets/" );
 	
     @Override public Bindings defaults() {
     	return defaults;
