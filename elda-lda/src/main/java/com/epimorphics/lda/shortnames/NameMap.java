@@ -208,7 +208,7 @@ public class NameMap {
 			if (strongBinding || mapShortnameToURIs.getAll( shortName ).isEmpty()) {
 				mapShortnameToURIs.add( shortName, uri );
 				if (!NameUtils.isLegalShortname( shortName )) {
-					log.warn( "ignored bad shortname " + shortName + " for " + s.getModel().shortForm( uri ) ); 	
+					// log.warn( "ignored bad shortname " + shortName + " for " + s.getModel().shortForm( uri ) ); 	
 				}
 			}
 		}		
