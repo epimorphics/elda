@@ -57,6 +57,7 @@ public class RouterRestletSupport {
         AuthMap am = AuthMap.loadAuthMap( FileManager.get(), noNamesAndValues );
         
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
+        FileManager.get().addLocatorFile( baseFilePath );
         
 //        SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
         SpecManagerImpl sm = new SpecManagerImpl(result, modelLoader);

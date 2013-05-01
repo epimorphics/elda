@@ -22,32 +22,32 @@
           </excludes>
           <outputDirectory>/</outputDirectory>
       </fileSet>      
-      <fileSet>
+	  
+	  <fileSet>
           <directory>../Notelets</directory>
           <outputDirectory>webapps/elda/docs/Notelets</outputDirectory>
       </fileSet>
-      <fileSet>
+	  
+	  <fileSet>
         <directory>../ReleaseNotes</directory>
         <outputDirectory>webapps/elda/docs/ReleaseNotes</outputDirectory>
-      </fileSet>
+	  </fileSet>
+
       <fileSet>
           <directory>jetty-distribution-7.0.2.v20100331/javadoc</directory>
           <outputDirectory>jetty-javadoc</outputDirectory>          
       </fileSet>
       
       <fileSet>
-          <directory>../deliver-elda/root</directory>
+          <directory>elda-standalone/root</directory>
           <outputDirectory>webapps/root</outputDirectory>
       </fileSet>
 
       <fileSet>
-          <directory>target/elda</directory>
+		  <directory>target/elda-standalone</directory>
           <outputDirectory>webapps/elda</outputDirectory>
-      </fileSet>
-      <fileSet>
-          <directory>src/main/docs</directory>
-          <outputDirectory>webapps/elda/docs</outputDirectory>
-      </fileSet>
+	  </fileSet>
+
   </fileSets>
   <files>
     <file>

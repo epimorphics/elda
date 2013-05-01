@@ -54,19 +54,25 @@
 	         -->
 	        <artifactId>maven-assembly-plugin</artifactId>
 	        <version>2.2.1</version>
-	        <configuration>	
+			<configuration>
+
 	            <descriptors>
 	                <descriptor>src/assemble/distribution.xml</descriptor>
 	            </descriptors>
-	            <finalName>elda-standalone-${project.version}</finalName>
-	            <appendAssemblyId>false</appendAssemblyId>
-	            <archive>
+				
+				<finalName>elda-standalone-${project.version}</finalName>
+				
+				<appendAssemblyId>false</appendAssemblyId>
+				
+				<archive>
 	                <manifestEntries>
                         <Main-Class>cmd.run</Main-Class>
                     </manifestEntries>
-	            </archive>
+				</archive>
+
 	        </configuration>
-	        <executions>
+			
+			<executions>
 	            <execution>
 	                <phase>package</phase>
 	                <goals>

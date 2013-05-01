@@ -22,7 +22,7 @@
     </filter-mapping>
 
   <servlet>
-    <servlet-name>elda</servlet-name>
+    <servlet-name>jersey-for-elda</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
        
     <init-param>
@@ -51,33 +51,6 @@
   
   <!-- ==================================================================== -->
 
-  <servlet>
-  	<servlet-name>loader-init</servlet-name>
-  	<servlet-class>com.epimorphics.lda.routing.Loader</servlet-class>
-  	
-  	<init-param>
-		<param-name>com.epimorphics.api.initialSpecFile</param-name>
-        <param-value>
-        	hello::specs/hello-world.ttl
-        	, again::specs/hello-again-world.ttl
-        	, tiny::specs/tiny-education.ttl
-        	, mini::specs/mini-education.ttl
-        	, full::specs/full-education.ttl
-        	, old::specs/old-education.ttl
-        	, mountain::specs/mountain.ttl
-        	, velocity::specs/hello-velocity.ttl
-        	, ved::specs/mini-education-velocity.ttl
-        	, demo-*::/etc/elda/demo-*.ttl
-        </param-value>
-  	</init-param>
-    
-    <init-param>
-    	<param-name>com.epimorphics.api.authKey.example</param-name>
-    	<param-value>auth/example.auth</param-value>
-    </init-param>
-    
-    <load-on-startup>1</load-on-startup>
-  </servlet>
   
   <!-- ==================================================================== -->
   
@@ -98,7 +71,7 @@
   <!-- ==================================================================== -->
 
   <servlet-mapping>
-     <servlet-name>elda</servlet-name>
+     <servlet-name>jersey-for-elda</servlet-name>
      <url-pattern>/API/*</url-pattern> 
   </servlet-mapping>  
   
