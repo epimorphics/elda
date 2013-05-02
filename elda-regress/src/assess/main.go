@@ -156,7 +156,7 @@ func setup() {
 //if [ $_JAR == "yes" ]; then
 //	echo "Building current (probably snapshot) jar"
 //	(cd ..; mvn clean package)
-//	mv ../deliver-elda/target/elda-standalone-*.jar this-elda
+//	mv ../elda-standalone/target/elda-standalone-*.jar this-elda
 //fi
 //
 //if [ $_REBUILD == "yes" ]; then
