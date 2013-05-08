@@ -4,9 +4,17 @@
 # script to run Elda regression tests
 #
 
+function multi_diff() {
+	if [[ "$1" == *json* ]] ; then
+		java -classpath $(cat json-diff-classpath):/home/chris/SPOO/Temp/target/classes run.jd $1 $2
+	else
+		diff $1 $2
+	fi
+}
+
 export _PORT=1829
-export _JAR=yes
-export _REBUILD=yes
+export _JAR=no
+export _REBUILD=no
 export _CLEAN=no
 
 for x in $* ; do
@@ -95,7 +103,8 @@ for config_file in configs/*.ttl; do
 			export o_name=$(echo $elda | sed -e 's/.*-standalone-//' -e 's/.jar//')
 			export d_file=${e_name}_vs_${o_name}_${c_name}_${u_name}
 			echo CONSIDERING ${d_file}
-			if diff results/${r_name} results/elda-${o_name}_${c_name}_${u_name} > differences/${d_file}; then
+
+			if multi_diff results/${r_name} results/elda-${o_name}_${c_name}_${u_name} > differences/${d_file}; then
 				echo OK -- no differences
 			else
 				if [ -e gold_differences/${d_file} ]; then
