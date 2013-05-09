@@ -79,7 +79,7 @@ $prefLabel, $altLabel, $title and $name variables.
 
 <xsl:template match="hasFormat/item" mode="metalink">
     <xsl:if test="format/label and /result/@href != @href">
-	    <link rel="alternate" href="{@href}" type="{format/label}" />
+       <link rel="alternate" href="{@href}" type="{format/label}" />
     </xsl:if>
 </xsl:template>
 
@@ -482,7 +482,8 @@ $prefLabel, $altLabel, $title and $name variables.
 	<section class="formats">
 		<ul>
 			<xsl:for-each select="hasFormat/item">
-				<xsl:sort select="label"/>
+                <!-- make sure a labelled or unabelled html sorts in the right position -->
+                <xsl:sort select="concat(label,'html')"/>
 				<li>
 					<xsl:if test="position() = 1">
 						<xsl:attribute name="class">first</xsl:attribute>
@@ -669,8 +670,8 @@ $prefLabel, $altLabel, $title and $name variables.
 							new OpenLayers.Control.Navigation(),
 							new OpenLayers.Control.KeyboardDefaults(),
 							new OpenSpace.Control.CopyrightCollection({displayClass:"osCopyright"}),
-//                            new OpenSpace.Control.CopyrightCollection(),
-//							new OpenSpace.Control.PoweredBy(),
+//                          new OpenSpace.Control.CopyrightCollection(),
+							new OpenSpace.Control.PoweredBy(),
 							new OpenLayers.Control.ArgParser()
 						];
 						//var options = {controls: controls, products: ["OV0", "OV1", "OV2", "MSR", "MS", "CS04", "CS05", "VMDR", "VMD", "VMLR", "VML"], bgcolor: '0x9ecfff'};
@@ -1218,8 +1219,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		<ul>
 			<xsl:for-each select="hasVersion/item | hasVersion[not(item)]">
                 <!-- concat label and view incase either is missing. Give precidenced to labels -->
-                <xsl:sort select="concat(./label, $view)" order="ascending"/>
-				<li>
+                <xsl:sort select="concat(./label, $view)" order="ascending"/>				<li>
 					<xsl:apply-templates select="." mode="nav">
 						<xsl:with-param name="current" select="$view" />
 					</xsl:apply-templates>
@@ -1625,7 +1625,6 @@ $prefLabel, $altLabel, $title and $name variables.
 			<xsl:with-param name="paramName" select="$paramName" />
 		</xsl:call-template>
 	</xsl:variable>
-    <xsl:if test="$sort != ''">
 	<li class="selected">
 		<a rel="nofollow" title="remove this sort">
 			<xsl:attribute name="href">
@@ -1691,21 +1690,11 @@ $prefLabel, $altLabel, $title and $name variables.
 			</xsl:otherwise>
 		</xsl:choose>
 	</li>
-    </xsl:if>
 	<xsl:if test="contains($sorts, ',')">
 		<xsl:apply-templates select="." mode="selectedSorts">
 			<xsl:with-param name="uri" select="$uri" />
 			<xsl:with-param name="sorts" select="substring-after($sorts, ',')" />
-            <xsl:with-param name="previousSorts">
-                <xsl:choose>
-                    <xsl:when test="$previousSorts = ''">
-                       <xsl:value-of select="$sort"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                       <xsl:value-of select="concat($previousSorts, ',', $sort)"/>
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:with-param>
+			<xsl:with-param name="previousSorts" select="concat($previousSorts, ',', $sort)" />
 		</xsl:apply-templates>
 	</xsl:if>
 </xsl:template>
@@ -1883,14 +1872,16 @@ $prefLabel, $altLabel, $title and $name variables.
     <xsl:variable name="name">
         <xsl:choose>
            <xsl:when test="format">
-        <xsl:apply-templates select="." mode="name" />
+              <xsl:apply-templates select="." mode="name" />
            </xsl:when>
-           <!-- pick up best label from misplaced result -->
+           <!-- pick up best label from misplaced result - cann only happen for html-->
            <xsl:otherwise>
-              <xsl:apply-templates select="/result" mode="name" />
+              <xsl:text>html</xsl:text>
+<!--               <xsl:apply-templates select="/result" mode="name" /> -->
            </xsl:otherwise>
         </xsl:choose>
     </xsl:variable>
+    
     <xsl:choose>
         <xsl:when test="format">
             <a href="{@href}" type="{format/label}" rel="alternate"
@@ -1901,7 +1892,8 @@ $prefLabel, $altLabel, $title and $name variables.
         <xsl:when test="/result/format/label and /result/label">
             <a href="{@href}" type="{/result/format/label}" rel="alternate"
                 title="view in {$name} format">
-                <xsl:value-of select="/result/label" />
+<!--                <xsl:value-of select="/result/label" /> -->
+ 				<xsl:value-of select="$name" /> 				
             </a>
         </xsl:when>
     </xsl:choose>
@@ -2078,7 +2070,7 @@ $prefLabel, $altLabel, $title and $name variables.
                 <td/>
             </xsl:if>
             <td/>       
-        </tr>
+        </tr>        
         </xsl:if>
 		<!-- This for-each is a hack around what seems to be a bug in older versions
 			of libxslt, which ignores ordering in an xsl:apply-templates -->
@@ -2631,7 +2623,7 @@ $prefLabel, $altLabel, $title and $name variables.
 				<img src="{$activeImageBase}/Back.png" alt="remove filter" />
 			</a>
 		</xsl:when>
-        <xsl:when test="$datatype = 'integer' or $datatype = 'decimal' or $datatype = 'float' or $datatype = 'double' or $datatype = 'int' or $datatype = 'date' or $datatype = 'dateTime' or $datatype = 'time'">
+		<xsl:when test="$datatype = 'integer' or $datatype = 'decimal' or $datatype = 'float' or $datatype = 'double' or $datatype = 'int' or $datatype = 'date' or $datatype = 'dateTime' or $datatype = 'time'">
 			<xsl:variable name="min">
 				<xsl:call-template name="paramValue">
 					<xsl:with-param name="uri">
@@ -2692,12 +2684,8 @@ $prefLabel, $altLabel, $title and $name variables.
 							<xsl:apply-templates select="/result" mode="searchURI" />
 						</xsl:with-param>
 						<xsl:with-param name="param" select="$paramName" />
-                        <xsl:with-param name="value">
-                            <xsl:call-template name="escapeValue">
-						        <xsl:with-param name="value" select="$value" />
-					        </xsl:call-template>
-                        </xsl:with-param>
-                    </xsl:call-template>
+						<xsl:with-param name="value" select="$value" />
+					</xsl:call-template>
 				</xsl:attribute>
 				<img src="{$inactiveImageBase}/Search.png" alt="more like this" />
 			</a>
@@ -2747,12 +2735,8 @@ $prefLabel, $altLabel, $title and $name variables.
 							<xsl:apply-templates select="/result" mode="searchURI" />
 						</xsl:with-param>
 						<xsl:with-param name="param" select="$paramName" />
-                        <xsl:with-param name="value">
-                            <xsl:call-template name="escapeValue">
-						        <xsl:with-param name="value" select="$label" />
-					        </xsl:call-template>
-                        </xsl:with-param>                        
-                    </xsl:call-template>
+						<xsl:with-param name="value" select="$label" />
+					</xsl:call-template>
 				</xsl:attribute>
 				<img src="{$inactiveImageBase}/Search.png" alt="more like this" />
 			</a>
@@ -2842,6 +2826,8 @@ $prefLabel, $altLabel, $title and $name variables.
                         <col class="labelWidth" />
                         <col class="valueWidth" />
                     </colgroup>
+                          <!-- add a dummy row to make sure that there are cells in each group -->
+                          <tr><td/><td/></tr>                    
                     </xsl:if>
 					<xsl:for-each select="(items/item/* | primaryTopic/*)[generate-id(key('properties', name(.))[1]) = generate-id(.)]">
 						<xsl:sort select="name(.) = $prefLabel" order="descending" />
@@ -2927,6 +2913,8 @@ $prefLabel, $altLabel, $title and $name variables.
                                 <col class="labelWidth" />
                                 <col class="nestedValueWidth" />
                             </colgroup>
+                                <!-- add a dummy row to make sure that there are cells in each group -->
+                                <tr><td/><td/></tr>                            
                             </xsl:if>
 							<xsl:for-each 
 								select="key('properties', $propertyName)/*[name() != 'item' and generate-id(key('properties', concat($propertyName, '.', name(.)))[1]) = generate-id(.)] | 
@@ -3070,23 +3058,23 @@ $prefLabel, $altLabel, $title and $name variables.
 
 <xsl:template match="*" mode="inputAtts">
     <xsl:choose>
-        <xsl:when test="@datatype = 'date'">
+        <xsl:when test="@datatype = 'date' or @datatype='xsd_date' ">
             <xsl:attribute name="type">date</xsl:attribute>
 <!--             <xsl:attribute name="size">10</xsl:attribute> -->
-            <xsl:attribute name="placeholder">YYYY-MM-DD</xsl:attribute>
-            <xsl:attribute name="pattern">[0-9]{4}-[0-9]{2}-[0-9]{2}</xsl:attribute>
+<!--             <xsl:attribute name="placeholder">YYYY-MM-DD</xsl:attribute> -->
+<!--             <xsl:attribute name="pattern">[0-9]{4}-[0-9]{2}-[0-9]{2}</xsl:attribute> -->
         </xsl:when>
-        <xsl:when test="@datatype = 'time'">
+        <xsl:when test="@datatype = 'time' or @datatype='xsd_time' ">
             <xsl:attribute name="type">time</xsl:attribute>
 <!--             <xsl:attribute name="size">8</xsl:attribute> -->
-            <xsl:attribute name="placeholder">hh:mm:ss</xsl:attribute>
-            <xsl:attribute name="pattern">[0-9]{2}:[0-9]{2}:[0-9]{2}</xsl:attribute>
+<!--             <xsl:attribute name="placeholder">hh:mm:ss</xsl:attribute> -->
+<!--             <xsl:attribute name="pattern">[0-9]{2}:[0-9]{2}:[0-9]{2}</xsl:attribute> -->
         </xsl:when>
-        <xsl:when test="@datatype = 'dateTime'">
+        <xsl:when test="@datatype = 'dateTime' or @datatype='xsd_dateTime' ">
             <xsl:attribute name="type">datetime</xsl:attribute>
 <!--             <xsl:attribute name="size">19</xsl:attribute> -->
-            <xsl:attribute name="placeholder">YYYY-MM-DDThh:mm:ss</xsl:attribute>
-            <xsl:attribute name="pattern">[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}</xsl:attribute>
+<!--             <xsl:attribute name="placeholder">YYYY-MM-DDThh:mm:ss</xsl:attribute> -->
+<!--             <xsl:attribute name="pattern">[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}</xsl:attribute> -->
         </xsl:when>
         <xsl:when test="@datatype = 'integer' or @datatype = 'decimal' or @datatype = 'float' or @datatype = 'double' or @datatype = 'int'">
             <xsl:attribute name="type">number</xsl:attribute>

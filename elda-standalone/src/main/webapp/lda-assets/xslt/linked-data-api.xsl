@@ -543,7 +543,10 @@
 	<xsl:param name="value" />
 	<xsl:choose>
 		<xsl:when test="contains($value, '+')">
-			<xsl:value-of select="substring-before($value, '+')"/>
+		    <xsl:call-template name="escapeValue">
+		      <xsl:with-param name="value" select="substring-before($value, '+')"/>
+		    </xsl:call-template>
+<!--			<xsl:value-of select="substring-before($value, '+')"/> -->
 			<xsl:text>%2B</xsl:text>
 			<xsl:call-template name="escapeValue">
 				<xsl:with-param name="value" select="substring-after($value, '+')" />
@@ -551,14 +554,20 @@
 		</xsl:when>
 		<!--  added escaping of spaces (skw) 9/1/2013 -->
         <xsl:when test="contains($value, ' ')">
-            <xsl:value-of select="substring-before($value, ' ')"/>
+            <xsl:call-template name="escapeValue">
+              <xsl:with-param name="value" select="substring-before($value, ' ')"/>
+            </xsl:call-template>
+<!--             <xsl:value-of select="substring-before($value, ' ')"/> -->
             <xsl:text>%20</xsl:text>
             <xsl:call-template name="escapeValue">
                 <xsl:with-param name="value" select="substring-after($value, ' ')" />
             </xsl:call-template>
         </xsl:when>
         <xsl:when test="contains($value, '&amp;')">
-            <xsl:value-of select="substring-before($value, '&amp;')"/>
+            <xsl:call-template name="escapeValue">
+               <xsl:with-param name="value" select="substring-before($value, '&amp;')"/>
+            </xsl:call-template>
+<!--             <xsl:value-of select="substring-before($value, '&amp;')"/> -->
             <xsl:text>%26</xsl:text>
             <xsl:call-template name="escapeValue">
                 <xsl:with-param name="value" select="substring-after($value, '&amp;')" />
