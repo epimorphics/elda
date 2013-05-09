@@ -1,0 +1,85 @@
+#
+# A hello-world config. 
+#
+
+# Assorted prefix declarations. Some of them are for the structuring
+# of the API config, others are for the vocabulary definitions.
+#
+
+@prefix api:                <http://purl.org/linked-data/api/vocab#> .
+@prefix dct:				<http://purl.org/dc/terms/> .
+
+@prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:                <http://www.w3.org/2001/XMLSchema#> .
+
+# The elda namespace/prefix is for Elda extensions to the LDA specification.
+@prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
+
+# Prefix for example-local entities.
+@prefix hello:				<http://localhost:8080/elda/vocabulary/>.
+
+# ---------------------------------------------------------------------
+# API config
+
+hello:hello-world-again a api:API 
+	; rdfs:label "Hello World example #2 -- games"@en
+	# Name the SPARQL endpoint which supplies the data we present
+	; api:sparqlEndpoint <local:data/example-data.ttl>
+	; api:defaultViewer api:labelledDescribeViewer
+	; api:endpoint 
+		hello:publishers, hello:games 
+	; api:defaultFormatter
+		[a elda:VelocityFormatter
+		; api:name "html"
+		; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
+		; api:mimeType "text/html"
+		# ; api:stylesheet "page-shell.vm"
+		]
+	.
+    
+# Endpoint definitions
+
+hello:publishers a api:ListEndpoint 
+	; rdfs:label "Publishers" 
+	; api:uriTemplate "/publishers" 
+	; api:selector [api:filter "type=Publisher"; api:sort "label"]
+	; api:defaultViewer api:labelledDescribeViewer
+	.	
+	
+hello:games a api:ListEndpoint 
+	; rdfs:label "Games" 
+	; api:uriTemplate "/games" 
+	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
+	; api:defaultViewer api:labelledDescribeViewer
+	.	
+	
+hello:BoardGame a rdfs:Class
+	; rdfs:label "Board Game"
+	; api:label "BoardGame"
+	.
+	
+hello:players a rdf:Property
+	; api:label "players"
+	; rdfs:range xsd:int
+	.
+	
+hello:Publisher a rdfs:Class
+	; api:label "Publisher"
+	.
+	
+dct:publisher a rdf:Property
+	; api:label "publishes"
+	.
+	
+rdfs:label a rdf:Property
+	; api:multiValued true
+	; api:label "label"
+	.
+	
+rdf:type a rdf:Property
+    ; api:multiValued true 
+    ; rdfs:range rdfs:Class 
+	; api:label "type"
+	.
+		

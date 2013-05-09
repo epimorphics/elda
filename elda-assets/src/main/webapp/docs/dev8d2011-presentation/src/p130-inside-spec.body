@@ -1,0 +1,234 @@
+<h2>Another example</h2>
+
+Just the types and labels of any school with at least 40 special-needs pupils:
+<a href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic">
+http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&amp;_view=basic
+</a>
+
+<pre>
+&lt;result format="linked-data-api" href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0" version="0.2"&gt;
+&lt;next href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=1"/&gt;
+
+&lt;hasFormat&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.rdf?min-specialPupils=40&_view=basic"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1001"&gt;
+&lt;label&gt;application/rdf+xml&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.text?min-specialPupils=40&_view=basic"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1002"&gt;
+&lt;label&gt;text/plain&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1003"&gt;
+&lt;label&gt;text/xml&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;type href="http://purl.org/linked-data/api/vocab#ListEndpoint"/&gt;
+&lt;definition href="http://services.data.gov.uk/education/api#api"/&gt;
+&lt;label&gt;should be a description of this list&lt;/label&gt;
+&lt;hasPart href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.html?min-specialPupils=40&_view=basic"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1004"&gt;
+&lt;label&gt;text/html&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.ttl?min-specialPupils=40&_view=basic"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1005"&gt;
+&lt;label&gt;text/turtle&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.owl?min-specialPupils=40&_view=basic"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1006"&gt;
+&lt;label&gt;application/rdf+xml&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.json?min-specialPupils=40&_view=basic"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1007"&gt;
+&lt;label&gt;application/json&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;/item&gt;
+&lt;/hasFormat&gt;
+&lt;page datatype="long"&gt;0&lt;/page&gt;
+&lt;itemsPerPage datatype="long"&gt;10&lt;/itemsPerPage&gt;
+
+&lt;hasVersion&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?min-specialPupils=40&_view=geo"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;label&gt;geo&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?min-specialPupils=40&_view=%23%23%23default"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;label&gt;###default&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?min-specialPupils=40&_view=basic"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;label&gt;basic&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?min-specialPupils=40&_view=short"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;label&gt;short&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?min-specialPupils=40&_view=medium"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;label&gt;medium&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?min-specialPupils=40&_view=all"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;label&gt;all&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?min-specialPupils=40&_view=description"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;label&gt;description&lt;/label&gt;
+&lt;/item&gt;
+&lt;/hasVersion&gt;
+&lt;type href="http://purl.org/linked-data/api/vocab#Page"/&gt;
+&lt;definition href="http://services.data.gov.uk/education/api#api"/&gt;
+&lt;first href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic&_page=0"/&gt;
+&lt;isPartOf href="http://localhost:8080/elda/api/education/schools.xml?min-specialPupils=40&_view=basic"/&gt;
+
+&lt;items&gt;
+
+&lt;item href="http://education.data.gov.uk/id/school/101173"&gt;
+
+&lt;type&gt;
+&lt;item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_Special_School"/&gt;
+&lt;item href="http://education.data.gov.uk/def/school/School"/&gt;
+&lt;/type&gt;
+&lt;label&gt;Fairley House School&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://education.data.gov.uk/id/school/100987"&gt;
+
+&lt;type&gt;
+&lt;item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/&gt;
+&lt;item href="http://education.data.gov.uk/def/school/School"/&gt;
+&lt;/type&gt;
+&lt;label&gt;Phoenix School&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://education.data.gov.uk/id/school/105376"&gt;
+
+&lt;type&gt;
+&lt;item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/&gt;
+&lt;item href="http://education.data.gov.uk/def/school/School"/&gt;
+&lt;/type&gt;
+&lt;label&gt;Cloughside College&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://education.data.gov.uk/id/school/105137"&gt;
+
+&lt;type&gt;
+&lt;item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Non-Maintained_Special_School"/&gt;
+&lt;item href="http://education.data.gov.uk/def/school/School"/&gt;
+&lt;/type&gt;
+&lt;label&gt;West Kirby Residential School&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://education.data.gov.uk/id/school/106009"&gt;
+
+&lt;type&gt;
+&lt;item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/&gt;
+&lt;item href="http://education.data.gov.uk/def/school/School"/&gt;
+&lt;/type&gt;
+&lt;label&gt;Oakwood High School&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://education.data.gov.uk/id/school/106010"&gt;
+
+&lt;type&gt;
+&lt;item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/&gt;
+&lt;item href="http://education.data.gov.uk/def/school/School"/&gt;
+&lt;/type&gt;
+&lt;label&gt;Chatsworth High&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://education.data.gov.uk/id/school/106167"&gt;
+
+&lt;type&gt;
+&lt;item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Non-Maintained_Special_School"/&gt;
+&lt;item href="http://education.data.gov.uk/def/school/School"/&gt;
+&lt;/type&gt;
+&lt;label&gt;St John Vianney School&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://education.data.gov.uk/id/school/106818"&gt;
+
+&lt;type&gt;
+&lt;item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Non-Maintained_Special_School"/&gt;
+&lt;item href="http://education.data.gov.uk/def/school/School"/&gt;
+&lt;/type&gt;
+&lt;label&gt;Doncaster School for the Deaf&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://education.data.gov.uk/id/school/106970"&gt;
+
+&lt;type&gt;
+&lt;item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/&gt;
+&lt;item href="http://education.data.gov.uk/def/school/School"/&gt;
+&lt;/type&gt;
+&lt;label&gt;The Willows School&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://education.data.gov.uk/id/school/106969"&gt;
+
+&lt;type&gt;
+&lt;item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Community_Special_School"/&gt;
+&lt;item href="http://education.data.gov.uk/def/school/School"/&gt;
+&lt;/type&gt;
+&lt;label&gt;Milton School&lt;/label&gt;
+&lt;/item&gt;
+&lt;/items&gt;
+&lt;startIndex datatype="long"&gt;1&lt;/startIndex&gt;
+&lt;/result&gt;
+</pre>

@@ -1,0 +1,84 @@
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Elda with Velocity</title>
+
+<script type="text/javascript" src="/elda/lda-assets/scripts/jquery.min.js"> </script>
+<script type="text/javascript" src="/elda/lda-assets/scripts/jquery-ui.min.js"> </script>
+<script src="/elda/lda-assets/scripts/codemirror/codemirror_min.js" type="text/javascript"> </script>
+
+<script type="text/javascript">
+
+$(function() {
+	$('textarea').each(function() {
+		var cm = CodeMirror.fromTextArea(this, 
+			{
+			basefiles: ["/elda/lda-assets/scripts/codemirror/codemirror_base_sparql.js"],
+			stylesheet: "/elda/lda-assets/css/sparql.css",
+			textWrapping: false
+			})
+		$(cm.frame)
+			.css('border', '1px solid #D3D3D3')
+			.css('border-radius', '5px')
+			.css('-moz-border-radius', '5px')
+	})
+})
+
+</script>
+
+<style>
+	h1 {
+		background-color: #444
+		; color: white
+		; padding: 1ex
+		; border-radius: 1ex
+	}
+	
+	h2 {
+		font-size: 1em
+		; margin-left: 1ex
+	}
+	
+	.indented {
+		margin-left: 1ex
+	}
+	
+	.itembox {
+		border: 1px solid black
+		; border-radius: 1ex
+		; margin-bottom: 1ex
+	}
+	
+	header h1 {
+		background: url("../lda-assets/images/molecule.png") no-repeat scroll 0px 0px transparent
+		; color: rgb(85, 85, 85)
+		; font-size: 2.3em
+		; font-weight: 300
+		; font-family: Gill Sans, Arial, sans-serif
+		; padding: 10px 66px
+	}
+	
+	#search-results {
+	}
+	
+	.bordered-panel {
+		border: 1px solid black
+		; border-radius: 2ex 
+	}
+	
+	.right-header {
+		background-color: #444
+		; min-width: 3cm
+		; border-radius: 1ex
+		; color: white
+		; font-size: 140%
+		; font-family: Gill Sans, Arial, sans-serif
+		; padding: 10px 66px
+	}
+	
+	footer {
+		background: #888
+		; text-align: right
+	}
+</style>	
+	
+</head>

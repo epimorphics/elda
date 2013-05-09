@@ -1,0 +1,21 @@
+<html>
+<head>
+<link href="../docs/style.css" type="text/css" rel="stylesheet"></link>
+</head>
+<body>
+
+<div class="heading">
+<h1>BoardGame</h1>
+<a href="http://www.epimorphics.com">
+<h2> http://localhost:8080/elda/vocabulary/BoardGame </h2>
+</a>
+</div>
+
+
+<p>
+    A board game
+</p>
+
+</body>
+</html>
+

@@ -1,0 +1,519 @@
+<html>
+<head>
+<title>Elda -- an implementation of the Linked Data API</title>
+<link href="style.css" type="text/css" rel="stylesheet"></link>
+</head>
+<body>
+
+<div class="main">
+
+<div class="heading">
+<a href="http://www.epimorphics.com">
+<img class="logo" src="epilogo-240.png">
+</a>
+<h1>Elda 1.2.13</h1>
+<h2>An implementation of the Linked Data API</h2>
+</div>
+
+<h1>Accepted content types</h1>
+
+<p>
+Elda accepts the following content types by default.
+</p>
+
+<ul>
+    <li>text/javascript, application/javascript:
+        for JSONP on some browsers.
+    </li>
+    <li>text/plain:
+        Plain text JSON.
+    </li>
+    <li>application/rdf+xml, text/turtle:
+        RDF/XML or Turtle representations of models.
+    </li>
+    <li>application/json: model rendered as JSON.
+    </li>
+    <li>text/xml;
+        model rendered as XML.
+    </li>
+    <li>text/html:
+        model rendered by stylesheet applied to XML rendering.
+    </li>
+</ul>
+
+<h1>Additional Elda features</h1>
+
+<h2>Configuration variables</h2>
+
+<p>
+    Elda reserves LDA variable names that begin "_" for
+    configuration purposes.
+</p>
+
+<h3>Variables used by the stylesheet</h3>
+
+<p>
+    The built-in Elda stylesheet generates HTML pages
+    that require http access to images, CSS stylesheets,
+    and Javascript served by the Elda server. Because
+    the webapp root isn't fixed, the stylesheet reads
+    location information from LDA variables that are
+    set as part of creating an Elda webapp.
+</p>
+
+<ul>
+    <li>_resourceRoot: the location from which the
+    resources will be served, relative to the server
+    root. May include a domain:port if the resources
+    are on a different server.
+    </li>
+
+    <li>activeImageBase: the location within the
+    resource root where the active (enabled) images
+    used by the stylesheet are fetched from.
+    </li>
+
+    <li>inactiveImageBase: the location within the
+    resource root where the inactive (disabled) images
+    used by the stylesheet are fetched from.
+    </li>
+
+</ul>
+
+<h3>Variables used by the Elda code</h3>
+
+<ul>
+    <li>_strip_has: (OBSOLESCENT) If this variable is defined
+    and has the value "yes", the XML renderer will rename
+    properties "hasWhatever" (ie where the fourth character
+    is upper-case) to "whatever". This is for compatability
+    with Puelia when using a Puelia-specific stylesheet.
+    </li>
+
+    <li>_suppress_media_type: If there is no .formatter
+    suffix in the request URL, and no _format= query
+    parameter, then the prescribed LDA behaviour is to
+    see if the request headers specify an appropriate
+    media type. If the requesting entity is a browser
+    it almost always will (with */*), which is inconvenient
+    when testing for the default default behaviour of
+    sending JSON. Setting this variable to "yes" will
+    cause Elda to ignore the supplied media type.
+    </li>
+
+    <li>_exceptionIfEmpty: by default, if a query for
+    an item template returns no item (because the requested
+    item has none of the required properties) Elda will
+    generate a 404 response rather than displaying an
+    empty item endpoint page. If the variable _exceptionIfEmpty
+    does not have the value "<code>yes</code>", then the
+    empty page is display.  
+    </li>
+</ul>
+
+<h2>wildcard '*' in view property chains</h2>
+
+<p>
+    A property chain appearing in a view specification
+    may contain the special element '*', meaning "any
+    property". In the generated query it is replaced by
+    a fresh variable. There can be any number of *-elements,
+    anywhere within the chain.
+</p>
+
+<h2>api:base</h2>
+
+<p>
+    An LDA configuration may specify an api:base property.
+    This should, if possible, be used to specify where 
+    the Elda webapp is served from. If specified, all
+    Elda's constructed URIs (such as those for different
+    views or formats of the displayed page) will use
+    that base URI with the path and query parameters
+    supplied in the request. This means that a server
+    at location A can generate URIs as though it were
+    at location B (from which it may have been redirected). 
+</p>
+
+<h2>elda:describeAllLabel</h2>
+
+<p>
+    If a new viewer is declared with the property
+    <code>elda:describeAllLabel</code>, it becomes a
+    variant of the <code>describeAllViewer</code>
+    where the label property used is the object of
+    that property rather than <code>rdfs:label</code>.
+</p>
+
+<h2>elda:allowedReserved</h2>
+
+<b>Experimental</b>: may be revised or removed.
+
+<p>
+    Normally (and as prescribed by the spec) Elda will
+    generate a 400 status for queries that try and use
+    unknown reserved parameter names (those beginning
+    with _), eg <code>?_example=17</code>.
+</p>
+
+<p>
+    The property <code>elda:allowReserved</code> may be
+    attached to an API or to an endpoint. Its values
+    are the names of reserved parameters that should be
+    ignored rather than generating status 400.
+</p>
+
+<p>
+    Attachments to the API apply to all endpoints; attachments
+    to one endpoint affect only that endpoint. 
+</p>
+
+<h2>etag generation</h2>
+
+<b>Experimental</b>: may be revised or removed.
+
+<p>
+    If an endpoint has the property <code>elda:enableETags</code>
+    with value <code>true</code>, or it does not have that
+    property but its parent API spec does with value 
+    <code>true</code>, then Elda will generate an etag
+    on successful responses. The value of the etag is derived
+    from hashes of:
+</p>
+
+<ul>
+    <li>the request URI</li>
+    <li>the Accept header (if present)</li>
+    <li>the Accept-Encoding header (if present)</li>
+    <li>the response's media type</li>
+    <li>the content of the model</li>
+</ul>
+
+<h2>item template fallback</h2>
+
+<p>
+    If an inbound URI does not match any of the uriTemplates
+    of the endpoints, Elda attempts to match that URI against
+    any item templates of the endpoints. If it finds a match,
+    then the query is redirected to that item endpoint.
+</p>
+
+<p>
+    This behaviour is currently not configurable.
+</p>
+
+
+<h2>SPARQL 1.1 features</h2>
+
+<p>
+    Some generated queries -- those that have view defined by
+    property chains and are applied to many selected items -- 
+    are rather large (exceeding a megabyte). These queries are
+    repetitions of the view property accesses specialised by
+    the selected item. If the SPARQL server supports nested
+    selects (part of, but not limited to, SPARQL 1.1), then
+    these repetitions can be replaced by a single application
+    of the view wrapped round a nested select that fetches
+    the items.
+</p>
+
+<p>
+    Elda automatically uses nested selects if the data source 
+    is a <b>local:</b> or <b>tdb:</b> model, or it the
+    <code>sparqEndpoint</code> value of the API is a
+    resource with an <b>extras:supportsNestedSelects</b>
+    value of true, "true", or "yes". (We anticipate that
+    later versions of Elda will dynamically check the server
+    to see if nested selects work.)
+</p>
+
+<h2>DESCRIBE thresholds</h2>
+
+<p>
+    Support for nested selects applies to DESCRIBE queries as well,
+    which may consist of a great many URIs when the selection
+    phase generates many items. To give greater control over 
+    the use of nested selects for DESCRIBE, a view may be defined 
+    with the property <code>extras:describeThreshold</code>. This
+    makes that view a DESCRIBE view on which nested selects
+    (if available) are then only used if the number of selected 
+    items exceeds the value of this property.
+</p>
+
+<p>
+    The default default threshold value is 10. However, it can be
+    changed. Setting the <code>extras:describeThreshold</code>
+    property on an <i>endpoint</i> makes all the (describe) viewers 
+    created for that endpoint have that value for their threshold.
+    Setting that property on an <code>api:API</code> makes the
+    default for all its endpoints be that value. 
+</p>
+
+<p>
+    (Values and defaulting rules may change in leater releases
+    of Elda according to reported experience.)
+</p>
+
+<h2>configuration rendering</h2>
+
+<p>
+    Elda provides the api:base-relative URI path <code>/api-config</code>.
+    Browsing this URI delivers a rendering of the various APIs that
+    the Elda instance provides. Each API description shows the
+    different endpoints, with their variable bindings and named views,
+    and the dictionary of shortnames appropriate to this endpoint.
+    By default the descriptions are hidden (for compactness) and
+    are revealed by clicking on the section titles.
+</p>
+
+<p>
+    The api:base-relative URI path 
+    <code>/meta/<span style='color: blue'>some/uri/template</span></code>
+    provides the same configuration description as <code>/api-config</code>,
+    but the API and endpoint for 
+    <span style='color: blue'>some/uri/template</span>
+    are already opened.
+</p>
+
+<h2>Formatting extensions</h2>
+
+<p>
+If the object of an <code>api:stylesheet</code> directive starts
+with the prefix "xsl:", then the stylesheet is loaded from Elda's
+stylesheet directory, wherever that is. (By default it is 
+<code>webapp/xsltsheets</code>, but this will become configurable.)
+</p>
+
+<p>
+If a formatter has the property 
+<code>http://www.epimorphics.com/vocabularies/lda#className</code>,
+then the (String) object of that property must be the name of a Java
+class that implements the <code>RendererFactory</code> interface.
+When rendering is required, an instance of that class is invoked
+to deliver a Renderer, and that Renderer is used to render the
+result set.
+</p>
+
+
+<h2>statistics</h2>
+
+<p>
+    The api:base-relative URI path <code>/control/show-stats</code> displays
+    statistics about the queries that this Elda instance has handled, including:
+</p>
+
+<ul>
+    <li>the total number of requests made</li>
+    <li>the number of requests that failed</li>
+    <li>the number of selection cache hits</li>
+    <li>the number of view cache hits</li>
+</ul>
+
+<p>
+    (Elda maintains two internal caches, one mapping the computed selection
+    query to the list of items it generates, the other mapping (list of
+    item, view) pairs to generated result sets. These are independant of
+    any caches provided by <i>eg</i> an Apache server wrapping Elda.)
+</p>
+
+<ul>
+    <li>the elapsed time dealing with all requests</li>
+    <li>the elapsed time taken for item-selection queries</li>
+    <li>the elapsed time taken for view-display queries</li>
+    <li>the elapsed time taken to render an Elda result</li>
+    <li>any remaining non-query non-rendering time</li>
+</ul>
+
+<p>
+    All of these results show the total time, the mean time over all
+    requests, and the maximum and minimum times over all requests.
+</p>
+
+<ul>
+    <li>the size of the rendered results</li>
+    <li>the size of the select queries</li>
+    <li>the size of the view queries</li>
+</ul>
+
+<p>
+    All of these results show the total size (in [kilo-]bytes),
+    and the mean, maximum, and minimum over all requests.
+</p>
+
+<p>
+    The display also breaks down rendering sizes and times by
+    the rendering format (ie JSON/XML/HTML ...).
+</p>
+
+<h2>Cache</h2>
+
+<p>
+Elda caches the results of queries so that they may be re-served
+quickly. When the cache gets "too full", it is reset. "Too full"
+by default is measured by the number of triples in the cache.
+</p>
+
+<h2>Using Elda directly</h2>
+
+<p>You don't need to go through a servlet (or restlet)
+framework to exploit Elda. You can call the components
+yourself and supply whatever glue you like.
+</p>
+
+<h3>Creating an APISpec</h3>
+
+<p>
+The constructor
+<pre>
+APISpec(Resource config, ModelLoader forVocab)
+</pre>
+
+delivers a new APISpec object configured from the given
+Resource. You may have chosen a Resource with a known 
+URI in a config model, or found one with <code>rdf:type</code>
+<code>api:API</code>, depending on your usecase. The
+<code>ModelLoader</code> is only used if the config has
+<code>api:vocabulary</code> elements, in which case it
+loads the models for its API vocabulary.
+</p>
+
+<p>
+Given an APISpec, the method <code>getEndpoints()</code>
+delivers a list of <code>APIEndpoint</code> objects corresponding
+(in no defined order) with the endpoint descriptions in the
+config model. 
+</p>
+
+<h3>Running an endpoint</h3>
+
+<p>
+You can then invoke
+<pre>
+APIEndpointUtil.call( control, match, requestUri, formatSuffix, queryParams )
+</pre>
+where
+</p>
+
+<ul>
+  <li><i>Controls c</i> is a Controls object that controls whether the
+    Elda cache can be used for this request and records timing information;
+    <code>new Controls()</code>	will do fine.
+  </li>
+
+  <li><i>Match match</i> wraps the endpoint object and the variable bindings that
+    made when matching the endpoint's <code>api:uriTemplate</code> against the
+    request URI. The usual way to get a Match object is to call <code>getMatch</code>
+    on a suitable <code>Router</code> value.
+  </li>
+
+  <li><i>URI requestURI</i> is the request URI for this request.
+  </li>
+
+  <li><i>String formatSuffix</i> is the format suffix associated with this request,
+    to be returned as the format name if the endpoint <code>call</code> does not
+    supply an alternative. The usual way to get the format suffix is from the end
+    of the request URIs path.
+  </li>
+
+  <li><i>MultiMap queryParams</i> is a map from query parameter names to their
+    (string) values.
+  </li>
+
+</ul>
+
+<p>
+The call returns a three-element object which contains the
+<code>ResultSet</code> of the query execution (the result
+model and selected items), the name of the result formatter
+that has been selected by the endpoint, and the variable
+Bindings.
+</p>
+
+<h3>Rendering results</h3>
+
+<p>
+Once you have chosen a renderer <code>R</code> to use for the 
+result set, the invocation
+
+<pre>
+R.render( t, rc, results )
+</pre>
+
+where <code>t</code> is a <code>Times</code> object,
+delivers a String which is the rendering of <code>results</code>
+according to the RenderContext <code>rc</code>, which you can
+construct from the <code>VarValues</code> embedded in the call
+context, the context path, and an AsURL object to convert URI
+fragments into full URIs.
+</p>
+
+
+<p>
+The method call <code>R.getMediaType()</code> returns the media
+type for the renderer's result. 
+</p>
+
+
+<h2>Building Elda</h2>
+
+<p>
+  Prerequisites: 
+  <a href="http://java.com/">Java</a> (underlying platform),
+  <a href="http://mercurial.selenic.com/">Mercurial</a> (to fetch the sources),
+  <a href="http://maven.apache.org/Maven">Maven</a> (build management).
+  Maven will download remaining necessary jars for Jena, Jersey, etc.
+</p>
+
+<p>
+  Download the Elda sources:
+
+<pre>
+hg clone https://elda.googlecode.com/hg/ elda  
+</pre>
+
+places the Elda sources in ./elda (which is created if necessary).
+</p>
+
+<p>
+Running
+<pre>
+mvn clean install
+</pre>
+will now build the Elda jars and put them into your local
+Maven repository, along with all the jars that they depend
+on. You can then either use Maven to build your own
+application with those jars as dependencies, or extract
+them and embed them in your own libraries.
+</p>
+
+<p>
+Look in the (automatically created) file
+<code>/lda/src/main/java/com/epimorphics/lda/Version.java</code>
+to see which version of Elda is being built. If you want to use
+a non-SNAPSHOT version, use 
+
+<pre>
+hg update -r REVISION
+</pre>
+
+before running maven, where REVISION is your choice of the revision
+tags you get from running:
+
+<pre>
+hg tags
+</pre>
+
+and selecting a tag that looks like <code>lda-top-1.X.Y</code>;
+that is the shape of tag generated by the Elda release process.
+</p>
+
+<div class="footer">
+<hr>
+&copy; Copyright 2011 Epimorphics Limited. For licencing conditions see
+<a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
+</div>
+</div>
+
+</body>
+</html>
+
