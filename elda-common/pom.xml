@@ -46,7 +46,7 @@
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>maven-jetty-plugin</artifactId>
 			<configuration>
-				<contextPath>/other</contextPath>
+				<contextPath>/elda-common</contextPath>
 			</configuration>
 		</plugin>
 

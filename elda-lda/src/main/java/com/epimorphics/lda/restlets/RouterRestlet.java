@@ -304,7 +304,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 			@Override public URL asResourceURL( String ePath ) { 		
 			String p = ePath.startsWith( "/" ) || ePath.startsWith( "http://") ? ePath : "/" + ePath;
 			try {
-				URL result = servCon.getResource( p );
+				URL result = p.startsWith( "http:" ) ? new URL(p) : servCon.getResource( p );
 				if (result == null) EldaException.NotFound( "webapp resource", ePath );
 				return result;
 				}
