@@ -15,25 +15,132 @@
 <h2>An implementation of the Linked Data API</h2>
 </div>
 
+<h1 a name="elda-common">Elda Common</h1>
+
+<p>
+Elda Common provides a way of dropping Elda
+into an existing webapp container (typically Tomcat)
+with a minimum of fuss.
+</p>
+
+<p>
+There are three components to Elda Common:
+
+<ul>
+	<li>
+		The Elda Common War, a Maven artifact you can download
+		in the usual way as file 
+		<code>elda-common-VERSION.war</code>.
+	</li>
+
+	<li>
+		The Elda Assets War, a Maven artifact you can download
+		in the usual way as <code>elda-assets-VERSION.war</code>.
+	</li>
+
+	<li>
+		A minimal LDA config downloadable from
+		<a href="http://http://elda.googlecode.com/hg/elda-assets/src/main/webapp/specs/elda-common_minimal.ttl">TODO</a>.
+	</li>
+</ul>
+
+The Common and Assets files should have the same version. Using
+Elda Common requires that you have sufficient access permissions
+on the machine you're going to install it on and that that machine
+is running a webapp container (or that you can start one).
+</p>
+
+<p>
+To use Elda Common, you add both .war files to your Tomcat
+configuration. Doing so may be as simple as dropping them
+into the appropriate directory. You need both .war files;
+Elda Common contains the LDA-handling Java code and Elda
+Assets provides styleheets, scripts, css, etc which Elda
+Common refers to or loads.
+</p>
+
+<p>
+By default, Elda Common assumes that Elda Common's context
+path is <code>elda-common</code> and Elda Assets's context
+path is <code>elda-assets</code>. If you want them to use
+different context paths, you will need to also change the
+name and contents of the LDA config (see below). You can
+install multiple copies of Elda Common with different
+context paths, all sharing the same assets. (You can also
+have multiple different assets if necessary.)
+</p>
+
+<p>
+By default, Elda Common loads its LDA configs from
+<code>/etc/elda/configs/{APP}_*.ttl</code>, where
+<code>{APP}</code> is the context path of that instance
+of Elda Common. This means that each instance may have
+multiple configs that it can load, and different instances
+can load different files.
+</p>
+
+<p>
+The LDA configurations contain references to the assets
+webapp, as seen in the minimal configuration file
+supplied. For a given API:api in a configuration file,
+the location of the assets is given in a variable
+binding:
+</p>
+
+<pre>
+; api:variable [api:name "_resourceRoot"; api:value "http://localhost/elda-assets/"]
+</pre>
+
+<p>
+so that the Elda Common instance running this LDA spec will
+refer to the elda-assets instance running on the same
+machine (and probably the same webapp container). If the
+assets instance has been renamed, or moved to a different
+machine, this part of the configuration will have to be
+changed.
+</p>
+
+<p>
+Similarly, if the configuration is generating HTML using the
+Elda XSLT renderer, the stylesheets are loaded from the
+assets according to the binding on the XsltFormatter by:
+</p>
+
+<pre>
+; api:stylesheet "http://localhost/elda-assets/xslt/result.xsl"
+</pre>
+
+<p>
+Again, if the assets are moved, this part of the configuration
+will have to be changed.
+</p>
+
+<p>
+The supplied minimal configuration is a place-holder with
+two uri templates: /anything, to provide some example 
+results, and /about?resource={someURI}, to provide information
+about the URI someURI. 
+</p>
+
+
 <h1><a name="beyond"></a>Beyond the stand-alone jar</h1>
 
 <p>
 The Elda standalone jar is just a delivery mechanism for getting
 started with LDA functionality: it packs together the Elda code
-and a Jetty server running an Elda webapp. 
+(a merge of Elda Common and Elda Assets) and a Jetty server.
 </p>
 
 <p>
-To use Elda in your own webapps, you can copy the constructed
-Elda webapp from the unzipped Elda-VERSION/webapps/elda directory
-and edit its web.xml as you require. The necessary jars are all
-in <code>webapps/elda/WEB-INF/lib</code>.
+To use Elda for your own webapps, you can use Elda Common
+(suitably replacing the minimal LDA config), produce your
+own merge of Common and Assets, or tweak the Elda Standalone
+warfile. You will need to edit the web.xml appropriately.
 </p>
 
 <p>
 If you have downloaded the Elda repository, then you can
-rebuild the Elda working jars 
-(json-rdf-VERSION.jar and lda-VERSION.jar) 
+rebuild the Elda working jar (lda-VERSION.jar) 
 and webapp using <a href="http://maven.apache.org/">Maven</a>;
 see below.
 </p>
