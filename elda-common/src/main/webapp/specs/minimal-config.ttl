@@ -22,6 +22,7 @@
 @prefix elda:   <http://www.epimorphics.com/vocabularies/lda#> .
 
 spec:minimal a api:API
+	; api:base "/"
 	; rdfs:label "a minimal demonstration API"
 	; api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query>
 	; api:defaultViewer api:labelledDescribeViewer
@@ -29,12 +30,13 @@ spec:minimal a api:API
 	; api:viewer api:describeViewer, api:labelledDescribeViewer, api:basicViewer
 	; api:endpoint spec:about, spec:anything
 	; api:variable [api:name "_exceptionIfEmpty"; api:value "no"]
+	; api:variable [api:name "_resourceRoot"; api:value "http://localhost/elda-assets/"]
 	.
 	
 spec:HtmlFormatter a api:XsltFormatter 
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "lda-assets/xslt/school.xsl"
+	; api:stylesheet "http://localhost/elda-assets/xslt/result.xsl"
 	.
 
 <http://education.data.gov.uk/sparql/education/query> 
