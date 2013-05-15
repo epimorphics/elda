@@ -50,25 +50,23 @@ public class RouterRestletSupport {
         contextPath.
     */
 	public static Router createRouterFor( ServletConfig sc, String contextName ) {
-		Router result = new DefaultRouter();
-		
+		Router result = new DefaultRouter();	
 		String baseFilePath = ServletUtils.withTrailingSlash( sc.getServletContext().getRealPath("/") );
-		
         AuthMap am = AuthMap.loadAuthMap( FileManager.get(), noNamesAndValues );
-        
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
         FileManager.get().addLocatorFile( baseFilePath );
-        
+//
 //        SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
         SpecManagerImpl sm = new SpecManagerImpl(result, modelLoader);
 		SpecManagerFactory.set( sm );
-
     	String prefixPath = sc.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
-		
+	//
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(new ServletConfigSpecContext(sc));
-		
+		// log.info( ">> createRouterFor ---------------------------------" );
 		for (String specTemplate: specFilenameTemplates) {
+			// log.info( ">>   template " + specTemplate );
 			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextName );
+			// log.info( ">>   specName " + specName );
 			String prefixPath1 = prefixPath;
 			String specPath = specName;
 			int chop = specPath.indexOf( "::" );

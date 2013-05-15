@@ -77,25 +77,41 @@ public class TestGlob {
 		}
 		
 		@Override public boolean isDirectory(File f) {
-			String path = f.getPath() + "/";
-			for (String fn: fileNames) if (fn.startsWith(path)) return true;
+			String path = f.getPath();
+			for (String fn: fileNames) {
+				if (fn.startsWith(path) && fn.length() > path.length() && Glob.isPathSeparator(fn.charAt(path.length()))) {
+					return true;
+				}
+			}
 			return false;
 		}
 
 		@Override public File[] listFiles(File d, FilenameFilter ff) {
-			String dn = d.getPath() + "/";
+			String dn = d.getPath();
 			int dl = dn.length();
 			List<File> result = new ArrayList<File>();
 			for (String fn: fileNames) 
-				if (fn.startsWith(dn)) {
-					String name = fn.substring(dl);
+				if (fn.startsWith(dn) && fn.length() > dl && Glob.isPathSeparator(fn.charAt(dl))) {
+					String name = fn.substring(dl+1);
 					if (ff.accept( d,  name )) {
-						int slash = fn.indexOf('/', dl);
+						int slash = firstSeparator(fn, dl+1);
 						if (slash > -1) fn = fn.substring(0, slash);
 						result.add(new File(fn));
 					}
 				}
 			return result.toArray( new File[result.size()] );
+		}
+		
+		private int firstSeparator(String s, int start) {
+			int forwardIndex = s.indexOf('/', start);
+			int backwardIndex = s.indexOf('\\', start);
+			if (forwardIndex == -1) {
+				return backwardIndex;
+			} else if (backwardIndex == -1) {
+				return forwardIndex;
+			} else {
+				return Math.min(forwardIndex, backwardIndex);
+			}
 		}
 	}
 

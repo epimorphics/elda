@@ -59,11 +59,11 @@ public class Glob {
 	*/
 	public List<File> filesMatching(List<File> files, String path) {
 		String root = "./";
-		if (path.startsWith("/")) {
+		if (path.length() > 0 && isPathSeparator(path.charAt(0))) {
 			root = "/"; 
 			path = path.substring(1);
 		} 
-		return filesMatching(files, new File(root), Arrays.asList( path.split("/") ) );	
+		return filesMatching(files, new File(root), Arrays.asList( path.split("[/\\\\]") ) );	
 	}
 
 	/**
@@ -122,8 +122,13 @@ public class Glob {
 			else if ("[].*+()?^$\\".indexOf(ch) > -1) re.append("\\").append(ch);
 			else re.append(ch);
 		}
-		return re.toString();
+		String result = re.toString();
+		return result;
 	}	
+	
+	public static boolean isPathSeparator(char ch) {
+		return ch == '/' || ch == '\\';
+	}
 	
 	/**
 	    A FileSystemInterface provides an interface onto a file system
