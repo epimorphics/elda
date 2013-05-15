@@ -38,6 +38,9 @@ public class Help {
 			ve.setProperty( "resource.loader",  "class" );
 			ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
 		//
+			ve.setProperty( "url.resource.loader.root", "http://localhost/elda-assets:8080/" );
+			ve.setProperty( "url.resource.loader.cache", true );
+		//
 //			ve.setProperty( "class.resource.loader.cache", false );
 //			ve.setProperty( "velocimacro.library.autoreload", true );
 		//

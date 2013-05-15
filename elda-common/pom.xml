@@ -15,12 +15,13 @@
   <description>single WAR with external configuration</description>
 
   <dependencies>
-
-    <dependency>
-      <groupId>com.epimorphics.lda</groupId>
-      <artifactId>lda</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+	  
+      <dependency>
+          <groupId>org.apache.velocity</groupId>
+          <artifactId>velocity</artifactId>
+          <version>1.7</version>
+		  <scope>compile</scope>
+      </dependency>
 
     <dependency>
       <groupId>junit</groupId>
@@ -32,8 +33,6 @@
     	<groupId>com.epimorphics.lda</groupId>
     	<artifactId>lda</artifactId>
     	<version>${project.version}</version>
-    	<classifier>sources</classifier>
-    	<scope>compile</scope>
     </dependency>
 
   </dependencies>
