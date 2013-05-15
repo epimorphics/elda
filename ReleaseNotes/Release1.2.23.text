@@ -1,7 +1,26 @@
 Elda 1.2.23
 
-* The json-rdf module has been absorbed into Elda. 
+* The json-rdf module has been absorbed into Elda.  
+  The Elda assets have been moved to their own module.
+  An elda-common module provides an externally configurable
+  war. The Elda modules are now
+
+  For general use:
+    elda-assets			scripts, stylesheets, images etc for _resourceRoot
+    elda-common			externally configurable WAR file
+    elda-lda			elda's core code
+    elda-standalone		self-contained configurable Elda server
+
+  For internal use:
+    elda-system-tests
+    elda-testing-webapp
+    elda-regress
 
 * The URIs in fetched data can be rewritten to help with staging; see
   
   http://elda.googlecode.com/hg/deliver-elda/src/main/webapp/lda-assets/docs/E1.2.23-advanced.html
+
+* Globbing should now work on Windows.
+
+* XSLT stylesheets have been updated and pruned.
+
