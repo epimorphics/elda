@@ -43,7 +43,7 @@ public class XSLT_RendererFactory implements RendererFactory {
 
 			@Override public Renderer.BytesOut render( Times t, Bindings rc, APIResultSet results ) {
 				handleMetadata(results);
-				final String sheet = root.getProperty( API.stylesheet ).getString();
+				final String sheet = rc.expandVariables(root.getProperty( API.stylesheet ).getString());
 				final XMLRenderer xr = new XMLRenderer( sns, mt, sheet );
 				return xr.render( t, rc.copyWithDefaults( ep.defaults() ), results ); 
 			}

@@ -44,9 +44,16 @@ public class APIEndpointUtil {
 		APIEndpointSpec spec = ep.getSpec();
 		Bindings vs = new Bindings( spec.getBindings() ).updateAll( match.getBindings() );
 		if (suffix != null) vs.put( "_suffix", suffix );
-		vs.put("_APP", contextPath );
+		vs.put( "_APP", contextPath );
+		vs.put( "_HOST", getHostAndPort( requestUri ) );
 		Bindings cc = Bindings.createContext( vs, queryParams );
 		return ep.call( c, requestUri, cc );
+	}
+
+	private static String getHostAndPort(URI u) {
+		String host = u.getHost();
+		int port = u.getPort();
+		return port < 1 ? host : host + ":" + port;
 	}
 
 	/**

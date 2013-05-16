@@ -1,0 +1,71 @@
+# minimal operational config
+
+# This LDA description is a "getting started" configuration.
+# Replace all references to the SPARQL endpoint
+#
+#	http://education.data.gov.uk/sparql/education/query
+#
+# with your SPARQL endpoint of interest. Replace the value 'true'
+# for supportsNestedSelect with 'false' unless you know the endpoint
+# support's SPARQL 1.1's nested select (as eg any Fuseki does and the
+# education endpoint does).
+#
+# The /anything endpoint will display some (10) items from the SPARQL
+# endpoint that have an rdf:type property. 
+#
+# The /about?resource=URI endpoint will display information about the
+# resource with the given URI from that SPARQL endpoint.
+
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix spec:	<http://education.data.gov.uk/api-config#> .
+@prefix api:    <http://purl.org/linked-data/api/vocab#> .
+@prefix elda:   <http://www.epimorphics.com/vocabularies/lda#> .
+
+spec:minimal a api:API
+	; api:base "/"
+	; rdfs:label "a minimal demonstration API"
+	; api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query>
+	; api:defaultViewer api:labelledDescribeViewer
+	; api:defaultFormatter spec:HtmlFormatter 
+	; api:viewer api:describeViewer, api:labelledDescribeViewer, api:basicViewer
+	; api:endpoint spec:about, spec:anything
+	; api:variable [api:name "_exceptionIfEmpty"; api:value "no"]
+	; api:variable [api:name "_resourceRoot"; api:value "http://localhost/elda-assets/"]
+	.
+	
+spec:HtmlFormatter a api:XsltFormatter 
+	; api:name "html" 
+	; api:mimeType "text/html; charset=utf-8" 
+	; api:stylesheet "http://localhost/elda-assets/xslt/result.xsl"
+	.
+
+<http://education.data.gov.uk/sparql/education/query> 
+	elda:supportsNestedSelect true.
+
+#
+# Describe a generic 'thing' as an example of an itemEndpoint.
+#
+spec:about a api:ItemEndpoint
+	; api:uriTemplate     "/about?resource={uri}"
+    ; rdfs:comment        "A generic item endpoint API for asking about a specific thing by 'uri'."
+    ; api:itemTemplate    "{uri}"
+    ; api:viewer          api:basicViewer, api:describeViewer, api:labelledDescribeViewer
+    ; api:defaultViewer   api:describeViewer
+    .
+
+#
+# List 'anything' endpoint
+#
+spec:anything a api:ListEndpoint
+    ; api:name            	"anything" 
+    ; rdfs:comment        	"A generic listing endpoint for listing things based solely on URI based filter parameters"@en
+    ; api:uriTemplate		"/anything"
+    ; api:selector			[api:where   " ?item a ?v1 . FILTER (!isBlank(?item)) "]
+    ; api:exampleRequestPath  "/anything"
+###
+### no selector - defers everything to URI params
+###
+     ; api:viewer api:describeViewer, api:basicViewer, api:labelledDescribeViewer
+     ; api:defaultViewer   api:describeViewer
+     .
+
