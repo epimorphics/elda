@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import org.apache.velocity.app.VelocityEngine;
 
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.WrappedIOException;
@@ -18,8 +19,6 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class Help {
-	
-    private static final String velocityPropertiesFileName = "velocity.properties";
     
 	static final Logger log = LoggerFactory.getLogger( Help.class );
 
@@ -29,16 +28,23 @@ public class Help {
 	    or defines no properties, with a default classpath resource loader.
 	    The <code>config</code> resource is currently unused.
 	*/
-	public static VelocityEngine createVelocityEngine( Resource config ) {
-		Properties p = getProperties( velocityPropertiesFileName );
+	public static VelocityEngine createVelocityEngine( Bindings b, Resource config ) {
+		String propertiesName = velocityPropertiesFileName(b);
+		Properties p = getProperties( propertiesName );
 		VelocityEngine ve = new VelocityEngine(); 
 		if (p.isEmpty()) {
 			log.info( "using default velocity properties." );
-			ve.setProperty( "runtime.references.strict", "true" );
-			ve.setProperty( "resource.loader",  "class" );
-			ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
 		//
-			ve.setProperty( "url.resource.loader.root", "http://localhost/elda-assets:8080/" );
+			String defaultRoot = b.getAsString("_resourceRoot", "") + "/vm/";
+			String templateRoot = b.getAsString("_velocityRoot", defaultRoot);
+		//
+			ve.setProperty( "runtime.references.strict", "true" );
+//			ve.setProperty( "resource.loader",  "class" );
+//			ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
+		//
+			ve.setProperty( "resource.loader", "url" );
+			ve.setProperty( "url.resource.loader.class", "org.apache.velocity.runtime.resource.loader.URLResourceLoader" );
+			ve.setProperty( "url.resource.loader.root", templateRoot );
 			ve.setProperty( "url.resource.loader.cache", true );
 		//
 //			ve.setProperty( "class.resource.loader.cache", false );
@@ -48,12 +54,16 @@ public class Help {
 			ve.setProperty("runtime.log.logsystem.log4j.category", "velocity");
 			ve.setProperty("runtime.log.logsystem.log4j.logger", "velocity");
 		} else {
-			log.info( "loaded properties file " + velocityPropertiesFileName );
+			log.info( "loaded properties file " + propertiesName );
 		}
 		ve.init();
 		return ve;
 	}
 	
+	private static String velocityPropertiesFileName(Bindings b) {
+		return b.getAsString("_resourceRoot", "") + "/velocity.properties";
+	}
+
 	static Properties getProperties( String fileName ) {
 		Properties p = new Properties();
 		InputStream is = FileManager.get().open( fileName );

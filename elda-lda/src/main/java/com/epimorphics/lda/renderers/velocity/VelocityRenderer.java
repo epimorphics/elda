@@ -23,8 +23,8 @@ public class VelocityRenderer implements Renderer {
 
 	static final String[] defaultMetadataOptions = "bindings,formats,versions,execution".split(",");
 	
-	public VelocityRenderer( MediaType mt, Resource config ) {
-		VelocityEngine ve = Help.createVelocityEngine( config );
+	public VelocityRenderer( MediaType mt, Bindings b, Resource config ) {
+		VelocityEngine ve = Help.createVelocityEngine( b, config );
 		String templateName = RDFUtils.getStringValue( config, API.stylesheet, "page-shell.vm" );
 		this.mt = mt;
 		this.core = new VelocityCore( ve, templateName );

@@ -1,10 +1,15 @@
 <head>
+<!--
+#set ($assets = $vars['_resourceRoot'])
+#set ($images = $assets + "images")
+#set ($scripts = $assets + "scripts")
+-->
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Elda with Velocity</title>
 
-<script type="text/javascript" src="/elda/lda-assets/scripts/jquery.min.js"> </script>
-<script type="text/javascript" src="/elda/lda-assets/scripts/jquery-ui.min.js"> </script>
-<script src="/elda/lda-assets/scripts/codemirror/codemirror_min.js" type="text/javascript"> </script>
+<script type="text/javascript" src="${scripts}/jquery.min.js"> </script>
+<script type="text/javascript" src="${scripts}/jquery-ui.min.js"> </script>
+<script src="${scripts}/codemirror/codemirror_min.js" type="text/javascript"> </script>
 
 <script type="text/javascript">
 
@@ -12,8 +17,8 @@ $(function() {
 	$('textarea').each(function() {
 		var cm = CodeMirror.fromTextArea(this, 
 			{
-			basefiles: ["/elda/lda-assets/scripts/codemirror/codemirror_base_sparql.js"],
-			stylesheet: "/elda/lda-assets/css/sparql.css",
+			basefiles: ["${scripts}/codemirror/codemirror_base_sparql.js"],
+			stylesheet: "${assets}/css/sparql.css",
 			textWrapping: false
 			})
 		$(cm.frame)
@@ -49,7 +54,7 @@ $(function() {
 	}
 	
 	header h1 {
-		background: url("../lda-assets/images/molecule.png") no-repeat scroll 0px 0px transparent
+		background: url("${images}/molecule.png") no-repeat scroll 0px 0px transparent
 		; color: rgb(85, 85, 85)
 		; font-size: 2.3em
 		; font-weight: 300

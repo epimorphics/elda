@@ -1,8 +1,12 @@
 <html>
+<!--
+#set ($assets = $vars['_resourceRoot'])
+#set ($images = $assets + "/images")
+-->
 #parse("page-head-shell.vm")
 <body style="background: #eee">
 
-<img src="/elda/lda-assets/images/elda-banner.png" alt="Elda banner" />
+<img src="${images}/elda-banner.png" alt="Elda banner" />
 
 <header>
 	<h1>Linked Data API</h1>
