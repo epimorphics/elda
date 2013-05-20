@@ -16,26 +16,6 @@
 
   <dependencies>
 
-    <dependency>
-      <groupId>com.epimorphics.lda</groupId>
-      <artifactId>lda</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.8.2</version>
-    </dependency>
-  
-    <dependency>
-    	<groupId>com.epimorphics.lda</groupId>
-    	<artifactId>lda</artifactId>
-    	<version>${project.version}</version>
-    	<classifier>sources</classifier>
-    	<scope>compile</scope>
-    </dependency>
-
   </dependencies>
 
   <build>

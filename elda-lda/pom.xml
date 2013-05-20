@@ -8,8 +8,8 @@
   </parent>
 
 	<groupId>com.epimorphics.lda</groupId> 
-  <artifactId>lda</artifactId>
-  <name>lda</name>  
+  <artifactId>elda-lda</artifactId>
+  <name>elda-lda</name>  
   <version>1.2.23-SNAPSHOT</version>
 
   <url>http://maven.apache.org</url>

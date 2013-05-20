@@ -31,7 +31,7 @@
   
     <dependency>
     	<groupId>com.epimorphics.lda</groupId>
-    	<artifactId>lda</artifactId>
+    	<artifactId>elda-lda</artifactId>
     	<version>${project.version}</version>
     </dependency>
 
