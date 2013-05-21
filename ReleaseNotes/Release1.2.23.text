@@ -8,6 +8,7 @@ Elda 1.2.23
   For general use:
     elda-assets			scripts, stylesheets, images etc for _resourceRoot
     elda-common			externally configurable WAR file
+	elda-unit			elda-assets + elda-common
     elda-lda			elda's core code
     elda-standalone		self-contained configurable Elda server
 
@@ -16,11 +17,26 @@ Elda 1.2.23
     elda-testing-webapp
     elda-regress
 
+  Developers should see 
+
+  
+    http://elda.googlecode.com/hg/docs/E1.2.23-advanced.html
+
+  for a description of how to use elda-common, -assets, and -unit.
+  Existing webapps built on Elda should continue to work as the
+  existing Loader configuration is still operational.
+
 * The URIs in fetched data can be rewritten to help with staging; see
   
-  http://elda.googlecode.com/hg/deliver-elda/src/main/webapp/lda-assets/docs/E1.2.23-advanced.html
+    http://elda.googlecode.com/hg/docs/E1.2.23-advanced.html
 
-* Globbing should now work on Windows.
+* Elda's specification of where config files are to be found now includes
+  globbing; that is, the character * in a pathname means 0 or more non-/
+  characters. Further, the character sequence {APP} is replaced by the
+  context path that this Elda instance is running on. This allows
+  (a) A single file to contain many configs, (b) a single context path
+  to load multiple configs, and (c) a single container to run many independant
+  webapps (hence configs).
 
 * XSLT stylesheets have been updated and pruned.
 
