@@ -93,7 +93,7 @@
       <dependencySet>
           <outputDirectory>/</outputDirectory>
           <includes>
-              <include>com.epimorphics.lda:lda</include>
+              <include>com.epimorphics.lda:elda-lda</include>
           </includes>
           <unpack>true</unpack>
           <unpackOptions>
