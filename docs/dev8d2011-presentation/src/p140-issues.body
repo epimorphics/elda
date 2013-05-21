@@ -1,0 +1,41 @@
+<h2>Interoperability issues</h2>
+
+<p style="font-size: 120%">
+It's easy to write simple URI queries that 
+generate surprisingly complicated SPARQL.
+</p>
+
+<ul>
+<li style="font-size: 120%">
+Property chains especially when combined with big
+data windows (200K SPARQL queries!).
+<a href="z010-big-sparql-query.html">
+(A big transport query.)
+</a>
+</li>
+
+<li style="font-size: 120%">
+Some endpoints do less optimisation than others.
+Elda does a primitive constants-to-the-top reordering
+as a work-around.
+</li>
+</ul>
+
+<div style="float: left">
+<pre style="font-size: 140%">
+?item rdf:type school:School
+?item school:localAuthority> ?___0
+?___0 rdfs:label "London"
+</pre>
+</div>
+
+<div style="float: right">
+<pre style="font-size: 140%">
+?___0 rdfs:label "London"
+?item school:localAuthority ?___0
+?item rdf:type school:School
+</pre>
+</div>
+
+<div style="clear: both">
+</div>

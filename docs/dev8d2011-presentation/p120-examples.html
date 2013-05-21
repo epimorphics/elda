@@ -1,0 +1,215 @@
+<html>
+<head>
+<title>dev8d Elda presentation</title>
+<link href="style.css" type="text/css" rel="stylesheet"></link>
+</head>
+<body>
+<div class="main">
+
+<div class="heading">
+<a href="http://www.epimorphics.com">
+<img class="logo" src="epilogo-240.png">
+</a>
+<h1>Elda</h1>
+<h2>An implementation of the Linked Data API</h2>
+</div>
+
+<a href="p000-and-so-it-begins.html">FIRST</a>
+<a href="p115-running-elda-jar.html">PREV</a>
+<a href="p130-inside-spec.html">NEXT</a>
+<h2>An example</h2>
+
+<a href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School">all schools named Southwark Small School</a>.
+<pre>
+&lt;result format="linked-data-api" href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0" version="0.2"&gt;
+
+&lt;hasFormat&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.text?label=Southwark%20Small%20School"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1001"&gt;
+&lt;label&gt;text/plain&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.rdf?label=Southwark%20Small%20School"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1002"&gt;
+&lt;label&gt;application/rdf+xml&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.ttl?label=Southwark%20Small%20School"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1003"&gt;
+&lt;label&gt;text/turtle&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1004"&gt;
+&lt;label&gt;text/xml&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;type href="http://purl.org/linked-data/api/vocab#ListEndpoint"/&gt;
+&lt;definition href="http://services.data.gov.uk/education/api#api"/&gt;
+&lt;label&gt;should be a description of this list&lt;/label&gt;
+&lt;hasPart href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.owl?label=Southwark%20Small%20School"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1005"&gt;
+&lt;label&gt;application/rdf+xml&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.json?label=Southwark%20Small%20School"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1006"&gt;
+&lt;label&gt;application/json&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools.html?label=Southwark%20Small%20School"&gt;
+
+&lt;format&gt;
+
+&lt;item id="anon_1007"&gt;
+&lt;label&gt;text/html&lt;/label&gt;
+&lt;/item&gt;
+&lt;/format&gt;
+&lt;isFormatOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;/item&gt;
+&lt;/hasFormat&gt;
+&lt;itemsPerPage datatype="long"&gt;10&lt;/itemsPerPage&gt;
+&lt;page datatype="long"&gt;0&lt;/page&gt;
+
+&lt;hasVersion&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?_view=all&label=Southwark%20Small%20School"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;label&gt;all&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?_view=medium&label=Southwark%20Small%20School"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;label&gt;medium&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?_view=description&label=Southwark%20Small%20School"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;label&gt;description&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?_view=geo&label=Southwark%20Small%20School"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;label&gt;geo&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?_view=%23%23%23default&label=Southwark%20Small%20School"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;label&gt;###default&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?_view=short&label=Southwark%20Small%20School"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;label&gt;short&lt;/label&gt;
+&lt;/item&gt;
+
+&lt;item href="http://localhost:8080/elda/api/education/schools?_view=basic&label=Southwark%20Small%20School"&gt;
+&lt;isVersionOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+&lt;label&gt;basic&lt;/label&gt;
+&lt;/item&gt;
+&lt;/hasVersion&gt;
+&lt;type href="http://purl.org/linked-data/api/vocab#Page"/&gt;
+&lt;definition href="http://services.data.gov.uk/education/api#api"/&gt;
+&lt;first href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School&_page=0"/&gt;
+
+&lt;items&gt;
+
+&lt;item href="http://education.data.gov.uk/id/school/100869"&gt;
+&lt;establishmentNumber datatype="integer"&gt;6385&lt;/establishmentNumber&gt;
+&lt;marketingOptInOut datatype="boolean"&gt;false&lt;/marketingOptInOut&gt;
+&lt;gender href="http://education.data.gov.uk/def/school/Gender_Mixed"/&gt;
+&lt;lat datatype="decimal"&gt;51.46070&lt;/lat&gt;
+&lt;burnhamGroup datatype="integer"&gt;0&lt;/burnhamGroup&gt;
+&lt;admissionsPolicy href="http://education.data.gov.uk/def/school/AdmissionsPolicy_Non-selective"/&gt;
+&lt;label&gt;Southwark Small School&lt;/label&gt;
+&lt;establishmentStatus href="http://education.data.gov.uk/def/school/EstablishmentStatus_Closed"/&gt;
+&lt;censusAreaStatisticWard href="http://statistics.data.gov.uk/id/cas-ward/00BEGH"/&gt;
+&lt;specialClasses datatype="boolean"&gt;false&lt;/specialClasses&gt;
+&lt;superannuationCategory href="http://education.data.gov.uk/def/school/SuperannuationCategory_Not_Subject"/&gt;
+&lt;hasGOR href="http://statistics.data.gov.uk/id/government-office-region/H"/&gt;
+&lt;districtAdministrative href="http://statistics.data.gov.uk/id/local-authority-district/00BE"/&gt;
+&lt;specialPupils datatype="integer"&gt;0&lt;/specialPupils&gt;
+&lt;vcard href="http://api.talis.com/stores/govuk-education/items/1258344546303#self"/&gt;
+&lt;statutoryHighAge datatype="integer"&gt;11&lt;/statutoryHighAge&gt;
+
+&lt;type&gt;
+&lt;item href="http://education.data.gov.uk/def/school/TypeOfEstablishment_Other_Independent_School"/&gt;
+&lt;item href="http://education.data.gov.uk/def/school/School"/&gt;
+&lt;/type&gt;
+&lt;censusRecord href="http://education.data.gov.uk/id/school/census/100869"/&gt;
+&lt;religiousCharacter href="http://education.data.gov.uk/def/school/ReligiousCharacter_None"/&gt;
+&lt;PFI datatype="boolean"&gt;false&lt;/PFI&gt;
+&lt;address href="http://api.talis.com/stores/govuk-education/items/1255726359770#self"/&gt;
+&lt;uniqueReferenceNumber datatype="integer"&gt;100869&lt;/uniqueReferenceNumber&gt;
+&lt;MSOA href="http://statistics.data.gov.uk/id/msoa/E02000834"/&gt;
+&lt;LLSC href="http://statistics.data.gov.uk/id/llsc/GL140"/&gt;
+&lt;closeDate datatype="date"&gt;1998-05-01&lt;/closeDate&gt;
+&lt;easting datatype="integer"&gt;533552&lt;/easting&gt;
+&lt;boarders href="http://education.data.gov.uk/def/school/Boarders_No_Boarders"/&gt;
+&lt;parliamentaryConstituency href="http://statistics.data.gov.uk/id/parliamentary-constituency/142"/&gt;
+&lt;typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"/&gt;
+&lt;investorInPeople href="http://education.data.gov.uk/def/school/InvestorInPeople_Uninvolved_at_present"/&gt;
+&lt;statutoryLowAge datatype="integer"&gt;3&lt;/statutoryLowAge&gt;
+&lt;establishmentName&gt;Southwark Small School&lt;/establishmentName&gt;
+&lt;northing datatype="integer"&gt;175275&lt;/northing&gt;
+&lt;LSOA href="http://statistics.data.gov.uk/id/lsoa/E01003953"/&gt;
+&lt;long datatype="decimal"&gt;-0.07897&lt;/long&gt;
+&lt;lastChangedDate datatype="date"&gt;2008-02-27&lt;/lastChangedDate&gt;
+&lt;administrativeWard href="http://statistics.data.gov.uk/id/local-authority-ward/00BEGH"/&gt;
+&lt;ofstedSpecialMeasures datatype="boolean"&gt;false&lt;/ofstedSpecialMeasures&gt;
+&lt;localAuthority href="http://statistics.data.gov.uk/id/local-education-authority/210"/&gt;
+&lt;urbanRural href="http://education.data.gov.uk/def/school/UrbanRural_Urban_10k_less_sparse"/&gt;
+&lt;/item&gt;
+&lt;/items&gt;
+&lt;isPartOf href="http://localhost:8080/elda/api/education/schools.xml?label=Southwark%20Small%20School"/&gt;
+&lt;startIndex datatype="long"&gt;1&lt;/startIndex&gt;
+&lt;/result&gt;
+</pre>
+<div class="footer">
+<hr>
+&copy; Copyright 2011 Epimorphics Limited. For licencing conditions see
+<a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
+</div>
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#
+# copy up the diagrams (there's at least one)
+#
+cp *.png ..
+
+#
+# copy up the bodies, wrapped in the header and footer
+# fragments, with the appropriate FIRST/NEXT/PREV links
+#
+files=("" *body "")
+size=${#files[*]}
+for ((i = 1; i < size-1; i += 1)) 
+do
+    x=${files[i]}
+    first=$(basename ${files[1]} .body).html
+    prev=$(basename ${files[i-1]} .body).html
+    next=$(basename ${files[i+1]} .body).html
+    out=../$(basename $x .body).html
+    cat HEADER.fragment > $out
+    if [ $i != 1 ]; then
+        echo >> $out '<a href="'$first'">FIRST</a>'
+    fi
+    if [ "${files[i-1]}" != "" ]; then 
+       echo >> $out '<a href="'$prev'">PREV</a>'
+    fi
+    if [ "${files[i+1]}" != "" ]; then 
+        echo >> $out '<a href="'$next'">NEXT</a>'
+
+    fi
+    cat $x >> $out
+    cat FOOTER.fragment >> $out
+done

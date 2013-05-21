@@ -1,0 +1,22 @@
+<h2>Running the Elda jar</h2>
+
+<ul>
+<li class="chunky">
+java -jar elda-0.9.12-SNAPSHOT.jar
+</li>
+
+<li class="chunky">
+cd Elda*
+java -jar start.jar
+</li>
+
+<li class="chunky">
+java -Djetty.port=28059 -jar start.jar
+</li>
+
+<li class="chunky">
+java -Delda.spec=SPEC1,SPEC2 -jar start.jar
+</li>
+
+</ul>
+
