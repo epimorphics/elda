@@ -43,9 +43,11 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.Version;
 import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
@@ -58,6 +60,7 @@ import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
+import com.epimorphics.lda.routing.ServletUtils;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
@@ -95,7 +98,20 @@ import com.hp.hpl.jena.shared.WrappedException;
     */
     public RouterRestlet( @Context ServletConfig servFig ) {
     	ServletContext sc = servFig.getServletContext();
+    	announceElda( sc );
     	router = getRouterFor( servFig, sc.getContextPath());
+    }
+    
+    static boolean announced = false;
+    
+    synchronized void announceElda( ServletContext sc ) {
+    	if (!announced) {
+    		String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
+    		String propertiesFile = "log4j.properties";
+    		PropertyConfigurator.configure( baseFilePath + propertiesFile );
+    		log.info( "Starting Elda " + Version.string ); 
+    		announced = true;
+    	}
     }
        
     /**
