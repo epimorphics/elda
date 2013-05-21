@@ -84,7 +84,7 @@ public class TestXMLRendererWithGold extends XMLTestCase {
 	}
 	
 	public void testGolden( String goldName ) throws Exception {
-		GoldXMLTest b = GoldXMLTest.load( goldName );
+		GoldXMLTestHelp b = GoldXMLTestHelp.load( goldName );
 	//	
 		final MergedModels mm = new MergedModels( b.objectModel );
 		mm.getMetaModel().add( b.metaModel );

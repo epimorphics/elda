@@ -13,7 +13,7 @@ import com.hp.hpl.jena.util.FileManager;
 /**
     Class to hold details of an XML rendering gold test.
 */
-public class GoldXMLTest {
+public class GoldXMLTestHelp {
 	
 	private static final String goldRoot = "src/test/resources/xml_gold/";
 	
@@ -24,7 +24,7 @@ public class GoldXMLTest {
 	final String root_uri;
 	final ShortnameService sns;
 	
-	GoldXMLTest( String root_uri, Model objectModel, Model metaModel, ShortnameService sns, boolean suppress_IPTO, String expected_xml ) {
+	GoldXMLTestHelp( String root_uri, Model objectModel, Model metaModel, ShortnameService sns, boolean suppress_IPTO, String expected_xml ) {
 		this.root_uri = root_uri;
 		this.objectModel = objectModel;
 		this.metaModel = metaModel;
@@ -33,14 +33,14 @@ public class GoldXMLTest {
 		this.sns = sns;
 	}
 	
-	static GoldXMLTest load( String name ) {
+	static GoldXMLTestHelp load( String name ) {
 		Model objectModel = FileManager.get().loadModel( goldRoot + name + "/object_model.ttl" );
 		Model metaModel = FileManager.get().loadModel( goldRoot + name + "/meta_model.ttl" );
 		boolean suppressIPTO = readBoolean( goldRoot + name + "/suppress_ipto.bool" );
 		String root_uri = readLine(  goldRoot + name + "/root.uri" );
 		String expected_xml = FileManager.get().readWholeFileAsUTF8( goldRoot + name + "/xml-rendering.xml" );
 		ShortnameService sns = readShortnames( goldRoot + name + "/names.sns" );
-		return new GoldXMLTest( root_uri, objectModel, metaModel, sns, suppressIPTO, expected_xml );
+		return new GoldXMLTestHelp( root_uri, objectModel, metaModel, sns, suppressIPTO, expected_xml );
 	}
 
 	private static ShortnameService readShortnames( String fileName ) {

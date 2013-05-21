@@ -42,7 +42,7 @@
         	, mountain::specs/mountain.ttl
         	, velocity::specs/hello-velocity.ttl
         	, ved::specs/mini-education-velocity.ttl
-        	, demo-*::/etc/elda/demo-*.ttl
+			, demo-*::/etc/elda/conf.d/demo-*.ttl
         </param-value>
     </init-param>
     
