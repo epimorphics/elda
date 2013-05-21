@@ -62,7 +62,7 @@ public class Loader extends HttpServlet {
     @Override public void init() {
     	ServletContext sc = getServletContext();   	
 		baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
-    	configureLog4J();
+//    	configureLog4J();
     	log.info( "Starting Elda " + Version.string );
         log.info( "baseFilePath: " + baseFilePath );
     	String prefixPath = getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );

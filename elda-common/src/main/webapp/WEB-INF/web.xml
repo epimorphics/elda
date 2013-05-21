@@ -38,6 +38,12 @@
         </param-value>
     </init-param>
   </servlet>
+
+  <servlet>
+	<servlet-name>force-log4j</servlet-name>
+	<servlet-class>com.epimorphics.lda.restlets.ForceLog4JAndAnnounceElda</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
   
   <!-- ==================================================================== -->
 

@@ -49,6 +49,13 @@ public class ComposeConfigDisplay {
 		StringBuilder textBody = new StringBuilder();
 		if (pathstub == null) pathstub = "";
 		int count = 0;
+		int n = entries.size();
+		textBody
+			.append( "<h1>" )
+			.append( (n == 0 ? "no " : "" + n) )
+			.append( (n == 1 ? "configuration" : "configurations" ) )
+			.append( "</h1>\n" )
+			;
 	//
 		for (SpecEntry se: entries) {
 			count += 1;

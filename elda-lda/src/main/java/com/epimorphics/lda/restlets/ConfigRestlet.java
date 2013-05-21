@@ -35,8 +35,8 @@ import com.epimorphics.util.Util;
 		) {
 		URI base = ui.getBaseUri();
 		ServletContext sc = config.getServletContext();
-		String cp = RouterRestletSupport.flatContextPath( sc.getContextPath() );
-		RouterRestletSupport.createRouterFor( config, cp );
+		String cp = sc.getContextPath();
+		/* result ignored */ RouterRestlet.getRouterFor( config, cp );
 	//
 		SpecManager sm = SpecManagerFactory.get();
 		List<SpecEntry> specs = sm.allSpecs();

@@ -23,31 +23,18 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
+import java.util.*;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
-import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.Version;
 import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
@@ -60,7 +47,6 @@ import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
-import com.epimorphics.lda.routing.ServletUtils;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
@@ -98,20 +84,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     */
     public RouterRestlet( @Context ServletConfig servFig ) {
     	ServletContext sc = servFig.getServletContext();
-    	announceElda( sc );
     	router = getRouterFor( servFig, sc.getContextPath());
-    }
-    
-    static boolean announced = false;
-    
-    synchronized void announceElda( ServletContext sc ) {
-    	if (!announced) {
-    		String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
-    		String propertiesFile = "log4j.properties";
-    		PropertyConfigurator.configure( baseFilePath + propertiesFile );
-    		log.info( "Starting Elda " + Version.string ); 
-    		announced = true;
-    	}
     }
        
     /**
@@ -121,14 +94,16 @@ import com.hp.hpl.jena.shared.WrappedException;
      	put in the table, and returned.
     */
      static synchronized Router getRouterFor( ServletConfig sc, String givenContextPath) {
-    	String contextPath = RouterRestletSupport.flatContextPath(givenContextPath);
-		Router r = routers.get(contextPath);
-		if (r == null) {
-			r = RouterRestletSupport.createRouterFor( sc, contextPath );
-			routers.put(contextPath, r );
-		}
-		return r;
-	}
+    	 log.info( "getting router for context path '" + givenContextPath + "'" );
+    	 String contextPath = RouterRestletSupport.flatContextPath(givenContextPath);
+    	 Router r = routers.get(contextPath);
+    	 if (r == null) {    	 
+    		 log.info( " ... creating router for context path '" + givenContextPath + "'" );
+    		 r = RouterRestletSupport.createRouterFor( sc, contextPath );
+    		 routers.put(contextPath, r );
+    	 }
+    	 return r;
+     }
 
 	public Match getMatch( String path, MultiMap<String, String> queryParams ) {
         Match match = router.getMatch( path, queryParams );
