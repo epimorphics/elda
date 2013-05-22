@@ -34,7 +34,7 @@
     <init-param>
     	<param-name>com.epimorphics.api.initialSpecFile</param-name>
 		<param-value>
-			/etc/elda/configs/{APP}_*.ttl
+			/etc/elda/conf.d/{APP}/*.ttl
         </param-value>
     </init-param>
   </servlet>
