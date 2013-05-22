@@ -2,6 +2,7 @@ package com.epimorphics.lda.support;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,12 +59,10 @@ public class Glob {
 	 	same list.	 	
 	*/
 	public List<File> filesMatching(List<File> files, String path) {
-		String root = "./";
-		if (path.length() > 0 && isPathSeparator(path.charAt(0))) {
-			root = "/"; 
-			path = path.substring(1);
-		} 
-		return filesMatching(files, new File(root), Arrays.asList( path.split("[/\\\\]") ) );	
+		List<String> segments = splitFilePath( new File( path ) );
+		String xroot = segments.get(0);
+		List<String> remainder = segments.subList(1, segments.size() );
+		return  filesMatching( files, new File( xroot ), remainder );	
 	}
 
 	/**
@@ -106,7 +105,10 @@ public class Glob {
 
 	private FilenameFilter matching(String globString) {
 		final Pattern p = Pattern.compile( toRegex( globString ) );
-		return new FilenameFilter() {
+		return new FilenameFilter() {	
+			@Override public String toString() {
+				return "`" + p.toString() + "`";
+			}
 			
 			@Override public boolean accept (File f, String name) {
 				return p.matcher( name ).matches();
@@ -131,6 +133,31 @@ public class Glob {
 	}
 	
 	/**
+	    Split a file into components such that the components are differences in
+	    reverse order of repeated getParentFile() calls, with file separators
+	    stripped if present.
+	*/
+	public List<String> splitFilePath(File f) {
+		ArrayList<String> segments = new ArrayList<String>();
+		File af = fs.getCanonicalFile(f);
+		split( segments, af, fs.getCanonicalPath(af) );
+		return segments;
+	}
+
+	private void split( ArrayList<String> segments, File f, String fullAbsPath ) {
+		File fp = f.getParentFile();
+		if (fp == null) {
+			segments.add( fullAbsPath );
+		} else {
+			String partPath = fs.getCanonicalPath(fp);
+			split( segments, fp, partPath );
+			String x = fullAbsPath.substring(partPath.length());
+			if (x.startsWith(File.separator)) x = x.substring(1);
+			segments.add( x );
+		}
+	}
+	
+	/**
 	    A FileSystemInterface provides an interface onto a file system
 	    that allows querying for a name being a directory name and extracting
 	    from a directory a list of names that match a given pattern.
@@ -141,6 +168,16 @@ public class Glob {
 		    Returns true if f names a directory.
 		*/
 		public boolean isDirectory(File f);
+
+		/**
+		    Return a canonical form of the file.
+		*/
+		public File getCanonicalFile(File f);
+		
+		/**
+		    Return the canonical path of the file.
+		*/
+		public String getCanonicalPath(File f);
 		
 		/**
 		    Returns an array of files that appear in the directory f and
@@ -160,6 +197,16 @@ public class Glob {
 
 			@Override public File[] listFiles(File f, FilenameFilter ff) {
 				return f.listFiles(ff);
+			}
+
+			@Override public File getCanonicalFile(File f) {
+				try { return f.getCanonicalFile(); }
+				catch (IOException e) { return f; }
+			}
+
+			@Override public String getCanonicalPath(File f) {
+				try { return f.getCanonicalPath(); }
+				catch (IOException e) { return f.getPath(); }
 			}
 			
 		};

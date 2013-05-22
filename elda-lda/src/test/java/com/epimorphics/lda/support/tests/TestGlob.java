@@ -17,34 +17,34 @@ import org.junit.Test;
 public class TestGlob {
 	
 	@Test public void testMatchingA() {
-		File f1 = new File( "./dir" ), f2 = new File( "./dir/eSTARt" );
-		File f3 = new File( "./dir/notme" ), f4 = new File( "." );
+		File f1 = new File( "dir" ), f2 = new File( "dir/eSTARt" );
+		File f3 = new File( "dir/notme" ), f4 = new File( "./" );
 		Glob g = new Glob( new FakeFSI( f1, f2, f3, f4 ) );
 		Set<File> files = new HashSet<File>( g.filesMatching( "dir/e*t" ) );
 		assertEquals( CollectionUtils.set(f2), files );
 	}
 	
 	@Test public void testMatchingB() {
-		File f1 = new File( "./dir" ), f2 = new File( "./dir/eSTARt" );
-		File f3 = new File( "./dir/notme" ), f4 = new File( "." );
+		File f1 = new File( "dir" ), f2 = new File( "dir/eSTARt" );
+		File f3 = new File( "dir/notme" ), f4 = new File( "./" );
 		Glob g = new Glob( new FakeFSI( f1, f2, f3, f4 ) );
 		Set<File> files = new HashSet<File>( g.filesMatching( "dir/*" ) );
 		assertEquals( CollectionUtils.set(f2, f3), files );
 	}
 	
 	@Test public void testMatchingAfterWildcard() {
-		File f1 = new File( "./dir" ), f2 = new File( "./dir/A/leaf" );
-		File f3 = new File( "./dir/B/leaf" ), f5 = new File("./dir/C/foliage");
-		File f4 = new File( "." );
+		File f1 = new File( "dir" ), f2 = new File( "dir/A/leaf" );
+		File f3 = new File( "dir/B/leaf" ), f5 = new File("dir/C/foliage");
+		File f4 = new File( "./" );
 		Glob g = new Glob( new FakeFSI( f1, f2, f3, f4, f5 ) );
 		Set<File> files = new HashSet<File>( g.filesMatching( "dir/*/leaf" ) );
 		assertEquals( CollectionUtils.set(f2, f3), files );
 	}
 	
 	@Test public void testMatchingMultipleWildcards() {
-		File f1 = new File( "./dir" ), f2 = new File( "./dir/A/B/leaf" );
-		File f3 = new File( "./dir/B/C/leaf" );
-		File f4 = new File( "." );
+		File f1 = new File( "dir" ), f2 = new File( "dir/A/B/leaf" );
+		File f3 = new File( "dir/B/C/leaf" );
+		File f4 = new File( "./" );
 		Glob g = new Glob( new FakeFSI( f1, f2, f3, f4 ) );
 		Set<File> files = new HashSet<File>( g.filesMatching( "dir/*/*/leaf" ) );
 		assertEquals( CollectionUtils.set(f2, f3), files );
@@ -73,7 +73,7 @@ public class TestGlob {
 		List<String> fileNames = new ArrayList<String>();
 		
 		public FakeFSI(File... init) {
-			for (File f: init) fileNames.add( f.getPath() );
+			for (File f: init) fileNames.add( getCanonicalPath(f) );
 		}
 		
 		@Override public boolean isDirectory(File f) {
@@ -112,6 +112,14 @@ public class TestGlob {
 			} else {
 				return Math.min(forwardIndex, backwardIndex);
 			}
+		}
+
+		@Override public File getCanonicalFile(File f) {
+			return new File(getCanonicalPath(f));
+		}
+
+		@Override public String getCanonicalPath(File f) {
+			return f.getPath().replaceFirst( "^\\./", "" ).replaceAll( "/\\./", "/" );
 		}
 	}
 
