@@ -3,24 +3,19 @@
 	'-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN'
 	'http://java.sun.com/dtd/web-app_2_3.dtd'>
 <web-app>        
-
-	<filter>
-    	<filter-name>UrlRewriteFilter</filter-name>
-        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
-   
-        <!--
-        <init-param>
-            <param-name>logLevel</param-name>
-            <param-value>DEBUG</param-value>
-        </init-param>
-        -->
+    
+    <!-- ======================================================== -->
+    
+    <filter>
+        <filter-name>DivertFilesFilter</filter-name>
+        <filter-class>com.epimorphics.lda.routing.DivertFilesFilter</filter-class>
     </filter>
     
     <filter-mapping>
-        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-name>DivertFilesFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
+    
   <servlet>
     <servlet-name>jersey-for-elda</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -61,18 +56,24 @@
   </listener>
   -->
   
+  <servlet>
+    <servlet-name>force-log4j</servlet-name>
+    <servlet-class>com.epimorphics.lda.restlets.ForceLog4JAndAnnounceElda</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
   <!-- ==================================================================== -->
   
   <servlet-mapping>
     <servlet-name>default</servlet-name>
-    <url-pattern>/</url-pattern>
+    <url-pattern>/lda-assets/*</url-pattern>
   </servlet-mapping>
   
   <!-- ==================================================================== -->
 
   <servlet-mapping>
      <servlet-name>jersey-for-elda</servlet-name>
-     <url-pattern>/API/*</url-pattern> 
+     <url-pattern>/*</url-pattern> 
   </servlet-mapping>  
   
   <!-- ==================================================================== -->

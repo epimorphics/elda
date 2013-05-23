@@ -52,7 +52,7 @@ public class ComposeConfigDisplay {
 		int n = entries.size();
 		textBody
 			.append( "<h1>" )
-			.append( (n == 0 ? "no " : "" + n) )
+			.append( (n == 0 ? "no " : n + " ") )
 			.append( (n == 1 ? "configuration" : "configurations" ) )
 			.append( "</h1>\n" )
 			;
