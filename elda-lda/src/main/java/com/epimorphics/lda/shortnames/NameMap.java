@@ -7,9 +7,11 @@
 */
 package com.epimorphics.lda.shortnames;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -226,11 +228,16 @@ public class NameMap {
 	*/
 	public void done() {
 //		System.err.println( ">> DONING -------------------------" );
+		List<ReusedShortnameException.One> problems = new ArrayList<ReusedShortnameException.One>();
 		for (String shortName: mapShortnameToURIs.keySet()) {
 			Set<String> uris = mapShortnameToURIs.getAll( shortName );
-			if (uris.size() > 1) throw new ReusedShortnameException( shortName, uris );
+			if (uris.size() > 1) {
+				problems.add( new ReusedShortnameException.One(shortName, uris) );
+				// throw new ReusedShortnameException( shortName, uris );
+			}
 			mapURItoShortName.put( uris.iterator().next(), shortName );
 		}
+		if (problems.size() > 0) throw new ReusedShortnameException(problems);
 	//
 		Map<String, Boolean> potentials = new HashMap<String, Boolean>();
 		for (Map.Entry<String, String> e: mapURItoShortName.entrySet()) {
