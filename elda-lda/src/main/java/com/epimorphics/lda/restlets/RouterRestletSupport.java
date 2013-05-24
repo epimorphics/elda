@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +50,10 @@ public class RouterRestletSupport {
         Create a new Router initialised with the configs appropriate to the
         contextPath.
     */
-	public static Router createRouterFor( ServletConfig sc, String contextName ) {
+	public static Router createRouterFor( ServletConfig sc, ServletContext con ) {
 		Router result = new DefaultRouter();	
-		String baseFilePath = ServletUtils.withTrailingSlash( sc.getServletContext().getRealPath("/") );
+		String contextName = con.getContextPath();
+		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
         AuthMap am = AuthMap.loadAuthMap( FileManager.get(), noNamesAndValues );
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
         FileManager.get().addLocatorFile( baseFilePath );

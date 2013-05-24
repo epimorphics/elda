@@ -55,7 +55,7 @@ hello:BoardGame a rdfs:Class
 	.
 	
 hello:players a rdf:Property
-	; api:label "players"
+	; api:label "playersIfGames"
 	; rdfs:range xsd:int
 	.
 	

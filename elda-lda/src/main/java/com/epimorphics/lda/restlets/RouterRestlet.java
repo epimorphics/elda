@@ -84,7 +84,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     */
     public RouterRestlet( @Context ServletConfig servFig ) {
     	ServletContext sc = servFig.getServletContext();
-    	router = getRouterFor( servFig, sc.getContextPath());
+    	router = getRouterFor( servFig, sc );
     }
        
     /**
@@ -93,13 +93,14 @@ import com.hp.hpl.jena.shared.WrappedException;
      	in which case it is used, otherwise a new router is created, initialised,
      	put in the table, and returned.
     */
-     static synchronized Router getRouterFor( ServletConfig sc, String givenContextPath) {
+     static synchronized Router getRouterFor( ServletConfig sc, ServletContext con) {
+    	 String givenContextPath = con.getContextPath();
     	 log.info( "getting router for context path '" + givenContextPath + "'" );
     	 String contextPath = RouterRestletSupport.flatContextPath(givenContextPath);
     	 Router r = routers.get(contextPath);
     	 if (r == null) {    	 
     		 log.info( " ... creating router for context path '" + givenContextPath + "'" );
-    		 r = RouterRestletSupport.createRouterFor( sc, contextPath );
+    		 r = RouterRestletSupport.createRouterFor( sc, con );
     		 routers.put(contextPath, r );
     	 }
     	 return r;

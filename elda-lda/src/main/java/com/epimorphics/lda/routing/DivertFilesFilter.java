@@ -18,13 +18,11 @@ public class DivertFilesFilter implements Filter{
 
 	@Override public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) 
 	throws IOException, ServletException {
+
 		final HttpServletRequestWrapper wrapped = new HttpServletRequestWrapper((HttpServletRequest) req) {
 			@Override public StringBuffer getRequestURL() {
 				HttpServletRequest req = (HttpServletRequest) getRequest();
 				final StringBuffer originalUrl = req.getRequestURL();
-				
-				System.err.println( ">> filtering; path= " + req.getPathInfo() );
-				
 				return originalUrl; // new StringBuffer("http://servername2:7001");
 			}
 		};
@@ -35,7 +33,7 @@ public class DivertFilesFilter implements Filter{
 //    dispatcher.forward(req, res);
 	
     @Override public void init(FilterConfig fc) throws ServletException {
-		System.err.println( ">> DivertFilesFilter.init" );
+		String cp = fc.getServletContext().getContextPath();
 	}
 
 }

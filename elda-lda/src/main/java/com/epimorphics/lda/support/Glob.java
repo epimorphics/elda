@@ -144,14 +144,14 @@ public class Glob {
 		return segments;
 	}
 
-	private void split( ArrayList<String> segments, File f, String fullAbsPath ) {
-		File fp = f.getParentFile();
-		if (fp == null) {
-			segments.add( fullAbsPath );
+	private void split( ArrayList<String> segments, File f, String fullPath ) {
+		File parent = f.getParentFile();
+		if (parent == null) {
+			segments.add( fullPath );
 		} else {
-			String partPath = fs.getCanonicalPath(fp);
-			split( segments, fp, partPath );
-			String x = fullAbsPath.substring(partPath.length());
+			String partPath = parent.getPath();
+			split( segments, parent, partPath );
+			String x = fullPath.substring( partPath.length() );
 			if (x.startsWith(File.separator)) x = x.substring(1);
 			segments.add( x );
 		}

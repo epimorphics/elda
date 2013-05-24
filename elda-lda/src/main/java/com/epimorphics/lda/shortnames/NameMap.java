@@ -316,7 +316,7 @@ public class NameMap {
 		public Stage2NameMap( NameMap nm ) {
 			this.prefixes.setNsPrefixes( nm.prefixes );
 			this.prefixes.setNsPrefixes( automatic );
-			this.uriToName.putAll( nm.mapURItoShortName );
+			this.uriToName.putAll( nm.mapURItoShortName );		
 		}
 
 		/** Load a prefix mapping and the terms of a model */
@@ -355,7 +355,7 @@ public class NameMap {
 			for (String mt: modelTerms) {
 				int cut = Util.splitNamespace( mt );
 				String namespace = mt.substring( 0, cut );
-				String shortName = mt.substring( cut );
+				String shortName = mt.substring( cut );		
 				if (namespace.equals( "eh:/" )) {
 					// TODO testing hack: fix and remove.
 					mapURItoShortName.put( mt, shortName );
