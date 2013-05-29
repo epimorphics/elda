@@ -52,7 +52,7 @@ public class RouterRestletSupport {
     */
 	public static Router createRouterFor( ServletConfig sc, ServletContext con ) {
 		Router result = new DefaultRouter();	
-		String contextName = con.getContextPath();
+		String contextName = RouterRestletSupport.flatContextPath( con.getContextPath() );
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
         AuthMap am = AuthMap.loadAuthMap( FileManager.get(), noNamesAndValues );
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
