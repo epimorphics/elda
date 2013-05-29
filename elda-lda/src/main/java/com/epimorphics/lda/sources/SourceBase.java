@@ -14,6 +14,8 @@ import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.shared.Lock;
+import com.hp.hpl.jena.shared.WrappedException;
+import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
 
 /**
     SourceBase provides the canonical implementation of the extended
@@ -44,8 +46,7 @@ public abstract class SourceBase {
     	QueryExecution qe = execute( query );
 		try { 
 			return qe.execDescribe(); 
-		}
-		finally	{
+		} finally {
 			try { qe.close(); } finally { l.leaveCriticalSection(); } 
 		}
 	}
