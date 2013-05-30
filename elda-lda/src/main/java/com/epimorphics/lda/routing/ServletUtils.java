@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 
 import org.slf4j.Logger;
@@ -36,25 +37,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 */
 public class ServletUtils {
 
-	
 	static Logger log = LoggerFactory.getLogger( ServletUtils.class );
-	
-	public interface SpecContext {
-		String getInitParameter( String name );
-	}
-
-	public static class ServletSpecContext implements ServletUtils.SpecContext {
-		
-		final HttpServlet underlying;
-		
-		ServletSpecContext(HttpServlet underlying) {
-			this.underlying = underlying;
-		}
-		
-		public String getInitParameter( String name ) {
-			return underlying.getInitParameter( name );
-		}
-	}
 
 	public static String withTrailingSlash(String path) {
 	    return path.endsWith("/") ? path : path + "/";
@@ -167,9 +150,14 @@ public class ServletUtils {
 	        }
 	    }
 	}
+	
+	public interface GetInitParameter {
+		public String getInitParameter(String name);
+	}
 
-	public static Set<String> specNamesFromInitParam(SpecContext f) {
-		return new HashSet<String>( Arrays.asList( safeSplit(f.getInitParameter( Container.INITIAL_SPECS_PARAM_NAME ) ) ) );
+	public static Set<String> specNamesFromInitParam( GetInitParameter f ) {
+		String specString = f.getInitParameter( Container.INITIAL_SPECS_PARAM_NAME );
+		return new HashSet<String>( Arrays.asList( safeSplit(specString) ) );
 	}
 
 	/**
@@ -178,7 +166,7 @@ public class ServletUtils {
 	
 	 	@return 
 	*/
-	public static Set<String> getSpecNamesFromContext(SpecContext f) {
+	public static Set<String> getSpecNamesFromContext(GetInitParameter f) {
 		Set<String> found = specNamesFromSystemProperties();
 		return found.size() > 0 ? found : specNamesFromInitParam(f);
 	}
@@ -188,7 +176,7 @@ public class ServletUtils {
 	    return s.replaceFirst( "^" + Container.LOCAL_PREFIX, baseFilePath );
 	}
 
-	public static void setupLARQandTDB( ServletSpecContext me ) {
+	public static void setupLARQandTDB( ServletContext me ) {
 	    String locStore = me.getInitParameter( "DATASTORE_KEY" );
 	    String defaultTDB = locStore + "/tdb", defaultLARQ = locStore + "/larq";
 	    String givenTDB = me.getInitParameter( TDBManager.TDB_BASE_DIRECTORY );

@@ -35,7 +35,38 @@
       <version>2.7.0-incubating</version>
       <type>test-jar</type>
       <scope>test</scope>
+  </dependency>
+  
+  <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-core</artifactId>
+      <version>1.12</version>
+      <type>jar</type>
+      <scope>compile</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-servlet</artifactId>
+      <version>1.12</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-server</artifactId>
+      <version>1.12</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-json</artifactId>
+      <version>1.12</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
   </dependencies>
   
   <build>

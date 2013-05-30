@@ -17,11 +17,19 @@
 
 package com.epimorphics.lda.routing;
 
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.xml.parsers.FactoryConfigurationError;
 
@@ -32,7 +40,8 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.Version;
 import com.epimorphics.lda.core.ModelLoader;
-import com.epimorphics.lda.routing.ServletUtils.ServletSpecContext;
+import com.epimorphics.lda.restlets.RouterRestletSupport;
+import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
 import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.sources.AuthMap.NamesAndValues;
 import com.epimorphics.lda.specmanager.SpecManager;
@@ -60,13 +69,14 @@ public class Loader extends HttpServlet {
     static Logger log = LoggerFactory.getLogger(Loader.class);
 
     @Override public void init() {
+    	ServletConfig fig = getServletConfig();
     	ServletContext sc = getServletContext();   	
 		baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
 //    	configureLog4J();
     	log.info( "Starting Elda " + Version.string );
         log.info( "baseFilePath: " + baseFilePath );
     	String prefixPath = getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
-        ServletUtils.setupLARQandTDB( new ServletSpecContext( this ) );
+        ServletUtils.setupLARQandTDB( sc );
         modelLoader = new APIModelLoader( baseFilePath );
         FileManager.get().addLocatorFile( baseFilePath );
     //
@@ -74,15 +84,26 @@ public class Loader extends HttpServlet {
     //
         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
     //
-        String contextName = adaptContextPath( sc.getContextPath() );
-        for (String specTemplate : ServletUtils.getSpecNamesFromContext(new ServletUtils.ServletSpecContext(this))) {
+        String contextName = RouterRestletSupport.flatContextPath(sc.getContextPath());
+        
+        for (String specTemplate : ServletUtils.getSpecNamesFromContext(adaptConfig(fig))) {
         	String spec = specTemplate.replaceAll( "\\{APP\\}", contextName );
             ServletUtils.loadSpecsFromFiles( am, modelLoader, baseFilePath, prefixPath, spec );
         }
     }
 
-    private String adaptContextPath(String contextPath) {
-		return contextPath.equals("") ? "ROOT" : contextPath.substring(1);
+    /**
+     	We do this because for reasons that are not completely clear the
+     	given ServletContext doesn't have the binding for INITIAL_SPECS_PARAM_NAME,
+     	but the ServletConfig does.
+    */
+    private GetInitParameter adaptConfig(final ServletConfig fig) {
+		return new GetInitParameter() {
+
+			@Override public String getInitParameter(String name) {
+				return fig.getInitParameter(name);
+			}
+		};
 	}
 
 	/**

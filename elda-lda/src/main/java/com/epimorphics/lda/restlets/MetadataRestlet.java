@@ -15,7 +15,7 @@ import static com.epimorphics.lda.restlets.ControlRestlet.lookupRequest;
 import java.io.StringWriter;
 import java.util.*;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -100,13 +100,13 @@ import com.hp.hpl.jena.util.ResourceUtils;
     }
     
     @GET @Produces("text/html") public Response requestHandlerHTML
-    	( @PathParam("path") String pathstub, @Context ServletConfig config, @Context UriInfo ui) {
+    	( @PathParam("path") String pathstub, @Context ServletContext config, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(pathstub, ui);
         String stub = rec == null ? "" : pathstub;
         return new ConfigRestlet().generateConfigPage( stub, config, ui );
     }
     
-    @GET public Response requestHandlerAny( @PathParam("path") String pathstub, @Context ServletConfig config, @Context UriInfo ui) {
+    @GET public Response requestHandlerAny( @PathParam("path") String pathstub, @Context ServletContext config, @Context UriInfo ui) {
         try {SpecRecord rec = lookupRequest(pathstub, ui);
         String stub = rec == null ? "" : pathstub;
         return new ConfigRestlet().generateConfigPage( stub, config, ui ); }

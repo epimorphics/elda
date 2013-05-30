@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
@@ -23,6 +22,7 @@ import com.epimorphics.lda.routing.DefaultRouter;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.routing.ServletUtils;
+import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
 import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.sources.AuthMap.NamesAndValues;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
@@ -50,7 +50,7 @@ public class RouterRestletSupport {
         Create a new Router initialised with the configs appropriate to the
         contextPath.
     */
-	public static Router createRouterFor( ServletConfig sc, ServletContext con ) {
+	public static Router createRouterFor( ServletContext con ) {
 		Router result = new DefaultRouter();	
 		String contextName = RouterRestletSupport.flatContextPath( con.getContextPath() );
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
@@ -61,9 +61,9 @@ public class RouterRestletSupport {
 //        SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
         SpecManagerImpl sm = new SpecManagerImpl(result, modelLoader);
 		SpecManagerFactory.set( sm );
-    	String prefixPath = sc.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
+    	String prefixPath = con.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
 	//
-		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(new ServletConfigSpecContext(sc));
+		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
 		// log.info( ">> createRouterFor ---------------------------------" );
 		for (String specTemplate: specFilenameTemplates) {
 			// log.info( ">>   template " + specTemplate );
@@ -94,6 +94,15 @@ public class RouterRestletSupport {
 		return count == 0  ? RouterFactory.getDefaultRouter() : result;
 	}
 
+	private static GetInitParameter adaptContext(final ServletContext con) {
+		return new GetInitParameter() {
+
+			@Override public String getInitParameter(String name) {
+				return con.getInitParameter(name);
+			}
+		};
+	}
+
 	public static String flatContextPath(String contextPath) {
 		return contextPath.equals("") ? "ROOT" : contextPath.substring(1).replaceAll("/", "_");
 	}
@@ -115,19 +124,6 @@ public class RouterRestletSupport {
 			APIFactory.registerApi( router, prefixPath, apiSpec );
 		}
 	}
-	
-    static class ServletConfigSpecContext implements ServletUtils.SpecContext {
-
-    	protected final ServletConfig config;
-    	
-		public ServletConfigSpecContext(ServletConfig config) {
-			this.config = config;
-		}
-
-		@Override public String getInitParameter(String name) {
-			return config.getInitParameter(name);
-		}
-    }
     
     static final NamesAndValues noNamesAndValues = new NamesAndValues() {
 

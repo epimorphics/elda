@@ -29,8 +29,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +59,7 @@ import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.shared.WrappedException;
+import com.sun.jersey.api.NotFoundException;
 
 /**
  * Handles all incoming API calls and routes to appropriate locations.
@@ -82,10 +84,19 @@ import com.hp.hpl.jena.shared.WrappedException;
         initialisations should be cached. Sets the router used by
         this instance according to the appropriate LDA configs.
     */
-    public RouterRestlet( @Context ServletConfig servFig ) {
-    	ServletContext sc = servFig.getServletContext();
-    	router = getRouterFor( servFig, sc );
+    public RouterRestlet( @Context ServletContext con ) {
+    	router = getRouterFor( con );
     }
+    
+    public static class Init implements ServletContextListener {
+    	
+	    @Override public void contextInitialized(ServletContextEvent sce) {
+			getRouterFor( sce.getServletContext() );
+		}
+	
+		@Override public void contextDestroyed(ServletContextEvent sce) {			
+		}
+	}
        
     /**
      	Answer a router initialised with the URI templates appropriate to
@@ -93,14 +104,14 @@ import com.hp.hpl.jena.shared.WrappedException;
      	in which case it is used, otherwise a new router is created, initialised,
      	put in the table, and returned.
     */
-     static synchronized Router getRouterFor( ServletConfig sc, ServletContext con) {
+     static synchronized Router getRouterFor(ServletContext con) {
     	 String givenContextPath = con.getContextPath();
-    	 log.info( "getting router for context path '" + givenContextPath + "'" );
+    	 // log.info( "getting router for context path '" + givenContextPath + "'" );
     	 String contextPath = RouterRestletSupport.flatContextPath(givenContextPath);
     	 Router r = routers.get(contextPath);
     	 if (r == null) {    	 
-    		 log.info( " ... creating router for context path '" + givenContextPath + "'" );
-    		 r = RouterRestletSupport.createRouterFor( sc, con );
+    		 log.info( "creating router for context path '" + givenContextPath + "'" );
+    		 r = RouterRestletSupport.createRouterFor( con );
     		 routers.put(contextPath, r );
     	 }
     	 return r;
@@ -137,7 +148,7 @@ import com.hp.hpl.jena.shared.WrappedException;
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
-    	String contextPath = servCon.getContextPath(); // RouterRestletSupport.flatContextPath(servCon.getContextPath());
+    	String contextPath = servCon.getContextPath(); 
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
     	boolean dontCache = has( rh, "pragma", "no-cache" ) || has( rh, "cache-control", "no-cache" );
         Couple<String, String> pathAndType = parse( pathstub );
@@ -388,6 +399,7 @@ import com.hp.hpl.jena.shared.WrappedException;
     
     public static Response returnNotFound( String message, String what ) {
         log.debug( "Failed to return results: " + Messages.brief( message ) );
+        if (true) throw new NotFoundException();
         return standardHeaders( Response.status(Status.NOT_FOUND) ).entity( Messages.niceMessage( message, "404 Resource Not Found: " + what ) ).build();
     }
     

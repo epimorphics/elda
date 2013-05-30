@@ -19,11 +19,13 @@ public class ForceLog4JAndAnnounceElda extends HttpServlet{
     static boolean announced = false;
     
 	@Override public void init() {	
-    	ServletContext sc = getServletContext(); 
-		String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
-		String propertiesFile = "log4j.properties";
-		PropertyConfigurator.configure( baseFilePath + propertiesFile );
-		log.info( "\n\n    =>=> Starting Elda " + Version.string + "\n" ); 
-		announced = true;
+		if (announced == false) {
+	    	ServletContext sc = getServletContext(); 
+			String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
+			String propertiesFile = "log4j.properties";
+			PropertyConfigurator.configure( baseFilePath + propertiesFile );
+			log.info( "\n\n    =>=> Starting Elda " + Version.string + "\n" ); 
+			announced = true;
+		}
 	}	
 }
