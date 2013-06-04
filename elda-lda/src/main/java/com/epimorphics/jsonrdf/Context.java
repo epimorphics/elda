@@ -156,11 +156,11 @@ public class Context implements ReadContext, Cloneable {
     	allPrefixes.withDefaultMappings( prefixes );
     	Set<String> seen = new HashSet<String>();
         for(Resource r : RES_TYPES_TO_SHORTEN) 
-            loadAnnotations(notThese, seen, m, m.listSubjectsWithProperty(RDF.type, r), false, prefixes);
+            loadAnnotations(notThese, seen, m.listSubjectsWithProperty(RDF.type, r), false, prefixes);
         for(Resource r : PROP_TYPES_TO_SHORTEN) 
-            loadAnnotations(notThese, seen, m, m.listSubjectsWithProperty(RDF.type, r), true, prefixes);
-        loadAnnotations(notThese, seen, m, m.listSubjectsWithProperty(API.label), false, prefixes);
-        loadAnnotations(notThese, seen, m, m.listSubjectsWithProperty(RDFS.range), true, prefixes);
+            loadAnnotations(notThese, seen, m.listSubjectsWithProperty(RDF.type, r), true, prefixes);
+        loadAnnotations(notThese, seen, m.listSubjectsWithProperty(API.label), false, prefixes);
+        loadAnnotations(notThese, seen, m.listSubjectsWithProperty(RDFS.range), true, prefixes);
         notThese.addAll( seen );
     }
     
@@ -170,7 +170,7 @@ public class Context implements ReadContext, Cloneable {
     
     public static Pattern labelPattern = Pattern.compile("[_a-zA-Z][0-9a-zA-Z_]*");
     
-    protected void loadAnnotations( Set<String> notThese, Set<String> seen, Model m, ResIterator ri, boolean isProperty, PrefixMapping prefixes) {
+    protected void loadAnnotations( Set<String> notThese, Set<String> seen, ResIterator ri, boolean isProperty, PrefixMapping prefixes) {
         while (ri.hasNext()) {
             Resource res = ri.next();
             String uri = res.getURI();
@@ -323,35 +323,6 @@ public class Context implements ReadContext, Cloneable {
         completeContext();
         return nameToURI.get(name);
     }
-    
-    /**
-     * Determine an appropriate name for a property resource, creating a new
-     * context entry if required. 
-     */
-    public String findNameForProperty(Resource r) {
-        String uri = r.getURI();
-        String name = getNameForURI( uri );
-        
-        if (name == null) {         
-        	// Try just using localname
-            String localname = r.getLocalName(); 
-            if ( nameUpdateOK(localname, uri) ) return localname; 
-            // See if we can generate a prefix form
-            name = r.getModel().shortForm(uri);
-            if (! name.equals(uri)) {
-                name = name.replace(':', '_');
-                if ( nameUpdateOK(name, uri) ) return name;
-            }
-            
-            // Start making ones up as a last resort
-            while (true) {
-                name = localname + nameCount++;
-                if ( nameUpdateOK(name, uri) ) return name;
-            }
-        } else {
-            return name;
-        }
-    }
 
     protected boolean nameUpdateOK(String name, String uri) {
         if (isNameFree(name)) {
@@ -377,6 +348,35 @@ public class Context implements ReadContext, Cloneable {
             }
         }
         return prop;
+    }
+    
+    /**
+     * Determine an appropriate name for a property resource, creating a new
+     * context entry if required. 
+     */
+    private String findNameForProperty(Resource r) {
+        String uri = r.getURI();
+        String name = getNameForURI( uri );
+        
+        if (name == null) {         
+        	// Try just using localname
+            String localname = r.getLocalName(); 
+            if ( nameUpdateOK(localname, uri) ) return localname; 
+            // See if we can generate a prefix form
+            name = r.getModel().shortForm(uri);
+            if (! name.equals(uri)) {
+                name = name.replace(':', '_');
+                if ( nameUpdateOK(name, uri) ) return name;
+            }
+            
+            // Start making ones up as a last resort
+            while (true) {
+                name = localname + nameCount++;
+                if ( nameUpdateOK(name, uri) ) return name;
+            }
+        } else {
+            return name;
+        }
     }
     
     /** Test if a name is not already in use */
