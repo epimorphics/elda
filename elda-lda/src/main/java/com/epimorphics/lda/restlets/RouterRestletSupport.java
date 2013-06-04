@@ -65,6 +65,10 @@ public class RouterRestletSupport {
 	//
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
 		// log.info( ">> createRouterFor ---------------------------------" );
+		
+		// System.err.println( ">> " + specFilenameTemplates.size() + " spec filenames: " );
+		// for (String s: specFilenameTemplates) System.err.println( ">>   " + s );		
+		
 		for (String specTemplate: specFilenameTemplates) {
 			// log.info( ">>   template " + specTemplate );
 			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextName );
