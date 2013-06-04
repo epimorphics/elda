@@ -38,6 +38,8 @@ if [ ${_CLEAN} == "yes" ]; then
   rm -rf meta_differences/*
 fi
 
+rm servers.log
+
 if [ $_JAR == "yes" ]; then
   echo "Building current (probably snapshot) jar"
   (cd ..; mvn clean package)
@@ -61,7 +63,7 @@ if [ $_REBUILD == "yes" ]; then
       export c_name=$config
     #
       echo ";;; -- java -jar $elda -Delda.spec=$PWD/$config_file -----------------------------"
-      java -jar $elda -Djetty.port=${_PORT} -Delda.spec=$PWD/$config_file &> servers.log &
+      java -jar $elda -Djetty.port=${_PORT} -Delda.spec=$PWD/$config_file &>> servers.log &
       # sleep to allow the server time to initialise
       sleep 10
     #
@@ -108,7 +110,7 @@ for config_file in configs/*.ttl; do
         echo OK -- no differences
       else
         if [ -e gold_differences/${d_file} ]; then
-          if diff differences/${d_file} gold_differences/${d_file} > meta_differences/${d_file} ; then
+          if multi_diff differences/${d_file} gold_differences/${d_file} > meta_differences/${d_file} ; then
             echo OK -- the same differences as last time
           else
             echo "PROBLEM -- different differences, there's been a change. Oops."
