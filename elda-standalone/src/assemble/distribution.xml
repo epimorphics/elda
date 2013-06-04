@@ -25,12 +25,12 @@
 	  
 	  <fileSet>
           <directory>../Notelets</directory>
-          <outputDirectory>webapps/elda/docs/Notelets</outputDirectory>
+          <outputDirectory>webapps/standalone/docs/Notelets</outputDirectory>
       </fileSet>
 	  
 	  <fileSet>
         <directory>../ReleaseNotes</directory>
-        <outputDirectory>webapps/elda/docs/ReleaseNotes</outputDirectory>
+        <outputDirectory>webapps/standalone/docs/ReleaseNotes</outputDirectory>
 	  </fileSet>
 
       <fileSet>
@@ -45,7 +45,7 @@
 
       <fileSet>
 		  <directory>target/elda-standalone</directory>
-          <outputDirectory>webapps/elda</outputDirectory>
+          <outputDirectory>webapps/standalone</outputDirectory>
 	  </fileSet>
 
   </fileSets>
