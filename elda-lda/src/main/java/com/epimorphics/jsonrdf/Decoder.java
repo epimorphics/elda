@@ -61,21 +61,21 @@ public class Decoder {
         } 
     }
     
-    /**
-     * Decode a JSON object from the reader into a set of resources within
-     * a reconstructed RDF Model.
-     * @throws EncodingException if there is a jsonrdf level error or JSON error
-     */
-    public static List<Resource> decode(Reader reader) {
-        
-        try {
-            JsonObject jObj = ParseWrapper.readerToJsonObject(reader);
-            Context context = encoder.getContext(jObj);
-            return new Decoder(context, jObj).decodeResources();
-        } catch (JsonException e) {
-            throw new EncodingException(e.getMessage(), e);
-        } 
-    }
+//    /**
+//     * Decode a JSON object from the reader into a set of resources within
+//     * a reconstructed RDF Model.
+//     * @throws EncodingException if there is a jsonrdf level error or JSON error
+//     */
+//    public static List<Resource> decode(Reader reader) {
+//        
+//        try {
+//            JsonObject jObj = ParseWrapper.readerToJsonObject(reader);
+//            Context context = encoder.getContext(jObj);
+//            return new Decoder(context, jObj).decodeResources();
+//        } catch (JsonException e) {
+//            throw new EncodingException(e.getMessage(), e);
+//        } 
+//    }
     
     protected final static int BUFLEN = 1000;
     protected static String readFull(Reader reader) throws IOException {
@@ -92,8 +92,8 @@ public class Decoder {
      * Decode a JSON object from the reader into a model.
      * @throws EncodingException if there is a jsonrdf level error or JSON error
      */
-    public static Model decodeModel(Reader reader) {
-        return modelFromRoots( decode(reader) );
+    public static Model decodeModel(Context context, Reader reader) {
+        return modelFromRoots( decode(context, reader) );
     }
     
     private static Model modelFromRoots(List<Resource> roots) {
@@ -108,10 +108,10 @@ public class Decoder {
      * Decode a JSON object from the reader into collection of named graphs
      * @throws EncodingException if there is a jsonrdf level error or JSON error
      */
-    public static DataSource decodeGraphs(Reader reader) {
+    public static DataSource decodeGraphs(Context context, Reader reader) {
         try {
             JsonObject jObj = ParseWrapper.readerToJsonObject(reader);
-            Context context = encoder.getContext(jObj);
+            // Context context = encoder.getContext(jObj);
             Model def = modelFromRoots( new Decoder(context, jObj).decodeResources() );
             DataSource set = DatasetFactory.create(def);
             JsonArray graphs = encoder.getNamedGraphs(jObj);

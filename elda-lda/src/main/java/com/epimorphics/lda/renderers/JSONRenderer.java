@@ -78,7 +78,7 @@ public class JSONRenderer implements Renderer {
 				try {
 					Writer writer = StreamUtils.asUTF8( os );
 					writer.write( before );
-					Encoder.getForOneResult( context, false ).encodeRecursive( model, roots, writer, true );
+					Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true );
 					writer.write( after );
 					writer.flush();
 				} catch (Exception e) {
@@ -190,7 +190,7 @@ public class JSONRenderer implements Renderer {
 		StringWriter writer = new StringWriter();
 		Context context = given.clone();
 		context.setSorted(true);
-        Encoder.getForOneResult( context, false ).encodeRecursive( model, roots, writer, true );
+        Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true );
 	}
 
 //	private void paranoiaCheckForLegalJSON(String written) throws Exception {

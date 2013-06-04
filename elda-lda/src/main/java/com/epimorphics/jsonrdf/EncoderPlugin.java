@@ -54,9 +54,6 @@ public interface EncoderPlugin {
     /** end of results */
 	public void endResults( JSONWriterFacade jw, boolean oneResult );
     
-    /** Write the context object to a JSON stream */
-    public void writeContext(ReadContext context, JSONWriterFacade jw);
-    
     /** Start a sub-section for outputing named graphs */
     public void startNamedGraphs(JSONWriterFacade jw);
     
@@ -75,12 +72,6 @@ public interface EncoderPlugin {
     /** Return the name of a named graph */
     public String getGraphName(JsonObject graph, Context context) throws JsonException ;
     
-    /** Extract the context part of a deserialized JSON object 
-     * @throws JSONException */
-    public Context getContext(JsonObject jobj) throws JsonException;
-    
-    /** Extract the context part of an embedded deserialized JSON object, no version checks  */
-    public Context getEmbeddedContext(JsonObject jObj) throws JsonException;
     
     /** Extract the results part of a deserialized JSON object */
     public JsonArray getResults(JsonObject jobj) throws JsonException;

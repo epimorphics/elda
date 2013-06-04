@@ -14,7 +14,6 @@ package com.epimorphics.jsonrdf.impl;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.Iterator;
 
 import org.openjena.atlas.json.JsonArray;
 import org.openjena.atlas.json.JsonBoolean;
@@ -30,7 +29,6 @@ import com.epimorphics.jsonrdf.Decoder;
 import com.epimorphics.jsonrdf.EncoderPlugin;
 import com.epimorphics.jsonrdf.EncodingException;
 import com.epimorphics.jsonrdf.JSONWriterFacade;
-import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.ReadContext;
 import com.epimorphics.jsonrdf.extras.JsonUtils;
@@ -74,9 +72,6 @@ public class EncoderDefault implements EncoderPlugin {
 
     /** property name for the format version property */    
     public static final String PNVersion = "version"; 
-    
-    /** property name for the context/mapping property */    
-    public static final String PNContext = "context"; 
     
     /** property name for the name/URI mapping table within the context */
     public static final String PNMapping = "mapping";
@@ -194,33 +189,6 @@ public class EncoderDefault implements EncoderPlugin {
 		jw.value( lex );
     }
 
-    /** Write the context object to a JSON stream */
-    @Override public void writeContext(ReadContext context, JSONWriterFacade jw) {
-        jw.key(PNContext);
-        jw.object();
-        String base = context.getBase();
-        if (base != null && !base.isEmpty()) {
-            jw.key(PNbase).value(base);
-        }
-        // Emit mappings
-        jw.key(PNMapping);
-        jw.object();
-        for (String name : context.allNames()) {
-            jw.key(name);
-            jw.object();
-            jw.key(PNuri).value( context.getURIfromName(name) );
-            ContextPropertyInfo prop = context.getPropertyByName(name);
-            if (prop != null) {
-                if (prop.getType() != null)
-                    jw.key(PNrange).value( prop.getType() );
-            }
-            jw.endObject();
-        }
-        jw.endObject();
-        // end mappings
-        jw.endObject();
-    }
-
     /** 
      * Encode a string to protect characters used to encode types and lang tags.
      */
@@ -285,39 +253,6 @@ public class EncoderDefault implements EncoderPlugin {
     /** Return the name of a named graph */
     @Override public String getGraphName(JsonObject graph, Context context) throws JsonException {
         return decodeResourceURI( JsonUtils.getString(graph, getPNResourceID()), context );
-    }
-    
-    /** Extract the context part of a deserialized JSON object  */
-    @Override public Context getContext(JsonObject jObj) throws JsonException {
-        String format = JsonUtils.getString(jObj, PNFormat);
-		String version = JsonUtils.getString(jObj, PNVersion);
-		if (format.equals(Format) && version.equals(Version)) {
-            return getEmbeddedContext(jObj);
-        } else {
-            throw new EncodingException("Format and version didn't match. Expecting: " + Format + " - " + Version + " but got " + format + " - " + version );
-        }
-    }
-    
-    /** Extract the context part of an embedded deserialized JSON object, no version checks  */
-	@Override public Context getEmbeddedContext(JsonObject jObj) throws JsonException {
-    	JsonObject cObj = jObj.get(PNContext).getAsObject();
-        Context context = new Context(JsonUtils.optString(cObj, PNbase, null));
-        JsonObject mapping = cObj.get(PNMapping).getAsObject();
-        Iterator<String> keys = mapping.keys().iterator();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            JsonObject map = mapping.get(key).getAsObject();
-            String uri = JsonUtils.optString( map, PNuri, null );
-            String range = JsonUtils.optString( map, PNrange, null );
-            if (range != null) {
-                ContextPropertyInfo prop = new ContextPropertyInfo(uri, key);
-                prop.setType(range);
-                context.setProperty(uri, prop);
-            } else {
-                context.recordPreferredName(key, uri);
-            }
-        }
-        return context;
     }
     
     /** Extract the results part of a deserialized JSON object */

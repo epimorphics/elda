@@ -1,7 +1,5 @@
 package com.epimorphics.jsonrdf;
 
-import java.util.Set;
-
 import com.hp.hpl.jena.rdf.model.Property;
 
 /**
@@ -22,8 +20,6 @@ public interface ReadContext {
 	public String getBase();
 	
 	public String forceShorten(String uri);
-	
-	public Set<String> allNames();
 	
 	public ContextPropertyInfo getPropertyByName(String name);
 }

@@ -61,17 +61,18 @@ public class TestNamedGraphs {
 
     public void testNamedGraphs(String def, String[] names, String[] graphs) throws IOException, JsonException {
         Model defM = modelFromTurtle(def);
+        Context context = new Context(defM);
         DataSource source = DatasetFactory.create(defM);
         for (int i = 0; i < names.length; i++) {
             source.addNamedModel(names[i], ModelIOUtils.modelFromTurtle(graphs[i]));
         }
         StringWriter writer = new StringWriter();
-        Encoder.get().encode(source, writer);
+        Encoder.get(context).encode(source, writer);
         String encoding = writer.toString();
 //        System.out.println(encoding);
         
         StringReader reader = new StringReader( encoding );
-        DataSource result = Decoder.decodeGraphs(reader);
+        DataSource result = Decoder.decodeGraphs(context, reader);
         assertTrue("Check default model", result.getDefaultModel().isIsomorphicWith(defM));
         int i = 0;
         for (Iterator<String> ni = result.listNames(); ni.hasNext(); ) {

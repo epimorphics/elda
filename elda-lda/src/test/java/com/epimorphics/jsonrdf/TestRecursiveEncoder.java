@@ -45,8 +45,7 @@ public class TestRecursiveEncoder {
             StringWriter writer = new StringWriter();
             List<Resource> rootsR = modelRoots(roots, src);
             Context context = new Context();
-            if (baseUri != null) 
-                context.setBase(baseUri);
+            if (baseUri != null) context.setBase(baseUri);
             Encoder.get(context).encodeRecursive(src, rootsR, writer);
             String encoding = writer.toString();
             
@@ -59,7 +58,7 @@ public class TestRecursiveEncoder {
             }
             
             StringReader reader = new StringReader( encoding );
-            List<Resource> results = Decoder.decode(reader);
+            List<Resource> results = Decoder.decode(context, reader);
             if (roots != null) {
                 assertTrue( results.size() >= rootsR.size());
                 Iterator<Resource> i = results.iterator();

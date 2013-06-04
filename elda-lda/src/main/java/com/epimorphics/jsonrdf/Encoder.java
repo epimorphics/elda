@@ -41,24 +41,20 @@ public class Encoder {
     
     protected static EncoderPlugin defaultPlugin = new EncoderDefault();
     
-    public static Encoder getForOneResult( ReadContext c, boolean wantContext ) {
-    	return new Encoder( defaultPlugin, wantContext, c, true );
+    public static Encoder getForOneResult( ReadContext c ) {
+    	return new Encoder( defaultPlugin, c, true );
     }
     
-    public static Encoder getForOneResult( boolean wantContext ) {
-    	return getForOneResult( new Context(), wantContext );    	
+    public static Encoder getForOneResult() {
+    	return getForOneResult( new Context() );    	
     }
     
     /**
      * Return an encoder using the default rules and no Context, any
      * Context information will be generated on-the-fly.
      */
-    public static Encoder get( boolean wantsContext ) {
-        return get( defaultPlugin, wantsContext );
-    }
-    
-    public static Encoder get() {
-        return get( defaultPlugin, true );
+    public static Encoder get( Context context ) {
+        return get(defaultPlugin, context );
     }
     
     /**
@@ -69,28 +65,12 @@ public class Encoder {
         return get(rules, new Context());
     }
     
-    public static Encoder get( EncoderPlugin rules, boolean wantsContext ) {
-        return get(rules, wantsContext, new Context());
-    }
-    
-    private static Encoder get(EncoderPlugin rules, boolean wantsContext, ReadContext context ) {
-		return new Encoder( rules, wantsContext, context, false );
-	}
-
-	/**
-     * Return an encoder using the default rules and the specified 
-     * base ontology.
-     */
-    public static Encoder get(Model ontology) {
-        return get(defaultPlugin, ontology);
-    }
-    
     /**
      * Return an encoder using the specified rules and the specified 
      * base ontology.
      */
-    public static Encoder get(EncoderPlugin rules, Model ontology) {
-        return new Encoder(rules, true, new Context(ontology), false );
+    public static Encoder get(EncoderPlugin rules, Context fromOntology) {
+        return new Encoder(rules, fromOntology, false );
     }
     
     /**
@@ -104,7 +84,7 @@ public class Encoder {
      * Return an encoder using the specified rules and the specified Context.
      */
     public static Encoder get(EncoderPlugin rules, ReadContext context) {
-        return new Encoder(rules, true, context, false );
+        return new Encoder(rules, context, false );
     }
 
     /**
@@ -121,21 +101,15 @@ public class Encoder {
      * @param oneResult true iff the LDA "result: object" style is required
      */
     private Encoder(EncoderPlugin rules, ReadContext context, boolean oneResult ) {
-        this( rules, false, context, oneResult );
-    }
-    
-    private Encoder(EncoderPlugin rules, boolean wantsContext, ReadContext context, boolean oneResult ) {
         this.rules = rules;
         this.context = context;
         this.oneResult = oneResult;
-        this.wantsContext = wantsContext;
     }
 
     // Instance data
     protected final EncoderPlugin rules;
     protected final ReadContext context;
     protected final boolean oneResult;
-    protected final boolean wantsContext;
     
     /**
      * Encode the whole of the given RDF model into the writer 
@@ -516,10 +490,7 @@ public class Encoder {
         }
         
         private void finishEncode() {
-            if (startedGraphs) {
-                rules.finishNamedGraphs(jw);
-            }
-            if (wantsContext) rules.writeContext(context, jw);
+            if (startedGraphs) rules.finishNamedGraphs(jw);
             jw.endObject();
         }
         
