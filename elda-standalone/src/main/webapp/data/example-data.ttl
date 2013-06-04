@@ -72,6 +72,14 @@
 	; rdfs:label "El Grande"
 	; hello:players 2, 3, 4, 5
 	.
+
+#<http://www.nosuchgames/absentia> a hello:BoardGame
+#	; rdfs:label "Absentia"
+#	; <http://www.nosuchproperty/property> "no such property"
+#	; <http://www.nosuchproperty1/prop,er-ty> "nor this one"
+#	; <http://www.nosuchproperty2/prop,er-ty> "nor this one either"
+#	; hello:players 42
+#	.
 	
 <http://www.treefroggames.com/age-of-industry> a hello:BoardGame
 	; rdfs:label "Age of Industry"
