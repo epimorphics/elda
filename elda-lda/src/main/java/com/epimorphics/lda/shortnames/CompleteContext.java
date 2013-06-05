@@ -23,6 +23,7 @@ public class CompleteContext {
 	public enum Mode { Transcode, EncodeAny, EncodeIfMultiple } 
 	
 	public CompleteContext( Mode m, Context context, PrefixMapping prefixes ) {
+		// context.completeContext();
 		this.context = context;
 		this.prefixes = prefixes;
 		this.transcodedNames = (m == Mode.Transcode);

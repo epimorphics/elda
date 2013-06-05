@@ -135,7 +135,7 @@ public class Context implements ReadContext, Cloneable {
     public static Pattern labelPattern = Pattern.compile("[_a-zA-Z][0-9a-zA-Z_]*");
     
     protected void loadAnnotations( Set<String> notThese, Set<String> seen, ResIterator ri, boolean isProperty, PrefixMapping prefixes) {
-        while (ri.hasNext()) {
+    	while (ri.hasNext()) {
             Resource res = ri.next();
             String uri = res.getURI();
             if (uri != null) {

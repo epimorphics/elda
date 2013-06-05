@@ -304,8 +304,7 @@ public class EndpointMetadata {
 	    </p>
 	*/
 	static void createOptionalMetadata
-		( NameMap nameMap
-		, ShortnameService sns
+		( ShortnameService sns
 		, boolean isListEndpoint
 		, Set<String> viewNames
 		, Set<FormatNameAndType> formats

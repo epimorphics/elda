@@ -9,12 +9,14 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.XMLRenderer;
+import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests.SNS;
@@ -25,38 +27,35 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class TestShortNames {
 	
 	@Test public void ensureUndeclatedURIUsesPrefix() {
-		NameMap nm = new NameMap();
 		Model m = ModelIOUtils.modelFromTurtle( "@prefix p: <http://example.com/ns#>. p:a p:thing p:b; p:other p:d; p:thong p:c." );
-		Map<String, String> mm = nm.stage2().loadPredicates(m, m).constructURItoShortnameMap();
+		Map<String, String> mm = 
+			new CompleteContext(CompleteContext.Mode.Transcode, new Context( m ), m )
+			.Do(m,  m); 
 		assertEquals( "p_thing", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}
 	
 	@Test public void ensureConfigShortnameIsUsed() {
 		Model empty = ModelFactory.createDefaultModel();
-		NameMap nm = new NameMap();
 		Model m = ModelIOUtils.modelFromTurtle
 			( "@prefix p: <http://example.com/ns#>."
 			+ "\np:a p:thing p:b; p:other p:d; p:thong p:c." 
-			+ "\np:thing rdfs:label 'labelled'."
+			+ "\np:thing rdfs:label 'labelled'; rdfs:range p:Thing."
 			);
-		nm.load(m, m);
-		nm.done();
-		Map<String, String> mm = nm.stage2().loadPredicates(empty, empty).constructURItoShortnameMap();
+		Context c = new Context( m ); 
+		Map<String, String> mm = new CompleteContext(CompleteContext.Mode.Transcode, c, m).Do(empty, empty);
 		assertEquals( "labelled", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}
 	
 	@Test public void ensureApiLabelWinsOverRDFSLabel() {
 		Model empty = ModelFactory.createDefaultModel();
-		NameMap nm = new NameMap();
 		Model m = ModelIOUtils.modelFromTurtle
 			( "@prefix p: <http://example.com/ns#>."
 			+ "\np:a p:thing p:b; p:other p:d; p:thong p:c." 
 			+ "\np:thing rdfs:label 'labelled'." 
 			+ "\np:thing api:label 'REALLY_labelled'."
 			);
-		nm.load(m, m);
-		nm.done();
-		Map<String, String> mm = nm.stage2().loadPredicates(empty, empty).constructURItoShortnameMap();
+		Context c = new Context( m ); 		
+		Map<String, String> mm = new CompleteContext(CompleteContext.Mode.Transcode, c, m).Do(empty, empty);
 		assertEquals( "REALLY_labelled", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}	
 	
