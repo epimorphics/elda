@@ -49,10 +49,6 @@ public class ExpandOnly extends StandardShortnameService
 				}
 	}
 	
-//	public void define( String shortName, String fullURI ) {
-//		map.put( shortName, fullURI );
-//	}
-	
 	@Override public String expand( String key ) 
 		{
 		String result = map.get( key );

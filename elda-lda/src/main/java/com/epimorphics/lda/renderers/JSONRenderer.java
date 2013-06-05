@@ -98,95 +98,9 @@ public class JSONRenderer implements Renderer {
 
 	private ReadContext makeReadContext( Model m ) {
 		ShortnameService sns = api.getSpec().getAPISpec().getShortnameService();
-		
 		Map<String, String> uriToName = new CompleteContext(CompleteContext.Mode.EncodeIfMultiple, sns.asContext(), m ).Do(m, m);
 		ReadContext result = CompleteReadContext.create(sns.asContext(), uriToName);
-		
-		return result; // return sns.asContext().clone();
-//		final NameMap nm = sns.nameMap();
-//	//
-////		Map<String, String> uriToShortname = nm.stage2().loadPredicates(m, m).result();
-//		
-//		final Map<String, ContextPropertyInfo> infos = nm.getInfoMap();
-//		final Map<String, String> givenURItoShortnameMap = nm.getURItoShortnameMap();
-//		
-//		Set<String> uris = new HashSet<String>();
-//		
-//		for (StmtIterator statements = m.listStatements(); statements.hasNext();) {
-//			uris.add( statements.next().getPredicate().getURI() );
-//		}
-//		
-//		Map<String, String> additionalURItoShortnameMap = new JSONPropertyNaming( m ).complete( givenURItoShortnameMap, uris );
-//		
-//		additionalURItoShortnameMap.putAll( givenURItoShortnameMap );
-//		
-//		for (StmtIterator statements = m.listStatements(); statements.hasNext();) {
-//			Statement s = statements.next();
-//			Property p = s.getPredicate();
-//			ContextPropertyInfo cpi = infos.get( p.getURI() );
-//			if (cpi == null) {
-//				String uri = p.getURI(), shortName = additionalURItoShortnameMap.get( uri );
-//				infos.put(uri,  cpi = new ContextPropertyInfo( uri, shortName ) );
-//			}
-//			cpi.addType( s.getObject() );
-//		}
-//		
-//	//
-//		Context given = sns.asContext();
-//        final Context context = given.clone();
-//		return new ReadContext() {
-//			
-//			@Override public boolean isSortProperties() {
-//				return true;
-//			}
-//			
-//			@Override public String getURIfromName(String code) {
-//				log.warn( "readContext: getURIfromName unexpectedly called." );
-//				return context.getURIfromName(code);
-//			}
-//			
-//			@Override public ContextPropertyInfo getPropertyByName(String name) {
-//				log.warn( "readContext: getpropertyByName unexpectedly called." );
-//				return context.getPropertyByName(name);
-//			}
-//			
-//			@Override public String getNameForURI(String uri) {
-//				log.warn( "readContext: getNameForURI unexpectedly called." );
-//				return context.getNameForURI(uri);
-//			}
-//			
-//			@Override public String getBase() {
-//				return context.getBase();
-//			}
-//			
-//			@Override public String forceShorten(String uri) {
-//				log.warn( "readContext: forceShorten unexpectedly called." );
-//				return context.forceShorten(uri);
-//			}
-//			
-//			@Override public ContextPropertyInfo findProperty(Property p) {
-//				ContextPropertyInfo cpi_old = context.findProperty( p );
-//				ContextPropertyInfo cpi_new = infos.get( p.getURI() );				
-////			warnIfNotEqual( cpi_old, cpi_new );
-//				ContextPropertyInfo cpi = cpi_new; // choose one
-//				return cpi;
-//			}
-//			
-//			private void warnIfNotEqual(ContextPropertyInfo oldWay, ContextPropertyInfo newWay) {
-//				if (!oldWay.equals(newWay)) {
-//					log.warn( "findProperty: internally inconsistent property infos" );
-//					log.warn( "  old vs new: " + oldWay.diff(newWay) );
-////					log.warn( "  old version: " + a );
-////					log.warn( "  new version: " + b );
-////					throw new RuntimeException("BOOM");
-//				}
-//			}
-//
-//			@Override public Set<String> allNames() {
-//				log.warn( "readContext: allNames unexpectedly called." );
-//				return context.allNames();
-//			}
-//		};
+		return result; 
 	}
 
     // testing only.

@@ -61,22 +61,6 @@ public class Decoder {
         } 
     }
     
-//    /**
-//     * Decode a JSON object from the reader into a set of resources within
-//     * a reconstructed RDF Model.
-//     * @throws EncodingException if there is a jsonrdf level error or JSON error
-//     */
-//    public static List<Resource> decode(Reader reader) {
-//        
-//        try {
-//            JsonObject jObj = ParseWrapper.readerToJsonObject(reader);
-//            Context context = encoder.getContext(jObj);
-//            return new Decoder(context, jObj).decodeResources();
-//        } catch (JsonException e) {
-//            throw new EncodingException(e.getMessage(), e);
-//        } 
-//    }
-    
     protected final static int BUFLEN = 1000;
     protected static String readFull(Reader reader) throws IOException {
         StringBuffer whole = new StringBuffer();

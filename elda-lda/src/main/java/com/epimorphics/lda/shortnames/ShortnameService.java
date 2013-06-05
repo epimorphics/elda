@@ -61,15 +61,6 @@ public interface ShortnameService
 	*/
 	public Context asContext();
 	
-//	/**
-//	    Answer the NameMap of this shortname service. A NameMap just maps
-//	    the long names to short names and back. It does not make the
-//	    commitments that Context does.
-//	    
-//	    ON ITS WAY OUT.
-//	*/
-//	public NameMap nameMap();
-	
 	/**
 	 	Answer a freshly-constructed map from URIs to shortnames, based on
 	 	the shortnames declared to this ShortnameService. All URIs in the
