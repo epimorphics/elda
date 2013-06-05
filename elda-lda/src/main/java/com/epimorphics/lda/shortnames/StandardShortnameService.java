@@ -77,6 +77,7 @@ public class StandardShortnameService implements ShortnameService {
         	nameMap.load( pm, vocab );
         }
     //
+        context.checkShortnames();
         nameMap.done();
     }
 

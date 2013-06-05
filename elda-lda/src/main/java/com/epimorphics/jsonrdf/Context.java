@@ -17,6 +17,7 @@ import static com.epimorphics.jsonrdf.RDFUtil.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import com.epimorphics.lda.exceptions.ReusedShortnameException;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.impl.Util;
@@ -45,6 +46,8 @@ public class Context implements ReadContext, Cloneable {
     
     protected Map<String, String> nameToURI = new HashMap<String, String>();
     
+    protected Map<String, Set<String>> allMap = new HashMap<String, Set<String>>();
+    
     protected int nameCount = 0;
     
     protected boolean sortProperties = false;
@@ -60,45 +63,6 @@ public class Context implements ReadContext, Cloneable {
     		;
     }
     
-//    @Override public boolean equals(Object other) {
-//    	return other instanceof Context && same( (Context) other );
-//    }
-//    
-//    protected boolean same(Context other) {
-//    	return
-//    		uriToProp.equals(other.uriToProp)
-//    		&& uriToName.equals(other.uriToName)
-//    		&& nameToURI.equals(other.nameToURI)
-//    		&& sortProperties == other.sortProperties
-//    		&& completedMappingTable == other.completedMappingTable
-//    		;
-//    }
-//    
-//    public String diff( Context other ) {
-//    	StringBuilder sb = new StringBuilder();
-//    	if (!uriToProp.equals(other.uriToProp)) diff( sb, "uriToProp", uriToProp, other.uriToProp );
-//    	if (!uriToName.equals(other.uriToName)) diff( sb, "uriToName", uriToName, other.uriToName );
-//    	if (!nameToURI.equals(other.nameToURI)) diff( sb, "nameToURI", nameToURI, other.nameToURI );
-//    	if (sortProperties != other.sortProperties) sb.append( "sortproperties: " ).append(other.sortProperties);
-//    	if (completedMappingTable != other.completedMappingTable) sb.append( "completedMappingTable: " ).append(other.completedMappingTable);
-//    	return sb.toString();
-//    }
-//    
-//    
-//    private static <K, V> void diff( StringBuilder sb, String name, Map<K, V> a, Map<K, V> b) {
-//		if (!a.equals(b)) {
-//			sb.append( "\n" ).append( name );
-//			Set<K> aKeys = a.keySet(), bKeys = b.keySet();
-//			if (!aKeys.equals(bKeys)) {
-//				Set<K> aKeysOnly = new HashSet<K>( aKeys ); aKeysOnly.removeAll( bKeys );
-//				Set<K> bKeysOnly = new HashSet<K>( bKeys ); bKeysOnly.removeAll( aKeys );
-//				Set<K> sharedKeys = new HashSet<K>( aKeys ); sharedKeys.retainAll( bKeys );
-//				sb.append( "\n  shared: " ).append( sharedKeys );
-//				sb.append( "\n  aKeys: " ).append( aKeysOnly );
-//				sb.append( "\n  bKeys: " ).append( bKeysOnly );
-//			}
-//		}
-//	}
 
 	/**
      * Construct an empty context
@@ -227,7 +191,6 @@ public class Context implements ReadContext, Cloneable {
      */
     protected void recordAltName(String name, String uri) {
         if (!nameToURI.containsKey(name)) nameToURI.put(name, uri);
-        // Only the preferred name goes in the uriToName mapping
     }
     
     protected void recordAltName(String uri, PrefixMapping pm) {
@@ -248,6 +211,7 @@ public class Context implements ReadContext, Cloneable {
      */
     public void recordPreferredName(String name, String uri) {
         if (isNameFree(name)) { 
+        	recordShortname(name, uri);
             nameToURI.put(name, uri);
             uriToName.put(uri, name);
             ContextPropertyInfo prop = uriToProp.get(uri);
@@ -255,6 +219,16 @@ public class Context implements ReadContext, Cloneable {
                 prop.setName(name);
             }
         } 
+    }
+    
+    /**
+        Record all preferred shortname => uri mappings that we find (even ones that
+        the older code discards) so that we can detect clashes later.
+    */
+    protected void recordShortname(String name, String uri) {
+    	Set<String> uris = allMap.get(name);
+    	if (uris == null) allMap.put(name, uris = new HashSet<String>() );
+    	uris.add(uri);
     }
 
     /**
@@ -271,6 +245,24 @@ public class Context implements ReadContext, Cloneable {
                 if (!uriToName.containsKey(uri)) uriToName.put(uri, name);
             }
         }
+    }
+    
+    /**
+        Check to see if there are any shortnames that map to multiple
+        URIs. If so, throw a ResusedShortnameException that reports 
+        all such classes.
+    */
+    public void checkShortnames() {
+		List<ReusedShortnameException.One> problems = new ArrayList<ReusedShortnameException.One>();
+	//	
+		for (Map.Entry<String, Set<String>> e: allMap.entrySet()) {
+			Set<String> uris = e.getValue();
+			if (uris.size() > 1) {
+				problems.add( new ReusedShortnameException.One(e.getKey(), uris) );
+			}
+		}
+	//
+		if (problems.size() > 0) throw new ReusedShortnameException(problems);
     }
     
     /** Return the base URI assumed during serialization */
