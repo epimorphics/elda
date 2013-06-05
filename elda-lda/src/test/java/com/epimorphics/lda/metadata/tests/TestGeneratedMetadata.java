@@ -17,7 +17,6 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.EndpointMetadata;
-import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.specs.EndpointDetails;

@@ -17,7 +17,6 @@ import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.CompleteContext;
-import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests.SNS;
 import com.hp.hpl.jena.rdf.model.Model;

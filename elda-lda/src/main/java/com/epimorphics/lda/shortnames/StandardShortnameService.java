@@ -42,7 +42,6 @@ public class StandardShortnameService implements ShortnameService {
 
     protected final Context context;
     protected final PrefixMapping prefixes;
-    protected final NameMap nameMap = new NameMap();
     
     /**
      	Initialise a ShortnameService
@@ -62,28 +61,22 @@ public class StandardShortnameService implements ShortnameService {
         context.loadVocabularyAnnotations( seen, specModel );
     //
         extractDatatypes( specModel );
-        nameMap.load( pm, rp );
-        nameMap.load( pm, specModel );
     //
         for (NodeIterator i = specModel.listObjectsOfProperty(specRoot, API.vocabulary); i.hasNext();) {
         	String vocabLoc = getLexicalForm(i.next());
             Model vocabModel = loader.loadModel( vocabLoc );
 			loadVocabulary( vocabModel, seen, prefixes, pm );
-            nameMap.load( pm, vocabModel );
         }
     //
         for (Model vocab: BuiltIn.vocabularies) {
         	loadVocabulary( vocab, seen, prefixes, pm );
-        	nameMap.load( pm, vocab );
         }
     //
         context.checkShortnames();
-        nameMap.done();
     }
 
 	public void loadVocabulary(Model vocab, Set<String> seen, PrefixMapping prefixes, PrefixMapping pm) {
 		extractDatatypes( vocab );
-		nameMap.loadIfNotDefined( pm, vocab );
 		context.loadVocabularyAnnotations( seen, vocab, prefixes);
 	}
 

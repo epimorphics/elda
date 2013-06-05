@@ -14,7 +14,6 @@ import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
-import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.EndpointDetails;

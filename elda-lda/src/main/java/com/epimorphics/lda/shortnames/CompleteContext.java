@@ -151,7 +151,6 @@ public class CompleteContext {
 	// the "best" short name is the shortest. Tiebreak by alphabetical order.
 	private String bestShortname( List<String> names ) {
 		if (names.size() > 1) Collections.sort(names, compareBySizeThenSpelling);
-		// if (names.size() > 1) System.err.println( ">> picking " + names.get(0) + " from " + names );
 		return names.get(0);
 	}
 

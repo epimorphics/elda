@@ -78,7 +78,7 @@
 	; <http://www.nosuchproperty/property> "no such property"
 	; <http://www.nosuchproperty1/prop,er-ty> "nor this one"
 	; <http://www.nosuchproperty2/prop,er-ty> "nor this one either"
-	; hello:players 42
+	; hello:players 99
 	.
 	
 <http://www.treefroggames.com/age-of-industry> a hello:BoardGame

@@ -33,7 +33,6 @@ import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
-import com.epimorphics.lda.shortnames.NameMap;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APIEndpointSpec;
