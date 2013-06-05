@@ -29,6 +29,8 @@ import com.epimorphics.jsonrdf.ReadContext;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.shortnames.CompleteContext;
+import com.epimorphics.lda.shortnames.CompleteReadContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
@@ -96,7 +98,11 @@ public class JSONRenderer implements Renderer {
 
 	private ReadContext makeReadContext( Model m ) {
 		ShortnameService sns = api.getSpec().getAPISpec().getShortnameService();
-		return sns.asContext().clone();
+		
+		Map<String, String> uriToName = new CompleteContext(CompleteContext.Mode.EncodeIfMultiple, sns.asContext(), m ).Do(m, m);
+		ReadContext result = CompleteReadContext.create(sns.asContext(), uriToName);
+		
+		return result; // return sns.asContext().clone();
 //		final NameMap nm = sns.nameMap();
 //	//
 ////		Map<String, String> uriToShortname = nm.stage2().loadPredicates(m, m).result();

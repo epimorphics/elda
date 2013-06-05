@@ -8,13 +8,11 @@ package com.epimorphics.lda.renderers.tests;
 
 import static org.junit.Assert.*;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.util.DOMUtils;
@@ -26,7 +24,6 @@ import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 public class TestXMLRenderer 
@@ -131,7 +128,7 @@ public class TestXMLRenderer
 		Model m = root.getModel();	
 	//
 		PrefixMapping pm = root.getModel();
-		ShortnameService sns = new SNS( "" );
+		ShortnameService sns = new SNS("P=eh:/P; Q=eh:/Q; R=eh:/R; HAS=eh:/HAS" );
 	//
 		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
@@ -148,8 +145,6 @@ public class TestXMLRenderer
 			{
 			String exp = DOMUtils.renderNodeToString( new Times(), expected, pm );
 			String obt = DOMUtils.renderNodeToString( new Times(), de, pm );
-//			System.err.println( "expected:\n" + exp );
-//			System.err.println( "obtained:\n" + obt );
 			fail( "ALAS -- rendering not as expected:\n" + exp + "obtained:\n" + obt );
 			}
 		}

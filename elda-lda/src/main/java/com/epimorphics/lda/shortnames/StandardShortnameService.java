@@ -49,11 +49,11 @@ public class StandardShortnameService implements ShortnameService {
     protected final NameMap nameMap = new NameMap();
     
     /**
-     * Construct a ShortnameService
-     * @param prefixes the prefixes to use for localname disambiguation
-     * @param specRoot the API specification with may both contain and further 
-     * reference vocabulary information
-     */
+     	Initialise a ShortnameService
+     	@param specRoot the API specification 
+     	@param prefixes prefixes to use
+     	@param loader the loader to use for vocabularies
+    */
     public StandardShortnameService( Resource specRoot, PrefixMapping prefixes, ModelLoader loader ) {
     	this.prefixes = prefixes;
         Model specModel = specRoot.getModel();
@@ -186,6 +186,8 @@ public class StandardShortnameService implements ShortnameService {
 
 	@Override public Map<String, String> constructURItoShortnameMap(Model m, PrefixMapping pm) {
 		
+		if (true) return new CompleteContext(CompleteContext.Mode.Transcode, context, pm).Do(m,  pm);
+		
 		String it = "http://purl.org/linked-data/api/vocab#processor";	
 				
 		Map<String, String> byContext = contextToNameMap(m, pm);
@@ -229,7 +231,7 @@ public class StandardShortnameService implements ShortnameService {
 		result.put(API.value.getURI(), "value");
 		result.put(API.label.getURI(), "label");
 	//
-		for (String key: context.allNames()) {
+		for (String key: context.preferredNames()) {
 			String uri = context.getURIfromName( key );
 			
 			if (uri.equals(DOAP.programming_language.getURI())) {

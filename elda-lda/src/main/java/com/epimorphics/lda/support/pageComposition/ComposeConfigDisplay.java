@@ -180,7 +180,7 @@ public class ComposeConfigDisplay {
 	}
 
 	private List<String> preferredShortnamesInOrder(Context sns) {
-		Set<String> allNames = new HashSet<String>( sns.allNames() );
+		Set<String> allNames = new HashSet<String>( sns.preferredNames() );
 		Set<String> toRemove = new HashSet<String>();
 		for (String oneName: allNames) {
 			String uri = sns.getURIfromName( oneName );

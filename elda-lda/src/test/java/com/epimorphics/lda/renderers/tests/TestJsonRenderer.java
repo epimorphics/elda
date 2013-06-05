@@ -38,7 +38,7 @@ public class TestJsonRenderer {
 		Resource root = model.createResource( "fake:root" );
 		Context given = new Context();
 		new JSONRenderer( null ).renderAndDiscard( b, model, root, given );
-		Set<String> allShortNames = given.allNames();
+		Set<String> allShortNames = given.preferredNames();
 		assertEquals( "rendering should not update the context", Collections.EMPTY_SET, allShortNames );
 	}
 	

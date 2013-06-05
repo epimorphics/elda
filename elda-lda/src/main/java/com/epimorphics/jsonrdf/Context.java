@@ -202,21 +202,7 @@ public class Context implements ReadContext, Cloneable {
 		}
 		return shortForm;
 	}
-    
-    /**
-     * Record the preferred name to use to shorten a URI.
-     * If the name is already in use then only record as an alternate name
-     */
-    public void recordPreferredName(String name, String uri) {
-        if (isNameFree(name)) { 
-            nameToURI.put(name, uri);
-            uriToName.put(uri, name);
-            ContextPropertyInfo prop = uriToProp.get(uri);
-            if (prop != null && !prop.getName().equals(name)) {
-                prop.setName(name);
-            }
-        } 
-    }
+
     
     static final Literal Literal_TRUE = ResourceFactory.createTypedLiteral( true );
     
@@ -240,7 +226,7 @@ public class Context implements ReadContext, Cloneable {
      * Will only be used when expanding queries, not for generation of shortform listings
      */
     protected void recordAltName(String name, String uri) {
-        if ( ! nameToURI.containsKey(name)) nameToURI.put(name, uri);
+        if (!nameToURI.containsKey(name)) nameToURI.put(name, uri);
         // Only the preferred name goes in the uriToName mapping
     }
     
@@ -254,21 +240,35 @@ public class Context implements ReadContext, Cloneable {
 
     protected String getLocalName(String uri) {
         return uri.substring( Util.splitNamespace( uri ));
+    }    
+    
+    /**
+     * Record the preferred name to use to shorten a URI.
+     * If the name is already in use then only record as an alternate name
+     */
+    public void recordPreferredName(String name, String uri) {
+        if (isNameFree(name)) { 
+            nameToURI.put(name, uri);
+            uriToName.put(uri, name);
+            ContextPropertyInfo prop = uriToProp.get(uri);
+            if (prop != null && !prop.getName().equals(name)) {
+                prop.setName(name);
+            }
+        } 
     }
 
     /**
-     * Finish off the mapping table filling in anything we have useful prefixes for
-     * and inventing non-clashing forms.
-     */
+        URIs that have no preferred shortname are given their alternative
+        shortname as their preferred shortname. This should be done once
+        only to a Context.
+    */
     protected void completeContext() {
         if ( !completedMappingTable ) {
             completedMappingTable = true;
             for (Map.Entry<String, String> e : nameToURI.entrySet()) {
                 String uri = e.getValue();
                 String name = e.getKey();
-                if ( ! uriToName.containsKey(uri)) {
-                    uriToName.put(uri, name);
-                }
+                if (!uriToName.containsKey(uri)) uriToName.put(uri, name);
             }
         }
     }
@@ -293,8 +293,8 @@ public class Context implements ReadContext, Cloneable {
     }
     
     /** The set of all mapped names */
-    public Set<String> allNames() {
-        return nameToURI.keySet();
+    public Set<String> preferredNames() {
+    	return new HashSet<String>( uriToName.values() );
     }
     
     /** Lookup the definition of a property based on its URI */
@@ -333,14 +333,24 @@ public class Context implements ReadContext, Cloneable {
     }
 
     /**
-     * Determine record for a property, creating a new
-     * context entry if required.
-     */
+        Find the info record for a property. Create one if there's
+        not one already there. Invent a shortname for the property
+        if we have to create the record.
+    */
     public ContextPropertyInfo findProperty(Property p) {
+        return findProperty(p, null);
+    }    
+    
+    /**
+        Find the info record for a property. Create one if there's
+        not one already there. If name is null, invent a shortname
+        for this property, otherwise use name as the shortname.
+    */
+    public ContextPropertyInfo findProperty(Property p, String name) {
         String uri = p.getURI();
         ContextPropertyInfo prop = getPropertyByURI(uri);
         if (prop == null) {
-            String name = findNameForProperty(p);
+            if (name == null) name = findNameForProperty(p);
             prop = getPropertyByURI(uri);
             if (prop == null) {
                 prop = new ContextPropertyInfo(uri, name);

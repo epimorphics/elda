@@ -45,6 +45,7 @@ public class ExpandOnly extends StandardShortnameService
 				{
 				String [] parts = e.split(" *= *", 2 );
 				map.put( parts[0], parts[1] );
+				context.recordPreferredName( parts[0], parts[1] );
 				}
 	}
 	
