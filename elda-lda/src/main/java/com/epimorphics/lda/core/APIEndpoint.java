@@ -21,6 +21,7 @@ import java.net.URI;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.util.MediaType;
@@ -37,7 +38,39 @@ import com.hp.hpl.jena.rdf.model.Resource;
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-public interface APIEndpoint {
+public interface APIEndpoint {	
+	
+	public static class Request {
+		public final Controls c;
+		public final URI requestURI;
+		public final Bindings context;
+		public final CompleteContext.Mode mode;
+		public final String format;
+			
+		public Request(Controls c, URI requestURI, Bindings context) {
+			this(c, requestURI, context, CompleteContext.Mode.Transcode, "");
+		}
+			
+		private Request(Controls c, URI requestURI, Bindings context, CompleteContext.Mode mode, String format) {
+			this.c = c;
+			this.requestURI = requestURI;
+			this.context = context;
+			this.mode = mode;
+			this.format = format;
+		}
+	
+		public Request withMode(CompleteContext.Mode mode) {
+			return new Request(c, requestURI, context, mode, format);
+		}
+	
+		public Request withBindings(Bindings newBindings) {
+			return new Request(c, requestURI, newBindings, mode, format);
+		}
+	
+		public Request withFormat(String format) {
+			return new Request(c, requestURI, context, mode, format);
+		}
+	}
     
     /**
      * The URI template at which this APIEndpoint should be attached

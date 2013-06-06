@@ -17,6 +17,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
+import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
@@ -39,14 +40,19 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Triad<APIResultSet, String, Bindings> call( Controls c, Match match, URI requestUri, String suffix, String contextPath, MultiMap<String, String> queryParams ) {
+	public static Triad<APIResultSet, String, Bindings> call( Controls c, Match match, URI requestUri, String formatBySuffix, String contextPath, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		APIEndpointSpec spec = ep.getSpec();
+		
 		Bindings vs = new Bindings( spec.getBindings() ).updateAll( match.getBindings() );
-		if (suffix != null) vs.put( "_suffix", suffix );
+		if (formatBySuffix != null) vs.put( "_suffix", formatBySuffix );
 		vs.put( "_APP", contextPath );
 		vs.put( "_HOST", getHostAndPort( requestUri ) );
 		Bindings cc = Bindings.createContext( vs, queryParams );
+		
+		String format = cc.getAsString("_format",  formatBySuffix);
+		CompleteContext.Mode mode = (format.equals("json") ? CompleteContext.Mode.EncodeIfMultiple : CompleteContext.Mode.Transcode);
+
 		return ep.call( c, requestUri, cc );
 	}
 
