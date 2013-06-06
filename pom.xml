@@ -258,7 +258,7 @@
     <module>elda-lda</module>
 	<module>elda-assets</module>
     <module>elda-common</module>
-	<module>elda-unit</module>
+	<module>elda-bundled</module>
     <module>elda-standalone</module>
     <module>elda-system-tests</module>
     <module>elda-testing-webapp</module>

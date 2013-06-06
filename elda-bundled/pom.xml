@@ -8,9 +8,9 @@
   </parent>
 
   <groupId>com.epimorphics.lda</groupId>
-  <artifactId>elda-unit</artifactId>
+  <artifactId>elda-bundled</artifactId>
   <packaging>war</packaging>
-  <name>elda-unit</name>
+  <name>elda-bundled</name>
   <version>1.2.23-SNAPSHOT</version>
   <description>single WAR with assets and external configuration</description>
 
@@ -46,14 +46,14 @@
   </dependencies>
 
   <build>
-    <finalName>elda-unit</finalName>
+    <finalName>elda-bundled</finalName>
 	<plugins>
 
 		<plugin>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>maven-jetty-plugin</artifactId>
 			<configuration>
-				<contextPath>/elda-unit</contextPath>
+				<contextPath>/elda-bundled</contextPath>
 			</configuration>
 		</plugin>
 
