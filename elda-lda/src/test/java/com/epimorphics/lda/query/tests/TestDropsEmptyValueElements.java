@@ -41,8 +41,8 @@ public class TestDropsEmptyValueElements {
 			, sns 
 			, aq
 			); 
-		Couple<View, String> ans = cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
-		assertEquals( CollectionUtils.set( new PropertyChain( "eh:/A" ) ), ans.a.chains() );
+		View v = cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
+		assertEquals( CollectionUtils.set( new PropertyChain( "eh:/A" ) ), v.chains() );
 	}
 
 	@Test public void ensureEmptySortsIgnored() {

@@ -38,13 +38,11 @@ import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.EndpointDetails;
-import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.RDFUtils;
-import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -92,8 +90,10 @@ public class APIEndpointImpl implements APIEndpoint {
 		Bindings cc = r.context.copyWithDefaults( spec.getBindings() );
 	    APIQuery query = spec.getBaseQuery();
 	//
-	    Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
-	    View view = viewAndFormat.a; 
+	    if (cc.getValueString( "callback" ) != null && !"json".equals( r.format ))
+			EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );
+	//
+	    View view = buildQueryAndView( cc, query );
 	//    
 	    APIResultSet unfiltered = query.runQuery( r.c, spec.getAPISpec(), cache, cc, view );
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage(), mpe );
@@ -102,26 +102,23 @@ public class APIEndpointImpl implements APIEndpoint {
 	    return new Couple<APIResultSet, Bindings>( filtered, cc );
     }
 
-    private Couple<View, String> buildQueryAndView( Bindings context, APIQuery query ) {
+    private View buildQueryAndView( Bindings context, APIQuery query ) {
     	ShortnameService sns = spec.getAPISpec().getShortnameService();
     	int endpointType = isListEndpoint() ? ContextQueryUpdater.ListEndpoint : ContextQueryUpdater.ItemEndpoint;
     	ContextQueryUpdater cq = new ContextQueryUpdater( endpointType, context, spec, sns, query );
 		try { 
-			Couple<View, String> result = cq.updateQueryAndConstructView( query.deferredFilters );
-			String format = result.b.equals( "" ) ? context.getValueString( "_suffix") : result.b;
-			if (context.getValueString( "callback" ) != null && !"json".equals( format ))
-				EldaException.BadRequest( "callback specified but format '" + format + "' is not JSON." );
-			return result; 
+			return cq.updateQueryAndConstructView( query.deferredFilters ); 
+		} catch (APIException e) { 
+			throw new QueryParseException( "query construction failed", e ); 
 		}
-		catch (APIException e) { throw new QueryParseException( "query construction failed", e ); }
     }
     
     /**
      * Return a metadata description for the query that would be run by this endpoint
      */
-    @Override public Resource getMetadata(Bindings context, URI ru, Model metadata) {
+    @Override public Resource getMetadata(Bindings context, URI ru, String formatName, Model metadata) {
         APIQuery query = spec.getBaseQuery();
-        buildQueryAndView(context, query);
+        View _ignored = buildQueryAndView(context, query);
         metadata.setNsPrefix("api", API.getURI());
 		Resource meta = metadata.createResource( URIUtils.withoutPageParameters( ru ).toString() );
         APISpec aSpec = spec.getAPISpec();

@@ -14,7 +14,6 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.util.Couple;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.NamedViews;
@@ -70,7 +69,7 @@ public class ContextQueryUpdater implements ViewSetter {
 	    Apply the context updates to the query, and answer the view
 	    specified.
 	*/
-    public Couple<View, String> updateQueryAndConstructView( List<PendingParameterValue> deferredFilters ) {	  
+    public View updateQueryAndConstructView( List<PendingParameterValue> deferredFilters ) {	  
     	aq.clearLanguages();
     	Set<String> allParamNames = context.parameterNames();
     	if (allParamNames.contains( QueryParameter._VIEW )) {
@@ -90,7 +89,7 @@ public class ContextQueryUpdater implements ViewSetter {
         geo.addLocationQueryIfPresent( aq );
         // ((QueryArgumentsImpl) args).updateQuery();
         activateDeferredFilters( deferredFilters );
-        return new Couple<View, String>( view, requestedFormat );
+        return view;
     }
 
 	private void activateDeferredFilters( List<PendingParameterValue> deferred ) {
@@ -141,7 +140,7 @@ public class ContextQueryUpdater implements ViewSetter {
 			mustBeListEndpoint( p );
 		    aq.setPageSize( integerOneOrMore( p, val ) );
 		} else if (p.equals( QueryParameter._FORMAT )) {
-			vs.setFormat(val);
+			// already handled. WAS: vs.setFormat(val);
 		} else if (p.equals(QueryParameter._METADATA)) {
 			aq.addMetadataOptions( val.split(",") );
 	    } else if (p.equals(QueryParameter._SEARCH)) {

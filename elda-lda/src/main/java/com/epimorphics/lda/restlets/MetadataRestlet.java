@@ -53,7 +53,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            Resource meta = createMetadata(ui, pathstub, rec);
+            Resource meta = createMetadata(ui, pathstub, "text", rec);
             return returnAs(ModelIOUtils.renderModelAs(meta.getModel(), "Turtle"), "text/plain");
         }
     }
@@ -64,7 +64,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            Resource meta = createMetadata(ui, pathstub, rec);
+            Resource meta = createMetadata(ui, pathstub, "rdf", rec);
             return returnAs(ModelIOUtils.renderModelAs(meta.getModel(), "RDF/XML-ABBREV"), "application/rdf+xml");
         }
     }
@@ -75,7 +75,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            Resource meta = createMetadata(ui, pathstub, rec);
+            Resource meta = createMetadata(ui, pathstub, "ttl", rec);
             return returnAs(ModelIOUtils.renderModelAs(meta.getModel(), "Turtle"), "text/turtle");
         }
     }
@@ -86,7 +86,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            Resource meta = createMetadata(ui, pathstub, rec);
+            Resource meta = createMetadata(ui, pathstub, "json", rec);
             StringWriter writer = new StringWriter();
             List<Resource> roots = new ArrayList<Resource>(1);
             roots.add( meta );
@@ -117,10 +117,10 @@ import com.hp.hpl.jena.util.ResourceUtils;
 
     static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.EXTRA + "SIBLING" );
     
-    private Resource createMetadata(UriInfo ui, String pathStub, SpecRecord rec) {
+    private Resource createMetadata(UriInfo ui, String pathStub, String formatName, SpecRecord rec) {
         Bindings cc = Bindings.createContext( Bindings.uplift( rec.getBindings() ), JerseyUtils.convert( ui.getQueryParameters() ) );
         Model metadata = ModelFactory.createDefaultModel();
-        Resource meta = rec.getAPIEndpoint().getMetadata( cc, ui.getRequestUri(), metadata);
+        Resource meta = rec.getAPIEndpoint().getMetadata( cc, ui.getRequestUri(), formatName, metadata);
     //
         for (APIEndpointSpec s: rec.getAPIEndpoint().getSpec().getAPISpec().getEndpoints()) {
             String ut = s.getURITemplate().replaceFirst( "^/", "" );

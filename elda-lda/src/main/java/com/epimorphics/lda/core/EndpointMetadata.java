@@ -242,8 +242,8 @@ public class EndpointMetadata {
 		( "http://www.w3.org/2004/02/skos/core#" + "prefLabel" )
 		;
 	
-	public void addTermBindings( APIEndpoint.Request r, Model toScan, Model meta, Resource exec, Context c ) {		
-		Map<String, String> mm = new CompleteContext( CompleteContext.Mode.Transcode, c, toScan ).Do(toScan, toScan);
+	public void addTermBindings( APIEndpoint.Request r, Model toScan, Model meta, Resource exec, Context c ) {
+		Map<String, String> mm = new CompleteContext( r.mode, c, toScan ).Do(toScan, toScan);
 	//
 		List<String> uriList = new ArrayList<String>( mm.keySet() );
 		Collections.sort( uriList );
