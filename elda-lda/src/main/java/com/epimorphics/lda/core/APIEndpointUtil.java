@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.core.APIEndpoint.Request;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
@@ -40,9 +41,11 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Couple<APIResultSet, Bindings> call( APIEndpoint.Request r, Match match, String formatName, String contextPath, MultiMap<String, String> queryParams ) {
+	public static Couple<APIResultSet, Bindings> call( APIEndpoint.Request r, Match match, String contextPath, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
-		APIEndpointSpec spec = ep.getSpec();
+		
+		String formatName = r.format;
+		CompleteContext.Mode mode = (formatName.equals("json") ? CompleteContext.Mode.EncodeIfMultiple : CompleteContext.Mode.Transcode);
 		
 		Bindings vs = new Bindings( r.context )
 			.updateAll( match.getBindings() )
@@ -53,9 +56,7 @@ public class APIEndpointUtil {
 		
 		Bindings cc = Bindings.createContext( vs, queryParams );
 		
-		CompleteContext.Mode mode = (formatName.equals("json") ? CompleteContext.Mode.EncodeIfMultiple : CompleteContext.Mode.Transcode);
-		
-		return ep.call( new APIEndpoint.Request( r.c, r.requestURI, cc ).withMode(mode).withFormat(formatName) );
+		return ep.call( r.withBindings(cc).withMode(mode).withFormat(formatName) );
 	}
 
 	private static String getHostAndPort(URI u) {

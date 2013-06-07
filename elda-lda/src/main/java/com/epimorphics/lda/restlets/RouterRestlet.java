@@ -249,32 +249,45 @@ import com.sun.jersey.api.NotFoundException;
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
         	APIEndpoint ep = match.getEndpoint();
+        	boolean needsVaryAccept = formatName == null && queryParams.containsKey( "_format" ) == false;
         	
         	Renderer _default = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );
-        	        	
-        	boolean needsVaryAccept = formatName == null && queryParams.containsKey( "_format" ) == false;
         	
         	if (formatName == null && _default != null) formatName = _default.getPreferredSuffix();
         	
+        	Renderer r = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );
+        	
+        	if (r == null) {
+        		String message = formatName == null
+        			? "no suitable media type was provided for rendering."
+        			: "renderer '" + formatName + "' is not known to this server."
+        			;
+        		return standardHeaders( Response.status( Status.BAD_REQUEST )
+        			.entity( Messages.niceMessage( message ) ) )
+        			.build()
+        			;
+        	} 
+        //        	
         	Bindings b = ep.getSpec().getBindings();
         	APIEndpoint.Request req = new APIEndpoint.Request( c, ru, b ).withFormat( formatName );
-        	Couple<APIResultSet, Bindings> resultsAndBindings = APIEndpointUtil.call( req, match, formatName, contextPath, queryParams );
+        	Couple<APIResultSet, Bindings> resultsAndBindings = APIEndpointUtil.call( req, match, contextPath, queryParams );
         	
             APIResultSet results = resultsAndBindings.a;
-            
 			Bindings rc = new Bindings( resultsAndBindings.b.copy(), as );
 			
-			Renderer r = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );
-        	
         	if (_default.getPreferredSuffix().equals( r.getPreferredSuffix())) {
         		MediaType dmt = _default.getMediaType(rc);
         		if (!dmt.equals(r.getMediaType(rc))) {
         			r = RouterRestletSupport.changeMediaType( r, dmt );
         		}
         	}
-			
+						
+			MediaType mt = r.getMediaType(rc);
+			log.info( "rendering with formatter " + mt );
+			Times times = c.times;
+			Renderer.BytesOut bo = r.render( times, rc, results );
 			int mainHash = runHash + ru.toString().hashCode();
-			return doRendering( c, rc, mainHash, needsVaryAccept, formatName, results, r );
+			return returnAs( results, mainHash + mt.hashCode(), wrap(times, bo), needsVaryAccept, mt );
 	//
         } catch (StackOverflowError e) {
         	StatsValues.endpointException();

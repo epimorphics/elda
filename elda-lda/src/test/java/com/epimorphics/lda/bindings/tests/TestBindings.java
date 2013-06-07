@@ -67,9 +67,9 @@ public class TestBindings {
 		URI req = new URI( "/driver/cartwheel" );
 		MultiMap<String, String> params = MakeData.parseQueryString( "" );
 		
-		APIEndpoint.Request r = new APIEndpoint.Request( controls, req, new Bindings() );
+		APIEndpoint.Request r = new APIEndpoint.Request( controls, req, new Bindings() ).withFormat("xml");
 		
-		Couple<APIResultSet, Bindings> results = APIEndpointUtil.call( r, match, "", "", params );
+		Couple<APIResultSet, Bindings> results = APIEndpointUtil.call( r, match, "s", params );
 //		System.err.println( ">> class: " + results.c.getStringValue( "class" ) );
 		String sq = results.a.getSelectQuery();
 //		System.err.println( ">> " + sq );
