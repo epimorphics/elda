@@ -51,6 +51,7 @@ import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.Controls;
+import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.support.pageComposition.Messages;
@@ -272,7 +273,9 @@ import com.sun.jersey.api.NotFoundException;
         	APIEndpoint.Request req = new APIEndpoint.Request( c, ru, b ).withFormat( formatName );
         	Couple<APIResultSet, Bindings> resultsAndBindings = APIEndpointUtil.call( req, match, contextPath, queryParams );
         	
-            APIResultSet results = resultsAndBindings.a;
+        	ModelPrefixEditor mpe = ep.getSpec().getAPISpec().getModelPrefixEditor();
+        	
+            APIResultSet results = resultsAndBindings.a.applyEdits( mpe );
 			Bindings rc = new Bindings( resultsAndBindings.b.copy(), as );
 			
         	if (_default.getPreferredSuffix().equals( r.getPreferredSuffix())) {

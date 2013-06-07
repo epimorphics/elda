@@ -45,6 +45,10 @@ public class ModelPrefixEditor {
 	private boolean same(ModelPrefixEditor other) {
 		return pe.equals(other.pe);
 	}
+	
+	public boolean isEmpty() {
+		return pe.isEmpty();
+	}
 
 	public Model rename( Model x ) {
 		if (pe.isEmpty()) return x;

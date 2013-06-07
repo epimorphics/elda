@@ -57,8 +57,9 @@ public class APIResultSet implements SetsMetadata {
 
 	protected final List<Resource> results;
     protected final boolean isCompleted;
-    protected final MergedModels model;
+    protected /* should be final. clone is rubbish. */ MergedModels model;
     protected final String detailsQuery;
+    
     protected long hash;
     protected Date timestamp;
     protected String selectQuery = "";
@@ -76,6 +77,12 @@ public class APIResultSet implements SetsMetadata {
     		this.object = objectModel;
     		this.meta = ModelFactory.createDefaultModel();
     		this.merged = ModelFactory.createUnion( this.object,  this.meta );
+    	}
+    	
+    	protected MergedModels( Model objectModel, Model metaModel, Model mergedModel ) {
+    		this.object = objectModel;
+    		this.meta = metaModel;
+    		this.merged = mergedModel;
     	}
     	
     	public Model getObjectModel() {
@@ -96,6 +103,19 @@ public class APIResultSet implements SetsMetadata {
 
 		public void setNsPrefixes(PrefixMapping supplied) {
 			object.setNsPrefixes( supplied );
+		}
+
+		public MergedModels applyEdits(ModelPrefixEditor mpe) {
+			if (mpe.isEmpty()) {
+				return this;
+			} else {
+				return new MergedModels
+					(
+					mpe.rename( object )
+					, mpe.rename( meta )
+					, mpe.rename( merged )
+				);
+			}
 		}
     }
     	
@@ -244,7 +264,8 @@ public class APIResultSet implements SetsMetadata {
      * @param v the view to filter the results with
      * @param languages  acceptable language codes for literals
      */
-    public APIResultSet getFilteredSet( View v, String languages, ModelPrefixEditor mpe ) {
+    public APIResultSet getFilteredSet( View v, String languages ) {
+    	ModelPrefixEditor mpe = new ModelPrefixEditor(); // TODO: eliminate
     	if (languages != null) LanguageFilter.filterByLanguages( model.object, languages.split(",") );
         // model.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();
@@ -253,6 +274,12 @@ public class APIResultSet implements SetsMetadata {
         for (Resource r : results)
         	mappedResults.add( mpe.rename( r.inModel( objectModel ) ).asResource() );
 		return new APIResultSet( objectGraph, mappedResults, isCompleted, enableETags, detailsQuery, metadata, v ).setSelectQuery( selectQuery );
+    }
+    
+    public APIResultSet applyEdits( ModelPrefixEditor mpe ) {
+    	APIResultSet edited = this.clone();
+    	edited.model = edited.model.applyEdits( mpe );
+    	return edited;
     }
 
 	/**

@@ -85,8 +85,6 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     @Override public Couple<APIResultSet, Bindings> call( Request r ) {
-    	
-    	ModelPrefixEditor mpe = spec.getAPISpec().getModelPrefixEditor();
 		Bindings cc = r.context.copyWithDefaults( spec.getBindings() );
 	    APIQuery query = spec.getBaseQuery();
 	//
@@ -96,7 +94,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    View view = buildQueryAndView( cc, query );
 	//    
 	    APIResultSet unfiltered = query.runQuery( r.c, spec.getAPISpec(), cache, cc, view );
-	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage(), mpe );
+	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
 	    createMetadata(r, filtered, r.requestURI, cc, query);        
 	    return new Couple<APIResultSet, Bindings>( filtered, cc );
