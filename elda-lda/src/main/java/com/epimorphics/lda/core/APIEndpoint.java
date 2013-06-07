@@ -83,9 +83,7 @@ public interface APIEndpoint {
      	@param context The call parameters and other context information
      	@return Triad(rs, format, cc): the ResultSet for rendering, the name
      		of the format, and the call context used for the result set.
-    */
-    public Triad<APIResultSet, String, Bindings> call( Controls c, URI reqestURI, Bindings context );
-    
+    */    
     public Triad<APIResultSet, String, Bindings> call( Request r );
     
     /**

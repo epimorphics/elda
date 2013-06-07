@@ -86,7 +86,7 @@ public class ExploreTestingForLatAndLongEtc
 		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );
 		URI ru = URIUtils.newURI("http://dummy/doc/schools");
 		Bindings cc = Bindings.createContext( MakeData.variables( settings ), map );
-		Triad<APIResultSet, String, Bindings> resultsAndFormat = e.call( controls, ru, cc );
+		Triad<APIResultSet, String, Bindings> resultsAndFormat = e.call( new APIEndpoint.Request( controls, ru, cc ) );
 		APIResultSet rs = resultsAndFormat.a;
 		return new HashSet<Resource>( rs.getResultList() );
 		}
