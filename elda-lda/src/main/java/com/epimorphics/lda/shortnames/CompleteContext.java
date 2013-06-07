@@ -52,8 +52,7 @@ public class CompleteContext {
 
 	// create synthetic shortnames for those URIs which can't be done
 	// any other way.
-	private void handleSyntheticNames(Map<String, String> result,
-			Map<String, List<String>> localNameToURIs) {
+	private void handleSyntheticNames(Map<String, String> result, Map<String, List<String>> localNameToURIs) {
 		for (String loc: localNameToURIs.keySet()) {
 			List<String> options = localNameToURIs.get(loc);
 			
@@ -61,7 +60,7 @@ public class CompleteContext {
 				result.put( options.get(0), loc );	
 			} else {
 				for (int i = 0; i < options.size(); i += 1) {
-					result.put( options.get(i), encodeLocalname(loc, i));
+					result.put( options.get(i), encodeLocalname(loc, options.get(i) ) );
 				}
 			}
 		}
@@ -163,23 +162,35 @@ public class CompleteContext {
 
 	private static char [] alphaHex = "ABCDEFGHIJKLMNOP".toCharArray();
 	
-	private String encodeLocalname(String loc, int n) {
+	private String encodeLocalname(String loc, String uri) {
+
 		StringBuilder result = new StringBuilder(loc.length() + 5 );
 		for (int i = 0; i < loc.length(); i += 1) {
 			char ch = loc.charAt(i);
-			if (Character.isLowerCase(ch) || Character.isDigit(ch)) {
-				result.append( ch );
-			} else if (Character.isUpperCase(ch)) {
-				result.append( '_' ).append( ch );
-			} else if (ch == '_') {
-				result.append( '_' ).append( '_' );
-			} else if (ch == '-') {
-				result.append( 'H' );
+			if (Character.isLetterOrDigit(ch) || ch == '-' || ch == '_') {
+				result.append(ch); 
 			} else {
-				result.append( '_' ).append( alphaHex[ch >> 4] ).append( alphaHex[ch & 0xf] );				
+				result.append('_');
 			}
 		}
-		result.append('_').append(n);
+		result.append('_').append( uri.hashCode() % 1000 );
+		
+//		StringBuilder result = new StringBuilder(loc.length() + 5 );
+//		for (int i = 0; i < loc.length(); i += 1) {
+//			char ch = loc.charAt(i);
+//			if (Character.isLowerCase(ch) || Character.isDigit(ch)) {
+//				result.append( ch );
+//			} else if (Character.isUpperCase(ch)) {
+//				result.append( '_' ).append( ch );
+//			} else if (ch == '_') {
+//				result.append( '_' ).append( '_' );
+//			} else if (ch == '-') {
+//				result.append( 'H' );
+//			} else {
+//				result.append( '_' ).append( alphaHex[ch >> 4] ).append( alphaHex[ch & 0xf] );				
+//			}
+//		}
+//		result.append('_').append(n);
 		return result.toString();
 	}
 
