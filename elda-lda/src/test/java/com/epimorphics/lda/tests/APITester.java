@@ -109,7 +109,7 @@ public class APITester {
         // TODO: the template should be a proper URI.
 		URI ru = URIUtils.newURI(uriTemplate);
 		Bindings call = Bindings.createContext( fix( match.getBindings() ), map );
-        return match.getEndpoint().call(controls, ru, call).a;
+        return match.getEndpoint().call( new APIEndpoint.Request(controls, ru, call)).a;
     }
 
 	static final Controls controls = new Controls( true, new Times() );

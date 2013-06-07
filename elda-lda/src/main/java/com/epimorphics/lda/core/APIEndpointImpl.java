@@ -85,6 +85,9 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public Bindings defaults() {
     	return defaults;
     }
+    @Override public Triad<APIResultSet, String, Bindings> call( Request r ) {
+    	return call( r.c, r.requestURI, r.context );
+    }
     
     @Override public Triad<APIResultSet, String, Bindings> call( Controls c, URI reqURI, Bindings given ) {
     	ModelPrefixEditor mpe = spec.getAPISpec().getModelPrefixEditor();
@@ -95,7 +98,7 @@ public class APIEndpointImpl implements APIEndpoint {
         View view = viewAndFormat.a; 
     //
         String format = viewAndFormat.b;
-        if (format == null || format.equals("")) format = given.getAsString( "_suffix", "" );
+        if (format == null || format.equals("")) format = cc.getAsString( "_suffix", "" );
     //    
         APIResultSet unfiltered = query.runQuery( c, spec.getAPISpec(), cache, cc, view );
         APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage(), mpe );

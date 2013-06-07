@@ -86,6 +86,8 @@ public interface APIEndpoint {
     */
     public Triad<APIResultSet, String, Bindings> call( Controls c, URI reqestURI, Bindings context );
     
+    public Triad<APIResultSet, String, Bindings> call( Request r );
+    
     /**
      	Return a metadata description for the query that would be run by this endpoint
     */

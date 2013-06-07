@@ -53,7 +53,7 @@ public class APIEndpointUtil {
 		String format = cc.getAsString("_format",  formatBySuffix);
 		CompleteContext.Mode mode = (format.equals("json") ? CompleteContext.Mode.EncodeIfMultiple : CompleteContext.Mode.Transcode);
 
-		return ep.call( c, requestUri, cc );
+		return ep.call( new APIEndpoint.Request( c, requestUri, cc ) );
 	}
 
 	private static String getHostAndPort(URI u) {
