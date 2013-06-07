@@ -17,6 +17,8 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.core.APIEndpoint.Request;
 import com.epimorphics.lda.core.APIEndpointImpl;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
@@ -64,7 +66,10 @@ public class TestBindings {
 		Match match = new Match( "_", ep, MakeData.hashMap( "term=autumn" ) );
 		URI req = new URI( "/driver/cartwheel" );
 		MultiMap<String, String> params = MakeData.parseQueryString( "" );
-		Couple<APIResultSet, Bindings> results = APIEndpointUtil.call( controls, match, req, "", "", params );
+		
+		APIEndpoint.Request r = new APIEndpoint.Request( controls, req, new Bindings() );
+		
+		Couple<APIResultSet, Bindings> results = APIEndpointUtil.call( r, match, "", "", params );
 //		System.err.println( ">> class: " + results.c.getStringValue( "class" ) );
 		String sq = results.a.getSelectQuery();
 //		System.err.println( ">> " + sq );

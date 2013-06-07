@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.core.APIEndpoint.Request;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.exceptions.EldaException;
@@ -255,11 +256,13 @@ import com.sun.jersey.api.NotFoundException;
         	
         	if (formatName == null && _default != null) formatName = _default.getPreferredSuffix();
         	
-        	Couple<APIResultSet, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatName, contextPath, queryParams );
+        	Bindings b = ep.getSpec().getBindings();
+        	APIEndpoint.Request req = new APIEndpoint.Request( c, ru, b ).withFormat( formatName );
+        	Couple<APIResultSet, Bindings> resultsAndBindings = APIEndpointUtil.call( req, match, formatName, contextPath, queryParams );
         	
-            APIResultSet results = resultsAndFormat.a;
+            APIResultSet results = resultsAndBindings.a;
             
-			Bindings rc = new Bindings( resultsAndFormat.b.copy(), as );
+			Bindings rc = new Bindings( resultsAndBindings.b.copy(), as );
 			
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );
         	

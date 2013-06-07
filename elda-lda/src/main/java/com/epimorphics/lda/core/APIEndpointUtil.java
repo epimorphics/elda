@@ -40,22 +40,22 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Couple<APIResultSet, Bindings> call( Controls c, Match match, URI requestUri, String formatName, String contextPath, MultiMap<String, String> queryParams ) {
+	public static Couple<APIResultSet, Bindings> call( APIEndpoint.Request r, Match match, String formatName, String contextPath, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		APIEndpointSpec spec = ep.getSpec();
 		
-		Bindings vs = new Bindings( spec.getBindings() )
+		Bindings vs = new Bindings( r.context )
 			.updateAll( match.getBindings() )
 			.put( "_suffix", formatName )
 			.put( "_APP", contextPath )
-			.put( "_HOST", getHostAndPort( requestUri ) )
+			.put( "_HOST", getHostAndPort( r.requestURI ) )
 			;
 		
 		Bindings cc = Bindings.createContext( vs, queryParams );
 		
 		CompleteContext.Mode mode = (formatName.equals("json") ? CompleteContext.Mode.EncodeIfMultiple : CompleteContext.Mode.Transcode);
 		
-		return ep.call( new APIEndpoint.Request( c, requestUri, cc ).withMode(mode).withFormat(formatName) );
+		return ep.call( new APIEndpoint.Request( r.c, r.requestURI, cc ).withMode(mode).withFormat(formatName) );
 	}
 
 	private static String getHostAndPort(URI u) {
