@@ -85,26 +85,23 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public Bindings defaults() {
     	return defaults;
     }
-    @Override public Triad<APIResultSet, String, Bindings> call( Request r ) {
-    	return call( r.c, r.requestURI, r.context );
-    }
     
-    protected Triad<APIResultSet, String, Bindings> call( Controls c, URI reqURI, Bindings given ) {
+    @Override public Triad<APIResultSet, String, Bindings> call( Request r ) {
     	ModelPrefixEditor mpe = spec.getAPISpec().getModelPrefixEditor();
-    	Bindings cc = given.copyWithDefaults( spec.getBindings() );
-        APIQuery query = spec.getBaseQuery();
-    //
-        Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
-        View view = viewAndFormat.a; 
-    //
-        String format = viewAndFormat.b;
-        if (format == null || format.equals("")) format = cc.getAsString( "_suffix", "" );
-    //    
-        APIResultSet unfiltered = query.runQuery( c, spec.getAPISpec(), cache, cc, view );
-        APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage(), mpe );
-        filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
-        createMetadata(filtered, reqURI, format, cc, query);        
-        return new Triad<APIResultSet, String, Bindings>( filtered, format, cc );
+		Bindings cc = r.context.copyWithDefaults( spec.getBindings() );
+	    APIQuery query = spec.getBaseQuery();
+	//
+	    Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
+	    View view = viewAndFormat.a; 
+	//
+	    String format = viewAndFormat.b;
+	    if (format == null || format.equals("")) format = cc.getAsString( "_suffix", "" );
+	//    
+	    APIResultSet unfiltered = query.runQuery( r.c, spec.getAPISpec(), cache, cc, view );
+	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage(), mpe );
+	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
+	    createMetadata(r, filtered, r.requestURI, format, cc, query);        
+	    return new Triad<APIResultSet, String, Bindings>( filtered, format, cc );
     }
 
     private Couple<View, String> buildQueryAndView( Bindings context, APIQuery query ) {
@@ -159,7 +156,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		return other;
 	}
 
-    private void createMetadata( APIResultSet rs, URI ru, String format, Bindings bindings, APIQuery query ) {
+    private void createMetadata( APIEndpoint.Request r, APIResultSet rs, URI ru, String format, Bindings bindings, APIQuery query ) {
 		boolean suppress_IPTO = bindings.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		boolean exceptionIfEmpty = bindings.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
 	//
@@ -196,7 +193,8 @@ public class APIEndpointImpl implements APIEndpoint {
     //     
         Resource uriForDefinition = metaModel.createResource( createDefinitionURI( uriForList, uriForSpec, template, bindings.expandVariables( template ) ) ); 
         EndpointMetadata.addAllMetadata
-        	( mergedModels
+        	( r
+        	, mergedModels
         	, ru
         	, uriForDefinition
         	, bindings

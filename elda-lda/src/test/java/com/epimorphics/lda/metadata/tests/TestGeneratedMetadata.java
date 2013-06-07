@@ -16,10 +16,13 @@ import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.core.APIEndpoint.Request;
 import com.epimorphics.lda.core.EndpointMetadata;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.specs.EndpointDetails;
+import com.epimorphics.lda.support.Controls;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
@@ -61,7 +64,8 @@ public class TestGeneratedMetadata {
 		Model meta = ModelFactory.createDefaultModel();
 		Resource exec = meta.createResource( "fake:exec" );
 		ShortnameService sns = new StandardShortnameService();
-		em.addTermBindings( toScan, meta, exec, sns );
+		APIEndpoint.Request r = new APIEndpoint.Request( new Controls(), reqURI, cc );
+		em.addTermBindings( r, toScan, meta, exec, sns.asContext() );
 	//
 		Resource tb = meta.listStatements( null, API.termBinding, Any ).nextStatement().getResource();
 		assertTrue( meta.contains( tb, API.label, "this_predicate" ) );

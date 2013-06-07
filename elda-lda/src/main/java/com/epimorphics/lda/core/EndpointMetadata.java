@@ -9,11 +9,13 @@ package com.epimorphics.lda.core;
 import java.net.URI;
 import java.util.*;
 
+import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
+import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.EndpointDetails;
@@ -38,7 +40,8 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 public class EndpointMetadata {
 
 	public static void addAllMetadata
-		( MergedModels mergedModels
+		( APIEndpoint.Request r
+		, MergedModels mergedModels
 		, URI ru
 		, Resource uriForDefinition
 		, Bindings bindings
@@ -116,7 +119,7 @@ public class EndpointMetadata {
 	//	
 		em.addVersions( versionsModel, viewNames );
 		em.addFormats( formatsModel, formats );
-		em.addBindings( mergedModels1, bindingsModel, exec, sns );
+		em.addBindings( r, mergedModels1, bindingsModel, exec, sns.asContext() );
 		em.addExecution( execution, exec );
 	//
 		em.addQueryMetadata( execution, exec, selectQuery, viewQuery, source, details.isListEndpoint() );
@@ -205,11 +208,11 @@ public class EndpointMetadata {
 		return result;
 	}
 
-	public void addBindings( Model toScan, Model meta, Resource anExec, ShortnameService sns ) {
+	public void addBindings( APIEndpoint.Request r, Model toScan, Model meta, Resource anExec, Context c ) {
 		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
 		exec.addProperty( RDF.type, API.Execution );
 		addVariableBindings( meta, exec );
-		addTermBindings( toScan, meta, exec, sns );
+		addTermBindings( r, toScan, meta, exec, c );
 		page.addProperty( API.wasResultOf, exec );
 	}
 
@@ -239,8 +242,9 @@ public class EndpointMetadata {
 		( "http://www.w3.org/2004/02/skos/core#" + "prefLabel" )
 		;
 	
-	public void addTermBindings( Model toScan, Model meta, Resource exec, ShortnameService sns ) {
-		Map<String, String> mm = sns.constructURItoShortnameMap( toScan, toScan );
+	public void addTermBindings( APIEndpoint.Request r, Model toScan, Model meta, Resource exec, Context c ) {		
+		Map<String, String> mm = new CompleteContext( CompleteContext.Mode.Transcode, c, toScan ).Do(toScan, toScan);
+	//
 		List<String> uriList = new ArrayList<String>( mm.keySet() );
 		Collections.sort( uriList );
 		for (String uri: uriList) {
@@ -303,7 +307,8 @@ public class EndpointMetadata {
 	    </p>
 	*/
 	static void createOptionalMetadata
-		( ShortnameService sns
+		( APIEndpoint.Request r
+		, Context c
 		, boolean isListEndpoint
 		, Set<String> viewNames
 		, Set<FormatNameAndType> formats
@@ -326,7 +331,7 @@ public class EndpointMetadata {
 	//	
 		em.addVersions( versionsModel, viewNames );
 		em.addFormats( formatsModel, formats );
-		em.addBindings( mergedModels, bindingsModel, exec, sns );
+		em.addBindings( r, mergedModels, bindingsModel, exec, c );
 		em.addExecution( execution, exec );
 	//
 		em.addQueryMetadata( execution, exec, selectQuery, viewQuery, source, isListEndpoint );
