@@ -86,7 +86,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	return defaults;
     }
     
-    @Override public Triad<APIResultSet, String, Bindings> call( Request r ) {
+    @Override public Couple<APIResultSet, Bindings> call( Request r ) {
     	
     	ModelPrefixEditor mpe = spec.getAPISpec().getModelPrefixEditor();
 		Bindings cc = r.context.copyWithDefaults( spec.getBindings() );
@@ -94,15 +94,12 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
 	    Couple<View, String> viewAndFormat = buildQueryAndView( cc, query );
 	    View view = viewAndFormat.a; 
-	//
-	    String format = viewAndFormat.b;
-	    if (format == null || format.equals("")) format = cc.getAsString( "_suffix", "" );
 	//    
 	    APIResultSet unfiltered = query.runQuery( r.c, spec.getAPISpec(), cache, cc, view );
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage(), mpe );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
-	    createMetadata(r, filtered, r.requestURI, format, cc, query);        
-	    return new Triad<APIResultSet, String, Bindings>( filtered, format, cc );
+	    createMetadata(r, filtered, r.requestURI, cc, query);        
+	    return new Couple<APIResultSet, Bindings>( filtered, cc );
     }
 
     private Couple<View, String> buildQueryAndView( Bindings context, APIQuery query ) {
@@ -157,9 +154,11 @@ public class APIEndpointImpl implements APIEndpoint {
 		return other;
 	}
 
-    private void createMetadata( APIEndpoint.Request r, APIResultSet rs, URI ru, String format, Bindings bindings, APIQuery query ) {
+    private void createMetadata( APIEndpoint.Request r, APIResultSet rs, URI ru, Bindings bindings, APIQuery query ) {
 		boolean suppress_IPTO = bindings.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		boolean exceptionIfEmpty = bindings.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
+	//
+		String format = r.format;
 	//
 		boolean listEndpoint = isListEndpoint();
 		if (rs.isEmpty() && exceptionIfEmpty && !listEndpoint) EldaException.NoItemFound();

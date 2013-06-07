@@ -27,6 +27,7 @@ import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests_support.MakeData;
+import com.epimorphics.util.Couple;
 import com.epimorphics.util.Triad;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -63,7 +64,7 @@ public class TestBindings {
 		Match match = new Match( "_", ep, MakeData.hashMap( "term=autumn" ) );
 		URI req = new URI( "/driver/cartwheel" );
 		MultiMap<String, String> params = MakeData.parseQueryString( "" );
-		Triad<APIResultSet, String, Bindings> results = APIEndpointUtil.call( controls, match, req, "", "", params );
+		Couple<APIResultSet, Bindings> results = APIEndpointUtil.call( controls, match, req, "", "", params );
 //		System.err.println( ">> class: " + results.c.getStringValue( "class" ) );
 		String sq = results.a.getSelectQuery();
 //		System.err.println( ">> " + sq );

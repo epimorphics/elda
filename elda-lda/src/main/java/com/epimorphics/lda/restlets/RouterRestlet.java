@@ -256,26 +256,13 @@ import com.sun.jersey.api.NotFoundException;
         	
         	if (formatName == null && _default != null) formatName = _default.getPreferredSuffix();
         	
-        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatName, contextPath, queryParams );
+        	Couple<APIResultSet, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatName, contextPath, queryParams );
         	
             APIResultSet results = resultsAndFormat.a;
             
-			Bindings rc = new Bindings( resultsAndFormat.c.copy(), as );
+			Bindings rc = new Bindings( resultsAndFormat.b.copy(), as );
 			
-			String _format = resultsAndFormat.b;
-			String formatter = (_format.equals( "" ) ? formatName : _format);
-			
-			if (formatter.equals( formatName ) && formatName.equals( resultsAndFormat.b )) {
-				System.err.println( ">> Remove this code when you're ready." );				
-			} else {
-				System.err.println( ">> OOPS;" );
-				System.err.println( ">> not all versions of renderer format are equal. " );
-				System.err.println( ">>   formatName:    " + formatName );
-				System.err.println( ">>   formatter:     " + formatName );
-				System.err.println( ">>   resultsAnd...: " + resultsAndFormat.b );
-			}
-			
-			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
+			Renderer r = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );
         	
         	if (_default.getPreferredSuffix().equals( r.getPreferredSuffix())) {
         		MediaType dmt = _default.getMediaType(rc);
@@ -285,7 +272,7 @@ import com.sun.jersey.api.NotFoundException;
         	}
 			
 			int mainHash = runHash + ru.toString().hashCode();
-			return doRendering( c, rc, mainHash, needsVaryAccept, formatter, results, r );
+			return doRendering( c, rc, mainHash, needsVaryAccept, formatName, results, r );
 	//
         } catch (StackOverflowError e) {
         	StatsValues.endpointException();

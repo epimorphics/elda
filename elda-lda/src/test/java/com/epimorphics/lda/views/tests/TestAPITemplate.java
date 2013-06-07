@@ -20,6 +20,7 @@ import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests_support.MakeData;
+import com.epimorphics.util.Couple;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -119,7 +120,7 @@ public class TestAPITemplate {
 		MultiMap<String, String> map = MakeData.parseQueryString( params );
 		URI ru = URIUtils.newURI( "/this" );
 		Bindings cc = Bindings.createContext( bindTemplate( epBindings, "/this", "/path", map ), map );
-		Triad<APIResultSet, String, Bindings> resultsAndFormat = ep.call( new APIEndpoint.Request( controls, ru, cc ) );
+		Couple<APIResultSet, Bindings> resultsAndFormat = ep.call( new APIEndpoint.Request( controls, ru, cc ) );
 		Model rsm = resultsAndFormat.a.getMergedModel();
 		
 		Model obtained = ModelFactory.createDefaultModel();

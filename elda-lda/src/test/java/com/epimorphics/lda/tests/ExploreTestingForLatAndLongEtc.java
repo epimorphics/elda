@@ -29,6 +29,7 @@ import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests_support.MakeData;
+import com.epimorphics.util.Couple;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
@@ -86,7 +87,7 @@ public class ExploreTestingForLatAndLongEtc
 		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );
 		URI ru = URIUtils.newURI("http://dummy/doc/schools");
 		Bindings cc = Bindings.createContext( MakeData.variables( settings ), map );
-		Triad<APIResultSet, String, Bindings> resultsAndFormat = e.call( new APIEndpoint.Request( controls, ru, cc ) );
+		Couple<APIResultSet, Bindings> resultsAndFormat = e.call( new APIEndpoint.Request( controls, ru, cc ) );
 		APIResultSet rs = resultsAndFormat.a;
 		return new HashSet<Resource>( rs.getResultList() );
 		}

@@ -21,6 +21,7 @@ import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.MultiMap;
+import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 
@@ -40,7 +41,7 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Triad<APIResultSet, String, Bindings> call( Controls c, Match match, URI requestUri, String formatName, String contextPath, MultiMap<String, String> queryParams ) {
+	public static Couple<APIResultSet, Bindings> call( Controls c, Match match, URI requestUri, String formatName, String contextPath, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		APIEndpointSpec spec = ep.getSpec();
 		
