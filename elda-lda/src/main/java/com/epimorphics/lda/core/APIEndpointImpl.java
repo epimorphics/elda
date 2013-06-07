@@ -87,6 +87,7 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     @Override public Triad<APIResultSet, String, Bindings> call( Request r ) {
+    	
     	ModelPrefixEditor mpe = spec.getAPISpec().getModelPrefixEditor();
 		Bindings cc = r.context.copyWithDefaults( spec.getBindings() );
 	    APIQuery query = spec.getBaseQuery();

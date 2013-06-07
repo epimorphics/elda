@@ -155,7 +155,11 @@ import com.sun.jersey.api.NotFoundException;
         Match matchAll = getMatch( "/" + pathstub, queryParams );
         Match matchTrimmed = getMatch( "/" + pathAndType.a, queryParams );
         Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
+        
         String formatSuffix = match == matchAll ? null : pathAndType.b;
+        Set<String> _formats = queryParams.getAll("_format");
+        if (_formats.size() == 1) formatSuffix = _formats.iterator().next();
+        
         if (match == null) {
         	StatsValues.endpointNoMatch();
         	String item = router.findItemURIPath( "_", ui.getRequestUri(), "/" + pathstub );
@@ -235,7 +239,7 @@ import com.sun.jersey.api.NotFoundException;
     	, UriInfo ui
     	, MultiMap<String, String> queryParams
     	, List<MediaType> mediaTypes
-    	, String formatSuffix
+    	, String formatName
     	, Match match
     	) {
     	URLforResource as = pathAsURLFactory(servCon);
@@ -245,16 +249,31 @@ import com.sun.jersey.api.NotFoundException;
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
         	APIEndpoint ep = match.getEndpoint();
-        	Renderer _default = APIEndpointUtil.getRenderer( ep, formatSuffix, mediaTypes );
+        	
+        	Renderer _default = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );
         	        	
-        	boolean needsVaryAccept = formatSuffix == null && queryParams.containsKey( "_format" ) == false;
-        	if (formatSuffix == null && _default != null) formatSuffix = _default.getPreferredSuffix();
-        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatSuffix, contextPath, queryParams );
+        	boolean needsVaryAccept = formatName == null && queryParams.containsKey( "_format" ) == false;
+        	
+        	if (formatName == null && _default != null) formatName = _default.getPreferredSuffix();
+        	
+        	Triad<APIResultSet, String, Bindings> resultsAndFormat = APIEndpointUtil.call( c, match, ru, formatName, contextPath, queryParams );
+        	
             APIResultSet results = resultsAndFormat.a;
             
 			Bindings rc = new Bindings( resultsAndFormat.c.copy(), as );
+			
 			String _format = resultsAndFormat.b;
-			String formatter = (_format.equals( "" ) ? formatSuffix : _format);
+			String formatter = (_format.equals( "" ) ? formatName : _format);
+			
+			if (formatter.equals( formatName ) && formatName.equals( resultsAndFormat.b )) {
+				System.err.println( ">> Remove this code when you're ready." );				
+			} else {
+				System.err.println( ">> OOPS;" );
+				System.err.println( ">> not all versions of renderer format are equal. " );
+				System.err.println( ">>   formatName:    " + formatName );
+				System.err.println( ">>   formatter:     " + formatName );
+				System.err.println( ">>   resultsAnd...: " + resultsAndFormat.b );
+			}
 			
 			Renderer r = APIEndpointUtil.getRenderer( ep, formatter, mediaTypes );
         	
@@ -267,6 +286,7 @@ import com.sun.jersey.api.NotFoundException;
 			
 			int mainHash = runHash + ru.toString().hashCode();
 			return doRendering( c, rc, mainHash, needsVaryAccept, formatter, results, r );
+	//
         } catch (StackOverflowError e) {
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );

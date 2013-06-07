@@ -40,20 +40,22 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Triad<APIResultSet, String, Bindings> call( Controls c, Match match, URI requestUri, String formatBySuffix, String contextPath, MultiMap<String, String> queryParams ) {
+	public static Triad<APIResultSet, String, Bindings> call( Controls c, Match match, URI requestUri, String formatName, String contextPath, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		APIEndpointSpec spec = ep.getSpec();
 		
-		Bindings vs = new Bindings( spec.getBindings() ).updateAll( match.getBindings() );
-		if (formatBySuffix != null) vs.put( "_suffix", formatBySuffix );
-		vs.put( "_APP", contextPath );
-		vs.put( "_HOST", getHostAndPort( requestUri ) );
+		Bindings vs = new Bindings( spec.getBindings() )
+			.updateAll( match.getBindings() )
+			.put( "_suffix", formatName )
+			.put( "_APP", contextPath )
+			.put( "_HOST", getHostAndPort( requestUri ) )
+			;
+		
 		Bindings cc = Bindings.createContext( vs, queryParams );
 		
-		String format = cc.getAsString("_format",  formatBySuffix);
-		CompleteContext.Mode mode = (format.equals("json") ? CompleteContext.Mode.EncodeIfMultiple : CompleteContext.Mode.Transcode);
+		CompleteContext.Mode mode = (formatName.equals("json") ? CompleteContext.Mode.EncodeIfMultiple : CompleteContext.Mode.Transcode);
 		
-		return ep.call( new APIEndpoint.Request( c, requestUri, cc ).withMode(mode).withFormat(format) );
+		return ep.call( new APIEndpoint.Request( c, requestUri, cc ).withMode(mode).withFormat(formatName) );
 	}
 
 	private static String getHostAndPort(URI u) {
