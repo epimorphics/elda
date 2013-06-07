@@ -55,9 +55,9 @@ public class APIResultSet implements SetsMetadata {
 	protected Resource root;
 	protected URI contentLocation;
 
-	protected final List<Resource> results;
+	protected /* should be final */ List<Resource> results;
     protected final boolean isCompleted;
-    protected /* should be final. clone is rubbish. */ MergedModels model;
+    protected /* should be final */ MergedModels model;
     protected final String detailsQuery;
     
     protected long hash;
@@ -66,6 +66,41 @@ public class APIResultSet implements SetsMetadata {
     protected boolean enableETags = false;
     
     final View view;
+    
+    /** 
+        Map holding named metadata options. 
+    */
+    protected final Map<String, Model> metadata = new HashMap<String, Model>();
+    
+// ---------------------------------------------------------------------------  
+    
+    protected APIResultSet
+    	( Resource root
+    	, URI contentLocation
+    	, List<Resource> results
+    	, boolean isCompleted
+    	, MergedModels model
+    	, String detailsQuery
+    	, long hash
+    	, Date timestamp
+    	, String selectQuery
+    	, boolean enableETags
+    	, View view
+    	, Map<String, Model> metadata
+    	) {
+    	this.root = root;
+    	this.contentLocation = contentLocation;
+    	this.results = results;
+    	this.isCompleted = isCompleted;
+    	this.model = model;
+    	this.detailsQuery = detailsQuery;
+    	this.hash = hash;
+    	this.timestamp = timestamp;
+    	this.selectQuery = selectQuery;
+    	this.enableETags = enableETags;
+    	this.view = view;
+    	this.metadata.putAll( metadata );
+    }
     
     public static class MergedModels {
     	
@@ -118,11 +153,6 @@ public class APIResultSet implements SetsMetadata {
 			}
 		}
     }
-    	
-    /** 
-        Map holding named metadata options. 
-    */
-	protected final Map<String, Model> metadata = new HashMap<String, Model>();
     
     public URI getContentLocation() {
         return contentLocation;
@@ -277,9 +307,26 @@ public class APIResultSet implements SetsMetadata {
     }
     
     public APIResultSet applyEdits( ModelPrefixEditor mpe ) {
-    	APIResultSet edited = this.clone();
-    	edited.model = edited.model.applyEdits( mpe );
-    	return edited;
+    	if (mpe.isEmpty()) return this;    	
+    //	
+    	MergedModels mappedModel = model.applyEdits( mpe );
+    	List<Resource> mappedResults = new ArrayList<Resource>();
+        for (Resource r : results) mappedResults.add( mpe.rename( r.inModel( mappedModel.object ) ).asResource() );
+    //
+		return new APIResultSet
+    		( mpe.rename(root).asResource()
+    		, contentLocation
+    		, mappedResults
+    		, isCompleted
+    		, mappedModel
+    		, detailsQuery
+    		, hash
+    		, timestamp
+    		, selectQuery
+    		, enableETags
+    		, view
+    		, metadata
+    		);
     }
 
 	/**
