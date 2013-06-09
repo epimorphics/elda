@@ -23,12 +23,104 @@ public class CompleteContext {
 	public enum Mode { Transcode, EncodeAny, EncodeIfMultiple } 
 	
 	public CompleteContext( Mode m, Context context, PrefixMapping prefixes ) {
-		// context.completeContext();
 		this.context = context;
 		this.prefixes = prefixes;
 		this.transcodedNames = (m == Mode.Transcode);
 		this.allowUniqueLocalnames = (m == Mode.EncodeIfMultiple);
 	}
+	
+	public Map<String, String> Do1(Model m, PrefixMapping pm) {
+
+		Map<String, String> result = new HashMap<String, String>();
+
+		result.put(API.value.getURI(), "value");
+		result.put(API.label.getURI(), "label");
+	//
+		chooseSingleShortnames( result );
+		
+		Set<String> modelTerms = loadModelTerms( m, result );
+		
+	// =======================================================
+		
+		Map<String, List<String>> localNameToURIs = new HashMap<String, List<String>>();
+		Set<String> handled = new HashSet<String>();
+		
+		for (String mt: modelTerms) {
+
+			int cut = splitNamespace( mt );
+			String ns = mt.substring( 0, cut );
+			String ln = mt.substring( cut );
+			
+			if (NameUtils.isLegalShortname(ln) && !result.containsKey( ln )) {
+				List<String> terms = localNameToURIs.get( ln );
+				if (terms == null) localNameToURIs.put( ln, terms = new ArrayList<String>() );
+				terms.add( mt );
+			}
+		}
+		
+		Set<String> lnsRemoved = new HashSet<String>();
+		
+		for (String ln: localNameToURIs.keySet()) {
+			List<String> terms = localNameToURIs.get(ln);
+			if (terms.size() == 1) {
+				String term = terms.get(0);
+				result.put( term, ln );
+				modelTerms.remove( term );
+				lnsRemoved.add( ln );
+			} else {
+				// bother, this ln belongs to multiple URIs.
+			}
+		}
+		
+	// ===========================================================
+		
+		for (String ln: lnsRemoved) localNameToURIs.remove( ln );
+		
+	// ===========================================================
+		
+		Set<String> mtsRemoved = new HashSet<String>();
+		
+		for (String mt: modelTerms) {
+
+			int cut = splitNamespace( mt );
+			String ns = mt.substring( 0, cut );
+			String ln = mt.substring( cut );
+			String prefix = pm.getNsURIPrefix( ns );
+			if (prefix != null) {
+				String sn = prefix + "_" + ln;
+				if (!result.containsValue(sn)) {
+					result.put( mt, sn );
+					mtsRemoved.add( mt );
+				}
+			}
+		}
+		
+		modelTerms.removeAll( mtsRemoved );
+		
+	// =============================================================
+		
+		mtsRemoved.clear();
+		
+		for (String mt: modelTerms) {
+
+			int cut = splitNamespace( mt );
+			String ns = mt.substring( 0, cut );
+			String ln = mt.substring( cut );
+			String sn = encodeLocalname(ln, mt);
+			if (!result.containsValue(sn)) {
+				result.put(mt,  sn);
+				mtsRemoved.add(mt);
+			}
+			
+		}
+		
+		modelTerms.removeAll( mtsRemoved );
+		
+		
+				
+		return result;
+	}
+	
 	
 	public Map<String, String> Do(Model m, PrefixMapping pm) {
 		
@@ -119,7 +211,7 @@ public class CompleteContext {
 		}
 //
 		for (String uri: shortNames.keySet()) {
-			result.put( uri, bestShortname( shortNames.get( uri) ) );
+			result.put( uri, bestShortname( shortNames.get(uri) ) );
 		}
 	}	
 
@@ -173,7 +265,7 @@ public class CompleteContext {
 				result.append('_');
 			}
 		}
-		result.append('_').append( uri.hashCode() % 1000 );
+		result.append('_').append( Math.abs( uri.hashCode()) % 1000 );
 		
 //		StringBuilder result = new StringBuilder(loc.length() + 5 );
 //		for (int i = 0; i < loc.length(); i += 1) {
