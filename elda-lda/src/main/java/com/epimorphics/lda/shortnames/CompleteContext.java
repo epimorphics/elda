@@ -29,179 +29,129 @@ public class CompleteContext {
 		this.allowUniqueLocalnames = (m == Mode.EncodeIfMultiple);
 	}
 	
-	public Map<String, String> Do1(Model m, PrefixMapping pm) {
+	static class SplitURI {
+		final String uri;
+		final String ns;
+		final String ln;
+		
+		SplitURI(String uri, String ns, String ln) {
+			this.uri = uri;
+			this.ns = ns;
+			this.ln = ln;
+		}
+		
+		static SplitURI create(String uri) {
+			int cut = splitNamespace( uri );
+			String ns = uri.substring( 0, cut );
+			String ln = uri.substring( cut );
+			return new SplitURI(uri, ns, ln);
+		}
+		
+		@Override public boolean equals(Object other) {
+			return other instanceof SplitURI && same( (SplitURI) other );
+		}
+		
+		@Override public int hashCode() {
+			return ns.hashCode() ^ ln.hashCode();
+		}
 
-		Map<String, String> result = new HashMap<String, String>();
-
-		result.put(API.value.getURI(), "value");
-		result.put(API.label.getURI(), "label");
+		private boolean same(SplitURI other) {
+			return ns.equals(other.ns) && ln.equals(other.ln);
+		}
+	}
+	
+	public Map<String, String> Do(Model m, PrefixMapping pm) {
+		Map<String, String> uriToShortname = new HashMap<String, String>();
 	//
-		chooseSingleShortnames( result );
+		uriToShortname.put(API.value.getURI(), "value");
+		uriToShortname.put(API.label.getURI(), "label");
+	//
+		pickPreferredShortnames( uriToShortname );
+		Set<SplitURI> modelTerms = loadModelTerms( m, uriToShortname.keySet() );
 		
-		Set<String> modelTerms = loadModelTerms( m, result );
-		
-	// =======================================================
-		
-		Map<String, List<String>> localNameToURIs = new HashMap<String, List<String>>();
-		Set<String> handled = new HashSet<String>();
-		
-		for (String mt: modelTerms) {
+		if (transcodedNames) {
+			oldTermHandler( uriToShortname, modelTerms );
+		} else {
+			extractPrefixedAndUniqueShortnames(	modelTerms, uriToShortname, pm );
+			extractHashedShortnames(modelTerms, uriToShortname);
+		}
+		return uriToShortname;
+	}
 
-			int cut = splitNamespace( mt );
-			String ns = mt.substring( 0, cut );
-			String ln = mt.substring( cut );
-			
-			if (NameUtils.isLegalShortname(ln) && !result.containsKey( ln )) {
-				List<String> terms = localNameToURIs.get( ln );
-				if (terms == null) localNameToURIs.put( ln, terms = new ArrayList<String>() );
+	/**
+	    For those URIs which can be uniquely mapped to an "encoded" localnam
+	    as their shortname, add this mapping to uriToShortname.
+	*/
+	private void extractHashedShortnames
+		( Set<SplitURI> modelTerms, Map<String, String> uriToShortname) {
+		Set<SplitURI> mtsRemoved = new HashSet<SplitURI>();
+		for (SplitURI mt: modelTerms) {
+			String sn = encodeLocalname(mt.ns, mt.ln);
+			if (!uriToShortname.containsValue(sn)) {
+				uriToShortname.put(mt.uri,  sn);
+				mtsRemoved.add(mt);
+			}
+		}
+		modelTerms.removeAll( mtsRemoved );	
+	}
+
+	/**
+	    Extract URIs that are uniquely identified by their local name, or
+	    by their local name prefixed by a prefix for their URI.
+	*/
+	private void extractPrefixedAndUniqueShortnames
+		( Set<SplitURI> modelTerms
+		, Map<String, String> uriToShortname
+		, PrefixMapping pm
+		) {
+		Map<String, List<SplitURI>> localNameToURIs = new HashMap<String, List<SplitURI>>();
+		
+		for (SplitURI mt: modelTerms) {			
+			String ln = mt.ln;
+			if (NameUtils.isLegalShortname(ln) && !uriToShortname.containsKey( ln )) {
+				List<SplitURI> terms = localNameToURIs.get( ln );
+				if (terms == null) localNameToURIs.put( ln, terms = new ArrayList<SplitURI>() );
 				terms.add( mt );
 			}
 		}
 		
-		Set<String> lnsRemoved = new HashSet<String>();
-		
-		for (String ln: localNameToURIs.keySet()) {
-			List<String> terms = localNameToURIs.get(ln);
-			if (terms.size() == 1) {
-				String term = terms.get(0);
-				result.put( term, ln );
-				modelTerms.remove( term );
-				lnsRemoved.add( ln );
-			} else {
-				// bother, this ln belongs to multiple URIs.
+		if (allowUniqueLocalnames) {
+			Set<String> lnsRemoved = new HashSet<String>();
+			
+			for (String ln: localNameToURIs.keySet()) {
+				List<SplitURI> terms = localNameToURIs.get(ln);
+				if (terms.size() == 1) {
+					SplitURI term = terms.get(0);
+					uriToShortname.put( term.uri, ln );
+					modelTerms.remove( term );
+					lnsRemoved.add( ln );
+				} 
 			}
+			
+			for (String ln: lnsRemoved) localNameToURIs.remove( ln );
 		}
 		
-	// ===========================================================
+		Set<SplitURI> mtsRemoved = new HashSet<SplitURI>();
 		
-		for (String ln: lnsRemoved) localNameToURIs.remove( ln );
-		
-	// ===========================================================
-		
-		Set<String> mtsRemoved = new HashSet<String>();
-		
-		for (String mt: modelTerms) {
-
-			int cut = splitNamespace( mt );
-			String ns = mt.substring( 0, cut );
-			String ln = mt.substring( cut );
-			String prefix = pm.getNsURIPrefix( ns );
+		for (SplitURI mt: modelTerms) {
+			String prefix = pm.getNsURIPrefix( mt.ns );
 			if (prefix != null) {
-				String sn = prefix + "_" + ln;
-				if (!result.containsValue(sn)) {
-					result.put( mt, sn );
+				String sn = prefix + "_" + mt.ln;
+				if (!uriToShortname.containsValue(sn)) {
+					uriToShortname.put( mt.uri, sn );
 					mtsRemoved.add( mt );
 				}
 			}
 		}
 		
 		modelTerms.removeAll( mtsRemoved );
-		
-	// =============================================================
-		
-		mtsRemoved.clear();
-		
-		for (String mt: modelTerms) {
-
-			int cut = splitNamespace( mt );
-			String ns = mt.substring( 0, cut );
-			String ln = mt.substring( cut );
-			String sn = encodeLocalname(ln, mt);
-			if (!result.containsValue(sn)) {
-				result.put(mt,  sn);
-				mtsRemoved.add(mt);
-			}
-			
-		}
-		
-		modelTerms.removeAll( mtsRemoved );
-		
-		
-				
-		return result;
 	}
 	
-	
-	public Map<String, String> Do(Model m, PrefixMapping pm) {
-		
-		Map<String, String> result = new HashMap<String, String>();
-	//		
-		// force this for ensuring regressions pass. May be unnecessary soon.
-		result.put(API.value.getURI(), "value");
-		result.put(API.label.getURI(), "label");
-	//
-		chooseSingleShortnames( result );
-		Set<String> modelTerms = loadModelTerms( m, result );				
-		
-		if (transcodedNames) {
-			oldTermHandler(result, modelTerms);
-		} else  {
-			Map<String, List<String>> localNameToURIs = handlePrefixableNames(pm, result, modelTerms);
-			handleSyntheticNames(result, localNameToURIs);
-		}
-		return result;
-	}
-
-	// create synthetic shortnames for those URIs which can't be done
-	// any other way.
-	private void handleSyntheticNames(Map<String, String> result, Map<String, List<String>> localNameToURIs) {
-		for (String loc: localNameToURIs.keySet()) {
-			List<String> options = localNameToURIs.get(loc);
-			
-			if (options.size() == 1 && allowUniqueLocalnames) {
-				result.put( options.get(0), loc );	
-			} else {
-				for (int i = 0; i < options.size(); i += 1) {
-					result.put( options.get(i), encodeLocalname(loc, options.get(i) ) );
-				}
-			}
-		}
-	}
-
-	// create prefix_localname shortnames for those URIs that can have them.
-	private Map<String, List<String>> handlePrefixableNames
-		(PrefixMapping pm, Map<String, String> result, Set<String> modelTerms ) {
-		Map<String, List<String>> localNameToURIs = new HashMap<String, List<String>>();
-				
-		for (String mt: modelTerms) {
-			int cut = splitNamespace( mt );
-			String ns = mt.substring( 0, cut );
-			String ln = mt.substring( cut );
-			String prefix = pm.getNsURIPrefix( ns );
-		//
-			if (prefix != null && NameUtils.isLegalShortname(ln)) {
-				result.put( mt, prefix + "_" + ln );
-			} else {
-				String localName = localNameOf( mt ); // .substring( cut );
-				List<String> URIs = localNameToURIs.get( localName );
-				if (URIs == null) localNameToURIs.put( localName, URIs = new ArrayList<String>() );
-				URIs.add( mt );
-			}
-		}
-		return localNameToURIs;
-	}
-
-	private void oldTermHandler(Map<String, String> result,	Set<String> modelTerms) {
-		for (String mt: modelTerms) result.put( mt, Transcoding.encode( prefixes, mt ) );
-	}
-
-	private Set<String> loadModelTerms(Model m, Map<String, String> result) {
-		Set<String> modelTerms = new HashSet<String>();
-		for (StmtIterator sit = m.listStatements(); sit.hasNext();) {
-			Statement s = sit.next();
-			String predicate = s.getPredicate().getURI();
-			if (!result.containsKey( predicate)) modelTerms.add( predicate );
-			Node o = s.getObject().asNode();
-			if (o.isLiteral()) {
-				String type = o.getLiteralDatatypeURI();
-				if (type != null && !result.containsKey(type)) modelTerms.add( type );
-			}
-		}
-		modelTerms.removeAll( result.keySet() );
-		return modelTerms;
-	}
-
-	private void chooseSingleShortnames(Map<String, String> result) {
+	/**
+	    For each URI with any shortnames, pick the "best" shortname and
+	    add `shortName -> URI` to the result map.
+	*/
+	private void pickPreferredShortnames( Map<String, String> uriToShortname ) {
 		Map<String, List<String>> shortNames = new HashMap<String, List<String>>();
 		for (String key: context.preferredNames()) {
 			String uri = context.getURIfromName( key );
@@ -211,9 +161,98 @@ public class CompleteContext {
 		}
 //
 		for (String uri: shortNames.keySet()) {
-			result.put( uri, bestShortname( shortNames.get(uri) ) );
+			uriToShortname.put( uri, bestShortname( shortNames.get(uri) ) );
 		}
 	}	
+	
+	public Map<String, String> Do1(Model m, PrefixMapping pm) {
+		return Do(m, pm);
+	}
+	
+//	public Map<String, String> Do1(Model m, PrefixMapping pm) {
+//		
+//		Map<String, String> uriToShortname = new HashMap<String, String>();
+//	//		
+//		// force this for ensuring regressions pass. May be unnecessary soon.
+//		uriToShortname.put(API.value.getURI(), "value");
+//		uriToShortname.put(API.label.getURI(), "label");
+//	//
+//		pickPreferredShortnames( uriToShortname );
+//		Set<String> modelTerms = loadModelTerms( m, uriToShortname.keySet() );				
+//		
+//		if (transcodedNames) {
+//			oldTermHandler(uriToShortname, modelTerms);
+//		} else  {
+//			Map<String, List<String>> localNameToURIs = handlePrefixableNames(pm, uriToShortname, modelTerms);
+//			handleSyntheticNames(uriToShortname, localNameToURIs);
+//		}
+//		return uriToShortname;
+//	}
+
+//	// create synthetic shortnames for those URIs which can't be done
+//	// any other way.
+//	private void handleSyntheticNames(Map<String, String> result, Map<String, List<String>> localNameToURIs) {
+//		for (String loc: localNameToURIs.keySet()) {
+//			List<String> options = localNameToURIs.get(loc);
+//			
+//			if (options.size() == 1 && allowUniqueLocalnames) {
+//				result.put( options.get(0), loc );	
+//			} else {
+//				for (int i = 0; i < options.size(); i += 1) {
+//					result.put( options.get(i), encodeLocalname(loc, options.get(i) ) );
+//				}
+//			}
+//		}
+//	}
+
+//	// create prefix_localname shortnames for those URIs that can have them.
+//	private Map<String, List<String>> handlePrefixableNames
+//		(PrefixMapping pm, Map<String, String> result, Set<String> modelTerms ) {
+//		Map<String, List<String>> localNameToURIs = new HashMap<String, List<String>>();
+//				
+//		for (String mt: modelTerms) {
+//			int cut = splitNamespace( mt );
+//			String ns = mt.substring( 0, cut );
+//			String ln = mt.substring( cut );
+//			String prefix = pm.getNsURIPrefix( ns );
+//		//
+//			if (prefix != null && NameUtils.isLegalShortname(ln)) {
+//				result.put( mt, prefix + "_" + ln );
+//			} else {
+//				String localName = localNameOf( mt ); // .substring( cut );
+//				List<String> URIs = localNameToURIs.get( localName );
+//				if (URIs == null) localNameToURIs.put( localName, URIs = new ArrayList<String>() );
+//				URIs.add( mt );
+//			}
+//		}
+//		return localNameToURIs;
+//	}
+
+	private void oldTermHandler(Map<String, String> result,	Set<SplitURI> modelTerms) {
+		for (SplitURI mt: modelTerms) result.put( mt.uri, Transcoding.encode( prefixes, mt.uri ) );
+	}
+
+	/**
+	    Return the set of terms (URIs) seen in the model as predicates or
+	    datatypes, excluding those that have already been seen. These are
+	    the terms that will need to be given shortnames.
+	*/
+	private Set<SplitURI> loadModelTerms(Model m, Set<String> seenTerms) {
+		Set<SplitURI> modelTerms = new HashSet<SplitURI>();
+		for (StmtIterator sit = m.listStatements(); sit.hasNext();) {
+			Statement s = sit.next();
+			String predicate = s.getPredicate().getURI();
+			if (!seenTerms.contains( predicate )) 
+				modelTerms.add( SplitURI.create(predicate) );
+			Node o = s.getObject().asNode();
+			if (o.isLiteral()) {
+				String type = o.getLiteralDatatypeURI();
+				if (type != null && !seenTerms.contains(type)) 
+					modelTerms.add( SplitURI.create(type) );
+			}
+		}
+		return modelTerms;
+	}
 
 	// order by badness first, then shortest, then alphabetical
 	private static final Comparator<String> compareBySizeThenSpelling = new Comparator<String>() {
@@ -239,51 +278,26 @@ public class CompleteContext {
 		
 	};
 	
-	// the "best" short name is the shortest. Tiebreak by alphabetical order.
+	/**
+	    Retunr the "best" short name, which we take to be the shortest. 
+	    Tiebreak by alphabetical order.
+	*/
 	private String bestShortname( List<String> names ) {
 		if (names.size() > 1) Collections.sort(names, compareBySizeThenSpelling);
 		return names.get(0);
 	}
-
-	private String localNameOf(String uri) {
-		int hashPos = uri.indexOf('#');
-		int slashPos = uri.lastIndexOf('/');
-		int cut = hashPos < 0 ? slashPos : hashPos;
-		return uri.substring(cut + 1);
-	}
-
-	private static char [] alphaHex = "ABCDEFGHIJKLMNOP".toCharArray();
 	
-	private String encodeLocalname(String loc, String uri) {
-
-		StringBuilder result = new StringBuilder(loc.length() + 5 );
-		for (int i = 0; i < loc.length(); i += 1) {
-			char ch = loc.charAt(i);
-			if (Character.isLetterOrDigit(ch) || ch == '-' || ch == '_') {
-				result.append(ch); 
-			} else {
-				result.append('_');
-			}
-		}
-		result.append('_').append( Math.abs( uri.hashCode()) % 1000 );
-		
-//		StringBuilder result = new StringBuilder(loc.length() + 5 );
-//		for (int i = 0; i < loc.length(); i += 1) {
-//			char ch = loc.charAt(i);
-//			if (Character.isLowerCase(ch) || Character.isDigit(ch)) {
-//				result.append( ch );
-//			} else if (Character.isUpperCase(ch)) {
-//				result.append( '_' ).append( ch );
-//			} else if (ch == '_') {
-//				result.append( '_' ).append( '_' );
-//			} else if (ch == '-') {
-//				result.append( 'H' );
-//			} else {
-//				result.append( '_' ).append( alphaHex[ch >> 4] ).append( alphaHex[ch & 0xf] );				
-//			}
-//		}
-//		result.append('_').append(n);
-		return result.toString();
+	/**
+	    Return the local name, plus an '_', plus an encoding of the namespace --
+	    we pick the low-order four digits of its hashcode.
+	*/
+	private String encodeLocalname(String ns, String loc) {
+		return new StringBuilder(loc.length() + 5 )
+			.append( loc )
+			.append('_')
+			.append( Math.abs( ns.hashCode()) % 10000 )
+			.toString()
+			;
 	}
 
 }

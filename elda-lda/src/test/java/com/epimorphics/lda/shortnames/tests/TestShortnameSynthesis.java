@@ -44,7 +44,7 @@ public class TestShortnameSynthesis {
 		;
 	
 	CompleteContext cc = new CompleteContext
-		( CompleteContext.Mode.EncodeAny
+		( CompleteContext.Mode.EncodeIfMultiple
 		, context
 		, prefixes
 		);
@@ -67,14 +67,14 @@ public class TestShortnameSynthesis {
 		assertEquals( "trivial", result.get(NS1 + "trivial") );
 	}
 	
-	@Test @Ignore public void testNastyLocalname() {
+	@Test public void testNastyLocalname() {
 		Model wild = ModelFactory.createDefaultModel()
-				.add( mA, P(NS1, "x,y"), "v" )
-				;
+			.add( mA, P(NS1, "x,y"), "v" )
+			;
 			
 		Map<String, String> result = cc.Do1( wild, prefixes );
 			
-		assertEquals( "x_y_1234", result.get(NS1 + "x,y" ) );
+		assertEquals( "y", result.get(NS1 + "x,y" ) );
 		}
 	
 	@Test public void testUsingPrefixes() {
@@ -89,7 +89,7 @@ public class TestShortnameSynthesis {
 		assertEquals( "ns4_common", result.get(NS4 + "common" ) );
 	}
 	
-	@Test @Ignore public void testFallbackTohashed() {
+	@Test public void testFallbackTohashed() {
 		Model wild = ModelFactory.createDefaultModel()
 			.add( mA, P(NS1, "local"), "v" )
 			.add( mA, P(NS2, "local"), "v" )
@@ -97,8 +97,11 @@ public class TestShortnameSynthesis {
 		
 		Map<String, String> result = cc.Do1( wild, prefixes );
 		
-		assertEquals( "local_1234", result.get(NS1 + "local" ) );
-		assertEquals( "local_4567", result.get(NS2 + "local" ) );
+		int hashNS1 = Math.abs( NS1.hashCode() ) % 10000;
+		int hashNS2 = Math.abs( NS2.hashCode() ) % 10000;
+		
+		assertEquals( "local_" + hashNS1, result.get(NS1 + "local" ) );
+		assertEquals( "local_" + hashNS2, result.get(NS2 + "local" ) );
 		
 	}
 }
