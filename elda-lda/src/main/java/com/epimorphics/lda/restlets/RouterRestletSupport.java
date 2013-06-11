@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -157,8 +158,8 @@ public class RouterRestletSupport {
 				return mt;
 			}
 	
-			@Override public BytesOut render(Times t, Bindings rc, APIResultSet results) {
-				return r.render(t, rc, results);
+			@Override public BytesOut render(Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results) {
+				return r.render(t, rc, termBindings, results);
 			}
 	
 			@Override public String getPreferredSuffix() {

@@ -29,7 +29,6 @@ import com.epimorphics.jsonrdf.ReadContext;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.CompleteReadContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
@@ -64,13 +63,14 @@ public class JSONRenderer implements Renderer {
     	return "json";
     }
 
-    @Override public Renderer.BytesOut render( Times t, Bindings b, APIResultSet results) {
+    @Override public Renderer.BytesOut render( Times t, Bindings b, final Map<String, String> termBindings, APIResultSet results) {
         String callback = b.getValueString( "callback" );
         final String before = (callback == null ? "" : callback + "(");
         final String after = (callback == null ? "" : ")");
         final Model model = results.getMergedModel();
         final Resource root = results.getRoot().inModel(model);
-        final ReadContext context = makeReadContext( model );        
+		ShortnameService sns = api.getSpec().getAPISpec().getShortnameService();
+        final ReadContext context = CompleteReadContext.create(sns.asContext(), termBindings );        
 		final List<Resource> roots = new ArrayList<Resource>(1);
 		roots.add( root );
 		
@@ -95,13 +95,6 @@ public class JSONRenderer implements Renderer {
 			
 		};
     }
-
-	private ReadContext makeReadContext( Model m ) {
-		ShortnameService sns = api.getSpec().getAPISpec().getShortnameService();
-		Map<String, String> uriToName = new CompleteContext(CompleteContext.Mode.EncodeIfMultiple, sns.asContext(), m ).Do(m, m);
-		ReadContext result = CompleteReadContext.create(sns.asContext(), uriToName);
-		return result; 
-	}
 
     // testing only.
 	public void renderAndDiscard( Bindings b, Model model, Resource root, Context given ) {

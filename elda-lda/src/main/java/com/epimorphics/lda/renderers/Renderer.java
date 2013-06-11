@@ -9,10 +9,10 @@
 package com.epimorphics.lda.renderers;
 
 import java.io.OutputStream;
+import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 
@@ -42,7 +42,7 @@ public interface Renderer {
     /**
      	Render a result set. Use t to log times if required.
     */
-    public BytesOut render( Times t, Bindings rc, APIResultSet results );
+    public BytesOut render( Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results );
 
     /**
      	Answer the format suffix associated with this renderer.

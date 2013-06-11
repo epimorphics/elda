@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -70,7 +71,7 @@ public class TestJsonRenderer {
 		Resource root = m.createResource( "fake:root" );
 		List<Resource> results = CollectionUtils.list( root );
 		APIResultSet rs = new APIResultSet( m.getGraph(), results, true, false, "detailsQuery", new View() );
-		Renderer.BytesOut bo = jr.render( t, b, rs );
+		Renderer.BytesOut bo = jr.render( t, b, new HashMap<String, String>(), rs );
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		bo.writeAll(t, bos);
 		return bos.toString();

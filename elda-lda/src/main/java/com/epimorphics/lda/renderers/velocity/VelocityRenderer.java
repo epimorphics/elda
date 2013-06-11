@@ -1,6 +1,7 @@
 package com.epimorphics.lda.renderers.velocity;
 
 import java.io.OutputStream;
+import java.util.Map;
 
 import org.apache.velocity.app.VelocityEngine;
 
@@ -44,7 +45,7 @@ public class VelocityRenderer implements Renderer {
     	return "html";
     }
     
-    @Override public Renderer.BytesOut render( Times t, Bindings b, final APIResultSet results ) {
+    @Override public Renderer.BytesOut render( Times t, Bindings b, Map<String, String> termBindings, final APIResultSet results ) {
     	return new BytesOutTimed() {
 
 			@Override public void writeAll( OutputStream os ) {

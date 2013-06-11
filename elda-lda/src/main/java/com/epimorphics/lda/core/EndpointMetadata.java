@@ -9,14 +9,12 @@ package com.epimorphics.lda.core;
 import java.net.URI;
 import java.util.*;
 
-import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.CompleteContext;
-import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.EndpointDetails;
 
@@ -40,12 +38,11 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 public class EndpointMetadata {
 
 	public static void addAllMetadata
-		( APIEndpoint.Request r
-		, MergedModels mergedModels
+		( MergedModels mergedModels
 		, URI ru
 		, Resource uriForDefinition
 		, Bindings bindings
-		, ShortnameService sns
+		, CompleteContext cc
 		, boolean suppress_IPTO
 		, Resource thisMetaPage
 		, int page
@@ -119,10 +116,14 @@ public class EndpointMetadata {
 	//	
 		em.addVersions( versionsModel, viewNames );
 		em.addFormats( formatsModel, formats );
-		em.addBindings( r, mergedModels1, bindingsModel, exec, sns.asContext() );
 		em.addExecution( execution, exec );
 	//
+		cc.include( versionsModel );
+		cc.include( formatsModel );
+		cc.include( execution );
 		em.addQueryMetadata( execution, exec, selectQuery, viewQuery, source, details.isListEndpoint() );
+	//
+		em.addBindings( mergedModels1, bindingsModel, exec, cc );
 	//
 	    if (wantsMeta.wantsMetadata( "versions" )) metaModel1.add( versionsModel ); else setsMeta.setMetadata( "versions", versionsModel );
 	    if (wantsMeta.wantsMetadata( "formats" )) metaModel1.add( formatsModel );  else setsMeta.setMetadata( "formats", formatsModel );
@@ -208,11 +209,12 @@ public class EndpointMetadata {
 		return result;
 	}
 
-	public void addBindings( APIEndpoint.Request r, Model toScan, Model meta, Resource anExec, Context c ) {
+	public void addBindings( Model toScan, Model meta, Resource anExec, CompleteContext cc ) {
 		Resource exec = anExec.inModel(meta), page = thisPage.inModel(meta);
 		exec.addProperty( RDF.type, API.Execution );
 		addVariableBindings( meta, exec );
-		addTermBindings( r, toScan, meta, exec, c );
+		cc.include( meta );
+		addTermBindings( toScan, meta, exec, cc );
 		page.addProperty( API.wasResultOf, exec );
 	}
 
@@ -242,15 +244,14 @@ public class EndpointMetadata {
 		( "http://www.w3.org/2004/02/skos/core#" + "prefLabel" )
 		;
 	
-	public void addTermBindings( APIEndpoint.Request r, Model toScan, Model meta, Resource exec, Context c ) {
-		Map<String, String> mm = new CompleteContext( r.mode, c, toScan ).Do(toScan, toScan);
-	//
-		List<String> uriList = new ArrayList<String>( mm.keySet() );
+	public void addTermBindings( Model toScan, Model meta, Resource exec, CompleteContext cc ) {
+		Map<String, String> termBindings = cc.Do();
+		List<String> uriList = new ArrayList<String>( termBindings.keySet() );
 		Collections.sort( uriList );
 		for (String uri: uriList) {
 			Resource term = meta.createResource( uri );
 			if (toScan.containsResource( term )) {
-				String shorty = mm.get( uri );
+				String shorty = termBindings.get( uri );
 	    		Resource tb = createBNode( meta );
 	    		exec.addProperty( API.termBinding, tb ); 
 				tb.addProperty( API.label, shorty );
@@ -307,9 +308,8 @@ public class EndpointMetadata {
 	    </p>
 	*/
 	static void createOptionalMetadata
-		( APIEndpoint.Request r
-		, Context c
-		, boolean isListEndpoint
+		( boolean isListEndpoint
+		, CompleteContext cc
 		, Set<String> viewNames
 		, Set<FormatNameAndType> formats
 		, MergedModels mm
@@ -331,7 +331,7 @@ public class EndpointMetadata {
 	//	
 		em.addVersions( versionsModel, viewNames );
 		em.addFormats( formatsModel, formats );
-		em.addBindings( r, mergedModels, bindingsModel, exec, c );
+		em.addBindings( mergedModels, bindingsModel, exec, cc );
 		em.addExecution( execution, exec );
 	//
 		em.addQueryMetadata( execution, exec, selectQuery, viewQuery, source, isListEndpoint );

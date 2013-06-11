@@ -33,6 +33,8 @@ import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
+import com.epimorphics.lda.shortnames.CompleteContext;
+import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APIEndpointSpec;
@@ -43,6 +45,7 @@ import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.RDFUtils;
+import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -84,7 +87,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	return defaults;
     }
     
-    @Override public Couple<APIResultSet, Bindings> call( Request r ) {
+    @Override public Triad<APIResultSet, Map<String, String>, Bindings> call( Request r ) {
 		Bindings cc = r.context.copyWithDefaults( spec.getBindings() );
 	    APIQuery query = spec.getBaseQuery();
 	//
@@ -96,8 +99,14 @@ public class APIEndpointImpl implements APIEndpoint {
 	    APIResultSet unfiltered = query.runQuery( r.c, spec.getAPISpec(), cache, cc, view );
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
-	    createMetadata(r, filtered, r.requestURI, cc, query);        
-	    return new Couple<APIResultSet, Bindings>( filtered, cc );
+	    
+	    CompleteContext c = 
+	    		new CompleteContext( r.mode, spec.getAPISpec().getShortnameService().asContext(), filtered.getModelPrefixes() )
+	    		.include( filtered.model.getMergedModel() )
+	    		;    
+	    
+	    createMetadata(r, c, filtered, cc, query);  
+	    return new Triad<APIResultSet, Map<String, String>, Bindings>( filtered, c.Do(), cc );
     }
 
     private View buildQueryAndView( Bindings context, APIQuery query ) {
@@ -149,7 +158,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		return other;
 	}
 
-    private void createMetadata( APIEndpoint.Request r, APIResultSet rs, URI ru, Bindings bindings, APIQuery query ) {
+    private void createMetadata( APIEndpoint.Request r, CompleteContext cc, APIResultSet rs, Bindings bindings, APIQuery query ) {
 		boolean suppress_IPTO = bindings.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		boolean exceptionIfEmpty = bindings.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
 	//
@@ -161,7 +170,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		MergedModels mergedModels = rs.getModels();		
 		Model metaModel = mergedModels.getMetaModel();
 	//
-		Resource thisMetaPage = metaModel.createResource( ru.toString() ); 
+		Resource thisMetaPage = metaModel.createResource( r.requestURI.toString() ); 
 		Resource uriForSpec = metaModel.createResource( spec.getSpecificationURI() ); 
 	//
         int page = query.getPageNumber();
@@ -169,7 +178,7 @@ public class APIEndpointImpl implements APIEndpoint {
     //
         String template = spec.getURITemplate();
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
-        rs.setContentLocation( URIUtils.changeFormatSuffix( ru, formatNames, format ) );
+        rs.setContentLocation( URIUtils.changeFormatSuffix( r.requestURI, formatNames, format ) );
         rs.setRoot(thisMetaPage);
     //
         List<Resource> resultList = rs.getResultList();
@@ -179,21 +188,19 @@ public class APIEndpointImpl implements APIEndpoint {
         String viewQuery = rs.getDetailsQuery();
         APISpec apiSpec = spec.getAPISpec();
         Source source = apiSpec.getDataSource();
-        ShortnameService sns = apiSpec.getShortnameService();
         String selectQuery = query.getQueryString( apiSpec, bindings );
         Set<String> viewNames = spec.getExplicitViewNames();
         EndpointDetails details = (EndpointDetails) spec;
         Set<FormatNameAndType> formats = spec.getRendererFactoryTable().getFormatNamesAndTypes();
-        URI uriForList = URIUtils.withoutPageParameters( ru );
+        URI uriForList = URIUtils.withoutPageParameters( r.requestURI );
     //     
         Resource uriForDefinition = metaModel.createResource( createDefinitionURI( uriForList, uriForSpec, template, bindings.expandVariables( template ) ) ); 
         EndpointMetadata.addAllMetadata
-        	( r
-        	, mergedModels
-        	, ru
+        	( mergedModels
+        	, r.requestURI
         	, uriForDefinition
         	, bindings
-        	, sns
+        	, cc
         	, suppress_IPTO
         	, thisMetaPage
         	, page

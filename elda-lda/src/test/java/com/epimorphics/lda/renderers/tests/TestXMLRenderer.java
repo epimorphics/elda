@@ -8,6 +8,8 @@ package com.epimorphics.lda.renderers.tests;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+
 import org.junit.Test;
 
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
@@ -136,7 +138,7 @@ public class TestXMLRenderer
 	//
 		Model meta = mm.getMetaModel();
 		meta.add( root, API.items, meta.createList( new RDFNode[] {root} ) );
-		xr.renderInto( root.inModel( meta ), mm, d, false );
+		xr.renderInto( root.inModel( meta ), mm, d, new HashMap<String, String>(), false );
 	//
 		Node de = d.getDocumentElement().getFirstChild();
 		Node expected = new TinyParser().parse( wrapped );

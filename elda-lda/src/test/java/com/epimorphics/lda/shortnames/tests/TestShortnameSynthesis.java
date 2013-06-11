@@ -62,7 +62,7 @@ public class TestShortnameSynthesis {
 			.add( mA, P(NS1, "trivial"), "v" )
 			;
 		
-		Map<String, String> result = cc.Do1( wild, prefixes );
+		Map<String, String> result = cc.Do( wild, prefixes );
 		
 		assertEquals( "trivial", result.get(NS1 + "trivial") );
 	}
@@ -72,7 +72,7 @@ public class TestShortnameSynthesis {
 			.add( mA, P(NS1, "x,y"), "v" )
 			;
 			
-		Map<String, String> result = cc.Do1( wild, prefixes );
+		Map<String, String> result = cc.Do( wild, prefixes );
 			
 		assertEquals( "y", result.get(NS1 + "x,y" ) );
 		}
@@ -83,7 +83,7 @@ public class TestShortnameSynthesis {
 			.add( mA, P(NS4, "common"), "v" )
 			;
 		
-		Map<String, String> result = cc.Do1( wild, prefixes );
+		Map<String, String> result = cc.Do( wild, prefixes );
 		
 		assertEquals( "ns3_common", result.get(NS3 + "common" ) );
 		assertEquals( "ns4_common", result.get(NS4 + "common" ) );
@@ -95,7 +95,7 @@ public class TestShortnameSynthesis {
 			.add( mA, P(NS2, "local"), "v" )
 			;
 		
-		Map<String, String> result = cc.Do1( wild, prefixes );
+		Map<String, String> result = cc.Do( wild, prefixes );
 		
 		int hashNS1 = Math.abs( NS1.hashCode() ) % 10000;
 		int hashNS2 = Math.abs( NS2.hashCode() ) % 10000;

@@ -350,6 +350,7 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
@@ -429,15 +430,15 @@ Each RDF value is mapped onto some XML content as follows:
 public class XMLRendering {
 	
 	private final Document d;
-	private final ShortnameService sns;
+	private final Context context;
 	private final Map<String, String> nameMap;
 	private final boolean suppressIPTO;
 	
-	public XMLRendering( Model m, ShortnameService sns, boolean suppressIPTO, Document d ) {
+	public XMLRendering( Model m, Context context, Map<String, String> nameMap, boolean suppressIPTO, Document d ) {
 		this.d = d;
-		this.sns = sns;
+		this.context = context;
 		this.suppressIPTO = suppressIPTO;
-		this.nameMap = sns.constructURItoShortnameMap(m, m);
+		this.nameMap = nameMap;
 	}
 
 	/** 
@@ -713,7 +714,7 @@ public class XMLRendering {
 
 	private boolean isMultiValued( Property p ) {
 		if (p.equals( RDF.type )) return true;
-		ContextPropertyInfo px = sns.asContext().getPropertyByURI(p.getURI());
+		ContextPropertyInfo px = context.getPropertyByURI(p.getURI());
 		return px != null && px.isMultivalued();
 	}
 	

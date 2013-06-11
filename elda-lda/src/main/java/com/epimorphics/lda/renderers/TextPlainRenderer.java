@@ -15,6 +15,7 @@
 package com.epimorphics.lda.renderers;
 
 import java.io.OutputStream;
+import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
@@ -31,7 +32,7 @@ public final class TextPlainRenderer implements Renderer {
     	return "text";
     }
 
-    @Override public Renderer.BytesOut render( Times t, Bindings ignored, final APIResultSet results ) {
+    @Override public Renderer.BytesOut render( Times t, Bindings ignored, Map<String, String> termBindings, final APIResultSet results ) {
     	return new BytesOutTimed() {
 			
 			@Override public void writeAll(OutputStream os) {

@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.XMLRenderer;
@@ -29,7 +31,7 @@ public class TestShortNames {
 		Model m = ModelIOUtils.modelFromTurtle( "@prefix p: <http://example.com/ns#>. p:a p:thing p:b; p:other p:d; p:thong p:c." );
 		Map<String, String> mm = 
 			new CompleteContext(CompleteContext.Mode.Transcode, new Context( m ), m )
-			.Do(m,  m); 
+			.Do1(m); 
 		assertEquals( "p_thing", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}
 	
@@ -41,7 +43,7 @@ public class TestShortNames {
 			+ "\np:thing rdfs:label 'labelled'; rdfs:range p:Thing."
 			);
 		Context c = new Context( m ); 
-		Map<String, String> mm = new CompleteContext(CompleteContext.Mode.Transcode, c, m).Do(empty, empty);
+		Map<String, String> mm = new CompleteContext(CompleteContext.Mode.Transcode, c, m).Do();
 		assertEquals( "labelled", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}
 	
@@ -54,7 +56,7 @@ public class TestShortNames {
 			+ "\np:thing api:label 'REALLY_labelled'."
 			);
 		Context c = new Context( m ); 		
-		Map<String, String> mm = new CompleteContext(CompleteContext.Mode.Transcode, c, m).Do(empty, empty);
+		Map<String, String> mm = new CompleteContext(CompleteContext.Mode.Transcode, c, m).Do();
 		assertEquals( "REALLY_labelled", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}	
 	
@@ -72,15 +74,23 @@ public class TestShortNames {
 	}
 
 	private void ensure_result_converted(String expectContains, Model meta, Model object ) {
-		Renderer r = new XMLRenderer( new SNS( "" ) );
+		SNS sns = new SNS( "" );
+		Renderer r = new XMLRenderer( sns );
 	//
 		Times t = new Times();
 		Resource rx = object.createResource( "eh:/A" );
 		List<Resource> results = new ArrayList<Resource>(); results.add( rx );
 		APIResultSet rs = new APIResultSet(object.getGraph(), results, true, false, "detailsQuery", new View() );
-		rs.getModels().getMetaModel().add( meta );
+		MergedModels mm = rs.getModels();
+		mm.getMetaModel().add( meta );
+		
+		Map<String, String> termBindings =
+			new CompleteContext(CompleteContext.Mode.Transcode, sns.asContext(), mm.getMergedModel() )
+			.include( mm.getMergedModel() )
+			.Do()
+			;
 	//
-		Renderer.BytesOut bo = r.render(t, new Bindings(), rs);
+		Renderer.BytesOut bo = r.render(t, new Bindings(), termBindings, rs);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		bo.writeAll(t, bos);
 		assertContains( expectContains, bos.toString() );

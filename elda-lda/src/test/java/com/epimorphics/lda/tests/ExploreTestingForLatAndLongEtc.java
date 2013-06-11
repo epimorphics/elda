@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 
 import java.net.URI;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Ignore;
@@ -87,7 +88,7 @@ public class ExploreTestingForLatAndLongEtc
 		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );
 		URI ru = URIUtils.newURI("http://dummy/doc/schools");
 		Bindings cc = Bindings.createContext( MakeData.variables( settings ), map );
-		Couple<APIResultSet, Bindings> resultsAndFormat = e.call( new APIEndpoint.Request( controls, ru, cc ) );
+		Triad<APIResultSet, Map<String, String>, Bindings> resultsAndFormat = e.call( new APIEndpoint.Request( controls, ru, cc ) );
 		APIResultSet rs = resultsAndFormat.a;
 		return new HashSet<Resource>( rs.getResultList() );
 		}

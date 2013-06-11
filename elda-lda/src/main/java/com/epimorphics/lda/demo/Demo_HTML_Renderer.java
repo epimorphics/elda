@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
@@ -59,7 +60,7 @@ public class Demo_HTML_Renderer implements Renderer {
     }
 
 	// TODO rewrite for streaming output
-    @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
+    @Override public Renderer.BytesOut render( Times t, Bindings ignored, Map<String, String> termBindings, APIResultSet results ) {
     	handleFakeBnodes( results.getMergedModel() );
     	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
         return new BytesOutString( isItemRendering ? renderItem(results) : renderList(results) );

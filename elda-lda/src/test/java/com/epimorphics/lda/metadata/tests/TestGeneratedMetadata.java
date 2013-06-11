@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -18,6 +19,7 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.EndpointMetadata;
+import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.specs.EndpointDetails;
@@ -64,8 +66,14 @@ public class TestGeneratedMetadata {
 		Resource exec = meta.createResource( "fake:exec" );
 		ShortnameService sns = new StandardShortnameService();
 		APIEndpoint.Request r = new APIEndpoint.Request( new Controls(), reqURI, cc );
-		em.addTermBindings( r, toScan, meta, exec, sns.asContext() );
-	//
+		
+		CompleteContext c  = 
+			new CompleteContext(CompleteContext.Mode.EncodeAny, sns.asContext(), pm )
+			.include(toScan);
+		
+		em.addTermBindings( toScan, meta, exec, c );
+		
+		Map<String, String> termBindings = c.Do();
 		Resource tb = meta.listStatements( null, API.termBinding, Any ).nextStatement().getResource();
 		assertTrue( meta.contains( tb, API.label, "this_predicate" ) );
 		assertTrue( meta.contains( tb, API.property, predicate ) );

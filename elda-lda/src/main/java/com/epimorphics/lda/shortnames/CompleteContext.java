@@ -9,6 +9,7 @@ import com.epimorphics.util.NameUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -19,6 +20,9 @@ public class CompleteContext {
 	final PrefixMapping prefixes;
 	final boolean transcodedNames;
 	final boolean allowUniqueLocalnames;
+	final Model model = ModelFactory.createDefaultModel();
+	
+	final Map<String, String> uriToShortname = new HashMap<String, String>();
 	
 	public enum Mode { Transcode, EncodeAny, EncodeIfMultiple } 
 	
@@ -59,31 +63,45 @@ public class CompleteContext {
 			return ns.equals(other.ns) && ln.equals(other.ln);
 		}
 	}
+
+	public CompleteContext include(Model m) {
+		model.add(m);
+		model.withDefaultMappings( m );
+		return this;
+	}
+	
+	public Map<String, String> Do1(Model m) {
+		return include( m ).Do();
+	}
 	
 	public Map<String, String> Do(Model m, PrefixMapping pm) {
-		Map<String, String> uriToShortname = new HashMap<String, String>();
+		model.setNsPrefixes( pm );
+		return include( m ).Do();
+	}
+
+	public Map<String, String> Do() {
+		uriToShortname.clear();
 	//
 		uriToShortname.put(API.value.getURI(), "value");
 		uriToShortname.put(API.label.getURI(), "label");
 	//
-		pickPreferredShortnames( uriToShortname );
-		Set<SplitURI> modelTerms = loadModelTerms( m, uriToShortname.keySet() );
+		pickPreferredShortnames();
+		Set<SplitURI> modelTerms = loadModelTerms( uriToShortname.keySet() );
 		
 		if (transcodedNames) {
 			oldTermHandler( uriToShortname, modelTerms );
 		} else {
-			extractPrefixedAndUniqueShortnames(	modelTerms, uriToShortname, pm );
-			extractHashedShortnames(modelTerms, uriToShortname);
+			extractPrefixedAndUniqueShortnames(	modelTerms );
+			extractHashedShortnames( modelTerms );
 		}
 		return uriToShortname;
 	}
 
 	/**
-	    For those URIs which can be uniquely mapped to an "encoded" localnam
+	    For those URIs which can be uniquely mapped to an "encoded" localname
 	    as their shortname, add this mapping to uriToShortname.
 	*/
-	private void extractHashedShortnames
-		( Set<SplitURI> modelTerms, Map<String, String> uriToShortname) {
+	private void extractHashedShortnames( Set<SplitURI> modelTerms ) {
 		Set<SplitURI> mtsRemoved = new HashSet<SplitURI>();
 		for (SplitURI mt: modelTerms) {
 			String sn = encodeLocalname(mt.ns, mt.ln);
@@ -99,11 +117,7 @@ public class CompleteContext {
 	    Extract URIs that are uniquely identified by their local name, or
 	    by their local name prefixed by a prefix for their URI.
 	*/
-	private void extractPrefixedAndUniqueShortnames
-		( Set<SplitURI> modelTerms
-		, Map<String, String> uriToShortname
-		, PrefixMapping pm
-		) {
+	private void extractPrefixedAndUniqueShortnames( Set<SplitURI> modelTerms ) {
 		Map<String, List<SplitURI>> localNameToURIs = new HashMap<String, List<SplitURI>>();
 		
 		for (SplitURI mt: modelTerms) {			
@@ -134,7 +148,7 @@ public class CompleteContext {
 		Set<SplitURI> mtsRemoved = new HashSet<SplitURI>();
 		
 		for (SplitURI mt: modelTerms) {
-			String prefix = pm.getNsURIPrefix( mt.ns );
+			String prefix = model.getNsURIPrefix( mt.ns );
 			if (prefix != null) {
 				String sn = prefix + "_" + mt.ln;
 				if (!uriToShortname.containsValue(sn)) {
@@ -151,7 +165,7 @@ public class CompleteContext {
 	    For each URI with any shortnames, pick the "best" shortname and
 	    add `shortName -> URI` to the result map.
 	*/
-	private void pickPreferredShortnames( Map<String, String> uriToShortname ) {
+	private void pickPreferredShortnames() {
 		Map<String, List<String>> shortNames = new HashMap<String, List<String>>();
 		for (String key: context.preferredNames()) {
 			String uri = context.getURIfromName( key );
@@ -164,10 +178,6 @@ public class CompleteContext {
 			uriToShortname.put( uri, bestShortname( shortNames.get(uri) ) );
 		}
 	}	
-	
-	public Map<String, String> Do1(Model m, PrefixMapping pm) {
-		return Do(m, pm);
-	}
 	
 //	public Map<String, String> Do1(Model m, PrefixMapping pm) {
 //		
@@ -237,11 +247,15 @@ public class CompleteContext {
 	    datatypes, excluding those that have already been seen. These are
 	    the terms that will need to be given shortnames.
 	*/
-	private Set<SplitURI> loadModelTerms(Model m, Set<String> seenTerms) {
+	private Set<SplitURI> loadModelTerms(Set<String> seenTerms) {
 		Set<SplitURI> modelTerms = new HashSet<SplitURI>();
-		for (StmtIterator sit = m.listStatements(); sit.hasNext();) {
+		for (StmtIterator sit = model.listStatements(); sit.hasNext();) {
 			Statement s = sit.next();
 			String predicate = s.getPredicate().getURI();
+			
+//			if (predicate.equals("http://purl.org/linked-data/api/vocab#sparqlEndpoint"))
+//				System.err.println( ">> YAY HAY HO!" );
+			
 			if (!seenTerms.contains( predicate )) 
 				modelTerms.add( SplitURI.create(predicate) );
 			Node o = s.getObject().asNode();

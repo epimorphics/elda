@@ -16,6 +16,8 @@ import com.epimorphics.util.MediaType;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Resource;
 
+import java.util.Map;
+
 /**
     Production of XSLT renderers, which transform the results
     of an XML rendering.
@@ -41,11 +43,11 @@ public class XSLT_RendererFactory implements RendererFactory {
 		    	return "html"; // TODO handle other suffixes
 		    }
 
-			@Override public Renderer.BytesOut render( Times t, Bindings rc, APIResultSet results ) {
+			@Override public Renderer.BytesOut render( Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results ) {
 				handleMetadata(results);
 				final String sheet = rc.expandVariables(root.getProperty( API.stylesheet ).getString());
 				final XMLRenderer xr = new XMLRenderer( sns, mt, sheet );
-				return xr.render( t, rc.copyWithDefaults( ep.defaults() ), results ); 
+				return xr.render( t, rc.copyWithDefaults( ep.defaults() ), termBindings, results ); 
 			}
 
 			public void handleMetadata( APIResultSet results ) {

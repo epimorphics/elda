@@ -1,5 +1,7 @@
 package temp;
 
+import java.util.HashMap;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -31,7 +33,7 @@ public class TestSuspectRendering {
 		ShortnameService sns = new StandardShortnameService();
 		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
-		xr.renderInto( root, mm, d, false );
+		xr.renderInto( root, mm, d, new HashMap<String, String>(), false );
 		Node de = d.getDocumentElement(); // .getFirstChild();
 		String obt = DOMUtils.renderNodeToString( new Times(), de, pm );
 		System.err.println( ">> " + obt );

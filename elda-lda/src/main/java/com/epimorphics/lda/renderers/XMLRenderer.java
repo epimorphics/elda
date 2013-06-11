@@ -61,16 +61,16 @@ public class XMLRenderer implements Renderer {
     	return "xml";
     }
 
-	@Override public synchronized Renderer.BytesOut render( Times t, Bindings rc, APIResultSet results ) {
+	@Override public synchronized Renderer.BytesOut render( Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results ) {
 		Resource root = results.getRoot();
 		boolean suppressIPTO = rc.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		Document d = DOMUtils.newDocument();
-		renderInto( root, results.getModels(), d, suppressIPTO );
+		renderInto( root, results.getModels(), d, termBindings, suppressIPTO );
 		return DOMUtils.renderNodeToBytesOut( t, d, rc, results.getModelPrefixes(), transformFilePath );
 	}
 
-	public void renderInto( Resource root, MergedModels mm, Document d, boolean suppressIPTO ) {
-		XMLRendering r = new XMLRendering( mm.getMergedModel(), sns, suppressIPTO, d );
+	public void renderInto( Resource root, MergedModels mm, Document d, Map<String, String> termBindings, boolean suppressIPTO ) {
+		XMLRendering r = new XMLRendering( mm.getMergedModel(), sns.asContext(), termBindings, suppressIPTO, d );
 		Element result = d.createElement( "result" );
 		result.setAttribute( "format", "linked-data-api" );
 		result.setAttribute( "version", "0.2" );

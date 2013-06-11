@@ -55,9 +55,9 @@ public class APIResultSet implements SetsMetadata {
 	protected Resource root;
 	protected URI contentLocation;
 
-	protected /* should be final */ List<Resource> results;
+	protected List<Resource> results;
     protected final boolean isCompleted;
-    protected /* should be final */ MergedModels model;
+    protected MergedModels model;
     protected final String detailsQuery;
     
     protected long hash;

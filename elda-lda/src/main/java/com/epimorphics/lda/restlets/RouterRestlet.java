@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.core.APIEndpoint.Request;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.exceptions.EldaException;
@@ -58,6 +57,7 @@ import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.MediaType;
+import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.shared.WrappedException;
 import com.sun.jersey.api.NotFoundException;
@@ -271,12 +271,12 @@ import com.sun.jersey.api.NotFoundException;
         //        	
         	Bindings b = ep.getSpec().getBindings();
         	APIEndpoint.Request req = new APIEndpoint.Request( c, ru, b ).withFormat( formatName );
-        	Couple<APIResultSet, Bindings> resultsAndBindings = APIEndpointUtil.call( req, match, contextPath, queryParams );
+        	Triad<APIResultSet, Map<String, String>, Bindings> resultsAndBindings = APIEndpointUtil.call( req, match, contextPath, queryParams );
         	
         	ModelPrefixEditor mpe = ep.getSpec().getAPISpec().getModelPrefixEditor();
         	
             APIResultSet results = resultsAndBindings.a.applyEdits( mpe );
-			Bindings rc = new Bindings( resultsAndBindings.b.copy(), as );
+			Bindings rc = new Bindings( resultsAndBindings.c.copy(), as );
 			
         	if (_default.getPreferredSuffix().equals( r.getPreferredSuffix())) {
         		MediaType dmt = _default.getMediaType(rc);
@@ -288,7 +288,7 @@ import com.sun.jersey.api.NotFoundException;
 			MediaType mt = r.getMediaType(rc);
 			log.info( "rendering with formatter " + mt );
 			Times times = c.times;
-			Renderer.BytesOut bo = r.render( times, rc, results );
+			Renderer.BytesOut bo = r.render( times, rc, resultsAndBindings.b, results );
 			int mainHash = runHash + ru.toString().hashCode();
 			return returnAs( results, mainHash + mt.hashCode(), wrap(times, bo), needsVaryAccept, mt );
 	//
@@ -342,22 +342,6 @@ import com.sun.jersey.api.NotFoundException;
 				} 
 			}
 		};
-	}
-	
-    private Response doRendering( Controls c, Bindings rc, int mainHash, boolean needsVaryAccept, String rName, APIResultSet rs, Renderer r ) {
-		if (r == null) {
-            String message = rName == null
-            	? "no suitable media type was provided for rendering."
-            	: "renderer '" + rName + "' is not known to this server."
-            	;
-            return standardHeaders( Response.status( Status.BAD_REQUEST ).entity( Messages.niceMessage( message ) ) ).build();
-        } else {
-			MediaType mt = r.getMediaType(rc);
-			log.info( "rendering with formatter " + mt );
-        	Times times = c.times;
-			Renderer.BytesOut bo = r.render( times, rc, rs );
-			return returnAs( rs, mainHash + mt.hashCode(), wrap(times, bo), needsVaryAccept, mt );
-        }
 	}
 
     public static ResponseBuilder standardHeaders( ResponseBuilder rb ) {

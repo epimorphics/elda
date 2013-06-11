@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 
 import org.junit.Test;
 
@@ -32,7 +33,7 @@ public class TestTurtleRenderer {
 		Model m = ModelIOUtils.modelFromTurtle( "<eh:/example> <eh:/predicate> '<<\u03ff>>'." );
 		Resource it = m.createResource( "<eh:/example>" );
 		APIResultSet rs = new APIResultSet( m.getGraph(), CollectionUtils.list(it), true, false, "notUsed", new View() );
-		Renderer.BytesOut rbo = new TurtleRenderer().render( new Times(), null, rs );
+		Renderer.BytesOut rbo = new TurtleRenderer().render( new Times(), null, new HashMap<String, String>(), rs );
 		String rendered = TestTurtleRenderer.pullString( rbo );
 		// String unwrapped = rendered.replaceFirst( "(.|[\r\n])*<<", "" ).replaceAll( ">>(.|[\r\n])*", "" );
 		String unwrapped = rendered.split("<<")[1].split(">>")[0];

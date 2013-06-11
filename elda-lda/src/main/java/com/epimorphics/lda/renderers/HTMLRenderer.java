@@ -17,6 +17,7 @@ package com.epimorphics.lda.renderers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
@@ -40,7 +41,7 @@ public class HTMLRenderer implements Renderer {
     }
 
     // TODO rewrite so that it can stream
-    @Override public Renderer.BytesOut render( Times t, Bindings ignored, APIResultSet results ) {
+    @Override public Renderer.BytesOut render( Times t, Bindings ignored, Map<String, String> termBindings, APIResultSet results ) {
     	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;
         return new BytesOutString( isItemRendering ? renderItem(results) : renderList(results) );
     }

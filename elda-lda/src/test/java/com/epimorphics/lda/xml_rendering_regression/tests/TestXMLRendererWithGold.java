@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,6 +28,7 @@ import org.xml.sax.SAXException;
 
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.renderers.XMLRenderer;
+import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.util.DOMUtils;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -92,7 +95,13 @@ public class TestXMLRendererWithGold extends XMLTestCase {
 		Document d = DOMUtils.newDocument();
 	//
 		XMLRenderer r = new XMLRenderer( b.sns );
-		r.renderInto( root, mm, d, false );
+		
+		Map<String, String> termBindings =
+			new CompleteContext(CompleteContext.Mode.EncodeAny, b.sns.asContext(), mm.getMergedModel() )
+			.Do( mm.getMergedModel(), mm.getMergedModel() )
+			;
+		
+		r.renderInto( root, mm, d, termBindings, false );
 	//
 		Document expected = parse( b.expected_xml );
 		Diff myDiff = new Diff( expected, d );
