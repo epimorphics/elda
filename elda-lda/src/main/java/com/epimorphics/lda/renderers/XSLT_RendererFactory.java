@@ -26,9 +26,10 @@ import java.util.Map;
 */
 public class XSLT_RendererFactory implements RendererFactory {
 	
+	private final CompleteContext.Mode defaultMode = Mode.PreferLocalnames;
+
 	private final Resource root;
 	private final MediaType mt;
-	private final CompleteContext.Mode defaultMode = Mode.PreferLocalnames;
 	private final CompleteContext.Mode mode;
 	
 	XSLT_RendererFactory( Resource root, MediaType mt ) {
