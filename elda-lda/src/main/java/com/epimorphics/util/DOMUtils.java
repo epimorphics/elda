@@ -6,6 +6,7 @@
 */
 package com.epimorphics.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -66,22 +67,46 @@ public class DOMUtils
 		, final Document d 
 		, final Bindings rc
 		, final PrefixMapping pm
-		, final String transformFilePath) {		
+		, final String transformFilePath) {	
+	//
+		Transformer tr = setPropertiesAndParams( t, rc, pm, transformFilePath );
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		OutputStreamWriter u = StreamUtils.asUTF8(os);
+		StreamResult sr = new StreamResult( u );
+		try { 
+			tr.transform( new DOMSource( d ), sr ); 
+			u.flush();
+			u.close();
+			} 
+		catch (TransformerException e) 
+			{ throw new WrappedException( e ); } 
+		catch (IOException e) 					
+			{ throw new WrappedException( e ); }
+		final String content = Renderer.UTF8.toString(os);
+	//
 		return new BytesOutTimed() {
 
 			@Override public void writeAll( OutputStream os ) {
-				Transformer tr = setPropertiesAndParams( t, rc, pm, transformFilePath );
 				OutputStreamWriter u = StreamUtils.asUTF8(os);
-				StreamResult sr = new StreamResult( u );
-				try { 
-					tr.transform( new DOMSource( d ), sr ); 
+				try {
+					u.write(content);
 					u.flush();
 					u.close();
-					} 
-				catch (TransformerException e) 
-					{ throw new WrappedException( e ); } 
-				catch (IOException e) 					
-					{ throw new WrappedException( e ); } 
+				} catch (IOException e) {
+					throw new WrappedException(e);
+				}
+//				Transformer tr = setPropertiesAndParams( t, rc, pm, transformFilePath );
+//				OutputStreamWriter u = StreamUtils.asUTF8(os);
+//				StreamResult sr = new StreamResult( u );
+//				try { 
+//					tr.transform( new DOMSource( d ), sr ); 
+//					u.flush();
+//					u.close();
+//					} 
+//				catch (TransformerException e) 
+//					{ throw new WrappedException( e ); } 
+//				catch (IOException e) 					
+//					{ throw new WrappedException( e ); } 
 			}
 
 			@Override protected String getFormat() {

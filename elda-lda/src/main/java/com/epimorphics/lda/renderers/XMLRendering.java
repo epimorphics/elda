@@ -354,7 +354,6 @@ import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
-import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.util.Couple;
 import com.epimorphics.vocabs.API;

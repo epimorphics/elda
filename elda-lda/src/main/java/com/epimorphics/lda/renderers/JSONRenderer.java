@@ -81,20 +81,41 @@ public class JSONRenderer implements Renderer {
         final ReadContext context = CompleteReadContext.create(sns.asContext(), termBindings );        
 		final List<Resource> roots = new ArrayList<Resource>(1);
 		roots.add( root );
-		
+	//
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		try {
+			Writer writer = StreamUtils.asUTF8( os );
+			writer.write( before );
+			Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true );
+			writer.write( after );
+			writer.flush();
+		} catch (Exception e) {
+			log.error( "Failed to encode model: stacktrace follows:", e );
+			throw new WrappedException( e );
+		}				
+		final String content = UTF8.toString( os );
+	//
 		return new BytesOutTimed() {
 
 			@Override public void writeAll( OutputStream os ) {
+				OutputStreamWriter u = StreamUtils.asUTF8(os);
 				try {
-					Writer writer = StreamUtils.asUTF8( os );
-					writer.write( before );
-					Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true );
-					writer.write( after );
-					writer.flush();
-				} catch (Exception e) {
-					log.error( "Failed to encode model: stacktrace follows:", e );
-					throw new WrappedException( e );
-				}				
+					u.write(content);
+					u.flush();
+					u.close();
+				} catch (IOException e) {
+					throw new WrappedException(e);
+				}
+//				try {
+//					Writer writer = StreamUtils.asUTF8( os );
+//					writer.write( before );
+//					Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true );
+//					writer.write( after );
+//					writer.flush();
+//				} catch (Exception e) {
+//					log.error( "Failed to encode model: stacktrace follows:", e );
+//					throw new WrappedException( e );
+//				}				
 			}
 
 			@Override protected String getFormat() {

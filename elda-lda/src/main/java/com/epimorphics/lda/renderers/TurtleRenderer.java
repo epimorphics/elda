@@ -14,7 +14,10 @@
 
 package com.epimorphics.lda.renderers;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
@@ -22,6 +25,8 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
+import com.epimorphics.util.StreamUtils;
+import com.hp.hpl.jena.shared.WrappedException;
 
 public class TurtleRenderer implements Renderer {
 	
@@ -38,10 +43,22 @@ public class TurtleRenderer implements Renderer {
     }
     
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, Map<String, String> termBindings, final APIResultSet results ) {
+    	ByteArrayOutputStream os = new ByteArrayOutputStream();
+    	results.getMergedModel().write( os, "TTL" );
+    	try { os.flush(); } catch (IOException e) { throw new WrappedException( e ); }
+    	final String content = UTF8.toString( os );
+    	
     	return new BytesOutTimed() {
 
-			@Override public void writeAll(OutputStream os) {
-				results.getMergedModel().write( os, "TTL" );
+			@Override public void writeAll(OutputStream os) {			
+				OutputStreamWriter u = StreamUtils.asUTF8(os);
+				try {
+					u.write(content);
+					u.flush();
+					u.close();
+				} catch (IOException e) {
+					throw new WrappedException(e);
+				}
 			}
 
 			@Override protected String getFormat() {

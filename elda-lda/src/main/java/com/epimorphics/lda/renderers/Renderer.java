@@ -8,6 +8,8 @@
 
 package com.epimorphics.lda.renderers;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
+import com.hp.hpl.jena.shared.WrappedException;
 
 /**
     Renderers -- turning result sets into byte streams.
@@ -54,5 +57,13 @@ public interface Renderer {
      	Answer the format suffix associated with this renderer.
     */
 	public String getPreferredSuffix();
+	
+	public static class UTF8 {
+
+		public static String toString(ByteArrayOutputStream os) {
+			try { return os.toString("UTF-8"); }
+			catch (IOException e) { throw new WrappedException( e ); }
+		}
+	}
 }
 
