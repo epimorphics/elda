@@ -29,6 +29,7 @@ hello:hello-world a api:API
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	# ; api:defaultViewer api:labelledDescribeViewer
 	; api:defaultFormatter hello:HtmlFormatter 
+	; api:formatter hello:XMLFormatter, hello:JSONFormatter
 	; api:endpoint hello:games 
 	.
 	
@@ -47,6 +48,19 @@ hello:HtmlFormatter a api:XsltFormatter
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
 	; api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
+	; elda:mode "byPrefix"
+	.
+
+hello:XMLFormatter a api:XmlFormatter
+	; api:name "xml"
+	; api:mimeType "application/xml; charset=utf-8"
+	; elda:mode "roundTrip"
+	.
+
+hello:JSONFormatter a api:JsonFormatter
+	; api:name "json"
+	; api:mimeType "application/json; charset=utf-8"
+	; elda:mode "roundTrip"
 	.
 	
 hello:BoardGame a rdfs:Class

@@ -270,9 +270,19 @@ import com.sun.jersey.api.NotFoundException;
         	} 
         //        	
         	Bindings b = ep.getSpec().getBindings();
-        	APIEndpoint.Request req = new APIEndpoint.Request( c, ru, b ).withFormat( formatName );
+    		
+//        	System.err.println( ">> mode: " + r.getMode() );
+//        	System.err.println( ">> media type: " + r.getMediaType(b) );
+        	
+        	APIEndpoint.Request req =
+        		new APIEndpoint.Request( c, ru, b )
+        		.withFormat( formatName )
+        		.withMode( r.getMode() )
+        		;
+        	
         	Triad<APIResultSet, Map<String, String>, Bindings> resultsAndBindings = APIEndpointUtil.call( req, match, contextPath, queryParams );
         	
+        //
         	ModelPrefixEditor mpe = ep.getSpec().getAPISpec().getModelPrefixEditor();
         	
             APIResultSet results = resultsAndBindings.a.applyEdits( mpe );

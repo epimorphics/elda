@@ -30,7 +30,7 @@ public class TestShortNames {
 	@Test public void ensureUndeclatedURIUsesPrefix() {
 		Model m = ModelIOUtils.modelFromTurtle( "@prefix p: <http://example.com/ns#>. p:a p:thing p:b; p:other p:d; p:thong p:c." );
 		Map<String, String> mm = 
-			new CompleteContext(CompleteContext.Mode.Transcode, new Context( m ), m )
+			new CompleteContext(CompleteContext.Mode.RoundTrip, new Context( m ), m )
 			.Do1(m); 
 		assertEquals( "p_thing", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}
@@ -43,7 +43,7 @@ public class TestShortNames {
 			+ "\np:thing rdfs:label 'labelled'; rdfs:range p:Thing."
 			);
 		Context c = new Context( m ); 
-		Map<String, String> mm = new CompleteContext(CompleteContext.Mode.Transcode, c, m).Do();
+		Map<String, String> mm = new CompleteContext(CompleteContext.Mode.RoundTrip, c, m).Do();
 		assertEquals( "labelled", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}
 	
@@ -56,7 +56,7 @@ public class TestShortNames {
 			+ "\np:thing api:label 'REALLY_labelled'."
 			);
 		Context c = new Context( m ); 		
-		Map<String, String> mm = new CompleteContext(CompleteContext.Mode.Transcode, c, m).Do();
+		Map<String, String> mm = new CompleteContext(CompleteContext.Mode.RoundTrip, c, m).Do();
 		assertEquals( "REALLY_labelled", mm.get( m.expandPrefix( "p:thing" ) ) );
 	}	
 	
@@ -85,7 +85,7 @@ public class TestShortNames {
 		mm.getMetaModel().add( meta );
 		
 		Map<String, String> termBindings =
-			new CompleteContext(CompleteContext.Mode.Transcode, sns.asContext(), mm.getMergedModel() )
+			new CompleteContext(CompleteContext.Mode.RoundTrip, sns.asContext(), mm.getMergedModel() )
 			.include( mm.getMergedModel() )
 			.Do()
 			;

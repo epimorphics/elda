@@ -68,7 +68,7 @@ public class TestGeneratedMetadata {
 		APIEndpoint.Request r = new APIEndpoint.Request( new Controls(), reqURI, cc );
 		
 		CompleteContext c  = 
-			new CompleteContext(CompleteContext.Mode.EncodeAny, sns.asContext(), pm )
+			new CompleteContext(CompleteContext.Mode.PreferPrefixes, sns.asContext(), pm )
 			.include(toScan);
 		
 		em.addTermBindings( toScan, meta, exec, c );

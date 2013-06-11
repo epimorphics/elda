@@ -7,14 +7,12 @@
 package com.epimorphics.lda.renderers;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Map;
 
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -32,6 +30,8 @@ import com.hp.hpl.jena.shared.WrappedException;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
+import com.epimorphics.lda.shortnames.CompleteContext.Mode;
+import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
 
@@ -42,15 +42,17 @@ public class XMLRenderer implements Renderer {
 	final ShortnameService sns;
 	final String transformFilePath;
 	final MediaType mt;
+	final Mode mode;
 	
 	public XMLRenderer( ShortnameService sns ) {
-		this( sns, MediaType.TEXT_XML, null );
+		this( CompleteContext.Mode.PreferLocalnames, sns, MediaType.TEXT_XML, null );
 	}
 	
-	public XMLRenderer( ShortnameService sns, MediaType mt, String transformFilePath ) {
+	public XMLRenderer( Mode mode, ShortnameService sns, MediaType mt, String transformFilePath ) {
 		this.sns = sns;
 		this.mt = mt;
 		this.transformFilePath = transformFilePath;
+		this.mode = mode;
 	}
 	
 	@Override public MediaType getMediaType( Bindings irrelevant ) {
@@ -60,6 +62,10 @@ public class XMLRenderer implements Renderer {
     @Override public String getPreferredSuffix() {
     	return "xml";
     }
+
+	@Override public Mode getMode() {
+		return mode;
+	}
 
 	@Override public synchronized Renderer.BytesOut render( Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results ) {
 		Resource root = results.getRoot();

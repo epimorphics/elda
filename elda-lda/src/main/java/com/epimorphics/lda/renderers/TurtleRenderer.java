@@ -19,6 +19,7 @@ import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 
@@ -30,6 +31,10 @@ public class TurtleRenderer implements Renderer {
 
     @Override public String getPreferredSuffix() {
     	return "ttl";
+    }
+    
+    @Override public Mode getMode() {
+    	return Mode.PreferLocalnames;
     }
     
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, Map<String, String> termBindings, final APIResultSet results ) {

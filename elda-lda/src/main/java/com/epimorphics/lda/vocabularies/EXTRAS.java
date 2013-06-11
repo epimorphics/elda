@@ -57,6 +57,8 @@ public class EXTRAS
 
 	public static final Property metaURL = property( "metaURL" );
 
+	public static final Property mode = property( "mode" );
+	
 	public static final Property wantsContext = property( "wantsContext" );
 
 	public static final Property cachePolicyName = property( "cachePolicyName" );

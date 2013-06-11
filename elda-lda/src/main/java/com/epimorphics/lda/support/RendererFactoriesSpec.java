@@ -54,7 +54,7 @@ public class RendererFactoriesSpec {
 		String name = getName( r );
 		String className = getClassName( r );
 		MediaType mt = getMimeType( r );
-		Resource type = getRendererType( r );
+		Resource type = getRendererType( r );		
 		if (type == null) EldaException.BadSpecification
 			(
 			"no renderer type for "

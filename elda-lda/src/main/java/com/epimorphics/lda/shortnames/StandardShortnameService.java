@@ -175,7 +175,7 @@ public class StandardShortnameService implements ShortnameService {
 	}
 
 	@Override public Map<String, String> constructURItoShortnameMap(Model m, PrefixMapping pm) {
-		return new CompleteContext(CompleteContext.Mode.Transcode, context, pm).Do(m,  pm);
+		return new CompleteContext(CompleteContext.Mode.RoundTrip, context, pm).Do(m,  pm);
 	}
 
 	public Map<String, String> copyWithout(Map<String, String> baseMap, Map<String, String> toRemove) {

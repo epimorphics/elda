@@ -24,6 +24,7 @@ import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.RouterFactory;
 import com.epimorphics.lda.routing.ServletUtils;
 import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
+import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.sources.AuthMap.NamesAndValues;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
@@ -164,7 +165,11 @@ public class RouterRestletSupport {
 	
 			@Override public String getPreferredSuffix() {
 				return r.getPreferredSuffix();
-			}    		
+			}    
+			
+			@Override public CompleteContext.Mode getMode() {
+				return r.getMode();
+			}
 		};
 	}
 

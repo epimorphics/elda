@@ -13,6 +13,7 @@ import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 
@@ -38,6 +39,11 @@ public interface Renderer {
      		in the given renderer context.
     */
     public MediaType getMediaType( Bindings rc );
+    
+    /**
+     	@return the shortname completion mode for this renderer;
+    */
+    public CompleteContext.Mode getMode();
     
     /**
      	Render a result set. Use t to log times if required.

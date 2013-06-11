@@ -29,6 +29,8 @@ import com.epimorphics.jsonrdf.ReadContext;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.shortnames.CompleteContext;
+import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.shortnames.CompleteReadContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
@@ -44,12 +46,14 @@ public class JSONRenderer implements Renderer {
     
     final APIEndpoint api;
     final MediaType mt;
+    final CompleteContext.Mode mode;
     
     public JSONRenderer( APIEndpoint api ) {
-        this( api, MediaType.APPLICATION_JSON );
+        this( Mode.PreferLocalnames, api, MediaType.APPLICATION_JSON );
     }
     
-    public JSONRenderer( APIEndpoint api, MediaType mt ) {
+    public JSONRenderer( CompleteContext.Mode mode, APIEndpoint api, MediaType mt ) {
+        this.mode = mode;
         this.api = api;
         this.mt = mt;
     }
@@ -61,6 +65,10 @@ public class JSONRenderer implements Renderer {
 
     @Override public String getPreferredSuffix() {
     	return "json";
+    }
+    
+    @Override public Mode getMode() {
+    	return mode;
     }
 
     @Override public Renderer.BytesOut render( Times t, Bindings b, final Map<String, String> termBindings, APIResultSet results) {

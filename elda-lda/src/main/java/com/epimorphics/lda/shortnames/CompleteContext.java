@@ -5,11 +5,13 @@ import static com.hp.hpl.jena.rdf.model.impl.Util.splitNamespace;
 import java.util.*;
 
 import com.epimorphics.jsonrdf.Context;
+import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.NameUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -24,13 +26,30 @@ public class CompleteContext {
 	
 	final Map<String, String> uriToShortname = new HashMap<String, String>();
 	
-	public enum Mode { Transcode, EncodeAny, EncodeIfMultiple } 
+	public enum Mode { 
+		RoundTrip, PreferPrefixes, PreferLocalnames ;
+	
+		public int n() { return 27; }		
+		
+		public static Mode decode( Resource root, Mode defaultMode ) {
+			if (root == null) return defaultMode;
+			Statement s = root.getProperty( EXTRAS.mode );
+			if (s == null) return defaultMode;
+			String modeString = s.getString();
+			return
+				modeString.equals("byPrefix") ? CompleteContext.Mode.PreferPrefixes
+				: modeString.equals("preferLocal") ? CompleteContext.Mode.PreferLocalnames
+				: modeString.equals("roundTrip") ? CompleteContext.Mode.RoundTrip
+				: defaultMode
+				;
+		}
+	} 
 	
 	public CompleteContext( Mode m, Context context, PrefixMapping prefixes ) {
 		this.context = context;
 		this.prefixes = prefixes;
-		this.transcodedNames = (m == Mode.Transcode);
-		this.allowUniqueLocalnames = (m == Mode.EncodeIfMultiple);
+		this.transcodedNames = (m == Mode.RoundTrip);
+		this.allowUniqueLocalnames = (m == Mode.PreferLocalnames);
 	}
 	
 	static class SplitURI {

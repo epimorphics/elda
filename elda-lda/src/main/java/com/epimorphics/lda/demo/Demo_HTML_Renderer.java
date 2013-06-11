@@ -18,6 +18,7 @@ import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.renderers.BytesOutString;
 import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.XHV;
@@ -57,6 +58,10 @@ public class Demo_HTML_Renderer implements Renderer {
     
 	@Override public MediaType getMediaType( Bindings irrelevant ) {
         return MediaType.TEXT_HTML;
+    }
+    
+    @Override public CompleteContext.Mode getMode() {
+    	return CompleteContext.Mode.PreferLocalnames;
     }
 
 	// TODO rewrite for streaming output

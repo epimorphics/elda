@@ -46,19 +46,15 @@ public class APIEndpointUtil {
 	public static Triad<APIResultSet, Map<String, String>, Bindings> call( APIEndpoint.Request r, Match match, String contextPath, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		
-		String formatName = r.format;
-		CompleteContext.Mode mode = (formatName.equals("json") ? CompleteContext.Mode.EncodeIfMultiple : CompleteContext.Mode.Transcode);
-		
 		Bindings vs = new Bindings( r.context )
 			.updateAll( match.getBindings() )
-			.put( "_suffix", formatName )
+			.put( "_suffix", r.format )
 			.put( "_APP", contextPath )
 			.put( "_HOST", getHostAndPort( r.requestURI ) )
 			;
 		
 		Bindings cc = Bindings.createContext( vs, queryParams );
-		
-		return ep.call( r.withBindings(cc).withMode(mode).withFormat(formatName) );
+		return ep.call( r.withBindings(cc) );
 	}
 
 	private static String getHostAndPort(URI u) {

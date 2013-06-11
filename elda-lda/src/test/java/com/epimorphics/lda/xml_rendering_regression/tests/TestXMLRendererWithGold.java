@@ -97,7 +97,7 @@ public class TestXMLRendererWithGold extends XMLTestCase {
 		XMLRenderer r = new XMLRenderer( b.sns );
 		
 		Map<String, String> termBindings =
-			new CompleteContext(CompleteContext.Mode.EncodeAny, b.sns.asContext(), mm.getMergedModel() )
+			new CompleteContext(CompleteContext.Mode.PreferPrefixes, b.sns.asContext(), mm.getMergedModel() )
 			.Do( mm.getMergedModel(), mm.getMergedModel() )
 			;
 		

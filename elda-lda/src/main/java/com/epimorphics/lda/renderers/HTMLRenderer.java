@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.MediaType;
@@ -38,6 +39,10 @@ public class HTMLRenderer implements Renderer {
 
     @Override public String getPreferredSuffix() {
     	return "html";
+    }
+    
+    @Override public Mode getMode() {
+    	return Mode.PreferLocalnames;
     }
 
     // TODO rewrite so that it can stream

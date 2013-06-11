@@ -50,7 +50,7 @@ public interface APIEndpoint {
 		public final String format;
 			
 		public Request(Controls c, URI requestURI, Bindings context) {
-			this(c, requestURI, context, CompleteContext.Mode.Transcode, "");
+			this(c, requestURI, context, CompleteContext.Mode.RoundTrip, "");
 		}
 			
 		private Request(Controls c, URI requestURI, Bindings context, CompleteContext.Mode mode, String format) {

@@ -118,10 +118,11 @@ public class EndpointMetadata {
 		em.addFormats( formatsModel, formats );
 		em.addExecution( execution, exec );
 	//
+		em.addQueryMetadata( execution, exec, selectQuery, viewQuery, source, details.isListEndpoint() );
+	//
 		cc.include( versionsModel );
 		cc.include( formatsModel );
 		cc.include( execution );
-		em.addQueryMetadata( execution, exec, selectQuery, viewQuery, source, details.isListEndpoint() );
 	//
 		em.addBindings( mergedModels1, bindingsModel, exec, cc );
 	//

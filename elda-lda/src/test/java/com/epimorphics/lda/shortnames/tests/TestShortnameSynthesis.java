@@ -44,7 +44,7 @@ public class TestShortnameSynthesis {
 		;
 	
 	CompleteContext cc = new CompleteContext
-		( CompleteContext.Mode.EncodeIfMultiple
+		( CompleteContext.Mode.PreferLocalnames
 		, context
 		, prefixes
 		);

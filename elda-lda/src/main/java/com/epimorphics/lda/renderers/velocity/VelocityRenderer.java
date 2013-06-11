@@ -9,6 +9,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.renderers.BytesOutTimed;
 import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
@@ -43,6 +44,10 @@ public class VelocityRenderer implements Renderer {
 
     @Override public String getPreferredSuffix() {
     	return "html";
+    }
+    
+    @Override public Mode getMode() {
+    	return Mode.PreferLocalnames;
     }
     
     @Override public Renderer.BytesOut render( Times t, Bindings b, Map<String, String> termBindings, final APIResultSet results ) {

@@ -9,6 +9,8 @@ package com.epimorphics.lda.renderers;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.shortnames.CompleteContext;
+import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.Times;
@@ -26,10 +28,13 @@ public class XSLT_RendererFactory implements RendererFactory {
 	
 	private final Resource root;
 	private final MediaType mt;
+	private final CompleteContext.Mode defaultMode = Mode.PreferLocalnames;
+	private final CompleteContext.Mode mode;
 	
 	XSLT_RendererFactory( Resource root, MediaType mt ) {
 		this.root = root;		
 		this.mt = mt;
+		this.mode = Mode.decode(root, defaultMode);
 	}
 	
 	@Override public Renderer buildWith( final APIEndpoint ep, final ShortnameService sns ) {
@@ -38,15 +43,19 @@ public class XSLT_RendererFactory implements RendererFactory {
 			@Override public MediaType getMediaType( Bindings irrelevant ) {
 				return mt;
 			}
+		    
+		    @Override public Mode getMode() {
+		    	return mode;
+		    }
 
 		    @Override public String getPreferredSuffix() {
-		    	return "html"; // TODO handle other suffixes
+		    	return "html"; 
 		    }
 
 			@Override public Renderer.BytesOut render( Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results ) {
 				handleMetadata(results);
 				final String sheet = rc.expandVariables(root.getProperty( API.stylesheet ).getString());
-				final XMLRenderer xr = new XMLRenderer( sns, mt, sheet );
+				final XMLRenderer xr = new XMLRenderer( mode, sns, mt, sheet );
 				return xr.render( t, rc.copyWithDefaults( ep.defaults() ), termBindings, results ); 
 			}
 
