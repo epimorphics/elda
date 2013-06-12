@@ -40,3 +40,64 @@ Elda 1.2.23
 
 * XSLT stylesheets have been updated and pruned.
 
+Elda 1.2.23
+
+	NEW CONFIGURATION SPEC. The preferred way to initialise Elda
+	is for the intialSpecFile parameter to be set in a context-param
+	in the web.xml and for Jersey to be installed as a filter rather
+	than a servlet. See the examples in the documentation.
+
+	WILDCARD EXPANSION. The filenames in the initialSpecFile may
+	contain wildcard '*' characters representing any number of non-/
+	characters.
+
+	AUTO-RELOAD. Whenever a new request comes into Elda and "sufficently
+	long" has passed since the last check, Elda checks to see if the
+	config files have changed since the last check. If so, the current
+	configuration is abandoned and a new one loaded.
+
+	The DOM cache (for compiled XSLT templates) and the Elda cache
+	(for the results of queries) are cleared when a reload occurs.
+	Velocity does its own independant reload-on-changes.
+
+	CACHE POLICY. Elda cache policy can be set on the whole API, not just
+	on endpoints. This is mostly so that "default:0" can be set in
+	a configuration to switch off the cache.
+
+	UNSTREAMED RENDERERS. The Turtle, JSON, and XML-driven renderers are
+	no longer streaming: they compute their results early so that failures
+	result in non-200 result statuses rather than producing a broken response
+	body after a 200 OK header.
+
+	SHORTNAMES. The shortname code for URIs that arrive without a
+	predeclared shortname have been revised (again), see the documentation.
+	The shortname style can be controlled from the formatter declaration
+	in the config.
+
+	All cases of multiple uses of the same shortname in a config are
+	reported at once.
+
+	INTERNAL CHANGES. The class NameMap has been disposed off. Information
+	continues to be carried by Context objects. Shortname construction is
+	now done separately and the same for both JSON and XML renderings.
+	Renderers are no supplied with the complete shortname map for their
+	use; it will have been generated according to the preferred style of
+	the renderer. Format names are computed early to allow renderer
+	selection up-front.
+
+	ELDA COMMON. 
+
+	ELDA ASSETS.
+
+	ELDA BUNDLED.
+
+	ELDA STANDALONE. The context name for the Elda Standalone servlet is now
+	"standalone", not "elda".
+
+	FILE LOADING. An Elda webapp can load static files.
+
+	POMS. Some POM issues have been fixed. json-rdf has been incorporated
+	into lda, which has been renamed to elda-lda.
+
+	VELOCITY. Velocity templates loaded from configurable location. Default 
+	templates now respect _resourceRoot via [].
