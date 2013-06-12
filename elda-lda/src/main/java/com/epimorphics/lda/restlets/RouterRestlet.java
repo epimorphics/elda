@@ -56,6 +56,7 @@ import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.Couple;
+import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
@@ -144,6 +145,7 @@ import com.sun.jersey.api.NotFoundException;
     	 if (r == null || r.timestamp < latestTime) {
     		 log.info( (r == null ? "creating" : "reloading") + " router for '" + givenContextPath + "'");
     		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), latestTime );
+    		 DOMUtils.clearCache();
     		 routers.put(contextPath, r );
     	 }
     	 r.deferCheck();

@@ -46,6 +46,8 @@ public class Help {
 			ve.setProperty( "url.resource.loader.class", "org.apache.velocity.runtime.resource.loader.URLResourceLoader" );
 			ve.setProperty( "url.resource.loader.root", templateRoot );
 			ve.setProperty( "url.resource.loader.cache", true );
+			ve.setProperty( "url.resource.loader.modificationCheckInterval", 5 );
+			
 		//
 //			ve.setProperty( "class.resource.loader.cache", false );
 //			ve.setProperty( "velocimacro.library.autoreload", true );

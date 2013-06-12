@@ -142,6 +142,10 @@ public class DOMUtils
 		catch (ParserConfigurationException e) { throw new WrappedException( e ); }
 		}
 	
+	public static synchronized void clearCache() {
+		cache.clear();
+	}
+	
 	protected static HashMap<URL, Templates> cache = new HashMap<URL, Templates>();
 	
 	private static Transformer getTransformer( Times times, Bindings rc, String transformFilePath ) 
@@ -152,17 +156,17 @@ public class DOMUtils
 			if (transformFilePath == null) 
 				return tf.newTransformer();
 			else 
-				{
-				URL u = rc.pathAsURL( Bindings.expandVariables( rc, transformFilePath ) );
-				Templates t = cache.get( u );
-				if (t == null) {
-					long origin = System.currentTimeMillis();
-					t = tf.newTemplates( new StreamSource( u.toExternalForm() ) );
-					long after = System.currentTimeMillis();
-					times.setStylesheetCompileTime( after - origin );
-					cache.put( u, t );
-				}
-				return t.newTransformer();
+				synchronized (DOMUtils.class) {
+					URL u = rc.pathAsURL( Bindings.expandVariables( rc, transformFilePath ) );
+					Templates t = cache.get( u );
+					if (t == null) {
+						long origin = System.currentTimeMillis();
+						t = tf.newTemplates( new StreamSource( u.toExternalForm() ) );
+						long after = System.currentTimeMillis();
+						times.setStylesheetCompileTime( after - origin );
+						cache.put( u, t );
+					}
+					return t.newTransformer();
 				}
 			}
 		catch (TransformerConfigurationException e) 
