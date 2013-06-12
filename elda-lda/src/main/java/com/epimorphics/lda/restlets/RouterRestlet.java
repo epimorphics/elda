@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIEndpointUtil;
 import com.epimorphics.lda.core.APIResultSet;
@@ -146,6 +147,7 @@ import com.sun.jersey.api.NotFoundException;
     		 log.info( (r == null ? "creating" : "reloading") + " router for '" + givenContextPath + "'");
     		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), latestTime );
     		 DOMUtils.clearCache();
+    		 Cache.Registry.clearAll();
     		 routers.put(contextPath, r );
     	 }
     	 r.deferCheck();
