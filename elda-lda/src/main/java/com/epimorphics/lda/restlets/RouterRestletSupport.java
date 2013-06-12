@@ -1,6 +1,7 @@
 package com.epimorphics.lda.restlets;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -48,53 +49,78 @@ public class RouterRestletSupport {
 
     protected static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
 
+    public static class PrefixAndFilename {
+    	final String prefixPath;
+    	final String fileName;
+    	
+    	public PrefixAndFilename(String prefixPath, String fileName) {
+    		this.prefixPath = prefixPath;
+    		this.fileName = fileName;
+    	}
+    	
+    	@Override public String toString() {
+    		return "<" + prefixPath + " :: " + fileName + ">";
+    	}
+    }
+
+	public static long latestConfigTime(ServletContext con, String contextPath) {
+		long latestTime = 0;
+		 List<PrefixAndFilename> pfs = prefixAndFilenames( con, contextPath );
+		 for (PrefixAndFilename s: pfs) {
+			 long lmFile = new File(s.fileName).lastModified();
+			 long lmDir = new File(s.fileName).getParentFile().lastModified();
+			 long lm = lmFile > lmDir ? lmFile : lmDir;
+			 if (lm > latestTime) latestTime = lm;
+		 }
+		return latestTime;
+	}
+    
+    public static List<PrefixAndFilename> prefixAndFilenames( ServletContext con, String contextPath ) {
+    	List<PrefixAndFilename> pfs = new ArrayList<PrefixAndFilename>();
+		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
+		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
+    	String givenPrefixPath = con.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
+		for (String specTemplate: specFilenameTemplates) {
+			String prefixName = givenPrefixPath;
+			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextPath );
+			int separatorPos = specName.indexOf( "::" );
+			if (separatorPos > -1) {
+				prefixName = "/" + specName.substring(0, separatorPos);
+				specName = specName.substring( separatorPos + 2 );
+			}
+			if (ServletUtils.isSpecialName( specName )) {
+				pfs.add( new PrefixAndFilename( prefixName, specName ) );
+			} else {
+				String fullPath = specName.startsWith("/") ? specName : baseFilePath + specName;
+				List<File> files = new Glob().filesMatching( fullPath );
+				for (File f: files) {
+					String expandedPrefix = ServletUtils.containsStar(prefixName) ? ServletUtils.nameToPrefix(prefixName, specName, f.getName()) : prefixName;
+					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
+				}
+			}				
+		}
+    	return pfs;
+    }
+    
     /**
         Create a new Router initialised with the configs appropriate to the
         contextPath.
     */
 	public static Router createRouterFor( ServletContext con ) {
+		String contextName = RouterRestletSupport.flatContextPath( con.getContextPath() );		
+		List<PrefixAndFilename> pfs = prefixAndFilenames( con, contextName );
+	//	
 		Router result = new DefaultRouter();	
-		String contextName = RouterRestletSupport.flatContextPath( con.getContextPath() );
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
         AuthMap am = AuthMap.loadAuthMap( FileManager.get(), noNamesAndValues );
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
         FileManager.get().addLocatorFile( baseFilePath );
-//
-//        SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
+    //
         SpecManagerImpl sm = new SpecManagerImpl(result, modelLoader);
 		SpecManagerFactory.set( sm );
-    	String prefixPath = con.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
-	//
-		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
-		// log.info( ">> createRouterFor ---------------------------------" );
-		
-		// System.err.println( ">> " + specFilenameTemplates.size() + " spec filenames: " );
-		// for (String s: specFilenameTemplates) System.err.println( ">>   " + s );		
-		
-		for (String specTemplate: specFilenameTemplates) {
-			// log.info( ">>   template " + specTemplate );
-			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextName );
-			// log.info( ">>   specName " + specName );
-			String prefixPath1 = prefixPath;
-			String specPath = specName;
-			int chop = specPath.indexOf( "::" );
-				if (chop >= 0) {
-					// prefixPath :: fileName
-					prefixPath1 = "/" + specPath.substring(0, chop);
-					specPath = specPath.substring( chop + 2 );
-				}
-			//	
-				if (ServletUtils.isSpecialName(specPath)) {
-					loadOneConfigFile( result, am, modelLoader, prefixPath1, specPath );
-				} else {
-					String fullPath = specPath.startsWith("/") ? specPath : baseFilePath + specPath;
-					List<File> files = new Glob().filesMatching( fullPath );
-					log.info( "Found " + files.size() + " file(s) matching specPath " + specPath );
-					for (File f: files) {
-						String pp = ServletUtils.containsStar(prefixPath1) ? ServletUtils.nameToPrefix(prefixPath1, specPath, f.getName()) : prefixPath1;
-						loadOneConfigFile(result, am, modelLoader, pp, f.getAbsolutePath());
-					}
-				}
+	//		
+		for (PrefixAndFilename pf: pfs) {
+			loadOneConfigFile( result, am, modelLoader, pf.prefixPath, pf.fileName );
 		}
 		int count = result.countTemplates();
 		return count == 0  ? RouterFactory.getDefaultRouter() : result;
@@ -142,7 +168,6 @@ public class RouterRestletSupport {
 		}
     	
     };
-    
 
 	/**
 	    Given a renderer r and a media type mt, return a new renderer which

@@ -76,6 +76,8 @@ public class APISpec {
 
 	public final int describeThreshold;
 	
+	public final String cachePolicyName;
+	
 	protected final ModelPrefixEditor modelPrefixEditor = new ModelPrefixEditor();
 	
 	/**
@@ -103,6 +105,7 @@ public class APISpec {
         bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
         factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
+		cachePolicyName = getStringValue( specification, EXTRAS.cachePolicyName, "default" );
         extractEndpointSpecifications( specification );
         extractModelPrefixEditor( specification );
     }
@@ -244,6 +247,10 @@ public class APISpec {
 	*/
 	public Factories getRendererFactoryTable() {
 		return factoryTable.copy();
+	}
+	
+	public String getCachePolicyName() {
+		return cachePolicyName;
 	}
 	
 	/**

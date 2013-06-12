@@ -78,7 +78,35 @@ import com.sun.jersey.api.NotFoundException;
     public static final String LAST_MODIFIED_DATE = "Last-Modified-Date";
     
     final Router router;
-    static final Map<String, Router> routers = new HashMap<String, Router>();
+    
+    /**
+        TimestampedRouter is a router plus the timestamp of the latest file
+        it was created from.
+    */
+    public static class TimestampedRouter {
+    	
+    	static final long DELTA = 5000;
+    	
+    	final Router router;
+    	final long timestamp;
+    	long nextCheck;
+    	
+    	public TimestampedRouter(Router router, long when) {
+    		this(router, when, when);
+    	}
+    		
+    	public TimestampedRouter(Router router, long when, long nextCheck) {
+    		this.router = router;
+    		this.timestamp = when;
+    		this.nextCheck = nextCheck;
+    	}
+
+		public void deferCheck() {
+			nextCheck += DELTA;
+		}
+    }
+    
+    static final Map<String, TimestampedRouter> routers = new HashMap<String, TimestampedRouter>();
     
     /**
         Initialise this RouterRestlet. Happens a lot, so expensive
@@ -109,13 +137,17 @@ import com.sun.jersey.api.NotFoundException;
     	 String givenContextPath = con.getContextPath();
     	 // log.info( "getting router for context path '" + givenContextPath + "'" );
     	 String contextPath = RouterRestletSupport.flatContextPath(givenContextPath);
-    	 Router r = routers.get(contextPath);
-    	 if (r == null) {    	 
-    		 log.info( "creating router for context path '" + givenContextPath + "'" );
-    		 r = RouterRestletSupport.createRouterFor( con );
+    	 TimestampedRouter r = routers.get(contextPath);
+    //
+    	 long latestTime = System.currentTimeMillis() > r.nextCheck ? RouterRestletSupport.latestConfigTime(con, contextPath) : r.timestamp;
+    //
+    	 if (r == null || r.timestamp < latestTime) {
+    		 log.info( (r == null ? "creating" : "reloading") + " router for '" + givenContextPath + "'");
+    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), latestTime );
     		 routers.put(contextPath, r );
     	 }
-    	 return r;
+    	 r.deferCheck();
+    	 return r.router;
      }
 
 	public Match getMatch( String path, MultiMap<String, String> queryParams ) {

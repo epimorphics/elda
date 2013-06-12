@@ -82,7 +82,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
         defaultLanguage = getStringValue(endpoint, API.lang, apiSpec.getDefaultLanguage());
     	defaultPageSize = getIntValue( endpoint, API.defaultPageSize, apiSpec.defaultPageSize );
 		maxPageSize = getIntValue( endpoint, API.maxPageSize, apiSpec.maxPageSize );
-		cachePolicyName = getStringValue( endpoint, EXTRAS.cachePolicyName, "default" );
+		cachePolicyName = getStringValue( endpoint, EXTRAS.cachePolicyName, apiSpec.getCachePolicyName() );
 		parentApi = parent;
         name = endpoint.getLocalName();
         itemTemplate = getStringValue( endpoint, API.itemTemplate, null );
