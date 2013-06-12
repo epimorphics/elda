@@ -33,9 +33,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.Version;
 import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
@@ -49,6 +51,7 @@ import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
+import com.epimorphics.lda.routing.ServletUtils;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.ModelPrefixEditor;
@@ -120,9 +123,19 @@ import com.sun.jersey.api.NotFoundException;
     }
     
     public static class Init implements ServletContextListener {
-    	
+
+        static boolean announced = false;
+        
 	    @Override public void contextInitialized(ServletContextEvent sce) {
-			getRouterFor( sce.getServletContext() );
+	    	ServletContext sc = sce.getServletContext();
+			if (announced == false) { 
+				String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
+				String propertiesFile = "log4j.properties";
+				PropertyConfigurator.configure( baseFilePath + propertiesFile );
+				log.info( "\n\n    =>=> Starting Elda " + Version.string + "\n" ); 
+				announced = true;
+			}
+			getRouterFor( sc );
 		}
 	
 		@Override public void contextDestroyed(ServletContextEvent sce) {			
