@@ -139,7 +139,7 @@ import com.sun.jersey.api.NotFoundException;
     	 String contextPath = RouterRestletSupport.flatContextPath(givenContextPath);
     	 TimestampedRouter r = routers.get(contextPath);
     //
-    	 long latestTime = System.currentTimeMillis() > r.nextCheck ? RouterRestletSupport.latestConfigTime(con, contextPath) : r.timestamp;
+    	 long latestTime = r == null || System.currentTimeMillis() > r.nextCheck ? RouterRestletSupport.latestConfigTime(con, contextPath) : r.timestamp;
     //
     	 if (r == null || r.timestamp < latestTime) {
     		 log.info( (r == null ? "creating" : "reloading") + " router for '" + givenContextPath + "'");
