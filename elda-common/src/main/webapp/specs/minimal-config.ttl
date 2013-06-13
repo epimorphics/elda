@@ -24,11 +24,15 @@
 spec:minimal a api:API
 	; api:base "/"
 	; rdfs:label "a minimal demonstration API"
+	# ; api:spqrqlEndpoint <http://localhost:3030/store/query>
 	; api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query>
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:defaultFormatter spec:HtmlFormatter 
 	; api:viewer api:describeViewer, api:labelledDescribeViewer, api:basicViewer
-	; api:endpoint spec:about, spec:anything
+	; api:endpoint 
+		spec:about
+		, spec:anything
+		, spec:mentions
 	; api:variable [api:name "_exceptionIfEmpty"; api:value "no"]
 	; api:variable [api:name "_resourceRoot"; api:value "http://localhost/elda-assets/"]
 	.
@@ -68,4 +72,15 @@ spec:anything a api:ListEndpoint
      ; api:viewer api:describeViewer, api:basicViewer, api:labelledDescribeViewer
      ; api:defaultViewer   api:describeViewer
      .
+
+#
+# List things related to a 'mentions' as an example of a ListEndpoint.
+#
+spec:mentions a api:ListEndpoint
+	; api:uriTemplate     "/mentions?resource={uri}"
+    ; api:variable [api:name "uri"; api:type rdfs:Resource]
+	; api:selector [api:where "?item ?p ?uri . FILTER (!isBlank(?item))"]
+	; api:viewer api:basicViewer, api:describeViewer, api:labelledDescribeViewer
+	; api:defaultViewer   api:describeViewer;
+    .
 

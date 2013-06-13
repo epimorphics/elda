@@ -3,6 +3,7 @@ package com.epimorphics.lda.restlets;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.Map;
@@ -40,6 +41,8 @@ import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.WrappedException;
 import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.util.Locator;
+import com.hp.hpl.jena.util.LocatorFile;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
@@ -114,7 +117,7 @@ public class RouterRestletSupport {
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
         AuthMap am = AuthMap.loadAuthMap( FileManager.get(), noNamesAndValues );
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
-        FileManager.get().addLocatorFile( baseFilePath );
+        addBaseFilepath( baseFilePath );
     //
         SpecManagerImpl sm = new SpecManagerImpl(result, modelLoader);
 		SpecManagerFactory.set( sm );
@@ -124,6 +127,25 @@ public class RouterRestletSupport {
 		}
 		int count = result.countTemplates();
 		return count == 0  ? RouterFactory.getDefaultRouter() : result;
+	}
+
+	/**
+	    Add the baseFilePath to the FileManager singleton. Only do it
+	    once, otherwise the instance will get larger on each config load
+	    (at least that won't be once per query, though). Just possibly
+	    there may be multiple servlet contexts so we add a new only only if 
+	    its not already in the instance's locator list.
+	*/
+	private static void addBaseFilepath(String baseFilePath) {
+		FileManager fm = FileManager.get();
+		for (Iterator<Locator> il = fm.locators(); il.hasNext();) {
+			Locator l = il.next();
+			if (l instanceof LocatorFile) 
+				if (((LocatorFile) l).getName().equals(baseFilePath))
+					return;
+		}
+		log.info( "adding locator for " + baseFilePath );
+		FileManager.get().addLocatorFile( baseFilePath );
 	}
 
 	private static GetInitParameter adaptContext(final ServletContext con) {
