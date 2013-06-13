@@ -131,20 +131,20 @@ public abstract class LimitedCacheBase implements Cache {
 
     @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs ) {
         if (log.isDebugEnabled()) log.debug( "caching descriptions for resources " + results );
+        cd.put( results.toString() + "::" + view, rs );
         if (exceedsResultSetLimit( cd )) {
         	if (log.isDebugEnabled()) log.debug( "clearing description cache for " + label );
             cd.clear();
         }
-        cd.put( results.toString() + "::" + view, rs );
     }
 
     @Override public synchronized void cacheSelection( String select, List<Resource> results ) {
     	if (log.isDebugEnabled()) log.debug( "caching resource selection for query " + select );
+    	cs.put( select, results );
         if (exceedsSelectLimit( cs )) {
         	if (log.isDebugEnabled()) log.debug( "clearing select cache for " + label );
             cs.clear();
         }
-        cs.put( select, results );
     }
 
     @Override public synchronized void resetCounts() {

@@ -1068,7 +1068,7 @@ http://localhost:8080/elda/doc/school
 </p>
 
 <p>
-    (Values and defaulting rules may change in leater releases
+    (Values and defaulting rules may change in later releases
     of Elda according to reported experience.)
 </p>
 
@@ -1113,7 +1113,7 @@ result set.
 </p>
 
 
-<h2><a name="staistics"></a>statistics</h2>
+<h2><a name="statistics"></a>statistics</h2>
 
 <p>
     The api:base-relative URI path <code>/control/show-stats</code> displays
@@ -1168,7 +1168,40 @@ result set.
 <p>
 Elda caches the results of queries so that they may be re-served
 quickly. When the cache gets "too full", it is reset. "Too full"
-by default is measured by the number of triples in the cache.
+by default is measured by the number of triples in the cache;
+the default limit is 20000 triples.
+</p>
+
+<p>
+The cache policy can be changed by setting the property
+<code>elda:cachePolicyName</code> to a string of the
+form <code>"name:integer"</code> where <code>name</code>
+is the name of a policy, eg <b>default</b>, and the optional
+<code>:integer</code> gives an associated limit. 
+</p>
+
+<p>
+The available cache policies are 
+<ul>
+	<li><code>default</code> &mdash; same as limit-triples.</li>
+	
+	<li><code>limit-triples</code> &mdash; clear the cache when
+		the number of triples retained is greater than the limit.
+	</li> 
+	
+	<li><code>limit-entries</code> &mdash; clear the cache when
+		the number of entries is greater than the limit.
+	</li>
+	
+	<li><code>perma-cache</code> &mdash; keep everything
+		(not a good choice in production).
+	</li>
+</ul>
+</p>
+
+<p>
+	Cache policies can be attached to the API spec and over-ridden
+	on individual endpoints.
 </p>
 
 <h2><a name="using-elda-from-java"></a>Using Elda directly</h2>

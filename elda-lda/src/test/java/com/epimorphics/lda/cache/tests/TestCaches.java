@@ -70,7 +70,7 @@ public class TestCaches
 		c.cacheDescription( resources, "view.string", rs );
 		assertEquals( 1, c.numEntries() );
 		c.cacheDescription( resources, "view.string.other", rs );
-		assertEquals( 2, c.numEntries() );
+		assertEquals( 0, c.numEntries() );
 		c.cacheDescription( resources, "view.string.third", rs );
 		assertEquals( 1, c.numEntries() );
 		}
@@ -86,7 +86,7 @@ public class TestCaches
 		c.cacheDescription( resources, "view.string", rs );
 		assertEquals( 1, c.numEntries() );
 		c.cacheDescription( resources, "view.string.other", rs );
-		assertEquals( 2, c.numEntries() );
+		assertEquals( 0, c.numEntries() );
 		c.cacheDescription( resources, "view.string.third", rs );
 		assertEquals( 1, c.numEntries() );
 		}
