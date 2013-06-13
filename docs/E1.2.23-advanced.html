@@ -400,6 +400,83 @@ by the "mvn install" process.
 
 </table>
 
+<h1><a name="shortname-mode"></a>Elda shortname creation</h1>
+
+<p>
+	When Elda renders a result-set graph using JSON or XML (and
+	consequently HTML), URIs used as predicates are given short
+	names if they have not been given in the configuration.
+	Where possible these names should satisfy the shortname
+	grammar; this allows them to be used as XML element names.
+	Elda splits the URI into its <i>namespace</i> and 
+	<i>local name</i> parts and uses the localname as the
+	basis for the generated shortname.
+</p>
+
+<p>
+	<i>NOTE</i>. Elda uses the Jena XML-derived rule to
+	split URIs, defining the local name as being the longest
+	possible NCName that is a suffix of the URI. That name
+	is not necessarily the same as that after a '#' or
+	final '/' of a URI. Because the local name is an NCName
+	it is automatically a legal XML element name.
+</p>
+
+<p>
+	Elda has three <i>shortname modes</i> for generating
+	shortnames. The mode for a given format may be
+	specified by setting the <code>elda:shortnameMode</code>
+	to one of the values <code>elda:roundTrip</code>,
+	<code>elda:preferLocalname</code>, or
+	<code>elda:preferPrefixes</code>. The default for
+	all renderers is <code>preferLocalname</code>.
+</p>
+
+<p>
+	Elda follows these rules for converting a URI 
+	(not already given a shortname) with namespace N 
+	and local name L into a shortname:
+</p>
+
+<ol>
+	<li>
+		if the mode is <code>preferLocalname</code>,
+		and this is the only URI with this local name,
+		and L is not already a shortname,
+		its shortname is L.
+	</li>
+	
+	<li>
+		if the namespace has an available prefix P
+		and P_L is not already a shortname, then
+		its shortname is P_L.
+	</li>
+
+	<li> 
+		if mode is not <code>roundTrip</code>, the
+		shortname is L_N, where N is a hash of
+		the namespace. 
+	</li>
+
+	<li>
+		otherwise the shortname is a reversible
+		encoding of the full URI into a shortname
+		(that is not short).
+	</li>
+</ol>
+
+<p>
+	If the mode is <code>preferPrefixes</code>, then
+	case (1) above is not applied.
+</p>
+
+<p>
+	The bindings of short names to full URIs &mdash;
+	the <i>term bindings</i> &mdash; are made available
+	as metadata in the rendered result.
+</p>
+
+
 <h1><a name="velocity"></a>Velocity template rendering</h1>
 
 <p>
