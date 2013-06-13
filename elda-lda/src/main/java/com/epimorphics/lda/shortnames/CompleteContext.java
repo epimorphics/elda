@@ -33,7 +33,7 @@ public class CompleteContext {
 		
 		public static Mode decode( Resource root, Mode defaultMode ) {
 			if (root == null) return defaultMode;
-			Statement s = root.getProperty( EXTRAS.mode );
+			Statement s = root.getProperty( EXTRAS.shortnameMode );
 			if (s == null) return defaultMode;
 			String modeString = s.getString();
 			return
