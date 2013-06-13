@@ -37,9 +37,9 @@ public class CompleteContext {
 			if (s == null) return defaultMode;
 			String modeString = s.getString();
 			return
-				modeString.equals("byPrefix") ? CompleteContext.Mode.PreferPrefixes
-				: modeString.equals("preferLocal") ? CompleteContext.Mode.PreferLocalnames
-				: modeString.equals("roundTrip") ? CompleteContext.Mode.RoundTrip
+				modeString.equals(EXTRAS.preferPrefixes) ? CompleteContext.Mode.PreferPrefixes
+				: modeString.equals(EXTRAS.preferLocalnames) ? CompleteContext.Mode.PreferLocalnames
+				: modeString.equals(EXTRAS.roundTrip) ? CompleteContext.Mode.RoundTrip
 				: defaultMode
 				;
 		}

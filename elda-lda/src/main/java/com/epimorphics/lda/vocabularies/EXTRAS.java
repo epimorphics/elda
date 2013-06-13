@@ -56,8 +56,18 @@ public class EXTRAS
 	public static final Property listURL = property( "listURL" );
 
 	public static final Property metaURL = property( "metaURL" );
+	
+//
 
 	public static final Property shortnameMode = property( "shortnameMode" );
+
+	public static final Resource roundTrip = resource( "roundTrip" );
+
+	public static final Resource preferLocalnames = resource( "preferLocalnames" );
+
+	public static final Resource preferPrefixes = resource( "preferPrefixes" );
+	
+//
 	
 	public static final Property wantsContext = property( "wantsContext" );
 
