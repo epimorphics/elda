@@ -35,11 +35,11 @@ public class CompleteContext {
 			if (root == null) return defaultMode;
 			Statement s = root.getProperty( EXTRAS.shortnameMode );
 			if (s == null) return defaultMode;
-			String modeString = s.getString();
+			Resource mode = s.getResource();
 			return
-				modeString.equals(EXTRAS.preferPrefixes) ? CompleteContext.Mode.PreferPrefixes
-				: modeString.equals(EXTRAS.preferLocalnames) ? CompleteContext.Mode.PreferLocalnames
-				: modeString.equals(EXTRAS.roundTrip) ? CompleteContext.Mode.RoundTrip
+				mode.equals(EXTRAS.preferPrefixes) ? CompleteContext.Mode.PreferPrefixes
+				: mode.equals(EXTRAS.preferLocalnames) ? CompleteContext.Mode.PreferLocalnames
+				: mode.equals(EXTRAS.roundTrip) ? CompleteContext.Mode.RoundTrip
 				: defaultMode
 				;
 		}
@@ -48,8 +48,8 @@ public class CompleteContext {
 	public CompleteContext( Mode m, Context context, PrefixMapping prefixes ) {
 		this.context = context;
 		this.prefixes = prefixes;
-		this.transcodedNames = (m == Mode.RoundTrip);
-		this.allowUniqueLocalnames = (m == Mode.PreferLocalnames);
+		this.transcodedNames = m.equals(Mode.RoundTrip);
+		this.allowUniqueLocalnames = m.equals(Mode.PreferLocalnames);
 	}
 	
 	static class SplitURI {
