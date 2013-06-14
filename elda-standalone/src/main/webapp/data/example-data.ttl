@@ -78,6 +78,10 @@
 	; <http://www.nosuchproperty/property> "no such property"
 	; <http://www.nosuchproperty1/prop,er-ty> "nor this one"
 	; <http://www.nosuchproperty2/prop,er-ty> "nor this one either"
+	; <http://www.nosuchproperty3/broad_Modifier/localname> "ALPHA"
+	; <http://www.nosuchproperty3/broad_Modifier/localname> "ALPHA"
+	; <http://www.nosuchproperty3/broad_modifier/localname> "ALPHA"
+	; <http://www.nosuchproperty3/broadModifier/localname> "ALPHA"
 	; hello:players 99
 	.
 	
