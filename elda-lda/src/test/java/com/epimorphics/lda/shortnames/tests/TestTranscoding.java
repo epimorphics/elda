@@ -40,4 +40,11 @@ public class TestTranscoding {
 		assertEquals( "pre_rdf_aMb", Transcoding.encode( pm, RDF.getURI() + "a-b") );
 	}
 	
+	@Test public void testInversion() {
+		String example = "http://www.nosuchproperty3/broad_Modifier/localname";
+		String encoded = Transcoding.encode(pm, example);
+		String decoded = Transcoding.decode(pm, encoded);
+		assertEquals( example, decoded );
+	}
+	
 }
