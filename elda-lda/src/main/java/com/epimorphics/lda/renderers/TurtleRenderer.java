@@ -44,7 +44,7 @@ public class TurtleRenderer implements Renderer {
     
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, Map<String, String> termBindings, final APIResultSet results ) {
     	ByteArrayOutputStream os = new ByteArrayOutputStream();
-    	results.getMergedModel().write( os, "TTL" );
+    	StripPrefixes.Do(results.getMergedModel()).write( os, "TTL" );
     	try { os.flush(); } catch (IOException e) { throw new WrappedException( e ); }
     	final String content = UTF8.toString( os );
     	

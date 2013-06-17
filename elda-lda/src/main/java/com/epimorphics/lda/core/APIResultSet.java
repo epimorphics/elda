@@ -111,7 +111,7 @@ public class APIResultSet implements SetsMetadata {
     	public MergedModels( Model objectModel ) {
     		this.object = objectModel;
     		this.meta = ModelFactory.createDefaultModel();
-    		this.merged = ModelFactory.createUnion( this.object,  this.meta );
+    		this.merged = ModelFactory.createUnion( this.object, this.meta );
     	}
     	
     	protected MergedModels( Model objectModel, Model metaModel, Model mergedModel ) {
@@ -163,11 +163,8 @@ public class APIResultSet implements SetsMetadata {
     }
 
     public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery, View v) {
-    	
-        model = new MergedModels( ModelFactory.createModelForGraph( graph ) );
-        
-        PrefixMapping imported = getPrefixes( results );
-		setUsedPrefixes( model, imported );
+    	model = new MergedModels( ModelFactory.createModelForGraph( graph ) );
+        setUsedPrefixes( model, getResultPrefixes( results ) );
         this.results = results;
         this.isCompleted = isCompleted;
         this.detailsQuery = detailsQuery;
@@ -183,7 +180,7 @@ public class APIResultSet implements SetsMetadata {
     	this.metadata.putAll( meta );
     }
 
-    private PrefixMapping getPrefixes( List<Resource> lr ) {
+    private PrefixMapping getResultPrefixes( List<Resource> lr ) {
     	if (lr.isEmpty()) return RDFUtils.noPrefixes;
     	Model m = lr.get(0).getModel();
     	return m == null ? RDFUtils.noPrefixes : m;
@@ -341,6 +338,7 @@ public class APIResultSet implements SetsMetadata {
         Model temp = ModelFactory.createDefaultModel();
         temp.add( model.merged );
         Graph cloneGraph = temp.getGraph();
+        cloneGraph.getPrefixMapping().setNsPrefixes( model.merged );
         APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, enableETags, detailsQuery, metadata, view );
         clone.setRoot(root);
         clone.setContentLocation(contentLocation);
