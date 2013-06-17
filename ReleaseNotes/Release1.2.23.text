@@ -58,7 +58,10 @@ Elda 1.2.23
 
 * CACHE POLICY. Elda cache policy can be set on the whole API, not just
   on endpoints. This is mostly so that "default:0" can be set in
-  a configuration to switch off the cache.
+  a configuration to switch off the cache. 
+
+  Elda used to always retain at least one item in its cache. This
+  behaviour has been dropped.
 
 * UNSTREAMED RENDERERS. The Turtle, JSON, and XML-driven renderers are
   no longer streaming: they compute their results early so that failures
@@ -74,6 +77,9 @@ Elda 1.2.23
   reported at once.
 
 * FILE LOADING. An Elda webapp can load static files.
+
+* SUPPRESSED PREFIXES. The Turtle and RDF/XML renderers discard prefixes
+  that bind to namespaces not used in the URIs of the model.
 
 * POMS. Some POM issues have been fixed. json-rdf has been incorporated
   into lda, which has been renamed to elda-lda.
