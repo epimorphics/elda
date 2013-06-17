@@ -26,6 +26,16 @@ public class TestTranscoding {
 		assertEquals( "en\u00AA\u00BBcoded", Transcoding.decode( pm, "unknown_en_aa_bbcoded" ) );
 		assertEquals( "en\u0012coded", Transcoding.decode( pm, "unknown_en_12coded" ) );
 	}
+
+	static final String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	
+	@Test public void testUnderbarMajorEscapes() {
+		assertEquals( "x_", Transcoding.decode( pm, "unknown_x__" ) );
+		for (int i = 0; i < alphabet.length(); i += 1) {
+			char ch = alphabet.charAt(i);
+			assertEquals( "x" + ch, Transcoding.decode( pm, "unknown_x_" + ch ) );
+		}
+	}
 	
 	@Test public void testEncodedLocalname() {
 		assertEquals( RDF.getURI() + "something", Transcoding.decode( pm, "pre_rdf_something" ) );

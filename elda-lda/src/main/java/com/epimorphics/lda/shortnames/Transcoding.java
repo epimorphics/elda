@@ -126,7 +126,7 @@ public class Transcoding {
     			sb.append( (char)( (unhex(pending) << 4) | unhex(c) ) );
     			inHex = false;
     		} else if (underbar) {
-    			if (Character.isUpperCase(c)) {
+    			if (Character.isUpperCase(c) || c == '_') {
     				sb.append(c);
     			} else {
     				pending = c;
