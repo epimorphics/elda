@@ -73,15 +73,23 @@
 	; hello:players 2, 3, 4, 5
 	.
 
-<http://www.nosuchgames/absentia> a hello:BoardGame
-	; rdfs:label "Absentia"
-	; <http://www.nosuchproperty/property> "no such property"
-	; <http://www.nosuchproperty1/prop,er-ty> "nor this one"
-	; <http://www.nosuchproperty2/prop,er-ty> "nor this one either"
-	; <http://www.nosuchproperty3/broad_Modifier/localname> "ALPHA"
-	; <http://www.nosuchproperty3/broad_Modifier/localname> "ALPHA"
-	; <http://www.nosuchproperty3/broad_modifier/localname> "ALPHA"
-	; <http://www.nosuchproperty3/broadModifier/localname> "ALPHA"
+#<http://www.nosuchgames/absentia> a hello:BoardGame
+#	; rdfs:label "Absentia"
+#	; <http://www.nosuchproperty/property> "no such property"
+#	; <http://www.nosuchproperty1/prop,er-ty> "nor this one"
+#	; <http://www.nosuchproperty2/prop,er-ty> "nor this one either"
+#	; <http://www.nosuchproperty3/broad_Modifier/localname> "ALPHA"
+#	; <http://www.nosuchproperty3/broad_Modifier/localname> "BETA"
+#	; <http://www.nosuchproperty3/broad_modifier/localname> "GAMMA"
+#	; <http://www.nosuchproperty3/broadModifier/localname> "DELTA"
+#	; <http://www.treefroggames.com/age-of-industry> "EPSILON"
+#	; dct:publisher <http://www.treefroggames.com/london>
+#	; dct:publisher <http://www.treefroggames.com/age-of-steam>
+#	.
+
+<http://www.riograndegames.com/> a hello:Publisher
+	; rdfs:label "Rio Grande Games"
+
 	; hello:players 99
 	.
 	
