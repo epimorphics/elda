@@ -170,7 +170,7 @@ public class DOMUtils
 				}
 			}
 		catch (TransformerConfigurationException e) 
-			{ throw new WrappedException( e ); }
+			{ throw new WrappedException( e.getMessage() + " [" + transformFilePath + "]", e ); }
 		}
 
 	private static String namespacesDocument( PrefixMapping pm ) 
