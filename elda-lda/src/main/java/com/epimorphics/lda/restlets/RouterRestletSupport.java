@@ -83,6 +83,9 @@ public class RouterRestletSupport {
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
     	String givenPrefixPath = con.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
+    //
+    	log.info( "configuration file templates: " + specFilenameTemplates );
+    //
 		for (String specTemplate: specFilenameTemplates) {
 			String prefixName = givenPrefixPath;
 			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextPath );
@@ -96,6 +99,7 @@ public class RouterRestletSupport {
 			} else {
 				String fullPath = specName.startsWith("/") ? specName : baseFilePath + specName;
 				List<File> files = new Glob().filesMatching( fullPath );
+				log.info( "full path " + fullPath + " matches " + files.size() + " files." );
 				for (File f: files) {
 					String expandedPrefix = ServletUtils.containsStar(prefixName) ? ServletUtils.nameToPrefix(prefixName, specName, f.getName()) : prefixName;
 					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
