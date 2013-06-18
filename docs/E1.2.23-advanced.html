@@ -56,7 +56,9 @@ configuration. Doing so may be as simple as dropping them
 into the appropriate directory. You need both .war files;
 Elda Common contains the LDA-handling Java code and Elda
 Assets provides styleheets, scripts, css, etc which Elda
-Common refers to or loads.
+Common refers to or loads. There is also an elda-bundled
+artifact whose elda-bundled.war combines elda-common and
+elda-assets into one item.
 </p>
 
 <p>
@@ -74,12 +76,13 @@ assets .war does not collide with any of those templates.
 </p>
 
 <p>
-By default, Elda Common loads its LDA configs from
+By default, Elda Common loads its LDA configurations from
 <code>/etc/elda/conf.d/{APP}/*.ttl</code>, where
 <code>{APP}</code> is the context path of that instance
 of Elda Common. This means that each instance may have
 multiple configs that it can load, and different instances
-can load different files. 
+can load different files. (See the <code>web.xml</code>
+for the setting of this configuration path.)
 </p>
 
 <p>
@@ -119,10 +122,62 @@ will have to be changed.
 </p>
 
 <p>
-The supplied minimal configuration is a place-holder with
-two uri templates: /anything, to provide some example 
-results, and /about?resource={someURI}, to provide information
-about the URI someURI. 
+Elda provides several example minimal configurations, different
+only in their intended environments:
+
+<table style="margin:1ex">
+<tr>
+	<td><a href="specs-1.2.23/minimal-named-bundled-8080-config.ttl">minimal-named-bundled-8080-config.ttl</a></td>
+	<td>bundled non-ROOT configuration running on port 8080.</td>
+</tr>
+
+<tr>
+	<td><a href="specs-1.2.23/minimal-named-or-ROOT-split-8080-config.ttl">minimal-named-or-ROOT-split-8080-config.ttl</a></td>
+	<td>split assets and common on port 8080, for both ROOT and non-ROOT use.</td>
+</tr>
+
+<tr>
+	<td><a href="specs-1.2.23/minimal-named-split-80-config.ttl">minimal-named-split-80-config.ttl</a></td>
+	<td>split assets and common on port 80 for non-ROOT use.</td>
+</tr>
+
+<tr>
+	<td><a href="specs-1.2.23/minimal-ROOT-bundled-8080-config.ttl">minimal-ROOT-bundled-8080-config.ttl</a></td>
+	<td>ROOT bundled and running on port 8080.</td>
+</tr>
+
+</table>
+
+</p>
+
+<p>
+The configuration itself is a place-holder with
+three uri templates:
+
+<table style="margin:1ex">
+	<tr>
+		<td><code>/anything</code></td>
+		<td>to provide some example results</td>
+	</tr>
+	<tr>
+		<td><code>/about?resource={someURI}</code></td>
+		<td>provides information (ie properties and their values) about the 
+			resource <code>someURI</code></td>
+	</tr>
+	<tr>
+		<td><code>/mentions?resource={someURI}</code></td>
+		<td>finds items which have <code>someURI</code> as the value of some property.</td>
+	</tr>
+
+</table>
+</p>
+
+<p>
+The minimal configuration assumes that a SPARQL endpoint is
+available on <code>localhost:3030/store</code>. You can 
+replace this endpoint with a different one, or for development
+purposes you can run a <a href="http://jena.apache.org/documentation/serving_data/">Fuseki</a>
+SPARQL server serving RDF data of your choice.
 </p>
 
 
@@ -967,9 +1022,7 @@ by the "mvn install" process.
 
 <p>
 	(<i>This feature is experimental and its details
-	may change. It is not yet completely implemented:
-	it should, but does not, rewrite the shortname maps
-	used by XML, JSON, and HTML renderers.</i>)
+	may change.</i>)
 </p>
 
 <p>
