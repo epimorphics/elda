@@ -1292,6 +1292,24 @@ result set.
     the rendering format (ie JSON/XML/HTML ...).
 </p>
 
+<h3>JMX statistics</h3>
+
+<p>
+Elda can also serve limited JMX statistics (the same ones as are
+accessible using <code>show-stats</code>) by enabling the appropriate 
+listeners in web.xml:
+
+<pre>
+&lt;listener>
+  &lt;listener-class>com.epimorphics.lda.jmx.Statistics&lt;/listener-class>
+  &lt;listener-class>com.epimorphics.lda.jmx.CacheControl&lt;/listener-class>
+&lt;/listener>
+</pre>
+
+This feature is experimental; it may be dropped in a future release.
+
+</p>
+
 <h2><a name="cache"></a>Cache</h2>
 
 <p>
