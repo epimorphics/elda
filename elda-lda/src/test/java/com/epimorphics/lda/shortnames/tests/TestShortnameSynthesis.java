@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.Map;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.Context;
