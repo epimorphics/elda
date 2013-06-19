@@ -19,8 +19,12 @@
 
 <p>
 Elda Common provides a way of dropping Elda
-into an existing webapp container (typically Tomcat)
-with a minimum of fuss.
+into an existing webapp container with a minimum of fuss.
+(While we write "Tomcat" below as the webapp container,
+any suitably configurable one &mdash; <i>eg</i> Jetty
+&mdash; will do. We assume that you have the necessary
+access permissions to install or update Tomcat and
+run it on your preferred port.)
 </p>
 
 <p>
@@ -39,32 +43,31 @@ There are three components to Elda Common:
 	</li>
 
 	<li>
-		A <a href="http://elda.googlecode.com/hg/elda-assets/src/main/webapp/specs/ROOT_minimal.ttl">minimal LDA config</a> 
-		demonstrating Elda Common setup.
+		<a href="http://elda.googlecode.com/hg/elda-assets/src/main/webapp/specs/ROOT_minimal.ttl">
+		Minimal LDA configurations</a> demonstrating Elda Common setup.
 	</li>
 </ul>
 
-The Common and Assets files should have the same version. Using
-Elda Common requires that you have sufficient access permissions
-on the machine you're going to install it on and that that machine
-is running a webapp container (or that you can start one).
+The Common and Assets files must have the same version.
 </p>
 
 <p>
 To use Elda Common, you add both .war files to your Tomcat
 configuration. Doing so may be as simple as dropping them
-into the appropriate directory. You need both .war files;
+into the appropriate <code>webapps</code> directory. 
+You need both .war files;
 Elda Common contains the LDA-handling Java code and Elda
-Assets provides styleheets, scripts, css, etc which Elda
-Common refers to or loads. There is also an elda-bundled
-artifact whose elda-bundled.war combines elda-common and
-elda-assets into one item.
+Assets provides styleheets, scripts, css, <i>etc</i> which Elda
+Common refers to or loads. There is also an 
+<code>elda-bundled</code>code>
+artifact whose <code>elda-bundled.war</code> combines 
+<code>elda-common</code> and <code>elda-assets</code> into one item.
 </p>
 
 <p>
 By default, Elda Common assumes that Elda Common's context
 path is <code>elda-common</code> and Elda Assets's context
-path is <code>/elda-assets</code>. If you want them to use
+path is <code>elda-assets</code>. If you want them to use
 different context paths, you will need to also change the
 name and contents of the LDA config (see below). You can
 install multiple copies of Elda Common with different
@@ -88,22 +91,20 @@ for the setting of this configuration path.)
 <p>
 The LDA configurations contain references to the assets
 webapp, as seen in the minimal configuration file
-supplied. For a given API:api in a configuration file,
+supplied. For a given <code>API:api</code> in a configuration file,
 the location of the assets is given in a variable
 binding:
 </p>
 
 <pre>
-; api:variable [api:name "_resourceRoot"; api:value "http://localhost/elda-assets/"]
+; api:variable [api:name "_resourceRoot"; api:value "http://<i>hostAndPort</i>/<i>assetPath</i>/"]
 </pre>
 
 <p>
-so that the Elda Common instance running this LDA spec will
-refer to the elda-assets instance running on the same
-machine (and probably the same webapp container). If the
-assets instance has been renamed, or moved to a different
-machine, this part of the configuration will have to be
-changed.
+The <i>hostAndPort</i> will usually be <b>localhost:8080</b>
+or <b>localhost:80</b>, and <i>assetPath</i> will by default
+be <b>elda-assets</b> unless the asset .war is renamed to some
+other context or you are using <code>elda-bundled</code>.
 </p>
 
 <p>
@@ -113,12 +114,12 @@ assets according to the binding on the XsltFormatter by:
 </p>
 
 <pre>
-; api:stylesheet "http://localhost/elda-assets/xslt/result.xsl"
+; api:stylesheet "http://<i>hostAndPort</i>/<i>stylesheetPath</i>/xslt/result.xsl"
 </pre>
 
 <p>
-Again, if the assets are moved, this part of the configuration
-will have to be changed.
+Again, if the stylesheet has moved, this binding must be
+changed accordingly.
 </p>
 
 <p>
@@ -181,12 +182,12 @@ SPARQL server serving RDF data of your choice.
 </p>
 
 
-<h1><a name="beyond"></a>Beyond the stand-alone jar</h1>
+<h1><a name="beyond"></a>Inside Elda Common</h1>
 
 <p>
-The Elda standalone jar is just a delivery mechanism for getting
+(The Elda standalone jar is just a delivery mechanism for getting
 started with LDA functionality: it packs together the Elda code
-(a merge of Elda Common and Elda Assets) and a Jetty server.
+(a merge of Elda Common and Elda Assets) and a Jetty server.)
 </p>
 
 <p>
@@ -203,153 +204,25 @@ and webapp using <a href="http://maven.apache.org/">Maven</a>;
 see below.
 </p>
 
-<p>
-The demo jar is given the name <i>elda-standalone-VERSION.jar</i>
-by the "mvn install" process.
-</p>
-
-<h2><a name="anatomy"></a>Anatomy of the standalone web.xml</h2>
-
-<h3><a name="servlet"></a>The Elda servlet</h3>
-
-<pre>
-&lt;servlet>
-  &lt;servlet-name>elda&lt;/servlet-name>
-  &lt;servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer&lt;/servlet-class>
-
-  &lt;init-param>
-      &lt;param-name>com.sun.jersey.config.property.packages&lt;/param-name>
-      &lt;param-value>com.epimorphics.lda.restlets&lt;/param-value>
-  &lt;/init-param>
-
-  &lt;load-on-startup>1&lt;/load-on-startup>
-&lt;/servlet>
-
-</pre>
+<h2><a name="anatomy"></a>Anatomy of the Elda's web.xml</h2>
 
 <p>
-	The Elda servlet is just boilerplate to invoke Jersey; it
-	requests that JAX-RS resources be loaded from the
-	package <code>com.epimorphics.lda.restlets</code>.
-	LDA requests to Elda are handled by the class 
-	<code>RouterRestlet</code> from that package.
-</p>
-
-<h3><a name="invoking"></a>Invoking the servlet</h3>
-
-<pre>
-&lt;servlet-mapping>
-   &lt;url-pattern>/API/*&lt;/url-pattern>
-   &lt;servlet-name>elda&lt;/servlet-name>
-&lt;/servlet-mapping>
-</pre>
-
-<p>
-	URLs for this webapp who's path starts <b>API</b> 
-	is handled by the Elda servlet. (Below we see how
-	this is set up.)
-</p>
-
-<h3><a name="assets"></a>Assets</h3>
-
-<pre>
-&lt;servlet-mapping>
-  &lt;url-pattern>/&lt;/url-pattern>
-  &lt;servlet-name>default&lt;/servlet-name>
-&lt;/servlet-mapping>
-</pre>
-
-<p>
-	Everything else is handled by the default servlet, which
-	delivers all the static files inside the webapp.
-</p>
-
-
-<h3><a name="rewriting"></a>URL rewriting</h3>
-
-<p>
-	URL paths handled by the Elda webapp are first rewritten using
-	the <code>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</code>.
-	This extra layer of flexibility makes it easier to control what
-	URL paths map to what. The boilerplate filter in <code>web.xml</code>
-	enables rewriting on all URLs according to the rules found in
-	<code>urlrewrite.xml</code>.
+Elda runs as a bunch of JAX-RS resources within a Jersey
+container. The LDA configurations it loads are specified
+by the value of a <i>context parameter</i>.
 </p>
 
 <pre>
-&lt;filter>
-  &lt;filter-name>UrlRewriteFilter&lt;/filter-name>
-  &lt;filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter&lt;/filter-class>
-&lt;/filter>
-
-&lt;filter-mapping>
-  &lt;filter-name>UrlRewriteFilter&lt;/filter-name>
-  &lt;url-pattern>/*&lt;/url-pattern>
-&lt;/filter-mapping>
+&lt;context-param>
+   &lt;param-name>com.epimorphics.api.initialSpecFile&lt;/param-name>
+   &lt;param-value>/etc/elda/conf.d/{APP}/*.ttl&lt;/param-value>
+&lt;/context-param>
 </pre>
 
 <p>
-	Two rewrite rules are used in this configuration. 
-	The first leaves unchanged all the asset paths &mdash; 
-	all the fixed resources such as scripts and stylesheets &mdash; 
-	that start with <code>specs</code> (LDA configuration files)
-	or <code>lda-assets</code> (which holds images, css, scripts,
-	etc) so that the servlet mappings will send them on to the default
-	servlet for static content. The second rule then rewrites
-	everything else to start with <b>API</b> so that it is
-	captured by the Elda servlet.
-</p>
-
-<pre>
-&lt;urlrewrite decode-using="null" use-query-string="true">
-
-    &lt;rule>
-        &lt;from>^/(lda-assets|specs)/(.*)$&lt;/from>
-        &lt;to last="true" type="forward">/$1/$2&lt;/to>
-    &lt;/rule>
-
-    &lt;rule>
-        &lt;from>^/(.*)$&lt;/from>
-        &lt;to last="true" type="forward">/API/$1&lt;/to>
-    &lt;/rule>
-
-&lt;/urlrewrite>
-</pre>
-
-<h3><a name="loading-config"></a>Loading the LDA configuration</h3>
-
-<p>
-	The LDA configurations that are to be part of this webapp
-	are specified to a servlet that invokes Elda's
-	<code>com.epimorphics.lda.routing.Loader</code>
-	class.
-</p>
-
-<pre>
-&lt;servlet>
-  &lt;servlet-name>loader-init&lt;/servlet-name>
-  &lt;servlet-class>com.epimorphics.lda.routing.Loader&lt;/servlet-class>
-  &lt;init-param>
-    &lt;param-name>com.epimorphics.api.initialSpecFile&lt;/param-name>
-    &lt;param-value>
-       	hello::specs/hello-world.ttl
-       	, again::specs/hello-again-world.ttl
-       	, tiny::specs/tiny-education.ttl
-       	, mini::specs/mini-education.ttl
-       	, full::specs/full-education.ttl
-       	, old::specs/old-education.ttl
-    &lt;/param-value>
-  &lt;/init-param>
-  &lt;load-on-startup>1&lt;/load-on-startup>
-&lt;/servlet>
-</pre>
-
-<p>
-	The configurations are loaded according to the value of the
-	<code>initialSpecFile</code> parameter, which is a comma-separated
-	list of configuration directives. (All spaces, tabs, and newlines
-	in the value are ignored to make big configurations easy to
-	read and write.)
+For non-Common uses of Elda, you can have multiple comma-separated
+configuration directives in a single &lt;param-value&gt;. Spaces, tabs,
+and newlines within the value are discarded.
 </p>
 
 <p>
@@ -384,7 +257,6 @@ by the "mvn install" process.
 	If the prefix contains a '*' character, it is replaced by whatever
 	characters matched any wildcard '*'s in the last segment of the
 	filename. (If there is more than one such '*', the matching groups
-	are separated by '-'.)
 </p>
 
 <h4>example</h4>
@@ -395,8 +267,79 @@ by the "mvn install" process.
 	in <code>/etc/elda</code>, the configuration file <code>x.ttl</code> 
 	will be loaded and given prefix <code>AxB</code> and the
 	file <code>y.ttl</code> will be loaded with prefix <code>AyB</code>.
-	<code>z.text</code> is ignored as it does not match the filename
-	pattern.
+	<code>z.text</code> is ignored as it does not match the filename.
+</p>
+
+<h3><a name="servlet"></a>The Elda Jersey filter</h3>
+
+<p>
+Elda runs as a Jersey filter applied to all of the paths for
+this context path. A path that does not match any LDA 
+URI template produces a NOT FOUND status that by default
+is handled by Tomcat to serve a static file if one exists
+with that pathname. JAX RS resources are located in the
+package <code>com.epimorphics.lda.restlets</code>.
+</p>
+
+<pre>
+ &lt;filter&gt;
+    &lt;filter-name&gt;Jersey Web Application&lt;/filter-name&gt;
+    &lt;filter-class&gt;com.sun.jersey.spi.container.servlet.ServletContainer&lt;/filter-class&gt;
+    
+    &lt;init-param&gt;
+      &lt;param-name&gt;com.sun.jersey.config.property.packages&lt;/param-name&gt;
+	  &lt;param-value&gt;<b>com.epimorphics.lda.restlets</b>&lt;/param-value&gt;
+    &lt;/init-param&gt;
+        
+    &lt;init-param&gt;
+	  &lt;param-name&gt;com.sun.jersey.config.feature.<b>FilterForwardOn404</b>&lt;/param-name&gt;
+	  &lt;param-value&gt;<b>true</b>&lt;/param-value&gt;
+    &lt;/init-param&gt;
+        
+    &lt;init-param&gt;
+         &lt;param-name&gt;com.sun.jersey.spi.container.ContainerRequestFilters&lt;/param-name&gt;
+         &lt;param-value&gt;com.sun.jersey.api.container.filter.PostReplaceFilter&lt;/param-value&gt;
+     &lt;/init-param&gt;
+&lt;/filter&gt;
+    
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;Jersey Web Application&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;
+
+&lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;default&lt;/servlet-name&gt;
+	&lt;url-pattern&gt;<b>/*</b></url-pattern&gt;
+&lt;/servlet-mapping&gt;
+</pre>
+
+<p>
+	Everything else is handled by the default servlet, which
+	delivers all the static files inside the webapp.
+</p>
+
+<h3><a name="rewriting"></a>URL rewriting</h3>
+
+<p>
+Elda Common does not do URL rewriting; it handles all of the
+requests sent to its context, either as URI templates or
+as static files. For applications that need to present
+different URIs to an external interface from those used within
+the application, you can either use on of the existing
+within-servlet URI rewriting engines or having a front-end
+server, <i>eg</i> Apache or Nginx, which selectively rewrites
+or discards requests with (un)suitable URIs.
+</p>
+
+<h3><a name="loading-config"></a>Obsolete: the Loader servlet</h3>
+
+<p>
+	Previous versions of Elda had their configuration specified
+	within a load-on-startup Loader servlet with an init-param
+	<code>initialSpecFile</code> supplying the configuration file names.
+	This approach to configuration is now <i>obsolete</i> as it lead
+	to technical difficulties; it is supported in Elda 1.2.23 to
+	allow users to migrate to the new configuration process.
 </p>
 
 <h1><a name="shortname-restrictions"></a>Restrictions on shortname selection</h1>
@@ -480,7 +423,8 @@ by the "mvn install" process.
 <p>
 	Elda has three <i>shortname modes</i> for generating
 	shortnames. The mode for a given format may be
-	specified by setting the <code>elda:shortnameMode</code>
+	specified by setting the property <code>elda:shortnameMode</code>
+	on a declared <code>formatter</code> of the configuration
 	to one of the values <code>elda:roundTrip</code>,
 	<code>elda:preferLocalname</code>, or
 	<code>elda:preferPrefixes</code>. The default for
@@ -509,8 +453,8 @@ by the "mvn install" process.
 
 	<li> 
 		if mode is not <code>roundTrip</code>, the
-		shortname is L_N, where N is a hash of
-		the namespace. 
+		shortname is L_N, where N is a (weak) hash 
+		of the namespace. 
 	</li>
 
 	<li>
@@ -521,14 +465,13 @@ by the "mvn install" process.
 </ol>
 
 <p>
-	If the mode is <code>preferPrefixes</code>, then
-	case (1) above is not applied.
-</p>
-
-<p>
 	The bindings of short names to full URIs &mdash;
 	the <i>term bindings</i> &mdash; are made available
-	as metadata in the rendered result.
+	as metadata in the rendered result. This metadata
+	is by default only generated for HTML renderings;
+	to have it present in JSON, XML, or RDF renderers,
+	specify the query parameter <code>_metadata=bindings</code>
+	or <code>_metadata=all</code> on the LDA request.
 </p>
 
 <h1><a name="velocity"></a>Velocity template rendering</h1>
