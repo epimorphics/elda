@@ -41,6 +41,8 @@
          </init-param>
   </filter>
 
+  <!-- ==================================================================== -->
+
   <filter-mapping>
     <filter-name>Jersey Web Application</filter-name>
     <url-pattern>/*</url-pattern>
@@ -51,22 +53,7 @@
   <listener>
     <listener-class>com.epimorphics.lda.restlets.RouterRestlet$Init</listener-class>
   </listener>
-  
-  <servlet>
-    <servlet-name>force-log4j</servlet-name>
-    <servlet-class>com.epimorphics.lda.restlets.ForceLog4JAndAnnounceElda</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  
-  <!-- ==================================================================== -->
-  
-  <!--
-  <servlet-mapping>
-    <servlet-name>default</servlet-name>
-    <url-pattern>/</url-pattern>
-  </servlet-mapping>  
-  -->
-  
+   
   <!-- ==================================================================== -->
 
   <welcome-file-list>

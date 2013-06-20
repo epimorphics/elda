@@ -309,13 +309,24 @@ package <code>com.epimorphics.lda.restlets</code>.
 
 &lt;servlet-mapping&gt;
     &lt;servlet-name&gt;default&lt;/servlet-name&gt;
-	&lt;url-pattern&gt;<b>/*</b></url-pattern&gt;
+    &lt;url-pattern&gt;&lt;b&gt;/*&lt;b&gt;&lt;/url-pattern&gt;
 &lt;/servlet-mapping&gt;
+
+&lt;listener&gt;
+  &lt;listener-class>com.epimorphics.lda.restlets.RouterRestlet$Init&lt;/listener-class&gt;
+&lt;/listener&gt;
 </pre>
 
 <p>
-	Everything else is handled by the default servlet, which
-	delivers all the static files inside the webapp.
+The (optional) <code>Init</code> listener forces Elda to load its
+configurations when the webapp starts. If this listener is
+omitted, Elda will load configurations when the first request
+arrives.
+</p>
+
+<p>
+Everything else is handled by the default servlet, which
+delivers all the static files inside the webapp.
 </p>
 
 <h3><a name="rewriting"></a>URL rewriting</h3>

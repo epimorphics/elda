@@ -37,17 +37,20 @@ public class Help {
 		//
 			String defaultRoot = b.getAsString("_resourceRoot", "") + "/vm/";
 			String templateRoot = b.getAsString("_velocityRoot", defaultRoot);
-		//
 			ve.setProperty( "runtime.references.strict", "true" );
 //			ve.setProperty( "resource.loader",  "class" );
 //			ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
 		//
-			ve.setProperty( "resource.loader", "url" );
+			ve.setProperty( "file.resource.loader.path", templateRoot );
+			ve.setProperty( "file.resource.loader.cache", "true" );
+			ve.setProperty( "file.resource.loader.modificationCheckInterval", "5" );
+		//
+			ve.setProperty( "resource.loader", "file, class, url" );
+		//
 			ve.setProperty( "url.resource.loader.class", "org.apache.velocity.runtime.resource.loader.URLResourceLoader" );
 			ve.setProperty( "url.resource.loader.root", templateRoot );
 			ve.setProperty( "url.resource.loader.cache", true );
-			ve.setProperty( "url.resource.loader.modificationCheckInterval", 5 );
-			
+			ve.setProperty( "url.resource.loader.modificationCheckInterval", "20" );
 		//
 //			ve.setProperty( "class.resource.loader.cache", false );
 //			ve.setProperty( "velocimacro.library.autoreload", true );

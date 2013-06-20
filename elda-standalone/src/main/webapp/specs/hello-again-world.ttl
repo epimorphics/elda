@@ -27,6 +27,8 @@ hello:hello-world-again a api:API
 	# Name the SPARQL endpoint which supplies the data we present
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	; api:defaultViewer api:labelledDescribeViewer
+	; api:variable [api:name "_velocityRoot"; api:value "http://localhost:8080/standalone/vm/"]
+	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/standalone/"]
 	; api:endpoint 
 		hello:publishers, hello:games 
 	; api:defaultFormatter
@@ -34,7 +36,7 @@ hello:hello-world-again a api:API
 		; api:name "html"
 		; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
 		; api:mimeType "text/html"
-		# ; api:stylesheet "page-shell.vm"
+		; api:stylesheet "page-shell.vm"
 		]
 	.
     
