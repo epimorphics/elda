@@ -64,4 +64,8 @@ hello:title a rdf:Property
 	; api:label "title"
 	.
 	
+# hello:struct a rdf:Property
+#     ; api:label "struct"
+#     ; api:structured true
+#     .
 		

@@ -17,6 +17,9 @@
 
 package com.epimorphics.lda.specmanager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Supply an environment-specific implementation of the
@@ -27,6 +30,8 @@ package com.epimorphics.lda.specmanager;
  */
 public class SpecManagerFactory {
 
+    static Logger log = LoggerFactory.getLogger(SpecManagerFactory.class);
+    
     protected static SpecManager instance;
     
     public static SpecManager get() {
@@ -34,6 +39,7 @@ public class SpecManagerFactory {
     }
     
     public static void set(SpecManager sm) {
+    	log.info( "Setting SpecManager " + sm );
         instance = sm;
     }
     

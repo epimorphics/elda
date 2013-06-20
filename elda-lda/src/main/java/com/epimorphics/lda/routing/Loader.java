@@ -40,6 +40,7 @@ import com.epimorphics.lda.sources.AuthMap.NamesAndValues;
 import com.epimorphics.lda.specmanager.SpecManager;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specmanager.SpecManagerImpl;
+import com.epimorphics.lda.vocabularies.ELDA;
 import com.hp.hpl.jena.util.FileManager;
 
 /**
@@ -65,8 +66,8 @@ public class Loader extends HttpServlet {
     	ServletConfig fig = getServletConfig();
     	ServletContext sc = getServletContext();   	
 		baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
-//    	configureLog4J();
-    	log.info( "Starting Elda " + Version.string );
+    	configureLog4J();
+    	log.info( "\n\n  Starting Elda " + Version.string + " " + ELDA.tag + "\n" );
         log.info( "baseFilePath: " + baseFilePath );
     	String prefixPath = getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
         ServletUtils.setupLARQandTDB( sc );
@@ -143,14 +144,6 @@ public class Loader extends HttpServlet {
                 PropertyConfigurator.configure( baseFilePath + file);
             }
         }
-	}
-    
-    /**
-    	Get a new SpecManager implementation.
-    */
-    protected SpecManager getSpecManager() {
-     	return new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader);
-    }
-    
+	}    
 }
 
