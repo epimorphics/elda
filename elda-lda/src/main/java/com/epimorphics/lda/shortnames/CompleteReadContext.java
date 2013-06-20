@@ -1,5 +1,6 @@
 package com.epimorphics.lda.shortnames;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -18,6 +19,8 @@ public class CompleteReadContext {
 	public static ReadContext create( final Context context, final Map<String, String> uriToName ) {
 		return new ReadContext() {
 			
+			Map<Property, ContextPropertyInfo> buffer = new HashMap<Property, ContextPropertyInfo>();
+			
 			@Override public boolean isSortProperties() {
 				return true;
 			}
@@ -35,7 +38,6 @@ public class CompleteReadContext {
 			@Override public String getNameForURI(String uri) {
 				log.warn( "readContext: getNameForURI unexpectedly called." );
 				return uriToName.get(uri);
-				// return context.getNameForURI(uri);
 			}
 			
 			@Override public String getBase() {
@@ -47,9 +49,18 @@ public class CompleteReadContext {
 				return context.forceShorten(uri);
 			}
 			
+			/**
+			    Changes to ContextPropertyInfos don't get pushed into the
+			    "real" map, just into a clone in this local map. 
+			*/
 			@Override public ContextPropertyInfo findProperty(Property p) {
-				String shortName = uriToName.get(p.getURI());
-				return context.findProperty( p, shortName );
+				ContextPropertyInfo result = buffer.get(p);
+				if (result == null) {				
+					String shortName = uriToName.get(p.getURI());
+					result = context.findProperty( p, shortName );
+					buffer.put( p, result.clone() );
+				}
+				return result;
 			}
 		};
 	}
