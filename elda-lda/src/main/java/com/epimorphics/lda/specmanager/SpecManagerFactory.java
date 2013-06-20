@@ -17,6 +17,9 @@
 
 package com.epimorphics.lda.specmanager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,16 +35,21 @@ public class SpecManagerFactory {
 
     static Logger log = LoggerFactory.getLogger(SpecManagerFactory.class);
     
-    protected static SpecManager instance;
+    protected static List<SpecManager> managers = new ArrayList<SpecManager>();
     
     public static SpecManager get() {
-        return instance;
+        return managers.isEmpty() ? null : managers.get(0);
     }
     
     public static void set(SpecManager sm) {
-    	log.info( "Setting SpecManager " + sm );
-        instance = sm;
+        managers.add(sm);
     }
+
+	public static List<SpecEntry> allSpecs() {
+		List<SpecEntry> specs = new ArrayList<SpecEntry>();
+		for (SpecManager sm: managers) specs.addAll( sm.allSpecs() );
+		return specs;
+	}
     
 }
 

@@ -20,7 +20,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.epimorphics.lda.specmanager.SpecEntry;
-import com.epimorphics.lda.specmanager.SpecManager;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.pageComposition.ComposeConfigDisplay;
 import com.epimorphics.util.Util;
@@ -35,8 +34,7 @@ import com.epimorphics.util.Util;
 		URI base = ui.getBaseUri();
 		/* result ignored */ RouterRestlet.getRouterFor( sc );
 	//
-		SpecManager sm = SpecManagerFactory.get();
-		List<SpecEntry> specs = sm.allSpecs();
+		List<SpecEntry> specs = SpecManagerFactory.allSpecs();
 		String page = new ComposeConfigDisplay().configPageMentioning( specs, base, pathstub );
 		return RouterRestlet.returnAs( Util.withBody( "API configuration", page ), "text/html" );
 	}
