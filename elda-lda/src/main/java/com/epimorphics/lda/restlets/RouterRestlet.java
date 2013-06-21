@@ -18,6 +18,7 @@
 package com.epimorphics.lda.restlets;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -65,6 +66,7 @@ import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.shared.WrappedException;
+import com.hp.hpl.jena.util.FileManager;
 import com.sun.jersey.api.NotFoundException;
 
 /**
@@ -89,25 +91,31 @@ import com.sun.jersey.api.NotFoundException;
         it was created from.
     */
     public static class TimestampedRouter {
-    	
-    	static final long DELTA = 5000;
+
+    	static final long DEFAULT_INTERVAL = 5000;
+
+    	// a year is forever.
+		public static final long forever = 1000 * 60 * 24 * 365;
     	
     	final Router router;
     	final long timestamp;
+    	final long interval;
+    	
     	long nextCheck;
     	
-    	public TimestampedRouter(Router router, long when) {
-    		this(router, when, when);
+    	public TimestampedRouter(Router router, long when, long interval) {
+    		this(router, when, interval, when + interval);
     	}
     		
-    	public TimestampedRouter(Router router, long when, long nextCheck) {
+    	public TimestampedRouter(Router router, long when, long interval, long nextCheck) {
     		this.router = router;
     		this.timestamp = when;
+    		this.interval = interval;
     		this.nextCheck = nextCheck;
     	}
 
 		public void deferCheck() {
-			nextCheck += DELTA;
+			nextCheck += interval;
 		}
     }
     
@@ -149,23 +157,54 @@ import com.sun.jersey.api.NotFoundException;
      	put in the table, and returned.
     */
      static synchronized Router getRouterFor(ServletContext con) {
-    	 String givenContextPath = con.getContextPath();
     	 // log.info( "getting router for context path '" + givenContextPath + "'" );
-    	 String contextPath = RouterRestletSupport.flatContextPath(givenContextPath);
+    	 String contextPath = RouterRestletSupport.flatContextPath(con.getContextPath());
     	 TimestampedRouter r = routers.get(contextPath);
+    	 long timeNow = System.currentTimeMillis();
     //
-    	 long latestTime = r == null || System.currentTimeMillis() > r.nextCheck ? RouterRestletSupport.latestConfigTime(con, contextPath) : r.timestamp;
-    //
-    	 if (r == null || r.timestamp < latestTime) {
-    		 log.info( (r == null ? "creating" : "reloading") + " router for '" + givenContextPath + "'");
-    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), latestTime );
-    		 DOMUtils.clearCache();
-    		 Cache.Registry.clearAll();
+    	 if (r == null) {
+    		 log.info( "creating router for '" + contextPath + "'");
+    		 long interval = getRefreshInterval(contextPath);
+    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), interval, timeNow );
     		 routers.put(contextPath, r );
+    	 } else if (r.nextCheck < timeNow) {
+	    	 long latestTime = RouterRestletSupport.latestConfigTime(con, contextPath);
+	    	 if (r.timestamp < latestTime) {
+	    		 log.info( "reloading router for '" + contextPath + "'");
+	    		 long interval = getRefreshInterval(contextPath);
+	    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), interval, timeNow );
+	    		 DOMUtils.clearCache();
+	    		 Cache.Registry.clearAll();
+	    		 routers.put( contextPath, r );	    		 
+	    	 } else {
+	    		 // checked, but no change to reload
+	    		 // log.info("don't need to reload router, will check again later." );
+	    		 r.deferCheck();
+	    	 }
+    	 } else {
+    		 // Don't need to check yet, still in waiting period
+    		 // log.info( "Using existing router, not time to check yet." );
     	 }
-    	 r.deferCheck();
+    //
     	 return r.router;
      }
+
+	private static long getRefreshInterval(String contextPath) {
+		long delay = TimestampedRouter.DEFAULT_INTERVAL;
+		 String intervalFileName = "/etc/elda/conf.d/" + contextPath + "/delay.int";
+		InputStream is = FileManager.get().open( intervalFileName );
+		 if (is != null) {
+			String t = FileManager.get().readWholeFileAsUTF8(is);
+			try { is.close(); } catch (IOException e) { throw new WrappedException( e ); }
+			long n = t.startsWith("FOREVER") 
+				? TimestampedRouter.forever 
+				: Long.parseLong(t.replace("\n", "" ))
+				;
+			if (n > 0) delay = n;
+		 }
+		 log.info( "reload check interval for " + contextPath + " is " + delay );
+		 return delay;
+	}
 
 	public Match getMatch( String path, MultiMap<String, String> queryParams ) {
         Match match = router.getMatch( path, queryParams );

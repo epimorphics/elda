@@ -68,13 +68,13 @@ public class RouterRestletSupport {
 
 	public static long latestConfigTime(ServletContext con, String contextPath) {
 		long latestTime = 0;
-		 List<PrefixAndFilename> pfs = prefixAndFilenames( con, contextPath );
-		 for (PrefixAndFilename s: pfs) {
-			 long lmFile = new File(s.fileName).lastModified();
-			 long lmDir = new File(s.fileName).getParentFile().lastModified();
-			 long lm = lmFile > lmDir ? lmFile : lmDir;
-			 if (lm > latestTime) latestTime = lm;
-		 }
+		List<PrefixAndFilename> pfs = prefixAndFilenames( con, contextPath );
+		for (PrefixAndFilename s: pfs) {
+			long lmFile = new File(s.fileName).lastModified();
+			long lmDir = new File(s.fileName).getParentFile().lastModified();
+			long lm = lmFile > lmDir ? lmFile : lmDir;
+			if (lm > latestTime) latestTime = lm;
+		}
 		return latestTime;
 	}
     
