@@ -79,7 +79,7 @@ assets .war does not collide with any of those templates.
 </p>
 
 <p>
-By default, Elda Common loads its LDA configurations from
+Elda Common loads its LDA configurations from
 <code>/etc/elda/conf.d/{APP}/*.ttl</code>, where
 <code>{APP}</code> is the context path of that instance
 of Elda Common. This means that each instance may have
@@ -181,6 +181,32 @@ purposes you can run a <a href="http://jena.apache.org/documentation/serving_dat
 SPARQL server serving RDF data of your choice.
 </p>
 
+<h2>Reload on change</h2>
+
+<p>
+When Elda handles a request, if it has been "sufficiently
+long" since the last request, it will check to see if it
+is up-to-date with its configuration and, if not, reload it.
+</p>
+
+<p>
+"Sufficently long" defaults to 5 seconds and can be adjusted
+by creating the file <code>/etc/elda/conf.d/{APP}/delay.int</code>.
+<code>APP</code> is the context path for this Elda webapp. The
+content of the file must be an integer number of millseconds.
+</p>
+
+<p>
+"Up-to-date" means that none of the configuration files or their
+directories are time-stamped later than the time that the
+configurations were loaded.
+</p>
+
+<p>
+Elda does not check that the <i>contexts</i> of these files
+have changed, so it is sufficient to simple <code>touch</code>
+one of the appropriate files.
+</p>
 
 <h1><a name="beyond"></a>Inside Elda Common</h1>
 
