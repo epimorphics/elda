@@ -86,7 +86,7 @@ echo
 echo ";;; generating results for current elda ----------------------------------------------------"
 echo
 
-export e_name=current-elda
+export e_name=current
 
 for config_file in configs/*.ttl; do
   echo
