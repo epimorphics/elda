@@ -8,7 +8,8 @@
 package com.epimorphics.lda.routing;
 
 import java.util.*;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.util.Couple;

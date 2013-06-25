@@ -7,10 +7,7 @@
 */
 package com.epimorphics.util;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 
 import com.hp.hpl.jena.shared.WrappedException;
 

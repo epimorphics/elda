@@ -14,15 +14,15 @@
 
 package com.epimorphics.lda.sources;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.Lock;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TDBSource extends SourceBase implements Source
     {

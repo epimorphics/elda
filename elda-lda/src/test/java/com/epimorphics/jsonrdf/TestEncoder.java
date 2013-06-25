@@ -36,33 +36,18 @@ package com.epimorphics.jsonrdf;
 import static com.epimorphics.jsonrdf.utils.ModelIOUtils.modelFromTurtle;
 import static org.junit.Assert.*;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TimeZone;
+import java.io.*;
+import java.util.*;
 
-import org.junit.*;
-import org.openjena.atlas.json.JsonArray;
-import org.openjena.atlas.json.JsonException;
-import org.openjena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.*;
+import org.codehaus.jettison.json.JSONException;
+import org.junit.Test;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.jsonrdf.utils.ModelCompareUtils;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
-import com.hp.hpl.jena.datatypes.xsd.impl.XSDDateTimeType;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.OWL;
 
 public class TestEncoder {

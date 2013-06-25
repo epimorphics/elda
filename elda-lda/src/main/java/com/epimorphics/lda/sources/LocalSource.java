@@ -17,19 +17,18 @@
 
 package com.epimorphics.lda.sources;
 
+import java.util.Iterator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.query.*;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.util.Locator;
 
 /**
  	Data source which represents an in-memory model loaded

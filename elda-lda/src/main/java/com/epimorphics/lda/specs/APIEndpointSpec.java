@@ -10,20 +10,14 @@ package com.epimorphics.lda.specs;
 
 import static com.epimorphics.util.RDFUtils.*;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.VariableExtractor;
-import com.epimorphics.lda.core.NamedViews;
-import com.epimorphics.lda.core.Param;
-import com.epimorphics.lda.core.View;
+import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.APIQuery;

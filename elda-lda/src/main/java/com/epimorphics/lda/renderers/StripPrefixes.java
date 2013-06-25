@@ -4,9 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.epimorphics.vocabs.NsUtils;
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.graph.*;
 import com.hp.hpl.jena.graph.impl.WrappedGraph;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;

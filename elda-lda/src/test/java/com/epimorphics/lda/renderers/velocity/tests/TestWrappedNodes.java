@@ -1,21 +1,15 @@
 package com.epimorphics.lda.renderers.velocity.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.renderers.velocity.IdMap;
-import com.epimorphics.lda.renderers.velocity.ShortNames;
-import com.epimorphics.lda.renderers.velocity.WrappedNode;
+import com.epimorphics.lda.renderers.velocity.*;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;

@@ -7,10 +7,7 @@
 */
 package com.epimorphics.lda.renderers;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Resource;

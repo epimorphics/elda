@@ -7,6 +7,10 @@
 */
 package com.epimorphics.lda.query.tests;
 
+import static org.junit.Assert.fail;
+
+import org.junit.Test;
+
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.query.APIQuery;
@@ -17,9 +21,6 @@ import com.epimorphics.lda.tests.FakeNamedViews;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.hp.hpl.jena.shared.PrefixMapping;
-
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class TestUniqueVariablesForPropertyChain {
 

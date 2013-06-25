@@ -17,9 +17,7 @@
 
 package com.epimorphics.lda.routing;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -37,11 +35,10 @@ import com.epimorphics.lda.restlets.RouterRestletSupport;
 import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
 import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.sources.AuthMap.NamesAndValues;
-import com.epimorphics.lda.specmanager.SpecManager;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specmanager.SpecManagerImpl;
+import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.vocabularies.ELDA;
-import com.hp.hpl.jena.util.FileManager;
 
 /**
  * This arranges for the current Api specifications to be
@@ -72,9 +69,9 @@ public class Loader extends HttpServlet {
     	String prefixPath = getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
         ServletUtils.setupLARQandTDB( sc );
         modelLoader = new APIModelLoader( baseFilePath );
-        FileManager.get().addLocatorFile( baseFilePath );
+        EldaFileManager.get().addLocatorFile( baseFilePath );
     //
-        AuthMap am = AuthMap.loadAuthMap( FileManager.get(), wrapParameters() );
+        AuthMap am = AuthMap.loadAuthMap( EldaFileManager.get(), wrapParameters() );
     //
         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
     //
@@ -123,9 +120,9 @@ public class Loader extends HttpServlet {
     public void osgiInit(String filepath) {
         baseFilePath = filepath;
         modelLoader = new APIModelLoader(baseFilePath);
-//        FileManager.get().addLocatorFile( baseFilePath );
+//        EldaFileManager.get().addLocatorFile( baseFilePath );
 //        modelLoader = new APIModelLoader(baseFilePath);
-        FileManager.get().addLocatorFile( baseFilePath );
+        EldaFileManager.get().addLocatorFile( baseFilePath );
         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
     }
 

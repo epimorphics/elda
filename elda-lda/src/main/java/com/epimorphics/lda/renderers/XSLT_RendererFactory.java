@@ -6,19 +6,18 @@
 */
 package com.epimorphics.lda.renderers;
 
+import java.util.Map;
+
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.shortnames.CompleteContext;
+import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
-import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Resource;
-
-import java.util.Map;
 
 /**
     Production of XSLT renderers, which transform the results

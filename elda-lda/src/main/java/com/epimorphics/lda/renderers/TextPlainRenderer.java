@@ -18,7 +18,7 @@ import java.io.OutputStream;
 import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.core.*;
+import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;

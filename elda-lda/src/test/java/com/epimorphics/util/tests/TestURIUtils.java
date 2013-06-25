@@ -14,7 +14,8 @@ package com.epimorphics.util.tests;
 
 import static com.epimorphics.util.URIUtils.changeFormatSuffix;
 import static com.epimorphics.util.URIUtils.newURI;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.net.URI;
 import java.util.Set;

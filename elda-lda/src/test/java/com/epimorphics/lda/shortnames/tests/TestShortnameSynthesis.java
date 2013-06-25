@@ -1,6 +1,6 @@
 package com.epimorphics.lda.shortnames.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Map;
 
@@ -9,10 +9,7 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.DC;
 import com.hp.hpl.jena.vocabulary.RDF;

@@ -8,9 +8,7 @@
 
 package com.epimorphics.lda.renderers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;

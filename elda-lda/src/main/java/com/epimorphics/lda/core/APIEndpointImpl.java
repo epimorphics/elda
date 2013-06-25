@@ -13,10 +13,7 @@
 package com.epimorphics.lda.core;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,30 +22,19 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
-import com.epimorphics.lda.exceptions.APIException;
-import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.exceptions.QueryParseException;
-import com.epimorphics.lda.query.APIQuery;
-import com.epimorphics.lda.query.ContextQueryUpdater;
-import com.epimorphics.lda.query.WantsMetadata;
-import com.epimorphics.lda.renderers.*;
+import com.epimorphics.lda.exceptions.*;
+import com.epimorphics.lda.query.*;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
+import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.shortnames.CompleteContext;
-import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
-import com.epimorphics.lda.specs.APIEndpointSpec;
-import com.epimorphics.lda.specs.APISpec;
-import com.epimorphics.lda.specs.EndpointDetails;
-import com.epimorphics.lda.support.ModelPrefixEditor;
+import com.epimorphics.lda.specs.*;
 import com.epimorphics.lda.vocabularies.EXTRAS;
-import com.epimorphics.util.Couple;
-import com.epimorphics.util.MediaType;
-import com.epimorphics.util.RDFUtils;
-import com.epimorphics.util.Triad;
-import com.epimorphics.util.URIUtils;
+import com.epimorphics.util.*;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**

@@ -7,31 +7,20 @@
 */
 package com.epimorphics.lda.restlets;
 
-import static com.epimorphics.lda.restlets.RouterRestlet.returnAs;
-import static com.epimorphics.lda.restlets.RouterRestlet.returnError;
-import static com.epimorphics.lda.restlets.RouterRestlet.returnNotFound;
+import static com.epimorphics.lda.restlets.RouterRestlet.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 
-import org.openjena.atlas.json.JsonException;
+import org.apache.jena.atlas.json.JsonException;
 
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.exceptions.APIException;
-import com.epimorphics.lda.routing.Match;
-import com.epimorphics.lda.routing.Router;
-import com.epimorphics.lda.routing.RouterFactory;
+import com.epimorphics.lda.routing.*;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.MultiMap;
@@ -39,11 +28,7 @@ import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.NodeIterator;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 /**

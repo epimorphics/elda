@@ -10,9 +10,8 @@ package com.epimorphics.lda.apispec.tests;
 
 import static org.junit.Assert.*;
 
+import org.hamcrest.core.IsNot;
 import org.junit.Test;
-
-import org.hamcrest.core.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;

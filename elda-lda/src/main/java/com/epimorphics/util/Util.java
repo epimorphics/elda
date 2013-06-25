@@ -11,8 +11,9 @@ package com.epimorphics.util;
 import java.io.InputStream;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.FileManager;
+import com.epimorphics.lda.support.EldaFileManager;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class Util
     {   
@@ -25,7 +26,7 @@ public class Util
         {
         InputStream in = Util.class.getClassLoader().getResourceAsStream( path );
         if (in == null) EldaException.NotFound( "resource", path );
-        return FileManager.get().readWholeFileAsUTF8( in );
+        return EldaFileManager.get().readWholeFileAsUTF8( in );
         }
     
     public static Model readModel( String path )

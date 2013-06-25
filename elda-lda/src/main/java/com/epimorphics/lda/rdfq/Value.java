@@ -10,9 +10,11 @@ package com.epimorphics.lda.rdfq;
 
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.util.RDFUtils;
+import com.hp.hpl.jena.datatypes.RDFDatatype;
+import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.graph.NodeFactory;
 import com.hp.hpl.jena.sparql.util.FmtUtils;
-import com.hp.hpl.jena.sparql.util.NodeFactory;
 
 public class Value extends Term 
 	{
@@ -40,7 +42,8 @@ public class Value extends Term
 	@Override public String asSparqlTerm( PrefixLogger pl )
 		{ 
 		String lang = (language.equals("none") ? "" : language);
-		Node n = NodeFactory.createLiteralNode( spelling, lang, datatype );
+		RDFDatatype dt = datatype.length() == 0 ? null : TypeMapper.getInstance().getSafeTypeByName(datatype);
+		Node n = NodeFactory.createLiteral( spelling, lang, dt );
 		if (datatype.length() > 0) pl.present( datatype );
 		String lf = FmtUtils.stringForNode( n, RDFUtils.noPrefixes ); 
 		return lf;

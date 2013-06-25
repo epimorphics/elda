@@ -8,15 +8,12 @@
 
 package com.epimorphics.lda.tests;
 
+import static org.junit.Assert.fail;
+
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.ModelLoader;
-import com.epimorphics.lda.core.NamedViews;
-import com.epimorphics.lda.core.Param;
+import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.tests.QueryTestUtils;
@@ -24,9 +21,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestPropertyChainEndToEnd 

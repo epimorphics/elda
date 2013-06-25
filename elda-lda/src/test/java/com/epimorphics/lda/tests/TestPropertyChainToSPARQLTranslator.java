@@ -8,6 +8,11 @@
 
 package com.epimorphics.lda.tests;
 
+import static com.epimorphics.util.CollectionUtils.list;
+import static com.hp.hpl.jena.rdf.model.test.ModelTestBase.property;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -16,12 +21,6 @@ import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.support.PropertyChainTranslator;
-
-import static com.epimorphics.util.CollectionUtils.list;
-import static com.hp.hpl.jena.rdf.model.test.ModelTestBase.property;
-import static org.junit.Assert.*;
-
-import static org.hamcrest.CoreMatchers.*;
 
 public class TestPropertyChainToSPARQLTranslator 
 	{

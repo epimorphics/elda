@@ -1,8 +1,6 @@
 package com.epimorphics.lda.sources;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.hp.hpl.jena.util.FileManager;
 

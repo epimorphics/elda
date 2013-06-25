@@ -2,9 +2,9 @@ package com.epimorphics.lda.routing;
 
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
+import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.support.TDBManager;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.util.FileManager;
 
 public class APIModelLoader implements ModelLoader {
 
@@ -18,7 +18,7 @@ public class APIModelLoader implements ModelLoader {
         Loader.log.info( "loadModel: " + uri );
         if (uri.startsWith( Container.LOCAL_PREFIX )) {
             String specFile = "file:///" + baseFilePathLocal + uri.substring(Container.LOCAL_PREFIX.length());
-            return FileManager.get().loadModel( specFile );
+            return EldaFileManager.get().loadModel( specFile );
 
         } else if (uri.startsWith( TDBManager.PREFIX )) {
             String modelName = uri.substring( TDBManager.PREFIX.length() );
@@ -29,7 +29,7 @@ public class APIModelLoader implements ModelLoader {
             return tdb;
 
         } else {
-            return FileManager.get().loadModel( uri );
+            return EldaFileManager.get().loadModel( uri );
         }
     }
 }

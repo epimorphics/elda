@@ -34,12 +34,12 @@
 
 package com.epimorphics.jsonrdf;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
-
-import static org.junit.Assert.*;
 
 public class TestStringBashing {
 

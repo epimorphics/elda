@@ -10,9 +10,8 @@ package com.epimorphics.lda.cache;
 
 import java.util.List;
 
-import com.hp.hpl.jena.rdf.model.Resource;
-
 import com.epimorphics.lda.core.APIResultSet;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
     The cache that remembers everything (until the world explodes

@@ -1,8 +1,8 @@
 package com.epimorphics.lda.shortnames;
 
 import com.epimorphics.util.NameUtils;
-import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.rdf.model.impl.Util;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
     <p>

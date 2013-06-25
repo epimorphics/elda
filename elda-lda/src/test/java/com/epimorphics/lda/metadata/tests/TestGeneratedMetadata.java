@@ -7,7 +7,7 @@
 */
 package com.epimorphics.lda.metadata.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,17 +19,11 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.EndpointMetadata;
-import com.epimorphics.lda.shortnames.CompleteContext;
-import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.lda.shortnames.StandardShortnameService;
+import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class TestGeneratedMetadata {

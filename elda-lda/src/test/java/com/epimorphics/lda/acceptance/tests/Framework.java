@@ -6,11 +6,9 @@
 */
 package com.epimorphics.lda.acceptance.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FilenameFilter;
+import java.io.*;
 import java.net.URI;
 import java.util.*;
 
@@ -18,7 +16,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,17 +26,13 @@ import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.specs.APISpec;
-import com.epimorphics.lda.support.Controls;
-import com.epimorphics.lda.support.MultiMap;
-import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Couple;
-import com.epimorphics.util.Triad;
-import com.epimorphics.util.URIUtils;
+import com.epimorphics.util.*;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.util.LocationMapper;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 
 /**
@@ -134,7 +127,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		{
 		List<UriAndAsks> result = new ArrayList<UriAndAsks>();
 //		System.err.println( ">> loading query " + fileName );
-		String wholeFile = FileManager.get().readWholeFileAsUTF8( fileName );
+		String wholeFile = EldaFileManager.get().readWholeFileAsUTF8( fileName );
 		String [] elements = wholeFile.split( "(^|\n)URI=" );
 		for (String element: elements)
 			if (element.length() > 0)
@@ -186,7 +179,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 
 	private static Model loadSpecFile( String specFile ) 
 		{
-		String body = FileManager.get().readWholeFileAsUTF8( specFile );
+		String body = EldaFileManager.get().readWholeFileAsUTF8( specFile );
 		try 
 			{ return ModelIOUtils.modelFromTurtle( body ); }
 		catch (Exception e) 
@@ -240,9 +233,14 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		{
 		Cache.Registry.clearAll();
 		log.debug( "running test " + w.title );
-//		System.err.println( "running test " + w.title );
 //		System.err.println( ">> " + w.pathToData );
-		FileManager.get().getLocationMapper().addAltEntry( "CURRENT-TEST", w.pathToData );
+	//
+	// this little dance of resetting the location mapper bypasses a
+	// problem that hits a null pointer exception. FileManager issue?
+	//
+		EldaFileManager.get().setLocationMapper( new LocationMapper() );
+		EldaFileManager.get().getLocationMapper().addAltEntry( "CURRENT-TEST", w.pathToData );
+	//
 		Model specModel = w.specModel;
 		Resource root = specModel.createResource( specModel.expandPrefix( ":root" ) );
 		APISpec s = SpecUtil.specFrom( root );

@@ -8,39 +8,28 @@
 
 package com.epimorphics.lda.tests;
 
-import static org.junit.Assert.*;
+import static com.hp.hpl.jena.rdf.model.test.ModelTestBase.resourceSet;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.net.URI;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.hamcrest.CoreMatchers.is;
 
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.core.APIEndpointImpl;
-import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.ModelLoader;
+import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
-import com.epimorphics.lda.support.Controls;
-import com.epimorphics.lda.support.MultiMap;
-import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Couple;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
-
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
-import com.hp.hpl.jena.util.FileManager;
-
-import static com.hp.hpl.jena.rdf.model.test.ModelTestBase.*;
 
 public class ExploreTestingForLatAndLongEtc 
 	{	
@@ -82,7 +71,7 @@ public class ExploreTestingForLatAndLongEtc
 				}
 			};
 		Resource specification = latLongTestDescription.createResource( "eh:/spec" );
-		APISpec parent = new APISpec( FileManager.get(), specification, ml );
+		APISpec parent = new APISpec( EldaFileManager.get(), specification, ml );
 		APIEndpointSpec spec = new APIEndpointSpec( parent, parent, endpoint );
 		APIEndpoint e = new APIEndpointImpl( spec );
 		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );

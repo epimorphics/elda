@@ -6,9 +6,7 @@
 */
 package com.epimorphics.lda.renderers.tests;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 
 import com.epimorphics.util.DOMUtils;
 

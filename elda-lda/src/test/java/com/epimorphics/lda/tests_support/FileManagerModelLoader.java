@@ -9,8 +9,8 @@
 package com.epimorphics.lda.tests_support;
 
 import com.epimorphics.lda.core.ModelLoader;
+import com.epimorphics.lda.support.EldaFileManager;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.util.FileManager;
 
 /**
     A ModelLoaderI that loads the model using the FileManager.
@@ -23,6 +23,6 @@ public final class FileManagerModelLoader implements ModelLoader {
 	    instance.
 	*/
 	@Override public Model loadModel( String uri ) {
-	    return FileManager.get().loadModel(uri);
+	    return EldaFileManager.get().loadModel(uri);
 	}
 }

@@ -38,7 +38,7 @@ import com.hp.hpl.jena.util.FileManager;
  */
 public class TestDecode {
 
-    static Context context = new Context( FileManager.get().loadModel("src/test/resources/apicontext.ttl") );
+    static Context context = new Context( EldaFileManager.get().loadModel("src/test/resources/apicontext.ttl") );
 
     @Test
     public void testRawDecode() {
@@ -61,7 +61,7 @@ public class TestDecode {
     }
     
     public boolean checkModel(Model actual, String expectedFile) {
-        Model expected = FileManager.get().loadModel(expectedFile);
+        Model expected = EldaFileManager.get().loadModel(expectedFile);
         if ( ! expected.isIsomorphicWith(actual)) {
             System.out.println("Model check failed, found:");
             actual.write(System.out, "Turtle");

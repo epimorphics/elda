@@ -24,26 +24,18 @@ import java.util.*;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.lda.bindings.Bindings;
-
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.rdfq.Value;
-import com.epimorphics.lda.routing.DefaultRouter;
-import com.epimorphics.lda.routing.Match;
-import com.epimorphics.lda.routing.Router;
-import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.routing.*;
 import com.epimorphics.lda.specs.APIEndpointSpec;
-import com.epimorphics.lda.support.Controls;
-import com.epimorphics.lda.support.MultiMap;
-import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ResIterator;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
@@ -59,8 +51,12 @@ public class APITester {
     protected Map<String, APISpec> specifications = new HashMap<String, APISpec>();
 
     public APITester( String specFileName ) {
-        this( FileManager.get().loadModel(specFileName) );
+        this( loadDebuggin(specFileName) );
     }
+
+	private static Model loadDebuggin(String specFileName) {
+		return EldaFileManager.get().loadModel(specFileName);
+	}
 
 	public APITester( Model model ) {
 		this( model, new FileManagerModelLoader() );
@@ -70,7 +66,7 @@ public class APITester {
 	public APITester( Model model, ModelLoader loader ) {
 		for (ResIterator ri = model.listSubjectsWithProperty(RDF.type, API.API); ri.hasNext();) {
             Resource api = ri.next();
-            APISpec spec = new APISpec( FileManager.get(), api, loader );
+            APISpec spec = new APISpec( EldaFileManager.get(), api, loader );
             specifications.put(api.getLocalName(), spec);
             for (APIEndpointSpec eps : spec.getEndpoints()) {
                 APIEndpoint ep = APIFactory.makeApiEndpoint(eps);

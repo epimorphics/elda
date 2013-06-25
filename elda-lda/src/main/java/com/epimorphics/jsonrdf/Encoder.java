@@ -12,13 +12,14 @@
 
 package com.epimorphics.jsonrdf;
 
+import static com.epimorphics.jsonrdf.RDFUtil.getLexicalForm;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
 
-import org.openjena.atlas.json.JsonObject;
-
-import static com.epimorphics.jsonrdf.RDFUtil.getLexicalForm;
+import org.apache.jena.atlas.json.JsonObject;
+import org.codehaus.jettison.json.JSONException;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.vocabs.API;

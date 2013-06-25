@@ -1,18 +1,15 @@
 package com.epimorphics.lda.support.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import org.junit.Test;
 
 import com.epimorphics.lda.support.Glob;
 import com.epimorphics.util.CollectionUtils;
-
-import org.junit.Test;
 
 public class TestGlob {
 	

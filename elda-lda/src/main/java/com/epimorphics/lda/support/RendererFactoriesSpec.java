@@ -7,22 +7,18 @@
 */
 package com.epimorphics.lda.support;
 
+import static com.epimorphics.lda.support.ReflectionSupport.classForName;
+import static com.epimorphics.lda.support.ReflectionSupport.newInstanceOf;
+
 import java.util.List;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.renderers.BuiltinRendererTable;
-import com.epimorphics.lda.renderers.Factories;
-import com.epimorphics.lda.renderers.RendererFactory;
+import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
-
-import static com.epimorphics.lda.support.ReflectionSupport.classForName;
-import static com.epimorphics.lda.support.ReflectionSupport.newInstanceOf;
 
 public class RendererFactoriesSpec {
 

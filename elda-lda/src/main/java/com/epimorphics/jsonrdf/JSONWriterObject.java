@@ -14,9 +14,7 @@ package com.epimorphics.jsonrdf;
 
 import java.util.ArrayDeque;
 
-import org.openjena.atlas.json.JsonException;
-import org.openjena.atlas.json.JsonObject;
-import org.openjena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.*;
 
 /**
  * Implements the JSONWriter emulation by creating a JsonObject

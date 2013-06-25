@@ -8,14 +8,13 @@
 
 package com.epimorphics.lda.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.ModelLoader;
-import com.epimorphics.lda.core.NamedViews;
+import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.ContextQueryUpdater;
 import com.epimorphics.lda.query.tests.QueryTestUtils;

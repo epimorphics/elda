@@ -16,13 +16,11 @@
  *****************************************************************/
 
 package com.epimorphics.lda.shortnames;
-import static com.epimorphics.util.RDFUtils.*;
+import static com.epimorphics.util.RDFUtils.getLexicalForm;
 
 import java.util.*;
 
-import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.jsonrdf.ContextPropertyInfo;
-import com.epimorphics.jsonrdf.RDFUtil;
+import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.vocabularies.EXTRAS;

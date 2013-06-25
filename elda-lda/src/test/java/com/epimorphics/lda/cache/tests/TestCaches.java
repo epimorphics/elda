@@ -1,15 +1,13 @@
 package com.epimorphics.lda.cache.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.cache.Cache;
+import com.epimorphics.lda.cache.*;
 import com.epimorphics.lda.cache.Cache.Controller;
-import com.epimorphics.lda.cache.LimitEntriesController;
-import com.epimorphics.lda.cache.LimitTriplesController;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.sources.Source;

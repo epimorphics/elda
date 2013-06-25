@@ -4,9 +4,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.epimorphics.lda.renderers.velocity.Help;
-import com.epimorphics.lda.renderers.velocity.IdMap;
-import com.epimorphics.lda.renderers.velocity.ShortNames;
+import com.epimorphics.lda.renderers.velocity.*;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 

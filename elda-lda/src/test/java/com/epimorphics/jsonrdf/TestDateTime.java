@@ -33,10 +33,11 @@
 
 package com.epimorphics.jsonrdf;
 
+import static org.junit.Assert.assertEquals;
+
 import java.text.ParseException;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Literal;

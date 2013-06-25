@@ -1,17 +1,16 @@
 package com.epimorphics.lda.shortnames.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
 
-import com.hp.hpl.jena.shared.PrefixMapping;
-
 import com.epimorphics.lda.renderers.json.JSONPropertyNaming;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.CollectionUtils;
+import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**
  	Tests for constructing JSON shortnames when rendering.

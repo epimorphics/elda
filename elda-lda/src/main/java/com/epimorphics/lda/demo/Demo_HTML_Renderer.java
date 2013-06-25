@@ -7,11 +7,7 @@
 */
 package com.epimorphics.lda.demo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
@@ -20,19 +16,12 @@ import com.epimorphics.lda.renderers.BytesOutString;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.XHV;
-import com.epimorphics.util.MediaType;
-import com.epimorphics.util.Triad;
-import com.epimorphics.util.Util;
+import com.epimorphics.util.*;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFList;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -43,7 +32,7 @@ public class Demo_HTML_Renderer implements Renderer {
 	protected final APIEndpoint endpoint;
 	protected final ShortnameService sns;
 	
-	protected static final FileManager fm = new FileManager(FileManager.get());
+	protected static final FileManager fm = new FileManager(EldaFileManager.get());
 	
 	{ fm.setModelCaching( true ); }
 	

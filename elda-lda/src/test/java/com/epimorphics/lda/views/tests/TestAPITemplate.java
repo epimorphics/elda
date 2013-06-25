@@ -1,6 +1,6 @@
 package com.epimorphics.lda.views.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -11,22 +11,14 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.core.APIEndpointImpl;
-import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.specs.APISpec;
-import com.epimorphics.lda.support.Controls;
-import com.epimorphics.lda.support.MultiMap;
-import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Couple;
 import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.*;
 
 public class TestAPITemplate {
 	

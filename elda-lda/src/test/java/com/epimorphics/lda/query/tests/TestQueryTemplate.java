@@ -11,11 +11,11 @@ import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.Controls;
+import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.tests.SNS;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
-import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 public class TestQueryTemplate {
@@ -60,7 +60,7 @@ public class TestQueryTemplate {
 			+ "\n"
 			);
 		Resource root = m.getResource( m.expandPrefix( ":spec" ) );
-		return new APISpec(FileManager.get(), root, null);
+		return new APISpec(EldaFileManager.get(), root, null);
 	}
 	
 }

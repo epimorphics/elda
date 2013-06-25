@@ -1,11 +1,7 @@
 package com.epimorphics.lda.renderers.json;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import com.epimorphics.lda.prefixes.Prefixes;
 import com.epimorphics.lda.shortnames.Transcoding;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.util.NameUtils;

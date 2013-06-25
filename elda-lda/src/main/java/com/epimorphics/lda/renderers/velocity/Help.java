@@ -4,19 +4,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.apache.velocity.app.VelocityEngine;
-
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.WrappedIOException;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import com.hp.hpl.jena.vocabulary.*;
 
 public class Help {
     
@@ -71,7 +68,7 @@ public class Help {
 
 	static Properties getProperties( String fileName ) {
 		Properties p = new Properties();
-		InputStream is = FileManager.get().open( fileName );
+		InputStream is = EldaFileManager.get().open( fileName );
 		if (is != null) loadNicely( p, is );
 		return p;
 	}

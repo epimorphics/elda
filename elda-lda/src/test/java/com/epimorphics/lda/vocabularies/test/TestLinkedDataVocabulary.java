@@ -14,10 +14,11 @@
 
 package com.epimorphics.lda.vocabularies.test;
 
-import org.hamcrest.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import org.hamcrest.Matcher;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Property;

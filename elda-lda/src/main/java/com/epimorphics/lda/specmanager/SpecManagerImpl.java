@@ -8,12 +8,9 @@
 
 package com.epimorphics.lda.specmanager;
 
-import static com.epimorphics.lda.specmanager.SpecUtils.*;
+import static com.epimorphics.lda.specmanager.SpecUtils.keyMatches;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,10 +23,10 @@ import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.support.MultiMap;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.util.FileManager;
 
 /**
  * Implementation of SpecManager for simple non-GAE environment.
@@ -59,7 +56,7 @@ public class SpecManagerImpl implements SpecManager {
         } else {
             log.info("Creating API spec at: " + uri);
             Resource specRoot = spec.getResource(uri);
-			APISpec apiSpec = new APISpec( am, FileManager.get(), specRoot, modelLoader );
+			APISpec apiSpec = new APISpec( am, EldaFileManager.get(), specRoot, modelLoader );
             synchronized (specs) { specs.put(uri, new SpecEntry(uri, key, apiSpec, spec)); }
             APIFactory.registerApi( router, context, apiSpec );
             return apiSpec;
@@ -117,7 +114,7 @@ public class SpecManagerImpl implements SpecManager {
 	}	
 	
 	@Override public APISpec getAPISpec(Resource specRoot) {
-		return new APISpec(FileManager.get(), specRoot, modelLoader);
+		return new APISpec(EldaFileManager.get(), specRoot, modelLoader);
 	}
 
 }

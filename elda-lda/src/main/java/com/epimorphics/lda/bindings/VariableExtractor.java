@@ -9,6 +9,8 @@
 package com.epimorphics.lda.bindings;
 
 
+import static com.epimorphics.util.RDFUtils.getStringValue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,8 +21,6 @@ import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDFS;
-
-import static com.epimorphics.util.RDFUtils.*;
 
 /**
     Extracts and binds variables from API specifications.

@@ -7,15 +7,10 @@
 */
 package com.epimorphics.lda.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.epimorphics.lda.core.View.State;
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.RDFQ;
-import com.epimorphics.lda.rdfq.Variable;
+import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.PropertyChain;

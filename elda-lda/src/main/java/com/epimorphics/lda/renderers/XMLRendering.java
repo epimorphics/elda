@@ -341,22 +341,17 @@ package com.epimorphics.lda.renderers;
 
 import java.util.*;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.jsonrdf.ContextPropertyInfo;
-import com.epimorphics.jsonrdf.RDFUtil;
+import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.util.Couple;
 import com.epimorphics.vocabs.API;
+import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
 From the spec: 

@@ -23,16 +23,12 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.jsonrdf.Encoder;
-import com.epimorphics.jsonrdf.ReadContext;
+import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.shortnames.CompleteContext;
+import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
-import com.epimorphics.lda.shortnames.CompleteReadContext;
-import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.StreamUtils;

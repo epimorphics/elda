@@ -8,9 +8,11 @@
 
 package com.epimorphics.sources.test;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.util.Context;
@@ -101,5 +103,21 @@ public class QueryExecutionWithHistory implements QueryExecution {
 
 	@Override public Query getQuery() {
 		return qe.getQuery();
+	}
+
+	@Override public Iterator<Triple> execConstructTriples() {
+		return qe.execConstructTriples();
+	}
+
+	@Override public Iterator<Triple> execDescribeTriples() {
+		return qe.execDescribeTriples();
+	}
+
+	@Override public long getTimeout1() {
+		return qe.getTimeout1();
+	}
+
+	@Override public long getTimeout2() {
+		return qe.getTimeout2();
 	}
 }

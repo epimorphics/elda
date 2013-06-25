@@ -1,15 +1,13 @@
 package com.epimorphics.lda.renderers.velocity.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import com.epimorphics.lda.renderers.velocity.Help;
 import com.epimorphics.lda.renderers.velocity.ShortNames;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 public class TestVelocityShortnames {

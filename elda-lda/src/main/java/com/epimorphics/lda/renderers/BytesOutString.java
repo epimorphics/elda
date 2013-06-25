@@ -8,10 +8,7 @@
 
 package com.epimorphics.lda.renderers;
 
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.support.Times;

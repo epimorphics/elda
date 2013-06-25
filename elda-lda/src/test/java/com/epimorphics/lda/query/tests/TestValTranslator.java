@@ -7,7 +7,7 @@
 */
 package com.epimorphics.lda.query.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +18,7 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.query.ValTranslator;
 import com.epimorphics.lda.query.ValTranslator.Filters;
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.RDFQ;
-import com.epimorphics.lda.rdfq.RenderExpression;
-import com.epimorphics.lda.rdfq.Variable;
+import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.vocabs.API;

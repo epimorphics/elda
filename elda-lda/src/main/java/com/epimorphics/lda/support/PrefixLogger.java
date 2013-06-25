@@ -1,16 +1,10 @@
 package com.epimorphics.lda.support;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.URINode;
-import com.epimorphics.lda.rdfq.Variable;
+import com.epimorphics.lda.rdfq.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 /**

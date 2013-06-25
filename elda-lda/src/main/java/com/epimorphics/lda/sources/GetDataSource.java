@@ -14,6 +14,8 @@
 
 package com.epimorphics.lda.sources;
 
+import static com.epimorphics.util.RDFUtils.getStringValue;
+
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.EXTRAS;
@@ -22,8 +24,6 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
-
-import static com.epimorphics.util.RDFUtils.*;
 
 public class GetDataSource
     {

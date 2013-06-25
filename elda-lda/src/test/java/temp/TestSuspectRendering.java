@@ -11,16 +11,16 @@ import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
+import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.DOMUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.util.FileManager;
 
 public class TestSuspectRendering {
 	
-	static Model m = FileManager.get().loadModel( "/tmp/bw.ttl" );
+	static Model m = EldaFileManager.get().loadModel( "/tmp/bw.ttl" );
 
 	@Test @Ignore public void testNastyBug() {
 		Resource root = m.createResource( "http://environment.data.gov.uk/def/bathing-water/BathingWater" );

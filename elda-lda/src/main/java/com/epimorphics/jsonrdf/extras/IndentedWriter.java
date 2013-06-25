@@ -1,12 +1,10 @@
 package com.epimorphics.jsonrdf.extras;
-import static java.lang.String.format ;
+import static java.lang.String.format;
 
-import java.io.IOException ;
-import java.io.OutputStream ;
-import java.io.Writer ;
+import java.io.*;
 
-import com.hp.hpl.jena.sparql.ARQInternalErrorException ;
-import com.hp.hpl.jena.util.FileUtils ;
+import com.hp.hpl.jena.sparql.ARQInternalErrorException;
+import com.hp.hpl.jena.util.FileUtils;
 
 /** A writer that records what the current indentation level is, and
  *  uses that to insert a prefix at each line. 

@@ -1,9 +1,6 @@
 package com.epimorphics.lda.support;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
     Edits the prefixes of strings (in the motivating case, URIs)

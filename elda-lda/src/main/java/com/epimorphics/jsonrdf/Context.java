@@ -12,7 +12,7 @@
 
 package com.epimorphics.jsonrdf;
 
-import static com.epimorphics.jsonrdf.RDFUtil.*;
+import static com.epimorphics.jsonrdf.RDFUtil.getStringValue;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -22,9 +22,7 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import com.hp.hpl.jena.vocabulary.*;
 
 /**
  * Encapsulates the mapping decisions to determine how RDF should be

@@ -9,11 +9,7 @@ import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.NameUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class CompleteContext {

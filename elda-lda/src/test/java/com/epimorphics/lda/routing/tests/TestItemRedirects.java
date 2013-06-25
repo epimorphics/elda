@@ -7,7 +7,8 @@
 */
 package com.epimorphics.lda.routing.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.net.URI;
 
@@ -21,11 +22,11 @@ import com.epimorphics.lda.routing.DefaultRouter;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.util.FileManager;
 
 public class TestItemRedirects {
 	
@@ -54,7 +55,7 @@ public class TestItemRedirects {
 	@Test @Ignore public void testFindsURITemplateForItem() {
 		URI req = URIUtils.newURI( "" );
 		Resource root = specModel.createResource( specModel.expandPrefix( ":root" ) );
-		APISpec spec = new APISpec( FileManager.get(), root, LoadsNothing.instance );
+		APISpec spec = new APISpec( EldaFileManager.get(), root, LoadsNothing.instance );
 		Router r = new DefaultRouter();
 		loadRouter( r, spec );
 		assertEquals( apiBase + "item/1066", r.findItemURIPath( "_", req, "/look/for/1066" ) );
@@ -139,7 +140,7 @@ public class TestItemRedirects {
 			Model m = ModelIOUtils.modelFromTurtle( config );
 						
 			Resource root = m.createResource( m.expandPrefix( ":root" ) );
-			APISpec spec = new APISpec( FileManager.get(), root, LoadsNothing.instance );
+			APISpec spec = new APISpec( EldaFileManager.get(), root, LoadsNothing.instance );
 			
 			Setup result = new Setup( spec );
 			loadRouter( result.r, spec ); 

@@ -15,11 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.core.APIEndpointImpl;
-import com.epimorphics.lda.core.NamedViews;
-import com.epimorphics.lda.core.Param;
-import com.epimorphics.lda.core.View;
-import com.epimorphics.lda.core.ViewSetter;
+import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.shortnames.ShortnameService;
 

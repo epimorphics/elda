@@ -7,7 +7,7 @@
 */
 package com.epimorphics.lda.renderers.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -18,9 +18,8 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.View;
-import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
-import com.epimorphics.lda.renderers.TurtleRenderer;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.Model;

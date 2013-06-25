@@ -7,11 +7,7 @@
 */
 package com.epimorphics.jsonrdf.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -19,7 +15,6 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.shared.JenaException;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.XSD;
-import com.sun.jersey.server.impl.model.parameter.multivalued.ExtractorContainerException;
 
 public class ModelIOUtils {
 

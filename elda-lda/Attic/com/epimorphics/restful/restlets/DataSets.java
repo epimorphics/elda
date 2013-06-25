@@ -97,7 +97,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
     @POST @Produces("text/html") public String sneakyInstall()
         {
         Model tdbm = ModelState.getModel();
-        Model m = FileManager.get().loadModel( "/tmp/install.ttl" );
+        Model m = EldaFileManager.get().loadModel( "/tmp/install.ttl" );
         tdbm.add( m ).setNsPrefixes( m );
         Resource type = m.createResource( m.expandPrefix( "ckan-data:Package" ) );
         for (Resource r: m.listSubjectsWithProperty( RDF.type, type ).toList())

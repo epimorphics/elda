@@ -1,6 +1,7 @@
 package com.epimorphics.lda.shortnames.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -8,7 +9,6 @@ import java.util.Set;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.shortnames.BuiltIn;
 import com.hp.hpl.jena.rdf.model.Model;

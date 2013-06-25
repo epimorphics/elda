@@ -7,10 +7,7 @@
 */
 package com.epimorphics.lda.support;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
     Fetch values from a Properties. There may be multiple matching keys. 

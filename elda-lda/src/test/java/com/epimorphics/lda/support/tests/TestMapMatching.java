@@ -8,13 +8,12 @@
 package com.epimorphics.lda.support.tests;
 
 
-import java.util.HashSet;
-import java.util.Properties;
-import java.util.Set;
+import static com.hp.hpl.jena.test.JenaTestBase.setOfStrings;
+import static org.junit.Assert.assertEquals;
+
+import java.util.*;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static com.hp.hpl.jena.test.JenaTestBase.setOfStrings;
 
 import com.epimorphics.lda.support.MapMatching;
 import com.epimorphics.lda.tests_support.MakeData;

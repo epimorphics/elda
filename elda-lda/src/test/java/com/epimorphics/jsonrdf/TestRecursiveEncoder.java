@@ -17,25 +17,23 @@
 
 package com.epimorphics.jsonrdf;
 
+import static com.epimorphics.jsonrdf.TestEncoder.modelRoots;
+import static com.epimorphics.jsonrdf.TestEncoder.parseJSON;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonException;
 import org.junit.Test;
-import org.openjena.atlas.json.JsonArray;
-import org.openjena.atlas.json.JsonException;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
-
-import static com.epimorphics.jsonrdf.TestEncoder.*;
 
 public class TestRecursiveEncoder {
     

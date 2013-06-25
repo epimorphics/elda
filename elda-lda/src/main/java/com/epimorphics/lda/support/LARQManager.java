@@ -9,22 +9,16 @@
 package com.epimorphics.lda.support;
 
 
-import java.io.File;
-import java.io.IOException;
-
+import org.apache.jena.larq.*;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.*;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.query.QueryExecution;
-import org.apache.jena.larq.*;
 import com.hp.hpl.jena.shared.WrappedException;
 
 public class LARQManager {

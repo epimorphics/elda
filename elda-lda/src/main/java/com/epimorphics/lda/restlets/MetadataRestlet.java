@@ -8,21 +8,17 @@
 
 package com.epimorphics.lda.restlets;
 
+import static com.epimorphics.lda.restlets.ControlRestlet.lookupRequest;
 import static com.epimorphics.lda.restlets.RouterRestlet.returnAs;
 import static com.epimorphics.lda.restlets.RouterRestlet.returnNotFound;
-import static com.epimorphics.lda.restlets.ControlRestlet.lookupRequest;
 
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletContext;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
 
 import com.epimorphics.jsonrdf.Encoder;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;

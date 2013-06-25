@@ -7,15 +7,13 @@
 */
 package com.epimorphics.jsonrdf.extras;
 
-import static org.openjena.atlas.lib.Chars.CH_QUOTE1 ;
-import static org.openjena.atlas.lib.Chars.CH_QUOTE2 ;
-
-import java.io.OutputStream ;
+import java.io.OutputStream;
 import java.io.Writer;
-import java.util.Stack ;
+import java.util.Stack;
 
-import org.openjena.atlas.json.JsonException;
-import org.openjena.atlas.lib.BitsInt ;
+import org.apache.jena.atlas.json.JsonException;
+import org.apache.jena.atlas.lib.BitsInt;
+import org.apache.jena.atlas.lib.Chars;
 
 
 /** 
@@ -96,7 +94,7 @@ public class JSStreamingWriter {
     { 
         final boolean allowBareWords = writeJavaScript ;
         
-        char quoteChar = CH_QUOTE2 ;
+        char quoteChar = Chars.CH_QUOTE2 ;
         int len = string.length() ;
         
         if ( allowBareWords )
@@ -124,7 +122,7 @@ public class JSStreamingWriter {
         }
 
         if ( allowBareWords )
-            quoteChar = CH_QUOTE1 ;
+            quoteChar = Chars.CH_QUOTE1 ;
         
         out.print(quoteChar) ;
         for (int i = 0; i < len; i++)
@@ -260,7 +258,7 @@ public class JSStreamingWriter {
     private static int oneHex(IndentedWriter out, int x, int i)
     {
         int y = BitsInt.unpack(x, 4*i, 4*i+4) ;
-        char charHex = org.openjena.atlas.lib.Chars.hexDigitsLC[y] ;
+        char charHex = Chars.hexDigitsLC[y] ;
         out.print(charHex) ; 
         return BitsInt.clear(x, 4*i, 4*i+4) ;
     }

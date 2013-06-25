@@ -1,6 +1,5 @@
 package com.epimorphics.lda.renderers.velocity;
 
-import java.io.PrintStream;
 import java.net.URI;
 import java.util.*;
 

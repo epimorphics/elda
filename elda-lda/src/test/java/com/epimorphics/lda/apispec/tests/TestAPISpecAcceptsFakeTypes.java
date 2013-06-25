@@ -8,13 +8,14 @@
 
 package com.epimorphics.lda.apispec.tests;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.core.Param;
+import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.core.Param.Info;
-import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.query.ValTranslator;
 import com.epimorphics.lda.query.ValTranslator.Filters;
 import com.epimorphics.lda.rdfq.Any;
@@ -22,11 +23,7 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-
-import static org.hamcrest.CoreMatchers.*;
+import com.hp.hpl.jena.vocabulary.*;
 
 public class TestAPISpecAcceptsFakeTypes 
 	{	

@@ -13,31 +13,21 @@
 package com.epimorphics.lda.core;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.shared.PrefixMapping;
 import com.epimorphics.lda.support.LanguageFilter;
 import com.epimorphics.lda.support.ModelPrefixEditor;
-
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.epimorphics.lda.vocabularies.XHV;
-import com.epimorphics.lda.vocabularies.ELDA;
-import com.epimorphics.lda.vocabularies.SPARQL;
-import com.hp.hpl.jena.sparql.vocabulary.DOAP;
-import com.epimorphics.lda.vocabularies.OpenSearch;
+import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.util.ModelUtils;
 import com.epimorphics.util.RDFUtils;
+import com.hp.hpl.jena.graph.Graph;
+import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.sparql.vocabulary.DOAP;
+import com.hp.hpl.jena.vocabulary.*;
 
 /**
   	Wrapper for the results of an API query before rendering.

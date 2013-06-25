@@ -1,26 +1,13 @@
 package com.epimorphics.lda.shortnames;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import com.epimorphics.lda.vocabularies.ELDA;
-import com.epimorphics.lda.vocabularies.EXTRAS;
-import com.epimorphics.lda.vocabularies.OpenSearch;
-import com.epimorphics.lda.vocabularies.SPARQL;
-import com.epimorphics.lda.vocabularies.XHV;
+import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.hp.hpl.jena.vocabulary.XSD;
+import com.hp.hpl.jena.vocabulary.*;
 
 public class BuiltIn {
 
@@ -28,7 +15,7 @@ public class BuiltIn {
 
 	public static ArrayList<Model> buildVocabularies() {
 		ArrayList<Model> result = new ArrayList<Model>();
-//		FileManager.get().loadModel( "src/main/resources/builtins/random.ttl" );
+//		EldaFileManager.get().loadModel( "src/main/resources/builtins/random.ttl" );
 		result.add( rdfModel() );
 		result.add( xsltModel() );
 		return result;

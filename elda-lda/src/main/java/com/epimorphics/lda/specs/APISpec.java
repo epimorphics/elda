@@ -11,7 +11,7 @@
  */
 
 package com.epimorphics.lda.specs;
-import static com.epimorphics.util.RDFUtils.*;
+import static com.epimorphics.util.RDFUtils.getStringValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +28,7 @@ import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
-import com.epimorphics.lda.sources.AuthMap;
-import com.epimorphics.lda.sources.GetDataSource;
-import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.sources.*;
 import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;

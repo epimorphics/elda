@@ -17,12 +17,12 @@
 
 package com.epimorphics.jsonrdf;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.StringReader;
 
+import org.apache.jena.atlas.json.JsonObject;
 import org.junit.Test;
-import org.openjena.atlas.json.JsonObject;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.hp.hpl.jena.rdf.model.Model;

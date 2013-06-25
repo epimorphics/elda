@@ -1,12 +1,7 @@
 package com.epimorphics.lda.restlets;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.ServletContext;
 
@@ -14,35 +9,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.core.APIFactory;
-import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.core.ModelLoader;
+import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.routing.APIModelLoader;
-import com.epimorphics.lda.routing.Container;
-import com.epimorphics.lda.routing.DefaultRouter;
-import com.epimorphics.lda.routing.Router;
-import com.epimorphics.lda.routing.RouterFactory;
-import com.epimorphics.lda.routing.ServletUtils;
+import com.epimorphics.lda.routing.*;
 import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
+import com.epimorphics.lda.routing.Container;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.sources.AuthMap.NamesAndValues;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specmanager.SpecManagerImpl;
 import com.epimorphics.lda.specs.APISpec;
-import com.epimorphics.lda.support.Glob;
-import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.support.*;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ResIterator;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.WrappedException;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.util.Locator;
-import com.hp.hpl.jena.util.LocatorFile;
+import com.hp.hpl.jena.util.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
@@ -119,7 +103,7 @@ public class RouterRestletSupport {
 	//	
 		Router result = new DefaultRouter();	
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
-        AuthMap am = AuthMap.loadAuthMap( FileManager.get(), noNamesAndValues );
+        AuthMap am = AuthMap.loadAuthMap( EldaFileManager.get(), noNamesAndValues );
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
         addBaseFilepath( baseFilePath );
     //
@@ -141,7 +125,7 @@ public class RouterRestletSupport {
 	    its not already in the instance's locator list.
 	*/
 	private static void addBaseFilepath(String baseFilePath) {
-		FileManager fm = FileManager.get();
+		FileManager fm = EldaFileManager.get();
 		for (Iterator<Locator> il = fm.locators(); il.hasNext();) {
 			Locator l = il.next();
 			if (l instanceof LocatorFile) 
@@ -149,7 +133,7 @@ public class RouterRestletSupport {
 					return;
 		}
 		log.info( "adding locator for " + baseFilePath );
-		FileManager.get().addLocatorFile( baseFilePath );
+		EldaFileManager.get().addLocatorFile( baseFilePath );
 	}
 
 	private static GetInitParameter adaptContext(final ServletContext con) {
@@ -178,7 +162,7 @@ public class RouterRestletSupport {
 			} catch (APISecurityException e) {
 				throw new WrappedException(e);
 			}
-			APISpec apiSpec = new APISpec( am, FileManager.get(), specRoot, ml );
+			APISpec apiSpec = new APISpec( am, EldaFileManager.get(), specRoot, ml );
 			APIFactory.registerApi( router, prefixPath, apiSpec );
 		}
 	}

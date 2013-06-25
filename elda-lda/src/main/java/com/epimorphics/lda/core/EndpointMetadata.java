@@ -17,17 +17,12 @@ import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.EndpointDetails;
-
 import com.epimorphics.lda.vocabularies.*;
-
 import com.epimorphics.util.URIUtils;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
-
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import com.hp.hpl.jena.vocabulary.*;
 
 /**
     Class to handle the construction of metadata for API endpoint results.

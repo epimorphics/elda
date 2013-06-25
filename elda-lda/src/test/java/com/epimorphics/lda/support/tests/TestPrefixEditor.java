@@ -1,7 +1,6 @@
 package com.epimorphics.lda.support.tests;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 

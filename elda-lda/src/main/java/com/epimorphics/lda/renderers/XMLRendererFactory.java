@@ -1,8 +1,7 @@
 package com.epimorphics.lda.renderers;
 
 import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.shortnames.CompleteContext;
-import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Resource;

@@ -17,56 +17,36 @@
 
 package com.epimorphics.lda.restlets;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.*;
+import java.net.*;
 import java.util.*;
 
+import javax.servlet.*;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.Version;
-import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.cache.Cache;
-import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.core.APIEndpointUtil;
-import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.exceptions.UnknownShortnameException;
-import com.epimorphics.lda.exceptions.QueryParseException;
+import com.epimorphics.lda.core.*;
+import com.epimorphics.lda.exceptions.*;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
-import com.epimorphics.lda.routing.Match;
-import com.epimorphics.lda.routing.Router;
-import com.epimorphics.lda.routing.ServletUtils;
+import com.epimorphics.lda.routing.*;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
-import com.epimorphics.lda.support.Controls;
-import com.epimorphics.lda.support.ModelPrefixEditor;
-import com.epimorphics.lda.support.MultiMap;
-import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.support.statistics.StatsValues;
-import com.epimorphics.util.Couple;
-import com.epimorphics.util.DOMUtils;
+import com.epimorphics.util.*;
 import com.epimorphics.util.MediaType;
-import com.epimorphics.util.Triad;
-import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.shared.WrappedException;
-import com.hp.hpl.jena.util.FileManager;
 import com.sun.jersey.api.NotFoundException;
 
 /**
@@ -192,9 +172,9 @@ import com.sun.jersey.api.NotFoundException;
 	private static long getRefreshInterval(String contextPath) {
 		long delay = TimestampedRouter.DEFAULT_INTERVAL;
 		 String intervalFileName = "/etc/elda/conf.d/" + contextPath + "/delay.int";
-		InputStream is = FileManager.get().open( intervalFileName );
+		InputStream is = EldaFileManager.get().open( intervalFileName );
 		 if (is != null) {
-			String t = FileManager.get().readWholeFileAsUTF8(is);
+			String t = EldaFileManager.get().readWholeFileAsUTF8(is);
 			try { is.close(); } catch (IOException e) { throw new WrappedException( e ); }
 			long n = t.startsWith("FOREVER") 
 				? TimestampedRouter.forever 

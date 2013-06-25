@@ -1,10 +1,6 @@
 package com.epimorphics.lda.renderers.velocity;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import java.io.*;
 import java.util.List;
 
 import org.apache.velocity.Template;

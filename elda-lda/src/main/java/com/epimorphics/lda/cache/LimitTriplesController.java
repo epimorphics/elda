@@ -8,8 +8,8 @@
 
 package com.epimorphics.lda.cache;
 
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import com.epimorphics.lda.core.APIResultSet;
 import com.hp.hpl.jena.rdf.model.Resource;

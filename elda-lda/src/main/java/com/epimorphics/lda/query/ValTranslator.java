@@ -10,12 +10,7 @@ package com.epimorphics.lda.query;
 
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.core.VarSupply;
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.Apply;
-import com.epimorphics.lda.rdfq.Infix;
-import com.epimorphics.lda.rdfq.RDFQ;
-import com.epimorphics.lda.rdfq.RenderExpression;
-import com.epimorphics.lda.rdfq.Variable;
+import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.vocabs.API;
 

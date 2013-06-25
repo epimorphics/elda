@@ -17,15 +17,17 @@
 
 package com.epimorphics.jsonrdf;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.StringReader;
 import java.util.List;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
+import com.epimorphics.lda.support.EldaFileManager;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.util.FileManager;
 
 /**
  * Tests for decoding raw JSON serializations.
@@ -38,7 +40,7 @@ import com.hp.hpl.jena.util.FileManager;
  */
 public class TestDecode {
 
-    static Context context = new Context( FileManager.get().loadModel("src/test/resources/apicontext.ttl") );
+    static Context context = new Context( EldaFileManager.get().loadModel("src/test/resources/apicontext.ttl") );
 
     @Test
     public void testRawDecode() {
@@ -61,7 +63,7 @@ public class TestDecode {
     }
     
     public boolean checkModel(Model actual, String expectedFile) {
-        Model expected = FileManager.get().loadModel(expectedFile);
+        Model expected = EldaFileManager.get().loadModel(expectedFile);
         if ( ! expected.isIsomorphicWith(actual)) {
             System.out.println("Model check failed, found:");
             actual.write(System.out, "Turtle");

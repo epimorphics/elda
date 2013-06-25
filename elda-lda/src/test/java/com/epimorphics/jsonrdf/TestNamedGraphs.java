@@ -34,22 +34,21 @@
 
 package com.epimorphics.jsonrdf;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
+import static com.epimorphics.jsonrdf.utils.ModelIOUtils.modelFromTurtle;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.*;
 import java.util.Iterator;
 
+import org.apache.jena.atlas.json.JsonException;
 import org.junit.Test;
-import org.openjena.atlas.json.JsonException;
 
 import com.epimorphics.jsonrdf.utils.ModelCompareUtils;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.hp.hpl.jena.query.DataSource;
+import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.rdf.model.Model;
-
-import static com.epimorphics.jsonrdf.utils.ModelIOUtils.modelFromTurtle;
-import static org.junit.Assert.*;
 
 /**
  * Test the round tripping of named graphs
@@ -62,7 +61,7 @@ public class TestNamedGraphs {
     public void testNamedGraphs(String def, String[] names, String[] graphs) throws IOException, JsonException {
         Model defM = modelFromTurtle(def);
         Context context = new Context(defM);
-        DataSource source = DatasetFactory.create(defM);
+        Dataset source = DatasetFactory.create(defM);
         for (int i = 0; i < names.length; i++) {
             source.addNamedModel(names[i], ModelIOUtils.modelFromTurtle(graphs[i]));
         }
@@ -72,7 +71,7 @@ public class TestNamedGraphs {
 //        System.out.println(encoding);
         
         StringReader reader = new StringReader( encoding );
-        DataSource result = Decoder.decodeGraphs(context, reader);
+        Dataset result = Decoder.decodeGraphs(context, reader);
         assertTrue("Check default model", result.getDefaultModel().isIsomorphicWith(defM));
         int i = 0;
         for (Iterator<String> ni = result.listNames(); ni.hasNext(); ) {

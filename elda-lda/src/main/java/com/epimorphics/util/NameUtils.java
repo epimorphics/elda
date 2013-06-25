@@ -3,7 +3,6 @@ package com.epimorphics.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.epimorphics.jsonrdf.Context;
 import com.hp.hpl.jena.rdf.model.impl.Util;
 
 public class NameUtils {

@@ -17,25 +17,18 @@
 
 package com.epimorphics.lda.tests;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
+import java.io.*;
 
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.core.APIResultSet;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
+import com.epimorphics.lda.support.EldaFileManager;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.NotFoundException;
-import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDFS;
-import com.epimorphics.lda.tests.APITester;
 
 public class TestAPI {
 
@@ -53,7 +46,7 @@ public class TestAPI {
             rsm.write(System.out, "Turtle");
         } else {
             try {
-                Model expected = FileManager.get().loadModel(TEST_BASE + expectedResults);
+                Model expected = EldaFileManager.get().loadModel(TEST_BASE + expectedResults);
                 if ( ! compareNormalized(expected, rsm)) {
                     // Print out to help debugging
 //                    System.out.println(">>  FAILED output for " + description + " [" + expectedResults + "]");

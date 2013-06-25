@@ -6,11 +6,7 @@
 */
 package com.epimorphics.lda.renderers;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Map;
 
 import javax.xml.transform.Transformer;
@@ -23,17 +19,17 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.hp.hpl.jena.rdf.model.*;
-import com.epimorphics.util.DOMUtils;
-import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.shared.WrappedException;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
+import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
-import com.epimorphics.lda.shortnames.CompleteContext;
-import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
+import com.epimorphics.util.DOMUtils;
+import com.epimorphics.util.MediaType;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.shared.WrappedException;
 
 public class XMLRenderer implements Renderer {
 	

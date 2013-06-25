@@ -38,7 +38,7 @@ if [ ${_CLEAN} == "yes" ]; then
   rm -rf meta_differences/*
 fi
 
-rm servers.log
+rm -f servers.log
 
 if [ $_JAR == "yes" ]; then
   echo "Building current (probably snapshot) jar"
@@ -94,13 +94,24 @@ for config_file in configs/*.ttl; do
   echo
   export config=$(echo $config_file | sed -e 's:.*/::' -e 's/\.ttl$//')
   export c_name=${config}
+
+  echo ___ java -jar this-elda/* -Djetty.port=${_PORT} -Delda.spec=$PWD/$config_file
+
   java -jar this-elda/* -Djetty.port=${_PORT} -Delda.spec=$PWD/$config_file &>> servers.log & 
   sleep 10
 #
   for uri in $(cat uris/$config); do
     export u_name=$(echo $uri | sed -e 's/[^A-Za-z0-9._\-]\+/_/g')
     export r_name=elda-${e_name}_${config}_${u_name}
-    wget -O results/${r_name} http://localhost:${_PORT}/$uri &> clients.log
+
+    #
+    # patching because the standalone jar's context path changed with 1.2.23
+    #
+    export standalone_uri=$(echo $uri | sed -e s/elda/standalone/)
+    echo ___ wget -O results/${r_name} http://localhost:${_PORT}/$standalone_uri 
+    wget -O results/${r_name} http://localhost:${_PORT}/$standalone_uri &> clients.log
+    sed -i -e 's:standalone:elda/API:g' results/${r_name}
+
     for elda in eldas/*.jar; do
       export o_name=$(echo $elda | sed -e 's/.*-standalone-//' -e 's/.jar//')
       export d_file=${e_name}_vs_${o_name}_${c_name}_${u_name}
