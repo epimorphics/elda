@@ -15,6 +15,9 @@ easier to manage. Existing configurations (using the Elda
 Loader class) should continute to work but support for Loader
 will be dropped in a future Elda release.
 
+NOTE that the artifact previously known as `lda` is now
+`elda-lda` for consistency with the other elda- artifacts.
+
 ===========================================================
 
 * The json-rdf module has been absorbed into Elda.  
@@ -26,7 +29,7 @@ will be dropped in a future Elda release.
     elda-assets			scripts, stylesheets, images etc for _resourceRoot
     elda-common			externally configurable WAR file
     elda-bundled		elda-assets + elda-common
-    elda-lda			elda's core code
+    elda-lda			elda's core code (used to be just `lda`)
     elda-standalone		self-contained configurable Elda server
 
   For internal use:
