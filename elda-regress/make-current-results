@@ -1,0 +1,25 @@
+# make results using the current elda standalone jar
+# (whatever that is)
+
+for config_file in configs/*.ttl; do
+  echo
+  echo ";;; configuration" ${config_file} "------------------------------------------------------"
+  echo
+  export config=$(echo $config_file | sed -e 's:.*/::' -e 's/\.ttl$//')
+  export c_name=${config}
+
+  echo ___ java -jar this-elda/* -Djetty.port=${_PORT} -Delda.spec=$PWD/$config_file
+
+  java -jar this-elda/* -Djetty.port=${_PORT} -Delda.spec=$PWD/$config_file &>> servers.log & 
+  sleep 10
+#
+  for uri in $(cat uris/$config); do
+    export u_name=$(echo $uri | sed -e 's/[^A-Za-z0-9._\-]\+/_/g')
+    export r_name=elda-${e_name}_${config}_${u_name}
+
+	echo ___ wget -O results/${r_name} http://localhost:${_PORT}/$uri 
+
+    wget -O results/${r_name} http://localhost:${_PORT}/$uri &> clients.log
+  done
+  pkill -f elda.spec
+done

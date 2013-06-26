@@ -1,5 +1,22 @@
 Elda 1.2.23
 
+===========================================================
+
+This release of Elda has significant changes in Elda
+initialisation, configuration, and internal structure.
+Users who are upgrading their Elda MUST read these
+release notes and the Elda documentation at
+
+ http://elda.googlecode.com/hg/docs/E1.2.23-index.html
+ http://elda.googlecode.com/hg/docs/E1.2.23-advanced.html
+
+carefully. These changes should make future Elda updates
+easier to manage. Existing configurations (using the Elda
+Loader class) should continute to work but support for Loader
+will be dropped in a future Elda release.
+
+===========================================================
+
 * The json-rdf module has been absorbed into Elda.  
   The Elda assets have been moved to their own module.
   An elda-common module provides an externally configurable
@@ -27,10 +44,6 @@ Elda 1.2.23
 
 * ELDA STANDALONE. The context name for the Elda Standalone servlet is now
   "standalone", not "elda".
-
-* The URIs in fetched data can be rewritten to help with staging; see
-  
-    http://elda.googlecode.com/hg/docs/E1.2.23-advanced.html
 
 * Elda's specification of where config files are to be found now includes
   globbing; that is, the character * in a pathname means 0 or more non-/
@@ -86,3 +99,6 @@ Elda 1.2.23
 
 * VELOCITY. Velocity templates loaded from configurable location. Default 
   templates now respect _resourceRoot via [].
+
+* JENA. Elda has been updated to use Jena 2.10.1 (with TDB 0.10.1 if
+  using the built-in TDB handler).

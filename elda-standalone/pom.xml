@@ -20,7 +20,7 @@
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>elda-lda</artifactId>
       <version>${project.version}</version>
-    </dependency>
+  </dependency>
 
     <dependency>
       <groupId>junit</groupId>
