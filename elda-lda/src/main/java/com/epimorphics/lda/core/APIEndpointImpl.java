@@ -18,6 +18,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.cache.Cache.Registry;
@@ -31,10 +32,10 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.*;
 import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.*;
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
@@ -74,25 +75,24 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     @Override public Triad<APIResultSet, Map<String, String>, Bindings> call( Request r ) {
-		Bindings cc = r.context.copyWithDefaults( spec.getBindings() );
+		Bindings b = r.context.copyWithDefaults( spec.getBindings() );
 	    APIQuery query = spec.getBaseQuery();
 	//
-	    if (cc.getValueString( "callback" ) != null && !"json".equals( r.format ))
+	    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
 			EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );
 	//
-	    View view = buildQueryAndView( cc, query );
+	    View view = buildQueryAndView( b, query );
 	//    
-	    APIResultSet unfiltered = query.runQuery( r.c, spec.getAPISpec(), cache, cc, view );
+	    APIResultSet unfiltered = query.runQuery( r.c, spec.getAPISpec(), cache, b, view );
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
-	    
-	    CompleteContext c = 
-	    		new CompleteContext( r.mode, spec.getAPISpec().getShortnameService().asContext(), filtered.getModelPrefixes() )
-	    		.include( filtered.model.getMergedModel() )
-	    		;    
-	    
-	    createMetadata(r, c, filtered, cc, query);  
-	    return new Triad<APIResultSet, Map<String, String>, Bindings>( filtered, c.Do(), cc );
+	//
+	    Context context = spec.getAPISpec().getShortnameService().asContext();
+		CompleteContext cc = new CompleteContext( r.mode, context, filtered.getModelPrefixes() );   
+	    createMetadata( r, cc, filtered, b, query );
+	    cc.include( filtered.getMergedModel() );	    
+	    Triad<APIResultSet, Map<String, String>, Bindings> result = new Triad<APIResultSet, Map<String, String>, Bindings>( filtered, cc.Do(), b );
+		return result;
     }
 
     private View buildQueryAndView( Bindings context, APIQuery query ) {
@@ -155,6 +155,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
 		MergedModels mergedModels = rs.getModels();		
 		Model metaModel = mergedModels.getMetaModel();
+		cc.include( metaModel );
 	//
 		Resource thisMetaPage = metaModel.createResource( r.requestURI.toString() ); 
 		Resource uriForSpec = metaModel.createResource( spec.getSpecificationURI() ); 

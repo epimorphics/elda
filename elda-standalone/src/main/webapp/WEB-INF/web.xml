@@ -8,16 +8,7 @@
 	<context-param>
 	   <param-name>com.epimorphics.api.initialSpecFile</param-name>
         <param-value>
-            hello::specs/hello-world.ttl
-            , again::specs/hello-again-world.ttl
-            , tiny::specs/tiny-education.ttl
-            , mini::specs/mini-education.ttl
-            , full::specs/full-education.ttl
-            , old::specs/old-education.ttl
-            , mountain::specs/mountain.ttl
-            , velocity::specs/hello-velocity.ttl
-            , ved::specs/mini-education-velocity.ttl
-            , demo-*::/etc/elda/conf.d/demo-*.ttl
+            /etc/elda/conf.d/ROOT/config.ttl
         </param-value>
 	</context-param>
   

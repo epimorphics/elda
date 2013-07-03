@@ -621,8 +621,8 @@ public class XMLRendering {
 		List<Property> properties = new ArrayList<Property>( set );
 		Collections.sort( properties, new Comparator<Property>() {
             @Override public int compare(Property a, Property b) {
-//            	if (nameMap.get(a.getURI()) == null) throw new RuntimeException( "A: " + a + " has no shortname" );
-//            	if (nameMap.get(b.getURI()) == null) throw new RuntimeException( "B: " + b + " has no shortname" );
+            	if (nameMap.get(a.getURI()) == null) throw new RuntimeException( "A: " + a + " has no shortname" );
+            	if (nameMap.get(b.getURI()) == null) throw new RuntimeException( "B: " + b + " has no shortname" );
                 return nameMap.get( a.getURI() ).compareTo( nameMap.get( b.getURI() ) );
             }
         	} );
