@@ -139,7 +139,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
                 enc = Encoder.getForOneResult().encodeRecursive(rec.getSpecModel(), roots).toString();
             } catch (JsonException e) {
                 return returnError(e);
-            } catch (Throwable e) { // TODO ensure this is clean
+            } catch (Throwable e) {
             	return returnError( e.getMessage() );
             }
             return returnAs(enc, "application/json");
@@ -153,7 +153,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            // TODO replace by sensible template renderer
+            // TODO replace by sensible template renderer (Issue 53)
             String body = Util.readResource("textlike/spec-form.html")
                 .replace("${endpoint}", pathstub)
                 .replace("${list}", ui.getBaseUri() + "api/" + pathstub)

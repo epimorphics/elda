@@ -282,7 +282,7 @@ public class APIResultSet implements SetsMetadata {
      * @param languages  acceptable language codes for literals
      */
     public APIResultSet getFilteredSet( View v, String languages ) {
-    	ModelPrefixEditor mpe = new ModelPrefixEditor(); // TODO: eliminate
+    	ModelPrefixEditor mpe = new ModelPrefixEditor();
     	if (languages != null) LanguageFilter.filterByLanguages( model.object, languages.split(",") );
         // model.setNsPrefixes( model );
         List<Resource> mappedResults = new ArrayList<Resource>();

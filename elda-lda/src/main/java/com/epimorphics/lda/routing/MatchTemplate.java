@@ -23,7 +23,7 @@ import com.epimorphics.util.Couple;
 public class MatchTemplate<T> {
 	
 	private final String template;
-	public /* TODO unpublish */  final Pattern compiled;
+	private final Pattern compiled;
 	private final List<Couple<String, Integer>> where;
 	private final int literals;
 	private final int patterns;

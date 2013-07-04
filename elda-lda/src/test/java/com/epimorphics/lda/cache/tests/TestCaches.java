@@ -40,7 +40,6 @@ public class TestCaches
 			{ return "FakeSource:" + name; }
 
 		@Override public Lock getLock() {
-			// TODO Auto-generated method stub
 			return null;
 			}
 

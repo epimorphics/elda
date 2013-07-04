@@ -39,8 +39,8 @@
       </fileSet>
       
       <fileSet>
-          <directory>elda-standalone/root</directory>
-          <outputDirectory>webapps/root</outputDirectory>
+          <directory>ROOT</directory>
+          <outputDirectory>webapps/ROOT</outputDirectory>
       </fileSet>
 
       <fileSet>

@@ -25,9 +25,7 @@ import com.hp.hpl.jena.datatypes.BaseDatatype;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.impl.XSDBaseNumericType;
-import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.impl.LiteralImpl;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.XSD;
 
@@ -175,13 +173,6 @@ public class EncoderDefault implements EncoderPlugin {
 		// (suppressing language tags)
 		jw.value( lex );
     }
-
-    /** 
-     * Encode a string to protect characters used to encode types and lang tags.
-     */
-    public static String escapeString(String lex) {
-        return lex; // TODO fix global issue lex.replaceAll("([@\\^\\\\<])", "\\\\$1");
-    }
     
     /**
      * Decode a string to reverse escapement of meta characters
@@ -288,7 +279,7 @@ public class EncoderDefault implements EncoderPlugin {
                 int split = lex.lastIndexOf('@');
                 String lang = lex.substring(split+1);
                 lex = lex.substring(0, split);
-                return new LiteralImpl(Node.createLiteral(lex, lang, false), null);
+                return ResourceFactory.createLangLiteral(lex, lang);
             } else {
                 return ResourceFactory.createPlainLiteral(lex);
             }

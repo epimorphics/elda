@@ -289,7 +289,6 @@ import com.sun.jersey.api.NotFoundException;
 	}
     
 	//** return (revised path, renderer name or null)
-    // TODO work out a spec-conformant method for this lookup
     public static Couple<String, String> parse( String pathstub ) 
         {
         String path = pathstub, type = null;

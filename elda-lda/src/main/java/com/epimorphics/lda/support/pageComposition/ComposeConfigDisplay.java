@@ -187,8 +187,6 @@ public class ComposeConfigDisplay {
     	return pm.shortForm( uri );    	
     }
 
-    // TODO: metadataoptions, factories
-    // link to parent
     void renderEndpoint( StringBuilder sb, Which w, URI base, String pathStub, PrefixMapping pm, APIEndpointSpec s ) {
     	Resource ep = s.getResource();
     	Bindings b = s.getBindings();

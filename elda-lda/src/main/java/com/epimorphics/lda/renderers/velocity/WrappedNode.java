@@ -60,7 +60,6 @@ public class WrappedNode implements Comparable<WrappedNode> {
 	}
 	
 	public WrappedNode( ShortNames sn, IdMap ids, RDFNode r ) {
-		// TODO may be obsolete
 		this( new Bundle( sn, ids ), r );
 	}
 	

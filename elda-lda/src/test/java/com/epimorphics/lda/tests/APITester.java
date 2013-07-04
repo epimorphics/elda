@@ -102,7 +102,6 @@ public class APITester {
         if (match == null) 
             throw new APIException("Tester failed to find routed endpoint: " + uriTemplate);
         MultiMap<String, String> map = MakeData.parseQueryString( queryString );
-        // TODO: the template should be a proper URI.
 		URI ru = URIUtils.newURI(uriTemplate);
 		Bindings call = Bindings.createContext( fix( match.getBindings() ), map );
         return match.getEndpoint().call( new APIEndpoint.Request(controls, ru, call)).a;

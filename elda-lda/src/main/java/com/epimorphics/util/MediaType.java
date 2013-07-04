@@ -105,7 +105,7 @@ public class MediaType
 	
 	/**
 	    Answer true iff <code>other</code> is a MediaType with the same
-	    type and subtype (IGNORING the Q-value; is this an error? TODO)
+	    type and subtype
 	*/
 	@Override public boolean equals( Object other ) 
 		{ return other instanceof MediaType && same( (MediaType) other ); }

@@ -107,7 +107,6 @@ public class ServletUtils {
 		return wildPrefix.replace( "*", (matched == null ? "NOMATCH" : matched) );
 	}
 
-	// TODO duplication of information. should do better sometime.
 	public static boolean isSpecialName( String specPath ) {
 		return specPath.startsWith( Container.LOCAL_PREFIX ) 
 			|| specPath.startsWith( TDBManager.PREFIX )

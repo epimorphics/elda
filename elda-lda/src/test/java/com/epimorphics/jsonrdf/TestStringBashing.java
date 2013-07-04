@@ -36,26 +36,9 @@ package com.epimorphics.jsonrdf;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.epimorphics.jsonrdf.impl.EncoderDefault;
-
 public class TestStringBashing {
-
-    @Test @Ignore public void testEncode() {
-        doTestEncode("foo bar", "foo bar");
-        doTestEncode("foo^^bar", "foo\\^\\^bar");
-        doTestEncode("foo\\bar", "foo\\\\bar");
-        doTestEncode("/foo/bar", "/foo/bar");
-        doTestEncode("http://foo/bar", "http://foo/bar");
-    }
-    
-    private void doTestEncode(String src, String expected) {
-        String actual = EncoderDefault.escapeString(src);
-        assertEquals(expected, actual);
-        assertEquals(src, EncoderDefault.unescapeString(actual));
-    }
     
     @Test public void testURIs() {
         assertEquals(true, RDFUtil.looksLikeURI("http://www.foo.bar/baz"));

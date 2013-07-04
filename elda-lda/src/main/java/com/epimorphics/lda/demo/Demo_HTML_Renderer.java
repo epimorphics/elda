@@ -26,7 +26,6 @@ import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Filter;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
-// TODO needs rewriting so that it can stream
 public class Demo_HTML_Renderer implements Renderer {
 
 	protected final APIEndpoint endpoint;
@@ -53,7 +52,6 @@ public class Demo_HTML_Renderer implements Renderer {
     	return CompleteContext.Mode.PreferLocalnames;
     }
 
-	// TODO rewrite for streaming output
     @Override public Renderer.BytesOut render( Times t, Bindings ignored, Map<String, String> termBindings, APIResultSet results ) {
     	handleFakeBnodes( results.getMergedModel() );
     	boolean isItemRendering = results.listStatements( null, API.items, (RDFNode) null ).hasNext() == false;

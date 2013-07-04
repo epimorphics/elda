@@ -68,8 +68,6 @@ public class TestPrefixLogger {
 		assertEquals( set( "a" ), findPrefixes( ">[_a:" ) );
 	}
 	
-	// TODO test cases with actual non-ascii letters in them.
-
 	private Set<String> findPrefixes( String s ) {
 		Set<String> result = new HashSet<String>();
 		Matcher m = qnp.matcher( s );

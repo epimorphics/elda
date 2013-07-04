@@ -37,8 +37,6 @@ public abstract class BytesOutTimed implements BytesOut {
 	        t.setRenderedSize( cos.size() );
 	        t.setRenderDuration( System.currentTimeMillis() - base, getFormat() );
 		} catch (Throwable e) {
-			// TODO be more specific about what's caught. Distinguish client aborts
-			// from internal failures.
 			log.warn( "client exception during streaming: " + e.getMessage() );
 			e.printStackTrace( System.err );
 		}

@@ -221,12 +221,6 @@ public class EncoderDefault implements EncoderPlugin {
         jw.endObject();
     }
 
-    /** 
-     * Encode a string to protect characters used to encode types and lang tags.
-     */
-    public static String escapeString(String lex) {
-        return lex; // TODO fix global issue lex.replaceAll("([@\\^\\\\<])", "\\\\$1");
-    }
     
     /**
      * Decode a string to reverse escapement of meta characters

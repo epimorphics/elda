@@ -18,14 +18,12 @@ public class CompleteContext {
 	final PrefixMapping prefixes;
 	final boolean transcodedNames;
 	final boolean allowUniqueLocalnames;
-	final Model model = ModelFactory.createDefaultModel();
+	public final Model model = ModelFactory.createDefaultModel();
 	
 	final Map<String, String> uriToShortname = new HashMap<String, String>();
 	
 	public enum Mode { 
 		RoundTrip, PreferPrefixes, PreferLocalnames ;
-	
-		public int n() { return 27; }		
 		
 		public static Mode decode( Resource root, Mode defaultMode ) {
 			if (root == null) return defaultMode;
@@ -53,7 +51,7 @@ public class CompleteContext {
 		final String ns;
 		final String ln;
 		
-		SplitURI(String uri, String ns, String ln) {
+		private SplitURI(String uri, String ns, String ln) {
 			this.uri = uri;
 			this.ns = ns;
 			this.ln = ln;
@@ -71,11 +69,11 @@ public class CompleteContext {
 		}
 		
 		@Override public int hashCode() {
-			return ns.hashCode() ^ ln.hashCode();
+			return uri.hashCode();
 		}
 
 		private boolean same(SplitURI other) {
-			return ns.equals(other.ns) && ln.equals(other.ln);
+			return uri.equals(other.uri);
 		}
 	}
 
@@ -94,7 +92,7 @@ public class CompleteContext {
 		return include( m ).Do();
 	}
 
-	public Map<String, String> Do() {
+	public Map<String, String> Do() {	
 		uriToShortname.clear();
 	//
 		uriToShortname.put(API.value.getURI(), "value");
@@ -102,13 +100,14 @@ public class CompleteContext {
 	//
 		pickPreferredShortnames();
 		Set<SplitURI> modelTerms = loadModelTerms( uriToShortname.keySet() );
-		
+	//
 		if (transcodedNames) {
 			oldTermHandler( uriToShortname, modelTerms );
 		} else {
 			extractPrefixedAndUniqueShortnames(	modelTerms );
 			extractHashedShortnames( modelTerms );
 		}
+	//
 		return uriToShortname;
 	}
 
@@ -193,65 +192,6 @@ public class CompleteContext {
 			uriToShortname.put( uri, bestShortname( shortNames.get(uri) ) );
 		}
 	}	
-	
-//	public Map<String, String> Do1(Model m, PrefixMapping pm) {
-//		
-//		Map<String, String> uriToShortname = new HashMap<String, String>();
-//	//		
-//		// force this for ensuring regressions pass. May be unnecessary soon.
-//		uriToShortname.put(API.value.getURI(), "value");
-//		uriToShortname.put(API.label.getURI(), "label");
-//	//
-//		pickPreferredShortnames( uriToShortname );
-//		Set<String> modelTerms = loadModelTerms( m, uriToShortname.keySet() );				
-//		
-//		if (transcodedNames) {
-//			oldTermHandler(uriToShortname, modelTerms);
-//		} else  {
-//			Map<String, List<String>> localNameToURIs = handlePrefixableNames(pm, uriToShortname, modelTerms);
-//			handleSyntheticNames(uriToShortname, localNameToURIs);
-//		}
-//		return uriToShortname;
-//	}
-
-//	// create synthetic shortnames for those URIs which can't be done
-//	// any other way.
-//	private void handleSyntheticNames(Map<String, String> result, Map<String, List<String>> localNameToURIs) {
-//		for (String loc: localNameToURIs.keySet()) {
-//			List<String> options = localNameToURIs.get(loc);
-//			
-//			if (options.size() == 1 && allowUniqueLocalnames) {
-//				result.put( options.get(0), loc );	
-//			} else {
-//				for (int i = 0; i < options.size(); i += 1) {
-//					result.put( options.get(i), encodeLocalname(loc, options.get(i) ) );
-//				}
-//			}
-//		}
-//	}
-
-//	// create prefix_localname shortnames for those URIs that can have them.
-//	private Map<String, List<String>> handlePrefixableNames
-//		(PrefixMapping pm, Map<String, String> result, Set<String> modelTerms ) {
-//		Map<String, List<String>> localNameToURIs = new HashMap<String, List<String>>();
-//				
-//		for (String mt: modelTerms) {
-//			int cut = splitNamespace( mt );
-//			String ns = mt.substring( 0, cut );
-//			String ln = mt.substring( cut );
-//			String prefix = pm.getNsURIPrefix( ns );
-//		//
-//			if (prefix != null && NameUtils.isLegalShortname(ln)) {
-//				result.put( mt, prefix + "_" + ln );
-//			} else {
-//				String localName = localNameOf( mt ); // .substring( cut );
-//				List<String> URIs = localNameToURIs.get( localName );
-//				if (URIs == null) localNameToURIs.put( localName, URIs = new ArrayList<String>() );
-//				URIs.add( mt );
-//			}
-//		}
-//		return localNameToURIs;
-//	}
 
 	private void oldTermHandler(Map<String, String> result,	Set<SplitURI> modelTerms) {
 		for (SplitURI mt: modelTerms) result.put( mt.uri, Transcoding.encode( prefixes, mt.uri ) );
@@ -262,17 +202,15 @@ public class CompleteContext {
 	    datatypes, excluding those that have already been seen. These are
 	    the terms that will need to be given shortnames.
 	*/
-	private Set<SplitURI> loadModelTerms(Set<String> seenTerms) {
+	private Set<SplitURI> loadModelTerms(Set<String> seenTerms) {		
 		Set<SplitURI> modelTerms = new HashSet<SplitURI>();
 		for (StmtIterator sit = model.listStatements(); sit.hasNext();) {
 			Statement s = sit.next();
 			String predicate = s.getPredicate().getURI();
-			
-//			if (predicate.equals("http://purl.org/linked-data/api/vocab#sparqlEndpoint"))
-//				System.err.println( ">> YAY HAY HO!" );
-			
+						
 			if (!seenTerms.contains( predicate )) 
-				modelTerms.add( SplitURI.create(predicate) );
+				modelTerms.add( SplitURI.create(predicate) );	
+			
 			Node o = s.getObject().asNode();
 			if (o.isLiteral()) {
 				String type = o.getLiteralDatatypeURI();
