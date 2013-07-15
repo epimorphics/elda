@@ -87,12 +87,6 @@
 #	; dct:publisher <http://www.treefroggames.com/age-of-steam>
 #	.
 
-<http://www.riograndegames.com/> a hello:Publisher
-	; rdfs:label "Rio Grande Games"
-
-	; hello:players 99
-	.
-	
 <http://www.treefroggames.com/age-of-industry> a hello:BoardGame
 	; rdfs:label "Age of Industry"
 	; hello:players 2, 3, 4, 5
