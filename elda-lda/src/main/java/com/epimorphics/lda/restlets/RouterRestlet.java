@@ -145,14 +145,14 @@ import com.sun.jersey.api.NotFoundException;
     	 if (r == null) {
     		 log.info( "creating router for '" + contextPath + "'");
     		 long interval = getRefreshInterval(contextPath);
-    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), interval, timeNow );
+    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), timeNow, interval );
     		 routers.put(contextPath, r );
     	 } else if (r.nextCheck < timeNow) {
 	    	 long latestTime = RouterRestletSupport.latestConfigTime(con, contextPath);
-	    	 if (r.timestamp < latestTime) {
+	    	 if (latestTime > r.timestamp) {
 	    		 log.info( "reloading router for '" + contextPath + "'");
 	    		 long interval = getRefreshInterval(contextPath);
-	    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), interval, timeNow );
+	    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), timeNow, interval );
 	    		 DOMUtils.clearCache();
 	    		 Cache.Registry.clearAll();
 	    		 routers.put( contextPath, r );	    		 
