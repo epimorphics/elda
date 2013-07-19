@@ -144,6 +144,7 @@ public class EncoderDefault implements EncoderPlugin {
 			} else {
 				if (showUnhandled)
 					{
+					// Issue #178
 					log.warn( "unhandled datatype '" + dt + "' in literal '" + spelling + "'" );
 					showUnhandled = false;
 					}
