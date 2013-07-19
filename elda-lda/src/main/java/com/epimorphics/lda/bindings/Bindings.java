@@ -225,6 +225,7 @@ public class Bindings implements Lookup
 			if (thisV == null) 
 				{
 				sb.append( "{" ).append( name ).append( "}" );
+				// issue #177
 				log.debug( "variable " + name + " has no value, not substituted." );
 				}
 			else
@@ -236,6 +237,7 @@ public class Bindings implements Lookup
 				if (value == null)
 					{
 					sb.append( "{" ).append( name ).append( "}" );
+					// issue #177
 					log.debug( "variable " + name + " has no value, not substituted." );
 					}
 				else
@@ -267,6 +269,7 @@ public class Bindings implements Lookup
 			if (value == null)
 				{
 				sb.append( "{" ).append( name ).append( "}" );
+				// issue #177
 				log.debug( "variable " + name + " has no value, not substituted." );
 				}
 			else
