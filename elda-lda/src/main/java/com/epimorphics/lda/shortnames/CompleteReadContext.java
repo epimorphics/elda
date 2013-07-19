@@ -24,17 +24,17 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String getURIfromName(String code) {
-				log.warn( "readContext: getURIfromName unexpectedly called." );
+				log.debug( "readContext: getURIfromName unexpectedly called." );
 				return context.getURIfromName(code);
 			}
 			
 			@Override public ContextPropertyInfo getPropertyByName(String name) {
-				log.warn( "readContext: getpropertyByName unexpectedly called." );
+				log.debug( "readContext: getpropertyByName unexpectedly called." );
 				return context.getPropertyByName(name);
 			}
 			
 			@Override public String getNameForURI(String uri) {
-				log.warn( "readContext: getNameForURI unexpectedly called." );
+				log.debug( "readContext: unusually, getNameForURI called." );
 				return uriToName.get(uri);
 			}
 			
@@ -43,7 +43,7 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String forceShorten(String uri) {
-				log.warn( "readContext: forceShorten unexpectedly called." );
+				log.debug( "readContext: unusually, forceShorten called." );
 				return context.forceShorten(uri);
 			}
 			

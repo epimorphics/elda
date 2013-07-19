@@ -98,7 +98,11 @@ public class ContextQueryUpdater implements ViewSetter {
 		String param = taggedParam.substring( QueryParameter.LANG_PREFIX.length() );
 		String sv = context.getValueString( taggedParam );
 		if (sv == null) {
-			log.warn( taggedParam + " supplied, but no value for " + param );
+			// should probably return a 400 status, but no convenient route to
+			// do so. For the moment we'll do a debug-level log (rather than the
+			// info-level log we had before) so we can at least spot them.
+			// See issue 175.
+			log.debug( taggedParam + " supplied, but no value for " + param );
 			return;
 		}
 		String val = context.expandVariables( sv );
