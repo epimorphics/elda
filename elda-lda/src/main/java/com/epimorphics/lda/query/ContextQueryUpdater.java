@@ -208,7 +208,8 @@ public class ContextQueryUpdater implements ViewSetter {
     */
     public void addFilterFromQuery( Param param, String val ) {
     	if (val.equals( "" )) {
-    		log.warn( "parameter " + param + " given empty value." );
+    		// see issue #175
+    		log.debug( "parameter " + param + " given empty value." );
     		return;
     	}
     	String prefix = param.prefix();
