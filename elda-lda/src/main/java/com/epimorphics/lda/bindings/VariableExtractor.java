@@ -47,6 +47,7 @@ public class VariableExtractor {
 	    stored into <code>toDo</code> for later evaluation.
 	*/
 	public static void findVariables( Resource root, Bindings bound ) {
+		// See issue #180
 		for (Statement s: root.listProperties( API.variable ).toList()) {
 			Resource v = s.getResource();
 			String name = getStringValue( v, API.name, null );
@@ -58,7 +59,7 @@ public class VariableExtractor {
 			if (type == null && value != null && value.getObject().isURIResource())
 				type = RDFS.Resource.getURI();
 			if (type == null){
-				log.warn("type mysteriously null, needs sorting soon" );
+				log.debug("No type for variable " + name + "; using default ''.");
 				type = "";
 			}
 			String valueString = getValueString( v, language, type );
