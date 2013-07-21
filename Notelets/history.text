@@ -1,3 +1,14 @@
+1.2.24
+
+* Fixed excessive reloading bug (configs were reloaded
+  even if they had not changed).
+
+1.2.23
+
+* Extensive changes to config-loading and other code
+  to allow Elda to be externally configured: see
+  release notes for this version.
+
 1.2.15
 
 * pre_localname decoding no longer incorrectly applies

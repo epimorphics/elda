@@ -1,5 +1,10 @@
 Elda 1.2.23
 
+Users should use Elda 1.2.24 in place of 1.2.23 to fix
+a excessive-reloading bug. Otherwise .24 is only slightly
+different from .23 and the following notes apply without
+change.
+
 ===========================================================
 
 This release of Elda has significant changes in Elda
