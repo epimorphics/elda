@@ -190,7 +190,7 @@ public class EndpointMetadata {
 		Set<String> formatNames = getFormatNames( formats );
 		Resource page = thisPage.inModel(meta);
 		for (FormatNameAndType format: formats) {
-			Resource v = resourceForFormat( pageURI, meta, formatNames, format.name );
+			Resource v = resourceForFormat( thisPageAsURI, meta, formatNames, format.name );
 			Resource formatNode = createBNode( meta ).addProperty( RDFS.label, format.mediaType );
 			page.addProperty( DCTerms.hasFormat, v );
 			v.addProperty( DCTerms.isFormatOf, thisPage );
