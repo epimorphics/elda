@@ -391,7 +391,6 @@ import com.sun.jersey.api.NotFoundException;
             return returnNotFound("Failed to parse query request : " + e.getMessage());
         } catch (Throwable e) {
         	log.error( "General failure: " + e.getMessage() );
-        	e.printStackTrace( System.out );
         	StatsValues.endpointException();
             return returnError( e );
         }
