@@ -68,7 +68,7 @@ public class RouterRestletSupport {
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
     	String givenPrefixPath = con.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
     //
-    	log.info( "configuration file templates: " + specFilenameTemplates );
+    	log.debug( "configuration file templates: " + specFilenameTemplates );
     //
 		for (String specTemplate: specFilenameTemplates) {
 			String prefixName = givenPrefixPath;
