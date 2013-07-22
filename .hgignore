@@ -9,17 +9,7 @@ syntax: glob
 .project
 
 syntax: glob
-elda-regress/eldas/*
-elda-regress/this-elda/*
-elda-regress/this_elda/*
-elda-regress/Eldas/*
-elda-regress/RESULT
-elda-regress/gold/*
-elda-regress/results/*
-elda-regress/differences/*
-elda-regress/meta_differences/*
-elda-regress/gold_differences/*
-elda-regress/*.log
+elda-regress/*
 
 syntax: regexp
 ^scratch$
