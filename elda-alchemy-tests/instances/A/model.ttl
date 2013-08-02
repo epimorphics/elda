@@ -1,0 +1,185 @@
+#
+# games data for regression testing
+#
+
+@prefix dct:				<http://purl.org/dc/terms/> .
+
+@prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix egc:				<http://localhost:8080/elda/vocabulary/>.
+@prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+# boardgame designers
+
+<http://en.wikipedia.org/wiki/Andreas_Seyfarth> a egc:Designer
+	; rdfs:label "Andreas Seyfarth" 
+	; egc:designer-of <http://www.riograndegames.com/games.html?id=4> 
+	.
+
+<http://en.wikipedia.org/wiki/Reiner_Knizia> a egc:Designer
+	; rdfs:label "Reiner Knizia"
+	; egc:designer-of <http://www.hans-im-glueck.de/euphrat-tigris> 
+	; egc:designer-of <http://www.riograndegames.com/games.html?id=181> 
+	.
+
+<http://en.wikipedia.org/wiki/Wolfgang_Kramer> a egc:Designer
+	; rdfs:label "Wolfgang Kramer"
+	; egc:designer-of <>
+	.
+
+<http://www.boardgamegeek.com/boardgamedesigner/8/richard-ulrich> a egc:Designer
+	; rdfs:label "Richard Ulrich"
+	; egc:designer-of <http://www.hans-im-glueck.de/el-grande> 
+	.
+
+<http://en.wikipedia.org/wiki/Martin_Wallace_%28game_designer%29> a egc:Designer
+	; egc:designer-of <http://www.treefroggames.com/age-of-industry> 
+	; egc:designer-of <http://www.treefroggames.com/london> 
+	; egc:designer-of <http://www.treefroggames.com/age-of-steam> 
+	; rdfs:label "Martin Wallace"
+	.
+
+<http://www.ragnarbrothers.co.uk/html/ragnar_brothers_games.html> a egc:Designer
+	; rdfs:label "Ragnar Brothers"
+	; egc:designer-of <http://www.ragnarbrothers.co.uk/html/canal_mania.html> 
+	; egc:designer-of <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> 
+	.
+
+<http://en.wikipedia.org/wiki/Alan_R._Moon> a egc:Designer
+	; rdfs:label "Alan R. Moon"
+	; egc:designer-of <http://www.daysofwonder.com/tickettoride>
+	.
+
+<http://boardgamegeek.com/boardgamedesigner/10525/donald-x-vaccarino> a egc:Designer
+	; rdfs:label "Donald X. Vaccarino"
+	; egc:designer-of <http://queen-games.de/games.aspx?ProductId=45>
+	.
+
+# boardgame publishers.
+
+<http://www.hans-im-glueck.de/> a egc:Publisher
+	; rdfs:label "Hans im Glück"@de
+	; dct:publisher <http://www.hans-im-glueck.de/euphrat-tigris>
+	; dct:publisher <http://www.hans-im-glueck.de/el-grande>
+	.
+	
+<http://www.queen-games.de/> a egc:Publisher
+	; rdfs:label "Queen Games"
+	; dct:publisher <http://queen-games.de/games.aspx?ProductId=45>
+	.
+	
+<http://www.treefroggames.com/> a egc:Publisher
+	; rdfs:label "Treefrog Games"@en
+	; dct:publisher <http://www.treefroggames.com/age-of-industry>
+	; dct:publisher <http://www.treefroggames.com/london>
+	; dct:publisher <http://www.treefroggames.com/age-of-steam>
+	.
+
+<http://www.riograndegames.com/> a egc:Publisher
+	; rdfs:label "Rio Grande Games"
+	; dct:publisher <http://www.riograndegames.com/games.html?id=4>
+	; dct:publisher <http://www.riograndegames.com/games.html?id=181>
+	.
+	
+<http://www.ragnarbrothers.co.uk/> a egc:Publisher
+	; rdfs:label "Ragnar Brothers"
+	; dct:publisher <http://www.ragnarbrothers.co.uk/html/canal_mania.html>
+	; dct:publisher <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html>
+	.
+	
+<http://www.daysofwonder.com/> a egc:Publisher
+	; rdfs:label "Days of Wonder"
+	; dct:publisher <http://www.daysofwonder.com/tickettoride>
+	.
+	
+# boardgames
+
+<http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> a egc:BoardGame
+	; rdfs:label "A Brief History of the World"
+	; egc:designed-by <http://www.ragnarbrothers.co.uk/html/ragnar_brothers_games.html> 
+	; egc:players 3, 4, 5, 6
+	; egc:pubDate 2009
+	.
+
+<http://queen-games.de/games.aspx?ProductId=45> a egc:BoardGame
+	; rdfs:label "Kingdom Builder"
+	; egc:players 2, 3, 4
+	; egc:designed-by <http://boardgamegeek.com/boardgamedesigner/10525/donald-x-vaccarino> 
+	; rdfs:seeAlso <http://boardgamegeek.com/boardgame/107529/kingdom-builder>
+	; egc:pubDate 2011
+	.
+
+<http://www.daysofwonder.com/tickettoride> a egc:BoardGame
+	; rdfs:label "Ticket To Ride"
+	; egc:designed-by <http://en.wikipedia.org/wiki/Alan_R._Moon> 
+	; egc:players 2, 3, 4, 5
+	; egc:pubDate 2004
+	.
+
+<http://www.hans-im-glueck.de/euphrat-tigris> a egc:BoardGame
+	; rdfs:label "Tigris and Euphrates"@en
+	; egc:designed-by <http://en.wikipedia.org/wiki/Reiner_Knizia> 
+	; egc:players 2, 3, 4
+	; egc:pubDate 1997
+	; egc:title "Tigris & Euphrates"
+	.
+	
+<http://www.hans-im-glueck.de/el-grande> a egc:BoardGame
+	; rdfs:label "El Grande"
+	; egc:designed-by <http://en.wikipedia.org/wiki/Wolfgang_Kramer>
+	; egc:designed-by <http://www.boardgamegeek.com/boardgamedesigner/8/richard-ulrich>
+	; egc:pubDate 1995
+	; egc:players 2, 3, 4, 5
+	.
+
+<http://www.treefroggames.com/age-of-industry> a egc:BoardGame
+	; rdfs:label "Age of Industry"
+	; egc:designed-by <http://en.wikipedia.org/wiki/Martin_Wallace_%28game_designer%29> 
+	; egc:players 2, 3, 4, 5
+	; egc:pubDate 2010
+	.
+	
+<http://www.treefroggames.com/london> a egc:BoardGame
+	; rdfs:label "London"
+	; egc:designed-by <http://en.wikipedia.org/wiki/Martin_Wallace_%28game_designer%29> 
+	; egc:players 2, 3, 4
+	; egc:pubDate 2010
+	.
+	
+<http://www.treefroggames.com/age-of-steam> a egc:BoardGame
+	; rdfs:label "Age of Steam"
+	; egc:designed-by <http://en.wikipedia.org/wiki/Martin_Wallace_%28game_designer%29> 
+	; egc:players 3, 4, 5, 6 
+	; egc:pubDate 2002
+	.
+	
+<http://www.ragnarbrothers.co.uk/html/canal_mania.html> a egc:BoardGame
+	; rdfs:label "Canal Mania"
+	; egc:designed-by <http://www.ragnarbrothers.co.uk/html/ragnar_brothers_games.html> 
+	; egc:players 2, 3, 4, 5
+	; egc:pubDate 2006
+	.	
+	
+<http://www.riograndegames.com/games.html?id=4> a egc:BoardGame
+	; egc:designed-by <http://en.wikipedia.org/wiki/Andreas_Seyfarth>
+	; rdfs:label "Puerto Rico"
+	; egc:players 2, 3, 4, 5
+	; egc:pubDate 2002
+	.
+	
+<http://www.riograndegames.com/games.html?id=181> a egc:BoardGame
+	; rdfs:label "Taj Mahal"
+	; egc:designed-by <http://en.wikipedia.org/wiki/Reiner_Knizia> 
+	; egc:players 2, 3, 4, 5
+	; egc:pubDate 2006
+	.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
