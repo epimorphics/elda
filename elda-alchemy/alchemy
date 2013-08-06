@@ -70,7 +70,7 @@ function run-tests() {
 			export instance_name=$(basename $instance_path)
 			export work_path=$_WORKDIR/$instance_name
 			export standalone=$(cd $ALCHEMY; realpath -m $_STANDALONE)
-
+		#
 			echo instance $instance_path results in $work_path
 			echo standalone is $standalone
 			mkdir -p $work_path
@@ -79,6 +79,8 @@ function run-tests() {
 		#
 			unzip -o -q $standalone -d standalone
 		#
+			ln -s -f $instance_path/model.ttl model.ttl
+		#
 			(cd standalone; \
 				java -jar start.jar \
 					-Delda.spec=$instance_path/config.ttl \
@@ -86,6 +88,8 @@ function run-tests() {
 				& echo $! > ../standalone-pid \
 			)
 			sleep 10
+		#
+			export cp=$(echo $PWD/standalone/webapps/standalone/WEB-INF/lib/* | sed -e 's/ /:/g')
 		#
 			for x in $instance_path/test_*; do
 				mkdir -p $(basename $x)
@@ -96,6 +100,19 @@ function run-tests() {
 					-w "__STATUS=%{response_code}\n__TYPE=%{content_type}\n" \
 					> response_status 2> /dev/null \
 					http://localhost:8080/standalone/$(cat $x/uri.get)
+			#
+				if test -n "$(find $x -name '*.rq' -print -quit)"; then
+					cp OUTPUT OUTPUT.ttl
+					for q in $x/*.rq; do
+						export MAYBE=$(java -classpath $cp arq.sparql --query $q --data OUTPUT.ttl)
+						if [ "$MAYBE" == "Ask => No" ]; then
+							echo PROBLEM: failed SPARQL query $q
+						fi
+					done
+				else
+					echo we could not find any SPARQL probe tests.
+				fi
+			#
 				source response_status
 				if [ -e status ]; then
 					# initialised
@@ -105,7 +122,7 @@ function run-tests() {
 					else
 						rm -f OK
 						mv differences PROBLEM
-						echo -e "\n" problem with $t/$x URI=$(cat uri.get) "\n"
+						echo -e "\n" problem with $t/$x URI=$(cat $x/uri.get) "\n"
 					fi
 				else
 					# this is the 'first' time
@@ -113,11 +130,12 @@ function run-tests() {
 					echo $__TYPE | sed -e 's:/:_:' > content-type
 					mv OUTPUT gold
 				fi
+			#
 				popd > /dev/null
 			done
 		#
 			kill $(cat standalone-pid)
-			rm -rf standalone standalone-pid
+			# rm -rf standalone standalone-pid
 			popd > /dev/null
 		done
 	done
