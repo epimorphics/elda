@@ -2,17 +2,20 @@
 
 # DRAFT
 #
-# script to run regression tests on Elda.
+# script to run regression (and other) tests on Elda.
 #
-# running `alchemy run INSTANCES=wherever will run all
-# the entries in `whatever` as tests. Each such entry
-# contains an LDA config in `config.ttl`, a model
-# to query in `model.ttl`, and tests in directories
-# named `test_*`. Each such test contains a file `uri.get`
-# whose content is the URI to pass to Elda with the
-# leading http://localhost:somePort/someAPP removed.
+# running `alchemy run INSTANCES=wherever will search
+# under `whatever` for test suites. A suit is identified
+# by containing a file `model.ttl`. Each such suite
+# also contains an LDA config in `config.ttl` and tests in 
+# directories named `test_*`. Each such directory contains a 
+# file `uri.get` whose content is the URI to pass to Elda 
+# with the leading http://localhost:somePort/someAPP removed.
 #
-# If there is no file named `status` in the test directory,
+# outputs from the test are written to a work directory
+# to files under the same name as the name of the suite.
+#
+# If there is no file named `status` in the work directory,
 # the query is passed to Elda and the reponse code is
 # witten into `status`, the content type into `content-type`,
 # and the content into `gold`.
