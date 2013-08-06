@@ -10,6 +10,7 @@ syntax: glob
 
 syntax: glob
 elda-regress/*
+work/*
 
 syntax: regexp
 ^scratch$
