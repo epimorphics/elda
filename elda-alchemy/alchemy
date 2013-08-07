@@ -101,16 +101,19 @@ function run-tests() {
 					> response_status 2> /dev/null \
 					http://localhost:8080/standalone/$(cat $x/uri.get)
 			#
+				rm -f failed_queries
 				if test -n "$(find $x -name '*.rq' -print -quit)"; then
 					cp OUTPUT OUTPUT.ttl
 					for q in $x/*.rq; do
-						export MAYBE=$(java -classpath $cp arq.sparql --query $q --data OUTPUT.ttl)
-						if [ "$MAYBE" == "Ask => No" ]; then
-							echo PROBLEM: failed SPARQL query $q
+						export maybe=$(basename $q | sed -e 's/^.*\(Yes\|No\).rq/\1/')
+						export answer=$(java -classpath $cp arq.sparql --query $q --data OUTPUT.ttl)
+					#
+						if [[ "$answer" != "Ask => $maybe" ]]; then
+							echo FAILED: $q
+							echo $q >> failed_queries
 						fi
 					done
-				else
-					echo we could not find any SPARQL probe tests.
+					rm OUTPUT.ttl
 				fi
 			#
 				source response_status
