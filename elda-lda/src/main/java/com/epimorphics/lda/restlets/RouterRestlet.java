@@ -203,6 +203,7 @@ import com.sun.jersey.api.NotFoundException;
     		"text/javascript"
     		, "application/javascript"
     		, "application/rdf+xml"
+    		, "application/atom+xml"
     		, "application/json"
     		, "application/xml"
     		, "text/turtle"

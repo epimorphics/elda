@@ -102,6 +102,8 @@ public class BuiltinRendererTable {
 		
 		putFactory( "_velocity", EXTRAS.VelocityFormatter, MediaType.NONE, new VelocityRendererFactory() );
 		
+		putFactory( "_atom", EXTRAS.FeedFormatter, MediaType.NONE, new FeedRendererFactory() );
+		
 		putFactory( "_xslt", API.XsltFormatter, MediaType.NONE, new XSLT_RendererFactory( Empty, MediaType.NONE ) );
 		
 		putFactory( "html", API.HtmlFormatter, MediaType.TEXT_HTML, new DoingWith() 

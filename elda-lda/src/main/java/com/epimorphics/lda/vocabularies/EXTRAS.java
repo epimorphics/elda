@@ -92,6 +92,8 @@ public class EXTRAS
 	public static final Property replaceStartBy = property( "replaceStartBy" );
 	
 	public static final Property rewriteResultURIs = property( "rewriteResultURIs" );
+
+	public static final Resource FeedFormatter = resource( "FeedFormatter" );
     
     private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }
