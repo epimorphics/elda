@@ -29,6 +29,13 @@ hello:hello-world a api:API
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	# ; api:defaultViewer api:labelledDescribeViewer
 	; api:defaultFormatter hello:HtmlFormatter 
+    ; api:formatter
+        [a elda:FeedFormatter
+        ; api:name "atom"
+        ; elda:className "com.epimorphics.lda.renderers.FeedRendererFactory"
+        ; api:mimeType "application/atom+xml"
+        #; api:stylesheet "page-shell.vm"
+        ]
 	; api:endpoint hello:games 
 	.
 	

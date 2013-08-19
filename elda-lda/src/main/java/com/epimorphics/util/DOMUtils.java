@@ -106,7 +106,7 @@ public class DOMUtils
     
     static Logger log = LoggerFactory.getLogger(DOMUtils.class);
 
-	private static Transformer setPropertiesAndParams( Times times, Bindings rc, PrefixMapping pm, String transformFilePath ) 
+	public static Transformer setPropertiesAndParams( Times times, Bindings rc, PrefixMapping pm, String transformFilePath ) 
 		{
 		Transformer t = getTransformer( times, rc, transformFilePath );
 		t.setOutputProperty( OutputKeys.INDENT, "yes" );

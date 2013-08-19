@@ -38,6 +38,12 @@ hello:hello-world-again a api:API
 		; api:mimeType "text/html"
 		; api:stylesheet "page-shell.vm"
 		]
+    ; api:formatter
+        [a elda:FeedFormatter
+        ; api:name "atom"
+        ; elda:className "com.epimorphics.lda.renderers.FeedRendererFactory"
+        ; api:mimeType "application/atom+xml"
+        ]
 	.
     
 # Endpoint definitions

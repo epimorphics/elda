@@ -1,15 +1,24 @@
 package com.epimorphics.lda.renderers;
 
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Map;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Document;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.support.Times;
-import com.epimorphics.util.MediaType;
+import com.epimorphics.util.*;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.shared.WrappedException;
 
 public class FeedRenderer implements Renderer {
 
@@ -28,18 +37,16 @@ public class FeedRenderer implements Renderer {
 	}
 
 	@Override public BytesOut render
-		(Times t
-		, Bindings rc
+		( final Times t
+		, final Bindings b
 		, Map<String, String> termBindings
 		, final APIResultSet results
 		) {
 		return new BytesOutTimed() {
 
 			@Override protected void writeAll(OutputStream os) {
-				PrintStream ps = new PrintStream( os );
-				renderFeed( ps, results );
-				ps.flush();
-				ps.close();
+				renderFeed( os, results, t, b );
+				flush( os );
 			}
 
 			@Override protected String getFormat() {
@@ -53,8 +60,31 @@ public class FeedRenderer implements Renderer {
 		return FeedRendererFactory.format;
 	}
 	
-	private void renderFeed( PrintStream ps, APIResultSet results ) {
-		ps.println( "<x>this feature is not yet supported</x>" );
+	private static void flush( OutputStream os ) {
+		try { os.flush(); } 
+		catch (IOException e) { throw new WrappedException( e ); } 
+		
+	}
+	
+	private void renderFeed( OutputStream os, APIResultSet results, Times t, Bindings b ) {
+		System.err.println( ">> working on RenderFeed." );
+	//
+		final PrefixMapping pm = results.getModelPrefixes();
+		Document d = DOMUtils.newDocument();
+		
+		renderFeedIntoDocument( d );
+		
+		Transformer tr = DOMUtils.setPropertiesAndParams( t, b, pm, null );
+		OutputStreamWriter u = StreamUtils.asUTF8( os );
+		StreamResult sr = new StreamResult( u );
+		try { tr.transform( new DOMSource( d ), sr ); } 
+		catch (TransformerException e) { throw new WrappedException( e ); }
+					
+	}
+
+	private void renderFeedIntoDocument(Document d) {
+		Element result = d.createElement( "result" );
+		d.appendChild( result );
 	}
 
 }
