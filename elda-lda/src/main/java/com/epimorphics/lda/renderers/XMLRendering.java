@@ -490,12 +490,12 @@ public class XMLRendering {
 		}
 	}
 
-	private void topLevelExpansion(Model objectModel, Trail t, Element pt) {
+	public void topLevelExpansion(Model objectModel, Trail t, Element pt) {
 		Resource anItem = objectModel.createResource( pt.getAttribute( "href" ) );
 		expandProperties(t, pt, anItem);
 	}
 
-	private void expandProperties(Trail t, Element pt, Resource anItem) {
+	public void expandProperties(Trail t, Element pt, Resource anItem) {
 		List<Property> properties = asSortedList( anItem.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
 		for (Property ip: properties) addPropertyValues( t, pt, anItem, ip );
 	}
@@ -532,7 +532,7 @@ public class XMLRendering {
 		return sit.hasNext() ? sit.next().getResource() : null;
 	}
 	
-	static class Trail {
+	public static class Trail {
 		
 		final Set<Resource> cyclic;
 		final Set<Resource> blocked;

@@ -19,7 +19,7 @@ public class FeedRendererFactory implements RendererFactory  {
 	}
 	
 	@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-		return new FeedRenderer( mt, ep.getSpec().getBindings(), config );
+		return new FeedRenderer( mt, ep.getSpec().getBindings(), config, sns );
 	}
 
 	@Override public RendererFactory withRoot( Resource config ) {
