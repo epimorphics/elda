@@ -235,10 +235,6 @@ public class EndpointMetadata {
 		Resource b = m.createResource( new AnonId( "bnode-" + bnodeCounter++ ) );
 		return b;
 	}
-
-	static final Property SKOSprefLabel = ResourceFactory.createProperty
-		( "http://www.w3.org/2004/02/skos/core#" + "prefLabel" )
-		;
 	
 	public void addTermBindings( Model toScan, Model meta, Resource exec, CompleteContext cc ) {
 		Map<String, String> termBindings = cc.Do();

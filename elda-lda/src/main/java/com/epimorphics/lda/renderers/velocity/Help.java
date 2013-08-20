@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.support.EldaFileManager;
+import com.epimorphics.lda.vocabularies.SKOSstub;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.WrappedIOException;
@@ -30,7 +31,7 @@ public class Help {
 		Properties p = getProperties( propertiesName );
 		VelocityEngine ve = new VelocityEngine(); 
 		if (p.isEmpty()) {
-			log.info( "using default velocity properties." );
+			log.debug( "using default velocity properties." );
 		//
 			String defaultRoot = b.getAsString("_resourceRoot", "") + "/vm/";
 			String templateRoot = b.getAsString("_velocityRoot", defaultRoot);
@@ -78,10 +79,6 @@ public class Help {
 		catch (IOException e) {	throw new WrappedIOException( e ); }
 	}
 
-	static final String SKOS = "http://www.w3.org/2004/02/skos/core#";
-	
-	static final Property SKOS_prefLabel = ResourceFactory.createProperty( SKOS + "prefLabel" );
-	
 	/**
 	    Return the "preferred" label of this resource. The definition of
 	    "preferred" is:
@@ -99,7 +96,7 @@ public class Help {
 	    <p>failing that, the local name of the resource.	
 	*/
 	public static String labelFor( Resource r ) {
-		Statement pref = r.getProperty( SKOS_prefLabel );
+		Statement pref = r.getProperty( SKOSstub.prefLabel );
 		if (pref != null && pref.getObject().isLiteral())
 			return ((Literal) pref.getObject()).getLexicalForm();
 	//
@@ -123,7 +120,7 @@ public class Help {
 	*/
 	public static List<Literal> labelsFor( Resource r ) {
 		List<Literal> result = new ArrayList<Literal>();
-		for (Statement s: r.listProperties( SKOS_prefLabel ).toList()) result.add( s.getLiteral() );
+		for (Statement s: r.listProperties( SKOSstub.prefLabel ).toList()) result.add( s.getLiteral() );
 		for (Statement s: r.listProperties( RDFS.label ).toList()) result.add( s.getLiteral() );
 		return result;
 	}

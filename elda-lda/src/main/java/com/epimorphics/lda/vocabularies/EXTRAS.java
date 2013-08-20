@@ -92,14 +92,23 @@ public class EXTRAS
 	public static final Property replaceStartBy = property( "replaceStartBy" );
 	
 	public static final Property rewriteResultURIs = property( "rewriteResultURIs" );
+	
+// configuration properties for Elda Atom feeds.
+	
+	public static final Property feedDateProperties = property( "feedDateProperties" );
+	
+	public static final Property feedLabelProperties = property( "feedLabelProperties" );
 
 	public static final Resource FeedFormatter = resource( "FeedFormatter" );
     
-    private static Property property( String local )
+	public static final Property feedTitle = property( "feedTitle" );
+
+	private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }
 
     private static Resource resource( String local )
         { return ResourceFactory.createResource( EXTRA + local ); }
+
     }
     
 /*
