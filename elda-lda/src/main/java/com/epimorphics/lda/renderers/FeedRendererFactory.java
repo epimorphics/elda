@@ -7,7 +7,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 public class FeedRendererFactory implements RendererFactory  {
 	
-	static final MediaType atom = new MediaType( "application", "atom+xml" );
+	public static final MediaType atom = new MediaType( "application", "atom+xml" );
 	
 	private  MediaType mt = atom;
 	
@@ -19,7 +19,7 @@ public class FeedRendererFactory implements RendererFactory  {
 	}
 	
 	@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-		return new FeedRenderer( mt, ep.getSpec().getBindings(), config, sns );
+		return new FeedRenderer( mt, config, sns );
 	}
 
 	@Override public RendererFactory withRoot( Resource config ) {

@@ -42,7 +42,6 @@ public class FeedRenderer implements Renderer {
 	
 	public FeedRenderer
 		( MediaType mt
-		, Bindings bindings
 		, Resource config
 		, ShortnameService sns 
 		) {
@@ -96,7 +95,7 @@ public class FeedRenderer implements Renderer {
 	    config. If there is no such value, then use the list
 	    (dct:modified). 
 	*/
-	private List<Property> getDateProperties(Resource config) {
+	public List<Property> getDateProperties(Resource config) {
 		List<Property> result = getPropertyList(config, EXTRAS.feedDateProperties);
 		if (result.isEmpty()) {
 			result.add( DCTerms.modified );
@@ -125,7 +124,7 @@ public class FeedRenderer implements Renderer {
 	    config. If there is no such value, then use the list
 	    (api:label, skos:prefLabel, rdfs:label).
 	*/
-	private List<Property> getLabelProperties( Resource config ) {
+	public List<Property> getLabelProperties( Resource config ) {
 		List<Property> result = getPropertyList( config, EXTRAS.feedLabelProperties );
 		if (result.isEmpty()) {
 			result.add( API.label );
