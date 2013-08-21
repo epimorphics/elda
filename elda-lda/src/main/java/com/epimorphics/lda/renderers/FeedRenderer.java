@@ -137,20 +137,46 @@ public class FeedRenderer implements Renderer {
 	private void renderFeed( OutputStream os, APIResultSet results, Times t, Map<String, String> termBindings, Bindings b ) {
 		final PrefixMapping pm = results.getModelPrefixes();
 		Document d = DOMUtils.newDocument();
-		renderFeedIntoDocument( d, termBindings, results );
+		FeedResults feedResults = new FeedResults
+			( results.getRoot(), results.getResultList(), results.getModels() );
+		renderFeedIntoDocument( d, termBindings, feedResults );
 	//
 		Transformer tr = DOMUtils.setPropertiesAndParams( t, b, pm, null );
 		OutputStreamWriter u = StreamUtils.asUTF8( os );
 		StreamResult sr = new StreamResult( u );
 		try { tr.transform( new DOMSource( d ), sr ); } 
 		catch (TransformerException e) { throw new WrappedException( e ); }
-					
 	}
 
-	private void renderFeedIntoDocument
+	public static class FeedResults {
+	
+		final Resource root;
+		final List<Resource> items;
+		final MergedModels models;
+		
+		public FeedResults(Resource root, List<Resource> items, MergedModels models) {
+			this.root = root;
+			this.items = items;
+			this.models = models;
+		}
+
+		public Resource getRoot() {
+			return root;
+		}
+
+		public MergedModels getModels() {
+			return models;
+		}
+
+		public List<Resource> getResultList() {
+			return items;
+		}
+	}
+	
+	public void renderFeedIntoDocument
 		( Document d
 		, Map<String, String> termBindings
-		, APIResultSet results 
+		, FeedResults results 
 		) {
 		Element feed = d.createElement( "feed" );
 		feed.setAttribute( "xmlns", "http://www.w3.org/2005/Atom" );

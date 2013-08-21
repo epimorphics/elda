@@ -2,22 +2,30 @@ package com.epimorphics.lda.renderers.feed.tests;
 
 import static org.junit.Assert.*;
 
-import java.util.List;
+import java.util.*;
 
 import org.junit.Test;
+import org.w3c.dom.Document;
 
+import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.renderers.FeedRenderer;
 import com.epimorphics.lda.renderers.FeedRendererFactory;
+import com.epimorphics.lda.renderers.FeedRenderer.FeedResults;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.SKOSstub;
 import static com.epimorphics.util.CollectionUtils.list;
+
+import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
+
+import org.custommonkey.xmlunit.*;
+import org.custommonkey.xmlunit.exceptions.XpathException;
 
 public class TestFeedAssembly {
 	
@@ -94,6 +102,36 @@ public class TestFeedAssembly {
 			Property a = defaultLabelProperties.get(i-1), b = defaultLabelProperties.get(i);
 			assertEquals( list(a, b), makeDateFeedRenderer(a, b).getDateProperties(config));			
 		}
+	}
+	
+	@Test public void testSingleItemXMLrendering() throws XpathException {
+		FeedRenderer fr = makeFeedRenderer( config );
+		Map<String, String> termBindings = new HashMap<String, String>();
+		Document  d = DOMUtils.newDocument();
+		
+		Model dataModel = ModelFactory.createDefaultModel();
+		List<Resource> items = new ArrayList<Resource>();
+		
+		Resource item = dataModel.createResource( "eh:/item" );
+		item.addProperty( RDFS.label, "Please Look After This Bear" );
+		items.add( item );
+		
+		FeedResults results = new FeedResults( config, items, new MergedModels( dataModel ) );
+		fr.renderFeedIntoDocument( d, termBindings, results );
+	//
+		XMLAssert.assertXpathExists( "feed", d );
+		XMLAssert.assertXpathExists( "feed/title", d );
+		XMLAssert.assertXpathExists( "feed/link", d );
+		XMLAssert.assertXpathExists( "feed/id", d );
+		XMLAssert.assertXpathExists( "feed/updated", d );
+		XMLAssert.assertXpathExists( "feed/entry", d );
+	//
+		XMLAssert.assertXpathExists( "feed/entry/title", d );
+		XMLAssert.assertXpathExists( "feed/entry/updated", d );
+		XMLAssert.assertXpathExists( "feed/entry/id", d );
+		XMLAssert.assertXpathExists( "feed/entry/content", d );
+	//
+		XMLAssert.assertXpathExists( "feed/entry/content/label", d );
 	}
 	
 	protected FeedRenderer makeFeedRenderer( Resource config ) {
