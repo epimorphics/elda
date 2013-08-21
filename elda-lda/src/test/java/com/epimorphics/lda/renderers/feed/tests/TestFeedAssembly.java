@@ -108,14 +108,14 @@ public class TestFeedAssembly {
 		FeedRenderer fr = makeFeedRenderer( config );
 		Map<String, String> termBindings = new HashMap<String, String>();
 		Document  d = DOMUtils.newDocument();
-		
+	//
 		Model dataModel = ModelFactory.createDefaultModel();
 		List<Resource> items = new ArrayList<Resource>();
-		
+	//
 		Resource item = dataModel.createResource( "eh:/item" );
 		item.addProperty( RDFS.label, "Please Look After This Bear" );
 		items.add( item );
-		
+	//
 		FeedResults results = new FeedResults( config, items, new MergedModels( dataModel ) );
 		fr.renderFeedIntoDocument( d, termBindings, results );
 	//
