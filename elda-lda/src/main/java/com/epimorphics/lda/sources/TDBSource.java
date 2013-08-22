@@ -32,13 +32,15 @@ public class TDBSource extends SourceBase implements Source
     protected final Dataset sourceSet;
     protected final String endpoint;
     
-    public TDBSource(String endpoint) {
-        String name = endpoint.substring( TDBManager.PREFIX.length() );
-        this.endpoint = endpoint;
+    public TDBSource( Resource endpoint ) {
+    	super( endpoint );
+    	String endpointString = endpoint.getURI();
+        String name = endpointString.substring( TDBManager.PREFIX.length() );
+        this.endpoint = endpointString;
         this.sourceSet = TDBManager.getDataset();
         if (name != null && !name.isEmpty()) {
             this.source = TDBManager.getTDBModelNamed(name);
-            log.debug("TDB with endpoint " + endpoint + " has model with "
+            log.debug("TDB with endpoint " + endpointString + " has model with "
                     + this.source.size() + " triples.");
             if (this.source.isEmpty())
                 EldaException.EmptyTDB( name );

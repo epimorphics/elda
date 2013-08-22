@@ -17,7 +17,7 @@ import com.hp.hpl.jena.shared.Lock;
 public class TestSourceLocking {
 
 	static class TestSource extends SourceBase implements Source {
-
+		
 		final List<String> history = new ArrayList<String>();
 
 		Lock lock = new Lock() {

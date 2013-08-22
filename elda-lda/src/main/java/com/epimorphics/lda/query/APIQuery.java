@@ -106,12 +106,6 @@ public class APIQuery implements VarSupply, WantsMetadata {
     
     protected boolean enableETags = false;
     
-    /**
-        Set to true to switch on LARQ indexing for this query, ie when an
-        _search wossname is being used.
-     */
-    protected boolean needsLARQindex = false;
-    
     protected String sortByOrderSpecs = "";
     
     protected boolean sortByOrderSpecsFrozen = false;
@@ -121,8 +115,6 @@ public class APIQuery implements VarSupply, WantsMetadata {
      	Used for finding substitution points in static query strings.
     */
     public static final Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
-    
-    protected final static Resource PF_TEXT_MATCH = ResourceFactory.createProperty( "http://jena.hpl.hp.com/ARQ/property#textMatch" );
     
     protected final int defaultPageSize;
 
@@ -212,7 +204,6 @@ public class APIQuery implements VarSupply, WantsMetadata {
     	this.fixedSelect = other.fixedSelect;
     	this.isItemEndpoint = other.isItemEndpoint;
     	this.itemTemplate = other.itemTemplate;
-    	this.needsLARQindex = other.needsLARQindex;
     	this.pageNumber = other.pageNumber;
     	this.pageSize = other.pageSize;
     	this.sortByOrderSpecs = other.sortByOrderSpecs;
@@ -347,9 +338,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
     }
     
     protected void addSearchTriple( String val ) {
-    	needsLARQindex = true;
-        log.debug( "enabled LARQ indexing to search for " + val );
-        addTriplePattern( SELECT_VAR, PF_TEXT_MATCH, RDFQ.literal( val ) );
+        
+
+        addTriplePattern( SELECT_VAR, Source.JENA_TEXT_QUERY, RDFQ.literal( val ) );
+        
     }
     
     public APIQuery addSubjectHasProperty( Resource P, Any O ) {
@@ -804,7 +796,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		    }
 		Query q = createQuery( selectQuery );
 		if (log.isDebugEnabled()) log.debug( "Running query: " + selectQuery.replaceAll( "\n", " " ) );
-		source.executeSelect( q, new ResultResourcesReader( results, needsLARQindex ) );
+		source.executeSelect( q, new ResultResourcesReader( results ) );
 		cache.cacheSelection( selectQuery, results );
 		return new Couple<String, List<Resource>>( selectQuery, results );
 	}
@@ -821,15 +813,13 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	private static final class ResultResourcesReader implements Source.ResultSetConsumer {
 		
 		private final List<Resource> results;
-		private final boolean needsLARQindex;
 
-		private ResultResourcesReader( List<Resource> results, boolean needsLARQindex ) {
+		private ResultResourcesReader( List<Resource> results ) {
 			this.results = results;
-			this.needsLARQindex = needsLARQindex;
 		}
 
 		@Override public void setup( QueryExecution qe ) {
-		    if (needsLARQindex) LARQManager.setLARQIndex( qe );				
+		    // TODO can this method be deleted?			
 		}
 
 		@Override public void consume( ResultSet rs ) {

@@ -20,8 +20,7 @@ package com.epimorphics.lda.sources;
 import java.util.List;
 
 import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 
 /**
  * Abstraction of the data endpoint to be queried.
@@ -32,7 +31,9 @@ import com.hp.hpl.jena.rdf.model.Resource;
  */
 public interface Source {
 
-    /**
+    public final static Property JENA_TEXT_QUERY = ResourceFactory.createProperty( "http://jena.apache.org/text#query" );
+
+	/**
         Return a name for this source, used for error reporting
     */
     @Override public String toString();
@@ -69,6 +70,12 @@ public interface Source {
     	void setup( QueryExecution qe );
     	void consume( ResultSet rs );
     	}
+
+    /**
+        Return the configured text query property, which defaults to
+        JENA_TEXT_SEARCH.
+    */
+    public Property getTextQueryProperty();
     
     /**
         Answer TRUE iff this source supports nested SELECT queries 
@@ -87,5 +94,7 @@ public interface Source {
 			return true;
 		}
 	}
+
+	
 }
 

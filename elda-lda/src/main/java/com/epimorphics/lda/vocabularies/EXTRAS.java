@@ -103,6 +103,8 @@ public class EXTRAS
     
 	public static final Property feedTitle = property( "feedTitle" );
 
+	public static final Property textQueryProperty = property( "textQueryProperty" );
+
 	private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }
 

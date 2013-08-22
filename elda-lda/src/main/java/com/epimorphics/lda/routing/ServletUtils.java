@@ -165,11 +165,9 @@ public class ServletUtils {
 
 	public static void setupLARQandTDB( ServletContext me ) {
 	    String locStore = me.getInitParameter( "DATASTORE_KEY" );
-	    String defaultTDB = locStore + "/tdb", defaultLARQ = locStore + "/larq";
+	    String defaultTDB = locStore + "/tdb";
 	    String givenTDB = me.getInitParameter( TDBManager.TDB_BASE_DIRECTORY );
-	    String givenLARQ =  me.getInitParameter( LARQManager.LARQ_DIRECTORY_KEY );
 	    TDBManager.setBaseTDBPath( expandLocal( Loader.baseFilePath, givenTDB , defaultTDB ) );
-	    LARQManager.setLARQIndexDirectory( expandLocal( Loader.baseFilePath, givenLARQ, defaultLARQ ) );
 	}
 
 }

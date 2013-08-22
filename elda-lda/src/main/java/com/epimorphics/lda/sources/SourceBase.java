@@ -10,9 +10,10 @@ package com.epimorphics.lda.sources;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.sources.Source.ResultSetConsumer;
+import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.Lock;
 
 /**
@@ -24,10 +25,33 @@ import com.hp.hpl.jena.shared.Lock;
 
 public abstract class SourceBase {
 
+	final Property textQueryProperty;
+	
+	public SourceBase() {
+		this( Source.JENA_TEXT_QUERY );
+	}
+	
+	public SourceBase( Resource endpoint ) {
+		this( configTextQueryProperty( endpoint ) );
+	}
+
+	private SourceBase( Property textQueryProperty ) {
+		this.textQueryProperty = textQueryProperty;
+	}
+	
+	private static Property configTextQueryProperty( Resource endpoint ) {
+		Resource tqp = endpoint.getPropertyResourceValue( EXTRAS.textQueryProperty );
+		return tqp == null ? Source.JENA_TEXT_QUERY : tqp.as(Property.class);
+	}
+	
 	/**
 	    Each SourceBase subclass must provide <code>execute</code>.    
 	*/
 	public abstract QueryExecution execute( Query query );
+	
+	public Property getTextQueryProperty() {
+		return textQueryProperty;
+	}
 	
 	/**
 	 	Each SourceBase subclass must provide a Lock on demand.

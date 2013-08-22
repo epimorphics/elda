@@ -35,12 +35,13 @@ public class HereSource extends SourceBase implements Source
 	final String endpoint;
 	final Model model;
 
-	public HereSource( Model fullModel, String endpoint ) 
+	public HereSource( Model fullModel, Resource endpoint ) 
 		{
-        if (!endpoint.startsWith( PREFIX ))
-            throw new APIException( "Illegal here endpoint: " + endpoint );
-		this.endpoint = endpoint;
-		model = ResourceUtils.reachableClosure( fullModel.createResource( endpoint ) );
+		String endpointString = endpoint.getURI();
+        if (!endpointString.startsWith( PREFIX ))
+            throw new APIException( "Illegal here endpoint: " + endpointString );
+		this.endpoint = endpointString;
+		model = ResourceUtils.reachableClosure( fullModel.createResource( endpointString ) );
 		model.setNsPrefixes( fullModel );
 		}
 	

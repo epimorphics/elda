@@ -17,8 +17,6 @@
 
 package com.epimorphics.lda.sources;
 
-import java.util.Iterator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +26,6 @@ import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.util.Locator;
 
 /**
  	Data source which represents an in-memory model loaded
@@ -48,11 +45,13 @@ public class LocalSource extends SourceBase implements Source {
     protected final String endpoint;
     
     
-    public LocalSource( FileManager fm, String endpoint ) {
-        if (!endpoint.startsWith(PREFIX))
-            throw new APIException("Illegal local endpoint: " + endpoint);
-        this.source = fm.loadModel( endpoint.substring( PREFIX.length() ) );
-        this.endpoint = endpoint;
+    public LocalSource( FileManager fm, Resource endpoint ) {
+    	super( endpoint );
+    	String endpointString = endpoint.getURI();
+        if (!endpointString.startsWith(PREFIX))
+            throw new APIException("Illegal local endpoint: " + endpointString);
+        this.source = fm.loadModel( endpointString.substring( PREFIX.length() ) );
+        this.endpoint = endpointString;
     }
     
     @Override public QueryExecution execute(Query query) {

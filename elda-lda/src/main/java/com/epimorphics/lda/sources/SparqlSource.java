@@ -53,7 +53,9 @@ public class SparqlSource extends SourceBase implements Source {
     
     protected final char[] basicPassword;
     
-    public SparqlSource( Resource ep, String sparqlEndpoint, AuthMap am ) {
+    public SparqlSource( Resource ep, AuthMap am ) {
+    	super( ep );
+    	String sparqlEndpoint = ep.getURI(); 
         this.sparqlEndpoint = sparqlEndpoint;
         String user = null;
         char [] password = null;
