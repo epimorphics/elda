@@ -24,6 +24,10 @@ import com.hp.hpl.jena.rdf.model.*;
 public class EXTRAS
     {
 	public static String EXTRA = "http://www.epimorphics.com/vocabularies/lda#";
+	
+	public static String getURI() {
+		return EXTRA;
+	}
 
 	// trampolined over from RDFUtil
 	public static final Resource missingListElement = RDFUtil.Vocab.missingListElement;
@@ -104,6 +108,8 @@ public class EXTRAS
 	public static final Property feedTitle = property( "feedTitle" );
 
 	public static final Property textQueryProperty = property( "textQueryProperty" );
+
+	public static final Property feedNamespace = property( "feedNamespace" );
 
 	private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }

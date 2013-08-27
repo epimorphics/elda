@@ -104,6 +104,18 @@ public class TestFeedAssembly {
 		}
 	}
 	
+	@Test public void testDefaultNamespace() {
+		FeedRenderer fr = makeFeedRenderer( config );
+		assertEquals( EXTRAS.getURI(), fr.getNamespace() );
+	}
+	
+	@Test public void testConfiguredNamespace() {
+		String explicit = "eh:/explicitNamespace";
+		config.addProperty( EXTRAS.feedNamespace, explicit );
+		FeedRenderer fr = makeFeedRenderer( config );
+		assertEquals( explicit, fr.getNamespace() );
+	}
+	
 	@Test public void testSingleItemXMLrendering() throws XpathException {
 		FeedRenderer fr = makeFeedRenderer( config );
 		Map<String, String> termBindings = new HashMap<String, String>();
@@ -132,6 +144,10 @@ public class TestFeedAssembly {
 		XMLAssert.assertXpathExists( "feed/entry/content", d );
 	//
 		XMLAssert.assertXpathExists( "feed/entry/content/label", d );
+	//
+		// TODO check that shortname translated to correct namespace.
+		XMLAssert.assertXpathExists( "feed/entry/content/label", d );
+		
 	}
 	
 	protected FeedRenderer makeFeedRenderer( Resource config ) {

@@ -33,6 +33,7 @@ public class FeedRenderer implements Renderer {
 
 	private final MediaType mt;
 	private final Resource config;
+	private final String namespace;
 	private final ShortnameService sns;
 	private final List<Property> dateProperties;
 	private final List<Property> labelProperties;
@@ -50,6 +51,7 @@ public class FeedRenderer implements Renderer {
 		this.sns = sns;
 		this.dateProperties = getDateProperties( config );
 		this.labelProperties = getLabelProperties( config );
+		this.namespace = getConfiguredNamespace();
 	}
 
 	@Override public MediaType getMediaType(Bindings rc) {
@@ -213,6 +215,7 @@ public class FeedRenderer implements Renderer {
 			
 			Element content = d.createElement( "content" );
 			content.setAttribute( "type", "application/xml" );
+			content.setAttribute( "xmlns", namespace );
 			
 			Set<Resource> cyclic = new HashSet<Resource>();
 			Set<Resource> seen = new HashSet<Resource>();
@@ -275,6 +278,14 @@ public class FeedRenderer implements Renderer {
 		Element child = d.createElement( tag );
 		child.appendChild( d.createTextNode( body ) );
 		e.appendChild( child );
+	}
+	
+	protected String getConfiguredNamespace() {
+		return RDFUtils.getStringValue( config,  EXTRAS.feedNamespace, EXTRAS.getURI() );
+	}
+
+	public String getNamespace() {
+		return namespace;
 	}
 
 }
