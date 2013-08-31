@@ -55,8 +55,8 @@ public class CompleteReadContext {
 				ContextPropertyInfo result = buffer.get(p);
 				if (result == null) {				
 					String shortName = uriToName.get(p.getURI());
-					result = context.findProperty( p, shortName );
-					buffer.put( p, result.clone() );
+					ContextPropertyInfo original = context.findProperty( p, shortName );
+					buffer.put( p, result = original.clone() );
 				}
 				return result;
 			}

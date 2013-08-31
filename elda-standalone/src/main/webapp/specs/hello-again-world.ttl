@@ -27,6 +27,7 @@ hello:hello-world-again a api:API
 	# Name the SPARQL endpoint which supplies the data we present
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	; api:defaultViewer api:labelledDescribeViewer
+	; api:viewer [a api:Viewer; api:name "none"; api:properties ""]
 	; api:variable [api:name "_velocityRoot"; api:value "http://localhost:8080/standalone/vm/"]
 	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/standalone/"]
 	; api:endpoint 
