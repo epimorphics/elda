@@ -13,20 +13,28 @@ import java.util.List;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.util.MediaType;
 
 public class JerseyUtils {
 
+    protected static Logger log = LoggerFactory.getLogger(JerseyUtils.class);
+    
 	/**
 	    Convert a (rs.core) MultivaluedMap to (our, local) MultiMap.
 	    This is just to allow bridging from Jersey restlets into our
 	    (eventually, Jersey-free internally) code.
 	*/
-	public static <K, V> MultiMap<K, V> convert( MultivaluedMap<K, V> map ) {
-		MultiMap<K, V> result = new MultiMap<K, V>();
-		for (K key: map.keySet()) {
-			for (V value: map.get(key)) result.add(key, value);        			
+	public static MultiMap<String, String> convert( MultivaluedMap<String, String> map ) {
+		MultiMap<String, String> result = new MultiMap<String, String>();
+		for (String key: map.keySet()) {
+			for (String value: map.get(key)) {
+				if (!value.equals("")) result.add(key, value);
+				else log.debug( "ignored empty parameter '" + key + "'" );
+			}
 		}
 		return result;
 	}
