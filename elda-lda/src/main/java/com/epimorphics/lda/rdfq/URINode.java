@@ -29,6 +29,10 @@ public class URINode extends Term
 	@Override public boolean equals( Object other )
 		{ return other instanceof URINode && same( (URINode) other ); }
 	
+	@Override public int hashCode() {
+		return URI.hashCode();
+	}
+	
 	private boolean same( URINode other ) 
 		{ return URI.equals( other.URI ); }
 	}

@@ -107,9 +107,11 @@ public class EXTRAS
     
 	public static final Property feedTitle = property( "feedTitle" );
 
+	public static final Property feedNamespace = property( "feedNamespace" );
+
 	public static final Property textQueryProperty = property( "textQueryProperty" );
 
-	public static final Property feedNamespace = property( "feedNamespace" );
+	public static final Property textContentProperty = property( "textContentProperty" );
 
 	private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }

@@ -88,6 +88,12 @@ public class APIQuery implements VarSupply, WantsMetadata {
     	filterExpressions.add( e );
     }
     
+    protected final Source itemSource;
+    
+    public Source getItemSource() {
+    	return itemSource;
+    }
+    
     private boolean isItemEndpoint = false;
     
     protected String defaultLanguage = null;
@@ -157,6 +163,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
     	int getDefaultPageSize();
 		String getItemTemplate();
 		boolean isItemEndpoint();
+		Source getItemSource();
     }
 
     protected static class FilterExpressions implements ValTranslator.Filters {
@@ -177,7 +184,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
         this.defaultPageSize = qb.getDefaultPageSize();
         this.maxPageSize = qb.getMaxPageSize();
         this.itemTemplate = qb.getItemTemplate();
-        this.isItemEndpoint = qb.isItemEndpoint(); 
+        this.isItemEndpoint = qb.isItemEndpoint();
+        this.itemSource = qb.getItemSource();
     //
         this.deferredFilters = new ArrayList<PendingParameterValue>();
         this.whereExpressions = new StringBuffer();
@@ -210,6 +218,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
     	this.sortByOrderSpecsFrozen = other.sortByOrderSpecsFrozen;
     	this.subjectResource = other.subjectResource;
     	this.varcount = other.varcount;
+    	this.itemSource = other.itemSource;
     //
     	this.languagesFor = new HashMap<String, String>( other.languagesFor );
         this.basicGraphTriples = new ArrayList<RDFQ.Triple>( other.basicGraphTriples );
@@ -337,11 +346,18 @@ public class APIQuery implements VarSupply, WantsMetadata {
     	deferredFilters.add( new PendingParameterValue( param, val ) );
     }
     
-    protected void addSearchTriple( String val ) {
-        
+    public void addSearchTriple( String val ) {
+    	Value literal = RDFQ.literal( val );
+    	Property queryProperty = itemSource.getTextQueryProperty();
+    	Property contentProperty = itemSource.getTextContentProperty();
 
-        addTriplePattern( SELECT_VAR, Source.JENA_TEXT_QUERY, RDFQ.literal( val ) );
-        
+		if (contentProperty.equals(Source.DEFAULT_CONTENT_PROPERTY)) {
+    		addTriplePattern( SELECT_VAR, queryProperty, literal );    		
+    	} else {    		
+    		Any cp = RDFQ.uri( contentProperty.getURI() );
+    		Any searchOperand = RDFQ.list( cp, literal );
+    		addTriplePattern( SELECT_VAR, queryProperty, searchOperand );  
+    	}
     }
     
     public APIQuery addSubjectHasProperty( Resource P, Any O ) {

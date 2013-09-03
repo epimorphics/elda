@@ -26,22 +26,32 @@ import com.hp.hpl.jena.shared.Lock;
 public abstract class SourceBase {
 
 	final Property textQueryProperty;
+	final Property textContentProperty;
 	
 	public SourceBase() {
-		this( Source.JENA_TEXT_QUERY );
+		this( Source.JENA_TEXT_QUERY, Source.DEFAULT_CONTENT_PROPERTY );
 	}
 	
 	public SourceBase( Resource endpoint ) {
-		this( configTextQueryProperty( endpoint ) );
+		this
+			( configTextQueryProperty( endpoint )
+			, configTextContentProperty( endpoint )
+			);
 	}
 
-	private SourceBase( Property textQueryProperty ) {
+	private SourceBase( Property textQueryProperty, Property textContentProperty ) {
 		this.textQueryProperty = textQueryProperty;
+		this.textContentProperty = textContentProperty;
 	}
 	
 	private static Property configTextQueryProperty( Resource endpoint ) {
 		Resource tqp = endpoint.getPropertyResourceValue( EXTRAS.textQueryProperty );
 		return tqp == null ? Source.JENA_TEXT_QUERY : tqp.as(Property.class);
+	}
+	
+	private static Property configTextContentProperty( Resource endpoint ) {
+		Resource tcp = endpoint.getPropertyResourceValue( EXTRAS.textContentProperty );
+		return tcp == null ? Source.DEFAULT_CONTENT_PROPERTY : tcp.as(Property.class);
 	}
 	
 	/**
@@ -51,6 +61,10 @@ public abstract class SourceBase {
 	
 	public Property getTextQueryProperty() {
 		return textQueryProperty;
+	}
+	
+	public Property getTextContentProperty() {
+		return textContentProperty;
 	}
 	
 	/**

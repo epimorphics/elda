@@ -68,6 +68,10 @@ public class Value extends Term
 	@Override public boolean equals( Object other )
 		{ return other instanceof Value && same( (Value) other ); }
 	
+	@Override public int hashCode() {
+		return spelling.hashCode() + language.hashCode() + datatype.hashCode();
+	}
+	
 	private boolean same( Value other ) 
 		{ 
 		return 

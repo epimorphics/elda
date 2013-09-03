@@ -1,0 +1,85 @@
+package com.epimorphics.lda.query.tests;
+
+import static org.junit.Assert.*;
+
+import java.util.*;
+
+import org.junit.Test;
+
+import com.epimorphics.lda.query.APIQuery;
+import com.epimorphics.lda.query.APIQuery.QueryBasis;
+import com.epimorphics.lda.rdfq.*;
+import com.epimorphics.lda.rdfq.RDFQ.Triple;
+import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.sources.HereSource;
+import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.tests.SNS;
+import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.hp.hpl.jena.rdf.model.*;
+
+public class TestConstructsTextQueries {
+	
+	Model config = ModelFactory.createDefaultModel();
+	
+	Resource endpoint = config.createResource( "here:eh:/endpoint" );
+
+	ShortnameService sns = new SNS( "" );
+
+	@Test public void testConstructsSimpleQuery() {
+		testConstructsSimpleSearchTriples( Source.JENA_TEXT_QUERY );	
+	}
+	
+	@Test public void testConstructsSimpleConfiguredQuery() {
+		Property queryProperty = ResourceFactory.createProperty( "eh:/query" );
+		endpoint.addProperty( EXTRAS.textQueryProperty, queryProperty );
+		testConstructsSimpleSearchTriples(queryProperty);		
+	}
+
+	private void testConstructsSimpleSearchTriples(Property queryProperty) {
+		final Source s = new HereSource( config, endpoint );
+		QueryBasis qb = new StubQueryBasis(sns) {
+
+			@Override public Source getItemSource() { 
+				return s; 
+			}
+		};
+	//
+		APIQuery q = new APIQuery(qb);
+		q.addSearchTriple( "target" );
+	//
+		Set<Triple> obtained = new HashSet<Triple>( q.getBasicGraphTriples() );
+	//
+		Set<Triple> expected = new HashSet<Triple>();
+		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri(queryProperty.getURI() ), RDFQ.literal( "target" ) ) );
+	//
+		assertEquals( expected, obtained );
+	}
+	
+	@Test public void testUsesConfiguredTextProperty() {
+		testUsesConfiguredTextProperty( Source.JENA_TEXT_QUERY );
+	}
+
+	private void testUsesConfiguredTextProperty(Property jenaTextQuery) {
+		Property contentProperty = ResourceFactory.createProperty( "eh:/content" );
+		endpoint.addProperty( EXTRAS.textContentProperty, contentProperty );
+		final Source s = new HereSource( config, endpoint );
+		QueryBasis qb = new StubQueryBasis(sns) {
+
+			@Override public Source getItemSource() { 
+				return s; 
+			}
+		};
+	//
+		APIQuery q = new APIQuery(qb);
+		q.addSearchTriple( "target" );
+	//
+		Set<Triple> obtained = new HashSet<Triple>( q.getBasicGraphTriples() );
+	//
+		Set<Triple> expected = new HashSet<Triple>();
+		AnyList searchOperand = RDFQ.list( RDFQ.uri(contentProperty.getURI()), RDFQ.literal( "target" ) );
+		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri( Source.JENA_TEXT_QUERY.getURI() ), searchOperand ) );
+	//
+		assertEquals( expected, obtained );
+	}
+	
+}

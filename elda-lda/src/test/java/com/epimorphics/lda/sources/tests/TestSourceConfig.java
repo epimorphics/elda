@@ -10,6 +10,7 @@ import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.test.JenaTestBase;
 import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class TestSourceConfig {
 	
@@ -46,6 +47,24 @@ public class TestSourceConfig {
 		endpoint.addProperty( EXTRAS.textQueryProperty, textQuery );
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
 		assertEquals( textQuery, s.getTextQueryProperty() );
+	}
+	
+	@Test public void testDefaultTextProperty() {
+		Resource config = model.createResource( "eh:/spec" );
+		Resource endpoint = model.createResource( "eh:/sparql" );
+		config.addProperty( API.sparqlEndpoint, endpoint );
+		Source s = GetDataSource.sourceFromSpec( fm, config, am );
+		assertEquals( RDFS.label, s.getTextContentProperty() );
+	}
+	
+	@Test public void testTextPropertyFromConfig() {
+		Resource config = model.createResource( "eh:/spec" );
+		Resource endpoint = model.createResource( "eh:/sparql" );
+		Property textContent = model.createProperty( "eh:/textContent" );
+		endpoint.addProperty( EXTRAS.textContentProperty, textContent );
+		config.addProperty( API.sparqlEndpoint, endpoint );
+		Source s = GetDataSource.sourceFromSpec( fm, config, am );
+		assertEquals( textContent, s.getTextContentProperty() );
 	}
 	
 

@@ -37,6 +37,7 @@ public class HereSource extends SourceBase implements Source
 
 	public HereSource( Model fullModel, Resource endpoint ) 
 		{
+		super( endpoint );
 		String endpointString = endpoint.getURI();
         if (!endpointString.startsWith( PREFIX ))
             throw new APIException( "Illegal here endpoint: " + endpointString );

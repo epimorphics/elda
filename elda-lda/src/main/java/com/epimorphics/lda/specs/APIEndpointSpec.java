@@ -23,6 +23,7 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
@@ -448,6 +449,10 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 
 	@Override public boolean hasParameterBasedContentNegotiation() {
 		return getAPISpec().hasParameterBasedContentNegotiation();
+	}
+
+	@Override public Source getItemSource() {
+		return apiSpec.getDataSource();
 	}
 	
 }

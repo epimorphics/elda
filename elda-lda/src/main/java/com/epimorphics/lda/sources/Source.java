@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Abstraction of the data endpoint to be queried.
@@ -32,6 +33,8 @@ import com.hp.hpl.jena.rdf.model.*;
 public interface Source {
 
     public final static Property JENA_TEXT_QUERY = ResourceFactory.createProperty( "http://jena.apache.org/text#query" );
+    
+    public final static Property DEFAULT_CONTENT_PROPERTY = RDFS.label;
 
 	/**
         Return a name for this source, used for error reporting
@@ -76,6 +79,8 @@ public interface Source {
         JENA_TEXT_SEARCH.
     */
     public Property getTextQueryProperty();
+
+	public Property getTextContentProperty();
     
     /**
         Answer TRUE iff this source supports nested SELECT queries 

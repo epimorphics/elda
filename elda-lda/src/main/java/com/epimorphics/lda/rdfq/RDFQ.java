@@ -8,6 +8,7 @@
 package com.epimorphics.lda.rdfq;
 
 import com.epimorphics.lda.support.PrefixLogger;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 
@@ -31,6 +32,18 @@ public class RDFQ
 		@Override public String toString()
 			{ return asSparqlTriple( PrefixLogger.some() ); }
 		
+		@Override public boolean equals( Object other ) {
+			return other instanceof Triple && same( (Triple) other );
+		}
+		
+		private boolean same(Triple other) {
+			return S.equals(other.S) && P.equals(other.P)&& O.equals(other.O);
+		}
+		
+		@Override public int hashCode() {
+			return S.hashCode() + (P.hashCode() << 8) + (O.hashCode() << 16);
+		}
+
 		public String asSparqlTriple( PrefixLogger pl )
 			{ 
 			return S.asSparqlTerm( pl ) + " " + P.asSparqlTerm( pl ) + " " + O.asSparqlTerm( pl ); 
@@ -66,5 +79,9 @@ public class RDFQ
 	
 	public static Triple triple( Any S, Any P, Any O ) 
 		{ return new Triple( S, P, O ); }
+
+	public static AnyList list( Any... elements ) {
+		return new AnyList( elements );
+	}
 
 	}
