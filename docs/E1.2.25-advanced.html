@@ -1221,6 +1221,70 @@ to deliver a Renderer, and that Renderer is used to render the
 result set.
 </p>
 
+<h3><a name="atom-feed"></a>The atom renderer</h3>
+
+<p>
+Elda contains an experimental atom-feed renderer. To use it, add
+a new formatter to the configuration file:
+</p>
+
+<pre>
+...
+; api:formatter
+    [a elda:FeedFormatter
+    ; api:name "atom"
+    ; elda:className "com.epimorphics.lda.renderers.FeedRendererFactory"
+    ; api:mimeType "application/atom+xml"
+    ; elda:feedTitle "an example Elda feed"
+    ]
+</pre>
+
+<p>
+The ID of the feed is the URI used to create it. The entries of the
+feed correspond to the selected items of the query; the ID of an 
+entry is the URI of the corresponding item.
+</p>
+
+<p>
+The title of the feed is set using the elda:feedTitle
+property of the formatter in the LDA config, as in the example above.
+The title of an entry is set from the value of the first of the
+properties in the list 
+
+</p>
+<pre>
+<code>api:label</code>
+<code>skos:prefLabel</code>
+<code>rdfs:label</code> 
+</pre>
+<p>
+
+that is defined; this list can be changed
+by setting the value of the formatter's <code>elda:feedLabelProperties</code> property.
+</p>
+
+<p>
+The update time of a feed is the latest of the updated
+times of its entries.
+</p>
+
+<p>
+The update time of an entry is the value of the first
+property in the list:
+</p>
+
+<pre>
+dct:modified
+dct:date
+dct:dateAccepted
+dct:dateSubmitted
+dct:created
+</pre>
+
+<p>
+that is defined. This list can be changed by setting the value of the
+formatter's <code>elda:feedFateProperties</code> property.
+</p>
 
 <h2><a name="statistics"></a>statistics</h2>
 
