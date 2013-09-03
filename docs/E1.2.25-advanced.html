@@ -1202,6 +1202,26 @@ http://localhost:8080/elda/doc/school
     are already opened.
 </p>
 
+<h2><a name="text-search"></a>Free-text searching</h2>
+
+<p>
+Elda allows free text from the reserved query parameter 
+<code>_search</code> to be passed to the SPARQL endpoint
+using the text search property <code>http://jena.apache.org/text#query</code>,
+implemented by recent Jena Fuseki artifacts as an abstraction 
+layer over existing free-text APIs.
+</p>
+
+<p>
+By default the text search is over values of <code>rdfs:label</code>,
+but this can be changed by setting the <code>elda:textContentProperty</code>
+of the SPARQL endpoint to the desired property in the configuration file.
+</p>
+
+<p>
+This feature is experimental and details may change.
+</p>
+
 <h2><a name="formatting-extensions"><a/>Formatting extensions</h2>
 
 <p>
@@ -1284,6 +1304,12 @@ dct:created
 <p>
 that is defined. This list can be changed by setting the value of the
 formatter's <code>elda:feedFateProperties</code> property.
+</p>
+
+<p>
+The content of an entry is similar to the XML rendering of the
+resource for this entry. Currently <b>circularity checking is not
+available</b>.
 </p>
 
 <h2><a name="statistics"></a>statistics</h2>
