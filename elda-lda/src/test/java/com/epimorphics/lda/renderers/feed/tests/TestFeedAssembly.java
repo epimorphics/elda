@@ -12,6 +12,7 @@ import com.epimorphics.lda.renderers.FeedRenderer;
 import com.epimorphics.lda.renderers.FeedRendererFactory;
 import com.epimorphics.lda.renderers.FeedRenderer.FeedResults;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.SKOSstub;
@@ -21,6 +22,9 @@ import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.test.JenaTestBase;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -114,6 +118,29 @@ public class TestFeedAssembly {
 		config.addProperty( EXTRAS.feedNamespace, explicit );
 		FeedRenderer fr = makeFeedRenderer( config );
 		assertEquals( explicit, fr.getNamespace() );
+	//
+		Document  d = DOMUtils.newDocument();
+		Model dataModel = ModelFactory.createDefaultModel();
+		List<Resource> items = new ArrayList<Resource>();
+	//
+		Resource item = dataModel.createResource( "eh:/item" );
+		item.addProperty( RDFS.label, "Please Look After This Bear" );
+		items.add( item );
+	//
+		FeedResults results = new FeedResults( config, items, new MergedModels( dataModel ) );
+		fr.renderFeedIntoDocument( d, new HashMap<String, String>(), results );
+	//
+		String namespace = explicit;
+		Times t = new Times();
+		PrefixMapping pm = PrefixMapping.Factory.create();
+		String rendering = DOMUtils.renderNodeToString( t, d, pm );
+	//
+		if (!rendering.contains( "<content xmlns=\"" + namespace + "\"" ))
+			fail( "rendering \n" + rendering + "\n does not contain correct content namespace\n" + namespace );
+	}
+	
+	@Test public void testNamespaceEmbedsInContent() {
+		
 	}
 	
 	@Test public void testSingleItemXMLrendering() throws XpathException {
@@ -148,6 +175,13 @@ public class TestFeedAssembly {
 		// TODO check that shortname translated to correct namespace.
 		XMLAssert.assertXpathExists( "feed/entry/content/label", d );
 		
+		String namespace = "http://www.epimorphics.com/vocabularies/lda#";
+		Times t = new Times();
+		PrefixMapping pm = PrefixMapping.Factory.create();
+		String rendering = DOMUtils.renderNodeToString( t, d, pm );
+	//
+		if (!rendering.contains( "<content xmlns=\"" + namespace + "\"" ))
+			fail( "rendering \n" + rendering + "\n does not contain correct content namespace\n" + namespace );
 	}
 	
 	protected FeedRenderer makeFeedRenderer( Resource config ) {
