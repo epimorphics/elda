@@ -28,6 +28,14 @@ public class AnyList extends Any {
 	public List<Any> getElements() {
 		return elements;
 	}
+
+	public int size() {
+		return elements.size();
+	}
+	
+	@Override public String toString() {
+		return asSparqlTerm( new PrefixLogger() );
+	}
 	
 	@Override public boolean equals( Object other ) {
 		return other instanceof AnyList && same( (AnyList) other );

@@ -48,8 +48,8 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  	@version $Revision: $
 */
 public class APIQuery implements VarSupply, WantsMetadata {
-    
-    static final Logger log = LoggerFactory.getLogger( APIQuery.class );
+
+	static final Logger log = LoggerFactory.getLogger( APIQuery.class );
     
     public static final Variable SELECT_VAR = RDFQ.var( "?item" );
     
@@ -350,17 +350,32 @@ public class APIQuery implements VarSupply, WantsMetadata {
     	Value literal = RDFQ.literal( val );
     	Property queryProperty = itemSource.getTextQueryProperty();
     	Property contentProperty = itemSource.getTextContentProperty();
-
-		if (contentProperty.equals(Source.DEFAULT_CONTENT_PROPERTY)) {
-    		addTriplePattern( SELECT_VAR, queryProperty, literal );    		
-    	} else {    		
-    		Any cp = RDFQ.uri( contentProperty.getURI() );
-    		Any searchOperand = RDFQ.list( cp, literal );
-    		addTriplePattern( SELECT_VAR, queryProperty, searchOperand );  
+    	AnyList operand = itemSource.getTextSearchOperand();
+    //
+    	if (operand == null) {
+			if (contentProperty.equals(Source.DEFAULT_CONTENT_PROPERTY)) {
+	    		addTriplePattern( SELECT_VAR, queryProperty, literal );    		
+	    	} else {    		
+	    		Any cp = RDFQ.uri( contentProperty.getURI() );
+	    		AnyList searchOperand = RDFQ.list( cp, literal );
+	    		addTriplePattern( SELECT_VAR, queryProperty, searchOperand );  
+	    	}
+    	} else {
+    		List<Any> elements = operand.getElements();
+    		Any[] y = new Any[operand.size()];
+    		for (int i = 0; i < elements.size(); i += 1) y[i] = substitute( elements.get(i), literal );
+    		AnyList searchOperand = RDFQ.list( y );
+    		addTriplePattern( SELECT_VAR, queryProperty, searchOperand );
     	}
     }
     
-    public APIQuery addSubjectHasProperty( Resource P, Any O ) {
+    private static final Value variable_search = RDFQ.literal("?_search" );
+    
+    private Any substitute(Any any, Value literal) {
+		return any.equals( variable_search) ? literal : any;
+	}
+
+	public APIQuery addSubjectHasProperty( Resource P, Any O ) {
         addTriplePattern( SELECT_VAR, P, O );
         return this;
     }    

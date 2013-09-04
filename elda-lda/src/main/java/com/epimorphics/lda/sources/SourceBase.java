@@ -8,7 +8,10 @@
 
 package com.epimorphics.lda.sources;
 
+import java.util.List;
+
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.hp.hpl.jena.query.Query;
@@ -27,21 +30,24 @@ public abstract class SourceBase {
 
 	final Property textQueryProperty;
 	final Property textContentProperty;
+	final AnyList textSearchOperand;
 	
 	public SourceBase() {
-		this( Source.JENA_TEXT_QUERY, Source.DEFAULT_CONTENT_PROPERTY );
+		this( Source.JENA_TEXT_QUERY, Source.DEFAULT_CONTENT_PROPERTY, null );
 	}
 	
 	public SourceBase( Resource endpoint ) {
 		this
 			( configTextQueryProperty( endpoint )
 			, configTextContentProperty( endpoint )
+			, configTextSearchOperand( endpoint )
 			);
 	}
 
-	private SourceBase( Property textQueryProperty, Property textContentProperty ) {
+	private SourceBase( Property textQueryProperty, Property textContentProperty, AnyList textSearchOperand ) {
 		this.textQueryProperty = textQueryProperty;
 		this.textContentProperty = textContentProperty;
+		this.textSearchOperand = textSearchOperand;
 	}
 	
 	private static Property configTextQueryProperty( Resource endpoint ) {
@@ -53,7 +59,24 @@ public abstract class SourceBase {
 		Resource tcp = endpoint.getPropertyResourceValue( EXTRAS.textContentProperty );
 		return tcp == null ? Source.DEFAULT_CONTENT_PROPERTY : tcp.as(Property.class);
 	}
+
+	private static AnyList configTextSearchOperand(Resource endpoint) {
+		Resource tso = endpoint.getPropertyResourceValue( EXTRAS.textSearchOperand );
+		return tso == null ? null : convertList(tso);
+	}
 	
+	private static AnyList convertList(Resource tso) {
+		if (tso.canAs(RDFList.class)) {
+			List<RDFNode> operand = tso.as(RDFList.class).asJavaList();
+			Any[] elements = new Any[operand.size()];
+			for (int i = 0; i < operand.size(); i += 1) elements[i] = RDFQ.any( operand.get(i) );
+			return RDFQ.list( elements );
+		} else {
+			EldaException.BadSpecification( "Object " + tso + " of " + EXTRAS.textSearchOperand + " must be an RDF list." );
+			return /* never */ null;
+		}
+	}
+
 	/**
 	    Each SourceBase subclass must provide <code>execute</code>.    
 	*/
@@ -65,6 +88,10 @@ public abstract class SourceBase {
 	
 	public Property getTextContentProperty() {
 		return textContentProperty;
+	}
+	
+	public AnyList getTextSearchOperand() {
+		return textSearchOperand;
 	}
 	
 	/**

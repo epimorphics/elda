@@ -25,7 +25,6 @@ public class StubQueryBasis implements QueryBasis {
 	@Override public boolean isItemEndpoint() {	return false; }
 	
 	@Override public Source getItemSource() { 
-		System.err.println( ">> getItemSource is undefined for fakeQB" );
 		return null; 
 	}
 }

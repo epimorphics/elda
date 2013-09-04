@@ -81,5 +81,36 @@ public class TestConstructsTextQueries {
 	//
 		assertEquals( expected, obtained );
 	}
+
+	@Test public void testUsesConfiguredTextOperand() {
+		int number = 17;
+		String searchString = "target";
+	//
+		Resource a = config.createProperty( "eh:/content" );
+		Literal b = config.createLiteral( "?_search" );
+		Literal c = config.createTypedLiteral( number );
+	//
+		Resource operand = config.createList( new RDFNode[] {a, b, c} );
+		endpoint.addProperty( EXTRAS.textSearchOperand, operand );
+		final Source s = new HereSource( config, endpoint );
+	//
+		QueryBasis qb = new StubQueryBasis(sns) {
+
+			@Override public Source getItemSource() { 
+				return s; 
+			}
+		};
+	//
+		APIQuery q = new APIQuery(qb);
+		q.addSearchTriple( searchString );
+	//
+		Set<Triple> obtained = new HashSet<Triple>( q.getBasicGraphTriples() );
+	//
+		Set<Triple> expected = new HashSet<Triple>();
+		AnyList searchOperand = RDFQ.list( RDFQ.uri(a.getURI()), RDFQ.literal( searchString ), RDFQ.literal(number) );
+		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri( Source.JENA_TEXT_QUERY.getURI() ), searchOperand ) );
+	//
+		assertEquals( expected, obtained );
+	}
 	
 }

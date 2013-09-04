@@ -112,6 +112,8 @@ public class EXTRAS
 	public static final Property textQueryProperty = property( "textQueryProperty" );
 
 	public static final Property textContentProperty = property( "textContentProperty" );
+	
+	public static final Property textSearchOperand = property( "textSearchOperand" );
 
 	private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }

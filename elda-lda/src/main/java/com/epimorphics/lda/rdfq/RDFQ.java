@@ -8,8 +8,10 @@
 package com.epimorphics.lda.rdfq;
 
 import com.epimorphics.lda.support.PrefixLogger;
-import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.XSD;
 
 
 /**
@@ -50,10 +52,23 @@ public class RDFQ
 			}
 		}
 	
+	static final String typeInteger = XSD.xint.getURI();
+
+	static final String typeDouble = XSD.xdouble.getURI();
+
 	public static Value literal( double d )
 		{
 		String spelling = Double.toString( d );
-		return new Value( spelling, "", "" ) 
+		return new Value( spelling, "",typeDouble ) 
+			{
+			@Override public String asSparqlTerm( PrefixLogger pl ) { return spelling; }
+			};
+		}
+	
+	public static Value literal( int i )
+		{
+		String spelling = Integer.toString( i );
+		return new Value( spelling, "", typeInteger ) 
 			{
 			@Override public String asSparqlTerm( PrefixLogger pl ) { return spelling; }
 			};
@@ -82,6 +97,13 @@ public class RDFQ
 
 	public static AnyList list( Any... elements ) {
 		return new AnyList( elements );
+	}
+
+	public static Any any(RDFNode rdf) {
+		Node n = rdf.asNode();
+		if (n.isURI()) return uri( n.getURI());
+		if (n.isLiteral()) return literal( n.getLiteralLexicalForm(), n.getLiteralLanguage(), n.getLiteralDatatypeURI() );
+		throw new RuntimeException( "Cannot convert " + rdf + " to RDFQ.Any" );
 	}
 
 	}

@@ -33,9 +33,17 @@ public class TestRDFQ {
 	Variable c2 = RDFQ.var( "?gamma" );
 	Variable notC = RDFQ.var( "?ammag" );
 	
+	Value i = RDFQ.literal(17);
+	Value i2 = RDFQ.literal(17);
+	Value notI = RDFQ.literal(42);
+	
 	AnyList l = RDFQ.list( a, b, c );
 	AnyList l2 = RDFQ.list( a, b, c );
 	AnyList notL = RDFQ.list( c, b, c );
+	
+	@Test public void testX() {
+		
+	}
 	
 	@Test public void testEqualityURI() {
 		assertEquals( a, a2 );
@@ -48,6 +56,12 @@ public class TestRDFQ {
 		assertDiffer( b, notB );
 		assertEquals( "beta", b.spelling() );
 	}
+	
+	@Test public void testEqualityInteger() {
+		assertEquals( i, i2 );
+		assertDiffer( i, notI );
+		assertEquals( "17", i.spelling() );
+	}
 		
 	@Test public void testEqualityVariable() {
 		assertEquals( c, c2 );
@@ -59,8 +73,11 @@ public class TestRDFQ {
 		assertDiffer( a, b );
 		assertDiffer( a, c );
 		assertDiffer( a, l );
+		assertDiffer( a, i );
 		assertDiffer( b, c );
+		assertDiffer( b, i );
 		assertDiffer( b, l );
+		assertDiffer( c, i );
 		assertDiffer( c, l );
 	}
 	
@@ -73,12 +90,20 @@ public class TestRDFQ {
 		assertEquals( CollectionUtils.list(a, b, c), l.getElements() );
 	}
 	
+	@Test public void testListSize() {
+		assertEquals( 0, RDFQ.list().size() );
+		assertEquals( 1, RDFQ.list(a).size() );
+		assertEquals( 2, RDFQ.list(a, b).size() );
+		assertEquals( 3, RDFQ.list(a, b, c).size() );
+	}
+	
 	PrefixLogger pl = new PrefixLogger( PrefixMapping.Standard );
 	
 	@Test public void testSparqRendering() {
 		assertEquals( "<eh:/alpha>", a.asSparqlTerm( pl ) );
 		assertEquals( "\"beta\"", b.asSparqlTerm( pl ) );
 		assertEquals( "?gamma", c.asSparqlTerm( pl ) );
+		assertEquals( "17", i.asSparqlTerm( pl ) );
 		assertEquals( "( <eh:/alpha> \"beta\" ?gamma)", l.asSparqlTerm( pl ) );
 	}
 	

@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.sources.*;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
@@ -47,6 +48,7 @@ public class TestSourceConfig {
 		endpoint.addProperty( EXTRAS.textQueryProperty, textQuery );
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
 		assertEquals( textQuery, s.getTextQueryProperty() );
+		assertNull( s.getTextSearchOperand() );
 	}
 	
 	@Test public void testDefaultTextProperty() {
@@ -55,6 +57,7 @@ public class TestSourceConfig {
 		config.addProperty( API.sparqlEndpoint, endpoint );
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
 		assertEquals( RDFS.label, s.getTextContentProperty() );
+		assertNull( s.getTextSearchOperand() );
 	}
 	
 	@Test public void testTextPropertyFromConfig() {
@@ -65,7 +68,30 @@ public class TestSourceConfig {
 		config.addProperty( API.sparqlEndpoint, endpoint );
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
 		assertEquals( textContent, s.getTextContentProperty() );
+		assertNull( s.getTextSearchOperand() );
 	}
 	
-
+	// the search operand coming out should match the config list coming in.
+	@Test public void testTextSearchListOperand() {
+		Resource config = model.createResource( "eh:/spec" );
+		Resource endpoint = model.createResource( "eh:/sparql" );
+	//
+		Resource a = model.createResource( "eh:/a" );
+		Literal b = model.createLiteral( "b" );
+		Literal c = model.createLiteral( "?c" );
+	//
+		Resource operand = model.createList( new RDFNode[] {a, b, c} );
+	//
+		endpoint.addProperty( EXTRAS.textSearchOperand, operand );		
+		config.addProperty( API.sparqlEndpoint, endpoint );
+		Source s = GetDataSource.sourceFromSpec( fm, config, am );
+	//
+		Any qA = RDFQ.uri( a.getURI() );
+		Any qB = RDFQ.literal( b.getLexicalForm() );
+		Any qC = RDFQ.literal( c.getLexicalForm() );
+	//
+		AnyList expected = RDFQ.list( qA, qB, qC );
+		assertEquals( expected, s.getTextSearchOperand() );		
+	}
+	
 }
