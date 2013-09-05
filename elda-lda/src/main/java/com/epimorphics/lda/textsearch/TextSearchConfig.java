@@ -31,9 +31,9 @@ public class TextSearchConfig {
 	*/
 	public TextSearchConfig( Resource endpoint ) {
 		this
-			( configTextQueryProperty( endpoint )
-			, configTextContentProperty( endpoint )
-			, configTextSearchOperand( endpoint )
+			( configTextQueryProperty( endpoint, JENA_TEXT_QUERY )
+			, configTextContentProperty( endpoint, DEFAULT_CONTENT_PROPERTY )
+			, configTextSearchOperand( endpoint, null )
 			);
 	}
 	
@@ -47,7 +47,11 @@ public class TextSearchConfig {
 	    // NOTE the "overlaying" isn't done yet.
 	*/
 	public TextSearchConfig overlay( Resource endpoint ) {
-		return new TextSearchConfig( endpoint );
+		return new TextSearchConfig
+			(  configTextQueryProperty( endpoint, textQueryProperty )
+			, configTextContentProperty( endpoint, textContentProperty )
+			, configTextSearchOperand( endpoint, textSearchOperand )
+			);
 	}
 	
 	private TextSearchConfig( Property textQueryProperty, Property textContentProperty, AnyList textSearchOperand ) {
@@ -56,19 +60,19 @@ public class TextSearchConfig {
 		this.textSearchOperand = textSearchOperand;
 	}
 	
-	private static Property configTextQueryProperty( Resource endpoint ) {
+	private static Property configTextQueryProperty( Resource endpoint, Property ifUnspecified ) {
 		Resource tqp = endpoint.getPropertyResourceValue( EXTRAS.textQueryProperty );
-		return tqp == null ? JENA_TEXT_QUERY : tqp.as(Property.class);
+		return tqp == null ? ifUnspecified : tqp.as(Property.class);
 	}
 	
-	private static Property configTextContentProperty( Resource endpoint ) {
+	private static Property configTextContentProperty( Resource endpoint, Property ifUnspecified ) {
 		Resource tcp = endpoint.getPropertyResourceValue( EXTRAS.textContentProperty );
-		return tcp == null ? DEFAULT_CONTENT_PROPERTY : tcp.as(Property.class);
+		return tcp == null ? ifUnspecified : tcp.as(Property.class);
 	}
 
-	private static AnyList configTextSearchOperand(Resource endpoint) {
+	private static AnyList configTextSearchOperand(Resource endpoint, AnyList ifUnspecified) {
 		Resource tso = endpoint.getPropertyResourceValue( EXTRAS.textSearchOperand );
-		return tso == null ? null : convertList(tso);
+		return tso == null ? ifUnspecified : convertList(tso);
 	}
 	
 	private static AnyList convertList(Resource tso) {
