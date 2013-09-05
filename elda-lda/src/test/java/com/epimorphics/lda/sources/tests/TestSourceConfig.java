@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.sources.*;
+import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -37,7 +38,7 @@ public class TestSourceConfig {
 	
 	@Test public void testTextSearchDefaults() {		
 		Source s = sourceForConfig("eh:/sparql");
-		assertEquals( Source.JENA_TEXT_QUERY, s.getTextQueryProperty() );
+		assertEquals( TextSearchConfig.JENA_TEXT_QUERY, s.getTextSearchConfig().getTextQueryProperty() );
 	}
 	
 	@Test public void testTextSearchFromConfig() {		
@@ -47,8 +48,9 @@ public class TestSourceConfig {
 		Property textQuery = model.createProperty( "eh:/textQuery" );
 		endpoint.addProperty( EXTRAS.textQueryProperty, textQuery );
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
-		assertEquals( textQuery, s.getTextQueryProperty() );
-		assertNull( s.getTextSearchOperand() );
+		TextSearchConfig tsc = s.getTextSearchConfig();
+		assertEquals( textQuery, tsc.getTextQueryProperty() );
+		assertNull( tsc.getTextSearchOperand() );
 	}
 	
 	@Test public void testDefaultTextProperty() {
@@ -56,8 +58,9 @@ public class TestSourceConfig {
 		Resource endpoint = model.createResource( "eh:/sparql" );
 		config.addProperty( API.sparqlEndpoint, endpoint );
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
-		assertEquals( RDFS.label, s.getTextContentProperty() );
-		assertNull( s.getTextSearchOperand() );
+		TextSearchConfig tsc = s.getTextSearchConfig();
+		assertEquals( RDFS.label, tsc.getTextContentProperty() );
+		assertNull( tsc.getTextSearchOperand() );
 	}
 	
 	@Test public void testTextPropertyFromConfig() {
@@ -67,8 +70,9 @@ public class TestSourceConfig {
 		endpoint.addProperty( EXTRAS.textContentProperty, textContent );
 		config.addProperty( API.sparqlEndpoint, endpoint );
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
-		assertEquals( textContent, s.getTextContentProperty() );
-		assertNull( s.getTextSearchOperand() );
+		TextSearchConfig tsc = s.getTextSearchConfig();
+		assertEquals( textContent, tsc.getTextContentProperty() );
+		assertNull( tsc.getTextSearchOperand() );
 	}
 	
 	// the search operand coming out should match the config list coming in.
@@ -91,7 +95,7 @@ public class TestSourceConfig {
 		Any qC = RDFQ.literal( c.getLexicalForm() );
 	//
 		AnyList expected = RDFQ.list( qA, qB, qC );
-		assertEquals( expected, s.getTextSearchOperand() );		
+		assertEquals( expected, s.getTextSearchConfig().getTextSearchOperand() );		
 	}
 	
 }

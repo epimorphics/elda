@@ -31,6 +31,7 @@ import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.sources.*;
 import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
+import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.vocabs.API;
@@ -64,6 +65,8 @@ public class APISpec {
     protected final String defaultLanguage;
     protected final String base;
     
+    protected final TextSearchConfig textSearchConfig;
+    
     public final int defaultPageSize;
     public final int maxPageSize;
     
@@ -96,6 +99,7 @@ public class APISpec {
 		prefixes = ExtractPrefixMapping.from(specification);
         sns = loadShortnames(specification, loader);
         dataSource = GetDataSource.sourceFromSpec( fm, specification, am );
+        textSearchConfig = dataSource.getTextSearchConfig().overlay(specification);
         describeSources = extractDescribeSources( fm, am, specification, dataSource );
         primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
         defaultLanguage = getStringValue(specification, API.lang, null);
@@ -264,6 +268,10 @@ public class APISpec {
 
 	public ModelPrefixEditor getModelPrefixEditor() {
 		return modelPrefixEditor;
+	}
+
+	public TextSearchConfig getTextSearchConfig() {
+		return textSearchConfig;
 	}
 }
 

@@ -14,6 +14,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.HereSource;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.tests.SNS;
+import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.hp.hpl.jena.rdf.model.*;
 
@@ -26,7 +27,7 @@ public class TestConstructsTextQueries {
 	ShortnameService sns = new SNS( "" );
 
 	@Test public void testConstructsSimpleQuery() {
-		testConstructsSimpleSearchTriples( Source.JENA_TEXT_QUERY );	
+		testConstructsSimpleSearchTriples( TextSearchConfig.JENA_TEXT_QUERY );	
 	}
 	
 	@Test public void testConstructsSimpleConfiguredQuery() {
@@ -39,8 +40,8 @@ public class TestConstructsTextQueries {
 		final Source s = new HereSource( config, endpoint );
 		QueryBasis qb = new StubQueryBasis(sns) {
 
-			@Override public Source getItemSource() { 
-				return s; 
+			@Override public TextSearchConfig getTextSearchConfig() { 
+				return s.getTextSearchConfig(); 
 			}
 		};
 	//
@@ -56,7 +57,7 @@ public class TestConstructsTextQueries {
 	}
 	
 	@Test public void testUsesConfiguredTextProperty() {
-		testUsesConfiguredTextProperty( Source.JENA_TEXT_QUERY );
+		testUsesConfiguredTextProperty( TextSearchConfig.JENA_TEXT_QUERY );
 	}
 
 	private void testUsesConfiguredTextProperty(Property jenaTextQuery) {
@@ -65,8 +66,8 @@ public class TestConstructsTextQueries {
 		final Source s = new HereSource( config, endpoint );
 		QueryBasis qb = new StubQueryBasis(sns) {
 
-			@Override public Source getItemSource() { 
-				return s; 
+			@Override public TextSearchConfig getTextSearchConfig() { 
+				return s.getTextSearchConfig(); 
 			}
 		};
 	//
@@ -77,7 +78,7 @@ public class TestConstructsTextQueries {
 	//
 		Set<Triple> expected = new HashSet<Triple>();
 		AnyList searchOperand = RDFQ.list( RDFQ.uri(contentProperty.getURI()), RDFQ.literal( "target" ) );
-		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri( Source.JENA_TEXT_QUERY.getURI() ), searchOperand ) );
+		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri( TextSearchConfig.JENA_TEXT_QUERY.getURI() ), searchOperand ) );
 	//
 		assertEquals( expected, obtained );
 	}
@@ -93,11 +94,12 @@ public class TestConstructsTextQueries {
 		Resource operand = config.createList( new RDFNode[] {a, b, c} );
 		endpoint.addProperty( EXTRAS.textSearchOperand, operand );
 		final Source s = new HereSource( config, endpoint );
+		final TextSearchConfig tsc = s.getTextSearchConfig();
 	//
 		QueryBasis qb = new StubQueryBasis(sns) {
 
-			@Override public Source getItemSource() { 
-				return s; 
+			@Override public TextSearchConfig getTextSearchConfig() { 
+				return tsc; 
 			}
 		};
 	//
@@ -108,7 +110,7 @@ public class TestConstructsTextQueries {
 	//
 		Set<Triple> expected = new HashSet<Triple>();
 		AnyList searchOperand = RDFQ.list( RDFQ.uri(a.getURI()), RDFQ.literal( searchString ), RDFQ.literal(number) );
-		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri( Source.JENA_TEXT_QUERY.getURI() ), searchOperand ) );
+		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri( TextSearchConfig.JENA_TEXT_QUERY.getURI() ), searchOperand ) );
 	//
 		assertEquals( expected, obtained );
 	}

@@ -19,10 +19,9 @@ package com.epimorphics.lda.sources;
 
 import java.util.List;
 
-import com.epimorphics.lda.rdfq.AnyList;
+import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Abstraction of the data endpoint to be queried.
@@ -32,10 +31,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @version $Revision: $
  */
 public interface Source {
-
-    public final static Property JENA_TEXT_QUERY = ResourceFactory.createProperty( "http://jena.apache.org/text#query" );
-    
-    public final static Property DEFAULT_CONTENT_PROPERTY = RDFS.label;
 
 	/**
         Return a name for this source, used for error reporting
@@ -74,30 +69,17 @@ public interface Source {
     	void setup( QueryExecution qe );
     	void consume( ResultSet rs );
     	}
-
-    /**
-        Return the configured text query property, which defaults to
-        JENA_TEXT_SEARCH.
-    */
-    public Property getTextQueryProperty();
-
-    /**
-        Return the configured text content property, which defaults to
-        rdfs:label.
-    */
-	public Property getTextContentProperty();
-
-	/**
-	    Return the configured text search operand, or null if no operand
-	    was configured.
-	*/
-	public AnyList getTextSearchOperand();
     
     /**
         Answer TRUE iff this source supports nested SELECT queries 
         (as specified by SPARQL 1.1).
     */
 	public boolean supportsNestedSelect();
+	
+	/**
+	    Answer this Source's text search configuration.
+	*/
+	public TextSearchConfig getTextSearchConfig();
 	
 	static class Util {
 		

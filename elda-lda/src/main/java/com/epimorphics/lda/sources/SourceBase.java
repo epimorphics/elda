@@ -8,12 +8,9 @@
 
 package com.epimorphics.lda.sources;
 
-import java.util.List;
-
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.sources.Source.ResultSetConsumer;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.rdf.model.*;
@@ -27,72 +24,25 @@ import com.hp.hpl.jena.shared.Lock;
 */
 
 public abstract class SourceBase {
-
-	final Property textQueryProperty;
-	final Property textContentProperty;
-	final AnyList textSearchOperand;
+	
+	private final TextSearchConfig textSearchConfig;
 	
 	public SourceBase() {
-		this( Source.JENA_TEXT_QUERY, Source.DEFAULT_CONTENT_PROPERTY, null );
+		this.textSearchConfig = new TextSearchConfig();
 	}
 	
 	public SourceBase( Resource endpoint ) {
-		this
-			( configTextQueryProperty( endpoint )
-			, configTextContentProperty( endpoint )
-			, configTextSearchOperand( endpoint )
-			);
-	}
-
-	private SourceBase( Property textQueryProperty, Property textContentProperty, AnyList textSearchOperand ) {
-		this.textQueryProperty = textQueryProperty;
-		this.textContentProperty = textContentProperty;
-		this.textSearchOperand = textSearchOperand;
+		this.textSearchConfig = new TextSearchConfig( endpoint );
 	}
 	
-	private static Property configTextQueryProperty( Resource endpoint ) {
-		Resource tqp = endpoint.getPropertyResourceValue( EXTRAS.textQueryProperty );
-		return tqp == null ? Source.JENA_TEXT_QUERY : tqp.as(Property.class);
+	public TextSearchConfig getTextSearchConfig() {
+		return textSearchConfig;
 	}
 	
-	private static Property configTextContentProperty( Resource endpoint ) {
-		Resource tcp = endpoint.getPropertyResourceValue( EXTRAS.textContentProperty );
-		return tcp == null ? Source.DEFAULT_CONTENT_PROPERTY : tcp.as(Property.class);
-	}
-
-	private static AnyList configTextSearchOperand(Resource endpoint) {
-		Resource tso = endpoint.getPropertyResourceValue( EXTRAS.textSearchOperand );
-		return tso == null ? null : convertList(tso);
-	}
-	
-	private static AnyList convertList(Resource tso) {
-		if (tso.canAs(RDFList.class)) {
-			List<RDFNode> operand = tso.as(RDFList.class).asJavaList();
-			Any[] elements = new Any[operand.size()];
-			for (int i = 0; i < operand.size(); i += 1) elements[i] = RDFQ.any( operand.get(i) );
-			return RDFQ.list( elements );
-		} else {
-			EldaException.BadSpecification( "Object " + tso + " of " + EXTRAS.textSearchOperand + " must be an RDF list." );
-			return /* never */ null;
-		}
-	}
-
 	/**
 	    Each SourceBase subclass must provide <code>execute</code>.    
 	*/
 	public abstract QueryExecution execute( Query query );
-	
-	public Property getTextQueryProperty() {
-		return textQueryProperty;
-	}
-	
-	public Property getTextContentProperty() {
-		return textContentProperty;
-	}
-	
-	public AnyList getTextSearchOperand() {
-		return textSearchOperand;
-	}
 	
 	/**
 	 	Each SourceBase subclass must provide a Lock on demand.

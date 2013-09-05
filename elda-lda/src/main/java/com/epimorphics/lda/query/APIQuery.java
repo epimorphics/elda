@@ -30,6 +30,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
+import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.graph.Graph;
@@ -88,10 +89,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
     	filterExpressions.add( e );
     }
     
-    protected final Source itemSource;
+    protected final TextSearchConfig textSearchConfig;
     
-    public Source getItemSource() {
-    	return itemSource;
+    public TextSearchConfig getItemSource() {
+    	return textSearchConfig;
     }
     
     private boolean isItemEndpoint = false;
@@ -163,7 +164,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
     	int getDefaultPageSize();
 		String getItemTemplate();
 		boolean isItemEndpoint();
-		Source getItemSource();
+		TextSearchConfig getTextSearchConfig();
     }
 
     protected static class FilterExpressions implements ValTranslator.Filters {
@@ -185,7 +186,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
         this.maxPageSize = qb.getMaxPageSize();
         this.itemTemplate = qb.getItemTemplate();
         this.isItemEndpoint = qb.isItemEndpoint();
-        this.itemSource = qb.getItemSource();
+        this.textSearchConfig = qb.getTextSearchConfig();
     //
         this.deferredFilters = new ArrayList<PendingParameterValue>();
         this.whereExpressions = new StringBuffer();
@@ -218,7 +219,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
     	this.sortByOrderSpecsFrozen = other.sortByOrderSpecsFrozen;
     	this.subjectResource = other.subjectResource;
     	this.varcount = other.varcount;
-    	this.itemSource = other.itemSource;
+    	this.textSearchConfig = other.textSearchConfig;
     //
     	this.languagesFor = new HashMap<String, String>( other.languagesFor );
         this.basicGraphTriples = new ArrayList<RDFQ.Triple>( other.basicGraphTriples );
@@ -348,12 +349,12 @@ public class APIQuery implements VarSupply, WantsMetadata {
     
     public void addSearchTriple( String val ) {
     	Value literal = RDFQ.literal( val );
-    	Property queryProperty = itemSource.getTextQueryProperty();
-    	Property contentProperty = itemSource.getTextContentProperty();
-    	AnyList operand = itemSource.getTextSearchOperand();
+    	Property queryProperty = textSearchConfig.getTextQueryProperty();
+    	Property contentProperty = textSearchConfig.getTextContentProperty();
+    	AnyList operand = textSearchConfig.getTextSearchOperand();
     //
     	if (operand == null) {
-			if (contentProperty.equals(Source.DEFAULT_CONTENT_PROPERTY)) {
+			if (contentProperty.equals(TextSearchConfig.DEFAULT_CONTENT_PROPERTY)) {
 	    		addTriplePattern( SELECT_VAR, queryProperty, literal );    		
 	    	} else {    		
 	    		Any cp = RDFQ.uri( contentProperty.getURI() );

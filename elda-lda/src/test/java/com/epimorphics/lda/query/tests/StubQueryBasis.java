@@ -3,7 +3,7 @@ package com.epimorphics.lda.query.tests;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.query.APIQuery.QueryBasis;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.textsearch.TextSearchConfig;
 
 public class StubQueryBasis implements QueryBasis {
 	private final ShortnameService sns;
@@ -24,7 +24,7 @@ public class StubQueryBasis implements QueryBasis {
 	
 	@Override public boolean isItemEndpoint() {	return false; }
 	
-	@Override public Source getItemSource() { 
+	@Override public TextSearchConfig getTextSearchConfig() { 
 		return null; 
 	}
 }

@@ -23,8 +23,8 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
+import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -42,6 +42,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     protected final APISpec parentApi;
     protected final String name;
     protected final Resource endpointResource;
+    
+    protected final TextSearchConfig textSearchConfig;
     
     protected APIQuery baseQuery;
     protected String uriTemplate ;
@@ -84,6 +86,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
         uriTemplate = createURITemplate( endpoint );
         endpointResource = endpoint;
         describeThreshold = getIntValue( endpoint, EXTRAS.describeThreshold, apiSpec.describeThreshold );
+    //
+        textSearchConfig = apiSpec.getTextSearchConfig().overlay( endpoint );
     //        
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
@@ -451,8 +455,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 		return getAPISpec().hasParameterBasedContentNegotiation();
 	}
 
-	@Override public Source getItemSource() {
-		return apiSpec.getDataSource();
+	@Override public TextSearchConfig getTextSearchConfig() {
+		return textSearchConfig;
 	}
 	
 }
