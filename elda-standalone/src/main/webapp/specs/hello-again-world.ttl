@@ -29,8 +29,8 @@ hello:hello-world-again a api:API
 	# ; api:sparqlEndpoint <http://localhost:3030/ds/query>
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:viewer [a api:Viewer; api:name "none"; api:properties ""]
-	; api:variable [api:name "_velocityRoot"; api:value "http://localhost:8080/standalone/vm/"]
-	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/standalone/"]
+	# ; api:variable [api:name "_velocityRoot"; api:value "http://localhost:8080/standalone/lda-assets/vm/"]
+	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/standalone/lda-assets/"]
 	; api:endpoint 
 		hello:publishers, hello:games 
 	; api:defaultFormatter
