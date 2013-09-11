@@ -86,10 +86,10 @@ public class EndpointMetadata {
 			
 			Resource listRoot = metaModel.createResource( uriForList.toString() );
 			thisMetaPage
-	    		.addProperty( DCTerms.hasPart, listRoot )
+	    		.addProperty( DCTerms.isPartOf, listRoot )
 	    		;
 			listRoot
-	    		.addProperty( DCTerms.isPartOf, thisMetaPage )
+	    		.addProperty( DCTerms.hasPart, thisMetaPage )
 	    		.addProperty( API.definition, uriForDefinition ) 
 	    		.addProperty( RDF.type, API.ListEndpoint )
 	    		;
