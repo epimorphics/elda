@@ -31,11 +31,15 @@ import org.custommonkey.xmlunit.exceptions.XpathException;
 
 public class TestFeedAssembly {
 	
-	protected ShortnameService sns = new SNS("");
+	protected final ShortnameService sns = new SNS("");
 	
 	protected final MediaType fakeMediaType = new MediaType( "media", "type" );
 	
-	protected Model configModel = ModelFactory.createDefaultModel();
+	protected final Model configModel = ModelFactory.createDefaultModel();
+
+	protected final Model dataModel = ModelFactory.createDefaultModel();
+	
+	protected final Resource item = dataModel.createResource( "eh:/item" );
 	
 	protected final Resource config = configModel.createResource( "eh:/root" );
 	
@@ -43,6 +47,11 @@ public class TestFeedAssembly {
 		( API.label
 		, SKOSstub.prefLabel
 		, RDFS.label
+		);
+	
+	static final List<Property> defaultAuthorProperties = list
+		( DCTerms.creator
+		, DCTerms.contributor
 		);
 	
 	static final List<Property> defaultRightsProperties = list
@@ -141,29 +150,108 @@ public class TestFeedAssembly {
 		FeedRenderer fr = makeFeedRenderer( config );
 		assertEquals( EXTRAS.getURI(), fr.getNamespace() );
 	}
+
+	@Test public void testDefaultAuthors() {
+		FeedRenderer fr = makeFeedRenderer( config );
+		assertTrue( fr.getAuthors().isEmpty() );
+	}
+
+	@Test public void testConfiguredAuthors() {
+		Literal a = configModel.createLiteral( "author_A" );
+		Resource b = configModel.createResource( "eh:/authorB" );
+		RDFNode[] properties = new RDFNode[] {a, b};
+		RDFList l = configModel.createList( properties );
+		config.addProperty( EXTRAS.feedAuthors, l );
+		FeedRenderer fr = makeFeedRenderer( config );
+		assertEquals( list( a, b ), fr.getAuthors() );
+	}
+	
+	@Test public void testDefaultAuthorProperties() {
+		FeedRenderer fr = makeFeedRenderer( config );
+		assertEquals( defaultAuthorProperties, fr.getAuthorProperties() );
+	}
+	
+	@Test public void testConfiguredAuthorProperties() {
+		Property a = configModel.createProperty( "eh:/A" );
+		Property b = configModel.createProperty( "eh:/B" );
+	//
+		Property[] properties = new Property[] {a, b};
+		RDFList l = configModel.createList( properties );
+		config.addProperty( EXTRAS.feedAuthorProperties, l );
+	//
+		FeedRenderer fr = makeFeedRenderer( config );
+		assertEquals( list(a, b), fr.getAuthorProperties() );
+	}
+	
+	@Test public void testRendersFeedAuthorsIfPresent() {		
+		Resource a = configModel.createProperty( "eh:/author_A" );
+		RDFNode b = configModel.createLiteral( "author_B" );
+	//
+		RDFNode[] properties = new RDFNode[] {a, b};
+		RDFList authors = configModel.createList( properties );
+		config.addProperty( EXTRAS.feedAuthors, authors );
+	//
+		String rendering = renderFeed();
+	//
+		if (!rendering.contains( "<author>" + a.toString() + "</author>" )) {
+			fail( "rendering\n" + rendering + "\nshould contain author\n" + a );
+		}
+	//
+		if (!rendering.contains( "<author>" + b.toString() + "</author>" )) {
+			fail( "rendering\n" + rendering + "\nshould contain author\n" + b );
+		}
+	}
+	
+	@Test public void testRendersEntryAuthorsIfPresent() {	
+		Property a = configModel.createProperty( "eh:/author_A" );
+		Property b = configModel.createProperty( "eh:/author_B" );
+		RDFNode[] properties = new RDFNode[] {a, b};
+		RDFList authors = configModel.createList( properties );		
+		config.addProperty( EXTRAS.feedAuthorProperties, authors );
+	//
+		item.addProperty( a, "the author is A" );
+		item.addProperty( b, "the author is B" );
+		
+		String rendering = renderFeed();
+	//
+		if (!rendering.contains( "<author>the author is A</author>" )) {
+			fail( "rendering\n" + rendering + "\nshould contain author\n" + a );
+		}
+	//
+		if (rendering.contains( "<author>the author is B</author>" )) {
+			fail( "rendering\n" + rendering + "\nshould not contain author\n" + b );
+		}
+	}
 	
 	@Test public void testRendersFeedRightsIfPresent() {
 
 		String rightsString = "© copyright 1066";
 		config.addProperty( EXTRAS.feedRights, rightsString );
-		FeedRenderer fr = makeFeedRenderer( config );
 		
-		Document  d = DOMUtils.newDocument();
-		Model dataModel = ModelFactory.createDefaultModel();
-		List<Resource> items = new ArrayList<Resource>();
-		Resource item = dataModel.createResource( "eh:/item" );
-		items.add( item );
-		
-		FeedResults results = new FeedResults( config, items, new MergedModels( dataModel ) );
-
-		fr.renderFeedIntoDocument( d, new HashMap<String, String>(), results );
-		Times t = new Times();
-		PrefixMapping pm = PrefixMapping.Factory.create();
-		String rendering = DOMUtils.renderNodeToString( t, d, pm );
+		String rendering = renderFeed();
 		
 		if (!rendering.contains( "<rights>" + rightsString + "</rights>" )) {
 			fail( "rendering\n" + rendering + "\nshould contain rights \n" + rightsString );
 		}
+	}
+
+	private String renderFeed() {
+		FeedRenderer fr = makeFeedRenderer( config );
+		Document  d = DOMUtils.newDocument();
+		List<Resource> items = new ArrayList<Resource>();
+		items.add( item );
+	//
+		FeedResults results = new FeedResults( config, items, new MergedModels( dataModel ) );
+	//
+		Map<String, String> tb = new HashMap<String, String>();
+		tb.put( "eh:/author_A", "A" );
+		tb.put( "eh:/author_B", "B" );
+	//
+		fr.renderFeedIntoDocument( d, tb, results );
+		Times t = new Times();
+		PrefixMapping pm = PrefixMapping.Factory.create();
+		String rendering = DOMUtils.renderNodeToString( t, d, pm );
+		return rendering;
 	}
 	
 	@Test public void testRendersEntryRightsIfPresent() throws XpathException {
@@ -172,9 +260,7 @@ public class TestFeedAssembly {
 		FeedRenderer fr = makeFeedRenderer( config );
 		
 		Document  d = DOMUtils.newDocument();
-		Model dataModel = ModelFactory.createDefaultModel();
 		List<Resource> items = new ArrayList<Resource>();
-		Resource item = dataModel.createResource( "eh:/item" );
 		
 		item.addProperty( DCTerms.rights, rightsString );
 		items.add( item );
@@ -188,7 +274,7 @@ public class TestFeedAssembly {
 		
 		XMLAssert.assertXpathExists( "feed/entry/rights", d );
 		
-		if (!rendering.contains( "<rigxhts>" + rightsString + "</rights>" )) {
+		if (!rendering.contains( "<rights>" + rightsString + "</rights>" )) {
 			fail( "rendering\n" + rendering + "\nshould contain rights \n" + rightsString );
 		}
 	}
@@ -200,10 +286,8 @@ public class TestFeedAssembly {
 		assertEquals( explicit, fr.getNamespace() );
 	//
 		Document  d = DOMUtils.newDocument();
-		Model dataModel = ModelFactory.createDefaultModel();
 		List<Resource> items = new ArrayList<Resource>();
 	//
-		Resource item = dataModel.createResource( "eh:/item" );
 		item.addProperty( RDFS.label, "Please Look After This Bear" );
 		items.add( item );
 	//
@@ -228,10 +312,8 @@ public class TestFeedAssembly {
 		Map<String, String> termBindings = new HashMap<String, String>();
 		Document  d = DOMUtils.newDocument();
 	//
-		Model dataModel = ModelFactory.createDefaultModel();
 		List<Resource> items = new ArrayList<Resource>();
 	//
-		Resource item = dataModel.createResource( "eh:/item" );
 		item.addProperty( RDFS.label, "Please Look After This Bear" );
 		items.add( item );
 	//

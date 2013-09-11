@@ -1328,6 +1328,22 @@ The rights of a feed can be specified by giving a value to the
 <code>elda:feedRights</code> property of the formatter.
 </p>
 
+<p>
+The authors of a feed are specified by the list-valued property
+<code>elda:feedAuthors</code>. The authors of an entry are specified
+by the values of the first property in the list
+</p>
+
+<pre>
+dct:creator
+dct:contributor
+</pre>
+
+<p>
+That has any. This list can be changed by setting the value of the
+formatter's <code>elda:feedAuthorProperties</code>.
+</p>
+
 <h2><a name="statistics"></a>statistics</h2>
 
 <p>

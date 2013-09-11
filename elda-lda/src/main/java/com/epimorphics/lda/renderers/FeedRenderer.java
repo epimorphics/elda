@@ -117,6 +117,19 @@ public class FeedRenderer implements Renderer {
 		return result;
 	}
 	
+	public List<RDFNode> getAuthors() {
+		return getNodeList(config, EXTRAS.feedAuthors);
+	}
+	
+	public List<Property> getAuthorProperties() {
+		List<Property> result = getPropertyList(config, EXTRAS.feedAuthorProperties);
+		if (result.isEmpty()) {
+			result.add( DCTerms.creator );
+			result.add( DCTerms.contributor );
+		}
+		return result;
+	}
+	
 	public String getFeedRights() {
 		return feedRights;
 	}
@@ -131,6 +144,17 @@ public class FeedRenderer implements Renderer {
 		if (s != null) {
 			for (RDFNode p: RDFUtil.asJavaList( s.getResource() )) {
 				result.add( p.as( Property.class ) );
+			}
+		}
+		return result;
+	}
+
+	private List<RDFNode> getNodeList(Resource config, Property property) {
+		List<RDFNode> result = new ArrayList<RDFNode>();
+		Statement s = config.getProperty( property );
+		if (s != null) {
+			for (RDFNode p: RDFUtil.asJavaList( s.getResource() )) {
+				result.add( p );
 			}
 		}
 		return result;
@@ -204,6 +228,10 @@ public class FeedRenderer implements Renderer {
 		addChild( feed, "author", "<name>Nemo</name>" );
 		addChild( feed, "id", results.getRoot().getURI() );
 	//
+		for (RDFNode author: getAuthors()) {
+			addChild( feed, "author", asBody( author ) );
+		}
+	//
 		if (feedRights != null) addChild( feed, "rights", feedRights );	
 	//		
 		MergedModels mm = results.getModels();
@@ -228,11 +256,12 @@ public class FeedRenderer implements Renderer {
 			Element entry = d.createElement( "entry" );
 			addChild( entry, "title", getEntryTitle( r ) );
 			addChild( entry, "updated", item.b );
-			addChild( entry, "author", "<name>Nemo</name>" );
 			addChild( entry, "id", r.getURI() );
 			
-			String rights = getEntryRights( r );
+			for (RDFNode author: getEntryAuthors( r )) 
+				addChild( entry, "author", asBody( author ) );
 			
+			String rights = getEntryRights( r );			
 			if (rights != null) addChild( entry, "rights", rights );
 			
 			Element content = d.createElement( "content" );
@@ -252,6 +281,20 @@ public class FeedRenderer implements Renderer {
 		}
 	//
 		d.appendChild( feed );
+	}
+	
+	private List<RDFNode> getEntryAuthors(Resource r) {
+		for (Property p: getAuthorProperties()) {
+			List<RDFNode> candidates = r.listProperties(p).mapWith(Statement.Util.getObject).toList();
+			if (candidates.size() > 0) return candidates;
+		}
+		return new ArrayList<RDFNode>();
+	}
+
+	private String asBody( RDFNode n ) {
+		if (n.isLiteral()) return n.asLiteral().getLexicalForm();
+		if (n.isResource()) return n.asResource().getURI();
+		return n.toString();
 	}
 	
 	private String getEntryRights(Resource r) {

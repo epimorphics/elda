@@ -110,6 +110,10 @@ public class EXTRAS
 	public static final Property feedTitle = property( "feedTitle" );
     
 	public static final Property feedRights = property( "feedRights" );
+    
+	public static final Property feedAuthors = property( "feedAuthors" );
+    
+	public static final Property feedAuthorProperties = property( "feedAuthorProperties" );
 
 	public static final Property feedNamespace = property( "feedNamespace" );
 
