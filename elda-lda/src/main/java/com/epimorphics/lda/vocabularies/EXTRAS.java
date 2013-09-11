@@ -102,10 +102,14 @@ public class EXTRAS
 	public static final Property feedDateProperties = property( "feedDateProperties" );
 	
 	public static final Property feedLabelProperties = property( "feedLabelProperties" );
+	
+	public static final Property feedRightsProperties = property( "feedRightsProperties" );
 
 	public static final Resource FeedFormatter = resource( "FeedFormatter" );
     
 	public static final Property feedTitle = property( "feedTitle" );
+    
+	public static final Property feedRights = property( "feedRights" );
 
 	public static final Property feedNamespace = property( "feedNamespace" );
 

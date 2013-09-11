@@ -34,6 +34,7 @@ public class FeedRenderer implements Renderer {
 	private final MediaType mt;
 	private final Resource config;
 	private final String namespace;
+	private final String feedRights;
 	private final ShortnameService sns;
 	private final List<Property> dateProperties;
 	private final List<Property> labelProperties;
@@ -52,6 +53,7 @@ public class FeedRenderer implements Renderer {
 		this.dateProperties = getDateProperties( config );
 		this.labelProperties = getLabelProperties( config );
 		this.namespace = getConfiguredNamespace();
+		this.feedRights = getRights(config);
 	}
 
 	@Override public MediaType getMediaType(Bindings rc) {
@@ -107,6 +109,20 @@ public class FeedRenderer implements Renderer {
 			result.add( DCTerms.created );
 		}
 		return result;
+	}
+
+	public List<Property> getRightsProperties() {
+		List<Property> result = getPropertyList(config, EXTRAS.feedRightsProperties);
+		if (result.isEmpty()) result.add( DCTerms.rights );
+		return result;
+	}
+	
+	public String getFeedRights() {
+		return feedRights;
+	}
+	
+	private static String getRights( Resource config ) {
+		return RDFUtils.getStringValue( config,  EXTRAS.feedRights, null );
 	}
 
 	private List<Property> getPropertyList(Resource config, Property property) {
@@ -187,6 +203,8 @@ public class FeedRenderer implements Renderer {
 		addLinkChild( feed, results.getRoot().getURI() );
 		addChild( feed, "author", "<name>Nemo</name>" );
 		addChild( feed, "id", results.getRoot().getURI() );
+	//
+		if (feedRights != null) addChild( feed, "rights", feedRights );	
 	//		
 		MergedModels mm = results.getModels();
 		XMLRendering xr = new XMLRendering
@@ -213,6 +231,10 @@ public class FeedRenderer implements Renderer {
 			addChild( entry, "author", "<name>Nemo</name>" );
 			addChild( entry, "id", r.getURI() );
 			
+			String rights = getEntryRights( r );
+			
+			if (rights != null) addChild( entry, "rights", rights );
+			
 			Element content = d.createElement( "content" );
 			content.setAttribute( "type", "application/xml" );
 			content.setAttribute( "xmlns", namespace );
@@ -232,6 +254,14 @@ public class FeedRenderer implements Renderer {
 		d.appendChild( feed );
 	}
 	
+	private String getEntryRights(Resource r) {
+		for (Property p: getRightsProperties()) {
+			Statement ps = r.getProperty( p );
+			if (ps != null) return ps.getLiteral().getLexicalForm();
+		}
+		return null;
+	}
+
 	private static final Comparator<Couple<Resource, String>> sortCouplesByString = new Comparator<Couple<Resource, String>>() {
 
 		@Override public int compare( Couple<Resource, String> l, Couple<Resource, String> r) {

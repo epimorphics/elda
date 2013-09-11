@@ -22,9 +22,7 @@ import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.test.JenaTestBase;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -45,6 +43,10 @@ public class TestFeedAssembly {
 		( API.label
 		, SKOSstub.prefLabel
 		, RDFS.label
+		);
+	
+	static final List<Property> defaultRightsProperties = list
+		( DCTerms.rights
 		);
 	
 	static final List<Property> defaultDateProperties = list
@@ -68,8 +70,7 @@ public class TestFeedAssembly {
 	
 	@Test public void testDefaultDateProperties() {
 		FeedRenderer fr = makeFeedRenderer( config );
-		List<Property> properties = fr.getDateProperties(config);
-		assertEquals( defaultDateProperties, properties );
+		assertEquals( defaultDateProperties, fr.getDateProperties(config) );
 	}
 	
 	// use the default date properties as a convenient set of examples
@@ -108,9 +109,88 @@ public class TestFeedAssembly {
 		}
 	}
 	
+	@Test public void testDefaultRightsProperties() {
+		FeedRenderer fr = makeFeedRenderer( config );
+		assertEquals( defaultRightsProperties, fr.getRightsProperties() );
+	}
+	
+	@Test public void testDeConfiguredRightsProperties() {
+		Property a = configModel.createProperty( "eh:/a" );
+		Property b = configModel.createProperty( "eh:/b" );
+		Property c = configModel.createProperty( "eh:/c" );
+		Property[] properties = new Property[] {a, b, c};
+		RDFList l = configModel.createList( properties );
+		config.addProperty( EXTRAS.feedRightsProperties, l );
+		FeedRenderer fr = makeFeedRenderer( config );
+		assertEquals( Arrays.asList( properties ), fr.getRightsProperties() );
+	}
+	
+	@Test public void testDefaultFeedRights() {
+		FeedRenderer fr = makeFeedRenderer( config );
+		assertNull( fr.getFeedRights() );
+	}
+	
+	@Test public void testConfiguredFeedRights() {
+		String rightsString = "© copyright 1066";
+		config.addProperty( EXTRAS.feedRights, rightsString );
+		FeedRenderer fr = makeFeedRenderer( config );
+		assertEquals( rightsString, fr.getFeedRights() );
+	}
+	
 	@Test public void testDefaultNamespace() {
 		FeedRenderer fr = makeFeedRenderer( config );
 		assertEquals( EXTRAS.getURI(), fr.getNamespace() );
+	}
+	
+	@Test public void testRendersFeedRightsIfPresent() {
+
+		String rightsString = "© copyright 1066";
+		config.addProperty( EXTRAS.feedRights, rightsString );
+		FeedRenderer fr = makeFeedRenderer( config );
+		
+		Document  d = DOMUtils.newDocument();
+		Model dataModel = ModelFactory.createDefaultModel();
+		List<Resource> items = new ArrayList<Resource>();
+		Resource item = dataModel.createResource( "eh:/item" );
+		items.add( item );
+		
+		FeedResults results = new FeedResults( config, items, new MergedModels( dataModel ) );
+
+		fr.renderFeedIntoDocument( d, new HashMap<String, String>(), results );
+		Times t = new Times();
+		PrefixMapping pm = PrefixMapping.Factory.create();
+		String rendering = DOMUtils.renderNodeToString( t, d, pm );
+		
+		if (!rendering.contains( "<rights>" + rightsString + "</rights>" )) {
+			fail( "rendering\n" + rendering + "\nshould contain rights \n" + rightsString );
+		}
+	}
+	
+	@Test public void testRendersEntryRightsIfPresent() throws XpathException {
+
+		String rightsString = "© copyright 1066";
+		FeedRenderer fr = makeFeedRenderer( config );
+		
+		Document  d = DOMUtils.newDocument();
+		Model dataModel = ModelFactory.createDefaultModel();
+		List<Resource> items = new ArrayList<Resource>();
+		Resource item = dataModel.createResource( "eh:/item" );
+		
+		item.addProperty( DCTerms.rights, rightsString );
+		items.add( item );
+		
+		FeedResults results = new FeedResults( config, items, new MergedModels( dataModel ) );
+
+		fr.renderFeedIntoDocument( d, new HashMap<String, String>(), results );
+		Times t = new Times();
+		PrefixMapping pm = PrefixMapping.Factory.create();
+		String rendering = DOMUtils.renderNodeToString( t, d, pm );
+		
+		XMLAssert.assertXpathExists( "feed/entry/rights", d );
+		
+		if (!rendering.contains( "<rigxhts>" + rightsString + "</rights>" )) {
+			fail( "rendering\n" + rendering + "\nshould contain rights \n" + rightsString );
+		}
 	}
 	
 	@Test public void testConfiguredNamespace() {
