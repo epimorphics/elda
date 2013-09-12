@@ -228,7 +228,7 @@ purposes you can run a <a href="http://jena.apache.org/documentation/serving_dat
 SPARQL server serving RDF data of your choice.
 </p>
 
-<h2>Reload on change</h2>
+<h2>reload on change</h2>
 
 <p>
 When Elda handles a request, if it has been "sufficiently
@@ -255,7 +255,7 @@ have changed, so it is sufficient to simple <code>touch</code>
 one of the appropriate files.
 </p>
 
-<h2><a name="beyond"></a>Inside Elda Common</h2>
+<h2><a name="beyond"></a>inside Elda Common</h2>
 
 <p>
 (The Elda standalone jar is just a delivery mechanism for getting
@@ -277,7 +277,7 @@ and webapp using <a href="http://maven.apache.org/">Maven</a>;
 see below.
 </p>
 
-<h2><a name="anatomy"></a>Anatomy of Elda's web.xml</h2>
+<h2><a name="anatomy"></a>anatomy of Elda's web.xml</h2>
 
 <p>
 Elda runs as a bunch of JAX-RS resources within a Jersey
@@ -343,7 +343,7 @@ and newlines within the value are discarded.
 	<code>z.text</code> is ignored as it does not match the filename.
 </p>
 
-<h2><a name="servlet"></a>The Jersey servlet/filter</h2>
+<h2><a name="servlet"></a>the Jersey servlet/filter</h2>
 
 <p>
 Elda runs Jersey either as a servlet or as a filter applied to 
@@ -870,7 +870,7 @@ or discards requests with (un)suitable URIs.
 This feature is experimental and details may change.
 </p>
 
-<h1>query size control</h1>    
+<h1>Query size control</h1>    
 
 <p>
 	Some generated queries -- those that have view defined by
@@ -930,7 +930,7 @@ If the SPARQL server supports nested
 
 <h1><a name="additional-elda-features"></a>Additional Elda features</h1>
 
-<h2><a name="variables"></a>Configuration variables</h2>
+<h2><a name="variables"></a>configuration variables</h2>
 
 <p>
     Elda reserves LDA variable names that begin "_" for
@@ -1198,7 +1198,7 @@ to deliver a Renderer, and that Renderer is used to render the
 result set.
 </p>
 
-<h2><a name="atom-feed"></a>The atom renderer</h2>
+<h2><a name="atom-feed"></a>the atom renderer</h2>
 
 <p>
 Elda contains an experimental atom-feed renderer. To use it, add
@@ -1371,7 +1371,7 @@ This feature is experimental; it may be dropped in a future release.
 
 </p>
 
-<h2><a name="cache"></a>Cache</h2>
+<h2><a name="cache"></a>cache</h2>
 
 <p>
 Elda caches the results of queries so that they may be re-served
@@ -1414,7 +1414,7 @@ The available cache policies are
 
 <h1>Shortnames in Elda</h1>
 
-<h2><a name="shortname-restrictions"></a>Restrictions on shortname selection</h2>
+<h2><a name="shortname-restrictions"></a>restrictions on shortname selection</h2>
 
 <p>
     In an (E)lda configuration file, the configurer may define 
@@ -1556,7 +1556,7 @@ yourself and supply whatever glue you like. Note however
 that details of the code structure may change between releases.
 </p>
 
-<h2>Creating an APISpec</h2>
+<h2>creating an APISpec</h2>
 
 <p>
 The constructor
@@ -1581,7 +1581,7 @@ delivers a list of <code>APIEndpoint</code> objects corresponding
 config model. 
 </p>
 
-<h2>Running an endpoint</h2>
+<h2>running an endpoint</h2>
 
 <p>
 You can then invoke
@@ -1630,7 +1630,7 @@ from shortnames to their URIs as appropriate for this resultset,
 and the (updated) variable Bindings.
 </p>
 
-<h2>Rendering results</h2>
+<h2>rendering results</h2>
 
 <p>
 Once you have chosen a renderer <code>R</code> to use for the 
