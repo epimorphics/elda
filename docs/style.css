@@ -1,6 +1,9 @@
 h1
-    { padding: 0
+    { padding-top: 1ex
+	; background-color: #9ecae1
     ; margin: 0
+    ; border-radius: 5px
+    ; -moz-border-radius: 5px
     }
 
 .heading
@@ -14,7 +17,6 @@ h1
 
 .main h2
     { padding-left: 1px
-    ; border-top: 3px solid #9ecae1
     ; margin-top: 0.6ex
     }
 
