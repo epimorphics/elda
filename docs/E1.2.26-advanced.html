@@ -2,8 +2,47 @@
 <head>
 <title>Elda -- an implementation of the Linked Data API</title>
 <link href="style.css" type="text/css" rel="stylesheet"></link>
+
+<style>
+.content-h1 {text-indent: 1em}
+
+.content-h2 {text-indent: 2em; font-style: italic}
+</style>
 </head>
-<body>
+
+<script>
+function recurse(d, b) {
+	var children = b.childNodes
+	for (var i = 0; i < children.length; i += 1) {
+		var node = children[i]
+		var tag = node.nodeName.toLowerCase()
+		if (tag == "h1") {
+			var x = document.createElement("div")
+			x.className = "content-h1"
+			x.innerHTML = node.innerHTML
+			d.appendChild( x )
+		} else if (tag == "h2") {
+			var x = document.createElement("div")
+			x.className = "content-h2"
+			x.innerHTML = node.innerHTML
+			d.appendChild( x )
+		} else {
+			recurse(d, node)
+		}	
+	} 
+}
+
+function toc() {
+	var d = document.getElementById("toc")
+	var b = document.body
+	recurse(d, b)
+}
+</script>
+
+<style>
+</style>
+
+<body onload="toc()">
 
 <div class="main">
 
@@ -13,6 +52,10 @@
 </a>
 <h1>Elda 1.2.26</h1>
 <h2>An implementation of the Linked Data API</h2>
+</div>
+
+<div id="toc">
+<h1>contents</h1>
 </div>
 
 <h1 a name="elda-common">Elda Common</h1>
