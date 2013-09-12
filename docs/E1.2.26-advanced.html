@@ -19,7 +19,8 @@ function recurse(d, b) {
 	for (var i = 0; i < children.length; i += 1) {
 		var node = children[i]
 		var tag = node.nodeName.toLowerCase()
-		if (tag == "h1" || tag == "h2") {
+		var show = !/not-toc/.test(node.className)
+		if (show && (tag == "h1" || tag == "h2")) {
 			var x = document.createElement("div")
 			var a = document.createElement("a")
 			x.className = "content-" + tag
@@ -53,12 +54,12 @@ function toc() {
 <a href="http://www.epimorphics.com">
 <img class="logo" src="epilogo-240.png">
 </a>
-<h1>Elda 1.2.26</h1>
-<h2>An implementation of the Linked Data API</h2>
+<h1 class="not-toc">Elda 1.2.26</h1>
+<h2 class="not-toc">An implementation of the Linked Data API</h2>
 </div>
 
 <div id="toc">
-<h1>contents</h1>
+<h1 class="not-toc">contents</h1>
 </div>
 
 <h1 a name="elda-common">Elda Common</h1>
