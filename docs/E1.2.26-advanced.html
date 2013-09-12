@@ -11,21 +11,24 @@
 </head>
 
 <script>
+
+var count = 1000
+
 function recurse(d, b) {
 	var children = b.childNodes
 	for (var i = 0; i < children.length; i += 1) {
 		var node = children[i]
 		var tag = node.nodeName.toLowerCase()
-		if (tag == "h1") {
+		if (tag == "h1" || tag == "h2") {
 			var x = document.createElement("div")
-			x.className = "content-h1"
-			x.innerHTML = node.innerHTML
+			var a = document.createElement("a")
+			x.className = "content-" + tag
+			a.innerHTML = node.innerHTML
+			count += 1
+			a.href = "#section-" + count
+			x.appendChild(a)
 			d.appendChild( x )
-		} else if (tag == "h2") {
-			var x = document.createElement("div")
-			x.className = "content-h2"
-			x.innerHTML = node.innerHTML
-			d.appendChild( x )
+			node.id = "section-" + count
 		} else {
 			recurse(d, node)
 		}	
@@ -251,7 +254,7 @@ have changed, so it is sufficient to simple <code>touch</code>
 one of the appropriate files.
 </p>
 
-<h1><a name="beyond"></a>Inside Elda Common</h1>
+<h2><a name="beyond"></a>Inside Elda Common</h2>
 
 <p>
 (The Elda standalone jar is just a delivery mechanism for getting
@@ -273,7 +276,7 @@ and webapp using <a href="http://maven.apache.org/">Maven</a>;
 see below.
 </p>
 
-<h2><a name="anatomy"></a>Anatomy of the Elda's web.xml</h2>
+<h2><a name="anatomy"></a>Anatomy of Elda's web.xml</h2>
 
 <p>
 Elda runs as a bunch of JAX-RS resources within a Jersey
@@ -339,13 +342,13 @@ and newlines within the value are discarded.
 	<code>z.text</code> is ignored as it does not match the filename.
 </p>
 
-<h3><a name="servlet"></a>The Elda Jersey filter</h3>
+<h2><a name="servlet"></a>The Jersey servlet/filter</h2>
 
 <p>
-Elda runs as a Jersey filter applied to all of the paths for
-this context path. A path that does not match any LDA 
-URI template produces a NOT FOUND status that by default
-is handled by Tomcat to serve a static file if one exists
+Elda runs Jersey either as a servlet or as a filter applied to 
+all of the paths for this context path. A path that does not 
+match any LDA  URI template produces a NOT FOUND status that 
+by default is handled by Tomcat to serve a static file if one exists
 with that pathname. JAX RS resources are located in the
 package <code>com.epimorphics.lda.restlets</code>.
 </p>
@@ -398,7 +401,7 @@ Everything else is handled by the default servlet, which
 delivers all the static files inside the webapp.
 </p>
 
-<h3><a name="rewriting"></a>URL rewriting</h3>
+<h2><a name="rewriting"></a>URL rewriting</h2>
 
 <p>
 Elda Common does not do URL rewriting; it handles all of the
@@ -411,7 +414,7 @@ server, <i>eg</i> Apache or Nginx, which selectively rewrites
 or discards requests with (un)suitable URIs.
 </p>
 
-<h3><a name="loading-config"></a>Obsolete: the Loader servlet</h3>
+<h4><a name="loading-config"></a>Obsolete: the Loader servlet</h4>
 
 <p>
 	Previous versions of Elda had their configuration specified
@@ -420,138 +423,6 @@ or discards requests with (un)suitable URIs.
 	This approach to configuration is now <i>obsolete</i> as it lead
 	to technical difficulties; it is supported in Elda 1.2.26 to
 	allow users to migrate to the new configuration process.
-</p>
-
-<h1><a name="shortname-restrictions"></a>Restrictions on shortname selection</h1>
-
-<p>
-    In an (E)lda configuration file, the configurer may define 
-    "short names" for properties and resources. However, the
-    current supplied example XSLT stylesheets expect that the
-    properties used to define the metadata about a query and
-    its results have certain specified shortnames.
-</p>
-
-<p>
-    Elda reserves and predefines those shortnames; the configuation
-    writer should not attempt to define them themselves.
-</p>
-
-<p>
-    The reserved names are the local names (except where otherwise
-    indicated) of the properties:
-</p>
-
-<table style="margin-left: 2ex">
-	<thead> <tr><th>prefix</th> <th>term</th> <th>term</th> <th>term</th></tr></thead>
-	<tr> <td>rdf</td>  <td>type</td> <td>value</td> <td>&nbsp;</td> </tr>
-	<tr> <td>rdfs</td>  <td>label</td> <td>comment</td> <td>&nbsp;</td> </tr>
-
-	<tr> <td>xsd</td>  <td>integer</td> <td>decimal</td> <td>string</td> </tr>
-	<tr> <td>xsd</td>  <td>boolean</td> <td>int</td> <td>short</td> </tr>
-	<tr> <td>xsd</td>  <td>byte</td> <td>long</td> <td>double</td> </tr>
-	<tr> <td>xsd</td>  <td>date</td> <td>time</td> <td>&nbsp;</td> </tr>
-
-	<tr> <td>doap</td>  <td>implements</td> <td>releaseOf</td> <td>homepage</td> </tr>
-	<tr> <td>doap</td>  <td>repository</td> <td>browse</td> <td>location</td> </tr>
-	<tr> <td>doap</td>  <td>wiki</td> <td>revision</td> <td>&nbsp;</td> </tr>
-	<tr> <td>doap</td>  
-		<td>bug-database <div>(as bug_database)</div></td> 
-		<td>programming-language <div>(as programming_language)</div></td> 
-		<td>&nbsp;</td> 
-	</tr>
-
-	<tr> <td>opmv</td>  <td>software</td> <td>&nbsp;</td> <td>&nbsp;</td> </tr>
-
-	<tr> <td>api</td>  <td>definition</td> <td>extendedMetadataVersion</td> <td>page</td> </tr>
-	<tr> <td>api</td>  <td>items</td> <td>item</td> <td>processor</td> </tr>
-	<tr> <td>api</td>  <td>property</td> <td>selectionResult</td> <td>termBinding</td> </tr>
-	<tr> <td>api</td>  <td>variableBinding</td> <td>viewingResult</td> <td>wasResultOf</td> </tr>
-	<tr> <td>dct</td>  <td>format</td> <td>hasFormat</td> <td>hasPart</td> </tr>
-	<tr> <td>dct</td>  <td>hasVersion</td> <td>isFormatOf</td> <td>isPartOf</td> </tr>
-	<tr> <td>dct</td>  <td>isVersionOf</td> <td>&nbsp;</td> <td>&nbsp;</td> </tr>
-	<tr> <td>elda</td>  <td>listURL</td> <td>sparqlQuery</td> <td>&nbsp;</td> </tr>
-	<tr> <td>foaf</td>  <td>isPrimaryTopicOf</td> <td>primaryTopic</td> <td>&nbsp;</td> </tr>
-	<tr> <td>OpenSearch</td>  <td>itemsPerPage </td> <td>startIndex</td> <td>&nbsp;</td> </tr>
-	<tr> <td>sparql</td>  <td>endpoint</td> <td>query</td> <td>url</td> </tr>
-	<tr> <td>xhv</td>  <td>first</td> <td>next</td> <td>prev</td> </tr>
-
-</table>
-
-<h1><a name="shortname-mode"></a>Elda shortname creation</h1>
-
-<p>
-	When Elda renders a result-set graph using JSON or XML (and
-	consequently HTML), URIs used as predicates are given short
-	names if they have not been given in the configuration.
-	Where possible these names should satisfy the shortname
-	grammar; this allows them to be used as XML element names.
-	Elda splits the URI into its <i>namespace</i> and 
-	<i>local name</i> parts and uses the localname as the
-	basis for the generated shortname.
-</p>
-
-<p>
-	<i>NOTE</i>. Elda uses the Jena XML-derived rule to
-	split URIs, defining the local name as being the longest
-	possible NCName that is a suffix of the URI. That name
-	is not necessarily the same as that after a '#' or
-	final '/' of a URI. Because the local name is an NCName
-	it is automatically a legal XML element name.
-</p>
-
-<p>
-	Elda has three <i>shortname modes</i> for generating
-	shortnames. The mode for a given format may be
-	specified by setting the property <code>elda:shortnameMode</code>
-	on a declared <code>formatter</code> of the configuration
-	to one of the values <code>elda:roundTrip</code>,
-	<code>elda:preferLocalname</code>, or
-	<code>elda:preferPrefixes</code>. The default for
-	all renderers is <code>preferLocalname</code>.
-</p>
-
-<p>
-	Elda follows these rules for converting a URI 
-	(not already given a shortname) with namespace N 
-	and local name L into a shortname:
-</p>
-
-<ol>
-	<li>
-		if the mode is <code>preferLocalname</code>,
-		and this is the only URI with this local name,
-		and L is not already a shortname,
-		its shortname is L.
-	</li>
-	
-	<li>
-		if the namespace has an available prefix P
-		and P_L is not already a shortname, then
-		its shortname is P_L.
-	</li>
-
-	<li> 
-		if mode is not <code>roundTrip</code>, the
-		shortname is L_N, where N is a (weak) hash 
-		of the namespace. 
-	</li>
-
-	<li>
-		otherwise the shortname is a reversible
-		encoding of the full URI into a shortname
-		(that is not short).
-	</li>
-</ol>
-
-<p>
-	The bindings of short names to full URIs &mdash;
-	the <i>term bindings</i> &mdash; are made available
-	as metadata in the rendered result. This metadata
-	is by default only generated for HTML renderings;
-	to have it present in JSON, XML, or RDF renderers,
-	specify the query parameter <code>_metadata=bindings</code>
-	or <code>_metadata=all</code> on the LDA request.
 </p>
 
 <h1><a name="velocity"></a>Velocity template rendering</h1>
@@ -618,6 +489,8 @@ or discards requests with (un)suitable URIs.
     fetches templates from <code>{_velocityRoot}</code> if it
     is defined and from <code>{_resourceRoot}/vm</code> if not.
 </p>
+
+<h2>names in the Velocity context</h2>
 
 <p>
     When rendering a page using Velocity, Elda binds several
@@ -712,6 +585,8 @@ or discards requests with (un)suitable URIs.
 	</td>
     </tr>
 </table>
+
+<h2>wrapped RDFNodes</h2>
 
 <p>
 	WrappedNodes are wrappers round Jena RDFNodes. When they are created,
@@ -946,6 +821,111 @@ or discards requests with (un)suitable URIs.
 </tr>
 </table>
 
+<h1><a name="text-search"></a>Free-text searching</h1>
+
+<p>
+	Elda allows free text from the reserved query parameter 
+	<code>_search</code> to be passed to the SPARQL endpoint
+	using the text search property <code>http://jena.apache.org/text#query</code>,
+	implemented by recent Jena Fuseki artifacts as an abstraction 
+	layer over the existing Apache Lucene and Apache Solr free-text APIs.
+</p>
+
+<p>
+	By default the text search is over values of <code>rdfs:label</code>,
+	but this can be changed by setting the value of <code>elda:textContentProperty</code> to the desired property in the configuration file.
+</p>
+
+<p>Similarly, the default text query property can be changed by
+	setting the value of the property <code>elda:textQueryProperty</code>
+	to the required query property.
+</p>
+
+<p>
+	More generally, the object of the text search predicate can be
+	specified as the object of the configuration property
+	<code>elda:textSearchOperand</code>. This should be an RDF list;
+	this list is copied as the object of the text search predicate
+	<i>except</i> that the string literal "?_search" is replaced by
+	the literal search string (ie, the value of the query parameter
+	_search).
+</p>
+
+<p>
+	The configuration properties can be attached to the SPARQL
+	endpoint resource, the api:API resource, or an endpoint resource.
+	Attaching a configyration to an endpoint means that it applies
+	only to _searches used with that endpoint and allows, for example,
+	different endpoints to use different content properties.
+</p>
+
+<p>
+	<i>Note</i> that the actual text searching is delegated to the
+	SPARQL endpoint; Elda simply generates a query in a special way
+	which happens to be understood by certain SPARQL endpoints.
+</p>
+
+<p>
+This feature is experimental and details may change.
+</p>
+
+<h1>query size control</h1>    
+
+<p>
+	Some generated queries -- those that have view defined by
+    property chains and are applied to many selected items -- 
+    are rather large (exceeding a megabyte). These queries are
+    repetitions of the view property accesses specialised by
+    the selected item. 
+</p>
+
+<h2><a name="sparql-1.1-features"></a>SPARQL 1.1 features</h2>
+
+<p>
+If the SPARQL server supports nested
+    selects (part of, but not limited to, SPARQL 1.1), then
+    these repetitions can be replaced by a single application
+    of the view wrapped round a nested select that fetches
+    the items.
+</p>
+
+<p>
+    Elda automatically uses nested selects if the data source 
+    is a <b>local:</b> or <b>tdb:</b> model, or it the
+    <code>sparqEndpoint</code> value of the API is a
+    resource with an <b>extras:supportsNestedSelects</b>
+    value of true, "true", or "yes". (We anticipate that
+    later versions of Elda will dynamically check the server
+    to see if nested selects work.)
+</p>
+
+<h2><a name="describe-thresholds"></a>DESCRIBE thresholds</h2>
+
+<p>
+    Support for nested selects applies to DESCRIBE queries as well,
+    which may consist of a great many URIs when the selection
+    phase generates many items. To give greater control over 
+    the use of nested selects for DESCRIBE, a view may be defined 
+    with the property <code>extras:describeThreshold</code>. This
+    makes that view a DESCRIBE view on which nested selects
+    (if available) are then only used if the number of selected 
+    items exceeds the value of this property.
+</p>
+
+<p>
+    The default default threshold value is 10. However, it can be
+    changed. Setting the <code>extras:describeThreshold</code>
+    property on an <i>endpoint</i> makes all the (describe) viewers 
+    created for that endpoint have that value for their threshold.
+    Setting that property on an <code>api:API</code> makes the
+    default for all its endpoints be that value. 
+</p>
+
+<p>
+    (Values and defaulting rules may change in later releases
+    of Elda according to reported experience.)
+</p>
+
 
 <h1><a name="additional-elda-features"></a>Additional Elda features</h1>
 
@@ -1172,58 +1152,6 @@ http://localhost:8080/elda/doc/school
     This behaviour is currently not configurable.
 </p>
 
-
-<h2><a name="sparql-1.1-features"></a>SPARQL 1.1 features</h2>
-
-<p>
-    Some generated queries -- those that have view defined by
-    property chains and are applied to many selected items -- 
-    are rather large (exceeding a megabyte). These queries are
-    repetitions of the view property accesses specialised by
-    the selected item. If the SPARQL server supports nested
-    selects (part of, but not limited to, SPARQL 1.1), then
-    these repetitions can be replaced by a single application
-    of the view wrapped round a nested select that fetches
-    the items.
-</p>
-
-<p>
-    Elda automatically uses nested selects if the data source 
-    is a <b>local:</b> or <b>tdb:</b> model, or it the
-    <code>sparqEndpoint</code> value of the API is a
-    resource with an <b>extras:supportsNestedSelects</b>
-    value of true, "true", or "yes". (We anticipate that
-    later versions of Elda will dynamically check the server
-    to see if nested selects work.)
-</p>
-
-<h2><a name="describe-thresholds"></a>DESCRIBE thresholds</h2>
-
-<p>
-    Support for nested selects applies to DESCRIBE queries as well,
-    which may consist of a great many URIs when the selection
-    phase generates many items. To give greater control over 
-    the use of nested selects for DESCRIBE, a view may be defined 
-    with the property <code>extras:describeThreshold</code>. This
-    makes that view a DESCRIBE view on which nested selects
-    (if available) are then only used if the number of selected 
-    items exceeds the value of this property.
-</p>
-
-<p>
-    The default default threshold value is 10. However, it can be
-    changed. Setting the <code>extras:describeThreshold</code>
-    property on an <i>endpoint</i> makes all the (describe) viewers 
-    created for that endpoint have that value for their threshold.
-    Setting that property on an <code>api:API</code> makes the
-    default for all its endpoints be that value. 
-</p>
-
-<p>
-    (Values and defaulting rules may change in later releases
-    of Elda according to reported experience.)
-</p>
-
 <h2><a name="configuration-rendering"></a>configuration rendering</h2>
 
 <p>
@@ -1245,27 +1173,10 @@ http://localhost:8080/elda/doc/school
     are already opened.
 </p>
 
-<h2><a name="text-search"></a>Free-text searching</h2>
 
-<p>
-Elda allows free text from the reserved query parameter 
-<code>_search</code> to be passed to the SPARQL endpoint
-using the text search property <code>http://jena.apache.org/text#query</code>,
-implemented by recent Jena Fuseki artifacts as an abstraction 
-layer over the existing Apache Lucene and Apache Solr free-text APIs.
-</p>
+<h1><a name="formatting-extensions"><a/>Formatting extensions</h1>
 
-<p>
-By default the text search is over values of <code>rdfs:label</code>,
-but this can be changed by setting the <code>elda:textContentProperty</code>
-of the SPARQL endpoint to the desired property in the configuration file.
-</p>
-
-<p>
-This feature is experimental and details may change.
-</p>
-
-<h2><a name="formatting-extensions"><a/>Formatting extensions</h2>
+<h2>location of XSLT stylesheets</h2>
 
 <p>
 If the object of an <code>api:stylesheet</code> directive starts
@@ -1273,6 +1184,8 @@ with the prefix "xsl:", then the stylesheet is loaded from Elda's
 stylesheet directory, wherever that is. (By default it is 
 <code>webapp/xsltsheets</code>, but this will become configurable.)
 </p>
+
+<h2>Java renderer factories</h2>
 
 <p>
 If a formatter has the property 
@@ -1284,7 +1197,7 @@ to deliver a Renderer, and that Renderer is used to render the
 result set.
 </p>
 
-<h3><a name="atom-feed"></a>The atom renderer</h3>
+<h2><a name="atom-feed"></a>The atom renderer</h2>
 
 <p>
 Elda contains an experimental atom-feed renderer. To use it, add
@@ -1387,7 +1300,9 @@ That has any. This list can be changed by setting the value of the
 formatter's <code>elda:feedAuthorProperties</code>.
 </p>
 
-<h2><a name="statistics"></a>statistics</h2>
+<h1><a name="statistics"></a>Statistics</h1>
+
+<h2>HTML display of statistics</h2>
 
 <p>
     The api:base-relative URI path <code>/control/show-stats</code> displays
@@ -1437,7 +1352,7 @@ formatter's <code>elda:feedAuthorProperties</code>.
     the rendering format (ie JSON/XML/HTML ...).
 </p>
 
-<h3>JMX statistics</h3>
+<h2>JMX statistics</h2>
 
 <p>
 Elda can also serve limited JMX statistics (the same ones as are
@@ -1496,7 +1411,143 @@ The available cache policies are
 	on individual endpoints.
 </p>
 
-<h2><a name="using-elda-from-java"></a>Using Elda directly</h2>
+<h1>Shortnames in Elda</h1>
+
+<h2><a name="shortname-restrictions"></a>Restrictions on shortname selection</h2>
+
+<p>
+    In an (E)lda configuration file, the configurer may define 
+    "short names" for properties and resources. However, the
+    current supplied example XSLT stylesheets expect that the
+    properties used to define the metadata about a query and
+    its results have certain specified shortnames.
+</p>
+
+<p>
+    Elda reserves and predefines those shortnames; the configuation
+    writer should not attempt to define them themselves.
+</p>
+
+<p>
+    The reserved names are the local names (except where otherwise
+    indicated) of the properties:
+</p>
+
+<table style="margin-left: 2ex">
+	<thead> <tr><th>prefix</th> <th>term</th> <th>term</th> <th>term</th></tr></thead>
+	<tr> <td>rdf</td>  <td>type</td> <td>value</td> <td>&nbsp;</td> </tr>
+	<tr> <td>rdfs</td>  <td>label</td> <td>comment</td> <td>&nbsp;</td> </tr>
+
+	<tr> <td>xsd</td>  <td>integer</td> <td>decimal</td> <td>string</td> </tr>
+	<tr> <td>xsd</td>  <td>boolean</td> <td>int</td> <td>short</td> </tr>
+	<tr> <td>xsd</td>  <td>byte</td> <td>long</td> <td>double</td> </tr>
+	<tr> <td>xsd</td>  <td>date</td> <td>time</td> <td>&nbsp;</td> </tr>
+
+	<tr> <td>doap</td>  <td>implements</td> <td>releaseOf</td> <td>homepage</td> </tr>
+	<tr> <td>doap</td>  <td>repository</td> <td>browse</td> <td>location</td> </tr>
+	<tr> <td>doap</td>  <td>wiki</td> <td>revision</td> <td>&nbsp;</td> </tr>
+	<tr> <td>doap</td>  
+		<td>bug-database <div>(as bug_database)</div></td> 
+		<td>programming-language <div>(as programming_language)</div></td> 
+		<td>&nbsp;</td> 
+	</tr>
+
+	<tr> <td>opmv</td>  <td>software</td> <td>&nbsp;</td> <td>&nbsp;</td> </tr>
+
+	<tr> <td>api</td>  <td>definition</td> <td>extendedMetadataVersion</td> <td>page</td> </tr>
+	<tr> <td>api</td>  <td>items</td> <td>item</td> <td>processor</td> </tr>
+	<tr> <td>api</td>  <td>property</td> <td>selectionResult</td> <td>termBinding</td> </tr>
+	<tr> <td>api</td>  <td>variableBinding</td> <td>viewingResult</td> <td>wasResultOf</td> </tr>
+	<tr> <td>dct</td>  <td>format</td> <td>hasFormat</td> <td>hasPart</td> </tr>
+	<tr> <td>dct</td>  <td>hasVersion</td> <td>isFormatOf</td> <td>isPartOf</td> </tr>
+	<tr> <td>dct</td>  <td>isVersionOf</td> <td>&nbsp;</td> <td>&nbsp;</td> </tr>
+	<tr> <td>elda</td>  <td>listURL</td> <td>sparqlQuery</td> <td>&nbsp;</td> </tr>
+	<tr> <td>foaf</td>  <td>isPrimaryTopicOf</td> <td>primaryTopic</td> <td>&nbsp;</td> </tr>
+	<tr> <td>OpenSearch</td>  <td>itemsPerPage </td> <td>startIndex</td> <td>&nbsp;</td> </tr>
+	<tr> <td>sparql</td>  <td>endpoint</td> <td>query</td> <td>url</td> </tr>
+	<tr> <td>xhv</td>  <td>first</td> <td>next</td> <td>prev</td> </tr>
+
+</table>
+
+<h2><a name="shortname-mode"></a>Elda shortname creation</h2>
+
+<p>
+	When Elda renders a result-set graph using JSON or XML (and
+	consequently HTML), URIs used as predicates are given short
+	names if they have not been given in the configuration.
+	Where possible these names should satisfy the shortname
+	grammar; this allows them to be used as XML element names.
+	Elda splits the URI into its <i>namespace</i> and 
+	<i>local name</i> parts and uses the localname as the
+	basis for the generated shortname.
+</p>
+
+<p>
+	<i>NOTE</i>. Elda uses the Jena XML-derived rule to
+	split URIs, defining the local name as being the longest
+	possible NCName that is a suffix of the URI. That name
+	is not necessarily the same as that after a '#' or
+	final '/' of a URI. Because the local name is an NCName
+	it is automatically a legal XML element name.
+</p>
+
+<p>
+	Elda has three <i>shortname modes</i> for generating
+	shortnames. The mode for a given format may be
+	specified by setting the property <code>elda:shortnameMode</code>
+	on a declared <code>formatter</code> of the configuration
+	to one of the values <code>elda:roundTrip</code>,
+	<code>elda:preferLocalname</code>, or
+	<code>elda:preferPrefixes</code>. The default for
+	all renderers is <code>preferLocalname</code>.
+</p>
+
+<p>
+	Elda follows these rules for converting a URI 
+	(not already given a shortname) with namespace N 
+	and local name L into a shortname:
+</p>
+
+<ol>
+	<li>
+		if the mode is <code>preferLocalname</code>,
+		and this is the only URI with this local name,
+		and L is not already a shortname,
+		its shortname is L.
+	</li>
+	
+	<li>
+		if the namespace has an available prefix P
+		and P_L is not already a shortname, then
+		its shortname is P_L.
+	</li>
+
+	<li> 
+		if mode is not <code>roundTrip</code>, the
+		shortname is L_N, where N is a (weak) hash 
+		of the namespace. 
+	</li>
+
+	<li>
+		otherwise the shortname is a reversible
+		encoding of the full URI into a shortname
+		(that is not short).
+	</li>
+</ol>
+
+<p>
+	The bindings of short names to full URIs &mdash;
+	the <i>term bindings</i> &mdash; are made available
+	as metadata in the rendered result. This metadata
+	is by default only generated for HTML renderings;
+	to have it present in JSON, XML, or RDF renderers,
+	specify the query parameter <code>_metadata=bindings</code>
+	or <code>_metadata=all</code> on the LDA request.
+</p>
+
+
+
+<h1><a name="using-elda-from-java"></a>Using Elda directly</h1>
 
 <p>You don't need to go through a servlet (or restlet)
 framework to exploit Elda. You can call the components
@@ -1504,7 +1555,7 @@ yourself and supply whatever glue you like. Note however
 that details of the code structure may change between releases.
 </p>
 
-<h3>Creating an APISpec</h3>
+<h2>Creating an APISpec</h2>
 
 <p>
 The constructor
@@ -1529,7 +1580,7 @@ delivers a list of <code>APIEndpoint</code> objects corresponding
 config model. 
 </p>
 
-<h3>Running an endpoint</h3>
+<h2>Running an endpoint</h2>
 
 <p>
 You can then invoke
@@ -1578,7 +1629,7 @@ from shortnames to their URIs as appropriate for this resultset,
 and the (updated) variable Bindings.
 </p>
 
-<h3>Rendering results</h3>
+<h2>Rendering results</h2>
 
 <p>
 Once you have chosen a renderer <code>R</code> to use for the 
@@ -1603,7 +1654,7 @@ type for the renderer's result.
 </p>
 
 
-<h2><a name="building-elda"></a>Building Elda</h2>
+<h1><a name="building-elda"></a>Building Elda</h1>
 
 <p>
   Prerequisites: 
@@ -1660,7 +1711,6 @@ that is the shape of tag generated by the Elda release process.
 As of Elda 1.2.23, the names of Elda modules (and the names of
 the corresponding directories in the Elda sources) have changed.
 </p>
-
 
 <h1><a name="accepted-content-types"></a>Accepted content types</h1>
 
