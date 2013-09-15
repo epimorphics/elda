@@ -11,6 +11,8 @@
 </head>
 
 <script>
+// extract the h1 and h2 elements from the text and generate
+// a table of contents attached to the node with ID="toc".
 
 var count = 1000
 
@@ -825,9 +827,10 @@ or discards requests with (un)suitable URIs.
 <h1><a name="text-search"></a>Free-text searching</h1>
 
 <p>
-	Elda allows free text from the reserved query parameter 
+	Elda allows the value of the reserved query parameter 
 	<code>_search</code> to be passed to the SPARQL endpoint
-	using the text search property <code>http://jena.apache.org/text#query</code>,
+	using the <i>text search</i> property 
+	<code>http://jena.apache.org/text#query</code>,
 	implemented by recent Jena Fuseki artifacts as an abstraction 
 	layer over the existing Apache Lucene and Apache Solr free-text APIs.
 </p>
@@ -861,13 +864,87 @@ or discards requests with (un)suitable URIs.
 </p>
 
 <p>
-	<i>Note</i> that the actual text searching is delegated to the
+	The actual text searching is delegated to the
 	SPARQL endpoint; Elda simply generates a query in a special way
 	which happens to be understood by certain SPARQL endpoints.
 </p>
 
+<h2>text queries</h2>
+
 <p>
-This feature is experimental and details may change.
+	Elda assumes that _search queries are handled by a SPARQL
+	endpoint which is compatible with jena-text (a recently-added
+	module of Jena). Jena-text is effectively a layer over one of
+	<a href="http://lucene.apache.org/core/">Apache Lucene<a> or
+	<a href="http://lucene.apache.org/solr/">Apache Solr</a>.
+</p>
+
+<p>
+	It is important to understand that the text search is not just
+	performing substring matches. Instead, the SPARQL endpoint will
+	have analysed some or all of the string values of properties in
+	the data (and maybe data external to the RDF content), typically
+	breaking it up into words and discarding "unhelpful" terms such
+	as "the" and "and" -- "unhelpful" because they don't help searches
+	to discriminate. Then an index from searchable terms to resources
+	in the RDF is constructed. This index is then used when searching
+	for text fragments.
+</p>
+
+<p>
+	The value of the _search query parameter is interpreted as a
+	<i>query</i> against the index. The query is expressed in its
+	own little language, as defined by Lucene and very similarly
+	by Solr -- the Solr query language is mostly a modest extension
+	to the Lucene language, so avoid using the extensions. The 
+	simplest query is a single word, eg <i>Steam</i> or <i>Mahal</i>,
+	which will succeed for resources that have that word in one
+	of their property values.
+</p>
+
+<blockquote>
+(The indexing/query process may work harder than this for match,
+eg by looking for stems or synonyns of words, but these details are
+endpoint and implementation specific.)
+</blockquote>
+
+<p>
+The query can contain several words; if so, it is looking for <i>any</i>
+of those words. To force it to look for both, use the infix operator 
+<i>AND</i>, which you can also spell <i>&amp;&amp;</i>. The query
+<i>Age Steam</i> will find resources that mention either of <i>Age</i>
+or <i>Steam</i>; the query "Age &amp;&amp; Steam" will find only 
+resources that mention them both. Note that if you use the &amp;&amp;
+syntax in a URI it will have to be carefully escaped, so <i>AND</i>
+is probably the better choice.
+</p>
+
+<p>
+Prefxing a word with <i>+</i> demands that it appear <i>somewhere</i>
+in the indexed text (ie, the RDF model or any extra indexing text that
+the endpoint applied). Prefixing the word with <i>-</i> demands
+that it does <i>not</i> appear.
+</p>
+
+<p>
+The query notation supports several other operators, grouping,
+a notion of <i>fields</i> in the data to which searching may be 
+confined, and escapes so that operators like <i>+</i> can be
+treated as ordinatry characters; for information about these
+see eg <a href="http://lucene.apache.org/core/4_4_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package_description">the Lucene classic package summary</a>.
+</p>
+
+<h2>caveats</h2>
+
+<p>
+	This feature is experimental and details may change.
+</p>
+
+<p>
+	The details of the query language -- and hence the meaning
+	of the value of the _search query parameter -- may change
+	between versions of Lucene and Solr. These versions are
+	dictated by the builder of the SPARQL endpoint.
 </p>
 
 <h1>Query size control</h1>    
