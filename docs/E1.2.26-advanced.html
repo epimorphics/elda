@@ -825,114 +825,198 @@ or discards requests with (un)suitable URIs.
 </table>
 
 <h1><a name="text-search"></a>Free-text searching</h1>
-
 <p>
 	Elda allows the value of the reserved query parameter 
 	<code>_search</code> to be passed to the SPARQL endpoint
 	using the <i>text search</i> property 
 	<code>http://jena.apache.org/text#query</code>,
 	implemented by recent Jena Fuseki artifacts as an abstraction 
-	layer over the existing Apache Lucene and Apache Solr free-text APIs.
+	layer over the existing 
+	<a href="http://lucene.apache.org/core/">Apache Lucene</a> 
+	and 
+	<a href="http://lucene.apache.org/solr/">Apache Solr</a>
+	free-text APIs;	see 
+	<a href="http://jena.apache.org/documentation/query/text-query.html">
+		Text searches with SPARQL</a>.
 </p>
 
 <p>
-	By default the text search is over values of <code>rdfs:label</code>,
-	but this can be changed by setting the value of <code>elda:textContentProperty</code> to the desired property in the configuration file.
-</p>
-
-<p>Similarly, the default text query property can be changed by
-	setting the value of the property <code>elda:textQueryProperty</code>
-	to the required query property.
+	Using text search is a three-step process; deciding what properties
+	are to be indexed under what names; building (for the server) the
+	index; and using <code>_search</code> to make a query against that
+	index.
 </p>
 
 <p>
-	More generally, the object of the text search predicate can be
-	specified as the object of the configuration property
-	<code>elda:textSearchOperand</code>. This should be an RDF list;
-	this list is copied as the object of the text search predicate
-	<i>except</i> that the string literal "?_search" is replaced by
-	the literal search string (ie, the value of the query parameter
-	_search).
+	We sketch these three steps below, but for details of the indexing
+	and query operations, see the references search/Lucene/Solr references
+	above.
 </p>
 
+<h2>dataset indexing</h2>
+
 <p>
-	The configuration properties can be attached to the SPARQL
-	endpoint resource, the api:API resource, or an endpoint resource.
-	Attaching a configyration to an endpoint means that it applies
-	only to _searches used with that endpoint and allows, for example,
-	different endpoints to use different content properties.
+	A Fuseki dataset can be configured to <i>index</i> specified properties
+	within an RDF model. The properties are associated with named
+	<i>fields</i> in the index. One of these fields can be designated
+	as the <i>default</i> field, the field that is searched if no
+	field is explicitly given in a search query; another can be designated
+	as the <i>uri</i> field that holds the URI of the resource associated
+	with the search strings. For example, the configuration in the Jena
+	text search documentation makes the default field name <i>text</i>,
+	has it track the value of the property <i>rdfs:label</i>, and binds the
+	URI of the item to the field <i>uri</i>:
 </p>
 
+<pre>
+...
+&lt;#entMap&gt; a text:EntityMap ;
+    text:entityField      "uri" ;
+    text:defaultField     "text" ;
+    text:map (
+         [ text:field "text" ; text:predicate rdfs:label ]
+         ) .
+...
+</pre>
+
 <p>
-	The actual text searching is delegated to the
-	SPARQL endpoint; Elda simply generates a query in a special way
-	which happens to be understood by certain SPARQL endpoints.
+	The indexing process breaks the text (of the objects of the
+	properties) into words and discards unhelpful terms such as "a" and
+	"the" because they do not discriminate well. It may -- depending on
+	details of the Lucene/Solr configuration -- do stemming and synonym
+	indexing as well. These words are the terms that can be used in the 
+	search.
 </p>
 
-<h2>text queries</h2>
+<h2>text query</h2>
 
 <p>
-	Elda assumes that _search queries are handled by a SPARQL
-	endpoint which is compatible with jena-text (a recently-added
-	module of Jena). Jena-text is effectively a layer over one of
-	<a href="http://lucene.apache.org/core/">Apache Lucene<a> or
-	<a href="http://lucene.apache.org/solr/">Apache Solr</a>.
-</p>
-
-<p>
-	It is important to understand that the text search is not just
-	performing substring matches. Instead, the SPARQL endpoint will
-	have analysed some or all of the string values of properties in
-	the data (and maybe data external to the RDF content), typically
-	breaking it up into words and discarding "unhelpful" terms such
-	as "the" and "and" -- "unhelpful" because they don't help searches
-	to discriminate. Then an index from searchable terms to resources
-	in the RDF is constructed. This index is then used when searching
-	for text fragments.
-</p>
-
-<p>
-	The value of the _search query parameter is interpreted as a
-	<i>query</i> against the index. The query is expressed in its
-	own little language, as defined by Lucene and very similarly
-	by Solr -- the Solr query language is mostly a modest extension
-	to the Lucene language, so avoid using the extensions. The 
-	simplest query is a single word, eg <i>Steam</i> or <i>Mahal</i>,
-	which will succeed for resources that have that word in one
-	of their property values.
+	The value of the <code>_search</code> query parameter is passed
+	through to Fuseki and used as a <i>query</i> against the index.
+	Just as the indexing operates on text that has been broken up
+	into words, the query isn't just a string to search for: it is
+	expressed in it own little language, as defined by Lucene and 
+	very similarly by Solr (the Solr query language is mostly a modest
+	extension to the Lucene language). The simplest query is a single 
+	word, eg <i>Steam</i> or <i>Mahal</i>, which will succeed for 
+	resources that have that word in one of their property values.
 </p>
 
 <blockquote>
-(The indexing/query process may work harder than this for match,
-eg by looking for stems or synonyns of words, but these details are
-endpoint and implementation specific.)
+	(The indexing/query process may work harder than this for match,
+	eg by looking for stems or synonyns of words, but these details are
+	endpoint and implementation specific.)
 </blockquote>
 
 <p>
-The query can contain several words; if so, it is looking for <i>any</i>
-of those words. To force it to look for both, use the infix operator 
-<i>AND</i>, which you can also spell <i>&amp;&amp;</i>. The query
-<i>Age Steam</i> will find resources that mention either of <i>Age</i>
-or <i>Steam</i>; the query "Age &amp;&amp; Steam" will find only 
-resources that mention them both. Note that if you use the &amp;&amp;
-syntax in a URI it will have to be carefully escaped, so <i>AND</i>
-is probably the better choice.
+	The query can contain several words; if so, it is looking for <i>any</i>
+	of those words. To force it to look for both, use the infix operator 
+	<i>AND</i>, which you can also spell <i>&amp;&amp;</i>. The query
+	<i>Age Steam</i> will find resources that mention either of <i>Age</i>
+	or <i>Steam</i>; the query <i>Age &amp;&amp; Steam</i> will find only 
+	resources that mention them both. Note that if you use the &amp;&amp;
+	syntax in a URI it will have to be carefully escaped, so <i>AND</i>
+	is probably the better choice.
 </p>
 
 <p>
-Prefxing a word with <i>+</i> demands that it appear <i>somewhere</i>
-in the indexed text (ie, the RDF model or any extra indexing text that
-the endpoint applied). Prefixing the word with <i>-</i> demands
-that it does <i>not</i> appear.
+	Prefxing a word with <i>+</i> demands that it appear <i>somewhere</i>
+	in the indexed text (ie, the RDF model or any extra indexing text that
+	the endpoint applied). Prefixing the word with <i>-</i> demands
+	that it does <i>not</i> appear.
 </p>
 
 <p>
-The query notation supports several other operators, grouping,
-a notion of <i>fields</i> in the data to which searching may be 
-confined, and escapes so that operators like <i>+</i> can be
-treated as ordinatry characters; for information about these
-see eg <a href="http://lucene.apache.org/core/4_4_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package_description">the Lucene classic package summary</a>.
+	The query runs against the default field unless otherwise specified
+	using a <i>fieldName:</i> prefix. This prefix applies to the next 
+	(as short as possible) piece of the query, so <i>alpha: Age Steam</i>
+	looks for <i>Age</i> in the <i>alpha</i> field and <i>Steam</i> in
+	the default field. To make it apply to both terms, you can either
+	repeat the field, <i>alpha: Age alpha: Steam</i>, or use parentheses
+	for grouping, <i>alpha: (Age Stream)</i>. (You can also use
+	parentheses in the usual way for grouping mixtures of <code>AND</code>
+	and <code>OR</code>, etc.)
 </p>
+
+<p>	The query notation supports several other operators, and escapes so that 
+	operators like <i>+</i> can be treated as ordinatry characters; for 
+	information about these see eg 
+	<a href="http://lucene.apache.org/core/4_4_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package_description">the Lucene classic package summary</a>.
+</p>
+	
+<h2>configuring search</h2>
+
+<p>
+	The default behaviour of <code>_search</code> is that its value
+	is used as a query against the Fuseki index of the SPARQL endpoint.
+	If the value does not specify otherwise, the search is performed
+	against the default field. The property that this is derived from
+	is defined when the text is indexed.
+</p>
+
+<p>
+	<code>_search</code>'s behaviour can be configured by properties
+	attached to the SPARQL endpoint, the api:API itself (over-riding
+	those on the SPARQL endpoint), or on individual API endpoints 
+	(over-riding the API and SPARQL endpoint). The most general
+	way to do this is to use:
+</p>
+
+<pre>
+<code>:APIorEndpoint elda:textSearchOperand</code> (... "?_search" ...)
+</pre>
+
+
+<p>
+	The elements of the list can be an integer <code>N</code>, a resource 
+	<code>P</code> which should be the name of a property, a literal 
+	string <code>L</code>, or the special literal string <code>?_search</code>.
+</p>
+
+<ul>
+<li>
+	<code>N</code>. This restricts the number of results matched by the
+	text search to <code>N</code>. If omitted, there is no restriction.
+</li>
+
+<li><code>P.</code>
+	The search is performed with the default field being the field
+	that is associated with <code>P</code> in the index.
+</li>
+
+<li><code>L.</code>
+	The value of <code>_search</code> is ignored and <code>L</code>'s
+	lexical form is used as the search query.
+</li>
+
+<li><code>"?_search".</code>
+	This is replaced by the value of <code>_search</code> and
+	will be used as the search query. 
+</li>
+</ul>
+
+<p>
+	Rather than using this most general mechanism, specifying
+</p>
+
+<pre>
+<code>:APIorEndpoint elda:textContentProperty some:Property</code>
+</pre>
+
+<p>
+	will make the default field be that associated with
+	<code>some:Property</code> in the same way as <code>P</code>
+	in the general form above.
+</p>
+
+<p>
+	It is also possible (but not expected) to be able to change
+	the property used for text query by setting
+</p>
+
+<pre>
+<code>elda:textQueryProperty some:Property</code>
+</pre>
 
 <h2>caveats</h2>
 
