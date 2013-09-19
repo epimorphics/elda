@@ -18,6 +18,7 @@ import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.renderers.XMLRendering.Trail;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.lda.vocabularies.SKOSstub;
@@ -271,6 +272,9 @@ public class FeedRenderer implements Renderer {
 			Set<Resource> cyclic = new HashSet<Resource>();
 			Set<Resource> seen = new HashSet<Resource>();
 			Set<Resource> blocked = new HashSet<Resource>();
+			
+			blocked.add( r );
+			cyclic.addAll( CycleFinder.findCycles( r ) );
 			
 			Trail t = new Trail( cyclic, seen, blocked );
 			xr.expandProperties( t, content, r );

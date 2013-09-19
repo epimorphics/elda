@@ -202,6 +202,22 @@ public class TestFeedAssembly {
 		}
 	}
 	
+	@Test public void testRendersManagesCyclesIfPresent() {	
+		Property a = configModel.createProperty( "eh:/author_A" );
+		Property b = configModel.createProperty( "eh:/author_B" );
+		RDFNode[] properties = new RDFNode[] {a, b};
+		RDFList authors = configModel.createList( properties );		
+		config.addProperty( EXTRAS.feedAuthorProperties, authors );
+	//
+		item.addProperty( a, "the author is A" );
+		item.addProperty( b, "the author is B" );
+		item.addProperty( a, item );
+	//
+		renderFeed();
+	//
+		// we don't get here if the cycle isn't handled.
+	}
+	
 	@Test public void testRendersEntryAuthorsIfPresent() {	
 		Property a = configModel.createProperty( "eh:/author_A" );
 		Property b = configModel.createProperty( "eh:/author_B" );
