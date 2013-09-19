@@ -1,0 +1,169 @@
+@prefix elda: <http://www.epimorphics.com/vocabularies/lda#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+	
+elda:allowReserved a rdf:Property
+	; rdfs:comment ":"
+	.
+
+elda:allowSyntaxProperties a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:authKey a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:cachePolicyName a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:className a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:construct a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:describeAllLabel a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:describeThreshold a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:element a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:enableETags a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:enhanceViewWith a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:feedAuthorProperties a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:feedAuthors a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:feedDateProperties a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:feedLabelProperties a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:feedNamespace a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:feedRightsProperties a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:feedRights a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:feedTitle a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:ifStarts a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:listURL a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:loadedFrom a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:match a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:metadataOptions a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:metaURL a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:replaceStartBy a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:rewriteResultURIs a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:shortnameMode a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:sparqlQuery a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:supportsNestedSelect a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:textContentProperty a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:textQueryProperty a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:textSearchOperand a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:uriTemplatePrefix a rdf:Property
+	; rdfs:comment ""
+	.
+
+elda:wantsContext a rdf:Property
+	; rdfs:comment ""
+	.
+
+
+elda:Combiner a rdfs:Class
+	; rdfs:comment ""
+	.
+
+elda:FeedFormatter a rdfs:Class
+	; rdfs:comment ""
+	.
+
+elda:preferLocalnames a rdfs:Class
+	; rdfs:comment ""
+	.
+
+elda:preferPrefixes a rdfs:Class
+	; rdfs:comment ""
+	.
+
+elda:roundTrip a rdfs:Class
+	; rdfs:comment ""
+	.
+
+elda:VelocityFormatter a rdfs:Class
+	; rdfs:comment ""
+	.
+
