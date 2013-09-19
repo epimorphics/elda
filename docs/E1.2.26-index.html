@@ -16,215 +16,266 @@
 </div>
 
 <p>
-This document is a quick-start for the 
-<a href="http://www.epimorphics.com">Epimorphics Ltd</a>
-implementation, Elda, of the 
-<a href="http://code.google.com/p/linked-data-api/wiki/Specification">Linked Data API</a>.
-The Elda runnable-demo jar can be downloaded from its Googlecode 
-<a href="http://code.google.com/p/elda/downloads/list">downloads page</a>;
-pick the latest unless you have good reason not to.  
+This document is an introduction to Elda, an implementation of the
+<a href="http://code.google.com/p/linked-data-api/wiki/Specification">Linked Data API (LDA)</a>.
+The LDA allows you to have a configurable, REST-style interface to a store containing
+<a href="http://www.w3.org/RDF/">RDF</a>
+data. This makes it easier for developers used to using common web technologies such as
+JavaScript and JSON to access your data, and display it in a web browser.
 </p>
 
 <p>
-    A <a href="E1.2.26-advanced.html">separate document</a> describes
-    Elda's extensions and an introduction to using Elda's
-    code directly rather than bundled as servlets/restlets.
+  Elda is a Java implementation of the LDA specification, and was developed by
+<a href="http://www.epimorphics.com">Epimorphics Ltd</a>. Elda is
+<a href="http://elda.googlecode.com/hg/LICENCE.html">licensed</a> under
+an open-source <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License</a>.
+</p>
+
+<h2>A quick introduction to running Elda</h2>
+<p>
+  Before we go on to explain more of what Elda is doing and how you can customise it,
+  let's get an instance of Elda running and see what it can do.
 </p>
 
 <p>
-If you want to explore the Elda codebase and have
-<a href="http://mercurial.selenic.com/">Mercurial</a>
-installed, you can download the Elda repository:
-
+  The easiest route to starting Elda is to use the pre-packaged Java <code>.jar</code>
+  file that you can <a href="http://code.google.com/p/elda/downloads/list">download</a>
+  from the Google project site. You can start the file from the command line.
+</p>
 <pre>
-hg clone https://elda.googlecode.com/hg/ elda  
+java -jar elda-standalone-<em>$VERSION</em>.jar
 </pre>
-
 <p>
-In the rest of this document, "the Elda jar" means the 
-downloaded standalone demonstration jar.
+  where <em><code>$VERSION</code></em> denotes the version number of the Elda you downloaded, such as
+  1.2.26.
+  If your system permits, double-clicking on the file in
+  your preferred file browser may also work.
+</p>
+<p>
+  At this point, you may see a large number of log messages as Elda starts, and then
+  you should be able to view the starting page in a web browser:
+  <a href="http://localhost:8080/standalone/hello/games">http://localhost:8080/standalone/hello/games</a>.
+  This should display a page similar to:
+  <img src="elda-demo-screenshot-1.png" alt="Screenshot showing demo dataset in Elda" title="Screenshot showing demo dataset" />
+</p>
+<h3>What just happened?</h3>
+<p>
+  Contained within the standalone Elda version is a small RDF dataset about board games. The
+  <a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/hello-world.ttl">example configuration</a>
+  provides an API for viewing the contents of this dataset through simple
+  web URLs. For example, <code>http://localhost:8080/standalone/hello/games</code>
+  lists the first page of board games that are in the example data. By default,
+  this list will be presented in HTML format, which is useful for people to read,
+  but not so useful for programs to process. Each of the items under 'Search Results'
+  represents one of the RDF resources of type BoardGame from the dataset. By
+  clicking on the links on the page, you can view other RDF resources from the
+  example dataset, or refine the way that each resource is displayed. For example,
+  clicking the <a href="http://localhost:8080/standalone/hello/games.ttl">ttl</a>
+  link, the BoardGame resources will be shown in RDF Turtle form, rather than being
+  presented as HTML.
+<p>
+<p>
+  Decisions about which datasets to display, which end-points (i.e. URL patterns) display
+  which resources, how resources are displayed, and other design choices are all
+  encoded in the LDA configuration file. The
+  <a href="http://code.google.com/p/linked-data-api/wiki/Specification">LDA specification</a>
+  describes in detail
+  what goes in a configuration file. The configuration file itself uses RDF to encode
+  these configuration choices, and is typically written in the
+  <a href="http://en.wikipedia.org/wiki/Turtle_(syntax)">Turtle</a> syntax, as it
+  is relatively readable and compact. Elda comes with various pre-built examples which may help
+  you to get started with building your own specs. Ultimately, it is the configuration file
+  which specifies how Elda URLs are turned into queries against the underlying store, and how
+  the results of those queries are presented back to your users.
 </p>
 
-<h3>What is the LDA?</h3>
+<h2>Summary of LDA capabilities</h2>
+<table>
+  <tr><th></th><th></th></tr>
+  <tr>
+    <td>
+    </td>
+  </tr>
+</table>
 
+***
+
+provide different endpoints
+filters
+formats
+views
+different data sources
+
+text search
+elda common
+velocity
+statistics
+item template fallback
+configuration rendering
+
+***
+
+<h2>Tutorial</h2>
 <p>
-The Linked Data API provides a configurable way to access RDF data
-using simple RESTful URLs that are translated into queries to
-a SPARQL endpoint. The API developer (probably you) writes an
-API spec (in RDF) which specifies how to translate URLs into
-queries. Elda comes with some pre-built examples which allow
-you to experiment with the style of query and get started with
-building your own specs.
+  We will now work through some of Elda's capabilities in slightly more detail. See the
+  <a href="E1.2.26-reference.html">reference page</a> for more comprehensive
+  and detailed descriptions.
 </p>
 
 <h3>Prerequisites</h3>
 
-<p>Elda is written in Java 
+<p>Elda is written in Java
 (using the <a href="http://jena.apache.org/">Jena RDF toolkit</a>),
 so you will need Java installed on your system.
 </p>
 
 <p>
 The default demonstration setup for Elda has examples that use the
-<code>data.gov.uk</code> data accessible from the SPARQL endpoint 
+<code>data.gov.uk</code> data accessible from the SPARQL endpoint
 <code>http://education.data.gov.uk/sparql/education/query</code>.
 To run those examples, you will need to have open web access.
 </p>
 
-<h3>Feedback</h3>
-
+<h3>Downloading and starting Elda</h3>
 <p>
-  Elda aims to provide a complete implementation of the Linked Data API.
-  Problems with Elda should be reported to the 
-  <a href="http://groups.google.com/group/linked-data-api-discuss">
-  linked data API discussion group
-  </a> (note: you will need a google account to use this group).
+  There are two ways to get Elda: either by downloading the pre-compiled
+  runnable demo <code>.jar</code> file, or by checking out the source code
+  from the Google Code project using Mercurial, and then compiling the
+  Java source.
+</p>
+<p>
+The runnable <code>.jar</code> can be downloaded from the
+<a href="http://code.google.com/p/elda/downloads/list">downloads page</a>.
+Choose the most recent version unless you have good reason not to.
 </p>
 
 <p>
-  Current issues can be seen on the
-  <a href="http://code.google.com/p/elda/issues/list">
-  Elda issues list
-  </a>.
+  If you want to explore the Elda code and have
+  <a href="http://mercurial.selenic.com/">Mercurial</a>
+  installed, you can copy the Elda repository:
 </p>
-
-<h2>Getting started</h2>
-
-<p>
-The Elda demo code is shipped as a single self-unpacking jar, 
-<code>elda-VERSION.jar</code>. You can start it from the command line:
-
 <pre>
-java -jar elda-VERSION.jar
+hg clone https://elda.googlecode.com/hg/ elda
 </pre>
 
-or, if your system permits, by double-clicking on it in
-your preferred file browser.
-</p>
-
 <p>
-In either case, Elda unzips itself from that jar into a
-new directory, Elda_VERSION, from which it starts
-itself as a Jetty server running on port 8080.
-You may immediately go to that URL's /elda in your browser
-(<i>ie</i>, <a href="http://localhost:8080/elda">http://localhost:8080/elda</a>):
-it provides links to Elda's documentation and example
-Elda URIs:
+  To compile the code, you will also need <a href="http://maven.apache.org/">Apache Maven</a>:
 </p>
-
-
-<table style="margin-left: 2em">
-	<thead>
-		<tr>
-			<th width="30%">description</th>
-			<th width="20%">config file</th>
-			<th width="50%">sample URLs</th>
-		</tr>
-	</thead>
-
-	<tr>
-		<td>one-template games example, local SPARQL endpoint.</td>
-		<td>
-			<a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/hello-world.ttl">hello-world.ttl</a>	
-		</td>
-		<td>
-			<div> <a href="http://localhost:8080/standalone/hello/games">standalone/hello/games</a> </div>
-			<div> <a href="http://localhost:8080/standalone/hello/games.xml">standalone/hello/games.xml</a> </div>
-		</td>
-	</tr>
-
-
-	<tr>
-		<td>two-template games example, local SPARQL endpoint.</td>
-		<td>
-			<a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/hello-again-world.ttl">hello-again-world.ttl</a>	
-		</td>
-		<td>
-			<div> <a href="http://localhost:8080/standalone/again/games">standalone/again/games</a> </div>
-			<div> <a href="http://localhost:8080/standalone/again/publishers">standalone/again/publishers</a> </div>
-			<div> <a href="http://localhost:8080/standalone/again/publishers.json">standalone/again/publishers.json</a> </div>
-		</td>
-	</tr>
-
-
-	<tr>
-		<td>one-template education example, external SPARQL endpoint.</td>
-		<td>
-			<a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/tiny-education.ttl">tiny-education.ttl</a>	
-		</td>
-		<td>
-			<div> <a href="http://localhost:8080/standalone/tiny/doc/school">standalone/tiny/doc/school</a> </div>
-		</td>
-	</tr>
-
-
-	<tr>
-		<td>multi-template education example, external SPARQL endpoint.</td>
-		<td>
-			<a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/mini-education.ttl">mini-education.ttl</a>	
-		</td>
-		<td>
-			<div> <a href="http://localhost:8080/standalone/mini/doc/school">standalone/mini/doc/school</a> </div>
-			<div> <a href="http://localhost:8080/standalone/mini/doc/school/phase/primary">standalone/mini/doc/school/phase/primary</a>
-			<div> <a href="http://localhost:8080/standalone/mini/doc/school/100855">standalone/mini/doc/school/100855</a> </div> </div>
-		</td>
-	</tr>
-
-	<tr>
-		<td>full education example, external SPARQL endpoint.</td>
-		<td>
-			<a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/full-education.ttl">full-education.ttl</a>	
-		</td>
-		<td>
-			<div> <a href="http://localhost:8080/standalone/full/doc/school">standalone/full/doc/school</a> </div>
-			<div> <a href="http://localhost:8080/standalone/full/def">standalone/full/def</a> </div>
-			<div> <a href="http://localhost:8080/standalone/full/def/school">standalone/full/def/school</a> </div>
-			<div> <a href="http://localhost:8080/standalone/full/doc/school?max-schoolCapacity=100">standalone/full/doc/school?max-schoolCapacity=100</a> </div>
-			<div> ... </div>
-		</td>
-	</tr>
-
-
-	<tr>
-		<td>old education example [for comparison], external SPARQ endpoint.</td>
-		<td>
-			<a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/old-education.ttl">old-education.ttl</a>	
-		</td>
-		<td>
-			<div> <a href="http://localhost:8080/standalone/old/education/schools/primary">standalone/old/education/schools/primary</a> </div>
-			<div> <a href="http://localhost:8080/standalone/old/education/schools?label=Hope+Primary+School">old/education/schools?label=Hope+Primary+School</a> </div>
-		</td>
-	</tr>
-
-</table>
-
-<p>and see presentations of selected data. The html rendering
-(which is provided by an XSLT transform of the xml rendering)
-has many interesting features.
-</p>
-
-<p>
-Once Elda has unzipped itself, you can run it from the Elda
-directory it creates:
-
 <pre>
-(in Elda_VERSION)
-
+mvn clean package
+</pre>
+<p>
+  After compiling, the runnable <code>.jar</code> file will be in
+  <code>./elda-standalone/target/elda-standalone.war</code>.
+  Alternatively, you can start the Jetty web server that is supplied with
+  Elda by running the following command <em>from the <code>elda-standalone</code>
+  sub-directory</em>:
+</p>
+<pre>
 java -jar start.jar
 </pre>
 
-(Or by double-clicking, etc).
+<h3>Built-in example datasets and configurations</h3>
+<p>
+  Elda comes pre-packaged with some example configurations and an example
+  dataset. The sample URLs in the table below should all work if you have
+  Elda running on your local computer, on port 8080:
 </p>
+<table style="margin-left: 2em">
+  <thead>
+    <tr>
+      <th width="30%">description</th>
+      <th width="20%">config file</th>
+      <th width="50%">sample URLs</th>
+    </tr>
+  </thead>
 
-<h2>If you can't use port 8080</h2>
+  <tr>
+    <td>one-template games example, local SPARQL endpoint.</td>
+    <td>
+      <a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/hello-world.ttl">hello-world.ttl</a>
+    </td>
+    <td>
+      <div> <a href="http://localhost:8080/standalone/hello/games">standalone/hello/games</a> </div>
+      <div> <a href="http://localhost:8080/standalone/hello/games.xml">standalone/hello/games.xml</a> </div>
+    </td>
+  </tr>
+
+
+  <tr>
+    <td>two-template games example, local SPARQL endpoint.</td>
+    <td>
+      <a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/hello-again-world.ttl">hello-again-world.ttl</a>
+    </td>
+    <td>
+      <div> <a href="http://localhost:8080/standalone/again/games">standalone/again/games</a> </div>
+      <div> <a href="http://localhost:8080/standalone/again/publishers">standalone/again/publishers</a> </div>
+      <div> <a href="http://localhost:8080/standalone/again/publishers.json">standalone/again/publishers.json</a> </div>
+    </td>
+  </tr>
+
+
+  <tr>
+    <td>one-template education example, external SPARQL endpoint.</td>
+    <td>
+      <a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/tiny-education.ttl">tiny-education.ttl</a>
+    </td>
+    <td>
+      <div> <a href="http://localhost:8080/standalone/tiny/doc/school">standalone/tiny/doc/school</a> </div>
+    </td>
+  </tr>
+
+
+  <tr>
+    <td>multi-template education example, external SPARQL endpoint.</td>
+    <td>
+      <a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/mini-education.ttl">mini-education.ttl</a>
+    </td>
+    <td>
+      <div> <a href="http://localhost:8080/standalone/mini/doc/school">standalone/mini/doc/school</a> </div>
+      <div> <a href="http://localhost:8080/standalone/mini/doc/school/phase/primary">standalone/mini/doc/school/phase/primary</a>
+      <div> <a href="http://localhost:8080/standalone/mini/doc/school/100855">standalone/mini/doc/school/100855</a> </div> </div>
+    </td>
+  </tr>
+
+  <tr>
+    <td>full education example, external SPARQL endpoint.</td>
+    <td>
+      <a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/full-education.ttl">full-education.ttl</a>
+    </td>
+    <td>
+      <div> <a href="http://localhost:8080/standalone/full/doc/school">standalone/full/doc/school</a> </div>
+      <div> <a href="http://localhost:8080/standalone/full/def">standalone/full/def</a> </div>
+      <div> <a href="http://localhost:8080/standalone/full/def/school">standalone/full/def/school</a> </div>
+      <div> <a href="http://localhost:8080/standalone/full/doc/school?max-schoolCapacity=100">standalone/full/doc/school?max-schoolCapacity=100</a> </div>
+      <div> ... </div>
+    </td>
+  </tr>
+
+
+  <tr>
+    <td>old education example [for comparison], external SPARQ endpoint.</td>
+    <td>
+      <a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/old-education.ttl">old-education.ttl</a>
+    </td>
+    <td>
+      <div> <a href="http://localhost:8080/standalone/old/education/schools/primary">standalone/old/education/schools/primary</a> </div>
+      <div> <a href="http://localhost:8080/standalone/old/education/schools?label=Hope+Primary+School">old/education/schools?label=Hope+Primary+School</a> </div>
+    </td>
+  </tr>
+
+</table>
+
+
+<h3>If you can't use port 8080</h3>
 
 <p>
-You may already be using port 8080 for some local service.
+Your computer may already be using port 8080 for some local service.
 In that case, you can start Elda from the command
-line (no double-click) with
+line (this wont' work when double-clicking in a file manager) with:
 
 <pre>
-java -jar elda.jar -Djetty.port=NNNN
+java -jar standalone.jar -Djetty.port=NNNN
 </pre>
 
 or, if you're starting from the unzipped Elda directory,
@@ -233,8 +284,8 @@ or, if you're starting from the unzipped Elda directory,
 java -Djetty.port=NNNN -jar start.jar
 </pre>
 
-where NNNN is the port of your choice. (Yes, the -D
-comes after elda.jar, but before start.jar.)
+where NNNN is the port of your choice. Note: the <code>-D</code>
+comes after <code>standalone.jar</code>, but before <code>start.jar</code>.
 </p>
 
 <p>
@@ -261,13 +312,13 @@ where NNNN is the port number of your choice.
 <h3>From the command line</h3>
 
 <p>
-To use different LDA specifications, use the system property 
+To use different LDA specifications, use the system property
 <code>elda.spec</code>. Like the port number, it can be set
 as part of launching the elda jar or when launching the jetty
 start jar:
 
 <pre>
-java -jar elda.jar -Delda.spec=SPECS
+java -jar standalone.jar -Delda.spec=SPECS
 </pre>
 
 or (in the Elda directory):
@@ -281,7 +332,7 @@ by commas.
 </p>
 
 <p>
-If you use <code>elda.spec</code>, then Elda ignores the 
+If you use <code>elda.spec</code>, then Elda ignores the
 default specification (the education LDA) wired into it.
 </p>
 
@@ -315,7 +366,7 @@ the structure of the <code>web.xml</code> file, see
 <a href="E1.2.26-advanced.html">the advanced documentation</a>).
 </p>
 
-<h2>Fancy HTML formatting using XSLT stylesheets</h2>
+<h3>Fancy HTML formatting using XSLT stylesheets</h3>
 
 <p>
 The default formatter supplied by Elda is a very simple
@@ -324,13 +375,13 @@ the selected items. Elda also ships with a renderer that
 uses XSLT (and Javascript at the client end) to produce
 pages with additional controls and a richer appearance.
 To use this as your html renderer, add:
-<pre>	
-; api:formatter 
+<pre>
+; api:formatter
   [a api:XsltFormatter
   ; api:name 'html'
   ; api:stylesheet 'xslt/result-osm.xsl'
   ; api:mimeType 'text/html'
-] 
+]
 
 </pre>
 
@@ -339,14 +390,14 @@ the webapps/elda directory contents are served as static files.
 </p>
 
 
-<h2>Querying a local file</h2>
+<h3>Querying a local file</h3>
 
 <p>
 If the remote SPARQL endpoint is slow, not yet fully configured,
 or plain unimplemented, you might want to set up a local endpoint
-using a tool like 
+using a tool like
 <a href="http://openjena.org/wiki/Fuseki">Fuseki</a>. But it's also
-possible for Elda to query a local RDF file. 
+possible for Elda to query a local RDF file.
 </p>
 
 <p>
@@ -360,18 +411,18 @@ spec:api
   api:maxPageSize 50;
   api:defaultPageSize 10 ;
   <b>api:sparqlEndpoint &lt;http://education.data.gov.uk/sparql/education/query&gt;</b> ;
-  api:endpoint 
+  api:endpoint
    spec:schools
    , spec:schoolsPrimary
    , spec:schoolsSecondary
    , spec:schoolsPrimaryDistrict
-   , spec:schoolsSecondaryDistrict 
+   , spec:schoolsSecondaryDistrict
  .
 </pre>
 
-Replace the endpoint URI with <b>local:content-name</b>, 
-where <b>content-name</b> is the name of the RDF source you 
-wish to query. When Elda issues queries to a local: endpoint, 
+Replace the endpoint URI with <b>local:content-name</b>,
+where <b>content-name</b> is the name of the RDF source you
+wish to query. When Elda issues queries to a local: endpoint,
 it loads (and remembers) the contents and queries those directly.
 </p>
 
@@ -394,7 +445,7 @@ documentation currently at openjena.org.)
 <h2>Using a local TDB datasource</h2>
 
 <p>
-As an alternative to setting up a local SPARQL endpoint, 
+As an alternative to setting up a local SPARQL endpoint,
 or using a local: file, you can instead use a local
 <a href="http://openjena.org/wiki/TDB">Jena TDB</a>
 database. To do so you will need to modify the <code>web.xml</code>
@@ -436,7 +487,7 @@ The alternative form:
 
 <p>
 specifies <b>datastore-directory</b> as a directory containing a
-TDB directory named <i>tdb</i>. The same warnings as above apply. 
+TDB directory named <i>tdb</i>. The same warnings as above apply.
 (This form exists because Elda can do limited LARQ indexing and
 in that case the datastore directory will have a <b>larq</b>
 subdirectory for the LARQ indexes.)
@@ -446,6 +497,7 @@ subdirectory for the LARQ indexes.)
 Having specified a TDB directory, you can now edit your spec's
 sparqlEndpoint declaration, which in the education example looks
 like:
+</p>
 
 <pre>
 spec:api
@@ -454,7 +506,7 @@ spec:api
   api:maxPageSize 50;
   api:defaultPageSize 10 ;
   <b>api:sparqlEndpoint &lt;http://services.data.gov.uk/education/sparql&gt;</b> ;
-  api:endpoint 
+  api:endpoint
    spec:schools
    , spec:schoolsPrimary
    , spec:schoolsSecondary
@@ -463,15 +515,36 @@ spec:api
  .
 </pre>
 
+<p>
 Replace the services URI with <b>tdb:model-name</b>, where <b>model-name</b>
 is the name of your endpoint model inside the TDB store.
 
 </p>
 
+<h2>Notes</h2>
+
+<h3>Feedback</h3>
+
+<p>
+  Elda aims to provide a complete implementation of the Linked Data API.
+  Problems with Elda should be reported to the
+  <a href="http://groups.google.com/group/linked-data-api-discuss">
+  linked data API discussion group
+  </a> (note: you will need a google account to use this group).
+</p>
+
+<p>
+  Current issues can be seen on the
+  <a href="http://code.google.com/p/elda/issues/list">
+  Elda issues list
+  </a>.
+</p>
+
+
 
 <div class="footer">
 <hr>
-&copy; Copyright 2011 Epimorphics Limited. For licencing conditions see
+&copy; Copyright 2011-2013 Epimorphics Limited. For licencing conditions see
 <a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
 </div>
 </div>
