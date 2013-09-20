@@ -2,8 +2,16 @@
 <head>
 <title>Elda -- an implementation of the Linked Data API</title>
 <link href="style.css" type="text/css" rel="stylesheet"></link>
+<script src="util.js"></script>
 </head>
-<body>
+
+<style>
+ul {margin-left: -1ex }
+
+li { margin-top: 1ex }
+</style>
+
+<body onload="toc()">
 
 <div class="main">
 
@@ -11,8 +19,12 @@
 <a href="http://www.epimorphics.com">
 <img class="logo" src="epilogo-240.png">
 </a>
-<h1>Elda 1.2.26</h1>
-<h2>An implementation of the Linked Data API</h2>
+<h1 class="not-toc">Elda 1.2.26</h1>
+<h2 class="not-toc">An implementation of the Linked Data API</h2>
+</div>
+
+<div id="toc">
+<h1 class="not-toc">contents</h1>
 </div>
 
 <p>
@@ -58,7 +70,9 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
   This should display a page similar to:
   <img src="elda-demo-screenshot-1.png" alt="Screenshot showing demo dataset in Elda" title="Screenshot showing demo dataset" />
 </p>
+
 <h3>What just happened?</h3>
+
 <p>
   Contained within the standalone Elda version is a small RDF dataset about board games. The
   <a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/hello-world.ttl">example configuration</a>
@@ -73,9 +87,19 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
   clicking the <a href="http://localhost:8080/standalone/hello/games.ttl">ttl</a>
   link, the BoardGame resources will be shown in RDF Turtle form, rather than being
   presented as HTML.
+</p>
+
 <p>
+  When Elda is presented with a URL, it uses it to select an <i>endpoint</i>. From
+  the details of the URL path and its query parameters, it constructs a <i>SPARQL
+  query</i> which selects one or more <i>items</i> from the RDF dataset. It then
+  constructs a <i>view</i> of (some of the) properties of those items, and then
+  <i>renders</i> that view into one of the possible formats, sending that rendering
+  back to whatever sent the query.
+</p>
+
 <p>
-  Decisions about which datasets to display, which end-points (i.e. URL patterns) display
+  Decisions about which datasets to display, which end-points (<i>ie</i>, URL patterns) display
   which resources, how resources are displayed, and other design choices are all
   encoded in the LDA configuration file. The
   <a href="http://code.google.com/p/linked-data-api/wiki/Specification">LDA specification</a>
@@ -90,32 +114,60 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
 </p>
 
 <h2>Summary of LDA capabilities</h2>
-<table>
-  <tr><th></th><th></th></tr>
-  <tr>
-    <td>
-    </td>
-  </tr>
-</table>
 
-***
+<ul>
+  <li>
+    <i>filters</i>. Query parameters can specify that items must have specified 
+    ranges of values for some property in order to be selected. Endpoints can
+    have some filters, <i>eg</i> that the item has a particular type, pre-loaded.
+  </li>
 
-provide different endpoints
-filters
-formats
-views
-different data sources
+  <li><i>views</i>.
+    Endpoints can specify, and query parameters modify, which properties of the
+    selected items are to be displayed.
+  </li>
+  
+  <li><i>formats</i>. 
+    The items and their properties can be rendered in different formats, including
+    HTML, XML, JSON, RDF/XML, and Turtle.
+  </li>
 
-text search
-elda common
-velocity
-statistics
-item template fallback
-configuration rendering
+  <li><i>data sources</i>.
+    Data can be fetched from any SPARQL endpoint. For convenience in testing,
+    Elda also allows data to be fetched from a local file.
+  </li>
 
-***
+  <li><i>metadata</i>.
+    The rendered response includes metadata such as SPARQL queries used to
+    select items and fetch their properties. 
+  </li>
+  
+  <li><i>text search</i>.
+    For suitably-configured SPARQL endpoints, Elda can exploit <i>free text
+    queries</i> that can search for text fragments or use AND, OR, and NOT to
+    control the search.  
+  </li>
+
+  <li><i>velocity templates</i>. 
+    You can choose to write a new format for an Elda instance using Velocity
+    templates. (This feature is experimental; feedback is welcome.)
+  </li>
+
+  <li><i>statistics</i>. 
+    Elda can present statistics about the queries that it has received
+    either in HTML or (experimentally) using JMX. The statistics include
+    the number of queries and the amount of data transferred.
+  </li>
+
+  <li><i>configuration display</i>.
+    The path <code>/api-config</code> for a running Elda presents all the
+    endpoints that are available for it and details of their configuration.
+  </li>
+
+</ul>
 
 <h2>Tutorial</h2>
+
 <p>
   We will now work through some of Elda's capabilities in slightly more detail. See the
   <a href="E1.2.26-reference.html">reference page</a> for more comprehensive
