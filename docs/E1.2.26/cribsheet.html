@@ -1,0 +1,316 @@
+<html>
+<head>
+<title>Elda -- an implementation of the Linked Data API</title>
+<link href="../style.css" type="text/css" rel="stylesheet"></link>
+<script src="../util.js"></script>
+</head>
+
+<body onload="toc()">
+
+<div class="main">
+
+<div class="heading">
+<a href="http://www.epimorphics.com">
+<img class="logo" src="epilogo-240.png">
+</a>
+<h1 class="not-toc">Elda 1.2.26</h1>
+<h2 class="not-toc">An implementation of the Linked Data API</h2>
+</div>
+
+<div id="toc">
+<h1 class="not-toc">contents</h1>
+</div>
+
+<h1>Query Parameters</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>query parameter</th>
+      <th>details</th>
+      <th>operation</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>P=V
+    </td>
+    <td>
+      P is a property chain, <i>ie</i> a sequence
+      of dot-separated short names of properties.
+    </td>
+    <td>
+      Select only items which have a value V
+      for the final item in the chain. (V's value
+      string is converted according to the range
+      of that property.)
+    </td>
+  </tr>
+
+  <tr>
+    <td>min-P=V
+    </td>
+    <td>
+      P is a property chain.
+    </td>
+    <td>
+      Select only items whose P-value is at least V.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>max-P=V
+    </td>
+    <td>
+      P is a property chain.
+    </td>
+    <td>
+      Select only items whose P-value is at most V.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>minEx-P=V
+    </td>
+    <td>
+      P is a property chain.
+    </td>
+    <td>
+      Select only values whose P-value is more than V.
+      (minEx means "minimum, exclusive of V")
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      maxEx-P=V
+    </td>
+    <td>
+      P is a property chain.
+    </td>
+    <td>
+      Select only values whose P-value is less than V.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      exists-P=true
+    </td>
+    <td>
+      P is a property chain.
+    </td>
+    <td>
+      Select only items which have some P-value.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      exists-P=false
+    </td>
+    <td>
+      P is a property chain.
+    </td>
+    <td>
+      Select only items which <i>do not</i> have
+      a P-value.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      lang-P=LANG
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+  </tr>
+
+  <tr>
+    <th>reserved query parameter</th>
+    <th>details</th>
+    <th>effect</th>
+  </tr>
+  
+  <tr>
+    <td>
+      _pageSize=N 
+    </td>
+    <td>
+      N is an integer greater than 0.
+    </td>
+    <td>
+      Show N items on this page.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      _page=N 
+    </td>
+    <td>
+      N is an integer greater than 0.
+    </td>
+    <td>
+      Show page N, where a page has X items on
+      it as defined by _pageSize=X or by the
+      API configuration or as the default of 10.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      _format=NAME
+    </td>
+    <td>
+      NAME must be the name of one of the formats understood
+      by this Elda (<i>eg</i>, html, json).
+    </td>
+    <td>
+      Render this query in the given format.
+    </td>
+  </tr>
+   
+  <tr>
+    <td>
+      _lang=LANG
+    </td>    
+    <td>
+      LANG is a language code, <i>eg</i> <b>en</b>, <b>eh-uk</b>,
+      or the special language code <b>none</b>.
+    </td>    
+    <td>
+      Sets the default language(s), overriding anything set by the
+      <code>api:lang</code> setting in the configuration.
+      Query parameter values that are strings are given the
+      default language code. The view will discard property values
+      that are strings not in the the given languages, unless the
+      only values are strings with <i>no</i> language, in which
+      case those are displayed.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      _view=NAME
+    </td>
+    <td>
+      NAME is the name of a view as defined in the configuration,
+      or one of the predefined names <b>description</b>, <b>all</b>,
+      or <b>basic</b>.
+    </td>
+    <td>
+      Only the item properties specified in the view will be
+      displayed.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      _properties=A,B,...
+    </td>
+    <td>
+      A, B, ... are the short names of properties.
+    </td>
+    <td>
+      The named properties are added to those of the view
+      defined by <b>_view</b> or the configuration. (This
+      applies even if that view is an <b>all</b> or
+      <b>description</b> view which uses a SPARQL 
+      DESCRIBE to get property values rather than individual names.)
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      _sort=A,B,...
+    </td>
+    <td>
+      A, B, are comma-separated sort specifications: an optional 
+      <b>-</b> meaning "sort in reverse order" preceeding a 
+      property chain.
+    </td>
+    <td>
+      The items are sorted according to the values of the specified
+      properties.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      _orderBy=ORDER
+    </td>
+    <td>
+      ORDER is a string suitable for use as a SPARQL ORDER BY
+      clause. (This is useful only with <b>_where</b> as a 
+      query parameter or <code>api:where</code> in the configuration.)
+    </td>
+    <td>
+      The items are ordered according to the ORDER BY clause.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      callback=F
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      _metadata=NAME
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      _template=
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      _where=
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      _search=QUERY
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+  </tr>
+
+</table>
+
+
+<div class="footer">
+<hr>
+&copy; Copyright 2011-2013 Epimorphics Limited. For licencing conditions see
+<a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
+</div>
+</div>
+
+</body>
+</html>
