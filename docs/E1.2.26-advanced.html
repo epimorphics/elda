@@ -21,16 +21,24 @@
 <h1 class="not-toc">contents</h1>
 </div>
 
-<h1 a name="elda-common">Elda Common</h1>
+<h1 a name="elda-common"><a name="beyond">Elda Common</h1>
 
 <p>
-Elda Common provides a way of dropping Elda
-into an existing webapp container with a minimum of fuss.
-(While we write "Tomcat" below as the webapp container,
-any suitably configurable one &mdash; <i>eg</i> Jetty
-&mdash; will do. We assume that you have the necessary
-access permissions to install or update Tomcat and
-run it on your preferred port.)
+	The stand-alone jar serves as a demonstration tool
+	and small-scale Elda service. However, the preferred
+	way of delivering an externally-viewed scalable
+	Elda service is to use Elda Common (or write your
+	own webapp based on the Elda artifacts, or course).
+</p>
+
+<p>
+	Elda Common provides a way of dropping Elda
+	into an existing webapp container with a minimum of fuss.
+	(While we write "Tomcat" below as the webapp container,
+	any suitably configurable one &mdash; <i>eg</i> Jetty
+	&mdash; will do. We assume that you have the necessary
+	access permissions to install or update Tomcat and
+	run it on your preferred port.)
 </p>
 
 <p>
@@ -58,48 +66,48 @@ The Common and Assets files must have the same version.
 </p>
 
 <p>
-To use Elda Common, you add both .war files to your Tomcat
-configuration. Doing so may be as simple as dropping them
-into the appropriate <code>webapps</code> directory. 
-You need both .war files;
-Elda Common contains the LDA-handling Java code and Elda
-Assets provides styleheets, scripts, css, <i>etc</i> which Elda
-Common refers to or loads. There is also an 
-<code>elda-bundled</code>code>
-artifact whose <code>elda-bundled.war</code> combines 
-<code>elda-common</code> and <code>elda-assets</code> into one item.
+	To use Elda Common, you add both .war files to your Tomcat
+	configuration. Doing so may be as simple as dropping them
+	into the appropriate <code>webapps</code> directory. 
+	You need both .war files;
+	Elda Common contains the LDA-handling Java code and Elda
+	Assets provides styleheets, scripts, css, <i>etc</i> which Elda
+	Common refers to or loads. There is also an 
+	<code>elda-bundled</code>code>
+	artifact whose <code>elda-bundled.war</code> combines 
+	<code>elda-common</code> and <code>elda-assets</code> into one item.
 </p>
 
 <p>
-By default, Elda Common assumes that Elda Common's context
-path is <code>elda-common</code> and Elda Assets's context
-path is <code>elda-assets</code>. If you want them to use
-different context paths, you will need to also change the
-name and contents of the LDA config (see below). You can
-install multiple copies of Elda Common with different
-context paths, all sharing the same assets. (You can also
-have multiple different assets if necessary.) You can 
-install Elda as ROOT.war so that Tomcat is serving the
-URI templates with no prefix, so long as the name of the
-assets .war does not collide with any of those templates.
+	By default, Elda Common assumes that Elda Common's context
+	path is <code>elda-common</code> and Elda Assets's context
+	path is <code>elda-assets</code>. If you want them to use
+	different context paths, you will need to also change the
+	name and contents of the LDA config (see below). You can
+	install multiple copies of Elda Common with different
+	context paths, all sharing the same assets. (You can also
+	have multiple different assets if necessary.) You can 
+	install Elda as ROOT.war so that Tomcat is serving the
+	URI templates with no prefix, so long as the name of the
+	assets .war does not collide with any of those templates.
 </p>
 
 <p>
-Elda Common loads its LDA configurations from
-<code>/etc/elda/conf.d/{APP}/*.ttl</code>, where
-<code>{APP}</code> is the context path of that instance
-of Elda Common. This means that each instance may have
-multiple configs that it can load, and different instances
-can load different files. (See the <code>web.xml</code>
-for the setting of this configuration path.)
+	Elda Common loads its LDA configurations from
+	<code>/etc/elda/conf.d/{APP}/*.ttl</code>, where
+	<code>{APP}</code> is the context path of that instance
+	of Elda Common. This means that each instance may have
+	multiple configs that it can load, and different instances
+	can load different files. (See the <code>web.xml</code>
+	for the setting of this configuration path.)
 </p>
 
 <p>
-The LDA configurations contain references to the assets
-webapp, as seen in the minimal configuration file
-supplied. For a given <code>API:api</code> in a configuration file,
-the location of the assets is given in a variable
-binding:
+	The LDA configurations contain references to the assets
+	webapp, as seen in the minimal configuration file
+	supplied. For a given <code>API:api</code> in a configuration file,
+	the location of the assets is given in a variable
+	binding:
 </p>
 
 <pre>
@@ -107,16 +115,16 @@ binding:
 </pre>
 
 <p>
-The <i>hostAndPort</i> will usually be <b>localhost:8080</b>
-or <b>localhost:80</b>, and <i>assetPath</i> will by default
-be <b>elda-assets</b> unless the asset .war is renamed to some
-other context or you are using <code>elda-bundled</code>.
+	The <i>hostAndPort</i> will usually be <b>localhost:8080</b>
+	or <b>localhost:80</b>, and <i>assetPath</i> will by default
+	be <b>elda-assets</b> unless the asset .war is renamed to some
+	other context or you are using <code>elda-bundled</code>.
 </p>
 
 <p>
-Similarly, if the configuration is generating HTML using the
-Elda XSLT renderer, the stylesheets are loaded from the
-assets according to the binding on the XsltFormatter by:
+	Similarly, if the configuration is generating HTML using the
+	Elda XSLT renderer, the stylesheets are loaded from the
+	assets according to the binding on the XsltFormatter by:
 </p>
 
 <pre>
@@ -124,13 +132,13 @@ assets according to the binding on the XsltFormatter by:
 </pre>
 
 <p>
-Again, if the stylesheet has moved, this binding must be
-changed accordingly.
+	Again, if the stylesheet has moved, this binding must be
+	changed accordingly.
 </p>
 
 <p>
-Elda provides several example minimal configurations, different
-only in their intended environments:
+	Elda provides several example minimal configurations, different
+	only in their intended environments:
 
 <table style="margin:1ex">
 <tr>
@@ -158,8 +166,8 @@ only in their intended environments:
 </p>
 
 <p>
-The configuration itself is a place-holder with
-three uri templates:
+	The configuration itself is a place-holder with
+	three uri templates:
 
 <table style="margin:1ex">
 	<tr>
@@ -180,68 +188,62 @@ three uri templates:
 </p>
 
 <p>
-The minimal configuration assumes that a SPARQL endpoint is
-available on <code>localhost:3030/store</code>. You can 
-replace this endpoint with a different one, or for development
-purposes you can run a <a href="http://jena.apache.org/documentation/serving_data/">Fuseki</a>
-SPARQL server serving RDF data of your choice.
+	The minimal configuration assumes that a SPARQL endpoint is
+	available on <code>localhost:3030/store</code>. You can 
+	replace this endpoint with a different one, or for development
+	purposes you can run a <a href="http://jena.apache.org/documentation/serving_data/">Fuseki</a>
+	SPARQL server serving RDF data of your choice.
 </p>
 
 <h2>reload on change</h2>
 
 <p>
-When Elda handles a request, if it has been "sufficiently
-long" since the last request, it will check to see if it
-is up-to-date with its configuration and, if not, reload it.
+	When Elda handles a request, if it has been "sufficiently
+	long" since the last request, it will check to see if it
+	is up-to-date with its configuration and, if not, reload it.
 </p>
 
 <p>
-"Sufficently long" defaults to 5 seconds and can be adjusted
-by creating the file <code>/etc/elda/conf.d/{APP}/delay.int</code>.
-<code>APP</code> is the context path for this Elda webapp. The
-content of the file must be an integer number of millseconds.
+	"Sufficently long" defaults to 5 seconds and can be adjusted
+	by creating the file <code>/etc/elda/conf.d/{APP}/delay.int</code>.
+	<code>APP</code> is the context path for this Elda webapp. The
+	content of the file must be an integer number of millseconds.
 </p>
 
 <p>
-"Up-to-date" means that none of the configuration files or their
-directories are time-stamped later than the time that the
-configurations were loaded.
+	"Up-to-date" means that none of the configuration files or their
+	directories are time-stamped later than the time that the
+	configurations were loaded.
 </p>
 
 <p>
-Elda does not check that the <i>contexts</i> of these files
-have changed, so it is sufficient to simple <code>touch</code>
-one of the appropriate files.
+	Elda does not check that the <i>contexts</i> of these files
+	have changed, so it is sufficient to simple <code>touch</code>
+	one of the appropriate files.
 </p>
 
-<h2><a name="beyond"></a>inside Elda Common</h2>
+<h2></a>inside Elda Common</h2>
 
 <p>
-(The Elda standalone jar is just a delivery mechanism for getting
-started with LDA functionality: it packs together the Elda code
-(a merge of Elda Common and Elda Assets) and a Jetty server.)
-</p>
-
-<p>
-To use Elda for your own webapps, you can use Elda Common
-(suitably replacing the minimal LDA config), produce your
-own merge of Common and Assets, or tweak the Elda Standalone
-warfile. You will need to edit the web.xml appropriately.
+	To use Elda for your own webapps, you can use Elda Common
+	(suitably replacing the minimal LDA config), produce your
+	own merge of Common and Assets, or tweak the Elda Standalone
+	warfile. You will need to edit the web.xml appropriately.
 </p>
 
 <p>
-If you have downloaded the Elda repository, then you can
-rebuild the Elda working jar (lda-VERSION.jar) 
-and webapp using <a href="http://maven.apache.org/">Maven</a>;
-see below.
+	If you have downloaded the Elda repository, then you can
+	rebuild the Elda working jar (lda-VERSION.jar) 
+	and webapp using <a href="http://maven.apache.org/">Maven</a>;
+	see below.
 </p>
 
 <h2><a name="anatomy"></a>anatomy of Elda's web.xml</h2>
 
 <p>
-Elda runs as a bunch of JAX-RS resources within a Jersey
-container. The LDA configurations it loads are specified
-by the value of a <i>context parameter</i>.
+	Elda runs as a bunch of JAX-RS resources within a Jersey
+	container. The LDA configurations it loads are specified
+	by the value of a <i>context parameter</i>.
 </p>
 
 <pre>
@@ -252,9 +254,9 @@ by the value of a <i>context parameter</i>.
 </pre>
 
 <p>
-For non-Common uses of Elda, you can have multiple comma-separated
-configuration directives in a single &lt;param-value&gt;. Spaces, tabs,
-and newlines within the value are discarded.
+	For non-Common uses of Elda, you can have multiple comma-separated
+	configuration directives in a single &lt;param-value&gt;. Spaces, tabs,
+	and newlines within the value are discarded.
 </p>
 
 <p>
@@ -305,12 +307,12 @@ and newlines within the value are discarded.
 <h2><a name="servlet"></a>the Jersey servlet/filter</h2>
 
 <p>
-Elda runs Jersey either as a servlet or as a filter applied to 
-all of the paths for this context path. A path that does not 
-match any LDA  URI template produces a NOT FOUND status that 
-by default is handled by Tomcat to serve a static file if one exists
-with that pathname. JAX RS resources are located in the
-package <code>com.epimorphics.lda.restlets</code>.
+	Elda runs Jersey either as a servlet or as a filter applied to 
+	all of the paths for this context path. A path that does not 
+	match any LDA  URI template produces a NOT FOUND status that 
+	by default is handled by Tomcat to serve a static file if one exists
+	with that pathname. JAX RS resources are located in the
+	package <code>com.epimorphics.lda.restlets</code>.
 </p>
 
 <pre>
@@ -350,28 +352,28 @@ package <code>com.epimorphics.lda.restlets</code>.
 </pre>
 
 <p>
-The (optional) <code>Init</code> listener forces Elda to load its
-configurations when the webapp starts. If this listener is
-omitted, Elda will load configurations when the first request
-arrives.
+	The (optional) <code>Init</code> listener forces Elda to load its
+	configurations when the webapp starts. If this listener is
+	omitted, Elda will load configurations when the first request
+	arrives.
 </p>
 
 <p>
-Everything else is handled by the default servlet, which
-delivers all the static files inside the webapp.
+	Everything else is handled by the default servlet, which
+	delivers all the static files inside the webapp.
 </p>
 
 <h2><a name="rewriting"></a>URL rewriting</h2>
 
 <p>
-Elda Common does not do URL rewriting; it handles all of the
-requests sent to its context, either as URI templates or
-as static files. For applications that need to present
-different URIs to an external interface from those used within
-the application, you can either use on of the existing
-within-servlet URI rewriting engines or having a front-end
-server, <i>eg</i> Apache or Nginx, which selectively rewrites
-or discards requests with (un)suitable URIs.
+	Elda Common does not do URL rewriting; it handles all of the
+	requests sent to its context, either as URI templates or
+	as static files. For applications that need to present
+	different URIs to an external interface from those used within
+	the application, you can either use on of the existing
+	within-servlet URI rewriting engines or having a front-end
+	server, <i>eg</i> Apache or Nginx, which selectively rewrites
+	or discards requests with (un)suitable URIs.
 </p>
 
 <h4><a name="loading-config"></a>Obsolete: the Loader servlet</h4>
@@ -782,19 +784,66 @@ or discards requests with (un)suitable URIs.
 </table>
 
 <h1><a name="text-search"></a>Free-text searching</h1>
+
 <p>
-	Elda allows the value of the reserved query parameter 
-	<code>_search</code> to be passed to the SPARQL endpoint
-	using the <i>text search</i> property 
-	<code>http://jena.apache.org/text#query</code>,
-	implemented by recent Jena Fuseki artifacts as an abstraction 
-	layer over the existing 
+	Normally, specifying a query parameter <code>sn=v</code>
+	to Elda (or using the equivalent <code>api:filter</code>
+	in the configuration file) requires that for an item
+	to be selected, it must have a value for the property
+	whose short-name is <code>sn</code> and whose value is
+	<code>v</code>. This allows you, for example, to find
+	an item whose rdfs:label is "hello there" by using the
+	query parameter <code>label=hello%20there</code>, 
+	assuming <code>label</code> is the short-name of
+	<code>rdfs:label</code>.
+</p>
+
+<p>
+	However, if you want to find items whose (<i>eg</i>) 
+	<code>rdfs:label</code> text <i>contains</i> <b>hello</b>, 
+	or which contains either <b>hello</b> OR <b>goodbye</b>,
+	<i>etc</i>, then you have to write explicit SPARQL
+	<code>FILTER</code>s, probably using regular expressions,
+	and smuggle them into your configuration. This works, and
+	is very flexible, but is also rather inefficient, since
+	<i>all</i> the literal values of the desired property have
+	to be examined, and general regular expressions are quite
+	complicated to process.
+</p>
+
+<p>
+	One solution to this is <i>indexing</i>. The literal text
+	value of the RDF properties is preprocessed, typically by
+	breaking it up into words, and an index constructed relating
+	each word to all the literals it appears in. Then a search
+	string can likewise be broken up into words and the search limited
+	to literals that are related to those words. This can be
+	made much faster than a scan-and-regexp -- indexing can be
+	done in advance and updated incrementally as new RDF is 
+	added to the dataset.
+</p>
+
+<p>
+	Two related examples of text indexing and search are 
 	<a href="http://lucene.apache.org/core/">Apache Lucene</a> 
-	and 
-	<a href="http://lucene.apache.org/solr/">Apache Solr</a>
-	free-text APIs;	see 
-	<a href="http://jena.apache.org/documentation/query/text-query.html">
-		Text searches with SPARQL</a>.
+	and <a href="http://lucene.apache.org/solr/">Apache Solr</a>.
+	Recent <a href="http://jena.apache.org/documentation/serving_data/">
+	Jena Fuseki</a> SPARQL servers offer an abtraction layer over
+	these text search engines, and Elda can exploit this. A
+	special property (usually called <code>text:query</code>)
+	matches literals using the text engine rather than RDF
+	literal lookup.
+</p>
+
+<p>
+	If the query parameter <code>_search</code> is defined,
+	Elda uses its value as the search string for the
+	<code>text:query</code> property. The configuration
+	file can specify further details of how this transformation
+	is performed. If the SPARQL endpoint understands the
+	<code>text:query</code> property (it need not be a
+	Fuseki, so long as it understands the same protocol), 
+	then the text search engine will handle the query. 
 </p>
 
 <p>
@@ -809,6 +858,8 @@ or discards requests with (un)suitable URIs.
 	and query operations, see the references search/Lucene/Solr references
 	above. <a href="E1.2.26-search-example.html">Another document</a>
 	provides a worked example of creating a simple text-search-enabled Elda.
+	See <a href="http://jena.apache.org/documentation/query/text-query.html">
+	Text searches with SPARQL</a> for more about the text-query module.
 </p>
 
 <h2>dataset indexing</h2>
@@ -1299,29 +1350,29 @@ http://localhost:8080/elda/doc/school
 <h2>location of XSLT stylesheets</h2>
 
 <p>
-If the object of an <code>api:stylesheet</code> directive starts
-with the prefix "xsl:", then the stylesheet is loaded from Elda's
-stylesheet directory, wherever that is. (By default it is 
-<code>webapp/xsltsheets</code>, but this will become configurable.)
+	If the object of an <code>api:stylesheet</code> directive starts
+	with the prefix "xsl:", then the stylesheet is loaded from Elda's
+	stylesheet directory, wherever that is. (By default it is 
+	<code>webapp/xsltsheets</code>, but this will become configurable.)
 </p>
 
 <h2>Java renderer factories</h2>
 
 <p>
-If a formatter has the property 
-<code>http://www.epimorphics.com/vocabularies/lda#className</code>,
-then the (String) object of that property must be the name of a Java
-class that implements the <code>RendererFactory</code> interface.
-When rendering is required, an instance of that class is invoked
-to deliver a Renderer, and that Renderer is used to render the
-result set.
+	If a formatter has the property 
+	<code>http://www.epimorphics.com/vocabularies/lda#className</code>,
+	then the (String) object of that property must be the name of a Java
+	class that implements the <code>RendererFactory</code> interface.
+	When rendering is required, an instance of that class is invoked
+	to deliver a Renderer, and that Renderer is used to render the
+	result set.
 </p>
 
 <h2><a name="atom-feed"></a>the atom renderer</h2>
 
 <p>
-Elda contains an experimental atom-feed renderer. To use it, add
-a new formatter to the configuration file:
+	Elda contains an experimental atom-feed renderer. To use it, add
+	a new formatter to the configuration file:
 </p>
 
 <pre>
@@ -1336,37 +1387,37 @@ a new formatter to the configuration file:
 </pre>
 
 <p>
-The ID of the feed is the URI used to create it. The entries of the
-feed correspond to the selected items of the query; the ID of an 
-entry is the URI of the corresponding item.
+	The ID of the feed is the URI used to create it. The entries of the
+	feed correspond to the selected items of the query; the ID of an 
+	entry is the URI of the corresponding item.
 </p>
 
 <p>
-The title of the feed is set using the elda:feedTitle
-property of the formatter in the LDA config, as in the example above.
-The title of an entry is set from the value of the first of the
-properties in the list 
-
+	The title of the feed is set using the elda:feedTitle
+	property of the formatter in the LDA config, as in the example above.
+	The title of an entry is set from the value of the first of the
+	properties in the list 
 </p>
+
 <pre>
 <code>api:label</code>
 <code>skos:prefLabel</code>
 <code>rdfs:label</code> 
 </pre>
-<p>
 
-that is defined; this list can be changed
-by setting the value of the formatter's <code>elda:feedLabelProperties</code> property.
+<p>
+	that is defined; this list can be changed
+	by setting the value of the formatter's <code>elda:feedLabelProperties</code> property.
 </p>
 
 <p>
-The update time of a feed is the latest of the updated
-times of its entries.
+	The update time of a feed is the latest of the updated
+	times of its entries.
 </p>
 
 <p>
-The update time of an entry is the value of the first
-property in the list:
+	The update time of an entry is the value of the first
+	property in the list:
 </p>
 
 <pre>
@@ -1378,36 +1429,38 @@ dct:created
 </pre>
 
 <p>
-that is defined. This list can be changed by setting the value of the
-formatter's <code>elda:feedFateProperties</code> property.
+	that is defined. This list can be changed by setting the value of the
+	formatter's <code>elda:feedFateProperties</code> property.
 </p>
 
 <p>
-The content of an entry is similar to the XML rendering of the
-resource for this entry. Currently <b>circularity checking is not
-available</b>. The entry is given its own namespace, which defaults
-to the Elda namespace but can be set in the feed configuration using
-the property <code>elda:feedNamespace</code>.
+	The content of an entry is similar to the XML rendering of the
+	resource for this entry. Currently <b>circularity checking is not
+	available</b>. The entry is given its own namespace, which defaults
+	to the Elda namespace but can be set in the feed configuration using
+	the property <code>elda:feedNamespace</code>.
 </p>
 
 <p>
-The rights of an entry is the value of the first property in the list
+	The rights of an entry is the value of the first property in the list
 </p>
+
 <pre>dct:rights</pre>
 
-<p> that is defined; otherwise there is no rights element. This list can
-be changed by setting the value of the formatter's <code>elda:feedRightsProperties</code> property.
+<p>
+	that is defined; otherwise there is no rights element. This list can
+	be changed by setting the value of the formatter's <code>elda:feedRightsProperties</code> property.
 </p>
 
 <p>
-The rights of a feed can be specified by giving a value to the
-<code>elda:feedRights</code> property of the formatter.
+	The rights of a feed can be specified by giving a value to the
+	<code>elda:feedRights</code> property of the formatter.
 </p>
 
 <p>
-The authors of a feed are specified by the list-valued property
-<code>elda:feedAuthors</code>. The authors of an entry are specified
-by the values of the first property in the list
+	The authors of a feed are specified by the list-valued property
+	<code>elda:feedAuthors</code>. The authors of an entry are specified
+	by the values of the first property in the list
 </p>
 
 <pre>
@@ -1416,8 +1469,8 @@ dct:contributor
 </pre>
 
 <p>
-That has any. This list can be changed by setting the value of the
-formatter's <code>elda:feedAuthorProperties</code>.
+	That has any. This list can be changed by setting the value of the
+	formatter's <code>elda:feedAuthorProperties</code>.
 </p>
 
 <h1><a name="statistics"></a>Statistics</h1>
@@ -1475,9 +1528,10 @@ formatter's <code>elda:feedAuthorProperties</code>.
 <h2>JMX statistics</h2>
 
 <p>
-Elda can also serve limited JMX statistics (the same ones as are
-accessible using <code>show-stats</code>) by enabling the appropriate 
-listeners in web.xml:
+	Elda can also serve limited JMX statistics (the same ones as are
+	accessible using <code>show-stats</code>) by enabling the appropriate 
+	listeners in web.xml:
+</p>
 
 <pre>
 &lt;listener>
@@ -1486,25 +1540,25 @@ listeners in web.xml:
 &lt;/listener>
 </pre>
 
-This feature is experimental; it may be dropped in a future release.
-
+<p>
+	This feature is experimental; it may be dropped in a future release.
 </p>
 
 <h2><a name="cache"></a>cache</h2>
 
 <p>
-Elda caches the results of queries so that they may be re-served
-quickly. When the cache gets "too full", it is reset. "Too full"
-by default is measured by the number of triples in the cache;
-the default limit is 20000 triples.
+	Elda caches the results of queries so that they may be re-served
+	quickly. When the cache gets "too full", it is reset. "Too full"
+	by default is measured by the number of triples in the cache;
+	the default limit is 20000 triples.
 </p>
 
 <p>
-The cache policy can be changed by setting the property
-<code>elda:cachePolicyName</code> to a string of the
-form <code>"name:integer"</code> where <code>name</code>
-is the name of a policy, eg <b>default</b>, and the optional
-<code>:integer</code> gives an associated limit. 
+	The cache policy can be changed by setting the property
+	<code>elda:cachePolicyName</code> to a string of the
+	form <code>"name:integer"</code> where <code>name</code>
+	is the name of a policy, eg <b>default</b>, and the optional
+	<code>:integer</code> gives an associated limit. 
 </p>
 
 <p>
