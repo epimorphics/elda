@@ -1,12 +1,11 @@
 #
-# games data for regression testing
+# games data for examples
 #
 
-@prefix dct:				<http://purl.org/dc/terms/> .
-
-@prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix egc:				<http://localhost:8080/elda/vocabulary/>.
-@prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix dct:	<http://purl.org/dc/terms/> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix egc:	<http://localhost:8080/standalone/vocabulary/>.
+@prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 # boardgame designers
 
@@ -23,7 +22,7 @@
 
 <http://en.wikipedia.org/wiki/Wolfgang_Kramer> a egc:Designer
 	; rdfs:label "Wolfgang Kramer"
-	; egc:designer-of <>
+	; egc:designer-of <http://www.hans-im-glueck.de/el-grande>
 	.
 
 <http://www.boardgamegeek.com/boardgamedesigner/8/richard-ulrich> a egc:Designer

@@ -33,12 +33,19 @@ hello:hello-world-again a api:API
 	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/standalone/lda-assets/"]
 	; api:endpoint 
 		hello:publishers, hello:games 
-	; api:defaultFormatter
+	; api:formatter
 		[a elda:VelocityFormatter
-		; api:name "html"
+		; api:name "vhtml"
 		; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
 		; api:mimeType "text/html"
 		; api:stylesheet "page-shell.vm"
+		]
+	; api:formatter
+		[ a api:XsltFormatter 
+		; api:name "html" 
+		; api:mimeType "text/html; charset=utf-8" 
+		; api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
+		# ; elda:shortnameMode elda:roundTrip
 		]
     ; api:formatter
         [a elda:FeedFormatter
@@ -98,4 +105,18 @@ rdf:type a rdf:Property
     ; rdfs:range rdfs:Class 
 	; api:label "type"
 	.
+hello:designed-by a rdf:Property
+	; api:label "designedBy"
+	.
+	
+hello:designer-of a rdf:Property
+	; api:label "designerOf"
+	.
+	
+hello:pubDate a rdf:Property
+	; api:label "publicationDate"
+	; rdfs:range xsd:integer
+	.
+	
+
 		

@@ -67,12 +67,21 @@ hello:players a rdf:Property
 	; rdfs:range xsd:int
 	.
 	
+hello:designed-by a rdf:Property
+	; api:label "designedBy"
+	.
+	
+hello:designer-of a rdf:Property
+	; api:label "designerOf"
+	.
+	
+hello:pubDate a rdf:Property
+	; api:label "publicationDate"
+	; rdfs:range xsd:integer
+	.
+	
 hello:title a rdf:Property
 	; api:label "title"
 	.
 	
-# hello:struct a rdf:Property
-#     ; api:label "struct"
-#     ; api:structured true
-#     .
 		

@@ -5,12 +5,6 @@
 <script src="util.js"></script>
 </head>
 
-<style>
-ul {margin-left: -1ex }
-
-li { margin-top: 1ex }
-</style>
-
 <body onload="toc()">
 
 <div class="main">
@@ -26,6 +20,8 @@ li { margin-top: 1ex }
 <div id="toc">
 <h1 class="not-toc">contents</h1>
 </div>
+
+<h1>introduction</h1>
 
 <p>
 This document is an introduction to Elda, an implementation of the
@@ -68,35 +64,64 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
   you should be able to view the starting page in a web browser:
   <a href="http://localhost:8080/standalone/hello/games">http://localhost:8080/standalone/hello/games</a>.
   This should display a page similar to:
-  <img src="elda-demo-screenshot-1.png" alt="Screenshot showing demo dataset in Elda" title="Screenshot showing demo dataset" />
+
+  <img
+    style="margin: 2ex" 
+    src="elda-demo-screenshot-1.png" 
+    alt="Screenshot showing demo dataset in Elda" 
+    title="Screenshot showing demo dataset" 
+    />
 </p>
 
 <h3>What just happened?</h3>
 
 <p>
   Contained within the standalone Elda version is a small RDF dataset about board games. The
-  <a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/hello-world.ttl">example configuration</a>
+  <a href="http://elda.googlecode.com/hg/elda-standalone/src/main/webapp/specs/hello-world.ttl">
+    example configuration
+  </a>
   provides an API for viewing the contents of this dataset through simple
-  web URLs. For example, <code>http://localhost:8080/standalone/hello/games</code>
-  lists the first page of board games that are in the example data. By default,
-  this list will be presented in HTML format, which is useful for people to read,
-  but not so useful for programs to process. Each of the items under 'Search Results'
-  represents one of the RDF resources of type BoardGame from the dataset. By
-  clicking on the links on the page, you can view other RDF resources from the
-  example dataset, or refine the way that each resource is displayed. For example,
-  clicking the <a href="http://localhost:8080/standalone/hello/games.ttl">ttl</a>
-  link, the BoardGame resources will be shown in RDF Turtle form, rather than being
-  presented as HTML.
+  web URLs. <code>http://localhost:8080/standalone/hello/games</code>
+  lists the first page of board games that are in the example data: the
+  different games appear as entries in the <b>Search Results</b> section on
+  the left.
 </p>
 
 <p>
-  When Elda is presented with a URL, it uses it to select an <i>endpoint</i>. From
-  the details of the URL path and its query parameters, it constructs a <i>SPARQL
-  query</i> which selects one or more <i>items</i> from the RDF dataset. It then
-  constructs a <i>view</i> of (some of the) properties of those items, and then
-  <i>renders</i> that view into one of the possible formats, sending that rendering
-  back to whatever sent the query.
+  By default, the list is presented in HTML format, which is nice for 
+  people to read, but not so good for programs to process. The format 
+  names on the top-right of the window are clickable to select a
+  different format, <i>eg</i> by clicking the 
+  <a href="http://localhost:8080/standalone/hello/games.ttl">ttl</a>
+  link, the BoardGame resources will be shown as RDF Turtle.
 </p>
+
+<p>
+  The right-hand column of the page has links to the individal items
+  on the left, links to allow sorting on the different properties
+  the items may have, and links for adjusting the view by adding or
+  removing properties from it; these are more useful for bigger
+  examples with more items and properties to experiment with.
+</p>
+
+<h3>how did it happen?</h3>
+
+<p>
+  When Elda is presented with a URL, it uses it to select an 
+  <i>endpoint</i>. From the details of the URL path 
+  (<code>/games</code> in this case) and its query parameters 
+  (none in this case), it constructs a <i>SPARQL query</i> which 
+  selects one or more <i>items</i> (here, games) from the
+  RDF dataset. It then  constructs a <i>view</i> of (some of the) 
+  properties of those items, and then <i>renders</i> that view 
+  into one of the possible formats, sending that rendering back 
+  to whatever sent the query.
+</p>
+
+<p>
+  This example displays all available properties.
+</p>
+
 
 <p>
   Decisions about which datasets to display, which end-points (<i>ie</i>, URL patterns) display
@@ -166,7 +191,7 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
 
 </ul>
 
-<h2>Tutorial</h2>
+<h1>Tutorial</h1>
 
 <p>
   We will now work through some of Elda's capabilities in slightly more detail. See the
@@ -174,7 +199,7 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
   and detailed descriptions.
 </p>
 
-<h3>Prerequisites</h3>
+<h3>prerequisites</h3>
 
 <p>Elda is written in Java
 (using the <a href="http://jena.apache.org/">Jena RDF toolkit</a>),
@@ -188,7 +213,7 @@ The default demonstration setup for Elda has examples that use the
 To run those examples, you will need to have open web access.
 </p>
 
-<h3>Downloading and starting Elda</h3>
+<h3>downloading and starting Elda</h3>
 <p>
   There are two ways to get Elda: either by downloading the pre-compiled
   runnable demo <code>.jar</code> file, or by checking out the source code
@@ -359,9 +384,9 @@ to:
 where NNNN is the port number of your choice.
 </p>
 
-<h2>Using other LDA specifications</h2>
+<h1>Using other LDA specifications</h1>
 
-<h3>From the command line</h3>
+<h2>From the command line</h2>
 
 <p>
 To use different LDA specifications, use the system property
@@ -389,7 +414,7 @@ default specification (the education LDA) wired into it.
 </p>
 
 
-<h3>By editing web.xml</h3>
+<h2>By editing web.xml</h2>
 
 <p>
 To change the specification used without having to use
@@ -418,7 +443,7 @@ the structure of the <code>web.xml</code> file, see
 <a href="E1.2.26-advanced.html">the advanced documentation</a>).
 </p>
 
-<h3>Fancy HTML formatting using XSLT stylesheets</h3>
+<h1>Fancy HTML formatting using XSLT stylesheets</h1>
 
 <p>
 The default formatter supplied by Elda is a very simple
@@ -441,8 +466,10 @@ to your API root in your configuration file and arrange that
 the webapps/elda directory contents are served as static files.
 </p>
 
+<h1>Alternative data sources</h1>
 
-<h3>Querying a local file</h3>
+
+<h2>querying a local file</h2>
 
 <p>
 If the remote SPARQL endpoint is slow, not yet fully configured,
@@ -494,7 +521,7 @@ queries to the endpoint are answered by this model.
 documentation currently at openjena.org.)
 </p>
 
-<h2>Using a local TDB datasource</h2>
+<h2>using a local TDB datasource [obsolescent]</h2>
 
 <p>
 As an alternative to setting up a local SPARQL endpoint,
@@ -573,9 +600,9 @@ is the name of your endpoint model inside the TDB store.
 
 </p>
 
-<h2>Notes</h2>
+<h1>Notes</h1>
 
-<h3>Feedback</h3>
+<h2>Feedback</h2>
 
 <p>
   Elda aims to provide a complete implementation of the Linked Data API.
@@ -591,8 +618,6 @@ is the name of your endpoint model inside the TDB store.
   Elda issues list
   </a>.
 </p>
-
-
 
 <div class="footer">
 <hr>
