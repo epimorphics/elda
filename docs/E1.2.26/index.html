@@ -262,6 +262,7 @@ java -jar start.jar
   dataset. The sample URLs in the table below should all work if you have
   Elda running on your local computer, on port 8080:
 </p>
+
 <table>
   <thead>
     <tr>
@@ -281,7 +282,6 @@ java -jar start.jar
       <div> <a href="http://localhost:8080/standalone/hello/games.xml">standalone/hello/games.xml</a> </div>
     </td>
   </tr>
-
 
   <tr>
     <td>two-template games example, local SPARQL endpoint.</td>
@@ -348,11 +348,52 @@ java -jar start.jar
 </table>
 
 <p>
-	Refer to 
-	<a href="cribsheet.html">the cribsheet</a>
-	for a summary of the action of Elda's query parameters.
+  Let's look a little at the two-template games example, <i>standalone/again</i>.
 </p>
 
+<p>
+  (Refer to <a href="cribsheet.html">the cribsheet</a>
+  for a summary of the action of Elda's query parameters.)
+</p>
+
+<p>The page
+<a href="http://localhost:8080/standalone/again/games">http://localhost:8080/standalone/again/games</a>
+shows us the properties (as in the example data file) of
+several boardgames. This HTML view allows you to explore
+the dataset. For example, <i>A Brief History of the World</i>
+has publication date 2009. Clicking the magnifying-glass icon
+on that line restricts the results to only those with that
+publication date -- as it happens, no others. And we see
+(from the URL bar) that the URL of this page has had a 
+<b>publicationDate=2009</b> query parameter added.
+</p>
+
+<p>
+  Going back and clicking the less-than sign shows instead
+  will show games whose publication date is the same as, or 
+  less recent than, <i>A Brief History of the World</i>.
+  Similarly, going back and clicking the greater-than sign 
+  will show games no older than <i>A Brief History of the World</i>.
+  In both cases, the URL changes to show the applied filter, which
+  also appears in the <i>Filter</i> box in the column on the right.
+</p>
+
+<p>
+  Similarly you can play with the value of <code>players</code>,
+  <i>eg</i> clicking on the magnifying class for players 4 will
+  restrict the display to only games that have a 4-player option.
+  And, of course, you can apply two (or more) filters at once.
+</p>
+
+<p>
+  In the right-hand column, the <i>Sortby</i> box contains the names
+  of the properties that are displayed. Clicking on an arrow will
+  change the order of the items by sorting according to the value
+  of the predicate: the default is to sort by the label of the
+  item, but you could choose <code>publication date</code> or
+  <code>designed by</code>, or both together. <code>players</code>,
+  being multi-valued, isn't really a good sorting candidate.
+</p>
 
 <h3>If you can't use port 8080</h3>
 
@@ -396,7 +437,7 @@ where NNNN is the port number of your choice.
 
 <h1>Using other LDA specifications</h1>
 
-<h2>From the command line</h2>
+<h2>from the command line</h2>
 
 <p>
 To use different LDA specifications, use the system property
@@ -424,7 +465,7 @@ default specification (the education LDA) wired into it.
 </p>
 
 
-<h2>By editing web.xml</h2>
+<h2>by editing web.xml</h2>
 
 <p>
 To change the specification used without having to use
@@ -452,6 +493,12 @@ Spaces and newlines are ignored. (For more explanation of
 the structure of the <code>web.xml</code> file, see
 <a href="reference.html">the reference documentation</a>).
 </p>
+
+
+
+
+
+
 
 <h1>Fancy HTML formatting using XSLT stylesheets</h1>
 
