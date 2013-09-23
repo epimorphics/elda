@@ -304,6 +304,342 @@
 
 </table>
 
+<h1>Configuration</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>resource</th>
+      <th>property</th>
+      <th>value</th>
+      <th>meaning</th>
+    </tr>
+  </thead>
+
+  <tr>
+    <td>an API</td>
+    <td>api:sparqlEndpoint</td>
+    <td>some_resource</td>
+    <td>
+      The designated resource identifies the SPARQL endpoint
+      that this API fetches its information from.
+    </td>
+  </tr>
+
+  <tr>
+    <td>a SPARQL endpoint</td>
+    <td>elda:supportsNestedSelect</td>
+    <td>boolean</td>
+    <td>
+      If the boolean value is <b>true</b>, Elda uses SPARQL 1.1
+      features to reduce the size of its queries.
+    </td>
+  </tr>
+
+  <tr>
+    <td>the API</td>
+    <td>a</td>
+    <td>api:ListEndpoint</td>
+    <td>
+      This endpoint is a list endpoint that can show multiple
+      items selected by filters.
+    </td>
+  </tr>
+
+  <tr>
+    <td>any endpoint</td>
+    <td>api:uriTemplate</td>
+    <td style="white-space: nowrap">"/path/with/{var}"</td>
+    <td>
+      This endpoint is invoked when the URI path matches the template.
+      The variable <code>var</code> is bound to the last segment
+      of the path.
+    </td>
+  </tr>
+
+  <tr>
+    <td>an item endpoint</td>
+    <td>a</td>
+    <td>api:ItemEndpoint</td>
+    <td>
+      This endpoint is an item endpoint showing the single
+      item specified by the associated <code>api:itemTemplate</code>.
+    </td>
+  </tr>
+
+  <tr>
+    <td>the API</td>
+    <td>api:itemTemplate</td>
+    <td>some_resource</td>
+    <td>
+      The single item displayed is the one named in <code>some_resource</code>
+      with any variable references <code>{name}</code> replaced with their
+      values.
+    </td>
+  </tr>
+
+  <tr>
+    <td>the API</td>
+    <td>api:base</td>
+    <td>some_resource</td>
+    <td>
+      If specified, all Elda's constructed URIs (such as those for different views or formats of the displayed page) will use that base URI with the path and query parameters supplied in the request. This means that a server at location A can generate URIs as though it were at location B (from which it may have been redirected). 
+    </td>
+  </tr>
+
+  <tr>
+    <td>the API</td>
+    <td>api:endpoint</td>
+    <td>some_resource</td>
+    <td>
+      The given <code>some_resource</code> is an endpoint.
+      It must be defined somewhere in this configuration.
+    </td>
+  </tr>
+
+  <tr><td colspan=4><hr></td></tr>
+
+  <tr>
+    <td>api or endpoint</td>
+    <td>api:variable</td>
+    <td>some_resource (usually a blank node)</td>
+    <td>
+      Declares an API variable. The resource is usually a blank
+      node with <code>rdf:type</code> <code>api:Variable</code>.
+      The name, type, and value of the variable are given by
+      properties of <code>some_resource</code>.
+    </td>
+  </tr>
+
+  <tr>
+    <td>a api:Variable</td>
+    <td>api:name</td>
+    <td>"<i>name</i>"</td>
+    <td>
+      Specifies the name of the variable.
+    </td>
+  </tr>
+
+  <tr>
+    <td>a api:Variable</td>
+    <td>api:type</td>
+    <td>some_resource</td>
+    <td>
+      Specifies the type of this variable. If not specified, the
+      value of the variable will be a plain literal.
+    </td>
+  </tr>
+
+  <tr>
+    <td>a api:Variable</td>
+    <td>api:value</td>
+    <td>some RDF resource or literal</td>
+    <td>
+      Specifies the value of this variable. May be over-ridden
+      by a query parameter binding.
+    </td>
+  </tr>
+
+  <tr><td colspan=4><hr></td></tr>
+
+  <tr>
+    <td>api or endpoint</td>
+    <td>api:maxPageSize</td>
+    <td>positive integer <i>N</i></td>
+    <td>
+      The maximum page size for this endpoint, or the default
+      for endpoints of this API, is <i>N</i>.
+    </td>
+  </tr>
+
+  <tr>
+    <td>api or endpoint</td>
+    <td>api:defaultPageSize</td>
+    <td>positive integer <i>N</i></td>
+    <td>
+      The default page size for this endpoint, or the default
+      for endpoints of this API, is <i>N</i>.
+    </td>
+  </tr>
+
+  <tr><td colspan=4><hr></td></tr>
+
+  <tr>
+    <td>api or endpoint</td>
+    <td>api:select</td>
+    <td>some_resource</td>
+    <td>
+      The endpoint, or by default other endoints of this API,
+      selects its list of items using the selector <code>some_resource</code>.
+    </td>
+  </tr>
+
+  <tr>
+    <td>an api:Selector</td>
+    <td>api:where</td>
+    <td>"<i>where clause</i>"</td>
+    <td>
+      This selector uses the specified <i>where clause</i> as the
+      where clause in the SPARQL query to select items. Any SPARQL
+      query variables <code>?var</code> that are defined as API
+      variables are replaced by the value of that variable.
+    </td>
+  </tr>
+
+  <tr>
+    <td>an api:Selector</td>
+    <td>api:filter</td>
+    <td>"chain1=value1,chain2=value2..."</td>
+    <td>
+      The <i>chain</i>s are property chains, <i>ie</i> dot-separated
+      shortnames of properties. Items are selected only if the value of
+      their property chain is equal to the given value.
+    </td>
+  </tr>
+
+  <tr>
+    <td>an api:Selector</td>
+    <td>api:parent</td>
+    <td>anotherSelector</td>
+    <td>
+      This selector includes any filters of the given parent selector
+      <code>anotherSelector</code>.
+    </td>
+  </tr>
+
+  <tr>
+    <td>an api:Selector</td>
+    <td>api:orderBy</td>
+    <td><b>order by</b> clause</td>
+    <td>
+      The selected items are sorted according to the given SPARQL
+      <b>order by</b> clause. Note that this is useful only with
+      the query parameter <b>_where</b> or using <b>api:where</b>
+      in a selector.
+    </td>
+  </tr>
+
+  <tr>
+    <td>an api:Selector</td>
+    <td>api:sort</td>
+    <td>"<i>A, B...</i>"</td>
+    <td>
+      The selected items are sorted according to the sort
+      specification, where A and B (<i>etc</i>) are property
+      chains possibly preceeded by <b>-</b> for reverse order. 
+    </td>
+  </tr>
+
+  <tr><td colspan=4><hr></td></tr>
+
+  <tr>
+    <td>api or endpoint</td>
+    <td>api:lang</td>
+    <td>"<i>language code</i>"</td>
+    <td>
+      The default language for this endpoint or endpoints of this API
+      are given as language codes, <i>eg</i> <b>en-us</b> or <b>cy</b>.
+    </td>
+  </tr>
+
+  <tr><td colspan=4><hr></td></tr>
+
+  <tr>
+    <td>api or endpoint</td>
+    <td>api:defaultViewer</td>
+    <td>some_resource</td>
+    <td>
+      This endpoint, or all endpoints of this API, has as default
+      viewer <code>some_resource</code>, which may be one of the
+      three builtin viewers 
+
+      <ul>
+        <li>
+          <code>api:basicViewer</code> (show <code>rdfs:label</code> 
+          and <code>rdf:type)
+        </li>
+        <li>
+          <code>api:describeViewer</code> (show whatever a SPARQL 
+          DESCRIBE produces)
+        </li>
+        <li>
+          <code>api:labelledDescribeViewer</code> (show DESCRIBE 
+          plus any labels of all resources)
+        </li>
+      </ul>
+
+      or a resource (often a blank node) of type <code>api:Viewer</code>
+      with <code>api:property</code> or <code>api:properties</code> properties 
+      (see below).
+    </td>
+  </tr>
+
+  <tr>
+    <td>api or endpoint</td>
+    <td>api:template</td>
+    <td></td>
+    <td>
+    </td>
+  </tr>
+
+  <tr>
+    <td>an api:Viewer</td>
+    <td>api:properties</td>
+    <td>"<i>chain1,chain2...</i>"</td>
+    <td>
+      The viewer should include properties and values for
+      all of the given property chains.
+    </td>
+  </tr>
+
+  <tr>
+    <td>an api:Viewer</td>
+    <td>api:property</td>
+    <td>(property1, property2 ...)</td>
+    <td>
+      The viewer should include the given properties. (Note
+      that the properties are identified by their full URI,
+      not shortname, and that there's no property-chaining.)
+    </td>
+  </tr>
+
+  <tr><td colspan=4><hr></td></tr>
+
+  <tr>
+    <td>api or endpoint</td>
+    <td>api:defaultFormatter</td>
+    <td>some_resource</td>
+    <td>
+      The default formatter of this endpoint, or all the endpoints of
+      this API, is that described in the <code>api:Formatter</code>
+      <code>some_resource</code>.
+    </td>
+  </tr>
+
+  <tr>
+    <td>api or endpoint</td>
+    <td>api:formatter</td>
+    <td>some_resource</td>
+    <td>
+      <code>some_resource</code> is a permissable formatter of this
+      endpoint or all endpoints of this API.
+    </td>
+  </tr>
+
+  <tr><td colspan=4><hr></td></tr>
+  
+  <tr>
+    <td>aProperty</td>
+    <td>api:structured</td>
+    <td>boolean</td>
+    <td>
+      If the boolean is <b>true</b>, the JSON rendering of <code>aProperty</code>
+      values will always include their datatypes and languages. 
+    </td>
+  </tr>
+
+</table>
+
 
 <div class="footer">
 <hr>
