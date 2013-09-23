@@ -47,10 +47,7 @@ div.main
 	}
 
 table 
-	{
-	border-color : black
-	; border: 1px solid black	
-	}
+	{ margin: 1ex }
 
 th 
 	{

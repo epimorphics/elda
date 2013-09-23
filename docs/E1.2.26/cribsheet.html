@@ -11,11 +11,13 @@
 
 <div class="heading">
 <a href="http://www.epimorphics.com">
-<img class="logo" src="epilogo-240.png">
+<img class="logo" src="../epilogo-240.png">
 </a>
 <h1 class="not-toc">Elda 1.2.26</h1>
 <h2 class="not-toc">An implementation of the Linked Data API</h2>
 </div>
+
+<h1 class="not-toc">Elda query parameters and configuration properties</h1>
 
 <div id="toc">
 <h1 class="not-toc">contents</h1>
@@ -283,7 +285,8 @@
           <b>bindings</b> the term (shortname) and variable bindings.
         </li>
         <li>
-          <b>execution</b>
+          <b>execution</b> details of the LDA processor, <i>ie</i> Elda,
+          specifying where its code and documentation can be found.
         </li>
         <li>
           <b>formats</b> the available different formats of this result.
@@ -341,10 +344,10 @@
 <table>
   <thead>
     <tr>
-      <th>resource</th>
-      <th>property</th>
-      <th>value</th>
-      <th>meaning</th>
+      <th style="width: 10%">resource</th>
+      <th style="width: 10%">property</th>
+      <th style="width: 10%">value</th>
+      <th style="width: 50%">meaning</th>
     </tr>
   </thead>
 
@@ -355,6 +358,39 @@
     <td>
       The designated resource identifies the SPARQL endpoint
       that this API fetches its information from.
+    </td>
+  </tr>
+
+  <tr>
+    <td>an API</td>
+    <td>api:prefixMapping</td>
+    <td>some_resource</td>
+    <td>
+      <code>some_resource</code> is an <code>api:PrefixMapping</code>
+      element, probably written using blank nodes, giving additional 
+      prefixes for this configuration. The prefixes present in the 
+      result include the prefixes of this configuration model and 
+      any <code>api:prefixMapping</code>s in this configuration. 
+      (A result model may drop prefixes it does not use.)
+    </td>
+  </tr>
+
+  <tr>
+    <td>an api:PrefixMapping</td>
+    <td>api:prefix</td>
+    <td>"<i>prefix</i>"</td>
+    <td>
+      <i>prefix</i> is the prefix of this prefix mapping.
+    </td>
+  </tr>
+
+  <tr>
+    <td>an api:PrefixMapping</td>
+    <td>api:namespace</td>
+    <td>"<i>namespace</i>"</td>
+    <td>
+      <i>namespace</i> is the namespace of this prefix mapping,
+      <i>ie</i> what the prefix represents.
     </td>
   </tr>
 
@@ -521,7 +557,7 @@
   <tr>
     <td>an api:Selector</td>
     <td>api:filter</td>
-    <td>"chain1=value1,chain2=value2..."</td>
+    <td>"chain1=value1, chain2=value2..."</td>
     <td>
       The <i>chain</i>s are property chains, <i>ie</i> dot-separated
       shortnames of properties. Items are selected only if the value of
