@@ -257,8 +257,11 @@
       callback=F
     </td>
     <td>
+      F must be a legal Javascript name.
     </td>
     <td>
+      The result is a Javascript call <code>F(J)</code> where <code>J</code>
+      is the JSON rendering of the result model.
     </td>
   </tr>
   
@@ -267,6 +270,40 @@
       _metadata=NAME
     </td>
     <td>
+      NAME should be one of the known metadata component names. 
+    </td>
+    <td>
+      That named metadata is included in the result model:
+      
+      <ul>
+        <li>
+          <b>versions</b> the available different views of this result.
+        </li>
+        <li>
+          <b>bindings</b> the term (shortname) and variable bindings.
+        </li>
+        <li>
+          <b>execution</b>
+        </li>
+        <li>
+          <b>formats</b> the available different formats of this result.
+        </li>
+        <li>
+          <b>all</b> all of the above.
+        </li>
+      </ul>
+
+      The XSLT-driven HTML renderer automatically incorporates all of these.
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      _template=TEMPLATE
+    </td>
+    <td>
+      TEMPLATE must be a legal SPARQL <b>CONSTRUCT</b> body also legal as a
+      <b>WHERE</b> body.
     </td>
     <td>
     </td>
@@ -274,21 +311,14 @@
   
   <tr>
     <td>
-      _template=
+      _where=CLAUSE
     </td>
     <td>
+      CLAUSE must be a legal SPARQL <b>where</b> clause.
     </td>
     <td>
-    </td>
-  </tr>
-  
-  <tr>
-    <td>
-      _where=
-    </td>
-    <td>
-    </td>
-    <td>
+      CLAUSE is used in the SPARQL query rather than any computed or
+      configured <b>where</b> clause.
     </td>
   </tr>
   
@@ -297,8 +327,10 @@
       _search=QUERY
     </td>
     <td>
+      QUERY must be a legal text-search query.
     </td>
     <td>
+      All the selected items must satisfy the query.
     </td>
   </tr>
 
@@ -627,7 +659,7 @@
   </tr>
 
   <tr><td colspan=4><hr></td></tr>
-  
+
   <tr>
     <td>aProperty</td>
     <td>api:structured</td>
