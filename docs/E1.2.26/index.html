@@ -108,7 +108,7 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
   provides an API for viewing the contents of this dataset through simple
   web URLs. <code>http://localhost:8080/standalone/hello/games</code>
   lists the first page of board games that are in the example data: the
-  different games appear as entries in the <b>Search Results</b> section on
+  different games appear as entries in the <strong>Search Results</strong> section on
   the left.
 </p>
 
@@ -116,7 +116,7 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
   By default, the list is presented in HTML format, which is nice for
   people to read, but not so good for programs to process. The format
   names on the top-right of the window are clickable to select a
-  different format, <i>eg</i> by clicking the
+  different format, <em>e.g.</em> by clicking the
   <a href="http://localhost:8080/standalone/hello/games.ttl">ttl</a>
   link, the BoardGame resources will be shown as RDF Turtle.
 </p>
@@ -133,12 +133,12 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
 
 <p>
   When Elda is presented with a URL, it uses it to select an
-  <i>endpoint</i>. From the details of the URL path
+  <em>endpoint</em>. From the details of the URL path
   (<code>/games</code> in this case) and its query parameters
-  (none in this case), it constructs a <i>SPARQL query</i> which
-  selects one or more <i>items</i> (here, games) from the
-  RDF dataset. It then  constructs a <i>view</i> of (some of the)
-  properties of those items, and then <i>renders</i> that view
+  (none in this case), it constructs a <em>SPARQL query</em> which
+  selects one or more <em>items</em> (here, games) from the
+  RDF dataset. It then  constructs a <em>view</em> of (some of the)
+  properties of those items, and then <em>renders</em> that view
   into one of the possible formats, sending that rendering back
   to whatever sent the query.
 </p>
@@ -148,7 +148,7 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
 </p>
 
 <p>
-  Decisions about which datasets to display, which end-points (<i>ie</i>, URL patterns) display
+  Decisions about which datasets to display, which end-points (<em>i.e.</em>, URL patterns) display
   which resources, how resources are displayed, and other design choices are all
   encoded in the LDA configuration file. The
   <a href="http://code.google.com/p/linked-data-api/wiki/Specification">LDA specification</a>
@@ -171,49 +171,49 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
 
 <ul>
   <li>
-    <i>filters</i>. Query parameters can specify that items must have specified
+    <em>filters</em>. Query parameters can specify that items must have specified
     ranges of values for some property in order to be selected. Endpoints can
-    have some filters, <i>eg</i> that the item has a particular type, pre-loaded.
+    have some filters, <em>e.g.</em> that the item has a particular type, pre-loaded.
   </li>
 
-  <li><i>views</i>.
+  <li><em>views</em>.
     Endpoints can specify, and query parameters modify, which properties of the
     selected items are to be displayed.
   </li>
 
-  <li><i>formats</i>.
+  <li><em>formats</em>.
     The items and their properties can be rendered in different formats, including
     HTML, XML, JSON, RDF/XML, and Turtle.
   </li>
 
-  <li><i>data sources</i>.
+  <li><em>data sources</em>.
     Data can be fetched from any SPARQL endpoint. For convenience in testing,
     Elda also allows data to be fetched from a local file.
   </li>
 
-  <li><i>metadata</i>.
+  <li><em>metadata</em>.
     The rendered response includes metadata such as the SPARQL queries used to
     select items and fetch their properties.
   </li>
 
-  <li><i>text search</i>.
-    For suitably-configured SPARQL endpoints, Elda can exploit <i>free text
-    queries</i> that can search for text fragments or use AND, OR, and NOT to
+  <li><em>text search</em>.
+    For suitably-configured SPARQL endpoints, Elda can exploit <em>free text
+    queries</em> that can search for text fragments or use AND, OR, and NOT to
     control the search.
   </li>
 
-  <li><i>velocity templates</i>.
+  <li><em>velocity templates</em>.
     You can choose to write a new format for an Elda instance using Velocity
     templates. (This feature is experimental; feedback is welcome.)
   </li>
 
-  <li><i>statistics</i>.
+  <li><em>statistics</em>.
     Elda can present statistics about the queries that it has received
     either in HTML or (experimentally) using JMX. The statistics include
     the number of queries and the amount of data transferred.
   </li>
 
-  <li><i>configuration display</i>.
+  <li><em>configuration display</em>.
     The path <code>/api-config</code> for a running Elda presents all the
     endpoints that are available for it and details of their configuration.
   </li>
@@ -313,13 +313,13 @@ and change the line:
 </p>
 
 <pre>
-&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <b>default="8080"</b>/&gt;&lt;/Set&gt;
+&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <strong>default="8080"</strong>/&gt;&lt;/Set&gt;
 </pre>
 
 <p>to:</p>
 
 <pre>
-&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <b>default="NNNN"</b>/&gt;&lt;/Set&gt;
+&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <strong>default="NNNN"</strong>/&gt;&lt;/Set&gt;
 </pre>
 <p>
 where NNNN is the port number of your choice.
@@ -419,7 +419,7 @@ where NNNN is the port number of your choice.
 <h2>Games example -- web page</h2>
 
 <p>
-  Let's look a little at the two-template games example, <i>standalone/again</i>.
+  Let's look a little at the two-template games example, <code>standalone/again</code>.
 </p>
 
 <p>
@@ -431,33 +431,33 @@ where NNNN is the port number of your choice.
 <a href="http://localhost:8080/standalone/again/games">http://localhost:8080/standalone/again/games</a>
 shows us the properties (as in the example data file) of
 several boardgames. This HTML view allows you to explore
-the dataset. For example, <i>A Brief History of the World</i>
+the dataset. For example, <em>A Brief History of the World</em>
 has publication date 2009. Clicking the magnifying-glass icon
 on that line restricts the results to only those with that
 publication date -- as it happens, no others. And we see
 (from the URL bar) that the URL of this page has had a
-<b>publicationDate=2009</b> query parameter added.
+<strong>publicationDate=2009</strong> query parameter added.
 </p>
 
 <p>
   Going back and clicking the less-than sign shows instead
   will show games whose publication date is the same as, or
-  less recent than, <i>A Brief History of the World</i>.
+  less recent than, <em>A Brief History of the World</em>.
   Similarly, going back and clicking the greater-than sign
-  will show games no older than <i>A Brief History of the World</i>.
+  will show games no older than <em>A Brief History of the World</em>.
   In both cases, the URL changes to show the applied filter, which
-  also appears in the <i>Filter</i> box in the column on the right.
+  also appears in the <em>Filter</em> box in the column on the right.
 </p>
 
 <p>
   Similarly you can play with the value of <code>players</code>,
-  <i>eg</i> clicking on the magnifying class for players 4 will
+  <em>eg</em> clicking on the magnifying class for players 4 will
   restrict the display to only games that have a 4-player option.
   And, of course, you can apply two (or more) filters at once.
 </p>
 
 <p>
-  In the right-hand column, the <i>Sortby</i> box contains the names
+  In the right-hand column, the <em>Sortby</em> box contains the names
   of the properties that are displayed. Clicking on an arrow will
   change the order of the items by sorting according to the value
   of the predicate: the default is to sort by the label of the
@@ -541,7 +541,7 @@ hello:hello-world-again a api:API
 </pre>
 
 <p>
-  This defines a new view called <i>none</i> which shows no
+  This defines a new view called <em>none</em> which shows no
   properties at all. This can be useful as a starting-point
   when building a view on the URL using the query parameter
   <code>_properties=</code>.
@@ -598,7 +598,7 @@ hello:publishers a api:ListEndpoint
 </pre>
 
 <p>
-  This is the <i>publishers</i> endpoint. It will show only items
+  This is the <em>publishers</em> endpoint. It will show only items
   of type hello:Publisher, sort them by their label (which will be
   the publisher name), and view them with the labelledDescribe
   viewer.
@@ -614,7 +614,7 @@ hello:games a api:ListEndpoint
 </pre>
 
 <p>
-  Similarly, this is the <i>games</i> endpoint, selecting only
+  Similarly, this is the <em>games</em> endpoint, selecting only
   items of type hello:BoardGame and sorting them by their label.
 </p>
 
@@ -636,7 +636,7 @@ hello:BoardGame a rdfs:Class
 
 <p>
   The class <code>hello:BoardGame</code> has shortname
-  <i>BoardGame</i>, as defined by its <code>api:label</code>;
+  <em>BoardGame</em>, as defined by its <code>api:label</code>;
   this is what allows it to appear in the endpoint filter
   <code>type=BoardGame</code>.
 </p>
@@ -649,10 +649,10 @@ hello:players a rdf:Property
 </pre>
 
 <p>
-  <code>hello:players</code> has shortname <i>players</i>, which
-  is what allows you to use <i>eg</i> <code>players</code> as
+  <code>hello:players</code> has shortname <em>players</em>, which
+  is what allows you to use <em>eg</em> <code>players</code> as
   the name of a query parameter. Defining its range to be
-  <code>xsd:int</code> means (<i>eg</i>) that the 2 in the query
+  <code>xsd:int</code> means (<em>eg</em>) that the 2 in the query
   parameter <code>players=2</code> is interpreted as an integer
   and not a string.
 </p>
@@ -675,7 +675,7 @@ dct:publisher a rdf:Property
 
 <p>
   Declares that the shortname of <code>dct:publisher</code> is
-  <i>publishes</i>.
+  <em>publishes</em>.
 </p>
 
 <pre>
@@ -686,9 +686,9 @@ rdfs:label a rdf:Property
 </pre>
 
 <p>
-    Declares that <code>rdfs:label</code> has shortname <i>label</i>
+    Declares that <code>rdfs:label</code> has shortname <em>label</em>
     and that it is always to be presented in the JSON rendering as
-    having an <i>array</i> of label values, even if there's only one.
+    having an <em>array</em> of label values, even if there's only one.
 </p>
 
 <pre>
@@ -700,7 +700,7 @@ rdf:type a rdf:Property
 </pre>
 
 <p>
-  Declares that <code>rdf:type</code> has shortname <i>type</i>,
+  Declares that <code>rdf:type</code> has shortname <em>type</em>,
   should have its JSON-rendered values appear as an array, and has
   a range of <code>rdfs:Class</code>, which means that for a query
   parameter <code>type=SPOO</code>, SPOO is interpreted as being
@@ -715,10 +715,10 @@ hello:designed-by a rdf:Property
 
 <p>
   Declares that <code>hello:designed-by</code> has shortname
-  <i>designedBy</i>. (Note that the HTML renderer shows property
+  <em>designedBy</em>. (Note that the HTML renderer shows property
   shortnamesin the display translated by turning camelCase
-  like <i>designedBy</i> into space-separated words like
-  <i>designed by</i>.)
+  like <em>designedBy</em> into space-separated words like
+  <em>designed by</em>.)
 </p>
 
 <pre>
@@ -728,7 +728,7 @@ hello:designer-of a rdf:Property
 </pre>
 
 <p>
-  The shortname of <code>hello:designer-of</code> is <i>designerOf</i>.
+  The shortname of <code>hello:designer-of</code> is <em>designerOf</em>.
 </p>
 
 <pre>
@@ -740,7 +740,7 @@ hello:pubDate a rdf:Property
 
 <p>
   And finally, the shortname of <code>hello:pubDate</code> is
-  <i>publicationDate</i> and its value is interpreted as an
+  <em>publicationDate</em> and its value is interpreted as an
   integer.
 </p>
 
@@ -801,14 +801,14 @@ servlet configuration
   &lt;servlet-class&gt;com.epimorphics.lda.routing.Loader&lt;/servlet-class&gt;
   &lt;init-param&gt;
     &lt;param-name&gt;com.epimorphics.api.initialSpecFile&lt;/param-name&gt;
-    &lt;param-value&gt;<b>assorted specs here</b>&lt;/param-value&gt;
+    &lt;param-value&gt;<strong>assorted specs here</strong>&lt;/param-value&gt;
   &lt;/init-param&gt;
   &lt;load-on-startup&gt;1&lt;/load-on-startup&gt;
 &lt;/servlet&gt;
 </pre>
 
 <p>
-Replace the <b>assorted specs here</b> with the name of the LDA
+Replace the <strong>assorted specs here</strong> with the name of the LDA
 specification files you wish to load, separated by commas.
 Spaces and newlines are ignored. (For more explanation of
 the structure of the <code>web.xml</code> file, see
@@ -861,7 +861,7 @@ spec:api
   rdfs:label "Edubase API"@en;
   api:maxPageSize 50;
   api:defaultPageSize 10 ;
-  <b>api:sparqlEndpoint &lt;http://education.data.gov.uk/sparql/education/query&gt;</b> ;
+  <strong>api:sparqlEndpoint &lt;http://education.data.gov.uk/sparql/education/query&gt;</strong> ;
   api:endpoint
    spec:schools
    , spec:schoolsPrimary
@@ -871,8 +871,8 @@ spec:api
  .
 </pre>
 <p>
-Replace the endpoint URI with <b>local:content-name</b>,
-where <b>content-name</b> is the name of the RDF source you
+Replace the endpoint URI with <strong>local:content-name</strong>,
+where <strong>content-name</strong> is the name of the RDF source you
 wish to query. When Elda issues queries to a local: endpoint,
 it loads (and remembers) the contents and queries those directly.
 </p>
@@ -908,18 +908,18 @@ two ways:
 <pre>
 &lt;init-param>
   &lt;param-name>com.epimorphics.api.TDB-base-directory&lt;/param-name>
-  &lt;param-value><b>tdb-directory</b>&lt;/param-value>
+  &lt;param-value><strong>tdb-directory</strong>&lt;/param-value>
 &lt;/init-param&gt;
 </pre>
 
 <p>
-Replace <b>tdb-directory</b> with the path to
+Replace <strong>tdb-directory</strong> with the path to
 your chosen TDB directory. Note that the path is relative to the
 webapps directory &ndash; your best choice is to use an absolute path.
 </p>
 
 <p>
-<i>Warning</i>. If the directory does not contain any TDB files,
+<em>Warning</em>. If the directory does not contain any TDB files,
 TDB will create a new empty dataset in it. This is usually not
 what you want, since all queries will return no answers, so
 Elda will report an error during setup.
@@ -932,15 +932,15 @@ The alternative form:
 <pre>
 &lt;init-param>
   &lt;param-name>com.epimorphics.api.dataStoreDirectory&lt;/param-name>
-  &lt;param-value><b>datastore-directory</b>&lt;/param-value>
+  &lt;param-value><strong>datastore-directory</strong>&lt;/param-value>
 &lt;/init-param&gt;
 </pre>
 
 <p>
-specifies <b>datastore-directory</b> as a directory containing a
-TDB directory named <i>tdb</i>. The same warnings as above apply.
+specifies <strong>datastore-directory</strong> as a directory containing a
+TDB directory named <em>tdb</em>. The same warnings as above apply.
 (This form exists because Elda can do limited LARQ indexing and
-in that case the datastore directory will have a <b>larq</b>
+in that case the datastore directory will have a <strong>larq</strong>
 subdirectory for the LARQ indexes.)
 </p>
 
@@ -956,7 +956,7 @@ spec:api
   rdfs:label "Edubase API"@en;
   api:maxPageSize 50;
   api:defaultPageSize 10 ;
-  <b>api:sparqlEndpoint &lt;http://services.data.gov.uk/education/sparql&gt;</b> ;
+  <strong>api:sparqlEndpoint &lt;http://services.data.gov.uk/education/sparql&gt;</strong> ;
   api:endpoint
    spec:schools
    , spec:schoolsPrimary
@@ -967,7 +967,7 @@ spec:api
 </pre>
 
 <p>
-Replace the services URI with <b>tdb:model-name</b>, where <b>model-name</b>
+Replace the services URI with <strong>tdb:model-name</strong>, where <strong>model-name</strong>
 is the name of your endpoint model inside the TDB store.
 
 </p>

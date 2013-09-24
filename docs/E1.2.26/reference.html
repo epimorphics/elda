@@ -58,7 +58,7 @@
 	Elda Common provides a way of dropping Elda
 	into an existing webapp container with a minimum of fuss.
 	(While we write "Tomcat" below as the webapp container,
-	any suitably configurable one &mdash; <i>eg</i> Jetty
+	any suitably configurable one &mdash; <em>eg</em> Jetty
 	&mdash; will do. We assume that you have the necessary
 	access permissions to install or update Tomcat and
 	run it on your preferred port.)
@@ -95,7 +95,7 @@ The Common and Assets files must have the same version.
 	into the appropriate <code>webapps</code> directory.
 	You need both .war files;
 	Elda Common contains the LDA-handling Java code and Elda
-	Assets provides styleheets, scripts, css, <i>etc</i> which Elda
+	Assets provides styleheets, scripts, css, <em>etc</em> which Elda
 	Common refers to or loads. There is also an
 	<code>elda-bundled</code>code>
 	artifact whose <code>elda-bundled.war</code> combines
@@ -135,13 +135,13 @@ The Common and Assets files must have the same version.
 </p>
 
 <pre>
-; api:variable [api:name "_resourceRoot"; api:value "http://<i>hostAndPort</i>/<i>assetPath</i>/"]
+; api:variable [api:name "_resourceRoot"; api:value "http://<em>hostAndPort</em>/<em>assetPath</em>/"]
 </pre>
 
 <p>
-	The <i>hostAndPort</i> will usually be <b>localhost:8080</b>
-	or <b>localhost:80</b>, and <i>assetPath</i> will by default
-	be <b>elda-assets</b> unless the asset .war is renamed to some
+	The <em>hostAndPort</em> will usually be <strong>localhost:8080</strong>
+	or <strong>localhost:80</strong>, and <em>assetPath</em> will by default
+	be <strong>elda-assets</strong> unless the asset .war is renamed to some
 	other context or you are using <code>elda-bundled</code>.
 </p>
 
@@ -152,7 +152,7 @@ The Common and Assets files must have the same version.
 </p>
 
 <pre>
-; api:stylesheet "http://<i>hostAndPort</i>/<i>stylesheetPath</i>/xslt/result.xsl"
+; api:stylesheet "http://<em>hostAndPort</em>/<em>stylesheetPath</em>/xslt/result.xsl"
 </pre>
 
 <p>
@@ -241,7 +241,7 @@ The Common and Assets files must have the same version.
 </p>
 
 <p>
-	Elda does not check that the <i>contexts</i> of these files
+	Elda does not check that the <em>contexts</em> of these files
 	have changed, so it is sufficient to simple <code>touch</code>
 	one of the appropriate files.
 </p>
@@ -267,7 +267,7 @@ The Common and Assets files must have the same version.
 <p>
 	Elda runs as a bunch of JAX-RS resources within a Jersey
 	container. The LDA configurations it loads are specified
-	by the value of a <i>context parameter</i>.
+	by the value of a <em>context parameter</em>.
 </p>
 
 <pre>
@@ -346,12 +346,12 @@ The Common and Assets files must have the same version.
 
     &lt;init-param&gt;
       &lt;param-name&gt;com.sun.jersey.config.property.packages&lt;/param-name&gt;
-	  &lt;param-value&gt;<b>com.epimorphics.lda.restlets</b>&lt;/param-value&gt;
+	  &lt;param-value&gt;<strong>com.epimorphics.lda.restlets</strong>&lt;/param-value&gt;
     &lt;/init-param&gt;
 
     &lt;init-param&gt;
-	  &lt;param-name&gt;com.sun.jersey.config.feature.<b>FilterForwardOn404</b>&lt;/param-name&gt;
-	  &lt;param-value&gt;<b>true</b>&lt;/param-value&gt;
+	  &lt;param-name&gt;com.sun.jersey.config.feature.<strong>FilterForwardOn404</strong>&lt;/param-name&gt;
+	  &lt;param-value&gt;<strong>true</strong>&lt;/param-value&gt;
     &lt;/init-param&gt;
 
     &lt;init-param&gt;
@@ -396,7 +396,7 @@ The Common and Assets files must have the same version.
 	different URIs to an external interface from those used within
 	the application, you can either use on of the existing
 	within-servlet URI rewriting engines or having a front-end
-	server, <i>eg</i> Apache or Nginx, which selectively rewrites
+	server, <em>eg</em> Apache or Nginx, which selectively rewrites
 	or discards requests with (un)suitable URIs.
 </p>
 
@@ -406,7 +406,7 @@ The Common and Assets files must have the same version.
 	Previous versions of Elda had their configuration specified
 	within a load-on-startup Loader servlet with an init-param
 	<code>initialSpecFile</code> supplying the configuration file names.
-	This approach to configuration is now <i>obsolete</i> as it lead
+	This approach to configuration is now <em>obsolete</em> as it lead
 	to technical difficulties; it is supported in Elda 1.2.26 to
 	allow users to migrate to the new configuration process.
 </p>
@@ -416,7 +416,7 @@ The Common and Assets files must have the same version.
 <p>
     This release of Elda includes the ability to use
     <a href="http://velocity.apache.org/">Velocity</a>
-    templates for rendering. This feature is <i>provisional</i>;
+    templates for rendering. This feature is <em>provisional</em>;
     it may change significantly in future releases.
 </p>
 
@@ -823,20 +823,20 @@ The Common and Assets files must have the same version.
 </p>
 
 <p>
-	However, if you want to find items whose (<i>eg</i>)
-	<code>rdfs:label</code> text <i>contains</i> <b>hello</b>,
-	or which contains either <b>hello</b> OR <b>goodbye</b>,
-	<i>etc</i>, then you have to write explicit SPARQL
+	However, if you want to find items whose (<em>eg</em>)
+	<code>rdfs:label</code> text <em>contains</em> <strong>hello</strong>,
+	or which contains either <strong>hello</strong> OR <strong>goodbye</strong>,
+	<em>etc</em>, then you have to write explicit SPARQL
 	<code>FILTER</code>s, probably using regular expressions,
 	and smuggle them into your configuration. This works, and
 	is very flexible, but is also rather inefficient, since
-	<i>all</i> the literal values of the desired property have
+	<em>all</em> the literal values of the desired property have
 	to be examined, and general regular expressions are quite
 	complicated to process.
 </p>
 
 <p>
-	One solution to this is <i>indexing</i>. The literal text
+	One solution to this is <em>indexing</em>. The literal text
 	value of the RDF properties is preprocessed, typically by
 	breaking it up into words, and an index constructed relating
 	each word to all the literals it appears in. Then a search
@@ -889,16 +889,16 @@ The Common and Assets files must have the same version.
 <h2>Dataset indexing</h2>
 
 <p>
-	A Fuseki dataset can be configured to <i>index</i> specified properties
+	A Fuseki dataset can be configured to <em>index</em> specified properties
 	within an RDF model. The properties are associated with named
-	<i>fields</i> in the index. One of these fields can be designated
-	as the <i>default</i> field, the field that is searched if no
+	<em>fields</em> in the index. One of these fields can be designated
+	as the <em>default</em> field, the field that is searched if no
 	field is explicitly given in a search query; another can be designated
-	as the <i>uri</i> field that holds the URI of the resource associated
+	as the <em>uri</em> field that holds the URI of the resource associated
 	with the search strings. For example, the configuration in the Jena
-	text search documentation makes the default field name <i>text</i>,
-	has it track the value of the property <i>rdfs:label</i>, and binds the
-	URI of the item to the field <i>uri</i>:
+	text search documentation makes the default field name <em>text</em>,
+	has it track the value of the property <em>rdfs:label</em>, and binds the
+	URI of the item to the field <em>uri</em>:
 </p>
 
 <pre>
@@ -925,13 +925,13 @@ The Common and Assets files must have the same version.
 
 <p>
 	The value of the <code>_search</code> query parameter is passed
-	through to Fuseki and used as a <i>query</i> against the index.
+	through to Fuseki and used as a <em>query</em> against the index.
 	Just as the indexing operates on text that has been broken up
 	into words, the query isn't just a string to search for: it is
 	expressed in it own little language, as defined by Lucene and
 	very similarly by Solr (the Solr query language is mostly a modest
 	extension to the Lucene language). The simplest query is a single
-	word, eg <i>Steam</i> or <i>Mahal</i>, which will succeed for
+	word, eg <em>Steam</em> or <em>Mahal</em>, which will succeed for
 	resources that have that word in one of their property values.
 </p>
 
@@ -942,37 +942,37 @@ The Common and Assets files must have the same version.
 </blockquote>
 
 <p>
-	The query can contain several words; if so, it is looking for <i>any</i>
+	The query can contain several words; if so, it is looking for <em>any</em>
 	of those words. To force it to look for both, use the infix operator
-	<i>AND</i>, which you can also spell <i>&amp;&amp;</i>. The query
-	<i>Age Steam</i> will find resources that mention either of <i>Age</i>
-	or <i>Steam</i>; the query <i>Age &amp;&amp; Steam</i> will find only
+	<em>AND</em>, which you can also spell <em>&amp;&amp;</em>. The query
+	<em>Age Steam</em> will find resources that mention either of <em>Age</em>
+	or <em>Steam</em>; the query <em>Age &amp;&amp; Steam</em> will find only
 	resources that mention them both. Note that if you use the &amp;&amp;
-	syntax in a URI it will have to be carefully escaped, so <i>AND</i>
+	syntax in a URI it will have to be carefully escaped, so <em>AND</em>
 	is probably the better choice.
 </p>
 
 <p>
-	Prefxing a word with <i>+</i> demands that it appear <i>somewhere</i>
+	Prefxing a word with <em>+</em> demands that it appear <em>somewhere</em>
 	in the indexed text (ie, the RDF model or any extra indexing text that
-	the endpoint applied). Prefixing the word with <i>-</i> demands
-	that it does <i>not</i> appear.
+	the endpoint applied). Prefixing the word with <em>-</em> demands
+	that it does <em>not</em> appear.
 </p>
 
 <p>
 	The query runs against the default field unless otherwise specified
-	using a <i>fieldName:</i> prefix. This prefix applies to the next
-	(as short as possible) piece of the query, so <i>alpha: Age Steam</i>
-	looks for <i>Age</i> in the <i>alpha</i> field and <i>Steam</i> in
+	using a <em>fieldName:</em> prefix. This prefix applies to the next
+	(as short as possible) piece of the query, so <em>alpha: Age Steam</em>
+	looks for <em>Age</em> in the <em>alpha</em> field and <em>Steam</em> in
 	the default field. To make it apply to both terms, you can either
-	repeat the field, <i>alpha: Age alpha: Steam</i>, or use parentheses
-	for grouping, <i>alpha: (Age Stream)</i>. (You can also use
+	repeat the field, <em>alpha: Age alpha: Steam</em>, or use parentheses
+	for grouping, <em>alpha: (Age Stream)</em>. (You can also use
 	parentheses in the usual way for grouping mixtures of <code>AND</code>
 	and <code>OR</code>, etc.)
 </p>
 
 <p>	The query notation supports several other operators, and escapes so that
-	operators like <i>+</i> can be treated as ordinatry characters; for
+	operators like <em>+</em> can be treated as ordinatry characters; for
 	information about these see eg
 	<a href="http://lucene.apache.org/core/4_4_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package_description">the Lucene classic package summary</a>.
 </p>
@@ -1086,9 +1086,9 @@ If the SPARQL server supports nested
 
 <p>
     Elda automatically uses nested selects if the data source
-    is a <b>local:</b> or <b>tdb:</b> model, or it the
+    is a <strong>local:</strong> or <strong>tdb:</strong> model, or it the
     <code>sparqEndpoint</code> value of the API is a
-    resource with an <b>extras:supportsNestedSelects</b>
+    resource with an <strong>extras:supportsNestedSelects</strong>
     value of true, "true", or "yes". (We anticipate that
     later versions of Elda will dynamically check the server
     to see if nested selects work.)
@@ -1110,7 +1110,7 @@ If the SPARQL server supports nested
 <p>
     The default default threshold value is 10. However, it can be
     changed. Setting the <code>extras:describeThreshold</code>
-    property on an <i>endpoint</i> makes all the (describe) viewers
+    property on an <em>endpoint</em> makes all the (describe) viewers
     created for that endpoint have that value for their threshold.
     Setting that property on an <code>api:API</code> makes the
     default for all its endpoints be that value.
@@ -1219,8 +1219,8 @@ If the SPARQL server supports nested
 <h2 id="uri-rewriting">URI rewriting</h2>
 
 <p>
-	(<i>This feature is experimental and its details
-	may change.</i>)
+	(<em>This feature is experimental and its details
+	may change.</em>)
 </p>
 
 <p>
@@ -1459,8 +1459,8 @@ dct:created
 
 <p>
 	The content of an entry is similar to the XML rendering of the
-	resource for this entry. Currently <b>circularity checking is not
-	available</b>. The entry is given its own namespace, which defaults
+	resource for this entry. Currently <strong>circularity checking is not
+	available</strong>. The entry is given its own namespace, which defaults
 	to the Elda namespace but can be set in the feed configuration using
 	the property <code>elda:feedNamespace</code>.
 </p>
@@ -1517,7 +1517,7 @@ dct:contributor
     (Elda maintains two internal caches, one mapping the computed selection
     query to the list of items it generates, the other mapping (list of
     item, view) pairs to generated result sets. These are independant of
-    any caches provided by <i>eg</i> an Apache server wrapping Elda.)
+    any caches provided by <em>eg</em> an Apache server wrapping Elda.)
 </p>
 
 <ul>
@@ -1581,7 +1581,7 @@ dct:contributor
 	The cache policy can be changed by setting the property
 	<code>elda:cachePolicyName</code> to a string of the
 	form <code>"name:integer"</code> where <code>name</code>
-	is the name of a policy, eg <b>default</b>, and the optional
+	is the name of a policy, eg <strong>default</strong>, and the optional
 	<code>:integer</code> gives an associated limit.
 </p>
 
@@ -1675,13 +1675,13 @@ The available cache policies are
 	names if they have not been given in the configuration.
 	Where possible these names should satisfy the shortname
 	grammar; this allows them to be used as XML element names.
-	Elda splits the URI into its <i>namespace</i> and
-	<i>local name</i> parts and uses the localname as the
+	Elda splits the URI into its <em>namespace</em> and
+	<em>local name</em> parts and uses the localname as the
 	basis for the generated shortname.
 </p>
 
 <p>
-	<i>NOTE</i>. Elda uses the Jena XML-derived rule to
+	<em>NOTE</em>. Elda uses the Jena XML-derived rule to
 	split URIs, defining the local name as being the longest
 	possible NCName that is a suffix of the URI. That name
 	is not necessarily the same as that after a '#' or
@@ -1690,7 +1690,7 @@ The available cache policies are
 </p>
 
 <p>
-	Elda has three <i>shortname modes</i> for generating
+	Elda has three <em>shortname modes</em> for generating
 	shortnames. The mode for a given format may be
 	specified by setting the property <code>elda:shortnameMode</code>
 	on a declared <code>formatter</code> of the configuration
@@ -1735,7 +1735,7 @@ The available cache policies are
 
 <p>
 	The bindings of short names to full URIs &mdash;
-	the <i>term bindings</i> &mdash; are made available
+	the <em>term bindings</em> &mdash; are made available
 	as metadata in the rendered result. This metadata
 	is by default only generated for HTML renderings;
 	to have it present in JSON, XML, or RDF renderers,
@@ -1792,7 +1792,7 @@ where
 </p>
 
 <ul>
-  <li><i>r</i> is a Request object describing this LDA request. A
+  <li><em>r</em> is a Request object describing this LDA request. A
 	Request itself contains:
 	  <ul>
 		<li>a Controls object for timing information</li>
@@ -1803,20 +1803,20 @@ where
 	  </ul>
   </li>
 
-  <li><i>Match match</i> wraps the endpoint object and the variable bindings that
+  <li><em>Match match</em> wraps the endpoint object and the variable bindings that
     made when matching the endpoint's <code>api:uriTemplate</code> against the
     request URI. The usual way to get a Match object is to call <code>getMatch</code>
     on a suitable <code>Router</code> value.
   </li>
 
-  <li><i>URI requestURI</i> is the request URI for this request.
+  <li><em>URI requestURI</em> is the request URI for this request.
   </li>
 
-  <li><i>contextPath</i> is the context path to assume (it is written into the
+  <li><em>contextPath</em> is the context path to assume (it is written into the
 	variable bindings)
   </li>
 
-  <li><i>MultiMap queryParams</i> is a map from query parameter names to their
+  <li><em>MultiMap queryParams</em> is a map from query parameter names to their
     (string) values.
   </li>
 
@@ -1825,7 +1825,7 @@ where
 <p>
 The call returns a three-element object which contains the
 <code>ResultSet</code> of the query execution (the result
-model and selected items), a map (the <i>term bindings</i>
+model and selected items), a map (the <em>term bindings</em>
 from shortnames to their URIs as appropriate for this resultset,
 and the (updated) variable Bindings.
 </p>

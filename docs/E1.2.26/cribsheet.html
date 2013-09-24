@@ -59,7 +59,7 @@
     <td>P=V
     </td>
     <td>
-      P is a property chain, <i>ie</i> a sequence
+      P is a property chain, <em>i.e.</em> a sequence
       of dot-separated short names of properties.
     </td>
     <td>
@@ -136,7 +136,7 @@
       P is a property chain.
     </td>
     <td>
-      Select only items which <i>do not</i> have
+      Select only items which <em>do not</em> have
       a P-value.
     </td>
   </tr>
@@ -189,7 +189,7 @@
     </td>
     <td>
       NAME must be the name of one of the formats understood
-      by this Elda (<i>eg</i>, html, json).
+      by this Elda (<em>e.g.</em>, html, json).
     </td>
     <td>
       Render this query in the given format.
@@ -201,8 +201,8 @@
       _lang=LANG
     </td>
     <td>
-      LANG is a language code, <i>eg</i> <b>en</b>, <b>eh-uk</b>,
-      or the special language code <b>none</b>.
+      LANG is a language code, <em>eg</em> <em>en</em>, <em>eh-uk</em>,
+      or the special language code <em>none</em>.
     </td>
     <td>
       Sets the default language(s), overriding anything set by the
@@ -210,7 +210,7 @@
       Query parameter values that are strings are given the
       default language code. The view will discard property values
       that are strings not in the the given languages, unless the
-      only values are strings with <i>no</i> language, in which
+      only values are strings with <em>no</em> language, in which
       case those are displayed.
     </td>
   </tr>
@@ -221,8 +221,8 @@
     </td>
     <td>
       NAME is the name of a view as defined in the configuration,
-      or one of the predefined names <b>description</b>, <b>all</b>,
-      or <b>basic</b>.
+      or one of the predefined names <strong>description</strong>, <strong>all</strong>,
+      or <strong>basic</strong>.
     </td>
     <td>
       Only the item properties specified in the view will be
@@ -239,9 +239,9 @@
     </td>
     <td>
       The named properties are added to those of the view
-      defined by <b>_view</b> or the configuration. (This
-      applies even if that view is an <b>all</b> or
-      <b>description</b> view which uses a SPARQL
+      defined by <strong>_view</strong> or the configuration. (This
+      applies even if that view is an <strong>all</strong> or
+      <strong>description</strong> view which uses a SPARQL
       DESCRIBE to get property values rather than individual names.)
     </td>
   </tr>
@@ -252,7 +252,7 @@
     </td>
     <td>
       A, B, are comma-separated sort specifications: an optional
-      <b>-</b> meaning "sort in reverse order" preceeding a
+      <strong>-</strong> meaning "sort in reverse order" preceeding a
       property chain.
     </td>
     <td>
@@ -267,7 +267,7 @@
     </td>
     <td>
       ORDER is a string suitable for use as a SPARQL ORDER BY
-      clause. (This is useful only with <b>_where</b> as a
+      clause. (This is useful only with <strong>_where</strong> as a
       query parameter or <code>api:where</code> in the configuration.)
     </td>
     <td>
@@ -300,20 +300,20 @@
 
       <ul>
         <li>
-          <b>versions</b> the available different views of this result.
+          <strong>versions</strong> the available different views of this result.
         </li>
         <li>
-          <b>bindings</b> the term (shortname) and variable bindings.
+          <strong>bindings</strong> the term (shortname) and variable bindings.
         </li>
         <li>
-          <b>execution</b> details of the LDA processor, <i>ie</i> Elda,
+          <strong>execution</strong> details of the LDA processor, <em>i.e.</em> Elda,
           specifying where its code and documentation can be found.
         </li>
         <li>
-          <b>formats</b> the available different formats of this result.
+          <strong>formats</strong> the available different formats of this result.
         </li>
         <li>
-          <b>all</b> all of the above.
+          <strong>all</strong> all of the above.
         </li>
       </ul>
 
@@ -326,8 +326,8 @@
       _template=TEMPLATE
     </td>
     <td>
-      TEMPLATE must be a legal SPARQL <b>CONSTRUCT</b> body also legal as a
-      <b>WHERE</b> body.
+      TEMPLATE must be a legal SPARQL <strong>CONSTRUCT</strong> body also legal as a
+      <strong>WHERE</strong> body.
     </td>
     <td>
     </td>
@@ -338,11 +338,11 @@
       _where=CLAUSE
     </td>
     <td>
-      CLAUSE must be a legal SPARQL <b>where</b> clause.
+      CLAUSE must be a legal SPARQL <strong>where</strong> clause.
     </td>
     <td>
       CLAUSE is used in the SPARQL query rather than any computed or
-      configured <b>where</b> clause.
+      configured <strong>where</strong> clause.
     </td>
   </tr>
 
@@ -399,19 +399,19 @@
   <tr>
     <td>an api:PrefixMapping</td>
     <td>api:prefix</td>
-    <td>"<i>prefix</i>"</td>
+    <td>"<em>prefix</em>"</td>
     <td>
-      <i>prefix</i> is the prefix of this prefix mapping.
+      <em>prefix</em> is the prefix of this prefix mapping.
     </td>
   </tr>
 
   <tr>
     <td>an api:PrefixMapping</td>
     <td>api:namespace</td>
-    <td>"<i>namespace</i>"</td>
+    <td>"<em>namespace</em>"</td>
     <td>
-      <i>namespace</i> is the namespace of this prefix mapping,
-      <i>ie</i> what the prefix represents.
+      <em>namespace</em> is the namespace of this prefix mapping,
+      <em>i.e.</em> what the prefix represents.
     </td>
   </tr>
 
@@ -420,7 +420,7 @@
     <td>elda:supportsNestedSelect</td>
     <td>boolean</td>
     <td>
-      If the boolean value is <b>true</b>, Elda uses SPARQL 1.1
+      If the boolean value is <strong>true</strong>, Elda uses SPARQL 1.1
       features to reduce the size of its queries.
     </td>
   </tr>
@@ -503,7 +503,7 @@
   <tr>
     <td>a api:Variable</td>
     <td>api:name</td>
-    <td>"<i>name</i>"</td>
+    <td>"<em>name</em>"</td>
     <td>
       Specifies the name of the variable.
     </td>
@@ -534,20 +534,20 @@
   <tr>
     <td>api or endpoint</td>
     <td>api:maxPageSize</td>
-    <td>positive integer <i>N</i></td>
+    <td>positive integer <em>N</em></td>
     <td>
       The maximum page size for this endpoint, or the default
-      for endpoints of this API, is <i>N</i>.
+      for endpoints of this API, is <em>N</em>.
     </td>
   </tr>
 
   <tr>
     <td>api or endpoint</td>
     <td>api:defaultPageSize</td>
-    <td>positive integer <i>N</i></td>
+    <td>positive integer <em>N</em></td>
     <td>
       The default page size for this endpoint, or the default
-      for endpoints of this API, is <i>N</i>.
+      for endpoints of this API, is <em>N</em>.
     </td>
   </tr>
 
@@ -566,9 +566,9 @@
   <tr>
     <td>an api:Selector</td>
     <td>api:where</td>
-    <td>"<i>where clause</i>"</td>
+    <td>"<em>where clause</em>"</td>
     <td>
-      This selector uses the specified <i>where clause</i> as the
+      This selector uses the specified <em>where clause</em> as the
       where clause in the SPARQL query to select items. Any SPARQL
       query variables <code>?var</code> that are defined as API
       variables are replaced by the value of that variable.
@@ -580,7 +580,7 @@
     <td>api:filter</td>
     <td>"chain1=value1, chain2=value2..."</td>
     <td>
-      The <i>chain</i>s are property chains, <i>ie</i> dot-separated
+      The <em>chain</em>s are property chains, <i>ie</i> dot-separated
       shortnames of properties. Items are selected only if the value of
       their property chain is equal to the given value.
     </td>
@@ -599,11 +599,11 @@
   <tr>
     <td>an api:Selector</td>
     <td>api:orderBy</td>
-    <td><b>order by</b> clause</td>
+    <td><strong>order by</strong> clause</td>
     <td>
       The selected items are sorted according to the given SPARQL
-      <b>order by</b> clause. Note that this is useful only with
-      the query parameter <b>_where</b> or using <b>api:where</b>
+      <strong>order by</strong> clause. Note that this is useful only with
+      the query parameter <strong>_where</strong> or using <strong>api:where</strong>
       in a selector.
     </td>
   </tr>
@@ -611,11 +611,11 @@
   <tr>
     <td>an api:Selector</td>
     <td>api:sort</td>
-    <td>"<i>A, B...</i>"</td>
+    <td>"<em>A, B...</em>"</td>
     <td>
       The selected items are sorted according to the sort
-      specification, where A and B (<i>etc</i>) are property
-      chains possibly preceeded by <b>-</b> for reverse order.
+      specification, where A and B (<em>etc</em>) are property
+      chains possibly preceeded by <strong>-</strong> for reverse order.
     </td>
   </tr>
 
@@ -624,10 +624,10 @@
   <tr>
     <td>api or endpoint</td>
     <td>api:lang</td>
-    <td>"<i>language code</i>"</td>
+    <td>"<em>language code</em>"</td>
     <td>
       The default language for this endpoint or endpoints of this API
-      are given as language codes, <i>eg</i> <b>en-us</b> or <b>cy</b>.
+      are given as language codes, <em>e.g.</em> <strong>en-us</strong> or <strong>cy</strong>.
     </td>
   </tr>
 
@@ -674,7 +674,7 @@
   <tr>
     <td>an api:Viewer</td>
     <td>api:properties</td>
-    <td>"<i>chain1,chain2...</i>"</td>
+    <td>"<em>chain1,chain2...</em>"</td>
     <td>
       The viewer should include properties and values for
       all of the given property chains.
@@ -722,7 +722,7 @@
     <td>api:structured</td>
     <td>boolean</td>
     <td>
-      If the boolean is <b>true</b>, the JSON rendering of <code>aProperty</code>
+      If the boolean is <strong>true</strong>, the JSON rendering of <code>aProperty</code>
       values will always include their datatypes and languages.
     </td>
   </tr>
