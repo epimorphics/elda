@@ -203,7 +203,7 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
   and detailed descriptions.
 </p>
 
-<h3>prerequisites</h3>
+<h2>prerequisites</h2>
 
 <p>Elda is written in Java
 (using the <a href="http://jena.apache.org/">Jena RDF toolkit</a>),
@@ -217,13 +217,14 @@ The default demonstration setup for Elda has examples that use the
 To run those examples, you will need to have open web access.
 </p>
 
-<h3>downloading and starting Elda</h3>
+<h2>downloading and starting Elda</h2>
 <p>
   There are two ways to get Elda: either by downloading the pre-compiled
   runnable demo <code>.jar</code> file, or by checking out the source code
   from the Google Code project using Mercurial, and then compiling the
   Java source.
 </p>
+
 <p>
 The runnable <code>.jar</code> can be downloaded from the
 <a href="http://code.google.com/p/elda/downloads/list">downloads page</a>.
@@ -256,7 +257,47 @@ mvn clean package
 java -jar start.jar
 </pre>
 
-<h3>Built-in example datasets and configurations</h3>
+<h2>if you can't use port 8080</h2>
+
+<p>
+Your computer may already be using port 8080 for some local service.
+In that case, you can start Elda from the command
+line (this wont' work when double-clicking in a file manager) with:
+
+<pre>
+java -jar standalone.jar -Djetty.port=NNNN
+</pre>
+
+or, if you're starting from the unzipped Elda directory,
+
+<pre>
+java -Djetty.port=NNNN -jar start.jar
+</pre>
+
+where NNNN is the port of your choice. Note: the <code>-D</code>
+comes after <code>standalone.jar</code>, but before <code>start.jar</code>.
+</p>
+
+<p>
+To change the port number without having to
+supply a <code>-Djetty.port</code> command line option
+every time, in the Elda directory edit the
+configuration file <code>etc/jetty.xml</code>
+and change the line:
+
+<pre>
+&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <b>default="8080"</b>/&gt;&lt;/Set&gt;
+</pre>
+
+to:
+
+<pre>
+&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <b>default="NNNN"</b>/&gt;&lt;/Set&gt;
+</pre>
+where NNNN is the port number of your choice.
+</p>
+
+<h2>built-in example datasets and configurations</h2>
 <p>
   Elda comes pre-packaged with some example configurations and an example
   dataset. The sample URLs in the table below should all work if you have
@@ -347,6 +388,8 @@ java -jar start.jar
 
 </table>
 
+<h2>games example -- web page</h2>
+
 <p>
   Let's look a little at the two-template games example, <i>standalone/again</i>.
 </p>
@@ -395,44 +438,292 @@ publication date -- as it happens, no others. And we see
   being multi-valued, isn't really a good sorting candidate.
 </p>
 
-<h3>If you can't use port 8080</h3>
+<h2>games example -- configuration</h2>
 
 <p>
-Your computer may already be using port 8080 for some local service.
-In that case, you can start Elda from the command
-line (this wont' work when double-clicking in a file manager) with:
+  We'll talk briefly through the LDA specification used for
+  the games example.
+</p>
 
 <pre>
-java -jar standalone.jar -Djetty.port=NNNN
+#
+# A hello-world config. 
+#
+
+# Assorted prefix declarations. Some of them are for the structuring
+# of the API config, others are for the vocabulary definitions.
+#
+
+@prefix api:    &lt;http://purl.org/linked-data/api/vocab#&gt; .
+@prefix dct:    &lt;http://purl.org/dc/terms/&gt; .
+
+@prefix rdf:    &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix rdfs:   &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+@prefix xsd:    &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+
+# The elda namespace/prefix is for Elda extensions to the LDA specification.
+@prefix elda:   &lt;http://www.epimorphics.com/vocabularies/lda#&gt; .
+
+# Prefix for example-local entities.
+@prefix hello:  &lt;http://localhost:8080/elda/vocabulary/&gt;.
+
 </pre>
 
-or, if you're starting from the unzipped Elda directory,
+<p>
+  The prefixes declared here make the configuration more concise
+  and are used in the result model from the LDA query.
+</p>
 
 <pre>
-java -Djetty.port=NNNN -jar start.jar
+# ---------------------------------------------------------------------
+# API config
+
+hello:hello-world-again a api:API 
+; rdfs:label "Hello World example #2 -- games"@en
 </pre>
 
-where NNNN is the port of your choice. Note: the <code>-D</code>
-comes after <code>standalone.jar</code>, but before <code>start.jar</code>.
+<p>
+  <code>hello:hello-world-again</code> is declared as an API.
+  The label is used as a title in /api-config.
+</p>
+
+<pre>
+# Name the SPARQL endpoint which supplies the data we present
+; api:sparqlEndpoint &lt;local:data/example-data.ttl&gt;
+</pre>
+
+<p>
+  The SPARQL endpoint for this API is a local file. (This is an
+  Elda extension to the LDA for testing and demonstration purposes.)
+</p>
+
+<pre>
+; api:defaultViewer api:labelledDescribeViewer
+</pre>
+
+<p>
+  The default view for this API is the built-in 
+  <code>labelledDescribeViewer</code>, which fetches all the
+  properties of the item using a SPARQL DESCRIBE and also fetches
+  the labels of all the resource values this finds.
+</p>
+
+<pre>
+; api:viewer [a api:Viewer; api:name "none"; api:properties ""]
+</pre>
+
+<p>
+  This defines a new view called <i>none</i> which shows no
+  properties at all. This can be useful as a starting-point 
+  when building a view on the URL using the query parameter
+  <code>_properties=</code>.
+</p>
+
+<pre>
+; api:variable 
+  [ api:name "_resourceRoot"
+  ; api:value "http://localhost:8080/standalone/lda-assets/"
+  ]
+</pre>
+
+<p>
+  The special variable <code>_resourceRoot</code> is used by Elda
+  as the base URI for assets needed for the HTML rendering of results.
+</p>
+
+<pre>
+; api:endpoint 
+  hello:publishers, hello:games 
+</pre>
+
+<p>
+  These are two endpoints for this API, <code>hello:games</code>
+  and <code>hello:publishers</code>.
+</p>
+
+<pre>
+; api:formatter
+  [ a api:XsltFormatter 
+  ; api:name "html" 
+  ; api:mimeType "text/html; charset=utf-8" 
+  ; api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
+  ]
+  .
+</pre>
+
+<p>
+  Elda's default HTML formatter is crude, so we define a new
+  formatter for the name <code>html</code> which is an XSLT formatter
+  producing UTF-8 endcoded <code>text/html</code> and using the
+  stylesheet <code>result-osm-trimmed.xsl</code>.
+</p>
+
+<pre>
+# Endpoint definitions
+
+hello:publishers a api:ListEndpoint 
+  ; rdfs:label "Publishers" 
+  ; api:uriTemplate "/publishers" 
+  ; api:selector [api:filter "type=Publisher"; api:sort "label"]
+  ; api:defaultViewer api:labelledDescribeViewer
+  . 
+</pre>
+
+<p>
+  This is the <i>publishers</i> endpoint. It will show only items
+  of type hello:Publisher, sort them by their label (which will be
+  the publisher name), and view them with the labelledDescribe
+  viewer.
+</p>
+
+<pre>
+hello:games a api:ListEndpoint 
+  ; rdfs:label "Games" 
+  ; api:uriTemplate "/games" 
+  ; api:selector [api:filter "type=BoardGame"; api:sort "label"]
+  ; api:defaultViewer api:labelledDescribeViewer
+  . 
+</pre>
+
+<p>
+  Similarly, this is the <i>games</i> endpoint, selecting only
+  items of type hello:BoardGame and sorting them by their label.
 </p>
 
 <p>
-To change the port number without having to
-supply a <code>-Djetty.port</code> command line option
-every time, in the Elda directory edit the
-configuration file <code>etc/jetty.xml</code>
-and change the line:
+  The rest of the configuration defines property and class
+  shortnames and other important attributes. The resouces
+  (classes and proeprties both) that are of interest are those
+  of type <code>rdf:Property</code>, <code>owl:ObjectProperty</code>,
+  <code>owl:DatatypeProperty</code>, <code>rdfs:Class</code>, and
+  <code>owl:Class</code>.
+</p>
 
 <pre>
-&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <b>default="8080"</b>/&gt;&lt;/Set&gt;
+hello:BoardGame a rdfs:Class
+; rdfs:label "Board Game"
+; api:label "BoardGame"
+.
 </pre>
 
-to:
+<p>
+  The class <code>hello:BoardGame</code> has shortname 
+  <i>BoardGame</i>, as defined by its <code>api:label</code>;
+  this is what allows it to appear in the endpoint filter
+  <code>type=BoardGame</code>.
+</p>
 
 <pre>
-&lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <b>default="NNNN"</b>/&gt;&lt;/Set&gt;
+hello:players a rdf:Property
+; api:label "players"
+; rdfs:range xsd:int
+.
 </pre>
-where NNNN is the port number of your choice.
+
+<p>
+  <code>hello:players</code> has shortname <i>players</i>, which
+  is what allows you to use <i>eg</i> <code>players</code> as
+  the name of a query parameter. Defining its range to be
+  <code>xsd:int</code> means (<i>eg</i>) that the 2 in the query
+  parameter <code>players=2</code> is interpreted as an integer
+  and not a string.
+</p>
+
+<pre>
+hello:Publisher a rdfs:Class
+  ; api:label "Publisher"
+  .
+</pre>
+
+<p>
+  Similarly to <code>BoardGame</code>.
+</p>
+
+<pre>
+dct:publisher a rdf:Property
+  ; api:label "publishes"
+  .
+</pre>
+
+<p>
+  Declares that the shortname of <code>dct:publisher</code> is
+  <i>publishes</i>. 
+</p>
+
+<pre>
+rdfs:label a rdf:Property
+  ; api:multiValued true
+  ; api:label "label"
+  .
+</pre>
+
+<p>
+    Declares that <code>rdfs:label</code> has shortname <i>label</i>
+    and that it is always to be presented in the JSON rendering as
+    having an <i>array</i> of label values, even if there's only one.
+</p>
+
+<pre>
+rdf:type a rdf:Property
+  ; api:multiValued true 
+  ; rdfs:range rdfs:Class 
+  ; api:label "type"
+  .
+</pre>
+
+<p>
+  Declares that <code>rdf:type</code> has shortname <i>type</i>,
+  should have its JSON-rendered values appear as an array, and has
+  a range of <code>rdfs:Class</code>, which means that for a query
+  parameter <code>type=SPOO</code>, SPOO is interpreted as being
+  the shortname of some resource rather than a literal string.
+</p>
+
+<pre>
+hello:designed-by a rdf:Property
+  ; api:label "designedBy"
+  .
+</pre>
+
+<p>
+  Declares that <code>hello:designed-by</code> has shortname
+  <i>designedBy</i>. (Note that the HTML renderer shows property 
+  shortnamesin the display translated by turning camelCase 
+  like <i>designedBy</i> into space-separated words like 
+  <i>designed by</i>.)
+</p>
+
+<pre>
+hello:designer-of a rdf:Property
+  ; api:label "designerOf"
+  .
+</pre>
+
+<p>
+  The shortname of <code>hello:designer-of</code> is <i>designerOf</i>.
+</p>
+
+<pre>
+hello:pubDate a rdf:Property
+  ; api:label "publicationDate"
+  ; rdfs:range xsd:integer
+  .
+</pre>
+
+<p>
+  And finally, the shortname of <code>hello:pubDate</code> is
+  <i>publicationDate</i> and its value is interpreted as an
+  integer.
+</p>
+
+<p>
+  That concludes our example LDA specification. For more
+  details on LDA configurations, see 
+  <a href="http://code.google.com/p/linked-data-api/wiki/Specification">
+    the Linked Data API (LDA)
+  </a> and
+  <a href="reference.html">the Elda reference material</a>. Also
+  see the other API configurations mentioned above.
 </p>
 
 <h1>Using other LDA specifications</h1>
@@ -493,12 +784,6 @@ Spaces and newlines are ignored. (For more explanation of
 the structure of the <code>web.xml</code> file, see
 <a href="reference.html">the reference documentation</a>).
 </p>
-
-
-
-
-
-
 
 <h1>Fancy HTML formatting using XSLT stylesheets</h1>
 
