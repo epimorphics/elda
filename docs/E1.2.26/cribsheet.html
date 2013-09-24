@@ -1,31 +1,51 @@
 <html>
 <head>
-<title>Elda -- an implementation of the Linked Data API</title>
-<link href="../style.css" type="text/css" rel="stylesheet"></link>
+<title>Elda cribsheet</title>
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
+<link href="../style.css" rel="stylesheet"></link>
 <script src="../util.js"></script>
 </head>
 
 <body onload="toc()">
+<nav class="navbar navbar-default" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-brand">
+      <h1 class="not-toc">Elda 1.2.26</h1>
+      <h2 class="not-toc">An implementation of the linked-data API</h2>
+    </div>
+  </div>
 
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav">
+      <li class=""><a href="index.html">Quick start</a></li>
+      <li class=""><a href="reference.html">Reference</a></li>
+      <li class="active"><a href="cribsheet.html">Crib sheet</a></li>
+      <li class=""><a href="search-example.html">Text search example</a></li>
+    </ul>
+    <div class="nav navbar-nav navbar-right">
+      <img class="logo" src="../epilogo-240.png">
+    </div>
+  </div><!-- /.navbar-collapse -->
+</nav>
+
+
+<div class="container">
 <div class="main">
 
-<div class="heading">
-<a href="http://www.epimorphics.com">
-<img class="logo" src="../epilogo-240.png">
-</a>
-<h1 class="not-toc">Elda 1.2.26</h1>
-<h2 class="not-toc">An implementation of the Linked Data API</h2>
-</div>
-
-<h1 class="not-toc">Elda query parameters and configuration properties</h1>
-
-<div id="toc">
-<h1 class="not-toc">contents</h1>
+<div id="toc" class="well pull-right">
+<h2 class="not-toc">Table of contents</h2>
 </div>
 
 <h1>Query Parameters</h1>
 
-<table>
+<table class="table table-striped table-condensed">
   <thead>
     <tr>
       <th>query parameter</th>
@@ -59,7 +79,7 @@
       Select only items whose P-value is at least V.
     </td>
   </tr>
-  
+
   <tr>
     <td>max-P=V
     </td>
@@ -70,7 +90,7 @@
       Select only items whose P-value is at most V.
     </td>
   </tr>
-  
+
   <tr>
     <td>minEx-P=V
     </td>
@@ -82,7 +102,7 @@
       (minEx means "minimum, exclusive of V")
     </td>
   </tr>
-  
+
   <tr>
     <td>
       maxEx-P=V
@@ -94,7 +114,7 @@
       Select only values whose P-value is less than V.
     </td>
   </tr>
-  
+
   <tr>
     <td>
       exists-P=true
@@ -106,7 +126,7 @@
       Select only items which have some P-value.
     </td>
   </tr>
-  
+
   <tr>
     <td>
       exists-P=false
@@ -119,7 +139,7 @@
       a P-value.
     </td>
   </tr>
-  
+
   <tr>
     <td>
       lang-P=LANG
@@ -135,10 +155,10 @@
     <th>details</th>
     <th>effect</th>
   </tr>
-  
+
   <tr>
     <td>
-      _pageSize=N 
+      _pageSize=N
     </td>
     <td>
       N is an integer greater than 0.
@@ -147,10 +167,10 @@
       Show N items on this page.
     </td>
   </tr>
-  
+
   <tr>
     <td>
-      _page=N 
+      _page=N
     </td>
     <td>
       N is an integer greater than 0.
@@ -161,7 +181,7 @@
       API configuration or as the default of 10.
     </td>
   </tr>
-  
+
   <tr>
     <td>
       _format=NAME
@@ -174,15 +194,15 @@
       Render this query in the given format.
     </td>
   </tr>
-   
+
   <tr>
     <td>
       _lang=LANG
-    </td>    
+    </td>
     <td>
       LANG is a language code, <i>eg</i> <b>en</b>, <b>eh-uk</b>,
       or the special language code <b>none</b>.
-    </td>    
+    </td>
     <td>
       Sets the default language(s), overriding anything set by the
       <code>api:lang</code> setting in the configuration.
@@ -193,7 +213,7 @@
       case those are displayed.
     </td>
   </tr>
-  
+
   <tr>
     <td>
       _view=NAME
@@ -208,7 +228,7 @@
       displayed.
     </td>
   </tr>
-  
+
   <tr>
     <td>
       _properties=A,B,...
@@ -220,18 +240,18 @@
       The named properties are added to those of the view
       defined by <b>_view</b> or the configuration. (This
       applies even if that view is an <b>all</b> or
-      <b>description</b> view which uses a SPARQL 
+      <b>description</b> view which uses a SPARQL
       DESCRIBE to get property values rather than individual names.)
     </td>
   </tr>
-  
+
   <tr>
     <td>
       _sort=A,B,...
     </td>
     <td>
-      A, B, are comma-separated sort specifications: an optional 
-      <b>-</b> meaning "sort in reverse order" preceeding a 
+      A, B, are comma-separated sort specifications: an optional
+      <b>-</b> meaning "sort in reverse order" preceeding a
       property chain.
     </td>
     <td>
@@ -239,21 +259,21 @@
       properties.
     </td>
   </tr>
-  
+
   <tr>
     <td>
       _orderBy=ORDER
     </td>
     <td>
       ORDER is a string suitable for use as a SPARQL ORDER BY
-      clause. (This is useful only with <b>_where</b> as a 
+      clause. (This is useful only with <b>_where</b> as a
       query parameter or <code>api:where</code> in the configuration.)
     </td>
     <td>
       The items are ordered according to the ORDER BY clause.
     </td>
   </tr>
-  
+
   <tr>
     <td>
       callback=F
@@ -266,17 +286,17 @@
       is the JSON rendering of the result model.
     </td>
   </tr>
-  
+
   <tr>
     <td>
       _metadata=NAME
     </td>
     <td>
-      NAME should be one of the known metadata component names. 
+      NAME should be one of the known metadata component names.
     </td>
     <td>
       That named metadata is included in the result model:
-      
+
       <ul>
         <li>
           <b>versions</b> the available different views of this result.
@@ -299,7 +319,7 @@
       The XSLT-driven HTML renderer automatically incorporates all of these.
     </td>
   </tr>
-  
+
   <tr>
     <td>
       _template=TEMPLATE
@@ -311,7 +331,7 @@
     <td>
     </td>
   </tr>
-  
+
   <tr>
     <td>
       _where=CLAUSE
@@ -324,7 +344,7 @@
       configured <b>where</b> clause.
     </td>
   </tr>
-  
+
   <tr>
     <td>
       _search=QUERY
@@ -341,13 +361,13 @@
 
 <h1>Configuration</h1>
 
-<table>
+<table class="table table-striped table-condensed">
   <thead>
     <tr>
-      <th style="width: 10%">resource</th>
-      <th style="width: 10%">property</th>
-      <th style="width: 10%">value</th>
-      <th style="width: 50%">meaning</th>
+      <th>resource</th>
+      <th>property</th>
+      <th>value</th>
+      <th>meaning</th>
     </tr>
   </thead>
 
@@ -367,10 +387,10 @@
     <td>some_resource</td>
     <td>
       <code>some_resource</code> is an <code>api:PrefixMapping</code>
-      element, probably written using blank nodes, giving additional 
-      prefixes for this configuration. The prefixes present in the 
-      result include the prefixes of this configuration model and 
-      any <code>api:prefixMapping</code>s in this configuration. 
+      element, probably written using blank nodes, giving additional
+      prefixes for this configuration. The prefixes present in the
+      result include the prefixes of this configuration model and
+      any <code>api:prefixMapping</code>s in this configuration.
       (A result model may drop prefixes it does not use.)
     </td>
   </tr>
@@ -451,7 +471,7 @@
     <td>api:base</td>
     <td>some_resource</td>
     <td>
-      If specified, all Elda's constructed URIs (such as those for different views or formats of the displayed page) will use that base URI with the path and query parameters supplied in the request. This means that a server at location A can generate URIs as though it were at location B (from which it may have been redirected). 
+      If specified, all Elda's constructed URIs (such as those for different views or formats of the displayed page) will use that base URI with the path and query parameters supplied in the request. This means that a server at location A can generate URIs as though it were at location B (from which it may have been redirected).
     </td>
   </tr>
 
@@ -594,7 +614,7 @@
     <td>
       The selected items are sorted according to the sort
       specification, where A and B (<i>etc</i>) are property
-      chains possibly preceeded by <b>-</b> for reverse order. 
+      chains possibly preceeded by <b>-</b> for reverse order.
     </td>
   </tr>
 
@@ -619,25 +639,25 @@
     <td>
       This endpoint, or all endpoints of this API, has as default
       viewer <code>some_resource</code>, which may be one of the
-      three builtin viewers 
+      three builtin viewers
 
       <ul>
         <li>
-          <code>api:basicViewer</code> (show <code>rdfs:label</code> 
-          and <code>rdf:type)
+          <code>api:basicViewer</code> (show <code>rdfs:label</code>
+          and <code>rdf:type</code>)
         </li>
         <li>
-          <code>api:describeViewer</code> (show whatever a SPARQL 
+          <code>api:describeViewer</code> (show whatever a SPARQL
           DESCRIBE produces)
         </li>
         <li>
-          <code>api:labelledDescribeViewer</code> (show DESCRIBE 
+          <code>api:labelledDescribeViewer</code> (show DESCRIBE
           plus any labels of all resources)
         </li>
       </ul>
 
       or a resource (often a blank node) of type <code>api:Viewer</code>
-      with <code>api:property</code> or <code>api:properties</code> properties 
+      with <code>api:property</code> or <code>api:properties</code> properties
       (see below).
     </td>
   </tr>
@@ -702,7 +722,7 @@
     <td>boolean</td>
     <td>
       If the boolean is <b>true</b>, the JSON rendering of <code>aProperty</code>
-      values will always include their datatypes and languages. 
+      values will always include their datatypes and languages.
     </td>
   </tr>
 
@@ -715,6 +735,6 @@
 <a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
 </div>
 </div>
-
+</div><!-- .container -->
 </body>
 </html>

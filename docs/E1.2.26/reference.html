@@ -1,27 +1,49 @@
 <html>
 <head>
-<title>Elda -- an implementation of the Linked Data API</title>
-<link href="../style.css" type="text/css" rel="stylesheet"></link>
+<title>Elda reference</title>
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
+<link href="../style.css" rel="stylesheet"></link>
 <script src="../util.js"></script>
 </head>
 
 <body onload="toc()">
+<nav class="navbar navbar-default" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-brand">
+      <h1 class="not-toc">Elda 1.2.26</h1>
+      <h2 class="not-toc">An implementation of the linked-data API</h2>
+    </div>
+  </div>
 
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav">
+      <li class=""><a href="index.html">Quick start</a></li>
+      <li class="active"><a href="reference.html">Reference</a></li>
+      <li class=""><a href="cribsheet.html">Crib sheet</a></li>
+      <li class=""><a href="search-example.html">Text search example</a></li>
+    </ul>
+    <div class="nav navbar-nav navbar-right">
+      <img class="logo" src="../epilogo-240.png">
+    </div>
+  </div><!-- /.navbar-collapse -->
+</nav>
+
+
+<div class="container">
 <div class="main">
 
-<div class="heading">
-<a href="http://www.epimorphics.com">
-<img class="logo" src="../epilogo-240.png">
-</a>
-<h1 class="not-toc">Elda 1.2.26</h1>
-<h2 class="not-toc">An implementation of the Linked Data API</h2>
+<div id="toc" class="well pull-right">
+<h2 class="not-toc">Table of contents</h2>
 </div>
 
-<div id="toc">
-<h1 class="not-toc">contents</h1>
-</div>
-
-<h1 a name="elda-common"><a name="beyond">Elda Common</h1>
+<h1 a name="elda-common"><a name="beyond">Elda Common</a></h1>
 
 <p>
 	The stand-alone jar serves as a demonstration tool
@@ -47,7 +69,7 @@ There are three components to Elda Common:
 <ul>
 	<li>
 		The Elda Common War, a Maven artifact you can download
-		in the usual way as file 
+		in the usual way as file
 		<code>elda-common-VERSION.war</code>.
 	</li>
 
@@ -68,13 +90,13 @@ The Common and Assets files must have the same version.
 <p>
 	To use Elda Common, you add both .war files to your Tomcat
 	configuration. Doing so may be as simple as dropping them
-	into the appropriate <code>webapps</code> directory. 
+	into the appropriate <code>webapps</code> directory.
 	You need both .war files;
 	Elda Common contains the LDA-handling Java code and Elda
 	Assets provides styleheets, scripts, css, <i>etc</i> which Elda
-	Common refers to or loads. There is also an 
+	Common refers to or loads. There is also an
 	<code>elda-bundled</code>code>
-	artifact whose <code>elda-bundled.war</code> combines 
+	artifact whose <code>elda-bundled.war</code> combines
 	<code>elda-common</code> and <code>elda-assets</code> into one item.
 </p>
 
@@ -86,7 +108,7 @@ The Common and Assets files must have the same version.
 	name and contents of the LDA config (see below). You can
 	install multiple copies of Elda Common with different
 	context paths, all sharing the same assets. (You can also
-	have multiple different assets if necessary.) You can 
+	have multiple different assets if necessary.) You can
 	install Elda as ROOT.war so that Tomcat is serving the
 	URI templates with no prefix, so long as the name of the
 	assets .war does not collide with any of those templates.
@@ -140,7 +162,7 @@ The Common and Assets files must have the same version.
 	Elda provides several example minimal configurations, different
 	only in their intended environments:
 
-<table>
+<table class="table table-striped table-condensed">
 <tr>
 	<td><a href="specs-1.2.26/minimal-named-bundled-8080-config.ttl">minimal-named-bundled-8080-config.ttl</a></td>
 	<td>bundled non-ROOT configuration running on port 8080.</td>
@@ -169,14 +191,14 @@ The Common and Assets files must have the same version.
 	The configuration itself is a place-holder with
 	three uri templates:
 
-<table>
+<table class="table table-striped table-condensed">
 	<tr>
 		<td><code>/anything</code></td>
 		<td>to provide some example results</td>
 	</tr>
 	<tr>
 		<td><code>/about?resource={someURI}</code></td>
-		<td>provides information (ie properties and their values) about the 
+		<td>provides information (ie properties and their values) about the
 			resource <code>someURI</code></td>
 	</tr>
 	<tr>
@@ -189,7 +211,7 @@ The Common and Assets files must have the same version.
 
 <p>
 	The minimal configuration assumes that a SPARQL endpoint is
-	available on <code>localhost:3030/store</code>. You can 
+	available on <code>localhost:3030/store</code>. You can
 	replace this endpoint with a different one, or for development
 	purposes you can run a <a href="http://jena.apache.org/documentation/serving_data/">Fuseki</a>
 	SPARQL server serving RDF data of your choice.
@@ -233,7 +255,7 @@ The Common and Assets files must have the same version.
 
 <p>
 	If you have downloaded the Elda repository, then you can
-	rebuild the Elda working jar (lda-VERSION.jar) 
+	rebuild the Elda working jar (lda-VERSION.jar)
 	and webapp using <a href="http://maven.apache.org/">Maven</a>;
 	see below.
 </p>
@@ -261,7 +283,7 @@ The Common and Assets files must have the same version.
 
 <p>
 	Each directive is a filename, with an optional leading
-	prefix specification consisting of a name followed by 
+	prefix specification consisting of a name followed by
 	<code>::</code>.
 </p>
 
@@ -274,7 +296,7 @@ The Common and Assets files must have the same version.
 
 <p>
 	The provided filename is a webapp-relative unless it starts
-	with "/". Any occurence of the string "{APP}" is replaced 
+	with "/". Any occurence of the string "{APP}" is replaced
 	by the context path, and the character "*" matches any sequence
 	of characters, allowing multiple configuration files to be
 	specified at one time and appropriately to this webapp.
@@ -298,7 +320,7 @@ The Common and Assets files must have the same version.
 <p>
 	Given the directive <code>A*B::/etc/elda/*.ttl</code> and
 	files <code>x.ttl</code>, <code>y.ttl</code> and <code>z.text</code>
-	in <code>/etc/elda</code>, the configuration file <code>x.ttl</code> 
+	in <code>/etc/elda</code>, the configuration file <code>x.ttl</code>
 	will be loaded and given prefix <code>AxB</code> and the
 	file <code>y.ttl</code> will be loaded with prefix <code>AyB</code>.
 	<code>z.text</code> is ignored as it does not match the filename.
@@ -307,9 +329,9 @@ The Common and Assets files must have the same version.
 <h2><a name="servlet"></a>the Jersey servlet/filter</h2>
 
 <p>
-	Elda runs Jersey either as a servlet or as a filter applied to 
-	all of the paths for this context path. A path that does not 
-	match any LDA  URI template produces a NOT FOUND status that 
+	Elda runs Jersey either as a servlet or as a filter applied to
+	all of the paths for this context path. A path that does not
+	match any LDA  URI template produces a NOT FOUND status that
 	by default is handled by Tomcat to serve a static file if one exists
 	with that pathname. JAX RS resources are located in the
 	package <code>com.epimorphics.lda.restlets</code>.
@@ -319,23 +341,23 @@ The Common and Assets files must have the same version.
  &lt;filter&gt;
     &lt;filter-name&gt;Jersey Web Application&lt;/filter-name&gt;
     &lt;filter-class&gt;com.sun.jersey.spi.container.servlet.ServletContainer&lt;/filter-class&gt;
-    
+
     &lt;init-param&gt;
       &lt;param-name&gt;com.sun.jersey.config.property.packages&lt;/param-name&gt;
 	  &lt;param-value&gt;<b>com.epimorphics.lda.restlets</b>&lt;/param-value&gt;
     &lt;/init-param&gt;
-        
+
     &lt;init-param&gt;
 	  &lt;param-name&gt;com.sun.jersey.config.feature.<b>FilterForwardOn404</b>&lt;/param-name&gt;
 	  &lt;param-value&gt;<b>true</b>&lt;/param-value&gt;
     &lt;/init-param&gt;
-        
+
     &lt;init-param&gt;
          &lt;param-name&gt;com.sun.jersey.spi.container.ContainerRequestFilters&lt;/param-name&gt;
          &lt;param-value&gt;com.sun.jersey.api.container.filter.PostReplaceFilter&lt;/param-value&gt;
      &lt;/init-param&gt;
 &lt;/filter&gt;
-    
+
 &lt;filter-mapping&gt;
     &lt;filter-name&gt;Jersey Web Application&lt;/filter-name&gt;
     &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
@@ -390,7 +412,7 @@ The Common and Assets files must have the same version.
 <h1><a name="velocity"></a>Velocity template rendering</h1>
 
 <p>
-    This release of Elda includes the ability to use 
+    This release of Elda includes the ability to use
     <a href="http://velocity.apache.org/">Velocity</a>
     templates for rendering. This feature is <i>provisional</i>;
     it may change significantly in future releases.
@@ -415,17 +437,17 @@ The Common and Assets files must have the same version.
     <code>page-shell.vm</code> found in <code>{_velocityRoot}</code>
     if <code>_velocityRoot</code> is defined, or in
     <code>{_resourceRoot/vm}</code> otherwise. (<code>_resourceRoot</code>
-    has a default value.) 
+    has a default value.)
 </p>
 
 <p>
-    (Previous versions of Elda loaded templates from 
+    (Previous versions of Elda loaded templates from
     <code>webapp/WEB-INF/classes</code>, but with the split between
     elda-common and elda-assets, the templates have been moved out
     of the Elda code webapp.)
 </p>
 
-<p> 
+<p>
     To change the
     rendered template, set the <code>api:stylesheet</code>
     property of the formatter to the name of the desired
@@ -445,7 +467,7 @@ The Common and Assets files must have the same version.
 
 <p>
     Elda looks for <code>{_resourceRoot}/velocity.properties</code>
-    and, if it exists and is non-empty, uses it as its Velocity 
+    and, if it exists and is non-empty, uses it as its Velocity
     configuration. If there's no such file, or it contains no
     property definitions, Elda uses a default configuration that
     fetches templates from <code>{_velocityRoot}</code> if it
@@ -459,7 +481,7 @@ The Common and Assets files must have the same version.
     names in the context:
 </p>
 
-<table>
+<table class="table table-striped table-condensed">
     <thead><tr><th>name</th><th>value</th></tr></thead>
 
     <tr>
@@ -469,21 +491,21 @@ The Common and Assets files must have the same version.
 		page.
 	</td>
     </tr>
-    
+
     <tr>
 	<td>isItemEndpoint</td>
 	<td>
 		A boolean, true iff this page is for an item endpoint.
 	</td>
     </tr>
-    
+
     <tr>
 	<td>isListEndpoint</td>
 	<td>
 		A boolean, true iff this page is for a list endpoint.
 	</td>
     </tr>
-    
+
     <tr>
 	<td>primaryTopic</td>
 	<td>
@@ -513,7 +535,7 @@ The Common and Assets files must have the same version.
     <tr>
 	<td>items</td>
 	<td>
-		the list of selected items. Each item is a 
+		the list of selected items. Each item is a
 		<code>WrappedNode</code>.
 	</td>
     </tr>
@@ -542,7 +564,7 @@ The Common and Assets files must have the same version.
     <tr>
 	<td>ids</td>
 	<td>
-		An IdMap object which contains a map from Resources to their 
+		An IdMap object which contains a map from Resources to their
 		identifiers for use in HTML <code>id=</code> attributes.
 	</td>
     </tr>
@@ -556,7 +578,7 @@ The Common and Assets files must have the same version.
 	names and an IdMap object to hold their allocated Id. They have the following methods:
 </p>
 
-<table>
+<table class="table table-striped table-condensed">
 	<thead>
 		<tr>
 			<th>signature</th>
@@ -592,8 +614,8 @@ The Common and Assets files must have the same version.
 <tr>
 	<td>WrappedString getLabel(String wantlanguage)</td>
 	<td>
-	    If wantLanguage is "", return getLabel(). Otherwise, 
-	    return the lexical form of some label of this wrapped 
+	    If wantLanguage is "", return getLabel(). Otherwise,
+	    return the lexical form of some label of this wrapped
     	    resource which has <code>wantLanguage</code>. If there isn't
     	    one, return some lexical form with no language. If there
     	    isn't one, return the local name of the resource.
@@ -692,7 +714,7 @@ The Common and Assets files must have the same version.
 <tr>
 	<td>List&lt;WrappedNode> getProperties</td>
 	<td>
-		Return a Java list of WrappedNodes which are the 
+		Return a Java list of WrappedNodes which are the
 		wrapped form of the different properties of this
 		WrappedNode.
 	</td>
@@ -734,8 +756,8 @@ The Common and Assets files must have the same version.
 	<td>
 		Return a new WrappedNode wrapping a resource with the same URI
 		as this one, except that all query parameters whose name is
-		<code>prefix</code> prefixed onto p's shortname have been 
-		discarded and replaced by a parameter with that name and with 
+		<code>prefix</code> prefixed onto p's shortname have been
+		discarded and replaced by a parameter with that name and with
 		value v.toString().
 	</td>
 </tr>
@@ -747,7 +769,7 @@ The Common and Assets files must have the same version.
 	WrappedNodes return a WrappedString object.
 </p>
 
-<table>
+<table class="table table-striped table-condensed">
 	<thead>
 		<tr>
 			<th>signature</th>
@@ -793,14 +815,14 @@ The Common and Assets files must have the same version.
 	whose short-name is <code>sn</code> and whose value is
 	<code>v</code>. This allows you, for example, to find
 	an item whose rdfs:label is "hello there" by using the
-	query parameter <code>label=hello%20there</code>, 
+	query parameter <code>label=hello%20there</code>,
 	assuming <code>label</code> is the short-name of
 	<code>rdfs:label</code>.
 </p>
 
 <p>
-	However, if you want to find items whose (<i>eg</i>) 
-	<code>rdfs:label</code> text <i>contains</i> <b>hello</b>, 
+	However, if you want to find items whose (<i>eg</i>)
+	<code>rdfs:label</code> text <i>contains</i> <b>hello</b>,
 	or which contains either <b>hello</b> OR <b>goodbye</b>,
 	<i>etc</i>, then you have to write explicit SPARQL
 	<code>FILTER</code>s, probably using regular expressions,
@@ -819,13 +841,13 @@ The Common and Assets files must have the same version.
 	string can likewise be broken up into words and the search limited
 	to literals that are related to those words. This can be
 	made much faster than a scan-and-regexp -- indexing can be
-	done in advance and updated incrementally as new RDF is 
+	done in advance and updated incrementally as new RDF is
 	added to the dataset.
 </p>
 
 <p>
-	Two related examples of text indexing and search are 
-	<a href="http://lucene.apache.org/core/">Apache Lucene</a> 
+	Two related examples of text indexing and search are
+	<a href="http://lucene.apache.org/core/">Apache Lucene</a>
 	and <a href="http://lucene.apache.org/solr/">Apache Solr</a>.
 	Recent <a href="http://jena.apache.org/documentation/serving_data/">
 	Jena Fuseki</a> SPARQL servers offer an abtraction layer over
@@ -842,8 +864,8 @@ The Common and Assets files must have the same version.
 	file can specify further details of how this transformation
 	is performed. If the SPARQL endpoint understands the
 	<code>text:query</code> property (it need not be a
-	Fuseki, so long as it understands the same protocol), 
-	then the text search engine will handle the query. 
+	Fuseki, so long as it understands the same protocol),
+	then the text search engine will handle the query.
 </p>
 
 <p>
@@ -893,7 +915,7 @@ The Common and Assets files must have the same version.
 	properties) into words and discards unhelpful terms such as "a" and
 	"the" because they do not discriminate well. It may -- depending on
 	details of the Lucene/Solr configuration -- do stemming and synonym
-	indexing as well. These words are the terms that can be used in the 
+	indexing as well. These words are the terms that can be used in the
 	search.
 </p>
 
@@ -904,10 +926,10 @@ The Common and Assets files must have the same version.
 	through to Fuseki and used as a <i>query</i> against the index.
 	Just as the indexing operates on text that has been broken up
 	into words, the query isn't just a string to search for: it is
-	expressed in it own little language, as defined by Lucene and 
+	expressed in it own little language, as defined by Lucene and
 	very similarly by Solr (the Solr query language is mostly a modest
-	extension to the Lucene language). The simplest query is a single 
-	word, eg <i>Steam</i> or <i>Mahal</i>, which will succeed for 
+	extension to the Lucene language). The simplest query is a single
+	word, eg <i>Steam</i> or <i>Mahal</i>, which will succeed for
 	resources that have that word in one of their property values.
 </p>
 
@@ -919,10 +941,10 @@ The Common and Assets files must have the same version.
 
 <p>
 	The query can contain several words; if so, it is looking for <i>any</i>
-	of those words. To force it to look for both, use the infix operator 
+	of those words. To force it to look for both, use the infix operator
 	<i>AND</i>, which you can also spell <i>&amp;&amp;</i>. The query
 	<i>Age Steam</i> will find resources that mention either of <i>Age</i>
-	or <i>Steam</i>; the query <i>Age &amp;&amp; Steam</i> will find only 
+	or <i>Steam</i>; the query <i>Age &amp;&amp; Steam</i> will find only
 	resources that mention them both. Note that if you use the &amp;&amp;
 	syntax in a URI it will have to be carefully escaped, so <i>AND</i>
 	is probably the better choice.
@@ -937,7 +959,7 @@ The Common and Assets files must have the same version.
 
 <p>
 	The query runs against the default field unless otherwise specified
-	using a <i>fieldName:</i> prefix. This prefix applies to the next 
+	using a <i>fieldName:</i> prefix. This prefix applies to the next
 	(as short as possible) piece of the query, so <i>alpha: Age Steam</i>
 	looks for <i>Age</i> in the <i>alpha</i> field and <i>Steam</i> in
 	the default field. To make it apply to both terms, you can either
@@ -947,12 +969,12 @@ The Common and Assets files must have the same version.
 	and <code>OR</code>, etc.)
 </p>
 
-<p>	The query notation supports several other operators, and escapes so that 
-	operators like <i>+</i> can be treated as ordinatry characters; for 
-	information about these see eg 
+<p>	The query notation supports several other operators, and escapes so that
+	operators like <i>+</i> can be treated as ordinatry characters; for
+	information about these see eg
 	<a href="http://lucene.apache.org/core/4_4_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package_description">the Lucene classic package summary</a>.
 </p>
-	
+
 <h2>configuring search</h2>
 
 <p>
@@ -966,7 +988,7 @@ The Common and Assets files must have the same version.
 <p>
 	<code>_search</code>'s behaviour can be configured by properties
 	attached to the SPARQL endpoint, the api:API itself (over-riding
-	those on the SPARQL endpoint), or on individual API endpoints 
+	those on the SPARQL endpoint), or on individual API endpoints
 	(over-riding the API and SPARQL endpoint). The most general
 	way to do this is to use:
 </p>
@@ -977,8 +999,8 @@ The Common and Assets files must have the same version.
 
 
 <p>
-	The elements of the list can be an integer <code>N</code>, a resource 
-	<code>P</code> which should be the name of a property, a literal 
+	The elements of the list can be an integer <code>N</code>, a resource
+	<code>P</code> which should be the name of a property, a literal
 	string <code>L</code>, or the special literal string <code>?_search</code>.
 </p>
 
@@ -1000,7 +1022,7 @@ The Common and Assets files must have the same version.
 
 <li><code>"?_search".</code>
 	This is replaced by the value of <code>_search</code> and
-	will be used as the search query. 
+	will be used as the search query.
 </li>
 </ul>
 
@@ -1040,14 +1062,14 @@ The Common and Assets files must have the same version.
 	dictated by the builder of the SPARQL endpoint.
 </p>
 
-<h1>Query size control</h1>    
+<h1>Query size control</h1>
 
 <p>
 	Some generated queries -- those that have view defined by
-    property chains and are applied to many selected items -- 
+    property chains and are applied to many selected items --
     are rather large (exceeding a megabyte). These queries are
     repetitions of the view property accesses specialised by
-    the selected item. 
+    the selected item.
 </p>
 
 <h2><a name="sparql-1.1-features"></a>SPARQL 1.1 features</h2>
@@ -1061,7 +1083,7 @@ If the SPARQL server supports nested
 </p>
 
 <p>
-    Elda automatically uses nested selects if the data source 
+    Elda automatically uses nested selects if the data source
     is a <b>local:</b> or <b>tdb:</b> model, or it the
     <code>sparqEndpoint</code> value of the API is a
     resource with an <b>extras:supportsNestedSelects</b>
@@ -1075,21 +1097,21 @@ If the SPARQL server supports nested
 <p>
     Support for nested selects applies to DESCRIBE queries as well,
     which may consist of a great many URIs when the selection
-    phase generates many items. To give greater control over 
-    the use of nested selects for DESCRIBE, a view may be defined 
+    phase generates many items. To give greater control over
+    the use of nested selects for DESCRIBE, a view may be defined
     with the property <code>extras:describeThreshold</code>. This
     makes that view a DESCRIBE view on which nested selects
-    (if available) are then only used if the number of selected 
+    (if available) are then only used if the number of selected
     items exceeds the value of this property.
 </p>
 
 <p>
     The default default threshold value is 10. However, it can be
     changed. Setting the <code>extras:describeThreshold</code>
-    property on an <i>endpoint</i> makes all the (describe) viewers 
+    property on an <i>endpoint</i> makes all the (describe) viewers
     created for that endpoint have that value for their threshold.
     Setting that property on an <code>api:API</code> makes the
-    default for all its endpoints be that value. 
+    default for all its endpoints be that value.
 </p>
 
 <p>
@@ -1164,7 +1186,7 @@ If the SPARQL server supports nested
     generate a 404 response rather than displaying an
     empty item endpoint page. If the variable _exceptionIfEmpty
     does not have the value "<code>yes</code>", then the
-    empty page is displayed.  
+    empty page is displayed.
     </li>
 </ul>
 
@@ -1182,7 +1204,7 @@ If the SPARQL server supports nested
 
 <p>
     An LDA configuration may specify an api:base property.
-    This should, if possible, be used to specify where 
+    This should, if possible, be used to specify where
     the Elda webapp is served from. If specified, all
     Elda's constructed URIs (such as those for different
     views or formats of the displayed page) will use
@@ -1212,7 +1234,7 @@ If the SPARQL server supports nested
 </p>
 
 <p>
-	All the URIs in the view model are rewritten, including 
+	All the URIs in the view model are rewritten, including
 	the datatypes of typed literals. Lexical forms, language
 	codes, and blank node IDs are not rewritten.
 </p>
@@ -1296,7 +1318,7 @@ http://localhost:8080/elda/doc/school
 <p>
     If an endpoint has the property <code>elda:enableETags</code>
     with value <code>true</code>, or it does not have that
-    property but its parent API spec does with value 
+    property but its parent API spec does with value
     <code>true</code>, then Elda will generate an etag
     on successful responses. The value of the etag is derived
     from hashes of:
@@ -1336,10 +1358,10 @@ http://localhost:8080/elda/doc/school
 </p>
 
 <p>
-    The api:base-relative URI path 
+    The api:base-relative URI path
     <code>/meta/<span style='color: blue'>some/uri/template</span></code>
     provides the same configuration description as <code>/api-config</code>,
-    but the API and endpoint for 
+    but the API and endpoint for
     <span style='color: blue'>some/uri/template</span>
     are already opened.
 </p>
@@ -1352,14 +1374,14 @@ http://localhost:8080/elda/doc/school
 <p>
 	If the object of an <code>api:stylesheet</code> directive starts
 	with the prefix "xsl:", then the stylesheet is loaded from Elda's
-	stylesheet directory, wherever that is. (By default it is 
+	stylesheet directory, wherever that is. (By default it is
 	<code>webapp/xsltsheets</code>, but this will become configurable.)
 </p>
 
 <h2>Java renderer factories</h2>
 
 <p>
-	If a formatter has the property 
+	If a formatter has the property
 	<code>http://www.epimorphics.com/vocabularies/lda#className</code>,
 	then the (String) object of that property must be the name of a Java
 	class that implements the <code>RendererFactory</code> interface.
@@ -1388,7 +1410,7 @@ http://localhost:8080/elda/doc/school
 
 <p>
 	The ID of the feed is the URI used to create it. The entries of the
-	feed correspond to the selected items of the query; the ID of an 
+	feed correspond to the selected items of the query; the ID of an
 	entry is the URI of the corresponding item.
 </p>
 
@@ -1396,13 +1418,13 @@ http://localhost:8080/elda/doc/school
 	The title of the feed is set using the elda:feedTitle
 	property of the formatter in the LDA config, as in the example above.
 	The title of an entry is set from the value of the first of the
-	properties in the list 
+	properties in the list
 </p>
 
 <pre>
 <code>api:label</code>
 <code>skos:prefLabel</code>
-<code>rdfs:label</code> 
+<code>rdfs:label</code>
 </pre>
 
 <p>
@@ -1529,7 +1551,7 @@ dct:contributor
 
 <p>
 	Elda can also serve limited JMX statistics (the same ones as are
-	accessible using <code>show-stats</code>) by enabling the appropriate 
+	accessible using <code>show-stats</code>) by enabling the appropriate
 	listeners in web.xml:
 </p>
 
@@ -1558,22 +1580,22 @@ dct:contributor
 	<code>elda:cachePolicyName</code> to a string of the
 	form <code>"name:integer"</code> where <code>name</code>
 	is the name of a policy, eg <b>default</b>, and the optional
-	<code>:integer</code> gives an associated limit. 
+	<code>:integer</code> gives an associated limit.
 </p>
 
 <p>
-The available cache policies are 
+The available cache policies are
 <ul>
 	<li><code>default</code> &mdash; same as limit-triples.</li>
-	
+
 	<li><code>limit-triples</code> &mdash; clear the cache when
 		the number of triples retained is greater than the limit.
-	</li> 
-	
+	</li>
+
 	<li><code>limit-entries</code> &mdash; clear the cache when
 		the number of entries is greater than the limit.
 	</li>
-	
+
 	<li><code>perma-cache</code> &mdash; keep everything
 		(not a good choice in production).
 	</li>
@@ -1590,7 +1612,7 @@ The available cache policies are
 <h2><a name="shortname-restrictions"></a>restrictions on shortname selection</h2>
 
 <p>
-    In an (E)lda configuration file, the configurer may define 
+    In an (E)lda configuration file, the configurer may define
     "short names" for properties and resources. However, the
     current supplied example XSLT stylesheets expect that the
     properties used to define the metadata about a query and
@@ -1607,7 +1629,7 @@ The available cache policies are
     indicated) of the properties:
 </p>
 
-<table>
+<table class="table table-striped table-condensed">
 	<thead> <tr><th>prefix</th> <th>term</th> <th>term</th> <th>term</th></tr></thead>
 	<tr> <td>rdf</td>  <td>type</td> <td>value</td> <td>&nbsp;</td> </tr>
 	<tr> <td>rdfs</td>  <td>label</td> <td>comment</td> <td>&nbsp;</td> </tr>
@@ -1620,10 +1642,10 @@ The available cache policies are
 	<tr> <td>doap</td>  <td>implements</td> <td>releaseOf</td> <td>homepage</td> </tr>
 	<tr> <td>doap</td>  <td>repository</td> <td>browse</td> <td>location</td> </tr>
 	<tr> <td>doap</td>  <td>wiki</td> <td>revision</td> <td>&nbsp;</td> </tr>
-	<tr> <td>doap</td>  
-		<td>bug-database <div>(as bug_database)</div></td> 
-		<td>programming-language <div>(as programming_language)</div></td> 
-		<td>&nbsp;</td> 
+	<tr> <td>doap</td>
+		<td>bug-database <div>(as bug_database)</div></td>
+		<td>programming-language <div>(as programming_language)</div></td>
+		<td>&nbsp;</td>
 	</tr>
 
 	<tr> <td>opmv</td>  <td>software</td> <td>&nbsp;</td> <td>&nbsp;</td> </tr>
@@ -1651,7 +1673,7 @@ The available cache policies are
 	names if they have not been given in the configuration.
 	Where possible these names should satisfy the shortname
 	grammar; this allows them to be used as XML element names.
-	Elda splits the URI into its <i>namespace</i> and 
+	Elda splits the URI into its <i>namespace</i> and
 	<i>local name</i> parts and uses the localname as the
 	basis for the generated shortname.
 </p>
@@ -1677,8 +1699,8 @@ The available cache policies are
 </p>
 
 <p>
-	Elda follows these rules for converting a URI 
-	(not already given a shortname) with namespace N 
+	Elda follows these rules for converting a URI
+	(not already given a shortname) with namespace N
 	and local name L into a shortname:
 </p>
 
@@ -1689,17 +1711,17 @@ The available cache policies are
 		and L is not already a shortname,
 		its shortname is L.
 	</li>
-	
+
 	<li>
 		if the namespace has an available prefix P
 		and P_L is not already a shortname, then
 		its shortname is P_L.
 	</li>
 
-	<li> 
+	<li>
 		if mode is not <code>roundTrip</code>, the
-		shortname is L_N, where N is a (weak) hash 
-		of the namespace. 
+		shortname is L_N, where N is a (weak) hash
+		of the namespace.
 	</li>
 
 	<li>
@@ -1738,7 +1760,7 @@ APISpec(FileManager fm, Resource config, ModelLoader forVocab)
 </pre>
 
 delivers a new APISpec object configured from the given
-Resource. You may have chosen a Resource with a known 
+Resource. You may have chosen a Resource with a known
 URI in a config model, or found one with <code>rdf:type</code>
 <code>api:API</code>, depending on your usecase. The
 <code>ModelLoader</code> is only used if the config has
@@ -1751,7 +1773,7 @@ is used for accessing data sources.
 Given an APISpec, the method <code>getEndpoints()</code>
 delivers a list of <code>APIEndpoint</code> objects corresponding
 (in no defined order) with the endpoint descriptions in the
-config model. 
+config model.
 </p>
 
 <h2>running an endpoint</h2>
@@ -1799,14 +1821,14 @@ where
 The call returns a three-element object which contains the
 <code>ResultSet</code> of the query execution (the result
 model and selected items), a map (the <i>term bindings</i>
-from shortnames to their URIs as appropriate for this resultset, 
+from shortnames to their URIs as appropriate for this resultset,
 and the (updated) variable Bindings.
 </p>
 
 <h2>rendering results</h2>
 
 <p>
-Once you have chosen a renderer <code>R</code> to use for the 
+Once you have chosen a renderer <code>R</code> to use for the
 result set, the invocation
 
 <pre>
@@ -1824,14 +1846,14 @@ map returned from <code>APIEndpointUtil.call</code>.
 
 <p>
 The method call <code>R.getMediaType()</code> returns the media
-type for the renderer's result. 
+type for the renderer's result.
 </p>
 
 
 <h1><a name="building-elda"></a>Building Elda</h1>
 
 <p>
-  Prerequisites: 
+  Prerequisites:
   <a href="http://java.com/">Java</a> (underlying platform),
   <a href="http://mercurial.selenic.com/">Mercurial</a> (to fetch the sources),
   <a href="http://maven.apache.org/Maven">Maven</a> (build management).
@@ -1842,7 +1864,7 @@ type for the renderer's result.
   Download the Elda sources:
 
 <pre>
-hg clone https://elda.googlecode.com/hg/ elda  
+hg clone https://elda.googlecode.com/hg/ elda
 </pre>
 
 places the Elda sources in ./elda (which is created if necessary).
@@ -1864,7 +1886,7 @@ them and embed them in your own libraries.
 Look in the (automatically created) file
 <code>/lda/src/main/java/com/epimorphics/lda/Version.java</code>
 to see which version of Elda is being built. If you want to use
-a non-SNAPSHOT version, use 
+a non-SNAPSHOT version, use
 
 <pre>
 hg update -r REVISION
@@ -1921,6 +1943,7 @@ Elda accepts the following content types by default.
 </div>
 </div>
 
+</div><!-- .container -->
 </body>
 </html>
 

@@ -1,12 +1,42 @@
 <html>
 <head>
-<title>worked _search example</title>
-<link href="../style.css" type="text/css" rel="stylesheet"></link>
+<title>Elda worked example</title>
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
+<link href="../style.css" rel="stylesheet"></link>
+<script src="../util.js"></script>
 </head>
 
 <body>
+<nav class="navbar navbar-default" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-brand">
+      <h1 class="not-toc">Elda 1.2.26</h1>
+      <h2 class="not-toc">An implementation of the linked-data API</h2>
+    </div>
+  </div>
 
-<div class="main">
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav">
+      <li class=""><a href="index.html">Quick start</a></li>
+      <li class=""><a href="reference.html">Reference</a></li>
+      <li class=""><a href="cribsheet.html">Crib sheet</a></li>
+      <li class="active"><a href="search-example.html">Text search example</a></li>
+    </ul>
+    <div class="nav navbar-nav navbar-right">
+      <img class="logo" src="../epilogo-240.png">
+    </div>
+  </div><!-- /.navbar-collapse -->
+</nav>
+
+
+<div class="container">
 
 <h1>Text Search Worked Example</h1>
 
@@ -21,19 +51,19 @@
 <h2>download the standalone jar</h2>
 
 <p>
-Download the latest Elda standalone jar from 
+Download the latest Elda standalone jar from
 <a href="https://code.google.com/p/elda/downloads/list">
 the Elda downloads page</a>. Put it somewhere handy;
 we'll call the directory it's in <code>$STANDALONE</code>
 and use it to set up an Elda server later on.
-(If you already have a server that you can configure 
+(If you already have a server that you can configure
 for Elda, you might choose to use that instead.)
 </p>
 
 <h2>download Fuseki</h2>
 
 <p>
-	Go to 
+	Go to
 	<a href="https://repository.apache.org/content/repositories/snapshots/org/apache/jena/jena-fuseki/1.0.1-SNAPSHOT/">
 	fuseki snapshot 1.0.1
 	</a> and download
@@ -49,9 +79,9 @@ for Elda, you might choose to use that instead.)
 <h2>load example data</h2>
 
 <p>
-	Download the 
+	Download the
 	<a href="https://code.google.com/p/elda/source/browse/elda-standalone/src/main/webapp/data/example-data.ttl">
-		example data 
+		example data
 	</a>
 	from Elda's standalone jar. Copy it into $FUSEKI.
 </p>
@@ -66,13 +96,13 @@ for Elda, you might choose to use that instead.)
 <pre>
 in $FUSEKI, run:
 
-java -cp ./fuseki-server.jar tdb.tdbloader --tdb=config-tdb-text.ttl example-data.ttl 
+java -cp ./fuseki-server.jar tdb.tdbloader --tdb=config-tdb-text.ttl example-data.ttl
 </pre>
 
 <p>
 	The config file is being used to set up the
 	dataset, which is why it's being supplied to the <code>--tdb</code>
-	command parameter. 
+	command parameter.
 </p>
 
 <h2>index the data</h2>
@@ -96,7 +126,7 @@ again in $FUSEKI, run:
 <h2>start serving the data</h2>
 
 <p>
-	Now we can start Fuseki serving the indexed example data: 
+	Now we can start Fuseki serving the indexed example data:
 </p>
 
 <pre>
@@ -123,7 +153,7 @@ again in $FUSEKI, run:
 </p>
 
 <p>
-	Comment out the line 
+	Comment out the line
 </p>
 
 <pre>
@@ -142,11 +172,11 @@ again in $FUSEKI, run:
 
 <p>
 	which tells Elda to query the local Fuseki we have set up
-	above. 
+	above.
 </p>
 
 <p>
-	Save this file somewhere suitable; we'll refer to it as 
+	Save this file somewhere suitable; we'll refer to it as
 	<code>$CONFIG</code>.
 </p>
 

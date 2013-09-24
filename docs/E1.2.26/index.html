@@ -1,24 +1,47 @@
 <html>
 <head>
-<title>Elda -- an implementation of the Linked Data API</title>
-<link href="../style.css" type="text/css" rel="stylesheet"></link>
+<title>Elda quick start</title>
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
+<link href="../style.css" rel="stylesheet"></link>
 <script src="../util.js"></script>
+
 </head>
 
 <body onload="toc()">
 
+<nav class="navbar navbar-default" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-brand">
+      <h1>Elda 1.2.26</h1>
+      <h2>An implementation of the linked-data API</h2>
+    </div>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Quick start</a></li>
+      <li class=""><a href="reference.html">Reference</a></li>
+      <li class=""><a href="cribsheet.html">Crib sheet</a></li>
+      <li class=""><a href="search-example.html">Text search example</a></li>
+    </ul>
+    <div class="nav navbar-nav navbar-right">
+      <img class="logo" src="../epilogo-240.png" style="height:45px">
+    </div>
+  </div><!-- /.navbar-collapse -->
+</nav>
+
+<div class="container">
 <div class="main">
 
-<div class="heading">
-<a href="http://www.epimorphics.com">
-<img class="logo" src="../epilogo-240.png">
-</a>
-<h1 class="not-toc">Elda 1.2.26</h1>
-<h2 class="not-toc">An implementation of the Linked Data API</h2>
-</div>
-
-<div id="toc">
-<h1 class="not-toc">contents</h1>
+<div id="toc" class="well pull-right">
+  <h2 class="not-toc">Table of contents</h2>
 </div>
 
 <h1>Introduction</h1>
@@ -64,14 +87,14 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
   you should be able to view the starting page in a web browser:
   <a href="http://localhost:8080/standalone/hello/games">http://localhost:8080/standalone/hello/games</a>.
   This should display a page similar to:
-
-  <img
-    style="margin: 2ex" 
-    src="elda-demo-screenshot-1.png" 
-    alt="Screenshot showing demo dataset in Elda" 
-    title="Screenshot showing demo dataset" 
-    />
 </p>
+<div class="text-center">
+  <img
+    src="elda-demo-screenshot-1.png"
+    alt="Screenshot showing demo dataset in Elda"
+    title="Screenshot showing demo dataset"
+    />
+</div>
 
 <h3>what just happened?</h3>
 
@@ -88,10 +111,10 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
 </p>
 
 <p>
-  By default, the list is presented in HTML format, which is nice for 
-  people to read, but not so good for programs to process. The format 
+  By default, the list is presented in HTML format, which is nice for
+  people to read, but not so good for programs to process. The format
   names on the top-right of the window are clickable to select a
-  different format, <i>eg</i> by clicking the 
+  different format, <i>eg</i> by clicking the
   <a href="http://localhost:8080/standalone/hello/games.ttl">ttl</a>
   link, the BoardGame resources will be shown as RDF Turtle.
 </p>
@@ -107,14 +130,14 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
 <h3>how did it happen?</h3>
 
 <p>
-  When Elda is presented with a URL, it uses it to select an 
-  <i>endpoint</i>. From the details of the URL path 
-  (<code>/games</code> in this case) and its query parameters 
-  (none in this case), it constructs a <i>SPARQL query</i> which 
+  When Elda is presented with a URL, it uses it to select an
+  <i>endpoint</i>. From the details of the URL path
+  (<code>/games</code> in this case) and its query parameters
+  (none in this case), it constructs a <i>SPARQL query</i> which
   selects one or more <i>items</i> (here, games) from the
-  RDF dataset. It then  constructs a <i>view</i> of (some of the) 
-  properties of those items, and then <i>renders</i> that view 
-  into one of the possible formats, sending that rendering back 
+  RDF dataset. It then  constructs a <i>view</i> of (some of the)
+  properties of those items, and then <i>renders</i> that view
+  into one of the possible formats, sending that rendering back
   to whatever sent the query.
 </p>
 
@@ -146,7 +169,7 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
 
 <ul>
   <li>
-    <i>filters</i>. Query parameters can specify that items must have specified 
+    <i>filters</i>. Query parameters can specify that items must have specified
     ranges of values for some property in order to be selected. Endpoints can
     have some filters, <i>eg</i> that the item has a particular type, pre-loaded.
   </li>
@@ -155,8 +178,8 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
     Endpoints can specify, and query parameters modify, which properties of the
     selected items are to be displayed.
   </li>
-  
-  <li><i>formats</i>. 
+
+  <li><i>formats</i>.
     The items and their properties can be rendered in different formats, including
     HTML, XML, JSON, RDF/XML, and Turtle.
   </li>
@@ -168,21 +191,21 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
 
   <li><i>metadata</i>.
     The rendered response includes metadata such as the SPARQL queries used to
-    select items and fetch their properties. 
+    select items and fetch their properties.
   </li>
-  
+
   <li><i>text search</i>.
     For suitably-configured SPARQL endpoints, Elda can exploit <i>free text
     queries</i> that can search for text fragments or use AND, OR, and NOT to
-    control the search.  
+    control the search.
   </li>
 
-  <li><i>velocity templates</i>. 
+  <li><i>velocity templates</i>.
     You can choose to write a new format for an Elda instance using Velocity
     templates. (This feature is experimental; feedback is welcome.)
   </li>
 
-  <li><i>statistics</i>. 
+  <li><i>statistics</i>.
     Elda can present statistics about the queries that it has received
     either in HTML or (experimentally) using JMX. The statistics include
     the number of queries and the amount of data transferred.
@@ -304,7 +327,7 @@ where NNNN is the port number of your choice.
   Elda running on your local computer, on port 8080:
 </p>
 
-<table>
+<table class="table table-striped table-condensed">
   <thead>
     <tr>
       <th width="30%">description</th>
@@ -407,15 +430,15 @@ the dataset. For example, <i>A Brief History of the World</i>
 has publication date 2009. Clicking the magnifying-glass icon
 on that line restricts the results to only those with that
 publication date -- as it happens, no others. And we see
-(from the URL bar) that the URL of this page has had a 
+(from the URL bar) that the URL of this page has had a
 <b>publicationDate=2009</b> query parameter added.
 </p>
 
 <p>
   Going back and clicking the less-than sign shows instead
-  will show games whose publication date is the same as, or 
+  will show games whose publication date is the same as, or
   less recent than, <i>A Brief History of the World</i>.
-  Similarly, going back and clicking the greater-than sign 
+  Similarly, going back and clicking the greater-than sign
   will show games no older than <i>A Brief History of the World</i>.
   In both cases, the URL changes to show the applied filter, which
   also appears in the <i>Filter</i> box in the column on the right.
@@ -447,7 +470,7 @@ publication date -- as it happens, no others. And we see
 
 <pre>
 #
-# A hello-world config. 
+# A hello-world config.
 #
 
 # Assorted prefix declarations. Some of them are for the structuring
@@ -478,7 +501,7 @@ publication date -- as it happens, no others. And we see
 # ---------------------------------------------------------------------
 # API config
 
-hello:hello-world-again a api:API 
+hello:hello-world-again a api:API
 ; rdfs:label "Hello World example #2 -- games"@en
 </pre>
 
@@ -502,7 +525,7 @@ hello:hello-world-again a api:API
 </pre>
 
 <p>
-  The default view for this API is the built-in 
+  The default view for this API is the built-in
   <code>labelledDescribeViewer</code>, which fetches all the
   properties of the item using a SPARQL DESCRIBE and also fetches
   the labels of all the resource values this finds.
@@ -514,13 +537,13 @@ hello:hello-world-again a api:API
 
 <p>
   This defines a new view called <i>none</i> which shows no
-  properties at all. This can be useful as a starting-point 
+  properties at all. This can be useful as a starting-point
   when building a view on the URL using the query parameter
   <code>_properties=</code>.
 </p>
 
 <pre>
-; api:variable 
+; api:variable
   [ api:name "_resourceRoot"
   ; api:value "http://localhost:8080/standalone/lda-assets/"
   ]
@@ -532,8 +555,8 @@ hello:hello-world-again a api:API
 </p>
 
 <pre>
-; api:endpoint 
-  hello:publishers, hello:games 
+; api:endpoint
+  hello:publishers, hello:games
 </pre>
 
 <p>
@@ -543,9 +566,9 @@ hello:hello-world-again a api:API
 
 <pre>
 ; api:formatter
-  [ a api:XsltFormatter 
-  ; api:name "html" 
-  ; api:mimeType "text/html; charset=utf-8" 
+  [ a api:XsltFormatter
+  ; api:name "html"
+  ; api:mimeType "text/html; charset=utf-8"
   ; api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
   ]
   .
@@ -561,12 +584,12 @@ hello:hello-world-again a api:API
 <pre>
 # Endpoint definitions
 
-hello:publishers a api:ListEndpoint 
-  ; rdfs:label "Publishers" 
-  ; api:uriTemplate "/publishers" 
+hello:publishers a api:ListEndpoint
+  ; rdfs:label "Publishers"
+  ; api:uriTemplate "/publishers"
   ; api:selector [api:filter "type=Publisher"; api:sort "label"]
   ; api:defaultViewer api:labelledDescribeViewer
-  . 
+  .
 </pre>
 
 <p>
@@ -577,12 +600,12 @@ hello:publishers a api:ListEndpoint
 </p>
 
 <pre>
-hello:games a api:ListEndpoint 
-  ; rdfs:label "Games" 
-  ; api:uriTemplate "/games" 
+hello:games a api:ListEndpoint
+  ; rdfs:label "Games"
+  ; api:uriTemplate "/games"
   ; api:selector [api:filter "type=BoardGame"; api:sort "label"]
   ; api:defaultViewer api:labelledDescribeViewer
-  . 
+  .
 </pre>
 
 <p>
@@ -607,7 +630,7 @@ hello:BoardGame a rdfs:Class
 </pre>
 
 <p>
-  The class <code>hello:BoardGame</code> has shortname 
+  The class <code>hello:BoardGame</code> has shortname
   <i>BoardGame</i>, as defined by its <code>api:label</code>;
   this is what allows it to appear in the endpoint filter
   <code>type=BoardGame</code>.
@@ -647,7 +670,7 @@ dct:publisher a rdf:Property
 
 <p>
   Declares that the shortname of <code>dct:publisher</code> is
-  <i>publishes</i>. 
+  <i>publishes</i>.
 </p>
 
 <pre>
@@ -665,8 +688,8 @@ rdfs:label a rdf:Property
 
 <pre>
 rdf:type a rdf:Property
-  ; api:multiValued true 
-  ; rdfs:range rdfs:Class 
+  ; api:multiValued true
+  ; rdfs:range rdfs:Class
   ; api:label "type"
   .
 </pre>
@@ -687,9 +710,9 @@ hello:designed-by a rdf:Property
 
 <p>
   Declares that <code>hello:designed-by</code> has shortname
-  <i>designedBy</i>. (Note that the HTML renderer shows property 
-  shortnamesin the display translated by turning camelCase 
-  like <i>designedBy</i> into space-separated words like 
+  <i>designedBy</i>. (Note that the HTML renderer shows property
+  shortnamesin the display translated by turning camelCase
+  like <i>designedBy</i> into space-separated words like
   <i>designed by</i>.)
 </p>
 
@@ -718,7 +741,7 @@ hello:pubDate a rdf:Property
 
 <p>
   That concludes our example LDA specification. For more
-  details on LDA configurations, see 
+  details on LDA configurations, see
   <a href="http://code.google.com/p/linked-data-api/wiki/Specification">
     the Linked Data API (LDA)
   </a> and
@@ -961,12 +984,15 @@ is the name of your endpoint model inside the TDB store.
   </a>.
 </p>
 
+
 <div class="footer">
 <hr>
 &copy; Copyright 2011-2013 Epimorphics Limited. For licencing conditions see
 <a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
 </div>
 </div>
+
+</div><!-- .container -->
 
 </body>
 </html>
