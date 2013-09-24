@@ -18,3 +18,8 @@
 	margin-right: 25px;
 	height: 45px;
 }
+
+.content-h2 a {
+	font-size: smaller;
+	margin-left: 1em;
+}
