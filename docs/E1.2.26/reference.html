@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html>
 <head>
 <title>Elda reference</title>
-<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
-<link href="../style.css" rel="stylesheet"></link>
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
+<link href="../style.css" rel="stylesheet" />
 <script src="../util.js"></script>
 </head>
 
@@ -30,7 +31,7 @@
       <li class=""><a href="search-example.html">Text search example</a></li>
     </ul>
     <div class="nav navbar-nav navbar-right">
-      <img class="logo" src="../epilogo-240.png">
+      <img class="logo" src="../epilogo-240.png" alt="Epimorphics.com">
     </div>
   </div><!-- /.navbar-collapse -->
 </nav>
@@ -65,7 +66,7 @@
 
 <p>
 There are three components to Elda Common:
-
+</p>
 <ul>
 	<li>
 		The Elda Common War, a Maven artifact you can download
@@ -84,6 +85,7 @@ There are three components to Elda Common:
 	</li>
 </ul>
 
+<p>
 The Common and Assets files must have the same version.
 </p>
 
@@ -161,53 +163,53 @@ The Common and Assets files must have the same version.
 <p>
 	Elda provides several example minimal configurations, different
 	only in their intended environments:
+</p>
 
 <table class="table table-striped table-condensed">
 <tr>
-	<td><a href="specs-1.2.26/minimal-named-bundled-8080-config.ttl">minimal-named-bundled-8080-config.ttl</a></td>
-	<td>bundled non-ROOT configuration running on port 8080.</td>
+  <td><a href="specs-1.2.26/minimal-named-bundled-8080-config.ttl">minimal-named-bundled-8080-config.ttl</a></td>
+  <td>bundled non-ROOT configuration running on port 8080.</td>
 </tr>
 
 <tr>
-	<td><a href="specs-1.2.26/minimal-named-or-ROOT-split-8080-config.ttl">minimal-named-or-ROOT-split-8080-config.ttl</a></td>
-	<td>split assets and common on port 8080, for both ROOT and non-ROOT use.</td>
+  <td><a href="specs-1.2.26/minimal-named-or-ROOT-split-8080-config.ttl">minimal-named-or-ROOT-split-8080-config.ttl</a></td>
+  <td>split assets and common on port 8080, for both ROOT and non-ROOT use.</td>
 </tr>
 
 <tr>
-	<td><a href="specs-1.2.26/minimal-named-split-80-config.ttl">minimal-named-split-80-config.ttl</a></td>
-	<td>split assets and common on port 80 for non-ROOT use.</td>
+  <td><a href="specs-1.2.26/minimal-named-split-80-config.ttl">minimal-named-split-80-config.ttl</a></td>
+  <td>split assets and common on port 80 for non-ROOT use.</td>
 </tr>
 
 <tr>
-	<td><a href="specs-1.2.26/minimal-ROOT-bundled-8080-config.ttl">minimal-ROOT-bundled-8080-config.ttl</a></td>
-	<td>ROOT bundled and running on port 8080.</td>
+  <td><a href="specs-1.2.26/minimal-ROOT-bundled-8080-config.ttl">minimal-ROOT-bundled-8080-config.ttl</a></td>
+  <td>ROOT bundled and running on port 8080.</td>
 </tr>
 
 </table>
 
-</p>
 
 <p>
 	The configuration itself is a place-holder with
 	three uri templates:
+</p>
 
 <table class="table table-striped table-condensed">
-	<tr>
-		<td><code>/anything</code></td>
-		<td>to provide some example results</td>
-	</tr>
-	<tr>
-		<td><code>/about?resource={someURI}</code></td>
-		<td>provides information (ie properties and their values) about the
-			resource <code>someURI</code></td>
-	</tr>
-	<tr>
-		<td><code>/mentions?resource={someURI}</code></td>
-		<td>finds items which have <code>someURI</code> as the value of some property.</td>
-	</tr>
+  <tr>
+    <td><code>/anything</code></td>
+    <td>to provide some example results</td>
+  </tr>
+  <tr>
+    <td><code>/about?resource={someURI}</code></td>
+    <td>provides information (ie properties and their values) about the
+      resource <code>someURI</code></td>
+  </tr>
+  <tr>
+    <td><code>/mentions?resource={someURI}</code></td>
+    <td>finds items which have <code>someURI</code> as the value of some property.</td>
+  </tr>
 
 </table>
-</p>
 
 <p>
 	The minimal configuration assumes that a SPARQL endpoint is
@@ -409,7 +411,7 @@ The Common and Assets files must have the same version.
 	allow users to migrate to the new configuration process.
 </p>
 
-<h1 id"velocity">Velocity template rendering</h1>
+<h1>Velocity template rendering</h1>
 
 <p>
     This release of Elda includes the ability to use
@@ -1585,22 +1587,22 @@ dct:contributor
 
 <p>
 The available cache policies are
-<ul>
-	<li><code>default</code> &mdash; same as limit-triples.</li>
-
-	<li><code>limit-triples</code> &mdash; clear the cache when
-		the number of triples retained is greater than the limit.
-	</li>
-
-	<li><code>limit-entries</code> &mdash; clear the cache when
-		the number of entries is greater than the limit.
-	</li>
-
-	<li><code>perma-cache</code> &mdash; keep everything
-		(not a good choice in production).
-	</li>
-</ul>
 </p>
+<ul>
+  <li><code>default</code> &mdash; same as limit-triples.</li>
+
+  <li><code>limit-triples</code> &mdash; clear the cache when
+    the number of triples retained is greater than the limit.
+  </li>
+
+  <li><code>limit-entries</code> &mdash; clear the cache when
+    the number of entries is greater than the limit.
+  </li>
+
+  <li><code>perma-cache</code> &mdash; keep everything
+    (not a good choice in production).
+  </li>
+</ul>
 
 <p>
 	Cache policies can be attached to the API spec and over-ridden
@@ -1755,10 +1757,11 @@ that details of the code structure may change between releases.
 
 <p>
 The constructor
+</p>
 <pre>
 APISpec(FileManager fm, Resource config, ModelLoader forVocab)
 </pre>
-
+<p>
 delivers a new APISpec object configured from the given
 Resource. You may have chosen a Resource with a known
 URI in a config model, or found one with <code>rdf:type</code>
@@ -1780,9 +1783,11 @@ config model.
 
 <p>
 You can then invoke
+</p>
 <pre>
-APIEndpointUtil.call(APIEndpoint.Request r, Match match, String contextPath, MultiMap<String, String> queryParams)
+APIEndpointUtil.call(APIEndpoint.Request r, Match match, String contextPath, MultiMap&lt;String, String&gt; queryParams)
 </pre>
+<p>
 where
 </p>
 
@@ -1830,11 +1835,13 @@ and the (updated) variable Bindings.
 <p>
 Once you have chosen a renderer <code>R</code> to use for the
 result set, the invocation
+</p>
 
 <pre>
 R.render( t, rc, termBindings, results )
 </pre>
 
+<p>
 where <code>t</code> is a <code>Times</code> object,
 delivers a String which is the rendering of <code>results</code>
 according to the RenderContext <code>rc</code>, which you can
@@ -1862,19 +1869,24 @@ type for the renderer's result.
 
 <p>
   Download the Elda sources:
+</p>
 
 <pre>
 hg clone https://elda.googlecode.com/hg/ elda
 </pre>
 
+<p>
 places the Elda sources in ./elda (which is created if necessary).
 </p>
 
 <p>
 Running
+</p>
+
 <pre>
 mvn clean install
 </pre>
+<p>
 will now build the Elda jars and put them into your local
 Maven repository, along with all the jars that they depend
 on. You can then either use Maven to build your own
@@ -1887,18 +1899,20 @@ Look in the (automatically created) file
 <code>/lda/src/main/java/com/epimorphics/lda/Version.java</code>
 to see which version of Elda is being built. If you want to use
 a non-SNAPSHOT version, use
-
+</p>
 <pre>
 hg update -r REVISION
 </pre>
 
+<p>
 before running maven, where REVISION is your choice of the revision
 tags you get from running:
-
+</p>
 <pre>
 hg tags
 </pre>
 
+<p>
 and selecting a tag that looks like <code>elda-1.X.Y</code>;
 that is the shape of tag generated by the Elda release process.
 </p>

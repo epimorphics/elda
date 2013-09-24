@@ -1,8 +1,10 @@
+<!DOCTYPE html>
 <html>
 <head>
 <title>Elda quick start</title>
-<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet"></link>
-<link href="../style.css" rel="stylesheet"></link>
+
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
+<link href="../style.css" rel="stylesheet" />
 <script src="../util.js"></script>
 
 </head>
@@ -32,7 +34,7 @@
       <li class=""><a href="search-example.html">Text search example</a></li>
     </ul>
     <div class="nav navbar-nav navbar-right">
-      <img class="logo" src="../epilogo-240.png" style="height:45px">
+      <img class="logo" src="../epilogo-240.png" alt="Epimorphics.com">
     </div>
   </div><!-- /.navbar-collapse -->
 </nav>
@@ -297,6 +299,7 @@ or, if you're starting from the unzipped Elda directory,
 java -Djetty.port=NNNN -jar start.jar
 </pre>
 
+<p>
 where NNNN is the port of your choice. Note: the <code>-D</code>
 comes after <code>standalone.jar</code>, but before <code>start.jar</code>.
 </p>
@@ -307,16 +310,18 @@ supply a <code>-Djetty.port</code> command line option
 every time, in the Elda directory edit the
 configuration file <code>etc/jetty.xml</code>
 and change the line:
+</p>
 
 <pre>
 &lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <b>default="8080"</b>/&gt;&lt;/Set&gt;
 </pre>
 
-to:
+<p>to:</p>
 
 <pre>
 &lt;Set name="port"&gt;&lt;SystemProperty name="jetty.port" <b>default="NNNN"</b>/&gt;&lt;/Set&gt;
 </pre>
+<p>
 where NNNN is the port number of your choice.
 </p>
 
@@ -758,17 +763,19 @@ To use different LDA specifications, use the system property
 <code>elda.spec</code>. Like the port number, it can be set
 as part of launching the elda jar or when launching the jetty
 start jar:
+</p>
 
 <pre>
 java -jar standalone.jar -Delda.spec=SPECS
 </pre>
 
-or (in the Elda directory):
+<p>or (in the Elda directory):</p>
 
 <pre>
 java -Delda.spec=SPECS -jar start.jar
 </pre>
 
+<p>
 where SPECS is one or more LDA specification files separated
 by commas.
 </p>
@@ -817,6 +824,7 @@ the selected items. Elda also ships with a renderer that
 uses XSLT (and Javascript at the client end) to produce
 pages with additional controls and a richer appearance.
 To use this as your html renderer, add:
+</p>
 <pre>
 ; api:formatter
   [a api:XsltFormatter
@@ -824,9 +832,8 @@ To use this as your html renderer, add:
   ; api:stylesheet 'xslt/result-osm.xsl'
   ; api:mimeType 'text/html'
 ]
-
 </pre>
-
+<p>
 to your API root in your configuration file and arrange that
 the webapps/elda directory contents are served as static files.
 </p>
@@ -847,7 +854,7 @@ possible for Elda to query a local RDF file.
 <p>
 Edit your spec file, which will look something like the
 education spec suplied with Elda:
-
+</p>
 <pre>
 spec:api
   a api:API ;
@@ -863,7 +870,7 @@ spec:api
    , spec:schoolsSecondaryDistrict
  .
 </pre>
-
+<p>
 Replace the endpoint URI with <b>local:content-name</b>,
 where <b>content-name</b> is the name of the RDF source you
 wish to query. When Elda issues queries to a local: endpoint,
@@ -896,7 +903,7 @@ database. To do so you will need to modify the <code>web.xml</code>
 webapp configuration file and supply an additional init-param
 for the <code>loader-init</code> servlet. You can do this in
 two ways:
-<p>
+</p>
 
 <pre>
 &lt;init-param>
