@@ -43,7 +43,7 @@
 <h2 class="not-toc">Table of contents</h2>
 </div>
 
-<h1 a name="elda-common"><a name="beyond">Elda Common</a></h1>
+<h1 id="elda-common">Elda Common</h1>
 
 <p>
 	The stand-alone jar serves as a demonstration tool
@@ -217,7 +217,7 @@ The Common and Assets files must have the same version.
 	SPARQL server serving RDF data of your choice.
 </p>
 
-<h2>reload on change</h2>
+<h2>Reload on change</h2>
 
 <p>
 	When Elda handles a request, if it has been "sufficiently
@@ -244,7 +244,7 @@ The Common and Assets files must have the same version.
 	one of the appropriate files.
 </p>
 
-<h2></a>inside Elda Common</h2>
+<h2>Inside Elda Common</h2>
 
 <p>
 	To use Elda for your own webapps, you can use Elda Common
@@ -260,7 +260,7 @@ The Common and Assets files must have the same version.
 	see below.
 </p>
 
-<h2><a name="anatomy"></a>anatomy of Elda's web.xml</h2>
+<h2 id="anatomy">Anatomy of Elda's web.xml</h2>
 
 <p>
 	Elda runs as a bunch of JAX-RS resources within a Jersey
@@ -315,7 +315,7 @@ The Common and Assets files must have the same version.
 	filename. (If there is more than one such '*', the matching groups
 </p>
 
-<h4>example</h4>
+<h4>Example</h4>
 
 <p>
 	Given the directive <code>A*B::/etc/elda/*.ttl</code> and
@@ -326,7 +326,7 @@ The Common and Assets files must have the same version.
 	<code>z.text</code> is ignored as it does not match the filename.
 </p>
 
-<h2><a name="servlet"></a>the Jersey servlet/filter</h2>
+<h2 id="servlet">The Jersey servlet/filter</h2>
 
 <p>
 	Elda runs Jersey either as a servlet or as a filter applied to
@@ -385,7 +385,7 @@ The Common and Assets files must have the same version.
 	delivers all the static files inside the webapp.
 </p>
 
-<h2><a name="rewriting"></a>URL rewriting</h2>
+<h2 id="rewriting">URL rewriting</h2>
 
 <p>
 	Elda Common does not do URL rewriting; it handles all of the
@@ -398,7 +398,7 @@ The Common and Assets files must have the same version.
 	or discards requests with (un)suitable URIs.
 </p>
 
-<h4><a name="loading-config"></a>Obsolete: the Loader servlet</h4>
+<h4 id="loading-config">Obsolete: the Loader servlet</h4>
 
 <p>
 	Previous versions of Elda had their configuration specified
@@ -409,7 +409,7 @@ The Common and Assets files must have the same version.
 	allow users to migrate to the new configuration process.
 </p>
 
-<h1><a name="velocity"></a>Velocity template rendering</h1>
+<h1 id"velocity">Velocity template rendering</h1>
 
 <p>
     This release of Elda includes the ability to use
@@ -474,7 +474,7 @@ The Common and Assets files must have the same version.
     is defined and from <code>{_resourceRoot}/vm</code> if not.
 </p>
 
-<h2>names in the Velocity context</h2>
+<h2>Names in the Velocity context</h2>
 
 <p>
     When rendering a page using Velocity, Elda binds several
@@ -570,7 +570,7 @@ The Common and Assets files must have the same version.
     </tr>
 </table>
 
-<h2>wrapped RDFNodes</h2>
+<h2>Wrapped RDFNodes</h2>
 
 <p>
 	WrappedNodes are wrappers round Jena RDFNodes. When they are created,
@@ -805,7 +805,7 @@ The Common and Assets files must have the same version.
 </tr>
 </table>
 
-<h1><a name="text-search"></a>Free-text searching</h1>
+<h1 id="text-search">Free-text searching</h1>
 
 <p>
 	Normally, specifying a query parameter <code>sn=v</code>
@@ -884,7 +884,7 @@ The Common and Assets files must have the same version.
 	Text searches with SPARQL</a> for more about the text-query module.
 </p>
 
-<h2>dataset indexing</h2>
+<h2>Dataset indexing</h2>
 
 <p>
 	A Fuseki dataset can be configured to <i>index</i> specified properties
@@ -919,7 +919,7 @@ The Common and Assets files must have the same version.
 	search.
 </p>
 
-<h2>text query</h2>
+<h2>Text query</h2>
 
 <p>
 	The value of the <code>_search</code> query parameter is passed
@@ -975,7 +975,7 @@ The Common and Assets files must have the same version.
 	<a href="http://lucene.apache.org/core/4_4_0/queryparser/org/apache/lucene/queryparser/classic/package-summary.html#package_description">the Lucene classic package summary</a>.
 </p>
 
-<h2>configuring search</h2>
+<h2>Configuring search</h2>
 
 <p>
 	The default behaviour of <code>_search</code> is that its value
@@ -1049,7 +1049,7 @@ The Common and Assets files must have the same version.
 <code>elda:textQueryProperty some:Property</code>
 </pre>
 
-<h2>caveats</h2>
+<h2>Caveats</h2>
 
 <p>
 	This feature is experimental and details may change.
@@ -1072,7 +1072,7 @@ The Common and Assets files must have the same version.
     the selected item.
 </p>
 
-<h2><a name="sparql-1.1-features"></a>SPARQL 1.1 features</h2>
+<h2 id="sparql-1.1-features">SPARQL 1.1 features</h2>
 
 <p>
 If the SPARQL server supports nested
@@ -1092,7 +1092,7 @@ If the SPARQL server supports nested
     to see if nested selects work.)
 </p>
 
-<h2><a name="describe-thresholds"></a>DESCRIBE thresholds</h2>
+<h2 id="describe-thresholds">DESCRIBE thresholds</h2>
 
 <p>
     Support for nested selects applies to DESCRIBE queries as well,
@@ -1120,9 +1120,9 @@ If the SPARQL server supports nested
 </p>
 
 
-<h1><a name="additional-elda-features"></a>Additional Elda features</h1>
+<h1 id="additional-elda-features">Additional Elda features</h1>
 
-<h2><a name="variables"></a>configuration variables</h2>
+<h2 id="variables">Configuration variables</h2>
 
 <p>
     Elda reserves LDA variable names that begin "_" for
@@ -1190,7 +1190,7 @@ If the SPARQL server supports nested
     </li>
 </ul>
 
-<h2><a name="wildcard-properties"></a>wildcard '*' in view property chains</h2>
+<h2 id="wildcard-properties">Wildcard '*' in view property chains</h2>
 
 <p>
     A property chain appearing in a view specification
@@ -1200,7 +1200,7 @@ If the SPARQL server supports nested
     anywhere within the chain.
 </p>
 
-<h2><a name="api-base"></a>api:base</h2>
+<h2 id="api-base"><code>api:base</code></h2>
 
 <p>
     An LDA configuration may specify an api:base property.
@@ -1214,7 +1214,7 @@ If the SPARQL server supports nested
     at location B (from which it may have been redirected).
 </p>
 
-<h2><a name="uri-rewriting">URI rewriting</a></h2>
+<h2 id="uri-rewriting">URI rewriting</h2>
 
 <p>
 	(<i>This feature is experimental and its details
@@ -1280,7 +1280,7 @@ http://localhost:8080/elda/doc/school
 	rules to share an <code>ifStarts</code> value.
 </p>
 
-<h2><a name="describe-all-label"></a>elda:describeAllLabel</h2>
+<h2 id="describe-all-label"><code>elda:describeAllLabel</code></h2>
 
 <p>
     If a new viewer is declared with the property
@@ -1290,7 +1290,7 @@ http://localhost:8080/elda/doc/school
     that property rather than <code>rdfs:label</code>.
 </p>
 
-<h2><a name="allow-reserved"></a>elda:allowedReserved</h2>
+<h2 id="allow-reserved"><code>elda:allowedReserved</code></h2>
 
 <p>
     Normally (and as prescribed by the spec) Elda will
@@ -1313,7 +1313,7 @@ http://localhost:8080/elda/doc/school
 	in JASONP queries.
 </p>
 
-<h2><a name="etags"></a>etag generation</h2>
+<h2 id="etags">Etag generation</h2>
 
 <p>
     If an endpoint has the property <code>elda:enableETags</code>
@@ -1332,7 +1332,7 @@ http://localhost:8080/elda/doc/school
     <li>the content of the model</li>
 </ul>
 
-<h2><a name="item-template-fallback"></a>item template fallback</h2>
+<h2 id="item-template-fallback">Item template fallback</h2>
 
 <p>
     If an inbound URI does not match any of the uriTemplates
@@ -1345,7 +1345,7 @@ http://localhost:8080/elda/doc/school
     This behaviour is currently not configurable.
 </p>
 
-<h2><a name="configuration-rendering"></a>configuration rendering</h2>
+<h2 id="configuration-rendering">Configuration rendering</h2>
 
 <p>
     Elda provides the api:base-relative URI path <code>/api-config</code>.
@@ -1367,9 +1367,9 @@ http://localhost:8080/elda/doc/school
 </p>
 
 
-<h1><a name="formatting-extensions"><a/>Formatting extensions</h1>
+<h1 id="formatting-extensions">Formatting extensions</h1>
 
-<h2>location of XSLT stylesheets</h2>
+<h2>Location of XSLT stylesheets</h2>
 
 <p>
 	If the object of an <code>api:stylesheet</code> directive starts
@@ -1390,7 +1390,7 @@ http://localhost:8080/elda/doc/school
 	result set.
 </p>
 
-<h2><a name="atom-feed"></a>the atom renderer</h2>
+<h2 id="atom-feed">The Atom renderer</h2>
 
 <p>
 	Elda contains an experimental atom-feed renderer. To use it, add
@@ -1495,7 +1495,7 @@ dct:contributor
 	formatter's <code>elda:feedAuthorProperties</code>.
 </p>
 
-<h1><a name="statistics"></a>Statistics</h1>
+<h1 id="statistics">Statistics</h1>
 
 <h2>HTML display of statistics</h2>
 
@@ -1566,7 +1566,7 @@ dct:contributor
 	This feature is experimental; it may be dropped in a future release.
 </p>
 
-<h2><a name="cache"></a>cache</h2>
+<h2 id="cache">Cache</h2>
 
 <p>
 	Elda caches the results of queries so that they may be re-served
@@ -1609,7 +1609,7 @@ The available cache policies are
 
 <h1>Shortnames in Elda</h1>
 
-<h2><a name="shortname-restrictions"></a>restrictions on shortname selection</h2>
+<h2 id="shortname-restrictions">Restrictions on shortname selection</h2>
 
 <p>
     In an (E)lda configuration file, the configurer may define
@@ -1665,7 +1665,7 @@ The available cache policies are
 
 </table>
 
-<h2><a name="shortname-mode"></a>Elda shortname creation</h2>
+<h2 id="shortname-mode">Elda shortname creation</h2>
 
 <p>
 	When Elda renders a result-set graph using JSON or XML (and
@@ -1743,7 +1743,7 @@ The available cache policies are
 
 
 
-<h1><a name="using-elda-from-java"></a>Using Elda directly</h1>
+<h1 id="using-elda-from-java">Using Elda directly</h1>
 
 <p>You don't need to go through a servlet (or restlet)
 framework to exploit Elda. You can call the components
@@ -1751,7 +1751,7 @@ yourself and supply whatever glue you like. Note however
 that details of the code structure may change between releases.
 </p>
 
-<h2>creating an APISpec</h2>
+<h2>Creating an APISpec</h2>
 
 <p>
 The constructor
@@ -1776,7 +1776,7 @@ delivers a list of <code>APIEndpoint</code> objects corresponding
 config model.
 </p>
 
-<h2>running an endpoint</h2>
+<h2>Running an endpoint</h2>
 
 <p>
 You can then invoke
@@ -1825,7 +1825,7 @@ from shortnames to their URIs as appropriate for this resultset,
 and the (updated) variable Bindings.
 </p>
 
-<h2>rendering results</h2>
+<h2>Rendering results</h2>
 
 <p>
 Once you have chosen a renderer <code>R</code> to use for the
@@ -1850,7 +1850,7 @@ type for the renderer's result.
 </p>
 
 
-<h1><a name="building-elda"></a>Building Elda</h1>
+<h1 id="building-elda">Building Elda</h1>
 
 <p>
   Prerequisites:
@@ -1908,7 +1908,7 @@ As of Elda 1.2.23, the names of Elda modules (and the names of
 the corresponding directories in the Elda sources) have changed.
 </p>
 
-<h1><a name="accepted-content-types"></a>Accepted content types</h1>
+<h1 id="accepted-content-types">Accepted content types</h1>
 
 <p>
 Elda accepts the following content types by default.
@@ -1938,7 +1938,7 @@ Elda accepts the following content types by default.
 
 <div class="footer">
 <hr>
-&copy; Copyright 2011 Epimorphics Limited. For licencing conditions see
+&copy; Copyright 2011&ndash;2013 Epimorphics Limited. For licencing conditions see
 <a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
 </div>
 </div>

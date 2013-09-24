@@ -6,7 +6,7 @@
 <script src="../util.js"></script>
 </head>
 
-<body>
+<body onload="toc()">
 <nav class="navbar navbar-default" role="navigation">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -38,6 +38,10 @@
 
 <div class="container">
 
+<div id="toc" class="well pull-right">
+<h2 class="not-toc">Table of contents</h2>
+</div>
+
 <h1>Text Search Worked Example</h1>
 
 <p>
@@ -48,7 +52,7 @@
 	configured Elda.
 </p>
 
-<h2>download the standalone jar</h2>
+<h2>Download the standalone jar</h2>
 
 <p>
 Download the latest Elda standalone jar from
@@ -60,7 +64,7 @@ and use it to set up an Elda server later on.
 for Elda, you might choose to use that instead.)
 </p>
 
-<h2>download Fuseki</h2>
+<h2>Download Fuseki</h2>
 
 <p>
 	Go to
@@ -76,7 +80,7 @@ for Elda, you might choose to use that instead.)
 	name of this directory as FUSEKI.
 </p>
 
-<h2>load example data</h2>
+<h2>Load example data</h2>
 
 <p>
 	Download the
@@ -105,7 +109,7 @@ java -cp ./fuseki-server.jar tdb.tdbloader --tdb=config-tdb-text.ttl example-dat
 	command parameter.
 </p>
 
-<h2>index the data</h2>
+<h2>Index the data</h2>
 
 <p>
 	We can use the same configuration to run the indexer:
@@ -123,7 +127,7 @@ again in $FUSEKI, run:
 	setting up the text-searchable dataset.
 </p>
 
-<h2>start serving the data</h2>
+<h2>Start serving the data</h2>
 
 <p>
 	Now we can start Fuseki serving the indexed example data:
@@ -143,7 +147,7 @@ again in $FUSEKI, run:
 	SPARQL queries, before going on to use <code>_search</code> in Elda.
 </p>
 
-<h2>make a suitable LDA configuration</h2>
+<h2>Make a suitable LDA configuration</h2>
 
 <p>
 	Fetch the example LDA configuration file from
@@ -180,7 +184,7 @@ again in $FUSEKI, run:
 	<code>$CONFIG</code>.
 </p>
 
-<h2>run the standalone jar</h2>
+<h2>Run the standalone jar</h2>
 
 <p>
 	In <code>$STANDALONE</code>, run the standalone jar:
@@ -197,7 +201,7 @@ java -jar elda.jar -Delda.spec=$CONFIG
 	<code>-Djetty.port=yourPortNumber</code>.)
 </p>
 
-<h2>exercise _search</h2>
+<h2>Exercise _search</h2>
 
 <p>
 	In your preferred browser, open
@@ -255,7 +259,7 @@ java -jar elda.jar -Delda.spec=$CONFIG
 	appended to the games URI above.
 </p>
 
-<h2>wrapup</h2>
+<h2>Wrapup</h2>
 
 <p>
 	You should now be in a position to work with data of your own

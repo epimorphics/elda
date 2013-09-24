@@ -96,7 +96,7 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
     />
 </div>
 
-<h3>what just happened?</h3>
+<h3>What just happened?</h3>
 
 <p>
   Contained within the standalone Elda version is a small RDF dataset about board games. The
@@ -127,7 +127,7 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
   examples with more items and properties to experiment with.
 </p>
 
-<h3>how did it happen?</h3>
+<h3>How did it happen?</h3>
 
 <p>
   When Elda is presented with a URL, it uses it to select an
@@ -226,7 +226,7 @@ java -jar elda-standalone-<em>$VERSION</em>.jar
   and detailed descriptions.
 </p>
 
-<h2>prerequisites</h2>
+<h2>Prerequisites</h2>
 
 <p>Elda is written in Java
 (using the <a href="http://jena.apache.org/">Jena RDF toolkit</a>),
@@ -240,7 +240,7 @@ The default demonstration setup for Elda has examples that use the
 To run those examples, you will need to have open web access.
 </p>
 
-<h2>downloading and starting Elda</h2>
+<h2>Downloading and starting Elda</h2>
 <p>
   There are two ways to get Elda: either by downloading the pre-compiled
   runnable demo <code>.jar</code> file, or by checking out the source code
@@ -280,7 +280,7 @@ mvn clean package
 java -jar start.jar
 </pre>
 
-<h2>if you can't use port 8080</h2>
+<h2>If you can't use port 8080</h2>
 
 <p>
 Your computer may already be using port 8080 for some local service.
@@ -320,7 +320,7 @@ to:
 where NNNN is the port number of your choice.
 </p>
 
-<h2>built-in example datasets and configurations</h2>
+<h2>Built-in example datasets and configurations</h2>
 <p>
   Elda comes pre-packaged with some example configurations and an example
   dataset. The sample URLs in the table below should all work if you have
@@ -411,7 +411,7 @@ where NNNN is the port number of your choice.
 
 </table>
 
-<h2>games example -- web page</h2>
+<h2>Games example -- web page</h2>
 
 <p>
   Let's look a little at the two-template games example, <i>standalone/again</i>.
@@ -461,7 +461,7 @@ publication date -- as it happens, no others. And we see
   being multi-valued, isn't really a good sorting candidate.
 </p>
 
-<h2>games example -- configuration</h2>
+<h2>Games example -- configuration</h2>
 
 <p>
   We'll talk briefly through the LDA specification used for
@@ -751,7 +751,7 @@ hello:pubDate a rdf:Property
 
 <h1>Using other LDA specifications</h1>
 
-<h2>from the command line</h2>
+<h2>From the command line</h2>
 
 <p>
 To use different LDA specifications, use the system property
@@ -779,7 +779,7 @@ default specification (the education LDA) wired into it.
 </p>
 
 
-<h2>by editing web.xml</h2>
+<h2>By editing web.xml</h2>
 
 <p>
 To change the specification used without having to use
@@ -834,7 +834,7 @@ the webapps/elda directory contents are served as static files.
 <h1>Alternative data sources</h1>
 
 
-<h2>querying a local file</h2>
+<h2>Querying a local file</h2>
 
 <p>
 If the remote SPARQL endpoint is slow, not yet fully configured,
@@ -886,7 +886,7 @@ queries to the endpoint are answered by this model.
 documentation currently at openjena.org.)
 </p>
 
-<h2>using a local TDB datasource [obsolescent]</h2>
+<h2>Using a local TDB datasource [obsolescent]</h2>
 
 <p>
 As an alternative to setting up a local SPARQL endpoint,
