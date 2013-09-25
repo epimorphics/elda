@@ -45,6 +45,7 @@ public class QuerySupport {
 		List<Triple> typed = new ArrayList<Triple>(triples.size());
 		for (Triple t : triples) {
 			if (t.P.equals(text_query)) 
+				// avoid current text:query problem
 				hasLiteral.add(t);
 			else if (t.O instanceof Value && canPromoteSubject(t.S))
 				hasLiteral.add(t);
