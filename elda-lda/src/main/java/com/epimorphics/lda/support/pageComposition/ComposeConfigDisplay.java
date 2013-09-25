@@ -320,6 +320,9 @@ public class ComposeConfigDisplay {
 	private String chainToString( Context sns, PrefixMapping pm, PropertyChain pc ) {
 		StringBuilder sb = new StringBuilder();
 		List<Property> properties = pc.getProperties();
+	//
+		if (properties.isEmpty()) return "";
+	//
 		Property last = properties.get( properties.size() - 1 );
 		String dot = "";
 		for (Property p: properties) {
