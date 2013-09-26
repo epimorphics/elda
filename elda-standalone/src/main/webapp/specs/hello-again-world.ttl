@@ -55,12 +55,26 @@ hello:hello-world-again a api:API
         ; elda:feedTitle "an example Elda feed"
         ]
 	.
+	
+
    
 <http://localhost:3030/ds/query> 
     elda:textSearchOperand (rdfs:label "?_search" 99)
     .
     
-    
+# hello:hello-world-again
+#     elda:rewriteResultURIs
+#         [ elda:ifStarts "http://localhost:8080/elda/vocabulary/"
+#        ; elda:replaceStartBy "http://localhost:8080/standalone/again/vocabulary/"
+#        ]
+#    ; api:endpoint 
+#        [ a api:ItemEndpoint
+#        ; rdfs:label "Vocabulary"
+#        ; api:uriTemplate "/vocabulary/{localname}"
+#        ; api:itemTemplate "http://localhost:8080/standalone/again/vocabulary/{localname}"
+#        ]
+#    .
+
 # Endpoint definitions
 
 hello:publishers a api:ListEndpoint 
