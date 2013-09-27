@@ -17,7 +17,7 @@
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
 
 # Prefix for example-local entities.
-@prefix hello:				<http://localhost:8080/elda/vocabulary/>.
+@prefix hello:				<http://elda.googlecode.com/hg/vocabs/games#>.
 
 # ---------------------------------------------------------------------
 # API config
@@ -56,24 +56,22 @@ hello:hello-world-again a api:API
         ]
 	.
 	
-
-   
 <http://localhost:3030/ds/query> 
     elda:textSearchOperand (rdfs:label "?_search" 99)
     .
     
-# hello:hello-world-again
-#     elda:rewriteResultURIs
-#         [ elda:ifStarts "http://localhost:8080/elda/vocabulary/"
-#        ; elda:replaceStartBy "http://localhost:8080/standalone/again/vocabulary/"
-#        ]
-#    ; api:endpoint 
-#        [ a api:ItemEndpoint
-#        ; rdfs:label "Vocabulary"
-#        ; api:uriTemplate "/vocabulary/{localname}"
-#        ; api:itemTemplate "http://localhost:8080/standalone/again/vocabulary/{localname}"
-#        ]
-#    .
+hello:hello-world-again a api:API
+    ; elda:rewriteResultURIs
+        [ elda:ifStarts "http://elda.googlecode.com/hg/vocabs/games#"
+        ; elda:replaceStartBy "http://localhost:8080/standalone/again/vocabulary/"
+        ]
+    ; api:endpoint 
+        [ a api:ItemEndpoint
+        ; rdfs:label "Vocabulary"
+        ; api:uriTemplate "/vocabulary/{localname}"
+        ; api:itemTemplate "http://elda.googlecode.com/hg/vocabs/games#{localname}"
+        ]
+    .
 
 # Endpoint definitions
 

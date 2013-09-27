@@ -348,12 +348,13 @@ import com.sun.jersey.api.NotFoundException;
         		.withMode( r.getMode() )
         		;
         	
-        	Triad<APIResultSet, Map<String, String>, Bindings> resultsAndBindings = APIEndpointUtil.call( req, match, contextPath, queryParams );
-        	
-        //
         	ModelPrefixEditor mpe = ep.getSpec().getAPISpec().getModelPrefixEditor();
-        	
+        //
+        	Triad<APIResultSet, Map<String, String>, Bindings> resultsAndBindings = APIEndpointUtil.call( req, match, contextPath, queryParams );
+        	Map<String, String> termBindings = mpe.rename( resultsAndBindings.b );
+        //
             APIResultSet results = resultsAndBindings.a.applyEdits( mpe );
+            
 			Bindings rc = new Bindings( resultsAndBindings.c.copy(), as );
 			
         	if (_default.getPreferredSuffix().equals( r.getPreferredSuffix())) {
@@ -366,7 +367,7 @@ import com.sun.jersey.api.NotFoundException;
 			MediaType mt = r.getMediaType(rc);
 			log.info( "rendering with formatter " + mt );
 			Times times = c.times;
-			Renderer.BytesOut bo = r.render( times, rc, resultsAndBindings.b, results );
+			Renderer.BytesOut bo = r.render( times, rc, termBindings, results );
 			int mainHash = runHash + ru.toString().hashCode();
 			return returnAs( results, mainHash + mt.hashCode(), wrap(times, bo), needsVaryAccept, mt );
 	//

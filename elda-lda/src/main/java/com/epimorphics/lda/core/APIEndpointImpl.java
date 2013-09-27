@@ -150,7 +150,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		String format = r.format;
 	//
 		boolean listEndpoint = isListEndpoint();
-		if (rs.isEmpty() && exceptionIfEmpty && !listEndpoint) EldaException.NoItemFound();
+		// if (rs.isEmpty() && exceptionIfEmpty && !listEndpoint) EldaException.NoItemFound();
 	//
 		MergedModels mergedModels = rs.getModels();		
 		Model metaModel = mergedModels.getMetaModel();

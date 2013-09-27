@@ -1,5 +1,8 @@
 package com.epimorphics.lda.support;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.TypeMapper;
 import com.hp.hpl.jena.graph.*;
@@ -41,6 +44,18 @@ public class ModelPrefixEditor {
 	public boolean isEmpty() {
 		return pe.isEmpty();
 	}
+	
+	/**
+	    Rename the keys of the term-binding map according to this prefix editor.
+	*/
+	public Map<String, String> rename( Map<String, String> tb ) {
+		if (pe.isEmpty()) return tb;
+		Map<String, String> renamed = new HashMap<String, String>(tb.size());
+		for (Map.Entry<String, String> e: tb.entrySet()) {
+			renamed.put( pe.rename(e.getKey()),  e.getValue());
+		}
+		return renamed;
+	}	
 
 	public Model rename( Model x ) {
 		if (pe.isEmpty()) return x;
