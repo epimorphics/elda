@@ -1,0 +1,56 @@
+#
+# ontology for games
+#
+
+@prefix dct:	<http://purl.org/dc/terms/> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix egc:	<http://elda.googlecode.com/hg/vocabs/games#>.
+@prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+
+egc:BoardGame a rdfs:Class
+    ; rdfs:label "Board Game"
+    ; rdfs:comment "Board games taken in a general sense."
+    .
+    
+egc:players a rdf:Property
+    ; rdfs:label "players"
+    ; rdfs:comment "One of the numbers of players a game can accomodate."
+    ; rdfs:range xsd:int
+    .
+    
+egc:Publisher a rdfs:Class
+    ; rdfs:label "Publisher"
+    ; rdfs:comment "A publisher of games (not restricted to board games)."
+    .
+    
+dct:publisher a rdf:Property
+    ; rdfs:label "publishes"
+    ; rdfs:comment "The subject is a publisher, the object is the published entity."
+    .
+    
+rdfs:label a rdf:Property
+    ; rdfs:label "label"
+    .
+    
+rdf:type a rdf:Property
+    ; rdfs:range rdfs:Class 
+    ; rdfs:label "type"
+    .
+    
+egc:designed-by a rdf:Property
+    ; rdfs:label "designedBy"
+    ; rdfs:comment "The subject is some game, the object is the designer."
+    .
+    
+egc:designer-of a rdf:Property
+    ; rdfs:label "designerOf"
+    ; rdfs:comment "The subject is a designer, the object some game they have designed."
+    .
+    
+egc:pubDate a rdf:Property
+    ; rdfs:label "publicationDate"
+    ; rdfs:comment "The subject is some published entity, the object is the year of its publication."
+    ; rdfs:range xsd:integer
+    .	
+
