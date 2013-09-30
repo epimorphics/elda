@@ -1051,6 +1051,28 @@ The Common and Assets files must have the same version.
 <code>elda:textQueryProperty some:Property</code>
 </pre>
 
+<h2>search with shortnames</h2>
+
+<p>
+	Another way to use text search is to give <code>text:query</code>
+	a shortname:
+</p>
+
+<pre>
+text:query a rdf:Property
+	; api:label "search"
+	.
+</pre>
+
+<p>
+	Because <code>text:query</code> can accept a simple string
+	object, this allows a filter <code>search=something</code> to
+	be used in the URL query parameters or in an <code>api:filter</code>
+	in the configuration file. This is especially useful when the
+	shortname appears at the end of a property chain such as
+	<code>author.search=mckillip<code>.
+</p>
+
 <h2>Caveats</h2>
 
 <p>
