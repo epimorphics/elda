@@ -1,3 +1,7 @@
+#
+# Extra Elda configuration properties and classes.
+#
+
 @prefix elda: <http://www.epimorphics.com/vocabularies/lda#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
