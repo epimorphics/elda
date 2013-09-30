@@ -1051,6 +1051,25 @@ The Common and Assets files must have the same version.
 <code>elda:textQueryProperty some:Property</code>
 </pre>
 
+<p>
+	By default, the <code>?item text:query literal</code> triples
+	in the generated SPARQL query are positioned first. If you have
+	reason to believe that your text search queries will be processed
+	more efficiently by positioning them later (just before the
+	type triples), then setting
+</p>
+
+<pre>
+	elda:textPlaceEarly false
+</pre>
+
+<p>
+	in the configuration will do so. Setting it <code>true</code> is
+	equivalent to the default of setting it early. (This assumes that
+	the SPARQL processor won't rearrange the query arbitrarily.)
+</p>
+
+
 <h2>search with shortnames</h2>
 
 <p>

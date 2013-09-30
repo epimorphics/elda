@@ -28,25 +28,31 @@ public class QuerySupport {
 	public static final Any text_query = RDFQ.uri(TextSearchConfig.JENA_TEXT_QUERY.getURI());
 	
 	/**
-	 * Reorder the given triples to try and arrange that query engines with weak
-	 * optimisers aren't given excessively silly queries. So rdf:type statements
-	 * (which are usually less useful than specific properties) are moved down
-	 * the order, and triples with literal objects (which often only appear a
-	 * few times) are moved up. All optional triples are moved to the end
-	 * regardless of their structure.
-	 * 
-	 * @param triples
-	 *            the list of triples to re-order.
-	 * @return a fresh list of triples, a reordered version of triples.
-	 */
-	public static List<Triple> reorder(List<Triple> triples) {
+	    <p>
+	    	Reorder the given triples to try and arrange that query engines with weak
+	 		optimisers aren't given excessively silly queries. So rdf:type statements
+	 		(which are usually less useful than specific properties) are moved down
+	 		the order, and triples with literal objects (which often only appear a
+	 		few times) are moved up. All optional triples are moved to the end
+	 		regardless of their structure.
+	 	</p>
+	 	
+	 	<p>
+	 		Uses of the text query property are pushed early if tqFirst
+	 		is true, and later (just before the types) if it is false. 
+	 	</p>
+	 
+	 	@param triples the list of triples to re-order.
+	 	@return a fresh list of triples, a reordered version of triples.
+	*/
+	public static List<Triple> reorder(List<Triple> triples, boolean tqFirst) {
 		List<Triple> plain = new ArrayList<Triple>(triples.size());
 		List<Triple> hasLiteral = new ArrayList<Triple>(triples.size());
 		List<Triple> typed = new ArrayList<Triple>(triples.size());
+		List<Triple> lateTextQueries = new ArrayList<Triple>(triples.size());
 		for (Triple t : triples) {
-			if (t.P.equals(text_query)) 
-				// avoid current text:query problem
-				hasLiteral.add(t);
+			if (t.P.equals(text_query))
+				(tqFirst ? hasLiteral : lateTextQueries).add(t);
 			else if (t.O instanceof Value && canPromoteSubject(t.S))
 				hasLiteral.add(t);
 			else if (t.P.equals(RDFQ.RDF_TYPE))
@@ -58,6 +64,7 @@ public class QuerySupport {
 		List<Triple> result = new ArrayList<Triple>(triples.size());
 		result.addAll(hasLiteral);
 		result.addAll(plain);
+		result.addAll(lateTextQueries);
 		result.addAll(typed);
 		if (!result.equals(triples))
 			log.debug("reordered\n    " + triples + "\nto\n    " + result);

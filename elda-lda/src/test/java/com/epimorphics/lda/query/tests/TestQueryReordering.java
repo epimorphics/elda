@@ -104,17 +104,31 @@ public class TestQueryReordering {
 	@Test public void testGeneralReordering() {
 		assertEquals( list(ItM, IPN, ITA),reorder(ITA, ItM, IPN) );
 	}
+	
+	@Test public void respectsTextQueryOrderingAgainstPlain() {
+		assertEquals( list(ItM, IPA), reorder(true, ItM, IPA) );
+		assertEquals( list(IPA, ItM), reorder(false, ItM, IPA) );
+	}
+	
+	@Test public void respectsTextQueryOrderingAgainstTypes() {
+		assertEquals( list(ItM, ITA), reorder(true, ItM, ITA) );
+		assertEquals( list(ItM, ITA), reorder(false, ITA, ItM) );
+	}
 
 	private void testRetains(Triple ...triples) {
 		Set<Triple> expected = set(triples);
 		List<Triple> reordered = Arrays.asList( triples );
-		Set<Triple> derived = new HashSet<Triple>( QuerySupport.reorder( reordered ) );
+		Set<Triple> derived = new HashSet<Triple>( QuerySupport.reorder( reordered, true ) );
 		assertEquals( expected.size(), reordered.size() );
 		assertEquals( expected, derived );
 	}
 	
 	private List<Triple> reorder(Triple... triples) {
-		return QuerySupport.reorder( Arrays.asList( triples ) );
+		return reorder( true, triples );
+	}
+	
+	private List<Triple> reorder(boolean tqFirst, Triple... triples) {
+		return QuerySupport.reorder( Arrays.asList( triples ), tqFirst );
 	}
 	
 }

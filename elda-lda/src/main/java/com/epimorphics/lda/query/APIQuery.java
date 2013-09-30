@@ -724,7 +724,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	public String constructBGP(PrefixLogger pl) {
 		StringBuilder sb = new StringBuilder();
-		for (RDFQ.Triple t : QuerySupport.reorder(basicGraphTriples))
+		for (RDFQ.Triple t : QuerySupport.reorder(basicGraphTriples, textSearchConfig.placeEarly()))
 			sb.append(t.asSparqlTriple(pl)).append(" .\n");
 		for (List<RDFQ.Triple> optional : optionalGraphTriples) {
 			sb.append("OPTIONAL { ");

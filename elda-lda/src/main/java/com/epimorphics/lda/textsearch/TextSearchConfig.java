@@ -7,11 +7,7 @@ import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.AnyList;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.vocabularies.EXTRAS;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFList;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class TextSearchConfig {
@@ -23,6 +19,7 @@ public class TextSearchConfig {
 	final Property textQueryProperty;
 	final Property textContentProperty;
 	final AnyList textSearchOperand;
+	final boolean placeEarly;
 
 	/**
 	    Configure this TextSearchConfig according to the properties of the
@@ -34,11 +31,12 @@ public class TextSearchConfig {
 			( configTextQueryProperty( endpoint, JENA_TEXT_QUERY )
 			, configTextContentProperty( endpoint, DEFAULT_CONTENT_PROPERTY )
 			, configTextSearchOperand( endpoint, null )
+			, configPlaceEarly( endpoint, true )
 			);
 	}
 	
 	public TextSearchConfig() {
-		this( JENA_TEXT_QUERY, DEFAULT_CONTENT_PROPERTY, null );
+		this( JENA_TEXT_QUERY, DEFAULT_CONTENT_PROPERTY, null, true );
 	}
 	
 	/**
@@ -48,16 +46,28 @@ public class TextSearchConfig {
 	*/
 	public TextSearchConfig overlay( Resource endpoint ) {
 		return new TextSearchConfig
-			(  configTextQueryProperty( endpoint, textQueryProperty )
+			( configTextQueryProperty( endpoint, textQueryProperty )
 			, configTextContentProperty( endpoint, textContentProperty )
 			, configTextSearchOperand( endpoint, textSearchOperand )
+			, configPlaceEarly( endpoint, placeEarly )
 			);
 	}
 	
-	private TextSearchConfig( Property textQueryProperty, Property textContentProperty, AnyList textSearchOperand ) {
+	private static boolean configPlaceEarly(Resource endpoint, boolean placeEarly) {
+		Statement b = endpoint.getProperty( EXTRAS.textPlaceEarly );
+		return b == null ? placeEarly : b.getBoolean();
+	}
+
+	private TextSearchConfig
+		( Property textQueryProperty
+		, Property textContentProperty
+		, AnyList textSearchOperand
+		, boolean placeEarly
+		) {
 		this.textQueryProperty = textQueryProperty;
 		this.textContentProperty = textContentProperty;
 		this.textSearchOperand = textSearchOperand;
+		this.placeEarly = placeEarly;
 	}
 	
 	private static Property configTextQueryProperty( Resource endpoint, Property ifUnspecified ) {
@@ -109,6 +119,14 @@ public class TextSearchConfig {
 	*/
 	public AnyList getTextSearchOperand() {
 		return textSearchOperand;
+	}
+	
+	/**
+	 	Returns true if text search properties should be ordered early,
+	 	false if they should be ordered late.
+	*/
+	public boolean placeEarly() {
+		return placeEarly;
 	}
 
 }

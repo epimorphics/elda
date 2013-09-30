@@ -123,6 +123,8 @@ public class EXTRAS
 	
 	public static final Property textSearchOperand = property( "textSearchOperand" );
 
+	public static final Property textPlaceEarly = property( "textPlaceEarly" );
+
 	private static Property property( String local )
         { return ResourceFactory.createProperty( EXTRA + local ); }
 

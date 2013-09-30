@@ -43,7 +43,11 @@ elda:element a rdf:Property
 	.
 
 elda:enableETags a rdf:Property
-	; rdfs:comment ""
+	; rdfs:comment 
+		"""
+		If given the value true, then Elda generates an ETag for
+		its results.
+		"""
 	.
 
 elda:enhanceViewWith a rdf:Property
@@ -136,6 +140,9 @@ elda:textQueryProperty a rdf:Property
 
 elda:textSearchOperand a rdf:Property
 	; rdfs:comment ""
+	.
+
+elda:textPlaceEarly a rdf:Property
 	.
 
 elda:uriTemplatePrefix a rdf:Property
