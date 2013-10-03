@@ -6,7 +6,10 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 
 public class StubQueryBasis implements QueryBasis {
+	
 	private final ShortnameService sns;
+	
+	private final TextSearchConfig textSearchConfig = new TextSearchConfig();
 	
 	StubQueryBasis(ShortnameService sns) {
 		this.sns = sns;
@@ -25,6 +28,6 @@ public class StubQueryBasis implements QueryBasis {
 	@Override public boolean isItemEndpoint() {	return false; }
 	
 	@Override public TextSearchConfig getTextSearchConfig() { 
-		return null; 
+		return textSearchConfig; 
 	}
 }
