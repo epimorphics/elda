@@ -17,7 +17,7 @@
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
 
 # Prefix for example-local entities.
-@prefix hello:				<http://localhost:8080/elda/vocabulary/>.
+@prefix hello:				<http://elda.googlecode.com/hg/vocabs/games#>.
 
 # ---------------------------------------------------------------------
 # API config
@@ -26,7 +26,7 @@ hello:velocity-world a api:API
 	; rdfs:label "Hello World example API -- games, rendered with Velocity"@en
 	; api:sparqlEndpoint <local:data/example-data.ttl>
 	# ; api:defaultViewer api:labelledDescribeViewer
-	; api:base "/elda"
+	; api:base "/standalone"
 	; api:endpoint hello:games 
 	; api:defaultFormatter
 		[a elda:VelocityFormatter
@@ -35,6 +35,7 @@ hello:velocity-world a api:API
 		; api:mimeType "text/html"
 		# ; api:stylesheet "page-shell.vm"
 		]
+	; api:variable [api:name "_velocityRoot"; api:value "http://localhost:8080/standalone/lda-assets/vm/"]
 	.
     
 # Endpoint definition	

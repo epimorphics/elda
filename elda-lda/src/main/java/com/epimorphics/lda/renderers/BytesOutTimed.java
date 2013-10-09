@@ -17,6 +17,7 @@ import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.CountStream;
 import com.epimorphics.util.StreamUtils;
+import com.hp.hpl.jena.shared.WrappedException;
 
 /**
  	A BytesOutTimed is a BytesOut that counts the bytes written and
@@ -38,7 +39,7 @@ public abstract class BytesOutTimed implements BytesOut {
 	        t.setRenderDuration( System.currentTimeMillis() - base, getFormat() );
 		} catch (Throwable e) {
 			log.warn( "client exception during streaming: " + e.getMessage() );
-			e.printStackTrace( System.err );
+			throw new WrappedException( e );
 		}
 	}
 	

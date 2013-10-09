@@ -21,7 +21,8 @@
     </a>
 #end
 
-#macro(nesting, $item)
+#macro(nesting, $item, $seen)
+    #set ($unseen = $seen.add($item))
 	#foreach ($property in $item.properties)
 		<hr style="color: #fff">
 		<div class="indented">
@@ -43,13 +44,17 @@
 						#if ($value.justALabel)
 							$value.label.cut()
 						#else
-							#nesting($value)
+					      <h2><a href="$value.URI" id="$value.id">$value.label</a></h2>
+						    #if ($unseen) 
+						      #nesting($value, $seen)
+						    #end
 						#end
 					#end
 				</div>
 			#end
 		</div>
 	#end
+	#set ($ignored = $seen.remove($item))
 #end
 
 <table width="100%">
@@ -62,7 +67,7 @@
 		#foreach ($item in $items) 
 			<div class="itembox">
 			<h2><a href="$item.URI" id="$item.id">$item.label</a></h2>
-			#nesting($item)
+			#nesting($item, $seen)
 			</div>
 		#end
 	</div>

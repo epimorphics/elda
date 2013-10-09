@@ -34,7 +34,8 @@ public class Help {
 			log.debug( "using default velocity properties." );
 		//
 			String defaultRoot = b.getAsString("_resourceRoot", "") + "/vm/";
-			String templateRoot = b.getAsString("_velocityRoot", defaultRoot);
+			String templateRoot = b.getAsString("_velocityRoot", defaultRoot);	
+		//
 			ve.setProperty( "runtime.references.strict", "true" );
 //			ve.setProperty( "resource.loader",  "class" );
 //			ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );

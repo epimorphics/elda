@@ -1,7 +1,7 @@
 package com.epimorphics.lda.renderers.velocity;
 
 import java.io.*;
-import java.util.List;
+import java.util.*;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -43,8 +43,9 @@ public class VelocityCore {
 		vc.put( "names", names );
 		vc.put( "formats", Help.getFormats( m ) );
 		vc.put( "items", itemised );
-		vc.put( "meta",  Help.getMetadataFrom( names, ids, m ) );
-		vc.put( "vars",  Help.getVarsFrom( names, ids, m ) );
+		vc.put( "meta", Help.getMetadataFrom( names, ids, m ) );
+		vc.put( "vars", Help.getVarsFrom( names, ids, m ) );
+		vc.put( "seen", new HashSet<WrappedNode>() );
 	//
 		Template t = ve.getTemplate( templateName );
 		try {
