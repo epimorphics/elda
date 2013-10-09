@@ -32,9 +32,9 @@ public class TestRecursionDetectionInProvidedTemplate {
 		MediaType mt = MediaType.TEXT_HTML;
 		Bindings b = new Bindings();
 		
-		// hack the velocity root. how do we do better?
-		b.put("_velocityRoot", "/home/chris/SPOO/elda/elda-standalone/src/main/webapp/lda-assets/vm");		
-		
+	// hack the velocity root. how do we do better?
+		b.put("_velocityRoot", "../elda-standalone/src/main/webapp/lda-assets/vm");	
+	//
 		Resource config = model.createResource( "eh:/config" );
 		Renderer r = new VelocityRenderer( mt, b, config );
 	//
