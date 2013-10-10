@@ -33,8 +33,8 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
 import com.epimorphics.lda.tests_support.MakeData;
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.URIUtils;
-import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 

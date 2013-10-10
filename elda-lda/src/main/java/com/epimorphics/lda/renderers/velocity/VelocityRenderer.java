@@ -12,9 +12,9 @@ import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.RDFUtils;
-import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class VelocityRenderer implements Renderer {

@@ -1,0 +1,41 @@
+<project name="Elda" default="schemagen" basedir=".">
+	<description>
+        Ant script extension called from Maven to perform build tasks.
+    </description>
+	<!-- set global properties for this build -->
+	<property name="src" location="${basedir}/elda-lda/src" />
+
+	<property name="classpath" value="/home/chris/Fuseki/jena-fuseki-0.2.7/fuseki-server.jar" />
+
+	<target name="schemagen_command">
+		<java className="jena.schemagen" classPath="${classpath}" failonerror="true">
+			<arg value="-i" /> <arg value="${basedir}/vocabs/${what}.ttl" />
+			<arg value="-a" /> <arg value="${namespace}" />
+			<arg value="-o" /> <arg value="${src}/main/java/" />
+			<arg value="--package" /> <arg value="com.epimorphics.lda.vocabularies" />
+			<arg value="-n" /> <arg value="${CLASSNAME}" />
+			<arg value="--inference" />
+		</java>
+		<echo>schemagen ${CLASSNAME} completed</echo>
+	</target>
+
+    <target name="schemagen_API">
+        <antcall target="schemagen_command">
+            <param name="what" value="api"/>
+        	<param name="namespace" value="http://purl.org/linked-data/api/vocab#" />
+            <param name="CLASSNAME" value="API"/>
+        </antcall>  
+    </target>
+
+	<target name="schemagen_EXTRAS">
+		<antcall target="schemagen_command">
+			<param name="what" value="extras"/>
+            <param name="namespace" value="http://www.epimorphics.com/vocabularies/lda#" />
+			<param name="CLASSNAME" value="EXTRAS"/>
+		</antcall>	
+	</target>
+	
+	<target name="schemagen" depends="schemagen_API,schemagen_EXTRAS">
+	</target>
+	
+</project>

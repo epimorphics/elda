@@ -22,7 +22,7 @@ import org.apache.jena.atlas.json.JsonObject;
 import org.codehaus.jettison.json.JSONException;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
-import com.epimorphics.vocabs.API;
+import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.OneToManyMap;

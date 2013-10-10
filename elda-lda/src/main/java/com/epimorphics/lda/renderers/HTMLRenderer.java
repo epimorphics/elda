@@ -20,10 +20,10 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.XHV;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Util;
-import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 

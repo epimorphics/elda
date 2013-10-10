@@ -46,7 +46,7 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.jsonrdf.utils.ModelCompareUtils;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.vocabs.API;
+import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.OWL;
 

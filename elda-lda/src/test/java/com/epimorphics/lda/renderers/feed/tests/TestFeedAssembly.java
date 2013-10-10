@@ -14,13 +14,11 @@ import com.epimorphics.lda.renderers.FeedRenderer.FeedResults;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests.SNS;
-import com.epimorphics.lda.vocabularies.EXTRAS;
-import com.epimorphics.lda.vocabularies.SKOSstub;
+import com.epimorphics.lda.vocabularies.*;
 import static com.epimorphics.util.CollectionUtils.list;
 
 import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.MediaType;
-import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.DCTerms;

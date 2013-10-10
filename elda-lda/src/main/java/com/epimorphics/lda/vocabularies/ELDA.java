@@ -9,7 +9,6 @@
 package com.epimorphics.lda.vocabularies;
 
 import com.epimorphics.lda.Version;
-import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.vocabulary.RDF;

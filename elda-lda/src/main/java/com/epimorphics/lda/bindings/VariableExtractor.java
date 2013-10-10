@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.Value;
-import com.epimorphics.vocabs.API;
+import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;

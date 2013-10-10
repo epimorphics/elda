@@ -322,6 +322,15 @@ api:RawLiteral a rdfs:Class
     ; rdfs:comment "A datatype to mark the values of a property as being untyped, unlanguaged literals."
     .
 
+api:SimpleLiteral a rdfs:Class
+	; rdfs:label "Simple literal"@en
+	; rdfs:comment "(Elda extension) A datatype to mark the values of a property as being unadorned literals."
+	.
+
+api:PlainLiteral a rdfs:Class
+	; rdfs:label "Plain literal"@en
+	; rdfs:comment "(Elda extension) A datatype to mark the values of a property as being untyped literals."
+	.
 
 # Add commentary to these.
 
@@ -354,6 +363,8 @@ api:structured a rdf:Property.
 api:variable a rdf:Property.
 
 api:value a rdf:Property.
+
+api:multiValued a rdf:Property.
 
 api:processor a rdf:Property.
 

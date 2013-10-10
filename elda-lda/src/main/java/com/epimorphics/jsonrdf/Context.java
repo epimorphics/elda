@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import com.epimorphics.lda.exceptions.ReusedShortnameException;
-import com.epimorphics.vocabs.API;
+import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;

@@ -47,9 +47,9 @@ public class VelocityCore {
 		vc.put( "meta", Help.getMetadataFrom( names, ids, m ) );
 		vc.put( "vars", Help.getVarsFrom( names, ids, m ) );
 		vc.put( "seen", new HashSet<WrappedNode>() );
-		vc.put( "onceies", Help.getOnceies( wrappedPage, m ) );
-		
-		System.err.println( ">> " + Help.getOnceies( wrappedPage, m ) );
+//		vc.put( "onceies", Help.getOnceies( wrappedPage, m ) );
+//		
+//		System.err.println( ">> " + Help.getOnceies( wrappedPage, m ) );
 		
 	//
 		Template t = ve.getTemplate( templateName );

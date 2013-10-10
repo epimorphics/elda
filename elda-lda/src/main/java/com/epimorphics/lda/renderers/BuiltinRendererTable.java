@@ -12,9 +12,9 @@ import java.util.Map;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.MediaType;
-import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 

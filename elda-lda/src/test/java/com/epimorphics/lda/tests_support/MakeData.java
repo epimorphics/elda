@@ -13,7 +13,7 @@ import java.util.*;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.support.MultiMap;
-import com.epimorphics.vocabs.API;
+import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;

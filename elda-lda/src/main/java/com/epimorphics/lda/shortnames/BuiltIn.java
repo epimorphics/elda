@@ -3,7 +3,6 @@ package com.epimorphics.lda.shortnames;
 import java.util.*;
 
 import com.epimorphics.lda.vocabularies.*;
-import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;

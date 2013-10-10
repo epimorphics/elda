@@ -14,9 +14,9 @@ import java.util.List;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.*;
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.MediaType;
-import com.epimorphics.vocabs.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 

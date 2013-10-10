@@ -10,7 +10,7 @@ package com.epimorphics.lda.shortnames;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.epimorphics.vocabs.API;
+import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 

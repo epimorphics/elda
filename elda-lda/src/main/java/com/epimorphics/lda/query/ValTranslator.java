@@ -12,7 +12,7 @@ import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.vocabs.API;
+import com.epimorphics.lda.vocabularies.API;
 
 /**
     ValTranslator handles the translation of the V in ?P=V
