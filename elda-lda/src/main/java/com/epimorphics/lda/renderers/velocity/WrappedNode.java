@@ -80,6 +80,14 @@ public class WrappedNode implements Comparable<WrappedNode> {
 	}
 	
 	/**
+	    Returns <code>r</code> wrapped using the same bundle
+	    as this WrappedNode.
+	*/
+	public WrappedNode wrap( Resource r ) {
+		return new WrappedNode( bundle, r );
+	}
+	
+	/**
 		Return this wrapped resource's preferred label;
 		the first literal of (a) this resources skos:prefLabel,
 		(b) an unlanguaged rdfs:label, (c) a languaged

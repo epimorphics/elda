@@ -35,7 +35,8 @@ public class VelocityCore {
 		List<WrappedNode> itemised = WrappedNode.itemise( b, results.getResultList() );
 	//
 		VelocityContext vc = new VelocityContext();
-		vc.put( "thisPage", new WrappedNode( b, thisPage ) );
+		WrappedNode wrappedPage = new WrappedNode( b, thisPage );
+		vc.put( "thisPage", wrappedPage );
 		vc.put( "isItemEndpoint", isItemEndpoint );
 		vc.put( "isListEndpoint", isListEndpoint );
 		if (isItemEndpoint) vc.put( "primaryTopic", topicOf(b, thisPage) );
@@ -46,6 +47,10 @@ public class VelocityCore {
 		vc.put( "meta", Help.getMetadataFrom( names, ids, m ) );
 		vc.put( "vars", Help.getVarsFrom( names, ids, m ) );
 		vc.put( "seen", new HashSet<WrappedNode>() );
+		vc.put( "onceies", Help.getOnceies( wrappedPage, m ) );
+		
+		System.err.println( ">> " + Help.getOnceies( wrappedPage, m ) );
+		
 	//
 		Template t = ve.getTemplate( templateName );
 		try {

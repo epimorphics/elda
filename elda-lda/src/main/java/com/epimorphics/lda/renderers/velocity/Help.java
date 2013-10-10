@@ -68,6 +68,28 @@ public class Help {
 		return b.getAsString("_resourceRoot", "") + "/velocity.properties";
 	}
 
+	// items that appear as an object just once.
+	public static Set<WrappedNode> getOnceies(WrappedNode w, Model m) {
+		Set<WrappedNode> result = new HashSet<WrappedNode>();
+		Map<Resource, Integer> count = new HashMap<Resource, Integer>();
+	//
+		for (StmtIterator it = m.listStatements(); it.hasNext();) {
+			Statement s = it.nextStatement();
+			RDFNode o = s.getObject();
+			if (o.isURIResource()) {
+				Resource or = o.asResource();
+				Integer i = count.containsKey(or) ? count.get(or) : 0;
+				count.put(or, i + 1);
+			}
+		}
+	//
+		for (Map.Entry<Resource, Integer> e: count.entrySet()) {
+			if (e.getValue() == 1) result.add(w.wrap(e.getKey()) );
+		}
+	//
+		return result;
+	}
+
 	static Properties getProperties( String fileName ) {
 		Properties p = new Properties();
 		InputStream is = EldaFileManager.get().open( fileName );
