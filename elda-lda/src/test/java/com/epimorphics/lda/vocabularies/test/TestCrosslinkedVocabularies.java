@@ -26,11 +26,6 @@ public class TestCrosslinkedVocabularies {
 		assertEquals( EXTRAS.EXTRA, RDFUtil.Vocab.NS );
 	}
 	
-	@Test public void ensure_imported_constants_match() {
-		assertEquals( RDFUtil.Vocab.missingListElement, EXTRAS.missingListElement );
-		assertEquals( RDFUtil.Vocab.missingListTail, EXTRAS.missingListTail );
-	}
-	
 	@Test public void ensure_spellings_match_names() {
 		assertEquals( "missingListTail", RDFUtil.Vocab.missingListTail.getLocalName() );
 		assertEquals( "missingListElement", RDFUtil.Vocab.missingListElement.getLocalName() );
