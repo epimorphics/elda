@@ -1,15 +1,13 @@
-<project name="Elda" default="schemagen" basedir=".">
+<project name="Elda" default="schemagen" basedir="..">
 	<description>
         Ant script extension called from Maven to perform build tasks.
     </description>
 	<!-- set global properties for this build -->
 	<property name="src" location="${basedir}/elda-lda/src" />
 
-	<property name="classpath" value="/home/chris/Fuseki/jena-fuseki-0.2.7/fuseki-server.jar" />
-
 	<target name="schemagen_command">
 		<java className="jena.schemagen" classPath="${classpath}" failonerror="true">
-			<arg value="-i" /> <arg value="${basedir}/vocabs/${what}.ttl" />
+			<arg value="-i" /> <arg value="${basedir}/../vocabs/${what}.ttl" />
 			<arg value="-a" /> <arg value="${namespace}" />
 			<arg value="-o" /> <arg value="${src}/main/java/" />
 			<arg value="--package" /> <arg value="com.epimorphics.lda.vocabularies" />

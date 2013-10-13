@@ -103,7 +103,24 @@
 		            </configuration>            
 		          </execution>
 		        </executions>
-          </plugin>
+          </plugin>   
+
+    <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+            <execution>
+                <phase>generate-sources</phase>
+                <configuration>
+                    <target>
+                        <property name="classpath" refid="maven.compile.classpath" />
+                        <ant />
+                    </target>
+                </configuration>
+                <goals> <goal>run</goal> </goals>
+            </execution>
+        </executions>
+    </plugin>
           
           <plugin>
                <groupId>org.apache.maven.plugins</groupId>
