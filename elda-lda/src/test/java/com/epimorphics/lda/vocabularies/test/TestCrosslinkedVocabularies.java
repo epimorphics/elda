@@ -23,7 +23,7 @@ import com.epimorphics.lda.vocabularies.EXTRAS;
 public class TestCrosslinkedVocabularies {
 
 	@Test public void RDF_Vocab_shares_NS_with_EXTRAS() {
-		assertEquals( EXTRAS.EXTRA, RDFUtil.Vocab.NS );
+		assertEquals( EXTRAS.NS, RDFUtil.Vocab.NS );
 	}
 	
 	@Test public void ensure_spellings_match_names() {

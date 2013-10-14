@@ -35,7 +35,7 @@ public class ELDA
 	
 	public static final Resource Elda = m.createResource();
 	
-	public static final Resource ThisElda = resource( EXTRAS.EXTRA, "Elda_" + version );
+	public static final Resource ThisElda = resource( EXTRAS.NS, "Elda_" + version );
 	
 	public static final Resource EldaRepository = resource( "https://elda.googlecode.com/hg/", "" );
 

@@ -1,11 +1,27 @@
 <project name="Elda" default="schemagen" basedir="..">
 	<description>
-        Ant script extension called from Maven to perform build tasks.
-    </description>
-	<!-- set global properties for this build -->
-	<property name="src" location="${basedir}/elda-lda/src" />
+		ANT task to perform vocabulary class building using schemagen.
+		Classpath is inherited from Maven.
+	</description>
 
-	<target name="schemagen_command">
+	<property name="src" location="${basedir}/src" />
+
+	<target name="testUpToDate">
+
+		<uptodate 
+			property="schemagen_api_UpToDate"
+			srcfile="${basedir}/../vocabs/api.ttl"
+			targetfile="${src}/main/java/com/epimorphics/lda/vocabularies/API.java"
+		/>
+
+		<uptodate 
+			property="schemagen_extras_UpToDate"
+			srcfile="${basedir}/../vocabs/extras.ttl"
+			targetfile="${src}/main/java/com/epimorphics/lda/vocabularies/EXTRAS.java"
+		/>
+	</target>
+
+	<target name="schemagen_command" unless="schemagen_${what}_UpToDate" depends="testUpToDate">
 		<java className="jena.schemagen" classPath="${classpath}" failonerror="true">
 			<arg value="-i" /> <arg value="${basedir}/../vocabs/${what}.ttl" />
 			<arg value="-a" /> <arg value="${namespace}" />

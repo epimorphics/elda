@@ -111,7 +111,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
         }
     }
 
-    static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.EXTRA + "SIBLING" );
+    static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.NS + "SIBLING" );
     
     private Resource createMetadata(UriInfo ui, String pathStub, String formatName, SpecRecord rec) {
         Bindings cc = Bindings.createContext( Bindings.uplift( rec.getBindings() ), JerseyUtils.convert( ui.getQueryParameters() ) );
