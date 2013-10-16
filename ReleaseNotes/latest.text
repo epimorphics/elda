@@ -6,26 +6,26 @@
   parameters and configuration properties, and additional 
   introductory materials. The text search documentation has 
   been updated. The page previously called "advanced" has 
-  been renamed to "reference" and given a table-of-contents.                                                                                                                                                                                           
-                                                                                                                                                                                                           
+  been renamed to "reference" and given a table-of-contents.
+
 * API.java has moved packages and now lives in 
   com.epimorphics.lda.vocabularies (alongside EXTRAS and the 
-  other vocabulary classes).                                                                                                                                                     
-                                                                                                                                                                                                           
-  Both API.java and EXTRAS.java are constructed from the corresponding files                                                                                                                               
-  in elda/vocabs by using `mvn generate-sources`. (If the Java files are                                                                                                                                   
-  up-to-date no generation is done.)                                                                                                                                                                       
-                                                                                                                                                                                                           
-* The example velocity templates and atom renderer now trap cycles in                                                                                                                                      
-  the view data.                                                                                                                                                                                           
-                                                                                                                                                                                                           
-* There is limited control over where the text:query triples appear                                                                                                                                        
-  in the generated SELECT query -- this may be helpful to the                                                                                                                                              
-  remote SPARQL engine.                                                                                                                                                                                    
-                                                                                                                                                                                                           
-* The example games ontology is now published as part of Elda's                                                                                                                                            
-  googlecode pages. The example data has been extended.                                                                                                                                                    
-                                                                                                                                                                                                           
+  other vocabulary classes).
+
+  Both API.java and EXTRAS.java are constructed from the corresponding 
+  files in elda/vocabs by using `mvn generate-sources`. (If the Java 
+  files are up-to-date no generation is done.)
+
+* The example velocity templates and atom renderer now trap cycles in
+  the view data.
+
+* There is limited control over where the text:query triples appear
+  in the generated SELECT query -- this may be helpful to the
+  remote SPARQL engine.
+
+* The example games ontology is now published as part of Elda's
+  googlecode pages. The example data has been extended.
+
 * Term bindings (ie LDA shortnames) are rewritten according to
   the URI-renaming rules if any are present, for consistency
   with the model rewriting.
