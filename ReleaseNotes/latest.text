@@ -1,7 +1,16 @@
-Elda 1.2.26                                                                                                                                                                                                
++ ----------------------------------------------------------------------
+| Elda 1.2.26 (DEVELOPING)    
+ 
+* The documentation has been improved and restyled. It now
+  includes a cribsheet with summaries of the Elda query 
+  parameters and configuration properties, and additional 
+  introductory materials. The text search documentation has 
+  been updated. The page previously called "advanced" has 
+  been renamed to "reference" and given a table-of-contents.                                                                                                                                                                                           
                                                                                                                                                                                                            
-* API.java has moved packages and now lives in com.epimorphics.lda.vocabularies                                                                                                                            
-  (alongside EXTRAS and the other vocabulary classes).                                                                                                                                                     
+* API.java has moved packages and now lives in 
+  com.epimorphics.lda.vocabularies (alongside EXTRAS and the 
+  other vocabulary classes).                                                                                                                                                     
                                                                                                                                                                                                            
   Both API.java and EXTRAS.java are constructed from the corresponding files                                                                                                                               
   in elda/vocabs by using `mvn generate-sources`. (If the Java files are                                                                                                                                   
@@ -21,74 +30,74 @@ Elda 1.2.26
   the URI-renaming rules if any are present, for consistency
   with the model rewriting.
 
-* The documentation has been improved and restyled. It now
-  includes a cribsheet with summaries of the Elda query parameters
-  and configuration properties, and additional introductory
-  materials. The text search documentation has been updated.
-  The page previously called "advanced" has been renamed to
-  "reference" and given a table-of-contents.
+* The separate release notes for each release have been replaced
+  by a single release notes document covering the latest releases
+  and an attic containing older release notes. The "notelets"
+  history has been abandoned. This change makes it easier for us
+  to create release notes that cross-refer.
 
-Elda 1.2.25 
++ ----------------------------------------------------------------------
+| Elda 1.2.25 (RELEASED)
 
-(1) A subtle bug where some uses of JSON rendering changed
-    gave the range type rdf:PlainLiteral to properties that have been
-    give no type in the LDA configuration, and continued to use this
-    wrong range in subsequent queries, has been fixed.
+* A subtle bug where some uses of JSON rendering changed
+  gave the range type rdf:PlainLiteral to properties that have been
+  give no type in the LDA configuration, and continued to use this
+  wrong range in subsequent queries, has been fixed.
 
-(2) Elda will now discard any and all query parameters that have
-    been given an empty value rather than using the empty string
-    as the value.
+* Elda will now discard any and all query parameters that have
+  been given an empty value rather than using the empty string
+  as the value.
 
-(3) An EXPERIMENTAL atom feed renderer has been added. For
-    details see the forthcoming on-site documentation.
+* An EXPERIMENTAL atom feed renderer has been added. For
+  details see the forthcoming on-site documentation.
 
-(4) The undocument and untested and historical _search query
-    parameter now generates jena-text compatible queries as available
-    in later versions of Fuseki. The LARQ code in Elda has been
-    removed. For  details see the forthcoming on-site documentation.
+* The undocument and untested and historical _search query
+  parameter now generates jena-text compatible queries as available
+  in later versions of Fuseki. The LARQ code in Elda has been
+  removed. For  details see the forthcoming on-site documentation.
 
-Elda 1.2.24 Release Notes
++ ----------------------------------------------------------------------
+| Elda 1.2.24 (RELEASED)
 
-A bug in the config-reload code that meant that Elda 1.2.23
-reloaded configs a LOT has been fixed. Users of Elda 1.2.23
-should upgrade to 1.2.24.
+* Users should use Elda 1.2.24 in place of 1.2.23 to fix
+  a excessive-reloading bug. Otherwise .24 is only slightly
+  different from .23 and the following notes apply without
+  change.
 
-Various WARN log elements have been changed to DEBUG
-or eliminated.
+* A bug in the config-reload code that meant that Elda 1.2.23
+  reloaded configs a LOT has been fixed. Users of Elda 1.2.23
+  should upgrade to 1.2.24.
 
-The hasFormat links from the current page now preserve
-the page size & number rather than discarding them.
-The effect of this is that the formatting links on the
-XSLT-generated HTML page now link to "the same page but
-with the selected format", rather than resetting to
-the first page.
+* Various WARN log elements have been changed to DEBUG
+  or eliminated.
 
-Minor code cleanups and fixes.
+* The hasFormat links from the current page now preserve
+  the page size & number rather than discarding them.
+  The effect of this is that the formatting links on the
+  XSLT-generated HTML page now link to "the same page but
+  with the selected format", rather than resetting to
+  the first page.
 
-Users should use Elda 1.2.24 in place of 1.2.23 to fix
-a excessive-reloading bug. Otherwise .24 is only slightly
-different from .23 and the following notes apply without
-change.
+* Minor code cleanups and fixes.
 
-===========================================================
++ ----------------------------------------------------------------------
+| Elda 1.2.23 (USE 1.2.24 INSTEAD)
 
-Elda 1.2.23
+* This release of Elda has significant changes in Elda
+  initialisation, configuration, and internal structure.
+  Users who are upgrading their Elda MUST read these
+  release notes and the Elda documentation at
 
-This release of Elda has significant changes in Elda
-initialisation, configuration, and internal structure.
-Users who are upgrading their Elda MUST read these
-release notes and the Elda documentation at
+   http://elda.googlecode.com/hg/docs/E1.2.23-index.html
+   http://elda.googlecode.com/hg/docs/E1.2.23-advanced.html
 
- http://elda.googlecode.com/hg/docs/E1.2.23-index.html
- http://elda.googlecode.com/hg/docs/E1.2.23-advanced.html
+  carefully. These changes should make future Elda updates
+  easier to manage. Existing configurations (using the Elda
+  Loader class) should continute to work but support for Loader
+  will be dropped in a future Elda release.
 
-carefully. These changes should make future Elda updates
-easier to manage. Existing configurations (using the Elda
-Loader class) should continute to work but support for Loader
-will be dropped in a future Elda release.
-
-NOTE that the artifact previously known as `lda` is now
-`elda-lda` for consistency with the other elda- artifacts.
+  NOTE that the artifact previously known as `lda` is now
+  `elda-lda` for consistency with the other elda- artifacts.
 
 * The json-rdf module has been absorbed into Elda.  
   The Elda assets have been moved to their own module.
@@ -176,13 +185,14 @@ NOTE that the artifact previously known as `lda` is now
 * JENA. Elda has been updated to use Jena 2.10.1 (with TDB 0.10.1 if
   using the built-in TDB handler).
 
-Elda 1.2.21
++ ----------------------------------------------------------------------
+| Elda 1.2.21 (RELEASED)
 
-    The XML renderer's changes to separate object and meta-data
-    did not correctly implement the intended cycle-breaking
-    algorithm, and the cycle detection code had a subtle bug
-    in it. The bug has been removed and the cycle-breaking
-    behaviour is a close match to that found in Elda 12/13.
+* The XML renderer's changes to separate object and meta-data
+  did not correctly implement the intended cycle-breaking
+  algorithm, and the cycle detection code had a subtle bug
+  in it. The bug has been removed and the cycle-breaking
+  behaviour is a close match to that found in Elda 12/13.
 
-    Fix bug in JSON renderer.
+* Fix bug in JSON renderer.
 
