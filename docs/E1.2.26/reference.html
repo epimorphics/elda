@@ -1089,7 +1089,7 @@ text:query a rdf:Property
 	be used in the URL query parameters or in an <code>api:filter</code>
 	in the configuration file. This is especially useful when the
 	shortname appears at the end of a property chain such as
-	<code>author.search=mckillip<code>.
+	<code>author.search=mckillip</code>.
 </p>
 
 <h2>Caveats</h2>
@@ -1170,6 +1170,24 @@ If the SPARQL server supports nested
 <p>
     Elda reserves LDA variable names that begin "_" for
     configuration purposes.
+</p>
+
+<p>
+    While the LDA spec says
+    (<a href="http://code.google.com/p/linked-data-api/wiki/API_Binding_Variables">
+    see API Binding Variables</a>) that
+    <blockquote>
+	endpoint-level variables can also depend on API-level 
+	variables, but not vice versa.
+    </blockquote>
+    Elda specifically allows API-level variables to depend on
+    endpoint variables. This means that the value of an API
+    variable cannot be determined in advance (if it depends on
+    any variables that may be bound in endpoints, <i>eg</i>
+    by appearing in a URI template). This turns out to allow
+    convenient idioms where API-level variable declarations
+    assemble a result from components that can appear elsewhere
+    at the API level or from the current endpoint.
 </p>
 
 <h3>Variables used by the stylesheet</h3>
