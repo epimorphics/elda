@@ -59,6 +59,12 @@ RELEASING ELDA
   application and eyeballing the results of well-known
   queries [this will become automated at some point].
 
+  IN PARTICULAR, after consultation with other interested
+  parties (eg Stuart), build a new EA webapp, put it up
+  on staging, and check that the BW app works. It makes
+  many specific queries and the app working syas that
+  bery many of these (still) work.
+
   Ensure the release notes are up-to-date. The top
   entry in ReleaseNotes/latest.text should be marked 
   DEVELOPING. Use `hg log | more` to check changes since
