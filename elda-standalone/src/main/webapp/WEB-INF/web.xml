@@ -20,17 +20,6 @@
         </param-value>
 	</context-param>
   
-  <servlet>
-  	<servlet-name>loader-init</servlet-name>
-  	<servlet-class>com.epimorphics.lda.routing.Loader</servlet-class>
-  	<init-param>
-		<param-name>com.epimorphics.api.initialSpecFile</param-name>
-        <param-value>specs/system-test-A.ttl</param-value>
-  	</init-param>
-    
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-  
 <!--
     <filter>
         <filter-name>Jersey Web Application</filter-name>

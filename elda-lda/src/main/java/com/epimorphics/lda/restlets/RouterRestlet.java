@@ -120,7 +120,7 @@ import com.sun.jersey.api.NotFoundException;
 				String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
 				String propertiesFile = "log4j.properties";
 				PropertyConfigurator.configure( baseFilePath + propertiesFile );
-				log.info( "\n\n    =>=> Starting Elda " + Version.string + "\n" ); 
+				log.info( "\n\n    =>=> Starting Elda (Init)" + Version.string + "\n" ); 
 				announced = true;
 			}
 			getRouterFor( sc );
