@@ -51,6 +51,8 @@ RELEASING ELDA
 
   Have permission to administer the elda.googlecode homepage.  
 
+  Willing to commit to this latest Elda version.
+
 * PREAMBLE
 
   Run a test build using `mvn install`. 
@@ -95,6 +97,17 @@ RELEASING ELDA
   This builds and deploys non-SNAPSHOT Elda artifacts.
   It should not fail (that's what the "run test build"
   and "all files under change control" steps are for).
+
+  THIS STEP IS NOT IDEMPOTENT AND NOT REVERSIBLE. The
+  release/prepare-perform cycle converts $VERSION-SNAPSHOT
+  to $VERSION and deploys the Elda artifacts, tagging
+  the repository, before incrementing the version and
+  creating $VERSION'-SNAPSHOT. Because convention decrees
+  that existing artifacts aren't deleted or changed,
+  the new Elda version is Out There and can't be pulled
+  back. 
+
+  This is far from perfect but will have to do. 
 
 * POSTAMBLE 
 
