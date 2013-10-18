@@ -39,17 +39,29 @@ $(function() {
 	
 	h2 {
 		font-size: 1em
-		; margin-left: 1ex
+		; margin: 1ex 0 0 0
 	}
 	
 	.indented {
 		margin-left: 1ex
 	}
 	
+	.hr-style {
+		background: black
+		; height: 1px
+		; margin: 2px
+		; padding: 0
+	}
+	
+	.bold {
+		font-weight: bold
+	}
+	
 	.itembox {
-		border: 1px solid black
+		border: 1ex solid #aaa
 		; border-radius: 1ex
-		; margin-bottom: 1ex
+		; margin: 1ex
+		; padding: 1ex
 	}
 	
 	header h1 {
@@ -65,18 +77,17 @@ $(function() {
 	}
 	
 	.bordered-panel {
-		border: 1px solid black
+		border: 1ex solid #aaa
 		; border-radius: 2ex 
 	}
 	
 	.right-header {
-		background-color: #444
+		background: black
 		; min-width: 3cm
 		; border-radius: 1ex
 		; color: white
-		; font-size: 140%
-		; font-family: Gill Sans, Arial, sans-serif
-		; padding: 10px 66px
+		; padding: 10px 20px
+		; font-weight: bold
 	}
 	
 	footer {

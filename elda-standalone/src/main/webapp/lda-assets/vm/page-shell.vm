@@ -47,7 +47,7 @@
 #macro(nesting, $item, $seen)
     #set ($unseen = $seen.add($item))
 	#foreach ($property in $item.properties)
-		<hr style="color: #fff">
+		<hr class="hr-style">
 		<div class="indented">
 			<a href="$property.URI">$property.label.cut()</a>
 			#set ($values = ${item.getValues($property)})
@@ -68,12 +68,14 @@
 	<div valign="top" width="100%" id="search-results">
 		<h1>Search Results</h1>
 		
-		#foreach ($item in $items) 
-			<div class="itembox">
-			<h2><a href="$item.URI" id="$item.id">$item.label</a></h2>
-			#nesting($item, $seen)
-			</div>
-		#end
+		<div>
+			#foreach ($item in $items) 
+				<div class="itembox">
+				<h2><a class="bold" href="$item.URI" id="$item.id">$item.label</a></h2>
+				#nesting($item, $seen)
+				</div>
+			#end
+		</div>
 	</div>
 	
 </td>
