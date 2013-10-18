@@ -1,6 +1,6 @@
 <html>
 #parse("page-head-shell.vm")
-<body style="background: #eee">
+<body>
 
 <img src="/standalone/lda-assets/images/standalone-banner.png" alt="Elda banner" />
 
@@ -21,6 +21,29 @@
     </a>
 #end
 
+#macro(showvalues,$property,$value,$seen) 
+	#if ($value.isLiteral())
+		<div style="float: left"> $value.shortForm().cut() </div>
+		<div style="float: right; margin-right: 1ex">
+		#selection("maxEx-", "&lt;", "less than", $property, $value)
+		#selection("max-", "&le;", "less or equal to", $property, $value)
+		#selection("", "=", "equal to", $property, $value)
+		#selection("min-", "&ge;", "greater or equal to", $property, $value)
+		#selection("minEx-", "&gt;", "greater than", $property, $value)
+		</div>
+		<div style="clear: both"> </div>
+	#else
+		#if ($value.justALabel)
+			$value.label.cut()
+		#else
+	      <h2><a href="$value.URI" id="$value.id">$value.label</a></h2>
+		    #if ($unseen) 
+		      #nesting($value, $seen)
+		    #end
+		#end
+	#end
+#end
+
 #macro(nesting, $item, $seen)
     #set ($unseen = $seen.add($item))
 	#foreach ($property in $item.properties)
@@ -30,26 +53,7 @@
 			#set ($values = ${item.getValues($property)})
 			#foreach ($value in $values)
 				<div class="indented" stylex="border-left: 1px solid black">
-					#if ($value.isLiteral())
-						<div style="float: left"> $value.shortForm().cut() </div>
-						<div style="float: right; margin-right: 1ex">
-						#selection("maxEx-", "&lt;", "less than", $property, $value)
-						#selection("max-", "&le;", "less or equal to", $property, $value)
-						#selection("", "=", "equal to", $property, $value)
-						#selection("min-", "&ge;", "greater or equal to", $property, $value)
-						#selection("minEx-", "&gt;", "greater than", $property, $value)
-						</div>
-						<div style="clear: both"> </div>
-					#else
-						#if ($value.justALabel)
-							$value.label.cut()
-						#else
-					      <h2><a href="$value.URI" id="$value.id">$value.label</a></h2>
-						    #if ($unseen) 
-						      #nesting($value, $seen)
-						    #end
-						#end
-					#end
+					#showvalues($property,$value,$seen)
 				</div>
 			#end
 		</div>

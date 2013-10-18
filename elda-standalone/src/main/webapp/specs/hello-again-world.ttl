@@ -31,7 +31,6 @@ hello:hello-world-again a api:API
 	; api:viewer [a api:Viewer; api:name "none"; api:properties ""]
 	# ; api:variable [api:name "_velocityRoot"; api:value "http://localhost:8080/standalone/lda-assets/vm/"]
 	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/standalone/lda-assets/"]
-	; api:variable [api:name "CLASS"; api:value: "BoardGame"]
 	; api:endpoint 
 		hello:publishers, hello:games 
 	; api:formatter
@@ -73,8 +72,8 @@ hello:publishers a api:ListEndpoint
 	
 hello:games a api:ListEndpoint 
 	; rdfs:label "Games" 
-	; api:uriTemplate "/games/{CLASS}" 
-	; api:selector [api:filter "type={CLASS}"; api:sort "label"]
+	; api:uriTemplate "/games" 
+	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
 	; api:defaultViewer api:labelledDescribeViewer
 	.	
 	

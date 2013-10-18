@@ -5,6 +5,7 @@
 <script type="text/javascript" src="/standalone/lda-assets/scripts/jquery.min.js"> </script>
 <script type="text/javascript" src="/standalone/lda-assets/scripts/jquery-ui.min.js"> </script>
 <script src="/standalone/lda-assets/scripts/codemirror/codemirror_min.js" type="text/javascript"> </script>
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
 
 <script type="text/javascript">
 
@@ -26,6 +27,9 @@ $(function() {
 </script>
 
 <style>
+	body {
+	}
+	
 	h1 {
 		background-color: #444
 		; color: white
