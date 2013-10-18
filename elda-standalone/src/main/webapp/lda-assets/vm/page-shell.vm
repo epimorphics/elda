@@ -21,22 +21,27 @@
     </a>
 #end
 
+#macro (showliteral,$preamble,$property,$value)
+	<div style="float: left"> $preamble </div>
+	<div style="float: left; margin-left: 1ex"> $value.shortForm().cut() </div> 
+	<div style="float: right">
+	#selection("maxEx-", "&lt;", "less than", $property, $value)
+	#selection("max-", "&le;", "less or equal to", $property, $value)
+	#selection("", "=", "equal to", $property, $value)
+	#selection("min-", "&ge;", "greater or equal to", $property, $value)
+	#selection("minEx-", "&gt;", "greater than", $property, $value)
+	</div>
+	<div style="clear: both"> </div>
+#end
+
 #macro(showvalues,$property,$value,$seen) 
 	#if ($value.isLiteral())
-		<div style="float: left"> $value.shortForm().cut() </div>
-		<div style="float: right; margin-right: 1ex">
-		#selection("maxEx-", "&lt;", "less than", $property, $value)
-		#selection("max-", "&le;", "less or equal to", $property, $value)
-		#selection("", "=", "equal to", $property, $value)
-		#selection("min-", "&ge;", "greater or equal to", $property, $value)
-		#selection("minEx-", "&gt;", "greater than", $property, $value)
-		</div>
-		<div style="clear: both"> </div>
+		#showliteral("",$property,$value)
 	#else
 		#if ($value.justALabel)
 			$value.label.cut()
 		#else
-	      <h2><a href="$value.URI" id="$value.id">$value.label</a></h2>
+	      <h2 style="background: pink"><a href="$value.URI" id="$value.id">$value.label</a></h2>
 		    #if ($unseen) 
 		      #nesting($value, $seen)
 		    #end
@@ -51,14 +56,63 @@
 		<div class="indented">
 			<a href="$property.URI">$property.label.cut()</a>
 			#set ($values = ${item.getValues($property)})
-			#foreach ($value in $values)
-				<div class="indented" stylex="border-left: 1px solid black">
-					#showvalues($property,$value,$seen)
-				</div>
+			#if ($values.size() == 1)
+				#showvalues($property,$values.get(0),$seen)
+			#else
+				#foreach ($value in $values)
+					<div class="indented" stylex="border-left: 1px solid black">
+						#showvalues($property,$value,$seen)
+					</div>
+				#end
 			#end
 		</div>
 	#end
-	#set ($ignored = $seen.remove($item))
+	#if ($unseen) #set ($ignored = $seen.remove($item)) #end
+#end
+
+#macro(displayvalues,$item,$seen)
+    #set ($unseen = $seen.add($item))
+    
+    #if ($unseen)
+    
+		#foreach ($property in $item.properties)
+			<hr class="hr-style">
+			#set ($values = ${item.getValues($property)})
+			#set ($first = $values.get(0))
+			
+			#set ($nice = "<a href='" + $property.URI + "'>" + $property.label.cut() + "</a>")
+			
+			#if ($values.size() == 1) 
+				#if ($first.isResource() && $first.properties.size() > 0)
+					$nice RESOURCE WITH PROPERTIES
+				#else
+					#if ($first.isLiteral())
+						#showliteral($nice,$property,$first)
+					#else
+						$nice
+						$first.label.cut()
+					#end
+				#end
+			
+			#else
+				$nice
+				#foreach ($value in $values)
+				<div class="indented">
+					#if ($value.isLiteral())
+						#showliteral("", $property,$value)
+					#else
+						$value.label.cut()
+					#end
+				</div>
+				#end
+			#end
+    	#end
+    	
+    #else
+    	ALREADY SEEN
+    #end
+    
+	#if ($unseen) #set ($ignored = $seen.remove($item)) #end
 #end
 
 <table width="100%">
@@ -72,7 +126,7 @@
 			#foreach ($item in $items) 
 				<div class="itembox">
 				<h2><a class="bold" href="$item.URI" id="$item.id">$item.label</a></h2>
-				#nesting($item, $seen)
+				#displayvalues($item, $seen)
 				</div>
 			#end
 		</div>

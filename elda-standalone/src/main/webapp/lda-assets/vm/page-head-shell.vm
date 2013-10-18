@@ -43,7 +43,7 @@ $(function() {
 	}
 	
 	.indented {
-		margin-left: 1ex
+		margin-left: 2ex
 	}
 	
 	.hr-style {
