@@ -50,7 +50,7 @@
 		#if ($value.justALabel)
 			$value.label.cut()
 		#else
-	      <h2 style="background: pink"><a href="$value.URI" id="$value.id">$value.label</a></h2>
+	      <h3 style="background: pink"><a href="$value.URI" id="$value.id">$value.label</a></h3>
 		    #if ($unseen) 
 		      #nesting($value, $seen)
 		    #end
@@ -98,7 +98,7 @@
 						#if ($value.isLiteral())
 							#showliteral("", $property,$value)
 						#else
-    	<h2><a class="bold" href="$value.URI" id="$value.id">$value.label</a></h2>
+    	<h3><a class="bold" href="$value.URI" id="$value.id">$value.label</a></h3>
 							#if ($value.properties.size() > 0)
 								#displayvalues($value,$seen)
 							#end
@@ -114,7 +114,7 @@
 #end
 
 <div valign="top" width="100%" id="search-results">
-	<h1>Search Results</h1>
+	<h2>Search Results</h2>
 	
 	<div style="margin-left: 4ex; margin-right: 4ex">
 	<b>on this page</b>
@@ -129,7 +129,7 @@
 	<div style="margin-left: 3ex">
 		#foreach ($item in $items) 
 			<div class="itembox">
-			<h2><a class="bold" href="$item.URI" id="$item.id">$item.label</a></h2>
+			<h3><a class="bold" href="$item.URI" id="$item.id">$item.label</a></h3>
 			#displayvalues($item, $seen)
 			</div>
 		#end

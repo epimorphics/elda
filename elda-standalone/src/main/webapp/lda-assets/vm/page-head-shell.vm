@@ -39,8 +39,19 @@ $(function() {
 	}
 	
 	h2 {
-		font-size: 1em
-		; margin: 1ex 0 0 0
+		font-size: 2.4em
+		; text-indent: 1em
+		; background: #777
+		; color: white
+		; margin-bottom: 1ex
+		; border-radius: 0.5ex
+	}
+	
+	h3 {
+		background: white
+		; font-size: 120%
+		; font-weight: bold
+		; margin: 1ex
 	}
 	
 	.indented {
