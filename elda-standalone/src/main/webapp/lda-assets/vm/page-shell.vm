@@ -35,12 +35,16 @@
 	<div style="float: left; margin-left: 1ex"> $value.shortForm().cut() </div> 
 	<div style="float: right">
 	#selection("maxEx-", "&lt;", "less than", $property, $value)
-	#selection("max-", "&le;", "less or equal to", $property, $value)
+	#selection("max-", "<u>&lt;</u>", "less or equal to", $property, $value)
 	#selection("", "=", "equal to", $property, $value)
-	#selection("min-", "&ge;", "greater or equal to", $property, $value)
+	#selection("min-", "<u>&gt;</u>", "greater or equal to", $property, $value)
 	#selection("minEx-", "&gt;", "greater than", $property, $value)
 	</div>
 	<div style="clear: both"> </div>
+#end
+
+#macro(linkly,$value)
+<span><a class="bold" href="$value.URI" id="$value.id">$value.label</a></span>
 #end
 
 #macro(displayvalues,$item,$seen)
@@ -51,20 +55,26 @@
 
 			#set ($values = ${item.getValues($property)})			
 			#set ($first = $values.get(0))
-			#set ($nice = "<a href='" + $property.URI + "'>" + $property.label.cut() + "</a>")
+			#set ($linkprop = "<a style='margin-left: 1ex' href='" + $property.URI + "'>" + $property.label.cut() + "</a>")
 
 			#if ($values.size() == 1 && $first.isLiteral())
-				#showliteral($nice,$property,$first)
+				#showliteral($linkprop,$property,$first)
+			#elseif ($values.size() == 1 && ($seen.contains($first) || $first.properties.size() == 0))
+				$linkprop #linkly($first)
 			#else
-				$nice
+				$linkprop
 				#foreach ($value in $values)
 					<div class="indented">
 						#if ($value.isLiteral())
 							#showliteral("", $property,$value)
 						#else
-    	<h3><a class="bold" href="$value.URI" id="$value.id">$value.label</a></h3>
-							#if ($value.properties.size() > 0)
+							#if ($value.properties.size() > 0 && !$seen.contains($value))
+								<div style="border-left: 4px solid #ddf; padding-left: 1ex">
+    							<span width="100%" style="background: #dff; width: 100%"> #linkly($value) </span>
 								#displayvalues($value,$seen)
+								</div>
+							#else
+    							#linkly($value)
 							#end
 						#end				
 					</div>					
@@ -97,7 +107,7 @@
 	<div style="margin-left: 3ex">
 		#foreach ($item in $items) 
 			<div class="itembox">
-			<h3><a class="bold" href="$item.URI" id="$item.id">$item.label</a></h3>
+			#linkly($item)
 			#displayvalues($item, $seen)
 			</div>
 		#end
