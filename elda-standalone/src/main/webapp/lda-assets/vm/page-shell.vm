@@ -43,42 +43,6 @@
 	<div style="clear: both"> </div>
 #end
 
-#macro(showvalues,$property,$value,$seen) 
-	#if ($value.isLiteral())
-		#showliteral("",$property,$value)
-	#else
-		#if ($value.justALabel)
-			$value.label.cut()
-		#else
-	      <h3 style="background: pink"><a href="$value.URI" id="$value.id">$value.label</a></h3>
-		    #if ($unseen) 
-		      #nesting($value, $seen)
-		    #end
-		#end
-	#end
-#end
-
-#macro(nesting, $item, $seen)
-    #set ($unseen = $seen.add($item))
-	#foreach ($property in $item.properties)
-		<hr class="hr-style">
-		<div class="indented">
-			<a href="$property.URI">$property.label.cut()</a>
-			#set ($values = ${item.getValues($property)})
-			#if ($values.size() == 1)
-				#showvalues($property,$values.get(0),$seen)
-			#else
-				#foreach ($value in $values)
-					<div class="indented" stylex="border-left: 1px solid black">
-						#showvalues($property,$value,$seen)
-					</div>
-				#end
-			#end
-		</div>
-	#end
-	#if ($unseen) #set ($ignored = $seen.remove($item)) #end
-#end
-
 #macro(displayvalues,$item,$seen)
     #set ($unseen = $seen.add($item))
     #if ($unseen)
@@ -113,11 +77,15 @@
 	#if ($unseen) #set ($ignored = $seen.remove($item)) #end
 #end
 
-<div valign="top" width="100%" id="search-results">
+<table width="100%">
+<tr>
+<td width="80%" valign="top">
+
+<div id="search-results">
 	<h2>Search Results</h2>
 	
 	<div style="margin-left: 4ex; margin-right: 4ex">
-	<b>on this page</b>
+	<b>on this page:</b>
 	#set ($pipe = "")
 	#foreach ($item in $items)
 		<span>
@@ -135,6 +103,13 @@
 		#end
 	</div>
 </div>
+
+</td>
+<td width="20%" valign="top">
+	currently unused column.
+</td>
+</tr>
+</table>
 	
 
 <hr>
