@@ -34,6 +34,7 @@ $(function() {
 		background-color: #444
 		; color: white
 		; padding: 1ex
+		; margin: 1ex
 		; border-radius: 1ex
 	}
 	

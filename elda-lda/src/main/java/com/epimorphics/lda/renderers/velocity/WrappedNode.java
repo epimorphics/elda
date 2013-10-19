@@ -261,9 +261,10 @@ public class WrappedNode implements Comparable<WrappedNode> {
 	public List<WrappedNode> getValues( WrappedNode p ) {	
 		List<WrappedNode> result = new ArrayList<WrappedNode>();
 	//
-		for (Statement s: r.listProperties( p.r.as(Property.class) ).toList() ) {	
+		if (basis.isResource())
+			for (Statement s: r.listProperties( p.r.as(Property.class) ).toList() ) {	
 			result.add( new WrappedNode( bundle, s.getObject() ) );
-		}
+			}
 	//
 		return result;
 	}

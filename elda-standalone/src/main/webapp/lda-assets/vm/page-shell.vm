@@ -5,7 +5,16 @@
 <img src="/standalone/lda-assets/images/standalone-banner.png" alt="Elda banner" />
 
 <header>
-	<h1>Linked Data API</h1>
+	<h1 style="float: left">Linked Data API</h1>
+	<div style="float: right; font-size: 1.5em; font-weight: 300; margin-right: 4em; margin-top: 2.5ex; font-family: Gill Sans, Arial, sans-serif">
+	
+	#set ($pipe = "")
+	#foreach ($f in $formats)
+		$pipe #set ($pipe = " | ") <a href="$f.link">$f.name</a>
+	#end			
+	
+	</div>
+	<div style="clear: both"> </div>
 </header>
 
 #macro (tag, $property, $value)
@@ -72,91 +81,61 @@
 
 #macro(displayvalues,$item,$seen)
     #set ($unseen = $seen.add($item))
-    
     #if ($unseen)
-    
 		#foreach ($property in $item.properties)
 			<hr class="hr-style">
-			#set ($values = ${item.getValues($property)})
+
+			#set ($values = ${item.getValues($property)})			
 			#set ($first = $values.get(0))
-			
 			#set ($nice = "<a href='" + $property.URI + "'>" + $property.label.cut() + "</a>")
-			
-			#if ($values.size() == 1) 
-				#if ($first.isResource() && $first.properties.size() > 0)
-					$nice RESOURCE WITH PROPERTIES
-				#else
-					#if ($first.isLiteral())
-						#showliteral($nice,$property,$first)
-					#else
-						$nice
-						$first.label.cut()
-					#end
-				#end
-			
+
+			#if ($values.size() == 1 && $first.isLiteral())
+				#showliteral($nice,$property,$first)
 			#else
 				$nice
 				#foreach ($value in $values)
-				<div class="indented">
-					#if ($value.isLiteral())
-						#showliteral("", $property,$value)
-					#else
-						$value.label.cut()
-					#end
-				</div>
+					<div class="indented">
+						#if ($value.isLiteral())
+							#showliteral("", $property,$value)
+						#else
+    	<h2><a class="bold" href="$value.URI" id="$value.id">$value.label</a></h2>
+							#if ($value.properties.size() > 0)
+								#displayvalues($value,$seen)
+							#end
+						#end				
+					</div>					
 				#end
 			#end
     	#end
-    	
     #else
-    	ALREADY SEEN
     #end
     
 	#if ($unseen) #set ($ignored = $seen.remove($item)) #end
 #end
 
-<table width="100%">
-<tr>
-<td valign="top" width="80%">
-
-	<div valign="top" width="100%" id="search-results">
-		<h1>Search Results</h1>
-		
-		<div>
-			#foreach ($item in $items) 
-				<div class="itembox">
-				<h2><a class="bold" href="$item.URI" id="$item.id">$item.label</a></h2>
-				#displayvalues($item, $seen)
-				</div>
-			#end
-		</div>
+<div valign="top" width="100%" id="search-results">
+	<h1>Search Results</h1>
+	
+	<div style="margin-left: 4ex; margin-right: 4ex">
+	<b>on this page</b>
+	#set ($pipe = "")
+	#foreach ($item in $items)
+		<span>
+			$pipe #set($pipe = " | ") <a href="#$item.id">$item.label</a>
+		</span>
+	#end
 	</div>
 	
-</td>
-
-<td valign="top" width="20%">
-	<div>
-		<div>
-			<div class="right-header">formats</div>
-			<div class="indented" style="margin-top: 1ex; margin-bottom: 1ex">
-				#foreach ($f in $formats)
-					<a href="$f.link">$f.name</a>
-				#end
+	<div style="margin-left: 3ex">
+		#foreach ($item in $items) 
+			<div class="itembox">
+			<h2><a class="bold" href="$item.URI" id="$item.id">$item.label</a></h2>
+			#displayvalues($item, $seen)
 			</div>
-		</div>
-		
-		<div class="bordered-panel">
-			<div class="right-header">on this page</div>
-			#foreach ($item in $items)
-				<div style="margin-left: 1ex">&raquo; <a href="#$item.id">$item.label</a></div>
-			#end
-		</div>
-	
+		#end
 	</div>
-
-</td>
-</tr>
-</table>
+</div>
+	
 
 <hr>
 <table width="100%">
