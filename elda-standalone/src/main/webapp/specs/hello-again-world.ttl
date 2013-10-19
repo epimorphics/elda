@@ -32,7 +32,7 @@ hello:hello-world-again a api:API
 	# ; api:variable [api:name "_velocityRoot"; api:value "http://localhost:8080/standalone/lda-assets/vm/"]
 	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/standalone/lda-assets/"]
 	; api:endpoint 
-		hello:publishers, hello:games 
+		hello:publishers, hello:games, hello:item
 	; api:formatter
 		[a elda:VelocityFormatter
 		; api:name "vhtml"
@@ -60,7 +60,6 @@ hello:hello-world-again a api:API
     elda:textSearchOperand (rdfs:label "?_search" 99)
     .
 
-
 # Endpoint definitions
 
 hello:publishers a api:ListEndpoint 
@@ -75,7 +74,18 @@ hello:games a api:ListEndpoint
 	; api:uriTemplate "/games" 
 	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
 	; api:defaultViewer api:labelledDescribeViewer
-	.	
+	.
+	
+hello:item a api:ListEndpoint
+	; rdfs:label "Items"
+	; api:uriTemplate "/item?resource={uri}"
+    ; api:variable [api:name "uri"; api:type rdfs:Resource]
+	; api:selector 
+		[ api:where "?item ?p ?o. FILTER(?item = ?uri)"
+		; api:sort "label"
+		]
+	; api:defaultViewer api:labelledDescribeViewer
+	.
 	
 hello:BoardGame a rdfs:Class
 	; rdfs:label "Board Game"

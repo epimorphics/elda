@@ -70,8 +70,8 @@
 						#else
 							#if ($value.properties.size() > 0 && !$seen.contains($value))
 								<div style="border-left: 4px solid #ddf; padding-left: 1ex">
-    							<span width="100%" style="background: #dff; width: 100%"> #linkly($value) </span>
-								#displayvalues($value,$seen)
+	    							<span width="100%" style="background: #dff; width: 100%"> #linkly($value) </span>
+									#displayvalues($value,$seen)
 								</div>
 							#else
     							#linkly($value)
@@ -83,7 +83,6 @@
     	#end
     #else
     #end
-    
 	#if ($unseen) #set ($ignored = $seen.remove($item)) #end
 #end
 
