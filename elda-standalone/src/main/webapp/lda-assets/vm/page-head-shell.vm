@@ -87,6 +87,17 @@ $(function() {
 		; padding: 10px 66px
 	}
 	
+	#queries td {
+		background: #dff
+		; border-radius: 0.5ex
+		; margin: 1ex
+		; padding: 1ex
+	}
+	
+	#queries h4 {
+		font-size: 120%
+	}
+	
 	#search-results {
 	}
 	
@@ -105,9 +116,15 @@ $(function() {
 	}
 	
 	footer {
-		background: #888
+		background: #ccc
 		; text-align: right
+		; border-radius: 0.5ex
 	}
+	
+	footer p {
+		font-size: 120%
+	}
+	
 </style>	
 	
 </head>
