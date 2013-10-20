@@ -44,7 +44,16 @@
 #end
 
 #macro(linkly,$value)
-<span><a class="bold" href="$value.URI" id="$value.id">$value.label</a></span>
+<span>
+<a class="bold" href="$value.URI" id="$value.id"
+	title="Click to see document for this resource."
+>&Delta;</a></span>
+
+<span>
+<a href="item.vhtml?_properties=*.*.*&resource=$value.URI"
+	title="Click to see properties of this resource."
+>$value.label</a>
+</span>
 #end
 
 #macro(displayvalues,$item,$seen)
@@ -70,7 +79,7 @@
 						#else
 							#if ($value.properties.size() > 0 && !$seen.contains($value))
 								<div style="border-left: 4px solid #ddf; padding-left: 1ex">
-	    							<span width="100%" style="background: #dff; width: 100%"> #linkly($value) </span>
+	    							<span style="background: #dff; width: 100%"> #linkly($value) </span>
 									#displayvalues($value,$seen)
 								</div>
 							#else
