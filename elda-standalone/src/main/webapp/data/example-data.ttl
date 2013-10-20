@@ -60,6 +60,11 @@
 	; rdfs:label "Donald X. Vaccarino"
 	; egc:designer-of <http://queen-games.de/games.aspx?ProductId=45>
 	.
+	
+<http://boardgamegeek.com/boardgamedesigner/60/dirk-henn> a egc:Designer
+	; rdfs:label "Dirk Henn"
+	; egc:designer-of <http://www.queen-games.de/games.aspx?ProductId=10>
+	.
 
 # boardgame publishers.
 
@@ -73,6 +78,7 @@
 	; rdfs:label "Queen Games"
 	; dct:publisher <http://queen-games.de/games.aspx?ProductId=45>
 	; dct:publisher <http://boardgamegeek.com/boardgame/96913/lancaster>
+	; dct:publisher <http://www.queen-games.de/games.aspx?ProductId=10>
 	.
 	
 <http://www.treefroggames.com/> a egc:Publisher
@@ -220,20 +226,13 @@
 	; egc:playTimeMinutes 60
 	.
 	
-egc:WOSSNAME a egc:BoardGame
+<http://www.queen-games.de/games.aspx?ProductId=10> a egc:BoardGame
 	; rdfs:label "Wallenstein"
-	; egc:designed-by egc:DESIGNER
-	; egc:players 3
-	; egc:pubYear 1066
-	; egc:playTimeMinutes 60
-	.
-	
-egc:WOSSNAME a egc:BoardGame
-	; rdfs:label "Colonial"
-	; egc:designed-by egc:DESIGNER
-	; egc:players 3
-	; egc:pubYear 1066
-	; egc:playTimeMinutes 60
+	; egc:designed-by <http://boardgamegeek.com/boardgamedesigner/60/dirk-henn>
+	; egc:published-by <http://www.queen-games.de/>
+	; egc:players 3, 4, 5
+	; egc:pubYear 2012
+	; egc:playTimeMinutes 150
 	.
 	
 #
