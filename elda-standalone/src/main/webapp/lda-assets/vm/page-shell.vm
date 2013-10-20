@@ -17,6 +17,10 @@
 	<div style="clear: both"> </div>
 </header>
 
+#set ($nextlink = $thisPage.valueOf("xhv:next"))
+#set ($prevlink = $thisPage.valueOf("xhv:prev"))
+#set ($firstlink = $thisPage.valueOf("xhv:first"))
+
 #macro (tag, $property, $value)
     "Select items with $property.shortForm() less than $value"
 #end
@@ -104,6 +108,16 @@
 	
 	<div style="margin-left: 4ex; margin-right: 4ex">
 	#if ($items.size() > 1)
+		#if ($firstlink)
+			#if ($firstlink.equals($thisPage)) #else
+				<a class="buttonlike" href="$firstlink.URI">first</a>
+			#end 
+		#end
+		
+		#if ($prevlink)
+			<a class="buttonlike" href="$prevlink.URI">prev</a> 
+		#end
+		
 		<b>on this page:</b>
 		#set ($pipe = "")
 		#foreach ($item in $items)
@@ -111,8 +125,12 @@
 				$pipe #set($pipe = " | ") <a href="#$item.id">$item.label</a>
 			</span>
 		#end
-		</div>
+		
+		#if ($nextlink)	
+			<a class="buttonlike" href="$nextlink.URI">next</a> 
+		#end
 	#end
+	</div>
 		
 	<div style="margin-left: 3ex">
 		#foreach ($item in $items) 

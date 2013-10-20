@@ -172,6 +172,18 @@
 	; egc:players 2, 3, 4, 5
 	; egc:pubDate 2006
 	.
+
+# 
+	
+egc:WOSSNAME a egc:BoardGame
+	; rdfs:label "WOSSNAME"
+	; egc:designed-by egc:DESIGNER
+	; egc:players 3
+	; egc:pubDate 1066
+	.
+	
+	
+	
 	
 #
 # Information about the classes and properties used in the

@@ -3,8 +3,10 @@ package com.epimorphics.lda.renderers.velocity;
 import java.net.URI;
 import java.util.*;
 
+import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -267,6 +269,21 @@ public class WrappedNode implements Comparable<WrappedNode> {
 			}
 	//
 		return result;
+	}
+	
+	public WrappedNode valueOf(String qName) {
+		Model m = r.getModel();
+
+		// HACK
+		if (r.getModel().getNsPrefixMap().isEmpty())
+			APIResultSet.setUsedPrefixes(m, PrefixMapping.Standard);		
+		
+		Property p = m.createProperty( m.expandPrefix(qName) );
+		Statement s = r.getProperty(p);
+		
+		// System.err.println( ">> " + qName + " ==> " + (s == null ? "NONE" : s.getObject() ) );
+		
+		return s == null ? null : wrap(s.getResource());
 	}
 	
 	/**
