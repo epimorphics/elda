@@ -345,9 +345,50 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		return sort( result );
 	}
 	
+	/**
+	    A sortable item wrapping a property node. The label is to toString()
+	    of the property, computed once. <code>hasLiterals</code> is precomputed
+	    and is true if any of the values of this property with respect to
+	    the given subject node S are literals.	    
+	*/
+	static class Sortable implements Comparable<Sortable> {
+		final WrappedNode property;
+		final String label;
+		final boolean hasLiterals;
+		
+		Sortable(WrappedNode S, WrappedNode property) {
+			this.property = property;
+			this.label = property.toString();
+			this.hasLiterals = hasLiterals(S, property);
+		}
+
+		@Override public int compareTo(Sortable other) {
+			if (hasLiterals == other.hasLiterals)
+				return label.compareToIgnoreCase(other.label);
+			return hasLiterals ? -1 : +1;
+		}
+		
+		private static boolean hasLiterals(WrappedNode S, WrappedNode property) {
+			StmtIterator s = S.r.listProperties(property.r.as(Property.class));
+			while (s.hasNext())	if (s.next().getObject().isLiteral()) return true;
+			return false;
+		}
+	}
+	
+	/**
+	    Sort <code>nodes</code> as properties with respect to this resource
+	    node. Properties which have literal values sort before those that
+	    have resource values. Otherwise they sort according to their toString().
+	    [This will probably change, since numbers don't sort property on
+	    lexical forms.]
+	*/
 	private List<WrappedNode> sort(ArrayList<WrappedNode> nodes) {
-		Collections.sort( nodes );
-		return nodes;
+		List<Sortable> toSort = new ArrayList<Sortable>(nodes.size() );
+		for (WrappedNode n: nodes) toSort.add(new Sortable( this, n ) );		
+		Collections.sort( toSort );
+		List<WrappedNode> result = new ArrayList<WrappedNode>( nodes.size() );
+		for (Sortable s: toSort) result.add( s.property );
+		return result;
 	}
 
 	public Resource asResource() {
