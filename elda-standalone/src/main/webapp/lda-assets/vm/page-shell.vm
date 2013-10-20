@@ -68,7 +68,7 @@
 
 			#set ($values = ${item.getValues($property)})			
 			#set ($first = $values.get(0))
-			#set ($linkprop = "<a style='margin-left: 1ex' href='" + $property.URI + "'>" + $property.label.cut() + "</a>")
+			#set ($linkprop = "<a style='margin-left: 1ex' href='" + $property.URI + "'>" + $property.shortForm().cut() + "</a>")
 
 			#if ($values.size() == 1 && $first.isLiteral())
 				#showliteral($linkprop,$property,$first)
