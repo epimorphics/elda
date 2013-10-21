@@ -63,34 +63,38 @@
     #set ($unseen = $seen.add($item))
     #if ($unseen)
 		#foreach ($property in $item.properties)
-			<hr class="hr-style">
 
 			#set ($values = ${item.getValues($property)})			
 			#set ($first = $values.get(0))
 			#set ($linkprop = "<a style='margin-left: 1ex' href='" + $property.URI + "'>" + $property.shortForm().cut() + "</a>")
 
-			#if ($values.size() == 1 && $first.isLiteral())
-				#showliteral($linkprop,$property,$first)
-			#elseif ($values.size() == 1 && ($seen.contains($first) || $first.properties.size() == 0))
-				$linkprop #linkly($first)
-			#else
-				$linkprop
-				#foreach ($value in $values)
-					<div class="indented">
-						#if ($value.isLiteral())
-							#showliteral("", $property,$value)
-						#else
-							#if ($value.properties.size() > 0 && !$seen.contains($value))
-								<div class="nested-item">
-	    							<span style="background: #dff; width: 100%"> #linkly($value) </span>
-									#displayvalues($value,$seen)
-								</div>
-							#else
-    							#linkly($value)
-							#end
-						#end				
-					</div>					
-				#end
+            #if ($values.size() == 1 && $property.shortForm() == "label") #else
+            
+    			<hr class="hr-style">
+    
+    			#if ($values.size() == 1 && $first.isLiteral())
+    				#showliteral($linkprop,$property,$first)
+    			#elseif ($values.size() == 1 && ($seen.contains($first) || $first.properties.size() == 0))
+    				$linkprop #linkly($first)
+    			#else
+    				$linkprop
+    				#foreach ($value in $values)
+    					<div class="indented">
+    						#if ($value.isLiteral())
+    							#showliteral("", $property,$value)
+    						#else
+    							#if ($value.properties.size() > 0 && !$seen.contains($value))
+    								<div class="nested-item">
+    	    							<span style="background: #dff; width: 100%"> #linkly($value) </span>
+    									#displayvalues($value,$seen)
+    								</div>
+    							#else
+        							#linkly($value)
+    							#end
+    						#end				
+    					</div>					
+    				#end
+    			#end
 			#end
     	#end
     #else
