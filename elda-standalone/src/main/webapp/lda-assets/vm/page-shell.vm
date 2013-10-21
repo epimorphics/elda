@@ -4,7 +4,7 @@
 
 <div style="background: #dff; font-size: 2em">
     <img style="float: left" src="../lda-assets/images/molecule.png">
-    <div style="float: left; text-indent: 1ex">Elda Standalone: Linked Data API</div>
+    <div style="float: left; margin-left: 1ex; margin-top: 5px">Elda Standalone: Linked Data API</div>
     <img style="float: right; margin-right: 1ex" src="http://elda.googlecode.com/hg/docs/epilogo-240.png">
     <div style="clear: both"> </div>
 </div>
