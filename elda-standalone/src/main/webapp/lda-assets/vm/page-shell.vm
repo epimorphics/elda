@@ -2,27 +2,19 @@
 #parse("page-head-shell.vm")
 <body>
 
-<div 
-    style="background: #dff; color: black; height: 64px; font-size: 200%"
->
-    <span style="text-indent: 1em; margin-left: 1ex">Elda Standalone</span>
-    
-    <img align="right" style="margin-right: 1ex" src="http://elda.googlecode.com/hg/docs/epilogo-240.png">
-          
+<div style="background: #dff; font-size: 2em">
+    <img style="float: left" src="../lda-assets/images/molecule.png">
+    <div style="float: left; text-indent: 1ex">Elda Standalone: Linked Data API</div>
+    <img style="float: right; margin-right: 1ex" src="http://elda.googlecode.com/hg/docs/epilogo-240.png">
+    <div style="clear: both"> </div>
 </div>
 
-<header>
-	<h1 style="float: left">Linked Data API</h1>
-	<div style="float: right; font-size: 1.5em; font-weight: 300; margin-right: 4em; margin-top: 2.5ex; font-family: Gill Sans, Arial, sans-serif">
-	
-	#set ($pipe = "")
-	#foreach ($f in $formats)
-		$pipe #set ($pipe = " | ") <a href="$f.link">$f.name</a>
-	#end			
-	
-	</div>
-	<div style="clear: both"> </div>
-</header>
+<div style="float: right; font-size: 1.5em; font-weight: 300; margin: 1ex">
+    #set ($pipe = "")
+    #foreach ($f in $formats)
+    	$pipe #set ($pipe = " | ") <a href="$f.link">$f.name</a>
+    #end			
+</div>
 
 #set ($nextlink = $thisPage.valueOf("xhv:next"))
 #set ($prevlink = $thisPage.valueOf("xhv:prev"))

@@ -80,11 +80,12 @@ $(function() {
 	
 	header h1 {
 		background: url("../lda-assets/images/molecule.png") no-repeat scroll 0px 0px transparent
+		; background-color: #dff
 		; color: rgb(85, 85, 85)
 		; font-size: 2.3em
 		; font-weight: 300
 		; font-family: Gill Sans, Arial, sans-serif
-		; padding: 10px 66px
+		; padding: 10px 72px
 	}
 	
 	#queries td {
