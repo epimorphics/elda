@@ -5,6 +5,8 @@ import java.util.*;
 
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.util.URIUtils;
+import com.hp.hpl.jena.datatypes.RDFDatatype;
+import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
@@ -196,6 +198,28 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		return basis.isLiteral();
 	}
 	
+	public boolean isSelfQuoting() {
+		return basis.isLiteral() && isNumber(basis.asLiteral());
+	}
+	
+	protected boolean isNumber(Literal l) {
+		RDFDatatype dt = l.getDatatype();
+		return dt == null ? false : isNumericType(dt.getURI());
+	}
+	
+	// TODO probably want a set for these.
+	private boolean isNumericType(String uri) {
+		return 
+			uri.equals(XSDDatatype.XSDbyte.getURI())
+			|| uri.equals(XSDDatatype.XSDshort.getURI())
+			|| uri.equals(XSDDatatype.XSDint.getURI())
+			|| uri.equals(XSDDatatype.XSDinteger.getURI())
+			|| uri.equals(XSDDatatype.XSDdecimal.getURI())
+			|| uri.equals(XSDDatatype.XSDfloat.getURI())
+			|| uri.equals(XSDDatatype.XSDdouble.getURI())
+			;
+	}
+
 	/**
 	 	Return true iff this WrappedNode is a wrapped Resource
 	 	(which might be a blank node).
@@ -224,7 +248,9 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		of this wrapped literal node.
 	*/
 	public WrappedString getLiteralType() {
-		return new WrappedString( bundle.sn.getWithUpdate( basis.asLiteral().getDatatypeURI() ) );
+		String t = basis.asLiteral().getDatatypeURI();
+		if (t == null) return new WrappedString( "" );
+		return new WrappedString( bundle.sn.getWithUpdate( t ) );
 	}
 	
 	/**

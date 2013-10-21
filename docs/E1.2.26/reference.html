@@ -675,6 +675,16 @@ The Common and Assets files must have the same version.
 </tr>
 
 <tr>
+	<td>boolean isSelfQuoting</td>
+	<td>
+		Return true iff this WrappedNode is a literal node
+		that is "self-quoting", <i>ie</i> does not need to
+		have quotes round its presentation. In E1.2.26 this
+		means "has a numeric type".
+	</td>
+</tr>
+
+<tr>
 	<td>String getLanguage</td>
 	<td>
 		If this node is a wrapped Literal, return its language

@@ -35,7 +35,17 @@
 
 #macro (showliteral,$preamble,$property,$value)
 	<div style="float: left"> $preamble </div>
-	<div style="float: left; margin-left: 1ex"> $value.shortForm().cut() </div> 
+	<div style="float: left; margin-left: 1ex">
+		#if ($value.isSelfQuoting()) 
+			$value 
+		#else 
+			"$value.shortForm()"
+			#set ($lang = $value.language) 
+			#set ($type = $value.literalType)
+			#if ($lang == "") #else @$lang #end 
+			#if ($type == "") #else ^^$type #end 
+		#end 
+	</div> 
 	<div style="float: right">
 	#selection("maxEx-", "&lt;", "less than", $property, $value)
 	#selection("max-", "<u>&lt;</u>", "less or equal to", $property, $value)
