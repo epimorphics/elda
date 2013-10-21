@@ -2,7 +2,14 @@
 #parse("page-head-shell.vm")
 <body>
 
-<img src="/standalone/lda-assets/images/standalone-banner.png" alt="Elda banner" />
+<div 
+    style="background: #dff; color: black; height: 64px; font-size: 200%"
+>
+    <span style="text-indent: 1em; margin-left: 1ex">Elda Standalone</span>
+    
+    <img align="right" style="margin-right: 1ex" src="http://elda.googlecode.com/hg/docs/epilogo-240.png">
+          
+</div>
 
 <header>
 	<h1 style="float: left">Linked Data API</h1>
@@ -144,7 +151,7 @@
 
 </td>
 <td width="20%" valign="top">
-	currently unused column.
+	<h2>other</h2>
 </td>
 </tr>
 </table>
