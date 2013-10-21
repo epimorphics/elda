@@ -54,7 +54,7 @@
 >&Delta;</a></span>
 
 <span>
-<a href="item.vhtml?_properties=*.*.*&resource=$value.URI"
+<a href="item.vhtml?_properties=*.*.*&resource=$value.URI.raw().replaceAll("#", "%23")"
 	title="Click to see properties of this resource."
 >$value.label</a>
 </span>
