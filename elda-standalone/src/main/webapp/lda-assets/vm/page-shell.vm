@@ -9,7 +9,7 @@
     <div style="clear: both"> </div>
 </div>
 
-<div style="float: right; font-size: 1.5em; font-weight: 300; margin: 1ex">
+<div class="formats-list">
     #set ($pipe = "")
     #foreach ($f in $formats)
     	$pipe #set ($pipe = " | ") <a href="$f.link">$f.name</a>
@@ -81,7 +81,7 @@
 							#showliteral("", $property,$value)
 						#else
 							#if ($value.properties.size() > 0 && !$seen.contains($value))
-								<div style="border-left: 4px solid #ddf; padding-left: 1ex">
+								<div class="nested-item">
 	    							<span style="background: #dff; width: 100%"> #linkly($value) </span>
 									#displayvalues($value,$seen)
 								</div>

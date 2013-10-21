@@ -60,6 +60,18 @@ $(function() {
 		margin-left: 2ex
 	}
 	
+	.formats-list {
+	   float: right
+	   ; font-size: 1.5em
+	   ; font-weight: 300
+	   ; margin: 1ex
+	}
+	
+	.nested-item {
+    	border-left: 4px solid #ddf
+    	; padding-left: 1ex
+    	}
+	
 	.hr-style {
 		background: black
 		; height: 1px

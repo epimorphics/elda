@@ -76,6 +76,13 @@ hello:games a api:ListEndpoint
 	; api:defaultViewer api:labelledDescribeViewer
 	.
 	
+#
+# The /item endpoint requires a query parameter whose value
+# is a URI; this is the single selected ?item. These URIs
+# are typically constructed by the Velocity renderer when
+# a resource is clicked on for a dataset-relative link. 
+#
+
 hello:item a api:ListEndpoint
 	; rdfs:label "Items"
 	; api:uriTemplate "/item?resource={uri}"
@@ -87,6 +94,11 @@ hello:item a api:ListEndpoint
 	; api:defaultViewer api:labelledDescribeViewer
 	.
 	
+#
+# class and property declarations, setting shortnames and
+# property ranges.
+#
+
 hello:BoardGame a rdfs:Class
 	; rdfs:label "Board Game"
 	; api:label "BoardGame"
