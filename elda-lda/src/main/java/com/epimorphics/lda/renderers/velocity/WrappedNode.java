@@ -207,7 +207,8 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		return dt == null ? false : isNumericType(dt.getURI());
 	}
 	
-	// TODO probably want a set for these.
+	// TODO probably want a set for these. And if we expose
+	// it perhaps we don't need isSelfQuoting.
 	private boolean isNumericType(String uri) {
 		return 
 			uri.equals(XSDDatatype.XSDbyte.getURI())
