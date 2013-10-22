@@ -33,6 +33,8 @@
     </a>
 #end
 
+## -------------------------------------------------------------------------
+
 #macro (showliteral,$preamble,$property,$value)
 	<div style="float: left"> $preamble </div>
 	<div style="float: left; margin-left: 1ex">
@@ -56,6 +58,8 @@
 	<div style="clear: both"> </div>
 #end
 
+## -------------------------------------------------------------------------
+
 #macro(linkly,$value)
 <span>
 <a class="bold" href="$value.URI" id="$value.id"
@@ -68,6 +72,8 @@
 >$value.label</a>
 </span>
 #end
+
+## -------------------------------------------------------------------------
 
 #macro(displayvalues,$item,$seen)
     #set ($unseen = $seen.add($item))
