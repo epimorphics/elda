@@ -97,10 +97,11 @@ spec:viewerLocation
 # This XSLT formatter produces rich HTML from the viewer properties.
 #
 
-spec:HtmlFormatter a api:XsltFormatter
-	; api:name "html"
+spec:VelocityFormatter a elda:VelocityFormatter
+	; api:name "vhtml"
 	; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
 	; api:mimeType "text/html"
+	; api:stylesheet "page-shell.vm"
 	.
 
 ############################################################################################
@@ -119,8 +120,16 @@ spec:mini-education-api a api:API
 	# the viewer to use by default, a DESCRIBE plus labels for all the
 	# resources that have them.
 	; api:defaultViewer api:labelledDescribeViewer
+	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/standalone/lda-assets/"]
+	
 	# the default formatter is the XSLT formatter defined above 
-	; api:defaultFormatter spec:HtmlFormatter 
+	; api:formatter 
+	   [ a elda:VelocityFormatter
+       ; api:name "vhtml"
+       ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
+       ; api:mimeType "text/html"
+       ; api:stylesheet "page-shell.vm"
+	   ] 
 	# two conveniently-available viewers
 	; api:viewer 
 		api:describeViewer
@@ -130,6 +139,7 @@ spec:mini-education-api a api:API
 		spec:school
 		, spec:schools 
 		, spec:schoolsPrimary
+		, spec:item
 	#
 	# Elda magic follows
 	#
@@ -188,7 +198,18 @@ spec:schoolsPrimary a api:ListEndpoint
     	, spec:viewerMedium
     	, spec:viewerProvision
     	, spec:viewerLocation
-    	.	
+    .
+    	
+spec:item a api:ListEndpoint
+    ; rdfs:label "Items"
+    ; api:uriTemplate "/item?resource={uri}"
+    ; api:variable [api:name "uri"; api:type rdfs:Resource]
+    ; api:selector 
+        [ api:where "?item ?p ?o. FILTER(?item = ?uri)"
+        ; api:sort "label"
+        ]
+    ; api:defaultViewer api:labelledDescribeViewer
+    .	
 
 ############################################################################
 # The rest of this config is vocabulary definitions.
