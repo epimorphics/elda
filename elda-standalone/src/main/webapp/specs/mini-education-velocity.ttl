@@ -122,7 +122,7 @@ spec:mini-education-api a api:API
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/standalone/lda-assets/"]
 	
-	# the default formatter is the XSLT formatter defined above 
+	# the default formatter is the XSLT formatter
 	; api:formatter 
 	   [ a elda:VelocityFormatter
        ; api:name "vhtml"
@@ -130,6 +130,7 @@ spec:mini-education-api a api:API
        ; api:mimeType "text/html"
        ; api:stylesheet "page-shell.vm"
 	   ] 
+	   
 	# two conveniently-available viewers
 	; api:viewer 
 		api:describeViewer
