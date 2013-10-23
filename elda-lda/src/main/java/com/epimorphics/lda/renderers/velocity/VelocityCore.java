@@ -46,6 +46,7 @@ public class VelocityCore {
 		vc.put( "items", itemised );
 		vc.put( "meta", Help.getMetadataFrom( names, ids, m ) );
 		vc.put( "vars", Help.getVarsFrom( names, ids, m ) );
+		vc.put( "utils", new Utils() );
 		vc.put( "seen", new HashSet<WrappedNode>() );
 //		vc.put( "onceies", Help.getOnceies( wrappedPage, m ) );
 //		
@@ -61,6 +62,21 @@ public class VelocityCore {
 			throw new BrokenException( e );
 		} catch (IOException e) {
 			throw new WrappedException( e );
+		}
+	}
+	
+	/**
+	    Utilities for template code that it can't make from the
+	    otherwise-available Wrapped methods and context data.
+	*/
+	public static class Utils {
+		
+		public Map<Object, Object> newMap() {
+			return new HashMap<Object, Object>();
+		}
+		
+		public Set<Object> newSet() {
+			return new HashSet<Object>();
 		}
 	}
 
