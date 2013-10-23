@@ -22,7 +22,7 @@
         <div style="text-indent: 1ex; float: left; margin-top: 0.5ex">Linked Data API</div>
     </a>
     <a href="http://www.epimorphics.com/web/">
-        <img valign="middle" style="float: right; margin-right: 1ex" src="http://www.epimorphics.com/web/sites/all/documents/images/epilogo-200.png">
+        <img style="float: right; margin-right: 1ex" src="http://elda.googlecode.com/hg/docs/epilogo-200.png">
     </a>
     <div style="clear: both"> </div>
 </div>
