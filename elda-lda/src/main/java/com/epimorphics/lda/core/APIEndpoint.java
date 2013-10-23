@@ -111,5 +111,12 @@ public interface APIEndpoint {
 	    not be ones specified by a config).
 	*/
 	public Bindings defaults();
+
+	/**
+	 	An API spec (and hence an endpoint) may have been defined with a
+	 	prefix path string, which follows the context path. Return the
+	 	prefix path, or the empty string if it was defined with no prefix path.
+	*/
+	public String getPrefixPath();
 }
 

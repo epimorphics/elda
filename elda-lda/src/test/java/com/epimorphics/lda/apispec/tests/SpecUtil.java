@@ -20,7 +20,7 @@ public class SpecUtil {
 	    default FileManager to resolve files to load.
 	*/
 	public static APISpec specFrom( Resource root ) {
-		return new APISpec( new AuthMap(), EldaFileManager.get(), root, null );
+		return new APISpec( "", new AuthMap(), EldaFileManager.get(), root, null );
 	}
 
 }

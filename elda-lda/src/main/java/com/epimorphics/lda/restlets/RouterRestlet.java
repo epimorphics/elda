@@ -223,9 +223,9 @@ import com.sun.jersey.api.NotFoundException;
     	boolean dontCache = has( rh, "pragma", "no-cache" ) || has( rh, "cache-control", "no-cache" );
         Couple<String, String> pathAndType = parse( pathstub );
         Match matchAll = getMatch( "/" + pathstub, queryParams );
-        Match matchTrimmed = getMatch( "/" + pathAndType.a, queryParams );
+        Match matchTrimmed = getMatch( "/" + pathAndType.a, queryParams );  
         Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
-        
+    //
         String formatSuffix = match == matchAll ? null : pathAndType.b;
         Set<String> _formats = queryParams.getAll("_format");
         if (_formats.size() == 1) formatSuffix = _formats.iterator().next();
@@ -238,6 +238,11 @@ import com.sun.jersey.api.NotFoundException;
         	else 
         		return standardHeaders( Response.seeOther( new URI( item ) ) ).build();
         } else {
+        //
+        	String prefixPath = match.getEndpoint().getPrefixPath();
+        	String path = contextPath + prefixPath;
+        	match.getEndpoint().getSpec().getBindings().put("_rootPath", path );
+        //
         	Times t = new Times( pathstub );
         	Controls c = new Controls( !dontCache, t );
         	int encodingHash = hashOf( headers.getRequestHeaders().get("Accept-Encoding") );

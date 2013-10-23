@@ -131,7 +131,7 @@ public class ServletUtils {
 	        Resource api = ri.next();
 	        try {
 	        	if (false) setUriTemplatePrefix( prefixPath, filePath, api );
-	            SpecManagerFactory.get().addSpec( am, prefixPath, api.getURI(), "", model);
+	            SpecManagerFactory.get().addSpec( prefixPath, am, prefixPath, api.getURI(), "", model);
 	        } catch (APISecurityException e) {
 	            throw new APIException( "Internal error. Got security exception during bootstrap. Not possible!", e );
 	        }

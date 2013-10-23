@@ -158,11 +158,11 @@ public class RouterRestletSupport {
 		    Resource api = ri.next();
             Resource specRoot = init.getResource(api.getURI());
             try {
-				SpecManagerFactory.get().addSpec(am, prefixPath, api.getURI(), "", init );
+				SpecManagerFactory.get().addSpec(prefixPath, am, prefixPath, api.getURI(), "", init );
 			} catch (APISecurityException e) {
 				throw new WrappedException(e);
 			}
-			APISpec apiSpec = new APISpec( am, EldaFileManager.get(), specRoot, ml );
+			APISpec apiSpec = new APISpec( prefixPath, am, EldaFileManager.get(), specRoot, ml );
 			APIFactory.registerApi( router, prefixPath, apiSpec );
 		}
 	}

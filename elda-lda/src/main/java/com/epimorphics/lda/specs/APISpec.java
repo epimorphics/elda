@@ -74,6 +74,8 @@ public class APISpec {
     protected final boolean hasParameterBasedContentNegotiation;
     protected final List<Source> describeSources;
     public final Bindings bindings = new Bindings();
+    
+    protected final String prefixPath;
 
 	public final int describeThreshold;
 	
@@ -86,28 +88,33 @@ public class APISpec {
 	    query to use nested selects if they are available.
 	*/
 	public static final int DEFAULT_DESCRIBE_THRESHOLD = 10;
-	
-    public APISpec( FileManager fm, Resource specification, ModelLoader loader ) {
-    	this(new AuthMap(), fm, specification, loader ); 
+    
+	public APISpec( FileManager fm, Resource specification, ModelLoader loader ) {
+		this( "", fm, specification, loader );
+	}
+
+    public APISpec( String prefixPath, FileManager fm, Resource specification, ModelLoader loader ) {
+    	this(prefixPath, new AuthMap(), fm, specification, loader ); 
     }
     
-    public APISpec( AuthMap am, FileManager fm, Resource specification, ModelLoader loader ) {
-    	specificationURI = specification.getURI();
-    	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
-		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
-        describeThreshold = RDFUtils.getIntValue( specification, EXTRAS.describeThreshold, DEFAULT_DESCRIBE_THRESHOLD );
-		prefixes = ExtractPrefixMapping.from(specification);
-        sns = loadShortnames(specification, loader);
-        dataSource = GetDataSource.sourceFromSpec( fm, specification, am );
-        textSearchConfig = dataSource.getTextSearchConfig().overlay(specification);
-        describeSources = extractDescribeSources( fm, am, specification, dataSource );
-        primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
-        defaultLanguage = getStringValue(specification, API.lang, null);
-        base = getStringValue( specification, API.base, null );
-        bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
-        factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
-        hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
-		cachePolicyName = getStringValue( specification, EXTRAS.cachePolicyName, "default" );
+    public APISpec( String prefixPath, AuthMap am, FileManager fm, Resource specification, ModelLoader loader ) {
+    	this.prefixPath = prefixPath;
+    	this.specificationURI = specification.getURI();
+    	this.defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
+		this.maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
+        this.describeThreshold = RDFUtils.getIntValue( specification, EXTRAS.describeThreshold, DEFAULT_DESCRIBE_THRESHOLD );
+		this.prefixes = ExtractPrefixMapping.from(specification);
+        this.sns = loadShortnames(specification, loader);
+        this.dataSource = GetDataSource.sourceFromSpec( fm, specification, am );
+        this.textSearchConfig = dataSource.getTextSearchConfig().overlay(specification);
+        this.describeSources = extractDescribeSources( fm, am, specification, dataSource );
+        this.primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
+        this.defaultLanguage = getStringValue(specification, API.lang, null);
+        this.base = getStringValue( specification, API.base, null );
+        this.bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
+        this.factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
+        this.hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
+		this.cachePolicyName = getStringValue( specification, EXTRAS.cachePolicyName, "default" );
         extractEndpointSpecifications( specification );
         extractModelPrefixEditor( specification );
     }
@@ -272,6 +279,10 @@ public class APISpec {
 
 	public TextSearchConfig getTextSearchConfig() {
 		return textSearchConfig;
+	}
+	
+	public String getPrefixPath() {
+		return prefixPath;
 	}
 }
 

@@ -66,6 +66,14 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public String toString() {
     	return spec.toString();
     }
+    
+    /**
+        Return this endpoints prefix path, which is the prefix path of its
+        parent API spec.
+    */
+    @Override public String getPrefixPath() {
+    	return getSpec().getAPISpec().getPrefixPath();
+    }
 	
 	static final Bindings defaults = new Bindings().put( "_resourceRoot", "{_APP}/lda-assets/" );
 	
