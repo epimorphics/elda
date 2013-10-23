@@ -8,10 +8,22 @@
 #parse("page-head-shell.vm")
 <body>
 
-<div style="background: #dff; font-size: 2em">
-    <img style="float: left" src="$resourceRoot/images/molecule-transparent.png">
-    <div style="float: left; margin-left: 1ex; margin-top: 5px">Elda Standalone: Linked Data API</div>
-    <img style="float: right; margin-right: 1ex" src="http://elda.googlecode.com/hg/docs/epilogo-240.png">
+<div style="background: #dff; font-size: 2em; margin: 0.5ex; border-radius: 0.2ex">
+    <a href="http://en.wikipedia.org/wiki/Resource_Description_Framework">
+        <img style="margin: 0.5ex; float: left" src="$resourceRoot/images/molecule-transparent.png">
+    </a>
+    <a href="https://code.google.com/p/elda/">
+        <div style="float: left; margin-top: 0.5ex">Elda</div>
+    </a>
+    <a href="https://code.google.com/p/elda/downloads/list">
+        <div style="text-indent: 0.5ex; float: left; margin-top: 0.5ex">Standalone: </div>
+    </a>
+    <a href="http://code.google.com/p/linked-data-api/wiki/Specification">
+        <div style="text-indent: 1ex; float: left; margin-top: 0.5ex">Linked Data API</div>
+    </a>
+    <a href="http://www.epimorphics.com/web/">
+        <img valign="middle" style="float: right; margin-right: 1ex" src="http://www.epimorphics.com/web/sites/all/documents/images/epilogo-200.png">
+    </a>
     <div style="clear: both"> </div>
 </div>
 
