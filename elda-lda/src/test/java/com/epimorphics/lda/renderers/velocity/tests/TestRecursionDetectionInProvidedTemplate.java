@@ -34,6 +34,8 @@ public class TestRecursionDetectionInProvidedTemplate {
 		
 	// hack the velocity root. how do we do better?
 		b.put("_velocityRoot", "../elda-standalone/src/main/webapp/lda-assets/vm");	
+		b.put("_resourceRoot", "../elda-standalone/src/main/webapp/lda-assets");	
+		b.put("_rootPath", "standalone");	
 	//
 		Resource config = model.createResource( "eh:/config" );
 		Renderer r = new VelocityRenderer( mt, b, config );
@@ -53,6 +55,9 @@ public class TestRecursionDetectionInProvidedTemplate {
 		addProperty( x, API.processor, COMMON.software, API.label, resultModel.createLiteral("Elda") );
 		addProperty( x, API.processor, COMMON.software, DOAP_EXTRAS.releaseOf, DOAP.homepage, resultModel.createResource( "eh:/homePage" ) );
 	//
+		addProperty( x, API.variableBinding, v( resultModel, "_resourceRoot", "../elda-standalone/src/main/webapp/lda-assets") );
+		addProperty( x, API.variableBinding, v( resultModel, "_rootPath", "standalone") );
+	//
 		Times t = new Times();
 		Map<String, String> termBindings = new HashMap<String, String>();
 		APIResultSet results = new APIResultSet
@@ -70,6 +75,13 @@ public class TestRecursionDetectionInProvidedTemplate {
 		// System.err.println( ">> content: " + bos.toString() );
 	}
 	
+	private RDFNode v(Model m, String name, String value) {
+		return m.createResource()
+			.addProperty(API.label, name)
+			.addProperty(API.value, value)
+			;
+	}
+
 	protected void addProperty( Resource x, RDFNode... nodes ) {
 		int i = nodes.length;
 		RDFNode value = nodes[--i];

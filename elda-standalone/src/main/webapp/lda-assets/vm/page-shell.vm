@@ -2,7 +2,7 @@
 #set ($prevlink = $thisPage.valueOf("xhv:prev"))
 #set ($firstlink = $thisPage.valueOf("xhv:first"))
 #set ($resourceRoot = $vars['_resourceRoot'])
-#set ($path = $vars['_rootPath'])
+#set ($rootPath = $vars['_rootPath'])
 
 <html>
 #parse("page-head-shell.vm")
@@ -69,7 +69,7 @@
 >&Delta;</a></span>
 
 <span>
-<a href="$path/item.vhtml?_properties=*.*.*&resource=$value.URI.raw().replaceAll("#", "%23")"
+<a href="$rootPath/item.vhtml?_properties=*.*.*&resource=$value.URI.raw().replaceAll("#", "%23")"
 	title="Click to see properties of this resource."
 >$value.label</a>
 </span>
