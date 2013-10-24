@@ -71,12 +71,28 @@ public class VelocityCore {
 	*/
 	public static class Utils {
 		
+		public <T extends Comparable<? super T>>void sort(List<? extends T> l) {
+			Collections.sort(l);
+		}
+		
 		public Map<Object, Object> newMap() {
 			return new HashMap<Object, Object>();
 		}
 		
 		public Set<Object> newSet() {
 			return new HashSet<Object>();
+		}
+		
+		public List<Object> newList() {
+			return new ArrayList<Object>();
+		}
+		
+		public void println(Object x) {
+			System.err.println( ">> " + x );
+		}
+		
+		public void println(Object x, Object y) {
+			System.err.println( ">> " + x + " " + y );
 		}
 	}
 

@@ -3,48 +3,49 @@
 #set ($firstlink = $thisPage.valueOf("xhv:first"))
 #set ($resourceRoot = $vars['_resourceRoot'])
 #set ($rootPath = $vars['_rootPath'])
+#set ($propertyPaths = $utils.newSet())
 
 <html>
 #parse("page-head-shell.vm")
 <body>
 
 <div style="background: #dff; font-size: 2em; margin: 0.5ex; border-radius: 0.2ex">
-    <a href="http://en.wikipedia.org/wiki/Resource_Description_Framework">
-        <img style="margin: 0.5ex; float: left" src="$resourceRoot/images/molecule-transparent.png">
-    </a>
-    <a href="https://code.google.com/p/elda/">
-        <div style="float: left; margin-top: 0.5ex">Elda</div>
-    </a>
-    <a href="https://code.google.com/p/elda/downloads/list">
-        <div style="text-indent: 0.5ex; float: left; margin-top: 0.5ex">Standalone: </div>
-    </a>
-    <a href="http://code.google.com/p/linked-data-api/wiki/Specification">
-        <div style="text-indent: 1ex; float: left; margin-top: 0.5ex">Linked Data API</div>
-    </a>
-    <a href="http://www.epimorphics.com/web/">
-        <img style="float: right; margin-right: 1ex" src="http://elda.googlecode.com/hg/docs/epilogo-200.png">
-    </a>
-    <div style="clear: both"> </div>
+	<a href="http://en.wikipedia.org/wiki/Resource_Description_Framework">
+		<img style="margin: 0.5ex; float: left" src="$resourceRoot/images/molecule-transparent.png">
+	</a>
+	<a href="https://code.google.com/p/elda/">
+		<div style="float: left; margin-top: 0.5ex">Elda</div>
+	</a>
+	<a href="https://code.google.com/p/elda/downloads/list">
+		<div style="text-indent: 0.5ex; float: left; margin-top: 0.5ex">Standalone: </div>
+	</a>
+	<a href="http://code.google.com/p/linked-data-api/wiki/Specification">
+		<div style="text-indent: 1ex; float: left; margin-top: 0.5ex">Linked Data API</div>
+	</a>
+	<a href="http://www.epimorphics.com/web/">
+		<img style="float: right; margin-right: 1ex" src="http://elda.googlecode.com/hg/docs/epilogo-200.png">
+	</a>
+	<div style="clear: both"> </div>
 </div>
 
 <div class="formats-list">
-    #set ($pipe = "")
-    #foreach ($f in $formats)
-    	$pipe #set ($pipe = " | ") <a href="$f.link">$f.name</a>
-    #end			
+	#set ($pipe = "")
+	#foreach ($f in $formats)
+		$pipe #set ($pipe = " | ") <a href="$f.link">$f.name</a>
+	#end			
 </div>
 
 #macro (tag, $property, $value)
-    "Select items with $property.shortForm() less than $value"
+	"Select items with $property.shortForm() less than $value"
 #end
 
 #macro (selection, $prefix, $symbol, $wording, $property, $value)					
-    <a
-    	title="Select items with $property.shortForm() $wording $value"
-    	href="$thisPage.change($prefix, $property, $value).getURI()"
-    > 
-    	$symbol 
-    </a>
+	<a
+		title="Select items with $property.shortForm() $wording $value"
+		href="$thisPage.change($prefix, $property, $value).getURI()"
+	> 
+		$symbol 
+	</a>
 #end
 
 ## -------------------------------------------------------------------------
@@ -89,47 +90,50 @@
 
 ## -------------------------------------------------------------------------
 
-#macro(displayvalues,$item,$seen)
-    #set ($unseen = $seen.add($item))
-    #if ($unseen)
+#macro(displayvalues,$chain,$item,$seen)
+	#set ($macro.unseen = $seen.add($item))
+	#if ($macro.unseen)
 		#foreach ($property in $item.properties)
 
-			#set ($values = ${item.getValues($property)})			
-			#set ($first = $values.get(0))
-			#set ($linkprop = "<a style='margin-left: 1ex' href='" + $property.URI + "'>" + $property.shortForm().cut() + "</a>")
-
-            #if ($values.size() == 1 && $property.shortForm() == "label") #else
-            
-    			<hr class="hr-style">
-    
-    			#if ($values.size() == 1 && $first.isLiteral())
-    				#showliteral($linkprop,$property,$first)
-    			#elseif ($values.size() == 1 && ($seen.contains($first) || $first.properties.size() == 0))
-    				$linkprop #linkly($first)
-    			#else
-    				$linkprop
-    				#foreach ($value in $values)
-    					<div class="indented">
-    						#if ($value.isLiteral())
-    							#showliteral("", $property,$value)
-    						#else
-    							#if ($value.properties.size() > 0 && !$seen.contains($value))
-    								<div class="nested-item">
-    	    							<span style="background: #dff; width: 100%"> #linkly($value) </span>
-    									#displayvalues($value,$seen)
-    								</div>
-    							#else
-        							#linkly($value)
-    							#end
-    						#end				
-    					</div>					
-    				#end
-    			#end
+			#set ($foreach.shortProp = $property.shortForm())
+			#set ($foreach.dottedChain = $chain + "." + $foreach.shortProp)
+			#set ($foreach.values = ${item.getValues($property)})			
+			#set ($foreach.firstValue = $foreach.values.get(0))
+			#set ($foreach.linkprop = "<a style='margin-left: 1ex' href='" + $property.URI + "'>" + $property.shortForm().cut() + " [" + $foreach.dottedChain + "]" + "</a>")
+            $utils.println("DC", $foreach.dottedChain)
+            #set ($ignored = $propertyPaths.add($foreach.dottedChain))
+			#if ($foreach.values.size() == 1 && $property.shortForm() == "label") #else
+			
+				<hr class="hr-style">
+					
+				#if ($foreach.values.size() == 1 && $foreach.firstValue.isLiteral())
+					#showliteral($foreach.linkprop,$property,$foreach.firstValue)
+				#elseif ($foreach.values.size() == 1 && ($seen.contains($foreach.firstValue) || $foreach.firstValue.properties.size() == 0))
+					$foreach.linkprop #linkly($foreach.firstValue)
+				#else				
+					$foreach.linkprop
+					#foreach ($value in $foreach.values)			   
+						<div class="indented">
+							#if ($value.isLiteral())
+								#showliteral("", $property,$value)
+							#else
+								#if ($value.properties.size() > 0 && !$seen.contains($value))
+									<div class="nested-item">
+										<span style="background: #dff; width: 100%"> #linkly($value) </span>
+										#displayvalues($foreach.parent.dottedChain,$value,$seen)
+									</div>
+								#else
+									#linkly($value)
+								#end
+							#end				
+						</div>					
+					#end
+				#end
 			#end
-    	#end
-    #else
-    #end
-	#if ($unseen) #set ($ignored = $seen.remove($item)) #end
+		#end
+	#else
+	#end
+	#if ($macro.unseen) #set ($ignored = $seen.remove($item)) #end
 #end
 
 <table width="100%">
@@ -169,7 +173,7 @@
 		#foreach ($item in $items) 
 			<div class="itembox">
 			#linkly($item)
-			#displayvalues($item, $seen)
+			#displayvalues("",$item, $seen)
 			</div>
 		#end
 	</div>
@@ -178,6 +182,18 @@
 </td>
 <td width="20%" valign="top">
 	<h2>other</h2>
+	
+	<div>property paths</div>
+	
+	#set ($list = $utils.newList())
+	#set ($ignored = $list.addAll($propertyPaths))
+	
+	$utils.sort($list)
+	
+	#foreach ($propertyPath in $list)
+	   <div> $propertyPath </div> 
+	#end
+	
 </td>
 </tr>
 </table>

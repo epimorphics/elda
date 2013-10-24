@@ -36,6 +36,8 @@ public class Help {
 			String defaultRoot = b.getAsString("_resourceRoot", "") + "/vm/";
 			String templateRoot = b.getAsString("_velocityRoot", defaultRoot);	
 		//
+			ve.setProperty( "macro.provide.scope.control", true );
+			ve.setProperty( "foreach.provide.scope.control", true );
 			ve.setProperty( "runtime.references.strict", "true" );
 //			ve.setProperty( "resource.loader",  "class" );
 //			ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
