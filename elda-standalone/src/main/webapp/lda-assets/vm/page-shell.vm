@@ -1,9 +1,15 @@
+#set ($seen = $utils.newSet())
 #set ($nextlink = $thisPage.valueOf("xhv:next"))
 #set ($prevlink = $thisPage.valueOf("xhv:prev"))
 #set ($firstlink = $thisPage.valueOf("xhv:first"))
 #set ($resourceRoot = $vars['_resourceRoot'])
 #set ($rootPath = $vars['_rootPath'])
 #set ($propertyPaths = $utils.newSet())
+
+#set ($_properties = $utils.newSet())
+#foreach ($p in $vars['_properties'].toString().split(","))
+	#set ($ignored = $_properties.add($p))
+#end
 
 <html>
 #parse("page-head-shell.vm")
@@ -99,9 +105,25 @@
 			#set ($foreach.dottedChain = $chain + "." + $foreach.shortProp)
 			#set ($foreach.values = ${item.getValues($property)})			
 			#set ($foreach.firstValue = $foreach.values.get(0))
-			#set ($foreach.linkprop = "<a style='margin-left: 1ex' href='" + $property.URI + "'>" + $property.shortForm().cut() + " [" + $foreach.dottedChain + "]" + "</a>")
-            $utils.println("DC", $foreach.dottedChain)
-            #set ($ignored = $propertyPaths.add($foreach.dottedChain))
+			#set ($foreach.linkprop = 
+				"<a style='margin-left: 1ex' href='" + $property.URI + "'>" 
+				+ $property.shortForm().cut() 
+				+ " [" + $foreach.dottedChain + "]" 
+				+ "</a>")
+				
+			#set ($A = $utils.newSet())
+			#set ($ignored = $A.addAll($_properties))
+			#set ($ignored = $A.add($foreach.dottedChain.substring(1)))
+			#set ($foreach.changeResult = $thisPage.change('', '_properties', $utils.join($A,',') ))
+			
+			$utils.println("thisPage: ", $thisPage)
+			$utils.println("change result: ",$foreach.changeResult.toString())
+			<a href="$foreach.changeResult.URI"> XXX $foreach.changeResult.URI YYY </a> 
+				
+            ## $utils.println("DC", $foreach.dottedChain)
+            
+            #set ($ignored = $propertyPaths.add($foreach.dottedChain.substring(1)))
+            
 			#if ($foreach.values.size() == 1 && $property.shortForm() == "label") #else
 			
 				<hr class="hr-style">
@@ -183,16 +205,26 @@
 <td width="20%" valign="top">
 	<h2>other</h2>
 	
-	<div>property paths</div>
+	<div style="margin-left: 2ex">
 	
-	#set ($list = $utils.newList())
-	#set ($ignored = $list.addAll($propertyPaths))
+	<div style="font-size: 2em; font-weight: bold"> properties </div>
 	
-	$utils.sort($list)
-	
-	#foreach ($propertyPath in $list)
-	   <div> $propertyPath </div> 
+	#foreach ($p in $_properties)
+		<div> <b> $p </b> </div>
 	#end
+	
+	</div>
+	
+##	<div>property paths</div>
+##	
+##	#set ($list = $utils.newList())
+##	#set ($ignored = $list.addAll($propertyPaths))
+##	
+##	$utils.sort($list)
+##	
+##	#foreach ($propertyPath in $list)
+##	   <div> $propertyPath </div> 
+##	#end
 	
 </td>
 </tr>

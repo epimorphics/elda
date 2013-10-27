@@ -47,7 +47,6 @@ public class VelocityCore {
 		vc.put( "meta", Help.getMetadataFrom( names, ids, m ) );
 		vc.put( "vars", Help.getVarsFrom( names, ids, m ) );
 		vc.put( "utils", new Utils() );
-		vc.put( "seen", new HashSet<WrappedNode>() );
 //		vc.put( "onceies", Help.getOnceies( wrappedPage, m ) );
 //		
 //		System.err.println( ">> " + Help.getOnceies( wrappedPage, m ) );
@@ -93,6 +92,20 @@ public class VelocityCore {
 		
 		public void println(Object x, Object y) {
 			System.err.println( ">> " + x + " " + y );
+		}
+		
+		public String join(Collection<Object> things, String infix) {
+			StringBuilder sb = new StringBuilder();
+			boolean doneSome = false;
+			for (Object t: things) {
+				String tString = t.toString();
+				if (tString.length() > 0) {
+					if (doneSome) sb.append(infix);
+					sb.append(tString);
+					doneSome = true;
+				}
+			}
+			return sb.toString();
 		}
 	}
 

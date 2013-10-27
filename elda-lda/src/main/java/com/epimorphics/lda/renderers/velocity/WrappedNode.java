@@ -175,12 +175,21 @@ public class WrappedNode implements Comparable<WrappedNode> {
 	}
 	
 	public WrappedNode change( String prefix, WrappedNode p, WrappedNode v ) {
+		return change( prefix, p.shortForm().content, v.toString() );
+	}
+	
+	public WrappedNode change( String prefix, String p, String v ) {
+		
+		if (p.equals("_properties")) System.err.println( ">> changing " + this.getURI() + " )) " + p + " to " + v );
 		URI ru = URIUtils.newURI( r.getURI() );
-		String key = prefix + p.shortForm().content;
+		String key = prefix + p;
 		String value = v.toString();
 		URI u = URIUtils.replaceQueryParam( ru, key, value );	
 	//
 		Resource changed = r.getModel().createResource( u.toString() );
+		
+		if (p.equals("_properties")) System.err.println( ">>   ==> " + changed );
+		
 		return new WrappedNode( bundle, changed );
 	}
 	
