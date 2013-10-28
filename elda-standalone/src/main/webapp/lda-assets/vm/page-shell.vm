@@ -6,6 +6,10 @@
 #set ($rootPath = $vars['_rootPath'])
 #set ($propertyPaths = $utils.newSet())
 
+#macro (image,$name)
+<img src="${resourceRoot}images/green/16x16/${name}.png" />
+#end
+
 #set ($_properties = $utils.newSet())
 #foreach ($p in $vars['_properties'].toString().split(","))
 	#set ($ignored = $_properties.add($p))
@@ -105,20 +109,22 @@
 			#set ($foreach.dottedChain = $chain + "." + $foreach.shortProp)
 			#set ($foreach.values = ${item.getValues($property)})			
 			#set ($foreach.firstValue = $foreach.values.get(0))
-			#set ($foreach.linkprop = 
-				"<a style='margin-left: 1ex' href='" + $property.URI + "'>" 
-				+ $property.shortForm().cut() 
-				+ " [" + $foreach.dottedChain + "]" 
-				+ "</a>")
-				
+			
 			#set ($A = $utils.newSet())
 			#set ($ignored = $A.addAll($_properties))
 			#set ($ignored = $A.add($foreach.dottedChain.substring(1)))
 			#set ($foreach.changeResult = $thisPage.change('', '_properties', $utils.join($A,',') ))
 			
-			$utils.println("thisPage: ", $thisPage)
-			$utils.println("change result: ",$foreach.changeResult.toString())
-			<a href="$foreach.changeResult.URI"> XXX $foreach.changeResult.URI YYY </a> 
+			## $utils.println("thisPage: ", $thisPage)
+			## $utils.println("change result: ",$foreach.changeResult.toString())		    
+		    #set ($image = "<img src='" + $resourceRoot + "images/green/16x16/" + "Plus" + ".png" + "'>")
+		    
+			#set ($foreach.linkprop = 
+				" <a title='Click to add this property chain to viewed proeprties.' href='" + $foreach.changeResult.URI + "'>" + $image + "</a>"
+				+ " <a style='margin-left: 1ex' href='" + $property.URI + "'>" 
+				+ $property.shortForm().cut() 
+				+ "</a>"
+				)
 				
             ## $utils.println("DC", $foreach.dottedChain)
             
@@ -210,21 +216,19 @@
 	<div style="font-size: 2em; font-weight: bold"> properties </div>
 	
 	#foreach ($p in $_properties)
-		<div> <b> $p </b> </div>
+		<div> 
+		
+		#set ($A = $utils.newSet())
+        #set ($ignored = $A.addAll($_properties))
+		#set ($ignored = $A.remove($p))
+		#set ($changed = $thisPage.change('', '_properties', $utils.join($A,',')))
+		
+		<a title='Click to remove this property chain from viewed properties.' href="$changed.URI">#image("Clipboard Cut")</a> $p
+        
+        </div>
 	#end
 	
 	</div>
-	
-##	<div>property paths</div>
-##	
-##	#set ($list = $utils.newList())
-##	#set ($ignored = $list.addAll($propertyPaths))
-##	
-##	$utils.sort($list)
-##	
-##	#foreach ($propertyPath in $list)
-##	   <div> $propertyPath </div> 
-##	#end
 	
 </td>
 </tr>
