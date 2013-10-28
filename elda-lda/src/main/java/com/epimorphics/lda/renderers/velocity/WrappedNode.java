@@ -92,6 +92,14 @@ public class WrappedNode implements Comparable<WrappedNode> {
 	}
 	
 	/**
+	    Returns <code>uri</code> wrapped as a Resource using 
+	    the same bundle as this WrappedNode.
+	*/
+	public WrappedNode wrap( String uri ) {
+		return new WrappedNode( bundle, r.getModel().createResource(uri) );
+	}
+	
+	/**
 		Return this wrapped resource's preferred label;
 		the first literal of (a) this resources skos:prefLabel,
 		(b) an unlanguaged rdfs:label, (c) a languaged

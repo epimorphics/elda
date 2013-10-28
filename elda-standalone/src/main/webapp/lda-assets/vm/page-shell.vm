@@ -12,7 +12,9 @@
 
 #set ($_properties = $utils.newSet())
 #foreach ($p in $vars['_properties'].toString().split(","))
-	#set ($ignored = $_properties.add($p))
+    #if ($p.isEmpty()) #else 
+        #set ($ignored = $_properties.add($p))
+    #end
 #end
 
 <html>
@@ -92,7 +94,17 @@
 >&Delta;</a></span>
 
 <span>
-<a href="$rootPath/item.vhtml?_properties=*.*.*&resource=$value.URI.raw().replaceAll("#", "%23")"
+#set ($macro.A = $utils.newSet())
+#set ($ignored = $macro.A.addAll($_properties))
+#set ($ignored = $macro.A.add("*.*.*"))
+#set ($macro.uri = $rootPath + "/item.vhtml")
+#set ($macro.base = $thisPage.wrap($macro.uri))
+#set ($macro.changeProperties = $macro.base.change('', '_properties', $utils.join($macro.A,',') ))
+#set ($macro.changeAll = $macro.changeProperties.change('','resource', $value.URI.raw().replaceAll("#", "%23")))           
+
+## $rootPath/item.vhtml
+
+<a href="$macro.changeAll.URI"
 	title="Click to see properties of this resource."
 >$value.label</a>
 </span>
@@ -166,7 +178,7 @@
 
 <table width="100%">
 <tr>
-<td width="80%" valign="top">
+<td width="70%" valign="top">
 
 <div id="search-results">
 	<h2>Search Results</h2>
@@ -208,7 +220,7 @@
 </div>
 
 </td>
-<td width="20%" valign="top">
+<td width="30%" valign="top">
 	<h2>other</h2>
 	
 	<div style="margin-left: 2ex">
