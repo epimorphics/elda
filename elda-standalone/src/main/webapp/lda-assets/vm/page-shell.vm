@@ -91,7 +91,7 @@
 <span>
 <a class="bold" href="$value.URI" id="$value.id"
 	title="Click to see document for this resource."
->&Delta;</a></span>
+>#image("Document")</a></span>
 
 <span>
 #set ($macro.A = $utils.newSet())
@@ -126,19 +126,15 @@
 			#set ($ignored = $A.addAll($_properties))
 			#set ($ignored = $A.add($foreach.dottedChain.substring(1)))
 			#set ($foreach.changeResult = $thisPage.change('', '_properties', $utils.join($A,',') ))
-			
-			## $utils.println("thisPage: ", $thisPage)
-			## $utils.println("change result: ",$foreach.changeResult.toString())		    
+					    
 		    #set ($image = "<img src='" + $resourceRoot + "images/green/16x16/" + "Plus" + ".png" + "'>")
 		    
 			#set ($foreach.linkprop = 
-				" <a title='Click to add this property chain to viewed proeprties.' href='" + $foreach.changeResult.URI + "'>" + $image + "</a>"
+				" <a title='Click to add this property chain to viewed properties.' href='" + $foreach.changeResult.URI + "'>" + $image + "</a>"
 				+ " <a style='margin-left: 1ex' href='" + $property.URI + "'>" 
 				+ $property.shortForm().cut() 
 				+ "</a>"
 				)
-				
-            ## $utils.println("DC", $foreach.dottedChain)
             
             #set ($ignored = $propertyPaths.add($foreach.dottedChain.substring(1)))
             
