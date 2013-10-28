@@ -30,7 +30,7 @@
 
 @prefix so:                 <http://education.data.gov.uk/def/school/> .
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
-
+@prefix vcard:              <http://www.w3.org/2006/vcard/ns#> .
 
 ############################################################################################
 #
@@ -79,6 +79,13 @@ spec:viewerAdmin
 
 #FORMATTERS
 
+spec:VelocityFormatter a elda:VelocityFormatter
+    ; api:name "vhtml"
+    ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
+    ; api:mimeType "text/html"
+    ; api:stylesheet "page-shell.vm"
+    .
+    
 spec:HtmlFormatter
 	a api:XsltFormatter ;
 	api:name "html" ;
@@ -104,6 +111,7 @@ spec:full-education-api a api:API ;
 	api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query> ;
 	api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"];
 	api:variable [api:name "_suppress_ipto"; api:value "yes"];
+    api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/standalone/lda-assets/"];
 	api:lang "en,none";
 	elda:enableETags true ;
 	rdfs:label "Edubase Full API"@en;
@@ -112,10 +120,12 @@ spec:full-education-api a api:API ;
 	api:defaultViewer api:labelledDescribeViewer ;
 	api:defaultFormatter spec:HtmlFormatter ;
 	api:formatter spec:CsvFormatter ;
+    api:formatter spec:VelocityFormatter ;
 	api:viewer 
 		api:describeViewer ,
 		api:labelledDescribeViewer ;
 	api:endpoint 
+	    so:item ,
 		so:scheme ,
 		so:scheme-ns ,
 		so:scheme-def ,
@@ -177,7 +187,25 @@ FILTER (regex(STR(?item),?schemeRegex))
 """;
      api:orderBy "str(?item)";
      .
+    
+#
+# The /item endpoint requires a query parameter whose value
+# is a URI; this is the single selected ?item. These URIs
+# are typically constructed by the Velocity renderer when
+# a resource is clicked on for a dataset-relative link. 
+#
 
+so:item a api:ListEndpoint
+    ; rdfs:label "Items"
+    ; api:uriTemplate "/item?resource={uri}"
+    ; api:variable [api:name "uri"; api:type rdfs:Resource]
+    ; api:selector 
+        [ api:where "?item ?p ?o. FILTER(?item = ?uri)"
+        ; api:sort "label"
+        ]
+    ; api:defaultViewer api:labelledDescribeViewer
+    .
+    
 so:scheme-def a api:ListEndpoint;
 	rdfs:comment "Returns a list of vocabularies organised under http://education.data.gov.uk/def/"@en;
 	api:viewer    api:describeViewer, spec:schemeViewer, api:basicViewer;

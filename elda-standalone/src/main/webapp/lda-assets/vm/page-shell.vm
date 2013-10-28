@@ -66,7 +66,7 @@
 	<div style="float: left"> $preamble </div>
 	<div style="float: left; margin-left: 1ex">
 		#if ($value.isSelfQuoting()) 
-			$value 
+			<span title="$value.literalType">$value</span> 
 		#else 
 			"$value.shortForm()"
 			#set ($lang = $value.language) 

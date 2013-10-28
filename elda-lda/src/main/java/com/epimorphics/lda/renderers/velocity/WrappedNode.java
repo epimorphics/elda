@@ -236,6 +236,7 @@ public class WrappedNode implements Comparable<WrappedNode> {
 			|| uri.equals(XSDDatatype.XSDfloat.getURI())
 			|| uri.equals(XSDDatatype.XSDdouble.getURI())
 			|| uri.equals(XSDDatatype.XSDboolean.getURI())
+			|| uri.equals(XSDDatatype.XSDdate.getURI())
 			;
 	}
 
