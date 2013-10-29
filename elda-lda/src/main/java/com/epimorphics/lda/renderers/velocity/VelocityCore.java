@@ -8,6 +8,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.BrokenException;
@@ -26,7 +27,8 @@ public class VelocityCore {
 
 	public void render( APIResultSet results, OutputStream os ) {
 		Resource thisPage = results.getRoot();
-		Model m = results.getMergedModel();
+		MergedModels mm = results.getModels();
+		Model m = mm.getMergedModel();
 		IdMap ids = new IdMap();
 		ShortNames names = Help.getShortnames( m );
 		boolean isItemEndpoint = thisPage.hasProperty(FOAF.primaryTopic);
@@ -43,14 +45,11 @@ public class VelocityCore {
 		vc.put( "ids",  ids );
 		vc.put( "names", names );
 		vc.put( "formats", Help.getFormats( m ) );
+		vc.put( "views", Help.getViews( m ) );
 		vc.put( "items", itemised );
 		vc.put( "meta", Help.getMetadataFrom( names, ids, m ) );
 		vc.put( "vars", Help.getVarsFrom( names, ids, m ) );
-		vc.put( "utils", new Utils() );
-//		vc.put( "onceies", Help.getOnceies( wrappedPage, m ) );
-//		
-//		System.err.println( ">> " + Help.getOnceies( wrappedPage, m ) );
-		
+		vc.put( "utils", new Utils() );		
 	//
 		Template t = ve.getTemplate( templateName );
 		try {

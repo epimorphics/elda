@@ -122,6 +122,16 @@ $(function() {
 	#search-results {
 	}
 	
+	.viewing-header {
+	   font-size: 1.5em
+	   ; margin-top: 1ex
+	   ; margin-bottom: 1ex
+	   ; font-weight: bold
+	   ; background: #ddd
+	   ; text-indent: 1ex
+       ; border-radius: 0.5ex
+	}
+	
 	.bordered-panel {
 		border: 1ex solid #aaa
 		; border-radius: 2ex 

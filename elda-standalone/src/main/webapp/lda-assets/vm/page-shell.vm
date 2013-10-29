@@ -290,10 +290,10 @@
 	
 	<div style="margin-left: 2ex">
 	
-    	<div style="font-size: 2em; font-weight: bold"> properties </div>
+    	<div class="viewing-header"> properties </div>
     	
     	#foreach ($p in $_properties)
-    		<div> 
+    		<div style="margin-left: 1em"> 
     		
     		#set ($A = $utils.newSet())
             #set ($ignored = $A.addAll($_properties))
@@ -304,6 +304,12 @@
             
             </div>
     	#end
+    	
+        <div class="viewing-header"> views </div>
+        
+        #foreach ($v in $views)
+            <div style="margin-left: 1em"> $v.name </div>
+        #end
 	
 	</div>
 	
