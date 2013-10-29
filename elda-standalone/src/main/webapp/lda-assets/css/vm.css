@@ -1,0 +1,129 @@
+body {
+	}
+	
+	h1 {
+		background-color: #444
+		; color: white
+		; padding: 1ex
+		; margin: 1ex
+		; border-radius: 1ex
+	}
+	
+	h2 {
+		font-size: 2.4em
+		; text-indent: 1ex
+		; background: #777
+		; color: white
+		; margin-bottom: 1ex
+		; margin-left: 1ex
+		; margin-top: 0
+		; border-radius: 0.5ex
+	}
+	
+	h3 {
+		background: white
+		; font-size: 120%
+		; font-weight: bold
+		; margin: 1ex
+	}
+	
+	.indented {
+		margin-left: 2ex
+	}
+	
+	.formats-list {
+	   float: right
+	   ; font-size: 1.5em
+	   ; font-weight: 300
+	   ; margin: 1ex
+	}
+	
+	.nested-item {
+    	border-left: 4px solid #ddf
+    	; padding-left: 1ex
+    	}
+	
+	.hr-style {
+		background: black
+		; height: 1px
+		; margin: 2px
+		; padding: 0
+	}
+	
+	.bold {
+		font-weight: bold
+	}
+	
+	.itembox {
+		border: 1ex solid #aaa
+		; border-radius: 1ex
+		; margin: 1ex
+		; padding: 1ex
+	}
+	
+	header h1 {
+		background: url("../lda-assets/images/molecule.png") no-repeat scroll 0px 0px transparent
+		; background-color: #dff
+		; color: rgb(85, 85, 85)
+		; font-size: 2.3em
+		; font-weight: 300
+		; font-family: Gill Sans, Arial, sans-serif
+		; padding: 10px 72px
+	}
+	
+	#queries td {
+		background: #dff
+		; border-radius: 0.5ex
+		; margin: 1ex
+		; padding: 1ex
+	}
+	
+	#queries h4 {
+		font-size: 120%
+	}
+	
+	.buttonlike {
+		color: black 
+		; background: #ddf
+		; border-radius: 0.5ex
+		; margin: 0 0 0 0
+		; padding: 1px
+	}
+	
+	#search-results {
+	}
+	
+	.viewing-header {
+	   font-size: 1.5em
+	   ; margin-top: 1ex
+	   ; margin-bottom: 1ex
+	   ; font-weight: bold
+	   ; background: #ddd
+	   ; text-indent: 1ex
+       ; border-radius: 0.5ex
+	}
+	
+	.bordered-panel {
+		border: 1ex solid #aaa
+		; border-radius: 2ex 
+	}
+	
+	.right-header {
+		background: black
+		; min-width: 3cm
+		; border-radius: 1ex
+		; color: white
+		; padding: 10px 20px
+		; font-weight: bold
+	}
+	
+	footer {
+		background: #ccc
+		; text-align: right
+		; border-radius: 0.5ex
+	}
+	
+	footer p {
+		font-size: 120%
+	}
+	
