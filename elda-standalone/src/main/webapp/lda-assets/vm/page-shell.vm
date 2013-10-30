@@ -309,9 +309,20 @@
 	<div style="margin-left: 2ex">
 
         #if ($map_datasize > 0)	
-        	<div class="viewing-header"> map </div>
+        	<div class="viewing-header">
+        	   #if ($map_datasize == 1)
+        	       one location 
+        	   #else
+        	       $map_datasize locations
+        	   #end 
+        	</div>
        	    <div style="margin-left: 1em">
        	        <div style="border: 1ex solid #ddd; border-radius: 1ex; width: 256px; height: 256px" id="map"></div>
+       	    
+           	    <div style="font-size: smaller; width: 256px" align="right">
+           	        tiles courtesy of <a href="http://www.mapquest.com/">MapQuest</a> 
+           	        <img src="http://developer.mapquest.com/content/osm/mq_logo.png">
+           	    </div>
        	    </div>
    	    #end
 	
