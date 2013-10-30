@@ -129,6 +129,10 @@ div.mapInfo {
         function addMouseOver( marker, id, message ) {
             marker.events.on({
             
+                    click: function () {
+                            var info = document.getElementById("mapInfo")
+                            info.innerHTML = "CLICKED ME"
+                    },
                     
                     mouseover: function () {
                                 var info = document.getElementById("mapInfo")
