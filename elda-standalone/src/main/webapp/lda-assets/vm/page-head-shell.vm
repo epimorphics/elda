@@ -32,6 +32,15 @@ $(function() {
     div[id="OpenLayers.Control.Attribution_2"] {right: 0; bottom: 0}
 </style>
 
+<style>
+div.mapInfo {
+    width: 155px;
+    padding: 2px 5px 2px 22px;
+    height: 1.2em;
+    border: 1px solid #D3D3D3;
+}
+</style>
+
 #if ($map_datasize > 0) 
 
     <script src="${resourceRoot}/openlayers/OpenLayers.js"></script>
@@ -94,13 +103,13 @@ $(function() {
             }
     
             var bounds = raw_bounds.transform(wgs84,map.getProjectionObject());
-            var zoom = map.getZoomForExtent(bounds);
+            var zoom = map.getZoomForExtent(bounds)
     
             var center = bounds.getCenterLonLat() // .transform(wgs84,map.getProjectionObject())
     
-            map.setCenter(center, zoom < 14 ? zoom : 14 );
+            map.setCenter(center, zoom < 14 ? zoom : 14 )
     
-            var markers = new OpenLayers.Layer.Markers("Markers");
+            var markers = new OpenLayers.Layer.Markers("Markers")
             map.addLayer(markers);
     
             var size = new OpenLayers.Size(32,32);
@@ -110,11 +119,25 @@ $(function() {
             for (var i = 0; i < data.length; i += 1) {
                 var di = data[i]
                 var pos = new OpenLayers.LonLat(di[0], di[1]).transform(wgs84,map.getProjectionObject())
-                markers.addMarker(new OpenLayers.Marker(pos, icon.clone()))
+                var marker = new OpenLayers.Marker(pos, icon.clone())
+               
+                addMouseOver( marker, "<div class='mapInfo'> SONGULATE " + i + " </div>" )
+                
+                markers.addMarker(marker)
             }
+        }
+        
+        function addMouseOver( marker, message ) {
+            marker.events.on({
+                    mouseover: function () {
+                                var info = document.getElementById("mapInfo")
+                                info.innerHTML = message
+                            }
+                    })
         }
     
     </script>
 #end
+
 	
 </head>

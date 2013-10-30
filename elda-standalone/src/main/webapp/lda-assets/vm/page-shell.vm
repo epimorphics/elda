@@ -323,6 +323,8 @@
            	        tiles courtesy of <a href="http://www.mapquest.com/">MapQuest</a> 
            	        <img src="http://developer.mapquest.com/content/osm/mq_logo.png">
            	    </div>
+           	    
+           	    <div id="mapInfo" class="mapInfo"> INTERIM </div>
        	    </div>
    	    #end
 	
