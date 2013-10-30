@@ -91,6 +91,10 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		return new WrappedNode( bundle, r );
 	}
 	
+	public WrappedNode wrap( RDFNode n ) {
+		return new WrappedNode( bundle, n );
+	}
+	
 	/**
 	    Returns <code>uri</code> wrapped as a Resource using 
 	    the same bundle as this WrappedNode.
@@ -329,7 +333,7 @@ public class WrappedNode implements Comparable<WrappedNode> {
 		
 		// System.err.println( ">> " + qName + " ==> " + (s == null ? "NONE" : s.getObject() ) );
 		
-		return s == null ? null : wrap(s.getResource());
+		return s == null ? null : wrap(s.getObject());
 	}
 	
 	/**

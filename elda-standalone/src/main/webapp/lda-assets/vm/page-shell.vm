@@ -40,9 +40,27 @@
     #end
 #end
 
+##
+## Scan the items for lat/long properties. Assemble same into a list,
+## and set datapoints and map_datasize so that if there are entries, a
+## map is generated.
+##
+
+#set ($data = $utils.newList())
+
+#foreach ($item in $items)
+    #set ($lat = $item.valueOf("geo:lat"))
+    #set ($long = $item.valueOf("geo:long"))
+
+    #if ($lat && $long) #set ($ignored = $data.add("[$long, $lat]")) #end
+#end
+
+#set ($map_datasize = $data.size())
+#set ($datapoints = "[" + $utils.join($data, ", ") + "]")
+
 <html>
 #parse("page-head-shell.vm")
-<body>
+<body onload="map_init()">
 
 ##
 ## The top div has the logos (RDF, Epimorphics) and title text, each of
@@ -289,6 +307,13 @@
 	<h2>viewing</h2>
 	
 	<div style="margin-left: 2ex">
+
+        #if ($map_datasize > 0)	
+        	<div class="viewing-header"> map </div>
+       	    <div style="margin-left: 1em">
+       	        <div style="border: 1ex solid #ddd; border-radius: 1ex; width: 256px; height: 256px" id="map"></div>
+       	    </div>
+   	    #end
 	
     	<div class="viewing-header"> properties </div>
     	
@@ -310,7 +335,7 @@
         #foreach ($v in $views)
             <div style="margin-left: 1em"> $v.name </div>
         #end
-	
+    	
 	</div>
 	
 </td>
