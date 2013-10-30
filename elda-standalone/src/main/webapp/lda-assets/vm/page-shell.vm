@@ -47,12 +47,13 @@
 ##
 
 #set ($data = $utils.newList())
+#set ($q = '"')
 
 #foreach ($item in $items)
     #set ($lat = $item.valueOf("geo:lat"))
     #set ($long = $item.valueOf("geo:long"))
 
-    #if ($lat && $long) #set ($ignored = $data.add("[$long, $lat]")) #end
+    #if ($lat && $long) #set ($ignored = $data.add("[$long, $lat, ${q}${item.label}${q}, ${q}${item.id}${q}]")) #end
 #end
 
 #set ($map_datasize = $data.size())
@@ -317,6 +318,9 @@
         	   #end 
         	</div>
        	    <div style="margin-left: 1em">
+           	    <div id="mapInfo" class="mapInfo"> &nbsp; </div>
+           	    <div style="clear: both"> </div>
+           	    
        	        <div style="border: 1ex solid #ddd; border-radius: 1ex; width: 256px; height: 256px" id="map"></div>
        	    
            	    <div style="font-size: smaller; width: 256px" align="right">
@@ -324,7 +328,6 @@
            	        <img src="http://developer.mapquest.com/content/osm/mq_logo.png">
            	    </div>
            	    
-           	    <div id="mapInfo" class="mapInfo"> INTERIM </div>
        	    </div>
    	    #end
 	
@@ -343,7 +346,7 @@
             </div>
     	#end
     	
-        <div class="viewing-header"> views </div>
+        <div class="viewing-header"> views [TBD] </div>
         
         #foreach ($v in $views)
             <div style="margin-left: 1em"> $v.name </div>

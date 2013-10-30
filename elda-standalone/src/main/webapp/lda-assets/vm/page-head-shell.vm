@@ -34,10 +34,8 @@ $(function() {
 
 <style>
 div.mapInfo {
-    width: 155px;
-    padding: 2px 5px 2px 22px;
-    height: 1.2em;
-    border: 1px solid #D3D3D3;
+    font-size: smaller
+    ; float: right
 }
 </style>
 
@@ -80,7 +78,10 @@ div.mapInfo {
     
             var raw_bounds = new OpenLayers.Bounds()
                     
-            var data = $datapoints
+            var datapoints = $datapoints
+            var data = []
+            for (var i = 0; i < datapoints.length; i += 1)
+                data.push([datapoints[i][0], datapoints[i][1]])
             
             var old_test_data = [
                 [-0.10611, 51.43420]
@@ -120,15 +121,15 @@ div.mapInfo {
                 var di = data[i]
                 var pos = new OpenLayers.LonLat(di[0], di[1]).transform(wgs84,map.getProjectionObject())
                 var marker = new OpenLayers.Marker(pos, icon.clone())
-               
-                addMouseOver( marker, "<div class='mapInfo'> SONGULATE " + i + " </div>" )
-                
+                addMouseOver( marker, datapoints[i][3], "<div class='mapInfo'> " + datapoints[i][2] + " </div>" )
                 markers.addMarker(marker)
             }
         }
         
-        function addMouseOver( marker, message ) {
+        function addMouseOver( marker, id, message ) {
             marker.events.on({
+            
+                    
                     mouseover: function () {
                                 var info = document.getElementById("mapInfo")
                                 info.innerHTML = message
