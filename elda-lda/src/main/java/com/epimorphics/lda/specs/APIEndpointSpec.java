@@ -170,6 +170,10 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     	
         return views;
     }
+    
+    public Map<String, View> extractViews() {
+    	return extractViews( endpointResource );
+    }
 
 	public void addViewers(Resource root, Map<String, View> views) {
 		Model m = root.getModel();

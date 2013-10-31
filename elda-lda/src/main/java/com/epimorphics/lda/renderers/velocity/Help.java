@@ -14,6 +14,7 @@ import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.SKOSstub;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.WrappedIOException;
+import com.hp.hpl.jena.util.iterator.Map1;
 import com.hp.hpl.jena.vocabulary.*;
 
 public class Help {
@@ -273,10 +274,12 @@ public class Help {
 		
 		final String linkUsing;
 		final String name;
+		final List<String> properties;
 		
-		public View(String uri, String name) {
+		public View(String name, String uri, List<String> properties ) {
 			this.linkUsing = uri;
 			this.name = name;
+			this.properties = properties;
 		}
 
 		public String getName() {
@@ -286,16 +289,28 @@ public class Help {
 		public String getLink() {
 			return linkUsing;
 		}
+		
+		public List<String> getProperties() {
+			return properties;
+		}
 
 		@Override public int compareTo( View o ) {
 			return name.compareTo( o.name );
 		}
 	}
+
+	private static final Map1<Statement, String> statementToString = new Map1<Statement, String>() {
+		@Override public String map1(Statement o) {	return o.getString(); }
+	};
 	
 	public static List<View> getViews( Model m ) {
 		List<View> result = new ArrayList<View>();
 		List<Resource> links = m.listSubjectsWithProperty( DCTerms.isVersionOf ).toList();
-		for (Resource l: links) result.add( new View( l.getURI(), nameFor( l ) ) );
+		for (Resource l: links) {
+			List<String> properties = l.listProperties(API.properties).mapWith(statementToString).toList();
+			Collections.sort(properties);
+			result.add( new View( nameFor( l ), l.getURI(), properties ) );
+		}
 		Collections.sort( result );
 		return result;
 	}

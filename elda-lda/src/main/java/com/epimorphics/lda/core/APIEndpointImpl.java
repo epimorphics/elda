@@ -183,7 +183,7 @@ public class APIEndpointImpl implements APIEndpoint {
         APISpec apiSpec = spec.getAPISpec();
         Source source = apiSpec.getDataSource();
         String selectQuery = query.getQueryString( apiSpec, bindings );
-        Set<String> viewNames = spec.getExplicitViewNames();
+        Map<String, View> views = spec.extractViews ();
         EndpointDetails details = (EndpointDetails) spec;
         Set<FormatNameAndType> formats = spec.getRendererFactoryTable().getFormatNamesAndTypes();
         URI uriForList = URIUtils.withoutPageParameters( r.requestURI );
@@ -206,7 +206,7 @@ public class APIEndpointImpl implements APIEndpoint {
         	, selectQuery
         	, viewQuery
         	, source
-        	, viewNames
+        	, views
         	, formats
         	, details
         	);   

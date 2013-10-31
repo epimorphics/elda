@@ -17,6 +17,7 @@ import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.EndpointDetails;
+import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.*;
@@ -48,7 +49,7 @@ public class EndpointMetadata {
 		, String selectQuery
 		, String viewQuery
 		, Source source
-		, Set<String> viewNames
+		, Map<String, View> views
 		, Set<FormatNameAndType> formats
 		, EndpointDetails details
 		) {
@@ -108,7 +109,7 @@ public class EndpointMetadata {
 		Model bindingsModel = ModelFactory.createDefaultModel();
 		Model execution = ModelFactory.createDefaultModel();
 	//	
-		em.addVersions( versionsModel, viewNames );
+		em.addVersions( versionsModel, cc, views );
 		em.addFormats( formatsModel, formats );
 		em.addExecution( execution, exec );
 	//
@@ -149,17 +150,33 @@ public class EndpointMetadata {
 	    Create metadata describing the alternative views available
 	    for this endpoint, given their names.
 	*/
-	public void addVersions( Model m, Set<String> viewNames ) {
+	public void addVersions( Model m, CompleteContext cc, Map<String, View> views ) {
+		Map<String, String> uriToShortname = cc.Do();
 		Resource page = thisPage.inModel( m );
-		for (String viewName: viewNames) {
+		for (Map.Entry<String, View> e: views.entrySet()) {
+			String viewName = e.getKey();
 			if (!viewName.equals( View.SHOW_DEFAULT_INTERNAL )) {
 	    		Resource v = resourceForView( m, viewName );
 	    		page.addProperty( DCTerms.hasVersion, v );
 				v.addProperty( DCTerms.isVersionOf, page );
-				v.addProperty( RDFS.label, viewName ); 
+				v.addProperty( RDFS.label, viewName );
+			//
 				v.addProperty( API.name, viewName );
+				for (PropertyChain pc: e.getValue().chains ) {
+					v.addProperty( API.properties, chainsFor( uriToShortname, pc ) );
+				}
 			}
     	}
+	}
+
+	private String chainsFor(Map<String, String> uriToShortname, PropertyChain pc) {
+		StringBuilder sb = new StringBuilder();
+		String dot = "";
+		for (Property p: pc.getProperties()) {
+			sb.append(dot); dot = ".";
+			sb.append( uriToShortname.get(p.getURI()));
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -302,7 +319,7 @@ public class EndpointMetadata {
 	static void createOptionalMetadata
 		( boolean isListEndpoint
 		, CompleteContext cc
-		, Set<String> viewNames
+		, Map<String, View> views
 		, Set<FormatNameAndType> formats
 		, MergedModels mm
 		, WantsMetadata wantsMeta
@@ -321,7 +338,7 @@ public class EndpointMetadata {
 		Model bindingsModel = ModelFactory.createDefaultModel();
 		Model execution = ModelFactory.createDefaultModel();
 	//	
-		em.addVersions( versionsModel, viewNames );
+		em.addVersions( versionsModel, cc, views );
 		em.addFormats( formatsModel, formats );
 		em.addBindings( mergedModels, bindingsModel, exec, cc );
 		em.addExecution( execution, exec );

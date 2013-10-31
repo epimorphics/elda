@@ -313,6 +313,15 @@
 ## query parameter's comma-separated value.
 ##
 
+#macro(showView,$v)
+    <b>$v.name</b>
+    <div style="margin-left: 1ex; font-size: smaller; font-style: italic">
+    #foreach ($chain in $v.properties) 
+        <div>$chain</div> 
+    #end
+    </div>
+#end
+
 <td width="30%" valign="top">
 	<h2>viewing</h2>
 	
@@ -346,12 +355,14 @@
             #if ($v.name == $_view)
                 #set ($l = $thisPage.change('', '_view', ""))
                 <div style="margin-left: 1em"> 
-                    <a href="$l.URI">#image("Minus")</a> $v.name 
+                    <a href="$l.URI">#image("Minus")</a> 
+                    #showView($v)
                 </div>
             #else
                 #set ($l = $thisPage.change('', '_view', "$v.name"))
                 <div style="margin-left: 1em"> 
-                    <a href="$l.URI">#image("Star")</a> $v.name 
+                    <a href="$l.URI">#image("Star")</a> 
+                    #showView($v)
                 </div>
             #end    
         #end
