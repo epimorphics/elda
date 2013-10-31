@@ -117,6 +117,11 @@ public class Help {
 		return r.getLocalName();
 	}
 	
+	public static String nameFor( Resource r ) {
+		Statement s = r.getProperty(API.name);
+		return s == null ? r.getLocalName() : s.getObject().toString();
+	}
+	
 	/**
 	    Answer a list of all the literals which are the objects of skos:prefLabel
 	    or rdfs:label, with the skos labels coming first.
@@ -290,7 +295,7 @@ public class Help {
 	public static List<View> getViews( Model m ) {
 		List<View> result = new ArrayList<View>();
 		List<Resource> links = m.listSubjectsWithProperty( DCTerms.isVersionOf ).toList();
-		for (Resource l: links) result.add( new View( l.getURI(), labelFor( l ) ) );
+		for (Resource l: links) result.add( new View( l.getURI(), nameFor( l ) ) );
 		Collections.sort( result );
 		return result;
 	}

@@ -157,6 +157,7 @@ public class EndpointMetadata {
 	    		page.addProperty( DCTerms.hasVersion, v );
 				v.addProperty( DCTerms.isVersionOf, page );
 				v.addProperty( RDFS.label, viewName ); 
+				v.addProperty( API.name, viewName );
 			}
     	}
 	}
