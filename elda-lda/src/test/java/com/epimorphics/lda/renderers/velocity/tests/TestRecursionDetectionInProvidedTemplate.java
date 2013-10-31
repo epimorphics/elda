@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.View;
+import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.velocity.VelocityRenderer;
@@ -34,8 +35,7 @@ public class TestRecursionDetectionInProvidedTemplate {
 		
 	// hack the velocity root. how do we do better?
 		b.put("_velocityRoot", "../elda-standalone/src/main/webapp/lda-assets/vm");	
-		b.put("_resourceRoot", "../elda-standalone/src/main/webapp/lda-assets");	
-		b.put("_rootPath", "standalone");	
+		b.put("_resourceRoot", "../elda-standalone/src/main/webapp/lda-assets");			
 	//
 		Resource config = model.createResource( "eh:/config" );
 		Renderer r = new VelocityRenderer( mt, b, config );
@@ -57,6 +57,9 @@ public class TestRecursionDetectionInProvidedTemplate {
 	//
 		addProperty( x, API.variableBinding, v( resultModel, "_resourceRoot", "../elda-standalone/src/main/webapp/lda-assets") );
 		addProperty( x, API.variableBinding, v( resultModel, "_rootPath", "standalone") );
+		addProperty( x, API.variableBinding, v( resultModel, "_page", "1") );
+		addProperty( x, API.variableBinding, v( resultModel, "_view", "all") );
+		addProperty( x, API.variableBinding, v( resultModel, "_properties", "*") );
 	//
 		Times t = new Times();
 		Map<String, String> termBindings = new HashMap<String, String>();
