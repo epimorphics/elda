@@ -21,7 +21,10 @@
 #set ($firstlink = $thisPage.valueOf("xhv:first"))
 #set ($resourceRoot = $vars['_resourceRoot'])
 #set ($rootPath = $vars['_rootPath'])
+
 #set ($_page = $vars['_page'].shortForm().raw())
+#set ($_view = $vars['_view'].shortForm().raw())
+
 #set ($propertyPaths = $utils.newSet())
 
 #macro (image,$name)
@@ -336,26 +339,36 @@
            	    
        	    </div>
    	    #end
-	
-    	<div class="viewing-header"> properties </div>
     	
-    	#foreach ($p in $_properties)
-    		<div style="margin-left: 1em"> 
-    		
-    		#set ($A = $utils.newSet())
-            #set ($ignored = $A.addAll($_properties))
-    		#set ($ignored = $A.remove($p))
-    		#set ($changed = $thisPage.change('', '_properties', $utils.join($A,',')))
-    		
-    		<a title='Click to remove this property chain from viewed properties.' href="$changed.URI">#image("Clipboard Cut")</a> $p
-            
-            </div>
-    	#end
-    	
-        <div class="viewing-header"> views [TBD] </div>
+        <div class="viewing-header"> views </div>
         
         #foreach ($v in $views)
-            <div style="margin-left: 1em"> $v.name </div>
+            #if ($v.name == $_view)
+                #set ($l = $thisPage.change('', '_view', ""))
+                <div style="margin-left: 1em"> 
+                    <a href="$l.URI">#image("Minus")</a> $v.name 
+                </div>
+            #else
+                #set ($l = $thisPage.change('', '_view', "$v.name"))
+                <div style="margin-left: 1em"> 
+                    <a href="$l.URI">#image("Star")</a> $v.name 
+                </div>
+            #end    
+        #end
+    
+        <div class="viewing-header"> properties </div>
+        
+        #foreach ($p in $_properties)
+            <div style="margin-left: 1em"> 
+            
+            #set ($A = $utils.newSet())
+            #set ($ignored = $A.addAll($_properties))
+            #set ($ignored = $A.remove($p))
+            #set ($changed = $thisPage.change('', '_properties', $utils.join($A,',')))
+            
+            <a title='Click to remove this property chain from viewed properties.' href="$changed.URI">#image("Clipboard Cut")</a> $p
+            
+            </div>
         #end
     	
 	</div>

@@ -349,6 +349,9 @@ import com.sun.jersey.api.NotFoundException;
 			
 			String _page = queryParams.getOne("_page");
 			b.put("_page", _page == null ? "" : _page );
+			
+			String _view = queryParams.getOne("_view");
+			b.put("_view", _view == null ? "" : _view );
     		
 //        	System.err.println( ">> mode: " + r.getMode() );
 //        	System.err.println( ">> media type: " + r.getMediaType(b) );

@@ -290,9 +290,7 @@ public class Help {
 	public static List<View> getViews( Model m ) {
 		List<View> result = new ArrayList<View>();
 		List<Resource> links = m.listSubjectsWithProperty( DCTerms.isVersionOf ).toList();
-		for (Resource l: links) {
-			result.add( new View( l.getURI(), labelFor( l ) ) );
-		}
+		for (Resource l: links) result.add( new View( l.getURI(), labelFor( l ) ) );
 		Collections.sort( result );
 		return result;
 	}
