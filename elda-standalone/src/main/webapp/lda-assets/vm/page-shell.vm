@@ -43,7 +43,8 @@
 ##
 ## Scan the items for lat/long properties. Assemble same into a list,
 ## and set datapoints and map_datasize so that if there are entries, a
-## map is generated.
+## map is generated. The array elements include the item label (for
+## presentation) and id (for linking).
 ##
 
 #set ($data = $utils.newList())

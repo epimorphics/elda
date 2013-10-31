@@ -121,17 +121,16 @@ div.mapInfo {
                 var di = data[i]
                 var pos = new OpenLayers.LonLat(di[0], di[1]).transform(wgs84,map.getProjectionObject())
                 var marker = new OpenLayers.Marker(pos, icon.clone())
-                addMouseOver( marker, datapoints[i][3], "<div class='mapInfo'> " + datapoints[i][2] + " </div>" )
+                addMouseEvents( marker, datapoints[i][3], "<div class='mapInfo'> " + datapoints[i][2] + " </div>" )
                 markers.addMarker(marker)
             }
         }
         
-        function addMouseOver( marker, id, message ) {
+        function addMouseEvents( marker, id, message ) {
             marker.events.on({
             
                     click: function () {
-                            var info = document.getElementById("mapInfo")
-                            info.innerHTML = "CLICKED ME"
+                            window.location = "#" + id
                     },
                     
                     mouseover: function () {
