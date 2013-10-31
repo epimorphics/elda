@@ -345,7 +345,10 @@ import com.sun.jersey.api.NotFoundException;
         	Bindings b = ep.getSpec().getBindings();
         	
         	String _properties = queryParams.getOne("_properties");
-			b.put("_properties", _properties == null ? "" : _properties ); 
+			b.put("_properties", _properties == null ? "" : _properties );
+			
+			String _page = queryParams.getOne("_page");
+			b.put("_page", _page == null ? "" : _page );
     		
 //        	System.err.println( ">> mode: " + r.getMode() );
 //        	System.err.println( ">> media type: " + r.getMediaType(b) );

@@ -21,6 +21,7 @@
 #set ($firstlink = $thisPage.valueOf("xhv:first"))
 #set ($resourceRoot = $vars['_resourceRoot'])
 #set ($rootPath = $vars['_rootPath'])
+#set ($_page = $vars['_page'].shortForm().raw())
 #set ($propertyPaths = $utils.newSet())
 
 #macro (image,$name)
@@ -250,6 +251,7 @@
 ## items, unless there is but one, and then an "item box" for each selected
 ## item which displays the item and invokes 'displayvalues' to show its
 ## properties.
+##
 
 <table width="100%">
 <tr>
@@ -270,7 +272,10 @@
 			<a class="buttonlike" href="$prevlink.URI">prev</a> 
 		#end
 		
-		<b>on this page:</b>
+		<b>
+		  on this page 
+		  #if ($_page.equals("") || $_page.equals("0")) #else ($_page) #end
+		</b>
 		#set ($pipe = "")
 		#foreach ($item in $items)
 			<span>
