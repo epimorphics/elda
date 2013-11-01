@@ -35,9 +35,22 @@ $(function() {
 <style>
 div.mapInfo {
     font-size: smaller
-    ; float: right
 }
+
+.hidden {
+	display: none
+}
+
 </style>
+
+<script type="text/javascript">
+
+function clickView(id) {
+	var v = document.getElementById(id)
+	v.className = (v.className == "" ? "hidden" : "") 
+}
+
+</script>
 
 #if ($map_datasize > 0) 
 

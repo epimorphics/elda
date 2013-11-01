@@ -313,11 +313,23 @@
 ## query parameter's comma-separated value.
 ##
 
+#set ($id_counter = 1000)
+
 #macro(showView,$v)
+    #set ($id_counter = $id_counter + 1)
+	<img src="$resourceRoot/images/green/16x16/Reduced Size.png" onClick='return clickView("view-$id_counter")'  />
     <b>$v.name</b>
-    <div style="margin-left: 1ex; font-size: smaller; font-style: italic">
+    <div id="view-$id_counter" class="hidden" style="margin-left: 1ex; font-size: smaller; font-style: italic">
     #foreach ($chain in $v.properties) 
-        <div>$chain</div> 
+        <div>
+			#set ($A = $utils.newSet())
+			#set ($ignored = $A.addAll($_properties))
+			#set ($ignored = $A.add($chain))
+        	#set ($changeResult = $thisPage.change('', '_properties', $utils.join($A,',') ))
+        	#set ($image = "<img src='" + $resourceRoot + "images/green/16x16/" + "Plus" + ".png" + "'>")
+		    
+        	<a href="$changeResult.URI"> $image </a> $chain
+        </div> 
     #end
     </div>
 #end
@@ -328,13 +340,7 @@
 	<div style="margin-left: 2ex">
 
         #if ($map_datasize > 0)	
-        	<div class="viewing-header">
-        	   #if ($map_datasize == 1)
-        	       one location 
-        	   #else
-        	       $map_datasize locations
-        	   #end 
-        	</div>
+        	<div class="viewing-header"> locations </div>
        	    <div style="margin-left: 1em">
            	    <div id="mapInfo" class="mapInfo"> &nbsp; </div>
            	    <div style="clear: both"> </div>
@@ -348,6 +354,21 @@
            	    
        	    </div>
    	    #end
+    
+        <div class="viewing-header"> properties </div>
+        
+        #foreach ($p in $_properties)
+            <div style="margin-left: 1em"> 
+            
+            #set ($A = $utils.newSet())
+            #set ($ignored = $A.addAll($_properties))
+            #set ($ignored = $A.remove($p))
+            #set ($changed = $thisPage.change('', '_properties', $utils.join($A,',')))
+            
+            <a title='Click to remove this property chain from viewed properties.' href="$changed.URI">#image("Clipboard Cut")</a> $p
+            
+            </div>
+        #end
     	
         <div class="viewing-header"> views </div>
         
@@ -365,21 +386,6 @@
                     #showView($v)
                 </div>
             #end    
-        #end
-    
-        <div class="viewing-header"> properties </div>
-        
-        #foreach ($p in $_properties)
-            <div style="margin-left: 1em"> 
-            
-            #set ($A = $utils.newSet())
-            #set ($ignored = $A.addAll($_properties))
-            #set ($ignored = $A.remove($p))
-            #set ($changed = $thisPage.change('', '_properties', $utils.join($A,',')))
-            
-            <a title='Click to remove this property chain from viewed properties.' href="$changed.URI">#image("Clipboard Cut")</a> $p
-            
-            </div>
         #end
     	
 	</div>
