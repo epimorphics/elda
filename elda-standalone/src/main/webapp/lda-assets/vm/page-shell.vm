@@ -359,11 +359,15 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
 
 #macro(showView,$v)
     #set ($id_counter = $id_counter + 1)
-	<img 
-		id="view-toggle-icon-$id_counter"
-		src="$resourceRoot/images/green/16x16/Reduced Size.png" 
-		onClick='return clickView("$id_counter")'  
-	/>
+    #if ($v.properties.size() == 0)
+    	#image("Player Stop")
+    #else
+		<img 
+			id="view-toggle-icon-$id_counter"
+			src="$resourceRoot/images/green/16x16/Reduced Size.png" 
+			onClick='return clickView("$id_counter")'  
+		/>
+	#end
     <b>$v.name</b>
     <div id="view-$id_counter" class="hidden" style="margin-left: 1ex; font-size: smaller; font-style: italic">
     #foreach ($chain in $v.properties) 
