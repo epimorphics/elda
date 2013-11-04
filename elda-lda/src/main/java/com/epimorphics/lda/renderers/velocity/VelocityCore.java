@@ -69,6 +69,11 @@ public class VelocityCore {
 	*/
 	public static class Utils {
 		
+		final long origin = System.currentTimeMillis();
+		
+		public Utils() {	
+		}
+		
 		public <T extends Comparable<? super T>>void sort(List<? extends T> l) {
 			Collections.sort(l);
 		}
@@ -91,6 +96,10 @@ public class VelocityCore {
 		
 		public void println(Object x, Object y) {
 			System.err.println( ">> " + x + " " + y );
+		}
+		
+		public long currentMillis() {
+			return System.currentTimeMillis() - origin;
 		}
 		
 		public String join(Collection<Object> things, String infix) {

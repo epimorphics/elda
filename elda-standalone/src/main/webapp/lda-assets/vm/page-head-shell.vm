@@ -45,9 +45,16 @@ div.mapInfo {
 
 <script type="text/javascript">
 
-function clickView(id) {
+var icon_reduced_size = "$_icon_reduced_size"
+var icon_full_size = "$_icon_full_size"
+
+function clickView(id_count) {
+	var id = "view-" + id_count
+	var toggle_id = "view-toggle-icon-" + id_count
 	var v = document.getElementById(id)
-	v.className = (v.className == "" ? "hidden" : "") 
+	var t = document.getElementById(toggle_id)
+	v.className = (v.className == "" ? "hidden" : "")
+	t.src = (v.className == "" ? icon_full_size : icon_reduced_size) 
 }
 
 </script>

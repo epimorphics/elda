@@ -15,6 +15,8 @@
 ## XSLT templates.
 ##
 
+$utils.println(">> currentMillis:", $utils.currentMillis())
+
 #set ($seen = $utils.newSet())
 #set ($nextlink = $thisPage.valueOf("xhv:next"))
 #set ($prevlink = $thisPage.valueOf("xhv:prev"))
@@ -24,6 +26,9 @@
 
 #set ($_page = $vars['_page'].shortForm().raw())
 #set ($_view = $vars['_view'].shortForm().raw())
+
+#set ($_icon_reduced_size = "$resourceRoot/images/green/16x16/Reduced Size.png")
+#set ($_icon_full_size = "$resourceRoot/images/green/16x16/Full Size.png")
 
 #set ($propertyPaths = $utils.newSet())
 
@@ -103,6 +108,8 @@
 		$pipe #set ($pipe = " | ") <a href="$f.link">$f.name</a>
 	#end			
 </div>
+
+$utils.println(">> currentMillis after formats:", $utils.currentMillis())
 
 ##
 ## display of literals, with their language codes if they have one,
@@ -199,19 +206,52 @@
 			
 			#set ($A = $utils.newSet())
 			#set ($ignored = $A.addAll($_properties))
-			#set ($ignored = $A.add($foreach.dottedChain.substring(1)))
-			#set ($foreach.changeResult = $thisPage.change('', '_properties', $utils.join($A,',') ))
-					    
-		    #set ($image = "<img src='" + $resourceRoot + "images/green/16x16/" + "Plus" + ".png" + "'>")
-		    
-			#set ($foreach.linkprop = 
-				" <a title='Click to add this property chain to viewed properties.' href='" + $foreach.changeResult.URI + "'>" + $image + "</a>"
-				+ " <a style='margin-left: 1ex' href='" + $property.URI + "'>" 
-				+ $property.shortForm().cut() 
-				+ "</a>"
-				)
+			
+		## ==========================================
+		
+			$utils.println("property:", $property)
+			$utils.println("dotted chain:", $foreach.dottedChain)	
+			$utils.println("A:", $A)
+			
+			#set ($foreach.wasAbsent = $A.add($foreach.dottedChain.substring(1)))
+			
+			$utils.println("wasAbsent:", $foreach.wasAbsent)
+			
+			#if ($foreach.wasAbsent) 
+				
+				#set ($foreach.changeResult = $thisPage.change('', '_properties', $utils.join($A,',') ))
+						    
+			    #set ($image = "<img src='" + $resourceRoot + "images/green/16x16/" + "Plus" + ".png" + "'>")
+			    
+				#set ($foreach.linkprop = 
+					" <a title='Click to add this property chain to viewed properties.' href='" + $foreach.changeResult.URI + "'>" + $image + "</a>"
+					+ " <a style='margin-left: 1ex' href='" + $property.URI + "'>" 
+					+ $property.shortForm().cut() 
+					+ "</a>"
+					)
+	            
+	            #set ($ignored = $propertyPaths.add($foreach.dottedChain.substring(1)))
+
+			#else 
+			
+				#set ($ignored = $A.remove($foreach.dottedChain.substring(1)))
+				
+				#set ($foreach.changeResult = $thisPage.change('', '_properties', $utils.join($A,',') ))
+			    
+			    #set ($image = "<img src='" + $resourceRoot + "images/green/16x16/" + "Clipboard Cut" + ".png" + "'>")
+				
+				#set ($foreach.linkprop = 
+					" <a title='Click to remove this property chain from viewed properties.' href='" + $foreach.changeResult.URI + "'>" + $image + "</a>"
+					+ " <a style='margin-left: 1ex' href='" + $property.URI + "'>" 
+					+ $property.shortForm().cut() 
+					+ "</a>"
+					)
+					
+	            #set ($ignored = $propertyPaths.add($foreach.dottedChain.substring(1)))
+            #end
             
-            #set ($ignored = $propertyPaths.add($foreach.dottedChain.substring(1)))
+        ## ===============================================
+            
             
 			#if ($foreach.values.size() == 1 && $property.shortForm() == "label") #else
 			
@@ -313,11 +353,17 @@
 ## query parameter's comma-separated value.
 ##
 
+$utils.println(">> currentMillis: before view column", $utils.currentMillis())
+
 #set ($id_counter = 1000)
 
 #macro(showView,$v)
     #set ($id_counter = $id_counter + 1)
-	<img src="$resourceRoot/images/green/16x16/Reduced Size.png" onClick='return clickView("view-$id_counter")'  />
+	<img 
+		id="view-toggle-icon-$id_counter"
+		src="$resourceRoot/images/green/16x16/Reduced Size.png" 
+		onClick='return clickView("$id_counter")'  
+	/>
     <b>$v.name</b>
     <div id="view-$id_counter" class="hidden" style="margin-left: 1ex; font-size: smaller; font-style: italic">
     #foreach ($chain in $v.properties) 
@@ -382,7 +428,7 @@
             #else
                 #set ($l = $thisPage.change('', '_view', "$v.name"))
                 <div style="margin-left: 1em"> 
-                    <a href="$l.URI">#image("Star")</a> 
+                    <a href="$l.URI">#image("Plus")</a> 
                     #showView($v)
                 </div>
             #end    
@@ -394,6 +440,8 @@
 </tr>
 </table>
 	
+$utils.println(">> currentMillis after right-hand column:", $utils.currentMillis())
+
 <hr class="hr-style">
 
 ##
@@ -439,6 +487,8 @@ $meta['viewingResult.query.value']
 
 
 #parse("page-foot-shell.vm")
+
+$utils.println(">> currentMillis end of body:", $utils.currentMillis())
 
 </body>
 </html>
