@@ -383,6 +383,10 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
 	
 	<div style="margin-left: 2ex">
 
+		##
+		## If there are datapoints, there is a map.
+		##
+		
         #if ($map_datasize > 0)	
         	<div class="viewing-header"> locations </div>
        	    <div style="margin-left: 1em">
@@ -399,6 +403,11 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
        	    </div>
    	    #end
    	    
+   	    ##
+   	    ## If there are filters, display them an offer the opportunity
+   	    ## to snip them away.
+   	    ##
+   	    
    	    #if ($filters.size() > 0) 
    	    	<div class="viewing-header"> filters </div>
             <div style="margin-left: 1em"> 
@@ -413,6 +422,11 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
 	    		#end
 	    	</div>
     	#end
+    	
+    	##
+    	## If there are any _properties, display them and offer the option
+    	## to snip them away.
+    	##
     
         <div class="viewing-header"> properties </div>
         
@@ -428,6 +442,12 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
             
             </div>
         #end
+    	
+    	##
+    	## Display the available views. Allow one of them them to become the
+    	## current view. Can toggle the view's properties open and that
+    	## allows them to be selected into _properties.
+    	##
     	
         <div class="viewing-header"> views </div>
         
