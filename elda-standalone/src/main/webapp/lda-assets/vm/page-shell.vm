@@ -208,14 +208,8 @@ $utils.println(">> currentMillis after formats:", $utils.currentMillis())
 			#set ($ignored = $A.addAll($_properties))
 			
 		## ==========================================
-		
-			$utils.println("property:", $property)
-			$utils.println("dotted chain:", $foreach.dottedChain)	
-			$utils.println("A:", $A)
 			
 			#set ($foreach.wasAbsent = $A.add($foreach.dottedChain.substring(1)))
-			
-			$utils.println("wasAbsent:", $foreach.wasAbsent)
 			
 			#if ($foreach.wasAbsent) 
 				
@@ -404,6 +398,21 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
            	    
        	    </div>
    	    #end
+   	    
+   	    #if ($filters.size() > 0) 
+   	    	<div class="viewing-header"> filters </div>
+            <div style="margin-left: 1em"> 
+	    		#foreach ($filters_p in $filters.keySet())
+	    			#set ($changed = $thisPage.change('', $filters_p, ""))
+	    			<div>
+		    			<a href="$changed.URI">
+		    				#image("Clipboard Cut")
+		    			</a>
+		    			$filters_p=$filters.get($filters_p)
+	    			</div>
+	    		#end
+	    	</div>
+    	#end
     
         <div class="viewing-header"> properties </div>
         

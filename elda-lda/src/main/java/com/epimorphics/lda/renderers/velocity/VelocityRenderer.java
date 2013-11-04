@@ -50,12 +50,17 @@ public class VelocityRenderer implements Renderer {
     	return Mode.PreferLocalnames;
     }
     
-    @Override public Renderer.BytesOut render( Times t, Bindings b, Map<String, String> termBindings, final APIResultSet results ) {
+    @Override public Renderer.BytesOut render
+    	( Times t
+    	, final Bindings b
+    	, Map<String, String> termBindings
+    	, final APIResultSet results 
+    	) {
     	return new BytesOutTimed() {
 
 			@Override public void writeAll( OutputStream os ) {
 				results.includeMetadata( metadataOptions );
-				core.render( results, os );
+				core.render( results, b, os );
 			}			
 
 			@Override protected String getFormat() {

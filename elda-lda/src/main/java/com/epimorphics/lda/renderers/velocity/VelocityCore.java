@@ -7,6 +7,7 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -25,7 +26,7 @@ public class VelocityCore {
 		this.templateName = templateName;
 	}
 
-	public void render( APIResultSet results, OutputStream os ) {
+	public void render( APIResultSet results, Bindings bindings, OutputStream os ) {
 		Resource thisPage = results.getRoot();
 		MergedModels mm = results.getModels();
 		Model m = mm.getMergedModel();
@@ -35,6 +36,12 @@ public class VelocityCore {
 		boolean isListEndpoint = !isItemEndpoint;
 		WrappedNode.Bundle b = new WrappedNode.Bundle( names,  ids );
 		List<WrappedNode> itemised = WrappedNode.itemise( b, results.getResultList() );
+	//	
+		Map<String, String> filters = new HashMap<String, String>();
+		for (String name: bindings.parameterNames()) {
+			if (name.charAt(0) != '_')
+				filters.put(name, bindings.get(name).spelling());
+		}
 	//
 		VelocityContext vc = new VelocityContext();
 		WrappedNode wrappedPage = new WrappedNode( b, thisPage );
@@ -49,7 +56,8 @@ public class VelocityCore {
 		vc.put( "items", itemised );
 		vc.put( "meta", Help.getMetadataFrom( names, ids, m ) );
 		vc.put( "vars", Help.getVarsFrom( names, ids, m ) );
-		vc.put( "utils", new Utils() );		
+		vc.put( "utils", new Utils() );
+		vc.put( "filters", filters );
 	//
 		Template t = ve.getTemplate( templateName );
 		try {

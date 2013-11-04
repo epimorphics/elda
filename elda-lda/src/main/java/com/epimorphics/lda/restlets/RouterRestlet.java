@@ -364,7 +364,9 @@ import com.sun.jersey.api.NotFoundException;
         	
         	ModelPrefixEditor mpe = ep.getSpec().getAPISpec().getModelPrefixEditor();
         //
-        	Triad<APIResultSet, Map<String, String>, Bindings> resultsAndBindings = APIEndpointUtil.call( req, match, contextPath, queryParams );
+        	Triad<APIResultSet, Map<String, String>, Bindings> resultsAndBindings = 
+        		APIEndpointUtil.call( req, match, contextPath, queryParams );
+        	
         	Map<String, String> termBindings = mpe.rename( resultsAndBindings.b );
         //
             APIResultSet results = resultsAndBindings.a.applyEdits( mpe );
