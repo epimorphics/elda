@@ -204,6 +204,16 @@ so:item a api:ListEndpoint
         ; api:sort "label"
         ]
     ; api:defaultViewer api:labelledDescribeViewer
+    ; api:viewer
+        spec:viewerShort
+        , spec:viewerMedium
+        , spec:schemeViewer
+        , spec:viewerProvision
+        , spec:viewerLocation
+        , spec:viewerPerformance
+        , spec:viewerAdmin
+        , spec:viewerViewer
+        , spec:definitionViewer
     .
     
 so:scheme-def a api:ListEndpoint;
