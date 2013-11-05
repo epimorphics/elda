@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import com.hp.hpl.jena.datatypes.DatatypeFormatException;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDateTime;
 import com.hp.hpl.jena.rdf.model.*;
@@ -150,7 +151,7 @@ public class RDFUtil {
      * Returns null if not a supported type
      */
     public static String formatDateTime(Literal l) {
-        Object val = l.getValue();
+    	Object val = getTemporalValue(l);
         if (val instanceof XSDDateTime) {
         	boolean isDate = l.getDatatype().equals(XSDDatatype.XSDdate);
             Date date = ((XSDDateTime)val).asCalendar().getTime();
@@ -160,7 +161,24 @@ public class RDFUtil {
         }
     }
     
-    public static final Pattern matchTimeZone = Pattern.compile( "(Z|[^-0-9][-+]\\d\\d(\\d\\d|:\\d\\d)?)$" );
+    /**
+        Returns the date/time object derived from the literal l. As a sop to
+        literals of type xsd_Date which have an associated Time, if getting
+        the value throws a datatype format exception, try again on a literal
+        with the same lexical form but type xsd_dateTime.
+    */
+    private static Object getTemporalValue(Literal l) {
+    	try {
+    		return l.getValue();
+    	} catch (DatatypeFormatException e) {
+    		Literal lit = ResourceFactory.createTypedLiteral(l.getLexicalForm(), XSDDatatype.XSDdateTime );
+			return lit.getValue();
+    	}
+	}
+
+
+
+	public static final Pattern matchTimeZone = Pattern.compile( "(Z|[^-0-9][-+]\\d\\d(\\d\\d|:\\d\\d)?)$" );
         
     /**
         Answer true iff this lexical form looks like it ends with a time

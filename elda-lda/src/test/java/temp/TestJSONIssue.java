@@ -5,7 +5,6 @@ import java.util.*;
 
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.*;
@@ -35,7 +34,7 @@ public class TestJSONIssue {
 	Resource item = model.createResource( "eh:/it" ).addProperty( RDF.value, oopsy );
 	List<Resource> items = CollectionUtils.list( item );
 
-	@Test @Ignore public void testJSON() throws IOException {
+	@Test public void testJSON() throws IOException {
 		ReadContext context = new FakeContext();
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		Writer writer = StreamUtils.asUTF8( os );
