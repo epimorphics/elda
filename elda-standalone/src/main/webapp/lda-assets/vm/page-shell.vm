@@ -36,6 +36,10 @@ $utils.println(">> currentMillis:", $utils.currentMillis())
 <img src="${resourceRoot}images/green/16x16/${name}.png" />
 #end
 
+#macro (grey_image,$name)
+<img src="${resourceRoot}images/grey/16x16/${name}.png" />
+#end
+
 ##
 ## cut the _properties variable (which has the value of the _properties
 ## query parameter) at commas and put the results into the set
@@ -232,7 +236,7 @@ $utils.println(">> currentMillis after formats:", $utils.currentMillis())
 				
 				#set ($foreach.changeResult = $thisPage.change('', '_properties', $utils.join($A,',') ))
 			    
-			    #set ($image = "<img src='" + $resourceRoot + "images/green/16x16/" + "Clipboard Cut" + ".png" + "'>")
+			    #set ($image = "<img src='" + $resourceRoot + "images/green/16x16/" + "Cancel" + ".png" + "'>")
 				
 				#set ($foreach.linkprop = 
 					" <a title='Click to remove this property chain from viewed properties.' href='" + $foreach.changeResult.URI + "'>" + $image + "</a>"
@@ -354,15 +358,16 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
 #macro(showView,$v)
     #set ($id_counter = $id_counter + 1)
     #if ($v.properties.size() == 0)
-    	#image("Player Stop")
+    	#grey_image("Player Stop")
     #else
 		<img 
 			id="view-toggle-icon-$id_counter"
 			src="$resourceRoot/images/green/16x16/Reduced Size.png" 
-			onClick='return clickView("$id_counter")'  
+			onClick='return clickView("$id_counter")'
+			title="Click to show/reveal properties of this view."  
 		/>
 	#end
-    <b>$v.name</b>
+    $v.name
     <div id="view-$id_counter" class="hidden" style="margin-left: 1ex; font-size: smaller; font-style: italic">
     #foreach ($chain in $v.properties) 
         <div>
@@ -404,7 +409,7 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
    	    #end
    	    
    	    ##
-   	    ## If there are filters, display them an offer the opportunity
+   	    ## If there are filters, display them and offer the opportunity
    	    ## to snip them away.
    	    ##
    	    
@@ -414,10 +419,12 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
 	    		#foreach ($filters_p in $filters.keySet())
 	    			#set ($changed = $thisPage.change('', $filters_p, ""))
 	    			<div>
-		    			<a href="$changed.URI">
-		    				#image("Clipboard Cut")
+		    			<a href="$changed.URI" title="Click to remove this filter.">
+		    				#image("Cancel")
 		    			</a>
-		    			$filters_p=$filters.get($filters_p)
+		    			#set ($value = $filters.get($filters_p))
+		    			#set ($param = $utils.cutParam($filters_p))
+		    			$param.property $param.op $value
 	    			</div>
 	    		#end
 	    	</div>
@@ -436,9 +443,43 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
             #set ($A = $utils.newSet())
             #set ($ignored = $A.addAll($_properties))
             #set ($ignored = $A.remove($p))
-            #set ($changed = $thisPage.change('', '_properties', $utils.join($A,',')))
+            #set ($cancelled = $thisPage.change('', '_properties', $utils.join($A,',')))
             
-            <a title='Click to remove this property chain from viewed properties.' href="$changed.URI">#image("Clipboard Cut")</a> $p
+            #set ($A = $utils.newSet())
+            #set ($p_starred = $p + ".*")
+            
+            #set ($ignored = $A.addAll($_properties))
+            #set ($ignored = $A.remove($p))
+            #set ($ignored = $A.add($p_starred))
+            
+            #set ($extended = $thisPage.change('', '_properties', $utils.join($A,',')))
+                        
+            <a title='Click to remove this property chain from viewed properties.' href="$cancelled.URI">
+                #image("Cancel")
+            </a> 
+            
+            <a title='Click to extend this property with ".*".' href="$extended.URI">
+                #image("Reduced Size")
+            </a>
+            
+            #if ($p.endsWith(".*"))
+            
+                #set ($A = $utils.newSet())
+                #set ($p_unstarred = $utils.allButLast(2, $p))
+            
+                #set ($ignored = $A.addAll($_properties))
+                #set ($ignored = $A.remove($p))
+                #set ($ignored = $A.add($p_unstarred))
+            
+                #set ($reduced = $thisPage.change('', '_properties', $utils.join($A,',')))
+                
+                <a title='Click to remove the rightmost ".*".' href="$reduced.URI">
+                    #image("Full Size")
+                </a>
+            #else
+                #grey_image("Player Stop")
+            #end
+            $p
             
             </div>
         #end
@@ -455,7 +496,7 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
             #if ($v.name == $_view)
                 #set ($l = $thisPage.change('', '_view', ""))
                 <div style="margin-left: 1em"> 
-                    <a href="$l.URI">#image("Minus")</a> 
+                    <a href="$l.URI">#image("Cancel")</a> 
                     #showView($v)
                 </div>
             #else

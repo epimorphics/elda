@@ -123,6 +123,40 @@ public class VelocityCore {
 			}
 			return sb.toString();
 		}
+		
+		public static String allButLast(int n, String s) {
+			return s.substring(0, s.length() - 2);
+		}
+		
+		public static class Param {
+			public final String property;
+			public final String op;
+			
+			public Param( String property, String op ) {
+				this.op = op;
+				this.property = property;
+			}
+			
+			public String getProperty() { return property; }
+			
+			public String getOp() { return op; }
+		}
+		
+		public Param cutParam(String property) {
+			String prop = null, op = null;
+			if (property.startsWith("max-")) {
+				prop = property.substring(4); op = "<u>&lt;</u>";
+			} else if (property.startsWith("maxEx-")) {
+				prop = property.substring(6); op = "&lt";
+			} else if (property.startsWith("min-")) {
+				prop = property.substring(4); op = "<u>&gt;</u>";
+			} else if (property.startsWith("minEx-")) {
+				prop = property.substring(6); op = "&gt;";
+			} else {
+				prop = property; op = "=";
+			}
+			return new Param(prop, op);
+		}
 	}
 
 	public WrappedNode topicOf( WrappedNode.Bundle b, Resource thisPage ) {

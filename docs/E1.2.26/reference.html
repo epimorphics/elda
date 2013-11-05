@@ -564,11 +564,73 @@ The Common and Assets files must have the same version.
     </tr>
 
     <tr>
+	<td>filters</td>
+	<td>
+		A map of the name=parameter query parameter values
+		(discarding all the ones that start with "_").
+	</td>
+    </tr>
+
+    <tr>
 	<td>ids</td>
 	<td>
 		An IdMap object which contains a map from Resources to their
 		identifiers for use in HTML <code>id=</code> attributes.
 	</td>
+    </tr>
+
+    <tr>
+	<td>utils</td> 
+	<td>
+	 	Utility methods not appropriate for placing in
+       		WrappedNode or WrappedString.	       
+	</td> 
+    </tr>
+    
+    <tr>
+	<td>utils.println(Object)</td> 
+	<td> 
+		One-argument println to System.err, as a debugging
+		aid. Output starts with ">>".
+	</td> 
+    </tr>
+
+    <tr>
+	<td>utils.println(Object, Object)</td> 
+	<td> 
+		Two-argument space-separated println to System.err,
+		as a debugging aid. Output starts with ">>".
+	</td> 
+    </tr>
+
+    <tr>
+	<td>utils.sort(Object c)</td> 
+	<td>
+		Sorts the sortable collection c in-place.
+	</td> 
+    </tr>
+
+    <tr>
+	<td>utils.join(Collection c, String infix)</td> 
+	<td> 
+		Return an infix-separated concatenation of the
+		toString() values of the elements of c.
+	</td> 
+    </tr>
+
+    <tr>
+	<td>utils.currentMillis()</td> 
+	<td> 
+		Returns the current time in milliseconds since
+		the Velocity renderer was initialised for this
+		rendering, meant as a debugging/profiling aid.
+	</td> 
+    </tr>
+
+    <tr>
+	<td>utils</td> 
+	<td> 
+	</td> 
     </tr>
 </table>
 
