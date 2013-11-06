@@ -6,11 +6,3 @@ ASK
 		; dcterms:isVersionOf ?thing
 		].
 	}
-	
-ASK NOT 
-    {
-    ?thing dcterms:hasVersion 
-        [rdfs:label "all"
-        ; dcterms:isVersionOf ?thing
-        ].
-    }
