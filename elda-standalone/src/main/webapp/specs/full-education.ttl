@@ -212,7 +212,6 @@ so:item a api:ListEndpoint
         , spec:viewerLocation
         , spec:viewerPerformance
         , spec:viewerAdmin
-        , spec:viewerViewer
         , spec:definitionViewer
     .
     
