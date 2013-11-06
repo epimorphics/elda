@@ -149,6 +149,10 @@ elda:uriTemplatePrefix a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:viewName a rdf:Property
+	; rdfs:comment ""
+	.
+
 elda:wantsContext a rdf:Property
 	; rdfs:comment ""
 	.

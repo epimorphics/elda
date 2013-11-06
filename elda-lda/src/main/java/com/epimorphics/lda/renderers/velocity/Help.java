@@ -10,8 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.support.EldaFileManager;
-import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.SKOSstub;
+import com.epimorphics.lda.vocabularies.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.WrappedIOException;
 import com.hp.hpl.jena.util.iterator.Map1;
@@ -118,8 +117,8 @@ public class Help {
 		return r.getLocalName();
 	}
 	
-	public static String nameFor( Resource r ) {
-		Statement s = r.getProperty(API.name);
+	public static String viewNameFor( Resource r ) {
+		Statement s = r.getProperty(EXTRAS.viewName);
 		return s == null ? r.getLocalName() : s.getObject().toString();
 	}
 	
@@ -309,7 +308,7 @@ public class Help {
 		for (Resource l: links) {
 			List<String> properties = l.listProperties(API.properties).mapWith(statementToString).toList();
 			Collections.sort(properties);
-			result.add( new View( nameFor( l ), l.getURI(), properties ) );
+			result.add( new View( viewNameFor( l ), l.getURI(), properties ) );
 		}
 		Collections.sort( result );
 		return result;
