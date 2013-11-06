@@ -174,7 +174,7 @@
 #set ($macro.uri = $rootPath + "/about.vhtml")
 #set ($macro.base = $thisPage.wrap($macro.uri))
 #set ($macro.changeProperties = $macro.base.change('', '_properties', $utils.join($macro.A,',') ))
-#set ($macro.changeAll = $macro.changeProperties.change('','resource', $value.URI.raw().replaceAll("#", "%23")))           
+#set ($macro.changeAll = $macro.changeProperties.change('','resource', $value.URI.quotedURI()))           
 
 <a href="$macro.changeAll.URI"
 	title="Click to see properties of this resource."
@@ -293,7 +293,7 @@
 
 <table width="100%">
 <tr>
-<td  valign="top">
+<td width="70%" valign="top">
 
 <div id="search-results">
 	<h2>Search Results</h2>
@@ -378,7 +378,7 @@
     </div>
 #end
 
-<td  valign="top">
+<td width="30%" valign="top">
 	<h2>viewing</h2>
 	
 	<div style="margin-left: 2ex">
@@ -430,7 +430,18 @@
     	## to snip them away.
     	##
     
-        <div class="viewing-header"> properties </div>
+        <div class="viewing-header"> 
+            properties 
+            <span style="float: right; clear: right; margin-right: 6px">
+                #set ($A = $utils.newSet())
+                #set ($ignored = $A.addAll($_properties))
+                #set ($ignored = $A.add("*"))
+                #set ($star = $thisPage.change('', '_properties', $utils.join($A,',')))
+                <a href="$star.URI" title="Click to add a wildcard property to the properties."> 
+                    #image("Star") 
+                </a>
+            </span>
+        </div>
         
         #foreach ($p in $_properties)
             <div style="margin-left: 1em"> 
@@ -453,10 +464,6 @@
                 #image("Cancel")
             </a> 
             
-            <a title='Click to extend this property with ".*".' href="$extended.URI">
-                #image("Reduced Size")
-            </a>
-            
             #if ($p.endsWith(".*"))
             
                 #set ($A = $utils.newSet())
@@ -474,6 +481,11 @@
             #else
                 #grey_image("Player Stop")
             #end
+            
+            <a title='Click to extend this property with ".*".' href="$extended.URI">
+                #image("Star")
+            </a>
+            
             $p
             
             </div>

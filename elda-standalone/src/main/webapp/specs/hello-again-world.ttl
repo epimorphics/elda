@@ -83,7 +83,7 @@ hello:games a api:ListEndpoint
 # a resource is clicked on for a dataset-relative link. 
 #
 
-hello:about a api:ListEndpoint
+hello:about a api:ItemEndpoint
 	; rdfs:label "About"
 	; api:uriTemplate "/about?resource={uri}"
     ; api:variable [api:name "uri"; api:type rdfs:Resource]

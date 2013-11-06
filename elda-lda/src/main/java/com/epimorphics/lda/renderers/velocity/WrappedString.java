@@ -22,6 +22,18 @@ public class WrappedString {
 	public String raw() {
 		return content;
 	}
+	
+	public String quotedURI() {
+		StringBuilder sb = new StringBuilder(content.length() + 10);
+		for (int i = 0; i < content.length(); i += 1) {
+			char ch = content.charAt(i);
+			if (ch == '#') sb.append( "%23" );
+			else if (ch == '?') sb.append("%3F");
+			else if (ch == '&') sb.append("%26");
+			else sb.append(ch);
+		}
+		return sb.toString();
+	}
 
 	/**
 	    The content with spaces inserted (a) in place of any run of '_'
