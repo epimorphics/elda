@@ -15,8 +15,6 @@
 ## XSLT templates.
 ##
 
-$utils.println(">> currentMillis:", $utils.currentMillis())
-
 #set ($seen = $utils.newSet())
 #set ($nextlink = $thisPage.valueOf("xhv:next"))
 #set ($prevlink = $thisPage.valueOf("xhv:prev"))
@@ -112,8 +110,6 @@ $utils.println(">> currentMillis:", $utils.currentMillis())
 		$pipe #set ($pipe = " | ") <a href="$f.link">$f.name</a>
 	#end			
 </div>
-
-$utils.println(">> currentMillis after formats:", $utils.currentMillis())
 
 ##
 ## display of literals, with their language codes if they have one,
@@ -352,8 +348,6 @@ $utils.println(">> currentMillis after formats:", $utils.currentMillis())
 ## query parameter's comma-separated value.
 ##
 
-$utils.println(">> currentMillis: before view column", $utils.currentMillis())
-
 #set ($id_counter = 1000)
 
 #macro(showView,$v)
@@ -515,8 +509,6 @@ $utils.println(">> currentMillis: before view column", $utils.currentMillis())
 </tr>
 </table>
 	
-$utils.println(">> currentMillis after right-hand column:", $utils.currentMillis())
-
 <hr class="hr-style">
 
 ##
@@ -562,8 +554,6 @@ $meta['viewingResult.query.value']
 
 
 #parse("page-foot-shell.vm")
-
-$utils.println(">> currentMillis end of body:", $utils.currentMillis())
 
 </body>
 </html>
