@@ -156,7 +156,7 @@
 
 ##
 ## Two links for some resource value; the first is a link directly to
-## that value's URI and the second launches a new /item link with
+## that value's URI and the second launches a new /about link with
 ## _properties set to "*.*.*" as a reasonable properties view.
 ##
 
@@ -171,7 +171,7 @@
 #set ($macro.A = $utils.newSet())
 #set ($ignored = $macro.A.addAll($_properties))
 #set ($ignored = $macro.A.add("*.*.*"))
-#set ($macro.uri = $rootPath + "/item.vhtml")
+#set ($macro.uri = $rootPath + "/about.vhtml")
 #set ($macro.base = $thisPage.wrap($macro.uri))
 #set ($macro.changeProperties = $macro.base.change('', '_properties', $utils.join($macro.A,',') ))
 #set ($macro.changeAll = $macro.changeProperties.change('','resource', $value.URI.raw().replaceAll("#", "%23")))           
@@ -293,7 +293,7 @@
 
 <table width="100%">
 <tr>
-<td width="70%" valign="top">
+<td  valign="top">
 
 <div id="search-results">
 	<h2>Search Results</h2>
@@ -378,7 +378,7 @@
     </div>
 #end
 
-<td width="30%" valign="top">
+<td  valign="top">
 	<h2>viewing</h2>
 	
 	<div style="margin-left: 2ex">

@@ -32,7 +32,7 @@ hello:hello-world-again a api:API
 	# ; api:variable [api:name "_velocityRoot"; api:value "http://localhost:8080/standalone/lda-assets/vm/"]
 	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/standalone/lda-assets/"]
 	; api:endpoint 
-		hello:publishers, hello:games, hello:item
+		hello:publishers, hello:games, hello:about
 	; api:formatter
 		[a elda:VelocityFormatter
 		; api:name "vhtml"
@@ -77,15 +77,15 @@ hello:games a api:ListEndpoint
 	.
 	
 #
-# The /item endpoint requires a query parameter whose value
+# The /about endpoint requires a query parameter whose value
 # is a URI; this is the single selected ?item. These URIs
 # are typically constructed by the Velocity renderer when
 # a resource is clicked on for a dataset-relative link. 
 #
 
-hello:item a api:ListEndpoint
-	; rdfs:label "Items"
-	; api:uriTemplate "/item?resource={uri}"
+hello:about a api:ListEndpoint
+	; rdfs:label "About"
+	; api:uriTemplate "/about?resource={uri}"
     ; api:variable [api:name "uri"; api:type rdfs:Resource]
 	; api:selector 
 		[ api:where "?item ?p ?o. FILTER(?item = ?uri)"

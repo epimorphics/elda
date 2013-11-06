@@ -125,7 +125,7 @@ spec:full-education-api a api:API ;
 		api:describeViewer ,
 		api:labelledDescribeViewer ;
 	api:endpoint 
-	    so:item ,
+	    so:about ,
 		so:scheme ,
 		so:scheme-ns ,
 		so:scheme-def ,
@@ -195,9 +195,9 @@ FILTER (regex(STR(?item),?schemeRegex))
 # a resource is clicked on for a dataset-relative link. 
 #
 
-so:item a api:ListEndpoint
-    ; rdfs:label "Items"
-    ; api:uriTemplate "/item?resource={uri}"
+so:about a api:ListEndpoint
+    ; rdfs:label "About"
+    ; api:uriTemplate "/about?resource={uri}"
     ; api:variable [api:name "uri"; api:type rdfs:Resource]
     ; api:selector 
         [ api:where "?item ?p ?o. FILTER(?item = ?uri)"
