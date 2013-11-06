@@ -39,14 +39,14 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
     Framework for running tests from suite in filing
     system.
 */
-@RunWith(Parameterized.class) public class Framework 
+@RunWith(Parameterized.class) public class TestFramework 
 	{
 	private final WhatToDo w;
 	
-	public Framework( WhatToDo w )
+	public TestFramework( WhatToDo w )
 		{ this.w = w; }
 
-    static Logger log = LoggerFactory.getLogger(Framework.class);
+    static Logger log = LoggerFactory.getLogger(TestFramework.class);
     
 	static final Controls controls = new Controls( true, new Times() );
     

@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.acceptance.tests.Ask;
-import com.epimorphics.lda.acceptance.tests.Framework;
+import com.epimorphics.lda.acceptance.tests.TestFramework;
 import com.epimorphics.lda.acceptance.tests.WhatToDo;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -52,7 +52,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 		{ this.w = w; }
 	
 	@Parameters public static Collection<Object[]> data()
-		{ return Framework.data( "/simple-range-tests" ); }
+		{ return TestFramework.data( "/simple-range-tests" ); }
 	
 	// Messing around with exceptions because JUnit's Parameterized
 	// runner doesn't display a decent test name. So we bash out the
@@ -93,9 +93,9 @@ import com.hp.hpl.jena.rdf.model.Model;
 				{
 				fail
 					( "test " + w.title + ": the probe query\n"
-					+ Framework.shortStringFor( a ) + "\n"
+					+ TestFramework.shortStringFor( a ) + "\n"
 					+ "failed for the result set\n"
-					+ Framework.shortStringFor( rsm )
+					+ TestFramework.shortStringFor( rsm )
 					)
 					;			
 				}
