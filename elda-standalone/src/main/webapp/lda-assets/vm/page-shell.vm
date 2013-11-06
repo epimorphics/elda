@@ -128,8 +128,8 @@ $utils.println(">> currentMillis after formats:", $utils.currentMillis())
 
 #macro (selection, $prefix, $symbol, $wording, $property, $value)					
 	<a
-		title="Select items with $property.shortForm() $wording $value"
-		href="$thisPage.change($prefix, $property, $value).getURI()"
+		title="Select items with $property $wording $value"
+		href="$thisPage.change($prefix, $property, $value.toString()).getURI()"
 	> 
 		$symbol 
 	</a>
@@ -205,7 +205,8 @@ $utils.println(">> currentMillis after formats:", $utils.currentMillis())
 
 			#set ($foreach.shortProp = $property.shortForm())
 			#set ($foreach.dottedChain = $chain + "." + $foreach.shortProp)
-			#set ($foreach.values = ${item.getValues($property)})			
+			#set ($foreach.values = ${item.getValues($property)})	
+            #set ($macro.dottedName = $foreach.dottedChain.substring(1))		
 			#set ($foreach.firstValue = $foreach.values.get(0))
 			
 			#set ($A = $utils.newSet())
@@ -256,7 +257,7 @@ $utils.println(">> currentMillis after formats:", $utils.currentMillis())
 				<hr class="hr-style">
 					
 				#if ($foreach.values.size() == 1 && $foreach.firstValue.isLiteral())
-					#showliteral($foreach.linkprop,$property,$foreach.firstValue)
+					#showliteral($foreach.linkprop,$macro.dottedName,$foreach.firstValue)
 				#elseif ($foreach.values.size() == 1 && ($seen.contains($foreach.firstValue) || $foreach.firstValue.properties.size() == 0))
 					$foreach.linkprop #linkly($foreach.firstValue)
 				#else				
@@ -264,7 +265,7 @@ $utils.println(">> currentMillis after formats:", $utils.currentMillis())
 					#foreach ($value in $foreach.values)			   
 						<div class="indented">
 							#if ($value.isLiteral())
-								#showliteral("", $property,$value)
+								#showliteral("", $macro.dottedName,$value)
 							#else
 								#if ($value.properties.size() > 0 && !$seen.contains($value))
 									<div class="nested-item">
