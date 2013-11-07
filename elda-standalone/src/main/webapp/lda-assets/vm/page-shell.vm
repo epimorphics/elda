@@ -256,6 +256,19 @@
 					#showliteral($foreach.linkprop,$macro.dottedName,$foreach.firstValue)
 				#elseif ($foreach.values.size() == 1 && ($seen.contains($foreach.firstValue) || $foreach.firstValue.properties.size() == 0))
 					$foreach.linkprop #linkly($foreach.firstValue)
+										
+					#set ($target = $thisPage.change('', $macro.dottedName, $foreach.firstValue.shortForm().raw()))
+										
+					[[*					                  
+                    <a
+                        style="float: right; clear: right"
+                        title="Select items with $macro.dottedName equal to $foreach.firstValue.shortForm()"
+                        href="$target.URI"
+                    > 
+                        =                        
+                    </a>
+                    *]]
+                    
 				#else				
 					$foreach.linkprop
 					#foreach ($value in $foreach.values)			   

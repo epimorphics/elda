@@ -129,15 +129,18 @@ rdf:type a rdf:Property
 	.
 	
 hello:designed-by a rdf:Property
+    ; rdfs:range rdfs:Class
 	; api:label "designedBy"
 	.
 	
 hello:published-by a rdf:Property
 	; api:label "publishedBy"
+    ; rdfs:range rdfs:Class 
 	.
 	
 hello:designer-of a rdf:Property
 	; api:label "designerOf"
+    ; rdfs:range rdfs:Class 
 	.
 	
 hello:pubYear a rdf:Property
