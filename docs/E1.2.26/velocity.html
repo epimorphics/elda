@@ -110,6 +110,82 @@
     is defined and from <code>{_resourceRoot}/vm</code> if not.
 </p>
 
+<h2>The example Velocity renderer</h2>
+
+<img src="elda-velocity-screenshot-1.png" style="float: right; clear: right" />
+
+<p>
+	The Elda title bar links to the RDF specification, the Elda
+	documentation, the Linked Data API specification, and the
+	Epimorphics web page.
+</p>
+
+<p>
+	Underneath that is the list of available formats that this
+	endpoint can display information in; clicking on list
+	items rerenders this page in the format. Since Elda's
+	XSLT-driven HTML renderer and the Velocity renderer both
+	generate HTML but only one can be <em>called</em> HTML,
+	the original renderer gets the "html" name and the new one
+	is named "vhtml".
+</p>
+
+<p>
+	Below the format list the page is displayed in two columns;
+	the left one for search results (information about selected
+	items) and the right one for additional viewing information
+	(map, filters, views and viewing properties).
+</p>
+
+<p> 
+	At the top of the search results Elda displays links to the
+	items on this page, and buttons to move through the item
+	list. Each item entry names the item (displaying its preferred
+	label) and shows selected properties of that item. Values
+	that are themselves resources with properties have their
+	properties displayed <em>unless</em> they have already appeared
+	in an outer display box. Clicking on an item's name will 
+	restrict the display to that single item.
+</p>
+
+<p>
+	Clicking on the operator symbols (&lt;<u>&lt;</u>=<u>&gt;</u>&gt;)
+	toward the right of the search results will restrict the search
+	to items that have the specified value for the specified property.
+	These filters will then appear in the <b>filters</b> section of 
+	the <b>viewing</b> column, where they can be snipped away using the
+	<b>cancel</b> icon.
+</p>
+
+<p>
+	The <b>properties</b> section of <b>viewing</b> shows properties that
+	have been explicitly selected for display. Those properties can be
+	discarded using the <b>cancel</b> icon, extended with ".*" using the
+	<b>star</b> icon, or have a trailing ".*" cut away using the <b>reduce</b>
+	icon. The <b>star</b> icon on the <b>properties</b> title introduces
+	the wildcard property chain "*" into the proeprties if it's not already 
+	present.
+</p>
+
+<p>
+	The <b>views</b> section displays the available views (<em>ie</em>,
+	named sets of properties) for this endpoint. Clicking on the
+	<b>expand</b> icon will toggle displaying the properties of that
+	view; clicking on the <b>plus</b> icon of that property will add
+	it to the <b>properties</b> display. Clicking on the <b>plus</b>
+	icon of the view will set it (and hence all its properties) as
+	the current view.
+</p>
+
+<p>
+	If there are any items in the top-level of the search results that
+	have both a <code>lat</code> and <code>long</code> property, then
+	a map is displayed in the <b>viewing</b> column with markers at
+	those locations.
+</p>
+
+<div style="clear: both">
+
 <h2>Names in the Velocity context</h2>
 
 <p>

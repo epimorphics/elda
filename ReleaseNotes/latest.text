@@ -7,6 +7,8 @@
   introductory materials. The text search documentation has 
   been updated. The page previously called "advanced" has 
   been renamed to "reference" and given a table-of-contents.
+  The velocity renderer documentation now lives in its own
+  document.
 
 * API.java has moved packages and now lives in 
   com.epimorphics.lda.vocabularies (alongside EXTRAS and the 
@@ -17,7 +19,8 @@
   files are up-to-date no generation is done.)
 
 * The example velocity templates and atom renderer now trap cycles in
-  the view data.
+  the view data. The example Velocity templates for Elda rendering
+  have been substantially improved and documented.
 
 * There is limited control over where the text:query triples appear
   in the generated SELECT query -- this may be helpful to the
@@ -35,6 +38,10 @@
   and an attic containing older release notes. The "notelets"
   history has been abandoned. This change makes it easier for us
   to create release notes that cross-refer.
+
+* The JSON renderer will treat a Date literal as a DateTime literal
+  if its lexical form is appropriate, rather than abandoning the
+  rendering with an exception and subsequent status 500.
 
 + ----------------------------------------------------------------------
 | Elda 1.2.25 (RELEASED)
