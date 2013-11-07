@@ -259,7 +259,6 @@
 										
 					#set ($target = $thisPage.change('', $macro.dottedName, $foreach.firstValue.shortForm().raw()))
 										
-					[[*					                  
                     <a
                         style="float: right; clear: right"
                         title="Select items with $macro.dottedName equal to $foreach.firstValue.shortForm()"
@@ -267,7 +266,6 @@
                     > 
                         =                        
                     </a>
-                    *]]
                     
 				#else				
 					$foreach.linkprop
