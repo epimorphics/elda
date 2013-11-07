@@ -352,9 +352,6 @@ import com.sun.jersey.api.NotFoundException;
 			
 			String _view = queryParams.getOne("_view");
 			b.put("_view", _view == null ? "" : _view );
-    		
-//        	System.err.println( ">> mode: " + r.getMode() );
-//        	System.err.println( ">> media type: " + r.getMediaType(b) );
         	
         	APIEndpoint.Request req =
         		new APIEndpoint.Request( c, ru, b )

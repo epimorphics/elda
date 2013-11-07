@@ -34,7 +34,8 @@ hello:velocity-world a api:API
 		; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
 		; api:mimeType "text/html"
 		# ; api:stylesheet "page-shell.vm"
-		]
+		]    
+	; api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"];
 	; api:variable [api:name "_velocityRoot"; api:value "http://localhost:8080/standalone/lda-assets/vm/"]
 	.
     
