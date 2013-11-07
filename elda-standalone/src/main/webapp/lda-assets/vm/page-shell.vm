@@ -324,6 +324,15 @@
     #end
 #end    
 
+#macro(pageSize,$n)
+    <a class="buttonlike"
+        style="margin-left: 1px"
+        href="$thisPage.change('', '_pageSize', $n).URI"
+    >
+        $n
+    </a>
+#end
+
 #macro(localAndExternalLinks)
     <div style="margin-left: 4ex; margin-right: 4ex">
     #if ($items.size() > 1)
@@ -339,6 +348,11 @@
             </span>
         #end
         #nextLink()
+        
+        <b>page size</b>
+        #pageSize("10")
+        #pageSize("25")
+        #pageSize("50")
     #end
     </div>
 #end
