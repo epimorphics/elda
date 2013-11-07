@@ -306,37 +306,47 @@
 <tr>
 <td width="70%" valign="top">
 
+#macro(firstAndPrevLinks)
+    #if ($firstlink)
+        #if ($firstlink.equals($thisPage)) #else
+            <a class="buttonlike" href="$firstlink.URI">first</a>
+        #end 
+    #end
+    
+    #if ($prevlink)
+        <a class="buttonlike" href="$prevlink.URI">prev</a> 
+    #end
+#end
+
+#macro(nextLink)
+    #if ($nextlink) 
+        <a class="buttonlike" href="$nextlink.URI">next</a> 
+    #end
+#end    
+
+#macro(localAndExternalLinks)
+    <div style="margin-left: 4ex; margin-right: 4ex">
+    #if ($items.size() > 1)
+        #firstAndPrevLinks()        
+        <b>
+          on this page 
+          #if ($_page.equals("") || $_page.equals("0")) #else ($_page) #end
+        </b>
+        #set ($pipe = "")
+        #foreach ($item in $items)
+            <span>
+                $pipe #set($pipe = " | ") <a href="#$item.id">$item.label</a>
+            </span>
+        #end
+        #nextLink()
+    #end
+    </div>
+#end
+
 <div id="search-results">
 	<h2>Search Results</h2>
 	
-	<div style="margin-left: 4ex; margin-right: 4ex">
-	#if ($items.size() > 1)
-		#if ($firstlink)
-			#if ($firstlink.equals($thisPage)) #else
-				<a class="buttonlike" href="$firstlink.URI">first</a>
-			#end 
-		#end
-		
-		#if ($prevlink)
-			<a class="buttonlike" href="$prevlink.URI">prev</a> 
-		#end
-		
-		<b>
-		  on this page 
-		  #if ($_page.equals("") || $_page.equals("0")) #else ($_page) #end
-		</b>
-		#set ($pipe = "")
-		#foreach ($item in $items)
-			<span>
-				$pipe #set($pipe = " | ") <a href="#$item.id">$item.label</a>
-			</span>
-		#end
-		
-		#if ($nextlink)	
-			<a class="buttonlike" href="$nextlink.URI">next</a> 
-		#end
-	#end
-	</div>
+	#localAndExternalLinks()
 		
 	##
 	## display the items and their properties.
@@ -348,7 +358,10 @@
 			#displayvalues("",$item, $seen)
 			</div>
 		#end
-	</div>
+	</div>	
+	
+    #localAndExternalLinks()
+	
 </div>
 
 </td>
