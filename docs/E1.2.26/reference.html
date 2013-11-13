@@ -820,11 +820,13 @@ If the SPARQL server supports nested
 <p>
     While the LDA spec says
     (<a href="http://code.google.com/p/linked-data-api/wiki/API_Binding_Variables">
-    see API Binding Variables</a>) that
+	    see API Binding Variables</a>) that
+</p>
     <blockquote>
 	endpoint-level variables can also depend on API-level 
 	variables, but not vice versa.
     </blockquote>
+<p>
     Elda specifically allows API-level variables to depend on
     endpoint variables. This means that the value of an API
     variable cannot be determined in advance (if it depends on
@@ -851,6 +853,18 @@ If the SPARQL server supports nested
     resources will be served, relative to the server
     root. May include a domain:port if the resources
     are on a different server.
+    </li>
+
+    <li>_velocityRoot</li>: the location from which
+    velocity stylesheets are served. <em>Note:</em>
+    the velocity root is resolved on the Elda <em>server</em>
+    when Elda attempts to render templates; the resource
+    root is copied into the generated HTML and resolved on
+    the <em>client</em>. Since in general these are not the
+    same machine, the two roots are different; in particular
+    the velocity root might be based on localhost but the
+    resource root should not be (except in the special case
+    of development/test on a single machine).
     </li>
 
     <li>activeImageBase: the location within the
