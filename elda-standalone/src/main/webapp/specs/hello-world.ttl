@@ -17,9 +17,7 @@
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
 
 # Prefix for example-local entities.
-@prefix hello:				<http://localhost:8080/elda/vocabulary/>.
-
-@prefix hig:				<http://www.hans-im-glueck.de/> .
+@prefix hello:				<http://elda.googlecode.com/hg/vocabs/games#>.
 
 # ---------------------------------------------------------------------
 # API config
@@ -83,5 +81,16 @@ hello:pubDate a rdf:Property
 hello:title a rdf:Property
 	; api:label "title"
 	.
-	
 		
+hello:pubYear a rdf:Property
+	; api:label "publicationYear"
+	; rdfs:range xsd:integer
+    ; rdfs:comment "The subject is some published entity, the object is the year of its publication."
+    ; rdfs:range xsd:integer
+	.
+    
+hello:playTimeMinutes a rdf:Property
+	; api:label "playTimeMinutes"
+	; rdfs:label "playTimeMinutes"
+	; rdfs:range xsd:integer
+	.	
