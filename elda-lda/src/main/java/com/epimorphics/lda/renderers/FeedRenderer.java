@@ -238,7 +238,6 @@ public class FeedRenderer implements Renderer {
 			( mm.getMergedModel()
 			, sns.asContext()
 			, termBindings
-			, false
 			, d 
 			);
 	//

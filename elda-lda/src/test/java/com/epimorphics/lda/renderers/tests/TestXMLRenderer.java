@@ -135,7 +135,7 @@ public class TestXMLRenderer
 	//
 		Model meta = mm.getMetaModel();
 		meta.add( root, API.items, meta.createList( new RDFNode[] {root} ) );
-		xr.renderInto( root.inModel( meta ), mm, d, new HashMap<String, String>(), false );
+		xr.renderInto( root.inModel( meta ), mm, d, new HashMap<String, String>() );
 	//
 		Node de = d.getDocumentElement().getFirstChild();
 		Node expected = new TinyParser().parse( wrapped );

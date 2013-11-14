@@ -33,4 +33,21 @@ public class TestWrappedStrings {
 		assertEquals( cooked, ws.toString() );
 	}
 	
+	@Test public void ensureCutRespectsBoundaries() {
+		ensureCutRespectsBoundaries( "babble", "babble" );
+		ensureCutRespectsBoundaries( "red hen", "redHen" );
+		ensureCutRespectsBoundaries( "red riding hood", "redRidingHood" );
+		ensureCutRespectsBoundaries( "designed by", "designedBy" );
+		ensureCutRespectsBoundaries( "empty faces", "empty_faces" );
+		ensureCutRespectsBoundaries( "empty faces", "empty__faces" );
+		ensureCutRespectsBoundaries( "empty faces", "empty___faces" );
+		ensureCutRespectsBoundaries( "some URI example", "someURIexample" );
+	}
+
+	private void ensureCutRespectsBoundaries(String expected, String original) {
+		String derived = new WrappedString( original ).cut().raw();
+		assertEquals(expected, derived);
+	}
+	
+	
 }

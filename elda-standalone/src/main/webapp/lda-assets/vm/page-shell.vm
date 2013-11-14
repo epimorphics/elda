@@ -221,7 +221,7 @@
 				#set ($foreach.linkprop = 
 					" <a title='Click to add this property chain to viewed properties.' href='" + $foreach.changeResult.URI + "'>" + $image + "</a>"
 					+ " <a style='margin-left: 1ex' href='" + $property.URI + "'>" 
-					+ $property.shortForm().cut() 
+					+ $property.shortForm() 
 					+ "</a>"
 					)
 	            
@@ -238,7 +238,7 @@
 				#set ($foreach.linkprop = 
 					" <a title='Click to remove this property chain from viewed properties.' href='" + $foreach.changeResult.URI + "'>" + $image + "</a>"
 					+ " <a style='margin-left: 1ex' href='" + $property.URI + "'>" 
-					+ $property.shortForm().cut() 
+					+ $property.shortForm() 
 					+ "</a>"
 					)
 					

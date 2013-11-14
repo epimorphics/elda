@@ -98,7 +98,7 @@ The Common and Assets files must have the same version.
 	Elda Common contains the LDA-handling Java code and Elda
 	Assets provides styleheets, scripts, css, <em>etc</em> which Elda
 	Common refers to or loads. There is also an
-	<code>elda-bundled</code>code>
+	<code>elda-bundled</code>
 	artifact whose <code>elda-bundled.war</code> combines
 	<code>elda-common</code> and <code>elda-assets</code> into one item.
 </p>
@@ -819,8 +819,7 @@ If the SPARQL server supports nested
 
 <p>
     While the LDA spec says
-    (<a href="http://code.google.com/p/linked-data-api/wiki/API_Binding_Variables">
-	    see API Binding Variables</a>) that
+    (<a href="http://code.google.com/p/linked-data-api/wiki/API_Binding_Variables">see API Binding Variables</a>)    that:
 </p>
     <blockquote>
 	endpoint-level variables can also depend on API-level 
@@ -830,7 +829,7 @@ If the SPARQL server supports nested
     Elda specifically allows API-level variables to depend on
     endpoint variables. This means that the value of an API
     variable cannot be determined in advance (if it depends on
-    any variables that may be bound in endpoints, <i>eg</i>
+    any variables that may be bound in endpoints, <em>eg</em>
     by appearing in a URI template). This turns out to allow
     convenient idioms where API-level variable declarations
     assemble a result from components that can appear elsewhere
@@ -855,7 +854,7 @@ If the SPARQL server supports nested
     are on a different server.
     </li>
 
-    <li>_velocityRoot</li>: the location from which
+    <li>_velocityRoot: the location from which
     velocity stylesheets are served. <em>Note:</em>
     the velocity root is resolved on the Elda <em>server</em>
     when Elda attempts to render templates; the resource
@@ -882,11 +881,12 @@ If the SPARQL server supports nested
 <h3>Variables used by the Elda code</h3>
 
 <ul>
-    <li>_strip_has: (OBSOLESCENT) If this variable is defined
-    and has the value "yes", the XML renderer will rename
-    properties "hasWhatever" (ie where the fourth character
-    is upper-case) to "whatever". This is for compatability
-    with Puelia when using a Puelia-specific stylesheet.
+    <li>_suppress_ipto: unless this variable is defined
+    and has the value "yes", the meta-data (and hence the
+    complete rendered model) for an item endpoint will
+    include an <code>isPrimaryTopicOf</code> property
+    of the selected item with value the currently displayed
+    URI.    
     </li>
 
     <li>_suppress_media_type: If there is no .formatter

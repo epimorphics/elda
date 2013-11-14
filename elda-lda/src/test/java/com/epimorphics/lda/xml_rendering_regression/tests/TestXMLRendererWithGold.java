@@ -89,7 +89,7 @@ public class TestXMLRendererWithGold extends XMLTestCase {
 			.Do( mm.getMergedModel(), mm.getMergedModel() )
 			;
 		
-		r.renderInto( root, mm, d, termBindings, false );
+		r.renderInto( root, mm, d, termBindings );
 	//
 		Document expected = parse( b.expected_xml );
 		Diff myDiff = new Diff( expected, d );

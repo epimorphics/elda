@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.*;
 
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.shortnames.Transcoding;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
@@ -167,7 +168,26 @@ public class WrappedNode implements Comparable<WrappedNode> {
 	}
 	
 	private WrappedString shortURI() {
-		return new WrappedString( bundle.sn.getWithUpdate(r) );
+		String shortish = bundle.sn.getWithUpdate(r);
+		return new WrappedString( tidyPrefix(shortish) );
+	}
+
+	private String tidyPrefix(String shortish) {
+		int ub = shortish.indexOf('_');
+		if (ub < 0) return shortish;
+	//
+		String pre = shortish.substring(0, ub);
+		if (pre.equals("pre")) {
+			int ub2 = shortish.indexOf('_', 4);
+			String prefix = shortish.substring(ub + 1, ub2);
+			return prefix + ": " + decode(shortish.substring(ub2 + 1));
+		} else {
+			return pre + ": " + shortish.substring(pre.length() + 1);
+		}
+	}
+
+	private String decode(String s) {
+		return Transcoding.decodeLightly(s);
 	}
 
 	private WrappedString shortLiteral() {

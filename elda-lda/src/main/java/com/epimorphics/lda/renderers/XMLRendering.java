@@ -426,12 +426,10 @@ public class XMLRendering {
 	private final Document d;
 	private final Context context;
 	private final Map<String, String> nameMap;
-	private final boolean suppressIPTO;
 	
-	public XMLRendering( Model m, Context context, Map<String, String> nameMap, boolean suppressIPTO, Document d ) {
+	public XMLRendering( Model m, Context context, Map<String, String> nameMap, Document d ) {
 		this.d = d;
 		this.context = context;
-		this.suppressIPTO = suppressIPTO;
 		this.nameMap = nameMap;
 	}
 

@@ -33,7 +33,7 @@ public class TestSuspectRendering {
 		ShortnameService sns = new StandardShortnameService();
 		XMLRenderer xr = new XMLRenderer( sns );
 		Document d = DOMUtils.newDocument();
-		xr.renderInto( root, mm, d, new HashMap<String, String>(), false );
+		xr.renderInto( root, mm, d, new HashMap<String, String>() );
 		Node de = d.getDocumentElement(); // .getFirstChild();
 		String obt = DOMUtils.renderNodeToString( new Times(), de, pm );
 		System.err.println( ">> " + obt );

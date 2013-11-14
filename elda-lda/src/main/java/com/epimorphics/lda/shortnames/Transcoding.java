@@ -116,7 +116,7 @@ public class Transcoding {
 			;
 	}
 
-	private static String decodeLightly( String encoded ) {
+	public static String decodeLightly( String encoded ) {
 		StringBuilder sb = new StringBuilder();
 		char pending = 0;
 		boolean underbar = false, inHex = false;

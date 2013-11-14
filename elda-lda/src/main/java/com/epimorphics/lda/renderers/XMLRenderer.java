@@ -65,14 +65,13 @@ public class XMLRenderer implements Renderer {
 
 	@Override public synchronized Renderer.BytesOut render( Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results ) {
 		Resource root = results.getRoot();
-		boolean suppressIPTO = rc.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		Document d = DOMUtils.newDocument();
-		renderInto( root, results.getModels(), d, termBindings, suppressIPTO );
+		renderInto( root, results.getModels(), d, termBindings );
 		return DOMUtils.renderNodeToBytesOut( t, d, rc, results.getModelPrefixes(), transformFilePath );
 	}
 
-	public void renderInto( Resource root, MergedModels mm, Document d, Map<String, String> termBindings, boolean suppressIPTO ) {
-		XMLRendering r = new XMLRendering( mm.getMergedModel(), sns.asContext(), termBindings, suppressIPTO, d );
+	public void renderInto( Resource root, MergedModels mm, Document d, Map<String, String> termBindings ) {
+		XMLRendering r = new XMLRendering( mm.getMergedModel(), sns.asContext(), termBindings, d );
 		Element result = d.createElement( "result" );
 		result.setAttribute( "format", "linked-data-api" );
 		result.setAttribute( "version", "0.2" );
@@ -88,7 +87,6 @@ public class XMLRenderer implements Renderer {
 				writeModel( mm.getObjectModel(), "/tmp/gold/object_model" );
 				writeModel( mm.getMetaModel(), "/tmp/gold/meta_model" );
 				writeResource( root, "/tmp/gold/root.uri" );
-				writeBoolean( suppressIPTO, "/tmp/gold/suppress_ipto.bool" );
 				
 				writeShortnames( sns, mm.getMergedModel(), "/tmp/gold/names.sns" );
 				
