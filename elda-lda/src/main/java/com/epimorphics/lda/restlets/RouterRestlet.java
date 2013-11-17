@@ -417,13 +417,18 @@ import com.sun.jersey.api.NotFoundException;
 		return URIUtils.resolveAgainstBase( requestUri, URIUtils.newURI( base ), ui.getPath() );
 	}
 
+    private static String MATCHES_SCHEME = "[a-zA-Z][-.+A-Za-z0-9]+:";
+    		
+    private static String STARTS_WITH_SCHEME_OR_SLASH = "^(/|" + MATCHES_SCHEME + ")";
+    
 	private static URLforResource pathAsURLFactory( final ServletContext servCon ) {
 		return new URLforResource() 
 			{
 			@Override public URL asResourceURL( String ePath ) { 		
-			String p = ePath.startsWith( "/" ) || ePath.startsWith( "http://") ? ePath : "/" + ePath;
+			// WAS: String p = ePath.startsWith( "/" ) || ePath.startsWith( "http://") ? ePath : "/" + ePath;
+			String p = ePath.matches( STARTS_WITH_SCHEME_OR_SLASH ) ? ePath : "/" + ePath;
 			try {
-				URL result = p.startsWith( "http:" ) ? new URL(p) : servCon.getResource( p );
+				URL result = p.startsWith( "/" ) ? servCon.getResource( p ) : new URL(p);
 				if (result == null) EldaException.NotFound( "webapp resource", ePath );
 				return result;
 				}

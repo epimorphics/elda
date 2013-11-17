@@ -836,36 +836,88 @@ If the SPARQL server supports nested
     at the API level or from the current endpoint.
 </p>
 
-<h3>Variables used by the stylesheet</h3>
+<h2>Configuring Elda resource paths</h2>
 
 <p>
-    The built-in Elda stylesheet generates HTML pages
-    that require http access to images, CSS stylesheets,
-    and Javascript served by the Elda server. Because
-    the webapp root isn't fixed, the stylesheet reads
-    location information from LDA variables that are
-    set as part of creating an Elda webapp.
+	There are three resource paths that you may need to configure
+	for Elda: the <em>stylesheet path</em>, the <em>asset path</em>,
+	and the <em>template path</em>.
 </p>
 
+<h3>stylesheet path</h3>
+
+<p>
+	The <em>stylesheet path</em> is used by the XSLT-driven HTML 
+	renderer to locate the XSLT stylesheet to use. It appears as
+	the object of an <code>api:stylesheet</code> property on the
+	HTML renderer, <em>eg</em>
+</p>
+
+<pre>
+	... api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
+</pre>
+
+<p>
+	If there are any variable references in the stylesheet
+	value, they are expanded. If the resulting stylesheet value 
+	starts with a scheme (<em>eg</em> <code>http:</code>) 
+	then it is treated as the URL of the stylesheet to fetch.
+	Otherwise it is treated as a reference to a file in the
+	application's <code>webapp</code> directory.
+</p>
+
+<h3>asset path and <code>api:base</code></h3>
+
+<p>
+	The <em>asset path</em> is used by the (default) XSLT-driven 
+	HTML renderer and the (default) velocity template renderer.
+	It is the value of the LDA variable <code>_resourceRoot</code>:
+</p>
+
+<pre>
+	... api:variable [api:name "_resourceRoot"; api:value "lda-assets/"]
+</pre>
+
+<p>
+	If that value is not defined, Elda uses the value of <code>api:base</code>.
+	(This should, if possible, be used to specify where the Elda webapp is served 
+	from; it is resolved against the URL for the current page so that a server
+	at location A can generate URIs as though it were at location B).
+	If <code>api:base</code> is not defined, Elda uses <code>"/lda-assets"</code>.
+</p>
+
+<p>
+	When those renderers must generate a link in the HTML to some
+	asset, such as an image or some CSS, the path to that asset
+	(<em>eg</em>, <code>images/Star.png</code>) is prefixed with 
+	the asset path (<em>eg</em>, <code>lda-assets/</code>) to
+	construct the link URL (<em>eg</em>, <code>lda-assets/images/Star.png</code>).
+	This URL will then be resolved in the usual way, relative
+	to the URL of the page being rendered.  
+</p>
+
+<h3>template path</h3>
+
+<p>
+	The <em>template path</em> is used by the velocity template
+	renderer to locate the template it will expand. It is the value
+	of the LDA variable <code>_velocityRoot</code>:
+</p>
+
+<pre>
+	... api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm"]
+</pre>
+
+<p>
+	Note that if the value is not an explict URI it is resolved <em>locally</em>
+	(the same way as <code>api>stylesheet</code>) against the webapp
+	directory, as opposed to <code>_resourceRoot</code>, who's value is
+	resolved <em>remotely</em> by the client browser.
+</p>
+
+<h3>Other variables used by the stylesheets</h3>
+
 <ul>
-    <li>_resourceRoot: the location from which the
-    resources will be served, relative to the server
-    root. May include a domain:port if the resources
-    are on a different server.
-    </li>
-
-    <li>_velocityRoot: the location from which
-    velocity stylesheets are served. <em>Note:</em>
-    the velocity root is resolved on the Elda <em>server</em>
-    when Elda attempts to render templates; the resource
-    root is copied into the generated HTML and resolved on
-    the <em>client</em>. Since in general these are not the
-    same machine, the two roots are different; in particular
-    the velocity root might be based on localhost but the
-    resource root should not be (except in the special case
-    of development/test on a single machine).
-    </li>
-
     <li>activeImageBase: the location within the
     resource root where the active (enabled) images
     used by the stylesheet are fetched from.
@@ -878,7 +930,8 @@ If the SPARQL server supports nested
 
 </ul>
 
-<h3>Variables used by the Elda code</h3>
+<h3>Variables configuring rendering used by the Elda code</h3>
+
 
 <ul>
     <li>_suppress_ipto: unless this variable is defined
@@ -918,20 +971,6 @@ If the SPARQL server supports nested
     property". In the generated query it is replaced by
     a fresh variable. There can be any number of *-elements,
     anywhere within the chain.
-</p>
-
-<h2 id="api-base"><code>api:base</code></h2>
-
-<p>
-    An LDA configuration may specify an api:base property.
-    This should, if possible, be used to specify where
-    the Elda webapp is served from. If specified, all
-    Elda's constructed URIs (such as those for different
-    views or formats of the displayed page) will use
-    that base URI with the path and query parameters
-    supplied in the request. This means that a server
-    at location A can generate URIs as though it were
-    at location B (from which it may have been redirected).
 </p>
 
 <h2 id="uri-rewriting">URI rewriting</h2>

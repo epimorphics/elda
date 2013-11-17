@@ -17,7 +17,9 @@ import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.MediaType;
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 
 /**
     Production of XSLT renderers, which transform the results
@@ -31,7 +33,7 @@ public class XSLT_RendererFactory implements RendererFactory {
 	private final MediaType mt;
 	private final CompleteContext.Mode mode;
 	
-	XSLT_RendererFactory( Resource root, MediaType mt ) {
+	public XSLT_RendererFactory( Resource root, MediaType mt ) {
 		this.root = root;		
 		this.mt = mt;
 		this.mode = Mode.decode(root, defaultMode);
@@ -54,9 +56,14 @@ public class XSLT_RendererFactory implements RendererFactory {
 
 			@Override public Renderer.BytesOut render( Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results ) {
 				handleMetadata(results);
-				final String sheet = rc.expandVariables(root.getProperty( API.stylesheet ).getString());
+				final String sheet = rc.expandVariables( objectSpelling( root.getProperty( API.stylesheet ) ));
 				final XMLRenderer xr = new XMLRenderer( mode, sns, mt, sheet );
 				return xr.render( t, rc.copyWithDefaults( ep.defaults() ), termBindings, results ); 
+			}
+
+			private String objectSpelling(Statement s) {
+				Node ob = s.getObject().asNode();
+				return ob.isLiteral() ? ob.getLiteralLexicalForm() : ob.getURI();
 			}
 
 			public void handleMetadata( APIResultSet results ) {
