@@ -879,10 +879,22 @@ If the SPARQL server supports nested
 </pre>
 
 <p>
-	If that value is not defined, Elda uses the value of <code>api:base</code>.
-	(This should, if possible, be used to specify where the Elda webapp is served 
-	from; it is resolved against the URL for the current page so that a server
-	at location A can generate URIs as though it were at location B).
+	If that value is not defined, Elda uses the value of the <code>api:base</code>
+	property of the API spec:
+</p>
+
+<pre>
+	... api:base "/"
+</pre>
+
+<p>
+	<code>api:base</code> should, if possible, be used to specify where 
+	the Elda webapp is served from; it is resolved against the URL 
+	for the current page so that a server at location A can generate 
+	URIs as though it were at location B.
+</p>
+
+<p>
 	If <code>api:base</code> is not defined, Elda uses <code>"/lda-assets"</code>.
 </p>
 
