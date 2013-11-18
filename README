@@ -91,8 +91,8 @@ RELEASING ELDA
 
   In your USUAL elda development directory
 
-    mvn release:prepare
-    mvn release:perform
+    mvn --batch-mode release:prepare
+    mvn --batch-mode release:perform
 
   This builds and deploys non-SNAPSHOT Elda artifacts.
   It should not fail (that's what the "run test build"
