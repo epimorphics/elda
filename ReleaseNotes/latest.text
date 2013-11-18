@@ -8,7 +8,8 @@
   been updated. The page previously called "advanced" has 
   been renamed to "reference" and given a table-of-contents.
   The velocity renderer documentation now lives in its own
-  document.
+  document. Path configuaration options for stylesheets,
+  HTML resouces, and Velocity templates has been clairified.
 
 * API.java has moved packages and now lives in 
   com.epimorphics.lda.vocabularies (alongside EXTRAS and the 
@@ -20,7 +21,9 @@
 
 * The example velocity templates and atom renderer now trap cycles in
   the view data. The example Velocity templates for Elda rendering
-  have been substantially improved and documented.
+  have been substantially improved and documented. The use of
+  api:stylesheet to specify the Velocity template to render with
+  has been replace by elda:velocityTemplate to avoid confusion.
 
 * There is limited control over where the text:query triples appear
   in the generated SELECT query -- this may be helpful to the
@@ -42,6 +45,10 @@
 * The JSON renderer will treat a Date literal as a DateTime literal
   if its lexical form is appropriate, rather than abandoning the
   rendering with an exception and subsequent status 500.
+
+* The long-obsolete documentation for the configuration variable
+  _strip_has has been removed. Documentation for _suppress_ipto
+  has been restored.
 
 + ----------------------------------------------------------------------
 | Elda 1.2.25 (RELEASED)

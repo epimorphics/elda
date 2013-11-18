@@ -32,7 +32,7 @@ hello:hello-world a api:API
         ; api:name "atom"
         ; elda:className "com.epimorphics.lda.renderers.FeedRendererFactory"
         ; api:mimeType "application/atom+xml"
-        #; api:stylesheet "page-shell.vm"
+        #; elda:velocityTemplate "page-shell.vm"
         ]
 	; api:endpoint hello:games 
 	.

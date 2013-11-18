@@ -13,6 +13,7 @@ import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.API;
+import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -27,7 +28,7 @@ public class VelocityRenderer implements Renderer {
 	
 	public VelocityRenderer( MediaType mt, Bindings b, Resource config ) {
 		VelocityEngine ve = Help.createVelocityEngine( b, config );
-		String templateName = RDFUtils.getStringValue( config, API.stylesheet, "page-shell.vm" );
+		String templateName = RDFUtils.getStringValue( config, EXTRAS.velocityTemplate, "page-shell.vm" );
 		this.mt = mt;
 		this.core = new VelocityCore( ve, templateName );
 		this.metadataOptions = getMetadataOptions( config );

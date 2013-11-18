@@ -83,7 +83,7 @@ spec:VelocityFormatter a elda:VelocityFormatter
     ; api:name "vhtml"
     ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
     ; api:mimeType "text/html"
-    ; api:stylesheet "page-shell.vm"
+    ; elda:velocityTemplate "page-shell.vm"
     .
     
 spec:HtmlFormatter

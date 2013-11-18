@@ -854,7 +854,7 @@ If the SPARQL server supports nested
 </p>
 
 <pre>
-	... api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
+... api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
 </pre>
 
 <p>
@@ -875,7 +875,7 @@ If the SPARQL server supports nested
 </p>
 
 <pre>
-	... api:variable [api:name "_resourceRoot"; api:value "lda-assets/"]
+... api:variable [api:name "_resourceRoot"; api:value "lda-assets/"]
 </pre>
 
 <p>
@@ -884,7 +884,7 @@ If the SPARQL server supports nested
 </p>
 
 <pre>
-	... api:base "/"
+... api:base "/"
 </pre>
 
 <p>
@@ -912,12 +912,12 @@ If the SPARQL server supports nested
 
 <p>
 	The <em>template path</em> is used by the velocity template
-	renderer to locate the template it will expand. It is the value
+	renderer to locate the templates it may expand. It is the value
 	of the LDA variable <code>_velocityRoot</code>:
 </p>
 
 <pre>
-	... api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm"]
+... api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm"]
 </pre>
 
 <p>
@@ -926,6 +926,21 @@ If the SPARQL server supports nested
 	directory, as opposed to <code>_resourceRoot</code>, who's value is
 	resolved <em>remotely</em> by the client browser.
 </p>
+
+<p>
+	The template that is used for a given velocity-template rendering is
+	given by the <code>elda:velocityTemplate</code> property of that
+	renderer:
+</p>
+
+<pre>
+... elda:velocityTemplate "some-template-name.vm"
+</pre>
+
+<p>
+	If no <code>velocityTemplate</code> property is defined, Elda uses
+	<code>"page-shell.vm"</code>.
+</pre>
 
 <h3>Other variables used by the stylesheets</h3>
 
