@@ -17,6 +17,7 @@ public class CycleFinder {
 	CycleFinder.Trace trace = null;
 	Set<Resource> inTrace = new HashSet<Resource>();
 	Set<Resource> cyclic = new HashSet<Resource>();
+	Set<Resource> crawled = new HashSet<Resource>();
 	
 	/**
 	    Answer all the resources in the model that x is in
@@ -41,30 +42,31 @@ public class CycleFinder {
 	public void crawl( Resource x ) {
 		if (inTrace.contains( x )) {
 			markCyclic( x );
-		} else {
-			add( x );
-			for (StmtIterator sit = x.listProperties(); sit.hasNext();) {
-				Statement s = sit.next();
+		} else if (!crawled.contains(x)) {
+			startCrawling( x );
+			for (StmtIterator it = x.listProperties(); it.hasNext();) {
+				Statement s = it.next();
 				RDFNode n = s.getObject();
 				trace.property = s.getPredicate();
 				if (n.isResource()) crawl( n.asResource() );
 			}
-			remove( x );
+			doneCrawling( x );
 		}
 	}
 	
 	public boolean inTrail( Resource x ) {
 		return inTrace.contains( x );
 	}
-
-	public void remove(Resource x) {
-		trace = trace.tail;
-		inTrace.remove( x );
-	}
-
-	public void add( Resource x ) {
+	
+	public void startCrawling( Resource x ) {
 		inTrace.add( x );
 		trace = new Trace( x, trace );
+	}
+
+	public void doneCrawling(Resource x) {
+		trace = trace.tail;
+		inTrace.remove( x );
+		crawled.add(x);
 	}
 
 	public void markCyclic(Resource x) {
