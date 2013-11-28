@@ -1,6 +1,12 @@
 + ----------------------------------------------------------------------
 | Elda 1.2.27 (DEVELOPING)
 
+* The cycle detector used by the XML renderer (and hence by the
+  usual HTML renderer) turned out to have draedful performance
+  on large tangled data because it didn't mark as "done" nodes
+  that it had finished with. Added a new map to CycleFinder and
+  adjusted it during crawl. Also took the opportunity to rename
+  methods hintingly.
 
 + ----------------------------------------------------------------------
 | Elda 1.2.26 (RELEASED)    
