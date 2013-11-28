@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
@@ -59,7 +60,7 @@ public class TestCycleFinder {
 		assertEquals( CollectionUtils.set(y, z), loops );
 	}
 	
-	// this is the test case that was missing and allowed the sysle-finder
+	// this is the test case that was missing and allowed the cycle-finder
 	// to miss items on a different path to the same cyclic node. Oops.
 	@Test public void addsBothTraces() {
 		Model m = ModelIOUtils.modelFromTurtle( ":x :P :y. :y :Q :z. :z :R :x. :x :S :a. :a :T :b. :b :U :x." );
@@ -71,8 +72,18 @@ public class TestCycleFinder {
 		Set<Resource> loops = CycleFinder.findCycles( x );
 		assertEquals( CollectionUtils.set(x, y, z, a, b), loops );
 	}
+	
+	@Test @Ignore public void testViscousCycles() {
+		Model m = ModelIOUtils.modelFromTurtle( ":x :P :y. :x :P :w. :y :P :z. :w :P :z. :x :P :z. :z :P :x." );
+		Resource x = m.createResource( m.expandPrefix( ":x" ) );
+		Resource y = m.createResource( m.expandPrefix( ":y" ) );
+		Resource w = m.createResource( m.expandPrefix( ":w" ) );
+		Resource z = m.createResource( m.expandPrefix( ":z" ) );		
+		Set<Resource> loops = CycleFinder.findCycles( x );
+		assertEquals( CollectionUtils.set(x, y, w, z), loops );
+	}
 
-	@Test public void testHorribleExample() {
+	@Test  public void testHorribleExampleTime() {
 		StringBuilder sb = new StringBuilder();
 		for (String line: exampleLines) sb.append( line ).append( '\n' );
 		Model m = ModelIOUtils.modelFromTurtle( sb.toString() );

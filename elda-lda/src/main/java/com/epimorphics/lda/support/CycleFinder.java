@@ -26,6 +26,11 @@ public class CycleFinder {
 	public static Set<Resource> findCycles( Resource x ) {
 		CycleFinder cf = new CycleFinder();
 		cf.crawl( x );
+		
+//		System.err.print( ">>" );
+//		for (Resource c: cf.cyclic) System.err.print( " " + c.getLocalName() ); 
+//		System.err.println();
+		
 		return cf.cyclic;
 	}
 
@@ -36,22 +41,35 @@ public class CycleFinder {
 	public static Set<Resource> findCycles( Set<Resource> items ) {
 		CycleFinder cf = new CycleFinder();
 		for (Resource item: items) cf.crawl( item.asResource() );
+		
+//		System.err.print( ">>" );
+//		for (Resource c: cf.cyclic) System.err.println( " " + c.getLocalName() ); 
+//		System.err.println();
+		
 		return cf.cyclic;
 	}
 	
 	public void crawl( Resource x ) {
+//		System.err.println( ">> crawling " + x.getLocalName() );
 		if (inTrace.contains( x )) {
-			markCyclic( x );
-		} else if (!crawled.contains(x)) {
+//			System.err.print( ">>  in trace: " );
+			markCyclic( x ); // System.err.println();
+		} else if (crawled.contains(x)) {
+//			System.err.println( ">>  already crawled" );
+		} else {
 			startCrawling( x );
 			for (StmtIterator it = x.listProperties(); it.hasNext();) {
 				Statement s = it.next();
 				RDFNode n = s.getObject();
 				trace.property = s.getPredicate();
-				if (n.isResource()) crawl( n.asResource() );
+				if (n.isResource()) {
+//					System.err.println( ">>  doing " + x.getLocalName() + "." + trace.property.getLocalName() + " = " + n.asResource().getLocalName() );
+					crawl( n.asResource() );
+				}
 			}
 			doneCrawling( x );
 		}
+//		System.err.println( ">> crawled " + x.getLocalName() );
 	}
 	
 	public boolean inTrail( Resource x ) {
@@ -72,6 +90,7 @@ public class CycleFinder {
 	public void markCyclic(Resource x) {
 		CycleFinder.Trace t = trace;
 		while (true) {
+//			System.err.print( " " + t.head.getLocalName() );
 			cyclic.add( t.head );
 			if (t.head.equals(x)) break;
 			t = t.tail;
