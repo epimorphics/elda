@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.Set;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
@@ -73,7 +72,7 @@ public class TestCycleFinder {
 		assertEquals( CollectionUtils.set(x, y, z, a, b), loops );
 	}
 	
-	@Test @Ignore public void testViscousCycles() {
+	@Test public void testViscousCycles() {
 		Model m = ModelIOUtils.modelFromTurtle( ":x :P :y. :x :P :w. :y :P :z. :w :P :z. :x :P :z. :z :P :x." );
 		Resource x = m.createResource( m.expandPrefix( ":x" ) );
 		Resource y = m.createResource( m.expandPrefix( ":y" ) );
