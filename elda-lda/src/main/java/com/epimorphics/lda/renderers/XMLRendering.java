@@ -346,6 +346,7 @@ import org.w3c.dom.*;
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.support.CycleFinder;
+import com.epimorphics.lda.support.CycleFinder_Tarjan;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.rdf.model.*;
@@ -477,10 +478,10 @@ public class XMLRendering {
 		if (hasPrimaryTopic) { 	
 			Resource primaryTopic = xInMetaModel.getProperty( FOAF.primaryTopic ).getResource().inModel(objectModel);		
 			blocked.add( primaryTopic );
-			cyclic.addAll( CycleFinder.findCycles( primaryTopic ) );
+			cyclic.addAll( CycleFinder_Tarjan.findCyclics( objectModel ) );
 			topLevelExpansion(objectModel, t, findByNodeName( e, "primaryTopic" ));			
 		} else {			
-			cyclic.addAll( CycleFinder.findCycles( selectedObjectItems ) );
+			cyclic.addAll( CycleFinder_Tarjan.findCyclics( objectModel ) );
 			NodeList nl = findItems( e ).getChildNodes();
 			for (int i = 0; i < nl.getLength(); i += 1) {
 				topLevelExpansion(objectModel, t, (Element) nl.item(i));
