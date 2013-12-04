@@ -8,6 +8,9 @@
 
 package com.epimorphics.lda.restlets;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
@@ -15,9 +18,8 @@ import com.epimorphics.lda.cache.Cache;
 
 @Path( "/control/clear-cache") public class ClearCache 
 	{
-	@GET @Produces("text/plain") public Response clearCache() 
-		{ // should really not use GET for this
+	@POST @Produces("text/plain") public Response clearCache() throws URISyntaxException { 
 		Cache.Registry.clearAll();
-		return RouterRestlet.returnAs( "caches cleared.", "text/plain" );
-		}
+		return Response.seeOther( new URI("control/show-cache")).build();
 	}
+}

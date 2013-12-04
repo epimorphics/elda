@@ -18,8 +18,9 @@ import com.epimorphics.lda.cache.Cache;
 		{
 		StringBuilder sb = new StringBuilder();
 		sb.append( "<html><head></head><body style='background-color: #aaffaa'>\n" );
-		sb.append( "<h1>reset cache counts</h1>\n" );
-		sb.append( "<form method='POST' action='reset-counts'><input type='SUBMIT' value='RESET'></form>\n" );
+		sb.append( "<h1>Elda cache state</h1>\n" );
+		sb.append( "<form method='POST' action='reset-counts'><input type='SUBMIT' value='RESET COUNTS'></form>\n" );
+		sb.append( "<form method='POST' action='clear-cache'><input type='SUBMIT' value='CLEAR CACHE'></form>\n" );
 		sb.append( "<h1>cache state</h1>\n" );
 		Cache.Registry.showAll( sb );
 		sb.append( "</body></html>\n" );

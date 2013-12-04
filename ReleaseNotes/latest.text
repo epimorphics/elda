@@ -2,11 +2,15 @@
 | Elda 1.2.27 (DEVELOPING)
 
 * The cycle detector used by the XML renderer (and hence by the
-  usual HTML renderer) turned out to have draedful performance
+  usual HTML renderer) turned out to have dreadful performance
   on large tangled data because it didn't mark as "done" nodes
   that it had finished with. Added a new map to CycleFinder and
   adjusted it during crawl. Also took the opportunity to rename
   methods hintingly.
+
+* The control/clear-cache request must now be a POST, not a GET.
+  The contro/show-cache page has been updated with a button
+  that makes such a POST.
 
 + ----------------------------------------------------------------------
 | Elda 1.2.26 (RELEASED)    

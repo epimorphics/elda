@@ -1393,6 +1393,22 @@ The available cache policies are
 	on individual endpoints.
 </p>
 
+<h3>external control of the Elda cache</h3>
+
+<p>
+If a request to Elda has a <code>pragma</code> or <code>cache-control:</code> header
+with value <code>no-cache</code> (such as a CRTL/F5 refresh might
+cause on Firefox) then that request is not served from the cache.
+The resulting response is then cached.
+</p>
+
+<p>
+The Elda-webapp URL <code>control/show-cache</code> shows information
+about the Elda cache state and provides two buttons: one to reset
+the statistics count, and another to clear the Elda cache completely.
+(The latter is exactly equivalent to POSTing to <code>control/clear-cache</code>.)
+</p>
+
 <h1>Shortnames in Elda</h1>
 
 <h2 id="shortname-restrictions">Restrictions on shortname selection</h2>

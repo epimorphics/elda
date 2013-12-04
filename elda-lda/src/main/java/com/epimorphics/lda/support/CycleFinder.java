@@ -1,138 +1,155 @@
 package com.epimorphics.lda.support;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.StmtIterator;
 
 /**
-    CycleFinder finds the resources in a model that are involved in
-    cycles when the model is entered using specified resource.
-    (Any parts of the model that are not reachable from that
-    resource are not considered. "Involvement" does not count
-    being used as a predicate.)
+ 	<p>
+	Find the cyclic nodes in a graph, using Tarjen's algorithm
+	for finding strongly connected components: see
+	
+	<a href="http://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm">
+	the Wikipedia entry</a>.
+	</p>
+	
+	<p>
+	The model underlying the resources to be searched for cyclicity is
+	converted to a simpler form that collapses all the properties linking
+	A to B into a single edge and makes the index fields of a node directly
+	accessible.
+	</p>
 */
 public class CycleFinder {
 
-	CycleFinder.Trace trace = null;
-	Set<Resource> inTrace = new HashSet<Resource>();
-	Set<Resource> cyclic = new HashSet<Resource>();
-	Set<Resource> crawled = new HashSet<Resource>();
+	int index = 0;
 	
-	/**
-	    Answer all the resources in the model that x is in
-	    that are accessible from x and are involved in cycles.
-	*/
+	Stack<Node> S = new Stack<Node>();
+	
+	Set<Resource> cyclics = new HashSet<Resource>();
+
+	Map<Resource, Node> nodes = new HashMap<Resource, Node>();
+	
+	CycleFinder(Model m) {
+		convert(m);
+	}
+	
 	public static Set<Resource> findCycles( Resource x ) {
-
-		Set<Resource> them = new HashSet<Resource>(); 
-		them.add(x); 
-		return CycleFinder_Tarjan.findCyclics(them);
+		return findCyclics(x.getModel());
+	}
+	
+	public static Set<Resource> findCyclics(Model m) {
+		return new CycleFinder(m).find_cyclics(m);
+	}
+	
+	Set<Resource> find_cyclics(Model m) {
+		for (Map.Entry<Resource, Node> e: nodes.entrySet()) {
+			stronglyConnect(e.getValue());
+		}
+		return cyclics;
+	}
+	
+	public static class Node {
 		
-//		CycleFinder cf = new CycleFinder();
-//		cf.crawl( x );
-//		
-//		Set<Resource> them = new HashSet<Resource>(); 
-//		them.add(x); 
-//		Set<Resource> tc = CycleFinder_Tarjan.findCyclics(them);
-//		
-//		System.err.print( ">>" );
-//		for (Resource c: cf.cyclic) System.err.print( " " + c.getLocalName() ); 
-//		System.err.println();
-//		
-//		if (tc.equals(cf.cyclic)) {} else {
-//			System.err.println( ">> DIFFERENT");
-//			System.err.println( ">> for: " + x );
-//			System.err.println( ">> tarjan: " + tc );
-//			System.err.println( ">> homwgrown: " + cf.cyclic );
-//		}
-//		
-//		return cf.cyclic;
+		final Resource r;
+		int index;
+		int lowlink;
+		
+		Set<Node> others = new HashSet<Node>();
+		
+		Node(Resource r) {
+			this.r = r;
+			this.index = -1;
+			this.lowlink = -1;
+		}
+		
+		void addEdgeTo(Node other) {
+			others.add(other);
+		}
+		
+		boolean isSelfCyclic() {
+			return others.contains(this);
+		}
+	}
+	
+	/**
+	    Convert a model to a set of nodes with edges to other nodes
+	*/
+	void convert(Model m) {
+		for (StmtIterator it = m.listStatements(); it.hasNext();) {
+			Statement s = it.next();
+			RDFNode o = s.getObject();
+			if (o.isResource()) convert(s.getSubject(), o.asResource());
+		}
+	}
+	
+	void convert(Resource s, Resource o) {
+		convert(s).addEdgeTo(convert(o));
+	}
+	
+	Node convert(Resource x) {
+		Node n = nodes.get(x);
+		if (n == null) nodes.put(x, n = new Node(x));
+		return n;
+	}
+	
+	boolean isSelfCyclic(Resource x) {
+		return convert(x).isSelfCyclic();
+	}
+	
+	/**
+	    The Tarjan algorithm.
+	*/
+	void stronglyConnect(Node v) {
+		v.index = index;
+		v.lowlink = index;
+		index += 1;
+		S.push(v);	
+		
+		for (Node w: v.others) {
+			if (w.index < 0) {
+				stronglyConnect(w);
+				v.lowlink = Math.min(v.lowlink, w.lowlink);
+			} else if (S.contains(w)) {
+				v.lowlink = Math.min(v.lowlink, w.index);
+			}
+		}
+		
+		if (v.lowlink == v.index) {
+			CycleFinder.Component c = new Component();
+			while (true) {
+				Node w = S.pop();
+				c.add( w.r );
+				if (v == w) break;
+			}
+			hereIsAComponent(c);
+		}
+	}
+	
+	/**
+	    Cyclic nodes are those in a nonsingular strongly connected
+	    component or those that have an edge back to themselves.
+	*/
+	void hereIsAComponent(CycleFinder.Component c) {
+		if (c.size() > 1 || isSelfCyclic(c.iterator().next())) {
+			cyclics.addAll(c);
+		}
 	}
 
 	/**
-	    Answer all the resources in the model that items are in
-	    which are accessible from x and are involved in cycles.
+	    Just to abbreviate `HashSet<Resource>`.
 	*/
-	public static Set<Resource> findCycles( Set<Resource> items ) {
+	static class Component extends HashSet<Resource> {
 		
-		return CycleFinder_Tarjan.findCyclics(items);
-		
-//		CycleFinder cf = new CycleFinder();
-//		for (Resource item: items) cf.crawl( item );
-//		
-//		Set<Resource> tc = CycleFinder_Tarjan.findCyclics(items);
-//		
-//		if (tc.equals(cf.cyclic)) {} else {
-//			System.err.println( ">> DIFFERENT");
-//			System.err.println( ">> for: " + items );
-//			System.err.println( ">> tarjan: " + tc );
-//			System.err.println( ">> homwgrown: " + cf.cyclic );
-//		}
-//		
-//		System.err.print( ">>" );
-//		for (Resource c: cf.cyclic) System.err.println( " " + c.getLocalName() ); 
-//		System.err.println();
-//		
-//		return cf.cyclic;
-	}
-	
-	public void crawl( Resource x ) {
-//		System.err.println( ">> crawling " + x.getLocalName() );
-		if (inTrace.contains( x )) {
-//			System.err.print( ">>  in trace: " );
-			markCyclic( x ); // System.err.println();
-		} else if (crawled.contains(x)) {
-//			System.err.println( ">>  already crawled" );
-		} else {
-			startCrawling( x );
-			for (StmtIterator it = x.listProperties(); it.hasNext();) {
-				Statement s = it.next();
-				RDFNode n = s.getObject();
-				trace.property = s.getPredicate();
-				if (n.isResource()) {
-//					System.err.println( ">>  doing " + x.getLocalName() + "." + trace.property.getLocalName() + " = " + n.asResource().getLocalName() );
-					crawl( n.asResource() );
-				}
-			}
-			doneCrawling( x );
-		}
-//		System.err.println( ">> crawled " + x.getLocalName() );
-	}
-	
-	public boolean inTrail( Resource x ) {
-		return inTrace.contains( x );
-	}
-	
-	public void startCrawling( Resource x ) {
-		inTrace.add( x );
-		trace = new Trace( x, trace );
-	}
+		private static final long serialVersionUID = 1L;
+	}		
 
-	public void doneCrawling(Resource x) {
-		trace = trace.tail;
-		inTrace.remove( x );
-		crawled.add(x);
-	}
-
-	public void markCyclic(Resource x) {
-		CycleFinder.Trace t = trace;
-		while (true) {
-//			System.err.print( " " + t.head.getLocalName() );
-			cyclic.add( t.head );
-			if (t.head.equals(x)) break;
-			t = t.tail;
-		}
-	}
-
-	static class Trace {
-		Resource head;
-		Property property;
-		CycleFinder.Trace tail;
-		
-		Trace(Resource head, CycleFinder.Trace tail) {
-			this.head = head; this.tail = tail;
-		}
-	}
-	
-	
 }

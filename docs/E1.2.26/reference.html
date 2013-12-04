@@ -1393,6 +1393,15 @@ The available cache policies are
 	on individual endpoints.
 </p>
 
+<h3>external control of the Elda cache</h3>
+
+<p>
+If a request to Elda has a <b>pragma</b> or <b>cache-control:</b> header
+with value <b>no-cache</b> (such as a CRTL/F5 refresh might
+cause on Firefox) then that request is not served from the cache.
+The resulting response is then cached.
+</p>
+
 <h1>Shortnames in Elda</h1>
 
 <h2 id="shortname-restrictions">Restrictions on shortname selection</h2>
