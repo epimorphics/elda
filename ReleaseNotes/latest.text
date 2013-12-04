@@ -9,7 +9,7 @@
   methods hintingly.
 
 * The control/clear-cache request must now be a POST, not a GET.
-  The contro/show-cache page has been updated with a button
+  The control/show-cache page has been updated with a button
   that makes such a POST.
 
 + ----------------------------------------------------------------------
