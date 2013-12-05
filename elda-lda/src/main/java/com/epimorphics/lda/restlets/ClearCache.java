@@ -18,8 +18,13 @@ import com.epimorphics.lda.cache.Cache;
 
 @Path( "/control/clear-cache") public class ClearCache 
 	{
-	@POST @Produces("text/plain") public Response clearCache() throws URISyntaxException { 
+	@POST @Produces("text/plain") public Response clearCachePOST() throws URISyntaxException { 
 		Cache.Registry.clearAll();
 		return Response.seeOther( new URI("control/show-cache")).build();
+	}
+	
+	@GET @Produces("text/plain") public Response clearCacheGET() throws URISyntaxException { 
+		Cache.Registry.clearAll();
+		return Response.seeOther( new URI("control/show-cache?warn=true")).build();
 	}
 }

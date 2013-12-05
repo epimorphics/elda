@@ -1,5 +1,5 @@
 + ----------------------------------------------------------------------
-| Elda 1.2.27 (DEVELOPING)
+| Elda 1.2.27 (RELEASED)
 
 * The cycle detector used by the XML renderer (and hence by the
   usual HTML renderer) turned out to have dreadful performance
@@ -8,9 +8,11 @@
   adjusted it during crawl. Also took the opportunity to rename
   methods hintingly.
 
-* The control/clear-cache request must now be a POST, not a GET.
+* The control/clear-cache request may now be a POST, not a GET.
   The control/show-cache page has been updated with a button
-  that makes such a POST.
+  that makes such a POST. The response page for a clear-cache
+  is control/show-cache; if the clear was performed using GET
+  then the page warns that this was inappropriate.
 
 + ----------------------------------------------------------------------
 | Elda 1.2.26 (RELEASED)    
