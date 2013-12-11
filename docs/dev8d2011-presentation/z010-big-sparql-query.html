@@ -1,0 +1,743 @@
+<html>
+<head>
+<title>dev8d Elda presentation</title>
+<link href="style.css" type="text/css" rel="stylesheet"></link>
+</head>
+<body>
+<div class="main">
+
+<div class="heading">
+<a href="http://www.epimorphics.com">
+<img class="logo" src="epilogo-240.png">
+</a>
+<h1>Elda</h1>
+<h2>An implementation of the Linked Data API</h2>
+</div>
+
+<a href="p000-and-so-it-begins.html">FIRST</a>
+<a href="p160-in-fire.html">PREV</a>
+<a href="z020-rdf-xml-example.html">NEXT</a>
+<h2>The Big Bang</h2>
+
+Generated SPARQL query for a LDA request to transport.data.gov.uk,
+<a href="http://transport.data.gov.uk/doc/airport?_page=1&_pageSize=50&_metadata=all%2Cviews%2Cformats%2Cexecution%2Cbindings">
+http://transport.data.gov.uk/doc/airport?_page=1&amp;_pageSize=50&amp;_metadata=all%2Cviews%2Cformats%2Cexecution%2Cbindings
+</a>
+
+
+<pre>
+
+PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;
+PREFIX naptan: &lt;http://transport.data.gov.uk/def/naptan/&gt;
+CONSTRUCT {
+    # constructing properties of http://transport.data.gov.uk/id/airport/WIC
+    &lt;http://transport.data.gov.uk/id/airport/WIC&gt; skos:prefLabel ?var_1_0 .
+    &lt;http://transport.data.gov.uk/id/airport/WIC&gt; skos:altLabel ?var_2_0 .
+    &lt;http://transport.data.gov.uk/id/airport/WIC&gt; naptan:iataRef ?var_3_0 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/SZD
+    &lt;http://transport.data.gov.uk/id/airport/SZD&gt; skos:prefLabel ?var_1_1 .
+    &lt;http://transport.data.gov.uk/id/airport/SZD&gt; skos:altLabel ?var_2_1 .
+    &lt;http://transport.data.gov.uk/id/airport/SZD&gt; naptan:iataRef ?var_3_1 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/SWS
+    &lt;http://transport.data.gov.uk/id/airport/SWS&gt; skos:prefLabel ?var_1_2 .
+    &lt;http://transport.data.gov.uk/id/airport/SWS&gt; skos:altLabel ?var_2_2 .
+    &lt;http://transport.data.gov.uk/id/airport/SWS&gt; naptan:iataRef ?var_3_2 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/NDY
+    &lt;http://transport.data.gov.uk/id/airport/NDY&gt; skos:prefLabel ?var_1_3 .
+    &lt;http://transport.data.gov.uk/id/airport/NDY&gt; skos:altLabel ?var_2_3 .
+    &lt;http://transport.data.gov.uk/id/airport/NDY&gt; naptan:iataRef ?var_3_3 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/NCL
+    &lt;http://transport.data.gov.uk/id/airport/NCL&gt; skos:prefLabel ?var_1_4 .
+    &lt;http://transport.data.gov.uk/id/airport/NCL&gt; skos:altLabel ?var_2_4 .
+    &lt;http://transport.data.gov.uk/id/airport/NCL&gt; naptan:iataRef ?var_3_4 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/MSE
+    &lt;http://transport.data.gov.uk/id/airport/MSE&gt; skos:prefLabel ?var_1_5 .
+    &lt;http://transport.data.gov.uk/id/airport/MSE&gt; skos:altLabel ?var_2_5 .
+    &lt;http://transport.data.gov.uk/id/airport/MSE&gt; naptan:iataRef ?var_3_5 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/MME
+    &lt;http://transport.data.gov.uk/id/airport/MME&gt; skos:prefLabel ?var_1_6 .
+    &lt;http://transport.data.gov.uk/id/airport/MME&gt; skos:altLabel ?var_2_6 .
+    &lt;http://transport.data.gov.uk/id/airport/MME&gt; naptan:iataRef ?var_3_6 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/LPL
+    &lt;http://transport.data.gov.uk/id/airport/LPL&gt; skos:prefLabel ?var_1_7 .
+    &lt;http://transport.data.gov.uk/id/airport/LPL&gt; skos:altLabel ?var_2_7 .
+    &lt;http://transport.data.gov.uk/id/airport/LPL&gt; naptan:iataRef ?var_3_7 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/LEQ
+    &lt;http://transport.data.gov.uk/id/airport/LEQ&gt; skos:prefLabel ?var_1_8 .
+    &lt;http://transport.data.gov.uk/id/airport/LEQ&gt; skos:altLabel ?var_2_8 .
+    &lt;http://transport.data.gov.uk/id/airport/LEQ&gt; naptan:iataRef ?var_3_8 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/CAL
+    &lt;http://transport.data.gov.uk/id/airport/CAL&gt; skos:prefLabel ?var_1_9 .
+    &lt;http://transport.data.gov.uk/id/airport/CAL&gt; skos:altLabel ?var_2_9 .
+    &lt;http://transport.data.gov.uk/id/airport/CAL&gt; naptan:iataRef ?var_3_9 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/ABZ
+    &lt;http://transport.data.gov.uk/id/airport/ABZ&gt; skos:prefLabel ?var_1_10 .
+    &lt;http://transport.data.gov.uk/id/airport/ABZ&gt; skos:altLabel ?var_2_10 .
+    &lt;http://transport.data.gov.uk/id/airport/ABZ&gt; naptan:iataRef ?var_3_10 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/STN
+    &lt;http://transport.data.gov.uk/id/airport/STN&gt; skos:prefLabel ?var_1_11 .
+    &lt;http://transport.data.gov.uk/id/airport/STN&gt; skos:altLabel ?var_2_11 .
+    &lt;http://transport.data.gov.uk/id/airport/STN&gt; naptan:iataRef ?var_3_11 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/SCS
+    &lt;http://transport.data.gov.uk/id/airport/SCS&gt; skos:prefLabel ?var_1_12 .
+    &lt;http://transport.data.gov.uk/id/airport/SCS&gt; skos:altLabel ?var_2_12 .
+    &lt;http://transport.data.gov.uk/id/airport/SCS&gt; naptan:iataRef ?var_3_12 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/PLH
+    &lt;http://transport.data.gov.uk/id/airport/PLH&gt; skos:prefLabel ?var_1_13 .
+    &lt;http://transport.data.gov.uk/id/airport/PLH&gt; skos:altLabel ?var_2_13 .
+    &lt;http://transport.data.gov.uk/id/airport/PLH&gt; naptan:iataRef ?var_3_13 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/OXF
+    &lt;http://transport.data.gov.uk/id/airport/OXF&gt; skos:prefLabel ?var_1_14 .
+    &lt;http://transport.data.gov.uk/id/airport/OXF&gt; skos:altLabel ?var_2_14 .
+    &lt;http://transport.data.gov.uk/id/airport/OXF&gt; naptan:iataRef ?var_3_14 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/OBN
+    &lt;http://transport.data.gov.uk/id/airport/OBN&gt; skos:prefLabel ?var_1_15 .
+    &lt;http://transport.data.gov.uk/id/airport/OBN&gt; skos:altLabel ?var_2_15 .
+    &lt;http://transport.data.gov.uk/id/airport/OBN&gt; naptan:iataRef ?var_3_15 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/ESH
+    &lt;http://transport.data.gov.uk/id/airport/ESH&gt; skos:prefLabel ?var_1_16 .
+    &lt;http://transport.data.gov.uk/id/airport/ESH&gt; skos:altLabel ?var_2_16 .
+    &lt;http://transport.data.gov.uk/id/airport/ESH&gt; naptan:iataRef ?var_3_16 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/DCS
+    &lt;http://transport.data.gov.uk/id/airport/DCS&gt; skos:prefLabel ?var_1_17 .
+    &lt;http://transport.data.gov.uk/id/airport/DCS&gt; skos:altLabel ?var_2_17 .
+    &lt;http://transport.data.gov.uk/id/airport/DCS&gt; naptan:iataRef ?var_3_17 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/BRR
+    &lt;http://transport.data.gov.uk/id/airport/BRR&gt; skos:prefLabel ?var_1_18 .
+    &lt;http://transport.data.gov.uk/id/airport/BRR&gt; skos:altLabel ?var_2_18 .
+    &lt;http://transport.data.gov.uk/id/airport/BRR&gt; naptan:iataRef ?var_3_18 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/LHR
+    &lt;http://transport.data.gov.uk/id/airport/LHR&gt; skos:prefLabel ?var_1_19 .
+    &lt;http://transport.data.gov.uk/id/airport/LHR&gt; skos:altLabel ?var_2_19 .
+    &lt;http://transport.data.gov.uk/id/airport/LHR&gt; naptan:iataRef ?var_3_19 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/CWL
+    &lt;http://transport.data.gov.uk/id/airport/CWL&gt; skos:prefLabel ?var_1_20 .
+    &lt;http://transport.data.gov.uk/id/airport/CWL&gt; skos:altLabel ?var_2_20 .
+    &lt;http://transport.data.gov.uk/id/airport/CWL&gt; naptan:iataRef ?var_3_20 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/HUY
+    &lt;http://transport.data.gov.uk/id/airport/HUY&gt; skos:prefLabel ?var_1_21 .
+    &lt;http://transport.data.gov.uk/id/airport/HUY&gt; skos:altLabel ?var_2_21 .
+    &lt;http://transport.data.gov.uk/id/airport/HUY&gt; naptan:iataRef ?var_3_21 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/LGW
+    &lt;http://transport.data.gov.uk/id/airport/LGW&gt; skos:prefLabel ?var_1_22 .
+    &lt;http://transport.data.gov.uk/id/airport/LGW&gt; skos:altLabel ?var_2_22 .
+    &lt;http://transport.data.gov.uk/id/airport/LGW&gt; naptan:iataRef ?var_3_22 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/NQY
+    &lt;http://transport.data.gov.uk/id/airport/NQY&gt; skos:prefLabel ?var_1_23 .
+    &lt;http://transport.data.gov.uk/id/airport/NQY&gt; skos:altLabel ?var_2_23 .
+    &lt;http://transport.data.gov.uk/id/airport/NQY&gt; naptan:iataRef ?var_3_23 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/PPW
+    &lt;http://transport.data.gov.uk/id/airport/PPW&gt; skos:prefLabel ?var_1_24 .
+    &lt;http://transport.data.gov.uk/id/airport/PPW&gt; skos:altLabel ?var_2_24 .
+    &lt;http://transport.data.gov.uk/id/airport/PPW&gt; naptan:iataRef ?var_3_24 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/PZE
+    &lt;http://transport.data.gov.uk/id/airport/PZE&gt; skos:prefLabel ?var_1_25 .
+    &lt;http://transport.data.gov.uk/id/airport/PZE&gt; skos:altLabel ?var_2_25 .
+    &lt;http://transport.data.gov.uk/id/airport/PZE&gt; naptan:iataRef ?var_3_25 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/UNT
+    &lt;http://transport.data.gov.uk/id/airport/UNT&gt; skos:prefLabel ?var_1_26 .
+    &lt;http://transport.data.gov.uk/id/airport/UNT&gt; skos:altLabel ?var_2_26 .
+    &lt;http://transport.data.gov.uk/id/airport/UNT&gt; naptan:iataRef ?var_3_26 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/VLY
+    &lt;http://transport.data.gov.uk/id/airport/VLY&gt; skos:prefLabel ?var_1_27 .
+    &lt;http://transport.data.gov.uk/id/airport/VLY&gt; skos:altLabel ?var_2_27 .
+    &lt;http://transport.data.gov.uk/id/airport/VLY&gt; naptan:iataRef ?var_3_27 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/WHS
+    &lt;http://transport.data.gov.uk/id/airport/WHS&gt; skos:prefLabel ?var_1_28 .
+    &lt;http://transport.data.gov.uk/id/airport/WHS&gt; skos:altLabel ?var_2_28 .
+    &lt;http://transport.data.gov.uk/id/airport/WHS&gt; naptan:iataRef ?var_3_28 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/SOU
+    &lt;http://transport.data.gov.uk/id/airport/SOU&gt; skos:prefLabel ?var_1_29 .
+    &lt;http://transport.data.gov.uk/id/airport/SOU&gt; skos:altLabel ?var_2_29 .
+    &lt;http://transport.data.gov.uk/id/airport/SOU&gt; naptan:iataRef ?var_3_29 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/LSI
+    &lt;http://transport.data.gov.uk/id/airport/LSI&gt; skos:prefLabel ?var_1_30 .
+    &lt;http://transport.data.gov.uk/id/airport/LSI&gt; skos:altLabel ?var_2_30 .
+    &lt;http://transport.data.gov.uk/id/airport/LSI&gt; naptan:iataRef ?var_3_30 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/INV
+    &lt;http://transport.data.gov.uk/id/airport/INV&gt; skos:prefLabel ?var_1_31 .
+    &lt;http://transport.data.gov.uk/id/airport/INV&gt; skos:altLabel ?var_2_31 .
+    &lt;http://transport.data.gov.uk/id/airport/INV&gt; naptan:iataRef ?var_3_31 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/GLA
+    &lt;http://transport.data.gov.uk/id/airport/GLA&gt; skos:prefLabel ?var_1_32 .
+    &lt;http://transport.data.gov.uk/id/airport/GLA&gt; skos:altLabel ?var_2_32 .
+    &lt;http://transport.data.gov.uk/id/airport/GLA&gt; naptan:iataRef ?var_3_32 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/SOY
+    &lt;http://transport.data.gov.uk/id/airport/SOY&gt; skos:prefLabel ?var_1_33 .
+    &lt;http://transport.data.gov.uk/id/airport/SOY&gt; skos:altLabel ?var_2_33 .
+    &lt;http://transport.data.gov.uk/id/airport/SOY&gt; naptan:iataRef ?var_3_33 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/SEN
+    &lt;http://transport.data.gov.uk/id/airport/SEN&gt; skos:prefLabel ?var_1_34 .
+    &lt;http://transport.data.gov.uk/id/airport/SEN&gt; skos:altLabel ?var_2_34 .
+    &lt;http://transport.data.gov.uk/id/airport/SEN&gt; naptan:iataRef ?var_3_34 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/CVT
+    &lt;http://transport.data.gov.uk/id/airport/CVT&gt; skos:prefLabel ?var_1_35 .
+    &lt;http://transport.data.gov.uk/id/airport/CVT&gt; skos:altLabel ?var_2_35 .
+    &lt;http://transport.data.gov.uk/id/airport/CVT&gt; naptan:iataRef ?var_3_35 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/CSA
+    &lt;http://transport.data.gov.uk/id/airport/CSA&gt; skos:prefLabel ?var_1_36 .
+    &lt;http://transport.data.gov.uk/id/airport/CSA&gt; skos:altLabel ?var_2_36 .
+    &lt;http://transport.data.gov.uk/id/airport/CSA&gt; naptan:iataRef ?var_3_36 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/OUK
+    &lt;http://transport.data.gov.uk/id/airport/OUK&gt; skos:prefLabel ?var_1_37 .
+    &lt;http://transport.data.gov.uk/id/airport/OUK&gt; skos:altLabel ?var_2_37 .
+    &lt;http://transport.data.gov.uk/id/airport/OUK&gt; naptan:iataRef ?var_3_37 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/LYX
+    &lt;http://transport.data.gov.uk/id/airport/LYX&gt; skos:prefLabel ?var_1_38 .
+    &lt;http://transport.data.gov.uk/id/airport/LYX&gt; skos:altLabel ?var_2_38 .
+    &lt;http://transport.data.gov.uk/id/airport/LYX&gt; naptan:iataRef ?var_3_38 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/LBA
+    &lt;http://transport.data.gov.uk/id/airport/LBA&gt; skos:prefLabel ?var_1_39 .
+    &lt;http://transport.data.gov.uk/id/airport/LBA&gt; skos:altLabel ?var_2_39 .
+    &lt;http://transport.data.gov.uk/id/airport/LBA&gt; naptan:iataRef ?var_3_39 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/EXT
+    &lt;http://transport.data.gov.uk/id/airport/EXT&gt; skos:prefLabel ?var_1_40 .
+    &lt;http://transport.data.gov.uk/id/airport/EXT&gt; skos:altLabel ?var_2_40 .
+    &lt;http://transport.data.gov.uk/id/airport/EXT&gt; naptan:iataRef ?var_3_40 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/BLK
+    &lt;http://transport.data.gov.uk/id/airport/BLK&gt; skos:prefLabel ?var_1_41 .
+    &lt;http://transport.data.gov.uk/id/airport/BLK&gt; skos:altLabel ?var_2_41 .
+    &lt;http://transport.data.gov.uk/id/airport/BLK&gt; naptan:iataRef ?var_3_41 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/LCY
+    &lt;http://transport.data.gov.uk/id/airport/LCY&gt; skos:prefLabel ?var_1_42 .
+    &lt;http://transport.data.gov.uk/id/airport/LCY&gt; skos:altLabel ?var_2_42 .
+    &lt;http://transport.data.gov.uk/id/airport/LCY&gt; naptan:iataRef ?var_3_42 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/NRL
+    &lt;http://transport.data.gov.uk/id/airport/NRL&gt; skos:prefLabel ?var_1_43 .
+    &lt;http://transport.data.gov.uk/id/airport/NRL&gt; skos:altLabel ?var_2_43 .
+    &lt;http://transport.data.gov.uk/id/airport/NRL&gt; naptan:iataRef ?var_3_43 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/KOI
+    &lt;http://transport.data.gov.uk/id/airport/KOI&gt; skos:prefLabel ?var_1_44 .
+    &lt;http://transport.data.gov.uk/id/airport/KOI&gt; skos:altLabel ?var_2_44 .
+    &lt;http://transport.data.gov.uk/id/airport/KOI&gt; naptan:iataRef ?var_3_44 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/ISC
+    &lt;http://transport.data.gov.uk/id/airport/ISC&gt; skos:prefLabel ?var_1_45 .
+    &lt;http://transport.data.gov.uk/id/airport/ISC&gt; skos:altLabel ?var_2_45 .
+    &lt;http://transport.data.gov.uk/id/airport/ISC&gt; naptan:iataRef ?var_3_45 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/PSV
+    &lt;http://transport.data.gov.uk/id/airport/PSV&gt; skos:prefLabel ?var_1_46 .
+    &lt;http://transport.data.gov.uk/id/airport/PSV&gt; skos:altLabel ?var_2_46 .
+    &lt;http://transport.data.gov.uk/id/airport/PSV&gt; naptan:iataRef ?var_3_46 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/LTN
+    &lt;http://transport.data.gov.uk/id/airport/LTN&gt; skos:prefLabel ?var_1_47 .
+    &lt;http://transport.data.gov.uk/id/airport/LTN&gt; skos:altLabel ?var_2_47 .
+    &lt;http://transport.data.gov.uk/id/airport/LTN&gt; naptan:iataRef ?var_3_47 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/EMA
+    &lt;http://transport.data.gov.uk/id/airport/EMA&gt; skos:prefLabel ?var_1_48 .
+    &lt;http://transport.data.gov.uk/id/airport/EMA&gt; skos:altLabel ?var_2_48 .
+    &lt;http://transport.data.gov.uk/id/airport/EMA&gt; naptan:iataRef ?var_3_48 .
+
+    # constructing properties of http://transport.data.gov.uk/id/airport/BRS
+    &lt;http://transport.data.gov.uk/id/airport/BRS&gt; skos:prefLabel ?var_1_49 .
+    &lt;http://transport.data.gov.uk/id/airport/BRS&gt; skos:altLabel ?var_2_49 .
+    &lt;http://transport.data.gov.uk/id/airport/BRS&gt; naptan:iataRef ?var_3_49 .
+} WHERE {
+  # identifying properties of http://transport.data.gov.uk/id/airport/WIC
+  {
+    &lt;http://transport.data.gov.uk/id/airport/WIC&gt; skos:prefLabel ?var_1_0 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/WIC&gt; skos:altLabel ?var_2_0 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/WIC&gt; naptan:iataRef ?var_3_0 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/SZD
+  {
+    &lt;http://transport.data.gov.uk/id/airport/SZD&gt; skos:prefLabel ?var_1_1 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SZD&gt; skos:altLabel ?var_2_1 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SZD&gt; naptan:iataRef ?var_3_1 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/SWS
+  {
+    &lt;http://transport.data.gov.uk/id/airport/SWS&gt; skos:prefLabel ?var_1_2 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SWS&gt; skos:altLabel ?var_2_2 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SWS&gt; naptan:iataRef ?var_3_2 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/NDY
+  {
+    &lt;http://transport.data.gov.uk/id/airport/NDY&gt; skos:prefLabel ?var_1_3 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/NDY&gt; skos:altLabel ?var_2_3 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/NDY&gt; naptan:iataRef ?var_3_3 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/NCL
+  {
+    &lt;http://transport.data.gov.uk/id/airport/NCL&gt; skos:prefLabel ?var_1_4 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/NCL&gt; skos:altLabel ?var_2_4 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/NCL&gt; naptan:iataRef ?var_3_4 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/MSE
+  {
+    &lt;http://transport.data.gov.uk/id/airport/MSE&gt; skos:prefLabel ?var_1_5 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/MSE&gt; skos:altLabel ?var_2_5 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/MSE&gt; naptan:iataRef ?var_3_5 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/MME
+  {
+    &lt;http://transport.data.gov.uk/id/airport/MME&gt; skos:prefLabel ?var_1_6 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/MME&gt; skos:altLabel ?var_2_6 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/MME&gt; naptan:iataRef ?var_3_6 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/LPL
+  {
+    &lt;http://transport.data.gov.uk/id/airport/LPL&gt; skos:prefLabel ?var_1_7 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LPL&gt; skos:altLabel ?var_2_7 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LPL&gt; naptan:iataRef ?var_3_7 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/LEQ
+  {
+    &lt;http://transport.data.gov.uk/id/airport/LEQ&gt; skos:prefLabel ?var_1_8 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LEQ&gt; skos:altLabel ?var_2_8 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LEQ&gt; naptan:iataRef ?var_3_8 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/CAL
+  {
+    &lt;http://transport.data.gov.uk/id/airport/CAL&gt; skos:prefLabel ?var_1_9 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/CAL&gt; skos:altLabel ?var_2_9 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/CAL&gt; naptan:iataRef ?var_3_9 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/ABZ
+  {
+    &lt;http://transport.data.gov.uk/id/airport/ABZ&gt; skos:prefLabel ?var_1_10 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/ABZ&gt; skos:altLabel ?var_2_10 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/ABZ&gt; naptan:iataRef ?var_3_10 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/STN
+  {
+    &lt;http://transport.data.gov.uk/id/airport/STN&gt; skos:prefLabel ?var_1_11 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/STN&gt; skos:altLabel ?var_2_11 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/STN&gt; naptan:iataRef ?var_3_11 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/SCS
+  {
+    &lt;http://transport.data.gov.uk/id/airport/SCS&gt; skos:prefLabel ?var_1_12 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SCS&gt; skos:altLabel ?var_2_12 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SCS&gt; naptan:iataRef ?var_3_12 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/PLH
+  {
+    &lt;http://transport.data.gov.uk/id/airport/PLH&gt; skos:prefLabel ?var_1_13 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/PLH&gt; skos:altLabel ?var_2_13 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/PLH&gt; naptan:iataRef ?var_3_13 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/OXF
+  {
+    &lt;http://transport.data.gov.uk/id/airport/OXF&gt; skos:prefLabel ?var_1_14 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/OXF&gt; skos:altLabel ?var_2_14 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/OXF&gt; naptan:iataRef ?var_3_14 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/OBN
+  {
+    &lt;http://transport.data.gov.uk/id/airport/OBN&gt; skos:prefLabel ?var_1_15 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/OBN&gt; skos:altLabel ?var_2_15 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/OBN&gt; naptan:iataRef ?var_3_15 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/ESH
+  {
+    &lt;http://transport.data.gov.uk/id/airport/ESH&gt; skos:prefLabel ?var_1_16 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/ESH&gt; skos:altLabel ?var_2_16 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/ESH&gt; naptan:iataRef ?var_3_16 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/DCS
+  {
+    &lt;http://transport.data.gov.uk/id/airport/DCS&gt; skos:prefLabel ?var_1_17 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/DCS&gt; skos:altLabel ?var_2_17 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/DCS&gt; naptan:iataRef ?var_3_17 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/BRR
+  {
+    &lt;http://transport.data.gov.uk/id/airport/BRR&gt; skos:prefLabel ?var_1_18 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/BRR&gt; skos:altLabel ?var_2_18 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/BRR&gt; naptan:iataRef ?var_3_18 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/LHR
+  {
+    &lt;http://transport.data.gov.uk/id/airport/LHR&gt; skos:prefLabel ?var_1_19 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LHR&gt; skos:altLabel ?var_2_19 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LHR&gt; naptan:iataRef ?var_3_19 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/CWL
+  {
+    &lt;http://transport.data.gov.uk/id/airport/CWL&gt; skos:prefLabel ?var_1_20 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/CWL&gt; skos:altLabel ?var_2_20 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/CWL&gt; naptan:iataRef ?var_3_20 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/HUY
+  {
+    &lt;http://transport.data.gov.uk/id/airport/HUY&gt; skos:prefLabel ?var_1_21 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/HUY&gt; skos:altLabel ?var_2_21 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/HUY&gt; naptan:iataRef ?var_3_21 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/LGW
+  {
+    &lt;http://transport.data.gov.uk/id/airport/LGW&gt; skos:prefLabel ?var_1_22 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LGW&gt; skos:altLabel ?var_2_22 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LGW&gt; naptan:iataRef ?var_3_22 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/NQY
+  {
+    &lt;http://transport.data.gov.uk/id/airport/NQY&gt; skos:prefLabel ?var_1_23 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/NQY&gt; skos:altLabel ?var_2_23 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/NQY&gt; naptan:iataRef ?var_3_23 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/PPW
+  {
+    &lt;http://transport.data.gov.uk/id/airport/PPW&gt; skos:prefLabel ?var_1_24 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/PPW&gt; skos:altLabel ?var_2_24 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/PPW&gt; naptan:iataRef ?var_3_24 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/PZE
+  {
+    &lt;http://transport.data.gov.uk/id/airport/PZE&gt; skos:prefLabel ?var_1_25 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/PZE&gt; skos:altLabel ?var_2_25 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/PZE&gt; naptan:iataRef ?var_3_25 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/UNT
+  {
+    &lt;http://transport.data.gov.uk/id/airport/UNT&gt; skos:prefLabel ?var_1_26 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/UNT&gt; skos:altLabel ?var_2_26 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/UNT&gt; naptan:iataRef ?var_3_26 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/VLY
+  {
+    &lt;http://transport.data.gov.uk/id/airport/VLY&gt; skos:prefLabel ?var_1_27 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/VLY&gt; skos:altLabel ?var_2_27 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/VLY&gt; naptan:iataRef ?var_3_27 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/WHS
+  {
+    &lt;http://transport.data.gov.uk/id/airport/WHS&gt; skos:prefLabel ?var_1_28 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/WHS&gt; skos:altLabel ?var_2_28 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/WHS&gt; naptan:iataRef ?var_3_28 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/SOU
+  {
+    &lt;http://transport.data.gov.uk/id/airport/SOU&gt; skos:prefLabel ?var_1_29 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SOU&gt; skos:altLabel ?var_2_29 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SOU&gt; naptan:iataRef ?var_3_29 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/LSI
+  {
+    &lt;http://transport.data.gov.uk/id/airport/LSI&gt; skos:prefLabel ?var_1_30 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LSI&gt; skos:altLabel ?var_2_30 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LSI&gt; naptan:iataRef ?var_3_30 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/INV
+  {
+    &lt;http://transport.data.gov.uk/id/airport/INV&gt; skos:prefLabel ?var_1_31 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/INV&gt; skos:altLabel ?var_2_31 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/INV&gt; naptan:iataRef ?var_3_31 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/GLA
+  {
+    &lt;http://transport.data.gov.uk/id/airport/GLA&gt; skos:prefLabel ?var_1_32 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/GLA&gt; skos:altLabel ?var_2_32 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/GLA&gt; naptan:iataRef ?var_3_32 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/SOY
+  {
+    &lt;http://transport.data.gov.uk/id/airport/SOY&gt; skos:prefLabel ?var_1_33 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SOY&gt; skos:altLabel ?var_2_33 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SOY&gt; naptan:iataRef ?var_3_33 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/SEN
+  {
+    &lt;http://transport.data.gov.uk/id/airport/SEN&gt; skos:prefLabel ?var_1_34 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SEN&gt; skos:altLabel ?var_2_34 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/SEN&gt; naptan:iataRef ?var_3_34 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/CVT
+  {
+    &lt;http://transport.data.gov.uk/id/airport/CVT&gt; skos:prefLabel ?var_1_35 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/CVT&gt; skos:altLabel ?var_2_35 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/CVT&gt; naptan:iataRef ?var_3_35 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/CSA
+  {
+    &lt;http://transport.data.gov.uk/id/airport/CSA&gt; skos:prefLabel ?var_1_36 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/CSA&gt; skos:altLabel ?var_2_36 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/CSA&gt; naptan:iataRef ?var_3_36 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/OUK
+  {
+    &lt;http://transport.data.gov.uk/id/airport/OUK&gt; skos:prefLabel ?var_1_37 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/OUK&gt; skos:altLabel ?var_2_37 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/OUK&gt; naptan:iataRef ?var_3_37 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/LYX
+  {
+    &lt;http://transport.data.gov.uk/id/airport/LYX&gt; skos:prefLabel ?var_1_38 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LYX&gt; skos:altLabel ?var_2_38 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LYX&gt; naptan:iataRef ?var_3_38 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/LBA
+  {
+    &lt;http://transport.data.gov.uk/id/airport/LBA&gt; skos:prefLabel ?var_1_39 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LBA&gt; skos:altLabel ?var_2_39 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LBA&gt; naptan:iataRef ?var_3_39 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/EXT
+  {
+    &lt;http://transport.data.gov.uk/id/airport/EXT&gt; skos:prefLabel ?var_1_40 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/EXT&gt; skos:altLabel ?var_2_40 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/EXT&gt; naptan:iataRef ?var_3_40 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/BLK
+  {
+    &lt;http://transport.data.gov.uk/id/airport/BLK&gt; skos:prefLabel ?var_1_41 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/BLK&gt; skos:altLabel ?var_2_41 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/BLK&gt; naptan:iataRef ?var_3_41 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/LCY
+  {
+    &lt;http://transport.data.gov.uk/id/airport/LCY&gt; skos:prefLabel ?var_1_42 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LCY&gt; skos:altLabel ?var_2_42 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LCY&gt; naptan:iataRef ?var_3_42 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/NRL
+  {
+    &lt;http://transport.data.gov.uk/id/airport/NRL&gt; skos:prefLabel ?var_1_43 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/NRL&gt; skos:altLabel ?var_2_43 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/NRL&gt; naptan:iataRef ?var_3_43 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/KOI
+  {
+    &lt;http://transport.data.gov.uk/id/airport/KOI&gt; skos:prefLabel ?var_1_44 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/KOI&gt; skos:altLabel ?var_2_44 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/KOI&gt; naptan:iataRef ?var_3_44 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/ISC
+  {
+    &lt;http://transport.data.gov.uk/id/airport/ISC&gt; skos:prefLabel ?var_1_45 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/ISC&gt; skos:altLabel ?var_2_45 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/ISC&gt; naptan:iataRef ?var_3_45 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/PSV
+  {
+    &lt;http://transport.data.gov.uk/id/airport/PSV&gt; skos:prefLabel ?var_1_46 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/PSV&gt; skos:altLabel ?var_2_46 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/PSV&gt; naptan:iataRef ?var_3_46 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/LTN
+  {
+    &lt;http://transport.data.gov.uk/id/airport/LTN&gt; skos:prefLabel ?var_1_47 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LTN&gt; skos:altLabel ?var_2_47 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/LTN&gt; naptan:iataRef ?var_3_47 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/EMA
+  {
+    &lt;http://transport.data.gov.uk/id/airport/EMA&gt; skos:prefLabel ?var_1_48 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/EMA&gt; skos:altLabel ?var_2_48 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/EMA&gt; naptan:iataRef ?var_3_48 .
+  }  UNION
+
+  # identifying properties of http://transport.data.gov.uk/id/airport/BRS
+  {
+    &lt;http://transport.data.gov.uk/id/airport/BRS&gt; skos:prefLabel ?var_1_49 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/BRS&gt; skos:altLabel ?var_2_49 .
+  } UNION {
+    &lt;http://transport.data.gov.uk/id/airport/BRS&gt; naptan:iataRef ?var_3_49 .
+  }
+}
+</pre>
+<div class="footer">
+<hr>
+&copy; Copyright 2011 Epimorphics Limited. For licencing conditions see
+<a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
+</div>
+</div>
+
+</body>
+</html>
+

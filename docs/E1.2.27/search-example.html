@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Elda worked example</title>
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
+<link href="../style.css" rel="stylesheet" />
+<script src="../util.js"></script>
+</head>
+
+<body onload="toc()">
+<nav class="navbar navbar-default" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-brand">
+      <h1 class="not-toc">Elda 1.2.27</h1>
+      <h2 class="not-toc">An implementation of the linked-data API</h2>
+    </div>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav">
+      <li class=""><a href="index.html">Quick start</a></li>
+      <li class=""><a href="reference.html">Reference</a></li>
+      <li class=""><a href="cribsheet.html">Crib sheet</a></li>
+      <li class="active"><a href="search-example.html">Text search example</a></li>
+      <li class=""><a href="velocity.html">Velocity renderer</a></li>
+    </ul>
+    <div class="nav navbar-nav navbar-right">
+      <img class="logo" src="../epilogo-240.png" alt="Epimorphics.com">
+    </div>
+  </div><!-- /.navbar-collapse -->
+</nav>
+
+
+<div class="container">
+
+<div id="toc" class="well pull-right">
+<h2 class="not-toc">Table of contents</h2>
+</div>
+
+<h1>Text Search Worked Example</h1>
+
+<p>
+	This document builds an example text search
+	configuration for Elda, based on a Fuseki snapshot
+	for 1.0.1. It contains live links to localhost:8080,
+	which will only work when you're running a suitably
+	configured Elda.
+</p>
+
+<h2>Download the standalone jar</h2>
+
+<p>
+Download the latest Elda standalone jar from
+<a href="https://code.google.com/p/elda/downloads/list">
+the Elda downloads page</a>. Put it somewhere handy;
+we'll call the directory it's in <code>$STANDALONE</code>
+and use it to set up an Elda server later on.
+(If you already have a server that you can configure
+for Elda, you might choose to use that instead.)
+</p>
+
+<h2>Download Fuseki</h2>
+
+<p>
+	Go to
+	<a href="https://repository.apache.org/content/repositories/snapshots/org/apache/jena/jena-fuseki/1.0.1-SNAPSHOT/">
+	fuseki snapshot 1.0.1
+	</a> and download
+	<a href="https://repository.apache.org/content/repositories/snapshots/org/apache/jena/jena-fuseki/1.0.1-SNAPSHOT/jena-fuseki-1.0.1-20130914.081056-2-distribution.zip">the distribution zip</a>.
+</p>
+
+<p>
+	Unzip the distribution in a directory of your choice.
+	<strong>cd</strong> into the jena-fuseki directory. Export the
+	name of this directory as FUSEKI.
+</p>
+
+<h2>Load example data</h2>
+
+<p>
+	Download the
+	<a href="https://code.google.com/p/elda/source/browse/elda-standalone/src/main/webapp/data/example-data.ttl">
+		example data
+	</a>
+	from Elda's standalone jar. Copy it into $FUSEKI.
+</p>
+
+<p>
+	We're going to use the supplied configuration file
+	<code>config-tdb-text.ttl</code> to steer the load
+	and indexing. This sets up a dataset for holding the
+	example data in a TDB in the directory <code>DB</code>.
+</p>
+
+<pre>
+in $FUSEKI, run:
+
+java -cp ./fuseki-server.jar tdb.tdbloader --tdb=config-tdb-text.ttl example-data.ttl
+</pre>
+
+<p>
+	The config file is being used to set up the
+	dataset, which is why it's being supplied to the <code>--tdb</code>
+	command parameter.
+</p>
+
+<h2>Index the data</h2>
+
+<p>
+	We can use the same configuration to run the indexer:
+</p>
+
+<pre>
+again in $FUSEKI, run:
+
+ java -cp ./fuseki-server.jar jena.textindexer --desc=config-tdb-text.ttl
+</pre>
+
+<p>
+	This time the configuration file is supplied to the --desc command
+	parameter. The loader set up the normal dataset; the indexer is
+	setting up the text-searchable dataset.
+</p>
+
+<h2>Start serving the data</h2>
+
+<p>
+	Now we can start Fuseki serving the indexed example data:
+</p>
+
+<pre>
+./fuseki-server --conf=config-tdb-text.ttl
+</pre>
+
+<p>
+	Fuseki will serve the dataset in DB under the dataset name "/ds"
+	on port 3030 (by default).
+</p>
+
+<p>
+	Now we've got Fuseki running, we can point a browser at <a href="http://localhost:3030/sparql.tpl"> </a>, and explore the data with
+	SPARQL queries, before going on to use <code>_search</code> in Elda.
+</p>
+
+<h2>Make a suitable LDA configuration</h2>
+
+<p>
+	Fetch the example LDA configuration file from
+	<a href="https://code.google.com/p/elda/source/browse/elda-standalone/src/main/webapp/specs/hello-again-world.ttl">
+		the stand-alone jar's example configurations
+	</a>.
+</p>
+
+<p>
+	Comment out the line
+</p>
+
+<pre>
+; api:sparqlEndpoint &lt;local:data/example-data.ttl&gt;
+</pre>
+
+<p>
+	which tells Elda that this configuration reads its data
+	from the webapp-relative file <code>data/example-data.ttl</code>.
+	Comment in the line
+</p>
+
+<pre>
+# ; api:sparqlEndpoint &lt;http://localhost:3030/ds/query&gt;
+</pre>
+
+<p>
+	which tells Elda to query the local Fuseki we have set up
+	above.
+</p>
+
+<p>
+	Save this file somewhere suitable; we'll refer to it as
+	<code>$CONFIG</code>.
+</p>
+
+<h2>Run the standalone jar</h2>
+
+<p>
+	In <code>$STANDALONE</code>, run the standalone jar:
+</p>
+
+<pre>
+java -jar elda.jar -Delda.spec=$CONFIG
+</pre>
+
+<p>
+	which runs Elda on port 8080 using the provided
+	configuration file. (If port 8080 is already in
+	use, you can change Elda's port using
+	<code>-Djetty.port=yourPortNumber</code>.)
+</p>
+
+<h2>Exercise _search</h2>
+
+<p>
+	In your preferred browser, open
+</p>
+
+<pre>
+	<a href="http://localhost:8080/standalone/again/games">http://localhost:8080/standalone/again/games</a>
+</pre>
+
+<p>
+	to display a list of games. The names of the games
+	are in the example data as objects of <code>rdfs:label</code>,
+	and the <code>config-tdb-text.ttl</code> indexing
+	configuration indexes <code>rdfs:label</code> as the
+	default field. Try searching with
+</p>
+
+<div style="background: #dddddd; margin-left: 2em">
+
+<p><a href="http://localhost:8080/standalone/again/games?_search=Age">
+	?_search=Age
+</a>
+
+<p><a href="http://localhost:8080/standalone/again/games?_search=Steam">
+	?_search=Steam
+</a>
+
+<p><a href="http://localhost:8080/standalone/again/games?_search=Industry">
+	?_search=Industry
+</a>
+
+<p><a href="http://localhost:8080/standalone/again/games?_search=Steam%20Industry">
+	?_search="Steam Industry"
+</a>
+
+<p><a href="http://localhost:8080/standalone/again/games?_search=Inventions">
+	_search=Inventions
+</a>
+
+<p><a href="http://localhost:8080/standalone/again/games?_search=Industry">
+	_search=Industry
+</a>
+
+<p><a href="http://localhost:8080/standalone/again/games?_search=Industry%20AND%20Inventions">
+	_search="Industry AND Inventions"
+</a>
+
+<p><a href="http://localhost:8080/standalone/again/games?_search=Industry%20Inventions">
+	_search="Industry Inventions"
+</a>
+
+</div>
+
+<p>
+	appended to the games URI above.
+</p>
+
+<h2>Wrapup</h2>
+
+<p>
+	You should now be in a position to work with data of your own
+	choosing and to experiment (if necessary) with different
+	query configurations for different Elda endpoints.
+</p>
+
+
+<div class="footer">
+<hr>
+&copy; Copyright 2011-2013 Epimorphics Limited. For licencing conditions see
+<a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
+</div>
+</div>
+
+</body>
+</html>

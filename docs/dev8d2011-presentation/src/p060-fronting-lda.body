@@ -1,0 +1,17 @@
+<h2>LDA fronts SPARQL endpoints with RESTful URIs</h2>
+
+<img style="float: left; margin-right: 0mm" src="src/d060-flowing.png">
+
+<pre style="font-size: 150%; float: right; padding-left: 2ex; padding-right: 2ex">
+
+<span style="color: blue">...wossname/elda/api</span>
+    <span style="color: green">/education/schools</span>
+    <span style="color: orange">.xml</span>
+    ?<span style="color: red">establishmentStatus=closed</span>
+    &amp;<span style="color: magenta">_view</span>=label
+
+</pre>
+
+<div style="clear: both">
+</div>
+

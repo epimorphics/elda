@@ -1,0 +1,26 @@
+<h2>Using the Elda demo jar</h2>
+
+<p class="chunky">
+<ul>
+<li style="font-size: 170%">
+quickstart: click and go
+</li>
+
+<li style="font-size: 170%">
+all dependencies included
+</li>
+
+<li style="font-size: 170%">
+runs education example by default
+</li>
+
+<li style="font-size: 170%">
+can be configured from the command line
+</li>
+
+<li style="font-size: 170%">
+(some) documentation included
+</li>
+
+</ul>
+</p>
