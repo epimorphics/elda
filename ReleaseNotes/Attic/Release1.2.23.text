@@ -1,0 +1,112 @@
+Elda 1.2.23
+
+Users should use Elda 1.2.24 in place of 1.2.23 to fix
+a excessive-reloading bug. Otherwise .24 is only slightly
+different from .23 and the following notes apply without
+change.
+
+===========================================================
+
+This release of Elda has significant changes in Elda
+initialisation, configuration, and internal structure.
+Users who are upgrading their Elda MUST read these
+release notes and the Elda documentation at
+
+ http://elda.googlecode.com/hg/docs/E1.2.23-index.html
+ http://elda.googlecode.com/hg/docs/E1.2.23-advanced.html
+
+carefully. These changes should make future Elda updates
+easier to manage. Existing configurations (using the Elda
+Loader class) should continute to work but support for Loader
+will be dropped in a future Elda release.
+
+NOTE that the artifact previously known as `lda` is now
+`elda-lda` for consistency with the other elda- artifacts.
+
+===========================================================
+
+* The json-rdf module has been absorbed into Elda.  
+  The Elda assets have been moved to their own module.
+  An elda-common module provides an externally configurable
+  war. The Elda modules are now
+
+  For general use:
+    elda-assets			scripts, stylesheets, images etc for _resourceRoot
+    elda-common			externally configurable WAR file
+    elda-bundled		elda-assets + elda-common
+    elda-lda			elda's core code (used to be just `lda`)
+    elda-standalone		self-contained configurable Elda server
+
+  For internal use:
+    elda-system-tests
+    elda-testing-webapp
+    elda-regress
+
+  Developers should see 
+
+    http://elda.googlecode.com/hg/docs/E1.2.23-advanced.html
+
+  for a description of how to use elda-common, -assets, and -bundled.
+  Existing webapps built on Elda should continue to work as the
+  existing Loader configuration is still operational.
+
+* ELDA STANDALONE. The context name for the Elda Standalone servlet is now
+  "standalone", not "elda".
+
+* Elda's specification of where config files are to be found now includes
+  globbing; that is, the character * in a pathname means 0 or more non-/
+  characters. Further, the character sequence {APP} is replaced by the
+  context path that this Elda instance is running on. This allows
+  (a) A single file to contain many configs, (b) a single context path
+  to load multiple configs, and (c) a single container to run many independant
+  webapps (hence configs).
+
+* NEW CONFIGURATION SPEC. The preferred way to initialise Elda
+  is for the intialSpecFile parameter to be set in a context-param
+  in the web.xml and for Jersey to be installed as a filter rather
+  than a servlet. See the examples in the documentation.
+
+* XSLT stylesheets have been updated and pruned.
+
+* AUTO-RELOAD. Whenever a new request comes into Elda and "sufficently
+  long" has passed since the last check, Elda checks to see if the
+  config files have changed since the last check. If so, the current
+  configuration is abandoned and a new one loaded.
+
+  The DOM cache (for compiled XSLT templates) and the Elda cache
+  for the results of queries) are cleared when a reload occurs.
+  Velocity does its own independant reload-on-changes.
+
+* CACHE POLICY. Elda cache policy can be set on the whole API, not just
+  on endpoints. This is mostly so that "default:0" can be set in
+  a configuration to switch off the cache. 
+
+  Elda used to always retain at least one item in its cache. This
+  behaviour has been dropped.
+
+* UNSTREAMED RENDERERS. The Turtle, JSON, and XML-driven renderers are
+  no longer streaming: they compute their results early so that failures
+  result in non-200 result statuses rather than producing a broken response
+  body after a 200 OK header.
+
+* SHORTNAMES. The shortname code for URIs that arrive without a
+  predeclared shortname have been revised (again), see the documentation.
+  The shortname style can be controlled from the formatter declaration
+  in the config.
+
+  All cases of multiple uses of the same shortname in a config are
+  reported at once.
+
+* FILE LOADING. An Elda webapp can load static files.
+
+* SUPPRESSED PREFIXES. The Turtle and RDF/XML renderers discard prefixes
+  that bind to namespaces not used in the URIs of the model.
+
+* POMS. Some POM issues have been fixed. json-rdf has been incorporated
+  into lda, which has been renamed to elda-lda.
+
+* VELOCITY. Velocity templates loaded from configurable location. Default 
+  templates now respect _resourceRoot via [].
+
+* JENA. Elda has been updated to use Jena 2.10.1 (with TDB 0.10.1 if
+  using the built-in TDB handler).

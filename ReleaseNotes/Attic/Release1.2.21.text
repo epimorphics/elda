@@ -1,0 +1,203 @@
+Elda 1.2.21
+
+	(These release notes include prior significant release notes 
+	back to 1.2.10.)
+
+    The XML renderer's changes to separate object and meta-data
+    did not correctly implement the intended cycle-breaking
+    algorithm, and the cycle detection code had a subtle bug
+    in it. The bug has been removed and the cycle-breaking
+    behaviour is a close match to that found in Elda 12/13.
+
+    Fix bug in JSON renderer.
+
+Elda 1.2.18
+
+    Major revision to XML renderer to prevent creep of
+    meta data into object data and vice versa.
+
+    Improvements in URI generation, specifically to handle
+    "&" appearing in filter values.
+
+    If a _view has been selected, the stylesheet shows it
+    highlighted.
+
+    application/xml is accepted as well as text/xml. The
+    returned content type is the same as the requested one.
+
+Release Notes for Elda 1.2.15
+
+    Elda has draft support for using Velocity templates for rendering
+    HTML pages. Details are in the documentation. This support is
+    subject to change and improvement.
+
+    Elda now uses Jersey 1.12.
+
+    api:template has been reimplemented and should now behave according
+    to the spec (it was incorrectly attached to the api:API root, not to
+    individual viewers). Viewer defaulting has been corrected. This has
+    resulted in significant changes to the View class internals.
+
+    The experimental special routing tags in Elda, seen as tag::filename
+    in Loader initspecs in web.xml, are now implemented inside the Router
+    objects and not by rewriting the uri templates of the config. Their
+    external behaviour is unchanged for the moment.
+
+    Elda used to fail if the returned data contained incomplete RDF
+    list structures. It is now more careful when assembling the elements
+    of a list. If an rdf:first is missing, a default value of
+    elda:missingListElement is returned. If an rdf:next is missing,
+    the list is terminated with the additional element elda:missingListTail.
+    It is up to the renderers to special-case these resources if required.
+
+    The transcoding used to make "short" names out of URIs (when property
+    names are present in the data that have not been given shortnames) has
+    been changed. (No application should have depended on the details of
+    this encoding.) The revised encoding makes transcoded URIs a little
+    easier on the human eye and allows the XSLT stylesheet to render it
+    more comfortably.
+
+    The documentation now specifies which shortnames are reserved by Elda
+    to allow the supplied XSLT stylesheets to find metadata in the
+    results being rendered.
+
+Release 1.2.14
+
+    NOTICE. Some changes in this release of Elda are NOT 
+    backwards-compatible. Please read these notes carefully.
+
+    * The Elda maven artifact now has the name 'elda', not 'lda-top'.
+
+    * The property shortnames `result`, `item`, and
+      `items` have become reserved, to prevent ambiguities in the XML and
+      XSLT renderers.
+    
+    Attaching the property elda:allowSyntaxProperties with value true to
+    the config API resource will disable the reservation but may cause
+    problems with XSLT rendering; this special configuration property is
+    intended to make the transition to the reserved state easier and will
+    be withdrawn in a later version of Elda.
+
+    * Elda currently contains some experimental JMX statistics reporting.
+
+    * _stripHas
+
+    This is now obsolete. The old enormously general rule that
+    converted hasX to x (eg hasVersion to version) has been discarded;
+    it was only required for dct:hasVersion, :hasFormat, and hasPart
+    to be available to the XSL stylesheet.
+
+    * metadataOptions
+
+        (a) metadata options set on the API over-ride any that are built in
+            [none are]
+
+        (b) if metadata options are set on an endpoint, they replace any
+            that were set on the parent API.
+
+        (c) The XSLT formatter sets all the metadata options by default.
+            Options set on the formatter replace that default.
+
+    * _resourceRoot
+
+        The XSLT stylesheets used within Elda prefix their requests for
+        various assets (scripts, images, css, etc) with the value of the
+        LDA variable _resourceRoot. The default value for this variable
+        is /elda/lda-assets, which matches the URL structure used by the
+        standalone jar. 
+
+    * _exceptionIfEmpty
+
+        If this variable is set to "yes", then an item endpoint that fails
+        to find any properties for its item will raise an exception that
+        results in a 404 status. The default value is "no" to make
+        development easier (since the query that is getting no results is
+        visible in the usual place).
+
+    * URI paths for Elda
+
+        The internal URL/directory structure used by the standalone jar
+        has changed. See 
+  
+        http://elda.googlecode.com/hg/deliver-elda/src/main/webapp/lda-assets/docs/E1.2.14-advanced.html
+
+    * XML CHANGE. The rules by which Elda generates round-tripping shortnames
+        from URIs in result models have been simplified and now take account of
+        edge cases. Given some URI U:
+
+        * if there is a declared shortname S for U, use S. "Declared" means
+          has an api:label (preferred) or rdfs:label in the config or (not
+          preferred) in an imported vocabulary with allowed shortname syntax.
+        
+        * otherwise if U has a namespace N with prefix P and localname L
+          with shortname syntax, use P_L.
+        
+        * otherwise, if U has N with P and L does not have legal shortname
+          syntax, use pre_P_L' where L' is the encoding of L (below). Note
+          that this reserves any prefix `pre`.
+        
+        * otherwise, use uri_U' where U' is the encoding of U. Note that
+          this reserves the prefix `uri`.
+        
+        * The encoding X' of X is a reversible translation into shortname
+          syntax. In general, code using shortnames SHOULD NOT rely on the
+          details of this translation; shortnames that come out of the
+          XML rendering will be translated back to the correct URIs when
+          they are used elsewhere. 
+        
+          The current scheme converts every non-lowercase-ascii-letter
+          into two hex digits.
+
+    EXAMPLES CHANGE. Elda's start-up examples have changed. There
+    are three new variants of the education config and itwo hello-world
+    examples intended to produce small obvious config files.
+
+
+Elda 1.2.13 Release Notes
+
+    No major changes but several small improvements/fixes.
+
+    Some example configurations used plain string values for
+    values that should be integers. They have been fixed and
+    the config checking tightened.
+
+    The JSON renderer has been modified so that (despite what
+    the LDA spec says) XSD dateTime values that have no timezone
+    are rendered with no timezone field. Previous versions of
+    Elda forced GMT in this case. The JSON unparser in json-rdf
+    will correctly read back the zoneless rendering and create
+    a zoneless dateTime literal.
+
+    The reserved parameter _ is ignored, to allow JSONP calls
+    that use its value as a signal to operate freely. Other
+    reserved parameter names can be marked as "allowed", ie
+    ignored; see the documentation for details.
+
+    The legacy undocumented deployment restlets have been
+    removed.
+
+    Corrections to unregistering of item-template redirections
+    have been made.
+
+Release notes for 1.2.12
+
+    Elda can now generate etags on contentful responses: see the
+    documentation for details. This is an EXPERIMENTAL feature;
+    it may be removed or revised without notice.
+
+Release 1.2.11
+
+    The JSONP format invoked by ?callback=NAME has been restored.
+
+Elda 1.2.10
+
+    The URI for definition metadata has been changed. In recent versions
+    a bug allowed the generated URI to be spelled the same as the URI
+    for the page, resulting in confusingly incorrect sets of property
+    values in some (but not all) cases: typically, when this occurred
+    all the properties of the subject were instead attached to the
+    meta-definition. This has been fixed: the generated uri will always
+    contain the /meta path element. Also, variables {foo} in the template
+    are replaced by _foo in the URI (rather than (foo), as was).
+    
+    

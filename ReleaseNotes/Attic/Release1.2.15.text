@@ -1,0 +1,35 @@
+Release Notes for Elda 1.2.15
+
+Elda has draft support for using Velocity templates for rendering
+HTML pages. Details are in the documentation. This support is
+subject to change and improvement.
+
+Elda now uses Jersey 1.12.
+
+api:template has been reimplemented and should now behave according
+to the spec (it was incorrectly attached to the api:API root, not to
+individual viewers). Viewer defaulting has been corrected. This has
+resulted in significant changes to the View class internals.
+
+The experimental special routing tags in Elda, seen as tag::filename
+in Loader initspecs in web.xml, are now implemented inside the Router
+objects and not by rewriting the uri templates of the config. Their
+external behaviour is unchanged for the moment.
+
+Elda used to fail if the returned data contained incomplete RDF
+list structures. It is now more careful when assembling the elements
+of a list. If an rdf:first is missing, a default value of
+elda:missingListElement is returned. If an rdf:next is missing,
+the list is terminated with the additional element elda:missingListTail.
+It is up to the renderers to special-case these resources if required.
+
+The transcoding used to make "short" names out of URIs (when property
+names are present in the data that have not been given shortnames) has
+been changed. (No application should have depended on the details of
+this encoding.) The revised encoding makes transcoded URIs a little
+easier on the human eye and allows the XSLT stylesheet to render it
+more comfortably.
+
+The documentation now specifies which shortnames are reserved by Elda
+to allow the supplied XSLT stylesheets to find metadata in the
+results being rendered.

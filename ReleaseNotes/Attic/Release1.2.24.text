@@ -1,0 +1,17 @@
+Elda 1.2.24 Release Notes
+
+A bug in the config-reload code that meant that Elda 1.2.23
+reloaded configs a LOT has been fixed. Users of Elda 1.2.23
+should upgrade to 1.2.24.
+
+Various WARN log elements have been changed to DEBUG
+or eliminated.
+
+The hasFormat links from the current page now preserve
+the page size & number rather than discarding them.
+The effect of this is that the formatting links on the
+XSLT-generated HTML page now link to "the same page but
+with the selected format", rather than resetting to
+the first page.
+
+Minor code cleanups and fixes.

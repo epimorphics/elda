@@ -1,0 +1,14 @@
+Elda 1.2.18
+
+Major revision to XML renderer to prevent creep of
+meta data into object data and vice versa.
+
+Improvements in URI generation, specifcally to handle
+"&" appearing in filter values.
+
+If a _view has been selected, the stylesheet shows it
+highlighted.
+
+application/xml is accepted as well as text/xml. The
+returned content type is the same as the requested one.
+

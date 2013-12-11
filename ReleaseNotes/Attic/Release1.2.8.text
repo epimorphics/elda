@@ -1,0 +1,40 @@
+Release notes for Elda 1.2.8
+
+[Repeated from 1.2.6 and modified -- .6 and .7
+we debugging releases.]
+
+A significant performance and rendering problem in 
+the XML renderer has been fixed. Previously, models 
+containing long cyclic property chains would re-expand 
+those chains in multiple places, taking a long time
+to produce startlingly large XML representations. Elda
+now spots all nodes involved in cycles and expands 
+those exactly once.
+
+As a further refinement, any node that is one of the
+selected items and which appears in a cycle is
+guaranteed to be expanded at its appearance in the
+api:items list. (Other cyclic nodes are expanded at
+their first encounter in a depth-first graph walk.)
+
+The standalone jar's root webapp automatically redirects
+you to the /elda context.
+
+The labelling predicate used by labelled-describe 
+viewers can be changed by using the elda:describeAllLabel
+property on the endpoint or API. Its value should be
+the label property to use.
+
+Elda now depends on Jena versions from Apache incubation
+rather than development snapshots.
+
+In places where configuration text is used to build a
+query, eg api:where, expansion of ?x query variables
+respects the type of the variable x.
+
+Elda dependencies on an XSLT engine have been removed.
+The standalone jar does not need anything other than
+the built-in XSLT engine; uses who require a specific
+other engine, eg for XSLT-2, will have to unpack the
+jar (or clone the codebase) and add their choice of
+engine.

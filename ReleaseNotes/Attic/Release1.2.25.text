@@ -1,0 +1,20 @@
+Elda 1.2.25 
+
+(1) A subtle bug where some uses of JSON rendering changed
+    gave the range type rdf:PlainLiteral to properties that have been
+    give no type in the LDA configuration, and continued to use this
+    wrong range in subsequent queries, has been fixed.
+
+(2) Elda will now discard any and all query parameters that have
+    been given an empty value rather than using the empty string
+    as the value.
+
+(3) An EXPERIMENTAL atom feed renderer has been added. For
+    details see the forthcoming on-site documentation.
+
+(4) The undocument and untested and historical _search query
+    parameter now generates jena-text compatible queries as available
+    in later versions of Fuseki. The LARQ code in Elda has been
+    removed. For  details see the forthcoming on-site documentation.
+
+

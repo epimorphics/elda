@@ -1,0 +1,92 @@
+Release 1.2.14
+
+NOTICE. Some changes in this release of Elda are NOT 
+backwards-compatible. Please read these notes carefully.
+
+* The Elda maven artifact now has the name 'elda', not 'lda-top'.
+
+* The property shortnames `result`, `item`, and
+  `items` have become reserved, to prevent ambiguities in the XML and
+  XSLT renderers.
+
+  Attaching the property elda:allowSyntaxProperties with value true to
+  the config API resource will disable the reservation but may cause
+  problems with XSLT rendering; this special configuration property is
+  intended to make the transition to the reserved state easier and will
+  be withdrawn in a later version of Elda.
+
+* Elda currently contains some experimental JMX statistics reporting.
+
+* _stripHas
+
+  This is now obsolete. The old enormously general rule that
+  converted hasX to x (eg hasVersion to version) has been discarded;
+  it was only required for dct:hasVersion, :hasFormat, and hasPart
+  to be available to the XSL stylesheet.
+
+* metadataOptions
+
+  (a) metadata options set on the API over-ride any that are built in
+     [none are]
+
+  (b) if metadata options are set on an endpoint, they replace any
+      that were set on the parent API.
+
+  (c) The XSLT formatter sets all the metadata options by default.
+      Options set on the formatter replace that default.
+
+* _resourceRoot
+
+  The XSLT stylesheets used within Elda prefix their requests for
+  various assets (scripts, images, css, etc) with the value of the
+  LDA variable _resourceRoot. The default value for this variable
+  is /elda/lda-assets, which matches the URL structure used by the
+  standalone jar. 
+
+* _exceptionIfEmpty
+
+  If this variable is set to "yes", then an item endpoint that fails
+  to find any properties for its item will raise an exception that
+  results in a 404 status. The default value is "no" to make
+  development easier (since the query that is getting no results is
+  visible in the usual place).
+
+* URI paths for Elda
+
+  The internal URL/directory structure used by the standalone jar
+  has changed. See 
+  
+  http://elda.googlecode.com/hg/deliver-elda/src/main/webapp/lda-assets/docs/E1.2.14-advanced.html
+
+XML CHANGE. The rules by which Elda generates round-tripping shortnames
+from URIs in result models have been simplified and now take account of
+edge cases. Given some URI U:
+
+* if there is a declared shortname S for U, use S. "Declared" means
+  has an api:label (preferred) or rdfs:label in the config or (not
+  preferred) in an imported vocabulary with allowed shortname syntax.
+
+* otherwise if U has a namespace N with prefix P and localname L
+  with shortname syntax, use P_L.
+
+* otherwise, if U has N with P and L does not have legal shortname
+  syntax, use pre_P_L' where L' is the encoding of L (below). Note
+  that this reserves any prefix `pre`.
+
+* otherwise, use uri_U' where U' is the encoding of U. Note that
+  this reserves the prefix `uri`.
+
+* The encoding X' of X is a reversible translation into shortname
+  syntax. In general, code using shortnames SHOULD NOT rely on the
+  details of this translation; shortnames that come out of the
+  XML rendering will be translated back to the correct URIs when
+  they are used elsewhere. 
+
+  The current scheme converts every non-lowercase-ascii-letter
+  into two hex digits.
+
+EXAMPLES CHANGE. Elda's start-up examples have changed. There
+are three new variants of the education config and itwo hello-world
+examples intended to produce small obvious config files.
+
+

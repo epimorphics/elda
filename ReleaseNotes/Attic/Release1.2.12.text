@@ -1,0 +1,6 @@
+Release notes for 1.2.12
+
+Elda can now generate etags on contentful responses: see the
+documentation for details. This is an EXPERIMENTAL feature;
+it may be removed or revised without notice.
+

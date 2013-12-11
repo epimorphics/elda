@@ -1,0 +1,28 @@
+Elda 1.1.15 Release Notes
+
+Various internal bug-fixes and simplifications to Elda have been
+made. For details see the Notelets history file.
+
+Changes to the Jena dependences mean that Elda now explicitly
+depends on a version of LARQ. If you have been using the
+undocumented and currently-unsupported LARQ-based _search
+feature of Elda, be warned that it may have broken.
+
+Sorting on some property chain P, eg with _sort=P, no longer
+requires that the sorted items actually have a value for P.
+Thus _sort results may now have additional elements that
+did not appear in earlier versions of Elda.
+
+Elda now conforms more closely to the spec in translating
+the value V in a parameter binding P=V or min-P=V etc. In
+particular, if P has no range type but V is the short name
+of some property (or class), Elda used -- incorrectly -- to
+generate the URI object <expansion-of-V>. This no longer happens.
+To have V expand to a URI, you must give P a range type that
+is not a known datatype and is not rdfs:Resource, owl:Thing,
+api:SimpleLiteral or api:PlainLiteral.
+
+These last two API types allow you to specify that V is
+always translated to "V" (using SimpleLiteral) or to a
+string "V" that may be qualified by language codes, eg,
+from _lang (using PlainLiteral).

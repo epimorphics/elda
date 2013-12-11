@@ -2,7 +2,6 @@
 <head>
 <title>Elda -- an implementation of the Linked Data API</title>
 <link href="docs/style.css" type="text/css" rel="stylesheet"></link>
-<meta http-equiv="refresh" content="1;url=docs/E1.2.27/index.html"/>
 </head>
 <body>
 
@@ -13,5 +12,38 @@
 
 <a href="docs/E1.2.27/index.html">docs/E1.2.27/index.html</a>
 
+<p>
+	Elda is a Java implementation of the <a href="http://code.google.com/p/linked-data-api/" rel="nofollow">Linked Data API</a>. 
+	Version 1.2.27 (<a href="ReleaseNotes/latest.text" rel="nofollow">ReleaseNotes/latest.text</a>) 
+	was released on 5 December 2013. Maven artifacts are available from 
+	<a href="http://repository.epimorphics.com" rel="nofollow">http://repository.epimorphics.com</a>
+	(groupid com.epimorphics.lda, artifactId and name lda, version 1.2.27). 
+</p>
+
+<p>
+	The Linked Data API provides a configurable way to access RDF data using simple 
+	RESTful URLs that are translated into queries to a SPARQL endpoint. The API developer 
+	(probably you) writes an API spec (in RDF) which specifies how to translate URLs into queries.  
+</p>
+
+<p>
+	Elda is the Epimorphics implementation of the LDA. It comes with some pre-built  examples 
+	which allow you to experiment with the style of query and get started with building your own configurations. 
+	For documentation on downloading and installing Elda, see the  
+	<a href="docs/E1.2.27/index.html" rel="nofollow">the quickstart documentation</a>; 
+	you can also <a href="docs/E1.2.28/index.html" rel="nofollow">preview documentation from upcoming versions of Elda </a>. 
+</p>
+
+<p>
+	Elda 1.2.27 does cycle-detection for the XML (and HTML and CSV) renderers using  a linear algorithm so that 
+	heavily entangled graphs don&#x27;t take forever to render. Also the webapp-relative control/clear-cache URL 
+	can (and should) be POSTed to rather than GETted from. </p>
+	
+<p>
+	Elda 1.2.26 had improved documentation, including separate sections for the use of the Velocity renderer 
+	and configuration and URI use cribsheet. The text search feature was completed and the example Velocity 
+	templates much expanded. 
+</p>
+ 
 </body>
 </html>

@@ -1,0 +1,25 @@
+Elda 1.2.13 Release Notes
+
+No major changes but several small improvements/fixes.
+
+Some example configurations used plain string values for
+values that should be integers. They have been fixed and
+the config checking tightened.
+
+The JSON renderer has been modified so that (despite what
+the LDA spec says) XSD dateTime values that have no timezone
+are rendered with no timezone field. Previous versions of
+Elda forced GMT in this case. The JSON unparser in json-rdf
+will correctly read back the zoneless rendering and create
+a zoneless dateTime literal.
+
+The reserved parameter _ is ignored, to allow JSONP calls
+that use its value as a signal to operate freely. Other
+reserved parameter names can be marked as "allowed", ie
+ignored; see the documentation for details.
+
+The legacy undocumented deployment restlets have been
+removed.
+
+Corrections to unregistering of item-template redirections
+have been made.

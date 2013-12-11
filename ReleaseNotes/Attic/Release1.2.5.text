@@ -1,0 +1,28 @@
+Elda 1.2.5 allows renderers to stream their output, rather than
+having to build a complete output string in advance. This has
+the following effects:
+
+* Renderers (may) consume less space, making the server more
+  efficient. The XSLT (and hence the fancy HTML), XML, Turtle, 
+  and JSON renderers all stream.
+
+* Renderers are no longer confined to generating only legal
+  Unicode characters -- they may generate arbitrary byte
+  sequences allowing general binary formats.
+
+* However, a renderer error may happen part-way through streaming
+  a response. Clients already have to be prepared for a response
+  to die unexpectedly, so this should not present new problems.
+
+* Users who have customised Elda by writing their own renderers
+  in Java will have to alter them to fit the new BytesOut interface.
+  Typically they will just subclass BytesOutTimed and be willing
+  to write their bytes down an OutputStream. As a holding pattern
+  they may subclass BytesOutString and continue to generate
+  an entire response as a string. BytesOutString will be deprecated
+  in a future release.
+
+Elda 1.2.5 specifically sets the content-encoding charset to UTF-8
+for HTML, XML, Turtle, and JSON. XSLT formatters will set the
+content encoding according to the charset parameter of the media 
+type they are configured with.
