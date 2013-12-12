@@ -17,7 +17,7 @@
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
 
 # Prefix for example-local entities.
-@prefix egc:				<http://elda.googlecode.com/hg/vocabs/games#>.
+@prefix egc:				<http://epimorphics.com/public/vocabulary/games.ttl#>.
 
 # ---------------------------------------------------------------------
 # API config
