@@ -12,9 +12,9 @@
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
       <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
+      <span class="icon-bar"> </span>
+      <span class="icon-bar"> </span>
+      <span class="icon-bar"> </span>
     </button>
     <div class="navbar-brand">
       <h1 class="not-toc">Elda 1.2.28</h1>
@@ -52,7 +52,7 @@
 	and small-scale Elda service. However, the preferred
 	way of delivering an externally-viewed scalable
 	Elda service is to use Elda Common (or write your
-	own webapp based on the Elda artifacts, or course).
+	own webapp based on the Elda artifacts, of course).
 </p>
 
 <p>
@@ -1662,7 +1662,7 @@ type for the renderer's result.
 <p>
   Prerequisites:
   <a href="http://java.com/">Java</a> (underlying platform),
-  <a href="http://mercurial.selenic.com/">Mercurial</a> (to fetch the sources),
+  <a href="http://git-scm.com/">git</a> (to fetch the sources),
   <a href="http://maven.apache.org/Maven">Maven</a> (build management).
   Maven will download remaining necessary jars for Jena, Jersey, etc.
 </p>
@@ -1672,7 +1672,7 @@ type for the renderer's result.
 </p>
 
 <pre>
-hg clone https://elda.googlecode.com/hg/ elda
+git clone https://github.com/epimorphics/elda.git
 </pre>
 
 <p>
@@ -1701,7 +1701,7 @@ to see which version of Elda is being built. If you want to use
 a non-SNAPSHOT version, use
 </p>
 <pre>
-hg update -r REVISION
+git checkout tags/REVISION 
 </pre>
 
 <p>
@@ -1709,7 +1709,7 @@ before running maven, where REVISION is your choice of the revision
 tags you get from running:
 </p>
 <pre>
-hg tags
+git tags
 </pre>
 
 <p>
