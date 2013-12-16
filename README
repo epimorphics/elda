@@ -116,15 +116,14 @@ RELEASING ELDA
   Summarise the release notes. Remove sufficiently old
   summaries.
 
-  Go to https://code.google.com/p/elda/downloads/list
-  and use "new download" to download the latest
-  Elda standalone from ${your-elda-directory}
+  Note the name $STANDALONE of the standalone jar
 
-    /elda-standalone/target/elda-standalone-${version}.jar
+	http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/$VERSION/elda-standalone-$VERSION-$DETAILS
 
-  If there are sufficiently many old elda-standalone files
-  in the downloads directory, delete some of them.
-    
+  where VERSION is the version you have just released and DETAILS is
+  the maven-defined timestamp of the release. Edit the project index.html
+  to refer to $STANDALONE.
+
   Add a new release marker to the release notes with
   the next release version tagged DEVELOPING.
 
@@ -134,7 +133,8 @@ RELEASING ELDA
 
   Email linked-data-api-discuss with a moderately chatty
   message about the update, summarising the release notes
-  and specifically anything that has been recently mentioned.
+  and specifically anything that has been recently mentioned,
+  and including $STANDALONE.
 
   Email dev@jena.apache.org, users@jena.apache.org, and 
   semantic-web@w3.org a message with the following structure
@@ -151,7 +151,7 @@ RELEASING ELDA
     
     Chris
     
-    [1] https://code.google.com/p/elda/
+    [1] http://epimorphics.github.io/elda/
     
     [2] http://code.google.com/p/linked-data-api/
     
