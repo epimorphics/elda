@@ -15,9 +15,9 @@
   <description>Top level linked data API project</description>
 
   <scm>
-    <connection>scm:hg:${tempSCM}</connection>
-    <developerConnection>scm:hg:${tempSCM}</developerConnection>
-    <url>scm:hg:${tempSCM}</url>
+    <connection>scm:git:${tempSCM}</connection>
+    <developerConnection>scm:git:${tempSCM}</developerConnection>
+    <url>scm:git:${tempSCM}</url>
   </scm>
 
   <build>
