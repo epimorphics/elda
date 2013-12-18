@@ -41,15 +41,15 @@ RELEASING ELDA
 
 * PREREQUISITES
 
-  Running Linux.
+  Running Linux with git installed.
 
   Have a local Elda project up-to-date with respect to
-  the googlecode repository (and maybe with your own
+  the github repository (and maybe with your own
   local updates).
 
   Have permission to update the deployment repository.
 
-  Have permission to administer the elda.googlecode homepage.  
+  Have permission to administer the project githib pages.  
 
   Willing to commit to this latest Elda version.
 
@@ -69,7 +69,7 @@ RELEASING ELDA
 
   Ensure the release notes are up-to-date. The top
   entry in ReleaseNotes/latest.text should be marked 
-  DEVELOPING. Use `hg log | more` to check changes since
+  DEVELOPING. Use `git log | more` to check changes since
   the previous release and incorporate them into the
   release notes, summarising where appropriate and 
   putting important/big changes early. Change DEVELOPING 
@@ -129,7 +129,7 @@ RELEASING ELDA
 
   Copy docs/E${version} to docs/E${version+1}. Correct
   any references in these new html files to the version
-  number. `hg add` these files and commit and push them.
+  number. `git add` these files and commit and push them.
 
   Email linked-data-api-discuss with a moderately chatty
   message about the update, summarising the release notes
