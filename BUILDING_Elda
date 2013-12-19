@@ -111,6 +111,11 @@ RELEASING ELDA
 
 * POSTAMBLE 
 
+  execute `git push origin elda-$(VERSION)` for the new version.
+  (This doesn't seem to happen automatically although some
+  forums claim it does.) This pushes the new tag into the
+  remote (ie Elda's github) repository.
+
   Update the index.html in the gl-pages branch of the Elda
   repository to change the release date and version number 
   appropriately. Summarise the release notes; remove 
