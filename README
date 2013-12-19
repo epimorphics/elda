@@ -111,10 +111,10 @@ RELEASING ELDA
 
 * POSTAMBLE 
 
-  Update ("administer") the elda.googlecode homepage
-  to change the release date and version number appropriately.
-  Summarise the release notes. Remove sufficiently old
-  summaries.
+  Update the index.html in the gl-pages branch of the Elda
+  repository to change the release date and version number 
+  appropriately. Summarise the release notes; remove 
+  sufficiently old summaries.
 
   Note the name $STANDALONE of the standalone jar
 
