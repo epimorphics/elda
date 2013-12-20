@@ -4,4 +4,6 @@
 *.war
 
 target/
-
+.settings/
+.classpath
+.project
