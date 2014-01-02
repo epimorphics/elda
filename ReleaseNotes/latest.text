@@ -1,6 +1,9 @@
 + ----------------------------------------------------------------------
 | Elda 1.2.29 (DEVELOPING)
 
+* a bug in RouterRestlet meant that Elda did not recognise stylesheet
+  names that were URLs (or absolute paths), and so it treated them
+  as names of files that it then failed to open.
 
 + ----------------------------------------------------------------------
 | Elda 1.2.28 (RELEASED)
