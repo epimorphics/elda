@@ -419,7 +419,7 @@ import com.sun.jersey.api.NotFoundException;
 
     private static String MATCHES_SCHEME = "[a-zA-Z][-.+A-Za-z0-9]+:";
     		
-    private static String STARTS_WITH_SCHEME_OR_SLASH = "^(/|" + MATCHES_SCHEME + ")";
+    private static String STARTS_WITH_SCHEME_OR_SLASH = "^(/|" + MATCHES_SCHEME + ").*";
     
 	private static URLforResource pathAsURLFactory( final ServletContext servCon ) {
 		return new URLforResource() 
