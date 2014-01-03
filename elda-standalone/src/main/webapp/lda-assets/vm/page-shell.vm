@@ -171,7 +171,7 @@
 #set ($macro.A = $utils.newSet())
 #set ($ignored = $macro.A.addAll($_properties))
 #set ($ignored = $macro.A.add("*.*.*"))
-#set ($macro.uri = $rootPath + "/about.vhtml")
+#set ($macro.uri = $rootPath + "/about.$type_suffix")
 #set ($macro.base = $thisPage.wrap($macro.uri))
 #set ($macro.changeProperties = $macro.base.change('', '_properties', $utils.join($macro.A,',') ))
 #set ($macro.changeAll = $macro.changeProperties.change('','resource', $value.URI.quotedURI()))           

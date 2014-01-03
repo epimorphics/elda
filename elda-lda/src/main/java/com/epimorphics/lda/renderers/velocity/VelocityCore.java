@@ -20,9 +20,11 @@ public class VelocityCore {
 	
 	final VelocityEngine ve;
 	final String templateName;
+	final String suffix;
 	
-	public VelocityCore( VelocityEngine ve, String templateName ) {
+	public VelocityCore( VelocityEngine ve, String suffix, String templateName ) {
 		this.ve = ve;
+		this.suffix = suffix;
 		this.templateName = templateName;
 	}
 
@@ -45,6 +47,7 @@ public class VelocityCore {
 	//
 		VelocityContext vc = new VelocityContext();
 		WrappedNode wrappedPage = new WrappedNode( b, thisPage );
+		vc.put( "type_suffix", suffix );
 		vc.put( "thisPage", wrappedPage );
 		vc.put( "isItemEndpoint", isItemEndpoint );
 		vc.put( "isListEndpoint", isListEndpoint );

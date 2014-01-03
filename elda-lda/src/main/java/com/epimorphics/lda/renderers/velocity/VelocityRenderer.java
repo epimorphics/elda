@@ -22,6 +22,7 @@ public class VelocityRenderer implements Renderer {
 	
 	final MediaType mt;
 	final VelocityCore core;
+	final String suffix;
 	final String [] metadataOptions;
 
 	static final String[] defaultMetadataOptions = "bindings,formats,versions,execution".split(",");
@@ -29,8 +30,9 @@ public class VelocityRenderer implements Renderer {
 	public VelocityRenderer( MediaType mt, Bindings b, Resource config ) {
 		VelocityEngine ve = Help.createVelocityEngine( b, config );
 		String templateName = RDFUtils.getStringValue( config, EXTRAS.velocityTemplate, "page-shell.vm" );
+		this.suffix = RDFUtils.getStringValue( config, API.name, "html" );
 		this.mt = mt;
-		this.core = new VelocityCore( ve, templateName );
+		this.core = new VelocityCore( ve, suffix, templateName );
 		this.metadataOptions = getMetadataOptions( config );
 	}
 
@@ -44,7 +46,7 @@ public class VelocityRenderer implements Renderer {
     }
 
     @Override public String getPreferredSuffix() {
-    	return "html";
+    	return "suffix";
     }
     
     @Override public Mode getMode() {
