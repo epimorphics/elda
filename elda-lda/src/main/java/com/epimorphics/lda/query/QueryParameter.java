@@ -33,6 +33,7 @@ public class QueryParameter {
 	public static final String _METADATA= "_metadata";
 	public static final String _FORMAT = "_format";
 	public static final String _LANG = "_lang";
+	public static final String _COUNT = "_count";
 
 	// used to force a distinction between a page and a primary topic
 	public static final String _MARK = "_mark";

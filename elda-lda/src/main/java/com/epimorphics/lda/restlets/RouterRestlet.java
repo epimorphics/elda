@@ -228,8 +228,8 @@ import com.sun.jersey.api.NotFoundException;
     //
         String formatSuffix = match == matchAll ? null : pathAndType.b;
         Set<String> _formats = queryParams.getAll("_format");
-        if (_formats.size() == 1) formatSuffix = _formats.iterator().next();
-        
+        if (_formats.size() == 1) formatSuffix = _formats.iterator().next();       
+    //
         if (match == null) {
         	StatsValues.endpointNoMatch();
         	String item = router.findItemURIPath( "_", ui.getRequestUri(), "/" + pathstub );
@@ -406,6 +406,10 @@ import com.sun.jersey.api.NotFoundException;
             return returnNotFound("Failed to parse query request : " + e.getMessage());
         } catch (Throwable e) {
         	log.error( "General failure: " + e.getMessage() );
+        	
+        	System.err.println( ">> ARGH OH DEAR." );
+        	e.printStackTrace(System.err);
+        	
         	StatsValues.endpointException();
             return returnError( e );
         }

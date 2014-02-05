@@ -27,6 +27,7 @@ import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -68,6 +69,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     
     protected final Factories factoryTable;
     
+    final Boolean enableCounting;
+    
     static Logger log = LoggerFactory.getLogger(APIEndpointSpec.class);
     
     public APIEndpointSpec( APISpec apiSpec, APISpec parent, Resource endpoint ) {
@@ -92,6 +95,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
+        enableCounting = RDFUtils.getOptionalBooleanValue(endpoint, EXTRAS.enableCounting, apiSpec.getEnableCounting() );
     }
 
 	public String createURITemplate( Resource endpoint ) {
@@ -461,6 +465,10 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 
 	@Override public TextSearchConfig getTextSearchConfig() {
 		return textSearchConfig;
+	}
+
+	public Boolean getEnableCounting() {
+		return enableCounting;
 	}
 	
 }

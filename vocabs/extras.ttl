@@ -50,6 +50,17 @@ elda:enableETags a rdf:Property
 		"""
 	.
 
+elda:enableCounting a rdf:Property
+	; rdfs:comment 
+		"""
+		If true, "true", or "yes", Elda will generate a total item count
+		for any list-endpoint query. If false, "false", or "no", it will
+		not. Otherwise counting is enabled using the _count query
+		parameter.
+		"""
+	; rdfs:label "enableCounting"
+	.
+
 elda:enhanceViewWith a rdf:Property
 	; rdfs:comment ""
 	.

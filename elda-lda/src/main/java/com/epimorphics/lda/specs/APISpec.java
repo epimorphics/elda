@@ -83,6 +83,8 @@ public class APISpec {
 	
 	protected final ModelPrefixEditor modelPrefixEditor = new ModelPrefixEditor();
 	
+	protected final Boolean enableCounting;
+	
 	/**
 	    The default number of selected items required for a DESCRIBE
 	    query to use nested selects if they are available.
@@ -115,7 +117,8 @@ public class APISpec {
         this.factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         this.hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
 		this.cachePolicyName = getStringValue( specification, EXTRAS.cachePolicyName, "default" );
-        extractEndpointSpecifications( specification );
+        this.enableCounting = RDFUtils.getOptionalBooleanValue( specification, EXTRAS.enableCounting, null );
+		extractEndpointSpecifications( specification );
         extractModelPrefixEditor( specification );
     }
 
@@ -283,6 +286,10 @@ public class APISpec {
 	
 	public String getPrefixPath() {
 		return prefixPath;
+	}
+
+	public Boolean getEnableCounting() {
+		return enableCounting;
 	}
 }
 

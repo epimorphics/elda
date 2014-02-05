@@ -57,6 +57,13 @@ public class APIResultSet implements SetsMetadata {
     
     final View view;
     
+    /**
+        The total count of items that the underlying query for this ResultSet
+        would have returned, null if no total count was requested (or thie
+        total count has not yet been set). 
+    */
+    protected Integer totalCount;
+    
     /** 
         Map holding named metadata options. 
     */
@@ -290,7 +297,11 @@ public class APIResultSet implements SetsMetadata {
         Model objectModel = ModelFactory.createModelForGraph( objectGraph );
         for (Resource r : results)
         	mappedResults.add( mpe.rename( r.inModel( objectModel ) ).asResource() );
-		return new APIResultSet( objectGraph, mappedResults, isCompleted, enableETags, detailsQuery, metadata, v ).setSelectQuery( selectQuery );
+       
+		return new APIResultSet( objectGraph, mappedResults, isCompleted, enableETags, detailsQuery, metadata, v )
+			.setSelectQuery( selectQuery )
+			.setTotalCount( this.totalCount )
+			;
     }
     
     public APIResultSet applyEdits( ModelPrefixEditor mpe ) {
@@ -334,6 +345,7 @@ public class APIResultSet implements SetsMetadata {
         clone.setContentLocation(contentLocation);
         clone.setSelectQuery( selectQuery );
         clone.timestamp = timestamp;
+        clone.setTotalCount(this.totalCount);      
         return clone;
     }
 
@@ -393,6 +405,15 @@ public class APIResultSet implements SetsMetadata {
 
 	public PrefixMapping getModelPrefixes() {
 		return model.merged;
+	}
+
+	public APIResultSet setTotalCount(Integer totalCount) {
+		this.totalCount = totalCount;
+		return this;
 	}    
+	
+	public Integer getTotalCount() {
+		return totalCount;
+	}
 }
 

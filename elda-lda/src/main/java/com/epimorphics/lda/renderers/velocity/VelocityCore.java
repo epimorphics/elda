@@ -85,6 +85,10 @@ public class VelocityCore {
 		public Utils() {	
 		}
 		
+		public int toInt(Object x) {
+			return Integer.parseInt(x.toString());
+		}
+		
 		public <T extends Comparable<? super T>>void sort(List<? extends T> l) {
 			Collections.sort(l);
 		}

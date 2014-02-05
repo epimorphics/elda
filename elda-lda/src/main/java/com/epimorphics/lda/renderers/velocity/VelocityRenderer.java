@@ -46,7 +46,7 @@ public class VelocityRenderer implements Renderer {
     }
 
     @Override public String getPreferredSuffix() {
-    	return "suffix";
+    	return suffix;
     }
     
     @Override public Mode getMode() {

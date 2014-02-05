@@ -170,12 +170,27 @@ public class ContextQueryUpdater implements ViewSetter {
 		    aq.setSortBy( val );
 		} else if (p.equals(QueryParameter._ORDERBY )) {
 			aq.setOrderBy( val );
+		} else if (p.equals(QueryParameter._COUNT)) {
+			
+			Boolean count = getBoolean(val);
+			if (count == null)
+				throw new EldaException("illegal boolean (should be 'yes' or 'no') for _count.", val, EldaException.BAD_REQUEST);
+			else if (!aq.setTotalCountRequested( count ))				
+				throw new EldaException("this endpoint does not allow _count to be altered.", val, EldaException.BAD_REQUEST);			
+			
 		} else if (!allowedReserved( p )){
 			EldaException.BadRequest( "unrecognised reserved parameter: " + p );
 			throw new EldaException( "Can never get here!" );
 		}
 	}	
 	
+	/**
+	    Return true if val is "yes", false if it's "no", and null otherwise.
+	*/
+	private Boolean getBoolean(String val) {
+		return val.equals("yes") ? Boolean.TRUE : val.equals("no") ? Boolean.FALSE : null;
+	}
+
 	private boolean allowedReserved( String name ) {
 		return aq.allowReserved( name );
 	}

@@ -30,4 +30,8 @@ public class StubQueryBasis implements QueryBasis {
 	@Override public TextSearchConfig getTextSearchConfig() { 
 		return textSearchConfig; 
 	}
+
+	@Override public Boolean getEnableCounting() {
+		return Boolean.FALSE;
+	}
 }

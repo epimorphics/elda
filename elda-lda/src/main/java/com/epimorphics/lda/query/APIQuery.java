@@ -28,11 +28,11 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
-import com.epimorphics.util.CollectionUtils;
-import com.epimorphics.util.Couple;
+import com.epimorphics.util.*;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
@@ -144,6 +144,25 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	private final Map<String, String> languagesFor;
 
 	public final List<PendingParameterValue> deferredFilters;
+	
+	/**
+	    Is a total count requested for this query? true, false, or null
+	    for optional.
+	 */
+	private Boolean totalCountRequested = null;
+	
+	/**
+	    If the current total count request is null, set it to <code>b</code>
+	    and return true; otherwise return false (meaning "could not set").
+	*/
+	public boolean setTotalCountRequested(boolean b) {
+		if (totalCountRequested == null) {
+			totalCountRequested = b;
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	/**
 	 * Map from property chain names (ie dotted strings) to the variable at the
@@ -171,6 +190,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		boolean isItemEndpoint();
 
 		TextSearchConfig getTextSearchConfig();
+		
+		Boolean getEnableCounting();
 	}
 
 	protected static class FilterExpressions implements ValTranslator.Filters {
@@ -181,8 +202,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 		protected final List<RenderExpression> expressions;
 
-		@Override
-		public void add(RenderExpression e) {
+		@Override public void add(RenderExpression e) {
 			expressions.add(e);
 		}
 	}
@@ -192,6 +212,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.defaultLanguage = qb.getDefaultLanguage();
 		this.pageSize = qb.getDefaultPageSize();
 		this.defaultPageSize = qb.getDefaultPageSize();
+		this.totalCountRequested = qb.getEnableCounting();
 		this.maxPageSize = qb.getMaxPageSize();
 		this.itemTemplate = qb.getItemTemplate();
 		this.isItemEndpoint = qb.isItemEndpoint();
@@ -206,8 +227,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.varInfo = new HashMap<Variable, Info>();
 		this.orderExpressions = new StringBuffer();
 		this.filterExpressions = new ArrayList<RenderExpression>();
-		this.vt = new ValTranslator(this, new FilterExpressions(
-				filterExpressions), sns);
+		this.vt = new ValTranslator(this, new FilterExpressions(filterExpressions), sns);
 	}
 
 	public APIQuery copy() {
@@ -219,6 +239,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.maxPageSize = other.maxPageSize;
 		this.defaultPageSize = other.defaultPageSize;
 		this.defaultLanguage = other.defaultLanguage;
+		this.totalCountRequested = other.totalCountRequested;
 		this.enableETags = other.enableETags;
 		this.fixedSelect = other.fixedSelect;
 		this.isItemEndpoint = other.isItemEndpoint;
@@ -567,8 +588,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 */
 	public void setSortBy(String orderSpecs) {
 		if (sortByOrderSpecsFrozen)
-			EldaException
-					.Broken("Elda attempted to set a sort order after generating the select query.");
+			EldaException.Broken("Elda attempted to set a sort order after generating the select query.");
 		sortByOrderSpecs = orderSpecs;
 	}
 
@@ -582,8 +602,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	protected void unpackSortByOrderSpecs() {
 		if (sortByOrderSpecsFrozen)
-			EldaException
-					.Broken("Elda attempted to unpack the sort order after generating the select query.");
+			EldaException.Broken("Elda attempted to unpack the sort order after generating the select query.");
 		if (sortByOrderSpecs.length() > 0) {
 			orderExpressions.setLength(0);
 			Bool mightBeUnbound = new Bool(false);
@@ -610,8 +629,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return generateSortVariable(SELECT_VAR, spec + ".", 0, mightBeUnbound);
 	}
 
-	private Variable generateSortVariable(Variable anchor, String spec,
-			int where, Bool mightBeUnbound) {
+	private Variable generateSortVariable(Variable anchor, String spec, int where, Bool mightBeUnbound) {
 		if (where == spec.length())
 			return anchor;
 		//
@@ -646,8 +664,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	public void addWhere(String whereClause) {
-		if (whereExpressions.length() > 0)
-			whereExpressions.append(" ");
+		if (whereExpressions.length() > 0) whereExpressions.append(" ");
 		whereExpressions.append(whereClause);
 	}
 
@@ -658,8 +675,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	public String assembleSelectQuery(PrefixMapping prefixes) {
 		PrefixLogger pl = new PrefixLogger(prefixes);
-		Bindings cc = Bindings.createContext(new Bindings(),
-				new MultiMap<String, String>());
+		Bindings cc = Bindings.createContext(new Bindings(), new MultiMap<String, String>());
 		return assembleRawSelectQuery(pl, cc);
 	}
 
@@ -693,6 +709,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			// System.err.println( ">> QUERY IS: \n" + q.toString() );
 			String bound = bindDefinedvariables(pl, q.toString(), cc);
 			StringBuilder x = new StringBuilder();
+			if (counting()) x.append("# Counting has been applied to this query.\n");
 			pl.writePrefixes(x);
 			x.append(bound);
 			return x.toString();
@@ -761,9 +778,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			} else {
 				Info prop = varInfo.get(RDFQ.var("?" + name));
 				String val = v.spelling();
-				String normalizedValue = (prop == null) ? valueAsSparql(v, pl)
-						: objectForValue(prop, val, defaultLanguage)
-								.asSparqlTerm(pl);
+				String normalizedValue = (prop == null) 
+					? valueAsSparql(v, pl)
+					: objectForValue(prop, val, defaultLanguage).asSparqlTerm(pl)
+					;
 
 				result.append(normalizedValue);
 			}
@@ -774,8 +792,11 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	private String valueAsSparql(Value v, PrefixLogger pl) {
-		return v.type().equals(RDFS.Resource.getURI()) ? "<" + v.spelling()
-				+ ">" : v.asSparqlTerm(pl);
+		return 
+			v.type().equals(RDFS.Resource.getURI()) 
+				? "<" + v.spelling() + ">" 
+				: v.asSparqlTerm(pl)
+			;
 	}
 
 	/**
@@ -783,16 +804,16 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 * resource
 	 */
 	public String getQueryString(APISpec spec, Bindings call) {
-		return isFixedSubject() && isItemEndpoint ? "<"
-				+ subjectResource.getURI() + ">" : assembleSelectQuery(call,
-				spec.getPrefixMap());
+		return isFixedSubject() && isItemEndpoint 
+			? "<"+ subjectResource.getURI() + ">" 
+			: assembleSelectQuery(call,	spec.getPrefixMap())
+			;
 	}
 
 	/**
 	 * Run the defined query against the datasource
 	 */
-	public APIResultSet runQuery(Controls c, APISpec spec, Cache cache,
-			Bindings call, View view) {
+	public APIResultSet runQuery(Controls c, APISpec spec, Cache cache,	Bindings call, View view) {
 		Source source = spec.getDataSource();
 		try {
 			return runQueryWithSource(c, spec, cache, call, view, source);
@@ -803,49 +824,47 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	// may be subclassed
-	protected APIResultSet runQueryWithSource(Controls c, APISpec spec,
-			Cache cache, Bindings call, View view, Source source) {
+	protected APIResultSet runQueryWithSource
+		( Controls c, APISpec spec, Cache cache, Bindings call, View view, Source source) {
 		Times t = c.times;
 		long origin = System.currentTimeMillis();
-		Couple<String, List<Resource>> queryAndResults = selectResources(c,
-				cache, spec, call, source);
+		Triad<String, List<Resource>, Integer> queryAndResults = selectResources(c, cache, spec, call, source);
 		long afterSelect = System.currentTimeMillis();
-
+		
 		t.setSelectionDuration(afterSelect - origin);
 		String outerSelect = queryAndResults.a;
 		List<Resource> results = queryAndResults.b;
-
-		APIResultSet already = cache.getCachedResultSet(results,
-				view.toString());
-		if (c.allowCache && already != null) {
+		Integer totalCount = queryAndResults.c;
+		String countingViewKey = (counting() ? "(counting) " : "") + view.toString();
+		
+		APIResultSet already = cache.getCachedResultSet(results, countingViewKey);
+		if (c.allowCache && already != null) {			
 			t.usedViewCache();
-			if (log.isDebugEnabled())
-				log.debug("re-using cached results for " + results);
+			if (log.isDebugEnabled()) log.debug("re-using cached results for " + results);
 			return already.clone();
 		}
 
-		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec,
-				view, results);
+		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, view, results);
 
 		long afterView = System.currentTimeMillis();
 		t.setViewDuration(afterView - afterSelect);
 		rs.setSelectQuery(outerSelect);
-		cache.cacheDescription(results, view.toString(), rs.clone());
+		rs.setTotalCount(totalCount);
+		cache.cacheDescription(results, countingViewKey, rs.clone());
 		return rs;
 	}
 
 	// may be subclassed
-	protected APIResultSet fetchDescriptionOfAllResources(Controls c,
-			String select, APISpec spec, View view, List<Resource> results) {
+	protected APIResultSet fetchDescriptionOfAllResources(Controls c, String select, APISpec spec, View view, List<Resource> results) {
 		int count = results.size();
 		Model descriptions = ModelFactory.createDefaultModel();
 		descriptions.setNsPrefixes(spec.getPrefixMap());
 		Graph gd = descriptions.getGraph();
-		String detailsQuery = results.isEmpty() || results.get(0) == null ? "# no results, no query."
-				: view.fetchDescriptionsFor(c, select, results, descriptions,
-						spec, this);
-		return new APIResultSet(gd, results, count < pageSize, enableETags,
-				detailsQuery, view);
+		String detailsQuery = results.isEmpty() || results.get(0) == null 
+			? "# no results, no query."
+			: view.fetchDescriptionsFor(c, select, results, descriptions, spec, this)
+			;
+		return new APIResultSet(gd, results, count < pageSize, enableETags, detailsQuery, view);
 	}
 
 	/**
@@ -854,50 +873,108 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 * 
 	 * May be subclassed.
 	 */
-	protected Couple<String, List<Resource>> selectResources(Controls c,
-			Cache cache, APISpec spec, Bindings b, Source source) {
+	protected Triad<String, List<Resource>, Integer> selectResources(Controls c, Cache cache, APISpec spec, Bindings b, Source source) {
 		final List<Resource> results = new ArrayList<Resource>();
 		if (itemTemplate != null)
 			setSubject(b.expandVariables(itemTemplate));
 		if (isFixedSubject() && isItemEndpoint)
-			return new Couple<String, List<Resource>>("",
-					CollectionUtils.list(subjectResource));
+			return new Triad<String, List<Resource>, Integer>("", CollectionUtils.list(subjectResource), null);
 		else
 			return runGeneralQuery(c, cache, spec, b, source, results);
 	}
 
-	private Couple<String, List<Resource>> runGeneralQuery(Controls c,
-			Cache cache, APISpec spec, Bindings cc, Source source,
-			final List<Resource> results) {
+	private Triad<String, List<Resource>, Integer> runGeneralQuery
+		( Controls c
+		, Cache cache
+		, APISpec spec
+		, Bindings cc
+		, Source source
+		, final List<Resource> results
+		) {
+		Integer totalCount = requestTotalCount(source, cc, spec.getPrefixMap());
 		String selectQuery = assembleSelectQuery(cc, spec.getPrefixMap());
+	//
 		c.times.setSelectQuerySize(selectQuery);
 		List<Resource> already = cache.getCachedResources(selectQuery);
 		if (c.allowCache && already != null) {
 			c.times.usedSelectionCache();
-			if (log.isDebugEnabled())
-				log.debug("re-using cached results for query " + selectQuery);
-			return new Couple<String, List<Resource>>(selectQuery, already);
+			if (log.isDebugEnabled()) log.debug("re-using cached results for query " + selectQuery);
+			return new Triad<String, List<Resource>, Integer>(selectQuery, already, totalCount);
 		}
+	//
 		Query q = createQuery(selectQuery);
-		if (log.isDebugEnabled())
-			log.debug("Running query: " + selectQuery.replaceAll("\n", " "));
+		if (log.isDebugEnabled()) log.debug("Running query: " + selectQuery.replaceAll("\n", " "));
 		source.executeSelect(q, new ResultResourcesReader(results));
 		cache.cacheSelection(selectQuery, results);
-		return new Couple<String, List<Resource>>(selectQuery, results);
+		return new Triad<String, List<Resource>, Integer>(selectQuery, results, totalCount );
 	}
+
+	private Integer requestTotalCount(Source s, Bindings b, PrefixMapping pm) {		
+		if (counting()) {
+			PrefixLogger pl = new PrefixLogger(pm);
+			String countQueryString = assembleRawCountQuery(pl, b);
+			Query countQuery = createQuery(countQueryString);
+			CountConsumer c = new CountConsumer();
+			s.executeSelect( countQuery, c );
+			return c.count;
+		}
+		return null;
+	}
+
+	private boolean counting() {
+		return Boolean.TRUE.equals(totalCountRequested);
+	}	
+	
+	static class CountConsumer implements ResultSetConsumer {
+
+		int count = -1;
+		
+		@Override public void setup(QueryExecution qe) {			
+		}
+
+		@Override public void consume(ResultSet rs) {
+			QuerySolution qs = rs.next();
+			Literal countLiteral = qs.getLiteral("count");
+			this.count = countLiteral.getInt();
+		}
+		
+	}
+	
+	public String assembleRawCountQuery(PrefixLogger pl, Bindings cc) {
+		
+		StringBuilder q = new StringBuilder();
+		q.append("SELECT (COUNT(").append(SELECT_VAR.name()).append( ") AS ?count)" );
+		q.append("\nWHERE {\n");
+		String bgp = constructBGP(pl);
+		if (whereExpressions.length() > 0) {
+			q.append(whereExpressions);
+			pl.findPrefixesIn(whereExpressions.toString());
+		} else {
+			if (basicGraphTriples.isEmpty())
+				bgp = SELECT_VAR.name() + " ?__p ?__v .\n" + bgp;
+		}
+		q.append(bgp);
+		appendFilterExpressions(pl, q);
+		q.append("} ");
+
+		String bound = bindDefinedvariables(pl, q.toString(), cc);
+		StringBuilder x = new StringBuilder();
+		pl.writePrefixes(x);
+		x.append(bound);
+		return x.toString();
+	}
+
 
 	// may be subclasses
 	protected Query createQuery(String selectQuery) {
 		try {
 			return QueryFactory.create(selectQuery);
 		} catch (Exception e) {
-			throw new APIException("Internal error building query: "
-					+ selectQuery, e);
+			throw new APIException("Internal error building query: " + selectQuery, e);
 		}
 	}
 
-	private static final class ResultResourcesReader implements
-			Source.ResultSetConsumer {
+	private static final class ResultResourcesReader implements	Source.ResultSetConsumer {
 
 		private final List<Resource> results;
 
@@ -905,13 +982,11 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			this.results = results;
 		}
 
-		@Override
-		public void setup(QueryExecution qe) {
+		@Override public void setup(QueryExecution qe) {
 			// TODO can this method be deleted?
 		}
 
-		@Override
-		public void consume(ResultSet rs) {
+		@Override public void consume(ResultSet rs) {
 			try {
 				while (rs.hasNext()) {
 					Resource item = rs.next().getResource(SELECT_VAR.name());

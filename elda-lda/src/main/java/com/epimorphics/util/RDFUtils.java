@@ -150,5 +150,17 @@ public class RDFUtils {
 		}
 		return ifAbsent;
 	}
+
+	public static Boolean getOptionalBooleanValue(Resource x,	Property p, Boolean ifAbsent) {
+		Statement s = x.getProperty( p );
+		if (s == null) return ifAbsent;
+		RDFNode o = s.getObject();
+		if (o.isLiteral()) {
+			Literal ol = (Literal) o;
+			String sp = ol.getLexicalForm();
+			return sp.equalsIgnoreCase("yes") || sp.equalsIgnoreCase("true");
+		}
+		return ifAbsent;
+	}
 }
 

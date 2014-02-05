@@ -23,7 +23,14 @@
 #set ($rootPath = $vars['_rootPath'])
 
 #set ($_page = $vars['_page'].shortForm().raw())
+#if ($_page) #else #set ($_page = 0) #end
+#if ($_page == "") #set ($_page = 0) #end
+
 #set ($_view = $vars['_view'].shortForm().raw())
+
+#set ($_count = $thisPage.valueOf("os:totalResults"))
+#set ($_pageSize = $vars['_pageSize'].shortForm().raw())
+#if ($_pageSize) #else #set ($_pageSize = 10) #end
 
 #set ($_icon_reduced_size = "$resourceRoot/images/green/16x16/Reduced Size.png")
 #set ($_icon_full_size = "$resourceRoot/images/green/16x16/Full Size.png")
@@ -338,8 +345,14 @@
     #if ($items.size() > 1)
         #firstAndPrevLinks()        
         <b>
-          on this page 
-          #if ($_page.equals("") || $_page.equals("0")) #else ($_page) #end
+          #if ($_page.equals("") || $_page.equals("0") || $_page.equals(0)) #else on page $_page #end
+        
+          #if ($_count) 
+              #set ($low = $utils.toInt($_pageSize) * $utils.toInt($_page))
+              #set ($high = $low + $utils.toInt($_pageSize) - 1)
+              $low to $high <b> out of </b> $_count items
+          #end
+          
         </b>
         #set ($pipe = "")
         #foreach ($item in $items)
@@ -349,10 +362,8 @@
         #end
         #nextLink()
         
-        <b>page size</b>
-        #pageSize("10")
-        #pageSize("25")
-        #pageSize("50")
+        <b>set page size</b>
+        #pageSize("10") | #pageSize("25") | #pageSize("50")
     #end
     </div>
 #end

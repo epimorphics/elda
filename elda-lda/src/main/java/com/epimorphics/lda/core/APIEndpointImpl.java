@@ -169,6 +169,8 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
+        Integer totalResults = rs.getTotalCount();
+               
     //
         String template = spec.getURITemplate();
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
@@ -199,6 +201,7 @@ public class APIEndpointImpl implements APIEndpoint {
         	, thisMetaPage
         	, page
         	, perPage
+        	, totalResults
         	, hasMorePages
         	, resultList
         	, setsMeta

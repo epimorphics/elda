@@ -42,6 +42,7 @@ public class EndpointMetadata {
 		, Resource thisMetaPage
 		, int page
 		, int perPage
+		, Integer totalResults
 		, boolean hasMorePages
 		, List<Resource> resultList
 		, SetsMetadata setsMeta
@@ -73,9 +74,11 @@ public class EndpointMetadata {
 	        	.addLiteral( OpenSearch.itemsPerPage, perPage )
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
+
+	    	if (totalResults != null) 
+	    		thisMetaPage.addLiteral( OpenSearch.totalResults, totalResults.intValue() );
 	    	
 	    	thisMetaPage.addProperty( API.items, content );
-	    	
 	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, 0 );
 	    	Resource nextPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, page + 1 );
 	    	Resource prevPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, page - 1 );
