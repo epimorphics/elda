@@ -350,6 +350,7 @@
           #if ($_count) 
               #set ($low = $utils.toInt($_pageSize) * $utils.toInt($_page))
               #set ($high = $low + $utils.toInt($_pageSize) - 1)
+              #if ($utils.toInt($_count) <= $high) #set ($high = $_count) #end
               $low to $high <b> out of </b> $_count items
           #end
           
