@@ -1543,7 +1543,53 @@ the statistics count, and another to clear the Elda cache completely.
 	or <code>_metadata=all</code> on the LDA request.
 </p>
 
+<h1 id="enabling item counting">Item counts for result pages</h1>
 
+<p>
+	Elda displays the items in list endpoints paged, with links
+	to previous and next pages embedded in the rendering, and the
+	size of a page controllable (within limits) by the reserved
+	query parameter <code>_pageSize</code> and the current page
+	controlled by the reserved query parameter <code>_page</code>.
+	However by default the total number of items that could be
+	selected is not available.
+</p>
+
+<p>
+	Item counting can be enabled (see below), in which case Elda 
+	will add additional meta-data to the result graph: the 
+	property <code>os:totalResults</code> (where <code>os</code> 
+	is the OpenSearch prefix) will have as its value the total 
+	number of results that the underlying query returns. The 
+	XSLT HTML and the example Velocity renderers will 
+	incorporate this  information into their displays.
+</p>
+
+<p>
+	Item counting can be enabled by setting the property
+	<code>elda:enableCounting</code> on the API configuration
+	root to <code>true</code> or <code>"yes"</code>. This
+	enables counting on any endpoint that does not override
+	it by setting the endpoint's <code>elda:enableCounting</code>
+	to <code>false</code> or <code>"no"</code>. 
+</p>
+
+<p>
+	If an endpoint has <code>elda:enableCounting</code> set to
+	<code>"optional"</code>, either explicitly or by inheriting
+	from the root, then counting can be enabled by setting the
+	reserved query parameter <code>_count</code> to <code>yes</code>
+	and explicitly disabled by setting it to <code>no</code>.
+	(Trying to use <code>_count</code> when <code>elda:enableCounting</code>
+	is not <code>"optional"</code> will result in a <code>400 Bad Request</code>
+	response.)
+</p>
+
+<p>
+	The count value is cached, so as the user moves forward and
+	back along next/prev links in the Elda response, the same count
+	is re-used.
+</p>
 
 <h1 id="using-elda-from-java">Using Elda directly</h1>
 
