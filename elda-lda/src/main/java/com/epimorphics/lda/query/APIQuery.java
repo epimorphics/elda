@@ -646,8 +646,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		}
 	}
 
-	@Override
-	public Variable newVar() {
+	@Override public Variable newVar() {
 		return RDFQ.var(PREFIX_VAR + varcount++);
 	}
 
@@ -762,8 +761,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 * are mashed together from strings in the config file, ie, without going
 	 * through RDFQ.
 	 */
-	protected String bindDefinedvariables(PrefixLogger pl, String query,
-			Bindings cc) {
+	protected String bindDefinedvariables(PrefixLogger pl, String query, Bindings cc) {
 		// System.err.println( ">> query is: " + query );
 		// System.err.println( ">> VarValues is: " + cc );
 		StringBuilder result = new StringBuilder(query.length());
@@ -891,7 +889,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		, Source source
 		, final List<Resource> results
 		) {
-		Integer totalCount = requestTotalCount(source, cc, spec.getPrefixMap());
+		Integer totalCount = requestTotalCount(cache, source, cc, spec.getPrefixMap());
 		String selectQuery = assembleSelectQuery(cc, spec.getPrefixMap());
 	//
 		c.times.setSelectQuerySize(selectQuery);
@@ -909,14 +907,20 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return new Triad<String, List<Resource>, Integer>(selectQuery, results, totalCount );
 	}
 
-	private Integer requestTotalCount(Source s, Bindings b, PrefixMapping pm) {		
+	private Integer requestTotalCount(Cache c, Source s, Bindings b, PrefixMapping pm) {		
 		if (counting()) {
 			PrefixLogger pl = new PrefixLogger(pm);
 			String countQueryString = assembleRawCountQuery(pl, b);
-			Query countQuery = createQuery(countQueryString);
-			CountConsumer c = new CountConsumer();
-			s.executeSelect( countQuery, c );
-			return c.count;
+			int already = c.getCount(countQueryString);
+			if (already < 0) {			
+				Query countQuery = createQuery(countQueryString);
+				CountConsumer cc = new CountConsumer();
+				s.executeSelect( countQuery, cc );
+				c.putCount(countQueryString, cc.count);
+				return cc.count;
+			} else {				
+				return already;
+			}
 		}
 		return null;
 	}

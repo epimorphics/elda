@@ -61,6 +61,17 @@ public abstract class LimitedCacheBase implements Cache {
 			.append( ".</div>" )
 			.append( "\n" )
 			;
+    	sb
+			.append( "<div style='margin-top: 1ex'>" )
+			.append( "COUNTS: ").append( viewSeconds ).append( "s since first")
+    		.append( ", " ).append( cc.requests ).append( " requests" )
+			.append( ", " ).append( cc.hits ).append( " hits" )
+			.append( ", " ).append( cc.misses ).append( " misses")
+			.append( ", " ).append( cc.drops ).append( " drops" )
+    		.append( " (last " ).append( viewDropSeconds ).append( "s ago)" )
+			.append( ".</div>" )
+			.append( "\n" )
+			;
 //    	for (Map.Entry<String, List<Resource>> e: cs.entrySet()) {
 //    		sb.append( "<pre>" );
 //    		sb.append( e.getKey().replaceAll( "\n", " " ).replaceAll( "&", "&amp;" ).replaceAll( "<", "&lt;" ) );
@@ -117,6 +128,8 @@ public abstract class LimitedCacheBase implements Cache {
     private final Cachelet<String, APIResultSet> cd = new Cachelet<String, APIResultSet>();
 
     private final Cachelet<String, List<Resource>> cs = new Cachelet<String, List<Resource>>();
+    
+    private final Cachelet<String, Integer> cc = new Cachelet<String, Integer>();
 
     @Override public synchronized APIResultSet getCachedResultSet( List<Resource> results, String view ) {
         return cd.get( results.toString() + "::" + view );
@@ -144,14 +157,38 @@ public abstract class LimitedCacheBase implements Cache {
         }
     }
 
+	/**
+	    Get the total number of items that this query will return, -1 for
+	    "not known".
+	*/
+	@Override public synchronized int getCount(String countQueryString) {
+		Integer already = cc.get(countQueryString);
+		return already == null ? -1 : already.intValue();
+	}
+	
+	/**
+	    Put the total number of items that this query returns.
+	*/
+	@Override public synchronized void putCount(String countQueryString, int count) {
+		if (cc.size() > countLimit()) cc.clear();
+		cc.put(countQueryString, new Integer(count));
+	}
+	
+	// temporary
+	public int countLimit() {
+		return 1000;
+	}
+
     @Override public synchronized void resetCounts() {
         cs.resetCounts();
         cd.resetCounts();
+        cc.resetCounts();
     }
 
     @Override public synchronized void clear() {
         cs.clear();
         cd.clear();
+        cc.clear();
     }
 
     @Override public synchronized int numEntries() {

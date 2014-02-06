@@ -72,6 +72,17 @@ public interface Cache {
 	    a unique ID.
 	*/
 	public String summary();
+
+	/**
+	    Get the total number of items that this query will return.
+	*/
+	public int getCount(String countQueryString);
+	
+	/**
+	    Put the total number of items that this query returns.
+	*/
+	public void putCount(String countQueryString, int count);
+	
 	
 	public interface Controller {
 		/**
@@ -162,6 +173,7 @@ public interface Cache {
 			}
 		}
 	}
+
 }
 
 		
