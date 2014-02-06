@@ -945,9 +945,11 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 	
 	public String assembleRawCountQuery(PrefixLogger pl, Bindings cc) {
-		
+		if (!sortByOrderSpecsFrozen) unpackSortByOrderSpecs();
+		String distinct = (orderExpressions.length() > 0 ? "DISTINCT " : "");
+	//
 		StringBuilder q = new StringBuilder();
-		q.append("SELECT (COUNT(").append(SELECT_VAR.name()).append( ") AS ?count)" );
+		q.append("SELECT (COUNT(").append(distinct).append(SELECT_VAR.name()).append( ") AS ?count)" );
 		q.append("\nWHERE {\n");
 		String bgp = constructBGP(pl);
 		if (whereExpressions.length() > 0) {
@@ -960,16 +962,25 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		q.append(bgp);
 		appendFilterExpressions(pl, q);
 		q.append("} ");
-
+	//
+	// We don't need to order the results, since we're just going to count
+	// them, and the DISTINCT in the select operates over the entire
+	// result-set.
+	//
+//		if (orderExpressions.length() > 0) {
+//			q.append(" ORDER BY ");
+//			q.append(orderExpressions);
+//			pl.findPrefixesIn(orderExpressions.toString());
+//		}
+	//
 		String bound = bindDefinedvariables(pl, q.toString(), cc);
 		StringBuilder x = new StringBuilder();
 		pl.writePrefixes(x);
 		x.append(bound);
 		return x.toString();
-	}
+	}	
 
-
-	// may be subclasses
+	// may be over-ridden in a subclass
 	protected Query createQuery(String selectQuery) {
 		try {
 			return QueryFactory.create(selectQuery);
@@ -1017,8 +1028,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		}
 	}
 
-	@Override
-	public boolean wantsMetadata(String name) {
+	@Override public boolean wantsMetadata(String name) {
 		return metadataOptions.contains(name)
 				|| metadataOptions.contains("all");
 	}
