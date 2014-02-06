@@ -117,7 +117,7 @@ public class APISpec {
         this.factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         this.hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
 		this.cachePolicyName = getStringValue( specification, EXTRAS.cachePolicyName, "default" );
-        this.enableCounting = RDFUtils.getOptionalBooleanValue( specification, EXTRAS.enableCounting, null );
+        this.enableCounting = RDFUtils.getOptionalBooleanValue( specification, EXTRAS.enableCounting, Boolean.FALSE );        
 		extractEndpointSpecifications( specification );
         extractModelPrefixEditor( specification );
     }

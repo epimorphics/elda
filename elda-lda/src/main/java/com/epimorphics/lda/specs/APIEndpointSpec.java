@@ -91,11 +91,11 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
         describeThreshold = getIntValue( endpoint, EXTRAS.describeThreshold, apiSpec.describeThreshold );
     //
         textSearchConfig = apiSpec.getTextSearchConfig().overlay( endpoint );
+        enableCounting = RDFUtils.getOptionalBooleanValue(endpoint, EXTRAS.enableCounting, apiSpec.getEnableCounting() );
     //        
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
-        enableCounting = RDFUtils.getOptionalBooleanValue(endpoint, EXTRAS.enableCounting, apiSpec.getEnableCounting() );
     }
 
 	public String createURITemplate( Resource endpoint ) {

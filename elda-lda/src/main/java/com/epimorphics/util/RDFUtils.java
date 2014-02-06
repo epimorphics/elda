@@ -133,7 +133,7 @@ public class RDFUtils {
 	}
 
 	/**
-	    Answer the boolean value of property <code>p</code> on resource
+	    Return the boolean value of property <code>p</code> on resource
 	    <code>r</code>. If there is no p-value, or the p-value is not a
 	    literal, return <code>ifAbsent</code>. Otherwise return true if
 	    the literal has spelling "true" or "yes", false if it has the
@@ -151,14 +151,22 @@ public class RDFUtils {
 		return ifAbsent;
 	}
 
-	public static Boolean getOptionalBooleanValue(Resource x,	Property p, Boolean ifAbsent) {
+	/**
+	    Return an optional boolean value of a property. If there is no p-value,
+	    or the p-value isn't a literal with spelling "true", "false", "yes",
+	    "no", or "optional", return the ifAbsent value. Otherwise return null
+	    for optional, TRUE for true/yes, or FALSE for false/no.
+	*/
+	public static Boolean getOptionalBooleanValue(Resource x, Property p, Boolean ifAbsent) {
 		Statement s = x.getProperty( p );
-		if (s == null) return ifAbsent;
-		RDFNode o = s.getObject();
+		if (s == null) return ifAbsent;		
+		RDFNode o = s.getObject();		
 		if (o.isLiteral()) {
 			Literal ol = (Literal) o;
 			String sp = ol.getLexicalForm();
-			return sp.equalsIgnoreCase("yes") || sp.equalsIgnoreCase("true");
+			if (sp.equalsIgnoreCase("optional")) return null;
+			if (sp.equalsIgnoreCase("yes") || sp.equalsIgnoreCase("true")) return Boolean.TRUE;
+			if (sp.equalsIgnoreCase("no") || sp.equalsIgnoreCase("false")) return Boolean.FALSE;
 		}
 		return ifAbsent;
 	}
