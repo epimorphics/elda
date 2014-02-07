@@ -7,3 +7,5 @@ target/
 .settings/
 .classpath
 .project
+.tomcatplugin
+.#webclasspath
