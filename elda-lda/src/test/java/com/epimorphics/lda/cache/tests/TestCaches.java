@@ -12,6 +12,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.sources.SourceBase;
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.graph.test.GraphTestBase;
@@ -23,7 +24,7 @@ import com.hp.hpl.jena.shared.Lock;
 
 public class TestCaches
 	{
-	static class FakeSource extends SourceBase implements Source
+	public static class FakeSource extends SourceBase implements Source
 		{
 		final String name;
 		
@@ -33,8 +34,9 @@ public class TestCaches
 		@Override public QueryExecution execute(Query query) 
 			{ throw new RuntimeException( "should never be called" ); }
 
-		@Override public void addMetadata(Resource meta) 
-			{ throw new RuntimeException( "should never be called" ); }
+		@Override public void addMetadata(Resource meta) {  
+			meta.addProperty(API.sparqlEndpoint, ResourceFactory.createResource("eh:/fakeSPARQLEndpoint"));
+		}
 		
 		@Override public String toString() 
 			{ return "FakeSource:" + name; }
