@@ -978,35 +978,52 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 
 <xsl:template match="result" mode="summary">
-	<xsl:if test="count(items/item) > 1">
-		<section class="summary">
-			<h1>On This Page</h1>
-			<xsl:call-template name="createInfo">
-				<xsl:with-param name="text">Links to the items within this page, and to the previous and/or next pages of results.</xsl:with-param>
-			</xsl:call-template>
-			<ul>
-				<xsl:if test="prev">
-					<li>
-						<xsl:apply-templates select="prev" mode="nav" />
-					</li>
-				</xsl:if>
-				<xsl:for-each select="items/item">
-					<li>
-						<a href="#{generate-id(.)}" title="jump to item on this page">
-							<xsl:apply-templates select="." mode="name" />
-						</a>
-					</li>
-				</xsl:for-each>
-				<xsl:if test="next">
-					<li>
-						<xsl:apply-templates select="next" mode="nav" />
-					</li>
-				</xsl:if>
-			</ul>
-		</section>
-	</xsl:if>
+    <xsl:if test="count(items/item) > 1">
+        <section class="summary">
+            <h1>On This Page</h1>
+            <xsl:call-template name="createInfo">
+                <xsl:with-param name="text">Links to the items within this page, and to the previous and/or next pages of results.</xsl:with-param>
+            </xsl:call-template>
+            <xsl:if test="totalResults">
+                <ul>
+                   <li class="resultcount">
+                      <xsl:apply-templates select="." mode="itemCounts"/>
+                   </li>
+                </ul>
+            </xsl:if>
+            <ul>
+                <xsl:if test="prev">
+                    <li>
+                        <xsl:apply-templates select="prev" mode="nav" />
+                    </li>
+                </xsl:if>
+                <xsl:for-each select="items/item">
+                    <li>
+                        <a href="#{generate-id(.)}" title="jump to item on this page">
+                            <xsl:apply-templates select="." mode="name" />
+                        </a>
+                    </li>
+                </xsl:for-each>
+                <xsl:if test="next">
+                    <li>
+                        <xsl:apply-templates select="next" mode="nav" />
+                    </li>
+                </xsl:if>
+            </ul>
+        </section>
+    </xsl:if>
 </xsl:template>
 
+<xsl:template match="result" mode="itemCounts">
+    <xsl:text>Results </xsl:text>
+    <xsl:value-of select="startIndex"/>  
+    <xsl:text> to </xsl:text>
+    <xsl:value-of select="startIndex + count(items/item) - 1"/>
+    <xsl:if test="totalResults">
+      <xsl:text> of </xsl:text>
+      <xsl:value-of select="totalResults"/>  
+    </xsl:if>  
+</xsl:template>
 <xsl:template match="result" mode="moreinfo">
 	<xsl:variable name="links">
 		<xsl:apply-templates select="primaryTopic | isPartOf" mode="moreinfo" />

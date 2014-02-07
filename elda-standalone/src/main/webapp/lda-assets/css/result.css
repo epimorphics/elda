@@ -1,10 +1,15 @@
 body {
-	background-image: url("../images/body_bg_big.png");
+	background-image: url(../images/body_bg_big.png);
 	color:#555555;
 	font-family: Arial,sans-serif;
+/*
 	font-size: 0.813em;
+*/
+    font-size: 0.7em;
 	line-height: 1.188em;
 }
+
+
 
 #page {
 	-webkit-box-shadow: #888 0px 5px 24px;
@@ -15,7 +20,7 @@ body {
 }
 
 nav.site {
-	background: url("../images/elda-banner.png") no-repeat 0% 0%;
+	background: url(../images/hmg-banner.png) no-repeat 0% 0%;
 	padding-top: 54px;
 }
 
@@ -34,6 +39,7 @@ nav.topnav {
 	clear: right;
 	padding-right: 30px;
 	width: 286px;
+	background: white;
 }
 
 #result {
@@ -42,6 +48,7 @@ nav.topnav {
 	padding-right: 43px;
 	padding-left: 43px;
 	width: 538px;
+	background: white;
 }
 
 #result .panel {
@@ -124,7 +131,7 @@ div.itemMap {
 	border: 1px solid #D3D3D3;
 }
 
-div.olLayerDiv img {
+div.olLayerDiv div img {
 	-moz-box-shadow: 1px 1px 3px 2px #555555;
 	-webkit-box-shadow: 1px 1px 3px 2px #555555;
 	box-shadow: 1px 1px 3px 2px #555555;
@@ -140,14 +147,24 @@ div.mapInfo {
 }
 
 div.osCopyright {
-	background-color: white;
-	bottom: 0;
-	font-size: 8pt;
+/*	background-color: white; */
+	font-size: 6pt;
 	height: 20pt;
 	line-height: 1.2em;
 	padding: 1px 5px;
 	border-top: 1px solid #D3D3D3;
+    bottom: 0;
+/* added 28/2/2013 */
+    width: 130pt ;
+    font-weight: bold;
+    background-color: rgba(0,0,0, 0);
+    border-width: 0;
+    text-align: right;
+    
 }
+
+.OpenSpaceControlCopyrightCollection
+{ display:none }
 
 .panel section caption {
 	background: transparent;
@@ -209,7 +226,7 @@ nav.topnav section.sort li, nav.topnav section.view ul.properties li {
 	white-space: normal;
 }
 
-nav.topnav section.sort li.selected, nav.topnav section.view ul.properties li.selected {
+.resultcount, nav.topnav section.sort li.selected, nav.topnav section.view ul.properties li.selected {
 	font-weight: bold;
 }
 
@@ -347,7 +364,7 @@ section#search td {
 }
 
 button, #openSearch {
-	background-image: url("../images/gradient_nav_item.png");
+	background-image: url(../images/gradient_nav_item.png);
 	background-color: #577D00;
 	border-color: #577D00;
 	color: white;
@@ -587,3 +604,31 @@ header h1 a:link , header h1 a:visited , header h1 a:active , header h1 a:hover 
 #ui-datepicker-div {
 	font-size: 0.8em;
 }
+
+.labelWidth {
+	width: 25%;
+}
+
+.nestedValueWidth {
+    width: 75%;
+}
+
+.valueWidth {
+	width: 70%;
+}
+.autoWidth {
+	width: auto;
+}
+
+.filterWidth {
+	width: 54px;
+}
+
+.mapWidth {
+    width: 47px;
+}
+
+.propWidth {
+    width: 20px;
+}
+
