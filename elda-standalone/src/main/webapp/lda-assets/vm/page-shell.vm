@@ -29,7 +29,7 @@
 #set ($_view = $vars['_view'].shortForm().raw())
 
 #set ($_count = $thisPage.valueOf("os:totalResults"))
-#set ($_pageSize = $vars['_pageSize'].shortForm().raw())
+#set ($_pageSize = $vars['_pageSize'])
 #if ($_pageSize) #else #set ($_pageSize = 10) #end
 
 #set ($_icon_reduced_size = "$resourceRoot/images/green/16x16/Reduced Size.png")
