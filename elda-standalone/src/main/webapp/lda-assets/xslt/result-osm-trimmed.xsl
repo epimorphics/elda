@@ -984,6 +984,13 @@ $prefLabel, $altLabel, $title and $name variables.
             <xsl:call-template name="createInfo">
                 <xsl:with-param name="text">Links to the items within this page, and to the previous and/or next pages of results.</xsl:with-param>
             </xsl:call-template>
+            <xsl:if test="totalResults">
+                <ul>
+                   <li class="resultcount">
+                      <xsl:apply-templates select="." mode="itemCounts"/>
+                   </li>
+                </ul>
+            </xsl:if>
             <ul>
                 <xsl:if test="prev">
                     <li>
@@ -1007,6 +1014,16 @@ $prefLabel, $altLabel, $title and $name variables.
     </xsl:if>
 </xsl:template>
 
+<xsl:template match="result" mode="itemCounts">
+    <xsl:text>Results </xsl:text>
+    <xsl:value-of select="startIndex"/>  
+    <xsl:text> to </xsl:text>
+    <xsl:value-of select="startIndex + count(items/item) - 1"/>
+    <xsl:if test="totalResults">
+      <xsl:text> of </xsl:text>
+      <xsl:value-of select="totalResults"/>  
+    </xsl:if>  
+</xsl:template>
 <xsl:template match="result" mode="moreinfo">
     <xsl:variable name="links">
         <xsl:apply-templates select="primaryTopic | isPartOf" mode="moreinfo" />

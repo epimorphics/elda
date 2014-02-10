@@ -32,6 +32,25 @@ import com.hp.hpl.jena.vocabulary.*;
 */
 public class EndpointMetadata {
 
+	protected final Bindings bindings;
+	protected final Resource thisPage;
+	protected final URI thisPageAsURI;
+	
+	protected final String pageNumber;
+	protected final boolean isListEndpoint;
+	protected final URI pageURI;
+	protected final boolean isParameterBasedFormat;
+	
+	public EndpointMetadata( EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings, URI pageURI ) {
+		this.bindings = bindings;
+		this.pageURI = pageURI;
+		this.thisPage = thisPage;
+		this.pageNumber = pageNumber;
+		this.isListEndpoint = ep.isListEndpoint();
+		this.isParameterBasedFormat = ep.hasParameterBasedContentNegotiation();
+    	this.thisPageAsURI = URIUtils.newURI( thisPage.getURI() );
+	}
+	
 	public static void addAllMetadata
 		( MergedModels mergedModels
 		, URI ru
@@ -75,7 +94,7 @@ public class EndpointMetadata {
 	        	.addLiteral( OpenSearch.startIndex, perPage * page + 1 )
 	        	;
 
-	    	if (totalResults != null) 
+	    	if (totalResults != null)     		
 	    		thisMetaPage.addLiteral( OpenSearch.totalResults, totalResults.intValue() );
 	    	
 	    	thisMetaPage.addProperty( API.items, content );
@@ -128,25 +147,6 @@ public class EndpointMetadata {
 	    if (wantsMeta.wantsMetadata( "formats" )) metaModel1.add( formatsModel );  else setsMeta.setMetadata( "formats", formatsModel );
 	    if (wantsMeta.wantsMetadata( "bindings" )) metaModel1.add( bindingsModel ); else setsMeta.setMetadata( "bindings", bindingsModel );
 	    if (wantsMeta.wantsMetadata( "execution" )) metaModel1.add( execution ); else setsMeta.setMetadata( "execution", execution );
-	}
-
-	protected final Bindings bindings;
-	protected final Resource thisPage;
-	protected final URI thisPageAsURI;
-	
-	protected final String pageNumber;
-	protected final boolean isListEndpoint;
-	protected final URI pageURI;
-	protected final boolean isParameterBasedFormat;
-	
-	public EndpointMetadata( EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings, URI pageURI ) {
-		this.bindings = bindings;
-		this.pageURI = pageURI;
-		this.thisPage = thisPage;
-		this.pageNumber = pageNumber;
-		this.isListEndpoint = ep.isListEndpoint();
-		this.isParameterBasedFormat = ep.hasParameterBasedContentNegotiation();
-    	this.thisPageAsURI = URIUtils.newURI( thisPage.getURI() );
 	}
 	
 	/**
@@ -286,7 +286,7 @@ public class EndpointMetadata {
 		Resource EP = meta.createResource( SPARQL.Service );
 	//
 		source.addMetadata( EP ); 
-		Resource url = EP.getProperty( API.sparqlEndpoint ).getResource(); 
+		Resource url = EP.getRequiredProperty( API.sparqlEndpoint ).getResource(); 
 		EP.addProperty( SPARQL.url, url );
 	//
 		Resource exec = anExec.inModel(meta);

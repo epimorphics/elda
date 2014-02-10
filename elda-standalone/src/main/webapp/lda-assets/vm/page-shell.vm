@@ -30,7 +30,7 @@
 
 #set ($_count = $thisPage.valueOf("os:totalResults"))
 #set ($_pageSize = $vars['_pageSize'])
-#if ($_pageSize) #else #set ($_pageSize = 10) #end
+#if ($_pageSize) #set ($_pageSize = $utils.toInt($_pageSize)) #else #set ($_pageSize = 10) #end
 
 #set ($_icon_reduced_size = "$resourceRoot/images/green/16x16/Reduced Size.png")
 #set ($_icon_full_size = "$resourceRoot/images/green/16x16/Full Size.png")

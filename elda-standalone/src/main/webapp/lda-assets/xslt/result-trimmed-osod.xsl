@@ -556,7 +556,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		</xsl:if>
 	</nav>
 </xsl:template>
-	
+
 <xsl:template match="result" mode="map">
 	<xsl:variable name="northing" select="key('propertyTerms', $northing-uri)/label" />
 	<xsl:variable name="easting" select="key('propertyTerms', $easting-uri)/label" />
@@ -972,7 +972,14 @@ $prefLabel, $altLabel, $title and $name variables.
 			<xsl:call-template name="createInfo">
 				<xsl:with-param name="text">Links to the items within this page, and to the previous and/or next pages of results.</xsl:with-param>
 			</xsl:call-template>
-			<ul>
+			<xsl:if test="totalResults">
+			    <ul>
+			       <li class="resultcount">
+			          <xsl:apply-templates select="." mode="itemCounts"/>
+			       </li>
+			    </ul>
+			</xsl:if>
+  			<ul>
 				<xsl:if test="prev">
 					<li>
 						<xsl:apply-templates select="prev" mode="nav" />
@@ -993,6 +1000,17 @@ $prefLabel, $altLabel, $title and $name variables.
 			</ul>
 		</section>
 	</xsl:if>
+</xsl:template>
+
+<xsl:template match="result" mode="itemCounts">
+    <xsl:text>Results </xsl:text>
+    <xsl:value-of select="startIndex"/>  
+    <xsl:text> to </xsl:text>
+    <xsl:value-of select="startIndex + count(items/item) - 1"/>
+    <xsl:if test="totalResults">
+      <xsl:text> of </xsl:text>
+      <xsl:value-of select="totalResults"/>  
+    </xsl:if>  
 </xsl:template>
 
 <xsl:template match="result" mode="moreinfo">
