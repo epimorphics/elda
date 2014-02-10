@@ -5,6 +5,12 @@
   names that were URLs (or absolute paths), and so it treated them
   as names of files that it then failed to open.
 
+* Optionally Elda will count the total number of items that are
+  selected and make this available as the value of os:totalResults
+  on the page root. (The count is cached so that a count query does
+  not have to be done for every page of next/prev links.) See
+  the documentation on the reference page.
+
 + ----------------------------------------------------------------------
 | Elda 1.2.28 (RELEASED)
 
