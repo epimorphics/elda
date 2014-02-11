@@ -4,14 +4,14 @@
   <parent>
     <artifactId>elda</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.2.29-SNAPSHOT</version>
+    <version>1.2.29</version>
   </parent>
 
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda-assets</artifactId>
   <packaging>war</packaging>
   <name>elda-assets</name>
-  <version>1.2.29-SNAPSHOT</version>
+  <version>1.2.29</version>
   <description>Elda assets [css, images, etc]</description>
 
   <dependencies>
