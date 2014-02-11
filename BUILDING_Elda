@@ -89,6 +89,8 @@ RELEASING ELDA
   Remove any existing /tmp/tempSCM directory.
   Clone the elda project into /tmp/tempSCM.
 
+    git clone --bare https://github.com/epimorphics/elda.git tempSCM
+
   In your USUAL elda development directory
 
     mvn --batch-mode release:prepare
