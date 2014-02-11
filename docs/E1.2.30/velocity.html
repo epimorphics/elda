@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Elda reference</title>
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
+<link href="../style.css" rel="stylesheet" />
+<script src="../util.js"></script>
+</head>
+
+<body onload="toc()">
+<nav class="navbar navbar-default" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <div class="navbar-brand">
+      <h1 class="not-toc">Elda 1.2.30</h1>
+      <h2 class="not-toc">An implementation of the linked-data API</h2>
+    </div>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav">
+      <li class=""><a href="index.html">Quick start</a></li>
+      <li class="active"><a href="reference.html">Reference</a></li>
+      <li class=""><a href="cribsheet.html">Crib sheet</a></li>
+      <li class=""><a href="search-example.html">Text search example</a></li>
+      <li class=""><a href="velocity.html">Velocity renderer</a></li>
+    </ul>
+    <div class="nav navbar-nav navbar-right">
+      <img class="logo" src="../epilogo-240.png" alt="Epimorphics.com">
+    </div>
+  </div><!-- /.navbar-collapse -->
+</nav>
+
+
+<div class="container">
+<div class="main">
+
+<div id="toc" class="well pull-right">
+<h2 class="not-toc">Table of contents</h2>
+</div>
+
+<h1>Velocity template rendering</h1>
+
+<p>
+    This release of Elda includes the ability to use
+    <a href="http://velocity.apache.org/">Velocity</a>
+    templates for rendering. This feature is <em>provisional</em>;
+    it may change significantly in future releases.
+</p>
+
+<p>
+    To use the Velocity renderer to generate HTML, attach this formatter to
+    your API spec:
+</p>
+
+<pre>
+&lt;yourSpec> api:defaultFormatter
+	[a elda:VelocityFormatter
+	; api:name "html"
+	; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
+	; api:mimeType "text/html"
+	]
+</pre>
+
+<p>
+    By default, this will render the template
+    <code>page-shell.vm</code> found in <code>{_velocityRoot}</code>
+    if <code>_velocityRoot</code> is defined, or in
+    <code>{_resourceRoot/vm}</code> otherwise. (<code>_resourceRoot</code>
+    has a default value.)
+</p>
+
+<p>
+    (Previous versions of Elda loaded templates from
+    <code>webapp/WEB-INF/classes</code>, but with the split between
+    elda-common and elda-assets, the templates have been moved out
+    of the Elda code webapp.)
+</p>
+
+<p>
+    To change the
+    rendered template, set the <code>elda:velocityTemplate</code>
+    property of the formatter to the name of the desired
+    template.
+</p>
+
+<p>
+    You may choose to specify a Velocity formatter as a property of an
+    endpoint rather than as the API-wide default.
+</p>
+
+<p>
+    You can change the associated suffix of the formatter by changing the
+    value of its <code>api:name</code> property, and change the content-type
+    of the generated page by changing the value of the api:mimeType property.
+</p>
+
+<p>
+    Elda looks for <code>{_resourceRoot}/velocity.properties</code>
+    and, if it exists and is non-empty, uses it as its Velocity
+    configuration. If there's no such file, or it contains no
+    property definitions, Elda uses a default configuration that
+    fetches templates from <code>{_velocityRoot}</code> if it
+    is defined and from <code>{_resourceRoot}/vm</code> if not.
+</p>
+
+<h2>The example Velocity renderer</h2>
+
+<img src="elda-velocity-screenshot-1.png" style="float: right; clear: right" />
+
+<p>
+	The Elda title bar links to the RDF specification, the Elda
+	documentation, the Linked Data API specification, and the
+	Epimorphics web page.
+</p>
+
+<p>
+	Underneath that is the list of available formats that this
+	endpoint can display information in; clicking on list
+	items rerenders this page in the format. Since Elda's
+	XSLT-driven HTML renderer and the Velocity renderer both
+	generate HTML but only one can be <em>called</em> HTML,
+	the original renderer gets the "html" name and the new one
+	is named "vhtml".
+</p>
+
+<p>
+	Below the format list the page is displayed in two columns;
+	the left one for search results (information about selected
+	items) and the right one for additional viewing information
+	(map, filters, views and viewing properties).
+</p>
+
+<p> 
+	At the top of the search results Elda displays links to the
+	items on this page, and buttons to move through the item
+	list. Each item entry names the item (displaying its preferred
+	label) and shows selected properties of that item. Values
+	that are themselves resources with properties have their
+	properties displayed <em>unless</em> they have already appeared
+	in an outer display box. Clicking on an item's name will 
+	restrict the display to that single item.
+</p>
+
+<p>
+	Clicking on the operator symbols (&lt;<u>&lt;</u>=<u>&gt;</u>&gt;)
+	toward the right of the search results will restrict the search
+	to items that have the specified value for the specified property.
+	These filters will then appear in the <b>filters</b> section of 
+	the <b>viewing</b> column, where they can be snipped away using the
+	<b>cancel</b> icon.
+</p>
+
+<p>
+	The <b>properties</b> section of <b>viewing</b> shows properties that
+	have been explicitly selected for display. Those properties can be
+	discarded using the <b>cancel</b> icon, extended with ".*" using the
+	<b>star</b> icon, or have a trailing ".*" cut away using the <b>reduce</b>
+	icon. The <b>star</b> icon on the <b>properties</b> title introduces
+	the wildcard property chain "*" into the proeprties if it's not already 
+	present.
+</p>
+
+<p>
+	The <b>views</b> section displays the available views (<em>ie</em>,
+	named sets of properties) for this endpoint. Clicking on the
+	<b>expand</b> icon will toggle displaying the properties of that
+	view; clicking on the <b>plus</b> icon of that property will add
+	it to the <b>properties</b> display. Clicking on the <b>plus</b>
+	icon of the view will set it (and hence all its properties) as
+	the current view.
+</p>
+
+<p>
+	If there are any items in the top-level of the search results that
+	have both a <code>lat</code> and <code>long</code> property, then
+	a map is displayed in the <b>viewing</b> column with markers at
+	those locations.
+</p>
+
+<div style="clear: both">
+
+<h2>Names in the Velocity context</h2>
+
+<p>
+    When rendering a page using Velocity, Elda binds several
+    names in the context:
+</p>
+
+<table class="table table-striped table-condensed">
+    <thead><tr><th>name</th><th>value</th></tr></thead>
+
+    <tr>
+	<td>thisPage</td>
+	<td>
+		A WrappedNode for a resource with the URI of this
+		page.
+	</td>
+    </tr>
+
+    <tr>
+	<td>isItemEndpoint</td>
+	<td>
+		A boolean, true iff this page is for an item endpoint.
+	</td>
+    </tr>
+
+    <tr>
+	<td>isListEndpoint</td>
+	<td>
+		A boolean, true iff this page is for a list endpoint.
+	</td>
+    </tr>
+
+    <tr>
+	<td>primaryTopic</td>
+	<td>
+		A WrappedNode for the primary topic of this page, only defined
+		if this page is for an item endpoint.
+	</td>
+    </tr>
+
+    <tr>
+	<td>names</td>
+	<td>
+		a map from resources to their short names, passed
+		when needed to methods on <code>WrappedNode</code>s.
+	</td>
+	</tr>
+
+    <tr>
+	<td>formats</td>
+	<td>
+		a list of Format objects in order of their names.
+		Each Format has a getName and getLink method;
+		a format's Link is the URI needed to fetch the
+		version of the current page in this format.
+	</td>
+    </tr>
+
+    <tr>
+	<td>items</td>
+	<td>
+		the list of selected items. Each item is a
+		<code>WrappedNode</code>.
+	</td>
+    </tr>
+
+    <tr>
+	<td>meta</td>
+	<td>
+		A map from string pathnames to <code>WrappedNode</code>
+		values. Each pathname is the dot-separated concatenation
+		of the short names of the properties in the path. The
+		proeprty chains are those of the metadata in the result
+		model, disregarding the <code>termBinding</code>s and
+		the <code>variableValues</code> since these have their own
+		context variables.
+	</td>
+    </tr>
+
+    <tr>
+	<td>vars</td>
+	<td>
+		A map from LDA variable names to <code>WrappedNode</code>s
+		representing their values.
+	</td>
+    </tr>
+
+    <tr>
+	<td>filters</td>
+	<td>
+		A map of the name=parameter query parameter values
+		(discarding all the ones that start with "_").
+	</td>
+    </tr>
+
+    <tr>
+	<td>ids</td>
+	<td>
+		An IdMap object which contains a map from Resources to their
+		identifiers for use in HTML <code>id=</code> attributes.
+	</td>
+    </tr>
+
+    <tr>
+	<td>utils</td> 
+	<td>
+	 	Utility methods not appropriate for placing in
+       		WrappedNode or WrappedString.	       
+	</td> 
+    </tr>
+    
+    <tr>
+	<td>utils.println(Object)</td> 
+	<td> 
+		One-argument println to System.err, as a debugging
+		aid. Output starts with ">>".
+	</td> 
+    </tr>
+
+    <tr>
+	<td>utils.println(Object, Object)</td> 
+	<td> 
+		Two-argument space-separated println to System.err,
+		as a debugging aid. Output starts with ">>".
+	</td> 
+    </tr>
+
+    <tr>
+	<td>utils.sort(Object c)</td> 
+	<td>
+		Sorts the sortable collection c in-place.
+	</td> 
+    </tr>
+
+    <tr>
+	<td>utils.join(Collection c, String infix)</td> 
+	<td> 
+		Return an infix-separated concatenation of the
+		toString() values of the elements of c.
+	</td> 
+    </tr>
+
+    <tr>
+	<td>utils.currentMillis()</td> 
+	<td> 
+		Returns the current time in milliseconds since
+		the Velocity renderer was initialised for this
+		rendering, meant as a debugging/profiling aid.
+	</td> 
+    </tr>
+
+    <tr>
+	<td>utils</td> 
+	<td> 
+	</td> 
+    </tr>
+</table>
+
+<h2>Wrapped RDFNodes</h2>
+
+<p>
+	WrappedNodes are wrappers round Jena RDFNodes. When they are created,
+	they are given a ShortNames object to allow them to render their short
+	names and an IdMap object to hold their allocated Id. They have the following methods:
+</p>
+
+<table class="table table-striped table-condensed">
+	<thead>
+		<tr>
+			<th>signature</th>
+			<th>description</th>
+		</tr>
+	</thead>
+<tr>
+	<td>boolean equals(Object other)</td>
+	<td>
+		A WrappedNode is .equals to another object if
+		that object is a WrappedNode and their underlying
+		RDFNodes are equal.
+	</td>
+</tr>
+<tr>
+	<td>String getId()</td>
+	<td>
+		Answer the id of this WrappedNode, allocating a
+		fresh one if necessary.
+	</td>
+</tr>
+
+<tr>
+	<td>WrappedString getLabel()</td>
+	<td>
+		Return this wrapped resource's preferred label;
+		the first literal of (a) this resources skos:prefLabel,
+ 		(b) an unlanguaged rdfs:label, (c) a languaged
+		rdfs:label, (d) the local name of this resource.
+	</td>
+</tr>
+
+<tr>
+	<td>WrappedString getLabel(String wantlanguage)</td>
+	<td>
+	    If wantLanguage is "", return getLabel(). Otherwise,
+	    return the lexical form of some label of this wrapped
+    	    resource which has <code>wantLanguage</code>. If there isn't
+    	    one, return some lexical form with no language. If there
+    	    isn't one, return the local name of the resource.
+	</td>
+</tr>
+
+<tr>
+	<td>boolean isJustALabel()</td>
+	<td>
+		Returns true if this WrappedNode is a Resource node
+		which has exactly one property, and that property
+		has predicate <code>rdfs:label</code>.
+	</td>
+
+</tr>
+
+<tr>
+	<td>WrappedString shortForm()</td>
+	<td>
+		If this node is a wrapped Resource, return the
+		shortname associated with that Resource or its
+		localname if it has no shortname. If this node
+		is a wrapped Literal, return the lexical form of
+		that literal.
+	</td>
+</tr>
+
+<tr>
+	<td>WrappedString getURI</td>
+	<td>
+		If this WrappedNode is a Resource, return its URI.
+	</td>
+</tr>
+
+<tr>
+	<td>boolean isLiteral</td>
+	<td>
+		Return true iff this WrappedNode is a wrapped Literal.
+	</td>
+</tr>
+
+<tr>
+	<td>boolean isResource</td>
+	<td>
+		Return true iff this WrappedNode is a wrapped Resource
+		(which may be a blank node).
+	</td>
+</tr>
+
+<tr>
+	<td>boolean isAnon</td>
+	<td>
+		Return true iff this WrappedNode is a blank node.
+	</td>
+</tr>
+
+<tr>
+	<td>boolean isSelfQuoting</td>
+	<td>
+		Return true iff this WrappedNode is a literal node
+		that is "self-quoting", <i>ie</i> does not need to
+		have quotes round its presentation. In E1.2.30 this
+		means "has a numeric type".
+	</td>
+</tr>
+
+<tr>
+	<td>String getLanguage</td>
+	<td>
+		If this node is a wrapped Literal, return its language
+		if any, otherwise return the empty string.
+	</td>
+</tr>
+
+<tr>
+	<td>WrappedString getLiteralType()</td>
+	<td>
+		Return the short form of the URI representing the type
+		of this wrapped literal node.
+	</td>
+</tr>
+
+<tr>
+	<td>Object getLiteralValue()</td>
+	<td>
+		Return the unadorned value of this literal.
+	</td>
+</tr>
+
+<tr>
+	<td>boolean isList</td>
+	<td>
+		Return true iff this WrappedNode wraps a Resource representing
+		an RDF list.
+	</td>
+</tr>
+
+<tr>
+	<td>List&lt;WrappedNode>asList</td>
+	<td>
+		Return a Java list of WrappedNodes wrapping the elements of
+		the RDF list represented by this WrappedNode.
+	</td>
+</tr>
+
+<tr>
+	<td>List&lt;WrappedNode> getProperties</td>
+	<td>
+		Return a Java list of WrappedNodes which are the
+		wrapped form of the different properties of this
+		WrappedNode.
+	</td>
+</tr>
+
+<tr>
+	<td>List&lt;WrappedNode> getInverseProperties</td>
+	<td>
+		Return a Java list of WrappedNodes which are
+		the wrapped form of predicates P where there is some
+		subject S such that (S, P, this wrapped node).
+	</td>
+</tr>
+
+<tr>
+	<td>List&lt;WrappedNode> getValues(WrappedNode property)</td>
+	<td>
+		Return a Java list of WrappedNodes which are the
+		objects of all statements for which this WrappedNode
+		is the subject and the argument <code>property</code>
+		is the predicate. (This argument will typically be
+		an element from the <code>getProperties</code> list.)
+	</td>
+</tr>
+
+<tr>
+	<td>List&lt;WrappedNode> getInverseValues(WrappedNode property)</td>
+	<td>
+		Return a Java list of WrappedNodes which are the
+		subjects of all statements for which this WrappedNode
+		is the object and the argument <code>property</code>
+		is the predicate. (This argument will typically be
+		an element from the <code>getInverseProperties</code> list.)
+	</td>
+</tr>
+
+<tr>
+	<td>WrappedNode change(String prefix, WrappedNode p, WrappedNode v)</td>
+	<td>
+		Return a new WrappedNode wrapping a resource with the same URI
+		as this one, except that all query parameters whose name is
+		<code>prefix</code> prefixed onto p's shortname have been
+		discarded and replaced by a parameter with that name and with
+		value v.toString().
+	</td>
+</tr>
+
+</table>
+
+<p>
+	Where a String result might contain HTML-significant characters,
+	WrappedNodes return a WrappedString object.
+</p>
+
+<table class="table table-striped table-condensed">
+	<thead>
+		<tr>
+			<th>signature</th>
+			<th>description</th>
+		</tr>
+	</thead>
+
+<tr>
+	<td>WrappedString cut()</td>
+	<td>
+		Returns a new wrapped string who's content is the
+		content of this wrapped string but with spaces
+		inserted in place of runs of '_' and between a
+		lower-case letter followed by an upper-case one,
+		with that letter converted to lower-case.
+	</td>
+</tr>
+
+<tr>
+	<td>String toString()</td>
+	<td>
+		Return the content of this WrappedString,
+		performing HTML escaping.
+	</td>
+</tr>
+
+<tr>
+	<td>String raw()</td>
+	<td>
+		Return the content of this WrappedString
+		without escaping.
+	</td>
+</tr>
+</table>
+
+
+<div class="footer">
+<hr>
+&copy; Copyright 2011&ndash;2013 Epimorphics Limited. For licencing conditions see
+<a href="http://elda.googlecode.com/hg/LICENCE.html">http://elda.googlecode.com/hg/LICENCE.html</a>.
+</div>
+</div>
+
+</div><!-- .container -->
+</body>
+</html>
+

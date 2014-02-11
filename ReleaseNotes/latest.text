@@ -1,4 +1,8 @@
 + ----------------------------------------------------------------------
+| Elda 1.2.30 (DEVELOPING)
+
+
++ ----------------------------------------------------------------------
 | Elda 1.2.29 (RELEASED)
 
 * a bug in RouterRestlet meant that Elda did not recognise stylesheet
