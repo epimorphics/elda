@@ -1,5 +1,5 @@
 + ----------------------------------------------------------------------
-| Elda 1.2.29 (DEVELOPING)
+| Elda 1.2.29 (RELEASED)
 
 * a bug in RouterRestlet meant that Elda did not recognise stylesheet
   names that were URLs (or absolute paths), and so it treated them
