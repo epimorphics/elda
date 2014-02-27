@@ -27,7 +27,7 @@ public class PermaCache extends LimitedCacheBase implements Cache {
         return false;
     }
 
-    @Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, APIResultSet> m ) {
+    @Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, TimedThing<APIResultSet>> m ) {
         return false;
     }
 }

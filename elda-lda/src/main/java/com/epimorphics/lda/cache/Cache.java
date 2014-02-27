@@ -39,7 +39,7 @@ public interface Cache {
 	    Make an entry in the caches that associates the result set <code>rs</code>
 	    with the given list of resources and view.
 	 */
-	public void cacheDescription( List<Resource> results, String view, APIResultSet rs );
+	public void cacheDescription( List<Resource> results, String view, APIResultSet rs, long duration );
 	
 	/**
 	    Answer the API result set remembered for the given list of results and

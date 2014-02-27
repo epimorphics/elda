@@ -34,4 +34,8 @@ public class StubQueryBasis implements QueryBasis {
 	@Override public Boolean getEnableCounting() {
 		return Boolean.FALSE;
 	}
+
+	@Override public long getCacheExpiryMilliseconds() {
+		return 5 * 1000;
+	}
 }

@@ -30,7 +30,7 @@ public class LimitEntriesController extends ControllerBase {
 			return m.size() > limit;
 		}
 
-		@Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, APIResultSet> m) {
+		@Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, TimedThing<APIResultSet>> m) {
 			return m.size() > limit;
 		}
 	}

@@ -145,6 +145,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	public final List<PendingParameterValue> deferredFilters;
 	
+	public final long cacheExpiryMilliseconds;
+	
 	/**
 	    Is a total count requested for this query? true, false, or null
 	    for optional.
@@ -192,6 +194,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		TextSearchConfig getTextSearchConfig();
 		
 		Boolean getEnableCounting();
+		
+		long getCacheExpiryMilliseconds();
 	}
 
 	protected static class FilterExpressions implements ValTranslator.Filters {
@@ -217,6 +221,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.itemTemplate = qb.getItemTemplate();
 		this.isItemEndpoint = qb.isItemEndpoint();
 		this.textSearchConfig = qb.getTextSearchConfig();
+		this.cacheExpiryMilliseconds = qb.getCacheExpiryMilliseconds();
 		//
 		this.deferredFilters = new ArrayList<PendingParameterValue>();
 		this.whereExpressions = new StringBuffer();
@@ -251,24 +256,19 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.subjectResource = other.subjectResource;
 		this.varcount = other.varcount;
 		this.textSearchConfig = other.textSearchConfig;
+		this.cacheExpiryMilliseconds = other.cacheExpiryMilliseconds;
 		//
 		this.languagesFor = new HashMap<String, String>(other.languagesFor);
-		this.basicGraphTriples = new ArrayList<RDFQ.Triple>(
-				other.basicGraphTriples);
-		this.optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>(
-				other.optionalGraphTriples);
-		this.filterExpressions = new ArrayList<RenderExpression>(
-				other.filterExpressions);
+		this.basicGraphTriples = new ArrayList<RDFQ.Triple>(other.basicGraphTriples);
+		this.optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>(other.optionalGraphTriples);
+		this.filterExpressions = new ArrayList<RenderExpression>(other.filterExpressions);
 		this.orderExpressions = new StringBuffer(other.orderExpressions);
 		this.whereExpressions = new StringBuffer(other.whereExpressions);
 		this.varInfo = new HashMap<Variable, Info>(other.varInfo);
-		this.deferredFilters = new ArrayList<PendingParameterValue>(
-				other.deferredFilters);
+		this.deferredFilters = new ArrayList<PendingParameterValue>(other.deferredFilters);
 		this.metadataOptions = new HashSet<String>(other.metadataOptions);
-		this.varsForPropertyChains = new HashMap<String, Variable>(
-				other.varsForPropertyChains);
-		this.vt = new ValTranslator(this, new FilterExpressions(
-				this.filterExpressions), this.sns);
+		this.varsForPropertyChains = new HashMap<String, Variable>(other.varsForPropertyChains);
+		this.vt = new ValTranslator(this, new FilterExpressions(this.filterExpressions), this.sns);
 		this.allowedReserved = new HashSet<String>(other.allowedReserved);
 	}
 
@@ -848,7 +848,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		t.setViewDuration(afterView - afterSelect);
 		rs.setSelectQuery(outerSelect);
 		rs.setTotalCount(totalCount);
-		cache.cacheDescription(results, countingViewKey, rs.clone());
+		cache.cacheDescription(results, countingViewKey, rs.clone(), cacheExpiryMilliseconds);
 		return rs;
 	}
 

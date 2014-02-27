@@ -58,6 +58,8 @@ public class TestCaches
 	
 	static final View fakeView = new View();
 	
+	static long DURATION = 1000;
+	
 	@Test public void testLimitEntriesCache() 
 		{
 		Graph g = GraphTestBase.graphWith( "" );
@@ -66,11 +68,11 @@ public class TestCaches
 		Controller cm = new LimitEntriesController();
 		Cache c = cm.cacheFor( s, "1" );
 		assertEquals( 0, c.numEntries() );
-		c.cacheDescription( resources, "view.string", rs );
+		c.cacheDescription( resources, "view.string", rs, DURATION );
 		assertEquals( 1, c.numEntries() );
-		c.cacheDescription( resources, "view.string.other", rs );
+		c.cacheDescription( resources, "view.string.other", rs, DURATION );
 		assertEquals( 0, c.numEntries() );
-		c.cacheDescription( resources, "view.string.third", rs );
+		c.cacheDescription( resources, "view.string.third", rs, DURATION );
 		assertEquals( 1, c.numEntries() );
 		}
 	
@@ -82,11 +84,11 @@ public class TestCaches
 		Controller cm = new LimitTriplesController();
 		Cache c = cm.cacheFor( s, "2" );
 		assertEquals( 0, c.numEntries() );
-		c.cacheDescription( resources, "view.string", rs );
+		c.cacheDescription( resources, "view.string", rs, DURATION );
 		assertEquals( 1, c.numEntries() );
-		c.cacheDescription( resources, "view.string.other", rs );
+		c.cacheDescription( resources, "view.string.other", rs, DURATION );
 		assertEquals( 0, c.numEntries() );
-		c.cacheDescription( resources, "view.string.third", rs );
+		c.cacheDescription( resources, "view.string.third", rs, DURATION );
 		assertEquals( 1, c.numEntries() );
 		}
 	}

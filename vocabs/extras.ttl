@@ -22,6 +22,15 @@ elda:cachePolicyName a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:cacheExpiryTime a rdf:Property
+	; rdfs:comment 
+		"""
+		If given a value, that is the cache expiry time in seconds
+		for an endpoint or family of endpoints.
+		"""
+	; rdfs:label "cache expiry time"
+	.
+
 elda:className a rdf:Property
 	; rdfs:comment ""
 	.

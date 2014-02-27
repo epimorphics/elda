@@ -31,9 +31,9 @@ public class LimitTriplesController extends ControllerBase {
 			return m.size() > limit;
 		}
 
-		@Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, APIResultSet> m) {
+		@Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, TimedThing<APIResultSet>> m) {
 			long size = 0;
-			for (Map.Entry<String, APIResultSet> e: m.entrySet()) size += e.getValue().modelSize();
+			for (Map.Entry<String, TimedThing<APIResultSet>> e: m.entrySet()) size += e.getValue().thing.modelSize();
 			return size > limit;
 		}
 	}

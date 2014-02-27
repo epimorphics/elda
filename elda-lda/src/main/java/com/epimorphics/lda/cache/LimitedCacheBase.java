@@ -79,6 +79,25 @@ public abstract class LimitedCacheBase implements Cache {
 //    	}
     }
     
+    public static class TimedThing<T> {
+    	
+    	protected final T thing;
+    	protected final long expiresAt;
+    	
+    	public TimedThing(T thing, long expiryDuration) {
+    		this.thing = thing;
+    		this.expiresAt = System.currentTimeMillis() + expiryDuration;
+    	}
+    	
+    	public boolean isLive() {
+    		return System.currentTimeMillis() < expiresAt;
+    	}
+    	
+    	public boolean hasExpired() {
+    		return !isLive();
+    	}
+    }
+    
     static class Cachelet<K, V> {
     	protected final Map<K, V> map = new HashMap<K, V>();
     	
@@ -119,29 +138,40 @@ public abstract class LimitedCacheBase implements Cache {
 		public Set<Map.Entry<K, V>> entrySet() {
 			return map.entrySet();
 		}
+
+		public void remove(K key) {
+			map.remove(key);
+		}
     }
 
     protected abstract boolean exceedsSelectLimit( Cachelet<String, List<Resource>> m) ;
 
-    protected abstract boolean exceedsResultSetLimit( Cachelet<String, APIResultSet> m );
+    protected abstract boolean exceedsResultSetLimit( Cachelet<String, TimedThing<APIResultSet>> m );
 
-    private final Cachelet<String, APIResultSet> cd = new Cachelet<String, APIResultSet>();
+    private final Cachelet<String, TimedThing<APIResultSet>> cd = new Cachelet<String, TimedThing<APIResultSet>>();
 
     private final Cachelet<String, List<Resource>> cs = new Cachelet<String, List<Resource>>();
     
     private final Cachelet<String, Integer> cc = new Cachelet<String, Integer>();
 
     @Override public synchronized APIResultSet getCachedResultSet( List<Resource> results, String view ) {
-        return cd.get( results.toString() + "::" + view );
+        String key = results.toString() + "::" + view;
+		TimedThing<APIResultSet> t = cd.get( key );
+        if (t == null) return null;
+        if (t.hasExpired()) {
+        	System.err.println( ">> removing expired key '" + key + "'" );
+        	cd.remove(key); 
+        }
+        return t.thing;
     }
 
     @Override public synchronized List<Resource> getCachedResources( String select ) {
         return cs.get( select );
     }
 
-    @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs ) {
+    @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs, long duration ) {
         if (log.isDebugEnabled()) log.debug( "caching descriptions for resources " + results );
-        cd.put( results.toString() + "::" + view, rs );
+        cd.put( results.toString() + "::" + view, new TimedThing<APIResultSet>(rs, duration ));
         if (exceedsResultSetLimit( cd )) {
         	if (log.isDebugEnabled()) log.debug( "clearing description cache for " + label );
             cd.clear();
