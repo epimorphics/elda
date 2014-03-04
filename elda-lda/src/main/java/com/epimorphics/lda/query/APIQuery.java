@@ -49,6 +49,10 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @version $Revision: $
  */
 public class APIQuery implements VarSupply, WantsMetadata {
+	
+	public static class NoteBoard {
+		public Integer totalResults;
+	}
 
 	static final Logger log = LoggerFactory.getLogger(APIQuery.class);
 
@@ -811,10 +815,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	/**
 	 * Run the defined query against the datasource
 	 */
-	public APIResultSet runQuery(Controls c, APISpec spec, Cache cache,	Bindings call, View view) {
+	public APIResultSet runQuery(NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings call, View view) {
 		Source source = spec.getDataSource();
 		try {
-			return runQueryWithSource(c, spec, cache, call, view, source);
+			return runQueryWithSource(nb, c, spec, cache, call, view, source);
 		} catch (QueryExceptionHTTP e) {
 			EldaException.ARQ_Exception(source, e);
 			return /* NEVER */null;
@@ -823,7 +827,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	// may be subclassed
 	protected APIResultSet runQueryWithSource
-		( Controls c, APISpec spec, Cache cache, Bindings call, View view, Source source) {
+		( NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings call, View view, Source source) {
 		Times t = c.times;
 		long origin = System.currentTimeMillis();
 		Triad<String, List<Resource>, Integer> queryAndResults = selectResources(c, cache, spec, call, source);
@@ -847,7 +851,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		long afterView = System.currentTimeMillis();
 		t.setViewDuration(afterView - afterSelect);
 		rs.setSelectQuery(outerSelect);
-		rs.setTotalCount(totalCount);
+		rs.setTotalCount(totalCount); nb.totalResults = totalCount;
 		cache.cacheDescription(results, countingViewKey, rs.clone(), cacheExpiryMilliseconds);
 		return rs;
 	}

@@ -29,7 +29,8 @@ public class TestQueryTemplate {
 		q.addSubjectHasProperty( RDF.type, RDFQ.var( "?type" ) );
 		View v = View.newTemplateView( "_template", "?item <{{NS}}hasData> ?val.".replace("{{NS}}", NS ) );
 		APIResultSet rs = q.runQuery
-			( new Controls()
+			( new APIQuery.NoteBoard()
+			, new Controls()
 			, spec
 			, Registry.cacheFor( "default", spec.getDataSource() )
 			, new Bindings()

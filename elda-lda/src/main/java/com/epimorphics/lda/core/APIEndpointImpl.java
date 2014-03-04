@@ -90,13 +90,14 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
 	    View view = buildQueryAndView( b, query );
 	//    
-	    APIResultSet unfiltered = query.runQuery( r.c, spec.getAPISpec(), cache, b, view );
+	    APIQuery.NoteBoard nb = new APIQuery.NoteBoard();
+	    APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
 	//
 	    Context context = spec.getAPISpec().getShortnameService().asContext();
 		CompleteContext cc = new CompleteContext( r.mode, context, filtered.getModelPrefixes() );   
-	    createMetadata( r, cc, filtered, b, query );
+	    createMetadata( r, cc, nb.totalResults, filtered, b, query );
 	    cc.include( filtered.getMergedModel() );	    
 	    Triad<APIResultSet, Map<String, String>, Bindings> result = new Triad<APIResultSet, Map<String, String>, Bindings>( filtered, cc.Do(), b );
 		return result;
@@ -151,7 +152,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		return other;
 	}
 
-    private void createMetadata( APIEndpoint.Request r, CompleteContext cc, APIResultSet rs, Bindings bindings, APIQuery query ) {
+    private void createMetadata( APIEndpoint.Request r, CompleteContext cc, Integer totalResults, APIResultSet rs, Bindings bindings, APIQuery query ) {
 		boolean suppress_IPTO = bindings.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 		boolean exceptionIfEmpty = bindings.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
 	//
@@ -169,7 +170,6 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
-        Integer totalResults = rs.getTotalCount();
                
     //
         String template = spec.getURITemplate();
