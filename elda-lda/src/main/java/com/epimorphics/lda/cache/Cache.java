@@ -27,7 +27,7 @@ public interface Cache {
 	    Make an entry in the cache that binds the given list of results
 	    to the given select query string.
 	*/
-	public void cacheSelection( String selectQuery, List<Resource> results );
+	public void cacheSelection( String selectQuery, List<Resource> results, long duration );
 
 	/**
 	    Answer the list of resources associated with this select query if
@@ -81,7 +81,7 @@ public interface Cache {
 	/**
 	    Put the total number of items that this query returns.
 	*/
-	public void putCount(String countQueryString, int count);
+	public void putCount(String countQueryString, int count, long duration);
 	
 	
 	public interface Controller {

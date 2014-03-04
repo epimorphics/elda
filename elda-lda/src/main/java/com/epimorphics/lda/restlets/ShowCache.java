@@ -31,6 +31,6 @@ import com.epimorphics.lda.cache.Cache;
 		sb.append( "<h1>cache state</h1>\n" );
 		Cache.Registry.showAll( sb );
 		sb.append( "</body></html>\n" );
-		return RouterRestlet.returnAs( sb.toString(), "text/html" );
+		return RouterRestlet.returnAs( RouterRestlet.NO_EXPIRY, sb.toString(), "text/html" );
 		}
 }

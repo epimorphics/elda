@@ -34,7 +34,7 @@ public class TestExtractsEndpointExpiryTimes {
 		Resource e = spec.getResource( spec.expandPrefix( ":e" ) );
 		APISpec a = SpecUtil.specFrom( s );
 		APIEndpointSpec eps = new APIEndpointSpec( a, null, e );
-		assertEquals( 5 * 60 * 1000, eps.getCacheExpiryMilliseconds() );
+		assertTrue( eps.getCacheExpiryMilliseconds() < 0);
 	}
 	
 	@Test public void testInheritedEndpointExpiryTime() {

@@ -23,7 +23,7 @@ public class PermaCache extends LimitedCacheBase implements Cache {
         super(label);
     }
 
-    @Override protected synchronized boolean exceedsSelectLimit( Cachelet<String, List<Resource>> m ) {
+    @Override protected synchronized boolean exceedsSelectLimit( Cachelet<String, TimedThing<List<Resource>>> m ) {
         return false;
     }
 

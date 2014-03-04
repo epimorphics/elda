@@ -144,29 +144,36 @@ public abstract class LimitedCacheBase implements Cache {
 		}
     }
 
-    protected abstract boolean exceedsSelectLimit( Cachelet<String, List<Resource>> m) ;
+    protected abstract boolean exceedsSelectLimit( Cachelet<String, TimedThing<List<Resource>>> m) ;
 
     protected abstract boolean exceedsResultSetLimit( Cachelet<String, TimedThing<APIResultSet>> m );
 
     private final Cachelet<String, TimedThing<APIResultSet>> cd = new Cachelet<String, TimedThing<APIResultSet>>();
 
-    private final Cachelet<String, List<Resource>> cs = new Cachelet<String, List<Resource>>();
+    private final Cachelet<String, TimedThing<List<Resource>>> cs = new Cachelet<String, TimedThing<List<Resource>>>();
     
-    private final Cachelet<String, Integer> cc = new Cachelet<String, Integer>();
+    private final Cachelet<String, TimedThing<Integer>> cc = new Cachelet<String, TimedThing<Integer>>();
 
     @Override public synchronized APIResultSet getCachedResultSet( List<Resource> results, String view ) {
         String key = results.toString() + "::" + view;
 		TimedThing<APIResultSet> t = cd.get( key );
         if (t == null) return null;
         if (t.hasExpired()) {
-        	System.err.println( ">> removing expired key '" + key + "'" );
+        	// System.err.println( ">> removing expired key '" + key + "'" );
         	cd.remove(key); 
+        	return null;
         }
         return t.thing;
     }
 
     @Override public synchronized List<Resource> getCachedResources( String select ) {
-        return cs.get( select );
+        TimedThing<List<Resource>> t = cs.get( select );
+        if (t == null) return null;
+        if (t.hasExpired()) {
+        	cs.remove(select);
+        	return null;
+        }
+        return t.thing;
     }
 
     @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs, long duration ) {
@@ -178,9 +185,9 @@ public abstract class LimitedCacheBase implements Cache {
         }
     }
 
-    @Override public synchronized void cacheSelection( String select, List<Resource> results ) {
+    @Override public synchronized void cacheSelection( String select, List<Resource> results, long duration ) {
     	if (log.isDebugEnabled()) log.debug( "caching resource selection for query " + select );
-    	cs.put( select, results );
+    	cs.put( select, new TimedThing<List<Resource>>(results, duration) );
         if (exceedsSelectLimit( cs )) {
         	if (log.isDebugEnabled()) log.debug( "clearing select cache for " + label );
             cs.clear();
@@ -192,16 +199,21 @@ public abstract class LimitedCacheBase implements Cache {
 	    "not known".
 	*/
 	@Override public synchronized int getCount(String countQueryString) {
-		Integer already = cc.get(countQueryString);
-		return already == null ? -1 : already.intValue();
+		TimedThing<Integer> already = cc.get(countQueryString);
+		if (already == null) return -1;
+		if (already.hasExpired()) {
+			cc.remove(countQueryString);
+			return -1;
+		}
+		return already.thing.intValue();
 	}
 	
 	/**
 	    Put the total number of items that this query returns.
 	*/
-	@Override public synchronized void putCount(String countQueryString, int count) {
+	@Override public synchronized void putCount(String countQueryString, int count, long duration) {
 		if (cc.size() > countLimit()) cc.clear();
-		cc.put(countQueryString, new Integer(count));
+		cc.put(countQueryString, new TimedThing<Integer>(new Integer(count), duration));
 	}
 	
 	// temporary

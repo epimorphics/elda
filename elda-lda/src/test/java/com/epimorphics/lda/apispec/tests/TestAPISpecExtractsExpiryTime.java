@@ -12,7 +12,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class TestAPISpecExtractsExpiryTime {
 	
 	@Test public void testExtractsDefaultExpiry() {
-		testExtractsExpiry( 5 * 60 * 1000, "" );
+		testExtractsExpiry( -1000, "" );
 		testExtractsExpiry( 1 * 1000, "elda:cacheExpiryTime 1" );
 		testExtractsExpiry( 10 * 1000, "elda:cacheExpiryTime 10" );
 		testExtractsExpiry( 100 * 1000, "elda:cacheExpiryTime 100" );

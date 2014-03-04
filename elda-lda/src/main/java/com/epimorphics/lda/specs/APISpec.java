@@ -119,7 +119,7 @@ public class APISpec {
         this.factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         this.hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
 		this.cachePolicyName = getStringValue( specification, EXTRAS.cachePolicyName, "default" );
-		this.cacheExpiryMilliseconds = getSecondsValue( specification, EXTRAS.cacheExpiryTime, 5 * 60) * 1000;
+		this.cacheExpiryMilliseconds = getSecondsValue( specification, EXTRAS.cacheExpiryTime, -1) * 1000;
         this.enableCounting = RDFUtils.getOptionalBooleanValue( specification, EXTRAS.enableCounting, Boolean.FALSE );        
 		extractEndpointSpecifications( specification );
         extractModelPrefixEditor( specification );

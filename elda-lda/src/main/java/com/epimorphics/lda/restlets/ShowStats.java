@@ -22,6 +22,6 @@ import com.epimorphics.lda.support.pageComposition.ComposeStatsDisplay;
 	    Render the statistics into HTML and respond with it.
 	*/
 	@GET @Produces("text/html") public synchronized Response showStats() {
-		return RouterRestlet.returnAs( new ComposeStatsDisplay().renderStatsPage(), "text/html" );
+		return RouterRestlet.returnAs( RouterRestlet.NO_EXPIRY, new ComposeStatsDisplay().renderStatsPage(), "text/html" );
 	}
 }

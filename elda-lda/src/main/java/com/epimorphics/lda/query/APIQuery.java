@@ -903,7 +903,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		Query q = createQuery(selectQuery);
 		if (log.isDebugEnabled()) log.debug("Running query: " + selectQuery.replaceAll("\n", " "));
 		source.executeSelect(q, new ResultResourcesReader(results));
-		cache.cacheSelection(selectQuery, results);
+		cache.cacheSelection(selectQuery, results, cacheExpiryMilliseconds);
 		return new Triad<String, List<Resource>, Integer>(selectQuery, results, totalCount );
 	}
 
@@ -916,7 +916,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 				Query countQuery = createQuery(countQueryString);
 				CountConsumer cc = new CountConsumer();
 				s.executeSelect( countQuery, cc );
-				c.putCount(countQueryString, cc.count);
+				c.putCount(countQueryString, cc.count, cacheExpiryMilliseconds);
 				return cc.count;
 			} else {				
 				return already;
@@ -1018,8 +1018,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			} catch (APIException e) {
 				throw e;
 			} catch (Throwable t) {
-				throw new APIException(
-						"Query execution problem on query: " + t, t);
+				throw new APIException("Query execution problem on query: " + t, t);
 			}
 		}
 

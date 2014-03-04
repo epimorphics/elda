@@ -50,7 +50,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 @Path("/control/{path: .*}") public class ControlRestlet {
 
-    static class SpecRecord {
+	static class SpecRecord {
         final Match match;
         final boolean isAPI;   
 
@@ -99,7 +99,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            return returnAs(ModelIOUtils.renderModelAs(rec.getSpecModel(), "Turtle"), "text/plain");
+            return returnAs(RouterRestlet.NO_EXPIRY, ModelIOUtils.renderModelAs(rec.getSpecModel(), "Turtle"), "text/plain");
         }
     }
     
@@ -110,7 +110,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            return returnAs(ModelIOUtils.renderModelAs(rec.getSpecModel(), "Turtle"), "text/turtle");
+            return returnAs(RouterRestlet.NO_EXPIRY, ModelIOUtils.renderModelAs(rec.getSpecModel(), "Turtle"), "text/turtle");
         }
     }
     
@@ -121,7 +121,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
-            return returnAs(ModelIOUtils.renderModelAs(rec.getSpecModel(), "RDF/XML-ABBREV"), "application/rdf+xml");
+            return returnAs(RouterRestlet.NO_EXPIRY, ModelIOUtils.renderModelAs(rec.getSpecModel(), "RDF/XML-ABBREV"), "application/rdf+xml");
         }
     }
     
@@ -142,7 +142,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
             } catch (Throwable e) {
             	return returnError( e.getMessage() );
             }
-            return returnAs(enc, "application/json");
+            return returnAs(RouterRestlet.NO_EXPIRY, enc, "application/json");
         }
     }
     
@@ -158,7 +158,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
                 .replace("${endpoint}", pathstub)
                 .replace("${list}", ui.getBaseUri() + "api/" + pathstub)
                 .replace("${model}", ModelIOUtils.renderModelAs(rec.getSpecModel(), "Turtle"));
-            return returnAs(body, "text/html");
+            return returnAs(RouterRestlet.NO_EXPIRY, body, "text/html");
         }
     }
     
