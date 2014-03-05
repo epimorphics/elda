@@ -81,12 +81,12 @@ public abstract class LimitedCacheBase implements Cache {
     
     public static class TimedThing<T> {
     	
-    	protected final T thing;
-    	protected final long expiresAt;
+    	public final T thing;
+    	public final long expiresAt;
     	
-    	public TimedThing(T thing, long expiryDuration) {
+    	public TimedThing(T thing, long expiresAt) {
     		this.thing = thing;
-    		this.expiresAt = System.currentTimeMillis() + expiryDuration;
+    		this.expiresAt = expiresAt;
     	}
     	
     	public boolean isLive() {
@@ -154,7 +154,7 @@ public abstract class LimitedCacheBase implements Cache {
     
     private final Cachelet<String, TimedThing<Integer>> cc = new Cachelet<String, TimedThing<Integer>>();
 
-    @Override public synchronized APIResultSet getCachedResultSet( List<Resource> results, String view ) {
+    @Override public synchronized TimedThing<APIResultSet> getCachedResultSet( List<Resource> results, String view ) {
         String key = results.toString() + "::" + view;
 		TimedThing<APIResultSet> t = cd.get( key );
         if (t == null) return null;
@@ -163,7 +163,7 @@ public abstract class LimitedCacheBase implements Cache {
         	cd.remove(key); 
         	return null;
         }
-        return t.thing;
+        return t;
     }
 
     @Override public synchronized List<Resource> getCachedResources( String select ) {
@@ -176,18 +176,18 @@ public abstract class LimitedCacheBase implements Cache {
         return t.thing;
     }
 
-    @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs, long duration ) {
+    @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs, long expiresAt ) {
         if (log.isDebugEnabled()) log.debug( "caching descriptions for resources " + results );
-        cd.put( results.toString() + "::" + view, new TimedThing<APIResultSet>(rs, duration ));
+        cd.put( results.toString() + "::" + view, new TimedThing<APIResultSet>(rs, expiresAt ));
         if (exceedsResultSetLimit( cd )) {
         	if (log.isDebugEnabled()) log.debug( "clearing description cache for " + label );
             cd.clear();
         }
     }
 
-    @Override public synchronized void cacheSelection( String select, List<Resource> results, long duration ) {
+    @Override public synchronized void cacheSelection( String select, List<Resource> results, long expiresAt ) {
     	if (log.isDebugEnabled()) log.debug( "caching resource selection for query " + select );
-    	cs.put( select, new TimedThing<List<Resource>>(results, duration) );
+    	cs.put( select, new TimedThing<List<Resource>>(results, expiresAt) );
         if (exceedsSelectLimit( cs )) {
         	if (log.isDebugEnabled()) log.debug( "clearing select cache for " + label );
             cs.clear();
@@ -211,9 +211,9 @@ public abstract class LimitedCacheBase implements Cache {
 	/**
 	    Put the total number of items that this query returns.
 	*/
-	@Override public synchronized void putCount(String countQueryString, int count, long duration) {
+	@Override public synchronized void putCount(String countQueryString, int count, long expiresAt) {
 		if (cc.size() > countLimit()) cc.clear();
-		cc.put(countQueryString, new TimedThing<Integer>(new Integer(count), duration));
+		cc.put(countQueryString, new TimedThing<Integer>(new Integer(count), expiresAt));
 	}
 	
 	// temporary

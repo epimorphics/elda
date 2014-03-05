@@ -10,6 +10,7 @@ package com.epimorphics.lda.cache;
 
 import java.util.*;
 
+import com.epimorphics.lda.cache.LimitedCacheBase.TimedThing;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.sources.Source;
@@ -27,7 +28,7 @@ public interface Cache {
 	    Make an entry in the cache that binds the given list of results
 	    to the given select query string.
 	*/
-	public void cacheSelection( String selectQuery, List<Resource> results, long duration );
+	public void cacheSelection( String selectQuery, List<Resource> results, long expiresAt );
 
 	/**
 	    Answer the list of resources associated with this select query if
@@ -39,13 +40,13 @@ public interface Cache {
 	    Make an entry in the caches that associates the result set <code>rs</code>
 	    with the given list of resources and view.
 	 */
-	public void cacheDescription( List<Resource> results, String view, APIResultSet rs, long duration );
+	public void cacheDescription( List<Resource> results, String view, APIResultSet rs, long expiresAt );
 	
 	/**
 	    Answer the API result set remembered for the given list of results and
 	    view, or null if there isn't one.
 	 */
-	public APIResultSet getCachedResultSet(List<Resource> results, String view );
+	public TimedThing<APIResultSet> getCachedResultSet(List<Resource> results, String view );
 	
 	/**
 	    Clear this cache.
@@ -81,8 +82,7 @@ public interface Cache {
 	/**
 	    Put the total number of items that this query returns.
 	*/
-	public void putCount(String countQueryString, int count, long duration);
-	
+	public void putCount(String countQueryString, int count, long expiresAt);
 	
 	public interface Controller {
 		/**

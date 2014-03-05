@@ -20,6 +20,7 @@ import com.epimorphics.lda.renderers.RendererFactory;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.MultiMap;
+import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 
@@ -39,7 +40,7 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Triad<APIResultSet, Map<String, String>, Bindings> call( APIEndpoint.Request r, Match match, String contextPath, MultiMap<String, String> queryParams ) {
+	public static Triad<APIResultSet, Map<String, String>, Bindings> call( APIEndpoint.Request r, NoteBoard nb, Match match, String contextPath, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		
 		Bindings vs = new Bindings( r.context )
@@ -50,7 +51,7 @@ public class APIEndpointUtil {
 			;
 		
 		Bindings cc = Bindings.createContext( vs, queryParams );
-		return ep.call( r.withBindings(cc) );
+		return ep.call( r.withBindings(cc), nb );
 	}
 
 	private static String getHostAndPort(URI u) {

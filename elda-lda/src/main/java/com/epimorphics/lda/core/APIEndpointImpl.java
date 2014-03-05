@@ -31,6 +31,7 @@ import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.*;
+import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.*;
@@ -81,7 +82,7 @@ public class APIEndpointImpl implements APIEndpoint {
     	return defaults;
     }
     
-    @Override public Triad<APIResultSet, Map<String, String>, Bindings> call( Request r ) {
+    @Override public Triad<APIResultSet, Map<String, String>, Bindings> call( Request r, NoteBoard nb ) {
 		Bindings b = r.context.copyWithDefaults( spec.getBindings() );
 	    APIQuery query = spec.getBaseQuery();
 	//
@@ -90,7 +91,6 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
 	    View view = buildQueryAndView( b, query );
 	//    
-	    APIQuery.NoteBoard nb = new APIQuery.NoteBoard();
 	    APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );

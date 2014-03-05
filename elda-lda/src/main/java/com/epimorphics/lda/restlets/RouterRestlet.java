@@ -366,8 +366,9 @@ import com.sun.jersey.api.NotFoundException;
         	
         	ModelPrefixEditor mpe = ep.getSpec().getAPISpec().getModelPrefixEditor();
         //
+        	NoteBoard nb = new NoteBoard();
         	Triad<APIResultSet, Map<String, String>, Bindings> resultsAndBindings = 
-        		APIEndpointUtil.call( req, match, contextPath, queryParams );
+        		APIEndpointUtil.call( req, nb, match, contextPath, queryParams );
         	
         	Map<String, String> termBindings = mpe.rename( resultsAndBindings.b );
         //
@@ -382,8 +383,10 @@ import com.sun.jersey.api.NotFoundException;
         		}
         	}
         	
-        	long interval = ep.getSpec().getCacheExpiryMilliseconds();        	
-        	String expiresDate = (interval < 0 ? null : nowPlusIntervalAsRFC1123(interval));
+        	long expiresAt = nb.expiresAt;   
+//        	System.err.println( ">> expiresAt: " + expiresAt + "ms" );
+//        	System.err.println( ">> timeNow:   " + System.currentTimeMillis() + "ms" );
+        	String expiresDate = expiresAt < System.currentTimeMillis() ? null : nowPlusIntervalAsRFC1123(expiresAt);
 						
 			MediaType mt = r.getMediaType(rc);
 			log.info( "rendering with formatter " + mt );
@@ -423,12 +426,17 @@ import com.sun.jersey.api.NotFoundException;
     /**
         Return now + interval, encoded as an http header date.
     */
-    private String nowPlusIntervalAsRFC1123(long interval) {
+    private String nowPlusIntervalAsRFC1123(long expiresAt) {
     	Calendar c = Calendar.getInstance();
-    	c.setTimeInMillis(c.getTimeInMillis() + interval);
+    	c.setTimeInMillis(expiresAt);
     	SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.UK);
     	dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
     	String result = dateFormat.format(c.getTime());
+    	
+//    	System.err.println( ">> expires (RFC): " + result );
+//    	long delta = expiresAt - System.currentTimeMillis();
+//    	System.err.println( ">> expires in " + (delta/1000) + "s" );
+    	
     	return result;
 	}
 

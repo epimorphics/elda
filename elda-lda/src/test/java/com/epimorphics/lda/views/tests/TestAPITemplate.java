@@ -112,7 +112,7 @@ public class TestAPITemplate {
 		MultiMap<String, String> map = MakeData.parseQueryString( params );
 		URI ru = URIUtils.newURI( "/this" );
 		Bindings cc = Bindings.createContext( bindTemplate( epBindings, "/this", "/path", map ), map );
-		Triad<APIResultSet, Map<String, String>, Bindings> resultsAndFormat = ep.call( new APIEndpoint.Request( controls, ru, cc ) );
+		Triad<APIResultSet, Map<String, String>, Bindings> resultsAndFormat = ep.call( new APIEndpoint.Request( controls, ru, cc ), new NoteBoard() );
 		Model rsm = resultsAndFormat.a.getMergedModel();
 		
 		Model obtained = ModelFactory.createDefaultModel();

@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
+import com.epimorphics.lda.cache.LimitedCacheBase.TimedThing;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.exceptions.APIException;
@@ -50,10 +51,6 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  */
 public class APIQuery implements VarSupply, WantsMetadata {
 	
-	public static class NoteBoard {
-		public Integer totalResults;
-	}
-
 	static final Logger log = LoggerFactory.getLogger(APIQuery.class);
 
 	public static final Variable SELECT_VAR = RDFQ.var("?item");
@@ -839,11 +836,12 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		Integer totalCount = queryAndResults.c;
 		String countingViewKey = (counting() ? "(counting) " : "") + view.toString();
 		
-		APIResultSet already = cache.getCachedResultSet(results, countingViewKey);
-		if (c.allowCache && already != null) {			
+		TimedThing<APIResultSet> already = cache.getCachedResultSet(results, countingViewKey);
+		if (c.allowCache && already != null) {	
+			nb.expiresAt = already.expiresAt;
 			t.usedViewCache();
 			if (log.isDebugEnabled()) log.debug("re-using cached results for " + results);
-			return already.clone();
+			return already.thing.clone();
 		}
 
 		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, view, results);
@@ -851,9 +849,18 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		long afterView = System.currentTimeMillis();
 		t.setViewDuration(afterView - afterSelect);
 		rs.setSelectQuery(outerSelect);
-		rs.setTotalCount(totalCount); nb.totalResults = totalCount;
-		cache.cacheDescription(results, countingViewKey, rs.clone(), cacheExpiryMilliseconds);
+		rs.setTotalCount(totalCount); 
+		nb.totalResults = totalCount;
+		
+		long expiryTime = nowPlus(cacheExpiryMilliseconds);
+		nb.expiresAt = expiryTime;
+		cache.cacheDescription(results, countingViewKey, rs.clone(), expiryTime);
+		
 		return rs;
+	}
+
+	private long nowPlus(long duration) {
+		return System.currentTimeMillis() + duration;
 	}
 
 	// may be subclassed
@@ -907,7 +914,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		Query q = createQuery(selectQuery);
 		if (log.isDebugEnabled()) log.debug("Running query: " + selectQuery.replaceAll("\n", " "));
 		source.executeSelect(q, new ResultResourcesReader(results));
-		cache.cacheSelection(selectQuery, results, cacheExpiryMilliseconds);
+		cache.cacheSelection(selectQuery, results, nowPlus(cacheExpiryMilliseconds));
 		return new Triad<String, List<Resource>, Integer>(selectQuery, results, totalCount );
 	}
 
@@ -920,7 +927,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 				Query countQuery = createQuery(countQueryString);
 				CountConsumer cc = new CountConsumer();
 				s.executeSelect( countQuery, cc );
-				c.putCount(countQueryString, cc.count, cacheExpiryMilliseconds);
+				c.putCount(countQueryString, cc.count, nowPlus(cacheExpiryMilliseconds));
 				return cc.count;
 			} else {				
 				return already;

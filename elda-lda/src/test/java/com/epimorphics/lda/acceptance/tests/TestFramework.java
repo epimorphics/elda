@@ -249,7 +249,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		MultiMap<String, String> map = MakeData.parseQueryString( w.queryParams );
 		URI ru = URIUtils.newURI(w.path);
 		Bindings cc = Bindings.createContext( bindTemplate( epBindings, w.template, w.path, map ), map );
-		Triad<APIResultSet, Map<String, String>, Bindings> resultsAndFormat = ep.call( new APIEndpoint.Request( controls, ru, cc ) );
+		Triad<APIResultSet, Map<String, String>, Bindings> resultsAndFormat = ep.call( new APIEndpoint.Request( controls, ru, cc ), new NoteBoard() );
 		Model rsm = resultsAndFormat.a.getMergedModel();
 //		System.err.println( ">> " + rs.getResultList() );				
 //		System.err.println( "||>> " + resultsAndFormat.a.getSelectQuery() );

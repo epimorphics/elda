@@ -25,6 +25,7 @@ import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.Controls;
+import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.Triad;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -84,7 +85,7 @@ public interface APIEndpoint {
      	@param r the request
      	@return Couple(rs, cc): the ResultSet for rendering and the call context used for the result set.
     */    
-    public Triad<APIResultSet, Map<String, String>, Bindings> call( Request r );
+    public Triad<APIResultSet, Map<String, String>, Bindings> call( Request r, NoteBoard nb );
     
     /**
      	Return a metadata description for the query that would be run by this endpoint

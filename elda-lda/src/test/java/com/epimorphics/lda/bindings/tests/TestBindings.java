@@ -63,7 +63,7 @@ public class TestBindings {
 		
 		APIEndpoint.Request r = new APIEndpoint.Request( controls, req, new Bindings() ).withFormat("xml");
 		
-		Triad<APIResultSet, Map<String, String>, Bindings> results = APIEndpointUtil.call( r, match, "s", params );
+		Triad<APIResultSet, Map<String, String>, Bindings> results = APIEndpointUtil.call( r, new NoteBoard(), match, "s", params );
 //		System.err.println( ">> class: " + results.c.getStringValue( "class" ) );
 		String sq = results.a.getSelectQuery();
 //		System.err.println( ">> " + sq );
