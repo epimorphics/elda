@@ -11,6 +11,7 @@ package com.epimorphics.lda.cache;
 import java.util.List;
 import java.util.Map;
 
+import com.epimorphics.lda.cache.Cache.Clock;
 import com.epimorphics.lda.core.APIResultSet;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -21,9 +22,13 @@ public class LimitTriplesController extends ControllerBase {
 	static class LimitTriplesCache extends LimitedCacheBase {
 
 		private final int limit;
-		
+
 		public LimitTriplesCache( String label, int limit ) {
-			super( label );
+			this(Clock.SystemClock, label, limit);
+		}
+		
+		public LimitTriplesCache( Clock clock, String label, int limit ) {
+			super( clock, label );
 			this.limit = limit;
 		}
 
@@ -40,13 +45,23 @@ public class LimitTriplesController extends ControllerBase {
 	
 	protected final static class Factory implements CacheNewer {
 		
+		final Clock clock;
+		
+		public Factory(Clock clock) {
+			this.clock = clock;
+		}
+		
 		@Override public Cache New( String label, String policyValue ) {
 			int limit = policyValue.length() == 0 ? DEFAULT : Integer.parseInt( policyValue );
-			return new LimitTriplesCache( label, limit );
+			return new LimitTriplesCache( clock, label, limit );
 		}
 	}
 	
+	public LimitTriplesController(Clock c) {
+		super( new Factory(c) );
+	}
+	
 	public LimitTriplesController() {
-		super( new Factory() );
+		this(Clock.SystemClock);
 	}
 }

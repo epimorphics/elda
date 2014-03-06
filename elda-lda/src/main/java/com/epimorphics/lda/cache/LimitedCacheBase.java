@@ -21,9 +21,11 @@ public abstract class LimitedCacheBase implements Cache {
 
     protected final String label;
     protected final int identity;
+    protected final Clock clock;
 
-    public LimitedCacheBase( String label ) {
+    public LimitedCacheBase( Clock clock, String label ) {
         this.label = label;
+        this.clock = clock;
         this.identity = Cache.Registry.newIdentity();
     }
     
@@ -89,12 +91,8 @@ public abstract class LimitedCacheBase implements Cache {
     		this.expiresAt = expiresAt;
     	}
     	
-    	public boolean isLive() {
-    		return System.currentTimeMillis() < expiresAt;
-    	}
-    	
-    	public boolean hasExpired() {
-    		return !isLive();
+    	public boolean hasExpired(Clock c) {
+    		return expiresAt < c.currentTimeMillis();
     	}
     }
     
@@ -158,8 +156,8 @@ public abstract class LimitedCacheBase implements Cache {
         String key = results.toString() + "::" + view;
 		TimedThing<APIResultSet> t = cd.get( key );
         if (t == null) return null;
-        if (t.hasExpired()) {
-        	// System.err.println( ">> removing expired key '" + key + "'" );
+        if (t.hasExpired(clock)) {
+//        	 System.err.println( ">> removing expired key '" + key + "'" );
         	cd.remove(key); 
         	return null;
         }
@@ -169,7 +167,7 @@ public abstract class LimitedCacheBase implements Cache {
     @Override public synchronized List<Resource> getCachedResources( String select ) {
         TimedThing<List<Resource>> t = cs.get( select );
         if (t == null) return null;
-        if (t.hasExpired()) {
+        if (t.hasExpired(clock)) {
         	cs.remove(select);
         	return null;
         }
@@ -201,7 +199,7 @@ public abstract class LimitedCacheBase implements Cache {
 	@Override public synchronized int getCount(String countQueryString) {
 		TimedThing<Integer> already = cc.get(countQueryString);
 		if (already == null) return -1;
-		if (already.hasExpired()) {
+		if (already.hasExpired(clock)) {
 			cc.remove(countQueryString);
 			return -1;
 		}

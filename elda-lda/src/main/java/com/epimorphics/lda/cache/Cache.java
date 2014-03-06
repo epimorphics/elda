@@ -118,6 +118,26 @@ public interface Cache {
 	}
 	
 	/**
+	    A Clock-like object that says what the current time in milliseconds
+	    is pretending to be. (It might be a fake for testing, though.)
+	*/
+	public interface Clock {
+		
+		public long currentTimeMillis();
+		
+		/**
+		    A Clock that reports the "actual" time in milliseconds.
+		*/
+		public static final Clock SystemClock = new Clock() {
+
+			@Override public long currentTimeMillis() {
+				return System.currentTimeMillis();
+			}
+			
+		};		
+	}
+	
+	/**
 	    The registry records named cache policies.
 	*/
 	public static class Registry {
