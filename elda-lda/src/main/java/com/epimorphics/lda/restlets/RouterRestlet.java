@@ -20,7 +20,6 @@ package com.epimorphics.lda.restlets;
 import java.io.*;
 import java.net.*;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.*;
@@ -384,9 +383,10 @@ import com.sun.jersey.api.NotFoundException;
         	}
         	
         	long expiresAt = nb.expiresAt;   
-//        	System.err.println( ">> expiresAt: " + expiresAt + "ms" );
-//        	System.err.println( ">> timeNow:   " + System.currentTimeMillis() + "ms" );
-        	String expiresDate = expiresAt < System.currentTimeMillis() ? null : nowPlusIntervalAsRFC1123(expiresAt);
+        	String expiresDate = expiresAt < System.currentTimeMillis() 
+        		? null 
+        		: RouterRestletSupport.expiresAtAsRFC1123(expiresAt)
+        		;
 						
 			MediaType mt = r.getMediaType(rc);
 			log.info( "rendering with formatter " + mt );
@@ -423,24 +423,7 @@ import com.sun.jersey.api.NotFoundException;
         }
     }    
     
-    /**
-        Return now + interval, encoded as an http header date.
-    */
-    private String nowPlusIntervalAsRFC1123(long expiresAt) {
-    	Calendar c = Calendar.getInstance();
-    	c.setTimeInMillis(expiresAt);
-    	SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.UK);
-    	dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-    	String result = dateFormat.format(c.getTime());
-    	
-//    	System.err.println( ">> expires (RFC): " + result );
-//    	long delta = expiresAt - System.currentTimeMillis();
-//    	System.err.println( ">> expires in " + (delta/1000) + "s" );
-    	
-    	return result;
-	}
-
-	public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
+    public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
 		if (base == null) return requestUri;
 		return URIUtils.resolveAgainstBase( requestUri, URIUtils.newURI( base ), ui.getPath() );
