@@ -860,7 +860,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	private long nowPlus(long duration) {
-		return System.currentTimeMillis() + duration;
+		return duration < 0 ? -1 : System.currentTimeMillis() + duration;
 	}
 
 	// may be subclassed

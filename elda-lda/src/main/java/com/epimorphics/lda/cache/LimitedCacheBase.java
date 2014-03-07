@@ -91,8 +91,9 @@ public abstract class LimitedCacheBase implements Cache {
     		this.expiresAt = expiresAt;
     	}
     	
+    	// negative expiry times mean there is no expiry time.
     	public boolean hasExpired(Clock c) {
-    		return expiresAt < c.currentTimeMillis();
+    		return 0 < expiresAt && expiresAt < c.currentTimeMillis();
     	}
     }
     
