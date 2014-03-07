@@ -71,6 +71,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     
     final Boolean enableCounting;
     
+    final long cacheExpiryMilliseconds;
+    
     static Logger log = LoggerFactory.getLogger(APIEndpointSpec.class);
     
     public APIEndpointSpec( APISpec apiSpec, APISpec parent, Resource endpoint ) {
@@ -92,6 +94,12 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     //
         textSearchConfig = apiSpec.getTextSearchConfig().overlay( endpoint );
         enableCounting = RDFUtils.getOptionalBooleanValue(endpoint, EXTRAS.enableCounting, apiSpec.getEnableCounting() );
+        cacheExpiryMilliseconds = APISpec.getSecondsValue
+        	( endpoint
+        	, EXTRAS.cacheExpiryTime
+        	, apiSpec.getCacheExpiryMilliseconds() / 1000
+        	) * 1000
+        	;
     //        
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
@@ -469,6 +477,10 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 
 	public Boolean getEnableCounting() {
 		return enableCounting;
+	}
+
+	public long getCacheExpiryMilliseconds() {
+		return cacheExpiryMilliseconds;
 	}
 	
 }

@@ -31,7 +31,7 @@ import com.epimorphics.util.Util;
 	//
 		List<SpecEntry> specs = SpecManagerFactory.allSpecs();
 		String page = new ComposeConfigDisplay().configPageMentioning( specs, base, pathstub );
-		return RouterRestlet.returnAs( Util.withBody( "API configuration", page ), "text/html" );
+		return RouterRestlet.returnAs( null, Util.withBody( "API configuration", page ), "text/html" );
 	}
 	
 }

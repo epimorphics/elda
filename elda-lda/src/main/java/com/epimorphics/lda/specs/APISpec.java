@@ -85,6 +85,8 @@ public class APISpec {
 	
 	protected final Boolean enableCounting;
 	
+	protected final long cacheExpiryMilliseconds;
+	
 	/**
 	    The default number of selected items required for a DESCRIBE
 	    query to use nested selects if they are available.
@@ -117,10 +119,39 @@ public class APISpec {
         this.factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         this.hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
 		this.cachePolicyName = getStringValue( specification, EXTRAS.cachePolicyName, "default" );
+		this.cacheExpiryMilliseconds = getSecondsValue( specification, EXTRAS.cacheExpiryTime, -1) * 1000;
         this.enableCounting = RDFUtils.getOptionalBooleanValue( specification, EXTRAS.enableCounting, Boolean.FALSE );        
 		extractEndpointSpecifications( specification );
         extractModelPrefixEditor( specification );
     }
+    
+    public static long getSecondsValue(Resource x, Property p, long ifAbsent) {
+    	Statement s = x.getProperty( p );
+    	if (s == null) return ifAbsent;
+    	RDFNode n = s.getObject();
+    	if (n.isResource()) return ifAbsent;
+    	if (n.asLiteral().getDatatypeURI() == null) {
+    		String spelling = n.asLiteral().getLexicalForm();
+    		char last = spelling.charAt(spelling.length() - 1);
+    		if (Character.isDigit(last)) {
+    			return Long.parseLong(spelling);
+    		} else {
+    			long l = Long.parseLong(spelling.substring(0, spelling.length() - 1));
+    			return l * scale(last);
+    		}
+    	} else {
+    		return n.asLiteral().getLong();
+    	}
+    }
+
+	private static long scale(char last) {
+		if (last == 's') return 1;
+		if (last == 'm') return 60;
+		if (last == 'h') return 60 * 60;
+		if (last == 'd') return 60 * 60 * 24;
+		if (last == 'w') return 60 * 60 * 24 * 7;
+		return 1;
+	}
 
 	private void extractModelPrefixEditor(Resource specification) {
 		StmtIterator eps = specification.listProperties( EXTRAS.rewriteResultURIs );
@@ -286,6 +317,10 @@ public class APISpec {
 	
 	public String getPrefixPath() {
 		return prefixPath;
+	}
+
+	public long getCacheExpiryMilliseconds() {
+		return cacheExpiryMilliseconds;
 	}
 
 	public Boolean getEnableCounting() {

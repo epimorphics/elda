@@ -19,6 +19,7 @@ package com.epimorphics.lda.restlets;
 
 import java.io.*;
 import java.net.*;
+import java.text.DateFormat;
 import java.util.*;
 
 import javax.servlet.*;
@@ -62,9 +63,12 @@ import com.sun.jersey.api.NotFoundException;
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
     public static final String VARY = "Vary";
     public static final String ETAG = "Etag";
+    public static final String EXPIRES = "Expires";
     public static final String LAST_MODIFIED_DATE = "Last-Modified-Date";
     
     final Router router;
+
+	public static final String NO_EXPIRY = null;
     
     /**
         TimestampedRouter is a router plus the timestamp of the latest file
@@ -236,7 +240,7 @@ import com.sun.jersey.api.NotFoundException;
         	if (item == null) 
         		return noMatchFound( pathstub, ui, pathAndType );
         	else 
-        		return standardHeaders( Response.seeOther( new URI( item ) ) ).build();
+        		return standardHeaders( null, Response.seeOther( new URI( item ) ) ).build();
         } else {
         //
         	String prefixPath = match.getEndpoint().getPrefixPath();
@@ -336,7 +340,7 @@ import com.sun.jersey.api.NotFoundException;
         			? "no suitable media type was provided for rendering."
         			: "renderer '" + formatName + "' is not known to this server."
         			;
-        		return standardHeaders( Response.status( Status.BAD_REQUEST )
+        		return standardHeaders( null, Response.status( Status.BAD_REQUEST )
         			.entity( Messages.niceMessage( message ) ) )
         			.build()
         			;
@@ -361,8 +365,9 @@ import com.sun.jersey.api.NotFoundException;
         	
         	ModelPrefixEditor mpe = ep.getSpec().getAPISpec().getModelPrefixEditor();
         //
+        	NoteBoard nb = new NoteBoard();
         	Triad<APIResultSet, Map<String, String>, Bindings> resultsAndBindings = 
-        		APIEndpointUtil.call( req, match, contextPath, queryParams );
+        		APIEndpointUtil.call( req, nb, match, contextPath, queryParams );
         	
         	Map<String, String> termBindings = mpe.rename( resultsAndBindings.b );
         //
@@ -376,19 +381,25 @@ import com.sun.jersey.api.NotFoundException;
         			r = RouterRestletSupport.changeMediaType( r, dmt );
         		}
         	}
+        	
+        	long expiresAt = nb.expiresAt;   
+        	String expiresDate = expiresAt < System.currentTimeMillis() 
+        		? null 
+        		: RouterRestletSupport.expiresAtAsRFC1123(expiresAt)
+        		;
 						
 			MediaType mt = r.getMediaType(rc);
 			log.info( "rendering with formatter " + mt );
 			Times times = c.times;
 			Renderer.BytesOut bo = r.render( times, rc, termBindings, results );
 			int mainHash = runHash + ru.toString().hashCode();
-			return returnAs( results, mainHash + mt.hashCode(), wrap(times, bo), needsVaryAccept, mt );
+			return returnAs( expiresDate, results, mainHash + mt.hashCode(), wrap(times, bo), needsVaryAccept, mt );
 	//
         } catch (StackOverflowError e) {
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
-            return standardHeaders( Response.serverError() ).entity( e.getMessage() ).build();
+            return standardHeaders( null, Response.serverError() ).entity( e.getMessage() ).build();
         } catch (UnknownShortnameException e) {
         	log.error( "UnknownShortnameException: " + e.getMessage() );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
@@ -406,10 +417,7 @@ import com.sun.jersey.api.NotFoundException;
             return returnNotFound("Failed to parse query request : " + e.getMessage());
         } catch (Throwable e) {
         	log.error( "General failure: " + e.getMessage() );
-        	
-        	System.err.println( ">> ARGH OH DEAR." );
         	e.printStackTrace(System.err);
-        	
         	StatsValues.endpointException();
             return returnError( e );
         }
@@ -444,18 +452,19 @@ import com.sun.jersey.api.NotFoundException;
 		};
 	}
 
-    public static ResponseBuilder standardHeaders( ResponseBuilder rb ) {
-        return standardHeaders( null, 0, false, rb );
+    public static ResponseBuilder standardHeaders( String expiresDate, ResponseBuilder rb ) {
+        return standardHeaders( expiresDate, null, 0, false, rb );
     }
 
-    public static ResponseBuilder standardHeaders( APIResultSet rs, int envHash, ResponseBuilder rb ) {
-        return standardHeaders( rs, envHash, false, rb );
+    public static ResponseBuilder standardHeaders( String expiresDate, APIResultSet rs, int envHash, ResponseBuilder rb ) {
+        return standardHeaders( expiresDate, rs, envHash, false, rb );
     }
 
-    public static ResponseBuilder standardHeaders( APIResultSet rs, int envHash, boolean needsVaryAccept, ResponseBuilder rb ) {
+    public static ResponseBuilder standardHeaders( String expiresDate, APIResultSet rs, int envHash, boolean needsVaryAccept, ResponseBuilder rb ) {
     	// rs may be null (no resultset for this header build)
     	rb = rb.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" );
         if (needsVaryAccept) rb = rb.header( VARY, "Accept" );
+        if (expiresDate != null) rb = rb.header( EXPIRES, expiresDate );
         if (rs != null && rs.enableETags()) rb = rb.tag( Long.toHexString( etagFor(rs, envHash) ) ); 
    		return rb;
     }
@@ -464,13 +473,13 @@ import com.sun.jersey.api.NotFoundException;
 		return rs.getHash() ^ envHash;
 	}
     
-    public static Response returnAs( String response, String mimetype) {
-        return standardHeaders( Response.ok(response, mimetype) ).build();
+    public static Response returnAs( String expiresDate, String response, String mimetype) {
+        return standardHeaders( expiresDate, Response.ok(response, mimetype) ).build();
     }
     
-    private static Response returnAs( APIResultSet rs, int envHash, StreamingOutput response, boolean varyAccept, MediaType mt ) {
+    private static Response returnAs( String expiresDate, APIResultSet rs, int envHash, StreamingOutput response, boolean varyAccept, MediaType mt ) {
         try {
-            return standardHeaders( rs, envHash, varyAccept, Response.ok( response, mt.toFullString() ) )
+            return standardHeaders( expiresDate, rs, envHash, varyAccept, Response.ok( response, mt.toFullString() ) )
             	.contentLocation( rs.getContentLocation() )
             	.build()
             	;
@@ -494,12 +503,12 @@ import com.sun.jersey.api.NotFoundException;
 		String longMessage = Messages.niceMessage( shortMessage, "Internal Server error." );
 		log.error("Exception: " + shortMessage );
         log.debug( Messages.shortStackTrace( e ) );
-        return standardHeaders( Response.serverError() ).entity( longMessage ).build();
+        return standardHeaders( null, Response.serverError() ).entity( longMessage ).build();
     }
 
 	public static Response returnError( String s ) {
         log.error("Exception: " + s );
-        return standardHeaders( Response.serverError() ).entity( s ).build();
+        return standardHeaders( null, Response.serverError() ).entity( s ).build();
     }
 
     public static Response returnNotFound( String message ) {
@@ -509,11 +518,11 @@ import com.sun.jersey.api.NotFoundException;
     public static Response returnNotFound( String message, String what ) {
         log.debug( "Failed to return results: " + Messages.brief( message ) );
         if (true) throw new NotFoundException();
-        return standardHeaders( Response.status(Status.NOT_FOUND) ).entity( Messages.niceMessage( message, "404 Resource Not Found: " + what ) ).build();
+        return standardHeaders( null, Response.status(Status.NOT_FOUND) ).entity( Messages.niceMessage( message, "404 Resource Not Found: " + what ) ).build();
     }
     
 	private Response buildErrorResponse( EldaException e ) {
-		return standardHeaders( Response.status( e.code ) )
+		return standardHeaders( null, Response.status( e.code ) )
 			.entity( Messages.niceMessage( e ) )
 			.build()
 			;

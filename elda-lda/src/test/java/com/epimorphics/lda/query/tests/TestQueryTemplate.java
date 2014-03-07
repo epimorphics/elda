@@ -10,8 +10,7 @@ import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.specs.APISpec;
-import com.epimorphics.lda.support.Controls;
-import com.epimorphics.lda.support.EldaFileManager;
+import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests.SNS;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -29,7 +28,8 @@ public class TestQueryTemplate {
 		q.addSubjectHasProperty( RDF.type, RDFQ.var( "?type" ) );
 		View v = View.newTemplateView( "_template", "?item <{{NS}}hasData> ?val.".replace("{{NS}}", NS ) );
 		APIResultSet rs = q.runQuery
-			( new Controls()
+			( new NoteBoard()
+			, new Controls()
 			, spec
 			, Registry.cacheFor( "default", spec.getDataSource() )
 			, new Bindings()

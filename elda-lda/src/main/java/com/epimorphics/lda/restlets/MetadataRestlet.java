@@ -50,7 +50,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
             Resource meta = createMetadata(ui, pathstub, "text", rec);
-            return returnAs(ModelIOUtils.renderModelAs(meta.getModel(), "Turtle"), "text/plain");
+            return returnAs(RouterRestlet.NO_EXPIRY, ModelIOUtils.renderModelAs(meta.getModel(), "Turtle"), "text/plain");
         }
     }
     
@@ -61,7 +61,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
             Resource meta = createMetadata(ui, pathstub, "rdf", rec);
-            return returnAs(ModelIOUtils.renderModelAs(meta.getModel(), "RDF/XML-ABBREV"), "application/rdf+xml");
+            return returnAs(RouterRestlet.NO_EXPIRY, ModelIOUtils.renderModelAs(meta.getModel(), "RDF/XML-ABBREV"), "application/rdf+xml");
         }
     }
     
@@ -72,7 +72,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
             Resource meta = createMetadata(ui, pathstub, "ttl", rec);
-            return returnAs(ModelIOUtils.renderModelAs(meta.getModel(), "Turtle"), "text/turtle");
+            return returnAs(RouterRestlet.NO_EXPIRY, ModelIOUtils.renderModelAs(meta.getModel(), "Turtle"), "text/turtle");
         }
     }
     
@@ -90,7 +90,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
             context.setSorted(true);
             Encoder.getForOneResult( context ).encodeRecursive(meta.getModel(), roots, writer, true);
             String enc = writer.toString();
-            return returnAs(enc, "application/json");
+            return returnAs(RouterRestlet.NO_EXPIRY, enc, "application/json");
         }
     }
     

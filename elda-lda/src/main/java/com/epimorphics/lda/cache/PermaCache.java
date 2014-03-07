@@ -20,14 +20,14 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class PermaCache extends LimitedCacheBase implements Cache {
 
     public PermaCache( String label ) {
-        super(label);
+        super(Clock.SystemClock, label);
     }
 
-    @Override protected synchronized boolean exceedsSelectLimit( Cachelet<String, List<Resource>> m ) {
+    @Override protected synchronized boolean exceedsSelectLimit( Cachelet<String, TimedThing<List<Resource>>> m ) {
         return false;
     }
 
-    @Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, APIResultSet> m ) {
+    @Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, TimedThing<APIResultSet>> m ) {
         return false;
     }
 }

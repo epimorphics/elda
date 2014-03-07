@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
+import com.epimorphics.lda.cache.LimitedCacheBase.TimedThing;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.exceptions.APIException;
@@ -49,7 +50,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @version $Revision: $
  */
 public class APIQuery implements VarSupply, WantsMetadata {
-
+	
 	static final Logger log = LoggerFactory.getLogger(APIQuery.class);
 
 	public static final Variable SELECT_VAR = RDFQ.var("?item");
@@ -145,6 +146,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	public final List<PendingParameterValue> deferredFilters;
 	
+	public final long cacheExpiryMilliseconds;
+	
 	/**
 	    Is a total count requested for this query? true, false, or null
 	    for optional.
@@ -192,6 +195,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		TextSearchConfig getTextSearchConfig();
 		
 		Boolean getEnableCounting();
+		
+		long getCacheExpiryMilliseconds();
 	}
 
 	protected static class FilterExpressions implements ValTranslator.Filters {
@@ -217,6 +222,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.itemTemplate = qb.getItemTemplate();
 		this.isItemEndpoint = qb.isItemEndpoint();
 		this.textSearchConfig = qb.getTextSearchConfig();
+		this.cacheExpiryMilliseconds = qb.getCacheExpiryMilliseconds();
 		//
 		this.deferredFilters = new ArrayList<PendingParameterValue>();
 		this.whereExpressions = new StringBuffer();
@@ -251,24 +257,19 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.subjectResource = other.subjectResource;
 		this.varcount = other.varcount;
 		this.textSearchConfig = other.textSearchConfig;
+		this.cacheExpiryMilliseconds = other.cacheExpiryMilliseconds;
 		//
 		this.languagesFor = new HashMap<String, String>(other.languagesFor);
-		this.basicGraphTriples = new ArrayList<RDFQ.Triple>(
-				other.basicGraphTriples);
-		this.optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>(
-				other.optionalGraphTriples);
-		this.filterExpressions = new ArrayList<RenderExpression>(
-				other.filterExpressions);
+		this.basicGraphTriples = new ArrayList<RDFQ.Triple>(other.basicGraphTriples);
+		this.optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>(other.optionalGraphTriples);
+		this.filterExpressions = new ArrayList<RenderExpression>(other.filterExpressions);
 		this.orderExpressions = new StringBuffer(other.orderExpressions);
 		this.whereExpressions = new StringBuffer(other.whereExpressions);
 		this.varInfo = new HashMap<Variable, Info>(other.varInfo);
-		this.deferredFilters = new ArrayList<PendingParameterValue>(
-				other.deferredFilters);
+		this.deferredFilters = new ArrayList<PendingParameterValue>(other.deferredFilters);
 		this.metadataOptions = new HashSet<String>(other.metadataOptions);
-		this.varsForPropertyChains = new HashMap<String, Variable>(
-				other.varsForPropertyChains);
-		this.vt = new ValTranslator(this, new FilterExpressions(
-				this.filterExpressions), this.sns);
+		this.varsForPropertyChains = new HashMap<String, Variable>(other.varsForPropertyChains);
+		this.vt = new ValTranslator(this, new FilterExpressions(this.filterExpressions), this.sns);
 		this.allowedReserved = new HashSet<String>(other.allowedReserved);
 	}
 
@@ -811,10 +812,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	/**
 	 * Run the defined query against the datasource
 	 */
-	public APIResultSet runQuery(Controls c, APISpec spec, Cache cache,	Bindings call, View view) {
+	public APIResultSet runQuery(NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings call, View view) {
 		Source source = spec.getDataSource();
 		try {
-			return runQueryWithSource(c, spec, cache, call, view, source);
+			return runQueryWithSource(nb, c, spec, cache, call, view, source);
 		} catch (QueryExceptionHTTP e) {
 			EldaException.ARQ_Exception(source, e);
 			return /* NEVER */null;
@@ -823,7 +824,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	// may be subclassed
 	protected APIResultSet runQueryWithSource
-		( Controls c, APISpec spec, Cache cache, Bindings call, View view, Source source) {
+		( NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings call, View view, Source source) {
 		Times t = c.times;
 		long origin = System.currentTimeMillis();
 		Triad<String, List<Resource>, Integer> queryAndResults = selectResources(c, cache, spec, call, source);
@@ -835,11 +836,12 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		Integer totalCount = queryAndResults.c;
 		String countingViewKey = (counting() ? "(counting) " : "") + view.toString();
 		
-		APIResultSet already = cache.getCachedResultSet(results, countingViewKey);
-		if (c.allowCache && already != null) {			
+		TimedThing<APIResultSet> already = cache.getCachedResultSet(results, countingViewKey);
+		if (c.allowCache && already != null) {	
+			nb.expiresAt = already.expiresAt;
 			t.usedViewCache();
 			if (log.isDebugEnabled()) log.debug("re-using cached results for " + results);
-			return already.clone();
+			return already.thing.clone();
 		}
 
 		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, view, results);
@@ -847,9 +849,18 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		long afterView = System.currentTimeMillis();
 		t.setViewDuration(afterView - afterSelect);
 		rs.setSelectQuery(outerSelect);
-		rs.setTotalCount(totalCount);
-		cache.cacheDescription(results, countingViewKey, rs.clone());
+		rs.setTotalCount(totalCount); 
+		nb.totalResults = totalCount;
+		
+		long expiryTime = nowPlus(cacheExpiryMilliseconds);
+		nb.expiresAt = expiryTime;
+		cache.cacheDescription(results, countingViewKey, rs.clone(), expiryTime);
+		
 		return rs;
+	}
+
+	private long nowPlus(long duration) {
+		return duration < 0 ? -1 : System.currentTimeMillis() + duration;
 	}
 
 	// may be subclassed
@@ -903,7 +914,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		Query q = createQuery(selectQuery);
 		if (log.isDebugEnabled()) log.debug("Running query: " + selectQuery.replaceAll("\n", " "));
 		source.executeSelect(q, new ResultResourcesReader(results));
-		cache.cacheSelection(selectQuery, results);
+		cache.cacheSelection(selectQuery, results, nowPlus(cacheExpiryMilliseconds));
 		return new Triad<String, List<Resource>, Integer>(selectQuery, results, totalCount );
 	}
 
@@ -916,7 +927,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 				Query countQuery = createQuery(countQueryString);
 				CountConsumer cc = new CountConsumer();
 				s.executeSelect( countQuery, cc );
-				c.putCount(countQueryString, cc.count);
+				c.putCount(countQueryString, cc.count, nowPlus(cacheExpiryMilliseconds));
 				return cc.count;
 			} else {				
 				return already;
@@ -1018,8 +1029,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			} catch (APIException e) {
 				throw e;
 			} catch (Throwable t) {
-				throw new APIException(
-						"Query execution problem on query: " + t, t);
+				throw new APIException("Query execution problem on query: " + t, t);
 			}
 		}
 

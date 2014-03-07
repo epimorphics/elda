@@ -1,6 +1,7 @@
 package com.epimorphics.lda.restlets;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.ServletContext;
@@ -207,5 +208,23 @@ public class RouterRestletSupport {
 			}
 		};
 	}
+
+	/**
+	        expiresAt (date/time in milliseconds) as an RFC1123 date/time string
+	        suitable for use in an HTTP header.
+	    */
+	    public static String expiresAtAsRFC1123(long expiresAt) {
+	    	Calendar c = Calendar.getInstance();
+	    	c.setTimeInMillis(expiresAt);
+	    	SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.UK);
+	    	dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+	    	String result = dateFormat.format(c.getTime());
+	    	
+	//    	System.err.println( ">> expires (RFC): " + result );
+	//    	long delta = expiresAt - System.currentTimeMillis();
+	//    	System.err.println( ">> expires in " + (delta/1000) + "s" );
+	    	
+	    	return result;
+		}
 
 }
