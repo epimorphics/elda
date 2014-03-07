@@ -12,7 +12,11 @@ specifies how to translate URLs into queries.
 <p>
 Elda is the Epimorphics implementation of the LDA. It comes with some pre-built  examples 
 which allow you to experiment with the style of query and get started with building your own configurations. 
+</p>
 
-See <a href="http://epimorphics.github.io/elda/">Elda's GitHub pages.</a>
+<p>
+See the <a href="http://epimorphics.github.io/elda/docs/E1.2.29/index.html">quickstart documentation</a>.
+For summaries of the latest releases, see the
+<a href="http://epimorphics.github.io/elda/">Elda root page</a>.
 </p>.
 
