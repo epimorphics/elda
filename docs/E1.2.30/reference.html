@@ -1118,6 +1118,67 @@ http://localhost:8080/elda/doc/school
     <li>the content of the model</li>
 </ul>
 
+<h2 id="expiry-headers-and-cache"><b>Expires</b> headers</h2>
+
+<p>
+	By default, Elda does not generate any <b>Expires:</b> headers
+	and assumes that all data fetched from its SPARQL endpoint
+	does not change while Elda is running. This is sufficient if
+	the data is fixed, or if Elda is restarted when the data is
+	"sufficiently old". An Apache or NGinx wrapper can add the
+	preferred <b>Expires:</b> headers.
+</p>
+
+<p>
+	If this is insufficient, <i>eg</i> data changes over periods
+	of hours or minutes, as of Elda 1.2.30 a <i>cache
+	expiry time</i> can be associated with each endpoint of
+	the configuration. Endpoints with no explicit expiry time
+	use that of their parent API if it has one.
+</p>
+
+<pre>
+; elda:cacheExpiryTime <code>Value</code>
+</pre>
+
+<p>
+The <code>Value</code> can be an integer with units of
+seconds, or a string <code>"integerLETTER"</code> meaning
+the specified number of the unit specified by the LETTER:
+</p>
+
+<p style="margin-left: 2ex">s(seconds), m(inutes), h(ours), d(ays), w(eeks).
+</p>
+
+<p>
+	If an endpoint has a cache expiry time <code>T</code>
+	(whether explicit or implicit), then there are two
+	consequences.
+</p>
+
+<ul>
+	<li>
+		Responses from that endpoint will have an <b>Expires:</b>
+		header. If this is a fresh response, then the expiry time
+		is <code>E = now + T</code>. If this response is served 
+		from the Elda cache, then the expiry time is that of the 
+		cached response.		
+	</li>
+
+	<li>
+		Newly generated responses are cached with the expiry time 
+		<code>E</code>. If a cached response is requested, and it 
+		has expired, that cache entry is dropped and a fresh 
+		response created, cached, and served.	
+	</li>
+</ul>
+
+<p>
+	This allows Elda to operate with its own (configurably-sized) 
+	cache but still to serve controllably-fresh data from its
+	SPARQL endpoint.
+</p>
+
 <h2 id="item-template-fallback">Item template fallback</h2>
 
 <p>
