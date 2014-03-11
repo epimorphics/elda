@@ -865,11 +865,11 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	private long viewSensitiveExpiryTime(APISpec spec, View v) {
-		System.err.println( ">> viewSensitiveExpiryTime: basis " + cacheExpiryMilliseconds );
+//		System.err.println( ">> viewSensitiveExpiryTime: basis " + cacheExpiryMilliseconds );
 		long duration = v.minExpiryMillis(spec.getPropertyExpiryTimes(), cacheExpiryMilliseconds);
-		System.err.println( ">> computed duration: " + duration );
+//		System.err.println( ">> computed duration: " + duration );
 		long result = nowPlus(duration);
-		System.err.println( ">> the long result of time: " + result );
+//		System.err.println( ">> the long result of time: " + result );
 		return result;
 	}
 

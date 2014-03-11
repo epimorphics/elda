@@ -88,16 +88,16 @@ public class APIEndpointImpl implements APIEndpoint {
     	URI key = r.requestURI;
     	TimedThing<ResponseResult> fromCache = cache.fetch(key);
     	if (fromCache == null) {
-    		System.err.println( ">> request: " + key + ", not in cache." );
+//    		System.err.println( ">> request: " + key + ", not in cache." );
     		ResponseResult fresh = uncachedCall(r, nb);
     		long expiresAt = nb.expiresAt;
     		cache.store(r.requestURI, fresh, expiresAt);
-    		System.err.println( ">> created new entry" );
-    		if (expiresAt < 0) System.err.println( ">>  no explicit expiry time"); 
-    		else System.err.println( ">>  lives until " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
+//    		System.err.println( ">> created new entry" );
+//    		if (expiresAt < 0) System.err.println( ">>  no explicit expiry time"); 
+//    		else System.err.println( ">>  lives until " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
     		return fresh;
     	} else {
-    		System.err.println( ">> request: " + key + " satisfied from cache" );
+//    		System.err.println( ">> request: " + key + " satisfied from cache" );
     		nb.expiresAt = fromCache.expiresAt;
     		return fromCache.thing;
     	}    	

@@ -149,7 +149,7 @@ public abstract class LimitedCacheBase implements Cache {
     	TimedThing<ResponseResult> tt = cr.get(uri);
     	if (tt == null) return null;
     	if (tt.hasExpired(clock)) {
-       	System.err.println( ">> removing expired key '" + uri + "'" );
+//       	System.err.println( ">> removing expired key '" + uri + "'" );
     		cr.remove(uri); 
     		return null;
     	}
@@ -157,7 +157,7 @@ public abstract class LimitedCacheBase implements Cache {
     }
     
     @Override public synchronized void store(URI uri, ResponseResult toStore, long expiresAt) {
-    	System.err.println( ">> caching " + uri + " until " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
+//    	System.err.println( ">> caching " + uri + " until " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
     	cr.put(uri, new TimedThing<ResponseResult>(toStore, expiresAt));
     	if (exceedsResponseLimit( cr )) cr.clear();
     }
