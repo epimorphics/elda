@@ -20,8 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.cache.Cache;
+import com.epimorphics.lda.cache.*;
 import com.epimorphics.lda.cache.Cache.Registry;
+import com.epimorphics.lda.cache.LimitedCacheBase.TimedThing;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.exceptions.*;
 import com.epimorphics.lda.query.*;
@@ -85,19 +86,20 @@ public class APIEndpointImpl implements APIEndpoint {
     
     @Override public ResponseResult call( Request r, NoteBoard nb ) {
     	URI key = r.requestURI;
-    	ResponseResult fromCache = cache.fetch(key);
+    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
     	if (fromCache == null) {
     		System.err.println( ">> request: " + key + ", not in cache." );
     		ResponseResult fresh = uncachedCall(r, nb);
     		long expiresAt = nb.expiresAt;
     		cache.store(r.requestURI, fresh, expiresAt);
     		System.err.println( ">> created new entry" );
-    		if (expiresAt < 0) System.err.println( "]]  no explicit expiry time"); 
-    		else System.err.println( "]]  lives until " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
+    		if (expiresAt < 0) System.err.println( ">>  no explicit expiry time"); 
+    		else System.err.println( ">>  lives until " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
     		return fresh;
     	} else {
     		System.err.println( ">> request: " + key + " satisfied from cache" );
-    		return fromCache;
+    		nb.expiresAt = fromCache.expiresAt;
+    		return fromCache.thing;
     	}    	
     }
 

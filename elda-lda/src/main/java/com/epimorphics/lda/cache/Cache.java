@@ -26,7 +26,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
 */
 public interface Cache {
 
-	public ResponseResult fetch(URI requestURI);
+	public TimedThing<ResponseResult> fetch(URI requestURI);
 	
 	public void store(URI requestURI, ResponseResult result, long expiresAt);
 

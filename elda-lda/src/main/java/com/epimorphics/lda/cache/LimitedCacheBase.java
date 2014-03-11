@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ResponseResult;
+import com.epimorphics.lda.restlets.RouterRestletSupport;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public abstract class LimitedCacheBase implements Cache {
@@ -144,18 +145,19 @@ public abstract class LimitedCacheBase implements Cache {
 		}
     }
     
-    @Override public synchronized ResponseResult fetch(URI uri) {
+    @Override public synchronized TimedThing<ResponseResult> fetch(URI uri) {
     	TimedThing<ResponseResult> tt = cr.get(uri);
     	if (tt == null) return null;
     	if (tt.hasExpired(clock)) {
-//       	System.err.println( ">> removing expired key '" + uri + "'" );
+       	System.err.println( ">> removing expired key '" + uri + "'" );
     		cr.remove(uri); 
     		return null;
     	}
-    	return tt.thing;
+    	return tt;
     }
     
     @Override public synchronized void store(URI uri, ResponseResult toStore, long expiresAt) {
+    	System.err.println( ">> caching " + uri + " until " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
     	cr.put(uri, new TimedThing<ResponseResult>(toStore, expiresAt));
     	if (exceedsResponseLimit( cr )) cr.clear();
     }
