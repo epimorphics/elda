@@ -55,7 +55,7 @@ hello:hello-world-again a api:API
         ; elda:feedTitle "an example Elda feed"
         ]
     ; elda:enableCounting "optional"
-    ; elda:cacheExpiryTime "1m"
+   	; elda:cacheExpiryTime "1m"
 	.
 	
 <http://localhost:3030/ds/query> 
