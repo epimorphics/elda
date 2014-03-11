@@ -63,9 +63,9 @@ public class TestBindings {
 		
 		APIEndpoint.Request r = new APIEndpoint.Request( controls, req, new Bindings() ).withFormat("xml");
 		
-		Triad<APIResultSet, Map<String, String>, Bindings> results = APIEndpointUtil.call( r, new NoteBoard(), match, "s", params );
+		ResponseResult results = APIEndpointUtil.call( r, new NoteBoard(), match, "s", params );
 //		System.err.println( ">> class: " + results.c.getStringValue( "class" ) );
-		String sq = results.a.getSelectQuery();
+		String sq = results.resultSet.getSelectQuery();
 //		System.err.println( ">> " + sq );
 		String expected = "[] a <http://environment.data.gov.uk/def/bathing-water-quality/autumn>";
 		if (!sq.contains( expected ))

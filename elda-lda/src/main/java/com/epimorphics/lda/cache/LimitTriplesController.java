@@ -8,11 +8,13 @@
 
 package com.epimorphics.lda.cache;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import com.epimorphics.lda.cache.Cache.Clock;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.ResponseResult;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class LimitTriplesController extends ControllerBase {
@@ -39,6 +41,13 @@ public class LimitTriplesController extends ControllerBase {
 		@Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, TimedThing<APIResultSet>> m) {
 			long size = 0;
 			for (Map.Entry<String, TimedThing<APIResultSet>> e: m.entrySet()) size += e.getValue().thing.modelSize();
+			return size > limit;
+		}
+
+		@Override protected boolean exceedsResponseLimit(Cachelet<URI, TimedThing<ResponseResult>> cr) {
+			long size = 0;
+			for (Map.Entry<URI, TimedThing<ResponseResult>> e: cr.entrySet()) 
+				size += e.getValue().thing.resultSet.modelSize();
 			return size > limit;
 		}
 	}

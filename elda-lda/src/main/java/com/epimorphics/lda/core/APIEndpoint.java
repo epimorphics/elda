@@ -83,9 +83,9 @@ public interface APIEndpoint {
      	Called by the Router to invoke the API and return set of result matches
      	
      	@param r the request
-     	@return Couple(rs, cc): the ResultSet for rendering and the call context used for the result set.
+     	@return ResponseResult: the ResultSet for rendering and the call context used for the result set.
     */    
-    public Triad<APIResultSet, Map<String, String>, Bindings> call( Request r, NoteBoard nb );
+    public ResponseResult call( Request r, NoteBoard nb );
     
     /**
      	Return a metadata description for the query that would be run by this endpoint

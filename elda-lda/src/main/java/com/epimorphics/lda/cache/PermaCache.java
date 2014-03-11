@@ -8,9 +8,11 @@
 
 package com.epimorphics.lda.cache;
 
+import java.net.URI;
 import java.util.List;
 
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.ResponseResult;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
@@ -30,4 +32,8 @@ public class PermaCache extends LimitedCacheBase implements Cache {
     @Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, TimedThing<APIResultSet>> m ) {
         return false;
     }
+
+	@Override protected boolean exceedsResponseLimit(Cachelet<URI, TimedThing<ResponseResult>> cr) {
+		return false;
+	}
 }

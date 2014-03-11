@@ -104,7 +104,7 @@ public class APITester {
         MultiMap<String, String> map = MakeData.parseQueryString( queryString );
 		URI ru = URIUtils.newURI(uriTemplate);
 		Bindings call = Bindings.createContext( fix( match.getBindings() ), map );
-        return match.getEndpoint().call( new APIEndpoint.Request(controls, ru, call), new NoteBoard()).a;
+        return match.getEndpoint().call( new APIEndpoint.Request(controls, ru, call), new NoteBoard()).resultSet;
     }
 
 	static final Controls controls = new Controls( true, new Times() );

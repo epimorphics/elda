@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
-import com.epimorphics.lda.cache.LimitedCacheBase.TimedThing;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.exceptions.APIException;
@@ -834,15 +833,15 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		String outerSelect = queryAndResults.a;
 		List<Resource> results = queryAndResults.b;
 		Integer totalCount = queryAndResults.c;
-		String countingViewKey = (counting() ? "(counting) " : "") + view.toString();
+//		String countingViewKey = (counting() ? "(counting) " : "") + view.toString();
 		
-		TimedThing<APIResultSet> already = cache.getCachedResultSet(results, countingViewKey);
-		if (c.allowCache && already != null) {	
-			nb.expiresAt = already.expiresAt;
-			t.usedViewCache();
-			if (log.isDebugEnabled()) log.debug("re-using cached results for " + results);
-			return already.thing.clone();
-		}
+//		TimedThing<APIResultSet> already = cache.getCachedResultSet(results, countingViewKey);
+//		if (c.allowCache && already != null) {	
+//			nb.expiresAt = already.expiresAt;
+//			t.usedViewCache();
+//			if (log.isDebugEnabled()) log.debug("re-using cached results for " + results);
+//			return already.thing.clone();
+//		}
 
 		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, view, results);
 
@@ -852,15 +851,34 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		rs.setTotalCount(totalCount); 
 		nb.totalResults = totalCount;
 		
-		long expiryTime = nowPlus(cacheExpiryMilliseconds);
+		Model dataModel = rs.getModels().getObjectModel();
+//		long expiryTime = dataSensitiveExpiryTime(spec, dataModel);
+		long expiryTime = viewSensitiveExpiryTime(spec, view);
 		nb.expiresAt = expiryTime;
-		cache.cacheDescription(results, countingViewKey, rs.clone(), expiryTime);
-		
+//		cache.cacheDescription(results, countingViewKey, rs.clone(), expiryTime);	
 		return rs;
 	}
 
+	private long viewSensitiveExpiryTime(APISpec spec, View v) {
+		System.err.println( ">> viewSensitiveExpiryTime: basis " + cacheExpiryMilliseconds );
+		long duration = v.minExpiryTime(spec.getPropertyExpiryTimes(), cacheExpiryMilliseconds);
+		System.err.println( ">> computed duration: " + duration );
+		long result = nowPlus(duration);
+		System.err.println( ">> the long result of time: " + result );
+		return result;
+	}
+
+	private long dataSensitiveExpiryTime(APISpec spec, Model dataModel) {
+		System.err.println( ">> dataSensitiveExpiryTime: basis " + cacheExpiryMilliseconds );
+		long duration = spec.getPropertyExpiryTimes().minExpiryTime(dataModel, cacheExpiryMilliseconds);
+		System.err.println( ">> computed duration: " + duration );
+		long result = nowPlus(duration);
+		System.err.println( ">> the long result of time: " + result );
+		return result;
+	}
+
 	private long nowPlus(long duration) {
-		return System.currentTimeMillis() + duration;
+		return duration < 0 ? duration : System.currentTimeMillis() + duration;
 	}
 
 	// may be subclassed
@@ -904,17 +922,17 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		String selectQuery = assembleSelectQuery(cc, spec.getPrefixMap());
 	//
 		c.times.setSelectQuerySize(selectQuery);
-		List<Resource> already = cache.getCachedResources(selectQuery);
-		if (c.allowCache && already != null) {
-			c.times.usedSelectionCache();
-			if (log.isDebugEnabled()) log.debug("re-using cached results for query " + selectQuery);
-			return new Triad<String, List<Resource>, Integer>(selectQuery, already, totalCount);
-		}
+//		List<Resource> already = cache.getCachedResources(selectQuery);
+//		if (c.allowCache && already != null) {
+//			c.times.usedSelectionCache();
+//			if (log.isDebugEnabled()) log.debug("re-using cached results for query " + selectQuery);
+//			return new Triad<String, List<Resource>, Integer>(selectQuery, already, totalCount);
+//		}
 	//
 		Query q = createQuery(selectQuery);
 		if (log.isDebugEnabled()) log.debug("Running query: " + selectQuery.replaceAll("\n", " "));
 		source.executeSelect(q, new ResultResourcesReader(results));
-		cache.cacheSelection(selectQuery, results, nowPlus(cacheExpiryMilliseconds));
+		// cache.cacheSelection(selectQuery, results, nowPlus(cacheExpiryMilliseconds));
 		return new Triad<String, List<Resource>, Integer>(selectQuery, results, totalCount );
 	}
 

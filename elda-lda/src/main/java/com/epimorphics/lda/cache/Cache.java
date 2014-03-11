@@ -8,10 +8,12 @@
 
 package com.epimorphics.lda.cache;
 
+import java.net.URI;
 import java.util.*;
 
 import com.epimorphics.lda.cache.LimitedCacheBase.TimedThing;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.ResponseResult;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.sources.Source;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -23,6 +25,10 @@ import com.hp.hpl.jena.rdf.model.Resource;
     prescribed.
 */
 public interface Cache {
+
+	public ResponseResult fetch(URI requestURI);
+	
+	public void store(URI requestURI, ResponseResult result, long expiresAt);
 
 	/**
 	    Make an entry in the cache that binds the given list of results

@@ -7,12 +7,14 @@
 */
 package com.epimorphics.lda.cache;
 
+import java.net.URI;
 import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.ResponseResult;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public abstract class LimitedCacheBase implements Cache {
@@ -111,7 +113,7 @@ public abstract class LimitedCacheBase implements Cache {
     		requests = hits = misses = drops = 0;
     	}
     	
-		public V get( String key ) {
+		public V get( K key ) {
 			requests += 1;
 			if (baseTime == 0) baseTime = System.currentTimeMillis();
 			V result = map.get( key );
@@ -141,8 +143,26 @@ public abstract class LimitedCacheBase implements Cache {
 			map.remove(key);
 		}
     }
+    
+    @Override public synchronized ResponseResult fetch(URI uri) {
+    	TimedThing<ResponseResult> tt = cr.get(uri);
+    	if (tt == null) return null;
+    	if (tt.hasExpired(clock)) {
+       	System.err.println( ">> removing expired key '" + uri + "'" );
+    		cr.remove(uri); 
+    		return null;
+    	}
+    	return tt.thing;
+    }
+    
+    @Override public synchronized void store(URI uri, ResponseResult toStore, long expiresAt) {
+    	cr.put(uri, new TimedThing<ResponseResult>(toStore, expiresAt));
+    	if (exceedsResponseLimit( cr )) cr.clear();
+    }
+    
+    protected abstract boolean exceedsResponseLimit(Cachelet<URI, TimedThing<ResponseResult>> cr);
 
-    protected abstract boolean exceedsSelectLimit( Cachelet<String, TimedThing<List<Resource>>> m) ;
+	protected abstract boolean exceedsSelectLimit( Cachelet<String, TimedThing<List<Resource>>> m) ;
 
     protected abstract boolean exceedsResultSetLimit( Cachelet<String, TimedThing<APIResultSet>> m );
 
@@ -151,6 +171,8 @@ public abstract class LimitedCacheBase implements Cache {
     private final Cachelet<String, TimedThing<List<Resource>>> cs = new Cachelet<String, TimedThing<List<Resource>>>();
     
     private final Cachelet<String, TimedThing<Integer>> cc = new Cachelet<String, TimedThing<Integer>>();
+    
+    private final Cachelet<URI, TimedThing<ResponseResult>> cr = new Cachelet<URI, TimedThing<ResponseResult>>();
 
     @Override public synchronized TimedThing<APIResultSet> getCachedResultSet( List<Resource> results, String view ) {
         String key = results.toString() + "::" + view;

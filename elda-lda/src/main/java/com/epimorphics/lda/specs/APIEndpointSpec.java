@@ -94,7 +94,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     //
         textSearchConfig = apiSpec.getTextSearchConfig().overlay( endpoint );
         enableCounting = RDFUtils.getOptionalBooleanValue(endpoint, EXTRAS.enableCounting, apiSpec.getEnableCounting() );
-        cacheExpiryMilliseconds = APISpec.getSecondsValue
+        cacheExpiryMilliseconds = PropertyExpiryTimes.getSecondsValue
         	( endpoint
         	, EXTRAS.cacheExpiryTime
         	, apiSpec.getCacheExpiryMilliseconds() / 1000

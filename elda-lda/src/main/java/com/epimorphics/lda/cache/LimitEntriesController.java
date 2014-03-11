@@ -8,10 +8,12 @@
 
 package com.epimorphics.lda.cache;
 
+import java.net.URI;
 import java.util.List;
 
 import com.epimorphics.lda.cache.Cache.Clock;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.core.ResponseResult;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public class LimitEntriesController extends ControllerBase {
@@ -29,6 +31,10 @@ public class LimitEntriesController extends ControllerBase {
 		public LimitEntriesCache( Clock clock, String label, int limit ) {
 			super( clock, label );
 			this.limit = limit;
+		}
+
+		@Override protected boolean exceedsResponseLimit(Cachelet<URI, TimedThing<ResponseResult>> cr) {
+			return cr.size() > limit;
 		}
 
 		@Override protected synchronized boolean exceedsSelectLimit( Cachelet<String, TimedThing<List<Resource>>> m ) {

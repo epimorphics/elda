@@ -27,6 +27,7 @@ import com.epimorphics.lda.exceptions.*;
 import com.epimorphics.lda.query.*;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.renderers.*;
+import com.epimorphics.lda.restlets.RouterRestletSupport;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
@@ -82,7 +83,25 @@ public class APIEndpointImpl implements APIEndpoint {
     	return defaults;
     }
     
-    @Override public Triad<APIResultSet, Map<String, String>, Bindings> call( Request r, NoteBoard nb ) {
+    @Override public ResponseResult call( Request r, NoteBoard nb ) {
+    	URI key = r.requestURI;
+    	ResponseResult fromCache = cache.fetch(key);
+    	if (fromCache == null) {
+    		System.err.println( ">> request: " + key + ", not in cache." );
+    		ResponseResult fresh = uncachedCall(r, nb);
+    		long expiresAt = nb.expiresAt;
+    		cache.store(r.requestURI, fresh, expiresAt);
+    		System.err.println( ">> created new entry" );
+    		if (expiresAt < 0) System.err.println( "]]  no explicit expiry time"); 
+    		else System.err.println( "]]  lives until " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
+    		return fresh;
+    	} else {
+    		System.err.println( ">> request: " + key + " satisfied from cache" );
+    		return fromCache;
+    	}    	
+    }
+
+	private ResponseResult uncachedCall( Request r, NoteBoard nb) {
 		Bindings b = r.context.copyWithDefaults( spec.getBindings() );
 	    APIQuery query = spec.getBaseQuery();
 	//
@@ -99,9 +118,9 @@ public class APIEndpointImpl implements APIEndpoint {
 		CompleteContext cc = new CompleteContext( r.mode, context, filtered.getModelPrefixes() );   
 	    createMetadata( r, cc, nb.totalResults, filtered, b, query );
 	    cc.include( filtered.getMergedModel() );	    
-	    Triad<APIResultSet, Map<String, String>, Bindings> result = new Triad<APIResultSet, Map<String, String>, Bindings>( filtered, cc.Do(), b );
+	    ResponseResult result = new ResponseResult( filtered, cc.Do(), b );
 		return result;
-    }
+	}
 
     private View buildQueryAndView( Bindings context, APIQuery query ) {
     	ShortnameService sns = spec.getAPISpec().getShortnameService();

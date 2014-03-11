@@ -40,7 +40,7 @@ public class APIEndpointUtil {
      		the name of the format suggested for rendering, and the
      		CallContext constructed and used in the invocation.
     */
-	public static Triad<APIResultSet, Map<String, String>, Bindings> call( APIEndpoint.Request r, NoteBoard nb, Match match, String contextPath, MultiMap<String, String> queryParams ) {
+	public static ResponseResult call( APIEndpoint.Request r, NoteBoard nb, Match match, String contextPath, MultiMap<String, String> queryParams ) {
 		APIEndpoint ep = match.getEndpoint();
 		
 		Bindings vs = new Bindings( r.context )

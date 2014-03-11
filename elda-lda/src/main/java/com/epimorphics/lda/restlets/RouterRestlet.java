@@ -366,14 +366,13 @@ import com.sun.jersey.api.NotFoundException;
         	ModelPrefixEditor mpe = ep.getSpec().getAPISpec().getModelPrefixEditor();
         //
         	NoteBoard nb = new NoteBoard();
-        	Triad<APIResultSet, Map<String, String>, Bindings> resultsAndBindings = 
-        		APIEndpointUtil.call( req, nb, match, contextPath, queryParams );
+        	ResponseResult resultsAndBindings = APIEndpointUtil.call( req, nb, match, contextPath, queryParams );
         	
-        	Map<String, String> termBindings = mpe.rename( resultsAndBindings.b );
+        	Map<String, String> termBindings = mpe.rename( resultsAndBindings.uriToShortnameMap );
         //
-            APIResultSet results = resultsAndBindings.a.applyEdits( mpe );
+            APIResultSet results = resultsAndBindings.resultSet.applyEdits( mpe );
             
-			Bindings rc = new Bindings( resultsAndBindings.c.copy(), as );
+			Bindings rc = new Bindings( resultsAndBindings.bindings.copy(), as );
 			
         	if (_default.getPreferredSuffix().equals( r.getPreferredSuffix())) {
         		MediaType dmt = _default.getMediaType(rc);
@@ -384,7 +383,7 @@ import com.sun.jersey.api.NotFoundException;
         	
         	long expiresAt = nb.expiresAt;   
         	String expiresDate = expiresAt < System.currentTimeMillis() 
-        		? null 
+        		? NO_EXPIRY 
         		: RouterRestletSupport.expiresAtAsRFC1123(expiresAt)
         		;
 						

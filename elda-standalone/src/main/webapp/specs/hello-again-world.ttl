@@ -109,6 +109,7 @@ hello:BoardGame a rdfs:Class
 hello:players a rdf:Property
 	; api:label "players"
 	; rdfs:range xsd:int
+	; elda:cacheExpiryTime "10s"
 	.
 	
 hello:Publisher a rdfs:Class

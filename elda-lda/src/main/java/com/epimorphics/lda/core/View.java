@@ -25,6 +25,7 @@ import com.epimorphics.lda.rdfq.SparqlSupport;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
+import com.epimorphics.lda.specs.PropertyExpiryTimes;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.query.Query;
@@ -494,6 +495,38 @@ public class View {
 		int result = 0;
 		for (Resource r: roots) result += r.getURI().length() + 14;
 		return result + 10;
+	}
+
+	public long minExpiryTime(PropertyExpiryTimes pet, long givenDuration) {
+		long viewDuration = propertyBasedTime(pet);
+		
+		System.err.println( ">> view: " + toString() );
+		System.err.println( "]]   View.minExpiryTime: viewDuration = " + viewDuration );		
+		
+		if (viewDuration == Long.MAX_VALUE) return givenDuration;
+		if (givenDuration < 0) return viewDuration;
+		return Math.min(viewDuration, givenDuration);
+	}
+
+	private long propertyBasedTime(PropertyExpiryTimes pet) {
+		
+		long result = Long.MAX_VALUE;
+		
+		if (type.equals(Type.T_DESCRIBE) || type.equals(Type.T_ALL))
+			return pet.minTime();
+		
+		for (PropertyChain pc: chains) {
+			for (Property p: pc.getProperties()) {
+				if (p.equals( ShortnameService.Util.propertySTAR )) {
+					return pet.minTime();
+				} else {
+					long t = pet.timeFor(p);
+					if (t < result) result = t;
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 }
