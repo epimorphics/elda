@@ -95,7 +95,13 @@ hello:about a api:ItemEndpoint
 		]
 	; api:defaultViewer api:labelledDescribeViewer
 	.
-	
+
+#
+# some cache-control examples
+#
+
+hello:players elda:cacheExpiryTime "10s".
+
 #
 # class and property declarations, setting shortnames and
 # property ranges.
@@ -109,7 +115,6 @@ hello:BoardGame a rdfs:Class
 hello:players a rdf:Property
 	; api:label "players"
 	; rdfs:range xsd:int
-	; elda:cacheExpiryTime "10s"
 	.
 	
 hello:Publisher a rdfs:Class

@@ -9,7 +9,6 @@ import org.junit.Test;
 import com.epimorphics.lda.cache.*;
 import com.epimorphics.lda.cache.Cache.Clock;
 import com.epimorphics.lda.cache.Cache.Controller;
-import com.epimorphics.lda.cache.LimitedCacheBase.TimedThing;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.sources.Source;

@@ -418,25 +418,6 @@ public class View {
 		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
 		return query.toString();
 	}		
-	
-	static final int CHUNK_SIZE = 1000;
-	static final boolean slice_describes = false;
-	
-	private List<List<Resource>> chunkify(List<Resource> roots) {
-		List<List<Resource>> result = new ArrayList<List<Resource>>();
-		if (slice_describes) {
-			int size = roots.size();
-			for (int i = 0; i < size; i += CHUNK_SIZE) {
-				int lim = Math.min( size, i + CHUNK_SIZE );
-				result.add( roots.subList( i, lim ) );
-			}
-			if (result.size() > 1)
-				log.debug( "large DESCRIBE: " + result.size() + " chunks of size " + CHUNK_SIZE );
-		} else {
-			result.add( roots );
-		}
-		return result;
-	}
 
 	private void addAllObjectLabels( Controls c, State s ) { 
 		StringBuilder sb = new StringBuilder();
@@ -497,31 +478,38 @@ public class View {
 		return result + 10;
 	}
 
-	public long minExpiryTime(PropertyExpiryTimes pet, long givenDuration) {
-		long viewDuration = propertyBasedTime(pet);
+	/**
+	    minExpiryTime(pet, dur) returns the minimum of the expiry times for
+	    predicates in this view. A predicate of propertySTAR, representing *,
+	    forces the result to use the smallest expiry time of any predicate.
+	    The result is the smaller of the givenDuration and the minimum expiry
+	    time.
+	*/
+	public long minExpiryMillis(PropertyExpiryTimes pet, long givenDuration) {
+		long viewDuration = propertyBasedMillis(pet);
 		
-		System.err.println( ">> view: " + toString() );
-		System.err.println( "]]   View.minExpiryTime: viewDuration = " + viewDuration );		
+//		System.err.println( ">> view: " + toString() );
+//		System.err.println( "]]   View.minExpiryTime: viewDuration = " + viewDuration );		
 		
 		if (viewDuration == Long.MAX_VALUE) return givenDuration;
 		if (givenDuration < 0) return viewDuration;
 		return Math.min(viewDuration, givenDuration);
 	}
 
-	private long propertyBasedTime(PropertyExpiryTimes pet) {
+	private long propertyBasedMillis(PropertyExpiryTimes pet) {
 		
 		long result = Long.MAX_VALUE;
 		
 		if (type.equals(Type.T_DESCRIBE) || type.equals(Type.T_ALL))
-			return pet.minTime();
+			return pet.minTimeMillis();
 		
 		for (PropertyChain pc: chains) {
 			for (Property p: pc.getProperties()) {
 				if (p.equals( ShortnameService.Util.propertySTAR )) {
-					return pet.minTime();
+					return pet.minTimeMillis();
 				} else {
-					long t = pet.timeFor(p);
-					if (t < result) result = t;
+					long millis = pet.timeInMillisFor(p);
+					if (millis < result) result = millis;
 				}
 			}
 		}

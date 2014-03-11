@@ -148,7 +148,7 @@ public abstract class LimitedCacheBase implements Cache {
     	TimedThing<ResponseResult> tt = cr.get(uri);
     	if (tt == null) return null;
     	if (tt.hasExpired(clock)) {
-       	System.err.println( ">> removing expired key '" + uri + "'" );
+//       	System.err.println( ">> removing expired key '" + uri + "'" );
     		cr.remove(uri); 
     		return null;
     	}

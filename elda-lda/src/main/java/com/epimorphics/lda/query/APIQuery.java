@@ -814,7 +814,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	public APIResultSet runQuery(NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings call, View view) {
 		Source source = spec.getDataSource();
 		try {
-			return runQueryWithSource(nb, c, spec, cache, call, view, source);
+			nb.expiresAt = viewSensitiveExpiryTime(spec, view);
+			Integer totalCount = requestTotalCount(nb.expiresAt, cache, source, call, spec.getPrefixMap());
+			nb.totalResults = totalCount;
+			return runQueryWithSource(nb, c, spec, call, view, source);
 		} catch (QueryExceptionHTTP e) {
 			EldaException.ARQ_Exception(source, e);
 			return /* NEVER */null;
@@ -823,54 +826,47 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	// may be subclassed
 	protected APIResultSet runQueryWithSource
-		( NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings call, View view, Source source) {
+		( NoteBoard nb, Controls c, APISpec spec, Bindings call, View view, Source source) {
+	//
 		Times t = c.times;
 		long origin = System.currentTimeMillis();
-		Triad<String, List<Resource>, Integer> queryAndResults = selectResources(c, cache, spec, call, source);
+		Couple<String, List<Resource>> queryAndResults = selectResources(c, spec, call, source);
 		long afterSelect = System.currentTimeMillis();
-		
+	//
 		t.setSelectionDuration(afterSelect - origin);
 		String outerSelect = queryAndResults.a;
 		List<Resource> results = queryAndResults.b;
-		Integer totalCount = queryAndResults.c;
-//		String countingViewKey = (counting() ? "(counting) " : "") + view.toString();
-		
-//		TimedThing<APIResultSet> already = cache.getCachedResultSet(results, countingViewKey);
-//		if (c.allowCache && already != null) {	
-//			nb.expiresAt = already.expiresAt;
-//			t.usedViewCache();
-//			if (log.isDebugEnabled()) log.debug("re-using cached results for " + results);
-//			return already.thing.clone();
-//		}
-
+	//
 		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, view, results);
-
+	//
 		long afterView = System.currentTimeMillis();
 		t.setViewDuration(afterView - afterSelect);
 		rs.setSelectQuery(outerSelect);
-		rs.setTotalCount(totalCount); 
-		nb.totalResults = totalCount;
-		
-		Model dataModel = rs.getModels().getObjectModel();
-//		long expiryTime = dataSensitiveExpiryTime(spec, dataModel);
-		long expiryTime = viewSensitiveExpiryTime(spec, view);
-		nb.expiresAt = expiryTime;
-//		cache.cacheDescription(results, countingViewKey, rs.clone(), expiryTime);	
+	//
 		return rs;
+	}
+
+	private Integer requestTotalCount(long expiryTime, Cache c, Source s, Bindings b, PrefixMapping pm) {		
+		if (counting()) {
+			PrefixLogger pl = new PrefixLogger(pm);
+			String countQueryString = assembleRawCountQuery(pl, b);
+			int already = c.getCount(countQueryString);
+			if (already < 0) {			
+				Query countQuery = createQuery(countQueryString);
+				CountConsumer cc = new CountConsumer();
+				s.executeSelect( countQuery, cc );
+				c.putCount(countQueryString, cc.count, expiryTime);
+				return cc.count;
+			} else {				
+				return already;
+			}
+		}
+		return null;
 	}
 
 	private long viewSensitiveExpiryTime(APISpec spec, View v) {
 		System.err.println( ">> viewSensitiveExpiryTime: basis " + cacheExpiryMilliseconds );
-		long duration = v.minExpiryTime(spec.getPropertyExpiryTimes(), cacheExpiryMilliseconds);
-		System.err.println( ">> computed duration: " + duration );
-		long result = nowPlus(duration);
-		System.err.println( ">> the long result of time: " + result );
-		return result;
-	}
-
-	private long dataSensitiveExpiryTime(APISpec spec, Model dataModel) {
-		System.err.println( ">> dataSensitiveExpiryTime: basis " + cacheExpiryMilliseconds );
-		long duration = spec.getPropertyExpiryTimes().minExpiryTime(dataModel, cacheExpiryMilliseconds);
+		long duration = v.minExpiryMillis(spec.getPropertyExpiryTimes(), cacheExpiryMilliseconds);
 		System.err.println( ">> computed duration: " + duration );
 		long result = nowPlus(duration);
 		System.err.println( ">> the long result of time: " + result );
@@ -900,58 +896,33 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 * 
 	 * May be subclassed.
 	 */
-	protected Triad<String, List<Resource>, Integer> selectResources(Controls c, Cache cache, APISpec spec, Bindings b, Source source) {
+	protected Couple<String, List<Resource>> selectResources(Controls c, APISpec spec, Bindings b, Source source) {
 		final List<Resource> results = new ArrayList<Resource>();
 		if (itemTemplate != null)
 			setSubject(b.expandVariables(itemTemplate));
 		if (isFixedSubject() && isItemEndpoint)
-			return new Triad<String, List<Resource>, Integer>("", CollectionUtils.list(subjectResource), null);
-		else
-			return runGeneralQuery(c, cache, spec, b, source, results);
+			return new Couple<String, List<Resource>>("", CollectionUtils.list(subjectResource));
+		else {
+			Couple<String, List<Resource>> x = runGeneralQuery(c, spec, b, source, results);	
+			return new Couple<String, List<Resource>>(x.a, x.b);
+		}
 	}
 
-	private Triad<String, List<Resource>, Integer> runGeneralQuery
+	private Couple<String, List<Resource>> runGeneralQuery
 		( Controls c
-		, Cache cache
 		, APISpec spec
 		, Bindings cc
 		, Source source
 		, final List<Resource> results
 		) {
-		Integer totalCount = requestTotalCount(cache, source, cc, spec.getPrefixMap());
 		String selectQuery = assembleSelectQuery(cc, spec.getPrefixMap());
 	//
 		c.times.setSelectQuerySize(selectQuery);
-//		List<Resource> already = cache.getCachedResources(selectQuery);
-//		if (c.allowCache && already != null) {
-//			c.times.usedSelectionCache();
-//			if (log.isDebugEnabled()) log.debug("re-using cached results for query " + selectQuery);
-//			return new Triad<String, List<Resource>, Integer>(selectQuery, already, totalCount);
-//		}
 	//
 		Query q = createQuery(selectQuery);
 		if (log.isDebugEnabled()) log.debug("Running query: " + selectQuery.replaceAll("\n", " "));
 		source.executeSelect(q, new ResultResourcesReader(results));
-		// cache.cacheSelection(selectQuery, results, nowPlus(cacheExpiryMilliseconds));
-		return new Triad<String, List<Resource>, Integer>(selectQuery, results, totalCount );
-	}
-
-	private Integer requestTotalCount(Cache c, Source s, Bindings b, PrefixMapping pm) {		
-		if (counting()) {
-			PrefixLogger pl = new PrefixLogger(pm);
-			String countQueryString = assembleRawCountQuery(pl, b);
-			int already = c.getCount(countQueryString);
-			if (already < 0) {			
-				Query countQuery = createQuery(countQueryString);
-				CountConsumer cc = new CountConsumer();
-				s.executeSelect( countQuery, cc );
-				c.putCount(countQueryString, cc.count, nowPlus(cacheExpiryMilliseconds));
-				return cc.count;
-			} else {				
-				return already;
-			}
-		}
-		return null;
+		return new Couple<String, List<Resource>>(selectQuery, results );
 	}
 
 	private boolean counting() {

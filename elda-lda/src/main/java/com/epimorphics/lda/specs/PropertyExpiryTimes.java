@@ -3,7 +3,6 @@ package com.epimorphics.lda.specs;
 import java.util.*;
 
 import com.epimorphics.lda.vocabularies.EXTRAS;
-import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.OWL;
@@ -11,9 +10,9 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 public class PropertyExpiryTimes {
 
-	protected final Map<Node, Long> bindings = new HashMap<Node, Long>();
+	protected final Map<Node, Long> secondsForNode = new HashMap<Node, Long>();
 	
-	protected long minTime = Long.MAX_VALUE;
+	protected long minTimeSeconds = Long.MAX_VALUE;
 	
 	public PropertyExpiryTimes() {
 	}
@@ -33,16 +32,16 @@ public class PropertyExpiryTimes {
 			;
 		for (Statement c: candidates)
 			if (isProperty( c.getSubject())) {
-				long t = getSecondsValue(c.getSubject(), EXTRAS.cacheExpiryTime, -1);
-				result.put(c.getSubject().asNode(), t);
+				long seconds = getSecondsValue(c.getSubject(), EXTRAS.cacheExpiryTime, -1);
+				result.put(c.getSubject().asNode(), seconds);
 			}
 				
 		return result;
 	}
 	
-	protected void put(Node n, long t) {
-		bindings.put(n, t);
-		if (t < minTime) minTime = t;
+	protected void put(Node n, long seconds) {
+		secondsForNode.put(n, seconds);
+		if (seconds < minTimeSeconds) minTimeSeconds = seconds;
 	}
 	
 	private static boolean isProperty(Resource s) {
@@ -54,7 +53,7 @@ public class PropertyExpiryTimes {
 	}
 
 	@Override public String toString() {
-		return "<PET " + bindings + ">";
+		return "<PET " + secondsForNode + ">";
 	}
 	
 	@Override public boolean equals( Object other ) {
@@ -65,7 +64,7 @@ public class PropertyExpiryTimes {
 	}
 
 	private boolean same(PropertyExpiryTimes other) {
-		return bindings.equals(other.bindings);
+		return secondsForNode.equals(other.secondsForNode);
 	}
 
 	public static long getSecondsValue(Resource x, Property p, long ifAbsent) {
@@ -96,29 +95,12 @@ public class PropertyExpiryTimes {
 		return 1;
 	}
     
-    public long timeFor(Resource r) {
-    	Long t = bindings.get(r.asNode());
-    	return t == null ? Long.MAX_VALUE : t;
+    public long timeInMillisFor(Resource r) {
+    	Long t = secondsForNode.get(r.asNode());
+    	return t == null ? Long.MAX_VALUE : t * 1000;
     }
     
-    public long minTime() {
-    	System.err.println( ">> minTime " + minTime + " for " + bindings );
-    	return minTime;
+    public long minTimeMillis() {
+    	return minTimeSeconds * 1000;
     }
-
-    /**
-        Return the minimum expiry time (duration) for this object model
-    */
-	public long minExpiryTime(Model dataModel, long givenDuration) {
-		Graph dataGraph = dataModel.getGraph();
-		long modelDuration = Long.MAX_VALUE;
-		for (Map.Entry<Node, Long> e: bindings.entrySet())
-			if (dataGraph.contains(Node.ANY, e.getKey(), Node.ANY)) {
-				if (e.getValue() < modelDuration) modelDuration = e.getValue();
-			}
-	//
-		if (modelDuration == Long.MAX_VALUE) return givenDuration;
-		if (givenDuration < 0) return modelDuration;
-		return Math.min(modelDuration, givenDuration);
-	}
 }

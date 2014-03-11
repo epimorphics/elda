@@ -19,7 +19,6 @@ package com.epimorphics.lda.restlets;
 
 import java.io.*;
 import java.net.*;
-import java.text.DateFormat;
 import java.util.*;
 
 import javax.servlet.*;
@@ -381,7 +380,12 @@ import com.sun.jersey.api.NotFoundException;
         		}
         	}
         	
-        	long expiresAt = nb.expiresAt;   
+        	long expiresAt = nb.expiresAt;  
+        	
+        	System.err.println( ">> expiresAt: " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
+        	System.err.println( ">> expiresAt: (= " + expiresAt + ")" );
+        	System.err.println( ">>  " + (expiresAt < System.currentTimeMillis() ? " expired" : " still alive" ) + ".");
+        	
         	String expiresDate = expiresAt < System.currentTimeMillis() 
         		? NO_EXPIRY 
         		: RouterRestletSupport.expiresAtAsRFC1123(expiresAt)
