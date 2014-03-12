@@ -1003,6 +1003,22 @@ If the SPARQL server supports nested
     the chain.
 </p>
 
+<p>
+	(Reminder: property chains are dot-separated lists of
+	property shortnames, <i>ie</i> the <code>api:name</code>s
+	of properties declared in the configuration. 
+	<code>_properties</code> and <code>api:properties</code>
+	both accept comma-separated lists of property chains,
+	<i>eg</i> <code>"type.*"</code> or <code>"*.designedBy"</code>.
+</p>
+
+<p><b>Warning</b>. 
+	Because <code>*</code> can match any property, it can
+	significantly increase the size of the resulting model
+	and the time taken for the SPARQL endpoint to generate it.
+	Use with caution.
+</p>
+
 <h2 id="uri-rewriting">URI rewriting</h2>
 
 <p>
