@@ -994,10 +994,13 @@ If the SPARQL server supports nested
 
 <p>
     A property chain appearing in a view specification
-    may contain the special element '*', meaning "any
-    property". In the generated query it is replaced by
-    a fresh variable. There can be any number of *-elements,
-    anywhere within the chain.
+    (<ie>, as the object of an <code>api:properties</code>
+    statement, or as part of an <code>_properties=</code>
+    query parameter) may contain the special element 
+    <code>*</code>, meaning "any property". In the generated 
+    query it is replaced by a fresh variable. There can be 
+    any number of <code>*</code> elements, anywhere within 
+    the chain.
 </p>
 
 <h2 id="uri-rewriting">URI rewriting</h2>
