@@ -87,8 +87,8 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public ResponseResult call( Request r, NoteBoard nb ) {
     	URI key = r.requestURI;
     	TimedThing<ResponseResult> fromCache = cache.fetch(key);
-    	if (fromCache == null) {
-//    		System.err.println( ">> request: " + key + ", not in cache." );
+    	if (fromCache == null || r.c.allowCache == false) {
+//    		System.err.println( ">> request: " + key + ", not in cache (or cache not allowed)." );
     		ResponseResult fresh = uncachedCall(r, nb);
     		long expiresAt = nb.expiresAt;
     		cache.store(r.requestURI, fresh, expiresAt);
