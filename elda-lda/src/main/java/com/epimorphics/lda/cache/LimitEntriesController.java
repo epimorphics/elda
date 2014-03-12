@@ -44,6 +44,10 @@ public class LimitEntriesController extends ControllerBase {
 		@Override protected synchronized boolean exceedsResultSetLimit( Cachelet<String, TimedThing<APIResultSet>> m) {
 			return m.size() > limit;
 		}
+
+		@Override protected boolean exceedsCountLimit(Cachelet<String, TimedThing<Integer>> cr) {
+			return cr.size() > limit;
+		}
 	}
 	
 	protected final static class Factory implements CacheNewer {

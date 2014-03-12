@@ -25,6 +25,10 @@ public class PermaCache extends LimitedCacheBase implements Cache {
         super(Clock.SystemClock, label);
     }
 
+	@Override protected boolean exceedsCountLimit(Cachelet<String, TimedThing<Integer>> cr) {
+		return false;
+	}
+
     @Override protected synchronized boolean exceedsSelectLimit( Cachelet<String, TimedThing<List<Resource>>> m ) {
         return false;
     }

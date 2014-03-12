@@ -167,6 +167,8 @@ public abstract class LimitedCacheBase implements Cache {
     }
     
     protected abstract boolean exceedsResponseLimit(Cachelet<URI, TimedThing<ResponseResult>> cr);
+    
+    protected abstract boolean exceedsCountLimit(Cachelet<String, TimedThing<Integer>> cr);
 
 	protected abstract boolean exceedsSelectLimit( Cachelet<String, TimedThing<List<Resource>>> m) ;
 
@@ -238,13 +240,8 @@ public abstract class LimitedCacheBase implements Cache {
 	    Put the total number of items that this query returns.
 	*/
 	@Override public synchronized void putCount(String countQueryString, int count, long expiresAt) {
-		if (cc.size() > countLimit()) cc.clear();
 		cc.put(countQueryString, new TimedThing<Integer>(new Integer(count), expiresAt));
-	}
-	
-	// temporary
-	public int countLimit() {
-		return 1000;
+		if (exceedsCountLimit(cc)) cc.clear();
 	}
 
     @Override public synchronized void resetCounts() {

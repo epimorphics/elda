@@ -34,6 +34,10 @@ public class LimitTriplesController extends ControllerBase {
 			this.limit = limit;
 		}
 
+		@Override protected boolean exceedsCountLimit(Cachelet<String, TimedThing<Integer>> cr) {
+			return cr.size() > limit;
+		}
+
 		@Override protected synchronized boolean exceedsSelectLimit( Cachelet<String, TimedThing<List<Resource>>> m ) {
 			return m.size() > limit;
 		}
