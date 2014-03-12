@@ -1121,6 +1121,11 @@ http://localhost:8080/elda/doc/school
 <h2 id="expiry-headers-and-cache"><b>Expires</b> headers</h2>
 
 <p>
+	(This is a new, experimental feature. Its details may
+	change with experience.)
+</p>
+
+<p>
 	By default, Elda does not generate any <b>Expires:</b> headers
 	and assumes that all data fetched from its SPARQL endpoint
 	does not change while Elda is running. This is sufficient if
@@ -1143,7 +1148,8 @@ http://localhost:8080/elda/doc/school
 
 <p>
 The <code>Value</code> can be an integer with units of
-seconds, or a string <code>"integerLETTER"</code> meaning
+seconds, or a string of digits interpreted as the corresponding integer,
+or a string <code>"integerLETTER"</code> meaning
 the specified number of the unit specified by the LETTER:
 </p>
 
@@ -1177,6 +1183,33 @@ the specified number of the unit specified by the LETTER:
 	This allows Elda to operate with its own (configurably-sized) 
 	cache but still to serve controllably-fresh data from its
 	SPARQL endpoint.
+</p>
+
+<h3>Property-based expiry time</h3>
+
+<p>
+	As well as setting explicit expiry times on endpoints or
+	the API, they can be set on declared properties in the
+	configuration. A "declared property" is one that has an
+	<code>rdf:type</code> of <code>rdf:Property</code>,
+	<code>owl:ObjectProperty</code>, or <code>owl:DatatypeProperty</code>.
+	Such declarations are often present in a configuration as
+	part of <code>api:label</code> shortname declarations. 
+</p>
+
+<p>
+	If a view mentions any properties with expiry times, then the
+	smallest such expiry time is taken as the upper limit
+	on the expiry time for this request. If the view contains
+	any <code>*</code> wildcard properties, or uses a 
+	<code>DESCRIBE</code>, then the smallest of any declared
+	property's expiry time is used.
+</p>
+
+<p>
+	This allows "volatile" properties to be annotated with their
+	expiry times and for those times to automatically propagate
+	to any request that uses them.
 </p>
 
 <h2 id="item-template-fallback">Item template fallback</h2>
