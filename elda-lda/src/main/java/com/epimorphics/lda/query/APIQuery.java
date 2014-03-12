@@ -815,7 +815,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		Source source = spec.getDataSource();
 		try {
 			nb.expiresAt = viewSensitiveExpiryTime(spec, view);
-			Integer totalCount = requestTotalCount(nb.expiresAt, cache, source, call, spec.getPrefixMap());
+			Integer totalCount = requestTotalCount(nb.expiresAt, c, cache, source, call, spec.getPrefixMap());
 			nb.totalResults = totalCount;
 			return runQueryWithSource(nb, c, spec, call, view, source);
 		} catch (QueryExceptionHTTP e) {
@@ -846,16 +846,16 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return rs;
 	}
 
-	private Integer requestTotalCount(long expiryTime, Cache c, Source s, Bindings b, PrefixMapping pm) {		
+	private Integer requestTotalCount(long expiryTime, Controls c, Cache cache, Source s, Bindings b, PrefixMapping pm) {		
 		if (counting()) {
 			PrefixLogger pl = new PrefixLogger(pm);
 			String countQueryString = assembleRawCountQuery(pl, b);
-			int already = c.getCount(countQueryString);
-			if (already < 0) {			
+			int already = cache.getCount(countQueryString);
+			if (already < 0 || c.allowCache == false) {			
 				Query countQuery = createQuery(countQueryString);
 				CountConsumer cc = new CountConsumer();
 				s.executeSelect( countQuery, cc );
-				c.putCount(countQueryString, cc.count, expiryTime);
+				cache.putCount(countQueryString, cc.count, expiryTime);
 				return cc.count;
 			} else {				
 				return already;
