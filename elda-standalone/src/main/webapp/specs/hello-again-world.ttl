@@ -54,7 +54,6 @@ hello:hello-world-again a api:API
         ; api:mimeType "application/atom+xml"
         ; elda:feedTitle "an example Elda feed"
         ]
-    ; elda:enableCounting "optional"
    	; elda:cacheExpiryTime "1m"
 	.
 	

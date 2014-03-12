@@ -12,7 +12,7 @@ public class PropertyExpiryTimes {
 
 	protected final Map<Node, Long> secondsForNode = new HashMap<Node, Long>();
 	
-	protected long minTimeSeconds = Long.MAX_VALUE;
+	protected long minTimeSeconds = Long.MAX_VALUE / 1000;
 	
 	public PropertyExpiryTimes() {
 	}
