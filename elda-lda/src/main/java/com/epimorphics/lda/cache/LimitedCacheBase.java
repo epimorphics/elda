@@ -147,6 +147,9 @@ public abstract class LimitedCacheBase implements Cache {
     }
     
     @Override public synchronized TimedThing<ResponseResult> fetch(URI uri) {
+    	
+    	// if (true) return null;
+    	
     	TimedThing<ResponseResult> tt = cr.get(uri);
     	if (tt == null) return null;
     	if (tt.hasExpired(clock)) {
@@ -248,12 +251,14 @@ public abstract class LimitedCacheBase implements Cache {
         cs.resetCounts();
         cd.resetCounts();
         cc.resetCounts();
+        cr.resetCounts();
     }
 
     @Override public synchronized void clear() {
         cs.clear();
         cd.clear();
         cc.clear();
+        cr.clear();
     }
 
     @Override public synchronized int numEntries() {

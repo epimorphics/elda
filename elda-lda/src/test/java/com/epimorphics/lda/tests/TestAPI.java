@@ -24,6 +24,7 @@ import java.io.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.support.EldaFileManager;
 import com.hp.hpl.jena.rdf.model.*;
@@ -37,6 +38,7 @@ public class TestAPI {
     protected String apiName = "api1";
 
     public APIResultSet testAPI(String uri, String query, String expectedResults) {
+		Cache.Registry.clearAll();
         String description = "# Model from test: " + uri + "?" + query + "\n";
         APIResultSet rs = tester.runQuery(uri, query);
 //        System.err.println( ">> QUERY: " + rs.getSelectQuery() );
