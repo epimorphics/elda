@@ -1,6 +1,53 @@
 + ----------------------------------------------------------------------
 | Elda 1.2.30 (DEVELOPING)
 
+This release of Elda improves cache use in two ways;
+with Expires headers and with improvements in Elda's
+internal cache.
+
+Expires Headers
+
+If a cache expiry time is associated with an Elda
+request, Elda adds the appropriate Expires: header
+to the response.
+
+A cache expiry time can be associated with a request
+in the following ways in order:
+
+* the view uses properties that have been declared
+  (in the configuration file) as having an expiry
+  time using `elda:cacheExpiryTime TIME`. The
+  smallest such time is the associated time.
+  A DESCRIBE view or a view using the * wildcard
+  implicitly uses all declared properties.
+
+* the endpoint has been given a cacheExpiryTime.
+  (If it has, and it is smaller than a views
+  expiry time, the endpoint time is used.)
+
+* the API has been given a cacheExpiryTime,
+  which acts as thge cacheExpiryTime for all
+  endpoints that do not explicitly have one.
+
+This allows timeouts to be given to any "volatile"
+properties and these timeouts will be respected
+by external caches. Item counts are also cached
+with the expiry time of the query that used them.
+
+Internal Cache
+
+Elda's internal cache now respects the expiry times
+mentioned above, rather than blindly allowing
+entries to persist until the cache is emptied.
+This means that Elda will age entries out even
+when it is not being used behind an external cache.
+
+(The old two-level structure of Elda's cache has also
+been abandoned; the cache is keyed from the request
+URI rather than their being one map from select
+query to resources and another from resources+view
+to results. This means that multiple formats for
+"the same" query are cached independently.)
 
 + ----------------------------------------------------------------------
 | Elda 1.2.29 (RELEASED)
