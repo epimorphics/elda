@@ -993,23 +993,47 @@ If the SPARQL server supports nested
 <h2 id="wildcard-properties">Wildcard '*' in view property chains</h2>
 
 <p>
-    A property chain appearing in a view specification
-    (<ie>, as the object of an <code>api:properties</code>
-    statement, or as part of an <code>_properties=</code>
-    query parameter) may contain the special element 
-    <code>*</code>, meaning "any property". In the generated 
-    query it is replaced by a fresh variable. There can be 
-    any number of <code>*</code> elements, anywhere within 
-    the chain.
+	A view definition (either some <code>api:Viewer</code>
+	in the configuration, or an implicit one constructed
+	from <code>_view</code> and <code>_properties</code>
+	in the request URL) is usually characterised by some
+	collection of <i>property chains</i>. Each property
+	chain <code>S1.S2...</code> corresponds to a SPARQL 
+	query fragment <code>?item P1 ?V1. ?V1 P2 ?V2...</code>
+	where <code>S<sub>i</sub></code> is the shortname of
+	property <code>P<sub>i</sub></code>.
+	A property chain may be specified as the list object
+	of an <code>api:property</code> declaration or as a
+     	(comma-separated list of) dot-separated list of 
+	property shortnames in the string value of an 
+	<code>api:properties</code> declaration.
 </p>
 
 <p>
-	(Reminder: property chains are dot-separated lists of
-	property shortnames, <i>ie</i> the <code>api:name</code>s
-	of properties declared in the configuration. 
-	<code>_properties</code> and <code>api:properties</code>
-	both accept comma-separated lists of property chains,
-	<i>eg</i> <code>"type.*"</code> or <code>"*.designedBy"</code>.
+   	(A property shortname is the <code>api:label</code>
+	of that property, or it's <code>rdfs:label</code> if
+	if has no <code>api:label</code> and its label has
+	the required syntax.)
+</p>
+
+<p>
+	Elda additionally allows an <code>api:properties</code>
+	to contain the special element <code>*</code> in place
+	of a shortname, meaning "any property"; in the generated
+	query fragment, the <code>*</code> is replaced by a
+	fresh variable. There can be any number of <code>*</code>
+	elements, anywhere within the chain, <i>eg</i>
+</p>
+
+<pre>
+ 	... api:properties <code>"type.*,label"</code>  
+	... api:properties <code>"*.designedBy"</code>
+
+</pre>
+
+<p>
+	This also applies to the value of the reserved query
+	parameter <code>_properties</code>.
 </p>
 
 <p><b>Warning</b>. 
