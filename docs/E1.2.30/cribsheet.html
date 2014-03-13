@@ -236,10 +236,12 @@
       _properties=A,B,...
     </td>
     <td>
-      A, B, ... are the short names of properties.
+      A, B, ... are property chains P.Q.R, where P... are the
+      short names of properties or the special wildcard property
+      <code>*</code> meaning any property.
     </td>
     <td>
-      The named properties are added to those of the view
+      The property chains are added to those of the view
       defined by <strong>_view</strong> or the configuration. (This
       applies even if that view is an <strong>all</strong> or
       <strong>description</strong> view which uses a SPARQL
@@ -678,7 +680,8 @@
     <td>"<em>chain1,chain2...</em>"</td>
     <td>
       The viewer should include properties and values for
-      all of the given property chains.
+      all of the given property chains (which may include
+      the wildcard property <code>*</code>).
     </td>
   </tr>
 
@@ -687,9 +690,10 @@
     <td>api:property</td>
     <td>(property1, property2 ...)</td>
     <td>
-      The viewer should include the given properties. (Note
-      that the properties are identified by their full URI,
-      not shortname, and that there's no property-chaining.)
+      The viewer should include a property chain with the
+      given properties in that order. (Note that the properties 
+      are identified by their full URI or CURIE, not their
+      shortname.)
     </td>
   </tr>
 
