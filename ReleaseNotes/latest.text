@@ -1,5 +1,8 @@
 + ----------------------------------------------------------------------
-| Elda 1.2.30 (DEVELOPING)
+| Elda 1.2.31 (DEVELOPING)
+
++ ----------------------------------------------------------------------
+| Elda 1.2.30 (RELEASED)
 
 This release of Elda improves cache use in two ways;
 with Expires headers and with improvements in Elda's
