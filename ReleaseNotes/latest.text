@@ -52,6 +52,13 @@ query to resources and another from resources+view
 to results. This means that multiple formats for
 "the same" query are cached independently.)
 
+Other Changes
+
+The XSLT stylesheets have been revised to avoid deep
+recursions when escaping characters in large literals
+when assembling more-like-this links: the links are
+suppressed.
+
 + ----------------------------------------------------------------------
 | Elda 1.2.29 (RELEASED)
 
