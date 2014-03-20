@@ -77,6 +77,17 @@ public abstract class LimitedCacheBase implements Cache {
 			.append( ".</div>" )
 			.append( "\n" )
 			;
+    	sb
+			.append( "<div style='margin-top: 1ex'>" )
+			.append( "RESULT: ").append( viewSeconds ).append( "s since first")
+    		.append( ", " ).append( cr.requests ).append( " requests" )
+			.append( ", " ).append( cr.hits ).append( " hits" )
+			.append( ", " ).append( cr.misses ).append( " misses")
+			.append( ", " ).append( cr.drops ).append( " drops" )
+    		.append( " (last " ).append( viewDropSeconds ).append( "s ago)" )
+			.append( ".</div>" )
+			.append( "\n" )
+			;
 //    	for (Map.Entry<String, List<Resource>> e: cs.entrySet()) {
 //    		sb.append( "<pre>" );
 //    		sb.append( e.getKey().replaceAll( "\n", " " ).replaceAll( "&", "&amp;" ).replaceAll( "<", "&lt;" ) );
