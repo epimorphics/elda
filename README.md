@@ -15,7 +15,7 @@ which allow you to experiment with the style of query and get started with build
 </p>
 
 <p>
-See the <a href="http://epimorphics.github.io/elda/docs/E1.2.29/index.html">quickstart documentation</a>.
+See the <a href="http://epimorphics.github.io/elda/docs/E1.2.30/index.html">quickstart documentation</a>.
 For summaries of the latest releases, see the
 <a href="http://epimorphics.github.io/elda/">documentation root</a>.
 </p>
