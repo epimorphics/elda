@@ -965,6 +965,13 @@ $prefLabel, $altLabel, $title and $name variables.
 			<xsl:call-template name="createInfo">
 				<xsl:with-param name="text">Links to the items within this page, and to the previous and/or next pages of results.</xsl:with-param>
 			</xsl:call-template>
+            <xsl:if test="totalResults">
+                <ul>
+                   <li class="resultcount">
+                      <xsl:apply-templates select="." mode="itemCounts"/>
+                   </li>
+                </ul>
+            </xsl:if>
 			<ul>
 				<xsl:if test="prev">
 					<li>
@@ -986,6 +993,17 @@ $prefLabel, $altLabel, $title and $name variables.
 			</ul>
 		</section>
 	</xsl:if>
+</xsl:template>
+
+<xsl:template match="result" mode="itemCounts">
+    <xsl:text>Results </xsl:text>
+    <xsl:value-of select="startIndex"/>  
+    <xsl:text> to </xsl:text>
+    <xsl:value-of select="startIndex + count(items/item) - 1"/>
+    <xsl:if test="totalResults">
+      <xsl:text> of </xsl:text>
+      <xsl:value-of select="totalResults"/>  
+    </xsl:if>  
 </xsl:template>
 
 <xsl:template match="result" mode="moreinfo">
@@ -2670,6 +2688,7 @@ $prefLabel, $altLabel, $title and $name variables.
 					</a>
 				</xsl:otherwise>
 			</xsl:choose>
+			<xsl:if test="string-length($value) &lt; 1000" >
 			<a rel="nofollow" title="more like this">
 				<xsl:attribute name="href">
 					<xsl:call-template name="substituteParam">
@@ -2682,6 +2701,7 @@ $prefLabel, $altLabel, $title and $name variables.
 				</xsl:attribute>
 				<img src="{$inactiveImageBase}/Search.png" alt="more like this" />
 			</a>
+			</xsl:if>
 			<xsl:choose>
 				<xsl:when test="$min = $value">
 					<a rel="nofollow" title="remove minimum value filter">
@@ -2721,6 +2741,7 @@ $prefLabel, $altLabel, $title and $name variables.
 			</xsl:choose>
 		</xsl:when>
 		<xsl:otherwise>
+		    <xsl:if test="string-length($label) &lt; 1000" >
 			<a rel="nofollow" title="more like this">
 				<xsl:attribute name="href">
 					<xsl:call-template name="substituteParam">
@@ -2733,6 +2754,7 @@ $prefLabel, $altLabel, $title and $name variables.
 				</xsl:attribute>
 				<img src="{$inactiveImageBase}/Search.png" alt="more like this" />
 			</a>
+			</xsl:if>
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>

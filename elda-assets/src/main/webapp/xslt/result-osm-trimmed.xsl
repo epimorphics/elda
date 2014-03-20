@@ -2718,6 +2718,7 @@ $prefLabel, $altLabel, $title and $name variables.
                     </a>
                 </xsl:otherwise>
             </xsl:choose>
+            <xsl:if test="string-length($value) &lt; 1000" >
             <a rel="nofollow" title="more like this">
                 <xsl:attribute name="href">
                     <xsl:call-template name="substituteParam">
@@ -2734,6 +2735,7 @@ $prefLabel, $altLabel, $title and $name variables.
                 </xsl:attribute>
                 <img src="{$inactiveImageBase}/Search.png" alt="more like this" />
             </a>
+            </xsl:if>
             <xsl:choose>
                 <xsl:when test="$min = $value">
                     <a rel="nofollow" title="remove minimum value filter">
@@ -2773,6 +2775,7 @@ $prefLabel, $altLabel, $title and $name variables.
             </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
+            <xsl:if test="string-length($label) &lt; 1000" >
             <a rel="nofollow" title="more like this">
                 <xsl:attribute name="href">
                     <xsl:call-template name="substituteParam">
@@ -2789,6 +2792,7 @@ $prefLabel, $altLabel, $title and $name variables.
                 </xsl:attribute>
                 <img src="{$inactiveImageBase}/Search.png" alt="more like this" />
             </a>
+            </xsl:if>
         </xsl:otherwise>
     </xsl:choose>
 </xsl:template>
