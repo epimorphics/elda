@@ -122,6 +122,57 @@ public class TestEnableCounting {
 		assertEquals( Boolean.TRUE, e.getEnableCounting() );
 	}
 	
+	@Test public void testEndpointOveridesFalseEnableCountingWithTrue() {
+		Model m = modelFrom
+			( ":my a api:API"
+			, "; elda:enableCounting false"
+			, "; api:sparqlEndpoint :spoo"
+			, "; api:endpoint :ep"
+			, "."
+			, ":ep a api:ListEndpoint"
+			, "; api:uriTemplate 'ep'"
+			, "; elda:enableCounting true"
+			);
+		Resource root = m.createResource(m.expandPrefix(":my"));
+		APISpec s = SpecUtil.specFrom( root );
+		APIEndpointSpec e = s.getEndpoints().get(0);
+		assertEquals( Boolean.TRUE, e.getEnableCounting() );
+	}
+	
+	@Test public void testEndpointOveridesTrueEnableCountingWithFalse() {
+		Model m = modelFrom
+			( ":my a api:API"
+			, "; elda:enableCounting true"
+			, "; api:sparqlEndpoint :spoo"
+			, "; api:endpoint :ep"
+			, "."
+			, ":ep a api:ListEndpoint"
+			, "; api:uriTemplate 'ep'"
+			, "; elda:enableCounting false"
+			);
+		Resource root = m.createResource(m.expandPrefix(":my"));
+		APISpec s = SpecUtil.specFrom( root );
+		APIEndpointSpec e = s.getEndpoints().get(0);
+		assertEquals( Boolean.FALSE, e.getEnableCounting() );
+	}
+	
+	@Test public void testEndpointOveridesTrueEnableCountingWithOptional() {
+		Model m = modelFrom
+			( ":my a api:API"
+			, "; elda:enableCounting true"
+			, "; api:sparqlEndpoint :spoo"
+			, "; api:endpoint :ep"
+			, "."
+			, ":ep a api:ListEndpoint"
+			, "; api:uriTemplate 'ep'"
+			, "; elda:enableCounting 'optional'"
+			);
+		Resource root = m.createResource(m.expandPrefix(":my"));
+		APISpec s = SpecUtil.specFrom( root );
+		APIEndpointSpec e = s.getEndpoints().get(0);
+		assertNull( e.getEnableCounting() );
+	}
+	
 	@Test public void testEndpointOveridesEnableCountingWithFalse() {
 		Model m = modelFrom
 			( ":my a api:API"
