@@ -926,7 +926,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	private boolean counting() {
-		return Boolean.TRUE.equals(totalCountRequested);
+		return 
+			Boolean.TRUE.equals(totalCountRequested)
+			&& isItemEndpoint == false
+			;
 	}	
 	
 	static class CountConsumer implements ResultSetConsumer {

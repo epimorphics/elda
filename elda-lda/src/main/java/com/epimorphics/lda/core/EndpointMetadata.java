@@ -116,7 +116,7 @@ public class EndpointMetadata {
 	    		.addProperty( RDF.type, API.ListEndpoint )
 	    		;
 	    } else {
-			Resource content = resultList.get(0).inModel(metaModel);
+			Resource content = firstOf(resultList).inModel(metaModel);
 			thisMetaPage.addProperty( FOAF.primaryTopic, content );
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
 		}
@@ -149,6 +149,13 @@ public class EndpointMetadata {
 	    if (wantsMeta.wantsMetadata( "execution" )) metaModel1.add( execution ); else setsMeta.setMetadata( "execution", execution );
 	}
 	
+	private static Resource firstOf(List<Resource> resultList) {
+		return resultList.isEmpty() 
+			? ResourceFactory.createResource("elda:missingEndpoint") 
+			: resultList.get(0)
+			;
+	}
+
 	/**
 	    Create metadata describing the alternative views available
 	    for this endpoint, given their names.

@@ -20,3 +20,10 @@ For summaries of the latest releases, see the
 <a href="http://epimorphics.github.io/elda/">documentation root</a>.
 </p>
 
+<p>
+	<b>WARNING</b> There is an item-counting problem in the latest
+	Elda (1.2.30) and possibly in 1.2.29 (which introduced item
+	counting). Do NOT start using these releases until this note
+	is removed and a new Elda release is officially announced.
+</p>
+
