@@ -15,15 +15,14 @@ which allow you to experiment with the style of query and get started with build
 </p>
 
 <p>
-See the <a href="http://epimorphics.github.io/elda/docs/E1.2.29/index.html">quickstart documentation</a>.
+See the <a href="http://epimorphics.github.io/elda/docs/E1.2.31/index.html">quickstart documentation</a>.
 For summaries of the latest releases, see the
 <a href="http://epimorphics.github.io/elda/">documentation root</a>.
 </p>
 
 <p>
-	<b>WARNING</b> There is an item-counting problem in the latest
-	Elda (1.2.30) and possibly in 1.2.29 (which introduced item
-	counting). Do NOT start using these releases until this note
-	is removed and a new Elda release is officially announced.
+	Elda 1.2.31 was released on 24th March 2014, replacing the 
+	slightly-broken 1.2.30. 1.2.31 allows control of cache-expiry
+	times by API, endpoint, and property.
 </p>
 
