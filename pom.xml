@@ -9,7 +9,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda</artifactId>
-  <version>1.2.31-SNAPSHOT</version>
+  <version>1.2.31</version>
   <packaging>pom</packaging>
   <name>elda</name>
   <description>Top level linked data API project</description>
