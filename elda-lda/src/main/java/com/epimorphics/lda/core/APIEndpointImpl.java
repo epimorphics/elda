@@ -175,12 +175,11 @@ public class APIEndpointImpl implements APIEndpoint {
 
     private void createMetadata( APIEndpoint.Request r, CompleteContext cc, Integer totalResults, APIResultSet rs, Bindings bindings, APIQuery query ) {
 		boolean suppress_IPTO = bindings.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
-		boolean exceptionIfEmpty = bindings.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
+//		boolean exceptionIfEmpty = bindings.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
+	//
+		// if (rs.isEmpty() && exceptionIfEmpty) EldaException.NoItemFound();
 	//
 		String format = r.format;
-	//
-		boolean listEndpoint = isListEndpoint();
-		// if (rs.isEmpty() && exceptionIfEmpty && !listEndpoint) EldaException.NoItemFound();
 	//
 		MergedModels mergedModels = rs.getModels();		
 		Model metaModel = mergedModels.getMetaModel();
@@ -191,7 +190,6 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
-               
     //
         String template = spec.getURITemplate();
         Set<String> formatNames = spec.getRendererFactoryTable().formatNames();

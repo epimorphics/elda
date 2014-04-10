@@ -366,13 +366,26 @@ import com.sun.jersey.api.NotFoundException;
         //
         	NoteBoard nb = new NoteBoard();
         	ResponseResult resultsAndBindings = APIEndpointUtil.call( req, nb, match, contextPath, queryParams );
-        	
-        	Map<String, String> termBindings = mpe.rename( resultsAndBindings.uriToShortnameMap );
+        //	
+        	boolean notFoundIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
+        	boolean throwIfEmpty = b.getAsString( "_passOnIfEmpty", "yes" ).equals( "yes" );
         //
+        	if (resultsAndBindings.resultSet.isEmpty() && notFoundIfEmpty) {
+				log.debug( "resultSet is empty, returning status 404." );   
+				if (throwIfEmpty) throw new NotFoundException();
+				return Response.status( Status.NOT_FOUND )
+					.type( "text/plain" )
+					.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" )
+					.header( VARY, "Accept" )
+					.entity( "404 Resource Not Found\n\n" + ru + "\n")
+					.build()
+					;
+			}       	
+        //
+        	Map<String, String> termBindings = mpe.rename( resultsAndBindings.uriToShortnameMap );
             APIResultSet results = resultsAndBindings.resultSet.applyEdits( mpe );
-            
 			Bindings rc = new Bindings( resultsAndBindings.bindings.copy(), as );
-			
+		//	
         	if (_default.getPreferredSuffix().equals( r.getPreferredSuffix())) {
         		MediaType dmt = _default.getMediaType(rc);
         		if (!dmt.equals(r.getMediaType(rc))) {
@@ -413,6 +426,8 @@ import com.sun.jersey.api.NotFoundException;
         	log.error( "Exception: " + e.getMessage() );
         	if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
         	return buildErrorResponse(e);
+        } catch (NotFoundException e) {
+        	throw e;
         } catch (QueryParseException e) {
         	StatsValues.endpointException();
             log.error( "Query Parse Exception: " + e.getMessage() );

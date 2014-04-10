@@ -107,26 +107,20 @@
 						<maxIdleTime>60000</maxIdleTime>
 					</connector>
 				</connectors>
-				<webApp>${basedir}/target/elda-testing-webapp.war</webApp>
+				<webApp>${basedir}/../target/elda-standalone.war</webApp>
 				<contextPath>/elda</contextPath>
 			</configuration>
 			<executions>
 				<execution>
 					<id>start-jetty</id>
 					<phase>pre-integration-test</phase>
-					<goals>
-						<goal>deploy-war</goal>
-					</goals>
-					<configuration>
-						<daemon>true</daemon>
-					</configuration>
+					<goals> <goal>deploy-war</goal> </goals>
+					<configuration> <daemon>true</daemon> </configuration>
 				</execution>
 				<execution>
 					<id>stop-jetty</id>
 					<phase>post-integration-test</phase>
-					<goals>
-						<goal>stop</goal>
-					</goals>
+					<goals> <goal>stop</goal> </goals>
 				</execution>
 			</executions>
 		</plugin>     

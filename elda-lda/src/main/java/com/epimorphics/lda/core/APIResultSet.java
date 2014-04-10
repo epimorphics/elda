@@ -374,8 +374,8 @@ public class APIResultSet implements SetsMetadata {
 	}
 
 	/**
-	    Answer true if this result set is empty, ie, it has no result values
-	    or the results have no properties.
+	    Answer true if this result set is empty, ie, either it is empty
+	    or all the items in it have no properties.
 	*/
 	public boolean isEmpty() {
 		for (Resource item: results)
