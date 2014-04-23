@@ -20,6 +20,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -42,7 +43,7 @@ import com.hp.hpl.jena.rdf.model.Model;
  * 
  */
 
-@RunWith(Parameterized.class) public class RemoteSimpleRangeTests {
+@Ignore @RunWith(Parameterized.class) public class RemoteSimpleRangeTests {
 	
 	static Logger log = LoggerFactory.getLogger(RemoteSimpleRangeTests.class);
     

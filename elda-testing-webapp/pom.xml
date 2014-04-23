@@ -92,7 +92,8 @@
           </execution>
         </executions>
       </plugin> 
-      
+
+      <!-- 
 	   <plugin>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>maven-jetty-plugin</artifactId>
@@ -123,7 +124,8 @@
 					<goals> <goal>stop</goal> </goals>
 				</execution>
 			</executions>
-		</plugin>     
+		</plugin>
+	-->     
 
       <!-- plugin to read properties -->
       <!-- used to configure port numbers -->

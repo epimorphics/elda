@@ -21,11 +21,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.exceptions.EldaException;
 
-public class ResponseStatusTest {
+@Ignore public class ResponseStatusTest {
 
 	@Test public void testSimpleFilter() throws ClientProtocolException, IOException {
 		ResponseStatusTest.testHttpRequest( "alpha?min-eastish=10", 200, Util.ignore );
