@@ -1,5 +1,11 @@
 + ----------------------------------------------------------------------
-| Elda 1.2.32 (DEVELOPING)
+| Elda 1.2.33 (DEVELOPING)
+
++ ----------------------------------------------------------------------
+| Elda 1.2.32 (RELEASED)
+
+Fixed a bug where item endpoints that produce no results did not 404
+but instead produced a "dummy" page.
 
 + ----------------------------------------------------------------------
 | Elda 1.2.31 (RELEASED, replaces 1.2.30)
