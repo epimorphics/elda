@@ -34,7 +34,7 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String getNameForURI(String uri) {
-				log.debug( "readContext: unusually, getNameForURI called." );
+//				log.debug( "readContext: unusually, getNameForURI called." );
 				return uriToName.get(uri);
 			}
 			
@@ -43,7 +43,7 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String forceShorten(String uri) {
-				log.debug( "readContext: unusually, forceShorten called." );
+//				log.debug( "readContext: unusually, forceShorten called." );
 				return context.forceShorten(uri);
 			}
 			
