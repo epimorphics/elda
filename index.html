@@ -22,19 +22,25 @@
 	Elda is the Epimorphics implementation of the LDA. It comes with some pre-built  examples 
 	which allow you to experiment with the style of query and get started with building your own configurations. 
 	For documentation on downloading and installing Elda, see the  
-	<a href="docs/E1.2.31/index.html" rel="nofollow">the quickstart documentation</a>; 
+	<a href="docs/E1.2.32/index.html" rel="nofollow">the quickstart documentation</a>; 
 	you can also <a href="docs/E1.2.32/index.html" rel="nofollow">preview documentation from upcoming versions of Elda </a>.
 	The current standalone jar is accessible via Maven or you can just download
-	<a href="http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/1.2.31/elda-standalone-1.2.31.jar">
-	http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/1.2.31/elda-standalone-1.2.31.jar
+	<a href="http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/1.2.32/elda-standalone-1.2.32.jar">
+	http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/1.2.32/elda-standalone-1.2.32.jar
 	</a>
 </p>
-	
+
+<p>
+	Elda 1.2.32 was released on 23rd April 2014 (groupid com.epimorphics.lda, artifactId and name lda, version 1.2.32).
+	It corrects a problem with item endpoints which failed to find the requested item but did
+	not generate a 404 response status.
+</p>
+
 <p>
 	Elda 1.2.31 (<a href="ReleaseNotes/latest.text" rel="nofollow">ReleaseNotes/latest.text</a>) 
-	was released on 24th March 2014. Maven artifacts for Elda 1.2.31 are available from 
+	was released on 24th March 2014. Maven artifacts for Elda 1.2.32 are available from 
 	<a href="http://repository.epimorphics.com" rel="nofollow">http://repository.epimorphics.com</a>
-	(groupid com.epimorphics.lda, artifactId and name lda, version 1.2.31).
+	(groupid com.epimorphics.lda, artifactId and name lda, version 1.2.32).
 	Elda now allows cache expiry times to be attached to properties,
 	endpoints, and APIs, generates <b>Expires:</b> headers appropriately,
 	and respects those expiry times in its internal caches.
@@ -42,7 +48,7 @@
 
 <p>
 	Elda 1.2.30, released on 20th March 2014, contains a serious item-counting/cache
-       	error and should not be used; it is replaced by Elda 1.2.31.
+       	error and should not be used; it is replaced by Elda 1.2.32.
 </p>
 
 <p>
@@ -52,20 +58,6 @@
 	and made optional in the URL.
 </p>
 
-<p>
-	Elda 1.2.28 is a copy of 1.2.27 but moved from Googlecode to Github.
-</p>
 
-<p>
-	Elda 1.2.27 does cycle-detection for the XML (and HTML and CSV) renderers using  a linear algorithm so that 
-	heavily entangled graphs don&#x27;t take forever to render. Also the webapp-relative control/clear-cache URL 
-	can (and should) be POSTed to rather than GETted from. </p>
-	
-<p>
-	Elda 1.2.26 had improved documentation, including separate sections for the use of the Velocity renderer 
-	and configuration and URI use cribsheet. The text search feature was completed and the example Velocity 
-	templates much expanded. 
-</p>
- 
 </body>
 </html>
