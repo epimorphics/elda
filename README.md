@@ -15,14 +15,14 @@ which allow you to experiment with the style of query and get started with build
 </p>
 
 <p>
-See the <a href="http://epimorphics.github.io/elda/docs/E1.2.31/index.html">quickstart documentation</a>.
+See the <a href="http://epimorphics.github.io/elda/docs/E1.2.33/index.html">quickstart documentation</a>.
 For summaries of the latest releases, see the
 <a href="http://epimorphics.github.io/elda/">documentation root</a>.
 </p>
 
 <p>
-	Elda 1.2.31 was released on 24th March 2014, replacing the 
-	slightly-broken 1.2.30. 1.2.31 allows control of cache-expiry
-	times by API, endpoint, and property.
+	Elda 1.2.33 was released on 23th April 2014 and fixes a bug
+	where item endpoints whose subject has no properties (<i>ie</i>
+	is missing) did not generate a 404 response status. 
 </p>
 
