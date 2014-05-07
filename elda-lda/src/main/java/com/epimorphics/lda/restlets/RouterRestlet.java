@@ -368,11 +368,11 @@ import com.sun.jersey.api.NotFoundException;
         	ResponseResult resultsAndBindings = APIEndpointUtil.call( req, nb, match, contextPath, queryParams );
         //	
         	boolean notFoundIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
-        	boolean throwIfEmpty = b.getAsString( "_passOnIfEmpty", "yes" ).equals( "yes" );
         //
-        	if (resultsAndBindings.resultSet.isEmpty() && notFoundIfEmpty && ep.getSpec().isItemEndpoint()) {
-				log.debug( "resultSet is empty, returning status 404." );   
-				if (throwIfEmpty) throw new NotFoundException();
+        	if (ep.getSpec().isItemEndpoint() && notFoundIfEmpty && resultsAndBindings.resultSet.isEmpty()) {
+        		log.debug( "resultSet is empty, returning status 404." );   
+        		boolean passOnIfMissing = b.getAsString( "_passOnIfEmpty", "no" ).equals( "yes" );
+				if (passOnIfMissing) throw new NotFoundException();
 				return Response.status( Status.NOT_FOUND )
 					.type( "text/plain" )
 					.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" )
