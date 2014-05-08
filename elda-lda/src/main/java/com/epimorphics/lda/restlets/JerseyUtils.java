@@ -27,13 +27,16 @@ public class JerseyUtils {
 	    Convert a (rs.core) MultivaluedMap to (our, local) MultiMap.
 	    This is just to allow bridging from Jersey restlets into our
 	    (eventually, Jersey-free internally) code.
+	    
+	    <p>
+	    Empty parameters are silently ignored.
+	    </p>
 	*/
 	public static MultiMap<String, String> convert( MultivaluedMap<String, String> map ) {
 		MultiMap<String, String> result = new MultiMap<String, String>();
 		for (String key: map.keySet()) {
 			for (String value: map.get(key)) {
 				if (!value.equals("")) result.add(key, value);
-				else log.debug( "ignored empty parameter '" + key + "'" );
 			}
 		}
 		return result;
