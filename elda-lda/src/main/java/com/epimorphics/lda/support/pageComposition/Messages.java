@@ -26,8 +26,8 @@ public class Messages {
 			+ "\n</head>"
 			+ "\n<body style='background-color: #ffdddd'>"
 			+ "\n<h2>Error " + e.code + "</h2>"
-			+ "\n<p>" + e.getMessage() + "</p>"
-			+ (e.moreMessage == null ? "" : "<p>" + e.moreMessage + "</p>")
+			+ "\n<pre>" + e.getMessage() + "</pre>"
+			+ (e.moreMessage == null ? "" : "<pre>" + e.moreMessage + "</pre>")
 			+ "\n</body>"
 			+ "\n</html>"
 			+ "\n"
@@ -42,7 +42,7 @@ public class Messages {
 			+ "\n</head>"
 			+ "\n<body style='background-color: #ffeeee'>"
 			+ "\n<h2>" + subText + "</h2>"
-			+ "\n<p>" + message + "</p>"
+			+ "\n<pre>" + message + "</pre>"
 			+ "\n</body>"
 			+ "\n</html>"
 			+ "\n"
