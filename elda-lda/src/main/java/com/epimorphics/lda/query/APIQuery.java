@@ -117,6 +117,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	protected boolean sortByOrderSpecsFrozen = false;
 
+	protected String graphName = null;
+
 	/**
 	 * Pattern for matching SPARQL query variables (including the leading '?').
 	 * Used for finding substitution points in static query strings.
@@ -222,7 +224,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.isItemEndpoint = qb.isItemEndpoint();
 		this.textSearchConfig = qb.getTextSearchConfig();
 		this.cacheExpiryMilliseconds = qb.getCacheExpiryMilliseconds();
-		//
+	//
 		this.deferredFilters = new ArrayList<PendingParameterValue>();
 		this.whereExpressions = new StringBuffer();
 		this.varsForPropertyChains = new HashMap<String, Variable>();
@@ -257,7 +259,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.varcount = other.varcount;
 		this.textSearchConfig = other.textSearchConfig;
 		this.cacheExpiryMilliseconds = other.cacheExpiryMilliseconds;
-		//
+	//
+		this.graphName = other.graphName;
 		this.languagesFor = new HashMap<String, String>(other.languagesFor);
 		this.basicGraphTriples = new ArrayList<RDFQ.Triple>(other.basicGraphTriples);
 		this.optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>(other.optionalGraphTriples);
@@ -272,6 +275,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.allowedReserved = new HashSet<String>(other.allowedReserved);
 	}
 
+	public void setGraphName(String graphName) {
+		this.graphName = graphName;
+	}
+	
 	/**
 	 * Set the etags enable flag; true -> enabled.
 	 */
@@ -677,28 +684,16 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		Bindings cc = Bindings.createContext(new Bindings(), new MultiMap<String, String>());
 		return assembleRawSelectQuery(pl, cc);
 	}
-
+	
 	public String assembleRawSelectQuery(PrefixLogger pl, Bindings cc) {
 		if (!sortByOrderSpecsFrozen)
 			unpackSortByOrderSpecs();
 		if (fixedSelect == null) {
 			StringBuilder q = new StringBuilder();
 			q.append("SELECT ");
-			if (orderExpressions.length() > 0)
-				q.append("DISTINCT ");
+			if (orderExpressions.length() > 0) q.append("DISTINCT ");
 			q.append(SELECT_VAR.name());
-			q.append("\nWHERE {\n");
-			String bgp = constructBGP(pl);
-			if (whereExpressions.length() > 0) {
-				q.append(whereExpressions);
-				pl.findPrefixesIn(whereExpressions.toString());
-			} else {
-				if (basicGraphTriples.isEmpty())
-					bgp = SELECT_VAR.name() + " ?__p ?__v .\n" + bgp;
-			}
-			q.append(bgp);
-			appendFilterExpressions(pl, q);
-			q.append("} ");
+			assembleWherePart(q, pl);
 			if (orderExpressions.length() > 0) {
 				q.append(" ORDER BY ");
 				q.append(orderExpressions);
@@ -723,6 +718,23 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			// if (true) throw new RuntimeException();
 			return sb.toString();
 		}
+	}
+
+	private void assembleWherePart(StringBuilder q, PrefixLogger pl) {
+		q.append("\nWHERE {\n");
+		if (graphName != null) q.append("GRAPH <" + graphName + "> {" );
+		String bgp = constructBGP(pl);
+		if (whereExpressions.length() > 0) {
+			q.append(whereExpressions);
+			pl.findPrefixesIn(whereExpressions.toString());
+		} else {
+			if (basicGraphTriples.isEmpty())
+				bgp = SELECT_VAR.name() + " ?__p ?__v .\n" + bgp;
+		}
+		q.append(bgp);
+		appendFilterExpressions(pl, q);
+		if (graphName != null) q.append("} ");
+		q.append("} ");
 	}
 
 	private void appendOffsetAndLimit(StringBuilder q) {
@@ -885,7 +897,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		Graph gd = descriptions.getGraph();
 		String detailsQuery = results.isEmpty() || results.get(0) == null 
 			? "# no results, no query."
-			: view.fetchDescriptionsFor(c, select, results, descriptions, spec, this)
+			: view.fetchDescriptionsFor(c, select, results, descriptions, spec, this, graphName)
 			;
 		return new APIResultSet(gd, results, count < pageSize, enableETags, detailsQuery, view);
 	}
@@ -954,17 +966,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		StringBuilder q = new StringBuilder();
 		q.append("SELECT (COUNT(").append(distinct).append(SELECT_VAR.name()).append( ") AS ?count)" );
 		q.append("\nWHERE {\n");
-		String bgp = constructBGP(pl);
-		if (whereExpressions.length() > 0) {
-			q.append(whereExpressions);
-			pl.findPrefixesIn(whereExpressions.toString());
-		} else {
-			if (basicGraphTriples.isEmpty())
-				bgp = SELECT_VAR.name() + " ?__p ?__v .\n" + bgp;
-		}
-		q.append(bgp);
-		appendFilterExpressions(pl, q);
-		q.append("} ");
+		assembleWherePart(q, pl);
 	//
 	// We don't need to order the results, since we're just going to count
 	// them, and the DISTINCT in the select operates over the entire
@@ -988,7 +990,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		try {
 			return QueryFactory.create(selectQuery);
 		} catch (Exception e) {
-			throw new APIException("Internal error building query: " + selectQuery, e);
+			throw new APIException("Internal error building query:\n" + selectQuery, e);
 		}
 	}
 
@@ -1009,12 +1011,13 @@ public class APIQuery implements VarSupply, WantsMetadata {
 				while (rs.hasNext()) {
 					Resource item = rs.next().getResource(SELECT_VAR.name());
 					if (item == null) {
-						EldaException
-								.BadSpecification("<br>Oops. No binding for "
-										+ SELECT_VAR.name()
-										+ " in successful SELECT.\n"
-										+ "<br>Perhaps ?item was mis-spelled in an explicit api:where clause.\n"
-										+ "<br>It's not your fault; contact the API provider.");
+						EldaException.BadSpecification
+							( "<br>Oops. No binding for "
+							+ SELECT_VAR.name()
+							+ " in successful SELECT.\n"
+							+ "<br>Perhaps ?item was mis-spelled in an explicit api:where clause.\n"
+							+ "<br>It's not your fault; contact the API provider."
+							);
 					}
 					results.add(withoutModel(item));
 				}

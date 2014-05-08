@@ -258,6 +258,7 @@ public class View {
 		final Model m; 
 		final List<Source> sources;
 		final VarSupply vars;
+		final String graphName;
 		
 		public State
 			( String select
@@ -265,12 +266,22 @@ public class View {
 			, Model m
 			, List<Source> sources
 			, VarSupply vars
+			, String graphName
 			) {
 			this.select = select;
 			this.roots = roots;
 			this.m = m; 
 			this.sources = sources;
 			this.vars = vars;
+			this.graphName = graphName;
+		}
+		
+		void beginGraph(StringBuilder sb) {
+			if (graphName != null) sb.append("GRAPH <" + graphName + "> {");
+		}
+		
+		void endGraph(StringBuilder sb) {
+			if (graphName != null) sb.append("}");
 		}
 	}
 	
@@ -307,8 +318,7 @@ public class View {
 	}
 	
 	private String fetchByGivenPropertyChains( State s, List<PropertyChain> chains ) { 
-		if (chains.isEmpty()) 
-			return "CONSTRUCT {} WHERE {}\n";
+		if (chains.isEmpty()) return "CONSTRUCT {} WHERE {}\n";
 		boolean uns = useNestedSelect(s) && s.select.length() > 0;
 		return uns // && false
 			? fetchChainsByNestedSelect( s, chains ) 
@@ -331,7 +341,9 @@ public class View {
 		construct.append( "CONSTRUCT {\n" );
 		chainTrees.renderTriples( construct, pl );
 		construct.append( "\n} WHERE {\n" );
+		s.beginGraph(construct);
 		chainTrees.renderWhere( construct, pl, "" );
+		s.endGraph(construct);
 		construct.append( "\n}" );
 	//
 		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
@@ -356,9 +368,11 @@ public class View {
 	//
 		construct.append( "CONSTRUCT {" );
 		trees.renderTriples( construct, pl );
-		construct.append( "\n} WHERE {\n" );			
+		construct.append( "\n} WHERE {\n" );	
 		construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
+		st.beginGraph(construct);
 		trees.renderWhere( construct, pl, "" );			
+		st.endGraph(construct);
 		construct.append( "\n}" );
 	//
 		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
@@ -406,8 +420,10 @@ public class View {
 		String selectPrefixes = s.select.substring(0, start);
 		describe.append( "DESCRIBE ?item" );
 		PrefixLogger pl = new PrefixLogger( s.m );
-		describe.append( "\n WHERE {\n" );			
+		describe.append( "\n WHERE {\n" );		
+		s.beginGraph(describe);
 		describe.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
+		s.endGraph(describe);
 		describe.append( "\n}" );			
 		String query = 
 			selectPrefixes
@@ -423,6 +439,7 @@ public class View {
 		StringBuilder sb = new StringBuilder();
 		sb.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">" )
 			.append( "\nCONSTRUCT { ?x <" ).append( labelPropertyURI ).append( "> ?l }\nWHERE\n{" );
+		s.beginGraph(sb);
 		String union = "";
 		for (RDFNode n: s.m.listObjects().toList()) {
 			if (n.isURIResource()) {
@@ -433,6 +450,7 @@ public class View {
 				union = "\nUNION ";
 			}
 		}
+		s.endGraph(sb);
 		sb.append( "}\n" );
 		String queryString = sb.toString();
 		Query constructQuery = QueryFactory.create( queryString );
@@ -446,14 +464,15 @@ public class View {
 		, Model m
 		, APISpec spec
 		, VarSupply vars
+		, String graphName
 		) {        
 		List<Source> sources = spec.getDescribeSources();
 		return this.isTemplateView()
-        	? this.viewByTemplate( roots, m, spec, sources )
-        	: this.fetchDescriptions( c, new View.State( select, roots, m, sources, vars ) );
+        	? this.viewByTemplate( roots, m, spec, sources, graphName )
+        	: this.fetchDescriptions( c, new View.State( select, roots, m, sources, vars, graphName ) );
 	}
 	
-	public String viewByTemplate(List<Resource> roots, Model m, APISpec spec, List<Source> sources) {
+	public String viewByTemplate(List<Resource> roots, Model m, APISpec spec, List<Source> sources, String graphName) {
 		String viewTemplate = getTemplate();
 		int estimatedSize = viewTemplate.length() * 2 + 30 + estimateRootsSize( roots );
 		StringBuilder query = new StringBuilder( estimatedSize );
@@ -462,7 +481,9 @@ public class View {
 			.append( "CONSTRUCT {\n" )
 				.append( viewTemplate )
 				.append( "} where {\n" )
+				.append(graphName == null ? "" : "GRAPH <" + graphName + "> { ")
 				.append( "{ " ).append( viewTemplate ).append( " }\n" )
+				.append(graphName == null ? "" : " }")
 				.append( SparqlSupport.itemsAsFilter( roots ) )
 				.append( "}\n" )
 				;

@@ -170,6 +170,8 @@ public class ContextQueryUpdater implements ViewSetter {
 		    aq.setSortBy( val );
 		} else if (p.equals(QueryParameter._ORDERBY )) {
 			aq.setOrderBy( val );
+		} else if (p.equals(QueryParameter._GRAPH)) {
+			aq.setGraphName( val );
 		} else if (p.equals(QueryParameter._COUNT)) {
 			
 			Boolean count = getBoolean(val);
