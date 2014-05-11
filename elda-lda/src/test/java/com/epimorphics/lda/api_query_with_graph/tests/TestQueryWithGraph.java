@@ -5,8 +5,10 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.core.APIEndpoint.Request;
@@ -22,12 +24,24 @@ import com.hp.hpl.jena.util.FileManager;
 
 public class TestQueryWithGraph {
 
-	@Test public void testWithGraph() throws URISyntaxException {
-		
-		Model model = ModelFactory.createDefaultModel();
-		Resource endpoint = model.createResource("eh:/root");
-		Resource specRoot = model.createResource("eh:/specRoot");
-		
+	final String specString = build
+		( ":spec a api:API"
+		, "  ; api:sparqlEndpoint <local:file-to-find>"
+		, "  ; api:endpoint :endpoint"
+		, "  ."
+		, ""
+		, ":endpoint a api:ListEndpoint"
+		, "  ; api:uriTemplate '/endpoint'"
+		, "  ."
+		);
+	
+	final Model spec = ModelIOUtils.modelFromTurtle(specString);
+	
+	Resource specRoot = spec.createResource( spec.expandPrefix( ":spec" ) );
+	Resource endpoint = spec.createResource( spec.expandPrefix( ":endpoint" ) );
+
+	@Test @Ignore public void testWithGraph() throws URISyntaxException {
+				
 		FileManager fm = FileManager.get();
 		ModelLoader ml = LoadsNothing.instance;
 		APISpec api = new APISpec( fm, specRoot, ml );
@@ -51,5 +65,14 @@ public class TestQueryWithGraph {
 		
 		// check that the model is the right one.
 	}
+
+	private String build(String ...strings) {
+		StringBuilder result = new StringBuilder();
+		for (String s: strings) result.append(s).append("\n");
+		return result.toString();
+	}
+	
+
+	
 	
 }

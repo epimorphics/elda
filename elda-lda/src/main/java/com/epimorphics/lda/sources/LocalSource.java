@@ -44,13 +44,18 @@ public class LocalSource extends SourceBase implements Source {
     protected final Model source; 
     protected final String endpoint;
     
+    protected final Dataset sourceDataset = DatasetFactory.createMem(); 
     
     public LocalSource( FileManager fm, Resource endpoint ) {
     	super( endpoint );
     	String endpointString = endpoint.getURI();
         if (!endpointString.startsWith(PREFIX))
             throw new APIException("Illegal local endpoint: " + endpointString);
+        
         this.source = fm.loadModel( endpointString.substring( PREFIX.length() ) );
+        
+        this.sourceDataset.getDefaultModel().add(this.source);
+        
         this.endpoint = endpointString;
     }
     
