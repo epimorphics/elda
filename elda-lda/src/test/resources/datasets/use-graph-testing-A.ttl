@@ -1,4 +1,4 @@
 # test data for queries using _graph and hence GRAPH <...> { ... } in the query.
 @prefix : <http://www.epimorphics.com/tools/example#>.
 
-:Z :P :Z.
+:A :P :A.

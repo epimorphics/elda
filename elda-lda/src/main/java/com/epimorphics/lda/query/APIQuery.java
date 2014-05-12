@@ -714,8 +714,6 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			pl.writePrefixes(sb);
 			sb.append(bound);
 			appendOffsetAndLimit(sb);
-			// System.err.println( ">> QUERY IS: \n" + sb.toString() );
-			// if (true) throw new RuntimeException();
 			return sb.toString();
 		}
 	}

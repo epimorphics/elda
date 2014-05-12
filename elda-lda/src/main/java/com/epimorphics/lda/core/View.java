@@ -277,7 +277,7 @@ public class View {
 		}
 		
 		void beginGraph(StringBuilder sb) {
-			if (graphName != null) sb.append("GRAPH <" + graphName + "> {");
+			if (graphName != null) sb.append(" GRAPH <" + graphName + "> {");
 		}
 		
 		void endGraph(StringBuilder sb) {
@@ -387,7 +387,7 @@ public class View {
 		List<Resource> allRoots = s.roots;
 		boolean uns = useNestedSelect(s) && s.select.length() > 0;
 	//
-		if (uns && allRoots.size() > describeThreshold) {
+		if (uns && allRoots.size() > describeThreshold || s.graphName != null) {
 			return describeByNestedSelect( s );
 		} else {
 			return describeBySelectedItems( s, allRoots );
@@ -395,16 +395,17 @@ public class View {
 	}
 
 	private String describeBySelectedItems(State s, List<Resource> allRoots) {
-		String query = createDescribeQueryForItems( s.m, allRoots );
+		String query = createDescribeQueryForItems( s, allRoots );
 		Query describeQuery = QueryFactory.create( query );
 		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
 		return query.toString();
 	}
 
-	public static String createDescribeQueryForItems( PrefixMapping pm, List<Resource> allRoots ) {
+	public static String createDescribeQueryForItems( State s, List<Resource> allRoots ) {
+		PrefixMapping pm = s.m;
 		StringBuilder describe = new StringBuilder();
 		PrefixLogger pl = new PrefixLogger( pm );
-		describe.append( "DESCRIBE" );
+		describe.append( "DESCRIBE " );
 		for (Resource r: new HashSet<Resource>( allRoots )) 
 			describe.append( "\n  " ).append( pl.present( r.getURI() ) );
 		String query = pl.writePrefixes( new StringBuilder() ).toString() + describe;
@@ -421,9 +422,7 @@ public class View {
 		describe.append( "DESCRIBE ?item" );
 		PrefixLogger pl = new PrefixLogger( s.m );
 		describe.append( "\n WHERE {\n" );		
-		s.beginGraph(describe);
 		describe.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
-		s.endGraph(describe);
 		describe.append( "\n}" );			
 		String query = 
 			selectPrefixes

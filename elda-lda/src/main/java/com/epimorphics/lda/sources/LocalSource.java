@@ -56,11 +56,11 @@ public class LocalSource extends SourceBase implements Source {
         String [] fileNames = endpointString.substring( PREFIX.length() ).split(",");
         String fileName = fileNames[0];
 
-        // NOTE that some tests are sensitive to the order that items
-        // turn up in. This way of setting up the dataset's default model
-        // means that the same ordering is observed as if we were just using
-        // a source model rather than a dataset. Horrible: TODO remove this
-        // fragility.
+    // NOTE that some tests are sensitive to the order that items
+    // turn up in. This way of setting up the dataset's default model
+    // means that the same ordering is observed as if we were just using
+    // a source model rather than a dataset. Horrible: TODO remove this
+    // fragility.
         Model dsm = this.sourceDataset.getDefaultModel();
         this.source = dsm;
         fm.readModel(dsm, fileName);
