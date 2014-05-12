@@ -23,9 +23,12 @@ public class TestQueryWithGraph {
 
 	final String specString = build
 		( ":spec a api:API"
-		, "  ; api:sparqlEndpoint <local:src/test/resources/datasets/use-graph-testing.ttl,src/test/resources/datasets/use-graph-testing-A.ttl,src/test/resources/datasets/use-graph-testing-B.ttl>"
+		, "  ; api:sparqlEndpoint <local:src/test/resources/datasets/use-graph-testing.ttl,...use-graph-testing-A.ttl,...use-graph-testing-B.ttl>"
 		, "  ; api:endpoint :endpoint"
 		, "  ."
+		, ""
+		, "<local:src/test/resources/datasets/use-graph-testing.ttl,.../use-graph-testing-A.ttl,.../use-graph-testing-B.ttl> elda:supportsNestedSelect true"
+		, "."
 		, ""
 		, ":endpoint a api:ListEndpoint"
 		, "  ; api:uriTemplate '/endpoint'"

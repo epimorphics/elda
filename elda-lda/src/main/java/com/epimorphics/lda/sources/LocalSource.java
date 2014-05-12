@@ -64,17 +64,26 @@ public class LocalSource extends SourceBase implements Source {
         Model dsm = this.sourceDataset.getDefaultModel();
         this.source = dsm;
         fm.readModel(dsm, fileName);
+        String baseName = fileName;
     //
         for (int i = 1; i < fileNames.length; i += 1) {
-        	String name = fileNames[i];
+        	String leafname = fileNames[i];
+        	String name = (leafname.startsWith("...") ? adjust(baseName, leafname) : leafname);
         	Model named = fm.loadModel(name);
+        	baseName = name;
         	sourceDataset.addNamedModel("file:///" + name, named);
         }
     //
         this.endpoint = endpointString;
     }
     
-    @Override public QueryExecution execute(Query query) {
+    private String adjust(String baseName, String leafname) {
+    	String tailName = leafname.substring(3);
+    	int slash = baseName.lastIndexOf("/");
+		return slash < 0 ? tailName : baseName.substring(0, slash + 1) + tailName;
+	}
+
+	@Override public QueryExecution execute(Query query) {
         if (log.isDebugEnabled()) log.debug("Running query: " + query);
         return QueryExecutionFactory.create(query, sourceDataset);
     }
