@@ -23,7 +23,7 @@ public class TestQueryWithGraph {
 
 	final String specString = build
 		( ":spec a api:API"
-		, "  ; api:sparqlEndpoint <local:src/test/resources/datasets/use-graph-testing.ttl>"
+		, "  ; api:sparqlEndpoint <local:src/test/resources/datasets/use-graph-testing.ttl,src/test/resources/datasets/use-graph-testing-A.ttl>"
 		, "  ; api:endpoint :endpoint"
 		, "  ."
 		, ""

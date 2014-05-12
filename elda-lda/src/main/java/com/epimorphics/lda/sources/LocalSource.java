@@ -53,7 +53,8 @@ public class LocalSource extends SourceBase implements Source {
         if (!endpointString.startsWith(PREFIX))
             throw new APIException("Illegal local endpoint: " + endpointString);
         
-        String fileName = endpointString.substring( PREFIX.length() );
+        String [] fileNames = endpointString.substring( PREFIX.length() ).split(",");
+        String fileName = fileNames[0];
 
         // NOTE that some tests are sensitive to the order that items
         // turn up in. This way of setting up the dataset's default model
@@ -63,7 +64,13 @@ public class LocalSource extends SourceBase implements Source {
         Model dsm = this.sourceDataset.getDefaultModel();
         this.source = dsm;
         fm.readModel(dsm, fileName);
-        
+    //
+        for (int i = 1; i < fileNames.length; i += 1) {
+        	String name = fileNames[i];
+        	Model named = fm.loadModel(name);
+        	sourceDataset.addNamedModel("file:///" + name, named);
+        }
+    //
         this.endpoint = endpointString;
     }
     
