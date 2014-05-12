@@ -55,22 +55,25 @@ public class LocalSource extends SourceBase implements Source {
         
         String fileName = endpointString.substring( PREFIX.length() );
 
-//        System.err.println(">> " + fileName );
-		
-        this.source = fm.loadModel( fileName );
-        
-        this.sourceDataset.getDefaultModel().add(this.source);
+        // NOTE that some tests are sensitive to the order that items
+        // turn up in. This way of setting up the dataset's default model
+        // means that the same ordering is observed as if we were just using
+        // a source model rather than a dataset. Horrible: TODO remove this
+        // fragility.
+        Model dsm = this.sourceDataset.getDefaultModel();
+        this.source = dsm;
+        fm.readModel(dsm, fileName);
         
         this.endpoint = endpointString;
     }
     
     @Override public QueryExecution execute(Query query) {
         if (log.isDebugEnabled()) log.debug("Running query: " + query);
-        return QueryExecutionFactory.create(query, source);
+        return QueryExecutionFactory.create(query, sourceDataset);
     }
     
     @Override public Lock getLock() {
-    	return source.getLock();
+    	return sourceDataset.getLock();
     }
     
     @Override public String toString() {
