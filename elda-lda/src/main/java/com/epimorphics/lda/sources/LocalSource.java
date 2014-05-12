@@ -48,11 +48,16 @@ public class LocalSource extends SourceBase implements Source {
     
     public LocalSource( FileManager fm, Resource endpoint ) {
     	super( endpoint );
+    	
     	String endpointString = endpoint.getURI();
         if (!endpointString.startsWith(PREFIX))
             throw new APIException("Illegal local endpoint: " + endpointString);
         
-        this.source = fm.loadModel( endpointString.substring( PREFIX.length() ) );
+        String fileName = endpointString.substring( PREFIX.length() );
+
+//        System.err.println(">> " + fileName );
+		
+        this.source = fm.loadModel( fileName );
         
         this.sourceDataset.getDefaultModel().add(this.source);
         

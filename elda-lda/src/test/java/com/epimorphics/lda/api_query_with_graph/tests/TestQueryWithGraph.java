@@ -11,14 +11,11 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
-import com.epimorphics.lda.core.APIEndpoint.Request;
-import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.LoadsNothing;
-import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.FileManager;
 
@@ -26,7 +23,7 @@ public class TestQueryWithGraph {
 
 	final String specString = build
 		( ":spec a api:API"
-		, "  ; api:sparqlEndpoint <local:file-to-find>"
+		, "  ; api:sparqlEndpoint <local:src/test/resources/datasets/use-graph-testing.ttl>"
 		, "  ; api:endpoint :endpoint"
 		, "  ."
 		, ""
@@ -40,7 +37,7 @@ public class TestQueryWithGraph {
 	Resource specRoot = spec.createResource( spec.expandPrefix( ":spec" ) );
 	Resource endpoint = spec.createResource( spec.expandPrefix( ":endpoint" ) );
 
-	@Test @Ignore public void testWithGraph() throws URISyntaxException {
+	@Test public void testWithGraph() throws URISyntaxException {
 				
 		FileManager fm = FileManager.get();
 		ModelLoader ml = LoadsNothing.instance;
@@ -63,7 +60,7 @@ public class TestQueryWithGraph {
 		
 		Model rm = rr.resultSet.getMergedModel();
 		
-		// check that the model is the right one.
+		rm.write(System.err, "TTL");		
 	}
 
 	private String build(String ...strings) {
