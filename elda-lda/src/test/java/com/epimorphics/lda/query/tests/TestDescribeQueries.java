@@ -24,19 +24,20 @@ public class TestDescribeQueries {
 	
 	static final String expectA =
 			"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-			+ "\nDESCRIBE"
+			+ "\nDESCRIBE "
 			+ "\n  rdf:intruder"
 			+ "\n  <http://www.w3.org/2000/01/rdf-schema#stranger>"
 			;
 	
 	static final String expectB =
 			"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>"
-			+ "\nDESCRIBE"
+			+ "\nDESCRIBE "
 			+ "\n  <http://www.w3.org/2000/01/rdf-schema#stranger>"
 			+ "\n  rdf:intruder"
 			;
 			
 	@Test public void testX() {
+		m.withDefaultMappings(pm);
 		Resource a = m.createResource( RDF.getURI() + "intruder" );
 		Resource b = m.createResource( RDFS.getURI() + "stranger" );
 		List<Resource> both = Arrays.asList( a, b );
