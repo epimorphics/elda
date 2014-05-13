@@ -860,10 +860,10 @@ If the SPARQL server supports nested
 <p>
 	If there are any variable references in the stylesheet
 	value, they are expanded. If the resulting stylesheet value 
-	starts with a scheme (<em>eg</em> <code>http:</code>) 
-	then it is treated as the URL of the stylesheet to fetch.
-	Otherwise it is treated as a reference to a file in the
-	application's <code>webapp</code> directory.
+	starts with a scheme (<em>eg</em> <code>http:</code> or
+	<code>file:</code>) then it is treated as the URL of the 
+	stylesheet to fetch.  Otherwise it is treated as a reference 
+	to a file in the application's <code>webapp</code> directory.
 </p>
 
 <h3>asset path and <code>api:base</code></h3>
@@ -1301,18 +1301,6 @@ the specified number of the unit specified by the LETTER:
 
 
 <h1 id="formatting-extensions">Formatting extensions</h1>
-
-<h2>Location of XSLT stylesheets</h2>
-
-<h3>warning -- TODO -- being rewriten</h3>
-
-<p>
-	The object of an <code>api:stylesheet</code> directive may be
-	an explicit URL (that is, starts with <code>someScheme:</code>)
-	or a file path. If a file path, it is relative to the webapp
-	directory. If no stylesheet directive is present, it defaults
-	to <code>xslt</code>.
-</p>
 
 <h2>Java renderer factories</h2>
 
