@@ -451,21 +451,18 @@ import com.sun.jersey.api.NotFoundException;
     		
     private static String STARTS_WITH_SCHEME_OR_SLASH = "^(/|" + MATCHES_SCHEME + ").*";
     
-	private static URLforResource pathAsURLFactory( final ServletContext servCon ) {
-		return new URLforResource() 
-			{
-			@Override public URL asResourceURL( String ePath ) { 		
-			// WAS: String p = ePath.startsWith( "/" ) || ePath.startsWith( "http://") ? ePath : "/" + ePath;
-			String p = ePath.matches( STARTS_WITH_SCHEME_OR_SLASH ) ? ePath : "/" + ePath;
-			try {
-				URL result = p.startsWith( "/" ) ? servCon.getResource( p ) : new URL(p);
-				if (result == null) EldaException.NotFound( "webapp resource", ePath );
-				return result;
+	private static URLforResource pathAsURLFactory(final ServletContext servCon) {
+		return new URLforResource() {
+			@Override public URL asResourceURL(String ePath) {
+				String p = ePath.matches(STARTS_WITH_SCHEME_OR_SLASH) ? ePath : "/" + ePath;
+				try {
+					URL result = p.startsWith("/") ? servCon.getResource(p) : new URL(p);
+					if (result == null)
+						EldaException.NotFound("webapp resource", ePath);
+					return result;
+				} catch (MalformedURLException e) {
+					throw new WrappedException(e);
 				}
-			catch (MalformedURLException e) 
-				{
-				throw new WrappedException( e );
-				} 
 			}
 		};
 	}
