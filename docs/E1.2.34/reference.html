@@ -1289,16 +1289,29 @@ the specified number of the unit specified by the LETTER:
     are already opened.
 </p>
 
+<h2 id="dataset-graph">Specifying a dataset graph</h2>
+
+<p>
+	Normally Elda will query the default graph of the dataset being
+	served by its SPARQL endpoint. To query one of the named graphs
+	of the datset, the <code>_graph</code> query parameter can
+	be set to the URI naming the graph; Elda will inject the appropriate
+	<code>GRAPH <URI> {...}</code> into the generated query.
+</p>
+
 
 <h1 id="formatting-extensions">Formatting extensions</h1>
 
 <h2>Location of XSLT stylesheets</h2>
 
+<h3>warning -- TODO -- being rewriten</h3>
+
 <p>
-	If the object of an <code>api:stylesheet</code> directive starts
-	with the prefix "xsl:", then the stylesheet is loaded from Elda's
-	stylesheet directory, wherever that is. (By default it is
-	<code>webapp/xsltsheets</code>, but this will become configurable.)
+	The object of an <code>api:stylesheet</code> directive may be
+	an explicit URL (that is, starts with <code>someScheme:</code>)
+	or a file path. If a file path, it is relative to the webapp
+	directory. If no stylesheet directive is present, it defaults
+	to <code>xslt</code>.
 </p>
 
 <h2>Java renderer factories</h2>
