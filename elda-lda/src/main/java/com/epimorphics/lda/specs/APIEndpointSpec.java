@@ -54,6 +54,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     
     protected final String itemTemplate;
     
+    protected final String graphTemplate;
+    
     protected final boolean wantsContext;
     
     protected final String cachePolicyName;
@@ -88,6 +90,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 		parentApi = parent;
         name = endpoint.getLocalName();
         itemTemplate = getStringValue( endpoint, API.itemTemplate, null );
+        graphTemplate = getStringValue( endpoint, EXTRAS.graphTemplate, null );
         uriTemplate = createURITemplate( endpoint );
         endpointResource = endpoint;
         describeThreshold = getIntValue( endpoint, EXTRAS.describeThreshold, apiSpec.describeThreshold );
@@ -432,7 +435,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     }
 
     /**
-        Answer the variable bindings of this endpoint. Never
+        Return the variable bindings of this endpoint. Never
         null, but of course the bindings may be empty.
     */
 	public Bindings getBindings() {
@@ -440,11 +443,19 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	}
 
 	/**
-	    Answer the item template of this endpoint, or null if there
+	    Return the item template of this endpoint, or null if there
 	    isn't one (eg it's a list endpoint).
 	*/
 	@Override public String getItemTemplate() {
 		return itemTemplate;
+	}
+	
+	/**
+	    Return the graph template string associated with this endpoint,
+	    or null if none was specified.
+	*/
+	public String getGraphTemplate() {
+		return graphTemplate;
 	}
 	
 	public Factories getRendererFactoryTable() {
@@ -452,7 +463,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	}
 
 	/**
-	    Answer (a copy of) the set of names of views in this
+	    Return (a copy of) the set of names of views in this
 	    EndpointSpec.
 	*/
 	public Set<String> viewNames() {
@@ -460,7 +471,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	}
 
 	/**
-	    Answer the specification URI for this Endpoint, which is
+	    Return the specification URI for this Endpoint, which is
 	    the specification URI for its parent APISpec.
 	*/
 	public String getSpecificationURI() {

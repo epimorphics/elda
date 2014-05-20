@@ -106,6 +106,15 @@ elda:feedTitle a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:graphTemplate a rdf:Property
+	; rdfs:label "graphTemplate"
+	; rdfs:comment 
+		"""
+		Configuration property to set the name of the queried
+		graph from an endpoint-specific template.
+		"""
+	.
+
 elda:ifStarts a rdf:Property
 	; rdfs:comment ""
 	.
