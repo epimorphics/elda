@@ -5,18 +5,28 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
+import com.epimorphics.lda.query.APIQuery;
+import com.epimorphics.lda.query.APIQuery.QueryBasis;
+import com.epimorphics.lda.query.tests.StubQueryBasis;
 import com.epimorphics.lda.routing.Match;
+import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
+import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.tests_support.LoadsNothing;
+import com.epimorphics.lda.tests_support.MakeData;
+import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.util.FileManager;
 
 public class TestQueryWithGraph {
@@ -82,7 +92,42 @@ public class TestQueryWithGraph {
 		Model rm = rr.resultSet.getModels().getObjectModel();
 		ModelTestBase.assertIsoModels(expected, rm);
 	}
+	
+	@Test public void testExpansionOfGraphTemplate() {
+		testExpansionOfGraphTemplate("straw{A}Man", null, v("A=VALUE"), "strawVALUEMan");
+		testExpansionOfGraphTemplate("{A}B{C}", null, v("A=alpha C=camera"), "alphaBcamera");
+	}
+	
+	@Test public void testExpansionOfGraphTemplateFrom_graph() {
+		testExpansionOfGraphTemplate("straw{A}Man", "graphName", v("A=VALUE"), "graphName");
+		testExpansionOfGraphTemplate("{A}B{C}", "A{B}C", v("A=alpha B=bonny C=camera"), "AbonnyC");
+	}
 
+	private void testExpansionOfGraphTemplate(final String template, String graphName, Bindings b, String expansion) {
+		PrefixMapping p = PrefixMapping.Factory.create();
+		ShortnameService sns = new SNS("");
+		QueryBasis qb = new StubQueryBasis(sns) {
+			
+			public String getGraphTemplate() {
+				return template;
+			}
+		};
+		
+		APIQuery q = new APIQuery(qb);
+		if (graphName != null) q.setGraphName(graphName);
+		String query = q.assembleSelectQuery(b, p);
+		assertContains("GRAPH <" + expansion + "> {", query);
+	}
+
+	private void assertContains(String expected, String content) {
+		if (content.indexOf(expected) < 0)
+			Assert.fail("Expected to find " + expected + " in " + content);
+	}
+
+	private Bindings v(String bindings) {
+		return MakeData.variables(bindings);
+	}
+	
 	private String build(String ...strings) {
 		StringBuilder result = new StringBuilder();
 		for (String s: strings) result.append(s).append("\n");

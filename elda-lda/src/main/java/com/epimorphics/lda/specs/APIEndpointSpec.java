@@ -90,7 +90,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 		parentApi = parent;
         name = endpoint.getLocalName();
         itemTemplate = getStringValue( endpoint, API.itemTemplate, null );
-        graphTemplate = getStringValue( endpoint, EXTRAS.graphTemplate, parent.getGraphTemplate() );
+        graphTemplate = getStringValue( endpoint, EXTRAS.graphTemplate, apiSpec.getGraphTemplate() );
         uriTemplate = createURITemplate( endpoint );
         endpointResource = endpoint;
         describeThreshold = getIntValue( endpoint, EXTRAS.describeThreshold, apiSpec.describeThreshold );

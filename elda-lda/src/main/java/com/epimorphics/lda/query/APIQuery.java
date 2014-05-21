@@ -682,9 +682,9 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		whereExpressions.append(whereClause);
 	}
 
-	public String assembleSelectQuery(Bindings cc, PrefixMapping prefixes) {
+	public String assembleSelectQuery(Bindings b, PrefixMapping prefixes) {
 		PrefixLogger pl = new PrefixLogger(prefixes);
-		return assembleRawSelectQuery(pl, cc);
+		return assembleRawSelectQuery(pl, b);
 	}
 
 	public String assembleSelectQuery(PrefixMapping prefixes) {
@@ -745,9 +745,9 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	private String expandGraphName(Bindings b) {
-		if (graphName != null) return graphName;
-		if (graphTemplate == null) return null;
-		return b.expandVariables(graphTemplate);
+		String toExpand = graphName;
+		if (toExpand == null) toExpand = graphTemplate;
+		return toExpand == null ? null : b.expandVariables(toExpand);
 	}
 
 	private void appendOffsetAndLimit(StringBuilder q) {

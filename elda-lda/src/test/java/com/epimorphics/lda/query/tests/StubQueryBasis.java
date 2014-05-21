@@ -11,7 +11,7 @@ public class StubQueryBasis implements QueryBasis {
 
 	private final TextSearchConfig textSearchConfig = new TextSearchConfig();
 
-	StubQueryBasis(ShortnameService sns) {
+	public StubQueryBasis(ShortnameService sns) {
 		this.sns = sns;
 	}
 
