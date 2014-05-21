@@ -118,6 +118,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	protected boolean sortByOrderSpecsFrozen = false;
 
 	protected String graphName = null;
+	
+	protected String graphTemplate = null;
 
 	/**
 	 * Pattern for matching SPARQL query variables (including the leading '?').
@@ -181,6 +183,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 * @author chris
 	 */
 	public interface QueryBasis {
+		
 		ShortnameService sns();
 
 		String getDefaultLanguage();
@@ -189,6 +192,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 		int getDefaultPageSize();
 
+		String getGraphTemplate();
+		
 		String getItemTemplate();
 
 		boolean isItemEndpoint();
@@ -224,6 +229,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.isItemEndpoint = qb.isItemEndpoint();
 		this.textSearchConfig = qb.getTextSearchConfig();
 		this.cacheExpiryMilliseconds = qb.getCacheExpiryMilliseconds();
+	//
+		this.graphTemplate = qb.getGraphTemplate();
 	//
 		this.deferredFilters = new ArrayList<PendingParameterValue>();
 		this.whereExpressions = new StringBuffer();
@@ -261,6 +268,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.cacheExpiryMilliseconds = other.cacheExpiryMilliseconds;
 	//
 		this.graphName = other.graphName;
+		this.graphTemplate = other.graphTemplate;
 		this.languagesFor = new HashMap<String, String>(other.languagesFor);
 		this.basicGraphTriples = new ArrayList<RDFQ.Triple>(other.basicGraphTriples);
 		this.optionalGraphTriples = new ArrayList<List<RDFQ.Triple>>(other.optionalGraphTriples);
@@ -685,7 +693,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return assembleRawSelectQuery(pl, cc);
 	}
 	
-	public String assembleRawSelectQuery(PrefixLogger pl, Bindings cc) {
+	public String assembleRawSelectQuery(PrefixLogger pl, Bindings b) {
 		if (!sortByOrderSpecsFrozen)
 			unpackSortByOrderSpecs();
 		if (fixedSelect == null) {
@@ -693,7 +701,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			q.append("SELECT ");
 			if (orderExpressions.length() > 0) q.append("DISTINCT ");
 			q.append(SELECT_VAR.name());
-			assembleWherePart(q, pl);
+			assembleWherePart(q, b, pl);
 			if (orderExpressions.length() > 0) {
 				q.append(" ORDER BY ");
 				q.append(orderExpressions);
@@ -701,7 +709,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			}
 			appendOffsetAndLimit(q);
 			// System.err.println( ">> QUERY IS: \n" + q.toString() );
-			String bound = bindDefinedvariables(pl, q.toString(), cc);
+			String bound = bindDefinedvariables(pl, q.toString(), b);
 			StringBuilder x = new StringBuilder();
 			if (counting()) x.append("# Counting has been applied to this query.\n");
 			pl.writePrefixes(x);
@@ -709,7 +717,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			return x.toString();
 		} else {
 			pl.findPrefixesIn(fixedSelect);
-			String bound = bindDefinedvariables(pl, fixedSelect, cc);
+			String bound = bindDefinedvariables(pl, fixedSelect, b);
 			StringBuilder sb = new StringBuilder();
 			pl.writePrefixes(sb);
 			sb.append(bound);
@@ -718,8 +726,9 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		}
 	}
 
-	private void assembleWherePart(StringBuilder q, PrefixLogger pl) {
+	private void assembleWherePart(StringBuilder q, Bindings b, PrefixLogger pl) {
 		q.append("\nWHERE {\n");
+		String graphName = expandGraphName(b);
 		if (graphName != null) q.append("GRAPH <" + graphName + "> {" );
 		String bgp = constructBGP(pl);
 		if (whereExpressions.length() > 0) {
@@ -733,6 +742,12 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		appendFilterExpressions(pl, q);
 		if (graphName != null) q.append("} ");
 		q.append("} ");
+	}
+
+	private String expandGraphName(Bindings b) {
+		if (graphName != null) return graphName;
+		if (graphTemplate == null) return null;
+		return b.expandVariables(graphTemplate);
 	}
 
 	private void appendOffsetAndLimit(StringBuilder q) {
@@ -821,13 +836,14 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	/**
 	 * Run the defined query against the datasource
 	 */
-	public APIResultSet runQuery(NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings call, View view) {
+	public APIResultSet runQuery(NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings b, View view) {
 		Source source = spec.getDataSource();
 		try {
 			nb.expiresAt = viewSensitiveExpiryTime(spec, view);
-			Integer totalCount = requestTotalCount(nb.expiresAt, c, cache, source, call, spec.getPrefixMap());
+			Integer totalCount = requestTotalCount(nb.expiresAt, c, cache, source, b, spec.getPrefixMap());
 			nb.totalResults = totalCount;
-			return runQueryWithSource(nb, c, spec, call, view, source);
+			String graphName = expandGraphName(b);
+			return runQueryWithSource(nb, c, spec, b, graphName, view, source);
 		} catch (QueryExceptionHTTP e) {
 			EldaException.ARQ_Exception(source, e);
 			return /* NEVER */null;
@@ -836,7 +852,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	// may be subclassed
 	protected APIResultSet runQueryWithSource
-		( NoteBoard nb, Controls c, APISpec spec, Bindings call, View view, Source source) {
+		( NoteBoard nb, Controls c, APISpec spec, Bindings call, String graphName, View view, Source source) {
 	//
 		Times t = c.times;
 		long origin = System.currentTimeMillis();
@@ -847,7 +863,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		String outerSelect = queryAndResults.a;
 		List<Resource> results = queryAndResults.b;
 	//
-		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, view, results);
+		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, graphName, view, results);
 	//
 		long afterView = System.currentTimeMillis();
 		t.setViewDuration(afterView - afterSelect);
@@ -888,7 +904,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	// may be subclassed
-	protected APIResultSet fetchDescriptionOfAllResources(Controls c, String select, APISpec spec, View view, List<Resource> results) {
+	protected APIResultSet fetchDescriptionOfAllResources(Controls c, String select, APISpec spec, String graphName, View view, List<Resource> results) {
 		int count = results.size();
 		Model descriptions = ModelFactory.createDefaultModel();
 		descriptions.setNsPrefixes(spec.getPrefixMap());
@@ -957,14 +973,13 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		
 	}
 	
-	public String assembleRawCountQuery(PrefixLogger pl, Bindings cc) {
+	public String assembleRawCountQuery(PrefixLogger pl, Bindings b) {
 		if (!sortByOrderSpecsFrozen) unpackSortByOrderSpecs();
 		String distinct = (orderExpressions.length() > 0 ? "DISTINCT " : "");
 	//
 		StringBuilder q = new StringBuilder();
 		q.append("SELECT (COUNT(").append(distinct).append(SELECT_VAR.name()).append( ") AS ?count)" );
-		q.append("\nWHERE {\n");
-		assembleWherePart(q, pl);
+		assembleWherePart(q, b, pl);
 	//
 	// We don't need to order the results, since we're just going to count
 	// them, and the DISTINCT in the select operates over the entire
@@ -976,7 +991,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 //			pl.findPrefixesIn(orderExpressions.toString());
 //		}
 	//
-		String bound = bindDefinedvariables(pl, q.toString(), cc);
+		String bound = bindDefinedvariables(pl, q.toString(), b);
 		StringBuilder x = new StringBuilder();
 		pl.writePrefixes(x);
 		x.append(bound);

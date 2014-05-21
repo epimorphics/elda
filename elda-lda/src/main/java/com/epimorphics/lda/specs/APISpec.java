@@ -89,6 +89,8 @@ public class APISpec {
 	
 	protected final PropertyExpiryTimes propertyExpiryTimes;
 	
+	protected final String graphTemplate;
+	
 	/**
 	    The default number of selected items required for a DESCRIBE
 	    query to use nested selects if they are available.
@@ -115,6 +117,7 @@ public class APISpec {
         this.textSearchConfig = dataSource.getTextSearchConfig().overlay(specification);
         this.describeSources = extractDescribeSources( fm, am, specification, dataSource );
         this.primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
+        this.graphTemplate = getStringValue(specification, EXTRAS.graphTemplate, null);
         this.defaultLanguage = getStringValue(specification, API.lang, null);
         this.base = getStringValue( specification, API.base, null );
         this.bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
@@ -304,6 +307,10 @@ public class APISpec {
 
 	public PropertyExpiryTimes getPropertyExpiryTimes() {
 		return propertyExpiryTimes;
+	}
+
+	public String getGraphTemplate() {
+		return graphTemplate;
 	}
 }
 
