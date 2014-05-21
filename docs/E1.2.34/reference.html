@@ -1294,9 +1294,32 @@ the specified number of the unit specified by the LETTER:
 <p>
 	Normally Elda will query the default graph of the dataset being
 	served by its SPARQL endpoint. To query one of the named graphs
-	of the datset, the <code>_graph</code> query parameter can
-	be set to the URI naming the graph; Elda will inject the appropriate
-	<code>GRAPH <URI> {...}</code> into the generated query.
+	of the datset, an endpoint can be configured with a
+	<i>graph template</i>.	
+</p>
+
+<pre>
+...
+; elda:graphTemplate "URI-with-{variables}"
+</pre>
+
+<p>
+	The template is expanded with the values of any {}-enclosed variables
+	(including any set from the uri template match) and used to specify
+	the GRAPH for this query.
+</p>
+
+<p>
+	The API itself can be given a <code>graphTemplate</code>; this is
+	used if the endpoint does not have its own, allowing a default
+	graph name to be given for the entire configuration.
+</p>
+	
+<p>	
+	Any <code>graphTemplate</code> can be overridden by using 
+	the <code>_graph</code> query parameter in the submitted URL;
+	its value should be a suitably-encoded URI which is used as
+	the GRAPH name.
 </p>
 
 
