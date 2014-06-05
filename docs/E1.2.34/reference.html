@@ -1322,6 +1322,29 @@ the specified number of the unit specified by the LETTER:
 	the GRAPH name.
 </p>
 
+<h2>Warning: mixing graph specification and describe queries</h2>
+
+<p>
+	The specification of SPARQL's <code>DESCRIBE</code> is
+	very loose and implementations can legitimately differ
+	in which parts of the dataset are used to assemble the
+	DESCRIBE result as well as what triples are returned
+	from a component graph. In particular, specifying a
+	specific named graph with <code>_graph</code> or a
+	graph template does <i>not</i> mean that the returned
+	triples come only from that graph.
+</p>
+
+<p>
+	If it is important to your application that the results
+	of a view are restricted to a specified graph, use
+	property chains rather than describe viewers to
+	define the view, with the <code>*</code> wildcard to
+	imitate the generality of DESCRIBE. While this will
+	not have the full effect of DESCRIBE's bnode closure it
+	will provide predictable results.
+</p>
+
 
 <h1 id="formatting-extensions">Formatting extensions</h1>
 
