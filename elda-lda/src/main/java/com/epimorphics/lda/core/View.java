@@ -387,7 +387,7 @@ public class View {
 		List<Resource> allRoots = s.roots;
 		boolean uns = useNestedSelect(s) && s.select.length() > 0;
 	//
-		if (uns && allRoots.size() > describeThreshold || s.graphName != null) {
+		if (uns && allRoots.size() > describeThreshold) {
 			return describeByNestedSelect( s );
 		} else {
 			return describeBySelectedItems( s, allRoots );
