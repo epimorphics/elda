@@ -71,16 +71,12 @@
 <p>
     By default, this will render the template
     <code>page-shell.vm</code> found in <code>{_velocityRoot}</code>
-    if <code>_velocityRoot</code> is defined, or in
-    <code>{_resourceRoot/vm}</code> otherwise. (<code>_resourceRoot</code>
-    has a default value.)
-</p>
-
-<p>
-    (Previous versions of Elda loaded templates from
-    <code>webapp/WEB-INF/classes</code>, but with the split between
-    elda-common and elda-assets, the templates have been moved out
-    of the Elda code webapp.)
+    if that is defined, or in <code>vm</code> if not, where
+	<code>vm</code> is relative to this webapp's <code>webapp</code>
+	directory. Note that <code>_velocityRoot</code> may be a URL
+	(so themplates can be fetched from anywhere on the web) or
+	an absolute path (so templates can be fetched from anywhere
+	on the local filing system).
 </p>
 
 <p>
@@ -102,12 +98,12 @@
 </p>
 
 <p>
-    Elda looks for <code>{_resourceRoot}/velocity.properties</code>
-    and, if it exists and is non-empty, uses it as its Velocity
-    configuration. If there's no such file, or it contains no
-    property definitions, Elda uses a default configuration that
-    fetches templates from <code>{_velocityRoot}</code> if it
-    is defined and from <code>{_resourceRoot}/vm</code> if not.
+    Elda looks for <code>{velocity.properties</code> in the
+	velocity root, and, if it exists and is non-empty, 
+	uses it as its Velocity configuration. If there's no such file, 
+	or it contains no property definitions, Elda uses a default 
+	configuration that fetches templates from <code>{_velocityRoot}</code> if it
+    is defined and from <code>vm</code> if not.
 </p>
 
 <h2>The example Velocity renderer</h2>
