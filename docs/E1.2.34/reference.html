@@ -439,8 +439,21 @@ The Common and Assets files must have the same version.
     By default, this will render the template
     <code>page-shell.vm</code> found in <code>{_velocityRoot}</code>
     if <code>_velocityRoot</code> is defined, or in
-    <code>{_resourceRoot/vm}</code> otherwise. (<code>_resourceRoot</code>
-    has a default value.) The provided template generates HTML in a style
+    <code>{vm}</code> otherwise. The root can be
+    <ul>
+		<li>an absolute URI;
+		</li>
+		<li>a relative path, which is resolved against this webapp's
+			base directory;
+		</li>
+		<li>an absolute path, referring to a resource on this
+			webapp's machine.
+		</li>
+	</ul>	
+
+</p>
+<p>
+    The provided template generates HTML in a style
     modelled after that of the default HTML rendering performed by
     XSLT stylesheets. Note the renderer name (and hence its format-selection
     suffix) is "vhtml" not "html" to allow the two different HTML renderers
