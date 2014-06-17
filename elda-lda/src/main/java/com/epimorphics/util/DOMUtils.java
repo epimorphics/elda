@@ -109,8 +109,8 @@ public class DOMUtils {
 
 	static Logger log = LoggerFactory.getLogger(DOMUtils.class);
 
-	public static Transformer setPropertiesAndParams(Times times, Bindings rc,
-			PrefixMapping pm, String transformFilePath) {
+	public static Transformer setPropertiesAndParams
+		(Times times, Bindings rc, PrefixMapping pm, String transformFilePath) {
 		Transformer t = getTransformer(times, rc, transformFilePath);
 		t.setOutputProperty(OutputKeys.INDENT, "yes");
 		t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
@@ -149,8 +149,7 @@ public class DOMUtils {
 				return tf.newTransformer();
 			else
 				synchronized (DOMUtils.class) {
-					URL u = rc.pathAsURL(Bindings.expandVariables(rc,
-							transformFilePath));
+					URL u = rc.pathAsURL(Bindings.expandVariables(rc, transformFilePath));
 					Templates t = cache.get(u);
 					if (t == null) {
 						long origin = System.currentTimeMillis();
