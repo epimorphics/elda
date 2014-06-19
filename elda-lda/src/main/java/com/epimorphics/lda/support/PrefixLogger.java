@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import com.epimorphics.lda.rdfq.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.sparql.util.FmtUtils;
 
 /**
     Prefix mapping
@@ -36,7 +37,8 @@ public class PrefixLogger {
 	    this protection into Jena. 
 	    </p>
 	*/
-	public String present( String URI ) {
+	public String present( String unsafeURI ) {
+		String URI = FmtUtils.stringEsc(unsafeURI);
 		if (URI.endsWith( ".") ) return "<" + URI + ">";
 		String qName = pm.qnameFor( URI );
 		if (qName == null) return "<" + URI + ">";

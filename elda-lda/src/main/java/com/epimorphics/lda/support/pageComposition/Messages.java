@@ -26,8 +26,8 @@ public class Messages {
 			+ "\n</head>"
 			+ "\n<body style='background-color: #ffdddd'>"
 			+ "\n<h2>Error " + e.code + "</h2>"
-			+ "\n<pre>" + e.getMessage() + "</pre>"
-			+ (e.moreMessage == null ? "" : "<pre>" + e.moreMessage + "</pre>")
+			+ "\n<pre>\n" + protect(e.getMessage()) + "\n</pre>"
+			+ (e.moreMessage == null ? "" : "<pre>" + protect(e.moreMessage) + "</pre>")
 			+ "\n</body>"
 			+ "\n</html>"
 			+ "\n"
@@ -41,11 +41,20 @@ public class Messages {
 			+ "\n<title>Error</title>"
 			+ "\n</head>"
 			+ "\n<body style='background-color: #ffeeee'>"
-			+ "\n<h2>" + subText + "</h2>"
-			+ "\n<pre>" + message + "</pre>"
+			+ "\n<h2>" + protect(subText) + "</h2>"
+			+ "\n<pre>\n" + protect(message) + "\n</pre>"
 			+ "\n</body>"
 			+ "\n</html>"
 			+ "\n"
+			;
+	}
+	
+	private static String protect(String message) {
+		// TODO replace with something more robust
+		return message
+			.replaceAll("&", "&amp;")
+			.replaceAll("<", "&lt;")
+			.replaceAll(">", "&gt;")
 			;
 	}
 

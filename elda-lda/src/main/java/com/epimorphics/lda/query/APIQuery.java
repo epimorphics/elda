@@ -412,8 +412,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		AnyList operand = textSearchConfig.getTextSearchOperand();
 		//
 		if (operand == null) {
-			if (contentProperty
-					.equals(TextSearchConfig.DEFAULT_CONTENT_PROPERTY)) {
+			if (contentProperty.equals(TextSearchConfig.DEFAULT_CONTENT_PROPERTY)) {
 				addTriplePattern(SELECT_VAR, queryProperty, literal);
 			} else {
 				Any cp = RDFQ.uri(contentProperty.getURI());
@@ -1003,7 +1002,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		try {
 			return QueryFactory.create(selectQuery);
 		} catch (Exception e) {
-			throw new APIException("Internal error building query:\n" + selectQuery, e);
+			String x = e.getMessage();
+			throw new APIException("Internal error building query:\n\n" + e.getMessage() + "\nin:\n\n" + selectQuery, e);
 		}
 	}
 
