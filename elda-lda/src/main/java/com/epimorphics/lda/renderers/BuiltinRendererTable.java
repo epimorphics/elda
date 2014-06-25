@@ -15,8 +15,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 
 /**
     The built-in table of renderers, by name. Includes those defined
@@ -42,6 +41,18 @@ public class BuiltinRendererTable {
 			return this;
 		}
 	}
+
+	// pseudo-config to set up a default HTML renderer.
+	static Resource XSLT_HTML = 
+		ModelFactory.createDefaultModel()
+			.createResource("eh:/HTML")
+			.addProperty(API.stylesheet, "lda-assets/xslt/result-osm-trimmed.xsl")
+			;
+	
+	static Resource EMPTY =
+		ModelFactory.createDefaultModel()
+			.createResource("eh:/EMPTY")
+			;
 	
 	static private Factories factoryTable = new Factories();
 	
@@ -49,13 +60,13 @@ public class BuiltinRendererTable {
 	
 	static private Map<Resource, RendererFactory> builtins = new HashMap<Resource, RendererFactory>();
 	
-	static void putFactory( String name, Resource type, MediaType mt, RendererFactory rf ) {
-		factoryTable.putFactory( name, null, mt, rf );
+	static void putFactory( Resource config, String name, Resource type, MediaType mt, RendererFactory rf ) {
+		factoryTable.putFactory( name, config, mt, rf );
 		builtins.put( type, rf );
 	}
 	
-	static void putDefaultFactory( String name, Resource type, MediaType mt, RendererFactory rf ) {
-		factoryTable.putFactory( name, null, mt, rf, true );
+	static void putDefaultFactory( Resource config, String name, Resource type, MediaType mt, RendererFactory rf ) {
+		factoryTable.putFactory( name, config, mt, rf, true );
 		builtins.put( type, rf );
 	}
 	
@@ -64,54 +75,54 @@ public class BuiltinRendererTable {
 	}
 	
 	static {
-		putFactory( "text", API.RdfXmlFormatter, MediaType.TEXT_PLAIN, new DoingWith() 
+		
+		
+		putFactory( EMPTY, "text", API.RdfXmlFormatter, MediaType.TEXT_PLAIN, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new JSONRenderer( CompleteContext.Mode.PreferLocalnames, ep, MediaType.TEXT_PLAIN );
 			}
 			} );
 		
-		putFactory( "ttl", API.TurtleFormatter, MediaType.TEXT_TURTLE, new DoingWith() 
+		putFactory( EMPTY, "ttl", API.TurtleFormatter, MediaType.TEXT_TURTLE, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new TurtleRenderer();
 			}
 			} );
 		
-		 putFactory( "rdf", API.RdfXmlFormatter, MediaType.APPLICATION_RDF_XML, new DoingWith() 
+		 putFactory( EMPTY, "rdf", API.RdfXmlFormatter, MediaType.APPLICATION_RDF_XML, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new RDFXMLRenderer();
 			}
 			} );
 		
-		putDefaultFactory( "json", API.JsonFormatter, MediaType.APPLICATION_JSON, new JSONRendererFactory( MediaType.APPLICATION_JSON ) );
+		putDefaultFactory( EMPTY, "json", API.JsonFormatter, MediaType.APPLICATION_JSON, new JSONRendererFactory( MediaType.APPLICATION_JSON ) );
 		
-		putFactory( "_jsonp", API.JsonFormatter, MediaType.TEXT_JAVASCRIPT, new JSONRendererFactory( MediaType.TEXT_JAVASCRIPT ) );
+		putFactory( EMPTY, "_jsonp", API.JsonFormatter, MediaType.TEXT_JAVASCRIPT, new JSONRendererFactory( MediaType.TEXT_JAVASCRIPT ) );
 		
-		putFactory( "_jsonp", API.JsonFormatter, MediaType.APPLICATION_JAVASCRIPT, new JSONRendererFactory( MediaType.APPLICATION_JAVASCRIPT ) );
+		putFactory( EMPTY, "_jsonp", API.JsonFormatter, MediaType.APPLICATION_JAVASCRIPT, new JSONRendererFactory( MediaType.APPLICATION_JAVASCRIPT ) );
 		
-		putFactory( "xml", API.XmlFormatter, MediaType.TEXT_XML, new DoingWith() 
+		putFactory( EMPTY, "xml", API.XmlFormatter, MediaType.TEXT_XML, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 				return new XMLRenderer( CompleteContext.Mode.PreferLocalnames, sns, MediaType.TEXT_XML, null );
 			}
 			} );
 		
-		putFactory( "xml", API.XmlFormatter, MediaType.APPLICATION_XML, new XMLRendererFactory() );
+		putFactory( EMPTY,  "xml", API.XmlFormatter, MediaType.APPLICATION_XML, new XMLRendererFactory() );
 		
-		putFactory( "_velocity", EXTRAS.VelocityFormatter, MediaType.NONE, new VelocityRendererFactory() );
+		putFactory( EMPTY, "_velocity", EXTRAS.VelocityFormatter, MediaType.NONE, new VelocityRendererFactory() );
 		
-		putFactory( "_atom", EXTRAS.FeedFormatter, MediaType.NONE, new FeedRendererFactory() );
+		putFactory( EMPTY, "_atom", EXTRAS.FeedFormatter, MediaType.NONE, new FeedRendererFactory() );
 		
-		putFactory( "_xslt", API.XsltFormatter, MediaType.NONE, new XSLT_RendererFactory( Empty, MediaType.NONE ) );
+		putFactory( EMPTY, "_xslt", API.XsltFormatter, MediaType.NONE, new XSLT_RendererFactory( Empty, MediaType.NONE ) );
 		
-		putFactory( "html", API.HtmlFormatter, MediaType.TEXT_HTML, new DoingWith() 
-			{
-			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-				return new HTMLRenderer();
-			}
-			} );
+		putFactory( XSLT_HTML, "html", API.XsltFormatter, MediaType.TEXT_HTML, new XSLT_RendererFactory( XSLT_HTML, MediaType.TEXT_HTML ) );
+		
+		putFactory( EMPTY, "vhtml", EXTRAS.VelocityFormatter, MediaType.TEXT_HTML, new VelocityRendererFactory() ); //  HTML, MediaType.TEXT_HTML ) );
+
 	}
 
 	public static Factories getBuiltinRenderers() {

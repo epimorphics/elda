@@ -5,6 +5,7 @@ import java.util.*;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.shared.BrokenException;
 
 public class MetadataOptions {
     
@@ -34,6 +35,9 @@ public class MetadataOptions {
 
 	public static String[] get( Resource R ) {
 		List<String> result = new ArrayList<String>();
+		
+		if (R == null) throw new BrokenException(">> OOPSY-DAISY.");
+		
 		List<Statement> options = R.listProperties( EXTRAS.metadataOptions ).toList();
     	if (options.size() > 0) 
     		for (Statement os: options)

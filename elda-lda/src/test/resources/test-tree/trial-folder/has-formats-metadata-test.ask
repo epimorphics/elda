@@ -7,7 +7,6 @@ ASK
 		, ?format_json
 		, ?format_ttl
 		, ?format_owl
-		, ?format_html
 		.
 	
 	?format_owl
@@ -30,11 +29,6 @@ ASK
 		; dcterms:isFormatOf ?thing
 		.
 	
-	?format_html 
-		dcterms:format [rdfs:label "text/html"]
-		; dcterms:isFormatOf ?thing
-		.
-		
 	?format_json 
 		dcterms:format [rdfs:label "application/json"]
 		; dcterms:isFormatOf ?thing

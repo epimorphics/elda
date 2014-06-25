@@ -415,24 +415,30 @@ import com.sun.jersey.api.NotFoundException;
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
-            return standardHeaders( null, Response.serverError() ).entity( e.getMessage() ).build();
+            String message = Messages.niceMessage("Stack overflow", e.getMessage() );
+			return standardHeaders( null, Response.serverError() ).entity( message ).build();
+			
         } catch (UnknownShortnameException e) {
         	log.error( "UnknownShortnameException: " + e.getMessage() );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
         	StatsValues.endpointException();
         	return buildErrorResponse(e);
+        
         } catch (EldaException e) {
         	StatsValues.endpointException();
         	log.error( "Exception: " + e.getMessage() );
         	if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
         	return buildErrorResponse(e);
+        
         } catch (NotFoundException e) {
         	throw e;
+        
         } catch (QueryParseException e) {
         	StatsValues.endpointException();
             log.error( "Query Parse Exception: " + e.getMessage() );
             if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
             return returnNotFound("Failed to parse query request : " + e.getMessage());
+        
         } catch (Throwable e) {
         	log.error( "General failure: " + e.getMessage() );
         	e.printStackTrace(System.err);
@@ -448,24 +454,36 @@ import com.sun.jersey.api.NotFoundException;
 	}
 
     private static String MATCHES_SCHEME = "[a-zA-Z][-.+A-Za-z0-9]+:";
+	
+    private static String STARTS_WITH_SCHEME = "^" + MATCHES_SCHEME + ".*";
     		
-    private static String STARTS_WITH_SCHEME_OR_SLASH = "^(/|" + MATCHES_SCHEME + ").*";
+//    private static String STARTS_WITH_SCHEME_OR_SLASH = "^(/|" + MATCHES_SCHEME + ").*";
     
 	private static URLforResource pathAsURLFactory(final ServletContext servCon) {
 		return new URLforResource() {
 			@Override public URL asResourceURL(String ePath) {
-				String p = ePath.matches(STARTS_WITH_SCHEME_OR_SLASH) ? ePath : "/" + ePath;
 				try {
-					URL result = p.startsWith("/") ? servCon.getResource(p) : new URL(p);
-					if (result == null)
-						EldaException.NotFound("webapp resource", ePath);
-					return result;
+					return 
+						ePath.matches(STARTS_WITH_SCHEME) ? new URL(ePath)
+						: ePath.startsWith("/") ? new URL("file:" + ePath)
+						: new URL("file:" + servCon.getRealPath(ePath))
+						;
 				} catch (MalformedURLException e) {
 					throw new WrappedException(e);
 				}
+				
+//				String p = ePath.matches(STARTS_WITH_SCHEME_OR_SLASH) ? ePath : "/" + ePath;
+//				try {
+//					URL result = p.startsWith("/") ? servCon.getResource(p) : new URL(p);
+//					if (result == null)
+//						EldaException.NotFound("webapp resource", ePath);
+//					return result;
+//				} catch (MalformedURLException e) {
+//					throw new WrappedException(e);
+//				}
 			}
 		};
-	}
+	}	
 
     public static ResponseBuilder standardHeaders( String expiresDate, ResponseBuilder rb ) {
         return standardHeaders( expiresDate, null, 0, false, rb );
@@ -516,7 +534,7 @@ import com.sun.jersey.api.NotFoundException;
 	public static Response returnError( Throwable e ) {
         String shortMessage = e.getMessage();      
 		String longMessage = Messages.niceMessage( shortMessage, "Internal Server error." );
-		
+	//
 		log.error("Exception: " + shortMessage );
         log.debug( Messages.shortStackTrace( e ) );
         return standardHeaders( null, Response.serverError() ).entity( longMessage ).build();
@@ -534,7 +552,8 @@ import com.sun.jersey.api.NotFoundException;
     public static Response returnNotFound( String message, String what ) {
         log.debug( "Failed to return results: " + Messages.brief( message ) );
         if (true) throw new NotFoundException();
-        return standardHeaders( null, Response.status(Status.NOT_FOUND) ).entity( Messages.niceMessage( message, "404 Resource Not Found: " + what ) ).build();
+        String m = Messages.niceMessage( message, "404 Resource Not Found: " + what );
+		return standardHeaders( null, Response.status(Status.NOT_FOUND) ).entity( m ).build();
     }
     
 	private Response buildErrorResponse( EldaException e ) {

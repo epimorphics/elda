@@ -124,22 +124,8 @@ spec:old-edubase-API a api:API
 		[a api:XsltFormatter
 		; api:name "html"
 		; api:stylesheet "lda-assets/xslt/result-osm.xsl" 
-        # ; api:stylesheet "lda-assets/xslt/ashtml.xsl"    
 		; api:mimeType "text/html; charset=utf-8"
 		] 
-	#
-	# as an alternative, a non-default html formatter with the name
-	# 'plainhtml' produces a very simple html rendering of the view.
-	#
-	# the turtle, rdf/xml, and json renderers are built-in and don't
-	# need specification in this config file.
-	#
-	; api:formatter
-		[a api:HtmlFormatter
-		; extras:className "com.epimorphics.lda.demo.Demo_HTML_RendererFactory"
-		; api:name "plainhtml"
-		; api:mimeType 'text/htmlx'
-		]
 	#
 	# a bunch of school-type-specific endpoints.
 	#

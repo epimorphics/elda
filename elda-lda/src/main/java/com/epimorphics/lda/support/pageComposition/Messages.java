@@ -10,6 +10,8 @@ package com.epimorphics.lda.support.pageComposition;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import com.epimorphics.lda.exceptions.EldaException;
 
 /**
@@ -50,12 +52,7 @@ public class Messages {
 	}
 	
 	private static String protect(String message) {
-		// TODO replace with something more robust
-		return message
-			.replaceAll("&", "&amp;")
-			.replaceAll("<", "&lt;")
-			.replaceAll(">", "&gt;")
-			;
+		return StringEscapeUtils.escapeHtml(message);
 	}
 
 	public static String niceMessage( String message ) {

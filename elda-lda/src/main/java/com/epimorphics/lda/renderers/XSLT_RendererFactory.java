@@ -20,6 +20,7 @@ import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.shared.BrokenException;
 
 /**
     Production of XSLT renderers, which transform the results
@@ -34,6 +35,9 @@ public class XSLT_RendererFactory implements RendererFactory {
 	private final CompleteContext.Mode mode;
 	
 	public XSLT_RendererFactory( Resource root, MediaType mt ) {
+		
+		if (root == null) throw new BrokenException(">> BUMPSY-WUMPSY.");
+		
 		this.root = root;		
 		this.mt = mt;
 		this.mode = Mode.decode(root, defaultMode);
@@ -42,7 +46,7 @@ public class XSLT_RendererFactory implements RendererFactory {
 	@Override public Renderer buildWith( final APIEndpoint ep, final ShortnameService sns ) {
 		return new Renderer() {
 
-			@Override public MediaType getMediaType( Bindings irrelevant ) {
+			@Override public MediaType getMediaType( Bindings unused ) {
 				return mt;
 			}
 		    

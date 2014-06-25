@@ -33,20 +33,7 @@ hello:hello-world-again a api:API
 	; api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"]
 	; api:endpoint 
 		hello:publishers, hello:games, hello:about
-	; api:formatter
-		[a elda:VelocityFormatter
-		; api:name "vhtml"
-		; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
-		; api:mimeType "text/html"
-		; elda:velocityTemplate "page-shell.vm"
-		]
-	; api:formatter
-		[ a api:XsltFormatter 
-		; api:name "html" 
-		; api:mimeType "text/html; charset=utf-8" 
-		; api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
-		# ; elda:shortnameMode elda:roundTrip
-		]
+
     ; api:formatter
         [a elda:FeedFormatter
         ; api:name "atom"
@@ -54,8 +41,9 @@ hello:hello-world-again a api:API
         ; api:mimeType "application/atom+xml"
         ; elda:feedTitle "an example Elda feed"
         ]
+        
     ; elda:enableCounting true
-   	; elda:cacheExpiryTime "1m"
+   	; elda:cacheExpiryTime "10m"
 	.
 	
 <http://localhost:3030/ds/query> 
