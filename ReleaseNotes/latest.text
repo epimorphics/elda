@@ -1,6 +1,37 @@
 +-----------------------------------------------------------------------
 | Elda 1.2.34 (DEVELOPING)
 
+* the Velocity configuration file (velocity.properties) has been
+  moved to the vm directory (ie wherever velocityRoot points).
+  (This file does not need to be present and is ignored if it
+  is empty, in which case system defaults are used.)
+
+* the mechanisms for generating the Velocity base directory path
+  and for the XSLT template path has been unified. The value
+  of the appropriate property (api:stylesheet, elda:velocityRoot)
+  may be a absolute URL, an absolute path (referring to this
+  machine), or a relative path (relative to this Elda's webapp
+  diretcory).
+
+* An API or endpoint may specify a named graph using
+  elda:graphTemplate "variable-string". Variables present
+  in the template are expanded when the query is generated,
+  and so may contain variables bound in the URI template
+  or query parameters. The generated query contains 
+  GRAPH <expanded-string> to restrict the query to that
+  named graph in the dataset.
+
+  An Elda URL can contain _graph=graphname to override such
+  the graphTemplate.
+
+  Note that the results from a DESCRIBE viewer need not be 
+  restricted to the named graph; this is a consequence of the
+  weak specification for DESCRIBE in SPARQL.
+
+* The XSLT processor supplied for elda-common and elda-bundled
+  has been changed to 9.5.1-5. The built-in JSK processor had
+  problems with large renderings, as did xalan. 
+     
 + ----------------------------------------------------------------------
 | Elda 1.2.33 (RELEASED)
 
