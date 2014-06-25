@@ -514,12 +514,7 @@ import com.sun.jersey.api.NotFoundException;
 	}
 
 	public static Response returnError( Throwable e ) {
-        String shortMessage = e.getMessage();
-        
-        // System.err.println(">> returnError: " + shortMessage);
-        // Throwable thrown = e.getCause();
-        // if (thrown != null) System.err.println(">> also: " + thrown);
-        
+        String shortMessage = e.getMessage();      
 		String longMessage = Messages.niceMessage( shortMessage, "Internal Server error." );
 		
 		log.error("Exception: " + shortMessage );
