@@ -1,6 +1,10 @@
 +-----------------------------------------------------------------------
 | Elda 1.2.34 (DEVELOPING)
 
+* When Elda generates an error message page, external text (such
+  as query parameters or material from the query results) is
+  escaped so that it is not, eg, interprted as Javascript.
+
 * the Velocity configuration file (velocity.properties) has been
   moved to the vm directory (ie wherever velocityRoot points).
   (This file does not need to be present and is ignored if it
