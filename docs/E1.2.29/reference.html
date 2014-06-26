@@ -840,16 +840,53 @@ If the SPARQL server supports nested
 
 <p>
 	There are three resource paths that you may need to configure
-	for Elda: the <em>stylesheet path</em>, the <em>asset path</em>,
-	and the <em>template path</em>.
+	for Elda: the <em>stylesheet path</em>, the <em>template path, 
+	and the <em>asset path</em></em>. 
+</p>
+
+<p>
+	The stylesheet and template paths serve to locate resources
+	that are read by Elda as part of its configuration. They
+	are resolved using the same algorithm:
+</p>
+
+<ul>
+<li>
+	The path is variable-expanded.
+</li>
+
+<li>
+	(a) If it is an absolute URI, <i>eg</i> it starts with 
+	<code>http</code>, then this is the URI of the resource
+	(and may be a base URI for multiple resources).
+</li>
+
+<li>
+	(b) If it as an abolute path, <i>ie</i> it starts with
+	<code>/</code>, then it is the name of the resource
+	on this Elda's machine.
+</li>
+
+<li>
+	(c) Otherwise, it is a relative path, and is relative to
+	this Elda's webapp directory.
+</li>
+</ul>
+
+<p>
+	Use relative paths for resources that are bundled with
+	this Elda webapp, absolute paths for resources that
+	need to be named independantly of a particular
+	webapp on this machine, and URIs for resource that
+	need not be on the local machine.
 </p>
 
 <h3>stylesheet path</h3>
 
 <p>
 	The <em>stylesheet path</em> is used by the XSLT-driven HTML 
-	renderer to locate the XSLT stylesheet to use. It appears as
-	the object of an <code>api:stylesheet</code> property on the
+	renderer to locate the specific XSLT stylesheet to use. It 
+	appears as the object of an <code>api:stylesheet</code> property on the
 	HTML renderer, <em>eg</em>
 </p>
 
@@ -857,14 +894,37 @@ If the SPARQL server supports nested
 ... api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
 </pre>
 
+<h3>template path</h3>
+
 <p>
-	If there are any variable references in the stylesheet
-	value, they are expanded. If the resulting stylesheet value 
-	starts with a scheme (<em>eg</em> <code>http:</code>) 
-	then it is treated as the URL of the stylesheet to fetch.
-	Otherwise it is treated as a reference to a file in the
-	application's <code>webapp</code> directory.
+	The <em>template path</em> is used by the velocity template
+	renderer to locate the templates it may expand. It is the value
+	of the LDA variable <code>_velocityRoot</code>:
 </p>
+
+<pre>
+... api:variable [api:name "_velocityRoot"; api:value "lda-assets<hr>/vm"]
+</pre>
+
+<p>
+	The velocity path names a directory or base URI using the
+	same algorithm that <code>api:stylesheet</code> uses.
+</p>
+
+<p>
+	The template that is used for a given velocity-template rendering is
+	given by the <code>elda:velocityTemplate</code> property of that
+	renderer:
+</p>
+
+<pre>
+... elda:velocityTemplate "some-template-name.vm"
+</pre>
+
+<p>
+	If no <code>velocityTemplate</code> property is defined, Elda uses
+	<code>"page-shell.vm"</code>.
+</pre>
 
 <h3>asset path and <code>api:base</code></h3>
 
@@ -907,40 +967,6 @@ If the SPARQL server supports nested
 	This URL will then be resolved in the usual way, relative
 	to the URL of the page being rendered.  
 </p>
-
-<h3>template path</h3>
-
-<p>
-	The <em>template path</em> is used by the velocity template
-	renderer to locate the templates it may expand. It is the value
-	of the LDA variable <code>_velocityRoot</code>:
-</p>
-
-<pre>
-... api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm"]
-</pre>
-
-<p>
-	Note that if the value is not an explict URI it is resolved <em>locally</em>
-	(the same way as <code>api>stylesheet</code>) against the webapp
-	directory, as opposed to <code>_resourceRoot</code>, who's value is
-	resolved <em>remotely</em> by the client browser.
-</p>
-
-<p>
-	The template that is used for a given velocity-template rendering is
-	given by the <code>elda:velocityTemplate</code> property of that
-	renderer:
-</p>
-
-<pre>
-... elda:velocityTemplate "some-template-name.vm"
-</pre>
-
-<p>
-	If no <code>velocityTemplate</code> property is defined, Elda uses
-	<code>"page-shell.vm"</code>.
-</pre>
 
 <h3>Other variables used by the stylesheets</h3>
 
