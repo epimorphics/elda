@@ -112,7 +112,7 @@ spec:full-education-api a api:API ;
 	api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"];
 	api:variable [api:name "_suppress_ipto"; api:value "yes"];
     api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"];
-    api:variable [api:name "_velocityRoot"; api:value "http://localhost:8080/standalone/lda-assets/vm/"];
+    api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm/"];
 	api:lang "en,none";
 	elda:enableETags true ;
 	rdfs:label "Edubase Full API"@en;

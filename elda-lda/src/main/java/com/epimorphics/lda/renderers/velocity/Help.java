@@ -2,6 +2,7 @@ package com.epimorphics.lda.renderers.velocity;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.*;
 
 import org.apache.velocity.app.VelocityEngine;
@@ -27,14 +28,12 @@ public class Help {
 	    The <code>config</code> resource is currently unused.
 	*/
 	public static VelocityEngine createVelocityEngine( Bindings b, Resource config ) {
-		String propertiesName = velocityPropertiesFileName(b);
+		String templateRoot = getTemplateRoot(b);	
+		String propertiesName = templateRoot + "/velocity.properties";
 		Properties p = getProperties( propertiesName );
 		VelocityEngine ve = new VelocityEngine(); 
 		if (p.isEmpty()) {
 			log.debug( "using default velocity properties." );
-		//
-			String defaultRoot = b.getAsString("_resourceRoot", "") + "/vm/";
-			String templateRoot = b.getAsString("_velocityRoot", defaultRoot);	
 		//
 			ve.setProperty( "macro.provide.scope.control", true );
 			ve.setProperty( "foreach.provide.scope.control", true );
@@ -65,9 +64,11 @@ public class Help {
 		ve.init();
 		return ve;
 	}
-	
-	private static String velocityPropertiesFileName(Bindings b) {
-		return b.getAsString("_resourceRoot", "") + "/velocity.properties";
+
+	private static String getTemplateRoot(Bindings b) {
+		String defaultRoot = b.getAsString("_velocityRoot", "/vm/");
+		URL u = b.pathAsURL(defaultRoot);
+		return u.toString() + "/";
 	}
 
 	static Properties getProperties( String fileName ) {

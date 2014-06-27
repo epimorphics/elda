@@ -1,12 +1,18 @@
 package com.epimorphics.lda.renderers.velocity.tests;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
 
+import sun.org.mozilla.javascript.WrappedException;
+
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.rdfq.RDFQ;
@@ -29,12 +35,27 @@ public class TestRecursionDetectionInProvidedTemplate {
 
 	final Model model = ModelFactory.createDefaultModel();
 	
-	@Test public void testX() {
+	final URLforResource x = new URLforResource() {
+
+		@Override public URL asResourceURL(String u) {
+			File dot = new File(System.getProperty("user.dir"));			
+			File full = new File(dot, u);
+		//
+			try {
+				return new URL("file:" + full.toString());
+			} catch (MalformedURLException e) {
+				throw new WrappedException(e);			
+			}
+		}
+		
+	};
+	
+	@Test public void testTecursionDetection() {
 		MediaType mt = MediaType.TEXT_HTML;
-		Bindings b = new Bindings();
+		Bindings b = new Bindings(x);
 		
 	// hack the velocity root. how do we do better?
-		b.put("_velocityRoot", "../elda-standalone/src/main/webapp/lda-assets/vm");	
+		b.put("_velocityRoot", "../elda-standalone/src/main/webapp/lda-assets/vm/");	
 		b.put("_resourceRoot", "../elda-standalone/src/main/webapp/lda-assets");			
 	//
 		Resource config = model.createResource( "eh:/config" );

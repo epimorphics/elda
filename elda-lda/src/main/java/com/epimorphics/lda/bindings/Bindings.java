@@ -55,6 +55,10 @@ public class Bindings implements Lookup
 	public Bindings( Bindings initial ) 
 		{ this( initial, initial.parameterNames, initial.ufr ); }
 	
+	public Bindings(URLforResource ufr) {
+		this.ufr = ufr;
+	}
+	
 	public Bindings()
 		{ this.ufr = URLforResource.alwaysFails; }    
 	

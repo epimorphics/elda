@@ -21,19 +21,20 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class VelocityRenderer implements Renderer {
 	
 	final MediaType mt;
-	final VelocityCore core;
 	final String suffix;
+	final Resource config;
+	private VelocityCore core;
+	final String templateName;
 	final String [] metadataOptions;
 
 	static final String[] defaultMetadataOptions = "bindings,formats,versions,execution".split(",");
 	
 	public VelocityRenderer( MediaType mt, Bindings b, Resource config ) {
-		VelocityEngine ve = Help.createVelocityEngine( b, config );
-		String templateName = RDFUtils.getStringValue( config, EXTRAS.velocityTemplate, "page-shell.vm" );
-		this.suffix = RDFUtils.getStringValue( config, API.name, "html" );
 		this.mt = mt;
-		this.core = new VelocityCore( ve, suffix, templateName );
+		this.suffix = RDFUtils.getStringValue( config, API.name, "html" );
+		this.templateName = RDFUtils.getStringValue( config, EXTRAS.velocityTemplate, "page-shell.vm" );
 		this.metadataOptions = getMetadataOptions( config );
+		this.config = config;
 	}
 
 	public String[] getMetadataOptions(Resource config) {
@@ -59,6 +60,12 @@ public class VelocityRenderer implements Renderer {
     	, Map<String, String> termBindings
     	, final APIResultSet results 
     	) {
+    // Issue whether we need to reconstruct thing every time round
+    // We used to use the bindings that came in when the renderer
+    // was constructed.
+    	VelocityEngine ve = Help.createVelocityEngine( b, config );
+		this.core = new VelocityCore( ve, suffix, templateName );
+	//
     	return new BytesOutTimed() {
 
 			@Override public void writeAll( OutputStream os ) {

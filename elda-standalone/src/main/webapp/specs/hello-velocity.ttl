@@ -36,7 +36,7 @@ egc:velocity-world a api:API
 		# ; elda:velocityTemplate "page-shell.vm"
 		]    
 	; api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"];
-	; api:variable [api:name "_velocityRoot"; api:value "http://localhost:8080/standalone/lda-assets/vm/"]
+	; api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm/"]
 	.
     
 # Endpoint definition	
