@@ -9,13 +9,10 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import sun.org.mozilla.javascript.WrappedException;
-
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.View;
-import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.velocity.VelocityRenderer;
@@ -27,6 +24,7 @@ import com.epimorphics.lda.vocabularies.SPARQL;
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.shared.WrappedException;
 import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
