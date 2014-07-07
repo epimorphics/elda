@@ -41,6 +41,14 @@ hello:hello-world-again a api:API
         ; api:mimeType "application/atom+xml"
         ; elda:feedTitle "an example Elda feed"
         ]
+    
+    ; api:formatter
+        [a elda:VelocityFormatter
+        ; api:name "vhtml"
+        ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
+        ; api:mimeType "text/html"
+        ; elda:velocityTemplate "page-shell.vm"
+        ]
         
     ; elda:enableCounting true
    	; elda:cacheExpiryTime "10m"
