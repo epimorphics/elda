@@ -15,14 +15,15 @@ which allow you to experiment with the style of query and get started with build
 </p>
 
 <p>
-See the <a href="http://epimorphics.github.io/elda/docs/E1.2.33/index.html">quickstart documentation</a>.
+See the <a href="http://epimorphics.github.io/elda/docs/E1.2.34/index.html">quickstart documentation</a>.
 For summaries of the latest releases, see the
 <a href="http://epimorphics.github.io/elda/">documentation root</a>.
 </p>
 
 <p>
-	Elda 1.2.33 was released on 23th April 2014 and fixes a bug
-	where item endpoints whose subject has no properties (<i>ie</i>
-	is missing) did not generate a 404 response status. 
+	Elda 1.2.34 was released on 8th July 2014. It allows a query to refer to
+	non-default models in the SPARQL endpoint's dataset. The mappings from
+	strings to resource locations for velocity templates and XSLT
+	styleheets have been unified and more exactly defined.
 </p>
 
