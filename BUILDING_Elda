@@ -67,6 +67,8 @@ RELEASING ELDA
   many specific queries and the app working says that
   very many of these (still) work.
 
+  Note: release notes, docs are in the gh-pages branch.
+
   Ensure the release notes are up-to-date. The top
   entry in ReleaseNotes/latest.text should be marked 
   DEVELOPING. Use `git log | more` to check changes since
