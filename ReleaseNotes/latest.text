@@ -1,5 +1,5 @@
 +-----------------------------------------------------------------------
-| Elda 1.2.34 (DEVELOPING)
+| Elda 1.2.34 (RELEASED)
 
 * When Elda generates an error message page, external text (such
   as query parameters or material from the query results) is
