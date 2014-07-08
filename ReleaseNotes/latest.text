@@ -1,9 +1,13 @@
 +-----------------------------------------------------------------------
+| Elda 1.2.35 (DEVELOPING)
+
+
++-----------------------------------------------------------------------
 | Elda 1.2.34 (RELEASED)
 
 * When Elda generates an error message page, external text (such
   as query parameters or material from the query results) is
-  escaped so that it is not, eg, interprted as Javascript.
+  escaped so that it is not, eg, interpreted as Javascript.
 
 * the Velocity configuration file (velocity.properties) has been
   moved to the vm directory (ie wherever velocityRoot points).
@@ -33,7 +37,7 @@
   weak specification for DESCRIBE in SPARQL.
 
 * The XSLT processor supplied for elda-common and elda-bundled
-  has been changed to 9.5.1-5. The built-in JSK processor had
+  has been changed to Saxon 9.5.1-5. The built-in JDK processor had
   problems with large renderings, as did xalan. 
      
 + ----------------------------------------------------------------------
