@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-  <properties>
-    <tempSCM>/tmp/tempSCM</tempSCM>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
@@ -20,42 +16,62 @@
     <url>scm:git:${tempSCM}</url>
   </scm>
 
+  <properties>
+    <tempSCM>/tmp/tempSCM</tempSCM>
+
+    <ver.junit>4.11</ver.junit>
+    <ver.log4j>1.2.17</ver.log4j>
+    <ver.lucene>4.6.1</ver.lucene>
+    <ver.servlet-api>2.5</ver.servlet-api>
+    <ver.slf4j>1.7.6</ver.slf4j>
+    <ver.velocity>1.7</ver.velocity>
+    <ver.wagon>1.0-beta-2</ver.wagon>
+    <ver.xmlunit>1.4</ver.xmlunit>
+
+    <jdk.version>1.7</jdk.version>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
+  </properties>
+
   <build>
     <pluginManagement>
       <plugins>
 
-      <plugin>
+        <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <configuration> <encoding>UTF-8</encoding> </configuration>
-	  </plugin>     
-
-	  <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <configuration>
-            <downloadSources>true</downloadSources>
-            <downloadJavadocs>true</downloadJavadocs>
-        </configuration>
-      </plugin>
+          <configuration>
+            <encoding>UTF-8</encoding>
+          </configuration>
+        </plugin>
 
         <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <configuration>
+            <downloadSources>true</downloadSources>
+            <downloadJavadocs>true</downloadJavadocs>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>${jdk.version}</source>
+            <target>${jdk.version}</target>
+            <encoding>UTF-8</encoding>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
 
     <extensions>
       <extension>
-  <groupId>org.apache.maven.wagon</groupId>
-  <artifactId>wagon-ftp</artifactId>
-  <version>1.0-beta-2</version>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ftp</artifactId>
+        <version>${ver.wagon}</version>
       </extension>
     </extensions>
     <plugins>
@@ -81,36 +97,31 @@
   </build>
 
   <distributionManagement>
-    <!--
-      <repository>
-          <id>ftp-repo-epi</id>
-          <url>ftp://ftp.epimorphics.org/</url>
-      </repository>
-    -->
-      <repository>
-        <id>epi-public-repo</id>
-        <url>ftp://epimorphics.com</url>
-	</repository>
+    <!-- <repository> <id>ftp-repo-epi</id> <url>ftp://ftp.epimorphics.org/</url> </repository> -->
+    <repository>
+      <id>epi-public-repo</id>
+      <url>ftp://epimorphics.com</url>
+    </repository>
   </distributionManagement>
 
   <dependencies>
 
-      <dependency>
-          <groupId>org.apache.velocity</groupId>
-          <artifactId>velocity</artifactId>
-          <version>1.7</version>
-      </dependency>
+    <dependency>
+      <groupId>org.apache.velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>${ver.velocity}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
-      <version>3.5.0</version>
+      <version>${ver.lucene}</version>
     </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
-      <version>2.5</version>
+      <version>${ver.servlet-api}</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
@@ -118,7 +129,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8.2</version>
+      <version>${ver.junit}</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
@@ -126,21 +137,21 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.6.1</version>
+      <version>${ver.slf4j}</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
 
-	<dependency>
-		<groupId>xmlunit</groupId>
-		<artifactId>xmlunit</artifactId>
-		<version>1.4</version>
-	</dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+      <version>${ver.xmlunit}</version>
+    </dependency>
 
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
-      <version>1.2.16</version>
+      <version>${ver.log4j}</version>
       <type>jar</type>
       <scope>compile</scope>
 
@@ -166,43 +177,26 @@
     </dependency>
   </dependencies>
 
- <repositories>
+  <repositories>
     <!-- jena-repo is mirrored to Maven central repository -->
-    <!-- In case mirroring has not happened yet ... - ->
-    <repository>
-      <id>repo-jena</id>
-      <name>Jena Maven - Repository</name>
-      <layout>default</layout>
-      <url>http://openjena.org/repo</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
+    <!-- In case mirroring has not happened yet ... - -> <repository> <id>repo-jena</id> <name>Jena Maven - Repository</name>
+      <layout>default</layout> <url>http://openjena.org/repo</url> <snapshots> <enabled>false</enabled> </snapshots> </repository>
+      <!- - jena-repo-dev is where SNAPSHOTs and RCs are published - -> <repository> <id>repo-jena-dev</id> <name>Jena Maven -
+      Development Repository</name> <layout>default</layout> <url>http://openjena.org/repo-dev</url> <snapshots> <enabled>true</enabled>
+      </snapshots> </repository> -->
 
-    <!- - jena-repo-dev is where SNAPSHOTs and RCs are published - ->
     <repository>
-      <id>repo-jena-dev</id>
-      <name>Jena Maven - Development Repository</name>
+      <id>epi-public-repo</id>
+      <name>Epimorphics Public Repository</name>
+      <url>http://repository.epimorphics.com</url>
       <layout>default</layout>
-      <url>http://openjena.org/repo-dev</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
     </repository>
-	-->
-	
-    <repository>
-        <id>epi-public-repo</id>
-        <name>Epimorphics Public Repository</name>
-        <url>http://repository.epimorphics.com</url>
-        <layout>default</layout>
-        <releases>
-            <enabled>true</enabled>
-        </releases>
-        <snapshots>
-            <enabled>true</enabled>
-		</snapshots>
-	</repository>
 
     <repository>
       <id>apache-repo-snapshots</id>
@@ -219,30 +213,30 @@
       <id>apache-repo-releases</id>
       <url>https://repository.apache.org/content/repositories/releases/</url>
       <releases>
-       <enabled>true</enabled>
+        <enabled>true</enabled>
       </releases>
     </repository>
 
     <repository>
-        <id>maven2-repository.dev.java.net</id>
-        <name>Java.net Repository for Maven</name>
-        <url>http://download.java.net/maven/2/</url>
-        <layout>default</layout>
-	</repository>
+      <id>maven2-repository.dev.java.net</id>
+      <name>Java.net Repository for Maven</name>
+      <url>http://download.java.net/maven/2/</url>
+      <layout>default</layout>
+    </repository>
 
     <repository>
-        <id>codehaus.maven.repository</id>
-        <name>Codehaus Maven Respository</name>
-        <url>http://repository.codehaus.org/</url>
+      <id>codehaus.maven.repository</id>
+      <name>Codehaus Maven Respository</name>
+      <url>http://repository.codehaus.org/</url>
     </repository>
 
   </repositories>
 
   <modules>
     <module>elda-lda</module>
-	<module>elda-assets</module>
+    <module>elda-assets</module>
     <module>elda-common</module>
-	<module>elda-bundled</module>
+    <module>elda-bundled</module>
     <module>elda-standalone</module>
     <module>elda-system-tests</module>
     <module>elda-testing-webapp</module>
