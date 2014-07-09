@@ -7,11 +7,9 @@
     <version>1.2.35-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda-assets</artifactId>
   <packaging>war</packaging>
   <name>elda-assets</name>
-  <version>1.2.35-SNAPSHOT</version>
   <description>Elda assets [css, images, etc]</description>
 
   <dependencies>
