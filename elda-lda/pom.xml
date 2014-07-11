@@ -7,12 +7,26 @@
     <version>1.2.35-SNAPSHOT</version>
   </parent>
 
-	<groupId>com.epimorphics.lda</groupId> 
+  <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda-lda</artifactId>
-  <name>elda-lda</name>  
+  <name>elda-lda</name>
   <version>1.2.35-SNAPSHOT</version>
 
   <url>http://maven.apache.org</url>
+
+  <repositories>
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>epi-public-repo</id>
+      <name>Epimorphics Public Repository</name>
+      <url>http://repository.epimorphics.com</url>
+    </repository>
+  </repositories>
 
   <dependencies>
 
@@ -43,7 +57,7 @@
       <type>test-jar</type>
       <scope>test</scope>
   </dependency>
-  
+
   <dependency>
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-core</artifactId>
@@ -80,36 +94,41 @@
       <version>2.6.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.epimorphics</groupId>
+      <artifactId>lib</artifactId>
+      <version>0.0.19</version>
+    </dependency>
   </dependencies>
-  
+
   <build>
       <plugins>
           <plugin>
-		        <artifactId>maven-resources-plugin</artifactId>
-		        <version>2.5</version>
-		        <executions>
-		          <execution>
-		            <id>copy-version</id>
-		            <!-- here the phase you need -->
-		            <phase>generate-sources</phase>
-		            <goals>
-		              <goal>copy-resources</goal>
-		            </goals>
-		            <configuration>
-		              <outputDirectory>${basedir}/src/main/java/com/epimorphics/lda</outputDirectory>
-		              <resources>          
-		                <resource>
-		                  <directory>src/pre</directory>
-		                  <includes>
-		                      <include>Version.java</include>
-		                  </includes>
-		                  <filtering>true</filtering>
-		                </resource>
-		              </resources>              
-		            </configuration>            
-		          </execution>
-		        </executions>
-          </plugin>   
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.5</version>
+            <executions>
+              <execution>
+                <id>copy-version</id>
+                <!-- here the phase you need -->
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${basedir}/src/main/java/com/epimorphics/lda</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>src/pre</directory>
+                      <includes>
+                          <include>Version.java</include>
+                      </includes>
+                      <filtering>true</filtering>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
 
     <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -127,7 +146,7 @@
             </execution>
         </executions>
     </plugin>
-          
+
           <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-jar-plugin</artifactId>
@@ -140,22 +159,22 @@
                  </execution>
                </executions>
          </plugin>
-          
+
           <plugin>
-		      <artifactId>maven-source-plugin</artifactId>
-		      <version>2.1.1</version>
-		      <executions>
-			      <execution>
-			          <id>bundle-sources</id>
-			          <phase>package</phase>
-			          <goals>
-			            <!-- produce source artifact for main project sources -->
-			              <goal>jar-no-fork</goal>
-			          </goals>
-			      </execution>
-		      </executions>
-	      </plugin>
-	     
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.1.1</version>
+          <executions>
+            <execution>
+                <id>bundle-sources</id>
+                <phase>package</phase>
+                <goals>
+                  <!-- produce source artifact for main project sources -->
+                    <goal>jar-no-fork</goal>
+                </goals>
+            </execution>
+          </executions>
+        </plugin>
+
       </plugins>
   </build>
 </project>
