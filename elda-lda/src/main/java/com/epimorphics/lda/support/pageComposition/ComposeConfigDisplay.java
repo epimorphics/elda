@@ -313,6 +313,9 @@ public class ComposeConfigDisplay {
 			case T_ALL: return " (DESCRIBE + labels)";
 			case T_DESCRIBE: return " (DESCRIBE)";
 			case T_CHAINS: return " (just these properties)";
+			case T_TEMPLATE: return " (explicit template)";
+		default:
+			break;
 		}
 		return "IMPOSSIBLE";
 	}
@@ -421,10 +424,6 @@ public class ComposeConfigDisplay {
 	protected static String shortForm( PrefixMapping pm, Resource r ) {
 		return pm.shortForm( r.getURI() );
 	}
-        
-    private void h3( StringBuilder textBody, String s ) {  
-        textBody.append( "\n<h3>" ).append( safe( s ) ).append( "</h3>\n" );        
-    }
     
     private String safe(String val) {
         return 

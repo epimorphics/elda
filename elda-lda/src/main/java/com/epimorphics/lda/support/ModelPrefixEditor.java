@@ -91,7 +91,7 @@ public class ModelPrefixEditor {
 		if (o.isLiteral()) return rename( (Node_Literal) o );
 		String uri = o.getURI(), newUri = pe.rename(uri);
 		if (newUri == uri) return o;
-		return Node.createURI( newUri );
+		return NodeFactory.createURI( newUri );
 	}
 	
 	private Node rename( Node_Literal o ) {
@@ -99,7 +99,7 @@ public class ModelPrefixEditor {
 		if (typeURI == null) return o;
 		String newURI = pe.rename( typeURI );
 		if (newURI == typeURI) return o;
-		return Node.createLiteral( o.getLiteralLexicalForm(), typeNamed( newURI ) );
+		return NodeFactory.createLiteral( o.getLiteralLexicalForm(), typeNamed( newURI ) );
 	}
 
 	public RDFNode rename( RDFNode n ) {

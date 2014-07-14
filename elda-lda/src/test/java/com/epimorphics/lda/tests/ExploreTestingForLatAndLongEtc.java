@@ -13,7 +13,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.net.URI;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -25,7 +26,6 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.util.Triad;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;

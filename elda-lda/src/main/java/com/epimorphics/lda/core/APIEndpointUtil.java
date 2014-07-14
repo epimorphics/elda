@@ -9,7 +9,6 @@ package com.epimorphics.lda.core;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,6 @@ import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.util.MediaType;
-import com.epimorphics.util.Triad;
 
 public class APIEndpointUtil {
 	

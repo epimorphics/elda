@@ -1,7 +1,7 @@
 package com.epimorphics.lda.query.tests;
 
-import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.query.APIQuery.QueryBasis;
+import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 

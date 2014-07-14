@@ -28,7 +28,6 @@ import com.epimorphics.lda.exceptions.*;
 import com.epimorphics.lda.query.*;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.renderers.*;
-import com.epimorphics.lda.restlets.RouterRestletSupport;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
@@ -37,7 +36,8 @@ import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.*;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
@@ -140,7 +140,7 @@ public class APIEndpointImpl implements APIEndpoint {
      */
     @Override public Resource getMetadata(Bindings context, URI ru, String formatName, Model metadata) {
         APIQuery query = spec.getBaseQuery();
-        View _ignored = buildQueryAndView(context, query);
+        @SuppressWarnings("unused") View _ignored = buildQueryAndView(context, query);
         metadata.setNsPrefix("api", API.getURI());
 		Resource meta = metadata.createResource( URIUtils.withoutPageParameters( ru ).toString() );
         APISpec aSpec = spec.getAPISpec();

@@ -31,7 +31,6 @@ public class TestShortNames {
 	}
 	
 	@Test public void ensureConfigShortnameIsUsed() {
-		Model empty = ModelFactory.createDefaultModel();
 		Model m = ModelIOUtils.modelFromTurtle
 			( "@prefix p: <http://example.com/ns#>."
 			+ "\np:a p:thing p:b; p:other p:d; p:thong p:c." 
@@ -43,7 +42,6 @@ public class TestShortNames {
 	}
 	
 	@Test public void ensureApiLabelWinsOverRDFSLabel() {
-		Model empty = ModelFactory.createDefaultModel();
 		Model m = ModelIOUtils.modelFromTurtle
 			( "@prefix p: <http://example.com/ns#>."
 			+ "\np:a p:thing p:b; p:other p:d; p:thong p:c." 

@@ -9,7 +9,6 @@ package com.epimorphics.lda.bindings.tests;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -24,7 +23,6 @@ import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.epimorphics.util.Triad;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 

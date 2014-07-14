@@ -13,7 +13,8 @@ import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.Lock;
 
 /**
