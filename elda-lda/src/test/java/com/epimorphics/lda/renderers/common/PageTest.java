@@ -14,8 +14,7 @@ import static org.junit.Assert.*;
 
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.legacy.ClassImposteriser;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,6 +54,8 @@ public class PageTest
         setImposteriser(ClassImposteriser.INSTANCE);
     }};
 
+    private Page page;
+
     /***********************************/
     /* Constructors                    */
     /***********************************/
@@ -63,12 +64,35 @@ public class PageTest
     /* External signature methods      */
     /***********************************/
 
+    @Before
+    public void before() {
+        ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
+        page = rm.page();
+    }
+
     @Test
     public void testPage() {
-        ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
-        Page page = rm.page();
-
         assertNotNull( page );
+    }
+
+    @Test
+    public void testIsSingleItem() {
+        assertFalse( page.isItemEndpoint() );
+    }
+
+    @Test
+    public void testPageNumber() {
+        assertEquals( 0, page.pageNumber() );
+    }
+
+    @Test
+    public void testItemsPerPage() {
+        assertEquals( 10, page.itemsPerPage() );
+    }
+
+    @Test
+    public void testStartIndex() {
+        assertEquals( 1, page.startIndex() );
     }
 
     /***********************************/

@@ -13,9 +13,11 @@ package com.epimorphics.lda.renderers.common;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.vocabularies.API;
+import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.rdfutil.ModelWrapper;
-import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 
 /**
  * Value object representing the page of results returned by Elda's query
@@ -28,6 +30,9 @@ public class Page extends RDFNodeWrapper
     /***********************************/
     /* Constants                       */
     /***********************************/
+
+    /** Indicate no available numeric value */
+    public static final int NO_VALUE = -1;
 
     /***********************************/
     /* Static variables                */
@@ -57,6 +62,37 @@ public class Page extends RDFNodeWrapper
     /***********************************/
     /* External signature methods      */
     /***********************************/
+
+    /**
+     * @return True if the page denotes a single item, or false for a list endpoint
+     */
+    public boolean isItemEndpoint() {
+        return asResource().hasProperty( FOAF.primaryTopic );
+    }
+
+    /**
+     * @return The current page number, starting from zero. Return -1 if this page
+     * does not have a specified page number
+     */
+    public int pageNumber() {
+        return getInt( API.page, NO_VALUE );
+    }
+
+    /**
+     * @return The number of items per page. Return -1 if this page does not
+     * specifiy the number of items per page
+     */
+    public int itemsPerPage() {
+        return getInt( OpenSearch.itemsPerPage, NO_VALUE );
+    }
+
+    /**
+     * @return The starting index for this page, starting from one. Return -1
+     * if this page does not specify the starting index.
+     */
+    public int startIndex() {
+        return getInt( OpenSearch.startIndex, NO_VALUE );
+    }
 
     /***********************************/
     /* Internal implementation methods */
