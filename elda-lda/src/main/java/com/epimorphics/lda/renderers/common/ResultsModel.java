@@ -19,7 +19,6 @@ import com.epimorphics.rdfutil.DatasetWrapper;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
-import com.hp.hpl.jena.rdf.model.Model;
 
 /**
  * An facade for the {@link APIResultSet} returned from Elda processing,
@@ -73,15 +72,13 @@ public class ResultsModel extends ModelWrapper
      * @return A dataset wrapper presenting the API results combined model as a dataset
      */
     protected static DatasetWrapper asDataset( APIResultSet results ) {
-        Model mm = results.getModels().getMergedModel();
-        Dataset ds = DatasetFactory.create( mm );
+        APIResultSet.MergedModels mm = results.getModels();
+        Dataset ds = DatasetFactory.create( mm.getMergedModel() );
 
-        // TODO ideally, we would break out the object and results graphs from
-        // APIResultSet as separate graphs in the dataset at this point. However,
-        // APIResultSet.MergedModel's contract is unclear. Need to discuss this
-        // with Chris
+        ds.addNamedModel( RESULTS_OBJECT_GRAPH, mm.getObjectModel() );
+        ds.addNamedModel( RESULTS_METADATA_GRAPH, mm.getMetaModel() );
 
-        return new DatasetWrapper( ds, false, mm );
+        return new DatasetWrapper( ds, false, mm.getMergedModel() );
     }
 
     /***********************************/

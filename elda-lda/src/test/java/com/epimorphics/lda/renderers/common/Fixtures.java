@@ -237,6 +237,116 @@ public class Fixtures
             "                <http://localhost:3030/bwq/query> .\n" +
             "";
 
+    public static final String PAGE_OBJECT_GAMES = "@prefix hello: <http://epimorphics.com/public/vocabulary/games.ttl#> .\n" +
+            "@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n" +
+            "@prefix elda:  <http://www.epimorphics.com/vocabularies/lda#> .\n" +
+            "@prefix dct:   <http://purl.org/dc/terms/> .\n" +
+            "@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .\n" +
+            "@prefix api:   <http://purl.org/linked-data/api/vocab#> .\n" +
+            "@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
+            "\n" +
+            "<http://www.treefroggames.com/a-few-acres-of-snow-2>\n" +
+            "        a                      hello:BoardGame ;\n" +
+            "        rdfs:label             \"A Few Acres of Snow\" ;\n" +
+            "        hello:designed-by      <http://boardgamegeek.com/boardgamedesigner/6/martin-wallace> ;\n" +
+            "        hello:playTimeMinutes  60 ;\n" +
+            "        hello:players          2 ;\n" +
+            "        hello:pubYear          2011 .\n" +
+            "\n" +
+            "<http://www.hans-im-glueck.de/el-grande>\n" +
+            "        a                  hello:BoardGame ;\n" +
+            "        rdfs:label         \"El Grande\" ;\n" +
+            "        hello:designed-by  <http://www.boardgamegeek.com/boardgamedesigner/8/richard-ulrich> , <http://en.wikipedia.org/wiki/Wolfgang_Kramer> ;\n" +
+            "        hello:players      5 , 4 , 3 , 2 ;\n" +
+            "        hello:pubYear      1995 .\n" +
+            "\n" +
+            "<http://www.aleaspiele.de/Pages/C6/>\n" +
+            "        a                      hello:BoardGame ;\n" +
+            "        rdfs:label             \"Glen More\" ;\n" +
+            "        hello:designed-by      <http://boardgamegeek.com/boardgamedesigner/34699/matthias-cramer> ;\n" +
+            "        hello:playTimeMinutes  60 ;\n" +
+            "        hello:players          4 , 3 , 2 , 5 ;\n" +
+            "        hello:pubYear          2010 ;\n" +
+            "        hello:published-by     <http://www.aleaspiele.de/Pages/Title/> .\n" +
+            "\n" +
+            "<http://www.ragnarbrothers.co.uk/html/canal_mania.html>\n" +
+            "        a                  hello:BoardGame ;\n" +
+            "        rdfs:label         \"Canal Mania\" ;\n" +
+            "        hello:designed-by  <http://www.ragnarbrothers.co.uk/html/ragnar_brothers_games.html> ;\n" +
+            "        hello:players      5 , 4 , 3 , 2 ;\n" +
+            "        hello:pubYear      2006 .\n" +
+            "\n" +
+            "<http://www.treefroggames.com/age-of-industry>\n" +
+            "        a                  hello:BoardGame ;\n" +
+            "        rdfs:label         \"Age of Industry\" ;\n" +
+            "        hello:designed-by  <http://boardgamegeek.com/boardgamedesigner/6/martin-wallace> ;\n" +
+            "        hello:players      5 , 4 , 3 , 2 ;\n" +
+            "        hello:pubYear      2010 .\n" +
+            "\n" +
+            "<http://www.treefroggames.com/age-of-steam>\n" +
+            "        a                  hello:BoardGame ;\n" +
+            "        rdfs:label         \"Age of Steam\" ;\n" +
+            "        hello:designed-by  <http://boardgamegeek.com/boardgamedesigner/6/martin-wallace> ;\n" +
+            "        hello:players      6 , 5 , 4 , 3 ;\n" +
+            "        hello:pubYear      2002 .\n" +
+            "\n" +
+            "<http://www.treefroggames.com/last-train-to-wensleydale>\n" +
+            "        a                      hello:BoardGame ;\n" +
+            "        rdfs:label             \"Last Train to Wensleydale\" ;\n" +
+            "        hello:designed-by      <http://boardgamegeek.com/boardgamedesigner/6/martin-wallace> ;\n" +
+            "        hello:playTimeMinutes  120 ;\n" +
+            "        hello:players          4 , 3 ;\n" +
+            "        hello:pubYear          2009 .\n" +
+            "\n" +
+            "<http://queen-games.de/games.aspx?ProductId=45>\n" +
+            "        a                  hello:BoardGame ;\n" +
+            "        rdfs:label         \"Kingdom Builder\" ;\n" +
+            "        rdfs:seeAlso       <http://boardgamegeek.com/boardgame/107529/kingdom-builder> ;\n" +
+            "        hello:designed-by  <http://boardgamegeek.com/boardgamedesigner/10525/donald-x-vaccarino> ;\n" +
+            "        hello:players      4 , 3 , 2 ;\n" +
+            "        hello:pubYear      2011 .\n" +
+            "\n" +
+            "<http://boardgamegeek.com/boardgame/96913/lancaster>\n" +
+            "        a                      hello:BoardGame ;\n" +
+            "        rdfs:label             \"Lancaster\" ;\n" +
+            "        hello:designed-by      <http://boardgamegeek.com/boardgamedesigner/34699/matthias-cramer> ;\n" +
+            "        hello:playTimeMinutes  60 ;\n" +
+            "        hello:players          2 , 3 , 4 , 5 ;\n" +
+            "        hello:pubYear          2011 ;\n" +
+            "        hello:published-by     <http://www.queen-games.de/> .\n" +
+            "\n" +
+            "<http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html>\n" +
+            "        a                  hello:BoardGame ;\n" +
+            "        rdfs:label         \"A Brief History of the World\" ;\n" +
+            "        hello:designed-by  <http://www.ragnarbrothers.co.uk/html/ragnar_brothers_games.html> ;\n" +
+            "        hello:players      6 , 5 , 4 , 3 ;\n" +
+            "        hello:pubYear      2009 .\n" +
+            "";
+
+    public static final String PAGE_METADATA_GAMES = "<http://localhost:8080/standalone/hello/games.vhtml>\n" +
+            "        a       <http://purl.org/linked-data/api/vocab#ListEndpoint> , <http://purl.org/linked-data/api/vocab#Page> ;\n" +
+            "        <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>\n" +
+            "                \"10\"^^<http://www.w3.org/2001/XMLSchema#long> ;\n" +
+            "        <http://a9.com/-/spec/opensearch/1.1/startIndex>\n" +
+            "                \"1\"^^<http://www.w3.org/2001/XMLSchema#long> ;\n" +
+            "        <http://purl.org/dc/terms/hasPart>\n" +
+            "                <http://localhost:8080/standalone/hello/games.vhtml> ;\n" +
+            "        <http://purl.org/dc/terms/isPartOf>\n" +
+            "                <http://localhost:8080/standalone/hello/games.vhtml> ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#definition>\n" +
+            "                <http://localhost:8080/standalone/hello/meta/games.vhtml> ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>\n" +
+            "                <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#items>\n" +
+            "                ( <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> <http://www.treefroggames.com/a-few-acres-of-snow-2> <http://www.treefroggames.com/age-of-industry> <http://www.treefroggames.com/age-of-steam> <http://www.ragnarbrothers.co.uk/html/canal_mania.html> <http://www.hans-im-glueck.de/el-grande> <http://www.aleaspiele.de/Pages/C6/> <http://queen-games.de/games.aspx?ProductId=45> <http://boardgamegeek.com/boardgame/96913/lancaster> <http://www.treefroggames.com/last-train-to-wensleydale> ) ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#page>\n" +
+            "                \"0\"^^<http://www.w3.org/2001/XMLSchema#long> ;\n" +
+            "        <http://www.w3.org/1999/xhtml/vocab#first>\n" +
+            "                <http://localhost:8080/standalone/hello/games.vhtml?_page=0> ;\n" +
+            "        <http://www.w3.org/1999/xhtml/vocab#next>\n" +
+            "                <http://localhost:8080/standalone/hello/games.vhtml?_page=1> .\n" +
+            "";
+
     /***********************************/
     /* Static variables                */
     /***********************************/

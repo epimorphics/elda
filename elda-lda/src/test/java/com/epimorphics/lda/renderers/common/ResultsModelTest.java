@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.APIResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 /**
  * Unit tests for {@link ResultsModel}
@@ -64,13 +65,18 @@ public class ResultsModelTest
     public void testCreateResultsModel() {
         ResultsModel rm = new ResultsModel( mockResultSet() );
         assertFalse( rm.getModel().isEmpty() );
+
+        assertFalse( rm.getDataset().getNamedModel( ResultsModel.RESULTS_METADATA_GRAPH ).isEmpty() );
+        assertFalse( rm.getDataset().getNamedModel( ResultsModel.RESULTS_OBJECT_GRAPH ).isEmpty() );
     }
 
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
 
-    static final Model apiResultsModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES + Fixtures.PAGE_BWQ );
+    static final Model apiMetadataModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_METADATA_GAMES );
+    static final Model apiObjectModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_OBJECT_GAMES );
+    static final Model apiResultsModel = ModelFactory.createUnion( apiMetadataModel, apiObjectModel );
 
     /**
      * Create an APIResultSet fixture without trying to do all that that very complex
@@ -87,6 +93,12 @@ public class ResultsModelTest
 
             atLeast(1).of (mm).getMergedModel();
             will( returnValue( apiResultsModel ));
+
+            atLeast(1).of (mm).getObjectModel();
+            will( returnValue( apiObjectModel));
+
+            atLeast(1).of (mm).getMetaModel();
+            will( returnValue( apiMetadataModel ));
         }});
 
         return results;
