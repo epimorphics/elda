@@ -7,15 +7,12 @@
 */
 package com.epimorphics.lda.metadata.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.Test;
 
@@ -23,16 +20,12 @@ import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.tests.TestCaches;
-import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
-import com.epimorphics.lda.core.EndpointMetadata;
-import com.epimorphics.lda.core.SetsMetadata;
-import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
-import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.vocabularies.API;
@@ -82,7 +75,7 @@ public class TestGeneratedMetadata {
 		
 		em.addTermBindings( toScan, meta, exec, c );
 		
-		Map<String, String> termBindings = c.Do();
+		@SuppressWarnings("unused") Map<String, String> termBindings = c.Do();
 		Resource tb = meta.listStatements( null, API.termBinding, Any ).nextStatement().getResource();
 		assertTrue( meta.contains( tb, API.label, "this_predicate" ) );
 		assertTrue( meta.contains( tb, API.property, predicate ) );

@@ -28,7 +28,7 @@ import com.epimorphics.util.URIUtils;
 public class TestURIUtils {
 	
 	@Test public void toHoldASpecialCharacter() {
-		URI u = newURI( "http://example.com/spa%20cé" );
+		@SuppressWarnings("unused") URI u = newURI( "http://example.com/spa%20cé" );
 	}
 	
 	@Test public void testReplacesKnownFormat() {

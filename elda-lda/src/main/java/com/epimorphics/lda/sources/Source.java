@@ -21,7 +21,8 @@ import java.util.List;
 
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
  * Abstraction of the data endpoint to be queried.

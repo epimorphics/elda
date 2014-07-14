@@ -15,7 +15,8 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
     The built-in table of renderers, by name. Includes those defined

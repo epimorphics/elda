@@ -3,9 +3,7 @@ package com.epimorphics.lda.textsearch;
 import java.util.List;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.rdfq.Any;
-import com.epimorphics.lda.rdfq.AnyList;
-import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.vocabularies.EXTRAS;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDFS;

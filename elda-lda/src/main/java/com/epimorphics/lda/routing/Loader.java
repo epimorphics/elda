@@ -110,7 +110,7 @@ public class Loader extends HttpServlet {
 
 			@Override public List<String> getParameterNames() {
 				List<String> result = new ArrayList<String>();
-				Enumeration<String> names = getInitParameterNames();
+				@SuppressWarnings("unchecked") Enumeration<String> names = getInitParameterNames();
 				while (names.hasMoreElements()) result.add( names.nextElement() );
 				return result;
 			}

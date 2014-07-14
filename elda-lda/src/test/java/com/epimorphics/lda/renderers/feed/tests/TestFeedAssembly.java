@@ -1,31 +1,28 @@
 package com.epimorphics.lda.renderers.feed.tests;
 
+import static com.epimorphics.util.CollectionUtils.list;
 import static org.junit.Assert.*;
 
 import java.util.*;
 
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
-import com.epimorphics.lda.renderers.FeedRenderer;
-import com.epimorphics.lda.renderers.FeedRendererFactory;
+import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.renderers.FeedRenderer.FeedResults;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.vocabularies.*;
-import static com.epimorphics.util.CollectionUtils.list;
-
 import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
-
-import org.custommonkey.xmlunit.*;
-import org.custommonkey.xmlunit.exceptions.XpathException;
 
 public class TestFeedAssembly {
 	

@@ -462,28 +462,22 @@ import com.sun.jersey.api.NotFoundException;
 	private static URLforResource pathAsURLFactory(final ServletContext servCon) {
 		return new URLforResource() {
 			@Override public URL asResourceURL(String ePath) {
-				try {
-					return 
-						ePath.matches(STARTS_WITH_SCHEME) ? new URL(ePath)
-						: ePath.startsWith("/") ? new URL("file:" + ePath)
-						: new URL("file:" + servCon.getRealPath(ePath))
+				try {        
+					return
+			            ePath.matches(STARTS_WITH_SCHEME) ? new URL(ePath)
+						: ePath.startsWith("/") ? pathToURL(ePath)
+						: pathToURL(servCon.getRealPath(ePath))
 						;
 				} catch (MalformedURLException e) {
 					throw new WrappedException(e);
 				}
-				
-//				String p = ePath.matches(STARTS_WITH_SCHEME_OR_SLASH) ? ePath : "/" + ePath;
-//				try {
-//					URL result = p.startsWith("/") ? servCon.getResource(p) : new URL(p);
-//					if (result == null)
-//						EldaException.NotFound("webapp resource", ePath);
-//					return result;
-//				} catch (MalformedURLException e) {
-//					throw new WrappedException(e);
-//				}
 			}
 		};
-	}	
+	}
+	
+	private static URL pathToURL(String path) throws MalformedURLException {
+		return new File(path).toURI().toURL();
+	}
 
     public static ResponseBuilder standardHeaders( String expiresDate, ResponseBuilder rb ) {
         return standardHeaders( expiresDate, null, 0, false, rb );

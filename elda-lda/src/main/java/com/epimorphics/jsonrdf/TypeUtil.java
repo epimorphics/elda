@@ -12,8 +12,7 @@
 
 package com.epimorphics.jsonrdf;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.graph.*;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.reasoner.TriplePattern;
 import com.hp.hpl.jena.reasoner.transitiveReasoner.TransitiveGraphCache;
@@ -60,7 +59,7 @@ public class TypeUtil {
     }
     
     public static boolean isSubTypeOf(String aUri, String bUri) {
-        return tgc.contains( new TriplePattern(Node.createURI(aUri), RDFS.subClassOf.asNode(), Node.createURI(bUri)) );
+        return tgc.contains( new TriplePattern(NodeFactory.createURI(aUri), RDFS.subClassOf.asNode(), NodeFactory.createURI(bUri)) );
     }
 }
 

@@ -1,6 +1,6 @@
 package com.epimorphics.lda.query.tests;
 
-import com.epimorphics.lda.query.*;
+import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
 public class QueryTestUtils {

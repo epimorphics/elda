@@ -23,7 +23,7 @@ public class TestAPISpecExtractsModelPrefixEditor {
 			);
 		
 		Resource s = spec.getResource( spec.expandPrefix( ":s" ) );
-		Resource e = spec.getResource( spec.expandPrefix( ":e" ) );
+		// Resource e = spec.getResource( spec.expandPrefix( ":e" ) );
 
 		APISpec a = SpecUtil.specFrom( s );
 		

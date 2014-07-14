@@ -1,8 +1,10 @@
 package com.epimorphics.lda.query.tests;
 
-import java.util.*;
+import static com.epimorphics.util.CollectionUtils.list;
+import static com.epimorphics.util.CollectionUtils.set;
+import static junit.framework.Assert.assertEquals;
 
-import static junit.framework.Assert.*;
+import java.util.*;
 
 import org.junit.Test;
 
@@ -10,8 +12,6 @@ import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.epimorphics.lda.support.QuerySupport;
 import com.hp.hpl.jena.vocabulary.RDF;
-
-import static com.epimorphics.util.CollectionUtils.*;
 
 public class TestQueryReordering {
 

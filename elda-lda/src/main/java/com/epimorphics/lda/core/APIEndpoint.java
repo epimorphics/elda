@@ -18,7 +18,6 @@
 package com.epimorphics.lda.core;
 
 import java.net.URI;
-import java.util.Map;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.renderers.Renderer;
@@ -27,7 +26,6 @@ import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.util.MediaType;
-import com.epimorphics.util.Triad;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 

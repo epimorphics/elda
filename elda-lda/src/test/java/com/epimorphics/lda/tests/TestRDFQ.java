@@ -1,9 +1,9 @@
 package com.epimorphics.lda.tests;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 import static com.hp.hpl.jena.test.JenaTestBase.assertDiffer;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.support.PrefixLogger;

@@ -32,7 +32,8 @@ import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
-import com.epimorphics.util.*;
+import com.epimorphics.util.CollectionUtils;
+import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
@@ -1003,7 +1004,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			return QueryFactory.create(selectQuery);
 		} catch (Exception e) {
 			String x = e.getMessage();
-			throw new APIException("Internal error building query:\n\n" + e.getMessage() + "\nin:\n\n" + selectQuery, e);
+			throw new APIException("Internal error building query:\n\n" + x + "\nin:\n\n" + selectQuery, e);
 		}
 	}
 
