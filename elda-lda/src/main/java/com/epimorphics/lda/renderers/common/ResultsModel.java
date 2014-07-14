@@ -50,17 +50,30 @@ public class ResultsModel extends ModelWrapper
     /* Instance variables              */
     /***********************************/
 
+    /** The API results, as given */
+    private APIResultSet results;
+
     /***********************************/
     /* Constructors                    */
     /***********************************/
 
     public ResultsModel( APIResultSet results ) {
         super( asDataset( results ) );
+        this.results = results;
     }
 
     /***********************************/
     /* External signature methods      */
     /***********************************/
+
+    /**
+     * Return a {@link Page} object decorating the underlying page resource in
+     * the API results model
+     * @return A page object
+     */
+    public Page page() {
+        return new Page( this, results.getRoot() );
+    }
 
     /***********************************/
     /* Internal implementation methods */

@@ -24,11 +24,11 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 /**
- * Unit tests for {@link ResultsModel}
+ * Unit tests for {@link Page}
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class ResultsModelTest
+public class PageTest
 {
     /***********************************/
     /* Constants                       */
@@ -39,7 +39,7 @@ public class ResultsModelTest
     /***********************************/
 
     @SuppressWarnings( value = "unused" )
-    private static final Logger log = LoggerFactory.getLogger( ResultsModelTest.class );
+    private static final Logger log = LoggerFactory.getLogger( PageTest.class );
 
     static final Model apiMetadataModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_METADATA_GAMES );
     static final Model apiObjectModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_OBJECT_GAMES );
@@ -64,12 +64,11 @@ public class ResultsModelTest
     /***********************************/
 
     @Test
-    public void testCreateResultsModel() {
+    public void testPage() {
         ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
-        assertFalse( rm.getModel().isEmpty() );
+        Page page = rm.page();
 
-        assertFalse( rm.getDataset().getNamedModel( ResultsModel.RESULTS_METADATA_GRAPH ).isEmpty() );
-        assertFalse( rm.getDataset().getNamedModel( ResultsModel.RESULTS_OBJECT_GRAPH ).isEmpty() );
+        assertNotNull( page );
     }
 
     /***********************************/

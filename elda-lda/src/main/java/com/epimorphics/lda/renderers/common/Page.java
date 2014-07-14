@@ -10,25 +10,20 @@
 package com.epimorphics.lda.renderers.common;
 
 
-import static org.junit.Assert.*;
-
-import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.jmock.lib.legacy.ClassImposteriser;
-import org.junit.Rule;
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.epimorphics.rdfutil.ModelWrapper;
+import com.epimorphics.rdfutil.RDFNodeWrapper;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
- * Unit tests for {@link ResultsModel}
+ * Value object representing the page of results returned by Elda's query
+ * processing. Corresponds to a single resource of type <code>api:Page</code>.
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class ResultsModelTest
+public class Page extends RDFNodeWrapper
 {
     /***********************************/
     /* Constants                       */
@@ -39,38 +34,29 @@ public class ResultsModelTest
     /***********************************/
 
     @SuppressWarnings( value = "unused" )
-    private static final Logger log = LoggerFactory.getLogger( ResultsModelTest.class );
-
-    static final Model apiMetadataModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_METADATA_GAMES );
-    static final Model apiObjectModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_OBJECT_GAMES );
-    static final Model apiResultsModel = ModelFactory.createUnion( apiMetadataModel, apiObjectModel );
+    private static final Logger log = LoggerFactory.getLogger( Page.class );
 
     /***********************************/
     /* Instance variables              */
     /***********************************/
 
-    @Rule public JUnitRuleMockery context = new JUnitRuleMockery() {{
-        // we are forced to use the legacy imposteriser because APIResultSet does not
-        // have an interface that it conforms to
-        setImposteriser(ClassImposteriser.INSTANCE);
-    }};
-
     /***********************************/
     /* Constructors                    */
     /***********************************/
 
+    /**
+     * Construct a new page object corresponding to the <code>root</code>
+     * object in model <code>mw</code>.
+     * @param mw A wrapper around the model containing the results from the API
+     * @param root The root resource of this page
+     */
+    public Page( ModelWrapper mw, Resource root ) {
+        super( mw, root );
+    }
+
     /***********************************/
     /* External signature methods      */
     /***********************************/
-
-    @Test
-    public void testCreateResultsModel() {
-        ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
-        assertFalse( rm.getModel().isEmpty() );
-
-        assertFalse( rm.getDataset().getNamedModel( ResultsModel.RESULTS_METADATA_GRAPH ).isEmpty() );
-        assertFalse( rm.getDataset().getNamedModel( ResultsModel.RESULTS_OBJECT_GRAPH ).isEmpty() );
-    }
 
     /***********************************/
     /* Internal implementation methods */

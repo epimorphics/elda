@@ -9,6 +9,15 @@
 
 package com.epimorphics.lda.renderers.common;
 
+import org.jmock.Expectations;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+
+import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.vocabularies.API;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.RDF;
+
 
 
 /**
@@ -362,6 +371,40 @@ public class Fixtures
     /***********************************/
     /* External signature methods      */
     /***********************************/
+
+    /**
+     * Create an APIResultSet fixture without trying to do all that that very complex
+     * class does.
+     * @return Mocked {@link APIResultSet}
+     */
+    public static APIResultSet mockResultSet( JUnitRuleMockery context,
+                                              final Model apiResultsModel,
+                                              final Model apiObjectModel,
+                                              final Model apiMetadataModel ) {
+        final APIResultSet results = context.mock( APIResultSet.class );
+        final APIResultSet.MergedModels mm = context.mock( APIResultSet.MergedModels.class );
+        final Resource root = apiResultsModel.listResourcesWithProperty( RDF.type, API.Page ).next();
+
+        context.checking(new Expectations() {{
+            atLeast(1).of (results).getModels();
+            will( returnValue( mm ) );
+
+            atLeast(1).of (mm).getMergedModel();
+            will( returnValue( apiResultsModel ));
+
+            atLeast(1).of (mm).getObjectModel();
+            will( returnValue( apiObjectModel));
+
+            atLeast(1).of (mm).getMetaModel();
+            will( returnValue( apiMetadataModel ));
+
+            atLeast(1).of (results).getRoot();
+            will( returnValue( root ) );
+        }});
+
+        return results;
+    }
+
 
     /***********************************/
     /* Internal implementation methods */
