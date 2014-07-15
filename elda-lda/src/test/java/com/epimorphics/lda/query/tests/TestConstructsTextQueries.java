@@ -16,7 +16,7 @@ import com.epimorphics.lda.sources.HereSource;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.*;
 
 public class TestConstructsTextQueries {
@@ -33,7 +33,7 @@ public class TestConstructsTextQueries {
 	
 	@Test public void testConstructsSimpleConfiguredQuery() {
 		Property queryProperty = ResourceFactory.createProperty( "eh:/query" );
-		endpoint.addProperty( EXTRAS.textQueryProperty, queryProperty );
+		endpoint.addProperty( ELDA_API.textQueryProperty, queryProperty );
 		testConstructsSimpleSearchTriples(queryProperty);		
 	}
 
@@ -63,7 +63,7 @@ public class TestConstructsTextQueries {
 
 	private void testUsesConfiguredTextProperty(Property jenaTextQuery) {
 		Property contentProperty = ResourceFactory.createProperty( "eh:/content" );
-		endpoint.addProperty( EXTRAS.textContentProperty, contentProperty );
+		endpoint.addProperty( ELDA_API.textContentProperty, contentProperty );
 		final Source s = new HereSource( config, endpoint );
 		QueryBasis qb = new StubQueryBasis(sns) {
 
@@ -93,7 +93,7 @@ public class TestConstructsTextQueries {
 		Literal c = config.createTypedLiteral( number );
 	//
 		Resource operand = config.createList( new RDFNode[] {a, b, c} );
-		endpoint.addProperty( EXTRAS.textSearchOperand, operand );
+		endpoint.addProperty( ELDA_API.textSearchOperand, operand );
 		final Source s = new HereSource( config, endpoint );
 		final TextSearchConfig tsc = s.getTextSearchConfig();
 	//

@@ -2,37 +2,59 @@ package com.epimorphics.lda.specs;
 
 import java.util.*;
 
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.OWL;
 import com.hp.hpl.jena.vocabulary.RDF;
 
+/**
+	PropertyExpiryTimes is a configurable map from resources (represented
+	by Nodes) to their cache expiry time (interval length) in seconds.
+	A PropertyExpiryTimes is configured from a model containing
+	EXTRAS.cacheExpiryTime statements. A PropertyExpiryTimes also records
+	the minimum of all specified cache expiry times it has been given.
+*/
 public class PropertyExpiryTimes {
 
 	protected final Map<Node, Long> secondsForNode = new HashMap<Node, Long>();
 	
 	protected long minTimeSeconds = Long.MAX_VALUE / 1000;
 	
-	public PropertyExpiryTimes() {
+	private PropertyExpiryTimes() {
 	}
 	
-	public static PropertyExpiryTimes testAssembly(Object ... args) {
+	/**
+	    buildForTests constructs a PropertyExpiryTimes from an array of
+	    alternating Node and (seconds) Long values; the node in element
+	    N of the array is given the seconds value in element N+1.
+	*/
+	public static PropertyExpiryTimes buildForTests(Object ... args) {
 		PropertyExpiryTimes result = new PropertyExpiryTimes();
 		for (int i = 0; i < args.length; i += 2)
 			result.put( ((Resource) args[i]).asNode(), (Long) args[i+1] );
 		return result;
 	}
 
+	/**
+	    assemble builds a PropertyExpiryTimes from a given model by looking
+	    at all the statements (S EXTRAS.cacheExpiryTime O) where S is
+	    a property, that is, has rdf:type rdf:Property, owl:DatatypeProperty,
+	    or owl:ObjectProperty. S is added to the PropertyExpiryTimes with
+	    a millisecond value derived from O, which must either be an
+	    integer number of seconds or a string d+S where d+ is an integer
+	    representation and S specifies the time unit for this time:
+	    s(econds), m(inutes), h(ours), d(ays), w(eeks).
+	*/
 	public static PropertyExpiryTimes assemble(Model model) {
 		PropertyExpiryTimes result = new PropertyExpiryTimes();
 		List<Statement> candidates = model
-			.listStatements(null, EXTRAS.cacheExpiryTime, (RDFNode) null)
+			.listStatements(null, ELDA_API.cacheExpiryTime, (RDFNode) null)
 			.toList()
 			;
 		for (Statement c: candidates)
 			if (isProperty( c.getSubject())) {
-				long seconds = getSecondsValue(c.getSubject(), EXTRAS.cacheExpiryTime, -1);
+				long seconds = getSecondsValue(c.getSubject(), ELDA_API.cacheExpiryTime, -1);
 				result.put(c.getSubject().asNode(), seconds);
 			}
 				

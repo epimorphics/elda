@@ -11,8 +11,9 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 public class TestVelocityMetadata {
 
 	@Test public void testMe() {
+		// TODO put some actual tests in here!
 		Model m = ModelFactory.createDefaultModel();
 		ShortNames shortNames = new ShortNames(m);
-		Map<String, Object> meta = Help.getMetadataFrom( shortNames, new IdMap(), m );
+		@SuppressWarnings("unused") Map<String, Object> meta = Help.getMetadataFrom( shortNames, new IdMap(), m );
 	}
 }

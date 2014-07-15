@@ -13,7 +13,7 @@ import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -114,15 +114,15 @@ public class BuiltinRendererTable {
 		
 		putFactory( EMPTY,  "xml", API.XmlFormatter, MediaType.APPLICATION_XML, new XMLRendererFactory() );
 		
-		putFactory( EMPTY, "_velocity", EXTRAS.VelocityFormatter, MediaType.NONE, new VelocityRendererFactory() );
+		putFactory( EMPTY, "_velocity", ELDA_API.VelocityFormatter, MediaType.NONE, new VelocityRendererFactory() );
 		
-		putFactory( EMPTY, "_atom", EXTRAS.FeedFormatter, MediaType.NONE, new FeedRendererFactory() );
+		putFactory( EMPTY, "_atom", ELDA_API.FeedFormatter, MediaType.NONE, new FeedRendererFactory() );
 		
 		putFactory( EMPTY, "_xslt", API.XsltFormatter, MediaType.NONE, new XSLT_RendererFactory( Empty, MediaType.NONE ) );
 		
 		putFactory( XSLT_HTML, "html", API.XsltFormatter, MediaType.TEXT_HTML, new XSLT_RendererFactory( XSLT_HTML, MediaType.TEXT_HTML ) );
 		
-		putFactory( EMPTY, "vhtml", EXTRAS.VelocityFormatter, MediaType.TEXT_HTML, new VelocityRendererFactory() ); //  HTML, MediaType.TEXT_HTML ) );
+		putFactory( EMPTY, "vhtml", ELDA_API.VelocityFormatter, MediaType.TEXT_HTML, new VelocityRendererFactory() ); //  HTML, MediaType.TEXT_HTML ) );
 
 	}
 

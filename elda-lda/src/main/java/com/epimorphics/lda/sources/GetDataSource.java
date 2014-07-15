@@ -17,7 +17,7 @@ package com.epimorphics.lda.sources;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -31,7 +31,7 @@ public class GetDataSource
         if (endpoint == null)
         	EldaException.BadSpecification( "no SPARQL endpoint specified for " + sourceConfig );
                 
-        if (endpoint.hasProperty( RDF.type, EXTRAS.Combiner ))
+        if (endpoint.hasProperty( RDF.type, ELDA_API.Combiner ))
         	return new CombinedSource( fm, am, endpoint );
         
         String sparqlEndpointString = endpoint.getURI();  

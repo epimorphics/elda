@@ -2,7 +2,7 @@ package com.epimorphics.lda.specs;
 
 import java.util.*;
 
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.BrokenException;
@@ -15,7 +15,7 @@ public class MetadataOptions {
 	    components of all the S's lowercased.
 	*/
     public static void extract( Set<String> metadataOptions, Resource R ) {
-    	List<Statement> options = R.listProperties( EXTRAS.metadataOptions ).toList();
+    	List<Statement> options = R.listProperties( ELDA_API.metadataOptions ).toList();
     	if (options.size() > 0) {
     		metadataOptions.clear();
     		for (Statement os: options)
@@ -38,7 +38,7 @@ public class MetadataOptions {
 		
 		if (R == null) throw new BrokenException(">> OOPSY-DAISY.");
 		
-		List<Statement> options = R.listProperties( EXTRAS.metadataOptions ).toList();
+		List<Statement> options = R.listProperties( ELDA_API.metadataOptions ).toList();
     	if (options.size() > 0) 
     		for (Statement os: options)
     			for (String opt: os.getString().split( " *, *" ))

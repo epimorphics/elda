@@ -94,7 +94,7 @@ public class TestFeedAssembly {
 	
 	private FeedRenderer makeDateFeedRenderer(Property ...properties) {
 		RDFList l = configModel.createList( properties );
-		config.addProperty( EXTRAS.feedDateProperties, l );
+		config.addProperty( ELDA_API.feedDateProperties, l );
 		return makeFeedRenderer(config);
 	}
 
@@ -124,7 +124,7 @@ public class TestFeedAssembly {
 		Property c = configModel.createProperty( "eh:/c" );
 		Property[] properties = new Property[] {a, b, c};
 		RDFList l = configModel.createList( properties );
-		config.addProperty( EXTRAS.feedRightsProperties, l );
+		config.addProperty( ELDA_API.feedRightsProperties, l );
 		FeedRenderer fr = makeFeedRenderer( config );
 		assertEquals( Arrays.asList( properties ), fr.getRightsProperties() );
 	}
@@ -136,14 +136,14 @@ public class TestFeedAssembly {
 	
 	@Test public void testConfiguredFeedRights() {
 		String rightsString = "© copyright 1066";
-		config.addProperty( EXTRAS.feedRights, rightsString );
+		config.addProperty( ELDA_API.feedRights, rightsString );
 		FeedRenderer fr = makeFeedRenderer( config );
 		assertEquals( rightsString, fr.getFeedRights() );
 	}
 	
 	@Test public void testDefaultNamespace() {
 		FeedRenderer fr = makeFeedRenderer( config );
-		assertEquals( EXTRAS.getURI(), fr.getNamespace() );
+		assertEquals( ELDA_API.getURI(), fr.getNamespace() );
 	}
 
 	@Test public void testDefaultAuthors() {
@@ -156,7 +156,7 @@ public class TestFeedAssembly {
 		Resource b = configModel.createResource( "eh:/authorB" );
 		RDFNode[] properties = new RDFNode[] {a, b};
 		RDFList l = configModel.createList( properties );
-		config.addProperty( EXTRAS.feedAuthors, l );
+		config.addProperty( ELDA_API.feedAuthors, l );
 		FeedRenderer fr = makeFeedRenderer( config );
 		assertEquals( list( a, b ), fr.getAuthors() );
 	}
@@ -172,7 +172,7 @@ public class TestFeedAssembly {
 	//
 		Property[] properties = new Property[] {a, b};
 		RDFList l = configModel.createList( properties );
-		config.addProperty( EXTRAS.feedAuthorProperties, l );
+		config.addProperty( ELDA_API.feedAuthorProperties, l );
 	//
 		FeedRenderer fr = makeFeedRenderer( config );
 		assertEquals( list(a, b), fr.getAuthorProperties() );
@@ -184,7 +184,7 @@ public class TestFeedAssembly {
 	//
 		RDFNode[] properties = new RDFNode[] {a, b};
 		RDFList authors = configModel.createList( properties );
-		config.addProperty( EXTRAS.feedAuthors, authors );
+		config.addProperty( ELDA_API.feedAuthors, authors );
 	//
 		String rendering = renderFeed();
 	//
@@ -202,7 +202,7 @@ public class TestFeedAssembly {
 		Property b = configModel.createProperty( "eh:/author_B" );
 		RDFNode[] properties = new RDFNode[] {a, b};
 		RDFList authors = configModel.createList( properties );		
-		config.addProperty( EXTRAS.feedAuthorProperties, authors );
+		config.addProperty( ELDA_API.feedAuthorProperties, authors );
 	//
 		item.addProperty( a, "the author is A" );
 		item.addProperty( b, "the author is B" );
@@ -218,7 +218,7 @@ public class TestFeedAssembly {
 		Property b = configModel.createProperty( "eh:/author_B" );
 		RDFNode[] properties = new RDFNode[] {a, b};
 		RDFList authors = configModel.createList( properties );		
-		config.addProperty( EXTRAS.feedAuthorProperties, authors );
+		config.addProperty( ELDA_API.feedAuthorProperties, authors );
 	//
 		item.addProperty( a, "the author is A" );
 		item.addProperty( b, "the author is B" );
@@ -237,7 +237,7 @@ public class TestFeedAssembly {
 	@Test public void testRendersFeedRightsIfPresent() {
 
 		String rightsString = "© copyright 1066";
-		config.addProperty( EXTRAS.feedRights, rightsString );
+		config.addProperty( ELDA_API.feedRights, rightsString );
 		
 		String rendering = renderFeed();
 		
@@ -292,7 +292,7 @@ public class TestFeedAssembly {
 	
 	@Test public void testConfiguredNamespace() {
 		String explicit = "eh:/explicitNamespace";
-		config.addProperty( EXTRAS.feedNamespace, explicit );
+		config.addProperty( ELDA_API.feedNamespace, explicit );
 		FeedRenderer fr = makeFeedRenderer( config );
 		assertEquals( explicit, fr.getNamespace() );
 	//

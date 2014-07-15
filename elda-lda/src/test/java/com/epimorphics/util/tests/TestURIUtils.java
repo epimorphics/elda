@@ -83,19 +83,28 @@ public class TestURIUtils {
 		}
 	}
 	
-	@Test public void testIt() {
-		String RU = "http://localhost:8080/elda/api/redirected/education/id/school/100869";
-		for (String apiBase: "/ /environment /environment/ http://localhost http://localhost/".split( " +" )) 
-			for (String mrp: "/doc/bathing-water doc/bathing-water".split(" +" )) {	
-				URI result = URIUtils.resolveAgainstBase( newURI(RU), newURI(apiBase), mrp );
-				// System.err.println( "!! " + apiBase + ", " + mrp + ", " + result.toString() );
-		}
-	}
+	static final String RU = "http://localhost:8080/elda/api/redirected/education/id/school/100869";
 
-	@Test public void testThat() {
-		URI mid = newURI( "http://localhost:8080/environment/" );
-		URI resolved = mid.resolve( "doc/bathing-water" );
-		// System.err.println( ")) " + resolved.toString() );
+	static final String[][] params = new String[][] {
+		// apiBase				uipath					result
+		{ "/",					"/doc/bathing-water",	"http://localhost:8080/doc/bathing-water" },
+		{ "/",					"doc/bathing-water", 	"http://localhost:8080/doc/bathing-water" },
+		{ "/environment",		"/doc/bathing-water",	"http://localhost:8080/environment/doc/bathing-water" },
+		{ "/environment",		"doc/bathing-water",	"http://localhost:8080/environment/doc/bathing-water" },
+		{ "/environment/",		"/doc/bathing-water",	"http://localhost:8080/environment/doc/bathing-water" },
+		{ "/environment/",		"doc/bathing-water",	"http://localhost:8080/environment/doc/bathing-water" },
+		{ "http://localhost",	"/doc/bathing-water",	"http://localhost/doc/bathing-water" },
+		{ "http://localhost",	"doc/bathing-water",	"http://localhost/doc/bathing-water" },
+		{ "http://localhost/",	"/doc/bathing-water",	"http://localhost/doc/bathing-water" },
+		{ "http://localhost/",	"doc/bathing-water",	"http://localhost/doc/bathing-water" }
+	};
+	
+	@Test public void testBuildsExpectedURI() {
+		for (String [] row: params) {
+			String apiBase = row[0], uiPath = row[1];
+			URI result = URIUtils.resolveAgainstBase(newURI(RU), newURI(apiBase), uiPath);
+			assertEquals(newURI(row[2]), result);
+		}
 	}
 	
 }

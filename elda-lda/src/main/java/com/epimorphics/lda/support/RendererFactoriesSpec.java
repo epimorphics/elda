@@ -15,7 +15,7 @@ import java.util.List;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -84,7 +84,7 @@ public class RendererFactoriesSpec {
 	}
 
 	private static String getClassName(Resource r) {
-		return r.hasProperty( EXTRAS.className ) ? r.getProperty( EXTRAS.className ).getString() : null;
+		return r.hasProperty( ELDA_API.className ) ? r.getProperty( ELDA_API.className ).getString() : null;
 	}
 
 	private static String getName( Resource r ) {

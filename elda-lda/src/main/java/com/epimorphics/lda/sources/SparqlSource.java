@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -60,10 +60,10 @@ public class SparqlSource extends SourceBase implements Source {
         String user = null;
         char [] password = null;
         if (ep != null) {
-        	boolean b = RDFUtils.getBooleanValue( ep, EXTRAS.supportsNestedSelect, false );
+        	boolean b = RDFUtils.getBooleanValue( ep, ELDA_API.supportsNestedSelect, false );
         	nestedSelects = (b ? Perhaps.Yes : Perhaps.No);
         //
-        	String authKey = RDFUtils.getStringValue( ep, EXTRAS.authKey, null );
+        	String authKey = RDFUtils.getStringValue( ep, ELDA_API.authKey, null );
         	// System.err.println( ">> AUTH KEY: " + authKey );
         	if (authKey != null) {
         		AuthInfo ai = am.get( authKey );

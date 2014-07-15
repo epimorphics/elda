@@ -26,7 +26,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -80,26 +80,27 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     public APIEndpointSpec( APISpec apiSpec, APISpec parent, Resource endpoint ) {
     	checkEndpointType( endpoint );
     	this.apiSpec = apiSpec;
-    	wantsContext = endpoint.hasLiteral( EXTRAS.wantsContext, true );
+    	wantsContext = endpoint.hasLiteral( ELDA_API.wantsContext, true );
     	bindings.putAll( apiSpec.bindings );
         bindings.putAll( VariableExtractor.findAndBindVariables( bindings, endpoint ) );
         defaultLanguage = getStringValue(endpoint, API.lang, apiSpec.getDefaultLanguage());
     	defaultPageSize = getIntValue( endpoint, API.defaultPageSize, apiSpec.defaultPageSize );
 		maxPageSize = getIntValue( endpoint, API.maxPageSize, apiSpec.maxPageSize );
-		cachePolicyName = getStringValue( endpoint, EXTRAS.cachePolicyName, apiSpec.getCachePolicyName() );
+		cachePolicyName = getStringValue( endpoint, ELDA_API.cachePolicyName, apiSpec.getCachePolicyName() );
 		parentApi = parent;
         name = endpoint.getLocalName();
         itemTemplate = getStringValue( endpoint, API.itemTemplate, null );
-        graphTemplate = getStringValue( endpoint, EXTRAS.graphTemplate, apiSpec.getGraphTemplate() );
+        graphTemplate = getStringValue( endpoint, ELDA_API.graphTemplate, apiSpec.getGraphTemplate() );
         uriTemplate = createURITemplate( endpoint );
         endpointResource = endpoint;
-        describeThreshold = getIntValue( endpoint, EXTRAS.describeThreshold, apiSpec.describeThreshold );
+        describeThreshold = getIntValue( endpoint, ELDA_API.describeThreshold, apiSpec.describeThreshold );
     //
         textSearchConfig = apiSpec.getTextSearchConfig().overlay( endpoint );
-        enableCounting = RDFUtils.getOptionalBooleanValue(endpoint, EXTRAS.enableCounting, apiSpec.getEnableCounting() );
+        enableCounting = RDFUtils.getOptionalBooleanValue(endpoint, ELDA_API.enableCounting, apiSpec.getEnableCounting() );
+    //
         cacheExpiryMilliseconds = PropertyExpiryTimes.getSecondsValue
         	( endpoint
-        	, EXTRAS.cacheExpiryTime
+        	, ELDA_API.cacheExpiryTime
         	, apiSpec.getCacheExpiryMilliseconds() / 1000
         	) * 1000
         	;
@@ -113,7 +114,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 		Resource spec = specForEndpoint(endpoint);
 		String ut = getStringValue(endpoint, API.uriTemplate, null);
         if (ut == null) EldaException.NoDeploymentURIFor( name );
-        String prefix = getStringValue( spec, EXTRAS.uriTemplatePrefix, "" );
+        String prefix = getStringValue( spec, ELDA_API.uriTemplatePrefix, "" );
         if (!ut.startsWith("/") && !ut.startsWith("http")) ut = "/" + ut;
         return prefix + ut;
 	}
@@ -258,13 +259,13 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	}
 
 	private void setDescribeThreshold(Resource tRes, View v) {
-		if (tRes.hasProperty( EXTRAS.describeThreshold ))
-			v.setDescribeThreshold( getIntValue( tRes, EXTRAS.describeThreshold, describeThreshold ) );
+		if (tRes.hasProperty( ELDA_API.describeThreshold ))
+			v.setDescribeThreshold( getIntValue( tRes, ELDA_API.describeThreshold, describeThreshold ) );
 	}
 
 	private void setDescribeLabelIfPresent(Resource tRes, View v) {
-		if (tRes.hasProperty( EXTRAS.describeAllLabel )) 
-			v.setDescribeLabel( getStringValue( tRes, EXTRAS.describeAllLabel, RDFS.label.getURI() ) );
+		if (tRes.hasProperty( ELDA_API.describeAllLabel )) 
+			v.setDescribeLabel( getStringValue( tRes, ELDA_API.describeAllLabel, RDFS.label.getURI() ) );
 	}
 
 	private void addViewPropertiesByString( View v, List<RDFNode> items ) {
@@ -313,8 +314,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 
     // may be subclassed
     protected boolean enableETags( Resource ep ) {
-		Statement s = ep.getProperty(EXTRAS.enableETags);
-		if (s == null) s = specForEndpoint(ep).getProperty(EXTRAS.enableETags);
+		Statement s = ep.getProperty(ELDA_API.enableETags);
+		if (s == null) s = specForEndpoint(ep).getProperty(ELDA_API.enableETags);
 		return s != null && s.getBoolean();
 	}
 
@@ -328,7 +329,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	}
 
 	private void setAllowedReservedFrom( Resource r, APIQuery q ) {
-		for (Statement s: r.listProperties( EXTRAS.allowReserved ).toSet()) {
+		for (Statement s: r.listProperties( ELDA_API.allowReserved ).toSet()) {
 			q.addAllowReserved( s.getString() );
 		}
 	}

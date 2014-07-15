@@ -27,7 +27,6 @@ import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.specs.EndpointDetails;
-import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.util.CollectionUtils;
@@ -67,7 +66,7 @@ public class TestGeneratedMetadata {
 		Model meta = ModelFactory.createDefaultModel();
 		Resource exec = meta.createResource( "fake:exec" );
 		ShortnameService sns = new StandardShortnameService();
-		APIEndpoint.Request r = new APIEndpoint.Request( new Controls(), reqURI, cc );
+//		APIEndpoint.Request r = new APIEndpoint.Request( new Controls(), reqURI, cc );
 		
 		CompleteContext c  = 
 			new CompleteContext(CompleteContext.Mode.PreferPrefixes, sns.asContext(), pm )

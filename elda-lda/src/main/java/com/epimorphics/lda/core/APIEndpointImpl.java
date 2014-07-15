@@ -34,7 +34,7 @@ import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.*;
 import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.*;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -144,9 +144,9 @@ public class APIEndpointImpl implements APIEndpoint {
         metadata.setNsPrefix("api", API.getURI());
 		Resource meta = metadata.createResource( URIUtils.withoutPageParameters( ru ).toString() );
         APISpec aSpec = spec.getAPISpec();
-        meta.addProperty(EXTRAS.sparqlQuery, query.getQueryString(aSpec, context));
+        meta.addProperty(ELDA_API.sparqlQuery, query.getQueryString(aSpec, context));
         aSpec.getDataSource().addMetadata(meta);
-        meta.addProperty( EXTRAS.listURL, meta );
+        meta.addProperty( ELDA_API.listURL, meta );
         meta.addProperty( RDFS.comment, "Metadata describing the query and source for endpoint " + spec.getURITemplate() );
         return meta;
     }

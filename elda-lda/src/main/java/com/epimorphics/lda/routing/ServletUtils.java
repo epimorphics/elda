@@ -15,7 +15,7 @@ import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -55,7 +55,7 @@ public class ServletUtils {
 			.replaceAll( "\\{file\\}", "/" + new File(filePath).getName().replace( ".ttl", "" ) )
 			.replaceAll( "\\{api\\}", "/" + root.getLocalName() )
 			;
-		root.addProperty( EXTRAS.uriTemplatePrefix, prefix );
+		root.addProperty( ELDA_API.uriTemplatePrefix, prefix );
 	}
 
 	public static void addLoadedFrom( Model m, String name ) {
@@ -65,7 +65,7 @@ public class ServletUtils {
 			.mapWith(Statement.Util.getSubject)
 			.toList()
 			;
-		for (Resource api: apis) toAdd.add( m.createStatement( api, EXTRAS.loadedFrom, name ) );
+		for (Resource api: apis) toAdd.add( m.createStatement( api, ELDA_API.loadedFrom, name ) );
 		m.add( toAdd );
 	}
 

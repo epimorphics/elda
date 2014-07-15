@@ -20,7 +20,7 @@ import com.epimorphics.lda.specmanager.SpecEntry;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.*;
@@ -58,7 +58,7 @@ public class ComposeConfigDisplay {
 			textBody.append( "<h2>" + label + " <a href='javascript:toggle(\"" + w.idFor(shortName) + "\")'>show/hide</a></h2>" );
 			textBody.append( "<div id='" + w.idFor(shortName) + "' class='" + (showThis ? "show" : "hide") + "'>\n" );
 		//
-			Statement lf = root.getProperty( EXTRAS.loadedFrom );
+			Statement lf = root.getProperty( ELDA_API.loadedFrom );
 			if (lf != null) textBody
 				.append( "<div>\n<b>loaded from</b> " )
 				.append( safe( lf.getObject().toString() ) )
@@ -66,10 +66,10 @@ public class ComposeConfigDisplay {
 				;
 	    //  
 			renderComments( textBody, root );
-	        Statement ep = root.getProperty( API.sparqlEndpoint );
 	        
 	        // SUPPRESS for now -- issue about escaping endpoint.
 	        
+//			Statement ep = root.getProperty( API.sparqlEndpoint );
 //	        h3( textBody, "SPARQL endpoint for queries" );
 //	        textBody
 //	            .append( "<div style='margin-left: 2ex; background-color: #dddddd'>" )

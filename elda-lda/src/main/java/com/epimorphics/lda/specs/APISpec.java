@@ -33,7 +33,7 @@ import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -110,29 +110,29 @@ public class APISpec {
     	this.specificationURI = specification.getURI();
     	this.defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
 		this.maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
-        this.describeThreshold = RDFUtils.getIntValue( specification, EXTRAS.describeThreshold, DEFAULT_DESCRIBE_THRESHOLD );
+        this.describeThreshold = RDFUtils.getIntValue( specification, ELDA_API.describeThreshold, DEFAULT_DESCRIBE_THRESHOLD );
 		this.prefixes = ExtractPrefixMapping.from(specification);
         this.sns = loadShortnames(specification, loader);
         this.dataSource = GetDataSource.sourceFromSpec( fm, specification, am );
         this.textSearchConfig = dataSource.getTextSearchConfig().overlay(specification);
         this.describeSources = extractDescribeSources( fm, am, specification, dataSource );
         this.primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
-        this.graphTemplate = getStringValue(specification, EXTRAS.graphTemplate, null);
+        this.graphTemplate = getStringValue(specification, ELDA_API.graphTemplate, null);
         this.defaultLanguage = getStringValue(specification, API.lang, null);
         this.base = getStringValue( specification, API.base, null );
         this.bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
         this.factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
         this.hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
-		this.cachePolicyName = getStringValue( specification, EXTRAS.cachePolicyName, "default" );
-		this.cacheExpiryMilliseconds = PropertyExpiryTimes.getSecondsValue( specification, EXTRAS.cacheExpiryTime, -1) * 1000;
-        this.enableCounting = RDFUtils.getOptionalBooleanValue( specification, EXTRAS.enableCounting, Boolean.FALSE );        
+		this.cachePolicyName = getStringValue( specification, ELDA_API.cachePolicyName, "default" );
+		this.cacheExpiryMilliseconds = PropertyExpiryTimes.getSecondsValue( specification, ELDA_API.cacheExpiryTime, -1) * 1000;
+        this.enableCounting = RDFUtils.getOptionalBooleanValue( specification, ELDA_API.enableCounting, Boolean.FALSE );        
 		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( specification.getModel() );
         extractEndpointSpecifications( specification );
         extractModelPrefixEditor( specification );
     }
 
 	private void extractModelPrefixEditor(Resource specification) {
-		StmtIterator eps = specification.listProperties( EXTRAS.rewriteResultURIs );
+		StmtIterator eps = specification.listProperties( ELDA_API.rewriteResultURIs );
 		while (eps.hasNext()) extractSingleModelprefixFromTo( eps.next() );
 	}
 
@@ -141,9 +141,9 @@ public class APISpec {
 		if (s.getObject().isLiteral())
 			throw new EldaException( "Object of editPrefix property of " + S + " is a literal." );
 		Resource edit = s.getResource();
-		String from = getStringValue( edit, EXTRAS.ifStarts );
+		String from = getStringValue( edit, ELDA_API.ifStarts );
 		if (from == null) throw new EldaException( "Missing from for " + S );
-		String to = getStringValue( edit, EXTRAS.replaceStartBy );
+		String to = getStringValue( edit, ELDA_API.replaceStartBy );
 		if (to == null) throw new EldaException( "Missing elda:to for " + S );
 		modelPrefixEditor.set(from, to);
 	}
@@ -159,7 +159,7 @@ public class APISpec {
     private List<Source> extractDescribeSources( FileManager fm, AuthMap am, Resource specification, Source dataSource ) {
         List<Source> result = new ArrayList<Source>();
         result.add( dataSource );
-        result.addAll( specification.listProperties( EXTRAS.enhanceViewWith ).mapWith( toSource( fm, am ) ).toList() ); 
+        result.addAll( specification.listProperties( ELDA_API.enhanceViewWith ).mapWith( toSource( fm, am ) ).toList() ); 
         return result;
     }
 

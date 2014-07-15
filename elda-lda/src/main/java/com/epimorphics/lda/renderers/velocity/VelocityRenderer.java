@@ -13,7 +13,7 @@ import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -32,7 +32,7 @@ public class VelocityRenderer implements Renderer {
 	public VelocityRenderer( MediaType mt, Bindings b, Resource config ) {
 		this.mt = mt;
 		this.suffix = RDFUtils.getStringValue( config, API.name, "html" );
-		this.templateName = RDFUtils.getStringValue( config, EXTRAS.velocityTemplate, "page-shell.vm" );
+		this.templateName = RDFUtils.getStringValue( config, ELDA_API.velocityTemplate, "page-shell.vm" );
 		this.metadataOptions = getMetadataOptions( config );
 		this.config = config;
 	}

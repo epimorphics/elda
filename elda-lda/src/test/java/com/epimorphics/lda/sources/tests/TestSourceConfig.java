@@ -9,7 +9,7 @@ import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.sources.*;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.test.JenaTestBase;
 import com.hp.hpl.jena.util.FileManager;
@@ -47,7 +47,7 @@ public class TestSourceConfig {
 		Resource endpoint = model.createResource( "eh:/sparql" );
 		config.addProperty( API.sparqlEndpoint, endpoint );
 		Property textQuery = model.createProperty( "eh:/textQuery" );
-		endpoint.addProperty( EXTRAS.textQueryProperty, textQuery );
+		endpoint.addProperty( ELDA_API.textQueryProperty, textQuery );
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
 		TextSearchConfig tsc = s.getTextSearchConfig();
 		assertEquals( textQuery, tsc.getTextQueryProperty() );
@@ -68,7 +68,7 @@ public class TestSourceConfig {
 		Resource config = model.createResource( "eh:/spec" );
 		Resource endpoint = model.createResource( "eh:/sparql" );
 		Property textContent = model.createProperty( "eh:/textContent" );
-		endpoint.addProperty( EXTRAS.textContentProperty, textContent );
+		endpoint.addProperty( ELDA_API.textContentProperty, textContent );
 		config.addProperty( API.sparqlEndpoint, endpoint );
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
 		TextSearchConfig tsc = s.getTextSearchConfig();
@@ -87,7 +87,7 @@ public class TestSourceConfig {
 	//
 		Resource operand = model.createList( new RDFNode[] {a, b, c} );
 	//
-		endpoint.addProperty( EXTRAS.textSearchOperand, operand );		
+		endpoint.addProperty( ELDA_API.textSearchOperand, operand );		
 		config.addProperty( API.sparqlEndpoint, endpoint );
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
 	//
