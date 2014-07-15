@@ -10,3 +10,5 @@ target/
 .metadata
 .tomcatplugin
 .#webclasspath
+elda-standalone/meta-graph.ttl
+elda-standalone/object-graph.ttl

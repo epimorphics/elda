@@ -13,11 +13,12 @@ package com.epimorphics.lda.renderers.common;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.OpenSearch;
+import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.DCTerms;
 
 /**
  * Value object representing the page of results returned by Elda's query
@@ -92,6 +93,56 @@ public class Page extends RDFNodeWrapper
      */
     public int startIndex() {
         return getInt( OpenSearch.startIndex, NO_VALUE );
+    }
+
+    /**
+     * @return The list that this page is part of
+     */
+    public Resource isPartOf() {
+        return getResource( DCTerms.isPartOf );
+    }
+
+    /**
+     * @return A resource denoting the API endpoint specification.
+     */
+    public Resource definition() {
+        return getResource( API.definition );
+    }
+
+    /**
+     * @return The URL for the extended metadata for this page
+     */
+    public String extendedMetadataURL() {
+        com.epimorphics.rdfutil.RDFNodeWrapper nw = getPropertyValue( API.extendedMetadataVersion );
+        return (nw == null) ? null : nw.getLexicalForm();
+    }
+
+    /**
+     * @return The resource denoting the first page of results, or null
+     */
+    public Resource firstPage() {
+        return getResource( XHV.first );
+    }
+
+    /**
+     * @return The resource denoting the previous page of results, or null
+     */
+    public Resource prevPage() {
+        return getResource( XHV.prev );
+    }
+
+    /**
+     * @return The resource denoting the next page of results, or null
+     */
+    public Resource nextPage() {
+        return getResource( XHV.next );
+    }
+
+    /**
+     * @return The resource denoting the last page of results, or null
+     */
+    public Resource lastPage() {
+        return getResource( ResourceFactory.createProperty( XHV.ns + "last" ) );
     }
 
     /***********************************/

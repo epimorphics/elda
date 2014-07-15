@@ -77,6 +77,26 @@ public class RDFNodeWrapper extends com.epimorphics.rdfutil.RDFNodeWrapper
         return v;
     }
 
+    /**
+     * Return the resource value of the given property, or null.
+     * @param p A property, specified as a property object, URI or curie
+     * @return The value of a <code>p</code> property of this node if it is a resource.
+     * If this node is not a resource, or does not have at least one <code>p</code>
+     * property, return null
+     */
+    public Resource getResource( Object p ) {
+        Resource r = null;
+
+        if (isResource()) {
+            com.epimorphics.rdfutil.RDFNodeWrapper n = getPropertyValue( p );
+            if (n != null && n.isResource()) {
+                r = n.asResource();
+            }
+        }
+
+        return r;
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

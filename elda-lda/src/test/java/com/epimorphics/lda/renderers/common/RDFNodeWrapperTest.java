@@ -19,8 +19,7 @@ import com.epimorphics.rdfutil.DatasetWrapper;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 
 /**
  * Unit tests for {@link RDFNodeWrapper}
@@ -40,7 +39,8 @@ public class RDFNodeWrapperTest
     static final Model testModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES +
             "@prefix example: <http://example/foo#>. " +
             "example:foo example:p \"42\"^^xsd:int; " +
-            "            example:q \"42\"^^xsd:string."
+            "            example:q \"42\"^^xsd:string;" +
+            "            example:r example:bar."
             );
 
     /***********************************/
@@ -76,6 +76,29 @@ public class RDFNodeWrapperTest
 
         // value is not an int
         assertEquals( -111, n.getInt( "example:q", -111 ));
+    }
+
+    @Test
+    public void testGetResource() {
+        String ns = "http://example/foo#";
+        ModelWrapper mw = modelWrapperFixture();
+        Resource foo = mw.getModel().getResource( ns + "foo" );
+        RDFNodeWrapper n = new RDFNodeWrapper( mw, foo );
+
+        // various ways of specifying p
+        assertEquals( ResourceFactory.createResource( ns + "bar" ), n.getResource( mw.getModel().getProperty( ns+"r" ) ) );
+        assertEquals( ResourceFactory.createResource( ns + "bar" ), n.getResource( ns+"r" ) );
+        assertEquals( ResourceFactory.createResource( ns + "bar" ), n.getResource( "example:r" ) );
+
+        // missing property
+        assertNull( n.getResource( "example:not-here" ) );
+
+        // node is not a resource
+        RDFNodeWrapper l = new RDFNodeWrapper( mw, mw.getModel().createLiteral( "kermit" ) );
+        assertNull( l.getResource( "example:p" ) );
+
+        // value is not a resource
+        assertNull( n.getResource( "example:p" ));
     }
 
     /***********************************/

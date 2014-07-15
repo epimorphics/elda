@@ -46,7 +46,9 @@ public class Fixtures
             "@prefix api:   <http://purl.org/linked-data/api/vocab#> .\n" +
             "@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
             "@prefix xhv:   <http://www.w3.org/1999/xhtml/vocab#> .\n" +
-            "@prefix doap:  <http://usefulinc.com/ns/doap#> .";
+            "@prefix doap:  <http://usefulinc.com/ns/doap#> .\n" +
+            "@prefix hello: <http://epimorphics.com/public/vocabulary/games.ttl#> .\n" +
+            "";
 
     /** A page of bathing water results */
     public static final String PAGE_BWQ =
@@ -332,28 +334,213 @@ public class Fixtures
             "        hello:pubYear      2009 .\n" +
             "";
 
-    public static final String PAGE_METADATA_GAMES = "<http://localhost:8080/standalone/hello/games.vhtml>\n" +
-            "        a       <http://purl.org/linked-data/api/vocab#ListEndpoint> , <http://purl.org/linked-data/api/vocab#Page> ;\n" +
+    public static final String PAGE_METADATA_GAMES = "@prefix hello: <http://epimorphics.com/public/vocabulary/games.ttl#> .\n" +
+            "@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n" +
+            "@prefix elda:  <http://www.epimorphics.com/vocabularies/lda#> .\n" +
+            "@prefix dct:   <http://purl.org/dc/terms/> .\n" +
+            "@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .\n" +
+            "@prefix api:   <http://purl.org/linked-data/api/vocab#> .\n" +
+            "@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/hello/games.rdf?_metadata=all>\n" +
+            "        rdfs:label      \"rdf\" ;\n" +
+            "        dct:format      [ rdfs:label  \"application/rdf+xml\" ] ;\n" +
+            "        dct:isFormatOf  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/hello/games.xml?_metadata=all>\n" +
+            "        rdfs:label      \"xml\" ;\n" +
+            "        dct:format      [ rdfs:label  \"application/xml\" ] ;\n" +
+            "        dct:isFormatOf  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/hello/games.vhtml?_view=description&_metadata=all&_page=0>\n" +
+            "        rdfs:label       \"description\" ;\n" +
+            "        dct:isVersionOf  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> ;\n" +
+            "        elda:viewName    \"description\" .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/hello/games.html?_metadata=all>\n" +
+            "        rdfs:label      \"html\" ;\n" +
+            "        dct:format      [ rdfs:label  \"text/html\" ] ;\n" +
+            "        dct:isFormatOf  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/hello/games.json?_metadata=all>\n" +
+            "        rdfs:label      \"json\" ;\n" +
+            "        dct:format      [ rdfs:label  \"application/json\" ] ;\n" +
+            "        dct:isFormatOf  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/hello/games.vhtml?_view=basic&_metadata=all&_page=0>\n" +
+            "        rdfs:label       \"basic\" ;\n" +
+            "        dct:isVersionOf  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> ;\n" +
+            "        api:properties   \"type\" , \"label\" ;\n" +
+            "        elda:viewName    \"basic\" .\n" +
+            "\n" +
+            "<https://elda.googlecode.com/hg/>\n" +
+            "        a       <http://usefulinc.com/ns/doap#Repository> ;\n" +
+            "        <http://usefulinc.com/ns/doap#browse>\n" +
+            "                <http://code.google.com/p/elda/source/browse/> ;\n" +
+            "        <http://usefulinc.com/ns/doap#location>\n" +
+            "                <https://elda.googlecode.com> .\n" +
+            "\n" +
+            "elda:Elda_1.2.35-SNAPSHOT\n" +
+            "        a           <http://usefulinc.com/ns/doap#Version> ;\n" +
+            "        rdfs:label  \"Elda 1.2.35-SNAPSHOT\" ;\n" +
+            "        <http://usefulinc.com/ns/doap#releaseOf>\n" +
+            "                [ rdfs:label  \"Elda\" ;\n" +
+            "                  <http://usefulinc.com/ns/doap#bug-database>\n" +
+            "                          <http://code.google.com/p/elda/issues/list> ;\n" +
+            "                  <http://usefulinc.com/ns/doap#homepage>\n" +
+            "                          <http://elda.googlecode.com> ;\n" +
+            "                  <http://usefulinc.com/ns/doap#implements>\n" +
+            "                          \"http://code.google.com/p/linked-data-api/wiki/Specification\" ;\n" +
+            "                  <http://usefulinc.com/ns/doap#programming-language>\n" +
+            "                          \"Java\" ;\n" +
+            "                  <http://usefulinc.com/ns/doap#repository>\n" +
+            "                          <https://elda.googlecode.com/hg/> ;\n" +
+            "                  <http://usefulinc.com/ns/doap#wiki>\n" +
+            "                          <http://code.google.com/p/elda/w/list>\n" +
+            "                ] ;\n" +
+            "        <http://usefulinc.com/ns/doap#revision>\n" +
+            "                \"1.2.35-SNAPSHOT\" .\n" +
+            "\n" +
+            "_:b0    a                   <http://www.w3.org/ns/sparql-service-description#Service> ;\n" +
+            "        api:sparqlEndpoint  <local:data/example-data.ttl> ;\n" +
+            "        <http://www.w3.org/ns/sparql-service-description#url>\n" +
+            "                <local:data/example-data.ttl> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/hello/games.atom?_metadata=all>\n" +
+            "        rdfs:label      \"atom\" ;\n" +
+            "        dct:format      [ rdfs:label  \"application/atom+xml\" ] ;\n" +
+            "        dct:isFormatOf  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/hello/games.text?_metadata=all>\n" +
+            "        rdfs:label      \"text\" ;\n" +
+            "        dct:format      [ rdfs:label  \"text/plain\" ] ;\n" +
+            "        dct:isFormatOf  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/hello/games.ttl?_metadata=all>\n" +
+            "        rdfs:label      \"ttl\" ;\n" +
+            "        dct:format      [ rdfs:label  \"text/turtle\" ] ;\n" +
+            "        dct:isFormatOf  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/hello/games.vhtml?_metadata=all>\n" +
+            "        a                            api:Page , api:ListEndpoint ;\n" +
+            "        rdfs:label                   \"vhtml\" ;\n" +
             "        <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>\n" +
-            "                \"10\"^^<http://www.w3.org/2001/XMLSchema#long> ;\n" +
+            "                \"10\"^^xsd:long ;\n" +
             "        <http://a9.com/-/spec/opensearch/1.1/startIndex>\n" +
-            "                \"1\"^^<http://www.w3.org/2001/XMLSchema#long> ;\n" +
-            "        <http://purl.org/dc/terms/hasPart>\n" +
-            "                <http://localhost:8080/standalone/hello/games.vhtml> ;\n" +
-            "        <http://purl.org/dc/terms/isPartOf>\n" +
-            "                <http://localhost:8080/standalone/hello/games.vhtml> ;\n" +
-            "        <http://purl.org/linked-data/api/vocab#definition>\n" +
-            "                <http://localhost:8080/standalone/hello/meta/games.vhtml> ;\n" +
-            "        <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>\n" +
-            "                <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> ;\n" +
-            "        <http://purl.org/linked-data/api/vocab#items>\n" +
-            "                ( <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> <http://www.treefroggames.com/a-few-acres-of-snow-2> <http://www.treefroggames.com/age-of-industry> <http://www.treefroggames.com/age-of-steam> <http://www.ragnarbrothers.co.uk/html/canal_mania.html> <http://www.hans-im-glueck.de/el-grande> <http://www.aleaspiele.de/Pages/C6/> <http://queen-games.de/games.aspx?ProductId=45> <http://boardgamegeek.com/boardgame/96913/lancaster> <http://www.treefroggames.com/last-train-to-wensleydale> ) ;\n" +
-            "        <http://purl.org/linked-data/api/vocab#page>\n" +
-            "                \"0\"^^<http://www.w3.org/2001/XMLSchema#long> ;\n" +
+            "                \"1\"^^xsd:long ;\n" +
+            "        dct:format                   [ rdfs:label\n" +
+            "                          \"text/html\" ] ;\n" +
+            "        dct:hasFormat                <http://localhost:8080/standalone/hello/games.ttl?_metadata=all> , <http://localhost:8080/standalone/hello/games.rdf?_metadata=all> , <http://localhost:8080/standalone/hello/games.html?_metadata=all> , <http://localhost:8080/standalone/hello/games.atom?_metadata=all> , <http://localhost:8080/standalone/hello/games.text?_metadata=all> , <http://localhost:8080/standalone/hello/games.json?_metadata=all> , <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> , <http://localhost:8080/standalone/hello/games.xml?_metadata=all> ;\n" +
+            "        dct:hasPart                  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> ;\n" +
+            "        dct:hasVersion               <http://localhost:8080/standalone/hello/games.vhtml?_view=basic&_metadata=all&_page=0> , <http://localhost:8080/standalone/hello/games.vhtml?_view=all&_metadata=all&_page=0> , <http://localhost:8080/standalone/hello/games.vhtml?_view=description&_metadata=all&_page=0> ;\n" +
+            "        dct:isFormatOf               <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> ;\n" +
+            "        dct:isPartOf                 <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> ;\n" +
+            "        api:definition               <http://localhost:8080/standalone/hello/meta/games.vhtml?_metadata=all> ;\n" +
+            "        api:extendedMetadataVersion  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> ;\n" +
+            "        api:items                    ( <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> <http://www.treefroggames.com/a-few-acres-of-snow-2> <http://www.treefroggames.com/age-of-industry> <http://www.treefroggames.com/age-of-steam> <http://www.ragnarbrothers.co.uk/html/canal_mania.html> <http://www.hans-im-glueck.de/el-grande> <http://www.aleaspiele.de/Pages/C6/> <http://queen-games.de/games.aspx?ProductId=45> <http://boardgamegeek.com/boardgame/96913/lancaster> <http://www.treefroggames.com/last-train-to-wensleydale> ) ;\n" +
+            "        api:page                     \"0\"^^xsd:long ;\n" +
+            "        api:wasResultOf              [ a                    api:Execution ;\n" +
+            "                                       api:processor        [ a       api:Service ;\n" +
+            "                                                              <http://purl.org/net/opmv/types/common#software>\n" +
+            "                                                                      elda:Elda_1.2.35-SNAPSHOT\n" +
+            "                                                            ] ;\n" +
+            "                                       api:selectionResult  [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;\n" +
+            "                                                              <http://purl.org/net/opmv/types/sparql#endpoint>\n" +
+            "                                                                      _:b0 ;\n" +
+            "                                                              <http://purl.org/net/opmv/types/sparql#query>\n" +
+            "                                                                      [ rdf:value  \"PREFIX hello: <http://epimorphics.com/public/vocabulary/games.ttl#>\\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\\nSELECT DISTINCT ?item\\nWHERE {\\n?item rdf:type hello:BoardGame .\\nOPTIONAL { ?item rdfs:label ?___0 . }\\n}  ORDER BY  ?___0  ?item OFFSET 0 LIMIT 10\" ]\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"BoardGame\" ;\n" +
+            "                                                              api:property  hello:BoardGame\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"isPartOf\" ;\n" +
+            "                                                              api:property  dct:isPartOf\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"label\" ;\n" +
+            "                                                              api:property  rdfs:label\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"type\" ;\n" +
+            "                                                              api:property  rdf:type\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"playTimeMinutes\" ;\n" +
+            "                                                              api:property  hello:playTimeMinutes\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"page\" ;\n" +
+            "                                                              api:property  api:page\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"definition\" ;\n" +
+            "                                                              api:property  api:definition\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"itemsPerPage\" ;\n" +
+            "                                                              api:property  <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"first\" ;\n" +
+            "                                                              api:property  <http://www.w3.org/1999/xhtml/vocab#first>\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"publicationYear\" ;\n" +
+            "                                                              api:property  hello:pubYear\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"players\" ;\n" +
+            "                                                              api:property  hello:players\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"extendedMetadataVersion\" ;\n" +
+            "                                                              api:property  api:extendedMetadataVersion\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"startIndex\" ;\n" +
+            "                                                              api:property  <http://a9.com/-/spec/opensearch/1.1/startIndex>\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"next\" ;\n" +
+            "                                                              api:property  <http://www.w3.org/1999/xhtml/vocab#next>\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"hasPart\" ;\n" +
+            "                                                              api:property  dct:hasPart\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"designedBy\" ;\n" +
+            "                                                              api:property  hello:designed-by\n" +
+            "                                                            ] ;\n" +
+            "                                       api:termBinding      [ api:label     \"items\" ;\n" +
+            "                                                              api:property  api:items\n" +
+            "                                                            ] ;\n" +
+            "                                       api:variableBinding  [ api:label  \"_HOST\" ;\n" +
+            "                                                              api:value  \"localhost:8080\"\n" +
+            "                                                            ] ;\n" +
+            "                                       api:variableBinding  [ api:label  \"_properties\" ;\n" +
+            "                                                              api:value  \"\"\n" +
+            "                                                            ] ;\n" +
+            "                                       api:variableBinding  [ api:label  \"_view\" ;\n" +
+            "                                                              api:value  \"\"\n" +
+            "                                                            ] ;\n" +
+            "                                       api:variableBinding  [ api:label  \"_APP\" ;\n" +
+            "                                                              api:value  \"/standalone\"\n" +
+            "                                                            ] ;\n" +
+            "                                       api:variableBinding  [ api:label  \"_metadata\" ;\n" +
+            "                                                              api:value  \"all\"\n" +
+            "                                                            ] ;\n" +
+            "                                       api:variableBinding  [ api:label  \"_rootPath\" ;\n" +
+            "                                                              api:value  \"/standalone/hello\"\n" +
+            "                                                            ] ;\n" +
+            "                                       api:variableBinding  [ api:label  \"_page\" ;\n" +
+            "                                                              api:value  \"\"\n" +
+            "                                                            ] ;\n" +
+            "                                       api:variableBinding  [ api:label  \"_suffix\" ;\n" +
+            "                                                              api:value  \"vhtml\"\n" +
+            "                                                            ] ;\n" +
+            "                                       api:viewingResult    [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;\n" +
+            "                                                              <http://purl.org/net/opmv/types/sparql#endpoint>\n" +
+            "                                                                      _:b0 ;\n" +
+            "                                                              <http://purl.org/net/opmv/types/sparql#query>\n" +
+            "                                                                      [ rdf:value  \"DESCRIBE \\n  <http://www.ragnarbrothers.co.uk/html/canal_mania.html>\\n  <http://queen-games.de/games.aspx?ProductId=45>\\n  <http://www.treefroggames.com/a-few-acres-of-snow-2>\\n  <http://www.treefroggames.com/age-of-industry>\\n  <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html>\\n  <http://www.aleaspiele.de/Pages/C6/>\\n  <http://www.treefroggames.com/last-train-to-wensleydale>\\n  <http://www.treefroggames.com/age-of-steam>\\n  <http://boardgamegeek.com/boardgame/96913/lancaster>\\n  <http://www.hans-im-glueck.de/el-grande>\" ]\n" +
+            "                                                            ]\n" +
+            "                                     ] ;\n" +
             "        <http://www.w3.org/1999/xhtml/vocab#first>\n" +
-            "                <http://localhost:8080/standalone/hello/games.vhtml?_page=0> ;\n" +
+            "                <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all&_page=0> ;\n" +
             "        <http://www.w3.org/1999/xhtml/vocab#next>\n" +
-            "                <http://localhost:8080/standalone/hello/games.vhtml?_page=1> .\n" +
+            "                <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all&_page=1> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/hello/games.vhtml?_view=all&_metadata=all&_page=0>\n" +
+            "        rdfs:label       \"all\" ;\n" +
+            "        dct:isVersionOf  <http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> ;\n" +
+            "        elda:viewName    \"all\" .\n" +
             "";
 
     /***********************************/

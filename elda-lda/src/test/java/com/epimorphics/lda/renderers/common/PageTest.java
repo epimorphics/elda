@@ -19,8 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.*;
 
 /**
  * Unit tests for {@link Page}
@@ -40,7 +39,7 @@ public class PageTest
     @SuppressWarnings( value = "unused" )
     private static final Logger log = LoggerFactory.getLogger( PageTest.class );
 
-    static final Model apiMetadataModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_METADATA_GAMES );
+    static final Model apiMetadataModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES + Fixtures.PAGE_METADATA_GAMES );
     static final Model apiObjectModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_OBJECT_GAMES );
     static final Model apiResultsModel = ModelFactory.createUnion( apiMetadataModel, apiObjectModel );
 
@@ -94,6 +93,33 @@ public class PageTest
     public void testStartIndex() {
         assertEquals( 1, page.startIndex() );
     }
+
+    @Test
+    public void testIsPartOf() {
+        assertEquals( ResourceFactory.createResource( "http://localhost:8080/standalone/hello/games.vhtml?_metadata=all" ), page.isPartOf() );
+    }
+
+    @Test
+    public void testDefinition() {
+        // TODO test disabled until https://github.com/epimorphics/elda/issues/72 is resolved
+        // assertEquals( ResourceFactory.createResource( "http://localhost:8080/standalone/hello/meta/games.vhtml" ), page.definition() );
+    }
+
+    @Test
+    public void testExtendedMetadataURL() {
+        assertEquals( "http://localhost:8080/standalone/hello/games.vhtml?_metadata=all", page.extendedMetadataURL() );
+    }
+
+    @Test
+    public void testPageLinks() {
+        assertEquals( ResourceFactory.createResource( "http://localhost:8080/standalone/hello/games.vhtml?_metadata=all&_page=0" ),
+                page.firstPage() );
+        assertEquals( ResourceFactory.createResource( "http://localhost:8080/standalone/hello/games.vhtml?_metadata=all&_page=1" ),
+                page.nextPage() );
+        assertNull( page.prevPage() );
+        assertNull( page.lastPage() );
+    }
+
 
     /***********************************/
     /* Internal implementation methods */
