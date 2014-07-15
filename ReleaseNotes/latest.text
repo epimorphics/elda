@@ -1,6 +1,31 @@
 +-----------------------------------------------------------------------
 | Elda 1.2.35 (DEVELOPING)
 
+1.2.35 is a cleanup release following 1.2.34 with one bugfix
+for Window's users using the Saxon toolkit.
+
+* Elda is now built over JDK1.7 and a rather more recent version of
+  Jena, with dependent jars updated to match.
+
+* 1.2.34's switch to Saxon exposed an error: under Windows, an XSLT
+  stylesheet that imported another one would fail to locate it.
+  This was traced to RouterRestlet's pathAsURLFactory which did
+  string-bashing to compute file: URLs. This has been replaced
+  by File.toURI.toURL operations.
+
+[internal]
+* the vocabulary class EXTRAS has been deprecated and superceeded by 
+  ELDA_API. The latter extends API so that both standard LDA properties
+  (and classes) and Elda extensions can be accessed using just one
+  imported vocabulary class. The ontology file vocabs/extras.ttl
+  has been renamed to elda_api.ttl.
+
+* Various compilation warnings, mostly about variables not being
+  declared or methods not called, have been fixed. 
+
+* Some incomplete/missing tests have been spotted and fixed/written.
+
+* Unused incomplete class DivertFilesFilter has been removed.
 
 +-----------------------------------------------------------------------
 | Elda 1.2.34 (RELEASED)
