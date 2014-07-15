@@ -117,6 +117,26 @@ public class RouterRestletSupport {
 		int count = result.countTemplates();
 		return count == 0  ? RouterFactory.getDefaultRouter() : result;
 	}
+	
+	/**
+	    Return a NamesAndValues which wraps the init parameters of this Loader
+	    servlet.
+	*/
+	public NamesAndValues wrapParameters(final ServletContext con) {
+		return new AuthMap.NamesAndValues() {
+	
+			@Override public String getParameter(String name) {
+				return con.getInitParameter( name );
+			}
+	
+			@Override public List<String> getParameterNames() {
+				List<String> result = new ArrayList<String>();
+				@SuppressWarnings("unchecked") Enumeration<String> names = con.getInitParameterNames();
+				while (names.hasMoreElements()) result.add( names.nextElement() );
+				return result;
+			}
+	    };
+	}
 
 	/**
 	    Add the baseFilePath to the FileManager singleton. Only do it
