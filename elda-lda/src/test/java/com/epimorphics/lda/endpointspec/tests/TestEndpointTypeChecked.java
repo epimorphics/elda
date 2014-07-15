@@ -10,7 +10,6 @@ package com.epimorphics.lda.endpointspec.tests;
 
 import static org.junit.Assert.fail;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
@@ -29,7 +28,7 @@ public class TestEndpointTypeChecked
 	Resource s = spec.getResource( spec.expandPrefix( ":s" ) );
 	Resource e = spec.getResource( spec.expandPrefix( ":e" ) );
 	
-	@Test @Ignore public void spoo()
+	@Test public void testThrowsExceptionIfNotListOrItemTypeEndpoint()
 		{
 		try 
 			{ 
