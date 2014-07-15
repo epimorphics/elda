@@ -1,3 +1,11 @@
+/*
+    See lda-top/LICENCE (or https://raw.github.com/epimorphics/elda/master/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011, 2014 Epimorphics Limited
+    $Id$
+*/
+
 package com.epimorphics.lda.shortnames;
 
 import java.util.*;
@@ -108,8 +116,8 @@ public class BuiltIn {
 		magic.add( DCTerms.isFormatOf );
 		magic.add( DCTerms.isPartOf );
 		magic.add( DCTerms.isVersionOf );
-		magic.add( EXTRAS.listURL );
-		magic.add( EXTRAS.sparqlQuery );
+		magic.add( ELDA_API.listURL );
+		magic.add( ELDA_API.sparqlQuery );
 		magic.add( FOAF.isPrimaryTopicOf );
 		magic.add( FOAF.primaryTopic );
 		magic.add( OpenSearch.itemsPerPage );

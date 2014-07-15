@@ -1,3 +1,11 @@
+/*
+    See lda-top/LICENCE (or https://raw.github.com/epimorphics/elda/master/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2011, 2014 Epimorphics Limited
+    $Id$
+*/
+
 package com.epimorphics.lda.shortnames;
 
 import static com.hp.hpl.jena.rdf.model.impl.Util.splitNamespace;
@@ -6,7 +14,7 @@ import java.util.*;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.NameUtils;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
@@ -27,13 +35,13 @@ public class CompleteContext {
 		
 		public static Mode decode( Resource root, Mode defaultMode ) {
 			if (root == null) return defaultMode;
-			Statement s = root.getProperty( EXTRAS.shortnameMode );
+			Statement s = root.getProperty( ELDA_API.shortnameMode );
 			if (s == null) return defaultMode;
 			Resource mode = s.getResource();
 			return
-				mode.equals(EXTRAS.preferPrefixes) ? CompleteContext.Mode.PreferPrefixes
-				: mode.equals(EXTRAS.preferLocalnames) ? CompleteContext.Mode.PreferLocalnames
-				: mode.equals(EXTRAS.roundTrip) ? CompleteContext.Mode.RoundTrip
+				mode.equals(ELDA_API.preferPrefixes) ? CompleteContext.Mode.PreferPrefixes
+				: mode.equals(ELDA_API.preferLocalnames) ? CompleteContext.Mode.PreferLocalnames
+				: mode.equals(ELDA_API.roundTrip) ? CompleteContext.Mode.RoundTrip
 				: defaultMode
 				;
 		}

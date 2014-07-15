@@ -25,7 +25,7 @@ import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.util.Util;
 import com.hp.hpl.jena.rdf.model.*;
@@ -198,8 +198,8 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
                                                  ; // .andThen(view.listProperties(API.uri));
             while (si.hasNext()) {
                 String uri = RDFUtils.getLexicalForm(si.next().getObject());
-                toadd.add( spec.createStatement(view, EXTRAS.listURL, spec.createResource(baseURI + "api" + uri)));
-                toadd.add( spec.createStatement(view, EXTRAS.metaURL, spec.createResource(baseURI + "meta" + uri)));
+                toadd.add( spec.createStatement(view, ELDA_API.listURL, spec.createResource(baseURI + "api" + uri)));
+                toadd.add( spec.createStatement(view, ELDA_API.metaURL, spec.createResource(baseURI + "meta" + uri)));
             }
         }
         spec.add(toadd);

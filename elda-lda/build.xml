@@ -15,9 +15,9 @@
 		/>
 
 		<uptodate 
-			property="schemagen_extras_UpToDate"
-			srcfile="${basedir}/../vocabs/extras.ttl"
-			targetfile="${src}/main/java/com/epimorphics/lda/vocabularies/EXTRAS.java"
+			property="schemagen_elda_api_UpToDate"
+			srcfile="${basedir}/../vocabs/elda_api.ttl"
+			targetfile="${src}/main/java/com/epimorphics/lda/vocabularies/ELDA_API.java"
 		/>
 	</target>
 
@@ -28,6 +28,7 @@
 			<arg value="-o" /> <arg value="${src}/main/java/" />
 			<arg value="--package" /> <arg value="com.epimorphics.lda.vocabularies" />
 			<arg value="-n" /> <arg value="${CLASSNAME}" />
+			<arg value="--classdec" /> <arg value="${CLASSDEC}" />
 			<arg value="--inference" />
 		</java>
 		<echo>schemagen ${CLASSNAME} completed</echo>
@@ -37,19 +38,21 @@
         <antcall target="schemagen_command">
             <param name="what" value="api"/>
         	<param name="namespace" value="http://purl.org/linked-data/api/vocab#" />
-            <param name="CLASSNAME" value="API"/>
+			<param name="CLASSNAME" value="API"/>
+			<param name="CLASSDEC" value="" />
         </antcall>  
     </target>
 
-	<target name="schemagen_EXTRAS">
+	<target name="schemagen_ELDA_API">
 		<antcall target="schemagen_command">
-			<param name="what" value="extras"/>
+			<param name="what" value="elda_api"/>
             <param name="namespace" value="http://www.epimorphics.com/vocabularies/lda#" />
-			<param name="CLASSNAME" value="EXTRAS"/>
+			<param name="CLASSNAME" value="ELDA_API" />
+			<param name="CLASSDEC" value=" extends API " />
 		</antcall>	
 	</target>
 	
-	<target name="schemagen" depends="schemagen_API,schemagen_EXTRAS">
+	<target name="schemagen" depends="schemagen_API,schemagen_ELDA_API">
 	</target>
 	
 </project>

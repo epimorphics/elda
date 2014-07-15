@@ -119,7 +119,7 @@ public class Help {
 	}
 	
 	public static String viewNameFor( Resource r ) {
-		Statement s = r.getProperty(EXTRAS.viewName);
+		Statement s = r.getProperty(ELDA_API.viewName);
 		return s == null ? r.getLocalName() : s.getObject().toString();
 	}
 	

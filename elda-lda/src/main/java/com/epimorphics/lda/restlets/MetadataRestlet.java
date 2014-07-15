@@ -26,7 +26,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.restlets.ControlRestlet.SpecRecord;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.util.ResourceUtils;
@@ -111,7 +111,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
         }
     }
 
-    static final Property SIBLING = ResourceFactory.createProperty( EXTRAS.NS + "SIBLING" );
+    static final Property SIBLING = ResourceFactory.createProperty( ELDA_API.NS + "SIBLING" );
     
     private Resource createMetadata(UriInfo ui, String pathStub, String formatName, SpecRecord rec) {
         Bindings cc = Bindings.createContext( Bindings.uplift( rec.getBindings() ), JerseyUtils.convert( ui.getQueryParameters() ) );

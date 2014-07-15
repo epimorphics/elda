@@ -171,7 +171,7 @@ public class EndpointMetadata {
 				v.addProperty( DCTerms.isVersionOf, page );
 				v.addProperty( RDFS.label, viewName );
 			//
-				v.addProperty( EXTRAS.viewName, viewName );
+				v.addProperty( ELDA_API.viewName, viewName );
 				for (PropertyChain pc: e.getValue().chains ) {
 					v.addProperty( API.properties, chainsFor( uriToShortname, pc ) );
 				}

@@ -99,7 +99,7 @@ public class FeedRenderer implements Renderer {
 	    (dct:modified). 
 	*/
 	public List<Property> getDateProperties(Resource config) {
-		List<Property> result = getPropertyList(config, EXTRAS.feedDateProperties);
+		List<Property> result = getPropertyList(config, ELDA_API.feedDateProperties);
 		if (result.isEmpty()) {
 			result.add( DCTerms.modified );
 			result.add( DCTerms.date );
@@ -111,17 +111,17 @@ public class FeedRenderer implements Renderer {
 	}
 
 	public List<Property> getRightsProperties() {
-		List<Property> result = getPropertyList(config, EXTRAS.feedRightsProperties);
+		List<Property> result = getPropertyList(config, ELDA_API.feedRightsProperties);
 		if (result.isEmpty()) result.add( DCTerms.rights );
 		return result;
 	}
 	
 	public List<RDFNode> getAuthors() {
-		return getNodeList(config, EXTRAS.feedAuthors);
+		return getNodeList(config, ELDA_API.feedAuthors);
 	}
 	
 	public List<Property> getAuthorProperties() {
-		List<Property> result = getPropertyList(config, EXTRAS.feedAuthorProperties);
+		List<Property> result = getPropertyList(config, ELDA_API.feedAuthorProperties);
 		if (result.isEmpty()) {
 			result.add( DCTerms.creator );
 			result.add( DCTerms.contributor );
@@ -134,7 +134,7 @@ public class FeedRenderer implements Renderer {
 	}
 	
 	private static String getRights( Resource config ) {
-		return RDFUtils.getStringValue( config,  EXTRAS.feedRights, null );
+		return RDFUtils.getStringValue( config,  ELDA_API.feedRights, null );
 	}
 
 	private List<Property> getPropertyList(Resource config, Property property) {
@@ -166,7 +166,7 @@ public class FeedRenderer implements Renderer {
 	    (api:label, skos:prefLabel, rdfs:label).
 	*/
 	public List<Property> getLabelProperties( Resource config ) {
-		List<Property> result = getPropertyList( config, EXTRAS.feedLabelProperties );
+		List<Property> result = getPropertyList( config, ELDA_API.feedLabelProperties );
 		if (result.isEmpty()) {
 			result.add( API.label );
 			result.add( SKOSstub.prefLabel );
@@ -344,7 +344,7 @@ public class FeedRenderer implements Renderer {
 	}
 
 	private String getFeedTitle() {
-		return RDFUtils.getStringValue( config, EXTRAS.feedTitle, "Elda feed" );
+		return RDFUtils.getStringValue( config, ELDA_API.feedTitle, "Elda feed" );
 	}
 
 	private void addChild( Element e, String tag, String body ) {
@@ -355,7 +355,7 @@ public class FeedRenderer implements Renderer {
 	}
 	
 	protected String getConfiguredNamespace() {
-		return RDFUtils.getStringValue( config,  EXTRAS.feedNamespace, EXTRAS.getURI() );
+		return RDFUtils.getStringValue( config,  ELDA_API.feedNamespace, ELDA_API.getURI() );
 	}
 
 	public String getNamespace() {

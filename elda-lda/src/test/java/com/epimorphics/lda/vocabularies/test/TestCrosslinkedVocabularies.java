@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.RDFUtil;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 
 /**
     Ensure that the EXTRAS elements for missing list elements/tails,
@@ -23,7 +23,7 @@ import com.epimorphics.lda.vocabularies.EXTRAS;
 public class TestCrosslinkedVocabularies {
 
 	@Test public void RDF_Vocab_shares_NS_with_EXTRAS() {
-		assertEquals( EXTRAS.NS, RDFUtil.Vocab.NS );
+		assertEquals( ELDA_API.NS, RDFUtil.Vocab.NS );
 	}
 	
 	@Test public void ensure_spellings_match_names() {

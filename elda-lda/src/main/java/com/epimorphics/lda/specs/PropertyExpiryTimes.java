@@ -2,7 +2,7 @@ package com.epimorphics.lda.specs;
 
 import java.util.*;
 
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.OWL;
@@ -49,12 +49,12 @@ public class PropertyExpiryTimes {
 	public static PropertyExpiryTimes assemble(Model model) {
 		PropertyExpiryTimes result = new PropertyExpiryTimes();
 		List<Statement> candidates = model
-			.listStatements(null, EXTRAS.cacheExpiryTime, (RDFNode) null)
+			.listStatements(null, ELDA_API.cacheExpiryTime, (RDFNode) null)
 			.toList()
 			;
 		for (Statement c: candidates)
 			if (isProperty( c.getSubject())) {
-				long seconds = getSecondsValue(c.getSubject(), EXTRAS.cacheExpiryTime, -1);
+				long seconds = getSecondsValue(c.getSubject(), ELDA_API.cacheExpiryTime, -1);
 				result.put(c.getSubject().asNode(), seconds);
 			}
 				

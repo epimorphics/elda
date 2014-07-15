@@ -24,7 +24,7 @@ import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -84,7 +84,7 @@ public class StandardShortnameService implements ShortnameService {
         compatability property is set on the spec.
     */
 	private Model getAnyReservedProperties( Resource root ) {
-		return root.hasLiteral( EXTRAS.allowSyntaxProperties, true ) ? emptyModel : Reserved.reservedProperties;
+		return root.hasLiteral( ELDA_API.allowSyntaxProperties, true ) ? emptyModel : Reserved.reservedProperties;
 	}
     
     private void extractDatatypes( Model m ) {

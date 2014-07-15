@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.PropertyExpiryTimes;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -44,7 +44,7 @@ public class TestAPISpecExtractsPropertyExpiryTimes {
 	private void testExpiryTimesScaling(String property, String value, long expectedSeconds) {
 		Model m = ModelFactory.createDefaultModel();
 		Resource S = m.createResource(property);
-		m.add(S, EXTRAS.cacheExpiryTime, value );
+		m.add(S, ELDA_API.cacheExpiryTime, value );
 		m.add(S, RDF.type, RDF.Property);
 		PropertyExpiryTimes pet = PropertyExpiryTimes.assemble(m);
 		assertEquals(expectedSeconds * 1000, pet.timeInMillisFor(S));

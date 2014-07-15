@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -52,7 +52,7 @@ public class TextSearchConfig {
 	}
 	
 	private static boolean configPlaceEarly(Resource endpoint, boolean placeEarly) {
-		Statement b = endpoint.getProperty( EXTRAS.textPlaceEarly );
+		Statement b = endpoint.getProperty( ELDA_API.textPlaceEarly );
 		return b == null ? placeEarly : b.getBoolean();
 	}
 
@@ -69,17 +69,17 @@ public class TextSearchConfig {
 	}
 	
 	private static Property configTextQueryProperty( Resource endpoint, Property ifUnspecified ) {
-		Resource tqp = endpoint.getPropertyResourceValue( EXTRAS.textQueryProperty );
+		Resource tqp = endpoint.getPropertyResourceValue( ELDA_API.textQueryProperty );
 		return tqp == null ? ifUnspecified : tqp.as(Property.class);
 	}
 	
 	private static Property configTextContentProperty( Resource endpoint, Property ifUnspecified ) {
-		Resource tcp = endpoint.getPropertyResourceValue( EXTRAS.textContentProperty );
+		Resource tcp = endpoint.getPropertyResourceValue( ELDA_API.textContentProperty );
 		return tcp == null ? ifUnspecified : tcp.as(Property.class);
 	}
 
 	private static AnyList configTextSearchOperand(Resource endpoint, AnyList ifUnspecified) {
-		Resource tso = endpoint.getPropertyResourceValue( EXTRAS.textSearchOperand );
+		Resource tso = endpoint.getPropertyResourceValue( ELDA_API.textSearchOperand );
 		return tso == null ? ifUnspecified : convertList(tso);
 	}
 	
@@ -90,7 +90,7 @@ public class TextSearchConfig {
 			for (int i = 0; i < operand.size(); i += 1) elements[i] = RDFQ.any( operand.get(i) );
 			return RDFQ.list( elements );
 		} else {
-			EldaException.BadSpecification( "Object " + tso + " of " + EXTRAS.textSearchOperand + " must be an RDF list." );
+			EldaException.BadSpecification( "Object " + tso + " of " + ELDA_API.textSearchOperand + " must be an RDF list." );
 			return /* never */ null;
 		}
 	}

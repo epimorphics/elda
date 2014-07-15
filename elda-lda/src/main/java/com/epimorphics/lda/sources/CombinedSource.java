@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.Lock;
@@ -70,9 +70,9 @@ public class CombinedSource extends SourceBase implements Source
     */
     public CombinedSource( FileManager fm, AuthMap am, Resource ep )
         {
-        constructs = ep.listProperties( EXTRAS.construct ).mapWith( toString ).toList();
-        matches = ep.listProperties( EXTRAS.match ).mapWith( toString ).toList();
-        sources = ep.listProperties( EXTRAS.element ).mapWith( toSource( fm, am ) ).toList();
+        constructs = ep.listProperties( ELDA_API.construct ).mapWith( toString ).toList();
+        matches = ep.listProperties( ELDA_API.match ).mapWith( toString ).toList();
+        sources = ep.listProperties( ELDA_API.element ).mapWith( toSource( fm, am ) ).toList();
         }
 
     @Override public Lock getLock() {
