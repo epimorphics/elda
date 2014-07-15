@@ -67,7 +67,7 @@ public class TestGeneratedMetadata {
 		Model meta = ModelFactory.createDefaultModel();
 		Resource exec = meta.createResource( "fake:exec" );
 		ShortnameService sns = new StandardShortnameService();
-		APIEndpoint.Request r = new APIEndpoint.Request( new Controls(), reqURI, cc );
+//		APIEndpoint.Request r = new APIEndpoint.Request( new Controls(), reqURI, cc );
 		
 		CompleteContext c  = 
 			new CompleteContext(CompleteContext.Mode.PreferPrefixes, sns.asContext(), pm )
