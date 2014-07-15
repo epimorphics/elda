@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.vocabularies.EXTRAS;
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.rdfutil.DatasetWrapper;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.hp.hpl.jena.query.Dataset;
@@ -34,10 +34,10 @@ public class ResultsModel extends ModelWrapper
     /***********************************/
 
     /** Graph name for the graph of actual results data */
-    public static final String RESULTS_OBJECT_GRAPH = EXTRAS.NS + "results_object_graph";
+    public static final String RESULTS_OBJECT_GRAPH = API.NS + "results_object_graph";
 
     /** Graph name for the graph of results metadata */
-    public static final String RESULTS_METADATA_GRAPH = EXTRAS.NS + "results_metadata_graph";
+    public static final String RESULTS_METADATA_GRAPH = API.NS + "results_metadata_graph";
 
     /***********************************/
     /* Static variables                */
