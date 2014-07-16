@@ -23,7 +23,9 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class PageFormat extends RDFNodeWrapper
+public class PageFormat
+extends RDFNodeWrapper
+implements Comparable<PageFormat>
 {
     /***********************************/
     /* Constants                       */
@@ -98,6 +100,14 @@ public class PageFormat extends RDFNodeWrapper
      */
     public com.epimorphics.rdfutil.RDFNodeWrapper isFormatOf() {
         return getPropertyValue( DCTerms.isFormatOf );
+    }
+
+    /**
+     * When sorting, use the name as a comparison key
+     */
+    @Override
+    public int compareTo( PageFormat o ) {
+        return label().compareTo( o.label() );
     }
 
     /***********************************/
