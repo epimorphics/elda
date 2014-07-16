@@ -10,8 +10,7 @@
 package com.epimorphics.lda.renderers.common;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +19,10 @@ import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Value object representing the page of results returned by Elda's query
@@ -158,6 +159,8 @@ public class Page extends RDFNodeWrapper
             pfs.add( new PageFormat( this, n.asResource() ) );
         }
 
+        Collections.sort( pfs );
+
         return pfs;
     }
 
@@ -171,7 +174,77 @@ public class Page extends RDFNodeWrapper
             vs.add( new EldaView( this, n.asResource() ) );
         }
 
+        Collections.sort( vs );
+
         return vs;
+    }
+
+    /**
+     * Return a list of the term bindings, which associate a short name with a resource.
+     * @return A list of the term bindings defined on this page
+     */
+    public List<Binding<Resource>> termBindings() {
+        List<Binding<Resource>> bindings = new ArrayList<Binding<Resource>>();
+
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n: connectedNodes( "api:wasResultOf/api:termBinding" )) {
+            String label = n.getPropertyValue( API.label ).getLexicalForm();
+            Resource res = n.getPropertyValue( API.property ).asResource();
+
+            bindings.add( new Binding<Resource>( label, res ) );
+        }
+
+        return bindings;
+    }
+
+    /**
+     * Return a list of the variable bindings, which associate a variable name with a textual value
+     * @return A list of the variable bindings
+     */
+    public List<Binding<String>> varBindings() {
+        List<Binding<String>> bindings = new ArrayList<Binding<String>>();
+
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n: connectedNodes( "api:wasResultOf/api:variableBinding" )) {
+            String label = n.getPropertyValue( API.label ).getLexicalForm();
+            String value = n.getPropertyValue( API.value).getLexicalForm();
+
+            bindings.add( new Binding<String>( label, value ) );
+        }
+
+        return bindings;
+    }
+
+    /**
+     * @return The {@link #varBindings()} as a map
+     */
+    public Map<String,String> varBindingsMap() {
+        Map<String,String> map = new HashMap<String, String>();
+
+        for (Binding<String> binding: varBindings()) {
+            map.put( binding.label(), binding.value() );
+        }
+
+        return map;
+    }
+
+    /**
+     * @return The resource that describes the version of Elda used to generate this page
+     */
+    public com.epimorphics.rdfutil.RDFNodeWrapper eldaProcessor() {
+        return connectedNodes( "api:wasResultOf/api:processor/<http://purl.org/net/opmv/types/common#software>" ).get( 0 );
+    }
+
+    /**
+     * @return The readable label for the version of Elda used to produce this page
+     */
+    public String eldaLabel() {
+        return eldaProcessor().getPropertyValue( RDFS.label ).getLexicalForm();
+    }
+
+    /**
+     * @return The version string for the release of Elda used to produce this page
+     */
+    public String eldaVersion() {
+        return eldaProcessor().getPropertyValue( DOAP.revision ).getLexicalForm();
     }
 
 

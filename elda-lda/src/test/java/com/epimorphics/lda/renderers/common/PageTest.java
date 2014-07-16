@@ -12,8 +12,7 @@ package com.epimorphics.lda.renderers.common;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.legacy.ClassImposteriser;
@@ -142,6 +141,53 @@ public class PageTest
         assertTrue( viewNames.contains( "basic" ));
         assertTrue( viewNames.contains( "all" ));
         assertTrue( viewNames.contains( "description" ));
+    }
+
+    @Test
+    public void testTermBindings() {
+        List<Binding<Resource>> bindings = page.termBindings();
+        boolean found = false;
+
+        for (Binding<Resource> b: bindings) {
+            if (b.label().equals( "playTimeMinutes")) {
+                assertTrue( b.value().equals( ResourceFactory.createResource( "http://epimorphics.com/public/vocabulary/games.ttl#playTimeMinutes" ) ));
+                found = true;
+            }
+        }
+
+        assertTrue( found );
+    }
+
+    @Test
+    public void testVarBindings() {
+        List<Binding<String>> bindings = page.varBindings();
+        boolean found = false;
+
+        for (Binding<String> b: bindings) {
+            if (b.label().equals( "_suffix")) {
+                assertTrue( b.value().equals( "vhtml" ));
+                found = true;
+            }
+        }
+
+        assertTrue( found );
+    }
+
+    @Test
+    public void testVarBindingsMap() {
+        Map<String,String> bindings = page.varBindingsMap();
+
+        assertEquals( "vhtml", bindings.get( "_suffix" ));
+    }
+
+    @Test
+    public void testEldaLabel() {
+        assertEquals( "Elda 1.2.35-SNAPSHOT", page.eldaLabel() );
+    }
+
+    @Test
+    public void testEldaVersion() {
+        assertEquals( "1.2.35-SNAPSHOT", page.eldaVersion() );
     }
 
     /***********************************/
