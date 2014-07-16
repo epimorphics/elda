@@ -1,6 +1,17 @@
+/*
+    See lda-top/LICENCE (or https://raw.github.com/epimorphics/elda/master/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2014 Epimorphics Limited
+    $Id$
+*/
+
 package com.epimorphics.lda.sources;
 
 import java.util.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.util.FileManager;
 
@@ -11,6 +22,7 @@ public class AuthMap {
 		public String getParameter( String name );
 		public List<String> getParameterNames();
 	}
+    protected static Logger log = LoggerFactory.getLogger(AuthMap.class);
 
 	public static final String AUTH_NAME_PREFIX = "com.epimorphics.api.authKey";
 	
@@ -32,6 +44,7 @@ public class AuthMap {
 	}
 
 	private static AuthInfo readAuthFile( FileManager fm, String fileName ) {
+		log.debug("reading auth file '" + fileName + "'");
 		AuthInfo ai = new AuthInfo();
 		String wholeFile = fm.readWholeFileAsUTF8( fileName );
 		String [] lines = wholeFile.split( "\n" );

@@ -1,3 +1,11 @@
+/*
+    See lda-top/LICENCE (or https://raw.github.com/epimorphics/elda/master/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2014 Epimorphics Limited
+    $Id$
+*/
+
 package com.epimorphics.lda.api_query_with_graph.tests;
 
 import java.net.URI;
@@ -5,7 +13,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

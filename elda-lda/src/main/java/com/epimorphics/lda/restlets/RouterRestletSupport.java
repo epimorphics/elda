@@ -1,3 +1,11 @@
+/*
+    See lda-top/LICENCE (or https://raw.github.com/epimorphics/elda/master/LICENCE)
+    for the licence for this software.
+    
+    (c) Copyright 2014 Epimorphics Limited
+    $Id$
+*/
+
 package com.epimorphics.lda.restlets;
 
 import java.io.File;
@@ -104,7 +112,7 @@ public class RouterRestletSupport {
 	//	
 		Router result = new DefaultRouter();	
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
-        AuthMap am = AuthMap.loadAuthMap( EldaFileManager.get(), noNamesAndValues );
+        AuthMap am = AuthMap.loadAuthMap( EldaFileManager.get(), wrapContext(con) );
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
         addBaseFilepath( baseFilePath );
     //
@@ -118,6 +126,22 @@ public class RouterRestletSupport {
 		return count == 0  ? RouterFactory.getDefaultRouter() : result;
 	}
 	
+	private static NamesAndValues wrapContext(final ServletContext con) {
+		return new NamesAndValues() {
+			
+			@Override public List<String> getParameterNames() {
+				List<String> result = new ArrayList<String>();
+				@SuppressWarnings("unchecked") Enumeration<String> names = con.getInitParameterNames();
+				while (names.hasMoreElements()) result.add( names.nextElement() );
+				return result;
+			}
+			
+			@Override public String getParameter(String name) {
+				return con.getInitParameter(name);
+			}
+		};
+	}
+
 	/**
 	    Return a NamesAndValues which wraps the init parameters of this Loader
 	    servlet.

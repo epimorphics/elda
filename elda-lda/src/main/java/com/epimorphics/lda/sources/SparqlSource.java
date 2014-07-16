@@ -64,8 +64,8 @@ public class SparqlSource extends SourceBase implements Source {
         	nestedSelects = (b ? Perhaps.Yes : Perhaps.No);
         //
         	String authKey = RDFUtils.getStringValue( ep, ELDA_API.authKey, null );
-        	// System.err.println( ">> AUTH KEY: " + authKey );
         	if (authKey != null) {
+        		log.debug("handling auth key '" + authKey + "'");
         		AuthInfo ai = am.get( authKey );
         		if (ai != null) {
         			user = ai.get("basic.user");
@@ -80,10 +80,12 @@ public class SparqlSource extends SourceBase implements Source {
     
     @Override public QueryExecution execute(Query query) {
         if (log.isDebugEnabled()) log.debug("Running query on " + sparqlEndpoint + ":\n" + query);
-		QueryEngineHTTP qe = new QueryEngineHTTP(sparqlEndpoint, query) ;
-		// System.err.println( ">> basic user: " + basicUser );
-		// System.err.println( ">> basic password: " + new String(basicPassword));
-		if (basicUser != null) qe.setBasicAuthentication( basicUser, basicPassword );
+		QueryEngineHTTP qe = new QueryEngineHTTP(sparqlEndpoint, query);
+		if (basicUser != null) {
+			log.debug( "basic user: " + basicUser );			
+			log.debug( "basic password: " + new String(basicPassword));
+			qe.setBasicAuthentication( basicUser, basicPassword );
+		}
 		return qe ;
     }
 
