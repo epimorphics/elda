@@ -118,6 +118,7 @@ public class EndpointMetadata {
 	    } else {
 			Resource content = firstOf(resultList).inModel(metaModel);
 			thisMetaPage.addProperty( FOAF.primaryTopic, content );
+			thisMetaPage.addProperty( RDF.type, API.ItemEndpoint );
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
 		}
 	//

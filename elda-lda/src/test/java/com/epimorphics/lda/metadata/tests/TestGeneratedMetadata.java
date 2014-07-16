@@ -32,6 +32,7 @@ import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 public class TestGeneratedMetadata {
 	
@@ -82,18 +83,30 @@ public class TestGeneratedMetadata {
 	
 	@Test public void testAbsentTotalCount() throws URISyntaxException {
 		Integer totalResults = null;
-		Resource thisMetaPage = createMetadata(totalResults);
+		Resource thisMetaPage = createMetadata(true, totalResults);
 		assertFalse( thisMetaPage.hasProperty(OpenSearch.totalResults));
 	}
 	
 	@Test public void testPresentTotalCount() throws URISyntaxException {
 		Integer totalResults = new Integer(17);
-		Resource thisMetaPage = createMetadata(totalResults);
+		Resource thisMetaPage = createMetadata(true, totalResults);
 		Literal tr = thisMetaPage.getModel().createTypedLiteral(totalResults);
 		assertTrue( thisMetaPage.hasProperty(OpenSearch.totalResults, tr));
 	}
+	
+	@Test public void testListEndpointHasCorrectType() throws URISyntaxException {
+		Integer totalResults = null;
+		Resource thisMetaPage = createMetadata(true, totalResults);
+		assertTrue(thisMetaPage.hasProperty(RDF.type, API.ListEndpoint));
+	}
+	
+	@Test public void testItemEndpointHasCorrectType() throws URISyntaxException {
+		Integer totalResults = null;
+		Resource thisMetaPage = createMetadata(false, totalResults);
+		assertTrue(thisMetaPage.hasProperty(RDF.type, API.ItemEndpoint));
+	}
 
-	private Resource createMetadata(Integer totalResults) throws URISyntaxException {
+	private Resource createMetadata(final boolean isListEndpoint, Integer totalResults) throws URISyntaxException {
 		Model objectModel = ModelFactory.createDefaultModel();
 		MergedModels mergedModels = new MergedModels(objectModel);
 	//
@@ -129,7 +142,7 @@ public class TestGeneratedMetadata {
 		EndpointDetails details = new EndpointDetails() {
 			
 			@Override public boolean isListEndpoint() {
-				return true;
+				return isListEndpoint;
 			}
 			
 			@Override public boolean hasParameterBasedContentNegotiation() {
