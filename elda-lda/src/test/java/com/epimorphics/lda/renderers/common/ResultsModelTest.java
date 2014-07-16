@@ -13,6 +13,7 @@ package com.epimorphics.lda.renderers.common;
 import static org.junit.Assert.*;
 
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,6 +54,8 @@ public class ResultsModelTest
         // we are forced to use the legacy imposteriser because APIResultSet does not
         // have an interface that it conforms to
         setImposteriser(ClassImposteriser.INSTANCE);
+
+        setThreadingPolicy(new Synchroniser());
     }};
 
     /***********************************/

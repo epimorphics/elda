@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.*;
 
@@ -48,6 +49,8 @@ public class PageTest
         // we are forced to use the legacy imposteriser because APIResultSet does not
         // have an interface that it conforms to
         setImposteriser(ClassImposteriser.INSTANCE);
+
+        setThreadingPolicy(new Synchroniser());
     }};
 
     private Page page;

@@ -12,7 +12,9 @@ package com.epimorphics.lda.renderers.common;
 
 import static org.junit.Assert.*;
 
+import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.*;
 
@@ -46,6 +48,8 @@ public class PageFormatTest
         // we are forced to use the legacy imposteriser because APIResultSet does not
         // have an interface that it conforms to
         setImposteriser(ClassImposteriser.INSTANCE);
+
+        setThreadingPolicy(new Synchroniser());
     }};
 
     private PageFormat pageFormat;
@@ -57,6 +61,13 @@ public class PageFormatTest
     /***********************************/
     /* External signature methods      */
     /***********************************/
+
+    @BeforeClass
+    public static void beforeClass() {
+        new JUnit4Mockery() {{
+            setThreadingPolicy(new Synchroniser());
+        }};
+    }
 
     @Before
     public void before() {
