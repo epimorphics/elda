@@ -256,7 +256,7 @@ public class APIEndpointImpl implements APIEndpoint {
 
     /**
         Answer the SELECT query that would be used in the current
-        state of this endpoint to find the iterms of interest.
+        state of this endpoint to find the items of interest.
     */
 	public String getSelectQuery() {
 		return spec.getBaseQuery().assembleSelectQuery( RDFUtils.noPrefixes );

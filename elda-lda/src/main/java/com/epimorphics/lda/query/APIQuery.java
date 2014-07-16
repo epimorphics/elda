@@ -318,7 +318,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	/**
-	 * Answer the currenty-set page number.
+	 * Answer the currently-set page number.
 	 */
 	public int getPageNumber() {
 		return pageNumber;
