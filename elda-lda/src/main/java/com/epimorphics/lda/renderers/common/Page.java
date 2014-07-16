@@ -161,6 +161,19 @@ public class Page extends RDFNodeWrapper
         return pfs;
     }
 
+    /**
+     * @return A list of the views that this page defines
+     */
+    public List<EldaView> views() {
+        List<EldaView> vs = new ArrayList<EldaView>();
+
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n: listPropertyValues( DCTerms.hasVersion )) {
+            vs.add( new EldaView( this, n.asResource() ) );
+        }
+
+        return vs;
+    }
+
 
     /***********************************/
     /* Internal implementation methods */

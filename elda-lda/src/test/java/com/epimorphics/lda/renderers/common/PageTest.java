@@ -131,6 +131,19 @@ public class PageTest
         assertTrue( formats.contains( "application/json" ));
     }
 
+    @Test
+    public void testViews() {
+        List<String> viewNames = new ArrayList<String>();
+
+        for (EldaView v: page.views()) {
+            viewNames.add( v.viewName() );
+        }
+
+        assertTrue( viewNames.contains( "basic" ));
+        assertTrue( viewNames.contains( "all" ));
+        assertTrue( viewNames.contains( "description" ));
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
