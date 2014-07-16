@@ -13,7 +13,10 @@ package com.epimorphics.lda.renderers.common;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.DCTerms;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Encapsulates a format that a page is declared as being available in.
@@ -58,6 +61,44 @@ public class PageFormat extends RDFNodeWrapper
     /***********************************/
     /* External signature methods      */
     /***********************************/
+
+    /**
+     * @return The page object that this page format is one of the formats of
+     */
+    public Page page() {
+        return this.page;
+    }
+
+    /**
+     * Return the label for this format, which is denoted by the <code>rdfs:label</code>
+     * on the page format resource
+     * @return The format label
+     */
+    public String label() {
+        return getPropertyValue( RDFS.label ).getLexicalForm();
+    }
+
+    /**
+     * Return the media (mime) type of this format
+     * @return  The mime type, or null if not specified
+     */
+    public MediaType mimeType() {
+        MediaType mime = null;
+
+        com.epimorphics.rdfutil.RDFNodeWrapper format = getPropertyValue( DCTerms.format );
+        if (format != null) {
+            mime = MediaType.decodeType( format.getPropertyValue( RDFS.label ).getLexicalForm() );
+        }
+
+        return mime;
+    }
+
+    /**
+     * @return The resource denoting the page that this page format is a format of
+     */
+    public com.epimorphics.rdfutil.RDFNodeWrapper isFormatOf() {
+        return getPropertyValue( DCTerms.isFormatOf );
+    }
 
     /***********************************/
     /* Internal implementation methods */

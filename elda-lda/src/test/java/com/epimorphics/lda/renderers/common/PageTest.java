@@ -12,11 +12,12 @@ package com.epimorphics.lda.renderers.common;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.hp.hpl.jena.rdf.model.*;
@@ -35,9 +36,6 @@ public class PageTest
     /***********************************/
     /* Static variables                */
     /***********************************/
-
-    @SuppressWarnings( value = "unused" )
-    private static final Logger log = LoggerFactory.getLogger( PageTest.class );
 
     static final Model apiMetadataModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES + Fixtures.PAGE_METADATA_GAMES );
     static final Model apiObjectModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_OBJECT_GAMES );
@@ -120,6 +118,18 @@ public class PageTest
         assertNull( page.lastPage() );
     }
 
+    @Test
+    public void testFormats() {
+        List<String> formats = new ArrayList<String>();
+
+        for (PageFormat pf: page.formats()) {
+            formats.add( pf.mimeType().toString() );
+        }
+
+        assertTrue( formats.contains( "text/turtle" ));
+        assertTrue( formats.contains( "application/xml" ));
+        assertTrue( formats.contains( "application/json" ));
+    }
 
     /***********************************/
     /* Internal implementation methods */

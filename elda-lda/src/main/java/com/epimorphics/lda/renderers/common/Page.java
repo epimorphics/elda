@@ -10,6 +10,9 @@
 package com.epimorphics.lda.renderers.common;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,6 +147,20 @@ public class Page extends RDFNodeWrapper
     public Resource lastPage() {
         return getResource( ResourceFactory.createProperty( XHV.ns + "last" ) );
     }
+
+    /**
+     * @return A list of the formats that this page is available in
+     */
+    public List<PageFormat> formats() {
+        List<PageFormat> pfs = new ArrayList<PageFormat>();
+
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n: listPropertyValues( DCTerms.hasFormat )) {
+            pfs.add( new PageFormat( this, n.asResource() ) );
+        }
+
+        return pfs;
+    }
+
 
     /***********************************/
     /* Internal implementation methods */
