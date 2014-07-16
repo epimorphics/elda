@@ -16,7 +16,6 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.bindings.Bindings;
@@ -50,17 +49,20 @@ public class ExploreTestingForLatAndLongEtc
 		+ "; D geo:lat '-0.5'xsd:float; D geo:long '-0.5'xsd:float"
 		);
 
-	@Test @Ignore public void testFindsResourceByLatAndLong()
+	@Test public void testFindsResourceByLatAndLong()
 		{
-		assertThat( resourcesFor( "near-lat=0.5 near-long=0.5 _distance=30" ), is( resourceSet( "A" ) ) );
-		assertThat( resourcesFor( "near-lat=0.5 near-long=-0.5 _distance=30" ), is( resourceSet( "B" ) ) );
-		assertThat( resourcesFor( "near-lat=-0.5 near-long=0.5 _distance=30" ), is( resourceSet( "C" ) ) );
-		assertThat( resourcesFor( "near-lat=-0.5 near-long=-0.5 _distance=30" ), is( resourceSet( "D" ) ) );
-		assertThat( resourcesFor( "near-lat=-0.1 near-long=-0.1 _distance=10" ), is( resourceSet( "" ) ) );
-		assertThat( resourcesFor( "near-lat=-0.1 near-long=-0.1 _distance=100" ), is( resourceSet( "A B C D" ) ) );
+		assertThat( resourcesFor( "1", "near-lat=0.5 near-long=0.5 _distance=30" ), is( resourceSet( "A" ) ) );
+		assertThat( resourcesFor( "2", "near-lat=0.5 near-long=-0.5 _distance=30" ), is( resourceSet( "B" ) ) );
+		assertThat( resourcesFor( "3", "near-lat=-0.5 near-long=0.5 _distance=30" ), is( resourceSet( "C" ) ) );
+		assertThat( resourcesFor( "4", "near-lat=-0.5 near-long=-0.5 _distance=30" ), is( resourceSet( "D" ) ) );
+		assertThat( resourcesFor( "5", "near-lat=-0.1 near-long=-0.1 _distance=10" ), is( resourceSet( "" ) ) );
+		assertThat( resourcesFor( "6", "near-lat=-0.1 near-long=-0.1 _distance=100" ), is( resourceSet( "A B C D" ) ) );
 		}
 
-	private Set<Resource> resourcesFor( String settings ) 
+	// the 'separate' parameter is incorporated in the dummy request URI
+	// to defeat caching (which otherwise delivers the same answer for
+	// all calls ...)
+	private Set<Resource> resourcesFor( String separate, String settings ) 
 		{
 		Resource endpoint = latLongTestDescription.createResource( "eh:/End" );
 		ModelLoader ml = new ModelLoader() 
@@ -75,7 +77,7 @@ public class ExploreTestingForLatAndLongEtc
 		APIEndpointSpec spec = new APIEndpointSpec( parent, parent, endpoint );
 		APIEndpoint e = new APIEndpointImpl( spec );
 		MultiMap<String, String> map = MakeData.parseQueryString( settings.replaceAll( " ", "\\&" ) );
-		URI ru = URIUtils.newURI("http://dummy/doc/schools");
+		URI ru = URIUtils.newURI("http://dummy/doc/schools/" + separate);
 		Bindings cc = Bindings.createContext( MakeData.variables( settings ), map );
 		ResponseResult resultsAndFormat = e.call( new APIEndpoint.Request( controls, ru, cc ), new NoteBoard() );
 		APIResultSet rs = resultsAndFormat.resultSet;
