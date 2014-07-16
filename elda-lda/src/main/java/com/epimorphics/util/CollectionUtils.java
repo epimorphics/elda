@@ -20,7 +20,7 @@ public class CollectionUtils
 	/**
 	    Answer a list of all the arguments, in order.
 	*/
-	public static <T> List<T> list( T ...elements) 
+	@SafeVarargs public static <T> List<T> list( T ...elements) 
 		{ return Arrays.asList( elements );	}
 
 	/**
@@ -40,6 +40,6 @@ public class CollectionUtils
 		return result;
 		}
 
-	public static <T> Set<T> set(T ...elements) 
+	@SafeVarargs public static <T> Set<T> set(T ...elements) 
 		{ return new HashSet<T>( list(elements) ); }
 	}

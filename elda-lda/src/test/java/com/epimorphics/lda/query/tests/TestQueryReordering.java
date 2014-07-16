@@ -10,7 +10,7 @@ package com.epimorphics.lda.query.tests;
 
 import static com.epimorphics.util.CollectionUtils.list;
 import static com.epimorphics.util.CollectionUtils.set;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.util.*;
 

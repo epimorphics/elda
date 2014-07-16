@@ -10,7 +10,7 @@ package com.epimorphics.lda.bindings.tests;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
