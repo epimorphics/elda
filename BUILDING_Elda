@@ -139,6 +139,8 @@ RELEASING ELDA
   Copy docs/E${version} to docs/E${version+1}. Correct
   any references in these new html files to the version
   number. `git add` these files and commit and push them.
+  Update the quickstart.html to point to the just-released
+  files.
 
   Email linked-data-api-discuss with a moderately chatty
   message about the update, summarising the release notes

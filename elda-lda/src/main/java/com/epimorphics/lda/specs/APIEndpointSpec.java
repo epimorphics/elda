@@ -131,7 +131,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     	boolean isList = endpoint.hasProperty( RDF.type, API.ListEndpoint );
     	boolean isItem = endpoint.hasProperty( RDF.type, API.ItemEndpoint );
     	if (isList || isItem) return;
-    	log.warn( "endpoint " + endpoint + " is not declared as ListEndpoint or ItemEndpoint -- unexpected behaviour may result." );
+    	// log.warn( "endpoint " + endpoint + " is not declared as ListEndpoint or ItemEndpoint -- unexpected behaviour may result." );
+    	throw new EldaException("endpoint " + endpoint + " is not declared as ListEndpoint or ItemEndpoint");
 	}
 
     public boolean wantsContext() {

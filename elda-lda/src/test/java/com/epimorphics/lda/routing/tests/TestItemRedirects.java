@@ -11,8 +11,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.net.URI;
-
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
@@ -52,7 +50,7 @@ public class TestItemRedirects {
 	    Test that a (Default) Router will find the correct URI template associated
 	    with an ItemTemplate that matches a given path.
 	*/
-	@Test @Ignore public void testFindsURITemplateForItem() {
+	@Test public void testFindsURITemplateForItem() {
 		URI req = URIUtils.newURI( "" );
 		Resource root = specModel.createResource( specModel.expandPrefix( ":root" ) );
 		APISpec spec = new APISpec( EldaFileManager.get(), root, LoadsNothing.instance );

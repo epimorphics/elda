@@ -39,7 +39,7 @@ public class ExploreTestingForLatAndLongEtc
 	private final static Model latLongTestDescription = model
 		( "spec rdf:type api:API" 
 		+ "; spec api:sparqlEndpoint here:example"
-		+ "; spec api:endPoint End"
+		+ "; spec api:endpoint End"
 		+ "; End rdf:type api:ListEndpoint"
 		+ "; End api:uriTemplate 'http://dummy/doc/schools'"
 		+ ""
