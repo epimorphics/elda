@@ -47,7 +47,8 @@ public class Fixtures
             "@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
             "@prefix xhv:   <http://www.w3.org/1999/xhtml/vocab#> .\n" +
             "@prefix doap:  <http://usefulinc.com/ns/doap#> .\n" +
-            "@prefix hello: <http://epimorphics.com/public/vocabulary/games.ttl#> .\n";
+            "@prefix hello: <http://epimorphics.com/public/vocabulary/games.ttl#> .\n" +
+            "@prefix skos: <http://www.w3.org/2004/02/skos/core#>.\n";
 
     /** A page of bathing water results */
     public static final String PAGE_BWQ =
