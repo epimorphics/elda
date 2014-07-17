@@ -55,6 +55,11 @@ public class PropertyPathTest
         assertEquals( "foo.bar.fubar", new PropertyPath( new String[] {"foo", "bar", "fubar"} ).toString() );
     }
 
+    @Test
+    public void testNullProperatyPath() {
+        assertEquals( "", new PropertyPath().toString() );
+    }
+
     @Test(expected=java.lang.IllegalArgumentException.class)
     public void testNullStringPath() {
         new PropertyPath( (String[]) null );

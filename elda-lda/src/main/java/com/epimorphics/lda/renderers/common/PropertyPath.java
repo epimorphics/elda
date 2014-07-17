@@ -71,6 +71,16 @@ public class PropertyPath
         this.segments = Arrays.asList( segments );
     }
 
+    /**
+     * Construct the empty path. This is the only sanctioned way to create an
+     * empty path - passing null or empty string into other constructors is not
+     * allowed.
+     */
+    public PropertyPath() {
+        this.segments = new ArrayList<String>();
+    }
+
+
     /***********************************/
     /* External signature methods      */
     /***********************************/
