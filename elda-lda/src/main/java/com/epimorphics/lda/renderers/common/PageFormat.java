@@ -24,7 +24,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
 public class PageFormat
-extends RDFNodeWrapper
+extends CommonNodeWrapper
 implements Comparable<PageFormat>
 {
     /***********************************/
@@ -42,9 +42,6 @@ implements Comparable<PageFormat>
     /* Instance variables              */
     /***********************************/
 
-    /** The page object for which this format is one of the available formats */
-    private Page page;
-
     /***********************************/
     /* Constructors                    */
     /***********************************/
@@ -56,20 +53,12 @@ implements Comparable<PageFormat>
      * @param root The configuration root resource
      */
     public PageFormat( Page page, Resource root ) {
-        super( page.getModelW(), root );
-        this.page = page;
+        super( page, root );
     }
 
     /***********************************/
     /* External signature methods      */
     /***********************************/
-
-    /**
-     * @return The page object that this page format is one of the formats of
-     */
-    public Page page() {
-        return this.page;
-    }
 
     /**
      * Return the label for this format, which is denoted by the <code>rdfs:label</code>

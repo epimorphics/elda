@@ -22,11 +22,11 @@ import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.rdf.model.*;
 
 /**
- * Unit tests for {@link RDFNodeWrapper}
+ * Unit tests for {@link CommonNodeWrapper}
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class RDFNodeWrapperTest
+public class CommonNodeWrapperTest
 {
     /***********************************/
     /* Constants                       */
@@ -60,7 +60,7 @@ public class RDFNodeWrapperTest
         String ns = "http://example/foo#";
         ModelWrapper mw = modelWrapperFixture();
         Resource foo = mw.getModel().getResource( ns + "foo" );
-        RDFNodeWrapper n = new RDFNodeWrapper( mw, foo );
+        CommonNodeWrapper n = new CommonNodeWrapper( mw, foo );
 
         // various ways of specifying p
         assertEquals( 42, n.getInt( mw.getModel().getProperty( ns+"p" ), -1 ) );
@@ -71,7 +71,7 @@ public class RDFNodeWrapperTest
         assertEquals( -123, n.getInt( "example:not-here", -123 ) );
 
         // node is not a resource
-        RDFNodeWrapper l = new RDFNodeWrapper( mw, mw.getModel().createLiteral( "kermit" ) );
+        CommonNodeWrapper l = new CommonNodeWrapper( mw, mw.getModel().createLiteral( "kermit" ) );
         assertEquals( -1, l.getInt( "example:foo", -1 ));
 
         // value is not an int
@@ -83,7 +83,7 @@ public class RDFNodeWrapperTest
         String ns = "http://example/foo#";
         ModelWrapper mw = modelWrapperFixture();
         Resource foo = mw.getModel().getResource( ns + "foo" );
-        RDFNodeWrapper n = new RDFNodeWrapper( mw, foo );
+        CommonNodeWrapper n = new CommonNodeWrapper( mw, foo );
 
         // various ways of specifying p
         assertEquals( ResourceFactory.createResource( ns + "bar" ), n.getResource( mw.getModel().getProperty( ns+"r" ) ) );
@@ -94,7 +94,7 @@ public class RDFNodeWrapperTest
         assertNull( n.getResource( "example:not-here" ) );
 
         // node is not a resource
-        RDFNodeWrapper l = new RDFNodeWrapper( mw, mw.getModel().createLiteral( "kermit" ) );
+        CommonNodeWrapper l = new CommonNodeWrapper( mw, mw.getModel().createLiteral( "kermit" ) );
         assertNull( l.getResource( "example:p" ) );
 
         // value is not a resource

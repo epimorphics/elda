@@ -30,7 +30,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class Page extends RDFNodeWrapper
+public class Page extends CommonNodeWrapper
 {
     /***********************************/
     /* Constants                       */
@@ -67,6 +67,10 @@ public class Page extends RDFNodeWrapper
     /***********************************/
     /* External signature methods      */
     /***********************************/
+
+    public Page getPage() {
+        return this;
+    }
 
     /**
      * @return True if the page denotes a single item, or false for a list endpoint

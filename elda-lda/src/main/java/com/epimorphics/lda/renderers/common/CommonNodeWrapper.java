@@ -10,6 +10,7 @@
 package com.epimorphics.lda.renderers.common;
 
 import com.epimorphics.rdfutil.ModelWrapper;
+import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.datatypes.DatatypeFormatException;
 import com.hp.hpl.jena.rdf.model.*;
 
@@ -23,7 +24,8 @@ import com.hp.hpl.jena.rdf.model.*;
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class RDFNodeWrapper extends com.epimorphics.rdfutil.RDFNodeWrapper
+public class CommonNodeWrapper
+extends RDFNodeWrapper
 {
     /***********************************/
     /* Constants                       */
@@ -37,17 +39,38 @@ public class RDFNodeWrapper extends com.epimorphics.rdfutil.RDFNodeWrapper
     /* Instance variables              */
     /***********************************/
 
+    /** The page this resource is attached to, if any */
+    private Page page;
+
     /***********************************/
     /* Constructors                    */
     /***********************************/
 
-    public RDFNodeWrapper( ModelWrapper mw, RDFNode node ) {
+    public CommonNodeWrapper( ModelWrapper mw, RDFNode node ) {
         super( mw, node );
+    }
+
+    /**
+     * Construct a common node wrapper that is attached to a particular page.
+     *
+     * @param page The page object
+     * @param node The wrapped node
+     */
+    public CommonNodeWrapper( Page page, RDFNode node ) {
+        super( page.getModelW(), node );
+        this.page = page;
     }
 
     /***********************************/
     /* External signature methods      */
     /***********************************/
+
+    /**
+     * @return The page object this resource is attached to, or null
+     */
+    public Page page() {
+        return this.page;
+    }
 
     /**
      * Return the int value of a property <code>p</code> of this resource, or return a default

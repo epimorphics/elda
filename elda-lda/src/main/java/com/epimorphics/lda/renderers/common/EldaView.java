@@ -29,7 +29,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
 public class EldaView
-extends RDFNodeWrapper
+extends CommonNodeWrapper
 implements Comparable<EldaView>
 {
     /***********************************/
@@ -47,9 +47,6 @@ implements Comparable<EldaView>
     /* Instance variables              */
     /***********************************/
 
-    /** The page on which this view spec appears */
-    private Page page;
-
     /***********************************/
     /* Constructors                    */
     /***********************************/
@@ -60,20 +57,12 @@ implements Comparable<EldaView>
      * @param root The root resource of the view specification
      */
     public EldaView( Page page, Resource root ) {
-        super( page.getModelW(), root );
-        this.page = page;
+        super( page, root );
     }
 
     /***********************************/
     /* External signature methods      */
     /***********************************/
-
-    /**
-     * @return The page object this view is attached to
-     */
-    public Page page() {
-        return this.page;
-    }
 
     /**
      * @return The label of the view
