@@ -62,13 +62,6 @@ public class PageFormatTest
     /* External signature methods      */
     /***********************************/
 
-    @BeforeClass
-    public static void beforeClass() {
-        new JUnit4Mockery() {{
-            setThreadingPolicy(new Synchroniser());
-        }};
-    }
-
     @Before
     public void before() {
         ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
