@@ -15,6 +15,8 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.hp.hpl.jena.rdf.model.*;
@@ -38,16 +40,21 @@ public class Page extends CommonNodeWrapper
     /** Indicate no available numeric value */
     public static final int NO_VALUE = -1;
 
+    /** By default, we assume we're seeing the basic view */
+    public static final String DEFAULT_VIEW_NAME = "basic";
+
     /***********************************/
     /* Static variables                */
     /***********************************/
 
-    @SuppressWarnings( value = "unused" )
     private static final Logger log = LoggerFactory.getLogger( Page.class );
 
     /***********************************/
     /* Instance variables              */
     /***********************************/
+
+    /** Cached var bindings */
+    private Map<String, String> varBindingsMap;
 
     /***********************************/
     /* Constructors                    */
@@ -217,16 +224,18 @@ public class Page extends CommonNodeWrapper
     }
 
     /**
-     * @return The {@link #varBindings()} as a map
+     * @return The {@link #varBindings()} as a map. Cached for performance.
      */
     public Map<String,String> varBindingsMap() {
-        Map<String,String> map = new HashMap<String, String>();
+        if (this.varBindingsMap == null) {
+            this.varBindingsMap = new HashMap<String, String>();
 
-        for (Binding<String> binding: varBindings()) {
-            map.put( binding.label(), binding.value() );
+            for (Binding<String> binding: varBindings()) {
+                this.varBindingsMap.put( binding.label(), binding.value() );
+            }
         }
 
-        return map;
+        return this.varBindingsMap;
     }
 
     /**
@@ -269,10 +278,81 @@ public class Page extends CommonNodeWrapper
         return items;
     }
 
+    /**
+     * Return the current view, if we can determine what it is. If we can't tell from
+     * the given metadata, return the basic view.
+     * @return The currently selected view
+     */
+    public EldaView currentView() {
+        String viewName = varBindingsMap().get( ELDA_API.viewName.getLocalName() );
+        if (viewName == null) {
+            viewName = DEFAULT_VIEW_NAME;
+        }
+
+        return findViewByName( viewName );
+    }
+
+    /**
+     * Return the view that has the given name
+     * @param viewName The name of the view to look for
+     * @return An {@link EldaView} object that has the name <code>viewName</code>
+     * @exception EldaException if there is no such view
+     */
+    public EldaView findViewByName( String viewName ) {
+        ResIterator i = getModelW().getModel().listSubjectsWithProperty( ELDA_API.viewName, viewName );
+        Resource viewRoot = null;
+
+        if (!i.hasNext()) {
+            throw new EldaException( "Could not locate view with viewName = " + viewName );
+        }
+        else {
+            viewRoot = i.next();
+            if (i.hasNext()) {
+                log.warn( "Ambiguous view name: there is more than one resource with viewName = " + viewName );
+            }
+        }
+
+        return new EldaView( this, viewRoot );
+    }
+
+    /**
+     * Return a list of all of the property paths that are explicitly defined for this
+     * page. These will either be from the <code>api:properties</code> on the view specification,
+     * or the <code>_properties</code> variable, or both.
+     *
+     * @return A list of the property paths that are explicitly included in the current page.
+     */
+    public List<PropertyPath> currentPropertyPaths() {
+        List<PropertyPath> paths = new ArrayList<PropertyPath>();
+
+        paths.addAll( currentView().propertyPaths() );
+        paths.addAll( queryParamPropertyPaths() );
+
+        return paths;
+    }
 
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
+
+    /**
+     * @return A list of the property paths that were defined via the query parameter
+     * _properties
+     */
+    protected List<PropertyPath> queryParamPropertyPaths() {
+        List <PropertyPath> paths = new ArrayList<PropertyPath>();
+
+        if (varBindingsMap.containsKey( QueryParameter._PROPERTIES )) {
+            String props = varBindingsMap.get( QueryParameter._PROPERTIES );
+            for (String path: props.split( "," )) {
+                if (path.length() > 0) {
+                    paths.add( new PropertyPath( path ) );
+                }
+            }
+        }
+
+        return paths;
+    }
 
     /***********************************/
     /* Inner class definitions         */

@@ -201,6 +201,32 @@ public class PageTest
         assertEquals( "http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html", items.get( 0 ).getURI() );
     }
 
+    @Test
+    public void testCurrentView() {
+        assertEquals( "basic", page.currentView().label() );
+    }
+
+    @Test
+    public void testFindViewByName() {
+        assertEquals( "all", page.findViewByName( "all" ).label() );
+    }
+
+    @Test
+    public void testListPropertyPaths() {
+        List<PropertyPath> paths = page.currentPropertyPaths();
+
+        assertEquals( 2, paths.size() );
+
+        List<String> pathNames = new ArrayList<String>();
+        for (PropertyPath p: paths) {
+            pathNames.add( p.toString() );
+        }
+        Collections.sort( pathNames ); // a consistent order makes testing easy
+
+        assertEquals( "label", pathNames.get( 0 ) );
+        assertEquals( "type", pathNames.get( 1 ) );
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
