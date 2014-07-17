@@ -12,7 +12,6 @@ package com.epimorphics.lda.renderers.common;
 
 import static org.junit.Assert.*;
 
-import org.jmock.integration.junit4.JUnit4Mockery;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;

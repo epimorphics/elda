@@ -193,6 +193,14 @@ public class PageTest
         assertEquals( "1.2.35-SNAPSHOT", page.eldaVersion() );
     }
 
+    @Test
+    public void testItems() {
+        List<DisplayResource> items = page.items();
+
+        assertEquals( 10, items.size() );
+        assertEquals( "http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html", items.get( 0 ).getURI() );
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

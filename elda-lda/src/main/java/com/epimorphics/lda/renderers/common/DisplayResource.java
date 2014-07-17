@@ -21,7 +21,7 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
- * Decorate a resource from the resultset with methods to make displaying
+ * Facade for a resource from the resultset with methods to make displaying
  * the resource in a template easier. In particular, this class collaborates
  * with {@link DisplayHierarchy} to unfold the results graph into a tree
  * that can be displayed to the user.

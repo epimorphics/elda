@@ -17,8 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.rdfutil.ModelWrapper;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -249,6 +248,25 @@ public class Page extends CommonNodeWrapper
      */
     public String eldaVersion() {
         return eldaProcessor().getPropertyValue( DOAP.revision ).getLexicalForm();
+    }
+
+    /**
+     * @return A list of the items on this page, as a list of {@link DisplayResource}
+     */
+    public List<DisplayResource> items() {
+        List<DisplayResource> items = new ArrayList<DisplayResource>();
+
+        if (isItemEndpoint()) {
+            items.add( new DisplayResource( this, getPropertyValue( FOAF.primaryTopic ).asResource() ) );
+        }
+        else {
+            RDFList itemList = getPropertyValue( API.items ).asResource().as( RDFList.class );
+            for (RDFNode n: itemList.asJavaList()) {
+                items.add( new DisplayResource( this, n.asResource() ) );
+            }
+        }
+
+        return items;
     }
 
 
