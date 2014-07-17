@@ -155,12 +155,18 @@ public class APIEndpointImpl implements APIEndpoint {
     	return spec.isListEndpoint();
     }
 
+    // template -- the unexpanded uri template for this endpoint
+    // expanded -- that same template but with all possible variables expanded
 	private String createDefinitionURI( URI ru, Resource uriForSpec, String template, String expanded ) {
+		// the pseudo-template converts {name} to _name so that it's a legal
+		// URI component for feeding back into a request URI.
     	String pseudoTemplate = template.replaceAll( "\\{([A-Za-z0-9]+)\\}", "_$1" );
+    //
        	if (pseudoTemplate.startsWith("http:")) {
     		// Avoid special case from the TestAPI uriTemplates, qv.
     		return pseudoTemplate + "/meta";
     	}
+    //
 		String other = ru.toString().replace( expanded, "/meta" + pseudoTemplate );
 //		System.err.println( ">> createDefinitionURI" );
 //		System.err.println( ">> ru: " + ru );
@@ -250,7 +256,7 @@ public class APIEndpointImpl implements APIEndpoint {
 
     /**
         Answer the SELECT query that would be used in the current
-        state of this endpoint to find the iterms of interest.
+        state of this endpoint to find the items of interest.
     */
 	public String getSelectQuery() {
 		return spec.getBaseQuery().assembleSelectQuery( RDFUtils.noPrefixes );
