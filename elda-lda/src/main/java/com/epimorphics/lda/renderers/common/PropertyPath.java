@@ -91,6 +91,19 @@ public class PropertyPath
         this.properties = new ArrayList<Property>( 0 );
     }
 
+    /**
+     * Construct a new property path by adding a segment to the given path
+     */
+    protected PropertyPath( PropertyPath parent, String shortName, Property uri ) {
+        this.segments = new ArrayList<String>( parent.segments.size() + 1 );
+        this.properties = new ArrayList<Property>( parent.segments.size() + 1 );
+
+        this.segments.addAll( parent.segments );
+        this.properties.addAll( parent.properties );
+
+        this.segments.add( shortName );
+        this.properties.add( uri );
+    }
 
     /***********************************/
     /* External signature methods      */
@@ -125,6 +138,28 @@ public class PropertyPath
                (properties.get( 0 ).equals( p ) ||
                 properties.get( 0 ).equals( STAR )
                );
+    }
+
+    /**
+     * Return a new property path with a new segment at the end
+     *
+     * @param shortName The short name for the new segment, or null
+     * @param uri The URI for the new segment, or null
+     * @param snr The short name service, which may be null if both shortName
+     * and uri are non-null
+     * @return A new property path corresponding to this path with the segment
+     * <code>.&lt;shortName&gt;</code> appended
+     */
+    public PropertyPath with( String shortName, String uri, ShortNameRenderer snr ) {
+        if (shortName == null) {
+            shortName = snr.shorten( uri );
+        }
+
+        if (uri == null) {
+            uri = snr.expand( shortName );
+        }
+
+        return new PropertyPath( this, shortName, ResourceFactory.createProperty( uri ) );
     }
 
     /***********************************/

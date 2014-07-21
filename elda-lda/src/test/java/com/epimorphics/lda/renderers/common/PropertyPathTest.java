@@ -133,6 +133,18 @@ public class PropertyPathTest
         assertFalse( path.beginsWith( ResourceFactory.createProperty( "http://example/test/q" ), snr ) );
     }
 
+    @Test
+    public void testWith() {
+        ShortnameService sns = stubShortNameService();
+        ShortNameRenderer snr = new ShortNameRenderer( sns, null );
+
+        PropertyPath path = new PropertyPath( "a.b" );
+
+        assertEquals( "a.b.name_p", path.with( "name_p", "http://example/test/p", null ).toString() );
+        assertEquals( "a.b.name_p", path.with( "name_p", null, snr ).toString() );
+        assertEquals( "a.b.name_p", path.with( null, "http://example/test/p", snr ).toString() );
+    }
+
 
     /***********************************/
     /* Internal implementation methods */
