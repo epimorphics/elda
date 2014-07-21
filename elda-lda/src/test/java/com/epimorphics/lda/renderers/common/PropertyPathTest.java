@@ -12,7 +12,14 @@ package com.epimorphics.lda.renderers.common;
 
 import static org.junit.Assert.*;
 
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Rule;
 import org.junit.Test;
+
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.shortnames.StandardShortnameService;
+import com.hp.hpl.jena.rdf.model.*;
 
 /**
  * Unit test for {@link PropertyPath}
@@ -28,6 +35,8 @@ public class PropertyPathTest
     /***********************************/
     /* Static variables                */
     /***********************************/
+
+    @Rule public JUnitRuleMockery context = new JUnitRuleMockery();
 
     /***********************************/
     /* Instance variables              */
@@ -81,9 +90,65 @@ public class PropertyPathTest
         assertEquals( 3, new PropertyPath( "foo.bar.fubar" ).size() );
     }
 
+    @Test
+    public void testPathBeginsWith() {
+        ShortnameService sns = stubShortNameService();
+        ShortNameRenderer snr = new ShortNameRenderer( sns, null );
+
+        PropertyPath path = new PropertyPath( "name_p" );
+
+        assertTrue( path.beginsWith( ResourceFactory.createProperty( "http://example/test/p" ), snr ) );
+        assertFalse( path.beginsWith( ResourceFactory.createProperty( "http://example/test/q" ), snr ) );
+
+        path = new PropertyPath( "name_p.name_q" );
+
+        assertTrue( path.beginsWith( ResourceFactory.createProperty( "http://example/test/p" ), snr ) );
+        assertFalse( path.beginsWith( ResourceFactory.createProperty( "http://example/test/q" ), snr ) );
+    }
+
+    @Test
+    public void testWildcardPathBeginsWith() {
+        ShortnameService sns = stubShortNameService();
+        ShortNameRenderer snr = new ShortNameRenderer( sns, null );
+
+        PropertyPath path = new PropertyPath( "*" );
+
+        assertTrue( path.beginsWith( ResourceFactory.createProperty( "http://example/test/p" ), snr ) );
+        assertTrue( path.beginsWith( ResourceFactory.createProperty( "http://example/test/q" ), snr ) );
+
+        path = new PropertyPath( "*.foo" );
+
+        assertTrue( path.beginsWith( ResourceFactory.createProperty( "http://example/test/p" ), snr ) );
+        assertTrue( path.beginsWith( ResourceFactory.createProperty( "http://example/test/q" ), snr ) );
+    }
+
+    @Test
+    public void testEmptyPathBeginsWith() {
+        ShortnameService sns = stubShortNameService();
+        ShortNameRenderer snr = new ShortNameRenderer( sns, null );
+
+        PropertyPath path = new PropertyPath();
+
+        assertFalse( path.beginsWith( ResourceFactory.createProperty( "http://example/test/p" ), snr ) );
+        assertFalse( path.beginsWith( ResourceFactory.createProperty( "http://example/test/q" ), snr ) );
+    }
+
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
+
+    static final Model apiModel1 = ModelIOUtils.modelFromTurtle
+            ( "@prefix : <http://example/test/>. "
+            + "<stub:root> a api:API. "
+            + ":p a rdf:Property; api:label 'name_p'. "
+            + ":q a rdf:Property; api:label 'name_q'; rdfs:range xsd:decimal."
+            );
+
+    private ShortnameService stubShortNameService() {
+        Resource root = apiModel1.createResource( "stub:root" );
+        return new StandardShortnameService( root, apiModel1, null );
+    }
 
     /***********************************/
     /* Inner class definitions         */

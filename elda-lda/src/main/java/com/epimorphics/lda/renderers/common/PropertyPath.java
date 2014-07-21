@@ -16,6 +16,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.vocabularies.ELDA_API;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+
 
 /**
  * A basic encapsulation of LDA property paths as represented in the
@@ -29,11 +33,13 @@ public class PropertyPath
     /* Constants                       */
     /***********************************/
 
+    /** A fake property to denote the star operator in a property path */
+    public static final Property STAR = ResourceFactory.createProperty( ELDA_API.NS + "__STAR" );
+
     /***********************************/
     /* Static variables                */
     /***********************************/
 
-    @SuppressWarnings( value = "unused" )
     private static final Logger log = LoggerFactory.getLogger( PropertyPath.class );
 
     /***********************************/
@@ -42,6 +48,9 @@ public class PropertyPath
 
     /** The individual segments of the path */
     private List<String> segments;
+
+    /** The predicate names that correspond to the shortnames on the path */
+    private List<Property> properties;
 
     /***********************************/
     /* Constructors                    */
@@ -69,6 +78,7 @@ public class PropertyPath
         }
 
         this.segments = Arrays.asList( segments );
+        this.properties = new ArrayList<Property>( segments.length );
     }
 
     /**
@@ -78,6 +88,7 @@ public class PropertyPath
      */
     public PropertyPath() {
         this.segments = new ArrayList<String>();
+        this.properties = new ArrayList<Property>( 0 );
     }
 
 
@@ -100,6 +111,22 @@ public class PropertyPath
         return segments.size();
     }
 
+    /**
+     * Return true if the given property matches the first segment in the path -
+     * either because the path's shortname expands to the property URI, or because
+     * the first segment of the path is <code>*</code>.
+     * @param p A property to test
+     * @param snr Short name renderer for converting path shortnames to predicate URIs
+     * @return True if the given property matches the start of the path
+     */
+    public boolean beginsWith( Property p, ShortNameRenderer snr ) {
+        checkExpanded( snr );
+        return !properties.isEmpty() &&
+               (properties.get( 0 ).equals( p ) ||
+                properties.get( 0 ).equals( STAR )
+               );
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
@@ -114,6 +141,29 @@ public class PropertyPath
             throw new IllegalArgumentException( "Cannnot create a PropertyPath with a null path" );
         }
         return path.split( "\\." );
+    }
+
+    /**
+     * Check that the shortnames on the path have been expanded into property URIs
+     */
+    private void checkExpanded( ShortNameRenderer snr ) {
+        if (segments.size() > properties.size()) {
+            for (String segment: segments) {
+                if (segment.equals( "*" )) {
+                    properties.add( STAR );
+                }
+                else {
+                    String uri = snr.expand( segment );
+                    if (uri == null) {
+                        log.warn( "Warning: property path uses short name '" + segment + "' which does not have an expansion to a URI"  );
+                        properties.add( STAR );
+                    }
+                    else {
+                        properties.add( ResourceFactory.createProperty( uri ));
+                    }
+                }
+            }
+        }
     }
 
     /***********************************/
