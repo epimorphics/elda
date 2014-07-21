@@ -195,7 +195,7 @@ public class PageTest
 
     @Test
     public void testItems() {
-        List<DisplayResource> items = page.items();
+        List<DisplayNode> items = page.items();
 
         assertEquals( 10, items.size() );
         assertEquals( "http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html", items.get( 0 ).getURI() );

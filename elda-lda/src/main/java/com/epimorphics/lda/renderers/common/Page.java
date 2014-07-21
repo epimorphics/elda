@@ -260,18 +260,18 @@ public class Page extends CommonNodeWrapper
     }
 
     /**
-     * @return A list of the items on this page, as a list of {@link DisplayResource}
+     * @return A list of the items on this page, as a list of {@link DisplayNode}
      */
-    public List<DisplayResource> items() {
-        List<DisplayResource> items = new ArrayList<DisplayResource>();
+    public List<DisplayNode> items() {
+        List<DisplayNode> items = new ArrayList<DisplayNode>();
 
         if (isItemEndpoint()) {
-            items.add( new DisplayResource( this, getPropertyValue( FOAF.primaryTopic ).asResource() ) );
+            items.add( new DisplayNode( this, getPropertyValue( FOAF.primaryTopic ).asResource() ) );
         }
         else {
             RDFList itemList = getPropertyValue( API.items ).asResource().as( RDFList.class );
             for (RDFNode n: itemList.asJavaList()) {
-                items.add( new DisplayResource( this, n.asResource() ) );
+                items.add( new DisplayNode( this, n.asResource() ) );
             }
         }
 
