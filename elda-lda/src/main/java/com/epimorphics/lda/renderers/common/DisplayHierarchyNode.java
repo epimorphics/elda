@@ -13,12 +13,14 @@ package com.epimorphics.lda.renderers.common;
 import java.util.*;
 
 import com.epimorphics.lda.renderers.common.DisplayHierarchy.DisplayHierarchyContext;
+import com.epimorphics.rdfutil.RDFNodeWrapper;
 
 
 /**
  *  A node in the unfolded display hierarchy starting at the item roots.
  */
-public class DisplayHierarchyNode {
+public class DisplayHierarchyNode
+{
     /***********************************/
     /* Constants                       */
     /***********************************/
@@ -134,6 +136,51 @@ public class DisplayHierarchyNode {
     public List<DisplayHierarchyNode> children() {
         return children;
     }
+
+    /* Convenience methods which delegate to the same method on the encapsulated RDFNodeWrapper */
+
+    /** @see {@link RDFNodeWrapper#isResource()} */
+    public boolean isResource() {
+        return rdfNode().isResource();
+    }
+
+    /** @see {@link RDFNodeWrapper#isLiteral()} */
+    public boolean isLiteral() {
+        return rdfNode().isLiteral();
+    }
+
+    /** @see {@link RDFNodeWrapper#isAnon()} */
+    public boolean isAnon() {
+        return rdfNode().isAnon();
+    }
+
+    /** @see {@link RDFNodeWrapper#isList()} */
+    public boolean isList() {
+        return rdfNode().isList();
+    }
+
+    /** @see {@link RDFNodeWrapper#getLexicalForm()} */
+    public String getLexicalForm() {
+        return rdfNode().getLexicalForm();
+    }
+
+    /** @see {@link RDFNodeWrapper#getName()} */
+    public String getName() {
+        return rdfNode().getName();
+    }
+
+    /** @see {@link RDFNodeWrapper#getValue()} */
+    public Object getValue() {
+        return rdfNode().getValue();
+    }
+
+    /** @see {@link RDFNodeWrapper#getURI()} */
+    public String getURI() {
+        return rdfNode().getURI();
+    }
+
+
+
 
     /***********************************/
     /* Internal implementation methods */
