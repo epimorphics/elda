@@ -140,9 +140,9 @@ public class PropertyPathTest
 
         PropertyPath path = new PropertyPath( "a.b" );
 
-        assertEquals( "a.b.name_p", path.with( "name_p", "http://example/test/p", null ).toString() );
-        assertEquals( "a.b.name_p", path.with( "name_p", null, snr ).toString() );
-        assertEquals( "a.b.name_p", path.with( null, "http://example/test/p", snr ).toString() );
+        assertEquals( "a.b.name_p", path.append( "name_p", "http://example/test/p", null ).toString() );
+        assertEquals( "a.b.name_p", path.append( "name_p", null, snr ).toString() );
+        assertEquals( "a.b.name_p", path.append( null, "http://example/test/p", snr ).toString() );
     }
 
 

@@ -44,6 +44,9 @@ public class DisplayHierarchy
     /** The page we are creating the hierarchy for */
     private Page page;
 
+    /** The current short name renderer */
+    private ShortNameRenderer shortNameRenderer;
+
     /** The roots of the hierarchy */
     private List<HierarchyNode> roots = new ArrayList<HierarchyNode>();
 
@@ -55,8 +58,9 @@ public class DisplayHierarchy
      * Construct a new display hierarchy for the given page
      * @param page
      */
-    public DisplayHierarchy( Page page ) {
+    public DisplayHierarchy( Page page,  ShortNameRenderer snr ) {
         this.page = page;
+        this.shortNameRenderer = snr;
 
         for (DisplayNode item: page.items()) {
             HierarchyNode n = new HierarchyNode( new PropertyPath(), null, item );
@@ -68,11 +72,16 @@ public class DisplayHierarchy
     /* External signature methods      */
     /***********************************/
 
+    /** @return The root nodes (ie. the top-level item or items) */
+    public List<HierarchyNode> roots() {
+        return roots;
+    }
+
     /**
      * Expand the hierarchy from the given roots
      */
-    public void expand( ShortNameRenderer snr ) {
-        DisplayHierarchyContext context = initialiseContext( page, snr );
+    public void expand() {
+        DisplayHierarchyContext context = initialiseContext( page );
 
         while (!context.completed()) {
             HierarchyNode node = context.queue().remove();
@@ -97,18 +106,18 @@ public class DisplayHierarchy
 
         for (Statement s: arcs) {
             Property p = s.getPredicate();
-            PropertyPath pathTo = node.pathTo().with( null, p.getURI(), context.shortNameRenderer() );
+            PropertyPath pathTo = node.pathTo().append( null, p.getURI(), shortNameRenderer );
             HierarchyNode child = new HierarchyNode( pathTo, node, context.wrap( s.getObject() ) );
 
             Set<PropertyPath> matchingPaths = matchingPaths( context, s.getPredicate(), paths );
             child.explicitPaths().addAll( matchingPaths );
 
-            node.children().add( child );
-            context.see( child.rdfNode() );
-
             if (!child.isLeaf( context )) {
                 context.queue().add( child );
             }
+
+            node.children().add( child );
+            context.see( child.rdfNode() );
         }
     }
 
@@ -119,13 +128,14 @@ public class DisplayHierarchy
      * @param context The current context, including the short name renderer
      * @param p An RDF property
      * @param paths The paths for consideration
-     * @return A sub-set of <code>paths</code>, possibly empty, which start with the given property
+     * @return A sub-set of <code>paths</code>, possibly empty, which start with the
+     *         given property or <code>*</code>
      */
     protected Set<PropertyPath> matchingPaths( DisplayHierarchyContext context, Property p, Set<PropertyPath> paths ) {
         Set<PropertyPath> matching = new HashSet<PropertyPath>();
 
         for (PropertyPath path: paths) {
-            if (path.beginsWith( p, context.shortNameRenderer() )) {
+            if (path.beginsWith( p, shortNameRenderer )) {
                 matching.add( path );
             }
         }
@@ -134,11 +144,10 @@ public class DisplayHierarchy
     }
 
     /** @return A new context bookkeeping object */
-    protected DisplayHierarchyContext initialiseContext( Page page, ShortNameRenderer snr ) {
+    protected DisplayHierarchyContext initialiseContext( Page page ) {
         DisplayHierarchyContext context = new DisplayHierarchyContext();
 
         context.setPage( page );
-        context.setShortNameRenderer( snr );
 
         context.queue().addAll( roots );
         for (HierarchyNode n: roots) {
@@ -264,9 +273,6 @@ public class DisplayHierarchy
         /** The base set of property paths we have to deal with */
         private Set<PropertyPath> basePaths;
 
-        /** The short name rendering service */
-        private ShortNameRenderer shortNameRenderer;
-
         /** The current page */
         private Page page;
 
@@ -307,16 +313,6 @@ public class DisplayHierarchy
         /** @return True if the queue has been exhausted */
         public boolean completed() {
             return queue().isEmpty();
-        }
-
-        /** Set the short name renderer */
-        public void setShortNameRenderer( ShortNameRenderer snr ) {
-            this.shortNameRenderer = snr;
-        }
-
-        /** @return The short name renderer */
-        public ShortNameRenderer shortNameRenderer() {
-            return this.shortNameRenderer;
         }
 
         /** @return A wrapped version of the given RDF node */

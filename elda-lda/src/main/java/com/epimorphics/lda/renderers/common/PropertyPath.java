@@ -150,7 +150,7 @@ public class PropertyPath
      * @return A new property path corresponding to this path with the segment
      * <code>.&lt;shortName&gt;</code> appended
      */
-    public PropertyPath with( String shortName, String uri, ShortNameRenderer snr ) {
+    public PropertyPath append( String shortName, String uri, ShortNameRenderer snr ) {
         if (shortName == null) {
             shortName = snr.shorten( uri );
         }
