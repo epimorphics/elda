@@ -12,6 +12,7 @@ import org.w3c.dom.*;
 
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.Couple;
@@ -342,7 +343,7 @@ public class XMLRendering {
 	}
 
 	private void addPropertyValues( Trail t, Element e, Resource x, Property p ) {		
-		Element pe = d.createElement( shortNameFor( p ) );
+		Element pe = createElement(p);
 		e.appendChild( pe );
 		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();		
 	//
@@ -352,6 +353,18 @@ public class XMLRendering {
 			}
 		} else if (values.size() == 1) {
 			giveValueToElement( t, pe, values.iterator().next() );
+		}
+	}
+
+	private Element createElement(Property p) {
+		String uri = p.getURI(), sn = shortNameFor(p);
+		try { return d.createElement(sn);  }
+		catch (DOMException e) { 
+			throw new EldaException
+				( "DOM exception involving '" 
+				+ sn + "' [" + uri + "]: " 
+				+ e.getMessage()
+				);	
 		}
 	}
 
