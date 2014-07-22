@@ -35,17 +35,15 @@ public class AuthMap {
 	Map<String, AuthInfo> map = new HashMap<String, AuthInfo>();
 	
 	public static AuthMap loadAuthMap(ServletContext sc, FileManager fm, NamesAndValues map) {
-		AuthMap am = new AuthMap(); 	
-	//
 		String contextName = RouterRestletSupport.flatContextPath(sc.getContextPath());
 		String s = "/etc/elda/conf.d/{APP}/*.auth";
 		String s2 = s.replaceAll( "\\{APP\\}", contextName );
 		List<File> authFiles = new Glob().filesMatching(s2);
 	//
+		AuthMap am = new AuthMap(); 	
 		for (File af: authFiles) {
 			am.put( af.getName(), readAuthFile( fm, af.toString()));
 		}
-	//
 		return am;
 	}	
 	
@@ -54,19 +52,19 @@ public class AuthMap {
 	}
 
 	private static AuthInfo readAuthFile( FileManager fm, String fileName ) {
-		
 		log.debug("reading auth file '" + fileName + "'");
+		return new AuthInfo(readProperties(fm, fileName));
+	}
 
+	private static Properties readProperties(FileManager fm, String fileName) {
 		String wholeFile = fm.readWholeFileAsUTF8( fileName );
-		
 		Properties p = new Properties();
 		try {
 			p.load(new StringReader(wholeFile));
 		} catch (IOException e) {
 			throw new WrappedException(e);
 		}
-		
-		return new AuthInfo(p);
+		return p;
 	}
 
 	public AuthInfo get(String key) {
