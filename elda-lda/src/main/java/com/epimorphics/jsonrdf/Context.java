@@ -17,6 +17,7 @@ import static com.epimorphics.jsonrdf.RDFUtil.getStringValue;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.exceptions.ReusedShortnameException;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -208,6 +209,10 @@ public class Context implements ReadContext, Cloneable {
      * If the name is already in use then only record as an alternate name
      */
     public void recordPreferredName(String name, String uri) {
+    	if (!labelPattern.matcher(name).matches()) {
+    		throw new EldaException
+    			("The label '" + name + "' is not a legal shortname for '" + uri + "'");
+    	}
         if (isNameFree(name)) { 
         	recordShortname(name, uri);
             nameToURI.put(name, uri);
