@@ -52,21 +52,6 @@ public class Fixtures
 
     /** A page of bathing water results */
     public static final String PAGE_BWQ =
-            "@prefix os:    <http://a9.com/-/spec/opensearch/1.1/> .\n" +
-            "@prefix opmv:  <http://purl.org/net/opmv/types/common#> .\n" +
-            "@prefix bw:    <http://environment.data.gov.uk/id/bathing-water/> .\n" +
-            "@prefix qb:    <http://purl.org/linked-data/cube#> .\n" +
-            "@prefix sparql: <http://purl.org/net/opmv/types/sparql#> .\n" +
-            "@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n" +
-            "@prefix elda:  <http://www.epimorphics.com/vocabularies/lda#> .\n" +
-            "@prefix dct:   <http://purl.org/dc/terms/> .\n" +
-            "@prefix def-bwq: <http://environment.data.gov.uk/def/bathing-water-quality/> .\n" +
-            "@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .\n" +
-            "@prefix api:   <http://purl.org/linked-data/api/vocab#> .\n" +
-            "@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
-            "@prefix xhv:   <http://www.w3.org/1999/xhtml/vocab#> .\n" +
-            "@prefix doap:  <http://usefulinc.com/ns/doap#> .\n" +
-            "\n" +
             "def-bwq:SampleAssessment\n" +
             "        rdfs:label  \"AsesiadSampl\"@cy , \"SampleAssessment\"@en .\n" +
             "\n" +

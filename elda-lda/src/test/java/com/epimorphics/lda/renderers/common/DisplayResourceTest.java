@@ -25,7 +25,7 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
- * Unit tests for {@link DisplayNode}
+ * Unit tests for {@link DisplayRdfNode}
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
@@ -56,7 +56,7 @@ public class DisplayResourceTest
         setThreadingPolicy(new Synchroniser());
     }};
 
-    private DisplayNode displayResource;
+    private DisplayRdfNode displayResource;
 
     /***********************************/
     /* Constructors                    */
@@ -69,7 +69,7 @@ public class DisplayResourceTest
     @Before
     public void before() {
         ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
-        displayResource = new DisplayNode( rm.page(), ResourceFactory.createResource( "http://www.treefroggames.com/a-few-acres-of-snow-2" ) );
+        displayResource = new DisplayRdfNode( rm.page(), ResourceFactory.createResource( "http://www.treefroggames.com/a-few-acres-of-snow-2" ) );
     }
 
 

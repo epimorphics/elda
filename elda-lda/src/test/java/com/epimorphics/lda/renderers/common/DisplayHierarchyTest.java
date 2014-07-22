@@ -25,7 +25,7 @@ import com.hp.hpl.jena.rdf.model.*;
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class TestDisplayHierarchy
+public class DisplayHierarchyTest
 {
     /***********************************/
     /* Constants                       */

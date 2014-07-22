@@ -48,7 +48,7 @@ public class DisplayHierarchy
     private ShortNameRenderer shortNameRenderer;
 
     /** The roots of the hierarchy */
-    private List<HierarchyNode> roots = new ArrayList<HierarchyNode>();
+    private List<DisplayHierarchyNode> roots = new ArrayList<DisplayHierarchyNode>();
 
     /***********************************/
     /* Constructors                    */
@@ -62,8 +62,8 @@ public class DisplayHierarchy
         this.page = page;
         this.shortNameRenderer = snr;
 
-        for (DisplayNode item: page.items()) {
-            HierarchyNode n = new HierarchyNode( new PropertyPath(), null, item );
+        for (DisplayRdfNode item: page.items()) {
+            DisplayHierarchyNode n = new DisplayHierarchyNode( new PropertyPath(), null, item );
             roots.add( n );
         }
     }
@@ -73,7 +73,7 @@ public class DisplayHierarchy
     /***********************************/
 
     /** @return The root nodes (ie. the top-level item or items) */
-    public List<HierarchyNode> roots() {
+    public List<DisplayHierarchyNode> roots() {
         return roots;
     }
 
@@ -84,7 +84,7 @@ public class DisplayHierarchy
         DisplayHierarchyContext context = initialiseContext( page );
 
         while (!context.completed()) {
-            HierarchyNode node = context.queue().remove();
+            DisplayHierarchyNode node = context.queue().remove();
             expandNode( context, node );
         }
     }
@@ -100,14 +100,14 @@ public class DisplayHierarchy
      * @param context
      * @param node
      */
-    protected void expandNode( DisplayHierarchyContext context, HierarchyNode node ) {
+    protected void expandNode( DisplayHierarchyContext context, DisplayHierarchyNode node ) {
         List<Statement> arcs = node.rdfNode().getDisplayProperties();
         Set<PropertyPath> paths = node.isRoot() ? context.basePaths() : node.explicitPaths();
 
         for (Statement s: arcs) {
             Property p = s.getPredicate();
             PropertyPath pathTo = node.pathTo().append( null, p.getURI(), shortNameRenderer );
-            HierarchyNode child = new HierarchyNode( pathTo, node, context.wrap( s.getObject() ) );
+            DisplayHierarchyNode child = new DisplayHierarchyNode( pathTo, node, context.wrap( s.getObject() ) );
 
             Set<PropertyPath> matchingPaths = matchingPaths( context, s.getPredicate(), paths );
             child.explicitPaths().addAll( matchingPaths );
@@ -116,7 +116,6 @@ public class DisplayHierarchy
                 context.queue().add( child );
             }
 
-            node.children().add( child );
             context.see( child.rdfNode() );
         }
     }
@@ -150,7 +149,7 @@ public class DisplayHierarchy
         context.setPage( page );
 
         context.queue().addAll( roots );
-        for (HierarchyNode n: roots) {
+        for (DisplayHierarchyNode n: roots) {
             context.see( n.rdfNode );
         }
         context.setBasePropertyPaths( new HashSet<PropertyPath>( page.currentPropertyPaths() ) );
@@ -163,109 +162,11 @@ public class DisplayHierarchy
     /***********************************/
 
     /**
-     * Denotes an expanded node in the hierarchy that unfolds the resultset graph
-     */
-    public class HierarchyNode {
-        /** The path leading to this node */
-        private PropertyPath pathTo;
-
-        /** For nodes that are part of an explicit property path */
-        private Set<PropertyPath> explicitPaths = new HashSet<PropertyPath>();
-
-        /** The parent node, null for root nodes */
-        private HierarchyNode parent;
-
-        /** The RDF node that is being presented at this level */
-        private DisplayNode rdfNode;
-
-        /** The list of child nodes of this node */
-        private List<HierarchyNode> children = new ArrayList<DisplayHierarchy.HierarchyNode>();
-
-        /** Constructor */
-        public HierarchyNode( PropertyPath pathTo, HierarchyNode parent, DisplayNode rdfNode ) {
-            this.pathTo = pathTo;
-            this.parent = parent;
-            this.rdfNode = rdfNode;
-        }
-
-        /** @return The path to this node */
-        public PropertyPath pathTo() {
-            return pathTo;
-        }
-
-        /** @return True if this node is explicitly on a property path */
-        public boolean isOnExplicitPath() {
-            return !explicitPaths.isEmpty();
-        }
-
-        /** @return The explicit property path that this expansion is following */
-        public Set<PropertyPath> explicitPaths() {
-            return explicitPaths;
-        }
-
-        /** @return The parent node */
-        public HierarchyNode parent() {
-            return parent;
-        }
-
-        /** @return True if this node is a root of the hierarchy */
-        public boolean isRoot() {
-            return parent == null;
-        }
-
-        /** @return The RDF node that this hierarchy node is presenting */
-        public DisplayNode rdfNode() {
-            return rdfNode;
-        }
-
-        /** @return True if this resource has already been seen on this branch */
-        public boolean isLoop() {
-            return (parent() != null) ? parent().findAncestor( rdfNode() ) : false;
-        }
-
-        /** @return True if this node's RDF node equals <code>resource</code>, or if any of my ancestors do */
-        public boolean findAncestor( DisplayNode resource ) {
-            if (rdfNode().equals( resource )) {
-                return true;
-            }
-            else if (parent() != null) {
-                return parent().findAncestor( resource );
-            }
-            else {
-                return false;
-            }
-        }
-
-        /**
-         * A node is a leaf of the hierarchy if any of the following apply:
-         * <ul><li>it is a literal</li>
-         *     <li>it has already occurred among its own ancestors (ie is a loop)</li>
-         *     <li>it is not a top-level root node, has been previously expanded
-         *         and is not on an explicit property path</li>
-         * </ul>
-         * @param context The current context, which contains the list of seen nodes
-         * @return True if this is a leaf node of this hierarchy
-         */
-        public boolean isLeaf( DisplayHierarchyContext context ) {
-            return rdfNode().isLiteral() ||
-                   isLoop() ||
-                   (!isRoot() &&
-                    !isOnExplicitPath() &&
-                    context.isSeen( rdfNode() ));
-        }
-
-        /** @return The list of children of this node */
-        public List<HierarchyNode> children() {
-            return children;
-        }
-    }
-
-    /**
      * A collection of the state information we keep while expanding the display hierarchy
      */
     public class DisplayHierarchyContext {
         /** A queue of the non-expanded nodes */
-        private Queue<HierarchyNode> queue = new ArrayDeque<HierarchyNode>();
+        private Queue<DisplayHierarchyNode> queue = new ArrayDeque<DisplayHierarchyNode>();
 
         /** A list of the resource URIs we have seen */
         private Set<Resource> seen = new HashSet<Resource>();
@@ -277,7 +178,7 @@ public class DisplayHierarchy
         private Page page;
 
         /** @return The current hierarchy node queue */
-        public Queue<HierarchyNode> queue() {
+        public Queue<DisplayHierarchyNode> queue() {
             return this.queue;
         }
 
@@ -316,8 +217,8 @@ public class DisplayHierarchy
         }
 
         /** @return A wrapped version of the given RDF node */
-        public DisplayNode wrap( RDFNode n ) {
-            return new DisplayNode( this.page, n );
+        public DisplayRdfNode wrap( RDFNode n ) {
+            return new DisplayRdfNode( this.page, n );
         }
 
         /** Set the model wrapper */

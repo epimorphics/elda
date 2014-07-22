@@ -28,7 +28,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class DisplayNode
+public class DisplayRdfNode
 extends CommonNodeWrapper
 {
     /***********************************/
@@ -40,7 +40,7 @@ extends CommonNodeWrapper
     /***********************************/
 
     @SuppressWarnings( value = "unused" )
-    private static final Logger log = LoggerFactory.getLogger( DisplayNode.class );
+    private static final Logger log = LoggerFactory.getLogger( DisplayRdfNode.class );
 
     /** The strategy object which we will use to order the resource's triples for display */
     private static PropertyOrderingStrategy propertyOrdering;
@@ -58,11 +58,11 @@ extends CommonNodeWrapper
      * @param page The page object
      * @param root The RDF node
      */
-    public DisplayNode( Page page, RDFNode root ) {
+    public DisplayRdfNode( Page page, RDFNode root ) {
         super( page, root );
     }
 
-    public DisplayNode( Page page, RDFNodeWrapper root ) {
+    public DisplayRdfNode( Page page, RDFNodeWrapper root ) {
         super( page, root.asRDFNode() );
     }
 
