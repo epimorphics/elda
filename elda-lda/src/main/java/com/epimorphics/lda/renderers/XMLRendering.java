@@ -361,8 +361,8 @@ public class XMLRendering {
 		try { return d.createElement(sn);  }
 		catch (DOMException e) { 
 			throw new EldaException
-				( "DOM exception involving '" 
-				+ sn + "' [" + uri + "]: " 
+				( "DOM exception involving shortname '" 
+				+ sn + "' [URL " + uri + "]: " 
 				+ e.getMessage()
 				);	
 		}
