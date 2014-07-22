@@ -71,7 +71,7 @@ public class Loader extends HttpServlet {
         modelLoader = new APIModelLoader( baseFilePath );
         EldaFileManager.get().addLocatorFile( baseFilePath );
     //
-        AuthMap am = AuthMap.loadAuthMap( EldaFileManager.get(), wrapParameters() );
+        AuthMap am = AuthMap.loadAuthMap( sc, EldaFileManager.get(), wrapParameters() );
     //
         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
     //

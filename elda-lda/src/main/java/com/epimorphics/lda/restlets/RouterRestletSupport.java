@@ -112,7 +112,7 @@ public class RouterRestletSupport {
 	//	
 		Router result = new DefaultRouter();	
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
-        AuthMap am = AuthMap.loadAuthMap( EldaFileManager.get(), wrapContext(con) );
+        AuthMap am = AuthMap.loadAuthMap( con, EldaFileManager.get(), wrapContext(con) );
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
         addBaseFilepath( baseFilePath );
     //
