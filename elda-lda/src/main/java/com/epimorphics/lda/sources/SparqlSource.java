@@ -67,6 +67,7 @@ public class SparqlSource extends SourceBase implements Source {
         	if (authKey != null) {
         		log.debug("handling auth key '" + authKey + "'");
         		AuthInfo ai = am.get( authKey );
+        		        		
         		if (ai != null) {
         			user = ai.get("basic.user");
         			password = ai.get("basic.password").toCharArray();

@@ -112,7 +112,7 @@ public class RouterRestletSupport {
 	//	
 		Router result = new DefaultRouter();	
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
-        AuthMap am = AuthMap.loadAuthMap( con, EldaFileManager.get(), wrapContext(con) );
+    //
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
         addBaseFilepath( baseFilePath );
     //
@@ -120,27 +120,29 @@ public class RouterRestletSupport {
 		SpecManagerFactory.set( sm );
 	//		
 		for (PrefixAndFilename pf: pfs) {
-			loadOneConfigFile( result, am, modelLoader, pf.prefixPath, pf.fileName );
+			loadOneConfigFile( result, contextName, modelLoader, pf.prefixPath, pf.fileName );
 		}
 		int count = result.countTemplates();
 		return count == 0  ? RouterFactory.getDefaultRouter() : result;
 	}
+
 	
-	private static NamesAndValues wrapContext(final ServletContext con) {
-		return new NamesAndValues() {
-			
-			@Override public List<String> getParameterNames() {
-				List<String> result = new ArrayList<String>();
-				@SuppressWarnings("unchecked") Enumeration<String> names = con.getInitParameterNames();
-				while (names.hasMoreElements()) result.add( names.nextElement() );
-				return result;
-			}
-			
-			@Override public String getParameter(String name) {
-				return con.getInitParameter(name);
-			}
-		};
-	}
+	
+//	private static NamesAndValues wrapContext(final ServletContext con) {
+//		return new NamesAndValues() {
+//			
+//			@Override public List<String> getParameterNames() {
+//				List<String> result = new ArrayList<String>();
+//				@SuppressWarnings("unchecked") Enumeration<String> names = con.getInitParameterNames();
+//				while (names.hasMoreElements()) result.add( names.nextElement() );
+//				return result;
+//			}
+//			
+//			@Override public String getParameter(String name) {
+//				return con.getInitParameter(name);
+//			}
+//		};
+//	}
 
 	/**
 	    Return a NamesAndValues which wraps the init parameters of this Loader
@@ -194,7 +196,7 @@ public class RouterRestletSupport {
 		return contextPath.equals("") ? "ROOT" : contextPath.substring(1).replaceAll("/", "_");
 	}
 
-	public static void loadOneConfigFile(Router router, AuthMap am, ModelLoader ml, String prefixPath, String thisSpecPath) {
+	public static void loadOneConfigFile(Router router, String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {
 		log.info( "Loading spec file from " + thisSpecPath + " with prefix path " + prefixPath );
 		Model init = ml.loadModel( thisSpecPath );
 		ServletUtils.addLoadedFrom( init, thisSpecPath );
@@ -203,11 +205,11 @@ public class RouterRestletSupport {
 		    Resource api = ri.next();
             Resource specRoot = init.getResource(api.getURI());
             try {
-				SpecManagerFactory.get().addSpec(prefixPath, am, prefixPath, api.getURI(), "", init );
+				SpecManagerFactory.get().addSpec(prefixPath, appName, prefixPath, api.getURI(), "", init );
 			} catch (APISecurityException e) {
 				throw new WrappedException(e);
 			}
-			APISpec apiSpec = new APISpec( prefixPath, am, EldaFileManager.get(), specRoot, ml );
+			APISpec apiSpec = new APISpec( prefixPath, appName, EldaFileManager.get(), specRoot, ml );
 			APIFactory.registerApi( router, prefixPath, apiSpec );
 		}
 	}

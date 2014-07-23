@@ -17,6 +17,7 @@
 
 package com.epimorphics.lda.routing;
 
+import java.io.File;
 import java.util.*;
 
 import javax.servlet.ServletConfig;
@@ -71,15 +72,13 @@ public class Loader extends HttpServlet {
         modelLoader = new APIModelLoader( baseFilePath );
         EldaFileManager.get().addLocatorFile( baseFilePath );
     //
-        AuthMap am = AuthMap.loadAuthMap( sc, EldaFileManager.get(), wrapParameters() );
-    //
         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
     //
         String contextName = RouterRestletSupport.flatContextPath(sc.getContextPath());
         
         for (String specTemplate : ServletUtils.getSpecNamesFromContext(adaptConfig(fig))) {
         	String spec = specTemplate.replaceAll( "\\{APP\\}", contextName );
-            ServletUtils.loadSpecsFromFiles( am, modelLoader, baseFilePath, prefixPath, spec );
+            ServletUtils.loadSpecsFromFiles(sc.getServletContextName(), modelLoader, baseFilePath, prefixPath, spec );
         }
     }
 

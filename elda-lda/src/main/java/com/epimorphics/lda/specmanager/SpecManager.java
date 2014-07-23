@@ -47,7 +47,7 @@ public interface SpecManager {
      * associate endpoints. 
      * @throws APISecurityException if the key does match the key used to create the matching existing entry
      */
-    public APISpec addSpec(String prefixPath, AuthMap am, String context, String uri, String key, Model spec) 
+    public APISpec addSpec(String prefixPath, String appName, String context, String uri, String key, Model spec) 
     throws APISecurityException;
     
     /**
@@ -58,7 +58,7 @@ public interface SpecManager {
      * associate endpoints. 
      * @throws APISecurityException if the key does match the key used to create the matching existing entry
      */
-    public APISpec updateSpec(String prefixPath, AuthMap am, String context, String uri, String key, Model spec)
+    public APISpec updateSpec(String prefixPath, String appName, String context, String uri, String key, Model spec)
     throws APISecurityException;
     
     /**

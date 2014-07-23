@@ -102,34 +102,49 @@ public class APISpec {
 	}
 
     public APISpec( String prefixPath, FileManager fm, Resource specification, ModelLoader loader ) {
-    	this(prefixPath, new AuthMap(), fm, specification, loader ); 
+    	this(prefixPath, "APP", fm, specification, loader ); 
     }
     
-    public APISpec( String prefixPath, AuthMap am, FileManager fm, Resource specification, ModelLoader loader ) {
+    public APISpec( String prefixPath, String appName, FileManager fm, Resource root, ModelLoader loader ) {
+    	AuthMap am = loadAuthMap(root, appName);
     	this.prefixPath = prefixPath;
-    	this.specificationURI = specification.getURI();
-    	this.defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
-		this.maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
-        this.describeThreshold = RDFUtils.getIntValue( specification, ELDA_API.describeThreshold, DEFAULT_DESCRIBE_THRESHOLD );
-		this.prefixes = ExtractPrefixMapping.from(specification);
-        this.sns = loadShortnames(specification, loader);
-        this.dataSource = GetDataSource.sourceFromSpec( fm, specification, am );
-        this.textSearchConfig = dataSource.getTextSearchConfig().overlay(specification);
-        this.describeSources = extractDescribeSources( fm, am, specification, dataSource );
-        this.primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
-        this.graphTemplate = getStringValue(specification, ELDA_API.graphTemplate, null);
-        this.defaultLanguage = getStringValue(specification, API.lang, null);
-        this.base = getStringValue( specification, API.base, null );
-        this.bindings.putAll( VariableExtractor.findAndBindVariables(specification) );
-        this.factoryTable = RendererFactoriesSpec.createFactoryTable( specification );
-        this.hasParameterBasedContentNegotiation = specification.hasProperty( API.contentNegotiation, API.parameterBased ); 
-		this.cachePolicyName = getStringValue( specification, ELDA_API.cachePolicyName, "default" );
-		this.cacheExpiryMilliseconds = PropertyExpiryTimes.getSecondsValue( specification, ELDA_API.cacheExpiryTime, -1) * 1000;
-        this.enableCounting = RDFUtils.getOptionalBooleanValue( specification, ELDA_API.enableCounting, Boolean.FALSE );        
-		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( specification.getModel() );
-        extractEndpointSpecifications( specification );
-        extractModelPrefixEditor( specification );
+    	this.specificationURI = root.getURI();
+    	this.defaultPageSize = RDFUtils.getIntValue( root, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
+		this.maxPageSize = RDFUtils.getIntValue( root, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
+        this.describeThreshold = RDFUtils.getIntValue( root, ELDA_API.describeThreshold, DEFAULT_DESCRIBE_THRESHOLD );
+		this.prefixes = ExtractPrefixMapping.from(root);
+        this.sns = loadShortnames(root, loader);
+        this.dataSource = GetDataSource.sourceFromSpec( fm, root, am );
+        this.textSearchConfig = dataSource.getTextSearchConfig().overlay(root);
+        this.describeSources = extractDescribeSources( fm, am, root, dataSource );
+        this.primaryTopic = getStringValue(root, FOAF.primaryTopic, null);
+        this.graphTemplate = getStringValue(root, ELDA_API.graphTemplate, null);
+        this.defaultLanguage = getStringValue(root, API.lang, null);
+        this.base = getStringValue( root, API.base, null );
+        this.bindings.putAll( VariableExtractor.findAndBindVariables(root) );
+        this.factoryTable = RendererFactoriesSpec.createFactoryTable( root );
+        this.hasParameterBasedContentNegotiation = root.hasProperty( API.contentNegotiation, API.parameterBased ); 
+		this.cachePolicyName = getStringValue( root, ELDA_API.cachePolicyName, "default" );
+		this.cacheExpiryMilliseconds = PropertyExpiryTimes.getSecondsValue( root, ELDA_API.cacheExpiryTime, -1) * 1000;
+        this.enableCounting = RDFUtils.getOptionalBooleanValue( root, ELDA_API.enableCounting, Boolean.FALSE );        
+		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( root.getModel() );
+        extractEndpointSpecifications( root );
+        extractModelPrefixEditor( root );
     }
+
+	private AuthMap loadAuthMap(Resource root, String appName) {
+		StmtIterator maps = root.listProperties(ELDA_API.authFile);
+		if (maps.hasNext()) {
+			AuthMap am = new AuthMap();
+			while (maps.hasNext()) {
+				Statement s = maps.nextStatement();
+				String fileNames = s.getString();
+				AuthMap.readAuthMapFromPaths(am, appName, fileNames);
+			}
+			return am;
+		}		
+		return AuthMap.loadAuthMapFromPaths(appName, AuthMap.USUAL_AUTH_PATHS);
+	}
 
 	private void extractModelPrefixEditor(Resource specification) {
 		StmtIterator eps = specification.listProperties( ELDA_API.rewriteResultURIs );
