@@ -28,11 +28,7 @@ import com.hp.hpl.jena.util.FileManager;
 public class AuthMap {
 	
 	public final static String USUAL_AUTH_PATHS = "/etc/elda/conf.d/{APP}/*.auth";
-	
-	public interface NamesAndValues {
-		public String getParameter( String name );
-		public List<String> getParameterNames();
-	}
+
     protected static Logger log = LoggerFactory.getLogger(AuthMap.class);
 	
 	final Map<String, AuthInfo> map = new HashMap<String, AuthInfo>();

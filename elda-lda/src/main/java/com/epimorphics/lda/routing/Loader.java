@@ -17,9 +17,6 @@
 
 package com.epimorphics.lda.routing;
 
-import java.io.File;
-import java.util.*;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
@@ -34,8 +31,6 @@ import com.epimorphics.lda.Version;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.restlets.RouterRestletSupport;
 import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
-import com.epimorphics.lda.sources.AuthMap;
-import com.epimorphics.lda.sources.AuthMap.NamesAndValues;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specmanager.SpecManagerImpl;
 import com.epimorphics.lda.support.EldaFileManager;
@@ -94,26 +89,6 @@ public class Loader extends HttpServlet {
 				return fig.getInitParameter(name);
 			}
 		};
-	}
-
-	/**
-        Return a NamesAndValues which wraps the init parameters of this Loader
-        servlet.
-    */
-	public NamesAndValues wrapParameters() {
-		return new AuthMap.NamesAndValues() {
-
-			@Override public String getParameter(String name) {
-				return getInitParameter( name );
-			}
-
-			@Override public List<String> getParameterNames() {
-				List<String> result = new ArrayList<String>();
-				@SuppressWarnings("unchecked") Enumeration<String> names = getInitParameterNames();
-				while (names.hasMoreElements()) result.add( names.nextElement() );
-				return result;
-			}
-        };
 	}
     
     public void osgiInit(String filepath) {

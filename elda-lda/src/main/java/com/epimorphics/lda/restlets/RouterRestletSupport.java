@@ -25,8 +25,6 @@ import com.epimorphics.lda.routing.*;
 import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
 import com.epimorphics.lda.routing.Container;
 import com.epimorphics.lda.shortnames.CompleteContext;
-import com.epimorphics.lda.sources.AuthMap;
-import com.epimorphics.lda.sources.AuthMap.NamesAndValues;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specmanager.SpecManagerImpl;
 import com.epimorphics.lda.specs.APISpec;
@@ -126,44 +124,6 @@ public class RouterRestletSupport {
 		return count == 0  ? RouterFactory.getDefaultRouter() : result;
 	}
 
-	
-	
-//	private static NamesAndValues wrapContext(final ServletContext con) {
-//		return new NamesAndValues() {
-//			
-//			@Override public List<String> getParameterNames() {
-//				List<String> result = new ArrayList<String>();
-//				@SuppressWarnings("unchecked") Enumeration<String> names = con.getInitParameterNames();
-//				while (names.hasMoreElements()) result.add( names.nextElement() );
-//				return result;
-//			}
-//			
-//			@Override public String getParameter(String name) {
-//				return con.getInitParameter(name);
-//			}
-//		};
-//	}
-
-	/**
-	    Return a NamesAndValues which wraps the init parameters of this Loader
-	    servlet.
-	*/
-	public NamesAndValues wrapParameters(final ServletContext con) {
-		return new AuthMap.NamesAndValues() {
-	
-			@Override public String getParameter(String name) {
-				return con.getInitParameter( name );
-			}
-	
-			@Override public List<String> getParameterNames() {
-				List<String> result = new ArrayList<String>();
-				@SuppressWarnings("unchecked") Enumeration<String> names = con.getInitParameterNames();
-				while (names.hasMoreElements()) result.add( names.nextElement() );
-				return result;
-			}
-	    };
-	}
-
 	/**
 	    Add the baseFilePath to the FileManager singleton. Only do it
 	    once, otherwise the instance will get larger on each config load
@@ -213,18 +173,6 @@ public class RouterRestletSupport {
 			APIFactory.registerApi( router, prefixPath, apiSpec );
 		}
 	}
-    
-    static final NamesAndValues noNamesAndValues = new NamesAndValues() {
-
-		@Override public String getParameter(String name) {
-			return null;
-		}
-
-		@Override public List<String> getParameterNames() {
-			return Arrays.asList( new String[]{} );
-		}
-    	
-    };
 
 	/**
 	    Given a renderer r and a media type mt, return a new renderer which

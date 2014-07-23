@@ -133,7 +133,8 @@ public class APISpec {
     }
 
 	private AuthMap loadAuthMap(Resource root, String appName) {
-		StmtIterator maps = root.listProperties(ELDA_API.authFile);
+		Resource endpoint = RDFUtils.getResourceValue(root, ELDA_API.sparqlEndpoint);
+		StmtIterator maps = endpoint.listProperties(ELDA_API.authFile);
 		if (maps.hasNext()) {
 			AuthMap am = new AuthMap();
 			while (maps.hasNext()) {
@@ -142,7 +143,7 @@ public class APISpec {
 				AuthMap.readAuthMapFromPaths(am, appName, fileNames);
 			}
 			return am;
-		}		
+		}	
 		return AuthMap.loadAuthMapFromPaths(appName, AuthMap.USUAL_AUTH_PATHS);
 	}
 
