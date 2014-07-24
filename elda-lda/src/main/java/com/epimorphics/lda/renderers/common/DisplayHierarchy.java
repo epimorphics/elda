@@ -81,7 +81,7 @@ public class DisplayHierarchy
      * Expand the hierarchy from the given roots
      */
     public void expand() {
-        DisplayHierarchyContext context = initialiseContext( page );
+        DisplayHierarchyContext context = initialiseContext();
 
         while (!context.completed()) {
             DisplayHierarchyNode node = context.queue().remove();
@@ -143,7 +143,7 @@ public class DisplayHierarchy
     }
 
     /** @return A new context bookkeeping object */
-    protected DisplayHierarchyContext initialiseContext( Page page ) {
+    protected DisplayHierarchyContext initialiseContext() {
         DisplayHierarchyContext context = new DisplayHierarchyContext();
 
         context.setPage( page );
@@ -175,6 +175,7 @@ public class DisplayHierarchy
         private Set<PropertyPath> basePaths;
 
         /** The current page */
+        @SuppressWarnings( "hiding" )
         private Page page;
 
         /** @return The current hierarchy node queue */
