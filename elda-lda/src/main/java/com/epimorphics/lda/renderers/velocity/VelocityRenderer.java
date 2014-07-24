@@ -1,7 +1,7 @@
 /*
     See lda-top/LICENCE (or https://raw.github.com/epimorphics/elda/master/LICENCE)
     for the licence for this software.
-    
+
     (c) Copyright 2014 Epimorphics Limited
     $Id$
 */
@@ -26,65 +26,75 @@ import com.epimorphics.util.MediaType;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public class VelocityRenderer implements Renderer {
-	
-	final MediaType mt;
-	final String suffix;
-	final Resource config;
-	private VelocityCore core;
-	final String templateName;
-	final String [] metadataOptions;
+public class VelocityRenderer
+implements Renderer
+{
 
-	static final String[] defaultMetadataOptions = "bindings,formats,versions,execution".split(",");
-	
-	public VelocityRenderer( MediaType mt, Bindings b, Resource config ) {
-		this.mt = mt;
-		this.suffix = RDFUtils.getStringValue( config, API.name, "html" );
-		this.templateName = RDFUtils.getStringValue( config, ELDA_API.velocityTemplate, "page-shell.vm" );
-		this.metadataOptions = getMetadataOptions( config );
-		this.config = config;
-	}
+    final MediaType mt;
+    final String suffix;
+    final Resource config;
+    private VelocityCore core;
+    final String templateName;
+    final MetadataOptions metadataOptions;
 
-	public String[] getMetadataOptions(Resource config) {
-		String [] options = MetadataOptions.get( config );
-		return options.length == 0 ? defaultMetadataOptions : options;
-	}
+    static final String defaultMetadataOptions = "bindings,formats,versions,execution";
 
-	@Override public MediaType getMediaType( Bindings irrelevant ) {
+    public VelocityRenderer( MediaType mt, Bindings b, Resource config ) {
+        this.mt = mt;
+        this.suffix = RDFUtils.getStringValue( config, API.name, "html" );
+        this.templateName = RDFUtils.getStringValue( config, ELDA_API.velocityTemplate, "page-shell.vm" );
+        this.metadataOptions = getMetadataOptions( config );
+        this.config = config;
+    }
+
+    @Override public MediaType getMediaType( Bindings irrelevant ) {
         return mt;
     }
 
     @Override public String getPreferredSuffix() {
-    	return suffix;
+        return suffix;
     }
-    
+
     @Override public Mode getMode() {
-    	return Mode.PreferLocalnames;
+        return Mode.PreferLocalnames;
     }
-    
+
     @Override public Renderer.BytesOut render
-    	( Times t
-    	, final Bindings b
-    	, Map<String, String> termBindings
-    	, final APIResultSet results 
-    	) {
+        ( Times t
+        , final Bindings b
+        , Map<String, String> termBindings
+        , final APIResultSet results
+        ) {
     // Issue whether we need to reconstruct thing every time round
     // We used to use the bindings that came in when the renderer
     // was constructed.
-    	VelocityEngine ve = Help.createVelocityEngine( b, config );
-		this.core = new VelocityCore( ve, suffix, templateName );
-	//
-    	return new BytesOutTimed() {
+        VelocityEngine ve = Help.createVelocityEngine( b, config );
+        this.core = new VelocityCore( ve, suffix, templateName );
+    //
+        return new BytesOutTimed() {
 
-			@Override public void writeAll( OutputStream os ) {
-				results.includeMetadata( metadataOptions );
-				core.render( results, b, os );
-			}			
+            @Override public void writeAll( OutputStream os ) {
+                results.includeMetadata( metadataOptions.asArray() );
+                core.render( results, b, os );
+            }
 
-			@Override protected String getFormat() {
-				return "html";
-			}
-    		
-    	};
+            @Override protected String getFormat() {
+                return "html";
+            }
+
+        };
     }
+
+    /**
+     * Return the configured metadata options, or, if not specified in the API
+     * configuration, the default options.
+     *
+     * @param root The configuration root resource
+     * @return The metadata options for this renderer
+     */
+    protected MetadataOptions getMetadataOptions( Resource root ) {
+        return new MetadataOptions( root, defaultMetadataOptions );
+    }
+
+
 }
