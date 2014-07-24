@@ -20,8 +20,9 @@ public class VelocityRendererFactory implements RendererFactory {
 
     private Resource config = null;
 
-    @Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-        return new VelocityRenderer( mt, ep.getSpec().getBindings(), config );
+    @Override
+    public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
+        return new VelocityRenderer( mt, ep, config, null, sns );
     }
 
     @Override
