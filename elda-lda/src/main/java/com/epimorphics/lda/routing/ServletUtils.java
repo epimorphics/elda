@@ -77,7 +77,7 @@ public class ServletUtils {
 		m.add( toAdd );
 	}
 
-	public static void loadSpecsFromFiles( AuthMap am, ModelLoader ml, String baseFilePath, String prefixPath, String specPath ) {
+	public static void loadSpecsFromFiles( String appName, ModelLoader ml, String baseFilePath, String prefixPath, String specPath ) {
 		int chop = specPath.indexOf( "::" );
 		if (chop >= 0) {
 			// prefixPath :: fileName
@@ -86,14 +86,14 @@ public class ServletUtils {
 		}
 	//	
 		if (isSpecialName(specPath)) {
-			loadOneConfigFile( am, ml, prefixPath, specPath );
+			loadOneConfigFile( appName, ml, prefixPath, specPath );
 		} else {
 			String fullPath = specPath.startsWith("/") ? specPath : baseFilePath + specPath;
 			List<File> files = new Glob().filesMatching( fullPath );
 			log.info( "Found " + files.size() + " file(s) matching specPath " + specPath );
 			for (File f: files) {
 				String pp = containsStar(prefixPath) ? nameToPrefix(prefixPath, specPath, f.getName()) : prefixPath;
-				loadOneConfigFile(am, ml, pp, f.getAbsolutePath());
+				loadOneConfigFile(appName, ml, pp, f.getAbsolutePath());
 			}
 		}
 	}
@@ -121,12 +121,12 @@ public class ServletUtils {
 			;
 	}
 
-	public static void loadOneConfigFile(AuthMap am, ModelLoader ml, String prefixPath, String thisSpecPath) {
+	public static void loadOneConfigFile(String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {
 		log.info( "Loading spec file from " + thisSpecPath + " with prefix path " + prefixPath );
 		Model init = ml.loadModel( thisSpecPath );
 		addLoadedFrom( init, thisSpecPath );
 		log.info( "Loaded " + thisSpecPath + ": " + init.size() + " statements" );
-		registerModel( am, prefixPath, thisSpecPath, init );
+		registerModel( appName, prefixPath, thisSpecPath, init );
 	}
 
 	/**
@@ -134,12 +134,12 @@ public class ServletUtils {
 	 * router.
 	 * @param model
 	 */
-	public static void registerModel( AuthMap am, String prefixPath, String filePath, Model model ) {
+	public static void registerModel( String appName, String prefixPath, String filePath, Model model ) {
 	    for (ResIterator ri = model.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
 	        Resource api = ri.next();
 	        try {
 	        	if (false) setUriTemplatePrefix( prefixPath, filePath, api );
-	            SpecManagerFactory.get().addSpec( prefixPath, am, prefixPath, api.getURI(), "", model);
+	            SpecManagerFactory.get().addSpec( prefixPath, appName, prefixPath, api.getURI(), "", model);
 	        } catch (APISecurityException e) {
 	            throw new APIException( "Internal error. Got security exception during bootstrap. Not possible!", e );
 	        }

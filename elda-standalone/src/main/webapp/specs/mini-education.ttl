@@ -1185,8 +1185,8 @@ school:diocese
 school:TypeOfEstablishment_Offshore_Schools
       api:label "Type_Offshore_Schools" .
 
-school:TypeOfEstablishment_Non-Maintained_Special_School
-      api:label "Type_Non-Maintained_Special_School" .
+school:TypeOfEstablishment_Non_Maintained_Special_School
+      api:label "Type_Non_Maintained_Special_School" .
 
 school:MSOA
       api:label "MSOA"  

@@ -25,7 +25,7 @@ public class TestPropertyChain {
 	static Property P = ResourceFactory.createProperty( "eh:/p" );
 	static Property Q = ResourceFactory.createProperty( "eh:/q" );
 
-	static ShortnameService sns = new SNS( "p=eh:/p;q=eh:/q;p.q=NEVER" );
+	static ShortnameService sns = new SNS( "p=eh:/p;q=eh:/q;p_q=NEVER" );
 	
 	@Test public void testBuildFromDottedNames() {
 		View v = new View();

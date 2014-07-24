@@ -13,12 +13,16 @@ import java.util.*;
 // EXPLORATORY.
 public class AuthInfo {
 	
-//	Map<String, String> map = new HashMap<String, String>();
-
-	final Properties map;
+	final Map<String, String> map = new HashMap<String, String>();
 	
 	public AuthInfo(Properties p) {
-		this.map = p;
+		for (Map.Entry<Object, Object> kv: p.entrySet()) {
+			if (kv.getKey() instanceof String) {
+				if (kv.getValue() instanceof String) {
+					map.put((String) kv.getKey(), (String) kv.getValue());
+				}
+			}
+		}
 	}	
 	
 	public void put(String k, String v) {
@@ -26,7 +30,7 @@ public class AuthInfo {
 	}
 
 	public String get(String key) {
-		return (String) map.get(key);
+		return map.get(key);
 	}
 	
 	@Override public String toString() {

@@ -20,13 +20,13 @@ package com.epimorphics.lda.sources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.Lock;
 import com.hp.hpl.jena.shared.LockNone;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
@@ -56,25 +56,47 @@ public class SparqlSource extends SourceBase implements Source {
     public SparqlSource( Resource ep, AuthMap am ) {
     	super( ep );
     	String sparqlEndpoint = ep.getURI(); 
+    	boolean secure = sparqlEndpoint.startsWith("https:");
         this.sparqlEndpoint = sparqlEndpoint;
         String user = null;
         char [] password = null;
+        boolean allowInsecure = false;
+    //
         if (ep != null) {
         	boolean b = RDFUtils.getBooleanValue( ep, ELDA_API.supportsNestedSelect, false );
         	nestedSelects = (b ? Perhaps.Yes : Perhaps.No);
         //
+        	allowInsecure = RDFUtils.getBooleanValue(ep, ELDA_API.authAllowInsecure, false);
+        //
         	String authKey = RDFUtils.getStringValue( ep, ELDA_API.authKey, null );
         	if (authKey != null) {
+//        		System.err.println(">> authKey: " + authKey);
+//        		System.err.println(">> authMap: " + am);
         		log.debug("handling auth key '" + authKey + "'");
         		AuthInfo ai = am.get( authKey );
+        		        		
         		if (ai != null) {
         			user = ai.get("basic.user");
         			password = ai.get("basic.password").toCharArray();
         		}
         	}
         }
+    //
         this.basicUser = user;
         this.basicPassword = password;
+
+//        System.err.println( ">> basicUser:     " + this.basicUser);
+//        System.err.println( ">> secure:        " + secure);
+//        System.err.println( ">> allowInsecure: " + allowInsecure);
+        
+        if (this.basicUser != null && !secure && !allowInsecure) {
+        	throw new EldaException
+        		( "This basic-authentication SPARQL endpoint (" 
+        		+ sparqlEndpoint + ")\n is insecure (does not use https:)"
+        		+ "\n and authAllowInsecure has not been specified."
+        		);
+        }
+    //
         log.info( "created " + toString() );
     }
     
@@ -90,7 +112,11 @@ public class SparqlSource extends SourceBase implements Source {
     }
 
     @Override public String toString() {
-        return "SparqlSource{" + sparqlEndpoint + "; supportsNestedSelect: " + nestedSelects + "}";
+        return 
+        	"SparqlSource{" + sparqlEndpoint 
+        	+ (this.basicUser == null ? "; unauthenticated" : "; basic authentication")
+        	+ "; supportsNestedSelect: " + nestedSelects 
+        	+ "}";
     }
     
     @Override public Lock getLock() {

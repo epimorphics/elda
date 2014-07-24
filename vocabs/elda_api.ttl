@@ -14,12 +14,27 @@ elda:allowSyntaxProperties a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:authFile a rdf:Property
+	; rdfs:comment "comma-separated list of file wildcarded paths for authentication files."
+	; rdfs:label "authFile"
+	.
+
+elda:authAllowInsecure a rdf:Property
+	; rdfs:label "allow insecure connection"
+	; rdfs:comment 
+		"""if present and true, allows a basic-auth SPARQL endpoint to connect
+			without using https. This should only be used if the connection to
+			the endpoint is already secure."""
+	.
+
 elda:authKey a rdf:Property
-	; rdfs:comment ""
+	; rdfs:label "authKey"
+	; rdfs:comment "key identifying which authentication item to use."
 	.
 
 elda:cachePolicyName a rdf:Property
-	; rdfs:comment ""
+	; rdfs:label "cache policy name"
+	; rdfs:comment "name of one of Elda's cache policies."
 	.
 
 elda:cacheExpiryTime a rdf:Property
@@ -32,7 +47,8 @@ elda:cacheExpiryTime a rdf:Property
 	.
 
 elda:className a rdf:Property
-	; rdfs:comment ""
+	; rdfs:label "class name"
+	; rdfs:comment "full Java class name of an Elda formatter plugin."
 	.
 
 elda:construct a rdf:Property
