@@ -55,6 +55,7 @@ public class EldaViewTest
         setThreadingPolicy(new Synchroniser());
     }};
 
+    ResultsModel rm;
     private EldaView view;
 
     /***********************************/
@@ -67,7 +68,7 @@ public class EldaViewTest
 
     @Before
     public void before() {
-        ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
+        rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
         view = new EldaView( rm.page(), ResourceFactory.createResource( view_uri ) );
     }
 
@@ -98,6 +99,25 @@ public class EldaViewTest
     @Test
     public void testIsFormatOf() {
         assertEquals( "http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy", view.isVersionOf().getURI() );
+    }
+
+    @Test
+    public void testBasicView() {
+        EldaView basic = new EldaView.BasicView( rm.page() );
+
+        assertEquals( "basic", basic.label() );
+        assertEquals( 2, basic.propertyPaths().size() );
+        assertEquals( "rdfs:label", basic.propertyPaths().get( 0 ).toString() );
+        assertEquals( "rdf:type", basic.propertyPaths().get( 1 ).toString() );
+    }
+
+    @Test
+    public void testDescriptionView() {
+        EldaView all = new EldaView.DescriptionView( rm.page() );
+
+        assertEquals( "all", all.label() );
+        assertEquals( 1, all.propertyPaths().size() );
+        assertEquals( "*", all.propertyPaths().get( 0 ).toString() );
     }
 
     /***********************************/

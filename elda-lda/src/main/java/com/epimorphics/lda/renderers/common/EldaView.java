@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -119,5 +120,69 @@ implements Comparable<EldaView>
     /* Inner class definitions         */
     /***********************************/
 
+    /**
+     * Built-in view named <code>basic</code>.
+     * Defined in <a href="http://code.google.com/p/linked-data-api/wiki/API_Viewing_Resources#Built-in_Viewers">the spec</a>.
+     */
+    public static class BasicView
+    extends EldaView
+    {
+        public static final String NAME = "basic";
+
+        private static final List<PropertyPath> basicPaths;
+        private static final Resource fakeRoot = ResourceFactory.createResource();
+
+        static {
+            basicPaths = new ArrayList<PropertyPath>();
+            basicPaths.add( new PropertyPath( "rdfs:label" ) );
+            basicPaths.add( new PropertyPath( "rdf:type") );
+        }
+
+        public BasicView( Page page ) {
+            super( page, fakeRoot );
+        }
+
+        @Override
+        public String label() {
+            return NAME;
+        }
+
+        @Override
+        public List<PropertyPath> propertyPaths() {
+            return basicPaths;
+        }
+    }
+
+    /**
+     * Built-in view named <code>all</code>.
+     * Defined in <a href="http://code.google.com/p/linked-data-api/wiki/API_Viewing_Resources#Built-in_Viewers">the spec</a>.
+     */
+    public static class DescriptionView
+    extends EldaView
+    {
+        public static final String NAME = "all";
+
+        private static final List<PropertyPath> allPaths;
+        private static final Resource fakeRoot = ResourceFactory.createResource();
+
+        static {
+            allPaths = new ArrayList<PropertyPath>();
+            allPaths.add( new PropertyPath( "*" ) );
+        }
+
+        public DescriptionView( Page page ) {
+            super( page, fakeRoot );
+        }
+
+        @Override
+        public String label() {
+            return NAME;
+        }
+
+        @Override
+        public List<PropertyPath> propertyPaths() {
+            return allPaths;
+        }
+    }
 }
 

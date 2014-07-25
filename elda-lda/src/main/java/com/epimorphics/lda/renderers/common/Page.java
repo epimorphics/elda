@@ -299,20 +299,30 @@ public class Page extends CommonNodeWrapper
      * @exception EldaException if there is no such view
      */
     public EldaView findViewByName( String viewName ) {
+        EldaView view = null;
         ResIterator i = getModelW().getModel().listSubjectsWithProperty( ELDA_API.viewName, viewName );
-        Resource viewRoot = null;
 
         if (!i.hasNext()) {
-            throw new EldaException( "Could not locate view with viewName = " + viewName );
+            if (viewName.equals( EldaView.BasicView.NAME )) {
+                view = new EldaView.BasicView( this );
+            }
+            else if (viewName.equals( EldaView.DescriptionView.NAME )) {
+                view = new EldaView.DescriptionView( this );
+            }
+            else {
+                throw new EldaException( "Could not locate view with viewName = " + viewName );
+            }
         }
         else {
-            viewRoot = i.next();
+            Resource viewRoot = i.next();
             if (i.hasNext()) {
                 log.warn( "Ambiguous view name: there is more than one resource with viewName = " + viewName );
             }
+
+            view = new EldaView( this, viewRoot );
         }
 
-        return new EldaView( this, viewRoot );
+        return view;
     }
 
     /**
