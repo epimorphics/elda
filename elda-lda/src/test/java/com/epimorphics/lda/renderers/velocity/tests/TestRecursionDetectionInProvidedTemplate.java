@@ -15,6 +15,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.bindings.Bindings;
@@ -55,7 +56,7 @@ public class TestRecursionDetectionInProvidedTemplate {
 
     };
 
-    @Test public void testTecursionDetection() {
+    @Ignore @Test public void testTecursionDetection() {
         MediaType mt = MediaType.TEXT_HTML;
         Bindings b = new Bindings(x);
 
@@ -64,7 +65,7 @@ public class TestRecursionDetectionInProvidedTemplate {
         b.put("_resourceRoot", "../elda-standalone/src/main/webapp/lda-assets");
     //
         Resource config = model.createResource( "eh:/config" );
-        Renderer r = new VelocityRenderer( mt, b, config,null );
+        Renderer r = null; //new VelocityRenderer( mt, b, config,null );
     //
         Model resultModel = ModelFactory.createDefaultModel();
         Resource item = resultModel.createResource( "eh:/item" );

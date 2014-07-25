@@ -9,8 +9,8 @@
 package com.epimorphics.lda.renderers.velocity;
 
 import java.io.*;
-import java.net.URL;
-import java.util.*;
+import java.util.Map;
+import java.util.Properties;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -19,22 +19,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.core.*;
-import com.epimorphics.lda.core.APIResultSet.MergedModels;
+import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.renderers.common.*;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
+import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.*;
-import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.*;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 
 public class VelocityRenderer
 implements Renderer
@@ -46,7 +45,10 @@ implements Renderer
 
     public static final String DEFAULT_FORMAT = "html";
     public static final String DEFAULT_METADATA_OPTIONS = "bindings,formats,versions,execution";
-    public static final String DEFAULT_TEMPLATE = "page-shell.vm";
+
+    /** The default page template which will define the overall presentation unless
+     *  a template is named in the Elda configuration */
+    public static final String DEFAULT_TEMPLATE = "index.vm";
 
     /***********************************/
     /* Static variables                */
@@ -166,10 +168,35 @@ implements Renderer
     static class VelocityRendering
     implements BytesOut
     {
+
+        /***********************************/
+        /* Constants                       */
+        /***********************************/
+
+        /** The default place we look for Velocity files */
+        public static final String DEFAULT_VELOCITY_ROOT_PATH = "/velocity/";
+
+        /** The configuration parameter which sets an alternative location for Velocity templates etc */
+        public static final String VELOCITY_ROOT_CONFIG_PARAM = "_velocityRoot";
+
+        /** Name of environment var to check for a velocity root directory */
+        public static final String VELOCITY_ROOT_ENV_VAR = "VELOCITY_ROOT";
+
+        /** Name of the properties file */
+        public static final String VELOCITY_PROPERTIES_FILE = "velocity.properties";
+
+        /***********************************/
+        /* Instance variables              */
+        /***********************************/
+
+        private VelocityRenderer vr;
         private Bindings bindings;
         private APIResultSet results;
-        private VelocityRenderer vr;
         private Map<String,String> termBindings;
+
+        /***********************************/
+        /* Constructors                    */
+        /***********************************/
 
         public VelocityRendering( Bindings b, Map<String,String> tb, APIResultSet rs, VelocityRenderer vr ) {
             this.bindings = b;
@@ -178,7 +205,9 @@ implements Renderer
             this.vr = vr;
         }
 
-        /** Internal implementation methods */
+        /***********************************/
+        /* External signature methods      */
+        /***********************************/
 
         @Override
         public void writeAll( Times times, OutputStream os ) {
@@ -208,41 +237,22 @@ implements Renderer
             }
         }
 
+        /***********************************/
+        /* Internal implementation methods */
+        /***********************************/
+
+        /**
+         * Render the top-level template, given the result set and other state stored
+         * in this rendering closure.
+         *
+         * @param os The output stream to write to
+         */
         protected void render( OutputStream os ) {
             VelocityEngine ve = createVelocityEngine();
-            Resource thisPage = results.getRoot();
-            MergedModels mm = results.getModels();
-            Model m = mm.getMergedModel();
-            IdMap ids = new IdMap();
-            ShortNames names = Help.getShortnames( m );
-            boolean isItemEndpoint = thisPage.hasProperty(FOAF.primaryTopic);
-            boolean isListEndpoint = !isItemEndpoint;
-            WrappedNode.Bundle b = new WrappedNode.Bundle( names,  ids );
-            List<WrappedNode> itemised = WrappedNode.itemise( b, results.getResultList() );
-        //
-            Map<String, String> filters = new HashMap<String, String>();
-            for (String name: bindings.parameterNames()) {
-                if (name.charAt(0) != '_')
-                    filters.put(name, bindings.get(name).spelling());
-            }
-        //
-            VelocityContext vc = new VelocityContext();
-            WrappedNode wrappedPage = new WrappedNode( b, thisPage );
-            vc.put( "type_suffix", vr.suffix() );
-            vc.put( "thisPage", wrappedPage );
-            vc.put( "isItemEndpoint", isItemEndpoint );
-            vc.put( "isListEndpoint", isListEndpoint );
-//            if (isItemEndpoint) vc.put( "primaryTopic", topicOf(b, thisPage) );
-            vc.put( "ids",  ids );
-            vc.put( "names", names );
-            vc.put( "formats", Help.getFormats( m ) );
-            vc.put( "views", Help.getViews( m ) );
-            vc.put( "items", itemised );
-            vc.put( "meta", Help.getMetadataFrom( names, ids, m ) );
-            vc.put( "vars", Help.getVarsFrom( names, ids, m ) );
-            vc.put( "filters", filters );
-        //
+            VelocityContext vc = createVelocityContext();
+
             Template t = ve.getTemplate( vr.templateName() );
+
             try {
                 Writer w = new OutputStreamWriter( os, "UTF-8" );
                 t.merge( vc,  w );
@@ -254,66 +264,145 @@ implements Renderer
             }
         }
 
+        /**
+         * Create a Velocity engine instance, and initialise it with properties
+         * loaded from the <code>velocity.properties</code> file.
+         * @return A new Velocity engine
+         */
         protected VelocityEngine createVelocityEngine() {
-            String templateRoot = getTemplateRoot(bindings);
-            String propertiesName = templateRoot + "/velocity.properties";
-            Properties p = getProperties( propertiesName );
+            String velocityRoot = velocityRoot(bindings);
+
+            Properties p = getProperties( velocityRoot );
             VelocityEngine ve = new VelocityEngine();
-            if (p.isEmpty()) {
-                log.debug( "using default velocity properties." );
-            //
-                ve.setProperty( "macro.provide.scope.control", true );
-                ve.setProperty( "foreach.provide.scope.control", true );
-                ve.setProperty( "runtime.references.strict", "true" );
-//              ve.setProperty( "resource.loader",  "class" );
-//              ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
-            //
-                ve.setProperty( "file.resource.loader.path", templateRoot );
-                ve.setProperty( "file.resource.loader.cache", "true" );
-                ve.setProperty( "file.resource.loader.modificationCheckInterval", "5" );
-            //
-                ve.setProperty( "resource.loader", "file, class, url" );
-            //
-                ve.setProperty( "url.resource.loader.class", "org.apache.velocity.runtime.resource.loader.URLResourceLoader" );
-                ve.setProperty( "url.resource.loader.root", templateRoot );
-                ve.setProperty( "url.resource.loader.cache", true );
-                ve.setProperty( "url.resource.loader.modificationCheckInterval", "20" );
-            //
-//              ve.setProperty( "class.resource.loader.cache", false );
-//              ve.setProperty( "velocimacro.library.autoreload", true );
-            //
-                ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
-                ve.setProperty("runtime.log.logsystem.log4j.category", "velocity");
-                ve.setProperty("runtime.log.logsystem.log4j.logger", "velocity");
-            } else {
-                log.info( "loaded properties file " + propertiesName );
-            }
-            ve.init();
+            ve.init( p );
+
             return ve;
         }
 
-        protected String getTemplateRoot(Bindings b) {
-            String defaultRoot = b.getAsString("_velocityRoot", "/vm/");
-            URL u = b.pathAsURL(defaultRoot);
-            return u.toString() + "/";
+        /** @return The root directory where we expect to find templates and <code>velocity.properties</code> */
+        protected String velocityRoot( Bindings b ) {
+            String rootPath = b.getAsString( VELOCITY_ROOT_CONFIG_PARAM, defaultVelocityRoot() );
+
+            String rootURL = b.pathAsURL( rootPath ).toString();
+            return (rootURL.endsWith( "/" )) ? rootURL : (rootURL + "/");
         }
 
-        protected Properties getProperties( String fileName ) {
+        /** @return The default Velocity root directory, which may set by an environment variable */
+        protected String defaultVelocityRoot() {
+            String envRoot = null;
+            try {
+                envRoot = System.getenv( VELOCITY_ROOT_ENV_VAR );
+            }
+            catch (SecurityException ignore) {
+                // not allowed to read the environment, no biggie
+            }
+
+            return (envRoot == null) ? DEFAULT_VELOCITY_ROOT_PATH : envRoot;
+        }
+
+        /** @return A properties object containing the configuration properties for this velocity instance */
+        protected Properties getProperties( String velocityRoot ) {
             Properties p = new Properties();
-            InputStream is = EldaFileManager.get().open( fileName );
-            if (is != null) loadNicely( p, is );
+
+            loadPropertiesFile( velocityRoot, p );
+            setDynamicProperties( velocityRoot, p );
+
             return p;
         }
 
-        protected void loadNicely(Properties p, InputStream is) {
-            try { p.load( is ); is.close(); }
-            catch (IOException e) { throw new WrappedIOException( e ); }
+        /**
+         * Set additional properties that are calculated based on current state
+         * @param velocityRoot
+         * @param p
+         */
+        protected void setDynamicProperties( String velocityRoot, Properties p ) {
+            p.setProperty( "url.resource.loader.root", velocityRoot );
+            p.setProperty( "file.resource.loader.path", velocityRoot );
+
+//            log.debug( "using default velocity properties." );
+//        //
+//            ve.setProperty( "macro.provide.scope.control", true );
+//            ve.setProperty( "foreach.provide.scope.control", true );
+//            ve.setProperty( "runtime.references.strict", "true" );
+////          ve.setProperty( "resource.loader",  "class" );
+////          ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
+//        //
+//            ve.setProperty( "file.resource.loader.cache", "true" );
+//            ve.setProperty( "file.resource.loader.modificationCheckInterval", "5" );
+//        //
+//            ve.setProperty( "resource.loader", "file, class, url" );
+//        //
+//            ve.setProperty( "url.resource.loader.class", "org.apache.velocity.runtime.resource.loader.URLResourceLoader" );
+//            ve.setProperty( "url.resource.loader.cache", true );
+//            ve.setProperty( "url.resource.loader.modificationCheckInterval", "20" );
+//        //
+////          ve.setProperty( "class.resource.loader.cache", false );
+////          ve.setProperty( "velocimacro.library.autoreload", true );
+//        //
+//            ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
+//            ve.setProperty("runtime.log.logsystem.log4j.category", "velocity");
+//            ve.setProperty("runtime.log.logsystem.log4j.logger", "velocity");
         }
 
+        /**
+         * Load the <code>velocity.properties</code> file from the Velocity root, if it exists.
+         * @param velocityRoot
+         * @param p
+         */
+        protected void loadPropertiesFile( String velocityRoot, Properties p ) {
+            InputStream is = EldaFileManager.get().open( velocityRoot + VELOCITY_PROPERTIES_FILE );
 
+            if (is != null) {
+                try {
+                    p.load( is );
+                }
+                catch (IOException e) {
+                    log.warn( "IO exception while reading properties: " + e.getMessage(), e );
+                    throw new WrappedIOException( e );
+                }
+                finally {
+                    try {
+                        is.close();
+                    }
+                    catch (IOException e) {
+                        log.warn( "IO exception while closing properties input stream: " + e.getMessage(), e );
+                        throw new WrappedIOException( e );
+                    }
+                }
+            }
+        }
 
+        /** @return A new velocity context containing bindings that we will use to render the results */
+        protected VelocityContext createVelocityContext() {
+            Page page = initialisePage();
+            DisplayHierarchy dh = initialiseHierarchy( page );
 
+            VelocityContext vc = new VelocityContext();
+            vc.put( "page", page );
+            vc.put( "hierarchy", dh );
+            vc.put( "renderer", this.vr );
+
+            return vc;
+        }
+
+        /**
+         * Initialise the display hierarchy, which unrolls the RDF graph into a displayable tree
+         * @param page The current page object
+         * @return The display hierarchy
+         */
+        protected DisplayHierarchy initialiseHierarchy( Page page ) {
+            ShortNameRenderer snr = new ShortNameRenderer( vr.shortNameService(), page.termBindings() );
+            DisplayHierarchy dh = new DisplayHierarchy( page, snr );
+            dh.expand();
+            return dh;
+        }
+
+        /**
+         * @return A new Page object providing access to the page of results
+         */
+        protected Page initialisePage() {
+            ResultsModel rm = new ResultsModel( results );
+            return rm.page();
+        }
     }
-
-
 }
