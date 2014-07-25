@@ -257,9 +257,11 @@ implements Renderer
                 Writer w = new OutputStreamWriter( os, "UTF-8" );
                 t.merge( vc,  w );
                 w.close();
-            } catch (UnsupportedEncodingException e) {
+            }
+            catch (UnsupportedEncodingException e) {
                 throw new BrokenException( e );
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new WrappedException( e );
             }
         }
@@ -317,7 +319,16 @@ implements Renderer
          */
         protected void setDynamicProperties( String velocityRoot, Properties p ) {
             p.setProperty( "url.resource.loader.root", velocityRoot );
-            p.setProperty( "file.resource.loader.path", velocityRoot );
+
+            if (velocityRoot.startsWith( "file:" )) {
+                String velocityDir = velocityRoot.replace( "file:", "" );
+                String path = p.getProperty( "file.resource.loader.path" );
+
+                path = ((path == null) ? "" : (path + ", ")) + velocityDir;
+
+                p.setProperty( "file.resource.loader.path", path );
+            }
+
 
 //            log.debug( "using default velocity properties." );
 //        //
