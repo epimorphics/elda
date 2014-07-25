@@ -42,6 +42,8 @@ public class BuiltinRendererTable {
 			return this;
 		}
 	}
+	
+	static boolean useVelocity = false;
 
 	// pseudo-config to set up a default HTML renderer.
 	static Resource XSLT_HTML = 
@@ -122,7 +124,8 @@ public class BuiltinRendererTable {
 		
 		putFactory( XSLT_HTML, "html", API.XsltFormatter, MediaType.TEXT_HTML, new XSLT_RendererFactory( XSLT_HTML, MediaType.TEXT_HTML ) );
 		
-		putFactory( EMPTY, "vhtml", ELDA_API.VelocityFormatter, MediaType.TEXT_HTML, new VelocityRendererFactory() ); //  HTML, MediaType.TEXT_HTML ) );
+		if (useVelocity)
+			putFactory( EMPTY, "vhtml", ELDA_API.VelocityFormatter, MediaType.TEXT_HTML, new VelocityRendererFactory() );
 
 	}
 
