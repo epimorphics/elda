@@ -60,8 +60,8 @@ implements Renderer
     /* Instance variables              */
     /***********************************/
 
-    final MediaType mt;
-    final Resource configRoot;
+    private final MediaType mt;
+    private final Resource configRoot;
     private final Mode prefixMode;
     private APIEndpoint endpoint;
     private ShortnameService shortNameService;
@@ -70,6 +70,14 @@ implements Renderer
     /* Constructors                    */
     /***********************************/
 
+    /**
+     * Construct a new Velocity renderer
+     * @param mt The media type that this renderer returns, usually <code>text/html</code>
+     * @param ep The API endpoint configuration
+     * @param config The RDF resource that is the root of the API configuration declaration
+     * @param prefixMode The required prefix mode, or <code>null</code> for default
+     * @param sns The current short name service
+     */
     public VelocityRenderer( MediaType mt, APIEndpoint ep, Resource config, Mode prefixMode, ShortnameService sns ) {
         this.mt = mt;
         this.endpoint = ep;
@@ -140,14 +148,14 @@ implements Renderer
      * Render the given result set
      * @param t TODO As far as I can tell, this parameter is redundant
      * @param b The variable bindings determined by the Elda query
-     * @param termBindings Shortname bindings
+     * @param termBindings Ignored
      * @param results The query results
      */
     @Override
     public Renderer.BytesOut render( Times t, Bindings b,
                                      Map<String, String> termBindings,
                                      APIResultSet results ) {
-        return new VelocityRendering( b, termBindings, results, this );
+        return new VelocityRendering( b, results, this );
     }
 
 
@@ -162,7 +170,7 @@ implements Renderer
 
     /**
      * A <code>VelocityRendering</code> is essentially a closure of the various state
-     * variables that provide considerations when rendering into a <code>render</code>
+     * variables that are inputs into a rendering via the <code>render</code>
      * method.
      */
     static class VelocityRendering
@@ -192,15 +200,20 @@ implements Renderer
         private VelocityRenderer vr;
         private Bindings bindings;
         private APIResultSet results;
-        private Map<String,String> termBindings;
 
         /***********************************/
         /* Constructors                    */
         /***********************************/
 
-        public VelocityRendering( Bindings b, Map<String,String> tb, APIResultSet rs, VelocityRenderer vr ) {
+        /**
+         * Construct a Velocity rendering closure
+         * @param b Current bindings
+         * @param rs Current result set
+         * @param vr Reference to the Velocity renderer object, which is also a container for some of the
+         * configuration information
+         */
+        public VelocityRendering( Bindings b, APIResultSet rs, VelocityRenderer vr ) {
             this.bindings = b;
-            this.termBindings = tb;
             this.results = rs;
             this.vr = vr;
         }
@@ -209,6 +222,12 @@ implements Renderer
         /* External signature methods      */
         /***********************************/
 
+        /**
+         * Write the rendered output to the output stream, and side-effect the given
+         * <code>Times</code> object to record duration and output counts.
+         * @param times Record used to capture time and size information on output
+         * @param os The output stream to write to
+         */
         @Override
         public void writeAll( Times times, OutputStream os ) {
             CountStream cos = null;
