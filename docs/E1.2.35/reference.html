@@ -1155,7 +1155,7 @@ http://localhost:8080/elda/doc/school
 	in JASONP queries.
 </p>
 
-<h2 id="etags">Etag generation</h2>
+<h2 id="etags"><b>Etag</b> generation</h2>
 
 <p>
     If an endpoint has the property <code>elda:enableETags</code>
@@ -1173,6 +1173,36 @@ http://localhost:8080/elda/doc/school
     <li>the response's media type</li>
     <li>the content of the model</li>
 </ul>
+
+<h2>purging filter values</h2>
+
+<p>
+	(This is a new, experimental feature. Its details may
+	change with experience.)
+</p>
+
+<p>
+	To reduce the risk of carefully-crafted URLs offering
+	a security risk via an XSS attack, Elda allows the
+	values of filters in the URL to be <i>purged</i> by
+	replacing suspicious characters by spaces.
+</p>
+
+<p>
+	If an endpoint has the property <code>elda:purgeFilterValues</code>,
+	its boolean value will determine if filters on that endpoint
+	are purged. Otherwise, if its parent API has an
+	<code>elda:purgeFilterValues</code>, then the value of that
+	property determines if filters are purged. Otherwise, the
+	default value is <code>false</code> &mdash; values
+	are not purged.
+</p>
+
+<p>
+	The default is likely to become true in later versions of
+	Elda.
+</p>
+
 
 <h2 id="expiry-headers-and-cache"><b>Expires</b> headers</h2>
 
