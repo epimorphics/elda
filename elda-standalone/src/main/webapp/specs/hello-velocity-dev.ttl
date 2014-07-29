@@ -35,7 +35,7 @@ egc:velocity-world a api:API
     ; api:mimeType "text/html"
     # ; elda:velocityTemplate "page-shell.vm"
     ]
-  ; api:variable [api:name "_velocityRoot"; api:value "/var/www/elda/elda-velocity"]
+  ; api:variable [api:name "_velocityRoot"; api:value "assets/velocity"]
   .
 
 # Endpoint definition
