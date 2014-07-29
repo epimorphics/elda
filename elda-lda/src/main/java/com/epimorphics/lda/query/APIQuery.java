@@ -31,6 +31,7 @@ import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
+import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
@@ -121,6 +122,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	protected String graphName = null;
 	
 	protected String graphTemplate = null;
+	
+	protected final boolean purging;
 
 	/**
 	 * Pattern for matching SPARQL query variables (including the leading '?').
@@ -204,6 +207,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		Boolean getEnableCounting();
 		
 		long getCacheExpiryMilliseconds();
+		
+		boolean getPurging();
 	}
 
 	protected static class FilterExpressions implements ValTranslator.Filters {
@@ -231,6 +236,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.textSearchConfig = qb.getTextSearchConfig();
 		this.cacheExpiryMilliseconds = qb.getCacheExpiryMilliseconds();
 	//
+		this.purging = qb.getPurging();
 		this.graphTemplate = qb.getGraphTemplate();
 	//
 		this.deferredFilters = new ArrayList<PendingParameterValue>();
@@ -267,6 +273,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.varcount = other.varcount;
 		this.textSearchConfig = other.textSearchConfig;
 		this.cacheExpiryMilliseconds = other.cacheExpiryMilliseconds;
+		this.purging = other.purging;
 	//
 		this.graphName = other.graphName;
 		this.graphTemplate = other.graphTemplate;
@@ -404,6 +411,16 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	public void deferrableAddFilter(Param param, String val) {
 		deferredFilters.add(new PendingParameterValue(param, val));
+	}
+
+	/**
+	    Raw values have come in from the outside world (as arguments to
+	    URL query-part filters) and may optionally be cooked to get rid
+	    of suspect characters. If cooking = true, the value is stripped
+	    of suspect characters.
+	*/
+	public String cookRawValue(String raw_val) {
+		return purging ? Messages.purgeWorrisomeCharacters(raw_val): raw_val;
 	}
 
 	public void addSearchTriple(String val) {

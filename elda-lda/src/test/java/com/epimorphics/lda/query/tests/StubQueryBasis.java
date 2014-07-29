@@ -62,4 +62,8 @@ public class StubQueryBasis implements QueryBasis {
 	@Override public String getGraphTemplate() {
 		return null;
 	}
+
+	@Override public boolean getPurging() {
+		return false;
+	}
 }

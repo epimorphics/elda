@@ -77,6 +77,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     
     static Logger log = LoggerFactory.getLogger(APIEndpointSpec.class);
     
+    protected final boolean purging;
+    
     public APIEndpointSpec( APISpec apiSpec, APISpec parent, Resource endpoint ) {
     	checkEndpointType( endpoint );
     	this.apiSpec = apiSpec;
@@ -94,6 +96,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
         uriTemplate = createURITemplate( endpoint );
         endpointResource = endpoint;
         describeThreshold = getIntValue( endpoint, ELDA_API.describeThreshold, apiSpec.describeThreshold );
+    //
+        purging = getBooleanValue( endpoint, ELDA_API.purgeFilterValues, apiSpec.purging);
     //
         textSearchConfig = apiSpec.getTextSearchConfig().overlay( endpoint );
         enableCounting = RDFUtils.getOptionalBooleanValue(endpoint, ELDA_API.enableCounting, apiSpec.getEnableCounting() );
@@ -494,6 +498,10 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 
 	public long getCacheExpiryMilliseconds() {
 		return cacheExpiryMilliseconds;
+	}
+
+	@Override public boolean getPurging() {
+		return purging;
 	}
 	
 }

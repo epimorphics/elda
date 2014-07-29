@@ -61,7 +61,6 @@ public class Context implements ReadContext, Cloneable {
     		+ "\n"
     		;
     }
-    
 
 	/**
      * Construct an empty context

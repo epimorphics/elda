@@ -51,6 +51,14 @@ public class Messages {
 			;
 	}
 	
+	/**
+	    Remove suspect characters from a string, replacing runs of them
+	    by spaces.
+	*/
+	public static String purgeWorrisomeCharacters(String s) {
+		return s.replaceAll("[<&%>]", " ");
+	}
+	
 	private static String protect(String message) {
 		return StringEscapeUtils.escapeHtml(message);
 	}

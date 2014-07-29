@@ -96,6 +96,8 @@ public class APISpec {
 	    query to use nested selects if they are available.
 	*/
 	public static final int DEFAULT_DESCRIBE_THRESHOLD = 10;
+
+	protected final boolean purging;
     
 	public APISpec( FileManager fm, Resource specification, ModelLoader loader ) {
 		this( "", fm, specification, loader );
@@ -107,6 +109,7 @@ public class APISpec {
     
     public APISpec( String prefixPath, String appName, FileManager fm, Resource root, ModelLoader loader ) {
     	AuthMap am = loadAuthMap(root, appName);
+    	this.purging = RDFUtils.getBooleanValue(root, ELDA_API.purgeFilterValues, false);
     	this.prefixPath = prefixPath;
     	this.specificationURI = root.getURI();
     	this.defaultPageSize = RDFUtils.getIntValue( root, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
