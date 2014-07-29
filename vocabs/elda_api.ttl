@@ -155,6 +155,12 @@ elda:metaURL a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:purgeFilterValues a rdf:Property
+	; rdfs:label "purge filter values"
+	; rdfs:comment """Property of an API spec or endpoint that says whether
+		suspicious characters should be dropped from a query parameter filter value."""
+	.
+
 elda:replaceStartBy a rdf:Property
 	; rdfs:comment ""
 	.

@@ -223,12 +223,14 @@ public class ContextQueryUpdater implements ViewSetter {
      * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
      * @return the name of the final property referencing the val, to allow type sensitive normalization
     */
-    public void addFilterFromQuery( Param param, String val ) {
-    	if (val.equals( "" )) {
+    public void addFilterFromQuery( Param param, String raw_val ) {
+    	if (raw_val.equals( "" )) {
     		// see issue #175
     		log.debug( "parameter " + param + " given empty value." );
     		return;
     	}
+    	String val = aq.cookRawValue(raw_val);
+    	
     	String prefix = param.prefix();
     	if (prefix == null) {
     		aq.addPropertyHasValue( param, val );    		
