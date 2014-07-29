@@ -28,7 +28,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 public class TestDropsEmptyValueElements {
 
 	@Test public void ensureEmptyPropertiesIgnored() {
-		NamedViews nv = NamedViews.noNamedViews;
+		NamedViews nv = NamedViews.oneNamedView;
 		SNS sns = new SNS("a=eh:/A");
 		Bindings cc = Bindings.createContext( new Bindings(), MakeData.parseQueryString("_properties=,a," ) );
 		APIQuery aq = QueryTestUtils.queryFromSNS(sns);
@@ -44,7 +44,7 @@ public class TestDropsEmptyValueElements {
 	}
 
 	@Test public void ensureEmptySortsIgnored() {
-		NamedViews nv = NamedViews.noNamedViews;
+		NamedViews nv = NamedViews.oneNamedView;
 		SNS sns = new SNS("a=eh:/A;b=eh:/B");
 		Bindings cc = Bindings.createContext( new Bindings(), MakeData.parseQueryString("_sort=,b," ) );
 		APIQuery aq = QueryTestUtils.queryFromSNS(sns);

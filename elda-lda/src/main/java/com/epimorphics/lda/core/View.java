@@ -109,19 +109,11 @@ public class View {
 	protected int describeThreshold = APISpec.DEFAULT_DESCRIBE_THRESHOLD;
 	
     public View() {
-    	this(true);
-    }
-    
-    public View( Type type ) {
-    	this( null, type );
+    	this( null, Type.T_DESCRIBE );
     }
     
     public View( String name ) {
     	this( name, Type.T_CHAINS );
-    }
-    
-    public View( boolean doesFiltering ) {
-    	this( null, Type.T_DESCRIBE );
     }
     
     public View( String name, Type type ) {

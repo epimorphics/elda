@@ -30,7 +30,7 @@ public class TestWhereParameter
 		{    
         ShortnameService sns = new StandardShortnameService();
         APIQuery q = QueryTestUtils.queryFromSNS(sns);		
-        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.oneNamedView, sns, q );
         String theBaseQuery = q.assembleSelectQuery( RDFUtils.noPrefixes );
         String theWhereClause = "?p rdf:equals 17";
         x.handleReservedParameters( null, null, "_where", theWhereClause );

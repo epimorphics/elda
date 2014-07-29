@@ -27,18 +27,21 @@ public interface NamedViews {
 	*/
 	public View getDefaultView();
 	
+
 	/**
 	    A NamedViews with only a trivial default view, for testing
 	    purposes.
 	*/
-	static final NamedViews noNamedViews = new NamedViews() {
+	static final NamedViews oneNamedView = new NamedViews() {
+		
+		final View it = new View("onlyView");
 		
 		@Override public View getView(String viewname) {
-			return null;
+			return it;
 		}
 		
 		@Override public View getDefaultView() {
-			return new View();
+			return it;
 		}
 	};
 
