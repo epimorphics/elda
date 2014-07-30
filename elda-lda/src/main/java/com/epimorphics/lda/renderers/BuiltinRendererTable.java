@@ -63,7 +63,7 @@ public class BuiltinRendererTable {
 	
 	static private Map<Resource, RendererFactory> builtins = new HashMap<Resource, RendererFactory>();
 	
-	static void putFactory( Resource config, String name, Resource type, MediaType mt, RendererFactory rf ) {
+	public static void putFactory( Resource config, String name, Resource type, MediaType mt, RendererFactory rf ) {
 		factoryTable.putFactory( name, config, mt, rf );
 		builtins.put( type, rf );
 	}
