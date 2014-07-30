@@ -19,6 +19,7 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.rdfutil.ModelWrapper;
+import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
@@ -249,7 +250,8 @@ public class Page extends CommonNodeWrapper
      * @return The readable label for the version of Elda used to produce this page
      */
     public String eldaLabel() {
-        return eldaProcessor().getPropertyValue( RDFS.label ).getLexicalForm();
+        RDFNodeWrapper n = eldaProcessor().getPropertyValue( RDFS.label );
+        return n == null ? null : n.getLexicalForm();
     }
 
     /**

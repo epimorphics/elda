@@ -1,0 +1,61 @@
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <div class="sr-only">Toggle navigation</div>
+          <div class="icon-bar"></div>
+          <div class="icon-bar"></div>
+          <div class="icon-bar"></div>
+        </button>
+        #parse( "partials/title-brand.vm" )
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">jump to ... <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="#">resource 1</a></li>
+              <li><a href="#">resource 2</a></li>
+              <li><a href="#">resource 3</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">page<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="active"><a href="#">show 10 items</a></li>
+              <li><a href="#">show 25 items</a></li>
+              <li><a href="#">show 50 items</a></li>
+              <li class="divider"></li>
+              <li><a href="#">first page</a></li>
+              <li><a href="#">prev page</a></li>
+              <li><a href="#">next page</a></li>
+              <li><a href="#">last page</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">data format<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              #foreach( $format in $page.formats())
+                <li>
+                  <a href="$format.getURI()">$format.label()</a>
+                </li>
+              #end
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">view<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li>Views</li>
+              <li><a href="#">default</a></li>
+              <li><a href="#">all</a></li>
+              <li class="divider"></li>
+              <li>Filters:</li>
+            </ul>
+          </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+  </nav>

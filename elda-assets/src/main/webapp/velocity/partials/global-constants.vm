@@ -1,0 +1,6 @@
+## The location of the static assets, which by default is given by the velocity root
+## under the webapp root
+#set( $assets = $_APP.spelling() + "/" + $_velocityRoot.spelling() )
+
+## Images are located in the assets folder
+#set( $images = $assets + "/images" )

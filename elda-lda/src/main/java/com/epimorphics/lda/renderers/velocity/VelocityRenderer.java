@@ -268,7 +268,7 @@ implements Renderer
          */
         protected void render( OutputStream os ) {
             VelocityEngine ve = createVelocityEngine();
-            VelocityContext vc = createVelocityContext();
+            VelocityContext vc = createVelocityContext( this.bindings );
 
             Template t = ve.getTemplate( vr.templateName() );
 
@@ -403,7 +403,7 @@ implements Renderer
         }
 
         /** @return A new velocity context containing bindings that we will use to render the results */
-        protected VelocityContext createVelocityContext() {
+        protected VelocityContext createVelocityContext( Bindings bindings ) {
             Page page = initialisePage();
             DisplayHierarchy dh = initialiseHierarchy( page );
 
@@ -411,6 +411,12 @@ implements Renderer
             vc.put( "page", page );
             vc.put( "hierarchy", dh );
             vc.put( "renderer", this.vr );
+
+            for (String key: bindings.keySet()) {
+                vc.put( key, bindings.get( key ) );
+            }
+
+            vc.put( "vcontext", vc );
 
             return vc;
         }
