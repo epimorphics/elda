@@ -1,11 +1,18 @@
 +-----------------------------------------------------------------------
-| Elda 1.2.35 (DEVELOPING)
+| Elda 1.2.35 (RELEASED)
 
 1.2.35 is a cleanup release following 1.2.34 with one bugfix
 for Window's users using the Saxon toolkit.
 
 * Elda is now built over JDK1.7 and a rather more recent version of
   Jena, with dependent jars updated to match.
+
+* Revised documentation links to that quickstart link is consistent
+  and persistent.
+
+* A shortname declaration (ie an api:label for a property or class)
+  will raise a log WARN if it does not follow the rules for shortname
+  spelling. This will change to an error in later releases of Elda.
 
 * 1.2.34's switch to Saxon exposed an error: under Windows, an XSLT
   stylesheet that imported another one would fail to locate it.
