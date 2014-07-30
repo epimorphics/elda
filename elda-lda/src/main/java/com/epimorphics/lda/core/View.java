@@ -109,7 +109,7 @@ public class View {
 	protected int describeThreshold = APISpec.DEFAULT_DESCRIBE_THRESHOLD;
 	
     public View() {
-    	this( null, Type.T_DESCRIBE );
+    	this( "anon", Type.T_DESCRIBE );
     }
     
     public View( String name ) {
@@ -158,7 +158,7 @@ public class View {
         original.
     */
     public View copy() {
-    	View r = new View( null, type ).addFrom( this );
+    	View r = new View( this.name + ".copy", type ).addFrom( this );
 		return r;
     }
 
