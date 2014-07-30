@@ -17,6 +17,9 @@ import static com.epimorphics.jsonrdf.RDFUtil.getStringValue;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.exceptions.ReusedShortnameException;
 import com.epimorphics.lda.vocabularies.API;
@@ -36,6 +39,8 @@ import com.hp.hpl.jena.vocabulary.*;
  * @version $Revision: $
  */
 public class Context implements ReadContext, Cloneable {
+	
+	static Logger log = LoggerFactory.getLogger(Context.class);
 
     protected String base = null;
     
@@ -202,6 +207,8 @@ public class Context implements ReadContext, Cloneable {
     protected String getLocalName(String uri) {
         return uri.substring( Util.splitNamespace( uri ));
     }    
+
+    static final boolean exceptionForBadShortname = false;
     
     /**
      * Record the preferred name to use to shorten a URI.
@@ -209,8 +216,12 @@ public class Context implements ReadContext, Cloneable {
      */
     public void recordPreferredName(String name, String uri) {
     	if (!labelPattern.matcher(name).matches()) {
-    		throw new EldaException
-    			("The label '" + name + "' is not a legal shortname for '" + uri + "'");
+    		if (exceptionForBadShortname) {
+    			throw new EldaException
+    				("The label '" + name + "' is not a legal shortname for '" + uri + "'");
+    		} else {
+    			log.warn("The label '" + name + "' is not a legal shortname for '" + uri + "'");
+    		}
     	}
         if (isNameFree(name)) { 
         	recordShortname(name, uri);
