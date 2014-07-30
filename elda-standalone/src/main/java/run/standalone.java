@@ -12,6 +12,7 @@ package run;
 //import org.mortbay.jetty.servlet.ServletHolder;
 //import org.mortbay.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AllowSymLinkAliasChecker;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 
@@ -25,6 +26,7 @@ public class standalone {
     //
         WebAppContext webapp = new WebAppContext( "src/main/webapp/", "/standalone" );
         webapp.addServlet(new ServletHolder( new ServletContainer( new PackagesResourceConfig("com.epimorphics.lda.restlets") ) ), "/");
+        webapp.addAliasCheck( new AllowSymLinkAliasChecker() );
         server.setHandler(webapp);
     //
         server.start();

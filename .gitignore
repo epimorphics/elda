@@ -13,3 +13,4 @@ target/
 elda-standalone/meta-graph.ttl
 elda-standalone/object-graph.ttl
 elda-standalone/velocity.log
+elda-standalone/src/main/webapp/assets
