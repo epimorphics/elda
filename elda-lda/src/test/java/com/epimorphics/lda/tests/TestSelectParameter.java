@@ -27,7 +27,7 @@ public class TestSelectParameter
         {    
         ShortnameService sns = new StandardShortnameService();
         APIQuery q = QueryTestUtils.queryFromSNS(sns);	
-        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.oneNamedView, sns, q );
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
         assertEquals( theSelectQuery + " OFFSET 0 LIMIT 10", q.assembleSelectQuery( RDFUtils.noPrefixes) );
@@ -37,7 +37,7 @@ public class TestSelectParameter
         {    
         ShortnameService sns = new StandardShortnameService();
         APIQuery q = QueryTestUtils.queryFromSNS(sns);	
-        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.noNamedViews, sns, q );
+        ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.oneNamedView, sns, q );
         String theSelectQuery = "this is a select query";
         x.handleReservedParameters( null, null, "_select", theSelectQuery );
         APIQuery cloned = q.copy();
