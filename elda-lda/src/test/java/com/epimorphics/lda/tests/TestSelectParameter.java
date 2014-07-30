@@ -23,7 +23,7 @@ import com.epimorphics.util.RDFUtils;
 
 public class TestSelectParameter 
     {
-	@Test public void testMe()
+	@Test public void testSelectQuery()
         {    
         ShortnameService sns = new StandardShortnameService();
         APIQuery q = QueryTestUtils.queryFromSNS(sns);	
