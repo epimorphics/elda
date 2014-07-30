@@ -25,7 +25,7 @@ public class TestPrefixLogger {
 
 	Pattern qnp = PrefixLogger.candidatePrefix;
 	
-	@Test public void testMe() {
+	@Test public void testEmptyPrefixes() {
 		assertEquals( set(), findPrefixes( "" ) );
 	}
 	

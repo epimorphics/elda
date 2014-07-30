@@ -18,7 +18,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class TestVelocityMetadata {
 
-	@Test public void testMe() {
+	@Test public void testToBeDefined() {
 		// TODO put some actual tests in here!
 		Model m = ModelFactory.createDefaultModel();
 		ShortNames shortNames = new ShortNames(m);

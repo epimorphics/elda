@@ -7,6 +7,8 @@
 */
 package com.epimorphics.lda.bindings.tests;
 
+import static org.junit.Assert.*;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -69,4 +71,24 @@ public class TestBindings {
 		if (!sq.contains( expected ))
 			Assert.fail( "query\n" + sq + "\n should contain\n" + expected + "\nbut does not." );
 	}
+	
+	@Test public void testBindingsCarryGeneralObjects() {
+		Bindings b = new Bindings();
+		Integer value = 17;
+		assertSame( b, b.putAny("key", value) );
+		assertEquals(value, b.getAny("key"));
+		assertNull(b.getAny("quiche"));
+	}
+	
+	@Test public void testBindingsCopyGeneralObjects() {
+		Bindings b = new Bindings();
+		Boolean value = Boolean.TRUE;
+		assertSame( b, b.putAny("key", value) );
+		assertEquals(value, b.getAny("key"));
+		Bindings c = b.copy();
+		assertEquals(value, c.getAny("key"));
+		assertEquals(value, b.getAny("key"));
+	}
+	
+	
 }
