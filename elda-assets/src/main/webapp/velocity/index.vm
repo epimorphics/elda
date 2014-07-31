@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${assets}/css/bootstrap.min.css">
     <link rel="stylesheet" href="${assets}/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="${assets}/css/main.css">
+    <link rel="stylesheet" href="${assets}/css/font-awesome.min.css">
 
     <script src="/standalone/assets/velocity/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
   </head>

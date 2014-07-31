@@ -1,0 +1,26 @@
+## Add a page navigation link, such as first-page, prev-page, etc
+#macro( pageNavigationLink $url $iconClass $title )
+  #set( $disable = "disabled" )
+  #if( $url )
+    #set( $disable = "" )
+  #end
+  <li class="$disable">
+    <a href="$url"><i class="fa $iconClass"></i> $title</a>
+  </li>
+#end
+
+## Add a page navigation link to change the page size
+#macro( pageSizeLink $page $size )
+  #set( $disable = "disabled" )
+  #if( $page.itemsPerPage() > 0 )
+    #set( $disable = "" )
+  #end
+  #set( $items = "items")
+  #if( $size == "1")
+    #set( $items = "item" )
+  #end
+  #set( $newPageURL = $page.pageURL().withParameter( "SET", "_pageSize", $size ))
+  <li class="$disable">
+    <a href="$newPageURL">show $size $items</a>
+  </li>
+#end
