@@ -175,7 +175,6 @@ public class DisplayHierarchy
         private Set<PropertyPath> basePaths;
 
         /** The current page */
-        @SuppressWarnings( "hiding" )
         private Page page;
 
         /** @return The current hierarchy node queue */
