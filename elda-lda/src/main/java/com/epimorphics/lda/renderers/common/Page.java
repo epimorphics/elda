@@ -161,6 +161,19 @@ public class Page extends CommonNodeWrapper
     }
 
     /**
+     * @return True if this page of results has at least one element of related page
+     * data
+     */
+    public boolean hasPageData() {
+        return pageNumber() != NO_VALUE ||
+               itemsPerPage() != NO_VALUE ||
+               firstPage() != null ||
+               lastPage() != null ||
+               nextPage() != null ||
+               prevPage() != null;
+    }
+
+    /**
      * @return A list of the formats that this page is available in
      */
     public List<PageFormat> formats() {

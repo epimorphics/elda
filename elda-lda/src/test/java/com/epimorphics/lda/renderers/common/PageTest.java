@@ -20,6 +20,7 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.vocabularies.*;
 import com.hp.hpl.jena.rdf.model.*;
 
 /**
@@ -118,6 +119,30 @@ public class PageTest
                 page.nextPage() );
         assertNull( page.prevPage() );
         assertNull( page.lastPage() );
+    }
+
+    @Test
+    public void testHasPageData() {
+        assertTrue( page.hasPageData() );
+
+        Resource pr = page.asResource();
+        page.getModelW().getModel().removeAll( pr, API.page, null );
+        assertTrue( page.hasPageData() );
+
+        page.getModelW().getModel().removeAll( pr, OpenSearch.itemsPerPage, null );
+        assertTrue( page.hasPageData() );
+
+        page.getModelW().getModel().removeAll( pr, XHV.first, null );
+        assertTrue( page.hasPageData() );
+
+        page.getModelW().getModel().removeAll( pr, ResourceFactory.createProperty( XHV.ns + "last" ), null );
+        assertTrue( page.hasPageData() );
+
+        page.getModelW().getModel().removeAll( pr, XHV.prev, null );
+        assertTrue( page.hasPageData() );
+
+        page.getModelW().getModel().removeAll( pr, XHV.next, null );
+        assertFalse( page.hasPageData() );
     }
 
     @Test
