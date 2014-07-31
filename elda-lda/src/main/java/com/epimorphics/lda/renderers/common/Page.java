@@ -79,6 +79,11 @@ public class Page extends CommonNodeWrapper
         return this;
     }
 
+    /** @return The page URL in a form that supports generating related URLs */
+    public EldaURL pageURL() {
+        return new EldaURL( getURI() );
+    }
+
     /**
      * @return True if the page denotes a single item, or false for a list endpoint
      */
