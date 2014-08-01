@@ -1,0 +1,19 @@
+## Macros for displaying a single item
+
+#macro( eldaItem $resource )
+  <section class="rdf resource outer">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="resource-label">$resource.getName()</h1>
+      </div>
+      <div class="col-md-12">
+        <h2 class="resource-uri"><a href="$resource.getURI()">$resource.getURI()</a></h2>
+      </div>
+      <div class="col-md-12">
+        <h2 class="resource-types">
+         a todo type1
+        </h2>
+      </div>
+    </div>
+  </section>
+#end

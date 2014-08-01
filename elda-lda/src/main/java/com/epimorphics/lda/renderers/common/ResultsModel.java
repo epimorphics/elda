@@ -72,7 +72,7 @@ public class ResultsModel extends ModelWrapper
      * @return A page object
      */
     public Page page() {
-        return new Page( this, results.getRoot() );
+        return new Page( this, results.getRoot().inModel( this.getModel() ) );
     }
 
     /***********************************/

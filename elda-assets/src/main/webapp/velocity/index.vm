@@ -23,6 +23,7 @@
   </head>
   <body>
     #parse( "partials/navigation-bar.vm" )
+    #parse( "partials/item-setup.vm")
 
     <div class="container">
 

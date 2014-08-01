@@ -1,0 +1,4 @@
+## Display the items in a list endpoint
+#foreach( $item in $page.items() )
+  #eldaItem( $item )
+#end

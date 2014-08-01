@@ -1,0 +1,9 @@
+## Set up the page to display either an item endpoint or a list endpoint
+#parse( "macros/item.vm" )
+<container>
+  #if( $page.isItemEndpoint() )
+    #parse( "partials/item-endpoint.vm" )
+  #else
+    #parse( "partials/list-endpoint.vm" )
+  #end
+</container>

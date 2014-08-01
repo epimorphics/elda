@@ -1,0 +1,2 @@
+## Display the single item from an item endpoint
+#eldaItem( $page.primaryTopic() )
