@@ -1,0 +1,10 @@
+## Add links to the various views that are defined on the current page
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">view<b class="caret"></b></a>
+  <ul class="dropdown-menu">
+    <li role="presentation" class="dropdown-header">Avilable views:</li>
+    #foreach( $view in $page.views() )
+      #viewLink( $view )
+    #end
+  </ul>
+</li>

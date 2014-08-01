@@ -24,43 +24,9 @@
             <li><a href="#">resource 3</a></li>
           </ul>
         </li>
-        #if ($page.hasPageData() )
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">page<b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              #if( $page.itemsPerPage() > 0 )
-                #pageSizeLink( $page, "1" )
-                #pageSizeLink( $page, "10" )
-                #pageSizeLink( $page, "25" )
-                #pageSizeLink( $page, "50" )
-                <li class="divider"></li>
-              #end
-              #pageNavigationLink( $page.firstPage(), "fa-fast-backward", "first" )
-              #pageNavigationLink( $page.prevPage(), "fa-step-backward", "previous" )
-              #pageNavigationLink( $page.nextPage(), "fa-step-forward", "next" )
-            </ul>
-          </li>
-        #end
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">data format<b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            #foreach( $format in $page.formats())
-              <li>
-                <a href="$format.getURI()">$format.label()</a>
-              </li>
-            #end
-          </ul>
-        </li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">view<b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li>Views</li>
-            <li><a href="#">default</a></li>
-            <li><a href="#">all</a></li>
-            <li class="divider"></li>
-            <li>Filters:</li>
-          </ul>
-        </li>
+        #parse( "partials/page-size-links.vm" )
+        #parse( "partials/format-links.vm" )
+        #parse( "partials/view-links.vm" )
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
