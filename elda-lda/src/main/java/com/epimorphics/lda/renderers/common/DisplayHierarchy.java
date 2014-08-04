@@ -15,6 +15,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.rdfutil.PropertyValue;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.*;
 
@@ -101,22 +102,25 @@ public class DisplayHierarchy
      * @param node
      */
     protected void expandNode( DisplayHierarchyContext context, DisplayHierarchyNode node ) {
-        List<Statement> arcs = node.rdfNode().getDisplayProperties();
+        List<PropertyValue> arcs = node.rdfNode().getDisplayProperties();
         Set<PropertyPath> paths = node.isRoot() ? context.basePaths() : node.explicitPaths();
 
-        for (Statement s: arcs) {
-            Property p = s.getPredicate();
+        for (PropertyValue s: arcs) {
+            Property p = s.getProp().toProperty( s.getProp() );
             PropertyPath pathTo = node.pathTo().append( null, p.getURI(), shortNameRenderer );
-            DisplayHierarchyNode child = new DisplayHierarchyNode( pathTo, node, context.wrap( s.getObject() ) );
 
-            Set<PropertyPath> matchingPaths = matchingPaths( context, s.getPredicate(), paths );
-            child.explicitPaths().addAll( matchingPaths );
+            for (RDFNodeWrapper childNode: s.getValues()) {
+                DisplayHierarchyNode child = new DisplayHierarchyNode( pathTo, node, context.wrap( childNode ) );
 
-            if (!child.isLeaf( context )) {
-                context.queue().add( child );
+                Set<PropertyPath> matchingPaths = matchingPaths( context, p, paths );
+                child.explicitPaths().addAll( matchingPaths );
+
+                if (!child.isLeaf( context )) {
+                    context.queue().add( child );
+                }
+
+                context.see( child.rdfNode() );
             }
-
-            context.see( child.rdfNode() );
         }
     }
 
@@ -218,6 +222,11 @@ public class DisplayHierarchy
 
         /** @return A wrapped version of the given RDF node */
         public DisplayRdfNode wrap( RDFNode n ) {
+            return new DisplayRdfNode( this.page, n );
+        }
+
+        /** @return A wrapped version of the given RDF node */
+        public DisplayRdfNode wrap( RDFNodeWrapper n ) {
             return new DisplayRdfNode( this.page, n );
         }
 

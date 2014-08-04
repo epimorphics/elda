@@ -19,8 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.rdfutil.ModelWrapper;
-import com.epimorphics.rdfutil.RDFNodeWrapper;
+import com.epimorphics.rdfutil.*;
 import com.hp.hpl.jena.rdf.model.*;
 
 /**
@@ -65,11 +64,11 @@ public class DefaultPropertyOrderingStrategyTest
         ModelWrapper mw = new ModelWrapper( m );
         RDFNodeWrapper subjw = new RDFNodeWrapper( mw, subj );
 
-        List<Statement> triples = new DefaultPropertyOrderingStrategy().orderProperties( subjw );
+        List<PropertyValue> triples = new DefaultPropertyOrderingStrategy().orderProperties( subjw );
 
-        assertEquals( "http://example/test#p2", triples.get(0).getPredicate().getURI() );
-        assertEquals( "http://example/test#p3", triples.get(1).getPredicate().getURI() );
-        assertEquals( "http://example/test#p1", triples.get(2).getPredicate().getURI() );
+        assertEquals( "http://example/test#p2", triples.get(0).getProp().getURI() );
+        assertEquals( "http://example/test#p3", triples.get(1).getProp().getURI() );
+        assertEquals( "http://example/test#p1", triples.get(2).getProp().getURI() );
     }
 
     /***********************************/

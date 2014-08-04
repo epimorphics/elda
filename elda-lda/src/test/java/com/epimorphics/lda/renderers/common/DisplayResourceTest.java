@@ -20,9 +20,9 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.rdfutil.PropertyValue;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Unit tests for {@link DisplayRdfNode}
@@ -75,15 +75,15 @@ public class DisplayResourceTest
 
     @Test
     public void testGetDisplayProperties() {
-        List<Statement> displayTriples = displayResource.getDisplayProperties();
+        List<PropertyValue> displayTriples = displayResource.getDisplayProperties();
         String ns = "http://epimorphics.com/public/vocabulary/games.ttl#";
 
         assertEquals( 5, displayTriples.size() );
-        assertEquals( ns + "designed-by", displayTriples.get(0).getPredicate().getURI() );
-        assertEquals( RDFS.label, displayTriples.get(1).getPredicate() );
-        assertEquals( ns + "playTimeMinutes", displayTriples.get(2).getPredicate().getURI() );
-        assertEquals( ns + "players", displayTriples.get(3).getPredicate().getURI() );
-        assertEquals( ns + "pubYear", displayTriples.get(4).getPredicate().getURI() );
+        assertEquals( ns + "designed-by", displayTriples.get(0).getProp().getURI() );
+        assertEquals( "rdfs:label", displayTriples.get(1).getProp().getShortURI() );
+        assertEquals( ns + "playTimeMinutes", displayTriples.get(2).getProp().getURI() );
+        assertEquals( ns + "players", displayTriples.get(3).getProp().getURI() );
+        assertEquals( ns + "pubYear", displayTriples.get(4).getProp().getURI() );
     }
 
     @Test

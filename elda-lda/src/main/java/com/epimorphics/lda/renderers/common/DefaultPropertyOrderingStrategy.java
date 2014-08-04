@@ -15,9 +15,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.rdfutil.ModelWrapper;
-import com.epimorphics.rdfutil.RDFNodeWrapper;
-import com.hp.hpl.jena.rdf.model.Property;
+import com.epimorphics.rdfutil.*;
 import com.hp.hpl.jena.rdf.model.Statement;
 
 /**
@@ -59,16 +57,21 @@ implements PropertyOrderingStrategy
      * @return The triples whose subject is <code>subject</code>, sorted by label order.
      */
     @Override
-    public List<Statement> orderProperties( RDFNodeWrapper subject ) {
-        List<Statement> triples = subject.asResource().listProperties().toList();
-        final ModelWrapper model = subject.getModelW();
-        final Map<Property, String> propertyNames = propertyNames( triples, model );
+    public List<PropertyValue> orderProperties( RDFNodeWrapper subject ) {
+        PropertyValueSet pvs = new PropertyValueSet( subject.getModelW() );
 
-        Collections.sort( triples, new Comparator<Statement>() {
+        for (Statement triple: subject.asResource().listProperties().toList()) {
+            pvs.add( triple );
+        }
+
+        final Map<RDFNodeWrapper, String> propertyNames = propertyNames( pvs, subject.getModelW() );
+        List<PropertyValue> triples = pvs.getValues();
+
+        Collections.sort( triples, new Comparator<PropertyValue>() {
             @Override
-            public int compare( Statement o1, Statement o2 ) {
-                String p1Label = propertyNames.get( o1.getPredicate() );
-                String p2Label = propertyNames.get( o2.getPredicate() );
+            public int compare( PropertyValue o1, PropertyValue o2 ) {
+                String p1Label = propertyNames.get( o1.getProp() );
+                String p2Label = propertyNames.get( o2.getProp() );
 
                 return p1Label.compareTo( p2Label );
             }
@@ -89,14 +92,13 @@ implements PropertyOrderingStrategy
      * @return A map from each of the distinct predicates in <code>triples</code> to its
      * corresponding label
      */
-    private Map<Property, String> propertyNames( List<Statement> triples, ModelWrapper model ) {
-        Map<Property, String> names = new HashMap<Property, String>();
+    private Map<RDFNodeWrapper, String> propertyNames( PropertyValueSet pvs, ModelWrapper model ) {
+        Map<RDFNodeWrapper, String> names = new HashMap<RDFNodeWrapper, String>();
 
-        for (Statement s: triples) {
-            Property p = s.getPredicate();
+        for (PropertyValue pv: pvs.getValues()) {
+            RDFNodeWrapper p = pv.getProp();
             if (!names.containsKey( p )) {
-                String pLabel = new RDFNodeWrapper( model, p ).getName();
-                names.put( p, pLabel );
+                names.put( p, p.getName() );
             }
         }
 

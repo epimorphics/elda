@@ -15,8 +15,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.rdfutil.RDFNodeWrapper;
-import com.epimorphics.rdfutil.RDFUtil;
+import com.epimorphics.rdfutil.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -94,8 +93,8 @@ extends CommonNodeWrapper
      * in the order in which they should be displayed.
      * @return A list of RDF triples in display order
      */
-    public List<Statement> getDisplayProperties() {
-        List<Statement> triples = propertyOrdering().orderProperties( this );
+    public List<PropertyValue> getDisplayProperties() {
+        List<PropertyValue> triples = propertyOrdering().orderProperties( this );
         return withoutNonDisplayTriples( triples );
     }
 
@@ -150,10 +149,10 @@ extends CommonNodeWrapper
      * @param triples A list of RDF triples from which the non-display triples
      * will be removed.
      */
-    protected List<Statement> withoutNonDisplayTriples( List<Statement> triples ) {
-        List<Statement> dTriples = new ArrayList<>( triples.size() );
+    protected List<PropertyValue> withoutNonDisplayTriples( List<PropertyValue> triples ) {
+        List<PropertyValue> dTriples = new ArrayList<>( triples.size() );
 
-        for (Statement s: triples) {
+        for (PropertyValue s: triples) {
             if (!isNonDisplay( s )) {
                 dTriples.add( s );
             }
@@ -169,8 +168,8 @@ extends CommonNodeWrapper
      * @param s A triple
      * @return True if the triple is not part of the resources displayed triples
      */
-    protected boolean isNonDisplay( Statement s ) {
-        return s.getPredicate().equals( RDF.type );
+    protected boolean isNonDisplay( PropertyValue s ) {
+        return s.getProp().getURI().equals( RDF.type.getURI() );
     }
 
 
