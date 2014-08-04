@@ -105,7 +105,7 @@ div.rdf {
 .rdf.predicate {
   vertical-align: top;
   padding: 1px 0px 1px 12px;
-  background-image: url('link-line.png');
+  background-image: url('../images/link-line.png');
   background-repeat: no-repeat;
   background-position: 0 -5px;
   margin-left: -10px;
@@ -114,7 +114,7 @@ div.rdf {
 
 .rdf.object {
   padding: 0px 5px 0px 18px;
-  background-image: url('link-arrow.png');
+  background-image: url('../images/link-arrow.png');
   background-repeat: no-repeat;
   background-position: 0 7px;
 }

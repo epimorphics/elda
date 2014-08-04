@@ -3,35 +3,84 @@
 #macro( eldaItem $resource )
   <section class="rdf resource outer">
     <div class="row">
-      <div class="col-md-12">
-        <h1 class="resource-label">$resource.getName()</h1>
-      </div>
-      <div class="col-md-12">
-        <h2 class="resource-uri"><a href="$resource.getURI()">$resource.getURI()</a></h2>
-      </div>
-      <div class="col-md-12">
-        #itemTypes( $resource )
-      </div>
+      #itemName( $resource )
+      #itemURI( $resource )
+      #itemTypes( $resource )
+      #itemProperties( $resource )
     </div>
   </section>
 #end
 
+## Display the name of the resource
+#macro( itemName $resource )
+  <div class="col-md-12">
+    <h1 class="resource-label">$resource.getName()</h1>
+  </div>
+#end
+
+## Display the item URI
+#macro( itemURI $resource )
+  <div class="col-md-12">
+    <h2 class="resource-uri"><a href="$resource.getURI()">$resource.getURI()</a></h2>
+  </div>
+#end
+
 ## Display a list of types for the resource, if any are known
 #macro( itemTypes $resource )
-  #set( $types = $resource.listPropertyValues( "rdf:type" ) )
+  #set( $types = $resource.types() )
   #set( $sep = "" )
   #if( $types.size() > 0 )
-    <div class="resource-types">
-      a
-      <ul class="list-inline">
-        #foreach( $type in $types )
-          <li>
-            $sep
-            <a href="$type.getURI()">$type.getName()</a>
-          </li>
-          #set( $sep = ", " )
-        #end
-      </ul>
+    <div class="col-md-12">
+      <div class="resource-types">
+        a
+        <ul class="list-inline">
+          #foreach( $type in $types )
+            <li>
+              $sep
+              <a href="$type.getURI()">$type.getName()</a>
+            </li>
+            #set( $sep = ", " )
+          #end
+        </ul>
+      </div>
     </div>
   #end
 #end
+
+## Show the various properties of the item
+#macro( itemProperties $resource )
+  <div class="col-md-12">
+    <ul class="resource-properties">
+      #foreach( $pv in $resource.getDisplayProperties() )
+        <li>
+          #propertyPredicate( $pv )
+          #propertyObjects( $pv )
+        </li>
+      #end
+    </ul>
+  </div>
+#end
+
+## Show the predicate of a property-value
+#macro( propertyPredicate $pv )
+  <div class="rdf predicate">
+    <a href="$pv.getProp().getURI()">$pv.getProp().getName()</a>
+  </div>
+#end
+
+## Show the value of a property-value
+#macro( propertyObjects $pv )
+  #foreach( $v in $pv.getValues() )
+    #if( $v.isLiteral() )
+      #propertyObjectLiteral( $v )
+    #end
+  #end
+#end
+
+## Show a literal-valued property
+#macro( propertyObjectLiteral $lit )
+  <div class="rdf object literal">
+    $lit.getLexicalForm()
+  </div>
+#end
+
