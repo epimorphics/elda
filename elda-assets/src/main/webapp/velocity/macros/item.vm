@@ -10,10 +10,28 @@
         <h2 class="resource-uri"><a href="$resource.getURI()">$resource.getURI()</a></h2>
       </div>
       <div class="col-md-12">
-        <h2 class="resource-types">
-         a todo type1
-        </h2>
+        #itemTypes( $resource )
       </div>
     </div>
   </section>
+#end
+
+## Display a list of types for the resource, if any are known
+#macro( itemTypes $resource )
+  #set( $types = $resource.listPropertyValues( "rdf:type" ) )
+  #set( $sep = "" )
+  #if( $types.size() > 0 )
+    <div class="resource-types">
+      a
+      <ul class="list-inline">
+        #foreach( $type in $types )
+          <li>
+            $sep
+            <a href="$type.getURI()">$type.getName()</a>
+          </li>
+          #set( $sep = ", " )
+        #end
+      </ul>
+    </div>
+  #end
 #end

@@ -31,7 +31,7 @@ h1.resource-label {
   padding: 5px;
 }
 
-h2.resource-uri, h2.resource-types {
+h2.resource-uri, .resource-types {
   font-size: 10pt;
   color: #999;
   margin: 0;
@@ -39,8 +39,21 @@ h2.resource-uri, h2.resource-types {
   background-color: #eee;
 }
 
+.resource-types > ul {
+  margin: 0;
+  padding: 0;
+}
+
 h2.resource-uri a, h2.resource-uri a:visited {
   color: #999;
+}
+
+.resource-types ul {
+  display: inline-block;
+}
+
+.resource-types li {
+  padding-bottom: 0;
 }
 
 .nested {
