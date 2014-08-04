@@ -15,6 +15,8 @@ import java.util.Properties;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.app.event.EventCartridge;
+import org.apache.velocity.app.event.implement.IncludeNotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -295,6 +297,7 @@ implements Renderer
 
             Properties p = getProperties( velocityRoot );
             VelocityEngine ve = new VelocityEngine();
+
             ve.init( p );
 
             return ve;
@@ -408,17 +411,40 @@ implements Renderer
             DisplayHierarchy dh = initialiseHierarchy( page );
 
             VelocityContext vc = new VelocityContext();
+            addStandardVariables( vc, page, dh );
+            addBindingsToContext( vc, bindings );
+            addContextSelfReference( vc );
+            addEventHandlers( vc );
+
+            return vc;
+        }
+
+        /** Add the standard variables to the context */
+        protected void addStandardVariables( VelocityContext vc, Page page, DisplayHierarchy dh ) {
             vc.put( "page", page );
             vc.put( "hierarchy", dh );
             vc.put( "renderer", this.vr );
+        }
 
+        /** Add the Elda bindings as context variables */
+        protected void addBindingsToContext( VelocityContext vc, Bindings bindings ) {
             for (String key: bindings.keySet()) {
                 vc.put( key, bindings.get( key ) );
             }
+        }
 
+        /** Attach the event handlers we want */
+        protected void addEventHandlers( VelocityContext vc ) {
+            EventCartridge ec = new EventCartridge();
+
+            ec.addEventHandler( new IncludeNotFound() );
+
+            vc.attachEventCartridge( ec );
+        }
+
+        /** Add the Velocity Contex itself, as a debugging aide */
+        protected void addContextSelfReference( VelocityContext vc ) {
             vc.put( "vcontext", vc );
-
-            return vc;
         }
 
         /**

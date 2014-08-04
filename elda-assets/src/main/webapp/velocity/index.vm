@@ -14,18 +14,15 @@
     <meta name="description" content="HTML rendering of Linked Data API results for TODO">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="${assets}/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${assets}/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="${assets}/css/main.css">
-    <link rel="stylesheet" href="${assets}/css/font-awesome.min.css">
+    #parse( "partials/css.vm" )
 
     <script src="/standalone/assets/velocity/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
   </head>
   <body>
     #parse( "partials/navigation-bar.vm" )
-    #parse( "partials/item-setup.vm")
 
     <div class="container">
+      #parse( "partials/item-setup.vm")
 
       <h2>debug - context</h2>
       <div>
