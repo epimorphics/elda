@@ -137,6 +137,9 @@ public class APISpec {
 
 	private AuthMap loadAuthMap(Resource root, String appName) {
 		Resource endpoint = RDFUtils.getResourceValue(root, ELDA_API.sparqlEndpoint);
+		if (endpoint == null) {
+			throw new EldaException("no SPARQL endpoint specified for " + root);
+		}
 		StmtIterator maps = endpoint.listProperties(ELDA_API.authFile);
 		if (maps.hasNext()) {
 			AuthMap am = new AuthMap();
