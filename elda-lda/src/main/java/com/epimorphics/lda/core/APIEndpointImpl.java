@@ -111,8 +111,9 @@ public class APIEndpointImpl implements APIEndpoint {
 			EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );
 	//
 	    View view = buildQueryAndView( b, query );
+	    b.put("_selectedView", view.nameWithoutCopy());	    
 	//    
-	    APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );
+	    APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );	    
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
 	//
