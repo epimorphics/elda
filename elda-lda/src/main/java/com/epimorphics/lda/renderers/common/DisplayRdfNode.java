@@ -93,9 +93,13 @@ extends CommonNodeWrapper
      * in the order in which they should be displayed.
      * @return A list of RDF triples in display order
      */
-    public List<PropertyValue> getDisplayProperties() {
-        List<PropertyValue> triples = propertyOrdering().orderProperties( this );
-        return withoutNonDisplayTriples( triples );
+    public List<AnnotatedPropertyValue> getDisplayProperties() {
+        List<AnnotatedPropertyValue> triples = propertyOrdering().orderProperties( this );
+        triples = withoutNonDisplayTriples( triples );
+
+        annotateProperties( triples );
+
+        return triples;
     }
 
     /**
@@ -149,10 +153,10 @@ extends CommonNodeWrapper
      * @param triples A list of RDF triples from which the non-display triples
      * will be removed.
      */
-    protected List<PropertyValue> withoutNonDisplayTriples( List<PropertyValue> triples ) {
-        List<PropertyValue> dTriples = new ArrayList<>( triples.size() );
+    protected List<AnnotatedPropertyValue> withoutNonDisplayTriples( List<AnnotatedPropertyValue> triples ) {
+        List<AnnotatedPropertyValue> dTriples = new ArrayList<>( triples.size() );
 
-        for (PropertyValue s: triples) {
+        for (AnnotatedPropertyValue s: triples) {
             if (!isNonDisplay( s )) {
                 dTriples.add( s );
             }
@@ -168,8 +172,26 @@ extends CommonNodeWrapper
      * @param s A triple
      * @return True if the triple is not part of the resources displayed triples
      */
-    protected boolean isNonDisplay( PropertyValue s ) {
+    protected boolean isNonDisplay( AnnotatedPropertyValue s ) {
         return s.getProp().getURI().equals( RDF.type.getURI() );
+    }
+
+
+    /**
+     * Annotate the properties list to mark odd and even rows, and the final entry
+     * @param apvs
+     */
+    protected void annotateProperties( List<AnnotatedPropertyValue> apvs ) {
+        boolean odd = true;
+
+        for (AnnotatedPropertyValue apv: apvs) {
+            apv.annotate( odd ? "odd" : "even" );
+            odd = !odd;
+        }
+
+        if (!apvs.isEmpty()) {
+            apvs.get( apvs.size() - 1 ).annotate( "last" );
+        }
     }
 
 

@@ -11,7 +11,6 @@ package com.epimorphics.lda.renderers.common;
 
 import java.util.List;
 
-import com.epimorphics.rdfutil.PropertyValue;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 
 
@@ -34,6 +33,6 @@ public interface PropertyOrderingStrategy
      * @return A list of the triples whose subject resource is <code>subject</code>,
      * sorted into a desired order.
      */
-    List<PropertyValue> orderProperties( RDFNodeWrapper subject );
+    List<AnnotatedPropertyValue> orderProperties( RDFNodeWrapper subject );
 }
 

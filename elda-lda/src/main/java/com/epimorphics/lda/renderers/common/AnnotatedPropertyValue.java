@@ -10,24 +10,25 @@
 package com.epimorphics.lda.renderers.common;
 
 
-import static org.junit.Assert.*;
-
+import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.rdfutil.*;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Property;
 
 /**
- * TODO class comment
+ * An extension to the library class {@link PropertyValue}, which allows us to annotate
+ * property values (for example for odd and even rows, or to note the last pair in a
+ * sequence).
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class DefaultPropertyOrderingStrategyTest
+public class AnnotatedPropertyValue
+extends PropertyValue
 {
     /***********************************/
     /* Constants                       */
@@ -38,37 +39,62 @@ public class DefaultPropertyOrderingStrategyTest
     /***********************************/
 
     @SuppressWarnings( value = "unused" )
-    private static final Logger log = LoggerFactory.getLogger( DefaultPropertyOrderingStrategyTest.class );
+    private static final Logger log = LoggerFactory.getLogger( AnnotatedPropertyValue.class );
 
     /***********************************/
     /* Instance variables              */
     /***********************************/
 
-    private Model m = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES +
-                                                    "@prefix test: <http://example/test#>.\n"
-                                                    + "test:subj test:p1 test:foo ; test:p2 test:bar ; test:p3 test:fubar.\n"
-                                                    + "test:p1 rdfs:label 'yy last'.\n"
-                                                    + "test:p3 skos:prefLabel 'xx second'." );
+    /** List of annotations for this pair */
+    private List<String> annotations = new ArrayList<String>();
 
     /***********************************/
     /* Constructors                    */
     /***********************************/
 
+    public AnnotatedPropertyValue(RDFNodeWrapper prop) {
+        super( prop );
+    }
+
+    public AnnotatedPropertyValue(ModelWrapper modelw, Property prop) {
+        super( modelw, prop );
+    }
+
+    public AnnotatedPropertyValue(RDFNodeWrapper prop, RDFNodeWrapper value) {
+        super( prop, value );
+    }
+
+    public AnnotatedPropertyValue( PropertyValue pv ) {
+        super( pv.getProp() );
+        for (RDFNodeWrapper v: pv.getValues()) {
+            addValue( v );
+        }
+    }
+
     /***********************************/
     /* External signature methods      */
     /***********************************/
 
-    @Test
-    public void testOrderProperties() {
-        Resource subj = m.getResource( "http://example/test#subj" );
-        ModelWrapper mw = new ModelWrapper( m );
-        RDFNodeWrapper subjw = new RDFNodeWrapper( mw, subj );
+    /**
+     * Add an annotation to the property value pair
+     * @param annotation
+     */
+    public void annotate( String annotation ) {
+        annotations.add( annotation );
+    }
 
-        List<AnnotatedPropertyValue> triples = new DefaultPropertyOrderingStrategy().orderProperties( subjw );
+    /**
+     * @return The list of annotations, which may be emtpy but will not be null
+     */
+    public List<String> annotations() {
+        return this.annotations;
+    }
 
-        assertEquals( "http://example/test#p2", triples.get(0).getProp().getURI() );
-        assertEquals( "http://example/test#p3", triples.get(1).getProp().getURI() );
-        assertEquals( "http://example/test#p1", triples.get(2).getProp().getURI() );
+    /**
+     * @return The annotations joined into one string, which may be empty but will not be null
+     */
+    public String annotationsString() {
+        return StringUtils.join( annotations(), " " );
     }
 
     /***********************************/

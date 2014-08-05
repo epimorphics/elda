@@ -12,22 +12,20 @@ package com.epimorphics.lda.renderers.common;
 
 import static org.junit.Assert.*;
 
-import java.util.List;
-
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.rdfutil.*;
 import com.hp.hpl.jena.rdf.model.*;
 
 /**
- * TODO class comment
+ * Unit tests for {@link AnnotatedPropertyValue}
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class DefaultPropertyOrderingStrategyTest
+public class AnnotatedPropertyValueTest
 {
     /***********************************/
     /* Constants                       */
@@ -38,17 +36,11 @@ public class DefaultPropertyOrderingStrategyTest
     /***********************************/
 
     @SuppressWarnings( value = "unused" )
-    private static final Logger log = LoggerFactory.getLogger( DefaultPropertyOrderingStrategyTest.class );
+    private static final Logger log = LoggerFactory.getLogger( AnnotatedPropertyValueTest.class );
 
     /***********************************/
     /* Instance variables              */
     /***********************************/
-
-    private Model m = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES +
-                                                    "@prefix test: <http://example/test#>.\n"
-                                                    + "test:subj test:p1 test:foo ; test:p2 test:bar ; test:p3 test:fubar.\n"
-                                                    + "test:p1 rdfs:label 'yy last'.\n"
-                                                    + "test:p3 skos:prefLabel 'xx second'." );
 
     /***********************************/
     /* Constructors                    */
@@ -58,17 +50,33 @@ public class DefaultPropertyOrderingStrategyTest
     /* External signature methods      */
     /***********************************/
 
+
+    @Before
+    public void setUp() throws Exception {
+    }
+
     @Test
-    public void testOrderProperties() {
-        Resource subj = m.getResource( "http://example/test#subj" );
+    public void testAnnotate() {
+        String ns = "http://exmample.com/test#";
+        Model m = ModelFactory.createDefaultModel();
+        Property p = m.createProperty( ns + "p" );
         ModelWrapper mw = new ModelWrapper( m );
-        RDFNodeWrapper subjw = new RDFNodeWrapper( mw, subj );
 
-        List<AnnotatedPropertyValue> triples = new DefaultPropertyOrderingStrategy().orderProperties( subjw );
+        RDFNodeWrapper prop = new RDFNodeWrapper( mw, p );
+        PropertyValue pv = new PropertyValue( prop );
 
-        assertEquals( "http://example/test#p2", triples.get(0).getProp().getURI() );
-        assertEquals( "http://example/test#p3", triples.get(1).getProp().getURI() );
-        assertEquals( "http://example/test#p1", triples.get(2).getProp().getURI() );
+        AnnotatedPropertyValue apv = new AnnotatedPropertyValue( pv );
+
+        assertEquals( 0, apv.annotations().size() );
+        assertEquals( "", apv.annotationsString() );
+
+        apv.annotate( "foo" );
+        assertEquals( 1, apv.annotations().size() );
+        assertEquals( "foo", apv.annotationsString() );
+
+        apv.annotate( "bar" );
+        assertEquals( 2, apv.annotations().size() );
+        assertEquals( "foo bar", apv.annotationsString() );
     }
 
     /***********************************/

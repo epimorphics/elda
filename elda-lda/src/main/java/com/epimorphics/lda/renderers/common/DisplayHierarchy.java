@@ -102,7 +102,7 @@ public class DisplayHierarchy
      * @param node
      */
     protected void expandNode( DisplayHierarchyContext context, DisplayHierarchyNode node ) {
-        List<PropertyValue> arcs = node.rdfNode().getDisplayProperties();
+        List<AnnotatedPropertyValue> arcs = node.rdfNode().getDisplayProperties();
         Set<PropertyPath> paths = node.isRoot() ? context.basePaths() : node.explicitPaths();
 
         for (PropertyValue s: arcs) {

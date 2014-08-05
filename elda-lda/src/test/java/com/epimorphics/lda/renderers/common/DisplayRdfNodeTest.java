@@ -29,7 +29,7 @@ import com.hp.hpl.jena.rdf.model.*;
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class DisplayResourceTest
+public class DisplayRdfNodeTest
 {
     /***********************************/
     /* Constants                       */
@@ -75,7 +75,7 @@ public class DisplayResourceTest
 
     @Test
     public void testGetDisplayProperties() {
-        List<PropertyValue> displayTriples = displayResource.getDisplayProperties();
+        List<AnnotatedPropertyValue> displayTriples = displayResource.getDisplayProperties();
         String ns = "http://epimorphics.com/public/vocabulary/games.ttl#";
 
         assertEquals( 5, displayTriples.size() );
@@ -84,6 +84,8 @@ public class DisplayResourceTest
         assertEquals( ns + "playTimeMinutes", displayTriples.get(2).getProp().getURI() );
         assertEquals( ns + "players", displayTriples.get(3).getProp().getURI() );
         assertEquals( ns + "pubYear", displayTriples.get(4).getProp().getURI() );
+
+        assertEquals( "odd last", displayTriples.get( 4 ).annotationsString() );
     }
 
     @Test
@@ -103,7 +105,6 @@ public class DisplayResourceTest
         assertEquals( "A Few Acres of Snow", labels.get(0).getLexicalForm() );
 
     }
-
 
     /***********************************/
     /* Internal implementation methods */

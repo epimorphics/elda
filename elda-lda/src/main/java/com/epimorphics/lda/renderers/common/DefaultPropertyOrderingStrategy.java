@@ -57,17 +57,11 @@ implements PropertyOrderingStrategy
      * @return The triples whose subject is <code>subject</code>, sorted by label order.
      */
     @Override
-    public List<PropertyValue> orderProperties( RDFNodeWrapper subject ) {
-        PropertyValueSet pvs = new PropertyValueSet( subject.getModelW() );
+    public List<AnnotatedPropertyValue> orderProperties( RDFNodeWrapper subject ) {
+        List<AnnotatedPropertyValue> apvs = collectValues( subject );
+        final Map<RDFNodeWrapper, String> propertyNames = propertyNames( apvs, subject.getModelW() );
 
-        for (Statement triple: subject.asResource().listProperties().toList()) {
-            pvs.add( triple );
-        }
-
-        final Map<RDFNodeWrapper, String> propertyNames = propertyNames( pvs, subject.getModelW() );
-        List<PropertyValue> triples = pvs.getValues();
-
-        Collections.sort( triples, new Comparator<PropertyValue>() {
+        Collections.sort( apvs, new Comparator<PropertyValue>() {
             @Override
             public int compare( PropertyValue o1, PropertyValue o2 ) {
                 String p1Label = propertyNames.get( o1.getProp() );
@@ -77,12 +71,32 @@ implements PropertyOrderingStrategy
             }
         } );
 
-        return triples;
+        return apvs;
     }
 
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
+
+    /**
+     * Collect the property value pairs of the given subject, and return a list
+     * @param subject
+     * @return
+     */
+    protected List<AnnotatedPropertyValue> collectValues( RDFNodeWrapper subject ) {
+        PropertyValueSet pvs = new PropertyValueSet( subject.getModelW() );
+
+        for (Statement triple: subject.asResource().listProperties().toList()) {
+            pvs.add( triple );
+        }
+
+        List<AnnotatedPropertyValue> apvs = new ArrayList<AnnotatedPropertyValue>();
+        for (PropertyValue pv : pvs.getValues()) {
+            apvs.add( new AnnotatedPropertyValue( pv ) );
+        }
+
+        return apvs;
+    }
 
     /**
      * Return a map from the predicates in the given set of triples to their string labels
@@ -92,10 +106,10 @@ implements PropertyOrderingStrategy
      * @return A map from each of the distinct predicates in <code>triples</code> to its
      * corresponding label
      */
-    private Map<RDFNodeWrapper, String> propertyNames( PropertyValueSet pvs, ModelWrapper model ) {
+    private Map<RDFNodeWrapper, String> propertyNames( List<AnnotatedPropertyValue> apvs, ModelWrapper model ) {
         Map<RDFNodeWrapper, String> names = new HashMap<RDFNodeWrapper, String>();
 
-        for (PropertyValue pv: pvs.getValues()) {
+        for (PropertyValue pv: apvs) {
             RDFNodeWrapper p = pv.getProp();
             if (!names.containsKey( p )) {
                 names.put( p, p.getName() );
@@ -104,6 +118,7 @@ implements PropertyOrderingStrategy
 
         return names;
     }
+
 
     /***********************************/
     /* Inner class definitions         */
