@@ -14,6 +14,7 @@ import java.util.*;
 
 import com.epimorphics.lda.renderers.common.DisplayHierarchy.DisplayHierarchyContext;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
+import com.hp.hpl.jena.rdf.model.Property;
 
 
 /**
@@ -69,6 +70,12 @@ public class DisplayHierarchyNode
     /** @return The path to this node */
     public PropertyPath pathTo() {
         return pathTo;
+    }
+
+    /** @return The RDF predicate linking from the parent node to this one */
+    public RDFNodeWrapper terminalLink() {
+        Property link = pathTo().terminal();
+        return (link == null) ? null : new RDFNodeWrapper( rdfNode().getModelW(), link );
     }
 
     /** @return True if this node is explicitly on a property path */

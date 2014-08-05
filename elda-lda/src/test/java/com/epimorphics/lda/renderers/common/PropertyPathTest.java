@@ -145,6 +145,18 @@ public class PropertyPathTest
         assertEquals( "a.b.name_p", path.append( null, "http://example/test/p", snr ).toString() );
     }
 
+    @Test
+    public void testTerminal() {
+        PropertyPath path = new PropertyPath();
+
+        assertNull( path.terminal() );
+
+        PropertyPath path1 = path.append( "name_p", "http://example/test/p", null );
+        PropertyPath path2 = path1.append( "name_q", "http://example/test/q", null );
+
+        assertEquals( "http://example/test/p", path1.terminal().getURI() );
+        assertEquals( "http://example/test/q", path2.terminal().getURI() );
+    }
 
     /***********************************/
     /* Internal implementation methods */

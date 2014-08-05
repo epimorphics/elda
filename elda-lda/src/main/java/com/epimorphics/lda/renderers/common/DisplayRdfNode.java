@@ -190,6 +190,7 @@ extends CommonNodeWrapper
         }
 
         if (!apvs.isEmpty()) {
+            apvs.get( 0 ).annotate( "first" );
             apvs.get( apvs.size() - 1 ).annotate( "last" );
         }
     }

@@ -10,8 +10,7 @@
 package com.epimorphics.lda.renderers.common;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -96,6 +95,20 @@ extends PropertyValue
     public String annotationsString() {
         return StringUtils.join( annotations(), " " );
     }
+
+    /** Sort values before returning */
+    @Override
+    public List<RDFNodeWrapper> getValues() {
+        Collections.sort( values, new Comparator<RDFNodeWrapper>() {
+            @Override
+            public int compare( RDFNodeWrapper o1, RDFNodeWrapper o2 ) {
+                return o1.getLexicalForm().compareTo( o2.getLexicalForm() );
+            }
+        });
+
+        return values;
+    }
+
 
     /***********************************/
     /* Internal implementation methods */

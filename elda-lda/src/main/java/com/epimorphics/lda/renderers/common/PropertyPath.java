@@ -162,6 +162,11 @@ public class PropertyPath
         return new PropertyPath( this, shortName, ResourceFactory.createProperty( uri ) );
     }
 
+    /** @return The last link along this path */
+    public Property terminal() {
+        return properties.isEmpty() ? null : properties.get( properties.size() -1 );
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

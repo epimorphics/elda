@@ -113,7 +113,11 @@ div.rdf {
 }
 
 .rdf.object {
-  padding: 0px 5px 0px 18px;
+  padding: 0px 0px 0px 18px;
+}
+
+.rdf.object.first {
+  margin-left: -4px;
   background-image: url('../images/link-arrow.png');
   background-repeat: no-repeat;
   background-position: 0 7px;
