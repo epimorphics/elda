@@ -143,6 +143,11 @@ public class View {
 	public String name(){
     	return name;
     }
+
+	public String nameWithoutCopy() {
+		int dotCopy = name.indexOf(".copy");
+		return dotCopy < 0 ? name : name.substring(0, dotCopy);
+	}
     
     public Type getType() {
     	return type;

@@ -196,7 +196,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 			};
 		}
 	
-	private static String sparqlPrefixesFrom( Model m ) 
+	public static String sparqlPrefixesFrom( Model m ) 
 		{
 		StringBuilder sb = new StringBuilder();
 		for (Map.Entry<String, String> e: m.getNsPrefixMap().entrySet())
@@ -284,7 +284,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		}
 
 	// this seems a bit tedious. There should be a more straightforward way.
-	private Bindings bindTemplate( Bindings epBindings, String template, String path, MultiMap<String, String> qp ) {
+	public static Bindings bindTemplate( Bindings epBindings, String template, String path, MultiMap<String, String> qp ) {
 		MatchSearcher<String> ms = new MatchSearcher<String>();
 		ms.register( template, "IGNORED" );
 		Map<String, String> bindings = new HashMap<String, String>();
