@@ -12,6 +12,7 @@
 
 package com.epimorphics.lda.query;
 
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,6 +39,7 @@ import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.shared.BrokenException;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -941,14 +943,39 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 */
 	protected Couple<String, List<Resource>> selectResources(Controls c, APISpec spec, Bindings b, Source source) {
 		final List<Resource> results = new ArrayList<Resource>();
-		if (itemTemplate != null)
-			setSubject(b.expandVariables(itemTemplate));
+		if (itemTemplate != null) {
+			String expanded = b.expandVariables(itemTemplate);
+			// expanded = encodeNonAscii(expanded);
+			setSubject(expanded);
+		}
 		if (isFixedSubject() && isItemEndpoint)
 			return new Couple<String, List<Resource>>("", CollectionUtils.list(subjectResource));
 		else {
 			Couple<String, List<Resource>> x = runGeneralQuery(c, spec, b, source, results);	
 			return new Couple<String, List<Resource>>(x.a, x.b);
 		}
+	}
+
+	private String encodeNonAscii(String expanded) {
+		StringBuilder result = new StringBuilder();
+		
+		char [] hex = "0123456789ABCDEF".toCharArray();
+		
+		try {
+			byte [] bytes = expanded.getBytes("UTF-8");
+			for  (int i = 0; i < bytes.length; i += 1) {
+				int b = bytes[i] & 0xFF;
+				if (b < 127) {
+					result.append((char) b);
+				} else {
+					result.append("%").append(hex[b >> 4]).append(hex[b & 15]);
+				}
+			}
+		} catch (UnsupportedEncodingException e) {
+			throw new BrokenException(e);
+		}
+		
+		return result.toString();
 	}
 
 	private Couple<String, List<Resource>> runGeneralQuery
