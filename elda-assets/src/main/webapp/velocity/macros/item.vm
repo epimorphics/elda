@@ -50,18 +50,14 @@
 
 ## Show the various properties of the item
 #macro( itemProperties $hNode )
-  #set( $curPred = null )
   <div class="col-md-12">
     <ul class="resource-properties">
       #foreach( $childNode in $hNode.children() )
-      <li class="">
-        #set( $pred = $childNode.terminalLink() )
-        #if ($pred.equals( $curPred ))
-          #additionalPropertyValue( $childNode )
-        #else
-          #newPropertyValue( $childNode )
-        #end
-        #set( $curPred = $pred )
+        <li class="$childNode.hintsString()">
+          #set( $pred = $childNode.terminalLink() )
+          #propertyPredicate( $pred )
+          #propertyValue( $childNode )
+        </li>
       #end
     </ul>
   </div>
@@ -74,36 +70,44 @@
   </div>
 #end
 
-## Start a new property value list
-#macro( newPropertyValue $node )
-    #propertyPredicate(  )
-    #propertyObject( $node, "first" )
-  </li>
+## Determine how to present a property value - single item or list?
+#macro( propertyValue $node )
+  #if( $node.hasSiblings() )
+    #propertyMultiValue( $node )
+  #else
+    #propertySingleValue( $node )
+  #end
 #end
 
-## Continue an existing property value list
-#macro( additionalPropertyValue $node )
-  <span>, </span>
-  #propertyObject( $node, "" )
+## Single value of a property
+#macro( propertySingleValue $node )
+  #propertyObject( $node, "first" )
+#end
+
+## List value of a property
+#macro( propertyMultiValue $node )
+  <ul class="rdf object multiple">
+    <li class="first">
+      #propertyObject( $node )
+    </li>
+    #foreach( $sibling in $node.siblings())
+      <li class="$sibling.hintsString()">
+        #propertyObject( $sibling )
+      </li>
+    #end
+  </ul>
 #end
 
 ## Show the value of a property-value
-#macro( propertyObject $node )
-  #set( $first = "first")
-  #set( $sep = "" )
-  #foreach( $v in $hNode.children() )
-    #if( $v.rdfNode().isLiteral() )
-      #propertyObjectLiteral( $v.rdfNode, $first, $sep )
-    #end
-    #set( $first = "" )
-    #set( $sep = "<span>, </span>" )
+#macro( propertyObject $node $hint )
+  #if( $node.rdfNode().isLiteral() )
+    #propertyObjectLiteral( $node.rdfNode(), $hint )
   #end
 #end
 
 ## Show a literal-valued property
-#macro( propertyObjectLiteral $lit $first $sep )
-  $sep
-  <div class="rdf object literal $first">
+#macro( propertyObjectLiteral $lit $hint )
+  <div class="rdf object literal $hint">
     $lit.getLexicalForm()
   </div>
 #end

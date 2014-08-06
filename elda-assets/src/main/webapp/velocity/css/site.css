@@ -116,12 +116,39 @@ div.rdf {
   padding: 0px 0px 0px 18px;
 }
 
+.rdf.object.multiple {
+  padding: 0px 0px 0px 14px;
+}
+
 .rdf.object.first {
   margin-left: -4px;
   background-image: url('../images/link-arrow.png');
   background-repeat: no-repeat;
   background-position: 0 7px;
 }
+
+.rdf.object.multiple {
+  margin-left: -4px;
+  background-image: url('../images/link-line3.png');
+  background-repeat: no-repeat;
+  background-position: 0 9px;
+}
+
+.multiple > li > .rdf.object {
+  vertical-align: top;
+  padding: 1px 0px 1px 18px;
+  background-image: url('../images/link-line-arrow.png');
+  background-repeat: no-repeat;
+  background-position: 0px -6px;
+  margin-left: -10px;
+  margin-right: 0;
+}
+
+.multiple > li.first > .rdf.object {
+  background-position: 0 7px;
+  background-image: url('../images/link-line2.png');
+}
+
 
 .rdf.predicate a, .rdf.predicate a:visited {
   border: 1px solid #a0a0a0;
@@ -131,6 +158,10 @@ div.rdf {
   padding: 2px 5px;
 }
 
+.multiple > li {
+  padding-bottom: 0;
+}
+
 li {
   padding-bottom: 6px;
 }
@@ -138,11 +169,12 @@ li {
 ul.resource-properties li {
   border-left: 2px solid #a0a0a0;
   padding-left: 8px;
+  margin-left: 0px;
 }
 
-ul.resource-properties li.last {
+ul.resource-properties li.last, ul.multiple li.first {
   border-left: 0;
-  padding-left: 10px;
+  padding-left: 11px;
 }
 
 .rdf.resource.nested .rdf.object {

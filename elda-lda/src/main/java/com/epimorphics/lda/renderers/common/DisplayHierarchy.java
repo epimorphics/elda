@@ -178,24 +178,24 @@ public class DisplayHierarchy
      * @param node
      */
     protected void annotateNodes( DisplayHierarchyContext context, DisplayHierarchyNode node ) {
-        annotateNodeList( context, node.children() );
+        annotateNodeList( context, node.children(), "first" );
     }
 
     protected void annotateSiblings( DisplayHierarchyContext context, DisplayHierarchyNode node ) {
         if (node.hasSiblings()) {
-            annotateNodeList( context, node.siblings() );
+            annotateNodeList( context, node.siblings(), null );
         }
     }
 
-    protected void annotateNodeList( DisplayHierarchyContext context, List<DisplayHierarchyNode> nodes ) {
+    protected void annotateNodeList( DisplayHierarchyContext context, List<DisplayHierarchyNode> nodes, String firstHint ) {
         int n = nodes.size();
 
         for (int i = 0; i < n; i++) {
             DisplayHierarchyNode node = nodes.get( i );
 
             node.addHint( (i % 2 == 1) ? "odd" : "even" );
-            if (i == 0) {
-                node.addHint( "first" );
+            if (i == 0 && firstHint != null) {
+                node.addHint( firstHint );
             }
             if (i == n - 1) {
                 node.addHint( "last" );
