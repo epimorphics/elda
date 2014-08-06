@@ -167,7 +167,7 @@ li {
 }
 
 ul.resource-properties li {
-  border-left: 2px solid #a0a0a0;
+  border-left: 2px solid rgba( 160, 160, 160, 20 );
   padding-left: 8px;
   margin-left: 0px;
 }
