@@ -87,6 +87,7 @@ public class DisplayHierarchy
         while (!context.completed()) {
             DisplayHierarchyNode node = context.queue().remove();
             expandNode( context, node );
+            annotateNodes( context, node );
         }
     }
 
@@ -101,25 +102,35 @@ public class DisplayHierarchy
      * @param context
      * @param node
      */
-    protected void expandNode( DisplayHierarchyContext context, DisplayHierarchyNode node ) {
-        List<AnnotatedPropertyValue> arcs = node.rdfNode().getDisplayProperties();
-        Set<PropertyPath> paths = node.isRoot() ? context.basePaths() : node.explicitPaths();
+    protected void expandNode( DisplayHierarchyContext context, DisplayHierarchyNode parent ) {
+        List<PropertyValue> arcs = parent.rdfNode().getDisplayProperties();
+        Set<PropertyPath> paths = parent.isRoot() ? context.basePaths() : parent.explicitPaths();
 
         for (PropertyValue s: arcs) {
             Property p = s.getProp().toProperty( s.getProp() );
-            PropertyPath pathTo = node.pathTo().append( null, p.getURI(), shortNameRenderer );
+            PropertyPath pathTo = parent.pathTo().append( null, p.getURI(), shortNameRenderer );
+            DisplayHierarchyNode first = null;
 
             for (RDFNodeWrapper childNode: s.getValues()) {
-                DisplayHierarchyNode child = new DisplayHierarchyNode( pathTo, node, context.wrap( childNode ) );
+                DisplayHierarchyNode node = null;
 
-                Set<PropertyPath> matchingPaths = matchingPaths( context, p, paths );
-                child.explicitPaths().addAll( matchingPaths );
-
-                if (!child.isLeaf( context )) {
-                    context.queue().add( child );
+                if (first == null) {
+                    node = new DisplayHierarchyNode( pathTo, parent, context.wrap( childNode ) );
+                    first = node;
+                }
+                else {
+                    node = new DisplayHierarchyNode( pathTo, null, context.wrap( childNode ) );
+                    first.addSibling( node );
                 }
 
-                context.see( child.rdfNode() );
+                Set<PropertyPath> matchingPaths = matchingPaths( context, p, paths );
+                node.explicitPaths().addAll( matchingPaths );
+
+                if (!node.isLeaf( context )) {
+                    context.queue().add( node );
+                }
+
+                context.see( node.rdfNode() );
             }
         }
     }
@@ -161,6 +172,41 @@ public class DisplayHierarchy
         return context;
     }
 
+    /**
+     * Walk the tree from a node and add display hints
+     * @param context
+     * @param node
+     */
+    protected void annotateNodes( DisplayHierarchyContext context, DisplayHierarchyNode node ) {
+        annotateNodeList( context, node.children() );
+    }
+
+    protected void annotateSiblings( DisplayHierarchyContext context, DisplayHierarchyNode node ) {
+        if (node.hasSiblings()) {
+            annotateNodeList( context, node.siblings() );
+        }
+    }
+
+    protected void annotateNodeList( DisplayHierarchyContext context, List<DisplayHierarchyNode> nodes ) {
+        int n = nodes.size();
+
+        for (int i = 0; i < n; i++) {
+            DisplayHierarchyNode node = nodes.get( i );
+
+            node.addHint( (i % 2 == 1) ? "odd" : "even" );
+            if (i == 0) {
+                node.addHint( "first" );
+            }
+            if (i == n - 1) {
+                node.addHint( "last" );
+            }
+
+            annotateNodes( context, node );
+            annotateSiblings( context, node );
+        }
+    }
+
+
     /***********************************/
     /* Inner class definitions         */
     /***********************************/
@@ -179,6 +225,7 @@ public class DisplayHierarchy
         private Set<PropertyPath> basePaths;
 
         /** The current page */
+        @SuppressWarnings( "hiding" )
         private Page page;
 
         /** @return The current hierarchy node queue */

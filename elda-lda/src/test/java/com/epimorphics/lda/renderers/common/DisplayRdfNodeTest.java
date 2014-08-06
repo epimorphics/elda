@@ -20,6 +20,7 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.rdfutil.PropertyValue;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.*;
 
@@ -74,7 +75,7 @@ public class DisplayRdfNodeTest
 
     @Test
     public void testGetDisplayProperties() {
-        List<AnnotatedPropertyValue> displayTriples = displayResource.getDisplayProperties();
+        List<PropertyValue> displayTriples = displayResource.getDisplayProperties();
         String ns = "http://epimorphics.com/public/vocabulary/games.ttl#";
 
         assertEquals( 5, displayTriples.size() );
@@ -83,8 +84,6 @@ public class DisplayRdfNodeTest
         assertEquals( ns + "playTimeMinutes", displayTriples.get(2).getProp().getURI() );
         assertEquals( ns + "players", displayTriples.get(3).getProp().getURI() );
         assertEquals( ns + "pubYear", displayTriples.get(4).getProp().getURI() );
-
-        assertEquals( "odd last", displayTriples.get( 4 ).annotationsString() );
     }
 
     @Test

@@ -12,13 +12,16 @@ package com.epimorphics.lda.renderers.common;
 
 import java.util.*;
 
+import org.apache.jena.atlas.lib.StrUtils;
+
 import com.epimorphics.lda.renderers.common.DisplayHierarchy.DisplayHierarchyContext;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.Property;
 
 
 /**
- *  A node in the unfolded display hierarchy starting at the item roots.
+ *  A node in the unfolded display hierarchy starting at the item roots. In the case
+ *  of properties with multiple values, a node may be a group that has siblings.
  */
 public class DisplayHierarchyNode
 {
@@ -48,6 +51,12 @@ public class DisplayHierarchyNode
 
     /** The list of child nodes of this node */
     private List<DisplayHierarchyNode> children = new ArrayList<DisplayHierarchyNode>();
+
+    /** The list of sibling nodes of this node (nodes that share the same property path) */
+    private List<DisplayHierarchyNode> siblings = new ArrayList<DisplayHierarchyNode>();
+
+    /** List of presentation hints */
+    private List<String> hints = new ArrayList<String>();
 
     /***********************************/
     /* Constructors                    */
@@ -139,9 +148,34 @@ public class DisplayHierarchyNode
                 context.isSeen( rdfNode() ));
     }
 
-    /** @return The list of children of this node */
+    /** @return The list of children of this node. */
     public List<DisplayHierarchyNode> children() {
         return children;
+    }
+
+    /** Add a sibling node to this node */
+    public void addSibling( DisplayHierarchyNode sibling ) {
+        siblings.add( sibling );
+    }
+
+    /** @return A list of the siblings of this node, which may be empty but is not null */
+    public List<DisplayHierarchyNode> siblings() {
+        return siblings;
+    }
+
+    /** @return True if this node has at least one sibling */
+    public boolean hasSiblings() {
+        return !siblings.isEmpty();
+    }
+
+    /** Add a new hint to this node's list of display hints */
+    public void addHint( String hint ) {
+        hints.add( hint );
+    }
+
+    /** @return The list of hints joined into a string */
+    public String hintsString() {
+        return StrUtils.strjoin( " ", hints );
     }
 
     /* Convenience methods which delegate to the same method on the encapsulated RDFNodeWrapper */

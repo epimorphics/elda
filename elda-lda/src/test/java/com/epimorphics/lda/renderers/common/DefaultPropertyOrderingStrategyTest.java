@@ -64,7 +64,7 @@ public class DefaultPropertyOrderingStrategyTest
         ModelWrapper mw = new ModelWrapper( m );
         RDFNodeWrapper subjw = new RDFNodeWrapper( mw, subj );
 
-        List<AnnotatedPropertyValue> triples = new DefaultPropertyOrderingStrategy().orderProperties( subjw );
+        List<PropertyValue> triples = new DefaultPropertyOrderingStrategy().orderProperties( subjw );
 
         assertEquals( "http://example/test#p2", triples.get(0).getProp().getURI() );
         assertEquals( "http://example/test#p3", triples.get(1).getProp().getURI() );

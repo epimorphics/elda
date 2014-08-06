@@ -12,6 +12,8 @@ package com.epimorphics.lda.renderers.common;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
@@ -73,6 +75,16 @@ public class DisplayHierarchyTest
     public void testExpand() {
         dh.expand();
         assertEquals( 10, dh.roots().size() );
+    }
+
+    @Test
+    public void testAnnotations() {
+        dh.expand();
+        List<DisplayHierarchyNode> children = dh.roots().get( 0 ).children();
+
+        assertEquals( "even first", children.get(0).hintsString() );
+        assertEquals( "odd", children.get(1).hintsString() );
+        assertEquals( "even last", children.get( children.size() - 1 ).hintsString() );
     }
 
     /***********************************/

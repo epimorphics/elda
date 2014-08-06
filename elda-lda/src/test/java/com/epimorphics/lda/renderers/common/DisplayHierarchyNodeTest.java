@@ -166,6 +166,23 @@ public class DisplayHierarchyNodeTest
         assertEquals( 0, c1.children().size() );
     }
 
+    @Test
+    public void testSiblings() {
+        assertEquals( 0, dhn.siblings().size() );
+        assertFalse( dhn.hasSiblings() );
+
+        Resource r0 = ResourceFactory.createResource( "http://example/foo#r0");
+        DisplayHierarchyNode c1 = new DisplayHierarchyNode( new PropertyPath(), null, new DisplayRdfNode( rm.page(), r0 ) );
+
+        dhn.addSibling( c1 );
+        assertEquals( 1, dhn.siblings().size() );
+        assertTrue( dhn.hasSiblings() );
+        assertSame( c1, dhn.siblings().get( 0 ));
+
+        assertEquals( 0, c1.siblings().size() );
+        assertFalse( c1.hasSiblings() );
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
