@@ -218,6 +218,8 @@ implements Renderer
             this.bindings = b;
             this.results = rs;
             this.vr = vr;
+
+            coerceAllMetadata();
         }
 
         /***********************************/
@@ -261,6 +263,14 @@ implements Renderer
         /***********************************/
         /* Internal implementation methods */
         /***********************************/
+
+        /**
+         * Irrespective of what is stated in the request URL, we ensure that we see
+         * all of the available metadata for this endpoint
+         */
+        protected void coerceAllMetadata() {
+            this.results.includeMetadata( MetadataOptions.allOptions().asArray() );
+        }
 
         /**
          * Render the top-level template, given the result set and other state stored

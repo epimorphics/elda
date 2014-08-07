@@ -21,6 +21,10 @@ import com.hp.hpl.jena.rdf.model.Statement;
 public class MetadataOptions
 extends HashSet<String>
 {
+    /** List of all metadata option types. TODO: remove this when issue 80 is addressed
+     * https://github.com/epimorphics/elda/issues/80
+     */
+    public static final String[] ALL_OPTIONS = {"versions", "formats", "bindings", "execution"};
 
     /**
      * Construct a new collection of metadata options from any <code>elda:metadataOptions</code>
@@ -40,6 +44,15 @@ extends HashSet<String>
 
         if (!root.hasProperty( ELDA_API.metadataOptions ) && defaultOptions != null) {
             addOptions( defaultOptions );
+        }
+    }
+
+    /**
+     * Constructor that collaborates with the #all method
+     */
+    protected MetadataOptions( String[] options ) {
+        for (String option: options) {
+            addOptions( option );
         }
     }
 
@@ -63,5 +76,13 @@ extends HashSet<String>
         for (String opt: options.split( " *, *" )) {
             add( opt.toLowerCase() );
         }
+    }
+
+    /**
+     * The Zen method: make me one with everything!
+     * @return A collection of all metadata options
+     */
+    public static MetadataOptions allOptions() {
+        return new MetadataOptions( ALL_OPTIONS );
     }
 }
