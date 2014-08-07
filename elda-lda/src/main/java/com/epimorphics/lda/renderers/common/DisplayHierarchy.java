@@ -214,7 +214,7 @@ public class DisplayHierarchy
     /**
      * A collection of the state information we keep while expanding the display hierarchy
      */
-    public class DisplayHierarchyContext {
+    public static class DisplayHierarchyContext {
         /** A queue of the non-expanded nodes */
         private Queue<DisplayHierarchyNode> queue = new ArrayDeque<DisplayHierarchyNode>();
 
@@ -225,7 +225,6 @@ public class DisplayHierarchy
         private Set<PropertyPath> basePaths;
 
         /** The current page */
-        @SuppressWarnings( "hiding" )
         private Page page;
 
         /** @return The current hierarchy node queue */
