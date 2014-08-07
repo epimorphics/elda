@@ -1,28 +1,43 @@
 ## Macros for displaying a single item
 
 #macro( eldaItem $hnode )
+  #showRdfResource( $hnode, "section", "outer" )
+#end
+
+## Display an RDF resource
+#macro( showRdfResource $hnode, $elem, $level )
   #set( $resource = $hnode.rdfNode() )
-  <section class="rdf resource outer">
+  <$elem class="rdf resource $level">
     <div class="row">
-      #itemName( $resource )
-      #itemURI( $resource )
-      #itemTypes( $resource )
-      #itemProperties( $hnode )
+      #itemName( $resource, $level )
+      #itemURI( $resource, $level )
+      #itemTypes( $resource, $level )
+      #itemProperties( $hnode, $level )
     </div>
-  </section>
+  </$elem>
+#end
+
+#macro( selectHLevel $level $hOuter $hInner )
+  #if( $level.equals( "outer" ) )
+    #set( $h = $hOuter)
+  #else
+    #set( $h = $hInner)
+  #end
 #end
 
 ## Display the name of the resource
-#macro( itemName $resource )
+#macro( itemName $resource, $level )
+  #selectHLevel( $level, "h1", "h3" )
   <div class="col-md-12">
-    <h1 class="resource-label">$resource.getName()</h1>
+    <$h class="resource-label">$resource.getName()</$h>
   </div>
 #end
 
 ## Display the item URI
 #macro( itemURI $resource )
+  #selectHLevel( $level, "h2", "h4" )
   <div class="col-md-12">
-    <h2 class="resource-uri"><a href="$resource.getURI()">$resource.getURI()</a></h2>
+    <$h class="resource-uri"><a href="$resource.getURI()">$resource.getURI()</a></$h>
   </div>
 #end
 
@@ -102,13 +117,21 @@
 #macro( propertyObject $node $hint )
   #if( $node.rdfNode().isLiteral() )
     #propertyObjectLiteral( $node.rdfNode(), $hint )
+  #else
+    #propertyObjectResource( $node, $hint )
   #end
 #end
 
-## Show a literal-valued property
+## Show a literal-value
 #macro( propertyObjectLiteral $lit $hint )
   <div class="rdf object literal $hint">
     $lit.getLexicalForm()
   </div>
 #end
 
+## Show a resource-value
+#macro( propertyObjectResource $node $hint )
+  <div class="rdf object $hint">
+    #showRdfResource( $node, "div", "nested" )
+  </div>
+#end
