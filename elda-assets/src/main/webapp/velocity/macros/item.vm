@@ -65,17 +65,19 @@
 
 ## Show the various properties of the item
 #macro( itemProperties $hNode )
-  <div class="col-md-12">
-    <ul class="resource-properties">
-      #foreach( $childNode in $hNode.children() )
-        <li class="$childNode.hintsString()">
-          #set( $pred = $childNode.terminalLink() )
-          #propertyPredicate( $pred )
-          #propertyValue( $childNode )
-        </li>
-      #end
-    </ul>
-  </div>
+  #if( $hNode.children().size() > 0)
+    <div class="col-md-12">
+      <ul class="resource-properties">
+        #foreach( $childNode in $hNode.children() )
+          <li class="$childNode.hintsString()">
+            #set( $pred = $childNode.terminalLink() )
+            #propertyPredicate( $pred )
+            #propertyValue( $childNode )
+          </li>
+        #end
+      </ul>
+    </div>
+  #end
 #end
 
 ## Show the predicate of a property-value
