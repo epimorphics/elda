@@ -71,6 +71,16 @@ implements PropertyOrderingStrategy
             }
         } );
 
+        // PropertyValue contains a list of values, we need these to be in order as well
+        for (PropertyValue pv: apvs) {
+            Collections.sort( pv.getValues(), new Comparator<RDFNodeWrapper>() {
+                @Override
+                public int compare( RDFNodeWrapper o1, RDFNodeWrapper o2 ) {
+                    return o1.getName().compareTo( o2.getName() );
+                }
+            } );
+        }
+
         return apvs;
     }
 
