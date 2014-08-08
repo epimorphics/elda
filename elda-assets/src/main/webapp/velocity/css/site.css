@@ -158,9 +158,18 @@ ul.resource-properties li {
   margin-left: 0px;
 }
 
-ul.resource-properties li.last, ul.multiple li.first {
+ul.resource-properties li.last {
   border-left: 0;
   padding-left: 11px;
+}
+
+ul.multiple li.first :after {
+  position: absolute;
+  height: 20px;
+  width: 2px;
+  left: -1px;
+  top: 0;
+  background-color:  red  ;
 }
 
 /* nested resources */
