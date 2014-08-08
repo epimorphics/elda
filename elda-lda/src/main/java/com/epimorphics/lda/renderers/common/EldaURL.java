@@ -33,7 +33,7 @@ public class EldaURL
     /***********************************/
 
     /** The ways we can change parameter values to create a related URL */
-    enum OPERATION { ADD, REMOVE, SET };
+    enum OPERATION { ADD, REMOVE, SET }
 
     /***********************************/
     /* Static variables                */
