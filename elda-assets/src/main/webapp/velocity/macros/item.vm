@@ -8,27 +8,33 @@
 #macro( showRdfResource $hnode, $elem, $level )
   #set( $resource = $hnode.rdfNode() )
   <$elem class="rdf resource $level">
-    <div class="row">
+    #if( $level.equals( "outer" ))
+      <div class="row">
+    #end
       #itemName( $resource, $level )
       #itemURI( $resource, $level )
       #itemTypes( $resource, $level )
       #itemProperties( $hnode, $level )
-    </div>
+    #if( $level.equals( "outer" ))
+      </div>
+    #end
   </$elem>
 #end
 
 #macro( selectHLevel $level $hOuter $hInner )
   #if( $level.equals( "outer" ) )
     #set( $h = $hOuter)
+    #set( $w = "col-md-12" )
   #else
     #set( $h = $hInner)
+    #set( $w = "" )
   #end
 #end
 
 ## Display the name of the resource
 #macro( itemName $resource, $level )
   #selectHLevel( $level, "h1", "h3" )
-  <div class="col-md-12">
+  <div class="$w">
     <$h class="resource-label">$resource.getName()</$h>
   </div>
 #end
@@ -36,7 +42,7 @@
 ## Display the item URI
 #macro( itemURI $resource )
   #selectHLevel( $level, "h2", "h4" )
-  <div class="col-md-12">
+  <div class="$w">
     <$h class="resource-uri"><a href="$resource.getURI()">$resource.getURI()</a></$h>
   </div>
 #end
@@ -45,8 +51,9 @@
 #macro( itemTypes $resource )
   #set( $types = $resource.types() )
   #set( $sep = "" )
+  #selectHLevel( $level, "", "" )
   #if( $types.size() > 0 )
-    <div class="col-md-12">
+    <div class="$w">
       <div class="resource-types">
         a
         <ul class="list-inline">
@@ -64,9 +71,10 @@
 #end
 
 ## Show the various properties of the item
-#macro( itemProperties $hNode )
+#macro( itemProperties $hNode $level )
+  #selectHLevel( $level, "", "" )
   #if( $hNode.children().size() > 0)
-    <div class="col-md-12">
+    <div class="$w">
       <ul class="resource-properties">
         #foreach( $childNode in $hNode.children() )
           <li class="$childNode.hintsString()">

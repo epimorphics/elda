@@ -48,34 +48,34 @@ spec:schoolsSelector
 #VIEWERS
 
 spec:viewerShort
-	a api:Viewer ;
-	api:name "short" ;
-	api:properties "lat,long,label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label" .
+  a api:Viewer ;
+  api:name "short" ;
+  api:properties "lat,long,label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label" .
 
 spec:viewerMedium
-	a api:Viewer ;
-	api:name "medium" ;
-	api:properties "label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label,address.address1,address.address2,address.address3,address.town,address.region,address.postcode,prefEmail,altEmail,notes,openDate,schoolCapacity,PFI" .
+  a api:Viewer ;
+  api:name "medium" ;
+  api:properties "label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label,address.address1,address.address2,address.address3,address.town,address.region,address.postcode,prefEmail,altEmail,notes,openDate,schoolCapacity,PFI" .
 
 spec:viewerProvision
-	a api:Viewer ;
-	api:name "provision" ;
-	api:properties "label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label,address.address1,address.address2,address.address3,address.town,address.region,address.postcode,schoolCapacity,nurseryProvision,totalPupilsPartTime.datum.val,totalPupilsFullTime.datum.date,totalPupilsFullTime.datum.val,totalPupilsPartTime.datum.date,highDayFee.datum.date,lowDayFee.datum.val,highDayFee.datum.val,SENStat,SENNoStat,specialPupils,boarders.label,censusRecord.dated,censusRecord.numberOfBoys,censusRecord.numberOfGirls,censusRecord.numberOfPupils,specialClasses,FSM,FSMPercentage,compSchoolAge,statutoryLowAge,statutoryHighAge,pupilTeacherRatio" .
+  a api:Viewer ;
+  api:name "provision" ;
+  api:properties "label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label,address.address1,address.address2,address.address3,address.town,address.region,address.postcode,schoolCapacity,nurseryProvision,totalPupilsPartTime.datum.val,totalPupilsFullTime.datum.date,totalPupilsFullTime.datum.val,totalPupilsPartTime.datum.date,highDayFee.datum.date,lowDayFee.datum.val,highDayFee.datum.val,SENStat,SENNoStat,specialPupils,boarders.label,censusRecord.dated,censusRecord.numberOfBoys,censusRecord.numberOfGirls,censusRecord.numberOfPupils,specialClasses,FSM,FSMPercentage,compSchoolAge,statutoryLowAge,statutoryHighAge,pupilTeacherRatio" .
 
 spec:viewerLocation
-	a api:Viewer ;
-	api:name "location" ;
-	api:properties "label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label,address.address1,address.address2,address.address3,address.town,address.region,address.postcode,lat,long,easting,northing,censusAreaStatisticWard.label,districtAdministrative.label,localAuthority.label,LSOA.label,MSOA.label,LLSC.label,parliamentaryConstituency.label,administrativeWard.label,urbanRural.label,hasGOR.label" .
+  a api:Viewer ;
+  api:name "location" ;
+  api:properties "label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label,address.address1,address.address2,address.address3,address.town,address.region,address.postcode,lat,long,easting,northing,censusAreaStatisticWard.label,districtAdministrative.label,localAuthority.label,LSOA.label,MSOA.label,LLSC.label,parliamentaryConstituency.label,administrativeWard.label,urbanRural.label,hasGOR.label" .
 
 spec:viewerPerformance
-	a api:Viewer ;
-	api:name "performance" ;
-	api:properties "label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label,address.address1,address.address2,address.address3,address.town,address.region,address.postcode,inspectorate.label,dateofLastOfstedVisit,dateofLastISIVisit,dateofLastFPVisit,nextHMIorISIvisit,actionFP,actionGEN,ofstedSpecialMeasures" .
-  
+  a api:Viewer ;
+  api:name "performance" ;
+  api:properties "label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label,address.address1,address.address2,address.address3,address.town,address.region,address.postcode,inspectorate.label,dateofLastOfstedVisit,dateofLastISIVisit,dateofLastFPVisit,nextHMIorISIvisit,actionFP,actionGEN,ofstedSpecialMeasures" .
+
 spec:viewerAdmin
-	a api:Viewer ;
-	api:name "admin" ;
-	api:properties "label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label,address.address1,address.address2,address.address3,address.town,address.region,address.postcode,superannuationCategory.label,investorInPeople.label,association.label,burnhamGroup,accomChange,reasonEstablishmentOpened.label" .
+  a api:Viewer ;
+  api:name "admin" ;
+  api:properties "label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,religiousCharacter.label,address.address1,address.address2,address.address3,address.town,address.region,address.postcode,superannuationCategory.label,investorInPeople.label,association.label,burnhamGroup,accomChange,reasonEstablishmentOpened.label" .
 
 #FORMATTERS
 
@@ -83,21 +83,20 @@ spec:VelocityFormatter a elda:VelocityFormatter
     ; api:name "vhtml"
     ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
     ; api:mimeType "text/html"
-    ; elda:velocityTemplate "page-shell.vm"
     .
-    
+
 spec:HtmlFormatter
-	a api:XsltFormatter ;
-	api:name "html" ;
-	api:mimeType "text/html; charset=utf-8" ;
-	api:stylesheet "lda-assets/xslt/result-osm.xsl"
-	.
+  a api:XsltFormatter ;
+  api:name "html" ;
+  api:mimeType "text/html; charset=utf-8" ;
+  api:stylesheet "lda-assets/xslt/result-osm.xsl"
+  .
 
 spec:CsvFormatter
-	a api:XsltFormatter ;
-	api:name "csv" ;
-	api:mimeType "text/csv; charset=utf-8" ;
-	api:stylesheet "lda-assets/xslt/school-csv.xsl" .
+  a api:XsltFormatter ;
+  api:name "csv" ;
+  api:mimeType "text/csv; charset=utf-8" ;
+  api:stylesheet "lda-assets/xslt/school-csv.xsl" .
 
 ############################################################################################
 #
@@ -105,57 +104,58 @@ spec:CsvFormatter
 #
 ############################################################################################
 
-<http://education.data.gov.uk/sparql/education/query> 
+<http://education.data.gov.uk/sparql/education/query>
     elda:supportsNestedSelect true
     # ; elda:authKey "config"
-	# ; elda:authAllowInsecure true
-	# ; elda:authFile "/home/chris/nosuch.auth"
+  # ; elda:authAllowInsecure true
+  # ; elda:authFile "/home/chris/nosuch.auth"
     .
 
 spec:full-education-api a api:API ;
-	api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query> ;
-	api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"];
-	api:variable [api:name "_suppress_ipto"; api:value "yes"];
+  api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query> ;
+  api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"];
+  api:variable [api:name "_suppress_ipto"; api:value "yes"];
     api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"];
-    api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm/"];
-	api:lang "en,none";
-	elda:enableETags true ;
-	rdfs:label "Edubase Full API"@en;
-	api:maxPageSize 50;
-	api:defaultPageSize 10 ;
-	api:defaultViewer api:labelledDescribeViewer ;
-	api:defaultFormatter spec:HtmlFormatter ;
-	api:formatter spec:CsvFormatter ;
+    #api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm/"];
+    api:variable [api:name "_velocityRoot"; api:value "assets/velocity"];
+  api:lang "en,none";
+  elda:enableETags true ;
+  rdfs:label "Edubase Full API"@en;
+  api:maxPageSize 50;
+  api:defaultPageSize 10 ;
+  api:defaultViewer api:labelledDescribeViewer ;
+  api:defaultFormatter spec:HtmlFormatter ;
+  api:formatter spec:CsvFormatter ;
     api:formatter spec:VelocityFormatter ;
-	api:viewer 
-		api:describeViewer ,
-		api:labelledDescribeViewer ;
-	api:endpoint 
-	    so:about ,
-		so:scheme ,
-		so:scheme-ns ,
-		so:scheme-def ,
-		so:subclasses ,
-		so:instances ,
-		so:properties ,
-		spec:definition ,
-		spec:school ,
-		spec:schools , 
-		spec:schoolsPrimary , 
-		spec:schoolsSecondary , 
-		spec:schoolsByLocalAuthority ,
-		spec:schoolsByLocalAuthorityName ,
-		spec:schoolsByDistrict ,
-		spec:schoolsByDistrictName ,
-		spec:schoolsByWard ,
-		spec:schoolsByWardName ,
-		spec:schoolsByConstituency ,
-		spec:schoolsByConstituencyName ,
-		spec:schoolsByLatLong ,
-		spec:schoolCensus ,
-		spec:schoolCensuses
-	.
-    
+  api:viewer
+    api:describeViewer ,
+    api:labelledDescribeViewer ;
+  api:endpoint
+      so:about ,
+    so:scheme ,
+    so:scheme-ns ,
+    so:scheme-def ,
+    so:subclasses ,
+    so:instances ,
+    so:properties ,
+    spec:definition ,
+    spec:school ,
+    spec:schools ,
+    spec:schoolsPrimary ,
+    spec:schoolsSecondary ,
+    spec:schoolsByLocalAuthority ,
+    spec:schoolsByLocalAuthorityName ,
+    spec:schoolsByDistrict ,
+    spec:schoolsByDistrictName ,
+    spec:schoolsByWard ,
+    spec:schoolsByWardName ,
+    spec:schoolsByConstituency ,
+    spec:schoolsByConstituencyName ,
+    spec:schoolsByLatLong ,
+    spec:schoolCensus ,
+    spec:schoolCensuses
+  .
+
 #ENDPOINTS
 
 # Ontology endpoints [cloned and edited from Stuart's
@@ -163,11 +163,11 @@ spec:full-education-api a api:API ;
 
 so:ontology-selector api:where
 """
-{ ?item a owl:Ontology } 
+{ ?item a owl:Ontology }
 UNION {?item a skos:ConceptScheme }
 UNION {?item a ?type. ?type rdfs:subClassOf skos:Concept}
 FILTER (regex(STR(?item),?schemeRegex))
-""";     
+""";
     api:orderBy "str(?item)";
     .
 
@@ -193,19 +193,19 @@ FILTER (regex(STR(?item),?schemeRegex))
 """;
      api:orderBy "str(?item)";
      .
-    
+
 #
 # The /item endpoint requires a query parameter whose value
 # is a URI; this is the single selected ?item. These URIs
 # are typically constructed by the Velocity renderer when
-# a resource is clicked on for a dataset-relative link. 
+# a resource is clicked on for a dataset-relative link.
 #
 
 so:about a api:ListEndpoint
     ; rdfs:label "About"
     ; api:uriTemplate "/about?resource={uri}"
     ; api:variable [api:name "uri"; api:type rdfs:Resource]
-    ; api:selector 
+    ; api:selector
         [ api:where "?item ?p ?o. FILTER(?item = ?uri)"
         ; api:sort "label"
         ]
@@ -220,24 +220,24 @@ so:about a api:ListEndpoint
         , spec:viewerAdmin
         , spec:definitionViewer
     .
-    
+
 so:scheme-def a api:ListEndpoint;
-	rdfs:comment "Returns a list of vocabularies organised under http://education.data.gov.uk/def/"@en;
-	api:viewer    api:describeViewer, spec:schemeViewer, api:basicViewer;
-	api:uriTemplate  "/def";
-	api:variable [ api:name "schemeRegex"; api:value "^http://education.data.gov.uk/def/" ];
-	api:selector so:ontology-selector ;
-	api:defaultViewer spec:schemeViewer ;
-	.
+  rdfs:comment "Returns a list of vocabularies organised under http://education.data.gov.uk/def/"@en;
+  api:viewer    api:describeViewer, spec:schemeViewer, api:basicViewer;
+  api:uriTemplate  "/def";
+  api:variable [ api:name "schemeRegex"; api:value "^http://education.data.gov.uk/def/" ];
+  api:selector so:ontology-selector ;
+  api:defaultViewer spec:schemeViewer ;
+  .
 
 so:scheme a api:ListEndpoint ;
-	rdfs:comment "Returns a paged list of vocabulary terms from a given vocabulary."@en;
-	api:uriTemplate "/def/{scheme}" ;
-	api:variable [ api:name "schemeRegex"; api:value "^http://education.data.gov.uk/def/{scheme}/" ];
-	api:selector so:scheme-selector ;
-	api:viewer spec:definitionViewer, api:describeViewer, api:basicViewer ;
-	api:defaultViewer spec:schemeViewer ;
-	.
+  rdfs:comment "Returns a paged list of vocabulary terms from a given vocabulary."@en;
+  api:uriTemplate "/def/{scheme}" ;
+  api:variable [ api:name "schemeRegex"; api:value "^http://education.data.gov.uk/def/{scheme}/" ];
+  api:selector so:scheme-selector ;
+  api:viewer spec:definitionViewer, api:describeViewer, api:basicViewer ;
+  api:defaultViewer spec:schemeViewer ;
+  .
 
 so:scheme-ns a api:ItemEndpoint ;
    rdfs:comment "Returns information about the vocabulary."@en;
@@ -248,9 +248,9 @@ so:scheme-ns a api:ItemEndpoint ;
    .
 
 spec:schemeViewer a api:Viewer ;
-	api:name "scheme" ;
-	api:properties "type,comment,label,altLabel,note,scopeNote,topConcept.prefLabel,comment" ;
-	.
+  api:name "scheme" ;
+  api:properties "type,comment,label,altLabel,note,scopeNote,topConcept.prefLabel,comment" ;
+  .
 
 so:subclass-selector
      api:where " ?item rdfs:subClassOf ?superclass . " ;
@@ -313,7 +313,7 @@ spec:definition
   a api:ItemEndpoint ;
   api:uriTemplate "/def/{scheme}/{term}" ;
   api:itemTemplate "http://education.data.gov.uk/def/{scheme}/{term}" ;
-  api:defaultViewer spec:definitionViewer ;   
+  api:defaultViewer spec:definitionViewer ;
   api:viewer so:definitionViewer, api:describeViewer, api:basicViewer;
   .
 
@@ -339,65 +339,65 @@ spec:school
 
 #List all schools
 spec:schools
-	a api:ListEndpoint ;
-	rdfs:label "Schools" ;
-	api:uriTemplate "/doc/school" ;
-	api:selector spec:schoolsSelector ;
-	api:defaultViewer spec:viewerShort ;
-	api:viewer
+  a api:ListEndpoint ;
+  rdfs:label "Schools" ;
+  api:uriTemplate "/doc/school" ;
+  api:selector spec:schoolsSelector ;
+  api:defaultViewer spec:viewerShort ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
     spec:viewerLocation ,
     spec:viewerPerformance ,
     spec:viewerAdmin ;
-  .	
+  .
 
 #List all primary schools
 spec:schoolsPrimary
-	a api:ListEndpoint ;
-	api:uriTemplate "/doc/school/phase/primary" ;
-	api:selector [
-	  api:parent spec:schoolsSelector ;
-	  api:filter "phaseOfEducation.label=Primary"
-	] ;
-	api:defaultViewer spec:viewerShort ;
-	api:viewer
+  a api:ListEndpoint ;
+  api:uriTemplate "/doc/school/phase/primary" ;
+  api:selector [
+    api:parent spec:schoolsSelector ;
+    api:filter "phaseOfEducation.label=Primary"
+  ] ;
+  api:defaultViewer spec:viewerShort ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
     spec:viewerLocation ,
     spec:viewerPerformance ,
-    spec:viewerAdmin .	
+    spec:viewerAdmin .
 
 #List all secondary schools
 spec:schoolsSecondary
-	a api:ListEndpoint ;
-	api:uriTemplate "/doc/school/phase/secondary" ;
-	api:selector [
-	  api:parent spec:schoolsSelector ;
-	  api:filter "phaseOfEducation.label=Secondary"
-	] ;
-	api:defaultViewer spec:viewerShort ;
-	api:viewer
+  a api:ListEndpoint ;
+  api:uriTemplate "/doc/school/phase/secondary" ;
+  api:selector [
+    api:parent spec:schoolsSelector ;
+    api:filter "phaseOfEducation.label=Secondary"
+  ] ;
+  api:defaultViewer spec:viewerShort ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
     spec:viewerLocation ,
     spec:viewerPerformance ,
-    spec:viewerAdmin .	
+    spec:viewerAdmin .
 
 #"label,uniqueReferenceNumber,establishmentNumber,typeOfEstablishment.label,phaseOfEducation.label,gender.label,address.address1,address.address2,address.address3,address.town,address.region,address.postcode,lat,long,easting,northing,censusAreaStatisticWard.label,districtAdministrative.label,localAuthority.label,LSOA.label,MSOA.label,LLSC.label,parliamentaryConstituency.label,administrativeWard.label,urbanRural.label,hasGOR.label" .
 
 spec:schoolsByLocalAuthority
-	a api:ListEndpoint ;
-	api:uriTemplate "/doc/school/local-authority/{la}" ;
-	api:selector [
-	  api:parent spec:schoolsSelector ;
-	  api:filter "localAuthority.code={la}"
-	] ;
-	api:defaultViewer spec:viewerLocation ;
-	api:viewer
+  a api:ListEndpoint ;
+  api:uriTemplate "/doc/school/local-authority/{la}" ;
+  api:selector [
+    api:parent spec:schoolsSelector ;
+    api:filter "localAuthority.code={la}"
+  ] ;
+  api:defaultViewer spec:viewerLocation ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
@@ -407,147 +407,147 @@ spec:schoolsByLocalAuthority
   .
 
 spec:schoolsByLocalAuthorityName
-	a api:ListEndpoint ;
-	api:uriTemplate "/doc/school/local-authority-name/{la}" ;
-	api:selector [
-	  api:parent spec:schoolsSelector ;
-	  api:filter "localAuthority.label={la}"
-	] ;
-	api:defaultViewer spec:viewerLocation ;
-	api:viewer
+  a api:ListEndpoint ;
+  api:uriTemplate "/doc/school/local-authority-name/{la}" ;
+  api:selector [
+    api:parent spec:schoolsSelector ;
+    api:filter "localAuthority.label={la}"
+  ] ;
+  api:defaultViewer spec:viewerLocation ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
     spec:viewerLocation ,
     spec:viewerPerformance ,
     spec:viewerAdmin ;
-	.
+  .
 
 spec:schoolsByDistrict
-	a api:ListEndpoint ;
-	api:uriTemplate "/doc/school/district/{district}" ;
-	api:selector [
-	  api:parent spec:schoolsSelector ;
-	  api:filter "districtAdministrative.code={district}"
-	] ;
-	api:defaultViewer spec:viewerLocation ;
-	api:viewer
+  a api:ListEndpoint ;
+  api:uriTemplate "/doc/school/district/{district}" ;
+  api:selector [
+    api:parent spec:schoolsSelector ;
+    api:filter "districtAdministrative.code={district}"
+  ] ;
+  api:defaultViewer spec:viewerLocation ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
     spec:viewerLocation ,
     spec:viewerPerformance ,
     spec:viewerAdmin ;
-	.
+  .
 
 spec:schoolsByDistrictName
-	a api:ListEndpoint ;
-	api:uriTemplate "/doc/school/district-name/{district}" ;
-	api:selector [
-	  api:parent spec:schoolsSelector ;
-	  api:filter "districtAdministrative.label={district}"
-	] ;
-	api:defaultViewer spec:viewerLocation ;
-	api:viewer
+  a api:ListEndpoint ;
+  api:uriTemplate "/doc/school/district-name/{district}" ;
+  api:selector [
+    api:parent spec:schoolsSelector ;
+    api:filter "districtAdministrative.label={district}"
+  ] ;
+  api:defaultViewer spec:viewerLocation ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
     spec:viewerLocation ,
     spec:viewerPerformance ,
     spec:viewerAdmin ;
-	.
+  .
 
 spec:schoolsByWard
-	a api:ListEndpoint ;
-	api:uriTemplate "/doc/school/ward/{ward}" ;
-	api:selector [
-	  api:parent spec:schoolsSelector ;
-	  api:filter "administrativeWard.code={ward}"
-	] ;
-	api:defaultViewer spec:viewerLocation ;
-	api:viewer
+  a api:ListEndpoint ;
+  api:uriTemplate "/doc/school/ward/{ward}" ;
+  api:selector [
+    api:parent spec:schoolsSelector ;
+    api:filter "administrativeWard.code={ward}"
+  ] ;
+  api:defaultViewer spec:viewerLocation ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
     spec:viewerLocation ,
     spec:viewerPerformance ,
     spec:viewerAdmin ;
-	.
+  .
 
 spec:schoolsByWardName
-	a api:ListEndpoint ;
-	api:uriTemplate "/doc/school/ward-name/{ward}" ;
-	api:selector [
-	  api:parent spec:schoolsSelector ;
-	  api:filter "administrativeWard.label={ward}"
-	] ;
-	api:defaultViewer spec:viewerLocation ;
-	api:viewer
+  a api:ListEndpoint ;
+  api:uriTemplate "/doc/school/ward-name/{ward}" ;
+  api:selector [
+    api:parent spec:schoolsSelector ;
+    api:filter "administrativeWard.label={ward}"
+  ] ;
+  api:defaultViewer spec:viewerLocation ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
     spec:viewerLocation ,
     spec:viewerPerformance ,
     spec:viewerAdmin ;
-	.
+  .
 
 spec:schoolsByConstituency
-	a api:ListEndpoint ;
-	api:uriTemplate "/doc/school/constituency/{constituency}" ;
-	api:selector [
-	  api:parent spec:schoolsSelector ;
-	  api:filter "parliamentaryConstituency.code={constituency}"
-	] ;
-	api:defaultViewer spec:viewerLocation ;
-	api:viewer
+  a api:ListEndpoint ;
+  api:uriTemplate "/doc/school/constituency/{constituency}" ;
+  api:selector [
+    api:parent spec:schoolsSelector ;
+    api:filter "parliamentaryConstituency.code={constituency}"
+  ] ;
+  api:defaultViewer spec:viewerLocation ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
     spec:viewerLocation ,
     spec:viewerPerformance ,
     spec:viewerAdmin ;
-	.
+  .
 
 spec:schoolsByConstituencyName
-	a api:ListEndpoint ;
-	api:uriTemplate "/doc/school/constituency-name/{constituency}" ;
-	api:selector [
-	  api:parent spec:schoolsSelector ;
-	  api:filter "parliamentaryConstituency.label={constituency}"
-	] ;
-	api:defaultViewer spec:viewerLocation ;
-	api:viewer
+  a api:ListEndpoint ;
+  api:uriTemplate "/doc/school/constituency-name/{constituency}" ;
+  api:selector [
+    api:parent spec:schoolsSelector ;
+    api:filter "parliamentaryConstituency.label={constituency}"
+  ] ;
+  api:defaultViewer spec:viewerLocation ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
     spec:viewerLocation ,
     spec:viewerPerformance ,
     spec:viewerAdmin ;
-	.
+  .
 
 spec:schoolsByLatLong
-	a api:ListEndpoint ;
-	api:uriTemplate "/doc/school/area/{minLat},{minLong};{maxLat},{maxLong}" ;
-	api:selector [
-	  api:parent spec:schoolsSelector ;
-	  api:filter "min-lat={minLat}&min-long={minLong}&max-lat={maxLat}&max-long={maxLong}"
-	] ;
-	api:defaultViewer spec:viewerLocation ;
-	api:viewer
+  a api:ListEndpoint ;
+  api:uriTemplate "/doc/school/area/{minLat},{minLong};{maxLat},{maxLong}" ;
+  api:selector [
+    api:parent spec:schoolsSelector ;
+    api:filter "min-lat={minLat}&min-long={minLong}&max-lat={maxLat}&max-long={maxLong}"
+  ] ;
+  api:defaultViewer spec:viewerLocation ;
+  api:viewer
     spec:viewerShort ,
     spec:viewerMedium ,
     spec:viewerProvision ,
     spec:viewerLocation ,
     spec:viewerPerformance ,
     spec:viewerAdmin ;
-	.
+  .
 
 #Describe a school census
 spec:schoolCensus
   a api:ItemEndpoint ;
   rdfs:label "School Census" ;
   api:uriTemplate "/doc/school/census/{number}" ;
-  api:itemTemplate "http://education.data.gov.uk/id/school/census/{number}" 
+  api:itemTemplate "http://education.data.gov.uk/id/school/census/{number}"
   .
 
 spec:schoolCensuses
@@ -564,12 +564,12 @@ spec:schoolCensuses
 # VOCABULARY
 #
 ############################################################################################
-  
+
 rdf:Property api:label "Property" .
 
-rdf:type api:label "type" 
-    ; api:multiValued true 
-    ; rdfs:range rdfs:Class 
+rdf:type api:label "type"
+    ; api:multiValued true
+    ; rdfs:range rdfs:Class
     .
 
 rdf:value api:label "value" .
@@ -599,7 +599,7 @@ owl:versionInfo api:label "versionInfo" .
 foaf:isPrimaryTopicOf a rdf:Property;
     api:label "isPrimaryTopicOf"
     .
-# appears (incorrectly) in some transport data. 
+# appears (incorrectly) in some transport data.
 skos:prefName api:label "prefName".
 
 skos:Concept api:label "Concept" .
@@ -608,8 +608,8 @@ skos:ConceptScheme api:label "ConceptScheme" .
 
 skos:prefLabel api:label "prefLabel" .
 
-skos:altLabel api:label "altLabel" 
-	; api:multiValued true .
+skos:altLabel api:label "altLabel"
+  ; api:multiValued true .
 
 skos:note api:label "note" .
 
@@ -617,23 +617,23 @@ skos:notation api:label "notation" .
 
 skos:scopeNote api:label "scopeNote" .
 
-skos:topConceptOf api:label "topConceptOf" 
-	; rdfs:range rdfs:Resource
-	.
+skos:topConceptOf api:label "topConceptOf"
+  ; rdfs:range rdfs:Resource
+  .
 
-skos:hasTopConcept api:label "topConcept"  
-	; rdfs:range rdfs:Resource 
-	; api:multiValued true 
-	.
+skos:hasTopConcept api:label "topConcept"
+  ; rdfs:range rdfs:Resource
+  ; api:multiValued true
+  .
 
-skos:broader api:label "broader"  
-	; rdfs:range rdfs:Resource
-	.
+skos:broader api:label "broader"
+  ; rdfs:range rdfs:Resource
+  .
 
-skos:narrower api:label "narrower"  
-	; rdfs:range rdfs:Resource
-	; api:multiValued true 
-	.
+skos:narrower api:label "narrower"
+  ; rdfs:range rdfs:Resource
+  ; api:multiValued true
+  .
 
 geo:lat
   a owl:DatatypeProperty ;
@@ -1609,7 +1609,7 @@ school:EYGovernmentFundedChildren
       api:label "EYGovernmentFundedChildren" .
 
 foundation:datum
-	api:label "datum" .
+  api:label "datum" .
 
 foundation:val
   a owl:DatatypeProperty ;
