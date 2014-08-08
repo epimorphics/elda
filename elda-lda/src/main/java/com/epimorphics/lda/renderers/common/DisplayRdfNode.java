@@ -82,7 +82,7 @@ extends CommonNodeWrapper
      */
     public static PropertyOrderingStrategy propertyOrdering() {
         if (propertyOrdering == null) {
-            propertyOrdering = new DefaultPropertyOrderingStrategy();
+            propertyOrdering = new LiteralsFirstPropertyOrderingStrategy();
         }
 
         return propertyOrdering;
