@@ -178,6 +178,11 @@ public class DisplayHierarchyNode
         return StrUtils.strjoin( " ", hints );
     }
 
+    /** @return True if the given string is one of this node's hints */
+    public boolean hasHint( String hint ) {
+        return hints.contains( hint );
+    }
+
     /* Convenience methods which delegate to the same method on the encapsulated RDFNodeWrapper */
 
     /** @see {@link RDFNodeWrapper#isResource()} */

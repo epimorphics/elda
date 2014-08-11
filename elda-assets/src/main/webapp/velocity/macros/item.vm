@@ -10,59 +10,46 @@
   <$elem class="rdf resource $level">
     #if( $level.equals( "outer" ))
       <div class="row">
-    #end
-      #itemName( $resource, $level )
-      #itemURI( $resource, $level )
-      #itemTypes( $resource, $level )
-      #itemProperties( $hnode, $level )
-    #if( $level.equals( "outer" ))
+        #itemName( $resource, "h1", "col-md-12" )
+        #itemURI( $resource, "h2", "col-md-12" )
+        #itemTypes( $resource, "col-md-12" )
+        #itemProperties( $hnode, $level )
       </div>
+    #else
+      #itemName( $resource, "h3" )
+      #itemURI( $resource, "h4" )
+      #itemTypes( $resource )
+      #itemProperties( $hnode, $level )
     #end
   </$elem>
 #end
 
-#macro( selectHLevel $level $hOuter $hInner )
-  #if( $level.equals( "outer" ) )
-    #set( $h = $hOuter)
-    #set( $w = "col-md-12" )
-  #else
-    #set( $h = $hInner)
-    #set( $w = "" )
-  #end
-#end
-
 ## Display the name of the resource
-#macro( itemName $resource, $level )
-  #selectHLevel( $level, "h1", "h3" )
-  <div class="$w">
+#macro( itemName $resource $h $css )
+  <div class="$css">
     <$h class="resource-label">$resource.getName()</$h>
   </div>
 #end
 
 ## Display the item URI
-#macro( itemURI $resource )
-  #selectHLevel( $level, "h2", "h4" )
-  <div class="$w">
+#macro( itemURI $resource $h $css )
+  <div class="$css">
     <$h class="resource-uri"><a href="$resource.getURI()">$resource.getURI()</a></$h>
   </div>
 #end
 
 ## Display a list of types for the resource, if any are known
-#macro( itemTypes $resource )
+#macro( itemTypes $resource $css )
   #set( $types = $resource.types() )
-  #set( $sep = "" )
-  #selectHLevel( $level, "", "" )
   #if( $types.size() > 0 )
-    <div class="$w">
+    <div class="$css">
       <div class="resource-types">
         a
         <ul class="list-inline">
           #foreach( $type in $types )
             <li>
-              $sep
               <a href="$type.getURI()">$type.getName()</a>
             </li>
-            #set( $sep = ", " )
           #end
         </ul>
       </div>
@@ -72,20 +59,49 @@
 
 ## Show the various properties of the item
 #macro( itemProperties $hNode $level )
-  #selectHLevel( $level, "", "" )
   #if( $hNode.children().size() > 0)
-    <div class="$w">
+    <div class="col-md-12">
       <ul class="resource-properties">
         #foreach( $childNode in $hNode.children() )
-          <li class="$childNode.hintsString()">
-            #set( $pred = $childNode.terminalLink() )
-            #propertyPredicate( $pred )
-            #propertyValue( $childNode )
-          </li>
+            <div class="property-value-row $childNode.hintsString()">
+              #if( $childNode.hasHint( "literal" ))
+                #literalValuedNode( $childNode )
+              #else
+                #resourceValuedNode( $childNode )
+              #end
+            </div>
         #end
       </ul>
     </div>
   #end
+#end
+
+## Show a property-value pair where the value is known to be a literal
+#macro( literalValuedNode $hNode )
+  <div class="row">
+    <li class="">
+      <div class="col-md-4">
+        #propertyPredicate( $hNode.terminalLink() )
+      </div>
+      <div class="col-md-8">
+        #propertyValue( $hNode )
+      </div>
+    </li>
+  </div>
+#end
+
+## Show a property value pair where the value is known to be a resource
+#macro( resourceValuedNode $hNode )
+  <div class="row">
+    <li class="">
+      <div class="col-md-4">
+        #propertyPredicate( $hNode.terminalLink() )
+      </div>
+      <div class="col-md-8">
+        #propertyValue( $hNode )
+      </div>
+    </li>
+  </div>
 #end
 
 ## Show the predicate of a property-value

@@ -201,9 +201,23 @@ public class DisplayHierarchy
                 node.addHint( "last" );
             }
 
+            if (isLiteralValued( node )) {
+                node.addHint( "literal" );
+            }
             annotateNodes( context, node );
             annotateSiblings( context, node );
         }
+    }
+
+    /** @return True if the node and all of its siblings are literal-valued */
+    protected boolean isLiteralValued( DisplayHierarchyNode node ) {
+        boolean literal = node.rdfNode().isLiteral();
+
+        for (DisplayHierarchyNode sibling: node.siblings()) {
+            literal = literal && sibling.rdfNode().isLiteral();
+        }
+
+        return literal;
     }
 
 

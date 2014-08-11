@@ -18,14 +18,15 @@ h1 .navbar-brand {
 /* RDF resource presentation */
 
 section.rdf.resource {
-  border: 1px solid #999;
+  border: 1px solid #0097a7;
   border-radius: 5px;
   margin-bottom: 10px;
 }
 
 h1.resource-label {
   font-size: 12pt;
-  background-color: #121212;
+  font-weight: bold;
+  background-color: #0097a7;
   color: white;
   margin: 0;
   padding: 5px;
@@ -33,19 +34,15 @@ h1.resource-label {
 
 h2.resource-uri, h4.resource-uri, .resource-types {
   font-size: 10pt;
-  color: #999;
+  color: #666;
   margin: 0;
   padding: 3px 5px;
-  background-color: #eee;
+  background-color: #e0f7fa;
 }
 
 .resource-types > ul {
   margin: 0;
   padding: 0;
-}
-
-h2.resource-uri a, h2.resource-uri a:visited {
-  color: #999;
 }
 
 .resource-types ul {
@@ -54,6 +51,18 @@ h2.resource-uri a, h2.resource-uri a:visited {
 
 .resource-types li {
   padding-bottom: 0;
+  padding: 0;
+  margin-right: 0;
+}
+
+.resource-types li + li::before {
+  padding: 0;
+  margin: 0;
+  content: ", ";
+}
+
+h2.resource-uri a, h2.resource-uri a:visited {
+  color: #666;
 }
 
 .rdf.object > ul {
@@ -87,12 +96,12 @@ div.rdf {
 .rdf.predicate {
   vertical-align: top;
   padding: 1px 0px 1px 12px;
-  background-image: url('../images/link-line.png');
-  background-repeat: no-repeat;
+  /*background-image: url('../images/link-line.png');*/
+/*  background-repeat: no-repeat;
   background-position: 0 -5px;
   margin-left: -10px;
   margin-right: 0;
-}
+*/}
 
 .rdf.object {
   padding: 0px 0px 0px 18px;
@@ -104,14 +113,14 @@ div.rdf {
 
 .rdf.object.first {
   margin-left: -4px;
-  background-image: url('../images/link-arrow.png');
+  /*background-image: url('../images/link-arrow.png');*/
   background-repeat: no-repeat;
   background-position: 0 7px;
 }
 
 .rdf.object.multiple {
   margin-left: -4px;
-  background-image: url('../images/link-line3.png');
+  /*background-image: url('../images/link-line3.png');*/
   background-repeat: no-repeat;
   background-position: 0 9px;
 }
@@ -119,7 +128,7 @@ div.rdf {
 .multiple > li > .rdf.object {
   vertical-align: top;
   padding: 1px 0px 1px 18px;
-  background-image: url('../images/link-line-arrow.png');
+  /*background-image: url('../images/link-line-arrow.png');*/
   background-repeat: no-repeat;
   background-position: 0px -6px;
   margin-left: -10px;
@@ -128,24 +137,29 @@ div.rdf {
 
 .multiple > li.first > .rdf.object {
   background-position: 0 7px;
-  background-image: url('../images/link-line2.png');
+  /*background-image: url('../images/link-line2.png');*/
 }
 
 
 .rdf.predicate a, .rdf.predicate a:visited {
-  border: 1px solid #a0a0a0;
-  border-radius: 3px;
-  background-color: #f5f5f8;
-  color: #303030;
-  padding: 2px 5px;
+  /*border: 1px solid #a0a0a0;*/
+  /*border-radius: 3px;*/
+  /*background-color: #f5f5f8;*/
+  /*color: #303030;*/
+  /*padding: 2px 5px;*/
+  text-align: right;
 }
 
 .multiple > li {
   padding-bottom: 0;
 }
 
-li {
+.rdf li {
   padding-bottom: 6px;
+}
+
+.property-value-row.odd  {
+  background-color: #f5f5f9;
 }
 
 ul.resource-properties {
@@ -153,10 +167,10 @@ ul.resource-properties {
 }
 
 ul.resource-properties li {
-  border-left: 2px solid rgba( 160, 160, 160, 20 );
+/*  border-left: 2px solid rgba( 160, 160, 160, 20 );
   padding-left: 8px;
   margin-left: 0px;
-}
+*/}
 
 ul.resource-properties li.last {
   border-left: 0;
@@ -175,15 +189,17 @@ ul.multiple li.first :after {
 /* nested resources */
 .nested {
   display: inline-block;
-  border: 1px solid #ddd;
+  border: 1px solid #00838f;
   border-radius: 3px;
+  margin: 4px 0;
+  max-width: 100%;
 }
 
 .nested h3 {
   font-size: 10pt;
   margin: 0;
   color: white;
-  background-color: #303030;
+  background-color: #00838f;
   padding: 3px;
   border-radius: 3px;
 }
