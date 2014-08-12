@@ -18,7 +18,7 @@ h1 .navbar-brand {
 /* RDF resource presentation */
 
 section.rdf.resource {
-  border: 1px solid #0097a7;
+  border: 1px solid #303f9f;
   border-radius: 5px;
   margin-bottom: 10px;
 }
@@ -26,7 +26,7 @@ section.rdf.resource {
 h1.resource-label {
   font-size: 12pt;
   font-weight: bold;
-  background-color: #0097a7;
+  background-color: #303f9f;
   color: white;
   margin: 0;
   padding: 5px;
@@ -37,7 +37,7 @@ h2.resource-uri, h4.resource-uri, .resource-types {
   color: #666;
   margin: 0;
   padding: 3px 5px;
-  background-color: #e0f7fa;
+  background-color: #e8eaf6;
 }
 
 .resource-types > ul {
@@ -189,7 +189,7 @@ ul.multiple li.first :after {
 /* nested resources */
 .nested {
   display: inline-block;
-  border: 1px solid #00838f;
+  border: 1px solid #283593;
   border-radius: 3px;
   margin: 4px 0;
   max-width: 100%;
@@ -199,7 +199,7 @@ ul.multiple li.first :after {
   font-size: 10pt;
   margin: 0;
   color: white;
-  background-color: #00838f;
+  background-color: #283593;
   padding: 3px;
   border-radius: 3px;
 }
