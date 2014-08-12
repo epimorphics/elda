@@ -15,6 +15,7 @@ import java.util.*;
 import org.apache.jena.atlas.lib.StrUtils;
 
 import com.epimorphics.lda.renderers.common.DisplayHierarchy.DisplayHierarchyContext;
+import com.epimorphics.lda.renderers.common.EldaURL.OPERATION;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.Property;
 
@@ -225,7 +226,35 @@ public class DisplayHierarchyNode
         return rdfNode().getURI();
     }
 
+    /** @return An HTML marked-up string of related links */
+    public String relatedLinksHTML() {
+        List<String> html = new ArrayList<String>();
 
+        html.add( "<ul class=''>" );
+        for (Link l: relatedLinks()) {
+            html.add( l.toHTMLString( "li" ) );
+        }
+        html.add( "</ul>" );
+
+        return StrUtils.strjoin( "\n", html );
+    }
+
+    /** @return A list of the related links to this node */
+    public List<Link> relatedLinks() {
+        List<Link> links = new ArrayList<Link>();
+        boolean isNumeric = rdfNode().isLiteral() && (rdfNode().getValue() instanceof Number);
+        Page page = rdfNode().page();
+        String param = terminalLink().getName();
+
+        if (isNumeric) {
+            links.add( new Link( "&lt;", page.pageURL().withParameter( OPERATION.SET, "max-" + param, rdfNode().getValue().toString() ), "filter-less-than" ));
+        }
+        if (isNumeric) {
+            links.add( new Link( "&gt;", page.pageURL().withParameter( OPERATION.SET, "min-" + param, rdfNode().getValue().toString() ), "filter-greater-than" ));
+        }
+
+        return links;
+    }
 
 
     /***********************************/

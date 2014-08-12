@@ -146,6 +146,7 @@
   #else
     #propertyObjectResource( $node )
   #end
+  #actionsMenu( $node )
 #end
 
 ## Show a literal-value
@@ -160,4 +161,18 @@
   <div class="rdf object">
     #showRdfResource( $node, "div", "nested" )
   </div>
+#end
+
+## Show the actions menu for this value
+#macro( actionsMenu $node )
+  <span class="filter-actions">
+    <button type="button"
+            class="btn btn-xs btn-default popover-dismiss"
+            title="Dismissible popover"
+            data-placement="auto left"
+            data-html="true"
+            data-content="$node.relatedLinksHTML()">
+      <i class="fa fa-bars"></i>
+    </button>
+  </span>
 #end
