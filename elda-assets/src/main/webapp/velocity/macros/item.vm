@@ -128,7 +128,7 @@
 ## List value of a property
 #macro( propertyMultiValue $node )
   <ul class="rdf object multiple">
-    <li class="first">
+    <li class="first $node.hintsString()">
       #propertyObject( $node )
     </li>
     #foreach( $sibling in $node.siblings())
@@ -140,24 +140,24 @@
 #end
 
 ## Show the value of a property-value
-#macro( propertyObject $node $hint )
+#macro( propertyObject $node )
   #if( $node.rdfNode().isLiteral() )
-    #propertyObjectLiteral( $node.rdfNode(), $hint )
+    #propertyObjectLiteral( $node.rdfNode() )
   #else
-    #propertyObjectResource( $node, $hint )
+    #propertyObjectResource( $node )
   #end
 #end
 
 ## Show a literal-value
-#macro( propertyObjectLiteral $lit $hint )
-  <div class="rdf object literal $hint">
+#macro( propertyObjectLiteral $lit )
+  <div class="rdf object literal">
     $lit.getLexicalForm()
   </div>
 #end
 
 ## Show a resource-value
-#macro( propertyObjectResource $node $hint )
-  <div class="rdf object $hint">
+#macro( propertyObjectResource $node )
+  <div class="rdf object">
     #showRdfResource( $node, "div", "nested" )
   </div>
 #end
