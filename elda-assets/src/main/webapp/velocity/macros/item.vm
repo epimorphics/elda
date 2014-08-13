@@ -158,9 +158,13 @@
 
 ## Show a resource-value
 #macro( propertyObjectResource $node )
-  <div class="rdf object">
-    #showRdfResource( $node, "div", "nested" )
-  </div>
+  #if( $node.isSimpleResource())
+    <a href="$node.getURI()" class="rdf object resource simple">$node.getName()</a>
+  #else
+    <div class="rdf object">
+      #showRdfResource( $node, "div", "nested" )
+    </div>
+  #end
 #end
 
 ## Show the actions menu for this value

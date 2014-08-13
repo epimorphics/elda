@@ -17,7 +17,9 @@ import org.apache.jena.atlas.lib.StrUtils;
 import com.epimorphics.lda.renderers.common.DisplayHierarchy.DisplayHierarchyContext;
 import com.epimorphics.lda.renderers.common.EldaURL.OPERATION;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
+import com.epimorphics.rdfutil.RDFUtil;
 import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Statement;
 
 
 /**
@@ -187,46 +189,30 @@ public class DisplayHierarchyNode
         return hints.contains( hint );
     }
 
-    /* Convenience methods which delegate to the same method on the encapsulated RDFNodeWrapper */
+    /**
+     * Return true if this node is a <em>simple</em> resource node: that is,
+     * it is a resource, and has no properties other than either
+     * <code>rdfs:label</code> or <code>skos:prefLabel</code>.
+     * @return True for nodes which can be displayed very simply
+     */
+    public boolean isSimpleResource() {
+        boolean isSimple = false;
 
-    /** @see {@link RDFNodeWrapper#isResource()} */
-    public boolean isResource() {
-        return rdfNode().isResource();
-    }
+        if (isResource()) {
+            List<Statement> s = rdfNode().asResource().listProperties().toList();
 
-    /** @see {@link RDFNodeWrapper#isLiteral()} */
-    public boolean isLiteral() {
-        return rdfNode().isLiteral();
-    }
+            if (s.size() == 0) {
+                isSimple = true;
+            }
+            else if (s.size() == 1) {
+                Property p = s.get( 0 ).getPredicate();
+                for (Property labelP: RDFUtil.labelProps) {
+                    isSimple = isSimple || p.equals( labelP );
+                }
+            }
+        }
 
-    /** @see {@link RDFNodeWrapper#isAnon()} */
-    public boolean isAnon() {
-        return rdfNode().isAnon();
-    }
-
-    /** @see {@link RDFNodeWrapper#isList()} */
-    public boolean isList() {
-        return rdfNode().isList();
-    }
-
-    /** @see {@link RDFNodeWrapper#getLexicalForm()} */
-    public String getLexicalForm() {
-        return rdfNode().getLexicalForm();
-    }
-
-    /** @see {@link RDFNodeWrapper#getName()} */
-    public String getName() {
-        return rdfNode().getName();
-    }
-
-    /** @see {@link RDFNodeWrapper#getValue()} */
-    public Object getValue() {
-        return rdfNode().getValue();
-    }
-
-    /** @see {@link RDFNodeWrapper#getURI()} */
-    public String getURI() {
-        return rdfNode().getURI();
+        return isSimple;
     }
 
     /** @return An HTML marked-up string of related links */
@@ -270,6 +256,49 @@ public class DisplayHierarchyNode
         links.add( generateSortLink( param, "sort sort-desc", false, page ));
 
         return links;
+    }
+
+
+    /* Convenience methods which delegate to the same method on the encapsulated RDFNodeWrapper */
+
+    /** @see {@link RDFNodeWrapper#isResource()} */
+    public boolean isResource() {
+        return rdfNode().isResource();
+    }
+
+    /** @see {@link RDFNodeWrapper#isLiteral()} */
+    public boolean isLiteral() {
+        return rdfNode().isLiteral();
+    }
+
+    /** @see {@link RDFNodeWrapper#isAnon()} */
+    public boolean isAnon() {
+        return rdfNode().isAnon();
+    }
+
+    /** @see {@link RDFNodeWrapper#isList()} */
+    public boolean isList() {
+        return rdfNode().isList();
+    }
+
+    /** @see {@link RDFNodeWrapper#getLexicalForm()} */
+    public String getLexicalForm() {
+        return rdfNode().getLexicalForm();
+    }
+
+    /** @see {@link RDFNodeWrapper#getName()} */
+    public String getName() {
+        return rdfNode().getName();
+    }
+
+    /** @see {@link RDFNodeWrapper#getValue()} */
+    public Object getValue() {
+        return rdfNode().getValue();
+    }
+
+    /** @see {@link RDFNodeWrapper#getURI()} */
+    public String getURI() {
+        return rdfNode().getURI();
     }
 
 
