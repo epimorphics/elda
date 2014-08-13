@@ -30,6 +30,9 @@ public class DisplayHierarchyNode
     /* Constants                       */
     /***********************************/
 
+    public static final String SORT_PARAM = "_sort";
+    public static final String PAGE_PARAM = "_page";
+
     /***********************************/
     /* Static variables                */
     /***********************************/
@@ -249,19 +252,22 @@ public class DisplayHierarchyNode
         String valueStr = isLiteral ? rdfNode().getLexicalForm() : rdfNode().getName();
 
         if (isNumeric) {
-            links.add( generateLink( "max-" + param, valueStr, valueStr, "&le;", "filter-less-than", true, page ));
+            links.add( generateLink( "max-" + param, param, valueStr, valueStr, "&le;", "filter-less-than", true, page ));
         }
 
         if (isLiteral) {
-            links.add( generateLink( param, valueStr, valueStr, "is", "filter-equals", true, page ));
+            links.add( generateLink( param, param, valueStr, valueStr, "is", "filter-equals", true, page ));
         }
         else if (!rdfNode().isAnon()){
-            links.add( generateLink( param, rdfNode.getShortURI(), valueStr, "is", "filter-equals", true, page ));
+            links.add( generateLink( param, param, rdfNode.getShortURI(), valueStr, "is", "filter-equals", true, page ));
         }
 
         if (isNumeric) {
-            links.add( generateLink( "min-" + param, valueStr, valueStr, "&ge;", "filter-greater-than", true, page ));
+            links.add( generateLink( "min-" + param, param, valueStr, valueStr, "&ge;", "filter-greater-than", true, page ));
         }
+
+        links.add( generateSortLink( param, "sort sort-asc", true, page ));
+        links.add( generateSortLink( param, "sort sort-desc", false, page ));
 
         return links;
     }
@@ -277,15 +283,17 @@ public class DisplayHierarchyNode
      * then it becomes a remove operation.
      *
      * @param paramName The name of the parameter to change
+     * @param paramNameLabel Presentation form of paramName
      * @param paramValue The value to change
-     * @param paramLabel The value on the label to show to the user
+     * @param paramValueLabel The value on the label to show to the user
      * @param rel The relationship of the parameter value to the new state
      * @param hint CSS hint
      * @param set If true, set the value rather than add it (see {@link OPERATION})
      * @param page The current page object
      * @return The new link
      */
-    protected Link generateLink( String paramName, String paramValue, String paramLabel,
+    protected Link generateLink( String paramName, String paramNameLabel,
+                                 String paramValue, String paramValueLabel,
                                  String rel, String hint, boolean set, Page page ) {
         OPERATION op = set ? OPERATION.SET : OPERATION.ADD;
         String linkIcon = "fa-plus-circle";
@@ -298,8 +306,40 @@ public class DisplayHierarchyNode
             prompt = "remove constraint: ";
         }
 
-        return new Link( String.format( "<i class='fa %s'></i> %s%s %s %s", linkIcon, prompt, paramName, rel, paramLabel ),
+        return new Link( String.format( "<i class='fa %s'></i> %s%s %s %s", linkIcon, prompt, paramNameLabel, rel, paramValueLabel ),
                          pageURL.withParameter( op, paramName, paramValue ),
+                         hint );
+    }
+
+    /**
+     * Generate a link to an adjacent point in API space by adding or removing a sort parameter.
+     * If the URL already includes a sort on "foo", then adding a sort on "-foo" will remove
+     * the "foo" sort, and vice-versa.
+     *
+     * @param paramName The name of the parameter to change
+     * @param hint CSS hint
+     * @param asc If true, sort ascending
+     * @param page The current page object
+     * @return The new link
+     */
+    protected Link generateSortLink( String paramName, String hint, boolean asc, Page page ) {
+        OPERATION op = OPERATION.ADD;
+        String linkIcon = "fa-chevron-circle-" + (asc ? "down" : "up");
+        EldaURL pageURL = page.pageURL();
+        String prompt = "sort by: ";
+        String sortOn =         (asc ? "" : "-") + paramName;
+        String converseSortOn = (asc ? "-" : "") + paramName;
+
+        if (pageURL.hasParameter( SORT_PARAM, sortOn )) {
+            op = OPERATION.REMOVE;
+            linkIcon = "fa-minus-circle";
+            prompt = "remove sorting on: ";
+        }
+
+        return new Link( String.format( "<i class='fa %s'></i> %s%s%s", linkIcon, prompt, paramName, asc ? "" : " (descending)"),
+                         pageURL.withParameter( OPERATION.REMOVE, SORT_PARAM, converseSortOn )
+                                .withParameter( OPERATION.SET, PAGE_PARAM, "0" )
+                                .withParameter( op, SORT_PARAM, sortOn ),
                          hint );
     }
 
