@@ -7,21 +7,23 @@
 ## Display an RDF resource
 #macro( showRdfResource $hnode, $elem, $level )
   #set( $resource = $hnode.rdfNode() )
-  <$elem class="rdf resource $level">
-    #if( $level.equals( "outer" ))
+  #if( $level.equals( "outer" ))
+    <$elem class="rdf resource $level" id="$resource.shortUniqueID()">
       <div class="row">
         #itemName( $resource, "h1", "col-md-12" )
         #itemURI( $resource, "h2", "col-md-12" )
         #itemTypes( $resource, "col-md-12" )
         #itemProperties( $hnode, $level )
       </div>
-    #else
+    </$elem>
+  #else
+    <$elem class="rdf resource $level">
       #itemName( $resource, "h3" )
       #itemURI( $resource, "h4" )
       #itemTypes( $resource )
       #itemProperties( $hnode, $level )
-    #end
-  </$elem>
+    </$elem>
+  #end
 #end
 
 ## Display the name of the resource

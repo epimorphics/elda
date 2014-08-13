@@ -12,6 +12,7 @@ package com.epimorphics.lda.renderers.common;
 
 import java.util.*;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,6 +139,17 @@ extends CommonNodeWrapper
         });
 
         return labels;
+    }
+
+    /** @return A unique ID for this node, e.g. useful for fragment addresses */
+    public String uniqueID() {
+        return DigestUtils.md5Hex( getLexicalForm() );
+    }
+
+    /** @return A short version of the unique ID for this node. Some (minimal) risk of collisions */
+    public String shortUniqueID() {
+        String id = uniqueID();
+        return id.substring( id.length() - 10 );
     }
 
     /***********************************/

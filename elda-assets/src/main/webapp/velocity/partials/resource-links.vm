@@ -1,8 +1,13 @@
 ## Show links to the resources on this page
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">jump to ... <b class="caret"></b></a>
-  <ul class="dropdown-menu">
-    <li class="dropdown-header">to do</li>
-    <li><a href="#">resource 1</a></li>
-  </ul>
-</li>
+#if( !$page.isItemEndpoint())
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">on this page ... <b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      #foreach( $item in $page.items())
+        <li>
+          <a href="#$item.shortUniqueID()">$item.getName()</a>
+        </li>
+      #end
+    </ul>
+  </li>
+#end
