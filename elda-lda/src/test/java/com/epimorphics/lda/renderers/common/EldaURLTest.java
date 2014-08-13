@@ -180,6 +180,20 @@ public class EldaURLTest
         assertTrue( "http://foo.bar.com/fubar?a=c,b".equals( newEu ) );
     }
 
+    @Test
+    public void testHasParameter1() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar?a=c" );
+        assertTrue( eu.hasParameter( "a", "c" ));
+        assertFalse( eu.hasParameter( "a", "cc" ));
+        assertFalse( eu.hasParameter( "aa", "c" ));
+    }
+
+    @Test
+    public void testHasParameter2() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar" );
+        assertFalse( eu.hasParameter( "a", "c" ));
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

@@ -247,29 +247,20 @@ public class DisplayHierarchyNode
         Page page = rdfNode().page();
         String param = terminalLink().getName();
         String valueStr = isLiteral ? rdfNode().getLexicalForm() : rdfNode().getName();
-        String linkIcon = "<i class='fa fa-plus-circle'></i>";
 
         if (isNumeric) {
-            links.add( new Link( String.format( "%s %s &le; %s", linkIcon, param, valueStr ),
-                                 page.pageURL().withParameter( OPERATION.SET, "max-" + param, valueStr ),
-                                 "filter-less-than" ));
+            links.add( generateLink( "max-" + param, valueStr, valueStr, "&le;", "filter-less-than", true, page ));
         }
 
         if (isLiteral) {
-            links.add( new Link( String.format( "%s %s is %s", linkIcon, param, valueStr ),
-                       page.pageURL().withParameter( OPERATION.SET, param, valueStr ),
-                       "filter-equals" ));
+            links.add( generateLink( param, valueStr, valueStr, "is", "filter-equals", true, page ));
         }
         else if (!rdfNode().isAnon()){
-            links.add( new Link( String.format( "%s %s is '%s'", linkIcon, param, valueStr ),
-                       page.pageURL().withParameter( OPERATION.SET, param, rdfNode.getShortURI() ),
-                       "filter-equals" ));
+            links.add( generateLink( param, rdfNode.getShortURI(), valueStr, "is", "filter-equals", true, page ));
         }
 
         if (isNumeric) {
-            links.add( new Link( String.format( "%s %s &ge; %s", linkIcon, param, valueStr ),
-                                 page.pageURL().withParameter( OPERATION.SET, "min-" + param, valueStr ),
-                                 "filter-greater-than" ));
+            links.add( generateLink( "min-" + param, valueStr, valueStr, "&ge;", "filter-greater-than", true, page ));
         }
 
         return links;
@@ -279,6 +270,39 @@ public class DisplayHierarchyNode
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
+
+    /**
+     * Generate a link to an adjacent point in API space, by changing the value of a parameter
+     * of the URI. By default, this is an addition to the URI, but if the parameter is already set,
+     * then it becomes a remove operation.
+     *
+     * @param paramName The name of the parameter to change
+     * @param paramValue The value to change
+     * @param paramLabel The value on the label to show to the user
+     * @param rel The relationship of the parameter value to the new state
+     * @param hint CSS hint
+     * @param set If true, set the value rather than add it (see {@link OPERATION})
+     * @param page The current page object
+     * @return The new link
+     */
+    protected Link generateLink( String paramName, String paramValue, String paramLabel,
+                                 String rel, String hint, boolean set, Page page ) {
+        OPERATION op = set ? OPERATION.SET : OPERATION.ADD;
+        String linkIcon = "fa-plus-circle";
+        EldaURL pageURL = page.pageURL();
+        String prompt = "require: ";
+
+        if (pageURL.hasParameter( paramName, paramValue )) {
+            op = OPERATION.REMOVE;
+            linkIcon = "fa-minus-circle";
+            prompt = "remove constraint: ";
+        }
+
+        return new Link( String.format( "<i class='fa %s'></i> %s%s %s %s", linkIcon, prompt, paramName, rel, paramLabel ),
+                         pageURL.withParameter( op, paramName, paramValue ),
+                         hint );
+    }
+
 
     /***********************************/
     /* Inner class definitions         */

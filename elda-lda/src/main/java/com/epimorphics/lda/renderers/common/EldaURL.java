@@ -128,6 +128,21 @@ public class EldaURL
         return generateURL( revisedParameters );
     }
 
+    /** @return True if the URL already has the given parameter/value pair */
+    public boolean hasParameter( String paramName, String paramValue ) {
+        URLParameterValue v = parseQueryParameters().get( paramName );
+        return (v == null) ? false : v.contains( paramValue );
+    }
+
+    @Override
+    public String toString() {
+        return uri.toString();
+    }
+
+    /***********************************/
+    /* Internal implementation methods */
+    /***********************************/
+
     /**
      * Use the given value to update the parameters. If <code>value</code> is empty, remove
      * the <code>paramName</code> key.
@@ -143,15 +158,6 @@ public class EldaURL
             parameters.put( paramName, value );
         }
     }
-
-    @Override
-    public String toString() {
-        return uri.toString();
-    }
-
-    /***********************************/
-    /* Internal implementation methods */
-    /***********************************/
 
     /** Parse the query string, if there is one, into a structure we can manipulate */
     protected Map<String, URLParameterValue> parseQueryParameters() {
@@ -264,6 +270,11 @@ public class EldaURL
                     // should be impossible!
                     throw new IllegalArgumentException();
             }
+        }
+
+        /** @return True if the list of values includes the given value */
+        public boolean contains( String value ) {
+            return values.contains( value );
         }
 
         @Override

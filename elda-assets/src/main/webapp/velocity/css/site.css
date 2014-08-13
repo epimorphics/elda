@@ -195,3 +195,7 @@ ul.resource-properties {
   background-color: #c5cae9;
   border: 0;
 }
+
+.popover i.fa-minus-circle {
+  color: #f57c00;
+}
