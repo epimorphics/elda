@@ -9,7 +9,6 @@
 
 package com.epimorphics.lda.renderers.common;
 
-
 import java.util.*;
 
 import org.slf4j.Logger;
@@ -17,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.QueryParameter;
+import com.epimorphics.lda.renderers.common.EldaURL.URLParameterValue;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
@@ -359,6 +359,28 @@ public class Page extends CommonNodeWrapper
         paths.addAll( queryParamPropertyPaths() );
 
         return paths;
+    }
+
+    /**
+     * Synthesise an informative title for this page
+     * @return A displayable page title
+     */
+    public String pageTitle() {
+        EldaURL url = new EldaURL( getURI() );
+        URLParameterValue _page = url.getParameter( DisplayHierarchyNode.PAGE_PARAM );
+        String pageNo = (_page == null) ? "0" : _page.toString();
+        if (pageNo.equals( "" )) {
+            pageNo = "0";
+        }
+
+        String rootPath = url.getUri().getPath();
+
+        if (isItemEndpoint()) {
+            return "LDA resource at " + rootPath;
+        }
+        else {
+            return String.format( "Page %s of linked-data API resources %s ", pageNo, rootPath );
+        }
     }
 
     /***********************************/

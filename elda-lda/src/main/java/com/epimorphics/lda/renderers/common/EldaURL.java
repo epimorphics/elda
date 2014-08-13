@@ -130,13 +130,23 @@ public class EldaURL
 
     /** @return True if the URL already has the given parameter/value pair */
     public boolean hasParameter( String paramName, String paramValue ) {
-        URLParameterValue v = parseQueryParameters().get( paramName );
+        URLParameterValue v = getParameter( paramName );
         return (v == null) ? false : v.contains( paramValue );
+    }
+
+    /** @return The value of the given parameter to the URL, or null */
+    public URLParameterValue getParameter( String paramName ) {
+        return parseQueryParameters().get( paramName );
     }
 
     @Override
     public String toString() {
         return uri.toString();
+    }
+
+    /** @return The encapsulated URI object */
+    public URI getUri() {
+        return uri;
     }
 
     /***********************************/

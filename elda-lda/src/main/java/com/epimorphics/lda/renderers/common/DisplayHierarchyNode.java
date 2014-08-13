@@ -353,7 +353,7 @@ public class DisplayHierarchyNode
      */
     protected Link generateSortLink( String paramName, String hint, boolean asc, Page page ) {
         OPERATION op = OPERATION.ADD;
-        String linkIcon = "fa-chevron-circle-" + (asc ? "down" : "up");
+        String linkIcon = "fa-chevron-circle-" + (asc ? "up" : "down");
         EldaURL pageURL = page.pageURL();
         String prompt = "sort by: ";
         String sortOn =         (asc ? "" : "-") + paramName;

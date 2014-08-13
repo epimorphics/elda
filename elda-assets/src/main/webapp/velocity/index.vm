@@ -10,8 +10,8 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>TODO</title>
-    <meta name="description" content="HTML rendering of Linked Data API results for TODO">
+    <title>$page.pageTitle()</title>
+    <meta name="description" content="HTML rendering of Linked Data API results: $page.pageTitle()">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     #parse( "partials/css.vm" )
@@ -23,24 +23,6 @@
 
     <div class="container">
       #parse( "partials/item-setup.vm")
-
-      <h2>debug - context</h2>
-      <div>
-      #set ($vcontextCopy = {})
-      $!vcontextCopy.putAll($vcontext)
-      </div>
-      <table>
-      #foreach ($entry in $vcontext.internalGetKeys())
-        <tr>
-        ## Prevent infinite recursion, don't print the whole context again
-        #if ($entry != 'vcontext')
-          <td>$entry</td><td>$vcontext.internalGet($entry)</td>
-        #end
-        </tr>
-      #end
-      </table>
-
-      <hr>
 
       <footer>
         <p>&copy; Company 2014</p>
