@@ -242,15 +242,34 @@ public class DisplayHierarchyNode
     /** @return A list of the related links to this node */
     public List<Link> relatedLinks() {
         List<Link> links = new ArrayList<Link>();
-        boolean isNumeric = rdfNode().isLiteral() && (rdfNode().getValue() instanceof Number);
+        boolean isLiteral = rdfNode().isLiteral();
+        boolean isNumeric = isLiteral && (rdfNode().getValue() instanceof Number);
         Page page = rdfNode().page();
         String param = terminalLink().getName();
+        String valueStr = isLiteral ? rdfNode().getLexicalForm() : rdfNode().getName();
+        String linkIcon = "<i class='fa fa-plus-circle'></i>";
 
         if (isNumeric) {
-            links.add( new Link( "&lt;", page.pageURL().withParameter( OPERATION.SET, "max-" + param, rdfNode().getValue().toString() ), "filter-less-than" ));
+            links.add( new Link( String.format( "%s %s &le; %s", linkIcon, param, valueStr ),
+                                 page.pageURL().withParameter( OPERATION.SET, "max-" + param, valueStr ),
+                                 "filter-less-than" ));
         }
+
+        if (isLiteral) {
+            links.add( new Link( String.format( "%s %s is %s", linkIcon, param, valueStr ),
+                       page.pageURL().withParameter( OPERATION.SET, param, valueStr ),
+                       "filter-equals" ));
+        }
+        else if (!rdfNode().isAnon()){
+            links.add( new Link( String.format( "%s %s is '%s'", linkIcon, param, valueStr ),
+                       page.pageURL().withParameter( OPERATION.SET, param, rdfNode.getShortURI() ),
+                       "filter-equals" ));
+        }
+
         if (isNumeric) {
-            links.add( new Link( "&gt;", page.pageURL().withParameter( OPERATION.SET, "min-" + param, rdfNode().getValue().toString() ), "filter-greater-than" ));
+            links.add( new Link( String.format( "%s %s &ge; %s", linkIcon, param, valueStr ),
+                                 page.pageURL().withParameter( OPERATION.SET, "min-" + param, valueStr ),
+                                 "filter-greater-than" ));
         }
 
         return links;

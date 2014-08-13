@@ -168,7 +168,7 @@
   <span class="filter-actions">
     <button type="button"
             class="btn btn-xs btn-default popover-dismiss"
-            title="Dismissible popover"
+            title="change this view:"
             data-placement="auto left"
             data-html="true"
             data-content="$node.relatedLinksHTML()">

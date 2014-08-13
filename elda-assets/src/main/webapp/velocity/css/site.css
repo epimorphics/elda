@@ -189,3 +189,9 @@ ul.resource-properties {
 .filter-actions button {
   color: #5c6bc0;
 }
+
+/* Popovers */
+.popover h3 {
+  background-color: #c5cae9;
+  border: 0;
+}
