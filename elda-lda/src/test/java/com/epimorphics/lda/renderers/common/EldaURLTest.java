@@ -194,6 +194,14 @@ public class EldaURLTest
         assertFalse( eu.hasParameter( "a", "c" ));
     }
 
+    @Test
+    public void testHasParameter3() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar?a=b,c" );
+        assertTrue( eu.hasParameter( "a", "b" ));
+        assertTrue( eu.hasParameter( "a", "c" ));
+        assertFalse( eu.hasParameter( "a", "d" ));
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
