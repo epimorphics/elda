@@ -276,6 +276,31 @@ public class DisplayHierarchyNode
         return hasAll;
     }
 
+    /**
+     * Promote the given properties to the front of the list of properties attached
+     * to this node. For example, if the children of this node are
+     * <code>a,b,c,d,e</code>, and we <code>pullToStart(c,d,f)</code>
+     * the children of the node will become <code>c,d,a,b,e</code>
+     *
+     * @param RDF properties which will identify the children of this node to
+     * move to the front of the children list. Order within the <code>properties</code>
+     * is preserved.
+     */
+    public void pullToStart( Object... properties ) {
+        for( int j = properties.length - 1; j >= 0; j-- ) {
+            Property prop = rdfNode().toProperty( properties[j] );
+            int index = indexOfChildProperty( prop );
+
+            if (index > 0) {
+                DisplayHierarchyNode n = children.get( index );
+                for (int i = index; i > 0; i--) {
+                    children.set( index, children.get( index - 1 ) );
+                }
+                children.set( 0, n );
+            }
+        }
+    }
+
     /* Convenience methods which delegate to the same method on the encapsulated RDFNodeWrapper */
 
     /** @see {@link RDFNodeWrapper#isResource()} */
@@ -389,6 +414,20 @@ public class DisplayHierarchyNode
                                 .withParameter( OPERATION.SET, PAGE_PARAM, "0" )
                                 .withParameter( op, SORT_PARAM, sortOn ),
                          hint );
+    }
+
+    /** @return The index of the child node with the given property, or -1 if not found */
+    protected int indexOfChildProperty( Property prop ) {
+        int index = -1;
+
+        for (int i = 0; index < 0 && i < children().size(); i++) {
+            DisplayHierarchyNode child = children().get( i );
+            if (child.terminalLink().asResource().equals(  prop )) {
+                index = i;
+            }
+        }
+
+        return index;
     }
 
 

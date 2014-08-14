@@ -192,6 +192,41 @@ public class DisplayHierarchyNodeTest
         assertFalse( dhn.hasAllProperties( "rdfs:seeAlso" ));
     }
 
+    @Test
+    public void testPullToStart() {
+        // simulate node expansion
+        String ns = "http://example/foo#";
+        Property p1 = ResourceFactory.createProperty( ns + "p1" );
+        Property p2 = ResourceFactory.createProperty( ns + "p2" );
+        Property p3 = ResourceFactory.createProperty( ns + "p3" );
+
+        Resource r0 = ResourceFactory.createResource( ns+"r0");
+        new DisplayHierarchyNode( dhn.pathTo().append( "p1", p1.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r0 ) );
+
+        Resource r1 = ResourceFactory.createResource( ns+"r0");
+        new DisplayHierarchyNode( dhn.pathTo().append( "p2", p2.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r0 ) );
+
+        Resource r2 = ResourceFactory.createResource( ns+"r0");
+        new DisplayHierarchyNode( dhn.pathTo().append( "p3", p3.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r0 ) );
+
+        assertEquals( r0, dhn.children().get( 0 ).rdfNode().asResource() );
+        assertEquals( r1, dhn.children().get( 1 ).rdfNode().asResource() );
+        assertEquals( r2, dhn.children().get( 2 ).rdfNode().asResource() );
+
+        dhn.pullToStart( p2 );
+
+        assertEquals( r1, dhn.children().get( 0 ).rdfNode().asResource() );
+        assertEquals( r0, dhn.children().get( 1 ).rdfNode().asResource() );
+        assertEquals( r2, dhn.children().get( 2 ).rdfNode().asResource() );
+
+        dhn.pullToStart( p1, p3 );
+
+        assertEquals( r0, dhn.children().get( 0 ).rdfNode().asResource() );
+        assertEquals( r2, dhn.children().get( 1 ).rdfNode().asResource() );
+        assertEquals( r1, dhn.children().get( 2 ).rdfNode().asResource() );
+    }
+
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
