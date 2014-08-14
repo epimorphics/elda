@@ -18,8 +18,7 @@ import com.epimorphics.lda.renderers.common.DisplayHierarchy.DisplayHierarchyCon
 import com.epimorphics.lda.renderers.common.EldaURL.OPERATION;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.epimorphics.rdfutil.RDFUtil;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.rdf.model.*;
 
 
 /**
@@ -258,6 +257,24 @@ public class DisplayHierarchyNode
         return links;
     }
 
+    /** @return True if this node has all of the given properties */
+    public boolean hasAllProperties( Object... properties ) {
+        boolean hasAll = true;
+
+        if (isLiteral()) {
+            hasAll = false;
+        }
+        else {
+            Resource r = rdfNode().asResource();
+
+            for (Object p: properties) {
+                Property prop = rdfNode().toProperty( p );
+                hasAll = hasAll && r.hasProperty( prop );
+            }
+        }
+
+        return hasAll;
+    }
 
     /* Convenience methods which delegate to the same method on the encapsulated RDFNodeWrapper */
 

@@ -22,6 +22,7 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.renderers.common.DisplayHierarchy.DisplayHierarchyContext;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Unit tests for {@link DisplayHierarchyNode}
@@ -181,6 +182,14 @@ public class DisplayHierarchyNodeTest
 
         assertEquals( 0, c1.siblings().size() );
         assertFalse( c1.hasSiblings() );
+    }
+
+    @Test
+    public void testHasAllProperties0() {
+        assertTrue( dhn.hasAllProperties( RDFS.label ));
+        assertTrue( dhn.hasAllProperties( "rdfs:label" ));
+        assertTrue( dhn.hasAllProperties( "rdfs:label", "def-bwq:abnormalWeatherException", "def-bwq:bathingWater" ) );
+        assertFalse( dhn.hasAllProperties( "rdfs:seeAlso" ));
     }
 
     /***********************************/
