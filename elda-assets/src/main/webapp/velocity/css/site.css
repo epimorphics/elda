@@ -98,10 +98,6 @@ div.rdf {
   padding: 1px 0px 1px 12px;
 }
 
-.rdf.object {
-  padding: 0px 0px 0px 18px;
-}
-
 .rdf.object.multiple {
   padding: 0px 0px 0px 14px;
 }

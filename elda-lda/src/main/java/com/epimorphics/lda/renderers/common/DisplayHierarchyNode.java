@@ -242,10 +242,10 @@ public class DisplayHierarchyNode
         }
 
         if (isLiteral) {
-            links.add( generateLink( param, param, valueStr, valueStr, "is", "filter-equals", true, page ));
+            links.add( generateLink( param, param, valueStr, valueStr, "to be", "filter-equals", true, page ));
         }
         else if (!rdfNode().isAnon()){
-            links.add( generateLink( param, param, rdfNode.getShortURI(), valueStr, "is", "filter-equals", true, page ));
+            links.add( generateLink( param, param, rdfNode.getShortURI(), valueStr, "to be", "filter-equals", true, page ));
         }
 
         if (isNumeric) {
@@ -327,15 +327,17 @@ public class DisplayHierarchyNode
         OPERATION op = set ? OPERATION.SET : OPERATION.ADD;
         String linkIcon = "fa-plus-circle";
         EldaURL pageURL = page.pageURL();
-        String prompt = "require: ";
+        String prompt = "require ";
+        String closeQuote = "";
 
         if (pageURL.hasParameter( paramName, paramValue )) {
             op = OPERATION.REMOVE;
             linkIcon = "fa-minus-circle";
-            prompt = "remove constraint: ";
+            prompt = "remove <em>'require ";
+            closeQuote = "'</em>";
         }
 
-        return new Link( String.format( "<i class='fa %s'></i> %s%s %s %s", linkIcon, prompt, paramNameLabel, rel, paramValueLabel ),
+        return new Link( String.format( "<i class='fa %s'></i> %s%s %s %s%s", linkIcon, prompt, paramNameLabel, rel, paramValueLabel, closeQuote ),
                          pageURL.withParameter( op, paramName, paramValue ),
                          hint );
     }
@@ -355,7 +357,7 @@ public class DisplayHierarchyNode
         OPERATION op = OPERATION.ADD;
         String linkIcon = "fa-chevron-circle-" + (asc ? "up" : "down");
         EldaURL pageURL = page.pageURL();
-        String prompt = "sort by: ";
+        String prompt = "sort by ";
         String sortOn =         (asc ? "" : "-") + paramName;
         String converseSortOn = (asc ? "-" : "") + paramName;
 
