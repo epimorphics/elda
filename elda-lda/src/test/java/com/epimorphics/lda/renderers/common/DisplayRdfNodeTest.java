@@ -79,11 +79,11 @@ public class DisplayRdfNodeTest
         String ns = "http://epimorphics.com/public/vocabulary/games.ttl#";
 
         assertEquals( 5, displayTriples.size() );
-        assertEquals( ns + "designed-by", displayTriples.get(0).getProp().getURI() );
-        assertEquals( "rdfs:label", displayTriples.get(1).getProp().getShortURI() );
+        assertEquals( "rdfs:label", displayTriples.get(0).getProp().getShortURI() );
+        assertEquals( ns + "players", displayTriples.get(1).getProp().getURI() );
         assertEquals( ns + "playTimeMinutes", displayTriples.get(2).getProp().getURI() );
-        assertEquals( ns + "players", displayTriples.get(3).getProp().getURI() );
-        assertEquals( ns + "pubYear", displayTriples.get(4).getProp().getURI() );
+        assertEquals( ns + "pubYear", displayTriples.get(3).getProp().getURI() );
+        assertEquals( ns + "designed-by", displayTriples.get(4).getProp().getURI() );
     }
 
     @Test
