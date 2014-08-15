@@ -12,6 +12,8 @@ package com.epimorphics.lda.renderers.common;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
@@ -200,32 +202,64 @@ public class DisplayHierarchyNodeTest
         Property p2 = ResourceFactory.createProperty( ns + "p2" );
         Property p3 = ResourceFactory.createProperty( ns + "p3" );
 
-        Resource r0 = ResourceFactory.createResource( ns+"r0");
-        new DisplayHierarchyNode( dhn.pathTo().append( "p1", p1.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r0 ) );
+        Resource r1 = ResourceFactory.createResource( ns+"r1");
+        new DisplayHierarchyNode( dhn.pathTo().append( "p1", p1.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r1 ) );
 
-        Resource r1 = ResourceFactory.createResource( ns+"r0");
-        new DisplayHierarchyNode( dhn.pathTo().append( "p2", p2.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r0 ) );
+        Resource r2 = ResourceFactory.createResource( ns+"r2");
+        new DisplayHierarchyNode( dhn.pathTo().append( "p2", p2.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r2 ) );
 
-        Resource r2 = ResourceFactory.createResource( ns+"r0");
-        new DisplayHierarchyNode( dhn.pathTo().append( "p3", p3.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r0 ) );
+        Resource r3 = ResourceFactory.createResource( ns+"r3");
+        new DisplayHierarchyNode( dhn.pathTo().append( "p3", p3.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r3 ) );
 
-        assertEquals( r0, dhn.children().get( 0 ).rdfNode().asResource() );
-        assertEquals( r1, dhn.children().get( 1 ).rdfNode().asResource() );
-        assertEquals( r2, dhn.children().get( 2 ).rdfNode().asResource() );
+        assertEquals( r1, dhn.children().get( 0 ).rdfNode().asResource() );
+        assertEquals( r2, dhn.children().get( 1 ).rdfNode().asResource() );
+        assertEquals( r3, dhn.children().get( 2 ).rdfNode().asResource() );
 
         dhn.pullToStart( p2 );
 
-        assertEquals( r1, dhn.children().get( 0 ).rdfNode().asResource() );
-        assertEquals( r0, dhn.children().get( 1 ).rdfNode().asResource() );
-        assertEquals( r2, dhn.children().get( 2 ).rdfNode().asResource() );
+        assertEquals( r2, dhn.children().get( 0 ).rdfNode().asResource() );
+        assertEquals( r1, dhn.children().get( 1 ).rdfNode().asResource() );
+        assertEquals( r3, dhn.children().get( 2 ).rdfNode().asResource() );
 
         dhn.pullToStart( p1, p3 );
 
-        assertEquals( r0, dhn.children().get( 0 ).rdfNode().asResource() );
-        assertEquals( r2, dhn.children().get( 1 ).rdfNode().asResource() );
-        assertEquals( r1, dhn.children().get( 2 ).rdfNode().asResource() );
+        assertEquals( r1, dhn.children().get( 0 ).rdfNode().asResource() );
+        assertEquals( r3, dhn.children().get( 1 ).rdfNode().asResource() );
+        assertEquals( r2, dhn.children().get( 2 ).rdfNode().asResource() );
     }
 
+
+    @Test
+    public void testExtractByPredicate() {
+        // simulate node expansion
+        String ns = "http://example/foo#";
+        Property p1 = ResourceFactory.createProperty( ns + "p1" );
+        Property p2 = ResourceFactory.createProperty( ns + "p2" );
+        Property p3 = ResourceFactory.createProperty( ns + "p3" );
+        Property p4 = ResourceFactory.createProperty( ns + "p4" );
+
+        Resource r1 = ResourceFactory.createResource( ns+"r1");
+        new DisplayHierarchyNode( dhn.pathTo().append( "p1", p1.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r1 ) );
+
+        Resource r2 = ResourceFactory.createResource( ns+"r2");
+        new DisplayHierarchyNode( dhn.pathTo().append( "p2", p2.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r2 ) );
+
+        Resource r3 = ResourceFactory.createResource( ns+"r3");
+        new DisplayHierarchyNode( dhn.pathTo().append( "p3", p3.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r3 ) );
+
+        assertEquals( r1, dhn.children().get( 0 ).rdfNode().asResource() );
+        assertEquals( r2, dhn.children().get( 1 ).rdfNode().asResource() );
+        assertEquals( r3, dhn.children().get( 2 ).rdfNode().asResource() );
+
+        List<DisplayHierarchyNode> ex = dhn.extractByPredicate( p1.getURI(), p3, p4.getURI() );
+
+        assertEquals( 1, dhn.children().size() );
+        assertEquals( r2, dhn.children().get( 0 ).rdfNode().asResource() );
+
+        assertEquals( 2, ex.size() );
+        assertEquals( r1, ex.get( 0 ).rdfNode().asResource() );
+        assertEquals( r3, ex.get( 1 ).rdfNode().asResource() );
+    }
 
     /***********************************/
     /* Internal implementation methods */

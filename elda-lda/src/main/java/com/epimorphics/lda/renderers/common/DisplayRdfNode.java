@@ -152,6 +152,25 @@ extends CommonNodeWrapper
         return id.substring( id.length() - 10 );
     }
 
+    /** @return True if this node has all of the given properties */
+    public boolean hasAllProperties( Object... properties ) {
+        boolean hasAll = true;
+
+        if (isLiteral()) {
+            hasAll = false;
+        }
+        else {
+            Resource r = asResource();
+
+            for (Object p: properties) {
+                Property prop = toProperty( p );
+                hasAll = hasAll && r.hasProperty( prop );
+            }
+        }
+
+        return hasAll;
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

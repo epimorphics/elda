@@ -259,21 +259,7 @@ public class DisplayHierarchyNode
 
     /** @return True if this node has all of the given properties */
     public boolean hasAllProperties( Object... properties ) {
-        boolean hasAll = true;
-
-        if (isLiteral()) {
-            hasAll = false;
-        }
-        else {
-            Resource r = rdfNode().asResource();
-
-            for (Object p: properties) {
-                Property prop = rdfNode().toProperty( p );
-                hasAll = hasAll && r.hasProperty( prop );
-            }
-        }
-
-        return hasAll;
+        return rdfNode().hasAllProperties( properties );
     }
 
     /**
@@ -294,11 +280,33 @@ public class DisplayHierarchyNode
             if (index > 0) {
                 DisplayHierarchyNode n = children.get( index );
                 for (int i = index; i > 0; i--) {
-                    children.set( index, children.get( index - 1 ) );
+                    children.set( i, children.get( i - 1 ) );
                 }
                 children.set( 0, n );
             }
         }
+    }
+
+    /**
+     * Extract the given properties, so that they can be treated in a particular
+     * way by the renderer.
+     * @param properties One or more RDF properties as Property objects or qName strings
+     * @return A non-null but possibly empty list of the child nodes of this node that are
+     * connected to this node by one of the given properties.
+     */
+    public List<DisplayHierarchyNode> extractByPredicate( Object... properties ) {
+        List<DisplayHierarchyNode> extracted = new ArrayList<DisplayHierarchyNode>();
+
+        for (Object p: properties) {
+            Property prop = rdfNode().toProperty( p );
+            int index = indexOfChildProperty( prop );
+
+            if (index >= 0) {
+                extracted.add( children.remove( index ) );
+            }
+        }
+
+        return extracted;
     }
 
     /* Convenience methods which delegate to the same method on the encapsulated RDFNodeWrapper */
