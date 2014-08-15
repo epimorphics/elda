@@ -17,7 +17,7 @@ h1 .navbar-brand {
 
 /* RDF resource presentation */
 
-section.rdf.resource {
+section {
   border: 1px solid #303f9f;
   border-radius: 5px;
   margin-bottom: 10px;
@@ -218,4 +218,8 @@ ul.resource-properties {
 
 .item-extension .olMap {
   height: 100px;
+}
+
+#resultsMap {
+  height: 250px;
 }
