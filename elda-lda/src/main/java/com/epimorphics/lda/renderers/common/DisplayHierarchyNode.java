@@ -262,6 +262,11 @@ public class DisplayHierarchyNode
         return rdfNode().hasAllProperties( properties );
     }
 
+    /** @return True if this node has all of the given properties */
+    public boolean hasAllProperties( List<Object> properties ) {
+        return rdfNode().hasAllProperties( properties.toArray() );
+    }
+
     /**
      * Promote the given properties to the front of the list of properties attached
      * to this node. For example, if the children of this node are
@@ -288,6 +293,20 @@ public class DisplayHierarchyNode
     }
 
     /**
+     * Promote the given properties to the front of the list of properties attached
+     * to this node. For example, if the children of this node are
+     * <code>a,b,c,d,e</code>, and we <code>pullToStart(c,d,f)</code>
+     * the children of the node will become <code>c,d,a,b,e</code>
+     *
+     * @param RDF properties which will identify the children of this node to
+     * move to the front of the children list. Order within the <code>properties</code>
+     * is preserved.
+     */
+    public void pullToStart( List<Object> properties ) {
+        pullToStart( properties.toArray() );
+    }
+
+    /**
      * Extract the given properties, so that they can be treated in a particular
      * way by the renderer.
      * @param properties One or more RDF properties as Property objects or qName strings
@@ -307,6 +326,17 @@ public class DisplayHierarchyNode
         }
 
         return extracted;
+    }
+
+    /**
+     * Extract the given properties, so that they can be treated in a particular
+     * way by the renderer.
+     * @param properties One or more RDF properties as Property objects or qName strings
+     * @return A non-null but possibly empty list of the child nodes of this node that are
+     * connected to this node by one of the given properties.
+     */
+    public List<DisplayHierarchyNode> extractByPredicate( List<Object> properties ) {
+        return extractByPredicate( properties.toArray() );
     }
 
     /* Convenience methods which delegate to the same method on the encapsulated RDFNodeWrapper */

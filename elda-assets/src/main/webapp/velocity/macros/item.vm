@@ -1,4 +1,5 @@
 ## Macros for displaying a single item
+#parse( "macros/item-extensions.vm" )
 
 #macro( eldaItem $hnode )
   #showRdfResource( $hnode, "section", "outer" )
@@ -13,6 +14,7 @@
         #itemName( $resource, "h1", "col-md-12" )
         #itemURI( $resource, "h2", "col-md-12" )
         #itemTypes( $resource, "col-md-12" )
+        #itemVisualExtension( $resource )
         #itemProperties( $hnode, $level )
       </div>
     </$elem>
@@ -64,28 +66,33 @@
   #if( $hNode.children().size() > 0)
     <div class="col-md-12">
       <ul class="resource-properties">
-        #foreach( $childNode in $hNode.children() )
-            <div class="property-value-row $childNode.hintsString()">
-              #if( $childNode.hasHint( "literal" ))
-                #literalValuedNode( $childNode )
-              #else
-                #resourceValuedNode( $childNode )
-              #end
-            </div>
-        #end
+        #renderProperties( $hNode.children(), 4, 8 )
       </ul>
     </div>
   #end
 #end
 
+## Loop to do the actual property rendering
+#macro( renderProperties $hNodes, $cw0, $cw1 )
+  #foreach( $hNode in $hNodes )
+    <div class="property-value-row $hNode.hintsString()">
+      #if( $hNode.hasHint( "literal" ))
+        #literalValuedNode( $hNode, $cw0, $cw1 )
+      #else
+        #resourceValuedNode( $hNode, $cw0, $cw1 )
+      #end
+    </div>
+  #end
+#end
+
 ## Show a property-value pair where the value is known to be a literal
-#macro( literalValuedNode $hNode )
+#macro( literalValuedNode $hNode $cw0 $cw1 )
   <div class="row">
     <li class="">
-      <div class="col-md-4">
+      <div class="col-md-$cw0">
         #propertyPredicate( $hNode.terminalLink() )
       </div>
-      <div class="col-md-8">
+      <div class="col-md-$cw1">
         #propertyValue( $hNode )
       </div>
     </li>
@@ -93,13 +100,13 @@
 #end
 
 ## Show a property value pair where the value is known to be a resource
-#macro( resourceValuedNode $hNode )
+#macro( resourceValuedNode $hNode $cw0 $cw1 )
   <div class="row">
     <li class="">
-      <div class="col-md-4">
+      <div class="col-md-$cw0">
         #propertyPredicate( $hNode.terminalLink() )
       </div>
-      <div class="col-md-8">
+      <div class="col-md-$cw1">
         #propertyValue( $hNode )
       </div>
     </li>

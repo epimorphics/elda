@@ -1,4 +1,5 @@
 #parse( "partials/global-constants.vm" )
+#parse( "partials/content-detection.vm" )
 
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -16,13 +17,22 @@
 
     #parse( "partials/css.vm" )
 
-    <script src="/standalone/assets/velocity/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <script src="$assets/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    #if( $mapDisplay )
+      <script src="$assets/js/vendor/OpenLayers.js"></script>
+      <script src="$assets/js/vendor/OpenStreetMap.js"></script>
+      <script src="$assets/js/vendor/proj4js-combined.js"></script>
+      <script src="$assets/js/maps.js"></script>
+    #end
   </head>
+
   <body>
     #parse( "partials/navigation-bar.vm" )
 
     <div class="container">
       #parse( "partials/item-setup.vm")
+
+      #parse( "partials/debug-context.vm" )
 
       <footer>
         <p>&copy; Company 2014</p>

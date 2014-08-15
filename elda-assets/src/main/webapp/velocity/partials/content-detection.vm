@@ -1,0 +1,4 @@
+## Set variables based on contents of the display resources
+#if( $page.itemHasAllProperties( $latLongProps ))
+  #set( $mapDisplay = true )
+#end

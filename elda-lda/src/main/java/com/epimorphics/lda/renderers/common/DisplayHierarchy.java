@@ -201,9 +201,8 @@ public class DisplayHierarchy
                 node.addHint( "last" );
             }
 
-            if (isLiteralValued( node )) {
-                node.addHint( "literal" );
-            }
+            node.addHint( isLiteralValued( node ) ? "literal" : "resource" );
+
             annotateNodes( context, node );
             annotateSiblings( context, node );
         }

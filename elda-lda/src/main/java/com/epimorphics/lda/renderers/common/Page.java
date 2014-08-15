@@ -383,6 +383,20 @@ public class Page extends CommonNodeWrapper
         }
     }
 
+    /**
+     * @return True if at least one item on this page passes the <code>hasAllProperties</code>
+     * test with the given properties
+     */
+    public boolean itemHasAllProperties( Object... properties ) {
+        boolean atLeastOneItem = false;
+
+        for (DisplayRdfNode item: items()) {
+            atLeastOneItem = atLeastOneItem || item.hasAllProperties( properties );
+        }
+
+        return atLeastOneItem;
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
