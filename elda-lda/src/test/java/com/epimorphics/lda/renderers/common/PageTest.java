@@ -38,9 +38,6 @@ public class PageTest
     /* Static variables                */
     /***********************************/
 
-    static final Model apiMetadataModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES + Fixtures.PAGE_METADATA_GAMES );
-    static final Model apiObjectModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_OBJECT_GAMES );
-    static final Model apiResultsModel = ModelFactory.createUnion( apiMetadataModel, apiObjectModel );
 
     /***********************************/
     /* Instance variables              */
@@ -66,6 +63,10 @@ public class PageTest
 
     @Before
     public void before() {
+        final Model apiMetadataModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES + Fixtures.PAGE_METADATA_GAMES );
+        final Model apiObjectModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_OBJECT_GAMES );
+        final Model apiResultsModel = ModelFactory.createUnion( apiMetadataModel, apiObjectModel );
+
         ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
         page = rm.page();
     }
