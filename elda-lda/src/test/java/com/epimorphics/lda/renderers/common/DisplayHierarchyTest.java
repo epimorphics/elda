@@ -82,9 +82,9 @@ public class DisplayHierarchyTest
         dh.expand();
         List<DisplayHierarchyNode> children = dh.roots().get( 0 ).children();
 
-        assertEquals( "even first", children.get(0).hintsString() );
-        assertEquals( "odd", children.get(1).hintsString() );
-        assertEquals( "even last", children.get( children.size() - 1 ).hintsString() );
+        assertEquals( "even first literal", children.get(0).hintsString() );
+        assertEquals( "odd literal", children.get(1).hintsString() );
+        assertEquals( "even last resource", children.get( children.size() - 1 ).hintsString() );
     }
 
     /***********************************/
