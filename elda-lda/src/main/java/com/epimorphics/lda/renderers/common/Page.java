@@ -387,6 +387,14 @@ public class Page extends CommonNodeWrapper
      * @return True if at least one item on this page passes the <code>hasAllProperties</code>
      * test with the given properties
      */
+    public boolean itemHasAllProperties( List<Object> properties ) {
+        return itemHasAllProperties( properties.toArray() );
+    }
+
+    /**
+     * @return True if at least one item on this page passes the <code>hasAllProperties</code>
+     * test with the given properties
+     */
     public boolean itemHasAllProperties( Object... properties ) {
         boolean atLeastOneItem = false;
 

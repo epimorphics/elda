@@ -171,6 +171,10 @@ extends CommonNodeWrapper
         return hasAll;
     }
 
+    public boolean hasAllProperties( List<Object> properties ) {
+        return hasAllProperties( properties.toArray() );
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
