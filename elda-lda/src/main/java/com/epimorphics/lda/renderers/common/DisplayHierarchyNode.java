@@ -233,7 +233,7 @@ public class DisplayHierarchyNode
         boolean isLiteral = rdfNode().isLiteral();
         boolean isNumeric = isLiteral && (rdfNode().getValue() instanceof Number);
         Page page = rdfNode().page();
-        String param = terminalLink().getName();
+        String param = pathTo().toString();
         String valueStr = isLiteral ? rdfNode().getLexicalForm() : rdfNode().getName();
 
         if (isNumeric) {
