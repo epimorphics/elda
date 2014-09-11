@@ -55,7 +55,7 @@ h2.resource-uri, h4.resource-uri, .resource-types {
   margin-right: 0;
 }
 
-.resource-types li + li::before {
+.resource-types li + li:before {
   padding: 0;
   margin: 0;
   content: ", ";
@@ -146,6 +146,7 @@ ul.resource-properties.extensions {
 
 ul.resource-properties {
   margin-bottom: 0;
+  width: 100%;
 }
 
 /* nested resources */
@@ -182,7 +183,7 @@ ul.resource-properties {
   content: ", ";
 }
 
-.literal li.literal + li.literal::before {
+.literal li.literal + li.literal:before {
   padding: 0;
   margin: 0;
   content: ", ";
