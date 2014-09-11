@@ -153,9 +153,15 @@ ul.resource-properties {
 .nested {
   display: inline-block;
   border: 1px solid #283593;
-  border-radius: 3px;
+  border-radius: 4px;
   margin: 4px 0;
   max-width: 100%;
+  width: 100%;
+}
+
+.rdf.resource.nested {
+  margin: 0;
+  border: 0;
 }
 
 .nested h3 {
@@ -174,7 +180,6 @@ ul.resource-properties {
 .rdf.resource.nested .rdf.object {
   margin-left: -5px;
 }
-
 
 /* Literal lists */
 

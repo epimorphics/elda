@@ -20,7 +20,7 @@
     </$elem>
   #else
     <$elem class="rdf resource $level">
-      #itemName( $resource, "h3" )
+      #itemName( $resource, "h3", "", $hnode )
       #itemURI( $resource, "h4" )
       #itemTypes( $resource )
       #itemProperties( $hnode, $level )
@@ -29,9 +29,14 @@
 #end
 
 ## Display the name of the resource
-#macro( itemName $resource $h $css )
+#macro( itemName $resource $h $css $node )
   <div class="$css">
-    <$h class="resource-label">$resource.getName()</$h>
+    <$h class="resource-label">
+      $resource.getName()
+      #if( $node )
+        #actionsMenu( $node )
+      #end
+    </$h>
   </div>
 #end
 
@@ -152,10 +157,10 @@
 #macro( propertyObject $node )
   #if( $node.rdfNode().isLiteral() )
     #propertyObjectLiteral( $node.rdfNode() )
+    #actionsMenu( $node )
   #else
     #propertyObjectResource( $node )
   #end
-  #actionsMenu( $node )
 #end
 
 ## Show a literal-value
@@ -169,8 +174,9 @@
 #macro( propertyObjectResource $node )
   #if( $node.isSimpleResource())
     <a href="$node.getURI()" class="rdf object resource simple">$node.getName()</a>
+    #actionsMenu( $node )
   #else
-    <div class="rdf object">
+    <div class="rdf object nested">
       #showRdfResource( $node, "div", "nested" )
     </div>
   #end
