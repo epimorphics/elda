@@ -50,7 +50,7 @@
 t:api
   a api:API ;
   rdfs:label "Bathing Water Quality API (environment.data.gov.uk)"@en ;
-  api:base "/";
+##  api:base "/";
 ##    api:base "http://environment.data.gov.uk/";
   api:maxPageSize "200";
     api:lang    "en,none";
