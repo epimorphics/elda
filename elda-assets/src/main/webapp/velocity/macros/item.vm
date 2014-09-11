@@ -23,7 +23,9 @@
       #itemName( $resource, "h3", "", $hnode )
       #itemURI( $resource, "h4" )
       #itemTypes( $resource )
-      #itemProperties( $hnode, $level )
+      <div class="row">
+        #itemProperties( $hnode, $level )
+      </div>
     </$elem>
   #end
 #end

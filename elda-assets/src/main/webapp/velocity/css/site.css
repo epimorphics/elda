@@ -95,7 +95,7 @@ div.rdf {
 
 .rdf.predicate {
   vertical-align: top;
-  padding: 1px 0px 1px 12px;
+  padding: 1px 0px 1px 0px;
 }
 
 .rdf.object.multiple {
