@@ -99,7 +99,8 @@ div.rdf {
 }
 
 .rdf.object.multiple {
-  padding: 0px 0px 0px 14px;
+  margin: 0;
+  padding: 0;
 }
 
 .rdf.object.first {
@@ -108,7 +109,7 @@ div.rdf {
 
 .multiple > li > .rdf.object {
   vertical-align: top;
-  padding: 1px 0px 1px 5px;
+  padding: 1px 0px 1px 0px;
 }
 
 .rdf.predicate a, .rdf.predicate a:visited {
