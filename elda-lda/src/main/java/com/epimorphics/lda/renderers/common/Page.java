@@ -405,6 +405,37 @@ public class Page extends CommonNodeWrapper
         return atLeastOneItem;
     }
 
+    /** @return A list of all resources in the current results model which each have all of the given properties */
+    public List<DisplayRdfNode> resourcesWithAllProperties( List<Object> properties ) {
+        List<DisplayRdfNode> rs = new ArrayList<DisplayRdfNode>();
+
+        if (!properties.isEmpty()) {
+            Property p = toProperty( properties.get( 0 ) );
+
+            List<Resource> candidates = getModelW().getModel().listSubjectsWithProperty( p ).toList();
+
+            // test the remaining properties
+            for (Object p1: properties) {
+                List<Resource> checked = new ArrayList<Resource>();
+                Property pp1 = toProperty( p1 );
+
+                for (Resource cand: candidates) {
+                    if (cand.hasProperty( pp1 )) {
+                        checked.add( cand );
+                    }
+                }
+
+                candidates = checked;
+            }
+
+            for (Resource cand: candidates) {
+                rs.add( new DisplayRdfNode( this, cand ) );
+            }
+        }
+
+        return rs;
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

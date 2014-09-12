@@ -22,6 +22,7 @@ import org.junit.*;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.vocabularies.*;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
  * Unit tests for {@link Page}
@@ -252,6 +253,49 @@ public class PageTest
         assertEquals( "label", pathNames.get( 0 ) );
         assertEquals( "type", pathNames.get( 1 ) );
     }
+
+    @Test
+    public void testItemHasAllProperties1() {
+        assertTrue( page.itemHasAllProperties( "rdfs:label", "http://epimorphics.com/public/vocabulary/games.ttl#players", RDF.type ));
+        assertFalse( page.itemHasAllProperties( "rdfs:label", "http://epimorphics.com/public/vocabulary/games.ttl#players", RDF.first ));
+    }
+
+    @Test
+    public void testItemHasAllProperties2() {
+        List<Object> properties = new ArrayList<Object>();
+        properties.add( "rdfs:label" );
+        properties.add( "http://epimorphics.com/public/vocabulary/games.ttl#players" );
+        properties.add( RDF.type );
+        assertTrue( page.itemHasAllProperties( properties ));
+
+        properties.add( RDF.first );
+        assertFalse( page.itemHasAllProperties( properties ));
+    }
+
+    @Test
+    public void testResourcesWithAllProperties() {
+        List<Object> properties = new ArrayList<Object>();
+
+        List<DisplayRdfNode> rs = page.resourcesWithAllProperties( properties );
+        assertEquals( 0, rs.size() );
+
+        properties.add( "rdfs:label" );
+        rs = page.resourcesWithAllProperties( properties );
+        assertEquals( 31, rs.size() );
+
+        properties.add( "http://epimorphics.com/public/vocabulary/games.ttl#players" );
+        rs = page.resourcesWithAllProperties( properties );
+        assertEquals( 10, rs.size() );
+
+        properties.add( RDF.type );
+        rs = page.resourcesWithAllProperties( properties );
+        assertEquals( 10, rs.size() );
+
+        properties.add( RDF.first );
+        rs = page.resourcesWithAllProperties( properties );
+        assertEquals( 0, rs.size() );
+    }
+
 
     /***********************************/
     /* Internal implementation methods */

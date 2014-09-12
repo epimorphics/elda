@@ -48,10 +48,10 @@
         <div id="resultsMap"></div>
         <script>
           var locations = [];
-          #foreach( $item in $hierarchy.roots())
-            locations.push( {lon: $item.rdfNode().getPropertyValue( "geo:long" ).getLexicalForm(),
-                             lat: $item.rdfNode().getPropertyValue( "geo:lat" ).getLexicalForm(),
-                             label: "$item.rdfNode().getName()"} );
+          #foreach( $resource in $latLongResources )
+            locations.push( {lon: $resource.getPropertyValue( "geo:long" ).getLexicalForm(),
+                             lat: $resource.getPropertyValue( "geo:lat" ).getLexicalForm(),
+                             label: "$resource.getName()"} );
           #end
           EldaMaps.addLargeMap( "resultsMap", locations, {w:16, h:16, image: "$assets/images/target.png"} );
         </script>
