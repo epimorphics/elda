@@ -3,27 +3,29 @@
 ## partials/content-detection.vm called from index.vm
 
 #macro( itemVisualExtension $resource )
-  #if( $mapDisplay && $item.hasAllProperties( $latLongProps ))
-    #itemMap( $resource )
+  #if( $mapDisplay && $resource.hasAllProperties( $latLongProps ))
+    #resourceMap( $resource )
   #end
 #end
 
-#macro( itemMap $resource )
-  #set( $geoTriples = $item.extractByPredicate( $geoProps ) )
-  <div class="col-md-8">
-    <ul class="resource-properties extensions">
-      #renderProperties( $geoTriples, 6, 6 )
-    </ul>
-  </div>
-  <div class="col-md-4">
-    <div class="item-extension map">
-      #set( $mapId = "map-" + $item.rdfNode().shortUniqueID() )
-      #set( $long = $geoTriples.get( 0 ).rdfNode().getLexicalForm() )
-      #set( $lat  = $geoTriples.get( 1 ).rdfNode().getLexicalForm() )
-      <div id="$mapId"></div>
-      <script>
-        EldaMaps.addSmallMap( "$mapId", $long, $lat, {w:16, h:16, image: "$assets/images/target.png"} );
-      </script>
+#macro( resourceMap $resource )
+  #set( $geoTriples = $resource.extractByPredicate( $geoProps ) )
+  <div class="row">
+    <div class="col-md-8">
+      <ul class="resource-properties extensions">
+        #renderProperties( $geoTriples, 6, 6 )
+      </ul>
+    </div>
+    <div class="col-md-4">
+      <div class="item-extension map">
+        #set( $mapId = "map-" + $item.rdfNode().shortUniqueID() )
+        #set( $long = $geoTriples.get( 0 ).rdfNode().getLexicalForm() )
+        #set( $lat  = $geoTriples.get( 1 ).rdfNode().getLexicalForm() )
+        <div id="$mapId"></div>
+        <script>
+          EldaMaps.addSmallMap( "$mapId", $long, $lat, {w:16, h:16, image: "$assets/images/target.png"} );
+        </script>
+      </div>
     </div>
   </div>
 #end
