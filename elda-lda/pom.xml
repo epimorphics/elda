@@ -97,7 +97,7 @@
     <dependency>
       <groupId>com.epimorphics</groupId>
       <artifactId>lib</artifactId>
-      <version>0.0.19</version>
+      <version>0.0.22-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.jmock</groupId>
