@@ -1,9 +1,11 @@
+#set( $pageMetadata = $page.metadata() )
+
 $(function(){
   require( ['app/qonsole'], function( qonsole ) {
     // configuration
     var config = {
       endpoints: {
-        "default": "http://environment.data.gov.uk/sparql/bwq/query",
+        "default": $pageMetadata.selectionQuery().queryEndpoint(),
       },
       prefixes: {
         "bw":       "http://environment.data.gov.uk/def/bathing-water/",
@@ -18,16 +20,11 @@ $(function(){
         "xsd":      "http://www.w3.org/2001/XMLSchema#"
       },
       queries: [
-        { "name": "Properties of a named bathing water",
-          "query": "select ?predicate ?object\nwhere {\n" +
-                   "  ?bw rdfs:label \"Spittal\"@en ;\n" +
-                   "      ?predicate ?object\n}"
+        { "name": "Item selection query",
+          "query": $pageMetadata.selectionQuery().queryText()
         },
-        { "name": "all OWL classes",
-          "query": "select ?class ?label ?description\nwhere {\n" +
-                   "  ?class a owl:Class.\n" +
-                   "  optional { ?class rdfs:label ?label}\n" +
-                   "  optional { ?class rdfs:comment ?description}\n}"
+        { "name": "Item description query",
+          "query": $pageMetadata.viewingQuery().queryText()
         }
       ]
     };

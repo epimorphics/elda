@@ -101,7 +101,7 @@ public class Page extends CommonNodeWrapper
 
     /**
      * @return The number of items per page. Return -1 if this page does not
-     * specifiy the number of items per page
+     * specify the number of items per page
      */
     public int itemsPerPage() {
         return getInt( OpenSearch.itemsPerPage, NO_VALUE );
@@ -343,6 +343,13 @@ public class Page extends CommonNodeWrapper
         }
 
         return view;
+    }
+
+    /**
+     * Return a facade object providing a convenience API onto the page metadata
+     */
+    public PageMetadata metadata() {
+        return new PageMetadata( this );
     }
 
     /**
