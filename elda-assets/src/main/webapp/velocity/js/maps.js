@@ -1,5 +1,5 @@
 /** Javascript support for adding maps to Elda rendered pages */
-var EldaMaps = function() {
+define( ['OpenLayers', 'OpenStreetMap', 'proj4js-combined'], function( OpenLayers ) {
   /** The correct projection for the UK - other locations may require different projections */
   var projection = new OpenLayers.Projection( "EPSG:4326" );
 
@@ -99,4 +99,4 @@ var EldaMaps = function() {
     addLargeMap: addLargeMap,
     addSmallMap: addSmallMap
   };
-}();
+} );

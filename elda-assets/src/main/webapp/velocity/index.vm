@@ -17,13 +17,15 @@
 
     #parse( "partials/css.vm" )
 
-    <script src="$assets/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-    #if( $mapDisplay )
-      <script src="$assets/js/vendor/OpenLayers.js"></script>
-      <script src="$assets/js/vendor/OpenStreetMap.js"></script>
-      <script src="$assets/js/vendor/proj4js-combined.js"></script>
-      <script src="$assets/js/maps.js"></script>
-    #end
+    <script src="$assets/js/vendor/require.js"></script>
+    <script>
+      #parse( "partials/javascript-dependencies.vm" )
+    </script>
+    <!-- This link provides CORS support in IE8+ -->
+    <!--[if lt IE 10]>
+      <script src="${assets}/js/vendor/jquery.xdomainrequest.js"></script>
+    <![endif]-->
+
   </head>
 
   <body>
@@ -33,6 +35,8 @@
       #parse( "partials/item-setup.vm")
 
       #parse( "partials/debug-context.vm" )
+
+      #parse( "partials/qonsole.vm" )
 
       <footer>
         <p>&copy; Company 2014</p>

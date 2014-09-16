@@ -23,7 +23,9 @@
         #set( $lat  = $geoTriples.get( 1 ).rdfNode().getLexicalForm() )
         <div id="$mapId"></div>
         <script>
-          EldaMaps.addSmallMap( "$mapId", $long, $lat, {w:16, h:16, image: "$assets/images/target.png"} );
+          require( ['app/maps'], function( EldaMaps ) {
+            EldaMaps.addSmallMap( "$mapId", $long, $lat, {w:16, h:16, image: "$assets/images/target.png"} );
+          } );
         </script>
       </div>
     </div>
@@ -55,7 +57,9 @@
                              lat: $resource.getPropertyValue( "geo:lat" ).getLexicalForm(),
                              label: "$resource.getName()"} );
           #end
-          EldaMaps.addLargeMap( "resultsMap", locations, {w:16, h:16, image: "$assets/images/target.png"} );
+          require( ['app/maps'], function( EldaMaps ) {
+            EldaMaps.addLargeMap( "resultsMap", locations, {w:16, h:16, image: "$assets/images/target.png"} );
+          } );
         </script>
       </div>
     </div>
