@@ -34,6 +34,7 @@ define( ['jquery', 'underscore', 'sprintf', 'lib/codemirror'],
 
   /** Initialisation - only called once */
   var init = function( config ) {
+    console.log( "in qonsole.init() ... " );
     loadConfig( config );
     bindEvents();
 
@@ -60,6 +61,9 @@ define( ['jquery', 'underscore', 'sprintf', 'lib/codemirror'],
 
   /** Bind events that we want to manage */
   var bindEvents = function() {
+    console.log( "in qonsole.bindEvents() ... " );
+    console.log( "ul.examples = " + $("ul.examples").length );
+
     $("ul.prefixes").on( "click", "a.btn", function( e ) {
       var elem = $(e.currentTarget);
       updatePrefixDeclaration( $.trim( elem.data( "prefix" ) ), elem.data( "uri" ), !elem.is(".active") );

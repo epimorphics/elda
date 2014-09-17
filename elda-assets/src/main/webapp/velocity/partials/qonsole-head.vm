@@ -29,6 +29,7 @@ $(function(){
       ]
     };
 
+    console.log( "initialising qonsole" );
     qonsole.init( config );
   } );
 });
