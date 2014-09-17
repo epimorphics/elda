@@ -10,6 +10,12 @@
       </div>
       <div id="sparqlform" class="panel-collapse collapse in">
         <div class="panel-body">
+          <div class="col-md-12">
+            <h2 class="">Example queries</h2>
+            <ul class="list-inline examples">
+            </ul>
+          </div>
+
           <div class="col-md-12 vertical">
             <h2 class="">Prefixes</h2>
             <ul class="list-inline prefixes">
