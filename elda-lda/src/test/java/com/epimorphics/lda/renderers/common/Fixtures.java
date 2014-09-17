@@ -671,6 +671,551 @@ public class Fixtures
             "        api:properties   \"type\" , \"sampleDateTime.inXSDDateTime\" , \"sampleWeek.label\" , \"dataset\" , \"bwq_samplingPoint.name\" , \"label\" , \"escherichiaColiCount\" , \"escherichiaColiQualifier.countQualifierNotation\" , \"bwq_bathingWater.name\" , \"source\" , \"bwq_bathingWater.eubwidNotation\" , \"bwq_samplingPoint.samplePointNotation\" , \"abnormalWeatherException\" ;\n" +
             "        elda:viewName    \"escherichiaColi\" .";
 
+    /** Metadata from a BWQ page */
+    public static final String PAGE_METADATA_BWQ = "<http://localhost:8080/standalone/bwq/doc/bathing-water?_view=all&_metadata=all&_page=0>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"all\" ;\n" +
+            "        <http://purl.org/dc/terms/isVersionOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> ;\n" +
+            "        <http://www.epimorphics.com/vocabularies/lda#viewName>\n" +
+            "                \"all\" .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water?_view=bathing-water&_metadata=all&_page=0>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"bathing-water\" ;\n" +
+            "        <http://purl.org/dc/terms/isVersionOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#properties>\n" +
+            "                \"country.name\" , \"latestSampleAssessment\" , \"seeAlso\" , \"latestComplianceAssessment\" , \"uriSet.label\" , \"samplingPoint.northing\" , \"samplingPoint.name\" , \"district.name\" , \"latestComplianceAssessment.complianceClassification.name\" , \"yearDedesignated\" , \"sameAs\" , \"type\" , \"county.name\" , \"latestRiskPrediction.riskLevel.name\" , \"zoneOfInfluence.name\" , \"sedimentTypesPresent\" , \"name\" , \"waterQualityImpactedByHeavyRain\" , \"latestRiskPrediction.expiresAt\" , \"eubwidNotation\" , \"envelope.label\" , \"uriSet.name\" , \"samplingPoint.easting\" , \"samplingPoint.long\" , \"latestSampleAssessment.sampleClassification.name\" , \"samplingPoint.lat\" , \"regionalOrganization.name\" , \"yearDesignated\" , \"latestProfile\" ;\n" +
+            "        <http://www.epimorphics.com/vocabularies/lda#viewName>\n" +
+            "                \"bathing-water\" .\n" +
+            "\n" +
+            "<http://www.epimorphics.com/vocabularies/lda#Elda_1.2.36-SNAPSHOT>\n" +
+            "        a       <http://usefulinc.com/ns/doap#Version> ;\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"Elda 1.2.36-SNAPSHOT\" ;\n" +
+            "        <http://usefulinc.com/ns/doap#releaseOf>\n" +
+            "                [ <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                          \"Elda\" ;\n" +
+            "                  <http://usefulinc.com/ns/doap#bug-database>\n" +
+            "                          <https://github.com/epimorphics/elda/issues?direction=desc&sort=created&state=open> ;\n" +
+            "                  <http://usefulinc.com/ns/doap#homepage>\n" +
+            "                          <https://github.com/epimorphics/elda> ;\n" +
+            "                  <http://usefulinc.com/ns/doap#implements>\n" +
+            "                          \"http://code.google.com/p/linked-data-api/wiki/Specification\" ;\n" +
+            "                  <http://usefulinc.com/ns/doap#programming-language>\n" +
+            "                          \"Java\" ;\n" +
+            "                  <http://usefulinc.com/ns/doap#repository>\n" +
+            "                          <https://github.com/epimorphics/elda.git> ;\n" +
+            "                  <http://usefulinc.com/ns/doap#wiki>\n" +
+            "                          <https://github.com/epimorphics/elda/wiki>\n" +
+            "                ] ;\n" +
+            "        <http://usefulinc.com/ns/doap#revision>\n" +
+            "                \"1.2.36-SNAPSHOT\" .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water?_view=prediction&_metadata=all&_page=0>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"prediction\" ;\n" +
+            "        <http://purl.org/dc/terms/isVersionOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#properties>\n" +
+            "                \"latestRiskPrediction.source\" , \"latestRiskPrediction.type\" , \"latestRiskPrediction.comment\" , \"latestRiskPrediction.riskLevel.name\" , \"latestRiskPrediction.publishedAt\" , \"latestRiskPrediction.predictedAt\" , \"latestRiskPrediction.predictedOn\" , \"latestRiskPrediction.expiresAt\" , \"name\" ;\n" +
+            "        <http://www.epimorphics.com/vocabularies/lda#viewName>\n" +
+            "                \"prediction\" .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water.json?_metadata=all>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"json\" ;\n" +
+            "        <http://purl.org/dc/terms/format>\n" +
+            "                [ <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                          \"application/json\" ] ;\n" +
+            "        <http://purl.org/dc/terms/isFormatOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all>\n" +
+            "        a       <http://purl.org/linked-data/api/vocab#Page> , <http://purl.org/linked-data/api/vocab#ListEndpoint> ;\n" +
+            "        <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>\n" +
+            "                \"10\"^^<http://www.w3.org/2001/XMLSchema#long> ;\n" +
+            "        <http://a9.com/-/spec/opensearch/1.1/startIndex>\n" +
+            "                \"1\"^^<http://www.w3.org/2001/XMLSchema#long> ;\n" +
+            "        <http://purl.org/dc/terms/hasFormat>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water.xml?_metadata=all> , <http://localhost:8080/standalone/bwq/doc/bathing-water.csv?_metadata=all> , <http://localhost:8080/standalone/bwq/doc/bathing-water.html?_metadata=all> , <http://localhost:8080/standalone/bwq/doc/bathing-water.text?_metadata=all> , <http://localhost:8080/standalone/bwq/doc/bathing-water.ttl?_metadata=all> , <http://localhost:8080/standalone/bwq/doc/bathing-water.rdf?_metadata=all> , <http://localhost:8080/standalone/bwq/doc/bathing-water.json?_metadata=all> ;\n" +
+            "        <http://purl.org/dc/terms/hasPart>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> ;\n" +
+            "        <http://purl.org/dc/terms/hasVersion>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_view=description&_metadata=all&_page=0> , <http://localhost:8080/standalone/bwq/doc/bathing-water?_view=bathing-water&_metadata=all&_page=0> , <http://localhost:8080/standalone/bwq/doc/bathing-water?_view=basic&_metadata=all&_page=0> , <http://localhost:8080/standalone/bwq/doc/bathing-water?_view=all&_metadata=all&_page=0> , <http://localhost:8080/standalone/bwq/doc/bathing-water?_view=prediction&_metadata=all&_page=0> ;\n" +
+            "        <http://purl.org/dc/terms/isPartOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#definition>\n" +
+            "                <http://localhost:8080/standalone/bwq/meta/doc/bathing-water?_metadata=all> ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#items>\n" +
+            "                ( <http://environment.data.gov.uk/id/bathing-water/ukc2102-03600> <http://environment.data.gov.uk/id/bathing-water/ukc2102-03700> <http://environment.data.gov.uk/id/bathing-water/ukc2102-03800> <http://environment.data.gov.uk/id/bathing-water/ukc2102-03900> <http://environment.data.gov.uk/id/bathing-water/ukc2101-04000> <http://environment.data.gov.uk/id/bathing-water/ukc2101-04200> <http://environment.data.gov.uk/id/bathing-water/ukc2101-04250> <http://environment.data.gov.uk/id/bathing-water/ukc2104-04280> <http://environment.data.gov.uk/id/bathing-water/ukc2104-04300> <http://environment.data.gov.uk/id/bathing-water/ukc2106-04400> ) ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#page>\n" +
+            "                \"0\"^^<http://www.w3.org/2001/XMLSchema#long> ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#wasResultOf>\n" +
+            "                [ a       <http://purl.org/linked-data/api/vocab#Execution> ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#processor>\n" +
+            "                          [ a       <http://purl.org/linked-data/api/vocab#Service> ;\n" +
+            "                            <http://purl.org/net/opmv/types/common#software>\n" +
+            "                                    <http://www.epimorphics.com/vocabularies/lda#Elda_1.2.36-SNAPSHOT>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#selectionResult>\n" +
+            "                          [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;\n" +
+            "                            <http://purl.org/net/opmv/types/sparql#endpoint>\n" +
+            "                                    _:b0 ;\n" +
+            "                            <http://purl.org/net/opmv/types/sparql#query>\n" +
+            "                                    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>\n" +
+            "                                              \"PREFIX def-bw: <http://environment.data.gov.uk/def/bathing-water/>\\nPREFIX def-ef: <http://location.data.gov.uk/def/ef/SamplingPoint/>\\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\\nSELECT DISTINCT ?item\\nWHERE {\\n?item def-ef:samplingPoint ?___samplingPoint_0 .\\n?item rdf:type def-bw:BathingWater .\\nOPTIONAL { ?item def-bw:yearDedesignated ?___1 . }\\nOPTIONAL { ?___samplingPoint_0 def-ef:samplePointNotation ?___2 . }\\n FILTER (!(bound(?___1)))\\n}  ORDER BY  ?___2  ?item OFFSET 0 LIMIT 10\" ]\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"regionalOrganization\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water/regionalOrganization>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"itemsPerPage\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"startIndex\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://a9.com/-/spec/opensearch/1.1/startIndex>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"latestSampleAssessment\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water-quality/latestSampleAssessment>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"northing\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/northing>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"next\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://www.w3.org/1999/xhtml/vocab#next>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"waterQualityImpactedByHeavyRain\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water/waterQualityImpactedByHeavyRain>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"normal\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bwq-stp/normal>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"district\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://statistics.data.gov.uk/def/administrative-geography/district>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"riskLevel\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bwq-stp/riskLevel>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"name\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://www.w3.org/2004/02/skos/core#prefLabel>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"eubwidNotation\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water/eubwidNotation>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"zoneOfInfluence\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://location.data.gov.uk/def/ef/ZoneOfInfluence/zoneOfInfluence>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"sedimentTypesPresent\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water/sedimentTypesPresent>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"latestComplianceAssessment\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water-quality/latestComplianceAssessment>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"api_definition\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://purl.org/linked-data/api/vocab#definition>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"easting\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/easting>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"items\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://purl.org/linked-data/api/vocab#items>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"uriSet\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://reference.data.gov.uk/def/reference/uriSet>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"yearDesignated\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water/yearDesignated>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"latestRiskPrediction\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bwq-stp/latestRiskPrediction>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"country\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://statistics.data.gov.uk/def/administrative-geography/country>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"sameAs\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://www.w3.org/2002/07/owl#sameAs>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"long\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://www.w3.org/2003/01/geo/wgs84_pos#long>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"CoastalBathingWater\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water/CoastalBathingWater>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"first\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://www.w3.org/1999/xhtml/vocab#first>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"samplingPoint\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://location.data.gov.uk/def/ef/SamplingPoint/samplingPoint>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"hasPart\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://purl.org/dc/terms/hasPart>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"sand\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water/sand-sediment>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"complianceClassification\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water-quality/complianceClassification>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"isPartOf\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://purl.org/dc/terms/isPartOf>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"extendedMetadataVersion\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"page\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://purl.org/linked-data/api/vocab#page>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"expiresAt\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bwq-stp/expiresAt>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"sampleClassification\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water-quality/sampleClassification>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"latestProfile\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water-profile/latestBathingWaterProfile>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"label\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"lat\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://www.w3.org/2003/01/geo/wgs84_pos#lat>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"BathingWater\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://environment.data.gov.uk/def/bathing-water/BathingWater>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"type\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#termBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"envelope\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#property>\n" +
+            "                                    <http://location.data.gov.uk/def/common/Geometry/envelope>\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_metadata\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"all\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_properties\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"bw\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"http://environment.data.gov.uk/id/bathing-water/{eubwid}\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_velocityRoot\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"assets/velocity\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_rootPath\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"/standalone/bwq\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_strip_has\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"yes\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_HOST\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"localhost:8080\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_view\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_suppress_ipto\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"yes\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_APP\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"/standalone\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"sp\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/{bwspid}\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"visibleSparqlForm\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"http://environment.data.gov.uk/lab/sparql.html\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_page\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_resourceRoot\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"/lda-assets/\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"visibleSparqlEndpoint\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"http://environment.data.gov.uk/sparql/bwq/query\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_selectedView\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"bathing-water\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#variableBinding>\n" +
+            "                          [ <http://purl.org/linked-data/api/vocab#label>\n" +
+            "                                    \"_suffix\" ;\n" +
+            "                            <http://purl.org/linked-data/api/vocab#value>\n" +
+            "                                    \"html\"\n" +
+            "                          ] ;\n" +
+            "                  <http://purl.org/linked-data/api/vocab#viewingResult>\n" +
+            "                          [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;\n" +
+            "                            <http://purl.org/net/opmv/types/sparql#endpoint>\n" +
+            "                                    _:b0 ;\n" +
+            "                            <http://purl.org/net/opmv/types/sparql#query>\n" +
+            "                                    [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>\n" +
+            "                                              \"PREFIX def-bw: <http://environment.data.gov.uk/def/bathing-water/>\\nPREFIX def-ef: <http://location.data.gov.uk/def/ef/SamplingPoint/>\\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\\nPREFIX def-bw: <http://environment.data.gov.uk/def/bathing-water/>\\nPREFIX def-bwp: <http://environment.data.gov.uk/def/bathing-water-profile/>\\nPREFIX def-bwq: <http://environment.data.gov.uk/def/bathing-water-quality/>\\nPREFIX def-ef: <http://location.data.gov.uk/def/ef/SamplingPoint/>\\nPREFIX def-geom: <http://location.data.gov.uk/def/common/Geometry/>\\nPREFIX def-stp: <http://environment.data.gov.uk/def/bwq-stp/>\\nPREFIX def-zoi: <http://location.data.gov.uk/def/ef/ZoneOfInfluence/>\\nPREFIX dgu: <http://reference.data.gov.uk/def/reference/>\\nPREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>\\nPREFIX onsadmingeo: <http://statistics.data.gov.uk/def/administrative-geography/>\\nPREFIX owl: <http://www.w3.org/2002/07/owl#>\\nPREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\\nPREFIX skos: <http://www.w3.org/2004/02/skos/core#>\\nPREFIX spatialrelations: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/>\\nCONSTRUCT {?item def-bwq:latestComplianceAssessment ?___3 .\\n?___3 def-bwq:complianceClassification ?___4 .\\n?___4 skos:prefLabel ?___5 .\\n?item rdfs:seeAlso ?___6 .\\n?item def-bw:sedimentTypesPresent ?___7 .\\n?item def-bw:yearDesignated ?___8 .\\n?item def-bw:eubwidNotation ?___9 .\\n?item def-geom:envelope ?___10 .\\n?___10 rdfs:label ?___11 .\\n?item def-bw:yearDedesignated ?___12 .\\n?item onsadmingeo:county ?___13 .\\n?___13 skos:prefLabel ?___14 .\\n?item def-bwq:latestSampleAssessment ?___15 .\\n?___15 def-bwq:sampleClassification ?___16 .\\n?___16 skos:prefLabel ?___17 .\\n?item dgu:uriSet ?___18 .\\n?___18 rdfs:label ?___19 .\\n?___18 skos:prefLabel ?___20 .\\n?item def-bw:waterQualityImpactedByHeavyRain ?___21 .\\n?item def-stp:latestRiskPrediction ?___22 .\\n?___22 def-stp:riskLevel ?___23 .\\n?___23 skos:prefLabel ?___24 .\\n?___22 def-stp:expiresAt ?___25 .\\n?item onsadmingeo:district ?___26 .\\n?___26 skos:prefLabel ?___27 .\\n?item rdf:type ?___28 .\\n?item onsadmingeo:country ?___29 .\\n?___29 skos:prefLabel ?___30 .\\n?item def-bw:regionalOrganization ?___31 .\\n?___31 skos:prefLabel ?___32 .\\n?item def-ef:samplingPoint ?___33 .\\n?___33 geo:long ?___34 .\\n?___33 spatialrelations:easting ?___35 .\\n?___33 geo:lat ?___36 .\\n?___33 spatialrelations:northing ?___37 .\\n?___33 skos:prefLabel ?___38 .\\n?item skos:prefLabel ?___39 .\\n?item owl:sameAs ?___40 .\\n?item def-bwp:latestBathingWaterProfile ?___41 .\\n?item def-zoi:zoneOfInfluence ?___42 .\\n?___42 skos:prefLabel ?___43 .\\n\\n} WHERE {\\n  {SELECT DISTINCT ?item\\n    WHERE {\\n    ?item def-ef:samplingPoint ?___samplingPoint_0 .\\n    ?item rdf:type def-bw:BathingWater .\\n    OPTIONAL { ?item def-bw:yearDedesignated ?___1 . }\\n    OPTIONAL { ?___samplingPoint_0 def-ef:samplePointNotation ?___2 . }\\n     FILTER (!(bound(?___1)))\\n    }  ORDER BY  ?___2  ?item OFFSET 0 LIMIT 10\\n}{{ ?item def-bwq:latestComplianceAssessment ?___3 . }  OPTIONAL {\\n  {{ ?___3 def-bwq:complianceClassification ?___4 . }  OPTIONAL {\\n    { ?___4 skos:prefLabel ?___5 . } \\n  }}\\n}}\\nUNION { ?item rdfs:seeAlso ?___6 . } \\nUNION { ?item def-bw:sedimentTypesPresent ?___7 . } \\nUNION { ?item def-bw:yearDesignated ?___8 . } \\nUNION { ?item def-bw:eubwidNotation ?___9 . } \\nUNION {{ ?item def-geom:envelope ?___10 . }  OPTIONAL {\\n  { ?___10 rdfs:label ?___11 . } \\n}}\\nUNION { ?item def-bw:yearDedesignated ?___12 . } \\nUNION {{ ?item onsadmingeo:county ?___13 . }  OPTIONAL {\\n  { ?___13 skos:prefLabel ?___14 . } \\n}}\\nUNION {{ ?item def-bwq:latestSampleAssessment ?___15 . }  OPTIONAL {\\n  {{ ?___15 def-bwq:sampleClassification ?___16 . }  OPTIONAL {\\n    { ?___16 skos:prefLabel ?___17 . } \\n  }}\\n}}\\nUNION {{ ?item dgu:uriSet ?___18 . }  OPTIONAL {\\n  { ?___18 rdfs:label ?___19 . } \\n  UNION { ?___18 skos:prefLabel ?___20 . } \\n}}\\nUNION { ?item def-bw:waterQualityImpactedByHeavyRain ?___21 . } \\nUNION {{ ?item def-stp:latestRiskPrediction ?___22 . }  OPTIONAL {\\n  {{ ?___22 def-stp:riskLevel ?___23 . }  OPTIONAL {\\n    { ?___23 skos:prefLabel ?___24 . } \\n  }}\\n  UNION { ?___22 def-stp:expiresAt ?___25 . } \\n}}\\nUNION {{ ?item onsadmingeo:district ?___26 . }  OPTIONAL {\\n  { ?___26 skos:prefLabel ?___27 . } \\n}}\\nUNION { ?item rdf:type ?___28 . } \\nUNION {{ ?item onsadmingeo:country ?___29 . }  OPTIONAL {\\n  { ?___29 skos:prefLabel ?___30 . } \\n}}\\nUNION {{ ?item def-bw:regionalOrganization ?___31 . }  OPTIONAL {\\n  { ?___31 skos:prefLabel ?___32 . } \\n}}\\nUNION {{ ?item def-ef:samplingPoint ?___33 . }  OPTIONAL {\\n  { ?___33 geo:long ?___34 . } \\n  UNION { ?___33 spatialrelations:easting ?___35 . } \\n  UNION { ?___33 geo:lat ?___36 . } \\n  UNION { ?___33 spatialrelations:northing ?___37 . } \\n  UNION { ?___33 skos:prefLabel ?___38 . } \\n}}\\nUNION { ?item skos:prefLabel ?___39 . } \\nUNION { ?item owl:sameAs ?___40 . } \\nUNION { ?item def-bwp:latestBathingWaterProfile ?___41 . } \\nUNION {{ ?item def-zoi:zoneOfInfluence ?___42 . }  OPTIONAL {\\n  { ?___42 skos:prefLabel ?___43 . } \\n}}\\n\\n}\" ]\n" +
+            "                          ]\n" +
+            "                ] ;\n" +
+            "        <http://www.w3.org/1999/xhtml/vocab#first>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all&_page=0> ;\n" +
+            "        <http://www.w3.org/1999/xhtml/vocab#next>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all&_page=1> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water.xml?_metadata=all>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"xml\" ;\n" +
+            "        <http://purl.org/dc/terms/format>\n" +
+            "                [ <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                          \"application/xml\" ] ;\n" +
+            "        <http://purl.org/dc/terms/isFormatOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water.rdf?_metadata=all>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"rdf\" ;\n" +
+            "        <http://purl.org/dc/terms/format>\n" +
+            "                [ <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                          \"application/rdf+xml\" ] ;\n" +
+            "        <http://purl.org/dc/terms/isFormatOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water.html?_metadata=all>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"html\" ;\n" +
+            "        <http://purl.org/dc/terms/format>\n" +
+            "                [ <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                          \"text/html\" ] ;\n" +
+            "        <http://purl.org/dc/terms/isFormatOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water.csv?_metadata=all>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"csv\" ;\n" +
+            "        <http://purl.org/dc/terms/format>\n" +
+            "                [ <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                          \"text/csv\" ] ;\n" +
+            "        <http://purl.org/dc/terms/isFormatOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water?_view=basic&_metadata=all&_page=0>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"basic\" ;\n" +
+            "        <http://purl.org/dc/terms/isVersionOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#properties>\n" +
+            "                \"type\" , \"label\" ;\n" +
+            "        <http://www.epimorphics.com/vocabularies/lda#viewName>\n" +
+            "                \"basic\" .\n" +
+            "\n" +
+            "<https://github.com/epimorphics/elda.git>\n" +
+            "        a       <http://usefulinc.com/ns/doap#Repository> ;\n" +
+            "        <http://usefulinc.com/ns/doap#browse>\n" +
+            "                <https://github.com/epimorphics/elda> ;\n" +
+            "        <http://usefulinc.com/ns/doap#location>\n" +
+            "                <https://github.com/epimorphics/elda> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water?_view=description&_metadata=all&_page=0>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"description\" ;\n" +
+            "        <http://purl.org/dc/terms/isVersionOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> ;\n" +
+            "        <http://www.epimorphics.com/vocabularies/lda#viewName>\n" +
+            "                \"description\" .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water.text?_metadata=all>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"text\" ;\n" +
+            "        <http://purl.org/dc/terms/format>\n" +
+            "                [ <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                          \"text/plain\" ] ;\n" +
+            "        <http://purl.org/dc/terms/isFormatOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> .\n" +
+            "\n" +
+            "<http://localhost:8080/standalone/bwq/doc/bathing-water.ttl?_metadata=all>\n" +
+            "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                \"ttl\" ;\n" +
+            "        <http://purl.org/dc/terms/format>\n" +
+            "                [ <http://www.w3.org/2000/01/rdf-schema#label>\n" +
+            "                          \"text/turtle\" ] ;\n" +
+            "        <http://purl.org/dc/terms/isFormatOf>\n" +
+            "                <http://localhost:8080/standalone/bwq/doc/bathing-water?_metadata=all> .\n" +
+            "\n" +
+            "_:b0    a       <http://www.w3.org/ns/sparql-service-description#Service> ;\n" +
+            "        <http://purl.org/linked-data/api/vocab#sparqlEndpoint>\n" +
+            "                <http://environment.data.gov.uk/sparql/bwq/query> ;\n" +
+            "        <http://www.w3.org/ns/sparql-service-description#url>\n" +
+            "                <http://environment.data.gov.uk/sparql/bwq/query> .";
+
     public static final String PAGE_OBJECT_GAMES = "@prefix hello: <http://epimorphics.com/public/vocabulary/games.ttl#> .\n" +
             "@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n" +
             "@prefix elda:  <http://www.epimorphics.com/vocabularies/lda#> .\n" +
