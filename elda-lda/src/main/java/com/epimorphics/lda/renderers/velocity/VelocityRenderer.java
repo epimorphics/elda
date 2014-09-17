@@ -12,6 +12,7 @@ import java.io.*;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -425,6 +426,7 @@ implements Renderer
             addBindingsToContext( vc, bindings );
             addContextSelfReference( vc );
             addEventHandlers( vc );
+            addTools( vc );
 
             return vc;
         }
@@ -455,6 +457,11 @@ implements Renderer
         /** Add the Velocity Contex itself, as a debugging aide */
         protected void addContextSelfReference( VelocityContext vc ) {
             vc.put( "vcontext", vc );
+        }
+
+        /** Add generic tools to the Velocity context */
+        protected void addTools( VelocityContext vc ) {
+            vc.put( "esc", new StringEscapeUtils() );
         }
 
         /**
