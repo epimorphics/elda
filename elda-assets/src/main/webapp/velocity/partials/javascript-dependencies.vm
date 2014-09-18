@@ -6,7 +6,8 @@ require.config({
     'bootstrap':            'bootstrap.min',
     'jquery':               'jquery-1.11.0.min',
     'sprintf':              'sprintf-0.7-beta1',
-    'modernizr':            'modernizr-2.6.2-respond-1.1.0.min'
+    'modernizr':            'modernizr-2.6.2-respond-1.1.0.min',
+    'datatables':    'jquery.dataTables.min'
   },
   shim: {
     'underscore': {
@@ -21,8 +22,9 @@ require.config({
     'jquery.xdomainrequest': {
       deps: ['jquery']
     },
-    'jquery.dataTables.min': {
-      deps: ['jquery']
+    'datatables': {
+      deps: ['jquery'],
+      exports: 'DataTable'
     },
     'qonsole': {
       deps: ['jquery.dataTables.min',
@@ -72,7 +74,8 @@ require( ['require'],
        'sprintf',
        'bootstrap',
        'app/qonsole',
-       'app/popover'
+       'datatables',
+       'app/popover',
        #if( $mapDisplay )
          , 'app/maps'
        #end

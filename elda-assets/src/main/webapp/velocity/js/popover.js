@@ -1,5 +1,9 @@
 /** Manage popovers */
+/* global: define */
 define( ['jquery'], function( $ ) {
+  /* jshint strict: true, undef:true */
+  "use strict";
+
   var onPageReady = function() {
     $('.popover-dismiss').popover({
       trigger: 'click'

@@ -1,5 +1,9 @@
 /** Javascript support for adding maps to Elda rendered pages */
+/* global: define */
 define( ['OpenLayers', 'OpenStreetMap', 'proj4js-combined'], function( OpenLayers ) {
+  /* jshint strict: true, undef:true */
+  "use strict";
+
   /** The correct projection for the UK - other locations may require different projections */
   var projection = new OpenLayers.Projection( "EPSG:4326" );
 
@@ -81,14 +85,16 @@ define( ['OpenLayers', 'OpenStreetMap', 'proj4js-combined'], function( OpenLayer
 
   /** Add a marker for the given location */
   var addMarker = function( markersLayer, lon, lat, markerImage, map ) {
+    var marker;
+
     if (markerImage.icon) {
-      var marker = new OpenLayers.Marker( longLatPoint( lon, lat, map ), markerImage.icon.clone() );
+      marker = new OpenLayers.Marker( longLatPoint( lon, lat, map ), markerImage.icon.clone() );
     }
     else {
       var size = new OpenLayers.Size( markerImage.w, markerImage.h );
       var offset = new OpenLayers.Pixel( -(size.w/2), -size.h );
       var icon = new OpenLayers.Icon( markerImage.image, size, offset );
-      var marker = new OpenLayers.Marker( longLatPoint( lon, lat, map ), icon );
+      marker = new OpenLayers.Marker( longLatPoint( lon, lat, map ), icon );
       markerImage.icon = icon;
     }
 

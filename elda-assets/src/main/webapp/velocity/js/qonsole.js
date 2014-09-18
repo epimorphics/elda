@@ -1,16 +1,10 @@
 /* Copyright (c) 2012-2013 Epimorphics Ltd. Released under Apache License 2.0 http://www.apache.org/licenses/ */
+/* global: define */
 
-define( ['jquery', 'underscore', 'sprintf', 'lib/codemirror'],
-        function( $, _, sprintf, CodeMirror ) {
+define( ['jquery', 'underscore', 'sprintf', 'lib/codemirror', 'app/remote-sparql-service'],
+        function( $, _, sprintf, CodeMirror, RemoteSparqlService ) {
+  /* jshint strict: true, undef:true */
   "use strict";
-
-  /* JsLint */
-  /*global sprintf, testCSS, loadConfig, bindEvents, $, onConfigLoaded, updatePrefixDeclaration, _,
-    showCurrentQuery, setCurrentEndpoint, setCurrentFormat, elementVisible, runQuery, onLookupPrefix,
-    startTimingResults, onAddPrefix, initQuery, CodeMirror, onQuerySuccess,
-    onQueryFail, ajaxDataType, resetResults, XMLSerializer,
-    showTableResult, showCodeMirrorResult
-   */
 
   /* --- module vars --- */
   /** The loaded configuration */
@@ -241,7 +235,7 @@ define( ['jquery', 'underscore', 'sprintf', 'lib/codemirror'],
   var displayQuery = function( query ) {
     if (query) {
       var queryBody = query.query ? query.query : query;
-      var prefixes = assemblePrefixes( queryBody, query.prefixes )
+      var prefixes = assemblePrefixes( queryBody, query.prefixes );
 
       var q = sprintf( "%s\n\n%s", renderPrefixes( prefixes ), stripLeader( queryBody ) );
       setCurrentQueryText( q );
