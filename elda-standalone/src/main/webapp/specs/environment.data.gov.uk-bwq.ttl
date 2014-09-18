@@ -80,7 +80,7 @@ t:api
 ##	api:variable [ api:name "visibleSparqlForm"; api:value "http://openuplabs.tso.co.uk/sparql/gov-environment" ];
 
 #  Optional base URI for referencing XSLT/HTML stylesheet resources.
-  api:variable [ api:name "_resourceRoot"; api:value "/lda-assets/" ];
+#  api:variable [ api:name "_resourceRoot"; api:value "/assets/" ];
 
     api:variable    [api:name "bw"; api:type rdfs:Resource; api:value "http://environment.data.gov.uk/id/bathing-water/{eubwid}" ];
     api:variable    [api:name "sp"; api:type rdfs:Resource; api:value "http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/{bwspid}" ];
