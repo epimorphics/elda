@@ -12,7 +12,10 @@ package com.epimorphics.lda.renderers.common;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.datatypes.DatatypeFormatException;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.datatypes.RDFDatatype;
+import com.hp.hpl.jena.datatypes.xsd.impl.XMLLiteralType;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 
 
@@ -118,6 +121,19 @@ extends RDFNodeWrapper
         }
 
         return r;
+    }
+
+    /**
+     * @return True if this node is a literal, and has an XML literal as its value
+     */
+    public boolean isXmlLiteral() {
+        if (isLiteral()) {
+            RDFDatatype typ = asLiteral().getDatatype();
+            return (typ != null) && XMLLiteralType.theXMLLiteralType.equals( typ );
+        }
+        else {
+            return false;
+        }
     }
 
     /***********************************/
