@@ -71,7 +71,8 @@ require( ['require'],
        'jquery',
        'sprintf',
        'bootstrap',
-       'app/qonsole'
+       'app/qonsole',
+       'app/popover'
        #if( $mapDisplay )
          , 'app/maps'
        #end

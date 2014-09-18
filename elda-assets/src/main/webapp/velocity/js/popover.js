@@ -1,5 +1,6 @@
-var Elda = function() {
-  var init = function() {
+/** Manage popovers */
+define( ['jquery'], function( $ ) {
+  var onPageReady = function() {
     $('.popover-dismiss').popover({
       trigger: 'click'
     });
@@ -17,9 +18,5 @@ var Elda = function() {
     });
   };
 
-  return {
-    init: init
-  }
-}();
-
-$( Elda.init );
+  $( onPageReady );
+} );
