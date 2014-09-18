@@ -80,8 +80,8 @@ public class DisplayRdfNodeTest
 
         assertEquals( 5, displayTriples.size() );
         assertEquals( "rdfs:label", displayTriples.get(0).getProp().getShortURI() );
-        assertEquals( ns + "players", displayTriples.get(1).getProp().getURI() );
-        assertEquals( ns + "playTimeMinutes", displayTriples.get(2).getProp().getURI() );
+        assertEquals( ns + "playTimeMinutes", displayTriples.get(1).getProp().getURI() );
+        assertEquals( ns + "players", displayTriples.get(2).getProp().getURI() );
         assertEquals( ns + "pubYear", displayTriples.get(3).getProp().getURI() );
         assertEquals( ns + "designed-by", displayTriples.get(4).getProp().getURI() );
     }
