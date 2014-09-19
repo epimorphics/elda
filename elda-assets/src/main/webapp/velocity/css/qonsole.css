@@ -103,7 +103,9 @@ footer p {
 }
 
 .qonsole #results-block {
+  border-top: 1px solid #e8eaf6;
   margin-top: 10px;
+  padding-top: 10px;
 }
 
 /* Custom buttons */
