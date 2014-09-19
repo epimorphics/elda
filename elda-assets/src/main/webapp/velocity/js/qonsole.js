@@ -72,6 +72,7 @@ define( ['jquery', 'underscore', 'sprintf', 'lib/codemirror', 'app/remote-sparql
       setCurrentEndpoint( $.trim( elem.text() ) );
     } );
     $("ul.formats").on( "click", "a", function( e ) {
+      e.preventDefault();
       var elem = $(e.currentTarget);
       setCurrentFormat( elem.data( "value" ), $.trim( elem.text() ) );
     } );

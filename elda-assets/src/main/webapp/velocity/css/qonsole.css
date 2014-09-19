@@ -78,6 +78,34 @@ footer p {
   color: #333;
 }
 
+.qonsole .panel-body {
+  padding: 0;
+}
+
+.qonsole .collapsed i.expand-indicator:before {
+  content: "\f078";
+}
+
+.qonsole i.expand-indicator:before {
+  content: "\f077";
+}
+
+.qonsole .panel-heading {
+  background-color: #e8eaf6;
+}
+
+.qonsole h2.panel-title {
+  font-size: 10pt;
+}
+
+.qonsole h2 {
+  margin-right: 10px;
+}
+
+.qonsole #results-block {
+  margin-top: 10px;
+}
+
 /* Custom buttons */
 
 .btn-custom1, .btn-custom2.active {
