@@ -96,6 +96,15 @@ public class PageMetadataTest
         assertEquals( "http://environment.data.gov.uk/sparql/bwq/query", q.queryEndpoint() );
     }
 
+    @Test
+    public void testProcessorName() {
+        PageMetadata.Processor proc = page.metadata().processor();
+
+        assertEquals( "Elda", proc.name() );
+        assertEquals( "1.2.36-SNAPSHOT", proc.version() );
+        assertEquals( "https://github.com/epimorphics/elda", proc.homePage() );
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

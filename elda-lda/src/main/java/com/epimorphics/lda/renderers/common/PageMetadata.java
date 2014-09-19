@@ -15,10 +15,14 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.vocabularies.*;
+import com.epimorphics.lda.vocabularies.ELDA.COMMON;
+import com.epimorphics.lda.vocabularies.ELDA.DOAP_EXTRAS;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Facade class for providing easier access to the elements of the
@@ -97,6 +101,11 @@ extends ModelWrapper
         return execution().viewingQuery();
     }
 
+    /** @return The processor which generated the resultset */
+    public Processor processor() {
+        return execution().processor();
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
@@ -121,6 +130,10 @@ extends ModelWrapper
             return queryResult( API.viewingResult );
         }
 
+        public Processor processor() {
+            return new Processor( getModelW(), getPropertyValue( API.processor ).asResource() );
+        }
+
         protected QueryResult queryResult( Property queryProperty ) {
             RDFNodeWrapper r = getPropertyValue( queryProperty );
 
@@ -142,6 +155,39 @@ extends ModelWrapper
 
         public String queryEndpoint() {
             return getPropertyValue( SPARQL.endpoint ).getPropertyValue( API.sparqlEndpoint ).getLexicalForm();
+        }
+    }
+
+    /** Encapsulates the processor that generated the result set */
+    public static class Processor
+    extends CommonNodeWrapper
+    {
+        public Processor( ModelWrapper meta, Resource processorRoot ) {
+            super( meta, processorRoot );
+        }
+
+        public String name() {
+            return lookupString( new Property[]{COMMON.software, DOAP_EXTRAS.releaseOf, RDFS.label}, "processor name" );
+        }
+
+        public String homePage() {
+            return lookupString( new Property[]{COMMON.software, DOAP_EXTRAS.releaseOf, DOAP.homepage}, "processor home page" );
+        }
+
+        public String version() {
+            return lookupString( new Property[]{COMMON.software, DOAP.revision}, "processor version" );
+        }
+
+        protected String lookupString( Property[] path, String lookingFor ) {
+            RDFNodeWrapper n = this;
+
+            for (Property p: path) {
+                if (n != null) {
+                    n = n.getPropertyValue( p );
+                }
+            }
+
+            return (n == null) ? (lookingFor + " not found") : n.getLexicalForm();
         }
     }
 }

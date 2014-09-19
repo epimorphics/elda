@@ -38,9 +38,7 @@
 
       #parse( "partials/qonsole.vm" )
 
-      <footer>
-        <p>&copy; Company 2014</p>
-      </footer>
+      #parse( "partials/footer.vm" )
     </div> <!-- /container -->
 
   </body>
