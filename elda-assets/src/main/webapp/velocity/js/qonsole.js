@@ -1,7 +1,21 @@
 /* Copyright (c) 2012-2013 Epimorphics Ltd. Released under Apache License 2.0 http://www.apache.org/licenses/ */
 /* global: define */
 
-define( ['jquery', 'underscore', 'sprintf', 'lib/codemirror', 'app/remote-sparql-service'],
+define( ['jquery',
+         'underscore',
+         'sprintf',
+         'lib/codemirror',
+         'app/remote-sparql-service',
+         'mode/sparql/sparql',
+         'mode/javascript/javascript',
+         'mode/xml/xml',
+         'mode/turtle/turtle',
+         'addon/fold/brace-fold',
+         'addon/fold/comment-fold',
+         'addon/fold/foldcode',
+         'addon/fold/foldgutter',
+         'addon/fold/xml-fold'
+         ],
         function( $, _, sprintf, CodeMirror, RemoteSparqlService ) {
   /* jshint strict: true, undef:true */
   "use strict";
