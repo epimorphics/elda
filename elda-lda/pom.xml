@@ -16,15 +16,27 @@
 
   <repositories>
     <repository>
+      <id>epi-public-s3-snapshot</id>
+      <name>Epimorphics S3 snapshot repository</name>
+      <url>s3://epi-repository/snapshot</url>
       <releases>
-        <enabled>true</enabled>
+        <enabled>false</enabled>
       </releases>
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-      <id>epi-public-repo</id>
-      <name>Epimorphics Public Repository</name>
-      <url>http://repository.epimorphics.com</url>
+    </repository>
+
+    <repository>
+      <id>epi-public-s3-release</id>
+      <name>Epimorphics S3 release repository</name>
+      <url>s3://epi-repository/release</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
   </repositories>
 
@@ -97,7 +109,7 @@
     <dependency>
       <groupId>com.epimorphics</groupId>
       <artifactId>lib</artifactId>
-      <version>0.0.22-SNAPSHOT</version>
+      <version>0.0.22</version>
     </dependency>
     <dependency>
       <groupId>org.jmock</groupId>
@@ -181,5 +193,13 @@
         </plugin>
 
       </plugins>
+
+    <extensions>
+      <extension>
+        <groupId>org.springframework.build.aws</groupId>
+        <artifactId>org.springframework.build.aws.maven</artifactId>
+        <version>3.0.0.RELEASE</version>
+      </extension>
+    </extensions>
   </build>
 </project>
