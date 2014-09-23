@@ -1,6 +1,6 @@
 /** Manage popovers */
 /* global: define */
-define( ['jquery'], function( $ ) {
+define( ['jquery', 'bootstrap'], function( $ ) {
   /* jshint strict: true, undef:true */
   "use strict";
 
