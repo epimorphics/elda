@@ -21,7 +21,7 @@
   #else
     <$elem class="rdf resource $level">
       #itemName( $resource, "h3", "", $hnode )
-      #itemURI( $resource, "h4" )
+      #itemURI( $resource, "h4", "" )
       #itemTypes( $resource )
       #itemVisualExtension( $hnode )
       <div class="row">

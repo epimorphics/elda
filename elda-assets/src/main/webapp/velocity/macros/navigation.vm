@@ -1,12 +1,14 @@
 ## Add a page navigation link, such as first-page, prev-page, etc
 #macro( pageNavigationLink $url $iconClass $title )
-  #set( $disable = "disabled" )
   #if( $url )
-    #set( $disable = "" )
+    <li class="">
+      <a href="$url"><i class="fa $iconClass"></i> $title</a>
+    </li>
+  #else
+    <li class="disabled">
+      <a href="#"><i class="fa $iconClass"></i> $title</a>
+    </li>
   #end
-  <li class="$disable">
-    <a href="$url"><i class="fa $iconClass"></i> $title</a>
-  </li>
 #end
 
 ## Add a page navigation link to change the page size
