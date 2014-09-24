@@ -26,6 +26,7 @@
       <script src="${assets}/js/vendor/jquery.xdomainrequest.js"></script>
     <![endif]-->
 
+    #parse( "partials/head-extensions.vm" )
   </head>
 
   <body>
