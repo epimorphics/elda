@@ -239,28 +239,29 @@ public class DisplayHierarchyNode
         boolean isNumeric = isLiteral && (rdfNode().getValue() instanceof Number);
         Page page = rdfNode().page();
         String param = pathTo().toString();
-        String valueStr = isLiteral ? rdfNode().getLexicalForm() : rdfNode.getName();
+        String paramHTML = pathTo.toHTMLString();
+        String valueStr = "<code class='rdf-value'>" + (isLiteral ? rdfNode().getLexicalForm() : rdfNode.getName()) + "</code>";
 
         if (isNumeric) {
-            links.add( generateLink( "max-" + param, param, valueStr, valueStr, "&le;", "filter-less-than", true, page ));
+            links.add( generateLink( "max-" + param, paramHTML, valueStr, valueStr, "&le;", "filter-less-than", true, page ));
         }
 
         if (isLiteral) {
-            links.add( generateLink( param, param, valueStr, valueStr, "to be", "filter-equals", true, page ));
+            links.add( generateLink( param, paramHTML, valueStr, valueStr, "to be", "filter-equals", true, page ));
         }
         else if (!rdfNode().isAnon()){
             String shortName = shortNameRenderer.lookupURI( rdfNode().getURI() );
             String uriValue = (shortName == null) ? rdfNode().getURI() : shortName;
 
-            links.add( generateLink( param, param, uriValue, valueStr, "to be", "filter-equals", true, page ));
+            links.add( generateLink( param, paramHTML, uriValue, valueStr, "to be", "filter-equals", true, page ));
         }
 
         if (isNumeric) {
-            links.add( generateLink( "min-" + param, param, valueStr, valueStr, "&ge;", "filter-greater-than", true, page ));
+            links.add( generateLink( "min-" + param, paramHTML, valueStr, valueStr, "&ge;", "filter-greater-than", true, page ));
         }
 
-        links.add( generateSortLink( param, "sort sort-asc", true, page ));
-        links.add( generateSortLink( param, "sort sort-desc", false, page ));
+        links.add( generateSortLink( param, paramHTML, "sort sort-asc", true, page ));
+        links.add( generateSortLink( param, paramHTML, "sort sort-desc", false, page ));
 
         return links;
     }
@@ -436,12 +437,13 @@ public class DisplayHierarchyNode
      * the "foo" sort, and vice-versa.
      *
      * @param paramName The name of the parameter to change
+     * @param paramHTML The parameter's name in HTML form
      * @param hint CSS hint
      * @param asc If true, sort ascending
      * @param page The current page object
      * @return The new link
      */
-    protected Link generateSortLink( String paramName, String hint, boolean asc, Page page ) {
+    protected Link generateSortLink( String paramName, String paramHTML, String hint, boolean asc, Page page ) {
         OPERATION op = OPERATION.ADD;
         String linkIcon = "fa-chevron-circle-" + (asc ? "up" : "down");
         EldaURL pageURL = page.pageURL();
@@ -455,7 +457,7 @@ public class DisplayHierarchyNode
             prompt = "remove sorting on: ";
         }
 
-        return new Link( String.format( "<i class='fa %s'></i> %s%s%s", linkIcon, prompt, paramName, asc ? "" : " (descending)"),
+        return new Link( String.format( "<i class='fa %s'></i> %s%s%s", linkIcon, prompt, paramHTML, asc ? "" : " (descending)"),
                          pageURL.withParameter( OPERATION.REMOVE, SORT_PARAM, converseSortOn )
                                 .withParameter( OPERATION.SET, PAGE_PARAM, "0" )
                                 .withParameter( op, SORT_PARAM, sortOn ),

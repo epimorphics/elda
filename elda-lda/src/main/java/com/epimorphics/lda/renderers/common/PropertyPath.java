@@ -10,9 +10,11 @@
 package com.epimorphics.lda.renderers.common;
 
 
+import java.io.StringWriter;
 import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jena.atlas.lib.StrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,6 +120,24 @@ public class PropertyPath
     }
 
     /**
+     * @return A string denoting this path in a form suitable for HTML presentation
+     */
+    public String toHTMLString() {
+        StringWriter buf = new StringWriter();
+        boolean first = true;
+
+        for (String segment: segments) {
+            buf.append( first ? "" : " &raquo; " );
+            buf.append( "<code class='rdf-path-segment'>" );
+            buf.append( tokeniseWords( segment ) );
+            buf.append( "</code>" );
+            first = false;
+        }
+
+        return buf.toString();
+    }
+
+    /**
      * @return The number of segments in the path
      */
     public int size() {
@@ -203,6 +223,31 @@ public class PropertyPath
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Tokenise the input string into words based on camelCase boundaries and hyphen characters.
+     * If the input string is already tokenised into words (determined by whether it contains a
+     * space character or not), return the string unchanged.
+     * @param name The input name to tokenise
+     * @return The input string, with camel-case boundaries, hyphens and underscores replaced by spaces.
+     */
+    protected String tokeniseWords( String name ) {
+        if (name.matches( "[^\\p{Space}]*(((\\p{Lower}|\\p{Digit})(\\p{Upper}))|[-_])[^\\p{Space}]*" )) {
+            String deCamelCased = name.replaceAll( "(\\p{Lower}|\\p{Digit})(\\p{Upper})", "$1-$2" );
+            List<String> correctlyCased = new ArrayList<String>();
+
+            for (String word: deCamelCased.split( "[-_]" )) {
+                if (word.length() > 0) {
+                    correctlyCased.add( word.substring( 0, 1 ).toLowerCase() + word.substring( 1) );
+                }
+            }
+
+            return StrUtils.strjoin( " ", correctlyCased );
+        }
+        else {
+            return name;
         }
     }
 
