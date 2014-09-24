@@ -211,16 +211,6 @@ public class PageTest
     }
 
     @Test
-    public void testEldaLabel() {
-        assertEquals( "Elda 1.2.35-SNAPSHOT", page.eldaLabel() );
-    }
-
-    @Test
-    public void testEldaVersion() {
-        assertEquals( "1.2.35-SNAPSHOT", page.eldaVersion() );
-    }
-
-    @Test
     public void testItems() {
         List<DisplayRdfNode> items = page.items();
 

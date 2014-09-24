@@ -19,12 +19,9 @@ import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.common.EldaURL.URLParameterValue;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.rdfutil.ModelWrapper;
-import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.sparql.vocabulary.DOAP;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Value object representing the page of results returned by Elda's query
@@ -255,28 +252,6 @@ public class Page extends CommonNodeWrapper
         }
 
         return this.varBindingsMap;
-    }
-
-    /**
-     * @return The resource that describes the version of Elda used to generate this page
-     */
-    public com.epimorphics.rdfutil.RDFNodeWrapper eldaProcessor() {
-        return connectedNodes( "api:wasResultOf/api:processor/<http://purl.org/net/opmv/types/common#software>" ).get( 0 );
-    }
-
-    /**
-     * @return The readable label for the version of Elda used to produce this page
-     */
-    public String eldaLabel() {
-        RDFNodeWrapper n = eldaProcessor().getPropertyValue( RDFS.label );
-        return n == null ? null : n.getLexicalForm();
-    }
-
-    /**
-     * @return The version string for the release of Elda used to produce this page
-     */
-    public String eldaVersion() {
-        return eldaProcessor().getPropertyValue( DOAP.revision ).getLexicalForm();
     }
 
     /**
