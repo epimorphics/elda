@@ -64,7 +64,7 @@ public class DisplayHierarchy
         this.shortNameRenderer = snr;
 
         for (DisplayRdfNode item: page.items()) {
-            DisplayHierarchyNode n = new DisplayHierarchyNode( new PropertyPath(), null, item );
+            DisplayHierarchyNode n = new DisplayHierarchyNode( new PropertyPath(), null, item, snr );
             roots.add( n );
         }
     }
@@ -115,11 +115,11 @@ public class DisplayHierarchy
                 DisplayHierarchyNode node = null;
 
                 if (first == null) {
-                    node = new DisplayHierarchyNode( pathTo, parent, context.wrap( childNode ) );
+                    node = new DisplayHierarchyNode( pathTo, parent, context.wrap( childNode ), shortNameRenderer );
                     first = node;
                 }
                 else {
-                    node = new DisplayHierarchyNode( pathTo, null, context.wrap( childNode ) );
+                    node = new DisplayHierarchyNode( pathTo, null, context.wrap( childNode ), shortNameRenderer );
                     first.addSibling( node );
                 }
 

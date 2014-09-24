@@ -78,14 +78,14 @@ public class DisplayHierarchyNodeTest
         Resource root = rm.getModel().getResource( TEST_ROOT_URI );
         DisplayRdfNode dn = new DisplayRdfNode( rm.page(), root );
 
-        dhn = new DisplayHierarchyNode( new PropertyPath(), null, dn );
+        dhn = new DisplayHierarchyNode( new PropertyPath(), null, dn, null );
     }
 
     @Test
     public void testPathTo() {
         PropertyPath fooBar = new PropertyPath( "foo.bar" );
         DisplayHierarchyNode child = new DisplayHierarchyNode( fooBar, dhn,
-                new DisplayRdfNode( rm.page(), ResourceFactory.createPlainLiteral( "foo" ) ) );
+                new DisplayRdfNode( rm.page(), ResourceFactory.createPlainLiteral( "foo" ) ), null );
         assertSame( fooBar, child.pathTo() );
     }
 
@@ -102,7 +102,8 @@ public class DisplayHierarchyNodeTest
         assertTrue( dhn.isRoot() );
 
         DisplayHierarchyNode child = new DisplayHierarchyNode( new PropertyPath(), dhn,
-                                                               new DisplayRdfNode( rm.page(), ResourceFactory.createPlainLiteral( "foo" ) ) );
+                                                               new DisplayRdfNode( rm.page(), ResourceFactory.createPlainLiteral( "foo" ) ),
+                                                               null );
         assertSame( dhn, child.parent() );
         assertFalse( child.isRoot() );
     }
@@ -118,10 +119,10 @@ public class DisplayHierarchyNodeTest
         Resource r1 = ResourceFactory.createResource( "http://example/foo#r1");
         Resource r2 = ResourceFactory.createResource( "http://example/foo#r2");
 
-        DisplayHierarchyNode c0 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), r0 ) );
-        DisplayHierarchyNode c1 = new DisplayHierarchyNode( new PropertyPath(), c0, new DisplayRdfNode( rm.page(), r1 ) );
-        DisplayHierarchyNode c2 = new DisplayHierarchyNode( new PropertyPath(), c1, new DisplayRdfNode( rm.page(), r2 ) );
-        DisplayHierarchyNode c3 = new DisplayHierarchyNode( new PropertyPath(), c1, new DisplayRdfNode( rm.page(), r0 ) );
+        DisplayHierarchyNode c0 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), r0 ), null );
+        DisplayHierarchyNode c1 = new DisplayHierarchyNode( new PropertyPath(), c0, new DisplayRdfNode( rm.page(), r1 ), null );
+        DisplayHierarchyNode c2 = new DisplayHierarchyNode( new PropertyPath(), c1, new DisplayRdfNode( rm.page(), r2 ), null );
+        DisplayHierarchyNode c3 = new DisplayHierarchyNode( new PropertyPath(), c1, new DisplayRdfNode( rm.page(), r0 ), null );
 
         assertFalse( dhn.isLoop() );
         assertFalse( c0.isLoop() );
@@ -143,27 +144,27 @@ public class DisplayHierarchyNodeTest
         assertFalse( dhn.isLeaf( dhc ));
 
         // literal is a leaf
-        DisplayHierarchyNode c0 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), ResourceFactory.createPlainLiteral( "foo" ) ) );
+        DisplayHierarchyNode c0 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), ResourceFactory.createPlainLiteral( "foo" ) ), null );
         assertTrue( c0.isLeaf( dhc ));
 
         // loop is a leaf
         Resource r0 = ResourceFactory.createResource( "http://example/foo#r0");
 
-        DisplayHierarchyNode c1 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), r0 ) );
-        DisplayHierarchyNode c2 = new DisplayHierarchyNode( new PropertyPath(), c1, new DisplayRdfNode( rm.page(), r0 ) );
+        DisplayHierarchyNode c1 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), r0 ), null );
+        DisplayHierarchyNode c2 = new DisplayHierarchyNode( new PropertyPath(), c1, new DisplayRdfNode( rm.page(), r0 ), null );
         assertFalse( c1.isLeaf( dhc ));
         assertTrue( c2.isLeaf( dhc ));
 
         // seen is a leaf
         DisplayHierarchyContext dhc1 = contextFixture( true, "dhc1" );
-        DisplayHierarchyNode c3 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), r0 ) );
+        DisplayHierarchyNode c3 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), r0 ), null );
         assertTrue( c3.isLeaf( dhc1 ));
     }
 
     @Test
     public void testChildren() {
         Resource r0 = ResourceFactory.createResource( "http://example/foo#r0");
-        DisplayHierarchyNode c1 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), r0 ) );
+        DisplayHierarchyNode c1 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), r0 ), null );
 
         assertEquals( 1, dhn.children().size() );
         assertEquals( 0, c1.children().size() );
@@ -175,7 +176,7 @@ public class DisplayHierarchyNodeTest
         assertFalse( dhn.hasSiblings() );
 
         Resource r0 = ResourceFactory.createResource( "http://example/foo#r0");
-        DisplayHierarchyNode c1 = new DisplayHierarchyNode( new PropertyPath(), null, new DisplayRdfNode( rm.page(), r0 ) );
+        DisplayHierarchyNode c1 = new DisplayHierarchyNode( new PropertyPath(), null, new DisplayRdfNode( rm.page(), r0 ), null );
 
         dhn.addSibling( c1 );
         assertEquals( 1, dhn.siblings().size() );
@@ -203,13 +204,13 @@ public class DisplayHierarchyNodeTest
         Property p3 = ResourceFactory.createProperty( ns + "p3" );
 
         Resource r1 = ResourceFactory.createResource( ns+"r1");
-        new DisplayHierarchyNode( dhn.pathTo().append( "p1", p1.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r1 ) );
+        new DisplayHierarchyNode( dhn.pathTo().append( "p1", p1.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r1 ), null );
 
         Resource r2 = ResourceFactory.createResource( ns+"r2");
-        new DisplayHierarchyNode( dhn.pathTo().append( "p2", p2.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r2 ) );
+        new DisplayHierarchyNode( dhn.pathTo().append( "p2", p2.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r2 ), null );
 
         Resource r3 = ResourceFactory.createResource( ns+"r3");
-        new DisplayHierarchyNode( dhn.pathTo().append( "p3", p3.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r3 ) );
+        new DisplayHierarchyNode( dhn.pathTo().append( "p3", p3.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r3 ), null );
 
         assertEquals( r1, dhn.children().get( 0 ).rdfNode().asResource() );
         assertEquals( r2, dhn.children().get( 1 ).rdfNode().asResource() );
@@ -239,13 +240,13 @@ public class DisplayHierarchyNodeTest
         Property p4 = ResourceFactory.createProperty( ns + "p4" );
 
         Resource r1 = ResourceFactory.createResource( ns+"r1");
-        new DisplayHierarchyNode( dhn.pathTo().append( "p1", p1.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r1 ) );
+        new DisplayHierarchyNode( dhn.pathTo().append( "p1", p1.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r1 ), null );
 
         Resource r2 = ResourceFactory.createResource( ns+"r2");
-        new DisplayHierarchyNode( dhn.pathTo().append( "p2", p2.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r2 ) );
+        new DisplayHierarchyNode( dhn.pathTo().append( "p2", p2.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r2 ), null );
 
         Resource r3 = ResourceFactory.createResource( ns+"r3");
-        new DisplayHierarchyNode( dhn.pathTo().append( "p3", p3.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r3 ) );
+        new DisplayHierarchyNode( dhn.pathTo().append( "p3", p3.getURI(), null ), dhn, new DisplayRdfNode( rm.page(), r3 ), null );
 
         assertEquals( r1, dhn.children().get( 0 ).rdfNode().asResource() );
         assertEquals( r2, dhn.children().get( 1 ).rdfNode().asResource() );

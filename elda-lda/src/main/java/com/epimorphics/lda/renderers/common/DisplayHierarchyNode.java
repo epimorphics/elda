@@ -63,14 +63,19 @@ public class DisplayHierarchyNode
     /** List of presentation hints */
     private List<String> hints = new ArrayList<String>();
 
+    /** Short name renderer */
+    private ShortNameRenderer shortNameRenderer;
+
     /***********************************/
     /* Constructors                    */
     /***********************************/
 
-    public DisplayHierarchyNode( PropertyPath pathTo, DisplayHierarchyNode parent, DisplayRdfNode rdfNode ) {
+    public DisplayHierarchyNode( PropertyPath pathTo, DisplayHierarchyNode parent,
+                                 DisplayRdfNode rdfNode, ShortNameRenderer shortNameRenderer ) {
         this.pathTo = pathTo;
         this.parent = parent;
         this.rdfNode = rdfNode;
+        this.shortNameRenderer = shortNameRenderer;
 
         if (parent != null) {
             parent.children().add( this );
@@ -234,7 +239,7 @@ public class DisplayHierarchyNode
         boolean isNumeric = isLiteral && (rdfNode().getValue() instanceof Number);
         Page page = rdfNode().page();
         String param = pathTo().toString();
-        String valueStr = isLiteral ? rdfNode().getLexicalForm() : rdfNode().getName();
+        String valueStr = isLiteral ? rdfNode().getLexicalForm() : rdfNode.getName();
 
         if (isNumeric) {
             links.add( generateLink( "max-" + param, param, valueStr, valueStr, "&le;", "filter-less-than", true, page ));
@@ -244,7 +249,10 @@ public class DisplayHierarchyNode
             links.add( generateLink( param, param, valueStr, valueStr, "to be", "filter-equals", true, page ));
         }
         else if (!rdfNode().isAnon()){
-            links.add( generateLink( param, param, rdfNode.getShortURI(), valueStr, "to be", "filter-equals", true, page ));
+            String shortName = shortNameRenderer.lookupURI( rdfNode().getURI() );
+            String uriValue = (shortName == null) ? rdfNode().getURI() : shortName;
+
+            links.add( generateLink( param, param, uriValue, valueStr, "to be", "filter-equals", true, page ));
         }
 
         if (isNumeric) {
