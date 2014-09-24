@@ -33,6 +33,7 @@ public class DisplayHierarchyNode
 
     public static final String SORT_PARAM = "_sort";
     public static final String PAGE_PARAM = "_page";
+    public static final String SORT_BY_LABELS_FORMAT = "%1$s%2$s.label,%1$s%2$s.prefLabel,%1$s%2$s";
 
     /***********************************/
     /* Static variables                */
@@ -448,8 +449,12 @@ public class DisplayHierarchyNode
         String linkIcon = "fa-chevron-circle-" + (asc ? "up" : "down");
         EldaURL pageURL = page.pageURL();
         String prompt = "sort by ";
-        String sortOn =         (asc ? "" : "-") + paramName;
-        String converseSortOn = (asc ? "-" : "") + paramName;
+
+        String sDir = asc ? "" : "-";
+        String sortOn = String.format( SORT_BY_LABELS_FORMAT, sDir, paramName );
+
+        sDir = asc ? "-" : "";
+        String converseSortOn = String.format( SORT_BY_LABELS_FORMAT, sDir, paramName );
 
         if (pageURL.hasParameter( SORT_PARAM, sortOn )) {
             op = OPERATION.REMOVE;

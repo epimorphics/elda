@@ -113,8 +113,10 @@ public class EldaURL
             URLParameterValue v = entry.getValue();
 
             if (paramName.equals( p )) {
-                v = v.perform( op, paramValue );
-                acted = true;
+                for (String pValue: StringUtils.split( paramValue, "," )) {
+                    v = v.perform( op, pValue );
+                    acted = true;
+                }
             }
 
             updateParameters( revisedParameters, p, v );
@@ -131,7 +133,22 @@ public class EldaURL
     /** @return True if the URL already has the given parameter/value pair */
     public boolean hasParameter( String paramName, String paramValue ) {
         URLParameterValue v = getParameter( paramName );
-        return (v == null) ? false : v.contains( paramValue );
+        boolean contains = false;
+
+        if (v != null) {
+            if (paramValue.contains( "," )) {
+                contains = true;
+
+                for (String pValue : StringUtils.split( paramValue, "," )) {
+                    contains = contains && v.contains( pValue );
+                }
+            }
+            else {
+                contains = v.contains( paramValue );
+            }
+        }
+
+        return contains;
     }
 
     /** @return The value of the given parameter to the URL, or null */

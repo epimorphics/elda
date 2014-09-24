@@ -119,6 +119,22 @@ public class EldaURLTest
     }
 
     @Test
+    public void testAddParameter5() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar?a=c&e=f" );
+        String newEu = eu.withParameter( EldaURL.OPERATION.ADD, "a", "b,d" ).toString();
+        assertTrue( "http://foo.bar.com/fubar?a=c,b,d&e=f".equals( newEu ) ||
+                    "http://foo.bar.com/fubar?e=f&a=c,b,d".equals( newEu ));
+    }
+
+    @Test
+    public void testAddParameter6() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar?a=c&e=f" );
+        String newEu = eu.withParameter( EldaURL.OPERATION.ADD, "a", "b,c" ).toString();
+        assertTrue( "http://foo.bar.com/fubar?a=c,b&e=f".equals( newEu ) ||
+                    "http://foo.bar.com/fubar?e=f&a=c,b".equals( newEu ));
+    }
+
+    @Test
     public void testRemoveParameter0() {
         EldaURL eu = new EldaURL( "http://foo.bar.com/fubar" );
         String newEu = eu.withParameter( EldaURL.OPERATION.REMOVE, "a", "b" ).toString();
@@ -161,6 +177,29 @@ public class EldaURLTest
                     "http://foo.bar.com/fubar?e=f&a=d".equals( newEu ));
     }
 
+    @Test
+    public void testRemoveParameter6() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar?a=c,d,cc&e=f" );
+        String newEu = eu.withParameter( EldaURL.OPERATION.REMOVE, "a", "c,cc" ).toString();
+        assertTrue( "http://foo.bar.com/fubar?a=d&e=f".equals( newEu ) ||
+                    "http://foo.bar.com/fubar?e=f&a=d".equals( newEu ));
+    }
+
+    @Test
+    public void testRemoveParameter7() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar?a=c,d&e=f" );
+        String newEu = eu.withParameter( EldaURL.OPERATION.REMOVE, "a", "g,c" ).toString();
+        assertTrue( "http://foo.bar.com/fubar?a=d&e=f".equals( newEu ) ||
+                    "http://foo.bar.com/fubar?e=f&a=d".equals( newEu ));
+    }
+
+    @Test
+    public void testRemoveParameter8() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar?a=c,d&e=f" );
+        String newEu = eu.withParameter( EldaURL.OPERATION.REMOVE, "a", "d,c" ).toString();
+        assertTrue( "http://foo.bar.com/fubar?e=f".equals( newEu ) );
+    }
+
     public void testSetParameter0Str() {
         EldaURL eu = new EldaURL( "http://foo.bar.com/fubar" );
         assertEquals( "http://foo.bar.com/fubar?a=b", eu.withParameter( "SET", "a", "b" ).toString() );
@@ -200,6 +239,14 @@ public class EldaURLTest
         assertTrue( eu.hasParameter( "a", "b" ));
         assertTrue( eu.hasParameter( "a", "c" ));
         assertFalse( eu.hasParameter( "a", "d" ));
+    }
+
+    @Test
+    public void testHasParameter4() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar?a=b,c" );
+        assertTrue( eu.hasParameter( "a", "b,c" ));
+        assertTrue( eu.hasParameter( "a", "c,b" ));
+        assertFalse( eu.hasParameter( "a", "b,d" ));
     }
 
     /***********************************/
