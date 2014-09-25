@@ -156,6 +156,25 @@ public class EldaURL
         return parseQueryParameters().get( paramName );
     }
 
+    /**
+     * Return a list of URL parameters, possibly excluding those internal
+     * use parameters (i.e. that start with an underscore character).
+     * @param external If true, remove internal-use parameters
+     * @return A non-null but possibly empty list of current URL parameter values
+     */
+    public List<NamedParameterValue> getParameters( boolean external ) {
+        List<NamedParameterValue> params = new ArrayList<EldaURL.NamedParameterValue>();
+
+        for (Map.Entry<String, URLParameterValue> entry: parseQueryParameters().entrySet()) {
+            if (!(external && isInternalParameterName( entry.getKey() ))) {
+                params.add( new NamedParameterValue( entry.getKey(), entry.getValue() ) );
+            }
+        }
+
+        Collections.sort( params );
+        return params;
+    }
+
     @Override
     public String toString() {
         return uri.toString();
@@ -232,6 +251,10 @@ public class EldaURL
         }
     }
 
+    /** @return True if the parameter name denotes an internal name, starting with an underscore */
+    protected boolean isInternalParameterName( String name ) {
+        return name.startsWith( "_" );
+    }
 
 
     /***********************************/
@@ -307,6 +330,34 @@ public class EldaURL
         @Override
         public String toString() {
             return StringUtils.join( values, "," );
+        }
+    }
+
+
+    /** A pair of parameter name and value */
+    public static class NamedParameterValue
+    extends URLParameterValue
+    implements Comparable<NamedParameterValue>
+    {
+        private String name;
+
+        public NamedParameterValue( String name, String values ) {
+            super( values );
+            this.name = name;
+        }
+
+        public NamedParameterValue( String name, URLParameterValue value ) {
+            super( value );
+            this.name = name;
+        }
+
+        public String name() {
+            return this.name;
+        }
+
+        @Override
+        public int compareTo( NamedParameterValue o ) {
+            return name().compareTo( o.name() );
         }
     }
 }

@@ -14,6 +14,7 @@ import static org.junit.Assert.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -247,6 +248,57 @@ public class EldaURLTest
         assertTrue( eu.hasParameter( "a", "b,c" ));
         assertTrue( eu.hasParameter( "a", "c,b" ));
         assertFalse( eu.hasParameter( "a", "b,d" ));
+    }
+
+    @Test
+    public void testGetParameters0() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar" );
+        List<EldaURL.NamedParameterValue> ps = eu.getParameters( true );
+        assertTrue( ps.isEmpty() );
+        ps = eu.getParameters( false );
+        assertTrue( ps.isEmpty() );
+    }
+
+    @Test
+    public void testGetParameters1() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar?a=b" );
+        List<EldaURL.NamedParameterValue> ps = eu.getParameters( true );
+        assertEquals( 1, ps.size() );
+        assertEquals( "a", ps.get( 0 ).name() );
+        assertEquals( "b", ps.get( 0 ).toString() );
+
+        ps = eu.getParameters( false );
+        assertEquals( 1, ps.size() );
+        assertEquals( "a", ps.get( 0 ).name() );
+        assertEquals( "b", ps.get( 0 ).toString() );
+    }
+
+    @Test
+    public void testGetParameters2() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar?_a=b" );
+        List<EldaURL.NamedParameterValue> ps = eu.getParameters( true );
+        assertEquals( 0, ps.size() );
+
+        ps = eu.getParameters( false );
+        assertEquals( 1, ps.size() );
+        assertEquals( "_a", ps.get( 0 ).name() );
+        assertEquals( "b", ps.get( 0 ).toString() );
+    }
+
+    @Test
+    public void testGetParameters3() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fubar?_a=b&c=d,e" );
+        List<EldaURL.NamedParameterValue> ps = eu.getParameters( true );
+        assertEquals( 1, ps.size() );
+        assertEquals( "c", ps.get( 0 ).name() );
+        assertEquals( "d,e", ps.get( 0 ).toString() );
+
+        ps = eu.getParameters( false );
+        assertEquals( 2, ps.size() );
+        assertEquals( "_a", ps.get( 0 ).name() );
+        assertEquals( "b", ps.get( 0 ).toString() );
+        assertEquals( "c", ps.get( 1 ).name() );
+        assertEquals( "d,e", ps.get( 1 ).toString() );
     }
 
     /***********************************/
