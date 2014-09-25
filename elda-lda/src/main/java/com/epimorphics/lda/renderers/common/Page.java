@@ -9,8 +9,10 @@
 
 package com.epimorphics.lda.renderers.common;
 
+import java.io.StringWriter;
 import java.util.*;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,10 +65,13 @@ public class Page extends CommonNodeWrapper
     /***********************************/
 
     /**
-     * Construct a new page object corresponding to the <code>root</code>
-     * object in model <code>mw</code>.
-     * @param mw A wrapper around the model containing the results from the API
-     * @param root The root resource of this page
+     * Construct a new page object corresponding to the <code>root</code> object
+     * in model <code>mw</code>.
+     *
+     * @param mw
+     *            A wrapper around the model containing the results from the API
+     * @param root
+     *            The root resource of this page
      */
     public Page( ModelWrapper mw, Resource root ) {
         super( mw, root );
@@ -77,8 +82,9 @@ public class Page extends CommonNodeWrapper
     /***********************************/
 
     /**
-     * Initialise the short-name renderer that this page has access to, basing it on an existing
-     * short name service
+     * Initialise the short-name renderer that this page has access to, basing
+     * it on an existing short name service
+     *
      * @param sns
      */
     public void initialiseShortNameRenderer( ShortnameService sns ) {
@@ -98,15 +104,16 @@ public class Page extends CommonNodeWrapper
     }
 
     /**
-     * @return True if the page denotes a single item, or false for a list endpoint
+     * @return True if the page denotes a single item, or false for a list
+     *         endpoint
      */
     public boolean isItemEndpoint() {
         return asResource().hasProperty( FOAF.primaryTopic );
     }
 
     /**
-     * @return The current page number, starting from zero. Return -1 if this page
-     * does not have a specified page number
+     * @return The current page number, starting from zero. Return -1 if this
+     *         page does not have a specified page number
      */
     public int pageNumber() {
         return getInt( API.page, NO_VALUE );
@@ -114,15 +121,15 @@ public class Page extends CommonNodeWrapper
 
     /**
      * @return The number of items per page. Return -1 if this page does not
-     * specify the number of items per page
+     *         specify the number of items per page
      */
     public int itemsPerPage() {
         return getInt( OpenSearch.itemsPerPage, NO_VALUE );
     }
 
     /**
-     * @return The starting index for this page, starting from one. Return -1
-     * if this page does not specify the starting index.
+     * @return The starting index for this page, starting from one. Return -1 if
+     *         this page does not specify the starting index.
      */
     public int startIndex() {
         return getInt( OpenSearch.startIndex, NO_VALUE );
@@ -179,16 +186,12 @@ public class Page extends CommonNodeWrapper
     }
 
     /**
-     * @return True if this page of results has at least one element of related page
-     * data
+     * @return True if this page of results has at least one element of related
+     *         page data
      */
     public boolean hasPageData() {
-        return pageNumber() != NO_VALUE ||
-               itemsPerPage() != NO_VALUE ||
-               firstPage() != null ||
-               lastPage() != null ||
-               nextPage() != null ||
-               prevPage() != null;
+        return pageNumber() != NO_VALUE || itemsPerPage() != NO_VALUE || firstPage() != null || lastPage() != null
+                || nextPage() != null || prevPage() != null;
     }
 
     /**
@@ -197,7 +200,7 @@ public class Page extends CommonNodeWrapper
     public List<PageFormat> formats() {
         List<PageFormat> pfs = new ArrayList<PageFormat>();
 
-        for (com.epimorphics.rdfutil.RDFNodeWrapper n: listPropertyValues( DCTerms.hasFormat )) {
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n : listPropertyValues( DCTerms.hasFormat )) {
             pfs.add( new PageFormat( this, n.asResource() ) );
         }
 
@@ -212,7 +215,7 @@ public class Page extends CommonNodeWrapper
     public List<EldaView> views() {
         List<EldaView> vs = new ArrayList<EldaView>();
 
-        for (com.epimorphics.rdfutil.RDFNodeWrapper n: listPropertyValues( DCTerms.hasVersion )) {
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n : listPropertyValues( DCTerms.hasVersion )) {
             vs.add( new EldaView( this, n.asResource() ) );
         }
 
@@ -222,13 +225,15 @@ public class Page extends CommonNodeWrapper
     }
 
     /**
-     * Return a list of the term bindings, which associate a short name with a resource.
+     * Return a list of the term bindings, which associate a short name with a
+     * resource.
+     *
      * @return A list of the term bindings defined on this page
      */
     public List<Binding<Resource>> termBindings() {
         List<Binding<Resource>> bindings = new ArrayList<Binding<Resource>>();
 
-        for (com.epimorphics.rdfutil.RDFNodeWrapper n: connectedNodes( "api:wasResultOf/api:termBinding" )) {
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n : connectedNodes( "api:wasResultOf/api:termBinding" )) {
             String label = n.getPropertyValue( API.label ).getLexicalForm();
             Resource res = n.getPropertyValue( API.property ).asResource();
 
@@ -239,15 +244,17 @@ public class Page extends CommonNodeWrapper
     }
 
     /**
-     * Return a list of the variable bindings, which associate a variable name with a textual value
+     * Return a list of the variable bindings, which associate a variable name
+     * with a textual value
+     *
      * @return A list of the variable bindings
      */
     public List<Binding<String>> varBindings() {
         List<Binding<String>> bindings = new ArrayList<Binding<String>>();
 
-        for (com.epimorphics.rdfutil.RDFNodeWrapper n: connectedNodes( "api:wasResultOf/api:variableBinding" )) {
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n : connectedNodes( "api:wasResultOf/api:variableBinding" )) {
             String label = n.getPropertyValue( API.label ).getLexicalForm();
-            String value = n.getPropertyValue( API.value).getLexicalForm();
+            String value = n.getPropertyValue( API.value ).getLexicalForm();
 
             bindings.add( new Binding<String>( label, value ) );
         }
@@ -258,11 +265,11 @@ public class Page extends CommonNodeWrapper
     /**
      * @return The {@link #varBindings()} as a map. Cached for performance.
      */
-    public Map<String,String> varBindingsMap() {
+    public Map<String, String> varBindingsMap() {
         if (this.varBindingsMap == null) {
             this.varBindingsMap = new HashMap<String, String>();
 
-            for (Binding<String> binding: varBindings()) {
+            for (Binding<String> binding : varBindings()) {
                 this.varBindingsMap.put( binding.label(), binding.value() );
             }
         }
@@ -271,7 +278,8 @@ public class Page extends CommonNodeWrapper
     }
 
     /**
-     * @return A list of the items on this page, as a list of {@link DisplayRdfNode}
+     * @return A list of the items on this page, as a list of
+     *         {@link DisplayRdfNode}
      */
     public List<DisplayRdfNode> items() {
         List<DisplayRdfNode> items = new ArrayList<DisplayRdfNode>();
@@ -281,7 +289,7 @@ public class Page extends CommonNodeWrapper
         }
         else {
             RDFList itemList = getPropertyValue( API.items ).asResource().as( RDFList.class );
-            for (RDFNode n: itemList.asJavaList()) {
+            for (RDFNode n : itemList.asJavaList()) {
                 items.add( new DisplayRdfNode( this, n.asResource() ) );
             }
         }
@@ -290,8 +298,9 @@ public class Page extends CommonNodeWrapper
     }
 
     /**
-     * Return the current view, if we can determine what it is. If we can't tell from
-     * the given metadata, return the basic view.
+     * Return the current view, if we can determine what it is. If we can't tell
+     * from the given metadata, return the basic view.
+     *
      * @return The currently selected view
      */
     public EldaView currentView() {
@@ -305,9 +314,13 @@ public class Page extends CommonNodeWrapper
 
     /**
      * Return the view that has the given name
-     * @param viewName The name of the view to look for
-     * @return An {@link EldaView} object that has the name <code>viewName</code>
-     * @exception EldaException if there is no such view
+     *
+     * @param viewName
+     *            The name of the view to look for
+     * @return An {@link EldaView} object that has the name
+     *         <code>viewName</code>
+     * @exception EldaException
+     *                if there is no such view
      */
     public EldaView findViewByName( String viewName ) {
         EldaView view = null;
@@ -344,11 +357,13 @@ public class Page extends CommonNodeWrapper
     }
 
     /**
-     * Return a list of all of the property paths that are explicitly defined for this
-     * page. These will either be from the <code>api:properties</code> on the view specification,
-     * or the <code>_properties</code> variable, or both.
+     * Return a list of all of the property paths that are explicitly defined
+     * for this page. These will either be from the <code>api:properties</code>
+     * on the view specification, or the <code>_properties</code> variable, or
+     * both.
      *
-     * @return A list of the property paths that are explicitly included in the current page.
+     * @return A list of the property paths that are explicitly included in the
+     *         current page.
      */
     public List<PropertyPath> currentPropertyPaths() {
         List<PropertyPath> paths = new ArrayList<PropertyPath>();
@@ -361,11 +376,12 @@ public class Page extends CommonNodeWrapper
 
     /**
      * Synthesise an informative title for this page
+     *
      * @return A displayable page title
      */
     public String pageTitle() {
         EldaURL url = new EldaURL( getURI() );
-        URLParameterValue _page = url.getParameter( DisplayHierarchyNode.PAGE_PARAM );
+        URLParameterValue _page = url.getParameter( QueryParameter._PAGE );
         String pageNo = (_page == null) ? "0" : _page.toString();
         if (pageNo.equals( "" )) {
             pageNo = "0";
@@ -382,28 +398,31 @@ public class Page extends CommonNodeWrapper
     }
 
     /**
-     * @return True if at least one item on this page passes the <code>hasAllProperties</code>
-     * test with the given properties
+     * @return True if at least one item on this page passes the
+     *         <code>hasAllProperties</code> test with the given properties
      */
     public boolean itemHasAllProperties( List<Object> properties ) {
         return itemHasAllProperties( properties.toArray() );
     }
 
     /**
-     * @return True if at least one item on this page passes the <code>hasAllProperties</code>
-     * test with the given properties
+     * @return True if at least one item on this page passes the
+     *         <code>hasAllProperties</code> test with the given properties
      */
     public boolean itemHasAllProperties( Object... properties ) {
         boolean atLeastOneItem = false;
 
-        for (DisplayRdfNode item: items()) {
+        for (DisplayRdfNode item : items()) {
             atLeastOneItem = atLeastOneItem || item.hasAllProperties( properties );
         }
 
         return atLeastOneItem;
     }
 
-    /** @return A list of all resources in the current results model which each have all of the given properties */
+    /**
+     * @return A list of all resources in the current results model which each
+     *         have all of the given properties
+     */
     public List<DisplayRdfNode> resourcesWithAllProperties( List<Object> properties ) {
         List<DisplayRdfNode> rs = new ArrayList<DisplayRdfNode>();
 
@@ -413,11 +432,11 @@ public class Page extends CommonNodeWrapper
             List<Resource> candidates = getModelW().getModel().listSubjectsWithProperty( p ).toList();
 
             // test the remaining properties
-            for (Object p1: properties) {
+            for (Object p1 : properties) {
                 List<Resource> checked = new ArrayList<Resource>();
                 Property pp1 = toProperty( p1 );
 
-                for (Resource cand: candidates) {
+                for (Resource cand : candidates) {
                     if (cand.hasProperty( pp1 )) {
                         checked.add( cand );
                     }
@@ -426,7 +445,7 @@ public class Page extends CommonNodeWrapper
                 candidates = checked;
             }
 
-            for (Resource cand: candidates) {
+            for (Resource cand : candidates) {
                 rs.add( new DisplayRdfNode( this, cand ) );
             }
         }
@@ -434,20 +453,63 @@ public class Page extends CommonNodeWrapper
         return rs;
     }
 
-    /** @return A list of links to pages that remove one of the currently active filters */
+    /**
+     * @return A list of links to pages that remove one of the currently active
+     *         filters
+     */
     public List<Link> filterRemovalLinks() {
         List<Link> links = new ArrayList<Link>();
         EldaURL eu = pageURL();
 
-        for (NamedParameterValue p: eu.getParameters( true )) {
+        for (NamedParameterValue p : eu.getParameters( true )) {
             String filterPath = p.name();
             String filterValue = p.toString();
             RDFNodeWrapper n = new CommonNodeWrapper( getModelW(), RDFUtil.asRDFNode( filterValue ) );
 
-
             if (shortNameRenderer().isKnownShortnamePath( filterPath )) {
                 links.add( createRemovalLink( eu, p.name(), p.name(), filterValue, n.getName() ) );
             }
+        }
+
+        return links;
+    }
+
+    /**
+     * @return A list of links to pages that remove one of the currently active
+     *         sorts
+     */
+    public List<Link> sortRemovalLinks() {
+        List<Link> links = new ArrayList<Link>();
+        EldaURL eu = pageURL();
+
+        URLParameterValue sorts = eu.getParameter( QueryParameter._SORT );
+
+        if (sorts != null) {
+            for (String sortOn : sorts.values()) {
+                boolean asc = true;
+                String path = sortOn;
+                if (sortOn.startsWith( "-" )) {
+                    asc = false;
+                    path = sortOn.substring( 1 );
+                }
+
+                StringWriter buf = new StringWriter();
+                String sep = "";
+
+                for (String p: StringUtils.split( path, "." )) {
+                    String uri = shortNameRenderer().expand( p );
+                    RDFNodeWrapper n = new CommonNodeWrapper( getModelW(), RDFUtil.asRDFNode( uri ) );
+                    buf.append( sep );
+                    buf.append( n.getName() );
+                    sep = " &raquo; ";
+                }
+
+                buf.append( asc ? "" : " (descending)" );
+
+                links.add( createRemovalLink( eu, QueryParameter._SORT, "sort by", sortOn,
+                                              buf.toString() ) );
+            }
+
         }
 
         return links;
@@ -458,15 +520,15 @@ public class Page extends CommonNodeWrapper
     /***********************************/
 
     /**
-     * @return A list of the property paths that were defined via the query parameter
-     * _properties
+     * @return A list of the property paths that were defined via the query
+     *         parameter _properties
      */
     protected List<PropertyPath> queryParamPropertyPaths() {
-        List <PropertyPath> paths = new ArrayList<PropertyPath>();
+        List<PropertyPath> paths = new ArrayList<PropertyPath>();
 
         if (varBindingsMap.containsKey( QueryParameter._PROPERTIES )) {
             String props = varBindingsMap.get( QueryParameter._PROPERTIES );
-            for (String path: props.split( "," )) {
+            for (String path : props.split( "," )) {
                 if (path.length() > 0) {
                     paths.add( new PropertyPath( path ) );
                 }
@@ -477,13 +539,13 @@ public class Page extends CommonNodeWrapper
     }
 
     /** @return A link for removing a filter or sort selection */
-    protected Link createRemovalLink( EldaURL pageURL, String paramName, String paramHTML, String paramValue, String paramValueHTML ) {
+    protected Link createRemovalLink( EldaURL pageURL, String paramName, String paramHTML, String paramValue,
+            String paramValueHTML ) {
         OPERATION op = OPERATION.REMOVE;
         String linkIcon = "fa-minus-circle";
 
         return new Link( String.format( "<i class='fa %s'></i> %s %s", linkIcon, paramHTML, paramValueHTML ),
-                         pageURL.withParameter( op, paramName, paramValue ),
-                         "remove-link" );
+                pageURL.withParameter( op, paramName, paramValue ), "remove-link" );
     }
 
     /***********************************/
@@ -491,4 +553,3 @@ public class Page extends CommonNodeWrapper
     /***********************************/
 
 }
-

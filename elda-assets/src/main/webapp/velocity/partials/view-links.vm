@@ -7,12 +7,7 @@
       #viewLink( $view )
     #end
 
-    #set( $removalLinks = $page.filterRemovalLinks() )
-    #if( !$removalLinks.isEmpty() )
-      <li role="presentation" class="dropdown-header">Remove current filter:</li>
-      #foreach( $link in $removalLinks )
-        #removalLink( $link )
-      #end
-    #end
+    #removalLinksSection( $page.filterRemovalLinks(), "Remove current filter:" )
+    #removalLinksSection( $page.sortRemovalLinks(), "Remove current sort:" )
   </ul>
 </li>

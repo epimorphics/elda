@@ -14,11 +14,13 @@ import java.util.*;
 
 import org.apache.jena.atlas.lib.StrUtils;
 
+import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.common.DisplayHierarchy.DisplayHierarchyContext;
 import com.epimorphics.lda.renderers.common.EldaURL.OPERATION;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.epimorphics.rdfutil.RDFUtil;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Statement;
 
 
 /**
@@ -31,9 +33,9 @@ public class DisplayHierarchyNode
     /* Constants                       */
     /***********************************/
 
-    public static final String SORT_PARAM = "_sort";
-    public static final String PAGE_PARAM = "_page";
-    public static final String SORT_BY_LABELS_FORMAT = "%1$s%2$s.label,%1$s%2$s.prefLabel,%1$s%2$s";
+    // commented out sorting by labels, see discussion on issue #90
+//    public static final String SORT_BY_LABELS_FORMAT = "%1$s%2$s.label,%1$s%2$s.prefLabel,%1$s%2$s";
+    public static final String SORT_BY_FORMAT = "%1$s%2$s";
 
     /***********************************/
     /* Static variables                */
@@ -451,21 +453,21 @@ public class DisplayHierarchyNode
         String prompt = "sort by ";
 
         String sDir = asc ? "" : "-";
-        String sortOn = String.format( SORT_BY_LABELS_FORMAT, sDir, paramName );
+        String sortOn = String.format( SORT_BY_FORMAT, sDir, paramName );
 
         sDir = asc ? "-" : "";
-        String converseSortOn = String.format( SORT_BY_LABELS_FORMAT, sDir, paramName );
+        String converseSortOn = String.format( SORT_BY_FORMAT, sDir, paramName );
 
-        if (pageURL.hasParameter( SORT_PARAM, sortOn )) {
+        if (pageURL.hasParameter( QueryParameter._SORT, sortOn )) {
             op = OPERATION.REMOVE;
             linkIcon = "fa-minus-circle";
             prompt = "remove sorting on: ";
         }
 
         return new Link( String.format( "<i class='fa %s'></i> %s%s%s", linkIcon, prompt, paramHTML, asc ? "" : " (descending)"),
-                         pageURL.withParameter( OPERATION.REMOVE, SORT_PARAM, converseSortOn )
-                                .withParameter( OPERATION.SET, PAGE_PARAM, "0" )
-                                .withParameter( op, SORT_PARAM, sortOn ),
+                         pageURL.withParameter( OPERATION.REMOVE, QueryParameter._SORT, converseSortOn )
+                                .withParameter( OPERATION.SET, QueryParameter._PAGE, "0" )
+                                .withParameter( op, QueryParameter._SORT, sortOn ),
                          hint );
     }
 

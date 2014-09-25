@@ -38,7 +38,12 @@
   </li>
 #end
 
-## Add a filter removal link
-#macro( removalLink $link )
-  $link.toHTMLString( "li" )
+## Add a section of removal links
+#macro( removalLinksSection $links $title )
+  #if( !$links.isEmpty() )
+    <li role="presentation" class="dropdown-header">$title</li>
+    #foreach( $link in $links )
+      $link.toHTMLString( "li" )
+    #end
+  #end
 #end

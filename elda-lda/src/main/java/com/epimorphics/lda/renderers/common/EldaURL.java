@@ -327,6 +327,11 @@ public class EldaURL
             return values.contains( value );
         }
 
+        /** @return A list of the values this parameter value object denotes */
+        public List<String> values() {
+            return values;
+        }
+
         @Override
         public String toString() {
             return StringUtils.join( values, "," );
