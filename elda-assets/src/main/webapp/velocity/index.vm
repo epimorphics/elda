@@ -35,9 +35,9 @@
     <div class="container">
       #parse( "partials/item-setup.vm")
 
-      ##parse( "partials/debug-context.vm" )
-
       #parse( "partials/qonsole.vm" )
+
+      #parse( "partials/debug-context.vm" )
 
       #parse( "partials/footer.vm" )
     </div> <!-- /container -->

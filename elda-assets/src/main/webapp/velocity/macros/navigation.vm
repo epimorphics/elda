@@ -28,7 +28,7 @@
 #end
 
 ## Add a view link
-#macro( viewLink $ivew )
+#macro( viewLink $view )
   #set( $disable = "" )
   #if( $view.viewName().equals( $_view.spelling() ) )
     #set( $disable = "disabled" )
@@ -36,4 +36,9 @@
   <li class="$disable">
     <a href="$view.getURI()">$view.viewName()</a>
   </li>
+#end
+
+## Add a filter removal link
+#macro( removalLink $link )
+  $link.toHTMLString( "li" )
 #end
