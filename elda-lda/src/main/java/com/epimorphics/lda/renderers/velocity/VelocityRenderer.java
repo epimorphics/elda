@@ -470,8 +470,8 @@ implements Renderer
          * @return The display hierarchy
          */
         protected DisplayHierarchy initialiseHierarchy( Page page ) {
-            ShortNameRenderer snr = new ShortNameRenderer( vr.shortNameService(), page.termBindings() );
-            DisplayHierarchy dh = new DisplayHierarchy( page, snr );
+            page.initialiseShortNameRenderer( vr.shortNameService );
+            DisplayHierarchy dh = new DisplayHierarchy( page );
             dh.expand();
             return dh;
         }

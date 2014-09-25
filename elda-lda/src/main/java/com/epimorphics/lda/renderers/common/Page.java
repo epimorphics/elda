@@ -16,9 +16,10 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.QueryParameter;
-import com.epimorphics.lda.renderers.common.EldaURL.URLParameterValue;
+import com.epimorphics.lda.renderers.common.EldaURL.*;
+import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.*;
-import com.epimorphics.rdfutil.ModelWrapper;
+import com.epimorphics.rdfutil.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
@@ -54,6 +55,9 @@ public class Page extends CommonNodeWrapper
     /** Cached var bindings */
     private Map<String, String> varBindingsMap;
 
+    /** Reference to short-name rendering service */
+    private ShortNameRenderer shortNameRenderer;
+
     /***********************************/
     /* Constructors                    */
     /***********************************/
@@ -72,8 +76,20 @@ public class Page extends CommonNodeWrapper
     /* External signature methods      */
     /***********************************/
 
-    public Page getPage() {
-        return this;
+    /**
+     * Initialise the short-name renderer that this page has access to, basing it on an existing
+     * short name service
+     * @param sns
+     */
+    public void initialiseShortNameRenderer( ShortnameService sns ) {
+        if (shortNameRenderer == null) {
+            shortNameRenderer = new ShortNameRenderer( sns, termBindings() );
+        }
+    }
+
+    /** @return The short name renderer for this page */
+    public ShortNameRenderer shortNameRenderer() {
+        return shortNameRenderer;
     }
 
     /** @return The page URL in a form that supports generating related URLs */
@@ -418,6 +434,25 @@ public class Page extends CommonNodeWrapper
         return rs;
     }
 
+    /** @return A list of links to pages that remove one of the currently active filters */
+    public List<Link> filterRemovalLinks() {
+        List<Link> links = new ArrayList<Link>();
+        EldaURL eu = pageURL();
+
+        for (NamedParameterValue p: eu.getParameters( true )) {
+            String filterPath = p.name();
+            String filterValue = p.toString();
+            RDFNodeWrapper n = new CommonNodeWrapper( getModelW(), RDFUtil.asRDFNode( filterValue ) );
+
+
+            if (shortNameRenderer().isKnownShortnamePath( filterPath )) {
+                links.add( createRemovalLink( eu, p.name(), p.name(), filterValue, n.getName() ) );
+            }
+        }
+
+        return links;
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
@@ -439,6 +474,16 @@ public class Page extends CommonNodeWrapper
         }
 
         return paths;
+    }
+
+    /** @return A link for removing a filter or sort selection */
+    protected Link createRemovalLink( EldaURL pageURL, String paramName, String paramHTML, String paramValue, String paramValueHTML ) {
+        OPERATION op = OPERATION.REMOVE;
+        String linkIcon = "fa-minus-circle";
+
+        return new Link( String.format( "<i class='fa %s'></i> %s %s", linkIcon, paramHTML, paramValueHTML ),
+                         pageURL.withParameter( op, paramName, paramValue ),
+                         "remove-link" );
     }
 
     /***********************************/

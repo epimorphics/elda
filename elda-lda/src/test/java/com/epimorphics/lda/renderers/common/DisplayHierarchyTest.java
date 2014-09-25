@@ -68,7 +68,8 @@ public class DisplayHierarchyTest
     @Before
     public void before() {
         ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
-        dh = new DisplayHierarchy( rm.page(), shortNameRendererFixture( rm ) );
+
+        dh = new DisplayHierarchy( rm.page() );
     }
 
     @Test
@@ -90,10 +91,6 @@ public class DisplayHierarchyTest
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
-
-    private ShortNameRenderer shortNameRendererFixture( ResultsModel rm ) {
-        return new ShortNameRenderer( null, rm.page().termBindings() );
-    }
 
     /***********************************/
     /* Inner class definitions         */

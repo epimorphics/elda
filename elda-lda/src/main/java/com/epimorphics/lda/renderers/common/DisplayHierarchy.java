@@ -45,9 +45,6 @@ public class DisplayHierarchy
     /** The page we are creating the hierarchy for */
     private Page page;
 
-    /** The current short name renderer */
-    private ShortNameRenderer shortNameRenderer;
-
     /** The roots of the hierarchy */
     private List<DisplayHierarchyNode> roots = new ArrayList<DisplayHierarchyNode>();
 
@@ -59,12 +56,11 @@ public class DisplayHierarchy
      * Construct a new display hierarchy for the given page
      * @param page
      */
-    public DisplayHierarchy( Page page,  ShortNameRenderer snr ) {
+    public DisplayHierarchy( Page page ) {
         this.page = page;
-        this.shortNameRenderer = snr;
 
         for (DisplayRdfNode item: page.items()) {
-            DisplayHierarchyNode n = new DisplayHierarchyNode( new PropertyPath(), null, item, snr );
+            DisplayHierarchyNode n = new DisplayHierarchyNode( new PropertyPath(), null, item, page.shortNameRenderer() );
             roots.add( n );
         }
     }
@@ -108,18 +104,18 @@ public class DisplayHierarchy
 
         for (PropertyValue s: arcs) {
             Property p = s.getProp().toProperty( s.getProp() );
-            PropertyPath pathTo = parent.pathTo().append( null, p.getURI(), shortNameRenderer );
+            PropertyPath pathTo = parent.pathTo().append( null, p.getURI(), page.shortNameRenderer() );
             DisplayHierarchyNode first = null;
 
             for (RDFNodeWrapper childNode: s.getValues()) {
                 DisplayHierarchyNode node = null;
 
                 if (first == null) {
-                    node = new DisplayHierarchyNode( pathTo, parent, context.wrap( childNode ), shortNameRenderer );
+                    node = new DisplayHierarchyNode( pathTo, parent, context.wrap( childNode ), page.shortNameRenderer() );
                     first = node;
                 }
                 else {
-                    node = new DisplayHierarchyNode( pathTo, null, context.wrap( childNode ), shortNameRenderer );
+                    node = new DisplayHierarchyNode( pathTo, null, context.wrap( childNode ), page.shortNameRenderer() );
                     first.addSibling( node );
                 }
 
@@ -149,7 +145,7 @@ public class DisplayHierarchy
         Set<PropertyPath> matching = new HashSet<PropertyPath>();
 
         for (PropertyPath path: paths) {
-            if (path.beginsWith( p, shortNameRenderer )) {
+            if (path.beginsWith( p, page.shortNameRenderer() )) {
                 matching.add( path );
             }
         }

@@ -12,6 +12,7 @@ package com.epimorphics.lda.renderers.common;
 
 import java.util.*;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -163,11 +164,29 @@ public class ShortNameRenderer
     }
 
     /**
-     * Return true if this renderer has an encapsulated short name service
+     * @return True if this renderer has an encapsulated short name service
      */
     public boolean hasShortNameService() {
         return shortNameService( false ) != null;
     }
+
+
+    /**
+     * @return True if the given string is path formed from known shortnames
+     */
+    public boolean isKnownShortnamePath( String path ) {
+        boolean known = true;
+
+        for( String segment: StringUtils.split( path, "." )) {
+            if (hasShortNameService()) {
+                String uri = shortNameService().expand( segment );
+                known = known && (uri != null);
+            }
+        }
+
+        return known;
+    }
+
 
     /***********************************/
     /* Internal implementation methods */
