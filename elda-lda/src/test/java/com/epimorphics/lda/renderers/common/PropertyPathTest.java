@@ -16,10 +16,8 @@ import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.junit.Rule;
 import org.junit.Test;
 
-import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.epimorphics.lda.shortnames.StandardShortnameService;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 /**
  * Unit test for {@link PropertyPath}
@@ -92,7 +90,7 @@ public class PropertyPathTest
 
     @Test
     public void testPathBeginsWith() {
-        ShortnameService sns = stubShortNameService();
+        ShortnameService sns = Fixtures.shortNameServiceFixture();
         ShortNameRenderer snr = new ShortNameRenderer( sns, null );
 
         PropertyPath path = new PropertyPath( "name_p" );
@@ -108,7 +106,7 @@ public class PropertyPathTest
 
     @Test
     public void testWildcardPathBeginsWith() {
-        ShortnameService sns = stubShortNameService();
+        ShortnameService sns = Fixtures.shortNameServiceFixture();
         ShortNameRenderer snr = new ShortNameRenderer( sns, null );
 
         PropertyPath path = new PropertyPath( "*" );
@@ -124,7 +122,7 @@ public class PropertyPathTest
 
     @Test
     public void testEmptyPathBeginsWith() {
-        ShortnameService sns = stubShortNameService();
+        ShortnameService sns = Fixtures.shortNameServiceFixture();
         ShortNameRenderer snr = new ShortNameRenderer( sns, null );
 
         PropertyPath path = new PropertyPath();
@@ -135,7 +133,7 @@ public class PropertyPathTest
 
     @Test
     public void testWith() {
-        ShortnameService sns = stubShortNameService();
+        ShortnameService sns = Fixtures.shortNameServiceFixture();
         ShortNameRenderer snr = new ShortNameRenderer( sns, null );
 
         PropertyPath path = new PropertyPath( "a.b" );
@@ -161,18 +159,6 @@ public class PropertyPathTest
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
-
-    static final Model apiModel1 = ModelIOUtils.modelFromTurtle
-            ( "@prefix : <http://example/test/>. "
-            + "<stub:root> a api:API. "
-            + ":p a rdf:Property; api:label 'name_p'. "
-            + ":q a rdf:Property; api:label 'name_q'; rdfs:range xsd:decimal."
-            );
-
-    private ShortnameService stubShortNameService() {
-        Resource root = apiModel1.createResource( "stub:root" );
-        return new StandardShortnameService( root, apiModel1, null );
-    }
 
     /***********************************/
     /* Inner class definitions         */

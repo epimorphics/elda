@@ -68,8 +68,10 @@ public class DisplayHierarchyTest
     @Before
     public void before() {
         ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
+        Page page = rm.page();
+        page.initialiseShortNameRenderer( Fixtures.shortNameServiceFixture() );
 
-        dh = new DisplayHierarchy( rm.page() );
+        dh = new DisplayHierarchy( page );
     }
 
     @Test

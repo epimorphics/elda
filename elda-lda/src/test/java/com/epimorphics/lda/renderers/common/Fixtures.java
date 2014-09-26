@@ -12,7 +12,10 @@ package com.epimorphics.lda.renderers.common;
 import org.jmock.Expectations;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -1511,9 +1514,18 @@ public class Fixtures
             "        elda:viewName    \"all\" .\n" +
             "";
 
+
+
     /***********************************/
     /* Static variables                */
     /***********************************/
+    public static final Model shortNameServiceFixtureModel = ModelIOUtils.modelFromTurtle
+            ( "@prefix : <http://example/test/>. "
+                    + "<stub:root> a api:API. "
+                    + ":p a rdf:Property; api:label 'name_p'. "
+                    + ":q a rdf:Property; api:label 'name_q'; rdfs:range xsd:decimal."
+                    );
+
 
     /***********************************/
     /* Instance variables              */
@@ -1559,6 +1571,16 @@ public class Fixtures
 
         return results;
     }
+
+    /**
+     * @return Stub {@link ShortnameService}
+     */
+    public static ShortnameService shortNameServiceFixture() {
+        Resource root = shortNameServiceFixtureModel.createResource( "stub:root" );
+        return new StandardShortnameService( root, shortNameServiceFixtureModel, null );
+    }
+
+
 
 
     /***********************************/
