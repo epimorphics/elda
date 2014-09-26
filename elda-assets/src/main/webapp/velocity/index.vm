@@ -37,7 +37,7 @@
 
       #parse( "partials/qonsole.vm" )
 
-      #parse( "partials/debug-context.vm" )
+      ##parse( "partials/debug-context.vm" )
 
       #parse( "partials/footer.vm" )
     </div> <!-- /container -->

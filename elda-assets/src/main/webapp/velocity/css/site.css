@@ -15,6 +15,10 @@ h1 .navbar-brand {
   padding-left: 20px;
 }
 
+.navbar .dropdown-menu {
+  z-index: 10000;
+}
+
 /* RDF resource presentation */
 
 section {
