@@ -45,7 +45,7 @@ require.config({
     'sprintf': {
       exports: 'sprintf'
     }
-    #if( $mapDisplay )
+    #if( $mapDisplay && !$noOSMLibs )
       ,
       'OpenLayers': {
         deps: ['jquery', 'proj4js-combined'],
@@ -76,7 +76,7 @@ require( ['require'],
        'app/qonsole',
        'datatables',
        'app/popover',
-       #if( $mapDisplay )
+       #if( $mapDisplay && !$noOSMLibs )
          , 'app/maps'
        #end
       ],

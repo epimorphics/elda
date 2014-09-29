@@ -16,6 +16,7 @@
     <meta name="description" content="HTML rendering of Linked Data API results: $page.pageTitle()">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    #parse( "partials/scripts.vm" )
     #parse( "partials/css.vm" )
 
     <script src="$assets/js/vendor/require.js"></script>
