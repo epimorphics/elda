@@ -76,6 +76,7 @@ require( ['require'],
        'app/qonsole',
        'datatables',
        'app/popover',
+       'app/events'
        #if( $mapDisplay && !$noOSMLibs )
          , 'app/maps'
        #end
