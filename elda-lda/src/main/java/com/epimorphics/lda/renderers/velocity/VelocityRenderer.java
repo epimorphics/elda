@@ -361,31 +361,6 @@ implements Renderer
 
                 p.setProperty( "file.resource.loader.path", path );
             }
-
-
-//            log.debug( "using default velocity properties." );
-//        //
-//            ve.setProperty( "macro.provide.scope.control", true );
-//            ve.setProperty( "foreach.provide.scope.control", true );
-//            ve.setProperty( "runtime.references.strict", "true" );
-////          ve.setProperty( "resource.loader",  "class" );
-////          ve.setProperty( "class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
-//        //
-//            ve.setProperty( "file.resource.loader.cache", "true" );
-//            ve.setProperty( "file.resource.loader.modificationCheckInterval", "5" );
-//        //
-//            ve.setProperty( "resource.loader", "file, class, url" );
-//        //
-//            ve.setProperty( "url.resource.loader.class", "org.apache.velocity.runtime.resource.loader.URLResourceLoader" );
-//            ve.setProperty( "url.resource.loader.cache", true );
-//            ve.setProperty( "url.resource.loader.modificationCheckInterval", "20" );
-//        //
-////          ve.setProperty( "class.resource.loader.cache", false );
-////          ve.setProperty( "velocimacro.library.autoreload", true );
-//        //
-//            ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
-//            ve.setProperty("runtime.log.logsystem.log4j.category", "velocity");
-//            ve.setProperty("runtime.log.logsystem.log4j.logger", "velocity");
         }
 
         /**
