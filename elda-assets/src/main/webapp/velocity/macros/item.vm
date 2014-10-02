@@ -46,7 +46,8 @@
 ## Display the item URI
 #macro( itemURI $resource $h $css )
   <div class="$css">
-    <$h class="resource-uri"><a href="$resource.getURI()">$resource.getURI()</a></$h>
+    #setResourceHref( $resource.getURI() )
+    <$h class="resource-uri"><a href="$href">$resource.getURI()</a></$h>
   </div>
 #end
 
@@ -176,12 +177,24 @@
 ## Show a resource-value
 #macro( propertyObjectResource $node )
   #if( $node.isSimpleResource())
-    <a href="$node.getURI()" class="rdf object resource simple">$node.getName()</a>
+    #setResourceHref( $node.getURI() )
+    <a href="$href" class="rdf object resource simple">$node.getName()</a>
     #actionsMenu( $node )
   #else
     <div class="rdf object nested">
       #showRdfResource( $node, "div", "nested" )
     </div>
+  #end
+#end
+
+## Determine the URL href for a resource URI, by applying any substitutions that are defined
+#macro( setResourceHref $uri )
+  #set( $href = $uri )
+  #if( $_suffix && $href.contains( $_HOST.spelling() ))
+    #set( $href = $href + "." + $_suffix.spelling() )
+  #end
+  #if( $rewriteURLFrom )
+    #set( $href = $href.replace( $rewriteURLFrom.spelling(), $rewriteURLTo.spelling() ) )
   #end
 #end
 
