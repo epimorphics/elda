@@ -71,6 +71,8 @@ public class XSLT_RendererFactory implements RendererFactory {
 			}
 
 			public void handleMetadata( APIResultSet results ) {
+				
+				
 				String [] options = MetadataOptions.get( root );
 				if (options.length == 0) options = "bindings,formats,versions,execution".split(",");
 				results.includeMetadata( options );
