@@ -36,7 +36,7 @@ public class XSLT_RendererFactory implements RendererFactory {
 	
 	public XSLT_RendererFactory( Resource root, MediaType mt ) {
 		
-		if (root == null) throw new BrokenException(">> BUMPSY-WUMPSY.");
+		if (root == null) throw new BrokenException("XSLT_RendererFactory has not been given a root.");
 		
 		this.root = root;		
 		this.mt = mt;
