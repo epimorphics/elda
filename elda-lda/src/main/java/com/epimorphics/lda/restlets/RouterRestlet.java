@@ -463,14 +463,23 @@ import com.sun.jersey.api.NotFoundException;
 		return new URLforResource() {
 			@Override public URL asResourceURL(String ePath) {
 				try {        
+					if (ePath == null)
+						throw new RuntimeException("problem: resource path in asResourceURL is null.");
 					return
 			            ePath.matches(STARTS_WITH_SCHEME) ? new URL(ePath)
 						: ePath.startsWith("/") ? pathToURL(ePath)
-						: pathToURL(servCon.getRealPath(ePath))
+						: pathToURL(getRealPath(servCon, "/" + ePath))
 						;
 				} catch (MalformedURLException e) {
 					throw new WrappedException(e);
 				}
+			}
+
+			private String getRealPath(final ServletContext servCon, String ePath) {
+				String realPath = servCon.getRealPath(ePath);
+				if (realPath == null)
+					throw new RuntimeException("problem: real path for " + ePath + " is null.");
+				return realPath;
 			}
 		};
 	}
