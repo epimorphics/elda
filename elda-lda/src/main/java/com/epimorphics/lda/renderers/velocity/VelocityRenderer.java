@@ -392,13 +392,13 @@ implements Renderer
         }
 
         /** @return A new velocity context containing bindings that we will use to render the results */
-        protected VelocityContext createVelocityContext( Bindings bindings ) {
+        protected VelocityContext createVelocityContext( Bindings binds ) {
             Page page = initialisePage();
             DisplayHierarchy dh = initialiseHierarchy( page );
 
             VelocityContext vc = new VelocityContext();
             addStandardVariables( vc, page, dh );
-            addBindingsToContext( vc, bindings );
+            addBindingsToContext( vc, binds );
             addContextSelfReference( vc );
             addEventHandlers( vc );
             addTools( vc );
@@ -414,9 +414,9 @@ implements Renderer
         }
 
         /** Add the Elda bindings as context variables */
-        protected void addBindingsToContext( VelocityContext vc, Bindings bindings ) {
-            for (String key: bindings.keySet()) {
-                vc.put( key, bindings.get( key ) );
+        protected void addBindingsToContext( VelocityContext vc, Bindings binds ) {
+            for (String key: binds.keySet()) {
+                vc.put( key, binds.get( key ) );
             }
         }
 
@@ -437,6 +437,7 @@ implements Renderer
         /** Add generic tools to the Velocity context */
         protected void addTools( VelocityContext vc ) {
             vc.put( "esc", new StringEscapeUtils() );
+            vc.put( "log", log );
         }
 
         /**
