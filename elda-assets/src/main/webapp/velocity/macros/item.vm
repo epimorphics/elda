@@ -23,7 +23,7 @@
       #itemName( $resource, "h3", "", $hnode )
       #itemURI( $resource, "h4", "" )
       #itemTypes( $resource )
-      #itemVisualExtension( $hnode )
+      #itemVisualExtension( $hnode, "row" )
       <div class="row">
         #itemProperties( $hnode, $level )
       </div>
@@ -61,7 +61,8 @@
         <ul class="list-inline">
           #foreach( $type in $types )
             <li>
-              <a href="$type.getURI()">$type.getName()</a>
+              #setResourceHref( $type.getURI() )
+              <a href="$href">$type.getName()</a>
             </li>
           #end
         </ul>
@@ -125,7 +126,8 @@
 ## Show the predicate of a property-value
 #macro( propertyPredicate $p )
   <div class="rdf predicate">
-    <a href="$p.getURI()">$p.getName()</a>
+    #setResourceHref( $p.getURI() )
+    <a href="$href">$p.getName()</a>
   </div>
 #end
 
@@ -190,11 +192,27 @@
 ## Determine the URL href for a resource URI, by applying any substitutions that are defined
 #macro( setResourceHref $uri )
   #set( $href = $uri )
-  #if( $_suffix && $href.contains( $_HOST.spelling() ))
-    #set( $href = $href + "." + $_suffix.spelling() )
-  #end
-  #if( $rewriteURLFrom )
+  #set ( $retainSuffix = false )
+
+  #if( $rewriteURLFrom && $href.contains( $rewriteURLFrom.spelling() ) )
     #set( $href = $href.replace( $rewriteURLFrom.spelling(), $rewriteURLTo.spelling() ) )
+    #set( $retainSuffix = true )
+  #elseif( $_suffix && $href.contains( $_HOST.spelling() ))
+    #set( $retainSuffix = true )
+  #end
+
+  #if( $retainSuffix )
+    #set( $trailingSlash = false )
+    #if( $href.endsWith( "/" ) )
+      #set( $trailingSlash = true )
+      #set( $href = $href.replace( "/$", "" ) )
+    #end
+
+    #set( $href = $href + "." + $_suffix.spelling() )
+
+    #if( $trailingSlash )
+      #set( $href = $href + "/" )
+    #end
   #end
 #end
 

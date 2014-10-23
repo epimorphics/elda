@@ -2,15 +2,15 @@
 ## of individual items. Content-detection variables are set in
 ## partials/content-detection.vm called from index.vm
 
-#macro( itemVisualExtension $resource )
+#macro( itemVisualExtension $resource $rowClass )
   #if( $mapDisplay && $resource.hasAllProperties( $latLongProps ))
-    #resourceMap( $resource )
+    #resourceMap( $resource, $rowClass )
   #end
 #end
 
-#macro( resourceMap $resource )
+#macro( resourceMap $resource $rowClass )
   #set( $geoTriples = $resource.extractByPredicate( $geoProps ) )
-  <div class="row">
+  <div class="$rowClass">
     <div class="col-md-8">
       <ul class="resource-properties extensions">
         #renderProperties( $geoTriples, 6, 6 )
