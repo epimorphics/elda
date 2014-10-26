@@ -253,7 +253,10 @@ public class DisplayHierarchyNode
             links.add( generateLink( param, paramHTML, valueStr, valueStr, "to be", "filter-equals", true, page ));
         }
         else if (!rdfNode().isAnon()){
-            String shortName = shortNameRenderer.lookupURI( rdfNode().getURI() );
+            String shortName = null;
+            if (shortNameRenderer != null) {
+                shortName = shortNameRenderer.lookupURI( rdfNode().getURI() );
+            }
             String uriValue = (shortName == null) ? rdfNode().getURI() : shortName;
 
             links.add( generateLink( param, paramHTML, uriValue, valueStr, "to be", "filter-equals", true, page ));
@@ -429,7 +432,10 @@ public class DisplayHierarchyNode
             closeQuote = "'</em>";
         }
 
-        return new Link( String.format( "<i class='fa %s'></i> %s%s %s %s%s", linkIcon, prompt, paramNameLabel, rel, paramValueLabel, closeQuote ),
+        return new Link( String.format( "<i class='fa %s'></i> %s%s %s %s%s",
+                         linkIcon, prompt,
+                         paramNameLabel, rel,
+                         paramValueLabel, closeQuote ),
                          pageURL.withParameter( op, paramName, paramValue ),
                          hint );
     }

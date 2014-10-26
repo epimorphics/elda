@@ -262,6 +262,32 @@ public class DisplayHierarchyNodeTest
         assertEquals( r3, ex.get( 1 ).rdfNode().asResource() );
     }
 
+    @Test
+    public void testRelatedLinks() {
+        List<Link> links = dhn.relatedLinks();
+        assertEquals( 3, links.size() );
+
+        boolean sortBy = false;
+        boolean sortByDesc = false;
+        boolean requireToBe = false;
+
+        for (Link l: links) {
+            if (l.title().matches( ".*sort by$" )) {
+                sortBy = true;
+            }
+            if (l.title().matches( ".*sort by (descending)$"  )) {
+                sortByDesc = true;
+            }
+            if (l.title().matches( ".*require to.*" )) {
+                requireToBe = true;
+            }
+        }
+
+        assertTrue( sortBy );
+        assertTrue( sortByDesc );
+        assertTrue( requireToBe );
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
