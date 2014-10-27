@@ -272,13 +272,13 @@ public class DisplayHierarchyNodeTest
         boolean requireToBe = false;
 
         for (Link l: links) {
-            if (l.title().matches( ".*sort by$" )) {
+            if (l.title().matches( ".*sort by *$" )) {
                 sortBy = true;
             }
-            if (l.title().matches( ".*sort by (descending)$"  )) {
+            if (l.title().matches( ".*sort by.*descending.*$"  )) {
                 sortByDesc = true;
             }
-            if (l.title().matches( ".*require to.*" )) {
+            if (l.title().matches( ".*require *to.*" )) {
                 requireToBe = true;
             }
         }
