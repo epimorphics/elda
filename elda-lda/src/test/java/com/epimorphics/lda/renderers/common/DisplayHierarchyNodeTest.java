@@ -288,6 +288,29 @@ public class DisplayHierarchyNodeTest
         assertTrue( requireToBe );
     }
 
+    @Test
+    public void testSantiseRelatedLinks() {
+        Resource root = dhn.rdfNode().asResource();
+        root.removeAll( RDFS.label )
+            .addProperty( RDFS.label, "<script></script>" );
+
+        for (Link l: dhn.relatedLinks()) {
+            assertFalse( l.title().contains( "<script>" ) );
+        }
+
+        root.removeAll( RDFS.label )
+            .addProperty( RDFS.label, "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis fringilla sapien sed aliquet malesuada. Duis ultricies tempus ultrices. Etiam eu risus lorem. Vestibulum id eros id tortor mollis aliquam. Ut ac viverra lacus. Cras cursus interdum ante et pulvinar. Phasellus dapibus vel quam vel finibus" );
+
+        // note we allow 20 characters for additional annotation, such as "require to be"
+        int lengthLimit = DisplayHierarchyNode.MAX_RELATED_LINK_LABEL_LENGTH + 20;
+
+        for (Link l: dhn.relatedLinks()) {
+            String titleNoTags = l.title().replaceAll( "<[^>]*>", "" );
+            assertTrue( titleNoTags.length() <= lengthLimit );
+        }
+
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

@@ -12,6 +12,7 @@ package com.epimorphics.lda.renderers.common;
 
 import java.util.*;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jena.atlas.lib.StrUtils;
 
 import com.epimorphics.lda.query.QueryParameter;
@@ -36,6 +37,9 @@ public class DisplayHierarchyNode
     // commented out sorting by labels, see discussion on issue #90
 //    public static final String SORT_BY_LABELS_FORMAT = "%1$s%2$s.label,%1$s%2$s.prefLabel,%1$s%2$s";
     public static final String SORT_BY_FORMAT = "%1$s%2$s";
+
+    /** Maximum label length in a related link */
+    public static final int MAX_RELATED_LINK_LABEL_LENGTH = 30;
 
     /***********************************/
     /* Static variables                */
@@ -243,14 +247,15 @@ public class DisplayHierarchyNode
         Page page = rdfNode().page();
         String param = pathTo().toString();
         String paramHTML = pathTo.toHTMLString();
-        String valueStr = "<code class='rdf-value'>" + (isLiteral ? rdfNode().getLexicalForm() : rdfNode.getName()) + "</code>";
+        String valueStr = isLiteral ? rdfNode().getLexicalForm() : rdfNode.getName();
+        String valueLabel = "<code class='rdf-value'>" + StringEscapeUtils.escapeHtml( truncateToMaxLength( valueStr ) ) + "</code>";
 
         if (isNumeric) {
-            links.add( generateLink( "max-" + param, paramHTML, valueStr, valueStr, "&le;", "filter-less-than", true, page ));
+            links.add( generateLink( "max-" + param, paramHTML, valueStr, valueLabel, "&le;", "filter-less-than", true, page ));
         }
 
         if (isLiteral) {
-            links.add( generateLink( param, paramHTML, valueStr, valueStr, "to be", "filter-equals", true, page ));
+            links.add( generateLink( param, paramHTML, valueStr, valueLabel, "to be", "filter-equals", true, page ));
         }
         else if (!rdfNode().isAnon()){
             String shortName = null;
@@ -259,11 +264,11 @@ public class DisplayHierarchyNode
             }
             String uriValue = (shortName == null) ? rdfNode().getURI() : shortName;
 
-            links.add( generateLink( param, paramHTML, uriValue, valueStr, "to be", "filter-equals", true, page ));
+            links.add( generateLink( param, paramHTML, uriValue, valueLabel, "to be", "filter-equals", true, page ));
         }
 
         if (isNumeric) {
-            links.add( generateLink( "min-" + param, paramHTML, valueStr, valueStr, "&ge;", "filter-greater-than", true, page ));
+            links.add( generateLink( "min-" + param, paramHTML, valueStr, valueLabel, "&ge;", "filter-greater-than", true, page ));
         }
 
         links.add( generateSortLink( param, paramHTML, "sort sort-asc", true, page ));
@@ -433,9 +438,9 @@ public class DisplayHierarchyNode
         }
 
         return new Link( String.format( "<i class='fa %s'></i> %s%s %s %s%s",
-                         linkIcon, prompt,
-                         paramNameLabel, rel,
-                         paramValueLabel, closeQuote ),
+                                        linkIcon, prompt,
+                                        paramNameLabel, rel,
+                                        paramValueLabel, closeQuote ),
                          pageURL.withParameter( op, paramName, paramValue ),
                          hint );
     }
@@ -489,6 +494,21 @@ public class DisplayHierarchyNode
         }
 
         return index;
+    }
+
+    private String ellipsis = "...";
+    private int maxLength = MAX_RELATED_LINK_LABEL_LENGTH - ellipsis.length();
+
+    /**
+     * Ensure that a string does not exceed the given length
+     */
+    private String truncateToMaxLength( String s ) {
+        if (s.length() <= maxLength) {
+            return s;
+        }
+        else {
+            return s.substring( 0, maxLength ) + ellipsis;
+        }
     }
 
 
