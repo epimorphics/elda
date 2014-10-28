@@ -5,7 +5,11 @@ $(function(){
     // configuration
     var config = {
       endpoints: {
-        "default": "$pageMetadata.selectionQuery().queryEndpoint()",
+        #if( $pageMetadata.selectionQuery() )
+          "default": "$pageMetadata.selectionQuery().queryEndpoint()"
+        #elseif( $pageMetadata.viewingQuery() )
+          "default": "$pageMetadata.viewingQuery().queryEndpoint()"
+        #end
       },
       prefixes: {
         "bw":       "http://environment.data.gov.uk/def/bathing-water/",
@@ -20,9 +24,11 @@ $(function(){
         "xsd":      "http://www.w3.org/2001/XMLSchema#"
       },
       queries: [
+        #if( $pageMetadata.selectionQuery() )
         { "name": "Item selection query",
           "query": "$esc.escapeJava( $pageMetadata.selectionQuery().queryText() )"
         },
+        #end
         { "name": "Item description query",
           "query": "$esc.escapeJava( $pageMetadata.viewingQuery().queryText() )"
         }
