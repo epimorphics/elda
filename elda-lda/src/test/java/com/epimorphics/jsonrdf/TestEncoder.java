@@ -33,7 +33,7 @@
  *****************************************************************/
 
 package com.epimorphics.jsonrdf;
-import static com.epimorphics.jsonrdf.utils.ModelIOUtils.modelFromTurtle;
+import static com.epimorphics.jsonrdf.utils.ModelIOUtils.*;
 import static org.junit.Assert.*;
 
 import java.io.*;
