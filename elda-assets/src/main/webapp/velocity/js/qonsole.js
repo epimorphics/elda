@@ -249,13 +249,18 @@ define( ['jquery',
   /** Display the given query */
   var displayQuery = function( query ) {
     if (query) {
-      var queryBody = query.query ? query.query : query;
-      var prefixes = assemblePrefixes( queryBody, query.prefixes );
+      var queryText = query.query ? query.query : query;
+      var prefixes = assemblePrefixes( queryText, query.prefixes );
+      var queryBody = stripLeader( queryText );
 
-      var q = sprintf( "%s\n\n%s", renderPrefixes( prefixes ), stripLeader( queryBody ) );
+      var q = sprintf( "%s\n\n%s", renderPrefixes( prefixes ), queryBody );
       setCurrentQueryText( q );
 
       syncPrefixButtonState( prefixes );
+
+      if (!isSelectQuery( queryBody )) {
+        setCurrentFormat( "text", "plain text" );
+      }
     }
   };
 
@@ -564,6 +569,16 @@ define( ['jquery',
     else {
       elem.removeClass( "disabled" );
     }
+  };
+
+  /** Return the query type of the current query */
+  var queryType = function( queryBody ) {
+    return queryBody.match( /^([^\s]+)\s.*/ )[1];
+  };
+
+  /** Return true if the query is a select query */
+  var isSelectQuery = function( queryBody ) {
+    return queryType( queryBody ).toLocaleLowerCase() === "select";
   };
 
   return {
