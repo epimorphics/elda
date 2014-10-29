@@ -306,7 +306,7 @@ define( ['jquery',
   /** Return an array of the prefixes parsed from the given query body */
   var assemblePrefixesFromQuery = function( queryBody ) {
     var leader = queryLeader( queryBody )[0].trim();
-    var pairs = _.compact( leader.split( "prefix" ) );
+    var pairs = _.compact( leader.split( /prefix|PREFIX/ ) );
     var prefixes = [];
 
     _.each( pairs, function( pair ) {

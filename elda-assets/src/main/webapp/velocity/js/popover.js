@@ -6,7 +6,6 @@ define( ['jquery', 'bootstrap'], function( $ ) {
 
   var onPageReady = function() {
     $('.popover-dismiss').popover({
-      trigger: 'click'
     });
 
     $('.popover-dismiss').click(function(){
