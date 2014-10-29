@@ -279,7 +279,7 @@ define( ['jquery',
 
   /** Assemble the set of prefixes to use when initially rendering the query */
   var assemblePrefixes = function( queryBody, queryDefinitionPrefixes ) {
-    if (queryBody.match( /^prefix/ )) {
+    if (queryBody.match( /^(prefix|PREFIX)/ )) {
       // strategy 1: there are prefixes encoded in the query body
       return assemblePrefixesFromQuery( queryBody );
     }
@@ -333,7 +333,7 @@ define( ['jquery',
 
   /** Split a query into leader (prefixes and leading blank lines) and body */
   var queryLeader = function( query ) {
-    var pattern = /(prefix [^>]+>[\s\n]*)/;
+    var pattern = /((prefix|PREFIX) [^>]+>[\s\n]*)/;
     var queryBody = query;
     var i = 0;
     var m = queryBody.match( pattern );
@@ -363,7 +363,7 @@ define( ['jquery',
   var updatePrefixDeclaration = function( prefix, uri, added ) {
     var query = currentQueryText();
     var lines = query.split( "\n" );
-    var pattern = new RegExp( "^prefix +" + prefix + ":");
+    var pattern = new RegExp( "^(prefix|PREFIX) +" + prefix + ":");
     var found = false;
     var i;
 
@@ -376,7 +376,7 @@ define( ['jquery',
 
     if (!found && added) {
       for (i = 0; i < lines.length; i++) {
-        if (!lines[i].match( /^prefix/ )) {
+        if (!lines[i].match( /^(prefix|PREFIX)/ )) {
           lines.splice( i, 0, sprintf( "prefix %s: <%s>", prefix, uri ) );
           break;
         }
