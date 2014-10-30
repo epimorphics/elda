@@ -456,8 +456,6 @@ import com.sun.jersey.api.NotFoundException;
     private static String MATCHES_SCHEME = "[a-zA-Z][-.+A-Za-z0-9]+:";
 	
     private static String STARTS_WITH_SCHEME = "^" + MATCHES_SCHEME + ".*";
-    		
-//    private static String STARTS_WITH_SCHEME_OR_SLASH = "^(/|" + MATCHES_SCHEME + ").*";
     
 	private static URLforResource pathAsURLFactory(final ServletContext servCon) {
 		return new URLforResource() {
@@ -465,11 +463,13 @@ import com.sun.jersey.api.NotFoundException;
 				try {        
 					if (ePath == null)
 						throw new RuntimeException("problem: resource path in asResourceURL is null.");
-					return
-			            ePath.matches(STARTS_WITH_SCHEME) ? new URL(ePath)
+					URL url = ePath.matches(STARTS_WITH_SCHEME) ? new URL(ePath)
 						: ePath.startsWith("/") ? pathToURL(ePath)
 						: pathToURL(getRealPath(servCon, "/" + ePath))
 						;
+					if (log.isDebugEnabled())
+						log.debug("mapped ePath '" + ePath + "' to URL '" + url + "'");
+					return url;
 				} catch (MalformedURLException e) {
 					throw new WrappedException(e);
 				}
