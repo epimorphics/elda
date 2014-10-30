@@ -17,6 +17,7 @@ function sync_to_current {
   set_current_writeable
   sync_to ./docs/E${1} "./current"
   set_current_readonly
+  cp docs/{style.css,util.js,epilogo-240.png} .
 }
 
 # Synchronise current content from $CURRENT_RELEASE
