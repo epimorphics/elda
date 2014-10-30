@@ -1,0 +1,120 @@
+#!/bin/bash
+
+function set_current_readonly {
+  find ./current -type f -print0 | xargs -0 chmod a-w
+}
+
+function set_current_writeable {
+  find ./current -type f -print0 | xargs -0 chmod u+w
+}
+
+function sync_to {
+  rsync -avz --delete $1/ $2/
+}
+
+function sync_to_current {
+  mkdir -p ./current
+  set_current_writeable
+  sync_to ./docs/E${1} "./current"
+  set_current_readonly
+}
+
+# Synchronise current content from $CURRENT_RELEASE
+function sync_current_release {
+  sync_to_current $CURRENT_RELEASE
+}
+
+function show_version {
+  echo "Current version is: $CURRENT_RELEASE"
+  echo "Next version is: $FORTHCOMING_RELEASE"
+}
+
+# Update the VERSION file
+function record_version {
+  echo "CURRENT_RELEASE=$1" > ./VERSION
+  echo "FORTHCOMING_RELEASE=$2" >> ./VERSION
+}
+
+# Roll the release
+function roll_release {
+  curr=${1}
+  next=${2}
+  sync_to_current $FORTHCOMING_RELEASE
+  mv ./docs/E${FORTHCOMING_RELEASE} ./docs/E$curr
+  mkdir -p ./docs/E$next
+  sync_to ./docs/E$curr ./docs/E$next
+  record_version $curr $next
+}
+
+# Do initial set up
+function initialise {
+  sync_to_current ${CURRENT_RELEASE}
+  sync_to ./docs/E${CURRENT_RELEASE} ./docs/E${FORTHCOMING_RELEASE}
+}
+
+# Abort if docs directory does not exist
+function check_exists {
+  if [ ! -d "docs/E${1}" ]; then
+    echo "Could not find expected directory: docs/E${1}"
+    exit 1
+  fi
+}
+
+# Abort if docs directory exists
+function check_not_exists {
+  if [ -d "docs/E${1}" ]; then
+    echo "Did not expect directory to exist: docs/E${1}"
+    exit 1
+  fi
+}
+
+. ./VERSION
+if [ "$CURRENT_RELEASE" == "" ]; then
+  echo "Failed to read from version file. Aborting"
+  exit 1
+fi
+
+check_exists $CURRENT_RELEASE
+show_version
+
+if [ "$1" == "-h" ]; then
+  echo "Usage: bin/release-docs [-r]"
+  echo "With no arguments, synchronizes changes from the named release directory '${CURRENT_RELEASE}'"
+  echo "into the ./current directory."
+  echo ""
+  echo '  --init One-time initialisation'
+  echo
+  echo "  -r  curr next"
+  echo "      Do a release rollover. Publish the forthcoming content as ./current, mirrored to"
+  echo '      $curr, and create a new release $next which will be initialised with $curr'
+  echo '      For example, start with:'
+  echo '        ./docs/E1.2.3           # where to edit current content '
+  echo '        ./current               # read-only mirror of 1.2.3'
+  echo '        ./docs/E1.2.4-SNAPSHOT  # where to edit forthcoming content'
+  echo ''
+  echo '      ./bin/release-docs 1.2.4 1.2.5-SNAPSHOT'
+  echo '      gives:'
+  echo '         ./docs/E1.2.3          # old release'
+  echo '         ./docs/E1.2.4          # new current content, copied from 1.2.4-SNAPSHOT'
+  echo '         ./current              # read-only mirror of 1.2.4'
+  echo '         ./docs/E1.2.5-SNAPSHOT # initialised with copy of 1.2.4'
+
+elif [ "$1" == "-r" ]; then
+  if [ "$#" -ne 3 ]; then
+    echo "Usage: ./bin/release-docs -r current next"
+    echo "Use -h for detailed help"
+  fi
+
+  check_not_exists $2
+  check_not_exists $3
+  check_exists $FORTHCOMING_RELEASE
+
+  roll_release $2 $3
+
+elif [ "$1" == "--init" ]; then
+  initialise
+
+else
+  sync_current_release
+
+fi

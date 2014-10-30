@@ -1,0 +1,2 @@
+Don't edit ./current, edit the master copy in ./docs and run ./bin/release-docs
+to sync. Current and next versions recorded in ./VERSION
