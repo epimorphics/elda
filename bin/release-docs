@@ -1,5 +1,7 @@
 #!/bin/bash
 
+VERSION_FILE=./_data/version.yml
+
 function set_current_readonly {
   find ./current -type f -print0 | xargs -0 chmod a-w
 }
@@ -17,7 +19,6 @@ function sync_to_current {
   set_current_writeable
   sync_to ./docs/E${1} "./current"
   set_current_readonly
-  cp docs/{style.css,util.js,epilogo-240.png} .
 }
 
 # Synchronise current content from $CURRENT_RELEASE
@@ -25,6 +26,7 @@ function sync_current_release {
   sync_to_current $CURRENT_RELEASE
 }
 
+# Show the specified version numbers, mostly for debugging
 function show_version {
   echo "Current version is: $CURRENT_RELEASE"
   echo "Next version is: $FORTHCOMING_RELEASE"
@@ -32,8 +34,8 @@ function show_version {
 
 # Update the VERSION file
 function record_version {
-  echo "CURRENT_RELEASE=$1" > ./VERSION
-  echo "FORTHCOMING_RELEASE=$2" >> ./VERSION
+  echo "CURRENT_RELEASE: $1" > $VERSION_FILE
+  echo "FORTHCOMING_RELEASE: $2" >> $VERSION_FILE
 }
 
 # Roll the release
@@ -69,7 +71,9 @@ function check_not_exists {
   fi
 }
 
-. ./VERSION
+CURRENT_RELEASE=`grep CURRENT_RELEASE $VERSION_FILE | sed -e 's/.*: //'`
+FORTHCOMING_RELEASE=`grep FORTHCOMING_RELEASE $VERSION_FILE | sed -e 's/.*: //'`
+
 if [ "$CURRENT_RELEASE" == "" ]; then
   echo "Failed to read from version file. Aborting"
   exit 1

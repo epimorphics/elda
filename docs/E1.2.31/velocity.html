@@ -3,8 +3,8 @@
 <head>
 <title>Elda reference</title>
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
-<link href="../style.css" rel="stylesheet" />
-<script src="../util.js"></script>
+<link href="style.css" rel="stylesheet" />
+<script src="util.js"></script>
 </head>
 
 <body onload="toc()">
@@ -32,7 +32,7 @@
       <li class=""><a href="velocity.html">Velocity renderer</a></li>
     </ul>
     <div class="nav navbar-nav navbar-right">
-      <img class="logo" src="../epilogo-240.png" alt="Epimorphics.com">
+      <img class="logo" src="epilogo-240.png" alt="Epimorphics.com">
     </div>
   </div><!-- /.navbar-collapse -->
 </nav>
@@ -137,14 +137,14 @@
 	(map, filters, views and viewing properties).
 </p>
 
-<p> 
+<p>
 	At the top of the search results Elda displays links to the
 	items on this page, and buttons to move through the item
 	list. Each item entry names the item (displaying its preferred
 	label) and shows selected properties of that item. Values
 	that are themselves resources with properties have their
 	properties displayed <em>unless</em> they have already appeared
-	in an outer display box. Clicking on an item's name will 
+	in an outer display box. Clicking on an item's name will
 	restrict the display to that single item.
 </p>
 
@@ -152,7 +152,7 @@
 	Clicking on the operator symbols (&lt;<u>&lt;</u>=<u>&gt;</u>&gt;)
 	toward the right of the search results will restrict the search
 	to items that have the specified value for the specified property.
-	These filters will then appear in the <b>filters</b> section of 
+	These filters will then appear in the <b>filters</b> section of
 	the <b>viewing</b> column, where they can be snipped away using the
 	<b>cancel</b> icon.
 </p>
@@ -163,7 +163,7 @@
 	discarded using the <b>cancel</b> icon, extended with ".*" using the
 	<b>star</b> icon, or have a trailing ".*" cut away using the <b>reduce</b>
 	icon. The <b>star</b> icon on the <b>properties</b> title introduces
-	the wildcard property chain "*" into the proeprties if it's not already 
+	the wildcard property chain "*" into the proeprties if it's not already
 	present.
 </p>
 
@@ -290,57 +290,57 @@
     </tr>
 
     <tr>
-	<td>utils</td> 
+	<td>utils</td>
 	<td>
 	 	Utility methods not appropriate for placing in
-       		WrappedNode or WrappedString.	       
-	</td> 
+       		WrappedNode or WrappedString.
+	</td>
     </tr>
-    
+
     <tr>
-	<td>utils.println(Object)</td> 
-	<td> 
+	<td>utils.println(Object)</td>
+	<td>
 		One-argument println to System.err, as a debugging
 		aid. Output starts with ">>".
-	</td> 
+	</td>
     </tr>
 
     <tr>
-	<td>utils.println(Object, Object)</td> 
-	<td> 
+	<td>utils.println(Object, Object)</td>
+	<td>
 		Two-argument space-separated println to System.err,
 		as a debugging aid. Output starts with ">>".
-	</td> 
+	</td>
     </tr>
 
     <tr>
-	<td>utils.sort(Object c)</td> 
+	<td>utils.sort(Object c)</td>
 	<td>
 		Sorts the sortable collection c in-place.
-	</td> 
+	</td>
     </tr>
 
     <tr>
-	<td>utils.join(Collection c, String infix)</td> 
-	<td> 
+	<td>utils.join(Collection c, String infix)</td>
+	<td>
 		Return an infix-separated concatenation of the
 		toString() values of the elements of c.
-	</td> 
+	</td>
     </tr>
 
     <tr>
-	<td>utils.currentMillis()</td> 
-	<td> 
+	<td>utils.currentMillis()</td>
+	<td>
 		Returns the current time in milliseconds since
 		the Velocity renderer was initialised for this
 		rendering, meant as a debugging/profiling aid.
-	</td> 
+	</td>
     </tr>
 
     <tr>
-	<td>utils</td> 
-	<td> 
-	</td> 
+	<td>utils</td>
+	<td>
+	</td>
     </tr>
 </table>
 

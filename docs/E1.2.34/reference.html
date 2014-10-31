@@ -3,8 +3,8 @@
 <head>
 <title>Elda reference</title>
 <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
-<link href="../style.css" rel="stylesheet" />
-<script src="../util.js"></script>
+<link href="style.css" rel="stylesheet" />
+<script src="util.js"></script>
 </head>
 
 <body onload="toc()">
@@ -32,7 +32,7 @@
       <li class=""><a href="velocity.html">Velocity renderer</a></li>
     </ul>
     <div class="nav navbar-nav navbar-right">
-      <img class="logo" src="../epilogo-240.png" alt="Epimorphics.com">
+      <img class="logo" src="epilogo-240.png" alt="Epimorphics.com">
     </div>
   </div><!-- /.navbar-collapse -->
 </nav>
@@ -449,7 +449,7 @@ The Common and Assets files must have the same version.
 		<li>an absolute path, referring to a resource on this
 			webapp's machine.
 		</li>
-	</ul>	
+	</ul>
 
 </p>
 <p>
@@ -457,7 +457,7 @@ The Common and Assets files must have the same version.
     modelled after that of the default HTML rendering performed by
     XSLT stylesheets. Note the renderer name (and hence its format-selection
     suffix) is "vhtml" not "html" to allow the two different HTML renderers
-    to operate on the same Elda endpoint. 
+    to operate on the same Elda endpoint.
 </p>
 
 <p>
@@ -835,7 +835,7 @@ If the SPARQL server supports nested
     (<a href="http://code.google.com/p/linked-data-api/wiki/API_Binding_Variables">see API Binding Variables</a>)    that:
 </p>
     <blockquote>
-	endpoint-level variables can also depend on API-level 
+	endpoint-level variables can also depend on API-level
 	variables, but not vice versa.
     </blockquote>
 <p>
@@ -860,7 +860,7 @@ If the SPARQL server supports nested
 <h3>stylesheet path</h3>
 
 <p>
-	The <em>stylesheet path</em> is used by the XSLT-driven HTML 
+	The <em>stylesheet path</em> is used by the XSLT-driven HTML
 	renderer to locate the XSLT stylesheet to use. It appears as
 	the object of an <code>api:stylesheet</code> property on the
 	HTML renderer, <em>eg</em>
@@ -872,17 +872,17 @@ If the SPARQL server supports nested
 
 <p>
 	If there are any variable references in the stylesheet
-	value, they are expanded. If the resulting stylesheet value 
+	value, they are expanded. If the resulting stylesheet value
 	starts with a scheme (<em>eg</em> <code>http:</code> or
-	<code>file:</code>) then it is treated as the URL of the 
-	stylesheet to fetch.  Otherwise it is treated as a reference 
+	<code>file:</code>) then it is treated as the URL of the
+	stylesheet to fetch.  Otherwise it is treated as a reference
 	to a file in the application's <code>webapp</code> directory.
 </p>
 
 <h3>asset path and <code>api:base</code></h3>
 
 <p>
-	The <em>asset path</em> is used by the (default) XSLT-driven 
+	The <em>asset path</em> is used by the (default) XSLT-driven
 	HTML renderer and the (default) velocity template renderer.
 	It is the value of the LDA variable <code>_resourceRoot</code>:
 </p>
@@ -901,9 +901,9 @@ If the SPARQL server supports nested
 </pre>
 
 <p>
-	<code>api:base</code> should, if possible, be used to specify where 
-	the Elda webapp is served from; it is resolved against the URL 
-	for the current page so that a server at location A can generate 
+	<code>api:base</code> should, if possible, be used to specify where
+	the Elda webapp is served from; it is resolved against the URL
+	for the current page so that a server at location A can generate
 	URIs as though it were at location B.
 </p>
 
@@ -914,11 +914,11 @@ If the SPARQL server supports nested
 <p>
 	When those renderers must generate a link in the HTML to some
 	asset, such as an image or some CSS, the path to that asset
-	(<em>eg</em>, <code>images/Star.png</code>) is prefixed with 
+	(<em>eg</em>, <code>images/Star.png</code>) is prefixed with
 	the asset path (<em>eg</em>, <code>lda-assets/</code>) to
 	construct the link URL (<em>eg</em>, <code>lda-assets/images/Star.png</code>).
 	This URL will then be resolved in the usual way, relative
-	to the URL of the page being rendered.  
+	to the URL of the page being rendered.
 </p>
 
 <h3>template path</h3>
@@ -979,7 +979,7 @@ If the SPARQL server supports nested
     complete rendered model) for an item endpoint will
     include an <code>isPrimaryTopicOf</code> property
     of the selected item with value the currently displayed
-    URI.    
+    URI.
     </li>
 
     <li>_suppress_media_type: If there is no .formatter
@@ -1011,14 +1011,14 @@ If the SPARQL server supports nested
 	from <code>_view</code> and <code>_properties</code>
 	in the request URL) is usually characterised by some
 	collection of <i>property chains</i>. Each property
-	chain <code>S1.S2...</code> corresponds to a SPARQL 
+	chain <code>S1.S2...</code> corresponds to a SPARQL
 	query fragment <code>?item P1 ?V1. ?V1 P2 ?V2...</code>
 	where <code>S<sub>i</sub></code> is the shortname of
 	property <code>P<sub>i</sub></code>.
 	A property chain may be specified as the list object
 	of an <code>api:property</code> declaration or as a
-     	(comma-separated list of) dot-separated list of 
-	property shortnames in the string value of an 
+     	(comma-separated list of) dot-separated list of
+	property shortnames in the string value of an
 	<code>api:properties</code> declaration.
 </p>
 
@@ -1039,7 +1039,7 @@ If the SPARQL server supports nested
 </p>
 
 <pre>
- 	... api:properties <code>"type.*,label"</code>  
+ 	... api:properties <code>"type.*,label"</code>
 	... api:properties <code>"*.designedBy"</code>
 
 </pre>
@@ -1049,7 +1049,7 @@ If the SPARQL server supports nested
 	parameter <code>_properties</code>.
 </p>
 
-<p><b>Warning</b>. 
+<p><b>Warning</b>.
 	Because <code>*</code> can match any property, it can
 	significantly increase the size of the resulting model
 	and the time taken for the SPARQL endpoint to generate it.
@@ -1222,21 +1222,21 @@ the specified number of the unit specified by the LETTER:
 	<li>
 		Responses from that endpoint will have an <b>Expires:</b>
 		header. If this is a fresh response, then the expiry time
-		is <code>E = now + T</code>. If this response is served 
-		from the Elda cache, then the expiry time is that of the 
-		cached response.		
+		is <code>E = now + T</code>. If this response is served
+		from the Elda cache, then the expiry time is that of the
+		cached response.
 	</li>
 
 	<li>
-		Newly generated responses are cached with the expiry time 
-		<code>E</code>. If a cached response is requested, and it 
-		has expired, that cache entry is dropped and a fresh 
-		response created, cached, and served.	
+		Newly generated responses are cached with the expiry time
+		<code>E</code>. If a cached response is requested, and it
+		has expired, that cache entry is dropped and a fresh
+		response created, cached, and served.
 	</li>
 </ul>
 
 <p>
-	This allows Elda to operate with its own (configurably-sized) 
+	This allows Elda to operate with its own (configurably-sized)
 	cache but still to serve controllably-fresh data from its
 	SPARQL endpoint.
 </p>
@@ -1250,14 +1250,14 @@ the specified number of the unit specified by the LETTER:
 	<code>rdf:type</code> of <code>rdf:Property</code>,
 	<code>owl:ObjectProperty</code>, or <code>owl:DatatypeProperty</code>.
 	Such declarations are often present in a configuration as
-	part of <code>api:label</code> shortname declarations. 
+	part of <code>api:label</code> shortname declarations.
 </p>
 
 <p>
 	If a view mentions any properties with expiry times, then the
 	smallest such expiry time is taken as the upper limit
 	on the expiry time for this request. If the view contains
-	any <code>*</code> wildcard properties, or uses a 
+	any <code>*</code> wildcard properties, or uses a
 	<code>DESCRIBE</code>, then the smallest of any declared
 	property's expiry time is used.
 </p>
@@ -1308,7 +1308,7 @@ the specified number of the unit specified by the LETTER:
 	Normally Elda will query the default graph of the dataset being
 	served by its SPARQL endpoint. To query one of the named graphs
 	of the datset, an endpoint can be configured with a
-	<i>graph template</i>.	
+	<i>graph template</i>.
 </p>
 
 <pre>
@@ -1327,9 +1327,9 @@ the specified number of the unit specified by the LETTER:
 	used if the endpoint does not have its own, allowing a default
 	graph name to be given for the entire configuration.
 </p>
-	
-<p>	
-	Any <code>graphTemplate</code> can be overridden by using 
+
+<p>
+	Any <code>graphTemplate</code> can be overridden by using
 	the <code>_graph</code> query parameter in the submitted URL;
 	its value should be a suitably-encoded URI which is used as
 	the GRAPH name.
@@ -1753,12 +1753,12 @@ the statistics count, and another to clear the Elda cache completely.
 </p>
 
 <p>
-	Item counting can be enabled (see below), in which case Elda 
-	will add additional meta-data to the result graph: the 
-	property <code>os:totalResults</code> (where <code>os</code> 
-	is the OpenSearch prefix) will have as its value the total 
-	number of results that the underlying query returns. The 
-	XSLT HTML and the example Velocity renderers will 
+	Item counting can be enabled (see below), in which case Elda
+	will add additional meta-data to the result graph: the
+	property <code>os:totalResults</code> (where <code>os</code>
+	is the OpenSearch prefix) will have as its value the total
+	number of results that the underlying query returns. The
+	XSLT HTML and the example Velocity renderers will
 	incorporate this  information into their displays.
 </p>
 
@@ -1768,7 +1768,7 @@ the statistics count, and another to clear the Elda cache completely.
 	root to <code>true</code> or <code>"yes"</code>. This
 	enables counting on any endpoint that does not override
 	it by setting the endpoint's <code>elda:enableCounting</code>
-	to <code>false</code> or <code>"no"</code>. 
+	to <code>false</code> or <code>"no"</code>.
 </p>
 
 <p>
@@ -1944,7 +1944,7 @@ to see which version of Elda is being built. If you want to use
 a non-SNAPSHOT version, use
 </p>
 <pre>
-git checkout tags/REVISION 
+git checkout tags/REVISION
 </pre>
 
 <p>
