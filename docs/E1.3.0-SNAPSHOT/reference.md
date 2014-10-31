@@ -78,23 +78,43 @@ accordingly.
 Elda provides several example minimal configurations, different only in
 their intended environments:
 
-  ------------------------------------ ------------------------------------
-  [minimal-named-bundled-8080-config.t [minimal-named-or-ROOT-split-8080-co
-  tl](specs/minimal-named-bundled-8080 nfig.ttl](specs/minimal-named-or-ROO
-  -config.ttl)                         T-split-8080-config.ttl)
-  bundled non-ROOT configuration       split assets and common on port
-  running on port 8080.                8080, for both ROOT and non-ROOT
-                                       use.
-  ------------------------------------ ------------------------------------
+<table class="table table-striped table-condensed">
+  <tr>
+    <td><a href="specs/minimal-named-bundled-8080-config.ttl">minimal-named-bundled-8080-config.ttl</a></td>
+    <td>bundled non-ROOT configuration running on port 8080.</td>
+  </tr>
+  <tr>
+    <td><a href="specs/minimal-named-or-ROOT-split-8080-config.ttl">minimal-named-or-ROOT-split-8080-config.ttl</a></td>
+    <td>split assets and common on port 8080, for both ROOT and non-ROOT use.</td>
+  </tr>
+  <tr>
+    <td><a href="specs/minimal-named-split-80-config.ttl">minimal-named-split-80-config.ttl</a></td>
+    <td>split assets and common on port 80 for non-ROOT use.</td>
+  </tr>
+  <tr>
+    <td><a href="specs/minimal-ROOT-bundled-8080-config.ttl">minimal-ROOT-bundled-8080-config.ttl</a></td>
+    <td>ROOT bundled and running on port 8080.</td>
+  </tr>
+</table>
 
 The configuration itself is a place-holder with three uri templates:
 
-  ------------------------------------ ------------------------------------
-  `/anything`                          `/about?resource={someURI}`
-  to provide some example results      provides information (ie properties
-                                       and their values) about the resource
-                                       `someURI`
-  ------------------------------------ ------------------------------------
+<table class="table table-striped table-condensed">
+  <tr>
+    <td><code>/anything</code></td>
+    <td>to provide some example results</td>
+  </tr>
+  <tr>
+    <td><code>/about?resource={someURI}</code></td>
+    <td>provides information (ie properties and their values) about the
+      resource <code>someURI</code></td>
+  </tr>
+  <tr>
+    <td><code>/mentions?resource={someURI}</code></td>
+    <td>finds items which have <code>someURI</code> as the value of some property.</td>
+  </tr>
+
+</table>
 
 The minimal configuration assumes that a SPARQL endpoint is available on
 `localhost:3030/store`. You can replace this endpoint with a different
