@@ -7,8 +7,7 @@
     <meta name="description" content="{{ site.description }}">
 
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="{{ site.baseurl }}/css/style.css" rel="stylesheet" />
-    <script src="{{ site.baseurl }}/js/util.js"></script>
+    <script src="{{ "/js/util.js" | prepend: site.baseurl }}"></script>
 
     <link rel="stylesheet" href="{{ "/css/site-local.css" | prepend: site.baseurl }}">
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
