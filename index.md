@@ -25,7 +25,7 @@ The currently released version of Elda is {{ site.data.version.CURRENT_RELEASE }
 
 ## Documentation index
 
-* [Quick start](current/quickstart.html)<br />
+* [Quick start](current/index.html)<br />
   Some
   pre-built examples which allow you to experiment with 
   the style of query and get started with building your 
