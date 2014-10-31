@@ -1,51 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Elda cribsheet</title>
-<link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" />
-<link href="style.css" rel="stylesheet" />
-<script src="util.js"></script>
-</head>
+---
+title: Elda cribsheet
+layout: default-toc
+---
 
-<body onload="toc()">
-<nav class="navbar navbar-default" role="navigation">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <div class="navbar-brand">
-      <h1 class="not-toc">Elda 1.2.36</h1>
-      <h2 class="not-toc">An implementation of the linked-data API</h2>
-    </div>
-  </div>
-
-  <!-- Collect the nav links, forms, and other content for toggling -->
-  <div class="collapse navbar-collapse navbar-ex1-collapse">
-    <ul class="nav navbar-nav">
-      <li class=""><a href="index.html">Quick start</a></li>
-      <li class=""><a href="reference.html">Reference</a></li>
-      <li class="active"><a href="cribsheet.html">Crib sheet</a></li>
-      <li class=""><a href="search-example.html">Text search example</a></li>
-      <li class=""><a href="velocity.html">Velocity renderer</a></li>
-    </ul>
-    <div class="nav navbar-nav navbar-right">
-      <img class="logo" src="epilogo-240.png" alt="Epimorphics.com">
-    </div>
-  </div><!-- /.navbar-collapse -->
-</nav>
-
-
-<div class="container">
-<div class="main">
-
-<div id="toc" class="well pull-right">
-<h2 class="not-toc">Table of contents</h2>
-</div>
-
-<h1>Query Parameters</h1>
+Query Parameters
+================
 
 <table class="table table-striped table-condensed">
   <thead>
@@ -362,20 +321,21 @@
   </tr>
 
   <tr>
-	<td>_graph=URI</td>
-	<td>
-		URI should be the (suitably-encoded) URI of a graph
-		in the datatset being queried.
-	</td>
-	<td>
-		The generated SPARQL query specifies the graph
-		with that name.
-	</td>
+    <td>_graph=URI</td>
+    <td>
+        URI should be the (suitably-encoded) URI of a graph
+        in the datatset being queried.
+    </td>
+    <td>
+        The generated SPARQL query specifies the graph
+        with that name.
+    </td>
   </tr>
 
 </table>
 
-<h1>Configuration</h1>
+Configuration
+=============
 
 <table class="table table-striped table-condensed">
   <thead>
@@ -472,15 +432,15 @@
   </tr>
 
   <tr>
-	<td>an API or endpoint</td>
-	<td>elda:graphTemplate</td>
-	<td>"URI/with/{var}"</td>
-	<td>
-		The SPARQL query specifies the variable-expanded form of the
-		given URI as the GRAPH URI for this query. Graph templates
-       		attached to an API apply to all endpoints that do not have
-		their own template.
-	</td>
+    <td>an API or endpoint</td>
+    <td>elda:graphTemplate</td>
+    <td>"URI/with/{var}"</td>
+    <td>
+        The SPARQL query specifies the variable-expanded form of the
+        given URI as the GRAPH URI for this query. Graph templates
+            attached to an API apply to all endpoints that do not have
+        their own template.
+    </td>
   </tr>
 
   <tr>
@@ -513,7 +473,7 @@
     </td>
   </tr>
 
-  <tr><td colspan=4><hr></td></tr>
+  <tr><td colspan="4"></td></tr>
 
   <tr>
     <td>api or endpoint</td>
@@ -556,7 +516,7 @@
     </td>
   </tr>
 
-  <tr><td colspan=4><hr></td></tr>
+  <tr><td colspan="4"></td></tr>
 
   <tr>
     <td>api or endpoint</td>
@@ -578,7 +538,7 @@
     </td>
   </tr>
 
-  <tr><td colspan=4><hr></td></tr>
+  <tr><td colspan="4"></td></tr>
 
   <tr>
     <td>api or endpoint</td>
@@ -646,7 +606,7 @@
     </td>
   </tr>
 
-  <tr><td colspan=4><hr></td></tr>
+  <tr><td colspan="4"></td></tr>
 
   <tr>
     <td>api or endpoint</td>
@@ -658,7 +618,7 @@
     </td>
   </tr>
 
-  <tr><td colspan=4><hr></td></tr>
+  <tr><td colspan="4"></td></tr>
 
   <tr>
     <td>api or endpoint</td>
@@ -721,7 +681,7 @@
     </td>
   </tr>
 
-  <tr><td colspan=4><hr></td></tr>
+  <tr><td colspan="4"></td></tr>
 
   <tr>
     <td>api or endpoint</td>
@@ -744,7 +704,7 @@
     </td>
   </tr>
 
-  <tr><td colspan=4><hr></td></tr>
+  <tr><td colspan="4"></td></tr>
 
   <tr>
     <td>aProperty</td>
@@ -757,14 +717,3 @@
   </tr>
 
 </table>
-
-
-<div class="footer">
-<hr>
-&copy; Copyright 2011-2013 Epimorphics Limited. For licencing conditions see
-<a href="http://http://epimorphics.github.io/elda/LICENCE.html">http://http://epimorphics.github.io/elda/LICENCE.html</a>.
-</div>
-</div>
-</div><!-- .container -->
-</body>
-</html>

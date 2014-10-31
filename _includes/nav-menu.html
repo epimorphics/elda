@@ -1,6 +1,22 @@
 <ul class="nav navbar-nav">
-  <li class="active"><a href="#">Quick start</a></li>
-  <li class=""><a href="reference.html">Reference</a></li>
-  <li class=""><a href="cribsheet.html">Crib sheet</a></li>
-  <li class=""><a href="velocity.html">Velocity renderer</a></li>
+  {% if page.url contains 'index.html' %}
+    <li class="active"><a href="index.html">Quick start</a></li>
+  {% else %}
+    <li class=""><a href='index.html'>Quick start</a></li>
+  {% endif %}
+  {% if page.url contains 'reference.html' %}
+    <li class="active"><a href='reference.html'>Reference</a></li>
+  {% else %}
+    <li class=""><a href='reference.html'>Reference</a></li>
+  {% endif %}
+  {% if page.url contains 'cribsheet.html' %}
+    <li class="active"><a href='cribsheet.html'>Cribsheet</a></li>
+  {% else %}
+    <li class=""><a href='cribsheet.html'>Cribsheet</a></li>
+  {% endif %}
+  {% if page.url contains 'velocity.html' %}
+    <li class="active"><a href='velocity.html'>Velocity renderer</a></li>
+  {% else %}
+    <li class=""><a href='velocity.html'>Velocity renderer</a></li>
+  {% endif %}
 </ul>

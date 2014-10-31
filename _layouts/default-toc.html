@@ -7,17 +7,9 @@
 
     {% include header.html %}
 
-    <div class="page-content">
-      <div class="wrapper">
-        {{ content }}
-      </div>
-    </div>
-
     <div class="container">
       <div class="main">
-        <div id="toc" class="well pull-right">
-          <h2 class="not-toc">Table of contents</h2>
-        </div>
+        {{ content | toc_generate }}
       </div>
     </div>
 
