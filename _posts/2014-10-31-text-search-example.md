@@ -1,21 +1,8 @@
-Toggle navigation
-
-Elda 1.2.35 {.not-toc}
-===========
-
-An implementation of the linked-data API {.not-toc}
-----------------------------------------
-
--   [Quick start](index.html)
--   [Reference](reference.html)
--   [Crib sheet](cribsheet.html)
--   [Text search example](search-example.html)
--   [Velocity renderer](velocity.html)
-
-![Epimorphics.com](../epilogo-240.png)
-
-Table of contents {.not-toc}
------------------
+---
+title: Text search - worked example
+layout: default
+categories: tutorial
+---
 
 Text Search Worked Example
 ==========================
@@ -30,7 +17,7 @@ Download the standalone jar
 
 Download the latest Elda standalone jar from the Epimorphic's Maven
 repository:
-<http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/1.2.35/elda-standalone-1.2.35.jar>.
+<http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/{{ site.data.version.CURRENT_RELEASE }}/elda-standalone-{{ site.data.version.CURRENT_RELEASE }}.jar>.
 Put it somewhere handy; we'll call the directory it's in `$STANDALONE`
 and use it to set up an Elda server later on. (If you already have a
 server that you can configure for Elda, you might choose to use that
@@ -162,9 +149,3 @@ Wrapup
 You should now be in a position to work with data of your own choosing
 and to experiment (if necessary) with different query configurations for
 different Elda endpoints.
-
-* * * * *
-
-© Copyright 2011-2013 Epimorphics Limited. For licencing conditions see
-<http://http://epimorphics.github.io/elda/LICENCE.html>.
-

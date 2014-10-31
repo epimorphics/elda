@@ -39,12 +39,23 @@ The currently released version of Elda is {{ site.data.version.CURRENT_RELEASE }
   The in-development documentation, which may give an indication
   of forthcoming features or changes.
 
+Elda tutorials
+
+<ul>
+  {% for post in site.categories.tutorial %}
+    <li>
+      <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
+
+
 ## Release history
 
 <ul>
   {% for post in site.categories.release %}
     <li>
-      <a href="{{ post.url }}">{{ post.title }}</a>
+      <a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
       {{ post.excerpt }}
     </li>
   {% endfor %}
