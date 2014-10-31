@@ -1,0 +1,11 @@
+# Site settings
+title: Elda
+email: linked-data-api-discuss@googlegroups.com
+description: >
+  Elda is an open-source Java implementation of the Linked Data API by Epimorphics.
+baseurl: "/elda"
+url: "https://epimorphics.github.io/elda" # the base hostname & protocol for your site
+github_username:  epimorphics
+
+# Build settings
+markdown: kramdown

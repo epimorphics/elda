@@ -1,0 +1,27 @@
+<header class="site-header">
+  <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <div class="navbar-brand">
+          <h1>Elda {{ site.data.version.CURRENT_RELEASE }}</h1>
+          <h2>An implementation of the linked-data API</h2>
+        </div>
+      </div>
+
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        {% unless page.landing %}
+          {% include nav-menu.html %}
+        {% endunless %}
+        <div class="nav navbar-nav navbar-right">
+          <img class="logo" src="{{ site.baseurl }}/images/epilogo-240.png" alt="Epimorphics.com">
+        </div>
+      </div><!-- /.navbar-collapse -->
+    </div><!-- /.container -->
+  </nav>
+</header>

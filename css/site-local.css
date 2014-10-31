@@ -6,12 +6,17 @@
 .navbar-brand h1, .navbar-brand h2 {
 	font-size: 12pt;
 	line-height: normal;
-	margin: 0;
+	margin: 0 0 0 15px;
 	padding: 0;
 }
 
 .navbar-brand h1 {
 	font-weight: bold;
+}
+
+.navbar-brand h2 {
+	font-size: 10pt;
+	line-height: 90%;
 }
 
 .navbar-right img {
