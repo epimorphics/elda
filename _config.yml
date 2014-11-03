@@ -9,3 +9,5 @@ github_username:  epimorphics
 
 # Build settings
 markdown: kramdown
+
+exclude: ['Gemfile', 'Gemfile.lock']
