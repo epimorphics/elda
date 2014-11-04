@@ -8,23 +8,28 @@
 
 package run;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.servlet.ServletHolder;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.apache.catalina.startup.Tomcat;
+import org.apache.catalina.Context;
 
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 public class standalone {
 
+	static final String contextPath = "/standalone";
+
 	public static void main( String [] args ) throws Exception {  		
-	    Server server = new Server(8080);
+	    Tomcat server = new Tomcat(); 
+	    server.setPort(8080);
 	//	    
-	    WebAppContext webapp = new WebAppContext( "src/main/webapp/", "/standalone" );
-	    webapp.addServlet(new ServletHolder( new ServletContainer( new PackagesResourceConfig("com.epimorphics.lda.restlets") ) ), "/");
-        server.setHandler(webapp);
+	    server.setBaseDir(".");
+	    PackagesResourceConfig p = new PackagesResourceConfig("com.epimorphics.lda.restlets");
+	    ServletContainer c = new ServletContainer(p);
+	//
+	    Context cx = server.addContext(contextPath, "GOOPSTY");
+	    Tomcat.addServlet(cx, contextPath, c);
     //
 	    server.start();
-	    server.join();
+	    server.getServer().await();
 	} 
 }
