@@ -36,7 +36,7 @@ public class XSLT_RendererFactory implements RendererFactory {
 
     public XSLT_RendererFactory( Resource root, MediaType mt ) {
 
-        if (root == null) throw new BrokenException(">> BUMPSY-WUMPSY.");
+        if (root == null) throw new BrokenException("XSLT_RendererFactory has not been given a root.");
 
         this.root = root;
         this.mt = mt;
@@ -71,8 +71,11 @@ public class XSLT_RendererFactory implements RendererFactory {
             }
 
             public void handleMetadata( APIResultSet results ) {
-                MetadataOptions options = new MetadataOptions( root, "bindings,formats,versions,execution" );
-                results.includeMetadata( options.asArray() );
+
+
+                String [] options = MetadataOptions.get( root );
+                if (options.length == 0) options = "bindings,formats,versions,execution".split(",");
+                results.includeMetadata( options );
             }
         };
     }

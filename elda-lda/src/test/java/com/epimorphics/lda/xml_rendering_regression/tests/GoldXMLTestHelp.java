@@ -45,8 +45,8 @@ public class GoldXMLTestHelp {
 		Model objectModel = EldaFileManager.get().loadModel( goldRoot + name + "/object_model.ttl" );
 		Model metaModel = EldaFileManager.get().loadModel( goldRoot + name + "/meta_model.ttl" );
 		boolean suppressIPTO = readBoolean( goldRoot + name + "/suppress_ipto.bool" );
-		String root_uri = readLine(  goldRoot + name + "/root.uri" );
-		String expected_xml = EldaFileManager.get().readWholeFileAsUTF8( goldRoot + name + "/xml-rendering.xml" );
+		String root_uri = readLine( goldRoot + name + "/root.uri" );
+		String expected_xml = EldaFileManager.get().readWholeFileAsUTF8( goldRoot + name + "/xml-rendering.xml" ).replace("\r", "");
 		ShortnameService sns = readShortnames( goldRoot + name + "/names.sns" );
 		return new GoldXMLTestHelp( root_uri, objectModel, metaModel, sns, suppressIPTO, expected_xml );
 	}
@@ -54,7 +54,7 @@ public class GoldXMLTestHelp {
 	private static ShortnameService readShortnames( String fileName ) {
 		Set<String> seen = new HashSet<String>();
 		Model config = ModelFactory.createDefaultModel();
-		for (String line: EldaFileManager.get().readWholeFileAsUTF8( fileName ).split( "\n" )) {
+		for (String line: EldaFileManager.get().readWholeFileAsUTF8( fileName ).split( "\r?\n" )) {
 			int eq = line.indexOf( '=' );
 			String name = line.substring(0, eq), uri = line.substring(eq + 1);
 			if (seen.add( name )) config.add( config.createResource( uri ), API.label, name );
@@ -69,6 +69,6 @@ public class GoldXMLTestHelp {
 
 	private static String readLine( String fileName ) {
 		String all = EldaFileManager.get().readWholeFileAsUTF8( fileName );
-		return all.replaceFirst( "\n.*", "" );
+		return all.replaceFirst( "\r?\n.*", "" );
 	}
 }
