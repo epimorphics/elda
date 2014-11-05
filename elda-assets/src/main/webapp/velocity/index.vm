@@ -32,7 +32,7 @@
   </head>
 
   <body>
-    #parse( "partials/navigation-bar.vm" )
+      #parse( "partials/navigation-bar.vm" )
 
     <div class="container">
       #parse( "partials/item-setup.vm")

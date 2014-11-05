@@ -16,6 +16,10 @@ h1 .navbar-brand {
   padding-left: 20px;
 }
 
+.navbar-default a.navbar-brand, .navbar-default a.navbar-brand:visited {
+  color: #f0f0f0;
+}
+
 .navbar .dropdown-menu {
   z-index: 10000;
 }
@@ -33,6 +37,18 @@ h1 .navbar-brand {
   width: 100%;
 }
 
+.navbar-default .navbar-nav > li > a,
+.navbar-default .navbar-nav > li > a:visited {
+  color: #f0f0f0;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+  background-color: #8c9eff;
+  background-color: transparent;
+  color: #444;
+}
 /* RDF resource presentation */
 
 section {
