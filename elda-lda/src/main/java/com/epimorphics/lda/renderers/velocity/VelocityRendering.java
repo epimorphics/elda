@@ -241,11 +241,11 @@ implements BytesOut
             }
             else {
                 String velocityURL = velocityPath.get( 0 );
-                if (velocityURL.matches( "^(http|file):.*" )) {
+                if (velocityURL.matches( "^http:.*" )) {
                     p.setProperty( "url.resource.loader.root", velocityURL );
                 }
                 else {
-                    p.setProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH, velocityURL );
+                    p.setProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH, velocityURL.replaceFirst( "^file:", "" ) );
                 }
 
             }
