@@ -35,6 +35,7 @@ The currently released version of Elda is {{ site.data.version.CURRENT_RELEASE }
 * [Velocity renderer](current/velocity.html)<br />
   ELda includes a pre-configured, but customizable, renderer
   for generating HTML pages from RDF resources using Apache Velocity.
+* [Java API documentation](apidocs/)
 * [Forthcoming](docs/E{{ site.data.version.FORTHCOMING_RELEASE }})<br />
   The in-development documentation, which may give an indication
   of forthcoming features or changes.
