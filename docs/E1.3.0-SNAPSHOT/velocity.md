@@ -269,6 +269,50 @@ Now that we have a new version of `head-extensions.vm` that we can have Elda fin
 
 With that, Elda will find the alternate `head-extensions.vm` first, thereby generating a link element that will ask Tomcat for `/local-assets/css/site-local.css`.
 
+## <a name="velocity-elements-guide"></a>Guide to Velocity template elements
+
+In this section, we outline some of the more commonly overridden elements in the default Velocity templates. This is only a guide: the most definitive reference is to read the Velocity source code in `src/main/webapp/velocity` in the Elda assets sub-project.
+
+| Element  | Filename  | Description |
+| ------------ | ---------------| -----|
+|       | `index.vm` | Overall page template |
+|     | `partials/overrides.vm`        |  Loaded first, so a good place to add macros or partials that override default definitions |
+|  | `partials/scripts.vm`        | A place to load JavaScript files that are not loaded via requireJS |
+| | `partials/css.vm`| Loads default CSS stylesheets. Also loads `partials/styles-extra.vm`, which would be an alternative extension point to the head extensions partial. |
+| | `partials/javascript-dependencies.vm` | JavaScript files, loaded using requireJS. |
+| | `partials/head-extensions.vm` | Generic extension point for adding content to the `head` element |
+| | `partials/title-brand.vm` | Loads the branding (image and title) into the navigation bar |
+| | `partials/item-endpoint.vm` | Defines the body content for an endpoint that presents a single item |
+| | `partials/list-endpoint.vm` | Defines the body content for an endpoint that presents a list of items |
+| `eldaItem` | `macros/item.vm` | Entry point for rendering a single RDF resource as an item in the output |
+| `itemName` | `macros/item.vm` | Renders the human-readable name of the resource, picking a suitable label from `rdfs:label`, `skos:prefLabel`, etc |
+| `itemProperties` | `macros/item.vm` | Renders a list of the properties of an item |
+| `literalValuedNode` | `macros/item.vm` | Presents a property value which is a literal value |
+| `resourceValuedNode` | `macros/item.vm` | Presents a property value which is a nested RDF resource |
+| `groupVisualExtensions` | `macros/item-extensions.vm` | Control point for injecting extended views of a collection of resources, such as a map or chart |
+| `itemVisualExtension` | `macros/item-extensions.vm` | Control point for injecting an extended visual presentation of a single item, such as showing a point on an embedded map. |
+
+### Example: adding a custom attribute to every item label
+
+Suppose we want every RDF resource to have a unique ID attached via a data attribute. The macro that renders item names is `itemName`, so we create a copy of `partials/overrides.vm` somewhere earlier in the `_velocityPath` (see above). Into this alternate version of `overrides.vm`, add:
+
+{% highlight velocity linenos %}
+## Display the name of the resource
+#macro( itemName $resource $h $css $node )
+  <div class="$css">
+    <$h class="resource-label"
+        data-id="$node.uniqueID()"
+    >
+      $resource.getName()
+      #if( $node )
+        #actionsMenu( $node )
+      #end
+    </$h>
+  </div>
+#end
+{% endhighlight %}
+
+Most of this version of `itemName` is directly copied from the default, with just the addition of line 5.
 
 *********************
 *********************
