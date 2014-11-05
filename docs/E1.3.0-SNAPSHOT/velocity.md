@@ -53,7 +53,7 @@ The Velocity renderer uses three `api:variable`s in the configuration to specify
 
 * `velocityTemplate` for the name of the root template file (default: `index.vm`)
 * `_resourceRoot` for a path that should be prepended to assets, such as CSS stylesheets and JavaScript files
-* `_velocityRoot` for a path on the server's file system where the Velocity templates are found.
+* `_velocityPath` for a path on the server's file system where the Velocity templates are found.
 
 #### Example
 
@@ -70,7 +70,7 @@ Suppose you unpack the files from *Elda assets* into `/var/www/elda/assets`, and
      api:value "/myEldaApp"
    ];
    api:variable [
-     api:name "_velocityRoot"; 
+     api:name "_velocityPath"; 
      api:value "/var/www/elda/assets"
    ]
   ]
@@ -89,7 +89,7 @@ Now suppose that we would like to override some of the default behaviours of the
      api:value "/myEldaApp"
    ];
    api:variable [
-     api:name "_velocityRoot"; 
+     api:name "_velocityPath"; 
      api:value "/var/www/myEldaApp/assets, /var/www/elda/assets"
    ]
   ]
@@ -105,7 +105,7 @@ generated page by changing the value of the `api:mimeType` property.
 
 ### Velocity properties
 
-Velocity uses a set of [configuration properties](http://velocity.apache.org/engine/releases/velocity-1.5/developer-guide.html#velocity_configuration_keys_and_values) to control aspects of its internal behaviour. By default, we leave all of these properties with their default values, execpt that `file.resource.loader.path` is set to the path given by `_velocityRoot`. However, the renderer will look for a `velocity.properties` file in the loader path, so you can override any of the default Velocity configuration properties by creating a `velocity.properties` file with appropriate keys and values. For example:
+Velocity uses a set of [configuration properties](http://velocity.apache.org/engine/releases/velocity-1.5/developer-guide.html#velocity_configuration_keys_and_values) to control aspects of its internal behaviour. By default, we leave all of these properties with their default values, execpt that `file.resource.loader.path` is set to the path given by `_velocityPath`. However, the renderer will look for a `velocity.properties` file in the loader path, so you can override any of the default Velocity configuration properties by creating a `velocity.properties` file with appropriate keys and values. For example:
 
 {% highlight properties linenos %}
 input.encoding = UTF-8
@@ -184,6 +184,90 @@ These CSS rules can simply be added to the `site.css` stylesheet that is deploye
 
 ## <a name="customising-velocity-templates"></a>Customising the Velocity templates
 
+The default Velocity templates in *Elda-assets* are designed to be modular, so that it is easier for maintainers of Elda-based systems to customise the behaviour and appearance of the generated pages. In particular, some hooks are built-in in convenient places. For example, the template defining the header of the page reads:
+
+{% highlight velocity linenos %}
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>$page.pageTitle()</title>
+  <meta name="description" content="HTML rendering of Linked Data API results: $page.pageTitle()">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  #parse( "partials/scripts.vm" )
+  #parse( "partials/css.vm" )
+
+  <script src="$assets/js/vendor/require.js"></script>
+  <script>
+    #parse( "partials/javascript-dependencies.vm" )
+  </script>
+  <!-- This link provides CORS support in IE8+ -->
+  <!--[if lt IE 10]>
+    <script src="${assets}/js/vendor/jquery.xdomainrequest.js"></script>
+  <![endif]-->
+
+  #parse( "partials/head-extensions.vm" )
+</head>
+{% endhighlight %}
+
+The key element here is on line 20, where `partials/head-extensions.vm` is added to the `head` element. The default contents of `head-extensions.vm` are:
+
+{% highlight velocity linenos %}
+## Extension point to add additional content to <head> element
+## E.g. additional JavaScript or CSS resources, or analytics
+{% endhighlight %}
+
+In other words, it adds no content. However, Velocity operates a 'first found, wins' rule - if the template engine finds a different version of `partials/head-extensions.vm` on its load path *before* the default, it will use that instead. We can use that to load an additional stylesheet, which will override the built-in default CSS rules:
+
+{% highlight velocity linenos %}
+## Alternate version of head-extensions.vm
+<link rel="stylesheet" href="/local-assets/css/site-local.css">
+{% endhighlight %}
+
+All we have to do now is arrange for this alternative version of `head-extensions.vm` to be found first. There are various strategies for achieving this: which one suits you will depend on your circumstances. Common choices include:
+
+* defining a Maven assembly goal to pull-together resources from different locations to create a custom assets `.war` file
+* using a deployment system, such as chef, puppet or capistrano to script the process of putting files where they are needed on a given server, perhaps using a web server such as Apache HTTPD or Nginx to handle static file serving.
+
+For the purposes of this documentation, we will describe a simpler strategy using only Tomcat (or another web application container). Note: this pattern works well for development and prototyping, it may not be suitable for full-scale deployments.
+
+### Simple deployment example using Tomcat
+
+*Note: these instructions have been tested on a Linux system. They may need to be adjusted for other operating systems.*
+
+The default directory for deploying `.war` files is typically something like `/var/lib/tomcat7/webapps`. Elda provides two `.war` files that will allow us to set up a minimal deployment: `elda-common.war` and `elda-assets.war` &ndash; copying these files to the `webapps` directory should create two unpacked web applications: `elda-common` and `elda-assets`. By default, Elda common will look for configuration files in `/etc/elda/conf.d/elda-common`.
+
+We also need a location from which Tomcat will serve our local, customised stylesheets and any other assets we need.  In the `webapps` directory, alongside `elda-common` and `elda-assets`, we create a directory structure with the following layout:
+
+    local-assets
+    +-- css
+    |   +-- site-local.css
+    +-- velocity
+        +-- partials
+            +-- head-extensions.vm
+
+There's actually not really a need to keep the Velocity extensions within the Tomcat web application, as they're not actually going to be served out to browsers. But it's handy to keep the files together for illustrative purposes in this documentation.
+
+Now that we have a new version of `head-extensions.vm` that we can have Elda find, it just remains to tell Elda where to look. In the configuration file, we set the `_velocityPath`
+
+{% highlight html linenos %}
+<myEldaAppSpec> api:defaultFormatter
+  [a elda:VelocityFormatter ;
+   api:name "html" ;
+   api:mimeType "text/html" ;
+   elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory" ;
+   api:variable [
+     api:name "_resourceRoot"; 
+     api:value "/myEldaApp"
+   ];
+   api:variable [
+     api:name "_velocityPath"; 
+     api:value "/var/lib/tomcat7/local-assets/velocity, /var/lib/tomcat7/elda-assets/velocity"
+   ]
+  ]
+{% endhighlight %}
+
+With that, Elda will find the alternate `head-extensions.vm` first, thereby generating a link element that will ask Tomcat for `/local-assets/css/site-local.css`.
 
 
 *********************
