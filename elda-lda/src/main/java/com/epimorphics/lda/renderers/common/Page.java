@@ -393,7 +393,7 @@ public class Page extends CommonNodeWrapper
             return "LDA resource at " + rootPath;
         }
         else {
-            return String.format( "Page %s of linked-data API resources %s ", pageNo, rootPath );
+            return String.format( "Elda &ndash; %s &ndash; page %s", rootPath, pageNo );
         }
     }
 
