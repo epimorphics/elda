@@ -1,0 +1,50 @@
+#parse( "partials/overrides.vm" )
+#parse( "partials/global-constants.vm" )
+#parse( "partials/content-detection.vm" )
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>$page.pageTitle()</title>
+    <meta name="description" content="HTML rendering of Linked Data API results: $page.pageTitle()">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    #parse( "partials/scripts.vm" )
+    #parse( "partials/css.vm" )
+
+    <script src="$assets/js/vendor/require.js"></script>
+    <script>
+      #parse( "partials/javascript-dependencies.vm" )
+    </script>
+    <!-- This link provides CORS support in IE8+ -->
+    <!--[if lt IE 10]>
+      <script src="${assets}/js/vendor/jquery.xdomainrequest.js"></script>
+    <![endif]-->
+
+    #parse( "partials/head-extensions.vm" )
+  </head>
+
+  <body>
+      #parse( "partials/navigation-bar.vm" )
+
+    <div class="container">
+      #parse( "partials/item-setup.vm")
+
+      #parse( "partials/qonsole.vm" )
+
+      ##parse( "partials/debug-context.vm" )
+
+      #parse( "partials/footer.vm" )
+    </div> <!-- /container -->
+
+  </body>
+</html>
+
+

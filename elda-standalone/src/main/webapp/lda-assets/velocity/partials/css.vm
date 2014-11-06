@@ -1,0 +1,14 @@
+## Included CSS stylesheets
+
+#parse( "partials/styles-extra-pre.vm" )
+
+<link rel="stylesheet" href="${assets}/css/bootstrap.min.css">
+<link rel="stylesheet" href="${assets}/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="${assets}/css/font-awesome.min.css">
+<link rel="stylesheet" href="${assets}/css/qonsole.css" />
+<link rel="stylesheet" href="${assets}/css/codemirror.css" />
+<link rel="stylesheet" href="${assets}/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="${assets}/css/site.css">
+
+#parse( "partials/styles-extra.vm" )
+

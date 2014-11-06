@@ -1,0 +1,19 @@
+## Add links to a menu item that allow users to select different page
+## sizes, and the next/prev/first page links
+#if ($page.hasPageData() )
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-file-o"></i> page<b class="caret"></b></a>
+    <ul class="dropdown-menu">
+      #if( $page.itemsPerPage() > 0 )
+        #pageSizeLink( $page, "1" )
+        #pageSizeLink( $page, "10" )
+        #pageSizeLink( $page, "25" )
+        #pageSizeLink( $page, "50" )
+        <li class="divider"></li>
+      #end
+      #pageNavigationLink( $page.firstPage(), "fa-fast-backward", "first" )
+      #pageNavigationLink( $page.prevPage(), "fa-step-backward", "previous" )
+      #pageNavigationLink( $page.nextPage(), "fa-step-forward", "next" )
+    </ul>
+  </li>
+#end

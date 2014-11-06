@@ -1,0 +1,4 @@
+<h1>
+<img src="${images}/molecule.png" alt="RDF molecule image" class="pull-left" />
+  <a class="navbar-brand" href="#">Linked data API</a>
+</h1>

@@ -1,0 +1,233 @@
+## Macros for displaying a single item
+#parse( "macros/item-extensions.vm" )
+
+#macro( eldaItem $hnode )
+  #showRdfResource( $hnode, "section", "outer" )
+#end
+
+## Display an RDF resource
+#macro( showRdfResource $hnode, $elem, $level )
+  #set( $resource = $hnode.rdfNode() )
+  #if( $level.equals( "outer" ))
+    <$elem class="rdf resource $level" id="$resource.shortUniqueID()">
+      <div class="row">
+        #itemName( $resource, "h1", "col-md-12" )
+        #itemURI( $resource, "h2", "col-md-12" )
+        #itemTypes( $resource, "col-md-12" )
+        #itemVisualExtension( $hnode )
+        #itemProperties( $hnode, $level )
+      </div>
+    </$elem>
+  #else
+    <$elem class="rdf resource $level">
+      #itemName( $resource, "h3", "", $hnode )
+      #itemURI( $resource, "h4", "" )
+      #itemTypes( $resource )
+      #itemVisualExtension( $hnode, "row" )
+      <div class="row">
+        #itemProperties( $hnode, $level )
+      </div>
+    </$elem>
+  #end
+#end
+
+## Display the name of the resource
+#macro( itemName $resource $h $css $node )
+  <div class="$css">
+    <$h class="resource-label">
+      $resource.getName()
+      #if( $node )
+        #actionsMenu( $node )
+      #end
+    </$h>
+  </div>
+#end
+
+## Display the item URI
+#macro( itemURI $resource $h $css )
+  <div class="$css">
+    #setResourceHref( $resource.getURI() )
+    <$h class="resource-uri"><a href="$href">$resource.getURI()</a></$h>
+  </div>
+#end
+
+## Display a list of types for the resource, if any are known
+#macro( itemTypes $resource $css )
+  #set( $types = $resource.types() )
+  #if( $types.size() > 0 )
+    <div class="$css">
+      <div class="resource-types">
+        a
+        <ul class="list-inline">
+          #foreach( $type in $types )
+            <li>
+              #setResourceHref( $type.getURI() )
+              <a href="$href">$type.getName()</a>
+            </li>
+          #end
+        </ul>
+      </div>
+    </div>
+  #end
+#end
+
+## Show the various properties of the item
+#macro( itemProperties $hNode $level )
+  #if( $hNode.children().size() > 0)
+    <div class="col-md-12">
+      <ul class="resource-properties">
+        #renderProperties( $hNode.children(), 4, 8 )
+      </ul>
+    </div>
+  #end
+#end
+
+## Loop to do the actual property rendering
+#macro( renderProperties $hNodes, $cw0, $cw1 )
+  #foreach( $hNode in $hNodes )
+    <div class="property-value-row $hNode.hintsString()">
+      #if( $hNode.hasHint( "literal" ))
+        #literalValuedNode( $hNode, $cw0, $cw1 )
+      #else
+        #resourceValuedNode( $hNode, $cw0, $cw1 )
+      #end
+    </div>
+  #end
+#end
+
+## Show a property-value pair where the value is known to be a literal
+#macro( literalValuedNode $hNode $cw0 $cw1 )
+  <div class="row">
+    <li class="">
+      <div class="col-md-$cw0">
+        #propertyPredicate( $hNode.terminalLink() )
+      </div>
+      <div class="col-md-$cw1">
+        #propertyValue( $hNode )
+      </div>
+    </li>
+  </div>
+#end
+
+## Show a property value pair where the value is known to be a resource
+#macro( resourceValuedNode $hNode $cw0 $cw1 )
+  <div class="row">
+    <li class="">
+      <div class="col-md-$cw0">
+        #propertyPredicate( $hNode.terminalLink() )
+      </div>
+      <div class="col-md-$cw1">
+        #propertyValue( $hNode )
+      </div>
+    </li>
+  </div>
+#end
+
+## Show the predicate of a property-value
+#macro( propertyPredicate $p )
+  <div class="rdf predicate">
+    #setResourceHref( $p.getURI() )
+    <a href="$href">$p.getName()</a>
+  </div>
+#end
+
+## Determine how to present a property value - single item or list?
+#macro( propertyValue $node )
+  #if( $node.hasSiblings() )
+    #propertyMultiValue( $node )
+  #else
+    #propertySingleValue( $node )
+  #end
+#end
+
+## Single value of a property
+#macro( propertySingleValue $node )
+  #propertyObject( $node, "first" )
+#end
+
+## List value of a property
+#macro( propertyMultiValue $node )
+  <ul class="rdf object multiple">
+    <li class="first $node.hintsString()">
+      #propertyObject( $node )
+    </li>
+    #foreach( $sibling in $node.siblings())
+      <li class="$sibling.hintsString()">
+        #propertyObject( $sibling )
+      </li>
+    #end
+  </ul>
+#end
+
+## Show the value of a property-value
+#macro( propertyObject $node )
+  #if( $node.rdfNode().isLiteral() )
+    #propertyObjectLiteral( $node.rdfNode() )
+    #actionsMenu( $node )
+  #else
+    #propertyObjectResource( $node )
+  #end
+#end
+
+## Show a literal-value
+#macro( propertyObjectLiteral $lit )
+  <div class="rdf object literal">
+    $esc.escapeHtml( $lit.getLexicalForm() )
+  </div>
+#end
+
+## Show a resource-value
+#macro( propertyObjectResource $node )
+  #if( $node.isSimpleResource())
+    #setResourceHref( $node.getURI() )
+    <a href="$href" class="rdf object resource simple">$node.getName()</a>
+    #actionsMenu( $node )
+  #else
+    <div class="rdf object nested">
+      #showRdfResource( $node, "div", "nested" )
+    </div>
+  #end
+#end
+
+## Determine the URL href for a resource URI, by applying any substitutions that are defined
+#macro( setResourceHref $uri )
+  #set( $href = $uri )
+  #set ( $retainSuffix = false )
+
+  #if( $rewriteURLFrom && $href.contains( $rewriteURLFrom.spelling() ) )
+    #set( $href = $href.replace( $rewriteURLFrom.spelling(), $rewriteURLTo.spelling() ) )
+    #set( $retainSuffix = true )
+  #elseif( $_suffix && $href.contains( $_HOST.spelling() ))
+    #set( $retainSuffix = true )
+  #end
+
+  #if( $retainSuffix )
+    #set( $trailingSlash = false )
+    #if( $href.endsWith( "/" ) )
+      #set( $trailingSlash = true )
+      #set( $href = $href.replace( "/$", "" ) )
+    #end
+
+    #set( $href = $href + "." + $_suffix.spelling() )
+
+    #if( $trailingSlash )
+      #set( $href = $href + "/" )
+    #end
+  #end
+#end
+
+## Show the actions menu for this value
+#macro( actionsMenu $node )
+  #if( ! $node.rdfNode().isXmlLiteral() )
+    <span class="filter-actions">
+      <button type="button"
+              class="btn btn-xs btn-default popover-dismiss"
+              title="change this view:"
+              data-placement="auto left"
+              data-html="true"
+              data-content="$node.relatedLinksHTML()">
+        <i class="fa fa-bars"></i>
+      </button>
+    </span>
+  #end
+#end
