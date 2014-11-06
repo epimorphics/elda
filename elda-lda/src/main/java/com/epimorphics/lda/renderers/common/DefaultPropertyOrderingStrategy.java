@@ -94,11 +94,11 @@ implements PropertyOrderingStrategy
     /**
      * Ensure that the values of multi-value properties are placed in a suitable order.
      *
-     * @param apvs
+     * @param pvs A list of property-value pairs to be placed into order
      */
-    protected void orderPropertyMultiValues( List<PropertyValue> apvs ) {
+    protected void orderPropertyMultiValues( List<PropertyValue> pvs ) {
         // PropertyValue contains a list of values, we need these to be in order as well
-        for (PropertyValue pv: apvs) {
+        for (PropertyValue pv: pvs) {
             Collections.sort( pv.getValues(), new Comparator<RDFNodeWrapper>() {
                 @Override
                 public int compare( RDFNodeWrapper o1, RDFNodeWrapper o2 ) {
@@ -110,8 +110,8 @@ implements PropertyOrderingStrategy
 
     /**
      * Collect the property value pairs of the given subject, and return a list
-     * @param subject
-     * @return
+     * @param subject An RDF resource node
+     * @return A list of the property-value pairs whose subject is <code>subject</code>
      */
     protected List<PropertyValue> collectValues( RDFNodeWrapper subject ) {
         PropertyValueSet pvs = new PropertyValueSet( subject.getModelW() );

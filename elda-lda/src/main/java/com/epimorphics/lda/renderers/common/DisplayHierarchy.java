@@ -95,8 +95,8 @@ public class DisplayHierarchy
      * Expand a hierarchy node by extracting the properties of the node, matching
      * paths to properties, and appending the children to the expansion queue if appropriate.
      *
-     * @param context
-     * @param node
+     * @param context The current display hierarchy context
+     * @param parent The node to be expanded
      */
     protected void expandNode( DisplayHierarchyContext context, DisplayHierarchyNode parent ) {
         List<PropertyValue> arcs = parent.rdfNode().getDisplayProperties();

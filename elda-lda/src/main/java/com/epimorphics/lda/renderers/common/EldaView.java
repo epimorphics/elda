@@ -97,8 +97,8 @@ implements Comparable<EldaView>
 
     /**
      * When comparing views in order to sort them, sort them in order of the view name
-     * @param o
-     * @return
+     * @param o An object to compare against
+     * @return -1, 0, or 1 to indicate the relative order of the compared views
      */
     @Override
     public int compareTo( EldaView o ) {

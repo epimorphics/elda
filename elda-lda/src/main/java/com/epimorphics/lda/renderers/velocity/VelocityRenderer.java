@@ -130,7 +130,6 @@ implements Renderer
      * Return the configured metadata options, or, if not specified in the API
      * configuration, the default options.
      *
-     * @param root The configuration root resource
      * @return The metadata options for this renderer
      */
     public MetadataOptions metadataOptions() {
