@@ -1,3 +1,11 @@
+/*
+    See lda-top/LICENCE (or https://raw.github.com/epimorphics/elda/master/LICENCE)
+    for the licence for this software.
+
+    (c) Copyright 2014 Epimorphics Limited
+    $Id$
+*/
+
 package run;
 
 import java.io.File;
@@ -18,5 +26,4 @@ public class standalone {
 	    server.start();
 	    server.getServer().await();
 	} 
-
 }

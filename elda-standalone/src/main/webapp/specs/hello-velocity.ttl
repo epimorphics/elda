@@ -1,5 +1,5 @@
 #
-# A hello-world config. 
+# A hello-world config.
 #
 
 # Assorted prefix declarations. Some of them are for the structuring
@@ -22,38 +22,38 @@
 # ---------------------------------------------------------------------
 # API config
 
-egc:velocity-world a api:API 
-	; rdfs:label "Hello World example API -- games, rendered with Velocity"@en
-	; api:sparqlEndpoint <local:data/example-data.ttl>
-	# ; api:defaultViewer api:labelledDescribeViewer
-	; api:base "/standalone"
-	; api:endpoint egc:games 
-	; api:defaultFormatter
-		[a elda:VelocityFormatter
-		; api:name "html"
-		; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
-		; api:mimeType "text/html"
-		# ; elda:velocityTemplate "page-shell.vm"
-		]    
-	; api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"];
-	; api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm/"]
-	.
-    
-# Endpoint definition	
-	
-egc:games a api:ListEndpoint 
-	; rdfs:label "Games" 
-	; api:uriTemplate "/games" 
-	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
-	.	
-	
+egc:velocity-world a api:API
+  ; rdfs:label "Hello World example API -- games, rendered with Velocity"@en
+  ; api:sparqlEndpoint <local:data/example-data.ttl>
+  # ; api:defaultViewer api:labelledDescribeViewer
+  ; api:base "/standalone"
+  ; api:endpoint egc:games
+  ; api:defaultFormatter
+    [a elda:VelocityFormatter
+    ; api:name "html"
+    ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
+    ; api:mimeType "text/html"
+    # ; elda:velocityTemplate "page-shell.vm"
+    ]
+#  ; api:variable [api:name "_velocityRoot"; api:value "/var/www/elda/elda-assets-velocity"]
+  ; api:variable [api:name "_velocityRoot"; api:value "assets/velocity"]
+  .
+
+# Endpoint definition
+
+egc:games a api:ListEndpoint
+  ; rdfs:label "Games"
+  ; api:uriTemplate "/games"
+  ; api:selector [api:filter "type=BoardGame"; api:sort "label"]
+  .
+
 egc:BoardGame a rdfs:Class
-	; rdfs:label "Board Game"
-	; api:label "BoardGame"
-	.
-	
+  ; rdfs:label "Board Game"
+  ; api:label "BoardGame"
+  .
+
 egc:players a rdf:Property
-	; api:label "players"
-	; rdfs:range xsd:int
-	.
-		
+  ; api:label "players"
+  ; rdfs:range xsd:int
+  .
+

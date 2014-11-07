@@ -1,0 +1,134 @@
+<section>
+  <div class="qonsole">
+    <div class="panel-group" id="accordion">
+      <div class="panel">
+        <div class="panel-heading">
+          <h2 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#sparqlform" class="collapsed">
+              Sparql query form
+              <i class="fa expand-indicator"></i>
+            </a>
+          </h4>
+        </div>
+        <div id="sparqlform" class="panel-collapse collapse">
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-md-12">
+                <h2 class="">Example queries</h2>
+                <ul class="list-inline examples">
+                </ul>
+              </div>
+
+              <div class="col-md-12 vertical">
+                <h2 class="">Prefixes</h2>
+                <ul class="list-inline prefixes">
+                  <li class="keep">
+                    <a data-toggle="modal" href="#prefixEditor" class="button" title="Add a SPARQL prefix">
+                      <i class="icon-plus-sign"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="col-md-12 ">
+                <div class="query-edit">
+                  <div id="query-edit-cm" class=""></div>
+                </div>
+                <div class="query-chrome">
+                  <form class="form-inline" role="form">
+                    <div class="row">
+                      <div class="form-group col-md-6">
+                        <label for="sparqlEndpoint">SPARQL endpoint</label><br />
+                        <div class="col-xs-12">
+                        <input type="text" class="form-control" id="sparqlEndpoint" style="width:100%"/>
+                        </div>
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label for="displayFormat">Results</label><br />
+                        <div class="dropup ">
+                          <a data-toggle="dropdown" class="btn btn-custom2 display-format" href="#" data-value="tsv">
+                            <span>table</span> <i class="icon-collapse"></i>
+                          </a>
+                          <ul class="dropdown-menu formats  " role="menu" aria-labelledby="dropdownMenu2">
+                            <li role='presentation' class="" ><a data-value="tsv" role='menuitem' tabindex='-1' href='#'>table</a></li>
+                            <li role='presentation' class="" ><a data-value="text"role='menuitem' tabindex='-1' href='#'>plain text</a></li>
+                            <li role='presentation' class="" ><a data-value="json"role='menuitem' tabindex='-1' href='#'>JSON</a></li>
+                            <li role='presentation' class="" ><a data-value="xml"role='menuitem' tabindex='-1' href='#'>XML</a></li>
+                          </ul>
+                        </div>
+
+                      </div>
+                      <div class="form-group col-md-3">
+                        <label>&nbsp;</label><br />
+                        <a href="#" class="btn btn-success run-query form-control">perform query</a>
+                      </div>
+                    </div> <!-- /.row -->
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- results -->
+            <div class="clearfix"></div>
+            <div id="results-block">
+              <div class="sparql sparql-results">
+                <div class="row">
+                  <div class="col-md-12">
+                    <span class="loadingSpinner hidden">
+                      <img src="${assets}/images/wait30.gif" alt="waiting for server action to complete" />
+                    </span>
+                    <span class="timeTaken hidden"></span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12" id="results">
+                    <h2 class="col-md-12">Query results</h2>
+                  </div>
+                </div>
+              </div> <!-- /.row.sparql-results -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row clearfix"></div>
+  </div><!-- .container-->
+</section>
+
+<!-- modal dialogue -->
+<div class="modal fade" id="prefixEditor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Add a SPARQL prefix</h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <label for="inputPrefix" class="col-lg-2 control-label">Prefix</label>
+            <div class="col-lg-10">
+              <input type="text" class="form-control" id="inputPrefix" placeholder="Prefix" autofocus>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+              <button class="btn btn-sm btn-primary" id="lookupPrefix">Lookup <span></span> on prefix.cc</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputURI" class="col-lg-2 control-label">URI</label>
+            <div class="col-lg-10">
+              <input type="text" class="form-control" id="inputURI" placeholder="URI">
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">cancel</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="addPrefix">add prefix</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
