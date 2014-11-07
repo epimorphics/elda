@@ -29,8 +29,10 @@ hello:hello-world-again a api:API
 	# ; api:sparqlEndpoint <http://localhost:3030/ds/query>
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:viewer [a api:Viewer; api:name "empty"; api:properties ""]
-	; api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm/"]
+
+	; api:variable [api:name "_velocityPath"; api:value "/src/main/webapp/lda-assets/velocity/"]
 	; api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"]
+
 	; api:endpoint 
 		hello:publishers, hello:games, hello:about
 
@@ -47,7 +49,6 @@ hello:hello-world-again a api:API
         ; api:name "vhtml"
         ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
         ; api:mimeType "text/html"
-        ; elda:velocityTemplate "page-shell.vm"
         ]
         
     ; elda:enableCounting true
@@ -158,6 +159,7 @@ hello:pubYear a rdf:Property
 hello:playTimeMinutes a rdf:Property
 	; api:label "playTimeMinutes"
 	; rdfs:label "playTimeMinutes"
+
 	; rdfs:range xsd:integer
 	.	
 		
