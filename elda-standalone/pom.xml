@@ -57,7 +57,7 @@
             </goals>
             <phase>package</phase>
             <configuration>
-              <path>standalone</path>
+					<path>/standalone</path>
             </configuration>
           </execution>
         </executions>

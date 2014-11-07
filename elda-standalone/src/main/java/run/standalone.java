@@ -21,7 +21,7 @@ public class standalone {
 	    server.setPort(8080);  
 	    server.setBaseDir(".");
 	//
-	    server.addWebapp(contextPath,  new File("src/main/webapp").getAbsolutePath());
+	    server.addWebapp(contextPath, new File("src/main/webapp").getAbsolutePath());
 	//
 	    server.start();
 	    server.getServer().await();
