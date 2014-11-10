@@ -293,7 +293,7 @@ public class DisplayHierarchyNode
      * <code>a,b,c,d,e</code>, and we <code>pullToStart(c,d,f)</code>
      * the children of the node will become <code>c,d,a,b,e</code>
      *
-     * @param RDF properties which will identify the children of this node to
+     * @param properties RDF properties which will identify the children of this node to
      * move to the front of the children list. Order within the <code>properties</code>
      * is preserved.
      */
@@ -318,7 +318,7 @@ public class DisplayHierarchyNode
      * <code>a,b,c,d,e</code>, and we <code>pullToStart(c,d,f)</code>
      * the children of the node will become <code>c,d,a,b,e</code>
      *
-     * @param RDF properties which will identify the children of this node to
+     * @param properties RDF properties which will identify the children of this node to
      * move to the front of the children list. Order within the <code>properties</code>
      * is preserved.
      */
@@ -361,42 +361,42 @@ public class DisplayHierarchyNode
 
     /* Convenience methods which delegate to the same method on the encapsulated RDFNodeWrapper */
 
-    /** @see {@link RDFNodeWrapper#isResource()} */
+    /** @see RDFNodeWrapper#isResource() */
     public boolean isResource() {
         return rdfNode().isResource();
     }
 
-    /** @see {@link RDFNodeWrapper#isLiteral()} */
+    /** @see RDFNodeWrapper#isLiteral() */
     public boolean isLiteral() {
         return rdfNode().isLiteral();
     }
 
-    /** @see {@link RDFNodeWrapper#isAnon()} */
+    /** @see RDFNodeWrapper#isAnon() */
     public boolean isAnon() {
         return rdfNode().isAnon();
     }
 
-    /** @see {@link RDFNodeWrapper#isList()} */
+    /** @see RDFNodeWrapper#isList() */
     public boolean isList() {
         return rdfNode().isList();
     }
 
-    /** @see {@link RDFNodeWrapper#getLexicalForm()} */
+    /** @see RDFNodeWrapper#getLexicalForm() */
     public String getLexicalForm() {
         return rdfNode().getLexicalForm();
     }
 
-    /** @see {@link RDFNodeWrapper#getName()} */
+    /** @see RDFNodeWrapper#getName() */
     public String getName() {
         return rdfNode().getName();
     }
 
-    /** @see {@link RDFNodeWrapper#getValue()} */
+    /** @see RDFNodeWrapper#getValue() */
     public Object getValue() {
         return rdfNode().getValue();
     }
 
-    /** @see {@link RDFNodeWrapper#getURI()} */
+    /** @see RDFNodeWrapper#getURI() */
     public String getURI() {
         return rdfNode().getURI();
     }

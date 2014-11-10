@@ -463,10 +463,12 @@ import com.sun.jersey.api.NotFoundException;
 				try {        
 					if (ePath == null)
 						throw new RuntimeException("problem: resource path in asResourceURL is null.");
+					
 					URL url = ePath.matches(STARTS_WITH_SCHEME) ? new URL(ePath)
 						: ePath.startsWith("/") ? pathToURL(ePath)
 						: pathToURL(getRealPath(servCon, "/" + ePath))
 						;
+						
 					if (log.isDebugEnabled())
 						log.debug("mapped ePath '" + ePath + "' to URL '" + url + "'");
 					return url;

@@ -33,7 +33,6 @@ egc:velocity-world a api:API
     ; api:name "html"
     ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
     ; api:mimeType "text/html"
-    # ; elda:velocityTemplate "page-shell.vm"
     ]
   ; api:variable [api:name "_velocityRoot"; api:value "assets/velocity"]
   .

@@ -12,4 +12,16 @@ define( ['jquery'], function( $ ) {
 
   /** Set the initial size for the nav bar */
   $( setBodyPaddingForNav );
+
+  /**
+   * Bug fix for combination of CodeMirror and hidden containers. CM does not initialise properly
+   * unless the parent is visible.
+   */
+  var qonsoleInit = false;
+  $( "#sparqlform" ).on( "shown.bs.collapse", function( e ) {
+    if (!qonsoleInit) {
+      qonsoleInit = true;
+      $("ul.examples a").first().click();
+    }
+  } );
 } );

@@ -1,139 +1,67 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <parent>
     <artifactId>elda</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.2.36-SNAPSHOT</version>
   </parent>
-
+  <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda-standalone</artifactId>
   <packaging>war</packaging>
   <name>elda-standalone</name>
+  <version>1.3.0-SNAPSHOT</version>
   <description>instant Elda webapp</description>
-
   <dependencies>
-
-
-    <!-- - ->
     <dependency>
-      <groupId>org.mortbay.jetty</groupId>
-      <artifactId>jetty</artifactId>
-      <version>6.1.16</version>
-    </dependency>
-    <!- - -->
-
-    <!-- -->
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-server</artifactId>
-      <version>9.2.1.v20140609</version>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <version>7.0.42</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-webapp</artifactId>
-      <version>9.2.1.v20140609</version>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-logging-log4j</artifactId>
+      <version>7.0.42</version>
+      <scope>provided</scope>
     </dependency>
-    <!-- -->
-
-
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-jasper</artifactId>
+      <version>7.0.42</version>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>elda-lda</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>com.epimorphics.lda</groupId>
-      <artifactId>elda-assets</artifactId>
-      <version>${project.version}</version>
-      <type>war</type>
-    </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.2</version>
     </dependency>
-
   </dependencies>
-
   <build>
     <finalName>elda-standalone</finalName>
     <plugins>
-      <!-- - ->
       <plugin>
-        <artifactId>maven-jetty-plugin</artifactId>
-        <groupId>org.mortbay.jetty</groupId>
-        <version>6.1.25</version>
-      </plugin>
-      <!- - -->
-
-      <!--  -->
-      <plugin>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <groupId>org.eclipse.jetty</groupId>
-        <version>9.2.1.v20140609</version>
-        <configuration>
-          <scanIntervalSeconds>2</scanIntervalSeconds>
-          <webApp>
-            <contextPath>/elda-standalone</contextPath>
-          </webApp>
-        </configuration>
-      </plugin>
-      <!--  -->
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <overlays>
-            <overlay>
-              <groupId>com.epimorphics.lda</groupId>
-              <artifactId>elda-assets</artifactId>
-              <targetPath>assets</targetPath>
-            </overlay>
-          </overlays>
-        </configuration>
-      </plugin>
-
-
-      <!-- assemble the final jar file -->
-      <plugin>
-        <!-- NOTE: We don't need a groupId specification because the group is org.apache.maven.plugins ...which is assumed
-          by default. -->
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.2.1</version>
-        <configuration>
-
-          <descriptors>
-            <descriptor>src/assemble/distribution.xml</descriptor>
-          </descriptors>
-
-          <finalName>elda-standalone-${project.version}</finalName>
-
-          <appendAssemblyId>false</appendAssemblyId>
-
-          <archive>
-            <manifestEntries>
-              <Main-Class>cmd.run</Main-Class>
-            </manifestEntries>
-          </archive>
-
-        </configuration>
-
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.0</version>
         <executions>
           <execution>
-            <phase>package</phase>
+            <id>tomcat-run</id>
             <goals>
-              <goal>single</goal>
+              <goal>exec-war-only</goal>
             </goals>
+            <phase>package</phase>
+            <configuration>
+					<path>/standalone</path>
+            </configuration>
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
@@ -144,5 +72,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>

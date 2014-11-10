@@ -228,8 +228,8 @@ implements BytesOut
 
     /**
      * Set additional properties that are calculated based on current state
-     * @param velocityRoot
-     * @param p
+     * @param velocityPath The Velocity path as given
+     * @param p The current Properties object
      */
     protected void setDynamicProperties( List<String> velocityPath, Properties p ) {
         if (p.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH ) == null) {

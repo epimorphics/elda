@@ -8,28 +8,22 @@
 
 package run;
 
-//import org.mortbay.jetty.Server;
-//import org.mortbay.jetty.servlet.ServletHolder;
-//import org.mortbay.jetty.webapp.WebAppContext;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.AllowSymLinkAliasChecker;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.webapp.WebAppContext;
+import java.io.File;
 
-import com.sun.jersey.api.core.PackagesResourceConfig;
-import com.sun.jersey.spi.container.servlet.ServletContainer;
+import org.apache.catalina.startup.Tomcat;
 
-public class standalone {
+public class standalone {	
+	
+	static final String contextPath = "/standalone";
 
-    public static void main( String [] args ) throws Exception {
-        Server server = new Server(8080);
-    //
-        WebAppContext webapp = new WebAppContext( "src/main/webapp/", "/standalone" );
-        webapp.addServlet(new ServletHolder( new ServletContainer( new PackagesResourceConfig("com.epimorphics.lda.restlets") ) ), "/");
-        webapp.addAliasCheck( new AllowSymLinkAliasChecker() );
-        server.setHandler(webapp);
-    //
-        server.start();
-        server.join();
-    }
+	public static void main( String [] args ) throws Exception {  
+	    Tomcat server = new Tomcat(); 
+	    server.setPort(8080);  
+	    server.setBaseDir(".");
+	//
+	    server.addWebapp(contextPath, new File("src/main/webapp").getAbsolutePath());
+	//
+	    server.start();
+	    server.getServer().await();
+	} 
 }

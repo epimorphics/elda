@@ -101,7 +101,6 @@ spec:VelocityFormatter a elda:VelocityFormatter
 	; api:name "vhtml"
 	; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
 	; api:mimeType "text/html"
-	; elda:velocityTemplate "page-shell.vm"
 	.
 
 ############################################################################################
@@ -128,7 +127,6 @@ spec:mini-education-api a api:API
        ; api:name "vhtml"
        ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
        ; api:mimeType "text/html"
-       ; elda:velocityTemplate "page-shell.vm"
 	   ] 
 	   
 	# two conveniently-available viewers

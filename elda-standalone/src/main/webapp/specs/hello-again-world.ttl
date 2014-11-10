@@ -30,7 +30,7 @@ hello:hello-world-again a api:API
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:viewer [a api:Viewer; api:name "empty"; api:properties ""]
 
-	; api:variable [api:name "_velocityPath"; api:value "/home/chris/EldaThings/elda-in-github/elda-standalone/src/main/webapp/lda-assets/velocity/"]
+	; api:variable [api:name "_velocityPath"; api:value "lda-assets/velocity/"]
 	; api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"]
 
 	; api:endpoint 
@@ -46,7 +46,7 @@ hello:hello-world-again a api:API
     
     ; api:formatter
         [a elda:VelocityFormatter
-        ; api:name "vhtml"
+        ; api:name "html"
         ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
         ; api:mimeType "text/html"
         ]

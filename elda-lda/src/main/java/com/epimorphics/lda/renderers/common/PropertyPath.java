@@ -193,8 +193,9 @@ public class PropertyPath
 
     /**
      * Segment the path by the '.' character, but don't allow null paths
-     * @param path
-     * @return
+     * @param path A path string to be segmented
+     * @return An array of the components of the path
+     * @throws IllegalArgumentException if <code>path</code> is null
      */
     private static String[] segment( String path ) {
         if (path == null) {

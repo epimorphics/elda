@@ -234,8 +234,8 @@ public class EldaURL
 
     /**
      * Generate a URL that has the same structure as this URL, except for the given parameters.
-     * @param parameters
-     * @return
+     * @param parameters Parameters of the new URL object, as a map
+     * @return A new URL object
      */
     protected EldaURL generateURL( Map<String, URLParameterValue> parameters ) {
         try {
