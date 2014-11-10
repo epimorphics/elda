@@ -174,23 +174,11 @@ After compiling, the runnable `.jar` file will be in
 If you can't use port 8080
 --------------------------
 
-Your computer may already be using port 8080 for some local service. In
+Your computer may already be using port 8080 for some other service. In
 that case, you can start Elda from the command line (this won't work
 when double-clicking in a file manager) with:
 
-    java -jar standalone.jar -Djetty.port=NNNN
-
-To change the port number without having to supply a `-Djetty.port`
-command line option every time, in the Elda directory edit the
-configuration file `etc/jetty.xml` and change the line:
-
-    <Set name="port"><SystemProperty name="jetty.port" default="8080"/></Set>
-
-to:
-
-    <Set name="port"><SystemProperty name="jetty.port" default="NNNN"/></Set>
-
-where NNNN is the port number of your choice.
+    java -jar standalone.jar -DhttpPort=NNNN
 
 if you need logging
 -------------------
@@ -284,28 +272,27 @@ The page <http://localhost:8080/standalone/again/games> shows us the
 properties (as in the example data file) of several boardgames. This
 HTML view allows you to explore the dataset. For example, *A Brief
 History of the World* has publication date 2009. Clicking the
-magnifying-glass icon on that line restricts the results to only those
-with that publication date -- as it happens, no others. And we see (from
+dropdown icon on that line restricts the results to only those
+with that publication date -- the *Brief History* and
+*Last Train to Wensleydale(. And we see (from
 the URL bar) that the URL of this page has had a
-**publicationDate=2009** query parameter added.
+*publicationDate=2009* query parameter added.
 
-Going back and clicking the less-than sign shows instead will show games
+The dropdown menu also allows you to select games
 whose publication date is the same as, or less recent than, *A Brief
-History of the World*. Similarly, going back and clicking the
-greater-than sign will show games no older than *A Brief History of the
-World*. In both cases, the URL changes to show the applied filter, which
-also appears in the *Filter* box in the column on the right.
+History of the World*, or, separately, no older. In both cases, 
+the URL changes to show the applied filter. Selected options can
+be de-selected.
 
-Similarly you can play with the value of `players`, *eg* clicking on the
-magnifying class for players 4 will restrict the display to only games
-that have a 4-player option. And, of course, you can apply two (or more)
-filters at once.
+Similarly you can play with the value of `players`, *eg* restricting
+the number to 4 will show only games that have a 4-player option
+(not that it does not reject games that allow other numbers of
+players). And you can apply more than one filter, perhaps asking
+for seven-player games from before 2005.
 
-In the right-hand column, the *Sortby* box contains the names of the
-properties that are displayed. Clicking on an arrow will change the
-order of the items by sorting according to the value of the predicate:
-the default is to sort by the label of the item, but you could choose
-`publication date` or `designed by`, or both together. `players`, being
+You can also chose to sort according to the selected property or 
+properties, *eg* by publication date or (rough) play time in 
+minutes, or both. However, `players`, being
 multi-valued, isn't really a good sorting candidate.
 
 Games example -- configuration
@@ -380,16 +367,14 @@ These are two endpoints for this API, `hello:games` and
 `hello:publishers`.
 
     ; api:formatter
-      [ a api:XsltFormatter
+      [ a api:VelocityFormatter
       ; api:name "html"
       ; api:mimeType "text/html; charset=utf-8"
-      ; api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
       ]
       .
 
-Elda's default HTML formatter is crude, so we define a new formatter for
-the name `html` which is an XSLT formatter producing UTF-8 endcoded
-`text/html` and using the stylesheet `result-osm-trimmed.xsl`.
+(An alternative (older) formatter which generates its results
+using XSLT stylesheets, is also available.)
 
     # Endpoint definitions
 
@@ -415,7 +400,7 @@ Similarly, this is the *games* endpoint, selecting only items of type
 hello:BoardGame and sorting them by their label.
 
 The rest of the configuration defines property and class shortnames and
-other important attributes. The resouces (classes and proeprties both)
+other important attributes. The resouces (classes and properties both)
 that are of interest are those of type `rdf:Property`,
 `owl:ObjectProperty`, `owl:DatatypeProperty`, `rdfs:Class`, and
 `owl:Class`.
@@ -520,8 +505,10 @@ By editing web.xml
 ------------------
 
 To change the specification used without having to use a `-Delda.spec`
-command line option every time, edit the Elda
-`webapps/elda/WEB-INF/web.xml`. Find the servlet configuration
+command line option every time, you will have to build your own
+version of Elda; see the instructions elsewhere (TBD). When you
+do so, edit `webapps/elda/WEB-INF/web.xml`. Find the servlet 
+configuration
 
     <servlet>
       <servlet-name>loader-init</servlet-name>
@@ -533,21 +520,19 @@ command line option every time, edit the Elda
       <load-on-startup>1</load-on-startup>
     </servlet>
 
-Replace the **assorted specs here** with the name of the LDA
+and replace the *assorted specs here* with the name of the LDA
 specification files you wish to load, separated by commas. Spaces and
 newlines are ignored. (For more explanation of the structure of the
 `web.xml` file, see [the reference documentation](reference.html)).
 
-Fancy HTML formatting using XSLT stylesheets
-============================================
+Older XSLT formatter
+====================
 
-The default formatter supplied by Elda is a very simple HTML formatter
-showing the properties and their values of the selected items. Elda also
-ships with a renderer that uses XSLT (and Javascript at the client end)
-to produce pages with additional controls and a richer appearance. To
-use this as your html renderer, add:
+To use the older XSLT renderer (typically if you have existing 
+editing stylesheets or prefer the older rendering style), define
+an xslt formatter:
 
-    ; api:formatter
+    api:formatter
       [a api:XsltFormatter
       ; api:name 'html'
       ; api:stylesheet 'xslt/result-osm.xsl'
