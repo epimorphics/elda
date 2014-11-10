@@ -52,13 +52,11 @@
         <executions>
           <execution>
             <id>tomcat-run</id>
-            <goals>
-              <goal>exec-war-only</goal>
-            </goals>
+            <goals> <goal>exec-war-only</goal> </goals>
             <phase>package</phase>
-            <configuration>
-					<path>/standalone</path>
-            </configuration>
+			<configuration> 
+				<path>/standalone</path> 
+			</configuration>
           </execution>
         </executions>
       </plugin>

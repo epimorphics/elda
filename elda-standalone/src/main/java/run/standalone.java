@@ -18,7 +18,13 @@ public class standalone {
 
 	public static void main( String [] args ) throws Exception {  
 	    Tomcat server = new Tomcat(); 
-	    server.setPort(8080);  
+	    int port = 8080;
+	    String portString = System.getProperty("elda.port");
+	    if (portString != null) port = Integer.parseInt(portString);
+	//
+	    System.err.println(">> elda: portString=" + portString + ", port=" + port);
+	//
+	    server.setPort(port);  
 	    server.setBaseDir(".");
 	//
 	    server.addWebapp(contextPath, new File("src/main/webapp").getAbsolutePath());
