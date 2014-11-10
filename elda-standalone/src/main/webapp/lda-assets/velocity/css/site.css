@@ -1,0 +1,266 @@
+/* General styles */
+body {
+  padding-top: 60px;
+}
+
+/* Navigation bar */
+
+.navbar h1 {
+  margin-top: 0;
+}
+
+h1 .navbar-brand {
+  font-size: 100%;
+  font-weight: bold;
+  white-space: nowrap;
+  padding-left: 20px;
+}
+
+.navbar-default a.navbar-brand, .navbar-default a.navbar-brand:visited {
+  color: #f0f0f0;
+}
+
+.navbar .dropdown-menu {
+  z-index: 10000;
+}
+
+.navbar-default {
+  background: linear-gradient( #8c9eff, #8c9eff 80%, rgba(140, 158, 255, 0.3) );
+}
+
+.navbar {
+  border: 0;
+  border-radius: 0;
+  position: fixed;
+  top: 0;
+  z-index: 9999;
+  width: 100%;
+}
+
+.navbar-default .navbar-nav > li > a,
+.navbar-default .navbar-nav > li > a:visited {
+  color: #f0f0f0;
+}
+
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+  background-color: #8c9eff;
+  background-color: transparent;
+  color: #444;
+}
+/* RDF resource presentation */
+
+section {
+  border: 1px solid #303f9f;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+h1.resource-label {
+  font-size: 12pt;
+  font-weight: bold;
+  background-color: #303f9f;
+  color: white;
+  margin: 0;
+  padding: 5px;
+}
+
+h2.resource-uri, h4.resource-uri, .resource-types {
+  font-size: 10pt;
+  color: #666;
+  margin: 0;
+  padding: 3px 5px;
+  background-color: #e8eaf6;
+}
+
+.resource-types > ul {
+  margin: 0;
+  padding: 0;
+}
+
+.resource-types ul {
+  display: inline-block;
+}
+
+.resource-types li {
+  padding-bottom: 0;
+  padding: 0;
+  margin-right: 0;
+}
+
+.resource-types li + li:before {
+  padding: 0;
+  margin: 0;
+  content: ", ";
+}
+
+h2.resource-uri a,
+h2.resource-uri a:visited,
+h4.resource-uri a,
+h4.resource-uri a:visited
+{
+  color: #666;
+}
+
+.rdf.object > ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rdf.object > ul li {
+  display: inline-block;
+  border-left: 0;
+}
+
+.rdf.object .rdf.resource > ul li {
+  display: block;
+}
+
+ul ul {
+  display: inline-block;
+}
+
+ul {
+  list-style: none;
+  padding: 5px 5px 1px 5px;
+}
+
+div.rdf {
+  display: inline-block;
+}
+
+.rdf.predicate {
+  vertical-align: top;
+  padding: 1px 0px 1px 0px;
+}
+
+.rdf.object.multiple {
+  margin: 0;
+  padding: 0;
+}
+
+.rdf.object.first {
+  margin-left: -4px;
+}
+
+.multiple > li > .rdf.object {
+  vertical-align: top;
+  padding: 1px 0px 1px 0px;
+}
+
+.rdf.predicate a, .rdf.predicate a:visited {
+  text-align: right;
+}
+
+.multiple > li {
+  padding-bottom: 0;
+}
+
+.rdf li {
+  padding-bottom: 6px;
+}
+
+.property-value-row {
+  padding: 2px 0;
+  min-height: 25px;
+}
+
+.property-value-row.odd  {
+  /*background-color: #f5f5f9;*/
+}
+
+.property-value-row + .property-value-row {
+  border-top: 1px solid #e8eaf6;
+}
+
+.property-value-row.literal + .property-value-row.resource {
+  border-top: 2px dotted #c5cae9;
+}
+
+ul.resource-properties.extensions {
+  border-bottom: 2px dotted #c5cae9;
+}
+
+ul.resource-properties {
+  margin-bottom: 0;
+  width: 100%;
+}
+
+/* nested resources */
+.nested {
+  display: inline-block;
+  border: 1px solid #3f51b5;
+  border-radius: 4px;
+  margin: 4px 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+.rdf.resource.nested {
+  margin: 0;
+  border: 0;
+}
+
+.nested h3 {
+  font-size: 10pt;
+  margin: 0;
+  color: white;
+  background-color: #3f51b5;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+.rdf.resource.nested .rdf.object {
+  margin-left: -5px;
+}
+
+/* Literal lists */
+
+.literal li.literal {
+  display: inline-block;
+  content: ", ";
+}
+
+.literal li.literal + li.literal:before {
+  padding: 0;
+  margin: 0;
+  content: ", ";
+}
+
+
+/* Filter and sort actions */
+.filter-actions {
+  margin-left: 15px;
+}
+
+.filter-actions button {
+  color: #5c6bc0;
+}
+
+/* Popovers */
+.popover h3 {
+  background-color: #c5cae9;
+  border: 0;
+}
+
+.popover i.fa-minus-circle {
+  color: #f57c00;
+}
+
+/* Item extensions */
+
+.item-extension {
+  min-height: 100px;
+  height: 100px;
+  margin: 10px;
+}
+
+.item-extension .olMap {
+  height: 100px;
+}
+
+#resultsMap {
+  height: 250px;
+}
