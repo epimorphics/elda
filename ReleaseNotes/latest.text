@@ -1,6 +1,24 @@
 +-----------------------------------------------------------------------
-| Elda 1.2.36 (DEVELOPING)
+| Elda 1.3.0 (DEVELOPING)
 
+The Elda velocity renderer has been completely rewritten
+and has become the default renderer. (The XSLT renderer
+is still available.) See
+
+    http://epimorphics.github.io/elda/docs/current/velocity.html
+
+for a detailed description. The old velocity templates have
+been removed.
+
+Elda standalone is now built using a maven tomcat plugin
+and does not unpack itself and launch jetty; instead
+Tomcat unpacks it into .extract.
+
+Some incomplete integration tests directories have been 
+removed and the javadoc improved.
+
+Elda now works with Tomcat8 (it was unportably presenting
+pathnames not starting with / to getRealPath).
 
 +-----------------------------------------------------------------------
 | Elda 1.2.35 (RELEASED)
