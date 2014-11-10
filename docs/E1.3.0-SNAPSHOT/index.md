@@ -44,7 +44,7 @@ browser: <http://localhost:8080/standalone/hello/games>. This should
 display a page similar to:
 
 ![Screenshot showing demo dataset in
-Elda](elda-demo-screenshot-1.png "Screenshot showing demo dataset")
+Elda](elda-demo-screenshot-2.png "Screenshot showing demo dataset")
 
 ### What just happened?
 
@@ -53,21 +53,18 @@ about board games. The [example
 configuration](https://github.com/epimorphics/elda/elda-standalone/src/main/webapp/specs/hello-world.ttl)
 provides an API for viewing the contents of this dataset through simple
 web URLs. `http://localhost:8080/standalone/hello/games` lists the first
-page of board games that are in the example data: the different games
-appear as entries in the **Search Results** section on the left.
+page of board games that are in the example data.
 
 By default, the list is presented in HTML format, which is nice for
-people to read, but not so good for programs to process. The format
-names on the top-right of the window are clickable to select a different
-format, *e.g.* by clicking the
+people to read, but not so good for programs to process. The
+*data format* pulldown on the top-right of the page are clickable to 
+select a different format, *eg* by clicking the
 [ttl](http://localhost:8080/standalone/hello/games.ttl) link, the
 BoardGame resources will be shown as RDF Turtle.
 
-The right-hand column of the page has links to the individal items on
-the left, links to allow sorting on the different properties the items
-may have, and links for adjusting the view by adding or removing
-properties from it; these are more useful for bigger examples with more
-items and properties to experiment with.
+The pull-down menus also allow you to *go to* a selected item,
+to adjust the *page* size and which page to view, or to change the
+*view* (which properties to show) of the data.
 
 ### How did it happen?
 
@@ -81,7 +78,7 @@ rendering back to whatever sent the query.
 
 This example displays all available properties.
 
-Decisions about which datasets to display, which end-points (*i.e.*, URL
+Decisions about which datasets to display, which end-points ( *ie*, URL
 patterns) display which resources, how resources are displayed, and
 other design choices are all encoded in the LDA configuration file. The
 [LDA
@@ -159,7 +156,7 @@ The runnable `.jar` can be downloaded from
 <http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone>
 and following through to a recent version, or the version current for
 this page:
-[elda-standalone-1.2.36.jar](http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/1.2.36/elda-standalone-1.2.36.jar).
+[elda-standalone-1.3.0.jar](http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/1.3.0/elda-standalone-1.3.0.jar).
 
 If you want to explore the Elda code and have [git](http://git-scm.com/)
 installed, you can copy the Elda repository:
@@ -172,27 +169,16 @@ Maven](http://maven.apache.org/):
     mvn clean package
 
 After compiling, the runnable `.jar` file will be in
-`./elda-standalone/target/elda-standalone.war`. Alternatively, you can
-start the Jetty web server that is supplied with Elda by running the
-following command *from the `elda-standalone` sub-directory*:
-
-    java -jar start.jar
+`./elda-standalone/target/elda-standalone.jar`.
 
 If you can't use port 8080
 --------------------------
 
 Your computer may already be using port 8080 for some local service. In
-that case, you can start Elda from the command line (this wont' work
+that case, you can start Elda from the command line (this won't work
 when double-clicking in a file manager) with:
 
     java -jar standalone.jar -Djetty.port=NNNN
-
-or, if you're starting from the unzipped Elda directory,
-
-    java -Djetty.port=NNNN -jar start.jar
-
-where NNNN is the port of your choice. Note: the `-D` comes after
-`standalone.jar`, but before `start.jar`.
 
 To change the port number without having to supply a `-Djetty.port`
 command line option every time, in the Elda directory edit the
@@ -450,7 +436,7 @@ The class `hello:BoardGame` has shortname *BoardGame*, as defined by its
 
 `hello:players` has shortname *players*, which is what allows you to use
 *eg* `players` as the name of a query parameter. Defining its range to
-be `xsd:int` means (*eg*) that the 2 in the query parameter `players=2`
+be `xsd:int` means *eg* that the 2 in the query parameter `players=2`
 is interpreted as an integer and not a string.
 
     hello:Publisher a rdfs:Class
@@ -526,12 +512,6 @@ To use different LDA specifications, use the system property
 the elda jar or when launching the jetty start jar:
 
     java -jar standalone.jar -Delda.spec=SPECS
-
-or (in the Elda directory):
-
-    java -Delda.spec=SPECS -jar start.jar
-
-where SPECS is one or more LDA specification files separated by commas.
 
 If you use `elda.spec`, then Elda ignores the default specification (the
 education LDA) wired into it.
