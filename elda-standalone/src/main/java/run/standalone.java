@@ -22,8 +22,6 @@ public class standalone {
 	    String portString = System.getProperty("elda.port");
 	    if (portString != null) port = Integer.parseInt(portString);
 	//
-	    System.err.println(">> elda: portString=" + portString + ", port=" + port);
-	//
 	    server.setPort(port);  
 	    server.setBaseDir(".");
 	//
