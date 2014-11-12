@@ -13,7 +13,6 @@
             , mini::specs/mini-education.ttl
             , full::specs/full-education.ttl
             , old::specs/old-education.ttl
-            , mountain::specs/mountain.ttl
             , velocity::specs/hello-velocity.ttl
             , velocitydev::specs/hello-velocity-dev.ttl
             , ved::specs/mini-education-velocity.ttl
