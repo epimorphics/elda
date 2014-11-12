@@ -266,7 +266,7 @@ Previous versions of Elda had their configuration specified within a
 load-on-startup Loader servlet with an init-param `initialSpecFile`
 supplying the configuration file names. This approach to configuration
 is now *obsolete* as it lead to technical difficulties; it is supported
-in Elda 1.2.36 to allow users to migrate to the new configuration
+in Elda {{ site.data.version.CURRENT_RELEASE }} to allow users to migrate to the new configuration
 process.
 
 Velocity template rendering
@@ -806,7 +806,7 @@ restarted when the data is "sufficiently old". An Apache or NGinx
 wrapper can add the preferred **Expires:** headers.
 
 If this is insufficient, *eg* data changes over periods of hours or
-minutes, as of Elda 1.2.36 a *cache expiry time* can be associated with
+minutes, a *cache expiry time* can be associated with
 each endpoint of the configuration. Endpoints with no explicit expiry
 time use that of their parent API if it has one.
 

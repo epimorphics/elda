@@ -1,6 +1,6 @@
 Toggle navigation
 
-Elda 1.2.36 {.not-toc}
+Elda {{ site.data.version.CURRENT_RELEASE }} {.not-toc}
 ===========
 
 An implementation of the linked-data API {.not-toc}
@@ -30,7 +30,7 @@ Download the standalone jar
 
 Download the latest Elda standalone jar from the Epimorphic's Maven
 repository:
-<http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/1.2.36/elda-standalone-1.2.36.jar>.
+<http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/{{ site.data.version.CURRENT_RELEASE }}/elda-standalone-{{ site.data.version.CURRENT_RELEASE }}.jar>.
 Put it somewhere handy; we'll call the directory it's in `$STANDALONE`
 and use it to set up an Elda server later on. (If you already have a
 server that you can configure for Elda, you might choose to use that
