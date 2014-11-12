@@ -1,5 +1,5 @@
 +-----------------------------------------------------------------------
-| Elda 1.3.0 (DEVELOPING)
+| Elda 1.3.0 (RELEASED)
 
 The Elda velocity renderer has been completely rewritten
 and has become the default renderer. (The XSLT renderer
