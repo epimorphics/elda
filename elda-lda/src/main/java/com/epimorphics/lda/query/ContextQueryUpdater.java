@@ -252,7 +252,7 @@ public class ContextQueryUpdater implements ViewSetter {
             else if (val.equals( "false" )) aq.addPropertyHasntValue( param );
             else EldaException.BadBooleanParameter( param.toString(), val );
         } else {
-            throw new EldaException( "unrecognised parameter prefix: " + prefix );
+            EldaException.BadRequest( "unrecognised parameter prefix: " + prefix );
         }
     }
 
