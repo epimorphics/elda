@@ -180,16 +180,6 @@ when double-clicking in a file manager) with:
 
     java -jar standalone.jar -DhttpPort=NNNN
 
-if you need logging
--------------------
-
-If you need to change the logging levels when using Elda standalone, run
-Elda from its unpacked form after editing the file:
-
-    elda-standalone/src/main/webapp/log4j.properties
-
-as required.
-
 Built-in example datasets and configurations
 --------------------------------------------
 
