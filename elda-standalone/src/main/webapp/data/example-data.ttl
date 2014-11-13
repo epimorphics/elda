@@ -7,36 +7,43 @@
 @prefix egc:	<http://epimorphics.com/public/vocabulary/games.ttl#>.
 @prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
 
 # boardgame designers
 
-<http://boardgamegeek.com/boardgamedesigner/34699/matthias-cramer> a egc:Designer
+egc:matthias-cramer a egc:Designer
+	; owl:sameAs <http://boardgamegeek.com/boardgamedesigner/34699/matthias-cramer> 
 	; rdfs:label "Matthias Cramer"
 	; egc:designer-of <http://boardgamegeek.com/boardgame/96913/lancaster>
 	.
 
-<http://en.wikipedia.org/wiki/Andreas_Seyfarth> a egc:Designer
+egc:Andreas_Seyfarth a egc:Designer
+	; owl:sameAs <http://en.wikipedia.org/wiki/Andreas_Seyfarth> 
 	; rdfs:label "Andreas Seyfarth" 
 	; egc:designer-of <http://www.riograndegames.com/games.html?id=4> 
 	.
 
-<http://en.wikipedia.org/wiki/Reiner_Knizia> a egc:Designer
+egc:Reiner_Knizia a egc:Designer
+	; owl:sameAs <http://en.wikipedia.org/wiki/Reiner_Knizia> 
 	; rdfs:label "Reiner Knizia"
 	; egc:designer-of <http://www.hans-im-glueck.de/euphrat-tigris> 
 	; egc:designer-of <http://www.riograndegames.com/games.html?id=181> 
 	.
 
-<http://en.wikipedia.org/wiki/Wolfgang_Kramer> a egc:Designer
+egc:Wolfgang_Kramer a egc:Designer
+	; owl:sameAs <http://en.wikipedia.org/wiki/Wolfgang_Kramer> 
 	; rdfs:label "Wolfgang Kramer"
 	; egc:designer-of <http://www.hans-im-glueck.de/el-grande>
 	.
 
-<http://www.boardgamegeek.com/boardgamedesigner/8/richard-ulrich> a egc:Designer
+egc:richard-ulrich a egc:Designer
+	; owl:sameAs <http://www.boardgamegeek.com/boardgamedesigner/8/richard-ulrich> 
 	; rdfs:label "Richard Ulrich"
 	; egc:designer-of <http://www.hans-im-glueck.de/el-grande> 
 	.
 
-<http://boardgamegeek.com/boardgamedesigner/6/martin-wallace> a egc:Designer
+egc:martin-wallace a egc:Designer
+	; owl:sameAs <http://boardgamegeek.com/boardgamedesigner/6/martin-wallace> 
 	; egc:designer-of <http://www.treefroggames.com/a-few-acres-of-snow-2>
 	; egc:designer-of <http://www.treefroggames.com/age-of-industry> 
 	; egc:designer-of <http://www.treefroggames.com/london> 
@@ -45,43 +52,50 @@
 	; rdfs:label "Martin Wallace"
 	.
 
-<http://www.ragnarbrothers.co.uk/html/ragnar_brothers_games.html> a egc:Designer
+egc:ragnar-brothers a egc:Designer
+	; owl:sameAs <http://www.ragnarbrothers.co.uk/html/ragnar_brothers_games.html> 
 	; rdfs:label "Ragnar Brothers"
 	; egc:designer-of <http://www.ragnarbrothers.co.uk/html/canal_mania.html> 
 	; egc:designer-of <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> 
 	.
 
-<http://en.wikipedia.org/wiki/Alan_R._Moon> a egc:Designer
+egc:Alan_R._Moon a egc:Designer
+	; owl:sameAs <http://en.wikipedia.org/wiki/Alan_R._Moon> 
 	; rdfs:label "Alan R. Moon"
 	; egc:designer-of <http://www.daysofwonder.com/tickettoride>
 	.
 
-<http://boardgamegeek.com/boardgamedesigner/10525/donald-x-vaccarino> a egc:Designer
+egc:donald-x-vaccarino a egc:Designer
+	; owl:sameAs <http://boardgamegeek.com/boardgamedesigner/10525/donald-x-vaccarino> 
 	; rdfs:label "Donald X. Vaccarino"
 	; egc:designer-of <http://queen-games.de/games.aspx?ProductId=45>
 	.
-	
-<http://boardgamegeek.com/boardgamedesigner/60/dirk-henn> a egc:Designer
+
+egc:dirk-henn a egc:Designer
+	; owl:sameAs <http://boardgamegeek.com/boardgamedesigner/60/dirk-henn> 
 	; rdfs:label "Dirk Henn"
 	; egc:designer-of <http://www.queen-games.de/games.aspx?ProductId=10>
 	.
 
 # boardgame publishers.
 
-<http://www.hans-im-glueck.de/> a egc:Publisher
+egc:hans-im-glueck a egc:Publisher
+	; owl:sameAs <http://www.hans-im-glueck.de/> 
 	; rdfs:label "Hans im Glück"@de
 	; dct:publisher <http://www.hans-im-glueck.de/euphrat-tigris>
 	; dct:publisher <http://www.hans-im-glueck.de/el-grande>
 	.
-	
-<http://www.queen-games.de/> a egc:Publisher
+
+egc:queen-games a egc:Publisher	
+	; owl:sameAs <http://www.queen-games.de/> 
 	; rdfs:label "Queen Games"
 	; dct:publisher <http://queen-games.de/games.aspx?ProductId=45>
 	; dct:publisher <http://boardgamegeek.com/boardgame/96913/lancaster>
 	; dct:publisher <http://www.queen-games.de/games.aspx?ProductId=10>
 	.
 	
-<http://www.treefroggames.com/> a egc:Publisher
+egc:treefroggames a egc:Publisher
+	; owl:sameAs <http://www.treefroggames.com/> 
 	; rdfs:label "Treefrog Games"@en
 	; dct:publisher <http://www.treefroggames.com/age-of-industry>
 	; dct:publisher <http://www.treefroggames.com/london>
@@ -89,24 +103,28 @@
 	; dct:publisher <http://www.treefroggames.com/a-few-acres-of-snow-2>
 	.
 
-<http://www.riograndegames.com/> a egc:Publisher
+egc:rio-grande-games a egc:Publisher
+	; owl:sameAs <http://www.riograndegames.com/> 
 	; rdfs:label "Rio Grande Games"
 	; dct:publisher <http://www.riograndegames.com/games.html?id=4>
 	; dct:publisher <http://www.riograndegames.com/games.html?id=181>
 	.
-	
-<http://www.ragnarbrothers.co.uk/> a egc:Publisher
+
+egc:ragnar-bothers-publisher a egc:Publisher	
+	; owl:sameAs <http://www.ragnarbrothers.co.uk/> 
 	; rdfs:label "Ragnar Brothers"
 	; dct:publisher <http://www.ragnarbrothers.co.uk/html/canal_mania.html>
 	; dct:publisher <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html>
 	.
 	
-<http://www.daysofwonder.com/> a egc:Publisher
+egc:daysofwonder a egc:Publisher
+	; owl:sameAs <http://www.daysofwonder.com/> 
 	; rdfs:label "Days of Wonder"
 	; dct:publisher <http://www.daysofwonder.com/tickettoride>
 	.
 	
-<http://www.aleaspiele.de/Pages/Title/> a egc:Publisher
+egc:alea a egc:Publisher
+	; owl:sameAs <http://www.aleaspiele.de/Pages/Title/> 
 	; rdfs:label "Alea"
 	; dct:publisher <http://www.aleaspiele.de/Pages/C6/>
 	.
@@ -115,7 +133,7 @@
 
 <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> a egc:BoardGame
 	; rdfs:label "A Brief History of the World"
-	; egc:designed-by <http://www.ragnarbrothers.co.uk/html/ragnar_brothers_games.html> 
+	; egc:designed-by egc:ragnar-brothers 
 	; egc:players 3, 4, 5, 6
 	; egc:pubYear 2009
 	.
@@ -123,63 +141,63 @@
 <http://queen-games.de/games.aspx?ProductId=45> a egc:BoardGame
 	; rdfs:label "Kingdom Builder"
 	; egc:players 2, 3, 4
-	; egc:designed-by <http://boardgamegeek.com/boardgamedesigner/10525/donald-x-vaccarino> 
+	; egc:designed-by egc:donald-x-vaccarino 
 	; rdfs:seeAlso <http://boardgamegeek.com/boardgame/107529/kingdom-builder>
 	; egc:pubYear 2011
 	.
 
 <http://www.daysofwonder.com/tickettoride> a egc:BoardGame
 	; rdfs:label "Ticket To Ride"
-	; egc:designed-by <http://en.wikipedia.org/wiki/Alan_R._Moon> 
+	; egc:designed-by egc:Alan_R._Moon 
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2004
 	.
 
 <http://www.hans-im-glueck.de/euphrat-tigris> a egc:BoardGame
 	; rdfs:label "Tigris and Euphrates"@en
-	; egc:designed-by <http://en.wikipedia.org/wiki/Reiner_Knizia> 
+	; egc:designed-by egc:Reiner_Knizia 
 	; egc:players 2, 3, 4
 	; egc:pubYear 1997
 	.
 	
 <http://www.hans-im-glueck.de/el-grande> a egc:BoardGame
 	; rdfs:label "El Grande"
-	; egc:designed-by <http://en.wikipedia.org/wiki/Wolfgang_Kramer>
-	; egc:designed-by <http://www.boardgamegeek.com/boardgamedesigner/8/richard-ulrich>
+	; egc:designed-by egc:Wolfgang_Kramer
+	; egc:designed-by egc:richard-ulrich
 	; egc:pubYear 1995
 	; egc:players 2, 3, 4, 5
 	.
 
 <http://www.treefroggames.com/age-of-industry> a egc:BoardGame
 	; rdfs:label "Age of Industry"
-	; egc:designed-by <http://boardgamegeek.com/boardgamedesigner/6/martin-wallace> 
+	; egc:designed-by egc:martin-wallace 
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2010
 	.
 	
 <http://www.treefroggames.com/london> a egc:BoardGame
 	; rdfs:label "London"
-	; egc:designed-by <http://boardgamegeek.com/boardgamedesigner/6/martin-wallace> 
+	; egc:designed-by egc:martin-wallace 
 	; egc:players 2, 3, 4
 	; egc:pubYear 2010
 	.
 	
 <http://www.treefroggames.com/age-of-steam> a egc:BoardGame
 	; rdfs:label "Age of Steam"
-	; egc:designed-by <http://boardgamegeek.com/boardgamedesigner/6/martin-wallace> 
+	; egc:designed-by egc:martin-wallace 
 	; egc:players 3, 4, 5, 6 
 	; egc:pubYear 2002
 	.
 	
 <http://www.ragnarbrothers.co.uk/html/canal_mania.html> a egc:BoardGame
 	; rdfs:label "Canal Mania"
-	; egc:designed-by <http://www.ragnarbrothers.co.uk/html/ragnar_brothers_games.html> 
+	; egc:designed-by egc:ragnar-brothers 
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2006
 	.	
 	
 <http://www.riograndegames.com/games.html?id=4> a egc:BoardGame
-	; egc:designed-by <http://en.wikipedia.org/wiki/Andreas_Seyfarth>
+	; egc:designed-by egc:Andreas_Seyfarth
 	; rdfs:label "Puerto Rico"
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2002
@@ -187,14 +205,14 @@
 	
 <http://www.riograndegames.com/games.html?id=181> a egc:BoardGame
 	; rdfs:label "Taj Mahal"
-	; egc:designed-by <http://en.wikipedia.org/wiki/Reiner_Knizia> 
+	; egc:designed-by egc:Reiner_Knizia 
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2006
 	.
 	
 <http://www.treefroggames.com/last-train-to-wensleydale> a egc:BoardGame
 	; rdfs:label "Last Train to Wensleydale"
-	; egc:designed-by <http://boardgamegeek.com/boardgamedesigner/6/martin-wallace>
+	; egc:designed-by egc:martin-wallace
 	; egc:players 3, 4
 	; egc:pubYear 2009
 	; egc:playTimeMinutes 120
@@ -202,7 +220,7 @@
 	
 <http://www.treefroggames.com/a-few-acres-of-snow-2> a egc:BoardGame
 	; rdfs:label "A Few Acres of Snow"
-	; egc:designed-by <http://boardgamegeek.com/boardgamedesigner/6/martin-wallace>
+	; egc:designed-by egc:martin-wallace
 	; egc:players 2
 	; egc:pubYear 2011
 	; egc:playTimeMinutes 60
@@ -210,7 +228,7 @@
 	
 <http://boardgamegeek.com/boardgame/96913/lancaster> a egc:BoardGame
 	; rdfs:label "Lancaster"
-	; egc:designed-by <http://boardgamegeek.com/boardgamedesigner/34699/matthias-cramer>
+	; egc:designed-by egc:matthias-cramer
 	; egc:published-by <http://www.queen-games.de/> 
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2011
@@ -219,7 +237,7 @@
 	
 <http://www.aleaspiele.de/Pages/C6/> a egc:BoardGame
 	; rdfs:label "Glen More"
-	; egc:designed-by <http://boardgamegeek.com/boardgamedesigner/34699/matthias-cramer>
+	; egc:designed-by egc:matthias-cramer
 	; egc:published-by <http://www.aleaspiele.de/Pages/Title/>
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2010
@@ -228,7 +246,7 @@
 	
 <http://www.queen-games.de/games.aspx?ProductId=10> a egc:BoardGame
 	; rdfs:label "Wallenstein"
-	; egc:designed-by <http://boardgamegeek.com/boardgamedesigner/60/dirk-henn>
+	; egc:designed-by egc:dirk-henn
 	; egc:published-by <http://www.queen-games.de/>
 	; egc:players 3, 4, 5
 	; egc:pubYear 2012
