@@ -20,6 +20,8 @@ removed and the javadoc improved.
 Elda now works with Tomcat8 (it was unportably presenting
 pathnames not starting with / to getRealPath).
 
+Elda now uses Jersey 18.2.
+
 +-----------------------------------------------------------------------
 | Elda 1.2.35 (RELEASED)
 
