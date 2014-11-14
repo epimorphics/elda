@@ -43,8 +43,7 @@ starts, and then you should be able to view the starting page in a web
 browser: <http://localhost:8080/standalone/hello/games>. This should
 display a page similar to:
 
-![Screenshot showing demo dataset in
-Elda](elda-demo-screenshot-2.png "Screenshot showing demo dataset")
+![]([["docs/E1.3.0/elda-demo-screenshot-2.png" | prepend: site.baseurl }})
 
 ### What just happened?
 
