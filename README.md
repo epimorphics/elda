@@ -17,21 +17,6 @@
 </p>
 
 <p>
-	See the 
-	<a href="http://epimorphics.github.io/elda/docs/E1.2.35/index.html">quickstart documentation</a>.
-	For summaries of the latest releases, see the
-	<a href="http://epimorphics.github.io/elda/">documentation root</a>.
-</p>
-
-<p>
-	Elda 1.2.35 was released on 30th July 2014. It fixes a Windows-only
-	bug with the resource locations tightened for 1.2.34.
-</p>
-
-<p>
-	Elda 1.2.34 was released on 8th July 2014. It allows a query to refer to
-	non-default models in the SPARQL endpoint's dataset. The mappings from
-	strings to resource locations for velocity templates and XSLT
-	styleheets have been unified and more exactly defined.
+	See epimorphics.github.io/elda/current/index.html for the Elda documentation.
 </p>
 
