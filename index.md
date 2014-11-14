@@ -19,7 +19,7 @@ translate URLs into queries.
 
 The currently released version of Elda is {{ site.data.version.CURRENT_RELEASE }}
 
-* [Download the current version](http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/{{ site.data.version.CURRENT_RELEASE }}/elda-standalone-{{ site.data.version.CURRENT_RELEASE }}.jar)
+* [Download the current version](http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/{{ site.data.version.CURRENT_RELEASE }}/elda-standalone-{{ site.data.version.CURRENT_RELEASE }}-exec-war.jar)
 * See the [Github repository](https://github.com/epimorphics/elda) for the source code
 * See [below](#maven-example) for an example Apache Maven `pom.xml` snippet
 
