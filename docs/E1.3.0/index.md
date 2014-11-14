@@ -45,6 +45,8 @@ display a page similar to:
 
 ![]([["docs/E1.3.0/elda-demo-screenshot-2.png" | prepend: site.baseurl }})
 
+![]({{ "docs/E1.3.0/elda-demo-screenshot-2.png" | prepend: site.baseurl }})
+
 ### What just happened?
 
 Contained within the standalone Elda version is a small RDF dataset
