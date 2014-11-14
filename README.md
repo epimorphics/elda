@@ -10,13 +10,16 @@
 </p>
 
 <p>
-	Elda is the Epimorphics implementation of the LDA. The <i>standalone jar</i>
+	Elda is the 
+	<a href="http://www.epimorphics.com/web/">Epimorphics</a> implementation of the LDA. The <i>standalone jar</i>
 	comes with pre-built examples which allow you to experiment with the style 
 	of query and get started with building your own configurations using
 	<i>elda common</i> or your own webapps.
 </p>
 
 <p>
-	See epimorphics.github.io/elda/current/index.html for the Elda documentation.
+	See <a href="epimorphics.github.io/elda/current/index.html">
+		the current Elda documentation
+	</a>
 </p>
 
