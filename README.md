@@ -18,7 +18,7 @@
 </p>
 
 <p>
-	See <a href="epimorphics.github.io/elda/current/index.html">
+	See <a href="epimorphics.github.io/elda/current/">
 		the current Elda documentation
 	</a>
 </p>
