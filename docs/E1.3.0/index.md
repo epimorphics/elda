@@ -44,7 +44,7 @@ browser: <http://localhost:8080/standalone/hello/games>. This should
 display a page similar to:
 
 
-![]({{ "docs/E1.3.0/elda-demo-screenshot-1.png" | prepend: site.baseurl }})
+![]({{ "/docs/E1.3.0/elda-demo-screenshot-1.png" | prepend: site.baseurl }})
 
 ### What just happened?
 
