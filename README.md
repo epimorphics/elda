@@ -19,7 +19,7 @@
 
 <p>
 	See <a href="http://epimorphics.github.io/elda/current/">
-		the current Elda documentation
+		| the current Elda documentation |
 	</a>
 </p>
 
