@@ -17,5 +17,5 @@ package com.epimorphics.lda;
  *
  */
 public interface Version {
-	public final String string = "${project.version}";
+	public final String string = "${project.version}${project.tagname}";
 }

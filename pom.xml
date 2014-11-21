@@ -16,7 +16,8 @@
   </scm>
 
   <properties>
-    <tempSCM>/tmp/tempSCM</tempSCM>
+	  <tempSCM>/tmp/tempSCM</tempSCM>
+	  <project.tagname>_[404errorpage]</project.tagname>
 
     <ver.junit>4.11</ver.junit>
     <ver.log4j>1.2.17</ver.log4j>
