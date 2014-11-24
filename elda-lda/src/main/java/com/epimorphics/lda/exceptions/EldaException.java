@@ -8,6 +8,9 @@
 
 package com.epimorphics.lda.exceptions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epimorphics.lda.sources.Source;
 import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
 
@@ -15,6 +18,8 @@ public class EldaException extends RuntimeException {
 
 	private static final long serialVersionUID = -189771483274502564L;
 
+    static Logger log = LoggerFactory.getLogger(EldaException.class);
+    
 	public final int code;
 	public final String moreMessage;
 	
@@ -46,10 +51,11 @@ public class EldaException extends RuntimeException {
 	}
 
 	/**
-	    Throw a BAD REQUEST exception with the given message.
+	    Throw a BAD REQUEST exception after logging the given message.
 	*/
 	public static void BadRequest( String message ) {
-		throw new EldaException( message, "", BAD_REQUEST );
+		log.error("bad request: " + message);
+		throw new BadRequestException();
 	}
 	
 	public static void NoDeploymentURIFor(String name) {
@@ -79,4 +85,7 @@ public class EldaException extends RuntimeException {
 	public static void NullParameter(String p) {
 		throw new EldaException( "value for parameter " + p + " is null" );
 	}
+	
+	
+	
 }

@@ -14,7 +14,7 @@ package com.epimorphics.lda.exceptions;
 
 /**
  * Used to indicate problems with parsing request structure,
- * should result in a 404 rather than 500 error.
+ * should result in a 400 rather than 500 error.
  * 
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $

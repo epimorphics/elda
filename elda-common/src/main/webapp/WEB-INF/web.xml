@@ -74,6 +74,26 @@
     <error-code>404</error-code>
     <location>/_errors/404.html</location>
   </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.BadRequestException</exception-type>
+    <location>/_errors/400.html</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.VelocityRenderingException</exception-type>
+    <location>/_errors/500.html</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.QueryParseException</exception-type>
+    <location>/_errors/500.html</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.GeneralException</exception-type>
+    <location>/_errors/something.html</location>
+  </error-page>
 
   <!-- ==================================================================== -->
 

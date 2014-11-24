@@ -415,20 +415,26 @@ import com.sun.jersey.api.NotFoundException;
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
-            String message = Messages.niceMessage("Stack overflow", e.getMessage() );
-			return standardHeaders( null, Response.serverError() ).entity( message ).build();
-			
+//            String message = Messages.niceMessage("Stack overflow", e.getMessage() );
+            throw new GeneralException();
+        
+        } catch (VelocityRenderingException e) {
+            throw e;
+        
+        } catch (BadRequestException e) {
+            throw e;
+                    	
         } catch (UnknownShortnameException e) {
         	log.error( "UnknownShortnameException: " + e.getMessage() );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
         	StatsValues.endpointException();
-        	return buildErrorResponse(e);
+        	throw new GeneralException();
         
         } catch (EldaException e) {
         	StatsValues.endpointException();
         	log.error( "Exception: " + e.getMessage() );
         	if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
-        	return buildErrorResponse(e);
+        	throw new GeneralException();
         
         } catch (NotFoundException e) {
         	throw e;
@@ -437,13 +443,13 @@ import com.sun.jersey.api.NotFoundException;
         	StatsValues.endpointException();
             log.error( "Query Parse Exception: " + e.getMessage() );
             if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
-            return returnNotFound("Failed to parse query request : " + e.getMessage());
-        
+            throw e; 
+            
         } catch (Throwable e) {
-        	log.error( "General failure: " + e.getMessage() );
+        	log.error( "General failure: " + e.getClass().getCanonicalName() + ": " + e.getMessage() );
         	e.printStackTrace(System.err);
         	StatsValues.endpointException();
-            return returnError( e );
+            throw new GeneralException();
         }
     }    
     

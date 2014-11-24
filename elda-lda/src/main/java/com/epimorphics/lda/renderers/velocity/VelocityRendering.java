@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.exceptions.VelocityRenderingException;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.common.*;
 import com.epimorphics.lda.specs.MetadataOptions;
@@ -122,7 +122,7 @@ implements BytesOut
         }
         catch (Exception e) {
             log.warn( e.getMessage(), e );
-            throw new EldaException( "Exception during Velocity rendering", e.getMessage(), 0, e );
+            throw new VelocityRenderingException();
         }
         finally {
             if (cos != null) {
