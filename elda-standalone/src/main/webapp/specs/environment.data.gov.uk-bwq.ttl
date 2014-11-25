@@ -63,7 +63,7 @@
 #    api:variable [ api:name "_resourceRoot"         ; api:value "/lda-assets/" ];
 #    api:variable [ api:name "visibleSparqlEndpoint" ; api:value "http://environment.data.gov.uk/sparql/bwq/query" ] ;
 #    api:variable [ api:name "visibleSparqlForm"     ; api:value "http://environment.data.gov.uk/lab/sparql.html" ] ;
-#    api:variable [ api:name "_velocityRoot"         ; api:value "/var/www/environment/html/lda-assets/velocity"] ;
+#    api:variable [ api:name "_velocityPath"         ; api:value "/var/www/environment/html/lda-assets/velocity"] ;
 #    .
 #    
 ##FORMATTERS
