@@ -714,7 +714,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			q.append("SELECT ");
 			if (orderExpressions.length() > 0)
 				q.append("DISTINCT ");
-			q.append(SELECT_VAR.name());
+			q.append(SELECT_VAR.name());			
 			assembleWherePart(q, b, pl);
 			if (orderExpressions.length() > 0) {
 				q.append(" ORDER BY ");

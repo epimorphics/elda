@@ -14,10 +14,36 @@ import java.util.regex.Pattern;
 import com.epimorphics.lda.support.MultiMap;
 
 /**
-    A MatchTemplate is a compiled URI template that
-    can match against a path and bind variables.
-     
- 	@author chris
+    <p>A MatchTemplate is a compiled URI template that
+    can match against a path and bind variables.</p>
+    
+    <p>
+    	Complications arise because MatchTemplates are used in two
+    	ways. One is to match a URI path template against the path
+    	of a request URI, binding variables as necessary; this is
+    	part of the endpoint selection login. Then these is the
+    	additional possibility of the template also having query
+    	parameter which may also bind variables. The matching of
+    	the actual query parameters against the template query parameters
+    	is done separately, with variable values matching anything
+    	including / -- as opposed to anything <i>except</i> /, used
+    	to match path elements.
+    </p>
+    
+    <p>
+    	The query template matchers are rebuilt on each call rather
+    	than being compiled with the main matcher, but only because
+    	a first attempt at doing this produced a recursive loop and
+    	stack overflow.
+    </p>
+    
+    <p>
+    	The uri template cannot (easily) be treated as a single pattern
+    	because the order of the query parameters is irrelevant; so
+    	if A and B are submatches we'd have something like AB|BA
+    	and that's not dealing with any other -- unclaimed -- query
+    	parameters.
+    </p>
 */
 public class MatchTemplate<T> {
 	
@@ -100,7 +126,7 @@ public class MatchTemplate<T> {
 	    piece Y of the uri.
 	 * @param queryParams 
 	*/
-	public boolean match( Map<String, String> bindings, String uri, MultiMap<String, String> queryParams ) {
+	public boolean match( Map<String, String> bindings, String uri, MultiMap<String, String> queryParams ) {		
 		Matcher mu = compiled.matcher( uri );
 		if (mu.matches()) {
 			if (paramsMatch( bindings, queryParams )) {
@@ -108,32 +134,28 @@ public class MatchTemplate<T> {
 					bindings.put(c.varName, mu.group(c.groupIndex) );
 				}
 				return true;
-			}
+			} 
 		}
 		return false;
 	}
 	
-	private boolean paramsMatch( Map<String, String> bindings, MultiMap<String, String> queryParams ) {
+	private boolean paramsMatch( Map<String, String> bindings, MultiMap<String, String> queryParams ) {				
 		Map<String, String> perhaps = new HashMap<String, String>();
 		List<String> toRemove = new ArrayList<String>();
 		for (String key: uriParamBindings.keySet()) {
 			if (queryParams.containsKey( key )) {
 				toRemove.add( key );
-				String v = queryParams.getOne( key );
+				String v = queryParams.getOne( key );				
 				String p = uriParamBindings.get( key );
-				
-				System.err.println(">> matching " + p + " to " + v );
-				
-				if (p.startsWith( "{" )) {
-					String varName = p.substring(1, p.length() - 1);
-					perhaps.put(varName, v);
-				} else if (!p.equals(v)) {
-					return false;
-				}
+				Map<String, String> MT = new HashMap<String, String>();
+				MatchTemplate<T> prepared = prepareCore(p, "(.+)", MT, value);			
+				boolean matched = prepared.match(bindings, v, queryParams);
+				if (!matched) return false;
 			} else {
 				return false;
 			}
 		}
+		
 		for (String key: toRemove) queryParams.remove( key );
 		bindings.putAll( perhaps );
 		return true;
@@ -147,7 +169,7 @@ public class MatchTemplate<T> {
 	public static <T> MatchTemplate<T> prepare( String template, T value ) {
 		Map<String, String> params = new HashMap<String, String>();
 		template = extractParams(template, params);
-		return prepareCore(template, params, value);
+		return prepareCore(template, "([^/]+)", params, value);
 	}
 
 	private static String extractParams(String template, Map<String, String> uriParamBindings) {
@@ -159,7 +181,7 @@ public class MatchTemplate<T> {
 		return template;
 	}
 
-	private static <T> MatchTemplate<T> prepareCore(String template, Map<String, String> uriParamBindings, T value) {
+	private static <T> MatchTemplate<T> prepareCore(String template, String argPattern, Map<String, String> uriParamBindings, T value) {
 		Matcher m = varPattern.matcher( template );
 		int start = 0;
 		int index = 0;
@@ -175,7 +197,7 @@ public class MatchTemplate<T> {
 			literals += literal.length();
 			patterns += 1;
 			sb.append( literal );
-			sb.append( "([^/]+)" );
+			sb.append( argPattern );
 			start = m.end();
 		}
 		String literal = template.substring( start );
@@ -198,7 +220,7 @@ public class MatchTemplate<T> {
 		with its group index in the regular expression that matches the
 		template.
 	*/
-	static class VarGroupIndex {
+	public static class VarGroupIndex {
 		final String varName;
 		final int groupIndex;
 		
