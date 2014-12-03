@@ -33,9 +33,7 @@ To use Elda Common, you add both .war files to your Tomcat
 configuration. Doing so may be as simple as dropping them into the
 appropriate `webapps` directory. You need both .war files; Elda Common
 contains the LDA-handling Java code and Elda Assets provides styleheets,
-scripts, css, *etc* which Elda Common refers to or loads. There is also
-an `elda-bundled` artifact whose `elda-bundled.war` combines
-`elda-common` and `elda-assets` into one item.
+scripts, css, *etc* which Elda Common refers to or loads. 
 
 By default, Elda Common assumes that Elda Common's context path is
 `elda-common` and Elda Assets's context path is `elda-assets`. If you
@@ -51,8 +49,8 @@ Elda Common loads its LDA configurations from
 `/etc/elda/conf.d/{APP}/*.ttl`, where `{APP}` is the context path of
 that instance of Elda Common. This means that each instance may have
 multiple configs that it can load, and different instances can load
-different files. (See the `web.xml` for the setting of this
-configuration path.)
+different files. (To see how this path is set, open up the .war
+file and look inside at its `web.xml`.)
 
 The LDA configurations contain references to the assets webapp, as seen
 in the minimal configuration file supplied. For a given `API:api` in a
@@ -63,8 +61,7 @@ binding:
 
 The *hostAndPort* will usually be **localhost:8080** or
 **localhost:80**, and *assetPath* will by default be **elda-assets**
-unless the asset .war is renamed to some other context or you are using
-`elda-bundled`.
+unless the asset .war is renamed to some other context.
 
 Similarly, if the configuration is generating HTML using the Elda XSLT
 renderer, the stylesheets are loaded from the assets according to the
@@ -75,14 +72,10 @@ binding on the XsltFormatter by:
 Again, if the stylesheet has moved, this binding must be changed
 accordingly.
 
-Elda provides several example minimal configurations, different only in
+Elda provides some example minimal configurations, different only in
 their intended environments:
 
 <table class="table table-striped table-condensed">
-  <tr>
-    <td><a href="specs/minimal-named-bundled-8080-config.ttl">minimal-named-bundled-8080-config.ttl</a></td>
-    <td>bundled non-ROOT configuration running on port 8080.</td>
-  </tr>
   <tr>
     <td><a href="specs/minimal-named-or-ROOT-split-8080-config.ttl">minimal-named-or-ROOT-split-8080-config.ttl</a></td>
     <td>split assets and common on port 8080, for both ROOT and non-ROOT use.</td>
@@ -90,10 +83,6 @@ their intended environments:
   <tr>
     <td><a href="specs/minimal-named-split-80-config.ttl">minimal-named-split-80-config.ttl</a></td>
     <td>split assets and common on port 80 for non-ROOT use.</td>
-  </tr>
-  <tr>
-    <td><a href="specs/minimal-ROOT-bundled-8080-config.ttl">minimal-ROOT-bundled-8080-config.ttl</a></td>
-    <td>ROOT bundled and running on port 8080.</td>
   </tr>
 </table>
 
@@ -143,11 +132,6 @@ it is sufficient to simple `touch` one of the appropriate files.
 
 Inside Elda Common
 ------------------
-
-To use Elda for your own webapps, you can use Elda Common (suitably
-replacing the minimal LDA config), produce your own merge of Common and
-Assets, or tweak the Elda Standalone warfile. You will need to edit the
-web.xml appropriately.
 
 If you have downloaded the Elda repository, then you can rebuild the
 Elda working jar (lda-VERSION.jar) and webapp using
