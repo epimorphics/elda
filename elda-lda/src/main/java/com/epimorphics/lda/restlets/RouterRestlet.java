@@ -433,7 +433,7 @@ import com.sun.jersey.api.NotFoundException;
         } catch (EldaException e) {
         	StatsValues.endpointException();
         	log.error( "Exception: " + e.getMessage() );
-        	if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
+        	if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
         	throw new GeneralException();
         
         } catch (NotFoundException e) {

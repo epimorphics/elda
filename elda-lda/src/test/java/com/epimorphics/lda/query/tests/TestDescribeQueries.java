@@ -49,7 +49,7 @@ public class TestDescribeQueries {
 		Resource a = m.createResource( RDF.getURI() + "intruder" );
 		Resource b = m.createResource( RDFS.getURI() + "stranger" );
 		List<Resource> both = Arrays.asList( a, b );
-		State s = new State("select string", both, m, null, null, null);
+		State s = new State(both, m, null, null, null);
 		String q = View.createDescribeQueryForItems( s, both );
 		if (!q.equals( expectA ) && !q.equals( expectB )) 
 			fail( "wrong describe query created:\n" + q ); 

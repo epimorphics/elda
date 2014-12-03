@@ -266,7 +266,7 @@ public class ContextQueryUpdater implements ViewSetter {
 
     @Override public void setViewByName( String viewName ) {
         View named  = nt.getView( viewName );
-        if (named == null) EldaException.NotFound( "view", viewName );
+        if (named == null) EldaException.BadRequest( "view not found: " + viewName );
         view = named.copy();
     }
 

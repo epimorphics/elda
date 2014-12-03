@@ -870,7 +870,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		String outerSelect = queryAndResults.a;
 		List<Resource> results = queryAndResults.b;
 		//
-		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, graphName, view, results);
+		APIResultSet rs = fetchDescriptionOfAllResources(c, spec, graphName, view, results);
 		//
 		long afterView = System.currentTimeMillis();
 		t.setViewDuration(afterView - afterSelect);
@@ -912,12 +912,12 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	// may be subclassed
-	protected APIResultSet fetchDescriptionOfAllResources(Controls c, String select, APISpec spec, String graphName, View view, List<Resource> results) {
+	protected APIResultSet fetchDescriptionOfAllResources(Controls c, APISpec spec, String graphName, View view, List<Resource> results) {
 		int count = results.size();
 		Model descriptions = ModelFactory.createDefaultModel();
 		descriptions.setNsPrefixes(spec.getPrefixMap());
 		Graph gd = descriptions.getGraph();
-		String detailsQuery = results.isEmpty() || results.get(0) == null ? "# no results, no query." : view.fetchDescriptionsFor(c, select, results, descriptions, spec, this,
+		String detailsQuery = results.isEmpty() || results.get(0) == null ? "# no results, no query." : view.fetchDescriptionsFor(c, results, descriptions, spec, this,
 				graphName);
 		return new APIResultSet(gd, results, count < pageSize, enableETags, detailsQuery, view);
 	}
