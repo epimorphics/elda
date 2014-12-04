@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+          http://java.sun.com/xml/ns/javaee/web-app_2_3.xsd"
+    version="2.3">
+
+  <context-param>
+     <param-name>com.epimorphics.api.initialSpecFile</param-name>
+     <param-value>
+            hello::specs/hello-world.ttl
+            , again::specs/hello-again-world.ttl 
+            , tiny::specs/tiny-education.ttl
+            , mini::specs/mini-education.ttl
+            , full::specs/full-education.ttl
+            , old::specs/old-education.ttl
+            , velocity::specs/hello-velocity.ttl
+            , velocitydev::specs/hello-velocity-dev.ttl
+            , ved::specs/mini-education-velocity.ttl
+            , bwq::specs/environment.data.gov.uk-bwq.ttl
+        </param-value>
+  </context-param>
+
+<!--
+    <filter>
+        <filter-name>Jersey Web Application</filter-name>
+        <filter-class>com.sun.jersey.spi.container.servlet.ServletContainer</filter-class>
+
+        <init-param>
+          <param-name>com.sun.jersey.config.property.packages</param-name>
+          <param-value>com.epimorphics.lda.restlets</param-value>
+        </init-param>
+
+        <init-param>
+          <param-name>com.sun.jersey.config.feature.FilterForwardOn404</param-name>
+          <param-value>true</param-value>
+        </init-param>
+
+        <init-param>
+             <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+             <param-value>com.sun.jersey.api.container.filter.PostReplaceFilter</param-value>
+         </init-param>
+  </filter>
+-->
+
+  <servlet>
+    <servlet-name>jersey</servlet-name>
+    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+
+    <init-param>
+      <param-name>com.sun.jersey.config.property.packages</param-name>
+      <param-value>com.epimorphics.lda.restlets</param-value>
+    </init-param>
+
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <!-- ==================================================================== -->
+
+<!--
+  <filter-mapping>
+    <filter-name>Jersey Web Application</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+-->
+
+  <servlet-mapping>
+    <servlet-name>jersey</servlet-name>
+    <url-pattern>/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>default</servlet-name>
+    <url-pattern>/lda-assets/*</url-pattern>
+    <url-pattern>/assets/*</url-pattern>
+  </servlet-mapping>
+
+
+  <!-- ==================================================================== -->
+
+  <listener>
+    <listener-class>com.epimorphics.lda.restlets.RouterRestlet$Init</listener-class>
+  </listener>
+
+  <!-- ==================================================================== -->
+
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+  
+</web-app>
