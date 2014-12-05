@@ -6,18 +6,7 @@
 
   <context-param>
      <param-name>com.epimorphics.api.initialSpecFile</param-name>
-     <param-value>
-            hello::specs/hello-world.ttl
-            , again::specs/hello-again-world.ttl 
-            , tiny::specs/tiny-education.ttl
-            , mini::specs/mini-education.ttl
-            , full::specs/full-education.ttl
-            , old::specs/old-education.ttl
-            , velocity::specs/hello-velocity.ttl
-            , velocitydev::specs/hello-velocity-dev.ttl
-            , ved::specs/mini-education-velocity.ttl
-            , bwq::specs/environment.data.gov.uk-bwq.ttl
-        </param-value>
+     <param-value>/home/eh/Epimorphics/Elda/elda-github/elda-testing-webapp/src/test/webapp_something/elda-config.ttl</param-value>
   </context-param>
 
 <!--

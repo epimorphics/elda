@@ -44,7 +44,6 @@ public abstract class TomcatTestBase {
         String root = getWebappRoot();
         tomcat = new Tomcat();
         tomcat.setPort(8070);
-
         tomcat.setBaseDir(".");
 
         String contextPath = getWebappContext();
@@ -58,7 +57,8 @@ public abstract class TomcatTestBase {
             System.exit(1);
         }
 
-        System.err.println(">> ADDWEBAPP:");
+        System.err.println(">> ADDWEBAPP: rootF = " + rootF.getAbsolutePath());
+        System.err.println(">> context path = " + contextPath );
         tomcat.addWebapp(contextPath,  rootF.getAbsolutePath());
         System.err.println(">> STARTING ...");
         tomcat.start();
@@ -70,6 +70,7 @@ public abstract class TomcatTestBase {
         c = Client.create(config);
 
         checkLive(200);
+        System.err.println(">> DONE checkLive.");
     }
 
     @After
@@ -216,10 +217,12 @@ public abstract class TomcatTestBase {
         boolean tomcatLive = false;
         int count = 0;
         while (!tomcatLive) {
-            int status = getResponse( getTestURL() ).getStatus();
+            String u = getTestURL() + "games.ttl";
+			int status = getResponse( u ).getStatus();
             if (status != targetStatus) {
+            	System.err.println(">> checkLive " + u + ", try " + count + ", status = " + status);
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(50000);
                 } catch (InterruptedException e) {
                     assertTrue("Interrupted", false);
                 }
