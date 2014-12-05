@@ -2,6 +2,7 @@ package com.epimorphics.lda.testing.tomcat;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.testing.utils.TomcatTestBase;
@@ -13,18 +14,24 @@ public class TestEndToEndStatus extends TomcatTestBase {
 		return "src/test/webapp";
 	}
 	
-	@Test public void succeed() {
-		assertTrue(1 == 1);
-	}
-	
-	@Test public void testing() {
-		String u = BASE_URL + "testing/games";
-		System.err.println(">> U = " + u );
-		ClientResponse response = getResponse(u, "text/turtle");
-		System.err.println(">> status: " + response.getStatus());
-		System.err.println(">> text: " + response.getEntity(String.class));
+	@Test public void testStatus200() {
+		ClientResponse response = getResponse(BASE_URL + "testing/games", "text/turtle");
 		assertEquals(200, response.getStatus());
 	}
-
+	
+	@Test @Ignore public void testStatus400() {
+		ClientResponse response = getResponse(BASE_URL + "testing/games?_unknown=17", "text/turtle");
+		assertEquals(400, response.getStatus());
+	}
+	
+	@Test @Ignore public void testStatus400BadCountValue() {
+		ClientResponse response = getResponse(BASE_URL + "testing/games?_count=vorkosigan", "text/turtle");
+		assertEquals(400, response.getStatus());
+	}
+	
+	@Test public void testStatus404() {
+		ClientResponse response = getResponse(BASE_URL + "testing/no-games", "text/turtle");
+		assertEquals(404, response.getStatus());
+	}
 
 }

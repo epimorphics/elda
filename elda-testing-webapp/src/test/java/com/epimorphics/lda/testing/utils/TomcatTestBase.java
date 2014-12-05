@@ -57,12 +57,8 @@ public abstract class TomcatTestBase {
             System.exit(1);
         }
 
-        System.err.println(">> ADDWEBAPP: rootF = " + rootF.getAbsolutePath());
-        System.err.println(">> context path = " + contextPath );
         tomcat.addWebapp(contextPath,  rootF.getAbsolutePath());
-        System.err.println(">> STARTING ...");
         tomcat.start();
-        System.err.println(">> STARTED.");
 
         // Allow arbitrary HTTP methods so we can use PATCH
         DefaultClientConfig config = new DefaultClientConfig();
@@ -70,7 +66,6 @@ public abstract class TomcatTestBase {
         c = Client.create(config);
 
         checkLive(200);
-        System.err.println(">> DONE checkLive.");
     }
 
     @After
@@ -219,8 +214,8 @@ public abstract class TomcatTestBase {
         while (!tomcatLive) {
             String u = getTestURL() + "games.ttl";
 			int status = getResponse( u ).getStatus();
-            if (status != targetStatus) {
-            	System.err.println(">> checkLive " + u + ", try " + count + ", status = " + status);
+			System.err.println(">> checkLive " + u + ", try " + count + ", status = " + status);
+			if (status != targetStatus) {
                 try {
                     Thread.sleep(50000);
                 } catch (InterruptedException e) {

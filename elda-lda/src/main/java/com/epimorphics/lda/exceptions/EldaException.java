@@ -55,7 +55,7 @@ public class EldaException extends RuntimeException {
 	*/
 	public static void BadRequest( String message ) {
 		log.error("bad request: " + message);
-		throw new BadRequestException();
+		throw new BadRequestException(message);
 	}
 	
 	public static void NoDeploymentURIFor(String name) {

@@ -176,9 +176,9 @@ public class ContextQueryUpdater implements ViewSetter {
 
             Boolean count = getBoolean(val);
             if (count == null)
-                throw new EldaException("illegal boolean (should be 'yes' or 'no') for _count.", val, EldaException.BAD_REQUEST);
+                EldaException.BadRequest("illegal boolean (should be 'yes' or 'no') for _count: " + val);
             else if (!aq.setTotalCountRequested( count ))
-                throw new EldaException("this endpoint does not allow _count to be altered.", val, EldaException.BAD_REQUEST);
+                EldaException.BadRequest("this endpoint does not allow _count to be altered: " + val);
 
         } else if (!allowedReserved( p )){
             EldaException.BadRequest( "unrecognised reserved parameter: " + p );
