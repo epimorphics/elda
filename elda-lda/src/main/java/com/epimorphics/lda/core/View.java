@@ -13,8 +13,6 @@
 package com.epimorphics.lda.core;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -250,7 +248,7 @@ public class View {
     
 	public static class State {
 		
-		final String select;
+//		final String select;
 		final List<Resource> roots;
 		final Model m; 
 		final List<Source> sources;
@@ -258,14 +256,14 @@ public class View {
 		final String graphName;
 		
 		public State
-			( String select
-			, List<Resource> roots
+			( // String select
+			 List<Resource> roots
 			, Model m
 			, List<Source> sources
 			, VarSupply vars
 			, String graphName
 			) {
-			this.select = select;
+//			this.select = select;
 			this.roots = roots;
 			this.m = m; 
 			this.sources = sources;
@@ -287,14 +285,14 @@ public class View {
 		switch (type) {
 			case T_DESCRIBE: {
 				String detailsQuery = fetchByGivenPropertyChains( s, chains ); 
-				String describeQuery = fetchUntimedByDescribe( s );
+				String describeQuery = describeBySelectedItems( s, s.roots );
 				t.addToViewQuerySize( detailsQuery );
 				t.addToViewQuerySize( describeQuery );
 				return describeQuery; 
 			}
 				
 			case T_ALL:	{	
-				String detailsQuery = fetchUntimedByDescribe( s ); 				
+				String detailsQuery = describeBySelectedItems( s, s.roots ); 				
 				String chainsQuery = fetchByGivenPropertyChains( s, chains ); 
 			    addAllObjectLabels( c, s );
 				t.addToViewQuerySize( detailsQuery );
@@ -314,83 +312,36 @@ public class View {
 		return "# should be a query here.";
 	}
 	
-	private String fetchByGivenPropertyChains( State s, List<PropertyChain> chains ) { 
-		if (chains.isEmpty()) return "CONSTRUCT {} WHERE {}\n";
-		boolean uns = useNestedSelect(s) && s.select.length() > 0;
-		return uns // && false
-			? fetchChainsByNestedSelect( s, chains ) 
-			: fetchChainsByRepeatedClauses( s, chains )
-			;
-	}
-
-	private boolean useNestedSelect( State st ) {
-		return Source.Util.allSupportNestedSelect( st.sources );
-	}
-		
-	private String fetchChainsByRepeatedClauses( State s, List<PropertyChain> chains ) { 
-		ChainTrees chainTrees = new ChainTrees();
-		for (Resource r: new HashSet<Resource>( s.roots )) {
-			chainTrees.addAll( ChainTree.make( RDFQ.uri( r.getURI() ), s, chains ) );
-		}
-	//
-		StringBuilder construct = new StringBuilder();
-		PrefixLogger pl = new PrefixLogger( s.m );
-		construct.append( "CONSTRUCT {\n" );
-		chainTrees.renderTriples( construct, pl );
-		construct.append( "\n} WHERE {\n" );
-		s.beginGraph(construct);
-		chainTrees.renderWhere( construct, pl, "" );
-		s.endGraph(construct);
-		construct.append( "\n}" );
-	//
-		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
-		String queryString = prefixes + construct.toString();
-		Query constructQuery = QueryFactory.create( queryString );
-		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
-		return queryString;
-	}
-
-	static final Pattern SELECT = Pattern.compile( "SELECT", Pattern.CASE_INSENSITIVE );
-	
-	private String fetchChainsByNestedSelect( State st, List<PropertyChain> chains ) { 
+	private String fetchByGivenPropertyChains( State st, List<PropertyChain> chains ) { 
 		PrefixLogger pl = new PrefixLogger( st.m );
 		StringBuilder construct = new StringBuilder();
 	//
-		Matcher m = SELECT.matcher( st.select );
-		if (!m.find()) EldaException.Broken( "No SELECT in nested query." );
-		int s = m.start();
-		String selection = st.select.substring( s );
-		String selectPrefixes = st.select.substring(0, s);
-		ChainTrees trees = ChainTree.make( RDFQ.var( "?item" ), st, chains );
+		ChainTrees trees = ChainTree.make( RDFQ.var( "?item" ), st, chains );		
 	//
 		construct.append( "CONSTRUCT {" );
 		trees.renderTriples( construct, pl );
 		construct.append( "\n} WHERE {\n" );	
-		construct.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
+		construct.append( "  { VALUES ?item { " );
+	//
+		for (Resource r: new HashSet<Resource>( st.roots )) 
+			construct.append( "\n  " ).append( pl.present( r.getURI() ) );
+	//
+		construct.append( "\n} }\n" );
 		st.beginGraph(construct);
 		trees.renderWhere( construct, pl, "" );			
 		st.endGraph(construct);
 		construct.append( "\n}" );
+	//	
+//		System.err.println("\n>> QUERY:\n" + construct + "\n");
 	//
 		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
-		String queryString = selectPrefixes + prefixes + construct.toString();
+		String queryString = prefixes + construct.toString();
 		// System.err.println( ">> QUERY:\n" + queryString );
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) ); 
 		return queryString;
-	}
+	}		
 	
-	private String fetchUntimedByDescribe( State s ) {
-		List<Resource> allRoots = s.roots;
-		boolean uns = useNestedSelect(s) && s.select.length() > 0;
-	//
-		if (uns && allRoots.size() > describeThreshold) {
-			return describeByNestedSelect( s );
-		} else {
-			return describeBySelectedItems( s, allRoots );
-		}
-	}
-
 	private String describeBySelectedItems(State s, List<Resource> allRoots) {
 		String query = createDescribeQueryForItems( s, allRoots );
 		Query describeQuery = QueryFactory.create( query );
@@ -407,55 +358,36 @@ public class View {
 			describe.append( "\n  " ).append( pl.present( r.getURI() ) );
 		String query = pl.writePrefixes( new StringBuilder() ).toString() + describe;
 		return query;
-	}
-
-	private String describeByNestedSelect( State s ) {
-		StringBuilder describe = new StringBuilder();
-		Matcher m = SELECT.matcher( s.select );
-		if (!m.find()) EldaException.Broken( "No SELECT in nested query." );
-		int start = m.start();
-		String selection = s.select.substring( start );
-		String selectPrefixes = s.select.substring(0, start);
-		describe.append( "DESCRIBE ?item" );
-		PrefixLogger pl = new PrefixLogger( s.m );
-		describe.append( "\n WHERE {\n" );		
-		describe.append( "  {" ).append( selection.replaceAll( "\n", "\n    " ) ).append( "\n}" );
-		describe.append( "\n}" );			
-		String query = 
-			selectPrefixes
-			+ pl.writePrefixes( new StringBuilder() ).toString() 
-			+ describe
-			;
-		Query describeQuery = QueryFactory.create( query );
-		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
-		return query.toString();
-	}		
+	}	
 
 	private void addAllObjectLabels( Controls c, State s ) { 
 		StringBuilder sb = new StringBuilder();
-		sb.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">" )
+		sb
+			.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">" )
 			.append( "\nCONSTRUCT { ?x <" ).append( labelPropertyURI ).append( "> ?l }\nWHERE\n{" );
 		s.beginGraph(sb);
-		String union = "";
-		for (RDFNode n: s.m.listObjects().toList()) {
-			if (n.isURIResource()) {
-				sb.append( union )
-					.append( "{?x <" ).append( labelPropertyURI ).append( "> ?l. " )
-					.append( "FILTER(?x = <" ).append( n.asNode().getURI() ).append( ">)" )
-					.append( "}" );
-				union = "\nUNION ";
-			}
-		}
+	//	
+		sb.append( "  { VALUES ?x { " );
+	//
+		for (RDFNode n: s.m.listObjects().toList()) 
+			if (n.isURIResource())
+				sb.append( "\n  " ).append("<").append( n.asNode().getURI() ).append(">");
+	//
+		sb.append( "\n} }\n" );
+		sb.append( "?x <" ).append( labelPropertyURI ).append( "> ?l. " );
+	//
 		s.endGraph(sb);
 		sb.append( "}\n" );
 		String queryString = sb.toString();
+		
+//		System.err.println("\n>> LABEL QUERY:\n" + queryString + "\n");
+		
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
 	}	
 
 	public String fetchDescriptionsFor
 		( Controls c
-		, String select
 		, List<Resource> roots
 		, Model m
 		, APISpec spec
@@ -465,7 +397,7 @@ public class View {
 		List<Source> sources = spec.getDescribeSources();
 		return this.isTemplateView()
         	? this.viewByTemplate( roots, m, spec, sources, graphName )
-        	: this.fetchDescriptions( c, new View.State( select, roots, m, sources, vars, graphName ) );
+        	: this.fetchDescriptions( c, new View.State( roots, m, sources, vars, graphName ) );
 	}
 	
 	public String viewByTemplate(List<Resource> roots, Model m, APISpec spec, List<Source> sources, String graphName) {
