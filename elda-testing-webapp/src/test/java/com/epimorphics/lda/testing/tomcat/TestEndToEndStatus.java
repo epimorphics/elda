@@ -7,10 +7,10 @@ import org.junit.Test;
 import com.epimorphics.lda.testing.utils.TomcatTestBase;
 import com.sun.jersey.api.client.ClientResponse;
 
-public class TestSomething extends TomcatTestBase {
+public class TestEndToEndStatus extends TomcatTestBase {
 
 	@Override public String getWebappRoot() {
-		return "src/test/webapp_something";
+		return "src/test/webapp";
 	}
 	
 	@Test public void succeed() {

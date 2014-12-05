@@ -6,7 +6,7 @@
 
   <context-param>
      <param-name>com.epimorphics.api.initialSpecFile</param-name>
-     <param-value>/home/eh/Epimorphics/Elda/elda-github/elda-testing-webapp/src/test/webapp_something/elda-config.ttl</param-value>
+     <param-value>/home/eh/Epimorphics/Elda/elda-github/elda-testing-webapp/src/test/webapp/elda-config.ttl</param-value>
   </context-param>
 
 <!--
