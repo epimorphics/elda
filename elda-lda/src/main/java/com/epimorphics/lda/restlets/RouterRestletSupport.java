@@ -93,6 +93,7 @@ public class RouterRestletSupport {
 				List<File> files = new Glob().filesMatching( fullPath );
 				log.debug( "full path " + fullPath + " matches " + files.size() + " files." );
 				for (File f: files) {
+					log.debug("file: " + f.toString());
 					String expandedPrefix = ServletUtils.containsStar(prefixName) ? ServletUtils.nameToPrefix(prefixName, specName, f.getName()) : prefixName;
 					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
 				}
