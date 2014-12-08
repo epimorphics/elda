@@ -24,7 +24,7 @@ public class TestEndToEndStatus extends TomcatTestBase {
 		assertTrue(response.getType().isCompatible(typeTurtle));
 	}
 	
-	@Test @Ignore public void testStatus400() {
+	@Test public void testStatus400() {
 		ClientResponse response = getResponse(BASE_URL + "testing/games?_unknown=17", "text/turtle");
 		assertEquals(400, response.getStatus());
 		assertTrue(response.getType().isCompatible(typeTurtle));

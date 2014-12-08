@@ -9,7 +9,6 @@
      <param-value>elda-config.ttl</param-value>
   </context-param>
 
-<!--
     <filter>
         <filter-name>Jersey Web Application</filter-name>
         <filter-class>com.sun.jersey.spi.container.servlet.ServletContainer</filter-class>
@@ -29,8 +28,8 @@
              <param-value>com.sun.jersey.api.container.filter.PostReplaceFilter</param-value>
          </init-param>
   </filter>
--->
 
+<!--
   <servlet>
     <servlet-name>jersey</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -42,20 +41,21 @@
 
     <load-on-startup>1</load-on-startup>
   </servlet>
+-->
 
   <!-- ==================================================================== -->
 
-<!--
   <filter-mapping>
     <filter-name>Jersey Web Application</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
--->
 
+<!--
   <servlet-mapping>
     <servlet-name>jersey</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
+-->
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
@@ -71,7 +71,32 @@
   </listener>
 
   <!-- ==================================================================== -->
-
+   
+  <error-page>
+    <error-code>404</error-code>
+    <location>/_errors/404.html</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.BadRequestException</exception-type>
+    <location>/_errors/400.html</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.VelocityRenderingException</exception-type>
+    <location>/_errors/500.html</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.QueryParseException</exception-type>
+    <location>/_errors/500.html</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.GeneralException</exception-type>
+    <location>/_errors/something.html</location>
+  </error-page>
+  
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
