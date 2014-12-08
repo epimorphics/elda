@@ -269,7 +269,6 @@
     <module>elda-common</module>
     <module>elda-bundled</module>
     <module>elda-standalone</module>
-    <module>elda-system-tests</module>
     <module>elda-testing-webapp</module>
   </modules>
 
