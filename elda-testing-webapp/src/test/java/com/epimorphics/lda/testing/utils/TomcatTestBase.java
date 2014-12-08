@@ -217,7 +217,7 @@ public abstract class TomcatTestBase {
 			System.err.println(">> checkLive " + u + ", try " + count + ", status = " + status);
 			if (status != targetStatus) {
                 try {
-                    Thread.sleep(50000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     assertTrue("Interrupted", false);
                 }
