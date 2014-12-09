@@ -13,7 +13,7 @@ import com.sun.jersey.api.client.ClientResponse;
 public class TestEndToEndStatus extends TomcatTestBase {
 
 	@Override public String getWebappRoot() {
-		return "src/test/webapp";
+		return "src/main/webapp";
 	}
 	
 	static final MediaType typeTurtle = new MediaType("text", "turtle");

@@ -10,6 +10,8 @@ import org.apache.jena.atlas.json.JSON;
 import org.apache.jena.atlas.json.JsonObject;
 import org.junit.After;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.FileManager;
@@ -22,6 +24,8 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class TomcatTestBase {
 
+    static Logger log = LoggerFactory.getLogger(TomcatTestBase.class);
+    
     protected static final String BASE_URL = "http://localhost:8070/";
 
     protected Tomcat tomcat ;
@@ -215,7 +219,7 @@ public abstract class TomcatTestBase {
         while (!tomcatLive) {
             String u = getTestURL() + "games.ttl";
 			int status = getResponse( u ).getStatus();
-			System.err.println(">> checkLive " + u + ", try " + count + ", status = " + status);
+			log.info("checkLive " + u + ", try " + count + ", status = " + status);
 			if (status != targetStatus) {
                 try {
                     Thread.sleep(500);
