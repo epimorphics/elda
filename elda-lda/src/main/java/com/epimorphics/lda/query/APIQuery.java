@@ -472,14 +472,20 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		String langs = getDefaultLanguage();
 		String [] langArray = langs == null ? ValTranslator.JUSTEMPTY : langs.split(",", -1);
 		
-		if (langArray.length > 1 && (type == null || type.equals(API.PlainLiteral.getURI()))) {
-			RenderExpression or = null;
+		if (langArray.length > 0 && (type == null || type.equals(API.PlainLiteral.getURI()))) {
+			
+			RenderExpression strAlready = RDFQ.apply("str", already);
+			RenderExpression strOp = RDFQ.infix(strAlready, op, RDFQ.literal(val));
+			
+			RenderExpression orTagsEq = null;
 			for (String lang: langArray) {
-				RenderExpression valInLang = RDFQ.literal(val, lang, null);
-				Infix oneTerm = RDFQ.infix(already, op, valInLang);
-				if (or == null) or = oneTerm; else or = RDFQ.infix(or,  "||",  oneTerm);
-			}			
-			addFilterExpression(or);
+				RenderExpression langAlready = RDFQ.apply("lang", already);
+				RenderExpression tagEq = RDFQ.infix(langAlready, "=", RDFQ.literal(lang));
+				if (orTagsEq == null) orTagsEq = tagEq; else orTagsEq = RDFQ.infix(orTagsEq, "||", tagEq);
+			}
+			
+			RenderExpression and = RDFQ.infix(strOp, "&&", orTagsEq);
+			addFilterExpression(and);
 			
 		} else {
 			Any r = objectForValue(inf, val, langs);

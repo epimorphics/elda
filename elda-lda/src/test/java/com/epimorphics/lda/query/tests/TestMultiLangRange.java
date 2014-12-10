@@ -31,15 +31,25 @@ public class TestMultiLangRange {
 	//
 		cq.addFilterFromQuery(Param.make( sns, "label" ), "sticky");
 		int n = aq.countVarsAllocated() - 1;
-		Variable v = RDFQ.var(APIQuery.PREFIX_VAR + "label_" + n);
+		Variable v = RDFQ.var(APIQuery.PREFIX_VAR + "" + n);
 	//
 		List<RenderExpression> filters = aq.getFilterExpressions();
 				
-		Infix en = RDFQ.infix(v, ">=", RDFQ.literal("sticky", "en", null));
-		Infix cy = RDFQ.infix(v, ">=", RDFQ.literal("sticky", "cy", null));
-		Infix or = RDFQ.infix(en, "||", cy);
+//		Infix en = RDFQ.infix(v, ">=", RDFQ.literal("sticky", "en", null));
+//		Infix cy = RDFQ.infix(v, ">=", RDFQ.literal("sticky", "cy", null));
+//		Infix or = RDFQ.infix(en, "||", cy);
 		
-		assertEquals(CollectionUtils.list(or), filters);
+		RenderExpression strOp = RDFQ.infix(RDFQ.apply("str", v), "=", RDFQ.literal("sticky"));
+		RenderExpression langEqEn = RDFQ.infix(RDFQ.apply("lang", v), "=", RDFQ.literal("en"));
+		RenderExpression langEqCy = RDFQ.infix(RDFQ.apply("lang", v), "=", RDFQ.literal("cy"));
+		
+		RenderExpression langOr = RDFQ.infix(langEqEn, "||", langEqCy);
+		Infix and = RDFQ.infix(strOp, "&&", langOr);
+				
+//		System.err.println(">> expected: " + and);
+//		System.err.println(">> obtained: " + filters.get(0));
+		
+		assertEquals(CollectionUtils.list(and), filters);
 	}
 
 	@Test public void testMultiLanguageMinEtc() {
@@ -56,11 +66,22 @@ public class TestMultiLangRange {
 		Variable v = RDFQ.var(APIQuery.PREFIX_VAR + "label_" + n);
 	//
 		List<RenderExpression> filters = aq.getFilterExpressions();
-				
-		Infix en = RDFQ.infix(v, ">=", RDFQ.literal("sticky", "en", null));
-		Infix cy = RDFQ.infix(v, ">=", RDFQ.literal("sticky", "cy", null));
-		Infix or = RDFQ.infix(en, "||", cy);
+//				
+//		Infix en = RDFQ.infix(v, ">=", RDFQ.literal("sticky", "en", null));
+//		Infix cy = RDFQ.infix(v, ">=", RDFQ.literal("sticky", "cy", null));
+//		Infix or = RDFQ.infix(en, "||", cy);
 		
-		assertEquals(CollectionUtils.list(or), filters);
+		RenderExpression strOp = RDFQ.infix(RDFQ.apply("str", v), ">=", RDFQ.literal("sticky"));
+		RenderExpression langEqEn = RDFQ.infix(RDFQ.apply("lang", v), "=", RDFQ.literal("en"));
+		RenderExpression langEqCy = RDFQ.infix(RDFQ.apply("lang", v), "=", RDFQ.literal("cy"));
+		
+		RenderExpression langOr = RDFQ.infix(langEqEn, "||", langEqCy);
+		
+		Infix and = RDFQ.infix(strOp, "&&", langOr);
+		
+//		System.err.println(">> expected: " + and);
+//		System.err.println(">> obtained: " + filters.get(0));
+		
+		assertEquals(CollectionUtils.list(and), filters);
 	}
 }

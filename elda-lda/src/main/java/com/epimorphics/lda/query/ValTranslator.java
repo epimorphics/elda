@@ -68,20 +68,15 @@ public class ValTranslator {
 
 	private Any languagedLiteral(String[] langArray, String val) {
 		if (langArray.length == 1) return RDFQ.literal( val, langArray[0], "" );
+
+		if (false) throw new RuntimeException("BOOM");
+		Variable o = vs.newVar();
+		Apply stringOf = RDFQ.apply( "str", o );
+		Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
+		Infix filter = RDFQ.infix( equals, "&&", ValTranslator.someOf( o, langArray ) );
+		expressions.add( filter );
 		
-		EldaException.Broken("cannot handle literals with multiple languages.");
-		return null;
-		
-//		System.err.println(">> languagedLiteral: " + Arrays.asList(langArray ));
-//		if (true) throw new RuntimeException("BOOM");
-//		
-//		Variable o = vs.newVar();
-//		Apply stringOf = RDFQ.apply( "str", o );
-//		Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
-//		Infix filter = RDFQ.infix( equals, "&&", ValTranslator.someOf( o, langArray ) );
-//		expressions.add( filter );
-//		
-//		return o;
+		return o;
 	}
 
 	/**
