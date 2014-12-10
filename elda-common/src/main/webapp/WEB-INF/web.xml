@@ -2,6 +2,7 @@
 <!DOCTYPE web-app PUBLIC 
 	'-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN'
 	'http://java.sun.com/dtd/web-app_2_3.dtd'>
+	
 <web-app> 
 
 	<!--
@@ -64,16 +65,40 @@
   
   <!-- ==================================================================== -->
 
-  <!--
   <servlet-mapping>
 	<servlet-name>default</servlet-name>
 	<url-pattern>/*</url-pattern>
   </servlet-mapping>
-  -->
+   
+  <error-page>
+    <error-code>404</error-code>
+    <location>/_errors/404.html</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.BadRequestException</exception-type>
+    <location>/_errors/400.html</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.VelocityRenderingException</exception-type>
+    <location>/_errors/500.html</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.QueryParseException</exception-type>
+    <location>/_errors/500.html</location>
+  </error-page>
+  
+  <error-page>
+    <exception-type>com.epimorphics.lda.exceptions.GeneralException</exception-type>
+    <location>/_errors/something.html</location>
+  </error-page>
 
   <!-- ==================================================================== -->
 
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
   </welcome-file-list>
+  
 </web-app>
