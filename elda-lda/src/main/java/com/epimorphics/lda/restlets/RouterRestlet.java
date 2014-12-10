@@ -47,6 +47,7 @@ import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.*;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.shared.WrappedException;
+import com.hp.hpl.jena.util.FileManager;
 import com.sun.jersey.api.NotFoundException;
 
 /**
@@ -415,26 +416,26 @@ import com.sun.jersey.api.NotFoundException;
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
-//            String message = Messages.niceMessage("Stack overflow", e.getMessage() );
-            throw new GeneralException();
+            String message = Messages.niceMessage("Stack overflow", e.getMessage() );
+            return respond(servCon, "stack_overflow", message, EldaException.SERVER_ERROR); // throw new GeneralException();
         
         } catch (VelocityRenderingException e) {
-            throw e;
+            return respond(servCon, "velocity_rendering", e.getMessage(), EldaException.SERVER_ERROR); // throw e;
         
         } catch (BadRequestException e) {
-            throw e;
+        	return respond(servCon, "bad_request", e.getMessage(), EldaException.BAD_REQUEST); // throw e;
                     	
         } catch (UnknownShortnameException e) {
         	log.error( "UnknownShortnameException: " + e.getMessage() );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
         	StatsValues.endpointException();
-        	throw new GeneralException();
+        	return respond(servCon, "unknown_shortname", e.getMessage(), EldaException.SERVER_ERROR); // throw new GeneralException();
         
         } catch (EldaException e) {
         	StatsValues.endpointException();
         	log.error( "Exception: " + e.getMessage() );
         	if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
-        	throw new GeneralException();
+        	return respond(servCon, "exception", e.getMessage(), EldaException.SERVER_ERROR); // throw new GeneralException();
         
         } catch (NotFoundException e) {
         	throw e;
@@ -443,16 +444,68 @@ import com.sun.jersey.api.NotFoundException;
         	StatsValues.endpointException();
             log.error( "Query Parse Exception: " + e.getMessage() );
             if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
-            throw e; 
+            return respond(servCon, "query_parse_exception", e.getMessage(), EldaException.SERVER_ERROR); // throw e; 
             
         } catch (Throwable e) {
         	log.error( "General failure: " + e.getClass().getCanonicalName() + ": " + e.getMessage() );
         	e.printStackTrace(System.err);
         	StatsValues.endpointException();
-            throw new GeneralException();
+        	return respond(servCon, "general_exception", e.getMessage(), EldaException.SERVER_ERROR); // throw new GeneralException();
         }
     }    
     
+    private Response respond(ServletContext con, String name, String message, int status) {
+    	
+    	String context = con.getContextPath();
+    	String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
+		String fullPath = 
+			(name.startsWith("/") ? "" : baseFilePath)
+			+ "_errors/" + name + ".vm"
+			;
+
+		String external = "/etc/elda/conf.d/" + context + "/_errors/" + name + ".vm";
+		
+		File fExternal = new File(external);
+		
+		if (fExternal.exists()) {
+			
+		} else {
+			fExternal = new File( fullPath );
+		}
+		
+		System.err.println(">> fExternal = " + fExternal);
+		
+		String page;
+		
+		if (fExternal.exists()) {
+			page = FileManager.get().readWholeFileAsUTF8(fExternal.getAbsolutePath());
+			
+		} else {
+			page = "<html><head></head><body><h1>OOPS</h1></body></html>\n";
+		}
+		
+		String builtPage = apply(page, name, message);
+		
+    	return Response
+    		.status(status)
+    		.entity(builtPage) // .entity(name + "\n" + message)
+    		.build()
+    		;
+    }
+    
+    String apply(String template, String name, String message ) {
+    	System.err.println(">> template: " + template );
+    	System.err.println(">> name: " + name );
+    	System.err.println(">> message: " + message );
+    	if (message == null) message = "(no further information)";
+    	return template
+    		.replace("{{name}}", name)
+    		.replace("{{message}}", Messages.protect(message))
+    		;
+    }
+    
+    
+        
     public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
 		if (base == null) return requestUri;

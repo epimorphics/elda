@@ -59,7 +59,7 @@ public class Messages {
 		return s.replaceAll("[<&%>]", " ");
 	}
 	
-	private static String protect(String message) {
+	public static String protect(String message) {
 		return StringEscapeUtils.escapeHtml(message);
 	}
 
