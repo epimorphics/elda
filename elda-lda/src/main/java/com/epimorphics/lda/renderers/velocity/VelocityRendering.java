@@ -178,7 +178,7 @@ implements BytesOut
      * loaded from the <code>velocity.properties</code> file.
      * @return A new Velocity engine
      */
-    protected VelocityEngine createVelocityEngine() {
+    public VelocityEngine createVelocityEngine() {
         List<String> velocityPath = expandVelocityPath( bindings );
 
         Properties p = getProperties( velocityPath );
@@ -286,7 +286,7 @@ implements BytesOut
     }
 
     /** @return A new velocity context containing bindings that we will use to render the results */
-    protected VelocityContext createVelocityContext( Bindings binds ) {
+    public VelocityContext createVelocityContext( Bindings binds ) {
         Page page = initialisePage();
         DisplayHierarchy dh = initialiseHierarchy( page );
 

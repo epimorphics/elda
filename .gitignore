@@ -19,3 +19,4 @@ elda-standalone/velocity.log*
 bin
 _site
 .sass-cache
+velocity.log
