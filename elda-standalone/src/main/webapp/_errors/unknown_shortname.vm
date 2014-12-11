@@ -1,14 +1,14 @@
 <html>
 <head>
-<title>bad request</title>
+<title>unknown shortname</title>
 
 <style> body { background-color: pink } </style>
 
 </head>
 <body>
-<h1>Bad Request</h1>
+<h1>Unknown shortname</h1>
 
-Your request was ill-formed.
+That shortname is unrecognised.
 
 {{message}} 
 

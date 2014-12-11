@@ -1,14 +1,12 @@
 <html>
 <head>
-<title>bad request</title>
+<title>velocity rendering problem</title>
 
 <style> body { background-color: pink } </style>
 
 </head>
 <body>
-<h1>Bad Request</h1>
-
-Your request was ill-formed.
+<h1>velocity rendering problem</h1>
 
 {{message}} 
 

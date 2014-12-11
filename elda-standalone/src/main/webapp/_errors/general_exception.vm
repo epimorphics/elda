@@ -1,14 +1,14 @@
 <html>
 <head>
-<title>bad request</title>
+<title>internal error</title>
 
 <style> body { background-color: pink } </style>
 
 </head>
 <body>
-<h1>Bad Request</h1>
+<h1>Internal error</h1>
 
-Your request was ill-formed.
+Something broke. Sorry.
 
 {{message}} 
 

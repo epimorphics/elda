@@ -1,14 +1,14 @@
 <html>
 <head>
-<title>bad request</title>
+<title>stack overflow</title>
 
 <style> body { background-color: pink } </style>
 
 </head>
 <body>
-<h1>Bad Request</h1>
+<h1>Server Error</h1>
 
-Your request was ill-formed.
+The stack overflowed.
 
 {{message}} 
 

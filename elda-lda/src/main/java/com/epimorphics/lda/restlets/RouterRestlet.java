@@ -458,45 +458,41 @@ import com.sun.jersey.api.NotFoundException;
     	
     	String context = con.getContextPath();
     	String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
-		String fullPath = 
-			(name.startsWith("/") ? "" : baseFilePath)
-			+ "_errors/" + name + ".vm"
-			;
-
-		String external = "/etc/elda/conf.d/" + context + "/_errors/" + name + ".vm";
+		String basePrefix = name.startsWith("/") ? "" : baseFilePath;
 		
-		File fExternal = new File(external);
+		String[] filesToTry = new String[] {
+			"/etc/elda/conf.d/" + context + "/_errors/" + name + ".vm"
+			, basePrefix + "_errors/" + name + ".vm"
+			, "/etc/elda/conf.d/" + context + "/_errors/" + "_error" + ".vm"
+			, basePrefix + "_errors/" + "_error" + ".vm"
+		};
 		
-		if (fExternal.exists()) {
-			
-		} else {
-			fExternal = new File( fullPath );
-		}
+		String fallBack = "<html><head></head><body><h1>OOPS</h1></body></html>\n";
 		
-		System.err.println(">> fExternal = " + fExternal);
-		
-		String page;
-		
-		if (fExternal.exists()) {
-			page = FileManager.get().readWholeFileAsUTF8(fExternal.getAbsolutePath());
-			
-		} else {
-			page = "<html><head></head><body><h1>OOPS</h1></body></html>\n";
-		}
+		String page = fetchPage(filesToTry, fallBack);
 		
 		String builtPage = apply(page, name, message);
 		
     	return Response
     		.status(status)
-    		.entity(builtPage) // .entity(name + "\n" + message)
+    		.entity(builtPage)
     		.build()
     		;
     }
     
+    String fetchPage(String [] fileNames, String ifAbsent) {
+    	for (String fileName: fileNames) {
+    		File f = new File(fileName);
+    		if (f.exists())
+    			return FileManager.get().readWholeFileAsUTF8(f.getAbsolutePath());
+    	}
+    	return ifAbsent;
+    }
+    
     String apply(String template, String name, String message ) {
-    	System.err.println(">> template: " + template );
-    	System.err.println(">> name: " + name );
-    	System.err.println(">> message: " + message );
+//    	System.err.println(">> template: " + template );
+//    	System.err.println(">> name: " + name );
+//    	System.err.println(">> message: " + message );
     	if (message == null) message = "(no further information)";
     	return template
     		.replace("{{name}}", name)
@@ -504,8 +500,6 @@ import com.sun.jersey.api.NotFoundException;
     		;
     }
     
-    
-        
     public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
 		if (base == null) return requestUri;
