@@ -172,7 +172,7 @@ import com.sun.jersey.api.NotFoundException;
     	 return r.router;
      }
 
-	private static long getRefreshInterval(String contextPath) {
+	protected static long getRefreshInterval(String contextPath) {
 		long delay = TimestampedRouter.DEFAULT_INTERVAL;
 		 String intervalFileName = "/etc/elda/conf.d/" + contextPath + "/delay.int";
 		InputStream is = EldaFileManager.get().open( intervalFileName );
