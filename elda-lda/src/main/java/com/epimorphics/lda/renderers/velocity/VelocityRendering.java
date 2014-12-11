@@ -183,7 +183,6 @@ implements BytesOut
 
         Properties p = getProperties( velocityPath );
         VelocityEngine ve = new VelocityEngine();
-        ve.setApplicationAttribute("javax.servlet.Context", servletContext);
         ve.init( p );
 
         return ve;
