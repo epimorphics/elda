@@ -169,7 +169,7 @@ Maven](http://maven.apache.org/):
     mvn clean package
 
 After compiling, the runnable `.jar` file will be in
-`./elda-standalone/target/elda-standalone.jar`.
+`./elda-standalone/target/elda-standalone-$VERSION-exec-war.jar`.
 
 If you can't use port 8080
 --------------------------
@@ -178,7 +178,7 @@ Your computer may already be using port 8080 for some other service. In
 that case, you can start Elda from the command line (this won't work
 when double-clicking in a file manager) with:
 
-    java -jar standalone.jar -DhttpPort=NNNN
+    java -jar standalone.jar -httpPort NNNN
 
 Built-in example datasets and configurations
 --------------------------------------------
