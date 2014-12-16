@@ -29,10 +29,10 @@ do.
 
 The easiest route to starting Elda is to use the pre-packaged Java
 `.jar` file that you can download from
-<http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/{{ site.data.version.CURRENT_RELEASE }}/elda-standalone-{{ site.data.version.CURRENT_RELEASE }}.jar>.
+<http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/{{ site.data.version.CURRENT_RELEASE }}/elda-standalone-{{ site.data.version.CURRENT_RELEASE }}-exec-war.jar>.
 You can start the file from the command line.
 
-    java -jar elda-standalone-$VERSION.jar
+    java -jar elda-standalone-$VERSION-exec-war.jar
 
 where *`$VERSION`* denotes the version number of the Elda you
 downloaded, such as {{ site.data.version.CURRENT_RELEASE }}. If your system permits, double-clicking on
@@ -40,7 +40,7 @@ the file in your preferred file browser may also work.
 
 At this point, you may see a large number of log messages as Elda
 starts, and then you should be able to view the starting page in a web
-browser: <http://localhost:8080/standalone/hello/games>. This should
+browser: <http://localhost:8080/standalone/again/games>. This should
 display a page similar to:
 
 ![Screenshot showing demo dataset in
