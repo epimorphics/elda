@@ -8,8 +8,9 @@
     {% include header.html %}
 
     <div class="container">
+      {% include toc.html %}
       <div class="main">
-        {{ content | toc_generate }}
+        {{ content }}
       </div>
     </div>
 

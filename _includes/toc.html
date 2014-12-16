@@ -1,0 +1,73 @@
+<script>
+  var advanceSection = function( options, level ) {
+    options.section.splice( level, 99 );
+    options.section[level - 1]++  ;
+  };
+
+  var formatAnchor = function( h, section, count ) {
+    var id = "tocEntry-" + String( count );
+    h.attr( "id", id );
+    return "<a href='#" + id +"'>" +
+           "<span class='tocnumber'>" + section.join( "." ) + "</span> " +
+           "<span class='toctext'>" + h.text() + "</span>"
+           "</a>"
+  };
+
+  var renderEntry = function( h, t, options ) {
+    var level = options.level;
+    var section = options.section;
+    var count = options.count++;
+    var html = $("<li class='toc_level-" + section.join("-") + "'' toc_section-" + count + ">" +
+               formatAnchor( h, section, count ) +
+               "</li>");
+
+    advanceSection( options, level );
+
+    t.append( html );
+    return html;
+  };
+
+  var addH1Section = function( h1, t, options ) {
+    var li = renderEntry( h1, t, options );
+    var children = h1.nextUntil( "h1", "h2:not(.no-toc)");
+
+    if (children.size() > 0) {
+      options.level++;
+
+      var ul = $("<ul></ul>" );
+      li.append( ul );
+
+      $.each( children, function( i, h2 ) {
+        renderEntry( $(h2), ul, options );
+      } );
+
+      options.level--;
+    }
+  };
+
+  var toc = function() {
+    var tocEntries = $("ul.toc-entries" );
+    var options = {count: 1, level: 1, section: [1]};
+
+    $("h1:not(.no-toc)").each( function( i, h1 ) {
+      addH1Section( $(h1), tocEntries, options );
+    } );
+  };
+
+  $( toc );
+</script>
+
+      <div id="toc-container">
+        <table class="toc" id="toc">
+          <thead>
+            <tr><td><div id="toctitle"><h2 class="no-toc">Contents</h2></div></td></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <ul class="toc-entries"></ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
