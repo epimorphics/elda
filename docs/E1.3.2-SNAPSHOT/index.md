@@ -577,62 +577,6 @@ answered by this model.
 `FileManager` class; for more details, see the Jena documentation
 currently at openjena.org.)
 
-Using a local TDB datasource [obsolescent]
-------------------------------------------
-
-As an alternative to setting up a local SPARQL endpoint, or using a
-local: file, you can instead use a local [Jena
-TDB](http://openjena.org/wiki/TDB) database. To do so you will need to
-modify the `web.xml` webapp configuration file and supply an additional
-init-param for the `loader-init` servlet. You can do this in two ways:
-
-    <init-param>
-      <param-name>com.epimorphics.api.TDB-base-directory</param-name>
-      <param-value>tdb-directory</param-value>
-    </init-param>
-
-Replace **tdb-directory** with the path to your chosen TDB directory.
-Note that the path is relative to the webapps directory – your best
-choice is to use an absolute path.
-
-*Warning*. If the directory does not contain any TDB files, TDB will
-create a new empty dataset in it. This is usually not what you want,
-since all queries will return no answers, so Elda will report an error
-during setup.
-
-The alternative form:
-
-    <init-param>
-      <param-name>com.epimorphics.api.dataStoreDirectory</param-name>
-      <param-value>datastore-directory</param-value>
-    </init-param>
-
-specifies **datastore-directory** as a directory containing a TDB
-directory named *tdb*. The same warnings as above apply. (This form
-exists because Elda can do limited LARQ indexing and in that case the
-datastore directory will have a **larq** subdirectory for the LARQ
-indexes.)
-
-Having specified a TDB directory, you can now edit your spec's
-sparqlEndpoint declaration, which in the education example looks like:
-
-    spec:api
-      a api:API ;
-      rdfs:label "Edubase API"@en;
-      api:maxPageSize 50;
-      api:defaultPageSize 10 ;
-      api:sparqlEndpoint <http://services.data.gov.uk/education/sparql> ;
-      api:endpoint
-       spec:schools
-       , spec:schoolsPrimary
-       , spec:schoolsSecondary
-       , spec:schoolsPrimaryDistrict
-       , spec:schoolsSecondaryDistrict
-     .
-
-Replace the services URI with **tdb:model-name**, where **model-name**
-is the name of your endpoint model inside the TDB store.
-
 Notes
 =====
 
