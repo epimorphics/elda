@@ -12,4 +12,10 @@ layout: default
     {{ content }}
   </article>
 
+  {% if page.releaseVersion %}
+    <p>
+      See the <a href="{{ site.baseUrl }}docs/E{{ page.releaseVersion }}">documentation specific to this version</a>.
+    </p>
+  {% endif %}
+
 </div>
