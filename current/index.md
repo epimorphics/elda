@@ -645,6 +645,6 @@ group](http://groups.google.com/group/linked-data-api-discuss) (note:
 you will need a google account to use this group).
 
 Current issues can be seen on the [Elda issues
-list](http://code.google.com/p/elda/issues/list).
+list](https://github.com/epimorphics/elda/issues).
 
 
