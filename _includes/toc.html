@@ -1,27 +1,31 @@
 <script>
-  var advanceSection = function( options, level ) {
-    options.section.splice( level, 99 );
-    options.section[level - 1]++  ;
+  "use strict";
+  var advanceSection = function( options ) {
+    options.section.push( options.section.pop() + 1 );
+  };
+
+  var headerId = function( h, count ) {
+    var id = h.attr( "id" );
+    if (!id) {
+      id = "tocEntry-" + String( count );
+      h.attr( "id", id );
+    }
+    return id;
   };
 
   var formatAnchor = function( h, section, count ) {
-    var id = "tocEntry-" + String( count );
-    h.attr( "id", id );
-    return "<a href='#" + id +"'>" +
+    return "<a href='#" + headerId( h, count ) +"'>" +
            "<span class='tocnumber'>" + section.join( "." ) + "</span> " +
            "<span class='toctext'>" + h.text() + "</span>"
            "</a>"
   };
 
   var renderEntry = function( h, t, options ) {
-    var level = options.level;
     var section = options.section;
     var count = options.count++;
     var html = $("<li class='toc_level-" + section.join("-") + "'' toc_section-" + count + ">" +
-               formatAnchor( h, section, count ) +
-               "</li>");
-
-    advanceSection( options, level );
+                 formatAnchor( h, section, count ) +
+                 "</li>");
 
     t.append( html );
     return html;
@@ -33,41 +37,43 @@
 
     if (children.size() > 0) {
       options.level++;
+      options.section.push( 1 );
 
       var ul = $("<ul></ul>" );
       li.append( ul );
 
       $.each( children, function( i, h2 ) {
         renderEntry( $(h2), ul, options );
+        advanceSection( options, options.level );
       } );
 
+      options.section.pop();
       options.level--;
     }
+
+    advanceSection( options, options.level );
   };
 
   var toc = function() {
-    var tocEntries = $("ul.toc-entries" );
     var options = {count: 1, level: 1, section: [1]};
-
     $("h1:not(.no-toc)").each( function( i, h1 ) {
-      addH1Section( $(h1), tocEntries, options );
+      addH1Section( $(h1), $("ul.toc-entries" ), options );
     } );
   };
 
   $( toc );
 </script>
-
-      <div id="toc-container">
-        <table class="toc" id="toc">
-          <thead>
-            <tr><td><div id="toctitle"><h2 class="no-toc">Contents</h2></div></td></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <ul class="toc-entries"></ul>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<div id="toc-container">
+  <table class="toc" id="toc">
+    <thead>
+      <tr><td><div id="toctitle"><h2 class="no-toc">Contents</h2></div></td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <ul class="toc-entries"></ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
