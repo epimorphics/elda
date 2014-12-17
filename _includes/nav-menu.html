@@ -1,27 +1,7 @@
 <ul class="nav navbar-nav">
-  
-  {% if page.url contains 'index.html' %}
-    <li class="active"><a href="index.html">Quick start</a></li>
-  {% else %}
-    <li class=""><a href='index.html'>Quick start</a></li>
-  {% endif %}
-
-  {% if page.url contains 'reference.html' %}
-    <li class="active"><a href='reference.html'>Reference</a></li>
-  {% else %}
-    <li class=""><a href='reference.html'>Reference</a></li>
-  {% endif %}
-
-  {% if page.url contains 'cribsheet.html' %}
-    <li class="active"><a href='cribsheet.html'>Cribsheet</a></li>
-  {% else %}
-    <li class=""><a href='cribsheet.html'>Cribsheet</a></li>
-  {% endif %}
-  
-  {% if page.url contains 'velocity.html' %}
-    <li class="active"><a href='velocity.html'>Velocity renderer</a></li>
-  {% else %}
-    <li class=""><a href='velocity.html'>Velocity renderer</a></li>
-  {% endif %}
-
+  <li class=""><a href="../index.html"><i class="fa fa-home"></i></a></li>
+  <li class="{% if page.url contains 'index.html' %}active{% endif %}"><a href="index.html">Quick start</a></li>
+  <li class="{% if page.url contains 'reference.html' %}active{% endif %}"><a href='reference.html'>Reference</a></li>
+  <li class="{% if page.url contains 'cribsheet.html' %}active{% endif %}"><a href='cribsheet.html'>Cribsheet</a></li>
+  <li class="{% if page.url contains 'velocity.html' %}active{% endif %}"><a href='velocity.html'>Velocity renderer</a></li>
 </ul>
