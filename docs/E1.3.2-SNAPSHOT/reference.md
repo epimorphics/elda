@@ -260,51 +260,6 @@ of the existing within-servlet URI rewriting engines or having a
 front-end server, *eg* Apache or Nginx, which selectively rewrites or
 discards requests with (un)suitable URIs.
 
-#### Obsolete: the Loader servlet {#loading-config}
-
-Previous versions of Elda had their configuration specified within a
-load-on-startup Loader servlet with an init-param `initialSpecFile`
-supplying the configuration file names. This approach to configuration
-is now *obsolete* as it lead to technical difficulties; it is supported
-in Elda {{ site.data.version.CURRENT_RELEASE }} to allow users to migrate to the new configuration
-process.
-
-Velocity template rendering
-===========================
-
-This release of Elda includes the ability to use
-[Velocity](http://velocity.apache.org/) templates for rendering. This
-feature is *provisional*; it may change significantly in future
-releases.
-
-To use the Velocity renderer to generate HTML, attach this formatter to
-your API spec:
-
-    <yourSpec> api:defaultFormatter
-        [a elda:VelocityFormatter
-        ; api:name "vhtml"
-        ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
-        ; api:mimeType "text/html"
-        ]
-
-By default, this will render the template `page-shell.vm` found in
-`{_velocityRoot}` if `_velocityRoot` is defined, or in `{vm}` otherwise.
-The root can be
-
--   an absolute URI;
--   a relative path, which is resolved against this webapp's base
-    directory;
--   an absolute path, referring to a resource on this webapp's machine.
-
-The provided template generates HTML in a style modelled after that of
-the default HTML rendering performed by XSLT stylesheets. Note the
-renderer name (and hence its format-selection suffix) is "vhtml" not
-"html" to allow the two different HTML renderers to operate on the same
-Elda endpoint.
-
-See [velocity.html](velocity.html) for more about the Elda interface to
-Velocity.
-
 Free-text searching {#text-search}
 ===================
 
