@@ -9,7 +9,6 @@ pre {
     ; padding: 1ex
     ; background-color: #ffaaaa
     ; border-radius: 1ex
-    ; width: 50%
     ; font-weight: bold
 }
     
