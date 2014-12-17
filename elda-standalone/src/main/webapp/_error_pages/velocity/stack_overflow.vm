@@ -2,7 +2,7 @@
 <head>
 <title>stack overflow</title>
 
-<style> body { background-color: pink } </style>
+#parse("head.vm")
 
 </head>
 <body>
@@ -10,7 +10,9 @@
 
 The stack overflowed.
 
-{{message}} 
+<pre>
+$_message.spelling()
+</pre>
 
 </body>
 </html>

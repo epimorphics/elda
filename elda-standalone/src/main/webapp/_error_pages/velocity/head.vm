@@ -1,0 +1,16 @@
+<style> 
+
+body { 
+    background-color: pink 
+} 
+
+pre {
+    margin: 1ex
+    ; padding: 1ex
+    ; background-color: #ffaaaa
+    ; border-radius: 1ex
+    ; width: 50%
+    ; font-weight: bold
+}
+    
+</style>

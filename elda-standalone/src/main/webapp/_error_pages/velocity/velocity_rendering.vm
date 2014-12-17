@@ -2,13 +2,15 @@
 <head>
 <title>velocity rendering problem</title>
 
-<style> body { background-color: pink } </style>
+#parse("head.vm")
 
 </head>
 <body>
 <h1>velocity rendering problem</h1>
 
-{{message}} 
+<pre>
+$_message.spelling()
+</pre>
 
 </body>
 </html>

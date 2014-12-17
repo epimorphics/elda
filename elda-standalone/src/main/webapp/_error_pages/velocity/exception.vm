@@ -2,7 +2,7 @@
 <head>
 <title>internal error</title>
 
-<style> body { background-color: pink } </style>
+#parse("head.vm")
 
 </head>
 <body>
@@ -10,7 +10,9 @@
 
 Something broke. Sorry.
 
-{{message}} 
+<pre>
+$_message.spelling()
+</pre>
 
 </body>
 </html>

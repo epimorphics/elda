@@ -2,7 +2,7 @@
 <head>
 <title>internal error</title>
 
-<style> body { background-color: pink } </style>
+#parse("head.vm")
 
 </head>
 <body>
@@ -11,7 +11,9 @@
 An internal error occurred and there was no error
 page to handle it. 
 
-{{message}} 
+<pre>
+$_message.spelling()
+</pre>
 
 </body>
 </html>

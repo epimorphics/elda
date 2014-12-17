@@ -2,7 +2,7 @@
 <head>
 <title>bad request</title>
 
-<style> body { background-color: pink } </style>
+#parse("head.vm")
 
 </head>
 <body>
@@ -10,7 +10,9 @@
 
 Your request was ill-formed.
 
+<pre>
 $_message.spelling()
+</pre>
 
 </body>
 </html>

@@ -2,7 +2,7 @@
 <head>
 <title>unknown shortname</title>
 
-<style> body { background-color: pink } </style>
+#parse("head.vm")
 
 </head>
 <body>
@@ -10,7 +10,9 @@
 
 That shortname is unrecognised.
 
-{{message}} 
+<pre>
+$_message.spelling()
+</pre>
 
 </body>
 </html>
