@@ -169,7 +169,7 @@ Maven](http://maven.apache.org/):
     mvn clean package
 
 After compiling, the runnable `.jar` file will be in
-`./elda-standalone/target/elda-standalone-$VERSON-exec-war.jar`.
+`./elda-standalone/target/elda-standalone-$VERSION-exec-war.jar`.
 
 If you can't use port 8080
 --------------------------
