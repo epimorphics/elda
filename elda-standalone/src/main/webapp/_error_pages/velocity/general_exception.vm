@@ -10,9 +10,11 @@
 
 Something broke. Sorry.
 
+#if($verbose)
 <pre>
 $_message.spelling()
 </pre>
+#end
 
 </body>
 </html>

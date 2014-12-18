@@ -31,6 +31,7 @@ hello:hello-world-again a api:API
 	; api:viewer [a api:Viewer; api:name "empty"; api:properties ""]
 
 	; api:variable [api:name "_velocityPath"; api:value "lda-assets/velocity/"]
+    # ; api:variable [api:name "_errorMode"; api:value "taciturn"]
 	; api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"]
 
 	; api:endpoint 
