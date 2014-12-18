@@ -159,7 +159,7 @@ public class ContextQueryUpdater implements ViewSetter {
             aq.setSubjectAsItemEndpoint(val);
         } else if (p.equals( QueryParameter.callback )) {
             if (!QueryParameter.callbackPattern.matcher( val ).matches())
-                throw new EldaException( "illegal callback name", val, EldaException.BAD_REQUEST );
+                EldaException.BadRequest("illegal callback name " + val);
         } else if (p.equals( QueryParameter.NEAR_LAT)) {
             geo.setNearLat( val );
         } else if (p.equals( QueryParameter.NEAR_LONG )) {
@@ -206,16 +206,20 @@ public class ContextQueryUpdater implements ViewSetter {
         try {
             int result = Integer.parseInt( val );
             if (0 <= result) return result;
-        } catch (NumberFormatException e) { /* fall-through */ }
-        throw new EldaException( param + "=" + val, "value must be non-negative integer.", EldaException.BAD_REQUEST );
+        } catch (NumberFormatException e) { 
+        	EldaException.BadRequest(param + "=" + val + ": value must be non-negative integer.");
+       	}
+        return /* never */ -1;
     }
 
     private int integerOneOrMore( String param, String val ) {
         try {
             int result = Integer.parseInt( val );
             if (0 < result) return result;
-        } catch (NumberFormatException e) { /* fall-through */ }
-        throw new EldaException( param + "=" + val, "value must be an integer > 0.", EldaException.BAD_REQUEST );
+        } catch (NumberFormatException e) {
+        	EldaException.BadRequest(param + "=" + val + ": value must be an integer > 0." );
+        }
+        return /* never */ -1;
     }
 
     /**

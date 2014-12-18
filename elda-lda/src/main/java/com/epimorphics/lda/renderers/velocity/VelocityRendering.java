@@ -29,8 +29,7 @@ import com.epimorphics.lda.exceptions.VelocityRenderingException;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.common.*;
 import com.epimorphics.lda.specs.MetadataOptions;
-import com.epimorphics.lda.support.EldaFileManager;
-import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.support.*;
 import com.epimorphics.util.CountStream;
 import com.epimorphics.util.StreamUtils;
 import com.hp.hpl.jena.shared.*;
@@ -178,7 +177,7 @@ implements BytesOut
      * loaded from the <code>velocity.properties</code> file.
      * @return A new Velocity engine
      */
-    protected VelocityEngine createVelocityEngine() {
+    public VelocityEngine createVelocityEngine() {
         List<String> velocityPath = expandVelocityPath( bindings );
 
         Properties p = getProperties( velocityPath );
@@ -189,21 +188,60 @@ implements BytesOut
         return ve;
     }
 
-    /** @return An array of expanded file paths or other URLs where we will search for Velocity assets */
+    /**
+		expandedVelocityPath returns a list of paths/URLs where Velocity may
+		search for its templates. The path is composed of
+		
+		<ul>
+			<li>any components of the variable _velocityPath
+			<li>the first component of /etc/elda/conf.d/{APP}/_error_pages if any
+			<li>webapp/_error_pages
+			<li>the velocity root default, currently /velocity/.
+		</ul>
+		
+		This allows Elda Common to have error pages built-in that can be
+		overridden in /etc/elda and in turn those can be over-ridden by
+		entries in _velocityPath.
+		
+    	@return An array of expanded file paths or other URLs where we will search for Velocity assets
+    */
     protected List<String> expandVelocityPath( Bindings b ) {
         List<String> roots = new ArrayList<>();
-        String rootPath = b.getAsString( VELOCITY_PATH_CONFIG_PARAM, defaultVelocityRoot() );
-
+        String userRootPath = b.getAsString( VELOCITY_PATH_CONFIG_PARAM, null );
+		
+		String rootPath =
+			(userRootPath == null ? "" : userRootPath + ",")
+			+ etcPath()
+			+ webappPath()
+			+ defaultVelocityRoot()
+			;
+		
         for (String pathEntry: StringUtils.split( rootPath, "," )) {
             pathEntry = StringUtils.trim( pathEntry );
             String pathURL = b.pathAsURL( pathEntry).toString();
             roots.add( pathURL + (pathURL.endsWith( "/" ) ? "" : "/") );
         }
-
+        
+        log.debug("complete expanded path: " + roots);
+        System.err.println("complete expanded path: " + roots);
         return roots;
     }
 
-    /** @return The default Velocity root directory, which may set by an environment variable */
+    private String webappPath() {
+		return "_error_pages/";
+	}
+
+	private String etcPath() {
+		String context = bindings
+			.getAsString("_rootPath", "NO_ROOTPATH")
+			.replaceAll("/([^/]*)/.*", "$1")
+			;
+		String appPath = "/etc/elda/conf.d/REPLACE/_error_pages".replace("REPLACE", context);
+		List<File> files = new Glob().filesMatching(appPath);		
+		return (files.size() == 0 ? "" : files.get(0)) + ",";
+	}
+
+	/** @return The default Velocity root directory, which may set by an environment variable */
     protected String defaultVelocityRoot() {
         String envRoot = null;
         try {
@@ -286,7 +324,7 @@ implements BytesOut
     }
 
     /** @return A new velocity context containing bindings that we will use to render the results */
-    protected VelocityContext createVelocityContext( Bindings binds ) {
+    public VelocityContext createVelocityContext( Bindings binds ) {
         Page page = initialisePage();
         DisplayHierarchy dh = initialiseHierarchy( page );
 

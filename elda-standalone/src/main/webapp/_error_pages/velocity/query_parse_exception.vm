@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>bad query</title>
+
+#parse("head.vm")
+
+</head>
+<body>
+<h1>Query parse problem</h1>
+
+The generated query was ill-formed.
+
+<pre>
+$_message.spelling()
+</pre>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>velocity rendering problem</title>
+
+#parse("head.vm")
+
+</head>
+<body>
+<h1>velocity rendering problem</h1>
+
+<pre>
+$_message.spelling()
+</pre>
+
+</body>
+</html>
