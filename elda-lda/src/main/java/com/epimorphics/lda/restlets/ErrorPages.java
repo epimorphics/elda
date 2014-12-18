@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -32,7 +33,19 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 public class ErrorPages {    
 	
-	public static Response respond(Bindings b, ServletContext con, String name, String message, int status) {
+	static final String fallBack = 
+		"<html>"
+		+ "\n<head><title>internal error</title></head>"
+		+ "\n<body>"
+		+ "\n<h1>Sorry</h1>"
+		+ "\n<p>The server suffered an internal error.</p>"
+		+ "\n</body>"
+		+ "\n</html>"
+		+ "\n"
+		;
+	
+	public static Response respond(Bindings b, ServletContext con, String name, String message, int status) {	
+		try {
 	
 		String context = con.getContextPath();
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
@@ -45,7 +58,6 @@ public class ErrorPages {
 			, basePrefix + "_errors/" + "_error" + ".vm"
 		};
 		
-		String fallBack = "<html><head></head><body><h1>OOPS</h1></body></html>\n";
 		
 		String page = fetchPage(filesToTry, fallBack);
 		
@@ -59,6 +71,13 @@ public class ErrorPages {
 			.entity(builtPage)
 			.build()
 			;
+		} catch (Throwable r) {
+			return Response
+				.status(Status.INTERNAL_SERVER_ERROR)
+				.entity(fallBack)
+				.build()
+				;
+		}
 	}
 
 	static String fetchPage(String [] fileNames, String ifAbsent) {
