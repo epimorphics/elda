@@ -57,6 +57,63 @@ public class TestMatchingTemplates {
 		assertEquals( "A", r.lookup( bindings, "/anchor", params ) );
 	}
 	
+	
+	@Test public void testing_template_with_big_query_parameter_patterns() {
+		MatchSearcher<String> r = new MatchSearcher<String>();
+		r.register("/eggs?arg={V}", "VAL"); 
+	//		
+		Map<String, String> b = new HashMap<String, String>();
+		MultiMap<String, String> params = new MultiMap<String, String>();
+		params.add("arg", "JHEREG");
+	//		
+		assertEquals("VAL", r.lookup(b, "/eggs", params) );
+		assertEquals("JHEREG", b.get("V"));
+	}
+	
+	@Test public void testing_template_with_big_multiple_parameter_patterns() {
+		MatchSearcher<String> r = new MatchSearcher<String>();
+		r.register("/comma?arg={X},{Y}", "VAL"); 
+		
+		Map<String, String> b = new HashMap<String, String>();
+		MultiMap<String, String> params = new MultiMap<String, String>();
+		params.add("arg", "314,271");
+		
+		assertEquals("VAL", r.lookup(b, "/comma", params) );
+		
+		assertEquals("314", b.get("X"));
+		assertEquals("271", b.get("Y"));
+	}
+	
+	@Test public void testing_template_with_big_multiple_parameter_patterns2() {
+		MatchSearcher<String> r = new MatchSearcher<String>();
+		r.register("/comma?arg=x:{X},y:{Y}", "VAL"); 
+		
+		Map<String, String> b = new HashMap<String, String>();
+		MultiMap<String, String> params = new MultiMap<String, String>();
+		params.add("arg", "x:314,y:271");
+		
+		assertEquals("VAL", r.lookup(b, "/comma", params) );
+		
+		assertEquals("314", b.get("X"));
+		assertEquals("271", b.get("Y"));
+	}
+	
+	@Test public void testing_template_with_big_multiple_parameter_patterns3() {
+		MatchSearcher<String> r = new MatchSearcher<String>();
+		r.register("/comma?arg=x:{X},y:{Y}&other={O}", "OTHER"); 
+		
+		Map<String, String> b = new HashMap<String, String>();
+		MultiMap<String, String> params = new MultiMap<String, String>();
+		params.add("arg", "x:314,y:271");
+		params.add("other", "1829");
+		
+		assertEquals("OTHER", r.lookup(b, "/comma", params) );
+		
+		assertEquals("314", b.get("X"));
+		assertEquals("271", b.get("Y"));
+		assertEquals("1829", b.get("O"));
+	}
+	
 	@Test public void ensure_matching_for_variable_query_parameters() {
 		MatchSearcher<String> r = new MatchSearcher<String>();
 		Map<String, String> bindings = new HashMap<String, String>();

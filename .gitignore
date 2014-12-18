@@ -15,7 +15,6 @@ elda-standalone/object-graph.ttl
 elda-standalone/src/main/webapp/assets
 
 bin
-
 velocity.log
 
 _site
