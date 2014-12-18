@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>unknown shortname</title>
+
+#parse("head.vm")
+
+</head>
+<body>
+<h1>Unknown shortname</h1>
+
+That shortname is unrecognised.
+
+<pre>
+$_message.spelling()
+</pre>
+
+</body>
+</html>

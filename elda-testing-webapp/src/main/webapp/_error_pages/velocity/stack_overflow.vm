@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>stack overflow</title>
+
+#parse("head.vm")
+
+</head>
+<body>
+<h1>Server Error</h1>
+
+The stack overflowed.
+
+<pre>
+$_message.spelling()
+</pre>
+
+</body>
+</html>
