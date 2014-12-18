@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>internal error</title>
+
+#parse("head.vm")
+
+</head>
+<body>
+<h1>Internal error</h1>
+
+Something broke. Sorry.
+
+<pre>
+$_message.spelling()
+</pre>
+
+</body>
+</html>

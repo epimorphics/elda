@@ -2,13 +2,17 @@
 <head>
 <title>internal error</title>
 
-<style> body { background-color: pink } </style>
+#parse("head.vm")
 
 </head>
 <body>
 <h1>Internal error</h1>
 
-Sorry, Elda couldn't handle that query. 
+Something broke. Sorry.
+
+<pre>
+$_message.spelling()
+</pre>
 
 </body>
 </html>
