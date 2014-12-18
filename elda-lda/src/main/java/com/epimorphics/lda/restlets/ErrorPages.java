@@ -10,6 +10,8 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
@@ -32,8 +34,10 @@ import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 public class ErrorPages {    
-	
-	static final String fallBack = 
+
+    protected static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
+    
+	protected static final String fallBack = 
 		"<html>"
 		+ "\n<head><title>internal error</title></head>"
 		+ "\n<body>"
@@ -71,7 +75,9 @@ public class ErrorPages {
 			.entity(builtPage)
 			.build()
 			;
-		} catch (Throwable r) {
+		} catch (Throwable e) {
+			log.error("An exception occurred when rendering an error page:");
+			log.error("  " + e.getMessage());
 			return Response
 				.status(Status.INTERNAL_SERVER_ERROR)
 				.entity(fallBack)
