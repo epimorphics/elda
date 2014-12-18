@@ -53,10 +53,6 @@ public class TestCaches
 		@Override public Lock getLock() {
 			return null;
 			}
-
-		@Override public boolean supportsNestedSelect() {
-			return false;
-			}
 		}
 	
 	static final Resource RA = ResourceFactory.createResource( "eh:/A" );

@@ -70,29 +70,11 @@ public interface Source {
     	void setup( QueryExecution qe );
     	void consume( ResultSet rs );
     	}
-    
-    /**
-        Answer TRUE iff this source supports nested SELECT queries 
-        (as specified by SPARQL 1.1).
-    */
-	public boolean supportsNestedSelect();
 	
 	/**
 	    Answer this Source's text search configuration.
 	*/
 	public TextSearchConfig getTextSearchConfig();
-	
-	static class Util {
-		
-		/**
-		    Answer true iff all of the sources in the list support nested selects.
-		    (If the list is empty, answer true.)
-		*/
-		public static boolean allSupportNestedSelect( List<Source> sources ) {
-			for (Source s: sources) if (!s.supportsNestedSelect()) return false;
-			return true;
-		}
-	}
 	
 }
 

@@ -8,9 +8,13 @@
 
 package com.epimorphics.lda.sources;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -25,7 +29,9 @@ import com.hp.hpl.jena.shared.Lock;
 */
 
 public abstract class SourceBase {
-	
+
+    static Logger log = LoggerFactory.getLogger(SparqlSource.class);
+    
 	private final TextSearchConfig textSearchConfig;
 	
 	public SourceBase() {
@@ -34,6 +40,11 @@ public abstract class SourceBase {
 	
 	public SourceBase( Resource endpoint ) {
 		this.textSearchConfig = new TextSearchConfig( endpoint );
+		if (endpoint.hasProperty(ELDA_API.supportsNestedSelect)) {
+			System.err.println(">> supportsNestedSe;ect obsolete.");
+			log.warn(endpoint + ": supportsNestedSelect is no longer used or needed.");
+			log.info("Elda assumes and requires SPARQL 1.1 support");
+		}
 	}
 	
 	public TextSearchConfig getTextSearchConfig() {

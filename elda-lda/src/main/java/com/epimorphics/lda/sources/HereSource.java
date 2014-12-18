@@ -46,12 +46,6 @@ public class HereSource extends SourceBase implements Source
 		model.setNsPrefixes( fullModel );
 		}
 	
-	/**
-	    HereSources are in-memory models and support nested selects via ARQ.
-	*/
-	@Override public boolean supportsNestedSelect() 
-		{ return true; }
-
 	@Override public void addMetadata( Resource meta ) 
 		{
         meta.addProperty( API.sparqlEndpoint, model.createResource( endpoint ) );
