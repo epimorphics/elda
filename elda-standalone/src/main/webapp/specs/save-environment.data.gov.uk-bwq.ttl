@@ -69,7 +69,7 @@ t:api
 ##
 ##
   api:defaultFormatter t:HtmlFormatter ;
-  api:variable [ api:name "_velocityRoot"; api:value "assets/velocity" ] ;
+  api:variable [ api:name "_velocityPath"; api:value "assets/velocity" ] ;
 #	api:variable [ api:name "activeImageBase"; api:value "/images/green/16x16" ];
 #	api:variable [ api:name "inactiveImageBase"; api:value "/images/grey/16x16" ];
 
