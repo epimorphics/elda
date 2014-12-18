@@ -34,6 +34,7 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.graph.Graph;
@@ -466,8 +467,30 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			varsForPropertyChains.put(param.asString(), already);
 		}
 		Info inf = param.fullParts()[param.fullParts().length - 1];
-		Any r = objectForValue(inf, val, getDefaultLanguage());
-		addInfixSparqlFilter(already, op, r);
+		
+		String type = inf.typeURI;
+		String langs = getDefaultLanguage();
+		String [] langArray = langs == null ? ValTranslator.JUSTEMPTY : langs.split(",", -1);
+		
+		if (langArray.length > 0 && (type == null || type.equals(API.PlainLiteral.getURI()))) {
+			
+			RenderExpression strAlready = RDFQ.apply("str", already);
+			RenderExpression strOp = RDFQ.infix(strAlready, op, RDFQ.literal(val));
+			
+			RenderExpression orTagsEq = null;
+			for (String lang: langArray) {
+				RenderExpression langAlready = RDFQ.apply("lang", already);
+				RenderExpression tagEq = RDFQ.infix(langAlready, "=", RDFQ.literal(lang));
+				if (orTagsEq == null) orTagsEq = tagEq; else orTagsEq = RDFQ.infix(orTagsEq, "||", tagEq);
+			}
+			
+			RenderExpression and = RDFQ.infix(strOp, "&&", orTagsEq);
+			addFilterExpression(and);
+			
+		} else {
+			Any r = objectForValue(inf, val, langs);
+			addInfixSparqlFilter(already, op, r);
+		}
 	}
 
 	private void addInfixSparqlFilter(Variable already, String op, Any r) {
@@ -537,8 +560,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			//
 			Info inf = infos[infos.length - 1];
 			Any o = objectForValue(inf, val, languagesFor(param));
-			if (o instanceof Variable)
-				varInfo.put((Variable) o, inf);
+			if (o instanceof Variable) varInfo.put((Variable) o, inf);
 			addTriplePattern(var, inf.asResource, o);
 		}
 	}
