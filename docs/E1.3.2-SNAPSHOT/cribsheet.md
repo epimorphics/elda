@@ -391,16 +391,6 @@ Configuration
   </tr>
 
   <tr>
-    <td>a SPARQL endpoint</td>
-    <td>elda:supportsNestedSelect</td>
-    <td>boolean</td>
-    <td>
-      If the boolean value is <strong>true</strong>, Elda uses SPARQL 1.1
-      features to reduce the size of its queries.
-    </td>
-  </tr>
-
-  <tr>
     <td>the API</td>
     <td>a</td>
     <td>api:ListEndpoint</td>

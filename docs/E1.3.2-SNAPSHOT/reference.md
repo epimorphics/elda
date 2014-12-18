@@ -456,16 +456,13 @@ property accesses specialised by the selected item.
 SPARQL 1.1 features
 -------------------
 
-If the SPARQL server supports nested selects (part of, but not limited
-to, SPARQL 1.1), then these repetitions can be replaced by a single
-application of the view wrapped round a nested select that fetches the
-items.
+Elda requires SPARQL 1.1 and exploits its VALUES feature. Elda
+used to use nested selects if available to reduce query sizes
+but this has been replaced by VALUES. 
 
-Elda automatically uses nested selects if the data source is a
-**local:** or **tdb:** model, or it the `sparqEndpoint` value of the API
-is a resource with an **extras:supportsNestedSelects** value of true,
-"true", or "yes". (We anticipate that later versions of Elda will
-dynamically check the server to see if nested selects work.)
+The old **elda:supportsNestedSelect** flags, used to enable
+nested selects, no longer affects the query and generates a
+warning in the log if it is used.
 
 DESCRIBE thresholds
 -------------------
