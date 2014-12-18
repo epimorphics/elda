@@ -33,6 +33,12 @@ This allows elda-common to contain a default set
 of error-page macros, which can be over-ridden using
 pages inside /etc or configured in the LDA config file.
 
+The supplied default pages inspect the value of the API
+variable _errorMode. If this is present and "taciturn", 
+then they do not show detail information (eg a reason why a
+request might be bad). Otherwise they show whatever
+detail is available.
+
 Obsolete .xsl files have been removed.
 
 The URI template definitions which include query
