@@ -20,5 +20,6 @@ bin
 
 velocity.log
 
+bin
 _site
 .sass-cache

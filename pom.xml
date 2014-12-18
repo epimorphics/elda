@@ -268,7 +268,6 @@
     <module>elda-assets</module>
     <module>elda-common</module>
     <module>elda-standalone</module>
-    <module>elda-system-tests</module>
     <module>elda-testing-webapp</module>
   </modules>
 
