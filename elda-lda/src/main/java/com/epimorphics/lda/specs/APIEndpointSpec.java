@@ -60,8 +60,6 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     
     protected final String cachePolicyName;
     
-    protected final int describeThreshold;
-    
     public final int defaultPageSize;
     public final int maxPageSize;
 
@@ -95,7 +93,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
         graphTemplate = getStringValue( endpoint, ELDA_API.graphTemplate, apiSpec.getGraphTemplate() );
         uriTemplate = createURITemplate( endpoint );
         endpointResource = endpoint;
-        describeThreshold = getIntValue( endpoint, ELDA_API.describeThreshold, apiSpec.describeThreshold );
+        apiSpec.reportObsoleteDescribeThreshold(endpoint);
     //
         purging = getBooleanValue( endpoint, ELDA_API.purgeFilterValues, apiSpec.purging);
     //
@@ -253,7 +251,6 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     */
 	private View addViewProperties( Model m, Set<Resource> seen, Resource tRes, View v ) {
 		setDescribeLabelIfPresent( tRes, v );
-		setDescribeThreshold( tRes, v );
 		addViewPropertiesByString( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
 		addViewPropertiesByResource( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
 		for (RDFNode n: tRes.listProperties( API.include ).mapWith( Statement.Util.getObject ).toList()) {
@@ -261,11 +258,6 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 				addViewProperties( m, seen, (Resource) n, v );
 		}
 		return v;
-	}
-
-	private void setDescribeThreshold(Resource tRes, View v) {
-		if (tRes.hasProperty( ELDA_API.describeThreshold ))
-			v.setDescribeThreshold( getIntValue( tRes, ELDA_API.describeThreshold, describeThreshold ) );
 	}
 
 	private void setDescribeLabelIfPresent(Resource tRes, View v) {

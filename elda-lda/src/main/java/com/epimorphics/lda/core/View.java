@@ -104,8 +104,6 @@ public class View {
 	
 	protected String labelPropertyURI = RDFS.label.getURI();
 	
-	protected int describeThreshold = APISpec.DEFAULT_DESCRIBE_THRESHOLD;
-	
     public View() {
     	this( "anon", Type.T_DESCRIBE );
     }
@@ -181,10 +179,6 @@ public class View {
 		this.type = Type.T_ALL;
 		this.labelPropertyURI = labelPropertyURI;
 	}
-
-	public void setDescribeThreshold( int threshold ) {
-		this.describeThreshold = threshold;
-	}
     
     /**
         Answer this view after modifying it to contain all the property
@@ -231,7 +225,6 @@ public class View {
     	cannotUpdateALL();
     	chains.addAll( t.chains );
     	this.labelPropertyURI = t.labelPropertyURI;
-    	this.describeThreshold = t.describeThreshold;
     	if (chains.size() > 0) type = Type.T_CHAINS;
     	if (t.type == Type.T_ALL) type = Type.T_ALL;
     	template = t.template;

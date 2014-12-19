@@ -76,8 +76,6 @@ public class APISpec {
     public final Bindings bindings = new Bindings();
     
     protected final String prefixPath;
-
-	public final int describeThreshold;
 	
 	public final String cachePolicyName;
 	
@@ -90,12 +88,6 @@ public class APISpec {
 	protected final PropertyExpiryTimes propertyExpiryTimes;
 	
 	protected final String graphTemplate;
-	
-	/**
-	    The default number of selected items required for a DESCRIBE
-	    query to use nested selects if they are available.
-	*/
-	public static final int DEFAULT_DESCRIBE_THRESHOLD = 10;
 
 	protected final boolean purging;
     
@@ -109,12 +101,12 @@ public class APISpec {
     
     public APISpec( String prefixPath, String appName, FileManager fm, Resource root, ModelLoader loader ) {
     	AuthMap am = loadAuthMap(root, appName);
+    	reportObsoleteDescribeThreshold(root);
     	this.purging = RDFUtils.getBooleanValue(root, ELDA_API.purgeFilterValues, false);
     	this.prefixPath = prefixPath;
     	this.specificationURI = root.getURI();
     	this.defaultPageSize = RDFUtils.getIntValue( root, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
 		this.maxPageSize = RDFUtils.getIntValue( root, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
-        this.describeThreshold = RDFUtils.getIntValue( root, ELDA_API.describeThreshold, DEFAULT_DESCRIBE_THRESHOLD );
 		this.prefixes = ExtractPrefixMapping.from(root);
         this.sns = loadShortnames(root, loader);
         this.dataSource = GetDataSource.sourceFromSpec( fm, root, am );
@@ -135,6 +127,12 @@ public class APISpec {
         extractModelPrefixEditor( root );
     }
 
+	protected void reportObsoleteDescribeThreshold(Resource endpoint) {
+		if (endpoint.hasProperty(ELDA_API.describeThreshold)) {
+			log.warn("Endpoint " + endpoint + ": elda:describeThreshold is no longer required/used.");
+		}
+	}
+    
 	private AuthMap loadAuthMap(Resource root, String appName) {
 		Resource endpoint = RDFUtils.getResourceValue(root, ELDA_API.sparqlEndpoint);
 		if (endpoint == null) {

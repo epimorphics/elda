@@ -41,7 +41,6 @@ public abstract class SourceBase {
 	public SourceBase( Resource endpoint ) {
 		this.textSearchConfig = new TextSearchConfig( endpoint );
 		if (endpoint.hasProperty(ELDA_API.supportsNestedSelect)) {
-			System.err.println(">> supportsNestedSe;ect obsolete.");
 			log.warn(endpoint + ": supportsNestedSelect is no longer used or needed.");
 			log.info("Elda assumes and requires SPARQL 1.1 support");
 		}
