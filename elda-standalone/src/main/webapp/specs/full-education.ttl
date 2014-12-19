@@ -104,13 +104,6 @@ spec:CsvFormatter
 #
 ############################################################################################
 
-<http://education.data.gov.uk/sparql/education/query>
-    elda:supportsNestedSelect true
-    # ; elda:authKey "config"
-  # ; elda:authAllowInsecure true
-  # ; elda:authFile "/home/chris/nosuch.auth"
-    .
-
 spec:full-education-api a api:API ;
   api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query> ;
   api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"];

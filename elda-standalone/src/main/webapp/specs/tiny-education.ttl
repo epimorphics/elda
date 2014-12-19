@@ -70,11 +70,6 @@ spec:schools a api:ListEndpoint
 	    , spec:viewerLocation
 	.		
 	
-# Tells Elda that the SPARQL endpoint understands nested SELECTS in SPARQL.
-# This can significantly reduce the size of queries.
-
-<http://education.data.gov.uk/sparql/education/query> elda:supportsNestedSelect true.
-
 # There are several defined viewers in this config. Most noteably, using 
 # viewerLocation will add lat/long easting/northing location values to
 # the view, which will allow the map to be displayed.

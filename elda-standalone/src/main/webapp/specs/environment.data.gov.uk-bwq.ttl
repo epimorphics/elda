@@ -43,10 +43,6 @@
 ##
 @prefix elda:			  <http://www.epimorphics.com/vocabularies/lda#> .
 
-<http://localhost:3030/bwq/query> elda:supportsNestedSelect true.
-<http://environment.data.gov.uk/sparql/bwq/query> elda:supportsNestedSelect true.
-<http://eastaging.epimorphics.com/sparql/bwq/query> elda:supportsNestedSelect true .
-
 ##deploy-begin
 ##deploy-end
 
@@ -94,7 +90,6 @@
 
 
 ##not-deploy-begin ##############################################################################################################
-<http://ec2-46-137-33-70.eu-west-1.compute.amazonaws.com/sparql/bwq/query> elda:supportsNestedSelect true .
 
 t:api
     api:base "/"; 
