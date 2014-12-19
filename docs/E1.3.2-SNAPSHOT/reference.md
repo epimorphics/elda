@@ -474,6 +474,41 @@ longer necessary and will generate a log message.
 Additional Elda features
 ========================
 
+Error pages
+-----------
+
+When Elda detects (or has detected for it) an error, it responds
+with an appropriate status code (eg *BAD_REQUEST*) and an
+*error page*.
+
+The error page is named one of:
+
+* names TBD
+* when available
+
+It is searched for along the expanded Velocity path:
+
+* the configured _velocityPath
+* the directory `/etc/elda/conf.d/APP/_error_pages/velocity/`
+* the directory `_error_pages/velocity/` in the webapp
+* the final fallback directory `velocity/` in the webapp
+
+Typically (and in the case of Elda Common, specifically) it
+will find the error page in the webapp's `_error_pages/velocity/`
+directory, which provides a default rendering of the error.
+However the developer may specify an alternative rendering
+by supplying a file with the appropriate name in the 
+`/etc/elda` error pages directory or by defining `_velocityPath`
+and putting replacement error pages there.
+
+The default error pages can be confgured to be `verbose` or
+`taciturn` by setting the API variable `_errorMode` to
+"verbose" or "taciturn". The verbose rendering will 
+supply additional information if available (*eg* the 
+details of what made a request bad); the taciturn rendering
+says as little as possible.
+
+
 Configuration variables {#variables}
 -----------------------
 
@@ -546,9 +581,9 @@ being rendered.
 
 The *template path* is used by the velocity template renderer to locate
 the templates it may expand. It is the value of the LDA variable
-`_velocityRoot`:
+`_velocityPath`:
 
-    ... api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm"]
+    ... api:variable [api:name "_velocityPath"; api:value "lda-assets/vm"]
 
 Note that if the value is not an explict URI it is resolved *locally*
 (the same way as `api>stylesheet`) against the webapp directory, as
