@@ -467,22 +467,9 @@ warning in the log if it is used.
 DESCRIBE thresholds
 -------------------
 
-Support for nested selects applies to DESCRIBE queries as well, which
-may consist of a great many URIs when the selection phase generates many
-items. To give greater control over the use of nested selects for
-DESCRIBE, a view may be defined with the property
-`extras:describeThreshold`. This makes that view a DESCRIBE view on
-which nested selects (if available) are then only used if the number of
-selected items exceeds the value of this property.
-
-The default default threshold value is 10. However, it can be changed.
-Setting the `extras:describeThreshold` property on an *endpoint* makes
-all the (describe) viewers created for that endpoint have that value for
-their threshold. Setting that property on an `api:API` makes the default
-for all its endpoints be that value.
-
-(Values and defaulting rules may change in later releases of Elda
-according to reported experience.)
+The use of **elda:describeThreshold** to specify whether a
+nested-select should be used for big DESCRIBE queries is no
+longer necessary and will generate a log message.
 
 Additional Elda features
 ========================
