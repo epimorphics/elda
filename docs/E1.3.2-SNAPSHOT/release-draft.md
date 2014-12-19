@@ -26,8 +26,8 @@ Instead, error pages are rendered from velocity macros
 with appropriate names. The pages are found by searching
 
 	* the user-specified _velocityPath
-	* /etc/elda/conf.d/{APP}/error-pages
-	* the webapps webapp/error_pages/velocity 
+	* /etc/elda/conf.d/{APP}/error-pages/velocity/
+	* the webapps webapp/error_pages/velocity/
 
 This allows elda-common to contain a default set
 of error-page macros, which can be over-ridden using
