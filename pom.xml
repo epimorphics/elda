@@ -103,13 +103,6 @@
     </plugins>
   </build>
 
-  <distributionManagement>
-    <!-- <repository> <id>ftp-repo-epi</id> <url>ftp://ftp.epimorphics.org/</url> </repository> -->
-    <repository>
-      <id>epi-public-repo</id>
-      <url>ftp://epimorphics.com</url>
-    </repository>
-  </distributionManagement>
 
   <dependencies>
 
@@ -184,13 +177,15 @@
     </dependency>
   </dependencies>
 
+  <distributionManagement>
+    <!-- <repository> <id>ftp-repo-epi</id> <url>ftp://ftp.epimorphics.org/</url> </repository> -->
+    <repository>
+      <id>epi-public-repo</id>
+      <url>http://repository.epimorphics.com</url>
+    </repository>
+  </distributionManagement>
+
   <repositories>
-    <!-- jena-repo is mirrored to Maven central repository -->
-    <!-- In case mirroring has not happened yet ... - -> <repository> <id>repo-jena</id> <name>Jena Maven - Repository</name>
-      <layout>default</layout> <url>http://openjena.org/repo</url> <snapshots> <enabled>false</enabled> </snapshots> </repository>
-      <!- - jena-repo-dev is where SNAPSHOTs and RCs are published - -> <repository> <id>repo-jena-dev</id> <name>Jena Maven -
-      Development Repository</name> <layout>default</layout> <url>http://openjena.org/repo-dev</url> <snapshots> <enabled>true</enabled>
-      </snapshots> </repository> -->
 
     <repository>
       <id>epi-public-repo</id>

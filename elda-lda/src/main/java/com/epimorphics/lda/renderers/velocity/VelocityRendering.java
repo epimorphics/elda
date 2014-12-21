@@ -223,7 +223,6 @@ implements BytesOut
         }
         
         log.debug("complete expanded path: " + roots);
-        System.err.println("complete expanded path: " + roots);
         return roots;
     }
 
