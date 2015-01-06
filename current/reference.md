@@ -1345,6 +1345,4 @@ Elda accepts the following content types by default.
 
 * * * * *
 
-© Copyright 2011–2013 Epimorphics Limited. For licencing conditions see
-<http://http://epimorphics.github.io/elda/LICENCE.html>.
-
+For licencing conditions see <http://epimorphics.github.io/elda/LICENCE.html>.
