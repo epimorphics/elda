@@ -26,7 +26,7 @@
     <ver.servlet-api>3.0.1</ver.servlet-api>
     <ver.slf4j>1.7.6</ver.slf4j>
     <ver.velocity>1.7</ver.velocity>
-    <ver.wagon>1.0-beta-2</ver.wagon>
+    <ver.wagon>2.2</ver.wagon>
     <ver.xmlunit>1.4</ver.xmlunit>
     <jdk.version>1.7</jdk.version>
 
@@ -178,10 +178,9 @@
   </dependencies>
 
   <distributionManagement>
-    <!-- <repository> <id>ftp-repo-epi</id> <url>ftp://ftp.epimorphics.org/</url> </repository> -->
     <repository>
       <id>epi-public-repo</id>
-      <url>http://repository.epimorphics.com</url>
+      <url>ftp://repository.epimorphics.com</url>
     </repository>
   </distributionManagement>
 

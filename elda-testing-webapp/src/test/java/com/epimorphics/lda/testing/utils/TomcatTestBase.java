@@ -61,7 +61,7 @@ public abstract class TomcatTestBase {
             System.exit(1);
         }
 
-        System.err.println(">> addWebapp(" + contextPath + ", " + rootF.getAbsolutePath() +")");
+        // System.err.println(">> addWebapp(" + contextPath + ", " + rootF.getAbsolutePath() +")");
         tomcat.addWebapp(contextPath,  rootF.getAbsolutePath());
         tomcat.start();
 
