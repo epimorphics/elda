@@ -33,9 +33,7 @@ To use Elda Common, you add both .war files to your Tomcat
 configuration. Doing so may be as simple as dropping them into the
 appropriate `webapps` directory. You need both .war files; Elda Common
 contains the LDA-handling Java code and Elda Assets provides styleheets,
-scripts, css, *etc* which Elda Common refers to or loads. There is also
-an `elda-bundled` artifact whose `elda-bundled.war` combines
-`elda-common` and `elda-assets` into one item.
+scripts, css, *etc* which Elda Common refers to or loads. 
 
 By default, Elda Common assumes that Elda Common's context path is
 `elda-common` and Elda Assets's context path is `elda-assets`. If you
@@ -51,8 +49,8 @@ Elda Common loads its LDA configurations from
 `/etc/elda/conf.d/{APP}/*.ttl`, where `{APP}` is the context path of
 that instance of Elda Common. This means that each instance may have
 multiple configs that it can load, and different instances can load
-different files. (See the `web.xml` for the setting of this
-configuration path.)
+different files. (To see how this path is set, open up the .war
+file and look inside at its `web.xml`.)
 
 The LDA configurations contain references to the assets webapp, as seen
 in the minimal configuration file supplied. For a given `API:api` in a
@@ -63,8 +61,7 @@ binding:
 
 The *hostAndPort* will usually be **localhost:8080** or
 **localhost:80**, and *assetPath* will by default be **elda-assets**
-unless the asset .war is renamed to some other context or you are using
-`elda-bundled`.
+unless the asset .war is renamed to some other context.
 
 Similarly, if the configuration is generating HTML using the Elda XSLT
 renderer, the stylesheets are loaded from the assets according to the
@@ -75,14 +72,10 @@ binding on the XsltFormatter by:
 Again, if the stylesheet has moved, this binding must be changed
 accordingly.
 
-Elda provides several example minimal configurations, different only in
+Elda provides some example minimal configurations, different only in
 their intended environments:
 
 <table class="table table-striped table-condensed">
-  <tr>
-    <td><a href="specs/minimal-named-bundled-8080-config.ttl">minimal-named-bundled-8080-config.ttl</a></td>
-    <td>bundled non-ROOT configuration running on port 8080.</td>
-  </tr>
   <tr>
     <td><a href="specs/minimal-named-or-ROOT-split-8080-config.ttl">minimal-named-or-ROOT-split-8080-config.ttl</a></td>
     <td>split assets and common on port 8080, for both ROOT and non-ROOT use.</td>
@@ -90,10 +83,6 @@ their intended environments:
   <tr>
     <td><a href="specs/minimal-named-split-80-config.ttl">minimal-named-split-80-config.ttl</a></td>
     <td>split assets and common on port 80 for non-ROOT use.</td>
-  </tr>
-  <tr>
-    <td><a href="specs/minimal-ROOT-bundled-8080-config.ttl">minimal-ROOT-bundled-8080-config.ttl</a></td>
-    <td>ROOT bundled and running on port 8080.</td>
   </tr>
 </table>
 
@@ -143,11 +132,6 @@ it is sufficient to simple `touch` one of the appropriate files.
 
 Inside Elda Common
 ------------------
-
-To use Elda for your own webapps, you can use Elda Common (suitably
-replacing the minimal LDA config), produce your own merge of Common and
-Assets, or tweak the Elda Standalone warfile. You will need to edit the
-web.xml appropriately.
 
 If you have downloaded the Elda repository, then you can rebuild the
 Elda working jar (lda-VERSION.jar) and webapp using
@@ -259,51 +243,6 @@ interface from those used within the application, you can either use on
 of the existing within-servlet URI rewriting engines or having a
 front-end server, *eg* Apache or Nginx, which selectively rewrites or
 discards requests with (un)suitable URIs.
-
-#### Obsolete: the Loader servlet {#loading-config}
-
-Previous versions of Elda had their configuration specified within a
-load-on-startup Loader servlet with an init-param `initialSpecFile`
-supplying the configuration file names. This approach to configuration
-is now *obsolete* as it lead to technical difficulties; it is supported
-in Elda {{ site.data.version.CURRENT_RELEASE }} to allow users to migrate to the new configuration
-process.
-
-Velocity template rendering
-===========================
-
-This release of Elda includes the ability to use
-[Velocity](http://velocity.apache.org/) templates for rendering. This
-feature is *provisional*; it may change significantly in future
-releases.
-
-To use the Velocity renderer to generate HTML, attach this formatter to
-your API spec:
-
-    <yourSpec> api:defaultFormatter
-        [a elda:VelocityFormatter
-        ; api:name "vhtml"
-        ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
-        ; api:mimeType "text/html"
-        ]
-
-By default, this will render the template `page-shell.vm` found in
-`{_velocityRoot}` if `_velocityRoot` is defined, or in `{vm}` otherwise.
-The root can be
-
--   an absolute URI;
--   a relative path, which is resolved against this webapp's base
-    directory;
--   an absolute path, referring to a resource on this webapp's machine.
-
-The provided template generates HTML in a style modelled after that of
-the default HTML rendering performed by XSLT stylesheets. Note the
-renderer name (and hence its format-selection suffix) is "vhtml" not
-"html" to allow the two different HTML renderers to operate on the same
-Elda endpoint.
-
-See [velocity.html](velocity.html) for more about the Elda interface to
-Velocity.
 
 Free-text searching {#text-search}
 ===================
@@ -517,39 +456,58 @@ property accesses specialised by the selected item.
 SPARQL 1.1 features
 -------------------
 
-If the SPARQL server supports nested selects (part of, but not limited
-to, SPARQL 1.1), then these repetitions can be replaced by a single
-application of the view wrapped round a nested select that fetches the
-items.
+Elda requires SPARQL 1.1 and exploits its VALUES feature. Elda
+used to use nested selects if available to reduce query sizes
+but this has been replaced by VALUES. 
 
-Elda automatically uses nested selects if the data source is a
-**local:** or **tdb:** model, or it the `sparqEndpoint` value of the API
-is a resource with an **extras:supportsNestedSelects** value of true,
-"true", or "yes". (We anticipate that later versions of Elda will
-dynamically check the server to see if nested selects work.)
+The old **elda:supportsNestedSelect** flags, used to enable
+nested selects, no longer affects the query and generates a
+warning in the log if it is used.
 
 DESCRIBE thresholds
 -------------------
 
-Support for nested selects applies to DESCRIBE queries as well, which
-may consist of a great many URIs when the selection phase generates many
-items. To give greater control over the use of nested selects for
-DESCRIBE, a view may be defined with the property
-`extras:describeThreshold`. This makes that view a DESCRIBE view on
-which nested selects (if available) are then only used if the number of
-selected items exceeds the value of this property.
-
-The default default threshold value is 10. However, it can be changed.
-Setting the `extras:describeThreshold` property on an *endpoint* makes
-all the (describe) viewers created for that endpoint have that value for
-their threshold. Setting that property on an `api:API` makes the default
-for all its endpoints be that value.
-
-(Values and defaulting rules may change in later releases of Elda
-according to reported experience.)
+The use of **elda:describeThreshold** to specify whether a
+nested-select should be used for big DESCRIBE queries is no
+longer necessary and will generate a log message.
 
 Additional Elda features
 ========================
+
+Error pages
+-----------
+
+When Elda detects (or has detected for it) an error, it responds
+with an appropriate status code (eg *BAD_REQUEST*) and an
+*error page*.
+
+The error page is named one of:
+
+* names TBD
+* when available
+
+It is searched for along the expanded Velocity path:
+
+* the configured _velocityPath
+* the directory `/etc/elda/conf.d/APP/_error_pages/velocity/`
+* the directory `_error_pages/velocity/` in the webapp
+* the final fallback directory `velocity/` in the webapp
+
+Typically (and in the case of Elda Common, specifically) it
+will find the error page in the webapp's `_error_pages/velocity/`
+directory, which provides a default rendering of the error.
+However the developer may specify an alternative rendering
+by supplying a file with the appropriate name in the 
+`/etc/elda` error pages directory or by defining `_velocityPath`
+and putting replacement error pages there.
+
+The default error pages can be confgured to be `verbose` or
+`taciturn` by setting the API variable `_errorMode` to
+"verbose" or "taciturn". The verbose rendering will 
+supply additional information if available (*eg* the 
+details of what made a request bad); the taciturn rendering
+says as little as possible.
+
 
 Configuration variables {#variables}
 -----------------------
@@ -623,9 +581,9 @@ being rendered.
 
 The *template path* is used by the velocity template renderer to locate
 the templates it may expand. It is the value of the LDA variable
-`_velocityRoot`:
+`_velocityPath`:
 
-    ... api:variable [api:name "_velocityRoot"; api:value "lda-assets/vm"]
+    ... api:variable [api:name "_velocityPath"; api:value "lda-assets/vm"]
 
 Note that if the value is not an explict URI it is resolved *locally*
 (the same way as `api>stylesheet`) against the webapp directory, as
