@@ -5,18 +5,32 @@ layout: default-toc
 
 # Rendering Elda results with Velocity templates
 
-Elda uses a *renderer* to generate output from the set of RDF resources that are selected by the input URL. Starting with version 1.3.0, Elda uses by default a renderer based on [Apache Velocity](http://velocity.apache.org) to generate HTML output. This renderer is a complete re-write of the older, provisional Velocity renderer, and is not backwards compatible with the previous version.
+Elda uses a *renderer* to generate output from the set of RDF
+resources that are selected by the input URL. Starting with
+version 1.3.0, Elda uses by default a renderer based on [Apache
+Velocity](http://velocity.apache.org) to generate HTML output. This
+renderer is a complete re-write of the older, provisional Velocity
+renderer, and is not backwards compatible with the previous version.
 
 In the remainder of this guide, we will show you:
 
 * [how to set-up and configure the Velocity renderer in the configuration code](#config-use-velocity);
-* how to customise the sytlesheets to change the look and feel of the rendered output;
+* how to customise the stylesheets to change the look and feel of the rendered output;
 * how to customise the Velocity macros to change specific renderering behaviours;
 * what's available in the API provide to Velocity template developers.
 
 ## What does a renderer do?
 
-Elda uses the information from the URL, together with the configuration file, to generate SPARQL queries to the underlying triple store and select a set of RDF resource and their descriptions (i.e. sets of RDF properties). This resultset is returned to the requester in some format: JSON, XML, Turtle or an HTML web page. A *renderer* is the part of Elda that turns the resultset into the output format. The HTML renderer does that job to display HTML web pages. In previous versions of Elda, the default HTMl renderer used XSLT to convert the resultset to HTML. That renderer is still included in Elda, but since version 1.3.0 we have switch to using Velocity as the default HTML renderer.
+Elda uses the information from the URL, together with the configuration
+file, to generate SPARQL queries to the underlying triple store and
+select a set of RDF resource and their descriptions (i.e. sets of RDF
+properties). This resultset is returned to the requester in some format:
+JSON, XML, Turtle or an HTML web page. A *renderer* is the part of Elda
+that turns the resultset into the output format. The HTML renderer does
+that job to display HTML web pages. In previous versions of Elda, the
+default HTMl renderer used XSLT to convert the resultset to HTML. That
+renderer is still included in Elda, but since version 1.3.0 we have
+switch to using Velocity as the default HTML renderer.
 
 Here is an example of a site that uses Velocity to render HTML pages:
 
@@ -36,16 +50,32 @@ your API spec:
   ]
 {% endhighlight %}
 
-This will do two things: it will create an instance of a `VelocityRendering` each time a resultset needs to be rendered into HTML, and it will look for a template file (and associated assets) to turn the `VelocityRendering` into HTML output. The root template file is `index.vm`. Other than the name, the renderer makes no assumptions about the root template, or what it does with the information in the `VelocityRendering`.  A standard template is provided in the *Elda assets* project &ndash; you are free to use this standard template as-is, adapt it to your needs, or ignore it and create your own Velocity templates to meet your needs precisely.  Guidance for customising the standard template appear below.
+This will do two things: it will create an instance of a
+`VelocityRendering` each time a resultset needs to be rendered into
+HTML, and it will look for a template file (and associated assets) to
+turn the `VelocityRendering` into HTML output. The root template file
+is `index.vm`. Other than the name, the renderer makes no assumptions
+about the root template, or what it does with the information in the
+`VelocityRendering`.  A standard template is provided in the *Elda assets*
+project &ndash; you are free to use this standard template as-is, adapt
+it to your needs, or ignore it and create your own Velocity templates
+to meet your needs precisely.  Guidance for customising the standard
+template appear below.
 
 ### What's the difference between the VelocityRendering and the template?
 
-Rendering a resultset into HTML using Elda's Velocity renderer goes through two stages. In the first, a `VelocityRendering` object is created. This stage has two goals:
+Rendering a resultset into HTML using Elda's Velocity renderer goes
+through two stages. In the first, a `VelocityRendering` object is
+created. This stage has two goals:
 
 * to create a set of Java accessor objects, which provide a convenience API onto the elements of the resultset so that the template developer's job is easier. For example, an Elda resultset frequently split up into manageable units that the LDA calls *pages* (the first 10 results, the second 10, etc). Page information is recorded into the RDF statements in the LDA resultset. To make this easier to use in a template, we provide a Java object `com.epimorphics.lda.renderers.common.Page`. The `Page` object has direct API calls, such as `pageNumber()`, `itemsPerPage()` to make it easy to incorporate the information from the page description in RDF into a template
 * to unwind the graph into a tree-structure, suitable for display in an HTML document model or other tree-structured output notation.
 
-Both of these jobs *could* have been achieved in the Velocity template language, VTL. However, VTL has some limitations in terms of performance and expressiveness, that make this harder. Moreover, by writing the `VelocityRendering` objects in Java, it becomes much easier to write unit tests to ensure correct, stable behaviour over time.
+Both of these jobs *could* have been achieved in the Velocity template
+language, VTL. However, VTL has some limitations in terms of performance
+and expressiveness, that make this harder. Moreover, by writing the
+`VelocityRendering` objects in Java, it becomes much easier to write
+unit tests to ensure correct, stable behaviour over time.
 
 ### Configuration options
 
@@ -103,9 +133,30 @@ endpoint rather than as the API-wide default.
 value of its `api:name` property, and change the content-type of the
 generated page by changing the value of the `api:mimeType` property.
 
+### The full velocity path
+
+The configured _velocityPath isn't the whole story about where Elda's
+velocity renderings search for macro files. The full path that Elda
+uses is in order:
+
+* the configured _velocityPath
+* the directory `/etc/elda/conf.d/APP/_error_pages/velocity/`
+* the directory `_error_pages/velocity/` in the webapp
+* the final fallback directory `velocity/` in the webapp
+
+The second and third entries exist for handling error pages.
+
 ### Velocity properties
 
-Velocity uses a set of [configuration properties](http://velocity.apache.org/engine/releases/velocity-1.5/developer-guide.html#velocity_configuration_keys_and_values) to control aspects of its internal behaviour. By default, we leave all of these properties with their default values, execpt that `file.resource.loader.path` is set to the path given by `_velocityPath`. However, the renderer will look for a `velocity.properties` file in the loader path, so you can override any of the default Velocity configuration properties by creating a `velocity.properties` file with appropriate keys and values. For example:
+Velocity uses a set of [configuration
+properties](http://velocity.apache.org/engine/releases/velocity-1.5/developer-guide.html#velocity_configuration_keys_and_values)
+to control aspects of its internal behaviour. By default,
+we leave all of these properties with their default values,
+execpt that `file.resource.loader.path` is set to the path
+given by `_velocityPath`. However, the renderer will look for a
+`velocity.properties` file in the loader path, so you can override
+any of the default Velocity configuration properties by creating a
+`velocity.properties` file with appropriate keys and values. For example:
 
 {% highlight properties linenos %}
 input.encoding = UTF-8

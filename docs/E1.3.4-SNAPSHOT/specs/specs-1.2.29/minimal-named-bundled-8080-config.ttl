@@ -39,13 +39,13 @@ spec:minimal a api:API
 		, spec:anything
 		, spec:mentions
 	; api:variable [api:name "_exceptionIfEmpty"; api:value "no"]
-	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/elda-assets/"]
+	; api:variable [api:name "_resourceRoot"; api:value "/elda-bundled/"]
 	.
 	
 spec:HtmlFormatter a api:XsltFormatter 
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "http://localhost:8080/elda-assets/xslt/result.xsl"
+	; api:stylesheet "/xslt/result.xsl"
 	.
 
 <http://education.data.gov.uk/sparql/education/query> 
