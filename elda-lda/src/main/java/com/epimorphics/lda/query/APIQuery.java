@@ -1068,13 +1068,21 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 		@Override public void consume(ResultSet rs) {
 			try {
+				int countBnodes = 0;
 				while (rs.hasNext()) {
 					Resource item = rs.next().getResource(SELECT_VAR.name());
 					if (item == null) {
 						EldaException.BadSpecification("<br>Oops. No binding for " + SELECT_VAR.name() + " in successful SELECT.\n"
 								+ "<br>Perhaps ?item was mis-spelled in an explicit api:where clause.\n" + "<br>It's not your fault; contact the API provider.");
 					}
-					results.add(withoutModel(item));
+					if (item.isAnon()) {
+						countBnodes += 1;
+					} else {
+						results.add(withoutModel(item));
+					}
+				}
+				if (countBnodes > 0) {
+					if (log.isDebugEnabled()) log.debug(countBnodes + " selected bnode items discarded.");
 				}
 			} catch (APIException e) {
 				throw e;
