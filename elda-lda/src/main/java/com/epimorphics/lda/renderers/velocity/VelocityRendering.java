@@ -20,6 +20,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.app.event.EventCartridge;
 import org.apache.velocity.app.event.implement.IncludeNotFound;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -156,8 +157,16 @@ implements BytesOut
     protected void render( OutputStream os ) {
         VelocityEngine ve = createVelocityEngine();
         VelocityContext vc = createVelocityContext( this.bindings );
+        Template t = null;
 
-        Template t = ve.getTemplate( vr.templateName() );
+        try {
+            t = ve.getTemplate( vr.templateName() );
+        }
+        catch (ResourceNotFoundException e) {
+            log.debug( "Could not find base template " + vr.templateName() );
+            log.debug( "Current velocity path is: '" + ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH ) + "'" );
+            throw e;
+        }
 
         try {
             Writer w = new OutputStreamWriter( os, "UTF-8" );
@@ -277,7 +286,11 @@ implements BytesOut
                 p.setProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH, StringUtils.join( velocityPath, ", " ) );
             }
             else {
-                String velocityURL = velocityPath.get( 0 );
+                String velocityURL = "";
+                if (velocityPath.size() > 0) {
+                    velocityURL = velocityPath.get( 0 );
+                }
+
                 if (velocityURL.matches( "^http:.*" )) {
                     p.setProperty( "url.resource.loader.root", velocityURL );
                 }

@@ -216,6 +216,13 @@ ul.resource-properties {
   margin-left: -5px;
 }
 
+/* Loop in graph */
+
+.loop h3.resource-label:before {
+  font-family: FontAwesome;
+  content: "\F112 ";
+}
+
 /* Literal lists */
 
 .literal li.literal {
