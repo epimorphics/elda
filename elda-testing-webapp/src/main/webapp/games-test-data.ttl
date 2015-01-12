@@ -9,6 +9,12 @@
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl:	<http://www.w3.org/2002/07/owl#> .
 
+#
+# redirection testing uses this to ensure that its URIs correspond
+# to the testing webapp environment.
+#
+@prefix item:    <http://localhost:8070/testing/item/> .
+
 # boardgame designers
 
 egc:matthias-cramer a egc:Designer
@@ -270,6 +276,37 @@ egc:wallenstein a egc:BoardGame
 	.
 	
 #
+# resources of type Thing, one of them being a bnode for testing of
+# the bnode-squelching code.
+#
+
+egc:alpha a egc:Thing
+    ; rdfs:label "thing alpha"
+    ; egc:integer 1
+    .
+    
+egc:beta a egc:Thing
+    ; rdfs:label "thing beta"
+    ; egc:integer 2
+    .
+    
+[a egc:Thing; rdfs:label "thing anon"; egc:integer 3].   
+	
+#
+# resources for testing redirection
+#	
+
+item:A a egc:Item
+    ; rdfs:label "item A"
+    ; egc:property "P"
+    .
+    
+item:B a egc:Item
+    ; rdfs:label "item B"
+    ; egc:property "Q"
+    .
+	
+#
 # Information about the classes and properties used in the
 # example data.
 #
@@ -277,6 +314,11 @@ egc:wallenstein a egc:BoardGame
 egc:BoardGame a rdfs:Class
     ; rdfs:label "Board Game"
     ; rdfs:comment "Board games taken in a general sense."
+    .
+    
+egc:Thing a rdfs:Class
+    ; rdfs:label "Thing"
+    ; rdfs:comment "Some Thing for testing purposes."
     .
     
 egc:players a rdf:Property

@@ -19,6 +19,8 @@
 # Prefix for example-local entities.
 @prefix hello:				<http://epimorphics.com/public/vocabulary/games.ttl#>.
 
+@prefix item:    <http://localhost:8070/testing/item/> .
+
 # ---------------------------------------------------------------------
 # API config
 
@@ -34,7 +36,11 @@ hello:hello-world-again a api:API
 	; api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"]
 
 	; api:endpoint 
-		hello:publishers, hello:games, hello:about
+		hello:publishers
+		, hello:games
+		, hello:about
+		, hello:things
+		, hello:show_item
 
     ; api:formatter
         [a elda:FeedFormatter
@@ -51,6 +57,7 @@ hello:hello-world-again a api:API
         ; api:mimeType "text/html"
         ]
         
+    ; api:base "/"
     ; elda:enableCounting true
    	; elda:cacheExpiryTime "10m"
 	.
@@ -76,6 +83,20 @@ hello:games a api:ListEndpoint
 	; elda:enableCounting false
 	.
 	
+hello:things a api:ListEndpoint
+    ; rdfs:label "things"
+    ; api:uriTemplate "/things"
+    ; api:selector [api:filter "type=Thing"; api:sort "label"]
+    ; api:defaultViewer api:labelledDescribeViewer
+    . 
+    
+hello:show_item a api:ItemEndpoint
+    ; rdfs:label "show item"
+    ; api:uriTemplate "/show/item/{which}"
+    ; api:defaultViewer api:labelledDescribeViewer
+    ; api:itemTemplate "/item/{which}"
+    .
+    	
 #
 # The /about endpoint requires a query parameter whose value
 # is a URI; this is the single selected ?item. These URIs
@@ -95,16 +116,15 @@ hello:about a api:ItemEndpoint
 	.
 
 #
-# some cache-control examples
-#
-
-hello:players elda:cacheExpiryTime "10s".
-
-#
 # class and property declarations, setting shortnames and
 # property ranges.
 #
 
+hello:Thing a rdfs:Class
+    ; rdfs:label "Thing"
+    ; api:label "Thing"
+    .
+    
 hello:BoardGame a rdfs:Class
 	; rdfs:label "Board Game"
 	; api:label "BoardGame"
@@ -159,7 +179,11 @@ hello:pubYear a rdf:Property
 hello:playTimeMinutes a rdf:Property
 	; api:label "playTimeMinutes"
 	; rdfs:label "playTimeMinutes"
-
 	; rdfs:range xsd:integer
-	.	
+	.
+	
+item:A api:label "Item_A".
+
+item:B api:label "Item_B".
+	
 		
