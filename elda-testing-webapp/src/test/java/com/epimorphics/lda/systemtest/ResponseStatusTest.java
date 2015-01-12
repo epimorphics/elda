@@ -21,6 +21,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.protocol.HttpContext;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.exceptions.EldaException;
@@ -48,7 +49,7 @@ public class ResponseStatusTest extends TomcatTestBase {
 		ResponseStatusTest.testHttpRequest( "games.json?callback=right", 200, Util.ignore );
 	}
 	
-	@Test public void testShowItemSucceeds() throws ClientProtocolException, IOException {
+	@Test @Ignore public void testShowItemSucceeds() throws ClientProtocolException, IOException {
 		ResponseStatusTest.testHttpRequest( "show/item/A", 200, Util.ignore );
 	}
 	
