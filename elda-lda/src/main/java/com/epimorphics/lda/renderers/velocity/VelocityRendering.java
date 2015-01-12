@@ -230,7 +230,7 @@ implements BytesOut
             String pathURL = b.pathAsURL( pathEntry).toString();
             roots.add( pathURL + (pathURL.endsWith( "/" ) ? "" : "/") );
         }
-        
+        log.debug("rootPath: " + rootPath);
         log.debug("complete expanded path: " + roots);
         return roots;
     }
