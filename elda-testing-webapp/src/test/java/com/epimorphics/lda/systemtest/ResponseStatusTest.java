@@ -10,6 +10,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
@@ -24,8 +25,11 @@ import org.apache.http.protocol.HttpContext;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.testing.utils.TomcatTestBase;
+import com.epimorphics.lda.vocabularies.API;
+import com.hp.hpl.jena.rdf.model.*;
 
 public class ResponseStatusTest extends TomcatTestBase {
 
@@ -59,6 +63,33 @@ public class ResponseStatusTest extends TomcatTestBase {
 	
 	@Test public void testThingAccessIsOK() throws ClientProtocolException, IOException {
 		ResponseStatusTest.testHttpRequest( "things", 200, Util.ignore );
+	}
+	
+	@Test public void testBnodesSuppressed() throws ClientProtocolException, IOException {
+		ResponseStatusTest.testHttpRequest( "things.ttl", 200, new Util.CheckContent() {
+			
+			@Override public String failMessage() {
+				return "bnodes should not be returned as results";
+			}
+			
+			/*
+				check interprets the content as a Turtle rendering of a query response.
+				It finds the list of selected items from the model (which is the object
+				of the single api:items triple in that model) and returns false if any
+				of them is a bnode. Otherwise it returns true. Other resources in the
+				model may be bnodes; that doesn't matter.
+			*/
+			@Override public boolean check(String content) {
+				Model m = ModelIOUtils.modelFromTurtle(content);
+				
+				for (RDFNode selected: m.listObjectsOfProperty(API.items).toList()) {
+					List<RDFNode> l = selected.as(RDFList.class).asJavaList();
+					for (RDFNode x: l) if (x.isAnon()) return false;
+				}
+				
+				return true;
+			}
+		} );
 	}
 	
 	@Test public void testPageOnItemEndpointGeneratesBadRequest() throws ClientProtocolException, IOException {
