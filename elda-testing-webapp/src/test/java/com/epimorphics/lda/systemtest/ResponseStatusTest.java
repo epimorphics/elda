@@ -67,6 +67,26 @@ public class ResponseStatusTest extends TomcatTestBase {
 		ResponseStatusTest.testHttpRequest( "things", 200, Util.ignore );
 	}
 	
+	@Test public void testLanguageCodes() throws ClientProtocolException, IOException {
+		ResponseStatusTest.testHttpRequest( "lang.ttl?_metadata=all&_lang=en,cy&min-label=crumble", 200, new Util.CheckContent() {
+			
+			String message = "unset";
+			
+			@Override public String failMessage() {
+				return "expected item C only: " + message;
+			}
+			
+			@Override public boolean check(String content) {				
+				Model m = ModelIOUtils.modelFromTurtle(content);			
+				Resource C = m.createResource(m.expandPrefix("hello:langC"));
+				RDFNode selected = m.listObjectsOfProperty(API.items).toList().get(0);
+				List<RDFNode> l = selected.as(RDFList.class).asJavaList();
+				message = l.toString();
+				return l.size() == 1 && l.get(0).asResource().equals(C);
+				}
+			} );
+	}
+	
 	@Test public void testBnodesSuppressed() throws ClientProtocolException, IOException {
 		
 		boolean anonPresent = false;

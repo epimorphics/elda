@@ -41,6 +41,7 @@ hello:hello-world-again a api:API
 		, hello:about
 		, hello:things
 		, hello:show_item
+		, hello:lang
 
     ; api:formatter
         [a elda:FeedFormatter
@@ -96,6 +97,13 @@ hello:show_item a api:ItemEndpoint
     ; api:defaultViewer api:labelledDescribeViewer
     ; api:itemTemplate "/item/{which}"
     .
+      
+hello:lang a api:ListEndpoint
+    ; rdfs:label "check language"
+    ; api:uriTemplate "/lang"
+    ; api:selector [api:filter "type=Langy"; api:sort "label"]
+    ; api:defaultViewer api:labelledDescribeViewer
+    .
     	
 #
 # The /about endpoint requires a query parameter whose value
@@ -120,6 +128,10 @@ hello:about a api:ItemEndpoint
 # property ranges.
 #
 
+hello:Langy a rdfs:Class
+    ; rdfs:label "Langy"
+    .
+    
 hello:Thing a rdfs:Class
     ; rdfs:label "Thing"
     ; api:label "Thing"

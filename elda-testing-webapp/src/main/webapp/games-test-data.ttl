@@ -293,6 +293,27 @@ egc:beta a egc:Thing
 [a egc:Thing; rdfs:label "thing anon"; egc:integer 3].   
 	
 #
+# resources for testing _lang with min- as representative
+# examples
+#
+
+egc:langA a egc:Langy
+    ; rdfs:label "albatross"@en
+    .
+    
+egc:langB a egc:Langy
+    ; rdfs:label "battleship"@cy
+    .
+    
+egc:langC a egc:Langy
+    ; rdfs:label "crumpet"@en
+    .
+    
+egc:langD a egc:Langy
+    ; rdfs:label "dodgem"@fr
+    .
+
+#
 # resources for testing redirection
 #	
 
@@ -319,6 +340,10 @@ egc:BoardGame a rdfs:Class
 egc:Thing a rdfs:Class
     ; rdfs:label "Thing"
     ; rdfs:comment "Some Thing for testing purposes."
+    .
+    
+egc:Langy a rdfs:Class
+    ; rdfs:label "Langy"
     .
     
 egc:players a rdf:Property
