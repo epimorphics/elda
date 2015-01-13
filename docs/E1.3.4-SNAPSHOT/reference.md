@@ -479,16 +479,23 @@ Error pages
 
 When Elda detects (or has detected for it) an error, it responds
 with an appropriate status code (eg *BAD_REQUEST*) and an
-*error page*.
+*error page*. Earlier mechanisms for rendering an error page
+have been revised in Elda 1.3.4.
 
-The error page is named one of:
+The error page is a rendered by a velocity macro named one of:
 
-* names TBD
-* when available
+* bad_request.vm 
+* exception.vm  
+* general_exception.vm  
+* query_parse_exception.vm  
+* stack_overflow.vm  
+* unknown_shortname.vm  
+* velocity_rendering.vm
 
+according to the category of the captured exception.
 It is searched for along the expanded Velocity path:
 
-* the configured _velocityPath
+* the users configured _velocityPath
 * the directory `/etc/elda/conf.d/APP/_error_pages/velocity/`
 * the directory `_error_pages/velocity/` in the webapp
 * the final fallback directory `velocity/` in the webapp
@@ -503,11 +510,13 @@ and putting replacement error pages there.
 
 The default error pages can be confgured to be `verbose` or
 `taciturn` by setting the API variable `_errorMode` to
-"verbose" or "taciturn". The verbose rendering will 
+`"verbose"` or `"taciturn"`. The verbose rendering will 
 supply additional information if available (*eg* the 
 details of what made a request bad); the taciturn rendering
 says as little as possible.
 
+The variable `_message` is bound to the text of the diagnostic
+message carried by the captured exception.
 
 Configuration variables {#variables}
 -----------------------
