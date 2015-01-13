@@ -30,6 +30,8 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.testing.utils.TomcatTestBase;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 public class ResponseStatusTest extends TomcatTestBase {
 
@@ -66,6 +68,15 @@ public class ResponseStatusTest extends TomcatTestBase {
 	}
 	
 	@Test public void testBnodesSuppressed() throws ClientProtocolException, IOException {
+		
+		boolean anonPresent = false;
+		Model m = FileManager.get().loadModel("src/main/webapp/games-test-data.ttl");
+		Resource Thing = m.createResource(m.expandPrefix("egc:Thing"));
+		for (Statement s: m.listStatements(null, RDF.type, Thing).toList()) {
+			if (s.getSubject().isAnon()) anonPresent = true;
+		}
+		assertTrue("there should be candidate bnodes in the tests data.", anonPresent);
+		
 		ResponseStatusTest.testHttpRequest( "things.ttl", 200, new Util.CheckContent() {
 			
 			@Override public String failMessage() {
