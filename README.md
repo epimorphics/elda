@@ -19,7 +19,8 @@
 
 <p>
 	See <a href="http://epimorphics.github.io/elda/current/index.html">
-		the current Elda documentation
-	</a>
+		the current Elda documentation,
+	</a> or the [Forthcoming](docs/E{{ site.data.version.FORTHCOMING_RELEASE }})
+	releases documentation.
 </p>
 
