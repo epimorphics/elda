@@ -458,9 +458,8 @@ SPARQL 1.1 features
 
 Elda requires SPARQL 1.1 and exploits its VALUES feature. Elda
 used to use nested selects if available to reduce query sizes
-but this has been replaced by VALUES. 
-
-The old **elda:supportsNestedSelect** flags, used to enable
+but this has been replaced by VALUES; the old 
+**elda:supportsNestedSelect** flags, used to enable
 nested selects, no longer affects the query and generates a
 warning in the log if it is used.
 
