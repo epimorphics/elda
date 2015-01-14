@@ -1,5 +1,5 @@
 ---
-title: Elda 1.3.0
+title: Elda 1.3.2
 layout: default-toc
 ---
 
