@@ -11,14 +11,14 @@
 -->	
 	{% assign path = page.path | split: "/"%}
 	{% assign len = path.size %}
-	{% assign name = "anon" %}
+	{% assign eldaName = "anon" %}
 	{% for item in path reversed %}
-		{% if forloop.index == 2 %}{% assign name = item %}{% endif %}
+		{% if forloop.index == 2 %}{% assign eldaName = item %}{% endif %}
 	{% endfor %}
-	{% if name == "current" %}
-		{% assign name = {{site.data.version.CURRENT_RELEASE | prepend: "E" | append: " (current)"}} }} %}
+	{% if eldaName == "current" %}
+		{% assign eldaName = {{site.data.version.CURRENT_RELEASE | prepend: "E" | append: " (current)"}} }} %}
 	{% endif %}
-	{% assign eldaVersion = {{name | replace_first: "E", "Elda "}} %}	
+	{% assign eldaVersion = {{eldaName | replace_first: "E", "Elda "}} %}	
 
   {% include head.html %}
 
