@@ -30,15 +30,22 @@ The currently released version of Elda is {{ site.data.version.CURRENT_RELEASE }
   pre-built examples which allow you to experiment with 
   the style of query and get started with building your 
   own configurations.
+
 * [Reference](current/reference.html)<br />
   Comprehensive reference documentation for API developers
+
 * [Velocity renderer](current/velocity.html)<br />
   ELda includes a pre-configured, but customizable, renderer
   for generating HTML pages from RDF resources using Apache Velocity.
+
 * [Java API documentation](apidocs/)
+
 * [Forthcoming](docs/E{{ site.data.version.FORTHCOMING_RELEASE }})<br />
   The in-development documentation, which may give an indication
   of forthcoming features or changes.
+
+* Links to the documentation for [other Elda versions](http://epimorphics.github.io/elda/docs/versions.html)
+  if you are running a non-current version of Elda.
 
 Elda tutorials
 
