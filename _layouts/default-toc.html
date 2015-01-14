@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html>
 
+<!-- 
+	This abomination retrieves the Elda version this page is for
+	by exploiting it's page-path wossname/Ex.y.z/something.md
+	and pulling the Ex.y.z component out of it. There seems to be
+	rather a dearth	of useful string and array primitives so
+	we run a loop in reverse order and capture the second element
+	as it flies past ...
+-->	
+	{% assign path = page.path | split: "/"%}
+	{% assign len = path.size %}
+	{% assign name = "anon" %}
+	{% for item in path reversed %}
+		{% if forloop.index == 2 %}{% assign name = item %}{% endif %}
+	{% endfor %}
+	{% if name == "current" %}
+		{% assign name = {{site.data.version.CURRENT_RELEASE | prepend: "E" | append: " (current)"}} }} %}
+	{% endif %}
+	{% assign eldaVersion = {{name | replace_first: "E", "Elda "}} %}	
+
   {% include head.html %}
 
   <body>
