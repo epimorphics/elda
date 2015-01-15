@@ -5,7 +5,10 @@
 #
 #	http://education.data.gov.uk/sparql/education/query
 #
-# with your SPARQL endpoint of interest. 
+# with your SPARQL endpoint of interest. Replace the value 'true'
+# for supportsNestedSelect with 'false' unless you know the endpoint
+# support's SPARQL 1.1's nested select (as eg any Fuseki does and the
+# education endpoint does).
 #
 # The /anything endpoint will display some (10) items from the SPARQL
 # endpoint that have an rdf:type property. 
@@ -36,14 +39,17 @@ spec:minimal a api:API
 		, spec:anything
 		, spec:mentions
 	; api:variable [api:name "_exceptionIfEmpty"; api:value "no"]
-	; api:variable [api:name "_resourceRoot"; api:value "http://localhost/elda-assets/"]
+	; api:variable [api:name "_resourceRoot"; api:value "/"]
 	.
 	
 spec:HtmlFormatter a api:XsltFormatter 
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "http://localhost/elda-assets/xslt/result.xsl"
+	; api:stylesheet "/xslt/result.xsl"
 	.
+
+<http://education.data.gov.uk/sparql/education/query> 
+	elda:supportsNestedSelect true.
 
 #
 # Describe a generic 'thing' as an example of an itemEndpoint.
