@@ -20,6 +20,8 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.rdfutil.ModelWrapper;
+import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.*;
 
 /**
@@ -88,6 +90,18 @@ public class DisplayHierarchyTest
         assertEquals( "even first literal", children.get(0).hintsString() );
         assertEquals( "odd literal", children.get(1).hintsString() );
         assertEquals( "even last resource", children.get( children.size() - 1 ).hintsString() );
+    }
+    
+    @Test
+    public void testContextSeen() {
+        DisplayHierarchy.DisplayHierarchyContext ctx = new DisplayHierarchy.DisplayHierarchyContext();
+        Model m = ModelFactory.createDefaultModel();
+        ModelWrapper mw = new ModelWrapper( m );
+        RDFNodeWrapper rn = new RDFNodeWrapper( mw, m.createResource( "http://example.com/foo" ));
+        
+        assertFalse( ctx.isSeen( rn ) );
+        ctx.see( rn );
+        assertTrue( ctx.isSeen( rn ) );
     }
 
     /***********************************/

@@ -243,7 +243,7 @@ public class DisplayHierarchy
 
         /** @return True if the given node is a resource which has already been seen during the expansion */
         public boolean isSeen( RDFNodeWrapper r ) {
-            return r.isResource() && this.seen.contains( r );
+            return r.isResource() && this.seen.contains( r.asResource() );
         }
 
         /** Add a node to the set of seen resources */
