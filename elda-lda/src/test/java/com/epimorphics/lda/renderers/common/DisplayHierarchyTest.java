@@ -12,8 +12,6 @@ package com.epimorphics.lda.renderers.common;
 
 import static org.junit.Assert.*;
 
-import java.util.List;
-
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
@@ -22,7 +20,8 @@ import org.junit.*;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 /**
  * Unit tests for {@link DisplayHierarchy}
@@ -82,16 +81,6 @@ public class DisplayHierarchyTest
         assertEquals( 10, dh.roots().size() );
     }
 
-    @Test
-    public void testAnnotations() {
-        dh.expand();
-        List<DisplayHierarchyNode> children = dh.roots().get( 0 ).children();
-
-        assertEquals( "even first literal", children.get(0).hintsString() );
-        assertEquals( "odd literal", children.get(1).hintsString() );
-        assertEquals( "even last resource", children.get( children.size() - 1 ).hintsString() );
-    }
-    
     @Test
     public void testContextSeen() {
         DisplayHierarchy.DisplayHierarchyContext ctx = new DisplayHierarchy.DisplayHierarchyContext();

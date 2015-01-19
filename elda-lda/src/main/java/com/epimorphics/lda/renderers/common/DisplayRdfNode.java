@@ -95,10 +95,18 @@ extends CommonNodeWrapper
      * @return A list of RDF triples in display order
      */
     public List<PropertyValue> getDisplayProperties() {
-        List<PropertyValue> triples = propertyOrdering().orderProperties( this );
+        List<PropertyValue> triples = propertyOrdering().orderProperties( objectResourceWrapped() );
         triples = withoutNonDisplayTriples( triples );
 
         return triples;
+    }
+
+    /** @return My wrapped node, but restricted to only the results object graph (ie not metadata) */
+    public RDFNodeWrapper objectResourceWrapped() {
+        Resource objResource = this.asResource().inModel( page().pageObjectModel() );
+        ModelWrapper mw = new ModelWrapper( page().pageObjectModel() );
+        RDFNodeWrapper objResourceWrapper = new RDFNodeWrapper( mw, objResource );
+        return objResourceWrapper;
     }
 
     /**
