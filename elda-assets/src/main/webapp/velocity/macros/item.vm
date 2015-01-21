@@ -62,28 +62,36 @@
 
 ## Display the name of the resource
 #macro( itemName $resource $h $css $node )
-  #if( !$resource.isAnon() )
+  #if( $resource.getName() )
     <div class="$css">
-      <$h class="resource-label">
-        $resource.getName()
-        #if( $node )
-          #actionsMenu( $node )
+      #if( $resource.isAnon() )
+        #set( $anonName = $resource.getName() )
+        #if( $anonName.equals( "[]" ))
+          #set( $anonName = "" )
         #end
-      </$h>
+        <$h class="resource-label anonymous">
+          $anonName
+        </$h>
+      #else
+        <$h class="resource-label">
+          $resource.getName()
+          #if( $node )
+            #actionsMenu( $node )
+          #end
+        </$h>
+      #end
     </div>
   #end
 #end
 
 ## Display the item URI
 #macro( itemURI $resource $h $css )
-  <div class="$css">
-    #if( $resource.isAnon() )
-      <$h class="resource-uri anon">$resource.asResource().getId()</$h>
-    #else
+  #if( !$resource.isAnon() )
+    <div class="$css">  
       #setResourceHref( $resource.getURI() )
       <$h class="resource-uri"><a href="$href">$resource.getURI()</a></$h>
-    #end
-  </div>
+    </div>
+  #end
 #end
 
 ## Display a list of types for the resource, if any are known

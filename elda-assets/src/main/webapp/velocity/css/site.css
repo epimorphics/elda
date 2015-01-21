@@ -219,6 +219,17 @@ ul.resource-properties {
   background-color: #3f51b5;
   padding: 3px;
   border-radius: 3px;
+  line-height: normal;
+}
+
+.nested h3.anonymous {
+  font-size: 10pt;
+  margin: 0;
+  color: #eee;
+  background-color: #3f51b5;
+  padding: 3px;
+  border-radius: 3px;
+  line-height: normal;
 }
 
 .rdf.resource.nested .rdf.object {
