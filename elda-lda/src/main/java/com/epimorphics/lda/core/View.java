@@ -372,9 +372,9 @@ public class View {
 		s.endGraph(sb);
 		sb.append( "}\n" );
 		String queryString = sb.toString();
-		
-//		System.err.println("\n>> LABEL QUERY:\n" + queryString + "\n");
-		
+	//
+		if (log.isDebugEnabled()) log.debug("LABEL QUERY:\n" + queryString + "\n");
+	//	
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
 	}	

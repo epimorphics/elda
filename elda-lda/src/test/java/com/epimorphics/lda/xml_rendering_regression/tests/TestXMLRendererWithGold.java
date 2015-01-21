@@ -102,9 +102,9 @@ public class TestXMLRendererWithGold extends XMLTestCase {
 		Document expected = parse( b.expected_xml );
 		Diff myDiff = new Diff( expected, d );
 
-//		writeDocument( "rendered.xml", d);
-//		
-//		writeDocument( "expected.xml", expected );
+		writeDocument( "rendered.xml", d);
+		
+		writeDocument( "expected.xml", expected );
 		
 		assertTrue( myDiff.toString(), myDiff.similar() );		
 	}
