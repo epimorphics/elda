@@ -62,21 +62,27 @@
 
 ## Display the name of the resource
 #macro( itemName $resource $h $css $node )
-  <div class="$css">
-    <$h class="resource-label">
-      $resource.getName()
-      #if( $node )
-        #actionsMenu( $node )
-      #end
-    </$h>
-  </div>
+  #if( !$resource.isAnon() )
+    <div class="$css">
+      <$h class="resource-label">
+        $resource.getName()
+        #if( $node )
+          #actionsMenu( $node )
+        #end
+      </$h>
+    </div>
+  #end
 #end
 
 ## Display the item URI
 #macro( itemURI $resource $h $css )
   <div class="$css">
-    #setResourceHref( $resource.getURI() )
-    <$h class="resource-uri"><a href="$href">$resource.getURI()</a></$h>
+    #if( $resource.isAnon() )
+      <$h class="resource-uri anon">$resource.asResource().getId()</$h>
+    #else
+      #setResourceHref( $resource.getURI() )
+      <$h class="resource-uri"><a href="$href">$resource.getURI()</a></$h>
+    #end
   </div>
 #end
 

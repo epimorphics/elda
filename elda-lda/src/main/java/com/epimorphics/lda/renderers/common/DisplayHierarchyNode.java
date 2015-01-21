@@ -161,6 +161,7 @@ public class DisplayHierarchyNode
         return rdfNode().isLiteral() ||
                isLoop() ||
                (!isRoot() &&
+                !rdfNode().isAnon() &&
                 !isOnExplicitPath() &&
                 context.isSeen( rdfNode() ));
     }
@@ -209,7 +210,7 @@ public class DisplayHierarchyNode
     public boolean isSimpleResource() {
         boolean isSimple = false;
 
-        if (isResource()) {
+        if (isResource() && !isAnon()) {
             List<Statement> s = rdfNode().asResource().listProperties().toList();
 
             if (s.size() == 0) {
