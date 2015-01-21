@@ -389,7 +389,8 @@ public class DisplayHierarchyNode
 
     /** @see RDFNodeWrapper#getName() */
     public String getName() {
-        return rdfNode().getName();
+        String name = rdfNode().getName();
+        return name.equals( "[]" ) ? "" : name;
     }
 
     /** @see RDFNodeWrapper#getValue() */
