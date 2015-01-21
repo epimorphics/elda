@@ -427,7 +427,7 @@ public class DisplayHierarchyNode
                                  String rel, String hint, boolean set, Page page ) {
         OPERATION op = set ? OPERATION.SET : OPERATION.ADD;
         String linkIcon = "fa-plus-circle";
-        EldaURL pageURL = page.pageURL();
+        EldaURL pageURL = page.isItemEndpoint() ? page.pageURL().parentURL() : page.pageURL();
         String prompt = "require ";
         String closeQuote = "";
 

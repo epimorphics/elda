@@ -13,6 +13,8 @@ package com.epimorphics.lda.renderers.common;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -183,6 +185,26 @@ public class EldaURL
     /** @return The encapsulated URI object */
     public URI getUri() {
         return uri;
+    }
+    
+    /**
+     * Return the parent URL, which we obtain by removing the trailing path
+     * segment of the URL path. If a suitable path segment to remove cannot be
+     * identified, return self.
+     * @return A URL for the parent of this URL
+     */
+    public EldaURL parentURL() {
+        String path = getUri().getPath();
+        Pattern pat = Pattern.compile( "\\A.*(/[^/]*)\\Z" );
+        Matcher mat = pat.matcher( path );
+        if (mat.matches()) {
+            String lastSegment = mat.group( 1 );
+            URI parentURI = URI.create( getUri().toString().replace( lastSegment, "" ) );
+            return new EldaURL( parentURI );
+        }
+        else {
+            return this;
+        }
     }
 
     /***********************************/
