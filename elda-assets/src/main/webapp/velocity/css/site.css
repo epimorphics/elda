@@ -35,7 +35,7 @@ background: -webkit-linear-gradient(top, rgba(140,158,255,1) 0%,rgba(140,158,255
 background: -o-linear-gradient(top, rgba(140,158,255,1) 0%,rgba(140,158,255,1) 80%,rgba(140,158,255,0.3) 100%); /* Opera 11.10+ */
 background: -ms-linear-gradient(top, rgba(140,158,255,1) 0%,rgba(140,158,255,1) 80%,rgba(140,158,255,0.3) 100%); /* IE10+ */
 background: linear-gradient(to bottom, rgba(140,158,255,1) 0%,rgba(140,158,255,1) 80%,rgba(140,158,255,0.3) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8c9eff', endColorstr='#4d8c9eff',GradientType=0 ); /* IE6-8 */}
+/*filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8c9eff', endColorstr='#4d8c9eff',GradientType=0 ); /* IE6-8 */}
 
 .navbar {
   border: 0;
