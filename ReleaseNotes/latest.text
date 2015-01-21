@@ -1,6 +1,28 @@
 + ----------------------------------------------------------------------
 | Elda 1.3.5 (DEVELOPING)
 
+Issues closed:
+
+* https://github.com/epimorphics/elda/issues/115
+Resolved a problem with the Velocity renderer generating hyperlinks
+for bNode resources, which can't be clicked through (because there's
+no URL to follow)
+
+* https://github.com/epimorphics/elda/issues/116
+Resolved a bug with the Velocity renderer, in which it was not
+detecting and breaking loops in the RDF graph correctly.
+
+* https://github.com/epimorphics/elda/issues/117
+Resolved a problem with the use of transparent regions in the title
+bar causing issues for IE9 users.
+
+* https://github.com/epimorphics/elda/issues/118
+An enhancement to replicate the behaviour of the XSLT renderer -
+filter actions on item endpoints should apply to the corresponding
+list endpoint, assumed to be the parent URL calculated by removing
+the trailing path segment.
+
+
 + ----------------------------------------------------------------------
 | Elda 1.3.4 (RELEASED)
 
@@ -20,7 +42,7 @@ unpacking comman and assets, merging, and then making
 a new warfile.)
 
 The artifact elda-system-tests has been removed
-because it no longer did anything. Instead, 
+because it no longer did anything. Instead,
 elda-testing-webapp now performs integratration tests.
 Users do not need to use this artifact; it is part of
 the Elda development process.
@@ -39,7 +61,7 @@ of error-page macros, which can be over-ridden using
 pages inside /etc or configured in the LDA config file.
 
 The supplied default pages inspect the value of the API
-variable _errorMode. If this is present and "taciturn", 
+variable _errorMode. If this is present and "taciturn",
 then they do not show detail information (eg a reason why a
 request might be bad). Otherwise they show whatever
 detail is available.
@@ -74,11 +96,11 @@ Fixes issues 111 and 112.
 +-----------------------------------------------------------------------
 | Elda 1.3.1 (RELEASED)
 
-Elda's handling of error (non-2xx) pages has changed. Rather than 
-generating a Response with internal Java code, Elda throws 
+Elda's handling of error (non-2xx) pages has changed. Rather than
+generating a Response with internal Java code, Elda throws
 exceptions which are then handled by error-page declarations
 in the web.xml. Elda Common comes with default pages in the
-webapp/_errors directory for all the exceptions it explicitly throws 
+webapp/_errors directory for all the exceptions it explicitly throws
 out.
 
 Web containers that can redirect parts (eg _errors) of the web address
@@ -105,7 +127,7 @@ Elda standalone is now built using a maven tomcat plugin
 and does not unpack itself and launch jetty; instead
 Tomcat unpacks it into .extract.
 
-Some incomplete integration tests directories have been 
+Some incomplete integration tests directories have been
 removed and the javadoc improved.
 
 Elda now works with Tomcat8 (it was unportably presenting
@@ -136,14 +158,14 @@ for Window's users using the Saxon toolkit.
   by File.toURI.toURL operations.
 
 [internal]
-* the vocabulary class EXTRAS has been deprecated and superceeded by 
+* the vocabulary class EXTRAS has been deprecated and superceeded by
   ELDA_API. The latter extends API so that both standard LDA properties
   (and classes) and Elda extensions can be accessed using just one
   imported vocabulary class. The ontology file vocabs/extras.ttl
   has been renamed to elda_api.ttl.
 
 * Various compilation warnings, mostly about variables not being
-  declared or methods not called, have been fixed. 
+  declared or methods not called, have been fixed.
 
 * Some incomplete/missing tests have been spotted and fixed/written.
 
@@ -172,21 +194,21 @@ for Window's users using the Saxon toolkit.
   elda:graphTemplate "variable-string". Variables present
   in the template are expanded when the query is generated,
   and so may contain variables bound in the URI template
-  or query parameters. The generated query contains 
+  or query parameters. The generated query contains
   GRAPH <expanded-string> to restrict the query to that
   named graph in the dataset.
 
   An Elda URL can contain _graph=graphname to override such
   the graphTemplate.
 
-  Note that the results from a DESCRIBE viewer need not be 
+  Note that the results from a DESCRIBE viewer need not be
   restricted to the named graph; this is a consequence of the
   weak specification for DESCRIBE in SPARQL.
 
 * The XSLT processor supplied for elda-common and elda-bundled
   has been changed to Saxon 9.5.1-5. The built-in JDK processor had
-  problems with large renderings, as did xalan. 
-     
+  problems with large renderings, as did xalan.
+
 + ----------------------------------------------------------------------
 | Elda 1.2.33 (RELEASED)
 
@@ -272,7 +294,7 @@ suppressed.
 + ----------------------------------------------------------------------
 | Elda 1.2.28 (RELEASED)
 
-* Elda has moved to GitHub. 
+* Elda has moved to GitHub.
 
 + ----------------------------------------------------------------------
 | Elda 1.2.27 (RELEASED)
@@ -291,24 +313,24 @@ suppressed.
   then the page warns that this was inappropriate.
 
 + ----------------------------------------------------------------------
-| Elda 1.2.26 (RELEASED)    
- 
+| Elda 1.2.26 (RELEASED)
+
 * The documentation has been improved and restyled. It now
-  includes a cribsheet with summaries of the Elda query 
-  parameters and configuration properties, and additional 
-  introductory materials. The text search documentation has 
-  been updated. The page previously called "advanced" has 
+  includes a cribsheet with summaries of the Elda query
+  parameters and configuration properties, and additional
+  introductory materials. The text search documentation has
+  been updated. The page previously called "advanced" has
   been renamed to "reference" and given a table-of-contents.
   The velocity renderer documentation now lives in its own
   document. Path configuaration options for stylesheets,
   HTML resouces, and Velocity templates has been clairified.
 
-* API.java has moved packages and now lives in 
-  com.epimorphics.lda.vocabularies (alongside EXTRAS and the 
+* API.java has moved packages and now lives in
+  com.epimorphics.lda.vocabularies (alongside EXTRAS and the
   other vocabulary classes).
 
-  Both API.java and EXTRAS.java are constructed from the corresponding 
-  files in elda/vocabs by using `mvn generate-sources`. (If the Java 
+  Both API.java and EXTRAS.java are constructed from the corresponding
+  files in elda/vocabs by using `mvn generate-sources`. (If the Java
   files are up-to-date no generation is done.)
 
 * The example velocity templates and atom renderer now trap cycles in
@@ -405,7 +427,7 @@ suppressed.
   NOTE that the artifact previously known as `lda` is now
   `elda-lda` for consistency with the other elda- artifacts.
 
-* The json-rdf module has been absorbed into Elda.  
+* The json-rdf module has been absorbed into Elda.
   The Elda assets have been moved to their own module.
   An elda-common module provides an externally configurable
   war. The Elda modules are now
@@ -422,7 +444,7 @@ suppressed.
     elda-testing-webapp
     elda-regress
 
-  Developers should see 
+  Developers should see
 
     http://elda.googlecode.com/hg/docs/E1.2.23-advanced.html
 
@@ -459,7 +481,7 @@ suppressed.
 
 * CACHE POLICY. Elda cache policy can be set on the whole API, not just
   on endpoints. This is mostly so that "default:0" can be set in
-  a configuration to switch off the cache. 
+  a configuration to switch off the cache.
 
   Elda used to always retain at least one item in its cache. This
   behaviour has been dropped.
@@ -485,7 +507,7 @@ suppressed.
 * POMS. Some POM issues have been fixed. json-rdf has been incorporated
   into lda, which has been renamed to elda-lda.
 
-* VELOCITY. Velocity templates loaded from configurable location. Default 
+* VELOCITY. Velocity templates loaded from configurable location. Default
   templates now respect _resourceRoot via [].
 
 * JENA. Elda has been updated to use Jena 2.10.1 (with TDB 0.10.1 if
