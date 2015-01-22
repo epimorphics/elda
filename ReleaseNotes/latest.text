@@ -1,5 +1,8 @@
++ ---------------------------------------------------------------------
+| Elda 1.3.6 (DEVELOPING)
+
 + ----------------------------------------------------------------------
-| Elda 1.3.5 (DEVELOPING)
+| Elda 1.3.5 (RELEASED)
 
 Issues closed:
 
@@ -21,6 +24,8 @@ An enhancement to replicate the behaviour of the XSLT renderer -
 filter actions on item endpoints should apply to the corresponding
 list endpoint, assumed to be the parent URL calculated by removing
 the trailing path segment.
+
+* Also: removed some order dependencies, see #122.
 
 
 + ----------------------------------------------------------------------
