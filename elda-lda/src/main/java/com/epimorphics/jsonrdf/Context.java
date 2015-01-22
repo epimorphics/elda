@@ -245,20 +245,40 @@ public class Context implements ReadContext, Cloneable {
     }
 
     /**
-        URIs that have no preferred shortname are given their alternative
+        <p> URIs that have no preferred shortname are given their alternative
         shortname as their preferred shortname. This should be done once
         only to a Context.
+        </p>
+        
+        <p>
+        It may (does) come about that a single URI may have many shortnames.
+        If so we need to pick one deterministically. (Previous versions of this
+        code had an implicit dependency on the order things came out of 
+        hashmaps in). We pick the shortest available shortname for that uri;
+        if the shortnames have the same length, then we pick the lexicographically
+        smallest.
+        </p>
     */
     protected void completeContext() {
         if ( !completedMappingTable ) {
             completedMappingTable = true;
-            for (Map.Entry<String, String> e : nameToURI.entrySet()) {
-                String uri = e.getValue();
-                String name = e.getKey();
-                if (!uriToName.containsKey(uri)) uriToName.put(uri, name);
+            
+            List<String> names = new ArrayList<String>(nameToURI.keySet());
+            Collections.sort(names, compareStringsByLength);
+                        
+            for (String name: names) {
+            	String uri = nameToURI.get(name);
+                if (!uriToName.containsKey(uri)) uriToName.put(uri, name);            
             }
         }
-    }
+    }  
+    
+    private static final Comparator<? super String> compareStringsByLength = new Comparator<String>() {
+        @Override public int compare( String a, String b ) {
+            int sign = Integer.compare(a.length(),  b.length());
+            return sign == 0 ? a.compareTo(b) : sign;
+        }
+    };
     
     /**
         Check to see if there are any shortnames that map to multiple

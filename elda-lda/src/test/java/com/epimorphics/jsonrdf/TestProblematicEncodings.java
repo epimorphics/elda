@@ -36,6 +36,7 @@ public class TestProblematicEncodings {
         String[] roots = new String[]{":school"};
         String expectedEncoding = "[{'alt_type':'Primary','type':'http://www.epimorphics.com/tools/example#Shool','_about':'http://www.epimorphics.com/tools/example#school'}]";
         Context context = new Context();
+        context.setSorted(true);
         Encoder enc = Encoder.get(context);
         testEncoding(srcTTL, enc, context, roots, expectedEncoding);
     }
@@ -43,11 +44,13 @@ public class TestProblematicEncodings {
     @Test
     public void testNullLists() throws IOException {
     	Context context1 = new Context();
+        context1.setSorted(true);
         testEncoding(":r :p [] .", 
                 Encoder.get(context1), context1,
                 new String[]{":r"}, 
                 "[{'_about':'http://www.epimorphics.com/tools/example#r','p':{}}]" );
         Context context2 = new Context();
+        context2.setSorted(true);
         testEncoding(":r :p () .", 
                 Encoder.get(context2), context2,
                 new String[]{":r"}, 
