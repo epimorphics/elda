@@ -18,6 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Ignore;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -31,11 +32,11 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class TestXMLRendererWithGold extends XMLTestCase {
 	
 	public void testProbe() throws Exception {
-		testGolden( "probe" );
+		// testGolden( "probe" );
 	}
 	
 	public void testMiniEdA() throws Exception {
-		testGolden( "mini-ed-A" );
+		// testGolden( "mini-ed-A" );
 	}
 	
 	public void testMiniEdB() throws Exception {
