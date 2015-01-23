@@ -17,5 +17,5 @@ package com.epimorphics.lda;
  *
  */
 public interface Version {
-	public final String string = "0.3.5A[]";
+	public final String string = "1.3.5[]";
 }
