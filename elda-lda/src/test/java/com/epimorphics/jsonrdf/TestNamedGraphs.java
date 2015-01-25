@@ -91,7 +91,7 @@ public class TestNamedGraphs {
         }
     }
     
-    @Test @Ignore public void testNamedGraphs() throws IOException, JsonException {
+    @Test public void testNamedGraphs() throws IOException, JsonException {
         testNamedGraphs(
                 ":r :p 'foo'.", 
                 new String[]{"http://www.epimoporphics.com/graph1", "http://www.epimoporphics.com/graph2"},

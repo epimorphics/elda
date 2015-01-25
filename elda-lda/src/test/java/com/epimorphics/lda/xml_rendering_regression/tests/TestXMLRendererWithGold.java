@@ -32,11 +32,11 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class TestXMLRendererWithGold extends XMLTestCase {
 	
 	public void testProbe() throws Exception {
-		// testGolden( "probe" );
+		testGolden( "probe" );
 	}
 	
 	public void testMiniEdA() throws Exception {
-		// testGolden( "mini-ed-A" );
+		testGolden( "mini-ed-A" );
 	}
 	
 	public void testMiniEdB() throws Exception {
