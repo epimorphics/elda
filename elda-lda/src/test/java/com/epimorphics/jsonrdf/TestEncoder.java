@@ -354,6 +354,7 @@ public class TestEncoder {
     
     @Test public void testStructuredLiteralWithType() throws IOException {
     	Context context = new Context(ontForLiterals);
+//    	context.setSorted(true);
     	testEncoding( 
     		":r :p 'english'^^xsd:string.", 
             encoderForStructuredLiterals(context), context,
@@ -362,7 +363,8 @@ public class TestEncoder {
                 "[{'_about':'http://www.epimorphics.com/tools/example#r','p': { '_value': 'english', '_datatype': 'string'}}]" );
     }
 
-    private static final Model ontForLiterals = ModelIOUtils.modelFromTurtle( ":p a owl:DatatypeProperty; api:structured true. xsd:string a rdfs:Class." );
+    private static final Model ontForLiterals = ModelIOUtils.modelFromTurtle
+    	( ":p a owl:DatatypeProperty; api:structured true. xsd:string a rdfs:Class." );
 
 	private Encoder encoderForStructuredLiterals(Context context) {
     	return Encoder.get( Encoder.defaultPlugin, context );

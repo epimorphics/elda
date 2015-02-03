@@ -18,6 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLTestCase;
+import org.junit.Ignore;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
