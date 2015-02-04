@@ -19,6 +19,7 @@ import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 
@@ -34,6 +35,13 @@ public class Fixtures
     /* Constants                       */
     /***********************************/
 
+    public static final Model PAGE_BWQ_MODEL;
+    public static final Model PAGE_BWQ_PROPERTIES_MODEL;
+    static {
+        PAGE_BWQ_MODEL = FileManager.get().loadModel( "src/test/resources/renderers/page_bwq_fixture.ttl" );
+        PAGE_BWQ_PROPERTIES_MODEL = FileManager.get().loadModel( "src/test/resources/renderers/page_bwq_with_properties_fixture.ttl" );
+    }
+    
     /** Prefixes - the usual suspects */
     public static final String COMMON_PREFIXES =
             "@prefix os:    <http://a9.com/-/spec/opensearch/1.1/> .\n" +
@@ -1553,19 +1561,19 @@ public class Fixtures
         final Resource root = apiResultsModel.listResourcesWithProperty( RDF.type, API.Page ).next();
 
         context.checking(new Expectations() {{
-            atLeast(1).of (results).getModels();
+            atLeast(0).of (results).getModels();
             will( returnValue( mm ) );
 
-            atLeast(1).of (mm).getMergedModel();
+            atLeast(0).of (mm).getMergedModel();
             will( returnValue( apiResultsModel ));
 
-            atLeast(1).of (mm).getObjectModel();
+            atLeast(0).of (mm).getObjectModel();
             will( returnValue( apiObjectModel));
 
-            atLeast(1).of (mm).getMetaModel();
+            atLeast(0).of (mm).getMetaModel();
             will( returnValue( apiMetadataModel ));
 
-            atLeast(1).of (results).getRoot();
+            atLeast(0).of (results).getRoot();
             will( returnValue( root ) );
         }});
 
