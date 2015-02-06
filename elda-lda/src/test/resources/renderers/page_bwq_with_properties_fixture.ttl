@@ -21,50 +21,9 @@ def-bwq:SampleAssessment
 <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04000/date/20140710/time/114000/recordDate/20140710>
         a                             def-bwq:SampleAssessment , qb:Observation ;
         rdfs:label                    "Low Newton sample assessment for 2014-W28"@en ;
-        def-bwq:abnormalWeatherException
-                false ;
-        def-bwq:bathingWater          bw:ukc2101-04000 ;
-        def-bwq:escherichiaColiCount  18 ;
-        def-bwq:escherichiaColiQualifier
-                def-bwq:actual ;
-        def-bwq:intestinalEnterococciCount
-                10 ;
-        def-bwq:intestinalEnterococciQualifier
-                def-bwq:lessThan ;
-        def-bwq:recordDate            "2014-07-15Z"^^xsd:date ;
-        def-bwq:recordStatus          def-bwq:new ;
-        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;
-        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:40:00> ;
-        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;
-        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;
-        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04000> ;
-        dct:created                   "2014-07-15Z"^^xsd:date ;
-        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000005> ;
-        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .
+        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> ;
+        rdf:seeAlso [rdf:seeAlso <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04000/date/20140710/time/114000/recordDate/20140710>].
 
-<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04200/date/20140710/time/120000/recordDate/20140710>
-        a                             def-bwq:SampleAssessment , qb:Observation ;
-        rdfs:label                    "Warkworth sample assessment for 2014-W28"@en ;
-        def-bwq:abnormalWeatherException
-                false ;
-        def-bwq:bathingWater          bw:ukc2101-04200 ;
-        def-bwq:escherichiaColiCount  136 ;
-        def-bwq:escherichiaColiQualifier
-                def-bwq:actual ;
-        def-bwq:intestinalEnterococciCount
-                10 ;
-        def-bwq:intestinalEnterococciQualifier
-                def-bwq:lessThan ;
-        def-bwq:recordDate            "2014-07-15Z"^^xsd:date ;
-        def-bwq:recordStatus          def-bwq:new ;
-        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/I> ;
-        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T12:00:00> ;
-        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;
-        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;
-        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04200> ;
-        dct:created                   "2014-07-15Z"^^xsd:date ;
-        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000006> ;
-        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .
 
 <http://environment.data.gov.uk/def/bwq-cc-2012/I>
         rdfs:label  "Minimum"@en , "Isafswm"@cy .
@@ -76,30 +35,6 @@ def-bwq:SampleAssessment
         rdfs:label  "British Week:2014-W28"@en .
 
 bw:ukc2106-04400  rdfs:label  "Newbiggin North"@en .
-
-<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03700/date/20140710/time/104000/recordDate/20140710>
-        a                             qb:Observation , def-bwq:SampleAssessment ;
-        rdfs:label                    "Bamburgh Castle sample assessment for 2014-W28"@en ;
-        def-bwq:abnormalWeatherException
-                false ;
-        def-bwq:bathingWater          bw:ukc2102-03700 ;
-        def-bwq:escherichiaColiCount  27 ;
-        def-bwq:escherichiaColiQualifier
-                def-bwq:actual ;
-        def-bwq:intestinalEnterococciCount
-                10 ;
-        def-bwq:intestinalEnterococciQualifier
-                def-bwq:lessThan ;
-        def-bwq:recordDate            "2014-07-15Z"^^xsd:date ;
-        def-bwq:recordStatus          def-bwq:new ;
-        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;
-        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:40:00> ;
-        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;
-        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;
-        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03700> ;
-        dct:created                   "2014-07-15Z"^^xsd:date ;
-        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000002> ;
-        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .
 
 bw:ukc2101-04250  rdfs:label  "Amble Links"@en .
 
@@ -115,55 +50,8 @@ bw:ukc2101-04250  rdfs:label  "Amble Links"@en .
 <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03800>
         rdfs:label  "Sampling point at Seahouses North"@en .
 
-<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03800/date/20140710/time/105800/recordDate/20140710>
-        a                             qb:Observation , def-bwq:SampleAssessment ;
-        rdfs:label                    "Seahouses North sample assessment for 2014-W28"@en ;
-        def-bwq:abnormalWeatherException
-                false ;
-        def-bwq:bathingWater          bw:ukc2102-03800 ;
-        def-bwq:escherichiaColiCount  10 ;
-        def-bwq:escherichiaColiQualifier
-                def-bwq:lessThan ;
-        def-bwq:intestinalEnterococciCount
-                10 ;
-        def-bwq:intestinalEnterococciQualifier
-                def-bwq:lessThan ;
-        def-bwq:recordDate            "2014-07-15Z"^^xsd:date ;
-        def-bwq:recordStatus          def-bwq:new ;
-        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;
-        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:58:00> ;
-        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;
-        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;
-        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03800> ;
-        dct:created                   "2014-07-15Z"^^xsd:date ;
-        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000003> ;
-        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .
 
 bw:ukc2101-04200  rdfs:label  "Warkworth"@en .
-
-<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04300/date/20140710/time/103500/recordDate/20140710>
-        a                             def-bwq:SampleAssessment , qb:Observation ;
-        rdfs:label                    "Druridge Bay South sample assessment for 2014-W28"@en ;
-        def-bwq:abnormalWeatherException
-                false ;
-        def-bwq:bathingWater          bw:ukc2104-04300 ;
-        def-bwq:escherichiaColiCount  10 ;
-        def-bwq:escherichiaColiQualifier
-                def-bwq:lessThan ;
-        def-bwq:intestinalEnterococciCount
-                10 ;
-        def-bwq:intestinalEnterococciQualifier
-                def-bwq:lessThan ;
-        def-bwq:recordDate            "2014-07-15Z"^^xsd:date ;
-        def-bwq:recordStatus          def-bwq:new ;
-        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;
-        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:35:00> ;
-        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;
-        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;
-        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04300> ;
-        dct:created                   "2014-07-15Z"^^xsd:date ;
-        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000009> ;
-        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .
 
 bw:ukc2104-04300  rdfs:label  "Druridge Bay South"@en .
 
@@ -179,31 +67,6 @@ bw:ukc2104-04300  rdfs:label  "Druridge Bay South"@en .
 <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03600>
         rdfs:label  "Sampling point at Spittal"@en .
 
-<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03600/date/20140710/time/100000/recordDate/20140710>
-        a                             def-bwq:SampleAssessment , qb:Observation ;
-        rdfs:label                    "Spittal sample assessment for 2014-W28"@en ;
-        def-bwq:abnormalWeatherException
-                false ;
-        def-bwq:bathingWater          bw:ukc2102-03600 ;
-        def-bwq:escherichiaColiCount  127 ;
-        def-bwq:escherichiaColiQualifier
-                def-bwq:actual ;
-        def-bwq:intestinalEnterococciCount
-                10 ;
-        def-bwq:intestinalEnterococciQualifier
-                def-bwq:lessThan ;
-        def-bwq:recordDate            "2014-07-15Z"^^xsd:date ;
-        def-bwq:recordStatus          def-bwq:new ;
-        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/I> ;
-        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:00:00> ;
-        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;
-        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;
-        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03600> ;
-        dct:created                   "2014-07-15Z"^^xsd:date ;
-        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000001> ;
-        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> ;
-        rdf:seeAlso [rdf:seeAlso <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03600/date/20140710/time/100000/recordDate/20140710> ].
-
 def-bwq:new  rdfs:label  "newydd"@cy , "new"@en .
 
 <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04200>
@@ -211,84 +74,11 @@ def-bwq:new  rdfs:label  "newydd"@cy , "new"@en .
 
 bw:ukc2101-04000  rdfs:label  "Low Newton"@en .
 
-<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04400/date/20140710/time/100000/recordDate/20140710>
-        a                             qb:Observation , def-bwq:SampleAssessment ;
-        rdfs:label                    "Newbiggin North sample assessment for 2014-W28"@en ;
-        def-bwq:abnormalWeatherException
-                false ;
-        def-bwq:bathingWater          bw:ukc2106-04400 ;
-        def-bwq:escherichiaColiCount  55 ;
-        def-bwq:escherichiaColiQualifier
-                def-bwq:actual ;
-        def-bwq:intestinalEnterococciCount
-                91 ;
-        def-bwq:intestinalEnterococciQualifier
-                def-bwq:actual ;
-        def-bwq:recordDate            "2014-07-15Z"^^xsd:date ;
-        def-bwq:recordStatus          def-bwq:new ;
-        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;
-        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:00:00> ;
-        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;
-        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;
-        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04400> ;
-        dct:created                   "2014-07-15Z"^^xsd:date ;
-        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000010> ;
-        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> ;
-        rdf:seeAlso <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04400/date/20140710/time/100000/recordDate/20140710>.
-
 <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04000>
         rdfs:label  "Sampling point at Low Newton"@en .
 
-<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03900/date/20140710/time/111200/recordDate/20140710>
-        a                             def-bwq:SampleAssessment , qb:Observation ;
-        rdfs:label                    "Beadnell sample assessment for 2014-W28"@en ;
-        def-bwq:abnormalWeatherException
-                false ;
-        def-bwq:bathingWater          bw:ukc2102-03900 ;
-        def-bwq:escherichiaColiCount  10 ;
-        def-bwq:escherichiaColiQualifier
-                def-bwq:lessThan ;
-        def-bwq:intestinalEnterococciCount
-                10 ;
-        def-bwq:intestinalEnterococciQualifier
-                def-bwq:lessThan ;
-        def-bwq:recordDate            "2014-07-15Z"^^xsd:date ;
-        def-bwq:recordStatus          def-bwq:new ;
-        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;
-        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:12:00> ;
-        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;
-        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;
-        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03900> ;
-        dct:created                   "2014-07-15Z"^^xsd:date ;
-        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000004> ;
-        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .
-
 <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season>
         rdfs:label  "Bathing Water Quality - In-Season Assessment Dataset (eaew)."@en .
-
-<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04280/date/20140710/time/111000/recordDate/20140710>
-        a                             qb:Observation , def-bwq:SampleAssessment ;
-        rdfs:label                    "Druridge Bay North sample assessment for 2014-W28"@en ;
-        def-bwq:abnormalWeatherException
-                false ;
-        def-bwq:bathingWater          bw:ukc2104-04280 ;
-        def-bwq:escherichiaColiCount  10 ;
-        def-bwq:escherichiaColiQualifier
-                def-bwq:lessThan ;
-        def-bwq:intestinalEnterococciCount
-                10 ;
-        def-bwq:intestinalEnterococciQualifier
-                def-bwq:lessThan ;
-        def-bwq:recordDate            "2014-07-15Z"^^xsd:date ;
-        def-bwq:recordStatus          def-bwq:new ;
-        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;
-        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:10:00> ;
-        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;
-        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;
-        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04280> ;
-        dct:created                   "2014-07-15Z"^^xsd:date ;
-        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000008> ;
-        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .
 
 bw:ukc2102-03900  rdfs:label  "Beadnell"@en .
 
@@ -303,30 +93,6 @@ def-bwq:lessThan  rdfs:label  "llai-na"@cy , "less-than"@en .
 bw:ukc2102-03600  rdfs:label  "Spittal"@en .
 
 bw:ukc2104-04280  rdfs:label  "Druridge Bay North"@en .
-
-<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04250/date/20140710/time/113000/recordDate/20140710>
-        a                             def-bwq:SampleAssessment , qb:Observation ;
-        rdfs:label                    "Amble Links sample assessment for 2014-W28"@en ;
-        def-bwq:abnormalWeatherException
-                false ;
-        def-bwq:bathingWater          bw:ukc2101-04250 ;
-        def-bwq:escherichiaColiCount  55 ;
-        def-bwq:escherichiaColiQualifier
-                def-bwq:actual ;
-        def-bwq:intestinalEnterococciCount
-                10 ;
-        def-bwq:intestinalEnterococciQualifier
-                def-bwq:lessThan ;
-        def-bwq:recordDate            "2014-07-15Z"^^xsd:date ;
-        def-bwq:recordStatus          def-bwq:new ;
-        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;
-        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:30:00> ;
-        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;
-        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;
-        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04250> ;
-        dct:created                   "2014-07-15Z"^^xsd:date ;
-        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000007> ;
-        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .
 
 <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04280>
         rdfs:label  "Sampling point at Druridge Bay North"@en .
@@ -447,7 +213,7 @@ _:b0    a                   <http://www.w3.org/ns/sparql-service-description#Ser
         dct:isPartOf                 <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all> ;
         api:definition               <http://environment.data.gov.uk/meta/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all> ;
         api:extendedMetadataVersion  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all&_page=0> ;
-        api:items                    ( <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03600/date/20140710/time/100000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03700/date/20140710/time/104000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03800/date/20140710/time/105800/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03900/date/20140710/time/111200/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04000/date/20140710/time/114000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04200/date/20140710/time/120000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04250/date/20140710/time/113000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04280/date/20140710/time/111000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04300/date/20140710/time/103500/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04400/date/20140710/time/100000/recordDate/20140710> ) ;
+        api:items                    ( <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04000/date/20140710/time/114000/recordDate/20140710> ) ;
         api:page                     "0"^^xsd:long ;
         api:wasResultOf              [ a                    api:Execution ;
                                        api:processor        [ a              api:Service ;
