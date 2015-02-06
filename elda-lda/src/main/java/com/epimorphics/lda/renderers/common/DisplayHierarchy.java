@@ -120,8 +120,14 @@ public class DisplayHierarchy
                 }
 
                 Set<PropertyPath> matchingPaths = matchingPaths( context, p, paths );
-                node.explicitPaths().addAll( matchingPaths );
-
+                
+                for (PropertyPath mp: matchingPaths) {
+                    PropertyPath mps = mp.shift();
+                    if (!mps.isEmpty()) {
+                        node.explicitPaths().add( mps );
+                    }
+                }
+                
                 if (!node.isLeaf( context )) {
                     context.queue().add( node );
                 }
