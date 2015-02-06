@@ -121,7 +121,7 @@ public class DisplayHierarchyNode
 
     /** @return True if this node is a root of the hierarchy */
     public boolean isRoot() {
-        return parent == null;
+        return pathTo().isEmpty();
     }
 
     /** @return The RDF node that this hierarchy node is presenting */
@@ -159,11 +159,10 @@ public class DisplayHierarchyNode
      */
     public boolean isLeaf( DisplayHierarchyContext context ) {
         return rdfNode().isLiteral() ||
-               isLoop() ||
-               (!isRoot() &&
-                !rdfNode().isAnon() &&
-                !isOnExplicitPath() &&
-                context.isSeen( rdfNode() ));
+               !(isRoot() ||
+                 rdfNode().isAnon() ||
+                 isOnExplicitPath() ||
+                 !context.isSeen( rdfNode() ));
     }
 
     /** @return The list of children of this node. */
@@ -401,6 +400,26 @@ public class DisplayHierarchyNode
     /** @see RDFNodeWrapper#getURI() */
     public String getURI() {
         return rdfNode().getURI();
+    }
+    
+    /** @return A string presentation of this node for debugging */
+    @Override
+    public String toString() {
+        String ep = "[";
+        String s = "";
+        
+        for (PropertyPath p: explicitPaths) {
+            ep = ep + p.toString() + s;
+            s = ",";
+        }
+        ep = ep + "]";
+        
+        return "DisplayHierarchyNode{ node: " + rdfNode + 
+                ", parent:" + (parent == null ? "null" : parent.rdfNode()) +
+                ", pathTo: " + pathTo +
+                ", nSiblings: " + siblings.size() +
+                ", explicitPaths: " + ep +
+                "}";
     }
 
 

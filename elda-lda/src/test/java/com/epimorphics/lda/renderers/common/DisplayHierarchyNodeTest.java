@@ -101,7 +101,7 @@ public class DisplayHierarchyNodeTest
         assertNull( dhn.parent() );
         assertTrue( dhn.isRoot() );
 
-        DisplayHierarchyNode child = new DisplayHierarchyNode( new PropertyPath(), dhn,
+        DisplayHierarchyNode child = new DisplayHierarchyNode( new PropertyPath( "fu" ), dhn,
                                                                new DisplayRdfNode( rm.page(), ResourceFactory.createPlainLiteral( "foo" ) ),
                                                                null );
         assertSame( dhn, child.parent() );
@@ -147,18 +147,15 @@ public class DisplayHierarchyNodeTest
         DisplayHierarchyNode c0 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), ResourceFactory.createPlainLiteral( "foo" ) ), null );
         assertTrue( c0.isLeaf( dhc ));
 
-        // loop is a leaf
-        Resource r0 = ResourceFactory.createResource( "http://example/foo#r0");
-
-        DisplayHierarchyNode c1 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), r0 ), null );
-        DisplayHierarchyNode c2 = new DisplayHierarchyNode( new PropertyPath(), c1, new DisplayRdfNode( rm.page(), r0 ), null );
-        assertFalse( c1.isLeaf( dhc ));
-        assertTrue( c2.isLeaf( dhc ));
-
         // seen is a leaf
+        Resource r0 = ResourceFactory.createResource( "http://example/foo#r0");
         DisplayHierarchyContext dhc1 = contextFixture( true, "dhc1" );
-        DisplayHierarchyNode c3 = new DisplayHierarchyNode( new PropertyPath(), dhn, new DisplayRdfNode( rm.page(), r0 ), null );
+        DisplayHierarchyNode c3 = new DisplayHierarchyNode( new PropertyPath( "fu" ), dhn, new DisplayRdfNode( rm.page(), r0 ), null );
         assertTrue( c3.isLeaf( dhc1 ));
+        
+        // node on explicit path is not a leaf
+        c3.explicitPaths().add( new PropertyPath( "*" ) );
+        assertFalse( c3.isLeaf( dhc1 ));
     }
 
     @Test
