@@ -199,7 +199,7 @@ public class APIEndpointImpl implements APIEndpoint {
         int perPage = query.getPageSize();
     //
         String template = spec.getURITemplate();
-        Set<String> formatNames = spec.getRendererFactoryTable().formatNames();
+        List<String> formatNames = spec.getRendererFactoryTable().formatNames();
         rs.setContentLocation( URIUtils.changeFormatSuffix( r.requestURI, formatNames, format ) );
         rs.setRoot(thisMetaPage);
     //

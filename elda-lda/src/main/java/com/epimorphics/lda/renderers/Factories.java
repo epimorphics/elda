@@ -62,8 +62,10 @@ public class Factories {
 		if (isDefault) theDefault = f;
 	}
 	
-	public Set<String> formatNames() {
-		return nameToFactory.keySet();
+	public List<String> formatNames() {
+		List<String> result = new ArrayList<String>(nameToFactory.keySet());
+		Collections.sort(result);
+		return result;
 	}
 	
 	public Set<FormatNameAndType> getFormatNamesAndTypes() {

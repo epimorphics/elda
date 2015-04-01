@@ -9,6 +9,7 @@ package com.epimorphics.util;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.core.UriBuilder;
@@ -49,7 +50,7 @@ public class URIUtils {
 		return result;
 	}
 
-	private static String replaceSuffix( Set<String> knownFormats, String newSuffix, String oldPath ) {
+	private static String replaceSuffix( List<String> knownFormats, String newSuffix, String oldPath ) {
 		int dot_pos = oldPath.lastIndexOf( '.' ), slash_pos = oldPath.lastIndexOf( '/' );
 		if (dot_pos > -1 && dot_pos > slash_pos) {
 			String oldSuffix = oldPath.substring( dot_pos + 1 );
@@ -63,7 +64,7 @@ public class URIUtils {
 		return newSuffix.equals("") ? oldPath : oldPath + "." + newSuffix;
 	}
 
-	public static URI changeFormatSuffix(URI reqURI, Set<String> knownFormats, String formatName)  {
+	public static URI changeFormatSuffix(URI reqURI, List<String> knownFormats, String formatName)  {
 		String newPath = replaceSuffix( knownFormats, formatName, reqURI.getPath() );
 		URI result = UriBuilder.fromUri( reqURI ).replacePath( newPath ).build();
 		return result;
