@@ -118,7 +118,7 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
     }
     
     public String getSerialisationName() {
-    	if (NsUtils.isMagic( NsUtils.getNameSpace(uri ) )) return NsUtils.getLocalName( uri );
+    	// if (NsUtils.isMagic( NsUtils.getNameSpace(uri ) )) return NsUtils.getLocalName( uri );
     	return name;
     }
     
