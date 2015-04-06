@@ -82,7 +82,7 @@ public class TestXMLRendererWithGold extends XMLTestCase {
 	public void testAusB() throws Exception {
 		testGolden( "aus-B" );
 	}
-	
+//	
 	public void testGolden( String goldName ) throws Exception {
 		GoldXMLTestHelp b = GoldXMLTestHelp.load( goldName );
 	//	

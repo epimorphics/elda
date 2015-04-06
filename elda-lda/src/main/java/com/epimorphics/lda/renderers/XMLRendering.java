@@ -17,6 +17,7 @@ import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -94,6 +95,8 @@ public class XMLRendering {
 	private final Document d;
 	private final Context context;
 	private final Map<String, String> nameMap;
+	
+	private static final boolean labelOfPrunesHeavily = true;
 	
 	public XMLRendering( Model m, Context context, Map<String, String> nameMap, Document d ) {
 		this.d = d;
@@ -302,11 +305,36 @@ public class XMLRendering {
 	} ;
 	
 	private List<RDFNode> sortObjects( Property predicate, Set<RDFNode> objects ) {
+		
 		List<Couple<RDFNode, String>> labelleds = new ArrayList<Couple<RDFNode, String>>();
 		for (RDFNode r: objects) labelleds.add( new Couple<RDFNode, String>( r, labelOf( r ) ) ); 
-		Collections.sort( labelleds, compareCouples );				
+
+		if (predicate.getLocalName().equals("hasFormat")) {
+			System.err.println(">> presorted objects of hasFormat:");
+			for (Couple<RDFNode, String> c: labelleds) {
+				System.err.println(">>  couple: " + c);
+			}
+		}
+		
+		Collections.sort( labelleds, compareCouples );	
+		
+		if (predicate.getLocalName().equals("hasFormat")) {
+			System.err.println(">> post-sorted objects of hasFormat:");
+			for (Couple<RDFNode, String> c: labelleds) {
+				System.err.println(">>  couple: " + c);
+			}
+		}	
+		
 		List<RDFNode> result = new ArrayList<RDFNode>();
 		for (Couple<RDFNode, String> labelled: labelleds) result.add( labelled.a );
+		
+		if (predicate.getLocalName().equals("hasFormat")) {
+			System.err.println(">> sorted objects of hasFormat:");
+			for (RDFNode o: result) {
+				System.err.println(">>   " + o);
+			}
+		}
+		
 		return result;
 	}
 
@@ -325,6 +353,15 @@ public class XMLRendering {
 			if (labelling != null) {
 				RDFNode label = labelling.getObject();
 				if (label.isLiteral()) return label.asLiteral().getLexicalForm();
+			}
+		}
+	//
+		if (labelOfPrunesHeavily && r.isURIResource()) {
+			String fullURI = ((Resource) r).getURI();
+			int q = fullURI.indexOf('?');
+			if (q > -1) {
+				String strippedURI = fullURI.substring(0, q);
+				return strippedURI.substring(Util.splitNamespace( strippedURI ));
 			}
 		}
 		return spelling( r );
