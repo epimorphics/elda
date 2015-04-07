@@ -309,31 +309,31 @@ public class XMLRendering {
 		List<Couple<RDFNode, String>> labelleds = new ArrayList<Couple<RDFNode, String>>();
 		for (RDFNode r: objects) labelleds.add( new Couple<RDFNode, String>( r, labelOf( r ) ) ); 
 
-		if (predicate.getLocalName().equals("hasFormat")) {
-			System.err.println(">> presorted objects of hasFormat:");
-			for (Couple<RDFNode, String> c: labelleds) {
-				System.err.println(">>  couple: " + c);
-			}
-		}
+//		if (predicate.getLocalName().equals("hasFormat")) {
+//			System.err.println(">> presorted objects of hasFormat:");
+//			for (Couple<RDFNode, String> c: labelleds) {
+//				System.err.println(">>  couple: " + c);
+//			}
+//		}
 		
 		Collections.sort( labelleds, compareCouples );	
 		
-		if (predicate.getLocalName().equals("hasFormat")) {
-			System.err.println(">> post-sorted objects of hasFormat:");
-			for (Couple<RDFNode, String> c: labelleds) {
-				System.err.println(">>  couple: " + c);
-			}
-		}	
+//		if (predicate.getLocalName().equals("hasFormat")) {
+//			System.err.println(">> post-sorted objects of hasFormat:");
+//			for (Couple<RDFNode, String> c: labelleds) {
+//				System.err.println(">>  couple: " + c);
+//			}
+//		}	
 		
 		List<RDFNode> result = new ArrayList<RDFNode>();
 		for (Couple<RDFNode, String> labelled: labelleds) result.add( labelled.a );
 		
-		if (predicate.getLocalName().equals("hasFormat")) {
-			System.err.println(">> sorted objects of hasFormat:");
-			for (RDFNode o: result) {
-				System.err.println(">>   " + o);
-			}
-		}
+//		if (predicate.getLocalName().equals("hasFormat")) {
+//			System.err.println(">> sorted objects of hasFormat:");
+//			for (RDFNode o: result) {
+//				System.err.println(">>   " + o);
+//			}
+//		}
 		
 		return result;
 	}

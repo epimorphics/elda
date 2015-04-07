@@ -23,7 +23,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 */
 public class GoldXMLTestHelp {
 	
-	private static final String goldRoot = "src/test/resources/xml_gold/";
+	protected static final String goldRoot = "src/test/resources/xml_gold/";
 	
 	final Model objectModel;
 	final Model metaModel;

@@ -70,6 +70,8 @@ public class XMLRenderer implements Renderer {
 		return DOMUtils.renderNodeToBytesOut( t, d, rc, results.getModelPrefixes(), transformFilePath );
 	}
 
+	public static boolean writingGold = false;
+	
 	public void renderInto( Resource root, MergedModels mm, Document d, Map<String, String> termBindings ) {
 		XMLRendering r = new XMLRendering( mm.getMergedModel(), sns.asContext(), termBindings, d );
 		Element result = d.createElement( "result" );
@@ -80,7 +82,7 @@ public class XMLRenderer implements Renderer {
 	//
 		try {	
 			// save the xml for later analysis or use in gold tests.
-			if (false) {		
+			if (writingGold) {		
 				new File("/tmp/gold" ).mkdirs();
 				System.err.println( ">> saving rendering to /tmp/gold/*" );
 				

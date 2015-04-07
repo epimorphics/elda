@@ -28,6 +28,8 @@ import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.util.DOMUtils;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.util.FileManager;
+import com.hp.hpl.jena.util.FileUtils;
 
 public class TestXMLRendererWithGold extends XMLTestCase {
 	
@@ -83,6 +85,8 @@ public class TestXMLRendererWithGold extends XMLTestCase {
 		testGolden( "aus-B" );
 	}
 //	
+	static boolean writingGold = false;
+	
 	public void testGolden( String goldName ) throws Exception {
 		GoldXMLTestHelp b = GoldXMLTestHelp.load( goldName );
 	//	
@@ -99,15 +103,28 @@ public class TestXMLRendererWithGold extends XMLTestCase {
 			;
 		
 		r.renderInto( root, mm, d, termBindings );
+		
+		if (writingGold) {
+			copyFromTo
+				("/tmp/gold/xml-rendering.xml"
+				, GoldXMLTestHelp.goldRoot + goldName + "/xml-rendering.xml" );
+		}
 	//
 		Document expected = parse( b.expected_xml );
 		Diff myDiff = new Diff( expected, d );
 
-		writeDocument( "rendered.xml", d);
-		
-		writeDocument( "expected.xml", expected );
+//		writeDocument( "rendered.xml", d);
+//		
+//		writeDocument( "expected.xml", expected );
 		
 		assertTrue( myDiff.toString(), myDiff.similar() );		
+	}
+
+	private void copyFromTo(String from, String to) throws FileNotFoundException {
+		String source = FileManager.get().readWholeFileAsUTF8(from);
+		PrintWriter pw = new PrintWriter(to);
+		pw.print(source);
+		pw.close();
 	}
 
 	public void writeDocument(String name, Document d) throws Exception {
