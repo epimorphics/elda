@@ -18,6 +18,7 @@ import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.impl.Util;
+import com.hp.hpl.jena.shared.BrokenException;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -356,15 +357,25 @@ public class XMLRendering {
 			}
 		}
 	//
-		if (labelOfPrunesHeavily && r.isURIResource()) {
-			String fullURI = ((Resource) r).getURI();
-			int q = fullURI.indexOf('?');
-			if (q > -1) {
-				String strippedURI = fullURI.substring(0, q);
-				return strippedURI.substring(Util.splitNamespace( strippedURI ));
-			}
+//		if (labelOfPrunesHeavily && r.isURIResource()) {
+//			String fullURI = ((Resource) r).getURI();
+//			int q = fullURI.indexOf('?');
+//			if (q > -1) {
+//				String strippedURI = fullURI.substring(0, q);
+//				return strippedURI.substring(Util.splitNamespace( strippedURI ));
+//			}
+//		}
+		if (r.isURIResource()) {
+			Resource r1 = (Resource) r;
+			String shorter = nameMap.get( r1.getURI() );
+			return shorter == null ? r1.getURI() : shorter;
 		}
-		return spelling( r );
+		if (r.isLiteral()) {
+			return ((Literal) r).getLexicalForm();
+		}
+//		String id = ((Resource) r).getId().toString();
+//		return id;
+		throw new BrokenException("node " + r + " neither blank, literal, or URI.");
 	}
 
 	protected String spelling( RDFNode n ) {
