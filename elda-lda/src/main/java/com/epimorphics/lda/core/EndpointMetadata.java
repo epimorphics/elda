@@ -200,7 +200,7 @@ public class EndpointMetadata {
 		return m.createResource( b.toString() );
     }
     
-	private Resource resourceForFormat( URI reqURI, Model m, Set<String> knownFormats, String formatName ) {
+	private Resource resourceForFormat( URI reqURI, Model m, List<String> knownFormats, String formatName ) {
 		if (isParameterBasedFormat) {
 			URI u = URIUtils.replaceQueryParam(reqURI, QueryParameter._FORMAT, formatName);
 			return m.createResource( u.toString() );
@@ -215,7 +215,7 @@ public class EndpointMetadata {
 	    this page could be presented in.
 	*/
 	public void addFormats( Model meta, Set<FormatNameAndType> formats ) {
-		Set<String> formatNames = getFormatNames( formats );
+		List<String> formatNames = getFormatNames( formats );
 		Resource page = thisPage.inModel(meta);
 		for (FormatNameAndType format: formats) {
 			Resource v = resourceForFormat( thisPageAsURI, meta, formatNames, format.name );
@@ -227,9 +227,10 @@ public class EndpointMetadata {
 		}
 	}
 
-	private Set<String> getFormatNames(Set<FormatNameAndType> formats) {
-		Set<String> result = new HashSet<String>();
+	private List<String> getFormatNames(Set<FormatNameAndType> formats) {
+		List<String> result = new ArrayList<String>();
 		for (FormatNameAndType nt: formats) result.add( nt.name );
+		Collections.sort(result);
 		return result;
 	}
 

@@ -39,7 +39,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.*;
-import java.util.Iterator;
+import java.util.*;
 
 import org.apache.jena.atlas.json.JsonException;
 import org.junit.Ignore;
@@ -74,13 +74,19 @@ public class TestNamedGraphs {
         StringReader reader = new StringReader( encoding );
         Dataset result = Decoder.decodeGraphs(context, reader);
         assertTrue("Check default model", result.getDefaultModel().isIsomorphicWith(defM));
-        int i = 0;
+        
+        List<String> fetchedNameList = listFromIterator(result.listNames());
+        Set<String> fetchedNames = new HashSet<String>(fetchedNameList);
+        assertEquals("should be as many names fetched as were given", names.length, fetchedNameList.size());
+        Set<String> givenNames = setFromArray(names);
+        assertEquals("there should be the same names fetched as were given", givenNames, fetchedNames);        
+        
         for (Iterator<String> ni = result.listNames(); ni.hasNext(); ) {
             String name = ni.next();
-            String expectedName = names[i++];
-            assertEquals(expectedName, name);
+            
             Model model = result.getNamedModel(name);
-            Model expectedModel = source.getNamedModel(expectedName);
+            Model expectedModel = source.getNamedModel(name);
+            
 //            boolean match = model.isIsomorphicWith(expectedModel);
             boolean match = ModelCompareUtils.compareAndDisplayDifferences( expectedModel, model );
 //            if (!match) {
@@ -91,7 +97,19 @@ public class TestNamedGraphs {
         }
     }
     
-    @Test public void testNamedGraphs() throws IOException, JsonException {
+    private List<String> listFromIterator(Iterator<String> names) {
+    	List<String> strings = new ArrayList<String>();
+    	while (names.hasNext()) strings.add(names.next());
+    	return strings;
+	}
+
+	private Set<String> setFromArray(String[] names) {
+    	Set<String> strings = new HashSet<String>();
+    	for (String name: names) strings.add(name);
+    	return strings;
+	}
+
+	@Test public void testNamedGraphs() throws IOException, JsonException {
         testNamedGraphs(
                 ":r :p 'foo'.", 
                 new String[]{"http://www.epimoporphics.com/graph1", "http://www.epimoporphics.com/graph2"},

@@ -159,8 +159,6 @@ public class TestEncoder {
         return testEncoding(srcTTL, Encoder.get(fromOntology), fromOntology, roots, expectedEncoding);
     }
     
-    
-    
     public static String testEncoding(String srcTTL, Encoder enc, Context context, String[] roots, String expectedEncoding) throws  IOException {
         return testEncoding(srcTTL, enc, context, srcTTL, roots, expectedEncoding);
     }

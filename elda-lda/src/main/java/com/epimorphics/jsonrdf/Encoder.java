@@ -533,7 +533,13 @@ public class Encoder {
 		}
 
 		private List<Property> getSortedProperties(OneToManyMap<Property, RDFNode> vals) {
+						
 			List<Property> props = new ArrayList<Property>(vals.keySet());
+			
+			sortPropertiesByURI(props);
+			for (Property p: props) context.findProperty(p);
+			
+		//
             if (context.isSortProperties()) {
                 Collections.sort(props, new Comparator<Property>() {
                     @Override
@@ -543,6 +549,14 @@ public class Encoder {
                 });
             }
 			return props;
+		}
+		
+		protected void sortPropertiesByURI(List<Property> properties) {
+			Collections.sort( properties, new Comparator<Property>() {
+	            @Override public int compare(Property a, Property b) {
+	            	return a.getURI().compareTo(b.getURI());
+	            }
+	        } );
 		}
 		
         private void writePropertyValues( OneToManyMap<Property, RDFNode> vals, Property p, ContextPropertyInfo prop ) {                
