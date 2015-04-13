@@ -125,13 +125,13 @@ public class XMLRenderer implements Renderer {
 		os.close();
 	}
 
-	private void writeBoolean( boolean suppressIPTO, String fileName ) throws IOException {
-		OutputStream os = new FileOutputStream( new File( fileName ) );
-		PrintStream ps = new PrintStream( os );
-		ps.println( suppressIPTO ? "true" : "false" );
-		ps.flush();
-		os.close();
-	}
+//	private void writeBoolean( boolean suppressIPTO, String fileName ) throws IOException {
+//		OutputStream os = new FileOutputStream( new File( fileName ) );
+//		PrintStream ps = new PrintStream( os );
+//		ps.println( suppressIPTO ? "true" : "false" );
+//		ps.flush();
+//		os.close();
+//	}
 
 	private void writeResource(Resource root, String fileName) throws IOException {
 		OutputStream os = new FileOutputStream( new File( fileName ) );
