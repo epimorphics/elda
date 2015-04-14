@@ -20,6 +20,7 @@
         </param-value>
   </context-param>
 
+<!--
     <filter>
         <filter-name>Jersey Web Application</filter-name>
         <filter-class>com.sun.jersey.spi.container.servlet.ServletContainer</filter-class>
@@ -40,7 +41,7 @@
          </init-param>
   </filter>
 
-<!--
+-->
   <servlet>
     <servlet-name>jersey</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -52,21 +53,20 @@
 
     <load-on-startup>1</load-on-startup>
   </servlet>
--->
 
   <!-- ==================================================================== -->
 
+<!--
   <filter-mapping>
     <filter-name>Jersey Web Application</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+-->
 
-<!--
   <servlet-mapping>
     <servlet-name>jersey</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
--->
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
