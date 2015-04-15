@@ -76,7 +76,7 @@
    
   <error-page>
     <error-code>404</error-code>
-    <location>/_errors/404.html</location>
+	<location>/_errors_pages/velocity/404.html</location>
   </error-page>
 
   <!-- ==================================================================== -->
