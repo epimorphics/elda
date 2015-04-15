@@ -71,12 +71,12 @@
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>/lda-assets/*</url-pattern>
-    <url-pattern>/assets/*</url-pattern>
+    <url-pattern>/_error_pages/*</url-pattern>
   </servlet-mapping>
    
   <error-page>
     <error-code>404</error-code>
-	<location>/_errors_pages/velocity/404.html</location>
+	<location>/_error_pages/velocity/404.html</location>
   </error-page>
 
   <!-- ==================================================================== -->
