@@ -1,0 +1,4 @@
+@prefix : <http://www.epimorphics.com/tools/example#> .
+
+:yes :p 1 .
+:no :p 2 .

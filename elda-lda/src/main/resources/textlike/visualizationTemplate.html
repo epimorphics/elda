@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <title>SDX Visualization</title>
+  
+  <link type="text/css" href="/sdx-ui/styles/themes/ui-lightness/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+  <link type="text/css" href="/sdx-ui/styles/sdxui.css" rel="stylesheet" />
+  <script type="text/javascript" src="/sdx-ui/lib/jquery-1.3.2.min.js"></script>
+  <script type="text/javascript" src="/sdx-ui/lib/jquery-ui-1.7.2.custom.min.js"></script>
+  <script type="text/javascript" src="/sdx-ui/lib/jquery.form.js"></script>
+  <script type="text/javascript" src="/sdx-ui/lib/shotenjin.js"></script>
+  <script src="http://maps.google.com/maps?file=api&v=2&sensor=false&key=ABQIAAAANuNa1vpaq-Fl1rf2HPcy7RT2yXp_ZAY8_ufC3CFXhHIE1NvwkxTfTOjT114c5IljlFXRMXnXqC6dlQ" type="text/javascript"></script>
+  <script type="text/javascript" src="/sdx-ui/scripts/sdxui-vis.js"></script>
+  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+  
+  <script type="text/javascript">
+      google.load('visualization', '1', {'packages':['columnchart', 'scatterchart']});
+      google.setOnLoadCallback(function() { SDX.googleReady = true; }); 
+  </script>
+  
+  <script type="text/javascript">
+      var SDX = { showError: alert };
+      SDX.widget = SDXWidget.create( 
+           ${src}
+      );
+      SDX.widget.uri = "/sdx-ui/${uri}";
+      SDX.widget.error = alert;
+
+      // Start on page load
+      $(function(){
+          SDX.widget.run( $('#canvas') ); 
+      });
+            
+  </script>
+  
+</head>
+<body>
+
+   <h1 class="ui-widget-header">Visualzation ${name}</h1>
+   <div id="canvas" class="ui-widget-content">
+   </div>
+  
+</body>
+</html>

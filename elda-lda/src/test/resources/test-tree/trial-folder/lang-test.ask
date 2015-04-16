@@ -1,0 +1,9 @@
+URI=/alpha?p=42&_lang=en,cy
+ASK
+    { :beta a :C. }
+    
+ASK NOT
+    { :alpha a :C. }
+
+ASK NOT
+    { :gamma a :C. }

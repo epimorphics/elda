@@ -1,0 +1,276 @@
+<http://localhost:8080/elda/API/hello/games.html?_metadata=all>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "html" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "text/html"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/hello/games.xml?_metadata=all> .
+
+<http://www.epimorphics.com/vocabularies/lda#Elda_1.2.21-SNAPSHOT>
+      a       <http://usefulinc.com/ns/doap#Version> ;
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "Elda 1.2.21-SNAPSHOT [20Feb/dayEnd]" ;
+      <http://usefulinc.com/ns/doap#releaseOf>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "Elda" ;
+                <http://usefulinc.com/ns/doap#bug-database>
+                        <http://code.google.com/p/elda/issues/list> ;
+                <http://usefulinc.com/ns/doap#homepage>
+                        <http://elda.googlecode.com> ;
+                <http://usefulinc.com/ns/doap#implements>
+                        "http://code.google.com/p/linked-data-api/wiki/Specification" ;
+                <http://usefulinc.com/ns/doap#programming-language>
+                        "Java" ;
+                <http://usefulinc.com/ns/doap#repository>
+                        <https://elda.googlecode.com/hg/> ;
+                <http://usefulinc.com/ns/doap#wiki>
+                        <http://code.google.com/p/elda/w/list>
+              ] ;
+      <http://usefulinc.com/ns/doap#revision>
+              "1.2.21-SNAPSHOT" .
+
+<http://localhost:8080/elda/API/hello/games.rdf?_metadata=all>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "rdf" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/hello/games.xml?_metadata=all> .
+
+<http://localhost:8080/elda/API/hello/games.ttl?_metadata=all>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "ttl" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "text/turtle"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/hello/games.xml?_metadata=all> .
+
+<https://elda.googlecode.com/hg/>
+      a       <http://usefulinc.com/ns/doap#Repository> ;
+      <http://usefulinc.com/ns/doap#browse>
+              <http://code.google.com/p/elda/source/browse/> ;
+      <http://usefulinc.com/ns/doap#location>
+              <https://elda.googlecode.com> .
+
+<http://localhost:8080/elda/API/hello/games.text?_metadata=all>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "text" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "text/plain"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/hello/games.xml?_metadata=all> .
+
+<http://localhost:8080/elda/API/hello/games.xml?_metadata=all>
+      a       <http://purl.org/linked-data/api/vocab#Page> , <http://purl.org/linked-data/api/vocab#ListEndpoint> ;
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "xml" ;
+      <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>
+              "10"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      <http://a9.com/-/spec/opensearch/1.1/startIndex>
+              "1"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "application/xml"
+              ] ;
+      <http://purl.org/dc/terms/hasFormat>
+              <http://localhost:8080/elda/API/hello/games.html?_metadata=all> , <http://localhost:8080/elda/API/hello/games.rdf?_metadata=all> , <http://localhost:8080/elda/API/hello/games.text?_metadata=all> , <http://localhost:8080/elda/API/hello/games.ttl?_metadata=all> , <http://localhost:8080/elda/API/hello/games.xml?_metadata=all> , <http://localhost:8080/elda/API/hello/games.json?_metadata=all> ;
+      <http://purl.org/dc/terms/hasPart>
+              <http://localhost:8080/elda/API/hello/games.xml?_metadata=all> ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/hello/games.xml?_metadata=all> ;
+      <http://purl.org/dc/terms/isPartOf>
+              <http://localhost:8080/elda/API/hello/games.xml?_metadata=all> ;
+      <http://purl.org/linked-data/api/vocab#definition>
+              <http://localhost:8080/elda/API/hello/meta/games.xml?_metadata=all> ;
+      <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>
+              <http://localhost:8080/elda/API/hello/games.xml?_metadata=all> ;
+      <http://purl.org/linked-data/api/vocab#items>
+              (<http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> <http://www.treefroggames.com/age-of-industry> <http://www.treefroggames.com/age-of-steam> <http://www.ragnarbrothers.co.uk/html/canal_mania.html> <http://www.hans-im-glueck.de/el-grande> <http://queen-games.de/games.aspx?ProductId=45> <http://www.treefroggames.com/london> <http://www.riograndegames.com/games.html?id=4> <http://www.riograndegames.com/games.html?id=181> <http://www.daysofwonder.com/tickettoride>) ;
+      <http://purl.org/linked-data/api/vocab#page>
+              "0"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      <http://purl.org/linked-data/api/vocab#wasResultOf>
+              [ a       <http://purl.org/linked-data/api/vocab#Execution> ;
+                <http://purl.org/linked-data/api/vocab#processor>
+                        [ a       <http://purl.org/linked-data/api/vocab#Service> ;
+                          <http://purl.org/net/opmv/types/common#software>
+                                  <http://www.epimorphics.com/vocabularies/lda#Elda_1.2.21-SNAPSHOT>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#selectionResult>
+                        [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;
+                          <http://purl.org/net/opmv/types/sparql#endpoint>
+                                  _:b1 ;
+                          <http://purl.org/net/opmv/types/sparql#query>
+                                  [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                            """PREFIX hello: <http://localhost:8080/elda/vocabulary/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?item
+WHERE {
+?item rdf:type hello:BoardGame .
+OPTIONAL { ?item rdfs:label ?___0 . }
+}  ORDER BY  ?___0  ?item OFFSET 0 LIMIT 10"""
+                                  ]
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "isPartOf" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/dc/terms/isPartOf>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "hasPart" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/dc/terms/hasPart>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "startIndex" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://a9.com/-/spec/opensearch/1.1/startIndex>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "BoardGame" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://localhost:8080/elda/vocabulary/BoardGame>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "players" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://localhost:8080/elda/vocabulary/players>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "next" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/1999/xhtml/vocab#next>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "rdf_rest" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "rdf_first" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#first>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "extendedMetadataVersion" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "items" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/linked-data/api/vocab#items>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "page" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/linked-data/api/vocab#page>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "itemsPerPage" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "definition" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/linked-data/api/vocab#definition>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "rdfs_seeAlso" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/2000/01/rdf-schema#seeAlso>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "label" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/2000/01/rdf-schema#label>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "type" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "first" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/1999/xhtml/vocab#first>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#variableBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "_suffix" ;
+                          <http://purl.org/linked-data/api/vocab#value>
+                                  "xml"
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#variableBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "_metadata" ;
+                          <http://purl.org/linked-data/api/vocab#value>
+                                  "all"
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#viewingResult>
+                        [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;
+                          <http://purl.org/net/opmv/types/sparql#endpoint>
+                                  _:b1 ;
+                          <http://purl.org/net/opmv/types/sparql#query>
+                                  [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                            """PREFIX hig: <http://www.hans-im-glueck.de/>
+DESCRIBE
+  <http://www.ragnarbrothers.co.uk/html/canal_mania.html>
+  <http://queen-games.de/games.aspx?ProductId=45>
+  <http://www.treefroggames.com/age-of-industry>
+  <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html>
+  <http://www.daysofwonder.com/tickettoride>
+  <http://www.treefroggames.com/age-of-steam>
+  <http://www.riograndegames.com/games.html?id=4>
+  <http://www.riograndegames.com/games.html?id=181>
+  <http://www.treefroggames.com/london>
+  hig:el-grande"""
+                                  ]
+                        ]
+              ] ;
+      <http://www.w3.org/1999/xhtml/vocab#first>
+              <http://localhost:8080/elda/API/hello/games.xml?_metadata=all&_page=0> ;
+      <http://www.w3.org/1999/xhtml/vocab#next>
+              <http://localhost:8080/elda/API/hello/games.xml?_metadata=all&_page=1> .
+
+_:b1  a       <http://www.w3.org/ns/sparql-service-description#Service> ;
+      <http://purl.org/linked-data/api/vocab#sparqlEndpoint>
+              <local:data/example-data.ttl> ;
+      <http://www.w3.org/ns/sparql-service-description#url>
+              <local:data/example-data.ttl> .
+
+<http://localhost:8080/elda/API/hello/games.json?_metadata=all>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "json" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "application/json"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/hello/games.xml?_metadata=all> .

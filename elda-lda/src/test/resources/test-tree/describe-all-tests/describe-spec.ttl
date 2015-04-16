@@ -1,0 +1,17 @@
+@prefix extras: <http://www.epimorphics.com/vocabularies/lda#>.
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+
+:root a api:API
+    ; api:sparqlEndpoint <local:CURRENT-TEST>
+    ; api:endpoint :endpoint
+    .
+    
+:endpoint a api:ListEndpoint
+    ; api:uriTemplate 'endpointlike'
+    ; api:viewer [api:name 'skossy'; extras:describeAllLabel skos:prefLabel]
+    .
+
+:p api:label 'p'
+    ; a owl:DatatypeProperty
+    .
+    

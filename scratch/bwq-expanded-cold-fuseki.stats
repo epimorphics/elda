@@ -1,0 +1,26 @@
+TIMING: select time: 0.659s
+TIMING: view time:   0.745s
+TIMING: build query: 0.01s
+TIMING: run query:   1.41s
+TIMING: view query:  0.032
+TIMING: compile stylesheet xslt/location.xsl 0.305s
+TIMING: render to DOM: 0.032s
+TIMING: DOM to string: 1.214s
+
+TIMING: build query: 0.003s
+TIMING: run query:   0.004s
+TIMING: view query:  0.027
+TIMING: render to DOM: 0.029s
+TIMING: DOM to string: 0.468s
+
+TIMING: build query: 0.002s
+TIMING: run query:   0.004s
+TIMING: view query:  0.025
+TIMING: render to DOM: 0.026s
+TIMING: DOM to string: 0.332s
+
+TIMING: build query: 0.002s
+TIMING: run query:   0.001s
+TIMING: view query:  0.013
+TIMING: render to DOM: 0.02s
+TIMING: DOM to string: 0.227s

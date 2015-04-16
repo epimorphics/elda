@@ -1,0 +1,72 @@
+:root a api:API 
+    ; api:sparqlEndpoint <local:CURRENT-TEST>
+    ; api:endpoint :ep
+    .
+    
+:included a api:Viewer
+    ; api:name "included"
+    ; api:property :p
+    .
+    
+:excluded a api:Viewer
+    ; api:name "excluded"
+    ; api:property :q
+    .
+    
+:empty a api:Viewer
+    ; api:name "empty"
+    .
+
+:ep a api:ListEndpoint
+    ; api:uriTemplate '/alpha'
+    ; api:viewer :included, :empty
+    ; api:defaultViewer :included
+    .
+    
+rdf:type a rdf:Property
+    ; api:label 'type'
+    .
+
+:p api:label 'p'
+	; a owl:DatatypeProperty
+    ; rdfs:range xsd:integer
+    .
+    
+:eastish a owl:DatatypeProperty
+    ; api:label 'eastish'
+    ; rdfs:range xsd:integer
+    .
+    
+:northish a owl:DatatypeProperty
+    ; api:label 'northish'
+    ; rdfs:range xsd:integer
+    .
+    
+:absent a owl:DatatypeProperty
+    ; api:label "absent"
+    ; rdfs:range xsd:integer
+    .
+    
+:p a owl:ObjectProperty
+    ; api:label "p"
+    ; rdfs:range :P
+    .
+    
+:q a owl:ObjectProperty
+    ; api:label "q"
+    ; rdfs:domain :P
+    ; rdfs:range :Q
+    .
+  
+ :unq a owl:ObjectProperty
+    ; api:label "unq"
+    ; rdfs:domain :P
+    ; rdfs:range :UNQ
+    .
+    
+:r a owl:ObjectProperty
+    ; api:label "r"
+    ; rdfs:domain :Q
+    ; rdfs:range :R
+    .
+    

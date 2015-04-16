@@ -1,0 +1,131 @@
+# fake data
+
+@prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:       <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:        <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct:        <http://purl.org/dc/terms/> .
+@prefix lda:        <http://purl.org/linked-data/api/vocab#> .
+@prefix xhv:        <http://www.w3.org/1999/xhtml/vocab#> .
+@prefix openSearch: <http://a9.com/-/spec/opensearch/1.1/> .
+@prefix ex:         <http://www.epimorphics.com/examples/eg1#> .
+@prefix school-ont: <http://education.data.gov.uk/def/school/> .
+@prefix la:      <http://admin.data.gov.uk/def/localAythority#> .
+
+ex:school_1 rdf:type school-ont:School; ex:name "Name1"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_2 rdf:type school-ont:School; ex:name "Name2"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_3 rdf:type school-ont:School; ex:name "Name3"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_4 rdf:type school-ont:School; ex:name "Name4"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_5 rdf:type school-ont:School; ex:name "Name5"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_6 rdf:type school-ont:School; ex:name "Name6"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_7 rdf:type school-ont:School; ex:name "Name7"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_8 rdf:type school-ont:School; ex:name "Name8"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_9 rdf:type school-ont:School; ex:name "Name9"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_10 rdf:type school-ont:School; ex:name "Name10"; ex:type ex:Primary; ex:size 100; school-ont:localAuthority la:456 . 
+ex:school_11 rdf:type school-ont:School; ex:name "Name11"; ex:type ex:Primary; ex:size 100; school-ont:localAuthority la:456 . 
+ex:school_12 rdf:type school-ont:School; ex:name "Name12"; ex:type ex:Primary; ex:size 100; school-ont:localAuthority la:456 . 
+ex:school_13 rdf:type school-ont:School; ex:name "Name13"; ex:type ex:Primary; ex:size 100; school-ont:localAuthority la:456 . 
+ex:school_14 rdf:type school-ont:School; ex:name "Name14"; ex:type ex:Primary; ex:size 100; school-ont:localAuthority la:456 . 
+ex:school_15 rdf:type school-ont:School; ex:name "Name15"; ex:type ex:Primary; ex:size 100; school-ont:localAuthority la:456 . 
+ex:school_16 rdf:type school-ont:School; ex:name "Name16"; ex:type ex:Primary; ex:size 100; school-ont:localAuthority la:456 . 
+ex:school_17 rdf:type school-ont:School; ex:name "Name17"; ex:type ex:Primary; ex:size 200; school-ont:localAuthority la:456 . 
+ex:school_18 rdf:type school-ont:School; ex:name "Name18"; ex:type ex:Primary; ex:size 200; school-ont:localAuthority la:456 . 
+ex:school_19 rdf:type school-ont:School; ex:name "Name19"; ex:type ex:Primary; ex:size 200; school-ont:localAuthority la:456 . 
+ex:school_20 rdf:type school-ont:School; ex:name "Name20"; ex:type ex:Primary; ex:size 200; school-ont:localAuthority la:456 . 
+ex:school_21 rdf:type school-ont:School; ex:name "Name21"; ex:type ex:Primary; ex:size 200; school-ont:localAuthority la:789 . 
+ex:school_22 rdf:type school-ont:School; ex:name "Name22"; ex:type ex:Primary; ex:size 200; school-ont:localAuthority la:789 . 
+ex:school_23 rdf:type school-ont:School; ex:name "Name23"; ex:type ex:Primary; ex:size 200; school-ont:localAuthority la:789 . 
+ex:school_24 rdf:type school-ont:School; ex:name "Name24"; ex:type ex:Primary; ex:size 200; school-ont:localAuthority la:789 . 
+ex:school_25 rdf:type school-ont:School; ex:name "Name25"; ex:type ex:Primary; ex:size 200; school-ont:localAuthority la:789 . 
+ex:school_26 rdf:type school-ont:School; ex:name "Name26"; ex:type ex:Primary; ex:size 200; school-ont:localAuthority la:789 . 
+ex:school_27 rdf:type school-ont:School; ex:name "Name27"; ex:type ex:Primary; ex:size 200; school-ont:localAuthority la:789 . 
+ex:school_28 rdf:type school-ont:School; ex:name "Name28"; ex:type ex:Primary; ex:size 100; school-ont:localAuthority la:789 . 
+ex:school_29 rdf:type school-ont:School; ex:name "Name29"; ex:type ex:Primary; ex:size 100; school-ont:localAuthority la:789 . 
+ex:school_30 rdf:type school-ont:School; ex:name "Name30"; ex:type ex:Primary; ex:size 100; school-ont:localAuthority la:789 . 
+ex:school_31 rdf:type school-ont:School; ex:name "Name31"; ex:type ex:Primary; ex:size 100; school-ont:localAuthority la:789 . 
+ex:school_32 rdf:type school-ont:School; ex:name "Name32"; ex:type ex:Primary; ex:size 400; school-ont:localAuthority la:abc . 
+ex:school_33 rdf:type school-ont:School; ex:name "Name33"; ex:type ex:Primary; ex:size 400; school-ont:localAuthority la:abc . 
+ex:school_34 rdf:type school-ont:School; ex:name "Name34"; ex:type ex:Primary; ex:size 400; school-ont:localAuthority la:abc . 
+ex:school_35 rdf:type school-ont:School; ex:name "Name35"; ex:type ex:Primary; ex:size 400; school-ont:localAuthority la:abc . 
+ex:school_36 rdf:type school-ont:School; ex:name "Name36"; ex:type ex:Primary; ex:size 400; school-ont:localAuthority la:abc . 
+ex:school_37 rdf:type school-ont:School; ex:name "Name37"; ex:type ex:Primary; ex:size 400; school-ont:localAuthority la:abc . 
+ex:school_38 rdf:type school-ont:School; ex:name "Name38"; ex:type ex:Primary; ex:size 400; school-ont:localAuthority la:abc . 
+ex:school_39 rdf:type school-ont:School; ex:name "Name39"; ex:type ex:Primary; ex:size 400; school-ont:localAuthority la:abc . 
+ex:school_40 rdf:type school-ont:School; ex:name "Name40"; ex:type ex:Primary; ex:size 400; school-ont:localAuthority la:abc . 
+ex:school_41 rdf:type school-ont:School; ex:name "Name41"; ex:size 100; school-ont:localAuthority la:abc . 
+ex:school_42 rdf:type school-ont:School; ex:name "Name42"; ex:size 100; school-ont:localAuthority la:xyz . 
+ex:school_43 rdf:type school-ont:School; ex:name "Name43"; ex:size 100; school-ont:localAuthority la:xyz . 
+ex:school_44 rdf:type school-ont:School; ex:name "Name44"; ex:size 100; school-ont:localAuthority la:xyz . 
+ex:school_45 rdf:type school-ont:School; ex:name "Name45"; ex:size 100; school-ont:localAuthority la:xyz . 
+ex:school_46 rdf:type school-ont:School; ex:name "Name46"; ex:size 100; school-ont:localAuthority la:xyz . 
+ex:school_47 rdf:type school-ont:School; ex:name "Name47"; ex:size 100; school-ont:localAuthority la:xyz . 
+ex:school_48 rdf:type school-ont:School; ex:name "Name48"; ex:size 100; school-ont:localAuthority la:xyz . 
+ex:school_49 rdf:type school-ont:School; ex:name "Name49"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_50 rdf:type school-ont:School; ex:name "Name50"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_51 rdf:type school-ont:School; ex:name "Name51"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_52 rdf:type school-ont:School; ex:name "Name52"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_53 rdf:type school-ont:School; ex:name "Name53"; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_54 rdf:type school-ont:School; ex:name "Name54"; ex:size 100; school-ont:localAuthority la:qwerty . 
+ex:school_55 rdf:type school-ont:School; ex:name "Name55"; ex:size 100; school-ont:localAuthority la:qwerty . 
+ex:school_56 rdf:type school-ont:School; ex:name "Name56"; ex:size 100; school-ont:localAuthority la:qwerty . 
+ex:school_57 rdf:type school-ont:School; ex:name "Name57"; ex:size 100; school-ont:localAuthority la:qwerty . 
+ex:school_58 rdf:type school-ont:School; ex:name "Name58"; ex:size 100; school-ont:localAuthority la:qwerty . 
+ex:school_59 rdf:type school-ont:School; ex:name "Name59"; ex:size 100; school-ont:localAuthority la:qwerty . 
+ex:school_60 rdf:type school-ont:School; ex:name "Name60"; ex:size 100; school-ont:localAuthority la:qwerty . 
+ex:school_61 rdf:type school-ont:School; ex:name "Name61"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:qwerty . 
+ex:school_62 rdf:type school-ont:School; ex:name "Name62"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:qwerty . 
+ex:school_63 rdf:type school-ont:School; ex:name "Name63"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:qwerty . 
+ex:school_64 rdf:type school-ont:School; ex:name "Name64"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:qwerty . 
+ex:school_65 rdf:type school-ont:School; ex:name "Name65"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_66 rdf:type school-ont:School; ex:name "Name66"; ex:type ex:Secondary; ex:size 200; school-ont:localAuthority la:ghjkl . 
+ex:school_67 rdf:type school-ont:School; ex:name "Name67"; ex:type ex:Secondary; ex:size 200; school-ont:localAuthority la:ghjkl . 
+ex:school_68 rdf:type school-ont:School; ex:name "Name68"; ex:type ex:Secondary; ex:size 200; school-ont:localAuthority la:ghjkl . 
+ex:school_69 rdf:type school-ont:School; ex:name "Name69"; ex:type ex:Secondary; ex:size 200; school-ont:localAuthority la:ghjkl . 
+ex:school_70 rdf:type school-ont:School; ex:name "Name70"; ex:type ex:Secondary; ex:size 200; school-ont:localAuthority la:ghjkl . 
+ex:school_71 rdf:type school-ont:School; ex:name "Name71"; ex:type ex:Secondary; ex:size 200; school-ont:localAuthority la:ghjkl . 
+ex:school_72 rdf:type school-ont:School; ex:name "Name72"; ex:type ex:Secondary; ex:size 200; school-ont:localAuthority la:ghjkl . 
+ex:school_73 rdf:type school-ont:School; ex:name "Name73"; ex:type ex:Secondary; ex:size 200; school-ont:localAuthority la:ghjkl . 
+ex:school_74 rdf:type school-ont:School; ex:name "Name74"; ex:type ex:Secondary; ex:size 200; school-ont:localAuthority la:ghjkl . 
+ex:school_75 rdf:type school-ont:School; ex:name "Name75"; ex:type ex:Secondary; ex:size 200; school-ont:localAuthority la:ghjkl . 
+ex:school_76 rdf:type school-ont:School; ex:name "Name76"; ex:type ex:Secondary; ex:size 200; school-ont:localAuthority la:ghjkl . 
+ex:school_77 rdf:type school-ont:School; ex:name "Name77"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:1066 . 
+ex:school_78 rdf:type school-ont:School; ex:name "Name78"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:1066 . 
+ex:school_79 rdf:type school-ont:School; ex:name "Name79"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:1066 . 
+ex:school_80 rdf:type school-ont:School; ex:name "Name80"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:1066 . 
+ex:school_81 rdf:type school-ont:School; ex:name "Name81"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:1066 . 
+ex:school_82 rdf:type school-ont:School; ex:name "Name82"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:1066 . 
+ex:school_83 rdf:type school-ont:School; ex:name "Name83"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:1066 . 
+ex:school_84 rdf:type school-ont:School; ex:name "Name84"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:1066 . 
+ex:school_85 rdf:type school-ont:School; ex:name "Name85"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:1066 . 
+ex:school_86 rdf:type school-ont:School; ex:name "Name86"; ex:type ex:Secondary; ex:size 300; school-ont:localAuthority la:1066 . 
+ex:school_87 rdf:type school-ont:School; ex:name "Name87"; ex:type ex:Secondary; ex:size 300; school-ont:localAuthority la:2001 . 
+ex:school_88 rdf:type school-ont:School; ex:name "Name88"; ex:type ex:Secondary; ex:size 300; school-ont:localAuthority la:2001 . 
+ex:school_89 rdf:type school-ont:School; ex:name "Name89"; ex:type ex:Secondary; ex:size 300; school-ont:localAuthority la:2001 . 
+ex:school_90 rdf:type school-ont:School; ex:name "Name90"; ex:type ex:Secondary; ex:size 300; school-ont:localAuthority la:2001 . 
+ex:school_91 rdf:type school-ont:School; ex:name "Name91"; ex:type ex:Secondary; ex:size 300; school-ont:localAuthority la:2001 . 
+ex:school_92 rdf:type school-ont:School; ex:name "Name92"; ex:type ex:Secondary; ex:size 300; school-ont:localAuthority la:2001 . 
+ex:school_93 rdf:type school-ont:School; ex:name "Name93"; ex:type ex:Secondary; ex:size 300; school-ont:localAuthority la:2001 . 
+ex:school_94 rdf:type school-ont:School; ex:name "Name94"; ex:type ex:Secondary; ex:size 300; school-ont:localAuthority la:2001 . 
+ex:school_95 rdf:type school-ont:School; ex:name "Name95"; ex:type ex:Secondary; ex:size 300; school-ont:localAuthority la:2001 . 
+ex:school_96 rdf:type school-ont:School; ex:name "Name96"; ex:type ex:Secondary; ex:size 300; school-ont:localAuthority la:2001 . 
+ex:school_97 rdf:type school-ont:School; ex:name "Name97"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_98 rdf:type school-ont:School; ex:name "Name98"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_99 rdf:type school-ont:School; ex:name "Name99"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:123 . 
+ex:school_100 rdf:type school-ont:School; ex:name "Name100"; ex:type ex:Secondary; ex:size 100; school-ont:localAuthority la:123 . 
+
+la:123 a school-ont:LocalAuthority; rdfs:label "BANES" .
+la:456 a school-ont:LocalAuthority; rdfs:label "SGlous" .
+la:789 a school-ont:LocalAuthority; rdfs:label "London" .
+la:abc a school-ont:LocalAuthority; rdfs:label "abc" .
+la:xyz a school-ont:LocalAuthority; rdfs:label "xyz" .
+la:qwerty a school-ont:LocalAuthority; rdfs:label "qwerty" .
+la:ghjkl a school-ont:LocalAuthority; rdfs:label "ghjkl" .
+la:1066 a school-ont:LocalAuthority; rdfs:label "1066" .
+la:2001 a school-ont:LocalAuthority; rdfs:label "2001" .
+
+ex:dept1 rdf:type school-ont:Department; ex:name "department"@en .
+ex:dept1 rdf:type school-ont:Department; ex:name "département"@fr .
+ex:dept2 rdf:type school-ont:Department; ex:name "department"@en .
+ex:dept3 rdf:type school-ont:Department; ex:name "department"@en .
+ex:dept4 rdf:type school-ont:Department; ex:name "département"@fr .
+

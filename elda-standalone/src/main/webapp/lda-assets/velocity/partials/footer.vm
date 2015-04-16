@@ -1,0 +1,14 @@
+<footer>
+  <div class="row">
+    <div class="col-md-12">
+      #set( $proc = $page.metadata().processor() )
+      Produced by
+      <a href="$proc.homePage()">$proc.name()</a>
+      $proc.version(),
+      an implementation by
+      <a href="http://www.epimorphics.com">Epimorphics</a>
+      of the
+      <a href="http://code.google.com/p/linked-data-api">Linked Data API</a>.
+    </div>
+  </div>
+</footer>

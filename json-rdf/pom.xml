@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>elda</artifactId>
+    <groupId>com.epimorphics.lda</groupId>
+    <version>1.2.23-SNAPSHOT</version>
+  </parent>
+
+  <!--
+  <groupId>com.epimorphics.lda</groupId>
+  -->
+
+  <artifactId>json-rdf</artifactId>
+  <name>json-rdf</name>
+
+  <dependencies>
+  
+      <dependency>
+      <groupId>org.codehaus.jettison</groupId>
+      <artifactId>jettison</artifactId>
+      <version>1.2</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+    	<groupId>org.apache.jena</groupId>
+    	<artifactId>jena-arq</artifactId>
+    	<version>2.9.0-incubating</version>
+    </dependency>
+
+</dependencies>
+<!--
+  <version>1.2.18-SNAPSHOT</version>
+-->
+
+  <build>
+     <plugins>
+       <plugin>
+         <groupId>org.apache.maven.plugins</groupId>
+         <artifactId>maven-jar-plugin</artifactId>
+         <version>2.3.2</version>
+         <executions>
+           <execution>
+             <goals>
+               <goal>test-jar</goal>
+             </goals>
+           </execution>
+         </executions>
+      </plugin>
+
+        <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.7</version><!--$NO-MVN-MAN-VER$-->
+            <executions>
+                <execution>
+                    <phase>generate-sources</phase>
+                    <configuration>
+                        <target>
+                            <property name="classpath" refid="maven.compile.classpath" />
+                            <ant />
+                        </target>
+                    </configuration>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+      
+          <plugin>
+		      <artifactId>maven-source-plugin</artifactId>
+		      <version>2.1.1</version>
+		      <executions>
+			      <execution>
+			          <id>bundle-sources</id>
+			          <phase>package</phase>
+			          <goals>
+			            <!-- produce source artifact for main project sources -->
+			              <goal>jar-no-fork</goal>
+			          </goals>
+			      </execution>
+		      </executions>
+	      </plugin>
+	      
+    </plugins>
+  </build>
+
+</project>

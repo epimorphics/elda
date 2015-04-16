@@ -1,0 +1,15 @@
+// If the document isn't at a location matching urlPattern then rewrite all a href links 
+// which do match urlPattern to point to the same server as this document
+// Assumes jQuery
+$(function() {
+	var urlPattern = /^http:\/\/(environment|location)\.data\.gov\.uk/;
+    var basePattern = /^https?:\/\/[^\/]*/;
+	var url = document.URL;
+	if (!urlPattern.test(url) && basePattern.test(url)) {
+	    var rootURL = url.match(basePattern)[0];
+	    $("a[href*=data.gov.uk]").each( function(a) {
+		    this.href = this.href.replace(urlPattern, rootURL);
+		});
+	}
+});
+

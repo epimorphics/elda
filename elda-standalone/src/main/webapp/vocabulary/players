@@ -1,0 +1,20 @@
+<html>
+<head>
+<link href="../docs/style.css" type="text/css" rel="stylesheet"></link>
+</head>
+<body>
+
+<div class="heading">
+<h1>players</h1>
+<a href="http://www.epimorphics.com">
+<h2> http://localhost:8080/elda/vocabulary/players </h2>
+</a>
+</div>
+
+
+<p>
+    A possible number of players for a board or card game.
+</p>
+
+</body>
+</html>

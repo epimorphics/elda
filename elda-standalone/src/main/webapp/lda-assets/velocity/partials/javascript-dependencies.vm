@@ -1,0 +1,88 @@
+require.config({
+  baseUrl: '$assets/js/vendor',
+  paths: {
+    'app':                  '..',
+    // lib paths
+    'bootstrap':            'bootstrap.min',
+    'jquery':               'jquery-1.11.0.min',
+    'sprintf':              'sprintf-0.7-beta1',
+    'modernizr':            'modernizr-2.6.2-respond-1.1.0.min',
+    'datatables':    'jquery.dataTables.min'
+  },
+  shim: {
+    'underscore': {
+      exports: '_'
+    },
+    'bootstrap': {
+      deps: ['jquery']
+    },
+    'bootstrap-select.min': {
+      deps: ['bootstrap']
+    },
+    'jquery.xdomainrequest': {
+      deps: ['jquery']
+    },
+    'datatables': {
+      deps: ['jquery'],
+      exports: 'DataTable'
+    },
+    'qonsole': {
+      deps: ['jquery.dataTables.min',
+             'app/remote-sparql-service',
+             'lib/codemirror',
+             'addon/fold/foldcode',
+             'addon/fold/foldgutter',
+             'addon/fold/brace-fold',
+             'addon/fold/xml-fold',
+             'addon/fold/comment-fold',
+             'mode/javascript/javascript',
+             'mode/xml/xml',
+             'mode/sparql/sparql',
+             'mode/turtle/turtle'
+             ],
+      exports: 'qonsole'
+    },
+    'sprintf': {
+      exports: 'sprintf'
+    }
+    #if( $mapDisplay && !$noOSMLibs )
+      ,
+      'OpenLayers': {
+        deps: ['jquery', 'proj4js-combined'],
+        exports: 'OpenLayers'
+      },
+      'OpenStreetMap': {
+        deps: ['OpenLayers']
+      },
+      'proj4js-combined': {
+        deps: ['jquery']
+      },
+      'maps': {
+        deps: ['OpenStreetMap']
+      }
+    #end
+  }
+});
+
+
+
+require( ['require'],
+  function( require ) {
+    require(
+      ['underscore',
+       'jquery',
+       'sprintf',
+       'bootstrap',
+       'app/qonsole',
+       'datatables',
+       'app/popover',
+       'app/events'
+       #if( $mapDisplay && !$noOSMLibs )
+         , 'app/maps'
+       #end
+      ],
+      function( _, $ ) {
+        #parse( "partials/qonsole-head.vm" )
+      });
+  }
+);

@@ -1,0 +1,306 @@
+## Common prefixes.
+@prefix rdf:              <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:             <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:              <http://www.w3.org/2002/07/owl#> .
+@prefix foaf:             <http://xmlns.com/foaf/0.1/> .
+@prefix xsd:              <http://www.w3.org/2001/XMLSchema#> .
+@prefix api:              <http://purl.org/linked-data/api/vocab#> .
+@prefix skos:             <http://www.w3.org/2004/02/skos/core#> .
+@prefix geo:              <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix spatialrelations: <http://data.ordnancesurvey.co.uk/ontology/spatialrelations/> .
+@prefix admingeo: 	      <http://statistics.data.gov.uk/def/administrative-geography/> .
+@prefix qb:      	      <http://purl.org/linked-data/cube#> .
+@prefix time:	 	      <http://www.w3.org/2006/time#> .
+@prefix interval:         <http://reference.data.gov.uk/def/intervals/> .
+@prefix dgu: 		      <http://reference.data.gov.uk/def/reference/> .
+@prefix bw:               <http://environment.data.gov.uk/id/bathing-water/> .
+@prefix bwsp:             <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/> .
+@prefix bwq:  	          <http://environment.data.gov.uk/def/bathing-water-quality/> .
+@prefix bwq-iss:          <http://environment.data.gov.uk/data/bathing-water-quality/in-season/slice/> .
+@prefix bw-def:           <http://environment.data.gov.uk/def/bathing-water/> .
+@prefix ef-def:           <http://location.data.gov.uk/def/ef/SamplingPoint/> .
+@prefix dct:			  <http://purl.org/dc/terms/> .
+@prefix t:                <http://environment.data.gov.uk/api#> .
+@prefix dgu:			  <http://reference.data.gov.uk/def/reference/>	.
+@prefix void:			  <http://rdfs.org/ns/void#> . 
+@prefix :             <http://rdf.epimorphics.com/root#> . 
+##
+## Epimorphics LDA extensions vocabulary
+##
+@prefix elda:   <http://www.epimorphics.com/vocabularies/lda#> .
+@prefix :       <http://www.epimorphics.com/tools/example#> .
+
+<http://localhost:3030/bwq/query> elda:supportsNestedSelect true.
+
+:root
+	a api:API ;
+	api:sparqlEndpoint <local:CURRENT-TEST>;
+	api:endpoint t:bathingWaters
+	.
+
+t:bathingWaters
+  a api:ListEndpoint ;
+  api:uriTemplate 		    "/doc/bathing-water" ;
+  api:exampleRequestPath 	"/doc/bathing-water" ;
+  api:viewer api:describeViewer;
+  api:defaultViewer api:describeViewer;
+  api:selector [
+    api:filter "type=BathingWater" ;
+    # api:sort   "samplingPoint.samplePointNotation";
+  ] .
+
+
+rdf:Property api:label "Property" .
+
+rdf:type    api:label "type" ; 
+            api:multiValued true ;
+            rdfs:range rdfs:Class .
+
+rdfs:Class api:label "Class" .
+
+rdfs:label   api:label "label" ; api:multiValued true;
+             a          owl:DatatypeProperty .
+             
+rdfs:seeAlso api:label "seeAlso" ; api:multiValued true .
+rdfs:comment api:label "comment" .
+rdfs:range   api:label "range" ;
+             rdfs:range rdfs:Resource .
+             
+rdfs:domain  api:label "domain" .
+rdfs:isDefinedBy api:label "isDefinedBy" .
+rdfs:subClassOf api:label "subClassOf" .
+rdfs:subPropertyOf api:label "subPropertyOf" .
+
+owl:sameAs api:label "sameAs" .
+
+skos:Concept api:label "Concept" .
+skos:ConceptScheme api:label "ConceptScheme" .
+
+skos:prefLabel 	api:label "name" .
+skos:altLabel 	api:label "alias" ; api:multiValued true .
+skos:note 		api:label "note" .
+skos:notation 	a owl:DatatypeProperty; api:label "notation"  .
+skos:scopeNote 	api:label "scopeNote" .
+skos:topConceptOf api:label "topConceptOf" .
+skos:hasTopConcept api:label "topConcept" ; api:multiValued true .
+skos:broader 	api:label "broader" ; api:multiValued true .
+skos:narrower 	api:label "narrower" ; api:multiValued true .
+skos:definition	api:label "definition" ; api:multiValued true .
+
+dgu:uriSet api:label "uriSet" ;
+           a         owl:ObjectProperty .
+
+geo:lat
+  a	owl:DatatypeProperty;
+  api:label "lat" ;
+  rdfs:range xsd:decimal .
+  
+geo:long
+  a owl:DatatypeProperty;
+  api:label "long" ;
+  rdfs:range xsd:decimal .
+
+spatialrelations:easting 
+  a owl:DatatypeProperty ;
+  api:label "easting" ;
+  rdfs:range xsd:decimal;
+  .
+  
+spatialrelations:northing 
+  a owl:DatatypeProperty ;
+  api:label "northing" ;
+  rdfs:range xsd:decimal;
+  .
+
+spatialrelations:containedBy api:label "containedBy" .
+spatialrelations:contains api:label "contains" .
+spatialrelations:borders api:label "borders" .
+
+admingeo:country api:label "countryAdmingeo" .
+admingeo:region api:label "regionAdmingeo" .
+admingeo:localAuthority api:label "localAuthority" .
+admingeo:district api:label "district" .
+admingeo:coverage api:label "coverage" .
+admingeo:standardCode
+  a owl:DatatypeProperty ;
+  api:label "snac" ;
+  rdfs:range admingeo:StandardCode .
+
+admingeo:LocalAuthority api:label "LocalAuthority" .
+admingeo:LocalAuthorityDistrict api:label "LocalAuthorityDistrict" .
+
+admingeo:StandardCode a rdfs:Datatype .
+
+# DC Terms
+dct:source api:label "source" .
+dct:contributor	api:label   "contributor" .
+
+dct:isReplacedBy	api:label	"isReplacedBy" ;
+					a			owl:ObjectProperty .
+			
+dct:replaces		api:label	"replaces" ;
+					a			owl:ObjectProperty .
+
+
+dct:modified	api:label	"modified";
+				a			owl:DatatypeProperty;
+				rdfs:range	xsd:date . 
+				
+dct:created		api:label	"created";
+				a			owl:DatatypeProperty;
+				rdfs:range	xsd:date . 
+
+
+# foaf
+foaf:name		api:label  "who" ;
+                a          owl:DatatypeProperty .
+                 
+foaf:mbox		api:label	"mbox" ;
+                a           owl:DatatypeProperty .
+								
+# cube 
+qb:dataset	api:label "dataset" ;
+            a          owl:ObjectProperty .
+            
+qb:observation api:label "observation" ;
+               a         owl:ObjectProperty .
+               
+qb:DataSet  api:label "DataSet" ;
+            a          rdfs:Class .
+
+# Bathing Waters #
+
+bw-def:BathingWater	api:label	 "BathingWater";
+                    a             owl:Class .
+                    
+bw-def:bathingWater   api:label   "bathingWater";
+                      rdfs:range  bw-def:BathingWater .
+
+bw-def:eubwidNotation api:label   "eubwidNotation";
+				a			owl:DatatypeProperty;
+			 	rdfs:range  bw-def:eubwid .
+
+ef-def:samplingPoint api:label  "samplingPoint" .
+ef-def:SamplingPoint api:label  "SamplingPoint" .
+
+ef-def:samplePointNotation a owl:DatatypeProperty;
+                           rdfs:range   ef-def:samplePointCode;
+                           api:label	"samplePointNotation" .
+                           
+
+bwq:SampleAssessment api:label  "SampleAssessment" .
+bwq:ComplianceAssessment api:label  "ComplianceAssessment" .
+
+bwq:sampleDateTime	 a			owl:ObjectProperty;
+					 api:label  "sampleDateTime"; 
+					 rdfs:range	time:Instant;
+					 .
+bwq:sampleWeek	 	 a			owl:ObjectProperty;
+				 	 api:label  "sampleWeek"; 
+				 	 rdfs:range	time:Interval;
+				 	 .
+				 	 
+bwq:sampleYear	 	 a			owl:ObjectProperty;
+					 api:label  "sampleYear";
+					 rdfs:range	time:Interval;
+				 	 .
+				 	 
+bwq:recordStatus	 a 			owl:ObjectProperty;
+					 api:label	"recordStatus" ;
+					 rdfs:range	bwq:RecordStatus .
+
+bwq:withdrawal		 api:label  "withdrawal" .
+
+bwq:samplingPoint    api:label  "bwq_samplingPoint" .
+bwq:bathingWater     api:label  "bwq_bathingWater" .
+
+bwq:ByWeekSlice		 api:label  "ByWeekSlice" .
+bwq:ByYearSlice		 api:label  "ByYearSlice" .
+bwq:BySamplingPointYearSlice
+					 api:label  "BySamplingPointYearSlice" .
+
+bwq:BySamplingPointSlice
+					 api:label  "BySamplingPointSlice" .
+
+bwq:ComplianceBySamplingPointSlice
+					 api:label  "ComplianceBySamplingPointSlice" .
+
+bwq:ComplianceByYearSlice
+					 api:label  "ComplianceByYearSlice" .
+
+bwq:sampleClassification api:label "sampleClassification" .
+bwq:complianceClassification api:label "complianceClassification" .
+
+bwq:complianceCodeNotation		a			owl:DatatypeProperty;
+								api:label	"complianceCodeNotation";
+								rdfs:range	bwq:complianceCode .
+                           
+bwq:complianceCode				api:label "complianceCode" .
+
+bwq:countQualifierNotation		a		owl:DatatypeProperty;
+								api:label	"countQualifierNotation";
+								rdfs:range	bwq:countQualifierCode;
+								.
+
+bwq:totalColiformQualifier		api:label    "totalColiformQualifier" ;
+								rdfs:range	bwq:CountQualifier .
+								
+bwq:totalColiformCount			api:label    "totalColiformCount";
+								a		  owl:DatatypeProperty;
+								rdfs:range	xsd:integer  .
+
+bwq:faecalColiformQualifier 	api:label "faecalColiformQualifier" ;
+								rdfs:range	bwq:CountQualifier .
+								
+bwq:faecalColiformCount 		api:label "faecalColiformCount";
+								a		  owl:DatatypeProperty;
+								rdfs:range	xsd:integer  .
+								
+
+bwq:faecalStreptococciQualifier api:label "faecalStreptococciQualifier" ;
+								rdfs:range	bwq:CountQualifier .
+								
+bwq:faecalStreptococciCount 	api:label "faecalStreptococciCount" ;
+								a		  owl:DatatypeProperty;
+								rdfs:range	xsd:integer .
+
+bwq:entrovirusQualifier 		api:label "entrovirusQualifier" ;
+								rdfs:range	bwq:CountQualifier .
+
+bwq:entrovirusCount 			api:label "entrovirusCount" ;
+								a		  owl:DatatypeProperty;
+								rdfs:range	xsd:integer .
+
+bwq:salmonellaPresent			api:label	"salmonellaPresent" ;
+								a		  owl:DatatypeProperty;
+								rdfs:range  xsd:boolean .
+								
+bwq:presenceNotation			a			owl:DatatypeProperty;
+								api:label	"presenceNotation";
+								rdfs:range	bwq:presenceCode .
+
+bwq:abnormalWeatherException	api:label	"abnormalWeatherException";
+								a			owl:DatatypeProperty;
+								rdfs:range	xsd:boolean .
+  
+time:inXSDDateTime				api:label	"inXSDDateTime";
+								a			owl:DatatypeProperty;
+								rdfs:range	xsd:dateTime .
+
+interval:ordinalYear			a		owl:DatatypeProperty;
+								rdfs:range	xsd:integer;
+								api:label	"ordinalYear" .
+  
+interval:ordinalWeekOfYear		a		owl:DatatypeProperty;
+								rdfs:range	xsd:integer;
+								api:label	"ordinalWeekOfYear" .
+								
+interval:ordinalWeekOfYearYear
+								a		owl:DatatypeProperty;
+								rdfs:range	xsd:integer;
+								api:label	"ordinalWeekOfYearYear" .  
+								
+dgu:uriSet						api:label  "uriSet" .
+rdfs:seeAlso					api:label  "seeAlso" .
+
+void:sparqlEndpoint				api:label  "sparqlEndpoint" .

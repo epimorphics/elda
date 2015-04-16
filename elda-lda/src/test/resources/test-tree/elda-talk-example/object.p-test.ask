@@ -1,0 +1,3 @@
+URI=/anchor-me?min-object.p=1&_properties=object.p
+
+ASK { :o :object [:p 1] }

@@ -1,0 +1,5 @@
+@prefix : <http://example.com/parameters#>.
+
+# hardly any data for these tests.
+
+:x a :X.

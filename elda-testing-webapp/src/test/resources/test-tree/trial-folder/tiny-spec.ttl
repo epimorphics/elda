@@ -1,0 +1,25 @@
+:root a api:API 
+    ; api:sparqlEndpoint <local:CURRENT-TEST>
+    ; api:endpoint :ep
+    .
+
+:ep a api:ListEndpoint
+    ; api:uriTemplate 'anchor'
+    ; api:selector [api:filter 'type=C']
+    .
+
+:p api:label 'p'
+	; a owl:DatatypeProperty
+    ; rdfs:range xsd:integer
+    .
+
+:q api:label 'q'
+	; a owl:DatatypeProperty
+    ; rdfs:range xsd:integer
+    .
+    
+rdf:type a rdf:Property
+    ; api:label 'type'
+    .
+
+:C api:label 'C'.

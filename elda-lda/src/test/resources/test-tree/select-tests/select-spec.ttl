@@ -1,0 +1,20 @@
+@prefix : <http://www.epimorphics.com/tools/example#> .
+
+:root a api:API 
+    ; api:sparqlEndpoint <local:CURRENT-TEST>
+    ; api:endpoint :ep
+    .
+
+:ep a api:ListEndpoint
+    ; api:uriTemplate '/fixed/select'
+    ; api:selector [api:select 'prefix : <http://www.epimorphics.com/tools/example#>\nSELECT * where { ?item :p 1 .}']
+    .
+    
+rdf:type a rdf:Property
+    ; api:label 'type'
+    .
+
+:p api:label 'p'
+	; a owl:DatatypeProperty
+    ; rdfs:range xsd:integer
+    .

@@ -1,0 +1,8 @@
+URI=anchor_me?_metadata=versions
+ASK 
+	{
+	?thing dcterms:hasVersion 
+		[rdfs:label "basic"
+		; dcterms:isVersionOf ?thing
+		].
+	}

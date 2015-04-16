@@ -1,0 +1,36 @@
+URI=anchor_me?_metadata=formats
+ASK
+{
+	?thing dcterms:hasFormat
+		?format_text
+		, ?format_rdf
+		, ?format_json
+		, ?format_ttl
+		, ?format_owl
+		.
+	
+	?format_owl
+		dcterms:format [rdfs:label "application/rdf+xml"]
+		; dcterms:isFormatOf ?thing
+		.
+	
+	?format_text 
+		dcterms:format [rdfs:label "text/plain"]
+		; dcterms:isFormatOf ?thing
+		.
+		
+	?format_rdf 
+		dcterms:format [rdfs:label "application/rdf+xml"]
+		; dcterms:isFormatOf ?thing
+		.
+		
+	?format_ttl 
+		dcterms:format [rdfs:label "text/turtle"]
+		; dcterms:isFormatOf ?thing
+		.
+	
+	?format_json 
+		dcterms:format [rdfs:label "application/json"]
+		; dcterms:isFormatOf ?thing
+		.
+}

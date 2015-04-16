@@ -1,0 +1,393 @@
+<http://localhost:8080/elda/API/mini/doc/school.html>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "html" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "text/html"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+<http://localhost:8080/elda/API/mini/doc/school?_view=description&_page=0>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "description" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+<http://localhost:8080/elda/API/mini/doc/school.ttl>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "ttl" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "text/turtle"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+<http://www.epimorphics.com/vocabularies/lda#Elda_1.2.21-SNAPSHOT>
+      a       <http://usefulinc.com/ns/doap#Version> ;
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "Elda 1.2.21-SNAPSHOT [20Feb/dayEnd]" ;
+      <http://usefulinc.com/ns/doap#releaseOf>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "Elda" ;
+                <http://usefulinc.com/ns/doap#bug-database>
+                        <http://code.google.com/p/elda/issues/list> ;
+                <http://usefulinc.com/ns/doap#homepage>
+                        <http://elda.googlecode.com> ;
+                <http://usefulinc.com/ns/doap#implements>
+                        "http://code.google.com/p/linked-data-api/wiki/Specification" ;
+                <http://usefulinc.com/ns/doap#programming-language>
+                        "Java" ;
+                <http://usefulinc.com/ns/doap#repository>
+                        <https://elda.googlecode.com/hg/> ;
+                <http://usefulinc.com/ns/doap#wiki>
+                        <http://code.google.com/p/elda/w/list>
+              ] ;
+      <http://usefulinc.com/ns/doap#revision>
+              "1.2.21-SNAPSHOT" .
+
+<http://localhost:8080/elda/API/mini/doc/school?_view=basic&_page=0>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "basic" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+<http://localhost:8080/elda/API/mini/doc/school?_view=location&_page=0>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "location" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+<http://localhost:8080/elda/API/mini/doc/school?_view=all&_page=0>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "all" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+<http://localhost:8080/elda/API/mini/doc/school.text>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "text" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "text/plain"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+<http://localhost:8080/elda/API/mini/doc/school.xml>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "xml" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "application/xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+<http://localhost:8080/elda/API/mini/doc/school.rdf>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "rdf" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+<http://localhost:8080/elda/API/mini/doc/school>
+      a       <http://purl.org/linked-data/api/vocab#Page> , <http://purl.org/linked-data/api/vocab#ListEndpoint> ;
+      <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>
+              "10"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      <http://a9.com/-/spec/opensearch/1.1/startIndex>
+              "1"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      <http://purl.org/dc/terms/hasFormat>
+              <http://localhost:8080/elda/API/mini/doc/school.html> , <http://localhost:8080/elda/API/mini/doc/school.text> , <http://localhost:8080/elda/API/mini/doc/school.json> , <http://localhost:8080/elda/API/mini/doc/school.ttl> , <http://localhost:8080/elda/API/mini/doc/school.rdf> , <http://localhost:8080/elda/API/mini/doc/school.xml> ;
+      <http://purl.org/dc/terms/hasPart>
+              <http://localhost:8080/elda/API/mini/doc/school> ;
+      <http://purl.org/dc/terms/hasVersion>
+              <http://localhost:8080/elda/API/mini/doc/school?_view=medium&_page=0> , <http://localhost:8080/elda/API/mini/doc/school?_view=all&_page=0> , <http://localhost:8080/elda/API/mini/doc/school?_view=basic&_page=0> , <http://localhost:8080/elda/API/mini/doc/school?_view=short&_page=0> , <http://localhost:8080/elda/API/mini/doc/school?_view=location&_page=0> , <http://localhost:8080/elda/API/mini/doc/school?_view=provision&_page=0> , <http://localhost:8080/elda/API/mini/doc/school?_view=description&_page=0> ;
+      <http://purl.org/dc/terms/isPartOf>
+              <http://localhost:8080/elda/API/mini/doc/school> ;
+      <http://purl.org/linked-data/api/vocab#definition>
+              <http://localhost:8080/elda/API/mini/meta/doc/school> ;
+      <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>
+              <http://localhost:8080/elda/API/mini/doc/school?_metadata=all> ;
+      <http://purl.org/linked-data/api/vocab#items>
+              (<http://education.data.gov.uk/id/school/100866> <http://education.data.gov.uk/id/school/100864> <http://education.data.gov.uk/id/school/100862> <http://education.data.gov.uk/id/school/100860> <http://education.data.gov.uk/id/school/100859> <http://education.data.gov.uk/id/school/100858> <http://education.data.gov.uk/id/school/100857> <http://education.data.gov.uk/id/school/100855> <http://education.data.gov.uk/id/school/100852> <http://education.data.gov.uk/id/school/100851>) ;
+      <http://purl.org/linked-data/api/vocab#page>
+              "0"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      <http://purl.org/linked-data/api/vocab#wasResultOf>
+              [ a       <http://purl.org/linked-data/api/vocab#Execution> ;
+                <http://purl.org/linked-data/api/vocab#processor>
+                        [ a       <http://purl.org/linked-data/api/vocab#Service> ;
+                          <http://purl.org/net/opmv/types/common#software>
+                                  <http://www.epimorphics.com/vocabularies/lda#Elda_1.2.21-SNAPSHOT>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#selectionResult>
+                        [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;
+                          <http://purl.org/net/opmv/types/sparql#endpoint>
+                                  _:b1 ;
+                          <http://purl.org/net/opmv/types/sparql#query>
+                                  [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                            """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX school: <http://education.data.gov.uk/def/school/>
+SELECT ?item
+WHERE {
+?___establishmentStatus_0 rdfs:label \"Open\" .
+?item school:establishmentStatus ?___establishmentStatus_0 .
+?item rdf:type school:School .
+}  OFFSET 0 LIMIT 10"""
+                                  ]
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "label" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/2000/01/rdf-schema#label>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "lat" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/2003/01/geo/wgs84_pos#lat>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "phaseOfEducation" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/phaseOfEducation>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "gender" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/gender>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "first" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/1999/xhtml/vocab#first>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "next" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/1999/xhtml/vocab#next>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "itemsPerPage" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://a9.com/-/spec/opensearch/1.1/itemsPerPage>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "startIndex" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://a9.com/-/spec/opensearch/1.1/startIndex>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "establishmentNumber" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/establishmentNumber>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "page" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/linked-data/api/vocab#page>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "long" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/2003/01/geo/wgs84_pos#long>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "definition" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/linked-data/api/vocab#definition>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "isPartOf" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/dc/terms/isPartOf>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "typeOfEstablishment" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/typeOfEstablishment>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "uniqueReferenceNumber" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/uniqueReferenceNumber>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "hasPart" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/dc/terms/hasPart>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "type" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "religiousCharacter" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/religiousCharacter>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "rdf_rest" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "rdf_first" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#first>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "extendedMetadataVersion" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "items" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/linked-data/api/vocab#items>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#variableBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "visibleSparqlForm" ;
+                          <http://purl.org/linked-data/api/vocab#value>
+                                  "http://education.data.gov.uk/sparql/education/query.html"
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#variableBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "_suffix" ;
+                          <http://purl.org/linked-data/api/vocab#value>
+                                  "html"
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#variableBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "_stagePattern" ;
+                          <http://purl.org/linked-data/api/vocab#value>
+                                  "^/doc/school|/doc/school/phase/primary|/(id|doc)/school/[^/]*$"
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#viewingResult>
+                        [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;
+                          <http://purl.org/net/opmv/types/sparql#endpoint>
+                                  _:b1 ;
+                          <http://purl.org/net/opmv/types/sparql#query>
+                                  [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                            """PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX school: <http://education.data.gov.uk/def/school/>
+PREFIX geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX school: <http://education.data.gov.uk/def/school/>
+CONSTRUCT {?item school:establishmentNumber ?___1 .
+?item geo:long ?___2 .
+?item school:gender ?___3 .
+?___3 rdfs:label ?___4 .
+?item geo:lat ?___5 .
+?item school:typeOfEstablishment ?___6 .
+?___6 rdfs:label ?___7 .
+?item school:phaseOfEducation ?___8 .
+?___8 rdfs:label ?___9 .
+?item rdfs:label ?___10 .
+?item school:religiousCharacter ?___11 .
+?___11 rdfs:label ?___12 .
+?item school:uniqueReferenceNumber ?___13 .
+
+} WHERE {
+  {SELECT ?item
+    WHERE {
+    ?___establishmentStatus_0 rdfs:label \"Open\" .
+    ?item school:establishmentStatus ?___establishmentStatus_0 .
+    ?item rdf:type school:School .
+    }  OFFSET 0 LIMIT 10
+}{ ?item school:establishmentNumber ?___1 . } 
+UNION { ?item geo:long ?___2 . } 
+UNION {{ ?item school:gender ?___3 . }  OPTIONAL {
+  { ?___3 rdfs:label ?___4 . } 
+}}
+UNION { ?item geo:lat ?___5 . } 
+UNION {{ ?item school:typeOfEstablishment ?___6 . }  OPTIONAL {
+  { ?___6 rdfs:label ?___7 . } 
+}}
+UNION {{ ?item school:phaseOfEducation ?___8 . }  OPTIONAL {
+  { ?___8 rdfs:label ?___9 . } 
+}}
+UNION { ?item rdfs:label ?___10 . } 
+UNION {{ ?item school:religiousCharacter ?___11 . }  OPTIONAL {
+  { ?___11 rdfs:label ?___12 . } 
+}}
+UNION { ?item school:uniqueReferenceNumber ?___13 . } 
+
+}"""
+                                  ]
+                        ]
+              ] ;
+      <http://www.w3.org/1999/xhtml/vocab#first>
+              <http://localhost:8080/elda/API/mini/doc/school?_page=0> ;
+      <http://www.w3.org/1999/xhtml/vocab#next>
+              <http://localhost:8080/elda/API/mini/doc/school?_page=1> .
+
+<http://localhost:8080/elda/API/mini/doc/school?_view=short&_page=0>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "short" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+<http://localhost:8080/elda/API/mini/doc/school?_view=provision&_page=0>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "provision" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+_:b1  a       <http://www.w3.org/ns/sparql-service-description#Service> ;
+      <http://purl.org/linked-data/api/vocab#sparqlEndpoint>
+              <http://education.data.gov.uk/sparql/education/query> ;
+      <http://www.w3.org/ns/sparql-service-description#url>
+              <http://education.data.gov.uk/sparql/education/query> .
+
+<https://elda.googlecode.com/hg/>
+      a       <http://usefulinc.com/ns/doap#Repository> ;
+      <http://usefulinc.com/ns/doap#browse>
+              <http://code.google.com/p/elda/source/browse/> ;
+      <http://usefulinc.com/ns/doap#location>
+              <https://elda.googlecode.com> .
+
+<http://localhost:8080/elda/API/mini/doc/school?_view=medium&_page=0>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "medium" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .
+
+<http://localhost:8080/elda/API/mini/doc/school.json>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "json" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "application/json"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school> .

@@ -1,0 +1,6 @@
+URI=fixed_select?_view=description
+ASK
+{
+	{ :select_yes :p 1 .}
+    FILTER NOT EXISTS { :select_no :p 2 .}
+}

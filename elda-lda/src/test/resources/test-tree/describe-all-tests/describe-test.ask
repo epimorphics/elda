@@ -1,0 +1,12 @@
+URI=/endpointlike?exists-p=true&_view=skossy
+
+ASK 
+    {
+    :A :p :V.
+    :V skos:prefLabel "this one please".
+    }
+
+ASK NOT
+    {
+    :V rdfs:label "not this one".
+    }

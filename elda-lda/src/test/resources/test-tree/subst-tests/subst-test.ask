@@ -1,0 +1,3 @@
+URI=/alpha/17
+ASK { :delta a :C }
+ASK NOT { :alpha a :C }

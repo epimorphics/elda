@@ -1,0 +1,118 @@
+# Model from test: http://dummy/doc/schools/laWhere/BANES?
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix os:      <http://a9.com/-/spec/opensearch/1.1/> .
+@prefix opmv:    <http://purl.org/net/opmv/types/common#> .
+@prefix dct:     <http://purl.org/dc/terms/> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+@prefix xhv:     <http://www.w3.org/1999/xhtml/vocab#> .
+@prefix sparql:  <http://purl.org/net/opmv/types/sparql#> .
+
+<http://www.epimorphics.com/examples/eg1#school_50>
+      a       <http://education.data.gov.uk/def/school/School> ;
+      <http://education.data.gov.uk/def/school/localAuthority>
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      <http://www.epimorphics.com/examples/eg1#name>
+              "Name50" ;
+      <http://www.epimorphics.com/examples/eg1#size>
+              100 .
+
+<http://www.epimorphics.com/examples/eg1#school_1>
+      a       <http://education.data.gov.uk/def/school/School> ;
+      <http://education.data.gov.uk/def/school/localAuthority>
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      <http://www.epimorphics.com/examples/eg1#name>
+              "Name1" ;
+      <http://www.epimorphics.com/examples/eg1#size>
+              100 .
+
+<http://www.epimorphics.com/examples/eg1#school_51>
+      a       <http://education.data.gov.uk/def/school/School> ;
+      <http://education.data.gov.uk/def/school/localAuthority>
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      <http://www.epimorphics.com/examples/eg1#name>
+              "Name51" ;
+      <http://www.epimorphics.com/examples/eg1#size>
+              100 .
+
+<http://www.epimorphics.com/examples/eg1#school_2>
+      a       <http://education.data.gov.uk/def/school/School> ;
+      <http://education.data.gov.uk/def/school/localAuthority>
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      <http://www.epimorphics.com/examples/eg1#name>
+              "Name2" ;
+      <http://www.epimorphics.com/examples/eg1#size>
+              100 .
+
+<http://www.epimorphics.com/examples/eg1#school_52>
+      a       <http://education.data.gov.uk/def/school/School> ;
+      <http://education.data.gov.uk/def/school/localAuthority>
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      <http://www.epimorphics.com/examples/eg1#name>
+              "Name52" ;
+      <http://www.epimorphics.com/examples/eg1#size>
+              100 .
+
+<http://dummy/doc/schools/laWhere/BANES>
+      a       <http://purl.org/linked-data/api/vocab#Page> , <http://purl.org/linked-data/api/vocab#ListEndpoint> ;
+      os:itemsPerPage "10"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      os:startIndex "1"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      dct:hasPart <http://dummy/doc/schools/laWhere/BANES> ;
+      dct:isPartOf <http://dummy/doc/schools/laWhere/BANES> ;
+      <http://purl.org/linked-data/api/vocab#definition>
+              <http://dummy/doc/schools/laWhere/_name/meta> ;
+      <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>
+              <http://dummy/doc/schools/laWhere/BANES?_metadata=all> ;
+      <http://purl.org/linked-data/api/vocab#items>
+              (<http://www.epimorphics.com/examples/eg1#school_1> <http://www.epimorphics.com/examples/eg1#school_100> <http://www.epimorphics.com/examples/eg1#school_2> <http://www.epimorphics.com/examples/eg1#school_3> <http://www.epimorphics.com/examples/eg1#school_4> <http://www.epimorphics.com/examples/eg1#school_49> <http://www.epimorphics.com/examples/eg1#school_5> <http://www.epimorphics.com/examples/eg1#school_50> <http://www.epimorphics.com/examples/eg1#school_51> <http://www.epimorphics.com/examples/eg1#school_52>) ;
+      <http://purl.org/linked-data/api/vocab#page>
+              "0"^^<http://www.w3.org/2001/XMLSchema#long> ;
+      xhv:first <http://dummy/doc/schools/laWhere/BANES?_page=0> ;
+      xhv:next <http://dummy/doc/schools/laWhere/BANES?_page=1> .
+
+<http://www.epimorphics.com/examples/eg1#school_5>
+      a       <http://education.data.gov.uk/def/school/School> ;
+      <http://education.data.gov.uk/def/school/localAuthority>
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      <http://www.epimorphics.com/examples/eg1#name>
+              "Name5" ;
+      <http://www.epimorphics.com/examples/eg1#size>
+              100 .
+
+<http://www.epimorphics.com/examples/eg1#school_3>
+      a       <http://education.data.gov.uk/def/school/School> ;
+      <http://education.data.gov.uk/def/school/localAuthority>
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      <http://www.epimorphics.com/examples/eg1#name>
+              "Name3" ;
+      <http://www.epimorphics.com/examples/eg1#size>
+              100 .
+
+<http://www.epimorphics.com/examples/eg1#school_4>
+      a       <http://education.data.gov.uk/def/school/School> ;
+      <http://education.data.gov.uk/def/school/localAuthority>
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      <http://www.epimorphics.com/examples/eg1#name>
+              "Name4" ;
+      <http://www.epimorphics.com/examples/eg1#size>
+              100 .
+
+<http://www.epimorphics.com/examples/eg1#school_100>
+      a       <http://education.data.gov.uk/def/school/School> ;
+      <http://education.data.gov.uk/def/school/localAuthority>
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      <http://www.epimorphics.com/examples/eg1#name>
+              "Name100" ;
+      <http://www.epimorphics.com/examples/eg1#size>
+              100 ;
+      <http://www.epimorphics.com/examples/eg1#type>
+              <http://www.epimorphics.com/examples/eg1#Secondary> .
+
+<http://www.epimorphics.com/examples/eg1#school_49>
+      a       <http://education.data.gov.uk/def/school/School> ;
+      <http://education.data.gov.uk/def/school/localAuthority>
+              <http://admin.data.gov.uk/def/localAythority#123> ;
+      <http://www.epimorphics.com/examples/eg1#name>
+              "Name49" ;
+      <http://www.epimorphics.com/examples/eg1#size>
+              100 .

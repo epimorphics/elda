@@ -1,0 +1,137 @@
+# Model from test: http://dummy/doc/schools?size=200&_view=all
+{ "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools", "next" : "http://dummy/doc/schools?_page=1", "page" : 0, "itemsPerPage" : 10, "extendedMetadataVersion" : "http://dummy/doc/schools?_metadata=all", "type" : ["http://purl.org/linked-data/api/vocab#ListEndpoint", "http://purl.org/linked-data/api/vocab#Page"], "definition" : "http://dummy/doc/schools/meta", "first" : "http://dummy/doc/schools?_page=0", "isPartOf" : "http://dummy/doc/schools", "startIndex" : 1, "hasPart" : "http://dummy/doc/schools"}
+  ], "context" : {"mapping" : {"xsd_time" : {"uri" : "http://www.w3.org/2001/XMLSchema#time"}
+      , "http://purl.org/linked-data/api/vocab#result" : {"uri" : "http://purl.org/linked-data/api/vocab#result"}
+      , "http://purl.org/net/opmv/types/sparql#query" : {"uri" : "http://purl.org/net/opmv/types/sparql#query"}
+      , "api_page" : {"uri" : "http://purl.org/linked-data/api/vocab#page", "range" : "http://www.w3.org/2001/XMLSchema#long"}
+      , "api_viewingResult" : {"uri" : "http://purl.org/linked-data/api/vocab#viewingResult"}
+      , "xsd_short" : {"uri" : "http://www.w3.org/2001/XMLSchema#short"}
+      , "xsd_string" : {"uri" : "http://www.w3.org/2001/XMLSchema#string"}
+      , "revision" : {"uri" : "http://usefulinc.com/ns/doap#revision"}
+      , "bug_database" : {"uri" : "http://usefulinc.com/ns/doap#bug-database"}
+      , "time" : {"uri" : "http://www.w3.org/2001/XMLSchema#time"}
+      , "sparqlQuery" : {"uri" : "http://www.epimorphics.com/vocabularies/lda#sparqlQuery"}
+      , "byte" : {"uri" : "http://www.w3.org/2001/XMLSchema#byte"}
+      , "page" : {"uri" : "http://purl.org/linked-data/api/vocab#page", "range" : "http://www.w3.org/2001/XMLSchema#long"}
+      , "http://purl.org/dc/terms/isFormatOf" : {"uri" : "http://purl.org/dc/terms/isFormatOf"}
+      , "http://usefulinc.com/ns/doap#implements" : {"uri" : "http://usefulinc.com/ns/doap#implements"}
+      , "boolean" : {"uri" : "http://www.w3.org/2001/XMLSchema#boolean"}
+      , "processor" : {"uri" : "http://purl.org/linked-data/api/vocab#processor"}
+      , "http://usefulinc.com/ns/doap#revision" : {"uri" : "http://usefulinc.com/ns/doap#revision"}
+      , "xsd_int" : {"uri" : "http://www.w3.org/2001/XMLSchema#int"}
+      , "http://usefulinc.com/ns/doap#location" : {"uri" : "http://usefulinc.com/ns/doap#location"}
+      , "bug-database" : {"uri" : "http://usefulinc.com/ns/doap#bug-database"}
+      , "api_definition" : {"uri" : "http://purl.org/linked-data/api/vocab#definition", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "school-ont_localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority"}
+      , "http://purl.org/net/opmv/types/sparql#endpoint" : {"uri" : "http://purl.org/net/opmv/types/sparql#endpoint"}
+      , "http://www.w3.org/1999/xhtml/vocab#first" : {"uri" : "http://www.w3.org/1999/xhtml/vocab#first", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "http://purl.org/dc/terms/isVersionOf" : {"uri" : "http://purl.org/dc/terms/isVersionOf"}
+      , "homepage" : {"uri" : "http://usefulinc.com/ns/doap#homepage"}
+      , "endpoint" : {"uri" : "http://purl.org/net/opmv/types/sparql#endpoint"}
+      , "prev" : {"uri" : "http://www.w3.org/1999/xhtml/vocab#prev"}
+      , "api_termBinding" : {"uri" : "http://purl.org/linked-data/api/vocab#termBinding"}
+      , "http://purl.org/dc/terms/format" : {"uri" : "http://purl.org/dc/terms/format"}
+      , "hasVersion" : {"uri" : "http://purl.org/dc/terms/hasVersion"}
+      , "listURL" : {"uri" : "http://www.epimorphics.com/vocabularies/lda#listURL"}
+      , "comment" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#comment"}
+      , "xsd_double" : {"uri" : "http://www.w3.org/2001/XMLSchema#double"}
+      , "ex_Secondary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Secondary"}
+      , "query" : {"uri" : "http://purl.org/net/opmv/types/sparql#query"}
+      , "next" : {"uri" : "http://www.w3.org/1999/xhtml/vocab#next", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "localAuthority" : {"uri" : "http://education.data.gov.uk/def/school/localAuthority"}
+      , "foaf_primaryTopic" : {"uri" : "http://xmlns.com/foaf/0.1/primaryTopic"}
+      , "xsd_byte" : {"uri" : "http://www.w3.org/2001/XMLSchema#byte"}
+      , "date" : {"uri" : "http://www.w3.org/2001/XMLSchema#date"}
+      , "http://purl.org/linked-data/api/vocab#items" : {"uri" : "http://purl.org/linked-data/api/vocab#items"}
+      , "ex_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "ex_name" : {"uri" : "http://www.epimorphics.com/examples/eg1#name"}
+      , "http://a9.com/-/spec/opensearch/1.1/startIndex" : {"uri" : "http://a9.com/-/spec/opensearch/1.1/startIndex", "range" : "http://www.w3.org/2001/XMLSchema#long"}
+      , "Secondary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Secondary"}
+      , "short" : {"uri" : "http://www.w3.org/2001/XMLSchema#short"}
+      , "wiki" : {"uri" : "http://usefulinc.com/ns/doap#wiki"}
+      , "primaryTopic" : {"uri" : "http://xmlns.com/foaf/0.1/primaryTopic"}
+      , "http://usefulinc.com/ns/doap#browse" : {"uri" : "http://usefulinc.com/ns/doap#browse"}
+      , "ex_size" : {"uri" : "http://www.epimorphics.com/examples/eg1#size", "range" : "http://www.w3.org/2001/XMLSchema#int"}
+      , "integer" : {"uri" : "http://www.w3.org/2001/XMLSchema#integer"}
+      , "http://www.w3.org/1999/xhtml/vocab#next" : {"uri" : "http://www.w3.org/1999/xhtml/vocab#next", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "ex_Primary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Primary"}
+      , "programming-language" : {"uri" : "http://usefulinc.com/ns/doap#programming-language"}
+      , "http://usefulinc.com/ns/doap#repository" : {"uri" : "http://usefulinc.com/ns/doap#repository"}
+      , "api_wasResultOf" : {"uri" : "http://purl.org/linked-data/api/vocab#wasResultOf"}
+      , "http://purl.org/linked-data/api/vocab#item" : {"uri" : "http://purl.org/linked-data/api/vocab#item"}
+      , "termBinding" : {"uri" : "http://purl.org/linked-data/api/vocab#termBinding"}
+      , "http://usefulinc.com/ns/doap#releaseOf" : {"uri" : "http://usefulinc.com/ns/doap#releaseOf"}
+      , "http://purl.org/net/opmv/types/common#software" : {"uri" : "http://purl.org/net/opmv/types/common#software"}
+      , "item" : {"uri" : "http://purl.org/linked-data/api/vocab#item"}
+      , "string" : {"uri" : "http://www.w3.org/2001/XMLSchema#string"}
+      , "http://usefulinc.com/ns/doap#wiki" : {"uri" : "http://usefulinc.com/ns/doap#wiki"}
+      , "implements" : {"uri" : "http://usefulinc.com/ns/doap#implements"}
+      , "variableBinding" : {"uri" : "http://purl.org/linked-data/api/vocab#variableBinding"}
+      , "location" : {"uri" : "http://usefulinc.com/ns/doap#location"}
+      , "xsd_boolean" : {"uri" : "http://www.w3.org/2001/XMLSchema#boolean"}
+      , "Primary" : {"uri" : "http://www.epimorphics.com/examples/eg1#Primary"}
+      , "type" : {"uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "range" : "http://www.w3.org/2000/01/rdf-schema#Resource"}
+      , "long" : {"uri" : "http://www.w3.org/2001/XMLSchema#long"}
+      , "http://www.w3.org/ns/sparql-service-description#url" : {"uri" : "http://www.w3.org/ns/sparql-service-description#url"}
+      , "http://purl.org/dc/terms/hasVersion" : {"uri" : "http://purl.org/dc/terms/hasVersion"}
+      , "hasFormat" : {"uri" : "http://purl.org/dc/terms/hasFormat"}
+      , "http://www.w3.org/1999/xhtml/vocab#prev" : {"uri" : "http://www.w3.org/1999/xhtml/vocab#prev"}
+      , "software" : {"uri" : "http://purl.org/net/opmv/types/common#software"}
+      , "browse" : {"uri" : "http://usefulinc.com/ns/doap#browse"}
+      , "rdf_value" : {"uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"}
+      , "value" : {"uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#value"}
+      , "api_property" : {"uri" : "http://purl.org/linked-data/api/vocab#property"}
+      , "School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
+      , "xsd_long" : {"uri" : "http://www.w3.org/2001/XMLSchema#long"}
+      , "viewingResult" : {"uri" : "http://purl.org/linked-data/api/vocab#viewingResult"}
+      , "foaf_isPrimaryTopicOf" : {"uri" : "http://xmlns.com/foaf/0.1/isPrimaryTopicOf"}
+      , "int" : {"uri" : "http://www.w3.org/2001/XMLSchema#int"}
+      , "programming_language" : {"uri" : "http://usefulinc.com/ns/doap#programming-language"}
+      , "xsd_integer" : {"uri" : "http://www.w3.org/2001/XMLSchema#integer"}
+      , "rdf_type" : {"uri" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "range" : "http://www.w3.org/2000/01/rdf-schema#Resource"}
+      , "label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label"}
+      , "property" : {"uri" : "http://purl.org/linked-data/api/vocab#property"}
+      , "http://usefulinc.com/ns/doap#bug-database" : {"uri" : "http://usefulinc.com/ns/doap#bug-database"}
+      , "format" : {"uri" : "http://purl.org/dc/terms/format"}
+      , "double" : {"uri" : "http://www.w3.org/2001/XMLSchema#double"}
+      , "url" : {"uri" : "http://www.w3.org/ns/sparql-service-description#url"}
+      , "api_processor" : {"uri" : "http://purl.org/linked-data/api/vocab#processor"}
+      , "size" : {"uri" : "http://www.epimorphics.com/examples/eg1#size", "range" : "http://www.w3.org/2001/XMLSchema#int"}
+      , "items" : {"uri" : "http://purl.org/linked-data/api/vocab#items"}
+      , "api_selectionResult" : {"uri" : "http://purl.org/linked-data/api/vocab#selectionResult"}
+      , "http://a9.com/-/spec/opensearch/1.1/itemsPerPage" : {"uri" : "http://a9.com/-/spec/opensearch/1.1/itemsPerPage", "range" : "http://www.w3.org/2001/XMLSchema#long"}
+      , "isPartOf" : {"uri" : "http://purl.org/dc/terms/isPartOf", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "releaseOf" : {"uri" : "http://usefulinc.com/ns/doap#releaseOf"}
+      , "http://usefulinc.com/ns/doap#homepage" : {"uri" : "http://usefulinc.com/ns/doap#homepage"}
+      , "xsd_date" : {"uri" : "http://www.w3.org/2001/XMLSchema#date"}
+      , "school_type" : {"uri" : "http://www.epimorphics.com/examples/eg1#type", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "isFormatOf" : {"uri" : "http://purl.org/dc/terms/isFormatOf"}
+      , "result" : {"uri" : "http://purl.org/linked-data/api/vocab#result"}
+      , "school-ont_School" : {"uri" : "http://education.data.gov.uk/def/school/School"}
+      , "extendedMetadataVersion" : {"uri" : "http://purl.org/linked-data/api/vocab#extendedMetadataVersion", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "http://purl.org/dc/terms/hasPart" : {"uri" : "http://purl.org/dc/terms/hasPart", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "http://www.epimorphics.com/vocabularies/lda#listURL" : {"uri" : "http://www.epimorphics.com/vocabularies/lda#listURL"}
+      , "http://www.epimorphics.com/vocabularies/lda#sparqlQuery" : {"uri" : "http://www.epimorphics.com/vocabularies/lda#sparqlQuery"}
+      , "selectionResult" : {"uri" : "http://purl.org/linked-data/api/vocab#selectionResult"}
+      , "api_extendedMetadataVersion" : {"uri" : "http://purl.org/linked-data/api/vocab#extendedMetadataVersion", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "repository" : {"uri" : "http://usefulinc.com/ns/doap#repository"}
+      , "name" : {"uri" : "http://www.epimorphics.com/examples/eg1#name"}
+      , "xsd_decimal" : {"uri" : "http://www.w3.org/2001/XMLSchema#decimal"}
+      , "api_variableBinding" : {"uri" : "http://purl.org/linked-data/api/vocab#variableBinding"}
+      , "itemsPerPage" : {"uri" : "http://a9.com/-/spec/opensearch/1.1/itemsPerPage", "range" : "http://www.w3.org/2001/XMLSchema#long"}
+      , "startIndex" : {"uri" : "http://a9.com/-/spec/opensearch/1.1/startIndex", "range" : "http://www.w3.org/2001/XMLSchema#long"}
+      , "definition" : {"uri" : "http://purl.org/linked-data/api/vocab#definition", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "http://purl.org/dc/terms/hasFormat" : {"uri" : "http://purl.org/dc/terms/hasFormat"}
+      , "rdfs_label" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#label"}
+      , "isPrimaryTopicOf" : {"uri" : "http://xmlns.com/foaf/0.1/isPrimaryTopicOf"}
+      , "hasPart" : {"uri" : "http://purl.org/dc/terms/hasPart", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "decimal" : {"uri" : "http://www.w3.org/2001/XMLSchema#decimal"}
+      , "http://purl.org/dc/terms/isPartOf" : {"uri" : "http://purl.org/dc/terms/isPartOf", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "isVersionOf" : {"uri" : "http://purl.org/dc/terms/isVersionOf"}
+      , "rdfs_comment" : {"uri" : "http://www.w3.org/2000/01/rdf-schema#comment"}
+      , "http://usefulinc.com/ns/doap#programming-language" : {"uri" : "http://usefulinc.com/ns/doap#programming-language"}
+      , "first" : {"uri" : "http://www.w3.org/1999/xhtml/vocab#first", "range" : "http://www.w3.org/2002/07/owl#Thing"}
+      , "wasResultOf" : {"uri" : "http://purl.org/linked-data/api/vocab#wasResultOf"}
+    }
+  }
+}

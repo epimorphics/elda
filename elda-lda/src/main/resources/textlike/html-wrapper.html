@@ -1,0 +1,78 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>{$title}</title>
+   
+<script type="text/javascript">
+
+function toggle(id) {
+    var div = document.getElementById( id );
+    div.className = (div.className == "show" ? "hide" : "show")
+}
+
+</script>
+
+{$style} 
+
+<style>
+.paging-links 
+  { background-color: pink
+  }
+  
+h1 
+  { background: #9ecae1
+    ; padding-left: 1ex
+    ; padding-right: 1ex
+    ; border-radius: 5px
+    ; -moz-border-radius: 5px
+  }
+
+h2 
+  { background: #9ecae1
+  }
+
+.show { display: block }
+.hide { display: none }
+
+.indent { margin-left: 1ex }
+  
+.one-item
+  { background-color: #eeeeff
+  ; border: 1px solid gray
+  ; margin-bottom: 2ex
+  }
+  
+.body-style
+  { background-color: #eeeeee
+  }
+  
+td
+  { margin-right: 1ex 
+  }
+  
+.literal
+  { background-color: #ffffcc
+  }
+    
+.keyword
+  { color: brown
+  ; font-weight: bold
+  }
+  
+.link
+  { color: blue 
+  }
+    
+tr:nth-child(2n+1) 
+  { background-color: #eeffee }
+
+tr:nth-child(2n) 
+  { background-color: #ffeeff }
+  
+</style>
+
+</head>
+<body class='body-style'>
+{$body}
+</body>
+</html>

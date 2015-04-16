@@ -1,0 +1,367 @@
+<http://localhost:8080/elda/API/mini/doc/school/100866.rdf>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "rdf" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "application/rdf+xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .
+
+<http://www.epimorphics.com/vocabularies/lda#Elda_1.2.21-SNAPSHOT>
+      a       <http://usefulinc.com/ns/doap#Version> ;
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "Elda 1.2.21-SNAPSHOT [20Feb/dayEnd]" ;
+      <http://usefulinc.com/ns/doap#releaseOf>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "Elda" ;
+                <http://usefulinc.com/ns/doap#bug-database>
+                        <http://code.google.com/p/elda/issues/list> ;
+                <http://usefulinc.com/ns/doap#homepage>
+                        <http://elda.googlecode.com> ;
+                <http://usefulinc.com/ns/doap#implements>
+                        "http://code.google.com/p/linked-data-api/wiki/Specification" ;
+                <http://usefulinc.com/ns/doap#programming-language>
+                        "Java" ;
+                <http://usefulinc.com/ns/doap#repository>
+                        <https://elda.googlecode.com/hg/> ;
+                <http://usefulinc.com/ns/doap#wiki>
+                        <http://code.google.com/p/elda/w/list>
+              ] ;
+      <http://usefulinc.com/ns/doap#revision>
+              "1.2.21-SNAPSHOT" .
+
+<http://localhost:8080/elda/API/mini/doc/school/100866.text>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "text" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "text/plain"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .
+
+<http://localhost:8080/elda/API/mini/doc/school/100866.json>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "json" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "application/json"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .
+
+<http://localhost:8080/elda/API/mini/doc/school/100866?_view=provision>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "provision" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .
+
+<http://localhost:8080/elda/API/mini/doc/school/100866.xml>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "xml" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "application/xml"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .
+
+<http://localhost:8080/elda/API/mini/doc/school/100866>
+      a       <http://purl.org/linked-data/api/vocab#Page> ;
+      <http://purl.org/dc/terms/hasFormat>
+              <http://localhost:8080/elda/API/mini/doc/school/100866.text> , <http://localhost:8080/elda/API/mini/doc/school/100866.xml> , <http://localhost:8080/elda/API/mini/doc/school/100866.json> , <http://localhost:8080/elda/API/mini/doc/school/100866.html> , <http://localhost:8080/elda/API/mini/doc/school/100866.rdf> , <http://localhost:8080/elda/API/mini/doc/school/100866.ttl> ;
+      <http://purl.org/dc/terms/hasVersion>
+              <http://localhost:8080/elda/API/mini/doc/school/100866?_view=description> , <http://localhost:8080/elda/API/mini/doc/school/100866?_view=location> , <http://localhost:8080/elda/API/mini/doc/school/100866?_view=all> , <http://localhost:8080/elda/API/mini/doc/school/100866?_view=basic> , <http://localhost:8080/elda/API/mini/doc/school/100866?_view=provision> ;
+      <http://purl.org/linked-data/api/vocab#definition>
+              <http://localhost:8080/elda/API/mini/meta/doc/school/_number> ;
+      <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>
+              <http://localhost:8080/elda/API/mini/doc/school/100866?_metadata=all> ;
+      <http://purl.org/linked-data/api/vocab#wasResultOf>
+              [ a       <http://purl.org/linked-data/api/vocab#Execution> ;
+                <http://purl.org/linked-data/api/vocab#processor>
+                        [ a       <http://purl.org/linked-data/api/vocab#Service> ;
+                          <http://purl.org/net/opmv/types/common#software>
+                                  <http://www.epimorphics.com/vocabularies/lda#Elda_1.2.21-SNAPSHOT>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "establishmentNumber" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/establishmentNumber>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "openDate" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/openDate>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "label" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/2000/01/rdf-schema#label>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "prefEmail" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/SCUpreferredemail>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "uniqueReferenceNumber" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/uniqueReferenceNumber>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "PFI" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/PFI>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "primaryTopic" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://xmlns.com/foaf/0.1/primaryTopic>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "typeOfEstablishment" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/typeOfEstablishment>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "gender" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/gender>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "altEmail" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/SCUAlternativeEmail>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "address2" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/address2>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "isPrimaryTopicOf" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://xmlns.com/foaf/0.1/isPrimaryTopicOf>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "address" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/address>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "town" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/town>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "notes" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/notes>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "extendedMetadataVersion" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/linked-data/api/vocab#extendedMetadataVersion>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "type" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "postcode" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/postcode>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "address1" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/address1>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "schoolCapacity" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://education.data.gov.uk/def/school/schoolCapacity>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#termBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "definition" ;
+                          <http://purl.org/linked-data/api/vocab#property>
+                                  <http://purl.org/linked-data/api/vocab#definition>
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#variableBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "_suffix" ;
+                          <http://purl.org/linked-data/api/vocab#value>
+                                  "html"
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#variableBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "number" ;
+                          <http://purl.org/linked-data/api/vocab#value>
+                                  "100866"
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#variableBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "visibleSparqlForm" ;
+                          <http://purl.org/linked-data/api/vocab#value>
+                                  "http://education.data.gov.uk/sparql/education/query.html"
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#variableBinding>
+                        [ <http://purl.org/linked-data/api/vocab#label>
+                                  "_stagePattern" ;
+                          <http://purl.org/linked-data/api/vocab#value>
+                                  "^/doc/school|/doc/school/phase/primary|/(id|doc)/school/[^/]*$"
+                        ] ;
+                <http://purl.org/linked-data/api/vocab#viewingResult>
+                        [ a       <http://purl.org/net/opmv/types/sparql#QueryResult> ;
+                          <http://purl.org/net/opmv/types/sparql#endpoint>
+                                  [ a       <http://www.w3.org/ns/sparql-service-description#Service> ;
+                                    <http://purl.org/linked-data/api/vocab#sparqlEndpoint>
+                                            <http://education.data.gov.uk/sparql/education/query> ;
+                                    <http://www.w3.org/ns/sparql-service-description#url>
+                                            <http://education.data.gov.uk/sparql/education/query>
+                                  ] ;
+                          <http://purl.org/net/opmv/types/sparql#query>
+                                  [ <http://www.w3.org/1999/02/22-rdf-syntax-ns#value>
+                                            """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX school: <http://education.data.gov.uk/def/school/>
+CONSTRUCT {
+<http://education.data.gov.uk/id/school/100866> school:establishmentNumber ?___0 .
+<http://education.data.gov.uk/id/school/100866> school:gender ?___1 .
+?___1 rdfs:label ?___2 .
+<http://education.data.gov.uk/id/school/100866> school:openDate ?___3 .
+<http://education.data.gov.uk/id/school/100866> school:typeOfEstablishment ?___4 .
+?___4 rdfs:label ?___5 .
+<http://education.data.gov.uk/id/school/100866> rdfs:label ?___6 .
+<http://education.data.gov.uk/id/school/100866> school:SCUpreferredemail ?___7 .
+<http://education.data.gov.uk/id/school/100866> school:notes ?___8 .
+<http://education.data.gov.uk/id/school/100866> school:schoolCapacity ?___9 .
+<http://education.data.gov.uk/id/school/100866> school:phaseOfEducation ?___10 .
+?___10 rdfs:label ?___11 .
+<http://education.data.gov.uk/id/school/100866> school:SCUAlternativeEmail ?___12 .
+<http://education.data.gov.uk/id/school/100866> school:PFI ?___13 .
+<http://education.data.gov.uk/id/school/100866> school:religiousCharacter ?___14 .
+?___14 rdfs:label ?___15 .
+<http://education.data.gov.uk/id/school/100866> school:address ?___16 .
+?___16 school:address3 ?___17 .
+?___16 school:address1 ?___18 .
+?___16 school:address2 ?___19 .
+?___16 school:postcode ?___20 .
+?___16 school:town ?___21 .
+?___16 school:region ?___22 .
+<http://education.data.gov.uk/id/school/100866> school:uniqueReferenceNumber ?___23 .
+
+} WHERE {
+{ <http://education.data.gov.uk/id/school/100866> school:establishmentNumber ?___0 . } 
+UNION {{ <http://education.data.gov.uk/id/school/100866> school:gender ?___1 . }  OPTIONAL {
+  { ?___1 rdfs:label ?___2 . } 
+}}
+UNION { <http://education.data.gov.uk/id/school/100866> school:openDate ?___3 . } 
+UNION {{ <http://education.data.gov.uk/id/school/100866> school:typeOfEstablishment ?___4 . }  OPTIONAL {
+  { ?___4 rdfs:label ?___5 . } 
+}}
+UNION { <http://education.data.gov.uk/id/school/100866> rdfs:label ?___6 . } 
+UNION { <http://education.data.gov.uk/id/school/100866> school:SCUpreferredemail ?___7 . } 
+UNION { <http://education.data.gov.uk/id/school/100866> school:notes ?___8 . } 
+UNION { <http://education.data.gov.uk/id/school/100866> school:schoolCapacity ?___9 . } 
+UNION {{ <http://education.data.gov.uk/id/school/100866> school:phaseOfEducation ?___10 . }  OPTIONAL {
+  { ?___10 rdfs:label ?___11 . } 
+}}
+UNION { <http://education.data.gov.uk/id/school/100866> school:SCUAlternativeEmail ?___12 . } 
+UNION { <http://education.data.gov.uk/id/school/100866> school:PFI ?___13 . } 
+UNION {{ <http://education.data.gov.uk/id/school/100866> school:religiousCharacter ?___14 . }  OPTIONAL {
+  { ?___14 rdfs:label ?___15 . } 
+}}
+UNION {{ <http://education.data.gov.uk/id/school/100866> school:address ?___16 . }  OPTIONAL {
+  { ?___16 school:address3 ?___17 . } 
+  UNION { ?___16 school:address1 ?___18 . } 
+  UNION { ?___16 school:address2 ?___19 . } 
+  UNION { ?___16 school:postcode ?___20 . } 
+  UNION { ?___16 school:town ?___21 . } 
+  UNION { ?___16 school:region ?___22 . } 
+}}
+UNION { <http://education.data.gov.uk/id/school/100866> school:uniqueReferenceNumber ?___23 . } 
+
+}"""
+                                  ]
+                        ]
+              ] ;
+      <http://xmlns.com/foaf/0.1/primaryTopic>
+              <http://education.data.gov.uk/id/school/100866> .
+
+<http://localhost:8080/elda/API/mini/doc/school/100866.ttl>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "ttl" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "text/turtle"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .
+
+<http://localhost:8080/elda/API/mini/doc/school/100866?_view=location>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "location" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .
+
+<http://localhost:8080/elda/API/mini/doc/school/100866.html>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "html" ;
+      <http://purl.org/dc/terms/format>
+              [ <http://www.w3.org/2000/01/rdf-schema#label>
+                        "text/html"
+              ] ;
+      <http://purl.org/dc/terms/isFormatOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .
+
+<https://elda.googlecode.com/hg/>
+      a       <http://usefulinc.com/ns/doap#Repository> ;
+      <http://usefulinc.com/ns/doap#browse>
+              <http://code.google.com/p/elda/source/browse/> ;
+      <http://usefulinc.com/ns/doap#location>
+              <https://elda.googlecode.com> .
+
+<http://localhost:8080/elda/API/mini/doc/school/100866?_view=all>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "all" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .
+
+<http://localhost:8080/elda/API/mini/doc/school/100866?_view=basic>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "basic" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .
+
+<http://localhost:8080/elda/API/mini/doc/school/100866?_view=description>
+      <http://www.w3.org/2000/01/rdf-schema#label>
+              "description" ;
+      <http://purl.org/dc/terms/isVersionOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .
+
+<http://education.data.gov.uk/id/school/100866>
+      <http://xmlns.com/foaf/0.1/isPrimaryTopicOf>
+              <http://localhost:8080/elda/API/mini/doc/school/100866> .

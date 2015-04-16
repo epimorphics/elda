@@ -1,0 +1,110 @@
+# Model from test: http://dummy/doc/schools/london?
+@prefix spec:    <http://www.epimorphics.com/examples/spec1#> .
+@prefix os:      <http://a9.com/-/spec/opensearch/1.1/> .
+@prefix ex:      <http://www.epimorphics.com/examples/eg1#> .
+@prefix school-ont:  <http://education.data.gov.uk/def/school/> .
+@prefix opmv:    <http://purl.org/net/opmv/types/common#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix sparql:  <http://purl.org/net/opmv/types/sparql#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct:     <http://purl.org/dc/terms/> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix api:     <http://purl.org/linked-data/api/vocab#> .
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+@prefix xhv:     <http://www.w3.org/1999/xhtml/vocab#> .
+
+ex:school_24
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#789> ;
+      ex:name "Name24" ;
+      ex:size 200 ;
+      ex:type ex:Primary .
+
+ex:school_26
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#789> ;
+      ex:name "Name26" ;
+      ex:size 200 ;
+      ex:type ex:Primary .
+
+ex:school_25
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#789> ;
+      ex:name "Name25" ;
+      ex:size 200 ;
+      ex:type ex:Primary .
+
+ex:school_28
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#789> ;
+      ex:name "Name28" ;
+      ex:size 100 ;
+      ex:type ex:Primary .
+
+ex:school_23
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#789> ;
+      ex:name "Name23" ;
+      ex:size 200 ;
+      ex:type ex:Primary .
+
+ex:school_21
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#789> ;
+      ex:name "Name21" ;
+      ex:size 200 ;
+      ex:type ex:Primary .
+
+ex:school_22
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#789> ;
+      ex:name "Name22" ;
+      ex:size 200 ;
+      ex:type ex:Primary .
+
+ex:school_27
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#789> ;
+      ex:name "Name27" ;
+      ex:size 200 ;
+      ex:type ex:Primary .
+
+<http://dummy/doc/schools/london>
+      a       api:Page , api:ListEndpoint ;
+      os:itemsPerPage "10"^^xsd:long ;
+      os:startIndex "1"^^xsd:long ;
+      dct:hasPart <http://dummy/doc/schools/london> ;
+      dct:isPartOf <http://dummy/doc/schools/london> ;
+      api:definition <http://dummy/doc/schools/london/meta> ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/schools/london?_metadata=all> ;
+      api:items (ex:school_24 ex:school_29 ex:school_28 ex:school_23 ex:school_21 ex:school_22 ex:school_31 ex:school_27 ex:school_25 ex:school_26) ;
+      api:page "0"^^xsd:long ;
+      xhv:first <http://dummy/doc/schools/london?_page=0> ;
+      xhv:next <http://dummy/doc/schools/london?_page=1> .
+
+ex:school_31
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#789> ;
+      ex:name "Name31" ;
+      ex:size 100 ;
+      ex:type ex:Primary .
+
+ex:school_29
+      a       school-ont:School ;
+      school-ont:localAuthority
+              <http://admin.data.gov.uk/def/localAythority#789> ;
+      ex:name "Name29" ;
+      ex:size 100 ;
+      ex:type ex:Primary .

@@ -1,0 +1,175 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix api:  <http://purl.org/linked-data/api/vocab#> .
+@prefix ex:  <http://www.epimorphics.com/examples/eg1#> .
+@prefix spec:  <http://www.epimorphics.com/examples/spec1#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix school-ont: <http://education.data.gov.uk/def/school/> .
+
+## N.B. In a specification file for deployment the URI templates are normally
+## relative to the web address of the proxy. This file is for use in the
+## unit testing and needs addresses that look like URLs 
+
+spec:api1 a api:API;
+    api:sparqlEndpoint <local:src/test/resources/api/model.ttl>;
+    api:endpoint spec:schools ;
+    api:endpoint spec:primarySchools ;
+    api:endpoint spec:primaryBigSchools ;
+    api:endpoint spec:londonSchools ;
+    api:endpoint spec:laSchools, spec:laSchoolsWhere ;
+    api:endpoint spec:bigSchools ;
+    api:endpoint spec:typedSchools ;
+    api:endpoint spec:departmentsEn, spec:departmentsFr ;
+    api:endpoint spec:schoolSize ;
+    .
+ 
+spec:schools
+    a api:ListEndpoint;
+    api:uriTemplate "http://dummy/doc/schools";
+    foaf:primaryTopic "http://education.data.gov.uk/set/schools";
+    api:selector [
+    	api:type school-ont:School;
+    	api:orderBy "?item";
+    ] ;
+    api:defaultViewer [
+        rdfs:label "default";
+        api:property rdf:type, rdfs:label, ex:name;
+        ];
+    api:viewer [
+        rdfs:label "medium";
+        api:property rdf:type, ex:name, ex:type, school-ont:localAuthority;
+        ];
+    .
+
+spec:primarySchools
+    a api:ListEndpoint;
+    api:uriTemplate "http://dummy/doc/schools/primary";
+    foaf:primaryTopic "http://education.data.gov.uk/set/schools";
+    api:selector spec:primarySchoolsView ;
+    .
+
+spec:primarySchoolsView
+     	api:type school-ont:School;
+    	api:filter "school_type=Primary";
+    	api:sort "name" .
+    
+spec:primaryBigSchools
+    a api:ListEndpoint;
+    api:uriTemplate "http://dummy/doc/schools/primary/big";
+    api:api spec:api1;
+    foaf:primaryTopic "http://education.data.gov.uk/set/schools";
+    api:selector [
+    	api:parent spec:primarySchoolsView ;
+    	api:filter "min-size=300";
+        ] ;
+    .
+    
+     
+spec:londonSchools
+    a api:ListEndpoint;
+    api:uriTemplate "http://dummy/doc/schools/london";
+    api:api spec:api1;
+    foaf:primaryTopic "http://education.data.gov.uk/set/schools";
+    api:selector [
+    	api:type school-ont:School;
+    	api:filter "localAuthority.label=London";
+    ] .
+     
+spec:laSchools
+    a api:ListEndpoint;
+    api:uriTemplate "http://dummy/doc/schools/la/{name}";
+    api:api spec:api1;
+    foaf:primaryTopic "http://education.data.gov.uk/set/schools";
+    api:selector [
+    	api:type school-ont:School;
+    	api:filter "localAuthority.label={name}";
+    	api:orderBy "?item";
+    ] .
+         
+spec:laSchoolsWhere
+    a api:ListEndpoint;
+    api:uriTemplate "http://dummy/doc/schools/laWhere/{name}";
+    api:api spec:api1;
+    foaf:primaryTopic "http://education.data.gov.uk/set/schools";
+    api:selector [
+    	api:type school-ont:School;
+    	api:where "?item <http://education.data.gov.uk/def/school/localAuthority> [<http://www.w3.org/2000/01/rdf-schema#label> ?name]. ";
+    	api:orderBy "?item";
+    ] .
+    
+spec:bigSchools
+    a api:ListEndpoint;
+    api:uriTemplate "http://dummy/doc/schools/big";
+    api:api spec:api1;
+    foaf:primaryTopic "http://education.data.gov.uk/set/schools";
+    api:selector [
+    	api:type school-ont:School;
+    	api:where "?item ex:size ?size . FILTER (?size >= 400)";
+    ] .
+    
+spec:schoolSize
+    a api:ListEndpoint;
+    api:uriTemplate "http://dummy/doc/schools/size/{size}";
+    api:api spec:api1;
+    foaf:primaryTopic "http://education.data.gov.uk/set/schools";
+    api:selector [
+    	api:type school-ont:School;
+    	api:filter "size={size}";
+    ] .
+    
+spec:typedSchools
+    a api:ListEndpoint;
+    api:uriTemplate "http://dummy/doc/schools/type/{type}";
+    api:api spec:api1;
+    foaf:primaryTopic "http://education.data.gov.uk/set/schools";
+    api:selector [
+    	api:type school-ont:School;
+    	api:filter "school_type={type}";
+    ] .
+         
+spec:departmentsEn
+    a api:ListEndpoint;
+    api:uriTemplate "http://dummy/doc/deptsEn";
+    api:lang "en";
+    api:api spec:api1;
+    foaf:primaryTopic "http://education.data.gov.uk/set/schools";
+    api:selector [
+    	api:type school-ont:Department;
+    ] .
+         
+spec:departmentsFr
+    a api:ListEndpoint;
+    api:uriTemplate "http://dummy/doc/deptsFr";
+    api:lang "fr";
+    api:api spec:api1;
+    foaf:primaryTopic "http://education.data.gov.uk/set/schools";
+    api:selector [
+    	api:type school-ont:Department;
+    ] .
+         
+# Ontology and annotation information
+school-ont:School a owl:Class; api:label "School" .
+ex:size a owl:DatatypeProperty; api:label "size" ; rdfs:range xsd:int .
+ex:name a owl:DatatypeProperty; api:label "name" .
+
+ex:type a owl:ObjectProperty
+    ; api:label "school_type" 
+    ; rdfs:range ex:SomeObjectType 
+    .
+
+ex:Primary api:label "Primary" .
+ex:Secondary api:label "Secondary" .
+
+school-ont:localAuthority 
+    a rdf:Property
+    ; api:label "localAuthority" 
+    .
+    
+rdfs:label a rdf:Property
+    ; api:label "label"
+    .
+
+
+

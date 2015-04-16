@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><result format="linked-data-api" href="http://localhost:8080/elda/API/mini/doc/school/100866" version="0.2"><definition href="http://localhost:8080/elda/API/mini/meta/doc/school/_number"/><extendedMetadataVersion href="http://localhost:8080/elda/API/mini/doc/school/100866?_metadata=all"/><hasFormat><item href="http://localhost:8080/elda/API/mini/doc/school/100866.html"><format id="_:format-1001"><label>text/html</label></format><isFormatOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><label>html</label></item><item href="http://localhost:8080/elda/API/mini/doc/school/100866.json"><format id="_:format-1002"><label>application/json</label></format><isFormatOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><label>json</label></item><item href="http://localhost:8080/elda/API/mini/doc/school/100866.rdf"><format id="_:format-1003"><label>application/rdf+xml</label></format><isFormatOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><label>rdf</label></item><item href="http://localhost:8080/elda/API/mini/doc/school/100866.text"><format id="_:format-1004"><label>text/plain</label></format><isFormatOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><label>text</label></item><item href="http://localhost:8080/elda/API/mini/doc/school/100866.ttl"><format id="_:format-1005"><label>text/turtle</label></format><isFormatOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><label>ttl</label></item><item href="http://localhost:8080/elda/API/mini/doc/school/100866.xml"><format id="_:format-1006"><label>application/xml</label></format><isFormatOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><label>xml</label></item></hasFormat><hasVersion><item href="http://localhost:8080/elda/API/mini/doc/school/100866?_view=all"><isVersionOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><label>all</label></item><item href="http://localhost:8080/elda/API/mini/doc/school/100866?_view=basic"><isVersionOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><label>basic</label></item><item href="http://localhost:8080/elda/API/mini/doc/school/100866?_view=description"><isVersionOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><label>description</label></item><item href="http://localhost:8080/elda/API/mini/doc/school/100866?_view=location"><isVersionOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><label>location</label></item><item href="http://localhost:8080/elda/API/mini/doc/school/100866?_view=provision"><isVersionOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><label>provision</label></item></hasVersion><primaryTopic href="http://education.data.gov.uk/id/school/100866"><isPrimaryTopicOf href="http://localhost:8080/elda/API/mini/doc/school/100866"/><PFI datatype="boolean">false</PFI><address href="http://api.talis.com/stores/govuk-education/items/1259149807712#self"><address1>127 Herne Hill</address1><address2>Herne Hill</address2><postcode>SE24 9LY</postcode><town>London</town></address><altEmail>vivien.tabone@hernehillschool.co.uk</altEmail><establishmentNumber datatype="integer">6375</establishmentNumber><gender href="http://education.data.gov.uk/def/school/Gender_Mixed"><label>Mixed</label></gender><label>Herne Hill School</label><notes>ISI 6 yr review date Jun '11</notes><openDate datatype="xsd_date">1989-02-17</openDate><prefEmail>enquiries@hernehillschool.co.uk</prefEmail><schoolCapacity datatype="integer">275</schoolCapacity><typeOfEstablishment href="http://education.data.gov.uk/def/school/TypeOfEstablishment_TERM_Other_Independent_School"><label>Other Independent School</label></typeOfEstablishment><uniqueReferenceNumber datatype="integer">100866</uniqueReferenceNumber></primaryTopic><type><item href="http://purl.org/linked-data/api/vocab#Page"/></type><wasResultOf id="_:wasResultOf-1007"><processor id="_:processor-1008"><software href="http://www.epimorphics.com/vocabularies/lda#Elda_1.2.21-SNAPSHOT"><label>Elda 1.2.21-SNAPSHOT [20Feb/dayEnd]</label><releaseOf id="_:releaseOf-1009"><bug_database href="http://code.google.com/p/elda/issues/list"/><homepage href="http://elda.googlecode.com"/><implements>http://code.google.com/p/linked-data-api/wiki/Specification</implements><label>Elda</label><programming_language>Java</programming_language><repository href="https://elda.googlecode.com/hg/"><browse href="http://code.google.com/p/elda/source/browse/"/><location href="https://elda.googlecode.com"/><type><item href="http://usefulinc.com/ns/doap#Repository"/></type></repository><wiki href="http://code.google.com/p/elda/w/list"/></releaseOf><revision>1.2.21-SNAPSHOT</revision><type><item href="http://usefulinc.com/ns/doap#Version"/></type></software><type><item href="http://purl.org/linked-data/api/vocab#Service"/></type></processor><termBinding><item id="_:item-1010"><label>PFI</label><property href="http://education.data.gov.uk/def/school/PFI"/></item><item id="_:item-1011"><label>address</label><property href="http://education.data.gov.uk/def/school/address"/></item><item id="_:item-1012"><label>address1</label><property href="http://education.data.gov.uk/def/school/address1"/></item><item id="_:item-1013"><label>address2</label><property href="http://education.data.gov.uk/def/school/address2"/></item><item id="_:item-1014"><label>altEmail</label><property href="http://education.data.gov.uk/def/school/SCUAlternativeEmail"/></item><item id="_:item-1015"><label>definition</label><property href="http://purl.org/linked-data/api/vocab#definition"/></item><item id="_:item-1016"><label>establishmentNumber</label><property href="http://education.data.gov.uk/def/school/establishmentNumber"/></item><item id="_:item-1017"><label>extendedMetadataVersion</label><property href="http://purl.org/linked-data/api/vocab#extendedMetadataVersion"/></item><item id="_:item-1018"><label>gender</label><property href="http://education.data.gov.uk/def/school/gender"/></item><item id="_:item-1019"><label>isPrimaryTopicOf</label><property href="http://xmlns.com/foaf/0.1/isPrimaryTopicOf"/></item><item id="_:item-1020"><label>label</label><property href="http://www.w3.org/2000/01/rdf-schema#label"/></item><item id="_:item-1021"><label>notes</label><property href="http://education.data.gov.uk/def/school/notes"/></item><item id="_:item-1022"><label>openDate</label><property href="http://education.data.gov.uk/def/school/openDate"/></item><item id="_:item-1023"><label>postcode</label><property href="http://education.data.gov.uk/def/school/postcode"/></item><item id="_:item-1024"><label>prefEmail</label><property href="http://education.data.gov.uk/def/school/SCUpreferredemail"/></item><item id="_:item-1025"><label>primaryTopic</label><property href="http://xmlns.com/foaf/0.1/primaryTopic"/></item><item id="_:item-1026"><label>schoolCapacity</label><property href="http://education.data.gov.uk/def/school/schoolCapacity"/></item><item id="_:item-1027"><label>town</label><property href="http://education.data.gov.uk/def/school/town"/></item><item id="_:item-1028"><label>type</label><property href="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"/></item><item id="_:item-1029"><label>typeOfEstablishment</label><property href="http://education.data.gov.uk/def/school/typeOfEstablishment"/></item><item id="_:item-1030"><label>uniqueReferenceNumber</label><property href="http://education.data.gov.uk/def/school/uniqueReferenceNumber"/></item></termBinding><type><item href="http://purl.org/linked-data/api/vocab#Execution"/></type><variableBinding><item id="_:item-1031"><label>_stagePattern</label><value>^/doc/school|/doc/school/phase/primary|/(id|doc)/school/[^/]*$</value></item><item id="_:item-1032"><label>_suffix</label><value>html</value></item><item id="_:item-1033"><label>number</label><value>100866</value></item><item id="_:item-1034"><label>visibleSparqlForm</label><value>http://education.data.gov.uk/sparql/education/query.html</value></item></variableBinding><viewingResult id="_:viewingResult-1035"><endpoint id="_:endpoint-1036"><api_sparqlEndpoint href="http://education.data.gov.uk/sparql/education/query"/><type><item href="http://www.w3.org/ns/sparql-service-description#Service"/></type><url href="http://education.data.gov.uk/sparql/education/query"/></endpoint><query id="_:query-1037"><value>PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX school: &lt;http://education.data.gov.uk/def/school/&gt;
+CONSTRUCT {
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:establishmentNumber ?___0 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:gender ?___1 .
+?___1 rdfs:label ?___2 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:openDate ?___3 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:typeOfEstablishment ?___4 .
+?___4 rdfs:label ?___5 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; rdfs:label ?___6 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:SCUpreferredemail ?___7 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:notes ?___8 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:schoolCapacity ?___9 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:phaseOfEducation ?___10 .
+?___10 rdfs:label ?___11 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:SCUAlternativeEmail ?___12 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:PFI ?___13 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:religiousCharacter ?___14 .
+?___14 rdfs:label ?___15 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:address ?___16 .
+?___16 school:address3 ?___17 .
+?___16 school:address1 ?___18 .
+?___16 school:address2 ?___19 .
+?___16 school:postcode ?___20 .
+?___16 school:town ?___21 .
+?___16 school:region ?___22 .
+&lt;http://education.data.gov.uk/id/school/100866&gt; school:uniqueReferenceNumber ?___23 .
+
+} WHERE {
+{ &lt;http://education.data.gov.uk/id/school/100866&gt; school:establishmentNumber ?___0 . } 
+UNION {{ &lt;http://education.data.gov.uk/id/school/100866&gt; school:gender ?___1 . }  OPTIONAL {
+  { ?___1 rdfs:label ?___2 . } 
+}}
+UNION { &lt;http://education.data.gov.uk/id/school/100866&gt; school:openDate ?___3 . } 
+UNION {{ &lt;http://education.data.gov.uk/id/school/100866&gt; school:typeOfEstablishment ?___4 . }  OPTIONAL {
+  { ?___4 rdfs:label ?___5 . } 
+}}
+UNION { &lt;http://education.data.gov.uk/id/school/100866&gt; rdfs:label ?___6 . } 
+UNION { &lt;http://education.data.gov.uk/id/school/100866&gt; school:SCUpreferredemail ?___7 . } 
+UNION { &lt;http://education.data.gov.uk/id/school/100866&gt; school:notes ?___8 . } 
+UNION { &lt;http://education.data.gov.uk/id/school/100866&gt; school:schoolCapacity ?___9 . } 
+UNION {{ &lt;http://education.data.gov.uk/id/school/100866&gt; school:phaseOfEducation ?___10 . }  OPTIONAL {
+  { ?___10 rdfs:label ?___11 . } 
+}}
+UNION { &lt;http://education.data.gov.uk/id/school/100866&gt; school:SCUAlternativeEmail ?___12 . } 
+UNION { &lt;http://education.data.gov.uk/id/school/100866&gt; school:PFI ?___13 . } 
+UNION {{ &lt;http://education.data.gov.uk/id/school/100866&gt; school:religiousCharacter ?___14 . }  OPTIONAL {
+  { ?___14 rdfs:label ?___15 . } 
+}}
+UNION {{ &lt;http://education.data.gov.uk/id/school/100866&gt; school:address ?___16 . }  OPTIONAL {
+  { ?___16 school:address3 ?___17 . } 
+  UNION { ?___16 school:address1 ?___18 . } 
+  UNION { ?___16 school:address2 ?___19 . } 
+  UNION { ?___16 school:postcode ?___20 . } 
+  UNION { ?___16 school:town ?___21 . } 
+  UNION { ?___16 school:region ?___22 . } 
+}}
+UNION { &lt;http://education.data.gov.uk/id/school/100866&gt; school:uniqueReferenceNumber ?___23 . } 
+
+}</value></query><type><item href="http://purl.org/net/opmv/types/sparql#QueryResult"/></type></viewingResult></wasResultOf></result>

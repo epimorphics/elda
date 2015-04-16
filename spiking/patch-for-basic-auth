@@ -1,0 +1,429 @@
+diff -r 4883c5a459d2 deliver-elda/src/main/webapp/WEB-INF/web.xml
+--- a/deliver-elda/src/main/webapp/WEB-INF/web.xml	Thu Dec 06 16:54:32 2012 +0000
++++ b/deliver-elda/src/main/webapp/WEB-INF/web.xml	Fri Dec 07 16:17:49 2012 +0000
+@@ -39,6 +39,10 @@
+   	<servlet-name>loader-init</servlet-name>
+   	<servlet-class>com.epimorphics.lda.routing.Loader</servlet-class>
+   	<init-param>
++  		<param-name>com.epimorphics.api.authKey.hello-auth</param-name>
++  		<param-value>auth/hello.auth</param-value>
++  	</init-param>
++  	<init-param>
+ 		<param-name>com.epimorphics.api.initialSpecFile</param-name>
+         <param-value>
+         	hello::specs/hello-world.ttl
+diff -r 4883c5a459d2 deliver-elda/src/main/webapp/specs/tiny-education.ttl
+--- a/deliver-elda/src/main/webapp/specs/tiny-education.ttl	Thu Dec 06 16:54:32 2012 +0000
++++ b/deliver-elda/src/main/webapp/specs/tiny-education.ttl	Fri Dec 07 16:17:49 2012 +0000
+@@ -56,6 +56,8 @@
+ 	# paths which are rewritten away from education.data.gov.uk
+ 	; api:variable [api:name "_stagePattern"; api:value "^/doc/school$"]
+ 	.
++	
++<http://education.data.gov.uk/sparql/education/query> elda:authKey "hello-auth".
+     
+ # Endpoint definitions: just the one, list all schools
+ 
+diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/routing/Loader.java
+--- a/lda/src/main/java/com/epimorphics/lda/routing/Loader.java	Thu Dec 06 16:54:32 2012 +0000
++++ b/lda/src/main/java/com/epimorphics/lda/routing/Loader.java	Fri Dec 07 16:17:49 2012 +0000
+@@ -17,6 +17,8 @@
+ 
+ package com.epimorphics.lda.routing;
+ 
++import java.util.Enumeration;
++
+ import javax.servlet.http.HttpServlet;
+ import javax.xml.parsers.FactoryConfigurationError;
+ 
+@@ -28,6 +30,8 @@
+ import com.epimorphics.lda.Version;
+ import com.epimorphics.lda.core.ModelLoader;
+ import com.epimorphics.lda.routing.ServletUtils.ServletSpecContext;
++import com.epimorphics.lda.sources.SparqlSource;
++import com.epimorphics.lda.sources.SparqlSource.AuthMap;
+ import com.epimorphics.lda.specmanager.SpecManagerFactory;
+ import com.epimorphics.lda.specmanager.SpecManagerImpl;
+ import com.hp.hpl.jena.util.FileManager;
+@@ -60,14 +64,42 @@
+         ServletUtils.setupLARQandTDB( new ServletSpecContext( this ) );
+         modelLoader = new APIModelLoader( baseFilePath );
+         FileManager.get().addLocatorFile( baseFilePath );
+-    //
++    //
++        AuthMap am = loadAuthMap( FileManager.get() );
+         SpecManagerFactory.set( new SpecManagerImpl(RouterFactory.getDefaultRouter(), modelLoader) );
+         for (String spec : ServletUtils.getSpecNamesFromContext(new ServletUtils.ServletSpecContext(this))) {
+-             ServletUtils.loadSpecFromFile( modelLoader, prefixPath, spec );
++             ServletUtils.loadSpecFromFile( modelLoader, am, prefixPath, spec );
+         }
+     }
+     
+-    public void osgiInit(String filepath) {
++    static final String AUTH_NAME_PREFIX = "com.epimorphics.api.authKey";
++    
++    // load authorisation map
++    private AuthMap loadAuthMap( FileManager fm ) {
++    	AuthMap am = new AuthMap();
++    	for (Enumeration<String> e = getInitParameterNames(); e.hasMoreElements();) {
++    		String name = e.nextElement();
++    		if (name.startsWith( AUTH_NAME_PREFIX )) {
++    			String restName = name.substring( AUTH_NAME_PREFIX.length() + 1 );
++    			am.put( restName, readAuthFile( fm, getInitParameter( name ) ) );
++    		}
++    	}
++		return am;
++	}
++
++    // TODO make this not a prototype. Use properties?
++	private SparqlSource.AuthInfo readAuthFile( FileManager fm, String fileName ) {
++		SparqlSource.AuthInfo ai = new SparqlSource.AuthInfo();
++		String wholeFile = fm.readWholeFileAsUTF8( fileName );
++		String [] lines = wholeFile.split( "\n" );
++		for (String line: lines) {
++			String [] parts = line.split( " *= *" );
++			ai.put( parts[0], parts[1] );
++		}
++		return ai;
++	}
++
++	public void osgiInit(String filepath) {
+         baseFilePath = filepath;
+         modelLoader = new APIModelLoader(baseFilePath);
+ //        FileManager.get().addLocatorFile( baseFilePath );
+diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/routing/ServletUtils.java
+--- a/lda/src/main/java/com/epimorphics/lda/routing/ServletUtils.java	Thu Dec 06 16:54:32 2012 +0000
++++ b/lda/src/main/java/com/epimorphics/lda/routing/ServletUtils.java	Fri Dec 07 16:17:49 2012 +0000
+@@ -16,6 +16,7 @@
+ import com.epimorphics.lda.core.ModelLoader;
+ import com.epimorphics.lda.exceptions.APIException;
+ import com.epimorphics.lda.exceptions.APISecurityException;
++import com.epimorphics.lda.sources.SparqlSource;
+ import com.epimorphics.lda.specmanager.SpecManagerFactory;
+ import com.epimorphics.lda.support.LARQManager;
+ import com.epimorphics.lda.support.MapMatching;
+@@ -96,7 +97,7 @@
+ 		m.add( toAdd );
+ 	}
+ 
+-	public static void loadSpecFromFile( ModelLoader ml, String prefixPath, String specPath ) {
++	public static void loadSpecFromFile( ModelLoader ml, SparqlSource.AuthMap am, String prefixPath, String specPath ) {
+ 		int chop = specPath.indexOf( "::" );
+ 		if (chop >= 0) {
+ 			// prefixPath :: fileName
+@@ -107,7 +108,7 @@
+ 		Model init = ml.loadModel( specPath );
+ 		addLoadedFrom( init, specPath );
+ 		log.info( "Loaded " + specPath + ": " + init.size() + " statements" );
+-		registerModel( prefixPath, specPath, init );
++		registerModel( prefixPath, am, specPath, init );
+ 	}
+ 
+ 	/**
+@@ -115,12 +116,12 @@
+ 	 * router.
+ 	 * @param model
+ 	 */
+-	public static void registerModel( String prefixPath, String filePath, Model model ) {
++	public static void registerModel( String prefixPath, SparqlSource.AuthMap am, String filePath, Model model ) {
+ 	    for (ResIterator ri = model.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
+ 	        Resource api = ri.next();
+ 	        try {
+ 	        	if (false) setUriTemplatePrefix( prefixPath, filePath, api );
+-	            SpecManagerFactory.get().addSpec( prefixPath, api.getURI(), "", model);
++	            SpecManagerFactory.get().addSpec( prefixPath, am, api.getURI(), "", model);
+ 	        } catch (APISecurityException e) {
+ 	            throw new APIException( "Internal error. Got security exception during bootstrap. Not possible!", e );
+ 	        }
+diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/sources/CombinedSource.java
+--- a/lda/src/main/java/com/epimorphics/lda/sources/CombinedSource.java	Thu Dec 06 16:54:32 2012 +0000
++++ b/lda/src/main/java/com/epimorphics/lda/sources/CombinedSource.java	Fri Dec 07 16:17:49 2012 +0000
+@@ -49,11 +49,11 @@
+     
+     protected final Lock lock = new LockMRSW();
+     
+-    private static final Map1<Statement, Source> toSource( final FileManager fm ) {
++    public static final Map1<Statement, Source> toSource( final FileManager fm, final SparqlSource.AuthMap am ) {
+     	return new Map1<Statement, Source>()
+         	{
+     		@Override public Source map1( Statement o )
+-            	{ return GetDataSource.sourceFromSpec( fm, o.getResource() ); }
++            	{ return GetDataSource.sourceFromSpec( fm, am, o.getResource() ); }
+         	};
+     }
+ 
+@@ -67,11 +67,11 @@
+         ep is a resource of type Combiner. It has multiple elements, each of
+         which themselves represent sub-sources.
+     */
+-    public CombinedSource( FileManager fm, Resource ep )
++    public CombinedSource( FileManager fm, SparqlSource.AuthMap am, Resource ep )
+         {
+         constructs = ep.listProperties( EXTRAS.construct ).mapWith( toString ).toList();
+         matches = ep.listProperties( EXTRAS.match ).mapWith( toString ).toList();
+-        sources = ep.listProperties( EXTRAS.element ).mapWith( toSource( fm ) ).toList();
++        sources = ep.listProperties( EXTRAS.element ).mapWith( toSource( fm, am ) ).toList();
+         }
+ 
+     @Override public Lock getLock() {
+diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/sources/GetDataSource.java
+--- a/lda/src/main/java/com/epimorphics/lda/sources/GetDataSource.java	Thu Dec 06 16:54:32 2012 +0000
++++ b/lda/src/main/java/com/epimorphics/lda/sources/GetDataSource.java	Fri Dec 07 16:17:49 2012 +0000
+@@ -27,13 +27,13 @@
+ 
+ public class GetDataSource
+     {
+-    public static Source sourceFromSpec( FileManager fm, Resource specification ) 
++    public static Source sourceFromSpec( FileManager fm, SparqlSource.AuthMap am, Resource specification ) 
+         {
+         Statement s = specification.getProperty( API.sparqlEndpoint );
+         if (s != null)
+             {
+             Resource ep = s.getResource();
+-            if (ep.hasProperty( RDF.type, EXTRAS.Combiner )) return new CombinedSource( fm, ep );
++            if (ep.hasProperty( RDF.type, EXTRAS.Combiner )) return new CombinedSource( fm, am, ep );
+             }
+         String sparqlEndpoint = getStringValue( specification, API.sparqlEndpoint );
+         Resource ep = specification.getPropertyResourceValue( API.sparqlEndpoint );
+@@ -43,7 +43,7 @@
+             sparqlEndpoint.startsWith( LocalSource.PREFIX ) ? new LocalSource( fm, sparqlEndpoint )
+         	: sparqlEndpoint.startsWith( HereSource.PREFIX ) ? new HereSource( specification.getModel(), sparqlEndpoint )
+             : sparqlEndpoint.startsWith( TDBManager.PREFIX ) ? new TDBSource( sparqlEndpoint )
+-            : new SparqlSource( ep, sparqlEndpoint )
++            : new SparqlSource( ep, sparqlEndpoint, am )
+             ;
+         }
+     }
+diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/sources/SparqlSource.java
+--- a/lda/src/main/java/com/epimorphics/lda/sources/SparqlSource.java	Thu Dec 06 16:54:32 2012 +0000
++++ b/lda/src/main/java/com/epimorphics/lda/sources/SparqlSource.java	Fri Dec 07 16:17:49 2012 +0000
+@@ -17,9 +17,13 @@
+ 
+ package com.epimorphics.lda.sources;
+ 
++import java.util.HashMap;
++import java.util.Map;
++
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ 
++import com.epimorphics.lda.sources.SparqlSource.AuthInfo;
+ import com.epimorphics.lda.vocabularies.EXTRAS;
+ import com.epimorphics.util.RDFUtils;
+ import com.epimorphics.vocabs.API;
+@@ -30,9 +34,10 @@
+ import com.hp.hpl.jena.rdf.model.ResourceFactory;
+ import com.hp.hpl.jena.shared.Lock;
+ import com.hp.hpl.jena.shared.LockNone;
++import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
+ 
+ /**
+- * Data source representing and external SPARQL endpoint.
++ * Data source representing an external SPARQL endpoint.
+  * 
+  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
+  * @version $Revision: $
+@@ -48,19 +53,61 @@
+     protected Perhaps nestedSelects = Perhaps.DontKnow;
+     
+     protected enum Perhaps {Yes, No, DontKnow, CantTell}
++    
++    private final String basicUser;
++    
++    private final char[] basicPassword;
++    
++    public static class AuthInfo {
++    	final Map<String, String> authInfo = new HashMap<String, String>();
++
++		public void put(String name, String value) {
++			authInfo.put( name,  value );			
++		}
++    }
++    
++    public static class AuthMap {
++    	final Map<String, AuthInfo> authMap = new HashMap<String, AuthInfo>();
++
++		public void put(String name, AuthInfo ai ) {
++			authMap.put( name, ai );		
++		}
++    }
++    
++    public static final AuthMap emptyAuth = new AuthMap();
++
++//    public SparqlSource( Resource ep, String sparqlEndpoint ) {
++//    	this( ep, sparqlEndpoint, emptyAuth );
++//    }
+     
+-    public SparqlSource( Resource ep, String sparqlEndpoint ) {
++    public SparqlSource( Resource ep, String sparqlEndpoint, AuthMap am ) {
+         this.sparqlEndpoint = sparqlEndpoint;
+         if (ep != null) {
+         	boolean b = RDFUtils.getBooleanValue( ep, EXTRAS.supportsNestedSelect, false );
+         	nestedSelects = (b ? Perhaps.Yes : Perhaps.No);
+-        }
++        }
++    //
++        String authKey = RDFUtils.getStringValue( ep, EXTRAS.authKey, null );
++        String basicUser = null;
++        char[] basicPassword = null;
++        if (authKey != null) {
++        	AuthInfo ai = am.authMap.get(authKey);
++        	if (ai != null) {
++        		basicUser = ai.authInfo.get("basic.user");
++        		basicPassword = ai.authInfo.get("basic.password").toCharArray();
++        	}
++        }
++        this.basicUser = basicUser;
++        this.basicPassword = basicPassword;
++    //
+         log.info( "created " + toString() );
+     }
+     
+     @Override public QueryExecution execute(Query query) {
+         if (log.isDebugEnabled()) log.debug("Running query on " + sparqlEndpoint + ":\n" + query);
+-        return QueryExecutionFactory.sparqlService(sparqlEndpoint, query);
++		QueryEngineHTTP qe = new QueryEngineHTTP(sparqlEndpoint, query) ;
++		if (basicUser != null) qe.setBasicAuthentication( basicUser, basicPassword );
++		return qe ;
+     }
+ 
+     @Override public String toString() {
+diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/specmanager/SpecManager.java
+--- a/lda/src/main/java/com/epimorphics/lda/specmanager/SpecManager.java	Thu Dec 06 16:54:32 2012 +0000
++++ b/lda/src/main/java/com/epimorphics/lda/specmanager/SpecManager.java	Fri Dec 07 16:17:49 2012 +0000
+@@ -20,6 +20,7 @@
+ import java.util.List;
+ 
+ import com.epimorphics.lda.exceptions.APISecurityException;
++import com.epimorphics.lda.sources.SparqlSource;
+ import com.epimorphics.lda.specs.APISpec;
+ import com.hp.hpl.jena.rdf.model.Model;
+ 
+@@ -45,7 +46,7 @@
+      * associate endpoints. 
+      * @throws APISecurityException if the key does match the key used to create the matching existing entry
+      */
+-    public APISpec addSpec(String context, String uri, String key, Model spec) 
++    public APISpec addSpec(String context, SparqlSource.AuthMap am, String uri, String key, Model spec) 
+     throws APISecurityException;
+     
+     /**
+diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/specmanager/SpecManagerImpl.java
+--- a/lda/src/main/java/com/epimorphics/lda/specmanager/SpecManagerImpl.java	Thu Dec 06 16:54:32 2012 +0000
++++ b/lda/src/main/java/com/epimorphics/lda/specmanager/SpecManagerImpl.java	Fri Dec 07 16:17:49 2012 +0000
+@@ -32,6 +32,7 @@
+ import com.epimorphics.lda.exceptions.APISecurityException;
+ import com.epimorphics.lda.routing.Match;
+ import com.epimorphics.lda.routing.Router;
++import com.epimorphics.lda.sources.SparqlSource;
+ import com.epimorphics.lda.specs.APIEndpointSpec;
+ import com.epimorphics.lda.specs.APISpec;
+ import com.epimorphics.lda.support.MultiMap;
+@@ -61,13 +62,13 @@
+         this.modelLoader = modelLoader;
+     }
+     
+-    @Override public APISpec addSpec( String context, String uri, String key, Model spec ) throws APISecurityException {
++    @Override public APISpec addSpec( String context, SparqlSource.AuthMap am, String uri, String key, Model spec ) throws APISecurityException {
+         if (specs.containsKey(uri)) {
+             return updateSpec(context, uri, key, spec);
+         } else {
+             log.info("Creating API spec at: " + uri);
+             Resource specRoot = spec.getResource(uri);
+-			APISpec apiSpec = new APISpec( FileManager.get(), specRoot, modelLoader );
++			APISpec apiSpec = new APISpec( FileManager.get(), am, specRoot, modelLoader );
+             synchronized (specs) { specs.put(uri, new SpecEntry(uri, key, apiSpec, spec)); }
+             APIFactory.registerApi( router, context, apiSpec );
+             return apiSpec;
+@@ -99,7 +100,7 @@
+     @Override public APISpec updateSpec(String context, String uri, String key, Model spec) throws APISecurityException {
+         log.info("Udating spec: " + uri);
+         deleteSpec(context, uri, key);
+-        return addSpec(context, uri, key, spec);
++        return addSpec(context, SparqlSource.emptyAuth, uri, key, spec);
+     }
+ 
+     @Override public Model getSpecForAPI(String api) {
+diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/specs/APISpec.java
+--- a/lda/src/main/java/com/epimorphics/lda/specs/APISpec.java	Thu Dec 06 16:54:32 2012 +0000
++++ b/lda/src/main/java/com/epimorphics/lda/specs/APISpec.java	Fri Dec 07 16:17:49 2012 +0000
+@@ -27,8 +27,10 @@
+ import com.epimorphics.lda.renderers.Factories;
+ import com.epimorphics.lda.shortnames.ShortnameService;
+ import com.epimorphics.lda.shortnames.StandardShortnameService;
++import com.epimorphics.lda.sources.CombinedSource;
+ import com.epimorphics.lda.sources.GetDataSource;
+ import com.epimorphics.lda.sources.Source;
++import com.epimorphics.lda.sources.SparqlSource;
+ import com.epimorphics.lda.support.RendererFactoriesSpec;
+ import com.epimorphics.lda.vocabularies.EXTRAS;
+ import com.epimorphics.util.RDFUtils;
+@@ -37,7 +39,6 @@
+ import com.hp.hpl.jena.shared.PrefixMapping;
+ import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+ import com.hp.hpl.jena.util.FileManager;
+-import com.hp.hpl.jena.util.iterator.Map1;
+ 
+ /**
+  * Encapsulates a specification of a single API instance.
+@@ -77,17 +78,21 @@
+ 	    The default number of selected items required for a DESCRIBE
+ 	    query to use nested selects if they are available.
+ 	*/
+-	public static final int DEFAULT_DESCRIBE_THRESHOLD = 10;
++	public static final int DEFAULT_DESCRIBE_THRESHOLD = 10;
++	
++    public APISpec( FileManager fm, Resource specification, ModelLoader loader ) {
++    	this( fm, SparqlSource.emptyAuth, specification, loader );
++    }
+     
+-    public APISpec( FileManager fm, Resource specification, ModelLoader loader ) {
++    public APISpec( FileManager fm, SparqlSource.AuthMap am, Resource specification, ModelLoader loader ) {
+     	specificationURI = specification.getURI();
+     	defaultPageSize = RDFUtils.getIntValue( specification, API.defaultPageSize, QueryParameter.DEFAULT_PAGE_SIZE );
+ 		maxPageSize = RDFUtils.getIntValue( specification, API.maxPageSize, QueryParameter.MAX_PAGE_SIZE );
+         describeThreshold = RDFUtils.getIntValue( specification, EXTRAS.describeThreshold, DEFAULT_DESCRIBE_THRESHOLD );
+ 		prefixes = ExtractPrefixMapping.from(specification);
+         sns = loadShortnames(specification, loader);
+-        dataSource = GetDataSource.sourceFromSpec( fm, specification );
+-        describeSources = extractDescribeSources( fm, specification, dataSource );
++        dataSource = GetDataSource.sourceFromSpec( fm, am, specification );
++        describeSources = extractDescribeSources( fm, am, specification, dataSource );
+         primaryTopic = getStringValue(specification, FOAF.primaryTopic, null);
+         defaultLanguage = getStringValue(specification, API.lang, null);
+         base = getStringValue( specification, API.base, null );
+@@ -105,20 +110,12 @@
+         Answer the list of sources that may be used to enhance the view of
+         the selected items. Always contains at least the given source.
+     */
+-    private List<Source> extractDescribeSources( FileManager fm, Resource specification, Source dataSource ) {
++    private List<Source> extractDescribeSources( FileManager fm, SparqlSource.AuthMap am, Resource specification, Source dataSource ) {
+         List<Source> result = new ArrayList<Source>();
+         result.add( dataSource );
+-        result.addAll( specification.listProperties( EXTRAS.enhanceViewWith ).mapWith( toSource( fm ) ).toList() ); 
++        result.addAll( specification.listProperties( EXTRAS.enhanceViewWith ).mapWith( CombinedSource.toSource( fm, am ) ).toList() ); 
+         return result;
+     }
+-
+-    private static final Map1<Statement, Source> toSource( final FileManager fm ) {
+-    	return new Map1<Statement, Source>() {
+-    		@Override public Source map1( Statement o ) { 
+-    			return GetDataSource.sourceFromSpec( fm, o.getResource() ); 
+-    		}
+-    	};
+-    };
+     
+     private void extractEndpointSpecifications( Resource specification ) {
+         NodeIterator ni = specification.getModel().listObjectsOfProperty(specification, API.endpoint);
+diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/vocabularies/EXTRAS.java
+--- a/lda/src/main/java/com/epimorphics/lda/vocabularies/EXTRAS.java	Thu Dec 06 16:54:32 2012 +0000
++++ b/lda/src/main/java/com/epimorphics/lda/vocabularies/EXTRAS.java	Fri Dec 07 16:17:49 2012 +0000
+@@ -72,6 +72,8 @@
+ 	public static final Property uriTemplatePrefix = property( "uriTemplatePrefix" );
+ 
+ 	public static final Resource VelocityFormatter = resource( "VelocityFormatter" );
++
++	public static final Property authKey = property( "authKey" );
+     
+     private static Property property( String local )
+         { return ResourceFactory.createProperty( EXTRA + local ); }

@@ -1,0 +1,28 @@
+:root a api:API 
+    ; api:sparqlEndpoint <local:CURRENT-TEST>
+    ; api:endpoint :ep
+    .
+    
+:included a api:Viewer
+    ; api:name "included"
+    ; api:property :p
+    .
+
+:ep a api:ListEndpoint
+    ; api:uriTemplate '/alpha'
+    ; api:viewer :included
+    ; api:lang "en"
+    ; api:selector  [api:filter "p=v"]
+    .
+    
+rdf:type a rdf:Property
+    ; api:label 'type'
+    .
+
+:p api:label 'p'
+    .
+    
+:q api:label 'q'
+    ; rdfs:range xsd:int
+    .
+    

@@ -1,0 +1,44 @@
+@prefix api:     <http://purl.org/linked-data/api/vocab#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix : <http://www.epimorphics.com/tools/example#> .
+
+:root a api:API
+    ; api:sparqlEndpoint <local:system-test-data-A.ttl>
+    ; api:endpoint :ep, :epitem, :ep_itemtest
+    .
+
+:ep a api:ListEndpoint
+    ; api:uriTemplate '/alpha'
+    .
+
+:epitem a api:ItemEndpoint
+    ; api:uriTemplate '/beta'
+    .
+
+:ep_itemtest a api:ItemTemplate
+    ; api:uriTemplate '/gamma'
+    ; api:itemTemplate 'http://nowhere.com/handover'
+    .
+
+rdf:type a rdf:Property
+    ; api:label 'type'
+    .
+
+:p api:label 'p'
+    ; a owl:DatatypeProperty
+    ; rdfs:range xsd:integer
+    .
+
+:eastish a owl:DatatypeProperty
+    ; api:label 'eastish'
+    ; rdfs:range xsd:integer
+    .
+
+:northish a owl:DatatypeProperty
+    ; api:label 'northish'
+    ; rdfs:range xsd:integer
+    .

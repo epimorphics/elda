@@ -1,0 +1,37 @@
+# Model from test: http://dummy/doc/deptsFr?name=département
+@prefix spec:    <http://www.epimorphics.com/examples/spec1#> .
+@prefix os:      <http://a9.com/-/spec/opensearch/1.1/> .
+@prefix ex:      <http://www.epimorphics.com/examples/eg1#> .
+@prefix school-ont:  <http://education.data.gov.uk/def/school/> .
+@prefix opmv:    <http://purl.org/net/opmv/types/common#> .
+@prefix foaf:    <http://xmlns.com/foaf/0.1/> .
+@prefix sparql:  <http://purl.org/net/opmv/types/sparql#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct:     <http://purl.org/dc/terms/> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix api:     <http://purl.org/linked-data/api/vocab#> .
+@prefix doap:    <http://usefulinc.com/ns/doap#> .
+@prefix xhv:     <http://www.w3.org/1999/xhtml/vocab#> .
+
+<http://dummy/doc/deptsFr>
+      a       api:Page , api:ListEndpoint ;
+      os:itemsPerPage "10"^^xsd:long ;
+      os:startIndex "1"^^xsd:long ;
+      dct:hasPart <http://dummy/doc/deptsFr> ;
+      dct:isPartOf <http://dummy/doc/deptsFr> ;
+      api:definition <http://dummy/doc/deptsFr/meta> ;
+      api:extendedMetadataVersion
+              <http://dummy/doc/deptsFr?_metadata=all> ;
+      api:items (ex:dept4 ex:dept1) ;
+      api:page "0"^^xsd:long ;
+      xhv:first <http://dummy/doc/deptsFr?_page=0> .
+
+ex:dept4
+      a       school-ont:Department ;
+      ex:name "département"@fr .
+
+ex:dept1
+      a       school-ont:Department ;
+      ex:name "département"@fr .

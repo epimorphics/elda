@@ -1,0 +1,15 @@
+URI=anchor_me?min-p=4&max-q=2
+ASK
+{	
+FILTER NOT EXISTS 
+	{
+	:d a :C; :p 4 .
+	:e a :C; :p 5 .
+	}
+	
+FILTER NOT EXISTS
+	{
+	:m a :C; :q 6 .
+	:n a :C; :q 7 .
+	}
+}

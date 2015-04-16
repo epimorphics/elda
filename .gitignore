@@ -3,3 +3,23 @@ _site
 
 target
 elda-*
+*.class
+
+*.jar
+*.war
+
+target/
+.settings/
+.classpath
+.project
+.metadata
+.tomcatplugin
+.#webclasspath
+elda-standalone/meta-graph.ttl
+elda-standalone/object-graph.ttl
+elda-standalone/velocity.log
+elda-standalone/src/main/webapp/assets
+elda-standalone/velocity.log*
+
+_site
+.sass-cache

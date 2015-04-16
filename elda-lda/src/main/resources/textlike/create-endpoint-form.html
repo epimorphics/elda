@@ -1,0 +1,27 @@
+<pre>
+Forthcoming:
+
+comment box [long description]
+label box [short label]
+template [SPARQL resource-finding query]
+resource [variable in query that designates "the" resource]
+param [variable[s?] in query that will be filled in when URI passed]
+    [POSSIBLE: allow anything that makes sense in the ontology]
+    [in which case, shouldn't we consult said ontology?]
+    
+construct [SPARQL construct for resource descriptions: CONSTRUCT query]
+</pre>
+
+<form id='request-endpoint' method='POST' action=''>
+  <input type='submit' name='SUBMIT' value='SUBMIT'></input>
+  <input type='text' name='comment' value='long description here'></input>
+  <input type='text' name='label' value='terse label goes here'></input>
+  <textarea rows='10' cols='80' name='template'>
+    The SPARQL query that finds the resources of interest goes here.
+  </textarea>
+  <input type='text' name='resource' value='resource variable goes here'></input>
+  <input type='text' name='params' value='parameter variables go here'></input>
+  <textarea rows='20' cols='80' name='desc'>
+    your Turtle describing the required service goes here. 
+  </textarea>
+</form>

@@ -1,0 +1,7 @@
+URI=/alpha?_root=17
+
+ASK { ?s ?p ?o }
+
+URI=/alpha?_epA=17
+
+ASK { ?s ?p ?o }

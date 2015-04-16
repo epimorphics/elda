@@ -1,0 +1,6 @@
+schools-ttl-medium;ttl;http://localhost:8080/elda/api/education/schools.ttl?_view=medium
+schools-ttl-basic;ttl;http://localhost:8080/elda/api/education/schools.ttl?_view=basic
+schools-ttl-all;ttl;http://localhost:8080/elda/api/education/schools.ttl?_view=all
+schools-ttl-description;ttl;http://localhost:8080/elda/api/education/schools.ttl?_view=description
+schools-ttl-short;ttl;http://localhost:8080/elda/api/education/schools.ttl?_view=short
+schools-ttl-geo;ttl;http://localhost:8080/elda/api/education/schools.ttl?_view=geo

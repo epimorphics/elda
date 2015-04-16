@@ -1,0 +1,20 @@
+URI=/alpha?exists-eastish=true
+ASK { :A a :Item }
+
+URI=/alpha?exists-absent=true
+ASK NOT { :A a :Item }
+
+URI=/alpha?exists-p.q=true
+ASK { :A a :Item }
+
+URI=/alpha?exists-p.unq=true
+ASK NOT { :A a :Item }
+
+URI=/alpha?exists-p.unq=false&_pageSize=100
+ASK { :A a :Item }
+
+URI=/alpha?exists-p.q.r=false&_pageSize=100
+ASK { :A a :Item }
+
+URI=/alpha?exists-p.q.r=true
+ASK NOT { :A a :Item }

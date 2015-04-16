@@ -1,0 +1,175 @@
+ELDA
+
+Modules for Jena-based implementation of the linked data api and 
+associated JSON encoding.
+
+This is organized as a multi-module Maven project with
+the follow modules:
+
+  o elda-lda            - core code for Elda
+  o elda-standalone     - deliverable webapp with standalone jar
+  o elda-common         - externally configurable elda
+  o elda-assets         - images, stylesheets, etc for elda
+  o elda-system-tests   - test client
+  o elda-testing-webapp - server for system tests
+
+Eclipse project and settings should not be in the repository.
+If not using m2clipse then create the Eclipse settings using:
+
+   mvn -DdownloadJavadocs=true -DdownloadSources=true eclipse:eclipse
+
+[The download options are optional beware that the jersey sources and 
+ javadocs are usually excruciatingly slow to download.]
+
+Import into Eclipse using the multi-project import tool from:
+http://eclipse-tools.sourceforge.net/updates/
+
+Elda documentation lives in docs/E*html. The latest version is
+referenced by docs/quickstart.html. Older documentation persists
+but not indefinitely.
+
+BUILDING ELDA
+
+Elda is built using maven in the usual way: `mvn package` to
+build in the local module filestore, `mvn install` to build
+and install in your local repository, `mvn deploy` to build
+and push the artifacts into the Epimorphics public repository
+(assuming you have the appropriate password in your maven
+settings.xml).
+
+RELEASING ELDA
+
+* PREREQUISITES
+
+  Running Linux with git installed.
+
+  Have a local Elda project up-to-date with respect to
+  the github repository (and maybe with your own
+  local updates).
+
+  Have permission to update the deployment repository.
+
+  Have permission to administer the project githib pages.  
+
+  Willing to commit to this latest Elda version.
+
+* PREAMBLE
+
+  Run a test build using `mvn install`. 
+  If it fails, you'll have to fix it.
+  Run any other tests to hand, eg building an Elda
+  application and eyeballing the results of well-known
+  queries [this will become automated at some point].
+
+  IN PARTICULAR, after consultation with other interested
+  parties (eg Stuart), build a new EA webapp, put it up
+  on staging, and check that the BW app works. It makes
+  many specific queries and the app working says that
+  very many of these (still) work.
+
+  Note: release notes, docs are in the gh-pages branch.
+
+  Ensure the release notes are up-to-date. The top
+  entry in ReleaseNotes/latest.text should be marked 
+  DEVELOPING. Use `git log | more` to check changes since
+  the previous release and incorporate them into the
+  release notes, summarising where appropriate and 
+  putting important/big changes early. Change DEVELOPING 
+  to RELEASED.
+
+  Edit docs/quickstart.html to refer to the 
+  docs/E${this.version}/index.html. 
+  
+  Commit (with a suitable "releasing" -m) and push.
+  There should be no files present that are not
+  under change control (if there are, maven release
+  will object loundly and clunkily). If there are,
+  deal with them appropriately.
+
+* MAVEN RELEASE
+
+  Remove any existing /tmp/tempSCM directory.
+  Clone the elda project into /tmp/tempSCM.
+
+    git clone --bare https://github.com/epimorphics/elda.git tempSCM
+
+  In your USUAL elda development directory
+
+    mvn --batch-mode release:prepare
+    mvn --batch-mode release:perform
+
+  This builds and deploys non-SNAPSHOT Elda artifacts.
+  It should not fail (that's what the "run test build"
+  and "all files under change control" steps are for).
+
+  THIS STEP IS NOT IDEMPOTENT AND NOT REVERSIBLE. The
+  release/prepare-perform cycle converts $VERSION-SNAPSHOT
+  to $VERSION and deploys the Elda artifacts, tagging
+  the repository, before incrementing the version and
+  creating $VERSION'-SNAPSHOT. Because convention decrees
+  that existing artifacts aren't deleted or changed,
+  the new Elda version is Out There and can't be pulled
+  back. 
+
+  This is far from perfect but will have to do. 
+
+* POSTAMBLE 
+
+  execute `git push origin elda-$(VERSION)` for the new version.
+  (This doesn't seem to happen automatically although some
+  forums claim it does.) This pushes the new tag into the
+  remote (ie Elda's github) repository.
+
+  Update the index.html in the gl-pages branch of the Elda
+  repository to change the release date and version number 
+  appropriately. Summarise the release notes; remove 
+  sufficiently old summaries.
+
+  Note the name $STANDALONE of the standalone jar
+
+	http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/$VERSION/elda-standalone-$VERSION-$DETAILS
+
+  where VERSION is the version you have just released and DETAILS is
+  the maven-defined timestamp of the release. Edit the project index.html
+  to refer to $STANDALONE.
+
+  Add a new release marker to the release notes with
+  the next release version tagged DEVELOPING.
+
+  Copy docs/E${version} to docs/E${version+1}. Correct
+  any references in these new html files to the version
+  number. `git add` these files and commit and push them.
+  Update the quickstart.html to point to the just-released
+  files.
+
+  Email linked-data-api-discuss with a moderately chatty
+  message about the update, summarising the release notes
+  and specifically anything that has been recently mentioned,
+  and including $STANDALONE.
+
+  Email dev@jena.apache.org, users@jena.apache.org, and 
+  semantic-web@w3.org a message with the following structure
+  (and updated version number):
+
+    Dear All
+    
+    We are pleased to announce the release of Elda ${version} [1]. 
+    Elda is an implementation of the Linked Data API [2], which 
+    allows SPARQL to be generated from configurable RESTful requests 
+    and the resulting RDF data to be presented in a variety of 
+    formats. Elda is implemented using Apache Jena [3]. Discussion 
+    about Elda takes place on the Linked Data API discussion list [4].
+    
+    Chris
+    
+    [1] http://epimorphics.github.io/elda/
+    
+    [2] http://code.google.com/p/linked-data-api/
+    
+    [3] http://jena.apache.org/
+    
+    [4] linked-data-api-discuss@googlegroups.com
+
+  If there is something particularly important/urgent about this
+  release, add it to the email body.
+    

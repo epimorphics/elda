@@ -1,0 +1,58 @@
+<project name="Elda" default="schemagen" basedir="..">
+	<description>
+		ANT task to perform vocabulary class building using schemagen.
+		Classpath is inherited from Maven.
+	</description>
+
+	<property name="src" location="${basedir}/src" />
+
+	<target name="testUpToDate">
+
+		<uptodate 
+			property="schemagen_api_UpToDate"
+			srcfile="${basedir}/../vocabs/api.ttl"
+			targetfile="${src}/main/java/com/epimorphics/lda/vocabularies/API.java"
+		/>
+
+		<uptodate 
+			property="schemagen_elda_api_UpToDate"
+			srcfile="${basedir}/../vocabs/elda_api.ttl"
+			targetfile="${src}/main/java/com/epimorphics/lda/vocabularies/ELDA_API.java"
+		/>
+	</target>
+
+	<target name="schemagen_command" unless="schemagen_${what}_UpToDate" depends="testUpToDate">
+		<java className="jena.schemagen" classPath="${classpath}" failonerror="true">
+			<arg value="-i" /> <arg value="${basedir}/../vocabs/${what}.ttl" />
+			<arg value="-a" /> <arg value="${namespace}" />
+			<arg value="-o" /> <arg value="${src}/main/java/" />
+			<arg value="--package" /> <arg value="com.epimorphics.lda.vocabularies" />
+			<arg value="-n" /> <arg value="${CLASSNAME}" />
+			<arg value="--classdec" /> <arg value="${CLASSDEC}" />
+			<arg value="--inference" />
+		</java>
+		<echo>schemagen ${CLASSNAME} completed</echo>
+	</target>
+
+    <target name="schemagen_API">
+        <antcall target="schemagen_command">
+            <param name="what" value="api"/>
+        	<param name="namespace" value="http://purl.org/linked-data/api/vocab#" />
+			<param name="CLASSNAME" value="API"/>
+			<param name="CLASSDEC" value="" />
+        </antcall>  
+    </target>
+
+	<target name="schemagen_ELDA_API">
+		<antcall target="schemagen_command">
+			<param name="what" value="elda_api"/>
+            <param name="namespace" value="http://www.epimorphics.com/vocabularies/lda#" />
+			<param name="CLASSNAME" value="ELDA_API" />
+			<param name="CLASSDEC" value=" extends API " />
+		</antcall>	
+	</target>
+	
+	<target name="schemagen" depends="schemagen_API,schemagen_ELDA_API">
+	</target>
+	
+</project>

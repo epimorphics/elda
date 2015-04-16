@@ -1,0 +1,4 @@
+@prefix : <http://www.epimorphics.com/tools/example#> .
+
+:select_yes :p 1 .
+:select_no :p 2 .
