@@ -37,9 +37,6 @@ public class ComposeConfigDisplay {
 	public String configPageMentioning( List<SpecEntry> entries, URI base, String pathstub ) {
 		StringBuilder textBody = new StringBuilder();
 		if (pathstub == null) pathstub = "";
-		
-		System.err.println(">> pathstub is " + pathstub);
-		
 		int count = 0;
 		int n = entries.size();
 		textBody

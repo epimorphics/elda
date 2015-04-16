@@ -94,25 +94,17 @@ import com.hp.hpl.jena.util.ResourceUtils;
         }
     }
     
-    // HERE EXEMPLAR
     @GET @Produces("text/html") public Response requestHandlerHTML
     	( @PathParam("path") String pathstub, @Context ServletContext config, @Context UriInfo ui) {
         SpecRecord rec = lookupRequest(config, pathstub, ui);
         String stub = rec == null ? "" : pathstub;
-        
-        System.err.println(">> meta x: rec is " + rec);
-        
         return new ConfigRestlet().generateConfigPage( stub, config, ui );
     }
     
     @GET public Response requestHandlerAny( @PathParam("path") String pathstub, @Context ServletContext config, @Context UriInfo ui) {
-        try {SpecRecord rec = lookupRequest(config, pathstub, ui);
+        SpecRecord rec = lookupRequest(config, pathstub, ui);
         String stub = rec == null ? "" : pathstub;
-        return new ConfigRestlet().generateConfigPage( stub, config, ui ); }
-        catch (RuntimeException e) {
-        	System.err.println( "OOPS" );
-        	throw new RuntimeException( e );
-        }
+        return new ConfigRestlet().generateConfigPage( stub, config, ui );
     }
 
     static final Property SIBLING = ResourceFactory.createProperty( ELDA_API.NS + "SIBLING" );
