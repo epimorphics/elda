@@ -37,6 +37,9 @@ public class ComposeConfigDisplay {
 	public String configPageMentioning( List<SpecEntry> entries, URI base, String pathstub ) {
 		StringBuilder textBody = new StringBuilder();
 		if (pathstub == null) pathstub = "";
+		
+		System.err.println(">> pathstub is " + pathstub);
+		
 		int count = 0;
 		int n = entries.size();
 		textBody
@@ -53,8 +56,8 @@ public class ComposeConfigDisplay {
 			PrefixMapping pm = se.getSpec().getPrefixMap();
 			String shortName = root.getModel().shortForm( root.getURI() );
 			String label = getLabelled( root, shortName );
-			List<APIEndpointSpec> endpoints = se.getSpec().getEndpoints();
-			boolean showThis = occursIn( pathstub, endpoints );
+		//
+			boolean showThis = show(pathstub, se);
 			textBody.append( "<h2>" + label + " <a href='javascript:toggle(\"" + w.idFor(shortName) + "\")'>show/hide</a></h2>" );
 			textBody.append( "<div id='" + w.idFor(shortName) + "' class='" + (showThis ? "show" : "hide") + "'>\n" );
 		//
@@ -78,6 +81,7 @@ public class ComposeConfigDisplay {
 //	            ;
 	        
 	        textBody.append( "<h2>endpoints</h2>\n" );
+	        List<APIEndpointSpec> endpoints = se.getSpec().getEndpoints();		
 	        Collections.sort( endpoints, sortByEndpointURITemplate );
 			for (APIEndpointSpec s: endpoints) renderEndpoint( textBody, w, base, pathstub, pm, s );  
 	    //
@@ -86,7 +90,24 @@ public class ComposeConfigDisplay {
 		}
 		
         return textBody.toString();
-	}  
+	}  			
+	
+	/**
+		show(path, se) returns true iff the supplied path names an endpoint
+		of the given spec entry, taking into account that the path might
+		start with the spec's prefix path (which will then have to be
+		stripped before checking the endpoints of this spec).
+	*/
+	private boolean show(String path, SpecEntry se) {
+		String prefixPath = se.getSpec().getPrefixPath().substring(1);	
+		if (path.startsWith(prefixPath)) {
+			List<APIEndpointSpec> endpoints = se.getSpec().getEndpoints();
+			String strippedPath = path.substring(prefixPath.length() + 1);
+			return occursIn( strippedPath, endpoints );
+		} else {
+			return false;
+		}
+	}
     
 	static class Which {
 
@@ -104,8 +125,11 @@ public class ComposeConfigDisplay {
 	}
 	
 	private boolean occursIn( String pathstub, List<APIEndpointSpec> endpoints ) {
-    	for (APIEndpointSpec es: endpoints)
-    		if (matches( pathstub, es.getURITemplate().substring(1) )) return true;
+    	for (APIEndpointSpec es: endpoints) {
+    		if (matches( pathstub, es.getURITemplate().substring(1) )) {
+    			return true;
+    		}
+    	}
 		return false;
 	}
 

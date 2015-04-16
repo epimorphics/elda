@@ -11,6 +11,7 @@ import static com.epimorphics.lda.restlets.RouterRestlet.*;
 
 import java.util.*;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
@@ -163,8 +164,12 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
     }
     
     public static SpecRecord lookupRequest(String pathstub, UriInfo ui) {
+    	return lookupRequest(null, pathstub, ui);
+    }
+        
+    public static SpecRecord lookupRequest(ServletContext con, String pathstub, UriInfo ui) {
         String path = "/" + pathstub;
-        Router r = RouterFactory.getDefaultRouter();
+        Router r = con == null ? RouterFactory.getDefaultRouter() : RouterRestlet.getRouterFor(con);
 		MultiMap<String, String> params = new MultiMap<String, String>();
 		Match match = r.getMatch(path, params );
         if (match == null) match = r.getMatch(trimmed(path), params);
