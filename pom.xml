@@ -118,10 +118,10 @@
         <artifactId>lucene-core</artifactId>
         <version>${ver.lucene}</version>
       </dependency>
-
+      
       <dependency>
         <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
+        <artifactId>javax.servlet-api</artifactId>
         <version>${ver.servlet-api}</version>
         <type>jar</type>
         <scope>provided</scope>
