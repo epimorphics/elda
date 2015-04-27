@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>stack overflow</title>
+
+#parse("head.vm")
+
+</head>
+<body>
+<h1>Sorry</h1>
+
+
+#if($verbose)
+The stack overflowed.
+
+<pre>
+$_message.spelling()
+</pre>
+#end
+
+</body>
+</html>

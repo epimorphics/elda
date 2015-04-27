@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>bad request</title>
+
+#parse("head.vm")
+
+</head>
+<body>
+<h1>Bad Request</h1>
+
+Your request was ill-formed.
+
+#if($verbose)
+<pre>
+$_message.spelling()
+</pre>
+#end
+
+</body>
+</html>

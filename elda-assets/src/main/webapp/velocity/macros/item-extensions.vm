@@ -9,6 +9,9 @@
 #end
 
 #macro( resourceMap $resource $rowClass )
+  #if( ! $mapCounter )
+    #set( $mapCounter = 1 )
+  #end
   #set( $geoTriples = $resource.extractByPredicate( $geoProps ) )
   <div class="$rowClass">
     <div class="col-md-8">
@@ -18,7 +21,8 @@
     </div>
     <div class="col-md-4">
       <div class="item-extension map">
-        #set( $mapId = "map-" + $item.rdfNode().shortUniqueID() )
+        #set( $mapId = "map-" + $item.rdfNode().shortUniqueID() + "-" + $mapCounter )
+        #set( $mapCounter = $mapCounter + 1 )
         #set( $long = $geoTriples.get( 0 ).rdfNode().getLexicalForm() )
         #set( $lat  = $geoTriples.get( 1 ).rdfNode().getLexicalForm() )
         <div id="$mapId"></div>

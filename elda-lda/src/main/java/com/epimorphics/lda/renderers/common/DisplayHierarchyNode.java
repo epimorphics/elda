@@ -121,7 +121,7 @@ public class DisplayHierarchyNode
 
     /** @return True if this node is a root of the hierarchy */
     public boolean isRoot() {
-        return parent == null;
+        return pathTo().isEmpty();
     }
 
     /** @return The RDF node that this hierarchy node is presenting */
@@ -159,10 +159,10 @@ public class DisplayHierarchyNode
      */
     public boolean isLeaf( DisplayHierarchyContext context ) {
         return rdfNode().isLiteral() ||
-               isLoop() ||
-               (!isRoot() &&
-                !isOnExplicitPath() &&
-                context.isSeen( rdfNode() ));
+               !(isRoot() ||
+                 rdfNode().isAnon() ||
+                 isOnExplicitPath() ||
+                 !context.isSeen( rdfNode() ));
     }
 
     /** @return The list of children of this node. */
@@ -209,7 +209,7 @@ public class DisplayHierarchyNode
     public boolean isSimpleResource() {
         boolean isSimple = false;
 
-        if (isResource()) {
+        if (isResource() && !isAnon()) {
             List<Statement> s = rdfNode().asResource().listProperties().toList();
 
             if (s.size() == 0) {
@@ -388,7 +388,8 @@ public class DisplayHierarchyNode
 
     /** @see RDFNodeWrapper#getName() */
     public String getName() {
-        return rdfNode().getName();
+        String name = rdfNode().getName();
+        return name.equals( "[]" ) ? "" : name;
     }
 
     /** @see RDFNodeWrapper#getValue() */
@@ -399,6 +400,26 @@ public class DisplayHierarchyNode
     /** @see RDFNodeWrapper#getURI() */
     public String getURI() {
         return rdfNode().getURI();
+    }
+    
+    /** @return A string presentation of this node for debugging */
+    @Override
+    public String toString() {
+        String ep = "[";
+        String s = "";
+        
+        for (PropertyPath p: explicitPaths) {
+            ep = ep + p.toString() + s;
+            s = ",";
+        }
+        ep = ep + "]";
+        
+        return "DisplayHierarchyNode{ node: " + rdfNode + 
+                ", parent:" + (parent == null ? "null" : parent.rdfNode()) +
+                ", pathTo: " + pathTo +
+                ", nSiblings: " + siblings.size() +
+                ", explicitPaths: " + ep +
+                "}";
     }
 
 
@@ -426,7 +447,7 @@ public class DisplayHierarchyNode
                                  String rel, String hint, boolean set, Page page ) {
         OPERATION op = set ? OPERATION.SET : OPERATION.ADD;
         String linkIcon = "fa-plus-circle";
-        EldaURL pageURL = page.pageURL();
+        EldaURL pageURL = page.isItemEndpoint() ? page.pageURL().parentURL() : page.pageURL();
         String prompt = "require ";
         String closeQuote = "";
 

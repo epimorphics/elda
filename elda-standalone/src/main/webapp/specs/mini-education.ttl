@@ -147,11 +147,6 @@ spec:mini-education-api a api:API
 		]
 	.
     
-# Tells Elda that the SPARQL endpoint understands nested SELECTS in SPARQL.
-# This can significantly reduce the size of queries.
-
-<http://education.data.gov.uk/sparql/education/query> elda:supportsNestedSelect true.
-
 # Endpoint definitions. We have three: an item endpoint to describe a
 # single school, a list endpoint to describe all schools, and a list
 # endpoint to describe all primary schools.

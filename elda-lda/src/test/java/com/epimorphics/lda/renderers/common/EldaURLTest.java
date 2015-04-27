@@ -300,6 +300,12 @@ public class EldaURLTest
         assertEquals( "c", ps.get( 1 ).name() );
         assertEquals( "d,e", ps.get( 1 ).toString() );
     }
+    
+    @Test
+    public void testGenerateParentURL() {
+        EldaURL eu = new EldaURL( "http://foo.bar.com/fu/bar?_a=b&c=d,e" );
+        assertEquals( "http://foo.bar.com/fu?_a=b&c=d,e", eu.parentURL().toString() );
+    }
 
     /***********************************/
     /* Internal implementation methods */

@@ -1,0 +1,21 @@
+<style> 
+
+body { 
+    background-color: pink 
+} 
+
+pre {
+    margin: 1ex
+    ; padding: 1ex
+    ; background-color: #ffaaaa
+    ; border-radius: 1ex
+    ; font-weight: bold
+}
+    
+</style>
+
+#set($verbose = true)
+#if($_errorMode.spelling() == "taciturn") 
+    #set($verbose = false) 
+#end
+    

@@ -42,6 +42,7 @@ import java.io.*;
 import java.util.Iterator;
 
 import org.apache.jena.atlas.json.JsonException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelCompareUtils;

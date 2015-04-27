@@ -43,10 +43,6 @@
 ##
 @prefix elda:			  <http://www.epimorphics.com/vocabularies/lda#> .
 
-<http://environment.data.gov.uk/sparql/bwq/query> elda:supportsNestedSelect true.
-<http://environment.data.gov.uk/sparql/bwq/query> elda:supportsNestedSelect true .
-<http://eastaging.epimorphics.com/sparql/bwq/query> elda:supportsNestedSelect true .
-
 t:api
   a api:API ;
   rdfs:label "Bathing Water Quality API (environment.data.gov.uk)"@en ;
@@ -69,7 +65,7 @@ t:api
 ##
 ##
   api:defaultFormatter t:HtmlFormatter ;
-  api:variable [ api:name "_velocityRoot"; api:value "assets/velocity" ] ;
+  api:variable [ api:name "_velocityPath"; api:value "assets/velocity" ] ;
 #	api:variable [ api:name "activeImageBase"; api:value "/images/green/16x16" ];
 #	api:variable [ api:name "inactiveImageBase"; api:value "/images/grey/16x16" ];
 

@@ -73,14 +73,7 @@ public class TDBSource extends SourceBase implements Source
                 ?  QueryExecutionFactory.create( query, sourceSet )
                 :  QueryExecutionFactory.create( query, source );
         }
-
-    /**
-        TDB supports nested selects via ARQ.
-    */
-	@Override public boolean supportsNestedSelect() 
-		{ return true; }
     }
-
     
 /*
     (c) Copyright 2010 Epimorphics Limited

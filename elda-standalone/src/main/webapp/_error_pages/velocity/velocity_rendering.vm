@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>sorry</title>
+
+#parse("head.vm")
+
+</head>
+<body>
+<h1>Sorry</h1>
+
+#if($verbose)
+
+There was a problem when Velocity rendered your page.
+<pre>
+$_message.spelling()
+</pre>
+#end
+
+</body>
+</html>

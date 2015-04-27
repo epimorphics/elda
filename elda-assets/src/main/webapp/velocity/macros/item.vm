@@ -8,47 +8,90 @@
 ## Display an RDF resource
 #macro( showRdfResource $hnode, $elem, $level )
   #set( $resource = $hnode.rdfNode() )
-  #if( $level.equals( "outer" ))
-    <$elem class="rdf resource $level" id="$resource.shortUniqueID()">
-      <div class="row">
-        #itemName( $resource, "h1", "col-md-12" )
-        #itemURI( $resource, "h2", "col-md-12" )
-        #itemTypes( $resource, "col-md-12" )
-        #itemVisualExtension( $hnode )
-        #itemProperties( $hnode, $level )
-      </div>
-    </$elem>
-  #else
-    <$elem class="rdf resource $level">
-      #itemName( $resource, "h3", "", $hnode )
-      #itemURI( $resource, "h4", "" )
-      #itemTypes( $resource )
-      #itemVisualExtension( $hnode, "row" )
-      <div class="row">
-        #itemProperties( $hnode, $level )
-      </div>
-    </$elem>
+  #set( $cssLeaf = "" )
+  #set( $isLeaf = false )
+
+  #if( $hnode.children().size() == 0 )
+    #set( $cssLeaf = " leaf" )
+    #set( $isLeaf = true )
   #end
+
+  #if( $level.equals( "outer" ))
+    #showRdfResourceOuter( $hnode, $elem, $level )
+  #elseif( $isLeaf && $hnode.isLoop() )
+    #showRdfResourceLoop( $hnode, $elem, $level )
+  #else
+    #showRdfResourceNested( $hnode, $elem, $level )
+  #end
+#end
+
+## Display a top-level resource, which includes setting the resource ID
+## for in-page linking
+#macro( showRdfResourceOuter $hnode, $elem, $level )
+  <$elem class="rdf resource $level $cssLeaf" id="$resource.shortUniqueID()">
+    <div class="row">
+      #itemName( $resource, "h1", "col-md-12" )
+      #itemURI( $resource, "h2", "col-md-12" )
+      #itemTypes( $resource, "col-md-12" )
+      #itemVisualExtension( $hnode )
+      #itemProperties( $hnode, $level )
+    </div>
+  </$elem>
+#end
+
+## Display a nested but non-terminal resource
+#macro( showRdfResourceNested $hnode, $elem, $level )
+  <$elem class="rdf resource $level $cssLeaf">
+    #itemName( $resource, "h3", "", $hnode )
+    #itemURI( $resource, "h4", "" )
+    #itemTypes( $resource, "" )
+    #itemVisualExtension( $hnode, "row" )
+    <div class="row">
+      #itemProperties( $hnode, $level )
+    </div>
+  </$elem>
+#end
+
+## Display a terminal loop resource
+#macro( showRdfResourceLoop $hnode, $elem, $level )
+  <$elem class="rdf resource $level $cssLeaf loop">
+    #itemName( $resource, "h3", "", $hnode )
+    #itemURI( $resource, "h4", "" )
+  </$elem>
 #end
 
 ## Display the name of the resource
 #macro( itemName $resource $h $css $node )
-  <div class="$css">
-    <$h class="resource-label">
-      $resource.getName()
-      #if( $node )
-        #actionsMenu( $node )
+  #if( $resource.getName() )
+    <div class="$css">
+      #if( $resource.isAnon() )
+        #set( $anonName = $resource.getName() )
+        #if( $anonName.equals( "[]" ))
+          #set( $anonName = "" )
+        #end
+        <$h class="resource-label anonymous">
+          $anonName
+        </$h>
+      #else
+        <$h class="resource-label">
+          $resource.getName()
+          #if( $node )
+            #actionsMenu( $node )
+          #end
+        </$h>
       #end
-    </$h>
-  </div>
+    </div>
+  #end
 #end
 
 ## Display the item URI
 #macro( itemURI $resource $h $css )
-  <div class="$css">
-    #setResourceHref( $resource.getURI() )
-    <$h class="resource-uri"><a href="$href">$resource.getURI()</a></$h>
-  </div>
+  #if( !$resource.isAnon() )
+    <div class="$css">  
+      #setResourceHref( $resource.getURI() )
+      <$h class="resource-uri"><a href="$href">$resource.getURI()</a></$h>
+    </div>
+  #end
 #end
 
 ## Display a list of types for the resource, if any are known

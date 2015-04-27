@@ -1,0 +1,20 @@
+<html>
+<head>
+<title>unknown shortname</title>
+
+#parse("head.vm")
+
+</head>
+<body>
+<h1>Sorry</h1>
+
+#if($verbose)
+That shortname is unrecognised.
+
+<pre>
+$_message.spelling()
+</pre>
+#end
+
+</body>
+</html>

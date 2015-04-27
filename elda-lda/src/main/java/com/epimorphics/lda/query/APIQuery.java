@@ -34,6 +34,7 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.graph.Graph;
@@ -466,8 +467,30 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			varsForPropertyChains.put(param.asString(), already);
 		}
 		Info inf = param.fullParts()[param.fullParts().length - 1];
-		Any r = objectForValue(inf, val, getDefaultLanguage());
-		addInfixSparqlFilter(already, op, r);
+		
+		String type = inf.typeURI;
+		String langs = getDefaultLanguage();
+		String [] langArray = langs == null ? ValTranslator.JUSTEMPTY : langs.split(",", -1);
+		
+		if (langArray.length > 0 && (type == null || type.equals(API.PlainLiteral.getURI()))) {
+			
+			RenderExpression strAlready = RDFQ.apply("str", already);
+			RenderExpression strOp = RDFQ.infix(strAlready, op, RDFQ.literal(val));
+			
+			RenderExpression orTagsEq = null;
+			for (String lang: langArray) {
+				RenderExpression langAlready = RDFQ.apply("lang", already);
+				RenderExpression tagEq = RDFQ.infix(langAlready, "=", RDFQ.literal(lang));
+				if (orTagsEq == null) orTagsEq = tagEq; else orTagsEq = RDFQ.infix(orTagsEq, "||", tagEq);
+			}
+			
+			RenderExpression and = RDFQ.infix(strOp, "&&", orTagsEq);
+			addFilterExpression(and);
+			
+		} else {
+			Any r = objectForValue(inf, val, langs);
+			addInfixSparqlFilter(already, op, r);
+		}
 	}
 
 	private void addInfixSparqlFilter(Variable already, String op, Any r) {
@@ -537,8 +560,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			//
 			Info inf = infos[infos.length - 1];
 			Any o = objectForValue(inf, val, languagesFor(param));
-			if (o instanceof Variable)
-				varInfo.put((Variable) o, inf);
+			if (o instanceof Variable) varInfo.put((Variable) o, inf);
 			addTriplePattern(var, inf.asResource, o);
 		}
 	}
@@ -714,7 +736,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			q.append("SELECT ");
 			if (orderExpressions.length() > 0)
 				q.append("DISTINCT ");
-			q.append(SELECT_VAR.name());
+			q.append(SELECT_VAR.name());			
 			assembleWherePart(q, b, pl);
 			if (orderExpressions.length() > 0) {
 				q.append(" ORDER BY ");
@@ -870,7 +892,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		String outerSelect = queryAndResults.a;
 		List<Resource> results = queryAndResults.b;
 		//
-		APIResultSet rs = fetchDescriptionOfAllResources(c, outerSelect, spec, graphName, view, results);
+		APIResultSet rs = fetchDescriptionOfAllResources(c, spec, graphName, view, results);
 		//
 		long afterView = System.currentTimeMillis();
 		t.setViewDuration(afterView - afterSelect);
@@ -912,12 +934,12 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	// may be subclassed
-	protected APIResultSet fetchDescriptionOfAllResources(Controls c, String select, APISpec spec, String graphName, View view, List<Resource> results) {
+	protected APIResultSet fetchDescriptionOfAllResources(Controls c, APISpec spec, String graphName, View view, List<Resource> results) {
 		int count = results.size();
 		Model descriptions = ModelFactory.createDefaultModel();
 		descriptions.setNsPrefixes(spec.getPrefixMap());
 		Graph gd = descriptions.getGraph();
-		String detailsQuery = results.isEmpty() || results.get(0) == null ? "# no results, no query." : view.fetchDescriptionsFor(c, select, results, descriptions, spec, this,
+		String detailsQuery = results.isEmpty() || results.get(0) == null ? "# no results, no query." : view.fetchDescriptionsFor(c, results, descriptions, spec, this,
 				graphName);
 		return new APIResultSet(gd, results, count < pageSize, enableETags, detailsQuery, view);
 	}
@@ -1046,13 +1068,21 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 		@Override public void consume(ResultSet rs) {
 			try {
+				int countBnodes = 0;
 				while (rs.hasNext()) {
 					Resource item = rs.next().getResource(SELECT_VAR.name());
 					if (item == null) {
 						EldaException.BadSpecification("<br>Oops. No binding for " + SELECT_VAR.name() + " in successful SELECT.\n"
 								+ "<br>Perhaps ?item was mis-spelled in an explicit api:where clause.\n" + "<br>It's not your fault; contact the API provider.");
 					}
-					results.add(withoutModel(item));
+					if (item.isAnon()) {
+						countBnodes += 1;
+					} else {
+						results.add(withoutModel(item));
+					}
+				}
+				if (countBnodes > 0) {
+					if (log.isDebugEnabled()) log.debug(countBnodes + " selected bnode items discarded.");
 				}
 			} catch (APIException e) {
 				throw e;

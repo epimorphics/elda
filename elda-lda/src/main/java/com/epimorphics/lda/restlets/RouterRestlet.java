@@ -319,6 +319,7 @@ import com.sun.jersey.api.NotFoundException;
     	, String formatName
     	, Match match
     	) {
+    	Bindings forErrorHandling = null;
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
     	log.info( "handling request " + requestUri );
@@ -355,6 +356,8 @@ import com.sun.jersey.api.NotFoundException;
 			
 			String _view = queryParams.getOne("_view");
 			b.put("_view", _view == null ? "" : _view );
+			
+			forErrorHandling = new Bindings(b, as);
         	
         	APIEndpoint.Request req =
         		new APIEndpoint.Request( c, ru, b )
@@ -415,26 +418,26 @@ import com.sun.jersey.api.NotFoundException;
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
-//            String message = Messages.niceMessage("Stack overflow", e.getMessage() );
-            throw new GeneralException();
+            String message = Messages.niceMessage("Stack overflow", e.getMessage() );
+            return ErrorPages.respond(forErrorHandling, servCon, "stack_overflow", message, EldaException.SERVER_ERROR);
         
         } catch (VelocityRenderingException e) {
-            throw e;
+            return ErrorPages.respond(forErrorHandling, servCon, "velocity_rendering", e.getMessage(), EldaException.SERVER_ERROR); 
         
         } catch (BadRequestException e) {
-            throw e;
+        	return ErrorPages.respond(forErrorHandling, servCon, "bad_request", e.getMessage(), EldaException.BAD_REQUEST);
                     	
         } catch (UnknownShortnameException e) {
         	log.error( "UnknownShortnameException: " + e.getMessage() );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
         	StatsValues.endpointException();
-        	throw new GeneralException();
+        	return ErrorPages.respond(forErrorHandling, servCon, "unknown_shortname", e.getMessage(), EldaException.BAD_REQUEST); 
         
         } catch (EldaException e) {
         	StatsValues.endpointException();
         	log.error( "Exception: " + e.getMessage() );
         	if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
-        	throw new GeneralException();
+        	return ErrorPages.respond(forErrorHandling, servCon, "exception", e.getMessage(), EldaException.SERVER_ERROR);
         
         } catch (NotFoundException e) {
         	throw e;
@@ -443,13 +446,13 @@ import com.sun.jersey.api.NotFoundException;
         	StatsValues.endpointException();
             log.error( "Query Parse Exception: " + e.getMessage() );
             if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
-            throw e; 
+            return ErrorPages.respond(forErrorHandling, servCon, "query_parse_exception", e.getMessage(), EldaException.SERVER_ERROR);  
             
         } catch (Throwable e) {
         	log.error( "General failure: " + e.getClass().getCanonicalName() + ": " + e.getMessage() );
         	e.printStackTrace(System.err);
         	StatsValues.endpointException();
-            throw new GeneralException();
+        	return ErrorPages.respond(forErrorHandling, servCon, "general_exception", e.getMessage(), EldaException.SERVER_ERROR); 
         }
     }    
     

@@ -135,11 +135,7 @@ public class CombinedSource extends SourceBase implements Source
         meta.addProperty(API.sparqlEndpoint, "a combined source");
     }
 
-	@Override public boolean supportsNestedSelect() {
-		return Source.Util.allSupportNestedSelect( sources );
-	}
-
-    }
+}
 
     
 /*

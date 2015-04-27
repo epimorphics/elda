@@ -77,11 +77,15 @@ RELEASING ELDA
   putting important/big changes early. Change DEVELOPING 
   to RELEASED.
 
-  Edit docs/quickstart.html to refer to the 
-  docs/E${this.version}/index.html. 
-  
+  run
+
+	bin/release-docs -r x.y.z x.y.z+1-SNAPSHOT
+
+  where the current release is x.y.z, to make the
+  next snapshot documetation directory and roll the
+  updated documentation into current.
+
   Commit (with a suitable "releasing" -m) and push.
-  There should be no files present that are not
   under change control (if there are, maven release
   will object loundly and clunkily). If there are,
   deal with them appropriately.
@@ -120,11 +124,6 @@ RELEASING ELDA
   forums claim it does.) This pushes the new tag into the
   remote (ie Elda's github) repository.
 
-  Update the index.html in the gl-pages branch of the Elda
-  repository to change the release date and version number 
-  appropriately. Summarise the release notes; remove 
-  sufficiently old summaries.
-
   Note the name $STANDALONE of the standalone jar
 
 	http://repository.epimorphics.com/com/epimorphics/lda/elda-standalone/$VERSION/elda-standalone-$VERSION-$DETAILS
@@ -135,12 +134,6 @@ RELEASING ELDA
 
   Add a new release marker to the release notes with
   the next release version tagged DEVELOPING.
-
-  Copy docs/E${version} to docs/E${version+1}. Correct
-  any references in these new html files to the version
-  number. `git add` these files and commit and push them.
-  Update the quickstart.html to point to the just-released
-  files.
 
   Email linked-data-api-discuss with a moderately chatty
   message about the update, summarising the release notes

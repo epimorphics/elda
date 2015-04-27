@@ -4,7 +4,7 @@
   <parent>
     <artifactId>elda</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.3.2-SNAPSHOT</version>
+    <version>1.3.6-SNAPSHOT</version>
   </parent>
 
   <artifactId>elda-lda</artifactId>
@@ -112,7 +112,7 @@
     <dependency>
       <groupId>com.epimorphics</groupId>
       <artifactId>lib</artifactId>
-      <version>0.0.22</version>
+      <version>0.1.1</version>
     </dependency>
     <dependency>
       <groupId>org.jmock</groupId>

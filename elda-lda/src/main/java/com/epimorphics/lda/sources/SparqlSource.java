@@ -45,10 +45,6 @@ public class SparqlSource extends SourceBase implements Source {
     
     protected final Lock lock = new LockNone();
     
-    protected Perhaps nestedSelects = Perhaps.DontKnow;
-    
-    protected enum Perhaps {Yes, No, DontKnow, CantTell}
-    
     protected final String basicUser;
     
     protected final char[] basicPassword;
@@ -63,9 +59,6 @@ public class SparqlSource extends SourceBase implements Source {
         boolean allowInsecure = false;
     //
         if (ep != null) {
-        	boolean b = RDFUtils.getBooleanValue( ep, ELDA_API.supportsNestedSelect, false );
-        	nestedSelects = (b ? Perhaps.Yes : Perhaps.No);
-        //
         	allowInsecure = RDFUtils.getBooleanValue(ep, ELDA_API.authAllowInsecure, false);
         //
         	String authKey = RDFUtils.getStringValue( ep, ELDA_API.authKey, null );
@@ -115,7 +108,6 @@ public class SparqlSource extends SourceBase implements Source {
         return 
         	"SparqlSource{" + sparqlEndpoint 
         	+ (this.basicUser == null ? "; unauthenticated" : "; basic authentication")
-        	+ "; supportsNestedSelect: " + nestedSelects 
         	+ "}";
     }
     
@@ -129,20 +121,5 @@ public class SparqlSource extends SourceBase implements Source {
     @Override public void addMetadata(Resource meta) {
         meta.addProperty(API.sparqlEndpoint, ResourceFactory.createResource(sparqlEndpoint));
     }
-
-    /**
-        It's remote. Try if we can.
-    */
-	@Override public boolean supportsNestedSelect() {
-		if (nestedSelects == Perhaps.DontKnow) probeNestedSelects();
-		return nestedSelects == Perhaps.Yes;
-	}
-
-	/**
-	    Should probe the remote end
-	*/
-	private void probeNestedSelects() {
-		nestedSelects = Perhaps.CantTell;
-	}
 }
 

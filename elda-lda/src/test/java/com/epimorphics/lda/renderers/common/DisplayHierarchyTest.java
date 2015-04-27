@@ -12,15 +12,17 @@ package com.epimorphics.lda.renderers.common;
 
 import static org.junit.Assert.*;
 
-import java.util.List;
-
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
 import org.jmock.lib.legacy.ClassImposteriser;
-import org.junit.*;
+import org.junit.Rule;
+import org.junit.Test;
 
-import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.hp.hpl.jena.rdf.model.*;
+import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.rdfutil.ModelWrapper;
+import com.epimorphics.rdfutil.RDFNodeWrapper;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 /**
  * Unit tests for {@link DisplayHierarchy}
@@ -37,11 +39,6 @@ public class DisplayHierarchyTest
     /* Static variables                */
     /***********************************/
 
-    static final Model apiMetadataModel = ModelFactory.createDefaultModel();
-    static final Model apiObjectModel = ModelFactory.createDefaultModel();
-    static final Model apiResultsModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES + Fixtures.PAGE_BWQ );
-
-    static final String view_uri = "http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=salmonella&_metadata=all&_page=0";
 
     /***********************************/
     /* Instance variables              */
@@ -55,7 +52,6 @@ public class DisplayHierarchyTest
         setThreadingPolicy(new Synchroniser());
     }};
 
-    private DisplayHierarchy dh;
 
     /***********************************/
     /* Constructors                    */
@@ -65,35 +61,56 @@ public class DisplayHierarchyTest
     /* External signature methods      */
     /***********************************/
 
-    @Before
-    public void before() {
-        ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
-        Page page = rm.page();
-        page.initialiseShortNameRenderer( Fixtures.shortNameServiceFixture() );
-
-        dh = new DisplayHierarchy( page );
-    }
-
     @Test
     public void testExpand() {
+        DisplayHierarchy dh = fixture1();
         dh.expand();
         assertEquals( 10, dh.roots().size() );
     }
 
     @Test
-    public void testAnnotations() {
+    public void testContextSeen() {
+        DisplayHierarchy.DisplayHierarchyContext ctx = new DisplayHierarchy.DisplayHierarchyContext();
+        Model m = ModelFactory.createDefaultModel();
+        ModelWrapper mw = new ModelWrapper( m );
+        RDFNodeWrapper rn = new RDFNodeWrapper( mw, m.createResource( "http://example.com/foo" ));
+        
+        assertFalse( ctx.isSeen( rn ) );
+        ctx.see( rn );
+        assertTrue( ctx.isSeen( rn ) );
+    }
+    
+    @Test
+    public void testExplicitPaths() {
+        // we need to set an explicit _properties variable in the context model
+        DisplayHierarchy dh = fixture2();
         dh.expand();
-        List<DisplayHierarchyNode> children = dh.roots().get( 0 ).children();
-
-        assertEquals( "even first literal", children.get(0).hintsString() );
-        assertEquals( "odd literal", children.get(1).hintsString() );
-        assertEquals( "even last resource", children.get( children.size() - 1 ).hintsString() );
     }
 
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
 
+    private DisplayHierarchy fixture1() {
+        return fixture(  Fixtures.PAGE_BWQ_MODEL );
+    }
+
+    private DisplayHierarchy fixture2() {
+        return fixture(  Fixtures.PAGE_BWQ_PROPERTIES_MODEL );
+    }
+
+    private DisplayHierarchy fixture( Model fixtureModel ) {
+        Model apiMetadataModel = ModelFactory.createDefaultModel();
+
+        APIResultSet resultSet = Fixtures.mockResultSet( context, fixtureModel, fixtureModel, apiMetadataModel );
+        ResultsModel rm = new ResultsModel( resultSet );
+        Page page = rm.page();
+        page.initialiseShortNameRenderer( Fixtures.shortNameServiceFixture() );
+
+        return new DisplayHierarchy( page );
+    }
+
+    
     /***********************************/
     /* Inner class definitions         */
     /***********************************/

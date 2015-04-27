@@ -58,7 +58,7 @@ hello:hello-world-again a api:API
 <http://localhost:3030/ds/query> 
     elda:textSearchOperand (rdfs:label "?_search" 99)
     .
-
+    
 # Endpoint definitions
 
 hello:publishers a api:ListEndpoint 

@@ -120,8 +120,14 @@ public class DisplayHierarchy
                 }
 
                 Set<PropertyPath> matchingPaths = matchingPaths( context, p, paths );
-                node.explicitPaths().addAll( matchingPaths );
-
+                
+                for (PropertyPath mp: matchingPaths) {
+                    PropertyPath mps = mp.shift();
+                    if (!mps.isEmpty()) {
+                        node.explicitPaths().add( mps );
+                    }
+                }
+                
                 if (!node.isLeaf( context )) {
                     context.queue().add( node );
                 }
@@ -243,7 +249,7 @@ public class DisplayHierarchy
 
         /** @return True if the given node is a resource which has already been seen during the expansion */
         public boolean isSeen( RDFNodeWrapper r ) {
-            return r.isResource() && this.seen.contains( r );
+            return r.isResource() && this.seen.contains( r.asResource() );
         }
 
         /** Add a node to the set of seen resources */

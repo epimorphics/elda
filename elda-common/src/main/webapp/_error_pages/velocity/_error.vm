@@ -1,0 +1,21 @@
+<html>
+<head>
+<title>internal error</title>
+
+#parse("head.vm")
+
+</head>
+<body>
+<h1>internal error</h1>
+
+An internal error occurred and there was no error
+page to handle it. 
+
+#if($verbose)
+<pre>
+$_message.spelling()
+</pre>
+#end
+
+</body>
+</html>

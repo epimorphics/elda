@@ -20,6 +20,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.app.event.EventCartridge;
 import org.apache.velocity.app.event.implement.IncludeNotFound;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +30,7 @@ import com.epimorphics.lda.exceptions.VelocityRenderingException;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.common.*;
 import com.epimorphics.lda.specs.MetadataOptions;
-import com.epimorphics.lda.support.EldaFileManager;
-import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.support.*;
 import com.epimorphics.util.CountStream;
 import com.epimorphics.util.StreamUtils;
 import com.hp.hpl.jena.shared.*;
@@ -157,8 +157,16 @@ implements BytesOut
     protected void render( OutputStream os ) {
         VelocityEngine ve = createVelocityEngine();
         VelocityContext vc = createVelocityContext( this.bindings );
+        Template t = null;
 
-        Template t = ve.getTemplate( vr.templateName() );
+        try {
+            t = ve.getTemplate( vr.templateName() );
+        }
+        catch (ResourceNotFoundException e) {
+            log.debug( "Could not find base template " + vr.templateName() );
+            log.debug( "Current velocity path is: '" + ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH ) + "'" );
+            throw e;
+        }
 
         try {
             Writer w = new OutputStreamWriter( os, "UTF-8" );
@@ -178,7 +186,7 @@ implements BytesOut
      * loaded from the <code>velocity.properties</code> file.
      * @return A new Velocity engine
      */
-    protected VelocityEngine createVelocityEngine() {
+    public VelocityEngine createVelocityEngine() {
         List<String> velocityPath = expandVelocityPath( bindings );
 
         Properties p = getProperties( velocityPath );
@@ -188,21 +196,59 @@ implements BytesOut
         return ve;
     }
 
-    /** @return An array of expanded file paths or other URLs where we will search for Velocity assets */
+    /**
+		expandedVelocityPath returns a list of paths/URLs where Velocity may
+		search for its templates. The path is composed of
+		
+		<ul>
+			<li>any components of the variable _velocityPath
+			<li>the first component of /etc/elda/conf.d/{APP}/_error_pages if any
+			<li>webapp/_error_pages
+			<li>the velocity root default, currently /velocity/.
+		</ul>
+		
+		This allows Elda Common to have error pages built-in that can be
+		overridden in /etc/elda and in turn those can be over-ridden by
+		entries in _velocityPath.
+		
+    	@return An array of expanded file paths or other URLs where we will search for Velocity assets
+    */
     protected List<String> expandVelocityPath( Bindings b ) {
         List<String> roots = new ArrayList<>();
-        String rootPath = b.getAsString( VELOCITY_PATH_CONFIG_PARAM, defaultVelocityRoot() );
-
+        String userRootPath = b.getAsString( VELOCITY_PATH_CONFIG_PARAM, null );
+		
+		String rootPath =
+			(userRootPath == null ? "" : userRootPath + ",")
+			+ etcPath()
+			+ webappPath()
+			+ defaultVelocityRoot()
+			;
+		
         for (String pathEntry: StringUtils.split( rootPath, "," )) {
             pathEntry = StringUtils.trim( pathEntry );
             String pathURL = b.pathAsURL( pathEntry).toString();
             roots.add( pathURL + (pathURL.endsWith( "/" ) ? "" : "/") );
         }
-
+        log.debug("rootPath: " + rootPath);
+        log.debug("complete expanded path: " + roots);
         return roots;
     }
 
-    /** @return The default Velocity root directory, which may set by an environment variable */
+    private String webappPath() {
+		return "_error_pages/";
+	}
+
+	private String etcPath() {
+		String context = bindings
+			.getAsString("_rootPath", "NO_ROOTPATH")
+			.replaceAll("/([^/]*)/.*", "$1")
+			;
+		String appPath = "/etc/elda/conf.d/REPLACE/_error_pages".replace("REPLACE", context);
+		List<File> files = new Glob().filesMatching(appPath);		
+		return (files.size() == 0 ? "" : files.get(0)) + ",";
+	}
+
+	/** @return The default Velocity root directory, which may set by an environment variable */
     protected String defaultVelocityRoot() {
         String envRoot = null;
         try {
@@ -239,7 +285,11 @@ implements BytesOut
                 p.setProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH, StringUtils.join( velocityPath, ", " ) );
             }
             else {
-                String velocityURL = velocityPath.get( 0 );
+                String velocityURL = "";
+                if (velocityPath.size() > 0) {
+                    velocityURL = velocityPath.get( 0 );
+                }
+
                 if (velocityURL.matches( "^http:.*" )) {
                     p.setProperty( "url.resource.loader.root", velocityURL );
                 }
@@ -285,7 +335,7 @@ implements BytesOut
     }
 
     /** @return A new velocity context containing bindings that we will use to render the results */
-    protected VelocityContext createVelocityContext( Bindings binds ) {
+    public VelocityContext createVelocityContext( Bindings binds ) {
         Page page = initialisePage();
         DisplayHierarchy dh = initialiseHierarchy( page );
 

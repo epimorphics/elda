@@ -106,6 +106,14 @@ public class PropertyPath
         this.segments.add( shortName );
         this.properties.add( uri );
     }
+    
+    /**
+     * Internal use: construct a path from existing property and segment lists
+     */
+    protected PropertyPath( List<String> segments, List<Property> properties ) {
+        this.segments = segments;
+        this.properties = properties;
+    }
 
     /***********************************/
     /* External signature methods      */
@@ -186,7 +194,32 @@ public class PropertyPath
     public Property terminal() {
         return properties.isEmpty() ? null : properties.get( properties.size() -1 );
     }
+    
+    /** @return A new path in which the first segment of this path has been removed */
+    public PropertyPath shift() {
+        if (properties.size() == 0 && segments.size() == 0) {
+            throw new RuntimeException( "Tried to shift() an empty PropertyPath" );
+        }
+        
+        List<String> shiftedSegments = new ArrayList<String>();
+        List<Property> shiftedProps = new ArrayList<Property>();
+        
+        for (int i = 1; i < properties.size(); i++) {
+            shiftedProps.add( properties.get( i ));
+        }
+        for (int i = 1; i < segments.size(); i++) {
+            shiftedSegments.add( segments.get( i ));
+        }
+        
+        return new PropertyPath( shiftedSegments, shiftedProps );
+    }
 
+    /** @return True if this is the empty path */
+    public boolean isEmpty() {
+        return properties.isEmpty() && segments.isEmpty();
+    }
+    
+    
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

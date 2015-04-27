@@ -156,6 +156,26 @@ public class PropertyPathTest
         assertEquals( "http://example/test/q", path2.terminal().getURI() );
     }
 
+    @Test
+    public void testShift0() {
+        PropertyPath p = new PropertyPath( "foo.bar.bam" );
+        
+        PropertyPath s = p.shift();
+        assertEquals( "bar.bam", s.toString() );
+        
+        s = s.shift();
+        assertEquals( "bam", s.toString() );
+        
+        s = s.shift();
+        assertEquals( "", s.toString() );
+    }
+    
+    @Test
+    public void testIsEmpty() {
+        assertTrue( new PropertyPath().isEmpty() );
+        assertFalse( new PropertyPath( "foo" ).isEmpty() );
+    }
+    
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

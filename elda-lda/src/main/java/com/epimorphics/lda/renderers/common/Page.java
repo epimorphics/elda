@@ -283,20 +283,27 @@ public class Page extends CommonNodeWrapper
      */
     public List<DisplayRdfNode> items() {
         List<DisplayRdfNode> items = new ArrayList<DisplayRdfNode>();
-
+        
         if (isItemEndpoint()) {
-            items.add( new DisplayRdfNode( this, getPropertyValue( FOAF.primaryTopic ).asResource() ) );
+            Resource item = getPropertyValue( FOAF.primaryTopic ).asResource();
+            items.add( new DisplayRdfNode( this, item ) );
         }
         else {
             RDFList itemList = getPropertyValue( API.items ).asResource().as( RDFList.class );
             for (RDFNode n : itemList.asJavaList()) {
-                items.add( new DisplayRdfNode( this, n.asResource() ) );
+                Resource item = n.asResource();
+                items.add( new DisplayRdfNode( this, item ) );
             }
         }
 
         return items;
     }
 
+    /** @return The object graph for this page as an RDF model */
+    public Model pageObjectModel() {
+        return getModelW().getDataset().getNamedModel( ResultsModel.RESULTS_OBJECT_GRAPH );
+    }
+    
     /**
      * Return the current view, if we can determine what it is. If we can't tell
      * from the given metadata, return the basic view.
