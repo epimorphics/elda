@@ -538,7 +538,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			chainName.append(dot).append(inf.shortName);
 			Variable v = varsForPropertyChains.get(chainName.toString());
 			if (v == null) {
-				v = RDFQ.var(PREFIX_VAR + chainName.toString().replaceAll("\\.", "_") + "_" + varcount++);
+				v = varForChain(chainName);
 				varsForPropertyChains.put(chainName.toString(), v);
 				varInfo.put(v, inf);
 				basicGraphTriples.add(RDFQ.triple(var, inf.asURI, v));
@@ -548,6 +548,11 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			i += 1;
 		}
 		return var;
+	}
+
+	private Variable varForChain(StringBuilder chainName) {
+		String namePart = chainName.toString().replaceAll("\\.", "_");
+		return RDFQ.var(PREFIX_VAR + namePart + "_" + varcount++);
 	}
 
 	protected void addPropertyHasValue(Param param, String val) {
