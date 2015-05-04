@@ -3,7 +3,7 @@
 ## partials/content-detection.vm called from index.vm
 
 #macro( itemVisualExtension $resource $rowClass )
-  #if( $mapDisplay && $resource.hasAllProperties( $latLongProps ))
+  #if( $mapDisplay && $resource.hasAllProperties( $longLatProps ))
     #resourceMap( $resource, $rowClass )
   #end
 #end
@@ -12,19 +12,19 @@
   #if( ! $mapCounter )
     #set( $mapCounter = 1 )
   #end
-  #set( $geoTriples = $resource.extractByPredicate( $geoProps ) )
+  #set( $longLatTriples = $resource.extractByPredicate( $longLatProps ) )
   <div class="$rowClass">
     <div class="col-md-8">
       <ul class="resource-properties extensions">
-        #renderProperties( $geoTriples, 6, 6 )
+        #renderProperties( $longLatTriples, 6, 6 )
       </ul>
     </div>
     <div class="col-md-4">
       <div class="item-extension map">
         #set( $mapId = "map-" + $item.rdfNode().shortUniqueID() + "-" + $mapCounter )
         #set( $mapCounter = $mapCounter + 1 )
-        #set( $long = $geoTriples.get( 0 ).rdfNode().getLexicalForm() )
-        #set( $lat  = $geoTriples.get( 1 ).rdfNode().getLexicalForm() )
+        #set( $long = $longLatTriples.get( 0 ).rdfNode().getLexicalForm() )
+        #set( $lat  = $longLatTriples.get( 1 ).rdfNode().getLexicalForm() )
         <div id="$mapId"></div>
         <script>
           require( ['app/maps'], function( EldaMaps ) {
@@ -56,7 +56,7 @@
         <div id="resultsMap"></div>
         <script>
           var locations = [];
-          #foreach( $resource in $latLongResources )
+          #foreach( $resource in $longLatResources )
             locations.push( {lon: $resource.getPropertyValue( "geo:long" ).getLexicalForm(),
                              lat: $resource.getPropertyValue( "geo:lat" ).getLexicalForm(),
                              label: "$resource.getName()"} );
