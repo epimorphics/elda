@@ -41,7 +41,7 @@ public abstract class TomcatTestBase {
      * URL to use for liveness tests
      */
     public String getTestURL() {
-        return NameUtils.ensureLastSlash( BASE_URL.substring(0, BASE_URL.length()-1) + getWebappContext() );
+        return NameSupport.ensureLastSlash( BASE_URL.substring(0, BASE_URL.length()-1) + getWebappContext() );
     }
 
     @Before public void containerStart() throws Exception {

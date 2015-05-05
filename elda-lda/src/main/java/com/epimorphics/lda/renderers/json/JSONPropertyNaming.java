@@ -12,7 +12,7 @@ import java.util.*;
 
 import com.epimorphics.lda.shortnames.Transcoding;
 import com.epimorphics.lda.support.MultiMap;
-import com.epimorphics.util.NameUtils;
+import com.epimorphics.util.EldaNameUtils;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
 public class JSONPropertyNaming {
@@ -33,8 +33,8 @@ public class JSONPropertyNaming {
 		Set<String> uris = removeExisting( given, given_uris );
 	//
 		for (String u: uris) {
-			String ln = NameUtils.localName(u);
-			if (NameUtils.isLegalShortname(ln)) {
+			String ln = EldaNameUtils.localName(u);
+			if (EldaNameUtils.isLegalShortname(ln)) {
 				shortnamesToURIs.add( ln, u );
 			} else {
 				deferred.add( u );
@@ -51,8 +51,8 @@ public class JSONPropertyNaming {
 	//
 		for (String u: uris) {
 			if (result.containsKey(u) == false) {
-				String ln = NameUtils.localName(u);
-				String ns = NameUtils.nameSpace(u);
+				String ln = EldaNameUtils.localName(u);
+				String ns = EldaNameUtils.nameSpace(u);
 				String prefix = pm.getNsURIPrefix(ns);
 				if (prefix == null) {
 					result.put( u, Transcoding.encode( pm, u ) );

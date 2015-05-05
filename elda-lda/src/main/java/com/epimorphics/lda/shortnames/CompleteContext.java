@@ -15,7 +15,7 @@ import java.util.*;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.epimorphics.util.NameUtils;
+import com.epimorphics.util.EldaNameUtils;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -144,7 +144,7 @@ public class CompleteContext {
 		
 		for (SplitURI mt: modelTerms) {			
 			String ln = mt.ln;
-			if (NameUtils.isLegalShortname(ln) && !uriToShortname.containsKey( ln )) {
+			if (EldaNameUtils.isLegalShortname(ln) && !uriToShortname.containsKey( ln )) {
 				List<SplitURI> terms = localNameToURIs.get( ln );
 				if (terms == null) localNameToURIs.put( ln, terms = new ArrayList<SplitURI>() );
 				terms.add( mt );
