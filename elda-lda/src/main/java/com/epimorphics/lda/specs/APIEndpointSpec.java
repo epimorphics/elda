@@ -110,6 +110,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
+    //
+        APISpec.setDefaultSuffixName(bindings, endpoint);        
     }
 
 	public String createURITemplate( Resource endpoint ) {

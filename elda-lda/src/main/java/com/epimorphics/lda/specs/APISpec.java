@@ -123,9 +123,21 @@ public class APISpec {
 		this.cacheExpiryMilliseconds = PropertyExpiryTimes.getSecondsValue( root, ELDA_API.cacheExpiryTime, -1) * 1000;
         this.enableCounting = RDFUtils.getOptionalBooleanValue( root, ELDA_API.enableCounting, Boolean.FALSE );        
 		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( root.getModel() );
-        extractEndpointSpecifications( root );
+	//
+		setDefaultSuffixName(bindings, root);      
+		extractEndpointSpecifications( root );
         extractModelPrefixEditor( root );
     }
+    
+	public static void setDefaultSuffixName(Bindings b, Resource ep) {
+		if (ep.hasProperty( API.defaultFormatter)) {
+			Resource r = ep.getProperty( API.defaultFormatter ).getObject().asResource();
+			if (r.hasProperty( API.name )) {
+				String name = r.getProperty( API.name ).getString();
+				b.put("_defaultSuffix", name);
+			} 
+		}
+	}
 
 	protected void reportObsoleteDescribeThreshold(Resource endpoint) {
 		if (endpoint.hasProperty(ELDA_API.describeThreshold)) {
