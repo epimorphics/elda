@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.restlets.RouterRestletSupport;
 import com.epimorphics.util.NameUtils;
 
 
@@ -34,6 +35,7 @@ import com.epimorphics.util.NameUtils;
  * for diagnosis. Not robust against restarts but easier to work with than UUIDs.
  */
 public class LogRequestFilter implements Filter {
+	
     public static final String TRANSACTION_ATTRIBUTE = "transaction";
     public static final String START_TIME_ATTRIBUTE  = "startTime";
     public static final String REQUEST_ID_HEADER  = "x-response-id";
@@ -67,9 +69,9 @@ public class LogRequestFilter implements Filter {
         boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);
         if (logThis) {
         	HttpServletResponse httpResponse = (HttpServletResponse)response;
-	        long transaction = transactionCount.incrementAndGet();
+	        long transaction = transactionCount.incrementAndGet();	        
+	        httpRequest.getServletContext().setAttribute(RouterRestletSupport.TRANSACTION_COUNT, transaction);
 	        long start = System.currentTimeMillis();
-	        
 	        log.info( String.format("Request  [%d] : %s", transaction, path) + (query == null ? "" : ("?" + query)) );
 	        httpResponse.addHeader(REQUEST_ID_HEADER, Long.toString(transaction));
 	        chain.doFilter(request, response);        

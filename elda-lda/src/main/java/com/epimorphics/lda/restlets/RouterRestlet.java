@@ -22,6 +22,8 @@ import java.net.*;
 import java.util.*;
 
 import javax.servlet.*;
+//import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -215,6 +217,8 @@ import com.sun.jersey.api.NotFoundException;
     		, "text/plain"
     	} )
     public Response requestHandler(
+//    		@Context HttpServletRequest servletRequest,
+//    		@Context HttpServletResponse servletResponse,
             @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
             @Context ServletContext servCon,
@@ -252,7 +256,7 @@ import com.sun.jersey.api.NotFoundException;
         	int mediaHash = hashOf( headers.getAcceptableMediaTypes() );
 			int runHash = mediaHash + encodingHash;
             List<MediaType> mediaTypes = JerseyUtils.getAcceptableMediaTypes( headers );
-            Response answer = runEndpoint( c, contextPath, runHash, servCon, ui, queryParams, mediaTypes, formatSuffix, match );
+            Response answer = runEndpoint( c, contextPath, runHash, servCon, /* servletRequest, servletResponse, */ ui, queryParams, mediaTypes, formatSuffix, match );
             t.done();
             return answer;
         }
@@ -308,17 +312,21 @@ import com.sun.jersey.api.NotFoundException;
         return new Couple<String, String>( path, type );
         }
 
+    // TODO : TOO MANY ARGUMENTS
     private Response runEndpoint
     	( Controls c
     	, String contextPath
     	, int runHash
     	, ServletContext servCon
+//    	, HttpServletRequest servletRequest
+//    	, HttpServletResponse servletResponse
     	, UriInfo ui
     	, MultiMap<String, String> queryParams
     	, List<MediaType> mediaTypes
     	, String formatName
     	, Match match
     	) {
+    	Object transactionId = servCon.getAttribute(RouterRestletSupport.TRANSACTION_COUNT);    	
     	Bindings forErrorHandling = null;
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
@@ -357,6 +365,8 @@ import com.sun.jersey.api.NotFoundException;
 			String _view = queryParams.getOne("_view");
 			b.put("_view", _view == null ? "" : _view );
 			
+			if (transactionId != null) b.put("_transaction", transactionId.toString());
+						
 			forErrorHandling = new Bindings(b, as);
         	
         	APIEndpoint.Request req =
