@@ -22,8 +22,8 @@ import java.net.*;
 import java.util.*;
 
 import javax.servlet.*;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -217,8 +217,8 @@ import com.sun.jersey.api.NotFoundException;
     		, "text/plain"
     	} )
     public Response requestHandler(
-//    		@Context HttpServletRequest servletRequest,
-//    		@Context HttpServletResponse servletResponse,
+    		@Context HttpServletRequest servletRequest,
+    		@Context HttpServletResponse servletResponse,
             @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
             @Context ServletContext servCon,
@@ -256,7 +256,7 @@ import com.sun.jersey.api.NotFoundException;
         	int mediaHash = hashOf( headers.getAcceptableMediaTypes() );
 			int runHash = mediaHash + encodingHash;
             List<MediaType> mediaTypes = JerseyUtils.getAcceptableMediaTypes( headers );
-            Response answer = runEndpoint( c, contextPath, runHash, servCon, /* servletRequest, servletResponse, */ ui, queryParams, mediaTypes, formatSuffix, match );
+            Response answer = runEndpoint( c, contextPath, runHash, servCon, servletRequest, servletResponse, ui, queryParams, mediaTypes, formatSuffix, match );
             t.done();
             return answer;
         }
@@ -318,8 +318,8 @@ import com.sun.jersey.api.NotFoundException;
     	, String contextPath
     	, int runHash
     	, ServletContext servCon
-//    	, HttpServletRequest servletRequest
-//    	, HttpServletResponse servletResponse
+    	, HttpServletRequest servletRequest
+    	, HttpServletResponse servletResponse
     	, UriInfo ui
     	, MultiMap<String, String> queryParams
     	, List<MediaType> mediaTypes
@@ -365,10 +365,13 @@ import com.sun.jersey.api.NotFoundException;
 			String _view = queryParams.getOne("_view");
 			b.put("_view", _view == null ? "" : _view );
 			
+			b.putAny("_servletRequest", servletRequest);
+			b.putAny("_servletResponse", servletResponse);
+			
 			if (transactionId != null) b.put("_transaction", transactionId.toString());
 						
 			forErrorHandling = new Bindings(b, as);
-        	
+			        	
         	APIEndpoint.Request req =
         		new APIEndpoint.Request( c, ru, b )
         		.withFormat( formatName )
