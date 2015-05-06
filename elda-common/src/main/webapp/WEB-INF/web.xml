@@ -23,6 +23,19 @@
     </filter-mapping>
     -->
 
+  
+  <!-- suppress from the filtering log anything that mentions lda-assets.
+  -->
+  
+  <filter>
+    <filter-name>LogRequestFilter</filter-name>
+    <filter-class>com.epimorphics.lda.support.LogRequestFilter</filter-class>
+    <init-param>
+        <param-name>com.epimorphics.lda.logging.ignoreIfMatches</param-name>
+        <param-value>.*/lda-assets/.*</param-value>
+    </init-param>
+  </filter>
+  
   <!-- ==================================================================== -->
 
     <context-param>

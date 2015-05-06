@@ -322,7 +322,7 @@ import com.sun.jersey.api.NotFoundException;
     	Bindings forErrorHandling = null;
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
-    	log.info( "handling request " + requestUri );
+    	log.debug( "handling request " + requestUri );
     //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
@@ -408,7 +408,7 @@ import com.sun.jersey.api.NotFoundException;
         		;
 						
 			MediaType mt = r.getMediaType(rc);
-			log.info( "rendering with formatter " + mt );
+			log.debug( "rendering with formatter " + mt );
 			Times times = c.times;
 			Renderer.BytesOut bo = r.render( times, rc, termBindings, results );
 			int mainHash = runHash + ru.toString().hashCode();

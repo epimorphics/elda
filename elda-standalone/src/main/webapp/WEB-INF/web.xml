@@ -19,6 +19,20 @@
 			, bwq::specs/environment.data.gov.uk-bwq.ttl
         </param-value>
   </context-param>
+  
+  <filter>
+    <filter-name>LogRequestFilter</filter-name>
+    <filter-class>com.epimorphics.lda.support.LogRequestFilter</filter-class>
+    <init-param>
+        <param-name>com.epimorphics.lda.logging.ignoreIfMatches</param-name>
+        <param-value>.*/lda-assets/.*</param-value>
+    </init-param>
+  </filter>
+ 
+  <filter-mapping>
+    <filter-name>LogRequestFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
 <!--
     <filter>
