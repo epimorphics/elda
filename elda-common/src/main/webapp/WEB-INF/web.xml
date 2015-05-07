@@ -36,6 +36,11 @@
     </init-param>
   </filter>
   
+  <filter-mapping>
+    <filter-name>LogRequestFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
   <!-- ==================================================================== -->
 
     <context-param>
