@@ -1,6 +1,44 @@
 + ---------------------------------------------------------------------
 | Elda 1.3.6 (DEVELOPING)
 
+* introduced LogRequestFilter which can be configured in web.xml
+  (elda-standalone and elda-common are shipped with it enabled).
+  Each Elda request generates two log lines with a shared ID
+  number (counting up, local to instance, reset on restart).
+  The ID is bound to the API variable _transaction for use in
+  renderers. If LogRequestFilter isn't configured in, then
+  _transaction will be unbound.
+
+  All requests are logged unless they match the Java regular 
+  expression given in the filter's init-param 
+
+	com.epimorphics.lda.logging.ignoreIfMatches
+    
+  The as-shipped value of this parameter is .*/lda-assets/.* 
+
+* the current HttpServletRequest and HttpServletResponse are bound
+  to the bindings variables _servletRequest and _servletResponse
+  (they must be extracted using getAny(name) not get() or getAsString())
+
+* The API variable _defaultSuffix is bound to the name of the default
+  formatter for the current endpoint, or the name of the parent API
+  specs default formatter if the endpoint doesn't define one, or 
+  is otherwise unbound.
+
+* the /meta URIs now work as documented (fixed issue #131).
+
+* error-page handling revised and corrected.
+
+* some ordering dependencies in the tests were fixed following
+  use of Java 8 (which appears to produced results from hashsets
+  in a different order, which the tests are accidentally dependent
+  on).
+
+* assorted rendering bug-fixes.
+
+
+
+
 + ----------------------------------------------------------------------
 | Elda 1.3.5 (RELEASED)
 
