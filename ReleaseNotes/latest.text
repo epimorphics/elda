@@ -1,5 +1,8 @@
 + ---------------------------------------------------------------------
-| Elda 1.3.6 (DEVELOPING)
+| Elda 1.3.7 (DEVELOPING)
+
++ ---------------------------------------------------------------------
+| Elda 1.3.6 (RELEASED)
 
 * introduced LogRequestFilter which can be configured in web.xml
   (elda-standalone and elda-common are shipped with it enabled).
