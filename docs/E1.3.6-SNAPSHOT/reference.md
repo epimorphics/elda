@@ -893,6 +893,32 @@ implements the `RendererFactory` interface. When rendering is required,
 an instance of that class is invoked to deliver a Renderer, and that
 Renderer is used to render the result set.
 
+Predefined variables
+--------------------
+
+Formatters are passed an Elda `Bindings` object which gives access
+to the values of API variables -- those defined in the LDA configuration
+file, those arising from URL query parameters (a query parameter
+`name=value` will (re)define the value of the variable `name`), and
+those defined by Elda for use by renderers:
+
+* _suffix: the renderer name for this renderer, *eg* `html`, `ttl`.
+
+* _defaultSuffix: the name of the default renderer for this endpoint,
+  or of the API spec as a whole if this endpoint does not define an
+  default renderer. 
+
+* _servletRequest: the Java object which is the HttpServletRequest
+  for this request.
+
+* _servletResponse: the Java object which is the HttpServletResponse
+  for this request.
+
+Both of the servelet values must be accessed using `getAny(name)`
+rather than the more usual binding methods `get(name)`, 
+`getAsString(name)`.  
+
+
 The Atom renderer {#atom-feed}
 -----------------
 
