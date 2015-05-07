@@ -5,11 +5,7 @@ $(function(){
     // configuration
     var config = {
       endpoints: {
-        #if( $pageMetadata.selectionQuery() )
-          "default": "$pageMetadata.selectionQuery().queryEndpoint()"
-        #elseif( $pageMetadata.viewingQuery() )
-          "default": "$pageMetadata.viewingQuery().queryEndpoint()"
-        #end
+        "default": "$pageMetadata.sparqlEndpoint( $vcontext )"
       },
       prefixes: {
         "bw":       "http://environment.data.gov.uk/def/bathing-water/",
