@@ -82,7 +82,8 @@
       </extension>
     </extensions>
 
-    <plugins>
+	<plugins>
+			<!--
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -100,7 +101,8 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+</plugin>
+-->
     </plugins>
   </build>
 
