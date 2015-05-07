@@ -864,6 +864,16 @@ Any `graphTemplate` can be overridden by using the `_graph` query
 parameter in the submitted URL; its value should be a suitably-encoded
 URI which is used as the GRAPH name.
 
+LogRequestFilter
+----------------
+
+By default (as configured in elda-standalone and elda-common,
+see their `web.xml` files), Elda logs the beginning and ending 
+of a request and gives it a (non-persistent) ID. Requests for 
+static resources under `lda-assets` are not logged by default;
+this is configurable using the `ignoreIfMatches` parameter
+of the `LogRequestFilter`.
+
 Warning: mixing graph specification and describe queries
 --------------------------------------------------------
 
