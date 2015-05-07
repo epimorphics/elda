@@ -874,6 +874,9 @@ static resources under `lda-assets` are not logged by default;
 this is configurable using the `ignoreIfMatches` parameter
 of the `LogRequestFilter`.
 
+The ID is injected into the response headers and into
+the API variable bindings under the name `_transactions`.
+
 Warning: mixing graph specification and describe queries
 --------------------------------------------------------
 
