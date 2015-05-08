@@ -1,8 +1,11 @@
 + ---------------------------------------------------------------------
-| Elda 1.3.7 (DEVELOPING)
+| Elda 1.3.10 (DEVELOPING)
 
 + ---------------------------------------------------------------------
-| Elda 1.3.6 (RELEASED)
+| Elda 1.3.9 (RELEASED)
+
+(There is no Elda 1.3.6 or .7; .8 is the same as .9 but without
+ javadoc.)
 
 * introduced LogRequestFilter which can be configured in web.xml
   (elda-standalone and elda-common are shipped with it enabled).
@@ -38,9 +41,6 @@
   on).
 
 * assorted rendering bug-fixes.
-
-
-
 
 + ----------------------------------------------------------------------
 | Elda 1.3.5 (RELEASED)
