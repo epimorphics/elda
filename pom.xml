@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda</artifactId>
-  <version>1.3.10-SNAPSHOT</version>
+  <version>1.3.11-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>elda</name>
   <description>Top level linked data API project</description>
@@ -18,7 +18,7 @@
 
   <properties>
 	  <tempSCM>/tmp/tempSCM</tempSCM>
-	  <project.tagname></project.tagname>
+	  <project.tagname />
 
     <ver.junit>4.11</ver.junit>
     <ver.log4j>1.2.17</ver.log4j>
