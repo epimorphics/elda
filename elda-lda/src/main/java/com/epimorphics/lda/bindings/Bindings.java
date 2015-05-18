@@ -40,9 +40,7 @@ public class Bindings implements Lookup {
 	}
 
 	public Bindings(Bindings initial, URLforResource ufr) {
-		this.ufr = ufr;
-		this.putAll(initial);
-		this.parameterNames.addAll(initial.parameterNames);
+		this(initial, initial.parameterNames, ufr);
 	}
 
 	public Bindings(Set<String> parameterNames, Bindings initial) {
@@ -112,16 +110,16 @@ public class Bindings implements Lookup {
 	}
 
 	/**
-		Associate the arbitrarry <code>value</code> with the specified
+		Associate the arbitrary <code>value</code> with the specified
 		<code>key</code>. Return this Bindings.
 	*/
 	public Bindings putAny(String key, Object value) {
-		vars.put(key,  value);
+		vars.put(key, value);
 		return this;
 	}
 
 	/**
-		Answer a set of the variable names bound in this ValValues.
+		Answer the set of variable names bound in this Bindings.
 	*/
 	public Set<String> keySet() {
 		return vars.keySet();

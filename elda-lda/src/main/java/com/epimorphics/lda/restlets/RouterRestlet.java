@@ -354,7 +354,7 @@ import com.sun.jersey.api.NotFoundException;
         			;
         	} 
         //        	
-        	Bindings b = ep.getSpec().getBindings();
+        	Bindings b = ep.getSpec().getBindings().copy();
         	
         	String _properties = queryParams.getOne("_properties");
 			b.put("_properties", _properties == null ? "" : _properties );

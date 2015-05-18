@@ -10,6 +10,9 @@ package com.epimorphics.lda.support.pageComposition;
 import java.net.URI;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.bindings.Bindings;
@@ -33,7 +36,9 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 public class ComposeConfigDisplay {
 	
 	private final static PrefixMapping empty = PrefixMapping.Factory.create().lock();
-	
+
+    protected static Logger log = LoggerFactory.getLogger(ComposeConfigDisplay.class);
+    
 	public String configPageMentioning( List<SpecEntry> entries, URI base, String pathstub ) {
 		StringBuilder textBody = new StringBuilder();
 		if (pathstub == null) pathstub = "";
@@ -145,18 +150,23 @@ public class ComposeConfigDisplay {
 	    	sb.append( "<thead><tr><th>name</th><th>lexical form</th><th>type or language</th></tr></thead>\n" );
 			for (String name: names) {
 				Value v = b.get( name );
-				String lf = v.spelling() == null ? "<i>none</i>" : v.spelling();
-				String type =
-					v.type().length() > 0 ? pm.shortForm( v.type() )
-					: v.lang().length() > 0 ? v.lang()
-					: ""
-					;
-				sb.append( "<tr>" )
-					.append( "<td>" ).append( name ).append( "</td>" )
-					.append( "<td>" ).append( safe(lf) ).append( "</td>" )
-					.append( "<td>" ).append( type ).append( "</td>" )
-					.append( "</tr>\n" )
-					;
+				if (v == null) {					
+					log.debug("binding for " + name + " is null or non-Value; ignored.");	
+					System.err.println("binding for " + name + " is null or non-Value; ignored.");			
+				} else {
+					String lf = v.spelling() == null ? "<i>none</i>" : v.spelling();
+					String type =
+						v.type().length() > 0 ? pm.shortForm( v.type() )
+						: v.lang().length() > 0 ? v.lang()
+						: ""
+						;
+					sb.append( "<tr>" )
+						.append( "<td>" ).append( name ).append( "</td>" )
+						.append( "<td>" ).append( safe(lf) ).append( "</td>" )
+						.append( "<td>" ).append( type ).append( "</td>" )
+						.append( "</tr>\n" )
+						;
+				}			
 			}
 			sb.append( "</table>\n" );
 			sb.append( "</div>\n" );
