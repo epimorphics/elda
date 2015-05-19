@@ -705,14 +705,14 @@ will be rewritten to
 If multiple `ifStarts` values match, the longest is preferred. It is an
 error for multiple rules to share an `ifStarts` value.
 
-`elda:describeAllLabel` {#describe-all-label}
+elda:describeAllLabel {#describe-all-label}
 -----------------------
 
 If a new viewer is declared with the property `elda:describeAllLabel`,
 it becomes a variant of the `describeAllViewer` where the label property
 used is the object of that property rather than `rdfs:label`.
 
-`elda:allowedReserved` {#allow-reserved}
+elda:allowedReserved {#allow-reserved}
 ----------------------
 
 Normally (and as prescribed by the spec) Elda will generate a 400 status
