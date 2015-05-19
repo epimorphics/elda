@@ -135,6 +135,10 @@ RELEASING ELDA
   Add a new release marker to the release notes with
   the next release version tagged DEVELOPING.
 
+  Add a file to _posts with file name $DATE-$VERSION.md and content
+  similar to previous such files, containing a short announcement of
+  the release.
+
   Email linked-data-api-discuss with a moderately chatty
   message about the update, summarising the release notes
   and specifically anything that has been recently mentioned,
