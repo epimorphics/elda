@@ -326,7 +326,7 @@ import com.sun.jersey.api.NotFoundException;
     	, String formatName
     	, Match match
     	) {
-    	Object transactionId = servCon.getAttribute(RouterRestletSupport.TRANSACTION_COUNT);    	
+    	Object transactionId = servletResponse.getHeader(LogRequestFilter.REQUEST_ID_HEADER);
     	Bindings forErrorHandling = null;
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();

@@ -24,9 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.restlets.RouterRestletSupport;
 import com.epimorphics.util.NameUtils;
-
 
 /**
  * A Filter that can be added to filter chain to log all incoming requests and
@@ -37,7 +35,12 @@ import com.epimorphics.util.NameUtils;
 public class LogRequestFilter implements Filter {
 	
     public static final String TRANSACTION_ATTRIBUTE = "transaction";
+    
     public static final String START_TIME_ATTRIBUTE  = "startTime";
+    
+    /**
+    	The response header used for the ID of this request/response.
+    */
     public static final String REQUEST_ID_HEADER  = "x-response-id";
     
     static final Logger log = LoggerFactory.getLogger( LogRequestFilter.class );
@@ -46,8 +49,7 @@ public class LogRequestFilter implements Filter {
 
     protected String ignoreIfMatches = null;
     
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    @Override public void init(FilterConfig filterConfig) throws ServletException {
     	ignoreIfMatches = filterConfig.getInitParameter("com.epimorphics.lda.logging.ignoreIfMatches");
     }
 
@@ -61,16 +63,11 @@ public class LogRequestFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest)request;
         String query = httpRequest.getQueryString();
         String path = httpRequest.getRequestURI();
-        
-//        System.err.println(">> ignoreIfMatches = " + ignoreIfMatches);
-//        System.err.println(">> path is " + path);
-//        if (ignoreIfMatches != null) System.err.println(">> path matches: " + (path.matches(ignoreIfMatches) ? "yes" : "no"));
-        
         boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);
+    //
         if (logThis) {
         	HttpServletResponse httpResponse = (HttpServletResponse)response;
 	        long transaction = transactionCount.incrementAndGet();	        
-	        httpRequest.getServletContext().setAttribute(RouterRestletSupport.TRANSACTION_COUNT, transaction);
 	        long start = System.currentTimeMillis();
 	        log.info( String.format("Request  [%d] : %s", transaction, path) + (query == null ? "" : ("?" + query)) );
 	        httpResponse.addHeader(REQUEST_ID_HEADER, Long.toString(transaction));

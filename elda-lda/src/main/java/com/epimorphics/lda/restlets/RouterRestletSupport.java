@@ -40,14 +40,6 @@ import com.hp.hpl.jena.vocabulary.RDF;
  	Support methods and data structures for RouterRestlet.
 */
 public class RouterRestletSupport {
-
-	/**
-		Attribute name used when passing a transaction id from the log
-		filter to RouterRestlet. Note that RouterRestlet* doesn't depend
-		at compile-time on LogRequestFilter, so it can be dropped if
-		not used.
-	*/
-	public static final String TRANSACTION_COUNT = "com.epimorphics.lda.logging.N";
 	
     protected static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
 
