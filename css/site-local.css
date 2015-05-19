@@ -90,3 +90,6 @@ pre {
 .highlight .lineno { color: #999; display:inline-block; padding: 0 5px; border-right:1px solid #ccc; }
 .highlight pre code { display: block; white-space: pre; overflow-x: auto; word-wrap: normal; }
 
+/* disable ugly scroll-bars on code blocks */
+pre { overflow-x: hidden }
+
