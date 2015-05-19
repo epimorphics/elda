@@ -1,8 +1,13 @@
 + ---------------------------------------------------------------------
-| Elda 1.3.11 (DEVELOPING)
+| Elda 1.3.12 (DEVELOPING)
 
 + ---------------------------------------------------------------------
-| Elda 1.3.10 (RELEASED)
+| Elda 1.3.11 (DEVELOPING)
+
+Made LogRequestFilter tomcat-6 compatible.
+
++ ---------------------------------------------------------------------
+| Elda 1.3.10-SNAPSHOT (INCOMPLETELY RELEASED)
 
 * Fixes bug in /api-config caused by introduction of non-Value Bindings
   for _servletRequest and _servletResponse.
