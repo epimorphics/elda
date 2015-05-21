@@ -101,16 +101,24 @@ public class ComposeConfigDisplay {
 		stripped before checking the endpoints of this spec).
 	*/
 	private boolean show(String path, SpecEntry se) {
-		String prefixPath = se.getSpec().getPrefixPath().substring(1);	
-		if (path.startsWith(prefixPath)) {
+		String prefixPath = cleanPrefixPath(se.getSpec().getPrefixPath());
+		if (path.startsWith(prefixPath)) {			
 			List<APIEndpointSpec> endpoints = se.getSpec().getEndpoints();
-			String strippedPath = path.substring(prefixPath.length() + 1);
+			String strippedPath = path.substring(prefixPath.length());
+			if (strippedPath.startsWith("/")) strippedPath = strippedPath.substring(1);
 			return occursIn( strippedPath, endpoints );
 		} else {
 			return false;
 		}
 	}
     
+	// deal with null (treat as "/") and strip the leading slash.
+	private String cleanPrefixPath(String prefixPath) {
+		if (prefixPath == null) return "";
+		if (prefixPath.isEmpty()) return "";
+		return prefixPath.substring(1);
+	}
+
 	static class Which {
 
 		final int n;
