@@ -73,7 +73,7 @@ public class Page extends CommonNodeWrapper
      * @param root
      *            The root resource of this page
      */
-    public Page( ModelWrapper mw, Resource root ) {
+    public Page( ResultsModel mw, Resource root ) {
         super( mw, root );
     }
 
@@ -200,7 +200,7 @@ public class Page extends CommonNodeWrapper
     public List<PageFormat> formats() {
         List<PageFormat> pfs = new ArrayList<PageFormat>();
 
-        for (com.epimorphics.rdfutil.RDFNodeWrapper n : listPropertyValues( DCTerms.hasFormat )) {
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n : pageMetadataRoot().listPropertyValues( DCTerms.hasFormat )) {
             pfs.add( new PageFormat( this, n.asResource() ) );
         }
 
@@ -215,7 +215,7 @@ public class Page extends CommonNodeWrapper
     public List<EldaView> views() {
         List<EldaView> vs = new ArrayList<EldaView>();
 
-        for (com.epimorphics.rdfutil.RDFNodeWrapper n : listPropertyValues( DCTerms.hasVersion )) {
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n : pageMetadataRoot().listPropertyValues( DCTerms.hasVersion )) {
             vs.add( new EldaView( this, n.asResource() ) );
         }
 
@@ -555,6 +555,17 @@ public class Page extends CommonNodeWrapper
                 pageURL.withParameter( op, paramName, paramValue ), "remove-link" );
     }
 
+    /** @return The model wrapper this resource is bound to, cast to {@link ResultsModel} */
+    protected ResultsModel resultsModel() {
+        return (ResultsModel) getModelW();
+    }
+    
+    /** @return The root resource for the page, in the metadata model only */
+    protected RDFNodeWrapper pageMetadataRoot() {
+        return resultsModel().metadataRoot();
+    }
+    
+    
     /***********************************/
     /* Inner class definitions         */
     /***********************************/
