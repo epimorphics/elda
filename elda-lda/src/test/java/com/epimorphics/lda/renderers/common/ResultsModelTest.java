@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.vocabulary.DCTerms;
 
 /**
  * Unit tests for {@link ResultsModel}
@@ -74,7 +75,34 @@ public class ResultsModelTest
         assertFalse( rm.getDataset().getNamedModel( ResultsModel.RESULTS_METADATA_GRAPH ).isEmpty() );
         assertFalse( rm.getDataset().getNamedModel( ResultsModel.RESULTS_OBJECT_GRAPH ).isEmpty() );
     }
+    
+    @Test
+    public void testMetadataModel() {
+        ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
+        assertEquals( apiMetadataModel, rm.metadataModel() );
+    }
 
+    
+    /**
+     * Issue 140: the Page object created from a results model should only draw properties
+     * from the results meta model
+     * @see https://github.com/epimorphics/elda/issues/140
+     */
+    @Test
+    public void testIssue140() {
+        Model withDctHasVersion = ModelIOUtils.modelFromTurtle( "<http://localhost:8080/standalone/hello/games.vhtml?_metadata=all> <http://purl.org/dc/terms/hasVersion> <bar>." );
+        Model unionModel = ModelFactory.createUnion( apiMetadataModel, withDctHasVersion );
+
+        ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, unionModel, withDctHasVersion, apiMetadataModel ) );
+        
+        for (EldaView view: rm.page().views()) {
+            assertNotNull( view.viewName() );
+        }
+        
+        assertEquals( 3, rm.page().views().size() );
+        assertEquals( 3, rm.metadataRoot().listPropertyValues( DCTerms.hasVersion ).size() );
+    }
+    
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
