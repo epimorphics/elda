@@ -452,7 +452,7 @@ literal string.
       .
 
 Declares that `hello:designed-by` has shortname *designedBy*. (Note that
-the HTML renderer shows property shortnamesin the display translated by
+the HTML renderer shows property shortnames in the display translated by
 turning camelCase like *designedBy* into space-separated words like
 *designed by*.)
 

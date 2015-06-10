@@ -560,8 +560,8 @@ application's `webapp` directory.
 
 ### asset path and `api:base`
 
-The *asset path* is used by the (default) XSLT-driven HTML renderer and
-the (default) velocity template renderer. It is the value of the LDA
+The *asset path* is used by the XSLT-driven HTML renderer and
+the velocity template renderer. It is the value of the LDA
 variable `_resourceRoot`:
 
     ... api:variable [api:name "_resourceRoot"; api:value "lda-assets/"]
