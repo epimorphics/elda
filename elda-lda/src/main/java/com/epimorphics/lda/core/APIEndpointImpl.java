@@ -15,8 +15,6 @@ package com.epimorphics.lda.core;
 import java.net.URI;
 import java.util.*;
 
-import javax.ws.rs.core.UriBuilder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,7 +85,7 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     @Override public ResponseResult call( Request r, NoteBoard nb ) {
-    	URI key = r.getCanonicalURI();
+    	URI key = r.getURIwithFormat();
     //
     	TimedThing<ResponseResult> fromCache = cache.fetch(key);
     	if (fromCache == null || r.c.allowCache == false) {
@@ -189,8 +187,6 @@ public class APIEndpointImpl implements APIEndpoint {
 	//
 		// if (rs.isEmpty() && exceptionIfEmpty) EldaException.NoItemFound();
 	//
-		String format = r.format;
-	//
 		MergedModels mergedModels = rs.getModels();		
 		Model metaModel = mergedModels.getMetaModel();
 		cc.include( metaModel );
@@ -202,8 +198,6 @@ public class APIEndpointImpl implements APIEndpoint {
         int perPage = query.getPageSize();
     //
         String template = spec.getURITemplate();
-        List<String> formatNames = spec.getRendererFactoryTable().formatNames();
-        rs.setContentLocation( URIUtils.changeFormatSuffix( r.requestURI, formatNames, format ) );
         rs.setRoot(thisMetaPage);
     //
         List<Resource> resultList = rs.getResultList();

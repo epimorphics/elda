@@ -80,14 +80,13 @@ public interface APIEndpoint {
 		}
 
 		/**
-			getCanonicalURI() returns the canonical form of the requestURI, where
-			"canonical" means that the format name is explicitly specified as
-			suffix .format and any existing _format= is stripped. This form of the URI
-			is suitable as a cache key because the renderer name is explicitly
-			present, whereas the requestURI might not (when a renderer is selected
-			by content negoriation).
+			getURIwithFormat() returns the specified-format form of the requestURI, where
+			the format name is explicitly specified as suffix .format and any 
+			existing _format= is stripped. This form of the URI is suitable as
+			a cache key because the renderer name is explicitly present, 
+			whereas the requestURI might not (when a renderer is selected by content negotiation).
 		*/
-		public URI getCanonicalURI() {
+		public URI getURIwithFormat() {
 			URI a = UriBuilder.fromUri(requestURI).replaceQueryParam("_format").build();
 			URI b = URIUtils.changeFormatSuffix(a, formatNames, format);
 			return b;

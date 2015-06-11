@@ -422,12 +422,14 @@ import com.sun.jersey.api.NotFoundException;
         		: RouterRestletSupport.expiresAtAsRFC1123(expiresAt)
         		;
 						
+        	URI contentLocation = req.getURIwithFormat();
+        	
 			MediaType mt = r.getMediaType(rc);
 			log.debug( "rendering with formatter " + mt );
 			Times times = c.times;
 			Renderer.BytesOut bo = r.render( times, rc, termBindings, results );
 			int mainHash = runHash + ru.toString().hashCode();
-			return returnAs( expiresDate, results, mainHash + mt.hashCode(), wrap(times, bo), needsVaryAccept, mt );
+			return returnAs( contentLocation, expiresDate, results, mainHash + mt.hashCode(), wrap(times, bo), needsVaryAccept, mt );
 	//
         } catch (StackOverflowError e) {
         	StatsValues.endpointException();
@@ -539,10 +541,10 @@ import com.sun.jersey.api.NotFoundException;
         return standardHeaders( expiresDate, Response.ok(response, mimetype) ).build();
     }
     
-    private static Response returnAs( String expiresDate, APIResultSet rs, int envHash, StreamingOutput response, boolean varyAccept, MediaType mt ) {
+    private static Response returnAs( URI contentLocation, String expiresDate, APIResultSet rs, int envHash, StreamingOutput response, boolean varyAccept, MediaType mt ) {
         try {
             return standardHeaders( expiresDate, rs, envHash, varyAccept, Response.ok( response, mt.toFullString() ) )
-            	.contentLocation( rs.getContentLocation() )
+            	.contentLocation( contentLocation )
             	.build()
             	;
         } catch (RuntimeException e) {

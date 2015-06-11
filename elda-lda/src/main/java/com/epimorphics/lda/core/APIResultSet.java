@@ -163,14 +163,6 @@ public class APIResultSet implements SetsMetadata {
 			}
 		}
     }
-    
-    public URI getContentLocation() {
-        return contentLocation;
-    }
-
-    public void setContentLocation(URI contentLocation) {
-        this.contentLocation = contentLocation;
-    }
 
     public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery, View v) {
     	model = new MergedModels( ModelFactory.createModelForGraph( graph ) );
@@ -354,7 +346,6 @@ public class APIResultSet implements SetsMetadata {
         cloneGraph.getPrefixMapping().setNsPrefixes( model.merged );
         APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, enableETags, detailsQuery, metadata, view );
         clone.setRoot(root);
-        clone.setContentLocation(contentLocation);
         clone.setSelectQuery( selectQuery );
         clone.timestamp = timestamp;     
         return clone;
