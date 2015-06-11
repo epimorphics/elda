@@ -64,6 +64,26 @@ public class APIResultSet implements SetsMetadata {
     
 // ---------------------------------------------------------------------------  
     
+    /**
+    	Initialise this APIResultSet as a shallow copy of <code>other</code>,
+    	except that a fresh merged model is created over the object model
+    	(only) of the copied result set.
+    */
+    public APIResultSet(APIResultSet other) {
+    	this.root = other.root;
+    	this.contentLocation = other.contentLocation;
+    	this.results = other.results;
+    	this.isCompleted = other.isCompleted;
+    	this.model = new MergedModels(other.model.getObjectModel());
+    	this.detailsQuery = other.detailsQuery;
+    	this.hash = other.hash;
+    	this.timestamp = other.timestamp;
+    	this.selectQuery = other.selectQuery;
+    	this.enableETags = other.enableETags;
+    	this.view = other.view;
+    	this.metadata.putAll( other.metadata );
+    }
+    
     protected APIResultSet
     	( Resource root
     	, URI contentLocation
