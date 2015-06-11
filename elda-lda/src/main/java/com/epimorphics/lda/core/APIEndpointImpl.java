@@ -15,6 +15,8 @@ package com.epimorphics.lda.core;
 import java.net.URI;
 import java.util.*;
 
+import javax.ws.rs.core.UriBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,13 +87,14 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
     @Override public ResponseResult call( Request r, NoteBoard nb ) {
-    	URI key = r.requestURI;
+    	URI key = r.getCanonicalURI();
+    //
     	TimedThing<ResponseResult> fromCache = cache.fetch(key);
     	if (fromCache == null || r.c.allowCache == false) {
 //    		System.err.println( ">> request: " + key + ", not in cache (or cache not allowed)." );
     		ResponseResult fresh = uncachedCall(r, nb);
     		long expiresAt = nb.expiresAt;
-    		cache.store(r.requestURI, fresh, expiresAt);
+    		cache.store(key, fresh, expiresAt);
 //    		System.err.println( ">> created new entry" );
 //    		if (expiresAt < 0) System.err.println( ">>  no explicit expiry time"); 
 //    		else System.err.println( ">>  lives until " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));

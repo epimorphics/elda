@@ -11,9 +11,10 @@ import static org.junit.Assert.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
@@ -31,6 +32,8 @@ import com.hp.hpl.jena.rdf.model.Resource;
 public class TestBindings {
 	
 	static final Controls controls = new Controls( true, new Times() );
+	
+	static final List<String> formatNames = Arrays.asList("xml json html".split(","));
 	
 	/**
 	    Test that declared variables can have values that depend on
@@ -61,7 +64,10 @@ public class TestBindings {
 		URI req = new URI( "/driver/cartwheel" );
 		MultiMap<String, String> params = MakeData.parseQueryString( "" );
 		
-		APIEndpoint.Request r = new APIEndpoint.Request( controls, req, new Bindings() ).withFormat("xml");
+		APIEndpoint.Request r = new APIEndpoint.Request
+			( controls, req, new Bindings() )
+			.withFormats(formatNames, "xml")
+			;
 		
 		ResponseResult results = APIEndpointUtil.call( r, new NoteBoard(), match, "s", params );
 //		System.err.println( ">> class: " + results.c.getStringValue( "class" ) );

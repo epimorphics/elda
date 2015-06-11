@@ -341,7 +341,7 @@ import com.sun.jersey.api.NotFoundException;
         	
         	if (formatName == null && _default != null) formatName = _default.getPreferredSuffix();
         	
-        	Renderer r = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );
+        	Renderer r = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );    	
         	
         	if (r == null) {
         		String message = formatName == null
@@ -371,10 +371,12 @@ import com.sun.jersey.api.NotFoundException;
 			if (transactionId != null) b.put("_transaction", transactionId.toString());
 						
 			forErrorHandling = new Bindings(b, as);
-			        	
+			        
+			List<String> formatNames = match.getEndpoint().getSpec().getRendererFactoryTable().formatNames();
+			
         	APIEndpoint.Request req =
         		new APIEndpoint.Request( c, ru, b )
-        		.withFormat( formatName )
+        		.withFormats( formatNames, formatName )
         		.withMode( r.getMode() )
         		;
         	
