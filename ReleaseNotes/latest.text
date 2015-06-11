@@ -5,6 +5,13 @@ The (obsolete, non-working) built-in HTML renderer has been
 removed. An HTML renderer must be explicitly specified for the
 API or its endpoints. 
 
+The key for the internal Elda cache is the request URI with
+the renderer name made explicit as a suffix rather than as
+a _format= or implicit in the content negotiation (which
+is what caused issue #144 when a entry with a different
+implied renderer had contaminated the cache).
+Fixes #144 (short-term).
+
 + ---------------------------------------------------------------------
 | Elda 1.3.12 (RELEASED)
 
