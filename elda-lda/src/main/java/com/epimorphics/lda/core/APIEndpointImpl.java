@@ -182,6 +182,8 @@ public class APIEndpointImpl implements APIEndpoint {
 	}
 
     private void createMetadata( APIEndpoint.Request r, CompleteContext cc, Integer totalResults, APIResultSet rs, Bindings bindings, APIQuery query ) {
+
+    	URI uriWithFormat = r.getURIwithFormat();
 		boolean suppress_IPTO = bindings.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 //		boolean exceptionIfEmpty = bindings.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
 	//
@@ -191,7 +193,8 @@ public class APIEndpointImpl implements APIEndpoint {
 		Model metaModel = mergedModels.getMetaModel();
 		cc.include( metaModel );
 	//
-		Resource thisMetaPage = metaModel.createResource( r.requestURI.toString() ); 
+		// Resource thisMetaPage = metaModel.createResource( r.getURIwithFormat().toString() ); // requestURI.toString() ); 
+		Resource thisMetaPage = metaModel.createResource( uriWithFormat.toString() ); 
 		Resource uriForSpec = metaModel.createResource( spec.getSpecificationURI() ); 
 	//
         int page = query.getPageNumber();
@@ -211,12 +214,12 @@ public class APIEndpointImpl implements APIEndpoint {
         Map<String, View> views = spec.extractViews();
         EndpointDetails details = (EndpointDetails) spec;
         Set<FormatNameAndType> formats = spec.getRendererFactoryTable().getFormatNamesAndTypes();
-        URI uriForList = URIUtils.withoutPageParameters( r.requestURI );
+        URI uriForList = URIUtils.withoutPageParameters( uriWithFormat );
     //     
         Resource uriForDefinition = metaModel.createResource( createDefinitionURI( uriForList, uriForSpec, template, bindings.expandVariables( template ) ) ); 
         EndpointMetadata.addAllMetadata
         	( mergedModels
-        	, r.requestURI
+        	, uriForList
         	, uriForDefinition
         	, bindings
         	, cc
