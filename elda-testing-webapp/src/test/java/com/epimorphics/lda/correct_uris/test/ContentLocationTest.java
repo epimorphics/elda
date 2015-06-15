@@ -4,9 +4,18 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.epimorphics.lda.testing.utils.TestUtil;
 import com.epimorphics.lda.testing.utils.TomcatTestBase;
+import com.epimorphics.lda.vocabularies.*;
+import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.vocabulary.*;
 import com.sun.jersey.api.client.ClientResponse;
 
+/**
+    Test that the content-location header tracks the chosen rendering format.
+    Also test that the content-location has at least some of the meta-data 
+    properties.
+*/
 public class ContentLocationTest extends TomcatTestBase {
 
 	@Override public String getWebappRoot() {
@@ -61,5 +70,19 @@ public class ContentLocationTest extends TomcatTestBase {
 			;
 		
 		assertEquals(expected, shortLocation);
+		
+		if (shortLocation.endsWith(".ttl")) {
+			String entity = response.getEntity(String.class);
+			Model result = TestUtil.modelFromTurtle(entity);
+			Resource root = result.createResource(fullLocation);
+			
+			assertTrue(root.hasProperty(OpenSearch.itemsPerPage));
+			assertTrue(root.hasProperty(DCTerms.hasFormat));
+			assertTrue(root.hasProperty(DCTerms.hasPart));
+			assertTrue(root.hasProperty(API.items));
+			assertTrue(root.hasProperty(API.page));
+			assertTrue(root.hasProperty(XHV.next));
+		}
+		
 	}
 }

@@ -2,7 +2,6 @@ package com.epimorphics.lda.testing.tomcat;
 
 import static org.junit.Assert.*;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,11 +12,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.junit.Test;
 
+import com.epimorphics.lda.testing.utils.TestUtil;
 import com.epimorphics.lda.testing.utils.TomcatTestBase;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.SPARQL;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.RDFList;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -49,7 +48,7 @@ public class TestViewIsUsingValues extends TomcatTestBase{
 		assertEquals(200, response.getStatus());
 		assertTrue(response.getType().isCompatible(typeTurtle));
 		String entity = response.getEntity(String.class);
-		Model result = modelFromTurtle(entity);
+		Model result = TestUtil.modelFromTurtle(entity);
 	//
 		List<RDFNode> selectedItems = result.listObjectsOfProperty(API.items).next().as(RDFList.class).asJavaList();		
 	//
@@ -90,11 +89,6 @@ public class TestViewIsUsingValues extends TomcatTestBase{
 			if(m.find()) result.setNsPrefix(m.group(1), m.group(2));
 		}
 		return result;
-	}
-
-	public static Model modelFromTurtle(String ttl) {
-		Model model = ModelFactory.createDefaultModel();
-		return model.read( new StringReader(ttl), null, "Turtle");
 	}
 
 }
