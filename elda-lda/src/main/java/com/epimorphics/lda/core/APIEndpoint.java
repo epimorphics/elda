@@ -48,7 +48,7 @@ public interface APIEndpoint {
 	public static class Request {
 		public final Controls c;
 		public final URI requestURI;
-		public final Bindings context;
+		public final Bindings bindings;
 		public final CompleteContext.Mode mode;
 		
 		public final String format;
@@ -58,17 +58,17 @@ public interface APIEndpoint {
 			this(c, requestURI, context, CompleteContext.Mode.RoundTrip, Collections.<String>emptyList(), "");
 		}
 			
-		private Request(Controls c, URI requestURI, Bindings context, CompleteContext.Mode mode, List<String> formatNames, String format) {
+		private Request(Controls c, URI requestURI, Bindings bindings, CompleteContext.Mode mode, List<String> formatNames, String format) {
 			this.c = c;
 			this.requestURI = requestURI;
-			this.context = context;
+			this.bindings = bindings;
 			this.mode = mode;
 			this.format = format;
 			this.formatNames = formatNames;
 		}
 	
 		public Request withMode(CompleteContext.Mode mode) {
-			return new Request(c, requestURI, context, mode, formatNames, format);
+			return new Request(c, requestURI, bindings, mode, formatNames, format);
 		}
 	
 		public Request withBindings(Bindings newBindings) {
@@ -76,7 +76,7 @@ public interface APIEndpoint {
 		}
 	
 		public Request withFormats(List<String> formatNames, String format) {
-			return new Request(c, requestURI, context, mode, formatNames, format);
+			return new Request(c, requestURI, bindings, mode, formatNames, format);
 		}
 
 		/**
