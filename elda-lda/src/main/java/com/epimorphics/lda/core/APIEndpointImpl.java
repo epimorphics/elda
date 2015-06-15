@@ -105,7 +105,7 @@ public class APIEndpointImpl implements APIEndpoint {
     }
 
 	private ResponseResult uncachedCall( Request r, NoteBoard nb) {
-		Bindings b = r.context.copyWithDefaults( spec.getBindings() );
+		Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
 	    APIQuery query = spec.getBaseQuery();
 	//
 	    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
