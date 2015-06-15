@@ -118,12 +118,17 @@ public class APIEndpointImpl implements APIEndpoint {
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
 	//
-	    Context context = spec.getAPISpec().getShortnameService().asContext();
-		CompleteContext cc = new CompleteContext( r.mode, context, filtered.getModelPrefixes() );   
-	    createMetadata( r, cc, nb.totalResults, filtered, b, query );
-	    cc.include( filtered.getMergedModel() );	    
+	    CompleteContext cc = zog(r, nb, b, query, filtered);	    
 	    ResponseResult result = new ResponseResult( filtered, cc.Do(), b );
 		return result;
+	}
+
+	private CompleteContext zog(Request r, NoteBoard nb, Bindings b, APIQuery query, APIResultSet filtered) {
+		Context context = spec.getAPISpec().getShortnameService().asContext();
+		CompleteContext cc = new CompleteContext( r.mode, context, filtered.getModelPrefixes() );   
+	    createMetadata( r, cc, nb.totalResults, filtered, b, query );
+	    cc.include( filtered.getMergedModel() );
+		return cc;
 	}
 
     private View buildQueryAndView( Bindings context, APIQuery query ) {
