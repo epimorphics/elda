@@ -17,20 +17,20 @@ import com.epimorphics.lda.bindings.Bindings;
 
 public class Switches {
 
-	protected String getStringSwitch(Bindings b, String name, String ifAbsent) {
+	static protected String getStringSwitch(Bindings b, String name, String ifAbsent) {
 		return b.getAsString(name, ifAbsent);
 	}
 	
-	protected boolean getBoolSwitch(Bindings b, String name, boolean ifAbsent) {
+	static protected boolean getBoolSwitch(Bindings b, String name, boolean ifAbsent) {
 		String spelling = getStringSwitch(b, name, (ifAbsent ? "true" : "false"));
 		return spelling.equalsIgnoreCase("true") || spelling.equalsIgnoreCase("yes");
 	}
 	
-	public boolean cacheOnlyObjectData(Bindings b) {
+	static public boolean cacheOnlyObjectData(Bindings b) {
 		return getBoolSwitch(b, "_cacheOnlyObjectData", true);
 	}
 	
-	public boolean stripCacheKey(Bindings b) {
+	static public boolean stripCacheKey(Bindings b) {
 		return getBoolSwitch(b, "_stripCacheKey", true);
 	}
 }
