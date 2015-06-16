@@ -33,6 +33,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.*;
 import com.epimorphics.lda.support.NoteBoard;
+import com.epimorphics.lda.support.panel.Switches;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.*;
@@ -85,21 +86,18 @@ public class APIEndpointImpl implements APIEndpoint {
     }
     
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-    
-    // WIP
-    static String metadataMode = "revised";
-    static String keyMode = "plain";
-    
+        
     @Override public ResponseResult call(Request r, NoteBoard nb) {
-    	return metadataMode.equals("revised") ? call_revised(r, nb) : call_original(r, nb);
+    	return Switches.cacheOnlyObjectData(r.bindings) 
+    		? call_revised(r, nb) 
+    		: call_original(r, nb)
+    		;
     }
     
 // ////////////////////////////////////////////////////////////////////////
     
     public ResponseResult call_revised(Request r, NoteBoard nb) {
-    	
-    	URI key = r.getURIwithFormat();
-    	if (keyMode.equals("plain")) key = r.getURIplain();
+    	URI key = Switches.stripCacheKey(r.bindings) ? r.getURIplain() : r.getURIwithFormat();
 
     	Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
     	APIQuery query = spec.getBaseQuery();
