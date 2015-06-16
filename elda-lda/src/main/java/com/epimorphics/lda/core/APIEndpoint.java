@@ -23,7 +23,10 @@ import java.util.List;
 
 import javax.ws.rs.core.UriBuilder;
 
+import org.apache.http.client.utils.URIBuilder;
+
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.specs.APIEndpointSpec;
@@ -90,6 +93,21 @@ public interface APIEndpoint {
 			URI a = UriBuilder.fromUri(requestURI).replaceQueryParam("_format").build();
 			URI b = URIUtils.changeFormatSuffix(a, formatNames, format);
 			return b;
+		}
+
+		/**
+			getURIPlain returns the requestURI with suffix and query parameters
+			that do not affect the SPARQL select and view queries removed.
+		*/
+		public URI getURIplain() {			
+			URI x = UriBuilder.fromUri(URIUtils.changeFormatSuffix(requestURI, formatNames, ""))
+				.replaceQueryParam(QueryParameter._FORMAT)
+				.replaceQueryParam(QueryParameter._METADATA)
+				.replaceQueryParam(QueryParameter._MARK)
+				.replaceQueryParam(QueryParameter.callback)
+				.build()
+				;
+			return x;
 		}
 	}
     

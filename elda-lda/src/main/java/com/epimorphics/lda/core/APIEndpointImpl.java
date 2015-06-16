@@ -84,7 +84,66 @@ public class APIEndpointImpl implements APIEndpoint {
     	return defaults;
     }
     
-    @Override public ResponseResult call( Request r, NoteBoard nb ) {
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    
+    // WIP
+    static String metadataMode = "revised";
+    static String keyMode = "plain";
+    
+    @Override public ResponseResult call(Request r, NoteBoard nb) {
+    	return metadataMode.equals("revised") ? call_revised(r, nb) : call_original(r, nb);
+    }
+    
+// ////////////////////////////////////////////////////////////////////////
+    
+    public ResponseResult call_revised(Request r, NoteBoard nb) {
+    	
+    	URI key = r.getURIwithFormat();
+    	if (keyMode.equals("plain")) key = r.getURIplain();
+
+    	Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
+    	APIQuery query = spec.getBaseQuery();
+    	
+	    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
+			EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );  
+	    
+	    View view = buildQueryAndView( b, query );
+	    b.put("_selectedView", view.nameWithoutCopy());
+        
+    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
+        if (fromCache == null || r.c.allowCache == false) {
+        	// must construct and cache a new response-result
+//        	System.err.println(">>  Fresh.");
+        	ResponseResult fresh = freshResponse(b, query, view, r, nb);
+    		cache.store(key, fresh, nb.expiresAt);
+        	return decorate(b, query, fresh, r, nb);
+        } else {
+//        	System.err.println(">>  Re-use.");
+        	// re-use the existing response-result
+        	nb.expiresAt = fromCache.expiresAt;
+        	return decorate(b, query, fromCache.thing, r, nb);
+        }
+    }
+    
+    protected ResponseResult freshResponse(Bindings b, APIQuery query, View view, Request r, NoteBoard nb) {
+	//    
+	    APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );	    
+	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
+	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
+	//
+	    return new ResponseResult( filtered, null, b );
+    }
+    
+    protected ResponseResult decorate(Bindings b, APIQuery query, ResponseResult basis, Request r, NoteBoard nb) {
+    //
+	    APIResultSet rs = new APIResultSet(basis.resultSet);
+		CompleteContext cc = createMetadata(r, nb, b, query, rs);
+		return new ResponseResult(rs, cc.Do(), b);
+    }
+    
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    
+    /* @Override */ public ResponseResult call_original( Request r, NoteBoard nb ) {
     	URI key = r.getURIwithFormat();
     //
     	TimedThing<ResponseResult> fromCache = cache.fetch(key);
@@ -107,12 +166,16 @@ public class APIEndpointImpl implements APIEndpoint {
 	private ResponseResult uncachedCall( Request r, NoteBoard nb) {
 		Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
 	    APIQuery query = spec.getBaseQuery();
+	    
+//	    System.err.println(">>  uncachedCall pageNumber [1]: " + query.getPageNumber());
 	//
 	    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
 			EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );
 	//
 	    View view = buildQueryAndView( b, query );
 	    b.put("_selectedView", view.nameWithoutCopy());	    
+	    
+//	    System.err.println(">>  uncachedCall pageNumber [2]: " + query.getPageNumber());
 	//    
 	    APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );	    
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
