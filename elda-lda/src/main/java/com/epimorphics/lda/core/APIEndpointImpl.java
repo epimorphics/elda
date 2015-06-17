@@ -114,12 +114,12 @@ public class APIEndpointImpl implements APIEndpoint {
 //        	System.err.println(">>  Fresh.");
         	ResponseResult fresh = freshResponse(b, query, view, r, nb);
     		cache.store(key, fresh, nb.expiresAt);
-        	return decorate(b, query, fresh, r, nb);
+        	return decorate(false, b, query, fresh, r, nb);
         } else {
 //        	System.err.println(">>  Re-use.");
         	// re-use the existing response-result
         	nb.expiresAt = fromCache.expiresAt;
-        	return decorate(b, query, fromCache.thing, r, nb);
+        	return decorate(true, b, query, fromCache.thing, r, nb);
         }
     }
     
@@ -129,14 +129,14 @@ public class APIEndpointImpl implements APIEndpoint {
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
 	//
-	    return new ResponseResult( filtered, null, b );
+	    return new ResponseResult(false, filtered, null, b);
     }
     
-    protected ResponseResult decorate(Bindings b, APIQuery query, ResponseResult basis, Request r, NoteBoard nb) {
+    protected ResponseResult decorate(boolean isFromCache, Bindings b, APIQuery query, ResponseResult basis, Request r, NoteBoard nb) {
     //
 	    APIResultSet rs = new APIResultSet(basis.resultSet);
 		CompleteContext cc = createMetadata(r, nb, b, query, rs);
-		return new ResponseResult(rs, cc.Do(), b);
+		return new ResponseResult(isFromCache, rs, cc.Do(), b);
     }
     
 // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -180,7 +180,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
 	//
 	    CompleteContext cc = createMetadata(r, nb, b, query, filtered);	    
-	    ResponseResult result = new ResponseResult( filtered, cc.Do(), b );
+	    ResponseResult result = new ResponseResult(false, filtered, cc.Do(), b );
 		return result;
 	}
 
