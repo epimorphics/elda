@@ -31,6 +31,8 @@ public class TestSharedCacheEntries {
 		( ":spec a api:API"
 		, "  ; api:sparqlEndpoint <local:src/test/resources/datasets/use-graph-testing.ttl,...use-graph-testing-A.ttl,...use-graph-testing-B.ttl>"
 		, "  ; api:endpoint :endpoint"
+		, "  ; api:variable [api:name '_stripCacheKey'; api:value 'true']"
+		, "  ; api:variable [api:name '_cacheOnlyObjectData'; api:value 'true']"
 		, "  ."
 		, ""
 		, ":endpoint a api:ListEndpoint"
