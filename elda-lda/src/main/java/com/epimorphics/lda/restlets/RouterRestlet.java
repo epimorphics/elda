@@ -247,7 +247,7 @@ import com.sun.jersey.api.NotFoundException;
         } else {
         //
         	String prefixPath = match.getEndpoint().getPrefixPath();
-        	String path = contextPath + prefixPath;
+        	String path = contextPath + (prefixPath == null ? "" : prefixPath);
         	match.getEndpoint().getSpec().getBindings().put("_rootPath", path );
         //
         	Times t = new Times( pathstub );
@@ -368,7 +368,7 @@ import com.sun.jersey.api.NotFoundException;
 			b.putAny("_servletRequest", servletRequest);
 			b.putAny("_servletResponse", servletResponse);
 			
-			if (transactionId != null) b.put("_transaction", transactionId.toString());
+//			if (transactionId != null) b.put("_transaction", transactionId.toString());
 						
 			forErrorHandling = new Bindings(b, as);
 			        
