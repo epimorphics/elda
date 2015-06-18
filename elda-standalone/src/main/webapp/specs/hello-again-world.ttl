@@ -17,7 +17,7 @@
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
 
 # Prefix for example-local entities.
-@prefix hello:				<http://epimorphics.com/public/vocabulary/games.ttl#>.
+@prefix hello:				<http://epimorphics.com/public/vocabulary/games/>.
 
 # ---------------------------------------------------------------------
 # API config
@@ -86,6 +86,7 @@ hello:games a api:ListEndpoint
 hello:about a api:ItemEndpoint
 	; rdfs:label "About"
 	; api:uriTemplate "/about?resource={uri}"
+	; api:itemTemplate "{uri}"
     ; api:variable [api:name "uri"; api:type rdfs:Resource]
 	; api:selector 
 		[ api:where "?item ?p ?o. FILTER(?item = ?uri)"

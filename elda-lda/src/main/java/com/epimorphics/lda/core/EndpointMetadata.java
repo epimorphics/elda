@@ -53,7 +53,7 @@ public class EndpointMetadata {
 	
 	public static void addAllMetadata
 		( MergedModels mergedModels
-		, URI ru
+		, URI uriForList
 		, Resource uriForDefinition
 		, Bindings bindings
 		, CompleteContext cc
@@ -75,7 +75,6 @@ public class EndpointMetadata {
 		) {
 	//
 		boolean listEndpoint = details.isListEndpoint();
-        URI uriForList = URIUtils.withoutPageParameters( ru );
 		Model metaModel = mergedModels.getMetaModel();
 		thisMetaPage.addProperty( API.definition, uriForDefinition );
 	//
@@ -98,9 +97,9 @@ public class EndpointMetadata {
 	    		thisMetaPage.addLiteral( OpenSearch.totalResults, totalResults.intValue() );
 	    	
 	    	thisMetaPage.addProperty( API.items, content );
-	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, 0 );
-	    	Resource nextPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, page + 1 );
-	    	Resource prevPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, page - 1 );
+	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, 0 );
+	    	Resource nextPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, page + 1 );
+	    	Resource prevPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, page - 1 );
 
 	    	thisMetaPage.addProperty( XHV.first, firstPage );
 			if (hasMorePages) thisMetaPage.addProperty( XHV.next, nextPage );

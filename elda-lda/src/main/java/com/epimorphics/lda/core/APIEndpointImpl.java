@@ -15,8 +15,6 @@ package com.epimorphics.lda.core;
 import java.net.URI;
 import java.util.*;
 
-import javax.ws.rs.core.UriBuilder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +33,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.*;
 import com.epimorphics.lda.support.NoteBoard;
+import com.epimorphics.lda.support.panel.Switches;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.*;
@@ -86,8 +85,64 @@ public class APIEndpointImpl implements APIEndpoint {
     	return defaults;
     }
     
-    @Override public ResponseResult call( Request r, NoteBoard nb ) {
-    	URI key = r.getCanonicalURI();
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        
+    @Override public ResponseResult call(Request r, NoteBoard nb) {
+    	return Switches.cacheOnlyObjectData(r.bindings) 
+    		? call_revised(r, nb) 
+    		: call_original(r, nb)
+    		;
+    }
+    
+// ////////////////////////////////////////////////////////////////////////
+    
+    public ResponseResult call_revised(Request r, NoteBoard nb) {
+    	URI key = Switches.stripCacheKey(r.bindings) ? r.getURIplain() : r.getURIwithFormat();
+
+    	Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
+    	APIQuery query = spec.getBaseQuery();
+    	
+	    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
+			EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );  
+	    
+	    View view = buildQueryAndView( b, query );
+	    b.put("_selectedView", view.nameWithoutCopy());
+        
+    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
+        if (fromCache == null || r.c.allowCache == false) {
+        	// must construct and cache a new response-result
+//        	System.err.println(">>  Fresh.");
+        	ResponseResult fresh = freshResponse(b, query, view, r, nb);
+    		cache.store(key, fresh, nb.expiresAt);
+        	return decorate(false, b, query, fresh, r, nb);
+        } else {
+//        	System.err.println(">>  Re-use.");
+        	// re-use the existing response-result
+        	nb.expiresAt = fromCache.expiresAt;
+        	return decorate(true, b, query, fromCache.thing, r, nb);
+        }
+    }
+    
+    protected ResponseResult freshResponse(Bindings b, APIQuery query, View view, Request r, NoteBoard nb) {
+	//    
+	    APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );	    
+	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
+	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
+	//
+	    return new ResponseResult(false, filtered, null, b);
+    }
+    
+    protected ResponseResult decorate(boolean isFromCache, Bindings b, APIQuery query, ResponseResult basis, Request r, NoteBoard nb) {
+    //
+	    APIResultSet rs = new APIResultSet(basis.resultSet);
+		CompleteContext cc = createMetadata(r, nb, b, query, rs);
+		return new ResponseResult(isFromCache, rs, cc.Do(), b);
+    }
+    
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    
+    /* @Override */ public ResponseResult call_original( Request r, NoteBoard nb ) {
+    	URI key = r.getURIwithFormat();
     //
     	TimedThing<ResponseResult> fromCache = cache.fetch(key);
     	if (fromCache == null || r.c.allowCache == false) {
@@ -107,25 +162,34 @@ public class APIEndpointImpl implements APIEndpoint {
     }
 
 	private ResponseResult uncachedCall( Request r, NoteBoard nb) {
-		Bindings b = r.context.copyWithDefaults( spec.getBindings() );
+		Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
 	    APIQuery query = spec.getBaseQuery();
+	    
+//	    System.err.println(">>  uncachedCall pageNumber [1]: " + query.getPageNumber());
 	//
 	    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
 			EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );
 	//
 	    View view = buildQueryAndView( b, query );
 	    b.put("_selectedView", view.nameWithoutCopy());	    
+	    
+//	    System.err.println(">>  uncachedCall pageNumber [2]: " + query.getPageNumber());
 	//    
 	    APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );	    
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
 	//
-	    Context context = spec.getAPISpec().getShortnameService().asContext();
+	    CompleteContext cc = createMetadata(r, nb, b, query, filtered);	    
+	    ResponseResult result = new ResponseResult(false, filtered, cc.Do(), b );
+		return result;
+	}
+
+	private CompleteContext createMetadata(Request r, NoteBoard nb, Bindings b, APIQuery query, APIResultSet filtered) {
+		Context context = spec.getAPISpec().getShortnameService().asContext();
 		CompleteContext cc = new CompleteContext( r.mode, context, filtered.getModelPrefixes() );   
 	    createMetadata( r, cc, nb.totalResults, filtered, b, query );
-	    cc.include( filtered.getMergedModel() );	    
-	    ResponseResult result = new ResponseResult( filtered, cc.Do(), b );
-		return result;
+	    cc.include( filtered.getMergedModel() );
+		return cc;
 	}
 
     private View buildQueryAndView( Bindings context, APIQuery query ) {
@@ -184,26 +248,25 @@ public class APIEndpointImpl implements APIEndpoint {
 	}
 
     private void createMetadata( APIEndpoint.Request r, CompleteContext cc, Integer totalResults, APIResultSet rs, Bindings bindings, APIQuery query ) {
+
+    	URI uriWithFormat = r.getURIwithFormat();
 		boolean suppress_IPTO = bindings.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
 //		boolean exceptionIfEmpty = bindings.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
 	//
 		// if (rs.isEmpty() && exceptionIfEmpty) EldaException.NoItemFound();
 	//
-		String format = r.format;
-	//
 		MergedModels mergedModels = rs.getModels();		
 		Model metaModel = mergedModels.getMetaModel();
 		cc.include( metaModel );
 	//
-		Resource thisMetaPage = metaModel.createResource( r.requestURI.toString() ); 
+		// Resource thisMetaPage = metaModel.createResource( r.getURIwithFormat().toString() ); // requestURI.toString() ); 
+		Resource thisMetaPage = metaModel.createResource( uriWithFormat.toString() ); 
 		Resource uriForSpec = metaModel.createResource( spec.getSpecificationURI() ); 
 	//
         int page = query.getPageNumber();
         int perPage = query.getPageSize();
     //
         String template = spec.getURITemplate();
-        List<String> formatNames = spec.getRendererFactoryTable().formatNames();
-        rs.setContentLocation( URIUtils.changeFormatSuffix( r.requestURI, formatNames, format ) );
         rs.setRoot(thisMetaPage);
     //
         List<Resource> resultList = rs.getResultList();
@@ -217,12 +280,12 @@ public class APIEndpointImpl implements APIEndpoint {
         Map<String, View> views = spec.extractViews();
         EndpointDetails details = (EndpointDetails) spec;
         Set<FormatNameAndType> formats = spec.getRendererFactoryTable().getFormatNamesAndTypes();
-        URI uriForList = URIUtils.withoutPageParameters( r.requestURI );
+        URI uriForList = URIUtils.withoutPageParameters( uriWithFormat );
     //     
         Resource uriForDefinition = metaModel.createResource( createDefinitionURI( uriForList, uriForSpec, template, bindings.expandVariables( template ) ) ); 
         EndpointMetadata.addAllMetadata
         	( mergedModels
-        	, r.requestURI
+        	, uriForList
         	, uriForDefinition
         	, bindings
         	, cc
