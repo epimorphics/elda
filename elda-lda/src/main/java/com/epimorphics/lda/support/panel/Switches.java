@@ -27,10 +27,10 @@ public class Switches {
 	}
 	
 	static public boolean cacheOnlyObjectData(Bindings b) {
-		return getBoolSwitch(b, "_cacheOnlyObjectData", true);
+		return getBoolSwitch(b, "_cacheOnlyObjectData", false);
 	}
 	
 	static public boolean stripCacheKey(Bindings b) {
-		return getBoolSwitch(b, "_stripCacheKey", true);
+		return getBoolSwitch(b, "_stripCacheKey", false);
 	}
 }
