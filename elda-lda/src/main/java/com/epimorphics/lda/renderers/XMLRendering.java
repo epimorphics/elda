@@ -328,6 +328,7 @@ public class XMLRendering {
 				RDFNode label = labelling.getObject();
 				if (label.isLiteral()) return label.asLiteral().getLexicalForm();
 			}
+			return r.asNode().getBlankNodeLabel();
 		}
 	//
 		if (r.isURIResource()) {
