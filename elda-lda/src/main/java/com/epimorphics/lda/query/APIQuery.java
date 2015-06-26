@@ -872,11 +872,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 * Run the defined query against the datasource
 	 */
 	public APIResultSet runQuery(NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings b, View view) {
+		// nb.expiresAt = viewSensitiveExpiryTime(spec, view);
+		// nb.totalResults = requestTotalCount(nb.expiresAt, c, cache, spec.getDataSource(), b, spec.getPrefixMap());
 		Source source = spec.getDataSource();
 		try {
-			nb.expiresAt = viewSensitiveExpiryTime(spec, view);
-			Integer totalCount = requestTotalCount(nb.expiresAt, c, cache, source, b, spec.getPrefixMap());
-			nb.totalResults = totalCount;
 			String graphName = expandGraphName(b);
 			return runQueryWithSource(nb, c, spec, b, graphName, view, source);
 		} catch (QueryExceptionHTTP e) {
@@ -906,7 +905,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return rs;
 	}
 
-	private Integer requestTotalCount(long expiryTime, Controls c, Cache cache, Source s, Bindings b, PrefixMapping pm) {
+	public Integer requestTotalCount(long expiryTime, Controls c, Cache cache, Source s, Bindings b, PrefixMapping pm) {
 		if (counting()) {
 			PrefixLogger pl = new PrefixLogger(pm);
 			String countQueryString = assembleRawCountQuery(pl, b);
@@ -924,7 +923,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return null;
 	}
 
-	private long viewSensitiveExpiryTime(APISpec spec, View v) {
+	public long viewSensitiveExpiryTime(APISpec spec, View v) {
 		// System.err.println( ">> viewSensitiveExpiryTime: basis " +
 		// cacheExpiryMilliseconds );
 		long duration = v.minExpiryMillis(spec.getPropertyExpiryTimes(), cacheExpiryMilliseconds);

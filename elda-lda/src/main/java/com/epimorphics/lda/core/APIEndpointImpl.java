@@ -108,6 +108,9 @@ public class APIEndpointImpl implements APIEndpoint {
 	    View view = buildQueryAndView( b, query );
 	    b.put("_selectedView", view.nameWithoutCopy());
         
+	    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
+	    nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, spec.getAPISpec().getDataSource(), b, spec.getAPISpec().getPrefixMap());	    
+	    
     	TimedThing<ResponseResult> fromCache = cache.fetch(key);
         if (fromCache == null || r.c.allowCache == false) {
         	// must construct and cache a new response-result
@@ -125,7 +128,8 @@ public class APIEndpointImpl implements APIEndpoint {
     
     protected ResponseResult freshResponse(Bindings b, APIQuery query, View view, Request r, NoteBoard nb) {
 	//    
-	    APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );	    
+    //
+    	APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );	    
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
 	//
