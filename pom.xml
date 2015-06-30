@@ -225,12 +225,6 @@
     </repository>
 
     <repository>
-      <id>codehaus.maven.repository</id>
-      <name>Codehaus Maven Respository</name>
-      <url>http://repository.codehaus.org/</url>
-    </repository>
-
-    <repository>
       <id>epi-public-s3-snapshot</id>
       <name>Epimorphics S3 snapshot repository</name>
       <url>s3://epi-repository/snapshot</url>
