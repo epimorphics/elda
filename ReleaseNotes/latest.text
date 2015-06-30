@@ -5,12 +5,25 @@ The (obsolete, non-working) built-in HTML renderer has been
 removed. An HTML renderer must be explicitly specified for the
 API or its endpoints. 
 
-The key for the internal Elda cache is the request URI with
-the renderer name made explicit as a suffix rather than as
-a _format= or implicit in the content negotiation (which
-is what caused issue #144 when a entry with a different
-implied renderer had contaminated the cache).
-Fixes #144 (short-term).
+The key for the internal Elda cache is the reqest URI
+without the renderer name (ie any .format or &_format=format
+is removed), so different renderings of "the same" entity
+share the same cache entry. Metadata is not cached; it is
+regenerated on each response. A bug in the (separate) caching 
+of item counts has been removed.
+
+Fixes #144.
+
+A trailing tomcat>6 dependency has been removed.
+
+Attempting to render an object value threw an exception
+if the object was a bnode with no label as a result of
+code changes that did not completely cover the kinds of
+rdf node usable as objects.
+ 
+
+
+
 
 + ---------------------------------------------------------------------
 | Elda 1.3.12 (RELEASED)
