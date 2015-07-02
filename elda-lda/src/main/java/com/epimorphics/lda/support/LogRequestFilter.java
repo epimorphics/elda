@@ -71,13 +71,29 @@ public class LogRequestFilter implements Filter {
 	        long start = System.currentTimeMillis();
 	        log.info( String.format("Request  [%d] : %s", transaction, path) + (query == null ? "" : ("?" + query)) );
 	        httpResponse.addHeader(REQUEST_ID_HEADER, Long.toString(transaction));
-	        chain.doFilter(request, response);        
-	        log.info( String.format("Response [%d] : %d (%s)", transaction, httpResponse.getStatus(),
-	            NameUtils.formatDuration(System.currentTimeMillis() - start) ) );
+	        chain.doFilter(request, response);
+	        
+	        int status = getStatus(httpResponse);
+	        String statusString = status < 0 ? "(status unknown)" : "" + status;
+			log.info( String.format
+				( "Response [%d] : %s (%s)"
+				, transaction
+				, statusString
+	            , NameUtils.formatDuration(System.currentTimeMillis() - start) ) 
+	            );
+			
 	    } else {
 	        chain.doFilter(request, response);
 	    }
     }
+
+    // The check for NoSuchMethodError is because Tomcat6 doesn't have a
+    // getStatus() in its HttpServletResponse implementation, and we have
+    // users still on Tomcat 6. -1 is a "no not really" value.
+	private int getStatus(HttpServletResponse httpResponse) {
+		try { return httpResponse.getStatus(); }
+		catch (NoSuchMethodError e) { return -1; }
+	}
 
     @Override
     public void destroy() {
