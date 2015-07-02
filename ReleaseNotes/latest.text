@@ -14,16 +14,15 @@ of item counts has been removed.
 
 Fixes #144.
 
-A trailing tomcat>6 dependency has been removed.
+A trailing tomcat>6 dependency has been removed. (We do advise
+people using tomcat6 to upgrade if possible.)
 
 Attempting to render an object value threw an exception
 if the object was a bnode with no label as a result of
 code changes that did not completely cover the kinds of
 rdf node usable as objects.
- 
 
-
-
+Cleared up various minor bugs (see the git log).
 
 + ---------------------------------------------------------------------
 | Elda 1.3.12 (RELEASED)
