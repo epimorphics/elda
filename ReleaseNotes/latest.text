@@ -22,6 +22,10 @@ if the object was a bnode with no label as a result of
 code changes that did not completely cover the kinds of
 rdf node usable as objects.
 
+Re-ordered <filter/> and <filter-mapping/> elements in web.xml
+to match DTD ordering constraints (they are not supposed to be
+interleaved - filters first then filter mappings).
+
 Cleared up various minor bugs (see the git log).
 
 + ---------------------------------------------------------------------
