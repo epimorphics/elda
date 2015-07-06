@@ -1,5 +1,9 @@
 + ---------------------------------------------------------------------
-| Elda 1.3.13 (DEVELOPING)
+| Elda 1.3.14 (DEVELOPING)
+
+
++ ---------------------------------------------------------------------
+| Elda 1.3.13 (RELEASED)
 
 The (obsolete, non-working) built-in HTML renderer has been
 removed. An HTML renderer must be explicitly specified for the
