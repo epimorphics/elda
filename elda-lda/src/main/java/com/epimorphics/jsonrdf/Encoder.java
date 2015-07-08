@@ -563,12 +563,14 @@ public class Encoder {
         	Iterator<RDFNode> i = vals.getAll(p);
             boolean multi = prop.isMultivalued();
             boolean isStructured = prop.isStructured();
+            boolean useISO = prop.isUseISO();
+            
             RDFNode first = i.next();
             prop.addType(first);
             if (!i.hasNext() && !multi) {
                 // just emit single value
             	jw.key(prop.getSerialisationName());
-                emitNode(first, isStructured);
+                emitNode(first, isStructured, useISO);
             } else {
                 // Emit as array, do so with sorting
                 List<RDFNode> nvals = new ArrayList<RDFNode>();
@@ -583,15 +585,15 @@ public class Encoder {
             	jw.key(prop.getSerialisationName());
                 jw.array();
                 for (RDFNode node : nvals) {
-					emitNode(node, isStructured);
+					emitNode(node, isStructured, useISO);
 				}
                 jw.endArray();
             }
         }
     
-        private void emitNode(RDFNode valNode, boolean isStructured) {
+        private void emitNode(RDFNode valNode, boolean isStructured, boolean useISO) {
             if (valNode.isLiteral()) {
-            	rules.encodeLiteral( jw, isStructured, (Literal) valNode, context );
+            	rules.encodeLiteral( jw, isStructured, (Literal) valNode, context, useISO );
             } else {
                 Resource r = (Resource)valNode;
                 if (RDFUtil.isList(r)) {
@@ -599,7 +601,7 @@ public class Encoder {
                 	while (!r.equals(RDF.nil)) {
             			Statement first = r.getProperty( RDF.first );
             			Statement rest = r.getProperty( RDF.rest );
-            			if (first != null) emitNode( first.getObject(), isStructured );
+            			if (first != null) emitNode( first.getObject(), isStructured, useISO );
             			if (rest == null) break;
             			r = rest.getResource();
                 	}

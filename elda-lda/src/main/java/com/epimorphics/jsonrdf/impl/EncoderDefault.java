@@ -117,9 +117,10 @@ public class EncoderDefault implements EncoderPlugin {
     }
     
     /** Encode a literal as a JSON compatible object */
-    @Override public void encodeLiteral( JSONWriterFacade jw, boolean isStructured, Literal lit, ReadContext c) {
+    @Override public void encodeLiteral( JSONWriterFacade jw, boolean isStructured, Literal lit, ReadContext c, boolean useISO ) {
     	String spelling = lit.getLexicalForm(), lang = lit.getLanguage();
     	RDFDatatype dt = lit.getDatatype();
+    	
     	if (isStructured) {
     		jw.object();
     		jw.key("_value"); jw.value( spelling );
@@ -136,7 +137,7 @@ public class EncoderDefault implements EncoderPlugin {
 			} else if (dt instanceof XSDBaseNumericType) {
 				jw.value( Long.parseLong( spelling ) );
 	        } else if (dt.equals( XSDDatatype.XSDdateTime) || dt.equals( XSDDatatype.XSDdate) ) {
-	        	jw.value( RDFUtil.formatDateTime( lit ) );
+	        	jw.value( RDFUtil.formatDateTime( lit, useISO ) );
 	        } else if (dt.equals( XSDDatatype.XSDanyURI)) {
 	            jw.value( spelling );
 	        } else if (dt.equals( XSDDatatype.XSDstring) ) { 

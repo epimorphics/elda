@@ -183,6 +183,7 @@ public class Context implements ReadContext, Cloneable {
         if (res.hasProperty( RDF.type, API.Multivalued)) prop.setMultivalued(true);
         if (res.hasProperty( API.multiValued )) prop.setMultivalued( res.getProperty( API.multiValued ).getBoolean() );
         if (res.hasProperty( API.structured ) ) prop.setStructured( res.getProperty( API.structured ).getBoolean() );
+        if (res.hasProperty( API.useISO ) ) prop.setUseISO( res.getProperty( API.useISO ).getBoolean() );
         if (res.hasProperty( RDF.type, API.Hidden)) prop.setHidden(true);
         if (res.hasProperty( RDF.type, OWL.ObjectProperty )) prop.setType(OWL.Thing.getURI());
         if (res.hasProperty( RDFS.range ) && prop.getType() == null) prop.setType( getStringValue(res, RDFS.range) );

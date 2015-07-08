@@ -141,7 +141,7 @@ public class RDFUtil {
     	String formatString = dateFormat;
     	if (keepTime) formatString += timeFormat;
     	if (keepZone && keepTime) formatString += " 'GMT'Z";
-    	SimpleDateFormat df = new SimpleDateFormat( formatString ); 
+    	SimpleDateFormat df = new SimpleDateFormat( formatString, Locale.ENGLISH ); 
     	if (keepZone) df.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
     	return df;
     }
@@ -150,17 +150,32 @@ public class RDFUtil {
      * Convert an xsd:datetype or xsd:date to a javascript compatible string.
      * Returns null if not a supported type
      */
-    public static String formatDateTime(Literal l) {
+    public static String formatDateTime(Literal l, boolean useISO ) {
     	Object val = getTemporalValue(l);
         if (val instanceof XSDDateTime) {
         	boolean isDate = l.getDatatype().equals(XSDDatatype.XSDdate);
             Date date = ((XSDDateTime)val).asCalendar().getTime();
-            return dateFormat(hasTimeZone(l.getLexicalForm()), isDate).format(date);
+            if(useISO) {
+                return dateFormatISO(hasTimeZone(l.getLexicalForm()), isDate).format(date);
+            } else {
+                return dateFormat(hasTimeZone(l.getLexicalForm()), isDate).format(date);
+            }
         } else {
             return null;
         }
     }
     
+    private static SimpleDateFormat dateFormatISO(boolean keepZone, boolean dropTime) {
+        boolean keepTime = !dropTime;
+        String timeFormat = "'T'HH:mm:ss", dateFormat = "yyyy-MM-dd";
+        String formatString = dateFormat;
+        if (keepTime) formatString += timeFormat;
+        if (keepZone && keepTime) formatString += "'Z'";
+        SimpleDateFormat df = new SimpleDateFormat( formatString ); 
+        if (keepZone) df.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+        return df;
+    }
+
     /**
         Returns the date/time object derived from the literal l. As a sop to
         literals of type xsd_Date which have an associated Time, if getting
