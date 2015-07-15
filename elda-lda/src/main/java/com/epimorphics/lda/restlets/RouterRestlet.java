@@ -29,6 +29,7 @@ import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.commons.lang.math.FloatRange;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -262,7 +263,12 @@ import com.sun.jersey.api.NotFoundException;
         }
     }
     
-    private int hashOf( Object x ) {
+    private static String getRequestId(HttpServletResponse servletResponse) {
+    	try { return servletResponse.getHeader(LogRequestFilter.REQUEST_ID_HEADER); }
+    	catch (NoSuchMethodError e) { return null; }
+   	}
+
+	private int hashOf( Object x ) {
 		return x == null ? 0x12345678 : x.hashCode();
 	}
 
@@ -311,127 +317,151 @@ import com.sun.jersey.api.NotFoundException;
             { path = pathstub.substring(0, dot - 1); type = pathstub.substring(dot); }        
         return new Couple<String, String>( path, type );
         }
+    
+    static class Mutable<T> {
+    	
+    	T value;
+    	
+    	Mutable(T value) { this.value = value; }
+    }
 
     // TODO : TOO MANY ARGUMENTS
     private Response runEndpoint
-    	( Controls c
-    	, String contextPath
-    	, int runHash
-    	, ServletContext servCon
-    	, HttpServletRequest servletRequest
-    	, HttpServletResponse servletResponse
-    	, UriInfo ui
-    	, MultiMap<String, String> queryParams
-    	, List<MediaType> mediaTypes
-    	, String formatName
-    	, Match match
+    	( final Controls c
+    	, final String contextPath
+    	, final int runHash
+    	, final ServletContext servCon
+    	, final HttpServletRequest servletRequest
+    	, final HttpServletResponse servletResponse
+    	, final UriInfo ui
+    	, final MultiMap<String, String> queryParams
+    	, final List<MediaType> mediaTypes
+    	, final String initialFormatName
+    	, final Match match
     	) {
-    	// Object transactionId = servletResponse.getHeader(LogRequestFilter.REQUEST_ID_HEADER);
-    	Bindings forErrorHandling = null;
-    	URLforResource as = pathAsURLFactory(servCon);
-    	URI requestUri = ui.getRequestUri();
-    	log.debug( "handling request " + requestUri );
+    	final Mutable<Bindings> forErrorHandling = new Mutable<Bindings>(null);
+    	final Mutable<String> mutableFormatName = new Mutable<String>(initialFormatName);
     //
-        try {
-        	URI ru = makeRequestURI(ui, match, requestUri);
-        	APIEndpoint ep = match.getEndpoint();
-        	boolean needsVaryAccept = formatName == null && queryParams.containsKey( "_format" ) == false;
-        	
-        	Renderer _default = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );
-        	
-        	if (formatName == null && _default != null) formatName = _default.getPreferredSuffix();
-        	
-        	Renderer r = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );    	
-        	
-        	if (r == null) {
-        		String message = formatName == null
-        			? "no suitable media type was provided for rendering."
-        			: "renderer '" + formatName + "' is not known to this server."
-        			;
-        		return standardHeaders( null, Response.status( Status.BAD_REQUEST )
-        			.entity( Messages.niceMessage( message ) ) )
-        			.build()
-        			;
-        	} 
-        //        	
-        	Bindings b = ep.getSpec().getBindings().copy();
-        	
-        	String _properties = queryParams.getOne("_properties");
-			b.put("_properties", _properties == null ? "" : _properties );
-			
-			String _page = queryParams.getOne("_page");
-			b.put("_page", _page == null ? "" : _page );
-			
-			String _view = queryParams.getOne("_view");
-			b.put("_view", _view == null ? "" : _view );
-			
-			b.putAny("_servletRequest", servletRequest);
-			b.putAny("_servletResponse", servletResponse);
-			
-//			if (transactionId != null) b.put("_transaction", transactionId.toString());
-						
-			forErrorHandling = new Bindings(b, as);
-			        
-			List<String> formatNames = match.getEndpoint().getSpec().getRendererFactoryTable().formatNames();
-			
-        	APIEndpoint.Request req =
-        		new APIEndpoint.Request( c, ru, b )
-        		.withFormats( formatNames, formatName )
-        		.withMode( r.getMode() )
-        		;
-        	
-        	ModelPrefixEditor mpe = ep.getSpec().getAPISpec().getModelPrefixEditor();
-        //
-        	NoteBoard nb = new NoteBoard();
-        	ResponseResult resultsAndBindings = APIEndpointUtil.call( req, nb, match, contextPath, queryParams );
-        //	
-        	boolean notFoundIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
-        //
-        	if (ep.getSpec().isItemEndpoint() && notFoundIfEmpty && resultsAndBindings.resultSet.isEmpty()) {
-        		log.debug( "resultSet is empty, returning status 404." );   
-        		boolean passOnIfMissing = b.getAsString( "_passOnIfEmpty", "no" ).equals( "yes" );
-				if (passOnIfMissing) throw new NotFoundException();
-				return Response.status( Status.NOT_FOUND )
-					.type( "text/plain" )
-					.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" )
-					.header( VARY, "Accept" )
-					.entity( "404 Resource Not Found\n\n" + ru + "\n")
-					.build()
-					;
-			}       	
-        //
-        	Map<String, String> termBindings = mpe.rename( resultsAndBindings.uriToShortnameMap );
-            APIResultSet results = resultsAndBindings.resultSet.applyEdits( mpe );
-			Bindings rc = new Bindings( resultsAndBindings.bindings.copy(), as );
-		//	
-        	if (_default.getPreferredSuffix().equals( r.getPreferredSuffix())) {
-        		MediaType dmt = _default.getMediaType(rc);
-        		if (!dmt.equals(r.getMediaType(rc))) {
-        			r = RouterRestletSupport.changeMediaType( r, dmt );
-        		}
-        	}
-        	
-        	long expiresAt = nb.expiresAt;  
-        	
-//        	System.err.println( ">> expiresAt: " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
-//        	System.err.println( ">> expiresAt: (= " + expiresAt + ")" );
-//        	System.err.println( ">>  " + (expiresAt < System.currentTimeMillis() ? " expired" : " still alive" ) + ".");
-        	
-        	String expiresDate = expiresAt < System.currentTimeMillis() 
-        		? NO_EXPIRY 
-        		: RouterRestletSupport.expiresAtAsRFC1123(expiresAt)
-        		;
-						
-        	URI contentLocation = req.getURIwithFormat();
-        	
-			MediaType mt = r.getMediaType(rc);
-			log.debug( "rendering with formatter " + mt );
-			Times times = c.times;
-			Renderer.BytesOut bo = r.render( times, rc, termBindings, results );
-			int mainHash = runHash + ru.toString().hashCode();
-			return returnAs( contentLocation, expiresDate, results, mainHash + mt.hashCode(), wrap(times, bo), needsVaryAccept, mt );
-	//
-        } catch (StackOverflowError e) {
+    	Responder R = new Responder() {
+    		
+    		public Response Run() {
+    			String formatName = mutableFormatName.value;
+    			URLforResource as = pathAsURLFactory(servCon);
+    			URI requestUri = ui.getRequestUri();
+    			log.debug( "handling request " + requestUri );
+
+    			URI ru = makeRequestURI(ui, match, requestUri);
+	        	APIEndpoint ep = match.getEndpoint();
+	        	boolean needsVaryAccept = formatName == null && queryParams.containsKey( "_format" ) == false;
+	        	
+	        	Renderer _default = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );
+	        	
+	        	if (formatName == null && _default != null) formatName = _default.getPreferredSuffix();
+	        	
+	        	Renderer r = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );    	
+	        	
+	        	if (r == null) {
+	        		String message = formatName == null
+	        			? "no suitable media type was provided for rendering."
+	        			: "renderer '" + formatName + "' is not known to this server."
+	        			;
+	        		return standardHeaders( null, Response.status( Status.BAD_REQUEST )
+	        			.entity( Messages.niceMessage( message ) ) )
+	        			.build()
+	        			;
+	        	} 
+	        //        	
+	        	Bindings b = ep.getSpec().getBindings().copy();
+	        	
+	        	String _properties = queryParams.getOne("_properties");
+				b.put("_properties", _properties == null ? "" : _properties );
+				
+				String _page = queryParams.getOne("_page");
+				b.put("_page", _page == null ? "" : _page );
+				
+				String _view = queryParams.getOne("_view");
+				b.put("_view", _view == null ? "" : _view );
+				
+				b.putAny("_servletRequest", servletRequest);
+				b.putAny("_servletResponse", servletResponse);
+										
+				forErrorHandling.value = new Bindings(b, as);
+				        
+				List<String> formatNames = match.getEndpoint().getSpec().getRendererFactoryTable().formatNames();
+	
+				APIEndpoint.Request req =
+	        		new APIEndpoint.Request( c, ru, b )
+	        		.withFormats( formatNames, formatName )
+	        		.withMode( r.getMode() )
+	        		.withSeqID( getRequestId(servletResponse) )
+	        		;
+	        	
+	        	ModelPrefixEditor mpe = ep.getSpec().getAPISpec().getModelPrefixEditor();
+	        //
+	        	NoteBoard nb = new NoteBoard();
+	        	ResponseResult resultsAndBindings = APIEndpointUtil.call( req, nb, match, contextPath, queryParams );
+	        //	
+	        	boolean notFoundIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
+	        //
+	        	if (ep.getSpec().isItemEndpoint() && notFoundIfEmpty && resultsAndBindings.resultSet.isEmpty()) {
+	        		log.debug( "resultSet is empty, returning status 404." );   
+	        		boolean passOnIfMissing = b.getAsString( "_passOnIfEmpty", "no" ).equals( "yes" );
+					if (passOnIfMissing) throw new NotFoundException();
+					return Response.status( Status.NOT_FOUND )
+						.type( "text/plain" )
+						.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" )
+						.header( VARY, "Accept" )
+						.entity( "404 Resource Not Found\n\n" + ru + "\n")
+						.build()
+						;
+				}       	
+	        //
+	        	Map<String, String> termBindings = mpe.rename( resultsAndBindings.uriToShortnameMap );
+	            APIResultSet results = resultsAndBindings.resultSet.applyEdits( mpe );
+				Bindings rc = new Bindings( resultsAndBindings.bindings.copy(), as );
+			//	
+	        	if (_default.getPreferredSuffix().equals( r.getPreferredSuffix())) {
+	        		MediaType dmt = _default.getMediaType(rc);
+	        		if (!dmt.equals(r.getMediaType(rc))) {
+	        			r = RouterRestletSupport.changeMediaType( r, dmt );
+	        		}
+	        	}
+	        	
+	        	long expiresAt = nb.expiresAt;  
+	        	
+	//        	System.err.println( ">> expiresAt: " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
+	//        	System.err.println( ">> expiresAt: (= " + expiresAt + ")" );
+	//        	System.err.println( ">>  " + (expiresAt < System.currentTimeMillis() ? " expired" : " still alive" ) + ".");
+	        	
+	        	String expiresDate = expiresAt < System.currentTimeMillis() 
+	        		? NO_EXPIRY 
+	        		: RouterRestletSupport.expiresAtAsRFC1123(expiresAt)
+	        		;
+							
+	        	URI contentLocation = req.getURIwithFormat();
+	        	
+				MediaType mt = r.getMediaType(rc);
+				log.debug( "rendering with formatter " + mt );
+				Times times = c.times;
+				Renderer.BytesOut bo = r.render( times, rc, termBindings, results );
+				int mainHash = runHash + ru.toString().hashCode();
+				return returnAs( contentLocation, expiresDate, results, mainHash + mt.hashCode(), wrap(times, bo), needsVaryAccept, mt );
+    		}
+    	};
+    	
+    	return guardedly(R, forErrorHandling.value, servCon);
+        
+    }    
+    
+    interface Responder {
+    	
+    	Response Run();
+    }
+    
+    Response guardedly(Responder r, Bindings forErrorHandling, ServletContext servCon) {
+    	try {
+    		return r.Run();
+    	} catch (StackOverflowError e) {
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
             if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );

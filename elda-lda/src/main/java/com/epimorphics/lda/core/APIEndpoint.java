@@ -23,9 +23,8 @@ import java.util.List;
 
 import javax.ws.rs.core.UriBuilder;
 
-import org.apache.http.client.utils.URIBuilder;
-
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.core.APIEndpoint.Request;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.shortnames.CompleteContext;
@@ -53,33 +52,38 @@ public interface APIEndpoint {
 		public final URI requestURI;
 		public final Bindings bindings;
 		public final CompleteContext.Mode mode;
+		public final String seqID;
 		
 		public final String format;
 		public final List<String> formatNames;
 			
 		public Request(Controls c, URI requestURI, Bindings context) {
-			this(c, requestURI, context, CompleteContext.Mode.RoundTrip, Collections.<String>emptyList(), "");
+			this(null, c, requestURI, context, CompleteContext.Mode.RoundTrip, Collections.<String>emptyList(), "");
 		}
 			
-		private Request(Controls c, URI requestURI, Bindings bindings, CompleteContext.Mode mode, List<String> formatNames, String format) {
+		private Request(String seqID, Controls c, URI requestURI, Bindings bindings, CompleteContext.Mode mode, List<String> formatNames, String format) {
 			this.c = c;
 			this.requestURI = requestURI;
 			this.bindings = bindings;
 			this.mode = mode;
 			this.format = format;
 			this.formatNames = formatNames;
+			this.seqID = seqID;
 		}
 	
 		public Request withMode(CompleteContext.Mode mode) {
-			return new Request(c, requestURI, bindings, mode, formatNames, format);
+			return new Request(seqID, c, requestURI, bindings, mode, formatNames, format);
 		}
 	
 		public Request withBindings(Bindings newBindings) {
-			return new Request(c, requestURI, newBindings, mode, formatNames, format);
+			return new Request(seqID, c, requestURI, newBindings, mode, formatNames, format);
 		}
 	
 		public Request withFormats(List<String> formatNames, String format) {
-			return new Request(c, requestURI, bindings, mode, formatNames, format);
+			return new Request(seqID, c, requestURI, bindings, mode, formatNames, format);
+		}
+		public Request withSeqID(String seqID) {
+			return new Request(seqID, c, requestURI, bindings, mode, formatNames, format);
 		}
 
 		/**
