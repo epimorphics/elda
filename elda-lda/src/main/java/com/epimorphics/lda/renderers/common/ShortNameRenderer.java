@@ -214,7 +214,7 @@ public class ShortNameRenderer
 
         if (existing != null) {
             if (!existing.equals(  uri  )) {
-                log.warn( "Attempt to overwrite existing binding '" + existing + "' for short-name '" +
+                log.warnZOG( "Attempt to overwrite existing binding '" + existing + "' for short-name '" +
                           shortName + "' with new value '" + uri + "' was ignored." );
             }
         }

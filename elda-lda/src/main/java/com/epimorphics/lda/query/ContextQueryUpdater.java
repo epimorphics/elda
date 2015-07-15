@@ -102,7 +102,7 @@ public class ContextQueryUpdater implements ViewSetter {
             // do so. For the moment we'll do a debug-level log (rather than the
             // info-level log we had before) so we can at least spot them.
             // See issue 175.
-            log.debug( taggedParam + " supplied, but no value for " + param );
+            log.debugZOG( taggedParam + " supplied, but no value for " + param );
             return;
         }
         String val = context.expandVariables( sv );
@@ -231,7 +231,7 @@ public class ContextQueryUpdater implements ViewSetter {
     public void addFilterFromQuery( Param param, String raw_val ) {
         if (raw_val.equals( "" )) {
             // see issue #175
-            log.debug( "parameter " + param + " given empty value." );
+            log.debugZOG( "parameter " + param + " given empty value." );
             return;
         }
         String val = aq.cookRawValue(raw_val);

@@ -40,13 +40,13 @@ public class TDBSource extends SourceBase implements Source
         this.sourceSet = TDBManager.getDataset();
         if (name != null && !name.isEmpty()) {
             this.source = TDBManager.getTDBModelNamed(name);
-            log.debug("TDB with endpoint " + endpointString + " has model with "
+            log.debugZOG("TDB with endpoint " + endpointString + " has model with "
                     + this.source.size() + " triples.");
             if (this.source.isEmpty())
                 EldaException.EmptyTDB( name );
         } else {
             source = null;
-            log.info("Using TDB whole dataset");
+            log.infoZOG("Using TDB whole dataset");
         }
     }
 
@@ -64,10 +64,10 @@ public class TDBSource extends SourceBase implements Source
     
     @Override public QueryExecution execute( Query query )
         {
-//        if (log.isInfoEnabled()) log.info( "Running query: " + query.toString().replaceAll( "\n", " " ) + " over " + this.source.size() + " triples.");
+//        if (log.isInfoEnabled()) log.infoZOG( "Running query: " + query.toString().replaceAll( "\n", " " ) + " over " + this.source.size() + " triples.");
 //        QueryExecution q = QueryExecutionFactory.create( query, source );
 //        Model result = q.execDescribe();
-//        if (log.isInfoEnabled()) log.info( "Resulting model has " + result.size() + " triples." );
+//        if (log.isInfoEnabled()) log.infoZOG( "Resulting model has " + result.size() + " triples." );
         return
             source == null 
                 ?  QueryExecutionFactory.create( query, sourceSet )

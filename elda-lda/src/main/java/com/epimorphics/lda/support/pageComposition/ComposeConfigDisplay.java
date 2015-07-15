@@ -159,7 +159,7 @@ public class ComposeConfigDisplay {
 			for (String name: names) {
 				Value v = b.get( name );
 				if (v == null) {					
-					log.debug("binding for " + name + " is null or non-Value; ignored.");	
+					log.debugZOG("binding for " + name + " is null or non-Value; ignored.");	
 					System.err.println("binding for " + name + " is null or non-Value; ignored.");			
 				} else {
 					String lf = v.spelling() == null ? "<i>none</i>" : v.spelling();

@@ -138,7 +138,7 @@ public class Decoder {
             if (prop == null) {
                 String uri = context.getURIfromName(key);
                 if (uri == null) {
-                    log.error("Can't decode property: " + key);
+                    log.errorZOG("Can't decode property: " + key);
                     uri = "http://www.epimoprhics.com/badkey/" + key;
                 }
                 p = model.getProperty(uri);

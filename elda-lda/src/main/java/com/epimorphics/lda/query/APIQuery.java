@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
+import com.epimorphics.lda.core.APIEndpoint.Request;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
@@ -871,13 +872,13 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	/**
 	 * Run the defined query against the datasource
 	 */
-	public APIResultSet runQuery(NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings b, View view) {
+	public APIResultSet runQuery(Request req, NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings b, View view) {
 		// nb.expiresAt = viewSensitiveExpiryTime(spec, view);
 		// nb.totalResults = requestTotalCount(nb.expiresAt, c, cache, spec.getDataSource(), b, spec.getPrefixMap());
 		Source source = spec.getDataSource();
 		try {
 			String graphName = expandGraphName(b);
-			return runQueryWithSource(nb, c, spec, b, graphName, view, source);
+			return runQueryWithSource(req, nb, c, spec, b, graphName, view, source);
 		} catch (QueryExceptionHTTP e) {
 			EldaException.ARQ_Exception(source, e);
 			return /* NEVER */null;
@@ -885,11 +886,11 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	// may be subclassed
-	protected APIResultSet runQueryWithSource(NoteBoard nb, Controls c, APISpec spec, Bindings call, String graphName, View view, Source source) {
+	protected APIResultSet runQueryWithSource(Request req, NoteBoard nb, Controls c, APISpec spec, Bindings call, String graphName, View view, Source source) {
 		//
 		Times t = c.times;
 		long origin = System.currentTimeMillis();
-		Couple<String, List<Resource>> queryAndResults = selectResources(c, spec, call, source);
+		Couple<String, List<Resource>> queryAndResults = selectResources(req, c, spec, call, source);
 		long afterSelect = System.currentTimeMillis();
 		//
 		t.setSelectionDuration(afterSelect - origin);
@@ -954,7 +955,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 * 
 	 * May be subclassed.
 	 */
-	protected Couple<String, List<Resource>> selectResources(Controls c, APISpec spec, Bindings b, Source source) {
+	protected Couple<String, List<Resource>> selectResources(Request req, Controls c, APISpec spec, Bindings b, Source source) {
 		final List<Resource> results = new ArrayList<Resource>();
 		if (itemTemplate != null) {
 			String expanded = b.expandVariables(itemTemplate);
@@ -964,7 +965,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		if (isFixedSubject() && isItemEndpoint)
 			return new Couple<String, List<Resource>>("", CollectionUtils.list(subjectResource));
 		else {
-			Couple<String, List<Resource>> x = runGeneralQuery(c, spec, b, source, results);
+			Couple<String, List<Resource>> x = runGeneralQuery(req, c, spec, b, source, results);
 			return new Couple<String, List<Resource>>(x.a, x.b);
 		}
 	}
@@ -991,15 +992,15 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return result.toString();
 	}
 
-	private Couple<String, List<Resource>> runGeneralQuery(Controls c, APISpec spec, Bindings cc, Source source, final List<Resource> results) {
+	private Couple<String, List<Resource>> runGeneralQuery(Request req, Controls c, APISpec spec, Bindings cc, Source source, final List<Resource> results) {
 		String selectQuery = assembleSelectQuery(cc, spec.getPrefixMap());
 		//
 		c.times.setSelectQuerySize(selectQuery);
 		//
 		Query q = createQuery(selectQuery);
 		if (log.isDebugEnabled())
-			log.debug("Running query: " + selectQuery.replaceAll("\n", " "));
-		source.executeSelect(q, new ResultResourcesReader(results));
+			log.debug("[%s]: running query %s", req.getSeqID(), selectQuery.replaceAll("\n", " "));
+		source.executeSelect(q, new ResultResourcesReader(req.getSeqID(), results));
 		return new Couple<String, List<Resource>>(selectQuery, results);
 	}
 
@@ -1061,9 +1062,11 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	private static final class ResultResourcesReader implements Source.ResultSetConsumer {
 
 		private final List<Resource> results;
-
-		private ResultResourcesReader(List<Resource> results) {
+		private final String seqID;
+		
+		private ResultResourcesReader(String seqID, List<Resource> results) {
 			this.results = results;
+			this.seqID = seqID;
 		}
 
 		@Override public void setup(QueryExecution qe) {
@@ -1086,7 +1089,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 					}
 				}
 				if (countBnodes > 0) {
-					if (log.isDebugEnabled()) log.debug(countBnodes + " selected bnode items discarded.");
+					if (log.isDebugEnabled()) log.debug("[%s]: discarded %s selected bnode items.", seqID, countBnodes );
 				}
 			} catch (APIException e) {
 				throw e;

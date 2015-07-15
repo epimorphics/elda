@@ -121,7 +121,7 @@ implements BytesOut
             times.setRenderDuration( System.currentTimeMillis() - base, vr.suffix() );
         }
         catch (Exception e) {
-            log.warn( e.getMessage(), e );
+            log.warnZOG( e.getMessage(), e );
             throw new VelocityRenderingException();
         }
         finally {
@@ -130,7 +130,7 @@ implements BytesOut
                     cos.close();
                 }
                 catch (IOException e) {
-                    log.warn( "Failed to close count stream: " + e.getMessage(), e );
+                    log.warnZOG( "Failed to close count stream: " + e.getMessage(), e );
                 }
             }
         }
@@ -163,8 +163,8 @@ implements BytesOut
             t = ve.getTemplate( vr.templateName() );
         }
         catch (ResourceNotFoundException e) {
-            log.debug( "Could not find base template " + vr.templateName() );
-            log.debug( "Current velocity path is: '" + ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH ) + "'" );
+            log.debugZOG( "Could not find base template " + vr.templateName() );
+            log.debugZOG( "Current velocity path is: '" + ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH ) + "'" );
             throw e;
         }
 
@@ -230,8 +230,8 @@ implements BytesOut
             String pathURL = b.pathAsURL( pathEntry).toString();
             roots.add( pathURL + (pathURL.endsWith( "/" ) ? "" : "/") );
         }
-        log.debug("rootPath: " + rootPath);
-        log.debug("complete expanded path: " + roots);
+        log.debugZOG("rootPath: " + rootPath);
+        log.debugZOG("complete expanded path: " + roots);
         return roots;
     }
 
@@ -316,7 +316,7 @@ implements BytesOut
                     p.load( is );
                 }
                 catch (IOException e) {
-                    log.warn( "IO exception while reading properties: " + e.getMessage(), e );
+                    log.warnZOG( "IO exception while reading properties: " + e.getMessage(), e );
                     throw new WrappedIOException( e );
                 }
                 finally {
@@ -324,7 +324,7 @@ implements BytesOut
                         is.close();
                     }
                     catch (IOException e) {
-                        log.warn( "IO exception while closing properties input stream: " + e.getMessage(), e );
+                        log.warnZOG( "IO exception while closing properties input stream: " + e.getMessage(), e );
                         throw new WrappedIOException( e );
                     }
                 }

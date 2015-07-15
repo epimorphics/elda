@@ -81,7 +81,7 @@ public class CombinedSource extends SourceBase implements Source
     
     @Override public QueryExecution execute( Query query )
         {
-        log.info( "doing query execution on a CombinedSource" );
+        log.infoZOG( "doing query execution on a CombinedSource" );
         Model combined = combine();
         return QueryExecutionFactory.create( query, combined );
         }
@@ -95,7 +95,7 @@ public class CombinedSource extends SourceBase implements Source
 
     private Model dataFrom( Source s )
         {
-        log.info( "getting model data from source " + s );
+        log.infoZOG( "getting model data from source " + s );
         String queryString = "construct " + triplesFor( constructs ) + " where " + triplesFor( matches ) + "";
         return s.executeConstruct( QueryFactory.create( queryString ) );
         }

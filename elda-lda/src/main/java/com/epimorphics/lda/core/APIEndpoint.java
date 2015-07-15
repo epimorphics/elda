@@ -24,7 +24,6 @@ import java.util.List;
 import javax.ws.rs.core.UriBuilder;
 
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.core.APIEndpoint.Request;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.shortnames.CompleteContext;
@@ -112,6 +111,10 @@ public interface APIEndpoint {
 				.build()
 				;
 			return x;
+		}
+
+		public String getSeqID() {
+			return seqID;
 		}
 	}
     

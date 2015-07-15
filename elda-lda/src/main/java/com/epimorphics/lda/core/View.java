@@ -373,7 +373,7 @@ public class View {
 		sb.append( "}\n" );
 		String queryString = sb.toString();
 	//
-		if (log.isDebugEnabled()) log.debug("LABEL QUERY:\n" + queryString + "\n");
+		if (log.isDebugEnabled()) log.debugZOG("LABEL QUERY:\n" + queryString + "\n");
 	//	
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );

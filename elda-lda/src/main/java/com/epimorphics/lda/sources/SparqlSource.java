@@ -65,7 +65,7 @@ public class SparqlSource extends SourceBase implements Source {
         	if (authKey != null) {
 //        		System.err.println(">> authKey: " + authKey);
 //        		System.err.println(">> authMap: " + am);
-        		log.debug("handling auth key '" + authKey + "'");
+        		log.debugZOG("handling auth key '" + authKey + "'");
         		AuthInfo ai = am.get( authKey );
         		        		
         		if (ai != null) {
@@ -90,15 +90,15 @@ public class SparqlSource extends SourceBase implements Source {
         		);
         }
     //
-        log.info( "created " + toString() );
+        log.infoZOG( "created " + toString() );
     }
     
     @Override public QueryExecution execute(Query query) {
-        if (log.isDebugEnabled()) log.debug("Running query on " + sparqlEndpoint + ":\n" + query);
+        if (log.isDebugEnabled()) log.debugZOG("Running query on " + sparqlEndpoint + ":\n" + query);
 		QueryEngineHTTP qe = new QueryEngineHTTP(sparqlEndpoint, query);
 		if (basicUser != null) {
-			log.debug( "basic user: " + basicUser );			
-			log.debug( "basic password: " + new String(basicPassword));
+			log.debugZOG( "basic user: " + basicUser );			
+			log.debugZOG( "basic password: " + new String(basicPassword));
 			qe.setBasicAuthentication( basicUser, basicPassword );
 		}
 		return qe ;

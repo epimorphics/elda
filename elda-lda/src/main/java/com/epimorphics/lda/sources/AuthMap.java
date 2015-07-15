@@ -66,7 +66,7 @@ public class AuthMap {
 	}
 
 	private static AuthInfo readAuthFile( FileManager fm, String fileName ) {
-		log.debug("reading auth file '" + fileName + "'");
+		log.debugZOG("reading auth file '" + fileName + "'");
 		return new AuthInfo(readProperties(fm, fileName));
 	}
 

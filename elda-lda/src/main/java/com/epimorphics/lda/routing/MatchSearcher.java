@@ -35,7 +35,7 @@ public class MatchSearcher<T> {
         with the supplied result value.
     */
     public void register( String path, T result ) {
-    	log.info( "registering " + path + " for " + result.toString() );
+    	log.infoZOG( "registering " + path + " for " + result.toString() );
         templates.add( MatchTemplate.prepare( path, result ) );
         needsSorting = true;
     }

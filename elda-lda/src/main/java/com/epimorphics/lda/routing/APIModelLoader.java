@@ -23,7 +23,7 @@ public class APIModelLoader implements ModelLoader {
     }
 
     @Override public Model loadModel(String uri) {
-        Loader.log.info( "loadModel: " + uri );
+        Loader.log.infoZOG( "loadModel: " + uri );
         if (uri.startsWith( Container.LOCAL_PREFIX )) {
             String specFile = "file:///" + baseFilePathLocal + uri.substring(Container.LOCAL_PREFIX.length());
             return EldaFileManager.get().loadModel( specFile );
@@ -31,8 +31,8 @@ public class APIModelLoader implements ModelLoader {
         } else if (uri.startsWith( TDBManager.PREFIX )) {
             String modelName = uri.substring( TDBManager.PREFIX.length() );
             Model tdb = TDBManager.getTDBModelNamed( modelName );
-            Loader.log.info( "get TDB model " + modelName );
-            if (tdb.isEmpty()) Loader.log.warn( "the TDB model at " + modelName + " is empty -- has it been initialised?" );
+            Loader.log.infoZOG( "get TDB model " + modelName );
+            if (tdb.isEmpty()) Loader.log.warnZOG( "the TDB model at " + modelName + " is empty -- has it been initialised?" );
             if (tdb.isEmpty()) throw new APIException( "the TDB model at " + modelName + " is empty -- has it been initialised?" );
             return tdb;
 

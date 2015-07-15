@@ -373,7 +373,7 @@ public class APIResultSet implements SetsMetadata {
 	public void includeMetadata( String[] options ) {
 		for (String option: options) {
 			Model meta = metadata.get( option );
-			if (meta == null) log.debug( "Metadata " + option + " unknown or already supplied." );
+			if (meta == null) log.debugZOG( "Metadata " + option + " unknown or already supplied." );
 			else model.meta.add( meta );
 		}
 	}

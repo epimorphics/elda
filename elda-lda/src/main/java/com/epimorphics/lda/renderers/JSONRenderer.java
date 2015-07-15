@@ -86,7 +86,7 @@ public class JSONRenderer implements Renderer {
 			writer.write( after );
 			writer.flush();
 		} catch (Exception e) {
-			log.error( "Failed to encode model: stacktrace follows:", e );
+			log.errorZOG( "Failed to encode model: stacktrace follows:", e );
 			throw new WrappedException( e );
 		}				
 		final String content = UTF8.toString( os );
@@ -109,7 +109,7 @@ public class JSONRenderer implements Renderer {
 //					writer.write( after );
 //					writer.flush();
 //				} catch (Exception e) {
-//					log.error( "Failed to encode model: stacktrace follows:", e );
+//					log.errorZOG( "Failed to encode model: stacktrace follows:", e );
 //					throw new WrappedException( e );
 //				}				
 			}
@@ -135,7 +135,7 @@ public class JSONRenderer implements Renderer {
 //		try {
 //			ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json
 //		} catch (Exception e) {
-//			log.error( "Broken generated JSON:\n" + written );
+//			log.errorZOG( "Broken generated JSON:\n" + written );
 //			throw e;
 //		}
 //	}

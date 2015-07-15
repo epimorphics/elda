@@ -36,10 +36,10 @@ public class ExtractPrefixMapping {
 	            if (prefix != null && uri != null) {
 	                pm.setNsPrefix(prefix, uri);
 	            } else {
-	                APISpec.log.error("Ignoring ill-structured prefix mapping " + prefix + " :: " + uri);
+	                APISpec.log.errorZOG("Ignoring ill-structured prefix mapping " + prefix + " :: " + uri);
 	            }
 	        } else {
-	            APISpec.log.error("Ignoring non-structured prefix mapping: " + n);
+	            APISpec.log.errorZOG("Ignoring non-structured prefix mapping: " + n);
 	        }
 	    }
 	    return pm;

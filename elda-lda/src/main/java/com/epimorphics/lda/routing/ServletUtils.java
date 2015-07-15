@@ -90,7 +90,7 @@ public class ServletUtils {
         } else {
             String fullPath = specPath.startsWith("/") ? specPath : baseFilePath + specPath;
             List<File> files = new Glob().filesMatching( fullPath );
-            log.info( "Found " + files.size() + " file(s) matching specPath " + specPath );
+            log.infoZOG( "Found " + files.size() + " file(s) matching specPath " + specPath );
             for (File f: files) {
                 String pp = containsStar(prefixPath) ? nameToPrefix(prefixPath, specPath, f.getName()) : prefixPath;
                 loadOneConfigFile(appName, ml, pp, f.getAbsolutePath());
@@ -122,10 +122,10 @@ public class ServletUtils {
     }
 
     public static void loadOneConfigFile(String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {
-        log.info( "Loading spec file from " + thisSpecPath + " with prefix path " + prefixPath );
+        log.infoZOG( "Loading spec file from " + thisSpecPath + " with prefix path " + prefixPath );
         Model init = ml.loadModel( thisSpecPath );
         addLoadedFrom( init, thisSpecPath );
-        log.info( "Loaded " + thisSpecPath + ": " + init.size() + " statements" );
+        log.infoZOG( "Loaded " + thisSpecPath + ": " + init.size() + " statements" );
         registerModel( appName, prefixPath, thisSpecPath, init );
     }
 

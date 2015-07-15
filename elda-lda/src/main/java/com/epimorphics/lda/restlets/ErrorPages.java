@@ -76,8 +76,8 @@ public class ErrorPages {
 			.build()
 			;
 		} catch (Throwable e) {
-			log.error("An exception occurred when rendering an error page:");
-			log.error("  " + e.getMessage());
+			log.errorZOG("An exception occurred when rendering an error page:");
+			log.errorZOG("  " + e.getMessage());
 			return Response
 				.status(Status.INTERNAL_SERVER_ERROR)
 				.entity(fallBack)

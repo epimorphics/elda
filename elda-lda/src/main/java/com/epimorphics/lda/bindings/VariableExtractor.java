@@ -59,7 +59,7 @@ public class VariableExtractor {
 			if (type == null && value != null && value.getObject().isURIResource())
 				type = RDFS.Resource.getURI();
 			if (type == null){
-				log.debug("No type for variable " + name + "; using default ''.");
+				log.debugZOG("No type for variable " + name + "; using default ''.");
 				type = "";
 			}
 			String valueString = getValueString( v, language, type );

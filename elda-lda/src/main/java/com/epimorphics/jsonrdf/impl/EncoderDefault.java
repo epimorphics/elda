@@ -145,7 +145,7 @@ public class EncoderDefault implements EncoderPlugin {
 				if (showUnhandled)
 					{
 					// Issue #178
-					log.warn( "unhandled datatype '" + dt + "' in literal '" + spelling + "'" );
+					log.warnZOG( "unhandled datatype '" + dt + "' in literal '" + spelling + "'" );
 					showUnhandled = false;
 					}
 				jw.value( spelling );

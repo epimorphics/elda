@@ -219,7 +219,7 @@ public abstract class TomcatTestBase {
         while (!tomcatLive) {
             String u = getTestURL() + "games.ttl";
 			int status = getResponse( u ).getStatus();
-			log.info("checkLive " + u + ", try " + count + ", status = " + status);
+			log.infoZOG("checkLive " + u + ", try " + count + ", status = " + status);
 			if (status != targetStatus) {
                 try {
                     Thread.sleep(500);

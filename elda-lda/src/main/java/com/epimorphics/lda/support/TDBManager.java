@@ -47,7 +47,7 @@ public class TDBManager {
     */
     public static void setBaseTDBPath( String value ) { 
         baseTDBPath = value; 
-        log.info( "setBaseTDBPath " + value );
+        log.infoZOG( "setBaseTDBPath " + value );
     }
 
     /**
@@ -68,7 +68,7 @@ public class TDBManager {
             (uri == null || uri.isEmpty()) 
                 ? dataset.getNamedModel( Quad.unionGraph.getURI() )
                 : dataset.getNamedModel( uri );
-//        log.debug( "opened " + uri + " (" + result.size() + " triples)" );
+//        log.debugZOG( "opened " + uri + " (" + result.size() + " triples)" );
         return result;
     }
     
@@ -81,9 +81,9 @@ public class TDBManager {
     }
 
     private static Dataset openDataset() {
-        log.info( "requesting open on TDB dataset at " + baseTDBPath );
+        log.infoZOG( "requesting open on TDB dataset at " + baseTDBPath );
         Dataset result = TDBFactory.createDataset( baseTDBPath );
-        log.info( "opened: result looks like " + result.toString() );
+        log.infoZOG( "opened: result looks like " + result.toString() );
         return result;
     }
 }

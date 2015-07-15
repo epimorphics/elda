@@ -347,7 +347,7 @@ public class Page extends CommonNodeWrapper
         else {
             Resource viewRoot = i.next();
             if (i.hasNext()) {
-                log.warn( "Ambiguous view name: there is more than one resource with viewName = " + viewName );
+                log.warnZOG( "Ambiguous view name: there is more than one resource with viewName = " + viewName );
             }
 
             view = new EldaView( this, viewRoot );

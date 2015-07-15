@@ -263,7 +263,7 @@ public class Bindings implements Lookup {
 			if (thisV == null) {
 				sb.append("{").append(name).append("}");
 				// issue #177
-				log.debug("variable " + name + " has no value, not substituted.");
+				log.debugZOG("variable " + name + " has no value, not substituted.");
 			} else {
 				seen.add(name);
 				Value v = evaluate(name, thisV, seen);
@@ -272,7 +272,7 @@ public class Bindings implements Lookup {
 				if (value == null) {
 					sb.append("{").append(name).append("}");
 					// issue #177
-					log.debug("variable " + name + " has no value, not substituted.");
+					log.debugZOG("variable " + name + " has no value, not substituted.");
 				} else
 					sb.append(value);
 			}
@@ -301,7 +301,7 @@ public class Bindings implements Lookup {
 			if (value == null) {
 				sb.append("{").append(name).append("}");
 				// issue #177
-				log.debug("variable " + name + " has no value, not substituted.");
+				log.debugZOG("variable " + name + " has no value, not substituted.");
 			} else
 				sb.append(value);
 			start = rb + 1;

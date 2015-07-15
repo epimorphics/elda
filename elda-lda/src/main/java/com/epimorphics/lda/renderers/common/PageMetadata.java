@@ -82,7 +82,7 @@ extends ModelWrapper
         RDFNodeWrapper pageRoot = new RDFNodeWrapper( this, i.next() );
 
         if (i.hasNext()) {
-            log.warn( "Unexpected: page metadata has more than one rdf:type api:Page resource - " + i.next() );
+            log.warnZOG( "Unexpected: page metadata has more than one rdf:type api:Page resource - " + i.next() );
         }
 
         return pageRoot;

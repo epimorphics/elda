@@ -135,7 +135,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     	boolean isList = endpoint.hasProperty( RDF.type, API.ListEndpoint );
     	boolean isItem = endpoint.hasProperty( RDF.type, API.ItemEndpoint );
     	if (isList || isItem) return;
-    	// log.warn( "endpoint " + endpoint + " is not declared as ListEndpoint or ItemEndpoint -- unexpected behaviour may result." );
+    	// log.warnZOG( "endpoint " + endpoint + " is not declared as ListEndpoint or ItemEndpoint -- unexpected behaviour may result." );
     	throw new EldaException("endpoint " + endpoint + " is not declared as ListEndpoint or ItemEndpoint");
 	}
 
@@ -343,7 +343,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	            if (parentN instanceof Resource) {
 	                addSelectorInfo( (Resource)parentN );
 	            } else {
-	                APISpec.log.error("Parent view must be a resource, found a literal: " + parentN);
+	                APISpec.log.errorZOG("Parent view must be a resource, found a literal: " + parentN);
 	            }
 	        }
 	        addSelectorInfo(s);
@@ -364,7 +364,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	            if (paramValue.length == 2) {
 	                baseQuery.deferrableAddFilter( Param.make( sns, paramValue[0] ), paramValue[1] );
 	            } else {
-	                APISpec.log.error("Filter specification contained unintepretable query string: " + q );
+	                APISpec.log.errorZOG("Filter specification contained unintepretable query string: " + q );
 	            }
             }
         }

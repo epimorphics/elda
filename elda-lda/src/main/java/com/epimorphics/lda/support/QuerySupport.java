@@ -67,7 +67,7 @@ public class QuerySupport {
 		result.addAll(lateTextQueries);
 		result.addAll(typed);
 		if (!result.equals(triples))
-			log.debug("reordered\n    " + triples + "\nto\n    " + result);
+			log.debugZOG("reordered\n    " + triples + "\nto\n    " + result);
 		return result;
 	}
 

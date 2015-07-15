@@ -249,7 +249,7 @@ public class PropertyPath
                 else {
                     String uri = snr.expand( segment );
                     if (uri == null) {
-                        log.warn( "Warning: property path uses short name '" + segment + "' which does not have an expansion to a URI"  );
+                        log.warnZOG( "Warning: property path uses short name '" + segment + "' which does not have an expansion to a URI"  );
                         properties.add( STAR );
                     }
                     else {

@@ -32,17 +32,17 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String getURIfromName(String code) {
-				log.debug( "readContext: getURIfromName unexpectedly called." );
+				log.debugZOG( "readContext: getURIfromName unexpectedly called." );
 				return context.getURIfromName(code);
 			}
 			
 			@Override public ContextPropertyInfo getPropertyByName(String name) {
-				log.debug( "readContext: getpropertyByName unexpectedly called." );
+				log.debugZOG( "readContext: getpropertyByName unexpectedly called." );
 				return context.getPropertyByName(name);
 			}
 			
 			@Override public String getNameForURI(String uri) {
-//				log.debug( "readContext: unusually, getNameForURI called." );
+//				log.debugZOG( "readContext: unusually, getNameForURI called." );
 				return uriToName.get(uri);
 			}
 			
@@ -51,7 +51,7 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String forceShorten(String uri) {
-//				log.debug( "readContext: unusually, forceShorten called." );
+//				log.debugZOG( "readContext: unusually, forceShorten called." );
 				return context.forceShorten(uri);
 			}
 			

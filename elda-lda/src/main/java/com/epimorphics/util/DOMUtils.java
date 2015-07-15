@@ -117,10 +117,10 @@ public class DOMUtils {
 		for (String name : rc.keySet()) {
 			String value = rc.getValueString(name);
 			if (value == null) {
-				log.debug("ignored null xslt parameter " + name);
+				log.debugZOG("ignored null xslt parameter " + name);
 			} else {
 				t.setParameter(name, value);
-				log.debug("set xslt parameter " + name + " = " + value);
+				log.debugZOG("set xslt parameter " + name + " = " + value);
 			}
 		}
 		String nsd = namespacesDocument(pm);

@@ -72,11 +72,11 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		{
 		Couple<String, Model> spec = getModelNamedEnding( d, givenSpec, "-spec.ttl" );
 		Couple<String, Model> data = getModelNamedEnding( d, givenData, "-data.ttl" );
-		log.debug( "considering: " + d );
+		log.debugZOG( "considering: " + d );
 		if (spec == null || data == null)
 			{
 			System.err.println( ">> " + "directory " + d + " ignored" );
-			log.debug( "directory " + d + " ignored" );
+			log.debugZOG( "directory " + d + " ignored" );
 			}
 		else
 			{
@@ -233,7 +233,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 	public void RunTestAllowingFailures()
 		{
 		Cache.Registry.clearAll();
-		log.debug( "running test " + w.title );
+		log.debugZOG( "running test " + w.title );
 //		System.err.println( ">> " + w.pathToData );
 	//
 	// this little dance of resetting the location mapper bypasses a

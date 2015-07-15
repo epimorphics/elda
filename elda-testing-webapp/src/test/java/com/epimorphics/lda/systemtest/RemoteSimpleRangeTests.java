@@ -78,7 +78,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 
 	public void RunTestAllowingFailures() throws ClientProtocolException, IOException
 		{
-		log.debug( "running test " + w.title );
+		log.debugZOG( "running test " + w.title );
 		HttpClient httpclient = new DefaultHttpClient();
 		String uri = "http://localhost:" + Config.port + "/elda/api" + w.path + ".ttl?" + w.queryParams;
 		HttpGet httpget = new HttpGet( uri );
