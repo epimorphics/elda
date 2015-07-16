@@ -349,7 +349,7 @@ public class Page extends CommonNodeWrapper
             Resource viewRoot = i.next();
             if (i.hasNext()) {
                 String seqID = RouterRestlet.getSeqID();
-                log.warn( "[%s] ambiguous view name: there is more than one resource with viewName '%s'", seqID, viewName );
+                log.warn(String.format( "[%s] ambiguous view name: there is more than one resource with viewName '%s'", seqID, viewName ));
             }
 
             view = new EldaView( this, viewRoot );

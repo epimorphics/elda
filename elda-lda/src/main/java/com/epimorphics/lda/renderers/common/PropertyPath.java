@@ -251,7 +251,7 @@ public class PropertyPath
                     String uri = snr.expand( segment );
                     if (uri == null) {
                         String seqID = RouterRestlet.getSeqID();
-                        log.warn( "[%s]: warning: property path uses short name '%s' which does not have an expansion to a URI", seqID, segment  );
+                        log.warn(String.format( "[%s]: warning: property path uses short name '%s' which does not have an expansion to a URI", seqID, segment ) );
                         properties.add( STAR );
                     }
                     else {

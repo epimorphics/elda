@@ -43,8 +43,8 @@ public abstract class SourceBase {
 		this.textSearchConfig = new TextSearchConfig( endpoint );
 		if (endpoint.hasProperty(ELDA_API.supportsNestedSelect)) {
 	        String seqID = RouterRestlet.getSeqID();
-			log.warn("[%s]: '%s' supportsNestedSelect is no longer used or needed.", seqID, endpoint);
-			log.info("[%s]: Elda assumes and requires SPARQL 1.1 support", seqID);
+			log.warn(String.format("[%s]: '%s' supportsNestedSelect is no longer used or needed.", seqID, endpoint));
+			log.info(String.format("[%s]: Elda assumes and requires SPARQL 1.1 support", seqID));
 		}
 	}
 	

@@ -84,7 +84,7 @@ extends ModelWrapper
 
         if (i.hasNext()) {
             String seqID = RouterRestlet.getSeqID();
-            log.warn( "[%s]: unexpected: page metadata has more than one rdf:type api:Page resource - %s", seqID, i.next() );
+            log.warn(String.format( "[%s]: unexpected: page metadata has more than one rdf:type api:Page resource - %s", seqID, i.next() ));
         }
 
         return pageRoot;

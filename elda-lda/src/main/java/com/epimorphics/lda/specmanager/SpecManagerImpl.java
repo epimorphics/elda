@@ -55,7 +55,7 @@ public class SpecManagerImpl implements SpecManager {
         if (specs.containsKey(uri)) {
             return updateSpec( prefixPath, appName, context, uri, key, spec );
         } else {
-            log.info("[%s]: creating API spec at '%s'", RouterRestlet.getSeqID(), uri);
+            log.info(String.format("[%s]: creating API spec at '%s'", RouterRestlet.getSeqID(), uri));
             Resource specRoot = spec.getResource(uri);
 			APISpec apiSpec = new APISpec( prefixPath, appName, EldaFileManager.get(), specRoot, modelLoader );
             synchronized (specs) { specs.put(uri, new SpecEntry(uri, key, apiSpec, spec)); }
@@ -73,7 +73,7 @@ public class SpecManagerImpl implements SpecManager {
         if (! keyMatches(uri, key, entry.keyDigest)) {
             throw new APISecurityException("This key is not permited to modify API " + uri);
         }
-        log.info("[%s]: delete API spec '%s'", RouterRestlet.getSeqID(), uri);
+        log.info(String.format("[%s]: delete API spec '%s'", RouterRestlet.getSeqID(), uri));
         for (APIEndpointSpec eps : entry.spec.getEndpoints()) {
             router.unregister( context, eps.getURITemplate());
         }
@@ -87,7 +87,7 @@ public class SpecManagerImpl implements SpecManager {
     }
 
     @Override public APISpec updateSpec(String prefixPath, String appName, String context, String uri, String key, Model spec) throws APISecurityException {
-        log.info("[%s] updating spec '%s'", RouterRestlet.getSeqID(), uri);
+        log.info(String.format("[%s] updating spec '%s'", RouterRestlet.getSeqID(), uri));
         deleteSpec(context, uri, key);
         return addSpec(prefixPath, appName, context, uri, key, spec);
     }

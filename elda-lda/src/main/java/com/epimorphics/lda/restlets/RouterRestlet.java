@@ -136,7 +136,7 @@ import com.sun.jersey.api.NotFoundException;
 				String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
 				String propertiesFile = "log4j.properties";
 				PropertyConfigurator.configure( baseFilePath + propertiesFile );
-				log.info( "\n\n    =>=> Starting Elda (Init) %s\n", Version.string ); 
+				log.info(String.format( "\n\n    =>=> Starting Elda (Init) %s\n", Version.string) ); 
 				announced = true;
 			}
 			getRouterFor( sc );
@@ -159,14 +159,14 @@ import com.sun.jersey.api.NotFoundException;
     	 long timeNow = System.currentTimeMillis();
     //
     	 if (r == null) {
-    		 log.info( "[%s]: creating router for '%s'", seqID, contextPath );
+    		 log.info(String.format( "[%s]: creating router for '%s'", seqID, contextPath ));
     		 long interval = getRefreshInterval(contextPath);
     		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), timeNow, interval );
     		 routers.put(contextPath, r );
     	 } else if (r.nextCheck < timeNow) {
 	    	 long latestTime = RouterRestletSupport.latestConfigTime(con, contextPath);
 	    	 if (latestTime > r.timestamp) {
-	    		 log.info( "[%s]: reloading router for '%s'", seqID, contextPath);
+	    		 log.info(String.format( "[%s]: reloading router for '%s'", seqID, contextPath));
 	    		 long interval = getRefreshInterval(contextPath);
 	    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), timeNow, interval );
 	    		 DOMUtils.clearCache();
@@ -198,7 +198,7 @@ import com.sun.jersey.api.NotFoundException;
 				;
 			if (n > 0) delay = n;
 		 }
-		 log.info( "[%s]: reload check interval for '%s' is '%s'", seqID, contextPath, delay );
+		 log.info(String.format( "[%s]: reload check interval for '%s' is '%s'", seqID, contextPath, delay) );
 		 return delay;
 	}
 
@@ -342,7 +342,7 @@ import com.sun.jersey.api.NotFoundException;
     	Bindings forErrorHandling = null;
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
-    	log.debug( "[%s]: handling request '%s'", seqID, requestUri );
+    	log.debug(String.format( "[%s]: handling request '%s'", seqID, requestUri ));
     //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
@@ -398,7 +398,7 @@ import com.sun.jersey.api.NotFoundException;
         	boolean notFoundIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
         //
         	if (ep.getSpec().isItemEndpoint() && notFoundIfEmpty && resultsAndBindings.resultSet.isEmpty()) {
-        		log.debug( "[%s] resultSet is empty, returning status 404.", seqID );   
+        		log.debug(String.format( "[%s] resultSet is empty, returning status 404.", seqID ));   
         		boolean passOnIfMissing = b.getAsString( "_passOnIfEmpty", "no" ).equals( "yes" );
 				if (passOnIfMissing) throw new NotFoundException();
 				return Response.status( Status.NOT_FOUND )
@@ -435,7 +435,7 @@ import com.sun.jersey.api.NotFoundException;
         	URI contentLocation = req.getURIwithFormat();
         	
 			MediaType mt = r.getMediaType(rc);
-			log.debug( "[%s] rendering with formatter '%s'", seqID, mt );
+			log.debug(String.format( "[%s] rendering with formatter '%s'", seqID, mt ));
 			Times times = c.times;
 			Renderer.BytesOut bo = r.render( times, rc, termBindings, results );
 			int mainHash = runHash + ru.toString().hashCode();
@@ -444,7 +444,7 @@ import com.sun.jersey.api.NotFoundException;
         } catch (StackOverflowError e) {
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
-            if (log.isDebugEnabled()) log.debug( "[%s]: %s", seqID, Messages.shortStackTrace( e ) );
+            if (log.isDebugEnabled()) log.debug(String.format( "[%s]: %s", seqID, Messages.shortStackTrace( e )) );
             String message = Messages.niceMessage("Stack overflow", e.getMessage() );
             return ErrorPages.respond(forErrorHandling, servCon, "stack_overflow", message, EldaException.SERVER_ERROR);
         
@@ -456,14 +456,14 @@ import com.sun.jersey.api.NotFoundException;
                     	
         } catch (UnknownShortnameException e) {
         	log.error( "UnknownShortnameException: " + e.getMessage() );
-            if (log.isDebugEnabled()) log.debug( "[%s]: %s", seqID, Messages.shortStackTrace( e ) );
+            if (log.isDebugEnabled()) log.debug(String.format( "[%s]: %s", seqID, Messages.shortStackTrace( e ) ));
         	StatsValues.endpointException();
         	return ErrorPages.respond(forErrorHandling, servCon, "unknown_shortname", e.getMessage(), EldaException.BAD_REQUEST); 
         
         } catch (EldaException e) {
         	StatsValues.endpointException();
         	log.error( "Exception: " + e.getMessage() );
-        	if (log.isDebugEnabled())log.debug( "[%s]: %s", seqID, Messages.shortStackTrace( e ) );
+        	if (log.isDebugEnabled())log.debug(String.format( "[%s]: %s", seqID, Messages.shortStackTrace( e )) );
         	return ErrorPages.respond(forErrorHandling, servCon, "exception", e.getMessage(), EldaException.SERVER_ERROR);
         
         } catch (NotFoundException e) {
@@ -472,7 +472,7 @@ import com.sun.jersey.api.NotFoundException;
         } catch (QueryParseException e) {
         	StatsValues.endpointException();
             log.error( "Query Parse Exception: " + e.getMessage() );
-            if (log.isDebugEnabled())log.debug("[%s]: %s", seqID,  Messages.shortStackTrace( e ) );
+            if (log.isDebugEnabled())log.debug(String.format("[%s]: %s", seqID,  Messages.shortStackTrace( e )) );
             return ErrorPages.respond(forErrorHandling, servCon, "query_parse_exception", e.getMessage(), EldaException.SERVER_ERROR);  
             
         } catch (Throwable e) {
@@ -511,7 +511,7 @@ import com.sun.jersey.api.NotFoundException;
 						;
 						
 					if (log.isDebugEnabled())
-						log.debug("[%s]: mapped ePath '%s' to '%s'", seqID, ePath, url);
+						log.debug(String.format("[%s]: mapped ePath '%s' to '%s'", seqID, ePath, url));
 					return url;
 				} catch (MalformedURLException e) {
 					throw new WrappedException(e);
@@ -582,7 +582,7 @@ import com.sun.jersey.api.NotFoundException;
 		String longMessage = Messages.niceMessage( shortMessage, "Internal Server error." );
 	//
 		log.error("Exception: " + shortMessage );
-        log.debug( "[%s]: %s", seqID, Messages.shortStackTrace( e ) );
+        log.debug(String.format( "[%s]: %s", seqID, Messages.shortStackTrace( e ) ));
         return standardHeaders( null, Response.serverError() ).entity( longMessage ).build();
     }
 
@@ -596,7 +596,7 @@ import com.sun.jersey.api.NotFoundException;
     }
     
     public static Response returnNotFound( String message, String what ) {
-        log.debug( "[%s]: failed to return results: %s", seqID, Messages.brief( message ) );
+        log.debug(String.format( "[%s]: failed to return results: %s", seqID, Messages.brief( message ) ));
         if (true) throw new NotFoundException();
         String m = Messages.niceMessage( message, "404 Resource Not Found: " + what );
 		return standardHeaders( null, Response.status(Status.NOT_FOUND) ).entity( m ).build();

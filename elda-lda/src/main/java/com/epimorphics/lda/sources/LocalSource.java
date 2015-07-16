@@ -86,7 +86,7 @@ public class LocalSource extends SourceBase implements Source {
 
 	@Override public QueryExecution execute(Query query) {
         if (log.isDebugEnabled()) {
-        	log.debug("[%s]: running query: %s", RouterRestlet.getSeqID(), query);
+        	log.debug(String.format("[%s]: running query: %s", RouterRestlet.getSeqID(), query));
         }
         return QueryExecutionFactory.create(query, sourceDataset);
     }

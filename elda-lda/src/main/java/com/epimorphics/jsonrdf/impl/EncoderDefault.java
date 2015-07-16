@@ -147,7 +147,7 @@ public class EncoderDefault implements EncoderPlugin {
 					{
 					// Issue #178
 			        String seqID = RouterRestlet.getSeqID();
-					log.warn( "[%s]: unhandled datatype '%s' in literal '%s'", seqID, dt, spelling );
+					log.warn(String.format( "[%s]: unhandled datatype '%s' in literal '%s'", seqID, dt, spelling ));
 					showUnhandled = false;
 					}
 				jw.value( spelling );

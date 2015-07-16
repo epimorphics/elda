@@ -76,7 +76,7 @@ public class RouterRestletSupport {
     	String givenPrefixPath = con.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
     //
     	String seqID = RouterRestlet.getSeqID();
-    	log.debug( "[%s]: configuration file templates: '%s'", seqID, specFilenameTemplates );
+    	log.debug(String.format( "[%s]: configuration file templates: '%s'", seqID, specFilenameTemplates ));
     //
 		for (String specTemplate: specFilenameTemplates) {
 			String prefixName = givenPrefixPath;
@@ -90,11 +90,11 @@ public class RouterRestletSupport {
 				pfs.add( new PrefixAndFilename( prefixName, specName ) );
 			} else {
 				String fullPath = specName.startsWith("/") ? specName : baseFilePath + specName;
-				log.debug("[%s]: spec file pattern is '%s'", seqID, fullPath);
+				log.debug(String.format("[%s]: spec file pattern is '%s'", seqID, fullPath));
 				List<File> files = new Glob().filesMatching( fullPath );
-				log.debug( "[%s]: full path '%s' matches %d files", seqID, fullPath, files.size() );
+				log.debug(String.format( "[%s]: full path '%s' matches %d files", seqID, fullPath, files.size() ));
 				for (File f: files) {
-					log.debug("[%s]: file '%s'", seqID, f);
+					log.debug(String.format("[%s]: file '%s'", seqID, f));
 					String expandedPrefix = ServletUtils.containsStar(prefixName) ? ServletUtils.nameToPrefix(prefixName, specName, f.getName()) : prefixName;
 					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
 				}
@@ -143,7 +143,7 @@ public class RouterRestletSupport {
 					return;
 		}    	
 		String seqID = RouterRestlet.getSeqID();
-		log.info( "[%s]: adding locator for '%s'", seqID, baseFilePath );
+		log.info(String.format( "[%s]: adding locator for '%s'", seqID, baseFilePath ));
 		EldaFileManager.get().addLocatorFile( baseFilePath );
 	}
 
@@ -162,10 +162,10 @@ public class RouterRestletSupport {
 
 	public static void loadOneConfigFile(Router router, String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {    	
 		String seqID = RouterRestlet.getSeqID();
-		log.info( "[%s]: loading spec file from '%s' with prefix path '%s'", seqID, thisSpecPath, prefixPath );
+		log.info(String.format( "[%s]: loading spec file from '%s' with prefix path '%s'", seqID, thisSpecPath, prefixPath) );
 		Model init = ml.loadModel( thisSpecPath );
 		ServletUtils.addLoadedFrom( init, thisSpecPath );
-		log.info( "[%s]: loaded '%s' with %d statements", seqID, thisSpecPath, init.size() );
+		log.info(String.format( "[%s]: loaded '%s' with %d statements", seqID, thisSpecPath, init.size() ));
 		for (ResIterator ri = init.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
 		    Resource api = ri.next();
             Resource specRoot = init.getResource(api.getURI());

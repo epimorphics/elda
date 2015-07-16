@@ -56,7 +56,7 @@ public class HereSource extends SourceBase implements Source
 		{
         if (log.isInfoEnabled()) {
             String seqID = RouterRestlet.getSeqID();
-        	log.info("[%s] creating query:\n%s", seqID, query);    
+        	log.info(String.format("[%s] creating query:\n%s", seqID, query));    
         }
         return QueryExecutionFactory.create( query, model );
 		}

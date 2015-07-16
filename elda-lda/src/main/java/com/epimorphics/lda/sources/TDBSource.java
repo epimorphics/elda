@@ -43,14 +43,14 @@ public class TDBSource extends SourceBase implements Source
         if (name != null && !name.isEmpty()) {
             this.source = TDBManager.getTDBModelNamed(name);
             log.debug
-            	( "[%s]: TDB with endpoint '%s' has model with '%s' triples"
+            	( String.format("[%s]: TDB with endpoint '%s' has model with '%s' triples"
             	, seqID, endpointString, this.source.size()
-            	);
+            	));
             if (this.source.isEmpty())
                 EldaException.EmptyTDB( name );
         } else {
             source = null;
-            log.info("[%s]: using TDB whole dataset", seqID);
+            log.info(String.format("[%s]: using TDB whole dataset", seqID));
         }
     }
 

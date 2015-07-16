@@ -36,7 +36,7 @@ public class MatchSearcher<T> {
         with the supplied result value.
     */
     public void register( String path, T result ) {
-    	log.info( "[%s] registering '%s' for '%s'", RouterRestlet.getSeqID(), path, result );
+    	log.info(String.format( "[%s] registering '%s' for '%s'", RouterRestlet.getSeqID(), path, result ));
         templates.add( MatchTemplate.prepare( path, result ) );
         needsSorting = true;
     }

@@ -222,7 +222,7 @@ public class Context implements ReadContext, Cloneable {
     			throw new EldaException
     				("[" + seqID + "]: the label '" + name + "' is not a legal shortname for '" + uri + "'");
     		} else {
-    			log.warn("[%s]: the label '%s' is not a legal shortname for '%s'", seqID, name, uri);
+    			log.warn(String.format("[%s]: the label '%s' is not a legal shortname for '%s'", seqID, name, uri));
     		}
     	}
         if (isNameFree(name)) { 

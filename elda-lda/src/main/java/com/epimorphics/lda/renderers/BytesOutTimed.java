@@ -40,7 +40,7 @@ public abstract class BytesOutTimed implements BytesOut {
 	        t.setRenderDuration( System.currentTimeMillis() - base, getFormat() );
 		} catch (Throwable e) {
 	        String seqID = RouterRestlet.getSeqID();
-			log.warn( "[%s] client exception during streaming: %s", seqID, e.getMessage() );
+			log.warn(String.format( "[%s] client exception during streaming: %s", seqID, e.getMessage() ));
 			throw new WrappedException( e );
 		}
 	}

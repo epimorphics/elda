@@ -69,7 +69,7 @@ public class QuerySupport {
 		result.addAll(typed);
 		if (!result.equals(triples)) {
 			String seqID = RouterRestlet.getSeqID();
-			log.debug("[%s]: reordered\n    %s\nto\n    %s", seqID, triples, result);
+			log.debug(String.format("[%s]: reordered\n    %s\nto\n    %s", seqID, triples, result));
 		}
 		return result;
 	}

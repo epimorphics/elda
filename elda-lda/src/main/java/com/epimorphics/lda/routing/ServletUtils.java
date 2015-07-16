@@ -92,7 +92,7 @@ public class ServletUtils {
             String fullPath = specPath.startsWith("/") ? specPath : baseFilePath + specPath;
             List<File> files = new Glob().filesMatching( fullPath );
             String seqID = RouterRestlet.getSeqID();
-            log.info( "[%s] found %d file(s) matching specPath '%s'", seqID, files.size(), specPath );
+            log.info(String.format( "[%s] found %d file(s) matching specPath '%s'", seqID, files.size(), specPath) );
             for (File f: files) {
                 String pp = containsStar(prefixPath) ? nameToPrefix(prefixPath, specPath, f.getName()) : prefixPath;
                 loadOneConfigFile(appName, ml, pp, f.getAbsolutePath());
@@ -125,10 +125,10 @@ public class ServletUtils {
 
     public static void loadOneConfigFile(String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {
         String seqID = RouterRestlet.getSeqID();
-        log.info( "[%s]: loading spec file from '%s' with prefix path '%s'", seqID, thisSpecPath, prefixPath );
+        log.info(String.format( "[%s]: loading spec file from '%s' with prefix path '%s'", seqID, thisSpecPath, prefixPath ));
         Model init = ml.loadModel( thisSpecPath );
         addLoadedFrom( init, thisSpecPath );
-        log.info( "[%s]: looaded '%s' with %d statements", seqID, thisSpecPath, init.size() );
+        log.info(String.format( "[%s]: looaded '%s' with %d statements", seqID, thisSpecPath, init.size() ));
         registerModel( appName, prefixPath, thisSpecPath, init );
     }
 

@@ -376,7 +376,7 @@ public class View {
 	//
 		if (log.isDebugEnabled()) {
 			String seqID = RouterRestlet.getSeqID();
-			log.debug("[%s]: label query:\n%s\n", seqID, queryString);
+			log.debug(String.format("[%s]: label query:\n%s\n", seqID, queryString));
 		}
 	//	
 		Query constructQuery = QueryFactory.create( queryString );

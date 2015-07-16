@@ -48,7 +48,7 @@ public class TDBManager {
     */
     public static void setBaseTDBPath( String value ) { 
         baseTDBPath = value; 
-        log.info( "[%s] setBaseTDBPath '%s'", RouterRestlet.getSeqID(), value );
+        log.info(String.format( "[%s] setBaseTDBPath '%s'", RouterRestlet.getSeqID(), value ));
     }
 
     /**
@@ -82,9 +82,9 @@ public class TDBManager {
     }
 
     private static Dataset openDataset() {
-        log.info( "[%s]: requesting open on TDB dataset at %s", RouterRestlet.getSeqID(), baseTDBPath );
+        log.info(String.format( "[%s]: requesting open on TDB dataset at %s", RouterRestlet.getSeqID(), baseTDBPath) );
         Dataset result = TDBFactory.createDataset( baseTDBPath );
-        log.info( "[%s]: opened: result looks like %s", RouterRestlet.getSeqID(), result.toString() );
+        log.info(String.format( "[%s]: opened: result looks like %s", RouterRestlet.getSeqID(), result.toString() ));
         return result;
     }
 }

@@ -216,7 +216,7 @@ public class ShortNameRenderer
         if (existing != null) {
             if (!existing.equals(  uri  )) {
                 String seqID = RouterRestlet.getSeqID();
-                log.warn( "[%s]: attempt to overwrite existing binding '%s' for short-name '%s' with new value '%s' was ignored", seqID, existing, shortName , uri );
+                log.warn(String.format( "[%s]: attempt to overwrite existing binding '%s' for short-name '%s' with new value '%s' was ignored", seqID, existing, shortName , uri) );
             }
         }
         else {

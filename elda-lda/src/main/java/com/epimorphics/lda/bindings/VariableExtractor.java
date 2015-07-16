@@ -61,7 +61,7 @@ public class VariableExtractor {
 				type = RDFS.Resource.getURI();
 			if (type == null) {
 				String seqID = RouterRestlet.getSeqID();
-				log.debug("[%s] no type for variable '%s'; using default ''", seqID, name);
+				log.debug(String.format("[%s] no type for variable '%s'; using default ''", seqID, name));
 				type = "";
 			}
 			String valueString = getValueString( v, language, type );

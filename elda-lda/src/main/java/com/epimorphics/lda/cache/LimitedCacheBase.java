@@ -218,13 +218,13 @@ public abstract class LimitedCacheBase implements Cache {
     @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs, long expiresAt ) {
         if (log.isDebugEnabled()) {
     		String seqID = RouterRestlet.getSeqID();
-        	log.debug( "[%s]: caching descriptions for resources %s", seqID, results );
+        	log.debug(String.format( "[%s]: caching descriptions for resources %s", seqID, results ));
         }
         cd.put( results.toString() + "::" + view, new TimedThing<APIResultSet>(rs, expiresAt ));
         if (exceedsResultSetLimit( cd )) {
         	if (log.isDebugEnabled()) {
         		String seqID = RouterRestlet.getSeqID();
-        		log.debug( "[%s]: clearing description cache for '%s'", seqID, label );
+        		log.debug(String.format( "[%s]: clearing description cache for '%s'", seqID, label ));
         	}
             cd.clear();
         }
@@ -233,13 +233,13 @@ public abstract class LimitedCacheBase implements Cache {
     @Override public synchronized void cacheSelection( String select, List<Resource> results, long expiresAt ) {
     	if (log.isDebugEnabled()) {   
     		String seqID = RouterRestlet.getSeqID();
-    		log.debug( "[%s]: caching resource selection for query %s", seqID, select );
+    		log.debug(String.format( "[%s]: caching resource selection for query %s", seqID, select ));
     	}
     	cs.put( select, new TimedThing<List<Resource>>(results, expiresAt) );
         if (exceedsSelectLimit( cs )) {
         	if (log.isDebugEnabled()) {        	
         		String seqID = RouterRestlet.getSeqID();
-        		log.debug( "[%s]: clearing select cache for '%s'", seqID, label );
+        		log.debug(String.format( "[%s]: clearing select cache for '%s'", seqID, label ));
         	}
             cs.clear();
         }

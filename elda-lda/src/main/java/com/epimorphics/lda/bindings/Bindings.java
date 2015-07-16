@@ -265,7 +265,7 @@ public class Bindings implements Lookup {
 			if (thisV == null) {
 				sb.append("{").append(name).append("}");
 				// issue #177
-				log.debug("[%s]: variable '%s' has no value, not substituted", seqID, name);
+				log.debug(String.format("[%s]: variable '%s' has no value, not substituted", seqID, name));
 			} else {
 				seen.add(name);
 				Value v = evaluate(name, thisV, seen);
@@ -274,7 +274,7 @@ public class Bindings implements Lookup {
 				if (value == null) {
 					sb.append("{").append(name).append("}");
 					// issue #177
-					log.debug("[%s]: variable '%s' has no value, not substituted", seqID, name);
+					log.debug(String.format("[%s]: variable '%s' has no value, not substituted", seqID, name));
 				} else
 					sb.append(value);
 			}
@@ -304,7 +304,7 @@ public class Bindings implements Lookup {
 			if (value == null) {
 				sb.append("{").append(name).append("}");
 				// issue #177
-				log.debug("[%s]: variable '%s' has no value, not substituted", seqID, name);
+				log.debug(String.format("[%s]: variable '%s' has no value, not substituted", seqID, name));
 			} else
 				sb.append(value);
 			start = rb + 1;

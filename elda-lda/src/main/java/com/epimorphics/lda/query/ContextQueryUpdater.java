@@ -104,7 +104,7 @@ public class ContextQueryUpdater implements ViewSetter {
             // info-level log we had before) so we can at least spot them.
             // See issue 175
         	String seqID = RouterRestlet.getSeqID();
-            log.debug( "[%s]: '%s' supplied, but no value for ", seqID, taggedParam, param );
+            log.debug(String.format( "[%s]: '%s' supplied, but no value for ", seqID, taggedParam, param) );
             return;
         }
         String val = context.expandVariables( sv );
@@ -234,7 +234,7 @@ public class ContextQueryUpdater implements ViewSetter {
         if (raw_val.equals( "" )) {
             // see issue #175        	
         	String seqID = RouterRestlet.getSeqID();
-            log.debug( "[%s]: parameter '%s' given empty value", seqID, param );
+            log.debug(String.format( "[%s]: parameter '%s' given empty value", seqID, param ));
             return;
         }
         String val = aq.cookRawValue(raw_val);

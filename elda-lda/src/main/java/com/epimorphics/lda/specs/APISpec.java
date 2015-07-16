@@ -143,7 +143,7 @@ public class APISpec {
 	protected void reportObsoleteDescribeThreshold(Resource endpoint) {
 		if (endpoint.hasProperty(ELDA_API.describeThreshold)) {
 	        String seqID = RouterRestlet.getSeqID();
-			log.warn("[%s]: endpoint '%s': elda:describeThreshold is no longer required/used.", seqID, endpoint);
+			log.warn(String.format("[%s]: endpoint '%s': elda:describeThreshold is no longer required/used.", seqID, endpoint));
 		}
 	}
     

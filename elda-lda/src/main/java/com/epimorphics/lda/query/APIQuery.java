@@ -1000,7 +1000,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		Query q = createQuery(selectQuery);
 		if (log.isDebugEnabled()) {
 			String seqID = RouterRestlet.getSeqID();
-			log.debug("[%s]: running query: %s", seqID, selectQuery.replaceAll("\n", " "));
+			log.debug(String.format("[%s]: running query: %s", seqID, selectQuery.replaceAll("\n", " ")));
 		}
 		source.executeSelect(q, new ResultResourcesReader(results));
 		return new Couple<String, List<Resource>>(selectQuery, results);
@@ -1090,7 +1090,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 				}
 				if (countBnodes > 0 && log.isDebugEnabled()) {
 					String seqID = RouterRestlet.getSeqID();
-					log.debug("[%s]: %s selected bnode items discarded", seqID, countBnodes);
+					log.debug(String.format("[%s]: %s selected bnode items discarded", seqID, countBnodes));
 				}
 			} catch (APIException e) {
 				throw e;

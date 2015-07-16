@@ -34,13 +34,13 @@ public class CompleteReadContext {
 			
 			@Override public String getURIfromName(String code) {
 				String seqID = RouterRestlet.getSeqID();
-				log.debug( "[%s]: readContext: getURIfromName unexpectedly called", seqID );
+				log.debug(String.format( "[%s]: readContext: getURIfromName unexpectedly called", seqID ));
 				return context.getURIfromName(code);
 			}
 			
 			@Override public ContextPropertyInfo getPropertyByName(String name) {
 				String seqID = RouterRestlet.getSeqID();
-				log.debug( "[%s]: readContext: getpropertyByName unexpectedly called.", seqID );
+				log.debug(String.format( "[%s]: readContext: getpropertyByName unexpectedly called.", seqID ));
 				return context.getPropertyByName(name);
 			}
 			

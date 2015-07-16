@@ -68,7 +68,7 @@ public class AuthMap {
 
 	private static AuthInfo readAuthFile( FileManager fm, String fileName ) {
 		String seqID = RouterRestlet.getSeqID();
-		log.debug("[%s]: reading auth file '%s'", seqID, fileName);
+		log.debug(String.format("[%s]: reading auth file '%s'", seqID, fileName));
 		return new AuthInfo(readProperties(fm, fileName));
 	}
 

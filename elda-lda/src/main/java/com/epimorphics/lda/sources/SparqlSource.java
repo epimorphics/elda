@@ -67,7 +67,7 @@ public class SparqlSource extends SourceBase implements Source {
         	if (authKey != null) {
 //        		System.err.println(">> authKey: " + authKey);
 //        		System.err.println(">> authMap: " + am);
-				log.debug("[%s]: handling auth key '%s'", seqID, authKey);
+				log.debug(String.format("[%s]: handling auth key '%s'", seqID, authKey));
         		AuthInfo ai = am.get( authKey );
         		        		
         		if (ai != null) {
@@ -92,16 +92,16 @@ public class SparqlSource extends SourceBase implements Source {
         		);
         }
     //
-        log.info( "[%s]: created '%s'", seqID, this.toString() );
+        log.info(String.format( "[%s]: created '%s'", seqID, this.toString() ));
     }
     
     @Override public QueryExecution execute(Query query) {
         String seqID = RouterRestlet.getSeqID();
-        if (log.isDebugEnabled()) log.debug("[%s]: running query on '%s':\n%s", seqID, sparqlEndpoint, query);
+        if (log.isDebugEnabled()) log.debug(String.format("[%s]: running query on '%s':\n%s", seqID, sparqlEndpoint, query));
 		QueryEngineHTTP qe = new QueryEngineHTTP(sparqlEndpoint, query);
 		if (basicUser != null) {
-			log.debug( "[%s]: basic user '%s'", seqID, basicUser );			
-			log.debug( "[%s]: basic password '%s'", seqID, new String(basicPassword));
+			log.debug(String.format( "[%s]: basic user '%s'", seqID, basicUser));			
+			log.debug(String.format( "[%s]: basic password '%s'", seqID, new String(basicPassword)));
 			qe.setBasicAuthentication( basicUser, basicPassword );
 		}
 		return qe ;

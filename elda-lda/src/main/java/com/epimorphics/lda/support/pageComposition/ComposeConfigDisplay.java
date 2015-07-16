@@ -161,7 +161,7 @@ public class ComposeConfigDisplay {
 				Value v = b.get( name );
 				if (v == null) {
 					String seqID = RouterRestlet.getSeqID();
-					log.debug("[%s]: binding for '%s' is null or non-Value; ignored.", seqID, name);	
+					log.debug(String.format("[%s]: binding for '%s' is null or non-Value; ignored.", seqID, name));	
 					System.err.println("binding for " + name + " is null or non-Value; ignored.");			
 				} else {
 					String lf = v.spelling() == null ? "<i>none</i>" : v.spelling();

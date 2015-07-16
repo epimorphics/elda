@@ -376,7 +376,7 @@ public class APIResultSet implements SetsMetadata {
 			Model meta = metadata.get( option );
 			if (meta == null) {
 				String seqID = RouterRestlet.getSeqID();
-				log.debug( "[%s]: metadata '%s' unknown (or already supplied).", seqID, option );
+				log.debug(String.format( "[%s]: metadata '%s' unknown (or already supplied).", seqID, option) );
 			}
 			else model.meta.add( meta );
 		}
