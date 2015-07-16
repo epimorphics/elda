@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.APIException;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
@@ -84,7 +85,9 @@ public class LocalSource extends SourceBase implements Source {
 	}
 
 	@Override public QueryExecution execute(Query query) {
-        if (log.isDebugEnabled()) log.debug("Running query: " + query);
+        if (log.isDebugEnabled()) {
+        	log.debug("[%s]: running query: %s", RouterRestlet.getSeqID(), query);
+        }
         return QueryExecutionFactory.create(query, sourceDataset);
     }
     

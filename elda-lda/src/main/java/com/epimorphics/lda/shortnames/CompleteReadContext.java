@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.renderers.JSONRenderer;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.hp.hpl.jena.rdf.model.Property;
 
 public class CompleteReadContext {
@@ -26,23 +27,25 @@ public class CompleteReadContext {
 		return new ReadContext() {
 			
 			Map<Property, ContextPropertyInfo> buffer = new HashMap<Property, ContextPropertyInfo>();
-			
+						
 			@Override public boolean isSortProperties() {
 				return true;
 			}
 			
 			@Override public String getURIfromName(String code) {
-				log.debug( "readContext: getURIfromName unexpectedly called." );
+				String seqID = RouterRestlet.getSeqID();
+				log.debug( "[%s]: readContext: getURIfromName unexpectedly called", seqID );
 				return context.getURIfromName(code);
 			}
 			
 			@Override public ContextPropertyInfo getPropertyByName(String name) {
-				log.debug( "readContext: getpropertyByName unexpectedly called." );
+				String seqID = RouterRestlet.getSeqID();
+				log.debug( "[%s]: readContext: getpropertyByName unexpectedly called.", seqID );
 				return context.getPropertyByName(name);
 			}
 			
 			@Override public String getNameForURI(String uri) {
-//				log.debug( "readContext: unusually, getNameForURI called." );
+//				log.debugZOG( "readContext: unusually, getNameForURI called." );
 				return uriToName.get(uri);
 			}
 			
@@ -51,7 +54,7 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String forceShorten(String uri) {
-//				log.debug( "readContext: unusually, forceShorten called." );
+//				log.debugZOG( "readContext: unusually, forceShorten called." );
 				return context.forceShorten(uri);
 			}
 			

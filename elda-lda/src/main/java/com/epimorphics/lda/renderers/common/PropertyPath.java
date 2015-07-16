@@ -18,6 +18,7 @@ import org.apache.jena.atlas.lib.StrUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
@@ -249,7 +250,8 @@ public class PropertyPath
                 else {
                     String uri = snr.expand( segment );
                     if (uri == null) {
-                        log.warn( "Warning: property path uses short name '" + segment + "' which does not have an expansion to a URI"  );
+                        String seqID = RouterRestlet.getSeqID();
+                        log.warn( "[%s]: warning: property path uses short name '%s' which does not have an expansion to a URI", seqID, segment  );
                         properties.add( STAR );
                     }
                     else {

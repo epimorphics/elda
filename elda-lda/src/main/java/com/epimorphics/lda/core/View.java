@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.SparqlSupport;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
@@ -373,7 +374,10 @@ public class View {
 		sb.append( "}\n" );
 		String queryString = sb.toString();
 	//
-		if (log.isDebugEnabled()) log.debug("LABEL QUERY:\n" + queryString + "\n");
+		if (log.isDebugEnabled()) {
+			String seqID = RouterRestlet.getSeqID();
+			log.debug("[%s]: label query:\n%s\n", seqID, queryString);
+		}
 	//	
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );

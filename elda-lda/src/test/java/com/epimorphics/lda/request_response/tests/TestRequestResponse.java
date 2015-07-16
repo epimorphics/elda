@@ -121,7 +121,7 @@ public class TestRequestResponse {
 	
 	public void testSingle(WhatToDo w) {
 		Cache.Registry.clearAll();
-		log.debug( "running test " + w.title );
+		log.debug( "[test] running '%s'", w.title );
 //		System.err.println( ">> " + w.pathToData );
 	//
 	// this little dance of resetting the location mapper bypasses a

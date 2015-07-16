@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.CountStream;
 import com.epimorphics.util.StreamUtils;
@@ -38,7 +39,8 @@ public abstract class BytesOutTimed implements BytesOut {
 	        t.setRenderedSize( cos.size() );
 	        t.setRenderDuration( System.currentTimeMillis() - base, getFormat() );
 		} catch (Throwable e) {
-			log.warn( "client exception during streaming: " + e.getMessage() );
+	        String seqID = RouterRestlet.getSeqID();
+			log.warn( "[%s] client exception during streaming: %s", seqID, e.getMessage() );
 			throw new WrappedException( e );
 		}
 	}

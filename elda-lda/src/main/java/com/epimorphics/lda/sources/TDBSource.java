@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.query.*;
@@ -38,15 +39,18 @@ public class TDBSource extends SourceBase implements Source
         String name = endpointString.substring( TDBManager.PREFIX.length() );
         this.endpoint = endpointString;
         this.sourceSet = TDBManager.getDataset();
+        String seqID = RouterRestlet.getSeqID();
         if (name != null && !name.isEmpty()) {
             this.source = TDBManager.getTDBModelNamed(name);
-            log.debug("TDB with endpoint " + endpointString + " has model with "
-                    + this.source.size() + " triples.");
+            log.debug
+            	( "[%s]: TDB with endpoint '%s' has model with '%s' triples"
+            	, seqID, endpointString, this.source.size()
+            	);
             if (this.source.isEmpty())
                 EldaException.EmptyTDB( name );
         } else {
             source = null;
-            log.info("Using TDB whole dataset");
+            log.info("[%s]: using TDB whole dataset", seqID);
         }
     }
 
@@ -64,10 +68,10 @@ public class TDBSource extends SourceBase implements Source
     
     @Override public QueryExecution execute( Query query )
         {
-//        if (log.isInfoEnabled()) log.info( "Running query: " + query.toString().replaceAll( "\n", " " ) + " over " + this.source.size() + " triples.");
+//        if (log.isInfoEnabled()) log.infoZOGZOG( "Running query: " + query.toString().replaceAll( "\n", " " ) + " over " + this.source.size() + " triples.");
 //        QueryExecution q = QueryExecutionFactory.create( query, source );
 //        Model result = q.execDescribe();
-//        if (log.isInfoEnabled()) log.info( "Resulting model has " + result.size() + " triples." );
+//        if (log.isInfoEnabled()) log.infoZOGZOG( "Resulting model has " + result.size() + " triples." );
         return
             source == null 
                 ?  QueryExecutionFactory.create( query, sourceSet )

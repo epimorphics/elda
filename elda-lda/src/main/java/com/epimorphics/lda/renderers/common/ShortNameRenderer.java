@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.Transcoding;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -214,8 +215,8 @@ public class ShortNameRenderer
 
         if (existing != null) {
             if (!existing.equals(  uri  )) {
-                log.warn( "Attempt to overwrite existing binding '" + existing + "' for short-name '" +
-                          shortName + "' with new value '" + uri + "' was ignored." );
+                String seqID = RouterRestlet.getSeqID();
+                log.warn( "[%s]: attempt to overwrite existing binding '%s' for short-name '%s' with new value '%s' was ignored", seqID, existing, shortName , uri );
             }
         }
         else {

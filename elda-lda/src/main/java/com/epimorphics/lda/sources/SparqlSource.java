@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
@@ -57,6 +58,7 @@ public class SparqlSource extends SourceBase implements Source {
         String user = null;
         char [] password = null;
         boolean allowInsecure = false;
+        String seqID = RouterRestlet.getSeqID();
     //
         if (ep != null) {
         	allowInsecure = RDFUtils.getBooleanValue(ep, ELDA_API.authAllowInsecure, false);
@@ -65,7 +67,7 @@ public class SparqlSource extends SourceBase implements Source {
         	if (authKey != null) {
 //        		System.err.println(">> authKey: " + authKey);
 //        		System.err.println(">> authMap: " + am);
-        		log.debug("handling auth key '" + authKey + "'");
+				log.debug("[%s]: handling auth key '%s'", seqID, authKey);
         		AuthInfo ai = am.get( authKey );
         		        		
         		if (ai != null) {
@@ -90,15 +92,16 @@ public class SparqlSource extends SourceBase implements Source {
         		);
         }
     //
-        log.info( "created " + toString() );
+        log.info( "[%s]: created '%s'", seqID, this.toString() );
     }
     
     @Override public QueryExecution execute(Query query) {
-        if (log.isDebugEnabled()) log.debug("Running query on " + sparqlEndpoint + ":\n" + query);
+        String seqID = RouterRestlet.getSeqID();
+        if (log.isDebugEnabled()) log.debug("[%s]: running query on '%s':\n%s", seqID, sparqlEndpoint, query);
 		QueryEngineHTTP qe = new QueryEngineHTTP(sparqlEndpoint, query);
 		if (basicUser != null) {
-			log.debug( "basic user: " + basicUser );			
-			log.debug( "basic password: " + new String(basicPassword));
+			log.debug( "[%s]: basic user '%s'", seqID, basicUser );			
+			log.debug( "[%s]: basic password '%s'", seqID, new String(basicPassword));
 			qe.setBasicAuthentication( basicUser, basicPassword );
 		}
 		return qe ;
