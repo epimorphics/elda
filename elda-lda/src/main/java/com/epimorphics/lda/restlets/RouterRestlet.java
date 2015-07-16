@@ -235,7 +235,7 @@ import com.sun.jersey.api.NotFoundException;
             @Context ServletContext servCon,
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
-    	setSeqID(getSeqID());
+    	setSeqID(getSeqID(servletResponse));
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	String contextPath = servCon.getContextPath(); 
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
