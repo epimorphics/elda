@@ -10,6 +10,7 @@ package com.epimorphics.lda.routing;
 
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.support.TDBManager;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -23,7 +24,8 @@ public class APIModelLoader implements ModelLoader {
     }
 
     @Override public Model loadModel(String uri) {
-        Loader.log.infoZOG( "loadModel: " + uri );
+        String seqID = RouterRestlet.getSeqID();
+        Loader.log.info(String.format( "[%s]: loadModel '%s'", seqID, uri ));
         if (uri.startsWith( Container.LOCAL_PREFIX )) {
             String specFile = "file:///" + baseFilePathLocal + uri.substring(Container.LOCAL_PREFIX.length());
             return EldaFileManager.get().loadModel( specFile );
@@ -31,8 +33,8 @@ public class APIModelLoader implements ModelLoader {
         } else if (uri.startsWith( TDBManager.PREFIX )) {
             String modelName = uri.substring( TDBManager.PREFIX.length() );
             Model tdb = TDBManager.getTDBModelNamed( modelName );
-            Loader.log.infoZOG( "get TDB model " + modelName );
-            if (tdb.isEmpty()) Loader.log.warnZOG( "the TDB model at " + modelName + " is empty -- has it been initialised?" );
+            Loader.log.info(String.format( "[%s]: get TDB model '%s'", seqID, modelName ));
+            if (tdb.isEmpty()) Loader.log.warn(String.format( "[%s]: the TDB model at '%s' is empty -- has it been initialised?", seqID, modelName) );
             if (tdb.isEmpty()) throw new APIException( "the TDB model at " + modelName + " is empty -- has it been initialised?" );
             return tdb;
 

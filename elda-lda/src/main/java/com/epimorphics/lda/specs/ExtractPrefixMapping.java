@@ -10,6 +10,7 @@ package com.epimorphics.lda.specs;
 
 import static com.epimorphics.util.RDFUtils.getStringValue;
 
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -23,6 +24,7 @@ public class ExtractPrefixMapping {
 	    specification prefixMapping [api:prefix P; api:namespace N]
 	*/
 	public static PrefixMapping from( Resource specification ) {
+		String seqID = RouterRestlet.getSeqID();
 	    PrefixMapping pm = PrefixMapping.Factory.create();
 	    Model model = specification.getModel();
 		pm.setNsPrefixes(model);
@@ -36,10 +38,10 @@ public class ExtractPrefixMapping {
 	            if (prefix != null && uri != null) {
 	                pm.setNsPrefix(prefix, uri);
 	            } else {
-	                APISpec.log.errorZOG("Ignoring ill-structured prefix mapping " + prefix + " :: " + uri);
+	                APISpec.log.error(String.format("[%s]: ignoring ill-structured prefix mapping '%s' :: '%s'", seqID, prefix, uri));
 	            }
 	        } else {
-	            APISpec.log.errorZOG("Ignoring non-structured prefix mapping: " + n);
+	            APISpec.log.error(String.format("[%s]: ignoring non-structured prefix mapping: '%s'", seqID, n));
 	        }
 	    }
 	    return pm;

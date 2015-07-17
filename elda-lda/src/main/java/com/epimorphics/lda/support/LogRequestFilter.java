@@ -69,18 +69,18 @@ public class LogRequestFilter implements Filter {
         	HttpServletResponse httpResponse = (HttpServletResponse)response;
 	        long transaction = transactionCount.incrementAndGet();	        
 	        long start = System.currentTimeMillis();
-	        log.infoZOG( String.format("Request  [%d] : %s", transaction, path) + (query == null ? "" : ("?" + query)) );
+	        log.info(String.format( String.format("Request  [%d] : %s", transaction, path) + (query == null ? "" : ("?" + query)) ));
 	        httpResponse.addHeader(REQUEST_ID_HEADER, Long.toString(transaction));
 	        chain.doFilter(request, response);
 	        
 	        int status = getStatus(httpResponse);
 	        String statusString = status < 0 ? "(status unknown)" : "" + status;
-			log.infoZOG( String.format
+			log.info(String.format( String.format
 				( "Response [%d] : %s (%s)"
 				, transaction
 				, statusString
 	            , NameUtils.formatDuration(System.currentTimeMillis() - start) ) 
-	            );
+	            ));
 			
 	    } else {
 	        chain.doFilter(request, response);

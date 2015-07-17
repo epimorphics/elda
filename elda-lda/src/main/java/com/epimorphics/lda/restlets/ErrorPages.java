@@ -76,8 +76,9 @@ public class ErrorPages {
 			.build()
 			;
 		} catch (Throwable e) {
-			log.errorZOG("An exception occurred when rendering an error page:");
-			log.errorZOG("  " + e.getMessage());
+			String seqID = RouterRestlet.getSeqID();			
+			log.error(String.format("[%s]: an exception occurred when rendering an error page", seqID));
+			log.error(String.format("[%s]: %s", seqID, e.getMessage()));
 			return Response
 				.status(Status.INTERNAL_SERVER_ERROR)
 				.entity(fallBack)

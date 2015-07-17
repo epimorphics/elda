@@ -19,6 +19,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.query.*;
@@ -81,7 +82,7 @@ public class CombinedSource extends SourceBase implements Source
     
     @Override public QueryExecution execute( Query query )
         {
-        log.infoZOG( "doing query execution on a CombinedSource" );
+        log.info(String.format( "[%s]: doing query execution on a CombinedSource", RouterRestlet.getSeqID()) );
         Model combined = combine();
         return QueryExecutionFactory.create( query, combined );
         }
@@ -95,7 +96,7 @@ public class CombinedSource extends SourceBase implements Source
 
     private Model dataFrom( Source s )
         {
-        log.infoZOG( "getting model data from source " + s );
+        log.info(String.format( "[%s]: getting model data from source '%s'", RouterRestlet.getSeqID(), s ));
         String queryString = "construct " + triplesFor( constructs ) + " where " + triplesFor( matches ) + "";
         return s.executeConstruct( QueryFactory.create( queryString ) );
         }

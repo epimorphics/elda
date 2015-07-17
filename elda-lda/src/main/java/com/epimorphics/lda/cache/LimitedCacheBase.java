@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ResponseResult;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public abstract class LimitedCacheBase implements Cache {
@@ -215,19 +216,31 @@ public abstract class LimitedCacheBase implements Cache {
     }
 
     @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs, long expiresAt ) {
-        if (log.isDebugEnabled()) log.debugZOG( "caching descriptions for resources " + results );
+        if (log.isDebugEnabled()) {
+    		String seqID = RouterRestlet.getSeqID();
+        	log.debug(String.format( "[%s]: caching descriptions for resources %s", seqID, results ));
+        }
         cd.put( results.toString() + "::" + view, new TimedThing<APIResultSet>(rs, expiresAt ));
         if (exceedsResultSetLimit( cd )) {
-        	if (log.isDebugEnabled()) log.debugZOG( "clearing description cache for " + label );
+        	if (log.isDebugEnabled()) {
+        		String seqID = RouterRestlet.getSeqID();
+        		log.debug(String.format( "[%s]: clearing description cache for '%s'", seqID, label ));
+        	}
             cd.clear();
         }
     }
 
     @Override public synchronized void cacheSelection( String select, List<Resource> results, long expiresAt ) {
-    	if (log.isDebugEnabled()) log.debugZOG( "caching resource selection for query " + select );
+    	if (log.isDebugEnabled()) {   
+    		String seqID = RouterRestlet.getSeqID();
+    		log.debug(String.format( "[%s]: caching resource selection for query %s", seqID, select ));
+    	}
     	cs.put( select, new TimedThing<List<Resource>>(results, expiresAt) );
         if (exceedsSelectLimit( cs )) {
-        	if (log.isDebugEnabled()) log.debugZOG( "clearing select cache for " + label );
+        	if (log.isDebugEnabled()) {        	
+        		String seqID = RouterRestlet.getSeqID();
+        		log.debug(String.format( "[%s]: clearing select cache for '%s'", seqID, label ));
+        	}
             cs.clear();
         }
     }

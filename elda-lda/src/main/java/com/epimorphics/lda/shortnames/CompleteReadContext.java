@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.renderers.JSONRenderer;
+import com.epimorphics.lda.restlets.RouterRestlet;
 import com.hp.hpl.jena.rdf.model.Property;
 
 public class CompleteReadContext {
@@ -26,18 +27,20 @@ public class CompleteReadContext {
 		return new ReadContext() {
 			
 			Map<Property, ContextPropertyInfo> buffer = new HashMap<Property, ContextPropertyInfo>();
-			
+						
 			@Override public boolean isSortProperties() {
 				return true;
 			}
 			
 			@Override public String getURIfromName(String code) {
-				log.debugZOG( "readContext: getURIfromName unexpectedly called." );
+				String seqID = RouterRestlet.getSeqID();
+				log.debug(String.format( "[%s]: readContext: getURIfromName unexpectedly called", seqID ));
 				return context.getURIfromName(code);
 			}
 			
 			@Override public ContextPropertyInfo getPropertyByName(String name) {
-				log.debugZOG( "readContext: getpropertyByName unexpectedly called." );
+				String seqID = RouterRestlet.getSeqID();
+				log.debug(String.format( "[%s]: readContext: getpropertyByName unexpectedly called.", seqID ));
 				return context.getPropertyByName(name);
 			}
 			
