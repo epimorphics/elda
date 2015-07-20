@@ -68,10 +68,6 @@ public class TDBSource extends SourceBase implements Source
     
     @Override public QueryExecution execute( Query query )
         {
-//        if (log.isInfoEnabled()) log.infoZOGZOG( "Running query: " + query.toString().replaceAll( "\n", " " ) + " over " + this.source.size() + " triples.");
-//        QueryExecution q = QueryExecutionFactory.create( query, source );
-//        Model result = q.execDescribe();
-//        if (log.isInfoEnabled()) log.infoZOGZOG( "Resulting model has " + result.size() + " triples." );
         return
             source == null 
                 ?  QueryExecutionFactory.create( query, sourceSet )

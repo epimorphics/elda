@@ -102,17 +102,7 @@ public class JSONRenderer implements Renderer {
 					u.close();
 				} catch (IOException e) {
 					throw new WrappedException(e);
-				}
-//				try {
-//					Writer writer = StreamUtils.asUTF8( os );
-//					writer.write( before );
-//					Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true );
-//					writer.write( after );
-//					writer.flush();
-//				} catch (Exception e) {
-//					log.errorZOG( "Failed to encode model: stacktrace follows:", e );
-//					throw new WrappedException( e );
-//				}				
+				}			
 			}
 
 			@Override protected String getFormat() {
@@ -131,15 +121,6 @@ public class JSONRenderer implements Renderer {
 		context.setSorted(true);
         Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true );
 	}
-
-//	private void paranoiaCheckForLegalJSON(String written) throws Exception {
-//		try {
-//			ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json
-//		} catch (Exception e) {
-//			log.errorZOG( "Broken generated JSON:\n" + written );
-//			throw e;
-//		}
-//	}
 
 }
 

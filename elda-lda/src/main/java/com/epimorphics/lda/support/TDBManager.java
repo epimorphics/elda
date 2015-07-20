@@ -69,7 +69,6 @@ public class TDBManager {
             (uri == null || uri.isEmpty()) 
                 ? dataset.getNamedModel( Quad.unionGraph.getURI() )
                 : dataset.getNamedModel( uri );
-//        log.debugZOG( "opened " + uri + " (" + result.size() + " triples)" );
         return result;
     }
     

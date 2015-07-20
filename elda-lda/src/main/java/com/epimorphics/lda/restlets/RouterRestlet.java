@@ -175,12 +175,12 @@ import com.sun.jersey.api.NotFoundException;
 	    		 routers.put( contextPath, r );	    		 
 	    	 } else {
 	    		 // checked, but no change to reload
-	    		 // log.infoZOGZOG("don't need to reload router, will check again later." );
+	    		 log.info(String.format("[%s]: don't need to reload router, will check again later.", seqID ));
 	    		 r.deferCheck();
 	    	 }
     	 } else {
     		 // Don't need to check yet, still in waiting period
-    		 // log.infoZOGZOG( "Using existing router, not time to check yet." );
+    		 log.info(String.format("[%s]: using existing router, not time to check yet.", seqID) );
     	 }
     //
     	 return r.router;
@@ -526,7 +526,7 @@ import com.sun.jersey.api.NotFoundException;
 						;
 						
 					if (log.isDebugEnabled())
-						log.debug(String.format("[%s]: mapped ePath '%s' to '%s'", seqID, ePath, url));
+						log.debug(String.format("[%s]: mapped ePath '%s' to '%s'", seqID.get(), ePath, url));
 					return url;
 				} catch (MalformedURLException e) {
 					throw new WrappedException(e);

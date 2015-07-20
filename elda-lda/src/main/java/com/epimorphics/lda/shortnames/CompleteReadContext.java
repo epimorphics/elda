@@ -45,7 +45,8 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String getNameForURI(String uri) {
-//				log.debugZOG( "readContext: unusually, getNameForURI called." );
+				String seqID = RouterRestlet.getSeqID();
+				log.debug( "[%s]: readContext: unusually, getNameForURI called.", seqID );
 				return uriToName.get(uri);
 			}
 			
@@ -54,7 +55,8 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String forceShorten(String uri) {
-//				log.debugZOG( "readContext: unusually, forceShorten called." );
+				String seqID = RouterRestlet.getSeqID();
+				log.debug( "[%s]: readContext: unusually, forceShorten called.", seqID );
 				return context.forceShorten(uri);
 			}
 			
