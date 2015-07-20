@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.APISecurityException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.routing.*;
 import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
@@ -75,8 +76,7 @@ public class RouterRestletSupport {
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
     	String givenPrefixPath = con.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
     //
-    	String seqID = RouterRestlet.getSeqID();
-    	log.debug(String.format( "[%s]: configuration file templates: '%s'", seqID, specFilenameTemplates ));    //
+    	ELog.debug(log,  "configuration file templates: '%s'", specFilenameTemplates );    //
 		for (String specTemplate: specFilenameTemplates) {
 			String prefixName = givenPrefixPath;
 			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextPath );
@@ -89,11 +89,11 @@ public class RouterRestletSupport {
 				pfs.add( new PrefixAndFilename( prefixName, specName ) );
 			} else {
 				String fullPath = specName.startsWith("/") ? specName : baseFilePath + specName;
-				log.debug(String.format("[%s]: spec file pattern is '%s'", seqID, fullPath));
+				ELog.debug(log, "spec file pattern is '%s'", fullPath);
 				List<File> files = new Glob().filesMatching( fullPath );
-				log.debug(String.format( "[%s]: full path '%s' matches %d files", seqID, fullPath, files.size() ));
+				ELog.debug(log,  "full path '%s' matches %d files", fullPath, files.size());
 				for (File f: files) {
-					log.debug(String.format("[%s]: file '%s'", seqID, f));
+					ELog.debug(log, "file '%s'", f);
 					String expandedPrefix = ServletUtils.containsStar(prefixName) ? ServletUtils.nameToPrefix(prefixName, specName, f.getName()) : prefixName;
 					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
 				}
@@ -141,8 +141,7 @@ public class RouterRestletSupport {
 				if (((LocatorFile) l).getName().equals(baseFilePath))
 					return;
 		}    	
-		String seqID = RouterRestlet.getSeqID();
-		log.info(String.format( "[%s]: adding locator for '%s'", seqID, baseFilePath ));
+		ELog.info(log, "adding locator for '%s'", baseFilePath );
 		EldaFileManager.get().addLocatorFile( baseFilePath );
 	}
 
@@ -160,11 +159,10 @@ public class RouterRestletSupport {
 	}
 
 	public static void loadOneConfigFile(Router router, String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {    	
-		String seqID = RouterRestlet.getSeqID();
-		log.info(String.format( "[%s]: loading spec file from '%s' with prefix path '%s'", seqID, thisSpecPath, prefixPath) );
+		ELog.info(log,  "loading spec file from '%s' with prefix path '%s'", thisSpecPath, prefixPath);
 		Model init = ml.loadModel( thisSpecPath );
 		ServletUtils.addLoadedFrom( init, thisSpecPath );
-		log.info(String.format( "[%s]: loaded '%s' with %d statements", seqID, thisSpecPath, init.size() ));
+		ELog.info(log, "loaded '%s' with %d statements", thisSpecPath, init.size());
 		for (ResIterator ri = init.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
 		    Resource api = ri.next();
             Resource specRoot = init.getResource(api.getURI());

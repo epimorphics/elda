@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
 /**
@@ -103,8 +103,7 @@ public class ContextQueryUpdater implements ViewSetter {
             // do so. For the moment we'll do a debug-level log (rather than the
             // info-level log we had before) so we can at least spot them.
             // See issue 175
-        	String seqID = RouterRestlet.getSeqID();
-            log.debug(String.format( "[%s]: '%s' supplied, but no value for ", seqID, taggedParam, param) );
+            ELog.debug(log, "'%s' supplied, but no value for ", taggedParam, param );
             return;
         }
         String val = context.expandVariables( sv );
@@ -233,8 +232,7 @@ public class ContextQueryUpdater implements ViewSetter {
     public void addFilterFromQuery( Param param, String raw_val ) {
         if (raw_val.equals( "" )) {
             // see issue #175        	
-        	String seqID = RouterRestlet.getSeqID();
-            log.debug(String.format( "[%s]: parameter '%s' given empty value", seqID, param ));
+            ELog.debug(log, "parameter '%s' given empty value", param);
             return;
         }
         String val = aq.cookRawValue(raw_val);

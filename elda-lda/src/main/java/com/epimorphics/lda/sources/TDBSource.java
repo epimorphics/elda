@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.API;
@@ -50,7 +51,7 @@ public class TDBSource extends SourceBase implements Source
                 EldaException.EmptyTDB( name );
         } else {
             source = null;
-            log.info(String.format("[%s]: using TDB whole dataset", seqID));
+            ELog.info(log, "using TDB whole dataset");
         }
     }
 

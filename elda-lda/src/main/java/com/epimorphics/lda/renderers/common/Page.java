@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.common.EldaURL.*;
 import com.epimorphics.lda.restlets.RouterRestlet;
@@ -349,7 +350,7 @@ public class Page extends CommonNodeWrapper
             Resource viewRoot = i.next();
             if (i.hasNext()) {
                 String seqID = RouterRestlet.getSeqID();
-                log.warn(String.format( "[%s] ambiguous view name: there is more than one resource with viewName '%s'", seqID, viewName ));
+                ELog.warn(log, "ambiguous view name: there is more than one resource with viewName '%s'", viewName);
             }
 
             view = new EldaView( this, viewRoot );

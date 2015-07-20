@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.exceptions.ReusedShortnameException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -222,7 +223,7 @@ public class Context implements ReadContext, Cloneable {
     			throw new EldaException
     				("[" + seqID + "]: the label '" + name + "' is not a legal shortname for '" + uri + "'");
     		} else {
-    			log.warn(String.format("[%s]: the label '%s' is not a legal shortname for '%s'", seqID, name, uri));
+    			ELog.warn(log, "the label '%s' is not a legal shortname for '%s'", name, uri);
     		}
     	}
         if (isNameFree(name)) { 

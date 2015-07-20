@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.ELDA_API;
@@ -42,9 +42,8 @@ public abstract class SourceBase {
 	public SourceBase( Resource endpoint ) {
 		this.textSearchConfig = new TextSearchConfig( endpoint );
 		if (endpoint.hasProperty(ELDA_API.supportsNestedSelect)) {
-	        String seqID = RouterRestlet.getSeqID();
-			log.warn(String.format("[%s]: '%s' supportsNestedSelect is no longer used or needed.", seqID, endpoint));
-			log.info(String.format("[%s]: Elda assumes and requires SPARQL 1.1 support", seqID));
+			ELog.warn(log, "'%s' supportsNestedSelect is no longer used or needed.", endpoint);
+			ELog.info(log, "Elda assumes and requires SPARQL 1.1 support");
 		}
 	}
 	

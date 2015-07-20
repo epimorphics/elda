@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.exceptions.VelocityRenderingException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.common.*;
-import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.util.CountStream;
@@ -122,7 +122,7 @@ implements BytesOut
             times.setRenderDuration( System.currentTimeMillis() - base, vr.suffix() );
         }
         catch (Exception e) {
-            log.warn(String.format( "[%s] %s (%s)", getSeqID(), e.getMessage(), e ));
+            ELog.warn(log, "%s (%s)", e.getMessage(), e );
             throw new VelocityRenderingException();
         }
         finally {
@@ -131,14 +131,10 @@ implements BytesOut
                     cos.close();
                 }
                 catch (IOException e) {
-                    log.warn(String.format( "[%s]: failed to close count stream: %s (%s)", getSeqID(), e.getMessage(), e ));
+                    ELog.warn(log, "failed to close count stream: %s (%s)", e.getMessage(), e );
                 }
             }
         }
-    }
-
-    protected static String getSeqID() {
-    	return RouterRestlet.getSeqID();
     }
     
     /***********************************/
@@ -168,9 +164,8 @@ implements BytesOut
             t = ve.getTemplate( vr.templateName() );
         }
         catch (ResourceNotFoundException e) {
-            String seqID = getSeqID();
-			log.debug(String.format( "[%s]: could not find base template '%s'", seqID, vr.templateName()) );
-            log.debug(String.format( "[%s]: current velocity path is '%s'", seqID, ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH )) );
+			ELog.debug(log, "could not find base template '%s'", vr.templateName() );
+            ELog.debug(log, "current velocity path is '%s'", ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH ) );
             throw e;
         }
 
@@ -236,8 +231,8 @@ implements BytesOut
             String pathURL = b.pathAsURL( pathEntry).toString();
             roots.add( pathURL + (pathURL.endsWith( "/" ) ? "" : "/") );
         }
-        log.debug(String.format("[%s]: rootPath '%s'", getSeqID(), rootPath));
-        log.debug(String.format("[%s]: complete expanded path '%s'", getSeqID(), roots));
+        ELog.debug(log, "rootPath '%s'", rootPath);
+        ELog.debug(log, "complete expanded path '%s'", roots);
         return roots;
     }
 
@@ -322,7 +317,7 @@ implements BytesOut
                     p.load( is );
                 }
                 catch (IOException e) {
-                    log.warn(String.format( "[%s]: IO exception while reading properties: %s (%s)", getSeqID(), e.getMessage(), e) );
+                    ELog.warn(log,  "IO exception while reading properties: %s (%s)", e.getMessage(), e);
                     throw new WrappedIOException( e );
                 }
                 finally {
@@ -330,7 +325,7 @@ implements BytesOut
                         is.close();
                     }
                     catch (IOException e) {
-                        log.warn(String.format( "[%s]: IO exception while closing properties input stream: %s (%s)", getSeqID(), e.getMessage(), e) );
+                        ELog.warn(log,  "IO exception while closing properties input stream: %s (%s)", e.getMessage(), e);
                         throw new WrappedIOException( e );
                     }
                 }

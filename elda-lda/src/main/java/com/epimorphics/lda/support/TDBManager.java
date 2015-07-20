@@ -17,7 +17,7 @@ package com.epimorphics.lda.support;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.log.ELog;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
@@ -48,7 +48,7 @@ public class TDBManager {
     */
     public static void setBaseTDBPath( String value ) { 
         baseTDBPath = value; 
-        log.info(String.format( "[%s] setBaseTDBPath '%s'", RouterRestlet.getSeqID(), value ));
+        ELog.info(log, "setBaseTDBPath '%s'", value );
     }
 
     /**
@@ -81,9 +81,9 @@ public class TDBManager {
     }
 
     private static Dataset openDataset() {
-        log.info(String.format( "[%s]: requesting open on TDB dataset at %s", RouterRestlet.getSeqID(), baseTDBPath) );
+        ELog.info(log, "requesting open on TDB dataset at %s", baseTDBPath);
         Dataset result = TDBFactory.createDataset( baseTDBPath );
-        log.info(String.format( "[%s]: opened: result looks like %s", RouterRestlet.getSeqID(), result.toString() ));
+        ELog.info(log, "opened: result looks like %s", result.toString() );
         return result;
     }
 }

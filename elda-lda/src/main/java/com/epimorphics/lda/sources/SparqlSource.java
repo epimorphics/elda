@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
@@ -58,7 +58,6 @@ public class SparqlSource extends SourceBase implements Source {
         String user = null;
         char [] password = null;
         boolean allowInsecure = false;
-        String seqID = RouterRestlet.getSeqID();
     //
         if (ep != null) {
         	allowInsecure = RDFUtils.getBooleanValue(ep, ELDA_API.authAllowInsecure, false);
@@ -67,7 +66,7 @@ public class SparqlSource extends SourceBase implements Source {
         	if (authKey != null) {
 //        		System.err.println(">> authKey: " + authKey);
 //        		System.err.println(">> authMap: " + am);
-				log.debug(String.format("[%s]: handling auth key '%s'", seqID, authKey));
+				ELog.debug(log, "handling auth key '%s'", authKey);
         		AuthInfo ai = am.get( authKey );
         		        		
         		if (ai != null) {
@@ -92,16 +91,15 @@ public class SparqlSource extends SourceBase implements Source {
         		);
         }
     //
-        log.info(String.format( "[%s]: created '%s'", seqID, this.toString() ));
+        ELog.info(log, "created '%s'", this.toString());
     }
     
     @Override public QueryExecution execute(Query query) {
-        String seqID = RouterRestlet.getSeqID();
-        if (log.isDebugEnabled()) log.debug(String.format("[%s]: running query on '%s':\n%s", seqID, sparqlEndpoint, query));
+        if (log.isDebugEnabled()) ELog.debug(log, "running query on '%s':\n%s", sparqlEndpoint, query);
 		QueryEngineHTTP qe = new QueryEngineHTTP(sparqlEndpoint, query);
 		if (basicUser != null) {
-			log.debug(String.format( "[%s]: basic user '%s'", seqID, basicUser));			
-			log.debug(String.format( "[%s]: basic password '%s'", seqID, new String(basicPassword)));
+			ELog.debug(log, "basic user '%s'", basicUser);			
+			ELog.debug(log, "basic password '%s'", new String(basicPassword));
 			qe.setBasicAuthentication( basicUser, basicPassword );
 		}
 		return qe ;

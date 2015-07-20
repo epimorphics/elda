@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.APISecurityException;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.API;
@@ -90,8 +90,7 @@ public class ServletUtils {
         } else {
             String fullPath = specPath.startsWith("/") ? specPath : baseFilePath + specPath;
             List<File> files = new Glob().filesMatching( fullPath );
-            String seqID = RouterRestlet.getSeqID();
-            log.info(String.format( "[%s] found %d file(s) matching specPath '%s'", seqID, files.size(), specPath) );
+            ELog.info(log, "found %d file(s) matching specPath '%s'", files.size(), specPath);
             for (File f: files) {
                 String pp = containsStar(prefixPath) ? nameToPrefix(prefixPath, specPath, f.getName()) : prefixPath;
                 loadOneConfigFile(appName, ml, pp, f.getAbsolutePath());
@@ -123,11 +122,10 @@ public class ServletUtils {
     }
 
     public static void loadOneConfigFile(String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {
-        String seqID = RouterRestlet.getSeqID();
-        log.info(String.format( "[%s]: loading spec file from '%s' with prefix path '%s'", seqID, thisSpecPath, prefixPath ));
+        ELog.info(log, "loading spec file from '%s' with prefix path '%s'", thisSpecPath, prefixPath );
         Model init = ml.loadModel( thisSpecPath );
         addLoadedFrom( init, thisSpecPath );
-        log.info(String.format( "[%s]: looaded '%s' with %d statements", seqID, thisSpecPath, init.size() ));
+        ELog.info(log, "looaded '%s' with %d statements", thisSpecPath, init.size() );
         registerModel( appName, prefixPath, thisSpecPath, init );
     }
 

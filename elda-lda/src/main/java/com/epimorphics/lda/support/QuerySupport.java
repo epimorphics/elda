@@ -14,6 +14,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
@@ -69,7 +70,7 @@ public class QuerySupport {
 		result.addAll(typed);
 		if (!result.equals(triples)) {
 			String seqID = RouterRestlet.getSeqID();
-			log.debug(String.format("[%s]: reordered\n    %s\nto\n    %s", seqID, triples, result));
+			ELog.debug(log, "reordered\n    %s\nto\n    %s", triples, result);
 		}
 		return result;
 	}

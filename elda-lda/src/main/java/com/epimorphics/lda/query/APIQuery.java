@@ -26,6 +26,7 @@ import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -999,8 +1000,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		//
 		Query q = createQuery(selectQuery);
 		if (log.isDebugEnabled()) {
-			String seqID = RouterRestlet.getSeqID();
-			log.debug(String.format("[%s]: running query: %s", seqID, selectQuery.replaceAll("\n", " ")));
+			ELog.debug(log, "running query: %s", selectQuery.replaceAll("\n", " "));
 		}
 		source.executeSelect(q, new ResultResourcesReader(results));
 		return new Couple<String, List<Resource>>(selectQuery, results);
@@ -1090,7 +1090,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 				}
 				if (countBnodes > 0 && log.isDebugEnabled()) {
 					String seqID = RouterRestlet.getSeqID();
-					log.debug(String.format("[%s]: %s selected bnode items discarded", seqID, countBnodes));
+					ELog.debug(log, "%s selected bnode items discarded", countBnodes);
 				}
 			} catch (APIException e) {
 				throw e;

@@ -23,9 +23,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.BytesOutTimed;
 import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.support.Times;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.shared.WrappedException;
@@ -112,17 +112,16 @@ public class DOMUtils {
 
 	public static Transformer setPropertiesAndParams
 		(Times times, Bindings rc, PrefixMapping pm, String transformFilePath) {
-		String seqID = RouterRestlet.getSeqID();
 		Transformer t = getTransformer(times, rc, transformFilePath);
 		t.setOutputProperty(OutputKeys.INDENT, "yes");
 		t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 		for (String name : rc.keySet()) {
 			String value = rc.getValueString(name);
 			if (value == null) {
-				log.debug(String.format("[%s]: ignored null xslt parameter '%s'", seqID, name));
+				ELog.debug(log, "ignored null xslt parameter '%s'", name);
 			} else {
 				t.setParameter(name, value);
-				log.debug(String.format("[%s]: set xslt parameter '%s' to '%s'",seqID, name, value));
+				ELog.debug(log, "set xslt parameter '%s' to '%s'", name, value);
 			}
 		}
 		String nsd = namespacesDocument(pm);

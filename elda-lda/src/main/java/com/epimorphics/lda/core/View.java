@@ -18,9 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.SparqlSupport;
-import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APISpec;
@@ -375,8 +375,7 @@ public class View {
 		String queryString = sb.toString();
 	//
 		if (log.isDebugEnabled()) {
-			String seqID = RouterRestlet.getSeqID();
-			log.debug(String.format("[%s]: label query:\n%s\n", seqID, queryString));
+			ELog.debug(log, "label query:\n%s\n", queryString);
 		}
 	//	
 		Query constructQuery = QueryFactory.create( queryString );

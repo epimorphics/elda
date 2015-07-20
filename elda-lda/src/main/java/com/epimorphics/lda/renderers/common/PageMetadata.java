@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.Value;
-import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.lda.vocabularies.ELDA.COMMON;
 import com.epimorphics.lda.vocabularies.ELDA.DOAP_EXTRAS;
@@ -83,8 +83,7 @@ extends ModelWrapper
         RDFNodeWrapper pageRoot = new RDFNodeWrapper( this, i.next() );
 
         if (i.hasNext()) {
-            String seqID = RouterRestlet.getSeqID();
-            log.warn(String.format( "[%s]: unexpected: page metadata has more than one rdf:type api:Page resource - %s", seqID, i.next() ));
+            ELog.warn(log, "unexpected: page metadata has more than one rdf:type api:Page resource - %s", i.next());
         }
 
         return pageRoot;

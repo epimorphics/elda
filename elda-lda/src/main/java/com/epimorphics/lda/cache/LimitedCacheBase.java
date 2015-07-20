@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ResponseResult;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.log.ELog;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public abstract class LimitedCacheBase implements Cache {
@@ -217,14 +217,12 @@ public abstract class LimitedCacheBase implements Cache {
 
     @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs, long expiresAt ) {
         if (log.isDebugEnabled()) {
-    		String seqID = RouterRestlet.getSeqID();
-        	log.debug(String.format( "[%s]: caching descriptions for resources %s", seqID, results ));
+        	ELog.debug(log, "caching descriptions for resources %s", results );
         }
         cd.put( results.toString() + "::" + view, new TimedThing<APIResultSet>(rs, expiresAt ));
         if (exceedsResultSetLimit( cd )) {
         	if (log.isDebugEnabled()) {
-        		String seqID = RouterRestlet.getSeqID();
-        		log.debug(String.format( "[%s]: clearing description cache for '%s'", seqID, label ));
+        		ELog.debug(log, "clearing description cache for '%s'", label );
         	}
             cd.clear();
         }
@@ -232,14 +230,12 @@ public abstract class LimitedCacheBase implements Cache {
 
     @Override public synchronized void cacheSelection( String select, List<Resource> results, long expiresAt ) {
     	if (log.isDebugEnabled()) {   
-    		String seqID = RouterRestlet.getSeqID();
-    		log.debug(String.format( "[%s]: caching resource selection for query %s", seqID, select ));
+    		ELog.debug(log, "caching resource selection for query %s", select );
     	}
     	cs.put( select, new TimedThing<List<Resource>>(results, expiresAt) );
         if (exceedsSelectLimit( cs )) {
         	if (log.isDebugEnabled()) {        	
-        		String seqID = RouterRestlet.getSeqID();
-        		log.debug(String.format( "[%s]: clearing select cache for '%s'", seqID, label ));
+        		ELog.debug(log, "clearing select cache for '%s'", label );
         	}
             cs.clear();
         }

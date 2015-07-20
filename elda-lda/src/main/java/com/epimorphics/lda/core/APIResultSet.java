@@ -18,7 +18,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.support.LanguageFilter;
 import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.vocabularies.*;
@@ -375,8 +375,7 @@ public class APIResultSet implements SetsMetadata {
 		for (String option: options) {
 			Model meta = metadata.get( option );
 			if (meta == null) {
-				String seqID = RouterRestlet.getSeqID();
-				log.debug(String.format( "[%s]: metadata '%s' unknown (or already supplied).", seqID, option) );
+				ELog.debug(log,  "metadata '%s' unknown (or already supplied).", option);
 			}
 			else model.meta.add( meta );
 		}
