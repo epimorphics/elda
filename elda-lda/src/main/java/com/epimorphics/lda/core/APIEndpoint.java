@@ -51,38 +51,33 @@ public interface APIEndpoint {
 		public final URI requestURI;
 		public final Bindings bindings;
 		public final CompleteContext.Mode mode;
-		public final String seqID;
 		
 		public final String format;
 		public final List<String> formatNames;
 			
 		public Request(Controls c, URI requestURI, Bindings context) {
-			this(null, c, requestURI, context, CompleteContext.Mode.RoundTrip, Collections.<String>emptyList(), "");
+			this(c, requestURI, context, CompleteContext.Mode.RoundTrip, Collections.<String>emptyList(), "");
 		}
 			
-		private Request(String seqID, Controls c, URI requestURI, Bindings bindings, CompleteContext.Mode mode, List<String> formatNames, String format) {
+		private Request(Controls c, URI requestURI, Bindings bindings, CompleteContext.Mode mode, List<String> formatNames, String format) {
 			this.c = c;
 			this.requestURI = requestURI;
 			this.bindings = bindings;
 			this.mode = mode;
 			this.format = format;
 			this.formatNames = formatNames;
-			this.seqID = seqID;
 		}
 	
 		public Request withMode(CompleteContext.Mode mode) {
-			return new Request(seqID, c, requestURI, bindings, mode, formatNames, format);
+			return new Request(c, requestURI, bindings, mode, formatNames, format);
 		}
 	
 		public Request withBindings(Bindings newBindings) {
-			return new Request(seqID, c, requestURI, newBindings, mode, formatNames, format);
+			return new Request(c, requestURI, newBindings, mode, formatNames, format);
 		}
 	
 		public Request withFormats(List<String> formatNames, String format) {
-			return new Request(seqID, c, requestURI, bindings, mode, formatNames, format);
-		}
-		public Request withSeqID(String seqID) {
-			return new Request(seqID, c, requestURI, bindings, mode, formatNames, format);
+			return new Request(c, requestURI, bindings, mode, formatNames, format);
 		}
 
 		/**
@@ -111,10 +106,6 @@ public interface APIEndpoint {
 				.build()
 				;
 			return x;
-		}
-
-		public String getSeqID() {
-			return seqID;
 		}
 	}
     

@@ -20,7 +20,6 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.common.EldaURL.*;
-import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.rdfutil.*;
@@ -349,7 +348,6 @@ public class Page extends CommonNodeWrapper
         else {
             Resource viewRoot = i.next();
             if (i.hasNext()) {
-                String seqID = RouterRestlet.getSeqID();
                 ELog.warn(log, "ambiguous view name: there is more than one resource with viewName '%s'", viewName);
             }
 

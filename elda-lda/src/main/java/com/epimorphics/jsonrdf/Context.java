@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.exceptions.ReusedShortnameException;
 import com.epimorphics.lda.log.ELog;
-import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.impl.Util;
@@ -217,7 +216,7 @@ public class Context implements ReadContext, Cloneable {
      * If the name is already in use then only record as an alternate name
      */
     public void recordPreferredName(String name, String uri) {
-        String seqID = RouterRestlet.getSeqID();
+        String seqID = ELog.getSeqID();
     	if (!labelPattern.matcher(name).matches()) {
     		if (exceptionForBadShortname) {
     			throw new EldaException

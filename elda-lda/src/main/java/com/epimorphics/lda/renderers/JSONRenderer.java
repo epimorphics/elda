@@ -27,7 +27,7 @@ import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.restlets.RouterRestlet;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.support.Times;
@@ -87,7 +87,7 @@ public class JSONRenderer implements Renderer {
 			writer.write( after );
 			writer.flush();
 		} catch (Exception e) {
-			log.error( "[%s] failed to encode model: stacktrace follows: %s",RouterRestlet.getSeqID(), e );
+			log.error( "[%s] failed to encode model: stacktrace follows: %s",ELog.getSeqID(), e );
 			throw new WrappedException( e );
 		}				
 		final String content = UTF8.toString( os );

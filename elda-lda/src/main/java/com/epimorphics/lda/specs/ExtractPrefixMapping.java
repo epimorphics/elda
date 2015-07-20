@@ -11,7 +11,6 @@ package com.epimorphics.lda.specs;
 import static com.epimorphics.util.RDFUtils.getStringValue;
 
 import com.epimorphics.lda.log.ELog;
-import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -25,7 +24,6 @@ public class ExtractPrefixMapping {
 	    specification prefixMapping [api:prefix P; api:namespace N]
 	*/
 	public static PrefixMapping from( Resource specification ) {
-		String seqID = RouterRestlet.getSeqID();
 	    PrefixMapping pm = PrefixMapping.Factory.create();
 	    Model model = specification.getModel();
 		pm.setNsPrefixes(model);

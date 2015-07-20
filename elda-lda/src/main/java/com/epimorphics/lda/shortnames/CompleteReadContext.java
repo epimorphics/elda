@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.JSONRenderer;
-import com.epimorphics.lda.restlets.RouterRestlet;
 import com.hp.hpl.jena.rdf.model.Property;
 
 public class CompleteReadContext {
@@ -44,8 +43,7 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String getNameForURI(String uri) {
-				String seqID = RouterRestlet.getSeqID();
-				log.debug( "[%s]: readContext: unusually, getNameForURI called.", seqID );
+				ELog.debug(log, "readContext: unusually, getNameForURI called.");
 				return uriToName.get(uri);
 			}
 			
@@ -54,8 +52,7 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String forceShorten(String uri) {
-				String seqID = RouterRestlet.getSeqID();
-				log.debug( "[%s]: readContext: unusually, forceShorten called.", seqID );
+				ELog.debug(log, "readContext: unusually, forceShorten called.");
 				return context.forceShorten(uri);
 			}
 			

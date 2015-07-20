@@ -18,7 +18,6 @@ import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
-import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 
 public class QuerySupport {
@@ -69,7 +68,6 @@ public class QuerySupport {
 		result.addAll(lateTextQueries);
 		result.addAll(typed);
 		if (!result.equals(triples)) {
-			String seqID = RouterRestlet.getSeqID();
 			ELog.debug(log, "reordered\n    %s\nto\n    %s", triples, result);
 		}
 		return result;

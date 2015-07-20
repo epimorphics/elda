@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.log.ELog;
-import com.epimorphics.lda.restlets.RouterRestlet;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.query.*;
@@ -40,13 +39,12 @@ public class TDBSource extends SourceBase implements Source
         String name = endpointString.substring( TDBManager.PREFIX.length() );
         this.endpoint = endpointString;
         this.sourceSet = TDBManager.getDataset();
-        String seqID = RouterRestlet.getSeqID();
         if (name != null && !name.isEmpty()) {
             this.source = TDBManager.getTDBModelNamed(name);
-            log.debug
-            	( String.format("[%s]: TDB with endpoint '%s' has model with '%s' triples"
-            	, seqID, endpointString, this.source.size()
-            	));
+            ELog.debug
+            	( log, "TDB with endpoint '%s' has model with '%s' triples"
+            	, endpointString, this.source.size()
+            	);
             if (this.source.isEmpty())
                 EldaException.EmptyTDB( name );
         } else {

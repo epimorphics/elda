@@ -62,17 +62,6 @@ import com.sun.jersey.api.NotFoundException;
 
     protected static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
     
-    public static ThreadLocal<String> seqID = new ThreadLocal<String>();
-    
-    public static String getSeqID() {
-    	String id = seqID.get();
-		return id == null ? "" : id;
-    }
-    
-    public static void setSeqID(String id) {
-    	seqID.set(id);
-    }
-
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
     public static final String VARY = "Vary";
     public static final String ETAG = "Etag";
@@ -235,7 +224,7 @@ import com.sun.jersey.api.NotFoundException;
             @Context ServletContext servCon,
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
-    	setSeqID(getSeqID(servletResponse));
+    	ELog.setSeqID(getSeqID(servletResponse));
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	String contextPath = servCon.getContextPath(); 
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
@@ -351,7 +340,6 @@ import com.sun.jersey.api.NotFoundException;
     	, final Match match
     	) {
 
-    	Object seqID = getSeqID(servletResponse);
     	String formatName = initialFormatName;
     	Bindings forErrorHandling = null;
     	URLforResource as = pathAsURLFactory(servCon);
@@ -596,12 +584,12 @@ import com.sun.jersey.api.NotFoundException;
 		String longMessage = Messages.niceMessage( shortMessage, "Internal Server error." );
 	//
 		log.error("Exception: " + shortMessage );
-        ELog.debug(log, "%s", seqID, Messages.shortStackTrace( e ) );
+        ELog.debug(log, "%s", Messages.shortStackTrace( e ) );
         return standardHeaders( null, Response.serverError() ).entity( longMessage ).build();
     }
 
 	public static Response returnError(String s ) {
-        log.error("[%s]: Exception: %s", seqID, s );
+        ELog.error(log, "exception: %s", s );
         return standardHeaders( null, Response.serverError() ).entity( s ).build();
     }
 
