@@ -1,6 +1,12 @@
 + ---------------------------------------------------------------------
-| Elda 1.3.14 (DEVELOPING)
+| Elda 1.3.15 (DEVELOPING)
 
+
++ ---------------------------------------------------------------------
+| Elda 1.3.14 (RELEASED)
+
+Updated Saxon-HE to version 9.5.1-8 in order to resolve XSLT performance
+(large result-sets generating CSV in particular)
 
 + ---------------------------------------------------------------------
 | Elda 1.3.13 (RELEASED)
