@@ -24,7 +24,6 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
     protected boolean structured = false;    
     protected String type = null;
     protected Property p;
-    protected boolean useISO = false;
 
     @Override public boolean equals( Object other) {
     	return other instanceof ContextPropertyInfo && same( (ContextPropertyInfo) other );
@@ -37,7 +36,6 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
     		&& name.equals( other.name )
     		&& hidden == other.hidden
     		&& structured == other.structured
-    		&& useISO == other.useISO
     		&& eq(p, other.p)
     		&& eq( type, other.type )
     		;
@@ -49,7 +47,6 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
     		+ ", multivalued: " + multivalued
     		+ ", hidden: " + hidden
     		+ ", structured: " + structured
-    		+ ", useISO: " + useISO
     		+ ", type: " + type
     		+ ", property: " + p
     		+ ", uri: " + uri
@@ -66,7 +63,6 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
 		if (!uri.equals(b.uri)) result.append( " uri: " ).append(uri).append(" vs ").append(b.uri);  
 		if (hidden != b.hidden) result.append( " hidden: " ).append(hidden).append(" vs ").append(b.hidden);  
 		if (structured != b.structured) result.append( " structured: " ).append(structured).append(" vs ").append(b.structured);
-		if (useISO != b.useISO) result.append( " useISO: " ).append(useISO).append(" vs ").append(b.useISO);
 		if (!eq(p, b.p)) result.append( " p: " ).append(p).append(" vs ").append(b.p);  
 		return result.toString();
 	}
@@ -106,14 +102,6 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
 		return structured;
 	}
 	
-	public void setUseISO(boolean b) {
-        this.useISO = b;            
-    }
-    
-    public boolean isUseISO() {
-        return useISO;
-    }
-    
     public ContextPropertyInfo(String uri, String name) {
     	this.uri = uri;
         this.name = name;

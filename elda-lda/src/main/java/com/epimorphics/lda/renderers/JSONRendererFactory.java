@@ -20,25 +20,32 @@ public class JSONRendererFactory implements RendererFactory {
 	
 	final MediaType mt;
 	final CompleteContext.Mode mode;
+	final Boolean useISO;
 	
-	public JSONRendererFactory(MediaType mt, CompleteContext.Mode mode) {
+	public JSONRendererFactory(MediaType mt, CompleteContext.Mode mode, Boolean useISO) {
 		this.mt = mt;
 		this.mode = mode;
+		this.useISO = useISO;
 	}
 	
 	public JSONRendererFactory(MediaType mt) {
-		this(mt, CompleteContext.Mode.PreferLocalnames);
+		this(mt, CompleteContext.Mode.PreferLocalnames, false);
 	}
 	
 	@Override public RendererFactory withMediaType( MediaType mt ) {
-		return new JSONRendererFactory(mt, mode);
+		return new JSONRendererFactory(mt, mode, false);
 	}
 	
 	@Override public RendererFactory withRoot( Resource r ) {
-		return new JSONRendererFactory( mt, CompleteContext.Mode.decode( r, defaultMode ) );
+		return new JSONRendererFactory( mt, CompleteContext.Mode.decode( r, defaultMode ), false );
 	}
 	
 	@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-		return new JSONRenderer( mode, ep, mt );
+		return new JSONRenderer( mode, ep, mt, useISO );
 	}
+
+    @Override
+    public RendererFactory withISODateTimeFormatting(Boolean useISO) {
+        return new JSONRendererFactory(mt, mode, useISO);
+    }
 }

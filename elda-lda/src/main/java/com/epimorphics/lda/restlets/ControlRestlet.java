@@ -137,7 +137,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
             try {
                 List<Resource> roots = new ArrayList<Resource>();
                 roots.add( rec.getApiRoot());
-                enc = Encoder.getForOneResult().encodeRecursive(rec.getSpecModel(), roots).toString();
+                enc = Encoder.getForOneResult().encodeRecursive(rec.getSpecModel(), roots, false).toString();
             } catch (JsonException e) {
                 return returnError(e);
             } catch (Throwable e) {

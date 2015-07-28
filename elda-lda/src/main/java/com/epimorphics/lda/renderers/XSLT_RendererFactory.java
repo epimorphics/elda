@@ -84,4 +84,9 @@ public class XSLT_RendererFactory implements RendererFactory {
     @Override public RendererFactory withMediaType( MediaType mt ) {
         return new XSLT_RendererFactory( root, mt );
     }
+    
+    @Override
+    public RendererFactory withISODateTimeFormatting(Boolean useISO) {
+        return new XSLT_RendererFactory( root, mt );
+    }
 }

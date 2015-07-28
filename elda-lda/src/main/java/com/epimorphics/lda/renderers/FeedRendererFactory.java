@@ -39,4 +39,9 @@ public class FeedRendererFactory implements RendererFactory  {
 		this.mt = mt;
 		return this;
 	}
+
+    @Override
+    public RendererFactory withISODateTimeFormatting(Boolean useISO) {
+        return this;
+    }
 }

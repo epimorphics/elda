@@ -37,7 +37,7 @@ public class TestEncodeToObject {
     @Test public void testModelEncode() {
         Model src = ModelIOUtils.modelFromTurtle(":r :p 42; :q :r2. :r2 :p 24 .");
         Context context = new Context();
-        JsonObject obj = Encoder.get(context).encode(src);
+        JsonObject obj = Encoder.get(context).encode(src, false);
         String encoding = obj.toString();
         Model dec = Decoder.decodeModel(context, new StringReader(encoding) );
         assertTrue( dec.isIsomorphicWith(src) );

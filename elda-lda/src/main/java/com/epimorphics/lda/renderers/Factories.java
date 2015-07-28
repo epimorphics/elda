@@ -50,12 +50,12 @@ public class Factories {
 		return result;
 	}
 
-	public void putFactory( String name, Resource uri, MediaType mt, RendererFactory factory ) {
-		putFactory( name, uri, mt, factory, false );
+	public void putFactory( String name, Resource uri, MediaType mt, RendererFactory factory, boolean useISO ) {
+		putFactory( name, uri, mt, factory, false, useISO );
 	}
 
-	public void putFactory( String name, Resource uri, MediaType mt, RendererFactory factory, boolean isDefault ) {
-		RendererFactory f = factory.withRoot( uri ).withMediaType( mt );
+	public void putFactory( String name, Resource uri, MediaType mt, RendererFactory factory, boolean isDefault, boolean useISO ) {
+		RendererFactory f = factory.withRoot( uri ).withMediaType( mt ).withISODateTimeFormatting(useISO);
 		nameToFactory.put( name, f );
 		typeToFactory.put( mt, f );
 		nameToType.put( name, mt );

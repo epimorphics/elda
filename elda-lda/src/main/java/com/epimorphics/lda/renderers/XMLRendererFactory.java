@@ -39,4 +39,9 @@ public class XMLRendererFactory implements RendererFactory {
 	@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
 		return new XMLRenderer( mode, sns, MediaType.APPLICATION_XML, null );
 	}
+	
+	@Override
+    public RendererFactory withISODateTimeFormatting(Boolean useISO) {
+        return this;
+    }
 }

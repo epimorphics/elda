@@ -41,6 +41,11 @@ public class BuiltinRendererTable {
 		@Override public RendererFactory withMediaType( MediaType mt ) {
 			return this;
 		}
+
+        @Override
+        public RendererFactory withISODateTimeFormatting(Boolean useISO) {
+            return this;
+        }
 	}
 	
 	static boolean useVelocity = false;
@@ -57,7 +62,7 @@ public class BuiltinRendererTable {
 	static private Map<Resource, RendererFactory> builtins = new HashMap<Resource, RendererFactory>();
 	
 	public static void putFactory( Resource config, String name, Resource type, MediaType mt, RendererFactory rf ) {
-		factoryTable.putFactory( name, config, mt, rf );
+		factoryTable.putFactory( name, config, mt, rf, false );
 		builtins.put( type, rf );
 	}
 	
@@ -75,7 +80,7 @@ public class BuiltinRendererTable {
 		putFactory( EMPTY, "text", API.RdfXmlFormatter, MediaType.TEXT_PLAIN, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-				return new JSONRenderer( CompleteContext.Mode.PreferLocalnames, ep, MediaType.TEXT_PLAIN );
+				return new JSONRenderer( CompleteContext.Mode.PreferLocalnames, ep, MediaType.TEXT_PLAIN, false );
 			}
 			} );
 		

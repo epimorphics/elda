@@ -43,15 +43,17 @@ public class JSONRenderer implements Renderer {
     final APIEndpoint api;
     final MediaType mt;
     final CompleteContext.Mode mode;
+    final Boolean useISO;
     
     public JSONRenderer( APIEndpoint api ) {
-        this( Mode.PreferLocalnames, api, MediaType.APPLICATION_JSON );
+        this( Mode.PreferLocalnames, api, MediaType.APPLICATION_JSON, false );
     }
     
-    public JSONRenderer( CompleteContext.Mode mode, APIEndpoint api, MediaType mt ) {
+    public JSONRenderer( CompleteContext.Mode mode, APIEndpoint api, MediaType mt, Boolean useISO ) {
         this.mode = mode;
         this.api = api;
         this.mt = mt;
+        this.useISO = useISO;
     }
     
     @Override public MediaType getMediaType( Bindings b ) {
@@ -82,7 +84,7 @@ public class JSONRenderer implements Renderer {
 		try {
 			Writer writer = StreamUtils.asUTF8( os );
 			writer.write( before );
-			Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true );
+			Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true, useISO );
 			writer.write( after );
 			writer.flush();
 		} catch (Exception e) {
