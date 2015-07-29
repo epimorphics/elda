@@ -67,7 +67,7 @@ public class BuiltinRendererTable {
 	}
 	
 	static void putDefaultFactory( Resource config, String name, Resource type, MediaType mt, RendererFactory rf ) {
-		factoryTable.putFactory( name, config, mt, rf, true );
+		factoryTable.putFactory( name, config, mt, rf, true, false );
 		builtins.put( type, rf );
 	}
 	

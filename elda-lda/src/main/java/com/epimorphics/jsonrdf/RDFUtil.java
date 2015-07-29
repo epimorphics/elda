@@ -141,7 +141,7 @@ public class RDFUtil {
     	String formatString = dateFormat;
     	if (keepTime) formatString += timeFormat;
     	if (keepZone && keepTime) formatString += " 'GMT'Z";
-    	SimpleDateFormat df = new SimpleDateFormat( formatString, Locale.ENGLISH ); 
+    	SimpleDateFormat df = new SimpleDateFormat( formatString ); 
     	if (keepZone) df.setTimeZone( TimeZone.getTimeZone( "GMT" ) );
     	return df;
     }
@@ -193,7 +193,7 @@ public class RDFUtil {
 
 
 
-	public static final Pattern matchTimeZone = Pattern.compile( "(Z|[^-0-9][-+]\\d\\d(\\d\\d|:\\d\\d)?)$" );
+	public static final Pattern matchTimeZone = Pattern.compile( "(Z|[-+]\\d\\d(\\d\\d|:\\d\\d))$" );
         
     /**
         Answer true iff this lexical form looks like it ends with a time
