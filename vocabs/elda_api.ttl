@@ -237,3 +237,6 @@ elda:VelocityFormatter a rdfs:Class
 	; rdfs:comment ""
 	.
 
+elda:jsonUsesISOdate a rdf:Property
+	; rdfs:comment " Property of a JSONFormatter that says if xsd:date and xsd:dateTime values should be encoded based on ISO 8601. Default value is false. "
+	.

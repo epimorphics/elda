@@ -186,8 +186,6 @@ public class API {
      */
     public static final Property where = m_model.createProperty( "http://purl.org/linked-data/api/vocab#where" );
     
-    public static final Property useISO = m_model.createProperty( "http://purl.org/linked-data/api/vocab#useISO" );;
-    
     public static final Resource API = m_model.createResource( "http://purl.org/linked-data/api/vocab#API" );
     
     public static final Resource ContentNegotiationStrategy = m_model.createResource( "http://purl.org/linked-data/api/vocab#ContentNegotiationStrategy" );

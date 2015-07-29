@@ -21,7 +21,7 @@ import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 
-public class TestAPIWithJSONFormatter {
+public class TestJSONFormatterUsesISOFormatting {
 
     protected static final String TEST_BASE = "src/test/resources/api/";
     protected APITester tester = new APITester(TEST_BASE + "dateTimeApiSpec.ttl");

@@ -41,7 +41,7 @@ public class XMLRendererFactory implements RendererFactory {
 	}
 	
 	@Override
-    public RendererFactory withISODateTimeFormatting(Boolean useISO) {
+    public RendererFactory withISODateFormatting(Boolean jsonUsesISOdate) {
         return this;
     }
 }

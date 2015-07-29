@@ -40,5 +40,5 @@ public interface RendererFactory
         Answer a new RendererFactory just like this one, but producing
         renderers that use ISO format for dateTime encoding.
     */
-	public RendererFactory withISODateTimeFormatting( Boolean useISO );
+	public RendererFactory withISODateFormatting( Boolean jsonUsesISOdate );
 	}

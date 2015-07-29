@@ -113,9 +113,9 @@ public class Encoder {
      * @param model The RDF to be encoded
      * @return encoding as a JSON object
      */
-    public JsonObject encode(Model model, boolean useISO) {
+    public JsonObject encode(Model model, boolean jsonUsesISOdate) {
         JSONWriterObject jwo = new JSONWriterObject();
-        encode(model, null, jwo, useISO); 
+        encode(model, null, jwo, jsonUsesISOdate); 
         return jwo.getTopObject();
     }
     
@@ -139,8 +139,8 @@ public class Encoder {
      * @param writer The output writer, ideally platform neutral charset like UTF-8
      * @throws IOException 
      */
-    public void encode(Model model, List<Resource> roots, Writer writer, boolean useISO) throws IOException {
-        encode(model, roots, new JSONWriterWrapper(writer), useISO);
+    public void encode(Model model, List<Resource> roots, Writer writer, boolean jsonUsesISOdate) throws IOException {
+        encode(model, roots, new JSONWriterWrapper(writer), jsonUsesISOdate);
     }
     
     /**
@@ -150,9 +150,9 @@ public class Encoder {
      * @param roots the root resources to be encoded
      * @return the JSONObject containing the encoding
      */
-    public JsonObject encode(Model model, List<Resource> roots, boolean useISO) {
+    public JsonObject encode(Model model, List<Resource> roots, boolean jsonUsesISOdate) {
         JSONWriterObject jwo = new JSONWriterObject();
-        encode(model, roots, jwo, useISO);
+        encode(model, roots, jwo, jsonUsesISOdate);
         return jwo.getTopObject();
     }
     
@@ -165,12 +165,12 @@ public class Encoder {
      * @param pretty set to true to pretty-print the json
      * @throws IOException 
      */
-    public void encode(Model model, List<Resource> roots, Writer writer, boolean pretty, boolean useISO) {
-        encode(model, roots, new JSONWriterWrapper(writer, pretty), useISO);
+    public void encode(Model model, List<Resource> roots, Writer writer, boolean pretty, boolean jsonUsesISOdate) {
+        encode(model, roots, new JSONWriterWrapper(writer, pretty), jsonUsesISOdate);
     }
 
-    protected void encode(Model model, List<Resource> roots, JSONWriterFacade jw, boolean useISO) {
-        EncoderInstance ei = new EncoderInstance(model, jw, useISO);
+    protected void encode(Model model, List<Resource> roots, JSONWriterFacade jw, boolean jsonUsesISOdate) {
+        EncoderInstance ei = new EncoderInstance(model, jw, jsonUsesISOdate);
         ei.encodeSingleModelRoots(roots, false);
     }
     
@@ -182,8 +182,8 @@ public class Encoder {
      * @param writer The output writer, ideally platform neutral charset like UTF-8
      * @param pretty set to true to pretty-print the json
      */
-    public void encodeRecursive(Model model, List<Resource> roots, Writer writer, boolean pretty, boolean useISO) {
-        encodeRecursive(model, roots, new JSONWriterWrapper( writer, pretty ), useISO);
+    public void encodeRecursive(Model model, List<Resource> roots, Writer writer, boolean pretty, boolean jsonUsesISOdate) {
+        encodeRecursive(model, roots, new JSONWriterWrapper( writer, pretty ), jsonUsesISOdate);
     }
     
     /**
@@ -194,8 +194,8 @@ public class Encoder {
      * @param writer The output writer, ideally platform neutral charset like UTF-8
      * @throws IOException 
      */
-    public void encodeRecursive(Model model, List<Resource> roots, Writer writer, boolean useISO) {
-        encodeRecursive(model, roots, new JSONWriterWrapper( writer ), useISO);
+    public void encodeRecursive(Model model, List<Resource> roots, Writer writer, boolean jsonUsesISOdate) {
+        encodeRecursive(model, roots, new JSONWriterWrapper( writer ), jsonUsesISOdate);
     }
     
     /**
@@ -206,14 +206,14 @@ public class Encoder {
      * @return JSONObject containing the encoding
      * @throws IOException 
      */
-    public JsonObject encodeRecursive(Model model, List<Resource> roots, boolean useISO) {
+    public JsonObject encodeRecursive(Model model, List<Resource> roots, boolean jsonUsesISOdate) {
         JSONWriterObject jwo = new JSONWriterObject();
-        encodeRecursive(model, roots, jwo, useISO);
+        encodeRecursive(model, roots, jwo, jsonUsesISOdate);
         return jwo.getTopObject();
     }
     
-    protected void encodeRecursive(Model model, List<Resource>roots, JSONWriterFacade jw, boolean useISO) {
-        EncoderInstance ei = new EncoderInstance(model, jw, useISO);
+    protected void encodeRecursive(Model model, List<Resource>roots, JSONWriterFacade jw, boolean jsonUsesISOdate) {
+        EncoderInstance ei = new EncoderInstance(model, jw, jsonUsesISOdate);
         ei.encodeSingleModelRoots(roots, true);
     }
     
@@ -275,7 +275,7 @@ public class Encoder {
     class EncoderInstance {
         protected Model model;
         protected JSONWriterFacade jw;
-        protected boolean useISO;
+        protected boolean jsonUsesISOdate;
         protected List<Resource> roots = new ArrayList<Resource>();
         protected int bnodeCount = 1;
         protected Map<AnonId, Integer> bNodes = new HashMap<AnonId, Integer>();
@@ -303,10 +303,10 @@ public class Encoder {
             this.jw = new JSONWriterWrapper( w );
         }
         
-        public EncoderInstance(Model model, JSONWriterFacade w, boolean useISO) {
+        public EncoderInstance(Model model, JSONWriterFacade w, boolean jsonUsesISOdate) {
             this.model = model;
             this.jw = w;
-            this.useISO = useISO;
+            this.jsonUsesISOdate = jsonUsesISOdate;
         }
 
         /**
@@ -594,7 +594,7 @@ public class Encoder {
     
         private void emitNode(RDFNode valNode, boolean isStructured ) {
             if (valNode.isLiteral()) {
-            	rules.encodeLiteral( jw, isStructured, (Literal) valNode, context, useISO );
+            	rules.encodeLiteral( jw, isStructured, (Literal) valNode, context, jsonUsesISOdate );
             } else {
                 Resource r = (Resource)valNode;
                 if (RDFUtil.isList(r)) {

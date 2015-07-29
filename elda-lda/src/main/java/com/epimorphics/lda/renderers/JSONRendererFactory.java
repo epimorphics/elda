@@ -20,12 +20,12 @@ public class JSONRendererFactory implements RendererFactory {
 	
 	final MediaType mt;
 	final CompleteContext.Mode mode;
-	final Boolean useISO;
+	final Boolean jsonUsesISOdate;
 	
-	public JSONRendererFactory(MediaType mt, CompleteContext.Mode mode, Boolean useISO) {
+	public JSONRendererFactory(MediaType mt, CompleteContext.Mode mode, Boolean jsonUsesISOdate) {
 		this.mt = mt;
 		this.mode = mode;
-		this.useISO = useISO;
+		this.jsonUsesISOdate = jsonUsesISOdate;
 	}
 	
 	public JSONRendererFactory(MediaType mt) {
@@ -41,11 +41,11 @@ public class JSONRendererFactory implements RendererFactory {
 	}
 	
 	@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-		return new JSONRenderer( mode, ep, mt, useISO );
+		return new JSONRenderer( mode, ep, mt, jsonUsesISOdate );
 	}
 
     @Override
-    public RendererFactory withISODateTimeFormatting(Boolean useISO) {
-        return new JSONRendererFactory(mt, mode, useISO);
+    public RendererFactory withISODateFormatting(Boolean jsonUsesISOdate) {
+        return new JSONRendererFactory(mt, mode, jsonUsesISOdate);
     }
 }

@@ -150,12 +150,12 @@ public class RDFUtil {
      * Convert an xsd:datetype or xsd:date to a javascript compatible string.
      * Returns null if not a supported type
      */
-    public static String formatDateTime(Literal l, boolean useISO ) {
+    public static String formatDateTime(Literal l, boolean jsonUsesISOdate ) {
     	Object val = getTemporalValue(l);
         if (val instanceof XSDDateTime) {
         	boolean isDate = l.getDatatype().equals(XSDDatatype.XSDdate);
             Date date = ((XSDDateTime)val).asCalendar().getTime();
-            if(useISO) {
+            if(jsonUsesISOdate) {
                 return dateFormatISO(hasTimeZone(l.getLexicalForm()), isDate).format(date);
             } else {
                 return dateFormat(hasTimeZone(l.getLexicalForm()), isDate).format(date);
