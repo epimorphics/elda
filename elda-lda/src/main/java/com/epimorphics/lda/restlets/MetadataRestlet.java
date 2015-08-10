@@ -88,7 +88,7 @@ import com.hp.hpl.jena.util.ResourceUtils;
             roots.add( meta );
             com.epimorphics.jsonrdf.Context context = rec.getAPIEndpoint().getSpec().getAPISpec().getShortnameService().asContext();
             context.setSorted(true);
-            Encoder.getForOneResult( context ).encodeRecursive(meta.getModel(), roots, writer, true, false);
+            Encoder.getForOneResult( context ).encodeRecursive(meta.getModel(), roots, writer, true);
             String enc = writer.toString();
             return returnAs(RouterRestlet.NO_EXPIRY, enc, "application/json");
         }

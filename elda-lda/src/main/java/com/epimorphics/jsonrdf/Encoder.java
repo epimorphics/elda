@@ -42,8 +42,12 @@ public class Encoder {
     
     protected static EncoderPlugin defaultPlugin = new EncoderDefault();
     
+    public static Encoder getForOneResult( ReadContext c, boolean jsonUsesISOdate ) {
+    	return new Encoder( defaultPlugin, c, true, jsonUsesISOdate );
+    }
+    
     public static Encoder getForOneResult( ReadContext c ) {
-    	return new Encoder( defaultPlugin, c, true );
+        return new Encoder( defaultPlugin, c, true, false );
     }
     
     public static Encoder getForOneResult() {
@@ -55,7 +59,15 @@ public class Encoder {
      * Context information will be generated on-the-fly.
      */
     public static Encoder get( ReadContext context ) {
-        return get(defaultPlugin, context );
+        return get(defaultPlugin, context, false );
+    }
+    
+    /**
+     * Return an encoder using the default rules and no Context, any
+     * Context information will be generated on-the-fly.
+     */
+    public static Encoder get( ReadContext context, boolean jsonUsesISOdate ) {
+        return get(defaultPlugin, context, jsonUsesISOdate );
     }
     
     /**
@@ -63,15 +75,15 @@ public class Encoder {
      * Context information will be generated on-the-fly.
      */
     public static Encoder get(EncoderPlugin rules) {
-        return get(rules, new Context());
+        return get(rules, new Context(), false);
     }
     
     /**
      * Return an encoder using the specified rules and the specified 
      * base ontology.
      */
-    public static Encoder get(EncoderPlugin rules, ReadContext fromOntology) {
-        return new Encoder(rules, fromOntology, false );
+    public static Encoder get(EncoderPlugin rules, ReadContext fromOntology, boolean jsonUsesISOdate) {
+        return new Encoder(rules, fromOntology, false, jsonUsesISOdate );
     }
 
     /**
@@ -79,7 +91,7 @@ public class Encoder {
      * @param context
      */
     private Encoder(EncoderPlugin rules, ReadContext context) {
-    	this( rules, context, false );
+    	this( rules, context, false, false );
     }
 
     /**
@@ -87,16 +99,18 @@ public class Encoder {
      * @param context
      * @param oneResult true iff the LDA "result: object" style is required
      */
-    private Encoder(EncoderPlugin rules, ReadContext context, boolean oneResult ) {
+    private Encoder(EncoderPlugin rules, ReadContext context, boolean oneResult, boolean jsonUsesISOdate ) {
         this.rules = rules;
         this.context = context;
         this.oneResult = oneResult;
+        this.jsonUsesISOdate = jsonUsesISOdate;
     }
 
     // Instance data
     protected final EncoderPlugin rules;
     protected final ReadContext context;
     protected final boolean oneResult;
+    protected final boolean jsonUsesISOdate;
     
     /**
      * Encode the whole of the given RDF model into the writer 
@@ -113,9 +127,9 @@ public class Encoder {
      * @param model The RDF to be encoded
      * @return encoding as a JSON object
      */
-    public JsonObject encode(Model model, boolean jsonUsesISOdate) {
+    public JsonObject encode(Model model) {
         JSONWriterObject jwo = new JSONWriterObject();
-        encode(model, null, jwo, jsonUsesISOdate); 
+        encode(model, null, jwo); 
         return jwo.getTopObject();
     }
     
@@ -139,8 +153,8 @@ public class Encoder {
      * @param writer The output writer, ideally platform neutral charset like UTF-8
      * @throws IOException 
      */
-    public void encode(Model model, List<Resource> roots, Writer writer, boolean jsonUsesISOdate) throws IOException {
-        encode(model, roots, new JSONWriterWrapper(writer), jsonUsesISOdate);
+    public void encode(Model model, List<Resource> roots, Writer writer) throws IOException {
+        encode(model, roots, new JSONWriterWrapper(writer));
     }
     
     /**
@@ -150,9 +164,9 @@ public class Encoder {
      * @param roots the root resources to be encoded
      * @return the JSONObject containing the encoding
      */
-    public JsonObject encode(Model model, List<Resource> roots, boolean jsonUsesISOdate) {
+    public JsonObject encode(Model model, List<Resource> roots) {
         JSONWriterObject jwo = new JSONWriterObject();
-        encode(model, roots, jwo, jsonUsesISOdate);
+        encode(model, roots, jwo);
         return jwo.getTopObject();
     }
     
@@ -165,11 +179,11 @@ public class Encoder {
      * @param pretty set to true to pretty-print the json
      * @throws IOException 
      */
-    public void encode(Model model, List<Resource> roots, Writer writer, boolean pretty, boolean jsonUsesISOdate) {
-        encode(model, roots, new JSONWriterWrapper(writer, pretty), jsonUsesISOdate);
+    public void encode(Model model, List<Resource> roots, Writer writer, boolean pretty) {
+        encode(model, roots, new JSONWriterWrapper(writer, pretty));
     }
 
-    protected void encode(Model model, List<Resource> roots, JSONWriterFacade jw, boolean jsonUsesISOdate) {
+    protected void encode(Model model, List<Resource> roots, JSONWriterFacade jw) {
         EncoderInstance ei = new EncoderInstance(model, jw, jsonUsesISOdate);
         ei.encodeSingleModelRoots(roots, false);
     }
@@ -182,8 +196,8 @@ public class Encoder {
      * @param writer The output writer, ideally platform neutral charset like UTF-8
      * @param pretty set to true to pretty-print the json
      */
-    public void encodeRecursive(Model model, List<Resource> roots, Writer writer, boolean pretty, boolean jsonUsesISOdate) {
-        encodeRecursive(model, roots, new JSONWriterWrapper( writer, pretty ), jsonUsesISOdate);
+    public void encodeRecursive(Model model, List<Resource> roots, Writer writer, boolean pretty) {
+        encodeRecursive(model, roots, new JSONWriterWrapper( writer, pretty ));
     }
     
     /**
@@ -194,8 +208,8 @@ public class Encoder {
      * @param writer The output writer, ideally platform neutral charset like UTF-8
      * @throws IOException 
      */
-    public void encodeRecursive(Model model, List<Resource> roots, Writer writer, boolean jsonUsesISOdate) {
-        encodeRecursive(model, roots, new JSONWriterWrapper( writer ), jsonUsesISOdate);
+    public void encodeRecursive(Model model, List<Resource> roots, Writer writer) {
+        encodeRecursive(model, roots, new JSONWriterWrapper( writer ));
     }
     
     /**
@@ -206,13 +220,13 @@ public class Encoder {
      * @return JSONObject containing the encoding
      * @throws IOException 
      */
-    public JsonObject encodeRecursive(Model model, List<Resource> roots, boolean jsonUsesISOdate) {
+    public JsonObject encodeRecursive(Model model, List<Resource> roots) {
         JSONWriterObject jwo = new JSONWriterObject();
-        encodeRecursive(model, roots, jwo, jsonUsesISOdate);
+        encodeRecursive(model, roots, jwo);
         return jwo.getTopObject();
     }
     
-    protected void encodeRecursive(Model model, List<Resource>roots, JSONWriterFacade jw, boolean jsonUsesISOdate) {
+    protected void encodeRecursive(Model model, List<Resource>roots, JSONWriterFacade jw) {
         EncoderInstance ei = new EncoderInstance(model, jw, jsonUsesISOdate);
         ei.encodeSingleModelRoots(roots, true);
     }

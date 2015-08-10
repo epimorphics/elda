@@ -84,7 +84,7 @@ public class JSONRenderer implements Renderer {
 		try {
 			Writer writer = StreamUtils.asUTF8( os );
 			writer.write( before );
-			Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true, jsonUsesISOdate );
+			Encoder.getForOneResult( context, jsonUsesISOdate ).encodeRecursive( model, roots, writer, true );
 			writer.write( after );
 			writer.flush();
 		} catch (Exception e) {

@@ -365,7 +365,7 @@ public class TestEncoder {
     	( ":p a owl:DatatypeProperty; api:structured true. xsd:string a rdfs:Class." );
 
 	private Encoder encoderForStructuredLiterals(Context context) {
-    	return Encoder.get( Encoder.defaultPlugin, context );
+    	return Encoder.get( Encoder.defaultPlugin, context, false );
 	}
 
     @Test public void testDateLiteral() throws IOException {
@@ -408,7 +408,7 @@ public class TestEncoder {
     @Test public void testISOFormattedDateTimeLiterals() throws IOException {
         String srcTTL = ":r :p '1999-05-31T02:09:32'^^xsd:dateTime. :r :o '2015-07-27'^^xsd:date.";
         Context context = new Context();
-        Encoder enc = Encoder.get(context);
+        Encoder enc = Encoder.get(context, true);
         String [] roots = new String[]{":r"};
         String expectedEncoding = "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'1999-05-31T02:09:32','o':'2015-07-27'}]";
         Model src = modelFromTurtle(srcTTL);
