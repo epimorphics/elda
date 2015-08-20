@@ -263,8 +263,12 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	}
 
 	private void setDescribeLabelIfPresent(Resource tRes, View v) {
-		if (tRes.hasProperty( ELDA_API.describeAllLabel )) 
-			v.setDescribeLabel( getStringValue( tRes, ELDA_API.describeAllLabel, RDFS.label.getURI() ) );
+		
+		List<Statement> statements = tRes.listProperties(ELDA_API.describeAllLabel).toList();
+		for (Statement s: statements) v.setDescribeLabel(RDFUtils.getLexicalForm(s.getObject()));
+		
+//		if (tRes.hasProperty( ELDA_API.describeAllLabel )) 
+//			v.setDescribeLabel( getStringValue( tRes, ELDA_API.describeAllLabel, RDFS.label.getURI() ) );
 	}
 
 	private void addViewPropertiesByString( View v, List<RDFNode> items ) {

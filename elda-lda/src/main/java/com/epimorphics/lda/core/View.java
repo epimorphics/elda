@@ -102,7 +102,7 @@ public class View {
 	
 	protected String template = null;
 	
-	protected String labelPropertyURI = RDFS.label.getURI();
+	protected Set<String> labelPropertyURIs = new HashSet<String>(); // RDFS.label.getURI();
 	
     public View() {
     	this( "anon", Type.T_DESCRIBE );
@@ -177,7 +177,7 @@ public class View {
     */
 	public void setDescribeLabel( String labelPropertyURI ) {
 		this.type = Type.T_ALL;
-		this.labelPropertyURI = labelPropertyURI;
+		this.labelPropertyURIs.add(labelPropertyURI);
 	}
     
     /**
@@ -224,7 +224,7 @@ public class View {
     	if (t == null) throw new IllegalArgumentException( "addFrom does not accept null views" );
     	cannotUpdateALL();
     	chains.addAll( t.chains );
-    	this.labelPropertyURI = t.labelPropertyURI;
+    	this.labelPropertyURIs = new HashSet<String>(t.labelPropertyURIs);
     	if (chains.size() > 0) type = Type.T_CHAINS;
     	if (t.type == Type.T_ALL) type = Type.T_ALL;
     	template = t.template;
@@ -287,7 +287,7 @@ public class View {
 			case T_ALL:	{	
 				String detailsQuery = describeBySelectedItems( s, s.roots ); 				
 				String chainsQuery = fetchByGivenPropertyChains( s, chains ); 
-			    addAllObjectLabels( c, s );
+			    addAllObjectLabels( s );
 				t.addToViewQuerySize( detailsQuery );
 				t.addToViewQuerySize( chainsQuery );
 			    return detailsQuery;
@@ -353,11 +353,32 @@ public class View {
 		return query;
 	}	
 
-	private void addAllObjectLabels( Controls c, State s ) { 
+	/**
+	     Construct a query that will fetch all the labels of all of the
+	     objects in the state's model. If no label properties are specified,
+	     use rdfs:label as the single label property. Objects that are not
+	     URI resources are ignored.
+	*/
+	private void addAllObjectLabels( State s ) { 
+				
+		List<String> properties = new ArrayList<String>(labelPropertyURIs);
+		if (properties.isEmpty()) properties.add(RDFS.label.getURI());		
+		
 		StringBuilder sb = new StringBuilder();
 		sb
-			.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">" )
-			.append( "\nCONSTRUCT { ?x <" ).append( labelPropertyURI ).append( "> ?l }\nWHERE\n{" );
+			.append( "PREFIX rdfs: <" )
+			.append( RDFS.getURI() )
+			.append(">" )
+			.append( "\nCONSTRUCT {\n")
+			;
+
+		int i = 0;
+		for (String p: properties) {
+			i += 1;
+			sb.append( "    ?x <" ).append( p ).append( "> ?l").append(i).append(".\n");				
+		}
+		
+		sb.append("}\nWHERE\n{" );
 		s.beginGraph(sb);
 	//	
 		sb.append( "  { VALUES ?x { " );
@@ -367,7 +388,11 @@ public class View {
 				sb.append( "\n  " ).append("<").append( n.asNode().getURI() ).append(">");
 	//
 		sb.append( "\n} }\n" );
-		sb.append( "?x <" ).append( labelPropertyURI ).append( "> ?l. " );
+		int j = 0;
+		for (String p: properties) {
+			j += 1;
+			sb.append( "    ?x <" ).append( p ).append( "> ?l").append(j).append(". \n" );			
+		}
 	//
 		s.endGraph(sb);
 		sb.append( "}\n" );
