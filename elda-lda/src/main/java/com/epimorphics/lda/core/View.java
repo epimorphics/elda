@@ -364,6 +364,15 @@ public class View {
 		List<String> properties = new ArrayList<String>(labelPropertyURIs);
 		if (properties.isEmpty()) properties.add(RDFS.label.getURI());		
 		
+		String queryString = buildFetchLabelsQuery(s, properties);
+	//
+		if (log.isDebugEnabled()) log.debug("LABEL QUERY:\n" + queryString + "\n");
+	//	
+		Query constructQuery = QueryFactory.create( queryString );
+		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
+	}
+
+	public static String buildFetchLabelsQuery(State s, List<String> properties) {
 		StringBuilder sb = new StringBuilder();
 		sb
 			.append( "PREFIX rdfs: <" )
@@ -397,11 +406,7 @@ public class View {
 		s.endGraph(sb);
 		sb.append( "}\n" );
 		String queryString = sb.toString();
-	//
-		if (log.isDebugEnabled()) log.debug("LABEL QUERY:\n" + queryString + "\n");
-	//	
-		Query constructQuery = QueryFactory.create( queryString );
-		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
+		return queryString;
 	}	
 
 	public String fetchDescriptionsFor
