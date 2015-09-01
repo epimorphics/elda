@@ -48,14 +48,7 @@ public class TurtleRenderer implements Renderer {
     	return new BytesOutTimed() {
 
 			@Override public void writeAll(OutputStream os) {			
-				OutputStreamWriter u = StreamUtils.asUTF8(os);
-				try {
-					u.write(content);
-					u.flush();
-					u.close();
-				} catch (IOException e) {
-					throw new WrappedException(e);
-				}
+				StreamUtils.writeAsUTF8(content, os);
 			}
 
 			@Override protected String getFormat() {

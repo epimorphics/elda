@@ -8,7 +8,9 @@
 
 package com.epimorphics.lda.renderers;
 
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,4 +55,8 @@ public abstract class BytesOutTimed implements BytesOut {
 	    The format name of the stream (so it can be reported in the timings).
 	*/
 	protected abstract String getFormat();
+	
+	
+	
+	
 }

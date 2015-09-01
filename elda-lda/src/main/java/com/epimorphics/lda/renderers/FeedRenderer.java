@@ -77,15 +77,23 @@ public class FeedRenderer implements Renderer {
 		, final Map<String, String> termBindings
 		, final APIResultSet results
 		) {
-		return new BytesOutTimed() {
+		
+		long base = System.currentTimeMillis();
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		final CountStream cos = new CountStream( os );
+		renderFeed( cos, results, t, termBindings, b );
+		StreamUtils.flush(os);
+		final String content = UTF8.toString(os);
+		final long duration = System.currentTimeMillis() - base;
+		
+		return new BytesOut() {
 
-			@Override protected void writeAll(OutputStream os) {
-				renderFeed( os, results, t, termBindings, b );
-				flush( os );
-			}
-
-			@Override protected String getFormat() {
-				return FeedRendererFactory.format;
+			final String format = FeedRendererFactory.format;
+			
+			@Override public void writeAll(Times t, OutputStream os) {
+		        t.setRenderedSize( cos.size() );
+				t.setRenderDuration( duration, format );
+				StreamUtils.writeAsUTF8(content, os);
 			}
 			
 		};
@@ -93,11 +101,6 @@ public class FeedRenderer implements Renderer {
 
 	@Override public String getPreferredSuffix() {
 		return FeedRendererFactory.format;
-	}
-
-	private static void flush( OutputStream os ) {
-		try { os.flush(); } 
-		catch (IOException e) { throw new WrappedException( e ); } 
 	}
 
 	/**
