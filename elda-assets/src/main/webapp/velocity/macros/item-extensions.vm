@@ -13,27 +13,29 @@
     #set( $mapCounter = 1 )
   #end
   #set( $longLatTriples = $resource.extractByPredicate( $longLatProps ) )
-  <div class="$rowClass">
-    <div class="col-md-8">
-      <ul class="resource-properties extensions">
-        #renderProperties( $longLatTriples, 6, 6 )
-      </ul>
-    </div>
-    <div class="col-md-4">
-      <div class="item-extension map">
-        #set( $mapId = "map-" + $item.rdfNode().shortUniqueID() + "-" + $mapCounter )
-        #set( $mapCounter = $mapCounter + 1 )
-        #set( $long = $longLatTriples.get( 0 ).rdfNode().getLexicalForm() )
-        #set( $lat  = $longLatTriples.get( 1 ).rdfNode().getLexicalForm() )
-        <div id="$mapId"></div>
-        <script>
-          require( ['app/maps'], function( EldaMaps ) {
-            EldaMaps.addSmallMap( "$mapId", $long, $lat, {w:16, h:16, image: "$assets/images/target.png"} );
-          } );
-        </script>
+  #if ($longLatTriples.size() > 0)
+    <div class="$rowClass">
+      <div class="col-md-8">
+        <ul class="resource-properties extensions">
+          #renderProperties( $longLatTriples, 6, 6 )
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <div class="item-extension map">
+          #set( $mapId = "map-" + $item.rdfNode().shortUniqueID() + "-" + $mapCounter )
+          #set( $mapCounter = $mapCounter + 1 )
+          #set( $long = $longLatTriples.get( 0 ).rdfNode().getLexicalForm() )
+          #set( $lat  = $longLatTriples.get( 1 ).rdfNode().getLexicalForm() )
+          <div id="$mapId"></div>
+          <script>
+            require( ['app/maps'], function( EldaMaps ) {
+              EldaMaps.addSmallMap( "$mapId", $long, $lat, {w:16, h:16, image: "$assets/images/target.png"} );
+            } );
+          </script>
+        </div>
       </div>
     </div>
-  </div>
+  #end
 #end
 
 ## Hook for showing additional visual presentations based on content. Default
