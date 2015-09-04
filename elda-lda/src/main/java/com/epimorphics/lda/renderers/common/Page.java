@@ -126,6 +126,40 @@ public class Page extends CommonNodeWrapper
     public int itemsPerPage() {
         return getInt( OpenSearch.itemsPerPage, NO_VALUE );
     }
+    
+    /**
+     * @return The total number of results in the resultset, or -1 if not specified.
+     */
+    public int totalResults() {
+        return getInt( OpenSearch.totalResults, NO_VALUE );
+    }
+    
+    /** 
+     * @return A string summarising the count of results, or null
+     */
+    public String resultsCountSummary() {
+        String s = null;
+        int total = totalResults();
+        
+        if (total >= 0) {
+            int perPage = itemsPerPage();
+            int from = startIndex();
+            
+            if (perPage > 0 && from >= 0) {
+                int to = from + perPage;
+                if (to > total) {
+                    to = total;
+                }
+                
+                s = String.format( "Showing items %d to %d of %d", from, to, total );
+            }
+            else {
+                s = String.format( "%d total results", total );
+            }
+        }
+        
+        return s;
+    }
 
     /**
      * @return The starting index for this page, starting from one. Return -1 if

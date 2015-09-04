@@ -1,0 +1,6 @@
+      <ul class="nav navbar-nav navbar-right">
+        #parse( "partials/resource-links.vm" )
+        #parse( "partials/page-size-links.vm" )
+        #parse( "partials/format-links.vm" )
+        #parse( "partials/view-links.vm" )
+      </ul>
