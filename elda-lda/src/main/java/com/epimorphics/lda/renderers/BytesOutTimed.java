@@ -8,9 +8,7 @@
 
 package com.epimorphics.lda.renderers;
 
-import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +17,6 @@ import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.CountStream;
 import com.epimorphics.util.StreamUtils;
-import com.hp.hpl.jena.shared.WrappedException;
 
 /**
  	A BytesOutTimed is a BytesOut that counts the bytes written and
@@ -32,17 +29,12 @@ public abstract class BytesOutTimed implements BytesOut {
     protected static Logger log = LoggerFactory.getLogger(BytesOutTimed.class);
     
 	@Override public final void writeAll( Times t, OutputStream os ) {
-		try {
-			long base = System.currentTimeMillis();
-			CountStream cos = new CountStream( os );
-			writeAll( cos );
-			StreamUtils.flush( os );
-	        t.setRenderedSize( cos.size() );
-	        t.setRenderDuration( System.currentTimeMillis() - base, getFormat() );
-		} catch (Throwable e) {
-			log.warn( "client exception during streaming: " + e.getMessage() );
-			throw new WrappedException( e );
-		}
+		long base = System.currentTimeMillis();
+		CountStream cos = new CountStream( os );
+		writeAll( cos );
+		StreamUtils.flush( os );
+        t.setRenderedSize( cos.size() );
+        t.setRenderDuration( System.currentTimeMillis() - base, getFormat() );
 	}
 	
 	/**

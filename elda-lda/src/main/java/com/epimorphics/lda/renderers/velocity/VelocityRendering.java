@@ -49,6 +49,9 @@ implements BytesOut
     /***********************************/
     /* Constants                       */
     /***********************************/
+	
+	/* poison string in case error occurs during streaming */
+	static final String HTML_POISON = "\nSTREAMING ERROR <=>'<=>\"<=>\n";
 
     /** The default place we look for Velocity files */
     public static final String DEFAULT_VELOCITY_ROOT_PATH = "/velocity/";
@@ -403,4 +406,8 @@ implements BytesOut
         ResultsModel rm = new ResultsModel( results );
         return rm.page();
     }
+
+	@Override public String getPoison() {
+		return HTML_POISON;
+	}
 }

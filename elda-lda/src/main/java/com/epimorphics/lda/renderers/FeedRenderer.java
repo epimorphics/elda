@@ -38,6 +38,8 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class FeedRenderer implements Renderer {
 
+	static final String FEED_POISON = "\nSTREAMING ERROR<=>'<=>\"<=>\n";
+	
 	private final MediaType mt;
 	private final Resource config;
 	private final String namespace;
@@ -94,6 +96,10 @@ public class FeedRenderer implements Renderer {
 		        t.setRenderedSize( cos.size() );
 				t.setRenderDuration( duration, format );
 				StreamUtils.writeAsUTF8(content, os);
+			}
+			
+			@Override public String getPoison() {
+				return FEED_POISON;
 			}
 			
 		};

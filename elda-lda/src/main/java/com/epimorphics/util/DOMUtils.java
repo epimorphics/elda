@@ -36,6 +36,9 @@ import com.hp.hpl.jena.shared.WrappedException;
  */
 public class DOMUtils {
 	
+	// very likely XML or HTML
+	static final String DOM_POISON = "\nSTREAMING ERROR<=>'<=>\"<=>\n";
+	
 	public static Document newDocument() {
 		return getBuilder().newDocument();
 	}
@@ -78,14 +81,7 @@ public class DOMUtils {
 		return new BytesOutTimed() {
 
 			@Override public void writeAll(OutputStream os) {
-				OutputStreamWriter u = StreamUtils.asUTF8(os);
-				try {
-					u.write(content);
-					u.flush();
-					u.close();
-				} catch (IOException e) {
-					throw new WrappedException(e);
-				}
+				StreamUtils.writeAsUTF8(content, os);
 				// Transformer tr = setPropertiesAndParams( t, rc, pm,
 				// transformFilePath );
 				// OutputStreamWriter u = StreamUtils.asUTF8(os);
@@ -103,6 +99,10 @@ public class DOMUtils {
 
 			@Override protected String getFormat() {
 				return "html";
+			}
+
+			@Override public String getPoison() {
+				return DOM_POISON;
 			}
 		};
 	}

@@ -27,6 +27,8 @@ import com.hp.hpl.jena.shared.WrappedException;
 
 public class TurtleRenderer implements Renderer {
 	
+	static final String TURTLE_POISON = "\n<=>'<=>\"<=>\n";
+	
     @Override public MediaType getMediaType( Bindings irrelevant ) {
         return MediaType.TEXT_TURTLE;
     }
@@ -53,6 +55,10 @@ public class TurtleRenderer implements Renderer {
 
 			@Override protected String getFormat() {
 				return "ttl";
+			}
+
+			@Override public String getPoison() {
+				return TURTLE_POISON;
 			}
     		
     	};

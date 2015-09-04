@@ -38,6 +38,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 
 public class JSONRenderer implements Renderer {
 
+	static final String JSON_POISON = "\nSTREAMING ERROR[:]'[:]\"[:]\n";
     static Logger log = LoggerFactory.getLogger(JSONRenderer.class);
     
     final APIEndpoint api;
@@ -94,28 +95,15 @@ public class JSONRenderer implements Renderer {
 		return new BytesOutTimed() {
 
 			@Override public void writeAll( OutputStream os ) {
-				OutputStreamWriter u = StreamUtils.asUTF8(os);
-				try {
-					u.write(content);
-					u.flush();
-					u.close();
-				} catch (IOException e) {
-					throw new WrappedException(e);
-				}
-//				try {
-//					Writer writer = StreamUtils.asUTF8( os );
-//					writer.write( before );
-//					Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true );
-//					writer.write( after );
-//					writer.flush();
-//				} catch (Exception e) {
-//					log.error( "Failed to encode model: stacktrace follows:", e );
-//					throw new WrappedException( e );
-//				}				
+				StreamUtils.writeAsUTF8(content, os);			
 			}
 
 			@Override protected String getFormat() {
 				return "json";
+			}
+
+			@Override public String getPoison() {
+				return JSON_POISON;
 			}
 			
 		};
