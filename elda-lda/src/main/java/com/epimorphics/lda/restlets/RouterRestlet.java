@@ -556,8 +556,15 @@ import com.sun.jersey.api.NotFoundException;
 		return new StreamingOutput() {
 			
 			@Override public void write(OutputStream os) throws IOException, WebApplicationException {
-				try { response.writeAll(t, os); }
-				catch (Throwable t) { StreamUtils.writeAsUTF8(response.getPoison(), os); }
+				try { 
+					response.writeAll(t, os); 
+				}
+				catch (Throwable t) { 
+					log.error("Error while streaming output", t);
+					StreamUtils.writeAsUTF8(response.getPoison(), os);
+					os.flush();
+					throw t;
+				}
 				StatsValues.accumulate( t );
 			}
 		};
