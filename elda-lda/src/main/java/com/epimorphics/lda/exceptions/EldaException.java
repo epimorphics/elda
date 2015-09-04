@@ -11,6 +11,7 @@ package com.epimorphics.lda.exceptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.sources.Source;
 import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
 
@@ -54,7 +55,7 @@ public class EldaException extends RuntimeException {
 	    Throw a BAD REQUEST exception after logging the given message.
 	*/
 	public static void BadRequest( String message ) {
-		log.error("bad request: " + message);
+		ELog.error(log, "bad request: ", message);
 		throw new BadRequestException(message);
 	}
 	

@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.SparqlSupport;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -359,14 +360,13 @@ public class View {
 	     use rdfs:label as the single label property. Objects that are not
 	     URI resources are ignored.
 	*/
-	private void addAllObjectLabels( State s ) { 
-				
+	private void addAllObjectLabels( State s ) { 		
 		List<String> properties = new ArrayList<String>(labelPropertyURIs);
 		if (properties.isEmpty()) properties.add(RDFS.label.getURI());		
-		
+	//
 		String queryString = buildFetchLabelsQuery(s, properties);
 	//
-		if (log.isDebugEnabled()) log.debug("LABEL QUERY:\n" + queryString + "\n");
+		if (log.isDebugEnabled()) ELog.debug(log, "LABEL QUERY:\n" + queryString + "\n");
 	//	
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
@@ -405,8 +405,7 @@ public class View {
 	//
 		s.endGraph(sb);
 		sb.append( "}\n" );
-		String queryString = sb.toString();
-		return queryString;
+		return sb.toString();
 	}	
 
 	public String fetchDescriptionsFor

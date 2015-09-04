@@ -20,6 +20,7 @@ import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -135,7 +136,6 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     	boolean isList = endpoint.hasProperty( RDF.type, API.ListEndpoint );
     	boolean isItem = endpoint.hasProperty( RDF.type, API.ItemEndpoint );
     	if (isList || isItem) return;
-    	// log.warn( "endpoint " + endpoint + " is not declared as ListEndpoint or ItemEndpoint -- unexpected behaviour may result." );
     	throw new EldaException("endpoint " + endpoint + " is not declared as ListEndpoint or ItemEndpoint");
 	}
 
@@ -347,7 +347,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	            if (parentN instanceof Resource) {
 	                addSelectorInfo( (Resource)parentN );
 	            } else {
-	                APISpec.log.error("Parent view must be a resource, found a literal: " + parentN);
+	                ELog.error(APISpec.log, "[config]: parent view must be a resource, found a literal: '%s'"
+	                	, parentN);
 	            }
 	        }
 	        addSelectorInfo(s);
@@ -368,7 +369,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	            if (paramValue.length == 2) {
 	                baseQuery.deferrableAddFilter( Param.make( sns, paramValue[0] ), paramValue[1] );
 	            } else {
-	                APISpec.log.error("Filter specification contained unintepretable query string: " + q );
+	                ELog.error(APISpec.log, "[config]: filter specification contained unintepretable query string: %s",
+	                	q );
 	            }
             }
         }

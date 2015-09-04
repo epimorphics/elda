@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ResponseResult;
+import com.epimorphics.lda.log.ELog;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 public abstract class LimitedCacheBase implements Cache {
@@ -215,19 +216,27 @@ public abstract class LimitedCacheBase implements Cache {
     }
 
     @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs, long expiresAt ) {
-        if (log.isDebugEnabled()) log.debug( "caching descriptions for resources " + results );
+        if (log.isDebugEnabled()) {
+        	ELog.debug(log, "caching descriptions for resources %s", results );
+        }
         cd.put( results.toString() + "::" + view, new TimedThing<APIResultSet>(rs, expiresAt ));
         if (exceedsResultSetLimit( cd )) {
-        	if (log.isDebugEnabled()) log.debug( "clearing description cache for " + label );
+        	if (log.isDebugEnabled()) {
+        		ELog.debug(log, "clearing description cache for '%s'", label );
+        	}
             cd.clear();
         }
     }
 
     @Override public synchronized void cacheSelection( String select, List<Resource> results, long expiresAt ) {
-    	if (log.isDebugEnabled()) log.debug( "caching resource selection for query " + select );
+    	if (log.isDebugEnabled()) {   
+    		ELog.debug(log, "caching resource selection for query %s", select );
+    	}
     	cs.put( select, new TimedThing<List<Resource>>(results, expiresAt) );
         if (exceedsSelectLimit( cs )) {
-        	if (log.isDebugEnabled()) log.debug( "clearing select cache for " + label );
+        	if (log.isDebugEnabled()) {        	
+        		ELog.debug(log, "clearing select cache for '%s'", label );
+        	}
             cs.clear();
         }
     }

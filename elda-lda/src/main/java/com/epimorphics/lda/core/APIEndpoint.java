@@ -23,8 +23,6 @@ import java.util.List;
 
 import javax.ws.rs.core.UriBuilder;
 
-import org.apache.http.client.utils.URIBuilder;
-
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Renderer;

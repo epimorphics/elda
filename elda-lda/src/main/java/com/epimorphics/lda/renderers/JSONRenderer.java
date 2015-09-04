@@ -27,6 +27,7 @@ import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.support.Times;
@@ -87,7 +88,7 @@ public class JSONRenderer implements Renderer {
 			writer.write( after );
 			writer.flush();
 		} catch (Exception e) {
-			log.error( "Failed to encode model: stacktrace follows:", e );
+			ELog.error(log, "failed to encode model: stacktrace follows: %s", e );
 			throw new WrappedException( e );
 		}				
 		final String content = UTF8.toString( os );
@@ -118,15 +119,6 @@ public class JSONRenderer implements Renderer {
 		context.setSorted(true);
         Encoder.getForOneResult( context ).encodeRecursive( model, roots, writer, true );
 	}
-
-//	private void paranoiaCheckForLegalJSON(String written) throws Exception {
-//		try {
-//			ParseWrapper.readerToJsonObject( new StringReader( written ) ); // Paranoia check that output is legal Json
-//		} catch (Exception e) {
-//			log.error( "Broken generated JSON:\n" + written );
-//			throw e;
-//		}
-//	}
 
 }
 

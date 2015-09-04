@@ -23,6 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.BytesOutTimed;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.support.Times;
@@ -117,10 +118,10 @@ public class DOMUtils {
 		for (String name : rc.keySet()) {
 			String value = rc.getValueString(name);
 			if (value == null) {
-				log.debug("ignored null xslt parameter " + name);
+				ELog.debug(log, "ignored null xslt parameter '%s'", name);
 			} else {
 				t.setParameter(name, value);
-				log.debug("set xslt parameter " + name + " = " + value);
+				ELog.debug(log, "set xslt parameter '%s' to '%s'", name, value);
 			}
 		}
 		String nsd = namespacesDocument(pm);
