@@ -42,6 +42,9 @@
 ## behaviours:
 ## * if at least some items have locations, show a map for the whole results group
 #macro( groupVisualExtensions $hierarchy )
+  <div>
+    #parse( "partials/page-size.vm" )
+  </div>
   #if( $mapDisplay)
     #groupMap( $hierarchy )
   #end
