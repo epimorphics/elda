@@ -41,6 +41,19 @@
   <dependencies>
 
       <dependency>
+          <groupId>com.github.jsonld-java</groupId>
+          <artifactId>jsonld-java</artifactId>
+          <version>0.6.0</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.apache.jena</groupId>
+        <artifactId>apache-jena-libs</artifactId>
+        <type>pom</type>
+        <version>2.13.0</version>
+      </dependency>
+
+      <dependency>
           <groupId>org.apache.velocity</groupId>
           <artifactId>velocity</artifactId>
           <version>1.7</version>

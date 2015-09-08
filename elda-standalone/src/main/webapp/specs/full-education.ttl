@@ -1122,7 +1122,7 @@ school:boys2
 
 school:establishmentNumber
       a       owl:DatatypeProperty ;
-      rdfs:range xsd:int ;
+      rdfs:range xsd:integer ;
       api:label "establishmentNumber" .
 
 school:dateofLastWelfareVisit

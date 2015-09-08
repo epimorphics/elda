@@ -39,6 +39,8 @@ public class MediaType
 	public static final MediaType TEXT_JAVASCRIPT = new MediaType( "text", "javascript" );
 
 	public static final MediaType APPLICATION_JAVASCRIPT = new MediaType( "application", "javascript" );
+
+	public static final MediaType APPLICATION_JSON_LD = new MediaType( "application", "ld+json" );
 	
 	/**
 	    Initialise this MediaType with the given type, subtype, and
