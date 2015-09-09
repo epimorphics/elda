@@ -67,8 +67,8 @@ public class JSONLDRenderer implements Renderer {
 					try {
 						Writer w = new OutputStreamWriter(os, "UTF-8");
 						JSONWriterFacade jw = new JSONWriterWrapper(w, true);
-						Composer c = new Composer(model, context, termBindings, jw);
-						c.compose(root, results.getResultList());
+						Composer c = new Composer(model, root, context, termBindings, jw);
+						c.compose(results.getResultList());
 						w.flush();						
 					} catch (Throwable e) {
 						throw new WrappedException(e);
@@ -164,7 +164,7 @@ public class JSONLDRenderer implements Renderer {
 		final Map<Resource, Int> refCount = new HashMap<Resource, Int>();
 		final Map<Resource, String> bnodes = new HashMap<Resource, String>();
 		
-		public Composer(Model model, ReadContext context, Map<String, String> termBindings, JSONWriterFacade jw) {
+		public Composer(Model model, Resource root, ReadContext context, Map<String, String> termBindings, JSONWriterFacade jw) {
 			this.jw = jw;
 			this.termBindings = termBindings;
 			this.model = model;
@@ -190,7 +190,7 @@ public class JSONLDRenderer implements Renderer {
 			return count == null ? false : count.i == 1;
 		}
 
-		public void compose(Resource root, List<Resource> items) {
+		public void compose(List<Resource> items) {
 			jw.object();
 		//
 			jw.key("@context");
@@ -239,23 +239,32 @@ public class JSONLDRenderer implements Renderer {
 		//
 			for (Map.Entry<Property, List<RDFNode>> e: properties.entrySet()) {
 				Property p = e.getKey();
-				boolean compactSingular = true;
-				List<RDFNode> os = e.getValue();
+				boolean compactSingular = !isMultiValued(p);
+				List<RDFNode> values = e.getValue();
 				jw.key(term(p.getURI()));
-				if (os.size() == 1 && compactSingular) {
-					value(os.get(0));
+				if (values.size() == 1 && compactSingular) {
+					value(p, values.get(0));
 				} else {
 					jw.array();
-					for (RDFNode o: os) value(o);
+					for (RDFNode o: values) value(p, o);
 					jw.endArray();
 				}
 			}
 		}
 
-		private void value(RDFNode n) {
+		private boolean isMultiValued(Property p) {
+			return context.findProperty(p).isMultivalued();
+		}
+
+		private void value(Property p, RDFNode n) {
 			if (n.isResource()) {
 				Resource r = n.asResource();
-				if (onlyReference(r)) {
+				if (RDFUtil.isList(r)) {
+					jw.array();
+					List<RDFNode> l = r.as(RDFList.class).asJavaList();
+					for (RDFNode element: l) value(p, element);
+					jw.endArray();
+				} else if (onlyReference(r)) {
 					composeResource(r);
 				} else {
 					String u = getId(r);
@@ -264,7 +273,7 @@ public class JSONLDRenderer implements Renderer {
 					jw.endObject();
 				}
 			} else if (n.isAnon()) {
-				
+				// never gets here
 			} else {
 				Literal l = n.asLiteral();
 				String typeURI = l.getDatatypeURI();
@@ -280,6 +289,11 @@ public class JSONLDRenderer implements Renderer {
 						jw.key("@value").value(spelling);
 						jw.endObject();
 					}
+				} else if (isStructured(p)) {
+					jw.object();
+					jw.key("@type").value(term(typeURI));
+					jw.key("@value").value(spelling);
+					jw.endObject();
 				} else if (dt.equals( XSDDatatype.XSDboolean)) {
 					jw.value(l.getBoolean());
 				} else if (isFloatLike(dt)) {
@@ -301,6 +315,10 @@ public class JSONLDRenderer implements Renderer {
 			}
 		}
 		
+		private boolean isStructured(Property p) {
+			return context.findProperty(p).isStructured();
+		}
+
 		private String getId(Resource r) {
 			if (r.isURIResource()) return r.getURI();
 			String id = bnodes.get(r);
