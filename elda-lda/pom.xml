@@ -45,14 +45,23 @@
           <artifactId>jsonld-java</artifactId>
           <version>0.6.0</version>
       </dependency>
-      
-      <dependency>
-        <groupId>org.apache.jena</groupId>
-        <artifactId>apache-jena-libs</artifactId>
-        <type>pom</type>
-        <version>2.13.0</version>
-      </dependency>
 
+    <dependency>
+      <groupId>com.github.jsonld-java</groupId>
+      <artifactId>jsonld-java-jena</artifactId>
+      <version>0.3</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.jena</groupId>
+          <artifactId>jena-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.jena</groupId>
+          <artifactId>jena-arq</artifactId>
+        </exclusion>
+      </exclusions>
+     </dependency>
+     
       <dependency>
           <groupId>org.apache.velocity</groupId>
           <artifactId>velocity</artifactId>

@@ -14,11 +14,14 @@ import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 import com.github.jsonldjava.core.*;
 import com.github.jsonldjava.impl.TurtleRDFParser;
+import com.github.jsonldjava.jena.JenaRDFParser;
 import com.github.jsonldjava.utils.JsonUtils;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
+import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.WrappedException;
+import com.hp.hpl.jena.sparql.core.DatasetImpl;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 /**
@@ -55,17 +58,22 @@ public class JSONLDRenderer implements Renderer {
 		ShortnameService sns = ep.getSpec().getAPISpec().getShortnameService();
         final ReadContext context = CompleteReadContext.create(sns.asContext(), termBindings );        
 
-        final RDFParser parser = new TurtleRDFParser();
-        ByteArrayOutputStream it = new ByteArrayOutputStream();
-        model.write(it, "TTL");
-        final String modelString = it.toString();
+        final RDFParser parser = new JenaRDFParser(); new TurtleRDFParser();
+        
+//        System.err.println(">> model as Turtle");
+//        String [] lines = modelString.split("\n");
+//        int n = 1;
+//        for (String line: lines) {
+//        	String number = ("" + (10000 + n++)).substring(1);
+//        	System.err.println(number + " " + line);
+//        }
 
         return new BytesOutTimed() {
 
 			@Override protected void writeAll(OutputStream os) {
 				try {
 					Writer w = new OutputStreamWriter(os, "UTF-8");
-					Object json = JsonLdProcessor.fromRDF(modelString, parser);
+					Object json = JsonLdProcessor.fromRDF(model, parser);
 		            Object ldContext = makeContext(context, model, termBindings);
 					Object compacted = JsonLdProcessor.compact(json, ldContext, new JsonLdOptions());					
 					JsonUtils.writePrettyPrint(w, compacted);
