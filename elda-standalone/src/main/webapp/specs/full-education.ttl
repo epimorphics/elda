@@ -117,9 +117,25 @@ spec:full-education-api a api:API ;
   api:maxPageSize 50;
   api:defaultPageSize 10 ;
   api:defaultViewer api:labelledDescribeViewer ;
+  
   api:defaultFormatter spec:HtmlFormatter ;
   api:formatter spec:CsvFormatter ;
     api:formatter spec:VelocityFormatter ;
+  
+    
+    api:formatter
+        [a api:JsonFormatter
+        ; api:name "json-ld"
+        ; elda:className "com.epimorphics.lda.renderers.JSONLDRendererFactory"
+    #
+    # use /json if client doesn't render json-ld as json, otherwise
+    # use /json+ld. Firefox doesn't understand +ld so we'll force to /json
+    # for the moment.
+    # 
+        ; api:mimeType "application/json"
+        # ; api:mimeType "application/json+ld"
+        ];
+        
   api:viewer
     api:describeViewer ,
     api:labelledDescribeViewer ;
