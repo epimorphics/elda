@@ -13,15 +13,12 @@ import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 import com.github.jsonldjava.core.*;
-import com.github.jsonldjava.impl.TurtleRDFParser;
 import com.github.jsonldjava.jena.JenaRDFParser;
 import com.github.jsonldjava.utils.JsonUtils;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.WrappedException;
-import com.hp.hpl.jena.sparql.core.DatasetImpl;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
 /**
@@ -58,7 +55,7 @@ public class JSONLDRenderer implements Renderer {
 		ShortnameService sns = ep.getSpec().getAPISpec().getShortnameService();
         final ReadContext context = CompleteReadContext.create(sns.asContext(), termBindings );        
 
-        final RDFParser parser = new JenaRDFParser(); new TurtleRDFParser();
+        final RDFParser parser = new JenaRDFParser(); 
         
 //        System.err.println(">> model as Turtle");
 //        String [] lines = modelString.split("\n");
