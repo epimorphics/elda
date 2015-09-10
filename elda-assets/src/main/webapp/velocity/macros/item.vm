@@ -241,22 +241,24 @@
     #set( $href = $href.replace( $rewriteURLFrom.spelling(), $rewriteURLTo.spelling() ) )
     #set( $retainSuffix = true )
   #elseif( $_suffix && $href.contains( $_HOST.spelling() ))
-    #set( $retainSuffix = true )
+    #if( ! $_suffix.spelling().equals( $_defaultSuffix.spelling() ) )
+      #set( $retainSuffix = true )
+    #end
   #end
 
-  ##if( $retainSuffix )
-    ##set( $trailingSlash = false )
-    ##if( $href.endsWith( "/" ) )
-      ##set( $trailingSlash = true )
-      ##set( $href = $href.replace( "/$", "" ) )
-    ##end
+  #if( $retainSuffix )
+    #set( $trailingSlash = false )
+    #if( $href.endsWith( "/" ) )
+      #set( $trailingSlash = true )
+      #set( $href = $href.replace( "/$", "" ) )
+    #end
 
-    ##set( $href = $href + "." + $_suffix.spelling() )
+    #set( $href = $href + "." + $_suffix.spelling() )
 
-   ##if( $trailingSlash )
-      ##set( $href = $href + "/" )
-    ##end
-  ##end
+    #if( $trailingSlash )
+      #set( $href = $href + "/" )
+    #end
+  #end
 #end
 
 ## Show the actions menu for this value
