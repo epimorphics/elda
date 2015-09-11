@@ -576,11 +576,11 @@ import com.sun.jersey.api.NotFoundException;
 				try { 
 					response.writeAll(t, os); 
 				}
-				catch (Throwable t) { 
-					ELog.error(log, "Error while streaming output", t);
-					StreamUtils.writeAsUTF8(response.getPoison(), os);
+				catch (Throwable e) {
+					String message = String.format("Error while sending response: '%s'", e);
+					ELog.error(log, message);
+					StreamUtils.writeAsUTF8(response.getPoison() + "\n" + message, os);
 					os.flush();
-					throw t;
 				}
 				StatsValues.accumulate( t );
 			}

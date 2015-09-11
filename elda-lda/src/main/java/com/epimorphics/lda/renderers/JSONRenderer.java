@@ -39,7 +39,7 @@ import com.hp.hpl.jena.shared.WrappedException;
 
 public class JSONRenderer implements Renderer {
 
-	static final String JSON_POISON = "\nSTREAMING ERROR[:]'[:]\"[:]\n";
+	static final String JSON_POISON = "\n[:]'[:]\"[:]\nPROBLEM:\n";
     static Logger log = LoggerFactory.getLogger(JSONRenderer.class);
     
     final APIEndpoint api;

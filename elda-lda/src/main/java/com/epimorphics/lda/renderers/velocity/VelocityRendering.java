@@ -52,7 +52,7 @@ implements BytesOut
     /***********************************/
 	
 	/* poison string in case error occurs during streaming */
-	static final String HTML_POISON = "\nSTREAMING ERROR <=>'<=>\"<=>\n";
+	static final String HTML_POISON = "\n<=>'<=>\"<=>\n";
 
     /** The default place we look for Velocity files */
     public static final String DEFAULT_VELOCITY_ROOT_PATH = "/velocity/";
