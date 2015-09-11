@@ -129,7 +129,7 @@ public class APIEndpointImpl implements APIEndpoint {
     protected ResponseResult freshResponse(Bindings b, APIQuery query, View view, Request r, NoteBoard nb) {
 	//    
     //
-    	APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );	    
+    	APIResultSet unfiltered = query.runQuery(nb, r.c, spec.getAPISpec(), cache, b, view );	    
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
 	//
@@ -179,7 +179,7 @@ public class APIEndpointImpl implements APIEndpoint {
 	    
 //	    System.err.println(">>  uncachedCall pageNumber [2]: " + query.getPageNumber());
 	//    
-	    APIResultSet unfiltered = query.runQuery( nb, r.c, spec.getAPISpec(), cache, b, view );	    
+	    APIResultSet unfiltered = query.runQuery(nb, r.c, spec.getAPISpec(), cache, b, view );	    
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
 	//

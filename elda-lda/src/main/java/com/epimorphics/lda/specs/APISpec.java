@@ -24,6 +24,7 @@ import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -141,7 +142,7 @@ public class APISpec {
 
 	protected void reportObsoleteDescribeThreshold(Resource endpoint) {
 		if (endpoint.hasProperty(ELDA_API.describeThreshold)) {
-			log.warn("Endpoint " + endpoint + ": elda:describeThreshold is no longer required/used.");
+			ELog.warn(log, "endpoint '%s': elda:describeThreshold is no longer required/used.", endpoint);
 		}
 	}
     

@@ -14,6 +14,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
@@ -66,8 +67,9 @@ public class QuerySupport {
 		result.addAll(plain);
 		result.addAll(lateTextQueries);
 		result.addAll(typed);
-		if (!result.equals(triples))
-			log.debug("reordered\n    " + triples + "\nto\n    " + result);
+		if (!result.equals(triples)) {
+			ELog.debug(log, "reordered\n    %s\nto\n    %s", triples, result);
+		}
 		return result;
 	}
 

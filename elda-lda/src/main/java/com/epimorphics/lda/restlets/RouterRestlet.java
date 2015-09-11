@@ -39,6 +39,7 @@ import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.*;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.*;
@@ -60,7 +61,7 @@ import com.sun.jersey.api.NotFoundException;
 @Path("{path: .*}") public class RouterRestlet {
 
     protected static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
-
+    
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
     public static final String VARY = "Vary";
     public static final String ETAG = "Etag";
@@ -125,7 +126,7 @@ import com.sun.jersey.api.NotFoundException;
 				String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
 				String propertiesFile = "log4j.properties";
 				PropertyConfigurator.configure( baseFilePath + propertiesFile );
-				log.info( "\n\n    =>=> Starting Elda (Init)" + Version.string + "\n" ); 
+				ELog.info(log,  "\n\n    =>=> Starting Elda (Init) %s\n", Version.string); 
 				announced = true;
 			}
 			getRouterFor( sc );
@@ -142,20 +143,19 @@ import com.sun.jersey.api.NotFoundException;
      	put in the table, and returned.
     */
      static synchronized Router getRouterFor(ServletContext con) {
-    	 // log.info( "getting router for context path '" + givenContextPath + "'" );
     	 String contextPath = RouterRestletSupport.flatContextPath(con.getContextPath());
     	 TimestampedRouter r = routers.get(contextPath);
     	 long timeNow = System.currentTimeMillis();
     //
     	 if (r == null) {
-    		 log.info( "creating router for '" + contextPath + "'");
+    		 ELog.info(log, "creating router for '%s'", contextPath );
     		 long interval = getRefreshInterval(contextPath);
     		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), timeNow, interval );
     		 routers.put(contextPath, r );
     	 } else if (r.nextCheck < timeNow) {
 	    	 long latestTime = RouterRestletSupport.latestConfigTime(con, contextPath);
 	    	 if (latestTime > r.timestamp) {
-	    		 log.info( "reloading router for '" + contextPath + "'");
+	    		 ELog.info(log,  "reloading router for '%s'", contextPath);
 	    		 long interval = getRefreshInterval(contextPath);
 	    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), timeNow, interval );
 	    		 DOMUtils.clearCache();
@@ -163,12 +163,12 @@ import com.sun.jersey.api.NotFoundException;
 	    		 routers.put( contextPath, r );	    		 
 	    	 } else {
 	    		 // checked, but no change to reload
-	    		 // log.info("don't need to reload router, will check again later." );
+	    		 ELog.info(log, "don't need to reload router, will check again later." );
 	    		 r.deferCheck();
 	    	 }
     	 } else {
     		 // Don't need to check yet, still in waiting period
-    		 // log.info( "Using existing router, not time to check yet." );
+    		 ELog.info(log, "using existing router, not time to check yet.");
     	 }
     //
     	 return r.router;
@@ -176,7 +176,7 @@ import com.sun.jersey.api.NotFoundException;
 
 	private static long getRefreshInterval(String contextPath) {
 		long delay = TimestampedRouter.DEFAULT_INTERVAL;
-		 String intervalFileName = "/etc/elda/conf.d/" + contextPath + "/delay.int";
+		String intervalFileName = "/etc/elda/conf.d/" + contextPath + "/delay.int";
 		InputStream is = EldaFileManager.get().open( intervalFileName );
 		 if (is != null) {
 			String t = EldaFileManager.get().readWholeFileAsUTF8(is);
@@ -187,7 +187,7 @@ import com.sun.jersey.api.NotFoundException;
 				;
 			if (n > 0) delay = n;
 		 }
-		 log.info( "reload check interval for " + contextPath + " is " + delay );
+		 ELog.info(log, "reload check interval for '%s' is '%s'", contextPath, delay);
 		 return delay;
 	}
 
@@ -224,6 +224,7 @@ import com.sun.jersey.api.NotFoundException;
             @Context ServletContext servCon,
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {
+    	ELog.setSeqID(getSeqID(servletResponse));
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	String contextPath = servCon.getContextPath(); 
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
@@ -262,7 +263,12 @@ import com.sun.jersey.api.NotFoundException;
         }
     }
     
-    private int hashOf( Object x ) {
+    private static String getRequestId(HttpServletResponse servletResponse) {
+    	try { return servletResponse.getHeader(LogRequestFilter.REQUEST_ID_HEADER); }
+    	catch (NoSuchMethodError e) { return null; }
+   	}
+
+	private int hashOf( Object x ) {
 		return x == null ? 0x12345678 : x.hashCode();
 	}
 
@@ -311,26 +317,34 @@ import com.sun.jersey.api.NotFoundException;
             { path = pathstub.substring(0, dot - 1); type = pathstub.substring(dot); }        
         return new Couple<String, String>( path, type );
         }
+    
+    static class Mutable<T> {
+    	
+    	T value;
+    	
+    	Mutable(T value) { this.value = value; }
+    }
 
     // TODO : TOO MANY ARGUMENTS
     private Response runEndpoint
-    	( Controls c
-    	, String contextPath
-    	, int runHash
-    	, ServletContext servCon
-    	, HttpServletRequest servletRequest
-    	, HttpServletResponse servletResponse
-    	, UriInfo ui
-    	, MultiMap<String, String> queryParams
-    	, List<MediaType> mediaTypes
-    	, String formatName
-    	, Match match
+    	( final Controls c
+    	, final String contextPath
+    	, final int runHash
+    	, final ServletContext servCon
+    	, final HttpServletRequest servletRequest
+    	, final HttpServletResponse servletResponse
+    	, final UriInfo ui
+    	, final MultiMap<String, String> queryParams
+    	, final List<MediaType> mediaTypes
+    	, final String initialFormatName
+    	, final Match match
     	) {
-    	// Object transactionId = servletResponse.getHeader(LogRequestFilter.REQUEST_ID_HEADER);
+
+    	String formatName = initialFormatName;
     	Bindings forErrorHandling = null;
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
-    	log.debug( "handling request " + requestUri );
+    	ELog.debug(log, "handling request '%s'", requestUri );
     //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
@@ -367,8 +381,6 @@ import com.sun.jersey.api.NotFoundException;
 			
 			b.putAny("_servletRequest", servletRequest);
 			b.putAny("_servletResponse", servletResponse);
-			
-//			if (transactionId != null) b.put("_transaction", transactionId.toString());
 						
 			forErrorHandling = new Bindings(b, as);
 			        
@@ -388,7 +400,7 @@ import com.sun.jersey.api.NotFoundException;
         	boolean notFoundIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
         //
         	if (ep.getSpec().isItemEndpoint() && notFoundIfEmpty && resultsAndBindings.resultSet.isEmpty()) {
-        		log.debug( "resultSet is empty, returning status 404." );   
+        		ELog.debug(log, "resultSet is empty, returning status 404.");   
         		boolean passOnIfMissing = b.getAsString( "_passOnIfEmpty", "no" ).equals( "yes" );
 				if (passOnIfMissing) throw new NotFoundException();
 				return Response.status( Status.NOT_FOUND )
@@ -425,7 +437,7 @@ import com.sun.jersey.api.NotFoundException;
         	URI contentLocation = req.getURIwithFormat();
         	
 			MediaType mt = r.getMediaType(rc);
-			log.debug( "rendering with formatter " + mt );
+			ELog.debug(log, "rendering with formatter '%s'", mt );
 			Times times = c.times;
 			Renderer.BytesOut bo = r.render( times, rc, termBindings, results );
 			int mainHash = runHash + ru.toString().hashCode();
@@ -434,7 +446,7 @@ import com.sun.jersey.api.NotFoundException;
         } catch (StackOverflowError e) {
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
-            if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
+            if (log.isDebugEnabled()) ELog.debug(log, "%s", Messages.shortStackTrace( e ) );
             String message = Messages.niceMessage("Stack overflow", e.getMessage() );
             return ErrorPages.respond(forErrorHandling, servCon, "stack_overflow", message, EldaException.SERVER_ERROR);
         
@@ -445,15 +457,15 @@ import com.sun.jersey.api.NotFoundException;
         	return ErrorPages.respond(forErrorHandling, servCon, "bad_request", e.getMessage(), EldaException.BAD_REQUEST);
                     	
         } catch (UnknownShortnameException e) {
-        	log.error( "UnknownShortnameException: " + e.getMessage() );
-            if (log.isDebugEnabled()) log.debug( Messages.shortStackTrace( e ) );
+        	ELog.error(log, "UnknownShortnameException: " + e.getMessage() );
+            if (log.isDebugEnabled()) ELog.debug(log, "%s", Messages.shortStackTrace( e ));
         	StatsValues.endpointException();
         	return ErrorPages.respond(forErrorHandling, servCon, "unknown_shortname", e.getMessage(), EldaException.BAD_REQUEST); 
         
         } catch (EldaException e) {
         	StatsValues.endpointException();
-        	log.error( "Exception: " + e.getMessage() );
-        	if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
+        	ELog.error(log, "Exception: " + e.getMessage() );
+        	if (log.isDebugEnabled()) ELog.debug(log, "%s", Messages.shortStackTrace( e ));
         	return ErrorPages.respond(forErrorHandling, servCon, "exception", e.getMessage(), EldaException.SERVER_ERROR);
         
         } catch (NotFoundException e) {
@@ -461,17 +473,22 @@ import com.sun.jersey.api.NotFoundException;
         
         } catch (QueryParseException e) {
         	StatsValues.endpointException();
-            log.error( "Query Parse Exception: " + e.getMessage() );
-            if (log.isDebugEnabled())log.debug( Messages.shortStackTrace( e ) );
+        	ELog.error(log, "Query Parse Exception: " + e.getMessage() );
+            if (log.isDebugEnabled()) ELog.debug(log, "%s",  Messages.shortStackTrace( e ));
             return ErrorPages.respond(forErrorHandling, servCon, "query_parse_exception", e.getMessage(), EldaException.SERVER_ERROR);  
             
         } catch (Throwable e) {
-        	log.error( "General failure: " + e.getClass().getCanonicalName() + ": " + e.getMessage() );
+        	ELog.error(log, "general failure: %s", e.getClass().getCanonicalName() + ": " + e.getMessage() );
         	e.printStackTrace(System.err);
         	StatsValues.endpointException();
         	return ErrorPages.respond(forErrorHandling, servCon, "general_exception", e.getMessage(), EldaException.SERVER_ERROR); 
         }
-    }    
+    }
+
+	private String getSeqID(HttpServletResponse servletResponse) {
+		try { return servletResponse.getHeader(LogRequestFilter.REQUEST_ID_HEADER); }
+		catch (NoSuchMethodError e) { return "none"; }
+	}    
     
     public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
 		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
@@ -496,7 +513,7 @@ import com.sun.jersey.api.NotFoundException;
 						;
 						
 					if (log.isDebugEnabled())
-						log.debug("mapped ePath '" + ePath + "' to URL '" + url + "'");
+						ELog.debug(log, "mapped ePath '%s' to '%s'", ePath, url);
 					return url;
 				} catch (MalformedURLException e) {
 					throw new WrappedException(e);
@@ -541,7 +558,7 @@ import com.sun.jersey.api.NotFoundException;
         return standardHeaders( expiresDate, Response.ok(response, mimetype) ).build();
     }
     
-    private static Response returnAs( URI contentLocation, String expiresDate, APIResultSet rs, int envHash, StreamingOutput response, boolean varyAccept, MediaType mt ) {
+    private static Response returnAs(URI contentLocation, String expiresDate, APIResultSet rs, int envHash, StreamingOutput response, boolean varyAccept, MediaType mt ) {
         try {
             return standardHeaders( expiresDate, rs, envHash, varyAccept, Response.ok( response, mt.toFullString() ) )
             	.contentLocation( contentLocation )
@@ -556,23 +573,31 @@ import com.sun.jersey.api.NotFoundException;
 		return new StreamingOutput() {
 			
 			@Override public void write(OutputStream os) throws IOException, WebApplicationException {
-				response.writeAll(t, os);
+				try { 
+					response.writeAll(t, os); 
+				}
+				catch (Throwable t) { 
+					ELog.error(log, "Error while streaming output", t);
+					StreamUtils.writeAsUTF8(response.getPoison(), os);
+					os.flush();
+					throw t;
+				}
 				StatsValues.accumulate( t );
 			}
 		};
 	}
 
-	public static Response returnError( Throwable e ) {
+	public static Response returnError(Throwable e ) {
         String shortMessage = e.getMessage();      
 		String longMessage = Messages.niceMessage( shortMessage, "Internal Server error." );
 	//
 		log.error("Exception: " + shortMessage );
-        log.debug( Messages.shortStackTrace( e ) );
+        ELog.debug(log, "%s", Messages.shortStackTrace( e ) );
         return standardHeaders( null, Response.serverError() ).entity( longMessage ).build();
     }
 
-	public static Response returnError( String s ) {
-        log.error("Exception: " + s );
+	public static Response returnError(String s ) {
+        ELog.error(log, "exception: %s", s );
         return standardHeaders( null, Response.serverError() ).entity( s ).build();
     }
 
@@ -581,7 +606,7 @@ import com.sun.jersey.api.NotFoundException;
     }
     
     public static Response returnNotFound( String message, String what ) {
-        log.debug( "Failed to return results: " + Messages.brief( message ) );
+        ELog.debug(log,  "failed to return results: %s", Messages.brief( message ) );
         if (true) throw new NotFoundException();
         String m = Messages.niceMessage( message, "404 Resource Not Found: " + what );
 		return standardHeaders( null, Response.status(Status.NOT_FOUND) ).entity( m ).build();

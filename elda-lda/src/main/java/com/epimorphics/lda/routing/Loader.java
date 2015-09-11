@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.Version;
 import com.epimorphics.lda.core.ModelLoader;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.restlets.RouterRestletSupport;
 import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
 import com.epimorphics.lda.specmanager.SpecManagerFactory;
@@ -60,8 +61,8 @@ public class Loader extends HttpServlet {
     	ServletContext sc = getServletContext();   	
 		baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
     	configureLog4J();
-    	log.info( "\n\n  Starting Elda (Loader) " + Version.string + " " + ELDA.tag + "\n" );
-        log.info( "baseFilePath: " + baseFilePath );
+    	ELog.info(log, "[load] \n\n  Starting Elda (Loader) %s %s\n", Version.string, ELDA.tag );
+        ELog.info(log, "[load] baseFilePath: ", baseFilePath );
     	String prefixPath = getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
         ServletUtils.setupLARQandTDB( sc );
         modelLoader = new APIModelLoader( baseFilePath );

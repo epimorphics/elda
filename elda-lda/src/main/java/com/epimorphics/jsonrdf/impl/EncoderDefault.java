@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.jsonrdf.extras.JsonUtils;
+import com.epimorphics.lda.log.ELog;
 import com.hp.hpl.jena.datatypes.BaseDatatype;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
@@ -146,7 +147,7 @@ public class EncoderDefault implements EncoderPlugin {
 				if (showUnhandled)
 					{
 					// Issue #178
-					log.warn( "unhandled datatype '" + dt + "' in literal '" + spelling + "'" );
+					ELog.warn(log, "unhandled datatype '%s' in literal '%s'", dt, spelling);
 					showUnhandled = false;
 					}
 				jw.value( spelling );

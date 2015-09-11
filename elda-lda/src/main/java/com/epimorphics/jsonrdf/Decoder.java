@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.extras.JsonUtils;
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
+import com.epimorphics.lda.log.ELog;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.rdf.model.*;
@@ -138,7 +139,7 @@ public class Decoder {
             if (prop == null) {
                 String uri = context.getURIfromName(key);
                 if (uri == null) {
-                    log.error("Can't decode property: " + key);
+                    ELog.error(log, "can't decode property '%s'", key);
                     uri = "http://www.epimoprhics.com/badkey/" + key;
                 }
                 p = model.getProperty(uri);

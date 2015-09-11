@@ -18,6 +18,7 @@ import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.View.Type;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.specmanager.SpecEntry;
 import com.epimorphics.lda.specs.APIEndpointSpec;
@@ -158,8 +159,8 @@ public class ComposeConfigDisplay {
 	    	sb.append( "<thead><tr><th>name</th><th>lexical form</th><th>type or language</th></tr></thead>\n" );
 			for (String name: names) {
 				Value v = b.get( name );
-				if (v == null) {					
-					log.debug("binding for " + name + " is null or non-Value; ignored.");	
+				if (v == null) {
+					ELog.debug(log, "binding for '%s' is null or non-Value; ignored.", name);	
 					System.err.println("binding for " + name + " is null or non-Value; ignored.");			
 				} else {
 					String lf = v.spelling() == null ? "<i>none</i>" : v.spelling();
