@@ -78,6 +78,10 @@ public class JSONLDRenderer implements Renderer {
 				@Override protected String getFormat() {
 					return getPreferredSuffix();
 				}
+
+				@Override public String getPoison() {
+					return JSONRenderer.JSON_POISON;
+				}
 			};
 		}
 		
@@ -109,6 +113,10 @@ public class JSONLDRenderer implements Renderer {
 
 			@Override protected String getFormat() {
 				return getPreferredSuffix();
+			}
+
+			@Override public String getPoison() {
+				return JSONRenderer.JSON_POISON;
 			}
 			
 		};
