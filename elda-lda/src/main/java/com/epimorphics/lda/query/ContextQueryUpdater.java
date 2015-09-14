@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
 /**
@@ -101,8 +102,8 @@ public class ContextQueryUpdater implements ViewSetter {
             // should probably return a 400 status, but no convenient route to
             // do so. For the moment we'll do a debug-level log (rather than the
             // info-level log we had before) so we can at least spot them.
-            // See issue 175.
-            log.debug( taggedParam + " supplied, but no value for " + param );
+            // See issue 175
+            ELog.debug(log, "'%s' supplied, but no value for ", taggedParam, param );
             return;
         }
         String val = context.expandVariables( sv );
@@ -230,8 +231,8 @@ public class ContextQueryUpdater implements ViewSetter {
     */
     public void addFilterFromQuery( Param param, String raw_val ) {
         if (raw_val.equals( "" )) {
-            // see issue #175
-            log.debug( "parameter " + param + " given empty value." );
+            // see issue #175        	
+            ELog.debug(log, "parameter '%s' given empty value", param);
             return;
         }
         String val = aq.cookRawValue(raw_val);

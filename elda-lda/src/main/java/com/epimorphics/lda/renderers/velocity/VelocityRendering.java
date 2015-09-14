@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.exceptions.VelocityRenderingException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.common.*;
 import com.epimorphics.lda.specs.MetadataOptions;
@@ -49,6 +50,9 @@ implements BytesOut
     /***********************************/
     /* Constants                       */
     /***********************************/
+	
+	/* poison string in case error occurs during streaming */
+	static final String HTML_POISON = "\n<=>'<=>\"<=>\n";
 
     /** The default place we look for Velocity files */
     public static final String DEFAULT_VELOCITY_ROOT_PATH = "/velocity/";
@@ -121,7 +125,7 @@ implements BytesOut
             times.setRenderDuration( System.currentTimeMillis() - base, vr.suffix() );
         }
         catch (Exception e) {
-            log.warn( e.getMessage(), e );
+            ELog.warn(log, "%s (%s)", e.getMessage(), e );
             throw new VelocityRenderingException();
         }
         finally {
@@ -130,12 +134,12 @@ implements BytesOut
                     cos.close();
                 }
                 catch (IOException e) {
-                    log.warn( "Failed to close count stream: " + e.getMessage(), e );
+                    ELog.warn(log, "failed to close count stream: %s (%s)", e.getMessage(), e );
                 }
             }
         }
     }
-
+    
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
@@ -163,8 +167,8 @@ implements BytesOut
             t = ve.getTemplate( vr.templateName() );
         }
         catch (ResourceNotFoundException e) {
-            log.debug( "Could not find base template " + vr.templateName() );
-            log.debug( "Current velocity path is: '" + ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH ) + "'" );
+			ELog.debug(log, "could not find base template '%s'", vr.templateName() );
+            ELog.debug(log, "current velocity path is '%s'", ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH ) );
             throw e;
         }
 
@@ -230,8 +234,8 @@ implements BytesOut
             String pathURL = b.pathAsURL( pathEntry).toString();
             roots.add( pathURL + (pathURL.endsWith( "/" ) ? "" : "/") );
         }
-        log.debug("rootPath: " + rootPath);
-        log.debug("complete expanded path: " + roots);
+        ELog.debug(log, "rootPath '%s'", rootPath);
+        ELog.debug(log, "complete expanded path '%s'", roots);
         return roots;
     }
 
@@ -316,7 +320,7 @@ implements BytesOut
                     p.load( is );
                 }
                 catch (IOException e) {
-                    log.warn( "IO exception while reading properties: " + e.getMessage(), e );
+                    ELog.warn(log,  "IO exception while reading properties: %s (%s)", e.getMessage(), e);
                     throw new WrappedIOException( e );
                 }
                 finally {
@@ -324,7 +328,7 @@ implements BytesOut
                         is.close();
                     }
                     catch (IOException e) {
-                        log.warn( "IO exception while closing properties input stream: " + e.getMessage(), e );
+                        ELog.warn(log,  "IO exception while closing properties input stream: %s (%s)", e.getMessage(), e);
                         throw new WrappedIOException( e );
                     }
                 }
@@ -403,4 +407,8 @@ implements BytesOut
         ResultsModel rm = new ResultsModel( results );
         return rm.page();
     }
+
+	@Override public String getPoison() {
+		return HTML_POISON;
+	}
 }

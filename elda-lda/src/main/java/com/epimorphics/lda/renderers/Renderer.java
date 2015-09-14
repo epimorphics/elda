@@ -32,7 +32,16 @@ public interface Renderer {
 	 	@author chris
 	*/
 	public interface BytesOut {
+		/**
+			Render the result down os. Update the times information.
+		*/
 		public void writeAll(Times t, OutputStream os);
+	
+		/**
+			Return a string used to poison the output stream so that
+			a client detects that an error has occurred.
+		*/
+		public String getPoison();
 	}
 	
 	/**
