@@ -10,6 +10,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.MediaType;
 import com.github.jsonldjava.core.*;
 import com.github.jsonldjava.jena.JenaRDFParser;
@@ -68,7 +69,7 @@ public class JSONLDRenderer implements Renderer {
 						Writer w = new OutputStreamWriter(os, "UTF-8");
 						JSONWriterFacade jw = new JSONWriterWrapper(w, true);
 						Composer c = new Composer(model, root, context, termBindings, jw);
-						c.compose(results.getResultList());
+						c.renderItems(results.getResultList());
 						w.flush();						
 					} catch (Throwable e) {
 						throw new WrappedException(e);
@@ -159,13 +160,16 @@ public class JSONLDRenderer implements Renderer {
 	
 	public static class Composer {
 
-		static class Int {
-			int i = 0;
+		public static class Int {
+			private int i = 0;
 
 			public void inc() { i += 1;	}
+			
+			public int value() { return i; }
 		}
 		
 		final Model model;
+		final Resource root;
 		final JSONWriterFacade jw;
 		final Map<String, String> termBindings;
 		final ReadContext context;
@@ -174,13 +178,14 @@ public class JSONLDRenderer implements Renderer {
 		
 		public Composer(Model model, Resource root, ReadContext context, Map<String, String> termBindings, JSONWriterFacade jw) {
 			this.jw = jw;
-			this.termBindings = termBindings;
+			this.root = root;
 			this.model = model;
 			this.context = context;
-			count(model);
+			this.termBindings = termBindings;
+			countObjectReferencesIn(model);
 		}
 		
-		private void count(Model m) {
+		private void countObjectReferencesIn(Model m) {
 			for (StmtIterator statements = m.listStatements(); statements.hasNext();) {
 				Statement statement = statements.nextStatement();
 				RDFNode O = statement.getObject();
@@ -193,12 +198,11 @@ public class JSONLDRenderer implements Renderer {
 		}
 
 		private boolean onlyReference(Resource r) {
-			if (r.isAnon()) return false;
 			Int count = refCount.get(r);
-			return count == null ? false : count.i == 1;
+			return count == null ? true : count.value() < 2;
 		}
 
-		public void compose(List<Resource> items) {
+		public void renderItems(List<Resource> items) {
 			jw.object();
 		//
 			jw.key("@context");
@@ -209,26 +213,37 @@ public class JSONLDRenderer implements Renderer {
 			jw.key("format").value("linked-data-api");
 			jw.key("version").value("0.2A");
 		//
+			jw.key("meta");
+			renderResource(root);
+		//
 			jw.key("results");
 			jw.array();
-			for (Resource i: items) composeResource(i);
-			jw.endArray();
-		//
-			jw.key("details");
-			jw.array();
-			for (Map.Entry<Resource, Int> e: refCount.entrySet()) {
-				if (e.getValue().i > 1) {
-					composeResource(e.getKey());
-				}
+			Set<Resource> itemSet = new HashSet<Resource>();
+			for (Resource i: items) {
+				renderResource(i);
+				itemSet.add(i);
 			}
 			jw.endArray();
 		//
-//			composeProperties(root);
+			jw.key("others");
+			jw.array();
+			for (Map.Entry<Resource, Int> e: refCount.entrySet()) {
+				Resource i = e.getKey();
+				if (isFitForRendering(itemSet, e, i)) renderResource(i);
+			}
+			jw.endArray();
 		//
 			jw.endObject();
 		}
 
-		private void composeResource(Resource r) {
+		private boolean isFitForRendering(Set<Resource> itemSet, Map.Entry<Resource, Int> e, Resource i) {
+			return e.getValue().value() > 1 
+			&& !itemSet.contains(i) 
+			&& i.listProperties().hasNext()
+			&& !i.equals(root);
+		}
+
+		private void renderResource(Resource r) {
 			jw.object();
 			jw.key("@id").value(getId(r));
 			composeProperties(r);
@@ -247,15 +262,17 @@ public class JSONLDRenderer implements Renderer {
 		//
 			for (Map.Entry<Property, List<RDFNode>> e: properties.entrySet()) {
 				Property p = e.getKey();
-				boolean compactSingular = !isMultiValued(p);
-				List<RDFNode> values = e.getValue();
-				jw.key(term(p.getURI()));
-				if (values.size() == 1 && compactSingular) {
-					value(p, values.get(0));
-				} else {
-					jw.array();
-					for (RDFNode o: values) value(p, o);
-					jw.endArray();
+				if (!p.equals(API.items)){
+					boolean compactSingular = !isMultiValued(p);
+					List<RDFNode> values = e.getValue();
+					jw.key(term(p.getURI()));					
+					if (values.size() == 1 && compactSingular) {
+						value(p, values.get(0));
+					} else {
+						jw.array();
+						for (RDFNode o: values) value(p, o);
+						jw.endArray();
+					}
 				}
 			}
 		}
@@ -273,7 +290,7 @@ public class JSONLDRenderer implements Renderer {
 					for (RDFNode element: l) value(p, element);
 					jw.endArray();
 				} else if (onlyReference(r)) {
-					composeResource(r);
+					renderResource(r);
 				} else {
 					String u = getId(r);
 					jw.object();
@@ -282,6 +299,7 @@ public class JSONLDRenderer implements Renderer {
 				}
 			} else if (n.isAnon()) {
 				// never gets here
+				throw new RuntimeException("BOOM");
 			} else {
 				Literal l = n.asLiteral();
 				String typeURI = l.getDatatypeURI();
