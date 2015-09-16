@@ -35,4 +35,10 @@ public interface RendererFactory
 	    renderers that announce the given media type.
 	*/
 	public RendererFactory withMediaType( MediaType mt );
+	
+	/**
+        Answer a new RendererFactory just like this one, but producing
+        renderers that use ISO format for dateTime encoding.
+    */
+	public RendererFactory withISODateFormatting( Boolean jsonUsesISOdate );
 	}

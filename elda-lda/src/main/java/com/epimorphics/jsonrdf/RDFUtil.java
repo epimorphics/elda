@@ -150,17 +150,32 @@ public class RDFUtil {
      * Convert an xsd:datetype or xsd:date to a javascript compatible string.
      * Returns null if not a supported type
      */
-    public static String formatDateTime(Literal l) {
+    public static String formatDateTime(Literal l, boolean jsonUsesISOdate ) {
     	Object val = getTemporalValue(l);
         if (val instanceof XSDDateTime) {
         	boolean isDate = l.getDatatype().equals(XSDDatatype.XSDdate);
             Date date = ((XSDDateTime)val).asCalendar().getTime();
-            return dateFormat(hasTimeZone(l.getLexicalForm()), isDate).format(date);
+            if(jsonUsesISOdate) {
+                return dateFormatISO(hasTimeZone(l.getLexicalForm()), isDate).format(date);
+            } else {
+                return dateFormat(hasTimeZone(l.getLexicalForm()), isDate).format(date);
+            }
         } else {
             return null;
         }
     }
     
+    private static SimpleDateFormat dateFormatISO(boolean keepZone, boolean dropTime) {
+        boolean keepTime = !dropTime;
+        String timeFormat = "'T'HH:mm:ss", dateFormat = "yyyy-MM-dd";
+        String formatString = dateFormat;
+        if (keepTime) formatString += timeFormat;
+        if (keepZone && keepTime) formatString += "'Z'";
+        SimpleDateFormat df = new SimpleDateFormat( formatString ); 
+        if (keepZone) df.setTimeZone( TimeZone.getTimeZone( "UTC" ) );
+        return df;
+    }
+
     /**
         Returns the date/time object derived from the literal l. As a sop to
         literals of type xsd_Date which have an associated Time, if getting
@@ -178,7 +193,7 @@ public class RDFUtil {
 
 
 
-	public static final Pattern matchTimeZone = Pattern.compile( "(Z|[^-0-9][-+]\\d\\d(\\d\\d|:\\d\\d)?)$" );
+	public static final Pattern matchTimeZone = Pattern.compile( "(Z|[-+]\\d\\d(\\d\\d|:\\d\\d))$" );
         
     /**
         Answer true iff this lexical form looks like it ends with a time

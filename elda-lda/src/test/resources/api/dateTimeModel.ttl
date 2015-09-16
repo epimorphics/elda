@@ -1,0 +1,25 @@
+# Fake date and dateTime data for JSON renderer
+
+@prefix ex:         <http://www.epimorphics.com/examples/eg1#> .
+@prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix schema:		<http://schema.org/> .
+@prefix xsd:		<http://www.w3.org/2001/XMLSchema#> .
+@prefix dct:        <http://purl.org/dc/terms/> .
+
+ex:person_01 rdf:type ex:Person; ex:name "Person 1"; schema:birthDate "1991-02-19"^^xsd:date; dct:created "2014-01-03T17:30:44Z"^^xsd:dateTime .
+ex:person_02 rdf:type ex:Person; ex:name "Person 2"; schema:birthDate "2001-07-17"^^xsd:date; dct:created "2014-12-31T23:59:56+03:00"^^xsd:dateTime .
+ex:person_03 rdf:type ex:Person; ex:name "Person 3"; schema:birthDate "1988-09-16"^^xsd:date; dct:created "2014-12-31T18:58:35Z"^^xsd:dateTime .
+ex:person_04 rdf:type ex:Person; ex:name "Person 4"; schema:birthDate "1987-03-20"^^xsd:date; dct:created "2014-02-22T09:15:05Z"^^xsd:dateTime .
+ex:person_05 rdf:type ex:Person; ex:name "Person 5"; schema:birthDate "1990-08-09"^^xsd:date; dct:created "2014-03-17T09:19:05"^^xsd:dateTime .
+ex:person_06 rdf:type ex:Person; ex:name "Person 6"; schema:birthDate "1992-04-20"^^xsd:date; dct:created "2014-04-16T10:15:07Z"^^xsd:dateTime .
+ex:person_07 rdf:type ex:Person; ex:name "Person 7"; schema:birthDate "1974-10-14"^^xsd:date; dct:created "2014-05-21T07:22:17Z"^^xsd:dateTime .
+ex:person_08 rdf:type ex:Person; ex:name "Person 8"; schema:birthDate "1970-04-02"^^xsd:date; dct:created "2014-06-15T10:34:14Z"^^xsd:dateTime .
+ex:person_09 rdf:type ex:Person; ex:name "Person 9"; schema:birthDate "1965-06-09"^^xsd:date; dct:created "2014-07-05T08:29:06Z"^^xsd:dateTime .
+ex:person_10 rdf:type ex:Person; ex:name "Person 10"; schema:birthDate "1976-11-24"^^xsd:date; dct:created "2014-08-16T11:16:24Z"^^xsd:dateTime .
+ex:person_11 rdf:type ex:Person; ex:name "Person 11"; schema:birthDate "1956-06-07"^^xsd:date; dct:created "2014-09-07T04:06:37Z"^^xsd:dateTime .
+ex:person_12 rdf:type ex:Person; ex:name "Person 12"; schema:birthDate "1983-07-22"^^xsd:date; dct:created "2014-10-21T16:46:52Z"^^xsd:dateTime .
+ex:person_13 rdf:type ex:Person; ex:name "Person 13"; schema:birthDate "1979-02-02"^^xsd:date; dct:created "2014-11-24T14:39:16Z"^^xsd:dateTime .
+ex:person_14 rdf:type ex:Person; ex:name "Person 14"; schema:birthDate "1986-04-07"^^xsd:date; dct:created "2014-12-27T16:47:01Z"^^xsd:dateTime .
+ex:person_15 rdf:type ex:Person; ex:name "Person 15"; schema:birthDate "1977-07-07"^^xsd:date; dct:created "2015-01-12T18:16:38Z"^^xsd:dateTime .
+ex:person_16 rdf:type ex:Person; ex:name "Person 16"; schema:birthDate "1988-08-18"^^xsd:date; dct:created "2015-02-11T15:07:41Z"^^xsd:dateTime .
+ex:person_17 rdf:type ex:Person; ex:name "Person 17"; schema:birthDate "1990-01-21"^^xsd:date; dct:created "2015-03-03T19:52:07Z"^^xsd:dateTime .

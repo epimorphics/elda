@@ -11,8 +11,9 @@ import java.util.Map;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.shortnames.*;
+import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
+import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.API;
@@ -83,5 +84,10 @@ public class XSLT_RendererFactory implements RendererFactory {
 
     @Override public RendererFactory withMediaType( MediaType mt ) {
         return new XSLT_RendererFactory( root, mt );
+    }
+    
+    @Override
+    public RendererFactory withISODateFormatting(Boolean jsonUsesISOdate) {
+        return this;
     }
 }
