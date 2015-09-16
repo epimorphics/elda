@@ -42,8 +42,12 @@ public class Encoder {
     
     protected static EncoderPlugin defaultPlugin = new EncoderDefault();
     
+    public static Encoder getForOneResult( ReadContext c, boolean jsonUsesISOdate ) {
+    	return new Encoder( defaultPlugin, c, true, jsonUsesISOdate );
+    }
+    
     public static Encoder getForOneResult( ReadContext c ) {
-    	return new Encoder( defaultPlugin, c, true );
+        return new Encoder( defaultPlugin, c, true, false );
     }
     
     public static Encoder getForOneResult() {
@@ -55,7 +59,15 @@ public class Encoder {
      * Context information will be generated on-the-fly.
      */
     public static Encoder get( ReadContext context ) {
-        return get(defaultPlugin, context );
+        return get(defaultPlugin, context, false );
+    }
+    
+    /**
+     * Return an encoder using the default rules and no Context, any
+     * Context information will be generated on-the-fly.
+     */
+    public static Encoder get( ReadContext context, boolean jsonUsesISOdate ) {
+        return get(defaultPlugin, context, jsonUsesISOdate );
     }
     
     /**
@@ -63,15 +75,15 @@ public class Encoder {
      * Context information will be generated on-the-fly.
      */
     public static Encoder get(EncoderPlugin rules) {
-        return get(rules, new Context());
+        return get(rules, new Context(), false);
     }
     
     /**
      * Return an encoder using the specified rules and the specified 
      * base ontology.
      */
-    public static Encoder get(EncoderPlugin rules, ReadContext fromOntology) {
-        return new Encoder(rules, fromOntology, false );
+    public static Encoder get(EncoderPlugin rules, ReadContext fromOntology, boolean jsonUsesISOdate) {
+        return new Encoder(rules, fromOntology, false, jsonUsesISOdate );
     }
 
     /**
@@ -79,7 +91,7 @@ public class Encoder {
      * @param context
      */
     private Encoder(EncoderPlugin rules, ReadContext context) {
-    	this( rules, context, false );
+    	this( rules, context, false, false );
     }
 
     /**
@@ -87,16 +99,18 @@ public class Encoder {
      * @param context
      * @param oneResult true iff the LDA "result: object" style is required
      */
-    private Encoder(EncoderPlugin rules, ReadContext context, boolean oneResult ) {
+    private Encoder(EncoderPlugin rules, ReadContext context, boolean oneResult, boolean jsonUsesISOdate ) {
         this.rules = rules;
         this.context = context;
         this.oneResult = oneResult;
+        this.jsonUsesISOdate = jsonUsesISOdate;
     }
 
     // Instance data
     protected final EncoderPlugin rules;
     protected final ReadContext context;
     protected final boolean oneResult;
+    protected final boolean jsonUsesISOdate;
     
     /**
      * Encode the whole of the given RDF model into the writer 
@@ -105,7 +119,7 @@ public class Encoder {
      * @throws IOException 
      */
     public void encode(Model model, Writer writer) throws IOException {
-        encode(model, null, writer);
+        encode(model, null, writer, false);
     }
     
     /**
@@ -170,7 +184,7 @@ public class Encoder {
     }
 
     protected void encode(Model model, List<Resource> roots, JSONWriterFacade jw) {
-        EncoderInstance ei = new EncoderInstance(model, jw);
+        EncoderInstance ei = new EncoderInstance(model, jw, jsonUsesISOdate);
         ei.encodeSingleModelRoots(roots, false);
     }
     
@@ -213,7 +227,7 @@ public class Encoder {
     }
     
     protected void encodeRecursive(Model model, List<Resource>roots, JSONWriterFacade jw) {
-        EncoderInstance ei = new EncoderInstance(model, jw);
+        EncoderInstance ei = new EncoderInstance(model, jw, jsonUsesISOdate);
         ei.encodeSingleModelRoots(roots, true);
     }
     
@@ -259,8 +273,8 @@ public class Encoder {
      * @param jw JSON writer to output to
      * @throws IOException
      */
-    protected void encode(Dataset dataset, JSONWriterFacade jw) throws IOException {
-        EncoderInstance ei = new EncoderInstance(dataset.getDefaultModel(), jw);
+    protected void encode(Dataset dataset, JSONWriterFacade jw ) throws IOException {
+        EncoderInstance ei = new EncoderInstance(dataset.getDefaultModel(), jw, false);
         ei.startEncode();
         ei.encodeAll();
         ei.finishModelEncode();
@@ -275,6 +289,7 @@ public class Encoder {
     class EncoderInstance {
         protected Model model;
         protected JSONWriterFacade jw;
+        protected boolean jsonUsesISOdate;
         protected List<Resource> roots = new ArrayList<Resource>();
         protected int bnodeCount = 1;
         protected Map<AnonId, Integer> bNodes = new HashMap<AnonId, Integer>();
@@ -302,9 +317,10 @@ public class Encoder {
             this.jw = new JSONWriterWrapper( w );
         }
         
-        public EncoderInstance(Model model, JSONWriterFacade w) {
+        public EncoderInstance(Model model, JSONWriterFacade w, boolean jsonUsesISOdate) {
             this.model = model;
             this.jw = w;
+            this.jsonUsesISOdate = jsonUsesISOdate;
         }
 
         /**
@@ -563,12 +579,13 @@ public class Encoder {
         	Iterator<RDFNode> i = vals.getAll(p);
             boolean multi = prop.isMultivalued();
             boolean isStructured = prop.isStructured();
+            
             RDFNode first = i.next();
             prop.addType(first);
             if (!i.hasNext() && !multi) {
                 // just emit single value
             	jw.key(prop.getSerialisationName());
-                emitNode(first, isStructured);
+                emitNode(first, isStructured );
             } else {
                 // Emit as array, do so with sorting
                 List<RDFNode> nvals = new ArrayList<RDFNode>();
@@ -583,15 +600,15 @@ public class Encoder {
             	jw.key(prop.getSerialisationName());
                 jw.array();
                 for (RDFNode node : nvals) {
-					emitNode(node, isStructured);
+					emitNode(node, isStructured );
 				}
                 jw.endArray();
             }
         }
     
-        private void emitNode(RDFNode valNode, boolean isStructured) {
+        private void emitNode(RDFNode valNode, boolean isStructured ) {
             if (valNode.isLiteral()) {
-            	rules.encodeLiteral( jw, isStructured, (Literal) valNode, context );
+            	rules.encodeLiteral( jw, isStructured, (Literal) valNode, context, jsonUsesISOdate );
             } else {
                 Resource r = (Resource)valNode;
                 if (RDFUtil.isList(r)) {
