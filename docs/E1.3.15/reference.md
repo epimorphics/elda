@@ -1012,10 +1012,14 @@ DateTime using JSON the result has the format
 `EEE, d MMM yyyy HH:mm:ss 'GMT'Z` if it is a `DateTime` or
 `yyyy-MM-dd` if it is a `Date`.
 
-Attaching the property `elda:jsonUserISODate` to a JSON formatter
+Attaching the property `elda:jsonUsesISODate` to a JSON formatter
 will leave this behaviour unchanged if its value is `false` but
-will render the date using ISO 8601 if its value is `true`.
+will render the date using an ISO 8601 format if its value is 
+`true`:
 
+    `yyyy-MM-ddTHH:mm:ss`
+
+The `T...` is ommited for `Date` values.
 
 Statistics
 ==========
