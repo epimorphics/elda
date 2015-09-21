@@ -1004,6 +1004,19 @@ of the first property in the list
 That has any. This list can be changed by setting the value of the
 formatter's `elda:feedAuthorProperties`.
 
+Date & Times in JSON
+--------------------
+
+By default and according to the LDA spec, when Elda renders a
+DateTime using JSON the result has the format 
+`EEE, d MMM yyyy HH:mm:ss 'GMT'Z` if it is a `DateTime` or
+`yyyy-MM-dd` if it is a `Date`.
+
+Attaching the property `elda:jsonUserISODate` to a JSON formatter
+will leave this behaviour unchanged if its value is `false` but
+will render the date using ISO 8601 if its value is `true`.
+
+
 Statistics
 ==========
 
