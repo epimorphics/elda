@@ -27,8 +27,8 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.PropertyExpiryTimes;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.API;
+import com.epimorphics.util.QueryUtil;
 import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -331,14 +331,14 @@ public class View {
 		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
 		String queryString = prefixes + construct.toString();
 		// System.err.println( ">> QUERY:\n" + queryString );
-		Query constructQuery = QueryFactory.create( queryString );
+		Query constructQuery = QueryUtil.create( queryString );
 		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) ); 
 		return queryString;
 	}		
 	
 	private String describeBySelectedItems(State s, List<Resource> allRoots) {
 		String query = createDescribeQueryForItems( s, allRoots );
-		Query describeQuery = QueryFactory.create( query );
+		Query describeQuery = QueryUtil.create( query );
 		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
 		return query.toString();
 	}
@@ -368,7 +368,7 @@ public class View {
 	//
 		if (log.isDebugEnabled()) ELog.debug(log, "LABEL QUERY:\n" + queryString + "\n");
 	//	
-		Query constructQuery = QueryFactory.create( queryString );
+		Query constructQuery = QueryUtil.create( queryString );
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
 	}
 
@@ -438,7 +438,7 @@ public class View {
 				.append( "}\n" )
 				;
 		String resultQueryString = query.toString();
-		Query q = QueryFactory.create( resultQueryString );
+		Query q = QueryUtil.create( resultQueryString );
 		for (Source x: sources) m.add( x.executeConstruct( q ) );		
 		return resultQueryString;
 	}

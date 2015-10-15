@@ -36,8 +36,7 @@ import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.util.CollectionUtils;
-import com.epimorphics.util.Couple;
+import com.epimorphics.util.*;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
@@ -1052,12 +1051,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	// may be over-ridden in a subclass
 	protected Query createQuery(String selectQuery) {
-		try {
-			return QueryFactory.create(selectQuery);
-		} catch (Exception e) {
-			String x = e.getMessage();
-			throw new APIException("Internal error building query:\n\n" + x + "\nin:\n\n" + selectQuery, e);
-		}
+		return QueryUtil.create(selectQuery);
 	}
 
 	private static final class ResultResourcesReader implements Source.ResultSetConsumer {
