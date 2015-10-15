@@ -219,17 +219,20 @@ import com.sun.jersey.api.NotFoundException;
     public Response requestHandler(
     		@Context HttpServletRequest servletRequest,
     		@Context HttpServletResponse servletResponse,
-            @PathParam("path") String pathstub,
+            /* @Encoded */ @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
             @Context ServletContext servCon,
             @Context UriInfo ui) throws IOException, URISyntaxException 
-    {
+    {    	
     	ELog.setSeqID(getSeqID(servletResponse));
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	String contextPath = servCon.getContextPath(); 
+    	
+    	
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
     	boolean dontCache = has( rh, "pragma", "no-cache" ) || has( rh, "cache-control", "no-cache" );
         Couple<String, String> pathAndType = parse( pathstub );
+        
         Match matchAll = getMatch( "/" + pathstub, queryParams );
         Match matchTrimmed = getMatch( "/" + pathAndType.a, queryParams );  
         Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
