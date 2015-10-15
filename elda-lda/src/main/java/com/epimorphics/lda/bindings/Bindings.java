@@ -250,6 +250,13 @@ public class Bindings implements Lookup {
 			int lb = s.indexOf('{', start);
 			if (lb < 0)
 				break;
+			
+			if (s.charAt(lb + 1) == '\\') {
+				sb.append("{");
+				start = lb + 2;
+				continue;
+			}
+			
 			int rb = s.indexOf('}', lb);
 			sb.append(s.substring(start, lb));
 			String name = s.substring(lb + 1, rb);

@@ -67,7 +67,9 @@ public class ErrorPages {
 		String page = fetchPage(filesToTry, fallBack);
 		
 		if (message == null) message = "Odd, no additional information is available.";
-		b.put("_message", message);
+		String escaped = message.replaceAll("\\{", "{\\\\");
+		b.put("_message", escaped);
+		System.err.println(">> message:" + escaped );
 		
 		String builtPage = apply(b, page, name, message);
 		

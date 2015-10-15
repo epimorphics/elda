@@ -35,6 +35,7 @@ hello:hello-world-again a api:API
 
 	; api:endpoint 
 		hello:publishers, hello:games, hello:about
+		, hello:catchall
 
     ; api:formatter
         [a elda:FeedFormatter
@@ -75,6 +76,14 @@ hello:games a api:ListEndpoint
 	; api:defaultViewer api:labelledDescribeViewer
 	; elda:enableCounting false
 	.
+	
+hello:catchall a api:ItemEndpoint
+    ; rdfs:label "Catchall"
+    ; api:uriTemplate "/catchall/{grognard}"
+    ; api:selector [api:filter "type={grognard}"; api:sort "label"]
+    ; api:defaultViewer api:labelledDescribeViewer
+    ; elda:enableCounting false
+    .
 	
 #
 # The /about endpoint requires a query parameter whose value
