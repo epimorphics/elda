@@ -157,7 +157,7 @@ public class Bindings implements Lookup {
 		<p>"getUnbackslashed" just felt clumsy.</p>
 	*/
 	public Value getUnslashed(String name) {
-		Value v = getUnexpandedValue(name);
+		Value v = get(name);
 		if (v == null) return null;
 		return v.replaceBy(v.spelling().replace("{\\", "{"));
 	}
