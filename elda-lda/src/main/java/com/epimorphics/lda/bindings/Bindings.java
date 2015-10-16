@@ -24,6 +24,11 @@ import com.epimorphics.lda.support.MultiMap;
 	(a lexical form with type & language annotation). It also has a set of
 	parameter names, which correspond to the query parameter names, and can map
 	partial resource names to their URLs.
+<br>	
+	Bindings string-like values may contain variable expansion markers
+	`{name}`. When the value of a variable is fetched (using get) then
+	such sequences are replaced by the value of the named variable.
+	The special sequence {\ represents an { that is not part of an expansion.
 */
 public class Bindings implements Lookup {
 	static Logger log = LoggerFactory.getLogger(Bindings.class);
@@ -143,6 +148,21 @@ public class Bindings implements Lookup {
 	}
 	
 	/**
+		getUnslashed returns a Value whose spelling is that of the
+		value bound to name, with any {\ replaced by {. This provides
+		an unquoting operation for {\ sequences introduced to escape {
+		in raw strings. If there's no binding for name, getUnslashed
+		returns null. 
+		
+		<p>"getUnbackslashed" just felt clumsy.</p>
+	*/
+	public Value getUnslashed(String name) {
+		Value v = getUnexpandedValue(name);
+		if (v == null) return null;
+		return v.replaceBy(v.spelling().replace("{\\", "{"));
+	}
+	
+	/**
 		Return whatever value is associated with the given <code>key</code>,
 		or null if there isn't one.
 	*/
@@ -245,20 +265,21 @@ public class Bindings implements Lookup {
 
 	public String expandVariables(String s, List<String> seen) {
 		int start = 0;
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();		
 		while (true) {
 			int lb = s.indexOf('{', start);
 			if (lb < 0)
 				break;
 			
+			sb.append(s.substring(start, lb));
+
 			if (s.charAt(lb + 1) == '\\') {
-				sb.append("{");
+				sb.append("{\\");
 				start = lb + 2;
 				continue;
 			}
 			
 			int rb = s.indexOf('}', lb);
-			sb.append(s.substring(start, lb));
 			String name = s.substring(lb + 1, rb);
 
 			if (seen.contains(name))

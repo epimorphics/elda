@@ -66,10 +66,11 @@ public class ErrorPages {
 		
 		String page = fetchPage(filesToTry, fallBack);
 		
+		// Bind the exception message to _message. Quote any left braces to
+		// allow them to be passed through possibly multiple Bindings evaluations
+		// and eventually unquoted using Bindings::getUnslashed.
 		if (message == null) message = "Odd, no additional information is available.";
-		String escaped = message.replaceAll("\\{", "{\\\\");
-		b.put("_message", escaped);
-		System.err.println(">> message:" + escaped );
+		b.put("_message", message.replaceAll("\\{", "{\\\\"));
 		
 		String builtPage = apply(b, page, name, message);
 		

@@ -361,10 +361,15 @@ implements BytesOut
         vc.put( "renderer", this.vr );
     }
 
-    /** Add the Elda bindings as context variables */
+    /**
+    	Add the Elda bindings as context variables. Use getUnslashed to
+    	unquote any quoted left braces (ie the {/ sequence) that were
+    	introduced to quote raw string values eg esp from exception
+    	messages.
+    */
     protected void addBindingsToContext( VelocityContext vc, Bindings binds ) {
         for (String key: binds.keySet()) {
-            vc.put( key, binds.get( key ) );
+            vc.put( key, binds.getUnslashed( key ) );
         }
     }
 
