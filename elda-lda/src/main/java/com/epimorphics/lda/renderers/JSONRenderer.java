@@ -90,7 +90,7 @@ public class JSONRenderer implements Renderer {
 			writer.write( after );
 			writer.flush();
 		} catch (Exception e) {
-			ELog.error(log, "failed to encode model: stacktrace follows: %s", e );
+			log.error(ELog.message("failed to encode model: stacktrace follows: %s", e));
 			throw new WrappedException( e );
 		}				
 		final String content = UTF8.toString( os );

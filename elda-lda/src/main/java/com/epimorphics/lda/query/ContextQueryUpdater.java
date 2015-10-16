@@ -103,7 +103,7 @@ public class ContextQueryUpdater implements ViewSetter {
             // do so. For the moment we'll do a debug-level log (rather than the
             // info-level log we had before) so we can at least spot them.
             // See issue 175
-            ELog.debug(log, "'%s' supplied, but no value for ", taggedParam, param );
+            log.debug(ELog.message("'%s' supplied, but no value for ", taggedParam, param ));
             return;
         }
         String val = context.expandVariables( sv );
@@ -232,7 +232,7 @@ public class ContextQueryUpdater implements ViewSetter {
     public void addFilterFromQuery( Param param, String raw_val ) {
         if (raw_val.equals( "" )) {
             // see issue #175        	
-            ELog.debug(log, "parameter '%s' given empty value", param);
+            log.debug(ELog.message("parameter '%s' given empty value", param));
             return;
         }
         String val = aq.cookRawValue(raw_val);

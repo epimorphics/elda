@@ -220,7 +220,7 @@ public abstract class TomcatTestBase {
         while (!tomcatLive) {
             String u = getTestURL() + "games.ttl";
 			int status = getResponse( u ).getStatus();
-			ELog.info(log, "[test] checkLive %s, try %s, status %s", u, count, status);
+			log.info(ELog.message("[test] checkLive %s, try %s, status %s", u, count, status));
 			if (status != targetStatus) {
                 try {
                     Thread.sleep(500);

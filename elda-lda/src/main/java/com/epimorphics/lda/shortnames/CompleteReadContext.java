@@ -33,17 +33,17 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String getURIfromName(String code) {
-				ELog.debug(log, "readContext: getURIfromName unexpectedly called");
+				log.debug(ELog.message("readContext: getURIfromName unexpectedly called"));
 				return context.getURIfromName(code);
 			}
 			
 			@Override public ContextPropertyInfo getPropertyByName(String name) {
-				ELog.debug(log, "readContext: getpropertyByName unexpectedly called.");
+				log.debug(ELog.message("readContext: getpropertyByName unexpectedly called."));
 				return context.getPropertyByName(name);
 			}
 			
 			@Override public String getNameForURI(String uri) {
-				ELog.debug(log, "readContext: unusually, getNameForURI called.");
+				log.debug(ELog.message("readContext: unusually, getNameForURI called."));
 				return uriToName.get(uri);
 			}
 			
@@ -52,7 +52,7 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String forceShorten(String uri) {
-				ELog.debug(log, "readContext: unusually, forceShorten called.");
+				log.debug(ELog.message("readContext: unusually, forceShorten called."));
 				return context.forceShorten(uri);
 			}
 			

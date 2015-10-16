@@ -24,7 +24,7 @@ public class APIModelLoader implements ModelLoader {
     }
 
     @Override public Model loadModel(String uri) {
-        ELog.info(Loader.log, "loadModel '%s'", uri );
+        Loader.log.info(ELog.message("loadModel '%s'", uri ));
         if (uri.startsWith( Container.LOCAL_PREFIX )) {
             String specFile = "file:///" + baseFilePathLocal + uri.substring(Container.LOCAL_PREFIX.length());
             return EldaFileManager.get().loadModel( specFile );
@@ -32,8 +32,8 @@ public class APIModelLoader implements ModelLoader {
         } else if (uri.startsWith( TDBManager.PREFIX )) {
             String modelName = uri.substring( TDBManager.PREFIX.length() );
             Model tdb = TDBManager.getTDBModelNamed( modelName );
-            ELog.info(Loader.log, "get TDB model '%s'", modelName);
-            if (tdb.isEmpty()) ELog.warn(Loader.log,  "the TDB model at '%s' is empty -- has it been initialised?", modelName);
+            Loader.log.info(ELog.message("get TDB model '%s'", modelName));
+            if (tdb.isEmpty()) Loader.log.warn(ELog.message("the TDB model at '%s' is empty -- has it been initialised?", modelName));
             if (tdb.isEmpty()) throw new APIException( "the TDB model at " + modelName + " is empty -- has it been initialised?" );
             return tdb;
 

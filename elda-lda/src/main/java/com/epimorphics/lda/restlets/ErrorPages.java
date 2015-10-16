@@ -77,8 +77,8 @@ public class ErrorPages {
 			.build()
 			;
 		} catch (Throwable e) {
-			ELog.error(log, "an exception occurred when rendering an error page");
-			ELog.error(log, "%s", e.getMessage());
+			log.error(ELog.message("an exception occurred when rendering an error page"));
+			log.error(ELog.message("%s", e.getMessage()));
 			return Response
 				.status(Status.INTERNAL_SERVER_ERROR)
 				.entity(fallBack)

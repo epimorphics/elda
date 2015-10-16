@@ -147,7 +147,7 @@ public class EncoderDefault implements EncoderPlugin {
 				if (showUnhandled)
 					{
 					// Issue #178
-					ELog.warn(log, "unhandled datatype '%s' in literal '%s'", dt, spelling);
+					log.warn(ELog.message("unhandled datatype '%s' in literal '%s'", dt, spelling));
 					showUnhandled = false;
 					}
 				jw.value( spelling );
