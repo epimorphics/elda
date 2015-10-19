@@ -163,12 +163,12 @@ import com.sun.jersey.api.NotFoundException;
 	    		 routers.put( contextPath, r );	    		 
 	    	 } else {
 	    		 // checked, but no change to reload
-	    		 log.debug(ELog.message("don't need to reload router, will check again later.") );
+	    		 // ELog.debug(log, "don't need to reload router, will check again later." );
 	    		 r.deferCheck();
 	    	 }
     	 } else {
     		 // Don't need to check yet, still in waiting period
-    		 log.debug(ELog.message("using existing router, not time to check yet."));
+    		 // ELog.debug(log, "using existing router, not time to check yet.");
     	 }
     //
     	 return r.router;
