@@ -26,7 +26,7 @@ public class QuerySupport {
 
 	private static boolean promoteAnySubject = true;
 
-	public static final Any text_query = RDFQ.uri(TextSearchConfig.JENA_TEXT_QUERY.getURI());
+	public static final Any text_query = RDFQ.uri(TextSearchConfig.JENA_TEXT_QUERY);
 	
 	/**
 	    <p>

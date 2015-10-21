@@ -60,7 +60,7 @@ public class TestConstructsTextQueries {
 		Set<Triple> obtained = new HashSet<Triple>( q.getBasicGraphTriples() );
 	//
 		Set<Triple> expected = new HashSet<Triple>();
-		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri(queryProperty.getURI() ), RDFQ.literal( "target" ) ) );
+		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri(queryProperty), RDFQ.literal( "target" ) ) );
 	//
 		assertEquals( expected, obtained );
 	}
@@ -86,8 +86,8 @@ public class TestConstructsTextQueries {
 		Set<Triple> obtained = new HashSet<Triple>( q.getBasicGraphTriples() );
 	//
 		Set<Triple> expected = new HashSet<Triple>();
-		AnyList searchOperand = RDFQ.list( RDFQ.uri(contentProperty.getURI()), RDFQ.literal( "target" ) );
-		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri( TextSearchConfig.JENA_TEXT_QUERY.getURI() ), searchOperand ) );
+		AnyList searchOperand = RDFQ.list( RDFQ.uri(contentProperty), RDFQ.literal( "target" ) );
+		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri( TextSearchConfig.JENA_TEXT_QUERY ), searchOperand ) );
 	//
 		assertEquals( expected, obtained );
 	}
@@ -118,8 +118,8 @@ public class TestConstructsTextQueries {
 		Set<Triple> obtained = new HashSet<Triple>( q.getBasicGraphTriples() );
 	//
 		Set<Triple> expected = new HashSet<Triple>();
-		AnyList searchOperand = RDFQ.list( RDFQ.uri(a.getURI()), RDFQ.literal( searchString ), RDFQ.literal(number) );
-		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri( TextSearchConfig.JENA_TEXT_QUERY.getURI() ), searchOperand ) );
+		AnyList searchOperand = RDFQ.list( RDFQ.uri(a), RDFQ.literal( searchString ), RDFQ.literal(number) );
+		expected.add( RDFQ.triple( RDFQ.var("?item"), RDFQ.uri( TextSearchConfig.JENA_TEXT_QUERY ), searchOperand ) );
 	//
 		assertEquals( expected, obtained );
 	}

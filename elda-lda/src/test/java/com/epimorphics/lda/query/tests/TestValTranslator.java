@@ -7,7 +7,7 @@
 */
 package com.epimorphics.lda.query.tests;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public class TestValTranslator {
 	//
 		ValTranslator vt = new ValTranslator(absentSupply, absentFilters, sns);
 		Any o = vt.objectForValue( type, "my:uri", null );
-		assertEquals( RDFQ.uri( "my:uri" ), o );
+		assertEquals( RDFQ.uriRaw( "my:uri" ), o );
 	}
 	
 	@Test public void testDatatypedObject() {
@@ -118,8 +118,8 @@ public class TestValTranslator {
 		ShortnameService sns = new StandardShortnameService( root, noPrefixes, null );
 	//
 		ValTranslator vt = new ValTranslator(absentSupply, absentFilters, sns);
-		Any o = vt.objectForValue( "some:ObjectType", "likeURI", "en" );
-		assertEquals( RDFQ.uri( "likeURI" ), o );		
+		Any o = vt.objectForValue( "some:ObjectType", "scheme:likeURI", "en" );
+		assertEquals( RDFQ.uriRaw( "scheme:likeURI" ), o );
 	}
 	
 	@Test public void testObjectTypedObjectWithExpansion() {
@@ -128,9 +128,9 @@ public class TestValTranslator {
 		ShortnameService sns = new StandardShortnameService( root, noPrefixes, null );
 	//
 		ValTranslator vt = new ValTranslator(absentSupply, absentFilters, sns);
-		String NS = root.getModel().expandPrefix( ":" );
+		String NS = root.getModel().expandPrefix( ":thing" );
 		Any o = vt.objectForValue( "some:ObjectType", "val", "en" );
-		assertEquals( RDFQ.uri( NS + "thing" ), o );		
+		assertEquals( RDFQ.uriRaw( NS ), o );		
 	}
 	
 //	@Test public void testMultipleLanguages() {
