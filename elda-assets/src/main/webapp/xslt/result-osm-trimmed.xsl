@@ -1917,9 +1917,9 @@ $prefLabel, $altLabel, $title and $name variables.
               <xsl:apply-templates select="." mode="name" />
            </xsl:when>
            <!-- pick the (misplaced) label up from the result if there is one there -->
-           <xsl:when test="/result/label">
-              <xsl:apply-templates select="/result" mode="name" />
-           </xsl:when>
+<!--            <xsl:when test="/result/label"> -->
+<!--               <xsl:apply-templates select="/result" mode="name" /> -->
+<!--            </xsl:when> -->
            <!-- pick up best label from misplaced result - cann only happen for html-->
            <xsl:otherwise>
               <xsl:text>html</xsl:text>
