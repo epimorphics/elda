@@ -1,8 +1,43 @@
 + ---------------------------------------------------------------------
 | Elda 1.3.17 (DEVELOPING)
 
-Fix for issue #153: when the results count is zero, 
-show an appropriate count summary
+TermBindings metadata was not complete. When Elda adds term
+bindings to the result model's metadata, it does not add
+bindings that are "not used". It turned out that terms in
+the metadata were not counting as "used", so terms only appearing
+in the metadata were not added to the term bindings, and this
+meant that the XSLT renderer could not seem them and instead
+used a fall-back representation rather than the term label.
+
+Fixed by the term binding adder checking not only the object
+model but also the union of the other (already created) metadata
+models.
+
+Messages about routers being/not being reloaded have been made
+DEBUG rather than INFO to reduce log density. Some such messages
+are no longer issued at all.
+
+When the constructed SPARQL queries are syntactically incorrect,
+the resulting exception in Elda is trapped and generates a
+proper error page (it used to throw a less helpful message).
+
+The stock XSLT stylesheets have been modified to handle the
+term binding issue if it should arise again.
+
+Exception text that appears in error pages may have embeddded
+braces {} which interacts badly with the use of {var} in the
+values of bindings -- which are used to send the error text into
+the Velocity context. To quote the opening brach we introduced
+the special variable substitution form {\} which expands to
+itself and is stripped back to { when put into the velocity context.
+
+Log messages once again show the appropriate class and line of
+the log call rather than all appearing to come from ELog. Elog
+no longer logs but merely provides a way (ELog.message()) to
+construct log messages with the sequence ID in.
+
+When rendering URI-like objects to SPARQL text, spaces are
+trapped and replaced by %20.
 
 + ---------------------------------------------------------------------
 | Elda 1.3.16 (RELEASED)
