@@ -118,10 +118,10 @@ public class DOMUtils {
 		for (String name : rc.keySet()) {
 			String value = rc.getValueString(name);
 			if (value == null) {
-				ELog.debug(log, "ignored null xslt parameter '%s'", name);
+				log.debug(ELog.message("ignored null xslt parameter '%s'", name));
 			} else {
 				t.setParameter(name, value);
-				ELog.debug(log, "set xslt parameter '%s' to '%s'", name, value);
+				log.debug(ELog.message("set xslt parameter '%s' to '%s'", name, value));
 			}
 		}
 		String nsd = namespacesDocument(pm);

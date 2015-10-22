@@ -68,7 +68,7 @@ public class QuerySupport {
 		result.addAll(lateTextQueries);
 		result.addAll(typed);
 		if (!result.equals(triples)) {
-			ELog.debug(log, "reordered\n    %s\nto\n    %s", triples, result);
+			log.debug(ELog.message("reordered\n    %s\nto\n    %s", triples, result));
 		}
 		return result;
 	}

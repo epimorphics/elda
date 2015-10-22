@@ -250,7 +250,7 @@ public class PropertyPath
                 else {
                     String uri = snr.expand( segment );
                     if (uri == null) {
-                        ELog.warn(log,  "[%s]: warning: property path uses short name '%s' which does not have an expansion to a URI", segment);
+                        log.warn(ELog.message( "[%s]: warning: property path uses short name '%s' which does not have an expansion to a URI", segment));
                         properties.add( STAR );
                     }
                     else {
