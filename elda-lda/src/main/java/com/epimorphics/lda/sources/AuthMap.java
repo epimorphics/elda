@@ -67,7 +67,7 @@ public class AuthMap {
 	}
 
 	private static AuthInfo readAuthFile( FileManager fm, String fileName ) {
-		ELog.debug(log, "reading auth file '%s'", fileName);
+		log.debug(ELog.message("reading auth file '%s'", fileName));
 		return new AuthInfo(readProperties(fm, fileName));
 	}
 

@@ -83,7 +83,7 @@ public class CombinedSource extends SourceBase implements Source
     
     @Override public QueryExecution execute( Query query )
         {
-        ELog.info(log, "doing query execution on a CombinedSource" );
+        log.info(ELog.message("doing query execution on a CombinedSource") );
         Model combined = combine();
         return QueryExecutionFactory.create( query, combined );
         }
@@ -97,7 +97,7 @@ public class CombinedSource extends SourceBase implements Source
 
     private Model dataFrom( Source s )
         {
-        ELog.info(log,  "[%s]: getting model data from source '%s'", s);
+        log.info(ELog.message( "[%s]: getting model data from source '%s'", s));
         String queryString = "construct " + triplesFor( constructs ) + " where " + triplesFor( matches ) + "";
         return s.executeConstruct( QueryUtil.create( queryString ) );
         }

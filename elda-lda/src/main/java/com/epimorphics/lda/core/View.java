@@ -366,7 +366,7 @@ public class View {
 	//
 		String queryString = buildFetchLabelsQuery(s, properties);
 	//
-		if (log.isDebugEnabled()) ELog.debug(log, "LABEL QUERY:\n" + queryString + "\n");
+		if (log.isDebugEnabled()) log.debug(ELog.message("LABEL QUERY:\n" + queryString + "\n"));
 	//	
 		Query constructQuery = QueryUtil.create( queryString );
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );

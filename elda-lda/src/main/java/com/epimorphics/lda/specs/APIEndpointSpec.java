@@ -347,8 +347,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	            if (parentN instanceof Resource) {
 	                addSelectorInfo( (Resource)parentN );
 	            } else {
-	                ELog.error(APISpec.log, "[config]: parent view must be a resource, found a literal: '%s'"
-	                	, parentN);
+	                APISpec.log.error(ELog.message("[config]: parent view must be a resource, found a literal: '%s'"
+	                	, parentN));
 	            }
 	        }
 	        addSelectorInfo(s);
@@ -369,8 +369,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	            if (paramValue.length == 2) {
 	                baseQuery.deferrableAddFilter( Param.make( sns, paramValue[0] ), paramValue[1] );
 	            } else {
-	                ELog.error(APISpec.log, "[config]: filter specification contained unintepretable query string: %s",
-	                	q );
+	                APISpec.log.error(ELog.message("[config]: filter specification contained unintepretable query string: %s",
+	                	q));
 	            }
             }
         }

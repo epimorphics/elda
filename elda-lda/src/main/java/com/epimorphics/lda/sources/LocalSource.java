@@ -86,7 +86,7 @@ public class LocalSource extends SourceBase implements Source {
 
 	@Override public QueryExecution execute(Query query) {
         if (log.isDebugEnabled()) {
-        	ELog.debug(log, "running query: %s", query);
+        	log.debug(ELog.message("running query: %s", query));
         }
         return QueryExecutionFactory.create(query, sourceDataset);
     }

@@ -998,7 +998,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		//
 		Query q = createQuery(selectQuery);
 		if (log.isDebugEnabled()) {
-			ELog.debug(log, "running query: %s", selectQuery.replaceAll("\n", " "));
+			log.debug(ELog.message("running query: %s", selectQuery.replaceAll("\n", " ")));
 		}
 		source.executeSelect(q, new ResultResourcesReader(results));
 		return new Couple<String, List<Resource>>(selectQuery, results);
@@ -1082,7 +1082,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 					}
 				}
 				if (countBnodes > 0 && log.isDebugEnabled()) {
-					ELog.debug(log, "%s selected bnode items discarded", countBnodes);
+					log.debug(ELog.message("%s selected bnode items discarded", countBnodes));
 				}
 			} catch (APIException e) {
 				throw e;

@@ -293,7 +293,7 @@ public class Bindings implements Lookup {
 			if (thisV == null) {
 				sb.append("{").append(name).append("}");
 				// issue #177
-				ELog.debug(log, "variable '%s' has no value, not substituted", name);
+				log.debug(ELog.message("variable '%s' has no value, not substituted", name));
 			} else {
 				seen.add(name);
 				Value v = evaluate(name, thisV, seen);
@@ -302,7 +302,7 @@ public class Bindings implements Lookup {
 				if (value == null) {
 					sb.append("{").append(name).append("}");
 					// issue #177
-					ELog.debug(log, "variable '%s' has no value, not substituted", name);
+					log.debug(ELog.message("variable '%s' has no value, not substituted", name));
 				} else
 					sb.append(value);
 			}
@@ -339,7 +339,7 @@ public class Bindings implements Lookup {
 			if (value == null) {
 				sb.append("{").append(name).append("}");
 				// issue #177
-				ELog.debug(log, "variable '%s' has no value, not substituted", name);
+				log.debug(ELog.message("variable '%s' has no value, not substituted", name));
 			} else
 				sb.append(value);
 			start = rb + 1;
