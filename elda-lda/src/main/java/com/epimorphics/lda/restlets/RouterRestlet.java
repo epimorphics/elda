@@ -219,11 +219,15 @@ import com.sun.jersey.api.NotFoundException;
     public Response requestHandler(
     		@Context HttpServletRequest servletRequest,
     		@Context HttpServletResponse servletResponse,
-            /* @Encoded */ @PathParam("path") String pathstub,
+            @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
             @Context ServletContext servCon,
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {    	
+    	
+//    	System.err.println(">> requestHandler: URI = " + ui.getRequestUri());
+//    	System.err.println(">> path: " + pathstub);
+    	
     	ELog.setSeqID(getSeqID(servletResponse));
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	String contextPath = servCon.getContextPath(); 
@@ -243,8 +247,9 @@ import com.sun.jersey.api.NotFoundException;
         if (match == null) {
         	StatsValues.endpointNoMatch();
         	String item = router.findItemURIPath( "_", ui.getRequestUri(), "/" + pathstub );
-        	if (item == null) 
+        	if (item == null) {
         		return noMatchFound( pathstub, ui, pathAndType );
+        	}
         	else 
         		return standardHeaders( null, Response.seeOther( new URI( item ) ) ).build();
         } else {

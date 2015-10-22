@@ -335,7 +335,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	public void setTypeConstraint(Resource typeConstraint) {
-		addTriplePattern(SELECT_VAR, RDF.type, RDFQ.uri(typeConstraint.getURI()));
+		addTriplePattern(SELECT_VAR, RDF.type, RDFQ.uri(typeConstraint));
 	}
 
 	/**
@@ -347,12 +347,12 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 *            full URI
 	 */
 	public void setSubjectAsItemEndpoint(String subj) {
-		subjectResource = sns.asResource(subj);
+		setSubject(subj);
 		isItemEndpoint = true;
 	}
 
 	public void setSubject(String subj) {
-		subjectResource = sns.asResource(subj);
+		subjectResource = sns.asResource(URIUtils.escapeAsURI(subj));
 	}
 
 	public void addAllowReserved(String name) {
@@ -435,7 +435,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			if (contentProperty.equals(TextSearchConfig.DEFAULT_CONTENT_PROPERTY)) {
 				addTriplePattern(SELECT_VAR, queryProperty, literal);
 			} else {
-				Any cp = RDFQ.uri(contentProperty.getURI());
+				Any cp = RDFQ.uri(contentProperty);
 				AnyList searchOperand = RDFQ.list(cp, literal);
 				addTriplePattern(SELECT_VAR, queryProperty, searchOperand);
 			}
@@ -507,7 +507,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	private void addTriplePattern(Variable varname, Resource P, Any O) {
-		basicGraphTriples.add(RDFQ.triple(varname, RDFQ.uri(P.getURI()), O));
+		basicGraphTriples.add(RDFQ.triple(varname, RDFQ.uri(P), O));
 	}
 
 	/**
@@ -616,7 +616,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	private void onePropertyStep(List<RDFQ.Triple> chain, Variable subject, Info prop, Variable var) {
 		Resource np = prop.asResource;
 		varInfo.put(var, prop);
-		chain.add(RDFQ.triple(subject, RDFQ.uri(np.getURI()), var));
+		chain.add(RDFQ.triple(subject, RDFQ.uri(np), var));
 	}
 
 	/**
@@ -957,9 +957,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	protected Couple<String, List<Resource>> selectResources(Controls c, APISpec spec, Bindings b, Source source) {
 		final List<Resource> results = new ArrayList<Resource>();
 		if (itemTemplate != null) {
-			String expanded = b.expandVariables(itemTemplate);
-			// expanded = encodeNonAscii(expanded);
-			setSubject(expanded);
+			setSubject(b.expandVariables(itemTemplate));
 		}
 		if (isFixedSubject() && isItemEndpoint)
 			return new Couple<String, List<Resource>>("", CollectionUtils.list(subjectResource));

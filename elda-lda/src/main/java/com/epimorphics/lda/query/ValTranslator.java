@@ -62,7 +62,7 @@ public class ValTranslator {
 		} else if (sns.isDatatype(type)) {
 			return RDFQ.literal( val, null, type );
 		} else {
-			return RDFQ.uri( expanded == null ? val : expanded );
+			return RDFQ.uriRaw( expanded == null ? val : expanded );
 		}
 	}
 

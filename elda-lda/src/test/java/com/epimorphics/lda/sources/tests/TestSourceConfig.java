@@ -99,7 +99,7 @@ public class TestSourceConfig {
 		config.addProperty( API.sparqlEndpoint, endpoint );
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
 	//
-		Any qA = RDFQ.uri( a.getURI() );
+		Any qA = RDFQ.uri( a );
 		Any qB = RDFQ.literal( b.getLexicalForm() );
 		Any qC = RDFQ.literal( c.getLexicalForm() );
 	//
