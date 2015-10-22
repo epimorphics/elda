@@ -159,7 +159,7 @@ public class Bindings implements Lookup {
 	public Value getUnslashed(String name) {
 		Value v = get(name);
 		if (v == null) return null;
-		return v.replaceBy(v.spelling().replace("{\\", "{"));
+		return v.replaceBy(v.spelling().replace("{\\}", "{"));
 	}
 	
 	/**
@@ -273,9 +273,10 @@ public class Bindings implements Lookup {
 			
 			sb.append(s.substring(start, lb));
 
+			// assume char after \ is }
 			if (s.charAt(lb + 1) == '\\') {
-				sb.append("{\\");
-				start = lb + 2;
+				sb.append("{\\}");
+				start = lb + 3;
 				continue;
 			}
 			
@@ -327,8 +328,8 @@ public class Bindings implements Lookup {
 			sb.append(s.substring(start, lb));
 
 			if (s.charAt(lb + 1) == '\\') {
-				sb.append("{\\");
-				start = lb + 2;
+				sb.append("{\\}");
+				start = lb + 3;
 				continue;
 			}
 			
