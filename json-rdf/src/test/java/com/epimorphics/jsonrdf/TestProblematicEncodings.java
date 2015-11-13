@@ -30,14 +30,14 @@ import org.junit.Test;
  */
 public class TestProblematicEncodings {
 
-    @Test
-    public void testNameClash1() throws IOException {
-        String srcTTL = ":school a :Shool; alt:type 'Primary'.";
-        String[] roots = new String[]{":school"};
-        String expectedEncoding = "[{'alt_type':'Primary','type':'http://www.epimorphics.com/tools/example#Shool','_about':'http://www.epimorphics.com/tools/example#school'}]";
-        Encoder enc = Encoder.get();
-        testEncoding(srcTTL, enc, roots, expectedEncoding);
-    }
+//    @Test
+//    public void testNameClash1() throws IOException {
+//        String srcTTL = ":school a :Shool; alt:type 'Primary'.";
+//        String[] roots = new String[]{":school"};
+//        String expectedEncoding = "[{'alt_type':'Primary','type':'http://www.epimorphics.com/tools/example#Shool','_about':'http://www.epimorphics.com/tools/example#school'}]";
+//        Encoder enc = Encoder.get();
+//        testEncoding(srcTTL, enc, roots, expectedEncoding);
+//    }
     
     @Test
     public void testNullLists() throws IOException {

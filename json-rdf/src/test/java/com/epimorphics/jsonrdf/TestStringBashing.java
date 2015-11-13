@@ -43,19 +43,19 @@ import static org.junit.Assert.*;
 
 public class TestStringBashing {
 
-    @Test @Ignore public void testEncode() {
-        doTestEncode("foo bar", "foo bar");
-        doTestEncode("foo^^bar", "foo\\^\\^bar");
-        doTestEncode("foo\\bar", "foo\\\\bar");
-        doTestEncode("/foo/bar", "/foo/bar");
-        doTestEncode("http://foo/bar", "http://foo/bar");
-    }
+//    @Test @Ignore public void testEncode() {
+//        doTestEncode("foo bar", "foo bar");
+//        doTestEncode("foo^^bar", "foo\\^\\^bar");
+//        doTestEncode("foo\\bar", "foo\\\\bar");
+//        doTestEncode("/foo/bar", "/foo/bar");
+//        doTestEncode("http://foo/bar", "http://foo/bar");
+//    }
     
-    private void doTestEncode(String src, String expected) {
-        String actual = EncoderDefault.escapeString(src);
-        assertEquals(expected, actual);
-        assertEquals(src, EncoderDefault.unescapeString(actual));
-    }
+//    private void doTestEncode(String src, String expected) {
+//        String actual = EncoderDefault.escapeString(src);
+//        assertEquals(expected, actual);
+//        assertEquals(src, EncoderDefault.unescapeString(actual));
+//    }
     
     @Test public void testURIs() {
         assertEquals(true, RDFUtil.looksLikeURI("http://www.foo.bar/baz"));
