@@ -366,46 +366,51 @@ public class View {
 		
 		String queryString = buildFetchLabelsQuery(s, properties);
 	//
-		if (log.isDebugEnabled()) log.debug("LABEL QUERY:\n" + queryString + "\n");
+		if (log.isDebugEnabled()) log.debug("label query:\n" + queryString + "\n");
 	//	
 		Query constructQuery = QueryFactory.create( queryString );
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
 	}
+	
+	
+	/*
+		CONSTRUCT { ?x ?prop ?label } WHERE {
+         	VALUE ?x { ..... }   ## subject bindings
+           	VALUE ?prop { ... }  ## label prop bindings
+          	?x ?prop ?label .
+        }
+        Degenerate case could be replaced by BIND or textual substitution
+	 */
 
 	public static String buildFetchLabelsQuery(State s, List<String> properties) {
 		StringBuilder sb = new StringBuilder();
 		sb
-			.append( "PREFIX rdfs: <" )
-			.append( RDFS.getURI() )
-			.append(">" )
 			.append( "\nCONSTRUCT {\n")
 			;
 
-		int i = 0;
-		for (String p: properties) {
-			i += 1;
-			sb.append( "    ?x <" ).append( p ).append( "> ?l").append(i).append(".\n");				
-		}
+		sb.append( "    ?x ?p ?label .\n");		
 		
 		sb.append("}\nWHERE\n{" );
 		s.beginGraph(sb);
-	//	
-		sb.append( "  { VALUES ?x { " );
-	//
+	//	  
+		sb.append("\n    VALUES ?x {" );
 		for (RDFNode n: s.m.listObjects().toList()) 
 			if (n.isURIResource())
-				sb.append( "\n  " ).append("<").append( n.asNode().getURI() ).append(">");
-	//
-		sb.append( "\n} }\n" );
-		int j = 0;
-		for (String p: properties) {
-			j += 1;
-			sb.append( "    ?x <" ).append( p ).append( "> ?l").append(j).append(". \n" );			
-		}
+				sb.append( "\n        " ).append("<").append( n.asNode().getURI() ).append(">");
+		sb.append("\n    }");
+		
+		sb.append("\n    VALUES ?p {" );
+		for (String p: properties) sb.append("\n        ").append("<").append(p).append(">");
+		sb.append("\n    }");
+		sb.append("\n    ?x ?p ?label .");
+
 	//
 		s.endGraph(sb);
-		sb.append( "}\n" );
+		sb.append( "\n}\n" );
 		String queryString = sb.toString();
+		
+//		System.err.println(">> QS"); System.err.println(queryString);
+		
 		return queryString;
 	}	
 
