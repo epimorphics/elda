@@ -712,6 +712,10 @@ If a new viewer is declared with the property `elda:describeAllLabel`,
 it becomes a variant of the `describeAllViewer` where the label property
 used is the object of that property rather than `rdfs:label`.
 
+Multiple `describeAllLabel` properties may be specified. All such
+available label properties and their values are available to
+the view.
+
 elda:allowedReserved {#allow-reserved}
 ----------------------
 
