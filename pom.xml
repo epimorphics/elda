@@ -18,7 +18,7 @@
 
   <properties>
 	  <tempSCM>/tmp/tempSCM</tempSCM>
-	  <project.tagname></project.tagname>
+	  <project.tagname>logFixed</project.tagname>
 
     <ver.junit>4.11</ver.junit>
     <ver.log4j>1.2.17</ver.log4j>
