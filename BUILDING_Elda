@@ -90,39 +90,70 @@ RELEASING ELDA
   will object loundly and clunkily). If there are,
   deal with them appropriately.
 
-* MAVEN RELEASE
+//* MAVEN RELEASE
+//
+//  Remove any existing /tmp/tempSCM directory.
+//  Clone the elda project into /tmp/tempSCM.
+//
+//    git clone --bare https://github.com/epimorphics/elda.git tempSCM
+//
+//  In your USUAL elda development directory
+//
+//    mvn --batch-mode release:prepare
+//    mvn --batch-mode release:perform
+//
+//  This builds and deploys non-SNAPSHOT Elda artifacts.
+//  It should not fail (that's what the "run test build"
+//  and "all files under change control" steps are for).
+//
+//  THIS STEP IS NOT IDEMPOTENT AND NOT REVERSIBLE. The
+//  release/prepare-perform cycle converts $VERSION-SNAPSHOT
+//  to $VERSION and deploys the Elda artifacts, tagging
+//  the repository, before incrementing the version and
+//  creating $VERSION'-SNAPSHOT. Because convention decrees
+//  that existing artifacts aren't deleted or changed,
+//  the new Elda version is Out There and can't be pulled
+//  back. 
+//
+//  This is far from perfect but will have to do. 
 
-  Remove any existing /tmp/tempSCM directory.
-  Clone the elda project into /tmp/tempSCM.
+RELEASING WITHOUT MAVEN RELEASE
 
-    git clone --bare https://github.com/epimorphics/elda.git tempSCM
+We've been having some problems with maven release and
+it's hard to explore them without multiple deploys
+cluttering up the repository. So instead I've been
+doing the release "by hand".
 
-  In your USUAL elda development directory
+(a) Ensure that there are no uncheckedin files and
+    that we are currently on a SNAPSHOT version eg
+    v.f.p-SNAPSHOT.
 
-    mvn --batch-mode release:prepare
-    mvn --batch-mode release:perform
+(b) mvn versions:set -DnewVersion=v.f.p
 
-  This builds and deploys non-SNAPSHOT Elda artifacts.
-  It should not fail (that's what the "run test build"
-  and "all files under change control" steps are for).
+(c) remove *versionsBackup and */*versionsBackup
 
-  THIS STEP IS NOT IDEMPOTENT AND NOT REVERSIBLE. The
-  release/prepare-perform cycle converts $VERSION-SNAPSHOT
-  to $VERSION and deploys the Elda artifacts, tagging
-  the repository, before incrementing the version and
-  creating $VERSION'-SNAPSHOT. Because convention decrees
-  that existing artifacts aren't deleted or changed,
-  the new Elda version is Out There and can't be pulled
-  back. 
+(d) git commit -a -m "Comment expressing we are at v.f.p"
 
-  This is far from perfect but will have to do. 
+(e) git tag elda-v.f.p
+
+(f) git push origin elda-v.f.p
+
+(g) mvn clean deploy
+    At this point there is a deployed .p for maven dependencies
+    and updated source code tagged with .p.
+
+(h) mvn versions:set -DnewVersion=v.f.p+1
+
+(i) remove *versionsBackup and */*versionsBackup
+
+(j) git commit -a -m "Comment expressing we are at v.f.p+1 SNAPSHOT"
+
+(g) mvn clean deploy
+    And now the source is tagged as SNAPSHOT for further
+    development. 
+
 
 * POSTAMBLE 
-
-  execute `git push origin elda-$(VERSION)` for the new version.
-  (This doesn't seem to happen automatically although some
-  forums claim it does.) This pushes the new tag into the
-  remote (ie Elda's github) repository.
 
   Note the name $STANDALONE of the standalone jar
 
