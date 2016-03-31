@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
@@ -65,7 +66,7 @@ public class SparqlSource extends SourceBase implements Source {
         	if (authKey != null) {
 //        		System.err.println(">> authKey: " + authKey);
 //        		System.err.println(">> authMap: " + am);
-        		log.debug("handling auth key '" + authKey + "'");
+				log.debug(ELog.message("handling auth key '%s'", authKey));
         		AuthInfo ai = am.get( authKey );
         		        		
         		if (ai != null) {
@@ -90,15 +91,15 @@ public class SparqlSource extends SourceBase implements Source {
         		);
         }
     //
-        log.info( "created " + toString() );
+        log.info(ELog.message("created '%s'", this.toString()));
     }
     
     @Override public QueryExecution execute(Query query) {
-        if (log.isDebugEnabled()) log.debug("Running query on " + sparqlEndpoint + ":\n" + query);
+        if (log.isDebugEnabled()) log.debug(ELog.message("running query on '%s':\n%s", sparqlEndpoint, query));
 		QueryEngineHTTP qe = new QueryEngineHTTP(sparqlEndpoint, query);
 		if (basicUser != null) {
-			log.debug( "basic user: " + basicUser );			
-			log.debug( "basic password: " + new String(basicPassword));
+			log.debug(ELog.message("basic user '%s'", basicUser));			
+			log.debug(ELog.message("basic password '%s'", new String(basicPassword)));
 			qe.setBasicAuthentication( basicUser, basicPassword );
 		}
 		return qe ;

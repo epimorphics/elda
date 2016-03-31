@@ -29,9 +29,9 @@ public class TestRDFQ {
 		assertEquals( "\"\\\"inside\\\"\"", a.asSparqlTerm( pl ) );
 	}
 	
-	Term a = RDFQ.uri( "eh:/alpha" );
-	Term a2 = RDFQ.uri( "eh:/alpha" );
-	Term notA = RDFQ.uri( "eh:/phala" );
+	Term a = RDFQ.uriRaw( "eh:/alpha" );
+	Term a2 = RDFQ.uriRaw( "eh:/alpha" );
+	Term notA = RDFQ.uriRaw( "eh:/phala" );
 	
 	Term b = RDFQ.literal( "beta" );
 	Term b2 = RDFQ.literal( "beta" );

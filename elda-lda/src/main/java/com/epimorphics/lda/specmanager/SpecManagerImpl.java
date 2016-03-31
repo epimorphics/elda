@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.core.APIFactory;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APISecurityException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.routing.Match;
 import com.epimorphics.lda.routing.Router;
-import com.epimorphics.lda.sources.AuthMap;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.EldaFileManager;
@@ -54,7 +54,7 @@ public class SpecManagerImpl implements SpecManager {
         if (specs.containsKey(uri)) {
             return updateSpec( prefixPath, appName, context, uri, key, spec );
         } else {
-            log.info("Creating API spec at: " + uri);
+            log.info(ELog.message("creating API spec at '%s'", uri));
             Resource specRoot = spec.getResource(uri);
 			APISpec apiSpec = new APISpec( prefixPath, appName, EldaFileManager.get(), specRoot, modelLoader );
             synchronized (specs) { specs.put(uri, new SpecEntry(uri, key, apiSpec, spec)); }
@@ -72,7 +72,7 @@ public class SpecManagerImpl implements SpecManager {
         if (! keyMatches(uri, key, entry.keyDigest)) {
             throw new APISecurityException("This key is not permited to modify API " + uri);
         }
-        log.info("Delete API sepc: " + uri);
+        log.info(ELog.message("delete API spec '%s'", uri));
         for (APIEndpointSpec eps : entry.spec.getEndpoints()) {
             router.unregister( context, eps.getURITemplate());
         }
@@ -86,7 +86,7 @@ public class SpecManagerImpl implements SpecManager {
     }
 
     @Override public APISpec updateSpec(String prefixPath, String appName, String context, String uri, String key, Model spec) throws APISecurityException {
-        log.info("Udating spec: " + uri);
+        log.info(ELog.message("updating spec '%s'", uri));
         deleteSpec(context, uri, key);
         return addSpec(prefixPath, appName, context, uri, key, spec);
     }

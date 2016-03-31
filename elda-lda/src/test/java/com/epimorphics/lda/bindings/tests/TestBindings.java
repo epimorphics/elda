@@ -96,5 +96,13 @@ public class TestBindings {
 		assertEquals(value, b.getAny("key"));
 	}
 	
+	@Test public void testEscapedBraces() {
+		Bindings b = new Bindings();
+		b.put("v", "abc{\\}def{ghi}");
+		b.put("ghi", "jkl");
+	//
+		assertEquals("abc{\\}defjkl", b.getAsString("v", "ifAbsent"));
+		assertEquals("abc{defjkl", b.getUnslashed("v").spelling());
+	}
 	
 }

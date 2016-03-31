@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.SparqlSupport;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -26,8 +27,8 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.PropertyExpiryTimes;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.API;
+import com.epimorphics.util.QueryUtil;
 import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -102,7 +103,7 @@ public class View {
 	
 	protected String template = null;
 	
-	protected String labelPropertyURI = RDFS.label.getURI();
+	protected Set<String> labelPropertyURIs = new HashSet<String>(); // RDFS.label.getURI();
 	
     public View() {
     	this( "anon", Type.T_DESCRIBE );
@@ -177,7 +178,7 @@ public class View {
     */
 	public void setDescribeLabel( String labelPropertyURI ) {
 		this.type = Type.T_ALL;
-		this.labelPropertyURI = labelPropertyURI;
+		this.labelPropertyURIs.add(labelPropertyURI);
 	}
     
     /**
@@ -224,7 +225,7 @@ public class View {
     	if (t == null) throw new IllegalArgumentException( "addFrom does not accept null views" );
     	cannotUpdateALL();
     	chains.addAll( t.chains );
-    	this.labelPropertyURI = t.labelPropertyURI;
+    	this.labelPropertyURIs = new HashSet<String>(t.labelPropertyURIs);
     	if (chains.size() > 0) type = Type.T_CHAINS;
     	if (t.type == Type.T_ALL) type = Type.T_ALL;
     	template = t.template;
@@ -287,7 +288,7 @@ public class View {
 			case T_ALL:	{	
 				String detailsQuery = describeBySelectedItems( s, s.roots ); 				
 				String chainsQuery = fetchByGivenPropertyChains( s, chains ); 
-			    addAllObjectLabels( c, s );
+			    addAllObjectLabels( s );
 				t.addToViewQuerySize( detailsQuery );
 				t.addToViewQuerySize( chainsQuery );
 			    return detailsQuery;
@@ -330,14 +331,14 @@ public class View {
 		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
 		String queryString = prefixes + construct.toString();
 		// System.err.println( ">> QUERY:\n" + queryString );
-		Query constructQuery = QueryFactory.create( queryString );
+		Query constructQuery = QueryUtil.create( queryString );
 		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) ); 
 		return queryString;
 	}		
 	
 	private String describeBySelectedItems(State s, List<Resource> allRoots) {
 		String query = createDescribeQueryForItems( s, allRoots );
-		Query describeQuery = QueryFactory.create( query );
+		Query describeQuery = QueryUtil.create( query );
 		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
 		return query.toString();
 	}
@@ -353,30 +354,64 @@ public class View {
 		return query;
 	}	
 
-	private void addAllObjectLabels( Controls c, State s ) { 
+	/**
+	     Construct a query that will fetch all the labels of all of the
+	     objects in the state's model. If no label properties are specified,
+	     use rdfs:label as the single label property. Objects that are not
+	     URI resources are ignored.
+	*/
+	private void addAllObjectLabels( State s ) { 		
+		List<String> properties = new ArrayList<String>(labelPropertyURIs);
+		if (properties.isEmpty()) properties.add(RDFS.label.getURI());		
+	//
+		String queryString = buildFetchLabelsQuery(s, properties);
+	//
+		if (log.isDebugEnabled()) log.debug("label query:\n" + queryString + "\n");
+	//	
+		Query constructQuery = QueryUtil.create( queryString );
+		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
+	}
+	
+	
+	/*
+		CONSTRUCT { ?x ?prop ?label } WHERE {
+         	VALUE ?x { ..... }   ## subject bindings
+           	VALUE ?prop { ... }  ## label prop bindings
+          	?x ?prop ?label .
+        }
+        Degenerate case could be replaced by BIND or textual substitution
+	 */
+
+	public static String buildFetchLabelsQuery(State s, List<String> properties) {
 		StringBuilder sb = new StringBuilder();
 		sb
-			.append( "PREFIX rdfs: <" ).append( RDFS.getURI() ).append(">" )
-			.append( "\nCONSTRUCT { ?x <" ).append( labelPropertyURI ).append( "> ?l }\nWHERE\n{" );
+			.append( "\nCONSTRUCT {\n")
+			;
+
+		sb.append( "    ?x ?p ?label .\n");		
+		
+		sb.append("}\nWHERE\n{" );
 		s.beginGraph(sb);
-	//	
-		sb.append( "  { VALUES ?x { " );
-	//
+	//	  
+		sb.append("\n    VALUES ?x {" );
 		for (RDFNode n: s.m.listObjects().toList()) 
 			if (n.isURIResource())
-				sb.append( "\n  " ).append("<").append( n.asNode().getURI() ).append(">");
-	//
-		sb.append( "\n} }\n" );
-		sb.append( "?x <" ).append( labelPropertyURI ).append( "> ?l. " );
+				sb.append( "\n        " ).append("<").append( n.asNode().getURI() ).append(">");
+		sb.append("\n    }");
+		
+		sb.append("\n    VALUES ?p {" );
+		for (String p: properties) sb.append("\n        ").append("<").append(p).append(">");
+		sb.append("\n    }");
+		sb.append("\n    ?x ?p ?label .");
+
 	//
 		s.endGraph(sb);
-		sb.append( "}\n" );
+		sb.append( "\n}\n" );
 		String queryString = sb.toString();
-	//
-		if (log.isDebugEnabled()) log.debug("LABEL QUERY:\n" + queryString + "\n");
-	//	
-		Query constructQuery = QueryFactory.create( queryString );
-		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
+		
+//		System.err.println(">> QS"); System.err.println(queryString);
+		
+		return queryString;
 	}	
 
 	public String fetchDescriptionsFor
@@ -409,7 +444,7 @@ public class View {
 				.append( "}\n" )
 				;
 		String resultQueryString = query.toString();
-		Query q = QueryFactory.create( resultQueryString );
+		Query q = QueryUtil.create( resultQueryString );
 		for (Source x: sources) m.add( x.executeConstruct( q ) );		
 		return resultQueryString;
 	}

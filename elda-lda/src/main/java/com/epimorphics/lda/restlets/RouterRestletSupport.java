@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.APISecurityException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.routing.*;
 import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
@@ -75,8 +76,7 @@ public class RouterRestletSupport {
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
     	String givenPrefixPath = con.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
     //
-    	log.debug( "configuration file templates: " + specFilenameTemplates );
-    //
+    	log.debug(ELog.message( "configuration file templates: '%s'", specFilenameTemplates ));    //
 		for (String specTemplate: specFilenameTemplates) {
 			String prefixName = givenPrefixPath;
 			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextPath );
@@ -89,11 +89,11 @@ public class RouterRestletSupport {
 				pfs.add( new PrefixAndFilename( prefixName, specName ) );
 			} else {
 				String fullPath = specName.startsWith("/") ? specName : baseFilePath + specName;
-				log.debug("spec file pattern is " + fullPath);
+				log.debug(ELog.message("spec file pattern is '%s'", fullPath));
 				List<File> files = new Glob().filesMatching( fullPath );
-				log.debug( "full path " + fullPath + " matches " + files.size() + " files." );
+				log.debug(ELog.message( "full path '%s' matches %d files", fullPath, files.size()));
 				for (File f: files) {
-					log.debug("file: " + f.toString());
+					log.debug(ELog.message("file '%s'", f));
 					String expandedPrefix = ServletUtils.containsStar(prefixName) ? ServletUtils.nameToPrefix(prefixName, specName, f.getName()) : prefixName;
 					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
 				}
@@ -140,8 +140,8 @@ public class RouterRestletSupport {
 			if (l instanceof LocatorFile) 
 				if (((LocatorFile) l).getName().equals(baseFilePath))
 					return;
-		}
-		log.info( "adding locator for " + baseFilePath );
+		}    	
+		log.info(ELog.message("adding locator for '%s'", baseFilePath ));
 		EldaFileManager.get().addLocatorFile( baseFilePath );
 	}
 
@@ -158,11 +158,11 @@ public class RouterRestletSupport {
 		return contextPath.equals("") ? "ROOT" : contextPath.substring(1).replaceAll("/", "_");
 	}
 
-	public static void loadOneConfigFile(Router router, String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {
-		log.info( "Loading spec file from " + thisSpecPath + " with prefix path " + prefixPath );
+	public static void loadOneConfigFile(Router router, String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {    	
+		log.info(ELog.message( "loading spec file from '%s' with prefix path '%s'", thisSpecPath, prefixPath));
 		Model init = ml.loadModel( thisSpecPath );
 		ServletUtils.addLoadedFrom( init, thisSpecPath );
-		log.info( "Loaded " + thisSpecPath + ": " + init.size() + " statements" );
+		log.info(ELog.message("loaded '%s' with %d statements", thisSpecPath, init.size()));
 		for (ResIterator ri = init.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
 		    Resource api = ri.next();
             Resource specRoot = init.getResource(api.getURI());

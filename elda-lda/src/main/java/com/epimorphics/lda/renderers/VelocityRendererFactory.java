@@ -36,4 +36,9 @@ public class VelocityRendererFactory implements RendererFactory {
         this.mt = mt;
         return this;
     }
+    
+    @Override
+    public RendererFactory withISODateFormatting(Boolean jsonUsesISOdate) {
+        return this;
+    }
 }

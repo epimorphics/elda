@@ -18,6 +18,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.support.LanguageFilter;
 import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.vocabularies.*;
@@ -373,7 +374,9 @@ public class APIResultSet implements SetsMetadata {
 	public void includeMetadata( String[] options ) {
 		for (String option: options) {
 			Model meta = metadata.get( option );
-			if (meta == null) log.debug( "Metadata " + option + " unknown or already supplied." );
+			if (meta == null) {
+				log.debug(ELog.message( "metadata '%s' unknown (or already supplied).", option));
+			}
 			else model.meta.add( meta );
 		}
 	}

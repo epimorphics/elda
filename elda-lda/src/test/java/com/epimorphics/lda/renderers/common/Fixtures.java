@@ -1556,8 +1556,21 @@ public class Fixtures
                                               final Model apiResultsModel,
                                               final Model apiObjectModel,
                                               final Model apiMetadataModel ) {
-        final APIResultSet results = context.mock( APIResultSet.class );
-        final APIResultSet.MergedModels mm = context.mock( APIResultSet.MergedModels.class );
+        return mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel, "APIResultSet" );
+    }
+    
+    /**
+     * Create a named APIResultSet fixture without trying to do all that that very complex
+     * class does.
+     * @return Mocked {@link APIResultSet}
+     */
+    public static APIResultSet mockResultSet( JUnitRuleMockery context,
+                                              final Model apiResultsModel,
+                                              final Model apiObjectModel,
+                                              final Model apiMetadataModel,
+                                              String mockName ) {
+        final APIResultSet results = context.mock( APIResultSet.class, mockName );
+        final APIResultSet.MergedModels mm = context.mock( APIResultSet.MergedModels.class, mockName + "-mm" );
         final Resource root = apiResultsModel.listResourcesWithProperty( RDF.type, API.Page ).next();
 
         context.checking(new Expectations() {{

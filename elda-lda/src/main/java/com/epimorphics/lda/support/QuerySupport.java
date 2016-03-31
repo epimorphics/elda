@@ -14,6 +14,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
@@ -25,7 +26,7 @@ public class QuerySupport {
 
 	private static boolean promoteAnySubject = true;
 
-	public static final Any text_query = RDFQ.uri(TextSearchConfig.JENA_TEXT_QUERY.getURI());
+	public static final Any text_query = RDFQ.uri(TextSearchConfig.JENA_TEXT_QUERY);
 	
 	/**
 	    <p>
@@ -66,8 +67,9 @@ public class QuerySupport {
 		result.addAll(plain);
 		result.addAll(lateTextQueries);
 		result.addAll(typed);
-		if (!result.equals(triples))
-			log.debug("reordered\n    " + triples + "\nto\n    " + result);
+		if (!result.equals(triples)) {
+			log.debug(ELog.message("reordered\n    %s\nto\n    %s", triples, result));
+		}
 		return result;
 	}
 

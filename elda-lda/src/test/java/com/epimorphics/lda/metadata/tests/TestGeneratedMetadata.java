@@ -7,8 +7,7 @@
 */
 package com.epimorphics.lda.metadata.tests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,6 +32,7 @@ import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class TestGeneratedMetadata {
 	
@@ -104,6 +104,24 @@ public class TestGeneratedMetadata {
 		Integer totalResults = null;
 		Resource thisMetaPage = createMetadata(false, totalResults);
 		assertTrue(thisMetaPage.hasProperty(RDF.type, API.ItemEndpoint));
+	}
+	
+	static final Property[] expectedTermboundProperties = new Property[] 
+		{ RDFS.label
+		, RDF.value
+		, RDF.type
+		};
+
+	@Test public void testTermbindsIncludesMetaproperties() throws URISyntaxException {
+		Integer totalResults = null;
+		Resource thisMetaPage = createMetadata(false, totalResults);
+		
+		for (Property p: expectedTermboundProperties) {
+			Model model = thisMetaPage.getModel();
+			if (!model.contains(null, API.property, p)) {
+				fail("term bindings should include " + model.shortForm(p.getURI()));
+			}
+		}
 	}
 
 	private Resource createMetadata(final boolean isListEndpoint, Integer totalResults) throws URISyntaxException {

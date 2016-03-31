@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.APIException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -53,7 +54,9 @@ public class HereSource extends SourceBase implements Source
 
 	@Override public QueryExecution execute( Query query ) 
 		{
-        if (log.isInfoEnabled()) log.info("Creating query:\n" + query);    
+        if (log.isInfoEnabled()) {
+        	log.info(ELog.message("creating query:\n%s", query));    
+        }
         return QueryExecutionFactory.create( query, model );
 		}
 
