@@ -66,7 +66,7 @@ public class SparqlSource extends SourceBase implements Source {
         	if (authKey != null) {
 //        		System.err.println(">> authKey: " + authKey);
 //        		System.err.println(">> authMap: " + am);
-				ELog.debug(log, "handling auth key '%s'", authKey);
+				log.debug(ELog.message("handling auth key '%s'", authKey));
         		AuthInfo ai = am.get( authKey );
         		        		
         		if (ai != null) {
@@ -91,15 +91,15 @@ public class SparqlSource extends SourceBase implements Source {
         		);
         }
     //
-        ELog.info(log, "created '%s'", this.toString());
+        log.info(ELog.message("created '%s'", this.toString()));
     }
     
     @Override public QueryExecution execute(Query query) {
-        if (log.isDebugEnabled()) ELog.debug(log, "running query on '%s':\n%s", sparqlEndpoint, query);
+        if (log.isDebugEnabled()) log.debug(ELog.message("running query on '%s':\n%s", sparqlEndpoint, query));
 		QueryEngineHTTP qe = new QueryEngineHTTP(sparqlEndpoint, query);
 		if (basicUser != null) {
-			ELog.debug(log, "basic user '%s'", basicUser);			
-			ELog.debug(log, "basic password '%s'", new String(basicPassword));
+			log.debug(ELog.message("basic user '%s'", basicUser));			
+			log.debug(ELog.message("basic password '%s'", new String(basicPassword)));
 			qe.setBasicAuthentication( basicUser, basicPassword );
 		}
 		return qe ;

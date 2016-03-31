@@ -215,7 +215,7 @@ public class ShortNameRenderer
 
         if (existing != null) {
             if (!existing.equals(  uri  )) {
-                ELog.warn(log, "attempt to overwrite existing binding '%s' for short-name '%s' with new value '%s' was ignored", existing, shortName , uri );
+                log.warn(ELog.message("attempt to overwrite existing binding '%s' for short-name '%s' with new value '%s' was ignored", existing, shortName , uri ));
             }
         }
         else {

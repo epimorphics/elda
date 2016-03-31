@@ -55,7 +55,7 @@ public class HereSource extends SourceBase implements Source
 	@Override public QueryExecution execute( Query query ) 
 		{
         if (log.isInfoEnabled()) {
-        	ELog.info(log, "creating query:\n%s", query);    
+        	log.info(ELog.message("creating query:\n%s", query));    
         }
         return QueryExecutionFactory.create( query, model );
 		}

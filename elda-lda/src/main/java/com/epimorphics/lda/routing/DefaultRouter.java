@@ -124,8 +124,8 @@ public class DefaultRouter implements Router {
 		Map<String, String> bindings = new HashMap<String, String>();
 		BaseAndTemplate bt = s.ms.lookup( bindings, path, null );
 		if (bt != null) {
-			String et = Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template );
-			// return resolvePath( bt.base, et );
+			String et = URIUtils.escapeAsURI
+				(Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template ));
 			if (bt.base == null) return et;
 			return URIUtils.resolveAgainstBase( requestURI, URIUtils.newURI( bt.base ), et ).toString();
 		}

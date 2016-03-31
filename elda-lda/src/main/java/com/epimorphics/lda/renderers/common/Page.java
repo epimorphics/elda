@@ -146,8 +146,8 @@ public class Page extends CommonNodeWrapper
             int perPage = itemsPerPage();
             int from = startIndex();
             
-            if (perPage > 0 && from >= 0) {
-                int to = from + perPage;
+            if (perPage > 0 && from >= 0 && total > 0) {
+                int to = from + perPage - 1;
                 if (to > total) {
                     to = total;
                 }
@@ -155,7 +155,8 @@ public class Page extends CommonNodeWrapper
                 s = String.format( "Showing items %d to %d of %d", from, to, total );
             }
             else {
-                s = String.format( "%d total results", total );
+                String plural = (total == 1) ? "" : "s";
+                s = String.format( "%d result%s", total, plural );
             }
         }
         
@@ -382,7 +383,7 @@ public class Page extends CommonNodeWrapper
         else {
             Resource viewRoot = i.next();
             if (i.hasNext()) {
-                ELog.warn(log, "ambiguous view name: there is more than one resource with viewName '%s'", viewName);
+                log.warn(ELog.message("ambiguous view name: there is more than one resource with viewName '%s'", viewName));
             }
 
             view = new EldaView( this, viewRoot );

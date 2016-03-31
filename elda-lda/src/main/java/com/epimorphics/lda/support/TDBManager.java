@@ -48,7 +48,7 @@ public class TDBManager {
     */
     public static void setBaseTDBPath( String value ) { 
         baseTDBPath = value; 
-        ELog.info(log, "setBaseTDBPath '%s'", value );
+        log.info(ELog.message("setBaseTDBPath '%s'", value ));
     }
 
     /**
@@ -81,9 +81,9 @@ public class TDBManager {
     }
 
     private static Dataset openDataset() {
-        ELog.info(log, "requesting open on TDB dataset at %s", baseTDBPath);
+        log.info(ELog.message("requesting open on TDB dataset at %s", baseTDBPath));
         Dataset result = TDBFactory.createDataset( baseTDBPath );
-        ELog.info(log, "opened: result looks like %s", result.toString() );
+        log.info(ELog.message("opened: result looks like %s", result.toString()));
         return result;
     }
 }

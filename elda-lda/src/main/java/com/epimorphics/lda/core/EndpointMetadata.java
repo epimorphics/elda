@@ -20,6 +20,7 @@ import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.util.URIUtils;
+import com.hp.hpl.jena.graph.compose.MultiUnion;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.*;
@@ -140,8 +141,15 @@ public class EndpointMetadata {
 		cc.include( versionsModel );
 		cc.include( formatsModel );
 		cc.include( execution );
-	//
-		em.addBindings( mergedModels1, bindingsModel, exec, cc );
+	//		
+		MultiUnion mu = new MultiUnion();
+		mu.addGraph(mergedModels1.getGraph());
+		mu.addGraph(versionsModel.getGraph());
+		mu.addGraph(formatsModel.getGraph());
+		mu.addGraph(execution.getGraph());
+		
+		Model toScan = ModelFactory.createModelForGraph(mu);
+		em.addBindings( toScan, bindingsModel, exec, cc );
 	//
 	    if (wantsMeta.wantsMetadata( "versions" )) metaModel1.add( versionsModel ); else setsMeta.setMetadata( "versions", versionsModel );
 	    if (wantsMeta.wantsMetadata( "formats" )) metaModel1.add( formatsModel );  else setsMeta.setMetadata( "formats", formatsModel );

@@ -27,8 +27,8 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.PropertyExpiryTimes;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.API;
+import com.epimorphics.util.QueryUtil;
 import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.RDF;
@@ -331,14 +331,14 @@ public class View {
 		String prefixes = pl.writePrefixes( new StringBuilder() ).toString();
 		String queryString = prefixes + construct.toString();
 		// System.err.println( ">> QUERY:\n" + queryString );
-		Query constructQuery = QueryFactory.create( queryString );
+		Query constructQuery = QueryUtil.create( queryString );
 		for (Source x: st.sources) st.m.add( x.executeConstruct( constructQuery ) ); 
 		return queryString;
 	}		
 	
 	private String describeBySelectedItems(State s, List<Resource> allRoots) {
 		String query = createDescribeQueryForItems( s, allRoots );
-		Query describeQuery = QueryFactory.create( query );
+		Query describeQuery = QueryUtil.create( query );
 		for (Source x: s.sources) s.m.add( x.executeDescribe( describeQuery ) );
 		return query.toString();
 	}
@@ -366,46 +366,52 @@ public class View {
 	//
 		String queryString = buildFetchLabelsQuery(s, properties);
 	//
-		if (log.isDebugEnabled()) ELog.debug(log, "LABEL QUERY:\n" + queryString + "\n");
+		if (log.isDebugEnabled()) log.debug("label query:\n" + queryString + "\n");
 	//	
-		Query constructQuery = QueryFactory.create( queryString );
+		Query constructQuery = QueryUtil.create( queryString );
 		for (Source x: s.sources) s.m.add( x.executeConstruct( constructQuery ) );
 	}
+	
+	
+	/*
+		CONSTRUCT { ?x ?prop ?label } WHERE {
+         	VALUE ?x { ..... }   ## subject bindings
+           	VALUE ?prop { ... }  ## label prop bindings
+          	?x ?prop ?label .
+        }
+        Degenerate case could be replaced by BIND or textual substitution
+	 */
 
 	public static String buildFetchLabelsQuery(State s, List<String> properties) {
 		StringBuilder sb = new StringBuilder();
 		sb
-			.append( "PREFIX rdfs: <" )
-			.append( RDFS.getURI() )
-			.append(">" )
 			.append( "\nCONSTRUCT {\n")
 			;
 
-		int i = 0;
-		for (String p: properties) {
-			i += 1;
-			sb.append( "    ?x <" ).append( p ).append( "> ?l").append(i).append(".\n");				
-		}
+		sb.append( "    ?x ?p ?label .\n");		
 		
 		sb.append("}\nWHERE\n{" );
 		s.beginGraph(sb);
-	//	
-		sb.append( "  { VALUES ?x { " );
-	//
+	//	  
+		sb.append("\n    VALUES ?x {" );
 		for (RDFNode n: s.m.listObjects().toList()) 
 			if (n.isURIResource())
-				sb.append( "\n  " ).append("<").append( n.asNode().getURI() ).append(">");
-	//
-		sb.append( "\n} }\n" );
-		int j = 0;
-		for (String p: properties) {
-			j += 1;
-			sb.append( "    ?x <" ).append( p ).append( "> ?l").append(j).append(". \n" );			
-		}
+				sb.append( "\n        " ).append("<").append( n.asNode().getURI() ).append(">");
+		sb.append("\n    }");
+		
+		sb.append("\n    VALUES ?p {" );
+		for (String p: properties) sb.append("\n        ").append("<").append(p).append(">");
+		sb.append("\n    }");
+		sb.append("\n    ?x ?p ?label .");
+
 	//
 		s.endGraph(sb);
-		sb.append( "}\n" );
-		return sb.toString();
+		sb.append( "\n}\n" );
+		String queryString = sb.toString();
+		
+//		System.err.println(">> QS"); System.err.println(queryString);
+		
+		return queryString;
 	}	
 
 	public String fetchDescriptionsFor
@@ -438,7 +444,7 @@ public class View {
 				.append( "}\n" )
 				;
 		String resultQueryString = query.toString();
-		Query q = QueryFactory.create( resultQueryString );
+		Query q = QueryUtil.create( resultQueryString );
 		for (Source x: sources) m.add( x.executeConstruct( q ) );		
 		return resultQueryString;
 	}

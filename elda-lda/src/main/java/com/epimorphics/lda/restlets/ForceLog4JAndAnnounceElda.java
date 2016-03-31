@@ -33,7 +33,7 @@ public class ForceLog4JAndAnnounceElda extends HttpServlet{
 			String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
 			String propertiesFile = "log4j.properties";
 			PropertyConfigurator.configure( baseFilePath + propertiesFile );
-			ELog.info(log,  "[init]\n\n    =>=> Starting Elda (Force) " + Version.string + "\n"); 
+			log.info(ELog.message( "[init]\n\n    =>=> Starting Elda (Force) " + Version.string + "\n")); 
 			announced = true;
 		}
 	}	

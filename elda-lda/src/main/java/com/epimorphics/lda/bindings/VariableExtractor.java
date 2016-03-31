@@ -60,7 +60,7 @@ public class VariableExtractor {
 			if (type == null && value != null && value.getObject().isURIResource())
 				type = RDFS.Resource.getURI();
 			if (type == null) {
-				ELog.debug(log, "no type for variable '%s'; using default ''", name);
+				log.debug(ELog.message("no type for variable '%s'; using default ''", name));
 				type = "";
 			}
 			String valueString = getValueString( v, language, type );

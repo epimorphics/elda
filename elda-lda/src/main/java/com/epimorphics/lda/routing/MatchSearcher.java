@@ -36,7 +36,7 @@ public class MatchSearcher<T> {
         with the supplied result value.
     */
     public void register( String path, T result ) {
-    	ELog.info(log, "registering '%s' for '%s'", path, result );
+    	log.info(ELog.message("registering '%s' for '%s'", path, result ));
         templates.add( MatchTemplate.prepare( path, result ) );
         needsSorting = true;
     }

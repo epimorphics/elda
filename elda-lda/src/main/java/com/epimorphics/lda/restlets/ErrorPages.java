@@ -66,8 +66,11 @@ public class ErrorPages {
 		
 		String page = fetchPage(filesToTry, fallBack);
 		
+		// Bind the exception message to _message. Quote any left braces to
+		// allow them to be passed through possibly multiple Bindings evaluations
+		// and eventually unquoted using Bindings::getUnslashed.
 		if (message == null) message = "Odd, no additional information is available.";
-		b.put("_message", message);
+		b.put("_message", message.replaceAll("\\{", "{\\\\}"));
 		
 		String builtPage = apply(b, page, name, message);
 		
@@ -77,8 +80,8 @@ public class ErrorPages {
 			.build()
 			;
 		} catch (Throwable e) {
-			ELog.error(log, "an exception occurred when rendering an error page");
-			ELog.error(log, "%s", e.getMessage());
+			log.error(ELog.message("an exception occurred when rendering an error page"));
+			log.error(ELog.message("%s", e.getMessage()));
 			return Response
 				.status(Status.INTERNAL_SERVER_ERROR)
 				.entity(fallBack)

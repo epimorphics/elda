@@ -55,7 +55,7 @@ public class EldaException extends RuntimeException {
 	    Throw a BAD REQUEST exception after logging the given message.
 	*/
 	public static void BadRequest( String message ) {
-		ELog.error(log, "bad request: ", message);
+		log.error(ELog.message("bad request: %s", message));
 		throw new BadRequestException(message);
 	}
 	

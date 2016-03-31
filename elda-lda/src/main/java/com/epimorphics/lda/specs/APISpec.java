@@ -142,7 +142,7 @@ public class APISpec {
 
 	protected void reportObsoleteDescribeThreshold(Resource endpoint) {
 		if (endpoint.hasProperty(ELDA_API.describeThreshold)) {
-			ELog.warn(log, "endpoint '%s': elda:describeThreshold is no longer required/used.", endpoint);
+			log.warn(ELog.message("endpoint '%s': elda:describeThreshold is no longer required/used.", endpoint));
 		}
 	}
     
