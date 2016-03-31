@@ -25,6 +25,8 @@ import com.epimorphics.util.MediaType;
 
 public class RDFXMLRenderer implements Renderer {
 	
+	static final String XML_POISON = "\nSTREAMING ERROR<=>'<=>\"<=>\n";
+	
     @Override public MediaType getMediaType( Bindings irrelevant ) {
        return MediaType.APPLICATION_RDF_XML;
     }
@@ -46,6 +48,10 @@ public class RDFXMLRenderer implements Renderer {
 
 			@Override protected String getFormat() {
 				return "rdf";
+			}
+
+			@Override public String getPoison() {
+				return XML_POISON;
 			}
 		};
     }

@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-          http://java.sun.com/xml/ns/javaee/web-app_2_3.xsd"
-    version="2.3">
-
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
   <context-param>
      <param-name>com.epimorphics.api.initialSpecFile</param-name>
      <param-value>
 			hello::specs/hello-world.ttl
 		 	, again::specs/hello-again-world.ttl 
-            , tiny::specs/tiny-education.ttl
-            , mini::specs/mini-education.ttl
-            , full::specs/full-education.ttl
-            , old::specs/old-education.ttl
-            , velocity::specs/hello-velocity.ttl
-            , velocitydev::specs/hello-velocity-dev.ttl
-            , ved::specs/mini-education-velocity.ttl
-			, bwq::specs/environment.data.gov.uk-bwq.ttl
+            
         </param-value>
   </context-param>
   

@@ -93,11 +93,12 @@
 
 t:api
     api:base "/"; 
-#    api:sparqlEndpoint <http://environment.data.gov.uk/sparql/bwq/query>;
-    api:sparqlEndpoint  <http://ec2-46-137-33-70.eu-west-1.compute.amazonaws.com/sparql/bwq/query>;
+    api:sparqlEndpoint <http://environment.data.gov.uk/sparql/bwq/query>;
 #  Optional base URI for referencing XSLT/HTML stylesheet resources.
     api:variable [ api:name "_resourceRoot"         ; api:value "/standalone/lda-assets/" ];
-    api:variable [api:name  "_velocityPath"         ; api:value "lda-assets/velocity/"] ;
+    api:variable [api:name  "_velocityRoot"         ; api:value "lda-assets/velocity/"] ;
+# uncomment this line and set appropriate symlink to use development .vm macros
+#    api:variable [api:name  "_velocityPath"         ; api:value "/etc/alternatives/elda-velocity"] ;
     api:variable [ api:name "visibleSparqlEndpoint" ; api:value "http://environment.data.gov.uk/sparql/bwq/query" ];
     api:variable [ api:name "visibleSparqlForm"     ; api:value "http://environment.data.gov.uk/lab/sparql.html" ];
     .
@@ -139,7 +140,11 @@ t:api
 ##    elda:enableCounting "yes" ;
 	api:defaultPageSize "10" ;
 	api:variable [ api:name "_strip_has"; api:value "yes" ];
-	api:variable [ api:name "_suppress_ipto"; api:value "yes" ];
+    api:variable [ api:name "_suppress_ipto"; api:value "yes" ];
+    
+    api:variable [ api:name "rewriteURLFrom"; api:value "http://environment.data.gov.uk" ];
+    api:variable [ api:name "rewriteURLTo"; api:value "http://localhost:8080/elda-standalone" ];
+    
 ##    api:variable [ api:name "_exceptionIfEmpty"; api:value "no" ];
 	api:defaultFormatter t:HtmlFormatter ;
 

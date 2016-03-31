@@ -375,7 +375,7 @@ public class APIResultSet implements SetsMetadata {
 		for (String option: options) {
 			Model meta = metadata.get( option );
 			if (meta == null) {
-				ELog.debug(log,  "metadata '%s' unknown (or already supplied).", option);
+				log.debug(ELog.message( "metadata '%s' unknown (or already supplied).", option));
 			}
 			else model.meta.add( meta );
 		}

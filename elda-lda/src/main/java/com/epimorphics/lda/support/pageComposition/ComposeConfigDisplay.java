@@ -160,7 +160,7 @@ public class ComposeConfigDisplay {
 			for (String name: names) {
 				Value v = b.get( name );
 				if (v == null) {
-					ELog.debug(log, "binding for '%s' is null or non-Value; ignored.", name);	
+					log.debug(ELog.message("binding for '%s' is null or non-Value; ignored.", name));	
 					System.err.println("binding for " + name + " is null or non-Value; ignored.");			
 				} else {
 					String lf = v.spelling() == null ? "<i>none</i>" : v.spelling();

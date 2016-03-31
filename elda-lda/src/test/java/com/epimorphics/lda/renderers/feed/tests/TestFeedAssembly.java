@@ -10,13 +10,19 @@ import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
+import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.renderers.FeedRenderer.FeedResults;
+import com.epimorphics.lda.renderers.tests.TestTurtleRenderer;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.vocabularies.*;
+import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.*;
@@ -60,6 +66,15 @@ public class TestFeedAssembly {
 		, DCTerms.dateSubmitted
 		, DCTerms.created
 		);
+	
+	@Test public void testBytesOutTimed() {
+		Model m = ModelIOUtils.modelFromTurtle( "<eh:/example> <eh:/predicate> '<<\u03ff>>'." );
+		Resource it = m.createResource( "<eh:/example>" );
+		APIResultSet rs = new APIResultSet( m.getGraph(), CollectionUtils.list(it), true, false, "notUsed", new View() );
+		FeedRenderer fr = new FeedRenderer(fakeMediaType, config, sns);
+		Renderer.BytesOut rbo = fr.render( new Times(), new Bindings(), new HashMap<String, String>(), rs );
+		String rendered = TestTurtleRenderer.pullString( rbo );	
+	}
 	
 	@Test public void testRetainsMediaType() {
 		FeedRenderer retains_fr = new FeedRenderer( fakeMediaType, config, sns );

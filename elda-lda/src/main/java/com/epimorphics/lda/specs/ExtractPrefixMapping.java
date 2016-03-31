@@ -37,10 +37,10 @@ public class ExtractPrefixMapping {
 	            if (prefix != null && uri != null) {
 	                pm.setNsPrefix(prefix, uri);
 	            } else {
-	                ELog.error(APISpec.log, "ignoring ill-structured prefix mapping '%s' :: '%s'", prefix, uri);
+	                APISpec.log.error(ELog.message("ignoring ill-structured prefix mapping '%s' :: '%s'", prefix, uri));
 	            }
 	        } else {
-	            ELog.error(APISpec.log, "ignoring non-structured prefix mapping: '%s'", n);
+	            APISpec.log.error(ELog.message("ignoring non-structured prefix mapping: '%s'", n));
 	        }
 	    }
 	    return pm;

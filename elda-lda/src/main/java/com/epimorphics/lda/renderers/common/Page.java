@@ -127,6 +127,41 @@ public class Page extends CommonNodeWrapper
     public int itemsPerPage() {
         return getInt( OpenSearch.itemsPerPage, NO_VALUE );
     }
+    
+    /**
+     * @return The total number of results in the resultset, or -1 if not specified.
+     */
+    public int totalResults() {
+        return getInt( OpenSearch.totalResults, NO_VALUE );
+    }
+    
+    /** 
+     * @return A string summarising the count of results, or null
+     */
+    public String resultsCountSummary() {
+        String s = null;
+        int total = totalResults();
+        
+        if (total >= 0) {
+            int perPage = itemsPerPage();
+            int from = startIndex();
+            
+            if (perPage > 0 && from >= 0 && total > 0) {
+                int to = from + perPage - 1;
+                if (to > total) {
+                    to = total;
+                }
+                
+                s = String.format( "Showing items %d to %d of %d", from, to, total );
+            }
+            else {
+                String plural = (total == 1) ? "" : "s";
+                s = String.format( "%d result%s", total, plural );
+            }
+        }
+        
+        return s;
+    }
 
     /**
      * @return The starting index for this page, starting from one. Return -1 if
@@ -348,7 +383,7 @@ public class Page extends CommonNodeWrapper
         else {
             Resource viewRoot = i.next();
             if (i.hasNext()) {
-                ELog.warn(log, "ambiguous view name: there is more than one resource with viewName '%s'", viewName);
+                log.warn(ELog.message("ambiguous view name: there is more than one resource with viewName '%s'", viewName));
             }
 
             view = new EldaView( this, viewRoot );

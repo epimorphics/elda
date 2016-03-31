@@ -76,7 +76,7 @@ public class RouterRestletSupport {
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
     	String givenPrefixPath = con.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
     //
-    	ELog.debug(log,  "configuration file templates: '%s'", specFilenameTemplates );    //
+    	log.debug(ELog.message( "configuration file templates: '%s'", specFilenameTemplates ));    //
 		for (String specTemplate: specFilenameTemplates) {
 			String prefixName = givenPrefixPath;
 			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextPath );
@@ -89,11 +89,11 @@ public class RouterRestletSupport {
 				pfs.add( new PrefixAndFilename( prefixName, specName ) );
 			} else {
 				String fullPath = specName.startsWith("/") ? specName : baseFilePath + specName;
-				ELog.debug(log, "spec file pattern is '%s'", fullPath);
+				log.debug(ELog.message("spec file pattern is '%s'", fullPath));
 				List<File> files = new Glob().filesMatching( fullPath );
-				ELog.debug(log,  "full path '%s' matches %d files", fullPath, files.size());
+				log.debug(ELog.message( "full path '%s' matches %d files", fullPath, files.size()));
 				for (File f: files) {
-					ELog.debug(log, "file '%s'", f);
+					log.debug(ELog.message("file '%s'", f));
 					String expandedPrefix = ServletUtils.containsStar(prefixName) ? ServletUtils.nameToPrefix(prefixName, specName, f.getName()) : prefixName;
 					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
 				}
@@ -141,7 +141,7 @@ public class RouterRestletSupport {
 				if (((LocatorFile) l).getName().equals(baseFilePath))
 					return;
 		}    	
-		ELog.info(log, "adding locator for '%s'", baseFilePath );
+		log.info(ELog.message("adding locator for '%s'", baseFilePath ));
 		EldaFileManager.get().addLocatorFile( baseFilePath );
 	}
 
@@ -159,10 +159,10 @@ public class RouterRestletSupport {
 	}
 
 	public static void loadOneConfigFile(Router router, String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {    	
-		ELog.info(log,  "loading spec file from '%s' with prefix path '%s'", thisSpecPath, prefixPath);
+		log.info(ELog.message( "loading spec file from '%s' with prefix path '%s'", thisSpecPath, prefixPath));
 		Model init = ml.loadModel( thisSpecPath );
 		ServletUtils.addLoadedFrom( init, thisSpecPath );
-		ELog.info(log, "loaded '%s' with %d statements", thisSpecPath, init.size());
+		log.info(ELog.message("loaded '%s' with %d statements", thisSpecPath, init.size()));
 		for (ResIterator ri = init.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
 		    Resource api = ri.next();
             Resource specRoot = init.getResource(api.getURI());

@@ -64,26 +64,36 @@ public class TestDateTime {
 
     @Test public void testBasicSerialization() {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31T02:09:32Z", XSDDatatype.XSDdateTime);
-        assertEquals("Mon, 31 May 1999 02:09:32 GMT+0000", RDFUtil.formatDateTime(l));
+        assertEquals("Mon, 31 May 1999 02:09:32 GMT+0000", RDFUtil.formatDateTime(l, false));
     }
     
     @Test public void testRoundTrip() throws ParseException {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31T02:09:32Z", XSDDatatype.XSDdateTime);
-        String date = RDFUtil.formatDateTime(l);
+        String date = RDFUtil.formatDateTime(l, false);
         Literal lret = RDFUtil.parseDateTime(date, null);
         assertEquals(l, lret);
     }
     
     @Test public void testRoundTripDate() throws ParseException {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31", XSDDatatype.XSDdate);
-        String date = RDFUtil.formatDateTime(l);
+        String date = RDFUtil.formatDateTime(l, false);
         Literal lret = RDFUtil.parseDateTime(date, l.getDatatypeURI() );
         assertEquals(l, lret);
     }
     
     @Test public void testTimelessDatetimeRendering() {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31Z", XSDDatatype.XSDdate);
-    	assertEquals( "Mon, 31 May 1999", RDFUtil.formatDateTime( l ) );
+    	assertEquals( "Mon, 31 May 1999", RDFUtil.formatDateTime( l, false ) );
+    }
+    
+    @Test public void testDateTimeISORendering() {
+        Literal l = ResourceFactory.createTypedLiteral("1999-05-31T02:09:32Z", XSDDatatype.XSDdateTime);
+        assertEquals("1999-05-31T02:09:32Z", RDFUtil.formatDateTime(l, true));
+    }
+    
+    @Test public void testTimelessDateISORendering() {
+        Literal l = ResourceFactory.createTypedLiteral("1999-05-31Z", XSDDatatype.XSDdate);
+        assertEquals( "1999-05-31", RDFUtil.formatDateTime( l, true ) );
     }
 }
 

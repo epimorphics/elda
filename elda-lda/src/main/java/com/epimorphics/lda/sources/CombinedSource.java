@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
+import com.epimorphics.util.QueryUtil;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.Lock;
@@ -82,7 +83,7 @@ public class CombinedSource extends SourceBase implements Source
     
     @Override public QueryExecution execute( Query query )
         {
-        ELog.info(log, "doing query execution on a CombinedSource" );
+        log.info(ELog.message("doing query execution on a CombinedSource") );
         Model combined = combine();
         return QueryExecutionFactory.create( query, combined );
         }
@@ -96,9 +97,9 @@ public class CombinedSource extends SourceBase implements Source
 
     private Model dataFrom( Source s )
         {
-        ELog.info(log,  "[%s]: getting model data from source '%s'", s);
+        log.info(ELog.message( "[%s]: getting model data from source '%s'", s));
         String queryString = "construct " + triplesFor( constructs ) + " where " + triplesFor( matches ) + "";
-        return s.executeConstruct( QueryFactory.create( queryString ) );
+        return s.executeConstruct( QueryUtil.create( queryString ) );
         }
 
     private String triplesFor( List<String> ls )

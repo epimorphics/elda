@@ -54,7 +54,7 @@ public class TestExistsModifier
 		assertEquals( 1, triples.size() );
 		RDFQ.Triple t = triples.get(0);
 		assertEquals( RDFQ.var( "?item" ), t.S );
-		assertEquals( RDFQ.uri( Shorts.NS + "backwards" ), t.P );
+		assertEquals( RDFQ.uriRaw( Shorts.NS + "backwards" ), t.P );
 		assertTrue( t.O instanceof Variable );
 		}
 	
@@ -74,7 +74,7 @@ public class TestExistsModifier
 		RDFQ.Triple t = optionals.get(0).get(0);
 	//
 		assertEquals( RDFQ.var( "?item" ), t.S );
-		assertEquals( RDFQ.uri( Shorts.NS + "backwards" ), t.P );
+		assertEquals( RDFQ.uriRaw( Shorts.NS + "backwards" ), t.P );
 		assertTrue( t.O instanceof Variable );
 	//
 		assertEquals( "should be one filter expression", 1, filters.size() );

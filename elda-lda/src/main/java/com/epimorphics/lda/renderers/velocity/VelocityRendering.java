@@ -50,6 +50,9 @@ implements BytesOut
     /***********************************/
     /* Constants                       */
     /***********************************/
+	
+	/* poison string in case error occurs during streaming */
+	static final String HTML_POISON = "\n<=>'<=>\"<=>\n";
 
     /** The default place we look for Velocity files */
     public static final String DEFAULT_VELOCITY_ROOT_PATH = "/velocity/";
@@ -122,7 +125,7 @@ implements BytesOut
             times.setRenderDuration( System.currentTimeMillis() - base, vr.suffix() );
         }
         catch (Exception e) {
-            ELog.warn(log, "%s (%s)", e.getMessage(), e );
+            log.warn(ELog.message("%s (%s)", e.getMessage(), e ));
             throw new VelocityRenderingException();
         }
         finally {
@@ -131,7 +134,7 @@ implements BytesOut
                     cos.close();
                 }
                 catch (IOException e) {
-                    ELog.warn(log, "failed to close count stream: %s (%s)", e.getMessage(), e );
+                    log.warn(ELog.message("failed to close count stream: %s (%s)", e.getMessage(), e ));
                 }
             }
         }
@@ -164,8 +167,8 @@ implements BytesOut
             t = ve.getTemplate( vr.templateName() );
         }
         catch (ResourceNotFoundException e) {
-			ELog.debug(log, "could not find base template '%s'", vr.templateName() );
-            ELog.debug(log, "current velocity path is '%s'", ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH ) );
+			log.debug(ELog.message("could not find base template '%s'", vr.templateName()) );
+            log.debug(ELog.message("current velocity path is '%s'", ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH )));
             throw e;
         }
 
@@ -231,8 +234,8 @@ implements BytesOut
             String pathURL = b.pathAsURL( pathEntry).toString();
             roots.add( pathURL + (pathURL.endsWith( "/" ) ? "" : "/") );
         }
-        ELog.debug(log, "rootPath '%s'", rootPath);
-        ELog.debug(log, "complete expanded path '%s'", roots);
+        log.debug(ELog.message("rootPath '%s'", rootPath));
+        log.debug(ELog.message("complete expanded path '%s'", roots));
         return roots;
     }
 
@@ -317,7 +320,7 @@ implements BytesOut
                     p.load( is );
                 }
                 catch (IOException e) {
-                    ELog.warn(log,  "IO exception while reading properties: %s (%s)", e.getMessage(), e);
+                    log.warn(ELog.message( "IO exception while reading properties: %s (%s)", e.getMessage(), e));
                     throw new WrappedIOException( e );
                 }
                 finally {
@@ -325,7 +328,7 @@ implements BytesOut
                         is.close();
                     }
                     catch (IOException e) {
-                        ELog.warn(log,  "IO exception while closing properties input stream: %s (%s)", e.getMessage(), e);
+                        log.warn(ELog.message( "IO exception while closing properties input stream: %s (%s)", e.getMessage(), e));
                         throw new WrappedIOException( e );
                     }
                 }
@@ -358,10 +361,15 @@ implements BytesOut
         vc.put( "renderer", this.vr );
     }
 
-    /** Add the Elda bindings as context variables */
+    /**
+    	Add the Elda bindings as context variables. Use getUnslashed to
+    	unquote any quoted left braces (ie the {/ sequence) that were
+    	introduced to quote raw string values eg esp from exception
+    	messages.
+    */
     protected void addBindingsToContext( VelocityContext vc, Bindings binds ) {
         for (String key: binds.keySet()) {
-            vc.put( key, binds.get( key ) );
+            vc.put( key, binds.getUnslashed( key ) );
         }
     }
 
@@ -404,4 +412,8 @@ implements BytesOut
         ResultsModel rm = new ResultsModel( results );
         return rm.page();
     }
+
+	@Override public String getPoison() {
+		return HTML_POISON;
+	}
 }

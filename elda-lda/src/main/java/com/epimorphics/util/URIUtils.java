@@ -10,7 +10,6 @@ package com.epimorphics.util;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.core.UriBuilder;
 
@@ -110,6 +109,16 @@ public class URIUtils {
 	public static URI withoutPageParameters( URI ru ) {
     	URI rqp1 = replaceQueryParam( ru, QueryParameter._PAGE );
     	return replaceQueryParam( rqp1, QueryParameter._PAGE_SIZE );
+	}
+
+	/**
+		Escape the string s which is the spelling of a URI by replacing
+		any spaces with %20. s may contain unencoded Unicode characters;
+		they are left alone. Other characters may also have to be escaped
+		eventually.
+	*/
+	public static String escapeAsURI(String s) {
+		return s.replaceAll(" ",  "%20");
 	}
 
 }

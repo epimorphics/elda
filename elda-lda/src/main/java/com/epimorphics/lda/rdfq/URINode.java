@@ -9,16 +9,22 @@
 package com.epimorphics.lda.rdfq;
 
 import com.epimorphics.lda.support.PrefixLogger;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 public class URINode extends Term {
-	final String URI;
+	
+	final String uriString;
 
-	public URINode(String URI) {
-		this.URI = URI;
+	public URINode(String u) {
+		this.uriString = u;
+	}
+
+	public URINode(Resource r) {
+		this.uriString = r.getURI();
 	}
 
 	@Override public String asSparqlTerm(PrefixLogger pl) {
-		return pl.present(URI);
+		return pl.present(uriString);
 	}
 
 	@Override public URINode replaceBy(String r) {
@@ -26,7 +32,7 @@ public class URINode extends Term {
 	}
 
 	@Override public String spelling() {
-		return URI;
+		return uriString;
 	}
 
 	@Override public boolean equals(Object other) {
@@ -34,10 +40,10 @@ public class URINode extends Term {
 	}
 
 	@Override public int hashCode() {
-		return URI.hashCode();
+		return uriString.hashCode();
 	}
 
 	private boolean same(URINode other) {
-		return URI.equals(other.URI);
+		return uriString.equals(other.uriString);
 	}
 }

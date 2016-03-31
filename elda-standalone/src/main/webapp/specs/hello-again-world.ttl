@@ -22,11 +22,16 @@
 # ---------------------------------------------------------------------
 # API config
 
+<http://localhost:3030/ds/query>
+    elda:authKey "grimdark"
+    ; elda:authFile "taods-and-robins"
+    .
+    
 hello:hello-world-again a api:API 
 	; rdfs:label "Hello World example #2 -- games"@en
 	# Name the SPARQL endpoint which supplies the data we present
-	; api:sparqlEndpoint <local:data/example-data.ttl>
-	# ; api:sparqlEndpoint <http://localhost:3030/ds/query>
+	# ; api:sparqlEndpoint <local:data/example-data.ttl>
+	; api:sparqlEndpoint <http://localhost:3030/ds/query>
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:viewer [a api:Viewer; api:name "empty"; api:properties ""]
 
@@ -35,6 +40,7 @@ hello:hello-world-again a api:API
 
 	; api:endpoint 
 		hello:publishers, hello:games, hello:about
+		, hello:catch # development debugging
 
     ; api:formatter
         [a elda:FeedFormatter
@@ -67,11 +73,21 @@ hello:publishers a api:ListEndpoint
 	; api:selector [api:filter "type=Publisher"; api:sort "label"]
 	; api:defaultViewer api:labelledDescribeViewer
 	.	
-	
+    
 hello:games a api:ListEndpoint 
-	; rdfs:label "Games" 
-	; api:uriTemplate "/games" 
-	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
+    ; rdfs:label "Games" 
+    ; api:uriTemplate "/games" 
+    ; api:selector [api:filter "type=BoardGame"; api:sort "label"]
+    ; api:defaultViewer api:labelledDescribeViewer
+    ; elda:enableCounting false
+    .
+	
+# for URI debugging purposes during development
+
+hello:catch a api:ListEndpoint 
+	; rdfs:label "Catch" 
+	; api:uriTemplate "/catch/{caught}" 
+	; api:selector [api:filter "type={caught}"; api:sort "label"]
 	; api:defaultViewer api:labelledDescribeViewer
 	; elda:enableCounting false
 	.
