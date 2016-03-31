@@ -219,11 +219,15 @@ import com.sun.jersey.api.NotFoundException;
     public Response requestHandler(
     		@Context HttpServletRequest servletRequest,
     		@Context HttpServletResponse servletResponse,
-            /* @Encoded */ @PathParam("path") String pathstub,
+            @PathParam("path") String pathstub,
             @Context HttpHeaders headers, 
             @Context ServletContext servCon,
             @Context UriInfo ui) throws IOException, URISyntaxException 
     {    	
+    	
+//    	System.err.println(">> requestHandler: URI = " + ui.getRequestUri());
+//    	System.err.println(">> path: " + pathstub);
+    	
     	ELog.setSeqID(getSeqID(servletResponse));
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	String contextPath = servCon.getContextPath(); 
@@ -243,8 +247,9 @@ import com.sun.jersey.api.NotFoundException;
         if (match == null) {
         	StatsValues.endpointNoMatch();
         	String item = router.findItemURIPath( "_", ui.getRequestUri(), "/" + pathstub );
-        	if (item == null) 
+        	if (item == null) {
         		return noMatchFound( pathstub, ui, pathAndType );
+        	}
         	else 
         		return standardHeaders( null, Response.seeOther( new URI( item ) ) ).build();
         } else {
@@ -459,14 +464,14 @@ import com.sun.jersey.api.NotFoundException;
         	return ErrorPages.respond(forErrorHandling, servCon, "bad_request", e.getMessage(), EldaException.BAD_REQUEST);
                     	
         } catch (UnknownShortnameException e) {
-        	log.error(ELog.message("UnknownShortnameException: " + e.getMessage()));
+        	log.error(ELog.message("UnknownShortnameException: %s", e.getMessage()));
             if (log.isDebugEnabled()) log.debug(ELog.message("%s", Messages.shortStackTrace( e )));
         	StatsValues.endpointException();
         	return ErrorPages.respond(forErrorHandling, servCon, "unknown_shortname", e.getMessage(), EldaException.BAD_REQUEST); 
         
         } catch (EldaException e) {
         	StatsValues.endpointException();
-        	log.error(ELog.message("Exception: " + e.getMessage()));
+        	log.error(ELog.message("Exception: %s", e.getMessage()));
         	if (log.isDebugEnabled()) log.debug(ELog.message("%s", Messages.shortStackTrace( e )));
         	return ErrorPages.respond(forErrorHandling, servCon, "exception", e.getMessage(), EldaException.SERVER_ERROR);
         
@@ -475,7 +480,7 @@ import com.sun.jersey.api.NotFoundException;
         
         } catch (QueryParseException e) {
         	StatsValues.endpointException();
-        	log.error(ELog.message("Query Parse Exception: " + e.getMessage()));
+        	log.error(ELog.message("Query Parse Exception: %s", e.getMessage()));
             if (log.isDebugEnabled()) log.debug(ELog.message("%s",  Messages.shortStackTrace( e )));
             return ErrorPages.respond(forErrorHandling, servCon, "query_parse_exception", e.getMessage(), EldaException.SERVER_ERROR);  
             
@@ -580,7 +585,7 @@ import com.sun.jersey.api.NotFoundException;
 				}
 				catch (Throwable e) {
 					String message = String.format("Error while sending response: '%s'", e);
-					log.error(ELog.message(message));
+					log.error(ELog.message("%s", message));
 					StreamUtils.writeAsUTF8(response.getPoison() + "\n" + message, os);
 					os.flush();
 				}

@@ -62,7 +62,7 @@ public class Loader extends HttpServlet {
 		baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
     	configureLog4J();
     	log.info(ELog.message("[load] \n\n  Starting Elda (Loader) %s %s\n", Version.string, ELDA.tag));
-        log.info(ELog.message("[load] baseFilePath: ", baseFilePath ));
+        log.info(ELog.message("[load] baseFilePath: %s", baseFilePath ));
     	String prefixPath = getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
         ServletUtils.setupLARQandTDB( sc );
         modelLoader = new APIModelLoader( baseFilePath );

@@ -96,7 +96,7 @@ public abstract class Param
 			this.asResource = r;
 			this.shortName = p;
 			this.typeURI = typeURI;
-			this.asURI = RDFQ.uri( r.getURI() );
+			this.asURI = RDFQ.uri( r );
 			}
 
 		public static Info create( ShortnameService sns, String p ) 
