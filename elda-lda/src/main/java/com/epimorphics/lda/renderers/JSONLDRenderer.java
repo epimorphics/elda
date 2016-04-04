@@ -39,10 +39,12 @@ public class JSONLDRenderer implements Renderer {
 
 	final MediaType mt;
     final APIEndpoint ep;
+    final boolean jsonUsesISOdate; // not currently used
     
-	public JSONLDRenderer(Resource config, MediaType mt, APIEndpoint ep, ShortnameService sns) {
+	public JSONLDRenderer(Resource config, MediaType mt, APIEndpoint ep, ShortnameService sns, boolean jsonUsesISOdate) {
 		this.ep = ep;
 		this.mt = mt;
+		this.jsonUsesISOdate = jsonUsesISOdate;
 	}
 
 	@Override public MediaType getMediaType(Bindings ignored) {
@@ -327,7 +329,7 @@ public class JSONLDRenderer implements Renderer {
 				} else if (dt instanceof XSDBaseNumericType) {
 					jw.value( Long.parseLong( spelling ) );
 		        } else if (dt.equals( XSDDatatype.XSDdateTime) || dt.equals( XSDDatatype.XSDdate) ) {
-		        	jw.value( RDFUtil.formatDateTime( l ) );
+		        	jw.value( RDFUtil.formatDateTime( l, true ) );
 		        } else if (dt.equals( XSDDatatype.XSDanyURI)) {
 		            jw.value( spelling );
 		        } else if (dt.equals( XSDDatatype.XSDstring) ) { 

@@ -9,10 +9,12 @@ public class JSONLDRendererFactory implements RendererFactory {
 
 	Resource config = null;
 	
+	boolean jsonUsesISOdate = false;
+	
 	MediaType mt = MediaType.APPLICATION_JSON_LD;
 	
 	@Override public Renderer buildWith(APIEndpoint ep, ShortnameService sns) {
-		return new JSONLDRenderer(config, mt, ep, sns);
+		return new JSONLDRenderer(config, mt, ep, sns, jsonUsesISOdate);
 	}
 
 	@Override public RendererFactory withRoot(Resource config) {
@@ -22,6 +24,11 @@ public class JSONLDRendererFactory implements RendererFactory {
 
 	@Override public RendererFactory withMediaType(MediaType mt) {
 		this.mt = mt;
+		return this;
+	}
+
+	@Override public RendererFactory withISODateFormatting(Boolean jsonUsesISOdate) {
+		this.jsonUsesISOdate = jsonUsesISOdate;
 		return this;
 	}
 
