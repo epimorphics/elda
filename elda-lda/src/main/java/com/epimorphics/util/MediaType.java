@@ -36,11 +36,11 @@ public class MediaType
 	public static final MediaType APPLICATION_RDF_XML = new MediaType( "application", "rdf+xml" );
 
 	// I'm told that application/javascript doesn't work on some IEs ...
-	public static final MediaType TEXT_JAVASCRIPT = new MediaType( "text", "javascript" );
-
-	public static final MediaType APPLICATION_JAVASCRIPT = new MediaType( "application", "javascript" );
+	public static final MediaType TEXT_JAVASCRIPT = new MediaType( "text", "javascript", "; charset=utf-8" );
 
 	public static final MediaType APPLICATION_JSON_LD = new MediaType( "application", "ld+json" );
+
+	public static final MediaType APPLICATION_JAVASCRIPT = new MediaType( "application", "javascript", "; charset=utf-8" );
 	
 	/**
 	    Initialise this MediaType with the given type, subtype, and
