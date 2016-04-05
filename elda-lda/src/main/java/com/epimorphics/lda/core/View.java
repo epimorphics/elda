@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.SparqlSupport;
 import com.epimorphics.lda.shortnames.ShortnameService;
