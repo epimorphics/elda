@@ -13,6 +13,8 @@ import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.MediaType;
 import com.github.jsonldjava.core.*;
+import com.github.jsonldjava.impl.TurtleTripleCallback;
+import com.github.jsonldjava.jena.JenaJSONLD;
 import com.github.jsonldjava.jena.JenaRDFParser;
 import com.github.jsonldjava.utils.JsonUtils;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
@@ -56,7 +58,13 @@ public class JSONLDRenderer implements Renderer {
 	}
 	
 	static boolean byHand = true;
-
+	
+	static { 
+		
+		JenaJSONLD.init();
+		
+	}
+	
 	@Override public BytesOut render(Times t, Bindings rc, final Map<String, String> termBindings, final APIResultSet results) {
 		final Model model = results.getMergedModel();
 		ShortnameService sns = ep.getSpec().getAPISpec().getShortnameService();
@@ -67,12 +75,24 @@ public class JSONLDRenderer implements Renderer {
 			return new BytesOutTimed() {
 				
 				@Override protected void writeAll(OutputStream os) {
+					ByteArrayOutputStream keepos = new ByteArrayOutputStream();
 					try {
-						Writer w = new OutputStreamWriter(os, "UTF-8");
+						Writer w = new OutputStreamWriter(keepos, "UTF-8");
 						JSONWriterFacade jw = new JSONWriterWrapper(w, true);
 						Composer c = new Composer(model, root, context, termBindings, jw);
 						c.renderItems(results.getResultList());
 						w.flush();						
+					//
+						byte[] bytes = keepos.toByteArray();
+						os.write(bytes);
+						
+						ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+						Model reconstituted = ModelFactory.createDefaultModel();
+						System.err.println(">> ALPHA");
+						reconstituted.read(bis, "", "JSON-LD");
+						System.err.println(">> BETA");
+						reconstituted.write(System.err, "ttl");
+						
 					} catch (Throwable e) {
 						throw new WrappedException(e);
 					}
