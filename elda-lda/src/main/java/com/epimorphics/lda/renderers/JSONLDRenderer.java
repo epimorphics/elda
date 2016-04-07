@@ -65,6 +65,10 @@ public class JSONLDRenderer implements Renderer {
 		
 	}
 	
+	static final String someBytes = "{\n\n '@context': {'isPartOf': 'http://purl.org/dc/terms/isPartOf', 'rest': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest', 'playTimeMinutes': {";
+
+	static final String someNiceBytes = "{}";
+	
 	@Override public BytesOut render(Times t, Bindings rc, final Map<String, String> termBindings, final APIResultSet results) {
 		final Model model = results.getMergedModel();
 		ShortnameService sns = ep.getSpec().getAPISpec().getShortnameService();
@@ -77,6 +81,7 @@ public class JSONLDRenderer implements Renderer {
 				@Override protected void writeAll(OutputStream os) {
 					ByteArrayOutputStream keepos = new ByteArrayOutputStream();
 					try {
+						System.err.println(">> writing model with " + model.size() + " triples.");
 						Writer w = new OutputStreamWriter(keepos, "UTF-8");
 						JSONWriterFacade jw = new JSONWriterWrapper(w, true);
 						Composer c = new Composer(model, root, context, termBindings, jw);
@@ -86,14 +91,32 @@ public class JSONLDRenderer implements Renderer {
 						byte[] bytes = keepos.toByteArray();
 						os.write(bytes);
 						
+						System.err.println(">> produced " + bytes.length + " bytes.");
+						
 						ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+						
+						System.err.println(">>>>>>>>>>>>>>>>>>>>>>>> ");
+						System.err.write(bytes);
+						System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>");
+						
+						
+						
 						Model reconstituted = ModelFactory.createDefaultModel();
 						System.err.println(">> ALPHA");
-						reconstituted.read(bis, "", "JSON-LD");
-						System.err.println(">> BETA");
-						reconstituted.write(System.err, "ttl");
+//						reconstituted.read(bis, "", "JSON-LD");
+						
+						byte[] little = someNiceBytes.getBytes("UTF-8");
+						
+						
+//						reconstituted.read(new StringReader(someNiceBytes), "", "JSON-LD");
+						reconstituted.read(new ByteArrayInputStream(little), "", "JSON-LD");
+						System.err.println(">> BETA: size " + reconstituted.size());
+						reconstituted.write(System.err, "TURTLE");
+						System.err.println(">> GAMMA");
 						
 					} catch (Throwable e) {
+						System.err.println(">> " + e);
+						e.printStackTrace(System.err);
 						throw new WrappedException(e);
 					}
 				}
