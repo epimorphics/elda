@@ -26,6 +26,7 @@ import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
@@ -35,8 +36,7 @@ import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.util.CollectionUtils;
-import com.epimorphics.util.Couple;
+import com.epimorphics.util.*;
 import com.hp.hpl.jena.graph.Graph;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.*;
@@ -335,7 +335,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	public void setTypeConstraint(Resource typeConstraint) {
-		addTriplePattern(SELECT_VAR, RDF.type, RDFQ.uri(typeConstraint.getURI()));
+		addTriplePattern(SELECT_VAR, RDF.type, RDFQ.uri(typeConstraint));
 	}
 
 	/**
@@ -347,12 +347,12 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 *            full URI
 	 */
 	public void setSubjectAsItemEndpoint(String subj) {
-		subjectResource = sns.asResource(subj);
+		setSubject(subj);
 		isItemEndpoint = true;
 	}
 
 	public void setSubject(String subj) {
-		subjectResource = sns.asResource(subj);
+		subjectResource = sns.asResource(URIUtils.escapeAsURI(subj));
 	}
 
 	public void addAllowReserved(String name) {
@@ -435,7 +435,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 			if (contentProperty.equals(TextSearchConfig.DEFAULT_CONTENT_PROPERTY)) {
 				addTriplePattern(SELECT_VAR, queryProperty, literal);
 			} else {
-				Any cp = RDFQ.uri(contentProperty.getURI());
+				Any cp = RDFQ.uri(contentProperty);
 				AnyList searchOperand = RDFQ.list(cp, literal);
 				addTriplePattern(SELECT_VAR, queryProperty, searchOperand);
 			}
@@ -507,7 +507,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	private void addTriplePattern(Variable varname, Resource P, Any O) {
-		basicGraphTriples.add(RDFQ.triple(varname, RDFQ.uri(P.getURI()), O));
+		basicGraphTriples.add(RDFQ.triple(varname, RDFQ.uri(P), O));
 	}
 
 	/**
@@ -616,7 +616,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	private void onePropertyStep(List<RDFQ.Triple> chain, Variable subject, Info prop, Variable var) {
 		Resource np = prop.asResource;
 		varInfo.put(var, prop);
-		chain.add(RDFQ.triple(subject, RDFQ.uri(np.getURI()), var));
+		chain.add(RDFQ.triple(subject, RDFQ.uri(np), var));
 	}
 
 	/**
@@ -872,11 +872,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 * Run the defined query against the datasource
 	 */
 	public APIResultSet runQuery(NoteBoard nb, Controls c, APISpec spec, Cache cache, Bindings b, View view) {
+		// nb.expiresAt = viewSensitiveExpiryTime(spec, view);
+		// nb.totalResults = requestTotalCount(nb.expiresAt, c, cache, spec.getDataSource(), b, spec.getPrefixMap());
 		Source source = spec.getDataSource();
 		try {
-			nb.expiresAt = viewSensitiveExpiryTime(spec, view);
-			Integer totalCount = requestTotalCount(nb.expiresAt, c, cache, source, b, spec.getPrefixMap());
-			nb.totalResults = totalCount;
 			String graphName = expandGraphName(b);
 			return runQueryWithSource(nb, c, spec, b, graphName, view, source);
 		} catch (QueryExceptionHTTP e) {
@@ -906,7 +905,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return rs;
 	}
 
-	private Integer requestTotalCount(long expiryTime, Controls c, Cache cache, Source s, Bindings b, PrefixMapping pm) {
+	public Integer requestTotalCount(long expiryTime, Controls c, Cache cache, Source s, Bindings b, PrefixMapping pm) {
 		if (counting()) {
 			PrefixLogger pl = new PrefixLogger(pm);
 			String countQueryString = assembleRawCountQuery(pl, b);
@@ -924,7 +923,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		return null;
 	}
 
-	private long viewSensitiveExpiryTime(APISpec spec, View v) {
+	public long viewSensitiveExpiryTime(APISpec spec, View v) {
 		// System.err.println( ">> viewSensitiveExpiryTime: basis " +
 		// cacheExpiryMilliseconds );
 		long duration = v.minExpiryMillis(spec.getPropertyExpiryTimes(), cacheExpiryMilliseconds);
@@ -958,9 +957,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	protected Couple<String, List<Resource>> selectResources(Controls c, APISpec spec, Bindings b, Source source) {
 		final List<Resource> results = new ArrayList<Resource>();
 		if (itemTemplate != null) {
-			String expanded = b.expandVariables(itemTemplate);
-			// expanded = encodeNonAscii(expanded);
-			setSubject(expanded);
+			setSubject(b.expandVariables(itemTemplate));
 		}
 		if (isFixedSubject() && isItemEndpoint)
 			return new Couple<String, List<Resource>>("", CollectionUtils.list(subjectResource));
@@ -998,8 +995,9 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		c.times.setSelectQuerySize(selectQuery);
 		//
 		Query q = createQuery(selectQuery);
-		if (log.isDebugEnabled())
-			log.debug("Running query: " + selectQuery.replaceAll("\n", " "));
+		if (log.isDebugEnabled()) {
+			log.debug(ELog.message("running query: %s", selectQuery.replaceAll("\n", " ")));
+		}
 		source.executeSelect(q, new ResultResourcesReader(results));
 		return new Couple<String, List<Resource>>(selectQuery, results);
 	}
@@ -1051,18 +1049,13 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	// may be over-ridden in a subclass
 	protected Query createQuery(String selectQuery) {
-		try {
-			return QueryFactory.create(selectQuery);
-		} catch (Exception e) {
-			String x = e.getMessage();
-			throw new APIException("Internal error building query:\n\n" + x + "\nin:\n\n" + selectQuery, e);
-		}
+		return QueryUtil.create(selectQuery);
 	}
 
 	private static final class ResultResourcesReader implements Source.ResultSetConsumer {
 
 		private final List<Resource> results;
-
+		
 		private ResultResourcesReader(List<Resource> results) {
 			this.results = results;
 		}
@@ -1086,8 +1079,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 						results.add(withoutModel(item));
 					}
 				}
-				if (countBnodes > 0) {
-					if (log.isDebugEnabled()) log.debug(countBnodes + " selected bnode items discarded.");
+				if (countBnodes > 0 && log.isDebugEnabled()) {
+					log.debug(ELog.message("%s selected bnode items discarded", countBnodes));
 				}
 			} catch (APIException e) {
 				throw e;

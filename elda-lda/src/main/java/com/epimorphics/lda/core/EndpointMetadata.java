@@ -20,6 +20,7 @@ import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.util.URIUtils;
+import com.hp.hpl.jena.graph.compose.MultiUnion;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.*;
@@ -53,7 +54,7 @@ public class EndpointMetadata {
 	
 	public static void addAllMetadata
 		( MergedModels mergedModels
-		, URI ru
+		, URI uriForList
 		, Resource uriForDefinition
 		, Bindings bindings
 		, CompleteContext cc
@@ -75,7 +76,6 @@ public class EndpointMetadata {
 		) {
 	//
 		boolean listEndpoint = details.isListEndpoint();
-        URI uriForList = URIUtils.withoutPageParameters( ru );
 		Model metaModel = mergedModels.getMetaModel();
 		thisMetaPage.addProperty( API.definition, uriForDefinition );
 	//
@@ -98,9 +98,9 @@ public class EndpointMetadata {
 	    		thisMetaPage.addLiteral( OpenSearch.totalResults, totalResults.intValue() );
 	    	
 	    	thisMetaPage.addProperty( API.items, content );
-	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, 0 );
-	    	Resource nextPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, page + 1 );
-	    	Resource prevPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, page - 1 );
+	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, 0 );
+	    	Resource nextPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, page + 1 );
+	    	Resource prevPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, page - 1 );
 
 	    	thisMetaPage.addProperty( XHV.first, firstPage );
 			if (hasMorePages) thisMetaPage.addProperty( XHV.next, nextPage );
@@ -141,8 +141,15 @@ public class EndpointMetadata {
 		cc.include( versionsModel );
 		cc.include( formatsModel );
 		cc.include( execution );
-	//
-		em.addBindings( mergedModels1, bindingsModel, exec, cc );
+	//		
+		MultiUnion mu = new MultiUnion();
+		mu.addGraph(mergedModels1.getGraph());
+		mu.addGraph(versionsModel.getGraph());
+		mu.addGraph(formatsModel.getGraph());
+		mu.addGraph(execution.getGraph());
+		
+		Model toScan = ModelFactory.createModelForGraph(mu);
+		em.addBindings( toScan, bindingsModel, exec, cc );
 	//
 	    if (wantsMeta.wantsMetadata( "versions" )) metaModel1.add( versionsModel ); else setsMeta.setMetadata( "versions", versionsModel );
 	    if (wantsMeta.wantsMetadata( "formats" )) metaModel1.add( formatsModel );  else setsMeta.setMetadata( "formats", formatsModel );

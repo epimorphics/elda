@@ -17,7 +17,7 @@
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
 
 # Prefix for example-local entities.
-@prefix egc:				<http://epimorphics.com/public/vocabulary/games.ttl#>.
+@prefix egc:				<http://epimorphics.com/public/vocabulary/games/>.
 
 # ---------------------------------------------------------------------
 # API config
@@ -34,7 +34,8 @@ egc:velocity-world a api:API
     ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
     ; api:mimeType "text/html"
     ]
-  ; api:variable [api:name "_velocityPath"; api:value "assets/velocity"]
+  ; api:variable [api:name "_velocityPath"; api:value "/etc/alternatives/elda-velocity"]
+  ; api:variable [api:name "_velocityRoot"; api:value "lda-assets/velocity"]
   .
 
 # Endpoint definition

@@ -23,6 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.BytesOutTimed;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.support.Times;
@@ -35,6 +36,9 @@ import com.hp.hpl.jena.shared.WrappedException;
  * @author chris
  */
 public class DOMUtils {
+	
+	// very likely XML or HTML
+	static final String DOM_POISON = "\nSTREAMING ERROR<=>'<=>\"<=>\n";
 	
 	public static Document newDocument() {
 		return getBuilder().newDocument();
@@ -78,14 +82,7 @@ public class DOMUtils {
 		return new BytesOutTimed() {
 
 			@Override public void writeAll(OutputStream os) {
-				OutputStreamWriter u = StreamUtils.asUTF8(os);
-				try {
-					u.write(content);
-					u.flush();
-					u.close();
-				} catch (IOException e) {
-					throw new WrappedException(e);
-				}
+				StreamUtils.writeAsUTF8(content, os);
 				// Transformer tr = setPropertiesAndParams( t, rc, pm,
 				// transformFilePath );
 				// OutputStreamWriter u = StreamUtils.asUTF8(os);
@@ -104,6 +101,10 @@ public class DOMUtils {
 			@Override protected String getFormat() {
 				return "html";
 			}
+
+			@Override public String getPoison() {
+				return DOM_POISON;
+			}
 		};
 	}
 
@@ -117,10 +118,10 @@ public class DOMUtils {
 		for (String name : rc.keySet()) {
 			String value = rc.getValueString(name);
 			if (value == null) {
-				log.debug("ignored null xslt parameter " + name);
+				log.debug(ELog.message("ignored null xslt parameter '%s'", name));
 			} else {
 				t.setParameter(name, value);
-				log.debug("set xslt parameter " + name + " = " + value);
+				log.debug(ELog.message("set xslt parameter '%s' to '%s'", name, value));
 			}
 		}
 		String nsd = namespacesDocument(pm);

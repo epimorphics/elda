@@ -13,8 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.epimorphics.lda.rdfq.*;
+import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.sparql.util.FmtUtils;
 
 /**
     Prefix mapping
@@ -46,12 +46,14 @@ public class PrefixLogger {
 	    </p>
 	*/
 	public String present( String unsafeURI ) {
-		String URI = FmtUtils.stringEsc(unsafeURI);
-		if (URI.endsWith( ".") ) return "<" + URI + ">";
-		String qName = pm.qnameFor( URI );
-		if (qName == null) return "<" + URI + ">";
-		seen.add( qName.substring( 0, qName.indexOf( ':' ) ) );
-		return qName;
+		String qName = pm.qnameFor( unsafeURI );
+		if (qName == null) {
+			return "<" + URIUtils.escapeAsURI(unsafeURI) + ">";
+		} else {
+			seen.add( qName.substring( 0, qName.indexOf( ':' ) ) );
+			return qName;
+		}
+		
 	}
 
 	public String present( Any r ) {

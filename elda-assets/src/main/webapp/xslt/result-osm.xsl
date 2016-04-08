@@ -978,7 +978,7 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 
 <xsl:template match="result" mode="summary">
-    <xsl:if test="count(items/item) > 1">
+    <xsl:if test="count(items/item) > 1 or totalResults">
         <section class="summary">
             <h1>On This Page</h1>
             <xsl:call-template name="createInfo">
@@ -1900,31 +1900,35 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 
 <xsl:template match="hasFormat/item" mode="nav">
-	<xsl:variable name="name">
+    <xsl:variable name="name">
         <xsl:choose>
            <xsl:when test="format">
-		       <xsl:apply-templates select="." mode="name" />
+              <xsl:apply-templates select="." mode="name" />
            </xsl:when>
+           <!-- pick the (misplaced) label up from the result if there is one there -->
+<!--            <xsl:when test="/result/label"> -->
+<!--               <xsl:apply-templates select="/result" mode="name" /> -->
+<!--            </xsl:when> -->
            <!-- pick up best label from misplaced result - cann only happen for html-->
            <xsl:otherwise>
               <xsl:text>html</xsl:text>
 <!--               <xsl:apply-templates select="/result" mode="name" /> -->
            </xsl:otherwise>
         </xsl:choose>
-	</xsl:variable>
+    </xsl:variable>
     
     <xsl:choose>
         <xsl:when test="format">
             <a href="{@href}" type="{format/label}" rel="alternate"
                 title="view in {$name} format">
-		        <xsl:value-of select="label" />
-	        </a>
+                <xsl:value-of select="label" />
+            </a>
         </xsl:when>
         <xsl:when test="/result/format/label and /result/label">
             <a href="{@href}" type="{/result/format/label}" rel="alternate"
                 title="view in {$name} format">
 <!--                <xsl:value-of select="/result/label" /> -->
- 				<xsl:value-of select="$name" /> 				
+                <xsl:value-of select="$name" />                 
             </a>
         </xsl:when>
     </xsl:choose>

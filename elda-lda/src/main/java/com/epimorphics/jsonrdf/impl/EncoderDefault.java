@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.jsonrdf.extras.JsonUtils;
+import com.epimorphics.lda.log.ELog;
 import com.hp.hpl.jena.datatypes.BaseDatatype;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
@@ -117,9 +118,10 @@ public class EncoderDefault implements EncoderPlugin {
     }
     
     /** Encode a literal as a JSON compatible object */
-    @Override public void encodeLiteral( JSONWriterFacade jw, boolean isStructured, Literal lit, ReadContext c) {
+    @Override public void encodeLiteral( JSONWriterFacade jw, boolean isStructured, Literal lit, ReadContext c, boolean jsonUsesISOdate ) {
     	String spelling = lit.getLexicalForm(), lang = lit.getLanguage();
     	RDFDatatype dt = lit.getDatatype();
+    	
     	if (isStructured) {
     		jw.object();
     		jw.key("_value"); jw.value( spelling );
@@ -136,7 +138,7 @@ public class EncoderDefault implements EncoderPlugin {
 			} else if (dt instanceof XSDBaseNumericType) {
 				jw.value( Long.parseLong( spelling ) );
 	        } else if (dt.equals( XSDDatatype.XSDdateTime) || dt.equals( XSDDatatype.XSDdate) ) {
-	        	jw.value( RDFUtil.formatDateTime( lit ) );
+	        	jw.value( RDFUtil.formatDateTime( lit, jsonUsesISOdate ) );
 	        } else if (dt.equals( XSDDatatype.XSDanyURI)) {
 	            jw.value( spelling );
 	        } else if (dt.equals( XSDDatatype.XSDstring) ) { 
@@ -145,7 +147,7 @@ public class EncoderDefault implements EncoderPlugin {
 				if (showUnhandled)
 					{
 					// Issue #178
-					log.warn( "unhandled datatype '" + dt + "' in literal '" + spelling + "'" );
+					log.warn(ELog.message("unhandled datatype '%s' in literal '%s'", dt, spelling));
 					showUnhandled = false;
 					}
 				jw.value( spelling );

@@ -24,6 +24,7 @@ import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -123,13 +124,25 @@ public class APISpec {
 		this.cacheExpiryMilliseconds = PropertyExpiryTimes.getSecondsValue( root, ELDA_API.cacheExpiryTime, -1) * 1000;
         this.enableCounting = RDFUtils.getOptionalBooleanValue( root, ELDA_API.enableCounting, Boolean.FALSE );        
 		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( root.getModel() );
-        extractEndpointSpecifications( root );
+	//
+		setDefaultSuffixName(bindings, root);      
+		extractEndpointSpecifications( root );
         extractModelPrefixEditor( root );
     }
+    
+	public static void setDefaultSuffixName(Bindings b, Resource ep) {
+		if (ep.hasProperty( API.defaultFormatter)) {
+			Resource r = ep.getProperty( API.defaultFormatter ).getObject().asResource();
+			if (r.hasProperty( API.name )) {
+				String name = r.getProperty( API.name ).getString();
+				b.put("_defaultSuffix", name);
+			} 
+		}
+	}
 
 	protected void reportObsoleteDescribeThreshold(Resource endpoint) {
 		if (endpoint.hasProperty(ELDA_API.describeThreshold)) {
-			log.warn("Endpoint " + endpoint + ": elda:describeThreshold is no longer required/used.");
+			log.warn(ELog.message("endpoint '%s': elda:describeThreshold is no longer required/used.", endpoint));
 		}
 	}
     

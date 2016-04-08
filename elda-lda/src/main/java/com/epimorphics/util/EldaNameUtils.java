@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import com.hp.hpl.jena.rdf.model.impl.Util;
 
-public class NameUtils {
+public class EldaNameUtils {
 
 	/**
 	    Answer true iff <code>proposed</code> matches the permitted
@@ -43,7 +43,7 @@ public class NameUtils {
 	    _, or -1 if it does not so start.
 	*/
 	public static int prefixEndsAt( String proposed ) {
-		Matcher m = NameUtils.prefixSyntax.matcher( proposed ); 
+		Matcher m = EldaNameUtils.prefixSyntax.matcher( proposed ); 
 		return m.find() ? m.end() : -1;
 	}
 

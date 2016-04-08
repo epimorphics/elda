@@ -10,11 +10,15 @@ package com.epimorphics.lda.support.pageComposition;
 import java.net.URI;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.View.Type;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.specmanager.SpecEntry;
 import com.epimorphics.lda.specs.APIEndpointSpec;
@@ -33,7 +37,9 @@ import com.hp.hpl.jena.vocabulary.RDFS;
 public class ComposeConfigDisplay {
 	
 	private final static PrefixMapping empty = PrefixMapping.Factory.create().lock();
-	
+
+    protected static Logger log = LoggerFactory.getLogger(ComposeConfigDisplay.class);
+    
 	public String configPageMentioning( List<SpecEntry> entries, URI base, String pathstub ) {
 		StringBuilder textBody = new StringBuilder();
 		if (pathstub == null) pathstub = "";
@@ -96,16 +102,24 @@ public class ComposeConfigDisplay {
 		stripped before checking the endpoints of this spec).
 	*/
 	private boolean show(String path, SpecEntry se) {
-		String prefixPath = se.getSpec().getPrefixPath().substring(1);	
-		if (path.startsWith(prefixPath)) {
+		String prefixPath = cleanPrefixPath(se.getSpec().getPrefixPath());
+		if (path.startsWith(prefixPath)) {			
 			List<APIEndpointSpec> endpoints = se.getSpec().getEndpoints();
-			String strippedPath = path.substring(prefixPath.length() + 1);
+			String strippedPath = path.substring(prefixPath.length());
+			if (strippedPath.startsWith("/")) strippedPath = strippedPath.substring(1);
 			return occursIn( strippedPath, endpoints );
 		} else {
 			return false;
 		}
 	}
     
+	// deal with null (treat as "/") and strip the leading slash.
+	private String cleanPrefixPath(String prefixPath) {
+		if (prefixPath == null) return "";
+		if (prefixPath.isEmpty()) return "";
+		return prefixPath.substring(1);
+	}
+
 	static class Which {
 
 		final int n;
@@ -145,18 +159,23 @@ public class ComposeConfigDisplay {
 	    	sb.append( "<thead><tr><th>name</th><th>lexical form</th><th>type or language</th></tr></thead>\n" );
 			for (String name: names) {
 				Value v = b.get( name );
-				String lf = v.spelling() == null ? "<i>none</i>" : v.spelling();
-				String type =
-					v.type().length() > 0 ? pm.shortForm( v.type() )
-					: v.lang().length() > 0 ? v.lang()
-					: ""
-					;
-				sb.append( "<tr>" )
-					.append( "<td>" ).append( name ).append( "</td>" )
-					.append( "<td>" ).append( safe(lf) ).append( "</td>" )
-					.append( "<td>" ).append( type ).append( "</td>" )
-					.append( "</tr>\n" )
-					;
+				if (v == null) {
+					log.debug(ELog.message("binding for '%s' is null or non-Value; ignored.", name));	
+					System.err.println("binding for " + name + " is null or non-Value; ignored.");			
+				} else {
+					String lf = v.spelling() == null ? "<i>none</i>" : v.spelling();
+					String type =
+						v.type().length() > 0 ? pm.shortForm( v.type() )
+						: v.lang().length() > 0 ? v.lang()
+						: ""
+						;
+					sb.append( "<tr>" )
+						.append( "<td>" ).append( name ).append( "</td>" )
+						.append( "<td>" ).append( safe(lf) ).append( "</td>" )
+						.append( "<td>" ).append( type ).append( "</td>" )
+						.append( "</tr>\n" )
+						;
+				}			
 			}
 			sb.append( "</table>\n" );
 			sb.append( "</div>\n" );

@@ -23,8 +23,8 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 public class TestQueryReordering {
 
-	static final Any A = RDFQ.uri( "eh:/A" );
-	static final Any B = RDFQ.uri( "eh:/B" );
+	static final Any A = RDFQ.uriRaw( "eh:/A" );
+	static final Any B = RDFQ.uriRaw( "eh:/B" );
 	
 	static final Any N = RDFQ.literal( 17 );
 	static final Any M = RDFQ.literal( "M" );
@@ -34,9 +34,9 @@ public class TestQueryReordering {
 	static final Any Y = RDFQ.var( "?B" );
 	
 	static final Any t = QuerySupport.text_query;
-	static final Any T = RDFQ.uri( RDF.type.getURI() );
-	static final Any P = RDFQ.uri( "eh:/P" );
-	static final Any Q = RDFQ.uri( "eh:/Q" );
+	static final Any T = RDFQ.uri( RDF.type );
+	static final Any P = RDFQ.uriRaw( "eh:/P" );
+	static final Any Q = RDFQ.uriRaw( "eh:/Q" );
 	
 	static final RDFQ.Triple IPA = RDFQ.triple(I, P, A);
 	static final RDFQ.Triple IPB = RDFQ.triple(I, P, B);

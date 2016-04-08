@@ -328,6 +328,7 @@ public class XMLRendering {
 				RDFNode label = labelling.getObject();
 				if (label.isLiteral()) return label.asLiteral().getLexicalForm();
 			}
+			return r.asNode().getBlankNodeLabel();
 		}
 	//
 		if (r.isURIResource()) {
@@ -409,8 +410,14 @@ public class XMLRendering {
 	
 	private String shortNameFor( String URI ) {
 		String s = nameMap.get( URI );
-		if (s == null) s = URI.replaceFirst( ".*[#/]",  "" );
+		if (s == null) nameMap.put(URI,  s = URItoNCName(URI));
 		return s;
+	}
+
+	// private static Pattern NCPattern = Pattern.compile("^[-_A-Za-z][_.A-Za-z0-9]*$");
+	
+	private String URItoNCName(String URI) {
+		return URI.replaceFirst( ".*[#/]",  "" );
 	}
 
 	final Map<AnonId, String> idMap = new HashMap<AnonId, String>();

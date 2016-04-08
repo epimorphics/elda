@@ -27,7 +27,7 @@ $prefLabel, $altLabel, $title and $name variables.
 <xsl:param name="inactiveImageBase" select="concat($_resourceRoot,'images/grey/16x16')" />
 
 <xsl:param name="graphColour" select="'#577D00'" />
-<xsl:variable name="openSpaceAPIkey" select="'91BDD27E0581EC9FE0405F0ACA603BCF'" />
+<xsl:param name="openSpaceAPIkey" select="'91BDD27E0581EC9FE0405F0ACA603BCF'" />
 
 <xsl:template match="/">
     <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
@@ -966,7 +966,7 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 
 <xsl:template match="result" mode="summary">
-	<xsl:if test="count(items/item) > 1">
+	<xsl:if test="count(items/item) > 1 or totalResults">
 		<section class="summary">
 			<h1>On This Page</h1>
 			<xsl:call-template name="createInfo">
@@ -1892,6 +1892,10 @@ $prefLabel, $altLabel, $title and $name variables.
            <xsl:when test="format">
               <xsl:apply-templates select="." mode="name" />
            </xsl:when>
+           <!-- pick the (misplaced) label up from the result if there is one there -->
+<!--            <xsl:when test="/result/label"> -->
+<!--               <xsl:apply-templates select="/result" mode="name" /> -->
+<!--            </xsl:when> -->
            <!-- pick up best label from misplaced result - cann only happen for html-->
            <xsl:otherwise>
               <xsl:text>html</xsl:text>

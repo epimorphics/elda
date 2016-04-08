@@ -1,0 +1,4 @@
+#set( $resultsCountSummary = $page.resultsCountSummary() )
+#if( $resultsCountSummary )
+  <span class="page-size">$resultsCountSummary</span>
+#end

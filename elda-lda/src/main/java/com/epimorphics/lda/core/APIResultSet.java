@@ -18,6 +18,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.support.LanguageFilter;
 import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.vocabularies.*;
@@ -63,6 +64,26 @@ public class APIResultSet implements SetsMetadata {
     protected final Map<String, Model> metadata = new HashMap<String, Model>();
     
 // ---------------------------------------------------------------------------  
+    
+    /**
+    	Initialise this APIResultSet as a shallow copy of <code>other</code>,
+    	except that a fresh merged model is created over the object model
+    	(only) of the copied result set.
+    */
+    public APIResultSet(APIResultSet other) {
+    	this.root = other.root;
+    	this.contentLocation = other.contentLocation;
+    	this.results = other.results;
+    	this.isCompleted = other.isCompleted;
+    	this.model = new MergedModels(other.model.getObjectModel());
+    	this.detailsQuery = other.detailsQuery;
+    	this.hash = other.hash;
+    	this.timestamp = other.timestamp;
+    	this.selectQuery = other.selectQuery;
+    	this.enableETags = other.enableETags;
+    	this.view = other.view;
+    	this.metadata.putAll( other.metadata );
+    }
     
     protected APIResultSet
     	( Resource root
@@ -142,14 +163,6 @@ public class APIResultSet implements SetsMetadata {
 				);
 			}
 		}
-    }
-    
-    public URI getContentLocation() {
-        return contentLocation;
-    }
-
-    public void setContentLocation(URI contentLocation) {
-        this.contentLocation = contentLocation;
     }
 
     public APIResultSet(Graph graph, List<Resource> results, boolean isCompleted, boolean enableETags, String detailsQuery, View v) {
@@ -334,7 +347,6 @@ public class APIResultSet implements SetsMetadata {
         cloneGraph.getPrefixMapping().setNsPrefixes( model.merged );
         APIResultSet clone = new APIResultSet(cloneGraph, results, isCompleted, enableETags, detailsQuery, metadata, view );
         clone.setRoot(root);
-        clone.setContentLocation(contentLocation);
         clone.setSelectQuery( selectQuery );
         clone.timestamp = timestamp;     
         return clone;
@@ -362,7 +374,9 @@ public class APIResultSet implements SetsMetadata {
 	public void includeMetadata( String[] options ) {
 		for (String option: options) {
 			Model meta = metadata.get( option );
-			if (meta == null) log.debug( "Metadata " + option + " unknown or already supplied." );
+			if (meta == null) {
+				log.debug(ELog.message( "metadata '%s' unknown (or already supplied).", option));
+			}
 			else model.meta.add( meta );
 		}
 	}

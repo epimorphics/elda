@@ -285,7 +285,42 @@ public class PageTest
         rs = page.resourcesWithAllProperties( properties );
         assertEquals( 0, rs.size() );
     }
+    
+    @Test
+    public void testResultsCountSummaryNoCount() {
+        assertNull( page.resultsCountSummary() );
+    }
+    
+    @Test
+    public void testResultsCountSummaryNonEmpty() {
+        final Model apiMetadataModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES + Fixtures.PAGE_METADATA_GAMES );
+        Resource pageRoot = apiMetadataModel.getResource( "http://localhost:8080/standalone/hello/games.vhtml?_metadata=all" );
+        pageRoot.addProperty( OpenSearch.totalResults, apiMetadataModel.createTypedLiteral( 99 ) );
+        
+        final Model apiObjectModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_OBJECT_GAMES );
+        final Model apiResultsModel = ModelFactory.createUnion( apiMetadataModel, apiObjectModel );
 
+        ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel, "APIResultsModel2" ) );
+        Page page1 = rm.page();
+        
+        assertEquals( "Showing items 1 to 10 of 99", page1.resultsCountSummary() );
+    }
+
+    
+    @Test
+    public void testResultsCountSummaryEmpty() {
+        final Model apiMetadataModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES + Fixtures.PAGE_METADATA_GAMES );
+        Resource pageRoot = apiMetadataModel.getResource( "http://localhost:8080/standalone/hello/games.vhtml?_metadata=all" );
+        pageRoot.addProperty( OpenSearch.totalResults, apiMetadataModel.createTypedLiteral( 0 ) );
+        
+        final Model apiObjectModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_OBJECT_GAMES );
+        final Model apiResultsModel = ModelFactory.createUnion( apiMetadataModel, apiObjectModel );
+
+        ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel, "APIResultsModel3" ) );
+        Page page1 = rm.page();
+        
+        assertEquals( "0 results", page1.resultsCountSummary() );
+    }
 
     /***********************************/
     /* Internal implementation methods */

@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.Version;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.routing.ServletUtils;
 
 public class ForceLog4JAndAnnounceElda extends HttpServlet{
@@ -32,7 +33,7 @@ public class ForceLog4JAndAnnounceElda extends HttpServlet{
 			String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
 			String propertiesFile = "log4j.properties";
 			PropertyConfigurator.configure( baseFilePath + propertiesFile );
-			log.info( "\n\n    =>=> Starting Elda (Force) " + Version.string + "\n" ); 
+			log.info(ELog.message( "[init]\n\n    =>=> Starting Elda (Force) " + Version.string + "\n")); 
 			announced = true;
 		}
 	}	

@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda</artifactId>
-  <version>1.3.6-SNAPSHOT</version>
+  <version>1.3.18-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>elda</name>
   <description>Top level linked data API project</description>
@@ -18,7 +18,7 @@
 
   <properties>
 	  <tempSCM>/tmp/tempSCM</tempSCM>
-	  <project.tagname> []</project.tagname>
+	  <project.tagname>logFixed</project.tagname>
 
     <ver.junit>4.11</ver.junit>
     <ver.log4j>1.2.17</ver.log4j>
@@ -82,14 +82,12 @@
       </extension>
     </extensions>
 
-    <plugins>
+	<plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.8</version>
-        <configuration>
-          <!-- Default configuration for all reports -->
-        </configuration>
+		<configuration><skip>false</skip></configuration>
         <executions>
           <execution>
             <id>aggregate</id>
@@ -100,7 +98,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
+</plugin>
     </plugins>
   </build>
 
@@ -224,12 +222,6 @@
       <name>Java.net Repository for Maven</name>
       <url>http://download.java.net/maven/2/</url>
       <layout>default</layout>
-    </repository>
-
-    <repository>
-      <id>codehaus.maven.repository</id>
-      <name>Codehaus Maven Respository</name>
-      <url>http://repository.codehaus.org/</url>
     </repository>
 
     <repository>

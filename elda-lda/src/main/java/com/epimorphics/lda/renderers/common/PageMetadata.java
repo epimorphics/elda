@@ -10,10 +10,13 @@
 package com.epimorphics.lda.renderers.common;
 
 
+import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
+import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.lda.vocabularies.ELDA.COMMON;
 import com.epimorphics.lda.vocabularies.ELDA.DOAP_EXTRAS;
@@ -80,7 +83,7 @@ extends ModelWrapper
         RDFNodeWrapper pageRoot = new RDFNodeWrapper( this, i.next() );
 
         if (i.hasNext()) {
-            log.warn( "Unexpected: page metadata has more than one rdf:type api:Page resource - " + i.next() );
+            log.warn(ELog.message("unexpected: page metadata has more than one rdf:type api:Page resource - %s", i.next()));
         }
 
         return pageRoot;
@@ -106,6 +109,22 @@ extends ModelWrapper
         return execution().processor();
     }
 
+    /** @return The SPARQL endpoint to use for queries against this page, preferring the declared visible endpoint */
+    public String sparqlEndpoint( VelocityContext context ) {
+        if (context.containsKey( "visibleSparqlEndpoint" )) {
+            return ((Value) context.get( "visibleSparqlEndpoint" )).spelling();
+        }
+        else if (selectionQuery() != null) {
+            return selectionQuery().queryEndpoint();
+        }
+        else if (viewingQuery() != null) {
+            return viewingQuery().queryEndpoint();
+        }
+        else {
+            return null;
+        }
+    }
+    
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

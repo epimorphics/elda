@@ -39,6 +39,17 @@ public class ResponseStatusTest extends TomcatTestBase {
 		return "src/main/webapp";
 	}
 	
+	// test that a call to api-config succeeds
+	@Test public void testApiConfig() throws ClientProtocolException, IOException {
+		ResponseStatusTest.testHttpRequest( "api-config", 200, Util.ignore );
+	}
+	
+	// test that a call to api-config succeeds after a endpoint call
+	@Test public void testApiConfig2() throws ClientProtocolException, IOException {		
+		ResponseStatusTest.testHttpRequest( "games", 200, Util.ignore );
+		ResponseStatusTest.testHttpRequest( "api-config", 200, Util.ignore );
+	}
+	
 	@Test public void testSimpleFilter() throws ClientProtocolException, IOException {
 		ResponseStatusTest.testHttpRequest( "games", 200, Util.ignore );
 	}

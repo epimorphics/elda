@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.common.EldaURL.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -73,7 +74,7 @@ public class Page extends CommonNodeWrapper
      * @param root
      *            The root resource of this page
      */
-    public Page( ModelWrapper mw, Resource root ) {
+    public Page( ResultsModel mw, Resource root ) {
         super( mw, root );
     }
 
@@ -125,6 +126,41 @@ public class Page extends CommonNodeWrapper
      */
     public int itemsPerPage() {
         return getInt( OpenSearch.itemsPerPage, NO_VALUE );
+    }
+    
+    /**
+     * @return The total number of results in the resultset, or -1 if not specified.
+     */
+    public int totalResults() {
+        return getInt( OpenSearch.totalResults, NO_VALUE );
+    }
+    
+    /** 
+     * @return A string summarising the count of results, or null
+     */
+    public String resultsCountSummary() {
+        String s = null;
+        int total = totalResults();
+        
+        if (total >= 0) {
+            int perPage = itemsPerPage();
+            int from = startIndex();
+            
+            if (perPage > 0 && from >= 0 && total > 0) {
+                int to = from + perPage - 1;
+                if (to > total) {
+                    to = total;
+                }
+                
+                s = String.format( "Showing items %d to %d of %d", from, to, total );
+            }
+            else {
+                String plural = (total == 1) ? "" : "s";
+                s = String.format( "%d result%s", total, plural );
+            }
+        }
+        
+        return s;
     }
 
     /**
@@ -200,7 +236,7 @@ public class Page extends CommonNodeWrapper
     public List<PageFormat> formats() {
         List<PageFormat> pfs = new ArrayList<PageFormat>();
 
-        for (com.epimorphics.rdfutil.RDFNodeWrapper n : listPropertyValues( DCTerms.hasFormat )) {
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n : pageMetadataRoot().listPropertyValues( DCTerms.hasFormat )) {
             pfs.add( new PageFormat( this, n.asResource() ) );
         }
 
@@ -215,7 +251,7 @@ public class Page extends CommonNodeWrapper
     public List<EldaView> views() {
         List<EldaView> vs = new ArrayList<EldaView>();
 
-        for (com.epimorphics.rdfutil.RDFNodeWrapper n : listPropertyValues( DCTerms.hasVersion )) {
+        for (com.epimorphics.rdfutil.RDFNodeWrapper n : pageMetadataRoot().listPropertyValues( DCTerms.hasVersion )) {
             vs.add( new EldaView( this, n.asResource() ) );
         }
 
@@ -347,7 +383,7 @@ public class Page extends CommonNodeWrapper
         else {
             Resource viewRoot = i.next();
             if (i.hasNext()) {
-                log.warn( "Ambiguous view name: there is more than one resource with viewName = " + viewName );
+                log.warn(ELog.message("ambiguous view name: there is more than one resource with viewName '%s'", viewName));
             }
 
             view = new EldaView( this, viewRoot );
@@ -555,6 +591,17 @@ public class Page extends CommonNodeWrapper
                 pageURL.withParameter( op, paramName, paramValue ), "remove-link" );
     }
 
+    /** @return The model wrapper this resource is bound to, cast to {@link ResultsModel} */
+    protected ResultsModel resultsModel() {
+        return (ResultsModel) getModelW();
+    }
+    
+    /** @return The root resource for the page, in the metadata model only */
+    protected RDFNodeWrapper pageMetadataRoot() {
+        return resultsModel().metadataRoot();
+    }
+    
+    
     /***********************************/
     /* Inner class definitions         */
     /***********************************/

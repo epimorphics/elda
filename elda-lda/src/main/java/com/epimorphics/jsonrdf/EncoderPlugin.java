@@ -41,7 +41,7 @@ public interface EncoderPlugin {
      	then encode it as an object with _value, _lang, and/or _datatype
      	properties. Use c to shorten type names.
     */
-    public void encodeLiteral( JSONWriterFacade jw, boolean isStructured, Literal lit, ReadContext c );
+    public void encodeLiteral( JSONWriterFacade jw, boolean isStructured, Literal lit, ReadContext c, boolean jsonUsesISOdate );
     
     /** Write the outer result wrapper.  */
     public void writeHeader(JSONWriterFacade jw);

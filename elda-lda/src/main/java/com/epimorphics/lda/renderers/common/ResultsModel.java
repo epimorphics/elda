@@ -15,10 +15,10 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.rdfutil.DatasetWrapper;
-import com.epimorphics.rdfutil.ModelWrapper;
+import com.epimorphics.rdfutil.*;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
+import com.hp.hpl.jena.rdf.model.Model;
 
 /**
  * An facade for the {@link APIResultSet} returned from Elda processing,
@@ -75,6 +75,20 @@ public class ResultsModel extends ModelWrapper
         return new Page( this, results.getRoot().inModel( this.getModel() ) );
     }
 
+    /**
+     * @return The metadata model for this results set
+     */
+    public Model metadataModel() {
+        return results.getModels().getMetaModel();
+    }
+    
+    /**
+     * @return The page root resource, but attached only to the metadata model
+     */
+    public RDFNodeWrapper metadataRoot() {
+        return new RDFNodeWrapper( new ModelWrapper( metadataModel() ), results.getRoot().inModel( metadataModel() ) );
+    }
+    
     /***********************************/
     /* Internal implementation methods */
     /***********************************/

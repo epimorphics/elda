@@ -41,18 +41,14 @@ public class BuiltinRendererTable {
 		@Override public RendererFactory withMediaType( MediaType mt ) {
 			return this;
 		}
+
+        @Override
+        public RendererFactory withISODateFormatting(Boolean jsonUsesISOdate) {
+            return this;
+        }
 	}
 	
 	static boolean useVelocity = false;
-	
-	static boolean useXSLT = true;
-
-	// pseudo-config to set up a default HTML renderer.
-	static Resource XSLT_HTML = 
-		ModelFactory.createDefaultModel()
-			.createResource("eh:/HTML")
-			.addProperty(API.stylesheet, "lda-assets/xslt/result-osm-trimmed.xsl")
-			;
 	
 	static Resource EMPTY =
 		ModelFactory.createDefaultModel()
@@ -66,12 +62,12 @@ public class BuiltinRendererTable {
 	static private Map<Resource, RendererFactory> builtins = new HashMap<Resource, RendererFactory>();
 	
 	public static void putFactory( Resource config, String name, Resource type, MediaType mt, RendererFactory rf ) {
-		factoryTable.putFactory( name, config, mt, rf );
+		factoryTable.putFactory( name, config, mt, rf, false );
 		builtins.put( type, rf );
 	}
 	
 	static void putDefaultFactory( Resource config, String name, Resource type, MediaType mt, RendererFactory rf ) {
-		factoryTable.putFactory( name, config, mt, rf, true );
+		factoryTable.putFactory( name, config, mt, rf, true, false );
 		builtins.put( type, rf );
 	}
 	
@@ -81,11 +77,10 @@ public class BuiltinRendererTable {
 	
 	static {
 		
-		
 		putFactory( EMPTY, "text", API.RdfXmlFormatter, MediaType.TEXT_PLAIN, new DoingWith() 
 			{
 			@Override public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-				return new JSONRenderer( CompleteContext.Mode.PreferLocalnames, ep, MediaType.TEXT_PLAIN );
+				return new JSONRenderer( CompleteContext.Mode.PreferLocalnames, ep, MediaType.TEXT_PLAIN, false );
 			}
 			} );
 		
@@ -123,9 +118,6 @@ public class BuiltinRendererTable {
 		putFactory( EMPTY, "_atom", ELDA_API.FeedFormatter, MediaType.NONE, new FeedRendererFactory() );
 		
 		putFactory( EMPTY, "_xslt", API.XsltFormatter, MediaType.NONE, new XSLT_RendererFactory( Empty, MediaType.NONE ) );
-		
-		if (useXSLT)
-			putFactory( XSLT_HTML, "html", API.XsltFormatter, MediaType.TEXT_HTML, new XSLT_RendererFactory( XSLT_HTML, MediaType.TEXT_HTML ) );
 		
 		if (useVelocity)
 			putFactory( EMPTY, "vhtml", ELDA_API.VelocityFormatter, MediaType.TEXT_HTML, new VelocityRendererFactory() );

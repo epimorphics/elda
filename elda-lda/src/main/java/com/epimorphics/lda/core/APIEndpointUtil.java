@@ -42,7 +42,7 @@ public class APIEndpointUtil {
     public static ResponseResult call( APIEndpoint.Request r, NoteBoard nb, Match match, String contextPath, MultiMap<String, String> queryParams ) {
         APIEndpoint ep = match.getEndpoint();
 
-        Bindings vs = new Bindings( r.context )
+        Bindings vs = new Bindings( r.bindings )
             .updateAll( match.getBindings() )
             .put( "_suffix", r.format )
             .put( "_APP", contextPath )

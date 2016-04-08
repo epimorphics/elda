@@ -206,5 +206,10 @@ public class TestUtil {
         return m;
     }
 
+	public static Model modelFromTurtle(String ttl) {
+		Model model = ModelFactory.createDefaultModel();
+		return model.read( new StringReader(ttl), null, "Turtle");
+	}
+
 }
 

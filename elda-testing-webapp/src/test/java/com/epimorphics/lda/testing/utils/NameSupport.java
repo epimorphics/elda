@@ -36,7 +36,7 @@ import com.epimorphics.util.EpiException;
  *
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  */
-public class NameUtils {
+public class NameSupport {
 
     /**
      * Convert an arbitrary name to name safe to use as a file name or URL path slug.

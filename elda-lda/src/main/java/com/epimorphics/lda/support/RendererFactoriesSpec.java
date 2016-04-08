@@ -50,7 +50,8 @@ public class RendererFactoriesSpec {
 		String name = getName( r );
 		String className = getClassName( r );
 		MediaType mt = getMimeType( r );
-		Resource type = getRendererType( r );		
+		Resource type = getRendererType( r );
+		boolean jsonUsesISOdate = getJSONUseISOFormatting( r );
 		if (type == null) EldaException.BadSpecification
 			(
 			"no renderer type for "
@@ -60,10 +61,14 @@ public class RendererFactoriesSpec {
 			);
 		RendererFactory rfx = BuiltinRendererTable.getFactory( type ); 
 		RendererFactory fac = pickFactory( className, rfx );
-		result.putFactory( name, r, mt, fac, isDefault );
+		result.putFactory( name, r, mt, fac, isDefault, jsonUsesISOdate );
 	}
 
-	private static Resource getRendererType( Resource r ) {
+	private static boolean getJSONUseISOFormatting(Resource r) {
+	    return (r.hasProperty( ELDA_API.jsonUsesISOdate ) ? r.getProperty( ELDA_API.jsonUsesISOdate ).getBoolean() : false);
+    }
+
+    private static Resource getRendererType( Resource r ) {
 		for (RDFNode tn: r.listProperties( RDF.type ).mapWith( Statement.Util.getObject ).toList()) {
 			Resource t = tn.asResource();
 			if (BuiltinRendererTable.isRendererType( t )) return t;

@@ -106,7 +106,7 @@ public class ChainTree {
 	}
 
 	private static Any predicate( State st, Property p ) {
-		return p.equals( ShortnameService.Util.propertySTAR ) ? st.vars.newVar() : RDFQ.uri( p.getURI() );
+		return p.equals( ShortnameService.Util.propertySTAR ) ? st.vars.newVar() : RDFQ.uri( p );
 	}
 
 	private static PropertyChain tail(PropertyChain chain) {

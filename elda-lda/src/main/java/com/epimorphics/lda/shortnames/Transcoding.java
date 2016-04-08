@@ -8,7 +8,7 @@
 
 package com.epimorphics.lda.shortnames;
 
-import com.epimorphics.util.NameUtils;
+import com.epimorphics.util.EldaNameUtils;
 import com.hp.hpl.jena.rdf.model.impl.Util;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
@@ -63,7 +63,7 @@ public class Transcoding {
 	}
 
 	public static String decodeMaybePrefixed(PrefixMapping pm, String shortName) {
-		int cut = NameUtils.prefixEndsAt( shortName );
+		int cut = EldaNameUtils.prefixEndsAt( shortName );
 		if (cut < 0) return null;
 		String prefix = shortName.substring(0, cut - 1);
 		String nameSpace = pm.getNsPrefixURI( prefix );
@@ -119,7 +119,7 @@ public class Transcoding {
 		String prefix = pm.getNsURIPrefix( ns );
 		return
 			prefix == null ? "unknown_" + encodeLightly(true, any) 
-			: NameUtils.isLegalShortname( ln ) ? prefix + "_" + ln
+			: EldaNameUtils.isLegalShortname( ln ) ? prefix + "_" + ln
 			: "pre_" + prefix + "_" + encodeLightly(false, ln)
 			;
 	}

@@ -1,0 +1,75 @@
+@prefix spec:  <http://www.epimorphics.com/examples/spec1#> .
+@prefix api:  <http://purl.org/linked-data/api/vocab#> .
+@prefix ex:  <http://www.epimorphics.com/examples/eg1#> .
+@prefix dct:        <http://purl.org/dc/terms/> .
+@prefix schema:		<http://schema.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix elda: <http://www.epimorphics.com/vocabularies/lda#> .
+
+spec:api1 a api:API;
+    api:sparqlEndpoint <local:src/test/resources/api/dateTimeModel.ttl>;
+    api:endpoint 
+    	spec:allPersonsISOFormatting,
+    	spec:allPersonsDefaultFormatting,
+    	spec:onePersonISOFormatting,
+    	spec:onePersonDefaultFormatting ;
+    .
+
+spec:jsonISOFormatter a api:JsonFormatter ;
+    api:name "json" ;
+    api:mimeType "application/json" ;
+    elda:jsonUsesISOdate true
+    .
+
+spec:jsonDefaultFormatter a api:JsonFormatter ;
+    api:name "json" ;
+    api:mimeType "application/json"
+    .
+
+spec:personsViewer a api:Viewer ;
+	rdfs:label "persons";
+	api:property 
+		rdf:type,
+		ex:name,
+		schema:birthDate,
+		dct:created ;
+	.
+
+spec:allPersonsISOFormatting a api:ListEndpoint;
+	api:uriTemplate "http://dummy/iso/persons";
+	api:selector [
+    	api:type ex:Person;
+    	api:orderBy "ASC(?item)";
+    ] ;
+    api:defaultFormatter spec:jsonISOFormatter ;
+    api:defaultViewer spec:personsViewer;
+    .
+
+spec:allPersonsDefaultFormatting a api:ListEndpoint;
+	api:uriTemplate "http://dummy/default/persons";
+	api:selector [
+    	api:type ex:Person;
+    	api:orderBy "ASC(?item)";
+    ] ;
+    api:defaultFormatter spec:jsonDefaultFormatter ;
+    api:defaultViewer spec:personsViewer;
+    .
+
+spec:onePersonISOFormatting a api:ItemEndpoint;
+	api:uriTemplate "http://dummy/iso/persons/{personId}" ;
+	api:itemTemplate "http://www.epimorphics.com/examples/eg1#{personId}" ;
+    api:defaultFormatter spec:jsonISOFormatter ;
+    api:defaultViewer spec:personsViewer;
+    .
+    
+spec:onePersonDefaultFormatting a api:ItemEndpoint;
+	api:uriTemplate "http://dummy/default/persons/{personId}" ;
+	api:itemTemplate "http://www.epimorphics.com/examples/eg1#{personId}" ;
+    api:defaultFormatter spec:jsonDefaultFormatter ;
+    api:defaultViewer spec:personsViewer;
+    .
+
+    
+
+    

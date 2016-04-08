@@ -29,7 +29,7 @@ public class TestAPISpecExtractsVariables
 
 	@Test public void testNoVariablesInRDFMeansNoneInSpec()
 		{
-		testVariableExtraction( "", ":my a api:API; api:sparqlEndpoint :spoo;." );
+		testVariableExtraction( "", ":my a api:API; api:sparqlEndpoint :spoo." );
 		}
 
 	@Test public void testAVariableInRDFMeansOneInSpec()
