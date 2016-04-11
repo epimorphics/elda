@@ -69,6 +69,32 @@ public class JSONLDRenderer implements Renderer {
 
 	static final String someNiceBytes = "{}";
 	
+	static final String mtc = "{ \"@context\" : {\"isPartOf\" : \"http://purl.org/dc/terms/isPartOf\"}, \"format\": \"linked-data-api\"}";
+	
+	static final String twople = "\"meta\": {\"@id\": \"http://localhost:8080/standalone/again/games.json-ld\", \"startIndex\": ​1, \"type\":" +
+			"\n	[{\"@id\": \"http://purl.org/linked-data/api/vocab#Page\"}]"
+			;
+	
+	static final String example =
+			joinup
+				( "\"@context\": {}"
+				, "\"@id\": \"http://dbpedia.org/resource/John_Lennon\""
+				, "\"name\": \"John Lennon\""
+				, "\"born\": \"1940-10-09\""
+				, "\"spouse\": \"http://dbpedia.org/resource/Cynthia_Lennon\""		
+				);
+	
+	static String joinup(String ...elements ) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{\n");
+		String comma = ",";
+		for (String x: elements) {
+			sb.append(x).append(comma).append("\n");
+		}
+		sb.append("\"hack\": \"for parsing\"}\n");
+		return sb.toString();
+	}
+		
 	@Override public BytesOut render(Times t, Bindings rc, final Map<String, String> termBindings, final APIResultSet results) {
 		final Model model = results.getMergedModel();
 		ShortnameService sns = ep.getSpec().getAPISpec().getShortnameService();
@@ -97,19 +123,16 @@ public class JSONLDRenderer implements Renderer {
 						
 						System.err.println(">>>>>>>>>>>>>>>>>>>>>>>> ");
 						System.err.write(bytes);
-						System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>");
-						
-						
+						System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>");						
 						
 						Model reconstituted = ModelFactory.createDefaultModel();
 						System.err.println(">> ALPHA");
 //						reconstituted.read(bis, "", "JSON-LD");
 						
-						byte[] little = someNiceBytes.getBytes("UTF-8");
-						
+						System.err.println(">> Example:\n" + example);
 						
 //						reconstituted.read(new StringReader(someNiceBytes), "", "JSON-LD");
-						reconstituted.read(new ByteArrayInputStream(little), "", "JSON-LD");
+						reconstituted.read(new ByteArrayInputStream(example.getBytes("UTF-8")), "", "JSON-LD");
 						System.err.println(">> BETA: size " + reconstituted.size());
 						reconstituted.write(System.err, "TURTLE");
 						System.err.println(">> GAMMA");
