@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.vocabularies.API;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.datatypes.xsd.impl.XSDBaseNumericType;
@@ -12,7 +13,7 @@ import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
 
-public class JSONLD_Composer {
+public class JSONLDComposer {
 			
 	public static class Int {
 		private int i = 0;
@@ -27,10 +28,24 @@ public class JSONLD_Composer {
 	final JSONWriterFacade jw;
 	final Map<String, String> termBindings;
 	final ReadContext context;
-	final Map<Resource, JSONLD_Composer.Int> refCount = new HashMap<Resource, JSONLD_Composer.Int>();
+	final Map<Resource, JSONLDComposer.Int> refCount = new HashMap<Resource, JSONLDComposer.Int>();
 	final Map<Resource, String> bnodes = new HashMap<Resource, String>();
 	
-	public JSONLD_Composer(Model model, Resource root, ReadContext context, Map<String, String> termBindings, JSONWriterFacade jw) {
+	public static final String OTHERS = ELDA_API.NS + "others";
+	public static final String RESULTS = ELDA_API.NS + "results";
+
+	public static final Property pOTHERS = ResourceFactory.createProperty(OTHERS);
+	public static final Property pRESULTS = ResourceFactory.createProperty(RESULTS);
+	
+	public static boolean isContentStatement(Statement s) {
+		if (true) return false;
+		return 
+			!s.getPredicate().equals(JSONLDComposer.pRESULTS) 
+			&& !s.getPredicate().equals(JSONLDComposer.pOTHERS)
+			;
+	}
+	
+	public JSONLDComposer(Model model, Resource root, ReadContext context, Map<String, String> termBindings, JSONWriterFacade jw) {
 		this.jw = jw;
 		this.root = root;
 		this.model = model;
@@ -44,7 +59,7 @@ public class JSONLD_Composer {
 			Statement statement = statements.nextStatement();
 			RDFNode O = statement.getObject();
 			if (O.isURIResource()) {
-				JSONLD_Composer.Int count = refCount.get(O);
+				JSONLDComposer.Int count = refCount.get(O);
 				if (count == null) refCount.put(O.asResource(), count = new Int());
 				count.inc();
 			}
@@ -52,7 +67,7 @@ public class JSONLD_Composer {
 	}
 
 	private boolean onlyReference(Resource r) {
-		JSONLD_Composer.Int count = refCount.get(r);
+		JSONLDComposer.Int count = refCount.get(r);
 		return count == null ? true : count.value() < 2;
 	}
 
@@ -81,7 +96,7 @@ public class JSONLD_Composer {
 	//
 		jw.key("others");
 		jw.array();
-		for (Map.Entry<Resource, JSONLD_Composer.Int> e: refCount.entrySet()) {
+		for (Map.Entry<Resource, JSONLDComposer.Int> e: refCount.entrySet()) {
 			Resource i = e.getKey();
 			if (isFitForRendering(itemSet, e, i)) renderResource(i);
 		}
@@ -90,7 +105,7 @@ public class JSONLD_Composer {
 		jw.endObject();
 	}
 
-	private boolean isFitForRendering(Set<Resource> itemSet, Map.Entry<Resource, JSONLD_Composer.Int> e, Resource i) {
+	private boolean isFitForRendering(Set<Resource> itemSet, Map.Entry<Resource, JSONLDComposer.Int> e, Resource i) {
 		return e.getValue().value() > 1 
 		&& !itemSet.contains(i) 
 		&& i.listProperties().hasNext()
@@ -229,7 +244,9 @@ public class JSONLD_Composer {
 		}
 	//
 		jw.key("results");
-		jw.value(JSONLD_Renderer.RESULTS);
+		jw.value(JSONLDComposer.RESULTS);
+		jw.key("others");
+		jw.value(JSONLDComposer.OTHERS);
 	//
 		for (Map.Entry<String, String> e: termBindings.entrySet()) {
 			String URI = e.getKey(), shortName = e.getValue();

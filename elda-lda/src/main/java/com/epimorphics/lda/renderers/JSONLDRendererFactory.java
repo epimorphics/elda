@@ -5,7 +5,7 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Resource;
 
-public class JSONLD_RendererFactory implements RendererFactory {
+public class JSONLDRendererFactory implements RendererFactory {
 
 	Resource config = null;
 	
@@ -14,7 +14,7 @@ public class JSONLD_RendererFactory implements RendererFactory {
 	MediaType mt = MediaType.APPLICATION_JSON_LD;
 	
 	@Override public Renderer buildWith(APIEndpoint ep, ShortnameService sns) {
-		return new JSONLD_Renderer(config, mt, ep, sns, jsonUsesISOdate);
+		return new JSONLDRenderer(config, mt, ep, sns, jsonUsesISOdate);
 	}
 
 	@Override public RendererFactory withRoot(Resource config) {
