@@ -251,10 +251,14 @@ public class JSONLDComposer {
 			if (t.getObject().isURI()) present.add(t.getObject().getURI());
 		}
 	//
+		jw.key("@vocab").value("eh:/vocab/");
 		jw.key("results").value(RESULTS);
 		jw.key("others").value(OTHERS);
 		jw.key("format").value(FORMAT);
 		jw.key("version").value(VERSION);
+		jw.key("meta").value("eh:/vocab/fixup/meta");
+//		jw.key("meta").value("eh:/vocab/fixup/meta");
+		
 		
 		jw.key("termBinding").value("eh:/elda/termBinding");
 	//
