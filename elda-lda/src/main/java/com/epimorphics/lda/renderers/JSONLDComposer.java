@@ -38,7 +38,6 @@ public class JSONLDComposer {
 	public static final Property pRESULTS = ResourceFactory.createProperty(RESULTS);
 	
 	public static boolean isContentStatement(Statement s) {
-		if (true) return false;
 		return 
 			!s.getPredicate().equals(JSONLDComposer.pRESULTS) 
 			&& !s.getPredicate().equals(JSONLDComposer.pOTHERS)
