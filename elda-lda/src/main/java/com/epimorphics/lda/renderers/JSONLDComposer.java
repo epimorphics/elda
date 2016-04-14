@@ -12,6 +12,7 @@ import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.graph.Triple;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+import com.hp.hpl.jena.vocabulary.DCTerms;
 
 public class JSONLDComposer {
 			
@@ -28,19 +29,27 @@ public class JSONLDComposer {
 	final JSONWriterFacade jw;
 	final Map<String, String> termBindings;
 	final ReadContext context;
+	
 	final Map<Resource, JSONLDComposer.Int> refCount = new HashMap<Resource, JSONLDComposer.Int>();
 	final Map<Resource, String> bnodes = new HashMap<Resource, String>();
 	
 	public static final String OTHERS = ELDA_API.NS + "others";
 	public static final String RESULTS = ELDA_API.NS + "results";
+	
+	public static final String FORMAT = DCTerms.format.getURI();
+	public static final String VERSION = ELDA_API.NS + "version";
 
 	public static final Property pOTHERS = ResourceFactory.createProperty(OTHERS);
 	public static final Property pRESULTS = ResourceFactory.createProperty(RESULTS);
 	
 	public static boolean isContentStatement(Statement s) {
+		Property P = s.getPredicate();
+		String U = P.getURI();
 		return 
-			!s.getPredicate().equals(JSONLDComposer.pRESULTS) 
-			&& !s.getPredicate().equals(JSONLDComposer.pOTHERS)
+			!P.equals(JSONLDComposer.pRESULTS) 
+			&& !P.equals(JSONLDComposer.pOTHERS)
+			&& !U.equals(FORMAT)
+			&& !U.equals(VERSION)
 			;
 	}
 	
@@ -242,10 +251,12 @@ public class JSONLDComposer {
 			if (t.getObject().isURI()) present.add(t.getObject().getURI());
 		}
 	//
-		jw.key("results");
-		jw.value(JSONLDComposer.RESULTS);
-		jw.key("others");
-		jw.value(JSONLDComposer.OTHERS);
+		jw.key("results").value(RESULTS);
+		jw.key("others").value(OTHERS);
+		jw.key("format").value(FORMAT);
+		jw.key("version").value(VERSION);
+		
+		jw.key("termBinding").value("eh:/elda/termBinding");
 	//
 		for (Map.Entry<String, String> e: termBindings.entrySet()) {
 			String URI = e.getKey(), shortName = e.getValue();

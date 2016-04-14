@@ -7,8 +7,6 @@
 
 package com.epimorphics.lda.log;
 
-import org.slf4j.Logger;
-
 /**
 	Elog is a wrapper for (part of) the log interface. It injects the
 	current thread's seqID at the beginning of the log message.
