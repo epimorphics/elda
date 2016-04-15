@@ -84,51 +84,39 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public Bindings defaults() {
     	return defaults;
     }
-    
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        
+            
     @Override public ResponseResult call(Request r, NoteBoard nb) {
-    	return Switches.cacheOnlyObjectData(r.bindings) 
-    		? call_revised(r, nb) 
-    		: call_original(r, nb)
-    		;
-    }
-    
-// ////////////////////////////////////////////////////////////////////////
-    
-    public ResponseResult call_revised(Request r, NoteBoard nb) {
-    	URI key = Switches.stripCacheKey(r.bindings) ? r.getURIplain() : r.getURIwithFormat();
-
-    	Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
-    	APIQuery query = spec.getBaseQuery();
-    	
-	    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
-			EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );  
-	    
-	    View view = buildQueryAndView( b, query );
-	    b.put("_selectedView", view.nameWithoutCopy());
-        
-	    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
-	    nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, spec.getAPISpec().getDataSource(), b, spec.getAPISpec().getPrefixMap());	    
-	    
-    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
-        if (fromCache == null || r.c.allowCache == false) {
-        	// must construct and cache a new response-result
-//        	System.err.println(">>  Fresh.");
-        	ResponseResult fresh = freshResponse(b, query, view, r, nb);
-    		cache.store(key, fresh, nb.expiresAt);
-        	return decorate(false, b, query, fresh, r, nb);
-        } else {
-//        	System.err.println(">>  Re-use.");
-        	// re-use the existing response-result
-        	nb.expiresAt = fromCache.expiresAt;
-        	return decorate(true, b, query, fromCache.thing, r, nb);
-        }
+		URI key = Switches.stripCacheKey(r.bindings) ? r.getURIplain() : r.getURIwithFormat();
+		
+	    	Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
+	    	APIQuery query = spec.getBaseQuery();
+	    	
+		    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
+				EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );  
+		    
+		    View view = buildQueryAndView( b, query );
+		    b.put("_selectedView", view.nameWithoutCopy());
+	        
+		    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
+		    nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, spec.getAPISpec().getDataSource(), b, spec.getAPISpec().getPrefixMap());	    
+		    
+	    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
+	        if (fromCache == null || r.c.allowCache == false) {
+	        	// must construct and cache a new response-result
+	//        	System.err.println(">>  Fresh.");
+	        	ResponseResult fresh = freshResponse(b, query, view, r, nb);
+	    		cache.store(key, fresh, nb.expiresAt);
+	        	return decorate(false, b, query, fresh, r, nb);
+	        } else {
+	//        	System.err.println(">>  Re-use.");
+	        	// re-use the existing response-result
+	        	nb.expiresAt = fromCache.expiresAt;
+	        	return decorate(true, b, query, fromCache.thing, r, nb);
+	        } 
     }
     
     protected ResponseResult freshResponse(Bindings b, APIQuery query, View view, Request r, NoteBoard nb) {
 	//    
-    //
     	APIResultSet unfiltered = query.runQuery(nb, r.c, spec.getAPISpec(), cache, b, view );	    
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
@@ -142,51 +130,6 @@ public class APIEndpointImpl implements APIEndpoint {
 		CompleteContext cc = createMetadata(r, nb, b, query, rs);
 		return new ResponseResult(isFromCache, rs, cc.Do(), b);
     }
-    
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    
-    /* @Override */ public ResponseResult call_original( Request r, NoteBoard nb ) {
-    	URI key = r.getURIwithFormat();
-    //
-    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
-    	if (fromCache == null || r.c.allowCache == false) {
-//    		System.err.println( ">> request: " + key + ", not in cache (or cache not allowed)." );
-    		ResponseResult fresh = uncachedCall(r, nb);
-    		long expiresAt = nb.expiresAt;
-    		cache.store(key, fresh, expiresAt);
-//    		System.err.println( ">> created new entry" );
-//    		if (expiresAt < 0) System.err.println( ">>  no explicit expiry time"); 
-//    		else System.err.println( ">>  lives until " + RouterRestletSupport.expiresAtAsRFC1123(expiresAt));
-    		return fresh;
-    	} else {
-//    		System.err.println( ">> request: " + key + " satisfied from cache" );
-    		nb.expiresAt = fromCache.expiresAt;
-    		return fromCache.thing;
-    	}    	
-    }
-
-	private ResponseResult uncachedCall( Request r, NoteBoard nb) {
-		Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
-	    APIQuery query = spec.getBaseQuery();
-	    
-//	    System.err.println(">>  uncachedCall pageNumber [1]: " + query.getPageNumber());
-	//
-	    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
-			EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );
-	//
-	    View view = buildQueryAndView( b, query );
-	    b.put("_selectedView", view.nameWithoutCopy());	    
-	    
-//	    System.err.println(">>  uncachedCall pageNumber [2]: " + query.getPageNumber());
-	//    
-	    APIResultSet unfiltered = query.runQuery(nb, r.c, spec.getAPISpec(), cache, b, view );	    
-	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
-	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
-	//
-	    CompleteContext cc = createMetadata(r, nb, b, query, filtered);	    
-	    ResponseResult result = new ResponseResult(false, filtered, cc.Do(), b );
-		return result;
-	}
 
 	private CompleteContext createMetadata(Request r, NoteBoard nb, Bindings b, APIQuery query, APIResultSet filtered) {
 		Context context = spec.getAPISpec().getShortnameService().asContext();
