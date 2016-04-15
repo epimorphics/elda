@@ -14,11 +14,15 @@ import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
 import com.github.jsonldjava.jena.JenaJSONLD;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.WrappedException;
+import com.hp.hpl.jena.vocabulary.DCTerms;
+import com.hp.hpl.jena.vocabulary.RDF;
+
 import static com.epimorphics.lda.renderers.JSONLDComposer.*;
 
 /**
@@ -111,6 +115,8 @@ public class JSONLDRenderer implements Renderer {
 		return "json-ld";
 	}
 	
+	static final Property ANY = null;
+	
 	private void checkRoundTripping(final Model model, final Model objectModel, byte[] bytes) {
 		Model reconstituted = ModelFactory
 				.createDefaultModel()
@@ -125,6 +131,33 @@ public class JSONLDRenderer implements Renderer {
 			Model inCommon = model.intersection(reconstituted);
 			Model onlyOriginal = model.difference(inCommon);
 			Model onlyReconstituted = reconstituted.difference(inCommon);
+			
+			List<Statement> removeTheseOriginals = new ArrayList<Statement>();
+			List<Statement> removeTheseReconstitutions = new ArrayList<Statement>();
+			
+			Statement itemListStatement = onlyOriginal.listStatements(ANY, API.items, ANY).nextStatement();
+			Resource items = itemListStatement.getSubject();
+			Resource itemList = itemListStatement.getObject().asResource();
+			Resource X = itemList;
+			
+			while (!itemList.equals(RDF.nil)) {
+				Resource f = itemList.getPropertyResourceValue(RDF.first);
+				Resource next = itemList.getPropertyResourceValue(RDF.rest);
+				removeTheseOriginals.add(model.createStatement(itemList, RDF.first, f));
+				removeTheseOriginals.add(model.createStatement(itemList, RDF.rest, next));
+				itemList = next;
+			}
+			removeTheseOriginals.add(model.createStatement(items, API.items, X));
+			
+			for (StmtIterator it = onlyReconstituted.listStatements(); it.hasNext();) {
+				Statement s = it.nextStatement();
+				Property p = s.getPredicate();
+				if (p.equals(JSONLDComposer.pOTHERS) || p.equals(JSONLDComposer.pRESULTS))
+					removeTheseReconstitutions.add(s);
+			}
+			
+			onlyReconstituted.remove(removeTheseReconstitutions);
+			onlyOriginal.remove(removeTheseOriginals);
 			
 			System.err.println(">> they have " + inCommon.size() + " statements in common:");
 			System.err.println(">> so unique original statements number " + onlyOriginal.size() + ",");

@@ -60,17 +60,6 @@ public class JSONLDComposer {
 		this.context = context;
 		this.termBindings = termBindings;
 		countObjectReferencesIn(model);
-		letsSeeAboutFirst(model);
-	}
-	
-	private void letsSeeAboutFirst(Model m) {
-		System.err.println(">> A " + termBindings.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#first"));
-		System.err.println(">> B " + termBindings.get("http://www.w3.org/1999/xhtml/vocab#first"));
-		for (StmtIterator it = m.listStatements(); it.hasNext();) {
-			Statement s = it.nextStatement();
-			if (s.getPredicate().getLocalName().equals("first"))
-				System.err.println(">> ---| " + s);
-		}
 	}
 
 	private void countObjectReferencesIn(Model m) {
