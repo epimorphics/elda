@@ -60,8 +60,19 @@ public class JSONLDComposer {
 		this.context = context;
 		this.termBindings = termBindings;
 		countObjectReferencesIn(model);
+		letsSeeAboutFirst(model);
 	}
 	
+	private void letsSeeAboutFirst(Model m) {
+		System.err.println(">> A " + termBindings.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#first"));
+		System.err.println(">> B " + termBindings.get("http://www.w3.org/1999/xhtml/vocab#first"));
+		for (StmtIterator it = m.listStatements(); it.hasNext();) {
+			Statement s = it.nextStatement();
+			if (s.getPredicate().getLocalName().equals("first"))
+				System.err.println(">> ---| " + s);
+		}
+	}
+
 	private void countObjectReferencesIn(Model m) {
 		for (StmtIterator statements = m.listStatements(); statements.hasNext();) {
 			Statement statement = statements.nextStatement();
@@ -256,6 +267,7 @@ public class JSONLDComposer {
 		jw.key("others").value(OTHERS);
 		jw.key("format").value(FORMAT);
 		jw.key("version").value(VERSION);
+//		jw.key("first").value("http://www.w3.org/1999/xhtml/vocab#first");
 		jw.key("meta").value("eh:/vocab/fixup/meta");
 //		jw.key("meta").value("eh:/vocab/fixup/meta");
 		
@@ -266,7 +278,7 @@ public class JSONLDComposer {
 			String URI = e.getKey(), shortName = e.getValue();
 			if (present.contains(URI)) {
 				ContextPropertyInfo cp = context.findProperty(ResourceFactory.createProperty(URI));
-				String type = cp.getType();
+				String type = cp.getType();				
 				jw.key(shortName);
 				if (type == null) {
 					jw.value(URI);

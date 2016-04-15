@@ -144,7 +144,7 @@ public class CompleteContext {
 		
 		for (SplitURI mt: modelTerms) {			
 			String ln = mt.ln;
-			if (EldaNameUtils.isLegalShortname(ln) && !uriToShortname.containsKey( ln )) {
+			if (EldaNameUtils.isLegalShortname(ln) && !uriToShortname.containsValue( ln )) {
 				List<SplitURI> terms = localNameToURIs.get( ln );
 				if (terms == null) localNameToURIs.put( ln, terms = new ArrayList<SplitURI>() );
 				terms.add( mt );

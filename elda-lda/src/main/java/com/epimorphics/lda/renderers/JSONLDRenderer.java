@@ -117,9 +117,32 @@ public class JSONLDRenderer implements Renderer {
 				.read(new ByteArrayInputStream(bytes), "", "JSON-LD")
 				;
 		
+		if (!model.isIsomorphicWith(reconstituted)) {
+			System.err.println(">> ALAS original and reconstituted models are not isomorphic:");
+			System.err.println(">> original has " + model.size() + " statements,");
+			System.err.println(">> reconstituted has " + reconstituted.size() + " statements.");
+			
+			Model inCommon = model.intersection(reconstituted);
+			Model onlyOriginal = model.difference(inCommon);
+			Model onlyReconstituted = reconstituted.difference(inCommon);
+			
+			System.err.println(">> they have " + inCommon.size() + " statements in common:");
+			System.err.println(">> so unique original statements number " + onlyOriginal.size() + ",");
+			System.err.println(">> and unique reconstituted statements number " + onlyReconstituted.size() + ".");
+			
+			System.err.println(">> ONLY ORIGINAL");
+			onlyOriginal.write(System.err, "TTL");
+			
+			System.err.println(">> ONLY RECONSTITUTED");
+			onlyReconstituted.write(System.err, "TTL");
+						
+		}
+		
+		
 		boolean needsHeaderA = true;
 		for (StmtIterator it = reconstituted.listStatements(); it.hasNext();) {
 			Statement s = it.nextStatement();
+//			System.err.println(">> reconstituted " + s);
 			if (isContentStatement(s))
 				if (!model.contains(s)) {
 					if (needsHeaderA) {
