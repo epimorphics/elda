@@ -156,6 +156,37 @@ public class JSONLDRenderer implements Renderer {
 					removeTheseReconstitutions.add(s);
 			}
 			
+//			for (StmtIterator it = onlyReconstituted.listStatements(ANY, API.termBinding, ANY); it.hasNext();) {
+//				Statement tb = it.nextStatement();
+//				Resource lap = tb.getObject().asResource();
+//				removeTheseReconstitutions.add(tb);
+//				for (StmtIterator lapit = lap.listProperties(); lapit.hasNext();) {
+//					removeTheseReconstitutions.add(lapit.nextStatement());
+//				}
+//			}
+			
+			Model A = getTermBindings(model), B = getTermBindings(reconstituted);
+			if (!A.isIsomorphicWith(B)) {
+				System.err.println(">> OH BOTHER.");
+				System.err.println(">> TermBindings: " + A.size() + " vs " + B.size() + " statements.");
+				
+				Set<String> namesForA = namesFor(A);
+				Set<String> namesForB = namesFor(B);
+				if (namesForA.equals(namesForB)) {
+					System.err.println(">> names are the same");
+				} else {
+					System.err.println("A: " + namesForA);
+					System.err.println("B: " + namesForB);
+				}
+				
+				
+				System.err.println(">> A ------------------------------------------------------");
+				A.write(System.err, "TTL");
+				System.err.println(">> B ------------------------------------------------------");
+				B.write(System.err, "TTL");
+				System.err.println(">> @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+			}
+						
 			onlyReconstituted.remove(removeTheseReconstitutions);
 			onlyOriginal.remove(removeTheseOriginals);
 			
@@ -163,40 +194,62 @@ public class JSONLDRenderer implements Renderer {
 			System.err.println(">> so unique original statements number " + onlyOriginal.size() + ",");
 			System.err.println(">> and unique reconstituted statements number " + onlyReconstituted.size() + ".");
 			
-			System.err.println(">> ONLY ORIGINAL");
-			onlyOriginal.write(System.err, "TTL");
-			
-			System.err.println(">> ONLY RECONSTITUTED");
-			onlyReconstituted.write(System.err, "TTL");
+//			System.err.println(">> ONLY ORIGINAL");
+//			onlyOriginal.write(System.err, "TTL");
+//			
+//			System.err.println(">> ONLY RECONSTITUTED");
+//			onlyReconstituted.write(System.err, "TTL");
 						
 		}
 		
 		
-		boolean needsHeaderA = true;
-		for (StmtIterator it = reconstituted.listStatements(); it.hasNext();) {
-			Statement s = it.nextStatement();
-//			System.err.println(">> reconstituted " + s);
-			if (isContentStatement(s))
-				if (!model.contains(s)) {
-					if (needsHeaderA) {
-						needsHeaderA = false;
-						log.warn(ELog.message("reconstituted model contains statements not in object model"));
-					}
-					log.warn(ELog.message("viz: %s", s));
-				}
+//		boolean needsHeaderA = true;
+//		for (StmtIterator it = reconstituted.listStatements(); it.hasNext();) {
+//			Statement s = it.nextStatement();
+////			System.err.println(">> reconstituted " + s);
+//			if (isContentStatement(s))
+//				if (!model.contains(s)) {
+//					if (needsHeaderA) {
+//						needsHeaderA = false;
+//						log.warn(ELog.message("reconstituted model contains statements not in object model"));
+//					}
+//					log.warn(ELog.message("viz: %s", s));
+//				}
+//		}
+//		
+//		boolean needsHeaderB = true;
+//		for (StmtIterator it = objectModel.listStatements(); it.hasNext();) {
+//			Statement s = it.nextStatement(); 
+//			if (isContentStatement(s))
+//				if (!reconstituted.contains(s)) {
+//					if (needsHeaderB) {
+//						needsHeaderB = false;
+//						log.warn(ELog.message("object model contains statements not reconstituted"));
+//					}
+//					log.warn(ELog.message("viz: %s", s));
+//				}
+//		}
+	}
+
+	private Set<String> namesFor(Model b) {
+		Set<String> results = new HashSet<String>();
+		for (StmtIterator it = b.listStatements(ANY, API.label, ANY); it.hasNext();) {
+			results.add(it.nextStatement().getString());
 		}
-		
-		boolean needsHeaderB = true;
-		for (StmtIterator it = objectModel.listStatements(); it.hasNext();) {
-			Statement s = it.nextStatement(); 
-			if (isContentStatement(s))
-				if (!reconstituted.contains(s)) {
-					if (needsHeaderB) {
-						needsHeaderB = false;
-						log.warn(ELog.message("object model contains statements not reconstituted"));
-					}
-					log.warn(ELog.message("viz: %s", s));
-				}
+		return results;
+	}
+
+	private Model getTermBindings(Model m) {
+		Model result = ModelFactory.createDefaultModel();
+		for (StmtIterator it = m.listStatements(ANY, API.termBinding, ANY); it.hasNext();) {
+			Statement tb = it.nextStatement();
+			result.add(tb);
+			Resource lap = tb.getObject().asResource();
+			for (StmtIterator lapit = lap.listProperties(); lapit.hasNext();) {
+				Statement s = lapit.nextStatement();
+				result.add(s);
+			}
 		}
+		return result;
 	}
 }
