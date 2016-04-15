@@ -3,6 +3,7 @@ package temp;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.jsonldjava.jena.JenaJSONLD;
@@ -13,7 +14,7 @@ public class TestJsonLdLibrary {
 	
 	static { JenaJSONLD.init(); }
 	
-	@Test public void testReadsJSON_LD() throws UnsupportedEncodingException {
+	@Test @Ignore public void testReadsJSON_LD() throws UnsupportedEncodingException {
 					
 		
 		Model reconstituted = ModelFactory.createDefaultModel();
@@ -684,7 +685,7 @@ public class TestJsonLdLibrary {
 		StringBuilder sb = new StringBuilder();
 		for (String x: elements) {
 			line += 1;
-			System.err.println("| " + line + ": " + x);
+//			System.err.println("| " + line + ": " + x);
 			sb.append(x).append("\n");
 		}
 		return sb.toString();

@@ -586,6 +586,7 @@ import com.sun.jersey.api.NotFoundException;
 				catch (Throwable e) {
 					String message = String.format("Error while sending response: '%s'", e);
 					log.error(ELog.message("%s", message));
+					e.printStackTrace(System.err);
 					StreamUtils.writeAsUTF8(response.getPoison() + "\n" + message, os);
 					os.flush();
 				}

@@ -14,6 +14,7 @@ import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.support.Times;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
 import com.github.jsonldjava.jena.JenaJSONLD;
 import com.hp.hpl.jena.rdf.model.*;
@@ -33,16 +34,20 @@ import static com.epimorphics.lda.renderers.JSONLDComposer.*;
 */
 public class JSONLDRenderer implements Renderer {
 	
+	static { JenaJSONLD.init(); }
+
 	static Logger log = LoggerFactory.getLogger(JSONLDRenderer.class);
 	
 	final MediaType mt;
     final APIEndpoint ep;
     final boolean jsonUsesISOdate; // not currently used
+    final boolean checkRoundTrip;
     
 	public JSONLDRenderer(Resource config, MediaType mt, APIEndpoint ep, ShortnameService sns, boolean jsonUsesISOdate) {
 		this.ep = ep;
 		this.mt = mt;
 		this.jsonUsesISOdate = jsonUsesISOdate;
+		this.checkRoundTrip = isCheckingRoundTrip(config);
 	}
 
 	@Override public MediaType getMediaType(Bindings ignored) {
@@ -53,14 +58,11 @@ public class JSONLDRenderer implements Renderer {
 		return Mode.PreferLocalnames;
 	}
 	
-	static { 
-		
-		JenaJSONLD.init();
-		
+	private boolean isCheckingRoundTrip(Resource config) {
+		Statement check = config.getProperty(ELDA_API.checkJSONLDRoundTrip);
+		return check == null ? true : check.getBoolean();
 	}
 		
-	static boolean checkRoundTrip = true;
-	
 	@Override public BytesOut render(Times t, Bindings rc, final Map<String, String> termBindings, final APIResultSet results) {
 		final Model model = results.getMergedModel();
 		final Model objectModel = results.getModels().getObjectModel();
@@ -83,6 +85,7 @@ public class JSONLDRenderer implements Renderer {
 					if (checkRoundTrip) {
 						byte[] bytes = bytesOut.toByteArray();
 						os.write(bytes);
+						log.info(ELog.message("checking that JSON LD result round-trips"));
 						checkRoundTripping(model, objectModel, bytes);
 					}
 										

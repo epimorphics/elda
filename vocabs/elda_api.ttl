@@ -46,6 +46,16 @@ elda:cacheExpiryTime a rdf:Property
 	; rdfs:label "cache expiry time"
 	.
 
+elda:checkJSONLDRoundTrip a rdf:Property
+    ; rdfs:comment 
+        """
+        If a JSON LD renderer has this property, its value determines
+        whether the renderer checks that the model has round-tripped
+        through the generated JSON LD.
+        """
+    ; rdfs:label "check JSON_LD roundtrip"
+    .
+
 elda:className a rdf:Property
 	; rdfs:label "class name"
 	; rdfs:comment "full Java class name of an Elda formatter plugin."
