@@ -26,10 +26,6 @@ public class Switches {
 		return spelling.equalsIgnoreCase("true") || spelling.equalsIgnoreCase("yes");
 	}
 	
-	static public boolean cacheOnlyObjectData(Bindings b) {
-		return getBoolSwitch(b, "_cacheOnlyObjectData", true);
-	}
-	
 	static public boolean stripCacheKey(Bindings b) {
 		return getBoolSwitch(b, "_stripCacheKey", true);
 	}
