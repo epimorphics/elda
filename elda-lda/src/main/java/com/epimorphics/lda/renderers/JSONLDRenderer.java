@@ -18,10 +18,10 @@ import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
 import com.github.jsonldjava.jena.JenaJSONLD;
+import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.WrappedException;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.*;
 
 import static com.epimorphics.lda.renderers.JSONLDComposer.*;
 
@@ -116,12 +116,37 @@ public class JSONLDRenderer implements Renderer {
 	}
 	
 	static final Property ANY = null;
+
+
+	private void checkObjectStatementsAppearInReconstitution(Model objectModel, Model reconstituted) {
+		Model inCommon = objectModel.intersection(reconstituted);
+
+		Model om = objectModel.difference(inCommon);
+		Model rm = reconstituted.difference(inCommon);
+		
+		System.err.println(">> om size " + om.size());
+		System.err.println(">> rm size " + rm.size());
+
+		if (om.size() > 0) System.err.println(">> OOPS: missing object model statements.");
+		
+	}
+	
+	private void checkTermBindings(Model model, Model reconstituted) {
+		Model A = getTermBindings(model), B = getTermBindings(reconstituted);
+		if (A.isIsomorphicWith(B)) return;
+		log.warn(ELog.message("JSON LD round-trip failed, term bindings not isomorphic."));
+	}
 	
 	private void checkRoundTripping(final Model model, final Model objectModel, byte[] bytes) {
 		Model reconstituted = ModelFactory
-				.createDefaultModel()
-				.read(new ByteArrayInputStream(bytes), "", "JSON-LD")
-				;
+			.createDefaultModel()
+			.read(new ByteArrayInputStream(bytes), "", "JSON-LD")
+			;
+		
+		checkObjectStatementsAppearInReconstitution(objectModel, reconstituted);
+		checkTermBindings(model, reconstituted);
+		
+		if (true) return;
 		
 		if (!model.isIsomorphicWith(reconstituted)) {
 			System.err.println(">> ALAS original and reconstituted models are not isomorphic:");
@@ -185,6 +210,7 @@ public class JSONLDRenderer implements Renderer {
 				System.err.println(">> B ------------------------------------------------------");
 				B.write(System.err, "TTL");
 				System.err.println(">> @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+				System.err.println(">> ISO: " + A.isIsomorphicWith(B));
 			}
 						
 			onlyReconstituted.remove(removeTheseReconstitutions);
@@ -243,13 +269,34 @@ public class JSONLDRenderer implements Renderer {
 		Model result = ModelFactory.createDefaultModel();
 		for (StmtIterator it = m.listStatements(ANY, API.termBinding, ANY); it.hasNext();) {
 			Statement tb = it.nextStatement();
-			result.add(tb);
+			result.add(changeObjectLiteral(tb));
 			Resource lap = tb.getObject().asResource();
 			for (StmtIterator lapit = lap.listProperties(); lapit.hasNext();) {
 				Statement s = lapit.nextStatement();
-				result.add(s);
+				result.add(changeObjectLiteral(s));
 			}
 		}
 		return result;
+	}
+
+	private Statement changeObjectLiteral(Statement s) {
+		Resource S = s.getSubject();
+		Property P = s.getPredicate();
+		RDFNode O = s.getObject();
+		Model M = s.getModel();
+		RDFNode L = changeLiteral(O, M);
+		return M.createStatement(S,  P, L);
+	}
+
+	private RDFNode changeLiteral(RDFNode o, Model M) {
+		if (o.isLiteral()) {
+			Node ln = o.asNode();
+			String dt = ln.getLiteralDatatypeURI();
+			if (dt == null) return o;
+			if (dt.equals(XSD.xstring.getURI())) {
+				return M.createLiteral(ln.getLiteralLexicalForm());
+			}
+		} 
+		return o;
 	}
 }
