@@ -240,6 +240,8 @@ public class ContextQueryUpdater implements ViewSetter {
         String prefix = param.prefix();
         if (prefix == null) {
             aq.addPropertyHasValue( param, val );
+        } else if (prefix.equals(QueryParameter.INV_PREFIX)) {
+        	aq.addInverseFilter(param.plain(), val);        	
         } else if (prefix.equals(QueryParameter.NAME_PREFIX)) {
             aq.addNameProp(param.plain(), val);
         } else if (prefix.equals( QueryParameter.LANG_PREFIX )) {

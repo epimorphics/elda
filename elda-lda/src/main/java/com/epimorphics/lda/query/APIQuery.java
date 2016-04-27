@@ -519,6 +519,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		basicGraphTriples.addAll(triples);
 	}
 
+	protected void addInverseFilter(Param param, String val) {
+		
+	}
+	
 	protected void addPropertyHasValue(Param param) {
 		addPropertyHasValue_REV(param);
 	}
