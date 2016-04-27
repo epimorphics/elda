@@ -17,6 +17,8 @@ import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
+import com.epimorphics.vocabs.OpenSearch;
+import com.epimorphics.vocabs.XHV;
 import com.github.jsonldjava.jena.JenaJSONLD;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
@@ -137,16 +139,67 @@ public class JSONLDRenderer implements Renderer {
 		log.warn(ELog.message("JSON LD round-trip failed, term bindings not isomorphic."));
 	}
 	
+	static final Property version = ResourceFactory.createProperty(ELDA_API.NS + "version");
+	static final Property meta = ResourceFactory.createProperty("eh:/vocab/fixup/meta");
+
 	private void checkRoundTripping(final Model model, final Model objectModel, byte[] bytes) {
 		Model reconstituted = ModelFactory
 			.createDefaultModel()
 			.read(new ByteArrayInputStream(bytes), "", "JSON-LD")
 			;
+			
+		reconstituted.removeAll(ANY, DCTerms.format, ANY);
+		reconstituted.removeAll(ANY, meta, ANY);
+		reconstituted.removeAll(ANY, version, ANY);
+		reconstituted.removeAll(ANY, JSONLDComposer.pMETA, ANY);
+		reconstituted.removeAll(ANY, JSONLDComposer.pOTHERS, ANY);
+		reconstituted.removeAll(ANY, JSONLDComposer.pRESULTS, ANY);
+
+		reconstituted.removeAll(ANY, DCTerms.hasPart, ANY);
+		reconstituted.removeAll(ANY, DCTerms.isPartOf, ANY);
+		
+		reconstituted.removeAll(ANY, API.definition, ANY);
+		reconstituted.removeAll(ANY, XHV.first, ANY);
+		reconstituted.removeAll(ANY, XHV.next, ANY);
+		reconstituted.removeAll(ANY, API.page, ANY);
+		reconstituted.removeAll(ANY, RDF.type, API.Page);
+		reconstituted.removeAll(ANY, RDF.type, API.ListEndpoint);
+		reconstituted.removeAll(ANY, RDF.type, API.ItemEndpoint);
+		reconstituted.removeAll(ANY, API.extendedMetadataVersion, ANY);
+		
+		reconstituted.removeAll(ANY, OpenSearch.itemsPerPage, ANY);
+		reconstituted.removeAll(ANY, OpenSearch.startIndex, ANY);		
+		
+		Model given = canonise(objectModel), recon = canonise(reconstituted);
+		
+		if (recon.isIsomorphicWith(given)) {
+			
+			System.err.println(">> Hooray, edited reconstitution isomorphic with original [after canonisation]");
+			
+		} else {
+			System.err.println(">> ALAS, canonised models are not isomorphic");
+			System.err.println(">> original has " + given.size() + " statements,");
+			System.err.println(">> reconstituted has " + recon.size() + " statements.");
+			
+			Model common = recon.intersection(given);
+			
+			System.err.println(">> there are " + common.size() + " common statements.");
+			
+			Model G = given.difference(common), R = recon.difference(common);
+			
+			System.err.println(">> G ===================================");
+			G.write(System.err, "TTL");
+			System.err.println(">> R ===================================");
+			R.write(System.err, "TTL");
+						
+		}
+		
+		if (true) return;
 		
 		checkObjectStatementsAppearInReconstitution(objectModel, reconstituted);
 		checkTermBindings(model, reconstituted);
 		
-		if (true) return;
+		// if (true) return;
 		
 		if (!model.isIsomorphicWith(reconstituted)) {
 			System.err.println(">> ALAS original and reconstituted models are not isomorphic:");
@@ -213,12 +266,23 @@ public class JSONLDRenderer implements Renderer {
 				System.err.println(">> ISO: " + A.isIsomorphicWith(B));
 			}
 						
+			
 			onlyReconstituted.remove(removeTheseReconstitutions);
+			onlyReconstituted.removeAll(ANY, DCTerms.format, ANY);
+			onlyReconstituted.removeAll(ANY, meta, ANY);
+			onlyReconstituted.removeAll(ANY, version, ANY);
+			onlyReconstituted.removeAll(ANY, JSONLDComposer.pMETA, ANY);
+			onlyReconstituted.removeAll(ANY, JSONLDComposer.pOTHERS, ANY);
+			onlyReconstituted.removeAll(ANY, JSONLDComposer.pRESULTS, ANY);
+			
+
 			onlyOriginal.remove(removeTheseOriginals);
 			
 			System.err.println(">> they have " + inCommon.size() + " statements in common:");
 			System.err.println(">> so unique original statements number " + onlyOriginal.size() + ",");
 			System.err.println(">> and unique reconstituted statements number " + onlyReconstituted.size() + ".");
+			
+			onlyReconstituted.write(System.err, "TTL");		
 			
 //			System.err.println(">> ONLY ORIGINAL");
 //			onlyOriginal.write(System.err, "TTL");
@@ -257,6 +321,7 @@ public class JSONLDRenderer implements Renderer {
 //		}
 	}
 
+
 	private Set<String> namesFor(Model b) {
 		Set<String> results = new HashSet<String>();
 		for (StmtIterator it = b.listStatements(ANY, API.label, ANY); it.hasNext();) {
@@ -279,11 +344,31 @@ public class JSONLDRenderer implements Renderer {
 		return result;
 	}
 
+	private Model canonise(Model m) {
+		Model result = ModelFactory.createDefaultModel();
+		for (StmtIterator it = m.listStatements(); it.hasNext();) {
+			result.add(canonise(it.next()));
+		}
+		return result;
+	}
+
+	private Statement canonise(Statement s) {
+		RDFNode O = s.getObject();
+		if (O.isLiteral()) 
+			if (XSD.xstring.getURI().equals(O.asNode().getLiteralDatatypeURI())) {
+				Model M = s.getModel();
+				Resource S = s.getSubject();
+				Property P = s.getPredicate();
+				return M.createStatement(S,  P,  O.asNode().getLiteralLexicalForm());
+			}
+		return s;
+	}
+	
 	private Statement changeObjectLiteral(Statement s) {
 		Resource S = s.getSubject();
 		Property P = s.getPredicate();
-		RDFNode O = s.getObject();
 		Model M = s.getModel();
+		RDFNode O = s.getObject();
 		RDFNode L = changeLiteral(O, M);
 		return M.createStatement(S,  P, L);
 	}

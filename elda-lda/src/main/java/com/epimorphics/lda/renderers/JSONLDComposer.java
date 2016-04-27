@@ -38,9 +38,11 @@ public class JSONLDComposer {
 	
 	public static final String FORMAT = DCTerms.format.getURI();
 	public static final String VERSION = ELDA_API.NS + "version";
+	public static final String META = ELDA_API.NS + "meta";
 
 	public static final Property pOTHERS = ResourceFactory.createProperty(OTHERS);
 	public static final Property pRESULTS = ResourceFactory.createProperty(RESULTS);
+	public static final Property pMETA = ResourceFactory.createProperty(META);
 	
 	public static boolean isContentStatement(Statement s) {
 		Property P = s.getPredicate();
