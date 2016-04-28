@@ -1,6 +1,7 @@
 package com.epimorphics.lda.renderers;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.vocabularies.API;
@@ -265,7 +266,10 @@ public class JSONLDComposer {
 		
 		jw.key("termBinding").value("eh:/elda/termBinding");
 	//
-		for (Map.Entry<String, String> e: termBindings.entrySet()) {
+		List<Map.Entry<String, String>> entries = new ArrayList<>(termBindings.entrySet());	
+		Collections.sort(entries, compareEntries);
+		
+		for (Map.Entry<String, String> e: entries) {
 			String URI = e.getKey(), shortName = e.getValue();
 			if (present.contains(URI)) {
 				ContextPropertyInfo cp = context.findProperty(ResourceFactory.createProperty(URI));
@@ -281,6 +285,14 @@ public class JSONLDComposer {
 				}
 			}
 		}
-	}
+	}		
+	
+	static final Comparator<Map.Entry<String, String>> compareEntries = new Comparator<Map.Entry<String, String>>() {
+
+		@Override public int compare(Entry<String, String> e1, Entry<String, String> e2) {
+			return e1.getValue().compareTo(e2.getValue());
+		}
+		
+	};
 	
 }

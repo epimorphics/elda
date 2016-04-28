@@ -149,28 +149,29 @@ public class JSONLDRenderer implements Renderer {
 			;
 			
 		reconstituted.removeAll(ANY, DCTerms.format, ANY);
-		reconstituted.removeAll(ANY, meta, ANY);
 		reconstituted.removeAll(ANY, version, ANY);
-		reconstituted.removeAll(ANY, JSONLDComposer.pMETA, ANY);
-		reconstituted.removeAll(ANY, JSONLDComposer.pOTHERS, ANY);
-		reconstituted.removeAll(ANY, JSONLDComposer.pRESULTS, ANY);
-
-		reconstituted.removeAll(ANY, DCTerms.hasPart, ANY);
-		reconstituted.removeAll(ANY, DCTerms.isPartOf, ANY);
+		reconstituted.removeAll(ANY, meta, ANY);
 		
-		reconstituted.removeAll(ANY, API.definition, ANY);
-		reconstituted.removeAll(ANY, XHV.first, ANY);
-		reconstituted.removeAll(ANY, XHV.next, ANY);
-		reconstituted.removeAll(ANY, API.page, ANY);
-		reconstituted.removeAll(ANY, RDF.type, API.Page);
-		reconstituted.removeAll(ANY, RDF.type, API.ListEndpoint);
-		reconstituted.removeAll(ANY, RDF.type, API.ItemEndpoint);
-		reconstituted.removeAll(ANY, API.extendedMetadataVersion, ANY);
+//		reconstituted.removeAll(ANY, JSONLDComposer.pMETA, ANY);
+//		reconstituted.removeAll(ANY, JSONLDComposer.pOTHERS, ANY);
+//		reconstituted.removeAll(ANY, JSONLDComposer.pRESULTS, ANY);
+//
+//		reconstituted.removeAll(ANY, DCTerms.hasPart, ANY);
+//		reconstituted.removeAll(ANY, DCTerms.isPartOf, ANY);
+//		
+//		reconstituted.removeAll(ANY, API.definition, ANY);
+//		reconstituted.removeAll(ANY, XHV.first, ANY);
+//		reconstituted.removeAll(ANY, XHV.next, ANY);
+//		reconstituted.removeAll(ANY, API.page, ANY);
+//		reconstituted.removeAll(ANY, RDF.type, API.Page);
+//		reconstituted.removeAll(ANY, RDF.type, API.ListEndpoint);
+//		reconstituted.removeAll(ANY, RDF.type, API.ItemEndpoint);
+//		reconstituted.removeAll(ANY, API.extendedMetadataVersion, ANY);
+//		
+//		reconstituted.removeAll(ANY, OpenSearch.itemsPerPage, ANY);
+//		reconstituted.removeAll(ANY, OpenSearch.startIndex, ANY);		
 		
-		reconstituted.removeAll(ANY, OpenSearch.itemsPerPage, ANY);
-		reconstituted.removeAll(ANY, OpenSearch.startIndex, ANY);		
-		
-		Model given = canonise(objectModel), recon = canonise(reconstituted);
+		Model given = canonise(model), recon = canonise(reconstituted);
 		
 		if (recon.isIsomorphicWith(given)) {
 			
