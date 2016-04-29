@@ -9,7 +9,9 @@ package com.epimorphics.lda.core;
 
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
+import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.epimorphics.lda.rdfq.URINode;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.Resource;
@@ -90,26 +92,37 @@ public abstract class Param
 		public final Resource asResource;
 		public final URINode asURI;
 		public final String typeURI;
+		public final boolean inverse;
 		
-		private Info(Resource r, String p, String typeURI) 
+		private Info(Resource r, boolean inverse, String p, String typeURI) 
 			{
 			this.asResource = r;
 			this.shortName = p;
 			this.typeURI = typeURI;
 			this.asURI = RDFQ.uri( r );
+			this.inverse = inverse;
 			}
 
 		public static Info create( ShortnameService sns, String p ) 
 			{
+			boolean inverse = false;
+			if (p.startsWith("inv_")) {
+				inverse = true;
+				p = p.substring(4);
+			}
 			Resource r = sns.asResource(p);
 			ContextPropertyInfo prop = sns.asContext().getPropertyByName( p );
 			String type = prop == null ? null : prop.getType();
-			return new Info(r, p, type);
+			return new Info(r, inverse, p, type);
 			}
+		
+		public Triple tripleWith(Any S, Any O) {
+			return inverse ? RDFQ.triple(O, asURI, S) : RDFQ.triple(S, asURI, O);
+		}
 		
 		@Override public String toString() 
 			{
-			return "<Info " + shortName + " is " + asResource + ", with type " + typeURI + ">";
+			return "<Info " + (inverse ? "(inverted) " : "") + shortName + " is " + asResource + ", with type " + typeURI + ">";
 			}
 		}
 	

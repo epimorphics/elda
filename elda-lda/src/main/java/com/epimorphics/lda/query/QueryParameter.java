@@ -43,7 +43,6 @@ public class QueryParameter {
 	public static final int DEFAULT_PAGE_SIZE = 10;
 	public static final int MAX_PAGE_SIZE = 250;
 	
-	public static final String INV_PREFIX = "inv-";
 	public static final String NAME_PREFIX = "name-";
 	public static final String LANG_PREFIX = "lang-";
 	public static final String MIN_PREFIX = "min-";
