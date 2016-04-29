@@ -375,4 +375,8 @@ public class Bindings implements Lookup {
 		}
 		return this;
 	}
+
+	public Set<String> allNames() {
+		return vars.keySet();
+	}
 }

@@ -38,6 +38,9 @@ hello:hello-world-again a api:API
 	; api:variable [api:name "_velocityPath"; api:value "lda-assets/velocity/"]
 	; api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"]
 
+    ; api:variable [api:name "_license_pdf"; api:value <http://epimorphics.com/license.pdf>]
+    ; api:variable [api:name "_license_html"; api:value <http://epimorphics.com/license.html>]
+    
 	; api:endpoint 
 		hello:publishers, hello:games, hello:about
 		, hello:catch # development debugging
