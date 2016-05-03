@@ -106,9 +106,9 @@ public abstract class Param
 		public static Info create( ShortnameService sns, String p ) 
 			{
 			boolean inverse = false;
-			if (p.startsWith("inv_")) {
+			if (p.startsWith("^")) {
 				inverse = true;
-				p = p.substring(4);
+				p = p.substring(1);
 			}
 			Resource r = sns.asResource(p);
 			ContextPropertyInfo prop = sns.asContext().getPropertyByName( p );
