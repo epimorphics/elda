@@ -106,7 +106,7 @@ public abstract class Param
 		public static Info create( ShortnameService sns, String p ) 
 			{
 			boolean inverse = false;
-			if (p.startsWith("^")) {
+			if (p.startsWith("~")) {
 				inverse = true;
 				p = p.substring(1);
 			}
