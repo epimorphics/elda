@@ -101,28 +101,28 @@ public class APIEndpointImpl implements APIEndpoint {
 		    b.put("_selectedView", view.nameWithoutCopy());
 	        
 		//////
-		    Source dataSource = spec.getAPISpec().getDataSource();
-
-		    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
-			nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, dataSource, b, spec.getAPISpec().getPrefixMap());	    
-		    
-			// System.err.println(">> licencing information");
-
-			String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?license\nWHERE {?item rdf:type ?license}";
-			ResultSetConsumer consume = new ResultSetConsumer() {
-				
-				@Override public void setup(QueryExecution qe) {
-					
-				}
-				
-				@Override public void consume(ResultSet rs) {
-					while (rs.hasNext()) {
-						String l = rs.next().get("license").asResource().getURI();
-						// System.err.println(">> " + l);
-					}
-				}
-			};
-			dataSource.executeSelect(QueryFactory.create(queryString), consume);
+//		    Source dataSource = spec.getAPISpec().getDataSource();
+//
+//		    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
+//			nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, dataSource, b, spec.getAPISpec().getPrefixMap());	    
+//		    
+//			// System.err.println(">> licencing information");
+//
+//			String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?license\nWHERE {?item rdf:type ?license}";
+//			ResultSetConsumer consume = new ResultSetConsumer() {
+//				
+//				@Override public void setup(QueryExecution qe) {
+//					
+//				}
+//				
+//				@Override public void consume(ResultSet rs) {
+//					while (rs.hasNext()) {
+//						String l = rs.next().get("license").asResource().getURI();
+//						// System.err.println(">> " + l);
+//					}
+//				}
+//			};
+//			dataSource.executeSelect(QueryFactory.create(queryString), consume);
 		////	
 			
 	    	TimedThing<ResponseResult> fromCache = cache.fetch(key);

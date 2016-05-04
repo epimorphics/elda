@@ -561,12 +561,12 @@ import com.sun.jersey.api.NotFoundException;
         if (needsVaryAccept) rb = rb.header( VARY, "Accept" );
         if (expiresDate != null) rb = rb.header( EXPIRES, expiresDate );
         
-        Resource root = rs.getRoot();
-        List<Statement> licenses = rs.getMergedModel().listStatements(root, DCTerms.license, ANY).toList();
-        for(Statement l: licenses) {
-        	String ll = l.getObject().toString();
-        	rb = rb.header(LINK, "<" + ll + ">; rel=\"license\"");        	
-        }
+//        Resource root = rs.getRoot();
+//        List<Statement> licenses = rs.getMergedModel().listStatements(root, DCTerms.license, ANY).toList();
+//        for(Statement l: licenses) {
+//        	String ll = l.getObject().toString();
+//        	rb = rb.header(LINK, "<" + ll + ">; rel=\"license\"");        	
+//        }
         
         if (rs != null && rs.enableETags()) rb = rb.tag( Long.toHexString( etagFor(rs, envHash) ) ); 
    		return rb;
