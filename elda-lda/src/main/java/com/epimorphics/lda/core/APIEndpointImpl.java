@@ -25,19 +25,21 @@ import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.cache.LimitedCacheBase.TimedThing;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.exceptions.*;
+import com.epimorphics.lda.exceptions.QueryParseException;
 import com.epimorphics.lda.query.*;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.specs.*;
 import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.lda.support.panel.Switches;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.*;
-import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -98,15 +100,30 @@ public class APIEndpointImpl implements APIEndpoint {
 		    View view = buildQueryAndView( b, query );
 		    b.put("_selectedView", view.nameWithoutCopy());
 	        
+		//////
 		    Source dataSource = spec.getAPISpec().getDataSource();
 
 		    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
 			nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, dataSource, b, spec.getAPISpec().getPrefixMap());	    
 		    
-			String queryString = "CONSTRUCT {?item ?p ?x} WHERE {?item ?p ?x}";
-			Model licencing = dataSource.executeConstruct(QueryFactory.create(queryString));
-			System.err.println(">> licencing information");
-			licencing.write(System.err, "TTL");
+			// System.err.println(">> licencing information");
+
+			String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?license\nWHERE {?item rdf:type ?license}";
+			ResultSetConsumer consume = new ResultSetConsumer() {
+				
+				@Override public void setup(QueryExecution qe) {
+					
+				}
+				
+				@Override public void consume(ResultSet rs) {
+					while (rs.hasNext()) {
+						String l = rs.next().get("license").asResource().getURI();
+						// System.err.println(">> " + l);
+					}
+				}
+			};
+			dataSource.executeSelect(QueryFactory.create(queryString), consume);
+		////	
 			
 	    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
 	        if (fromCache == null || r.c.allowCache == false) {

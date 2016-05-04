@@ -50,7 +50,6 @@ import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.*;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.WrappedException;
