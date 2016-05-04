@@ -37,6 +37,7 @@ import com.epimorphics.lda.support.panel.Switches;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.*;
+import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -97,9 +98,16 @@ public class APIEndpointImpl implements APIEndpoint {
 		    View view = buildQueryAndView( b, query );
 		    b.put("_selectedView", view.nameWithoutCopy());
 	        
+		    Source dataSource = spec.getAPISpec().getDataSource();
+
 		    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
-		    nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, spec.getAPISpec().getDataSource(), b, spec.getAPISpec().getPrefixMap());	    
+			nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, dataSource, b, spec.getAPISpec().getPrefixMap());	    
 		    
+			String queryString = "CONSTRUCT {?item ?p ?x} WHERE {?item ?p ?x}";
+			Model licencing = dataSource.executeConstruct(QueryFactory.create(queryString));
+			System.err.println(">> licencing information");
+			licencing.write(System.err, "TTL");
+			
 	    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
 	        if (fromCache == null || r.c.allowCache == false) {
 	        	// must construct and cache a new response-result
