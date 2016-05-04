@@ -78,7 +78,7 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
     protected final boolean purging;
     
     public APIEndpointSpec( APISpec apiSpec, APISpec parent, Resource endpoint ) {
-    	super(parent.getLicenceNodes(), endpoint);
+    	super(apiSpec.getLicenceNodes(), endpoint);
     	checkEndpointType( endpoint );
     	this.apiSpec = apiSpec;
     	wantsContext = endpoint.hasLiteral( ELDA_API.wantsContext, true );
