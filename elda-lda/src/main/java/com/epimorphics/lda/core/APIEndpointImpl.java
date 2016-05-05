@@ -41,7 +41,9 @@ import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.*;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.sparql.util.StringUtils;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
@@ -100,12 +102,73 @@ public class APIEndpointImpl implements APIEndpoint {
 		    View view = buildQueryAndView( b, query );
 		    b.put("_selectedView", view.nameWithoutCopy());
 	        
-		//////
-//		    Source dataSource = spec.getAPISpec().getDataSource();
-//
-//		    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
-//			nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, dataSource, b, spec.getAPISpec().getPrefixMap());	    
-//		    
+		    Source dataSource = spec.getAPISpec().getDataSource();
+
+		    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
+			nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, dataSource, b, spec.getAPISpec().getPrefixMap());	    
+		    
+		//
+			System.err.println(">> == handling licences ==================");
+			
+			Set<Resource> licences = new HashSet<Resource>();
+			Set<String> paths = new HashSet<String>();
+			
+			for (RDFNode l: spec.getLicenceNodes()) {
+				if (l.isResource()) 
+					licences.add(l.asResource());
+				else
+					paths.add(l.asLiteral().getLexicalForm());
+			}
+			
+			
+			if (paths.size() > 0) {
+				List<String> queryLines = new ArrayList<String>();
+				queryLines.add("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\"");
+				queryLines.add("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
+				queryLines.add("SELECT DISTINCT ?licence WHERE {");
+				queryLines.add("VALUES ?item {");
+				// items in turn
+				queryLines.add("  }");
+				queryLines.add("  {");
+				
+				boolean first = true;
+				String currentVar = "item";
+				String prefix = "";
+				
+				for (String path: paths) {
+					if (!first) queryLines.add("    UNION");
+					first = false;
+					String prev = "";
+					// handle a path
+					String [] elements = path.split("\\.");
+					int remaining = elements.length;
+					for (String element: elements) {
+						remaining -= 1;
+						boolean last = remaining == 0;
+						String nextVar = (last ? "license" : prev + "_" + predicateName(element));
+						String S = "?" + currentVar;
+						String P = predicateName(element);
+						String O = "?" + nextVar;
+						if (isInverse(element)) {
+							queryLines.add("  " + O + " " + P + " " + S + " .");
+						} else {
+							queryLines.add("  " + S + " " + P + " " + O + " .");
+						}
+						prefix = prefix + "_" + nextVar;
+						currentVar = nextVar;
+					}
+				}
+				
+				queryLines.add("  }");
+				
+				queryLines.add("}");
+				
+				
+				String queryString = org.apache.commons.lang.StringUtils.join(queryLines, "\n");
+				System.err.println(">>\n" + queryString);
+			}
+			
+	    //////
 //			// System.err.println(">> licencing information");
 //
 //			String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?license\nWHERE {?item rdf:type ?license}";
@@ -140,7 +203,16 @@ public class APIEndpointImpl implements APIEndpoint {
 	        } 
     }
     
-    protected ResponseResult freshResponse(Bindings b, APIQuery query, View view, Request r, NoteBoard nb) {
+    private String predicateName(String element) {
+    	if (element.startsWith("~")) element = element.substring(1);
+		return element + "_unshortened";
+	}
+    
+    private boolean isInverse(String element) {
+    	return element.startsWith("~");
+    }
+
+	protected ResponseResult freshResponse(Bindings b, APIQuery query, View view, Request r, NoteBoard nb) {
 	//    
     	APIResultSet unfiltered = query.runQuery(nb, r.c, spec.getAPISpec(), cache, b, view );	    
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );

@@ -97,13 +97,13 @@ public class EndpointMetadata {
 	    	if (totalResults != null)     		
 	    		thisMetaPage.addLiteral( OpenSearch.totalResults, totalResults.intValue() );
 	    	
-	    	for (String name: bindings.allNames()) {
-	    		if (name.startsWith("_license")) {
-	    			String value = bindings.getAsString(name, "");
-	    			Resource l = thisMetaPage.getModel().createResource(value);
-	    			thisMetaPage.addProperty(DCTerms.license, l);
-	    		}
-	    	}
+//	    	for (String name: bindings.allNames()) {
+//	    		if (name.startsWith("_license")) {
+//	    			String value = bindings.getAsString(name, "");
+//	    			Resource l = thisMetaPage.getModel().createResource(value);
+//	    			thisMetaPage.addProperty(DCTerms.license, l);
+//	    		}
+//	    	}
 	    	
 	    	thisMetaPage.addProperty( API.items, content );
 	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, 0 );
