@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.Context;
+import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.*;
 import com.epimorphics.lda.cache.Cache.Registry;
@@ -106,87 +107,8 @@ public class APIEndpointImpl implements APIEndpoint {
 
 		    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
 			nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, dataSource, b, spec.getAPISpec().getPrefixMap());	    
-		    
-		//
-			System.err.println(">> == handling licences ==================");
 			
-			Set<Resource> licences = new HashSet<Resource>();
-			Set<String> paths = new HashSet<String>();
-			
-			for (RDFNode l: spec.getLicenceNodes()) {
-				if (l.isResource()) 
-					licences.add(l.asResource());
-				else
-					paths.add(l.asLiteral().getLexicalForm());
-			}
-			
-			
-			if (paths.size() > 0) {
-				List<String> queryLines = new ArrayList<String>();
-				queryLines.add("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\"");
-				queryLines.add("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
-				queryLines.add("SELECT DISTINCT ?licence WHERE {");
-				queryLines.add("VALUES ?item {");
-				// items in turn
-				queryLines.add("  }");
-				queryLines.add("  {");
-				
-				boolean first = true;
-				String currentVar = "item";
-				String prefix = "";
-				
-				for (String path: paths) {
-					if (!first) queryLines.add("    UNION");
-					first = false;
-					String prev = "";
-					// handle a path
-					String [] elements = path.split("\\.");
-					int remaining = elements.length;
-					for (String element: elements) {
-						remaining -= 1;
-						boolean last = remaining == 0;
-						String nextVar = (last ? "license" : prev + "_" + predicateName(element));
-						String S = "?" + currentVar;
-						String P = predicateName(element);
-						String O = "?" + nextVar;
-						if (isInverse(element)) {
-							queryLines.add("  " + O + " " + P + " " + S + " .");
-						} else {
-							queryLines.add("  " + S + " " + P + " " + O + " .");
-						}
-						prefix = prefix + "_" + nextVar;
-						currentVar = nextVar;
-					}
-				}
-				
-				queryLines.add("  }");
-				
-				queryLines.add("}");
-				
-				
-				String queryString = org.apache.commons.lang.StringUtils.join(queryLines, "\n");
-				System.err.println(">>\n" + queryString);
-			}
-			
-	    //////
-//			// System.err.println(">> licencing information");
-//
-//			String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?license\nWHERE {?item rdf:type ?license}";
-//			ResultSetConsumer consume = new ResultSetConsumer() {
-//				
-//				@Override public void setup(QueryExecution qe) {
-//					
-//				}
-//				
-//				@Override public void consume(ResultSet rs) {
-//					while (rs.hasNext()) {
-//						String l = rs.next().get("license").asResource().getURI();
-//						// System.err.println(">> " + l);
-//					}
-//				}
-//			};
-//			dataSource.executeSelect(QueryFactory.create(queryString), consume);
-		////	
+			ResponseResult toReturn = null;
 			
 	    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
 	        if (fromCache == null || r.c.allowCache == false) {
@@ -194,18 +116,123 @@ public class APIEndpointImpl implements APIEndpoint {
 	//        	System.err.println(">>  Fresh.");
 	        	ResponseResult fresh = freshResponse(b, query, view, r, nb);
 	    		cache.store(key, fresh, nb.expiresAt);
-	        	return decorate(false, b, query, fresh, r, nb);
+	        	toReturn = decorate(false, b, query, fresh, r, nb);
 	        } else {
 	//        	System.err.println(">>  Re-use.");
 	        	// re-use the existing response-result
 	        	nb.expiresAt = fromCache.expiresAt;
-	        	return decorate(true, b, query, fromCache.thing, r, nb);
-	        } 
+	        	toReturn = decorate(true, b, query, fromCache.thing, r, nb);
+	        }
+	        
+	        List<Resource> items = toReturn.resultSet.results;
+			String licenceQuery = getLicences(items);
+			runLicenceQuery(dataSource, licenceQuery);
+	        return toReturn;
     }
+
+	private Set<String> runLicenceQuery(Source dataSource, String licenceQuery) {
+		final Set<String> licences = new HashSet<String>();
+		if (licenceQuery != null) {
+			ResultSetConsumer consume = new ResultSetConsumer() {
+				
+				@Override public void setup(QueryExecution qe) {
+					
+				}
+				
+				@Override public void consume(ResultSet rs) {
+					while (rs.hasNext()) {
+						String l = rs.next().get("license").asResource().getURI();
+						licences.add(l);
+					}
+				}
+			};
+			dataSource.executeSelect(QueryFactory.create(licenceQuery), consume);
+		}
+		return licences;
+	}
+
+	private String getLicences(List<Resource> items) {
+		System.err.println(">> == handling licences ==================");
+		
+		ShortnameService sns = spec.getAPISpec().getShortnameService();
+		
+		Set<Resource> licences = new HashSet<Resource>();
+		Set<String> paths = new HashSet<String>();
+		
+		for (RDFNode l: spec.getLicenceNodes()) {
+			if (l.isResource()) 
+				licences.add(l.asResource());
+			else
+				paths.add(l.asLiteral().getLexicalForm());
+		}
+		
+		
+		if (paths.size() > 0) {
+			List<String> queryLines = new ArrayList<String>();
+			queryLines.add("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>");
+			queryLines.add("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
+			queryLines.add("SELECT DISTINCT ?licence WHERE {");
+			queryLines.add("VALUES ?item {");
+			
+			for (Resource item: items) {
+				queryLines.add("<" + item.getURI() + ">");
+			}
+			
+			queryLines.add("  }");
+			queryLines.add("  {");
+			
+			boolean first = true;
+			String currentVar = "item";
+			String prefix = "";
+			
+			for (String path: paths) {
+				if (!first) queryLines.add("    UNION");
+				first = false;
+				String prev = "";
+				// handle a path
+				String [] elements = path.split("\\.");
+				int remaining = elements.length;
+				for (String element: elements) {
+					remaining -= 1;
+					boolean last = remaining == 0;
+					String newPrev = prev + "_" + predicateName(sns, element);
+					String nextVar = (last ? "license" : newPrev);
+					prev = newPrev;
+					String S = "?" + currentVar;
+					String P = "<" + predicateURI(sns, element) + ">";
+					String O = "?" + nextVar;
+					if (isInverse(element)) {
+						queryLines.add("  " + O + " " + P + " " + S + " .");
+					} else {
+						queryLines.add("  " + S + " " + P + " " + O + " .");
+					}
+					prefix = prefix + "_" + nextVar;
+					currentVar = nextVar;
+				}
+			}
+			
+			queryLines.add("  }");
+			
+			queryLines.add("}");
+			
+			
+			String queryString = org.apache.commons.lang.StringUtils.join(queryLines, "\n");
+			System.err.println(">>\n" + queryString);
+			return queryString;
+		}
+		return null;
+	}
     
-    private String predicateName(String element) {
+    private String predicateURI(ShortnameService sns, String element) {
     	if (element.startsWith("~")) element = element.substring(1);
-		return element + "_unshortened";
+    	ContextPropertyInfo i = sns.getPropertyByName(element);
+    	if (i == null) throw new UnknownShortnameException(element);
+		return i.getURI();
+	}
+    
+    private String predicateName(ShortnameService sns, String element) {
+    	if (element.startsWith("~")) element = element.substring(1);
+    	return element;
 	}
     
     private boolean isInverse(String element) {

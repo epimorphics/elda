@@ -41,7 +41,7 @@ hello:hello-world-again a api:API
     ; api:variable [api:name "_license_pdf"; api:value <http://epimorphics.com/license.pdf>]
     ; api:variable [api:name "_license_html"; api:value <http://epimorphics.com/license.html>]
     
-    ; elda:license "alpha.~beta.~gamma"
+    ; elda:license "designedBy.~type.players"
     
 	; api:endpoint 
 		hello:publishers, hello:games, hello:about
