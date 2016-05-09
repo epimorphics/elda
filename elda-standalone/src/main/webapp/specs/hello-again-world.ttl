@@ -9,6 +9,7 @@
 @prefix api:                <http://purl.org/linked-data/api/vocab#> .
 @prefix dct:				<http://purl.org/dc/terms/> .
 
+@prefix egc:                <http://epimorphics.com/public/vocabulary/games/> .
 @prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:                <http://www.w3.org/2001/XMLSchema#> .
@@ -41,7 +42,7 @@ hello:hello-world-again a api:API
     ; api:variable [api:name "_license_pdf"; api:value <http://epimorphics.com/license.pdf>]
     ; api:variable [api:name "_license_html"; api:value <http://epimorphics.com/license.html>]
     
-    ; elda:license "designedBy.~type.players"
+    ; elda:license "inDataset" # .gamesLicense"
     
 	; api:endpoint 
 		hello:publishers, hello:games, hello:about
@@ -70,6 +71,11 @@ hello:hello-world-again a api:API
     elda:textSearchOperand (rdfs:label "?_search" 99)
     .
     
+# informal dataset for licence testing
+
+egc:dataset egc:license <http://licences.epimorpics.com/pseudo-one>
+    .
+
 # Endpoint definitions
 
 hello:publishers a api:ListEndpoint 
@@ -126,6 +132,14 @@ hello:players elda:cacheExpiryTime "10s".
 # class and property declarations, setting shortnames and
 # property ranges.
 #
+
+egc:gamesDataset
+    api:label "inDataset"
+    .
+    
+egc:gamesLicense
+    api:label "gamesLicense"
+    .
 
 hello:BoardGame a rdfs:Class
 	; rdfs:label "Board Game"

@@ -141,7 +141,17 @@ public class APIEndpointImpl implements APIEndpoint {
 				
 				@Override public void consume(ResultSet rs) {
 					while (rs.hasNext()) {
-						String l = rs.next().get("license").asResource().getURI();
+						QuerySolution next = rs.next();
+						System.err.println(">> query solution: " + next);
+						Iterator<String> it = next.varNames();
+						System.err.println(">> it is " + it);
+						while (it.hasNext()) {
+							System.err.println(">> next name --------------------------");
+							System.err.println(">> name: " + it.next());
+						}
+						RDFNode rdfNode = next.get("license");
+						System.err.println(">> binding for license is " + rdfNode);
+						String l = rdfNode.asResource().getURI();
 						licences.add(l);
 					}
 				}
@@ -171,7 +181,7 @@ public class APIEndpointImpl implements APIEndpoint {
 			List<String> queryLines = new ArrayList<String>();
 			queryLines.add("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>");
 			queryLines.add("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
-			queryLines.add("SELECT DISTINCT ?licence WHERE {");
+			queryLines.add("SELECT DISTINCT ?license WHERE {");
 			queryLines.add("VALUES ?item {");
 			
 			for (Resource item: items) {
@@ -226,7 +236,12 @@ public class APIEndpointImpl implements APIEndpoint {
     private String predicateURI(ShortnameService sns, String element) {
     	if (element.startsWith("~")) element = element.substring(1);
     	ContextPropertyInfo i = sns.getPropertyByName(element);
-    	if (i == null) throw new UnknownShortnameException(element);
+    	System.err.println(">> predicateURI: expand " + element + " yields " + sns.expand(element));
+    	if (true) return sns.expand(element);
+    	if (i == null) {
+    		System.err.println(">> predicateURI: asking about " + element + " (" + sns.expand(element) + ")");
+    		throw new UnknownShortnameException(element);
+    	}
 		return i.getURI();
 	}
     
