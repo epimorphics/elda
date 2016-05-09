@@ -73,6 +73,7 @@ public class EndpointMetadata {
 		, Map<String, View> views
 		, Set<FormatNameAndType> formats
 		, EndpointDetails details
+		, Set<String> licences
 		) {
 	//
 		boolean listEndpoint = details.isListEndpoint();
@@ -96,6 +97,11 @@ public class EndpointMetadata {
 
 	    	if (totalResults != null)     		
 	    		thisMetaPage.addLiteral( OpenSearch.totalResults, totalResults.intValue() );
+	    	
+	    	for (String licence: licences) {
+    			Resource l = thisMetaPage.getModel().createResource(licence);
+    			thisMetaPage.addProperty(DCTerms.license, l);
+	    	}
 	    	
 //	    	for (String name: bindings.allNames()) {
 //	    		if (name.startsWith("_license")) {

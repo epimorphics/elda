@@ -123,10 +123,6 @@ public class APIEndpointImpl implements APIEndpoint {
 	        	nb.expiresAt = fromCache.expiresAt;
 	        	toReturn = decorate(true, b, query, fromCache.thing, r, nb);
 	        }
-	        
-	        List<Resource> items = toReturn.resultSet.results;
-			String licenceQuery = getLicences(items);
-			runLicenceQuery(dataSource, licenceQuery);
 	        return toReturn;
     }
 
@@ -236,13 +232,9 @@ public class APIEndpointImpl implements APIEndpoint {
     private String predicateURI(ShortnameService sns, String element) {
     	if (element.startsWith("~")) element = element.substring(1);
     	ContextPropertyInfo i = sns.getPropertyByName(element);
-    	System.err.println(">> predicateURI: expand " + element + " yields " + sns.expand(element));
-    	if (true) return sns.expand(element);
-    	if (i == null) {
-    		System.err.println(">> predicateURI: asking about " + element + " (" + sns.expand(element) + ")");
-    		throw new UnknownShortnameException(element);
-    	}
-		return i.getURI();
+    	String URI = sns.expand(element);
+    	if (URI == null) throw new UnknownShortnameException(element);
+		return URI;
 	}
     
     private String predicateName(ShortnameService sns, String element) {
@@ -259,6 +251,13 @@ public class APIEndpointImpl implements APIEndpoint {
     	APIResultSet unfiltered = query.runQuery(nb, r.c, spec.getAPISpec(), cache, b, view );	    
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
+
+	    Source dataSource = spec.getAPISpec().getDataSource();
+        List<Resource> items = filtered.results;
+		String licenceQuery = getLicences(items);
+		Set<String> licences = runLicenceQuery(dataSource, licenceQuery);
+	    filtered.setLicences(licences);
+	    
 	//
 	    return new ResponseResult(false, filtered, null, b);
     }
@@ -390,6 +389,7 @@ public class APIEndpointImpl implements APIEndpoint {
         	, views
         	, formats
         	, details
+        	, rs.getLicences()
         	);   
     }
 

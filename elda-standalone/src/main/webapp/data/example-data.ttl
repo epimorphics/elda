@@ -9,6 +9,10 @@
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl:	<http://www.w3.org/2002/07/owl#> .
 
+# informal dataset for licence testing
+
+egc:dataset egc:gamesLicense <http://licences.epimorpics.com/pseudo-one> .
+
 # boardgame designers
 
 egc:matthias-cramer a egc:Designer
