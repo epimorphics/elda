@@ -103,23 +103,20 @@ public class APIEndpointImpl implements APIEndpoint {
 
 	    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
 		nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, dataSource, b, spec.getAPISpec().getPrefixMap());	    
-		
-		ResponseResult toReturn = null;
-		
+				
     	TimedThing<ResponseResult> fromCache = cache.fetch(key);
         if (fromCache == null || r.c.allowCache == false) {
         	// must construct and cache a new response-result
 //        	System.err.println(">>  Fresh.");
         	ResponseResult fresh = freshResponse(b, query, view, r, nb);
     		cache.store(key, fresh, nb.expiresAt);
-        	toReturn = decorate(false, b, query, fresh, r, nb);
+        	return decorate(false, b, query, fresh, r, nb);
         } else {
 //        	System.err.println(">>  Re-use.");
         	// re-use the existing response-result
         	nb.expiresAt = fromCache.expiresAt;
-        	toReturn = decorate(true, b, query, fromCache.thing, r, nb);
+        	return decorate(true, b, query, fromCache.thing, r, nb);
         }
-        return toReturn;
     }
 
 
