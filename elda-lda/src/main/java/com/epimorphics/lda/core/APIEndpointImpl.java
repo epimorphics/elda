@@ -125,13 +125,9 @@ public class APIEndpointImpl implements APIEndpoint {
     	APIResultSet unfiltered = query.runQuery(nb, r.c, spec.getAPISpec(), cache, b, view );	    
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
-
-	    Source dataSource = spec.getAPISpec().getDataSource();
-        List<Resource> items = filtered.results;
-		String licenceQuery = Extractor.getLicences(spec, items);
-		Set<String> licences = Extractor.runLicenceQuery(dataSource, licenceQuery);
+	//
+	    Set<String> licences = new Extractor(spec).getLicenceURIs(filtered.results);
 	    filtered.setLicences(licences);
-	    
 	//
 	    return new ResponseResult(false, filtered, null, b);
     }

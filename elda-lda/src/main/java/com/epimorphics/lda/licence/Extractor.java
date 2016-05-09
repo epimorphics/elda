@@ -13,7 +13,87 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 public class Extractor {
 
-	public static Set<String> runLicenceQuery(Source dataSource, String licenceQuery) {
+	final APIEndpointSpec spec;
+	
+	public Extractor(APIEndpointSpec spec) {
+		this.spec = spec;
+	}
+
+	public Set<String> getLicenceURIs(List<Resource> items) {
+		String licenceQuery = constructLicenceQuery(items);
+		return runLicenceQuery(licenceQuery);
+	}
+
+	public String constructLicenceQuery(List<Resource> items) {
+		
+		Set<Resource> licences = new HashSet<Resource>();
+		Set<String> paths = new HashSet<String>();
+		
+		for (RDFNode l: spec.getLicenceNodes()) {
+			if (l.isResource()) 
+				licences.add(l.asResource());
+			else
+				paths.add(l.asLiteral().getLexicalForm());
+		}
+		
+		
+		if (paths.size() > 0) {
+			List<String> queryLines = new ArrayList<String>();
+			queryLines.add("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>");
+			queryLines.add("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
+		//
+			queryLines.add("SELECT DISTINCT ?license WHERE {");
+		//
+			queryLines.add("VALUES ?item {");
+			for (Resource item: items) queryLines.add("<" + item.getURI() + ">");
+			queryLines.add("  }");
+		//
+			queryLines.add("  {");
+			addPaths(paths, queryLines);
+			queryLines.add("  }");
+		//
+			queryLines.add("}");
+			return org.apache.commons.lang.StringUtils.join(queryLines, "\n");
+		}
+		return null;
+	}
+
+	private void addPaths(Set<String> paths, List<String> queryLines) {
+		ShortnameService sns = spec.getAPISpec().getShortnameService();
+		
+		boolean first = true;
+		String currentVar = "item";
+		String prefix = "";
+		
+		for (String path: paths) {
+			if (!first) queryLines.add("    UNION");
+			first = false;
+			String prev = "";
+			// handle a path
+			String [] elements = path.split("\\.");
+			int remaining = elements.length;
+			for (String element: elements) {
+				remaining -= 1;
+				boolean last = remaining == 0;
+				String newPrev = prev + "_" + predicateName(sns, element);
+				String nextVar = (last ? "license" : newPrev);
+				prev = newPrev;
+				String S = "?" + currentVar;
+				String P = "<" + predicateURI(sns, element) + ">";
+				String O = "?" + nextVar;
+				if (isInverse(element)) {
+					queryLines.add("  " + O + " " + P + " " + S + " .");
+				} else {
+					queryLines.add("  " + S + " " + P + " " + O + " .");
+				}
+				prefix = prefix + "_" + nextVar;
+				currentVar = nextVar;
+			}
+		}
+	}
+	
+	public Set<String> runLicenceQuery(String licenceQuery) {
+	    Source dataSource = spec.getAPISpec().getDataSource();
 		final Set<String> licences = new HashSet<String>();
 		if (licenceQuery != null) {
 			ResultSetConsumer consume = new ResultSetConsumer() {
@@ -33,89 +113,20 @@ public class Extractor {
 		}
 		return licences;
 	}
-
-	public static String getLicences(APIEndpointSpec spec, List<Resource> items) {
-		
-		ShortnameService sns = spec.getAPISpec().getShortnameService();
-		
-		Set<Resource> licences = new HashSet<Resource>();
-		Set<String> paths = new HashSet<String>();
-		
-		for (RDFNode l: spec.getLicenceNodes()) {
-			if (l.isResource()) 
-				licences.add(l.asResource());
-			else
-				paths.add(l.asLiteral().getLexicalForm());
-		}
-		
-		
-		if (paths.size() > 0) {
-			List<String> queryLines = new ArrayList<String>();
-			queryLines.add("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>");
-			queryLines.add("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
-			queryLines.add("SELECT DISTINCT ?license WHERE {");
-			queryLines.add("VALUES ?item {");
-			
-			for (Resource item: items) {
-				queryLines.add("<" + item.getURI() + ">");
-			}
-			
-			queryLines.add("  }");
-			queryLines.add("  {");
-			
-			boolean first = true;
-			String currentVar = "item";
-			String prefix = "";
-			
-			for (String path: paths) {
-				if (!first) queryLines.add("    UNION");
-				first = false;
-				String prev = "";
-				// handle a path
-				String [] elements = path.split("\\.");
-				int remaining = elements.length;
-				for (String element: elements) {
-					remaining -= 1;
-					boolean last = remaining == 0;
-					String newPrev = prev + "_" + predicateName(sns, element);
-					String nextVar = (last ? "license" : newPrev);
-					prev = newPrev;
-					String S = "?" + currentVar;
-					String P = "<" + predicateURI(sns, element) + ">";
-					String O = "?" + nextVar;
-					if (isInverse(element)) {
-						queryLines.add("  " + O + " " + P + " " + S + " .");
-					} else {
-						queryLines.add("  " + S + " " + P + " " + O + " .");
-					}
-					prefix = prefix + "_" + nextVar;
-					currentVar = nextVar;
-				}
-			}
-			
-			queryLines.add("  }");
-			
-			queryLines.add("}");
-			
-			
-			return org.apache.commons.lang.StringUtils.join(queryLines, "\n");
-		}
-		return null;
-	}
     
-    private static String predicateURI(ShortnameService sns, String element) {
+    private String predicateURI(ShortnameService sns, String element) {
     	if (element.startsWith("~")) element = element.substring(1);
     	String URI = sns.expand(element);
     	if (URI == null) throw new UnknownShortnameException(element);
 		return URI;
 	}
     
-    private static String predicateName(ShortnameService sns, String element) {
+    private String predicateName(ShortnameService sns, String element) {
     	if (element.startsWith("~")) element = element.substring(1);
     	return element;
 	}
     
-    private static boolean isInverse(String element) {
+    private boolean isInverse(String element) {
     	return element.startsWith("~");
     }
 }
