@@ -1,4 +1,4 @@
-package com.epimorphics.lda.query.licence.tests;
+package com.epimorphics.lda.licence.tests;
 
 import static org.junit.Assert.*;
 

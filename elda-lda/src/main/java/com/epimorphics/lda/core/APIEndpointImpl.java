@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.*;
 import com.epimorphics.lda.cache.Cache.Registry;
@@ -27,24 +26,21 @@ import com.epimorphics.lda.cache.LimitedCacheBase.TimedThing;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.exceptions.*;
 import com.epimorphics.lda.exceptions.QueryParseException;
+import com.epimorphics.lda.licence.Extractor;
 import com.epimorphics.lda.query.*;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
-import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.specs.*;
 import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.lda.support.panel.Switches;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.*;
-import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.sparql.util.StringUtils;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
@@ -94,157 +90,38 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public ResponseResult call(Request r, NoteBoard nb) {
 		URI key = Switches.stripCacheKey(r.bindings) ? r.getURIplain() : r.getURIwithFormat();
 		
-	    	Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
-	    	APIQuery query = spec.getBaseQuery();
-	    	
-		    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
-				EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );  
-		    
-		    View view = buildQueryAndView( b, query );
-		    b.put("_selectedView", view.nameWithoutCopy());
-	        
-		    Source dataSource = spec.getAPISpec().getDataSource();
+    	Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
+    	APIQuery query = spec.getBaseQuery();
+    	
+	    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
+			EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );  
+	    
+	    View view = buildQueryAndView( b, query );
+	    b.put("_selectedView", view.nameWithoutCopy());
+        
+	    Source dataSource = spec.getAPISpec().getDataSource();
 
-		    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
-			nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, dataSource, b, spec.getAPISpec().getPrefixMap());	    
-			
-			ResponseResult toReturn = null;
-			
-	    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
-	        if (fromCache == null || r.c.allowCache == false) {
-	        	// must construct and cache a new response-result
-	//        	System.err.println(">>  Fresh.");
-	        	ResponseResult fresh = freshResponse(b, query, view, r, nb);
-	    		cache.store(key, fresh, nb.expiresAt);
-	        	toReturn = decorate(false, b, query, fresh, r, nb);
-	        } else {
-	//        	System.err.println(">>  Re-use.");
-	        	// re-use the existing response-result
-	        	nb.expiresAt = fromCache.expiresAt;
-	        	toReturn = decorate(true, b, query, fromCache.thing, r, nb);
-	        }
-	        return toReturn;
+	    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
+		nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, dataSource, b, spec.getAPISpec().getPrefixMap());	    
+		
+		ResponseResult toReturn = null;
+		
+    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
+        if (fromCache == null || r.c.allowCache == false) {
+        	// must construct and cache a new response-result
+//        	System.err.println(">>  Fresh.");
+        	ResponseResult fresh = freshResponse(b, query, view, r, nb);
+    		cache.store(key, fresh, nb.expiresAt);
+        	toReturn = decorate(false, b, query, fresh, r, nb);
+        } else {
+//        	System.err.println(">>  Re-use.");
+        	// re-use the existing response-result
+        	nb.expiresAt = fromCache.expiresAt;
+        	toReturn = decorate(true, b, query, fromCache.thing, r, nb);
+        }
+        return toReturn;
     }
 
-	private Set<String> runLicenceQuery(Source dataSource, String licenceQuery) {
-		final Set<String> licences = new HashSet<String>();
-		if (licenceQuery != null) {
-			ResultSetConsumer consume = new ResultSetConsumer() {
-				
-				@Override public void setup(QueryExecution qe) {
-					
-				}
-				
-				@Override public void consume(ResultSet rs) {
-					while (rs.hasNext()) {
-						QuerySolution next = rs.next();
-						System.err.println(">> query solution: " + next);
-						Iterator<String> it = next.varNames();
-						System.err.println(">> it is " + it);
-						while (it.hasNext()) {
-							System.err.println(">> next name --------------------------");
-							System.err.println(">> name: " + it.next());
-						}
-						RDFNode rdfNode = next.get("license");
-						System.err.println(">> binding for license is " + rdfNode);
-						String l = rdfNode.asResource().getURI();
-						licences.add(l);
-					}
-				}
-			};
-			dataSource.executeSelect(QueryFactory.create(licenceQuery), consume);
-		}
-		return licences;
-	}
-
-	private String getLicences(List<Resource> items) {
-		System.err.println(">> == handling licences ==================");
-		
-		ShortnameService sns = spec.getAPISpec().getShortnameService();
-		
-		Set<Resource> licences = new HashSet<Resource>();
-		Set<String> paths = new HashSet<String>();
-		
-		for (RDFNode l: spec.getLicenceNodes()) {
-			if (l.isResource()) 
-				licences.add(l.asResource());
-			else
-				paths.add(l.asLiteral().getLexicalForm());
-		}
-		
-		
-		if (paths.size() > 0) {
-			List<String> queryLines = new ArrayList<String>();
-			queryLines.add("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>");
-			queryLines.add("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
-			queryLines.add("SELECT DISTINCT ?license WHERE {");
-			queryLines.add("VALUES ?item {");
-			
-			for (Resource item: items) {
-				queryLines.add("<" + item.getURI() + ">");
-			}
-			
-			queryLines.add("  }");
-			queryLines.add("  {");
-			
-			boolean first = true;
-			String currentVar = "item";
-			String prefix = "";
-			
-			for (String path: paths) {
-				if (!first) queryLines.add("    UNION");
-				first = false;
-				String prev = "";
-				// handle a path
-				String [] elements = path.split("\\.");
-				int remaining = elements.length;
-				for (String element: elements) {
-					remaining -= 1;
-					boolean last = remaining == 0;
-					String newPrev = prev + "_" + predicateName(sns, element);
-					String nextVar = (last ? "license" : newPrev);
-					prev = newPrev;
-					String S = "?" + currentVar;
-					String P = "<" + predicateURI(sns, element) + ">";
-					String O = "?" + nextVar;
-					if (isInverse(element)) {
-						queryLines.add("  " + O + " " + P + " " + S + " .");
-					} else {
-						queryLines.add("  " + S + " " + P + " " + O + " .");
-					}
-					prefix = prefix + "_" + nextVar;
-					currentVar = nextVar;
-				}
-			}
-			
-			queryLines.add("  }");
-			
-			queryLines.add("}");
-			
-			
-			String queryString = org.apache.commons.lang.StringUtils.join(queryLines, "\n");
-			System.err.println(">>\n" + queryString);
-			return queryString;
-		}
-		return null;
-	}
-    
-    private String predicateURI(ShortnameService sns, String element) {
-    	if (element.startsWith("~")) element = element.substring(1);
-    	ContextPropertyInfo i = sns.getPropertyByName(element);
-    	String URI = sns.expand(element);
-    	if (URI == null) throw new UnknownShortnameException(element);
-		return URI;
-	}
-    
-    private String predicateName(ShortnameService sns, String element) {
-    	if (element.startsWith("~")) element = element.substring(1);
-    	return element;
-	}
-    
-    private boolean isInverse(String element) {
-    	return element.startsWith("~");
-    }
 
 	protected ResponseResult freshResponse(Bindings b, APIQuery query, View view, Request r, NoteBoard nb) {
 	//    
@@ -254,8 +131,8 @@ public class APIEndpointImpl implements APIEndpoint {
 
 	    Source dataSource = spec.getAPISpec().getDataSource();
         List<Resource> items = filtered.results;
-		String licenceQuery = getLicences(items);
-		Set<String> licences = runLicenceQuery(dataSource, licenceQuery);
+		String licenceQuery = Extractor.getLicences(spec, items);
+		Set<String> licences = Extractor.runLicenceQuery(dataSource, licenceQuery);
 	    filtered.setLicences(licences);
 	    
 	//
