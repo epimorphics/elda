@@ -2,6 +2,7 @@
 
 *.jar
 *.war
+*.swp
 
 target/
 .settings/
