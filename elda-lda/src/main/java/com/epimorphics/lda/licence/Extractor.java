@@ -58,7 +58,7 @@ public class Extractor {
 		return null;
 	}
 
-	private void addPaths(Set<String> paths, List<String> queryLines) {
+	public void addPaths(Set<String> paths, List<String> queryLines) {
 		ShortnameService sns = spec.getAPISpec().getShortnameService();
 		
 		boolean first = true;
