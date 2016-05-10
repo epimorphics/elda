@@ -38,14 +38,14 @@
 	
 	<dependency>
       <groupId>com.epimorphics.lda</groupId>
-      <artifactId>elda-common</artifactId>
+      <artifactId>elda-assets</artifactId>
       <version>${project.version}</version>
       <type>war</type>
   </dependency>
 	
 	<dependency>
       <groupId>com.epimorphics.lda</groupId>
-      <artifactId>elda-assets</artifactId>
+      <artifactId>elda-common</artifactId>
       <version>${project.version}</version>
       <type>war</type>
     </dependency>
@@ -69,7 +69,7 @@
         <executions>
           <execution>
             <id>tomcat-run</id>
-            <goals> <goal>exec-war-only</goal> </goals>
+            <goals> <goal>exec-war</goal> </goals>
             <phase>package</phase>
 			<configuration> 
 				<path>/standalone</path> 
