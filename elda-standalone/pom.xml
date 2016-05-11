@@ -45,9 +45,8 @@
 	
 	<dependency>
       <groupId>com.epimorphics.lda</groupId>
-      <artifactId>elda-common</artifactId>
+      <artifactId>elda-lda</artifactId>
       <version>${project.version}</version>
-      <type>war</type>
     </dependency>
 	
 	<dependency>
