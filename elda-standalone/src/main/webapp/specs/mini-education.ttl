@@ -131,6 +131,10 @@ spec:mini-education-api a api:API
 		spec:school
 		, spec:schools 
 		, spec:schoolsPrimary
+
+    ; api:variable [api:name "_velocityPath"; api:value "velocity/"]
+    ; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
+    
 	#
 	# Elda magic follows
 	#

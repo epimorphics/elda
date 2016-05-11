@@ -95,6 +95,10 @@ spec:old-edubase-API a api:API
     ; rdfs:comment "An API around sparql-provided education data."
     ; extras:enableETags true       
     ; api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"]
+
+    ; api:variable [api:name "_velocityPath"; api:value "velocity/"]
+    ; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
+    
     # ; extras:describeAllLabel skos:prefLabel
     #
     # normally constructed URIs (for views, formatters, metadata, etc) are based
