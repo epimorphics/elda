@@ -94,7 +94,6 @@
     <url-pattern>/xslt/*</url-pattern>
     <url-pattern>/index.html/*</url-pattern>
     <url-pattern>/vocabulary/*</url-pattern>
-    <url-pattern>/index.html/*</url-pattern>
     <url-pattern>/_error_pages/*</url-pattern>
   </servlet-mapping>
    
