@@ -49,7 +49,11 @@ import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.*;
 import com.epimorphics.util.MediaType;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.WrappedException;
+import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.sun.jersey.api.NotFoundException;
 
 /**
@@ -65,12 +69,15 @@ import com.sun.jersey.api.NotFoundException;
     public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
     public static final String VARY = "Vary";
     public static final String ETAG = "Etag";
+    public static final String LINK = "Link";
     public static final String EXPIRES = "Expires";
     public static final String LAST_MODIFIED_DATE = "Last-Modified-Date";
     
     final Router router;
 
 	public static final String NO_EXPIRY = null;
+	
+	public static final Property ANY = null;
     
     /**
         TimestampedRouter is a router plus the timestamp of the latest file
@@ -553,6 +560,14 @@ import com.sun.jersey.api.NotFoundException;
     	rb = rb.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" );
         if (needsVaryAccept) rb = rb.header( VARY, "Accept" );
         if (expiresDate != null) rb = rb.header( EXPIRES, expiresDate );
+        
+//        Resource root = rs.getRoot();
+//        List<Statement> licenses = rs.getMergedModel().listStatements(root, DCTerms.license, ANY).toList();
+//        for(Statement l: licenses) {
+//        	String ll = l.getObject().toString();
+//        	rb = rb.header(LINK, "<" + ll + ">; rel=\"license\"");        	
+//        }
+        
         if (rs != null && rs.enableETags()) rb = rb.tag( Long.toHexString( etagFor(rs, envHash) ) ); 
    		return rb;
     }

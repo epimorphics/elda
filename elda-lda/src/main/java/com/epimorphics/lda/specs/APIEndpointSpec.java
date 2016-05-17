@@ -31,13 +31,12 @@ import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Encapsulates the specification of the particular List/Set within
  * a particular API. 
  */
-public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.QueryBasis {
+public class APIEndpointSpec extends SpecCommon implements EndpointDetails, NamedViews, APIQuery.QueryBasis {
 	
 	private final APISpec apiSpec;
 	
@@ -79,6 +78,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     protected final boolean purging;
     
     public APIEndpointSpec( APISpec apiSpec, APISpec parent, Resource endpoint ) {
+    	super(apiSpec.getLicenceNodes(), endpoint);
     	checkEndpointType( endpoint );
     	this.apiSpec = apiSpec;
     	wantsContext = endpoint.hasLiteral( ELDA_API.wantsContext, true );

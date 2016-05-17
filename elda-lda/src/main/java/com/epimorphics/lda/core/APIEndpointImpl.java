@@ -25,6 +25,8 @@ import com.epimorphics.lda.cache.Cache.Registry;
 import com.epimorphics.lda.cache.LimitedCacheBase.TimedThing;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.exceptions.*;
+import com.epimorphics.lda.exceptions.QueryParseException;
+import com.epimorphics.lda.licence.Extractor;
 import com.epimorphics.lda.query.*;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.renderers.*;
@@ -88,38 +90,44 @@ public class APIEndpointImpl implements APIEndpoint {
     @Override public ResponseResult call(Request r, NoteBoard nb) {
 		URI key = Switches.stripCacheKey(r.bindings) ? r.getURIplain() : r.getURIwithFormat();
 		
-	    	Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
-	    	APIQuery query = spec.getBaseQuery();
-	    	
-		    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
-				EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );  
-		    
-		    View view = buildQueryAndView( b, query );
-		    b.put("_selectedView", view.nameWithoutCopy());
-	        
-		    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
-		    nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, spec.getAPISpec().getDataSource(), b, spec.getAPISpec().getPrefixMap());	    
-		    
-	    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
-	        if (fromCache == null || r.c.allowCache == false) {
-	        	// must construct and cache a new response-result
-	//        	System.err.println(">>  Fresh.");
-	        	ResponseResult fresh = freshResponse(b, query, view, r, nb);
-	    		cache.store(key, fresh, nb.expiresAt);
-	        	return decorate(false, b, query, fresh, r, nb);
-	        } else {
-	//        	System.err.println(">>  Re-use.");
-	        	// re-use the existing response-result
-	        	nb.expiresAt = fromCache.expiresAt;
-	        	return decorate(true, b, query, fromCache.thing, r, nb);
-	        } 
+    	Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
+    	APIQuery query = spec.getBaseQuery();
+    	
+	    if (b.getValueString( "callback" ) != null && !"json".equals( r.format ))
+			EldaException.BadRequest( "callback specified but format '" + r.format + "' is not JSON." );  
+	    
+	    View view = buildQueryAndView( b, query );
+	    b.put("_selectedView", view.nameWithoutCopy());
+        
+	    Source dataSource = spec.getAPISpec().getDataSource();
+
+	    nb.expiresAt = query.viewSensitiveExpiryTime(spec.getAPISpec(), view);
+		nb.totalResults = query.requestTotalCount(nb.expiresAt, r.c, cache, dataSource, b, spec.getAPISpec().getPrefixMap());	    
+				
+    	TimedThing<ResponseResult> fromCache = cache.fetch(key);
+        if (fromCache == null || r.c.allowCache == false) {
+        	// must construct and cache a new response-result
+//        	System.err.println(">>  Fresh.");
+        	ResponseResult fresh = freshResponse(b, query, view, r, nb);
+    		cache.store(key, fresh, nb.expiresAt);
+        	return decorate(false, b, query, fresh, r, nb);
+        } else {
+//        	System.err.println(">>  Re-use.");
+        	// re-use the existing response-result
+        	nb.expiresAt = fromCache.expiresAt;
+        	return decorate(true, b, query, fromCache.thing, r, nb);
+        }
     }
-    
-    protected ResponseResult freshResponse(Bindings b, APIQuery query, View view, Request r, NoteBoard nb) {
+
+
+	protected ResponseResult freshResponse(Bindings b, APIQuery query, View view, Request r, NoteBoard nb) {
 	//    
     	APIResultSet unfiltered = query.runQuery(nb, r.c, spec.getAPISpec(), cache, b, view );	    
 	    APIResultSet filtered = unfiltered.getFilteredSet( view, query.getDefaultLanguage() );
 	    filtered.setNsPrefixes( spec.getAPISpec().getPrefixMap() );
+	//
+	    Set<String> licences = new Extractor(spec).getLicenceURIs(filtered.results);
+	    filtered.setLicences(licences);
 	//
 	    return new ResponseResult(false, filtered, null, b);
     }
@@ -251,6 +259,7 @@ public class APIEndpointImpl implements APIEndpoint {
         	, views
         	, formats
         	, details
+        	, rs.getLicences()
         	);   
     }
 

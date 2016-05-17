@@ -56,6 +56,8 @@ public class APIResultSet implements SetsMetadata {
     protected String selectQuery = "";
     protected boolean enableETags = false;
     
+    protected Set<String> licences = new HashSet<String>();
+    
     final View view;
     
     /** 
@@ -83,6 +85,7 @@ public class APIResultSet implements SetsMetadata {
     	this.enableETags = other.enableETags;
     	this.view = other.view;
     	this.metadata.putAll( other.metadata );
+    	this.licences.addAll(other.licences);
     }
     
     protected APIResultSet
@@ -192,6 +195,14 @@ public class APIResultSet implements SetsMetadata {
     public long getHash() {
     	if (hash == 0) hash = ModelUtils.hashModel( model.merged ) ^ ((long) results.hashCode() << 32 );
     	return hash;
+    }
+    
+    public void setLicences(Set<String> licences) {
+    	this.licences.addAll(licences);
+    }
+    
+    public Set<String> getLicences() {
+    	return licences;
     }
 
 	/**
