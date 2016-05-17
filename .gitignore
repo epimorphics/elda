@@ -4,6 +4,8 @@
 *.war
 *.swp
 
+MANIFEST.MF
+
 target/
 .settings/
 .classpath
