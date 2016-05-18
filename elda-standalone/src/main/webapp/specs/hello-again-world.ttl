@@ -19,6 +19,7 @@
 
 # Prefix for example-local entities.
 @prefix hello:				<http://epimorphics.com/public/vocabulary/games/>.
+@prefix foaf:               <http://xmlns.com/foaf/0.1/>.
 
 # ---------------------------------------------------------------------
 # API config
@@ -42,6 +43,7 @@ hello:hello-world-again a api:API
     ; api:variable [api:name "_license_pdf"; api:value <http://epimorphics.com/license.pdf>]
     ; api:variable [api:name "_license_html"; api:value <http://epimorphics.com/license.html>]
     
+    ; elda:license <http://placeholder.epimorphics.com/licences/alpha.pdf>
     ; elda:license "inDataset.gamesLicense"
     
 	; api:endpoint 
@@ -72,8 +74,14 @@ hello:hello-world-again a api:API
     .
     
 # informal dataset for licence testing
-
-egc:dataset egc:license <http://licences.epimorpics.com/pseudo-one>
+   
+<http://placeholder.epimorphics.com/licences/alpha.pdf> a elda:license
+    ; rdfs:label "alpha"
+    ; rdfs:comment """license alpha"""
+    ; foaf:depiction <http://epimorpics.com/example/depiction>
+    .
+    
+egc:dataset egc:license <http://placeholder.epimorphics.com/licences/alpha.pdf>
     .
 
 # Endpoint definitions

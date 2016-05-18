@@ -56,7 +56,7 @@ public class APIResultSet implements SetsMetadata {
     protected String selectQuery = "";
     protected boolean enableETags = false;
     
-    protected Set<String> licences = new HashSet<String>();
+    protected Set<Resource> licences = new HashSet<Resource>();
     
     final View view;
     
@@ -197,11 +197,11 @@ public class APIResultSet implements SetsMetadata {
     	return hash;
     }
     
-    public void setLicences(Set<String> licences) {
+    public void setLicences(Set<Resource> licences) {
     	this.licences.addAll(licences);
     }
     
-    public Set<String> getLicences() {
+    public Set<Resource> getLicences() {
     	return licences;
     }
 

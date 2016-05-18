@@ -34,7 +34,11 @@ import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.util.CountStream;
 import com.epimorphics.util.StreamUtils;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.*;
+import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.vocabulary.DCTerms;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * A VelocityRendering captures the state required to render a particular request into
@@ -161,6 +165,8 @@ implements BytesOut
     protected void render( OutputStream os ) {
         VelocityEngine ve = createVelocityEngine();
         VelocityContext vc = createVelocityContext( this.bindings );
+        vc.put("_licenses", revise(results.getLicences()));
+        
         Template t = null;
 
         try {
@@ -185,7 +191,45 @@ implements BytesOut
         }
     }
 
-    /**
+    private Set<Object> revise(Set<Resource> licences) {
+    	Set<Object> result = new HashSet<Object>();
+    	for (Resource r: licences) result.add(revise(r));
+    	return result;
+	}
+
+	private Object revise(final Resource r) {
+		return new Object () {
+			public String toString() {
+				
+				
+				StringBuilder sb = new StringBuilder();
+				String depiction = null, label = r.getLocalName();
+
+				
+				Statement property = r.getProperty(FOAF.depiction);
+				
+				
+				if (r.hasProperty(FOAF.depiction)) {
+					depiction = property.getObject().toString();
+					
+					sb.append("<img src=\"").append(depiction).append("\"></img>");
+				}
+
+				
+				if (r.hasProperty(RDFS.label)) {
+					label = property.getObject().toString();
+				}
+
+				
+				
+				sb.append("<a href=\"").append(r.getURI()).append("\">").append(label).append("</a>");
+				sb.append("\n");
+				return sb.toString();
+			}
+		};
+	}
+
+	/**
      * Create a Velocity engine instance, and initialise it with properties
      * loaded from the <code>velocity.properties</code> file.
      * @return A new Velocity engine

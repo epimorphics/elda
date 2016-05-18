@@ -1,6 +1,7 @@
 <footer>
   <div class="row">
     <div class="col-md-12">
+        
       #set( $proc = $page.metadata().processor() )
       Produced by
       <a href="$proc.homePage()">$proc.name()</a>
@@ -9,6 +10,13 @@
       <a href="http://www.epimorphics.com">Epimorphics</a>
       of the
       <a href="http://code.google.com/p/linked-data-api">Linked Data API</a>.
+      
+      #if ($_licenses)
+        #foreach ($l in $_licenses)
+            <div> $l </div>
+        #end
+      #end
+      
     </div>
   </div>
 </footer>

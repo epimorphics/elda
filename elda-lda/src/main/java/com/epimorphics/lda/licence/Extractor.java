@@ -19,7 +19,7 @@ public class Extractor {
 		this.spec = spec;
 	}
 
-	public Set<String> getLicenceURIs(List<Resource> items) {
+	public Set<Resource> getLicenceResources(List<Resource> items) {
 		String licenceQuery = constructLicenceQuery(items);
 		return runLicenceQuery(licenceQuery);
 	}
@@ -92,9 +92,9 @@ public class Extractor {
 		}
 	}
 	
-	public Set<String> runLicenceQuery(String licenceQuery) {
+	public Set<Resource> runLicenceQuery(String licenceQuery) {
 	    Source dataSource = spec.getAPISpec().getDataSource();
-		final Set<String> licences = new HashSet<String>();
+		final Set<Resource> licences = new HashSet<Resource>();
 		if (licenceQuery != null) {
 			ResultSetConsumer consume = new ResultSetConsumer() {
 				
@@ -104,7 +104,7 @@ public class Extractor {
 				
 				@Override public void consume(ResultSet rs) {
 					while (rs.hasNext()) {
-						String l = rs.next().get("license").asResource().getURI();
+						Resource l = rs.next().get("license").asResource();
 						licences.add(l);
 					}
 				}
