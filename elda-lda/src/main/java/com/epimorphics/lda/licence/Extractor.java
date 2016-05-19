@@ -5,11 +5,9 @@ import java.util.*;
 import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
-import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.*;
 
 public class Extractor {
 
@@ -41,8 +39,9 @@ public class Extractor {
 			List<String> queryLines = new ArrayList<String>();
 			queryLines.add("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>");
 			queryLines.add("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>");
+			queryLines.add("PREFIX elda: <http://www.epimorphics.com/vocabularies/lda#>");
 		//
-			queryLines.add("SELECT DISTINCT ?license WHERE {");
+			queryLines.add("CONSTRUCT { ?license a elda:licence ; ?p ?v } WHERE {");
 		//
 			queryLines.add("VALUES ?item {");
 			for (Resource item: items) queryLines.add("<" + item.getURI() + ">");
@@ -89,6 +88,7 @@ public class Extractor {
 				prefix = prefix + "_" + nextVar;
 				currentVar = nextVar;
 			}
+			queryLines.add("  OPTIONAL { ?license ?p ?v } ");
 		}
 	}
 	
@@ -96,20 +96,8 @@ public class Extractor {
 	    Source dataSource = spec.getAPISpec().getDataSource();
 		final Set<Resource> licences = new HashSet<Resource>();
 		if (licenceQuery != null) {
-			ResultSetConsumer consume = new ResultSetConsumer() {
-				
-				@Override public void setup(QueryExecution qe) {
-					
-				}
-				
-				@Override public void consume(ResultSet rs) {
-					while (rs.hasNext()) {
-						Resource l = rs.next().get("license").asResource();
-						licences.add(l);
-					}
-				}
-			};
-			dataSource.executeSelect(QueryFactory.create(licenceQuery), consume);
+			Model cons = dataSource.executeConstruct(QueryFactory.create(licenceQuery));
+			licences.addAll(cons.listSubjects().toSet());
 		}
 		return licences;
 	}

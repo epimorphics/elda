@@ -12,7 +12,12 @@
       <a href="http://code.google.com/p/linked-data-api">Linked Data API</a>.
       
       #if ($_licenses)
-        #foreach ($l in $_licenses) <div> $l </div> #end
+        #foreach ($l in $_licenses) 
+            <div> 
+            #if ($l.picture) <img src="$l.picture"> #end
+            <a href="$l.URI"> $l.label </a>
+            </div>
+        #end
       #end
       
     </div>
