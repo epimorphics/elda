@@ -8,20 +8,20 @@ import com.hp.hpl.jena.rdf.model.*;
 
 public class SpecCommon {
 
-	final Set<RDFNode> licenceProperties = new HashSet<RDFNode>();
+	final Set<RDFNode> licences = new HashSet<RDFNode>();
 
-	public SpecCommon(Set<RDFNode> inheritedLicenceProperties, Resource root) {
+	public SpecCommon(Set<RDFNode> inheritedLicences, Resource root) {
 		this(root);
-		licenceProperties.addAll(inheritedLicenceProperties);
+		licences.addAll(inheritedLicences);
 	}
 	
 	public SpecCommon(Resource root) {
 		for (RDFNode x: root.listProperties(ELDA_API.license).mapWith(Statement.Util.getObject).toList()) {
-			licenceProperties.add(x);
+			licences.add(x);
 		}
 	}
 	
 	public Set<RDFNode> getLicenceNodes() {
-		return new HashSet<RDFNode>(licenceProperties);
+		return new HashSet<RDFNode>(licences);
 	}
 }

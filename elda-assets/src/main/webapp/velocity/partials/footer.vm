@@ -12,9 +12,7 @@
       <a href="http://code.google.com/p/linked-data-api">Linked Data API</a>.
       
       #if ($_licenses)
-        #foreach ($l in $_licenses)
-            <div> $l </div>
-        #end
+        #foreach ($l in $_licenses) <div> $l </div> #end
       #end
       
     </div>

@@ -20,22 +20,22 @@ public class Extractor {
 	}
 
 	public Set<Resource> getLicenceResources(List<Resource> items) {
-		String licenceQuery = constructLicenceQuery(items);
-		return runLicenceQuery(licenceQuery);
+		Set<Resource> result = new HashSet<Resource>();
+		String licenceQuery = constructLicenceQuery(result, items);
+		result.addAll(runLicenceQuery(licenceQuery));		
+		return result;
 	}
 
-	public String constructLicenceQuery(List<Resource> items) {
+	public String constructLicenceQuery(Set<Resource> plainLicences, List<Resource> items) {
 		
-		Set<Resource> licences = new HashSet<Resource>();
 		Set<String> paths = new HashSet<String>();
 		
-		for (RDFNode l: spec.getLicenceNodes()) {
+		for (RDFNode l: spec.getLicenceNodes()) {			
 			if (l.isResource()) 
-				licences.add(l.asResource());
+				plainLicences.add(l.asResource());
 			else
 				paths.add(l.asLiteral().getLexicalForm());
-		}
-		
+		}		
 		
 		if (paths.size() > 0) {
 			List<String> queryLines = new ArrayList<String>();
