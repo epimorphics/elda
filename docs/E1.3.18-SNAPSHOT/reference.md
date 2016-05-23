@@ -897,6 +897,55 @@ describe viewers to define the view, with the `*` wildcard to imitate
 the generality of DESCRIBE. While this will not have the full effect of
 DESCRIBE's bnode closure it will provide predictable results.
 
+Licence metadata
+----------------
+
+*Experimental*. Starting with Elda 1.3.18, page metadata may include
+licence information, as the URI value(s) of the property `elda:licence`
+of the page.
+
+An API may declare licences using the (possibly multi-valued)
+property `elda:licence`. Additional licences can be declared for 
+individual endpoints of that API.
+
+The objects of `elda:licence` may be named resources or literal strings. 
+
+A named resource is attached using `elda:licence` to the page
+metadata for this API or endpoint. All the properties of that
+resource become part of the metadata. 
+
+A string literal should consist of a dot-separated sequence of
+shortnames (ie a property chain); a shortname may be preceeded by 
+`~` to specify its inverse. The licence resource is found by following
+the property chain starting from the selected items of the query
+and is added to the page metadata with on level of property/values.
+ 
+Turtle, XML, and JSON renderings simply include the new licence
+metadata; the client can harmlessly ignore it if required.
+
+The default Velocity renderer has been modified so that the
+footer page (footer.vm) checks for the presence of any licences
+and if so displays them as a picture and a label.
+
+-   the picture is the image (if any) which is the value of
+    the `foaf:depiction` of the licence resource.
+
+-   the label is the value of the `rdfs:label` property of
+    the licence resource, if there is one, and otherwise
+    the local name of the licence resource. 
+
+-   the label is displayed as link with href the licence
+    resource and body the link text.
+
+A sequence of licence resources is available to velocity
+macros as the value of the variable `_licences`. The individual
+values are instances of `LicenceResource` which has methods
+`getURI()` for the URI of the licence, `getLabel()` for the
+label of the licence, and `getPicture()` for the image to
+display for the licence.
+
+Currently the HTML renderer does not display licence information.
+
 Formatting extensions
 =====================
 
