@@ -1,5 +1,15 @@
 + ---------------------------------------------------------------------
 | Elda 1.3.18 (DEVELOPING)
+
+Elda can now attach licence metadata to the pages it constructs.
+The metadata is described in the LDA config as a property
+`elda:licence` of an API or endpoint, either as an explicit
+URI resource or a property path from the pages selected items
+to the licence object. The velocity renderer default footer
+has be modified to display the licences and their labels and
+images if present. See the `reference` section of the documentation
+for details.
+
  
 
 + ---------------------------------------------------------------------

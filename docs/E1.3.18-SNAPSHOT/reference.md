@@ -919,6 +919,21 @@ shortnames (ie a property chain); a shortname may be preceeded by
 `~` to specify its inverse. The licence resource is found by following
 the property chain starting from the selected items of the query
 and is added to the page metadata with on level of property/values.
+
+Note that this means an extra query to the SPARQL server is made
+for every Elda query, and that no caching is applied to the
+result. Hence an Elda query can take up to 5 SPARQL queries:
+
+-   the query for selected items (always required)
+
+-   the query for view resources from property paths
+
+-   the query for DESCRIBEd resources
+
+-   the query to find the names of all resouces fetched for
+    the view
+
+-   the query to find licences that apply to this page
  
 Turtle, XML, and JSON renderings simply include the new licence
 metadata; the client can harmlessly ignore it if required.
