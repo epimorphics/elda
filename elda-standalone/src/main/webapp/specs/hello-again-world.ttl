@@ -24,6 +24,9 @@
 # ---------------------------------------------------------------------
 # API config
 
+# example authorisation for SPARQL host if expected
+#
+ 
 <http://localhost:3030/ds/query>
     elda:authKey "grimdark"
     ; elda:authFile "taods-and-robins"
@@ -39,9 +42,6 @@ hello:hello-world-again a api:API
 
 	; api:variable [api:name "_velocityPath"; api:value "velocity/"]
 	; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
-
-    ; api:variable [api:name "_license_pdf"; api:value <http://epimorphics.com/license.pdf>]
-    ; api:variable [api:name "_license_html"; api:value <http://epimorphics.com/license.html>]
     
     ; elda:license <http://placeholder.epimorphics.com/licences/alpha.pdf>
     ; elda:license "inDataset.gamesLicense"
