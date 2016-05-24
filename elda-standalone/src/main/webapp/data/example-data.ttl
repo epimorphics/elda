@@ -16,9 +16,9 @@
 egc:dataset egc:gamesLicense <http://licences.epimorpics.com/pseudo-two> .
 
 <http://licences.epimorpics.com/pseudo-two> a elda:license
-    ; rdfs:label "beta"
-    ; rdfs:comment """license beta"""
-    ; foaf:depiction <http://epimorpics.com/example/beta/depiction>
+    ; rdfs:label "per-page licence Beta"
+    ; rdfs:comment """per-page licence Beta"""
+    ; foaf:depiction <http://localhost:8080/standalone/velocity/images/licence-beta.png>
     .
 
 # boardgame designers

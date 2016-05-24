@@ -76,9 +76,9 @@ hello:hello-world-again a api:API
 # informal dataset for licence testing
    
 <http://placeholder.epimorphics.com/licences/alpha.pdf> a elda:license
-    ; rdfs:label "alpha"
-    ; rdfs:comment """license alpha"""
-    ; foaf:depiction <http://epimorpics.com/example/depiction>
+    ; rdfs:label "per-page licence Alpha"
+    ; rdfs:comment """per-page licence Alpha"""
+    ; foaf:depiction <http://localhost:8080/standalone/velocity/images/licence-alpha.png>
     .
     
 egc:dataset egc:license <http://placeholder.epimorphics.com/licences/alpha.pdf>
