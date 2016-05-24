@@ -18,49 +18,32 @@ public class LicenceResource  {
     public static Set<LicenceResource> revise(Set<Resource> licences) {
     	Set<LicenceResource> result = new HashSet<LicenceResource>();
     	for (Resource r: licences) {
-			final Resource r1 = r;
-			result.add(new LicenceResource(r1));
+			result.add(new LicenceResource(r));
 		}
     	return result;
 	}
 
-    final Resource r;
+    final Resource wrapped;
 
-	public LicenceResource(Resource r) {
-		this.r = r;
+	public LicenceResource(Resource toWrap) {
+		this.wrapped = toWrap;
 	}
 	
 	public String getURI() {
-		return r.getURI();
+		return wrapped.getURI();
 	}
 
 	public String getLabel() {
-		Statement label = r.getProperty(RDFS.label);
-		return label == null ? r.getLocalName() : label.getObject().toString();
+		Statement label = wrapped.getProperty(RDFS.label);
+		return label == null ? wrapped.getLocalName() : label.getObject().toString();
 	}
 	
 	public String getPicture() {
-		Statement picture = r.getProperty(FOAF.depiction);
+		Statement picture = wrapped.getProperty(FOAF.depiction);
 		return picture == null ? null : picture.getObject().toString();
 	}
 	
 	public String toString() {
-		
-		StringBuilder sb = new StringBuilder();
-		String depiction = getPicture();	
-					
-		if (depiction != null) 
-			sb.append("<img src=\"").append(depiction).append("\"></img>");
-		
-		sb
-			.append("<a href=\"")
-			.append(r.getURI())
-			.append("\">")
-			.append(getLabel())
-			.append("</a>")
-			.append("\n")
-			;
-		
-		return sb.toString();
+		return "{licence " + wrapped.toString() + "}";
 	}
 }
