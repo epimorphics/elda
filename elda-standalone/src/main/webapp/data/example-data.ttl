@@ -13,9 +13,9 @@
 
 # informal dataset for licence testing
 
-egc:dataset egc:gamesLicense <http://licences.epimorpics.com/pseudo-two> .
+egc:dataset egc:gamesLicense <http://localhost:8080/standalone/licences/licence-beta-text.text> .
 
-<http://licences.epimorpics.com/pseudo-two> a elda:license
+<http://localhost:8080/standalone/licences/licence-beta-text.text> a elda:license
     ; rdfs:label "per-page licence Beta"
     ; rdfs:comment """per-page licence Beta"""
     ; foaf:depiction <http://localhost:8080/standalone/velocity/images/licence-beta.png>

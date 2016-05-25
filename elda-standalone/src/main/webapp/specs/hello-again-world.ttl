@@ -43,7 +43,7 @@ hello:hello-world-again a api:API
 	; api:variable [api:name "_velocityPath"; api:value "velocity/"]
 	; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
     
-    ; elda:license <http://placeholder.epimorphics.com/licences/alpha.pdf>
+    ; elda:license <http://localhost:8080/standalone/licences/licence-alpha-text.text>
     ; elda:license "inDataset.gamesLicense"
     
 	; api:endpoint 
@@ -75,13 +75,13 @@ hello:hello-world-again a api:API
     
 # informal dataset for licence testing
    
-<http://placeholder.epimorphics.com/licences/alpha.pdf> a elda:license
+<http://localhost:8080/standalone/licences/licence-alpha-text.text> a elda:license
     ; rdfs:label "per-page licence Alpha"
-    ; rdfs:comment """per-page licence Alpha"""
+    ; rdfs:comment """per-page license Alpha"""
     ; foaf:depiction <http://localhost:8080/standalone/velocity/images/licence-alpha.png>
     .
     
-egc:dataset egc:license <http://placeholder.epimorphics.com/licences/alpha.pdf>
+egc:dataset egc:license <http://localhost:8080/standalone/licences/licence-alpha-text.text>
     .
 
 # Endpoint definitions
