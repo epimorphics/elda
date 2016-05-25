@@ -519,6 +519,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		basicGraphTriples.addAll(triples);
 	}
 
+	protected void addInverseFilter(Param param, String val) {
+		
+	}
+	
 	protected void addPropertyHasValue(Param param) {
 		addPropertyHasValue_REV(param);
 	}
@@ -541,7 +545,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 				v = varForChain(chainName);
 				varsForPropertyChains.put(chainName.toString(), v);
 				varInfo.put(v, inf);
-				basicGraphTriples.add(RDFQ.triple(var, inf.asURI, v));
+				basicGraphTriples.add(inf.tripleWith(var, v));					
+//				}
 			}
 			dot = ".";
 			var = v;
