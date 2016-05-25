@@ -189,6 +189,7 @@ public class TestGeneratedMetadata {
 			, views
 			, formats
 			, details
+			, new HashSet<Resource>() // no licences
 			);
 		return thisMetaPage;
 	}

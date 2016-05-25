@@ -99,7 +99,7 @@ spec:viewerLocation
 spec:HtmlFormatter a api:XsltFormatter 
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "lda-assets/xslt/school.xsl" # result-osm-trimmed.xsl"
+	; api:stylesheet "xslt/school.xsl" # result-osm-trimmed.xsl"
 	.
 
 ############################################################################################
@@ -131,6 +131,10 @@ spec:mini-education-api a api:API
 		spec:school
 		, spec:schools 
 		, spec:schoolsPrimary
+
+    ; api:variable [api:name "_velocityPath"; api:value "velocity/"]
+    ; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
+    
 	#
 	# Elda magic follows
 	#

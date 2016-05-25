@@ -9,6 +9,7 @@
 @prefix api:                <http://purl.org/linked-data/api/vocab#> .
 @prefix dct:				<http://purl.org/dc/terms/> .
 
+@prefix egc:                <http://epimorphics.com/public/vocabulary/games/> .
 @prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:                <http://www.w3.org/2001/XMLSchema#> .
@@ -18,10 +19,14 @@
 
 # Prefix for example-local entities.
 @prefix hello:				<http://epimorphics.com/public/vocabulary/games/>.
+@prefix foaf:               <http://xmlns.com/foaf/0.1/>.
 
 # ---------------------------------------------------------------------
 # API config
 
+# example authorisation for SPARQL host if expected
+#
+ 
 <http://localhost:3030/ds/query>
     elda:authKey "grimdark"
     ; elda:authFile "taods-and-robins"
@@ -35,9 +40,12 @@ hello:hello-world-again a api:API
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:viewer [a api:Viewer; api:name "empty"; api:properties ""]
 
-	; api:variable [api:name "_velocityPath"; api:value "lda-assets/velocity/"]
-	; api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"]
-
+	; api:variable [api:name "_velocityPath"; api:value "velocity/"]
+	; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
+    
+    ; elda:license <http://localhost:8080/standalone/licences/licence-alpha-text.text>
+    ; elda:license "inDataset.gamesLicense"
+    
 	; api:endpoint 
 		hello:publishers, hello:games, hello:about
 		, hello:catch # development debugging
@@ -65,6 +73,17 @@ hello:hello-world-again a api:API
     elda:textSearchOperand (rdfs:label "?_search" 99)
     .
     
+# informal dataset for licence testing
+   
+<http://localhost:8080/standalone/licences/licence-alpha-text.text> a elda:license
+    ; rdfs:label "per-page licence Alpha"
+    ; rdfs:comment """per-page license Alpha"""
+    ; foaf:depiction <http://localhost:8080/standalone/velocity/images/licence-alpha.png>
+    .
+    
+egc:dataset egc:license <http://localhost:8080/standalone/licences/licence-alpha-text.text>
+    .
+
 # Endpoint definitions
 
 hello:publishers a api:ListEndpoint 
@@ -121,6 +140,14 @@ hello:players elda:cacheExpiryTime "10s".
 # class and property declarations, setting shortnames and
 # property ranges.
 #
+
+egc:gamesDataset
+    api:label "inDataset"
+    .
+    
+egc:gamesLicense
+    api:label "gamesLicense"
+    .
 
 hello:BoardGame a rdfs:Class
 	; rdfs:label "Board Game"

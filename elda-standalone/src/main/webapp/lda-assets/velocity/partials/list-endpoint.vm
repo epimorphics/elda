@@ -1,5 +1,0 @@
-## Display the items in a list endpoint
-#groupVisualExtensions( $hierarchy )
-#foreach( $item in $hierarchy.roots() )
-  #eldaItem( $item )
-#end

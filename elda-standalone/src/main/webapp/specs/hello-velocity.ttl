@@ -34,8 +34,7 @@ egc:velocity-world a api:API
     ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
     ; api:mimeType "text/html"
     ]
-#  ; api:variable [api:name "_velocityPath"; api:value "/var/www/elda/elda-assets-velocity"]
-  ; api:variable [api:name "_velocityPath"; api:value "assets/velocity"]
+  ; api:variable [api:name "_velocityPath"; api:value "velocity/"]
   .
 
 # Endpoint definition

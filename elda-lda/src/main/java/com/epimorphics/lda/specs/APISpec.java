@@ -51,7 +51,7 @@ import com.hp.hpl.jena.util.iterator.Map1;
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
-public class APISpec {
+public class APISpec extends SpecCommon {
 
     static Logger log = LoggerFactory.getLogger(APISpec.class);
     
@@ -101,6 +101,7 @@ public class APISpec {
     }
     
     public APISpec( String prefixPath, String appName, FileManager fm, Resource root, ModelLoader loader ) {
+    	super(root);
     	AuthMap am = loadAuthMap(root, appName);
     	reportObsoleteDescribeThreshold(root);
     	this.purging = RDFUtils.getBooleanValue(root, ELDA_API.purgeFilterValues, false);

@@ -110,6 +110,12 @@ public class ELDA_API  extends API {
      */
     public static final Property jsonUsesISOdate = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#jsonUsesISOdate" );
     
+    /** <p>Configuration property to set a URL for a licence for the response page or 
+     *  a way of extracting licence URLs from the SPARQL endpoint. There can be many 
+     *  such licences.</p>
+     */
+    public static final Property license = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#license" );
+    
     /** <p></p> */
     public static final Property listURL = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#listURL" );
     
