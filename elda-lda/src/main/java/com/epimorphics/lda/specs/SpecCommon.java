@@ -29,17 +29,10 @@ public class SpecCommon {
 	}
 	
 	public Set<Resource> getDeprecations() {
-		
-//		System.err.println(">> getReprecations: root is " + root);
-//		root.getModel().write(System.err, "TTL");
-		
-		
 		Set<Resource> result = new HashSet<Resource>();
 		for (RDFNode x: root.listProperties(ELDA_API.deprecated).mapWith(Statement.Util.getObject).toList()) {
 			result.add(x.asResource());
 		}
-
-//		System.err.println(">> getDeprecations called, returning " + result);
 		return result;		
 	}
 }

@@ -106,7 +106,9 @@ public class EndpointMetadata {
     			thisMetaPage.addProperty(DCTerms.license, l);
 	    	}
 	    	
-	    	for (Resource d: spec.getDeprecations()) {
+	    	Set<Resource> deprecations = spec.getDeprecations();
+	    	deprecations.addAll(spec.getAPISpec().getDeprecations());
+			for (Resource d: deprecations) {
 	    		thisMetaPage.addProperty(ELDA_API.deprecated, d);
 	    		thisMetaPage.getModel().add(ResourceUtils.reachableClosure(d));
 	    	}
