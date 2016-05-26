@@ -239,7 +239,8 @@ public class APIEndpointImpl implements APIEndpoint {
     //     
         Resource uriForDefinition = metaModel.createResource( createDefinitionURI( uriForList, uriForSpec, template, bindings.expandVariables( template ) ) ); 
         EndpointMetadata.addAllMetadata
-        	( mergedModels
+        	( spec
+        	, mergedModels
         	, uriForList
         	, uriForDefinition
         	, bindings

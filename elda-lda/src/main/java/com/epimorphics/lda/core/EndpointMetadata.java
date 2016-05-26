@@ -16,6 +16,7 @@ import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.*;
@@ -23,6 +24,7 @@ import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.graph.compose.MultiUnion;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.util.ResourceUtils;
 import com.hp.hpl.jena.vocabulary.*;
 
 /**
@@ -53,7 +55,8 @@ public class EndpointMetadata {
 	}
 	
 	public static void addAllMetadata
-		( MergedModels mergedModels
+		( APIEndpointSpec spec
+		, MergedModels mergedModels
 		, URI uriForList
 		, Resource uriForDefinition
 		, Bindings bindings
@@ -103,13 +106,10 @@ public class EndpointMetadata {
     			thisMetaPage.addProperty(DCTerms.license, l);
 	    	}
 	    	
-//	    	for (String name: bindings.allNames()) {
-//	    		if (name.startsWith("_license")) {
-//	    			String value = bindings.getAsString(name, "");
-//	    			Resource l = thisMetaPage.getModel().createResource(value);
-//	    			thisMetaPage.addProperty(DCTerms.license, l);
-//	    		}
-//	    	}
+	    	for (Resource d: spec.getDeprecations()) {
+	    		thisMetaPage.addProperty(ELDA_API.deprecated, d);
+	    		thisMetaPage.getModel().add(ResourceUtils.reachableClosure(d));
+	    	}
 	    	
 	    	thisMetaPage.addProperty( API.items, content );
 	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, 0 );

@@ -25,12 +25,13 @@ import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
-import com.epimorphics.lda.specs.EndpointDetails;
+import com.epimorphics.lda.specs.*;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
@@ -124,6 +125,22 @@ public class TestGeneratedMetadata {
 		}
 	}
 
+	static final ModelLoader loader = new ModelLoader() {
+
+		@Override public Model loadModel(String uri) {
+			return null;
+		}
+		
+	};
+	
+	final Model config = ModelFactory.createDefaultModel();
+
+	final Resource root = config.createResource("eh:/the-spec");
+
+	final Resource sparql = config.createResource("eh:/sparqlEndpoint");
+	
+	final Resource theEndpoint = config.createResource("eh:/the-endpoint");
+	
 	private Resource createMetadata(final boolean isListEndpoint, Integer totalResults) throws URISyntaxException {
 		Model objectModel = ModelFactory.createDefaultModel();
 		MergedModels mergedModels = new MergedModels(objectModel);
@@ -168,8 +185,19 @@ public class TestGeneratedMetadata {
 			}
 		};
 	//
+		config.add(root, RDF.type, API.API);
+		config.add(root, API.sparqlEndpoint, sparql);
+		config.add(root, API.endpoint, theEndpoint);
+		
+		config.add(theEndpoint, RDF.type, API.ListEndpoint);
+		config.add(theEndpoint, API.uriTemplate, "/an/endpoint");
+		
+		APISpec aspec = new APISpec(FileManager.get(), root, loader);
+		APIEndpointSpec espec = aspec.getEndpoints().get(0);
+	//
 		EndpointMetadata.addAllMetadata
-			( mergedModels
+			( espec
+			, mergedModels
 			, ru
 			, uriForDefinition
 			, bindings

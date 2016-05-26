@@ -55,6 +55,11 @@ elda:construct a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:deprecated a rdf:Property
+    ; rdfs:lavel "deprecated"
+    ; rdfs:comment """Declares the page it is a property of to be deprecated."""
+    .
+
 elda:describeAllLabel a rdf:Property
 	; rdfs:comment ""
 	.
