@@ -632,7 +632,14 @@ If no `velocityTemplate` property is defined, Elda uses
     returns no item (because the requested item has none of the required
     properties) Elda will generate a 404 response rather than displaying
     an empty item endpoint page. If the variable \_exceptionIfEmpty does
-    not have the value "`yes`", then the empty page is displayed.
+    not have the (default) value "`yes`", then a Not Found result is 
+    returned according to \_passOnIfEmpty.
+
+-   \_passOnIfEmpty: when a Not Found result is returned, if this
+    variable has the value "`yes`" then the Not Found is passed on 
+    to the servlet container where the request may be handed on
+    to different handlers. Otherwise an immediate 404 status response
+    is generated.
 
 Wildcard '\*' in view property chains {#wildcard-properties}
 -------------------------------------
