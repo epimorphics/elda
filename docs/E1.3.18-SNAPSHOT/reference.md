@@ -619,6 +619,7 @@ If no `velocityTemplate` property is defined, Elda uses
     "yes", the meta-data (and hence the complete rendered model) for an
     item endpoint will include an `isPrimaryTopicOf` property of the
     selected item with value the currently displayed URI.
+
 -   \_suppress\_media\_type: If there is no .formatter suffix in the
     request URL, and no \_format= query parameter, then the prescribed
     LDA behaviour is to see if the request headers specify an
@@ -626,6 +627,7 @@ If no `velocityTemplate` property is defined, Elda uses
     almost always will (with \*/\*), which is inconvenient when testing
     for the default default behaviour of sending JSON. Setting this
     variable to "yes" will cause Elda to ignore the supplied media type.
+
 -   \_exceptionIfEmpty: by default, if a query for an item template
     returns no item (because the requested item has none of the required
     properties) Elda will generate a 404 response rather than displaying

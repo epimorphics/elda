@@ -10,7 +10,9 @@ has be modified to display the licences and their labels and
 images if present. See the `reference` section of the documentation
 for details.
 
- 
+The test for whether an empty result set results in a Not Found
+rather than an empty list has been modified to apply to list endpoints
+as well as item endpoints.
 
 + ---------------------------------------------------------------------
 | Elda 1.3.17 (RELEASED)
