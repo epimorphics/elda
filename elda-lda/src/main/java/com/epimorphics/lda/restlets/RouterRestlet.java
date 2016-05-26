@@ -411,19 +411,22 @@ import com.sun.jersey.api.NotFoundException;
         	NoteBoard nb = new NoteBoard();
         	ResponseResult resultsAndBindings = APIEndpointUtil.call( req, nb, match, contextPath, queryParams );
         //	
-        	boolean notFoundIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
         //
-        	if (notFoundIfEmpty && resultsAndBindings.resultSet.isEmpty()) {
-        		log.debug(ELog.message("resultSet is empty, returning status 404."));   
-        		boolean passOnIfMissing = b.getAsString( "_passOnIfEmpty", "no" ).equals( "yes" );
-				if (passOnIfMissing) throw new NotFoundException();
-				return Response.status( Status.NOT_FOUND )
-					.type( "text/plain" )
-					.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" )
-					.header( VARY, "Accept" )
-					.entity( "404 Resource Not Found\n\n" + ru + "\n")
-					.build()
-					;
+        	if (resultsAndBindings.resultSet.isEmpty()) {
+        		boolean return404IfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
+        		boolean throwToContainer = b.getAsString( "_passOnIfEmpty", "no" ).equals( "yes" );
+
+        		if (return404IfEmpty) {
+        			log.debug(ELog.message("resultSet is empty, returning status 404."));   
+        			if (throwToContainer) throw new NotFoundException();
+        			return Response.status( Status.NOT_FOUND )
+        					.type( "text/plain" )
+        					.header( ACCESS_CONTROL_ALLOW_ORIGIN, "*" )
+        					.header( VARY, "Accept" )
+        					.entity( "404 Resource Not Found\n\n" + ru + "\n")
+        					.build()
+        					;
+        		}
 			}       	
         //
         	Map<String, String> termBindings = mpe.rename( resultsAndBindings.uriToShortnameMap );
