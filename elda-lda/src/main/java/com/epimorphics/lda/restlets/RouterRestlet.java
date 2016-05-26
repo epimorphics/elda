@@ -413,7 +413,7 @@ import com.sun.jersey.api.NotFoundException;
         //	
         	boolean notFoundIfEmpty = b.getAsString( "_exceptionIfEmpty", "yes" ).equals( "yes" );
         //
-        	if (ep.getSpec().isItemEndpoint() && notFoundIfEmpty && resultsAndBindings.resultSet.isEmpty()) {
+        	if (notFoundIfEmpty && resultsAndBindings.resultSet.isEmpty()) {
         		log.debug(ELog.message("resultSet is empty, returning status 404."));   
         		boolean passOnIfMissing = b.getAsString( "_passOnIfEmpty", "no" ).equals( "yes" );
 				if (passOnIfMissing) throw new NotFoundException();
