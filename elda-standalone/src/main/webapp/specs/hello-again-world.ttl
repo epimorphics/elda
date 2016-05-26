@@ -46,7 +46,7 @@ hello:hello-world-again a api:API
     ; elda:license <http://localhost:8080/standalone/licences/licence-alpha-text.text>
     ; elda:license "inDataset.gamesLicense"
     
-    # ; elda:deprecated <eh:/this.is.deprecated-A>
+    ; elda:deprecated <http:/this.is/deprecated-A>
     
 	; api:endpoint 
 		hello:publishers, hello:games, hello:about
