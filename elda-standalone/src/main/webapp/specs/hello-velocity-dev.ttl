@@ -22,7 +22,7 @@
 # ---------------------------------------------------------------------
 # API config
 
-egc:velocity-world a api:API
+egc:velocity-world-dev a api:API
   ; rdfs:label "Hello World example API -- games, rendered with Velocity"@en
   ; api:sparqlEndpoint <local:data/example-data.ttl>
   # ; api:defaultViewer api:labelledDescribeViewer
@@ -34,8 +34,8 @@ egc:velocity-world a api:API
     ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
     ; api:mimeType "text/html"
     ]
-  ; api:variable [api:name "_velocityPath"; api:value "/etc/alternatives/elda-velocity"]
-  ; api:variable [api:name "_velocityRoot"; api:value "lda-assets/velocity"]
+	; api:variable [api:name "_velocityPath"; api:value "velocity/"]
+	; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
   .
 
 # Endpoint definition
