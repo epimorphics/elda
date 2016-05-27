@@ -104,6 +104,7 @@ public class EndpointMetadata {
 	    	for (Resource licence: licences) {
     			Resource l = licence.inModel(thisMetaPage.getModel());
     			thisMetaPage.addProperty(DCTerms.license, l);
+    			thisMetaPage.getModel().add(ResourceUtils.reachableClosure(l));
 	    	}
 	    	
 	    	Set<Resource> deprecations = spec.getDeprecations();
