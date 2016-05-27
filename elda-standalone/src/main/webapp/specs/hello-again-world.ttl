@@ -46,7 +46,9 @@ hello:hello-world-again a api:API
     ; elda:license <http://localhost:8080/standalone/licences/licence-alpha-text.text>
     ; elda:license "inDataset.gamesLicense"
     
-    ; elda:deprecated <http:/this.is/deprecated-A>
+    # uncomment to have an api-wide deprecation notice (or just
+    # plain notice)
+    # ; elda:deprecated <http:/this.is/deprecated-A>
     
 	; api:endpoint 
 		hello:publishers, hello:games, hello:about
@@ -101,10 +103,12 @@ hello:games a api:ListEndpoint
     ; api:selector [api:filter "type=BoardGame"; api:sort "label"]
     ; api:defaultViewer api:labelledDescribeViewer
     ; elda:enableCounting false
-    # ; elda:deprecated <eh:/this.is.deprecated-B>
+    ; elda:deprecated <eh:/this.is.deprecated-B>
     .
     
-<eh:/this.is.deprecated-B> rdfs:label "this is deprecated (policy B)"
+<eh:/this.is.deprecated-B> a elda:Notice
+    ; rdfs:label "this is deprecated (policy B)"
+    ; elda:startDate "2016-06-01"^^xsd:date
     .
 
 # for URI debugging purposes during development
