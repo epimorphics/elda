@@ -53,7 +53,7 @@ public class ELDA_API  extends API {
     public static final Property construct = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#construct" );
     
     /** <p>Declares the page it is a property of to be deprecated.</p> */
-    public static final Property deprecated = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#deprecated" );
+    public static final Property notice = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#notice" );
     
     /** <p></p> */
     public static final Property describeAllLabel = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#describeAllLabel" );

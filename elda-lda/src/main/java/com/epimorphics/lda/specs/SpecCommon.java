@@ -30,7 +30,7 @@ public class SpecCommon {
 	
 	public Set<Resource> getDeprecations() {
 		Set<Resource> result = new HashSet<Resource>();
-		for (RDFNode x: root.listProperties(ELDA_API.deprecated).mapWith(Statement.Util.getObject).toList()) {
+		for (RDFNode x: root.listProperties(ELDA_API.notice).mapWith(Statement.Util.getObject).toList()) {
 			result.add(x.asResource());
 		}
 		return result;		

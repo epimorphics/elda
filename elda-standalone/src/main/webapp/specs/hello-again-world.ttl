@@ -48,7 +48,7 @@ hello:hello-world-again a api:API
     
     # uncomment to have an api-wide deprecation notice (or just
     # plain notice)
-    # ; elda:deprecated <http:/this.is/deprecated-A>
+    # ; elda:notice <http:/this.is/deprecated-A>
     
 	; api:endpoint 
 		hello:publishers, hello:games, hello:about
@@ -103,7 +103,7 @@ hello:games a api:ListEndpoint
     ; api:selector [api:filter "type=BoardGame"; api:sort "label"]
     ; api:defaultViewer api:labelledDescribeViewer
     ; elda:enableCounting false
-    ; elda:deprecated <eh:/this.is.deprecated-B>
+    ; elda:notice <eh:/this.is.deprecated-B>
     .
     
 <eh:/this.is.deprecated-B> a elda:Notice
