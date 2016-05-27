@@ -659,13 +659,14 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		}
 	}
 
-	protected void unpackSortByOrderSpecs() {
+	protected void unpackSortByOrderSpecs(Bindings b) {
 		if (sortByOrderSpecsFrozen)
 			EldaException.Broken("Elda attempted to unpack the sort order after generating the select query.");
-		if (sortByOrderSpecs.length() > 0) {
+		String expandedOrderSpecs = b.expandVariables(sortByOrderSpecs);
+		if (expandedOrderSpecs.length() > 0) {
 			orderExpressions.setLength(0);
 			Bool mightBeUnbound = new Bool(false);
-			for (String spec : sortByOrderSpecs.split(",")) {
+			for (String spec : expandedOrderSpecs.split(",")) {
 				if (spec.length() > 0) {
 					boolean descending = spec.startsWith("-");
 					if (descending)
@@ -740,7 +741,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	public String assembleRawSelectQuery(PrefixLogger pl, Bindings b) {
 		if (!sortByOrderSpecsFrozen)
-			unpackSortByOrderSpecs();
+			unpackSortByOrderSpecs(b);
 		if (fixedSelect == null) {
 			StringBuilder q = new StringBuilder();
 			q.append("SELECT ");
@@ -1028,7 +1029,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	public String assembleRawCountQuery(PrefixLogger pl, Bindings b) {
 		if (!sortByOrderSpecsFrozen)
-			unpackSortByOrderSpecs();
+			unpackSortByOrderSpecs(b);
 		String distinct = (orderExpressions.length() > 0 ? "DISTINCT " : "");
 		//
 		StringBuilder q = new StringBuilder();
