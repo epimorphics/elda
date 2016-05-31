@@ -679,8 +679,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 					}
 				}
 			}
-			if (true)
-				orderExpressions.append(" ?item");
+			orderExpressions.append(" ?item");
 		}
 		sortByOrderSpecsFrozen = true;
 	}
