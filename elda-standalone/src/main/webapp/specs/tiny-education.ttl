@@ -55,6 +55,9 @@ spec:tiny-education-api a api:API
 	; api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"]
 	# paths which are rewritten away from education.data.gov.uk
 	; api:variable [api:name "_stagePattern"; api:value "^/doc/school$"]
+	
+    ; api:variable [api:name "_velocityPath"; api:value "velocity/"]
+    ; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
 	.
     
 # Endpoint definitions: just the one, list all schools
@@ -112,7 +115,7 @@ spec:viewerLocation
 spec:HtmlFormatter a api:XsltFormatter 
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "lda-assets/xslt/result-osm.xsl"
+	; api:stylesheet "xslt/result-osm.xsl"
 	.
 
 ############################################################################

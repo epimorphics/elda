@@ -89,14 +89,14 @@ spec:HtmlFormatter
   a api:XsltFormatter ;
   api:name "html" ;
   api:mimeType "text/html; charset=utf-8" ;
-  api:stylesheet "lda-assets/xslt/result-osm.xsl"
+  api:stylesheet "xslt/result-osm.xsl"
   .
 
 spec:CsvFormatter
   a api:XsltFormatter ;
   api:name "csv" ;
   api:mimeType "text/csv; charset=utf-8" ;
-  api:stylesheet "lda-assets/xslt/school-csv.xsl" .
+  api:stylesheet "xslt/school-csv.xsl" .
 
 ############################################################################################
 #
@@ -107,10 +107,12 @@ spec:CsvFormatter
 spec:full-education-api a api:API ;
   api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query> ;
   api:variable [api:name "visibleSparqlForm"; api:value "http://education.data.gov.uk/sparql/education/query.html"];
-  api:variable [api:name "_suppress_ipto"; api:value "yes"];
-    api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"];
-    #api:variable [api:name "_velocityPath"; api:value "lda-assets/vm/"];
-    api:variable [api:name "_velocityPath"; api:value "assets/velocity"];
+  api:variable [api:name "_suppress_ipto"; api:value "yes"]
+
+    ; api:variable [api:name "_velocityPath"; api:value "velocity/"]
+    ; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
+    
+  ;
   api:lang "en,none";
   elda:enableETags true ;
   rdfs:label "Edubase Full API"@en;

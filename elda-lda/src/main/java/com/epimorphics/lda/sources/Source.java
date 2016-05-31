@@ -17,8 +17,6 @@
 
 package com.epimorphics.lda.sources;
 
-import java.util.List;
-
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.hp.hpl.jena.query.*;
 import com.hp.hpl.jena.rdf.model.Model;

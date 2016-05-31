@@ -145,6 +145,15 @@ elda:ifStarts a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:license a rdf:Property
+    ; rdfs:comment 
+        """ 
+        Configuration property to set a URL for a licence for the response page
+        or a way of extracting licence URLs from the SPARQL endpoint. There
+        can be many such licences.
+        """
+    .
+
 elda:listURL a rdf:Property
 	; rdfs:comment ""
 	.
@@ -164,6 +173,11 @@ elda:metadataOptions a rdf:Property
 elda:metaURL a rdf:Property
 	; rdfs:comment ""
 	.
+
+elda:notice a rdf:Property
+    ; rdfs:label "notice"
+    ; rdfs:comment """Attatches a notice (eg deprecation) to a generated page."""
+    .
 
 elda:purgeFilterValues a rdf:Property
 	; rdfs:label "purge filter values"

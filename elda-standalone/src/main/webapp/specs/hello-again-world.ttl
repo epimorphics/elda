@@ -9,6 +9,7 @@
 @prefix api:                <http://purl.org/linked-data/api/vocab#> .
 @prefix dct:				<http://purl.org/dc/terms/> .
 
+@prefix egc:                <http://epimorphics.com/public/vocabulary/games/> .
 @prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:                <http://www.w3.org/2001/XMLSchema#> .
@@ -19,27 +20,41 @@
 # Prefix for example-local entities.
 @prefix hello:				<http://epimorphics.com/public/vocabulary/games/>.
 
+@prefix again:              <http://epimorphics.com/public/vocabulary/again/>.
+
+@prefix foaf:               <http://xmlns.com/foaf/0.1/>.
+
 # ---------------------------------------------------------------------
 # API config
 
-# <http://localhost:8080/ds/query>
-#    elda:authKey "grimdark"
-#    ; elda:authFile "taods-and-robins"
-#    .
+# example authorisation for SPARQL host if expected
+#
+ 
+<http://localhost:3030/ds/query>
+    elda:authKey "grimdark"
+    ; elda:authFile "taods-and-robins"
+    .
     
 hello:hello-world-again a api:API 
 	; rdfs:label "Hello World example #2 -- games"@en
 	# Name the SPARQL endpoint which supplies the data we present
 	; api:sparqlEndpoint <local:data/example-data.ttl>
-	# ; api:sparqlEndpoint <http://localhost:3030/ds/query>; api:sparqlEndpoint <local:data/example-data.ttl>
+	# ; api:sparqlEndpoint <http://localhost:3030/ds/query>
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:viewer [a api:Viewer; api:name "empty"; api:properties ""]
 
-	; api:variable [api:name "_velocityPath"; api:value "lda-assets/velocity/"]
-	; api:variable [api:name "_resourceRoot"; api:value "/standalone/lda-assets/"]
-
+	; api:variable [api:name "_velocityPath"; api:value "velocity/"]
+	; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
+    
+    ; elda:license <http://localhost:8080/standalone/licences/licence-alpha-text.text>
+    ; elda:license "inDataset.gamesLicense"
+    
+    # uncomment to have an api-wide deprecation notice (or just
+    # plain notice)
+    # ; elda:notice <http:/this.is/deprecated-A>
+    
 	; api:endpoint 
-		hello:publishers, hello:games, hello:about
+		hello:publishers, again:games, hello:about
 		, hello:catch # development debugging
 
     ; api:formatter
@@ -78,6 +93,17 @@ hello:hello-world-again a api:API
     elda:textSearchOperand (rdfs:label "?_search" 99)
     .
     
+# informal dataset for licence testing
+   
+<http://localhost:8080/standalone/licences/licence-alpha-text.text> a elda:license
+    ; rdfs:label "per-page licence Alpha"
+    ; rdfs:comment """per-page license Alpha"""
+    ; foaf:depiction <http://localhost:8080/standalone/velocity/images/licence-alpha.png>
+    .
+    
+egc:dataset egc:license <http://localhost:8080/standalone/licences/licence-alpha-text.text>
+    .
+
 # Endpoint definitions
 
 hello:publishers a api:ListEndpoint 
@@ -87,14 +113,20 @@ hello:publishers a api:ListEndpoint
 	; api:defaultViewer api:labelledDescribeViewer
 	.	
     
-hello:games a api:ListEndpoint 
+again:games a api:ListEndpoint 
     ; rdfs:label "Games" 
     ; api:uriTemplate "/games" 
     ; api:selector [api:filter "type=BoardGame"; api:sort "label"]
     ; api:defaultViewer api:labelledDescribeViewer
     ; elda:enableCounting false
+    ; elda:notice <eh:/this.is.deprecated-B>
     .
-	
+    
+<eh:/this.is.deprecated-B> a elda:Notice
+    ; rdfs:label "this is deprecated (policy again:B)"
+    ; elda:startDate "2016-06-01"^^xsd:date
+    .
+
 # for URI debugging purposes during development
 
 hello:catch a api:ListEndpoint 
@@ -134,6 +166,14 @@ hello:players elda:cacheExpiryTime "10s".
 # class and property declarations, setting shortnames and
 # property ranges.
 #
+
+egc:gamesDataset
+    api:label "inDataset"
+    .
+    
+egc:gamesLicense
+    api:label "gamesLicense"
+    .
 
 hello:BoardGame a rdfs:Class
 	; rdfs:label "Board Game"

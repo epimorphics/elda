@@ -34,6 +34,7 @@ hello:hello-world a api:API
         ; api:mimeType "application/atom+xml"
         ]
 	; api:endpoint hello:games 
+    ; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
 	.
 	
 # Endpoint definition	
@@ -42,7 +43,14 @@ hello:games a api:ListEndpoint
 	; rdfs:label "Games" 
 	; api:uriTemplate "/games" 
 	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
+    ; elda:notice <eh:/this.is.deprecated-B>
 	.	
+	
+<eh:/this.is.deprecated-B> a elda:Notice
+    ; rdfs:label "this is deprecated (policy hello:B)"
+    ; elda:startDate "2016-06-01"^^xsd:date
+    .
+	
 #
 # This XSLT formatter produces rich HTML from the viewer properties.
 #
@@ -50,7 +58,7 @@ hello:games a api:ListEndpoint
 hello:HtmlFormatter a api:XsltFormatter 
 	; api:name "html" 
 	; api:mimeType "text/html; charset=utf-8" 
-	; api:stylesheet "lda-assets/xslt/result-osm-trimmed.xsl"
+	; api:stylesheet "xslt/result-osm-trimmed.xsl"
 	# ; elda:shortnameMode elda:roundTrip
 	.
 

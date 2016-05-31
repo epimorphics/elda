@@ -16,6 +16,7 @@ import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.*;
@@ -23,6 +24,7 @@ import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.graph.compose.MultiUnion;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.util.ResourceUtils;
 import com.hp.hpl.jena.vocabulary.*;
 
 /**
@@ -53,7 +55,8 @@ public class EndpointMetadata {
 	}
 	
 	public static void addAllMetadata
-		( MergedModels mergedModels
+		( APIEndpointSpec spec
+		, MergedModels mergedModels
 		, URI uriForList
 		, Resource uriForDefinition
 		, Bindings bindings
@@ -73,6 +76,7 @@ public class EndpointMetadata {
 		, Map<String, View> views
 		, Set<FormatNameAndType> formats
 		, EndpointDetails details
+		, Set<Resource> licences
 		) {
 	//
 		boolean listEndpoint = details.isListEndpoint();
@@ -84,8 +88,20 @@ public class EndpointMetadata {
 	//
 	    thisMetaPage.addProperty( RDF.type, API.Page );
 	//
-		if (listEndpoint) {
-	    	
+	    for (Resource licence: licences) {
+	    	Resource l = licence.inModel(thisMetaPage.getModel());
+	    	thisMetaPage.addProperty(DCTerms.license, l);
+	    	thisMetaPage.getModel().add(ResourceUtils.reachableClosure(l));
+	    }
+	//
+	    Set<Resource> notices = spec.getNotices();
+	    notices.addAll(spec.getAPISpec().getNotices());
+	    for (Resource d: notices) {
+	    	thisMetaPage.addProperty(ELDA_API.notice, d);
+	    	thisMetaPage.getModel().add(ResourceUtils.reachableClosure(d));
+	    }
+	//
+		if (listEndpoint) {  	
 	    	RDFList content = metaModel.createList( resultList.iterator() );
 	    	
 	    	thisMetaPage

@@ -34,6 +34,7 @@ import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.util.CountStream;
 import com.epimorphics.util.StreamUtils;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.*;
 
 /**
@@ -47,7 +48,7 @@ public class VelocityRendering
 implements BytesOut
 {
 
-    /***********************************/
+	/***********************************/
     /* Constants                       */
     /***********************************/
 	
@@ -161,6 +162,8 @@ implements BytesOut
     protected void render( OutputStream os ) {
         VelocityEngine ve = createVelocityEngine();
         VelocityContext vc = createVelocityContext( this.bindings );
+        vc.put("_licenses", LicenceResource.revise(results.getLicences()));
+        
         Template t = null;
 
         try {
@@ -185,7 +188,7 @@ implements BytesOut
         }
     }
 
-    /**
+	/**
      * Create a Velocity engine instance, and initialise it with properties
      * loaded from the <code>velocity.properties</code> file.
      * @return A new Velocity engine
@@ -416,4 +419,5 @@ implements BytesOut
 	@Override public String getPoison() {
 		return HTML_POISON;
 	}
+
 }
