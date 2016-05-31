@@ -19,6 +19,9 @@
 
 # Prefix for example-local entities.
 @prefix hello:				<http://epimorphics.com/public/vocabulary/games/>.
+
+@prefix again:              <http://epimorphics.com/public/vocabulary/again/>.
+
 @prefix foaf:               <http://xmlns.com/foaf/0.1/>.
 
 # ---------------------------------------------------------------------
@@ -51,7 +54,7 @@ hello:hello-world-again a api:API
     # ; elda:notice <http:/this.is/deprecated-A>
     
 	; api:endpoint 
-		hello:publishers, hello:games, hello:about
+		hello:publishers, again:games, hello:about
 		, hello:catch # development debugging
 
     ; api:formatter
@@ -97,7 +100,7 @@ hello:publishers a api:ListEndpoint
 	; api:defaultViewer api:labelledDescribeViewer
 	.	
     
-hello:games a api:ListEndpoint 
+again:games a api:ListEndpoint 
     ; rdfs:label "Games" 
     ; api:uriTemplate "/games" 
     ; api:selector [api:filter "type=BoardGame"; api:sort "label"]
@@ -107,7 +110,7 @@ hello:games a api:ListEndpoint
     .
     
 <eh:/this.is.deprecated-B> a elda:Notice
-    ; rdfs:label "this is deprecated (policy B)"
+    ; rdfs:label "this is deprecated (policy again:B)"
     ; elda:startDate "2016-06-01"^^xsd:date
     .
 

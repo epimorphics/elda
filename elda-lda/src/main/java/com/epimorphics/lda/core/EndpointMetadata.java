@@ -88,8 +88,20 @@ public class EndpointMetadata {
 	//
 	    thisMetaPage.addProperty( RDF.type, API.Page );
 	//
-		if (listEndpoint) {
-	    	
+	    for (Resource licence: licences) {
+	    	Resource l = licence.inModel(thisMetaPage.getModel());
+	    	thisMetaPage.addProperty(DCTerms.license, l);
+	    	thisMetaPage.getModel().add(ResourceUtils.reachableClosure(l));
+	    }
+	//
+	    Set<Resource> notices = spec.getNotices();
+	    notices.addAll(spec.getAPISpec().getNotices());
+	    for (Resource d: notices) {
+	    	thisMetaPage.addProperty(ELDA_API.notice, d);
+	    	thisMetaPage.getModel().add(ResourceUtils.reachableClosure(d));
+	    }
+	//
+		if (listEndpoint) {  	
 	    	RDFList content = metaModel.createList( resultList.iterator() );
 	    	
 	    	thisMetaPage
@@ -100,19 +112,6 @@ public class EndpointMetadata {
 
 	    	if (totalResults != null)     		
 	    		thisMetaPage.addLiteral( OpenSearch.totalResults, totalResults.intValue() );
-	    	
-	    	for (Resource licence: licences) {
-    			Resource l = licence.inModel(thisMetaPage.getModel());
-    			thisMetaPage.addProperty(DCTerms.license, l);
-    			thisMetaPage.getModel().add(ResourceUtils.reachableClosure(l));
-	    	}
-	    	
-	    	Set<Resource> notices = spec.getNotices();
-	    	notices.addAll(spec.getAPISpec().getNotices());
-			for (Resource d: notices) {
-	    		thisMetaPage.addProperty(ELDA_API.notice, d);
-	    		thisMetaPage.getModel().add(ResourceUtils.reachableClosure(d));
-	    	}
 	    	
 	    	thisMetaPage.addProperty( API.items, content );
 	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, 0 );

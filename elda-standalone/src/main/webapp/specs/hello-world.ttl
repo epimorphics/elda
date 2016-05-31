@@ -43,7 +43,14 @@ hello:games a api:ListEndpoint
 	; rdfs:label "Games" 
 	; api:uriTemplate "/games" 
 	; api:selector [api:filter "type=BoardGame"; api:sort "label"]
+    ; elda:notice <eh:/this.is.deprecated-B>
 	.	
+	
+<eh:/this.is.deprecated-B> a elda:Notice
+    ; rdfs:label "this is deprecated (policy hello:B)"
+    ; elda:startDate "2016-06-01"^^xsd:date
+    .
+	
 #
 # This XSLT formatter produces rich HTML from the viewer properties.
 #
