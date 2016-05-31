@@ -28,7 +28,7 @@ public class SpecCommon {
 		return new HashSet<RDFNode>(licences);
 	}
 	
-	public Set<Resource> getDeprecations() {
+	public Set<Resource> getNotices() {
 		Set<Resource> result = new HashSet<Resource>();
 		for (RDFNode x: root.listProperties(ELDA_API.notice).mapWith(Statement.Util.getObject).toList()) {
 			result.add(x.asResource());

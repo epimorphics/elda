@@ -107,9 +107,9 @@ public class EndpointMetadata {
     			thisMetaPage.getModel().add(ResourceUtils.reachableClosure(l));
 	    	}
 	    	
-	    	Set<Resource> deprecations = spec.getDeprecations();
-	    	deprecations.addAll(spec.getAPISpec().getDeprecations());
-			for (Resource d: deprecations) {
+	    	Set<Resource> notices = spec.getNotices();
+	    	notices.addAll(spec.getAPISpec().getNotices());
+			for (Resource d: notices) {
 	    		thisMetaPage.addProperty(ELDA_API.notice, d);
 	    		thisMetaPage.getModel().add(ResourceUtils.reachableClosure(d));
 	    	}
