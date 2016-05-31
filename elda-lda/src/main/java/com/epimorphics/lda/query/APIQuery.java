@@ -743,14 +743,17 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		if (fixedSelect == null) {
 			StringBuilder q = new StringBuilder();
 			q.append("SELECT ");
-			if (orderExpressions.length() > 0)
+			
+			String o = b.expandVariables(orderExpressions.toString());
+			
+			if (o.length() > 0)
 				q.append("DISTINCT ");
 			q.append(SELECT_VAR.name());			
 			assembleWherePart(q, b, pl);
-			if (orderExpressions.length() > 0) {
+			if (o.length() > 0) {
 				q.append(" ORDER BY ");
-				q.append(orderExpressions);
-				pl.findPrefixesIn(orderExpressions.toString());
+				q.append(o);
+				pl.findPrefixesIn(o.toString());
 			}
 			appendOffsetAndLimit(q);
 			// System.err.println( ">> QUERY IS: \n" + q.toString() );
