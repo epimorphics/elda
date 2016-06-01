@@ -179,6 +179,12 @@ hello:BoardGame a rdfs:Class
 	; rdfs:label "Board Game"
 	; api:label "BoardGame"
 	.
+
+elda:startDate a rdf:Property
+    ; api:label "start date"
+    ; api:structured true
+    ; rdfs:comment """Start date for a (possibly indefinite) date range."""
+    .
 	
 hello:players a rdf:Property
 	; api:label "players"
@@ -229,7 +235,6 @@ hello:pubYear a rdf:Property
 hello:playTimeMinutes a rdf:Property
 	; api:label "playTimeMinutes"
 	; rdfs:label "playTimeMinutes"
-
 	; rdfs:range xsd:integer
 	.	
 		

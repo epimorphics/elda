@@ -249,9 +249,15 @@ public class JSONLDComposer {
 		ExtendedIterator<Triple> triples = model.getGraph().find(Node.ANY, Node.ANY, Node.ANY);
 		while (triples.hasNext()) {
 			Triple t = triples.next();
-			if (t.getSubject().isURI()) present.add(t.getSubject().getURI());
-			if (t.getPredicate().isURI()) present.add(t.getPredicate().getURI());
-			if (t.getObject().isURI()) present.add(t.getObject().getURI());
+			Node S = t.getSubject(), P = t.getPredicate(), O = t.getObject();
+			if (S.isURI()) present.add(S.getURI());
+			if (P.isURI()) present.add(P.getURI());
+			if (O.isURI()) {
+				present.add(O.getURI());
+			} else if (O.isLiteral()) {
+				String type = O.getLiteralDatatypeURI();
+				if (type != null) present.add(type);
+			}
 		}
 	//
 		jw.key("@vocab").value("eh:/vocab/");
