@@ -181,7 +181,7 @@ hello:BoardGame a rdfs:Class
 	.
 
 elda:startDate a rdf:Property
-    ; api:label "start date"
+    ; api:label "startDate"
     ; api:structured true
     ; rdfs:comment """Start date for a (possibly indefinite) date range."""
     .
