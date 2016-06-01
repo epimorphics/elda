@@ -152,6 +152,7 @@ public class JSONLDRenderer implements Renderer {
 		reconstituted.removeAll(ANY, version, ANY);
 		reconstituted.removeAll(ANY, meta, ANY);
 		
+		
 //		reconstituted.removeAll(ANY, JSONLDComposer.pMETA, ANY);
 //		reconstituted.removeAll(ANY, JSONLDComposer.pOTHERS, ANY);
 //		reconstituted.removeAll(ANY, JSONLDComposer.pRESULTS, ANY);
@@ -172,6 +173,7 @@ public class JSONLDRenderer implements Renderer {
 //		reconstituted.removeAll(ANY, OpenSearch.startIndex, ANY);		
 		
 		Model given = canonise(model), recon = canonise(reconstituted);
+		restitch(given, recon);
 		
 		if (recon.isIsomorphicWith(given)) {
 			
@@ -321,7 +323,23 @@ public class JSONLDRenderer implements Renderer {
 //				}
 //		}
 	}
-
+		
+	static final Property others = ResourceFactory.createProperty(ELDA_API.NS + "others");
+	
+	private void restitch(Model given, Model recon) {
+				
+		Statement G = given.listStatements(ANY, API.items, ANY).toList().get(0);
+		Resource page = G.getSubject();
+		
+		System.err.println(">> restitch: page = " + page);		
+		
+		Statement S = recon.listStatements(ANY, API.items, ANY).toList().get(0);
+		Resource items = S.getObject().asResource();
+		S.remove();
+		recon.add(page, API.items, items);
+		
+		recon.removeAll(ANY, others, ANY);
+	}
 
 	private Set<String> namesFor(Model b) {
 		Set<String> results = new HashSet<String>();

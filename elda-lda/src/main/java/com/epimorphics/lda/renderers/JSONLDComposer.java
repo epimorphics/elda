@@ -96,7 +96,9 @@ public class JSONLDComposer {
 		jw.key("meta");
 		renderResource(root);
 	//
-		jw.key("results");
+		jw.key("items");
+		jw.object();
+		jw.key("@list");
 		jw.array();
 		Set<Resource> itemSet = new HashSet<Resource>();
 		for (Resource i: items) {
@@ -104,6 +106,7 @@ public class JSONLDComposer {
 			itemSet.add(i);
 		}
 		jw.endArray();
+		jw.endObject();
 	//
 		jw.key("others");
 		jw.array();
