@@ -46,7 +46,7 @@ public class JSONLDRenderer implements Renderer {
 		this.ep = ep;
 		this.mt = mt;
 		this.jsonUsesISOdate = jsonUsesISOdate;
-		this.checkRoundTrip = isCheckingRoundTrip(config);
+		this.checkRoundTrip = isCheckingRoundTrip(config);		
 	}
 
 	@Override public MediaType getMediaType(Bindings ignored) {
@@ -58,8 +58,8 @@ public class JSONLDRenderer implements Renderer {
 	}
 	
 	private boolean isCheckingRoundTrip(Resource config) {
-		Statement check = config.getProperty(ELDA_API.checkJSONLDRoundTrip);
-		return check == null ? true : check.getBoolean();
+		Statement check = config.getProperty(ELDA_API.checkJSONLDRoundTrip);		
+		return check == null ? false : check.getBoolean();
 	}
 		
 	@Override public BytesOut render(Times t, Bindings rc, final Map<String, String> termBindings, final APIResultSet results) {
@@ -85,7 +85,8 @@ public class JSONLDRenderer implements Renderer {
 						byte[] bytes = bytesOut.toByteArray();
 						os.write(bytes);
 						log.info(ELog.message("checking that JSON LD result round-trips"));
-						new JSONLDRoundtrip().check(model, objectModel, bytes);
+						boolean ok = new JSONLDRoundtrip().check(model, objectModel, bytes);
+						log.info(ELog.message("  -- %s", ok));
 					}
 										
 				} catch (Throwable e) {

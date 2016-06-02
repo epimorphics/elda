@@ -17,10 +17,9 @@ public class JSONLDRoundtrip {
 	static final Property meta = ResourceFactory.createProperty("eh:/vocab/fixup/meta");
 
 	public JSONLDRoundtrip() {
-		
 	}
 	
-	public void check(final Model model, final Model objectModel, byte[] bytes) {
+	public boolean check(final Model model, final Model objectModel, byte[] bytes) {
 		Model reconstituted = ModelFactory
 			.createDefaultModel()
 			.read(new ByteArrayInputStream(bytes), "", "JSON-LD")
@@ -36,6 +35,7 @@ public class JSONLDRoundtrip {
 		if (recon.isIsomorphicWith(given)) {
 			
 			// System.err.println(">> Hooray, edited reconstitution isomorphic with original [after canonisation]");
+			return true;
 			
 		} else {
 			System.err.println(">> ALAS, canonised models are not isomorphic");
@@ -52,7 +52,7 @@ public class JSONLDRoundtrip {
 			G.write(System.err, "TTL");
 			System.err.println(">> R ===================================");
 			R.write(System.err, "TTL");
-						
+			return false;			
 		}		
 	}
 	

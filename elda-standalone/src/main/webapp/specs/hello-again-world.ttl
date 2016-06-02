@@ -68,6 +68,7 @@ hello:hello-world-again a api:API
     ; api:formatter
         [a api:JsonFormatter
         ; api:name "json-ld"
+        ; elda:checkJSONLDRoundTrip false
         ; elda:className "com.epimorphics.lda.renderers.JSONLDRendererFactory"
     #
     # use /json if client doesn't render json-ld as json, otherwise
