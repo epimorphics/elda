@@ -372,6 +372,35 @@ Configuration
   </tr>
 
   <tr>
+    <td>an API or endpoint</td>
+    <td>elda:licence</td>
+    <td>some_resource</td>
+    <td>
+      <code>some_resource</code> is a licence resource with arbitrary
+      properties which are embedded in the metadata for a generated
+      view page. The properties <code>rdfs:label</code> and
+      <code>foaf:depiction</code> are recognised by the velocity
+      renderer which displays them on a generated page.
+    <br>
+      An endpoint has all the licences of its API as well as any
+      configured on the endpoint itself.
+    </td>
+  </tr>
+
+  <tr>
+    <td>an API or endpoint</td>
+    <td>elda:notice</td>
+    <td>some_resource</td>
+    <td>
+      <code>some_resource</code> is a notice resource with
+      arbitrary properties which are embedded into the metadata
+      for a generated view page.
+    <br>
+        An endpoint inherits the notice configured on its API.
+    </td>
+  </tr>
+
+  <tr>
     <td>an api:PrefixMapping</td>
     <td>api:prefix</td>
     <td>"<em>prefix</em>"</td>
