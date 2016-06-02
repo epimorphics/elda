@@ -14,7 +14,6 @@ public class JSONLDRoundtrip {
 	
 	static final Property others = ResourceFactory.createProperty(ELDA_API.NS + "others");
 	static final Property version = ResourceFactory.createProperty(ELDA_API.NS + "version");
-	static final Property meta = ResourceFactory.createProperty("eh:/vocab/fixup/meta");
 
 	public JSONLDRoundtrip() {
 	}
@@ -27,7 +26,7 @@ public class JSONLDRoundtrip {
 			
 		reconstituted.removeAll(ANY, DCTerms.format, ANY);
 		reconstituted.removeAll(ANY, version, ANY);
-		reconstituted.removeAll(ANY, meta, ANY);	
+		reconstituted.removeAll(ANY, ELDA_API.meta, ANY);	
 		
 		Model given = normaliseLiterals(model), recon = normaliseLiterals(reconstituted);
 		restitchItemLists(given, recon);

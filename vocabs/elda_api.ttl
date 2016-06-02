@@ -166,6 +166,11 @@ elda:match a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:meta a rdf:Property
+    ; rdfs:label "meta"
+    ; rdfs:comment """Property mapping from page to metadata for JSON-LD rendering."""
+    .
+
 elda:metadataOptions a rdf:Property
 	; rdfs:comment ""
 	.
@@ -205,6 +210,11 @@ elda:supportsNestedSelect a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:termBinding a rdf:Property
+    ; rdfs:label "termBinding"
+    ; rdfs:comment "Property from page to term bindings"
+    .
+
 elda:textContentProperty a rdf:Property
 	; rdfs:comment ""
 	.
@@ -231,6 +241,10 @@ elda:velocityTemplate a rdf:Property
 elda:viewName a rdf:Property
 	; rdfs:comment ""
 	.
+
+elda:vocabFallback a rdf:Property
+    ; rdfs:label "vocabFallback"
+    .
 
 elda:wantsContext a rdf:Property
 	; rdfs:comment ""

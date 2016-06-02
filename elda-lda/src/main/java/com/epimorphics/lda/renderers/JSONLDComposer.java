@@ -35,26 +35,9 @@ public class JSONLDComposer {
 	final Map<Resource, String> bnodes = new HashMap<Resource, String>();
 	
 	public static final String OTHERS = ELDA_API.NS + "others";
-	public static final String RESULTS = ELDA_API.NS + "results";
 	
 	public static final String FORMAT = DCTerms.format.getURI();
 	public static final String VERSION = ELDA_API.NS + "version";
-	public static final String META = ELDA_API.NS + "meta";
-
-	public static final Property pOTHERS = ResourceFactory.createProperty(OTHERS);
-	public static final Property pRESULTS = ResourceFactory.createProperty(RESULTS);
-	public static final Property pMETA = ResourceFactory.createProperty(META);
-	
-	public static boolean isContentStatement(Statement s) {
-		Property P = s.getPredicate();
-		String U = P.getURI();
-		return 
-			!P.equals(JSONLDComposer.pRESULTS) 
-			&& !P.equals(JSONLDComposer.pOTHERS)
-			&& !U.equals(FORMAT)
-			&& !U.equals(VERSION)
-			;
-	}
 	
 	public JSONLDComposer(Model model, Resource root, ReadContext context, Map<String, String> termBindings, JSONWriterFacade jw) {
 		this.jw = jw;
@@ -263,17 +246,12 @@ public class JSONLDComposer {
 			}
 		}
 	//
-		jw.key("@vocab").value("eh:/vocab/");
-		jw.key("results").value(RESULTS);
+		jw.key("@vocab").value(ELDA_API.vocabFallback.getURI());
 		jw.key("others").value(OTHERS);
 		jw.key("format").value(FORMAT);
 		jw.key("version").value(VERSION);
-//		jw.key("first").value("http://www.w3.org/1999/xhtml/vocab#first");
-		jw.key("meta").value("eh:/vocab/fixup/meta");
-//		jw.key("meta").value("eh:/vocab/fixup/meta");
-		
-		
-		jw.key("termBinding").value("eh:/elda/termBinding");
+		jw.key("meta").value(ELDA_API.meta.getURI());
+		jw.key("termBinding").value(ELDA_API.termBinding.getURI());
 	//
 		List<Map.Entry<String, String>> entries = new ArrayList<>(termBindings.entrySet());	
 		Collections.sort(entries, compareEntries);
