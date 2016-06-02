@@ -17,5 +17,5 @@ package com.epimorphics.lda;
  *
  */
 public interface Version {
-	public final String string = "1.3.18-SNAPSHOT/logFixed";
+	public final String string = "1.3.18-SNAPSHOT";
 }
