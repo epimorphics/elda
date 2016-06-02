@@ -943,7 +943,7 @@ result. Hence an Elda query can take up to 5 SPARQL queries:
     the view
 
 -   the query to find licences that apply to this page
- 
+
 Turtle, XML, and JSON renderings simply include the new licence
 metadata; the client can harmlessly ignore it if required.
 
@@ -956,7 +956,7 @@ and if so displays them as a picture and a label.
 
 -   the label is the value of the `rdfs:label` property of
     the licence resource, if there is one, and otherwise
-    the local name of the licence resource. 
+    the local name of the licence resource.
 
 -   the label is displayed as link with href the licence
     resource and body the link text.
@@ -968,7 +968,19 @@ values are instances of `LicenceResource` which has methods
 label of the licence, and `getPicture()` for the image to
 display for the licence.
 
-Currently the HTML renderer does not display licence information.
+Currently the XSLT/HTML renderer does not display licence 
+information.
+
+notice metadata
+---------------
+
+*Experimental*. Starting from Elda 1.3.18, page metadata may
+include *notices* as the value of the property `elda:notice`
+copied from the LDA config. An endpoint inherits all the notices
+of its parent API. All the properties of the notice are copied
+recursively.
+
+Currently the HTML renderers do not display notice information.
 
 Formatting extensions
 =====================
