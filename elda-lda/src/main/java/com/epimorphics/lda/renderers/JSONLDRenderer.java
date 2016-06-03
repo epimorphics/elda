@@ -41,12 +41,14 @@ public class JSONLDRenderer implements Renderer {
     final APIEndpoint ep;
     final boolean jsonUsesISOdate; // not currently used
     final boolean checkRoundTrip;
+    final boolean allStructured;
     
 	public JSONLDRenderer(Resource config, MediaType mt, APIEndpoint ep, ShortnameService sns, boolean jsonUsesISOdate) {
 		this.ep = ep;
 		this.mt = mt;
 		this.jsonUsesISOdate = jsonUsesISOdate;
-		this.checkRoundTrip = isCheckingRoundTrip(config);		
+		this.checkRoundTrip = isCheckingRoundTrip(config);
+		this.allStructured = allLiteralsStructured(config);
 	}
 
 	@Override public MediaType getMediaType(Bindings ignored) {
@@ -59,6 +61,11 @@ public class JSONLDRenderer implements Renderer {
 	
 	private boolean isCheckingRoundTrip(Resource config) {
 		Statement check = config.getProperty(ELDA_API.checkJSONLDRoundTrip);		
+		return check == null ? false : check.getBoolean();
+	}
+	
+	private boolean allLiteralsStructured(Resource config) {
+		Statement check = config.getProperty(ELDA_API.allLiteralsStructured);		
 		return check == null ? false : check.getBoolean();
 	}
 		
@@ -78,7 +85,7 @@ public class JSONLDRenderer implements Renderer {
 					OutputStream s = (checkRoundTrip ? bytesOut : os);
 					Writer w = new OutputStreamWriter(s, "UTF-8");
 					JSONWriterFacade jw = new JSONWriterWrapper(w, true);						
-					JSONLDComposer c = new JSONLDComposer(model, root, context, termBindings, jw);
+					JSONLDComposer c = new JSONLDComposer(model, root, context, termBindings, allStructured, jw);
 					c.renderItems(results.getResultList());
 					w.flush();	
 					if (checkRoundTrip) {

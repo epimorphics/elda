@@ -5,6 +5,14 @@
 @prefix elda: <http://www.epimorphics.com/vocabularies/lda#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+elda:allLiteralsStructured a rdf:Property
+	; rdfs:label "all literals structured"
+	; rdfs:comment 
+		"""Property of JSON-LD formatter that determines if
+			all literals are rendered with their types.
+		"""
+	.
 	
 elda:allowReserved a rdf:Property
 	; rdfs:comment ":"

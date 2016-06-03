@@ -69,6 +69,7 @@ hello:hello-world-again a api:API
         [a api:JsonFormatter
         ; api:name "json-ld"
         ; elda:checkJSONLDRoundTrip false
+        ; elda:allLiteralsStructured true
         ; elda:className "com.epimorphics.lda.renderers.JSONLDRendererFactory"
     #
     # use /json if client doesn't render json-ld as json, otherwise
@@ -120,11 +121,11 @@ again:games a api:ListEndpoint
     ; api:selector [api:filter "type=BoardGame"; api:sort "label"]
     ; api:defaultViewer api:labelledDescribeViewer
     ; elda:enableCounting false
-    ; elda:notice <eh:/this.is.deprecated-B>
+    ; elda:notice <eh:/this-is-a-notice>
     .
     
-<eh:/this.is.deprecated-B> a elda:Notice
-    ; rdfs:label "this is deprecated (policy again:B)"
+<eh:/this-is-a-notice> a elda:Notice
+    ; rdfs:comment "this happens on the given date."
     ; elda:startDate "2016-06-01"^^xsd:date
     .
 
@@ -181,11 +182,11 @@ hello:BoardGame a rdfs:Class
 	; api:label "BoardGame"
 	.
 
-elda:startDate a rdf:Property
-    ; api:label "startDate"
-    ; api:structured true
-    ; rdfs:comment """Start date for a (possibly indefinite) date range."""
-    .
+# elda:startDate a rdf:Property
+#     ; api:label "startDate"
+#     ; api:structured true
+#     ; rdfs:comment """Start date for a (possibly indefinite) date range."""
+#     .
 	
 hello:players a rdf:Property
 	; api:label "players"

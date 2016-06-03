@@ -30,6 +30,7 @@ public class JSONLDComposer {
 	final JSONWriterFacade jw;
 	final Map<String, String> termBindings;
 	final ReadContext context;
+	final boolean allStructured;
 	
 	final Map<Resource, JSONLDComposer.Int> refCount = new HashMap<Resource, JSONLDComposer.Int>();
 	final Map<Resource, String> bnodes = new HashMap<Resource, String>();
@@ -39,12 +40,13 @@ public class JSONLDComposer {
 	public static final String FORMAT = DCTerms.format.getURI();
 	public static final String VERSION = ELDA_API.NS + "version";
 	
-	public JSONLDComposer(Model model, Resource root, ReadContext context, Map<String, String> termBindings, JSONWriterFacade jw) {
+	public JSONLDComposer(Model model, Resource root, ReadContext context, Map<String, String> termBindings, boolean allStructured, JSONWriterFacade jw) {
 		this.jw = jw;
 		this.root = root;
 		this.model = model;
 		this.context = context;
 		this.termBindings = termBindings;
+		this.allStructured = allStructured;
 		countObjectReferencesIn(model);
 	}
 
@@ -208,7 +210,7 @@ public class JSONLDComposer {
 	}
 	
 	private boolean isStructured(Property p) {
-		return context.findProperty(p).isStructured();
+		return allStructured || context.findProperty(p).isStructured();
 	}
 
 	private String getId(Resource r) {
