@@ -906,6 +906,16 @@ describe viewers to define the view, with the `*` wildcard to imitate
 the generality of DESCRIBE. While this will not have the full effect of
 DESCRIBE's bnode closure it will provide predictable results.
 
+Inverse properties
+------------------
+
+*Experimental* Starting with Elda 1.3.18, elements of property 
+chains may be prefixed by `~` to mean the inverse of that property; 
+the generated query exchanges the subject and object of the generated triple.
+
+(The character `^` used in SPARQL for property inverses was considered 
+but needs appropriate quoting in a URL, so `~` was chosen in its place.)
+
 Licence metadata
 ----------------
 
@@ -1096,7 +1106,7 @@ formatter's `elda:feedAuthorProperties`.
 JSON LD renderer
 ----------------
 
-As of version 1.3.18, Elda contains a JSON-LD renderer.
+*Experimental.* As of version 1.3.18, Elda contains a JSON-LD renderer.
 Add to your Elda formatter configuration:
 
     ...
@@ -1125,8 +1135,16 @@ resources that are the objects of multiple statements
 in an additional top-level member `other`. 
 
 If a property has multiple values or is declared to be
-structured, then its JSON LD representation is an
-array of JSON LD values.
+structured, then the JSON LD representation of its 
+values is is an array of JSON LD values.
+
+If the formatter is given an `elda:checkJSONLDRoundTrip` property
+with value `true` then the generated JSON-LD is reparsed into
+a Model and compared with the original model. If they are
+not isomorphic after some syntactic restructuring, then
+the differences are logged. This is a developer's debugging
+tool, not for routine use. 
+
 
 Date & Times in JSON
 --------------------
