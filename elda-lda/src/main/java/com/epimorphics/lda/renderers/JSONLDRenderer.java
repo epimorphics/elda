@@ -3,9 +3,6 @@ package com.epimorphics.lda.renderers;
 import java.io.*;
 import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
@@ -34,8 +31,6 @@ import com.hp.hpl.jena.shared.WrappedException;
 public class JSONLDRenderer implements Renderer {
 	
 	static { JenaJSONLD.init(); }
-
-	static Logger log = LoggerFactory.getLogger(JSONLDRenderer.class);
 	
 	final MediaType mt;
     final APIEndpoint ep;

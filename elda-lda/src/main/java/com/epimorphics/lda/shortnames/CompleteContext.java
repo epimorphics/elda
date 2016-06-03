@@ -13,7 +13,6 @@ import static com.hp.hpl.jena.rdf.model.impl.Util.splitNamespace;
 import java.util.*;
 
 import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.EldaNameUtils;
 import com.hp.hpl.jena.graph.Node;

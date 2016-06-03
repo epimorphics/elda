@@ -1,14 +1,21 @@
 package com.epimorphics.lda.renderers;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.XSD;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class JSONLDRoundtrip {
+
+	static Logger log = LoggerFactory.getLogger(JSONLDRenderer.class);
 	
 	static final Property ANY = null;
 	
@@ -33,26 +40,35 @@ public class JSONLDRoundtrip {
 		
 		if (recon.isIsomorphicWith(given)) {
 			
-			// System.err.println(">> Hooray, edited reconstitution isomorphic with original [after canonisation]");
 			return true;
 			
 		} else {
-			System.err.println(">> ALAS, canonised models are not isomorphic");
-			System.err.println(">> original has " + given.size() + " statements,");
-			System.err.println(">> reconstituted has " + recon.size() + " statements.");
+			
+			System.err.println(">> YOUO");
+			Say("ALAS, canonised models are not isomorphic");
+			Say("original has " + given.size() + " statements,");
+			Say("reconstituted has " + recon.size() + " statements.");
 			
 			Model common = recon.intersection(given);
 			
-			System.err.println(">> there are " + common.size() + " common statements.");
+			Say("there are " + common.size() + " common statements.");
 			
 			Model G = given.difference(common), R = recon.difference(common);
 			
-			System.err.println(">> G ===================================");
-			G.write(System.err, "TTL");
-			System.err.println(">> R ===================================");
-			R.write(System.err, "TTL");
+			SayGraph(G, "given");
+			SayGraph(R, "reconstituted");
 			return false;			
 		}		
+	}
+	
+	protected void Say(String what) {
+		log.warn(ELog.message(what));
+	}
+	
+	protected void SayGraph(Model m, String title) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		log.warn(ELog.message("%s -----------------", title));
+		log.warn(ELog.message(bos.toString()));
 	}
 	
 	private void restitchItemLists(Model given, Model recon) {
