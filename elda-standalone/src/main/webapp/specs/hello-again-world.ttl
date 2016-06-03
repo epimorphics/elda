@@ -69,7 +69,7 @@ hello:hello-world-again a api:API
         [a api:JsonFormatter
         ; api:name "json-ld"
         ; elda:checkJSONLDRoundTrip false
-        ; elda:allLiteralsStructured true
+        ; elda:allLiteralsStructured false
         ; elda:className "com.epimorphics.lda.renderers.JSONLDRendererFactory"
     #
     # use /json if client doesn't render json-ld as json, otherwise
@@ -182,11 +182,11 @@ hello:BoardGame a rdfs:Class
 	; api:label "BoardGame"
 	.
 
-# elda:startDate a rdf:Property
-#     ; api:label "startDate"
-#     ; api:structured true
-#     ; rdfs:comment """Start date for a (possibly indefinite) date range."""
-#     .
+elda:startDate a rdf:Property
+    ; api:label "startDate"
+    ; api:structured true
+    ; rdfs:comment """Start date for a (possibly indefinite) date range."""
+    .
 	
 hello:players a rdf:Property
 	; api:label "players"
