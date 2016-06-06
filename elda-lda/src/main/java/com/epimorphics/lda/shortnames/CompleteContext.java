@@ -102,8 +102,8 @@ public class CompleteContext {
 	public Map<String, String> Do() {	
 		uriToShortname.clear();
 	//
-//		uriToShortname.put(API.value.getURI(), "value");
-//		uriToShortname.put(API.label.getURI(), "label");
+		uriToShortname.put(ELDA_API.value.getURI(), "value");
+		uriToShortname.put(ELDA_API.label.getURI(), "label");
 	//
 		pickPreferredShortnames();
 		Set<SplitURI> modelTerms = loadModelTerms( uriToShortname.keySet() );
@@ -119,7 +119,7 @@ public class CompleteContext {
 		for (Map.Entry<String, String> e: uriToShortname.entrySet()) {
 			String v = e.getValue();
 			if (seen.add(v) == false) {
-				System.err.println(">> Already seen: " + v);
+				// System.err.println(">> Already seen: " + v);
 			}
 		}
 		

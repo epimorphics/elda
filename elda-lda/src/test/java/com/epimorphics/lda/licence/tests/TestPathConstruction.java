@@ -73,6 +73,7 @@ public class TestPathConstruction {
 			assertEquals(instance.length, queryLines.size());
 			for (int i = 1; i < instance.length; i += 1) {
 				String expected = instance[i];
+				System.err.println(">> expecting: " + expected);
 				assertEq(expected, queryLines.get(i));
 			}
 		}
