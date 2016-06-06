@@ -1,5 +1,8 @@
 + ---------------------------------------------------------------------
-| Elda 1.3.18 (DEVELOPING)
+| Elda 1.3.19 (DEVELOPING)
+
++ ---------------------------------------------------------------------
+| Elda 1.3.18 (RELEASED)
 
 Experimentally, Elda can now attach licence metadata to the 
 pages it constructs. The metadata is described in the LDA 
@@ -9,6 +12,9 @@ the pages selected items to the licence object. The velocity
 renderer default footer has been modified to display the licences 
 and their labels and images if present. See the reference 
 documentation for details.
+
+Similarly, *notices* can be attached to returned pages in metadata
+using the property `elsa:notice`.
 
 The test for whether an empty result set results in a Not Found
 rather than an empty list has been modified to apply to list endpoints
