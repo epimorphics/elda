@@ -57,10 +57,6 @@ public class TestPathConstruction {
 	};	
 	
 	@Test public void ByParameters() {
-		if (true) {
-			System.err.println(">> temporarily ignoring ByParameters.");
-			return;
-		}
 		setBaseConfig();		
 		APISpec spec = new APISpec(FileManager.get(), root, loader);
 		
@@ -69,15 +65,14 @@ public class TestPathConstruction {
 			List<String> queryLines = new ArrayList<String>();
 			
 			e.addPaths(one(instance[0]), queryLines);
-			
+					
 			assertEquals(instance.length, queryLines.size());
 			for (int i = 1; i < instance.length; i += 1) {
 				String expected = instance[i];
-				System.err.println(">> expecting: " + expected);
-				assertEq(expected, queryLines.get(i));
+//				System.err.println(">> expecting [" + i + "]: " + expected);
+				assertEq(expected, queryLines.get(i-1));
 			}
 		}
-		
 	}
 	
 	// Equality counting any run of spaces as one space and no 
