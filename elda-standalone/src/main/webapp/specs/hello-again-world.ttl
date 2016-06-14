@@ -229,6 +229,7 @@ hello:designer-of a rdf:Property
 	
 hello:pubYear a rdf:Property
 	; api:label "publicationYear"
+    ; api:multiValued true 
 	; rdfs:range xsd:integer
     ; rdfs:comment "The subject is some published entity, the object is the year of its publication."
     ; rdfs:range xsd:integer
