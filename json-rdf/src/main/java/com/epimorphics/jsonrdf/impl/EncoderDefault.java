@@ -16,12 +16,12 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Iterator;
 
-import org.openjena.atlas.json.JsonArray;
-import org.openjena.atlas.json.JsonBoolean;
-import org.openjena.atlas.json.JsonException;
-import org.openjena.atlas.json.JsonNumber;
-import org.openjena.atlas.json.JsonObject;
-import org.openjena.atlas.json.JsonString;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonBoolean;
+import org.apache.jena.atlas.json.JsonException;
+import org.apache.jena.atlas.json.JsonNumber;
+import org.apache.jena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.JsonString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

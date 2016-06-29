@@ -19,7 +19,6 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.shared.JenaException;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.XSD;
-import com.sun.jersey.server.impl.model.parameter.multivalued.ExtractorContainerException;
 
 public class ModelIOUtils {
 

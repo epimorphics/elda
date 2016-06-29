@@ -12,9 +12,9 @@
 
 package com.epimorphics.jsonrdf;
 
-import org.openjena.atlas.json.JsonArray;
-import org.openjena.atlas.json.JsonException;
-import org.openjena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonException;
+import org.apache.jena.atlas.json.JsonObject;
 
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.RDFNode;

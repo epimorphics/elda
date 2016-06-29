@@ -15,7 +15,7 @@ package com.epimorphics.jsonrdf;
 import java.io.Writer;
 import java.math.BigDecimal;
 
-import org.openjena.atlas.json.JsonException;
+import org.apache.jena.atlas.json.JsonException;
 
 import com.epimorphics.jsonrdf.extras.JSStreamingWriter;
 

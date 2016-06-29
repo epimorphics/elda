@@ -27,8 +27,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Test;
-import org.openjena.atlas.json.JsonArray;
-import org.openjena.atlas.json.JsonException;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonException;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
