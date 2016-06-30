@@ -10,6 +10,7 @@
     <properties>
         <jdk.version>1.7</jdk.version>
         <ver.junit>4.11</ver.junit>
+        <ver.wagon>2.2</ver.wagon>
     </properties>
     
 	<repositories>
@@ -37,19 +38,42 @@
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
-    
+
     <dependency>
     	<groupId>org.apache.jena</groupId>
     	<artifactId>jena-arq</artifactId>
     	<version>2.13.0</version>
     </dependency>
-    
+
 </dependencies>
+
+  <distributionManagement>
+    <repository>
+      <id>epi-public-repo</id>
+      <url>ftp://repository.epimorphics.com</url>
+    </repository>
+  </distributionManagement>
+
 <!--
   <version>1.2.18-SNAPSHOT</version>
 -->
 
   <build>
+
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ftp</artifactId>
+        <version>${ver.wagon}</version>
+      </extension>
+
+      <extension>
+        <groupId>org.springframework.build.aws</groupId>
+        <artifactId>org.springframework.build.aws.maven</artifactId>
+        <version>3.0.0.RELEASE</version>
+      </extension>
+  </extensions>
+
      <plugins>
        <plugin>
          <groupId>org.apache.maven.plugins</groupId>
@@ -62,7 +86,17 @@
              </goals>
            </execution>
          </executions>
-      </plugin>
+     </plugin>
+
+     <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
+    </plugin>
+
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
