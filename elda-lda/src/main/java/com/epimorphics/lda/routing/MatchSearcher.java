@@ -45,7 +45,7 @@ public class MatchSearcher<T> {
         Remove the entry with the given template path from
         the collection.
     */
-    public void unregister( String path ) {
+    public synchronized void unregister( String path ) {
     	String trimmedPath = removeQueryPart( path );
         Iterator<MatchTemplate<T>> it = templates.iterator();
         while (it.hasNext()) {        	
@@ -66,7 +66,7 @@ public class MatchSearcher<T> {
         If there is, return the associated value, and update the
         bindings with the matches variables.
     */
-    public T lookup( Map<String, String> bindings, String path, MultiMap<String, String> queryParams ) {
+    public synchronized T lookup( Map<String, String> bindings, String path, MultiMap<String, String> queryParams ) {
         if (needsSorting) sortTemplates();    
         for (MatchTemplate<T> t: templates) {
         	if (t.match( bindings, path, queryParams )) return t.value();
@@ -74,7 +74,7 @@ public class MatchSearcher<T> {
         return null;
     }
 
-    private void sortTemplates() {
+    private synchronized void sortTemplates() {
         Collections.sort( templates, MatchTemplate.compare );
         needsSorting = false;
     }
