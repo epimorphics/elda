@@ -46,8 +46,8 @@ public class TestGeneratedMetadata {
 	@Test public void testTermBindingsCoverAllPredicates() throws URISyntaxException {
 		Resource thisPage = ResourceFactory.createResource( "elda:thisPage" );
 		String pageNumber = "1";
-		Bindings cc = new Bindings();
-		URI reqURI = new URI( "" );
+		Bindings noBindings = new Bindings();
+		URI reqURI = new URI( "eh:/request-uri" );
 	//
 		EndpointDetails spec = new EndpointDetails() {
 
@@ -59,7 +59,7 @@ public class TestGeneratedMetadata {
 				return false;
 			}
 		};
-		EndpointMetadata em = new EndpointMetadata( spec, thisPage, pageNumber, cc, reqURI );
+		EndpointMetadata em = new EndpointMetadata( spec, thisPage, pageNumber, noBindings, reqURI );
 	//
 		PrefixMapping pm = PrefixMapping.Factory.create().setNsPrefix( "this", "http://example.com/root#" );
 		Model toScan = ModelIOUtils.modelFromTurtle( ":a <http://example.com/root#predicate> :b." );
@@ -68,15 +68,14 @@ public class TestGeneratedMetadata {
 		Model meta = ModelFactory.createDefaultModel();
 		Resource exec = meta.createResource( "fake:exec" );
 		ShortnameService sns = new StandardShortnameService();
-//		APIEndpoint.Request r = new APIEndpoint.Request( new Controls(), reqURI, cc );
 		
-		CompleteContext c  = 
+		CompleteContext cc  = 
 			new CompleteContext(CompleteContext.Mode.PreferPrefixes, sns.asContext(), pm )
 			;
 		
-		em.addTermBindings( toScan, meta, exec, c );
+		em.addTermBindings( toScan, meta, exec, cc );
 		
-		@SuppressWarnings("unused") Map<String, String> termBindings = c.Do();
+		@SuppressWarnings("unused") Map<String, String> termBindings = cc.Do();
 		Resource tb = meta.listStatements( null, API.termBinding, Any ).nextStatement().getResource();
 		assertTrue( meta.contains( tb, API.label, "this_predicate" ) );
 		assertTrue( meta.contains( tb, API.property, predicate ) );
