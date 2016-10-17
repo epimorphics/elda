@@ -72,7 +72,7 @@ public class TestGeneratedMetadata {
 		
 		CompleteContext c  = 
 			new CompleteContext(CompleteContext.Mode.PreferPrefixes, sns.asContext(), pm )
-			.include(toScan);
+			;
 		
 		em.addTermBindings( toScan, meta, exec, c );
 		

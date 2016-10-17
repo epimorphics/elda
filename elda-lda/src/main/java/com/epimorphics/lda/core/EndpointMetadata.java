@@ -289,7 +289,7 @@ public class EndpointMetadata {
 	}
 	
 	public void addTermBindings( Model toScan, Model meta, Resource exec, CompleteContext cc ) {
-		Map<String, String> termBindings = cc.Do();
+		Map<String, String> termBindings = cc.include(toScan).Do();
 		List<String> uriList = new ArrayList<String>( termBindings.keySet() );
 		Collections.sort( uriList );
 		for (String uri: uriList) {
