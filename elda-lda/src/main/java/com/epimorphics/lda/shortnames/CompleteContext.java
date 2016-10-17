@@ -70,6 +70,10 @@ public class CompleteContext {
 			String ln = uri.substring( cut );
 			return new SplitURI(uri, ns, ln);
 		}
+
+		@Override public String toString() {
+			return "{URI: " + uri + ", ns: " + ns + ", ln: " + ln + "}";
+		}
 		
 		@Override public boolean equals(Object other) {
 			return other instanceof SplitURI && same( (SplitURI) other );
