@@ -51,9 +51,10 @@ public class QuerySupport {
 		List<Triple> hasLiteral = new ArrayList<Triple>(triples.size());
 		List<Triple> typed = new ArrayList<Triple>(triples.size());
 		List<Triple> lateTextQueries = new ArrayList<Triple>(triples.size());
+		List<Triple> textQueryTriples = new ArrayList<Triple>(triples.size());
 		for (Triple t : triples) {
 			if (t.P.equals(text_query))
-				(tqFirst ? hasLiteral : lateTextQueries).add(t);
+				(tqFirst ? textQueryTriples : lateTextQueries).add(t);
 			else if (t.O instanceof Value && canPromoteSubject(t.S))
 				hasLiteral.add(t);
 			else if (t.P.equals(RDFQ.RDF_TYPE))
@@ -63,6 +64,7 @@ public class QuerySupport {
 		}
 	//
 		List<Triple> result = new ArrayList<Triple>(triples.size());
+		result.addAll(textQueryTriples);
 		result.addAll(hasLiteral);
 		result.addAll(plain);
 		result.addAll(lateTextQueries);
