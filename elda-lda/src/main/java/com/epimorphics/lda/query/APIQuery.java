@@ -738,6 +738,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	}
 
 	public String assembleRawSelectQuery(PrefixLogger pl, Bindings b) {
+		
 		if (!sortByOrderSpecsFrozen)
 			unpackSortByOrderSpecs();
 		if (fixedSelect == null) {
@@ -756,13 +757,13 @@ public class APIQuery implements VarSupply, WantsMetadata {
 				pl.findPrefixesIn(o.toString());
 			}
 			appendOffsetAndLimit(q);
-			// System.err.println( ">> QUERY IS: \n" + q.toString() );
 			String bound = bindDefinedvariables(pl, q.toString(), b);
 			StringBuilder x = new StringBuilder();
 			if (counting())
 				x.append("# Counting has been applied to this query.\n");
 			pl.writePrefixes(x);
 			x.append(bound);
+//			 System.err.println( ">> QUERY IS: \n" + q.toString() );
 			return x.toString();
 		} else {
 			pl.findPrefixesIn(fixedSelect);
@@ -777,19 +778,23 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	private void assembleWherePart(StringBuilder q, Bindings b, PrefixLogger pl) {
 		q.append("\nWHERE {\n");
+		
 		String graphName = expandGraphName(b);
 		if (graphName != null)
 			q.append("GRAPH <" + graphName + "> {");
-		String bgp = constructBGP(pl);
+				
+		if (basicGraphTriples.isEmpty() && whereExpressions.length() == 0)
+			q.append(SELECT_VAR.name() + " ?__p ?__v .\n");
+		
+		q.append(constructBGP(pl));
+		
 		if (whereExpressions.length() > 0) {
 			q.append(whereExpressions);
 			pl.findPrefixesIn(whereExpressions.toString());
-		} else {
-			if (basicGraphTriples.isEmpty())
-				bgp = SELECT_VAR.name() + " ?__p ?__v .\n" + bgp;
 		}
-		q.append(bgp);
+		
 		appendFilterExpressions(pl, q);
+		
 		if (graphName != null)
 			q.append("} ");
 		q.append("} ");
