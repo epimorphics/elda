@@ -1,5 +1,5 @@
 ---
-title: Rendering with Velocity
+title: Text Search Worked Example
 layout: default-toc
 ---
 
