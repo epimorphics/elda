@@ -55,6 +55,7 @@ hello:hello-world-again a api:API
     
 	; api:endpoint 
 		hello:publishers, again:games, hello:about
+		, hello:there
 		, hello:catch # development debugging
 
     ; api:formatter
@@ -107,6 +108,14 @@ egc:dataset egc:license <http://localhost:8080/standalone/licences/licence-alpha
     .
 
 # Endpoint definitions
+
+hello:there a api:ListEndpoint
+    ; rdfs:label "there"
+    ; api:uriTemplate "/those"
+    ; api:selector [api:where "?item a again:humpty-dumpty.\n"]
+    # ; api:selector [api:filter "type=Pernicious"; api:sort "label"]
+    ; api:defaultViewer api:labelledDescribeViewer
+    .
 
 hello:publishers a api:ListEndpoint 
 	; rdfs:label "Publishers" 
