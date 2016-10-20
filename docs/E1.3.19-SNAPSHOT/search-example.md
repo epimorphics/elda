@@ -1,21 +1,7 @@
-Toggle navigation
-
-Elda {{ site.data.version.CURRENT_RELEASE }} {.not-toc}
-===========
-
-An implementation of the linked-data API {.not-toc}
-----------------------------------------
-
--   [Quick start](index.html)
--   [Reference](reference.html)
--   [Crib sheet](cribsheet.html)
--   [Text search example](search-example.html)
--   [Velocity renderer](velocity.html)
-
-![Epimorphics.com](epilogo-240.png)
-
-Table of contents {.not-toc}
------------------
+---
+title: Rendering with Velocity
+layout: default-toc
+---
 
 Text Search Worked Example
 ==========================
