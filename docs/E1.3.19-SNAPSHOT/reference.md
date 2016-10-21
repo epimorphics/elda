@@ -470,6 +470,26 @@ The use of **elda:describeThreshold** to specify whether a
 nested-select should be used for big DESCRIBE queries is no
 longer necessary and will generate a log message.
 
+Details for api:where and \_where=
+==================================
+
+To allow api:where (or \_where) to work with text:query, we
+define the rules that apply when a where clause has multiple
+components.
+
+The body of the WHERE comprises:
+
+	* any triples with predicate the text:query predicate.
+	* any explicit api:where or \_where= text fragments in
+  	unspecified order
+	* any other triples and OPTIONAL triples in unspecified order
+	* any FILTERs that have been generated.
+
+"Unspecified" means that the order depends on internal
+Elda (and Jena and Java) behaviours and need not be
+consistent.
+
+
 Additional Elda features
 ========================
 
