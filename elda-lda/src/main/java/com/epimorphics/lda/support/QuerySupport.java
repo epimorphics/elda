@@ -9,7 +9,9 @@
 package com.epimorphics.lda.support;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,8 +48,8 @@ public class QuerySupport {
 	 	@param triples the list of triples to re-order.
 	 	@return a fresh list of triples, a reordered version of triples.
 	*/
-	public static List<Triple> reorder(List<Triple> triples, boolean tqFirst) {
-		List<Triple> plain = new ArrayList<Triple>(triples.size());
+	public static Reordered reorder(List<Triple> triples, boolean tqFirst) {
+		List<Triple> others = new ArrayList<Triple>(triples.size());
 		List<Triple> hasLiteral = new ArrayList<Triple>(triples.size());
 		List<Triple> typed = new ArrayList<Triple>(triples.size());
 		List<Triple> lateTextQueries = new ArrayList<Triple>(triples.size());
@@ -60,19 +62,40 @@ public class QuerySupport {
 			else if (t.P.equals(RDFQ.RDF_TYPE))
 				typed.add(t);
 			else
-				plain.add(t);
+				others.add(t);
 		}
 	//
-		List<Triple> result = new ArrayList<Triple>(triples.size());
-		result.addAll(textQueryTriples);
-		result.addAll(hasLiteral);
-		result.addAll(plain);
-		result.addAll(lateTextQueries);
-		result.addAll(typed);
-		if (!result.equals(triples)) {
-			log.debug(ELog.message("reordered\n    %s\nto\n    %s", triples, result));
+		List<Triple> plainTriples = new ArrayList<Triple>(triples.size());
+		plainTriples.addAll(hasLiteral);
+		plainTriples.addAll(others);
+		plainTriples.addAll(lateTextQueries);
+		plainTriples.addAll(typed);
+		if (!plainTriples.equals(triples)) {
+			log.debug(ELog.message("reordered\n    %s\nto\n    %s", triples, plainTriples));
 		}
-		return result;
+		return new Reordered(textQueryTriples, plainTriples);
+	}
+	
+	public static class Reordered {
+		public final List<Triple> textQueryTriples;
+		public final List<Triple> plainTriples;
+		
+		Reordered(List<Triple> textQueryTriples, List<Triple> plainTriples) {
+			this.textQueryTriples = textQueryTriples;
+			this.plainTriples = plainTriples;
+		}
+
+		public List<Triple> merge() {
+			List<Triple> result = new ArrayList<Triple>(textQueryTriples);
+			result.addAll(plainTriples);
+			return result;
+		}
+
+		public Set<Triple> mergeToSet() {
+			Set<Triple> result = new HashSet<Triple>(textQueryTriples);
+			result.addAll(plainTriples);
+			return result;
+		}
 	}
 
 	public static boolean canPromoteSubject(Any S) {

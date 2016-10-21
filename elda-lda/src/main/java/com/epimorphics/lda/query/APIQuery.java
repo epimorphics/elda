@@ -33,6 +33,7 @@ import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
+import com.epimorphics.lda.support.QuerySupport.Reordered;
 import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
@@ -788,11 +789,6 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		
 		q.append(constructBGP(pl));
 		
-		if (whereExpressions.length() > 0) {
-			q.append(whereExpressions);
-			pl.findPrefixesIn(whereExpressions.toString());
-		}
-		
 		appendFilterExpressions(pl, q);
 		
 		if (graphName != null)
@@ -822,8 +818,19 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	public String constructBGP(PrefixLogger pl) {
 		StringBuilder sb = new StringBuilder();
-		for (RDFQ.Triple t : QuerySupport.reorder(basicGraphTriples, textSearchConfig.placeEarly()))
+		Reordered r = QuerySupport.reorder(basicGraphTriples, textSearchConfig.placeEarly());
+		
+		for (RDFQ.Triple t : r.textQueryTriples)
 			sb.append(t.asSparqlTriple(pl)).append(" .\n");
+
+		if (whereExpressions.length() > 0) {
+			sb.append(whereExpressions);
+			pl.findPrefixesIn(whereExpressions.toString());
+		}
+		
+		for (RDFQ.Triple t : r.plainTriples)
+			sb.append(t.asSparqlTriple(pl)).append(" .\n");
+		
 		for (List<RDFQ.Triple> optional : optionalGraphTriples) {
 			sb.append("OPTIONAL { ");
 			for (RDFQ.Triple t : optional) {

@@ -126,7 +126,7 @@ public class TestQueryReordering {
 	private void testRetains(Triple ...triples) {
 		Set<Triple> expected = set(triples);
 		List<Triple> reordered = Arrays.asList( triples );
-		Set<Triple> derived = new HashSet<Triple>( QuerySupport.reorder( reordered, true ) );
+		Set<Triple> derived = new HashSet<Triple>( QuerySupport.reorder( reordered, true ).mergeToSet() );
 		assertEquals( expected.size(), reordered.size() );
 		assertEquals( expected, derived );
 	}
@@ -136,7 +136,7 @@ public class TestQueryReordering {
 	}
 	
 	private List<Triple> reorder(boolean tqFirst, Triple... triples) {
-		return QuerySupport.reorder( Arrays.asList( triples ), tqFirst );
+		return QuerySupport.reorder( Arrays.asList( triples ), tqFirst ).merge();
 	}
 	
 }
