@@ -234,7 +234,7 @@ import com.sun.jersey.api.NotFoundException;
     
 //    	System.err.println(">> requestHandler: URI = " + ui.getRequestUri());
 //    	System.err.println(">> path: " + pathstub);
-    
+    	
     	ELog.setSeqID(getSeqID(servletResponse));
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	String contextPath = servCon.getContextPath();
@@ -242,7 +242,6 @@ import com.sun.jersey.api.NotFoundException;
     	MultiMap<String, String> queryParams = JerseyUtils.convert(ui.getQueryParameters());
     	boolean dontCache = has( rh, "pragma", "no-cache" ) || has( rh, "cache-control", "no-cache" );
         Couple<String, String> pathAndType = parse( pathstub );
-
         Match matchAll = getMatch( "/" + pathstub, queryParams );
         Match matchTrimmed = getMatch( "/" + pathAndType.a, queryParams );
         Match match = matchTrimmed == null || notFormat( matchTrimmed, pathAndType.b ) ? matchAll : matchTrimmed;
@@ -253,12 +252,15 @@ import com.sun.jersey.api.NotFoundException;
     //
         if (match == null) {
         	StatsValues.endpointNoMatch();
-        	String item = router.findItemURIPath( "_", ui.getRequestUri(), "/" + pathstub );
+        	String item = router.findItemURIPath( "_", ui.getRequestUri(), "/" + pathAndType.a );
         	if (item == null) {
         		return noMatchFound( pathstub, ui, pathAndType );
         	}
-        	else
-        		return standardHeaders( null, Response.seeOther( new URI( item ) ) ).build();
+        	else {
+        		URI plainURI = new URI( item );
+        		URI formatURI = URIUtils.changeFormatSuffix(plainURI, new ArrayList<String>(_formats), pathAndType.b);
+				return standardHeaders( null, Response.seeOther( formatURI ) ).build();
+        	}
         } else {
         //
         	String prefixPath = match.getEndpoint().getPrefixPath();
