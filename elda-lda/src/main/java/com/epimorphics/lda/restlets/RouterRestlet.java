@@ -258,7 +258,7 @@ import com.sun.jersey.api.NotFoundException;
         	}
         	else {
         		URI plainURI = new URI( item );
-        		URI formatURI = URIUtils.changeFormatSuffix(plainURI, new ArrayList<String>(_formats), pathAndType.b);
+        		URI formatURI = pathAndType.b == null ? plainURI : URIUtils.changeFormatSuffix(plainURI, new ArrayList<String>(_formats), pathAndType.b);
 				return standardHeaders( null, Response.seeOther( formatURI ) ).build();
         	}
         } else {
