@@ -257,8 +257,7 @@ import com.sun.jersey.api.NotFoundException;
         		return noMatchFound( pathstub, ui, pathAndType );
         	}
         	else {
-        		URI plainURI = new URI( item );
-        		URI formatURI = pathAndType.b == null ? plainURI : URIUtils.changeFormatSuffix(plainURI, new ArrayList<String>(_formats), pathAndType.b);
+        		URI formatURI = DefaultRouter.accountForFormat(pathAndType.b, _formats, item);
 				return standardHeaders( null, Response.seeOther( formatURI ) ).build();
         	}
         } else {
@@ -278,11 +277,6 @@ import com.sun.jersey.api.NotFoundException;
             return answer;
         }
     }
-
-//    private static String getRequestId(HttpServletResponse servletResponse) {
-//    	try { return servletResponse.getHeader(LogRequestFilter.REQUEST_ID_HEADER); }
-//    	catch (NoSuchMethodError e) { return null; }
-//   	}
 
 	private int hashOf( Object x ) {
 		return x == null ? 0x12345678 : x.hashCode();
