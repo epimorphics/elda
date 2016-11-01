@@ -19,6 +19,9 @@ import org.junit.Test;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.epimorphics.lda.support.QuerySupport;
+import com.epimorphics.lda.support.QuerySupport.Reordered;
+import com.epimorphics.lda.textsearch.TextSearchConfig;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 public class TestQueryReordering {
@@ -123,20 +126,82 @@ public class TestQueryReordering {
 		assertEquals( list(ItM, ITA), reorder(false, ITA, ItM) );
 	}
 
+	@Test public void testWithConfiguredIn() {
+		
+		TextSearchConfig ts = new TextSearchConfig(
+			TextSearchConfig.JENA_TEXT_QUERY
+			, TextSearchConfig.DEFAULT_CONTENT_PROPERTY
+			, new AnyList()
+			, true
+		);
+		
+		RDFQ.Triple query = RDFQ.triple(I, t, M);
+		RDFQ.Triple plain = RDFQ.triple(I, P, M);
+		List<Triple> them = Arrays.asList(plain, query);
+		Reordered r = QuerySupport.reorder(them, ts);		
+		assertEquals(list(query), r.textQueryTriples);
+		assertEquals(list(plain), r.plainTriples);
+	}
+
+	@Test public void testWithConfiguredOut() {
+		
+		TextSearchConfig ts = new TextSearchConfig(
+			ResourceFactory.createProperty("absent:query")
+			, TextSearchConfig.DEFAULT_CONTENT_PROPERTY
+			, new AnyList()
+			, true
+		);
+		
+		RDFQ.Triple query = RDFQ.triple(I, t, M);
+		RDFQ.Triple plain = RDFQ.triple(I, P, M);
+		List<Triple> them = Arrays.asList(plain, query);
+		Reordered r = QuerySupport.reorder(them, ts);		
+		assertEquals(list(), r.textQueryTriples);
+		assertEquals(list(plain, query), r.plainTriples);
+	}		
+		
 	private void testRetains(Triple ...triples) {
+
+		TextSearchConfig ts = new TextSearchConfig(
+			TextSearchConfig.JENA_TEXT_QUERY
+			, TextSearchConfig.DEFAULT_CONTENT_PROPERTY
+			, new AnyList()
+			, true
+		);
+		
 		Set<Triple> expected = set(triples);
 		List<Triple> reordered = Arrays.asList( triples );
-		Set<Triple> derived = new HashSet<Triple>( QuerySupport.reorder( reordered, true ).mergeToSet() );
+		Set<Triple> derived = new HashSet<Triple>( QuerySupport.reorder( reordered, ts ).mergeToSet() );
 		assertEquals( expected.size(), reordered.size() );
 		assertEquals( expected, derived );
 	}
 	
 	private List<Triple> reorder(Triple... triples) {
-		return reorder( true, triples );
+		
+		TextSearchConfig ts = new TextSearchConfig(
+			TextSearchConfig.JENA_TEXT_QUERY
+			, TextSearchConfig.DEFAULT_CONTENT_PROPERTY
+			, new AnyList()
+			, true
+		);
+		
+		return reorder( ts, triples );
 	}
 	
 	private List<Triple> reorder(boolean tqFirst, Triple... triples) {
-		return QuerySupport.reorder( Arrays.asList( triples ), tqFirst ).merge();
+		
+		TextSearchConfig ts = new TextSearchConfig(
+				TextSearchConfig.JENA_TEXT_QUERY
+				, TextSearchConfig.DEFAULT_CONTENT_PROPERTY
+				, new AnyList()
+				, tqFirst
+			);
+		
+		return QuerySupport.reorder( Arrays.asList( triples ), ts ).merge();
+	}
+	
+	private List<Triple> reorder(TextSearchConfig ts, Triple... triples) {
+		return QuerySupport.reorder( Arrays.asList( triples ), ts ).merge();
 	}
 	
 }

@@ -48,14 +48,16 @@ public class QuerySupport {
 	 	@param triples the list of triples to re-order.
 	 	@return a fresh list of triples, a reordered version of triples.
 	*/
-	public static Reordered reorder(List<Triple> triples, boolean tqFirst) {
+	public static Reordered reorder(List<Triple> triples, TextSearchConfig ts) {
+		boolean tqFirst = ts.placeEarly();
+		Any textQueryProperty = RDFQ.uri(ts.getTextQueryProperty());
 		List<Triple> others = new ArrayList<Triple>(triples.size());
 		List<Triple> hasLiteral = new ArrayList<Triple>(triples.size());
 		List<Triple> typed = new ArrayList<Triple>(triples.size());
 		List<Triple> lateTextQueries = new ArrayList<Triple>(triples.size());
 		List<Triple> textQueryTriples = new ArrayList<Triple>(triples.size());
 		for (Triple t : triples) {
-			if (t.P.equals(text_query))
+			if (t.P.equals(textQueryProperty))
 				(tqFirst ? textQueryTriples : lateTextQueries).add(t);
 			else if (t.O instanceof Value && canPromoteSubject(t.S))
 				hasLiteral.add(t);
