@@ -1,4 +1,3 @@
-# Model from test: http://dummy/doc/schools?minEx-size=300&_view=all
 { "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/schools", "page" : 0, "itemsPerPage" : 10, "extendedMetadataVersion" : "http://dummy/doc/schools?_metadata=all", "type" : ["http://purl.org/linked-data/api/vocab#ListEndpoint", "http://purl.org/linked-data/api/vocab#Page"], "definition" : "http://dummy/doc/schools/meta", "first" : "http://dummy/doc/schools?_page=0", "isPartOf" : "http://dummy/doc/schools", "startIndex" : 1, "hasPart" : "http://dummy/doc/schools"}
   ], "context" : {"mapping" : {"xsd_time" : {"uri" : "http://www.w3.org/2001/XMLSchema#time"}
       , "http://purl.org/linked-data/api/vocab#result" : {"uri" : "http://purl.org/linked-data/api/vocab#result"}
