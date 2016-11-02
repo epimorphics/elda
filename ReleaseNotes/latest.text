@@ -21,6 +21,18 @@ api:where etc so that the components are in order:
 * any other triples and OPTIONAL triples in unspecified order
 * any FILTERs that have been generated.
 
+Copied csv.xsl from assets to allow use in .csv examples
+(provoked by Eclipse spotting it wasn#t available).
+
+Item-template redirection now respects formatters. That
+is, if a URI X fails to match any URI template, but
+does match item template Y and so redirects to Z, the
+URI template for Y, then all the URIs X.F, ie X with
+known formatter F, will redirect to Z.F.
+
+Removed "# Model ..." comments from gold JSON files
+and the generator of them.
+
 + ---------------------------------------------------------------------
 | Elda 1.3.18 (RELEASED)
 
