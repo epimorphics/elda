@@ -201,7 +201,7 @@ hello:players a rdf:Property
 	; rdfs:range xsd:int
 	.
 	
-hello:Publisher a rdfs:Class
+egc:Publisher a rdfs:Class
 	; api:label "Publisher"
 	.
 	
