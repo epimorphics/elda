@@ -235,14 +235,15 @@ public class APIEndpointImpl implements APIEndpoint {
         Map<String, View> views = spec.extractViews();
         EndpointDetails details = (EndpointDetails) spec;
         Set<FormatNameAndType> formats = spec.getRendererFactoryTable().getFormatNamesAndTypes();
-        URI uriForList = URIUtils.withoutPageParameters( uriWithFormat );
-    //     
-        Resource uriForDefinition = metaModel.createResource( createDefinitionURI( uriForList, uriForSpec, template, bindings.expandVariables( template ) ) ); 
+        
+        URI noPageURI = URIUtils.withoutPageParameters( uriWithFormat );
+        String definitionURI = createDefinitionURI( noPageURI, uriForSpec, template, bindings.expandVariables( template ) );
+
         EndpointMetadata.addAllMetadata
         	( spec
         	, mergedModels
-        	, uriForList
-        	, uriForDefinition
+        	, uriWithFormat
+        	, metaModel.createResource( definitionURI )
         	, bindings
         	, cc
         	, suppress_IPTO

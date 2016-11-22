@@ -41,12 +41,10 @@ public class EndpointMetadata {
 	
 	protected final String pageNumber;
 	protected final boolean isListEndpoint;
-	protected final URI pageURI;
 	protected final boolean isParameterBasedFormat;
 	
-	public EndpointMetadata( EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings, URI pageURI ) {
+	public EndpointMetadata( EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings ) {
 		this.bindings = bindings;
-		this.pageURI = pageURI;
 		this.thisPage = thisPage;
 		this.pageNumber = pageNumber;
 		this.isListEndpoint = ep.isListEndpoint();
@@ -57,7 +55,7 @@ public class EndpointMetadata {
 	public static void addAllMetadata
 		( APIEndpointSpec spec
 		, MergedModels mergedModels
-		, URI uriForList
+		, URI fullURI
 		, Resource uriForDefinition
 		, Bindings bindings
 		, CompleteContext cc
@@ -114,15 +112,16 @@ public class EndpointMetadata {
 	    		thisMetaPage.addLiteral( OpenSearch.totalResults, totalResults.intValue() );
 	    	
 	    	thisMetaPage.addProperty( API.items, content );
-	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, 0 );
-	    	Resource nextPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, page + 1 );
-	    	Resource prevPage = URIUtils.adjustPageParameter( metaModel, uriForList, listEndpoint, page - 1 );
+	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, fullURI, listEndpoint, 0 );
+	    	Resource nextPage = URIUtils.adjustPageParameter( metaModel, fullURI, listEndpoint, page + 1 );
+	    	Resource prevPage = URIUtils.adjustPageParameter( metaModel, fullURI, listEndpoint, page - 1 );
 
 	    	thisMetaPage.addProperty( XHV.first, firstPage );
 			if (hasMorePages) thisMetaPage.addProperty( XHV.next, nextPage );
 			if (page > 0) thisMetaPage.addProperty( XHV.prev, prevPage );
 			
-			Resource listRoot = metaModel.createResource( uriForList.toString() );
+			Resource listRoot = metaModel.createResource( URIUtils.withoutPageParameters(fullURI).toString() );
+			
 			thisMetaPage
 	    		.addProperty( DCTerms.isPartOf, listRoot )
 	    		;
@@ -138,7 +137,7 @@ public class EndpointMetadata {
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
 		}
 	//
-		EndpointMetadata em = new EndpointMetadata( details, thisMetaPage, "" + page, bindings, uriForList );
+		EndpointMetadata em = new EndpointMetadata( details, thisMetaPage, "" + page, bindings);
 		Model metaModel1 = mergedModels.getMetaModel();
 		Model mergedModels1 = mergedModels.getMergedModel();
 	//
