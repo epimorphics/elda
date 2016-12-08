@@ -44,7 +44,7 @@ public class TestRecursiveEncoder {
             List<Resource> rootsR = modelRoots(roots, src);
             Context context = new Context();
             if (baseUri != null) context.setBase(baseUri);
-            Encoder.get(context).encodeRecursive(src, rootsR, writer);
+            Encoder.get(context).encodeRecursive(src, rootsR, writer, false);
             String encoding = writer.toString();
             
             JsonArray actual = parseJSON(encoding).get(EncoderDefault.PNContent).getAsArray();

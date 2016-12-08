@@ -8,6 +8,7 @@
 package com.epimorphics.lda.routing;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 import com.epimorphics.lda.bindings.Bindings;
@@ -119,13 +120,12 @@ public class DefaultRouter implements Router {
 	*/
 	@Override public String findItemURIPath( String context, URI requestURI, String path ) {
 		
-		Searcher s = searchers.get("_");
-		
+		Searcher s = searchers.get("_");		
 		Map<String, String> bindings = new HashMap<String, String>();
 		BaseAndTemplate bt = s.ms.lookup( bindings, path, null );
 		if (bt != null) {
-			String et = Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template );
-			// return resolvePath( bt.base, et );
+			String et = URIUtils.escapeAsURI
+				(Bindings.expandVariables( Lookup.Util.asLookup( bindings ), bt.template ));
 			if (bt.base == null) return et;
 			return URIUtils.resolveAgainstBase( requestURI, URIUtils.newURI( bt.base ), et ).toString();
 		}
@@ -161,5 +161,21 @@ public class DefaultRouter implements Router {
 
 	@Override public List<String> templates() {
 		return searcher.self.templates();
+	}
+	
+	/**
+	 * @param pathAndType local path and format type of the context
+	 * @param _formats set of format names
+	 * @param item path of reverse-lookup result
+	 * @return URI carrying same format name as pastAndType
+	 * @throws URISyntaxException
+	*/
+	public static URI accountForFormat(String type, Set<String> _formats, String item) throws URISyntaxException {
+		URI plainURI = new URI( item );
+		URI formatURI = type == null 
+			? plainURI 
+			: URIUtils.changeFormatSuffix(plainURI, new ArrayList<String>(_formats), type)
+			;
+		return formatURI;
 	}
 }

@@ -78,7 +78,7 @@ public class TestAPI {
 				String render = tester.renderAsJSON(apiName, rs);
 				try {
 					FileWriter writer = new FileWriter(file);
-					writer.append(description);
+					// writer.append(description);
 					writer.append(render);
 					writer.close();
 				} catch (IOException ei) {

@@ -16,12 +16,15 @@ import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.sources.Source;
+import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.util.URIUtils;
+import com.hp.hpl.jena.graph.compose.MultiUnion;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
+import com.hp.hpl.jena.util.ResourceUtils;
 import com.hp.hpl.jena.vocabulary.*;
 
 /**
@@ -38,12 +41,10 @@ public class EndpointMetadata {
 	
 	protected final String pageNumber;
 	protected final boolean isListEndpoint;
-	protected final URI pageURI;
 	protected final boolean isParameterBasedFormat;
 	
-	public EndpointMetadata( EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings, URI pageURI ) {
+	public EndpointMetadata( EndpointDetails ep, Resource thisPage, String pageNumber, Bindings bindings ) {
 		this.bindings = bindings;
-		this.pageURI = pageURI;
 		this.thisPage = thisPage;
 		this.pageNumber = pageNumber;
 		this.isListEndpoint = ep.isListEndpoint();
@@ -52,8 +53,9 @@ public class EndpointMetadata {
 	}
 	
 	public static void addAllMetadata
-		( MergedModels mergedModels
-		, URI ru
+		( APIEndpointSpec spec
+		, MergedModels mergedModels
+		, URI fullURI
 		, Resource uriForDefinition
 		, Bindings bindings
 		, CompleteContext cc
@@ -72,10 +74,10 @@ public class EndpointMetadata {
 		, Map<String, View> views
 		, Set<FormatNameAndType> formats
 		, EndpointDetails details
+		, Set<Resource> licences
 		) {
 	//
 		boolean listEndpoint = details.isListEndpoint();
-        URI uriForList = URIUtils.withoutPageParameters( ru );
 		Model metaModel = mergedModels.getMetaModel();
 		thisMetaPage.addProperty( API.definition, uriForDefinition );
 	//
@@ -84,8 +86,20 @@ public class EndpointMetadata {
 	//
 	    thisMetaPage.addProperty( RDF.type, API.Page );
 	//
-		if (listEndpoint) {
-	    	
+	    for (Resource licence: licences) {
+	    	Resource l = licence.inModel(thisMetaPage.getModel());
+	    	thisMetaPage.addProperty(DCTerms.license, l);
+	    	thisMetaPage.getModel().add(ResourceUtils.reachableClosure(l));
+	    }
+	//
+	    Set<Resource> notices = spec.getNotices();
+	    notices.addAll(spec.getAPISpec().getNotices());
+	    for (Resource d: notices) {
+	    	thisMetaPage.addProperty(ELDA_API.notice, d);
+	    	thisMetaPage.getModel().add(ResourceUtils.reachableClosure(d));
+	    }
+	//
+		if (listEndpoint) {  	
 	    	RDFList content = metaModel.createList( resultList.iterator() );
 	    	
 	    	thisMetaPage
@@ -98,15 +112,16 @@ public class EndpointMetadata {
 	    		thisMetaPage.addLiteral( OpenSearch.totalResults, totalResults.intValue() );
 	    	
 	    	thisMetaPage.addProperty( API.items, content );
-	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, 0 );
-	    	Resource nextPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, page + 1 );
-	    	Resource prevPage = URIUtils.adjustPageParameter( metaModel, ru, listEndpoint, page - 1 );
+	    	Resource firstPage = URIUtils.adjustPageParameter( metaModel, fullURI, listEndpoint, 0 );
+	    	Resource nextPage = URIUtils.adjustPageParameter( metaModel, fullURI, listEndpoint, page + 1 );
+	    	Resource prevPage = URIUtils.adjustPageParameter( metaModel, fullURI, listEndpoint, page - 1 );
 
 	    	thisMetaPage.addProperty( XHV.first, firstPage );
 			if (hasMorePages) thisMetaPage.addProperty( XHV.next, nextPage );
 			if (page > 0) thisMetaPage.addProperty( XHV.prev, prevPage );
 			
-			Resource listRoot = metaModel.createResource( uriForList.toString() );
+			Resource listRoot = metaModel.createResource( URIUtils.withoutPageParameters(fullURI).toString() );
+			
 			thisMetaPage
 	    		.addProperty( DCTerms.isPartOf, listRoot )
 	    		;
@@ -122,7 +137,7 @@ public class EndpointMetadata {
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
 		}
 	//
-		EndpointMetadata em = new EndpointMetadata( details, thisMetaPage, "" + page, bindings, uriForList );
+		EndpointMetadata em = new EndpointMetadata( details, thisMetaPage, "" + page, bindings);
 		Model metaModel1 = mergedModels.getMetaModel();
 		Model mergedModels1 = mergedModels.getMergedModel();
 	//
@@ -141,8 +156,15 @@ public class EndpointMetadata {
 		cc.include( versionsModel );
 		cc.include( formatsModel );
 		cc.include( execution );
-	//
-		em.addBindings( mergedModels1, bindingsModel, exec, cc );
+	//		
+		MultiUnion mu = new MultiUnion();
+		mu.addGraph(mergedModels1.getGraph());
+		mu.addGraph(versionsModel.getGraph());
+		mu.addGraph(formatsModel.getGraph());
+		mu.addGraph(execution.getGraph());
+		
+		Model toScan = ModelFactory.createModelForGraph(mu);
+		em.addBindings( toScan, bindingsModel, exec, cc );
 	//
 	    if (wantsMeta.wantsMetadata( "versions" )) metaModel1.add( versionsModel ); else setsMeta.setMetadata( "versions", versionsModel );
 	    if (wantsMeta.wantsMetadata( "formats" )) metaModel1.add( formatsModel );  else setsMeta.setMetadata( "formats", formatsModel );
@@ -200,7 +222,7 @@ public class EndpointMetadata {
 		return m.createResource( b.toString() );
     }
     
-	private Resource resourceForFormat( URI reqURI, Model m, Set<String> knownFormats, String formatName ) {
+	private Resource resourceForFormat( URI reqURI, Model m, List<String> knownFormats, String formatName ) {
 		if (isParameterBasedFormat) {
 			URI u = URIUtils.replaceQueryParam(reqURI, QueryParameter._FORMAT, formatName);
 			return m.createResource( u.toString() );
@@ -215,7 +237,7 @@ public class EndpointMetadata {
 	    this page could be presented in.
 	*/
 	public void addFormats( Model meta, Set<FormatNameAndType> formats ) {
-		Set<String> formatNames = getFormatNames( formats );
+		List<String> formatNames = getFormatNames( formats );
 		Resource page = thisPage.inModel(meta);
 		for (FormatNameAndType format: formats) {
 			Resource v = resourceForFormat( thisPageAsURI, meta, formatNames, format.name );
@@ -227,9 +249,10 @@ public class EndpointMetadata {
 		}
 	}
 
-	private Set<String> getFormatNames(Set<FormatNameAndType> formats) {
-		Set<String> result = new HashSet<String>();
+	private List<String> getFormatNames(Set<FormatNameAndType> formats) {
+		List<String> result = new ArrayList<String>();
 		for (FormatNameAndType nt: formats) result.add( nt.name );
+		Collections.sort(result);
 		return result;
 	}
 
@@ -265,7 +288,7 @@ public class EndpointMetadata {
 	}
 	
 	public void addTermBindings( Model toScan, Model meta, Resource exec, CompleteContext cc ) {
-		Map<String, String> termBindings = cc.Do();
+		Map<String, String> termBindings = cc.include(toScan).Do();
 		List<String> uriList = new ArrayList<String>( termBindings.keySet() );
 		Collections.sort( uriList );
 		for (String uri: uriList) {

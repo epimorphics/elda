@@ -7,8 +7,7 @@
 */
 package com.epimorphics.lda.metadata.tests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,13 +25,15 @@ import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
 import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
-import com.epimorphics.lda.specs.EndpointDetails;
+import com.epimorphics.lda.specs.*;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
+import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class TestGeneratedMetadata {
 	
@@ -45,8 +46,7 @@ public class TestGeneratedMetadata {
 	@Test public void testTermBindingsCoverAllPredicates() throws URISyntaxException {
 		Resource thisPage = ResourceFactory.createResource( "elda:thisPage" );
 		String pageNumber = "1";
-		Bindings cc = new Bindings();
-		URI reqURI = new URI( "" );
+		Bindings noBindings = new Bindings();
 	//
 		EndpointDetails spec = new EndpointDetails() {
 
@@ -58,7 +58,7 @@ public class TestGeneratedMetadata {
 				return false;
 			}
 		};
-		EndpointMetadata em = new EndpointMetadata( spec, thisPage, pageNumber, cc, reqURI );
+		EndpointMetadata em = new EndpointMetadata( spec, thisPage, pageNumber, noBindings );
 	//
 		PrefixMapping pm = PrefixMapping.Factory.create().setNsPrefix( "this", "http://example.com/root#" );
 		Model toScan = ModelIOUtils.modelFromTurtle( ":a <http://example.com/root#predicate> :b." );
@@ -67,15 +67,14 @@ public class TestGeneratedMetadata {
 		Model meta = ModelFactory.createDefaultModel();
 		Resource exec = meta.createResource( "fake:exec" );
 		ShortnameService sns = new StandardShortnameService();
-//		APIEndpoint.Request r = new APIEndpoint.Request( new Controls(), reqURI, cc );
 		
-		CompleteContext c  = 
+		CompleteContext cc  = 
 			new CompleteContext(CompleteContext.Mode.PreferPrefixes, sns.asContext(), pm )
-			.include(toScan);
+			;
 		
-		em.addTermBindings( toScan, meta, exec, c );
+		em.addTermBindings( toScan, meta, exec, cc );
 		
-		@SuppressWarnings("unused") Map<String, String> termBindings = c.Do();
+		@SuppressWarnings("unused") Map<String, String> termBindings = cc.Do();
 		Resource tb = meta.listStatements( null, API.termBinding, Any ).nextStatement().getResource();
 		assertTrue( meta.contains( tb, API.label, "this_predicate" ) );
 		assertTrue( meta.contains( tb, API.property, predicate ) );
@@ -105,7 +104,41 @@ public class TestGeneratedMetadata {
 		Resource thisMetaPage = createMetadata(false, totalResults);
 		assertTrue(thisMetaPage.hasProperty(RDF.type, API.ItemEndpoint));
 	}
+	
+	static final Property[] expectedTermboundProperties = new Property[] 
+		{ RDFS.label
+		, RDF.value
+		, RDF.type
+		};
 
+	@Test public void testTermbindsIncludesMetaproperties() throws URISyntaxException {
+		Integer totalResults = null;
+		Resource thisMetaPage = createMetadata(false, totalResults);
+		
+		for (Property p: expectedTermboundProperties) {
+			Model model = thisMetaPage.getModel();
+			if (!model.contains(null, API.property, p)) {
+				fail("term bindings should include " + model.shortForm(p.getURI()));
+			}
+		}
+	}
+
+	static final ModelLoader loader = new ModelLoader() {
+
+		@Override public Model loadModel(String uri) {
+			return null;
+		}
+		
+	};
+	
+	final Model config = ModelFactory.createDefaultModel();
+
+	final Resource root = config.createResource("eh:/the-spec");
+
+	final Resource sparql = config.createResource("eh:/sparqlEndpoint");
+	
+	final Resource theEndpoint = config.createResource("eh:/the-endpoint");
+	
 	private Resource createMetadata(final boolean isListEndpoint, Integer totalResults) throws URISyntaxException {
 		Model objectModel = ModelFactory.createDefaultModel();
 		MergedModels mergedModels = new MergedModels(objectModel);
@@ -150,8 +183,19 @@ public class TestGeneratedMetadata {
 			}
 		};
 	//
+		config.add(root, RDF.type, API.API);
+		config.add(root, API.sparqlEndpoint, sparql);
+		config.add(root, API.endpoint, theEndpoint);
+		
+		config.add(theEndpoint, RDF.type, API.ListEndpoint);
+		config.add(theEndpoint, API.uriTemplate, "/an/endpoint");
+		
+		APISpec aspec = new APISpec(FileManager.get(), root, loader);
+		APIEndpointSpec espec = aspec.getEndpoints().get(0);
+	//
 		EndpointMetadata.addAllMetadata
-			( mergedModels
+			( espec
+			, mergedModels
 			, ru
 			, uriForDefinition
 			, bindings
@@ -171,6 +215,7 @@ public class TestGeneratedMetadata {
 			, views
 			, formats
 			, details
+			, new HashSet<Resource>() // no licences
 			);
 		return thisMetaPage;
 	}

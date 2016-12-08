@@ -27,12 +27,14 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.exceptions.VelocityRenderingException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.common.*;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.util.CountStream;
 import com.epimorphics.util.StreamUtils;
+import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.*;
 
 /**
@@ -46,9 +48,12 @@ public class VelocityRendering
 implements BytesOut
 {
 
-    /***********************************/
+	/***********************************/
     /* Constants                       */
     /***********************************/
+	
+	/* poison string in case error occurs during streaming */
+	static final String HTML_POISON = "\n<=>'<=>\"<=>\n";
 
     /** The default place we look for Velocity files */
     public static final String DEFAULT_VELOCITY_ROOT_PATH = "/velocity/";
@@ -121,7 +126,7 @@ implements BytesOut
             times.setRenderDuration( System.currentTimeMillis() - base, vr.suffix() );
         }
         catch (Exception e) {
-            log.warn( e.getMessage(), e );
+            log.warn(ELog.message("%s (%s)", e.getMessage(), e ));
             throw new VelocityRenderingException();
         }
         finally {
@@ -130,12 +135,12 @@ implements BytesOut
                     cos.close();
                 }
                 catch (IOException e) {
-                    log.warn( "Failed to close count stream: " + e.getMessage(), e );
+                    log.warn(ELog.message("failed to close count stream: %s (%s)", e.getMessage(), e ));
                 }
             }
         }
     }
-
+    
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
@@ -157,14 +162,16 @@ implements BytesOut
     protected void render( OutputStream os ) {
         VelocityEngine ve = createVelocityEngine();
         VelocityContext vc = createVelocityContext( this.bindings );
+        vc.put("_licenses", LicenceResource.revise(results.getLicences()));
+        
         Template t = null;
 
         try {
             t = ve.getTemplate( vr.templateName() );
         }
         catch (ResourceNotFoundException e) {
-            log.debug( "Could not find base template " + vr.templateName() );
-            log.debug( "Current velocity path is: '" + ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH ) + "'" );
+			log.debug(ELog.message("could not find base template '%s'", vr.templateName()) );
+            log.debug(ELog.message("current velocity path is '%s'", ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH )));
             throw e;
         }
 
@@ -181,7 +188,7 @@ implements BytesOut
         }
     }
 
-    /**
+	/**
      * Create a Velocity engine instance, and initialise it with properties
      * loaded from the <code>velocity.properties</code> file.
      * @return A new Velocity engine
@@ -229,8 +236,8 @@ implements BytesOut
             String pathURL = b.pathAsURL( pathEntry).toString();
             roots.add( pathURL + (pathURL.endsWith( "/" ) ? "" : "/") );
         }
-        log.debug("rootPath: " + rootPath);
-        log.debug("complete expanded path: " + roots);
+        log.debug(ELog.message("rootPath '%s'", rootPath));
+        log.debug(ELog.message("complete expanded path '%s'", roots));
         return roots;
     }
 
@@ -315,7 +322,7 @@ implements BytesOut
                     p.load( is );
                 }
                 catch (IOException e) {
-                    log.warn( "IO exception while reading properties: " + e.getMessage(), e );
+                    log.warn(ELog.message( "IO exception while reading properties: %s (%s)", e.getMessage(), e));
                     throw new WrappedIOException( e );
                 }
                 finally {
@@ -323,7 +330,7 @@ implements BytesOut
                         is.close();
                     }
                     catch (IOException e) {
-                        log.warn( "IO exception while closing properties input stream: " + e.getMessage(), e );
+                        log.warn(ELog.message( "IO exception while closing properties input stream: %s (%s)", e.getMessage(), e));
                         throw new WrappedIOException( e );
                     }
                 }
@@ -356,10 +363,15 @@ implements BytesOut
         vc.put( "renderer", this.vr );
     }
 
-    /** Add the Elda bindings as context variables */
+    /**
+    	Add the Elda bindings as context variables. Use getUnslashed to
+    	unquote any quoted left braces (ie the {/ sequence) that were
+    	introduced to quote raw string values eg esp from exception
+    	messages.
+    */
     protected void addBindingsToContext( VelocityContext vc, Bindings binds ) {
         for (String key: binds.keySet()) {
-            vc.put( key, binds.get( key ) );
+            vc.put( key, binds.getUnslashed( key ) );
         }
     }
 
@@ -402,4 +414,9 @@ implements BytesOut
         ResultsModel rm = new ResultsModel( results );
         return rm.page();
     }
+
+	@Override public String getPoison() {
+		return HTML_POISON;
+	}
+
 }

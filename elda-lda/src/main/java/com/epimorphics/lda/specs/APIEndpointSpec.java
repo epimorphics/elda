@@ -20,6 +20,7 @@ import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -30,13 +31,12 @@ import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
  * Encapsulates the specification of the particular List/Set within
  * a particular API. 
  */
-public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.QueryBasis {
+public class APIEndpointSpec extends SpecCommon implements EndpointDetails, NamedViews, APIQuery.QueryBasis {
 	
 	private final APISpec apiSpec;
 	
@@ -78,6 +78,7 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     protected final boolean purging;
     
     public APIEndpointSpec( APISpec apiSpec, APISpec parent, Resource endpoint ) {
+    	super(apiSpec.getLicenceNodes(), endpoint);
     	checkEndpointType( endpoint );
     	this.apiSpec = apiSpec;
     	wantsContext = endpoint.hasLiteral( ELDA_API.wantsContext, true );
@@ -110,6 +111,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
         instantiateBaseQuery( endpoint ); 
         views = extractViews( endpoint );
         factoryTable = RendererFactoriesSpec.createFactoryTable( endpoint, apiSpec.getRendererFactoryTable() );
+    //
+        APISpec.setDefaultSuffixName(bindings, endpoint);        
     }
 
 	public String createURITemplate( Resource endpoint ) {
@@ -133,7 +136,6 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
     	boolean isList = endpoint.hasProperty( RDF.type, API.ListEndpoint );
     	boolean isItem = endpoint.hasProperty( RDF.type, API.ItemEndpoint );
     	if (isList || isItem) return;
-    	// log.warn( "endpoint " + endpoint + " is not declared as ListEndpoint or ItemEndpoint -- unexpected behaviour may result." );
     	throw new EldaException("endpoint " + endpoint + " is not declared as ListEndpoint or ItemEndpoint");
 	}
 
@@ -261,8 +263,12 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	}
 
 	private void setDescribeLabelIfPresent(Resource tRes, View v) {
-		if (tRes.hasProperty( ELDA_API.describeAllLabel )) 
-			v.setDescribeLabel( getStringValue( tRes, ELDA_API.describeAllLabel, RDFS.label.getURI() ) );
+		
+		List<Statement> statements = tRes.listProperties(ELDA_API.describeAllLabel).toList();
+		for (Statement s: statements) v.setDescribeLabel(RDFUtils.getLexicalForm(s.getObject()));
+		
+//		if (tRes.hasProperty( ELDA_API.describeAllLabel )) 
+//			v.setDescribeLabel( getStringValue( tRes, ELDA_API.describeAllLabel, RDFS.label.getURI() ) );
 	}
 
 	private void addViewPropertiesByString( View v, List<RDFNode> items ) {
@@ -341,7 +347,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	            if (parentN instanceof Resource) {
 	                addSelectorInfo( (Resource)parentN );
 	            } else {
-	                APISpec.log.error("Parent view must be a resource, found a literal: " + parentN);
+	                APISpec.log.error(ELog.message("[config]: parent view must be a resource, found a literal: '%s'"
+	                	, parentN));
 	            }
 	        }
 	        addSelectorInfo(s);
@@ -362,7 +369,8 @@ public class APIEndpointSpec implements EndpointDetails, NamedViews, APIQuery.Qu
 	            if (paramValue.length == 2) {
 	                baseQuery.deferrableAddFilter( Param.make( sns, paramValue[0] ), paramValue[1] );
 	            } else {
-	                APISpec.log.error("Filter specification contained unintepretable query string: " + q );
+	                APISpec.log.error(ELog.message("[config]: filter specification contained unintepretable query string: %s",
+	                	q));
 	            }
             }
         }

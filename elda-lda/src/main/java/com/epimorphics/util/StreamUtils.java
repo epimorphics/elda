@@ -37,4 +37,18 @@ public class StreamUtils {
 		catch (IOException e) { throw new WrappedException( e  ); }
 	}
 	
+	/**
+	    Write the content UTF-8 encoded down the given output stream.
+	*/
+	public static void writeAsUTF8(final String content, OutputStream os) {
+		OutputStreamWriter u = StreamUtils.asUTF8(os);
+		try {
+			u.write(content);
+			u.flush();
+			u.close();
+		} catch (IOException e) {
+			throw new WrappedException(e);
+		}
+	}
+	
 }

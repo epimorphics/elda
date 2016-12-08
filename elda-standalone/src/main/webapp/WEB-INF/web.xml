@@ -1,25 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-          http://java.sun.com/xml/ns/javaee/web-app_2_3.xsd"
-    version="2.3">
-
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
   <context-param>
      <param-name>com.epimorphics.api.initialSpecFile</param-name>
      <param-value>
 			hello::specs/hello-world.ttl
-		 	, again::specs/hello-again-world.ttl 
+            , again::specs/hello-again-world.ttl
             , tiny::specs/tiny-education.ttl
             , mini::specs/mini-education.ttl
             , full::specs/full-education.ttl
-            , old::specs/old-education.ttl
             , velocity::specs/hello-velocity.ttl
             , velocitydev::specs/hello-velocity-dev.ttl
             , ved::specs/mini-education-velocity.ttl
-			, bwq::specs/environment.data.gov.uk-bwq.ttl
+            , bwq::specs/environment.data.gov.uk-bwq.ttl
+           
         </param-value>
   </context-param>
+  
+  <!--
+            , tiny::specs/tiny-education.ttl
+            , mini::specs/mini-education.ttl
+            , full::specs/full-education.ttl
+            , velocity::specs/hello-velocity.ttl
+            , velocitydev::specs/hello-velocity-dev.ttl
+            , ved::specs/mini-education-velocity.ttl
+            , bwq::specs/environment.data.gov.uk-bwq.ttl
+  -->
+  
+  <filter>
+    <filter-name>LogRequestFilter</filter-name>
+    <filter-class>com.epimorphics.lda.support.LogRequestFilter</filter-class>
+    <init-param>
+        <param-name>com.epimorphics.lda.logging.ignoreIfMatches</param-name>
+        <param-value>(/standalone/(again/)?.*(auth|css|data|images|openlayers|scripts|specs|velocity|xslt|vocabulary|index.html|_error_pages).*)</param-value>
+    </init-param>
+  </filter>
+ 
+  <filter-mapping>
+    <filter-name>LogRequestFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
+<!--
     <filter>
         <filter-name>Jersey Web Application</filter-name>
         <filter-class>com.sun.jersey.spi.container.servlet.ServletContainer</filter-class>
@@ -39,8 +63,8 @@
              <param-value>com.sun.jersey.api.container.filter.PostReplaceFilter</param-value>
          </init-param>
   </filter>
+-->
 
-<!--
   <servlet>
     <servlet-name>jersey</servlet-name>
     <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -52,31 +76,40 @@
 
     <load-on-startup>1</load-on-startup>
   </servlet>
--->
 
   <!-- ==================================================================== -->
 
+<!--
   <filter-mapping>
     <filter-name>Jersey Web Application</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+-->
 
-<!--
   <servlet-mapping>
     <servlet-name>jersey</servlet-name>
     <url-pattern>/*</url-pattern>
   </servlet-mapping>
--->
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
-    <url-pattern>/lda-assets/*</url-pattern>
-    <url-pattern>/assets/*</url-pattern>
+    <url-pattern>/auth/*</url-pattern>
+    <url-pattern>/css/*</url-pattern>
+    <url-pattern>/data/*</url-pattern>
+    <url-pattern>/images/*</url-pattern>
+    <url-pattern>/openlayers/*</url-pattern>
+    <url-pattern>/scripts/*</url-pattern>
+    <url-pattern>/specs/*</url-pattern>
+    <url-pattern>/velocity/*</url-pattern>
+    <url-pattern>/xslt/*</url-pattern>
+    <url-pattern>/index.html/*</url-pattern>
+    <url-pattern>/vocabulary/*</url-pattern>
+    <url-pattern>/_error_pages/*</url-pattern>
   </servlet-mapping>
    
   <error-page>
     <error-code>404</error-code>
-    <location>/_errors/404.html</location>
+	<location>/_error_pages/velocity/404.html</location>
   </error-page>
 
   <!-- ==================================================================== -->

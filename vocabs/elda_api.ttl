@@ -5,6 +5,14 @@
 @prefix elda: <http://www.epimorphics.com/vocabularies/lda#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+
+elda:allLiteralsStructured a rdf:Property
+	; rdfs:label "all literals structured"
+	; rdfs:comment 
+		"""Property of JSON-LD formatter that determines if
+			all literals are rendered with their types.
+		"""
+	.
 	
 elda:allowReserved a rdf:Property
 	; rdfs:comment ":"
@@ -45,6 +53,16 @@ elda:cacheExpiryTime a rdf:Property
 		"""
 	; rdfs:label "cache expiry time"
 	.
+
+elda:checkJSONLDRoundTrip a rdf:Property
+    ; rdfs:comment 
+        """
+        If a JSON LD renderer has this property, its value determines
+        whether the renderer checks that the model has round-tripped
+        through the generated JSON LD.
+        """
+    ; rdfs:label "check JSON_LD roundtrip"
+    .
 
 elda:className a rdf:Property
 	; rdfs:label "class name"
@@ -135,6 +153,15 @@ elda:ifStarts a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:license a rdf:Property
+    ; rdfs:comment 
+        """ 
+        Configuration property to set a URL for a licence for the response page
+        or a way of extracting licence URLs from the SPARQL endpoint. There
+        can be many such licences.
+        """
+    .
+
 elda:listURL a rdf:Property
 	; rdfs:comment ""
 	.
@@ -147,6 +174,11 @@ elda:match a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:meta a rdf:Property
+    ; rdfs:label "meta"
+    ; rdfs:comment """Property mapping from page to metadata for JSON-LD rendering."""
+    .
+
 elda:metadataOptions a rdf:Property
 	; rdfs:comment ""
 	.
@@ -154,6 +186,11 @@ elda:metadataOptions a rdf:Property
 elda:metaURL a rdf:Property
 	; rdfs:comment ""
 	.
+
+elda:notice a rdf:Property
+    ; rdfs:label "notice"
+    ; rdfs:comment """Attatches a notice (eg deprecation) to a generated page."""
+    .
 
 elda:purgeFilterValues a rdf:Property
 	; rdfs:label "purge filter values"
@@ -181,6 +218,11 @@ elda:supportsNestedSelect a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:termBinding a rdf:Property
+    ; rdfs:label "termBinding"
+    ; rdfs:comment "Property from page to term bindings"
+    .
+
 elda:textContentProperty a rdf:Property
 	; rdfs:comment ""
 	.
@@ -207,6 +249,10 @@ elda:velocityTemplate a rdf:Property
 elda:viewName a rdf:Property
 	; rdfs:comment ""
 	.
+
+elda:vocabFallback a rdf:Property
+    ; rdfs:label "vocabFallback"
+    .
 
 elda:wantsContext a rdf:Property
 	; rdfs:comment ""
@@ -237,3 +283,6 @@ elda:VelocityFormatter a rdfs:Class
 	; rdfs:comment ""
 	.
 
+elda:jsonUsesISOdate a rdf:Property
+	; rdfs:comment " Property of a JSONFormatter that says if xsd:date and xsd:dateTime values should be encoded based on ISO 8601. Default value is false. "
+	.

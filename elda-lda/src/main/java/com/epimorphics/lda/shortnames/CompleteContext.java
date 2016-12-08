@@ -13,9 +13,8 @@ import static com.hp.hpl.jena.rdf.model.impl.Util.splitNamespace;
 import java.util.*;
 
 import com.epimorphics.jsonrdf.Context;
-import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.epimorphics.util.NameUtils;
+import com.epimorphics.util.EldaNameUtils;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
@@ -71,6 +70,10 @@ public class CompleteContext {
 			String ln = uri.substring( cut );
 			return new SplitURI(uri, ns, ln);
 		}
+
+		@Override public String toString() {
+			return "{URI: " + uri + ", ns: " + ns + ", ln: " + ln + "}";
+		}
 		
 		@Override public boolean equals(Object other) {
 			return other instanceof SplitURI && same( (SplitURI) other );
@@ -103,8 +106,8 @@ public class CompleteContext {
 	public Map<String, String> Do() {	
 		uriToShortname.clear();
 	//
-		uriToShortname.put(API.value.getURI(), "value");
-		uriToShortname.put(API.label.getURI(), "label");
+		uriToShortname.put(ELDA_API.value.getURI(), "value");
+		uriToShortname.put(ELDA_API.label.getURI(), "label");
 	//
 		pickPreferredShortnames();
 		Set<SplitURI> modelTerms = loadModelTerms( uriToShortname.keySet() );
@@ -116,6 +119,15 @@ public class CompleteContext {
 			extractHashedShortnames( modelTerms );
 		}
 	//
+		Set<String> seen = new HashSet<String>();
+		for (Map.Entry<String, String> e: uriToShortname.entrySet()) {
+			String v = e.getValue();
+			if (seen.add(v) == false) {
+				// System.err.println(">> Already seen: " + v);
+			}
+		}
+		
+		
 		return uriToShortname;
 	}
 
@@ -144,7 +156,7 @@ public class CompleteContext {
 		
 		for (SplitURI mt: modelTerms) {			
 			String ln = mt.ln;
-			if (NameUtils.isLegalShortname(ln) && !uriToShortname.containsKey( ln )) {
+			if (EldaNameUtils.isLegalShortname(ln) && !uriToShortname.containsValue( ln )) {
 				List<SplitURI> terms = localNameToURIs.get( ln );
 				if (terms == null) localNameToURIs.put( ln, terms = new ArrayList<SplitURI>() );
 				terms.add( mt );

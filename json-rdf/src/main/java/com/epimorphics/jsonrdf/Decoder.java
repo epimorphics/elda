@@ -20,15 +20,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.openjena.atlas.json.JsonArray;
-import org.openjena.atlas.json.JsonException;
-import org.openjena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonException;
+import org.apache.jena.atlas.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.extras.JsonUtils;
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
-import com.hp.hpl.jena.query.DataSource;
+import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -108,12 +108,12 @@ public class Decoder {
      * Decode a JSON object from the reader into collection of named graphs
      * @throws EncodingException if there is a jsonrdf level error or JSON error
      */
-    public static DataSource decodeGraphs(Reader reader) {
+    public static Dataset decodeGraphs(Reader reader) {
         try {
             JsonObject jObj = ParseWrapper.readerToJsonObject(reader);
             Context context = encoder.getContext(jObj);
             Model def = modelFromRoots( new Decoder(context, jObj).decodeResources() );
-            DataSource set = DatasetFactory.create(def);
+            Dataset set = DatasetFactory.create(def);
             JsonArray graphs = encoder.getNamedGraphs(jObj);
             if (graphs != null) {
                 for (int i = 0; i < graphs.size(); i++) {

@@ -64,7 +64,7 @@ public class TextSearchConfig {
 		return b == null ? placeEarly : b.getBoolean();
 	}
 
-	private TextSearchConfig
+	public TextSearchConfig
 		( Property textQueryProperty
 		, Property textContentProperty
 		, AnyList textSearchOperand

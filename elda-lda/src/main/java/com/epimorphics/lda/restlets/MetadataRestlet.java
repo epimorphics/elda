@@ -44,8 +44,8 @@ import com.hp.hpl.jena.util.ResourceUtils;
 @Path("/meta/{path: .*}") public class MetadataRestlet {
     
     @GET @Produces("text/plain") public Response requestHandlerPlain
-    	( @PathParam("path") String pathstub, @Context UriInfo ui) {
-        SpecRecord rec = lookupRequest(pathstub, ui);
+    	( @PathParam("path") String pathstub, @Context ServletContext config, @Context UriInfo ui) {
+        SpecRecord rec = lookupRequest(config, pathstub, ui);
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
@@ -55,8 +55,8 @@ import com.hp.hpl.jena.util.ResourceUtils;
     }
     
     @GET @Produces("application/rdf+xml")  public Response requestHandlerRDF_XML
-    	( @PathParam("path") String pathstub, @Context UriInfo ui) {
-        SpecRecord rec = lookupRequest(pathstub, ui);
+    	( @PathParam("path") String pathstub, @Context ServletContext config, @Context UriInfo ui) {
+        SpecRecord rec = lookupRequest(config, pathstub, ui);
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
@@ -66,8 +66,8 @@ import com.hp.hpl.jena.util.ResourceUtils;
     }
     
     @GET @Produces("text/turtle") public Response requestHandlerTurtle
-    	( @PathParam("path") String pathstub, @Context UriInfo ui) {
-        SpecRecord rec = lookupRequest(pathstub, ui);
+    	( @PathParam("path") String pathstub, @Context ServletContext config, @Context UriInfo ui) {
+        SpecRecord rec = lookupRequest(config, pathstub, ui);
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
@@ -77,8 +77,8 @@ import com.hp.hpl.jena.util.ResourceUtils;
     }
     
     @GET @Produces("application/json") public Response requestHandlerJson
-    	( @PathParam("path") String pathstub, @Context UriInfo ui) {
-        SpecRecord rec = lookupRequest(pathstub, ui);
+    	( @PathParam("path") String pathstub, @Context ServletContext config, @Context UriInfo ui) {
+        SpecRecord rec = lookupRequest(config, pathstub, ui);
         if (rec == null) {
             return returnNotFound("No specification corresponding to path: /" + pathstub);
         } else {
@@ -96,19 +96,15 @@ import com.hp.hpl.jena.util.ResourceUtils;
     
     @GET @Produces("text/html") public Response requestHandlerHTML
     	( @PathParam("path") String pathstub, @Context ServletContext config, @Context UriInfo ui) {
-        SpecRecord rec = lookupRequest(pathstub, ui);
+        SpecRecord rec = lookupRequest(config, pathstub, ui);
         String stub = rec == null ? "" : pathstub;
         return new ConfigRestlet().generateConfigPage( stub, config, ui );
     }
     
     @GET public Response requestHandlerAny( @PathParam("path") String pathstub, @Context ServletContext config, @Context UriInfo ui) {
-        try {SpecRecord rec = lookupRequest(pathstub, ui);
+        SpecRecord rec = lookupRequest(config, pathstub, ui);
         String stub = rec == null ? "" : pathstub;
-        return new ConfigRestlet().generateConfigPage( stub, config, ui ); }
-        catch (RuntimeException e) {
-        	System.err.println( "OOPS" );
-        	throw new RuntimeException( e );
-        }
+        return new ConfigRestlet().generateConfigPage( stub, config, ui );
     }
 
     static final Property SIBLING = ResourceFactory.createProperty( ELDA_API.NS + "SIBLING" );

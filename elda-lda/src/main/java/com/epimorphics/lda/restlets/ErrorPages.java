@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.View;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.velocity.VelocityRenderer;
 import com.epimorphics.lda.renderers.velocity.VelocityRendering;
 import com.epimorphics.lda.routing.ServletUtils;
@@ -65,8 +66,11 @@ public class ErrorPages {
 		
 		String page = fetchPage(filesToTry, fallBack);
 		
+		// Bind the exception message to _message. Quote any left braces to
+		// allow them to be passed through possibly multiple Bindings evaluations
+		// and eventually unquoted using Bindings::getUnslashed.
 		if (message == null) message = "Odd, no additional information is available.";
-		b.put("_message", message);
+		b.put("_message", message.replaceAll("\\{", "{\\\\}"));
 		
 		String builtPage = apply(b, page, name, message);
 		
@@ -76,8 +80,8 @@ public class ErrorPages {
 			.build()
 			;
 		} catch (Throwable e) {
-			log.error("An exception occurred when rendering an error page:");
-			log.error("  " + e.getMessage());
+			log.error(ELog.message("an exception occurred when rendering an error page"));
+			log.error(ELog.message("%s", e.getMessage()));
 			return Response
 				.status(Status.INTERNAL_SERVER_ERROR)
 				.entity(fallBack)

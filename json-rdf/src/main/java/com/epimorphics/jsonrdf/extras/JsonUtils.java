@@ -8,9 +8,9 @@
 
 package com.epimorphics.jsonrdf.extras;
 
-import org.openjena.atlas.json.JsonArray;
-import org.openjena.atlas.json.JsonObject;
-import org.openjena.atlas.json.JsonValue;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.JsonValue;
 
 public class JsonUtils {
 

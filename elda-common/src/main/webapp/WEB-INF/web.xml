@@ -5,6 +5,15 @@
 
 <web-app>
 
+  <!-- ==================================================================== -->
+
+    <context-param>
+       <param-name>com.epimorphics.api.initialSpecFile</param-name>
+        <param-value>/etc/elda/conf.d/{APP}/*.ttl</param-value>
+    </context-param>
+
+  <!-- ==================================================================== -->
+  
   <!--
   <filter>
       <filter-name>UrlRewriteFilter</filter-name>
@@ -16,46 +25,54 @@
         </init-param>
 
     </filter>
-
-    <filter-mapping>
-        <filter-name>UrlRewriteFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
     -->
 
-  <!-- ==================================================================== -->
+  <!-- suppress from the filtering log anything that mentions lda-assets. -->
+  
+  <filter>
+    <filter-name>LogRequestFilter</filter-name>
+    <filter-class>com.epimorphics.lda.support.LogRequestFilter</filter-class>
+    <init-param>
+        <param-name>com.epimorphics.lda.logging.ignoreIfMatches</param-name>
+        <param-value>.*/lda-assets/.*</param-value>
+    </init-param>
+  </filter>
 
-    <context-param>
-       <param-name>com.epimorphics.api.initialSpecFile</param-name>
-        <param-value>/etc/elda/conf.d/{APP}/*.ttl</param-value>
-    </context-param>
+  <filter>
+     <filter-name>Jersey Web Application</filter-name>
+     <filter-class>com.sun.jersey.spi.container.servlet.ServletContainer</filter-class>
+     <init-param>
+       <param-name>com.sun.jersey.config.property.packages</param-name>
+       <param-value>com.epimorphics.lda.restlets</param-value>
+     </init-param>
 
-  <!-- ==================================================================== -->
+     <init-param>
+       <param-name>com.sun.jersey.config.feature.FilterForwardOn404</param-name>
+       <param-value>true</param-value>
+     </init-param>
 
-    <filter>
-        <filter-name>Jersey Web Application</filter-name>
-        <filter-class>com.sun.jersey.spi.container.servlet.ServletContainer</filter-class>
+     <init-param>
+       <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
+       <param-value>com.sun.jersey.api.container.filter.PostReplaceFilter</param-value>
+     </init-param>
+  </filter>
+  
+   <!--
+   <filter-mapping>
+     <filter-name>UrlRewriteFilter</filter-name>
+     <url-pattern>/*</url-pattern>
+   </filter-mapping>
+    -->
 
-        <init-param>
-          <param-name>com.sun.jersey.config.property.packages</param-name>
-          <param-value>com.epimorphics.lda.restlets</param-value>
-        </init-param>
-
-        <init-param>
-          <param-name>com.sun.jersey.config.feature.FilterForwardOn404</param-name>
-          <param-value>true</param-value>
-        </init-param>
-
-        <init-param>
-             <param-name>com.sun.jersey.spi.container.ContainerRequestFilters</param-name>
-             <param-value>com.sun.jersey.api.container.filter.PostReplaceFilter</param-value>
-         </init-param>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>Jersey Web Application</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+  <filter-mapping>
+    <filter-name>LogRequestFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <filter-mapping>
+    <filter-name>Jersey Web Application</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
   <!-- ==================================================================== -->
 

@@ -1,4 +1,3 @@
-# Model from test: http://dummy/doc/deptsEn?name=department
 { "format" : "linked-data-api", "version" : "0.2", "results" : [{"_about" : "http://dummy/doc/deptsEn", "page" : 0, "itemsPerPage" : 10, "type" : ["http://purl.org/linked-data/api/vocab#ListEndpoint", "http://purl.org/linked-data/api/vocab#Page"], "extendedMetadataVersion" : "http://dummy/doc/deptsEn?_metadata=all", "definition" : "http://dummy/doc/deptsEn/meta", "first" : "http://dummy/doc/deptsEn?_page=0", "isPartOf" : "http://dummy/doc/deptsEn", "startIndex" : 1, "hasPart" : "http://dummy/doc/deptsEn"}
   ], "context" : {"mapping" : {"xsd_time" : {"uri" : "http://www.w3.org/2001/XMLSchema#time"}
       , "http://purl.org/linked-data/api/vocab#result" : {"uri" : "http://purl.org/linked-data/api/vocab#result"}

@@ -241,7 +241,9 @@
     #set( $href = $href.replace( $rewriteURLFrom.spelling(), $rewriteURLTo.spelling() ) )
     #set( $retainSuffix = true )
   #elseif( $_suffix && $href.contains( $_HOST.spelling() ))
-    #set( $retainSuffix = true )
+    #if( ! $_suffix.spelling().equals( $_defaultSuffix.spelling() ) )
+      #set( $retainSuffix = true )
+    #end
   #end
 
   #if( $retainSuffix )

@@ -3,7 +3,7 @@
 ## partials/content-detection.vm called from index.vm
 
 #macro( itemVisualExtension $resource $rowClass )
-  #if( $mapDisplay && $resource.hasAllProperties( $latLongProps ))
+  #if( $mapDisplay && $resource.hasAllProperties( $longLatProps ))
     #resourceMap( $resource, $rowClass )
   #end
 #end
@@ -12,34 +12,39 @@
   #if( ! $mapCounter )
     #set( $mapCounter = 1 )
   #end
-  #set( $geoTriples = $resource.extractByPredicate( $geoProps ) )
-  <div class="$rowClass">
-    <div class="col-md-8">
-      <ul class="resource-properties extensions">
-        #renderProperties( $geoTriples, 6, 6 )
-      </ul>
-    </div>
-    <div class="col-md-4">
-      <div class="item-extension map">
-        #set( $mapId = "map-" + $item.rdfNode().shortUniqueID() + "-" + $mapCounter )
-        #set( $mapCounter = $mapCounter + 1 )
-        #set( $long = $geoTriples.get( 0 ).rdfNode().getLexicalForm() )
-        #set( $lat  = $geoTriples.get( 1 ).rdfNode().getLexicalForm() )
-        <div id="$mapId"></div>
-        <script>
-          require( ['app/maps'], function( EldaMaps ) {
-            EldaMaps.addSmallMap( "$mapId", $long, $lat, {w:16, h:16, image: "$assets/images/target.png"} );
-          } );
-        </script>
+  #set( $longLatTriples = $resource.extractByPredicate( $longLatProps ) )
+  #if ($longLatTriples.size() > 0)
+    <div class="$rowClass">
+      <div class="col-md-8">
+        <ul class="resource-properties extensions">
+          #renderProperties( $longLatTriples, 6, 6 )
+        </ul>
+      </div>
+      <div class="col-md-4">
+        <div class="item-extension map">
+          #set( $mapId = "map-" + $item.rdfNode().shortUniqueID() + "-" + $mapCounter )
+          #set( $mapCounter = $mapCounter + 1 )
+          #set( $long = $longLatTriples.get( 0 ).rdfNode().getLexicalForm() )
+          #set( $lat  = $longLatTriples.get( 1 ).rdfNode().getLexicalForm() )
+          <div id="$mapId"></div>
+          <script>
+            require( ['app/maps'], function( EldaMaps ) {
+              EldaMaps.addSmallMap( "$mapId", $long, $lat, {w:16, h:16, image: "$assets/images/target.png"} );
+            } );
+          </script>
+        </div>
       </div>
     </div>
-  </div>
+  #end
 #end
 
 ## Hook for showing additional visual presentations based on content. Default
 ## behaviours:
 ## * if at least some items have locations, show a map for the whole results group
 #macro( groupVisualExtensions $hierarchy )
+  <div>
+    #parse( "partials/page-size.vm" )
+  </div>
   #if( $mapDisplay)
     #groupMap( $hierarchy )
   #end
@@ -56,7 +61,7 @@
         <div id="resultsMap"></div>
         <script>
           var locations = [];
-          #foreach( $resource in $latLongResources )
+          #foreach( $resource in $longLatResources )
             locations.push( {lon: $resource.getPropertyValue( "geo:long" ).getLexicalForm(),
                              lat: $resource.getPropertyValue( "geo:lat" ).getLexicalForm(),
                              label: "$resource.getName()"} );

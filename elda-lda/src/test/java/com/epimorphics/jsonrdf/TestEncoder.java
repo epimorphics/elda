@@ -58,7 +58,7 @@ public class TestEncoder {
         Encoder.get( context ).encode(
                 ModelFactory.createDefaultModel(), 
                 new ArrayList<Resource>(), 
-                writer);
+                writer, false);
         assertEquals("{\"format\":\"linked-data-api\",\"version\":\"0.2\",\"results\":[]}",
                 writer.toString().replaceAll( "[ \n]+", "" ));
     }
@@ -79,7 +79,7 @@ public class TestEncoder {
         if (roots == null) {
             enc.encode(src, writer);
         } else {
-            enc.encode(src, roots, writer);
+            enc.encode(src, roots, writer, false);
         }
         String written = writer.toString();
 		Reader reader = new StringReader( written );
@@ -158,8 +158,6 @@ public class TestEncoder {
         Context fromOntology = (ontTTL == null ? new Context() : new Context(ModelIOUtils.modelFromTurtle(ontTTL)));
         return testEncoding(srcTTL, Encoder.get(fromOntology), fromOntology, roots, expectedEncoding);
     }
-    
-    
     
     public static String testEncoding(String srcTTL, Encoder enc, Context context, String[] roots, String expectedEncoding) throws  IOException {
         return testEncoding(srcTTL, enc, context, srcTTL, roots, expectedEncoding);
@@ -367,7 +365,7 @@ public class TestEncoder {
     	( ":p a owl:DatatypeProperty; api:structured true. xsd:string a rdfs:Class." );
 
 	private Encoder encoderForStructuredLiterals(Context context) {
-    	return Encoder.get( Encoder.defaultPlugin, context );
+    	return Encoder.get( Encoder.defaultPlugin, context, false );
 	}
 
     @Test public void testDateLiteral() throws IOException {
@@ -400,7 +398,23 @@ public class TestEncoder {
         Model src = modelFromTurtle(srcTTL);
 		List<Resource> roots1 = modelRoots(roots, src);
 		StringWriter writer = new StringWriter();
-		enc.encode(src, roots1, writer);
+		enc.encode(src, roots1, writer, false);
+        String encoding = writer.toString();
+        JsonArray actual = parseJSON(encoding).get(EncoderDefault.PNContent).getAsArray();
+        JsonArray expected = ParseWrapper.stringToJsonArray(expectedEncoding);
+        assertEquals(expected, actual);
+    }
+    
+    @Test public void testISOFormattedDateTimeLiterals() throws IOException {
+        String srcTTL = ":r :p '1999-05-31T02:09:32'^^xsd:dateTime. :r :o '2015-07-27'^^xsd:date.";
+        Context context = new Context();
+        Encoder enc = Encoder.get(context, true);
+        String [] roots = new String[]{":r"};
+        String expectedEncoding = "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'1999-05-31T02:09:32','o':'2015-07-27'}]";
+        Model src = modelFromTurtle(srcTTL);
+        List<Resource> roots1 = modelRoots(roots, src);
+        StringWriter writer = new StringWriter();
+        enc.encode(src, roots1, writer, true);
         String encoding = writer.toString();
         JsonArray actual = parseJSON(encoding).get(EncoderDefault.PNContent).getAsArray();
         JsonArray expected = ParseWrapper.stringToJsonArray(expectedEncoding);
@@ -446,7 +460,7 @@ public class TestEncoder {
         List<Resource> rootsR = modelRoots(roots, src);
         Context context = new Context();
         StringWriter writer = new StringWriter();
-        Encoder.get(context).encodeRecursive(src, rootsR, writer);
+        Encoder.get(context).encodeRecursive(src, rootsR, writer, false);
         StringReader reader = new StringReader( writer.toString() );
         List<Resource> results = Decoder.decode(context, reader);
         assertNotNull(results);

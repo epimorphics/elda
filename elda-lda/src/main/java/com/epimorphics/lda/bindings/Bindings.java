@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.support.MultiMap;
 
@@ -23,6 +24,11 @@ import com.epimorphics.lda.support.MultiMap;
 	(a lexical form with type & language annotation). It also has a set of
 	parameter names, which correspond to the query parameter names, and can map
 	partial resource names to their URLs.
+<br>	
+	Bindings string-like values may contain variable expansion markers
+	`{name}`. When the value of a variable is fetched (using get) then
+	such sequences are replaced by the value of the named variable.
+	The special sequence {\ represents an { that is not part of an expansion.
 */
 public class Bindings implements Lookup {
 	static Logger log = LoggerFactory.getLogger(Bindings.class);
@@ -40,9 +46,7 @@ public class Bindings implements Lookup {
 	}
 
 	public Bindings(Bindings initial, URLforResource ufr) {
-		this.ufr = ufr;
-		this.putAll(initial);
-		this.parameterNames.addAll(initial.parameterNames);
+		this(initial, initial.parameterNames, ufr);
 	}
 
 	public Bindings(Set<String> parameterNames, Bindings initial) {
@@ -112,16 +116,16 @@ public class Bindings implements Lookup {
 	}
 
 	/**
-		Associate the arbitrarry <code>value</code> with the specified
+		Associate the arbitrary <code>value</code> with the specified
 		<code>key</code>. Return this Bindings.
 	*/
 	public Bindings putAny(String key, Object value) {
-		vars.put(key,  value);
+		vars.put(key, value);
 		return this;
 	}
 
 	/**
-		Answer a set of the variable names bound in this ValValues.
+		Answer the set of variable names bound in this Bindings.
 	*/
 	public Set<String> keySet() {
 		return vars.keySet();
@@ -141,6 +145,21 @@ public class Bindings implements Lookup {
 	*/
 	public Value get(String name) {
 		return getValue(name);
+	}
+	
+	/**
+		getUnslashed returns a Value whose spelling is that of the
+		value bound to name, with any {\ replaced by {. This provides
+		an unquoting operation for {\ sequences introduced to escape {
+		in raw strings. If there's no binding for name, getUnslashed
+		returns null. 
+		
+		<p>"getUnbackslashed" just felt clumsy.</p>
+	*/
+	public Value getUnslashed(String name) {
+		Value v = get(name);
+		if (v == null) return null;
+		return v.replaceBy(v.spelling().replace("{\\}", "{"));
 	}
 	
 	/**
@@ -246,13 +265,22 @@ public class Bindings implements Lookup {
 
 	public String expandVariables(String s, List<String> seen) {
 		int start = 0;
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder();		
 		while (true) {
 			int lb = s.indexOf('{', start);
 			if (lb < 0)
 				break;
-			int rb = s.indexOf('}', lb);
+			
 			sb.append(s.substring(start, lb));
+
+			// assume char after \ is }
+			if (s.charAt(lb + 1) == '\\') {
+				sb.append("{\\}");
+				start = lb + 3;
+				continue;
+			}
+			
+			int rb = s.indexOf('}', lb);
 			String name = s.substring(lb + 1, rb);
 
 			if (seen.contains(name))
@@ -265,7 +293,7 @@ public class Bindings implements Lookup {
 			if (thisV == null) {
 				sb.append("{").append(name).append("}");
 				// issue #177
-				log.debug("variable " + name + " has no value, not substituted.");
+				log.debug(ELog.message("variable '%s' has no value, not substituted", name));
 			} else {
 				seen.add(name);
 				Value v = evaluate(name, thisV, seen);
@@ -274,7 +302,7 @@ public class Bindings implements Lookup {
 				if (value == null) {
 					sb.append("{").append(name).append("}");
 					// issue #177
-					log.debug("variable " + name + " has no value, not substituted.");
+					log.debug(ELog.message("variable '%s' has no value, not substituted", name));
 				} else
 					sb.append(value);
 			}
@@ -296,14 +324,22 @@ public class Bindings implements Lookup {
 			int lb = s.indexOf('{', start);
 			if (lb < 0)
 				break;
-			int rb = s.indexOf('}', lb);
+			
 			sb.append(s.substring(start, lb));
+
+			if (s.charAt(lb + 1) == '\\') {
+				sb.append("{\\}");
+				start = lb + 3;
+				continue;
+			}
+			
+			int rb = s.indexOf('}', lb);
 			String name = s.substring(lb + 1, rb);
 			String value = values.getValueString(name);
 			if (value == null) {
 				sb.append("{").append(name).append("}");
 				// issue #177
-				log.debug("variable " + name + " has no value, not substituted.");
+				log.debug(ELog.message("variable '%s' has no value, not substituted", name));
 			} else
 				sb.append(value);
 			start = rb + 1;

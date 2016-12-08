@@ -4,10 +4,22 @@
 
 @prefix dct:	<http://purl.org/dc/terms/> .
 @prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
-@prefix egc:	<http://epimorphics.com/public/vocabulary/games.ttl#>.
+@prefix egc:	<https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#>.
 @prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix foaf:   <http://xmlns.com/foaf/0.1/> .
+@prefix elda:   <http://www.epimorphics.com/vocabularies/lda#> .
+
+# informal dataset for licence testing
+
+egc:dataset egc:gamesLicense <http://localhost:8080/standalone/licences/licence-beta-text.text> .
+
+<http://localhost:8080/standalone/licences/licence-beta-text.text> a elda:license
+    ; rdfs:label "per-page licence Beta"
+    ; rdfs:comment """per-page licence Beta"""
+    ; foaf:depiction <http://localhost:8080/standalone/velocity/images/licence-beta.png>
+    .
 
 # boardgame designers
 
@@ -137,6 +149,7 @@ egc:BriefHistoryOfTheWorld a egc:BoardGame
 	; egc:designed-by egc:ragnar-brothers 
 	; egc:players 3, 4, 5, 6
 	; egc:pubYear 2009
+    ; egc:gamesDataset egc:dataset
 	.
 
 egc:KingdomBuilder a egc:BoardGame
@@ -146,6 +159,7 @@ egc:KingdomBuilder a egc:BoardGame
 	; egc:designed-by egc:donald-x-vaccarino 
 	; rdfs:seeAlso <http://boardgamegeek.com/boardgame/107529/kingdom-builder>
 	; egc:pubYear 2011
+    ; egc:gamesDataset egc:dataset
 	.
 
 egc:ticket-to-ride a egc:BoardGame
@@ -154,6 +168,7 @@ egc:ticket-to-ride a egc:BoardGame
 	; egc:designed-by egc:Alan_R._Moon 
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2004
+    ; egc:gamesDataset egc:dataset
 	.
 
 egc:tigris-and-euphrates a egc:BoardGame
@@ -162,6 +177,7 @@ egc:tigris-and-euphrates a egc:BoardGame
 	; egc:designed-by egc:Reiner_Knizia 
 	; egc:players 2, 3, 4
 	; egc:pubYear 1997
+    ; egc:gamesDataset egc:dataset
 	.
 	
 egc:el-grande a egc:BoardGame
@@ -171,6 +187,7 @@ egc:el-grande a egc:BoardGame
 	; egc:designed-by egc:richard-ulrich
 	; egc:pubYear 1995
 	; egc:players 2, 3, 4, 5
+    ; egc:gamesDataset egc:dataset
 	.
 
 egc:age-of-industry a egc:BoardGame
@@ -179,6 +196,7 @@ egc:age-of-industry a egc:BoardGame
 	; egc:designed-by egc:martin-wallace 
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2010
+    ; egc:gamesDataset egc:dataset
 	.
 	
 egc:london a egc:BoardGame
@@ -187,6 +205,7 @@ egc:london a egc:BoardGame
 	; egc:designed-by egc:martin-wallace 
 	; egc:players 2, 3, 4
 	; egc:pubYear 2010
+    ; egc:gamesDataset egc:dataset
 	.
 	
 egc:age-of-steam a egc:BoardGame
@@ -195,6 +214,7 @@ egc:age-of-steam a egc:BoardGame
 	; egc:designed-by egc:martin-wallace 
 	; egc:players 3, 4, 5, 6 
 	; egc:pubYear 2002
+    ; egc:gamesDataset egc:dataset
 	.
 	
 egc:canal-mania a egc:BoardGame
@@ -203,6 +223,7 @@ egc:canal-mania a egc:BoardGame
 	; egc:designed-by egc:ragnar-brothers 
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2006
+    ; egc:gamesDataset egc:dataset
 	.	
 	
 egc:puerto-rico a egc:BoardGame
@@ -211,6 +232,7 @@ egc:puerto-rico a egc:BoardGame
 	; rdfs:label "Puerto Rico"
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2002
+    ; egc:gamesDataset egc:dataset
 	.
 	
 egc:tag-mahal a egc:BoardGame
@@ -219,6 +241,7 @@ egc:tag-mahal a egc:BoardGame
 	; egc:designed-by egc:Reiner_Knizia 
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2006
+    ; egc:gamesDataset egc:dataset
 	.
 	
 egc:last-train-to-wensleydale a egc:BoardGame
@@ -228,6 +251,7 @@ egc:last-train-to-wensleydale a egc:BoardGame
 	; egc:players 3, 4
 	; egc:pubYear 2009
 	; egc:playTimeMinutes 120
+    ; egc:gamesDataset egc:dataset
 	.
 	
 egc:a-few-acres-of-snow a egc:BoardGame
@@ -237,6 +261,7 @@ egc:a-few-acres-of-snow a egc:BoardGame
 	; egc:players 2
 	; egc:pubYear 2011
 	; egc:playTimeMinutes 60
+    ; egc:gamesDataset egc:dataset
 	.
 	
 egc:lancaster a egc:BoardGame
@@ -247,6 +272,7 @@ egc:lancaster a egc:BoardGame
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2011
 	; egc:playTimeMinutes 60
+    ; egc:gamesDataset egc:dataset
 	.
 	
 egc:glen-more a egc:BoardGame
@@ -257,6 +283,7 @@ egc:glen-more a egc:BoardGame
 	; egc:players 2, 3, 4, 5
 	; egc:pubYear 2010
 	; egc:playTimeMinutes 60
+    ; egc:gamesDataset egc:dataset
 	.
 	
 egc:wallenstein a egc:BoardGame
@@ -273,6 +300,13 @@ egc:wallenstein a egc:BoardGame
 # Information about the classes and properties used in the
 # example data.
 #
+egc:gamesDataset
+    rdfs:label "gamesDataset"
+    .
+    
+egc:gamesLicense
+    rdfs:label "gamesLicense"
+    .
     
 egc:BoardGame a rdfs:Class
     ; rdfs:label "Board Game"

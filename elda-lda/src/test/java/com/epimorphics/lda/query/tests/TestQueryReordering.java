@@ -19,12 +19,15 @@ import org.junit.Test;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.epimorphics.lda.support.QuerySupport;
+import com.epimorphics.lda.support.QuerySupport.Reordered;
+import com.epimorphics.lda.textsearch.TextSearchConfig;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 public class TestQueryReordering {
 
-	static final Any A = RDFQ.uri( "eh:/A" );
-	static final Any B = RDFQ.uri( "eh:/B" );
+	static final Any A = RDFQ.uriRaw( "eh:/A" );
+	static final Any B = RDFQ.uriRaw( "eh:/B" );
 	
 	static final Any N = RDFQ.literal( 17 );
 	static final Any M = RDFQ.literal( "M" );
@@ -34,9 +37,9 @@ public class TestQueryReordering {
 	static final Any Y = RDFQ.var( "?B" );
 	
 	static final Any t = QuerySupport.text_query;
-	static final Any T = RDFQ.uri( RDF.type.getURI() );
-	static final Any P = RDFQ.uri( "eh:/P" );
-	static final Any Q = RDFQ.uri( "eh:/Q" );
+	static final Any T = RDFQ.uri( RDF.type );
+	static final Any P = RDFQ.uriRaw( "eh:/P" );
+	static final Any Q = RDFQ.uriRaw( "eh:/Q" );
 	
 	static final RDFQ.Triple IPA = RDFQ.triple(I, P, A);
 	static final RDFQ.Triple IPB = RDFQ.triple(I, P, B);
@@ -123,20 +126,82 @@ public class TestQueryReordering {
 		assertEquals( list(ItM, ITA), reorder(false, ITA, ItM) );
 	}
 
+	@Test public void testWithConfiguredIn() {
+		
+		TextSearchConfig ts = new TextSearchConfig(
+			TextSearchConfig.JENA_TEXT_QUERY
+			, TextSearchConfig.DEFAULT_CONTENT_PROPERTY
+			, new AnyList()
+			, true
+		);
+		
+		RDFQ.Triple query = RDFQ.triple(I, t, M);
+		RDFQ.Triple plain = RDFQ.triple(I, P, M);
+		List<Triple> them = Arrays.asList(plain, query);
+		Reordered r = QuerySupport.reorder(them, ts);		
+		assertEquals(list(query), r.textQueryTriples);
+		assertEquals(list(plain), r.plainTriples);
+	}
+
+	@Test public void testWithConfiguredOut() {
+		
+		TextSearchConfig ts = new TextSearchConfig(
+			ResourceFactory.createProperty("absent:query")
+			, TextSearchConfig.DEFAULT_CONTENT_PROPERTY
+			, new AnyList()
+			, true
+		);
+		
+		RDFQ.Triple query = RDFQ.triple(I, t, M);
+		RDFQ.Triple plain = RDFQ.triple(I, P, M);
+		List<Triple> them = Arrays.asList(plain, query);
+		Reordered r = QuerySupport.reorder(them, ts);		
+		assertEquals(list(), r.textQueryTriples);
+		assertEquals(list(plain, query), r.plainTriples);
+	}		
+		
 	private void testRetains(Triple ...triples) {
+
+		TextSearchConfig ts = new TextSearchConfig(
+			TextSearchConfig.JENA_TEXT_QUERY
+			, TextSearchConfig.DEFAULT_CONTENT_PROPERTY
+			, new AnyList()
+			, true
+		);
+		
 		Set<Triple> expected = set(triples);
 		List<Triple> reordered = Arrays.asList( triples );
-		Set<Triple> derived = new HashSet<Triple>( QuerySupport.reorder( reordered, true ) );
+		Set<Triple> derived = new HashSet<Triple>( QuerySupport.reorder( reordered, ts ).mergeToSet() );
 		assertEquals( expected.size(), reordered.size() );
 		assertEquals( expected, derived );
 	}
 	
 	private List<Triple> reorder(Triple... triples) {
-		return reorder( true, triples );
+		
+		TextSearchConfig ts = new TextSearchConfig(
+			TextSearchConfig.JENA_TEXT_QUERY
+			, TextSearchConfig.DEFAULT_CONTENT_PROPERTY
+			, new AnyList()
+			, true
+		);
+		
+		return reorder( ts, triples );
 	}
 	
 	private List<Triple> reorder(boolean tqFirst, Triple... triples) {
-		return QuerySupport.reorder( Arrays.asList( triples ), tqFirst );
+		
+		TextSearchConfig ts = new TextSearchConfig(
+				TextSearchConfig.JENA_TEXT_QUERY
+				, TextSearchConfig.DEFAULT_CONTENT_PROPERTY
+				, new AnyList()
+				, tqFirst
+			);
+		
+		return QuerySupport.reorder( Arrays.asList( triples ), ts ).merge();
+	}
+	
+	private List<Triple> reorder(TextSearchConfig ts, Triple... triples) {
+		return QuerySupport.reorder( Arrays.asList( triples ), ts ).merge();
 	}
 	
 }

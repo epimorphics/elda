@@ -62,7 +62,7 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
 		if (multivalued != b.multivalued) result.append( " multivalued: " ).append(multivalued).append(" vs ").append( b.multivalued );  
 		if (!uri.equals(b.uri)) result.append( " uri: " ).append(uri).append(" vs ").append(b.uri);  
 		if (hidden != b.hidden) result.append( " hidden: " ).append(hidden).append(" vs ").append(b.hidden);  
-		if (structured != b.structured) result.append( " structured: " ).append(structured).append(" vs ").append(b.structured);  
+		if (structured != b.structured) result.append( " structured: " ).append(structured).append(" vs ").append(b.structured);
 		if (!eq(p, b.p)) result.append( " p: " ).append(p).append(" vs ").append(b.p);  
 		return result.toString();
 	}
@@ -101,7 +101,7 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
 	public boolean isStructured() {
 		return structured;
 	}
-    
+	
     public ContextPropertyInfo(String uri, String name) {
     	this.uri = uri;
         this.name = name;
@@ -118,7 +118,7 @@ public class ContextPropertyInfo implements Comparable<ContextPropertyInfo>, Clo
     }
     
     public String getSerialisationName() {
-    	if (NsUtils.isMagic( NsUtils.getNameSpace(uri ) )) return NsUtils.getLocalName( uri );
+    	// if (NsUtils.isMagic( NsUtils.getNameSpace(uri ) )) return NsUtils.getLocalName( uri );
     	return name;
     }
     

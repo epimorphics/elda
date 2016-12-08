@@ -17,6 +17,7 @@ import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.Couple;
 import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.shared.BrokenException;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -302,9 +303,10 @@ public class XMLRendering {
 	} ;
 	
 	private List<RDFNode> sortObjects( Property predicate, Set<RDFNode> objects ) {
+		
 		List<Couple<RDFNode, String>> labelleds = new ArrayList<Couple<RDFNode, String>>();
-		for (RDFNode r: objects) labelleds.add( new Couple<RDFNode, String>( r, labelOf( r ) ) ); 
-		Collections.sort( labelleds, compareCouples );				
+		for (RDFNode r: objects) labelleds.add( new Couple<RDFNode, String>( r, objectTagOf( r ) ) ); 
+		Collections.sort( labelleds, compareCouples );	
 		List<RDFNode> result = new ArrayList<RDFNode>();
 		for (Couple<RDFNode, String> labelled: labelleds) result.add( labelled.a );
 		return result;
@@ -318,7 +320,7 @@ public class XMLRendering {
 	    if it has one. We try api:label then rdfs:label and otherwise fall back to
 	    the bnode ID and cross our fingers.
 	*/
-	private String labelOf( RDFNode r ) {
+	private String objectTagOf( RDFNode r ) {
 		if (r.isAnon()) {
 			Statement labelling = r.asResource().getProperty( API.label );
 			if (labelling == null) labelling = r.asResource().getProperty( RDFS.label );
@@ -326,8 +328,18 @@ public class XMLRendering {
 				RDFNode label = labelling.getObject();
 				if (label.isLiteral()) return label.asLiteral().getLexicalForm();
 			}
+			return r.asNode().getBlankNodeLabel();
 		}
-		return spelling( r );
+	//
+		if (r.isURIResource()) {
+			Resource r1 = (Resource) r;
+			String shorter = nameMap.get( r1.getURI() );
+			return shorter == null ? r1.getURI() : shorter;
+		}
+		if (r.isLiteral()) {
+			return ((Literal) r).getLexicalForm();
+		}
+		throw new BrokenException("node " + r + " neither blank, literal, or URI.");
 	}
 
 	protected String spelling( RDFNode n ) {
@@ -398,8 +410,14 @@ public class XMLRendering {
 	
 	private String shortNameFor( String URI ) {
 		String s = nameMap.get( URI );
-		if (s == null) s = URI.replaceFirst( ".*[#/]",  "" );
+		if (s == null) nameMap.put(URI,  s = URItoNCName(URI));
 		return s;
+	}
+
+	// private static Pattern NCPattern = Pattern.compile("^[-_A-Za-z][_.A-Za-z0-9]*$");
+	
+	private String URItoNCName(String URI) {
+		return URI.replaceFirst( ".*[#/]",  "" );
 	}
 
 	final Map<AnonId, String> idMap = new HashMap<AnonId, String>();

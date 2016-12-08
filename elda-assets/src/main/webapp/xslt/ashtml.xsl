@@ -9,7 +9,7 @@ $prefLabel, $altLabel, $title and $name variables.
 
 <xsl:import href="linked-data-api.xsl" />
 
-<xsl:param name="_resourceRoot">/</xsl:param> 
+<xsl:param name="_resourceRoot">/</xsl:param>
 
 <xsl:param name="visibleSparqlEndpoint"/>
 <xsl:param name="visibleSparqlForm"/>
@@ -46,7 +46,7 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 
 <xsl:template match="result" mode="meta">
-	<link rel="shortcut icon" href="{$_resourceRoot}images/datagovuk_favicon.png" type="image/x-icon" /> 
+	<link rel="shortcut icon" href="{$_resourceRoot}images/datagovuk_favicon.png" type="image/x-icon" />
 	<xsl:apply-templates select="first | prev | next | last" mode="metalink" />
 	<xsl:apply-templates select="hasFormat/item" mode="metalink" />
 </xsl:template>
@@ -102,16 +102,16 @@ $prefLabel, $altLabel, $title and $name variables.
 						.attr('src', '<xsl:value-of select="$activeImageBase"/>/Question.png')
 						.next().fadeOut('slow');
 				});
-			
+
 			$('input[type=date]').datepicker({
 				changeMonth: true,
 				changeYear: true,
 				dateFormat: 'yy-mm-dd',
 				autoSize: true
 			});
-			
+
 			$('#search').hide();
-			
+
 			$('#openSearch')
 				.toggle(function () {
 					$(this).text('Hide Search Form');
@@ -120,7 +120,7 @@ $prefLabel, $altLabel, $title and $name variables.
 					$(this).text('Show Search Form');
 					$('#search').slideUp('slow');
 				});
-			
+
 			$('.provenance textarea')
 				.each(function () {
 					var skipLines = parseFloat($(this).attr('data-skip-lines'), 10);
@@ -139,7 +139,7 @@ $prefLabel, $altLabel, $title and $name variables.
 							.css('-moz-border-radius', '5px');
 					});
 				});
-			
+
 			<xsl:if test="$showMap = 'true'">
 				<xsl:variable name="uri">
 					<xsl:call-template name="clearPosition">
@@ -164,7 +164,7 @@ $prefLabel, $altLabel, $title and $name variables.
 					<xsl:if test="not(/result/items)">_properties=<xsl:value-of select="$eastingParam"/>,<xsl:value-of select="$northingParam"/>&amp;</xsl:if>
 				</xsl:variable>
 				initMap();
-				
+
 				$('.map .search').click(function() {
 					var bounds = summaryMap.getExtent();
 					var minEasting = Math.ceil(bounds.left);
@@ -329,7 +329,7 @@ $prefLabel, $altLabel, $title and $name variables.
 				</xsl:when>
 				<xsl:otherwise>identify the items to be shown in the page.</xsl:otherwise>
 			</xsl:choose>
-			
+
 			<xsl:text> You can modify it here and re-run the query but you may find more options at the </xsl:text>
 			<a href="{$formToUse}">endpoint's page</a>
 			<xsl:text>.</xsl:text>
@@ -487,7 +487,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		</xsl:if>
 	</nav>
 </xsl:template>
-	
+
 <xsl:template match="result" mode="map">
 	<xsl:variable name="northing" select="key('propertyTerms', $northing-uri)/label" />
 	<xsl:variable name="easting" select="key('propertyTerms', $easting-uri)/label" />
@@ -570,7 +570,7 @@ $prefLabel, $altLabel, $title and $name variables.
 					</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
-			<xsl:variable name="searchMap" 
+			<xsl:variable name="searchMap"
 				select="//*[*[name(.) = $easting] and *[name(.) = $northing]]" />
 			<section class="map">
 				<h1>Map</h1>
@@ -675,7 +675,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
-	
+
 <xsl:template match="result" mode="graphs">
 	<xsl:variable name="rows">
 		<xsl:for-each select="items/item/*[generate-id(key('properties', name(.))[1]) = generate-id(.)]">
@@ -695,7 +695,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		</section>
 	</xsl:if>
 </xsl:template>
-	
+
 <xsl:template match="*" mode="graphRow">
 	<xsl:param name="parentName" select="''" />
 	<xsl:variable name="propertyName">
@@ -1112,7 +1112,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		<xsl:call-template name="createInfo">
 			<xsl:with-param name="text">
 				<xsl:text>Choose what information you want to view about each item. </xsl:text>
-				<xsl:text>There are some pre-defined views, but starred properties are always present no matter what the view. </xsl:text> 
+				<xsl:text>There are some pre-defined views, but starred properties are always present no matter what the view. </xsl:text>
 				<xsl:text>You can star properties by clicking on the </xsl:text>
 				<img src="{$inactiveImageBase}/Star.png" alt="star this property" />
 				<xsl:text> icon. The currently starred icons have a </xsl:text>
@@ -1170,7 +1170,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		</ul>
 	</section>
 </xsl:template>
-	
+
 <xsl:template match="result" mode="selectedProperties">
 	<xsl:param name="properties" />
 	<xsl:param name="previousProperties" select="''" />
@@ -1202,7 +1202,7 @@ $prefLabel, $altLabel, $title and $name variables.
 							<xsl:text>,</xsl:text>
 						</xsl:if>
 						<xsl:value-of select="substring-after($properties, ',')" />
-					</xsl:with-param> 
+					</xsl:with-param>
 				</xsl:call-template>
 			</xsl:attribute>
 			<img src="{$activeImageBase}/Star.png" alt="unstar this property" />
@@ -1292,7 +1292,7 @@ $prefLabel, $altLabel, $title and $name variables.
 								<xsl:text>,</xsl:text>
 							</xsl:if>
 							<xsl:value-of select="$name" />
-						</xsl:with-param> 
+						</xsl:with-param>
 					</xsl:call-template>
 				</xsl:attribute>
 				<img src="{$inactiveImageBase}/Star.png" alt="star this property" />
@@ -1541,7 +1541,7 @@ $prefLabel, $altLabel, $title and $name variables.
 							<xsl:text>,</xsl:text>
 						</xsl:if>
 						<xsl:value-of select="substring-after($sorts, ',')" />
-					</xsl:with-param> 
+					</xsl:with-param>
 				</xsl:call-template>
 			</xsl:attribute>
 			<img src="{$activeImageBase}/Cancel.png" alt="remove this sort" />
@@ -1564,7 +1564,7 @@ $prefLabel, $altLabel, $title and $name variables.
 								<xsl:value-of select="concat('-', $sort)" />
 							</xsl:otherwise>
 						</xsl:choose>
-					</xsl:with-param> 
+					</xsl:with-param>
 				</xsl:call-template>
 			</xsl:attribute>
 			<xsl:attribute name="title">
@@ -1666,7 +1666,7 @@ $prefLabel, $altLabel, $title and $name variables.
 						<xsl:text>,</xsl:text>
 					</xsl:if>
 					<xsl:value-of select="$name" />
-				</xsl:with-param> 
+				</xsl:with-param>
 			</xsl:call-template>
 		</xsl:variable>
 		<li>
@@ -1720,7 +1720,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		<xsl:otherwise><xsl:apply-templates select="." mode="paramHierarchy" /></xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
-	
+
 <xsl:template match="result" mode="bottomnav">
 	<nav class="bottomnav">
 		<xsl:apply-templates select="." mode="pagenav" />
@@ -1939,7 +1939,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		</xsl:for-each>
 	</table>
 </xsl:template>
-	
+
 <xsl:template match="*" mode="caption">
 	<caption>
 		<xsl:apply-templates select=".." mode="link">
@@ -2152,7 +2152,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		</xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
-	
+
 <xsl:template match="*[@datatype = 'boolean']" mode="display">
 	<xsl:choose>
 		<xsl:when test=". = 'true'">
@@ -2344,21 +2344,32 @@ $prefLabel, $altLabel, $title and $name variables.
 </xsl:template>
 
 <xsl:template match="*[@href]" mode="content">
-	<xsl:param name="nested" select="false()" />
-	<xsl:choose>
-		<xsl:when test="$nested">
-			<xsl:apply-templates select="." mode="table" />
-		</xsl:when>
-		<xsl:otherwise>
-			<xsl:apply-templates select="." mode="link">
-				<xsl:with-param name="content">
-					<xsl:call-template name="lastURIpart">
-						<xsl:with-param name="uri" select="@href" />
-					</xsl:call-template>
-				</xsl:with-param>
-			</xsl:apply-templates>
-		</xsl:otherwise>
-	</xsl:choose>
+  <xsl:param name="nested" select="false()"/>
+  <xsl:choose>
+    <xsl:when test="$nested">
+      <xsl:apply-templates select="." mode="table"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:choose>
+        <xsl:when test="/result/items/item[@href = current()/@href]">
+          <xsl:apply-templates select="/result/items/item[@href = current()/@href]" mode="link">
+            <xsl:with-param name="content">
+              <xsl:apply-templates select="/result/items/item[@href = current()/@href]" mode="name"/>
+            </xsl:with-param>
+          </xsl:apply-templates>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:apply-templates select="." mode="link">
+            <xsl:with-param name="content">
+              <xsl:call-template name="lastURIpart">
+                <xsl:with-param name="uri" select="@href"/>
+              </xsl:call-template>
+            </xsl:with-param>
+          </xsl:apply-templates>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <xsl:template match="*" mode="content">
@@ -2676,7 +2687,7 @@ $prefLabel, $altLabel, $title and $name variables.
 		</xsl:if>
 	</section>
 </xsl:template>
-	
+
 <xsl:template name="hiddenInputs">
 	<xsl:param name="params" />
 	<xsl:variable name="param">
@@ -2735,8 +2746,8 @@ $prefLabel, $altLabel, $title and $name variables.
 								<col width="25%" />
 								<col width="75%" />
 							</colgroup>
-							<xsl:for-each 
-								select="key('properties', $propertyName)/*[name() != 'item' and generate-id(key('properties', concat($propertyName, '.', name(.)))[1]) = generate-id(.)] | 
+							<xsl:for-each
+								select="key('properties', $propertyName)/*[name() != 'item' and generate-id(key('properties', concat($propertyName, '.', name(.)))[1]) = generate-id(.)] |
 								key('properties', concat($propertyName, '.item'))/*[generate-id(key('properties', concat($propertyName, '.item.', name(.)))[1]) = generate-id(.)]">
 								<xsl:sort select="name(.) = $easting" order="descending" />
 								<xsl:sort select="name(.) = $northing" order="descending" />

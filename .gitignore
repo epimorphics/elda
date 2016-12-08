@@ -2,6 +2,9 @@
 
 *.jar
 *.war
+*.swp
+
+MANIFEST.MF
 
 target/
 .settings/
@@ -9,6 +12,7 @@ target/
 .project
 .metadata
 .tomcatplugin
+.extract
 .#webclasspath
 elda-standalone/meta-graph.ttl
 elda-standalone/object-graph.ttl

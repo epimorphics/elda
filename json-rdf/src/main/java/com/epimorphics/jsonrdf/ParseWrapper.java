@@ -11,10 +11,10 @@ package com.epimorphics.jsonrdf;
 import java.io.Reader;
 import java.io.StringReader;
 
-import org.openjena.atlas.json.JsonArray;
-import org.openjena.atlas.json.JsonObject;
-import org.openjena.atlas.json.io.JSONMaker;
-import org.openjena.atlas.json.io.parser.JSONParser;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
+import org.apache.jena.atlas.json.io.JSONMaker;
+import org.apache.jena.atlas.json.io.parser.JSONParser;
 
 public class ParseWrapper {
 

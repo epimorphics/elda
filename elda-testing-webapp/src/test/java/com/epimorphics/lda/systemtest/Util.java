@@ -7,14 +7,24 @@
 */
 package com.epimorphics.lda.systemtest;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
+import org.apache.http.*;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.protocol.HttpContext;
+
 public class Util {
 
-	interface CheckContent {
+	public interface CheckContent {
 		boolean check( String s );
 		String failMessage();
 	}
@@ -42,5 +52,31 @@ public class Util {
 		}
 		
 	};
+
+	public static void testHttpRequest( String x, int status, CheckContent cc ) 
+		throws ClientProtocolException, IOException {
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+		httpclient.setRedirectStrategy( new DefaultRedirectStrategy() {
+			 public boolean isRedirected(
+			            final HttpRequest request,
+			            final HttpResponse response,
+			            final HttpContext context) throws ProtocolException {
+	
+			    int statusCode = response.getStatusLine().getStatusCode();	 
+				return statusCode == HttpStatus.SC_SEE_OTHER ? false : super.isRedirected(request, response, context);
+			 }
+			
+		} );
+	
+		HttpGet httpget = new HttpGet("http://localhost:" + 8070 + "/testing/" + x );
+		HttpResponse response = httpclient.execute(httpget);
+	//
+		assertEquals( "Check response status:", status, response.getStatusLine().getStatusCode() );
+		HttpEntity entity = response.getEntity();
+		if (entity != null) {
+			String content = stringFrom( entity.getContent() );
+			assertTrue( cc.failMessage(), cc.check( content ) );
+		}
+	}
 
 }

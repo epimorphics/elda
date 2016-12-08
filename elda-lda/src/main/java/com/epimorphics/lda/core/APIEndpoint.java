@@ -18,14 +18,20 @@
 package com.epimorphics.lda.core;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.List;
+
+import javax.ws.rs.core.UriBuilder;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.util.MediaType;
+import com.epimorphics.util.URIUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 
@@ -43,32 +49,63 @@ public interface APIEndpoint {
 	public static class Request {
 		public final Controls c;
 		public final URI requestURI;
-		public final Bindings context;
+		public final Bindings bindings;
 		public final CompleteContext.Mode mode;
+		
 		public final String format;
+		public final List<String> formatNames;
 			
 		public Request(Controls c, URI requestURI, Bindings context) {
-			this(c, requestURI, context, CompleteContext.Mode.RoundTrip, "");
+			this(c, requestURI, context, CompleteContext.Mode.RoundTrip, Collections.<String>emptyList(), "");
 		}
 			
-		private Request(Controls c, URI requestURI, Bindings context, CompleteContext.Mode mode, String format) {
+		private Request(Controls c, URI requestURI, Bindings bindings, CompleteContext.Mode mode, List<String> formatNames, String format) {
 			this.c = c;
 			this.requestURI = requestURI;
-			this.context = context;
+			this.bindings = bindings;
 			this.mode = mode;
 			this.format = format;
+			this.formatNames = formatNames;
 		}
 	
 		public Request withMode(CompleteContext.Mode mode) {
-			return new Request(c, requestURI, context, mode, format);
+			return new Request(c, requestURI, bindings, mode, formatNames, format);
 		}
 	
 		public Request withBindings(Bindings newBindings) {
-			return new Request(c, requestURI, newBindings, mode, format);
+			return new Request(c, requestURI, newBindings, mode, formatNames, format);
 		}
 	
-		public Request withFormat(String format) {
-			return new Request(c, requestURI, context, mode, format);
+		public Request withFormats(List<String> formatNames, String format) {
+			return new Request(c, requestURI, bindings, mode, formatNames, format);
+		}
+
+		/**
+			getURIwithFormat() returns the specified-format form of the requestURI, where
+			the format name is explicitly specified as suffix .format and any 
+			existing _format= is stripped. This form of the URI is suitable as
+			a cache key because the renderer name is explicitly present, 
+			whereas the requestURI might not (when a renderer is selected by content negotiation).
+		*/
+		public URI getURIwithFormat() {
+			URI a = UriBuilder.fromUri(requestURI).replaceQueryParam("_format").build();
+			URI b = URIUtils.changeFormatSuffix(a, formatNames, format);
+			return b;
+		}
+
+		/**
+			getURIPlain returns the requestURI with suffix and query parameters
+			that do not affect the SPARQL select and view queries removed.
+		*/
+		public URI getURIplain() {			
+			URI x = UriBuilder.fromUri(URIUtils.changeFormatSuffix(requestURI, formatNames, ""))
+				.replaceQueryParam(QueryParameter._FORMAT)
+				.replaceQueryParam(QueryParameter._METADATA)
+				.replaceQueryParam(QueryParameter._MARK)
+				.replaceQueryParam(QueryParameter.callback)
+				.build()
+				;
+			return x;
 		}
 	}
     

@@ -228,6 +228,7 @@ public class EldaURL
     }
 
     /** Parse the query string, if there is one, into a structure we can manipulate */
+    // if there's no =value, use the empty url parameter value
     protected Map<String, URLParameterValue> parseQueryParameters() {
         Map<String, URLParameterValue> queryParameters = new HashMap<String, EldaURL.URLParameterValue>();
 
@@ -235,7 +236,11 @@ public class EldaURL
             String[] pairs = StringUtils.split( uri.getQuery(), "&" );
             for (String pair: pairs) {
                 String[] pv = StringUtils.split( pair, "=" );
-                queryParameters.put( pv[0], new URLParameterValue( pv[1] ) );
+                URLParameterValue u = pv.length < 2 
+                	? new URLParameterValue("") 
+                	: new URLParameterValue(pv[1])
+                	;
+                queryParameters.put( pv[0], u );
             }
         }
 

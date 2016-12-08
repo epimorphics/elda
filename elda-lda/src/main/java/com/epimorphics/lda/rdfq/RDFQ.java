@@ -7,9 +7,12 @@
 */
 package com.epimorphics.lda.rdfq;
 
+import java.net.URI;
+
 import com.epimorphics.lda.support.PrefixLogger;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.XSD;
 
@@ -22,7 +25,7 @@ import com.hp.hpl.jena.vocabulary.XSD;
 */
 public class RDFQ
 	{
-	public static final URINode RDF_TYPE = uri( RDF.type.getURI() );
+	public static final URINode RDF_TYPE = uri( RDF.type );
 	
 	public static class Triple 
 		{
@@ -80,8 +83,11 @@ public class RDFQ
 	public static Infix infix( RenderExpression L, String op, RenderExpression R ) 
 		{ return new Infix( L, op, R ); }
 	
-	public static URINode uri( String URI ) 
-		{ return new URINode( URI ); }
+	public static URINode uri( Resource r ) 
+		{ return new URINode( r ); }
+	
+	public static URINode uriRaw( String raw ) 
+		{ return new URINode( raw ); }
 	
 	public static Value literal( String spelling ) 
 		{ return new Value( spelling ); }
@@ -101,7 +107,7 @@ public class RDFQ
 
 	public static Any any(RDFNode rdf) {
 		Node n = rdf.asNode();
-		if (n.isURI()) return uri( n.getURI());
+		if (n.isURI()) return uri(rdf.asResource());
 		if (n.isLiteral()) return literal( n.getLiteralLexicalForm(), n.getLiteralLanguage(), n.getLiteralDatatypeURI() );
 		throw new RuntimeException( "Cannot convert " + rdf + " to RDFQ.Any" );
 	}

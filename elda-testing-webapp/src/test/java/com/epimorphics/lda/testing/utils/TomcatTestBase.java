@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.log.ELog;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.FileManager;
 import com.sun.jersey.api.client.*;
@@ -41,7 +42,7 @@ public abstract class TomcatTestBase {
      * URL to use for liveness tests
      */
     public String getTestURL() {
-        return NameUtils.ensureLastSlash( BASE_URL.substring(0, BASE_URL.length()-1) + getWebappContext() );
+        return NameSupport.ensureLastSlash( BASE_URL.substring(0, BASE_URL.length()-1) + getWebappContext() );
     }
 
     @Before public void containerStart() throws Exception {
@@ -219,7 +220,7 @@ public abstract class TomcatTestBase {
         while (!tomcatLive) {
             String u = getTestURL() + "games.ttl";
 			int status = getResponse( u ).getStatus();
-			log.info("checkLive " + u + ", try " + count + ", status = " + status);
+			log.info(ELog.message("[test] checkLive %s, try %s, status %s", u, count, status));
 			if (status != targetStatus) {
                 try {
                     Thread.sleep(500);

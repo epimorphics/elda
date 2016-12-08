@@ -50,20 +50,22 @@ public class Factories {
 		return result;
 	}
 
-	public void putFactory( String name, Resource uri, MediaType mt, RendererFactory factory ) {
-		putFactory( name, uri, mt, factory, false );
+	public void putFactory( String name, Resource uri, MediaType mt, RendererFactory factory, boolean jsonUsesISOdate ) {
+		putFactory( name, uri, mt, factory, false, jsonUsesISOdate );
 	}
 
-	public void putFactory( String name, Resource uri, MediaType mt, RendererFactory factory, boolean isDefault ) {
-		RendererFactory f = factory.withRoot( uri ).withMediaType( mt );
+	public void putFactory( String name, Resource uri, MediaType mt, RendererFactory factory, boolean isDefault, boolean jsonUsesISOdate ) {
+		RendererFactory f = factory.withRoot( uri ).withMediaType( mt ).withISODateFormatting(jsonUsesISOdate);
 		nameToFactory.put( name, f );
 		typeToFactory.put( mt, f );
 		nameToType.put( name, mt );
 		if (isDefault) theDefault = f;
 	}
 	
-	public Set<String> formatNames() {
-		return nameToFactory.keySet();
+	public List<String> formatNames() {
+		List<String> result = new ArrayList<String>(nameToFactory.keySet());
+		Collections.sort(result);
+		return result;
 	}
 	
 	public Set<FormatNameAndType> getFormatNamesAndTypes() {

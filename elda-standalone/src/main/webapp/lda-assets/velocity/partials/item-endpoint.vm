@@ -1,3 +1,0 @@
-## Display the single item from an item endpoint
-#groupVisualExtensions( $hierarchy )
-#eldaItem( $hierarchy.roots().get( 0 ) )

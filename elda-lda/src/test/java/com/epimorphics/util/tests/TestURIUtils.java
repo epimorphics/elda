@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
@@ -33,21 +34,21 @@ public class TestURIUtils {
 	
 	@Test public void testReplacesKnownFormat() {
 		URI req = newURI( "http://example.com/anchor/thing.rdf" );
-		Set<String> knownFormats = CollectionUtils.set( "rdf", "ttl" );
+		List<String> knownFormats = CollectionUtils.list( "rdf", "ttl" );
 		URI got = changeFormatSuffix( req, knownFormats, "ttl" );
 		assertEquals( newURI("http://example.com/anchor/thing.ttl"), got );
 	}
 	
 	@Test public void testPreservesUnknownFormat() {
 		URI req = newURI( "http://example.com/anchor/thing.rdf" );
-		Set<String> knownFormats = CollectionUtils.set( "n3", "ttl" );
+		List<String> knownFormats = CollectionUtils.list( "n3", "ttl" );
 		URI got = changeFormatSuffix( req, knownFormats, "ttl" );
 		assertEquals( newURI("http://example.com/anchor/thing.rdf.ttl"), got );
 	}
 	
 	@Test public void testChangeFormatSuffixPreservesEncoding() {
 		URI req = newURI( "http://example.com/anc%20hor/thing.rdf" );
-		Set<String> knownFormats = CollectionUtils.set( "n3", "ttl" );
+		List<String> knownFormats = CollectionUtils.list( "n3", "ttl" );
 		URI got = changeFormatSuffix( req, knownFormats, "ttl" );
 		assertEquals( newURI("http://example.com/anc%20hor/thing.rdf.ttl"), got );
 	}
