@@ -74,10 +74,8 @@ accordingly.
 Example configurations
 ----------------------
 
-<a name=example-configurations>
 Elda provides some example minimal configurations, different only in
 their intended environments:
-</a>
 
 <table class="table table-striped table-condensed">
   <tr>
