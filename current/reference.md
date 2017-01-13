@@ -23,8 +23,7 @@ There are three components to Elda Common:
     way as file `elda-common-VERSION.war`.
 -   The Elda Assets War, a Maven artifact you can download in the usual
     way as `elda-assets-VERSION.war`.
--   [CURRENT] [Minimal LDA
-    configurations](https://raw.githubusercontent.com/epimorphics/elda/master/elda-assets/src/main/webapp/specs/ROOT_minimal.ttl)
+-   [Minimal LDA configurations](#example-confgurations)
     demonstrating Elda Common setup.
 
 The Common and Assets files must have the same version.
@@ -71,6 +70,14 @@ binding on the XsltFormatter by:
 
 Again, if the stylesheet has moved, this binding must be changed
 accordingly.
+
+Example configurations
+----------------------
+
+<a name=example-configurations>
+Elda provides some example minimal configurations, different only in
+their intended environments:
+</a>
 
 Elda provides some example minimal configurations, different only in
 their intended environments:
