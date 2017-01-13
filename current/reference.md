@@ -23,7 +23,7 @@ There are three components to Elda Common:
     way as file `elda-common-VERSION.war`.
 -   The Elda Assets War, a Maven artifact you can download in the usual
     way as `elda-assets-VERSION.war`.
--   [Minimal LDA configurations](#example-confgurations)
+-   [Minimal LDA configurations](#example-configurations)
     demonstrating Elda Common setup.
 
 The Common and Assets files must have the same version.
