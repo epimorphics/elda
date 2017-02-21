@@ -7,6 +7,8 @@
 
 package com.epimorphics.lda.configs;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +21,6 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ResIterator;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -42,14 +43,19 @@ public class ConfigLoader {
 		ServletUtils.addLoadedFrom( init, thisSpecPath );
 		log.info(ELog.message("loaded '%s' with %d statements", thisSpecPath, init.size()));
 		
-		for (ResIterator ri = init.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
-		    Resource api = ri.next();
-	        Resource specRoot = init.getResource(api.getURI());
+		List<Resource> roots = init.listSubjectsWithProperty( RDF.type, API.API ).toList();
+		if (roots.isEmpty()) {
+			
+		} else {
+		
+		for (Resource specRoot: roots) {
 	        
 			APISpec apiSpec = new APISpec( prefixPath, appName, EldaFileManager.get(), specRoot, ml );
 			APIFactory.registerApi( router, prefixPath, apiSpec );
 			
-			LoadedConfigs.instance.stash(thisSpecPath,api, apiSpec);
+			LoadedConfigs.instance.stash(thisSpecPath, specRoot, apiSpec);
+			
+		}
 		}
 	}
 

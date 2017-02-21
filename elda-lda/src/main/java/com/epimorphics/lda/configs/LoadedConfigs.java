@@ -22,6 +22,9 @@ public class LoadedConfigs {
 	// filename -> (URI -> APISpec)
 	final Map<String, Map<Resource, APISpec>> stashed = new HashMap<String, Map<Resource, APISpec>>();
 	
+	/**
+		Add an API spec from the file thisPathSpec and with URI api. 
+	*/
 	public void stash(String thisSpecPath, Resource api, APISpec apiSpec) {
 	
 		Map<Resource, APISpec> already = stashed.get(thisSpecPath);
@@ -39,6 +42,13 @@ public class LoadedConfigs {
 			already.put(api, apiSpec);
 		}
 	}
+	
+	/**
+		Remove all entries for this spec path
+	*/
+	public void unstash(String thisSpecPath) {
+		stashed.remove(thisSpecPath);
+	}
 
 	public int size() {
 		int n = 0;
@@ -48,6 +58,10 @@ public class LoadedConfigs {
 		return n;
 	}
 	
+	/**
+		entries() delivers a collection containing each specPath/URI/apiSpec
+		configured in.
+	*/
 	public List<StashEntry> entries() {
 		List<StashEntry> result = new ArrayList<StashEntry>();
 		for (Map.Entry<String, Map<Resource, APISpec>> e: stashed.entrySet()) {
