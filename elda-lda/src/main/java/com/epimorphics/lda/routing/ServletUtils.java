@@ -43,21 +43,6 @@ public class ServletUtils {
         Properties p = System.getProperties();
         return MapMatching.allValuesWithMatchingKey( Container.ELDA_SPEC_SYSTEM_PROPERTY_NAME, p );
     }
-//
-//    /**
-//        If the prefix path is not null, update the root to have a
-//        uriTemplatePrefix derived from the prefix path by substituting
-//        {file} with the leafname of the file loaded from and (b) {api}
-//        with the local name of the root.
-//    */
-//    public static void setUriTemplatePrefix( String prefixPath, String filePath, Resource root) {
-//        if (prefixPath == null) return;
-//        String prefix = prefixPath
-//            .replaceAll( "\\{file\\}", "/" + new File(filePath).getName().replace( ".ttl", "" ) )
-//            .replaceAll( "\\{api\\}", "/" + root.getLocalName() )
-//            ;
-//        root.addProperty( ELDA_API.uriTemplatePrefix, prefix );
-//    }
 
     public static void addLoadedFrom( Model m, String name ) {
         List<Statement> toAdd = new ArrayList<Statement>();
@@ -69,27 +54,6 @@ public class ServletUtils {
         for (Resource api: apis) toAdd.add( m.createStatement( api, ELDA_API.loadedFrom, name ) );
         m.add( toAdd );
     }
-
-//    public static void loadSpecsFromFiles( String appName, ModelLoader ml, String baseFilePath, String prefixPath, String specPath ) {
-//        int chop = specPath.indexOf( "::" );
-//        if (chop >= 0) {
-//            // prefixPath :: fileName
-//            prefixPath = "/" + specPath.substring(0, chop);
-//            specPath = specPath.substring( chop + 2 );
-//        }
-//    //
-//        if (isSpecialName(specPath)) {
-//            loadOneConfigFile( appName, ml, prefixPath, specPath );
-//        } else {
-//            String fullPath = specPath.startsWith("/") ? specPath : baseFilePath + specPath;
-//            List<File> files = new Glob().filesMatching( fullPath );
-//            log.info(ELog.message("found %d file(s) matching specPath '%s'", files.size(), specPath));
-//            for (File f: files) {
-//                String pp = containsStar(prefixPath) ? nameToPrefix(prefixPath, specPath, f.getName()) : prefixPath;
-//                loadOneConfigFile(appName, ml, pp, f.getAbsolutePath());
-//            }
-//        }
-//    }
 
     public static boolean containsStar(String prefixPath) {
         return prefixPath == null ? false : prefixPath.contains("*");
@@ -113,31 +77,6 @@ public class ServletUtils {
             || specPath.startsWith( TDBManager.PREFIX )
             ;
     }
-
-//    public static void loadOneConfigFile(String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {
-//        log.info(ELog.message("loading spec file from '%s' with prefix path '%s'", thisSpecPath, prefixPath ));
-//        Model init = ml.loadModel( thisSpecPath );
-//        addLoadedFrom( init, thisSpecPath );
-//        log.info(ELog.message("looaded '%s' with %d statements", thisSpecPath, init.size()));
-//        registerModel( appName, prefixPath, thisSpecPath, init );
-//    }
-
-//    /**
-//     * Register all API endpoints specified in the given model with the
-//     * router.
-//     * @param model
-//     */
-//    public static void registerModel( String appName, String prefixPath, String filePath, Model model ) {
-//        for (ResIterator ri = model.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
-//            Resource api = ri.next();
-//            try {
-//                if (false) setUriTemplatePrefix( prefixPath, filePath, api );
-//                SpecManagerFactory.get().addSpec( prefixPath, appName, prefixPath, api.getURI(), "", model);
-//            } catch (APISecurityException e) {
-//                throw new APIException( "Internal error. Got security exception during bootstrap. Not possible!", e );
-//            }
-//        }
-//    }
 
     public interface GetInitParameter {
         public String getInitParameter(String name);
