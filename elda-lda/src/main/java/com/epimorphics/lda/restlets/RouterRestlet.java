@@ -43,17 +43,13 @@ import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.*;
-import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.*;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.WrappedException;
-import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.sun.jersey.api.NotFoundException;
 
 /**
@@ -200,13 +196,6 @@ import com.sun.jersey.api.NotFoundException;
 
 	public Match getMatch( String path, MultiMap<String, String> queryParams ) {
         Match match = router.getMatch( path, queryParams );
-        if (match == null) {
-            // No match in the table at the moment, but check the persistence
-            // manager to see if it can restore an API spec which would enable this endpoint
-            // System.err.println( ">> ----------------- " + SpecManagerFactory.get() );
-            SpecManagerFactory.get().loadSpecFor(path);
-            match = router.getMatch( path, queryParams );
-        }
         return match;
     }
 

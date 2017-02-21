@@ -25,8 +25,6 @@ import com.epimorphics.lda.routing.*;
 import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
 import com.epimorphics.lda.routing.Container;
 import com.epimorphics.lda.shortnames.CompleteContext;
-import com.epimorphics.lda.specmanager.SpecManagerFactory;
-import com.epimorphics.lda.specmanager.SpecManagerImpl;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.API;
@@ -40,7 +38,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
 */
 public class RouterRestletSupport {
 	
-    protected static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
+    public static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
 
     public static class PrefixAndFilename {
     	final String prefixPath;
@@ -113,9 +111,6 @@ public class RouterRestletSupport {
     //
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
         addBaseFilepath( baseFilePath );
-    //
-        SpecManagerImpl sm = new SpecManagerImpl(result, modelLoader);
-		SpecManagerFactory.set( sm );
 	//		
 		for (PrefixAndFilename pf: pfs) {
 			loadOneConfigFile( result, contextName, modelLoader, pf.prefixPath, pf.fileName );

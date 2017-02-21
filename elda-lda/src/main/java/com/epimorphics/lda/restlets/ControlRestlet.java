@@ -22,7 +22,6 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.routing.*;
-import com.epimorphics.lda.specmanager.SpecManagerFactory;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.vocabularies.API;
@@ -67,7 +66,7 @@ import com.hp.hpl.jena.util.iterator.ExtendedIterator;
             if (spec == null) {
                 APIEndpointSpec eps = match.getEndpoint().getSpec();
                 String api = eps.getAPISpec().getSpecURI();
-                spec = SpecManagerFactory.get().getSpecForAPI(api);
+                spec = null; // TODO SpecManagerFactory.get().getSpecForAPI(api);
                 if (spec != null)
                     apiRoot = spec.createResource( api );
             }

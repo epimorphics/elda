@@ -22,7 +22,6 @@ import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.restlets.RouterRestletSupport.ConfigStash;
 import com.epimorphics.lda.restlets.RouterRestletSupport.ConfigStash.StashEntry;
-import com.epimorphics.lda.specmanager.SpecEntry;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.API;
