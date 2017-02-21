@@ -47,7 +47,6 @@ public class TestGeneratedMetadata {
 		Resource thisPage = ResourceFactory.createResource( "elda:thisPage" );
 		String pageNumber = "1";
 		Bindings noBindings = new Bindings();
-		URI reqURI = new URI( "eh:/request-uri" );
 	//
 		EndpointDetails spec = new EndpointDetails() {
 
@@ -59,7 +58,7 @@ public class TestGeneratedMetadata {
 				return false;
 			}
 		};
-		EndpointMetadata em = new EndpointMetadata( spec, thisPage, pageNumber, noBindings, reqURI );
+		EndpointMetadata em = new EndpointMetadata( spec, thisPage, pageNumber, noBindings );
 	//
 		PrefixMapping pm = PrefixMapping.Factory.create().setNsPrefix( "this", "http://example.com/root#" );
 		Model toScan = ModelIOUtils.modelFromTurtle( ":a <http://example.com/root#predicate> :b." );
