@@ -17,6 +17,7 @@ import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.configs.LoadedConfigs;
+import com.epimorphics.lda.configs.StashEntry;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.View.Type;
 import com.epimorphics.lda.log.ELog;
