@@ -46,16 +46,18 @@ public class ConfigLoader {
 		List<Resource> roots = init.listSubjectsWithProperty( RDF.type, API.API ).toList();
 		if (roots.isEmpty()) {
 			
+			LoadedConfigs.instance.unstash(thisSpecPath);
+			
 		} else {
 		
-		for (Resource specRoot: roots) {
-	        
-			APISpec apiSpec = new APISpec( prefixPath, appName, EldaFileManager.get(), specRoot, ml );
-			APIFactory.registerApi( router, prefixPath, apiSpec );
-			
-			LoadedConfigs.instance.stash(thisSpecPath, specRoot, apiSpec);
-			
-		}
+			for (Resource specRoot: roots) {
+		        
+				APISpec apiSpec = new APISpec( prefixPath, appName, EldaFileManager.get(), specRoot, ml );
+				APIFactory.registerApi( router, prefixPath, apiSpec );
+				
+				LoadedConfigs.instance.stash(thisSpecPath, specRoot, apiSpec);
+				
+			}
 		}
 	}
 
