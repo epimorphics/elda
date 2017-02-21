@@ -13,7 +13,7 @@ import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
-import com.epimorphics.lda.restlets.RouterRestletSupport.ConfigStash;
+import com.epimorphics.lda.configs.LoadedConfigs;
 import com.epimorphics.lda.support.pageComposition.ComposeConfigDisplay;
 import com.epimorphics.util.Util;
 
@@ -27,7 +27,7 @@ import com.epimorphics.util.Util;
 		URI base = ui.getBaseUri();
 		/* result ignored */ RouterRestlet.getRouterFor( sc );
 	//
-		String page = new ComposeConfigDisplay().configPageMentioning( ConfigStash.instance, base, pathstub );
+		String page = new ComposeConfigDisplay().configPageMentioning( LoadedConfigs.instance, base, pathstub );
 		return RouterRestlet.returnAs( null, Util.withBody( "API configuration", page ), "text/html" );
 	}
 	

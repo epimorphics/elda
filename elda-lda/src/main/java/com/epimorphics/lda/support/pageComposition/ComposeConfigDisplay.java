@@ -16,12 +16,11 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.ContextPropertyInfo;
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.configs.LoadedConfigs;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.View.Type;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.Value;
-import com.epimorphics.lda.restlets.RouterRestletSupport.ConfigStash;
-import com.epimorphics.lda.restlets.RouterRestletSupport.ConfigStash.StashEntry;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.API;
@@ -41,7 +40,7 @@ public class ComposeConfigDisplay {
 
     protected static Logger log = LoggerFactory.getLogger(ComposeConfigDisplay.class);
     
-	public String configPageMentioning( ConfigStash stash, URI base, String pathstub ) {
+	public String configPageMentioning( LoadedConfigs stash, URI base, String pathstub ) {
 		StringBuilder textBody = new StringBuilder();
 		if (pathstub == null) pathstub = "";
 		int count = 0;
