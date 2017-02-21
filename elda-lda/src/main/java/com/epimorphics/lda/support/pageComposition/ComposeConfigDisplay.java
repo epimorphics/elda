@@ -20,6 +20,8 @@ import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.View.Type;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.Value;
+import com.epimorphics.lda.restlets.RouterRestletSupport.ConfigStash;
+import com.epimorphics.lda.restlets.RouterRestletSupport.ConfigStash.StashEntry;
 import com.epimorphics.lda.specmanager.SpecEntry;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.PropertyChain;
@@ -40,11 +42,11 @@ public class ComposeConfigDisplay {
 
     protected static Logger log = LoggerFactory.getLogger(ComposeConfigDisplay.class);
     
-	public String configPageMentioning( List<SpecEntry> entries, URI base, String pathstub ) {
+	public String configPageMentioning( ConfigStash stash, URI base, String pathstub ) {
 		StringBuilder textBody = new StringBuilder();
 		if (pathstub == null) pathstub = "";
 		int count = 0;
-		int n = entries.size();
+		int n = stash.size();
 		textBody
 			.append( "<h1>" )
 			.append( (n == 0 ? "no " : n + " ") )
@@ -52,7 +54,7 @@ public class ComposeConfigDisplay {
 			.append( "</h1>\n" )
 			;
 	//
-		for (SpecEntry se: entries) {
+		for (StashEntry se: stash.entries()) {
 			count += 1;
 			Which w = new Which(count);
 			Resource root = se.getRoot();
@@ -101,7 +103,7 @@ public class ComposeConfigDisplay {
 		start with the spec's prefix path (which will then have to be
 		stripped before checking the endpoints of this spec).
 	*/
-	private boolean show(String path, SpecEntry se) {
+	private boolean show(String path, StashEntry se) {
 		String prefixPath = cleanPrefixPath(se.getSpec().getPrefixPath());
 		if (path.startsWith(prefixPath)) {			
 			List<APIEndpointSpec> endpoints = se.getSpec().getEndpoints();

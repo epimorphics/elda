@@ -8,14 +8,12 @@
 package com.epimorphics.lda.restlets;
 
 import java.net.URI;
-import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 
-import com.epimorphics.lda.specmanager.SpecEntry;
-import com.epimorphics.lda.specmanager.SpecManagerFactory;
+import com.epimorphics.lda.restlets.RouterRestletSupport.ConfigStash;
 import com.epimorphics.lda.support.pageComposition.ComposeConfigDisplay;
 import com.epimorphics.util.Util;
 
@@ -29,8 +27,7 @@ import com.epimorphics.util.Util;
 		URI base = ui.getBaseUri();
 		/* result ignored */ RouterRestlet.getRouterFor( sc );
 	//
-		List<SpecEntry> specs = SpecManagerFactory.allSpecs();
-		String page = new ComposeConfigDisplay().configPageMentioning( specs, base, pathstub );
+		String page = new ComposeConfigDisplay().configPageMentioning( ConfigStash.instance, base, pathstub );
 		return RouterRestlet.returnAs( null, Util.withBody( "API configuration", page ), "text/html" );
 	}
 	

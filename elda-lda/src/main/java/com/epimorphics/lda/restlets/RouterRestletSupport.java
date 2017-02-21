@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
-import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.routing.*;
@@ -33,7 +32,6 @@ import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.WrappedException;
 import com.hp.hpl.jena.util.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 
@@ -166,13 +164,80 @@ public class RouterRestletSupport {
 		for (ResIterator ri = init.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
 		    Resource api = ri.next();
             Resource specRoot = init.getResource(api.getURI());
-            try {
-				SpecManagerFactory.get().addSpec(prefixPath, appName, prefixPath, api.getURI(), "", init );
-			} catch (APISecurityException e) {
-				throw new WrappedException(e);
-			}
+            
 			APISpec apiSpec = new APISpec( prefixPath, appName, EldaFileManager.get(), specRoot, ml );
 			APIFactory.registerApi( router, prefixPath, apiSpec );
+			
+			ConfigStash.instance.stash(thisSpecPath,api, apiSpec);
+		}
+	}
+
+	public static class ConfigStash {
+	
+		static final ConfigStash instance = new ConfigStash();
+		
+		// filename -> (URI -> APISpec)
+		final Map<String, Map<Resource, APISpec>> stashed = new HashMap<String, Map<Resource, APISpec>>();
+		
+		void stash(String thisSpecPath, Resource api, APISpec apiSpec) {
+		
+			Map<Resource, APISpec> already = stashed.get(thisSpecPath);
+			
+			if (already == null) {
+				
+				Map<Resource, APISpec> x = new HashMap<Resource, APISpec>();
+				x.put(api, apiSpec);
+				stashed.put(thisSpecPath, x);
+				
+			} else {
+
+				Map<Resource, APISpec> x = new HashMap<Resource, APISpec>();
+				x.put(api, apiSpec);
+				already.put(api, apiSpec);
+			}
+		}
+
+		// size() is the number of different configurations in this stash
+		public int size() {
+			int n = 0;
+			for (Map.Entry<String, Map<Resource, APISpec>> e: stashed.entrySet()) {
+				n += e.getValue().size();
+			}
+			return n;
+		}
+		
+		public List<StashEntry> entries() {
+			List<StashEntry> result = new ArrayList<StashEntry>();
+			for (Map.Entry<String, Map<Resource, APISpec>> e: stashed.entrySet()) {
+				String specPath = e.getKey();
+				for (Map.Entry<Resource, APISpec> f: e.getValue().entrySet()) {	
+					Resource URI = f.getKey();
+					APISpec a = f.getValue();
+					result.add(new StashEntry(specPath, URI, a));
+				}
+			}
+			return result;
+		}
+		
+		public static class StashEntry {
+			
+			final String specPath;
+			final Resource URI;
+			final APISpec a;
+			
+			public StashEntry(String specPath, Resource URI, APISpec a) {
+				this.specPath = specPath;
+				this.URI = URI;
+				this.a = a;
+			}
+
+			public APISpec getSpec() {
+				return a;
+			}
+
+			public Resource getRoot() {
+				return URI;
+			}
 		}
 	}
 
