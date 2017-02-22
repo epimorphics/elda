@@ -25,22 +25,16 @@ public class LoadedConfigs {
 	/**
 		Add an API spec from the file thisPathSpec and with URI api. 
 	*/
-	public void stash(String thisSpecPath, Resource api, APISpec apiSpec) {
+	public void stash(String thisSpecPath, Resource api, APISpec spec) {
 	
-		Map<Resource, APISpec> already = stashed.get(thisSpecPath);
+		Map<Resource, APISpec> specsForPath = stashed.get(thisSpecPath);
 		
-		if (already == null) {
-			
-			Map<Resource, APISpec> x = new HashMap<Resource, APISpec>();
-			x.put(api, apiSpec);
-			stashed.put(thisSpecPath, x);
-			
-		} else {
-
-			Map<Resource, APISpec> x = new HashMap<Resource, APISpec>();
-			x.put(api, apiSpec);
-			already.put(api, apiSpec);
+		if (specsForPath == null) {
+			specsForPath = new HashMap<Resource, APISpec>();
+			stashed.put(thisSpecPath, specsForPath);
 		}
+		
+		specsForPath.put(api, spec);
 	}
 	
 	/**
