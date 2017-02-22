@@ -43,21 +43,16 @@ public class ConfigLoader {
 		ServletUtils.addLoadedFrom( init, thisSpecPath );
 		log.info(ELog.message("loaded '%s' with %d statements", thisSpecPath, init.size()));
 		
+		LoadedConfigs.instance.unstash(thisSpecPath);
+
 		List<Resource> roots = init.listSubjectsWithProperty( RDF.type, API.API ).toList();
-		if (roots.isEmpty()) {
+
+		for (Resource specRoot: roots) {
+	        
+			APISpec apiSpec = new APISpec( prefixPath, appName, EldaFileManager.get(), specRoot, ml );
+			APIFactory.registerApi( router, prefixPath, apiSpec );
 			
-			LoadedConfigs.instance.unstash(thisSpecPath);
-			
-		} else {
-		
-			for (Resource specRoot: roots) {
-		        
-				APISpec apiSpec = new APISpec( prefixPath, appName, EldaFileManager.get(), specRoot, ml );
-				APIFactory.registerApi( router, prefixPath, apiSpec );
-				
-				LoadedConfigs.instance.stash(thisSpecPath, specRoot, apiSpec);
-				
-			}
+			LoadedConfigs.instance.stash(thisSpecPath, specRoot, apiSpec);
 		}
 	}
 
