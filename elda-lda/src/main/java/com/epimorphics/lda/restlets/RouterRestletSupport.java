@@ -18,31 +18,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.configs.ConfigLoader;
 import com.epimorphics.lda.core.*;
-import com.epimorphics.lda.exceptions.APISecurityException;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.routing.*;
 import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
 import com.epimorphics.lda.routing.Container;
 import com.epimorphics.lda.shortnames.CompleteContext;
-import com.epimorphics.lda.specmanager.SpecManagerFactory;
-import com.epimorphics.lda.specmanager.SpecManagerImpl;
-import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
-import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.WrappedException;
 import com.hp.hpl.jena.util.*;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
  	Support methods and data structures for RouterRestlet.
 */
 public class RouterRestletSupport {
 	
-    protected static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
+    public static Logger log = LoggerFactory.getLogger(RouterRestlet.class);
 
     public static class PrefixAndFilename {
     	final String prefixPath;
@@ -115,12 +109,9 @@ public class RouterRestletSupport {
     //
         ModelLoader modelLoader = new APIModelLoader( baseFilePath );
         addBaseFilepath( baseFilePath );
-    //
-        SpecManagerImpl sm = new SpecManagerImpl(result, modelLoader);
-		SpecManagerFactory.set( sm );
 	//		
 		for (PrefixAndFilename pf: pfs) {
-			loadOneConfigFile( result, contextName, modelLoader, pf.prefixPath, pf.fileName );
+			ConfigLoader.loadOneConfigFile( result, contextName, modelLoader, pf.prefixPath, pf.fileName );
 		}
 		int count = result.countTemplates();
 		return count == 0  ? RouterFactory.getDefaultRouter() : result;
@@ -156,24 +147,6 @@ public class RouterRestletSupport {
 
 	public static String flatContextPath(String contextPath) {
 		return contextPath.equals("") ? "ROOT" : contextPath.substring(1).replaceAll("/", "_");
-	}
-
-	public static void loadOneConfigFile(Router router, String appName, ModelLoader ml, String prefixPath, String thisSpecPath) {    	
-		log.info(ELog.message( "loading spec file from '%s' with prefix path '%s'", thisSpecPath, prefixPath));
-		Model init = ml.loadModel( thisSpecPath );
-		ServletUtils.addLoadedFrom( init, thisSpecPath );
-		log.info(ELog.message("loaded '%s' with %d statements", thisSpecPath, init.size()));
-		for (ResIterator ri = init.listSubjectsWithProperty( RDF.type, API.API ); ri.hasNext();) {
-		    Resource api = ri.next();
-            Resource specRoot = init.getResource(api.getURI());
-            try {
-				SpecManagerFactory.get().addSpec(prefixPath, appName, prefixPath, api.getURI(), "", init );
-			} catch (APISecurityException e) {
-				throw new WrappedException(e);
-			}
-			APISpec apiSpec = new APISpec( prefixPath, appName, EldaFileManager.get(), specRoot, ml );
-			APIFactory.registerApi( router, prefixPath, apiSpec );
-		}
 	}
 
 	/**
