@@ -1,5 +1,21 @@
 + ---------------------------------------------------------------------
-| Elda 1.3.21 (DEVELOPING)
+| Elda 1.3.22 (DEVELOPING)
+
++ ---------------------------------------------------------------------
+| Elda 1.3.21 (RELEASED)
+
+#179 -- empty lists defaulted to 404ing, a regression that needed
+to be fixed. Empty list endpoints now default to rendering as an empty
+list (item endpoints 404 by default).
+
+#177 -- elda stored repeated runs of reloaded configurations which
+lead to running out of room. The entire SpecManager family of
+classes has been rewritten so that any given config file has at
+most as many configurations loaded as were present in the last
+version of the config file. Because Elda now keeps track of which
+config has which API endpoints, /lda-config will no longer display
+configs that have no endpoints rather than displaying them but
+giving them no endpoints.
 
 + ---------------------------------------------------------------------
 | Elda 1.3.20 (RELEASED)
