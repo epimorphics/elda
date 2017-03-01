@@ -37,7 +37,7 @@
 hello:hello-world-again a api:API 
 	; rdfs:label "Hello World example #2 -- games"@en
 	# Name the SPARQL endpoint which supplies the data we present
-	; api:sparqlEndpoint <local:data/example-data.ttl>
+	; api:sparqlEndpoint <local:/home/chris/EldaThings/elda-in-github/elda-standalone/src/main/webapp/data/example-data.ttl>
 	# ; api:sparqlEndpoint <http://localhost:3030/ds/query>
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:viewer [a api:Viewer; api:name "empty"; api:properties ""]
@@ -170,7 +170,7 @@ hello:about a api:ItemEndpoint
 # some cache-control examples
 #
 
-hello:players elda:cacheExpiryTime "10s".
+# hello:players elda:cacheExpiryTime "10s".
 
 #
 # class and property declarations, setting shortnames and
@@ -196,7 +196,7 @@ elda:startDate a rdf:Property
     ; rdfs:comment """Start date for a (possibly indefinite) date range."""
     .
 	
-hello:players a rdf:Property
+egc:players a rdf:Property
 	; api:label "players"
 	; rdfs:range xsd:int
 	.
@@ -220,22 +220,22 @@ rdf:type a rdf:Property
 	; api:label "type"
 	.
 	
-hello:designed-by a rdf:Property
+egc:designed-by a rdf:Property
     ; rdfs:range rdfs:Class
 	; api:label "designedBy"
 	.
 	
-hello:published-by a rdf:Property
+egc:published-by a rdf:Property
 	; api:label "publishedBy"
     ; rdfs:range rdfs:Class 
 	.
 	
-hello:designer-of a rdf:Property
+egc:designer-of a rdf:Property
 	; api:label "designerOf"
     ; rdfs:range rdfs:Class 
 	.
 	
-hello:pubYear a rdf:Property
+egc:pubYear a rdf:Property
 	; api:label "publicationYear"
     ; api:multiValued true 
 	; rdfs:range xsd:integer
@@ -243,7 +243,7 @@ hello:pubYear a rdf:Property
     ; rdfs:range xsd:integer
 	.
     
-hello:playTimeMinutes a rdf:Property
+egc:playTimeMinutes a rdf:Property
 	; api:label "playTimeMinutes"
 	; rdfs:label "playTimeMinutes"
 	; rdfs:range xsd:integer
