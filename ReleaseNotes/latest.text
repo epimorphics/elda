@@ -17,6 +17,13 @@ config has which API endpoints, /lda-config will no longer display
 configs that have no endpoints rather than displaying them but
 giving them no endpoints.
 
+In earlier versions of Elda, if the initial load of config
+fails (eg because of a syntax error in the Turtle file) then
+Elda did not allow access to any endpoints and it was not possible
+to fix this by updating the config file. The changes for #177
+also fix this; broken configs are logged and then treated as
+empty.
+
 + ---------------------------------------------------------------------
 | Elda 1.3.20 (RELEASED)
 
