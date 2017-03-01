@@ -1,8 +1,16 @@
 + ---------------------------------------------------------------------
-| Elda 1.3.22 (DEVELOPING)
+| Elda 1.3.23 (DEVELOPING)
 
 + ---------------------------------------------------------------------
-| Elda 1.3.21 (RELEASED)
+| Elda 1.3.23 (RELEASED)
+
+Fixed error in namespaces for games 'again' example.
+
++ ---------------------------------------------------------------------
+| Elda 1.3.22 (RELEASED, RESTRICTIONS)
+
+Use 1.3.23 instead, unless not using elda-standalone -- the
+examples of the latter have a namespacing problem.
 
 #179 -- empty lists defaulted to 404ing, a regression that needed
 to be fixed. Empty list endpoints now default to rendering as an empty
