@@ -1,16 +1,18 @@
 #!/bin/bash
 
 export WEBAPPS=/usr/share/tomcat/webapps
-export ELDAGIT=/home/chris/EldaThings/elda-in-github
-export SPECS=$ELDAGIT/elda-standalone/src/main/webapp/specs
+export ELDAGIT=/home/eh/REB/elda
 
 service tomcat stop
+
+rm -rf /etc/elda/conf.d/elda-common/*
+cp $ELDAGIT/run-common/eh-config.ttl /etc/elda/conf.d/elda-common
+# cp $ELDAGIT/run-common/eh-hello-again-world.ttl /etc/elda/conf.d/elda-common
+
 rm -rf $WEBAPPS/*
 
 cp $ELDAGIT/elda-assets/target/elda-assets.war $WEBAPPS
 cp $ELDAGIT/elda-common/target/elda-common.war $WEBAPPS
-
-cp /home/chris/EldaThings/tryout/hello-again-world.ttl /etc/elda/conf.d/elda-common
 
 rm -rf /var/log/tomcat/*
 service tomcat start
