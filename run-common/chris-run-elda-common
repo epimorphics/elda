@@ -10,6 +10,7 @@ rm -rf $WEBAPPS/*
 cp $ELDAGIT/elda-assets/target/elda-assets.war $WEBAPPS
 cp $ELDAGIT/elda-common/target/elda-common.war $WEBAPPS
 
+rm -rf /etc/elda/conf.d/elda-common/*
 cp /home/chris/EldaThings/elda-in-github/run-common/chris-config.ttl /etc/elda/conf.d/elda-common
 
 rm -rf /var/log/tomcat/*
