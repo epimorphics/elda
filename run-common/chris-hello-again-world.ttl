@@ -1,250 +1,84 @@
+# minimal operational config
+
+# This LDA description is a "getting started" configuration.
+# Replace all references to the SPARQL endpoint
 #
-# A hello-world config. 
+#	http://education.data.gov.uk/sparql/education/query
+#
+# with your SPARQL endpoint of interest. 
+#
+# The /anything endpoint will display some (10) items from the SPARQL
+# endpoint that have an rdf:type property. 
+#
+# The /about?resource=URI endpoint will display information about the
+# resource with the given URI from that SPARQL endpoint.
+#
+# The /mentions?resource=URI will display information about 
+# resources that 'mention' URI, ie, are objects of some property 
+# of that item.
 #
 
-# Assorted prefix declarations. Some of them are for the structuring
-# of the API config, others are for the vocabulary definitions.
-#
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix spec:	<http://education.data.gov.uk/api-config#> .
+@prefix api:    <http://purl.org/linked-data/api/vocab#> .
+@prefix elda:   <http://www.epimorphics.com/vocabularies/lda#> .
 
-@prefix api:                <http://purl.org/linked-data/api/vocab#> .
-@prefix dct:				<http://purl.org/dc/terms/> .
-
-@prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd:                <http://www.w3.org/2001/XMLSchema#> .
-
-# The elda namespace/prefix is for Elda extensions to the LDA specification.
-@prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
-@prefix foaf:               <http://xmlns.com/foaf/0.1/>.
-
-# Prefix for example-local entities.
-@prefix egc:      <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#>.
-@prefix hello:    <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#games> .
-@prefix again:    <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#again> .
-
-# ---------------------------------------------------------------------
-# API config
-
-# example authorisation for SPARQL host if expected
-#
- 
-<http://localhost:3030/ds/query>
-    elda:authKey "grimdark"
-    ; elda:authFile "taods-and-robins"
-    .
-   
-hello:hello-world-again a api:API 
-	; rdfs:label "Hello World example #2 -- games"@en
-	# Name the SPARQL endpoint which supplies the data we present
+spec:minimal a api:API
+	; api:base "/"
+	; rdfs:label "a minimal demonstration API"
 	; api:sparqlEndpoint <local:/home/chris/EldaThings/elda-in-github/elda-standalone/src/main/webapp/data/example-data.ttl>
-	# ; api:sparqlEndpoint <http://localhost:3030/ds/query>
+	# ; api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query>
 	; api:defaultViewer api:labelledDescribeViewer
-	; api:viewer [a api:Viewer; api:name "empty"; api:properties ""]
-
-	; api:variable [api:name "_velocityPath"; api:value "velocity/"]
-	; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
-    
-    ; elda:license <http://localhost:8080/standalone/licences/licence-alpha-text.text>
-    ; elda:license "inDataset.gamesLicense"
-    
-    # uncomment to have an api-wide deprecation notice (or just
-    # plain notice)
-    # ; elda:notice <http:/this.is/deprecated-A>
-    
+	; api:defaultFormatter spec:HtmlFormatter 
+	; api:viewer api:describeViewer, api:labelledDescribeViewer, api:basicViewer
 	; api:endpoint 
-		hello:publishers, again:games, hello:about
-		, hello:there
-		, hello:catch # development debugging
-
-    ; api:formatter
-        [a elda:FeedFormatter
-        ; api:name "atom"
-        ; elda:className "com.epimorphics.lda.renderers.FeedRendererFactory"
-        ; api:mimeType "application/atom+xml"
-        ; elda:feedTitle "an example Elda feed"
-        ]
-    
-    ; api:formatter
-        [a api:JsonFormatter
-        ; api:name "json-ld"
-        ; elda:checkJSONLDRoundTrip false
-        ; elda:allLiteralsStructured false
-        ; elda:className "com.epimorphics.lda.renderers.JSONLDRendererFactory"
-    #
-    # use /json if client doesn't render json-ld as json, otherwise
-    # use /json+ld. Firefox doesn't understand +ld so we'll force to /json
-    # for the moment.
-    # 
-        ; api:mimeType "application/json"
-        # ; api:mimeType "application/json+ld"
-        ]
-        
-    ; api:formatter
-        [a elda:VelocityFormatter
-        ; api:name "html"
-        ; elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory"
-        ; api:mimeType "text/html"
-        ]
-        
-    ; elda:enableCounting true
-   	; elda:cacheExpiryTime "10m"
+		spec:about
+		, spec:anything
+		, spec:mentions
+	; api:variable [api:name "_exceptionIfEmpty"; api:value "no"]
+	; api:variable [api:name "_resourceRoot"; api:value "http://localhost:8080/elda-assets/"]
 	.
 	
-<http://localhost:3030/ds/query> 
-    elda:textSearchOperand (rdfs:label "?_search" 99)
-    .
-    
-# informal dataset for licence testing
-   
-<http://localhost:8080/standalone/licences/licence-alpha-text.text> a elda:license
-    ; rdfs:label "per-page licence Alpha"
-    ; rdfs:comment """per-page license Alpha"""
-    ; foaf:depiction <http://localhost:8080/standalone/velocity/images/licence-alpha.png>
-    .
-    
-egc:dataset egc:license <http://localhost:8080/standalone/licences/licence-alpha-text.text>
-    .
-
-# Endpoint definitions
-
-hello:there a api:ListEndpoint
-    ; rdfs:label "there"
-    ; api:uriTemplate "/those"
-    ; api:selector [api:where "?item a again:humpty-dumpty.\n"]
-    # ; api:selector [api:filter "type=Pernicious"; api:sort "label"]
-    ; api:defaultViewer api:labelledDescribeViewer
-    .
-
-hello:publishers a api:ListEndpoint 
-	; rdfs:label "Publishers" 
-	; api:uriTemplate "/publishers" 
-	; api:selector [api:filter "type=Publisher"; api:sort "label"]
-	; api:defaultViewer api:labelledDescribeViewer
-	.	
-    
-again:games a api:ListEndpoint 
-    ; rdfs:label "Games" 
-    ; api:uriTemplate "/games" 
-    ; api:selector [api:filter "type=BoardGame"; api:sort "label"]
-    ; api:defaultViewer api:labelledDescribeViewer
-    ; elda:enableCounting false
-    ; elda:notice <eh:/this-is-a-notice>
-    .
-    
-<eh:/this-is-a-notice> a elda:Notice
-    ; rdfs:comment "this happens on the given date."
-    ; elda:startDate "2016-06-01"^^xsd:date
-    .
-
-# for URI debugging purposes during development
-
-hello:catch a api:ListEndpoint 
-	; rdfs:label "Catch" 
-	; api:uriTemplate "/catch/{caught}" 
-	; api:selector [api:filter "type={caught}"; api:sort "label"]
-	; api:defaultViewer api:labelledDescribeViewer
-	; elda:enableCounting false
+spec:HtmlFormatter a api:XsltFormatter 
+	; api:name "html" 
+	; api:mimeType "text/html; charset=utf-8" 
+	; api:stylesheet "http://localhost:8080/elda-assets/xslt/result.xsl"
 	.
-	
 #
-# The /about endpoint requires a query parameter whose value
-# is a URI; this is the single selected ?item. These URIs
-# are typically constructed by the Velocity renderer when
-# a resource is clicked on for a dataset-relative link. 
+# Describe a generic 'thing' as an example of an itemEndpoint.
 #
+spec:about a api:ItemEndpoint
+	; api:uriTemplate     "/about?resource={uri}"
+    ; rdfs:comment        "A generic item endpoint API for asking about a specific thing by 'uri'."
+    ; api:itemTemplate    "{uri}"
+    ; api:viewer          api:basicViewer, api:describeViewer, api:labelledDescribeViewer
+    ; api:defaultViewer   api:describeViewer
+    .
 
-hello:about a api:ItemEndpoint
-	; rdfs:label "About"
-	; api:uriTemplate "/about?resource={uri}"
-	; api:itemTemplate "{uri}"
+#
+# List 'anything' endpoint
+#
+spec:anything a api:ListEndpoint
+    ; api:name            	"anything" 
+    ; rdfs:comment        	"A generic listing endpoint for listing things based solely on URI based filter parameters"@en
+    ; api:uriTemplate		"/anything"
+    ; api:selector			[api:where   " ?item a ?v1 . FILTER (!isBlank(?item)) "]
+    ; api:exampleRequestPath  "/anything"
+###
+### no selector - defers everything to URI params
+###
+     ; api:viewer api:describeViewer, api:basicViewer, api:labelledDescribeViewer
+     ; api:defaultViewer   api:describeViewer
+     .
+
+#
+# List things related to a 'mentions' as an example of a ListEndpoint.
+#
+spec:mentions a api:ListEndpoint
+	; api:uriTemplate     "/mentions?resource={uri}"
     ; api:variable [api:name "uri"; api:type rdfs:Resource]
-	; api:selector 
-		[ api:where "?item ?p ?o. FILTER(?item = ?uri)"
-		; api:sort "label"
-		]
-	; api:defaultViewer api:labelledDescribeViewer
-	.
-
-#
-# some cache-control examples
-#
-
-# hello:players elda:cacheExpiryTime "10s".
-
-#
-# class and property declarations, setting shortnames and
-# property ranges.
-#
-
-egc:gamesDataset
-    api:label "inDataset"
-    .
-    
-egc:gamesLicense
-    api:label "gamesLicense"
+	; api:selector [api:where "?item ?p ?uri . FILTER (!isBlank(?item))"]
+	; api:viewer api:basicViewer, api:describeViewer, api:labelledDescribeViewer
+	; api:defaultViewer   api:describeViewer;
     .
 
-egc:BoardGame a rdfs:Class
-	; rdfs:label "Board Game"
-	; api:label "BoardGame"
-	.
-
-elda:startDate a rdf:Property
-    ; api:label "startDate"
-    ; api:structured true
-    ; rdfs:comment """Start date for a (possibly indefinite) date range."""
-    .
-	
-egc:players a rdf:Property
-	; api:label "players"
-	; rdfs:range xsd:int
-	.
-	
-egc:Publisher a rdfs:Class
-	; api:label "Publisher"
-	.
-	
-dct:publisher a rdf:Property
-	; api:label "publishes"
-	.
-	
-rdfs:label a rdf:Property
-	; api:multiValued true
-	; api:label "label"
-	.
-	
-rdf:type a rdf:Property
-    ; api:multiValued true 
-    ; rdfs:range rdfs:Class 
-	; api:label "type"
-	.
-	
-egc:designed-by a rdf:Property
-    ; rdfs:range rdfs:Class
-	; api:label "designedBy"
-	.
-	
-egc:published-by a rdf:Property
-	; api:label "publishedBy"
-    ; rdfs:range rdfs:Class 
-	.
-	
-egc:designer-of a rdf:Property
-	; api:label "designerOf"
-    ; rdfs:range rdfs:Class 
-	.
-	
-egc:pubYear a rdf:Property
-	; api:label "publicationYear"
-    ; api:multiValued true 
-	; rdfs:range xsd:integer
-    ; rdfs:comment "The subject is some published entity, the object is the year of its publication."
-    ; rdfs:range xsd:integer
-	.
-    
-egc:playTimeMinutes a rdf:Property
-	; api:label "playTimeMinutes"
-	; rdfs:label "playTimeMinutes"
-	; rdfs:range xsd:integer
-	.	
-		
