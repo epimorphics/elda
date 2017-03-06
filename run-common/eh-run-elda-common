@@ -10,7 +10,7 @@ rm -rf $WEBAPPS/*
 cp $ELDAGIT/elda-assets/target/elda-assets.war $WEBAPPS
 cp $ELDAGIT/elda-common/target/elda-common.war $WEBAPPS
 
-cp /home/chris/EldaThings/tryout/hello-again-world.ttl /etc/elda/conf.d/elda-common
+cp /home/chris/EldaThings/tryout/eh-config.ttl /etc/elda/conf.d/elda-common
 
 rm -rf /var/log/tomcat/*
 service tomcat start
