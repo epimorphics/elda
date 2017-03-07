@@ -26,7 +26,7 @@
 spec:minimal a api:API
 	; api:base "/"
 	; rdfs:label "a minimal demonstration API"
-	; api:sparqlEndpoint <local:/home/chris/EldaThings/elda-in-github/elda-standalone/src/main/webapp/data/example-data.ttl>
+	; api:sparqlEndpoint <local:/tmp/elda/data/example-data.ttl>
 	# ; api:sparqlEndpoint <http://education.data.gov.uk/sparql/education/query>
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:defaultFormatter spec:HtmlFormatter 

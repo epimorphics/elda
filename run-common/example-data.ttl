@@ -1,0 +1,366 @@
+#
+# games data for examples
+#
+
+@prefix dct:	<http://purl.org/dc/terms/> .
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix egc:	<https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#>.
+@prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl:	<http://www.w3.org/2002/07/owl#> .
+@prefix foaf:   <http://xmlns.com/foaf/0.1/> .
+@prefix elda:   <http://www.epimorphics.com/vocabularies/lda#> .
+
+# informal dataset for licence testing
+
+egc:dataset egc:gamesLicense <http://localhost:8080/standalone/licences/licence-beta-text.text> .
+
+<http://localhost:8080/standalone/licences/licence-beta-text.text> a elda:license
+    ; rdfs:label "per-page licence Beta"
+    ; rdfs:comment """per-page licence Beta"""
+    ; foaf:depiction <http://localhost:8080/standalone/velocity/images/licence-beta.png>
+    .
+
+# boardgame designers
+
+egc:matthias-cramer a egc:Designer
+	; owl:sameAs <http://boardgamegeek.com/boardgamedesigner/34699/matthias-cramer> 
+	; rdfs:label "Matthias Cramer"
+	; egc:designer-of egc:lancaster
+	.
+
+egc:Andreas_Seyfarth a egc:Designer
+	; owl:sameAs <http://en.wikipedia.org/wiki/Andreas_Seyfarth> 
+	; rdfs:label "Andreas Seyfarth" 
+	; egc:designer-of egc:puerto-rico 
+	.
+
+egc:Reiner_Knizia a egc:Designer
+	; owl:sameAs <http://en.wikipedia.org/wiki/Reiner_Knizia> 
+	; rdfs:label "Reiner Knizia"
+	; egc:designer-of egc:tigris-and-euphrates 
+	; egc:designer-of egc:tag-mahal 
+	.
+
+egc:Wolfgang_Kramer a egc:Designer
+	; owl:sameAs <http://en.wikipedia.org/wiki/Wolfgang_Kramer> 
+	; rdfs:label "Wolfgang Kramer"
+	; egc:designer-of egc:el-grande
+	.
+
+egc:richard-ulrich a egc:Designer
+	; owl:sameAs <http://www.boardgamegeek.com/boardgamedesigner/8/richard-ulrich> 
+	; rdfs:label "Richard Ulrich"
+	; egc:designer-of egc:el-grande 
+	.
+
+egc:martin-wallace a egc:Designer
+	; owl:sameAs <http://boardgamegeek.com/boardgamedesigner/6/martin-wallace> 
+	; egc:designer-of egc:a-few-acres-of-snow
+	; egc:designer-of egc:age-of-industry 
+	; egc:designer-of egc:london 
+	; egc:designer-of egc:age-of-steam 
+	; egc:designer-of egc:last-train-to-wensleydale
+	; rdfs:label "Martin Wallace"
+	.
+
+egc:ragnar-brothers a egc:Designer
+	; owl:sameAs <http://www.ragnarbrothers.co.uk/html/ragnar_brothers_games.html> 
+	; rdfs:label "Ragnar Brothers"
+	; egc:designer-of egc:canal-mania 
+	; egc:designer-of egc:BriefHistoryOfTheWorld 
+	.
+
+egc:Alan_R._Moon a egc:Designer
+	; owl:sameAs <http://en.wikipedia.org/wiki/Alan_R._Moon> 
+	; rdfs:label "Alan R. Moon"
+	; egc:designer-of egc:ticket-to-ride
+	.
+
+egc:donald-x-vaccarino a egc:Designer
+	; owl:sameAs <http://boardgamegeek.com/boardgamedesigner/10525/donald-x-vaccarino> 
+	; rdfs:label "Donald X. Vaccarino"
+	; egc:designer-of egc:KingdomBuilder
+	.
+
+egc:dirk-henn a egc:Designer
+	; owl:sameAs <http://boardgamegeek.com/boardgamedesigner/60/dirk-henn> 
+	; rdfs:label "Dirk Henn"
+	; egc:designer-of egc:wallenstein
+	.
+
+# boardgame publishers.
+
+egc:hans-im-glueck a egc:Publisher
+	; owl:sameAs <http://www.hans-im-glueck.de/> 
+	; rdfs:label "Hans im Glück"@de
+	; dct:publisher egc:tigris-and-euphrates
+	; dct:publisher egc:el-grande
+	.
+
+egc:queen-games a egc:Publisher	
+	; owl:sameAs <http://www.queen-games.de/> 
+	; rdfs:label "Queen Games"
+	; dct:publisher egc:KingdomBuilder
+	; dct:publisher egc:lancaster
+	; dct:publisher egc:wallenstein
+	.
+	
+egc:treefroggames a egc:Publisher
+	; owl:sameAs <http://www.treefroggames.com/> 
+	; rdfs:label "Treefrog Games"@en
+	; dct:publisher egc:age-of-industry
+	; dct:publisher egc:london
+	; dct:publisher egc:age-of-steam
+	; dct:publisher egc:a-few-acres-of-snow
+	.
+
+egc:rio-grande-games a egc:Publisher
+	; owl:sameAs <http://www.riograndegames.com/> 
+	; rdfs:label "Rio Grande Games"
+	; dct:publisher egc:puerto-rico
+	; dct:publisher egc:tag-mahal
+	.
+
+egc:ragnar-bothers-publisher a egc:Publisher	
+	; owl:sameAs <http://www.ragnarbrothers.co.uk/> 
+	; rdfs:label "Ragnar Brothers"
+	; dct:publisher egc:canal-mania
+	; dct:publisher egc:BriefHistoryOfTheWorld
+	.
+	
+egc:daysofwonder a egc:Publisher
+	; owl:sameAs <http://www.daysofwonder.com/> 
+	; rdfs:label "Days of Wonder"
+	; dct:publisher egc:ticket-to-ride
+	.
+	
+egc:Alea a egc:Publisher
+	; owl:sameAs <http://www.aleaspiele.de/Pages/Title/> 
+	; rdfs:label "Alea"
+	; dct:publisher egc:glen-more
+	.
+	
+# boardgames
+
+egc:BriefHistoryOfTheWorld a egc:BoardGame
+	; owl:sameAs <http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html> 
+	; rdfs:label "A Brief History of the World"
+	; egc:designed-by egc:ragnar-brothers 
+	; egc:players 3, 4, 5, 6
+	; egc:pubYear 2009
+    ; egc:gamesDataset egc:dataset
+	.
+
+egc:KingdomBuilder a egc:BoardGame
+	; owl:sameAs <http://queen-games.de/games.aspx?ProductId=45>
+	; rdfs:label "Kingdom Builder"
+	; egc:players 2, 3, 4
+	; egc:designed-by egc:donald-x-vaccarino 
+	; rdfs:seeAlso <http://boardgamegeek.com/boardgame/107529/kingdom-builder>
+	; egc:pubYear 2011
+    ; egc:gamesDataset egc:dataset
+	.
+
+egc:ticket-to-ride a egc:BoardGame
+	; owl:sameAs <http://www.daysofwonder.com/tickettoride>
+	; rdfs:label "Ticket To Ride"
+	; egc:designed-by egc:Alan_R._Moon 
+	; egc:players 2, 3, 4, 5
+	; egc:pubYear 2004
+    ; egc:gamesDataset egc:dataset
+	.
+
+egc:tigris-and-euphrates a egc:BoardGame
+	; owl:sameAs <http://www.hans-im-glueck.de/euphrat-tigris>
+	; rdfs:label "Tigris and Euphrates"@en
+	; egc:designed-by egc:Reiner_Knizia 
+	; egc:players 2, 3, 4
+	; egc:pubYear 1997
+    ; egc:gamesDataset egc:dataset
+	.
+	
+egc:el-grande a egc:BoardGame
+	; owl:sameAs <http://www.hans-im-glueck.de/el-grande>
+	; rdfs:label "El Grande"
+	; egc:designed-by egc:Wolfgang_Kramer
+	; egc:designed-by egc:richard-ulrich
+	; egc:pubYear 1995
+	; egc:players 2, 3, 4, 5
+    ; egc:gamesDataset egc:dataset
+	.
+
+egc:age-of-industry a egc:BoardGame
+	; owl:sameAs <http://www.treefroggames.com/age-of-industry>
+	; rdfs:label "Age of Industry"
+	; egc:designed-by egc:martin-wallace 
+	; egc:players 2, 3, 4, 5
+	; egc:pubYear 2010
+    ; egc:gamesDataset egc:dataset
+	.
+	
+egc:london a egc:BoardGame
+	; owl:sameAs <http://www.treefroggames.com/london>
+	; rdfs:label "London"
+	; egc:designed-by egc:martin-wallace 
+	; egc:players 2, 3, 4
+	; egc:pubYear 2010
+    ; egc:gamesDataset egc:dataset
+	.
+	
+egc:age-of-steam a egc:BoardGame
+	; owl:sameAs <http://www.treefroggames.com/age-of-steam>
+	; rdfs:label "Age of Steam"
+	; egc:designed-by egc:martin-wallace 
+	; egc:players 3, 4, 5, 6 
+	; egc:pubYear 2002
+    ; egc:gamesDataset egc:dataset
+	.
+	
+egc:canal-mania a egc:BoardGame
+	; owl:sameAs <http://www.ragnarbrothers.co.uk/html/canal_mania.html>
+	; rdfs:label "Canal Mania"
+	; egc:designed-by egc:ragnar-brothers 
+	; egc:players 2, 3, 4, 5
+	; egc:pubYear 2006
+    ; egc:gamesDataset egc:dataset
+	.	
+	
+egc:puerto-rico a egc:BoardGame
+	; owl:sameAs <http://www.riograndegames.com/games.html?id=4>
+	; egc:designed-by egc:Andreas_Seyfarth
+	; rdfs:label "Puerto Rico"
+	; egc:players 2, 3, 4, 5
+	; egc:pubYear 2002
+    ; egc:gamesDataset egc:dataset
+	.
+	
+egc:tag-mahal a egc:BoardGame
+	; owl:sameAs <http://www.riograndegames.com/games.html?id=181>
+	; rdfs:label "Taj Mahal"
+	; egc:designed-by egc:Reiner_Knizia 
+	; egc:players 2, 3, 4, 5
+	; egc:pubYear 2006
+    ; egc:gamesDataset egc:dataset
+	.
+	
+egc:last-train-to-wensleydale a egc:BoardGame
+	; owl:sameAs <http://www.treefroggames.com/last-train-to-wensleydale>
+	; rdfs:label "Last Train to Wensleydale"
+	; egc:designed-by egc:martin-wallace
+	; egc:players 3, 4
+	; egc:pubYear 2009
+	; egc:playTimeMinutes 120
+    ; egc:gamesDataset egc:dataset
+	.
+	
+egc:a-few-acres-of-snow a egc:BoardGame
+	; owl:sameAs <http://www.treefroggames.com/a-few-acres-of-snow-2>
+	; rdfs:label "A Few Acres of Snow"
+	; egc:designed-by egc:martin-wallace
+	; egc:players 2
+	; egc:pubYear 2011
+	; egc:playTimeMinutes 60
+    ; egc:gamesDataset egc:dataset
+	.
+	
+egc:lancaster a egc:BoardGame
+	; owl:sameAs <http://boardgamegeek.com/boardgame/96913/lancaster>
+	; rdfs:label "Lancaster"
+	; egc:designed-by egc:matthias-cramer
+	; egc:published-by egc:queen-games 
+	; egc:players 2, 3, 4, 5
+	; egc:pubYear 2011
+	; egc:playTimeMinutes 60
+    ; egc:gamesDataset egc:dataset
+	.
+	
+egc:glen-more a egc:BoardGame
+	; owl:sameAs <http://www.aleaspiele.de/Pages/C6/>
+	; rdfs:label "Glen More"
+	; egc:designed-by egc:matthias-cramer
+	; egc:published-by egc:Alea
+	; egc:players 2, 3, 4, 5
+	; egc:pubYear 2010
+	; egc:playTimeMinutes 60
+    ; egc:gamesDataset egc:dataset
+	.
+	
+egc:wallenstein a egc:BoardGame
+	; owl:sameAs <http://www.queen-games.de/games.aspx?ProductId=10>
+	; rdfs:label "Wallenstein"
+	; egc:designed-by egc:dirk-henn
+	; egc:published-by egc:queen-games
+	; egc:players 3, 4, 5
+	; egc:pubYear 2012
+	; egc:playTimeMinutes 150
+	.
+	
+#
+# Information about the classes and properties used in the
+# example data.
+#
+egc:gamesDataset
+    rdfs:label "gamesDataset"
+    .
+    
+egc:gamesLicense
+    rdfs:label "gamesLicense"
+    .
+    
+egc:BoardGame a rdfs:Class
+    ; rdfs:label "Board Game"
+    ; rdfs:comment "Board games taken in a general sense."
+    .
+    
+egc:players a rdf:Property
+    ; rdfs:label "players"
+    ; rdfs:comment "One of the numbers of players a game can accomodate."
+    ; rdfs:range xsd:int
+    .
+    
+egc:Publisher a rdfs:Class
+    ; rdfs:label "Publisher"
+    ; rdfs:comment "A publisher of games (not restricted to board games)."
+    .
+    
+dct:publisher a rdf:Property
+    ; rdfs:label "publishes"
+    ; rdfs:comment "The subject is a publisher, the object is the published entity."
+    .
+    
+egc:published-by a rdf:Property
+	; rdfs:label "published by"
+	; rdfs:comment "The object is the publisher of the subject."
+	.
+    
+rdfs:label a rdf:Property
+    ; rdfs:label "label"
+    .
+    
+rdf:type a rdf:Property
+    ; rdfs:range rdfs:Class 
+    ; rdfs:label "type"
+    .
+    
+egc:designed-by a rdf:Property
+    ; rdfs:label "designedBy"
+    ; rdfs:comment "The subject is some game, the object is the designer."
+    .
+    
+egc:designer-of a rdf:Property
+    ; rdfs:label "designerOf"
+    ; rdfs:comment "The subject is a designer, the object some game they have designed."
+    .
+    
+egc:playTimeMinutes a rdf:Property
+	; rdfs:label "playTimeMinutes"
+	; rdfs:range xsd:integer
+	.
+    
+egc:pubYear a rdf:Property
+    ; rdfs:label "publicationYear"
+    ; rdfs:comment "The subject is some published entity, the object is the year of its publication."
+    ; rdfs:range xsd:integer
+    .	
+
