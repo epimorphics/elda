@@ -4,7 +4,7 @@
   <parent>
     <artifactId>elda</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.3.24-SNAPSHOT</version>
+    <version>1.3.24</version>
   </parent>
   <artifactId>elda-common</artifactId>
   <packaging>war</packaging>
