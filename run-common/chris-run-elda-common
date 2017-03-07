@@ -19,3 +19,5 @@ cp /home/chris/EldaThings/elda-in-github/run-common/example-data.ttl /tmp/elda/d
 
 rm -rf /var/log/tomcat/*
 service tomcat start
+
+journalctl -f -u tomcat
