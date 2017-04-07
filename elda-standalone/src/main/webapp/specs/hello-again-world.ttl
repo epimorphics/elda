@@ -37,7 +37,7 @@
 hello:hello-world-again a api:API 
 	; rdfs:label "Hello World example #2 -- games"@en
 	# Name the SPARQL endpoint which supplies the data we present
-	; api:sparqlEndpoint <local:/home/chris/EldaThings/elda-in-github/elda-standalone/src/main/webapp/data/example-data.ttl>
+	; api:sparqlEndpoint <local:data/example-data.ttl>
 	# ; api:sparqlEndpoint <http://localhost:3030/ds/query>
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:viewer [a api:Viewer; api:name "empty"; api:properties ""]
