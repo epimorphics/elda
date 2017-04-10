@@ -697,6 +697,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		Variable v = varsForPropertyChains.get(thing);
 		if (v == null) {
 			v = newVar();
+			varsForPropertyChains.put(thing, v);
 			optionalProperty(anchor, Param.make(sns, spec.substring(where)), v);
 			mightBeUnbound.value = true;
 			return v;

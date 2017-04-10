@@ -10,6 +10,7 @@ target/
 .settings/
 .classpath
 .project
+.recommenders
 .metadata
 .tomcatplugin
 .extract
