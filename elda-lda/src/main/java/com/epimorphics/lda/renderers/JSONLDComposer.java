@@ -179,6 +179,7 @@ public class JSONLDComposer {
 				if (lang.equals("")) {
 					jw.value(spelling);
 				} else {
+					jw.object();
 					jw.key("@lang").value(lang);
 					jw.key("@value").value(spelling);
 					jw.endObject();
