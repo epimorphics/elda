@@ -110,9 +110,13 @@ so that the dynamically generated pages will contain the correct links:
   ]
 {% endhighlight %}
 
-The default value for *_resourceRoot* is */elda-assets/*
+The default value for *_resourceRoot* is */APP/lda-assets/* where *APP*
+is the application name, by default *elda*.
 
-Now suppose that we would like to override some of the default behaviours of the Velocity renderer. Velocity's behaviour is to use the first definition of a macro or partial that it finds, so our overrides have to be found before the default files. We decide to put our locally customised assets into `/var/www/myEldaApp/assets`:
+Now suppose that we would like to override some of the default behaviours
+of the Velocity renderer. Velocity's behaviour is to use the first definition
+of a macro or partial that it finds, so our overrides have to be found before
+the default files. We decide to put our locally customised assets into `/var/www/myEldaApp/assets`:
 
 {% highlight html linenos %}
 <myEldaAppSpec> api:defaultFormatter
@@ -131,7 +135,7 @@ Now suppose that we would like to override some of the default behaviours of the
   ]
 {% endhighlight %}
 
-**Other notes **
+## Other notes
 
 * You can choose to specify a Velocity formatter as a property of an
 endpoint rather than as the API-wide default.
