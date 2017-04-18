@@ -87,7 +87,11 @@ The Velocity renderer uses three `api:variable`s in the configuration to specify
 
 #### Example
 
-Suppose you unpack the files from *Elda assets* into `/var/www/elda/assets`, and that you arrange that all requests coming in to *myEldaApp* are forwarded from the front-end Apache or Nginx server to a Tomcat webapp container hosting Elda. We need to supply both of these pieces of information to the Elda config, so that the dynamically generated pages will contain the correct links:
+Suppose you unpack the files from *Elda assets* into `/var/www/elda/assets`,
+and that you arrange that all requests coming in to *myEldaApp* are forwarded
+rom the front-end Apache or Nginx server to a Tomcat webapp container hosting Elda.
+We need to supply both of these pieces of information to the Elda config,
+so that the dynamically generated pages will contain the correct links:
 
 {% highlight html linenos %}
 <myEldaAppSpec> api:defaultFormatter
@@ -96,15 +100,17 @@ Suppose you unpack the files from *Elda assets* into `/var/www/elda/assets`, and
    api:mimeType "text/html" ;
    elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory" ;
    api:variable [
-     api:name "_resourceRoot"; 
+     api:name "_resourceRoot";
      api:value "/myEldaApp"
    ];
    api:variable [
-     api:name "_velocityPath"; 
+     api:name "_velocityPath";
      api:value "/var/www/elda/assets"
    ]
   ]
 {% endhighlight %}
+
+The default value for *_resourceRoot* is */elda-assets/*
 
 Now suppose that we would like to override some of the default behaviours of the Velocity renderer. Velocity's behaviour is to use the first definition of a macro or partial that it finds, so our overrides have to be found before the default files. We decide to put our locally customised assets into `/var/www/myEldaApp/assets`:
 
@@ -115,11 +121,11 @@ Now suppose that we would like to override some of the default behaviours of the
    api:mimeType "text/html" ;
    elda:className "com.epimorphics.lda.renderers.VelocityRendererFactory" ;
    api:variable [
-     api:name "_resourceRoot"; 
+     api:name "_resourceRoot";
      api:value "/myEldaApp"
    ];
    api:variable [
-     api:name "_velocityPath"; 
+     api:name "_velocityPath";
      api:value "/var/www/myEldaApp/assets, /var/www/elda/assets"
    ]
   ]
