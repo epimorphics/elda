@@ -24,7 +24,7 @@ public class standalone {
 	//
 	    server.setPort(port);  
 	    server.setBaseDir(".");
-	//
+	    
 	    String absolutePath = new File("target/elda-standalone").getAbsolutePath();
 	    // System.err.println(">> " + absolutePath);
 		server.addWebapp(contextPath, absolutePath);
