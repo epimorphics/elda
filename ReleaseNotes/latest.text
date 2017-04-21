@@ -1,5 +1,15 @@
 + ---------------------------------------------------------------------
-| Elda 1.3.25 (DEVELOPING)
+| Elda 1.3.26 (DEVELOPING)
+
++ ---------------------------------------------------------------------
+| Elda 1.3.25 (RELEASED)
+
+json-ld generated for literals with language codes omitted
+the opening brace - fixed.
+
+multiple sort clauses with variables sharing the same
+property path prefix (eg "x" and "x.f") generated new variables
+for each such shared prefix rather than sharing the same ones - fixed.
 
 + ---------------------------------------------------------------------
 | Elda 1.3.24 (RELEASED)
