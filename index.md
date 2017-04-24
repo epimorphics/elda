@@ -48,7 +48,7 @@ The currently released version of Elda is {{ site.data.version.CURRENT_RELEASE }
 * Links to the documentation for [other Elda versions](http://epimorphics.github.io/elda/docs/versions.html)
   if you are running a non-current version of Elda.
 
-Elda tutorials
+## Elda tutorials
 
 <ul>
   {% for post in site.categories.tutorial %}
