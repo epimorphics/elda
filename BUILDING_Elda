@@ -168,7 +168,18 @@ doing the release "by hand".
 
   Add a file to _posts with file name $DATE-$VERSION.md and content
   similar to previous such files, containing a short announcement of
-  the release.
+  the release. Such a post must have a header line
+
+    categories: release
+
+  so that the post header is included in the templated
+  index.md file. So see what this will looks like when
+  pushed back to github, run
+
+    bundle exec jekyll serve
+
+  and browse the appropriate URL (which jekyll will report).
+  [You may have to do gem updates for this to work ...]
 
   Email linked-data-api-discuss with a moderately chatty
   message about the update, summarising the release notes
