@@ -86,6 +86,8 @@ public class View {
     	builtins.put( API.labelledDescribeViewer, ALL );
     }
     
+    public static final String NoPropertyChainsPresentComment = "# no property chains present.";
+    
     /**
         Answer the built-in view with the given URI, or null if there
         isn't one.
@@ -305,7 +307,12 @@ public class View {
 		return "# should be a query here.";
 	}
 	
-	private String fetchByGivenPropertyChains( State st, List<PropertyChain> chains ) { 
+	public String fetchByGivenPropertyChains( State st, List<PropertyChain> chains ) { 
+
+		if (chains.isEmpty()) {
+			return NoPropertyChainsPresentComment;
+		}
+
 		PrefixLogger pl = new PrefixLogger( st.m );
 		StringBuilder construct = new StringBuilder();
 	//
