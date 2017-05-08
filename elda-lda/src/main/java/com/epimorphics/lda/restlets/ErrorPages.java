@@ -70,7 +70,14 @@ public class ErrorPages {
 		// allow them to be passed through possibly multiple Bindings evaluations
 		// and eventually unquoted using Bindings::getUnslashed.
 		if (message == null) message = "Odd, no additional information is available.";
-		b.put("_message", message.replaceAll("\\{", "{\\\\}"));
+		
+		b.put("_message", 
+			message
+				.replaceAll("\\{", "{\\\\}")
+				.replaceAll("&", "&amp;")
+				.replaceAll("<", "&lt;")
+				.replaceAll(">", "&gt;")
+		);
 		
 		String builtPage = apply(b, page, name, message);
 		
