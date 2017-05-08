@@ -18,36 +18,24 @@ public class ELog {
 		by the log filter.
 	*/
 	public static ThreadLocal<String> seqID = new ThreadLocal<String>();
+	public static ThreadLocal<String> queryID = new ThreadLocal<String>();
 
 	public static String getSeqID() {
 		String id = seqID.get();
 		return id == null ? "" : id;
 	}
 
-	public static void setSeqID(String id) {
-		seqID.set(id);
+	public static void setSeqID(String seqId) {
+		seqID.set(seqId);
 	}
-
-//	public static void warn(Logger log, String format, Object ... args) {
-//		if (log.isWarnEnabled()) 
-//			log.warn(String.format("[%s]: " + format, withSeqId(args)));
-//	}
-
-//	public static void debug(Logger log, String format, Object ... args) {
-//		if (log.isDebugEnabled()) 
-//			log.debug(String.format("[%s]: " + format, withSeqId(args)));
-//	}
 	
-//	public static void info(Logger log, String format, Object ... args) {
-//		if (log.isInfoEnabled()) {	
-//			log.info(String.format("[%s]: " + format, withSeqId(args)));
-//		}
-//	}
+	public static void setQueryId(String queryId) {
+		queryID.set(queryId);
+	}
 	
-//	public static void error(Logger log, String format, Object ... args) {
-//		if (log.isErrorEnabled()) 
-//			log.error(String.format("[%s]: " + format, withSeqId(args)));
-//	}
+	public static String getQueryId() {
+		return queryID.get();
+	}
 	
 	private static Object[] withSeqId(Object[] args) {
 		Object [] extended = new Object[args.length + 1];
@@ -55,9 +43,23 @@ public class ELog {
 		extended[0] = ELog.getSeqID(); 
 		return extended;
 	}
+	
+	private static Object[] withQueryId(String queryID, Object[] args) {
+		Object [] extended = new Object[args.length + 2];
+		System.arraycopy(args, 0, extended, 2, args.length);
+		extended[0] = getSeqID(); 
+		extended[1] = queryID;
+		return extended;
+	}
 
 	public static String message(String message, Object... args) {
-		return String.format("[%s]: " + message, withSeqId(args));
+		String q = queryID.get();
+//		System.err.println(">> message: query ID = '" + q + "'");
+		if (q == null) {
+			return String.format("[%s]: " + message, withSeqId(args));		
+		} else {
+			return String.format("[%s.%s]: " + message,  withQueryId(q, args));
+		}
 	}
 
 }
