@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.lda.log.ELog;
 import com.epimorphics.util.NameUtils;
 
 /**
@@ -73,11 +74,13 @@ public class LogRequestFilter implements Filter {
 	        httpResponse.addHeader(REQUEST_ID_HEADER, Long.toString(transaction));
 	        chain.doFilter(request, response);
 	        
+	        String queryID = ELog.getQueryId();
 	        int status = getStatus(httpResponse);
 	        String statusString = status < 0 ? "(status unknown)" : "" + status;
 			log.info(String.format
-				( "Response [%d] : %s (%s)"
+				( "Response [%d, %s] : %s (%s)"
 				, transaction
+				, queryID
 				, statusString
 	            , NameUtils.formatDuration(System.currentTimeMillis() - start) ) 
 	            );
