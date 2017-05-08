@@ -40,6 +40,7 @@ import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.*;
 import com.epimorphics.lda.log.ELog;
+import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.*;
@@ -225,6 +226,7 @@ import com.sun.jersey.api.NotFoundException;
 //    	System.err.println(">> path: " + pathstub);
     	
     	ELog.setSeqID(getSeqID(servletResponse));
+    	ELog.setQueryId(ui.getQueryParameters().getFirst(QueryParameter._QUERY_ID));
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	String contextPath = servCon.getContextPath();
     
