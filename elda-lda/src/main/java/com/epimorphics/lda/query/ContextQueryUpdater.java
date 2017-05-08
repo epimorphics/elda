@@ -181,6 +181,8 @@ public class ContextQueryUpdater implements ViewSetter {
             else if (!aq.setTotalCountRequested( count ))
                 EldaException.BadRequest("this endpoint does not allow _count to be altered: " + val);
 
+        } else if (p.equals(QueryParameter._QUERY_ID)) {
+        	// Nothing. _query-id is handled early by RouterRestlet.
         } else if (!allowedReserved( p )){
             EldaException.BadRequest( "unrecognised reserved parameter: " + p );
             throw new EldaException( "Can never get here!" );
