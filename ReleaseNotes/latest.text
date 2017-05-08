@@ -1,6 +1,12 @@
 + ---------------------------------------------------------------------
 | Elda 1.3.26 (DEVELOPING)
 
+Elda no longer generates an empty CONSTRUCT{} clause if the view
+has no property chains.
+
+Elda's new _query-id URL parameter carries an arbitrary parameter
+which is displayed in log messages.
+
 + ---------------------------------------------------------------------
 | Elda 1.3.25 (RELEASED)
 
