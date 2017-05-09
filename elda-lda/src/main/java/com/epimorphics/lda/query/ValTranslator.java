@@ -8,20 +8,14 @@
 
 package com.epimorphics.lda.query;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-
-import org.apache.jena.iri.IRI;
-import org.apache.jena.iri.IRIFactory;
-
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.exceptions.BadRequestException;
-import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.API;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QueryParseException;
 
 /**
     ValTranslator handles the translation of the V in ?P=V
@@ -43,11 +37,17 @@ public class ValTranslator {
 	protected final ShortnameService sns;
 	protected final VarSupply vs;
 	protected final Filters expressions;
+	protected final boolean checkIRISyntax;
 	
 	public ValTranslator(VarSupply vs, Filters expressions, ShortnameService sns) {
+		this(vs, expressions, sns, true);
+	}
+	
+	public ValTranslator(VarSupply vs, Filters expressions, ShortnameService sns, boolean checkIRISyntax) {
 		this.vs = vs;
 		this.sns = sns;
 		this.expressions = expressions;
+		this.checkIRISyntax = checkIRISyntax;
 	}
 
 	public static final String[] JUSTEMPTY = new String[]{""};
@@ -55,8 +55,6 @@ public class ValTranslator {
 	public Any objectForValue( Info inf, String val, String languages ) {
 		return objectForValue(inf.typeURI, val, languages);
 	}
-	
-	static final IRIFactory iriFactory = IRIFactory.iriImplementation();
 
 	public Any objectForValue( String type, String val, String languages ) {
 		String[] langArray = languages == null ? JUSTEMPTY : languages.split( ",", -1 );
@@ -71,13 +69,27 @@ public class ValTranslator {
 			return RDFQ.literal( val, null, type );
 		} else {
 			String uri = expanded == null ? val : expanded;
-			if (false) {
-				IRI i = iriFactory.create(uri);
-				if (i.hasViolation(true)) {
-					throw new BadRequestException("illegal IRI '" + uri + "'");
-				}
-			}
+			if (checkIRISyntax)	badRequestIfFailsParse(uri);
 			return RDFQ.uriRaw( uri );
+		}
+	}
+
+	/**
+		Throw a BadRequest exception if uri cannot be parsed
+		as a SPARQL URI. This isn't called very often (once
+		per property chain in request with Resource type)
+		so we can avoid the brute-force approach of parsing
+		a SPARQL clause with the URI embedded in it. It would
+		be nice if there was an IRIFactory implementation that
+		fitted the same IRIs as (Jena's) SPARQL, but there isn't
+		AFAICS.
+	*/
+	private void badRequestIfFailsParse(String uri) {
+		try { 
+			QueryFactory.create("SELECT (<" + uri + "> AS ?x) WHERE {}"); 
+		}
+		catch (QueryParseException e) {
+			throw new BadRequestException("illegal IRI '" + uri + "'");					
 		}
 	}
 

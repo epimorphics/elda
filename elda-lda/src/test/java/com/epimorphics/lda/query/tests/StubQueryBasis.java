@@ -66,4 +66,8 @@ public class StubQueryBasis implements QueryBasis {
 	@Override public boolean getPurging() {
 		return false;
 	}
+
+	@Override public boolean getCheckIRISyntax() {
+		return true;
+	}
 }
