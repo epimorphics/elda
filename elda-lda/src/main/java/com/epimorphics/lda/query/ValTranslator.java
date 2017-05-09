@@ -8,10 +8,16 @@
 
 package com.epimorphics.lda.query;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
+
+import org.apache.jena.iri.IRI;
+import org.apache.jena.iri.IRIFactory;
 
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.core.VarSupply;
+import com.epimorphics.lda.exceptions.BadRequestException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -49,6 +55,8 @@ public class ValTranslator {
 	public Any objectForValue( Info inf, String val, String languages ) {
 		return objectForValue(inf.typeURI, val, languages);
 	}
+	
+	static final IRIFactory iriFactory = IRIFactory.iriImplementation();
 
 	public Any objectForValue( String type, String val, String languages ) {
 		String[] langArray = languages == null ? JUSTEMPTY : languages.split( ",", -1 );
@@ -62,14 +70,20 @@ public class ValTranslator {
 		} else if (sns.isDatatype(type)) {
 			return RDFQ.literal( val, null, type );
 		} else {
-			return RDFQ.uriRaw( expanded == null ? val : expanded );
+			String uri = expanded == null ? val : expanded;
+			if (false) {
+				IRI i = iriFactory.create(uri);
+				if (i.hasViolation(true)) {
+					throw new BadRequestException("illegal IRI '" + uri + "'");
+				}
+			}
+			return RDFQ.uriRaw( uri );
 		}
 	}
 
 	private Any languagedLiteral(String[] langArray, String val) {
 		if (langArray.length == 1) return RDFQ.literal( val, langArray[0], "" );
-
-		if (false) throw new RuntimeException("BOOM");
+		
 		Variable o = vs.newVar();
 		Apply stringOf = RDFQ.apply( "str", o );
 		Infix equals = RDFQ.infix( stringOf, "=", RDFQ.literal( val ) );
