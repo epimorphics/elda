@@ -58,7 +58,6 @@ public class ValTranslator {
 
 	public Any objectForValue( String type, String val, String languages ) {
 		String[] langArray = languages == null ? JUSTEMPTY : languages.split( ",", -1 );
-		String expanded = sns.expand(val);
 		if (type == null) {
 			return languagedLiteral(langArray, val);
 		} else if (type.equals( API.SimpleLiteral.getURI())) {
@@ -68,8 +67,10 @@ public class ValTranslator {
 		} else if (sns.isDatatype(type)) {
 			return RDFQ.literal( val, null, type );
 		} else {
-			String uri = expanded == null ? val : expanded;
-			if (checkIRISyntax)	badRequestIfFailsParse(uri);
+			String fullName = sns.expand(val);
+			String uri = fullName == null ? val : fullName;
+			String tag = fullName == null ? null : val; 
+			if (checkIRISyntax)	badRequestIfFailsParse(tag, uri);
 			return RDFQ.uriRaw( uri );
 		}
 	}
@@ -84,12 +85,13 @@ public class ValTranslator {
 		fitted the same IRIs as (Jena's) SPARQL, but there isn't
 		AFAICS.
 	*/
-	private void badRequestIfFailsParse(String uri) {
+	private void badRequestIfFailsParse(String tag, String uri) {
 		try { 
 			QueryFactory.create("SELECT (<" + uri + "> AS ?x) WHERE {}"); 
 		}
 		catch (QueryParseException e) {
-			throw new BadRequestException("illegal IRI '" + uri + "'");					
+			String tagged = tag == null ? "" : " [" + tag + "] ";
+			throw new BadRequestException("illegal IRI " + tagged + "'" + uri + "'");					
 		}
 	}
 
