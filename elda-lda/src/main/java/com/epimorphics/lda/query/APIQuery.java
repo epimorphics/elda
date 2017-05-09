@@ -158,6 +158,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	public final List<PendingParameterValue> deferredFilters;
 
 	public final long cacheExpiryMilliseconds;
+	
+	public final boolean checkIRISyntax;
 
 	/**
 	 * Is a total count requested for this query? true, false, or null for
@@ -213,6 +215,8 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		long getCacheExpiryMilliseconds();
 
 		boolean getPurging();
+		
+		boolean getCheckIRISyntax();
 	}
 
 	protected static class FilterExpressions implements ValTranslator.Filters {
@@ -239,6 +243,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.isItemEndpoint = qb.isItemEndpoint();
 		this.textSearchConfig = qb.getTextSearchConfig();
 		this.cacheExpiryMilliseconds = qb.getCacheExpiryMilliseconds();
+		this.checkIRISyntax = qb.getCheckIRISyntax();
 		//
 		this.purging = qb.getPurging();
 		this.graphTemplate = qb.getGraphTemplate();
@@ -252,7 +257,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.varInfo = new HashMap<Variable, Info>();
 		this.orderExpressions = new StringBuffer();
 		this.filterExpressions = new ArrayList<RenderExpression>();
-		this.vt = new ValTranslator(this, new FilterExpressions(filterExpressions), sns);
+		this.vt = new ValTranslator(this, new FilterExpressions(filterExpressions), sns, checkIRISyntax);
 	}
 
 	public APIQuery copy() {
@@ -278,6 +283,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.textSearchConfig = other.textSearchConfig;
 		this.cacheExpiryMilliseconds = other.cacheExpiryMilliseconds;
 		this.purging = other.purging;
+		this.checkIRISyntax = other.checkIRISyntax;
 		//
 		this.graphName = other.graphName;
 		this.graphTemplate = other.graphTemplate;
@@ -291,7 +297,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		this.deferredFilters = new ArrayList<PendingParameterValue>(other.deferredFilters);
 		this.metadataOptions = new HashSet<String>(other.metadataOptions);
 		this.varsForPropertyChains = new HashMap<String, Variable>(other.varsForPropertyChains);
-		this.vt = new ValTranslator(this, new FilterExpressions(this.filterExpressions), this.sns);
+		this.vt = new ValTranslator(this, new FilterExpressions(this.filterExpressions), this.sns, checkIRISyntax);
 		this.allowedReserved = new HashSet<String>(other.allowedReserved);
 	}
 

@@ -503,5 +503,10 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
 	@Override public boolean getPurging() {
 		return purging;
 	}
+
+	@Override public boolean getCheckIRISyntax() {
+		String check = bindings.getAsString("_checkIRISyntax", "yes");
+		return check.equals("yes") || check.equals("true");
+	}
 	
 }
