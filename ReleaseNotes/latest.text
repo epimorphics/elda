@@ -1,5 +1,8 @@
 + ---------------------------------------------------------------------
-| Elda 1.3.26 (DEVELOPING)
+| Elda 1.4.1 (DEVELOPING)
+
++ ---------------------------------------------------------------------
+| Elda 1.4.0 (RELEASED)
 
 Elda no longer generates an empty CONSTRUCT{} clause if the view
 has no property chains.
