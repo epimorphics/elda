@@ -10,6 +10,7 @@
 package com.epimorphics.lda.support;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.Filter;
@@ -43,6 +44,10 @@ public class LogRequestFilter implements Filter {
     	The response header used for the ID of this request/response.
     */
     public static final String REQUEST_ID_HEADER  = "x-response-id";
+        
+    public static final String X_REQUEST_ID  = "X-Request-Id";
+    
+    public static final String SEQ_USE_UUID = "Seq-Use-UUID";
     
     static final Logger log = LoggerFactory.getLogger( LogRequestFilter.class );
     
@@ -62,25 +67,31 @@ public class LogRequestFilter implements Filter {
     	) throws IOException, ServletException 
     {
         HttpServletRequest httpRequest = (HttpServletRequest)request;
+        
         String query = httpRequest.getQueryString();
         String path = httpRequest.getRequestURI();
         boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);
     //
         if (logThis) {
+        	ELog.setQueryId(httpRequest.getHeader(X_REQUEST_ID));
         	HttpServletResponse httpResponse = (HttpServletResponse)response;
 	        long transaction = transactionCount.incrementAndGet();	        
 	        long start = System.currentTimeMillis();
 	        log.info(String.format("Request  [%d] : %s", transaction, path) + (query == null ? "" : ("?" + query)));
-	        httpResponse.addHeader(REQUEST_ID_HEADER, Long.toString(transaction));
+	        
+	        String seqId = Long.toString(transaction);
+	        if (usesUUID(httpRequest)) seqId = UUID.randomUUID().toString();
+			httpResponse.addHeader(REQUEST_ID_HEADER, seqId);
+	        
 	        chain.doFilter(request, response);
 	        
-	        String queryID = ELog.getQueryId();
+	        String queryId = ELog.getQueryId();
 	        int status = getStatus(httpResponse);
 	        String statusString = status < 0 ? "(status unknown)" : "" + status;
 			log.info(String.format
-				( "Response [%d, %s] : %s (%s)"
-				, transaction
-				, queryID
+				( "Response [%s, %s] : %s (%s)"
+				, seqId
+				, queryId
 				, statusString
 	            , NameUtils.formatDuration(System.currentTimeMillis() - start) ) 
 	            );
@@ -90,7 +101,11 @@ public class LogRequestFilter implements Filter {
 	    }
     }
 
-    // The check for NoSuchMethodError is because Tomcat6 doesn't have a
+    private boolean usesUUID(HttpServletRequest httpRequest) {
+		return "true".equals(httpRequest.getHeader(SEQ_USE_UUID));
+	}
+
+	// The check for NoSuchMethodError is because Tomcat6 doesn't have a
     // getStatus() in its HttpServletResponse implementation, and we have
     // users still on Tomcat 6. -1 is a "no not really" value.
 	private int getStatus(HttpServletResponse httpResponse) {

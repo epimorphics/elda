@@ -30,7 +30,7 @@ public class ELog {
 	}
 	
 	public static void setQueryId(String queryId) {
-		queryID.set(queryId);
+		if (queryId != null) queryID.set(queryId);
 	}
 	
 	public static String getQueryId() {
