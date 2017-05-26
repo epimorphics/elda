@@ -10,7 +10,6 @@
 package com.epimorphics.lda.support;
 
 import java.io.IOException;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.Filter;
@@ -26,7 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.log.ELog;
+import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.util.NameUtils;
+import com.hp.hpl.jena.shared.uuid.UUID_V1;
 
 /**
  * A Filter that can be added to filter chain to log all incoming requests and
@@ -35,23 +36,17 @@ import com.epimorphics.util.NameUtils;
  * for diagnosis. Not robust against restarts but easier to work with than UUIDs.
  */
 public class LogRequestFilter implements Filter {
-	
-    public static final String TRANSACTION_ATTRIBUTE = "transaction";
-    
-    public static final String START_TIME_ATTRIBUTE  = "startTime";
     
     /**
     	The response header used for the ID of this request/response.
     */
-    public static final String REQUEST_ID_HEADER  = "x-response-id";
+    public static final String X_RESPONSE_ID  = "X-Response-Id";
         
     public static final String X_REQUEST_ID  = "X-Request-Id";
     
-    public static final String SEQ_USE_UUID = "Seq-Use-UUID";
-    
     static final Logger log = LoggerFactory.getLogger( LogRequestFilter.class );
     
-    protected static AtomicLong transactionCount = new AtomicLong(0);
+    protected static AtomicLong queryCount = new AtomicLong(0);
 
     protected String ignoreIfMatches = null;
     
@@ -66,34 +61,53 @@ public class LogRequestFilter implements Filter {
     	, FilterChain chain
     	) throws IOException, ServletException 
     {
-        HttpServletRequest httpRequest = (HttpServletRequest)request;
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
         
         String query = httpRequest.getQueryString();
         String path = httpRequest.getRequestURI();
         boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);
     //
         if (logThis) {
-        	ELog.setQueryId(httpRequest.getHeader(X_REQUEST_ID));
-        	HttpServletResponse httpResponse = (HttpServletResponse)response;
-	        long transaction = transactionCount.incrementAndGet();	        
-	        long start = System.currentTimeMillis();
-	        log.info(String.format("Request  [%d] : %s", transaction, path) + (query == null ? "" : ("?" + query)));
+        	
+        	String ID = null;
+        	
+        	String headerID = httpRequest.getHeader(X_REQUEST_ID);
+        	String paramID = httpRequest.getParameter(QueryParameter._QUERY_ID);
+        	
+        	if (ID == null) ID = headerID;
+        	if (ID == null) ID = paramID;
+        	if (ID == null) ID = generateID();
+        	
+        	ELog.setQueryId(ID);
+        	
+	        long requestCount = queryCount.incrementAndGet();	        
+	        String seqId = Long.toString(requestCount);
 	        
-	        String seqId = Long.toString(transaction);
-	        if (usesUUID(httpRequest)) seqId = UUID.randomUUID().toString();
-			httpResponse.addHeader(REQUEST_ID_HEADER, seqId);
+	        ELog.setSeqID(seqId);
 	        
+	        log.info(String.format
+	        	( "Request  [%s, %s] : %s"
+	        	, seqId
+	        	, ID
+	        	, path) + (query == null ? "" : ("?" + query))
+	        	);
+	        
+			httpResponse.addHeader(X_RESPONSE_ID, ID);			
+	        
+			long startTime = System.currentTimeMillis();
 	        chain.doFilter(request, response);
+	        long endTime = System.currentTimeMillis();
 	        
-	        String queryId = ELog.getQueryId();
 	        int status = getStatus(httpResponse);
 	        String statusString = status < 0 ? "(status unknown)" : "" + status;
+	        
 			log.info(String.format
 				( "Response [%s, %s] : %s (%s)"
 				, seqId
-				, queryId
+				, ID
 				, statusString
-	            , NameUtils.formatDuration(System.currentTimeMillis() - start) ) 
+	            , NameUtils.formatDuration(endTime - startTime) ) 
 	            );
 			
 	    } else {
@@ -101,8 +115,8 @@ public class LogRequestFilter implements Filter {
 	    }
     }
 
-    private boolean usesUUID(HttpServletRequest httpRequest) {
-		return "true".equals(httpRequest.getHeader(SEQ_USE_UUID));
+    private String generateID() {
+		return UUID_V1.generate().toString();
 	}
 
 	// The check for NoSuchMethodError is because Tomcat6 doesn't have a

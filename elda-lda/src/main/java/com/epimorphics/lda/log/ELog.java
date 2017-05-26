@@ -37,14 +37,7 @@ public class ELog {
 		return queryID.get();
 	}
 	
-	private static Object[] withSeqId(Object[] args) {
-		Object [] extended = new Object[args.length + 1];
-		System.arraycopy(args, 0, extended, 1, args.length);
-		extended[0] = ELog.getSeqID(); 
-		return extended;
-	}
-	
-	private static Object[] withQueryId(String queryID, Object[] args) {
+	private static Object[] withIdAndSeq(String queryID, Object[] args) {
 		Object [] extended = new Object[args.length + 2];
 		System.arraycopy(args, 0, extended, 2, args.length);
 		extended[0] = getSeqID(); 
@@ -54,12 +47,8 @@ public class ELog {
 
 	public static String message(String message, Object... args) {
 		String q = queryID.get();
-//		System.err.println(">> message: query ID = '" + q + "'");
-		if (q == null) {
-			return String.format("[%s]: " + message, withSeqId(args));		
-		} else {
-			return String.format("[%s.%s]: " + message,  withQueryId(q, args));
-		}
+		if (q == null) q = "anon";
+		return String.format("[%s.%s]: " + message,  withIdAndSeq(q, args));
 	}
 
 }

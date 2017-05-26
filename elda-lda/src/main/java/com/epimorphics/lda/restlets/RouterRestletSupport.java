@@ -28,7 +28,6 @@ import com.epimorphics.lda.routing.Container;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.*;
 
 /**

@@ -225,8 +225,6 @@ import com.sun.jersey.api.NotFoundException;
 //    	System.err.println(">> requestHandler: URI = " + ui.getRequestUri());
 //    	System.err.println(">> path: " + pathstub);
     	
-    	ELog.setSeqID(getSeqID(servletResponse));
-    	ELog.setQueryId(ui.getQueryParameters().getFirst(QueryParameter._QUERY_ID));
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	String contextPath = servCon.getContextPath();
     
@@ -492,7 +490,7 @@ import com.sun.jersey.api.NotFoundException;
     }
 
 	private String getSeqID(HttpServletResponse servletResponse) {
-		try { return servletResponse.getHeader(LogRequestFilter.REQUEST_ID_HEADER); }
+		try { return servletResponse.getHeader(LogRequestFilter.X_RESPONSE_ID); }
 		catch (NoSuchMethodError e) { return "none"; }
 	}
 
