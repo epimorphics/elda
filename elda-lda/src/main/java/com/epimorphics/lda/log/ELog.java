@@ -48,7 +48,7 @@ public class ELog {
 	public static String message(String message, Object... args) {
 		String q = queryID.get();
 		if (q == null) q = "anon";
-		return String.format("[%s.%s]: " + message,  withIdAndSeq(q, args));
+		return String.format("[%s, %s]: " + message,  withIdAndSeq(q, args));
 	}
 
 }
