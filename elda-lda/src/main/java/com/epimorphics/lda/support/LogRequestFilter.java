@@ -77,7 +77,7 @@ public class LogRequestFilter implements Filter {
         	
         	if (ID == null) ID = headerID;
         	if (ID == null) ID = paramID;
-        	if (ID == null) ID = generateID();
+        	if (ID == null) ID = generateID(httpRequest);
         	
         	ELog.setQueryId(ID);
         	
@@ -115,8 +115,9 @@ public class LogRequestFilter implements Filter {
 	    }
     }
 
-    private String generateID() {
-		return UUID_V1.generate().toString();
+    private String generateID(HttpServletRequest req) {
+		// return UUID_V1.generate().toString();
+		return req.getLocalAddr();
 	}
 
 	// The check for NoSuchMethodError is because Tomcat6 doesn't have a
