@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.util.NameUtils;
-import com.hp.hpl.jena.shared.uuid.UUID_V1;
 
 /**
  * A Filter that can be added to filter chain to log all incoming requests and
@@ -75,8 +74,8 @@ public class LogRequestFilter implements Filter {
         	String headerID = httpRequest.getHeader(X_REQUEST_ID);
         	String paramID = httpRequest.getParameter(QueryParameter._QUERY_ID);
         	
-        	if (ID == null) ID = headerID;
         	if (ID == null) ID = paramID;
+        	if (ID == null) ID = headerID;
         	if (ID == null) ID = generateID(httpRequest);
         	
         	ELog.setQueryId(ID);
