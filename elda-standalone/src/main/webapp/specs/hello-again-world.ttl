@@ -34,7 +34,7 @@
     ; elda:authFile "taods-and-robins"
     .
     
-hello:hello-world-again a api:API 
+hello:hello-world-again a api:API
 	; rdfs:label "Hello World example #2 -- games"@en
 	# Name the SPARQL endpoint which supplies the data we present
 	; api:sparqlEndpoint <local:data/example-data.ttl>
