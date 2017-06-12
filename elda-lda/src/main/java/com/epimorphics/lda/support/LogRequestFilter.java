@@ -97,7 +97,7 @@ public class LogRequestFilter implements Filter {
 	        	, path) + (query == null ? "" : ("?" + query))
 	        	);
 	        
-			httpResponse.addHeader(X_RESPONSE_ID, ID);			
+			httpResponse.addHeader(X_RESPONSE_ID, "[" + seqId + ", " + ID + "]");			
 	        
 			long startTime = System.currentTimeMillis();
 	        chain.doFilter(request, response);
