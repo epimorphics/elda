@@ -53,6 +53,8 @@ public class LogRequestFilter implements Filter {
     	ignoreIfMatches = filterConfig.getInitParameter("com.epimorphics.lda.logging.ignoreIfMatches");
     }
 
+    boolean useID = "true".equals(System.getenv("ELDA_USE_ID"));
+    
     @Override
     public void doFilter
     	( ServletRequest request
@@ -74,8 +76,11 @@ public class LogRequestFilter implements Filter {
         	String headerID = httpRequest.getHeader(X_REQUEST_ID);
         	String paramID = httpRequest.getParameter(QueryParameter._QUERY_ID);
         	
-        	if (ID == null) ID = paramID;
-        	if (ID == null) ID = headerID;
+        	if (useID) {
+        		if (ID == null) ID = paramID;
+        		if (ID == null) ID = headerID;
+        	}
+        	
         	if (ID == null) ID = generateID(httpRequest);
         	
         	ELog.setQueryId(ID);

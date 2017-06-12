@@ -40,7 +40,6 @@ import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.*;
 import com.epimorphics.lda.log.ELog;
-import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.*;
@@ -128,7 +127,10 @@ import com.sun.jersey.api.NotFoundException;
 	    	ServletContext sc = sce.getServletContext();
 			if (announced == false) {
 				String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
-				String propertiesFile = "log4j.properties";
+				
+				String propertiesFile = System.getenv("ELDA_LOG4J_PROPERTIES");
+				if (propertiesFile == null) propertiesFile = "log4j.properties";
+				
 				PropertyConfigurator.configure( baseFilePath + propertiesFile );
 				log.info(ELog.message( "\n\n    =>=> Starting Elda (Init) %s\n", Version.string));
 				announced = true;
