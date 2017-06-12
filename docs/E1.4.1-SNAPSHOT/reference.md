@@ -1024,15 +1024,20 @@ query.
 In Elda 1.4.1, by default, log messages omit thread information,
 the current class name, and the current line number, but include
 the query id and sequence number; this is also placed in Response
-headers under X_Response_Id. The query ID is the IP address 
+headers under X\_Response\_Id. The query ID is the IP address 
 directed to this servlet.
 
-For debugging purposes, if the environment variable ELDA_USE_ID
+For debugging purposes, if the environment variable ELDA\_USE\_ID
 is set to `true` then rather than the IP address, the value of
 the query parameter \_query-id is used, if present; or the value
-of the X_REQUEST_ID header, if present.
+of the X\_REQUEST\_ID header, if present.
 
-
+For debugging purposes, if the environment variable
+`ELDA\_LOG4J\_PROPERTIES` is set to some webapp-relative
+filename, then that file is used as the log4j properties
+file. The file `dev-log4j.properties` is the same as
+the default log4j.properties except that it includes
+class name and line number in its log entries.
 
 Formatting extensions
 =====================
