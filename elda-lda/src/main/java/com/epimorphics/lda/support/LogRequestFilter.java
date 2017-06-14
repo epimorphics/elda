@@ -121,7 +121,8 @@ public class LogRequestFilter implements Filter {
 
     private String generateID(HttpServletRequest req) {
 		// return UUID_V1.generate().toString();
-		return req.getLocalAddr();
+    	String envID = System.getenv("ELDA_INSTANCE_ID");
+		return envID == null ? req.getLocalAddr() : envID;
 	}
 
 	// The check for NoSuchMethodError is because Tomcat6 doesn't have a
