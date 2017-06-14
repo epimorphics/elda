@@ -1025,10 +1025,11 @@ In Elda 1.4.1, by default, log messages omit thread information,
 the current class name, and the current line number, but include
 the query id and sequence number; this is also placed in Response
 headers under X\_Response\_Id. The query ID is the IP address 
-directed to this servlet.
+directed to this servlet, or, if defined, the value of the
+environment variable ELDA\_INSTANCE\_ID.
 
 For debugging purposes, if the environment variable ELDA\_USE\_ID
-is set to `true` then rather than the IP address, the value of
+is set to `true` then rather than the default query ID, the value of
 the query parameter \_query-id is used, if present; or the value
 of the X\_REQUEST\_ID header, if present.
 
