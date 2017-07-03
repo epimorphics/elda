@@ -16,11 +16,11 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.Couple;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.BrokenException;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.BrokenException;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
 From the spec: 
@@ -124,7 +124,7 @@ public class XMLRendering {
 		if (emv != null) blocked.add( emv.getResource() );		
 	//
 		addIdentification( t, e, x );
-		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement::getPredicate ).toSet() );
 		// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
 		for (Property p: metaProperties) addPropertyValues( t, e, xInMetaModel, p );
 	}
@@ -163,7 +163,7 @@ public class XMLRendering {
 	}
 
 	public void expandProperties(Trail t, Element pt, Resource anItem) {
-		List<Property> properties = asSortedList( anItem.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+		List<Property> properties = asSortedList( anItem.listProperties().mapWith( Statement::getPredicate ).toSet() );
 		for (Property ip: properties) addPropertyValues( t, pt, anItem, ip );
 	}
 	
@@ -357,7 +357,7 @@ public class XMLRendering {
 	private void addPropertyValues( Trail t, Element e, Resource x, Property p ) {		
 		Element pe = createElement(p);
 		e.appendChild( pe );
-		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();		
+		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement::getObject ).toSet();
 	//
 		if (values.size() > 1 || isMultiValued( p )) {
 			for (RDFNode value: sortObjects( p, values )) {

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.epimorphics.lda.specs.APISpec;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 public class LoadedConfigs {
 

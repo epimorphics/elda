@@ -25,7 +25,7 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 
 public class TestAPITemplate {
 	

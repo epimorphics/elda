@@ -14,7 +14,7 @@ import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.PropertyChain;
-import com.hp.hpl.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Property;
 
 /**
     A collection of property chains represented as a triple (?item predicate ?value)

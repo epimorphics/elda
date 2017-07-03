@@ -9,7 +9,7 @@
 package com.epimorphics.lda.rdfq;
 
 import com.epimorphics.lda.support.PrefixLogger;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 public class URINode extends Term {
 	

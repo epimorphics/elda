@@ -14,10 +14,10 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
-import com.hp.hpl.jena.vocabulary.*;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.vocabulary.*;
 
 /**
     Helper code to construct String->String hash maps from tiny strings

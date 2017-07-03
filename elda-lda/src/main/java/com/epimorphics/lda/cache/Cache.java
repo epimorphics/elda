@@ -16,7 +16,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ResponseResult;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.sources.Source;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 /**
     The Cache interface names the methods used by the Query

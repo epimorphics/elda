@@ -3,7 +3,7 @@ package com.epimorphics.lda.renderers;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 public class JSONLDRendererFactory implements RendererFactory {
 

@@ -25,12 +25,12 @@ import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.shared.LockNone;
-import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.Lock;
+import org.apache.jena.shared.LockNone;
+import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
 
 /**
  * Data source representing and external SPARQL endpoint.

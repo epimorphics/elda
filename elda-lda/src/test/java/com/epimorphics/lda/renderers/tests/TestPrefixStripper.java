@@ -13,8 +13,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.epimorphics.lda.renderers.StripPrefixes;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.test.ModelTestBase;
 
 public class TestPrefixStripper {
 	

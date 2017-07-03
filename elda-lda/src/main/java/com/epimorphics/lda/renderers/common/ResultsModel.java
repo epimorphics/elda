@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.rdfutil.*;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.DatasetFactory;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.rdf.model.Model;
 
 /**
  * An facade for the {@link APIResultSet} returned from Elda processing,

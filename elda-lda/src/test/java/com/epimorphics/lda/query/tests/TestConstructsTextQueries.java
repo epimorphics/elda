@@ -25,7 +25,7 @@ import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 
 public class TestConstructsTextQueries {
 	

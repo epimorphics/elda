@@ -13,7 +13,7 @@ import java.lang.management.ManagementFactory;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.shared.WrappedException;
 
 public class JMXSupport {
 

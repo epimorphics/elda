@@ -15,6 +15,7 @@
 package com.epimorphics.lda.sources;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +24,12 @@ import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.QueryUtil;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.shared.LockMRSW;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.util.iterator.Map1;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.Lock;
+import org.apache.jena.shared.LockMRSW;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.util.iterator.Map1;
 
 /**
     A combined source is a way of composing data from different endpoints.
@@ -52,17 +53,17 @@ public class CombinedSource extends SourceBase implements Source
     
     protected final Lock lock = new LockMRSW();
     
-    private static final Map1<Statement, Source> toSource( final FileManager fm, final AuthMap am ) {
-    	return new Map1<Statement, Source>()
+    private static final Function<Statement, Source> toSource( final FileManager fm, final AuthMap am ) {
+	return new Function<Statement, Source>()
         	{
-    		@Override public Source map1( Statement o )
+		@Override public Source apply( Statement o )
             	{ return GetDataSource.sourceFromSpec( fm, o.getResource(), am ); }
         	};
     }
 
-    private static final Map1<Statement, String> toString = new Map1<Statement, String>()
+    private static final Function<Statement, String> toString = new Function<Statement, String>()
         {
-        @Override public String map1( Statement o )
+        @Override public String apply( Statement o )
             { return o.getString(); }
         };
 

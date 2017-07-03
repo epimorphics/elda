@@ -23,7 +23,7 @@ import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.StreamUtils;
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.shared.WrappedException;
 
 public class TurtleRenderer implements Renderer {
 	

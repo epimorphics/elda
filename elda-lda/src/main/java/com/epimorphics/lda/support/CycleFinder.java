@@ -10,7 +10,7 @@ package com.epimorphics.lda.support;
 
 import java.util.*;
 
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 
 /**
  	<p>

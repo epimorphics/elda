@@ -13,7 +13,7 @@ package com.epimorphics.lda.tests_support;
 
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 /**
 	A ModelLoadI that throws a NotFoundException whatever uri is

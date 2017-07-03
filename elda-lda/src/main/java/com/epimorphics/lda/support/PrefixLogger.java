@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.shared.PrefixMapping;
 
 /**
     Prefix mapping

@@ -16,9 +16,9 @@ import org.junit.Test;
 
 import com.epimorphics.lda.specs.ExtractPrefixMapping;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.shared.PrefixMapping;
 
 public class TestAPISpecExtractPrefixMapping {
 	

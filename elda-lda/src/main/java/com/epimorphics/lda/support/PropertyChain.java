@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 /**
     A PropertyChain is a sequence of properties, to be used to trawl

@@ -39,6 +39,7 @@ import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.*;
+import com.epimorphics.lda.exceptions.BadRequestException;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Renderer;
@@ -49,8 +50,8 @@ import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.*;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.shared.WrappedException;
 import com.sun.jersey.api.NotFoundException;
 
 /**

@@ -9,7 +9,7 @@
 package com.epimorphics.lda.tests;
 
 import static com.epimorphics.util.CollectionUtils.list;
-import static com.hp.hpl.jena.rdf.model.test.ModelTestBase.property;
+import static org.apache.jena.rdf.model.test.ModelTestBase.property;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 

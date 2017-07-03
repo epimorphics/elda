@@ -10,8 +10,8 @@ package com.epimorphics.lda.support;
 
 import java.util.*;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.*;
 
 /**
     This class implements the language-filtering rules of LDA views.
@@ -32,7 +32,7 @@ public class LanguageFilter {
         Set<String> allowed = new HashSet<String>( Arrays.asList( split ) );
         if (allowed.contains( "none" )) allowed.add( "" );
         for (Resource sub: m.listSubjects().toList()) {
-            for (Property prop: sub.listProperties().mapWith( Statement.Util.getPredicate ).toSet())
+            for (Property prop: sub.listProperties().mapWith( Statement::getPredicate ).toSet())
                 removeUnwantedPropertyValues( allowed, sub, prop );
         }
     }

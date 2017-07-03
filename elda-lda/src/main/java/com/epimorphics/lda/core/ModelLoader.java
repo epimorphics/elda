@@ -12,7 +12,7 @@
 
 package com.epimorphics.lda.core;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 /**
  * Interface for loading models from a possibly re-routed source.

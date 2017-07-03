@@ -6,9 +6,9 @@ import java.io.ByteArrayOutputStream;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.XSD;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

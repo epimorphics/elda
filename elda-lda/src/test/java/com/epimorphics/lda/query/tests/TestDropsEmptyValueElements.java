@@ -23,7 +23,7 @@ import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.shared.PrefixMapping;
 
 public class TestDropsEmptyValueElements {
 

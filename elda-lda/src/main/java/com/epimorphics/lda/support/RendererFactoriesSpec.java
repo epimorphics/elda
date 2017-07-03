@@ -17,8 +17,8 @@ import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 public class RendererFactoriesSpec {
 
@@ -69,7 +69,7 @@ public class RendererFactoriesSpec {
     }
 
     private static Resource getRendererType( Resource r ) {
-		for (RDFNode tn: r.listProperties( RDF.type ).mapWith( Statement.Util.getObject ).toList()) {
+		for (RDFNode tn: r.listProperties( RDF.type ).mapWith( Statement::getObject ).toList()) {
 			Resource t = tn.asResource();
 			if (BuiltinRendererTable.isRendererType( t )) return t;
 		}
@@ -97,7 +97,7 @@ public class RendererFactoriesSpec {
 	}
 
 	private static List<RDFNode> formattersOf( Resource endpoint ) {
-		return endpoint.listProperties( API.formatter ).mapWith( Statement.Util.getObject ).toList();
+		return endpoint.listProperties( API.formatter ).mapWith( Statement::getObject ).toList();
 	}
 
 }

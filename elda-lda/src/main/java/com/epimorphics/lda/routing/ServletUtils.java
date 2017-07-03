@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 /**
     Some methods useful in the two servlet-handling components
@@ -48,7 +48,7 @@ public class ServletUtils {
         List<Statement> toAdd = new ArrayList<Statement>();
         List<Resource> apis = m
             .listStatements( null, RDF.type, API.API )
-            .mapWith(Statement.Util.getSubject)
+            .mapWith(Statement::getSubject)
             .toList()
             ;
         for (Resource api: apis) toAdd.add( m.createStatement( api, ELDA_API.loadedFrom, name ) );

@@ -32,8 +32,8 @@ import org.apache.jena.atlas.json.JsonException;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 
 import static com.epimorphics.jsonrdf.TestEncoder.*;
 

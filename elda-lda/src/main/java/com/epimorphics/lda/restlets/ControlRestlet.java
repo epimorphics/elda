@@ -28,8 +28,8 @@ import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
 import com.epimorphics.util.Util;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.iterator.ExtendedIterator;
 
 /**
  * Supports REST access to the definition of an API endpoint.

@@ -8,7 +8,7 @@
 package com.epimorphics.lda.support.tests;
 
 
-import static com.hp.hpl.jena.test.JenaTestBase.setOfStrings;
+import static org.apache.jena.test.JenaTestBase.setOfStrings;
 import static org.junit.Assert.assertEquals;
 
 import java.util.*;

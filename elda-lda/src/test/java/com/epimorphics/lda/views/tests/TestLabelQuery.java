@@ -10,9 +10,9 @@ import com.epimorphics.lda.sources.Source;
 import static com.epimorphics.jsonrdf.utils.ModelIOUtils.modelFromTurtle;
 import static com.epimorphics.util.CollectionUtils.*;
 
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.test.ModelTestBase;
 
 public class TestLabelQuery {
 	

@@ -21,9 +21,9 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.Lock;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.Lock;
 
 public class TDBSource extends SourceBase implements Source
     {

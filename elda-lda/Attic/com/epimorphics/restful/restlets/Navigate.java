@@ -19,8 +19,8 @@ import com.epimorphics.restful.support.SharedConfig;
 import com.epimorphics.sdx.system_state.ModelState;
 import com.epimorphics.sdx.vocabulary.DSV;
 import com.epimorphics.util.Util;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 @Path("{a : anchor}") public class Navigate
     {
@@ -97,7 +97,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
         {
         Set<RDFNode> result = new HashSet<RDFNode>();
         for (Resource r: candidates) 
-            result.addAll( r.listProperties( px ).mapWith( Statement.Util.getObject ).toSet() );
+            result.addAll( r.listProperties( px ).mapWith( Statement::getObject ).toSet() );
         return result;
         }
 

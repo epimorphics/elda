@@ -27,11 +27,11 @@ import com.epimorphics.lda.specs.PropertyExpiryTimes;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.QueryUtil;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.query.Query;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
  * Represents a view which selects which parts of a result 

@@ -17,9 +17,9 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.rdfutil.DatasetWrapper;
 import com.epimorphics.rdfutil.ModelWrapper;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.DatasetFactory;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.rdf.model.*;
 
 /**
  * Unit tests for {@link CommonNodeWrapper}

@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.RDF;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -19,9 +22,6 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.testing.utils.TomcatTestBase;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.vocabulary.RDF;
 
 public class ResponseStatusTest extends TomcatTestBase {
 

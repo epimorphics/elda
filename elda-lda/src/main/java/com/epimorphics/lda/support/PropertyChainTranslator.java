@@ -11,7 +11,7 @@ package com.epimorphics.lda.support;
 import java.util.*;
 
 import com.epimorphics.lda.core.VarSupply;
-import com.hp.hpl.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Property;
 
 /**
 	A PropertyChainTranslator is initialised with a bunch of property chains and

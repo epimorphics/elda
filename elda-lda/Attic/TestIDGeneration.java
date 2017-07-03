@@ -15,10 +15,10 @@ import static org.hamcrest.CoreMatchers.*;
 
 import com.epimorphics.sdx.system_state.ModelState;
 import com.epimorphics.sdx.vocabulary.SYSV;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
-import com.hp.hpl.jena.shared.ReificationStyle;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.shared.ReificationStyle;
 
 public class TestIDGeneration
     {

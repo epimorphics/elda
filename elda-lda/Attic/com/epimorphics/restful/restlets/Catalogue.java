@@ -20,8 +20,8 @@ import com.epimorphics.restful.support.SharedConfig;
 import com.epimorphics.sdx.system_state.ModelState;
 import com.epimorphics.sdx.vocabulary.DSV;
 import com.epimorphics.util.Util;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 @Path("{c : catalogue}") public class Catalogue
     {
@@ -83,7 +83,7 @@ import com.hp.hpl.jena.vocabulary.RDF;
     public static Set<Property> getAllProperties( Set<Resource> candidates )
         {
         Set<Property> result = new HashSet<Property>();
-        for (Resource r: candidates) result.addAll( r.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+        for (Resource r: candidates) result.addAll( r.listProperties().mapWith( Statement::getPredicate ).toSet() );
         return result;
         }
 

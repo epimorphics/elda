@@ -22,8 +22,8 @@ import javax.ws.rs.core.UriInfo;
 
 import com.epimorphics.lda.support.SharedConfig;
 import com.epimorphics.util.Util;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 
 @Path("{sc : create}") public class ServiceCreate
     {

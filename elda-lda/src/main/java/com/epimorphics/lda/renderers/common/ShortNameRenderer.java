@@ -20,9 +20,9 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.Transcoding;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.PrefixMapping;
 
 /**
  * A service object that augments the {@link ShortnameService} to add the

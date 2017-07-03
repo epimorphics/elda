@@ -28,7 +28,8 @@ import com.epimorphics.lda.routing.Container;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.util.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.*;
 
 /**
  	Support methods and data structures for RouterRestlet.

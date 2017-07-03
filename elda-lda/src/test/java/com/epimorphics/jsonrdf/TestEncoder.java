@@ -47,8 +47,8 @@ import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.jsonrdf.utils.ModelCompareUtils;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.OWL;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.OWL;
 
 public class TestEncoder {
 	

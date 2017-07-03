@@ -6,8 +6,8 @@ import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.specs.APIEndpointSpec;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.*;
 
 public class Extractor {
 

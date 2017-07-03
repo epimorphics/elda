@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.support.Glob;
-import com.hp.hpl.jena.shared.WrappedException;
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.shared.WrappedException;
+import org.apache.jena.util.FileManager;
 
 /**
 	An AuthMap is a map from authKey strings (as specified by an elda:authKey

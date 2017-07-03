@@ -18,10 +18,10 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
     Extracts and binds variables from API specifications.

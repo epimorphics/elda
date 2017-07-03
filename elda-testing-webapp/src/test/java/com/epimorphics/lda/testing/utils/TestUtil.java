@@ -28,18 +28,19 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.function.Function;
 
 import com.epimorphics.rdfutil.RDFUtil;
 import com.epimorphics.util.PrefixUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.util.iterator.Map1;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.apache.jena.util.iterator.Map1;
 
 /**
  * Support for testing iterator/list values against and expected set
@@ -192,8 +193,8 @@ public class TestUtil {
     }
 
     private static Set<RDFNode> getValues(Resource expected, Property p) {
-        return expected.listProperties(p).mapWith(new Map1<Statement,RDFNode>() {
-            @Override public RDFNode map1(Statement s) { return s.getObject(); }
+        return expected.listProperties(p).mapWith(new Function<Statement,RDFNode>() {
+            @Override public RDFNode apply(Statement s) { return s.getObject(); }
         }).toSet();
     }
 

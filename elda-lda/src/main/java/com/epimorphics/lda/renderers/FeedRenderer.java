@@ -30,11 +30,11 @@ import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.util.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.shared.WrappedException;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.shared.WrappedException;
+import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDFS;
 
 public class FeedRenderer implements Renderer {
 
@@ -303,7 +303,7 @@ public class FeedRenderer implements Renderer {
 	
 	private List<RDFNode> getEntryAuthors(Resource r) {
 		for (Property p: getAuthorProperties()) {
-			List<RDFNode> candidates = r.listProperties(p).mapWith(Statement.Util.getObject).toList();
+			List<RDFNode> candidates = r.listProperties(p).mapWith(Statement::getObject).toList();
 			if (candidates.size() > 0) return candidates;
 		}
 		return new ArrayList<RDFNode>();

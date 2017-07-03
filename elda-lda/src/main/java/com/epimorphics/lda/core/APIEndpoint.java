@@ -32,8 +32,8 @@ import com.epimorphics.lda.support.Controls;
 import com.epimorphics.lda.support.NoteBoard;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 
 /**
  * An particular api endpoint receives "calls" (can be GET or POST) via a Router, extracts

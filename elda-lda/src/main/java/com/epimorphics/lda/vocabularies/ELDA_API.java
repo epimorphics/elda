@@ -1,6 +1,6 @@
 /* CVS $Id: $ */
 package com.epimorphics.lda.vocabularies; 
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
  
 /**
  * Vocabulary definitions from /home/chris/EldaThings/elda-in-github/elda-lda/../vocabs/elda_api.ttl 

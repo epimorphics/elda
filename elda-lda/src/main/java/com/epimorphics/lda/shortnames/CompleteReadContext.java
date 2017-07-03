@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.JSONRenderer;
-import com.hp.hpl.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Property;
 
 public class CompleteReadContext {
 

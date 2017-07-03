@@ -10,11 +10,11 @@ package com.epimorphics.lda.rdfq;
 import java.net.URI;
 
 import com.epimorphics.lda.support.PrefixLogger;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.XSD;
 
 
 /**
@@ -90,7 +90,7 @@ public class RDFQ
 		{ return new URINode( raw ); }
 	
 	public static Value literal( String spelling ) 
-		{ return new Value( spelling ); }
+		{ return new Value( spelling, null, "http://www.w3.org/2001/XMLSchema#string" ); }
 	
 	public static Value literal( String spelling, String language, String datatype ) 
 		{ return new Value( spelling, language, datatype ); }

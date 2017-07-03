@@ -12,14 +12,14 @@
 
 package com.epimorphics.jsonrdf;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.reasoner.TriplePattern;
-import com.hp.hpl.jena.reasoner.transitiveReasoner.TransitiveGraphCache;
-import com.hp.hpl.jena.reasoner.transitiveReasoner.TransitiveReasoner;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.reasoner.TriplePattern;
+import org.apache.jena.reasoner.transitiveReasoner.TransitiveGraphCache;
+import org.apache.jena.reasoner.transitiveReasoner.TransitiveReasoner;
+import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 
 /**
  * Support for comparing datatypes to reflect XSD type heirarchy

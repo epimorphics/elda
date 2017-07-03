@@ -8,7 +8,7 @@
 
 package com.epimorphics.lda.support;
 
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.util.FileManager;
 
 public class EldaFileManager {
 

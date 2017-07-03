@@ -12,12 +12,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.epimorphics.vocabs.NsUtils;
-import com.hp.hpl.jena.graph.*;
-import com.hp.hpl.jena.graph.impl.WrappedGraph;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.graph.*;
+import org.apache.jena.graph.impl.WrappedGraph;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.util.iterator.ExtendedIterator;
 
 /**
     StripPrefixes provides a method for removing unnecessary prefixes from

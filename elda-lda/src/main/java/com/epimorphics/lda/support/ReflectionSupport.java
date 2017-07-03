@@ -8,7 +8,7 @@
 package com.epimorphics.lda.support;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.shared.WrappedException;
 
 /**
     Versions of Class.forName and Class.newInstance that turn checked

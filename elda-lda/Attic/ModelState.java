@@ -9,9 +9,9 @@
 package com.epimorphics.sdx.system_state;
 
 import com.epimorphics.sdx.vocabulary.SYSV;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.tdb.TDBFactory;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.tdb.TDBFactory;
 
 public class ModelState
     {

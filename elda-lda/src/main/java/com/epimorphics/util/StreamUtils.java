@@ -9,7 +9,7 @@ package com.epimorphics.util;
 
 import java.io.*;
 
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.shared.WrappedException;
 
 /**
     Some utilities for handling UTF8 streams.

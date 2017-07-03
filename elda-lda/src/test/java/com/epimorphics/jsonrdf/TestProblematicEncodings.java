@@ -23,7 +23,7 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDF;
 /**
  * Collection of cases that didn't work at first.
  * 

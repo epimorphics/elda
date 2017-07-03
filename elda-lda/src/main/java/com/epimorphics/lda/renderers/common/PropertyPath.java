@@ -20,8 +20,8 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 
 /**

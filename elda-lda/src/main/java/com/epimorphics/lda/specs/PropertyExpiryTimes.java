@@ -11,10 +11,11 @@ package com.epimorphics.lda.specs;
 import java.util.*;
 
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.XSD;
 
 /**
 	PropertyExpiryTimes is a configurable map from resources (represented
@@ -102,7 +103,7 @@ public class PropertyExpiryTimes {
 		if (s == null) return ifAbsent;
 		RDFNode n = s.getObject();
 		if (n.isResource()) return ifAbsent;
-		if (n.asLiteral().getDatatypeURI() == null) {
+		if (n.asLiteral().getDatatypeURI().equals(XSD.xstring.getURI())) {
 			String spelling = n.asLiteral().getLexicalForm();
 			char last = spelling.charAt(spelling.length() - 1);
 			if (Character.isDigit(last)) {

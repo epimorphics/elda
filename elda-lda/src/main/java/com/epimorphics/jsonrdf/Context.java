@@ -24,10 +24,10 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.exceptions.ReusedShortnameException;
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.impl.Util;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.impl.Util;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.*;
 
 /**
  * Encapsulates the mapping decisions to determine how RDF should be
@@ -206,7 +206,7 @@ public class Context implements ReadContext, Cloneable {
     }
 
     protected String getLocalName(String uri) {
-        return uri.substring( Util.splitNamespace( uri ));
+        return uri.substring( Util.splitNamespaceXML( uri ));
     }    
 
     static final boolean exceptionForBadShortname = false;

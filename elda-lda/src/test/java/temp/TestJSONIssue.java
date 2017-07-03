@@ -25,9 +25,9 @@ import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.StreamUtils;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 public class TestJSONIssue {
 	

@@ -17,18 +17,18 @@ import static com.epimorphics.jsonrdf.RDFUtil.getLexicalForm;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.*;
+import java.util.function.Function;
 
 import org.apache.jena.atlas.json.JsonObject;
 import org.codehaus.jettison.json.JSONException;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.OneToManyMap;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
-import com.hp.hpl.jena.util.iterator.Map1;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.OneToManyMap;
+import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  * Driver for encoding a set of RDF resources into JSON.
@@ -354,9 +354,9 @@ public class Encoder {
 			
 			if(roots!=null) for (Resource root : roots) {
 				ExtendedIterator<Resource> i = root.listProperties(API.items)
-						.mapWith(new Map1<Statement, Resource>() {
+						.mapWith(new Function<Statement, Resource>() {
 							@Override
-							public Resource map1(Statement o) {
+							public Resource apply(Statement o) {
 								return o.getResource();
 							}
 						});
@@ -367,10 +367,10 @@ public class Encoder {
 				}
 				topItemLists = res;
 				for (RDFList list : topItemLists) {
-					ExtendedIterator<Resource> iter = list.iterator().mapWith(new Map1<RDFNode, Resource>(){
+					ExtendedIterator<Resource> iter = list.iterator().mapWith(new Function<RDFNode, Resource>(){
 
 						@Override
-						public Resource map1(RDFNode o) {
+						public Resource apply(RDFNode o) {
 							return o.asResource();
 						}
 					});

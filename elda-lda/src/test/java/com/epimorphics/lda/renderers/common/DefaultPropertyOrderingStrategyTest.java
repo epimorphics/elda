@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.rdfutil.*;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 
 /**
  * TODO class comment

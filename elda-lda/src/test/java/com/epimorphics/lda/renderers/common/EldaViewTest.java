@@ -20,7 +20,7 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 
 /**
  * Unit tests for {@link EldaView}

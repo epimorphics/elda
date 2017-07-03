@@ -24,9 +24,9 @@ import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.tests_support.ExpandOnly;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
 
 public class TestExistsModifier 
 	{

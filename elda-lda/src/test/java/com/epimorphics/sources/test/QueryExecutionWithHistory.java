@@ -12,11 +12,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.sparql.util.Context;
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.util.Context;
 
 /**
     A wrapper round QueryExecution that logs some of its actions
@@ -34,10 +33,6 @@ public class QueryExecutionWithHistory implements QueryExecution {
 
     @Override public void setInitialBinding(QuerySolution binding) {
         qe.setInitialBinding(binding);
-    }
-
-    @Override public void setFileManager(FileManager fm) {
-        qe.setFileManager(fm);
     }
 
     @Override public Dataset getDataset() {
@@ -119,5 +114,11 @@ public class QueryExecutionWithHistory implements QueryExecution {
 
 	@Override public long getTimeout2() {
 		return qe.getTimeout2();
+	}
+
+	@Override
+	public boolean isClosed() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

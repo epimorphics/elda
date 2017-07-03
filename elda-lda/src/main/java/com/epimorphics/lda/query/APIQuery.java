@@ -38,14 +38,14 @@ import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.*;
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.BrokenException;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.BrokenException;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
  * Query abstraction that supports assembling multiple filter/order/view

@@ -22,10 +22,10 @@ import com.epimorphics.lda.vocabularies.ELDA.COMMON;
 import com.epimorphics.lda.vocabularies.ELDA.DOAP_EXTRAS;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.sparql.vocabulary.DOAP;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.sparql.vocabulary.DOAP;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
  * Facade class for providing easier access to the elements of the

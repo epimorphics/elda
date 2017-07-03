@@ -15,6 +15,7 @@ import static com.epimorphics.util.RDFUtils.getStringValue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,11 +37,11 @@ import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.util.iterator.Map1;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.util.iterator.Map1;
 
 /**
  * Encapsulates a specification of a single API instance.
@@ -197,9 +198,9 @@ public class APISpec extends SpecCommon {
         return result;
     }
 
-    private static final Map1<Statement, Source> toSource( final FileManager fm, final AuthMap am ) {
-    	return new Map1<Statement, Source>() {
-    		@Override public Source map1( Statement o ) { 
+    private static final Function<Statement, Source> toSource( final FileManager fm, final AuthMap am ) {
+	return new Function<Statement, Source>() {
+		@Override public Source apply( Statement o ) {
     			return GetDataSource.sourceFromSpec( fm, o.getResource(), am ); 
     		}
     	};

@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.renderers.JSONLDComposer;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 
 /**
 	Tests for JSON LD output. Very partial.
@@ -48,6 +48,9 @@ public class TestJSONLD {
 		
 		jc.renderItems(Arrays.asList(item));
 		String content = s.toString();
+
+		System.err.println(">> content: " + content);
+
 		if (!content.contains("{\"@lang\" : \"fr\", \"@value\" : \"chat\"}"))
 			fail("");
 	}

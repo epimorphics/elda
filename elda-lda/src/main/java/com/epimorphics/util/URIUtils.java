@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.QueryParameter;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 
 public class URIUtils {
 

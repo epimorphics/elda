@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.sources.Source;
-import com.hp.hpl.jena.sparql.engine.http.QueryExceptionHTTP;
+import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
 
 public class EldaException extends RuntimeException {
 

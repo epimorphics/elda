@@ -11,6 +11,8 @@ package com.epimorphics.lda.sources.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.List;
+
 import org.junit.Test;
 
 import com.epimorphics.lda.rdfq.*;
@@ -18,10 +20,10 @@ import com.epimorphics.lda.sources.*;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.test.JenaTestBase;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.test.JenaTestBase;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.RDFS;
 
 public class TestSourceConfig {
 	
@@ -103,8 +105,10 @@ public class TestSourceConfig {
 		Any qB = RDFQ.literal( b.getLexicalForm() );
 		Any qC = RDFQ.literal( c.getLexicalForm() );
 	//
-		AnyList expected = RDFQ.list( qA, qB, qC );
-		assertEquals( expected, s.getTextSearchConfig().getTextSearchOperand() );		
+		List<Any> expected = RDFQ.list( qA, qB, qC ).getElements();
+		List<Any> actual = s.getTextSearchConfig().getTextSearchOperand().getElements();
+
+		assertEquals( expected, actual );
 	}
 	
 }
