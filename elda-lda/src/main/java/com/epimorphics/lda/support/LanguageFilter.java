@@ -13,6 +13,8 @@ import java.util.*;
 import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.*;
 
+import com.epimorphics.util.RDFUtils;
+
 /**
     This class implements the language-filtering rules of LDA views.
 */
@@ -49,7 +51,7 @@ public class LanguageFilter {
         	Statement s = it.next();
             RDFNode mo = s.getObject();
             Node o = mo.asNode();
-            if (isStringLiteral(o)) {
+            if (o.isLiteral() && RDFUtils.isBareStringType(o.getLiteralDatatypeURI())) {
                 String lang = o.getLiteralLanguage();
                 if (allowed.contains( lang )) hasLanguagedObjects = true; 
                 else if (lang.equals( "" )) plains.add( s );                        
@@ -60,8 +62,4 @@ public class LanguageFilter {
 		if (hasLanguagedObjects) m.remove( plains );
         m.remove( removes );        
     }
-    
-	private static boolean isStringLiteral(Node o) {
-		return o.isLiteral() && o.getLiteralDatatypeURI() == null; 
-	}
 }

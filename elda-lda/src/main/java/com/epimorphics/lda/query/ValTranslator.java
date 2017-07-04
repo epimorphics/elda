@@ -14,6 +14,8 @@ import com.epimorphics.lda.exceptions.BadRequestException;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.API;
+import com.epimorphics.util.RDFUtils;
+
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QueryParseException;
 
@@ -58,7 +60,7 @@ public class ValTranslator {
 
 	public Any objectForValue( String type, String val, String languages ) {
 		String[] langArray = languages == null ? JUSTEMPTY : languages.split( ",", -1 );
-		if (type == null) {
+		if (RDFUtils.isBareStringType(type)) {
 			return languagedLiteral(langArray, val);
 		} else if (type.equals( API.SimpleLiteral.getURI())) {
 			return RDFQ.literal(val);
@@ -96,7 +98,7 @@ public class ValTranslator {
 	}
 
 	private Any languagedLiteral(String[] langArray, String val) {
-		if (langArray.length == 1) return RDFQ.literal( val, langArray[0], "" );
+		if (langArray.length == 1) return RDFQ.literal( val, langArray[0] );
 		
 		Variable o = vs.newVar();
 		Apply stringOf = RDFQ.apply( "str", o );

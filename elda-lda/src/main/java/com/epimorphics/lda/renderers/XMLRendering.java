@@ -16,6 +16,8 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.Couple;
+import com.epimorphics.util.RDFUtils;
+
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.shared.BrokenException;
 import org.apache.jena.sparql.vocabulary.FOAF;
@@ -390,7 +392,7 @@ public class XMLRendering {
 		String lang = L.getLanguage();
 		if (lang.length() > 0) e.setAttribute( "lang", lang );
 		String type = L.getDatatypeURI();
-		if (type != null) e.setAttribute( "datatype", shortNameFor( type ) );
+		if (!RDFUtils.isBareStringType(type)) e.setAttribute( "datatype", shortNameFor( type ) );
 		e.appendChild( d.createTextNode( L.getLexicalForm() ) );
 	}
 

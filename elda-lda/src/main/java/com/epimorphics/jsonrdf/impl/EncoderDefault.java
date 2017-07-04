@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.jsonrdf.extras.JsonUtils;
 import com.epimorphics.lda.log.ELog;
+import com.epimorphics.util.RDFUtils;
+
 import org.apache.jena.datatypes.BaseDatatype;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
@@ -125,11 +127,11 @@ public class EncoderDefault implements EncoderPlugin {
     	if (isStructured) {
     		jw.object();
     		jw.key("_value"); jw.value( spelling );
-    		if (dt != null) { jw.key( "_datatype" ); jw.value( shortName( c, dt ) ); }
+    		if (!isBareStringType(dt)) { jw.key( "_datatype" ); jw.value( shortName( c, dt ) ); }
     		if (lang.length() > 0) { jw.key("_lang" ); jw.value( lang ); }
     		jw.endObject();    		
     	} else {
-			if (dt == null) {
+			if (isBareStringType(dt)) {
 				encodeString( jw, spelling, lang );
 			} else if (dt.equals( XSDDatatype.XSDboolean)) {
 				jw.value( (boolean) ((Boolean) lit.getValue()) );
@@ -154,6 +156,10 @@ public class EncoderDefault implements EncoderPlugin {
 			}
     	}
     }
+
+	private boolean isBareStringType(RDFDatatype dt) {
+		return RDFUtils.isBareStringType(dt.getURI());
+	}
     
     private boolean showUnhandled = true;
 

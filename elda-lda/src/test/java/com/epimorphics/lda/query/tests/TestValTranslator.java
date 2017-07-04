@@ -79,7 +79,7 @@ public class TestValTranslator {
 	//
 		ValTranslator vt = new ValTranslator(absentSupply, absentFilters, sns);
 		Any o = vt.objectForValue( API.SimpleLiteral.getURI(), "lexicalForm", null );
-		assertEquals( RDFQ.literal( "lexicalForm", "", "" ), o );		
+		assertEquals( RDFQ.literal( "lexicalForm", "" ), o );		
 	}
 	
 	@Test public void testSimpleLiteralObjectWithLanguage() {
@@ -89,7 +89,7 @@ public class TestValTranslator {
 	//
 		ValTranslator vt = new ValTranslator(absentSupply, absentFilters, sns);
 		Any o = vt.objectForValue( API.SimpleLiteral.getURI(), "lexicalForm", "fr" );
-		assertEquals( RDFQ.literal( "lexicalForm", "", "" ), o );		
+		assertEquals( RDFQ.literal( "lexicalForm", ""), o );		
 	}
 	
 	@Test public void testPlainLiteralObjectWithoutLanguage() {
@@ -99,7 +99,7 @@ public class TestValTranslator {
 	//
 		ValTranslator vt = new ValTranslator(absentSupply, absentFilters, sns);
 		Any o = vt.objectForValue( API.PlainLiteral.getURI(), "lexicalForm", null );
-		assertEquals( RDFQ.literal( "lexicalForm", "", "" ), o );		
+		assertEquals( RDFQ.literal( "lexicalForm", "" ), o );		
 	}
 	
 	@Test public void testPlainLiteralObjectWithLanguage() {
@@ -109,7 +109,7 @@ public class TestValTranslator {
 	//
 		ValTranslator vt = new ValTranslator(absentSupply, absentFilters, sns);
 		Any o = vt.objectForValue( API.PlainLiteral.getURI(), "lexicalForm", "en" );
-		assertEquals( RDFQ.literal( "lexicalForm", "en", "" ), o );		
+		assertEquals( RDFQ.literal( "lexicalForm", "en"), o );		
 	}
 	
 	@Test public void testObjectTypedObjectWithoutExpansion() {

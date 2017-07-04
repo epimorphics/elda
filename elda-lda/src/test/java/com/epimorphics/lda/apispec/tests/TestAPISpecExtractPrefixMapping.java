@@ -65,6 +65,11 @@ public class TestAPISpecExtractPrefixMapping {
 		ModelTestBase.modelAdd(m, modelString);
 		m = ModelFactory.createDefaultModel().add(m);
 		Resource r = ModelTestBase.resource( m, "mine" );
+		
+		// the m = ...add(m) dance doesn't work in later vsrsions
+		// of jena since it adds the prefixes anyway.
+		m.removeNsPrefix("api");
+		
 		PrefixMapping pm = ExtractPrefixMapping.from( r );
 		assertThat( pm, IsSame(expected) );
 	}

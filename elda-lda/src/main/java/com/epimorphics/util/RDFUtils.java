@@ -24,7 +24,9 @@ import java.util.regex.Pattern;
 
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 
 /**
  * Random collection of RDF Utilities that should really be in Jena.
@@ -169,6 +171,14 @@ public class RDFUtils {
 			if (sp.equalsIgnoreCase("no") || sp.equalsIgnoreCase("false")) return Boolean.FALSE;
 		}
 		return ifAbsent;
+	}
+
+	public static boolean isBareStringType(String uri) {
+		if (uri == null) {
+			System.err.println(">> null type!");
+			return true;
+		}
+		return uri.equals(XSD.xstring.getURI()) || uri.equals(RDF.langString.getURI());
 	}
 }
 

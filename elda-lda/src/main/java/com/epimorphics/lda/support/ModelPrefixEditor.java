@@ -17,6 +17,8 @@ import org.apache.jena.graph.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.iterator.ExtendedIterator;
 
+import com.epimorphics.util.RDFUtils;
+
 /**
     Class to edit models by editing all the resource URIs according to the 
     rules for a PrefixEditor.
@@ -121,9 +123,9 @@ public class ModelPrefixEditor {
 	
 	private Literal rename( Literal n ) {
 		String typeURI = n.getDatatypeURI();
-		if (typeURI == null) return n;
+		if (RDFUtils.isBareStringType(typeURI)) return n;
 		String newURI = pe.rename( typeURI );
-		if (typeURI == newURI) return n;
+		if (typeURI.equals(newURI)) return n;
 		return ResourceFactory.createTypedLiteral( n.getLexicalForm(), typeNamed(newURI) );
 	}
 	

@@ -92,6 +92,9 @@ public class RDFQ
 	public static Value literal( String spelling ) 
 		{ return new Value( spelling, null, "http://www.w3.org/2001/XMLSchema#string" ); }
 	
+	public static Value literal( String spelling, String lang ) 
+		{ return new Value( spelling, lang, "http://www.w3.org/2001/XMLSchema#string" ); }
+	
 	public static Value literal( String spelling, String language, String datatype ) 
 		{ return new Value( spelling, language, datatype ); }
 	
