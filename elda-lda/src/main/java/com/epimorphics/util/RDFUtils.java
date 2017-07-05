@@ -176,6 +176,7 @@ public class RDFUtils {
 	public static boolean isBareStringType(String uri) {
 		if (uri == null) {
 			System.err.println(">> null type!");
+//			throw new RuntimeException("BOOM");
 			return true;
 		}
 		return uri.equals(XSD.xstring.getURI()) || uri.equals(RDF.langString.getURI());

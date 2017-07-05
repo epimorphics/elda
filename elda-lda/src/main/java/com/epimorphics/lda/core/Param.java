@@ -15,6 +15,7 @@ import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.epimorphics.lda.rdfq.URINode;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.XSD;
 
 /**
  	introduced to try and pull apart the types of arguments to the different filtering
@@ -113,6 +114,8 @@ public abstract class Param
 			Resource r = sns.asResource(p);
 			ContextPropertyInfo prop = sns.asContext().getPropertyByName( p );
 			String type = prop == null ? null : prop.getType();
+			// should warn in this case?
+			if (type == null) type = XSD.xstring.getURI();
 			return new Info(r, inverse, p, type);
 			}
 		

@@ -93,7 +93,6 @@ extends RDFNodeWrapper
             if (n != null && n.isLiteral()) {
                 try {
                     v = n.asLiteral().getInt();
-                    System.err.println(">> v := " + v);
                 }
                 catch (DatatypeFormatException e) {
                     // ignore this error - we return the default value
