@@ -28,7 +28,9 @@ import org.apache.jena.datatypes.BaseDatatype;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.impl.XSDBaseNumericType;
+import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.sparql.util.NodeFactoryExtra;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.XSD;
 
@@ -248,8 +250,8 @@ public class EncoderDefault implements EncoderPlugin {
     }
     
     /** Decode an RDF value (object of a statement) */
-    @Override public RDFNode decodeValue(Object jsonValue, Decoder decoder, String type) {
-        if (jsonValue instanceof Number) {
+    @Override public RDFNode decodeValue(Object jsonValue, Decoder decoder, String type) {    	
+    	if (jsonValue instanceof Number) {
             return ResourceFactory.createTypedLiteral(jsonValue);
         } else if (jsonValue instanceof JsonBoolean) {
         	JsonBoolean jb = (JsonBoolean) jsonValue;
@@ -298,13 +300,25 @@ public class EncoderDefault implements EncoderPlugin {
 
 	private RDFNode decodeNumber( JsonNumber jn ) {
 		BigDecimal bd = (BigDecimal) jn.value();
-		try { return ResourceFactory.createTypedLiteral( bd.intValueExact() ); }
+		try { return asInteger(bd); }
 		catch (ArithmeticException e) { /* fall through on exception */ }
 		try { return ResourceFactory.createTypedLiteral( bd.longValueExact() ); }
 		catch (ArithmeticException e) { /* fall through on exception */ }
 		try { return ResourceFactory.createTypedLiteral( bd.doubleValue() ); }
 		catch (ArithmeticException e) { /* fall through on exception */ }
 		return ResourceFactory.createTypedLiteral( bd );
+	}
+
+	static final Model m = ModelFactory.createDefaultModel();
+	
+	/**
+		Somewhere round Jena 3.0.0 createTypedLiteral returned int not
+		integer as the literal type, breaking the round-trip test.
+		So do surgery on the literal node.
+	 */
+	private Literal asInteger(BigDecimal bd) {
+		Literal l = ResourceFactory.createTypedLiteral( bd.intValueExact() );
+		return m.createTypedLiteral(l.getLexicalForm(), XSD.integer.getURI());
 	}
 
 }

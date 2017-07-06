@@ -17,8 +17,6 @@
 
 package com.epimorphics.jsonrdf;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.StringReader;
 
 import org.apache.jena.atlas.json.JsonObject;
@@ -26,6 +24,7 @@ import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.test.ModelTestBase;
 /**
  * Test cases the encode to JSONObject cases
  * 
@@ -40,7 +39,7 @@ public class TestEncodeToObject {
         JsonObject obj = Encoder.get(context).encode(src);
         String encoding = obj.toString();
         Model dec = Decoder.decodeModel(context, new StringReader(encoding) );
-        assertTrue( dec.isIsomorphicWith(src) );
+        ModelTestBase.assertIsoModels(src, dec);
     }
 }
 

@@ -28,6 +28,7 @@ import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 
 public class Decoder {
 
@@ -180,7 +181,7 @@ public class Decoder {
     private Literal decodeStructuredLiteral(JsonObject jo) {
 		String spelling = JsonUtils.optString( jo, "_value", "" );
 		String lang = JsonUtils.optString( jo, "_lang", "" );
-		String type = JsonUtils.optString( jo, "_datatype", "" );
+		String type = JsonUtils.optString( jo, "_datatype", XSD.xstring.getURI());
 		return
 			lang.isEmpty() ? model.createTypedLiteral( spelling, decodeTypeURI( type ) ) 
 			: model.createLiteral( spelling, lang )

@@ -46,6 +46,7 @@ import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.sparql.engine.http.QueryExceptionHTTP;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 
 /**
  * Query abstraction that supports assembling multiple filter/order/view
@@ -479,7 +480,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		String langs = getDefaultLanguage();
 		String [] langArray = langs == null ? ValTranslator.JUSTEMPTY : langs.split(",", -1);
 		
-		if (langArray.length > 0 && (type == null || type.equals(API.PlainLiteral.getURI()))) {
+		if (langArray.length > 0 && (type == null || type.equals(XSD.xstring.getURI()))) {
 			
 			RenderExpression strAlready = RDFQ.apply("str", already);
 			RenderExpression strOp = RDFQ.infix(strAlready, op, RDFQ.literal(val));
