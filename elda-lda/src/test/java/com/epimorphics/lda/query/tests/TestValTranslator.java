@@ -27,6 +27,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 
 public class TestValTranslator {
 	
@@ -42,7 +43,7 @@ public class TestValTranslator {
 		ShortnameService sns = new StandardShortnameService( root, noPrefixes, null );
 	//
 		ValTranslator vt = new ValTranslator(absentSupply, absentFilters, sns);
-		Any o = vt.objectForValue( (String) null, "val", null );
+		Any o = vt.objectForValue( XSD.xstring.getURI(), "val", "" );
 		assertEquals( RDFQ.literal( "val" ), o );
 	}
 	

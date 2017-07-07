@@ -16,8 +16,12 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.RDFUtils;
 
+import java.util.Arrays;
+
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.QueryParseException;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.XSD;
 
 /**
     ValTranslator handles the translation of the V in ?P=V
@@ -98,7 +102,9 @@ public class ValTranslator {
 	}
 
 	private Any languagedLiteral(String[] langArray, String val) {
-		if (langArray.length == 1) return RDFQ.literal( val, langArray[0] );
+		if (langArray.length == 1) {
+			return RDFQ.literal( val, langArray[0], RDF.langString.getURI() );
+		}
 		
 		Variable o = vs.newVar();
 		Apply stringOf = RDFQ.apply( "str", o );
