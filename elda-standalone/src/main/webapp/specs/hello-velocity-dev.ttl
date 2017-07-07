@@ -17,17 +17,18 @@
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
 
 # Prefix for example-local entities.
-@prefix egc:				<http://epimorphics.com/public/vocabulary/games/>.
+@prefix hello:				<http://epimorphics.com/public/vocabulary/games/>.
+@prefix egc:				<https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#>.
 
 # ---------------------------------------------------------------------
 # API config
 
-egc:velocity-world-dev a api:API
+hello:velocity-world-dev a api:API
   ; rdfs:label "Hello World example API -- games, rendered with Velocity"@en
   ; api:sparqlEndpoint <local:data/example-data.ttl>
   # ; api:defaultViewer api:labelledDescribeViewer
   ; api:base "/standalone"
-  ; api:endpoint egc:games
+  ; api:endpoint hello:games
   ; api:defaultFormatter
     [a elda:VelocityFormatter
     ; api:name "html"
@@ -40,7 +41,7 @@ egc:velocity-world-dev a api:API
 
 # Endpoint definition
 
-egc:games a api:ListEndpoint
+hello:games a api:ListEndpoint
   ; rdfs:label "Games"
   ; api:uriTemplate "/games"
   ; api:selector [api:filter "type=BoardGame"; api:sort "label"]

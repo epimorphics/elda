@@ -18,6 +18,7 @@
 
 # Prefix for example-local entities.
 @prefix hello:				<http://epimorphics.com/public/vocabulary/games/>.
+@prefix egc:                            <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#>.
 
 # ---------------------------------------------------------------------
 # API config
@@ -62,41 +63,41 @@ hello:HtmlFormatter a api:XsltFormatter
 	# ; elda:shortnameMode elda:roundTrip
 	.
 
-hello:BoardGame a rdfs:Class
+egc:BoardGame a rdfs:Class
 	; rdfs:label "Board Game"
 	; api:label "BoardGame"
 	.
 	
-hello:players a rdf:Property
+egc:players a rdf:Property
 	; api:label "players"
 	; rdfs:range xsd:int
 	.
 	
-hello:designed-by a rdf:Property
+egc:designed-by a rdf:Property
 	; api:label "designedBy"
 	.
 	
-hello:designer-of a rdf:Property
+egc:designer-of a rdf:Property
 	; api:label "designerOf"
 	.
 	
-hello:pubDate a rdf:Property
+egc:pubDate a rdf:Property
 	; api:label "publicationDate"
 	; rdfs:range xsd:integer
 	.
 	
-hello:title a rdf:Property
+egc:title a rdf:Property
 	; api:label "title"
 	.
 		
-hello:pubYear a rdf:Property
+egc:pubYear a rdf:Property
 	; api:label "publicationYear"
 	; rdfs:range xsd:integer
     ; rdfs:comment "The subject is some published entity, the object is the year of its publication."
     ; rdfs:range xsd:integer
 	.
     
-hello:playTimeMinutes a rdf:Property
+egc:playTimeMinutes a rdf:Property
 	; api:label "playTimeMinutes"
 	; rdfs:label "playTimeMinutes"
 	; rdfs:range xsd:integer
