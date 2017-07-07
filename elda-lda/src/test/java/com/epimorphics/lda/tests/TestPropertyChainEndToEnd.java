@@ -132,7 +132,7 @@ public class TestPropertyChainEndToEnd
 		Model model = MakeData.specModel
 			( "spec:spoo rdf:type api:API"
 			+ "; ex:size rdf:type owl:DatatypeProperty"
-			+ "; ex:size rdfs:range xsd:string"
+			+ "; ex:size rdfs:range eh:/T"
 			+ "; ex:thing rdf:type owl:DatatypeProperty"
 			+ ""
 			);
@@ -142,8 +142,8 @@ public class TestPropertyChainEndToEnd
 		ShortnameService sns = new StandardShortnameService( spec, prefixes, loader );
 		APIQuery q = QueryTestUtils.queryFromSNS(sns);
 		ContextQueryUpdater x = new ContextQueryUpdater( ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.oneNamedView, sns, q );
-		x.addFilterFromQuery( Param.make(sns, propertyThing), "17.9" );
-		assertContains( q.assembleSelectQuery( prefixes ), "\"17.9\"^^<http://www.w3.org/2001/XMLSchema#float>" );
+		x.addFilterFromQuery( Param.make(sns, propertyThing), "true" );
+		assertContains( q.assembleSelectQuery( prefixes ), "\"true\"^^<eh:/T>" );
 		}
 	
 	private void assertContains(String target, String want) 
