@@ -69,7 +69,7 @@ public class TestXMLRenderer
 	
 	@Test public void testSingleDataStatementWithType()
 		{
-		ensureWrappedRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
+		ensureWrappedRendering( "(P datatype=boolean 'b')", resourceInModel( "a P 'b'xsd:boolean" ) );
 		}
 	
 	@Test public void testSortingByPredicate()
@@ -80,7 +80,8 @@ public class TestXMLRenderer
 		// not sure how to improve this without arranging a pipeline through to the
 		// renderer.
 		ensureRendering( wrap("eh:/root", "(R href=eh:/a (P (item 'aa') (item 'b')))" ), resourceInModel( "root R a; a P 'b'; a P 'aa'" ) );
-		ensureWrappedRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
+		ensureWrappedRendering( "(P datatype=boolean 'b')", resourceInModel( "a P 'b'xsd:boolean" ) );
+		ensureWrappedRendering( "(P 'b')", resourceInModel( "a P 'b'xsd:string" ) );
 		}
 	
 	/*
