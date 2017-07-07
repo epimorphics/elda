@@ -25,3 +25,6 @@ velocity.log
 bin
 _site
 .sass-cache
+
+nb-configuration.xml
+nbactions.xml
