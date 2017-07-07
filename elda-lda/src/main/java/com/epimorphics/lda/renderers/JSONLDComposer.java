@@ -14,6 +14,8 @@ import org.apache.jena.graph.Triple;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.XSD;
 
 public class JSONLDComposer {
 			
@@ -175,7 +177,7 @@ public class JSONLDComposer {
 			String spelling = l.getLexicalForm();    	
 			RDFDatatype dt = l.getDatatype();
 
-			if (typeURI == null) {
+			if (typeURI.equals(XSD.xstring.getURI()) || typeURI.equals(RDF.langString.getURI())) {
 				if (lang.equals("")) {
 					jw.value(spelling);
 				} else {
