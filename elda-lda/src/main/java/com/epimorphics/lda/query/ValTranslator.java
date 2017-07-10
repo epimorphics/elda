@@ -56,7 +56,7 @@ public class ValTranslator {
 		this.checkIRISyntax = checkIRISyntax;
 	}
 
-	public static final String[] JUSTEMPTY = new String[]{""};
+	public static final String[] JUSTEMPTY = new String[]{};
 
 	public Any objectForValue( Info inf, String val, String languages ) {
 		return objectForValue(inf.typeURI, val, languages);
@@ -102,6 +102,11 @@ public class ValTranslator {
 	}
 
 	private Any languagedLiteral(String[] langArray, String val) {
+		
+		if (langArray.length == 0) {
+			return RDFQ.literal( val, "", XSD.xstring.getURI() );
+		}
+		
 		if (langArray.length == 1) {
 			return RDFQ.literal( val, langArray[0], RDF.langString.getURI() );
 		}

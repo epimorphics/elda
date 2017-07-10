@@ -1076,6 +1076,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	// may be over-ridden in a subclass
 	protected Query createQuery(String selectQuery) {
+		System.err.println(">> Query: " + selectQuery);
 		return QueryUtil.create(selectQuery);
 	}
 
