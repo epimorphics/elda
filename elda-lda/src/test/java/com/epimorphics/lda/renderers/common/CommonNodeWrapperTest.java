@@ -41,7 +41,7 @@ public class CommonNodeWrapperTest
             "@prefix example: <http://example/foo#>. " +
             "example:foo example:p \"42\"^^xsd:int; " +
             "            example:q \"42\"^^xsd:string;" +
-            "            example:qx \"42\"^^xsd:boolean;" +
+            "            example:qx \"true\"^^xsd:boolean;" +
             "            example:r example:bar."
             );
 

@@ -285,7 +285,6 @@ public class IDTest  {
 			return null;
 		}
 
-		@Override
 		public void setContentLengthLong(long len) {
 			// TODO Auto-generated method stub
 			
@@ -692,19 +691,16 @@ public class IDTest  {
 			return null;
 		}
 
-		@Override
 		public long getContentLengthLong() {
 			// TODO Auto-generated method stub
 			return 0;
 		}
 
-		@Override
 		public String changeSessionId() {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
-		@Override
 		public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException {
 			// TODO Auto-generated method stub
 			return null;

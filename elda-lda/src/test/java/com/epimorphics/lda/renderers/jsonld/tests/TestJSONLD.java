@@ -49,10 +49,9 @@ public class TestJSONLD {
 		jc.renderItems(Arrays.asList(item));
 		String content = s.toString();
 
-		System.err.println(">> content: " + content);
-
-		if (!content.contains("{\"@lang\" : \"fr\", \"@value\" : \"chat\"}"))
-			fail("");
+		String expect = "{\"@lang\" : \"fr\", \"@value\" : \"chat\"}";
+		if (!content.contains(expect))
+			fail("content " + content + "\nshould contain " + expect + "but does not.");
 	}
 
 }

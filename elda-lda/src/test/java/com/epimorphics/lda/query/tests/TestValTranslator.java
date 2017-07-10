@@ -37,7 +37,7 @@ public class TestValTranslator {
 	
 	final PrefixMapping noPrefixes = PrefixMapping.Factory.create().lock();
 	
-	/* @Test */ public void testUntypedLiteral() {
+	@Test public void testUntypedLiteral() {
 		Model spec = ModelIOUtils.modelFromTurtle( ":thing api:label 'val'." );
 		Resource root = spec.createResource( "http://example.com/root" );
 		ShortnameService sns = new StandardShortnameService( root, noPrefixes, null );
@@ -47,7 +47,7 @@ public class TestValTranslator {
 		assertEquals( RDFQ.literal( "val" ), o );
 	}
 	
-	/* @Test */ public void testResourceLiteral() {
+	@Test public void testResourceLiteral() {
 		testResourceObject(RDFS.Resource.getURI());
 		testResourceObject(OWL.Thing.getURI());
 	}
@@ -62,7 +62,7 @@ public class TestValTranslator {
 		assertEquals( RDFQ.uriRaw( "my:uri" ), o );
 	}
 	
-	/* @Test */ public void testDatatypedObject() {
+	@Test public void testDatatypedObject() {
 		Model spec = ModelIOUtils.modelFromTurtle( ":thing api:label 'val'. :dt a rdfs:Datatype." );
 		Resource root = spec.createResource( "http://example.com/root" );
 		ShortnameService sns = new StandardShortnameService( root, noPrefixes, null );
@@ -73,7 +73,7 @@ public class TestValTranslator {
 		assertEquals( RDFQ.literal( "lexicalForm", "", NS + "dt" ), o );		
 	}
 	
-	/* @Test */ public void testSimpleLiteralObjectWithoutLanguage() {
+	@Test public void testSimpleLiteralObjectWithoutLanguage() {
 		Model spec = ModelIOUtils.modelFromTurtle( ":thing api:label 'val'." );
 		Resource root = spec.createResource( "http://example.com/root" );
 		ShortnameService sns = new StandardShortnameService( root, noPrefixes, null );
@@ -83,7 +83,7 @@ public class TestValTranslator {
 		assertEquals( RDFQ.literal( "lexicalForm", "" ), o );		
 	}
 	
-	/* @Test */ public void testSimpleLiteralObjectWithLanguage() {
+	@Test public void testSimpleLiteralObjectWithLanguage() {
 		Model spec = ModelIOUtils.modelFromTurtle( ":thing api:label 'val'." );
 		Resource root = spec.createResource( "http://example.com/root" );
 		ShortnameService sns = new StandardShortnameService( root, noPrefixes, null );
@@ -93,7 +93,7 @@ public class TestValTranslator {
 		assertEquals( RDFQ.literal( "lexicalForm", ""), o );		
 	}
 	
-	/* @Test */ public void testPlainLiteralObjectWithoutLanguage() {
+	@Test public void testPlainLiteralObjectWithoutLanguage() {
 		Model spec = ModelIOUtils.modelFromTurtle( ":thing api:label 'val'." );
 		Resource root = spec.createResource( "http://example.com/root" );
 		ShortnameService sns = new StandardShortnameService( root, noPrefixes, null );
@@ -113,7 +113,7 @@ public class TestValTranslator {
 		assertEquals( RDFQ.literal( "lexicalForm", "en"), o );		
 	}
 	
-	/* @Test */ public void testObjectTypedObjectWithoutExpansion() {
+	@Test public void testObjectTypedObjectWithoutExpansion() {
 		Model spec = ModelIOUtils.modelFromTurtle( ":thing api:label 'val'." );
 		Resource root = spec.createResource( "http://example.com/root" );
 		ShortnameService sns = new StandardShortnameService( root, noPrefixes, null );
@@ -123,7 +123,7 @@ public class TestValTranslator {
 		assertEquals( RDFQ.uriRaw( "scheme:likeURI" ), o );
 	}
 	
-	/* @Test */ public void testObjectTypedObjectWithExpansion() {
+	@Test public void testObjectTypedObjectWithExpansion() {
 		Model spec = ModelIOUtils.modelFromTurtle( ":thing api:label 'val'." );
 		Resource root = spec.createResource( "http://example.com/root" );
 		ShortnameService sns = new StandardShortnameService( root, noPrefixes, null );
@@ -134,7 +134,7 @@ public class TestValTranslator {
 		assertEquals( RDFQ.uriRaw( NS ), o );		
 	}
 	
-//	/* @Test */ public void testMultipleLanguages() {
+//	@Test public void testMultipleLanguages() {
 //		Model spec = ModelIOUtils.modelFromTurtle( ":thing api:label 'val'." );
 //		Resource root = spec.createResource( "http://example.com/root" );
 //		ShortnameService sns = new StandardShortnameService( root, noPrefixes, null );
