@@ -7,15 +7,12 @@
 */
 package com.epimorphics.lda.rdfq;
 
-import java.net.URI;
-
 import com.epimorphics.lda.support.PrefixLogger;
 import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.XSD;
-
 
 /**
     A skinny set of classes for representing SPARQL atomic terms,

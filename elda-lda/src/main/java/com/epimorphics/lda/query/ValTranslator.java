@@ -63,7 +63,7 @@ public class ValTranslator {
 	}
 
 	public Any objectForValue( String type, String val, String languages ) {
-		String[] langArray = languages == null ? JUSTEMPTY : languages.split( ",", -1 );
+		String[] langArray = parseLanguages(languages);		
 		if (RDFUtils.isBareStringType(type)) {
 			return languagedLiteral(langArray, val);
 		} else if (type.equals( API.SimpleLiteral.getURI())) {
@@ -79,6 +79,13 @@ public class ValTranslator {
 			if (checkIRISyntax)	badRequestIfFailsParse(tag, uri);
 			return RDFQ.uriRaw( uri );
 		}
+	}
+
+	public static String[] parseLanguages(String languages) {
+		String[] langArray = languages == null ? JUSTEMPTY : languages.split( ",", -1 );
+		
+		if (langArray.length == 1 && langArray[0].equals("")) langArray = new String[]{};
+		return langArray;
 	}
 
 	/**
@@ -108,7 +115,7 @@ public class ValTranslator {
 		}
 		
 		if (langArray.length == 1) {
-			return RDFQ.literal( val, langArray[0], RDF.langString.getURI() );
+			return RDFQ.literal( val, langArray[0], XSD.xstring.getURI() );
 		}
 		
 		Variable o = vs.newVar();

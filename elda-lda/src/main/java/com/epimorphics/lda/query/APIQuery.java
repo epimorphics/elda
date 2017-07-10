@@ -478,10 +478,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		
 		String type = inf.typeURI;
 		String langs = getDefaultLanguage();
-		String [] langArray = langs == null ? ValTranslator.JUSTEMPTY : langs.split(",", -1);
+//		String [] langArray = langs == null ? ValTranslator.JUSTEMPTY : langs.split(",", -1);
+		String [] langArray = ValTranslator.parseLanguages(langs);
 		
 		if (langArray.length > 0 && (type == null || type.equals(XSD.xstring.getURI()))) {
-			
 			RenderExpression strAlready = RDFQ.apply("str", already);
 			RenderExpression strOp = RDFQ.infix(strAlready, op, RDFQ.literal(val));
 			
@@ -1076,7 +1076,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 
 	// may be over-ridden in a subclass
 	protected Query createQuery(String selectQuery) {
-		System.err.println(">> Query: " + selectQuery);
+//		 System.err.println(">> Query: " + selectQuery);
 		return QueryUtil.create(selectQuery);
 	}
 

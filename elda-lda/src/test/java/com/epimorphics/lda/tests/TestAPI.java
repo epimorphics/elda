@@ -44,7 +44,7 @@ public class TestAPI {
 		Model rsm = rs.getMergedModel();
 		if (expectedResults == null) {
 			System.out.print(description);
-			rsm.write(System.out, "Turtle");
+			// rsm.write(System.out, "Turtle");
 		} else {
 			try {
 				Model expected = EldaFileManager.get().loadModel(TEST_BASE + expectedResults);

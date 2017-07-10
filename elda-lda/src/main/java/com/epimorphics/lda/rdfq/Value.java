@@ -43,9 +43,10 @@ public class Value extends Term
 		{ 
 		String lang = (language.equals("none") ? "" : language);
 		RDFDatatype dt = datatype.length() == 0 ? null : TypeMapper.getInstance().getSafeTypeByName(datatype);
-		Node n = NodeFactory.createLiteral( spelling, lang, dt );
+		Node n = NodeFactory.createLiteral( spelling, "", dt );
 		if (datatype.length() > 0) pl.present( datatype );
 		String lf = FmtUtils.stringForNode( n, RDFUtils.noPrefixes ); 
+		if (!lang.isEmpty()) lf = lf + "@" + lang;
 		return lf;
 		}
 	
