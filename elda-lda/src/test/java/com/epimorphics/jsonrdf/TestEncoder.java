@@ -53,7 +53,7 @@ import org.apache.jena.vocabulary.OWL;
 
 public class TestEncoder {
 	
-	/* @Test */public void testNullEncode() throws IOException {
+	@Test public void testNullEncode() throws IOException {
         StringWriter writer = new StringWriter();
         Context context = new Context();
         Encoder.get( context ).encode(
@@ -189,86 +189,86 @@ public class TestEncoder {
         }
     }
     
-    /* @Test */public void testSimpleResourceNoLabels() throws IOException {
+    @Test public void testSimpleResourceNoLabels() throws IOException {
         roundTripTester(":r :p 'foo'.",  new String[]{":r"} );
     }
     
-    /* @Test */public void testSimpleResourceClash() throws IOException {
+    @Test public void testSimpleResourceClash() throws IOException {
         roundTripTester(":r :p 'foo'; alt:p 'bar'.", new String[]{":r"} );
     }
     
-    /* @Test */public void testRDFtype() throws IOException {
+    @Test public void testRDFtype() throws IOException {
         roundTripTester(":r a :Thing; :p 'foo'.", new String[]{":r"} );
     }
     
-    /* @Test */public void testSimplebNode() throws IOException {
+    @Test public void testSimplebNode() throws IOException {
         roundTripTester(":r :p [:p 'first'; :q 'second'].", new String[]{":r"} );
     }
     
-    /* @Test */public void testMultiRefbNode() throws IOException {
+    @Test public void testMultiRefbNode() throws IOException {
         roundTripTester(":r :p _:1. :r2 :p _:1. _:1 :q 'foo'.", new String[]{":r", ":r2"} );
     }
     
-    /* @Test */public void testSimpleLiterals() throws IOException {
+    @Test public void testSimpleLiterals() throws IOException {
         roundTripTester(":r :p 'foo'; :p2 23; :p3 '1.2'^^xsd:double.",  new String[]{":r"} );
     }
     
-    /* @Test */public void testMultivalues() throws IOException {
+    @Test public void testMultivalues() throws IOException {
         roundTripTester(":r :p 'foo' , 'bar' , 'baz' ; :p2 23 .",  new String[]{":r"} );
     }
     
-    /* @Test */public void testResourcesWithLabels() throws IOException {
+    @Test public void testResourcesWithLabels() throws IOException {
         Context context = new Context();
         testEncoding(":r :p :res. :res rdfs:label 'resource label'.", Encoder.get(context), context, ":r :p :res.",  new String[]{":r"},
         "[{'_about':'http://www.epimorphics.com/tools/example#r', 'p':'http://www.epimorphics.com/tools/example#res'}]");
     }
     
-    /* @Test */public void testSimpleLists() throws IOException {
+    @Test public void testSimpleLists() throws IOException {
         roundTripTester(":r :p (1 2 2).",  new String[]{":r"} );
     }
     
-    /* @Test */public void testNestedLists() throws IOException {
+    @Test public void testNestedLists() throws IOException {
         roundTripTester(":r :p (1 2 ('a' 'b')).",  new String[]{":r"} );
     }
     
-    /* @Test */public void testOntologyNaming() throws IOException {
+    @Test public void testOntologyNaming() throws IOException {
         testEncoding(":r :p 'foo'; :q 'bar'.", ":p rdf:type rdf:Property; rdfs:label 'pee'.", new String[]{":r"}, 
                 "[{'_about':'http://www.epimorphics.com/tools/example#r','pee':'foo','q':'bar'}]" );
     }
     
-    /* @Test */public void testForcedMultivalue() throws IOException {
+    @Test public void testForcedMultivalue() throws IOException {
         testEncoding(":r :p 'foo'; :q 'bar'.", ":p rdf:type api:Multivalued, rdf:Property.", new String[]{":r"}, 
                 "[{'_about':'http://www.epimorphics.com/tools/example#r','p':['foo'],'q':'bar'}]" );
     }
     
-    /* @Test */public void testForcedMultivalue2() throws IOException {
+    @Test public void testForcedMultivalue2() throws IOException {
         roundTripOntTester(":r :p 'foo'. :r2 :p 'foo', 'bar'.", ":p rdf:type api:Multivalued, rdf:Property.", new String[]{":r", ":r2"});
     }
     
-    /* @Test */public void testHide() throws IOException {
+    @Test public void testHide() throws IOException {
         roundTripOntTester(":r :p 'foo'; :q 'bar'.", ":p rdf:type api:Hidden, rdf:Property.", ":r :q 'bar'.", new String[]{":r"});
     }
     
-    /* @Test */public void testPropertyBase() throws IOException {
+    @Test public void testPropertyBase() throws IOException {
         Context context = new Context("http://www.epimorphics.com/tools/");
 		testEncoding(":r :p 'foo'.", Encoder.get( context), context,
                 new String[]{":r"}, "[{'_about':'<example#r>','p':'foo'}]");
     }
     
-    /* @Test */public void testResourceBase() throws IOException {
+    @Test public void testResourceBase() throws IOException {
         Context context = new Context("http://www.epimorphics.com/tools/");
 		testEncoding(":r :p :r2. :r2 :p :r3.", Encoder.get( context), context,
                 new String[]{":r", ":r2"}, "[{'_about':'<example#r>','p':'<example#r2>'},{'_about':'<example#r2>','p':'<example#r3>'}]");
     }
 
-    /* @Test */public void testResourceList() throws IOException {
+    @Test public void testResourceList() throws IOException {
         Context context = new Context("http://www.epimorphics.com/tools/");
 		roundTripEncTester(":r :p (:r1 :r2 :r3).", 
                 Encoder.get( context), context,
                 new String[]{":r"});
     }
     
-    /* @Test */public void testPropertySorting() throws IOException {
+    @Test public void testPropertySorting() throws IOException {
         Context context = new Context();
         context.setSorted(true);
         testEncoding(":r :p 'foo'; :q 'bar'; :s 'baz'.", Encoder.get( context ), context,
@@ -276,7 +276,7 @@ public class TestEncoder {
     }
     
     // Objects of RDF.type used to get shortened. Now they should not be.
-    /* @Test */public void testTypesDontShorten() throws IOException {
+    @Test public void testTypesDontShorten() throws IOException {
         Context context = new Context();
         context.recordPreferredName( "T", "http://www.epimorphics.com/tools/example#t" );
         context.recordPreferredName( "U", "http://www.epimorphics.com/tools/example#u" );
@@ -288,7 +288,7 @@ public class TestEncoder {
     /*
         This is the no-language-tags version of the encoding. The older test is below.
      */
-    /* @Test */public void testLiterals() throws IOException {
+    @Test public void testLiterals() throws IOException {
         Context context = new Context();
         testEncoding(":r :p 'foo'; :q '2.3'^^xsd:float; :s 'bar'^^xsd:string.",
                 Encoder.get(context), context,
@@ -313,7 +313,7 @@ public class TestEncoder {
 //                null);
     }
     
-//    /* @Test */public void testLiterals() throws IOException {
+//    @Test public void testLiterals() throws IOException {
 //        testEncoding(":r :p 'foo'@en; :q '2.3'^^xsd:float; :s 'bar'^^xsd:string.", 
 //                Encoder.get(),
 //                ":r :p 'foo'@en; :q '2.3'^^xsd:double; :s 'bar'.",
@@ -340,7 +340,7 @@ public class TestEncoder {
     	+ "@prefix owl: <" + OWL.getURI() + ">.\n"
     	;
     
-    /* @Test */public void testStructuredLiteralWithLanguage() throws IOException {
+    @Test public void testStructuredLiteralWithLanguage() throws IOException {
     	Context context = new Context(ontForLiterals);
     	testEncoding( 
     		":r :p 'english'@en.", 
@@ -368,7 +368,7 @@ public class TestEncoder {
     	return Encoder.get( Encoder.defaultPlugin, context, false );
 	}
 
-    /* @Test */public void testDateLiteral() throws IOException {
+    @Test public void testDateLiteral() throws IOException {
         Context context = new Context();
         testEncoding(":r :p '1999-05-31T02:09:32Z'^^xsd:dateTime.", 
                 Encoder.get(context), context,
@@ -405,7 +405,7 @@ public class TestEncoder {
         assertEquals(expected, actual);
     }
     
-    /* @Test /public void testISOFormattedDateTimeLiterals() throws IOException {
+    /* @Test */ public void testISOFormattedDateTimeLiterals() throws IOException {
         String srcTTL = ":r :p '1999-05-31T02:09:32'^^xsd:dateTime. :r :o '2015-07-27'^^xsd:date.";
         Context context = new Context();
         Encoder enc = Encoder.get(context, true);
@@ -421,14 +421,14 @@ public class TestEncoder {
         assertEquals(expected, actual);
     }
     
-    /* @Test */ public void testWholeModels() throws IOException, JsonException {
+    @Test  public void testWholeModels() throws IOException, JsonException {
         roundTripTester(":r :p 'foo', 'bar'.");
         roundTripTester(":r :p 'foo', 'bar'. :r2 :q :r.");
         roundTripTester(":r :p 'foo', 'bar'; :q [:s 'baz'].");
         roundTripTester(":r :p 'foo', 'bar'. [] :s 'baz'.");
     }
     
-    /* @Test */public void testOddResourceURIs() throws IOException {
+    @Test public void testOddResourceURIs() throws IOException {
         Model model = ModelFactory.createDefaultModel();
         String NS = "/foo/bar";
         Property p = model.createProperty(NS + "#p");
@@ -440,14 +440,14 @@ public class TestEncoder {
         // However, such URIs are broken anyway so accept this encoding for now.
     }
     
-    /* @Test */public void testRecursiveEncoding1() throws IOException {
+    @Test public void testRecursiveEncoding1() throws IOException {
         testRecursiveRoundTrip(
                 ":r :p :r1. :r1 :p :r2. :r2 :p :r1; :s 'foo'.",
                 ":r :p :r1. :r1 :p :r2. :r2 :p :r1; :s 'foo'.",
                 new String[]{":r"} );
     }
 
-    /* @Test */public void testRecursiveEncoding2() throws IOException {
+    @Test public void testRecursiveEncoding2() throws IOException {
         testRecursiveRoundTrip(
                 ":r :p :r1. :r1 :p :r2. :r2 :p :r1; :s 'foo'. :r3 :p 'bar'.",
                 ":r :p :r1. :r1 :p :r2. :r2 :p :r1; :s 'foo'.",
