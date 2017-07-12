@@ -1,0 +1,67 @@
+change imports
+
+    find -name "*java" | xargs sed -i -e 's/com.hp.hpl.jena/org.apache.jena/g'
+
+Eliminate Statement.Util
+
+    find -name "*.java" | xargs sed -i -e 's/Statement.Util.get/Statement::get/'
+    
+Use revised poms
+
+    jena 3.0.0
+    junit lucene jersey servlet-api velocity wagon xmlunit jdk jsonldjava
+
+
+Changes
+    Util.splitNamespace to Util.splitNamespaceXML
+    Replace use of Map1 with Function
+    Check for null datatypes, replace carefully with XSD string value
+    EncoderDefault decodeValue, first case replace test for BigDecimal
+    and generate literal with type XSD.integer (a opposed to int)
+    APIQuery fix uses of langArray using ValTranslator
+    ValTranslator account for typed strings and proper use of lang codes
+    TestValTranslator, account for loss of null type URIs
+    RDFQ.Value, replace null type with XSD.string, suitable constructors
+    JSONLDComposer, replace null type URI check
+    LanguageFilter replace test for isStringLiteralModelPrefixEditor, literal rename, 
+        replace null check for type URI
+    RDFUtils introduce isBareStringType
+    TestEncodeToObject, use ModelTestBase.assertIsoModels
+    TestEncoder likewise and in 'english' data type becomes eh:string
+    TestAPISpecExtractPrefixMapping, m.removeNsPrefix("api") to account for cganges
+        in model.add
+    CommonNodeWrapperTest, add  "            example:qx \"true\"^^xsd:boolean;" +
+    TestXMLRenderer, 
+        -		ensureWrappedRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
+        +		ensureWrappedRendering( "(P datatype=boolean 'b')", resourceInModel( "a P 'b'xsd:boolean" ) );
+
+    and
+        -		ensureWrappedRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
+        +		ensureWrappedRendering( "(P datatype=boolean 'b')", resourceInModel( "a P 'b'xsd:boolean" ) );
+        +		ensureWrappedRendering( "(P 'b')", resourceInModel( "a P 'b'xsd:string" ) );
+
+    TestSourceConfig, 
+        -		AnyList expected = RDFQ.list( qA, qB, qC );
+    -		assertEquals( expected, s.getTextSearchConfig().getTextSearchOperand() );		
+    +		List<Any> expected = RDFQ.list( qA, qB, qC ).getElements();
+    +		List<Any> actual = s.getTextSearchConfig().getTextSearchOperand().getElements();
+    +
+    +		assertEquals( expected, actual );
+
+    TestPropertyChainEndToEnd
+        -			+ "; ex:size rdfs:range xsd:string"
+        +			+ "; ex:size rdfs:range eh:/T"
+
+    -		x.addFilterFromQuery( Param.make(sns, propertyThing), "17.9" );
+    -		assertContains( q.assembleSelectQuery( prefixes ), "\"17.9\"^^<http://www.w3.org/2001/XMLSchema#string>" );
+    +		x.addFilterFromQuery( Param.make(sns, propertyThing), "true" );
+    +		assertContains( q.assembleSelectQuery( prefixes ), "\"true\"^^<eh:/T>" );
+
+
+
+
+
+
+
+
+
