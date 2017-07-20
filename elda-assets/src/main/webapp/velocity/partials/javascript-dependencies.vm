@@ -3,14 +3,13 @@ require.config({
   paths: {
     'app':                  '..',
     // lib paths
-    'bootstrap':            'bootstrap.min',
-    'jquery':               'jquery-1.11.0.min',
-    'sprintf':              'sprintf-0.7-beta1',
-    'modernizr':            'modernizr-2.6.2-respond-1.1.0.min',
-    'datatables':    'jquery.dataTables.min'
+    'bootstrap':            'bootstrap',
+    'jquery':               'jquery',
+    'sprintf':              'sprintf.min',
+    'datatables':    'jquery.dataTables'
   },
   shim: {
-    'underscore': {
+    'lodash': {
       exports: '_'
     },
     'bootstrap': {
@@ -19,7 +18,7 @@ require.config({
     'bootstrap-select.min': {
       deps: ['bootstrap']
     },
-    'jquery.xdomainrequest': {
+    'jQuery.XDomainRequest': {
       deps: ['jquery']
     },
     'datatables': {
@@ -27,18 +26,19 @@ require.config({
       exports: 'DataTable'
     },
     'qonsole': {
-      deps: ['jquery.dataTables.min',
+      deps: ['jquery.dataTables',
              'app/remote-sparql-service',
              'lib/codemirror',
-             'addon/fold/foldcode',
-             'addon/fold/foldgutter',
-             'addon/fold/brace-fold',
-             'addon/fold/xml-fold',
-             'addon/fold/comment-fold',
-             'mode/javascript/javascript',
-             'mode/xml/xml',
-             'mode/sparql/sparql',
-             'mode/turtle/turtle'
+             'cm/addon/fold/foldcode',
+             'cm/addon/fold/foldgutter',
+             'cm/addon/fold/brace-fold',
+             'cm/addon/fold/xml-fold',
+             'cm/addon/fold/comment-fold',
+             'cm/mode/javascript/javascript',
+             'cm/mode/xml/xml',
+             'cm/mode/sparql/sparql',
+             'cm/mode/turtle/turtle',
+             'cm/display/autoprefix'
              ],
       exports: 'qonsole'
     },
@@ -61,7 +61,12 @@ require.config({
         deps: ['OpenStreetMap']
       }
     #end
-  }
+  },
+  packages: [{
+    name: 'codemirror',
+    location: 'cm',
+    main: 'lib/codemirror'
+  }]
 });
 
 
@@ -69,7 +74,7 @@ require.config({
 require( ['require'],
   function( require ) {
     require(
-      ['underscore',
+      ['lodash',
        'jquery',
        'sprintf',
        'bootstrap',

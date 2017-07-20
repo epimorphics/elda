@@ -4,89 +4,84 @@
       <div class="panel">
         <div class="panel-heading">
           <h2 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#sparqlform" class="collapsed">
-              Sparql query form
+            <a data-toggle="collapse" data-parent="#accordion" href="#sparqlform" class="">
+              Sparql query form!
               <i class="fa expand-indicator"></i>
             </a>
           </h4>
         </div>
-        <div id="sparqlform" class="panel-collapse collapse">
+        <div id="sparqlform" class="panel-collapse">
           <div class="panel-body">
-            <div class="row">
-              <div class="col-md-12">
-                <h2 class="">Example queries</h2>
-                <ul class="list-inline examples">
-                </ul>
+            <div class="col-md-12 well">
+              <h2 class="">Example queries</h2>
+              <span class="form-inline">
+                <select class="form-control" id="examples"></select>
+              </span>
+            </div>
+
+            <div class="col-md-12 well vertical">
+              <h2 class="">Prefixes</h2>
+              <ul class="list-inline prefixes">
+                <li class="keep">
+                  <a data-toggle="modal" href="#prefixEditor" class="btn" title="Add a SPARQL prefix">
+                    <i class="fa fa-plus-circle"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="col-md-12 well">
+              <div class="query-edit">
+                <div id="query-edit-cm" class=""></div>
               </div>
+              <div class="query-chrome">
+                <form class="form-inline" role="form">
+                  <div class="form-group">
+                    <label for="endpoints">SPARQL endpoint:</label>
+                      <select class="form-control" id="endpoints">
+                      </select>
+                    </div>
+                  <div class="form-group">
+                    <input type="hidden" class="form-control" id="sparqlEndpoint" />
+                  </div>
+                  <div class="form-group">
+                    <label for="format">Results format:</label>
+                    <select class="form-control" name="format">
+                      <option value="tsv">table</option>
+                      <option value="text">plain text</option>
+                      <option value="json">JSON</option>
+                      <option value="xml">XML</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <a href="#" class="btn btn-success run-query form-control">perform query</a>
+                  </div>
 
-              <div class="col-md-12 vertical">
-                <h2 class="">Prefixes</h2>
-                <ul class="list-inline prefixes">
-                  <li class="keep">
-                    <a data-toggle="modal" href="#prefixEditor" class="button" title="Add a SPARQL prefix">
-                      <i class="icon-plus-sign"></i>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              <div class="col-md-12 ">
-                <div class="query-edit">
-                  <div id="query-edit-cm" class=""></div>
-                </div>
-                <div class="query-chrome">
-                  <form class="form-inline" role="form">
-                    <div class="row">
-                      <div class="form-group col-md-6">
-                        <label for="sparqlEndpoint">SPARQL endpoint</label><br />
-                        <div class="col-xs-12">
-                        <input type="text" class="form-control" id="sparqlEndpoint" style="width:100%"/>
-                        </div>
-                      </div>
-                      <div class="form-group col-md-3">
-                        <label for="displayFormat">Results</label><br />
-                        <div class="dropup ">
-                          <a data-toggle="dropdown" class="btn btn-custom2 display-format" href="#" data-value="tsv">
-                            <span>table</span> <i class="icon-collapse"></i>
-                          </a>
-                          <ul class="dropdown-menu formats  " role="menu" aria-labelledby="dropdownMenu2">
-                            <li role='presentation' class="" ><a data-value="tsv" role='menuitem' tabindex='-1' href='#'>table</a></li>
-                            <li role='presentation' class="" ><a data-value="text"role='menuitem' tabindex='-1' href='#'>plain text</a></li>
-                            <li role='presentation' class="" ><a data-value="json"role='menuitem' tabindex='-1' href='#'>JSON</a></li>
-                            <li role='presentation' class="" ><a data-value="xml"role='menuitem' tabindex='-1' href='#'>XML</a></li>
-                          </ul>
-                        </div>
-
-                      </div>
-                      <div class="form-group col-md-3">
-                        <label>&nbsp;</label><br />
-                        <a href="#" class="btn btn-success run-query form-control">perform query</a>
-                      </div>
-                    </div> <!-- /.row -->
-                  </form>
-                </div>
+                </form>
               </div>
             </div>
 
             <!-- results -->
-            <div class="clearfix"></div>
-            <div id="results-block">
-              <div class="sparql sparql-results">
-                <div class="row">
-                  <div class="col-md-12">
-                    <span class="loadingSpinner hidden">
-                      <img src="${assets}/images/wait30.gif" alt="waiting for server action to complete" />
-                    </span>
-                    <span class="timeTaken hidden"></span>
+            <div id="results-block" class="row sparql sparql-results">
+              <div class="col-md-12">
+                <div class="well">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <span class="timeTaken hidden"></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12" id="results">
+                      <h2 class="col-md-12">Query results</h2>
+                    </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-12" id="results">
-                    <h2 class="col-md-12">Query results</h2>
-                  </div>
-                </div>
-              </div> <!-- /.row.sparql-results -->
+              </div>
             </div>
+
+            <div class="row clearfix"></div>
+
+
           </div>
         </div>
       </div>
