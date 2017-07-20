@@ -4,13 +4,13 @@
   <parent>
     <artifactId>elda</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.4.1</version>
+    <version>1.4.1-SNAPSHOT</version>
   </parent>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda-standalone</artifactId>
   <packaging>war</packaging>
   <name>elda-standalone</name>
-  <version>1.4.1</version>
+  <version>1.4.1-SNAPSHOT</version>
   <description>instant Elda webapp</description>
 
   <dependencies>
@@ -21,34 +21,34 @@
       <version>7.0.42</version>
       <scope>provided</scope>
     </dependency>
-	
+
 	<dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-logging-log4j</artifactId>
       <version>7.0.42</version>
       <scope>provided</scope>
     </dependency>
-	
+
 	<dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-jasper</artifactId>
       <version>7.0.42</version>
       <scope>provided</scope>
     </dependency>
-	
+
 	<dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>elda-assets</artifactId>
       <version>${project.version}</version>
       <type>war</type>
   </dependency>
-	
+
 	<dependency>
       <groupId>com.epimorphics.lda</groupId>
       <artifactId>elda-lda</artifactId>
       <version>${project.version}</version>
     </dependency>
-	
+
 	<dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -70,13 +70,13 @@
             <id>tomcat-run</id>
             <goals> <goal>exec-war</goal> </goals>
             <phase>package</phase>
-			<configuration> 
-				<path>/standalone</path> 
+			<configuration>
+				<path>/standalone</path>
 			</configuration>
           </execution>
         </executions>
       </plugin>
-  
+
 	  <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
