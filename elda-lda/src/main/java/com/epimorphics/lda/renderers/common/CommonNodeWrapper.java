@@ -9,6 +9,9 @@
 
 package com.epimorphics.lda.renderers.common;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.datatypes.DatatypeFormatException;
@@ -135,6 +138,42 @@ extends RDFNodeWrapper
             return false;
         }
     }
+
+    /**
+     * @return A name for the resource. By preference, this will be a label property
+     * of the resource. Otherwise, a curie or localname will be used if no naming property is found.
+     * Special cases for displaying names of nodes with no labels in Elda:
+     * <ul>
+     * <li>if the name would otherwise be empty, and the URI ends with `.../` or `.../-`,
+     * use the preceding path segment</li>
+     * <li>if the name would otherwise be empty, and the node is a bNode, use the anon-ID</li>
+     * <li>if the name would otherwise be empty, use the full URI</li>
+     * </ul>
+     */
+    @Override
+    public String getName() {
+        String name = super.getName();
+
+        if (name.isEmpty() || name.matches("^\\s*$") || name.equals( getURI() )) {
+            if (isAnon()) {
+                name = asRDFNode().asResource().getId().toString();
+            }
+            else {
+                Matcher match = lnmatch.matcher(getURI());
+                if (match.matches()) {
+                    name = match.group(1);
+                }
+                else {
+                    name = getURI();
+                }
+            }
+        }
+
+        return name;
+    }
+
+//    static final Pattern lnmatch = Pattern.compile("([^#/]*[/#]\\-?)$");
+    static final Pattern lnmatch = Pattern.compile(".*[/#]([^#/]+[/#]-?)$");
 
     /***********************************/
     /* Internal implementation methods */
