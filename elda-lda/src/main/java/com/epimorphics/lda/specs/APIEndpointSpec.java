@@ -20,7 +20,6 @@ import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -347,8 +346,8 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
 	            if (parentN instanceof Resource) {
 	                addSelectorInfo( (Resource)parentN );
 	            } else {
-	                APISpec.log.error(ELog.message("[config]: parent view must be a resource, found a literal: '%s'"
-	                	, parentN));
+	                APISpec.log.error("[config]: parent view must be a resource, found a literal: '{}'"
+	                	, parentN);
 	            }
 	        }
 	        addSelectorInfo(s);
@@ -369,8 +368,8 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
 	            if (paramValue.length == 2) {
 	                baseQuery.deferrableAddFilter( Param.make( sns, paramValue[0] ), paramValue[1] );
 	            } else {
-	                APISpec.log.error(ELog.message("[config]: filter specification contained unintepretable query string: %s",
-	                	q));
+	                APISpec.log.error("[config]: filter specification contained unintepretable query string: {}",
+	                	q);
 	            }
             }
         }

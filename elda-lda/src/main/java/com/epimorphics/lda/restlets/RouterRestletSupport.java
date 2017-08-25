@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.configs.ConfigLoader;
 import com.epimorphics.lda.core.*;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.routing.*;
 import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
@@ -69,7 +68,7 @@ public class RouterRestletSupport {
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
     	String givenPrefixPath = con.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
     //
-    	log.debug(ELog.message( "configuration file templates: '%s'", specFilenameTemplates ));    //
+    	log.debug( "configuration file templates: '{}'", specFilenameTemplates);    //
 		for (String specTemplate: specFilenameTemplates) {
 			String prefixName = givenPrefixPath;
 			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextPath );
@@ -82,11 +81,11 @@ public class RouterRestletSupport {
 				pfs.add( new PrefixAndFilename( prefixName, specName ) );
 			} else {
 				String fullPath = specName.startsWith("/") ? specName : baseFilePath + specName;
-				log.debug(ELog.message("spec file pattern is '%s'", fullPath));
+				log.debug("spec file pattern is '{}'", fullPath);
 				List<File> files = new Glob().filesMatching( fullPath );
-				log.debug(ELog.message( "full path '%s' matches %d files", fullPath, files.size()));
+				log.debug( "full path '{}' matches {} files", fullPath, files.size());
 				for (File f: files) {
-					log.debug(ELog.message("file '%s'", f));
+					log.debug("file '{}'", f);
 					String expandedPrefix = ServletUtils.containsStar(prefixName) ? ServletUtils.nameToPrefix(prefixName, specName, f.getName()) : prefixName;
 					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
 				}
@@ -131,7 +130,7 @@ public class RouterRestletSupport {
 				if (((LocatorFile) l).getName().equals(baseFilePath))
 					return;
 		}    	
-		log.info(ELog.message("adding locator for '%s'", baseFilePath ));
+		log.info("adding locator for '{}'", baseFilePath);
 		EldaFileManager.get().addLocatorFile( baseFilePath );
 	}
 

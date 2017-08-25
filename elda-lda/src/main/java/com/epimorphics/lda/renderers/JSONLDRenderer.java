@@ -7,7 +7,6 @@ import com.epimorphics.jsonrdf.*;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.support.Times;
@@ -86,9 +85,9 @@ public class JSONLDRenderer implements Renderer {
 					if (checkRoundTrip) {
 						byte[] bytes = bytesOut.toByteArray();
 						os.write(bytes);
-						log.info(ELog.message("checking that JSON LD result round-trips"));
+						log.info("checking that JSON LD result round-trips");
 						boolean ok = new JSONLDRoundtrip().check(model, objectModel, bytes);
-						log.info(ELog.message("  -- %s", ok));
+						log.info("  -- {}", ok);
 					}
 										
 				} catch (Throwable e) {

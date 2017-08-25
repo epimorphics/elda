@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.query.*;
@@ -41,15 +40,15 @@ public class TDBSource extends SourceBase implements Source
         this.sourceSet = TDBManager.getDataset();
         if (name != null && !name.isEmpty()) {
             this.source = TDBManager.getTDBModelNamed(name);
-            log.debug(ELog.message(
-            	"TDB with endpoint '%s' has model with '%s' triples"
+            log.debug(
+            	"TDB with endpoint '{}' has model with {} triples"
             	, endpointString, this.source.size()
-            	));
+            	);
             if (this.source.isEmpty())
                 EldaException.EmptyTDB( name );
         } else {
             source = null;
-            log.info(ELog.message("using TDB whole dataset"));
+            log.info("using TDB whole dataset");
         }
     }
 

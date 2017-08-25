@@ -17,12 +17,10 @@ package com.epimorphics.lda.support;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.log.ELog;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.tdb.TDBFactory;
-// import com.hp.hpl.jena.tdb.TDBFactory;
 
 /**
     Control point for TDB access -- everything goes through here so that
@@ -48,7 +46,7 @@ public class TDBManager {
     */
     public static void setBaseTDBPath( String value ) { 
         baseTDBPath = value; 
-        log.info(ELog.message("setBaseTDBPath '%s'", value ));
+        log.info("setBaseTDBPath '{}'", value);
     }
 
     /**
@@ -81,9 +79,9 @@ public class TDBManager {
     }
 
     private static Dataset openDataset() {
-        log.info(ELog.message("requesting open on TDB dataset at %s", baseTDBPath));
+        log.info("requesting open on TDB dataset at {}", baseTDBPath);
         Dataset result = TDBFactory.createDataset( baseTDBPath );
-        log.info(ELog.message("opened: result looks like %s", result.toString()));
+        log.info("opened: result looks like {}", result.toString());
         return result;
     }
 }

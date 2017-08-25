@@ -26,7 +26,6 @@ import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.core.Param.Info;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.sources.Source;
@@ -1022,7 +1021,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		//
 		Query q = createQuery(selectQuery);
 		if (log.isDebugEnabled()) {
-			log.debug(ELog.message("running query: %s", selectQuery.replaceAll("\n", " ")));
+			log.debug("running query: {}", selectQuery.replaceAll("\n", " "));
 		}
 		source.executeSelect(q, new ResultResourcesReader(results));
 		return new Couple<String, List<Resource>>(selectQuery, results);
@@ -1106,7 +1105,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 					}
 				}
 				if (countBnodes > 0 && log.isDebugEnabled()) {
-					log.debug(ELog.message("%s selected bnode items discarded", countBnodes));
+					log.debug("{} selected bnode items discarded", countBnodes);
 				}
 			} catch (APIException e) {
 				throw e;

@@ -24,7 +24,6 @@ import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.routing.MatchSearcher;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
@@ -73,10 +72,10 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 		{
 		Couple<String, Model> spec = getModelNamedEnding( d, givenSpec, "-spec.ttl" );
 		Couple<String, Model> data = getModelNamedEnding( d, givenData, "-data.ttl" );
-		log.debug(ELog.message( "[test]: considering '%s'", d) );
+		log.debug( "[test]: considering '{}'", d);
 		if (spec == null || data == null)
 			{
-			log.debug(ELog.message( "[test]: directory %s ignored", d ));
+			log.debug( "[test]: directory {} ignored", d);
 			}
 		else
 			{
@@ -233,7 +232,7 @@ import com.hp.hpl.jena.vocabulary.DCTerms;
 	public void RunTestAllowingFailures()
 		{
 		Cache.Registry.clearAll();
-		log.debug(ELog.message( "[test] running '%s'", w.title ));
+		log.debug( "[test] running '{}'", w.title);
 //		System.err.println( ">> " + w.pathToData );
 	//
 	// this little dance of resetting the location mapper bypasses a

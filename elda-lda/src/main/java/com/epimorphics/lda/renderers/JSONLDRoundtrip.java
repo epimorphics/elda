@@ -3,7 +3,6 @@ package com.epimorphics.lda.renderers;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.*;
@@ -44,7 +43,6 @@ public class JSONLDRoundtrip {
 			
 		} else {
 			
-			System.err.println(">> YOUO");
 			Say("ALAS, canonised models are not isomorphic");
 			Say("original has " + given.size() + " statements,");
 			Say("reconstituted has " + recon.size() + " statements.");
@@ -62,13 +60,13 @@ public class JSONLDRoundtrip {
 	}
 	
 	protected void Say(String what) {
-		log.warn(ELog.message(what));
+		log.warn(what);
 	}
 	
 	protected void SayGraph(Model m, String title) {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		log.warn(ELog.message("%s -----------------", title));
-		log.warn(ELog.message(bos.toString()));
+		log.warn("{} -----------------", title);
+		log.warn("{} ", bos.toString());
 	}
 	
 	private void restitchItemLists(Model given, Model recon) {

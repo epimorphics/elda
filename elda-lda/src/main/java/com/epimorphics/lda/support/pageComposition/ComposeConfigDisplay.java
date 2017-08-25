@@ -20,7 +20,6 @@ import com.epimorphics.lda.configs.LoadedConfigs;
 import com.epimorphics.lda.configs.StashEntry;
 import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.core.View.Type;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.support.PropertyChain;
@@ -161,7 +160,7 @@ public class ComposeConfigDisplay {
 			for (String name: names) {
 				Value v = b.get( name );
 				if (v == null) {
-					log.debug(ELog.message("binding for '%s' is null or non-Value; ignored.", name));	
+					log.debug("binding for '{}' is null or non-Value; ignored.", name);	
 					System.err.println("binding for " + name + " is null or non-Value; ignored.");			
 				} else {
 					String lf = v.spelling() == null ? "<i>none</i>" : v.spelling();

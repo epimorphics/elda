@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.*;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.JSONRenderer;
 import com.hp.hpl.jena.rdf.model.Property;
 
@@ -33,17 +32,17 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String getURIfromName(String code) {
-				log.debug(ELog.message("readContext: getURIfromName unexpectedly called"));
+				log.debug("readContext: getURIfromName unexpectedly called");
 				return context.getURIfromName(code);
 			}
 			
 			@Override public ContextPropertyInfo getPropertyByName(String name) {
-				log.debug(ELog.message("readContext: getpropertyByName unexpectedly called."));
+				log.debug("readContext: getpropertyByName unexpectedly called.");
 				return context.getPropertyByName(name);
 			}
 			
 			@Override public String getNameForURI(String uri) {
-				log.debug(ELog.message("readContext: unusually, getNameForURI called."));
+				log.debug("readContext: unusually, getNameForURI called.");
 				return uriToName.get(uri);
 			}
 			
@@ -52,7 +51,7 @@ public class CompleteReadContext {
 			}
 			
 			@Override public String forceShorten(String uri) {
-				log.debug(ELog.message("readContext: unusually, forceShorten called."));
+				log.debug("readContext: unusually, forceShorten called.");
 				return context.forceShorten(uri);
 			}
 			

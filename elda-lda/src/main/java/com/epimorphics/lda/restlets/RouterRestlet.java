@@ -39,7 +39,6 @@ import com.epimorphics.lda.bindings.URLforResource;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.*;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.routing.*;
@@ -132,7 +131,7 @@ import com.sun.jersey.api.NotFoundException;
 				if (propertiesFile == null) propertiesFile = "log4j.properties";
 				
 				PropertyConfigurator.configure( baseFilePath + propertiesFile );
-				log.info(ELog.message( "\n\n    =>=> Starting Elda (Init) %s\n", Version.string));
+				log.info( "\n\n    =>=> Starting Elda (Init) {}\n", Version.string);
 				announced = true;
 			}
 			getRouterFor( sc );
@@ -154,14 +153,14 @@ import com.sun.jersey.api.NotFoundException;
     	 long timeNow = System.currentTimeMillis();
     //
     	 if (r == null) {
-    		 log.info(ELog.message("creating router for '%s'", contextPath) );
+    		 log.info("creating router for '{}'", contextPath);
     		 long interval = getRefreshInterval(contextPath);
     		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), timeNow, interval );
     		 routers.put(contextPath, r );
     	 } else if (r.nextCheck < timeNow) {
 	    	 long latestTime = RouterRestletSupport.latestConfigTime(con, contextPath);
 	    	 if (latestTime > r.timestamp) {
-	    		 log.info(ELog.message( "reloading router for '%s'", contextPath));
+	    		 log.info("reloading router for '{}'", contextPath);
 	    		 long interval = getRefreshInterval(contextPath);
 	    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), timeNow, interval );
 	    		 DOMUtils.clearCache();
@@ -193,7 +192,7 @@ import com.sun.jersey.api.NotFoundException;
 				;
 			if (n > 0) delay = n;
 		 }
-		 log.info(ELog.message("reload check interval for '%s' is '%s'", contextPath, delay));
+		 log.info("reload check interval for '{}' is '{}'", contextPath, delay);
 		 return delay;
 	}
 
@@ -345,7 +344,7 @@ import com.sun.jersey.api.NotFoundException;
     	Bindings forErrorHandling = null;
     	URLforResource as = pathAsURLFactory(servCon);
     	URI requestUri = ui.getRequestUri();
-    	log.debug(ELog.message("handling request '%s'", requestUri ));
+    	log.debug("handling request '{}'", requestUri);
     //
         try {
         	URI ru = makeRequestURI(ui, match, requestUri);
@@ -406,7 +405,7 @@ import com.sun.jersey.api.NotFoundException;
         		boolean throwToContainer = b.getAsString( "_passOnIfEmpty", "no" ).equals( "yes" );
 
         		if (return404IfEmpty) {
-        			log.debug(ELog.message("resultSet is empty, returning status 404."));
+        			log.debug("resultSet is empty, returning status 404.");
         			if (throwToContainer) throw new NotFoundException();
         			return Response.status( Status.NOT_FOUND )
         					.type( "text/plain" )
@@ -443,7 +442,7 @@ import com.sun.jersey.api.NotFoundException;
         	URI contentLocation = req.getURIwithFormat();
         
 			MediaType mt = r.getMediaType(rc);
-			log.debug(ELog.message("rendering with formatter '%s'", mt ));
+			log.debug("rendering with formatter '{}'", mt);
 			Times times = c.times;
 			Renderer.BytesOut bo = r.render( times, rc, termBindings, results );
 			int mainHash = runHash + ru.toString().hashCode();
@@ -452,7 +451,7 @@ import com.sun.jersey.api.NotFoundException;
         } catch (StackOverflowError e) {
         	StatsValues.endpointException();
             log.error("Stack Overflow Error" );
-            if (log.isDebugEnabled()) log.debug(ELog.message("%s", Messages.shortStackTrace( e ) ));
+            if (log.isDebugEnabled()) log.debug(Messages.shortStackTrace( e ));
             String message = Messages.niceMessage("Stack overflow", e.getMessage() );
             return ErrorPages.respond(forErrorHandling, servCon, "stack_overflow", message, EldaException.SERVER_ERROR);
 
@@ -463,15 +462,15 @@ import com.sun.jersey.api.NotFoundException;
         	return ErrorPages.respond(forErrorHandling, servCon, "bad_request", e.getMessage(), EldaException.BAD_REQUEST);
                     
         } catch (UnknownShortnameException e) {
-        	log.error(ELog.message("UnknownShortnameException: %s", e.getMessage()));
-            if (log.isDebugEnabled()) log.debug(ELog.message("%s", Messages.shortStackTrace( e )));
+        	log.error("UnknownShortnameException: {}", e.getMessage());
+            if (log.isDebugEnabled()) log.debug("{}", Messages.shortStackTrace( e ));
         	StatsValues.endpointException();
         	return ErrorPages.respond(forErrorHandling, servCon, "unknown_shortname", e.getMessage(), EldaException.BAD_REQUEST);
 
         } catch (EldaException e) {
         	StatsValues.endpointException();
-        	log.error(ELog.message("Exception: %s", e.getMessage()));
-        	if (log.isDebugEnabled()) log.debug(ELog.message("%s", Messages.shortStackTrace( e )));
+        	log.error("Exception: {}", e.getMessage());
+        	if (log.isDebugEnabled()) log.debug("{}", Messages.shortStackTrace( e ));
         	return ErrorPages.respond(forErrorHandling, servCon, "exception", e.getMessage(), EldaException.SERVER_ERROR);
 
         } catch (NotFoundException e) {
@@ -479,12 +478,12 @@ import com.sun.jersey.api.NotFoundException;
 
         } catch (QueryParseException e) {
         	StatsValues.endpointException();
-        	log.error(ELog.message("Query Parse Exception: %s", e.getMessage()));
-            if (log.isDebugEnabled()) log.debug(ELog.message("%s",  Messages.shortStackTrace( e )));
+        	log.error("Query Parse Exception: {}", e.getMessage());
+            if (log.isDebugEnabled()) log.debug("{}", Messages.shortStackTrace( e ));
             return ErrorPages.respond(forErrorHandling, servCon, "query_parse_exception", e.getMessage(), EldaException.SERVER_ERROR);
 
         } catch (Throwable e) {
-        	log.error(ELog.message("general failure: %s", e.getClass().getCanonicalName() + ": " + e.getMessage()));
+        	log.error("general failure: {}", e.getClass().getCanonicalName() + ": " + e.getMessage());
         	e.printStackTrace(System.err);
         	StatsValues.endpointException();
         	return ErrorPages.respond(forErrorHandling, servCon, "general_exception", e.getMessage(), EldaException.SERVER_ERROR);
@@ -519,7 +518,7 @@ import com.sun.jersey.api.NotFoundException;
 						;
 
 					if (log.isDebugEnabled())
-						log.debug(ELog.message("mapped ePath '%s' to '%s'", ePath, url));
+						log.debug("mapped ePath '{}' to '{}'", ePath, url);
 					return url;
 				} catch (MalformedURLException e) {
 					throw new WrappedException(e);
@@ -592,7 +591,7 @@ import com.sun.jersey.api.NotFoundException;
 				}
 				catch (Throwable e) {
 					String message = String.format("Error while sending response: '%s'", e);
-					log.error(ELog.message("%s", message));
+					log.error("{}", message);
 					e.printStackTrace(System.err);
 					StreamUtils.writeAsUTF8(response.getPoison() + "\n" + message, os);
 					os.flush();
@@ -607,12 +606,12 @@ import com.sun.jersey.api.NotFoundException;
 		String longMessage = Messages.niceMessage( shortMessage, "Internal Server error." );
 	//
 		log.error("Exception: " + shortMessage );
-        log.debug(ELog.message("%s", Messages.shortStackTrace( e )) );
+        log.debug("{}", Messages.shortStackTrace( e ));
         return standardHeaders( null, Response.serverError() ).entity( longMessage ).build();
     }
 
 	public static Response returnError(String s ) {
-        log.error(ELog.message("exception: %s", s));
+        log.error("exception: {}", s);
         return standardHeaders( null, Response.serverError() ).entity( s ).build();
     }
 
@@ -621,7 +620,7 @@ import com.sun.jersey.api.NotFoundException;
     }
 
     public static Response returnNotFound( String message, String what ) {
-        log.debug(ELog.message( "failed to return results: %s", Messages.brief( message ) ));
+        log.debug("failed to return results: {}", Messages.brief( message ));
         if (true) throw new NotFoundException();
         String m = Messages.niceMessage( message, "404 Resource Not Found: " + what );
 		return standardHeaders( null, Response.status(Status.NOT_FOUND) ).entity( m ).build();

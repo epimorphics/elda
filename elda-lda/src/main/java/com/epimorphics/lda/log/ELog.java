@@ -45,10 +45,10 @@ public class ELog {
 		return extended;
 	}
 
-	public static String message(String message, Object... args) {
-		String q = queryID.get();
-		if (q == null) q = "anon";
-		return String.format("Alert [%s, %s]: " + message,  withIdAndSeq(q, args));
-	}
+//	public static String message(String message, Object... args) {
+//		String q = queryID.get();
+//		if (q == null) q = "anon";
+//		return String.format("Alert [%s, %s]: " + message,  withIdAndSeq(q, args));
+//	}
 
 }

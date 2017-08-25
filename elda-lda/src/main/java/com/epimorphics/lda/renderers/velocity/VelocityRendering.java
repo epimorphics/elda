@@ -27,14 +27,12 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.exceptions.VelocityRenderingException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
 import com.epimorphics.lda.renderers.common.*;
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.util.CountStream;
 import com.epimorphics.util.StreamUtils;
-import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.*;
 
 /**
@@ -126,7 +124,7 @@ implements BytesOut
             times.setRenderDuration( System.currentTimeMillis() - base, vr.suffix() );
         }
         catch (Exception e) {
-            log.warn(ELog.message("%s (%s)", e.getMessage(), e ));
+            log.warn("{} ({})", e.getMessage(), e);
             throw new VelocityRenderingException();
         }
         finally {
@@ -135,7 +133,7 @@ implements BytesOut
                     cos.close();
                 }
                 catch (IOException e) {
-                    log.warn(ELog.message("failed to close count stream: %s (%s)", e.getMessage(), e ));
+                    log.warn("failed to close count stream: {} ({})", e.getMessage(), e);
                 }
             }
         }
@@ -170,8 +168,8 @@ implements BytesOut
             t = ve.getTemplate( vr.templateName() );
         }
         catch (ResourceNotFoundException e) {
-			log.debug(ELog.message("could not find base template '%s'", vr.templateName()) );
-            log.debug(ELog.message("current velocity path is '%s'", ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH )));
+			log.debug("could not find base template '{}'", vr.templateName());
+            log.debug("current velocity path is '{}'", ve.getProperty( VELOCITY_FILE_RESOURCE_LOADER_PATH ));
             throw e;
         }
 
@@ -237,8 +235,8 @@ implements BytesOut
             String pathURL = b.pathAsURL( pathEntry).toString();
             roots.add( pathURL + (pathURL.endsWith( "/" ) ? "" : "/") );
         }
-        log.debug(ELog.message("rootPath '%s'", rootPath));
-        log.debug(ELog.message("complete expanded path '%s'", roots));
+        log.debug("rootPath '{}'", rootPath);
+        log.debug("complete expanded path '{}'", roots);
         return roots;
     }
 
@@ -323,7 +321,7 @@ implements BytesOut
                     p.load( is );
                 }
                 catch (IOException e) {
-                    log.warn(ELog.message( "IO exception while reading properties: %s (%s)", e.getMessage(), e));
+                    log.warn( "IO exception while reading properties: {} ({})", e.getMessage(), e);
                     throw new WrappedIOException( e );
                 }
                 finally {
@@ -331,7 +329,7 @@ implements BytesOut
                         is.close();
                     }
                     catch (IOException e) {
-                        log.warn(ELog.message( "IO exception while closing properties input stream: %s (%s)", e.getMessage(), e));
+                        log.warn("IO exception while closing properties input stream: {} ({})", e.getMessage(), e);
                         throw new WrappedIOException( e );
                     }
                 }

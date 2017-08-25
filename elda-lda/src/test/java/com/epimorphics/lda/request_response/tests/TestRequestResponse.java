@@ -22,7 +22,6 @@ import com.epimorphics.lda.apispec.tests.SpecUtil;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.MakeData;
@@ -122,7 +121,7 @@ public class TestRequestResponse {
 	
 	public void testSingle(WhatToDo w) {
 		Cache.Registry.clearAll();
-		log.debug(ELog.message( "[test] running '%s'", w.title) );
+		log.debug( "[test] running '{}'", w.title);
 //		System.err.println( ">> " + w.pathToData );
 	//
 	// this little dance of resetting the location mapper bypasses a

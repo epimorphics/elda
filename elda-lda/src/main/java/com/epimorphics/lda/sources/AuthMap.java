@@ -14,7 +14,6 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.support.Glob;
 import com.hp.hpl.jena.shared.WrappedException;
@@ -67,7 +66,7 @@ public class AuthMap {
 	}
 
 	private static AuthInfo readAuthFile( FileManager fm, String fileName ) {
-		log.debug(ELog.message("reading auth file '%s'", fileName));
+		log.debug("reading auth file '{}'", fileName);
 		return new AuthInfo(readProperties(fm, fileName));
 	}
 

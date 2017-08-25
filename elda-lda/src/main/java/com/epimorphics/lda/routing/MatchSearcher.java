@@ -13,7 +13,6 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.support.MultiMap;
 
 /**
@@ -36,7 +35,7 @@ public class MatchSearcher<T> {
         with the supplied result value.
     */
     public void register( String path, T result ) {
-    	log.info(ELog.message("registering '%s' for '%s'", path, result ));
+    	log.info("registering '{}' for '{}'", path, result);
         templates.add( MatchTemplate.prepare( path, result ) );
         needsSorting = true;
     }
