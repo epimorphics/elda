@@ -135,10 +135,10 @@ public class ContextQueryUpdater implements ViewSetter {
     public void handleReservedParameters( GEOLocation geo, ViewSetter vs, String p, String val ) {
         if (p.equals(QueryParameter._PAGE)) {
             mustBeListEndpoint( p );
-            aq.setPageNumber( positiveInteger( p, val ) );
+            aq.setPageNumber( integerAtLeast( 0, p, val ) );
         } else if (p.equals(QueryParameter._PAGE_SIZE)) {
             mustBeListEndpoint( p );
-            aq.setPageSize( integerOneOrMore( p, val ) );
+            aq.setPageSize( integerAtLeast( 1, p, val ) );
         } else if (p.equals( QueryParameter._FORMAT )) {
             // already handled. WAS: vs.setFormat(val);
         } else if (p.equals(QueryParameter._METADATA)) {
@@ -204,22 +204,14 @@ public class ContextQueryUpdater implements ViewSetter {
             EldaException.BadRequest( p + " can only be used with a list endpoint." );
     }
 
-    private int positiveInteger( String param, String val ) {
+    private int integerAtLeast( int minimum, String param, String val ) {
         try {
             int result = Integer.parseInt( val );
-            if (0 <= result) return result;
-        } catch (NumberFormatException e) { 
-        	EldaException.BadRequest(param + "=" + val + ": value must be non-negative integer.");
-       	}
-        return /* never */ -1;
-    }
-
-    private int integerOneOrMore( String param, String val ) {
-        try {
-            int result = Integer.parseInt( val );
-            if (0 < result) return result;
+            if (result < minimum)
+            	EldaException.BadRequest(param + "=" + val + ": value must be at least " + minimum + "." );
+            return result;
         } catch (NumberFormatException e) {
-        	EldaException.BadRequest(param + "=" + val + ": value must be an integer > 0." );
+        	EldaException.BadRequest(param + "=" + val + ": value must be an integer." );
         }
         return /* never */ -1;
     }

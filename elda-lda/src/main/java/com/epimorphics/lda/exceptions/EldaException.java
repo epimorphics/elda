@@ -51,10 +51,10 @@ public class EldaException extends RuntimeException {
 	}
 
 	/**
-	    Throw a BAD REQUEST exception after logging the given message.
+	    Throw a BAD REQUEST exception // after logging the given message.
 	*/
 	public static void BadRequest( String message ) {
-		log.error("bad request: {}", message);
+//		log.error("bad request: {}", message);
 		throw new BadRequestException(message);
 	}
 	
