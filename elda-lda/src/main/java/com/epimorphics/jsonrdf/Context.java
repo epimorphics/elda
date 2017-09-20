@@ -20,9 +20,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.exceptions.ReusedShortnameException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.rdf.model.impl.Util;
@@ -208,22 +206,14 @@ public class Context implements ReadContext, Cloneable {
     protected String getLocalName(String uri) {
         return uri.substring( Util.splitNamespace( uri ));
     }    
-
-    static final boolean exceptionForBadShortname = false;
     
     /**
      * Record the preferred name to use to shorten a URI.
      * If the name is already in use then only record as an alternate name
      */
     public void recordPreferredName(String name, String uri) {
-        String seqID = ELog.getSeqID();
     	if (!labelPattern.matcher(name).matches()) {
-    		if (exceptionForBadShortname) {
-    			throw new EldaException
-    				("[" + seqID + "]: the label '" + name + "' is not a legal shortname for '" + uri + "'");
-    		} else {
-    			log.warn("the label '{}' is not a legal shortname for '{}'", name, uri);
-    		}
+   			log.warn("the label '{}' is not a legal shortname for '{}'", name, uri);
     	}
         if (isNameFree(name)) { 
         	recordShortname(name, uri);

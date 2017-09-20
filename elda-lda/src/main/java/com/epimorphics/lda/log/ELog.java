@@ -36,19 +36,5 @@ public class ELog {
 	public static String getQueryId() {
 		return queryID.get();
 	}
-	
-	private static Object[] withIdAndSeq(String queryID, Object[] args) {
-		Object [] extended = new Object[args.length + 2];
-		System.arraycopy(args, 0, extended, 2, args.length);
-		extended[0] = getSeqID(); 
-		extended[1] = queryID;
-		return extended;
-	}
-
-//	public static String message(String message, Object... args) {
-//		String q = queryID.get();
-//		if (q == null) q = "anon";
-//		return String.format("Alert [%s, %s]: " + message,  withIdAndSeq(q, args));
-//	}
 
 }
