@@ -215,6 +215,7 @@
             <configuration>
               <includes><include>**/*Tests.java</include></includes>
               <skipTests>${skip-integration-test}</skipTests>
+		<showSuccess>false</showSuccess>
             </configuration>
           </execution>
 
