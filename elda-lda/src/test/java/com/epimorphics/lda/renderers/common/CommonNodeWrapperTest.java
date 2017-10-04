@@ -101,6 +101,23 @@ public class CommonNodeWrapperTest
         assertNull( n.getResource( "example:p" ));
     }
 
+    @Test
+    public void testGetNameSpecialCases() {
+        String ns = "http://example/foo#";
+        ModelWrapper mw = modelWrapperFixture();
+
+        Resource foo = mw.getModel().getResource( ns + "foo" );
+        CommonNodeWrapper n0 = new CommonNodeWrapper( mw, foo );
+        Resource endsWithHyphen = mw.getModel().getResource( "http://example.com/foo/-" );
+        CommonNodeWrapper n1 = new CommonNodeWrapper( mw, endsWithHyphen );
+        Resource endsWithSlash = mw.getModel().getResource( "http://example.com/foo/bar/" );
+        CommonNodeWrapper n2 = new CommonNodeWrapper( mw, endsWithSlash );
+
+        assertEquals(  "foo", n0.getName() );
+        assertEquals(  "foo/-", n1.getName() );
+        assertEquals(  "bar/", n2.getName() );
+    }
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
