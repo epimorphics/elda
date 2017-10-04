@@ -21,10 +21,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.NDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.util.NameUtils;
 
@@ -54,6 +54,7 @@ public class LogRequestFilter implements Filter {
     }
 
     boolean useID = "true".equals(System.getenv("ELDA_USE_ID"));
+
     
     @Override
     public void doFilter
@@ -67,10 +68,13 @@ public class LogRequestFilter implements Filter {
         
         String query = httpRequest.getQueryString();
         String path = httpRequest.getRequestURI();
-        boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);
-    //
-        if (logThis) {
-        	
+        
+        boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);        
+
+        if (logThis == false) {
+	        chain.doFilter(request, response);	        
+        } else {
+
         	String ID = null;
         	
         	String headerID = httpRequest.getHeader(X_REQUEST_ID);
@@ -83,41 +87,29 @@ public class LogRequestFilter implements Filter {
         	
         	if (ID == null) ID = generateID(httpRequest);
         	
-        	ELog.setQueryId(ID);
-        	
 	        long requestCount = queryCount.incrementAndGet();	        
 	        String seqId = Long.toString(requestCount);
-	        
-	        ELog.setSeqID(seqId);
-	        
-	        log.info(String.format
-	        	( "Request  [%s, %s] : %s"
-	        	, seqId
-	        	, ID
-	        	, path) + (query == null ? "" : ("?" + query))
-	        	);
+
+			NDC.push(ID);
+			
+	        log.info("Request {}", path + (query == null ? "" : "?" + query));
 	        
 			httpResponse.addHeader(X_RESPONSE_ID, "[" + seqId + ", " + ID + "]");			
 	        
 			long startTime = System.currentTimeMillis();
 	        chain.doFilter(request, response);
 	        long endTime = System.currentTimeMillis();
-	        
+
+			
 	        int status = getStatus(httpResponse);
-	        String statusString = status < 0 ? "(status unknown)" : "" + status;
-	        
-			log.info(String.format
-				( "Response [%s, %s] : %s (%s)"
-				, seqId
-				, ID
-				, statusString
-	            , NameUtils.formatDuration(endTime - startTime) ) 
+	        log.info("Response {} {}"
+				, status < 0 ? "(status unknown)" : "" + status
+	            , NameUtils.formatDuration(endTime - startTime) 
 	            );
 			
-	    } else {
-	        chain.doFilter(request, response);
-	    }
-    }
+			NDC.pop();
+	    	} 
+       }
 
     private String generateID(HttpServletRequest req) {
 		// return UUID_V1.generate().toString();
