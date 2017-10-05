@@ -53,7 +53,7 @@ public class LogRequestFilter implements Filter {
     	ignoreIfMatches = filterConfig.getInitParameter("com.epimorphics.lda.logging.ignoreIfMatches");
     }
 
-    boolean useID = "true".equals(System.getenv("ELDA_USE_ID"));
+    static boolean useID = "true".equals(System.getenv("ELDA_USE_ID"));
 
     
     @Override
@@ -68,6 +68,7 @@ public class LogRequestFilter implements Filter {
         
         String query = httpRequest.getQueryString();
         String path = httpRequest.getRequestURI();
+        String fullPath = path + (query == null ? "" : "?" + query);
         
         boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);        
 
@@ -79,30 +80,30 @@ public class LogRequestFilter implements Filter {
         	
         	String headerID = httpRequest.getHeader(X_REQUEST_ID);
         	String paramID = httpRequest.getParameter(QueryParameter._QUERY_ID);
-        	
-        	if (useID) {
-        		if (ID == null) ID = paramID;
-        		if (ID == null) ID = headerID;
-        	}
-        	
-        	if (ID == null) ID = generateID(httpRequest);
-        	
+      	
 	        long requestCount = queryCount.incrementAndGet();	        
 	        String seqId = Long.toString(requestCount);
 
-			NDC.push(ID);
+	        if (useID) {
+	        	if (ID == null) ID = paramID;
+	        	if (ID == null) ID = headerID;	        	
+	        }
+        	if (ID == null) ID = generateID(httpRequest); 
+        	
+			String fullID = ID.replace("*", seqId);
+			NDC.push(fullID);
 			
-	        log.info("Request {}", path + (query == null ? "" : "?" + query));
+			log.info("Request {}", fullPath);
 	        
-			httpResponse.addHeader(X_RESPONSE_ID, "[" + seqId + ", " + ID + "]");			
+			httpResponse.addHeader(X_RESPONSE_ID, fullID);			
 	        
 			long startTime = System.currentTimeMillis();
 	        chain.doFilter(request, response);
 	        long endTime = System.currentTimeMillis();
-
 			
 	        int status = getStatus(httpResponse);
-	        log.info("Response {} {}"
+	        log.info("Response {} {} {}"
+	        	, fullPath
 				, status < 0 ? "(status unknown)" : "" + status
 	            , NameUtils.formatDuration(endTime - startTime) 
 	            );
@@ -114,7 +115,7 @@ public class LogRequestFilter implements Filter {
     private String generateID(HttpServletRequest req) {
 		// return UUID_V1.generate().toString();
     	String envID = System.getenv("ELDA_INSTANCE_ID");
-		return envID == null ? req.getLocalAddr() : envID;
+		return envID == null ? "host " + req.getLocalAddr() + ":*": envID;
 	}
 
 	// The check for NoSuchMethodError is because Tomcat6 doesn't have a
