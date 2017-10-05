@@ -1,5 +1,24 @@
 + ---------------------------------------------------------------------
-| Elda 1.4.1 (DEVELOPING)
+| Elda 1.4.2 (RELEASED)
+
+Clean up of logging configuration, see reference notes.
+
+Fixed issue #188, updated Elda's embedded Qonsole.
+
+Fixed issue #197, some resources rendered as ampty <a> elements.
+
+Fixed issue #153, count of empty list incorrect in velocity renderer.
+
+Fixed issue #200, a URI in standard Elda config was broken because it
+was not served from the epimorphics pages.
+
+Improved handling of _pageSize=invalidvalue.
+
+We are now using Java 1.8.
+
+
++ ---------------------------------------------------------------------
+| Elda 1.4.1 (BYPASSED)
 
 + ---------------------------------------------------------------------
 | Elda 1.4.0 (RELEASED)
