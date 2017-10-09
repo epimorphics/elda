@@ -63,6 +63,8 @@ public class LogRequestFilter implements Filter {
     	, FilterChain chain
     	) throws IOException, ServletException 
     {
+    	
+    	
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         
@@ -71,6 +73,7 @@ public class LogRequestFilter implements Filter {
         String fullPath = path + (query == null ? "" : "?" + query);
         
         boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);        
+        log.info("log " + fullPath + " -- " + logThis);
 
         if (logThis == false) {
 	        chain.doFilter(request, response);	        
