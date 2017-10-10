@@ -225,7 +225,6 @@ import com.sun.jersey.api.NotFoundException;
     
 //    	System.err.println(">> requestHandler: URI = " + ui.getRequestUri());
 //    	System.err.println(">> path: " + pathstub);
-    	log.info(">> requestHandler");
     	
     	MultivaluedMap<String, String> rh = headers.getRequestHeaders();
     	String contextPath = servCon.getContextPath();

@@ -54,7 +54,6 @@ public class LogRequestFilter implements Filter {
     }
 
     static boolean useID = "true".equals(System.getenv("ELDA_USE_ID"));
-
     
     @Override
     public void doFilter
@@ -62,9 +61,7 @@ public class LogRequestFilter implements Filter {
     	, ServletResponse response
     	, FilterChain chain
     	) throws IOException, ServletException 
-    {
-    	
-    	
+    {    	
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         
@@ -72,9 +69,11 @@ public class LogRequestFilter implements Filter {
         String path = httpRequest.getRequestURI();
         String fullPath = path + (query == null ? "" : "?" + query);
         
-        boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);        
-        log.info("log " + fullPath + " -- " + logThis);
-
+        boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);  
+        
+        // log.info(">> path " + path + " matches " + ignoreIfMatches + ": " + path.matches(ignoreIfMatches));
+        // log.info(">> does " + fullPath + " log -- " + (logThis ? "yes" : "no"));
+        
         if (logThis == false) {
 	        chain.doFilter(request, response);	        
         } else {
