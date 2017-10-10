@@ -14,7 +14,8 @@ import org.apache.catalina.startup.Tomcat;
 
 public class standalone {	
 	
-	static final String contextPath = "/standalone";
+	static final String standalone = "/standalone";
+	static final String ROOT = "/";
 
 	public static void main( String [] args ) throws Exception {  
 	    Tomcat server = new Tomcat(); 
@@ -27,7 +28,8 @@ public class standalone {
 	    
 	    String absolutePath = new File("target/elda-standalone").getAbsolutePath();
 	    // System.err.println(">> " + absolutePath);
-		server.addWebapp(contextPath, absolutePath);
+		server.addWebapp(standalone, absolutePath);
+		server.addWebapp(ROOT, absolutePath);
 	//
 	    server.start();
 	    server.getServer().await();
