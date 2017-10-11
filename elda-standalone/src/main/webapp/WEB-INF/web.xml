@@ -98,12 +98,11 @@
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
-    <url-pattern>/again/*</url-pattern>
+    <url-pattern>/openlayers/*</url-pattern>
     <url-pattern>/auth/*</url-pattern>
     <url-pattern>/css/*</url-pattern>
     <url-pattern>/data/*</url-pattern>
     <url-pattern>/images/*</url-pattern>
-    <url-pattern>/openlayers/*</url-pattern>
     <url-pattern>/scripts/*</url-pattern>
     <url-pattern>/specs/*</url-pattern>
     <url-pattern>/velocity/*</url-pattern>
@@ -111,6 +110,8 @@
     <url-pattern>/index.html/*</url-pattern>
     <url-pattern>/vocabulary/*</url-pattern>
     <url-pattern>/_error_pages/*</url-pattern>
+    <!-- 
+    -->
   </servlet-mapping>
    
   <error-page>
