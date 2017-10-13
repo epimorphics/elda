@@ -86,7 +86,15 @@
 
   <filter-mapping>
     <filter-name>Jersey Web Application</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/hello/*</url-pattern>
+    <url-pattern>/again/*</url-pattern>
+    <url-pattern>/tiny/*</url-pattern>
+    <url-pattern>/mini/*</url-pattern>
+    <url-pattern>/full/*</url-pattern>
+    <url-pattern>/velocity/*</url-pattern>
+    <url-pattern>/velocity-dev/*</url-pattern>
+    <url-pattern>/ved/*</url-pattern>
+    <url-pattern>/bwq/*</url-pattern>
   </filter-mapping>
 
 <!-- 
@@ -98,7 +106,10 @@
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
+<!-- <url-pattern>/*</url-pattern> -->
     <url-pattern>/openlayers/*</url-pattern>
+    <url-pattern>/again/*</url-pattern>
+    <url-pattern>/mini/*</url-pattern>
     <url-pattern>/auth/*</url-pattern>
     <url-pattern>/css/*</url-pattern>
     <url-pattern>/data/*</url-pattern>

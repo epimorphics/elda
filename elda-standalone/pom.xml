@@ -70,7 +70,6 @@
             <phase>package</phase>
 			<configuration>
 				<path>/standalone</path>
-				<path>/</path>
 			</configuration>
           </execution>
         </executions>
