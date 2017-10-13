@@ -34,7 +34,7 @@
     <filter-class>com.epimorphics.lda.support.LogRequestFilter</filter-class>
     <init-param>
         <param-name>com.epimorphics.lda.logging.ignoreIfMatches</param-name>
-        <param-value>^/(standalone/velocity/.*)?</param-value>
+        <param-value>^/(standalone/(scripts|css|images|velocity)/.*)?</param-value>
     </init-param>
   </filter>
  
