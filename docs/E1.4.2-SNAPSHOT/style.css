@@ -1,0 +1,25 @@
+.navbar-brand {
+	margin: 0 25px;
+	padding: 10px 0 0 0;
+}
+
+.navbar-brand h1, .navbar-brand h2 {
+	font-size: 12pt;
+	line-height: normal;
+	margin: 0;
+	padding: 0;
+}
+
+.navbar-brand h1 {
+	font-weight: bold;
+}
+
+.navbar-right img {
+	margin-right: 25px;
+	height: 45px;
+}
+
+.content-h2 a {
+	font-size: smaller;
+	margin-left: 1em;
+}
