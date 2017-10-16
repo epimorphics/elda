@@ -4,7 +4,7 @@
   <parent>
     <artifactId>elda</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.4.3-SNAPSHOT</version>
+    <version>1.4.4-SNAPSHOT</version>
   </parent>
   <artifactId>elda-standalone</artifactId>
   <packaging>war</packaging>
@@ -70,7 +70,6 @@
             <phase>package</phase>
 			<configuration>
 				<path>/standalone</path>
-				<path>/</path>
 			</configuration>
           </execution>
         </executions>

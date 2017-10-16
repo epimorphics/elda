@@ -34,7 +34,7 @@
     <filter-class>com.epimorphics.lda.support.LogRequestFilter</filter-class>
     <init-param>
         <param-name>com.epimorphics.lda.logging.ignoreIfMatches</param-name>
-        <param-value>^/(standalone/velocity/.*)?</param-value>
+        <param-value>^/(standalone/(scripts|css|images|velocity)/.*)?</param-value>
     </init-param>
   </filter>
  
@@ -86,7 +86,15 @@
 
   <filter-mapping>
     <filter-name>Jersey Web Application</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/hello/*</url-pattern>
+    <url-pattern>/again/*</url-pattern>
+    <url-pattern>/tiny/*</url-pattern>
+    <url-pattern>/mini/*</url-pattern>
+    <url-pattern>/full/*</url-pattern>
+    <url-pattern>/velocity/*</url-pattern>
+    <url-pattern>/velocity-dev/*</url-pattern>
+    <url-pattern>/ved/*</url-pattern>
+    <url-pattern>/bwq/*</url-pattern>
   </filter-mapping>
 
 <!-- 
@@ -98,14 +106,22 @@
 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
+<!-- <url-pattern>/*</url-pattern> -->
+    
+    <url-pattern>/again/*</url-pattern>
+    <url-pattern>/hello/*</url-pattern>
+    <url-pattern>/mini/*</url-pattern>
+    <url-pattern>/tiny/*</url-pattern>
+    <url-pattern>/full/*</url-pattern>
+    
     <url-pattern>/openlayers/*</url-pattern>
+    <url-pattern>/velocity/*</url-pattern>
     <url-pattern>/auth/*</url-pattern>
     <url-pattern>/css/*</url-pattern>
     <url-pattern>/data/*</url-pattern>
     <url-pattern>/images/*</url-pattern>
     <url-pattern>/scripts/*</url-pattern>
     <url-pattern>/specs/*</url-pattern>
-    <url-pattern>/velocity/*</url-pattern>
     <url-pattern>/xslt/*</url-pattern>
     <url-pattern>/index.html/*</url-pattern>
     <url-pattern>/vocabulary/*</url-pattern>
