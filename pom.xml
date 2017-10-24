@@ -102,20 +102,75 @@
     </plugins>
   </build>
 
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>org.apache.velocity</groupId>
+        <artifactId>velocity</artifactId>
+        <version>${ver.velocity}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>${ver.servlet-api}</version>
+        <type>jar</type>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${ver.junit}</version>
+        <type>jar</type>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${ver.slf4j}</version>
+        <type>jar</type>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>xmlunit</groupId>
+        <artifactId>xmlunit</artifactId>
+        <version>${ver.xmlunit}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>${ver.log4j}</version>
+        <type>jar</type>
+        <scope>compile</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.jms</groupId>
+            <artifactId>jms</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.jdmk</groupId>
+            <artifactId>jmxtools</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.jmx</groupId>
+            <artifactId>jmxri</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
-
-    <dependency>
-      <groupId>org.apache.velocity</groupId>
-      <artifactId>velocity</artifactId>
-      <version>${ver.velocity}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.lucene</groupId>
-      <artifactId>lucene-core</artifactId>
-      <version>${ver.lucene}</version>
-    </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -139,12 +194,6 @@
       <version>${ver.slf4j}</version>
       <type>jar</type>
       <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>xmlunit</groupId>
-      <artifactId>xmlunit</artifactId>
-      <version>${ver.xmlunit}</version>
     </dependency>
 
     <dependency>

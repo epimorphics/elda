@@ -122,7 +122,7 @@ public class RouterRestletSupport {
 	    there may be multiple servlet contexts so we add a new only only if 
 	    its not already in the instance's locator list.
 	*/
-	private static void addBaseFilepath(String baseFilePath) {
+	protected static void addBaseFilepath(String baseFilePath) {
 		FileManager fm = EldaFileManager.get();
 		for (Iterator<Locator> il = fm.locators(); il.hasNext();) {
 			Locator l = il.next();

@@ -196,7 +196,6 @@ implements BytesOut
 
         Properties p = getProperties( velocityPath );
         VelocityEngine ve = new VelocityEngine();
-
         ve.init( p );
 
         return ve;

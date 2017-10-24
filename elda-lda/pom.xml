@@ -16,7 +16,7 @@
     <repository>
       <id>epi-public-s3-snapshot</id>
       <name>Epimorphics S3 snapshot repository</name>
-      <url>s3://epi-repository/snapshot</url>
+      <url>http://epi-repository.s3.amazonaws.com/snapshot</url>
       <releases>
         <enabled>false</enabled>
       </releases>
@@ -28,7 +28,7 @@
     <repository>
       <id>epi-public-s3-release</id>
       <name>Epimorphics S3 release repository</name>
-      <url>s3://epi-repository/release</url>
+      <url>http://epi-repository.s3.amazonaws.com/release</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -131,6 +131,15 @@
       <artifactId>jmock-legacy</artifactId>
       <version>2.6.0</version>
     </dependency>
+    <dependency>
+      <groupId>xmlunit</groupId>
+      <artifactId>xmlunit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
   </dependencies>
 
   <build>
