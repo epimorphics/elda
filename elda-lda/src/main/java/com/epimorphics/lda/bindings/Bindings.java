@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.support.MultiMap;
 
@@ -293,7 +292,7 @@ public class Bindings implements Lookup {
 			if (thisV == null) {
 				sb.append("{").append(name).append("}");
 				// issue #177
-				log.debug(ELog.message("variable '%s' has no value, not substituted", name));
+				log.debug("variable '{}' has no value, not substituted", name);
 			} else {
 				seen.add(name);
 				Value v = evaluate(name, thisV, seen);
@@ -302,7 +301,7 @@ public class Bindings implements Lookup {
 				if (value == null) {
 					sb.append("{").append(name).append("}");
 					// issue #177
-					log.debug(ELog.message("variable '%s' has no value, not substituted", name));
+					log.debug("variable '{}' has no value, not substituted", name);
 				} else
 					sb.append(value);
 			}
@@ -339,7 +338,7 @@ public class Bindings implements Lookup {
 			if (value == null) {
 				sb.append("{").append(name).append("}");
 				// issue #177
-				log.debug(ELog.message("variable '%s' has no value, not substituted", name));
+				log.debug("variable '{}' has no value, not substituted", name);
 			} else
 				sb.append(value);
 			start = rb + 1;

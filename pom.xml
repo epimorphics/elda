@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda</artifactId>
-  <version>1.4.1</version>
+  <version>1.4.4-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>elda</name>
   <description>Top level linked data API project</description>
@@ -30,7 +30,10 @@
     <ver.wagon>2.2</ver.wagon>
     <ver.xmlunit>1.4</ver.xmlunit>
     <jdk.version>1.8</jdk.version>
+<<<<<<< HEAD
     <ver.jsonldjava>0.5.1</ver.jsonldjava>
+=======
+>>>>>>> master
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>

@@ -21,10 +21,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.NDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.util.NameUtils;
 
@@ -53,70 +53,71 @@ public class LogRequestFilter implements Filter {
     	ignoreIfMatches = filterConfig.getInitParameter("com.epimorphics.lda.logging.ignoreIfMatches");
     }
 
+    static boolean useID = "true".equals(System.getenv("ELDA_USE_ID"));
+    
     @Override
     public void doFilter
     	( ServletRequest request
     	, ServletResponse response
     	, FilterChain chain
     	) throws IOException, ServletException 
-    {
+    {    	
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         
         String query = httpRequest.getQueryString();
         String path = httpRequest.getRequestURI();
-        boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);
-    //
-        if (logThis) {
-        	
+        String fullPath = path + (query == null ? "" : "?" + query);
+        
+        boolean logThis = ignoreIfMatches == null || !path.matches(ignoreIfMatches);  
+        
+        // log.info(">> path " + path + " matches " + ignoreIfMatches + ": " + path.matches(ignoreIfMatches));
+        // log.info(">> does " + fullPath + " log -- " + (logThis ? "yes" : "no"));
+        
+        if (logThis == false) {
+	        chain.doFilter(request, response);	        
+        } else {
+
         	String ID = null;
         	
         	String headerID = httpRequest.getHeader(X_REQUEST_ID);
         	String paramID = httpRequest.getParameter(QueryParameter._QUERY_ID);
-        	
-        	if (ID == null) ID = paramID;
-        	if (ID == null) ID = headerID;
-        	if (ID == null) ID = generateID(httpRequest);
-        	
-        	ELog.setQueryId(ID);
-        	
+      	
 	        long requestCount = queryCount.incrementAndGet();	        
 	        String seqId = Long.toString(requestCount);
+
+	        if (useID) {
+	        	if (ID == null) ID = paramID;
+	        	if (ID == null) ID = headerID;	        	
+	        }
+        	if (ID == null) ID = generateID(httpRequest); 
+        	
+			String fullID = ID.replace("*", seqId);
+			NDC.push(fullID);
+			
+			log.info("Request {}", fullPath);
 	        
-	        ELog.setSeqID(seqId);
-	        
-	        log.info(String.format
-	        	( "Request  [%s, %s] : %s"
-	        	, seqId
-	        	, ID
-	        	, path) + (query == null ? "" : ("?" + query))
-	        	);
-	        
-			httpResponse.addHeader(X_RESPONSE_ID, ID);			
+			httpResponse.addHeader(X_RESPONSE_ID, fullID);			
 	        
 			long startTime = System.currentTimeMillis();
 	        chain.doFilter(request, response);
 	        long endTime = System.currentTimeMillis();
-	        
+			
 	        int status = getStatus(httpResponse);
-	        String statusString = status < 0 ? "(status unknown)" : "" + status;
-	        
-			log.info(String.format
-				( "Response [%s, %s] : %s (%s)"
-				, seqId
-				, ID
-				, statusString
-	            , NameUtils.formatDuration(endTime - startTime) ) 
+	        log.info("Response {} {} {}"
+	        	, fullPath
+				, status < 0 ? "(status unknown)" : "" + status
+	            , NameUtils.formatDuration(endTime - startTime) 
 	            );
 			
-	    } else {
-	        chain.doFilter(request, response);
-	    }
-    }
+			NDC.pop();
+	    	} 
+       }
 
     private String generateID(HttpServletRequest req) {
 		// return UUID_V1.generate().toString();
-		return req.getLocalAddr();
+    	String envID = System.getenv("ELDA_INSTANCE_ID");
+		return envID == null ? "host " + req.getLocalAddr() + ":*": envID;
 	}
 
 	// The check for NoSuchMethodError is because Tomcat6 doesn't have a

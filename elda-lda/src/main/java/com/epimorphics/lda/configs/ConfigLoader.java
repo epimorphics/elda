@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.core.APIFactory;
 import com.epimorphics.lda.core.ModelLoader;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.routing.Router;
 import com.epimorphics.lda.routing.ServletUtils;
 import com.epimorphics.lda.specs.APISpec;
@@ -54,10 +53,10 @@ public class ConfigLoader {
 		// we build all the APISpecs first and let any exceptions bubble
 		// up, and once we have the apiSpecs we load them into the router.
 		
-		log.info(ELog.message( "loading spec file from '%s' with prefix path '%s'", thisSpecPath, prefixPath));
+		log.info("loading spec file from '{}' with prefix path '{}'", thisSpecPath, prefixPath);
 		Model init = safeLoad(ml, thisSpecPath);
 		ServletUtils.addLoadedFrom( init, thisSpecPath );
-		log.info(ELog.message("loaded '%s' with %d statements", thisSpecPath, init.size()));
+		log.info("loaded '{}' with {} statements", thisSpecPath, init.size());
 		
 		List<StashEntry> entryList = new ArrayList<StashEntry>();
 		
@@ -72,7 +71,7 @@ public class ConfigLoader {
 	        	APISpec apiSpec = new APISpec( prefixPath, appName, EldaFileManager.get(), specRoot, ml );
 	        	entryList.add(new StashEntry(thisSpecPath, specRoot, apiSpec));	        	
 	        } catch (RuntimeException e) {
-	        	log.error(ELog.message("error processing config from file '%s': %s", thisSpecPath, e));
+	        	log.error("error processing config from file '{}': {}", thisSpecPath, e);
 	        }
 			
 		}
@@ -98,7 +97,7 @@ public class ConfigLoader {
 		try {
 			return ml.loadModel( thisSpecPath );
 		} catch (RuntimeException e) {
-			log.error(ELog.message("error loading spec file '%s': %s", thisSpecPath, e));
+			log.error("error loading spec file '{}': {}", thisSpecPath, e);
 			return ModelFactory.createDefaultModel();
 		}
 	}

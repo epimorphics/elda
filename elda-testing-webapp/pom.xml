@@ -4,7 +4,7 @@
   <parent>
     <artifactId>elda</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.4.1</version>
+    <version>1.4.4-SNAPSHOT</version>
   </parent>
 
   <artifactId>elda-testing-webapp</artifactId>
@@ -27,7 +27,7 @@
       <version>7.0.42</version>
       <scope>provided</scope>
     </dependency>
-	
+
 	<dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-jasper</artifactId>
@@ -215,6 +215,7 @@
             <configuration>
               <includes><include>**/*Tests.java</include></includes>
               <skipTests>${skip-integration-test}</skipTests>
+		<showSuccess>false</showSuccess>
             </configuration>
           </execution>
 

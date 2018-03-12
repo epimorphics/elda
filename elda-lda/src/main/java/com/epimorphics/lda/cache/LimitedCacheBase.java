@@ -217,12 +217,12 @@ public abstract class LimitedCacheBase implements Cache {
 
     @Override public synchronized void cacheDescription( List<Resource> results, String view, APIResultSet rs, long expiresAt ) {
         if (log.isDebugEnabled()) {
-        	log.debug(ELog.message("caching descriptions for resources %s", results ));
+        	log.debug("caching descriptions for resources {}", results);
         }
         cd.put( results.toString() + "::" + view, new TimedThing<APIResultSet>(rs, expiresAt ));
         if (exceedsResultSetLimit( cd )) {
         	if (log.isDebugEnabled()) {
-        		log.debug(ELog.message("clearing description cache for '%s'", label ));
+        		log.debug("clearing description cache for '{}'", label);
         	}
             cd.clear();
         }
@@ -230,12 +230,12 @@ public abstract class LimitedCacheBase implements Cache {
 
     @Override public synchronized void cacheSelection( String select, List<Resource> results, long expiresAt ) {
     	if (log.isDebugEnabled()) {   
-    		log.debug(ELog.message("caching resource selection for query %s", select ));
+    		log.debug("caching resource selection for query {}", select);
     	}
     	cs.put( select, new TimedThing<List<Resource>>(results, expiresAt) );
         if (exceedsSelectLimit( cs )) {
         	if (log.isDebugEnabled()) {        	
-        		log.debug(ELog.message("clearing select cache for '%s'", label ));
+        		log.debug("clearing select cache for '{}'", label);
         	}
             cs.clear();
         }

@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.APIException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
@@ -86,7 +85,7 @@ public class LocalSource extends SourceBase implements Source {
 
 	@Override public QueryExecution execute(Query query) {
         if (log.isDebugEnabled()) {
-        	log.debug(ELog.message("running query: %s", query));
+        	log.debug("running query: {}", query);
         }
         return QueryExecutionFactory.create(query, sourceDataset);
     }

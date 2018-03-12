@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.vocabularies.API;
 import org.apache.jena.graph.Node;
@@ -60,7 +59,7 @@ public class VariableExtractor {
 			if (type == null && value != null && value.getObject().isURIResource())
 				type = RDFS.Resource.getURI();
 			if (type == null) {
-				log.debug(ELog.message("no type for variable '%s'; using default ''", name));
+				log.debug("no type for variable '{}'; using default ''", name);
 				type = "";
 			}
 			String valueString = getValueString( v, language, type );

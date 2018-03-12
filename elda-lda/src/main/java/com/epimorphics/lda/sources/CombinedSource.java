@@ -20,7 +20,6 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.QueryUtil;
@@ -84,7 +83,7 @@ public class CombinedSource extends SourceBase implements Source
     
     @Override public QueryExecution execute( Query query )
         {
-        log.info(ELog.message("doing query execution on a CombinedSource") );
+        log.info("doing query execution on a CombinedSource");
         Model combined = combine();
         return QueryExecutionFactory.create( query, combined );
         }
@@ -98,7 +97,7 @@ public class CombinedSource extends SourceBase implements Source
 
     private Model dataFrom( Source s )
         {
-        log.info(ELog.message( "[%s]: getting model data from source '%s'", s));
+        log.info( "[{}]: getting model data from source '{}'", s);
         String queryString = "construct " + triplesFor( constructs ) + " where " + triplesFor( matches ) + "";
         return s.executeConstruct( QueryUtil.create( queryString ) );
         }

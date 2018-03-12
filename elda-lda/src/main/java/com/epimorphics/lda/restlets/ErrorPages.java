@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.View;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.renderers.velocity.VelocityRenderer;
 import com.epimorphics.lda.renderers.velocity.VelocityRendering;
 import com.epimorphics.lda.routing.ServletUtils;
@@ -87,8 +86,8 @@ public class ErrorPages {
 			.build()
 			;
 		} catch (Throwable e) {
-			log.error(ELog.message("an exception occurred when rendering an error page"));
-			log.error(ELog.message("%s", e.getMessage()));
+			log.error("an exception occurred when rendering an error page");
+			log.error("{}", e.getMessage());
 			return Response
 				.status(Status.INTERNAL_SERVER_ERROR)
 				.entity(fallBack)

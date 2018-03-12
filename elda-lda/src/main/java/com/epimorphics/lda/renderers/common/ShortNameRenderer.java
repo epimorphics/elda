@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.Transcoding;
 import org.apache.jena.rdf.model.RDFNode;
@@ -215,7 +214,7 @@ public class ShortNameRenderer
 
         if (existing != null) {
             if (!existing.equals(  uri  )) {
-                log.warn(ELog.message("attempt to overwrite existing binding '%s' for short-name '%s' with new value '%s' was ignored", existing, shortName , uri ));
+                log.warn("attempt to overwrite existing binding '{}' for short-name '{}' with new value '{}' was ignored", existing, shortName , uri);
             }
         }
         else {

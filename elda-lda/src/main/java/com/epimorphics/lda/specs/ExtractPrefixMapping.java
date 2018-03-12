@@ -10,7 +10,6 @@ package com.epimorphics.lda.specs;
 
 import static com.epimorphics.util.RDFUtils.getStringValue;
 
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.vocabularies.API;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.shared.PrefixMapping;
@@ -37,10 +36,10 @@ public class ExtractPrefixMapping {
 	            if (prefix != null && uri != null) {
 	                pm.setNsPrefix(prefix, uri);
 	            } else {
-	                APISpec.log.error(ELog.message("ignoring ill-structured prefix mapping '%s' :: '%s'", prefix, uri));
+	                APISpec.log.error("ignoring ill-structured prefix mapping '{}' :: '{}'", prefix, uri);
 	            }
 	        } else {
-	            APISpec.log.error(ELog.message("ignoring non-structured prefix mapping: '%s'", n));
+	            APISpec.log.error("ignoring non-structured prefix mapping: '{}'", n);
 	        }
 	    }
 	    return pm;

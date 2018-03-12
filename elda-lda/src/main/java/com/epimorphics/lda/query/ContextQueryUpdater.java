@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.shortnames.ShortnameService;
 
 /**
@@ -103,7 +102,7 @@ public class ContextQueryUpdater implements ViewSetter {
             // do so. For the moment we'll do a debug-level log (rather than the
             // info-level log we had before) so we can at least spot them.
             // See issue 175
-            log.debug(ELog.message("'%s' supplied, but no value for ", taggedParam, param ));
+            log.debug("'{}' supplied, but no value for {}", taggedParam, param);
             return;
         }
         String val = context.expandVariables( sv );
@@ -136,10 +135,10 @@ public class ContextQueryUpdater implements ViewSetter {
     public void handleReservedParameters( GEOLocation geo, ViewSetter vs, String p, String val ) {
         if (p.equals(QueryParameter._PAGE)) {
             mustBeListEndpoint( p );
-            aq.setPageNumber( positiveInteger( p, val ) );
+            aq.setPageNumber( integerAtLeast( 0, p, val ) );
         } else if (p.equals(QueryParameter._PAGE_SIZE)) {
             mustBeListEndpoint( p );
-            aq.setPageSize( integerOneOrMore( p, val ) );
+            aq.setPageSize( integerAtLeast( 1, p, val ) );
         } else if (p.equals( QueryParameter._FORMAT )) {
             // already handled. WAS: vs.setFormat(val);
         } else if (p.equals(QueryParameter._METADATA)) {
@@ -205,22 +204,14 @@ public class ContextQueryUpdater implements ViewSetter {
             EldaException.BadRequest( p + " can only be used with a list endpoint." );
     }
 
-    private int positiveInteger( String param, String val ) {
+    private int integerAtLeast( int minimum, String param, String val ) {
         try {
             int result = Integer.parseInt( val );
-            if (0 <= result) return result;
-        } catch (NumberFormatException e) { 
-        	EldaException.BadRequest(param + "=" + val + ": value must be non-negative integer.");
-       	}
-        return /* never */ -1;
-    }
-
-    private int integerOneOrMore( String param, String val ) {
-        try {
-            int result = Integer.parseInt( val );
-            if (0 < result) return result;
+            if (result < minimum)
+            	EldaException.BadRequest(param + "=" + val + ": value must be at least " + minimum + "." );
+            return result;
         } catch (NumberFormatException e) {
-        	EldaException.BadRequest(param + "=" + val + ": value must be an integer > 0." );
+        	EldaException.BadRequest(param + "=" + val + ": value must be an integer." );
         }
         return /* never */ -1;
     }
@@ -234,7 +225,7 @@ public class ContextQueryUpdater implements ViewSetter {
     public void addFilterFromQuery( Param param, String raw_val ) {
         if (raw_val.equals( "" )) {
             // see issue #175        	
-            log.debug(ELog.message("parameter '%s' given empty value", param));
+            log.debug("parameter '{}' given empty value", param);
             return;
         }
         String val = aq.cookRawValue(raw_val);
