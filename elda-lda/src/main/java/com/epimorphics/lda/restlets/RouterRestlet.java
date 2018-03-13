@@ -40,7 +40,6 @@ import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.*;
 import com.epimorphics.lda.exceptions.BadRequestException;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;

@@ -31,7 +31,6 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.acceptance.tests.Ask;
 import com.epimorphics.lda.acceptance.tests.TestFramework;
 import com.epimorphics.lda.acceptance.tests.WhatToDo;
-import com.epimorphics.lda.log.ELog;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.rdf.model.Model;

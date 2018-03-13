@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.jsonrdf.extras.JsonUtils;
-import com.epimorphics.lda.log.ELog;
 import com.epimorphics.util.RDFUtils;
 
 import org.apache.jena.datatypes.BaseDatatype;

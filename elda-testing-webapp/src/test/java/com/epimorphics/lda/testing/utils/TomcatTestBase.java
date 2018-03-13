@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.log.ELog;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileManager;
 import com.sun.jersey.api.client.*;
