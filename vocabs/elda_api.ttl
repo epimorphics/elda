@@ -73,6 +73,13 @@ elda:construct a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:disable-default-metadata a rdf:Property
+    ; rdfs:comment """
+        Controls whether hardwired metadata is suppressed
+        when rendering a result.
+    """
+    .
+
 elda:describeAllLabel a rdf:Property
 	; rdfs:comment ""
 	.

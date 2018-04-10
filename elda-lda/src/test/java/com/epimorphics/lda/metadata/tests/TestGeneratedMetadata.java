@@ -123,7 +123,7 @@ public class TestGeneratedMetadata {
 		}
 	}
 
-	static final ModelLoader loader = new ModelLoader() {
+	public static final ModelLoader loader = new ModelLoader() {
 
 		@Override public Model loadModel(String uri) {
 			return null;
