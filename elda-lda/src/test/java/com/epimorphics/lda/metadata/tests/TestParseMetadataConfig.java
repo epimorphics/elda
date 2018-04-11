@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.metadata.MetaConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
@@ -42,32 +43,10 @@ public class TestParseMetadataConfig {
 		return sb.toString();
 	}
 
-	public static class MetaConfig {
-		
-		protected boolean disableDefaultMetadata = false;
-		
-		public MetaConfig(boolean disableDefaultMetadata) {
-			this.disableDefaultMetadata = disableDefaultMetadata;
-		}
-		
-		public MetaConfig() {
-			this(false);
-		}
-		
-		public MetaConfig(Resource root, MetaConfig metaConfig) {
-			this(metaConfig.disableDefaultMetadata);
-		}
-
-		public boolean disableDefaultMetadata() {
-			return disableDefaultMetadata;
-		}
-	}
-	
 	public MetaConfig parseMetaConfig(Model config) {
 		List<Statement> apiStatements = config.listStatements(null, RDF.type, API.API).toList();
 		Resource root = apiStatements.iterator().next().getSubject();
 		boolean defaultMetadata = RDFUtils.getBooleanValue(root, ELDA_API.disable_default_metadata, false);
-		
 		return new MetaConfig(defaultMetadata);
 	}
 	

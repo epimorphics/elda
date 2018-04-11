@@ -11,7 +11,7 @@ import java.util.*;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
-import com.epimorphics.lda.metadata.tests.TestParseMetadataConfig.MetaConfig;
+import com.epimorphics.lda.metadata.MetaConfig;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
@@ -140,9 +140,8 @@ public class EndpointMetadata {
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
 		}
 	//
-		System.err.println(">> disableHardwiredMetadata: " + disableHardwiredMetadata );
+		System.err.println(">> " + disableHardwiredMetadata);
 		if (disableHardwiredMetadata) {
-			System.err.println(">>  disable default metadata");
 			Model m = ModelFactory.createDefaultModel();
 			for (Statement s: thisMetaPage.listProperties().toList())
 				if (hardwiredProperties.contains(s.getPredicate()))
