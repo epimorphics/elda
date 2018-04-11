@@ -95,7 +95,12 @@ public class APISpec extends SpecCommon {
 	protected final MetaConfig metaConfig;
     
 	public APISpec( FileManager fm, Resource specification, ModelLoader loader ) {
-		this( "", fm, specification, loader );
+		this( new MetaConfig(), "", "APP", fm, specification, loader );
+	}
+	
+	public APISpec( MetaConfig mc, FileManager fm, Resource specification, ModelLoader loader ) {
+		this( mc, "", "APP", fm, specification, loader );
+		System.err.println(">> APISpec: mc = " + mc.disableDefaultMetadata());
 	}
 
     public APISpec( String prefixPath, FileManager fm, Resource specification, ModelLoader loader ) {
@@ -103,6 +108,10 @@ public class APISpec extends SpecCommon {
     }
     
     public APISpec( String prefixPath, String appName, FileManager fm, Resource root, ModelLoader loader ) {
+    	this(new MetaConfig(), prefixPath, appName, fm, root, loader);
+    }
+
+    public APISpec( MetaConfig mc, String prefixPath, String appName, FileManager fm, Resource root, ModelLoader loader ) {
     	super(root);
     	AuthMap am = loadAuthMap(root, appName);
     	reportObsoleteDescribeThreshold(root);
@@ -128,7 +137,11 @@ public class APISpec extends SpecCommon {
         this.enableCounting = RDFUtils.getOptionalBooleanValue( root, ELDA_API.enableCounting, Boolean.FALSE );        
 		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( root.getModel() );
 	//
-		this.metaConfig = new MetaConfig();
+		this.metaConfig = new MetaConfig(root, mc);
+		
+		System.err.println( "|| API Spec");
+		System.err.println("|| inbound metaconfig  " + mc.disableDefaultMetadata());
+		System.err.println("|| outbound metaconfig " + metaConfig.disableDefaultMetadata());
 		
 		setDefaultSuffixName(bindings, root);      
 		extractEndpointSpecifications( root );

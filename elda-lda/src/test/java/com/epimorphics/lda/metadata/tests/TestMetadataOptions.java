@@ -49,21 +49,25 @@ public class TestMetadataOptions {
 	
 	@Test public void testingDefaultMetaFalse() throws URISyntaxException {
 		MetaConfig mc = new MetaConfig(false);
-		testConfigProperties(EndpointMetadata.hardwiredProperties, mc);
-	}	
+		Set<Property> hardwiredProperties = EndpointMetadata.hardwiredProperties;
+		testConfigProperties(hardwiredProperties, mc);
+	}
+	
 	@Test public void testingDefaultMetaTrue() throws URISyntaxException {
 		MetaConfig mc = new MetaConfig(true);
-		Set<Property> properties = new HashSet<Property>();
-		testConfigProperties(properties, mc);
+		testConfigProperties(new HashSet<Property>(), mc);
 	}
 	
 	public void testConfigProperties(Set<Property> expected, MetaConfig mc) throws URISyntaxException {
+		
+		System.err.println(">> mc.disableDefaultMetadata: " + mc.disableDefaultMetadata());
 		
 		Resource metaPage = assembleMetadata(mc, true, new Integer(10));
 		Set<Property> properties = new HashSet<Property>();
 		for (Statement s: metaPage.listProperties().toList()) {
 			properties.add(s.getPredicate());
 		}
+		System.err.println(">> expecting " + expected.size() + " expecteds.");
 		assertEquals(expected, properties);
 	}
 	
@@ -73,6 +77,9 @@ public class TestMetadataOptions {
 		, Integer totalResults
 		) throws URISyntaxException {
 		
+		System.err.println(">> assembleMetadata: mc = " + mc.disableDefaultMetadata());
+		
+		
 		config.add(root, RDF.type, API.API);
 		config.add(root, API.sparqlEndpoint, sparql);
 		config.add(root, API.endpoint, theEndpoint);
@@ -81,11 +88,15 @@ public class TestMetadataOptions {
 		config.add(theEndpoint, API.uriTemplate, "/an/endpoint");
 		
 		APISpec aspec = new APISpec
-			( FileManager.get()
+			( mc
+			, FileManager.get()
 			, root
 			, TestGeneratedMetadata.loader
 			)
 			;
+		
+		System.err.println(">> API spec mc: " + aspec.getMetaConfig().disableDefaultMetadata());
+		
 		APIEndpointSpec espec = aspec.getEndpoints().get(0);
 		
 		SetsMetadata setsMeta = new SetsMetadata() {
