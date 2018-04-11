@@ -24,6 +24,7 @@ import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.metadata.tests.TestParseMetadataConfig.MetaConfig;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -90,6 +91,8 @@ public class APISpec extends SpecCommon {
 	protected final String graphTemplate;
 
 	protected final boolean purging;
+	
+	protected final MetaConfig metaConfig;
     
 	public APISpec( FileManager fm, Resource specification, ModelLoader loader ) {
 		this( "", fm, specification, loader );
@@ -125,6 +128,8 @@ public class APISpec extends SpecCommon {
         this.enableCounting = RDFUtils.getOptionalBooleanValue( root, ELDA_API.enableCounting, Boolean.FALSE );        
 		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( root.getModel() );
 	//
+		this.metaConfig = new MetaConfig();
+		
 		setDefaultSuffixName(bindings, root);      
 		extractEndpointSpecifications( root );
         extractModelPrefixEditor( root );
@@ -140,6 +145,10 @@ public class APISpec extends SpecCommon {
 		}
 	}
 
+	public MetaConfig getMetaConfig() {
+		return metaConfig;
+	}
+	
 	protected void reportObsoleteDescribeThreshold(Resource endpoint) {
 		if (endpoint.hasProperty(ELDA_API.describeThreshold)) {
 			log.warn("endpoint '{}': elda:describeThreshold is no longer required/used.", endpoint);

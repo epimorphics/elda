@@ -49,24 +49,7 @@ public class TestMetadataOptions {
 	
 	@Test public void testingDefaultMetaFalse() throws URISyntaxException {
 		MetaConfig mc = new MetaConfig(false);
-		
-		Set<Property> properties = new HashSet<Property>();
-		properties.add(config.createProperty("http://purl.org/linked-data/api/vocab#items"));
-		properties.add(config.createProperty("http://purl.org/linked-data/api/vocab#definition"));
-		properties.add(config.createProperty("http://www.w3.org/1999/xhtml/vocab#first"));
-		properties.add(config.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"));
-		properties.add(config.createProperty("http://www.w3.org/1999/xhtml/vocab#prev"));
-		properties.add(config.createProperty("http://a9.com/-/spec/opensearch/1.1/totalResults"));
-		properties.add(config.createProperty("http://purl.org/linked-data/api/vocab#extendedMetadataVersion"));
-		properties.add(config.createProperty("http://purl.org/dc/terms/hasPart"));
-		properties.add(config.createProperty("http://purl.org/dc/terms/isPartOf"));
-		properties.add(config.createProperty("http://a9.com/-/spec/opensearch/1.1/startIndex"));
-		properties.add(config.createProperty("http://purl.org/linked-data/api/vocab#wasResultOf"));
-		properties.add(config.createProperty("http://a9.com/-/spec/opensearch/1.1/itemsPerPage"));
-		properties.add(config.createProperty("http://purl.org/linked-data/api/vocab#page"));
-		properties.add(config.createProperty("http://www.w3.org/1999/xhtml/vocab#next"));
-		
-		testConfigProperties(properties, mc);
+		testConfigProperties(EndpointMetadata.hardwiredProperties, mc);
 	}	
 	@Test public void testingDefaultMetaTrue() throws URISyntaxException {
 		MetaConfig mc = new MetaConfig(true);
@@ -76,7 +59,7 @@ public class TestMetadataOptions {
 	
 	public void testConfigProperties(Set<Property> expected, MetaConfig mc) throws URISyntaxException {
 		
-		Resource metaPage = assembleMetadata(true, new Integer(10));
+		Resource metaPage = assembleMetadata(mc, true, new Integer(10));
 		Set<Property> properties = new HashSet<Property>();
 		for (Statement s: metaPage.listProperties().toList()) {
 			properties.add(s.getPredicate());
@@ -84,9 +67,9 @@ public class TestMetadataOptions {
 		assertEquals(expected, properties);
 	}
 	
-	
 	public Resource assembleMetadata
-		( boolean isListEndpoint
+		( MetaConfig mc
+		, boolean isListEndpoint
 		, Integer totalResults
 		) throws URISyntaxException {
 		

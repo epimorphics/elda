@@ -1,7 +1,6 @@
 package com.epimorphics.lda.metadata.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import java.util.List;
 
@@ -18,10 +17,10 @@ import com.hp.hpl.jena.vocabulary.RDF;
 
 public class TestParseMetadataConfig {
 
-	String apiPrefixString = "@prefix api: <http://purl.org/linked-data/api/vocab#>.";
-	String rdfPrefixString = "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n";
-	String rdfsPrefixString = "@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n";
-	String eldaPrefixString = "@prefix elda: <http://www.epimorphics.com/vocabularies/lda#> .\n";
+	static final String apiPrefixString = "@prefix api: <http://purl.org/linked-data/api/vocab#>.";
+	static final String rdfPrefixString = "@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n";
+	static final String rdfsPrefixString = "@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n";
+	static final String eldaPrefixString = "@prefix elda: <http://www.epimorphics.com/vocabularies/lda#> .\n";
 	
 	private Model getModelA(String value) {
 		String modelString = longString(
@@ -51,6 +50,14 @@ public class TestParseMetadataConfig {
 			this.disableDefaultMetadata = disableDefaultMetadata;
 		}
 		
+		public MetaConfig() {
+			this(false);
+		}
+		
+		public MetaConfig(Resource root, MetaConfig metaConfig) {
+			this(metaConfig.disableDefaultMetadata);
+		}
+
 		public boolean disableDefaultMetadata() {
 			return disableDefaultMetadata;
 		}

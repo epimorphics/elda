@@ -11,6 +11,7 @@ import java.util.*;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
+import com.epimorphics.lda.metadata.tests.TestParseMetadataConfig.MetaConfig;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
@@ -77,6 +78,8 @@ public class EndpointMetadata {
 		, Set<Resource> licences
 		) {
 	//
+		MetaConfig mc = spec.getMetaConfig();
+		boolean disableHardwiredMetadata = mc.disableDefaultMetadata();
 		boolean listEndpoint = details.isListEndpoint();
 		Model metaModel = mergedModels.getMetaModel();
 		thisMetaPage.addProperty( API.definition, uriForDefinition );
@@ -136,6 +139,17 @@ public class EndpointMetadata {
 			thisMetaPage.addProperty( RDF.type, API.ItemEndpoint );
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
 		}
+	//
+		System.err.println(">> disableHardwiredMetadata: " + disableHardwiredMetadata );
+		if (disableHardwiredMetadata) {
+			System.err.println(">>  disable default metadata");
+			Model m = ModelFactory.createDefaultModel();
+			for (Statement s: thisMetaPage.listProperties().toList())
+				if (hardwiredProperties.contains(s.getPredicate()))
+					m.add(s);
+			thisMetaPage.getModel().remove(m);
+		}
+		
 	//
 		EndpointMetadata em = new EndpointMetadata( details, thisMetaPage, "" + page, bindings);
 		Model metaModel1 = mergedModels.getMetaModel();
@@ -388,4 +402,26 @@ public class EndpointMetadata {
 	public static Resource inValue( Model rsm, String s ) {
 		return rsm.createResource().addProperty( RDF.value, s );
 	}
+	
+	public static Set<Property> createHardwiredProperties() {
+		Model config = ModelFactory.createDefaultModel();
+		Set<Property> properties = new HashSet<Property>();
+		properties.add(config.createProperty("http://purl.org/linked-data/api/vocab#items"));
+		properties.add(config.createProperty("http://purl.org/linked-data/api/vocab#definition"));
+		properties.add(config.createProperty("http://www.w3.org/1999/xhtml/vocab#first"));
+		properties.add(config.createProperty("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"));
+		properties.add(config.createProperty("http://www.w3.org/1999/xhtml/vocab#prev"));
+		properties.add(config.createProperty("http://a9.com/-/spec/opensearch/1.1/totalResults"));
+		properties.add(config.createProperty("http://purl.org/linked-data/api/vocab#extendedMetadataVersion"));
+		properties.add(config.createProperty("http://purl.org/dc/terms/hasPart"));
+		properties.add(config.createProperty("http://purl.org/dc/terms/isPartOf"));
+		properties.add(config.createProperty("http://a9.com/-/spec/opensearch/1.1/startIndex"));
+		properties.add(config.createProperty("http://purl.org/linked-data/api/vocab#wasResultOf"));
+		properties.add(config.createProperty("http://a9.com/-/spec/opensearch/1.1/itemsPerPage"));
+		properties.add(config.createProperty("http://purl.org/linked-data/api/vocab#page"));
+		properties.add(config.createProperty("http://www.w3.org/1999/xhtml/vocab#next"));
+		return properties;
+	}
+	
+	public static Set<Property> hardwiredProperties = new HashSet<Property>();
 }

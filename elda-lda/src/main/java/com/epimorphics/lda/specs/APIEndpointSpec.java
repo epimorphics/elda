@@ -20,6 +20,7 @@ import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.metadata.tests.TestParseMetadataConfig.MetaConfig;
 import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -70,6 +71,8 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
     
     final Boolean enableCounting;
     
+    final MetaConfig metaConfig;
+    
     final long cacheExpiryMilliseconds;
     
     static Logger log = LoggerFactory.getLogger(APIEndpointSpec.class);
@@ -93,6 +96,7 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
         graphTemplate = getStringValue( endpoint, ELDA_API.graphTemplate, apiSpec.getGraphTemplate() );
         uriTemplate = createURITemplate( endpoint );
         endpointResource = endpoint;
+        metaConfig = new MetaConfig(root, parent.getMetaConfig());
         apiSpec.reportObsoleteDescribeThreshold(endpoint);
     //
         purging = getBooleanValue( endpoint, ELDA_API.purgeFilterValues, apiSpec.purging);
@@ -121,6 +125,10 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
         String prefix = getStringValue( spec, ELDA_API.uriTemplatePrefix, "" );
         if (!ut.startsWith("/") && !ut.startsWith("http")) ut = "/" + ut;
         return prefix + ut;
+	}
+	
+	public MetaConfig getMetaConfig() {
+		return metaConfig;
 	}
 
 	public boolean isListEndpoint() {
