@@ -79,10 +79,7 @@ public class EndpointMetadata {
 		) {
 	//
 		MetaConfig mc = spec.getMetaConfig();
-		boolean disableHardwiredMetadata = mc.disableDefaultMetadata();
-		
-		System.err.println(">> disableHardwiredMetadata: " + disableHardwiredMetadata);
-		
+		boolean disableHardwiredMetadata = mc.disableDefaultMetadata();		
 		boolean listEndpoint = details.isListEndpoint();
 		Model metaModel = mergedModels.getMetaModel();
 		thisMetaPage.addProperty( API.definition, uriForDefinition );
@@ -144,23 +141,13 @@ public class EndpointMetadata {
 		}
 	//
 		if (disableHardwiredMetadata) {
-			System.err.println(">> line 147");
-			System.err.println(">> hardwired properties: " + hardwiredProperties.size());
 			Model m = ModelFactory.createDefaultModel();
 			for (Statement s: thisMetaPage.listProperties().toList()) {
 				if (hardwiredProperties.contains(s.getPredicate())) {
-					System.err.println( ">> another to remove");
 					m.add(s);
 				}
 			}
-			System.err.println(">> metamodel: " + thisMetaPage.getModel().size() + " items.");
-			System.err.println(">> " + m.size() + " things to remove.");
-			System.err.println(">> final size: " + thisMetaPage.getModel().size() + " items.");
-			
-			thisMetaPage.getModel().write(System.err, "TTL");
-			m.write(System.err, "TTL");
-			
-			thisMetaPage.getModel().remove(m);
+			thisMetaPage.getModel().remove(m);			
 		}
 		
 	//

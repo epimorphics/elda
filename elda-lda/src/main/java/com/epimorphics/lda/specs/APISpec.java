@@ -100,7 +100,6 @@ public class APISpec extends SpecCommon {
 	
 	public APISpec( MetaConfig mc, FileManager fm, Resource specification, ModelLoader loader ) {
 		this( mc, "", "APP", fm, specification, loader );
-		System.err.println(">> APISpec: mc = " + mc.disableDefaultMetadata());
 	}
 
     public APISpec( String prefixPath, FileManager fm, Resource specification, ModelLoader loader ) {
@@ -138,11 +137,7 @@ public class APISpec extends SpecCommon {
 		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( root.getModel() );
 	//
 		this.metaConfig = new MetaConfig(root, mc);
-		
-		System.err.println( "|| API Spec");
-		System.err.println("|| inbound metaconfig  " + mc.disableDefaultMetadata());
-		System.err.println("|| outbound metaconfig " + metaConfig.disableDefaultMetadata());
-		
+	//		
 		setDefaultSuffixName(bindings, root);      
 		extractEndpointSpecifications( root );
         extractModelPrefixEditor( root );

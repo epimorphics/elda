@@ -1,6 +1,7 @@
 package com.epimorphics.lda.metadata.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -50,6 +51,9 @@ public class TestMetadataOptions {
 	@Test public void testingDefaultMetaFalse() throws URISyntaxException {
 		MetaConfig mc = new MetaConfig(false);
 		Set<Property> hardwiredProperties = EndpointMetadata.hardwiredProperties;
+		
+		Model config = ModelFactory.createDefaultModel();
+		assertTrue(hardwiredProperties.contains(config.createProperty("http://purl.org/linked-data/api/vocab#wasResultOf")));
 		testConfigProperties(hardwiredProperties, mc);
 	}
 	
@@ -58,16 +62,12 @@ public class TestMetadataOptions {
 		testConfigProperties(new HashSet<Property>(), mc);
 	}
 	
-	public void testConfigProperties(Set<Property> expected, MetaConfig mc) throws URISyntaxException {
-		
-		System.err.println(">> mc.disableDefaultMetadata: " + mc.disableDefaultMetadata());
-		
+	public void testConfigProperties(Set<Property> expected, MetaConfig mc) throws URISyntaxException {		
 		Resource metaPage = assembleMetadata(mc, true, new Integer(10));
 		Set<Property> properties = new HashSet<Property>();
 		for (Statement s: metaPage.listProperties().toList()) {
 			properties.add(s.getPredicate());
 		}
-		System.err.println(">> expecting " + expected.size() + " expecteds.");
 		assertEquals(expected, properties);
 	}
 	
@@ -76,10 +76,7 @@ public class TestMetadataOptions {
 		, boolean isListEndpoint
 		, Integer totalResults
 		) throws URISyntaxException {
-		
-		System.err.println(">> assembleMetadata: mc = " + mc.disableDefaultMetadata());
-		
-		
+				
 		config.add(root, RDF.type, API.API);
 		config.add(root, API.sparqlEndpoint, sparql);
 		config.add(root, API.endpoint, theEndpoint);
@@ -94,9 +91,7 @@ public class TestMetadataOptions {
 			, TestGeneratedMetadata.loader
 			)
 			;
-		
-		System.err.println(">> API spec mc: " + aspec.getMetaConfig().disableDefaultMetadata());
-		
+				
 		APIEndpointSpec espec = aspec.getEndpoints().get(0);
 		
 		SetsMetadata setsMeta = new SetsMetadata() {
