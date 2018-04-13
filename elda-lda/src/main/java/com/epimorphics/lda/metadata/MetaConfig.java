@@ -15,7 +15,7 @@ public class MetaConfig {
 	
 	protected boolean disableDefaultMetadata = false;
 	
-	protected Set<Property> enabled = new HashSet<Property>();
+	public Set<Property> enabled = new HashSet<Property>();
 	
 	public MetaConfig(boolean disableDefaultMetadata) {
 		this.disableDefaultMetadata = disableDefaultMetadata;
@@ -37,6 +37,12 @@ public class MetaConfig {
 				Property p = n.as(Property.class);
 				enabled.add(p);
 			}
+		}
+		
+		List<Statement> xx = root.listProperties(ELDA_API.disable_default_metadata).toList();
+		for (Statement x: xx) {
+			boolean disable = x.getBoolean();
+			disableDefaultMetadata = disable;
 		}
 	}
 

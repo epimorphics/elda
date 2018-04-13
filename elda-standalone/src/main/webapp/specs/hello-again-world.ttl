@@ -90,7 +90,8 @@ hello:hello-world-again a api:API
     ; elda:enableCounting true
    	; elda:cacheExpiryTime "10m"
    	
-   	; elda:disable-default-metadata false
+   	# ; elda:disable-default-metadata false
+   	# ; elda:enable-default-metadata (P1 P2 ...)
 	.
 	
 <http://localhost:3030/ds/query> 

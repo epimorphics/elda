@@ -28,9 +28,8 @@ public class TestMetaConfig {
 			assertEquals(false, new MetaConfig().drop(p));
 	}
 	
-	@Test public void testEnablePropertiesConfig() {
-		
-		String configString = TestParseMetadataConfig.longString
+	protected String configString(String control) {
+		return TestParseMetadataConfig.longString
 			( TestParseMetadataConfig.apiPrefixString
 			, TestParseMetadataConfig.eldaPrefixString
 			, TestParseMetadataConfig.rdfPrefixString
@@ -38,22 +37,32 @@ public class TestMetaConfig {
 			, "@prefix : <eh:/> ."
 			, ""
 			, "<eh:/root> a api:API"
+			, control
 			, "; elda:enable-default-metadata ("
-				, "<http://purl.org/dc/terms/hasPart>"
-				, "<http://purl.org/dc/terms/isPartOf>"
+			, "<http://purl.org/dc/terms/hasPart>"
+			, "<http://purl.org/dc/terms/isPartOf>"
 			, ")"
 			, "."
 			);
+	}
+	
+	@Test public void testEnablePropertiesConfigAbsent() {
+		testEnablePropertiesConfig(false, false, "");
+	}
 		
-		Model config = ModelIOUtils.modelFromTurtle(configString);
+	@Test public void testEnablePropertiesConfigFalse() {
+		testEnablePropertiesConfig(false, false, "; elda:disable-default-metadata false");
+	}
 		
+	@Test public void testEnablePropertiesConfigTrue() {
+		testEnablePropertiesConfig(false, true, "; elda:disable-default-metadata true");
+	}
+		
+	public void testEnablePropertiesConfig(boolean expectHardwired, boolean expectNotwired, String control) {
+		Model config = ModelIOUtils.modelFromTurtle(configString(control));
 		Resource root = config.createResource("eh:/root");
-		
 		MetaConfig mc = new MetaConfig(root);
-		
-		assertEquals(false, mc.drop(config.createProperty("http://purl.org/dc/terms/hasPart")));
-		assertEquals(false, mc.drop(config.createProperty("eh:/not-at-all")));
-		
-		
+		assertEquals(expectHardwired, mc.drop(config.createProperty("http://purl.org/dc/terms/hasPart")));
+		assertEquals(expectNotwired, mc.drop(config.createProperty("eh:/not-at-all")));
 	}
 }
