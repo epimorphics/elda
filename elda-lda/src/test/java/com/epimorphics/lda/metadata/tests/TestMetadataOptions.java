@@ -62,7 +62,7 @@ public class TestMetadataOptions {
 		testConfigProperties(new HashSet<Property>(), mc);
 	}
 	
-	public void testConfigProperties(Set<Property> expected, MetaConfig mc) throws URISyntaxException {		
+	public void testConfigProperties(Set<Property> expected, MetaConfig mc) throws URISyntaxException {	
 		Resource metaPage = assembleMetadata(mc, true, new Integer(10));
 		Set<Property> properties = new HashSet<Property>();
 		for (Statement s: metaPage.listProperties().toList()) {

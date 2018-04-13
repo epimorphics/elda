@@ -140,17 +140,6 @@ public class EndpointMetadata {
 			if (suppress_IPTO == false) content.addProperty( FOAF.isPrimaryTopicOf, thisMetaPage );
 		}
 	//
-		if (disableHardwiredMetadata) {
-			Model m = ModelFactory.createDefaultModel();
-			for (Statement s: thisMetaPage.listProperties().toList()) {
-				if (hardwiredProperties.contains(s.getPredicate())) {
-					m.add(s);
-				}
-			}
-			thisMetaPage.getModel().remove(m);			
-		}
-		
-	//
 		EndpointMetadata em = new EndpointMetadata( details, thisMetaPage, "" + page, bindings);
 		Model metaModel1 = mergedModels.getMetaModel();
 		Model mergedModels1 = mergedModels.getMergedModel();
@@ -184,6 +173,17 @@ public class EndpointMetadata {
 	    if (wantsMeta.wantsMetadata( "formats" )) metaModel1.add( formatsModel );  else setsMeta.setMetadata( "formats", formatsModel );
 	    if (wantsMeta.wantsMetadata( "bindings" )) metaModel1.add( bindingsModel ); else setsMeta.setMetadata( "bindings", bindingsModel );
 	    if (wantsMeta.wantsMetadata( "execution" )) metaModel1.add( execution ); else setsMeta.setMetadata( "execution", execution );
+	    
+		//
+		if (disableHardwiredMetadata) {
+			Model m = ModelFactory.createDefaultModel();
+			for (Statement s: thisMetaPage.listProperties().toList()) {
+				if (hardwiredProperties.contains(s.getPredicate())) {
+					m.add(s);
+				}
+			}
+			thisMetaPage.getModel().remove(m);			
+		}
 	}
 	
 	private static Resource firstOf(List<Resource> resultList) {
