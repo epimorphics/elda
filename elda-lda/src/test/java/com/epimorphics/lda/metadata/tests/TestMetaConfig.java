@@ -1,0 +1,59 @@
+package com.epimorphics.lda.metadata.tests;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.core.EndpointMetadata;
+import com.epimorphics.lda.metadata.MetaConfig;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
+
+public class TestMetaConfig {
+
+	@Test public void testEmptyConfig() {
+		assertEquals(false, new MetaConfig().disableDefaultMetadata());
+		assertEquals(false, new MetaConfig(false).disableDefaultMetadata());
+		assertEquals(true, new MetaConfig(true).disableDefaultMetadata());
+
+		for (Property p: EndpointMetadata.hardwiredProperties)
+			assertEquals(false, new MetaConfig(false).drop(p));
+		
+		for (Property p: EndpointMetadata.hardwiredProperties)
+			assertEquals(true, new MetaConfig(true).drop(p));
+		
+		for (Property p: EndpointMetadata.hardwiredProperties)
+			assertEquals(false, new MetaConfig().drop(p));
+	}
+	
+	@Test public void testEnablePropertiesConfig() {
+		
+		String configString = TestParseMetadataConfig.longString
+			( TestParseMetadataConfig.apiPrefixString
+			, TestParseMetadataConfig.eldaPrefixString
+			, TestParseMetadataConfig.rdfPrefixString
+			, TestParseMetadataConfig.rdfsPrefixString
+			, "@prefix : <eh:/> ."
+			, ""
+			, "<eh:/root> a api:API"
+			, "; elda:enable-default-metadata ("
+				, "<http://purl.org/dc/terms/hasPart>"
+				, "<http://purl.org/dc/terms/isPartOf>"
+			, ")"
+			, "."
+			);
+		
+		Model config = ModelIOUtils.modelFromTurtle(configString);
+		
+		Resource root = config.createResource("eh:/root");
+		
+		MetaConfig mc = new MetaConfig(root);
+		
+		assertEquals(false, mc.drop(config.createProperty("http://purl.org/dc/terms/hasPart")));
+		assertEquals(false, mc.drop(config.createProperty("eh:/not-at-all")));
+		
+		
+	}
+}

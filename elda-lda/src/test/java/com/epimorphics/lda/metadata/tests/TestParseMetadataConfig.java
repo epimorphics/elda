@@ -35,7 +35,7 @@ public class TestParseMetadataConfig {
 		return ModelIOUtils.modelFromTurtle(modelString);
 	}
 	
-	private String longString( String ... strings) {
+	public static String longString( String ... strings) {
 		StringBuilder sb = new StringBuilder();
 		for (String s: strings) {
 			sb.append(s).append("\n");
