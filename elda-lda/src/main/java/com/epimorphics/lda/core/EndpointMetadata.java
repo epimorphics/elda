@@ -78,8 +78,6 @@ public class EndpointMetadata {
 		, Set<Resource> licences
 		) {
 	//
-		MetaConfig mc = spec.getMetaConfig();
-		boolean disableHardwiredMetadata = mc.disableDefaultMetadata();		
 		boolean listEndpoint = details.isListEndpoint();
 		Model metaModel = mergedModels.getMetaModel();
 		thisMetaPage.addProperty( API.definition, uriForDefinition );
@@ -174,16 +172,17 @@ public class EndpointMetadata {
 	    if (wantsMeta.wantsMetadata( "bindings" )) metaModel1.add( bindingsModel ); else setsMeta.setMetadata( "bindings", bindingsModel );
 	    if (wantsMeta.wantsMetadata( "execution" )) metaModel1.add( execution ); else setsMeta.setMetadata( "execution", execution );
 	    
-		//
-		if (disableHardwiredMetadata) {
-			Model m = ModelFactory.createDefaultModel();
-			for (Statement s: thisMetaPage.listProperties().toList()) {
-				if (hardwiredProperties.contains(s.getPredicate())) {
-					m.add(s);
-				}
+	//
+	    
+		MetaConfig mc = spec.getMetaConfig();
+		Model toRemove = ModelFactory.createDefaultModel();
+				
+		for (Statement s: thisMetaPage.listProperties().toList()) {
+			if (mc.drop(s.getPredicate())) {
+				if(!s.getPredicate().equals(ELDA_API.items)) toRemove.add(s);
 			}
-			thisMetaPage.getModel().remove(m);			
 		}
+		thisMetaPage.getModel().remove(toRemove);			
 	}
 	
 	private static Resource firstOf(List<Resource> resultList) {

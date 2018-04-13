@@ -96,7 +96,9 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
         graphTemplate = getStringValue( endpoint, ELDA_API.graphTemplate, apiSpec.getGraphTemplate() );
         uriTemplate = createURITemplate( endpoint );
         endpointResource = endpoint;
+    //
         metaConfig = new MetaConfig(root, apiSpec.getMetaConfig());
+    //
         apiSpec.reportObsoleteDescribeThreshold(endpoint);
     //
         purging = getBooleanValue( endpoint, ELDA_API.purgeFilterValues, apiSpec.purging);

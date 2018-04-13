@@ -25,11 +25,17 @@ public class MetaConfig {
 		this(false);
 	}
 	
-	public MetaConfig(Resource root, MetaConfig metaConfig) {
-		this(metaConfig.disableDefaultMetadata);
+	public MetaConfig(Resource root, MetaConfig mc) {
+		this.disableDefaultMetadata = mc.disableDefaultMetadata;
+		this.enabled = new HashSet<Property>(mc.enabled);
+		parseRoot(root);
 	}
 	
 	public MetaConfig(Resource root) {
+		parseRoot(root);
+	}
+
+	private void parseRoot(Resource root) {
 		List<Statement> ss = root.listProperties(ELDA_API.enable_default_metadata).toList();
 		for (Statement s: ss) {
 			List< RDFNode> l = s.getObject().as(RDFList.class).asJavaList();
@@ -39,9 +45,9 @@ public class MetaConfig {
 			}
 		}
 		
-		List<Statement> xx = root.listProperties(ELDA_API.disable_default_metadata).toList();
-		for (Statement x: xx) {
-			boolean disable = x.getBoolean();
+		List<Statement> dd = root.listProperties(ELDA_API.disable_default_metadata).toList();
+		for (Statement d: dd) {
+			boolean disable = d.getBoolean();
 			disableDefaultMetadata = disable;
 		}
 	}
@@ -59,5 +65,9 @@ public class MetaConfig {
 			enabled.contains(p)
 			|| disableDefaultMetadata == false
 			;
+	}
+	
+	@Override public String toString() {
+		return "<mc " + disableDefaultMetadata + " " + enabled + ">";
 	}
 }
