@@ -183,6 +183,8 @@ public class EndpointMetadata {
 			}
 		}
 		thisMetaPage.getModel().remove(toRemove);			
+		
+		mc.addMetadata(thisMetaPage);
 	}
 	
 	private static Resource firstOf(List<Resource> resultList) {

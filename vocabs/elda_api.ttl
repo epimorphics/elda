@@ -189,6 +189,13 @@ elda:match a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:metadata a rdf:Property
+	; rdfs:comment 
+	"""
+		Property used in Elda metadata block declarations.
+	"""
+	.
+
 elda:meta a rdf:Property
     ; rdfs:label "meta"
     ; rdfs:comment """Property mapping from page to metadata for JSON-LD rendering."""

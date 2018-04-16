@@ -1,11 +1,16 @@
 package com.epimorphics.lda.metadata;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
+import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFList;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -17,6 +22,8 @@ public class MetaConfig {
 	protected boolean disableDefaultMetadata = false;
 	
 	public Set<Property> enabled = new HashSet<Property>();
+	
+	public Map<String, Resource> blocks = new HashMap<String, Resource>();
 	
 	public MetaConfig(boolean disableDefaultMetadata) {
 		this.disableDefaultMetadata = disableDefaultMetadata;
@@ -39,11 +46,33 @@ public class MetaConfig {
 	private void parseRoot(Resource root) {
 		enableDefaultMetadata(root);
 		disableDefaultMetadata(root);
-		loadBlockMetadata(root);
+		loadMetadataBlocks(root);
 	}
 
-	private void loadBlockMetadata(Resource root) {
+	private void loadMetadataBlocks(Resource root) {
+		List <Statement> mds = root.listProperties(ELDA_API.metadata).toList();		
+		for (Statement md: mds) loadMetadataBlock(md);
+	}
+
+	private void loadMetadataBlock(Statement md) {
+				
+		Resource block = md.getResource();
+		String name = RDFUtils.getStringValue(block, API.name);
+				
+		List<Statement> ss = block.listProperties().toList();
+				
+		Model target = ModelFactory.createDefaultModel();
 		
+		for (Statement s: ss) {
+			if (s.getPredicate().equals(API.name)) {
+				// discard
+			} else {
+				target.add(s);
+			}
+		}
+		
+		Resource outBlock = block.inModel(target);
+		blocks.put(name,  outBlock);
 	}
 
 	private void disableDefaultMetadata(Resource root) {
@@ -81,10 +110,18 @@ public class MetaConfig {
 	}
 	
 	@Override public String toString() {
-		return "<mc " + disableDefaultMetadata + " " + enabled + ">";
+		return "<mc " + disableDefaultMetadata + " " + enabled + ">" + blocks;
 	}
 
-	public void addMetadata(Model receiver) {
+	public void addMetadata(Resource root) {		
+		Model target = root.getModel();
 		
+		for (String k: blocks.keySet()) {	
+			Resource block = blocks.get(k);
+		
+			for (Statement s: block.listProperties().toList()) {
+				target.add(root, s.getPredicate(), s.getObject());
+			}
+		}
 	}
 }
