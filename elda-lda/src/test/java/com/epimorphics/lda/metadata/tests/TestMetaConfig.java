@@ -2,14 +2,17 @@ package com.epimorphics.lda.metadata.tests;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.EndpointMetadata;
 import com.epimorphics.lda.metadata.MetaConfig;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 
 public class TestMetaConfig {
 
@@ -65,4 +68,36 @@ public class TestMetaConfig {
 		assertEquals(expectHardwired, mc.drop(config.createProperty("http://purl.org/dc/terms/hasPart")));
 		assertEquals(expectNotwired, mc.drop(config.createProperty("eh:/not-at-all")));
 	}
+	protected String configNamedBlock() {
+		return TestParseMetadataConfig.longString
+			( TestParseMetadataConfig.apiPrefixString
+			, TestParseMetadataConfig.eldaPrefixString
+			, TestParseMetadataConfig.rdfPrefixString
+			, TestParseMetadataConfig.rdfsPrefixString
+			, "@prefix : <eh:/> ."
+			, ""
+			, "<eh:/root> a api:API"
+			, "; elda:metadata ["
+			, "    api:name \"NameX\""
+			, "    ; <eh:/P> 10"
+			, "    ; <eh:/Q> <eh:/O>"
+			, "    ]"
+			, "."
+			);
+	}
+	
+	@Test public void testBuildMetadataBlock() {
+		Model config = ModelIOUtils.modelFromTurtle(configNamedBlock());
+		Resource root = config.createResource("eh:/root");
+		MetaConfig mc = new MetaConfig(root);
+		Model receiver = ModelFactory.createDefaultModel();
+		mc.addMetadata(receiver);
+		String expectString = "<eh:/S> <eh:/P> <eh:/O> .";
+		Model expect = ModelIOUtils.modelFromTurtle(expectString);
+		// ModelTestBase.assertIsoModels("", expect, receiver);
+	}
+	
+	
+	
+	
 }

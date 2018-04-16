@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.epimorphics.lda.vocabularies.ELDA_API;
+import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFList;
 import com.hp.hpl.jena.rdf.model.RDFNode;
@@ -36,6 +37,24 @@ public class MetaConfig {
 	}
 
 	private void parseRoot(Resource root) {
+		enableDefaultMetadata(root);
+		disableDefaultMetadata(root);
+		loadBlockMetadata(root);
+	}
+
+	private void loadBlockMetadata(Resource root) {
+		
+	}
+
+	private void disableDefaultMetadata(Resource root) {
+		List<Statement> dd = root.listProperties(ELDA_API.disable_default_metadata).toList();
+		for (Statement d: dd) {
+			boolean disable = d.getBoolean();
+			disableDefaultMetadata = disable;
+		}
+	}
+
+	private void enableDefaultMetadata(Resource root) {
 		List<Statement> ss = root.listProperties(ELDA_API.enable_default_metadata).toList();
 		for (Statement s: ss) {
 			List< RDFNode> l = s.getObject().as(RDFList.class).asJavaList();
@@ -43,12 +62,6 @@ public class MetaConfig {
 				Property p = n.as(Property.class);
 				enabled.add(p);
 			}
-		}
-		
-		List<Statement> dd = root.listProperties(ELDA_API.disable_default_metadata).toList();
-		for (Statement d: dd) {
-			boolean disable = d.getBoolean();
-			disableDefaultMetadata = disable;
 		}
 	}
 
@@ -69,5 +82,9 @@ public class MetaConfig {
 	
 	@Override public String toString() {
 		return "<mc " + disableDefaultMetadata + " " + enabled + ">";
+	}
+
+	public void addMetadata(Model receiver) {
+		
 	}
 }
