@@ -68,6 +68,11 @@ public class TestMetadataOptions {
 		for (Statement s: metaPage.listProperties().toList()) {
 			properties.add(s.getPredicate());
 		}
+	//
+	// api:items is a special case because it must always be there.
+		properties.remove(API.items);
+		expected.remove(API.items);
+	//
 		assertEquals(expected, properties);
 	}
 	
