@@ -19,11 +19,21 @@ import com.hp.hpl.jena.rdf.model.Statement;
 
 public class MetaConfig {
 	
+	static class State {
+		final boolean enabled;
+		final Resource blockData;
+		
+		State(boolean enabled, Resource blockData) {
+			this.enabled = enabled;
+			this.blockData = blockData;
+		}
+	}
+	
 	protected boolean disableDefaultMetadata = false;
 	
 	public Set<Property> enabled = new HashSet<Property>();
 	
-	public Map<String, Resource> blocks = new HashMap<String, Resource>();
+	public Map<String, State> blocks = new HashMap<String, State>();
 	
 	public MetaConfig(boolean disableDefaultMetadata) {
 		this.disableDefaultMetadata = disableDefaultMetadata;
@@ -57,8 +67,14 @@ public class MetaConfig {
 	private void loadMetadataBlock(Statement md) {
 				
 		Resource block = md.getResource();
-		String name = RDFUtils.getStringValue(block, API.name);
-				
+		String taggedName = RDFUtils.getStringValue(block, API.name);
+		
+		boolean plus = taggedName.startsWith("+");
+		boolean minus = taggedName.startsWith("-");
+		boolean enabled = plus || !minus;
+
+		String name = plus || minus ? taggedName.substring(1) : taggedName;
+		
 		List<Statement> ss = block.listProperties().toList();
 				
 		Model target = ModelFactory.createDefaultModel();
@@ -72,7 +88,7 @@ public class MetaConfig {
 		}
 		
 		Resource outBlock = block.inModel(target);
-		blocks.put(name,  outBlock);
+		blocks.put(name,  new State(enabled, outBlock));
 	}
 
 	private void disableDefaultMetadata(Resource root) {
@@ -117,10 +133,12 @@ public class MetaConfig {
 		Model target = root.getModel();
 		
 		for (String k: blocks.keySet()) {	
-			Resource block = blocks.get(k);
+			State block = blocks.get(k);
 		
-			for (Statement s: block.listProperties().toList()) {
-				target.add(root, s.getPredicate(), s.getObject());
+			if (block.enabled) {
+				for (Statement s: block.blockData.listProperties().toList()) {
+					target.add(root, s.getPredicate(), s.getObject());
+				}
 			}
 		}
 	}
