@@ -74,11 +74,19 @@ public class MetaConfig {
 		Resource block = md.getResource();
 		String taggedName = RDFUtils.getStringValue(block, API.name);
 		
+		if (taggedName == null ) {
+			throw new RuntimeException("metadata block has no api:name.");
+		}
+		
 		boolean plus = taggedName.startsWith("+");
 		boolean minus = taggedName.startsWith("-");
 		boolean enabled = plus || !minus;
 
 		String name = plus || minus ? taggedName.substring(1) : taggedName;
+		
+		if (blocks.containsKey(name)) {
+			throw new RuntimeException("api:name '" + name + "' has been reused.");
+		}
 		
 		List<Statement> ss = block.listProperties().toList();
 				
@@ -153,7 +161,6 @@ public class MetaConfig {
 	protected static final String RDFS_Resource = RDFS.Resource.getURI();
 	
 	private RDFNode expand(Bindings b, RDFNode O) {
-		
 		if (O.isResource()) return O;
 		String lex = O.asNode().getLiteralLexicalForm();
 		String typeURI = O.asNode().getLiteralDatatypeURI();

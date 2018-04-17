@@ -1,6 +1,7 @@
 package com.epimorphics.lda.metadata.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 
 public class TestMetaConfig {
 
-	@Test @Ignore public void testEmptyConfig() {
+	@Test public void testEmptyConfig() {
 		assertEquals(false, new MetaConfig().disableDefaultMetadata());
 		assertEquals(false, new MetaConfig(false).disableDefaultMetadata());
 		assertEquals(true, new MetaConfig(true).disableDefaultMetadata());
@@ -50,15 +51,15 @@ public class TestMetaConfig {
 			);
 	}
 	
-	@Test @Ignore public void testEnablePropertiesConfigAbsent() {
+	@Test public void testEnablePropertiesConfigAbsent() {
 		testEnablePropertiesConfig(false, false, "");
 	}
 		
-	@Test @Ignore public void testEnablePropertiesConfigFalse() {
+	@Test public void testEnablePropertiesConfigFalse() {
 		testEnablePropertiesConfig(false, false, "; elda:disable-default-metadata false");
 	}
 		
-	@Test @Ignore public void testEnablePropertiesConfigTrue() {
+	@Test public void testEnablePropertiesConfigTrue() {
 		testEnablePropertiesConfig(false, true, "; elda:disable-default-metadata true");
 	}
 		
@@ -87,7 +88,7 @@ public class TestMetaConfig {
 			);
 	}
 	
-	@Test @Ignore public void testBuildMetadataBlockNoSubst() {
+	@Test public void testBuildMetadataBlockNoSubst() {
 		Bindings b = new Bindings();
 		Model config = ModelIOUtils.modelFromTurtle(configNamedBlockNoSubst());
 		Resource root = config.createResource("eh:/root");
@@ -120,7 +121,7 @@ public class TestMetaConfig {
 			);
 	}
 	
-	@Test @Ignore public void testBuildMetadataBlockWithSubst() {
+	@Test public void testBuildMetadataBlockWithSubst() {
 		Bindings b = new Bindings().put("B", "X");
 		Model config = ModelIOUtils.modelFromTurtle(configNamedBlockWithSubst());
 		Resource root = config.createResource("eh:/root");
@@ -168,5 +169,43 @@ public class TestMetaConfig {
 		Model expect = ModelIOUtils.modelFromTurtle(expectString);
 		ModelTestBase.assertIsoModels("", expect, meta);
 	}
+	protected String configErrorReusedName() {
+		return TestParseMetadataConfig.longString
+			( TestParseMetadataConfig.apiPrefixString
+			, TestParseMetadataConfig.eldaPrefixString
+			, TestParseMetadataConfig.rdfPrefixString
+			, TestParseMetadataConfig.rdfsPrefixString
+			, "@prefix : <eh:/> ."
+			, ""
+			, "<eh:/root> a api:API"
+			, "; elda:metadata ["
+			, "    api:name \"REPEATED\""
+			, "    ; <eh:/R> \"eh:/{B}\"^^rdfs:Resource"
+			, "    ]"
+			, "    , [api:name \"REPEATED\"]"
+			, "."
+			);
+	}
+	
+	@Test public void testBuildMetadataBlockError() {
+		Bindings b = new Bindings().put("B", "X");
+		Model config = ModelIOUtils.modelFromTurtle(configErrorReusedName());
+		Resource root = config.createResource("eh:/root");
+		
+		MetaConfig mc = new MetaConfig(root);
+		
+		Model meta = ModelFactory.createDefaultModel();
+		Resource metaRoot = meta.createResource("eh:/result");
+
+		try {
+			mc.addMetadata(metaRoot, b);
+			fail("should have detected reused name");
+		} catch (RuntimeException e) {
+			// As expected.
+		}
+		
+
+	}
+		
 		
 }
