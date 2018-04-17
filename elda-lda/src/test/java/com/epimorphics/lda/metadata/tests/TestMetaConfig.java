@@ -6,6 +6,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.EndpointMetadata;
 import com.epimorphics.lda.metadata.MetaConfig;
 import com.hp.hpl.jena.rdf.model.Model;
@@ -16,7 +17,7 @@ import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
 
 public class TestMetaConfig {
 
-	@Ignore @Test public void testEmptyConfig() {
+	@Test @Ignore public void testEmptyConfig() {
 		assertEquals(false, new MetaConfig().disableDefaultMetadata());
 		assertEquals(false, new MetaConfig(false).disableDefaultMetadata());
 		assertEquals(true, new MetaConfig(true).disableDefaultMetadata());
@@ -49,15 +50,15 @@ public class TestMetaConfig {
 			);
 	}
 	
-	@Ignore @Test public void testEnablePropertiesConfigAbsent() {
+	@Test @Ignore public void testEnablePropertiesConfigAbsent() {
 		testEnablePropertiesConfig(false, false, "");
 	}
 		
-	@Ignore @Test public void testEnablePropertiesConfigFalse() {
+	@Test @Ignore public void testEnablePropertiesConfigFalse() {
 		testEnablePropertiesConfig(false, false, "; elda:disable-default-metadata false");
 	}
 		
-	@Ignore @Test public void testEnablePropertiesConfigTrue() {
+	@Test @Ignore public void testEnablePropertiesConfigTrue() {
 		testEnablePropertiesConfig(false, true, "; elda:disable-default-metadata true");
 	}
 		
@@ -68,7 +69,7 @@ public class TestMetaConfig {
 		assertEquals(expectHardwired, mc.drop(config.createProperty("http://purl.org/dc/terms/hasPart")));
 		assertEquals(expectNotwired, mc.drop(config.createProperty("eh:/not-at-all")));
 	}
-	protected String configNamedBlock() {
+	protected String configNamedBlockNoSubst() {
 		return TestParseMetadataConfig.longString
 			( TestParseMetadataConfig.apiPrefixString
 			, TestParseMetadataConfig.eldaPrefixString
@@ -86,19 +87,86 @@ public class TestMetaConfig {
 			);
 	}
 	
-	@Test public void testBuildMetadataBlock() {
-		Model config = ModelIOUtils.modelFromTurtle(configNamedBlock());
+	@Test @Ignore public void testBuildMetadataBlockNoSubst() {
+		Bindings b = new Bindings();
+		Model config = ModelIOUtils.modelFromTurtle(configNamedBlockNoSubst());
 		Resource root = config.createResource("eh:/root");
 		
 		MetaConfig mc = new MetaConfig(root);
 		
 		Model meta = ModelFactory.createDefaultModel();
 		Resource metaRoot = meta.createResource("eh:/result");
-		mc.addMetadata(metaRoot);
+		mc.addMetadata(metaRoot, b);
 		
 		String expectString = "<eh:/result> <eh:/P> 10; <eh:/Q> <eh:/O>.";
 		Model expect = ModelIOUtils.modelFromTurtle(expectString);
 		ModelTestBase.assertIsoModels("", expect, meta);
+	}	
+	
+	protected String configNamedBlockWithSubst() {
+		return TestParseMetadataConfig.longString
+			( TestParseMetadataConfig.apiPrefixString
+			, TestParseMetadataConfig.eldaPrefixString
+			, TestParseMetadataConfig.rdfPrefixString
+			, TestParseMetadataConfig.rdfsPrefixString
+			, "@prefix : <eh:/> ."
+			, ""
+			, "<eh:/root> a api:API"
+			, "; elda:metadata ["
+			, "    api:name \"NameX\""
+			, "    ; <eh:/R> \"A{B}C\""
+			, "    ]"
+			, "."
+			);
 	}
 	
+	@Test @Ignore public void testBuildMetadataBlockWithSubst() {
+		Bindings b = new Bindings().put("B", "X");
+		Model config = ModelIOUtils.modelFromTurtle(configNamedBlockWithSubst());
+		Resource root = config.createResource("eh:/root");
+		
+		MetaConfig mc = new MetaConfig(root);
+		
+		Model meta = ModelFactory.createDefaultModel();
+		Resource metaRoot = meta.createResource("eh:/result");
+		mc.addMetadata(metaRoot, b);
+		
+		String expectString = "<eh:/result> <eh:/R> \"AXC\".";
+		Model expect = ModelIOUtils.modelFromTurtle(expectString);
+		ModelTestBase.assertIsoModels("", expect, meta);
+	}
+	
+	protected String configNamedBlockWithResource() {
+		return TestParseMetadataConfig.longString
+			( TestParseMetadataConfig.apiPrefixString
+			, TestParseMetadataConfig.eldaPrefixString
+			, TestParseMetadataConfig.rdfPrefixString
+			, TestParseMetadataConfig.rdfsPrefixString
+			, "@prefix : <eh:/> ."
+			, ""
+			, "<eh:/root> a api:API"
+			, "; elda:metadata ["
+			, "    api:name \"NameX\""
+			, "    ; <eh:/R> \"eh:/{B}\"^^rdfs:Resource"
+			, "    ]"
+			, "."
+			);
+	}
+	
+	@Test public void testBuildMetadataBlockWithResource() {
+		Bindings b = new Bindings().put("B", "X");
+		Model config = ModelIOUtils.modelFromTurtle(configNamedBlockWithResource());
+		Resource root = config.createResource("eh:/root");
+		
+		MetaConfig mc = new MetaConfig(root);
+		
+		Model meta = ModelFactory.createDefaultModel();
+		Resource metaRoot = meta.createResource("eh:/result");
+		mc.addMetadata(metaRoot, b);
+		
+		String expectString = "<eh:/result> <eh:/R> <eh:/X>.";
+		Model expect = ModelIOUtils.modelFromTurtle(expectString);
+		ModelTestBase.assertIsoModels("", expect, meta);
+	}
+		
 }

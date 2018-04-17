@@ -184,7 +184,7 @@ public class EndpointMetadata {
 		}
 		thisMetaPage.getModel().remove(toRemove);			
 		
-		mc.addMetadata(thisMetaPage);
+		mc.addMetadata(thisMetaPage, bindings);
 	}
 	
 	private static Resource firstOf(List<Resource> resultList) {

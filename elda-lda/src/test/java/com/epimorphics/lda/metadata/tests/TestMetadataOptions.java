@@ -70,6 +70,7 @@ public class TestMetadataOptions {
 		}
 	//
 	// api:items is a special case because it must always be there.
+	//
 		properties.remove(API.items);
 		expected.remove(API.items);
 	//

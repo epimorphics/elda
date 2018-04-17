@@ -6,19 +6,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
+import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFList;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceF;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.vocabulary.RDFS;
 
 public class MetaConfig {
-	
+
 	static class State {
 		final boolean enabled;
 		final Resource blockData;
@@ -129,7 +134,7 @@ public class MetaConfig {
 		return "<mc " + disableDefaultMetadata + " " + enabled + ">" + blocks;
 	}
 
-	public void addMetadata(Resource root) {		
+	public void addMetadata(Resource root, Bindings b) {		
 		Model target = root.getModel();
 		
 		for (String k: blocks.keySet()) {	
@@ -137,9 +142,23 @@ public class MetaConfig {
 		
 			if (block.enabled) {
 				for (Statement s: block.blockData.listProperties().toList()) {
-					target.add(root, s.getPredicate(), s.getObject());
+					target.add(root, s.getPredicate(), expand(b, s.getObject()));
 				}
 			}
 		}
+	}
+
+	protected static Model litModel = ModelFactory.createDefaultModel();
+
+	protected static final String RDFS_Resource = RDFS.Resource.getURI();
+	
+	private RDFNode expand(Bindings b, RDFNode O) {
+		
+		if (O.isResource()) return O;
+		String lex = O.asNode().getLiteralLexicalForm();
+		String typeURI = O.asNode().getLiteralDatatypeURI();
+		String expanded = b.expandVariables(lex);
+		if (RDFS_Resource.equals(typeURI)) return ResourceFactory.createResource(expanded);
+		return litModel.createTypedLiteral(expanded, typeURI);
 	}
 }
