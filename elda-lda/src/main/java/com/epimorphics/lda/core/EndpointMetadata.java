@@ -349,57 +349,6 @@ public class EndpointMetadata {
 		exec.addProperty( API.viewingResult, vr );
 	}
 
-	/**
-	    <p>
-	    	Create the optional endpoint metadata for this endpoint and query.
-	    	The metadata is in four parts: the other versions (aka views) of
-	    	this page, the other formats (aka renderers) of this page, the
-	    	bindings (values of variables, full URIs of shortnames) for this
-	    	page, and the execution description (which processor etc) for the
-	    	process that built this page.
-	    </p>
-	    <p>
-	    	Metadata that has been requested by the _metadata= query argument 
-	    	is copied into the result-set model. Unrequested metadata is stored
-	    	in the result-sets named metadata models in case it is requested by
-	    	a renderer (ie, the xslt renderer in the education example).
-	    </p>
-	*/
-	static void createOptionalMetadata
-		( boolean isListEndpoint
-		, CompleteContext cc
-		, Map<String, View> views
-		, Set<FormatNameAndType> formats
-		, MergedModels mm
-		, WantsMetadata wantsMeta
-		, SetsMetadata setsMeta
-		, String selectQuery
-		, String viewQuery
-		, Source source
-		, EndpointMetadata em 
-		) {
-		Model metaModel = mm.getMetaModel();
-		Model mergedModels = mm.getMergedModel();
-	//
-		Resource exec = metaModel.createResource();
-		Model versionsModel = ModelFactory.createDefaultModel();
-		Model formatsModel = ModelFactory.createDefaultModel();
-		Model bindingsModel = ModelFactory.createDefaultModel();
-		Model execution = ModelFactory.createDefaultModel();
-	//	
-		em.addVersions( versionsModel, cc, views );
-		em.addFormats( formatsModel, formats );
-		em.addBindings( mergedModels, bindingsModel, exec, cc );
-		em.addExecution( execution, exec );
-	//
-		em.addQueryMetadata( execution, exec, selectQuery, viewQuery, source, isListEndpoint );
-	//
-	    if (wantsMeta.wantsMetadata( "versions" )) metaModel.add( versionsModel ); else setsMeta.setMetadata( "versions", versionsModel );
-	    if (wantsMeta.wantsMetadata( "formats" )) metaModel.add( formatsModel );  else setsMeta.setMetadata( "formats", formatsModel );
-	    if (wantsMeta.wantsMetadata( "bindings" )) metaModel.add( bindingsModel ); else setsMeta.setMetadata( "bindings", bindingsModel );
-	    if (wantsMeta.wantsMetadata( "execution" )) metaModel.add( execution ); else setsMeta.setMetadata( "execution", execution );
-	}
-
 	public static Resource inValue( Model rsm, String s ) {
 		return rsm.createResource().addProperty( RDF.value, s );
 	}
