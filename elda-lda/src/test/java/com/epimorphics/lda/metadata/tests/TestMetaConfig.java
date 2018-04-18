@@ -192,12 +192,13 @@ public class TestMetaConfig {
 		Model config = ModelIOUtils.modelFromTurtle(configErrorReusedName());
 		Resource root = config.createResource("eh:/root");
 		
-		MetaConfig mc = new MetaConfig(root);
-		
-		Model meta = ModelFactory.createDefaultModel();
-		Resource metaRoot = meta.createResource("eh:/result");
-
 		try {
+
+			MetaConfig mc = new MetaConfig(root);
+		
+			Model meta = ModelFactory.createDefaultModel();
+			Resource metaRoot = meta.createResource("eh:/result");
+
 			mc.addMetadata(metaRoot, b);
 			fail("should have detected reused name");
 		} catch (RuntimeException e) {
