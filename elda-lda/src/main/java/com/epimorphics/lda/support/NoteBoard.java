@@ -16,10 +16,16 @@ public class NoteBoard {
 	/**
 	    The total number of results for this list endpoint query.
 	*/
-	public Integer totalResults;
+	public Integer totalResults = 0;
 	
 	/**
 	    The expiry date/time in milliseconds for this query result.
 	*/
-	public long expiresAt;
+	public long expiresAt = 0;
+	
+	/**
+	    true iff this query's metadata must include [a api:Page].
+	    Set when renderer known.
+	*/
+	public boolean demandPage = false;
 }

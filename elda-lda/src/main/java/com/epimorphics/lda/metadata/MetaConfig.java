@@ -1,5 +1,6 @@
 package com.epimorphics.lda.metadata;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -10,14 +11,12 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFList;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceF;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -142,18 +141,38 @@ public class MetaConfig {
 		return "<mc " + disableDefaultMetadata + " " + enabled + ">" + blocks;
 	}
 
-	public void addMetadata(Resource root, Bindings b) {		
+	public void addMetadata(Resource root, Bindings b) {
+		addMetadata(root, b, Collections.emptySet());
+	}
+	
+	public void addMetadata(Resource root, Bindings b, Set<String> options) {		
 		Model target = root.getModel();
+		
+		Map<String, Boolean> decoded = new HashMap<String, Boolean>();
+		
+		for (String option: options) {
+			if (option.startsWith("+")) {
+				decoded.put(option.substring(1), true);
+			} else if (option.startsWith("-")) {
+				decoded.put(option.substring(1), false);
+			} else {
+				// ignore
+			}
+		}
 		
 		for (String k: blocks.keySet()) {	
 			State block = blocks.get(k);
-		
-			if (block.enabled) {
+			Boolean qp = decoded.get(k);
+			if (block.enabled || qp != false) {
 				for (Statement s: block.blockData.listProperties().toList()) {
 					target.add(root, s.getPredicate(), expand(b, s.getObject()));
 				}
 			}
 		}
+		
+//		System.err.println(">> metadata setting ------------------");
+//		target.write(System.err, "TTL");
+//		System.err.println(">> -----------------------------------");
 	}
 
 	protected static Model litModel = ModelFactory.createDefaultModel();

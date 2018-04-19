@@ -167,6 +167,10 @@ public class TestGeneratedMetadata {
 
 			@Override public boolean wantsMetadata(String name) {
 				return true;
+			}
+			
+			@Override public Set<String> metaNames() {
+				return Collections.emptySet();
 			}};
 	//	
 		Map<String, View> views = new HashMap<String, View>();
@@ -216,6 +220,7 @@ public class TestGeneratedMetadata {
 			, formats
 			, details
 			, new HashSet<Resource>() // no licences
+			, false // don't demand API.Page.
 			);
 		return thisMetaPage;
 	}

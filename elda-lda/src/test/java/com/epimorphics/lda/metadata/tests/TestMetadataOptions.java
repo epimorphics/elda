@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -110,6 +111,9 @@ public class TestMetadataOptions {
 
 			@Override public boolean wantsMetadata(String name) {
 				return true;
+			}
+			@Override public Set<String> metaNames() {
+				return Collections.emptySet();
 			}};	
 			
 		EndpointDetails details = new EndpointDetails() {
@@ -160,6 +164,7 @@ public class TestMetadataOptions {
 			, new HashSet<FormatNameAndType>()
 			, details
 			, new HashSet<Resource>() // no licences
+			, false
 			);
 		return thisMetaPage;
 	}

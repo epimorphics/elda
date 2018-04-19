@@ -88,6 +88,7 @@ public class APIEndpointImpl implements APIEndpoint {
     }
             
     @Override public ResponseResult call(Request r, NoteBoard nb) {
+    	boolean demandPage = nb.demandPage;
 		URI key = Switches.stripCacheKey(r.bindings) ? r.getURIplain() : r.getURIwithFormat();
 		
     	Bindings b = r.bindings.copyWithDefaults( spec.getBindings() );
@@ -110,12 +111,12 @@ public class APIEndpointImpl implements APIEndpoint {
 //        	System.err.println(">>  Fresh.");
         	ResponseResult fresh = freshResponse(b, query, view, r, nb);
     		cache.store(key, fresh, nb.expiresAt);
-        	return decorate(false, b, query, fresh, r, nb);
+        	return decorate(demandPage, false, b, query, fresh, r, nb);
         } else {
 //        	System.err.println(">>  Re-use.");
         	// re-use the existing response-result
         	nb.expiresAt = fromCache.expiresAt;
-        	return decorate(true, b, query, fromCache.thing, r, nb);
+        	return decorate(demandPage, true, b, query, fromCache.thing, r, nb);
         }
     }
 
@@ -132,17 +133,17 @@ public class APIEndpointImpl implements APIEndpoint {
 	    return new ResponseResult(false, filtered, null, b);
     }
     
-    protected ResponseResult decorate(boolean isFromCache, Bindings b, APIQuery query, ResponseResult basis, Request r, NoteBoard nb) {
+    protected ResponseResult decorate(boolean demandPage, boolean isFromCache, Bindings b, APIQuery query, ResponseResult basis, Request r, NoteBoard nb) {
     //
 	    APIResultSet rs = new APIResultSet(basis.resultSet);
-		CompleteContext cc = createMetadata(r, nb, b, query, rs);
+		CompleteContext cc = createMetadata(demandPage, r, nb, b, query, rs);
 		return new ResponseResult(isFromCache, rs, cc.Do(), b);
     }
 
-	private CompleteContext createMetadata(Request r, NoteBoard nb, Bindings b, APIQuery query, APIResultSet filtered) {
+	private CompleteContext createMetadata(boolean demandPage, Request r, NoteBoard nb, Bindings b, APIQuery query, APIResultSet filtered) {
 		Context context = spec.getAPISpec().getShortnameService().asContext();
 		CompleteContext cc = new CompleteContext( r.mode, context, filtered.getModelPrefixes() );   
-	    createMetadata( r, cc, nb.totalResults, filtered, b, query );
+	    createMetadata( demandPage, r, cc, nb.totalResults, filtered, b, query );
 	    cc.include( filtered.getMergedModel() );
 		return cc;
 	}
@@ -202,7 +203,7 @@ public class APIEndpointImpl implements APIEndpoint {
 		return other;
 	}
 
-    private void createMetadata( APIEndpoint.Request r, CompleteContext cc, Integer totalResults, APIResultSet rs, Bindings bindings, APIQuery query ) {
+    private void createMetadata(boolean demandPage, APIEndpoint.Request r, CompleteContext cc, Integer totalResults, APIResultSet rs, Bindings bindings, APIQuery query ) {
 
     	URI uriWithFormat = r.getURIwithFormat();
 		boolean suppress_IPTO = bindings.getAsString( "_suppress_ipto", "no" ).equals( "yes" );
@@ -262,6 +263,7 @@ public class APIEndpointImpl implements APIEndpoint {
         	, formats
         	, details
         	, rs.getLicences()
+        	, demandPage
         	);   
     }
 

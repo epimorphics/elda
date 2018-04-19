@@ -76,6 +76,7 @@ public class EndpointMetadata {
 		, Set<FormatNameAndType> formats
 		, EndpointDetails details
 		, Set<Resource> licences
+		, boolean demandPage
 		) {
 	//
 		boolean listEndpoint = details.isListEndpoint();
@@ -170,21 +171,29 @@ public class EndpointMetadata {
 	    if (wantsMeta.wantsMetadata( "versions" )) metaModel1.add( versionsModel ); else setsMeta.setMetadata( "versions", versionsModel );
 	    if (wantsMeta.wantsMetadata( "formats" )) metaModel1.add( formatsModel );  else setsMeta.setMetadata( "formats", formatsModel );
 	    if (wantsMeta.wantsMetadata( "bindings" )) metaModel1.add( bindingsModel ); else setsMeta.setMetadata( "bindings", bindingsModel );
-	    if (wantsMeta.wantsMetadata( "execution" )) metaModel1.add( execution ); else setsMeta.setMetadata( "execution", execution );
-	    
+	    if (wantsMeta.wantsMetadata( "execution" )) metaModel1.add( execution ); else setsMeta.setMetadata( "execution", execution );  
 	//
-	    
 		MetaConfig mc = spec.getMetaConfig();
 		Model toRemove = ModelFactory.createDefaultModel();
 				
 		for (Statement s: thisMetaPage.listProperties().toList()) {
 			if (mc.drop(s.getPredicate())) {
-				if(!s.getPredicate().equals(ELDA_API.items)) toRemove.add(s);
+				boolean isItems = s.getPredicate().equals(ELDA_API.items);
+				// cater to requirements of velocity renderer.
+				boolean isTypePage = s.getPredicate().equals(RDF.type) && s.getObject().equals(API.Page);
+				
+				if (isItems) {
+					// do not remove
+				} else if (isTypePage) {
+					if (demandPage) {} else toRemove.add(s);
+				} else {
+					toRemove.add(s);
+				}
+				
 			}
 		}
 		thisMetaPage.getModel().remove(toRemove);			
-		
-		mc.addMetadata(thisMetaPage, bindings);
+		mc.addMetadata(thisMetaPage, bindings, wantsMeta.metaNames());
 	}
 	
 	private static Resource firstOf(List<Resource> resultList) {
