@@ -181,14 +181,16 @@ public class EndpointMetadata {
 				boolean isItems = s.getPredicate().equals(ELDA_API.items);
 				// cater to requirements of velocity renderer.
 				boolean isTypePage = s.getPredicate().equals(RDF.type) && s.getObject().equals(API.Page);
-				
-				if (isItems) {
-					// do not remove
-				} else if (isTypePage) {
-					if (demandPage) {} else toRemove.add(s);
-				} else {
-					toRemove.add(s);
-				}
+				boolean keep = isItems || (demandPage && isTypePage);
+				if (!keep) toRemove.add(s);
+// OLDER:				
+//				if (isItems) {
+//					// do not remove
+//				} else if (isTypePage) {
+//					if (demandPage) {} else toRemove.add(s);
+//				} else {
+//					toRemove.add(s);
+//				}
 				
 			}
 		}
