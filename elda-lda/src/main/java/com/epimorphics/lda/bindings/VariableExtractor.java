@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.vocabularies.API;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
@@ -53,6 +54,7 @@ public class VariableExtractor {
 			String name = getStringValue( v, API.name, null );
 			String language = getStringValue( v, API.lang, "" );
 			String type = getStringValue( v, API.type, null );
+			String mapName = getStringValue( v, ELDA_API.mapName, null);
 			Statement value = v.getProperty( API.value );
 			if (type == null && value != null && value.getObject().isLiteral())
 				type = emptyIfNull( value.getObject().asNode().getLiteralDatatypeURI() );
@@ -63,7 +65,7 @@ public class VariableExtractor {
 				type = "";
 			}
 			String valueString = getValueString( v, language, type );
-			Value var = new Value( valueString, language, type );
+			Value var = new Value( valueString, language, type, mapName );
 			bound.put( name, var ); 			
 			}
 		}

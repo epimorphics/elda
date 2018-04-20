@@ -170,6 +170,22 @@ elda:loadedFrom a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:mapName a rdf:Property
+	; rdfs:comment "specifies the mapName of a Value for variable lookup."
+	.
+
+elda:map a rdf:Property
+	; rdfs:comment "introduces a map declaration"
+	.
+
+elda:maplet a rdf:Property
+	; rdfs:comment "introduces one key-value pair of a map"
+	.
+
+elda:key a rdf:Property
+	; rdfs:comment "the key of a maplet"
+	.
+
 elda:match a rdf:Property
 	; rdfs:comment ""
 	.

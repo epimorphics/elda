@@ -30,6 +30,7 @@ import com.epimorphics.lda.support.MultiMap;
 	The special sequence {\ represents an { that is not part of an expansion.
 */
 public class Bindings implements Lookup {
+	
 	static Logger log = LoggerFactory.getLogger(Bindings.class);
 
 	protected final Map<String, Object> vars = new HashMap<String, Object>();
@@ -158,7 +159,7 @@ public class Bindings implements Lookup {
 	public Value getUnslashed(String name) {
 		Value v = get(name);
 		if (v == null) return null;
-		return v.replaceBy(v.spelling().replace("{\\}", "{"));
+		return v.replaceBy(v.spelling(this).replace("{\\}", "{"));
 	}
 	
 	/**
@@ -194,7 +195,7 @@ public class Bindings implements Lookup {
 	*/
 	@Override public String getValueString(String name) {
 		Value v = get(name);
-		return v == null ? null : v.spelling();
+		return v == null ? null : v.spelling(this);
 	}
 
 	/**
@@ -202,7 +203,7 @@ public class Bindings implements Lookup {
 		or the value of <code>ifAbsent</code> if it is not bound.
 	*/
 	public String getAsString(String name, String ifAbsent) {
-		return vars.containsKey(name) ? get(name).spelling() : ifAbsent;
+		return vars.containsKey(name) ? get(name).spelling(this) : ifAbsent;
 	}
 
 	/**
@@ -253,7 +254,7 @@ public class Bindings implements Lookup {
 	}
 
 	private Value evaluate(String name, Value v, List<String> seen) {
-		String vs = v.spelling();
+		String vs = v.spelling(this);
 		if (vs == null || vs.indexOf('{') < 0)
 			return v;
 		String expanded = expandVariables(vs, seen);
@@ -297,7 +298,7 @@ public class Bindings implements Lookup {
 				seen.add(name);
 				Value v = evaluate(name, thisV, seen);
 				seen.remove(seen.size() - 1);
-				String value = v.spelling(); // values.getStringValue( name );
+				String value = v.spelling(this); // values.getStringValue( name );
 				if (value == null) {
 					sb.append("{").append(name).append("}");
 					// issue #177

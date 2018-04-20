@@ -8,6 +8,7 @@
 
 package com.epimorphics.lda.rdfq;
 
+import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
@@ -21,22 +22,28 @@ public class Value extends Term
 	final String spelling;
 	final String language;
 	final String datatype;
+	final String mapName;
 	
 	public static final Value emptyPlain = new Value("");
 	
 	public Value( String spelling ) 
 		{ this( spelling, "", "" ); }
+
+	public Value( String spelling, String language, String datatype ) {
+		this(spelling, language, datatype, null);
+	}
 	
-	public Value( String spelling, String language, String datatype ) 
+	public Value( String spelling, String language, String datatype, String mapName ) 
 		{ 
 		this.spelling = spelling; 
 		this.language = language == null ? "" : language; 
 		this.datatype = datatype == null ? "" : datatype; 
+		this.mapName  = mapName == null ? "" : mapName;
 		}
 	
 	@Override public String toString() 
 		{
-		return "{" + spelling + "|" + language + "|" + datatype + "}";
+		return "{"+spelling + "|" + language + "|" + datatype + "}";
 		}
 	
 	@Override public String asSparqlTerm( PrefixLogger pl )
@@ -54,10 +61,19 @@ public class Value extends Term
 	    one, but with a new lexical form aka valueString vs.
 	 */
 	@Override public Value replaceBy( String vs ) 
-		{ return new Value( vs, language, datatype ); }
+		{ return new Value( vs, language, datatype, mapName ); }
 	
-	@Override public String spelling() 
-		 { return spelling; }
+	public String spelling(Lookup l) {
+		if (mapName.equals("")) {
+			return spelling();
+		} else {
+			return l.getValueString(mapName);
+		}
+	}
+	
+	@Override public String spelling() {
+		return spelling; 
+	}
 	
 	public String lang() 
 	 	{ return language; }

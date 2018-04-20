@@ -42,6 +42,12 @@ hello:hello-world-again a api:API
 	; api:defaultViewer api:labelledDescribeViewer
 	; api:viewer [a api:Viewer; api:name "empty"; api:properties ""]
 
+	; elda:map
+		[ api:name "nameOfMap"
+		; elda:maplet [elda:key "key_A"; api:value: "result_A"]
+		; elda:maplet [elda:key "key_B"; api:value: "result_B"]
+		]
+	
 	; api:variable [api:name "_velocityPath"; api:value "velocity/"]
 	; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
     

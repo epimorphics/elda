@@ -14,11 +14,14 @@ package com.epimorphics.lda.specs;
 import static com.epimorphics.util.RDFUtils.getStringValue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.epimorphics.converters.Value;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
@@ -81,6 +84,8 @@ public class APISpec extends SpecCommon {
 	
 	protected final ModelPrefixEditor modelPrefixEditor = new ModelPrefixEditor();
 	
+	protected final Map<String, Map<String, Value>> valueMaps = new HashMap<String, Map<String, Value>>();
+	
 	protected final Boolean enableCounting;
 	
 	protected final long cacheExpiryMilliseconds;
@@ -125,11 +130,27 @@ public class APISpec extends SpecCommon {
         this.enableCounting = RDFUtils.getOptionalBooleanValue( root, ELDA_API.enableCounting, Boolean.FALSE );        
 		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( root.getModel() );
 	//
+		extractValueMaps(root);
 		setDefaultSuffixName(bindings, root);      
 		extractEndpointSpecifications( root );
         extractModelPrefixEditor( root );
     }
     
+	private void extractValueMaps(Resource root) {
+		for(Statement s: root.listProperties(ELDA_API.map).toList()) {
+			Resource map = s.getResource();
+			String name = getStringValue(map, ELDA_API.name);			
+			List<Statement> maplets = map.listProperties(ELDA_API.maplet).toList();
+			
+			for (Statement maplet: maplets) {
+				Resource mp = maplet.getResource();
+				String key = getStringValue(mp, ELDA_API.key);
+				String value = getStringValue(mp, ELDA_API.value);
+
+			}
+		}
+	}
+
 	public static void setDefaultSuffixName(Bindings b, Resource ep) {
 		if (ep.hasProperty( API.defaultFormatter)) {
 			Resource r = ep.getProperty( API.defaultFormatter ).getObject().asResource();
