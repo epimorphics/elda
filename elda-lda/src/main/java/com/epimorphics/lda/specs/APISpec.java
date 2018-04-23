@@ -21,13 +21,13 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.converters.Value;
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.query.QueryParameter;
+import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
@@ -147,6 +147,11 @@ public class APISpec extends SpecCommon {
 				String key = getStringValue(mp, ELDA_API.key);
 				String value = getStringValue(mp, ELDA_API.value);
 
+				Map<String, Value> vm = valueMaps.get(name);
+				if (vm == null) {
+					vm = new HashMap<String, Value>();
+				}
+				vm.put(key, new Value(value));
 			}
 		}
 	}

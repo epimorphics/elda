@@ -64,9 +64,11 @@ public class Value extends Term
 		{ return new Value( vs, language, datatype, mapName ); }
 	
 	public String spelling(Lookup l) {
+		System.err.println(">> spelling: " + spelling);
 		if (mapName.equals("")) {
 			return spelling();
 		} else {
+			System.err.println(">> mapName = " + mapName);
 			return l.getValueString(mapName);
 		}
 	}
