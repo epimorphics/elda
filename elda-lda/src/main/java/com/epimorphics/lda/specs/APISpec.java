@@ -150,6 +150,7 @@ public class APISpec extends SpecCommon {
 				Map<String, Value> vm = valueMaps.get(name);
 				if (vm == null) {
 					vm = new HashMap<String, Value>();
+					valueMaps.put(name,  vm);
 				}
 				vm.put(key, new Value(value));
 			}

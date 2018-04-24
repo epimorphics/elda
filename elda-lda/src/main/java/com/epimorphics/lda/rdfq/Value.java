@@ -41,6 +41,10 @@ public class Value extends Term
 		this.mapName  = mapName == null ? "" : mapName;
 		}
 	
+	public String mapName() {
+		return mapName;
+	}
+	
 	@Override public String toString() 
 		{
 		return "{"+spelling + "|" + language + "|" + datatype + "}";
@@ -64,11 +68,10 @@ public class Value extends Term
 		{ return new Value( vs, language, datatype, mapName ); }
 	
 	public String spelling(Lookup l) {
-		System.err.println(">> spelling: " + spelling);
 		if (mapName.equals("")) {
 			return spelling();
 		} else {
-			System.err.println(">> mapName = " + mapName);
+			System.err.println(">> ------------------- mapName = " + mapName);
 			return l.getValueString(mapName);
 		}
 	}

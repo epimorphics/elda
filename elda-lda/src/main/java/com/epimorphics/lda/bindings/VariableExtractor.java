@@ -53,7 +53,7 @@ public class VariableExtractor {
 			Resource v = s.getResource();
 			String name = getStringValue( v, API.name, null );
 			String language = getStringValue( v, API.lang, "" );
-			String type = getStringValue( v, API.type, null );
+			String type = getStringValue( v, API.type, null );			
 			String mapName = getStringValue( v, ELDA_API.mapName, null);
 			Statement value = v.getProperty( API.value );
 			if (type == null && value != null && value.getObject().isLiteral())
