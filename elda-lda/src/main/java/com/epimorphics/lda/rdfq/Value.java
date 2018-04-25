@@ -8,6 +8,9 @@
 
 package com.epimorphics.lda.rdfq;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.util.RDFUtils;
@@ -67,15 +70,17 @@ public class Value extends Term
 	@Override public Value replaceBy( String vs ) 
 		{ return new Value( vs, language, datatype, mapName ); }
 	
-	public String spelling(Lookup l) {
+	public String spelling(MapLookup l) {
 		if (mapName.equals("")) {
 			return spelling();
 		} else {
-			System.err.println(">> ------------------- mapName = " + mapName);
-			return l.getValueString(mapName);
+			String key = spelling, mapName = this.mapName;
+			Map<String, String> map = l.getMap(mapName);
+			String v = map.get(key);
+			return v == null ? "ABSENT" : v; 
 		}
 	}
-	
+
 	@Override public String spelling() {
 		return spelling; 
 	}

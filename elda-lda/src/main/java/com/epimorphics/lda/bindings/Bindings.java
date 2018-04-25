@@ -69,6 +69,10 @@ public class Bindings implements Lookup {
 		this(bindings, parameterNames, bindings.ufr);
 	}
 
+	public interface MapLookup {
+		public Map<String, String> getMap();
+	}
+	
 	/**
 		Answer a copy of this Bindings with the given defaults.
 	*/

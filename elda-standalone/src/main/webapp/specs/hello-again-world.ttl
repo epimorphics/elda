@@ -49,8 +49,6 @@ hello:hello-world-again a api:API
 		]
 		
 	; api:variable [ api:name "exMapped"; api:value "key_A"; elda:mapName "nameOfMap"]
-	; api:variable [ api:name "alpha"; api:value "alphaValue"]
-	; api:variable [ api:name "beta"; api:value "betaValue"]
 	
 	; api:variable [api:name "_velocityPath"; api:value "velocity/"]
 	; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
