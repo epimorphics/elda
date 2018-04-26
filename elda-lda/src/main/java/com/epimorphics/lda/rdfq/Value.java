@@ -70,16 +70,16 @@ public class Value extends Term
 	@Override public Value replaceBy( String vs ) 
 		{ return new Value( vs, language, datatype, mapName ); }
 	
-	public String spelling(MapLookup l) {
-		if (mapName.equals("")) {
-			return spelling();
-		} else {
-			String key = spelling, mapName = this.mapName;
-			Map<String, String> map = l.getMap(mapName);
-			String v = map.get(key);
-			return v == null ? "ABSENT" : v; 
-		}
-	}
+//	public String spelling() {
+//		if (mapName.equals("")) {
+//			return spelling();
+//		} else {
+//			String key = spelling, mapName = this.mapName;
+//			Map<String, String> map = new HashMap<String, String>();
+//			String v = map.get(key);
+//			return v == null ? "ABSENT" : v; 
+//		}
+//	}
 
 	@Override public String spelling() {
 		return spelling; 

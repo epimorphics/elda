@@ -131,6 +131,7 @@ public class APISpec extends SpecCommon {
 		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( root.getModel() );
 	//
 		extractValueMaps(root);
+		// bindings.setAPISPec(this);
 		setDefaultSuffixName(bindings, root);      
 		extractEndpointSpecifications( root );
         extractModelPrefixEditor( root );
@@ -150,7 +151,6 @@ public class APISpec extends SpecCommon {
 				Map<String, Value> vm = valueMaps.get(name);
 				if (vm == null) {
 					vm = new HashMap<String, Value>();
-					valueMaps.put(name,  vm);
 				}
 				vm.put(key, new Value(value));
 			}
