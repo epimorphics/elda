@@ -37,10 +37,13 @@ public class Bindings implements Lookup {
 	protected final Set<String> parameterNames = new HashSet<String>();
 
 	protected final URLforResource ufr;
+	
+	protected final Lookup mapLookup ; // = Lookup.empty;
 
 	public Bindings(Bindings initial, Set<String> parameterNames, URLforResource ufr) {
 		this.ufr = ufr;
 		this.putAll(initial);
+		this.mapLookup = initial.mapLookup;
 		this.parameterNames.addAll(parameterNames);
 	}
 
@@ -57,15 +60,22 @@ public class Bindings implements Lookup {
 	}
 
 	public Bindings(URLforResource ufr) {
+		this.mapLookup = Lookup.empty;
 		this.ufr = ufr;
 	}
 
 	public Bindings() {
 		this.ufr = URLforResource.alwaysFails;
+		this.mapLookup = Lookup.empty;
 	}
 
 	public Bindings(Bindings bindings, Set<String> parameterNames) {
 		this(bindings, parameterNames, bindings.ufr);
+	}
+
+	public Bindings(Lookup mapLookup) {
+		this.ufr = URLforResource.alwaysFails;
+		this.mapLookup = mapLookup;
 	}
 
 	/**
@@ -193,8 +203,11 @@ public class Bindings implements Lookup {
 		<code>Lookup</code>.
 	*/
 	@Override public String getValueString(String name) {
+		
+//		System.err.println(mapLookup);
+		
 		Value v = get(name);
-		return v == null ? null : v.spelling();
+		return v == null ? null : v.spelling(mapLookup);
 	}
 
 	/**
@@ -373,5 +386,9 @@ public class Bindings implements Lookup {
 			this.put(name, (v == null ? new Value(e.getValue()) : v.replaceBy(e.getValue())));
 		}
 		return this;
+	}
+
+	public Lookup getMapLookup() {
+		return mapLookup;
 	}
 }

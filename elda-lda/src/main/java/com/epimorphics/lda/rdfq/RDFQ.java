@@ -62,7 +62,7 @@ public class RDFQ
 	public static Value literal( double d )
 		{
 		String spelling = Double.toString( d );
-		return new Value( spelling, "",typeDouble ) 
+		return new Value( spelling, "",typeDouble, "" ) 
 			{
 			@Override public String asSparqlTerm( PrefixLogger pl ) { return spelling; }
 			};
@@ -71,7 +71,7 @@ public class RDFQ
 	public static Value literal( int i )
 		{
 		String spelling = Integer.toString( i );
-		return new Value( spelling, "", typeInteger ) 
+		return new Value( spelling, "", typeInteger, "" ) 
 			{
 			@Override public String asSparqlTerm( PrefixLogger pl ) { return spelling; }
 			};
@@ -93,7 +93,7 @@ public class RDFQ
 		{ return new Value( spelling ); }
 	
 	public static Value literal( String spelling, String language, String datatype ) 
-		{ return new Value( spelling, language, datatype ); }
+		{ return new Value( spelling, language, datatype, "" ); }
 	
 	public static Variable var( String name ) 
 		{ return new Variable( name ); }

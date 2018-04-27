@@ -128,9 +128,9 @@ public class TestAPISpecExtractsVariables
 
 	private Value asVar( String name, Node n ) 
 		{
-		if (n.isURI()) return new Value( n.getURI(), "", RDFS.Resource.getURI() );
+		if (n.isURI()) return new Value( n.getURI(), "", RDFS.Resource.getURI(), "" );
 		if (n.isLiteral()) return new Value
-			( n.getLiteralLexicalForm(), n.getLiteralLanguage(), fixNull(n.getLiteralDatatypeURI()) );
+			( n.getLiteralLexicalForm(), n.getLiteralLanguage(), fixNull(n.getLiteralDatatypeURI()), "" );
 		throw new RuntimeException( "cannot convert " + n + " to an RDFQ node" );
 		}
 

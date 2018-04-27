@@ -62,7 +62,7 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
     public final int defaultPageSize;
     public final int maxPageSize;
 
-    protected final Bindings bindings = new Bindings();
+    protected final Bindings bindings;
     
     protected final Set<String> explicitViewNames = new HashSet<String>();
     
@@ -81,8 +81,13 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
     	checkEndpointType( endpoint );
     	this.apiSpec = apiSpec;
     	wantsContext = endpoint.hasLiteral( ELDA_API.wantsContext, true );
+    	
+    	this.bindings = new Bindings(apiSpec.mapLookup);
     	bindings.putAll( apiSpec.bindings );
         bindings.putAll( VariableExtractor.findAndBindVariables( bindings, endpoint ) );
+        
+        
+        
         defaultLanguage = getStringValue(endpoint, API.lang, apiSpec.getDefaultLanguage());
     	defaultPageSize = getIntValue( endpoint, API.defaultPageSize, apiSpec.defaultPageSize );
 		maxPageSize = getIntValue( endpoint, API.maxPageSize, apiSpec.maxPageSize );

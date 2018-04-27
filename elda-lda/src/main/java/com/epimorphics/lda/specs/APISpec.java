@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
@@ -73,7 +74,9 @@ public class APISpec extends SpecCommon {
     protected final Factories factoryTable;
     protected final boolean hasParameterBasedContentNegotiation;
     protected final List<Source> describeSources;
-    public final Bindings bindings = new Bindings();
+    public final Bindings bindings;
+    
+    protected final Lookup mapLookup;
     
     protected final String prefixPath;
 	
@@ -117,7 +120,9 @@ public class APISpec extends SpecCommon {
         this.graphTemplate = getStringValue(root, ELDA_API.graphTemplate, null);
         this.defaultLanguage = getStringValue(root, API.lang, null);
         this.base = getStringValue( root, API.base, null );
-        this.bindings.putAll( VariableExtractor.findAndBindVariables(root) );
+        this.mapLookup = createMapLookup(root);
+        this.bindings = new Bindings(mapLookup);
+        VariableExtractor.findAndBindVariables(this.bindings, root);
         this.factoryTable = RendererFactoriesSpec.createFactoryTable( root );
         this.hasParameterBasedContentNegotiation = root.hasProperty( API.contentNegotiation, API.parameterBased ); 
 		this.cachePolicyName = getStringValue( root, ELDA_API.cachePolicyName, "default" );
@@ -128,8 +133,25 @@ public class APISpec extends SpecCommon {
 		setDefaultSuffixName(bindings, root);      
 		extractEndpointSpecifications( root );
         extractModelPrefixEditor( root );
-    }
+        }
     
+    static int mapCount = 0;
+    int mapIndex = ++mapCount;
+    
+	private Lookup createMapLookup(Resource root) {
+		return new Lookup() {
+
+			@Override public String toString() {
+				return "IdentityLookup " + mapIndex;
+			}
+			
+			@Override public String getValueString(String name) {
+				return name;
+			}
+			
+		};
+	}
+
 	public static void setDefaultSuffixName(Bindings b, Resource ep) {
 		if (ep.hasProperty( API.defaultFormatter)) {
 			Resource r = ep.getProperty( API.defaultFormatter ).getObject().asResource();
