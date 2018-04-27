@@ -63,6 +63,8 @@ public class Value extends Term
 		 { return spelling; }
 	
 	public String spelling(Lookup l) {
+//		if (true) return spelling;
+		
 		if (mapName.length() > 0) {
 			String vs = l.getValueString(spelling);
 			return vs == null ? "ABSENT" : vs;

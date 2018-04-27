@@ -168,6 +168,7 @@ public class Bindings implements Lookup {
 	public Value getUnslashed(String name) {
 		Value v = get(name);
 		if (v == null) return null;
+		if (v.spelling() == null) return null;
 		return v.replaceBy(v.spelling().replace("{\\}", "{"));
 	}
 	

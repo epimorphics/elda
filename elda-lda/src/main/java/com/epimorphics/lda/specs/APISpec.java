@@ -30,12 +30,18 @@ import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.sources.*;
+import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
@@ -120,7 +126,7 @@ public class APISpec extends SpecCommon {
         this.graphTemplate = getStringValue(root, ELDA_API.graphTemplate, null);
         this.defaultLanguage = getStringValue(root, API.lang, null);
         this.base = getStringValue( root, API.base, null );
-        this.mapLookup = createMapLookup(root);
+        this.mapLookup = createMapLookup(root, this.dataSource);
         this.bindings = new Bindings(mapLookup);
         VariableExtractor.findAndBindVariables(this.bindings, root);
         this.factoryTable = RendererFactoriesSpec.createFactoryTable( root );
@@ -138,15 +144,47 @@ public class APISpec extends SpecCommon {
     static int mapCount = 0;
     int mapIndex = ++mapCount;
     
-	private Lookup createMapLookup(Resource root) {
+	private Lookup createMapLookup(Resource root, final Source s) {
 		return new Lookup() {
 
+			String result = null;
+			
 			@Override public String toString() {
 				return "IdentityLookup " + mapIndex;
 			}
 			
 			@Override public String getValueString(String name) {
-				return name;
+				
+				if (name == null) return null;
+				
+				String prefix = "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"; 
+				String preSelect = "select ?x where {?x rdfs:label 'PARAM'} limit 1";
+				
+				System.err.println(">> preSelect: " + preSelect);
+				System.err.println(">> name:      " + name);				
+				
+				String selected = preSelect.replace("PARAM", name);
+				String queryString = prefix + selected;
+				
+				Query q = QueryFactory.create(queryString);
+				
+				ResultSetConsumer c = new ResultSetConsumer() {
+
+					@Override public void setup(QueryExecution qe) {						
+					}
+
+					@Override public void consume(ResultSet rs) {
+						while (rs.hasNext()) {
+							QuerySolution qs = rs.next();
+							RDFNode n = qs.get("x");
+							result = n.toString();
+						}
+					}
+				};
+				
+				s.executeSelect(q, c);
+				
+				return result;
 			}
 			
 		};
