@@ -30,8 +30,8 @@ public class Value extends Term
 		{ this( spelling, "", "", "" ); }
 	
 	public Value( String spelling, String language, String datatype, String mapName ) 
-		{ 
-		this.spelling = spelling; 
+		{ 		
+		this.spelling = spelling == null ? "" : spelling; 
 		this.language = language == null ? "" : language; 
 		this.datatype = datatype == null ? "" : datatype; 
 		this.mapName  = mapName == null  ? "" : mapName;
