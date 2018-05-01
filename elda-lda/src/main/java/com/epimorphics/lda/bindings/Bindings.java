@@ -181,6 +181,15 @@ public class Bindings implements Lookup {
 
 	private Value getValue(String name) {
 		Value v = getUnexpandedValue(name);
+		
+		if (v == null) return null;
+		
+		String mapName = v.getMapName();
+		if (mapName.length() > 0) {
+			String key = v.spelling();
+			String value = mapLookup.getValueString(key);
+			System.err.println(">> seeing(" + name + ") " + key + " --> " + value);
+		}
 		return v == null ? null : evaluate(name, v, new ArrayList<String>());
 	}
 

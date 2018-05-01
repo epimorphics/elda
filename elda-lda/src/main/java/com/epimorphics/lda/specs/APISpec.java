@@ -146,7 +146,7 @@ public class APISpec extends SpecCommon {
 			}
 			
 			@Override public String getValueString(String name) {
-				return name;
+				return name + " /lookedup";
 			}
 			
 		};

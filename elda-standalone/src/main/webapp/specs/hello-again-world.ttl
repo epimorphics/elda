@@ -90,7 +90,7 @@ hello:hello-world-again a api:API
     ; elda:enableCounting true
    	; elda:cacheExpiryTime "10m"
    	
-   	; api:variable [api:name "var_A"; api:value: "key_A"; elda:mapName "someMap"]
+   	; api:variable [api:name "var_A"; api:value "key_A"; elda:mapName "someMap"]
 	.
 	
 <http://localhost:3030/ds/query> 

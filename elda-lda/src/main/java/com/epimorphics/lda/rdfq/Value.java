@@ -39,7 +39,7 @@ public class Value extends Term
 		
 	@Override public String toString() 
 		{
-		return "{" + spelling + "|" + language + "|" + datatype + "}";
+		return "{" + spelling + "|" + language + "|" + datatype + "|" + mapName + "}";
 		}
 	
 	@Override public String asSparqlTerm( PrefixLogger pl )
@@ -52,6 +52,9 @@ public class Value extends Term
 		return lf;
 		}
 	
+	public String getMapName() {
+		return mapName;
+	}
 	/**
 	    Answer a new Value with the same language and datatype as this
 	    one, but with a new lexical form aka valueString vs.
