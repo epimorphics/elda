@@ -76,7 +76,7 @@ public class APISpec extends SpecCommon {
     protected final List<Source> describeSources;
     public final Bindings bindings;
     
-    protected final Lookup mapLookup;
+    protected final Bindings.MapLookup mapLookup;
     
     protected final String prefixPath;
 	
@@ -138,14 +138,14 @@ public class APISpec extends SpecCommon {
     static int mapCount = 0;
     int mapIndex = ++mapCount;
     
-	private Lookup createMapLookup(Resource root) {
-		return new Lookup() {
+	private Bindings.MapLookup createMapLookup(Resource root) {
+		return new Bindings.MapLookup() {
 
 			@Override public String toString() {
 				return "IdentityLookup " + mapIndex;
 			}
 			
-			@Override public String getValueString(String name) {
+			@Override public String getValueString(String mapName, String name) {
 				return name + " /lookedup";
 			}
 			

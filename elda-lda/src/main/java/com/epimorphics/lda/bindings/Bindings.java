@@ -38,7 +38,19 @@ public class Bindings implements Lookup {
 
 	protected final URLforResource ufr;
 	
-	protected final Lookup mapLookup ; // = Lookup.empty;
+	public interface MapLookup {
+		public String getValueString(String mapName, String keyValue);
+		
+		public static final MapLookup empty = new MapLookup() {
+
+			@Override public String getValueString(String mapName, String keyValue) {
+				return null;
+			}
+				
+		};
+	}
+	
+	protected final MapLookup mapLookup; 
 
 	public Bindings(Bindings initial, Set<String> parameterNames, URLforResource ufr) {
 		this.ufr = ufr;
@@ -60,20 +72,20 @@ public class Bindings implements Lookup {
 	}
 
 	public Bindings(URLforResource ufr) {
-		this.mapLookup = Lookup.empty;
+		this.mapLookup = MapLookup.empty;
 		this.ufr = ufr;
 	}
 
 	public Bindings() {
 		this.ufr = URLforResource.alwaysFails;
-		this.mapLookup = Lookup.empty;
+		this.mapLookup = MapLookup.empty;
 	}
 
 	public Bindings(Bindings bindings, Set<String> parameterNames) {
 		this(bindings, parameterNames, bindings.ufr);
 	}
 
-	public Bindings(Lookup mapLookup) {
+	public Bindings(MapLookup mapLookup) {
 		this.ufr = URLforResource.alwaysFails;
 		this.mapLookup = mapLookup;
 	}
@@ -187,8 +199,8 @@ public class Bindings implements Lookup {
 		String mapName = v.getMapName();
 		if (mapName.length() > 0) {
 			String key = v.spelling();
-			String value = mapLookup.getValueString(key);
-			System.err.println(">> seeing(" + name + ") " + key + " --> " + value);
+			String value = mapLookup.getValueString(mapName, key);
+			v = v.replaceBy(value);
 		}
 		return v == null ? null : evaluate(name, v, new ArrayList<String>());
 	}
@@ -216,7 +228,7 @@ public class Bindings implements Lookup {
 //		System.err.println(mapLookup);
 		
 		Value v = get(name);
-		return v == null ? null : v.spelling(mapLookup);
+		return v == null ? null : v.spelling();
 	}
 
 	/**
@@ -397,7 +409,7 @@ public class Bindings implements Lookup {
 		return this;
 	}
 
-	public Lookup getMapLookup() {
+	public MapLookup getMapLookup() {
 		return mapLookup;
 	}
 }
