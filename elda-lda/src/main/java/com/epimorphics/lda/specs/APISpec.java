@@ -30,12 +30,18 @@ import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.sources.*;
+import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryFactory;
+import com.hp.hpl.jena.query.QuerySolution;
+import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
@@ -120,7 +126,7 @@ public class APISpec extends SpecCommon {
         this.graphTemplate = getStringValue(root, ELDA_API.graphTemplate, null);
         this.defaultLanguage = getStringValue(root, API.lang, null);
         this.base = getStringValue( root, API.base, null );
-        this.mapLookup = createMapLookup(root);
+        this.mapLookup = createMapLookup(root, this.dataSource);
         this.bindings = new Bindings(mapLookup);
         VariableExtractor.findAndBindVariables(this.bindings, root);
         this.factoryTable = RendererFactoriesSpec.createFactoryTable( root );
@@ -138,15 +144,35 @@ public class APISpec extends SpecCommon {
     static int mapCount = 0;
     int mapIndex = ++mapCount;
     
-	private Bindings.MapLookup createMapLookup(Resource root) {
+	private Bindings.MapLookup createMapLookup(Resource root, final Source ds) {
 		return new Bindings.MapLookup() {
 
 			@Override public String toString() {
-				return "IdentityLookup " + mapIndex;
+				return "SourceMap";
 			}
 			
-			@Override public String getValueString(String mapName, String name) {
-				return name + " /lookedup";
+			@Override public String getValueString(String mapName, String queryString) {
+				
+				String [] result = new String[] {""};
+				
+				ResultSetConsumer rsc = new ResultSetConsumer() {
+
+					@Override public void setup(QueryExecution qe) {						
+					}
+
+					@Override public void consume(ResultSet rs) {
+						while (rs.hasNext()) {
+							QuerySolution qs = rs.next();
+							result[0] = qs.get("x").toString();
+						}
+						
+					}
+					
+				};
+				Query query = QueryFactory.create(queryString);
+				ds.executeSelect(query, rsc);
+				
+				return result[0];
 			}
 			
 		};

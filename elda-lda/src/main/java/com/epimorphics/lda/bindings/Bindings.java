@@ -199,7 +199,12 @@ public class Bindings implements Lookup {
 		String mapName = v.getMapName();
 		if (mapName.length() > 0) {
 			String key = v.spelling();
-			String value = mapLookup.getValueString(mapName, key);
+			String expandedKey = expandVariables(key);
+			System.err.println(">> expanded key: '" + expandedKey + "'");
+			String bracedKey = expandedKey.replace("((", "{").replace("))", "}");
+			System.err.println(">> braced key: '" + bracedKey + "'");
+			String value = mapLookup.getValueString(mapName, bracedKey);
+			System.err.println(">> returned value: '" + value + "'");
 			v = v.replaceBy(value);
 		}
 		return v == null ? null : evaluate(name, v, new ArrayList<String>());
