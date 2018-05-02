@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.Lookup;
+import com.epimorphics.lda.bindings.MapLookup;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
@@ -82,7 +83,7 @@ public class APISpec extends SpecCommon {
     protected final List<Source> describeSources;
     public final Bindings bindings;
     
-    protected final Bindings.MapLookup mapLookup;
+    protected final MapLookup mapLookup;
     
     protected final String prefixPath;
 	
@@ -144,8 +145,8 @@ public class APISpec extends SpecCommon {
     static int mapCount = 0;
     int mapIndex = ++mapCount;
     
-	private Bindings.MapLookup createMapLookup(Resource root, final Source ds) {
-		return new Bindings.MapLookup() {
+	private MapLookup createMapLookup(Resource root, final Source ds) {
+		return new MapLookup() {
 
 			@Override public String toString() {
 				return "SourceMap";

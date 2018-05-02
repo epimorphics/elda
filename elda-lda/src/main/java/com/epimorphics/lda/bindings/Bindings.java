@@ -38,18 +38,6 @@ public class Bindings implements Lookup {
 
 	protected final URLforResource ufr;
 	
-	public interface MapLookup {
-		public String getValueString(String mapName, String keyValue);
-		
-		public static final MapLookup empty = new MapLookup() {
-
-			@Override public String getValueString(String mapName, String keyValue) {
-				return null;
-			}
-				
-		};
-	}
-	
 	protected final MapLookup mapLookup; 
 
 	public Bindings(Bindings initial, Set<String> parameterNames, URLforResource ufr) {
@@ -193,7 +181,6 @@ public class Bindings implements Lookup {
 
 	private Value getValue(String name) {
 		Value v = getUnexpandedValue(name);
-		
 		if (v == null) return null;
 		
 		String mapName = v.getMapName();
@@ -207,7 +194,7 @@ public class Bindings implements Lookup {
 			System.err.println(">> returned value: '" + value + "'");
 			v = v.replaceBy(value);
 		}
-		return v == null ? null : evaluate(name, v, new ArrayList<String>());
+		return evaluate(name, v, new ArrayList<String>());
 	}
 
 	private Value getUnexpandedValue(String name) {
@@ -228,10 +215,7 @@ public class Bindings implements Lookup {
 		this Bindings, or null if it is not bound. Part of the implementation of
 		<code>Lookup</code>.
 	*/
-	@Override public String getValueString(String name) {
-		
-//		System.err.println(mapLookup);
-		
+	@Override public String getValueString(String name) { // TODO		
 		Value v = get(name);
 		return v == null ? null : v.spelling();
 	}
