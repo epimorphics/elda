@@ -10,7 +10,7 @@ public interface MapLookup {
 		Return the value associated with keyValue from the map
 		named mapName.
 	*/
-	public String getValueString(String mapName, String keyValue);
+	public String getValueString(String mapName, Lookup expander);
 	
 	/**
 		A map with no elements, so all calls to getValueString
@@ -18,7 +18,7 @@ public interface MapLookup {
 	*/
 	public static final MapLookup empty = new MapLookup() {
 
-		@Override public String getValueString(String mapName, String keyValue) {
+		@Override public String getValueString(String mapName, Lookup expander) {
 			return null;
 		}
 			

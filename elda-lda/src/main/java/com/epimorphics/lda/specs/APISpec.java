@@ -14,7 +14,9 @@ package com.epimorphics.lda.specs;
 import static com.epimorphics.util.RDFUtils.getStringValue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,22 +144,38 @@ public class APISpec extends SpecCommon {
         extractModelPrefixEditor( root );
         }
     
-    static int mapCount = 0;
-    int mapIndex = ++mapCount;
-    
-	private MapLookup createMapLookup(Resource root, final Source ds) {
+	public static MapLookup createMapLookup(Resource root, final Source ds) {
+		
+		final Map<String, String> maps = new HashMap<String, String>();
+		
+		for (Statement decl: root.listProperties(ELDA_API.sparqlMap).toList()) {
+			Resource map = decl.getResource();
+			String mapName = getStringValue(map, ELDA_API.mapName);
+			String queryString = getStringValue(map,ELDA_API.mapQuery);
+			maps.put(mapName, queryString);
+		}
+		
 		return new MapLookup() {
 
 			@Override public String toString() {
 				return "SourceMap";
 			}
 			
-			@Override public String getValueString(String mapName, String queryString) {
+			@Override public String getValueString(String mapName, Lookup expander) {
+				
+				String configuredQuery = maps.get(mapName);
+				System.err.println(">> configured query: " + configuredQuery);
+				
+				String expandedQuery = expander.getValueString(configuredQuery);
+				System.err.println(">> expandedQuery:    " + expandedQuery);
+				
+				String bracedQueryString = expandedQuery.replace("((", "{").replace("))", "}");
+				System.err.println(">> bracedQuery:      " + bracedQueryString);
 				
 				String [] result = new String[] {""};
 				
 				ResultSetConsumer rsc = new ResultSetConsumer() {
-
+					
 					@Override public void setup(QueryExecution qe) {						
 					}
 
@@ -169,8 +187,9 @@ public class APISpec extends SpecCommon {
 						
 					}
 					
-				};
-				Query query = QueryFactory.create(queryString);
+				};			
+
+				Query query = QueryFactory.create(bracedQueryString);
 				ds.executeSelect(query, rsc);
 				
 				return result[0];

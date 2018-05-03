@@ -101,6 +101,16 @@ hello:hello-world-again a api:API
    			select ?x where ((?x rdfs:label '{_param}')) limit 1
    			"""
    		]
+   		
+   	; elda:sparqlMap
+   		[ a elda:SPARQLMap
+   		; elda:mapName "someMap"
+   		; elda:mapQuery 
+   			"""
+   			prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+   			select ?x where ((?x rdfs:label '{_param}')) limit 1
+   			"""
+   		]
 	.
 	
 <http://localhost:3030/ds/query> 

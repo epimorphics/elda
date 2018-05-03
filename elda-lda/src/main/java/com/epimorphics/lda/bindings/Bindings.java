@@ -185,12 +185,15 @@ public class Bindings implements Lookup {
 		
 		String mapName = v.getMapName();
 		if (mapName.length() > 0) {
-			String key = v.spelling();
-			String expandedKey = expandVariables(key);
-			System.err.println(">> expanded key: '" + expandedKey + "'");
-			String bracedKey = expandedKey.replace("((", "{").replace("))", "}");
-			System.err.println(">> braced key: '" + bracedKey + "'");
-			String value = mapLookup.getValueString(mapName, bracedKey);
+			Lookup l = new Lookup() {
+
+				@Override public String getValueString(String name) {
+					return expandVariables(name);
+				}
+				
+			};
+			
+			String value = mapLookup.getValueString(mapName, l);
 			System.err.println(">> returned value: '" + value + "'");
 			v = v.replaceBy(value);
 		}

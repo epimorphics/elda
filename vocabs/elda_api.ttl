@@ -5,6 +5,7 @@
 @prefix elda: <http://www.epimorphics.com/vocabularies/lda#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix api: <http://purl.org/linked-data/api/vocab#>.
 
 elda:allLiteralsStructured a rdf:Property
 	; rdfs:label "all literals structured"
@@ -173,6 +174,20 @@ elda:loadedFrom a rdf:Property
 elda:mapName a rdf:Property
 	; rdfs:comment "specifies map name for lookup"
 	.
+
+elda:mapQuery a rdf:Property
+    ; rdfs:domain api:API
+    .
+
+elda:sparqlMap a rdf:Property
+    ; rdfs:comment "property connecting API spec to its SPARQL query map."
+    ; rdfs:range elda:SPARQLMap
+    ; rdfs:domain api:API
+    .
+
+elda:SPARQLMap a rdf:Property
+    ; rdfs:comment "class of SPARQL maps"
+    .
 
 elda:match a rdf:Property
 	; rdfs:comment ""
