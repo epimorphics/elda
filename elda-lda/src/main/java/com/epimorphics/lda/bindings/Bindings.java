@@ -40,6 +40,17 @@ public class Bindings implements Lookup {
 	
 	protected final MapLookup mapLookup; 
 
+	/**
+		A Lookup that does variable expansion on the supplied value.
+	*/
+	protected final Lookup expander = new Lookup() {
+		
+		@Override public String getValueString(String name) {
+			return expandVariables(name);
+		}
+		
+	};
+
 	public Bindings(Bindings initial, Set<String> parameterNames, URLforResource ufr) {
 		this.ufr = ufr;
 		this.putAll(initial);
@@ -185,19 +196,13 @@ public class Bindings implements Lookup {
 		
 		String mapName = v.getMapName();
 		if (mapName.length() > 0) {
-			Lookup l = new Lookup() {
-
-				@Override public String getValueString(String name) {
-					return expandVariables(name);
-				}
-				
-			};
-			
-			String value = mapLookup.getValueString(mapName, l);
-//			System.err.println(">> returned value: '" + value + "'");
+			String spelling = v.spelling();
+			Bindings b = new Bindings(this);
+			b.put("_param", spelling);
+			String value = mapLookup.getValueString(mapName, b.expander);
 			v = v.replaceBy(value);
 		}
-		return evaluate(name, v, new ArrayList<String>());
+		return evaluate(v, new ArrayList<String>());
 	}
 
 	private Value getUnexpandedValue(String name) {
@@ -278,14 +283,12 @@ public class Bindings implements Lookup {
 		return true;
 	}
 
-	private Value evaluate(String name, Value v, List<String> seen) {
+	private Value evaluate(Value v, List<String> seen) {
 		String vs = v.spelling();
 		if (vs == null || vs.indexOf('{') < 0)
 			return v;
 		String expanded = expandVariables(vs, seen);
-		Value newV = v.replaceBy(expanded);
-		vars.put(name, newV);
-		return newV;
+		return v.replaceBy(expanded);
 	}
 
 	public String expandVariables(String s, List<String> seen) {
@@ -321,7 +324,7 @@ public class Bindings implements Lookup {
 				log.debug("variable '{}' has no value, not substituted", name);
 			} else {
 				seen.add(name);
-				Value v = evaluate(name, thisV, seen);
+				Value v = evaluate(thisV, seen);
 				seen.remove(seen.size() - 1);
 				String value = v.spelling(); // values.getStringValue( name );
 				if (value == null) {

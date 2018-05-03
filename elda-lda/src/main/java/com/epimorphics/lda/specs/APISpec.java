@@ -163,6 +163,8 @@ public class APISpec extends SpecCommon {
 			
 			@Override public String getValueString(String mapName, Lookup expander) {
 				
+				System.err.println(">> getValueString(" + mapName + ")");
+				
 				String configuredQuery = maps.get(mapName);
 //				System.err.println(">> configured query: " + configuredQuery);
 				

@@ -90,15 +90,12 @@ hello:hello-world-again a api:API
     ; elda:enableCounting true
    	; elda:cacheExpiryTime "10m"
    	
-   	; api:variable [api:name "_param" ; api:value "Dirk Henn"]
+   	# ; api:variable [api:name "_param" ; api:value "Dirk Henn"]
    	
    	; api:variable 
-   		[api:name "var_A"
+   		[ api:name "var_A"
    		; elda:mapName "someMap"
-   		; api:value 
-   			"""
-   			IGNORED
-   			"""
+   		; api:value "Dirk Henn"
    		]
    		
    	; elda:sparqlMap
