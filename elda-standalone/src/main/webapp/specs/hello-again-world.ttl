@@ -97,8 +97,7 @@ hello:hello-world-again a api:API
    		; elda:mapName "someMap"
    		; api:value 
    			"""
-   			prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-   			select ?x where ((?x rdfs:label '{_param}')) limit 1
+   			IGNORED
    			"""
    		]
    		

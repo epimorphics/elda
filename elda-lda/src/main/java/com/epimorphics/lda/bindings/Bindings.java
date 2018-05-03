@@ -194,7 +194,7 @@ public class Bindings implements Lookup {
 			};
 			
 			String value = mapLookup.getValueString(mapName, l);
-			System.err.println(">> returned value: '" + value + "'");
+//			System.err.println(">> returned value: '" + value + "'");
 			v = v.replaceBy(value);
 		}
 		return evaluate(name, v, new ArrayList<String>());
