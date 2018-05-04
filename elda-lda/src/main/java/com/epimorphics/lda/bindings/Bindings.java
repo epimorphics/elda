@@ -200,7 +200,7 @@ public class Bindings implements Lookup {
 			String spelling = v.spelling();
 			Bindings b = new Bindings(this);
 			b.put("_param", spelling);
-			String value = mapLookup.getValueString(mapName, b.expander);
+			String value = mapLookup.getValueString(mapName, b, b.expander);
 			v = v.replaceBy(value);
 		}
 		return evaluate(v, new ArrayList<String>());

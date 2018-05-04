@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +29,16 @@ import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.QueryParameter;
+import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.sources.*;
 import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.support.ModelPrefixEditor;
+import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
@@ -156,19 +160,17 @@ public class APISpec extends SpecCommon {
 		}
 		
 		return new MapLookup() {
-
-			String result = null;
 			
 			@Override public String toString() {
 				return "SourceMap";
 			}
 			
-			@Override public String getValueString(String mapName, Lookup expander) {
+			@Override public String getValueString(String mapName, Bindings b, Lookup expander) {
 				
 				System.err.println(">> getValueString(" + mapName + ")");
 				
-				String configuredQuery = maps.get(mapName);
-//				System.err.println(">> configured query: " + configuredQuery);
+				String configuredQuery = queryExpand(maps.get(mapName), b);
+				System.err.println(">> configured query: " + configuredQuery);
 				
 				String expandedQuery = expander.getValueString(configuredQuery);
 //				System.err.println(">> expandedQuery:    " + expandedQuery);
@@ -197,6 +199,32 @@ public class APISpec extends SpecCommon {
 				ds.executeSelect(query, rsc);
 				
 				return result[0];
+			}
+
+			private String queryExpand(String q, Bindings b) {
+				Matcher m = APIQuery.varPattern.matcher(q);
+				StringBuilder sb = new StringBuilder();
+				PrefixLogger pl = new PrefixLogger();
+				int start = 0;
+				
+				while (m.find(start)) {
+					String leader = q.substring(start,  m.start());
+					sb.append(leader);
+					
+					String name = m.group().substring(1);
+					
+					Value v = b.get(name); 
+					if (v == null || v.spelling().equals("")) {
+						sb.append(m.group());
+					} else {
+						String term = v.asSparqlTerm(pl);
+						sb.append(term);
+					}
+					start = m.end();
+				}
+				
+				sb.append(q.substring(start));
+				return sb.toString();
 			}
 			
 		};

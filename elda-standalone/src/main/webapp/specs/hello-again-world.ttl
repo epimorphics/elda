@@ -98,11 +98,18 @@ hello:hello-world-again a api:API
    		; api:value "Dirk Henn"
    		]
    		
+   	; api:variable
+   		[ api:name "selectable"
+   		; api:value "12345"
+   		; api:type <eh:/integer>
+   		]
+   		
    	; elda:sparqlMap
    		[ a elda:SPARQLMap
    		; elda:mapName "someMap"
    		; elda:mapQuery 
    			"""
+   			# ?selectable
    			prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
    			select ?x where ((?x rdfs:label '{_param}')) limit 1
    			"""
