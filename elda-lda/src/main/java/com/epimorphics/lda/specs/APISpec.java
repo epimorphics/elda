@@ -14,13 +14,16 @@ package com.epimorphics.lda.specs;
 import static com.epimorphics.util.RDFUtils.getStringValue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.bindings.Lookup;
+import com.epimorphics.lda.bindings.MapLookup;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
@@ -82,7 +85,7 @@ public class APISpec extends SpecCommon {
     protected final List<Source> describeSources;
     public final Bindings bindings;
     
-    protected final Lookup mapLookup;
+    protected final MapLookup mapLookup;
     
     protected final String prefixPath;
 	
@@ -141,50 +144,59 @@ public class APISpec extends SpecCommon {
         extractModelPrefixEditor( root );
         }
     
-    static int mapCount = 0;
-    int mapIndex = ++mapCount;
-    
-	private Lookup createMapLookup(Resource root, final Source s) {
-		return new Lookup() {
+	public static MapLookup createMapLookup(Resource root, final Source ds) {
+		
+		final Map<String, String> maps = new HashMap<String, String>();
+		
+		for (Statement decl: root.listProperties(ELDA_API.sparqlMap).toList()) {
+			Resource map = decl.getResource();
+			String mapName = getStringValue(map, ELDA_API.mapName);
+			String queryString = getStringValue(map,ELDA_API.mapQuery);
+			maps.put(mapName, queryString);
+		}
+		
+		return new MapLookup() {
 
 			String result = null;
 			
 			@Override public String toString() {
-				return "IdentityLookup " + mapIndex;
+				return "SourceMap";
 			}
 			
-			@Override public String getValueString(String name) {
+			@Override public String getValueString(String mapName, Lookup expander) {
 				
-				if (name == null) return null;
+				System.err.println(">> getValueString(" + mapName + ")");
 				
-				String prefix = "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n"; 
-				String preSelect = "select ?x where {?x rdfs:label 'PARAM'} limit 1";
+				String configuredQuery = maps.get(mapName);
+//				System.err.println(">> configured query: " + configuredQuery);
 				
-				System.err.println(">> preSelect: " + preSelect);
-				System.err.println(">> name:      " + name);				
+				String expandedQuery = expander.getValueString(configuredQuery);
+//				System.err.println(">> expandedQuery:    " + expandedQuery);
 				
-				String selected = preSelect.replace("PARAM", name);
-				String queryString = prefix + selected;
+				String bracedQueryString = expandedQuery.replace("((", "{").replace("))", "}");
+//				System.err.println(">> bracedQuery:      " + bracedQueryString);
 				
-				Query q = QueryFactory.create(queryString);
+				String [] result = new String[] {""};
 				
-				ResultSetConsumer c = new ResultSetConsumer() {
-
+				ResultSetConsumer rsc = new ResultSetConsumer() {
+					
 					@Override public void setup(QueryExecution qe) {						
 					}
 
 					@Override public void consume(ResultSet rs) {
 						while (rs.hasNext()) {
 							QuerySolution qs = rs.next();
-							RDFNode n = qs.get("x");
-							result = n.toString();
+							result[0] = qs.get("x").toString();
 						}
+						
 					}
-				};
+					
+				};			
+
+				Query query = QueryFactory.create(bracedQueryString);
+				ds.executeSelect(query, rsc);
 				
-				s.executeSelect(q, c);
-				
-				return result;
+				return result[0];
 			}
 			
 		};

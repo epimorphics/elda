@@ -65,7 +65,7 @@ public class VariableExtractor {
 				type = "";
 			}
 			String valueString = getValueString( v, language, type );
-			Value var = new Value( valueString, language, type, mapName );
+			Value var = new Value( valueString, language, type, mapName );			
 			bound.put( name, var ); 			
 			}
 		}

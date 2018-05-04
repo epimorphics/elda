@@ -90,7 +90,23 @@ hello:hello-world-again a api:API
     ; elda:enableCounting true
    	; elda:cacheExpiryTime "10m"
    	
-   	; api:variable [api:name "var_A"; api:value: "key_A"; elda:mapName "someMap"]
+   	# ; api:variable [api:name "_param" ; api:value "Dirk Henn"]
+   	
+   	; api:variable 
+   		[ api:name "var_A"
+   		; elda:mapName "someMap"
+   		; api:value "Dirk Henn"
+   		]
+   		
+   	; elda:sparqlMap
+   		[ a elda:SPARQLMap
+   		; elda:mapName "someMap"
+   		; elda:mapQuery 
+   			"""
+   			prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+   			select ?x where ((?x rdfs:label '{_param}')) limit 1
+   			"""
+   		]
 	.
 	
 <http://localhost:3030/ds/query> 

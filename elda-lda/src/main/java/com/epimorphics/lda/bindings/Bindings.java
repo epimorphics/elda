@@ -38,7 +38,18 @@ public class Bindings implements Lookup {
 
 	protected final URLforResource ufr;
 	
-	protected final Lookup mapLookup ; // = Lookup.empty;
+	protected final MapLookup mapLookup; 
+
+	/**
+		A Lookup that does variable expansion on the supplied value.
+	*/
+	protected final Lookup expander = new Lookup() {
+		
+		@Override public String getValueString(String name) {
+			return expandVariables(name);
+		}
+		
+	};
 
 	public Bindings(Bindings initial, Set<String> parameterNames, URLforResource ufr) {
 		this.ufr = ufr;
@@ -60,20 +71,20 @@ public class Bindings implements Lookup {
 	}
 
 	public Bindings(URLforResource ufr) {
-		this.mapLookup = Lookup.empty;
+		this.mapLookup = MapLookup.empty;
 		this.ufr = ufr;
 	}
 
 	public Bindings() {
 		this.ufr = URLforResource.alwaysFails;
-		this.mapLookup = Lookup.empty;
+		this.mapLookup = MapLookup.empty;
 	}
 
 	public Bindings(Bindings bindings, Set<String> parameterNames) {
 		this(bindings, parameterNames, bindings.ufr);
 	}
 
-	public Bindings(Lookup mapLookup) {
+	public Bindings(MapLookup mapLookup) {
 		this.ufr = URLforResource.alwaysFails;
 		this.mapLookup = mapLookup;
 	}
@@ -182,7 +193,17 @@ public class Bindings implements Lookup {
 
 	private Value getValue(String name) {
 		Value v = getUnexpandedValue(name);
-		return v == null ? null : evaluate(name, v, new ArrayList<String>());
+		if (v == null) return null;
+		
+		String mapName = v.getMapName();
+		if (mapName.length() > 0) {
+			String spelling = v.spelling();
+			Bindings b = new Bindings(this);
+			b.put("_param", spelling);
+			String value = mapLookup.getValueString(mapName, b.expander);
+			v = v.replaceBy(value);
+		}
+		return evaluate(v, new ArrayList<String>());
 	}
 
 	private Value getUnexpandedValue(String name) {
@@ -203,12 +224,9 @@ public class Bindings implements Lookup {
 		this Bindings, or null if it is not bound. Part of the implementation of
 		<code>Lookup</code>.
 	*/
-	@Override public String getValueString(String name) {
-		
-//		System.err.println(mapLookup);
-		
+	@Override public String getValueString(String name) { // TODO		
 		Value v = get(name);
-		return v == null ? null : v.spelling(mapLookup);
+		return v == null ? null : v.spelling();
 	}
 
 	/**
@@ -266,14 +284,12 @@ public class Bindings implements Lookup {
 		return true;
 	}
 
-	private Value evaluate(String name, Value v, List<String> seen) {
+	private Value evaluate(Value v, List<String> seen) {
 		String vs = v.spelling();
 		if (vs == null || vs.indexOf('{') < 0)
 			return v;
 		String expanded = expandVariables(vs, seen);
-		Value newV = v.replaceBy(expanded);
-		vars.put(name, newV);
-		return newV;
+		return v.replaceBy(expanded);
 	}
 
 	public String expandVariables(String s, List<String> seen) {
@@ -309,7 +325,7 @@ public class Bindings implements Lookup {
 				log.debug("variable '{}' has no value, not substituted", name);
 			} else {
 				seen.add(name);
-				Value v = evaluate(name, thisV, seen);
+				Value v = evaluate(thisV, seen);
 				seen.remove(seen.size() - 1);
 				String value = v.spelling(); // values.getStringValue( name );
 				if (value == null) {
@@ -389,7 +405,7 @@ public class Bindings implements Lookup {
 		return this;
 	}
 
-	public Lookup getMapLookup() {
+	public MapLookup getMapLookup() {
 		return mapLookup;
 	}
 }
