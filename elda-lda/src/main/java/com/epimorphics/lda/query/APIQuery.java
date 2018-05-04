@@ -132,7 +132,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	 * Pattern for matching SPARQL query variables (including the leading '?').
 	 * Used for finding substitution points in static query strings.
 	 */
-	public static final Pattern varPattern = Pattern.compile("\\?[a-zA-Z]\\w*");
+	public static final Pattern varPattern = Pattern.compile("\\?[a-z_A-Z]\\w*");
 
 	protected final int defaultPageSize;
 
