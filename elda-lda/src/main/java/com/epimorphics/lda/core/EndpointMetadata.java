@@ -178,20 +178,11 @@ public class EndpointMetadata {
 				
 		for (Statement s: thisMetaPage.listProperties().toList()) {
 			if (mc.drop(s.getPredicate())) {
-				boolean isItems = s.getPredicate().equals(ELDA_API.items);
-				// cater to requirements of velocity renderer.
+				boolean isItems = s.getPredicate().equals(API.items);
+				boolean isPrimaryTopic = s.getPredicate().equals(FOAF.primaryTopic);
 				boolean isTypePage = s.getPredicate().equals(RDF.type) && s.getObject().equals(API.Page);
-				boolean keep = isItems || (demandPage && isTypePage);
-				if (!keep) toRemove.add(s);
-// OLDER:				
-//				if (isItems) {
-//					// do not remove
-//				} else if (isTypePage) {
-//					if (demandPage) {} else toRemove.add(s);
-//				} else {
-//					toRemove.add(s);
-//				}
-				
+				boolean keep = isItems || isPrimaryTopic|| (demandPage && isTypePage);
+				if (!keep) toRemove.add(s);				
 			}
 		}
 		thisMetaPage.getModel().remove(toRemove);			
