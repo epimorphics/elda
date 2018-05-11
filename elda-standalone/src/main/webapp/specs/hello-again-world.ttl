@@ -91,6 +91,7 @@ hello:hello-world-again a api:API
    	; elda:cacheExpiryTime "10m"
    	
    	; elda:disable-default-metadata true
+   	
    	# ; elda:enable-default-metadata (dct:hasPart dct:isPartOf )
 	.
 	

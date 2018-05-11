@@ -4,7 +4,7 @@
   <parent>
     <artifactId>elda</artifactId>
     <groupId>com.epimorphics.lda</groupId>
-    <version>1.1.4-A1704-SNAPSHOT</version>
+    <version>1.1.4-option.a.1</version>
   </parent>
 
   <artifactId>elda-assets</artifactId>
