@@ -182,7 +182,7 @@ public class EndpointMetadata {
 				boolean isPrimaryTopic = s.getPredicate().equals(FOAF.primaryTopic);
 				boolean isTypePage = s.getPredicate().equals(RDF.type) && s.getObject().equals(API.Page);
 				boolean keep = isItems || isPrimaryTopic|| (demandPage && isTypePage);
-				if (!keep) toRemove.add(s);				
+				if (!keep) toRemove.add(s);
 			}
 		}
 		thisMetaPage.getModel().remove(toRemove);			
