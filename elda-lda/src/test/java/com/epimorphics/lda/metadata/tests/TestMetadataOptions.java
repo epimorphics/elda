@@ -58,7 +58,7 @@ public class TestMetadataOptions {
 		testConfigProperties(hardwiredProperties, mc);
 	}
 	
-	/* @Test */ public void testingDefaultMetaTrue() throws URISyntaxException {
+	@Test public void testingDefaultMetaTrue() throws URISyntaxException {
 		MetaConfig mc = new MetaConfig(true);
 		testConfigProperties(new HashSet<Property>(), mc);
 	}
