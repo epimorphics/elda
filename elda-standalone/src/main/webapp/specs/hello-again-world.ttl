@@ -17,6 +17,8 @@
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
 @prefix foaf:               <http://xmlns.com/foaf/0.1/>.
 
+@prefix example:               <http://www.epimorphics.com/vocabularies/lda#example.> .
+
 # Prefix for example-local entities.
 @prefix egc:      <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#>.
 @prefix hello:    <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#games> .
@@ -104,16 +106,18 @@ hello:hello-world-again a api:API
    		; api:type <eh:/integer>
    		]
    		
-   	; elda:sparqlMap
-   		[ a elda:SPARQLMap
-   		; elda:mapName "someMap"
-   		; elda:mapQuery 
-   			"""
-   			# ?selectable
-   			prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-   			select ?x where ((?x rdfs:label ?_param)) limit 1
-   			"""
-   		]
+   	; elda:sparqlMap example:map
+   	
+   	.
+   	
+example:map a elda:SPARQLMap
+   	; elda:mapName "someMap"
+   	; elda:mapQuery 
+   		"""
+   		# ?selectable
+   		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+   		select ?x where ((?x rdfs:label ?_param)) limit 1
+   		"""
 	.
 	
 <http://localhost:3030/ds/query> 
