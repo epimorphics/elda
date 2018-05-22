@@ -167,10 +167,10 @@ public class APISpec extends SpecCommon {
 			
 			@Override public String getValueString(String mapName, Bindings b, Lookup expander) {
 				
-				System.err.println(">> getValueString(" + mapName + ")");
+//				System.err.println(">> getValueString(" + mapName + ")");
 				
 				String configuredQuery = queryExpand(maps.get(mapName), b);
-				System.err.println(">> configured query: " + configuredQuery);
+//				System.err.println(">> configured query: " + configuredQuery);
 				
 				String expandedQuery = expander.getValueString(configuredQuery);
 //				System.err.println(">> expandedQuery:    " + expandedQuery);
