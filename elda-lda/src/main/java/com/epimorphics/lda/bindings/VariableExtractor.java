@@ -10,6 +10,7 @@ package com.epimorphics.lda.bindings;
 
 
 import static com.epimorphics.util.RDFUtils.getStringValue;
+import static com.epimorphics.util.RDFUtils.getResourceValue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,8 @@ public class VariableExtractor {
 			Resource v = s.getResource();
 			String name = getStringValue( v, API.name, null );
 			String language = getStringValue( v, API.lang, "" );
-			String mapName = getStringValue( v, ELDA_API.mapName, "" );
+			Resource mapResource = getResourceValue( v, ELDA_API.mapName );
+			String mapName = (mapResource == null ? null : mapResource.getURI());
 			String type = getStringValue( v, API.type, null );
 			Statement value = v.getProperty( API.value );
 			if (type == null && value != null && value.getObject().isLiteral())

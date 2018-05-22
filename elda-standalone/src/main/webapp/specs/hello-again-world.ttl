@@ -96,7 +96,7 @@ hello:hello-world-again a api:API
    	
    	; api:variable 
    		[ api:name "var_A"
-   		; elda:mapName "someMap"
+   		; elda:mapName example:map
    		; api:value "Dirk Henn"
    		]
    		
@@ -111,7 +111,7 @@ hello:hello-world-again a api:API
    	.
    	
 example:map a elda:SPARQLMap
-   	; elda:mapName "someMap"
+   	; elda:mapName "http://www.epimorphics.com/vocabularies/lda#example.map"
    	; elda:mapQuery 
    		"""
    		# ?selectable

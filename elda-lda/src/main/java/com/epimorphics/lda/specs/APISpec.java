@@ -152,9 +152,12 @@ public class APISpec extends SpecCommon {
 		
 		final Map<String, String> maps = new HashMap<String, String>();
 		
+		// System.err.println(">> creating map lookup");
+		
 		for (Statement decl: root.listProperties(ELDA_API.sparqlMap).toList()) {
+			// System.err.println(">> ... another one: " + decl);
 			Resource map = decl.getResource();
-			String mapName = getStringValue(map, ELDA_API.mapName);
+			String mapName = map.getURI(); 
 			String queryString = getStringValue(map,ELDA_API.mapQuery);
 			maps.put(mapName, queryString);
 		}
