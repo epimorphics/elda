@@ -95,10 +95,8 @@ hello:hello-world-again a api:API
    	; api:variable 
    		[ api:name "var_A"
    		; elda:mapWith example:map
-   		; api:value "Dirk Henn"
+   		; api:value "Martin Wallace"
    		]
-   		
-   	; api:variable [ api:name "_param"; api:value "Dirk Henn"]
 
    	; elda:sparqlMap example:map  	
    	.
