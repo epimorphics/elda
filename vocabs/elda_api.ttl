@@ -175,6 +175,10 @@ elda:mapName a rdf:Property
 	; rdfs:comment "specifies map name for lookup"
 	.
 
+elda:mapWith a rdf:Property
+    ; rdfs:comment "object is reference to Elda SPARQL map resource."
+    .
+
 elda:mapQuery a rdf:Property
     ; rdfs:domain api:API
     .

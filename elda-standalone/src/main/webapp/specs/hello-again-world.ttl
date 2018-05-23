@@ -91,30 +91,20 @@ hello:hello-world-again a api:API
         
     ; elda:enableCounting true
    	; elda:cacheExpiryTime "10m"
-   	
-   	; api:variable [api:name "_param" ; api:value "Dirk Henn"]
-   	
+   	   	
    	; api:variable 
    		[ api:name "var_A"
-   		; elda:mapName example:map
+   		; elda:mapWith example:map
    		; api:value "Dirk Henn"
    		]
    		
-   	; api:variable
-   		[ api:name "selectable"
-   		; api:value "12345"
-   		; api:type <eh:/integer>
-   		]
-   		
-   	; elda:sparqlMap example:map
-   	
+   	; elda:sparqlMap example:map  	
    	.
    	
 example:map a elda:SPARQLMap
-   	; elda:mapName "http://www.epimorphics.com/vocabularies/lda#example.map"
+   	# ; elda:mapName "http://www.epimorphics.com/vocabularies/lda#example.map"
    	; elda:mapQuery 
    		"""
-   		# ?selectable
    		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
    		select ?x where ((?x rdfs:label ?_param)) limit 1
    		"""
