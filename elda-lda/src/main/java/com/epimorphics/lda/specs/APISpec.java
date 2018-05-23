@@ -12,6 +12,7 @@
 
 package com.epimorphics.lda.specs;
 import static com.epimorphics.util.RDFUtils.getStringValue;
+import static com.epimorphics.util.RDFUtils.getResourceValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -157,7 +158,10 @@ public class APISpec extends SpecCommon {
 		for (Statement decl: root.listProperties(ELDA_API.sparqlMap).toList()) {
 			// System.err.println(">> ... another one: " + decl);
 			Resource map = decl.getResource();
-			String mapName = map.getURI(); 
+			String mapName = map.isURIResource()
+				? map.getURI()
+				: getResourceValue(map, ELDA_API.mapName).getURI()
+				; 
 			String queryString = getStringValue(map,ELDA_API.mapQuery);
 			maps.put(mapName, queryString);
 		}

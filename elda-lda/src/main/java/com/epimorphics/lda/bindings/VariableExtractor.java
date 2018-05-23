@@ -54,7 +54,7 @@ public class VariableExtractor {
 			Resource v = s.getResource();
 			String name = getStringValue( v, API.name, null );
 			String language = getStringValue( v, API.lang, "" );
-			Resource mapResource = getResourceValue( v, ELDA_API.mapName );
+			Resource mapResource = getResourceValue( v, ELDA_API.mapWith );
 			String mapName = (mapResource == null ? null : mapResource.getURI());
 			String type = getStringValue( v, API.type, null );
 			Statement value = v.getProperty( API.value );
