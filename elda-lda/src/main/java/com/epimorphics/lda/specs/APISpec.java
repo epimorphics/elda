@@ -14,42 +14,29 @@ package com.epimorphics.lda.specs;
 import static com.epimorphics.util.RDFUtils.getStringValue;
 import static com.epimorphics.util.RDFUtils.getResourceValue;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
-import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.bindings.MapLookup;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
-import com.epimorphics.lda.query.APIQuery;
 import com.epimorphics.lda.query.QueryParameter;
-import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.sources.*;
-import com.epimorphics.lda.sources.Source.ResultSetConsumer;
+import com.epimorphics.lda.specs.SPARQLMapLookup.Element;
 import com.epimorphics.lda.support.ModelPrefixEditor;
-import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.query.Query;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryFactory;
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
@@ -150,91 +137,21 @@ public class APISpec extends SpecCommon {
         }
     
 	public static MapLookup createMapLookup(Resource root, final Source ds) {
-		
-		final Map<String, String> maps = new HashMap<String, String>();
-		
-		// System.err.println(">> creating map lookup");
-		
+		final Map<String, SPARQLMapLookup.Element> maps = new HashMap<String, SPARQLMapLookup.Element>();
+	//		
 		for (Statement decl: root.listProperties(ELDA_API.sparqlMap).toList()) {
-			// System.err.println(">> ... another one: " + decl);
-			Resource map = decl.getResource();
+			Resource map = decl.getResource();	
 			String mapName = map.isURIResource()
 				? map.getURI()
 				: getResourceValue(map, ELDA_API.mapName).getURI()
 				; 
+			String inName = getStringValue(map, ELDA_API.mapIn, "MAP_IN");
+			String outName = getStringValue(map, ELDA_API.mapOut, "result");	
 			String queryString = getStringValue(map,ELDA_API.mapQuery);
-			maps.put(mapName, queryString);
+			maps.put(mapName, new Element(inName, queryString, outName));
 		}
 		
-		return new MapLookup() {
-			
-			@Override public String toString() {
-				return "SourceMap";
-			}
-			
-			@Override public String getValueString(String mapName, Bindings b, Lookup expander) {
-				
-//				System.err.println(">> getValueString(" + mapName + ")");
-				
-				String configuredQuery = queryExpand(maps.get(mapName), b);
-//				System.err.println(">> configured query: " + configuredQuery);
-				
-				String expandedQuery = expander.getValueString(configuredQuery);
-//				System.err.println(">> expandedQuery:    " + expandedQuery);
-				
-				String bracedQueryString = expandedQuery.replace("((", "{").replace("))", "}");
-//				System.err.println(">> bracedQuery:      " + bracedQueryString);
-				
-				String [] result = new String[] {""};
-				
-				ResultSetConsumer rsc = new ResultSetConsumer() {
-					
-					@Override public void setup(QueryExecution qe) {						
-					}
-
-					@Override public void consume(ResultSet rs) {
-						while (rs.hasNext()) {
-							QuerySolution qs = rs.next();
-							result[0] = qs.get("x").toString();
-						}
-						
-					}
-					
-				};			
-
-				Query query = QueryFactory.create(bracedQueryString);
-				ds.executeSelect(query, rsc);
-				
-				return result[0];
-			}
-
-			private String queryExpand(String q, Bindings b) {
-				Matcher m = APIQuery.varPattern.matcher(q);
-				StringBuilder sb = new StringBuilder();
-				PrefixLogger pl = new PrefixLogger();
-				int start = 0;
-				
-				while (m.find(start)) {
-					String leader = q.substring(start,  m.start());
-					sb.append(leader);
-					
-					String name = m.group().substring(1);
-					
-					Value v = b.get(name); 
-					if (v == null || v.spelling().equals("")) {
-						sb.append(m.group());
-					} else {
-						String term = v.asSparqlTerm(pl);
-						sb.append(term);
-					}
-					start = m.end();
-				}
-				
-				sb.append(q.substring(start));
-				return sb.toString();
-			}
-			
-		};
+		return new SPARQLMapLookup(ds, maps);
 	}
 
 	public static void setDefaultSuffixName(Bindings b, Resource ep) {
