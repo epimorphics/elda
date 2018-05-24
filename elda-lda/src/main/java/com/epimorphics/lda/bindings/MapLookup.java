@@ -1,5 +1,7 @@
 package com.epimorphics.lda.bindings;
 
+import com.epimorphics.lda.rdfq.Value;
+
 /**
 	MapLookup is an interface capturing the idea of getting
 	the value associated with a key in some mapping object.
@@ -10,7 +12,7 @@ public interface MapLookup {
 		Return the value associated with keyValue from the map
 		named mapName.
 	*/
-	public String getValueString(String mapName, Bindings b, Lookup expander);
+	public String getValueString(String mapName, Value v, Bindings b, Lookup expander);
 	
 	/**
 		A map with no elements, so all calls to getValueString
@@ -18,7 +20,7 @@ public interface MapLookup {
 	*/
 	public static final MapLookup empty = new MapLookup() {
 
-		@Override public String getValueString(String mapName, Bindings b, Lookup expander) {
+		@Override public String getValueString(String mapName, Value v, Bindings b, Lookup expander) {
 			return null;
 		}
 			

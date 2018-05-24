@@ -197,10 +197,10 @@ public class Bindings implements Lookup {
 		
 		String mapName = v.getMapName();
 		if (mapName.length() > 0) {
-			String spelling = v.spelling();
+			// String spelling = v.spelling();
 			Bindings b = new Bindings(this);
-			b.put("_param", spelling);
-			String value = mapLookup.getValueString(mapName, b, b.expander);
+			// b.put("_param", spelling);
+			String value = mapLookup.getValueString(mapName, v, b, b.expander);
 			v = v.replaceBy(value);
 		}
 		return evaluate(v, new ArrayList<String>());

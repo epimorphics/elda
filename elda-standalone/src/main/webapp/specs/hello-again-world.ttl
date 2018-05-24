@@ -103,11 +103,13 @@ hello:hello-world-again a api:API
    	
 example:map a elda:SPARQLMap
    	# ; elda:mapName "http://www.epimorphics.com/vocabularies/lda#example.map"
+   	; elda:mapIn "param"
    	; elda:mapQuery 
    		"""
    		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-   		select ?x where ((?x rdfs:label ?_param)) limit 1
+   		select ?out where ((?out rdfs:label ?param)) limit 1
    		"""
+   	; elda:mapOut "out"
 	.
 	
 <http://localhost:3030/ds/query> 

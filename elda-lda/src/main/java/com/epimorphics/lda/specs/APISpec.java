@@ -145,7 +145,7 @@ public class APISpec extends SpecCommon {
 				? map.getURI()
 				: getResourceValue(map, ELDA_API.mapName).getURI()
 				; 
-			String inName = getStringValue(map, ELDA_API.mapIn, "MAP_IN");
+			String inName = getStringValue(map, ELDA_API.mapIn, "param");
 			String outName = getStringValue(map, ELDA_API.mapOut, "result");	
 			String queryString = getStringValue(map,ELDA_API.mapQuery);
 			maps.put(mapName, new Element(inName, queryString, outName));
