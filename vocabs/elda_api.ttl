@@ -6,6 +6,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
 @prefix api: <http://purl.org/linked-data/api/vocab#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 
 elda:allLiteralsStructured a rdf:Property
 	; rdfs:label "all literals structured"
@@ -177,6 +178,18 @@ elda:mapName a rdf:Property
 
 elda:mapWith a rdf:Property
     ; rdfs:comment "object is reference to Elda SPARQL map resource."
+    .
+
+elda:mapIn a rdf:Property
+    ; rdfs:comment "name of argument variable in map."
+    ; rdfs:range xsd:string
+    ; rdfs:domain elda:SPARQLMap
+    .
+
+elda:mapOut a rdf:Property
+    ; rdfs:comment "name of result variable in map."
+    ; rdfs:range xsd:string
+    ; rdfs:domain elda:SPARQLMap
     .
 
 elda:mapQuery a rdf:Property
