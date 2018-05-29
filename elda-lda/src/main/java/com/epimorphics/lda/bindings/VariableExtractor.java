@@ -20,6 +20,7 @@ import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.graph.Node;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDFS;
@@ -53,11 +54,12 @@ public class VariableExtractor {
 		for (Statement s: root.listProperties( API.variable ).toList()) {
 			Resource v = s.getResource();
 			String name = getStringValue( v, API.name, null );
-			String language = getStringValue( v, API.lang, "" );
-			Resource mapResource = getResourceValue( v, ELDA_API.mapWith );
-			String mapName = (mapResource == null ? null : mapResource.getURI());
 			String type = getStringValue( v, API.type, null );
+			String language = getStringValue( v, API.lang, "" );
+			
 			Statement value = v.getProperty( API.value );
+			RDFNode valueNode = value.getObject();
+			
 			if (type == null && value != null && value.getObject().isLiteral())
 				type = emptyIfNull( value.getObject().asNode().getLiteralDatatypeURI() );
 			if (type == null && value != null && value.getObject().isURIResource())
@@ -66,12 +68,20 @@ public class VariableExtractor {
 				log.debug("no type for variable '{}'; using default ''", name);
 				type = "";
 			}
+
 			String valueString = getValueString( v, language, type );
-			Value var = new Value( valueString, language, type, mapName );			
-			bound.put( name, var ); 			
+			if (valueNode.isAnon()) {
+				Resource mapResource = getResourceValue( v, ELDA_API.mapWith );
+				String mapName = (mapResource == null ? null : mapResource.getURI());
+				Value.Apply apply = new Value.Apply(mapName, valueString);
+				
+			} else {
+				Value var = new Value( valueString, language, type, Value.noApply);			
+				bound.put( name, var ); 			
 			}
 		}
-
+	}
+	
 	private static String emptyIfNull(String s) {
 		return s == null ? "" : s;
 	}

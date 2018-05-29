@@ -22,24 +22,51 @@ public class Value extends Term
 	final String spelling;
 	final String language;
 	final String datatype;
-	final String mapName;
+	
+	// final String mapName;
+
+	public static class Apply {
+		public final String mapName;
+		public final String argument;
+		
+		public Apply(String mapName, String argument) {
+			this.mapName = mapName;
+			this.argument = argument;
+		}
+		
+		@Override public String toString() {
+			return "(" + mapName + " | " + argument + ")";
+		}
+		
+		@Override public boolean equals(Object other) {
+			return other instanceof Apply && same((Apply) other);
+		}
+
+		private boolean same(Apply other) {
+			return mapName.equals(other.mapName) && argument.equals(other.argument);
+		}
+	}
+	
+	public final Apply apply;
 	
 	public static final Value emptyPlain = new Value("");
 	
-	public Value( String spelling ) 
-		{ this( spelling, "", "", "" ); }
+	public static final Apply noApply = null;
 	
-	public Value( String spelling, String language, String datatype, String mapName ) 
+	public Value( String spelling ) 
+		{ this( spelling, "", "", noApply ); }
+	
+	public Value( String spelling, String language, String datatype, Apply apply ) 
 		{ 		
 		this.spelling = spelling == null ? "" : spelling; 
 		this.language = language == null ? "" : language; 
 		this.datatype = datatype == null ? "" : datatype; 
-		this.mapName  = mapName == null  ? "" : mapName;
+		this.apply    = apply;
 		}
 		
 	@Override public String toString() 
 		{
-		return "{" + spelling + "|" + language + "|" + datatype + "|" + mapName + "}";
+		return "{" + spelling + "|" + language + "|" + datatype + "|" + apply + "}";
 		}
 	
 	@Override public String asSparqlTerm( PrefixLogger pl )
@@ -52,23 +79,18 @@ public class Value extends Term
 		return lf;
 		}
 	
-	public String getMapName() {
-		return mapName;
-	}
 	/**
 	    Answer a new Value with the same language and datatype as this
 	    one, but with a new lexical form aka valueString vs.
 	 */
 	@Override public Value replaceBy( String vs ) 
-		{ return new Value( vs, language, datatype, mapName ); }
+		{ return new Value( vs, language, datatype, apply ); }
 	
 	@Override public String spelling() 
 		 { return spelling; }
 	
-	public String spelling(Lookup l) {
-//		if (true) return spelling;
-		
-		if (mapName.length() > 0) {
+	public String spelling(Lookup l) {		
+		if (apply != null) {
 			String vs = l.getValueString(spelling);
 			return vs == null ? "ABSENT" : vs;
 		}
@@ -94,6 +116,7 @@ public class Value extends Term
 			spelling.equals( other.spelling ) 
 			&& language.equals( other.language ) 
 			&& datatype.equals( other.datatype )
+			&& apply.equals( other.apply )
 			; 
 		}
 	}

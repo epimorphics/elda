@@ -48,9 +48,9 @@ public class SPARQLMapLookup implements MapLookup {
 		return "SourceMap";
 	}
 
-	@Override public String getValueString(String mapName, Value v, Bindings b, Lookup expander) {
+	@Override public String getValueString(Value.Apply apply, Value v, Bindings b, Lookup expander) {
 				
-		Element e = maps.get(mapName);
+		Element e = maps.get(apply.mapName);
 		
 		String in = e.inName;
 		if (in == null) in = "param";

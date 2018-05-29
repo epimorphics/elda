@@ -12,7 +12,7 @@ public interface MapLookup {
 		Return the value associated with keyValue from the map
 		named mapName.
 	*/
-	public String getValueString(String mapName, Value v, Bindings b, Lookup expander);
+	public String getValueString(Value.Apply apply, Value v, Bindings b, Lookup expander);
 	
 	/**
 		A map with no elements, so all calls to getValueString
@@ -20,7 +20,7 @@ public interface MapLookup {
 	*/
 	public static final MapLookup empty = new MapLookup() {
 
-		@Override public String getValueString(String mapName, Value v, Bindings b, Lookup expander) {
+		@Override public String getValueString(Value.Apply apply, Value v, Bindings b, Lookup expander) {
 			return null;
 		}
 			

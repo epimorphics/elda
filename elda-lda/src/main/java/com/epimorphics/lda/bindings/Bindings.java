@@ -195,12 +195,11 @@ public class Bindings implements Lookup {
 		Value v = getUnexpandedValue(name);
 		if (v == null) return null;
 		
-		String mapName = v.getMapName();
-		if (mapName.length() > 0) {
+		if (v.apply != null) {
 			// String spelling = v.spelling();
 			Bindings b = new Bindings(this);
 			// b.put("_param", spelling);
-			String value = mapLookup.getValueString(mapName, v, b, b.expander);
+			String value = mapLookup.getValueString(v.apply, v, b, b.expander);
 			v = v.replaceBy(value);
 		}
 		return evaluate(v, new ArrayList<String>());
