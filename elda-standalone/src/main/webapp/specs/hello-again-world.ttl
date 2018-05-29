@@ -107,7 +107,7 @@ example:map a elda:SPARQLMap
    	; elda:mapQuery 
    		"""
    		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-   		select ?out where ((?out rdfs:label ?param)) limit 1
+   		select ?out where {?out rdfs:label ?param} limit 1
    		"""
    	; elda:mapOut "out"
 	.
