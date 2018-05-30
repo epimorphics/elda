@@ -116,7 +116,11 @@ public class Value extends Term
 			spelling.equals( other.spelling ) 
 			&& language.equals( other.language ) 
 			&& datatype.equals( other.datatype )
-			&& apply.equals( other.apply )
+			&& same( apply, other.apply )
 			; 
 		}
+
+	private boolean same(Apply x, Apply y) {
+		return x == null ? y == null : x.equals(y);
 	}
+}
