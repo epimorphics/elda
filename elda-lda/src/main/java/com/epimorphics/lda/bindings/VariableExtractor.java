@@ -19,8 +19,10 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
+import com.fasterxml.jackson.databind.node.ValueNode;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
@@ -56,12 +58,12 @@ public class VariableExtractor {
 	public static void findVariables( Resource root, Bindings bound ) {
 		// See issue #180
 		for (Statement s: root.listProperties( API.variable ).toList()) {
-			Resource v = s.getResource();
-			String name = getStringValue( v, API.name, null );
-			String type = getStringValue( v, API.type, null );
-			String language = getStringValue( v, API.lang, "" );
+			Resource valueRoot = s.getResource();
+			String name = getStringValue( valueRoot, API.name, null );
+			String type = getStringValue( valueRoot, API.type, null );
+			String language = getStringValue( valueRoot, API.lang, "" );
 			
-			Statement value = v.getProperty( API.value );
+			Statement value = valueRoot.getProperty( API.value );
 			RDFNode valueNode = value == null ? nullString : value.getObject();
 			
 			if (type == null && value != null && value.getObject().isLiteral())
@@ -72,29 +74,32 @@ public class VariableExtractor {
 				log.debug("no type for variable '{}'; using default ''", name);
 				type = "";
 			}
-
 			
-			if (valueNode.isAnon()) {
-				String valueString = getValueString( valueNode.asResource() );
-				Resource mapResource = getResourceValue( v, ELDA_API.mapWith );
-				String mapName = (mapResource == null ? null : mapResource.getURI());
-				Value.Apply apply = new Value.Apply(mapName, valueString);
-				Value var = new Value( valueString, language, type, apply);
-				bound.put(name,  var);
-			} else {
-				String valueString = getValueString( v );
-				Value var = new Value( valueString, language, type, Value.noApply);			
-				bound.put( name, var ); 			
-			}
+			bound.put(name, getValueFrom(valueRoot, valueNode, language, type));
 		}
+	}
+	
+	private static Value getValueFrom(Resource v, RDFNode valueNode, String language, String type) {
+		Value.Apply app = Value.noApply;
+		String valueString = null;
+		
+		if (valueNode.isAnon()) {
+			valueString = getValueString( ELDA_API.mapFrom, valueNode.asResource() );
+			Resource mapResource = getResourceValue( v, ELDA_API.mapWith );
+			String mapName = (mapResource == null ? null : mapResource.getURI());
+			app = new Value.Apply(mapName, valueString);
+		} else {
+			valueString = getValueString( API.value, v );
+		}
+		return new Value(valueString, language, type, app);
 	}
 	
 	private static String emptyIfNull(String s) {
 		return s == null ? "" : s;
 	}
 
-	private static String getValueString(Resource v) {
-		Statement s = v.getProperty( API.value );
+	private static String getValueString(Property forValue, Resource v) {
+		Statement s = v.getProperty( forValue );
 		if (s == null) return null;
 		Node object = s.getObject().asNode();
 		if (object.isURI()) return object.getURI();

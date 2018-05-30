@@ -180,6 +180,10 @@ elda:mapWith a rdf:Property
     ; rdfs:comment "object is reference to Elda SPARQL map resource."
     .
 
+elda:mapFrom a rdf:Property
+    ; rdfs:comment "value to use as the argument to the map lookup."
+    .
+
 elda:mapIn a rdf:Property
     ; rdfs:comment "name of argument variable in map."
     ; rdfs:range xsd:string

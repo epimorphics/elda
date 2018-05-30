@@ -96,7 +96,7 @@ hello:hello-world-again a api:API
    		[ api:name "var_A"
    		; elda:mapWith example:map
    		; api:value 
-   			[ api:value "Martin Wallace" 
+   			[ elda:mapFrom "Martin Wallace" 
    			; elda:mapWith example:map
    			]
    		]
