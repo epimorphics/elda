@@ -96,7 +96,7 @@ hello:hello-world-again a api:API
    	   	
    	; api:variable 
    		[ api:name "var_A"
-   		; elda:mapWith example:map
+   		# ; elda:mapWith example:map
    		; api:value 
    			[ elda:mapFrom "Martin Wallace" 
    			; elda:mapWith example:map
@@ -107,7 +107,7 @@ hello:hello-world-again a api:API
    	.
    	
 example:map a elda:SPARQLMap
-   	# ; elda:mapName "http://www.epimorphics.com/vocabularies/lda#example.map"
+   	; elda:mapName "http://www.epimorphics.com/vocabularies/lda#example.map"
    	; elda:mapIn "param"
    	; elda:mapQuery 
    		"""
