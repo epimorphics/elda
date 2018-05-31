@@ -107,7 +107,7 @@ hello:hello-world-again a api:API
    	.
    	
 example:map a elda:SPARQLMap
-   	; elda:mapName "http://www.epimorphics.com/vocabularies/lda#example.map"
+   	# ; elda:mapName "http://www.epimorphics.com/vocabularies/lda#example.map"
    	; elda:mapIn "param"
    	; elda:mapQuery 
    		"""
