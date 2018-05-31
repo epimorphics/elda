@@ -75,17 +75,17 @@ public class VariableExtractor {
 				type = "";
 			}
 			
-			bound.put(name, getValueFrom(valueRoot, valueNode, language, type));
+			bound.put(name, getValueFrom(bound, valueRoot, valueNode, language, type));
 		}
 	}
 	
-	private static Value getValueFrom(Resource v, RDFNode valueNode, String language, String type) {
+	private static Value getValueFrom(Bindings b, Resource v, RDFNode valueNode, String language, String type) {
 		Value.Apply app = Value.noApply;
 		String valueString = null;
 		
 		if (valueNode.isAnon()) {
 			Resource vnr = valueNode.asResource();
-			valueString = getValueString( ELDA_API.mapFrom, vnr );
+			valueString = b.expandVariables(getValueString( ELDA_API.mapFrom, vnr ));
 			Resource mapResource = getResourceValue( vnr, ELDA_API.mapWith );
 			String mapName = (mapResource == null ? null : mapResource.getURI());
 			app = new Value.Apply(mapName, valueString);
