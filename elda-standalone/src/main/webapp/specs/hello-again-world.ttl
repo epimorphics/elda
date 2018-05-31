@@ -91,6 +91,8 @@ hello:hello-world-again a api:API
         
     ; elda:enableCounting true
    	; elda:cacheExpiryTime "10m"
+
+   	; elda:disable-default-metadata false
    	   	
    	; api:variable 
    		[ api:name "var_A"
@@ -113,7 +115,8 @@ example:map a elda:SPARQLMap
    		select ?out where {?out rdfs:label ?param} limit 1
    		"""
    	; elda:mapOut "out"
-	.
+    .
+   	
 	
 <http://localhost:3030/ds/query> 
     elda:textSearchOperand (rdfs:label "?_search" 99)

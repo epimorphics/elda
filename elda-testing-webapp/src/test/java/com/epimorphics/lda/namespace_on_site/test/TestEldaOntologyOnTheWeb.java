@@ -19,6 +19,11 @@ public class TestEldaOntologyOnTheWeb {
 	
 	@Test @Ignore public void testOnWeb() throws IOException {
 		
+		if (true) {
+			System.err.println(">> testOnWeb suppressed for the moment.");
+			return;
+		}
+		
 		boolean ignored = generatesOutput(new String[] {"wget", "-O", DOWNFILE, URL});	
 		boolean different = generatesOutput(new String []{"cmp", ELDAVOCAB, DOWNFILE});
 		

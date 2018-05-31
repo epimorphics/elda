@@ -75,6 +75,21 @@ elda:construct a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:disable-default-metadata a rdf:Property
+    ; rdfs:comment """
+        Controls whether hardwired metadata is suppressed
+        when rendering a result.
+    """
+    .
+
+elda:enable-default-metadata a rdf:Property
+    ; rdfs:comment """
+        Controls whether hardwired metadata is suppressed
+        when rendering a result.
+    """
+    .
+
+
 elda:describeAllLabel a rdf:Property
 	; rdfs:comment ""
 	.
@@ -212,6 +227,13 @@ elda:SPARQLMap a rdf:Property
 
 elda:match a rdf:Property
 	; rdfs:comment ""
+	.
+
+elda:metadata a rdf:Property
+	; rdfs:comment 
+	"""
+		Property used in Elda metadata block declarations.
+	"""
 	.
 
 elda:meta a rdf:Property

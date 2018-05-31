@@ -25,6 +25,7 @@ import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.exceptions.EldaException;
+import com.epimorphics.lda.metadata.MetaConfig;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -94,9 +95,15 @@ public class APISpec extends SpecCommon {
 	protected final String graphTemplate;
 
 	protected final boolean purging;
+	
+	protected final MetaConfig metaConfig;
     
 	public APISpec( FileManager fm, Resource specification, ModelLoader loader ) {
-		this( "", fm, specification, loader );
+		this( new MetaConfig(), "", "APP", fm, specification, loader );
+	}
+	
+	public APISpec( MetaConfig mc, FileManager fm, Resource specification, ModelLoader loader ) {
+		this( mc, "", "APP", fm, specification, loader );
 	}
 
     public APISpec( String prefixPath, FileManager fm, Resource specification, ModelLoader loader ) {
@@ -104,6 +111,10 @@ public class APISpec extends SpecCommon {
     }
     
     public APISpec( String prefixPath, String appName, FileManager fm, Resource root, ModelLoader loader ) {
+    	this(new MetaConfig(), prefixPath, appName, fm, root, loader);
+    }
+
+    public APISpec( MetaConfig mc, String prefixPath, String appName, FileManager fm, Resource root, ModelLoader loader ) {
     	super(root);
     	AuthMap am = loadAuthMap(root, appName);
     	reportObsoleteDescribeThreshold(root);
@@ -131,6 +142,8 @@ public class APISpec extends SpecCommon {
         this.enableCounting = RDFUtils.getOptionalBooleanValue( root, ELDA_API.enableCounting, Boolean.FALSE );        
 		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( root.getModel() );
 	//
+		this.metaConfig = new MetaConfig(root, mc);
+	//		
 		setDefaultSuffixName(bindings, root);      
 		extractEndpointSpecifications( root );
         extractModelPrefixEditor( root );
@@ -164,6 +177,10 @@ public class APISpec extends SpecCommon {
 		}
 	}
 
+	public MetaConfig getMetaConfig() {
+		return metaConfig;
+	}
+	
 	protected void reportObsoleteDescribeThreshold(Resource endpoint) {
 		if (endpoint.hasProperty(ELDA_API.describeThreshold)) {
 			log.warn("endpoint '{}': elda:describeThreshold is no longer required/used.", endpoint);

@@ -90,8 +90,15 @@ extends ModelWrapper
 
     /** @return The execution object which documents the generation of this page of results */
     public Execution execution() {
+    	try {
         return new Execution( this, pageRoot().getPropertyValue( API.wasResultOf ).asResource() );
+    	} catch (NullPointerException p) {
+    		System.err.println(">> BOOMITY BOOM");
+    		p.printStackTrace(System.err);
+    		throw p;
+    	}
     }
+    	
 
     /** @return The query result object documenting the selection query */
     public QueryResult selectionQuery() {

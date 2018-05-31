@@ -1122,6 +1122,10 @@ public class APIQuery implements VarSupply, WantsMetadata {
 	@Override public boolean wantsMetadata(String name) {
 		return metadataOptions.contains(name) || metadataOptions.contains("all");
 	}
+	
+	@Override public Set<String> metaNames() {
+		return metadataOptions;
+	}
 
 	/**
 	 * Answer true if <code>name</code> is a reserved name (_whatever) that is

@@ -52,7 +52,7 @@ public class ResultsModel extends ModelWrapper
 
     /** The API results, as given */
     private APIResultSet results;
-
+    
     /***********************************/
     /* Constructors                    */
     /***********************************/

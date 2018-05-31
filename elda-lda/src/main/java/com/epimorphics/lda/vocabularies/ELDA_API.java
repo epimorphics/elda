@@ -72,8 +72,14 @@ public class ELDA_API  extends API {
     /** <p></p> */
     public static final Property describeThreshold = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#describeThreshold" );
     
+    /** <p>Controls whether hardwired metadata is suppressed when rendering a result.</p> */
+    public static final Property disable_default_metadata = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#disable-default-metadata" );
+    
     /** <p></p> */
     public static final Property element = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#element" );
+    
+    /** <p>Controls whether hardwired metadata is suppressed when rendering a result.</p> */
+    public static final Property enable_default_metadata = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#enable-default-metadata" );
     
     /** <p>If true, "true", or "yes", Elda will generate a total item count for any list-endpoint 
      *  query. If false, "false", or "no", it will not. Otherwise counting is enabled 
@@ -161,6 +167,9 @@ public class ELDA_API  extends API {
     
     /** <p></p> */
     public static final Property metaURL = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#metaURL" );
+    
+    /** <p>Property used in Elda metadata block declarations.</p> */
+    public static final Property metadata = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#metadata" );
     
     /** <p></p> */
     public static final Property metadataOptions = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#metadataOptions" );

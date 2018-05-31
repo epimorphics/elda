@@ -41,6 +41,8 @@ import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.*;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.renderers.Renderer.BytesOut;
+import com.epimorphics.lda.renderers.XMLRenderer;
+import com.epimorphics.lda.renderers.velocity.VelocityRenderer;
 import com.epimorphics.lda.routing.*;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.support.pageComposition.Messages;
@@ -356,7 +358,6 @@ import com.sun.jersey.api.NotFoundException;
         	if (formatName == null && _default != null) formatName = _default.getPreferredSuffix();
         
         	Renderer r = APIEndpointUtil.getRenderer( ep, formatName, mediaTypes );    
-        
         	if (r == null) {
         		String message = formatName == null
         			? "no suitable media type was provided for rendering."
@@ -395,6 +396,8 @@ import com.sun.jersey.api.NotFoundException;
         	ModelPrefixEditor mpe = ep.getSpec().getAPISpec().getModelPrefixEditor();
         //
         	NoteBoard nb = new NoteBoard();
+        	nb.demandPage = r instanceof VelocityRenderer || r instanceof XMLRenderer;
+        	        	
         	ResponseResult resultsAndBindings = APIEndpointUtil.call( req, nb, match, contextPath, queryParams );
         //
         //

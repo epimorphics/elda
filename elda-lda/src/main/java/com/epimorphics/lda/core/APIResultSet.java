@@ -390,7 +390,7 @@ public class APIResultSet implements SetsMetadata {
 			else model.meta.add( meta );
 		}
 	}
-
+	
 	public APIResultSet setSelectQuery( String selectQuery ) {
 		if (this.selectQuery.length() > 0) throw new RuntimeException( "was " + this.selectQuery + " wants " + selectQuery );
 		this.selectQuery = selectQuery;
