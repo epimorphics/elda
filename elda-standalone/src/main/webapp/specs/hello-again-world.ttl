@@ -94,10 +94,13 @@ hello:hello-world-again a api:API
 
    	; elda:disable-default-metadata false
    	   	
+   	; api:variable [ api:name "M"; api:value "Martin" ]
+   	; api:variable [ api:name "W"; api:value "Wallace" ]
+   	
    	; api:variable 
    		[ api:name "var_A"
    		; api:value 
-   			[ elda:mapFrom "Martin Wallace" 
+   			[ elda:mapFrom "{M} {W}" 
    			; elda:mapWith example:map
    			]
    		]

@@ -1,0 +1,68 @@
+Hi All
+
+This is a revision of last week's draft of mapping
+for option B, incorporating some suggestions from Brian.
+
+A variable declaration may mention a map in its
+api:value
+
+    ...
+
+   	; api:variable 
+   		[ api:name "var_A"
+   		; api:value 
+   			[ elda:mapFrom "Martin Wallace" 
+   			; elda:mapWith example:map
+   			]
+   		]
+    ...
+
+If the api:value of a variable is a resource (in the
+example, it's a bnode), then the value of that variable
+is obtained by running the named query (above, example:map
+as referred to with elda:mapWith) with input argument
+"Martin Wallace" and using the output of the query as
+the value of this variable.
+
+The value of the variable is its api:value as translated
+by the map [1].
+
+Maps are declared to be associated with specs:
+
+    ...
+       ; elda:sparqlMap example:map     
+    ...
+
+(This will be changed shortly)
+
+The map is attached to the api spec. This allows multiple
+different maps to be attached to different api specs in the same
+configuration.
+
+A map is represented by a resource and referred to (in a
+variable declaration) by its resource name. If a map is a bnode,
+it can be given a name using a mapName property.
+
+   example:map a elda:SPARQLMap
+       # ; elda:mapName "http://www.epimorphics.com/vocabularies/lda#example.map"
+       ; elda:mapIn "param"
+       ; elda:mapQuery
+           """
+           prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+           select ?out where {?out rdfs:label ?param} limit 1
+           """
+       ; elda:mapOut "out"
+    .
+
+the mapIn property names the variable name bound to the
+input to the map, here "param". If omitted it defaults
+to "param".
+
+the mapQuery property gives the text of the SPARQL query
+that implements the map. Any defined (ie given a value)
+variable that appears in the query, eg ?param, is replaced
+by its value.
+
+The variable named by mapOut is the variable who's value
+is the output of the map. If omitted it defaults to "out".
+
