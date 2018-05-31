@@ -83,7 +83,7 @@ public class VariableExtractor {
 		Value.Apply app = Value.noApply;
 		String valueString = null;
 		
-		if (valueNode.isAnon()) {
+		if (valueNode.isResource()) {
 			Resource vnr = valueNode.asResource();
 			valueString = getValueString( ELDA_API.mapFrom, vnr );
 			Resource mapResource = getResourceValue( vnr, ELDA_API.mapWith );
