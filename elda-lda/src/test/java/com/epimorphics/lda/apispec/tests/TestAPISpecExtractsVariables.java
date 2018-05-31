@@ -40,9 +40,9 @@ public class TestAPISpecExtractsVariables
 
 	@Test public void testTwoVariablesInRDFMeansTwoInSpec()
 		{
-		testVariableExtraction( "fred=api:value;tom='frodo'", 
+		testVariableExtraction( "fred='api:value';tom='frodo'", 
 			":my a api:API; api:sparqlEndpoint :spoo; api:variable"
-			+ " [api:name 'fred'; api:value api:value]"
+			+ " [api:name 'fred'; api:value 'api:value']"
 			+ ", [api:name 'tom'; api:value 'frodo']." 
 			);
 		}
