@@ -11,7 +11,7 @@ api:value
    	; api:variable 
    		[ api:name "var_A"
    		; api:value 
-   			[ elda:mapFrom "Martin Wallace" 
+   			[ elda:mapFrom "argument" 
    			; elda:mapWith example:map
    			]
    		]
@@ -21,7 +21,7 @@ If the api:value of a variable is a resource (in the
 example, it's a bnode), then the value of that variable
 is obtained by running the named query (above, example:map
 as referred to with elda:mapWith) with input argument
-"Martin Wallace" and using the output of the query as
+"argument" and using the output of the query as
 the value of this variable.
 
 The value of the variable is its api:value as translated
