@@ -19,7 +19,6 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.fasterxml.jackson.databind.node.ValueNode;
 import com.hp.hpl.jena.graph.Node;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Property;
@@ -27,6 +26,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.rdf.model.Statement;
+import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
 /**
@@ -79,18 +79,23 @@ public class VariableExtractor {
 				type = "";
 			}
 			
-			bound.put(name, getValueFrom(bound, valueRoot, valueNode, language, type));
+			bound.put(name, getValueFrom(name, bound, valueRoot, valueNode, language, type));
 		}
 	}
 	
-	private static Value getValueFrom(Bindings b, Resource v, RDFNode valueNode, String language, String type) {
+	private static Value getValueFrom(String name, Bindings b, Resource v, RDFNode valueNode, String language, String type) {
 		Value.Apply app = Value.noApply;
 		String valueString = null;
 		
-		if (valueNode.isAnon()) {
+		if (valueNode.isResource()) {
 			Resource vnr = valueNode.asResource();
 			valueString = b.expandVariables(getValueString( ELDA_API.mapFrom, vnr ));
 			Resource mapResource = getResourceValue( vnr, ELDA_API.mapWith );
+			
+			if (!mapResource.hasProperty(RDF.type, ELDA_API.SPARQLMap)) {
+				throw new EldaException("api:variable " + name + " has elda:mapWith " + mapResource + " which is not typed elda:SPARQLMap");
+			}			
+			
 			String mapName = (mapResource == null ? null : mapResource.getURI());
 			app = new Value.Apply(mapName, valueString);
 		} else {
