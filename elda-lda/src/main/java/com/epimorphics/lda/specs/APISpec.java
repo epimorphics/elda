@@ -149,6 +149,8 @@ public class APISpec extends SpecCommon {
 			String inName = getStringValue(mapSpec, ELDA_API.mapIn, "param");
 			String outName = getStringValue(mapSpec, ELDA_API.mapOut, "result");	
 			String queryString = getStringValue(mapSpec,ELDA_API.mapQuery);
+			if (queryString == null) 
+				throw new EldaException("SPARQLMap spec " + mapSpec + " has no mapQuery.");
 			maps.put(mapName, new Element(inName, queryString, outName));
 		}
 		
