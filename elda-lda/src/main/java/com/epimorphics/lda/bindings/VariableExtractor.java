@@ -60,6 +60,10 @@ public class VariableExtractor {
 		for (Statement s: root.listProperties( API.variable ).toList()) {
 			Resource valueRoot = s.getResource();
 			String name = getStringValue( valueRoot, API.name, null );
+			
+			if (name == null) 
+				throw new EldaException("api:variable " + valueRoot + " has no api:name.");
+			
 			String type = getStringValue( valueRoot, API.type, null );
 			String language = getStringValue( valueRoot, API.lang, "" );
 			
