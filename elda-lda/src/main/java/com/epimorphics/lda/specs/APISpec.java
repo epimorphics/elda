@@ -42,6 +42,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Map1;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
  * Encapsulates a specification of a single API instance.
@@ -139,15 +140,15 @@ public class APISpec extends SpecCommon {
 	public static MapLookup createMapLookup(Resource root, final Source ds) {
 		final Map<String, SPARQLMapLookup.Element> maps = new HashMap<String, SPARQLMapLookup.Element>();
 	//		
-		for (Statement decl: root.listProperties(ELDA_API.sparqlMap).toList()) {
-			Resource map = decl.getResource();	
-			String mapName = map.isURIResource()
-				? map.getURI()
-				: getResourceValue(map, ELDA_API.mapName).getURI()
+		List<Resource> mapSpecs = root.getModel().listSubjectsWithProperty(RDF.type, ELDA_API.SPARQLMap).toList();
+		for (Resource mapSpec: mapSpecs) {
+			String mapName = mapSpec.isURIResource()
+				? mapSpec.getURI()
+				: getResourceValue(mapSpec, ELDA_API.mapName).getURI()
 				; 
-			String inName = getStringValue(map, ELDA_API.mapIn, "param");
-			String outName = getStringValue(map, ELDA_API.mapOut, "result");	
-			String queryString = getStringValue(map,ELDA_API.mapQuery);
+			String inName = getStringValue(mapSpec, ELDA_API.mapIn, "param");
+			String outName = getStringValue(mapSpec, ELDA_API.mapOut, "result");	
+			String queryString = getStringValue(mapSpec,ELDA_API.mapQuery);
 			maps.put(mapName, new Element(inName, queryString, outName));
 		}
 		

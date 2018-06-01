@@ -102,8 +102,6 @@ hello:hello-world-again a api:API
    			; elda:mapWith example:map
    			]
    		]
-
-   	; elda:sparqlMap example:map  	
    	.
    	
 example:map a elda:SPARQLMap
