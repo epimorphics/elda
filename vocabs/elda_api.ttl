@@ -153,6 +153,10 @@ elda:ifStarts a rdf:Property
 	; rdfs:comment ""
 	.
 
+elda:includesFragment a rdf:Property
+	; rdfs:comment "Configs can include sub-config fragments."
+	.
+
 elda:license a rdf:Property
     ; rdfs:comment 
         """ 

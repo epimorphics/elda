@@ -26,7 +26,13 @@ import com.epimorphics.lda.routing.ServletUtils.GetInitParameter;
 import com.epimorphics.lda.routing.Container;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.support.*;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.util.*;
 
 /**
@@ -52,7 +58,7 @@ public class RouterRestletSupport {
 
 	public static long latestConfigTime(ServletContext con, String contextPath) {
 		long latestTime = 0;
-		List<PrefixAndFilename> pfs = prefixAndFilenames( con, contextPath );
+		List<PrefixAndFilename> pfs = prefixAndFilenames( true, con, contextPath );
 		for (PrefixAndFilename s: pfs) {
 			long lmFile = new File(s.fileName).lastModified();
 			long lmDir = new File(s.fileName).getParentFile().lastModified();
@@ -62,7 +68,7 @@ public class RouterRestletSupport {
 		return latestTime;
 	}
     
-    public static List<PrefixAndFilename> prefixAndFilenames( ServletContext con, String contextPath ) {
+    public static List<PrefixAndFilename> prefixAndFilenames( boolean includeIncludes, ServletContext con, String contextPath ) {
     	List<PrefixAndFilename> pfs = new ArrayList<PrefixAndFilename>();
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
@@ -91,6 +97,15 @@ public class RouterRestletSupport {
 						: prefixName
 						;
 					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
+					if (includeIncludes && !f.isDirectory()) {
+						Model m = FileManager.get().loadModel(f.getAbsolutePath());						
+						for (Statement s: m.listStatements(null, ELDA_API.includesFragment, (RDFNode) null).toList()) {
+							String fileToInclude = s.getString();
+							File parent = new File(fullPath).getParentFile();
+							File inc = new File(parent, fileToInclude);
+							pfs.add(new PrefixAndFilename(expandedPrefix,  inc.getAbsolutePath()));
+						}
+					}
 				}
 			}				
 		}
@@ -103,7 +118,7 @@ public class RouterRestletSupport {
     */
 	public static Router createRouterFor( ServletContext con ) {
 		String contextName = RouterRestletSupport.flatContextPath( con.getContextPath() );		
-		List<PrefixAndFilename> pfs = prefixAndFilenames( con, contextName );
+		List<PrefixAndFilename> pfs = prefixAndFilenames( false, con, contextName );
 	//	
 		Router result = new DefaultRouter();	
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
