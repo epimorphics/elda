@@ -86,7 +86,10 @@ public class RouterRestletSupport {
 				log.debug( "full path '{}' matches {} files", fullPath, files.size());
 				for (File f: files) {
 					log.debug("file '{}'", f);
-					String expandedPrefix = ServletUtils.containsStar(prefixName) ? ServletUtils.nameToPrefix(prefixName, specName, f.getName()) : prefixName;
+					String expandedPrefix = ServletUtils.containsStar(prefixName) 
+						? ServletUtils.nameToPrefix(prefixName, specName, f.getName()) 
+						: prefixName
+						;
 					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
 				}
 			}				

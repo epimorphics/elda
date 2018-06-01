@@ -72,6 +72,7 @@ public class ServletUtils {
         return wildPrefix.replace( "*", (matched == null ? "NOMATCH" : matched) );
     }
 
+    /** local:something or tdb:something. */
     public static boolean isSpecialName( String specPath ) {
         return specPath.startsWith( Container.LOCAL_PREFIX )
             || specPath.startsWith( TDBManager.PREFIX )
