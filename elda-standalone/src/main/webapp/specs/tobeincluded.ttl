@@ -16,7 +16,6 @@
 #
 # class and property declarations, setting shortnames and
 # property ranges.
-#
 
 egc:gamesDataset
     api:label "inDataset"

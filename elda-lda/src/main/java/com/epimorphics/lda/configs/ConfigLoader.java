@@ -7,6 +7,7 @@
 
 package com.epimorphics.lda.configs;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +21,12 @@ import com.epimorphics.lda.routing.ServletUtils;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.vocabularies.API;
+import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
@@ -95,7 +99,19 @@ public class ConfigLoader {
 	*/
 	private static Model safeLoad(ModelLoader ml, String thisSpecPath) {
 		try {
-			return ml.loadModel( thisSpecPath );
+			Model m = ml.loadModel( thisSpecPath );
+			
+			for (Statement include: m.listStatements(null, ELDA_API.includesFragment, (RDFNode) null).toList()) {
+				try {
+					File parent = new File(thisSpecPath).getParentFile();
+					File inc = new File(parent, include.getString());
+					EldaFileManager.get().readModel(m, inc.getAbsolutePath());
+				} catch (RuntimeException e) {
+					throw e;
+				}
+			};
+			
+			return m;
 		} catch (RuntimeException e) {
 			log.error("error loading spec file '{}': {}", thisSpecPath, e);
 			return ModelFactory.createDefaultModel();

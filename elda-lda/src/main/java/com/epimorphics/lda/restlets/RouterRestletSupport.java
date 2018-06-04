@@ -28,10 +28,8 @@ import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.util.*;
 
@@ -98,7 +96,7 @@ public class RouterRestletSupport {
 						;
 					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
 					if (includeIncludes && !f.isDirectory()) {
-						Model m = FileManager.get().loadModel(f.getAbsolutePath());						
+						Model m = EldaFileManager.get().loadModel(f.getAbsolutePath());						
 						for (Statement s: m.listStatements(null, ELDA_API.includesFragment, (RDFNode) null).toList()) {
 							String fileToInclude = s.getString();
 							File parent = new File(fullPath).getParentFile();
