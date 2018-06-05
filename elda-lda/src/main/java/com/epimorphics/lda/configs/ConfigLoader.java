@@ -113,6 +113,7 @@ public class ConfigLoader {
 			
 			return m;
 		} catch (RuntimeException e) {
+			// e.printStackTrace(System.err);
 			log.error("error loading spec file '{}': {}", thisSpecPath, e);
 			return ModelFactory.createDefaultModel();
 		}
