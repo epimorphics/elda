@@ -8,8 +8,13 @@
 package com.epimorphics.lda.configs;
 
 import java.io.File;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,5 +123,35 @@ public class ConfigLoader {
 			return ModelFactory.createDefaultModel();
 		}
 	}
+	
+	public static Model loadModelExpanding(String path) {
+		return loadModelExpanding(path, new HashMap<String, Model>());
+	}
+	
+	private static Model loadModelExpanding(String path, Map<String, Model> seen) {
+		Model already = seen.get(path);
+		if (already == null) {
+			String fileContent = EldaFileManager.get().readWholeFileAsUTF8(path);
+			Model result = ModelFactory.createDefaultModel();
+			StringBuilder sb = new StringBuilder();
+			int here = 0;
+			while (true) {
+				int foundAt = fileContent.indexOf("#include ", here);
+				if (foundAt < 0) break;
+				String xxx = fileContent.substring(here, foundAt);
+				sb.append(xxx);
+				int atNL = fileContent.indexOf('\n', foundAt);
+				String foundPath = fileContent.substring(foundAt + 9, atNL);
+				System.err.println(">> deal with included files.");
+				here = atNL + 1;
+			}
+			sb.append(fileContent.substring(here));			
+			result.read(new StringReader(sb.toString()), "/testing/me", "TTL");
+			return result;
+		} else {
+			return already;
+		}
+	}
+	
 
 }
