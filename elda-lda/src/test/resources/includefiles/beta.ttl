@@ -1,0 +1,3 @@
+# included from beta.ttl
+
+[] rdf:type xsd:string.

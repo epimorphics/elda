@@ -125,31 +125,33 @@ public class ConfigLoader {
 	}
 	
 	public static Model loadModelExpanding(String path) {
-		return loadModelExpanding(path, new HashMap<String, Model>());
+		StringBuilder result = new StringBuilder();
+		loadModelExpanding(result, path, new HashMap<String, String>());
+		Model m = ModelFactory.createDefaultModel();
+		m.read(new StringReader(result.toString()), "/testing/me", "TTL");
+		return m;
 	}
 	
-	private static Model loadModelExpanding(String path, Map<String, Model> seen) {
-		Model already = seen.get(path);
+	private static void loadModelExpanding(StringBuilder result, String path, Map<String, String> seen) {
+		String already = seen.get(path);
 		if (already == null) {
 			String fileContent = EldaFileManager.get().readWholeFileAsUTF8(path);
-			Model result = ModelFactory.createDefaultModel();
-			StringBuilder sb = new StringBuilder();
+			Model m = ModelFactory.createDefaultModel();
 			int here = 0;
 			while (true) {
 				int foundAt = fileContent.indexOf("#include ", here);
 				if (foundAt < 0) break;
-				String xxx = fileContent.substring(here, foundAt);
-				sb.append(xxx);
+				String leadingContent = fileContent.substring(here, foundAt);
+				result.append(leadingContent);
 				int atNL = fileContent.indexOf('\n', foundAt);
 				String foundPath = fileContent.substring(foundAt + 9, atNL);
-				System.err.println(">> deal with included files.");
+				String fullPath = "includefiles/" + foundPath; // new File(new File(path).getParent(), foundPath).getAbsolutePath();
+				loadModelExpanding(result, fullPath, seen);		
 				here = atNL + 1;
 			}
-			sb.append(fileContent.substring(here));			
-			result.read(new StringReader(sb.toString()), "/testing/me", "TTL");
-			return result;
+			result.append(fileContent.substring(here));
 		} else {
-			return already;
+			result.append(already);
 		}
 	}
 	
