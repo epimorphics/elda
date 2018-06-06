@@ -91,7 +91,7 @@ hello:hello-world-again a api:API
    	; elda:cacheExpiryTime "10m"
 	.
 	
-[elda:includesFragment "tobeincluded.ttl"].
+#include tobeincluded.ttl
 	
 <http://localhost:3030/ds/query> 
     elda:textSearchOperand (rdfs:label "?_search" 99)

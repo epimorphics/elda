@@ -104,19 +104,22 @@ public class ConfigLoader {
 	*/
 	private static Model safeLoad(ModelLoader ml, String thisSpecPath) {
 		try {
-			Model m = ml.loadModel( thisSpecPath );
+			System.err.println(">> safeLoad " + thisSpecPath);
 			
-			for (Statement include: m.listStatements(null, ELDA_API.includesFragment, (RDFNode) null).toList()) {
-				try {
-					File parent = new File(thisSpecPath).getParentFile();
-					File inc = new File(parent, include.getString());
-					EldaFileManager.get().readModel(m, inc.getAbsolutePath());
-				} catch (RuntimeException e) {
-					throw e;
-				}
-			};
-			
-			return m;
+//			Model m = ml.loadModel( thisSpecPath );
+//			
+//			for (Statement include: m.listStatements(null, ELDA_API.includesFragment, (RDFNode) null).toList()) {
+//				try {
+//					File parent = new File(thisSpecPath).getParentFile();
+//					File inc = new File(parent, include.getString());
+//					EldaFileManager.get().readModel(m, inc.getAbsolutePath());
+//				} catch (RuntimeException e) {
+//					throw e;
+//				}
+//			};
+//			
+//			return m;
+			return loadModelExpanding(ml, thisSpecPath);
 		} catch (RuntimeException e) {
 			// e.printStackTrace(System.err);
 			log.error("error loading spec file '{}': {}", thisSpecPath, e);
@@ -124,15 +127,15 @@ public class ConfigLoader {
 		}
 	}
 	
-	public static Model loadModelExpanding(String path) {
+	public static Model loadModelExpanding(ModelLoader ml, String path) {
 		StringBuilder result = new StringBuilder();
-		loadModelExpanding(result, path, new HashMap<String, String>());
+		loadModelExpanding(ml, result, path, new HashMap<String, String>());
 		Model m = ModelFactory.createDefaultModel();
 		m.read(new StringReader(result.toString()), "/testing/me", "TTL");
 		return m;
 	}
 	
-	private static void loadModelExpanding(StringBuilder result, String path, Map<String, String> seen) {
+	private static void loadModelExpanding(ModelLoader ml, StringBuilder result, String path, Map<String, String> seen) {
 		String already = seen.get(path);
 		if (already == null) {
 			String fileContent = EldaFileManager.get().readWholeFileAsUTF8(path);
@@ -147,7 +150,7 @@ public class ConfigLoader {
 				String foundPath = fileContent.substring(foundAt + 9, atNL);				
 				File sibling = new File(new File(path).getParent(), foundPath);
 				String fullPath = foundPath.startsWith("/") ? foundPath : sibling.toString(); 				
-				loadModelExpanding(result, fullPath, seen);		
+				loadModelExpanding(ml, result, fullPath, seen);		
 				here = atNL + 1;
 			}
 			result.append(fileContent.substring(here));
