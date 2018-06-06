@@ -144,8 +144,9 @@ public class ConfigLoader {
 				String leadingContent = fileContent.substring(here, foundAt);
 				result.append(leadingContent);
 				int atNL = fileContent.indexOf('\n', foundAt);
-				String foundPath = fileContent.substring(foundAt + 9, atNL);
-				String fullPath = "includefiles/" + foundPath; // new File(new File(path).getParent(), foundPath).getAbsolutePath();
+				String foundPath = fileContent.substring(foundAt + 9, atNL);				
+				File sibling = new File(new File(path).getParent(), foundPath);
+				String fullPath = foundPath.startsWith("/") ? foundPath : sibling.toString(); 				
 				loadModelExpanding(result, fullPath, seen);		
 				here = atNL + 1;
 			}
