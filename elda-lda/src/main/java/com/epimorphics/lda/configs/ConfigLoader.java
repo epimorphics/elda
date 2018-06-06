@@ -104,21 +104,6 @@ public class ConfigLoader {
 	*/
 	private static Model safeLoad(ModelLoader ml, String thisSpecPath) {
 		try {
-			System.err.println(">> safeLoad " + thisSpecPath);
-			
-//			Model m = ml.loadModel( thisSpecPath );
-//			
-//			for (Statement include: m.listStatements(null, ELDA_API.includesFragment, (RDFNode) null).toList()) {
-//				try {
-//					File parent = new File(thisSpecPath).getParentFile();
-//					File inc = new File(parent, include.getString());
-//					EldaFileManager.get().readModel(m, inc.getAbsolutePath());
-//				} catch (RuntimeException e) {
-//					throw e;
-//				}
-//			};
-//			
-//			return m;
 			return loadModelExpanding(ml, thisSpecPath);
 		} catch (RuntimeException e) {
 			// e.printStackTrace(System.err);
