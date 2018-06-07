@@ -11,10 +11,8 @@ import java.io.File;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +24,9 @@ import com.epimorphics.lda.routing.ServletUtils;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
@@ -124,7 +119,6 @@ public class ConfigLoader {
 		String already = seen.get(path);
 		if (already == null) {
 			String fileContent = EldaFileManager.get().readWholeFileAsUTF8(path);
-			Model m = ModelFactory.createDefaultModel();
 			int here = 0;
 			while (true) {
 				int foundAt = fileContent.indexOf("#include ", here);
