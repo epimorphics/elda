@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.support.EldaFileManager;
@@ -14,11 +15,32 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class TestIncludeReader {
 
-	@Test public void testIncludeReader() {
+	@Test @Ignore public void testIncludeReader() throws IOException {
 		Model m = ModelFactory.createDefaultModel();
 		Reader r = new ThingReader("includefiles/toplevel.ttl");
-		m.read(r, "", "TTL");
-		m.write(System.out, "TTL");
+		
+		boolean runRiot = true;
+		
+		if (runRiot) {
+			try {
+				m.read(r, "", "TTL");
+			} catch (Throwable e) {
+				e.printStackTrace(System.err);
+				throw e;
+			}
+			System.err.println(">> ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" );
+			m.write(System.out, "TTL");
+			
+		} else {
+			
+			while (true) {
+				char [] cbuf = new char[20000];
+				int n = r.read(cbuf, 0, cbuf.length);
+				if (n < 0) break;
+				for (int i = 0; i < n; i += 1)
+					System.err.print(cbuf[i]);
+				}
+			}
 	}
 	
 	static class ThingReader extends Reader {
@@ -31,6 +53,8 @@ public class TestIncludeReader {
 		String content;
 		String filePath;
 		
+		int lineCount = 0;
+		
 		public ThingReader(String fileSpec) {
 			this.filePath = fileSpec;
 			this.content = EldaFileManager.get().readWholeFileAsUTF8(fileSpec);
@@ -41,56 +65,59 @@ public class TestIncludeReader {
 			if (nlPos < 0) {
 				return pop();
 			} else {
-//				System.err.println(">> " + content.substring(here, nlPos));
-				String line = content.substring(here, nlPos);
+				String subs = content.substring(here, nlPos);
+				String line = subs;
 				if (line.startsWith("#include ")) {
 					String foundPath = line.substring(9);
 					File sibling = new File(new File(filePath).getParent(), foundPath);
 					String fullPath = foundPath.startsWith("/") ? foundPath : sibling.toString(); 				
 					String toInclude = EldaFileManager.get().readWholeFileAsUTF8(fullPath);
-					push(toInclude);
+					here = nlPos + 1;
+					push(fullPath, toInclude);
+					return read(cbuf, off, len);
 				} else {
+					lineCount += 1;
+					
 					for (int i = here; i < nlPos; i += 1) {
-						cbuf[off++] = content.charAt(here);
-					}				
+						cbuf[off++] = content.charAt(i);
+					}			
+					cbuf[off++] = '\n';
+					
+					int result = nlPos - here + 1;
+					here = nlPos + 1;
+					return result;
 				}
-				
-				int result = nlPos - here;
-				here = nlPos + 1;
-				return result;
 			}
 		}
-
-		int count = 10;
+		
 		private int pop() {
-			System.err.println(">> pop()");
-			count -= 1;
-			if (count == 0) throw new RuntimeException("DONEDONE");
-			int which = contents.size() - 1;
+			
+			if (heres.isEmpty()) {
+				return -1;
+			}
+			
+			int which = contents.isEmpty() ? 0 : contents.size() - 1;
+			
 			content = contents.remove(which);
 			here = heres.remove(which);
-			
-			System.err.println(">> heres: " + heres);
-			System.err.println(">> here " + here);
-			System.err.println(">> length: " + content.length());
-			
-			int x = heres.isEmpty() && here >= content.length() ? -1 : 0;
-			
-			System.err.println(">> x: " + x);
-			return x;
+			filePath = paths.remove(which);
+						
+			int returnCode = heres.isEmpty() && here >= content.length() ? -1 : 0;
+			return returnCode;
 		}
 
-		private void push(String toInclude) {
+		private void push(String filePath, String toInclude) {
 			contents.add(content);
 			heres.add(here);
 			paths.add(filePath);
 		//
-			content = toInclude;
-			here = 0;
+			this.content = toInclude;
+			this.here = 0;
+			this.filePath = filePath;
 		}
 
 		@Override public void close() throws IOException {
-			
+			// nothing to do.
 		}
 		
 	}

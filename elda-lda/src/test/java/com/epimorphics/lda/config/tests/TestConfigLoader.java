@@ -2,6 +2,7 @@ package com.epimorphics.lda.config.tests;
 
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.configs.ConfigLoader;
@@ -24,7 +25,7 @@ public class TestConfigLoader {
 		
 	static final Model ignore = testModel.add(example, RDF.type, XSD.xstring);
 	
-	@Test public void testConfigLoader() {
+	@Test @Ignore public void testConfigLoader() {
 		Model m = ConfigLoader.loadModelExpanding(ml, "includefiles/toplevel.ttl");		
 		assertTrue(m.isIsomorphicWith(testModel));
 	}
