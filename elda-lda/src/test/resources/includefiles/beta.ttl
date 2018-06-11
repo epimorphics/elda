@@ -1,4 +1,4 @@
-# included from beta.ttl
+# from: beta.ttl
 
 rdfs:range rdf:type rdf:Property .
 elda:example rdf:type xsd:string .
