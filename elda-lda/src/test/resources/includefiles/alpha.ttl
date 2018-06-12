@@ -1,17 +1,5 @@
 # from: alpha.ttl
 
-@prefix api:                <http://purl.org/linked-data/api/vocab#> .
-@prefix dct:				<http://purl.org/dc/terms/> .
-
 @prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd:                <http://www.w3.org/2001/XMLSchema#> .
-
-# The elda namespace/prefix is for Elda extensions to the LDA specification.
 @prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
-@prefix foaf:               <http://xmlns.com/foaf/0.1/>.
-
-# Prefix for example-local entities.
-@prefix egc:      <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#>.
-@prefix hello:    <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#games> .
-@prefix again:    <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#again> .

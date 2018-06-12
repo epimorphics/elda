@@ -1,6 +1,5 @@
 #this is a top-level document with inclusions.
 
 #include alpha.ttl
-# separator
+
 #include beta.ttl
-# terminator
