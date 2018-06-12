@@ -1,8 +1,11 @@
 package com.epimorphics.lda.config.tests;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +18,14 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 public class TestIncludeReader {
 
-	@Test @Ignore public void testIncludeReader() throws IOException {
+//	@Test public void runReader() {
+//		Model m = ModelFactory.createDefaultModel();
+//		m.read("/tmp/readme.ttl");
+//		m.write(System.out, "TTL");
+//	}
+	
+	
+	@Test public void testIncludeReader() throws IOException {
 		Model m = ModelFactory.createDefaultModel();
 		Reader r = new ThingReader("includefiles/toplevel.ttl");
 		
@@ -24,6 +34,8 @@ public class TestIncludeReader {
 		if (runRiot) {
 			try {
 				m.read(r, "", "TTL");
+				System.err.println(">> READ ------------------------------------------.");
+				r.close();
 			} catch (Throwable e) {
 				e.printStackTrace(System.err);
 				throw e;
@@ -40,6 +52,7 @@ public class TestIncludeReader {
 				for (int i = 0; i < n; i += 1)
 					System.err.print(cbuf[i]);
 				}
+				r.close();
 			}
 	}
 	
@@ -55,18 +68,35 @@ public class TestIncludeReader {
 		
 		int lineCount = 0;
 		
+		PrintWriter pw = newPW();
+		
 		public ThingReader(String fileSpec) {
 			this.filePath = fileSpec;
 			this.content = EldaFileManager.get().readWholeFileAsUTF8(fileSpec);
+		}
+		
+		PrintWriter newPW() {
+			try {
+				return new PrintWriter("/tmp/loggit", "UTF-8");
+			} catch (FileNotFoundException e) {
+				throw new RuntimeException("NOT FOUND");
+			} catch (UnsupportedEncodingException e) {
+				throw new RuntimeException("UNSUPPORTED");
+			}
 		}
 
 		@Override public int read(char[] cbuf, int off, int len) throws IOException {
 			int nlPos = content.indexOf('\n', here);
 			if (nlPos < 0) {
-				return pop();
+				if (heres.isEmpty()) return -1;
+				pop();
+				return read(cbuf, off, len);
 			} else {
 				String subs = content.substring(here, nlPos);
 				String line = subs;
+				
+				// System.err.println(">> line: " + lineCount + " '" + line + "'");
+				
 				if (line.startsWith("#include ")) {
 					String foundPath = line.substring(9);
 					File sibling = new File(new File(filePath).getParent(), foundPath);
@@ -78,9 +108,13 @@ public class TestIncludeReader {
 				} else {
 					lineCount += 1;
 					
+					System.err.println(">> line: " + lineCount + " text: " + line );
+					
 					for (int i = here; i < nlPos; i += 1) {
+						note(content.charAt(i));
 						cbuf[off++] = content.charAt(i);
 					}			
+					note('\n');
 					cbuf[off++] = '\n';
 					
 					int result = nlPos - here + 1;
@@ -90,20 +124,17 @@ public class TestIncludeReader {
 			}
 		}
 		
-		private int pop() {
-			
-			if (heres.isEmpty()) {
-				return -1;
-			}
+		void note(char ch) {
+			pw.println(">> line " + lineCount + " char " + ch + " (" + (int) ch + ")");
+		}
+		
+		private void pop() {
 			
 			int which = contents.isEmpty() ? 0 : contents.size() - 1;
 			
 			content = contents.remove(which);
 			here = heres.remove(which);
 			filePath = paths.remove(which);
-						
-			int returnCode = heres.isEmpty() && here >= content.length() ? -1 : 0;
-			return returnCode;
 		}
 
 		private void push(String filePath, String toInclude) {
@@ -117,7 +148,9 @@ public class TestIncludeReader {
 		}
 
 		@Override public void close() throws IOException {
-			// nothing to do.
+			pw.println(">> ENDED ---------------------------");
+			pw.flush();
+			pw.close();
 		}
 		
 	}
