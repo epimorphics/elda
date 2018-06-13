@@ -6,8 +6,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.jena.riot.RiotException;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -23,7 +28,7 @@ import com.hp.hpl.jena.vocabulary.XSD;
 
 public class TestIncludeReader {
 	
-	@Test public void testIncludeReader() throws IOException {
+	@Test public void testIncludeReaderTriple() throws IOException {
 		Model m = ModelFactory.createDefaultModel();
 		Reader r = new ThingReader("includefiles/toplevel.ttl");
 		m.read(r, "", "TTL");
@@ -37,73 +42,100 @@ public class TestIncludeReader {
 	//
 		if (!m.isIsomorphicWith(expect)) fail("did not read concatenated turtle.");
 	}
+
+	@Test public void testIncludeReaderException() throws IOException {
+		Model m = ModelFactory.createDefaultModel();
+		ThingReader r = new ThingReader("includefiles/badtoplevel.ttl");
+		try {
+			m.read(r, "", "TTL");
+		} catch (RiotException re) {
+			String message = re.getMessage();
+			System.err.println(">> " + message);
+			Pattern p = Pattern.compile("line: ([0-9]+)");
+			Matcher mat = p.matcher(message);
+			mat.find();
+			int intLine = Integer.parseInt(mat.group(1));
+			System.err.println("@ line " + intLine);
+			System.err.println(">> actual line: " + r.mapLine(intLine));
+		}
+		r.close();
+	//
+		fail("exception not caught");
+	}
 	
 	static class ThingReader extends Reader {
 		
-		final List<String> contents = new ArrayList<String>();
-		final List<Integer> heres = new ArrayList<Integer>();
-		final List<String> paths = new ArrayList<String>();
+		final List<Layer> layers = new ArrayList<Layer>();
 		
-		int here = 0;
-		String content;
-		String filePath;
+		Layer layer = new Layer("", "");
 		
 		int lineCount = 0;
 		
+		final Map<String, String> seen = new HashMap<String, String>();
+		
+		public String mapLine(int appendedLine) {
+			return "TODO";
+		}
+		
 		public ThingReader(String fileSpec) {
-			this.filePath = fileSpec;
-			this.content = EldaFileManager.get().readWholeFileAsUTF8(fileSpec);
+			this.layer = new Layer(EldaFileManager.get().readWholeFileAsUTF8(fileSpec), fileSpec);
 		}
 
 		@Override public int read(char[] cbuf, int off, int len) throws IOException {
-			int nlPos = content.indexOf('\n', here);
+			String content = layer.content;
+		//
+			int nlPos = content.indexOf('\n', layer.here);
 			if (nlPos < 0) {
-				if (heres.isEmpty()) return -1;
+				if (layers.isEmpty()) return -1;
 				pop();
 				return read(cbuf, off, len);
 			} else {
-				String subs = content.substring(here, nlPos);
+				String subs = content.substring(layer.here, nlPos);
 				String line = subs;
 								
 				if (line.startsWith("#include ")) {
 					String foundPath = line.substring(9);
-					File sibling = new File(new File(filePath).getParent(), foundPath);
+					File sibling = new File(new File(layer.filePath).getParent(), foundPath);
 					String fullPath = foundPath.startsWith("/") ? foundPath : sibling.toString(); 				
 					String toInclude = EldaFileManager.get().readWholeFileAsUTF8(fullPath);
-					here = nlPos + 1;
+					layer.here = nlPos + 1;
 					push(fullPath, toInclude);
 					return read(cbuf, off, len);
 				} else {
 					lineCount += 1;
 										
-					for (int i = here; i < nlPos; i += 1) {
-						cbuf[off++] = content.charAt(i);
+					for (int i = layer.here; i < nlPos; i += 1) {
+						cbuf[off++] = layer.content.charAt(i);
 					}			
 					cbuf[off++] = '\n';
 					
-					int result = nlPos - here + 1;
-					here = nlPos + 1;
+					int result = nlPos - layer.here + 1;
+					layer.here = nlPos + 1;
 					return result;
 				}
 			}
 		}
 		
-		private void pop() {
-			int which = contents.isEmpty() ? 0 : contents.size() - 1;
+		public static class Layer {
+			String content;
+			int here;
+			String filePath;
 			
-			content = contents.remove(which);
-			here = heres.remove(which);
-			filePath = paths.remove(which);
+			Layer(String content, String filePath) {
+				this.content = content;
+				this.here = 0;
+				this.filePath = filePath;
+			}
+		}
+		
+		private void pop() {
+			int which = layers.size() - 1;
+			layer = layers.remove(which);
 		}
 
 		private void push(String filePath, String toInclude) {
-			contents.add(content);
-			heres.add(here);
-			paths.add(filePath);
-		//
-			this.content = toInclude;
-			this.here = 0;
-			this.filePath = filePath;
+			layers.add(layer);
+			layer = new Layer(toInclude, filePath);
 		}
 
 		@Override public void close() throws IOException {
