@@ -67,7 +67,11 @@ public class TestIncludeReader {
 		
 		final List<Layer> layers = new ArrayList<Layer>();
 		
+		final List<Fragment> fragments = new ArrayList<Fragment>();
+		
 		Layer layer = new Layer("", "");
+		
+		Fragment current = null;
 		
 		int lineCount = 0;
 		
@@ -79,6 +83,7 @@ public class TestIncludeReader {
 		
 		public ThingReader(String fileSpec) {
 			this.layer = new Layer(EldaFileManager.get().readWholeFileAsUTF8(fileSpec), fileSpec);
+			this.current = new Fragment(lineCount, fileSpec);
 		}
 
 		@Override public int read(char[] cbuf, int off, int len) throws IOException {
@@ -88,13 +93,14 @@ public class TestIncludeReader {
 			if (nlPos < 0) {
 				if (layers.isEmpty()) return -1;
 				pop();
+				pushFragment(layer.filePath);
 				return read(cbuf, off, len);
 			} else {
-				String subs = content.substring(layer.here, nlPos);
-				String line = subs;
+				String line = content.substring(layer.here, nlPos);
 								
 				if (line.startsWith("#include ")) {
 					String foundPath = line.substring(9);
+					pushFragment(foundPath);
 					File sibling = new File(new File(layer.filePath).getParent(), foundPath);
 					String fullPath = foundPath.startsWith("/") ? foundPath : sibling.toString(); 				
 					String toInclude = EldaFileManager.get().readWholeFileAsUTF8(fullPath);
@@ -102,6 +108,8 @@ public class TestIncludeReader {
 					push(fullPath, toInclude);
 					return read(cbuf, off, len);
 				} else {
+					current.size += 1;
+					layer.size += 1;
 					lineCount += 1;
 										
 					for (int i = layer.here; i < nlPos; i += 1) {
@@ -116,14 +124,32 @@ public class TestIncludeReader {
 			}
 		}
 		
+		void pushFragment(String foundPath) {
+			if (current.size > 0) fragments.add(current);
+			current = new Fragment(lineCount, foundPath);
+		}
+		
+		public static class Fragment {
+			int size;
+			int count;
+			String filePath;
+			
+			public Fragment(int count, String filePath) {
+				this.count = count;
+				this.filePath = filePath;
+			}
+		}
+		
 		public static class Layer {
 			String content;
 			int here;
+			int size;
 			String filePath;
 			
 			Layer(String content, String filePath) {
 				this.content = content;
 				this.here = 0;
+				this.size = 0;
 				this.filePath = filePath;
 			}
 		}
@@ -139,6 +165,12 @@ public class TestIncludeReader {
 		}
 
 		@Override public void close() throws IOException {
+			
+			System.err.println(">> Closing -----------------");
+			
+			for (Fragment f: fragments) {
+				System.err.println(f.filePath + "  " + f.size + " lines.");
+			}
 		}
 		
 	}
