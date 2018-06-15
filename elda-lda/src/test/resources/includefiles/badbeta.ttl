@@ -1,5 +1,5 @@
 # from: beta.ttl
 
-bad:example rdf:type xsd:string .
+elda:example rdf:type xsd:string .
 
 # done.
