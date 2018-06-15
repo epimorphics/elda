@@ -16,7 +16,6 @@ public class IncludeReader extends Reader {
 	Layer layer = null;
 	int lineCount = 1;
 
-	
 	public IncludeReader(String fileSpec) {
 		this.layer = new Layer(EldaFileManager.get().readWholeFileAsUTF8(fileSpec), fileSpec);
 	}
@@ -25,7 +24,7 @@ public class IncludeReader extends Reader {
 		return "TBD.";
 	}
 
-	@Override public int read(char[] cbuf, int off, int len) throws IOException {
+	@Override public int read(char[] cbuf, int offset, int limit) throws IOException {
 		String content = layer.content;
 		int contentPosition = layer.contentPosition;
 		int nlPos = content.indexOf('\n', contentPosition);
@@ -36,7 +35,7 @@ public class IncludeReader extends Reader {
 				return -1; 
 			} else {
 				pop();
-				return read(cbuf, off, len);
+				return read(cbuf, offset, limit);
 			}
 		
 		} else if (content.startsWith("#include ", contentPosition)) {
@@ -47,10 +46,11 @@ public class IncludeReader extends Reader {
 			String toInclude = EldaFileManager.get().readWholeFileAsUTF8(fullPath);
 			layer.contentPosition = nlPos + 1;
 			push(fullPath, toInclude);
-			return read(cbuf, off, len);
+			return read(cbuf, offset, limit);
 		
 		} else {
-			layer.content.getChars(contentPosition, nlPos + 1, cbuf, off);
+			// TODO check that there's enough room for this line.
+			layer.content.getChars(contentPosition, nlPos + 1, cbuf, offset);
 			int result = nlPos - contentPosition + 1;
 			layer.contentPosition = nlPos + 1;
 			return result;
@@ -69,8 +69,4 @@ public class IncludeReader extends Reader {
 
 	@Override public void close() throws IOException {
 	}
-	
-	
-	
-	
 }
