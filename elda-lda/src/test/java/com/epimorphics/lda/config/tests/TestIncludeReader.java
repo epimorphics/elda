@@ -23,7 +23,7 @@ import com.hp.hpl.jena.vocabulary.XSD;
 
 public class TestIncludeReader {
 	
-	@Test @Ignore public void testIncludeReaderTriple() throws IOException {
+	@Test public void testIncludeReaderTriple() throws IOException {
 		Model m = ModelFactory.createDefaultModel();
 		Reader r = new IncludeReader("includefiles/toplevel.ttl");
 		m.read(r, "", "TTL");
@@ -36,6 +36,7 @@ public class TestIncludeReader {
 		expect.add(S, P, O);
 	//
 		if (!m.isIsomorphicWith(expect)) fail("did not read concatenated turtle.");
+		System.err.println(">> OK.");
 	}
 
 	@Test public void testIncludeReaderException() throws IOException {
