@@ -1,3 +1,5 @@
 # from: beta.ttl
 
 elda:example rdf:type xsd:string .
+
+# done.

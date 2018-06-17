@@ -15,13 +15,15 @@ public class IncludeReader extends Reader {
 	final List<Layer> layers = new ArrayList<Layer>();
 	Layer layer = null;
 	int lineCount = 0;
+	ShapeBlock currentBlock; 
 
 	public IncludeReader(String fileSpec) {
 		this.layer = new Layer(EldaFileManager.get().readWholeFileAsUTF8(fileSpec), fileSpec);
+		currentBlock = new ShapeBlock(1, 0, fileSpec);
 	}
 
-	public Position mapLine(int appendedLine) {
-		return new Position("TBD", 0);
+	public Position mapLine(int givenLine) {
+		return new Position(currentBlock.filePath, givenLine);
 	}
 	
 	public static class Position {
@@ -62,6 +64,7 @@ public class IncludeReader extends Reader {
 			// TODO check that there's enough room for this line.
 			
 			lineCount += 1;
+			currentBlock.linesCount += 1;
 			// System.err.println(">> line " + lineCount + ": " + content.substring(contentPosition, nlPos));
 			
 			layer.content.getChars(contentPosition, nlPos + 1, cbuf, offset);

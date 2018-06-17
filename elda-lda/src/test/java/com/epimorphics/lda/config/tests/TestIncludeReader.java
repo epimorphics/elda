@@ -44,20 +44,20 @@ public class TestIncludeReader {
 	
 	@Test public void testByExample() {
 		IncludeReader r = new IncludeReader("includefiles/toplevel.ttl");
-//		testByExample(r, 1, "includefiles/badtoplevel.ttl", 1);
-//		testByExample(r, 2, "includefiles/badtoplevel.ttl", 2);
+		testByExample(r, 1, "includefiles/toplevel.ttl", 1);
+		testByExample(r, 2, "includefiles/toplevel.ttl", 2);
 //		testByExample(r, 3, "includefiles/alpha.ttl", 1);
 //		testByExample(r, 4, "includefiles/alpha.ttl", 2);
 //		testByExample(r, 5, "includefiles/alpha.ttl", 3);
 //		testByExample(r, 6, "includefiles/alpha.ttl", 4);
 //		testByExample(r, 7, "includefiles/alpha.ttl", 5);
-//		testByExample(r, 8, "includefiles/badtoplevel.ttl", 4);
-//		testByExample(r, 9, "includefiles/badbeta.ttl", 1);
-//		testByExample(r, 10, "includefiles/badbeta.ttl", 2);
-//		testByExample(r, 11, "includefiles/badbeta.ttl", 3);
-//		testByExample(r, 12, "includefiles/badbeta.ttl", 4);
-//		testByExample(r, 13, "includefiles/badbeta.ttl", 5);
-//		testByExample(r, 14, "includefiles/badtoplevel.ttl", 6);
+//		testByExample(r, 8, "includefiles/toplevel.ttl", 4);
+//		testByExample(r, 9, "includefiles/beta.ttl", 1);
+//		testByExample(r, 10, "includefiles/beta.ttl", 2);
+//		testByExample(r, 11, "includefiles/beta.ttl", 3);
+//		testByExample(r, 12, "includefiles/beta.ttl", 4);
+//		testByExample(r, 13, "includefiles/beta.ttl", 5);
+//		testByExample(r, 14, "includefiles/toplevel.ttl", 6);
 	}
 
 	private void testByExample(IncludeReader r, int givenLine, String expectPath, int expectLine) {
