@@ -16,14 +16,31 @@ public class IncludeReader extends Reader {
 	Layer layer = null;
 	int lineCount = 0;
 	ShapeBlock currentBlock; 
-
+	List<ShapeBlock> blocks = new ArrayList<ShapeBlock>();
+	
 	public IncludeReader(String fileSpec) {
 		this.layer = new Layer(EldaFileManager.get().readWholeFileAsUTF8(fileSpec), fileSpec);
 		currentBlock = new ShapeBlock(1, 0, fileSpec);
 	}
 
 	public Position mapLine(int givenLine) {
-		return new Position(currentBlock.filePath, givenLine);
+		
+		System.err.println(">> given line " + givenLine);
+		System.err.println(">> mapLine -- (" + blocks.size() + " blocks)---------------------");
+
+		for (ShapeBlock sb: blocks) {
+			System.err.println(">>   " + sb);
+		}
+		
+		int sumSizes = 0;
+		for (ShapeBlock sb: blocks) {
+			sumSizes += sb.linesCount;
+			if (sumSizes + 1 > givenLine) {
+				int delta = sumSizes - givenLine;
+				return new Position(sb.filePath, delta);
+			}
+		}		
+		throw new RuntimeException("could not attain given line.");
 	}
 	
 	public static class Position {
@@ -43,18 +60,26 @@ public class IncludeReader extends Reader {
 
 		if (nlPos < 0) {
 			
+			blocks.add(currentBlock);
+
 			if (layers.isEmpty()) {	
+				currentBlock = new ShapeBlock(lineCount, 0, layer.filePath);
 				return -1; 
 			} else {
 				pop();
+				currentBlock = new ShapeBlock(lineCount, 0, layer.filePath);
 				return read(cbuf, offset, limit);
 			}
 		
 		} else if (content.startsWith("#include ", contentPosition)) {
 			String givenPath = content.substring(contentPosition + 9, nlPos);
-			
+						
 			File sibling = new File(new File(layer.filePath).getParent(), givenPath);
 			String fullPath = givenPath.startsWith("/") ? givenPath : sibling.toString(); 				
+			
+			blocks.add(currentBlock);
+			currentBlock = new ShapeBlock(lineCount, 0, fullPath);
+			
 			String toInclude = EldaFileManager.get().readWholeFileAsUTF8(fullPath);
 			layer.contentPosition = nlPos + 1;
 			push(fullPath, toInclude);
