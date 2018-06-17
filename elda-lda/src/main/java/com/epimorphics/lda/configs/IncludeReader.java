@@ -14,14 +14,24 @@ public class IncludeReader extends Reader {
 	
 	final List<Layer> layers = new ArrayList<Layer>();
 	Layer layer = null;
-	int lineCount = 1;
+	int lineCount = 0;
 
 	public IncludeReader(String fileSpec) {
 		this.layer = new Layer(EldaFileManager.get().readWholeFileAsUTF8(fileSpec), fileSpec);
 	}
 
-	public String mapLine(int appendedLine) {
-		return "TBD.";
+	public Position mapLine(int appendedLine) {
+		return new Position("TBD", 0);
+	}
+	
+	public static class Position {
+		public final String pathName;
+		public final int lineNumber;
+		
+		public Position(String pathName, int lineNumber) {
+			this.pathName = pathName;
+			this.lineNumber = lineNumber;
+		}
 	}
 
 	@Override public int read(char[] cbuf, int offset, int limit) throws IOException {
@@ -50,6 +60,10 @@ public class IncludeReader extends Reader {
 		
 		} else {
 			// TODO check that there's enough room for this line.
+			
+			lineCount += 1;
+			// System.err.println(">> line " + lineCount + ": " + content.substring(contentPosition, nlPos));
+			
 			layer.content.getChars(contentPosition, nlPos + 1, cbuf, offset);
 			int result = nlPos - contentPosition + 1;
 			layer.contentPosition = nlPos + 1;
