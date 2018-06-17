@@ -17,4 +17,8 @@ public class ShapeBlock {
 		this.linesCount = linesCount;
 		this.filePath = filePath;
 	}
+	
+	@Override public String toString() {
+		return "<block line: " + firstLine + ", size: " + linesCount + ", path: " + filePath + ">";
+	}
 }
