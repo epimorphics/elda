@@ -54,58 +54,58 @@ public class TestIncludeReader {
 		testByExample(3, "includefiles/alpha.ttl", 1);
 	}
 
-//	@Test public void testByExample4() {
-//		testByExample(4, "includefiles/alpha.ttl", 2);
-//	}
-//
-//	@Test public void testByExample5() {
-//		testByExample(5, "includefiles/alpha.ttl", 3);
-//	}
-//
-//	@Test public void testByExample6() {
-//		testByExample(6, "includefiles/alpha.ttl", 4);
-//	}
-//
-//	@Test public void testByExample7() {
-//		testByExample(7, "includefiles/alpha.ttl", 5);
-//	}
-//
-//	@Test public void testByExample8() {
-//		testByExample(8, "includefiles/toplevel.ttl", 4);
-//	}
-//
-//	@Test public void testByExample9() {
-//		testByExample(9, "includefiles/beta.ttl", 1);
-//	}
-//
-//	@Test public void testByExample10() {
-//		testByExample(10, "includefiles/beta.ttl", 2);
-//	}
-//
-//	@Test public void testByExample11() {
-//		testByExample(11, "includefiles/beta.ttl", 3);
-//	}
-//
-//	@Test public void testByExample12() {
-//		testByExample(12, "includefiles/beta.ttl", 4);
-//	}
-//
-//	@Test public void testByExample13() {
-//		testByExample(13, "includefiles/beta.ttl", 5);
-//	}
-//
-//	@Test public void testByExample14() {
-//		testByExample(14, "includefiles/toplevel.ttl", 6);
-//	}
+	@Test public void testByExample4() {
+		testByExample(4, "includefiles/alpha.ttl", 2);
+	}
+
+	@Test public void testByExample5() {
+		testByExample(5, "includefiles/alpha.ttl", 3);
+	}
+
+	@Test public void testByExample6() {
+		testByExample(6, "includefiles/alpha.ttl", 4);
+	}
+
+	@Test public void testByExample7() {
+		testByExample(7, "includefiles/alpha.ttl", 5);
+	}
+
+	@Test public void testByExample8() {
+		testByExample(8, "includefiles/toplevel.ttl", 4);
+	}
+
+	@Test public void testByExample9() {
+		testByExample(9, "includefiles/beta.ttl", 1);
+	}
+
+	@Test public void testByExample10() {
+		testByExample(10, "includefiles/beta.ttl", 2);
+	}
+
+	@Test public void testByExample11() {
+		testByExample(11, "includefiles/beta.ttl", 3);
+	}
+
+	@Test public void testByExample12() {
+		testByExample(12, "includefiles/beta.ttl", 4);
+	}
+
+	@Test public void testByExample13() {
+		testByExample(13, "includefiles/beta.ttl", 5);
+	}
+
+	@Test public void testByExample14() {
+		testByExample(14, "includefiles/toplevel.ttl", 6);
+	}
 
 	private void testByExample(int givenLine, String expectPath, int expectLine) {
+		Position expect = new Position(expectPath, expectLine);
 		Model m = ModelFactory.createDefaultModel();
 		IncludeReader r = new IncludeReader("includefiles/toplevel.ttl");
 		m.read(r, "", "TTL");
 	//
 		Position where = r.mapLine(givenLine);
-		assertEquals("path name is wrong", expectPath, where.pathName);
-		assertEquals("line number is wrong", expectLine, where.lineNumber);
+		assertEquals("wrong position", expect, where);
 	}
 
 	@Test @Ignore public void testIncludeReaderException() throws IOException {

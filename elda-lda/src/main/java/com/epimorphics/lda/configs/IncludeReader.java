@@ -32,12 +32,12 @@ public class IncludeReader extends Reader {
 			System.err.println(">>   " + sb);
 		}
 		
-		int sumSizes = 0;
+		ShapeBlock prev = null;
 		for (ShapeBlock sb: blocks) {
-			sumSizes += sb.linesCount;
-			if (sumSizes + 1 > givenLine) {
-				int delta = sumSizes - givenLine;
-				return new Position(sb.filePath, delta);
+			if (sb.firstLine > givenLine) {
+				return new Position(prev.filePath, prev.firstLine);
+			} else {
+				prev = sb;
 			}
 		}		
 		throw new RuntimeException("could not attain given line.");
@@ -50,6 +50,18 @@ public class IncludeReader extends Reader {
 		public Position(String pathName, int lineNumber) {
 			this.pathName = pathName;
 			this.lineNumber = lineNumber;
+		}
+		
+		@Override public String toString() {
+			return "<position " + lineNumber + " " + pathName + ">";
+		}
+		
+		@Override public boolean equals(Object other) {
+			return other instanceof Position && same((Position) other);
+		}
+
+		private boolean same(Position other) {
+			return lineNumber == other.lineNumber && pathName.equals(other.pathName);
 		}
 	}
 
