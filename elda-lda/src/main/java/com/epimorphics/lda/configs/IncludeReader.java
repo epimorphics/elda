@@ -24,33 +24,27 @@ public class IncludeReader extends Reader {
 	}
 
 	public Position mapLine(int givenLine) {
-		System.err.println();
-		System.err.println(">> mapLine(" + givenLine + ") " + " -- [" + blocks.size() + " blocks] ---------------------");
-
-//		for (ShapeBlock sb: blocks) {
-//			System.err.println(">>   " + sb);
-//		}
+//		System.err.println();
+//		System.err.println(">> mapLine(" + givenLine + ") " + " -- [" + blocks.size() + " blocks] ---------------------");
 		
 		ShapeBlock prev = null;
-		int i = 0;
+//		int i = 0;
 		
 		for (ShapeBlock sb: blocks) {
 			
-			System.err.println(">>   block " + ++ i + " " + sb);
+//			 System.err.println(">>   block " + ++ i + " " + sb);
 
 			if (sb.firstLine > givenLine) {
-				System.err.println(">> " + sb.firstLine + " > " + givenLine);
-				System.err.println(">> prev = " + prev);
-				int delta = givenLine - prev.firstLine;
-				System.err.println(">>   delta = " + delta);
-				
-				return new Position(prev.filePath,  delta + 1 );
+				int base = prev.linesCount;
+				int delta = givenLine - prev.firstLine;				
+				return new Position(prev.filePath, base + delta + 1 );
+			
 			} else {
 				prev = sb;
 			}
-		}	
+		}
 		ShapeBlock last = blocks.get(blocks.size() - 1);
-		return new Position(last.filePath, givenLine - last.firstLine + 1);
+		return new Position(last.filePath, givenLine - last.firstLine + last.linesCount + 2);
 	}
 	
 	@Override public int read(char[] cbuf, int offset, int limit) throws IOException {
@@ -66,7 +60,7 @@ public class IncludeReader extends Reader {
 				return -1; 
 			} else {
 				pop();
-				currentBlock = new ShapeBlock(lineCount + 1, 0, layer.filePath);
+				currentBlock = new ShapeBlock(lineCount + 1, layer.lineCount + 1, layer.filePath);
 				return read(cbuf, offset, limit);
 			}
 		
@@ -88,7 +82,8 @@ public class IncludeReader extends Reader {
 		} else {
 			// TODO check that there's enough room for this line.
 			lineCount += 1;
-			currentBlock.linesCount += 1;
+			layer.lineCount += 1;
+			// currentBlock.linesCount += 1;
 						
 			layer.content.getChars(contentPosition, nlPos + 1, cbuf, offset);
 			int result = nlPos - contentPosition + 1;

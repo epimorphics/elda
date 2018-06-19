@@ -26,7 +26,7 @@ import com.hp.hpl.jena.vocabulary.XSD;
 
 public class TestIncludeReader {
 	
-	@Test @Ignore public void testIncludeReaderTriple() throws IOException {
+	@Test public void testIncludeReaderTriple() throws IOException {
 		Model m = ModelFactory.createDefaultModel();
 		Reader r = new IncludeReader("includefiles/toplevel.ttl");
 		m.read(r, "", "TTL");
@@ -109,7 +109,7 @@ public class TestIncludeReader {
 		assertEquals(expect.pathName, where.pathName);
 	}
 
-	@Test @Ignore public void testIncludeReaderException() throws IOException {
+	@Test public void testIncludeReaderException() throws IOException {
 		Model m = ModelFactory.createDefaultModel();
 		IncludeReader r = new IncludeReader("includefiles/badtoplevel.ttl");
 		try {
@@ -123,8 +123,8 @@ public class TestIncludeReader {
 			assertTrue("did not find line: element in message", mat.find());
 			int intLine = Integer.parseInt(mat.group(1));
 			Position where = r.mapLine(intLine);
-			assertEquals("wrong line number", 3, where.lineNumber);
-			assertEquals("wrong path", "", where.pathName);
+			assertEquals("wrong line number", 8, where.lineNumber);
+			assertEquals("wrong path", "includefiles/badtoplevel.ttl", where.pathName);
 		}
 		r.close();
 	}
