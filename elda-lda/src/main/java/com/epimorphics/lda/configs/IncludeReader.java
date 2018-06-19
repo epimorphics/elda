@@ -48,8 +48,10 @@ public class IncludeReader extends Reader {
 			} else {
 				prev = sb;
 			}
-		}		
-		throw new RuntimeException("could not attain given line.");
+		}	
+		ShapeBlock last = blocks.get(blocks.size() - 1);
+		return new Position(last.filePath, last.firstLine);
+		// throw new RuntimeException("could not attain given line.");
 	}
 	
 	@Override public int read(char[] cbuf, int offset, int limit) throws IOException {
@@ -65,11 +67,11 @@ public class IncludeReader extends Reader {
 
 			blocks.add(currentBlock);
 			if (layers.isEmpty()) {	
-				currentBlock = new ShapeBlock(lineCount, 0, layer.filePath);
+				currentBlock = new ShapeBlock(lineCount + 1, 0, layer.filePath);
 				return -1; 
 			} else {
 				pop();
-				currentBlock = new ShapeBlock(lineCount, 0, layer.filePath);
+				currentBlock = new ShapeBlock(lineCount + 1, 0, layer.filePath);
 				return read(cbuf, offset, limit);
 			}
 		
