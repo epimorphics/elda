@@ -61,9 +61,6 @@ public class IncludeReader extends Reader {
 		int nlPos = content.indexOf('\n', contentPosition);
 
 		if (nlPos < 0) {
-			
-//			System.err.println(">> END OF " + layer.filePath);
-
 			blocks.add(currentBlock);
 			if (layers.isEmpty()) {	
 				return -1; 
@@ -79,14 +76,9 @@ public class IncludeReader extends Reader {
 						
 			File sibling = new File(new File(layer.filePath).getParent(), givenPath);
 			String fullPath = givenPath.startsWith("/") ? givenPath : sibling.toString(); 				
-
-//			System.err.println(">> INCLUDE " + fullPath);
-//			
-//			System.err.println(">>   adding block " + currentBlock);
 			
 			blocks.add(currentBlock);
 			currentBlock = new ShapeBlock(lineCount + 1, 0, fullPath);
-//			System.err.println(">>   new block " + currentBlock);
 			
 			String toInclude = EldaFileManager.get().readWholeFileAsUTF8(fullPath);
 			layer.contentPosition = nlPos + 1;
@@ -97,10 +89,7 @@ public class IncludeReader extends Reader {
 			// TODO check that there's enough room for this line.
 			lineCount += 1;
 			currentBlock.linesCount += 1;
-			
-//			System.err.println(">> line " + lineCount + ": '" + content.substring(contentPosition, nlPos) + "'");
-//			System.err.println(">>   " + currentBlock );
-			
+						
 			layer.content.getChars(contentPosition, nlPos + 1, cbuf, offset);
 			int result = nlPos - contentPosition + 1;
 			layer.contentPosition = nlPos + 1;
