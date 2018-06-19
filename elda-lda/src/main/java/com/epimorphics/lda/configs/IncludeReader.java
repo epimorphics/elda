@@ -25,17 +25,26 @@ public class IncludeReader extends Reader {
 
 	public Position mapLine(int givenLine) {
 		
-		System.err.println(">> given line " + givenLine);
-		System.err.println(">> mapLine -- (" + blocks.size() + " blocks)---------------------");
+		System.err.println(">> mapLine(" + givenLine + ") " + " -- [" + blocks.size() + " blocks] ---------------------");
 
-		for (ShapeBlock sb: blocks) {
-			System.err.println(">>   " + sb);
-		}
+//		for (ShapeBlock sb: blocks) {
+//			System.err.println(">>   " + sb);
+//		}
 		
 		ShapeBlock prev = null;
+		int i = 0;
+		
 		for (ShapeBlock sb: blocks) {
+			
+			System.err.println(">>   block " + ++ i + " " + sb);
+
 			if (sb.firstLine > givenLine) {
-				return new Position(prev.filePath, prev.firstLine);
+				System.err.println(">> " + sb.firstLine + " > " + givenLine);
+				System.err.println(">> prev = " + prev);
+				int delta = givenLine - prev.firstLine;
+				System.err.println(">>   delta = " + delta);
+				
+				return new Position(prev.filePath, prev.firstLine + delta);
 			} else {
 				prev = sb;
 			}
@@ -43,37 +52,18 @@ public class IncludeReader extends Reader {
 		throw new RuntimeException("could not attain given line.");
 	}
 	
-	public static class Position {
-		public final String pathName;
-		public final int lineNumber;
-		
-		public Position(String pathName, int lineNumber) {
-			this.pathName = pathName;
-			this.lineNumber = lineNumber;
-		}
-		
-		@Override public String toString() {
-			return "<position " + lineNumber + " " + pathName + ">";
-		}
-		
-		@Override public boolean equals(Object other) {
-			return other instanceof Position && same((Position) other);
-		}
-
-		private boolean same(Position other) {
-			return lineNumber == other.lineNumber && pathName.equals(other.pathName);
-		}
-	}
-
 	@Override public int read(char[] cbuf, int offset, int limit) throws IOException {
+		
+		
 		String content = layer.content;
 		int contentPosition = layer.contentPosition;
 		int nlPos = content.indexOf('\n', contentPosition);
 
 		if (nlPos < 0) {
 			
-			blocks.add(currentBlock);
+//			System.err.println(">> END OF " + layer.filePath);
 
+			blocks.add(currentBlock);
 			if (layers.isEmpty()) {	
 				currentBlock = new ShapeBlock(lineCount, 0, layer.filePath);
 				return -1; 
@@ -84,13 +74,19 @@ public class IncludeReader extends Reader {
 			}
 		
 		} else if (content.startsWith("#include ", contentPosition)) {
+			
 			String givenPath = content.substring(contentPosition + 9, nlPos);
 						
 			File sibling = new File(new File(layer.filePath).getParent(), givenPath);
 			String fullPath = givenPath.startsWith("/") ? givenPath : sibling.toString(); 				
+
+//			System.err.println(">> INCLUDE " + fullPath);
+//			
+//			System.err.println(">>   adding block " + currentBlock);
 			
 			blocks.add(currentBlock);
-			currentBlock = new ShapeBlock(lineCount, 0, fullPath);
+			currentBlock = new ShapeBlock(lineCount + 1, 0, fullPath);
+//			System.err.println(">>   new block " + currentBlock);
 			
 			String toInclude = EldaFileManager.get().readWholeFileAsUTF8(fullPath);
 			layer.contentPosition = nlPos + 1;
@@ -99,10 +95,11 @@ public class IncludeReader extends Reader {
 		
 		} else {
 			// TODO check that there's enough room for this line.
-			
 			lineCount += 1;
 			currentBlock.linesCount += 1;
-			// System.err.println(">> line " + lineCount + ": " + content.substring(contentPosition, nlPos));
+			
+//			System.err.println(">> line " + lineCount + ": '" + content.substring(contentPosition, nlPos) + "'");
+//			System.err.println(">>   " + currentBlock );
 			
 			layer.content.getChars(contentPosition, nlPos + 1, cbuf, offset);
 			int result = nlPos - contentPosition + 1;
