@@ -44,13 +44,13 @@ public class IncludeReader extends Reader {
 				int delta = givenLine - prev.firstLine;
 				System.err.println(">>   delta = " + delta);
 				
-				return new Position(prev.filePath, prev.firstLine + delta);
+				return new Position(prev.filePath,  delta + 1 );
 			} else {
 				prev = sb;
 			}
 		}	
 		ShapeBlock last = blocks.get(blocks.size() - 1);
-		return new Position(last.filePath, last.firstLine);
+		return new Position(last.filePath, givenLine - last.firstLine + 1);
 	}
 	
 	@Override public int read(char[] cbuf, int offset, int limit) throws IOException {
