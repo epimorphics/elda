@@ -105,8 +105,8 @@ public class TestIncludeReader {
 		m.read(r, "", "TTL");
 	//
 		Position where = r.mapLine(givenLine);
-		// assertEquals("wrong position", expect, where);
-		assertEquals(expect.pathName, where.pathName);
+		assertEquals("wrong position", expect, where);
+//		assertEquals(expect.pathName, where.pathName);
 	}
 
 	@Test @Ignore public void testIncludeReaderException() throws IOException {

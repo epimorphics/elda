@@ -24,7 +24,7 @@ public class IncludeReader extends Reader {
 	}
 
 	public Position mapLine(int givenLine) {
-		
+		System.err.println();
 		System.err.println(">> mapLine(" + givenLine + ") " + " -- [" + blocks.size() + " blocks] ---------------------");
 
 //		for (ShapeBlock sb: blocks) {
@@ -51,7 +51,6 @@ public class IncludeReader extends Reader {
 		}	
 		ShapeBlock last = blocks.get(blocks.size() - 1);
 		return new Position(last.filePath, last.firstLine);
-		// throw new RuntimeException("could not attain given line.");
 	}
 	
 	@Override public int read(char[] cbuf, int offset, int limit) throws IOException {
