@@ -66,7 +66,6 @@ public class IncludeReader extends Reader {
 
 			blocks.add(currentBlock);
 			if (layers.isEmpty()) {	
-				currentBlock = new ShapeBlock(lineCount + 1, 0, layer.filePath);
 				return -1; 
 			} else {
 				pop();
