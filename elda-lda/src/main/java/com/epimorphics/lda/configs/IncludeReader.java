@@ -92,7 +92,7 @@ public class IncludeReader extends Reader {
 						
 			File sibling = new File(new File(layer.filePath).getParent(), givenPath);
 			String fullPath = givenPath.startsWith("/") ? givenPath : sibling.toString(); 				
-			
+						
 			blocks.add(currentBlock);
 			currentBlock = new ShapeBlock(lineCount + 1, 0, fullPath);
 			
@@ -121,7 +121,17 @@ public class IncludeReader extends Reader {
 
 	private void push(String filePath, String toInclude) {
 		layers.add(layer);
+		if (someLayerContainsPath(filePath)) {
+			throw new RuntimeException("recursive use of " + filePath + " at line: " + lineCount);
+		}
 		layer = new Layer(toInclude, filePath);
+	}
+
+	private boolean someLayerContainsPath(String filePath) {
+		for (Layer l: layers) {
+			if (l.filePath.equals(filePath)) return true;
+		}
+		return false;
 	}
 
 	@Override public void close() throws IOException {
