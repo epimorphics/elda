@@ -4,13 +4,22 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.epimorphics.lda.support.EldaFileManager;
 
+/**
+	An IncludeReader pulls content from a file and
+	replaces lines of the form "#include fileName"
+	with (recursively) the contents of the named
+	file.
+*/
 public class IncludeReader extends Reader {
+	
+	/**
+		The line start indicating an include command.
+	*/
+	public static final String INCLUDE = "#include ";
 	
 	final List<Layer> layers = new ArrayList<Layer>();
 	Layer layer = null;
@@ -18,11 +27,20 @@ public class IncludeReader extends Reader {
 	ShapeBlock currentBlock; 
 	List<ShapeBlock> blocks = new ArrayList<ShapeBlock>();
 	
+	/**
+		Initialise this IncludeReader to read from the file named
+		by fileSpec.
+	*/
 	public IncludeReader(String fileSpec) {
 		this.layer = new Layer(EldaFileManager.get().readWholeFileAsUTF8(fileSpec), fileSpec);
-		currentBlock = new ShapeBlock(1, 0, fileSpec);
+		this.currentBlock = new ShapeBlock(1, 0, fileSpec);
 	}
 
+	/**
+		Given a line number relative to the complete included
+		text, mapLine returns a position giving a line number
+		relative to a named included file.
+	*/
 	public Position mapLine(int givenLine) {
 //		System.err.println();
 //		System.err.println(">> mapLine(" + givenLine + ") " + " -- [" + blocks.size() + " blocks] ---------------------");
@@ -47,9 +65,13 @@ public class IncludeReader extends Reader {
 		return new Position(last.filePath, givenLine - last.firstLine + last.linesCount + 2);
 	}
 	
-	@Override public int read(char[] cbuf, int offset, int limit) throws IOException {
-		
-		
+	/**
+		Obey the Reader.line specification, also tracking the global line
+		number, the stack of layers holding sleeping state, and the
+		sequence of fragment descriptions allowing mapping back from
+		global line number to file-and-line-number.
+	*/
+	@Override public int read(char[] cbuf, int offset, int limit) throws IOException {		
 		String content = layer.content;
 		int contentPosition = layer.contentPosition;
 		int nlPos = content.indexOf('\n', contentPosition);
@@ -64,9 +86,9 @@ public class IncludeReader extends Reader {
 				return read(cbuf, offset, limit);
 			}
 		
-		} else if (content.startsWith("#include ", contentPosition)) {
+		} else if (content.startsWith(INCLUDE, contentPosition)) {
 			
-			String givenPath = content.substring(contentPosition + 9, nlPos);
+			String givenPath = content.substring(contentPosition + INCLUDE.length(), nlPos).trim();
 						
 			File sibling = new File(new File(layer.filePath).getParent(), givenPath);
 			String fullPath = givenPath.startsWith("/") ? givenPath : sibling.toString(); 				

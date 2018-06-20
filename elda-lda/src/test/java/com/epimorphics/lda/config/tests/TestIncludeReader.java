@@ -39,7 +39,7 @@ public class TestIncludeReader {
 		expect.add(S, P, O);
 	//
 		if (!m.isIsomorphicWith(expect)) fail("did not read concatenated turtle.");
-		System.err.println(">> OK.");
+		// System.err.println(">> OK.");
 	}
 	
 	@Test public void testByExample1() {
@@ -98,11 +98,14 @@ public class TestIncludeReader {
 		testByExample(14, "includefiles/toplevel.ttl", 6);
 	}
 
+	static final IncludeReader r = new IncludeReader("includefiles/toplevel.ttl");
+	
+	static final Model m = ModelFactory.createDefaultModel();
+	
+	static { m.read(r, "", "TTL"); }
+
 	private void testByExample(int givenLine, String expectPath, int expectLine) {
 		Position expect = new Position(expectPath, expectLine);
-		Model m = ModelFactory.createDefaultModel();
-		IncludeReader r = new IncludeReader("includefiles/toplevel.ttl");
-		m.read(r, "", "TTL");
 	//
 		Position where = r.mapLine(givenLine);
 		assertEquals("wrong position for " + givenLine, expect, where);
