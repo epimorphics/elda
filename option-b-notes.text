@@ -45,7 +45,7 @@ must have rdf:type elda:SPARQLMap.
 
 the mapIn property names the variable name bound to the
 input to the map, here "param". If omitted it defaults
-to "param".
+to "input".
 
 the mapQuery property gives the text of the SPARQL query
 that implements the map. Any defined (ie given a value)
