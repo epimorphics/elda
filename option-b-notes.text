@@ -55,6 +55,8 @@ is the output of the map. If omitted it defaults to "result".
 
 Part B: #includes
 
+[not integrated into mappings yet]
+
 When a config file is being read, it may
 contain lines of the form:
 
