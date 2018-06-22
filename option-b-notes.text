@@ -1,7 +1,5 @@
-Hi All
-
-This is a revision of last week's draft of mapping
-for option B, incorporating some suggestions from Brian.
+Option B, defining variables by SPARQL queries.
+Part A: mapping declarations
 
 A variable declaration may mention a map in its
 api:value
@@ -45,7 +43,7 @@ must have rdf:type elda:SPARQLMap.
 
 the mapIn property names the variable name bound to the
 input to the map, here "param". If omitted it defaults
-to "param".
+to "input".
 
 the mapQuery property gives the text of the SPARQL query
 that implements the map. Any defined (ie given a value)
@@ -55,3 +53,38 @@ by its value.
 The variable named by mapOut is the variable who's value
 is the output of the map. If omitted it defaults to "result".
 
+Part B: #includes
+
+[not integrated into mappings yet]
+
+When a config file is being read, it may
+contain lines of the form:
+
+    #include fileName
+
+The contents of the named file are inserted into
+the input. That content may contain further #includes
+in turn.
+
+If an error occurs while reading a config file, Elda's
+error report will refer to a line within the complete
+concatenated stream and also mention the file within
+which the error occurred and the line number within
+that file.
+
+If, while including a file A, a #include A is encountered,
+Elda reports an error. 
+
+The same file may be included several times. This is not
+an error, nor is the file cached -- the results of an
+include depend on the most recently read prefixes, for
+example:
+
+    @prefix x: <http://example.org/A>
+    #include fileA
+    @prefix x: <http://exampl.org>/B>
+    #include fileA
+
+Uses of x: in fileA will expand to <http://example.org/A>
+in the first inclusion and <http://example.org/B> in the
+second.
