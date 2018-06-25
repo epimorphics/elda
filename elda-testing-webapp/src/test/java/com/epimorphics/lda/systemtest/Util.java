@@ -41,7 +41,7 @@ public class Util {
 		return out.toString();
 	}
 
-	static Util.CheckContent ignore = new Util.CheckContent() {
+	public static Util.CheckContent ignore = new Util.CheckContent() {
 	
 		@Override public boolean check(String s) {
 			return true;

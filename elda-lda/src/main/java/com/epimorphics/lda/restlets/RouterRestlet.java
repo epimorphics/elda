@@ -143,6 +143,8 @@ import com.sun.jersey.api.NotFoundException;
 		}
 	}
 
+    public static int loadCounter = 0;
+    
     /**
      	Answer a router initialised with the URI templates appropriate to
      	this context path. Such a router may already be in the routers table,
@@ -159,12 +161,14 @@ import com.sun.jersey.api.NotFoundException;
     		 long interval = getRefreshInterval(contextPath);
     		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), timeNow, interval );
     		 routers.put(contextPath, r );
+    		 System.err.println(">> put router.");
     	 } else if (r.nextCheck < timeNow) {
 	    	 long latestTime = RouterRestletSupport.latestConfigTime(con, contextPath);
 	    	 if (latestTime > r.timestamp) {
 	    		 log.info("reloading router for '{}'", contextPath);
 	    		 long interval = getRefreshInterval(contextPath);
 	    		 r = new TimestampedRouter( RouterRestletSupport.createRouterFor( con ), timeNow, interval );
+	    		 loadCounter += 1;
 	    		 DOMUtils.clearCache();
 	    		 Cache.Registry.clearAll();
 	    		 routers.put( contextPath, r );	    
