@@ -41,7 +41,7 @@ public class TestDynamicReload extends TomcatTestBase {
 		Util.testHttpRequest( "games", 200, Util.ignore );
 		
 		if(RouterRestlet.loadCounter <= lastNumber) {
-			fail("did not reload: semained at " + RouterRestlet.loadCounter  );
+			fail("did not reload: remained at " + RouterRestlet.loadCounter  );
 		}
 	}
 
