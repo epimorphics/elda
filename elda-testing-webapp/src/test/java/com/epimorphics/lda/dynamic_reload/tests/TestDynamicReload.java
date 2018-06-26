@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.epimorphics.lda.restlets.RouterRestlet;
@@ -21,6 +23,14 @@ public class TestDynamicReload extends TomcatTestBase {
 		return "src/main/webapp";
 	}
 
+	@Before public void beforeTesting() {
+		RouterRestlet.refreshIntervalTestingMillis = 1000;
+	}
+	
+	@After public void afterTesting() {
+		RouterRestlet.refreshIntervalTestingMillis = 0;
+	}
+	
 	@Test public void testDynamicReload() throws ClientProtocolException, IOException, InterruptedException {
 		Util.testHttpRequest( "games", 200, Util.ignore );
 		
@@ -30,9 +40,7 @@ public class TestDynamicReload extends TomcatTestBase {
 		Thread.sleep(1000);
 		Util.testHttpRequest( "games", 200, Util.ignore );
 		
-		if(RouterRestlet.loadCounter > lastNumber) {
-			// OK
-		} else {
+		if(RouterRestlet.loadCounter <= lastNumber) {
 			fail("did not reload: semained at " + RouterRestlet.loadCounter  );
 		}
 	}

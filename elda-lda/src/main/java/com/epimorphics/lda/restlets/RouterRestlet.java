@@ -184,19 +184,33 @@ import com.sun.jersey.api.NotFoundException;
     	 return r.router;
      }
 
-	private static long getRefreshInterval(String contextPath) {
-		long delay = TimestampedRouter.DEFAULT_INTERVAL;
-		String intervalFileName = "/etc/elda/conf.d/" + contextPath + "/delay.int";
-		InputStream is = EldaFileManager.get().open( intervalFileName );
-		 if (is != null) {
-			String t = EldaFileManager.get().readWholeFileAsUTF8(is);
-			try { is.close(); } catch (IOException e) { throw new WrappedException( e ); }
-			long n = t.startsWith("FOREVER")
-				? TimestampedRouter.forever
-				: Long.parseLong(t.replace("\n", "" ))
-				;
-			if (n > 0) delay = n;
-		 }
+     public static int refreshIntervalTestingMillis = 0; 
+     
+     /**
+     	Return the dynamic reload interval for this (contextPath).
+     	
+     	If refreshIntervalTestingMillis is positive, that is the
+     	reload interval. Otherwise if there's a value in
+     	/etc/elda/conf.d/{contextPath}/delay.int then that
+     	is the value. Otherwise it is the value of 
+     	TimestampedRouter.DEFAULT_INTERVAL.
+     */
+     private static long getRefreshInterval(String contextPath) {
+    	 long delay  = refreshIntervalTestingMillis;
+    	 if (delay == 0) {
+    		 delay = TimestampedRouter.DEFAULT_INTERVAL;
+    		 String intervalFileName = "/etc/elda/conf.d/" + contextPath + "/delay.int";
+    		 InputStream is = EldaFileManager.get().open( intervalFileName );
+    		 if (is != null) {
+    			 String t = EldaFileManager.get().readWholeFileAsUTF8(is);
+    			 try { is.close(); } catch (IOException e) { throw new WrappedException( e ); }
+    			 long n = t.startsWith("FOREVER")
+    				? TimestampedRouter.forever
+    				: Long.parseLong(t.replace("\n", "" ))
+    				;
+    			 if (n > 0) delay = n;
+    		 }    		 
+    	 }    	 
 		 log.info("reload check interval for '{}' is '{}'", contextPath, delay);
 		 return delay;
 	}
