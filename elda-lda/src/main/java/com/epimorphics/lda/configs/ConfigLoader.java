@@ -7,12 +7,13 @@
 
 package com.epimorphics.lda.configs;
 
-import java.io.File;
-import java.io.StringReader;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.jena.riot.RiotException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,7 @@ public class ConfigLoader {
 		// up, and once we have the apiSpecs we load them into the router.
 		
 		log.info("loading spec file from '{}' with prefix path '{}'", thisSpecPath, prefixPath);
-		Model init = safeLoad(ml, thisSpecPath);
+		Model init = safeLoad(thisSpecPath);
 		ServletUtils.addLoadedFrom( init, thisSpecPath );
 		log.info("loaded '{}' with {} statements", thisSpecPath, init.size());
 		
@@ -92,51 +93,66 @@ public class ConfigLoader {
 		}
 	}
 
+	public static Model loadModelExpanding(String path) {
+		return safeLoad(path);
+	}
+	
 	/**
 		safeLoad(ml, thisSpecPath) loads the configuration file thisSpecPath
 		using the loader ml. If an exception is thrown while loading, an
 		error message is logged and an empty model is returned.
 	*/
-	private static Model safeLoad(ModelLoader ml, String thisSpecPath) {
+	private static Model safeLoad(String thisSpecPath) {
+		IncludeReader r = new IncludeReader(thisSpecPath);
 		try {
-			return loadModelExpanding(ml, thisSpecPath);
+			Model m = ModelFactory.createDefaultModel();
+			return m.read(r, "", "TTL");
+		} catch (RiotException re) {
+			String message = re.getMessage();
+			Pattern p = Pattern.compile("line: ([0-9]+)");
+			Matcher mat = p.matcher(message);
+			if (!mat.find()) throw re;
+		//
+			int intLine = Integer.parseInt(mat.group(1));
+			Position where = r.mapLine(intLine);
+			throw new RuntimeException("on line " + where.lineNumber + " of " + where.pathName, re);
+		
 		} catch (RuntimeException e) {
 			// e.printStackTrace(System.err);
 			log.error("error loading spec file '{}': {}", thisSpecPath, e);
 			return ModelFactory.createDefaultModel();
+			
+		} finally {
+			try {
+				r.close();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			} 			
 		}
 	}
 	
-	public static Model loadModelExpanding(ModelLoader ml, String path) {
-		StringBuilder result = new StringBuilder();
-		loadModelExpanding(ml, result, path, new HashMap<String, String>());
-		Model m = ModelFactory.createDefaultModel();
-		m.read(new StringReader(result.toString()), "/testing/me", "TTL");
-		return m;
-	}
-	
-	private static void loadModelExpanding(ModelLoader ml, StringBuilder result, String path, Map<String, String> seen) {
-		String already = seen.get(path);
-		if (already == null) {
-			String fileContent = EldaFileManager.get().readWholeFileAsUTF8(path);
-			int here = 0;
-			while (true) {
-				int foundAt = fileContent.indexOf("#include ", here);
-				if (foundAt < 0) break;
-				String leadingContent = fileContent.substring(here, foundAt);
-				result.append(leadingContent);
-				int atNL = fileContent.indexOf('\n', foundAt);
-				String foundPath = fileContent.substring(foundAt + 9, atNL);				
-				File sibling = new File(new File(path).getParent(), foundPath);
-				String fullPath = foundPath.startsWith("/") ? foundPath : sibling.toString(); 				
-				loadModelExpanding(ml, result, fullPath, seen);		
-				here = atNL + 1;
-			}
-			result.append(fileContent.substring(here));
-		} else {
-			result.append(already);
-		}
-	}
+//	private static void loadModelExpanding(ModelLoader ml, StringBuilder result, String path, Map<String, String> seen) {
+//		String already = seen.get(path);
+//		if (already == null) {
+//			String fileContent = EldaFileManager.get().readWholeFileAsUTF8(path);
+//			int here = 0;
+//			while (true) {
+//				int foundAt = fileContent.indexOf("#include ", here);
+//				if (foundAt < 0) break;
+//				String leadingContent = fileContent.substring(here, foundAt);
+//				result.append(leadingContent);
+//				int atNL = fileContent.indexOf('\n', foundAt);
+//				String foundPath = fileContent.substring(foundAt + 9, atNL);				
+//				File sibling = new File(new File(path).getParent(), foundPath);
+//				String fullPath = foundPath.startsWith("/") ? foundPath : sibling.toString(); 				
+//				loadModelExpanding(ml, result, fullPath, seen);		
+//				here = atNL + 1;
+//			}
+//			result.append(fileContent.substring(here));
+//		} else {
+//			result.append(already);
+//		}
+//	}
 	
 
 }

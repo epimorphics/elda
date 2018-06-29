@@ -10,7 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.jena.riot.RiotException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.configs.IncludeReader;
