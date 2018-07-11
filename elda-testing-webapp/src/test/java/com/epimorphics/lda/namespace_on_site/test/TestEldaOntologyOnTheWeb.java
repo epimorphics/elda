@@ -18,7 +18,6 @@ public class TestEldaOntologyOnTheWeb {
 	static final String ELDAVOCAB = "../vocabs/elda_api.ttl";
 	
 	@Test @Ignore public void testOnWeb() throws IOException {
-		
 		if (true) {
 			System.err.println(">> testOnWeb suppressed for the moment.");
 			return;

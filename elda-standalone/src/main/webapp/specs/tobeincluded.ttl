@@ -1,0 +1,92 @@
+@prefix api:                <http://purl.org/linked-data/api/vocab#> .
+@prefix dct:				<http://purl.org/dc/terms/> .
+
+@prefix rdf:                <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:               <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:                <http://www.w3.org/2001/XMLSchema#> .
+
+# The elda namespace/prefix is for Elda extensions to the LDA specification.
+@prefix elda:               <http://www.epimorphics.com/vocabularies/lda#> .
+@prefix foaf:               <http://xmlns.com/foaf/0.1/>.
+
+# Prefix for example-local entities.
+@prefix egc:      <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#>.
+@prefix hello:    <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#games> .
+@prefix again:    <https://rawgit.com/epimorphics/elda/gh-pages/demo/vocabularies/games.ttl#again> .
+#
+# class and property declarations, setting shortnames and
+# property ranges.
+
+egc:gamesDataset
+    api:label "inDataset"
+    .
+    
+egc:gamesLicense
+    api:label "gamesLicense"
+    .
+
+egc:BoardGame a rdfs:Class
+	; rdfs:label "Board Game"
+	; api:label "BoardGame"
+	.
+
+elda:startDate a rdf:Property
+    ; api:label "startDate"
+    ; api:structured true
+    ; rdfs:comment """Start date for a (possibly indefinite) date range."""
+    .
+	
+egc:players a rdf:Property
+	; api:label "players"
+	; rdfs:range xsd:int
+	.
+	
+egc:Publisher a rdfs:Class
+	; api:label "Publisher"
+	.
+	
+dct:publisher a rdf:Property
+	; api:label "publishes"
+	.
+	
+rdfs:label a rdf:Property
+	; api:multiValued true
+	; api:label "label"
+	.
+	
+rdf:type a rdf:Property
+    ; api:multiValued true 
+    ; rdfs:range rdfs:Class 
+	; api:label "type"
+	.
+	
+egc:designed-by a rdf:Property
+    ; rdfs:range rdfs:Class
+	; api:label "designedBy"
+	.
+	
+egc:published-by a rdf:Property
+	; api:label "publishedBy"
+    ; rdfs:range rdfs:Class 
+	.
+	
+egc:designer-of a rdf:Property
+	; api:label "designerOf"
+    ; rdfs:range rdfs:Class 
+	.
+	
+egc:pubYear a rdf:Property
+	; api:label "publicationYear"
+    ; api:multiValued true 
+	; rdfs:range xsd:integer
+    ; rdfs:comment "The subject is some published entity, the object is the year of its publication."
+    ; rdfs:range xsd:integer
+	.
+    
+egc:playTimeMinutes a rdf:Property
+	; api:label "playTimeMinutes"
+	; rdfs:label "playTimeMinutes"
+	; rdfs:range xsd:integer
+	.	
+		
+

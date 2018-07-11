@@ -32,16 +32,24 @@ public class TestDynamicReload extends TomcatTestBase {
 	}
 	
 	@Test public void testDynamicReload() throws ClientProtocolException, IOException, InterruptedException {
+		testDynamicReload("elda-config.ttl");
+	}
+	
+	@Test public void testIncludeDynamicReload() throws ClientProtocolException, IOException, InterruptedException {
+		testDynamicReload("empty.ttl");
+	}
+
+	private void testDynamicReload(String tweakPath) throws ClientProtocolException, IOException, InterruptedException {
 		Util.testHttpRequest( "games", 200, Util.ignore );
 		
 		int lastNumber = RouterRestlet.loadCounter;
-		tweak("elda-config.ttl");
+		tweak(tweakPath);
 
 		Thread.sleep(1000);
 		Util.testHttpRequest( "games", 200, Util.ignore );
 		
 		if(RouterRestlet.loadCounter <= lastNumber) {
-			fail("did not reload: remained at " + RouterRestlet.loadCounter  );
+			fail("did not reload after tweak " + tweakPath + ": remained at " + RouterRestlet.loadCounter  );
 		}
 	}
 

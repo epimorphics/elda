@@ -26,6 +26,9 @@
 # ---------------------------------------------------------------------
 # API config
 
+# an inclusion for testing dynamic reloading
+#include empty.ttl
+
 hello:hello-world-again a api:API 
 	; rdfs:label "Hello World example #2 -- games"@en
 	# Name the SPARQL endpoint which supplies the data we present
