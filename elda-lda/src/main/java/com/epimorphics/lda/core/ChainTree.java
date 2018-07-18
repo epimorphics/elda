@@ -12,10 +12,8 @@ import java.util.*;
 import com.epimorphics.lda.core.View.State;
 import com.epimorphics.lda.core.property.ViewProperty;
 import com.epimorphics.lda.rdfq.*;
-import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.PropertyChain;
-import com.hp.hpl.jena.rdf.model.Property;
 
 /**
     A collection of property chains represented as a triple (?item predicate ?value)
@@ -104,9 +102,5 @@ public class ChainTree {
 			result.add( new ChainTree( triple, followers ) );
 		}
 		return result;
-	}
-
-	private static PropertyChain tail(PropertyChain chain) {
-		return chain.tail();
 	}
 }
