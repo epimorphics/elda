@@ -11,6 +11,7 @@ import java.util.*;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet.MergedModels;
+import com.epimorphics.lda.core.property.ViewProperty;
 import com.epimorphics.lda.query.QueryParameter;
 import com.epimorphics.lda.query.WantsMetadata;
 import com.epimorphics.lda.renderers.Factories.FormatNameAndType;
@@ -205,7 +206,8 @@ public class EndpointMetadata {
 	private String chainsFor(Map<String, String> uriToShortname, PropertyChain pc) {
 		StringBuilder sb = new StringBuilder();
 		String dot = "";
-		for (Property p: pc.getProperties()) {
+		for (ViewProperty vp: pc.getProperties()) {
+			Property p = vp.asProperty();
 			sb.append(dot); dot = ".";
 			sb.append( uriToShortname.get(p.getURI()));
 		}

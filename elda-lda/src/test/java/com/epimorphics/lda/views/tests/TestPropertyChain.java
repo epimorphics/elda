@@ -9,6 +9,7 @@ package com.epimorphics.lda.views.tests;
 
 import static org.junit.Assert.assertEquals;
 
+import com.epimorphics.lda.core.property.ViewProperty;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
@@ -22,8 +23,8 @@ import com.hp.hpl.jena.vocabulary.OWL;
 
 public class TestPropertyChain {
 	
-	static Property P = ResourceFactory.createProperty( "eh:/p" );
-	static Property Q = ResourceFactory.createProperty( "eh:/q" );
+	static ViewProperty P = new ViewProperty.Base(ResourceFactory.createProperty( "eh:/p" ));
+	static ViewProperty Q = new ViewProperty.Base(ResourceFactory.createProperty( "eh:/q" ));
 
 	static ShortnameService sns = new SNS( "p=eh:/p;q=eh:/q;p_q=NEVER" );
 	
@@ -31,14 +32,14 @@ public class TestPropertyChain {
 		View v = new View();
 		v.addViewFromParameterValue( "p.q", sns);
 		PropertyChain pc = new PropertyChain( CollectionUtils.list( P, Q ) );
-		assertEquals( CollectionUtils.set( pc ), v.chains() );
+		assertEquals( CollectionUtils.list( pc ), v.chains() );
 	}
 	
 	@Test public void testBuildFromProperty() {
 		View v = new View();
 		v.addViewFromRDFList( ResourceFactory.createResource( "eh:/p" ), sns );
 		PropertyChain pc = new PropertyChain( CollectionUtils.list( P ) );
-		assertEquals( CollectionUtils.set( pc ), v.chains() );
+		assertEquals( CollectionUtils.list( pc ), v.chains() );
 	}
 	
 	@Test public void testBuildFromPropertyList() {
@@ -47,7 +48,7 @@ public class TestPropertyChain {
 		Statement s = m.listStatements( null, OWL.sameAs, (RDFNode) null ).next();
 		v.addViewFromRDFList( s.getResource(), sns );
 		PropertyChain pc = new PropertyChain( CollectionUtils.list( P, Q ) );
-		assertEquals( CollectionUtils.set( pc ), v.chains() );
+		assertEquals( CollectionUtils.list( pc ), v.chains() );
 	}
 
 }

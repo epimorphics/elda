@@ -8,6 +8,7 @@ package com.epimorphics.lda.endpointspec.tests;
 
 import static org.junit.Assert.assertEquals;
 
+import com.epimorphics.lda.core.View;
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
@@ -42,10 +43,9 @@ public class TestIncludeViewers {
 		Resource endpoint = m.createResource( NS + "ep" );
 		APISpec as = SpecUtil.specFrom( root );
 		APIEndpointSpec es = new APIEndpointSpec( as, as, endpoint );
-		assertEquals(
-			CollectionUtils.set( new PropertyChain( NS + "A" ), new PropertyChain( NS + "B" ) ),
-			es.getView( "v" ).chains() 
-		);
+		View view = es.getView( "v" );
+		assertEquals(NS + "A", view.chains().get(1).getProperties().get(0).asProperty().getURI());
+		assertEquals(NS + "B", view.chains().get(0).getProperties().get(0).asProperty().getURI());
 	}
 
 }

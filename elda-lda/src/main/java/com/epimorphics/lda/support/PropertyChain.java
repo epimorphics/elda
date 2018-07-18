@@ -10,7 +10,9 @@ package com.epimorphics.lda.support;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.epimorphics.lda.core.property.ViewProperty;
 import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
@@ -23,14 +25,10 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 */
 public class PropertyChain {
 	
-	protected final List<Property> chain;
+	protected final List<ViewProperty> chain;
 	
-	public PropertyChain(List<Property> chain) {
+	public PropertyChain(List<ViewProperty> chain) {
 		this.chain = chain;
-	}
-	
-	public PropertyChain( String URI ) {
-		this( CollectionUtils.list(ResourceFactory.createProperty( URI ) ) );		
 	}
 	
 	@Override public boolean equals( Object other ) {
@@ -42,15 +40,19 @@ public class PropertyChain {
 		return chain.hashCode();
 	}
 	
-	public PropertyChain( Property p ) {
-		this( CollectionUtils.list( p ) );		
+	public PropertyChain( ViewProperty p ) {
+		this( CollectionUtils.list(p) );
 	}
 	
 	@Override public String toString() {
 		return chain.toString();
 	}
-	
-	public List<Property> getProperties() {
-		return new ArrayList<Property>( chain );
+
+	public PropertyChain tail() {
+		return new PropertyChain(chain.subList(1, chain.size()));
+	}
+
+	public List<ViewProperty> getProperties() {
+		return new ArrayList<>(chain);
 	}
 }
