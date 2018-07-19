@@ -1,34 +1,33 @@
 package com.epimorphics.lda.core.property;
 
+import com.epimorphics.lda.core.VarSupply;
+import com.epimorphics.lda.rdfq.Any;
+import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.hp.hpl.jena.rdf.model.Property;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class Factory implements ViewProperty.Factory {
 
-	private final Iterable<DefinitionParser> parsers;
+	private final List<DefinitionParser> parsers;
 
-	Factory(Iterable<DefinitionParser> parsers) {
+	Factory(List<DefinitionParser> parsers) {
 		this.parsers = parsers;
 	}
 
-	@Override public ViewProperty getImpl(ShortnameService snr, String definition) {
-		ViewProperty.Builder builder = getBuilderImpl(definition);
-		return builder.build(snr);
-	}
-
-	private ViewProperty.Builder getBuilderImpl(String definition) {
+	@Override public ViewProperty getImpl(String definition) {
 		for (DefinitionParser parser : parsers) {
-			Pattern pattern = parser.pattern();
-			Matcher matcher = pattern.matcher(definition);
-
+			Matcher matcher = parser.pattern().matcher(definition);
 			if (matcher.matches()) {
-				String name = matcher.group(1);
-				return parser.parse(name);
+				definition = matcher.group(1);
+				return parser.getViewProperty(definition, this);
 			}
 		}
 
-		return new ViewProperty.Builder.Base(definition);
+		throw new IllegalArgumentException("Unable to parse property definition: " + definition);
 	}
 }

@@ -3,31 +3,31 @@ package com.epimorphics.lda.core.property;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
-import com.hp.hpl.jena.rdf.model.Property;
 
 import java.util.regex.Pattern;
 
-class InverseDefinitionParser extends DefinitionParser.Base {
+class InverseDefinitionParser implements DefinitionParser {
+	private final Pattern pattern = Pattern.compile("^~(.+)$");
 
-	InverseDefinitionParser() {
-		super(Pattern.compile("^~(.+)$"));
+	@Override public Pattern pattern() {
+		return pattern;
 	}
 
-	@Override public ViewProperty.Builder parse(String name) {
-		return new ViewProperty.Builder.Base(name) {
-			@Override protected ViewProperty getViewProperty(Property prop) {
-				return new InverseProperty(prop);
-			}
-		};
+	@Override public ViewProperty getViewProperty(String definition, ViewProperty.Factory factory) {
+		ViewProperty vp = factory.getImpl(definition);
+		return new InverseProperty(vp);
 	}
 
 	private class InverseProperty extends ViewProperty.Base {
-		InverseProperty(Property prop) {
-			super(prop);
+		private final ViewProperty vp;
+
+		InverseProperty(ViewProperty vp) {
+			super(vp.asProperty());
+			this.vp = vp;
 		}
 
 		@Override public RDFQ.Triple asTriple(Any subject, Any object, VarSupply vars) {
-			return RDFQ.triple(object, RDFQ.uri(prop), subject);
+			return vp.asTriple(object, subject, vars);
 		}
 	}
 }
