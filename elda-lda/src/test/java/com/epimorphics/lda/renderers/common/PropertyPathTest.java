@@ -169,6 +169,20 @@ public class PropertyPathTest
         s = s.shift();
         assertEquals( "", s.toString() );
     }
+
+    @Test
+    public void testShiftWithWildcard() {
+        PropertyPath p = new PropertyPath( "foo.*.bam" );
+
+        PropertyPath s = p.shift();
+        assertEquals( "*.bam", s.toString() );
+
+        s = s.shift();
+        assertEquals( "bam", s.toString() );
+
+        s = s.shift();
+        assertEquals( "", s.toString() );
+    }
     
     @Test
     public void testIsEmpty() {
