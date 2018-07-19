@@ -10,6 +10,7 @@ package com.epimorphics.lda.support.pageComposition;
 import java.net.URI;
 import java.util.*;
 
+import com.epimorphics.lda.core.property.ViewProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -336,7 +337,7 @@ public class ComposeConfigDisplay {
 		if (isDefault) sb.append( "<b>default</b> " );
 		sb.append( "<i style='color: red'>" ).append( vn ).append( "</i>" ).append( type );
 		sb.append( "</div>" );
-		List<PropertyChain> chains = new ArrayList<PropertyChain>( v.chains() );
+		List<PropertyChain> chains = v.chains();
 		List<String> stringedChains = new ArrayList<String>(chains.size());
 		for (PropertyChain pc: chains) stringedChains.add( chainToString( sns, pm, pc ) );
 		Collections.sort( stringedChains );
@@ -362,17 +363,17 @@ public class ComposeConfigDisplay {
 
 	private String chainToString( Context sns, PrefixMapping pm, PropertyChain pc ) {
 		StringBuilder sb = new StringBuilder();
-		List<Property> properties = pc.getProperties();
+		List<ViewProperty> properties = pc.getProperties();
 	//
 		if (properties.isEmpty()) return "";
 	//
-		Property last = properties.get( properties.size() - 1 );
+		ViewProperty last = properties.get( properties.size() - 1 );
 		String dot = "";
-		for (Property p: properties) {
-			sb.append( dot ).append( shortForm( sns, pm, p ) );
+		for (ViewProperty p: properties) {
+			sb.append( dot ).append( shortForm( sns, pm, p.asProperty() ) );
 			dot = ".";
 		}
-		ContextPropertyInfo cpi = sns.findProperty( last );
+		ContextPropertyInfo cpi = sns.findProperty( last.asProperty() );
 		if (cpi != null) {
 			String type = cpi.getType();
 			if (type != null && type.startsWith( "http:" )) {
