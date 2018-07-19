@@ -192,18 +192,18 @@ public class View {
     */
     public View addViewFromRDFList(Resource spec, ShortnameService sns) {
     	cannotUpdateALL();
-		ViewProperty.Factory factory = ViewProperty.factory();
+		ViewProperty.Factory factory = ViewProperty.factory(sns);
         if (spec.canAs(RDFList.class)) {
         	List<ViewProperty> properties = new ArrayList<>();
             Iterator<RDFNode> list = spec.as(RDFList.class).iterator();
             while(list.hasNext()) {
-            	ViewProperty viewProp = factory.getImpl(sns, list.next().toString());
+            	ViewProperty viewProp = factory.getImpl(list.next().toString());
 				properties.add(viewProp);
 			}
             chains.add( new PropertyChain( properties ) );
         } else {
             String uri = spec.asResource().getURI();
-            ViewProperty viewProp = factory.getImpl(sns, uri);
+            ViewProperty viewProp = factory.getImpl(uri);
             chains.add( new PropertyChain( viewProp ) );
         }
         if (chains.size() > 0) type = Type.T_CHAINS;
@@ -220,11 +220,11 @@ public class View {
     */
     public View addViewFromParameterValue( String prop, ShortnameService sns ) {
     	cannotUpdateALL();
-		ViewProperty.Factory factory = ViewProperty.factory();
+		ViewProperty.Factory factory = ViewProperty.factory(sns);
 		List<ViewProperty> chain = Arrays.asList(prop.split("\\.")).stream().filter(
 				definition -> !definition.isEmpty()
 		).map(
-				definition -> factory.getImpl(sns, definition)
+				definition -> factory.getImpl(definition)
 		).collect(Collectors.toList());
 
         chains.add( new PropertyChain( chain ) );
