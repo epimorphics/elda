@@ -95,6 +95,8 @@
     <url-pattern>/velocity-dev/*</url-pattern>
     <url-pattern>/ved/*</url-pattern>
     <url-pattern>/bwq/*</url-pattern>
+    <url-pattern>/api-config/*</url-pattern>
+    <url-pattern>/control/*</url-pattern>
   </filter-mapping>
 
 <!-- 
