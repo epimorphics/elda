@@ -221,9 +221,9 @@ public class View {
     public View addViewFromParameterValue( String prop, ShortnameService sns ) {
     	cannotUpdateALL();
 		ViewProperty.Factory factory = ViewProperty.factory();
-		List<ViewProperty> chain = Arrays.asList(prop.split("\\.")).stream().map(definition -> {
-			return factory.getImpl(sns, definition);
-		}).collect(Collectors.toList());
+		List<ViewProperty> chain = Arrays.asList(prop.split("\\.")).stream().map(
+				definition -> factory.getImpl(sns, definition)
+		).collect(Collectors.toList());
 
         chains.add( new PropertyChain( chain ) );
         return this;
