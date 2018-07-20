@@ -86,6 +86,8 @@
 
   <filter-mapping>
     <filter-name>Jersey Web Application</filter-name>
+    <url-pattern>/api-config/*</url-pattern>
+    <url-pattern>/control/*</url-pattern>
     <url-pattern>/hello/*</url-pattern>
     <url-pattern>/again/*</url-pattern>
     <url-pattern>/tiny/*</url-pattern>
