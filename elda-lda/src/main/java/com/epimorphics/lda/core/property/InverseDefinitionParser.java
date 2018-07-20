@@ -1,5 +1,6 @@
 package com.epimorphics.lda.core.property;
 
+import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
@@ -28,6 +29,14 @@ class InverseDefinitionParser implements DefinitionParser {
 
 		@Override public RDFQ.Triple asTriple(Any subject, Any object, VarSupply vars) {
 			return vp.asTriple(object, subject, vars);
+		}
+
+		@Override public String shortName(Context ctx) {
+			return "~" + vp.shortName(ctx);
+		}
+
+		@Override public String toString() {
+			return "~" + vp.toString();
 		}
 	}
 }

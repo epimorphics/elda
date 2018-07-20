@@ -1,5 +1,6 @@
 package com.epimorphics.lda.core.property;
 
+import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 public interface ViewProperty {
 	Property asProperty();
 	RDFQ.Triple asTriple(Any subject, Any object, VarSupply vars);
+	String shortName(Context ctx);
 
 	interface Factory {
 		ViewProperty getImpl(String definition);
@@ -40,6 +42,10 @@ public interface ViewProperty {
 
 		@Override public RDFQ.Triple asTriple(Any subject, Any object, VarSupply vars) {
 			return RDFQ.triple(subject, RDFQ.uri(prop), object);
+		}
+
+		@Override public String shortName(Context ctx) {
+			return ctx.getNameForURI(prop.getURI());
 		}
 
 		@Override public String toString() {

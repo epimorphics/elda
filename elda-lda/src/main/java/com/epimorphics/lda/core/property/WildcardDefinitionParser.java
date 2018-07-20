@@ -1,5 +1,6 @@
 package com.epimorphics.lda.core.property;
 
+import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
@@ -27,6 +28,10 @@ class WildcardDefinitionParser implements DefinitionParser {
 
 		@Override public RDFQ.Triple asTriple(Any subject, Any object, VarSupply vars) {
 			return RDFQ.triple(subject, vars.newVar(), object);
+		}
+
+		@Override public String shortName(Context ctx) {
+			return "ANY";
 		}
 	}
 }

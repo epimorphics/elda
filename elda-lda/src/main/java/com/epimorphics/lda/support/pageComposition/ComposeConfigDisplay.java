@@ -370,7 +370,7 @@ public class ComposeConfigDisplay {
 		ViewProperty last = properties.get( properties.size() - 1 );
 		String dot = "";
 		for (ViewProperty p: properties) {
-			sb.append( dot ).append( shortForm( sns, pm, p.asProperty() ) );
+			sb.append( dot ).append( shortForm( sns, pm, p ) );
 			dot = ".";
 		}
 		ContextPropertyInfo cpi = sns.findProperty( last.asProperty() );
@@ -457,9 +457,9 @@ public class ComposeConfigDisplay {
 		}
     };
     
-    protected static String shortForm( Context sns, PrefixMapping pm, Resource r ) {
-    	String x = sns.getNameForURI( r.getURI() );
-    	return x == null ? shortForm( pm, r ) : x;
+    protected static String shortForm( Context sns, PrefixMapping pm, ViewProperty vp ) {
+    	String shortName = vp.shortName(sns);
+    	return shortName == null ? shortForm( pm, vp.asProperty() ) : shortName;
     }
 
 	protected static String shortForm( PrefixMapping pm, Resource r ) {
