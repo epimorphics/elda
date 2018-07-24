@@ -66,4 +66,11 @@ public class ShortNameDefinitionParserTest {
 		Property prop = getViewProperty().asProperty();
 		assertEquals(uri, prop.getURI());
 	}
+
+	@Test
+	public void viewProperty_NoExpansionFound_asProperty_ReturnsProperty() {
+		when(svc.expand(uri)).thenReturn(null);
+		Property prop = parser.getViewProperty(uri, factory).asProperty();
+		assertEquals(uri, prop.getURI());
+	}
 }
