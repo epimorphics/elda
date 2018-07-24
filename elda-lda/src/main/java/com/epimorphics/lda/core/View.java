@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.epimorphics.lda.core.property.ViewProperty;
+import com.epimorphics.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @version $Revision: $
  */
 public class View {
-	
+
     static Logger log = LoggerFactory.getLogger(View.class);
 
     protected final List<PropertyChain> chains = new ArrayList<PropertyChain>();
@@ -192,19 +193,18 @@ public class View {
     */
     public View addViewFromRDFList(Resource spec, ShortnameService sns) {
     	cannotUpdateALL();
-		ViewProperty.Factory factory = ViewProperty.factory(sns);
         if (spec.canAs(RDFList.class)) {
         	List<ViewProperty> properties = new ArrayList<>();
             Iterator<RDFNode> list = spec.as(RDFList.class).iterator();
             while(list.hasNext()) {
-            	ViewProperty viewProp = factory.getImpl(list.next().toString());
-				properties.add(viewProp);
+				properties.add(new ViewProperty.Base(list.next().as(Property.class)));
 			}
             chains.add( new PropertyChain( properties ) );
         } else {
             String uri = spec.asResource().getURI();
-            ViewProperty viewProp = factory.getImpl(uri);
-            chains.add( new PropertyChain( viewProp ) );
+            Property prop = ResourceFactory.createProperty(uri);
+            ViewProperty vp = new ViewProperty.Base(prop);
+            chains.add(new PropertyChain(vp));
         }
         if (chains.size() > 0) type = Type.T_CHAINS;
         return this;
