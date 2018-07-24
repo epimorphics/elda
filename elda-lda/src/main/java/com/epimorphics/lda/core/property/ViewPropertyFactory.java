@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Factory implements ViewProperty.Factory {
+class ViewPropertyFactory implements ViewProperty.Factory {
 
 	private final List<DefinitionParser> parsers;
 
-	Factory(List<DefinitionParser> parsers) {
+	ViewPropertyFactory(List<DefinitionParser> parsers) {
 		this.parsers = parsers;
 	}
 

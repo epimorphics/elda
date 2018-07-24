@@ -6,7 +6,6 @@ import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 import java.util.Arrays;
 
@@ -20,7 +19,7 @@ public interface ViewProperty {
 	}
 
 	static Factory factory(ShortnameService sns) {
-		return new com.epimorphics.lda.core.property.Factory(
+		return new ViewPropertyFactory(
 				Arrays.asList(
 						new InverseDefinitionParser(),
 						new WildcardDefinitionParser(),
