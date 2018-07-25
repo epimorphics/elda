@@ -938,6 +938,8 @@ the generated query exchanges the subject and object of the generated triple.
 (The character `^` used in SPARQL for property inverses was considered 
 but needs appropriate quoting in a URL, so `~` was chosen in its place.)
 
+TODO
+
 Licence metadata
 ----------------
 
