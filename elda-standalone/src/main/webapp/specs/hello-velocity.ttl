@@ -35,6 +35,7 @@ egc:velocity-world a api:API
     ; api:mimeType "text/html"
     ]
   ; api:variable [api:name "_velocityPath"; api:value "velocity/"]
+  ; api:variable [api:name "_resourceRoot"; api:value "/standalone/"]
   .
 
 # Endpoint definition
