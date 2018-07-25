@@ -12,6 +12,7 @@ package com.epimorphics.lda.renderers.common;
 import java.io.StringWriter;
 import java.util.*;
 
+import com.epimorphics.lda.core.Param;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -504,8 +505,11 @@ public class Page extends CommonNodeWrapper
         EldaURL eu = pageURL();
 
         for (NamedParameterValue p : eu.getParameters( true )) {
-            String filterPath = p.name();
+            String key = p.name();
+            Param param = Param.make(shortNameRenderer().shortNameService(), key);
+            String filterPath = param.plain().asString();
             String filterValue = p.toString();
+
             RDFNodeWrapper n = new CommonNodeWrapper( getModelW(), RDFUtil.asRDFNode( filterValue ) );
 
             if (shortNameRenderer().isKnownShortnamePath( filterPath )) {

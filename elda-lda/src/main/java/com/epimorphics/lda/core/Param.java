@@ -74,7 +74,7 @@ public abstract class Param
 			{ return null; }
 
 		@Override public Param plain() 
-			 { throw new RuntimeException( "cannot make plain a plain parameter: " + p ); }
+			 { return this; }
 		}
 
 	public String lastPropertyOf() {
