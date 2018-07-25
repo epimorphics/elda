@@ -5,6 +5,7 @@ import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import com.epimorphics.lda.specs.PropertyExpiryTimes;
 import com.hp.hpl.jena.rdf.model.Property;
 
 import java.util.Arrays;
@@ -31,6 +32,8 @@ public interface ViewProperty {
 	 * @return The short name associated with this property.
 	 */
 	String shortName(Context ctx);
+
+	long expiryTimeMillis(PropertyExpiryTimes pet);
 
 	/**
 	 * Defines a factory which instantiates <code>ViewProperty</code> implementations.
@@ -78,6 +81,10 @@ public interface ViewProperty {
 
 		@Override public boolean equals(Object other) {
 			return other instanceof ViewProperty && prop.equals(((ViewProperty)other).asProperty());
+		}
+
+		@Override public long expiryTimeMillis(PropertyExpiryTimes pet) {
+			return pet.timeInMillisFor(prop);
 		}
 	}
 }

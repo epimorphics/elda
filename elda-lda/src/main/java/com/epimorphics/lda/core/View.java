@@ -501,13 +501,7 @@ public class View {
 		
 		for (PropertyChain pc: chains) {
 			for (ViewProperty vp: pc.getProperties()) {
-				Property p = vp.asProperty();
-				if (p.equals( ShortnameService.Util.propertySTAR )) {
-					return pet.minTimeMillis();
-				} else {
-					long millis = pet.timeInMillisFor(p);
-					if (millis < result) result = millis;
-				}
+				result = Math.min(result, vp.expiryTimeMillis(pet));
 			}
 		}
 		

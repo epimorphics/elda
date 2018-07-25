@@ -4,8 +4,7 @@ import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
-import com.epimorphics.lda.shortnames.ShortnameService;
-import com.hp.hpl.jena.rdf.model.Property;
+import com.epimorphics.lda.specs.PropertyExpiryTimes;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 import java.util.regex.Pattern;
@@ -36,6 +35,10 @@ class WildcardDefinitionParser implements DefinitionParser {
 
 		@Override public String shortName(Context ctx) {
 			return "ANY";
+		}
+
+		@Override public long expiryTimeMillis(PropertyExpiryTimes pet) {
+			return pet.minTimeMillis();
 		}
 	}
 }
