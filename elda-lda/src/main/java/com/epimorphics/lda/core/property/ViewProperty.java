@@ -9,12 +9,37 @@ import com.hp.hpl.jena.rdf.model.Property;
 
 import java.util.Arrays;
 
+/**
+ * Defines a property to be rendered on a particular View, either through the API spec or request query parameters.
+ */
 public interface ViewProperty {
+	/**
+	 * @return The underlying Jena property.
+	 */
 	Property asProperty();
+
+	/**
+	 * @param subject The subject for which to create a triple.
+	 * @param object The object for which to create a triple.
+	 * @param vars The store from which to obtain new variables to be included in the triple.
+	 * @return A triple which relates the subject to the object by this view property.
+	 */
 	RDFQ.Triple asTriple(Any subject, Any object, VarSupply vars);
+
+	/**
+	 * @param ctx The context for which to derive a short name.
+	 * @return The short name associated with this property.
+	 */
 	String shortName(Context ctx);
 
+	/**
+	 * Defines a factory which instantiates <code>ViewProperty</code> implementations.
+	 */
 	interface Factory {
+		/**
+		 * @param definition The definition of a view property, eg. from an API spec or query parameter.
+		 * @return The view property derived from the definition.
+		 */
 		ViewProperty getImpl(String definition);
 	}
 

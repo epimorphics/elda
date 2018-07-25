@@ -7,6 +7,11 @@ import com.epimorphics.lda.rdfq.RDFQ;
 
 import java.util.regex.Pattern;
 
+/**
+ * Parser for inverted view properties.
+ * Inverted / inverse view properties denote that resources which relate to a particular object by the given property
+ * are included in the view.
+ */
 class InverseDefinitionParser implements DefinitionParser {
 	private final Pattern pattern = Pattern.compile("^~(.+)$");
 

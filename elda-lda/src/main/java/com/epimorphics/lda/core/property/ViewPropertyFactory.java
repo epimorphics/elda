@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Factory for <code>ViewProperty</code> implementations.
+ * The parsers supplied in the constructor determine the acceptable view property definition patterns and behaviours.
+ * The parsers are invoked in the order that they are given, so should be ordered by priority from highest to lowest.
+ */
 class ViewPropertyFactory implements ViewProperty.Factory {
 
 	private final List<DefinitionParser> parsers;

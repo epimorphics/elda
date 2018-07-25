@@ -6,6 +6,10 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 import java.util.regex.Pattern;
 
+/**
+ * Parser for properties which are given by their short name.
+ * This parser accepts any definition and attempts to obtain a property from it.
+ */
 class ShortNameDefinitionParser implements DefinitionParser {
 	private final Pattern pattern;
 	private final ShortnameService svc;

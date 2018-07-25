@@ -10,6 +10,10 @@ import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
 import java.util.regex.Pattern;
 
+/**
+ * Parser for wildcard view properties.
+ * Wildcards denote that all relations on a particular subject are included in the view.
+ */
 class WildcardDefinitionParser implements DefinitionParser {
 	private final Pattern pattern = Pattern.compile("^(\\*)$");
 
