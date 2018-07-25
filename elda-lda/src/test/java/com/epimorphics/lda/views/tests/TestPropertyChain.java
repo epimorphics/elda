@@ -38,15 +38,22 @@ public class TestPropertyChain {
 	@Test public void testBuildFromDottedNames() {
 		View v = new View();
 		v.addViewFromParameterValue( "p.q", sns);
-		PropertyChain pc = new PropertyChain( CollectionUtils.list( P, Q ) );
-		assertEquals( CollectionUtils.list( pc ), v.chains() );
+		List<PropertyChain> chains = v.chains();
+		assertEquals(1, chains.size());
+		List<ViewProperty> chain = chains.get(0).getProperties();
+		assertEquals(2, chain.size());
+		assertEquals("eh:/p", chain.get(0).toString());
+		assertEquals("eh:/q", chain.get(1).toString());
 	}
 	
 	@Test public void testBuildFromProperty() {
 		View v = new View();
 		v.addViewFromRDFList( ResourceFactory.createResource( "eh:/p" ), sns );
-		PropertyChain pc = new PropertyChain( CollectionUtils.list( P ) );
-		assertEquals( CollectionUtils.list( pc ), v.chains() );
+		List<PropertyChain> chains = v.chains();
+		assertEquals(1, chains.size());
+		List<ViewProperty> chain = chains.get(0).getProperties();
+		assertEquals(1, chain.size());
+		assertEquals("eh:/p", chain.get(0).toString());
 	}
 	
 	@Test public void testBuildFromPropertyList() {
@@ -54,8 +61,12 @@ public class TestPropertyChain {
 		Model m = ModelIOUtils.modelFromTurtle( "@prefix : <eh:/>. :root owl:sameAs (:p :q)." );
 		Statement s = m.listStatements( null, OWL.sameAs, (RDFNode) null ).next();
 		v.addViewFromRDFList( s.getResource(), sns );
-		PropertyChain pc = new PropertyChain( CollectionUtils.list( P, Q ) );
-		assertEquals( CollectionUtils.list( pc ), v.chains() );
+		List<PropertyChain> chains = v.chains();
+		assertEquals(1, chains.size());
+		List<ViewProperty> chain = chains.get(0).getProperties();
+		assertEquals(2, chain.size());
+		assertEquals("eh:/p", chain.get(0).toString());
+		assertEquals("eh:/q", chain.get(1).toString());
 	}
 
 	private void verifyInverseProperty(ViewProperty vp, String expectedUri) {

@@ -79,10 +79,6 @@ public interface ViewProperty {
 			return prop.toString();
 		}
 
-		@Override public boolean equals(Object other) {
-			return other instanceof ViewProperty && prop.equals(((ViewProperty)other).asProperty());
-		}
-
 		@Override public long expiryTimeMillis(PropertyExpiryTimes pet) {
 			return pet.timeInMillisFor(prop);
 		}
