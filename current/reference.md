@@ -691,6 +691,11 @@ can be any number of `*` elements, anywhere within the chain, *eg*
 This also applies to the value of the reserved query parameter
 `_properties`.
 
+Wildcards can be inverted by using the prefix `~` to denote that the values
+of any inverted property should be included in the graph of results. See the
+[Inverse Properties](#inverse-properties) section for an explanation of inverse
+properties.
+
 **Warning**. Because `*` can match any property, it can significantly
 increase the size of the resulting model and the time taken for the
 SPARQL endpoint to generate it. Use with caution.
@@ -937,6 +942,17 @@ the generated query exchanges the subject and object of the generated triple.
 
 (The character `^` used in SPARQL for property inverses was considered 
 but needs appropriate quoting in a URL, so `~` was chosen in its place.)
+
+Inverse properties are supported in filter parameters, for example
+`~published-by.label=MyBook`, and in view definitions, for example
+`_properties=~publisher.label`. They are also supported in view specifications
+which use the `api:properties` relation to denote a list of property chains,
+however they are not supported by views using `api:property`.
+
+Inverse properties on views are currently only guaranteed to be included in the
+result sets of Turtle (`ttl`) and RDF (`rdf`) requests. They are not guaranteed
+otherwise and inverse relationships cannot be traversed directly in tree-like
+formats such as JSON.
 
 Licence metadata
 ----------------
