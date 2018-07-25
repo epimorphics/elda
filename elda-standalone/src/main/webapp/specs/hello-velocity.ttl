@@ -56,3 +56,12 @@ egc:players a rdf:Property
   ; rdfs:range xsd:int
   .
 
+dct:publisher a rdf:Property
+	; rdfs:label "publishes"
+	; rdfs:comment "The subject is a publisher, the object is the published entity."
+	.
+
+rdfs:label a rdf:Property
+	; api:multiValued true
+	; api:label "label"
+	.
