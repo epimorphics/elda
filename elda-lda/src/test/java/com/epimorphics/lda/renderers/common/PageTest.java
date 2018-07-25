@@ -53,6 +53,7 @@ public class PageTest
     }};
 
     private Page page;
+    private ResultsModel rm;
 
     /***********************************/
     /* Constructors                    */
@@ -68,7 +69,7 @@ public class PageTest
         final Model apiObjectModel = ModelIOUtils.modelFromTurtle( Fixtures.PAGE_OBJECT_GAMES );
         final Model apiResultsModel = ModelFactory.createUnion( apiMetadataModel, apiObjectModel );
 
-        ResultsModel rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
+        rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
         page = rm.page();
     }
 
@@ -320,6 +321,42 @@ public class PageTest
         Page page1 = rm.page();
         
         assertEquals( "0 results", page1.resultsCountSummary() );
+    }
+
+    @Test
+    public void filterRemovalLinks_ShortNameFilter_ReturnsLink() {
+        Resource res = createPageResource("value=2");
+        Page p = new Page(rm, res);
+        p.initialiseShortNameRenderer(Fixtures.shortNameServiceFixture());
+
+        List<Link> results = p.filterRemovalLinks();
+        assertEquals(1, results.size());
+        assertEquals("<i class='fa fa-minus-circle'></i> value 2", results.get(0).title());
+    }
+
+    @Test
+    public void filterRemovalLinks_PrefixShortNameFilter_ReturnsLink() {
+        Resource res = createPageResource("min-value=2");
+        Page p = new Page(rm, res);
+        p.initialiseShortNameRenderer(Fixtures.shortNameServiceFixture());
+
+        List<Link> results = p.filterRemovalLinks();
+        assertEquals(1, results.size());
+        assertEquals("<i class='fa fa-minus-circle'></i> min-value 2", results.get(0).title());
+    }
+
+    @Test
+    public void filterRemovalLinks_WithoutFilter_DoesNotReturnLink() {
+        Resource res = createPageResource("_properties=value");
+        Page p = new Page(rm, res);
+        p.initialiseShortNameRenderer(Fixtures.shortNameServiceFixture());
+
+        List<Link> results = p.filterRemovalLinks();
+        assertEquals(0, results.size());
+    }
+
+    private Resource createPageResource(String query) {
+        return ResourceFactory.createResource("http://localhost:8080/standalone/hello/games?" + query);
     }
 
     /***********************************/
