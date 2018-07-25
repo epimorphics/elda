@@ -1,5 +1,6 @@
 package com.epimorphics.lda.core.property;
 
+import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
@@ -31,7 +32,7 @@ class ShortNameDefinitionParser implements DefinitionParser {
 	private Property expand(String name) {
 		String fullName = svc.expand(name);
 		if (fullName == null) {
-			fullName = name; // name is already expanded
+			throw new UnknownShortnameException(name);
 		}
 
 		return ResourceFactory.createProperty(fullName);

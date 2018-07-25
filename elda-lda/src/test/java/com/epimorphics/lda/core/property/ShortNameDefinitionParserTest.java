@@ -2,6 +2,7 @@ package com.epimorphics.lda.core.property;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.core.VarSupply;
+import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.URINode;
@@ -67,10 +68,9 @@ public class ShortNameDefinitionParserTest {
 		assertEquals(uri, prop.getURI());
 	}
 
-	@Test
-	public void viewProperty_NoExpansionFound_asProperty_ReturnsProperty() {
+	@Test(expected = UnknownShortnameException.class)
+	public void viewProperty_NoExpansionFound_asProperty_ThrowsException() {
 		when(svc.expand(uri)).thenReturn(null);
-		Property prop = parser.getViewProperty(uri, factory).asProperty();
-		assertEquals(uri, prop.getURI());
+		parser.getViewProperty(uri, factory).asProperty();
 	}
 }
