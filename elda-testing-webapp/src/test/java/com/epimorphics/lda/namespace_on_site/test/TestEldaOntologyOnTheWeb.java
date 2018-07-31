@@ -31,8 +31,7 @@ public class TestEldaOntologyOnTheWeb {
 			String message = URL + " is either mssing or different from " + ELDAVOCAB;
 			System.err.println("\n\n" + message + "\n\n");
 			fail(message);
-		}
-		
+		}	
 	}
 	
 	protected boolean generatesOutput(String [] command) throws IOException {

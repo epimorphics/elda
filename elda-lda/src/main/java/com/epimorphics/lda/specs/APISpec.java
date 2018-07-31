@@ -12,14 +12,15 @@
 
 package com.epimorphics.lda.specs;
 import static com.epimorphics.util.RDFUtils.getStringValue;
+import static com.epimorphics.util.RDFUtils.getResourceValue;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
+import com.epimorphics.lda.bindings.MapLookup;
 import com.epimorphics.lda.bindings.VariableExtractor;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.exceptions.APIException;
@@ -30,6 +31,7 @@ import com.epimorphics.lda.renderers.Factories;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.sources.*;
+import com.epimorphics.lda.specs.SPARQLMapLookup.Element;
 import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.support.RendererFactoriesSpec;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
@@ -41,6 +43,7 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Map1;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 /**
  * Encapsulates a specification of a single API instance.
@@ -74,7 +77,9 @@ public class APISpec extends SpecCommon {
     protected final Factories factoryTable;
     protected final boolean hasParameterBasedContentNegotiation;
     protected final List<Source> describeSources;
-    public final Bindings bindings = new Bindings();
+    public final Bindings bindings;
+    
+    protected final MapLookup mapLookup;
     
     protected final String prefixPath;
 	
@@ -128,7 +133,9 @@ public class APISpec extends SpecCommon {
         this.graphTemplate = getStringValue(root, ELDA_API.graphTemplate, null);
         this.defaultLanguage = getStringValue(root, API.lang, null);
         this.base = getStringValue( root, API.base, null );
-        this.bindings.putAll( VariableExtractor.findAndBindVariables(root) );
+        this.mapLookup = createMapLookup(root, this.dataSource);
+        this.bindings = new Bindings(mapLookup);
+        VariableExtractor.findAndBindVariables(this.bindings, root);
         this.factoryTable = RendererFactoriesSpec.createFactoryTable( root );
         this.hasParameterBasedContentNegotiation = root.hasProperty( API.contentNegotiation, API.parameterBased ); 
 		this.cachePolicyName = getStringValue( root, ELDA_API.cachePolicyName, "default" );
@@ -141,8 +148,25 @@ public class APISpec extends SpecCommon {
 		setDefaultSuffixName(bindings, root);      
 		extractEndpointSpecifications( root );
         extractModelPrefixEditor( root );
-    }
+        }
     
+	public static MapLookup createMapLookup(Resource root, final Source ds) {
+		final Map<String, SPARQLMapLookup.Element> maps = new HashMap<String, SPARQLMapLookup.Element>();
+	//		
+		List<Resource> mapSpecs = root.getModel().listSubjectsWithProperty(RDF.type, ELDA_API.SPARQLMap).toList();
+		for (Resource mapSpec: mapSpecs) {
+			String mapName = mapSpec.isURIResource()
+				? mapSpec.getURI()
+				: getResourceValue(mapSpec, ELDA_API.mapName).getURI()
+				; 
+			String inName = getStringValue(mapSpec, ELDA_API.mapIn, "input");
+			String outName = getStringValue(mapSpec, ELDA_API.mapOut, "result");	
+			String queryString = getStringValue(mapSpec,ELDA_API.mapQuery);
+			maps.put(mapName, new Element(inName, queryString, outName));
+		}		
+		return new SPARQLMapLookup(ds, maps);
+	}
+
 	public static void setDefaultSuffixName(Bindings b, Resource ep) {
 		if (ep.hasProperty( API.defaultFormatter)) {
 			Resource r = ep.getProperty( API.defaultFormatter ).getObject().asResource();

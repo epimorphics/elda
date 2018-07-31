@@ -8,6 +8,7 @@
 
 package com.epimorphics.lda.rdfq;
 
+import com.epimorphics.lda.bindings.Lookup;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.util.RDFUtils;
 import com.hp.hpl.jena.datatypes.RDFDatatype;
@@ -22,21 +23,50 @@ public class Value extends Term
 	final String language;
 	final String datatype;
 	
+	// final String mapName;
+
+	public static class Apply {
+		public final String mapName;
+		public final String argument;
+		
+		public Apply(String mapName, String argument) {
+			this.mapName = mapName;
+			this.argument = argument;
+		}
+		
+		@Override public String toString() {
+			return "(" + mapName + " | " + argument + ")";
+		}
+		
+		@Override public boolean equals(Object other) {
+			return other instanceof Apply && same((Apply) other);
+		}
+
+		private boolean same(Apply other) {
+			return mapName.equals(other.mapName) && argument.equals(other.argument);
+		}
+	}
+	
+	public final Apply apply;
+	
 	public static final Value emptyPlain = new Value("");
 	
-	public Value( String spelling ) 
-		{ this( spelling, "", "" ); }
+	public static final Apply noApply = null;
 	
-	public Value( String spelling, String language, String datatype ) 
-		{ 
-		this.spelling = spelling; 
+	public Value( String spelling ) 
+		{ this( spelling, "", "", noApply ); }
+	
+	public Value( String spelling, String language, String datatype, Apply apply ) 
+		{ 		
+		this.spelling = spelling == null ? "" : spelling; 
 		this.language = language == null ? "" : language; 
 		this.datatype = datatype == null ? "" : datatype; 
+		this.apply    = apply;
 		}
-	
+		
 	@Override public String toString() 
 		{
-		return "{" + spelling + "|" + language + "|" + datatype + "}";
+		return "{" + spelling + "|" + language + "|" + datatype + "|" + apply + "}";
 		}
 	
 	@Override public String asSparqlTerm( PrefixLogger pl )
@@ -54,10 +84,18 @@ public class Value extends Term
 	    one, but with a new lexical form aka valueString vs.
 	 */
 	@Override public Value replaceBy( String vs ) 
-		{ return new Value( vs, language, datatype ); }
+		{ return new Value( vs, language, datatype, apply ); }
 	
 	@Override public String spelling() 
 		 { return spelling; }
+	
+	public String spelling(Lookup l) {		
+		if (apply != null) {
+			String vs = l.getValueString(spelling);
+			return vs == null ? "ABSENT" : vs;
+		}
+		return spelling; 
+	}
 	
 	public String lang() 
 	 	{ return language; }
@@ -78,6 +116,11 @@ public class Value extends Term
 			spelling.equals( other.spelling ) 
 			&& language.equals( other.language ) 
 			&& datatype.equals( other.datatype )
+			&& same( apply, other.apply )
 			; 
 		}
+
+	private boolean same(Apply x, Apply y) {
+		return x == null ? y == null : x.equals(y);
 	}
+}

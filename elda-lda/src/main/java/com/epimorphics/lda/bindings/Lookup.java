@@ -16,6 +16,18 @@ public interface Lookup {
 	
 	public String getValueString( String name );
 	
+	public static final Lookup empty = new Lookup() {
+
+		@Override public String toString() {
+			return "Lookup.empty";
+		}
+		
+		@Override public String getValueString(String name) {
+			return null;
+		}
+		
+	};
+	
 	public static class Util {
 
 		/**

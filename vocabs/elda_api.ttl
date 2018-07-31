@@ -5,6 +5,8 @@
 @prefix elda: <http://www.epimorphics.com/vocabularies/lda#>.
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix api: <http://purl.org/linked-data/api/vocab#>.
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
 
 elda:allLiteralsStructured a rdf:Property
 	; rdfs:label "all literals structured"
@@ -188,6 +190,44 @@ elda:listURL a rdf:Property
 elda:loadedFrom a rdf:Property
 	; rdfs:comment ""
 	.
+
+elda:mapName a rdf:Property
+	; rdfs:comment "specifies map name for lookup"
+	.
+
+elda:mapWith a rdf:Property
+    ; rdfs:comment "object is reference to Elda SPARQL map resource."
+    .
+
+elda:mapFrom a rdf:Property
+    ; rdfs:comment "value to use as the argument to the map lookup."
+    .
+
+elda:mapIn a rdf:Property
+    ; rdfs:comment "name of argument variable in map."
+    ; rdfs:range xsd:string
+    ; rdfs:domain elda:SPARQLMap
+    .
+
+elda:mapOut a rdf:Property
+    ; rdfs:comment "name of result variable in map."
+    ; rdfs:range xsd:string
+    ; rdfs:domain elda:SPARQLMap
+    .
+
+elda:mapQuery a rdf:Property
+    ; rdfs:domain api:API
+    .
+
+elda:sparqlMap a rdf:Property
+    ; rdfs:comment "property connecting API spec to its SPARQL query map."
+    ; rdfs:range elda:SPARQLMap
+    ; rdfs:domain api:API
+    .
+
+elda:SPARQLMap a rdf:Property
+    ; rdfs:comment "class of SPARQL maps"
+    .
 
 elda:match a rdf:Property
 	; rdfs:comment ""

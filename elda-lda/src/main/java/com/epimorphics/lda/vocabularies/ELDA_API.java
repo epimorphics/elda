@@ -20,6 +20,9 @@ public class ELDA_API  extends API {
     /** <p>The namespace of the vocabulary as a resource</p> */
     public static final Resource NAMESPACE = m_model.createResource( NS );
     
+    /** <p>class of SPARQL maps</p> */
+    public static final Property SPARQLMap = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#SPARQLMap" );
+    
     /** <p>Property of JSON-LD formatter that determines if all literals are rendered 
      *  with their types.</p>
      */
@@ -142,6 +145,23 @@ public class ELDA_API  extends API {
     /** <p></p> */
     public static final Property loadedFrom = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#loadedFrom" );
     
+    /** <p>value to use as the argument to the map lookup.</p> */
+    public static final Property mapFrom = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#mapFrom" );
+    
+    /** <p>name of argument variable in map.</p> */
+    public static final Property mapIn = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#mapIn" );
+    
+    /** <p>specifies map name for lookup</p> */
+    public static final Property mapName = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#mapName" );
+    
+    /** <p>name of result variable in map.</p> */
+    public static final Property mapOut = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#mapOut" );
+    
+    public static final Property mapQuery = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#mapQuery" );
+    
+    /** <p>object is reference to Elda SPARQL map resource.</p> */
+    public static final Property mapWith = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#mapWith" );
+    
     /** <p></p> */
     public static final Property match = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#match" );
     
@@ -173,6 +193,9 @@ public class ELDA_API  extends API {
     
     /** <p></p> */
     public static final Property shortnameMode = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#shortnameMode" );
+    
+    /** <p>property connecting API spec to its SPARQL query map.</p> */
+    public static final Property sparqlMap = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#sparqlMap" );
     
     /** <p></p> */
     public static final Property sparqlQuery = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#sparqlQuery" );

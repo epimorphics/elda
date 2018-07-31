@@ -21,6 +21,8 @@
 
 @prefix item:    <http://localhost:8070/testing/item/> .
 
+@prefix example:               <http://www.epimorphics.com/vocabularies/lda#example.> .
+
 # ---------------------------------------------------------------------
 # API config
 
@@ -61,8 +63,30 @@ hello:hello-world-again a api:API
     ; api:base "/"
     ; elda:enableCounting true
    	; elda:cacheExpiryTime "10m"
+   	
+   	; api:variable [ api:name "M"; api:value "Martin" ]
+   	; api:variable [ api:name "W"; api:value "Wallace" ]
+   	
+   	; api:variable 
+   		[ api:name "var_A"
+   		; api:value 
+   			[ elda:mapFrom "{M} {W}" 
+   			; elda:mapWith example:map
+   			]
+   		]
 	.
-	
+   	
+example:map a elda:SPARQLMap
+   	# ; elda:mapName "http://www.epimorphics.com/vocabularies/lda#example.map"
+   	; elda:mapIn "param"
+   	; elda:mapQuery
+   		"""
+   		prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+   		select ?out where {?out rdfs:label ?param} limit 1
+   		"""
+   	; elda:mapOut "out"
+    .
+    
 <http://localhost:3030/ds/query> 
     elda:textSearchOperand (rdfs:label "?_search" 99)
     .
