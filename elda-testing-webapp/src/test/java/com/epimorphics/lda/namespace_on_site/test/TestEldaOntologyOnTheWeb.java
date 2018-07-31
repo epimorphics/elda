@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.epimorphics.lda.vocabularies.ELDA_API;
@@ -16,7 +17,7 @@ public class TestEldaOntologyOnTheWeb {
 	static final String DOWNFILE = "/tmp/elda-downloaded.ttl";
 	static final String ELDAVOCAB = "../vocabs/elda_api.ttl";
 	
-	@Test public void testOnWeb() throws IOException {
+	@Test @Ignore public void testOnWeb() throws IOException {
 		
 		if (true) {
 			System.err.println(">> testOnWeb suppressed for the moment.");

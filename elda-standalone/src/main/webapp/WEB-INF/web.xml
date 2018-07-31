@@ -6,11 +6,23 @@
   <context-param>
      <param-name>com.epimorphics.api.initialSpecFile</param-name>
      <param-value>
-			again::specs/hello-again-world.ttl  
+            again::specs/hello-again-world.ttl
         </param-value>
   </context-param>
   
   <!--
+<<<<<<< HEAD
+=======
+			hello::specs/hello-world.ttl
+            , tiny::specs/tiny-education.ttl
+            , mini::specs/mini-education.ttl
+            , full::specs/full-education.ttl
+            , velocity::specs/hello-velocity.ttl
+            , velocitydev::specs/hello-velocity-dev.ttl
+            , ved::specs/mini-education-velocity.ttl
+            , bwq::specs/environment.data.gov.uk-bwq.ttl
+           
+>>>>>>> include-files
             , tiny::specs/tiny-education.ttl
             , mini::specs/mini-education.ttl
             , full::specs/full-education.ttl

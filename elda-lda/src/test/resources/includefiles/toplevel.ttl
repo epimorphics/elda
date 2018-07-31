@@ -1,0 +1,5 @@
+#this is a top-level document with inclusions.
+
+#include alpha.ttl
+
+#include beta.ttl
