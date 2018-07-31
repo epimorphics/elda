@@ -18,7 +18,11 @@
 
   <properties>
 	  <tempSCM>/tmp/tempSCM</tempSCM>
+<<<<<<< HEAD
 	  <project.tagname>-option-ab-1</project.tagname>
+=======
+	  <project.tagname>control-fix</project.tagname>
+>>>>>>> dev-control
 
     <ver.junit>4.11</ver.junit>
     <ver.log4j>1.2.17</ver.log4j>

@@ -17,5 +17,9 @@ package com.epimorphics.lda;
  *
  */
 public interface Version {
+<<<<<<< HEAD
 	public final String string = "1.5.0-SNAPSHOT-option-ab-1";
+=======
+	public final String string = "1.4.4-SNAPSHOTcontrol-fix";
+>>>>>>> dev-control
 }
