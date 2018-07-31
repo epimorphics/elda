@@ -7,11 +7,10 @@
      <param-name>com.epimorphics.api.initialSpecFile</param-name>
      <param-value>
             again::specs/hello-again-world.ttl
-        </param-value>
+     </param-value>
   </context-param>
   
   <!--
-			hello::specs/hello-world.ttl
 		    , again::specs/hello-again-world.ttl
             , tiny::specs/tiny-education.ttl
             , mini::specs/mini-education.ttl
@@ -21,6 +20,10 @@
             , ved::specs/mini-education-velocity.ttl
             , bwq::specs/environment.data.gov.uk-bwq.ttl
   -->
+=======
+           
+ -->
+>>>>>>> includes-ab
   
   <filter>
     <filter-name>LogRequestFilter</filter-name>
