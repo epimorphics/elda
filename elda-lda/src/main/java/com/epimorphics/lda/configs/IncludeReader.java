@@ -75,15 +75,27 @@ public class IncludeReader extends Reader {
 		String content = layer.content;
 		int contentPosition = layer.contentPosition;
 		int nlPos = content.indexOf('\n', contentPosition);
-
+		
 		if (nlPos < 0) {
+						
+			// deal with any non-nl-terminated trailing string
+			
+			int length = content.length();
+			int delta = length - contentPosition;
+			if (delta > 0) {
+				
+				content.getChars(contentPosition, length, cbuf, offset);
+				layer.contentPosition = length;
+				return delta;
+			}
+			
 			blocks.add(currentBlock);
 			if (layers.isEmpty()) {	
 				return -1; 
 			} else {
-				pop();
+				pop();						
 				currentBlock = new ShapeBlock(lineCount + 1, layer.lineCount + 1, layer.filePath);
-				return read(cbuf, offset, limit);
+				return read(cbuf, offset, limit);			
 			}
 		
 		} else if (content.startsWith(INCLUDE, contentPosition)) {
