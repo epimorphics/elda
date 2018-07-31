@@ -1056,6 +1056,70 @@ file. The file `dev-log4j.properties` is the same as
 the default log4j.properties except that it includes
 class name and line number in its log entries.
 
+Editing metadata
+================
+
+From Elda 1.4.4, additional control over generated metadata
+may be configured.
+
+To disable the wired-in metadata
+
+ :spec a api:API
+    ; elda:disable-default-metadata false
+
+    A setting of false means that by default the
+    hardwired metadata is switched off. A setting
+    of true means that the hardwired metadata is
+    switched on.
+
+    If this property is not set, it is treated as false,
+    consistent with the current behaviour.
+
+ allow switching off hardwired metadata with
+ specified property names: 
+
+    :spec a api:API
+    ; elda:disable-default-metadata (P1 P2 ...)
+
+    The hardwired metadata with properties P1, P2 ... is
+    switched off. That is, metadata (S P1 O1), (S P2 O2)
+    is dropped from the endpoints metadata.
+
+allow enabling metadata from config:
+
+    :spec a api:API
+    ; elda:enable-default-metadata (P1 P2 ...)
+
+    The hardwired metadata with properties P1 P2 ...
+    is not dropped from the result metadata. enable-default
+    overrides disable-default.
+
+    Between them, enable-default-metadata and disable-default-metadata
+    allow any combination of hardwired metadata properties
+    to be represented.
+
+provide config of named blocks of metadata in config:
+
+    :spec a api:API
+    ; elda:metadata
+        [api:name "Name"
+        ; P1 V1
+        ; P2 V2 ...
+        ]
+
+    The name "Name" represents the block declaring
+    metadata. If this block is enabled, then the
+    metadata elements (S P1 V1) (S P2 V2) ... are
+    added to this query's metadata.
+
+    The property values V1, V2 ... may be literals
+    or named resources.
+
+Setting Variables from queries
+===============================
+
+(To be specified)
+
 Formatting extensions
 =====================
 
