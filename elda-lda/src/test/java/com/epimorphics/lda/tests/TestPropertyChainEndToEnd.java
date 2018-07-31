@@ -24,8 +24,7 @@ import com.epimorphics.lda.tests_support.MakeData;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.shared.PrefixMapping;
 
-public class TestPropertyChainEndToEnd 
-	{
+public class TestPropertyChainEndToEnd {
 	@Test public void testPropertyChainBuildsResultChain()
 		{
 		Model model = MakeData.specModel
@@ -41,7 +40,7 @@ public class TestPropertyChainEndToEnd
 		//
 			+ "; spec:my-viewer rdfs:label 'mine'"
 			+ "; spec:my-viewer api:property ex:size"
-		//	
+		//
 			+ "; ex:size rdf:type owl:DatatypeProperty"
 			+ "; ex:size api:label 'size'"
 			+ "; ex:size rdfs:range xsd:int"
@@ -65,7 +64,7 @@ public class TestPropertyChainEndToEnd
 			);
 		Model expect = MakeData.specModel
 			( "ex:A school-ont:localAuthority ex:LA-1"
-			+ "; ex:LA-1 ex:number 17"					
+			+ "; ex:LA-1 ex:number 17"
 			);
 		ModelLoader loader = LoadsNothing.instance;
 		APITester t = new APITester( model, loader );
@@ -88,7 +87,7 @@ public class TestPropertyChainEndToEnd
 		//
 			+ "; spec:my-viewer rdfs:label 'mine'"
 			+ "; spec:my-viewer api:properties 'localAuthority.number'"
-		//	
+		//
 			+ "; ex:size rdf:type owl:DatatypeProperty"
 			+ "; ex:size api:label 'size'"
 			+ "; ex:size rdfs:range xsd:int"
@@ -108,7 +107,7 @@ public class TestPropertyChainEndToEnd
 			);
 		Model expect = MakeData.specModel
 			( "ex:A school-ont:localAuthority ex:LA-1"
-			+ "; ex:LA-1 ex:number 17"					
+			+ "; ex:LA-1 ex:number 17"
 			);
 		ModelLoader loader = LoadsNothing.instance;
 		APITester t = new APITester( model, loader );
@@ -116,18 +115,18 @@ public class TestPropertyChainEndToEnd
 		APIResultSet rs = t.runQuery( uriTemplate, "" );
 		assertContains( expect, rs.getMergedModel() );
 		}
-	
+
 	@Test public void ensureUnitPropertyHasType()
 		{
 		ensurePropertyThingHasType( "size" );
 		}
-	
+
 	@Test public void ensureChainedPropertyHasType()
 		{
 		ensurePropertyThingHasType( "max-thing.size" );
 		}
 
-	private void ensurePropertyThingHasType( String propertyThing ) 
+	private void ensurePropertyThingHasType( String propertyThing )
 		{
 		Model model = MakeData.specModel
 			( "spec:spoo rdf:type api:API"
@@ -145,20 +144,20 @@ public class TestPropertyChainEndToEnd
 		x.addFilterFromQuery( Param.make(sns, propertyThing), "17.9" );
 		assertContains( q.assembleSelectQuery( prefixes ), "\"17.9\"^^<http://www.w3.org/2001/XMLSchema#string>" );
 		}
-	
-	private void assertContains(String target, String want) 
+
+	private void assertContains(String target, String want)
 		{
 		if (!target.contains(want))
 			fail( "expected '" + target + "' to contain '" + want + "'" );
 		}
 
-	private void assertContains(Model expect, Model rs) 
+	private void assertContains(Model expect, Model rs)
 		{
 		if (!rs.containsAll(expect))
 			{
 			Model spoo = expect.difference( rs );
 			StringBuilder them = new StringBuilder();
-			for (Statement s: spoo.listStatements().toList()) 
+			for (Statement s: spoo.listStatements().toList())
 				{
 				them.append( s ).append( "\n" );
 				}
@@ -168,4 +167,84 @@ public class TestPropertyChainEndToEnd
 			fail( "result set doesn't contain all expected triples: missing\n" + them );
 			}
 		}
+
+	@Test
+	public void inversePropertyInSpec_ReturnsInverseRelatedNodes() {
+		Model model = MakeData.specModel(
+				"spec:foo rdf:type api:API"
+						// API
+						+ "; spec:foo api:sparqlEndpoint here:data"
+						+ "; spec:foo api:endpoint spec:target"
+						// Endpoint
+						+ "; spec:target rdf:type api:ListEndpoint"
+						+ "; spec:target api:uriTemplate http://test.org/target"
+						+ "; spec:target api:defaultViewer spec:my-viewer"
+						// View
+						+ "; spec:my-viewer rdfs:label 'test-viewer'"
+						+ "; spec:my-viewer api:properties '~isParentOf.label'"
+						// Ontology
+						+ "; rdfs:label api:label 'label'"
+						+ "; school-ont:isParentOf api:label 'isParentOf'"
+						// Query result
+						+ "; here:data spec:item ex:item"
+						+ "; here:data spec:item ex:parent"
+						// Records
+						+ "; ex:item rdfs:label 'child'"
+						+ "; ex:parent rdfs:label 'parent'"
+						+ "; ex:parent school-ont:isParentOf ex:item"
+		);
+
+		APITester t = new APITester(model, LoadsNothing.instance);
+		String uriTemplate = "http://test.org/target";
+		APIResultSet rs = t.runQuery(uriTemplate);
+		Model resultModel = rs.getMergedModel();
+
+		Resource expectedSubject = ResourceFactory.createResource("http://www.epimorphics.com/examples/eg1#parent");
+		Property expectedProperty = resultModel.createProperty("http://education.data.gov.uk/def/school/isParentOf");
+		Property label = resultModel.createProperty("http://www.w3.org/2000/01/rdf-schema#label");
+		Resource expectedObject = ResourceFactory.createResource("http://www.epimorphics.com/examples/eg1#item");
+
+		assert(resultModel.contains(expectedSubject, expectedProperty, expectedObject));
+		assert(resultModel.contains(expectedSubject, label, "parent"));
 	}
+
+	@Test
+	public void inversePropertyInQueryParam_ReturnsInverseRelatedNodes() {
+		Model model = MakeData.specModel(
+				"spec:foo rdf:type api:API"
+						// API
+						+ "; spec:foo api:sparqlEndpoint here:data"
+						+ "; spec:foo api:endpoint spec:target"
+						// Endpoint
+						+ "; spec:target rdf:type api:ListEndpoint"
+						+ "; spec:target api:uriTemplate http://test.org/target"
+						+ "; spec:target api:defaultViewer spec:my-viewer"
+						// View
+						+ "; spec:my-viewer rdfs:label 'test-viewer'"
+						+ "; spec:my-viewer api:properties 'label'"
+						// Ontology
+						+ "; rdfs:label api:label 'label'"
+						+ "; school-ont:isParentOf api:label 'isParentOf'"
+						// Query result
+						+ "; here:data spec:item ex:item"
+						+ "; here:data spec:item ex:parent"
+						// Records
+						+ "; ex:item rdfs:label 'child'"
+						+ "; ex:parent rdfs:label 'parent'"
+						+ "; ex:parent school-ont:isParentOf ex:item"
+		);
+
+		APITester t = new APITester(model, LoadsNothing.instance);
+		String uriTemplate = "http://test.org/target";
+		APIResultSet rs = t.runQuery(uriTemplate, "_properties=~isParentOf.label");
+		Model resultModel = rs.getMergedModel();
+
+		Resource expectedSubject = ResourceFactory.createResource("http://www.epimorphics.com/examples/eg1#parent");
+		Property expectedProperty = resultModel.createProperty("http://education.data.gov.uk/def/school/isParentOf");
+		Property label = resultModel.createProperty("http://www.w3.org/2000/01/rdf-schema#label");
+		Resource expectedObject = ResourceFactory.createResource("http://www.epimorphics.com/examples/eg1#item");
+
+		assert(resultModel.contains(expectedSubject, expectedProperty, expectedObject));
+		assert(resultModel.contains(expectedSubject, label, "parent"));
+	}
+}

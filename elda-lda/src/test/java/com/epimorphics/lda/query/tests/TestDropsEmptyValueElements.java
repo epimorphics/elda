@@ -12,6 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.junit.Test;
 
@@ -40,7 +41,9 @@ public class TestDropsEmptyValueElements {
 			, aq
 			); 
 		View v = cu.updateQueryAndConstructView( new ArrayList<PendingParameterValue>() );
-		assertEquals( CollectionUtils.set( new PropertyChain( "eh:/A" ) ), v.chains() );
+		assertEquals(1, v.chains().size());
+		assertEquals(1, v.chains().get(0).getProperties().size());
+		assertEquals("eh:/A", v.chains().get(0).getProperties().get(0).asProperty().getURI());
 	}
 
 	@Test public void ensureEmptySortsIgnored() {

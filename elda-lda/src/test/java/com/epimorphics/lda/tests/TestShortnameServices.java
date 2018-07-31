@@ -23,7 +23,6 @@ import com.epimorphics.lda.query.ValTranslator.Filters;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.shortnames.*;
-import com.epimorphics.lda.shortnames.ShortnameService.Util;
 import com.epimorphics.lda.tests_support.ExpandOnly;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.util.CollectionUtils;
@@ -38,13 +37,6 @@ import com.hp.hpl.jena.shared.PrefixMapping;
 */
 public class TestShortnameServices
 	{
-	@Test public void testExpandProperties()
-		{
-		Property P = property( "eh:/P" ), Q = property( "spoo:/Q" );
-		ShortnameService sns = new ExpandOnly( "P=eh:/P;Q=spoo:/Q" );
-		List<Property> p = Util.expandProperties( "P.Q", sns );
-		assertEquals( CollectionUtils.list( P, Q ), p );
-		}
 	
 	static final String EX = "http://www.epimorphics.com/tools/example#";
 		

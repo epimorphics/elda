@@ -9,8 +9,10 @@
 package com.epimorphics.lda.support;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.epimorphics.lda.core.VarSupply;
+import com.epimorphics.lda.core.property.ViewProperty;
 import com.hp.hpl.jena.rdf.model.Property;
 
 /**
@@ -72,9 +74,10 @@ public class PropertyChainTranslator {
 	}
 
 	private List<List<Property>> getChoppedChains(boolean dropLast) {
-		List<List<Property>> choppedChains = new ArrayList<List<Property>>();
+		List<List<Property>> choppedChains = new ArrayList<>();
 		for (PropertyChain pc : chains) {
-			List<Property> chain = mayTrim(pc.getProperties(), dropLast);
+			List<Property> props = pc.getProperties().stream().map(vp -> vp.asProperty()).collect(Collectors.toList());
+			List<Property> chain = mayTrim(props, dropLast);
 			if (chain.size() > 0)
 				choppedChains.add(chain);
 		}

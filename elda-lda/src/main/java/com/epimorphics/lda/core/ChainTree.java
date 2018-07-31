@@ -10,11 +10,10 @@ package com.epimorphics.lda.core;
 import java.util.*;
 
 import com.epimorphics.lda.core.View.State;
+import com.epimorphics.lda.core.property.ViewProperty;
 import com.epimorphics.lda.rdfq.*;
-import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.lda.support.PropertyChain;
-import com.hp.hpl.jena.rdf.model.Property;
 
 /**
     A collection of property chains represented as a triple (?item predicate ?value)
@@ -83,34 +82,25 @@ public class ChainTree {
 	    and as a magic property in the PropertyChain objects) to a fresh variable.
 	*/
 	public static ChainTrees make( Any r, State st, List<PropertyChain> chains ) {
-		Map<Property, List<PropertyChain>> them = new HashMap<Property, List<PropertyChain>>();
+		Map<ViewProperty, List<PropertyChain>> them = new HashMap<>();
 		for (PropertyChain chain: chains) {
-			List<Property> properties = chain.getProperties();
+			List<ViewProperty> properties = chain.getProperties();
 			if (properties.size() > 0) {
-				Property key = properties.get(0);
-				PropertyChain rest = tail(chain);
+				ViewProperty key = properties.get(0);
+				PropertyChain tail = chain.tail();
 				List<PropertyChain> entries = them.get(key);
-				if (entries == null) them.put( key, entries = new ArrayList<PropertyChain>() );
-				entries.add( rest );
+				if (entries == null) them.put( key, entries = new ArrayList<>() );
+				entries.add(tail);
 			}
-		}		
-	//
+		}
+
 		ChainTrees result = new ChainTrees();
-		for (Map.Entry<Property, List<PropertyChain>> entry: them.entrySet()) {
+		for (Map.Entry<ViewProperty, List<PropertyChain>> entry: them.entrySet()) {
 			Variable nv = st.vars.newVar();
-			RDFQ.Triple triple = RDFQ.triple( r, predicate( st, entry.getKey() ), nv );
+			RDFQ.Triple triple = entry.getKey().asTriple(r, nv, st.vars);
 			ChainTrees followers = make( nv, st, entry.getValue() );
 			result.add( new ChainTree( triple, followers ) );
 		}
 		return result;
-	}
-
-	private static Any predicate( State st, Property p ) {
-		return p.equals( ShortnameService.Util.propertySTAR ) ? st.vars.newVar() : RDFQ.uri( p );
-	}
-
-	private static PropertyChain tail(PropertyChain chain) {
-		List<Property> properties = chain.getProperties();
-		return new PropertyChain( properties.subList( 1, properties.size() ) );
 	}
 }

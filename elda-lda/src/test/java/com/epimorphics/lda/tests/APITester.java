@@ -107,6 +107,10 @@ public class APITester {
         return match.getEndpoint().call( new APIEndpoint.Request(controls, ru, call), new NoteBoard()).resultSet;
     }
 
+	public APIResultSet runQuery(String uriTemplate) {
+    	return runQuery(uriTemplate, "");
+	}
+
 	static final Controls controls = new Controls( true, new Times() );
 
 	private Bindings fix(Map<String, String> bindings) {

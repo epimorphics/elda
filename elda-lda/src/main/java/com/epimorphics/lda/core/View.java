@@ -13,7 +13,10 @@
 package com.epimorphics.lda.core;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+import com.epimorphics.lda.core.property.ViewProperty;
+import com.epimorphics.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +44,7 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @version $Revision: $
  */
 public class View {
-	
+
     static Logger log = LoggerFactory.getLogger(View.class);
 
     protected final List<PropertyChain> chains = new ArrayList<PropertyChain>();
@@ -64,8 +67,10 @@ public class View {
 	/**
 	    Property chains: [RDF.type] and [RDFS.label].
 	*/
-	static final List<PropertyChain> BasicChains = 
-		Arrays.asList( new PropertyChain( RDF.type ), new PropertyChain( RDFS.label ) );
+	private static final List<PropertyChain> BasicChains = Arrays.asList(
+			new PropertyChain(new ViewProperty.Base(RDF.type)),
+			new PropertyChain(new ViewProperty.Base(RDFS.label))
+	);
     
 	/**
         View that does rdf:type and rdfs:label.
@@ -151,8 +156,8 @@ public class View {
     	return type;
     }
     
-    public Set<PropertyChain> chains() {
-    	return new HashSet<PropertyChain>( chains );
+    public List<PropertyChain> chains() {
+    	return chains;
     }
     
     /**
@@ -187,33 +192,41 @@ public class View {
         chains defined by <code>spec</code>.
     */
     public View addViewFromRDFList(Resource spec, ShortnameService sns) {
-    	cannotUpdateALL();		
+    	cannotUpdateALL();
         if (spec.canAs(RDFList.class)) {
-        	List<Property> properties = new ArrayList<Property>();
-            RDFList list = spec.as(RDFList.class);
-            for (Iterator<RDFNode> i = list.iterator(); i.hasNext();) {
-                properties.add( i.next().as( Property.class ) ); 
-            }
+        	List<ViewProperty> properties = new ArrayList<>();
+            Iterator<RDFNode> list = spec.as(RDFList.class).iterator();
+            while(list.hasNext()) {
+				properties.add(new ViewProperty.Base(list.next().as(Property.class)));
+			}
             chains.add( new PropertyChain( properties ) );
         } else {
             String uri = spec.asResource().getURI();
-            chains.add( new PropertyChain( uri ) );
+            Property prop = ResourceFactory.createProperty(uri);
+            ViewProperty vp = new ViewProperty.Base(prop);
+            chains.add(new PropertyChain(vp));
         }
         if (chains.size() > 0) type = Type.T_CHAINS;
         return this;
     }
 
 	private void cannotUpdateALL() {
-		if (this == ALL) throw new IllegalArgumentException( "the view ALL cannot be updated." );
+		if (this == ALL) throw new IllegalArgumentException("the view ALL cannot be updated.");
 	}
-    
+
     /**
         Answer this view after updating it with the given property string.
         The property name may be dotted; it defines a property chain.
     */
     public View addViewFromParameterValue( String prop, ShortnameService sns ) {
     	cannotUpdateALL();
-        List<Property> chain = ShortnameService.Util.expandProperties( prop, sns );
+		ViewProperty.Factory factory = ViewProperty.factory(sns);
+		List<ViewProperty> chain = Arrays.asList(prop.split("\\.")).stream().filter(
+				definition -> !definition.isEmpty()
+		).map(
+				definition -> factory.getImpl(definition)
+		).collect(Collectors.toList());
+
         chains.add( new PropertyChain( chain ) );
         return this;
     }
@@ -487,13 +500,8 @@ public class View {
 			return pet.minTimeMillis();
 		
 		for (PropertyChain pc: chains) {
-			for (Property p: pc.getProperties()) {
-				if (p.equals( ShortnameService.Util.propertySTAR )) {
-					return pet.minTimeMillis();
-				} else {
-					long millis = pet.timeInMillisFor(p);
-					if (millis < result) result = millis;
-				}
+			for (ViewProperty vp: pc.getProperties()) {
+				result = Math.min(result, vp.expiryTimeMillis(pet));
 			}
 		}
 		
