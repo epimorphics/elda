@@ -1,4 +1,26 @@
 + ---------------------------------------------------------------------
+| Elda 1.4.4 (RELEASED)
+
+* greater control over generated metadata is available, including
+    suppressing it entirely.
+
+* LDA variables can be set by an explicit query to the data source
+    for the specified endpoint.
+
+* config files may contain #include lines, allowing configurations
+    to be built from shared components. Changing a file that has been
+    #included will cause all configs that included it to be reloaded.
+
+* inverse properties can now appear in view specifications
+
+* /api-config is now working again.
+
++ ---------------------------------------------------------------------
+| Elda 1.4.3 (RELEASED)
+
+(BYPASSED)
+
++ ---------------------------------------------------------------------
 | Elda 1.4.2 (RELEASED)
 
 Clean up of logging configuration, see reference notes.
