@@ -159,6 +159,11 @@ public class IncludeReader extends Reader {
 
 	private static void nest(String givenName, String contextPath,  ArrayList<String> stack, Set<String> seen) {
 		String fileName = expandName(givenName, contextPath); 
+		
+		if (stack.contains(fileName)) { 
+			throw new RuntimeException("config file " + givenName + " loaded recursively."); 	
+		}
+		stack.add(fileName);
 		seen.add(fileName);
 		
 		String content = EldaFileManager.get().readWholeFileAsUTF8(fileName);
@@ -172,6 +177,9 @@ public class IncludeReader extends Reader {
 			nest(nextName, givenName, stack, seen);
 			position = end + 1;
 		}
+		
+		stack.remove(stack.size() - 1); 
+		
 	}
 	
 	private static String expandName(String givenPath, String contextPath) {
