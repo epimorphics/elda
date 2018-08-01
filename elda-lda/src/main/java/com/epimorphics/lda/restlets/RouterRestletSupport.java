@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.configs.ConfigLoader;
+import com.epimorphics.lda.configs.IncludeReader;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.routing.*;
@@ -71,9 +72,10 @@ public class RouterRestletSupport {
 		String baseFilePath = ServletUtils.withTrailingSlash( con.getRealPath("/") );
 		Set<String> specFilenameTemplates = ServletUtils.getSpecNamesFromContext(adaptContext(con));
     	String givenPrefixPath = con.getInitParameter( Container.INITIAL_SPECS_PREFIX_PATH_NAME );
-    //
+    //    	
     	log.debug( "configuration file templates: '{}'", specFilenameTemplates);    //
 		for (String specTemplate: specFilenameTemplates) {
+						
 			String prefixName = givenPrefixPath;
 			String specName = specTemplate.replaceAll( "\\{APP\\}" , contextPath );
 			int separatorPos = specName.indexOf( "::" );
@@ -86,7 +88,7 @@ public class RouterRestletSupport {
 			} else {
 				String fullPath = specName.startsWith("/") ? specName : baseFilePath + specName;
 				log.debug("spec file pattern is '{}'", fullPath);
-				List<File> files = new Glob().filesMatching( fullPath );
+				List<File> files = new Glob().filesMatching( fullPath );				
 				log.debug( "full path '{}' matches {} files", fullPath, files.size());
 				for (File f: files) {
 					log.debug("file '{}'", f);
@@ -96,12 +98,9 @@ public class RouterRestletSupport {
 						;
 					pfs.add( new PrefixAndFilename( expandedPrefix, f.getAbsolutePath() ) );
 					if (includeIncludes && !f.isDirectory()) {
-						Model m = EldaFileManager.get().loadModel(f.getAbsolutePath());						
-						for (Statement s: m.listStatements(null, ELDA_API.includesFragment, (RDFNode) null).toList()) {
-							String fileToInclude = s.getString();
-							File parent = new File(fullPath).getParentFile();
-							File inc = new File(parent, fileToInclude);
-							pfs.add(new PrefixAndFilename(expandedPrefix,  inc.getAbsolutePath()));
+						for (String fileName: IncludeReader.filenamesFor(f.getAbsolutePath())) {
+							pfs.add(new PrefixAndFilename(expandedPrefix, fileName));
+							
 						}
 					}
 				}

@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.epimorphics.lda.support.EldaFileManager;
 
@@ -101,9 +105,7 @@ public class IncludeReader extends Reader {
 		} else if (content.startsWith(INCLUDE, contentPosition)) {
 			
 			String givenPath = content.substring(contentPosition + INCLUDE.length(), nlPos).trim();
-						
-			File sibling = new File(new File(layer.filePath).getParent(), givenPath);
-			String fullPath = givenPath.startsWith("/") ? givenPath : sibling.toString(); 				
+			String fullPath = expandName(givenPath, layer.filePath); 				
 						
 			blocks.add(currentBlock);
 			currentBlock = new ShapeBlock(lineCount + 1, 0, fullPath);
@@ -125,7 +127,7 @@ public class IncludeReader extends Reader {
 			return result;
 		}
 	}
-	
+
 	private void pop() {
 		int which = layers.size() - 1;
 		layer = layers.remove(which);
@@ -148,4 +150,34 @@ public class IncludeReader extends Reader {
 
 	@Override public void close() throws IOException {
 	}
+	
+	public static List<String> filenamesFor(String topName) {
+		Set<String> seen = new HashSet<String>();
+		nest(topName, topName, new ArrayList<String>(), seen);
+		return new ArrayList<String>(seen);
+	}
+
+	private static void nest(String givenName, String contextPath,  ArrayList<String> stack, Set<String> seen) {
+		String fileName = expandName(givenName, contextPath); 
+		seen.add(fileName);
+		
+		String content = EldaFileManager.get().readWholeFileAsUTF8(fileName);
+		int position = 0;
+		while (true) {
+			String seek = "#include ";
+			int next = content.indexOf(seek, position);
+			if (next < 0) break;
+			int end = content.indexOf('\n', next);
+			String nextName = content.substring(next + seek.length(), end);
+			nest(nextName, givenName, stack, seen);
+			position = end + 1;
+		}
+	}
+	
+	private static String expandName(String givenPath, String contextPath) {
+		File sibling = new File(new File(contextPath).getParent(), givenPath);
+		String fullPath = givenPath.startsWith("/") ? givenPath : sibling.toString();
+		return fullPath;
+	}
+	
 }
