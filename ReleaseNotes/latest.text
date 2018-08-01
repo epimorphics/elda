@@ -13,6 +13,9 @@
 
 * inverse properties can now appear in view specifications
 
+* filters using prefixes min-, max- etc can now be removed from
+    the query through the UI.
+
 * /api-config is now working again.
 
 + ---------------------------------------------------------------------
