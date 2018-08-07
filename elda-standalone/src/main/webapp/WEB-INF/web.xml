@@ -20,10 +20,6 @@
             , ved::specs/mini-education-velocity.ttl
             , bwq::specs/environment.data.gov.uk-bwq.ttl
   -->
-=======
-           
- -->
->>>>>>> includes-ab
   
   <filter>
     <filter-name>LogRequestFilter</filter-name>
