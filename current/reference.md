@@ -1168,6 +1168,22 @@ corresponding Elda variable if that is bound
 
 Only the first result from the query is used.
 
+Config file inclusion
+=====================
+
+From Elda 1.5.0, config files can include other config file
+fragments using the #include directive:
+
+    \#include name-of-file
+
+The content of the `#included file is included at this point,
+replacing the #include directive.
+
+It is an error for nested #includes to #include the same
+file again. It is not an error for the same file to be
+\#included in multiple places. Inclusions are not 
+cached.
+
 Formatting extensions
 =====================
 
