@@ -1059,21 +1059,29 @@ class name and line number in its log entries.
 Editing metadata
 ================
 
-From Elda 1.4.4, additional control over generated metadata
-may be configured.
+From Elda 1.5.0, additional control over generated metadata
+may be configured, allowing wired-in metadata to be suppressed
+and arbitrary limited metadata to be added.
 
-To disable the wired-in metadata
+"Wired-in" metadata is infrmation about the current
+query and its result model that is automatically added
+to the formatted result if the renderer is metadata-aware,
+for example the current page number or size or Elda
+version.
 
- :spec a api:API
-    ; elda:disable-default-metadata false
+To suppress such wired-in metadata, configure the API
+endpoint:
 
-    A setting of false means that by default the
-    hardwired metadata is switched off. A setting
-    of true means that the hardwired metadata is
-    switched on.
+    :spec a api:API
+        ; elda:disable-default-metadata false
 
-    If this property is not set, it is treated as false,
-    consistent with the current behaviour.
+A setting of false means that by default the
+hardwired metadata is switched off. A setting
+of true means that the hardwired metadata is
+switched on.
+
+If this property is not set, it is treated as false,
+consistent with the pre-1.5.0 behaviour.
 
  allow switching off hardwired metadata with
  specified property names: 
