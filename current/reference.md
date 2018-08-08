@@ -1116,9 +1116,57 @@ provide config of named blocks of metadata in config:
     or named resources.
 
 Setting Variables from queries
-===============================
+==============================
 
-(To be specified)
+From Elda 1.5.0, it is possible for a configuration to specify
+the value of a variable to be set from a SPARQL query on
+the configuration's SPARQL endpoint. We call this a *map*.
+New properties have been added to the Elda namespace.
+
+    @prefix elda: <http://www.epimorphics.com/vocabularies/lda#> .
+
+In a variable declaration, the value of a variable can be given
+by a resource, typically (but not necessarily) a bnode:
+
+    :spec api:variable
+        [ api:name "the_name"
+        ; api:value 
+            [ elda:mapFrom "argumentValue"
+            ; elda:mapWith example:map
+            ]
+        ].
+
+the variable's resulting value is obtained by passing
+the value of the `mapFrom` property to the map
+resource which is the value of the `mapWith` property.
+
+A map can be referred to by multiple variable declarations
+and is declared by giving it the type `elda:SPARQLMap`:  
+
+    example:map a elda:SPARQLMap
+        ; elda:mapIn "param"
+        ; elda:mapQuery     
+   		    """
+   		    prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+   		    select ?out where {?out rdfs:label ?param} limit 1
+   		    """
+   	    ; elda:mapOut "out"
+        .
+
+The map declaration has three properties.
+
+`elda:mapIn` specifies the name by which the query can refer
+to the argument value given to the map.
+
+`elda:mapOut` specifies the result name from the query that
+has the desired result value.
+
+`elda:mapQuery` specifies the SPARQL query used to fetch
+the output value given the input value. Query variables
+(eg `?out`, `?param`) are replaced by the value of the
+corresponding Elda variable if that is bound
+
+Only the first result from the query is used.
 
 Formatting extensions
 =====================
