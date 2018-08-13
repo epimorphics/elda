@@ -1083,28 +1083,30 @@ switched on.
 If this property is not set, it is treated as false,
 consistent with the pre-1.5.0 behaviour.
 
- allow switching off hardwired metadata with
- specified property names: 
+To suppress particular metadata properties, use
+the configuration property `elda:disable-default-metadata`:
 
     :spec a api:API
     ; elda:disable-default-metadata (P1 P2 ...)
 
-    The hardwired metadata with properties P1, P2 ... is
-    switched off. That is, metadata (S P1 O1), (S P2 O2)
-    is dropped from the endpoints metadata.
+The hardwired metadata with properties P1, P2 ... is
+switched off. That is, metadata (S P1 O1), (S P2 O2)
+is dropped from the endpoints metadata.
 
-allow enabling metadata from config:
+Similarly, the configuration property `elda:enable-default-metadata`
+allows specified meta to be retained when it would otherwise be
+dropped:
 
     :spec a api:API
     ; elda:enable-default-metadata (P1 P2 ...)
 
-    The hardwired metadata with properties P1 P2 ...
-    is not dropped from the result metadata. enable-default
-    overrides disable-default.
+The hardwired metadata with properties P1 P2 ...
+is not dropped from the result metadata. enable-default
+overrides disable-default.
 
-    Between them, enable-default-metadata and disable-default-metadata
-    allow any combination of hardwired metadata properties
-    to be represented.
+Between them, enable-default-metadata and disable-default-metadata
+allow any combination of hardwired metadata properties
+to be represented.
 
 provide config of named blocks of metadata in config:
 
