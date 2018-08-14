@@ -1074,6 +1074,7 @@ endpoint:
 
     :spec a api:API
         ; elda:disable-default-metadata false
+    .
 
 A setting of false means that by default the
 hardwired metadata is switched off. A setting
@@ -1088,6 +1089,7 @@ the configuration property `elda:disable-default-metadata`:
 
     :spec a api:API
     ; elda:disable-default-metadata (P1 P2 ...)
+    .
 
 The hardwired metadata with properties P1, P2 ... is
 switched off. That is, metadata (S P1 O1), (S P2 O2)
@@ -1099,6 +1101,7 @@ dropped:
 
     :spec a api:API
     ; elda:enable-default-metadata (P1 P2 ...)
+    .
 
 The hardwired metadata with properties P1 P2 ...
 is not dropped from the result metadata. enable-default
@@ -1108,22 +1111,24 @@ Between them, enable-default-metadata and disable-default-metadata
 allow any combination of hardwired metadata properties
 to be represented.
 
-provide config of named blocks of metadata in config:
+It's possible to provide metadata other than the wired-in
+metadata by using named blocks in the configuration:
 
     :spec a api:API
     ; elda:metadata
-        [api:name "Name"
+        [api:name "blockName"
         ; P1 V1
         ; P2 V2 ...
         ]
+    .
 
-    The name "Name" represents the block declaring
-    metadata. If this block is enabled, then the
-    metadata elements (S P1 V1) (S P2 V2) ... are
-    added to this query's metadata.
+The "blockName" names the block declaring
+metadata. If this block is enabled, then the
+metadata elements (S P1 V1) (S P2 V2) ... are
+added to this query's metadata.
 
-    The property values V1, V2 ... may be literals
-    or named resources.
+The property values V1, V2 ... may be literals
+or named resources. 
 
 Setting Variables from queries
 ==============================
