@@ -1134,7 +1134,15 @@ metadata by using named blocks in the configuration:
 The "blockName" names the block declaring
 metadata. If this block is enabled, then the
 metadata elements (S P1 V1) (S P2 V2) ... are
-added to this query's metadata.
+added to this query's metadata. To enable a
+block, prefix its name with "+"; to disable
+it, prefix its name with "-".
+
+Metadata blocks can be enabled or disabled from
+the query URL by giving their names as
+the value of \_metadata=blockName1,blockName2 ...
+query arguments. The names may be prefixed with
+"+" or "-" to enable/disable the block.
 
 The property values V1, V2 ... may be literals
 or named resources. 
