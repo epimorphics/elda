@@ -1,5 +1,7 @@
 package com.epimorphics.lda.configs;
 
+import java.io.File;
+
 /**
 	A Position specifies a 1-origin line number and the
 	pathname of the file the line number is in.
@@ -22,6 +24,6 @@ public class Position {
 	}
 
 	private boolean same(Position other) {
-		return lineNumber == other.lineNumber && pathName.equals(other.pathName);
+		return lineNumber == other.lineNumber && new File(pathName).equals(new File(other.pathName));
 	}
 }
