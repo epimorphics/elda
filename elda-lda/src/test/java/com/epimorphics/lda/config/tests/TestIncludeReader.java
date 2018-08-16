@@ -105,7 +105,6 @@ public class TestIncludeReader {
 	static { m.read(r, "", "TTL"); }
 
 	private void testByExample(int givenLine, String expectPath, int expectLine) {
-		expectPath = expectPath.replaceAll("/", "\\" + File.separator);
 		Position expect = new Position(expectPath, expectLine);
 	//
 		Position where = r.mapLine(givenLine);
