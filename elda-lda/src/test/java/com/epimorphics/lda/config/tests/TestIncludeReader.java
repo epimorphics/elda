@@ -103,8 +103,8 @@ public class TestIncludeReader {
 	static final Model m = ModelFactory.createDefaultModel();
 	
 	static { m.read(r, "", "TTL"); }
-
-	private void testByExample(int givenLine, String expectPath, int expectLine) {		
+	
+	private void testByExample(int givenLine, String expectPath, int expectLine) {
 		Position expect = new Position(expectPath, expectLine);
 	//
 		Position where = r.mapLine(givenLine);
