@@ -184,7 +184,7 @@ public class IncludeReader extends Reader {
 	
 	private static String expandName(String givenPath, String contextPath) {
 		File sibling = new File(new File(contextPath).getParent(), givenPath);
-		String fullPath = givenPath.startsWith("/") ? givenPath : sibling.toString();
+		String fullPath = givenPath.startsWith(File.separator) ? givenPath : sibling.toString();
 		return fullPath;
 	}
 	
