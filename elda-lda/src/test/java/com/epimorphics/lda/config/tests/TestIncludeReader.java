@@ -109,7 +109,6 @@ public class TestIncludeReader {
 	//
 		Position where = r.mapLine(givenLine);
 		assertEquals("wrong position for " + givenLine, expect, where);
-		assertEquals(expect.pathName, where.pathName);
 	}
 
 	@Test public void testIncludeReaderException() throws IOException {
