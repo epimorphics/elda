@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.regex.Matcher;
@@ -104,6 +105,7 @@ public class TestIncludeReader {
 	static { m.read(r, "", "TTL"); }
 
 	private void testByExample(int givenLine, String expectPath, int expectLine) {
+		expectPath = expectPath.replaceAll("/", File.separator);
 		Position expect = new Position(expectPath, expectLine);
 	//
 		Position where = r.mapLine(givenLine);
