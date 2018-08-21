@@ -105,8 +105,7 @@ public class TestIncludeReader {
 	static { m.read(r, "", "TTL"); }
 
 	private void testByExample(int givenLine, String expectPath, int expectLine) {		
-		String expectPathTweaked = expectPath.replaceAll("/", File.separator);
-		Position expect = new Position(expectPathTweaked, expectLine);
+		Position expect = new Position(expectPath, expectLine);
 	//
 		Position where = r.mapLine(givenLine);
 		assertEquals("wrong position for " + givenLine, expect, where);
