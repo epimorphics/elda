@@ -366,7 +366,7 @@ import com.sun.jersey.api.NotFoundException;
     	log.debug("handling request '{}'", requestUri);
     //
         try {
-        	URI ru = makeRequestURI(ui, match, requestUri);
+        	URI ru = makeRequestURI(ui, match.getEndpoint().getSpec().getAPISpec().getBase(), requestUri, servletRequest);
         	APIEndpoint ep = match.getEndpoint();
         	boolean needsVaryAccept = formatName == null && queryParams.containsKey( "_format" ) == false;
         
@@ -515,10 +515,24 @@ import com.sun.jersey.api.NotFoundException;
 		catch (NoSuchMethodError e) { return "none"; }
 	}
 
-    public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
-		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
-		if (base == null) return requestUri;
-		return URIUtils.resolveAgainstBase( requestUri, URIUtils.newURI( base ), ui.getPath() );
+    public static URI makeRequestURI(UriInfo ui, String base, URI requestUri, HttpServletRequest request) {
+		String prot = request.getHeader("X-Forwarded-Proto");
+		String host = request.getHeader("X-Forwarded-Host");
+		URI baseUri;
+		if (base == null) {
+			if (prot == null || host == null) {
+				return requestUri;
+			} else {
+				baseUri = UriBuilder.fromUri("").scheme(prot).host(host).build();
+			}
+		} else {
+			baseUri = URIUtils.newURI(base);
+			if (!baseUri.isAbsolute()) {
+				baseUri = UriBuilder.fromUri(base).scheme(prot).host(host).build().resolve(baseUri);
+			}
+		}
+
+		return URIUtils.resolveAgainstBase( requestUri, baseUri, ui.getPath() );
 	}
 
     private static String MATCHES_SCHEME = "[a-zA-Z][-.+A-Za-z0-9]+:";
