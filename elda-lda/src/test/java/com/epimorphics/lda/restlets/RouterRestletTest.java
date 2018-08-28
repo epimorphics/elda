@@ -26,6 +26,14 @@ public class RouterRestletTest {
 	}
 
 	@Test
+	public void makeRequestURI_WithoutBase_WithForwardPort_ReturnsForwardUri() {
+		URI result = new RequestURIScenario()
+				.withForward("https", "proxy.net:9090")
+				.run();
+		assertEquals("https://proxy.net:9090/request", result.toString());
+	}
+
+	@Test
 	public void makeRequestURI_WithAbsoluteBase_WithoutForward_ReturnsBaseUri() {
 		URI result = new RequestURIScenario()
 				.withBase("https://proxy.net")

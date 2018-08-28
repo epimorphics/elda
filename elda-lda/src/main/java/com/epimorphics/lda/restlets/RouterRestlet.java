@@ -528,7 +528,8 @@ import com.sun.jersey.api.NotFoundException;
 			builder.scheme(prot);
 		}
 		if (baseUri.getHost() == null && host != null) {
-			builder.host(host);
+			URI hostUri = URIUtils.newURI("//" + host);
+			builder.host(hostUri.getHost()).port(hostUri.getPort());
 		}
 
 		baseUri = builder.build();
