@@ -37,7 +37,7 @@ public class RouterRestletTest {
 	public void makeRequestURI_WithAbsoluteBase_WithForward_ReturnsBaseUri() {
 		URI result = new RequestURIScenario()
 				.withBase("https://proxy.net")
-				.withForward("ftp", "proxy2.net")
+				.withForward("ftp", "forward.com")
 				.run();
 		assertEquals("https://proxy.net/request", result.toString());
 	}
@@ -51,10 +51,19 @@ public class RouterRestletTest {
 	}
 
 	@Test
-	public void makeRequestURI_WithRelativeBase_WithForward_ReturnsForwardUri() {
+	public void makeRequestURI_WithRelativeBasePath_WithForward_ReturnsForwardUri() {
 		URI result = new RequestURIScenario()
 				.withBase("/test/path")
 				.withForward("https", "proxy.net")
+				.run();
+		assertEquals("https://proxy.net/test/path/request", result.toString());
+	}
+
+	@Test
+	public void makeRequestURI_WithRelativeBaseHost_WithForward_ReturnsForwardUri() {
+		URI result = new RequestURIScenario()
+				.withBase("//proxy.net/test/path")
+				.withForward("https", "forward.com")
 				.run();
 		assertEquals("https://proxy.net/test/path/request", result.toString());
 	}
@@ -66,6 +75,7 @@ public class RouterRestletTest {
 		private final HttpServletRequest request = mock(HttpServletRequest.class);
 
 		RequestURIScenario() {
+			when(ui.getRequestUri()).thenReturn(requestUri);
 			when(ui.getPath()).thenReturn("/request");
 		}
 
@@ -81,7 +91,7 @@ public class RouterRestletTest {
 		}
 
 		URI run() {
-			return RouterRestlet.makeRequestURI(ui, base, requestUri, request);
+			return RouterRestlet.makeRequestURI(ui, base, request);
 		}
 	}
 }
