@@ -185,6 +185,8 @@ public class ELDA_API  extends API {
      *  should be dropped from a query parameter filter value.</p>
      */
     public static final Property purgeFilterValues = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#purgeFilterValues" );
+
+    public static final Property enableForwardHeaders = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#enableForwardHeaders" );
     
     /** <p></p> */
     public static final Property replaceStartBy = m_model.createProperty( "http://www.epimorphics.com/vocabularies/lda#replaceStartBy" );
