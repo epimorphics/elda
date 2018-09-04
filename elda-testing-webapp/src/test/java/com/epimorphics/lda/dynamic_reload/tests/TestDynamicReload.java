@@ -27,16 +27,19 @@ public class TestDynamicReload extends TomcatTestBase {
 		RouterRestlet.refreshIntervalTestingMillis = 1000;
 	}
 	
+	static final boolean runTests = 
+		"true".equals(System.getenv("ELDA_TEST_DYNAMIC_RELOAD"));
+	
 	@After public void afterTesting() {
 		RouterRestlet.refreshIntervalTestingMillis = 0;
 	}
 	
 	@Test public void testDynamicReload() throws ClientProtocolException, IOException, InterruptedException {
-		testDynamicReload("elda-config.ttl");
+		if (runTests) testDynamicReload("elda-config.ttl");
 	}
 	
 	@Test public void testIncludeDynamicReload() throws ClientProtocolException, IOException, InterruptedException {
-		testDynamicReload("empty.ttl");
+		if (runTests) testDynamicReload("empty.ttl");
 	}
 
 	private void testDynamicReload(String tweakPath) throws ClientProtocolException, IOException, InterruptedException {
