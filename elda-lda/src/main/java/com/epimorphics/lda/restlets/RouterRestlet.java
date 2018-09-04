@@ -534,6 +534,11 @@ import com.sun.jersey.api.NotFoundException;
 
 		baseUri = builder.build();
 
+		if (baseUri.getScheme() != null && baseUri.getHost() == null) {
+			builder.host(requestUri.getHost());
+			baseUri = builder.build();
+		}
+
 		return URIUtils.resolveAgainstBase( requestUri, baseUri, ui.getPath() );
 	}
 

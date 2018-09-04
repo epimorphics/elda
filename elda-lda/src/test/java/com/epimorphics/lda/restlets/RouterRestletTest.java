@@ -76,6 +76,15 @@ public class RouterRestletTest {
 		assertEquals("https://proxy.net/test/path/request", result.toString());
 	}
 
+	@Test
+	public void makeRequestURI_WithRelativeBaseHost_WithForwardProtoOnly_ReturnsForwardUri() {
+		URI result = new RequestURIScenario()
+				.withBase("/test/path")
+				.withForward("https", null)
+				.run();
+		assertEquals("https://test.org/test/path/request", result.toString());
+	}
+
 	class RequestURIScenario {
 		private final UriInfo ui = mock(UriInfo.class);
 		private String base;
