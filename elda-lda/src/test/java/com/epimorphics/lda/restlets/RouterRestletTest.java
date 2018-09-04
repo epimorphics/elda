@@ -85,8 +85,38 @@ public class RouterRestletTest {
 		assertEquals("https://test.org/test/path/request", result.toString());
 	}
 
+	@Test
+	public void makeRequestURI_ForwardHeadersDisabled_WithAbsoluteBase_ReturnsBaseUri() {
+		URI result = new RequestURIScenario()
+				.withEnabled(false)
+				.withForward("https", "proxy.net")
+				.withBase("http://base.com")
+				.run();
+		assertEquals("http://base.com/request", result.toString());
+	}
+
+	@Test
+	public void makeRequestURI_ForwardHeadersDisabled_WithRelativeBase_ReturnsBaseUri() {
+		URI result = new RequestURIScenario()
+				.withEnabled(false)
+				.withForward("https", "proxy.net")
+				.withBase("/test/path")
+				.run();
+		assertEquals("http://test.org/test/path/request", result.toString());
+	}
+
+	@Test
+	public void makeRequestURI_ForwardHeadersDisabled_WithoutBase_ReturnsRequestUri() {
+		URI result = new RequestURIScenario()
+				.withEnabled(false)
+				.withForward("https", "proxy.net")
+				.run();
+		assertEquals("http://test.org/request", result.toString());
+	}
+
 	class RequestURIScenario {
 		private final UriInfo ui = mock(UriInfo.class);
+		private Boolean enabled = true;
 		private String base;
 		private URI requestUri = URIUtils.newURI("http://test.org/request");
 		private final HttpServletRequest request = mock(HttpServletRequest.class);
@@ -94,6 +124,11 @@ public class RouterRestletTest {
 		RequestURIScenario() {
 			when(ui.getRequestUri()).thenReturn(requestUri);
 			when(ui.getPath()).thenReturn("/request");
+		}
+
+		RequestURIScenario withEnabled(Boolean enabled) {
+			this.enabled = enabled;
+			return this;
 		}
 
 		RequestURIScenario withBase(String base) {
@@ -108,7 +143,7 @@ public class RouterRestletTest {
 		}
 
 		URI run() {
-			return RouterRestlet.makeRequestURI(ui, base, request);
+			return RouterRestlet.makeRequestURI(ui, enabled, base, request);
 		}
 	}
 }
