@@ -96,6 +96,8 @@ public class APISpec extends SpecCommon {
 	protected final String graphTemplate;
 
 	protected final boolean purging;
+
+	protected final Boolean enableForwardHeaders;
 	
 	protected final MetaConfig metaConfig;
     
@@ -142,6 +144,7 @@ public class APISpec extends SpecCommon {
 		this.cacheExpiryMilliseconds = PropertyExpiryTimes.getSecondsValue( root, ELDA_API.cacheExpiryTime, -1) * 1000;
         this.enableCounting = RDFUtils.getOptionalBooleanValue( root, ELDA_API.enableCounting, Boolean.FALSE );        
 		this.propertyExpiryTimes = PropertyExpiryTimes.assemble( root.getModel() );
+		this.enableForwardHeaders = RDFUtils.getBooleanValue(root, ELDA_API.enableForwardHeaders, true);
 	//
 		this.metaConfig = new MetaConfig(root, mc);
 	//		
@@ -385,6 +388,10 @@ public class APISpec extends SpecCommon {
 
 	public String getGraphTemplate() {
 		return graphTemplate;
+	}
+
+	public Boolean getEnableForwardHeaders() {
+		return enableForwardHeaders;
 	}
 }
 

@@ -29,6 +29,7 @@ import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
+import com.epimorphics.lda.specs.APISpec;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -366,7 +367,8 @@ import com.sun.jersey.api.NotFoundException;
     	log.debug("handling request '{}'", requestUri);
     //
         try {
-        	URI ru = makeRequestURI(ui, match, requestUri);
+        	APISpec apiSpec = match.getEndpoint().getSpec().getAPISpec();
+        	URI ru = makeRequestURI(ui, apiSpec.getEnableForwardHeaders(), apiSpec.getBase(), servletRequest);
         	APIEndpoint ep = match.getEndpoint();
         	boolean needsVaryAccept = formatName == null && queryParams.containsKey( "_format" ) == false;
         
@@ -515,10 +517,34 @@ import com.sun.jersey.api.NotFoundException;
 		catch (NoSuchMethodError e) { return "none"; }
 	}
 
-    public static URI makeRequestURI(UriInfo ui, Match match, URI requestUri) {
-		String base = match.getEndpoint().getSpec().getAPISpec().getBase();
-		if (base == null) return requestUri;
-		return URIUtils.resolveAgainstBase( requestUri, URIUtils.newURI( base ), ui.getPath() );
+    public static URI makeRequestURI(UriInfo ui, Boolean enableForwardHeaders, String base, HttpServletRequest request) {
+		URI requestUri = ui.getRequestUri();
+
+		base = base == null ? "" : base;
+		URI baseUri = URIUtils.newURI(base);
+		UriBuilder builder = UriBuilder.fromUri(baseUri);
+
+		if (enableForwardHeaders) {
+			String prot = request.getHeader("X-Forwarded-Proto");
+			String host = request.getHeader("X-Forwarded-Host");
+
+			if (baseUri.getScheme() == null && prot != null) {
+				builder.scheme(prot);
+			}
+			if (baseUri.getHost() == null && host != null) {
+				URI hostUri = URIUtils.newURI("//" + host);
+				builder.host(hostUri.getHost()).port(hostUri.getPort());
+			}
+
+			baseUri = builder.build();
+
+			if (baseUri.getScheme() != null && baseUri.getHost() == null) {
+				builder.host(requestUri.getHost()).port(requestUri.getPort());
+				baseUri = builder.build();
+			}
+		}
+
+		return URIUtils.resolveAgainstBase( requestUri, baseUri, ui.getPath() );
 	}
 
     private static String MATCHES_SCHEME = "[a-zA-Z][-.+A-Za-z0-9]+:";
