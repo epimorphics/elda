@@ -9,6 +9,7 @@
 package com.epimorphics.lda.bindings;
 
 
+import static com.epimorphics.lda.specs.SPARQLMapLookup.DEFAULT_PARAM;
 import static com.epimorphics.util.RDFUtils.getStringValue;
 import static com.epimorphics.util.RDFUtils.getResourceValue;
 
@@ -89,7 +90,8 @@ public class VariableExtractor {
 		
 		if (valueNode.isResource()) {
 			Resource vnr = valueNode.asResource();
-			valueString = b.expandVariables(getValueString( ELDA_API.mapFrom, vnr ));
+			valueString = getValueString( ELDA_API.mapFrom, vnr );
+			valueString = valueString == null ? DEFAULT_PARAM : b.expandVariables(valueString);
 			Resource mapResource = getResourceValue( vnr, ELDA_API.mapWith );
 			
 			if (!mapResource.hasProperty(RDF.type, ELDA_API.SPARQLMap)) {

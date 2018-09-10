@@ -194,14 +194,7 @@ public class Bindings implements Lookup {
 	private Value getValue(String name) {
 		Value v = getUnexpandedValue(name);
 		if (v == null) return null;
-		
-		if (v.apply != null) {
-			// String spelling = v.spelling();
-			Bindings b = new Bindings(this);
-			// b.put("_param", spelling);
-			String value = mapLookup.getValueString(v.apply, v, b, b.expander);
-			v = v.replaceBy(value);
-		}
+
 		return evaluate(v, new ArrayList<String>());
 	}
 
@@ -284,6 +277,14 @@ public class Bindings implements Lookup {
 	}
 
 	private Value evaluate(Value v, List<String> seen) {
+		if (v.apply != null) {
+			// String spelling = v.spelling();
+			Bindings b = new Bindings(this);
+			// b.put("_param", spelling);
+			String value = mapLookup.getValueString(v.apply, v, b, b.expander);
+			v = v.replaceBy(value);
+		}
+
 		String vs = v.spelling();
 		if (vs == null || vs.indexOf('{') < 0)
 			return v;

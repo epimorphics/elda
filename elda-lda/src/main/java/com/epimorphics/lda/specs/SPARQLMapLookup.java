@@ -18,6 +18,8 @@ import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 
 public class SPARQLMapLookup implements MapLookup {
+
+	public static final String DEFAULT_PARAM = "param";
 	
 	private final Source ds;
 	private final Map<String, Element> maps;
@@ -53,7 +55,7 @@ public class SPARQLMapLookup implements MapLookup {
 		Element e = maps.get(apply.mapName);
 		
 		String in = e.inName;
-		if (in == null) in = "param";
+		if (in == null) in = DEFAULT_PARAM;
 		b.put(in, v.spelling());
 		
 		String [] result = new String[] {""};
