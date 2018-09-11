@@ -11,6 +11,8 @@ package com.epimorphics.lda.specs;
 import java.util.*;
 
 import com.epimorphics.lda.vocabularies.ELDA_API;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.datatypes.xsd.impl.XSDBaseStringType;
 import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.OWL;
@@ -102,7 +104,7 @@ public class PropertyExpiryTimes {
 		if (s == null) return ifAbsent;
 		RDFNode n = s.getObject();
 		if (n.isResource()) return ifAbsent;
-		if (n.asLiteral().getDatatypeURI() == null) {
+		if (n.asLiteral().getDatatype() == XSDDatatype.XSDstring) {
 			String spelling = n.asLiteral().getLexicalForm();
 			char last = spelling.charAt(spelling.length() - 1);
 			if (Character.isDigit(last)) {
