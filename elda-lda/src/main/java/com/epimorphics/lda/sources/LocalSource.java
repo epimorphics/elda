@@ -44,7 +44,7 @@ public class LocalSource extends SourceBase implements Source {
     protected final Model source; 
     protected final String endpoint;
     
-    protected final Dataset sourceDataset = DatasetFactory.createMem(); 
+    protected final Dataset sourceDataset = DatasetFactory.create();
     
     public LocalSource( FileManager fm, Resource endpoint ) {
     	super( endpoint );

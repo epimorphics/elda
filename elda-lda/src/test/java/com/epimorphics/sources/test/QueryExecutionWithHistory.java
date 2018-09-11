@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.core.Quad;
 import org.apache.jena.sparql.util.Context;
 import org.apache.jena.util.FileManager;
 
@@ -107,6 +108,18 @@ public class QueryExecutionWithHistory implements QueryExecution {
 
 	@Override public Iterator<Triple> execConstructTriples() {
 		return qe.execConstructTriples();
+	}
+
+	@Override public Iterator<Quad> execConstructQuads() {
+		return qe.execConstructQuads();
+	}
+
+	@Override public Dataset execConstructDataset() {
+		return qe.execConstructDataset();
+	}
+
+	@Override public Dataset execConstructDataset(Dataset dataset) {
+		return qe.execConstructDataset(dataset);
 	}
 
 	@Override public Iterator<Triple> execDescribeTriples() {
