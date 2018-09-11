@@ -480,7 +480,7 @@ import com.sun.jersey.api.NotFoundException;
         } catch (VelocityRenderingException e) {
             return ErrorPages.respond(forErrorHandling, servCon, "velocity_rendering", e.getMessage(), EldaException.SERVER_ERROR);
 
-        } catch (BadRequestException e) {
+        } catch (com.epimorphics.lda.exceptions.BadRequestException e) {
         	return ErrorPages.respond(forErrorHandling, servCon, "bad_request", e.getMessage(), EldaException.BAD_REQUEST);
                     
         } catch (UnknownShortnameException e) {
