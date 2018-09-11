@@ -12,6 +12,10 @@
 
   <url>http://maven.apache.org</url>
 
+    <properties>
+        <jena.version>3.5.0</jena.version>
+    </properties>
+
   <repositories>
     <repository>
       <id>epi-public-s3-snapshot</id>
@@ -72,7 +76,7 @@
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-core</artifactId>
-      <version>3.0.0</version>
+      <version>${jena.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
   </dependency>
@@ -80,7 +84,7 @@
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-arq</artifactId>
-      <version>3.0.0</version>
+      <version>${jena.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
   </dependency>
