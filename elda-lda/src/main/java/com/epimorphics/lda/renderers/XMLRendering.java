@@ -124,7 +124,7 @@ public class XMLRendering {
 		if (emv != null) blocked.add( emv.getResource() );		
 	//
 		addIdentification( t, e, x );
-		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+		List<Property> metaProperties = asSortedList( xInMetaModel.listProperties().mapWith( Statement::getPredicate ).toSet() );
 		// if (suppressIPTO) properties.remove( FOAF.isPrimaryTopicOf );
 		for (Property p: metaProperties) addPropertyValues( t, e, xInMetaModel, p );
 	}
@@ -163,7 +163,7 @@ public class XMLRendering {
 	}
 
 	public void expandProperties(Trail t, Element pt, Resource anItem) {
-		List<Property> properties = asSortedList( anItem.listProperties().mapWith( Statement.Util.getPredicate ).toSet() );
+		List<Property> properties = asSortedList( anItem.listProperties().mapWith( Statement::getPredicate ).toSet() );
 		for (Property ip: properties) addPropertyValues( t, pt, anItem, ip );
 	}
 	

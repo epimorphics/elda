@@ -32,7 +32,7 @@ public class LanguageFilter {
         Set<String> allowed = new HashSet<String>( Arrays.asList( split ) );
         if (allowed.contains( "none" )) allowed.add( "" );
         for (Resource sub: m.listSubjects().toList()) {
-            for (Property prop: sub.listProperties().mapWith( Statement.Util.getPredicate ).toSet())
+            for (Property prop: sub.listProperties().mapWith( Statement::getPredicate ).toSet())
                 removeUnwantedPropertyValues( allowed, sub, prop );
         }
     }

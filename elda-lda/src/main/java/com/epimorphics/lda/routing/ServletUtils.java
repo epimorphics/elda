@@ -48,7 +48,7 @@ public class ServletUtils {
         List<Statement> toAdd = new ArrayList<Statement>();
         List<Resource> apis = m
             .listStatements( null, RDF.type, API.API )
-            .mapWith(Statement.Util.getSubject)
+            .mapWith(Statement::getSubject)
             .toList()
             ;
         for (Resource api: apis) toAdd.add( m.createStatement( api, ELDA_API.loadedFrom, name ) );
