@@ -36,10 +36,6 @@ public class QueryExecutionWithHistory implements QueryExecution {
         qe.setInitialBinding(binding);
     }
 
-    @Override public void setFileManager(FileManager fm) {
-        qe.setFileManager(fm);
-    }
-
     @Override public Dataset getDataset() {
         return qe.getDataset();
     }
@@ -80,6 +76,10 @@ public class QueryExecutionWithHistory implements QueryExecution {
         history.add( "CLOSE" );
         qe.close();
     }
+
+    @Override public boolean isClosed() {
+    	return qe.isClosed();
+	}
 
     @Override public void abort() {
         qe.abort();

@@ -39,7 +39,6 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.util.iterator.Map1;
 
 /**
  * Support for testing iterator/list values against and expected set
@@ -192,9 +191,7 @@ public class TestUtil {
     }
 
     private static Set<RDFNode> getValues(Resource expected, Property p) {
-        return expected.listProperties(p).mapWith(new Map1<Statement,RDFNode>() {
-            @Override public RDFNode map1(Statement s) { return s.getObject(); }
-        }).toSet();
+        return expected.listProperties(p).mapWith(Statement::getObject).toSet();
     }
 
     private static Model buildTestModel(Resource r, Property...props) {

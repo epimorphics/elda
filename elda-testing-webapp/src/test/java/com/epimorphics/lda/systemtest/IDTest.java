@@ -186,13 +186,13 @@ public class IDTest  {
 			return null;
 		}
 
-		@Override
+		@Override @Deprecated
 		public String encodeUrl(String url) {
 			// TODO Auto-generated method stub
 			return null;
 		}
 
-		@Override
+		@Override @Deprecated
 		public String encodeRedirectUrl(String url) {
 			// TODO Auto-generated method stub
 			return null;
@@ -256,10 +256,10 @@ public class IDTest  {
 			
 		}
 
-		@Override
+		@Override @Deprecated
 		public void setStatus(int sc, String sm) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
@@ -435,7 +435,7 @@ public class IDTest  {
 			return null;
 		}
 
-		@Override
+		@Override @Deprecated
 		public String getRealPath(String path) {
 			// TODO Auto-generated method stub
 			return null;
@@ -650,7 +650,7 @@ public class IDTest  {
 			return false;
 		}
 
-		@Override
+		@Override @Deprecated
 		public boolean isRequestedSessionIdFromUrl() {
 			// TODO Auto-generated method stub
 			return false;
