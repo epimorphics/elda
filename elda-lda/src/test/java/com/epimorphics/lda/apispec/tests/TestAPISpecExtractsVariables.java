@@ -19,10 +19,10 @@ import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.tests_support.Matchers;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.RDFS;
 
 public class TestAPISpecExtractsVariables 
 	{

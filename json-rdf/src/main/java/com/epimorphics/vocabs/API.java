@@ -6,7 +6,7 @@
     $Id$
 */
 package com.epimorphics.vocabs; 
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
  
 /**
  * Vocabulary definitions from elda/json-rdf/src/main/vocabs/api.ttl 

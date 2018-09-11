@@ -23,8 +23,8 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.OWL;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.OWL;
 
 import java.util.List;
 

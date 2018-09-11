@@ -29,13 +29,13 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.RDF;
 
 public class TestMetadataOptions {
 

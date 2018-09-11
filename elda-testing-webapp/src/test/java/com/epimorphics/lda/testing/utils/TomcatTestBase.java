@@ -13,8 +13,8 @@ import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.FileManager;
 import com.sun.jersey.api.client.*;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;

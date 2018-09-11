@@ -11,8 +11,8 @@ package com.epimorphics.lda.specs;
 import java.util.*;
 
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 
 /**
  * Encapsulates a set of metadata options extracted from the API configuration.

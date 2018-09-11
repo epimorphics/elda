@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.util.ResourceUtils;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.Lock;
+import org.apache.jena.util.ResourceUtils;
 
 /**
     A Source that pulls its data from the supplied model

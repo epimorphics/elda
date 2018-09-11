@@ -13,8 +13,8 @@ import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
 import com.github.jsonldjava.jena.JenaJSONLD;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.WrappedException;
 
 /**
 	A renderer into JSON-LD.

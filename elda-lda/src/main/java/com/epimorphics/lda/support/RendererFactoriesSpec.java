@@ -17,8 +17,8 @@ import com.epimorphics.lda.renderers.*;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 public class RendererFactoriesSpec {
 

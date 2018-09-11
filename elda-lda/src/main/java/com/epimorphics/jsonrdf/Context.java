@@ -22,10 +22,10 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.ReusedShortnameException;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.impl.Util;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.impl.Util;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.*;
 
 /**
  * Encapsulates the mapping decisions to determine how RDF should be

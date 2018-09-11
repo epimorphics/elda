@@ -26,10 +26,10 @@ import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.util.LocationMapper;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.util.LocationMapper;
 
 // INCOMPLETE (but does more than nothing)
 // Code cloned from TestFramework which has turned out to be

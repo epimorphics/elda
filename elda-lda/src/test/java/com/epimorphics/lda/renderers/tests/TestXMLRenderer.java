@@ -21,9 +21,9 @@ import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.DOMUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.shared.PrefixMapping;
 
 public class TestXMLRenderer 
 	{	

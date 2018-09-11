@@ -8,7 +8,7 @@
 
 package com.epimorphics.lda.tests;
 
-import static com.hp.hpl.jena.rdf.model.test.ModelTestBase.property;
+import static org.apache.jena.rdf.model.test.ModelTestBase.property;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -26,9 +26,9 @@ import com.epimorphics.lda.shortnames.*;
 import com.epimorphics.lda.tests_support.ExpandOnly;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
 
 /**
     Some (limited) tests for shortname services

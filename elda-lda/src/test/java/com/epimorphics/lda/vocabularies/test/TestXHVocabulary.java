@@ -21,8 +21,8 @@ import org.hamcrest.Matcher;
 import org.junit.Test;
 
 import com.epimorphics.lda.vocabularies.XHV;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
 
 public class TestXHVocabulary
     {

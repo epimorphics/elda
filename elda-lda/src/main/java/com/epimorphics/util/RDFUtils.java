@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
  * Random collection of RDF Utilities that should really be in Jena.

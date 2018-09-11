@@ -16,8 +16,8 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.specs.PropertyExpiryTimes;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 public class TestAPISpecExtractsPropertyExpiryTimes {
 

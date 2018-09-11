@@ -17,10 +17,10 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.RDF;
 
 
 

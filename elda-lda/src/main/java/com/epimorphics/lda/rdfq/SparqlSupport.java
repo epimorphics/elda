@@ -10,8 +10,8 @@ package com.epimorphics.lda.rdfq;
 
 import java.util.List;
 
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.PrefixMapping;
 
 /**
     Support code for constructing SPARQL queries.

@@ -12,7 +12,7 @@ import org.junit.Test;
 import com.epimorphics.lda.systemtest.Util;
 import com.epimorphics.lda.testing.utils.TomcatTestBase;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 
 public class TestMappingQuery extends TomcatTestBase {
 

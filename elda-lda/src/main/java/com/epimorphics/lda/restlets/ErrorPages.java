@@ -27,11 +27,11 @@ import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.RDF;
 
 public class ErrorPages {    
 

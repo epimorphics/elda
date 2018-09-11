@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 
 public class SpecCommon {
 

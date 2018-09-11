@@ -6,9 +6,9 @@
 */
 package com.epimorphics.vocabs;
 
-import com.hp.hpl.jena.rdf.model.impl.Util;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.impl.Util;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 public class NsUtils {
 

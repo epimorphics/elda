@@ -31,10 +31,10 @@ import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.LocationMapper;
-import com.hp.hpl.jena.vocabulary.DCTerms;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.LocationMapper;
+import org.apache.jena.vocabulary.DCTerms;
 
 /**
     Framework for running tests from suite in filing

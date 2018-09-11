@@ -23,11 +23,11 @@ import com.epimorphics.lda.support.ModelPrefixEditor;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.util.ModelUtils;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.graph.Graph;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.sparql.vocabulary.DOAP;
-import com.hp.hpl.jena.vocabulary.*;
+import org.apache.jena.graph.Graph;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.sparql.vocabulary.DOAP;
+import org.apache.jena.vocabulary.*;
 
 /**
   	Wrapper for the results of an API query before rendering.

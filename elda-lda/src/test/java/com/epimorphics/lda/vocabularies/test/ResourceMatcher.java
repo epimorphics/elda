@@ -14,7 +14,7 @@ package com.epimorphics.lda.vocabularies.test;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 public class ResourceMatcher extends BaseMatcher<Resource>
     {

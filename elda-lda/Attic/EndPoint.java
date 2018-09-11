@@ -23,8 +23,8 @@ import javax.ws.rs.core.*;
 import com.epimorphics.util.Util;
 import com.epimorphics.vocabs.API;
 import com.epimorphics.lda.support.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 @Path("{e: endpoint}/{spec}") public class EndPoint
     {

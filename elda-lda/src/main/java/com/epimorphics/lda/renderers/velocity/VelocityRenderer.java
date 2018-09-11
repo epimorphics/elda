@@ -25,7 +25,7 @@ import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 public class VelocityRenderer
 implements Renderer

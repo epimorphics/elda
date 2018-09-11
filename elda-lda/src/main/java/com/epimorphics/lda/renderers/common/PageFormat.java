@@ -14,9 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
  * Encapsulates a format that a page is declared as being available in.

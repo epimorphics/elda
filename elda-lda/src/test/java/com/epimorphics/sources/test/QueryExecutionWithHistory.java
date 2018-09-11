@@ -12,11 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.sparql.util.Context;
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.util.Context;
+import org.apache.jena.util.FileManager;
 
 /**
     A wrapper round QueryExecution that logs some of its actions

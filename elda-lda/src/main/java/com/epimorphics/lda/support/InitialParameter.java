@@ -16,9 +16,9 @@ package com.epimorphics.lda.support;
 
 import java.util.Iterator;
 
-import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.iterator.SingletonIterator;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.iterator.SingletonIterator;
 
 /**
     A QuerySolution with one literal binding, used as an initial setting

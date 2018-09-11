@@ -9,7 +9,7 @@
 package com.epimorphics.lda.exceptions;
 
 import com.epimorphics.lda.rdfq.Term;
-import com.hp.hpl.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.RDFNode;
 
 public class UnknownShortnameException extends EldaException {
 

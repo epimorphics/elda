@@ -11,8 +11,8 @@ import static java.lang.String.format;
 
 import java.io.*;
 
-import com.hp.hpl.jena.sparql.ARQInternalErrorException;
-import com.hp.hpl.jena.util.FileUtils;
+import org.apache.jena.sparql.ARQInternalErrorException;
+import org.apache.jena.util.FileUtils;
 
 /** A writer that records what the current indentation level is, and
  *  uses that to insert a prefix at each line. 

@@ -20,8 +20,8 @@ import com.epimorphics.lda.renderers.common.DisplayHierarchy.DisplayHierarchyCon
 import com.epimorphics.lda.renderers.common.EldaURL.OPERATION;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.epimorphics.rdfutil.RDFUtil;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Statement;
 
 
 /**

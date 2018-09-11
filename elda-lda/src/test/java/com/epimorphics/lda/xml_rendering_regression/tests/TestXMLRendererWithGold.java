@@ -27,9 +27,9 @@ import com.epimorphics.lda.core.APIResultSet.MergedModels;
 import com.epimorphics.lda.renderers.XMLRenderer;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.util.DOMUtils;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.util.FileUtils;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.util.FileUtils;
 
 public class TestXMLRendererWithGold extends XMLTestCase {
 	

@@ -26,8 +26,8 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.renderers.BytesOutTimed;
 import com.epimorphics.lda.renderers.Renderer;
 import com.epimorphics.lda.support.Times;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.shared.WrappedException;
 
 /**
  * Handles XSLT rewrites for HTML and indented-string display of XML.

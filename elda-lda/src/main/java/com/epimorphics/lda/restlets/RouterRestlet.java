@@ -50,8 +50,8 @@ import com.epimorphics.lda.support.pageComposition.Messages;
 import com.epimorphics.lda.support.statistics.StatsValues;
 import com.epimorphics.util.*;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.shared.WrappedException;
 import com.sun.jersey.api.NotFoundException;
 
 /**

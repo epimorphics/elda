@@ -21,8 +21,8 @@ import org.junit.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.vocabularies.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  * Unit tests for {@link Page}

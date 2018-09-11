@@ -23,9 +23,9 @@ import java.util.List;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.util.FileManager;
 
 /**
  * Tests for decoding raw JSON serializations.

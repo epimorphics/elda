@@ -19,7 +19,7 @@ import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.shortnames.BuiltIn;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 public class TestContext {
 

@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.rdf.model.test.ModelTestBase;
 
 public class TestMediaType 
 	{

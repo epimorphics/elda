@@ -21,8 +21,8 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
 
 public class TestPropertyChainEndToEnd {
 	@Test public void testPropertyChainBuildsResultChain()

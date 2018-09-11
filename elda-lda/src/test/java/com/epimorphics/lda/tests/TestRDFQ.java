@@ -8,7 +8,7 @@
 
 package com.epimorphics.lda.tests;
 
-import static com.hp.hpl.jena.test.JenaTestBase.assertDiffer;
+import static org.apache.jena.test.JenaTestBase.assertDiffer;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -16,7 +16,7 @@ import org.junit.Test;
 import com.epimorphics.lda.rdfq.*;
 import com.epimorphics.lda.support.PrefixLogger;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.shared.PrefixMapping;
 
 /**
     Tests for elements of the RDFQ representation for query triples.

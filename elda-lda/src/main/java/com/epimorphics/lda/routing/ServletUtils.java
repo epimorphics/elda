@@ -17,8 +17,8 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 /**
     Some methods useful in the two servlet-handling components

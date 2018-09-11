@@ -9,8 +9,8 @@
 package com.epimorphics.lda.shortnames;
 
 import com.epimorphics.util.EldaNameUtils;
-import com.hp.hpl.jena.rdf.model.impl.Util;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.impl.Util;
+import org.apache.jena.shared.PrefixMapping;
 
 /**
     <p>

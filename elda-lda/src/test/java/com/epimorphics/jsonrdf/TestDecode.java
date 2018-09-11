@@ -26,8 +26,8 @@ import java.util.List;
 import org.junit.Test;
 
 import com.epimorphics.lda.support.EldaFileManager;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 
 /**
  * Tests for decoding raw JSON serializations.

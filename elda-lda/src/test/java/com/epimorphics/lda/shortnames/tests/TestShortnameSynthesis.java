@@ -17,10 +17,10 @@ import org.junit.Test;
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.DC;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.DC;
+import org.apache.jena.vocabulary.RDF;
 
 public class TestShortnameSynthesis {
 	

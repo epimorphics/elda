@@ -14,8 +14,8 @@ package com.epimorphics.jsonrdf;
 
 import org.apache.jena.atlas.json.*;
 
-import com.hp.hpl.jena.rdf.model.Literal;
-import com.hp.hpl.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.RDFNode;
 
 /**
  * Signature for plugins which perform all the encoding decisions.

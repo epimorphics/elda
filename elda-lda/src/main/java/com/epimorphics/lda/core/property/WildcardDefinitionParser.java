@@ -5,7 +5,7 @@ import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.specs.PropertyExpiryTimes;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 import java.util.regex.Pattern;
 

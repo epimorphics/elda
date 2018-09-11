@@ -10,7 +10,7 @@ package com.epimorphics.lda.renderers;
 import java.util.*;
 
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 /**
     Named renderer factories. (A renderer factory is just a

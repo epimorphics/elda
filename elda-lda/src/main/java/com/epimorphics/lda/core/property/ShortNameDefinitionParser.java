@@ -2,8 +2,8 @@ package com.epimorphics.lda.core.property;
 
 import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 import java.util.regex.Pattern;
 

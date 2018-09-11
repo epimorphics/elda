@@ -17,7 +17,7 @@ import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.tests_support.Matchers;
-import com.hp.hpl.jena.test.JenaTestBase;
+import org.apache.jena.test.JenaTestBase;
 
 public class TestCallContext 
 	{	

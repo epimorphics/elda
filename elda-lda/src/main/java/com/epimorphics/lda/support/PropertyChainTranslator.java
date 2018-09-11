@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.core.property.ViewProperty;
-import com.hp.hpl.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Property;
 
 /**
 	A PropertyChainTranslator is initialised with a bunch of property chains and

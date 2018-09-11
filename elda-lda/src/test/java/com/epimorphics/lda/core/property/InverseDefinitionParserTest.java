@@ -4,7 +4,7 @@ import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
-import com.hp.hpl.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Property;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

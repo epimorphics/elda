@@ -4,7 +4,7 @@ import com.epimorphics.lda.core.VarSupply;
 import com.epimorphics.lda.rdfq.Any;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.hp.hpl.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Property;
 
 import java.util.ArrayList;
 import java.util.List;

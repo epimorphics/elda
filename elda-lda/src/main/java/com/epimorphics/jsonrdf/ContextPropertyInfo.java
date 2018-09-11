@@ -9,8 +9,8 @@
 package com.epimorphics.jsonrdf;
 
 import com.epimorphics.vocabs.NsUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.*;
 
 /** 
  	Sub interface used to describe a mapped property 

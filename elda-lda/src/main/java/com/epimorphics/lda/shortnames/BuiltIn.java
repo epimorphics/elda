@@ -11,10 +11,10 @@ package com.epimorphics.lda.shortnames;
 import java.util.*;
 
 import com.epimorphics.lda.vocabularies.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.sparql.vocabulary.DOAP;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.sparql.vocabulary.DOAP;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.vocabulary.*;
 
 public class BuiltIn {
 

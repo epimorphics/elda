@@ -16,11 +16,11 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.support.CycleFinder;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.Couple;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.BrokenException;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.BrokenException;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
 From the spec: 

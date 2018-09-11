@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 /**
     Mode containing shortname definitions for the

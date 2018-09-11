@@ -1,6 +1,6 @@
 /* CVS $Id: $ */
 package com.epimorphics.lda.vocabularies; 
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
  
 /**
 <<<<<<< HEAD

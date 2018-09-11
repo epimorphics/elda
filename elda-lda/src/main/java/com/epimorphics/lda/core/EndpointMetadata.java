@@ -23,11 +23,11 @@ import com.epimorphics.lda.specs.EndpointDetails;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.graph.compose.MultiUnion;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.util.ResourceUtils;
-import com.hp.hpl.jena.vocabulary.*;
+import org.apache.jena.graph.compose.MultiUnion;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.util.ResourceUtils;
+import org.apache.jena.vocabulary.*;
 
 /**
     Class to handle the construction of metadata for API endpoint results.

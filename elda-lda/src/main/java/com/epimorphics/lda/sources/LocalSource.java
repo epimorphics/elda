@@ -22,10 +22,10 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.Lock;
+import org.apache.jena.util.FileManager;
 
 /**
  	Data source which represents an in-memory model loaded

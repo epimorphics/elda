@@ -11,7 +11,7 @@ package com.epimorphics.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hp.hpl.jena.rdf.model.impl.Util;
+import org.apache.jena.rdf.model.impl.Util;
 
 public class EldaNameUtils {
 

@@ -14,7 +14,7 @@ import java.util.List;
 import com.epimorphics.lda.cache.Cache.Clock;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.core.ResponseResult;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 public class LimitEntriesController extends ControllerBase {
 

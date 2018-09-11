@@ -25,10 +25,10 @@ import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.util.CollectionUtils;
 import com.epimorphics.util.DOMUtils;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.DCTerms;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDFS;
 
 public class TestFeedAssembly {
 	

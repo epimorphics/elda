@@ -31,9 +31,9 @@ import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.acceptance.tests.Ask;
 import com.epimorphics.lda.acceptance.tests.TestFramework;
 import com.epimorphics.lda.acceptance.tests.WhatToDo;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.rdf.model.Model;
 
 /**
  * An example test to illustrate system testing framework.

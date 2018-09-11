@@ -11,10 +11,10 @@ package com.epimorphics.lda.specs;
 import java.util.*;
 
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
 
 /**
 	PropertyExpiryTimes is a configurable map from resources (represented

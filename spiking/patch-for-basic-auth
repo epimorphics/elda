@@ -44,7 +44,7 @@ diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/routing/Loader.java
 +import com.epimorphics.lda.sources.SparqlSource.AuthMap;
  import com.epimorphics.lda.specmanager.SpecManagerFactory;
  import com.epimorphics.lda.specmanager.SpecManagerImpl;
- import com.hp.hpl.jena.util.FileManager;
+ import org.apache.jena.util.FileManager;
 @@ -60,14 +64,42 @@
          ServletUtils.setupLARQandTDB( new ServletSpecContext( this ) );
          modelLoader = new APIModelLoader( baseFilePath );
@@ -212,10 +212,10 @@ diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/sources/SparqlSource.
  import com.epimorphics.util.RDFUtils;
  import com.epimorphics.vocabs.API;
 @@ -30,9 +34,10 @@
- import com.hp.hpl.jena.rdf.model.ResourceFactory;
- import com.hp.hpl.jena.shared.Lock;
- import com.hp.hpl.jena.shared.LockNone;
-+import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
+ import org.apache.jena.rdf.model.ResourceFactory;
+ import org.apache.jena.shared.Lock;
+ import org.apache.jena.shared.LockNone;
++import org.apache.jena.sparql.engine.http.QueryEngineHTTP;
  
  /**
 - * Data source representing and external SPARQL endpoint.
@@ -297,7 +297,7 @@ diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/specmanager/SpecManag
  import com.epimorphics.lda.exceptions.APISecurityException;
 +import com.epimorphics.lda.sources.SparqlSource;
  import com.epimorphics.lda.specs.APISpec;
- import com.hp.hpl.jena.rdf.model.Model;
+ import org.apache.jena.rdf.model.Model;
  
 @@ -45,7 +46,7 @@
       * associate endpoints. 
@@ -359,10 +359,10 @@ diff -r 4883c5a459d2 lda/src/main/java/com/epimorphics/lda/specs/APISpec.java
  import com.epimorphics.lda.vocabularies.EXTRAS;
  import com.epimorphics.util.RDFUtils;
 @@ -37,7 +39,6 @@
- import com.hp.hpl.jena.shared.PrefixMapping;
- import com.hp.hpl.jena.sparql.vocabulary.FOAF;
- import com.hp.hpl.jena.util.FileManager;
--import com.hp.hpl.jena.util.iterator.Map1;
+ import org.apache.jena.shared.PrefixMapping;
+ import org.apache.jena.sparql.vocabulary.FOAF;
+ import org.apache.jena.util.FileManager;
+-import org.apache.jena.util.iterator.Map1;
  
  /**
   * Encapsulates a specification of a single API instance.

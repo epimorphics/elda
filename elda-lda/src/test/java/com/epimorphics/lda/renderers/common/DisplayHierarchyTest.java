@@ -21,8 +21,8 @@ import org.junit.Test;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 
 /**
  * Unit tests for {@link DisplayHierarchy}

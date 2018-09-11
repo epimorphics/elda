@@ -29,8 +29,8 @@ import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  * Encapsulates the specification of the particular List/Set within

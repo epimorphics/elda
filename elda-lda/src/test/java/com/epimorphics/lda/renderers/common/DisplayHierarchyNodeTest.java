@@ -23,8 +23,8 @@ import org.junit.*;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.renderers.common.DisplayHierarchy.DisplayHierarchyContext;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDFS;
 
 /**
  * Unit tests for {@link DisplayHierarchyNode}

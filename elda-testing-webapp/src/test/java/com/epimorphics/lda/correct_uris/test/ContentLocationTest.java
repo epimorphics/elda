@@ -7,8 +7,8 @@ import org.junit.Test;
 import com.epimorphics.lda.testing.utils.TestUtil;
 import com.epimorphics.lda.testing.utils.TomcatTestBase;
 import com.epimorphics.lda.vocabularies.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.*;
 import com.sun.jersey.api.client.ClientResponse;
 
 /**

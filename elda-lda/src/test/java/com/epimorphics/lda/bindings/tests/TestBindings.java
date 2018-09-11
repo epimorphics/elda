@@ -26,8 +26,8 @@ import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
 
 public class TestBindings {
 	

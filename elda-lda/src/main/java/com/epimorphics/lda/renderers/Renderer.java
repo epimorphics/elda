@@ -16,7 +16,7 @@ import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.shared.WrappedException;
+import org.apache.jena.shared.WrappedException;
 
 /**
     Renderers -- turning result sets into byte streams.

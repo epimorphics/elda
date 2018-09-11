@@ -38,12 +38,11 @@ import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.util.iterator.Map1;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  * Encapsulates a specification of a single API instance.
@@ -244,7 +243,7 @@ public class APISpec extends SpecCommon {
     	return new Map1<Statement, Source>() {
     		@Override public Source map1( Statement o ) { 
     			return GetDataSource.sourceFromSpec( fm, o.getResource(), am ); 
-    		}
+    }
     	};
     };
     

@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.apache.jena.atlas.json.JsonObject;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 /**
  * Test cases the encode to JSONObject cases
  * 

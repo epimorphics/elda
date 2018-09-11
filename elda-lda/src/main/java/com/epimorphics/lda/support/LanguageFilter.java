@@ -10,8 +10,8 @@ package com.epimorphics.lda.support;
 
 import java.util.*;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.*;
 
 /**
     This class implements the language-filtering rules of LDA views.

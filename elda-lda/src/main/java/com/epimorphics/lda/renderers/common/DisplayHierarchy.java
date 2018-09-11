@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.rdfutil.PropertyValue;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 
 /**
  * Represents the resource hierarchy as it is unfolded from the results

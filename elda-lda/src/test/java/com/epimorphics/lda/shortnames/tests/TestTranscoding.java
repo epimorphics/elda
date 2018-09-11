@@ -13,8 +13,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.epimorphics.lda.shortnames.Transcoding;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.RDF;
 
 public class TestTranscoding {
 	

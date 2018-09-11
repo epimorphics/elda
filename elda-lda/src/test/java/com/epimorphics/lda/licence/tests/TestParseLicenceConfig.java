@@ -11,9 +11,9 @@ import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.RDF;
 
 public class TestParseLicenceConfig {
 	

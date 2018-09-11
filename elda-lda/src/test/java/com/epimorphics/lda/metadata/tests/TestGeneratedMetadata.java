@@ -29,11 +29,11 @@ import com.epimorphics.lda.specs.*;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.OpenSearch;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
 
 public class TestGeneratedMetadata {
 	

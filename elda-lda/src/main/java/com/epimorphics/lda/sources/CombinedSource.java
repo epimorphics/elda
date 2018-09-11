@@ -22,12 +22,11 @@ import org.slf4j.LoggerFactory;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.QueryUtil;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.Lock;
-import com.hp.hpl.jena.shared.LockMRSW;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.util.iterator.Map1;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.Lock;
+import org.apache.jena.shared.LockMRSW;
+import org.apache.jena.util.FileManager;
 
 /**
     A combined source is a way of composing data from different endpoints.

@@ -8,11 +8,11 @@
 package com.epimorphics.lda.rdfq;
 
 import com.epimorphics.lda.support.PrefixLogger;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.XSD;
 
 
 /**

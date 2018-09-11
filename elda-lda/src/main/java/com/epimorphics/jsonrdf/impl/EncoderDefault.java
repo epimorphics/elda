@@ -21,13 +21,13 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.jsonrdf.*;
 import com.epimorphics.jsonrdf.extras.JsonUtils;
-import com.hp.hpl.jena.datatypes.BaseDatatype;
-import com.hp.hpl.jena.datatypes.RDFDatatype;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.datatypes.xsd.impl.XSDBaseNumericType;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.datatypes.BaseDatatype;
+import org.apache.jena.datatypes.RDFDatatype;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.datatypes.xsd.impl.XSDBaseNumericType;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.XSD;
 
 /**
  * Implements the default encoding rules for converting RDF

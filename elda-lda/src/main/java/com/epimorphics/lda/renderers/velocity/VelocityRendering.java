@@ -33,7 +33,7 @@ import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.support.*;
 import com.epimorphics.util.CountStream;
 import com.epimorphics.util.StreamUtils;
-import com.hp.hpl.jena.shared.*;
+import org.apache.jena.shared.*;
 
 /**
  * A VelocityRendering captures the state required to render a particular request into

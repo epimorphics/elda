@@ -17,7 +17,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 /**
  * Unit test for {@link PropertyPath}

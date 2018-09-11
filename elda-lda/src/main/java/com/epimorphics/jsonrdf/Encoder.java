@@ -23,12 +23,11 @@ import org.codehaus.jettison.json.JSONException;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.OneToManyMap;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
-import com.hp.hpl.jena.util.iterator.Map1;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.OneToManyMap;
+import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  * Driver for encoding a set of RDF resources into JSON.

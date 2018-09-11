@@ -6,36 +6,31 @@
     $Id$
 */
 
-package com.epimorphics.lda.endpointspec.tests;
+package com.epimorphics.lda.apispec.tests;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.apispec.tests.SpecUtil;
+import com.epimorphics.lda.specs.APISpec;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 
-public class TestEndpointTypeChecked
+public class TestAPISpecExtractsBase 
 	{
 	Model spec = ModelIOUtils.modelFromTurtle
 		( 
-		":s a api:API; api:endpoint :e; api:sparqlEndpoint <http://example.com/none>."
-		+ "\n:e api:uriTemplate '/absent/friends'." 
+		":s a api:API; api:sparqlEndpoint <http://example.com/none>; api:base 'to/be/expunged'."
 		);
-
+	
 	Resource s = spec.getResource( spec.expandPrefix( ":s" ) );
 	Resource e = spec.getResource( spec.expandPrefix( ":e" ) );
-	
-	@Test public void testThrowsExceptionIfNotListOrItemTypeEndpoint()
+
+	@Test public void testExtractsBase()
 		{
-		try 
-			{ 
-			SpecUtil.specFrom( s ); 
-			fail( "should detect missing endpoint type" ); 
-			}
-		catch (Exception e) 
-			{}
+		APISpec a = SpecUtil.specFrom( s );		
+		assertEquals( "to/be/expunged", a.getBase() );
 		}
+
 	}

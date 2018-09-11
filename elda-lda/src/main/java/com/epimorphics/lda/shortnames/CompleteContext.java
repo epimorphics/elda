@@ -8,16 +8,16 @@
 
 package com.epimorphics.lda.shortnames;
 
-import static com.hp.hpl.jena.rdf.model.impl.Util.splitNamespace;
+import static org.apache.jena.rdf.model.impl.Util.splitNamespaceXML;
 
 import java.util.*;
 
 import com.epimorphics.jsonrdf.Context;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.EldaNameUtils;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.graph.Node;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
 
 public class CompleteContext {
 	
@@ -65,7 +65,7 @@ public class CompleteContext {
 		}
 		
 		static SplitURI create(String uri) {
-			int cut = splitNamespace( uri );
+			int cut = splitNamespaceXML( uri );
 			String ns = uri.substring( 0, cut );
 			String ln = uri.substring( cut );
 			return new SplitURI(uri, ns, ln);

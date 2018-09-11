@@ -23,9 +23,9 @@ import com.epimorphics.lda.renderers.common.EldaURL.*;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.vocabularies.*;
 import com.epimorphics.rdfutil.*;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.DCTerms;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.vocabulary.DCTerms;
 
 /**
  * Value object representing the page of results returned by Elda's query

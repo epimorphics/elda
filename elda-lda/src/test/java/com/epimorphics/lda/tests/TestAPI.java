@@ -26,9 +26,9 @@ import org.junit.Test;
 import com.epimorphics.lda.cache.Cache;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.support.EldaFileManager;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.NotFoundException;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.NotFoundException;
+import org.apache.jena.vocabulary.RDFS;
 
 public class TestAPI {
 

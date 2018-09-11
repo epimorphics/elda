@@ -13,11 +13,11 @@ import org.junit.Test;
 
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.vocabularies.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.sparql.vocabulary.DOAP;
-import com.hp.hpl.jena.vocabulary.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.sparql.vocabulary.DOAP;
+import org.apache.jena.vocabulary.*;
 
 public class TestAPIResultSet {
 

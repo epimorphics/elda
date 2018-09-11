@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.epimorphics.lda.shortnames.StandardShortnameService;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 /**
     An implementation of ShortnameService that implements expand()

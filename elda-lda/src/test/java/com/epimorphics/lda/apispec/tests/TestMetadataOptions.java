@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import com.epimorphics.lda.specs.MetadataOptions;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
+import org.apache.jena.rdf.model.*;
 
 /**
  * Unit tests for {@link MetadataOptions}

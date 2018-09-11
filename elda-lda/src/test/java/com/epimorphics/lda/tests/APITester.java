@@ -35,8 +35,8 @@ import com.epimorphics.lda.tests_support.FileManagerModelLoader;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  * A test harness for testing the API code

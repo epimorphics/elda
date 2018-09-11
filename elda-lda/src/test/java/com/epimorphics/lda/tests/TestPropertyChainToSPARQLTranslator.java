@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import com.epimorphics.lda.core.property.ViewProperty;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.rdf.model.test.ModelTestBase;
 import org.junit.Test;
 
 import com.epimorphics.lda.core.VarSupply;
