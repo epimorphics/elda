@@ -278,7 +278,7 @@ public class PropertyPath
                 }
             }
 
-            return StrUtils.strjoin( " ", correctlyCased );
+            return String.join( " ", correctlyCased );
         }
         else {
             return name;

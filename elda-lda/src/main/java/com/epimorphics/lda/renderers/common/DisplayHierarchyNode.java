@@ -192,7 +192,7 @@ public class DisplayHierarchyNode
 
     /** @return The list of hints joined into a string */
     public String hintsString() {
-        return StrUtils.strjoin( " ", hints );
+        return String.join( " ", hints );
     }
 
     /** @return True if the given string is one of this node's hints */
@@ -236,7 +236,7 @@ public class DisplayHierarchyNode
         }
         html.add( "</ul>" );
 
-        return StrUtils.strjoin( "\n", html );
+        return String.join( "\n", html );
     }
 
     /** @return A list of the related links to this node */

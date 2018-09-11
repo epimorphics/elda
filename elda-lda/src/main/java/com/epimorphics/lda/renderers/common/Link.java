@@ -95,7 +95,7 @@ public class Link
 
         buf.append( "<a " );
         buf.append( "href='" + url().toString() + "' " );
-        buf.append( "class='" + StrUtils.strjoin( " ", hints()  ) + "' " );
+        buf.append( "class='" + String.join( " ", hints()  ) + "' " );
         buf.append( ">" );
         buf.append( title() );
         buf.append( "</a>" );
