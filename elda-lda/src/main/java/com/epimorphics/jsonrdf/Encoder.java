@@ -353,12 +353,7 @@ public class Encoder {
 			
 			if(roots!=null) for (Resource root : roots) {
 				ExtendedIterator<Resource> i = root.listProperties(API.items)
-						.mapWith(new Map1<Statement, Resource>() {
-							@Override
-							public Resource map1(Statement o) {
-								return o.getResource();
-							}
-						});
+						.mapWith(Statement::getResource);
 				while (i.hasNext()) {
 					Resource list = i.next();
 					if (RDFUtil.isList(list))
@@ -366,13 +361,7 @@ public class Encoder {
 				}
 				topItemLists = res;
 				for (RDFList list : topItemLists) {
-					ExtendedIterator<Resource> iter = list.iterator().mapWith(new Map1<RDFNode, Resource>(){
-
-						@Override
-						public Resource map1(RDFNode o) {
-							return o.asResource();
-						}
-					});
+					ExtendedIterator<Resource> iter = list.iterator().mapWith(RDFNode::asResource);
 					res2.addAll(iter.toList());
 				}
 			}

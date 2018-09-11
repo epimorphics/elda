@@ -15,6 +15,7 @@ import static com.epimorphics.util.RDFUtils.getStringValue;
 import static com.epimorphics.util.RDFUtils.getResourceValue;
 
 import java.util.*;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -239,13 +240,9 @@ public class APISpec extends SpecCommon {
         return result;
     }
 
-    private static final Map1<Statement, Source> toSource( final FileManager fm, final AuthMap am ) {
-    	return new Map1<Statement, Source>() {
-    		@Override public Source map1( Statement o ) { 
-    			return GetDataSource.sourceFromSpec( fm, o.getResource(), am ); 
+    private static final Function<Statement, Source> toSource(final FileManager fm, final AuthMap am ) {
+    	return (Statement o) -> GetDataSource.sourceFromSpec( fm, o.getResource(), am );
     }
-    	};
-    };
     
     private void extractEndpointSpecifications( Resource specification ) {
         NodeIterator ni = specification.getModel().listObjectsOfProperty(specification, API.endpoint);
@@ -393,4 +390,3 @@ public class APISpec extends SpecCommon {
 		return enableForwardHeaders;
 	}
 }
-

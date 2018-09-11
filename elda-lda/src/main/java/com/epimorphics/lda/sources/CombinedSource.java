@@ -15,6 +15,7 @@
 package com.epimorphics.lda.sources;
 
 import java.util.List;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,19 +51,11 @@ public class CombinedSource extends SourceBase implements Source
     
     protected final Lock lock = new LockMRSW();
     
-    private static final Map1<Statement, Source> toSource( final FileManager fm, final AuthMap am ) {
-    	return new Map1<Statement, Source>()
-        	{
-    		@Override public Source map1( Statement o )
-            	{ return GetDataSource.sourceFromSpec( fm, o.getResource(), am ); }
-        	};
+    private static final Function<Statement, Source> toSource(final FileManager fm, final AuthMap am ) {
+        return (Statement o) -> GetDataSource.sourceFromSpec( fm, o.getResource(), am );
     }
 
-    private static final Map1<Statement, String> toString = new Map1<Statement, String>()
-        {
-        @Override public String map1( Statement o )
-            { return o.getString(); }
-        };
+    private static final Function<Statement, String> toString = Statement::getString;
 
     /**
         ep is a resource of type Combiner. It has multiple elements, each of
