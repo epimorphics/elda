@@ -30,11 +30,11 @@ public class EldaNameUtils {
 	public static final Pattern prefixSyntax = Pattern.compile( "^[A-Za-z][a-zA-Z0-9]*_" );
 	
 	public static String nameSpace( String uri ) {
-		return uri.substring( 0, Util.splitNamespace( uri ) );
+		return uri.substring( 0, Util.splitNamespaceXML( uri ) );
 	}
 
 	public static String localName( String uri ) {
-		return uri.substring( Util.splitNamespace( uri ) );
+		return uri.substring( Util.splitNamespaceXML( uri ) );
 	}
 
 	/**

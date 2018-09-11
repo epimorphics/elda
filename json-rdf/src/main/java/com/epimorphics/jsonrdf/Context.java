@@ -253,7 +253,7 @@ public class Context implements ReadContext, Cloneable {
     }
 
     protected String getLocalName(String uri) {
-        return uri.substring( Util.splitNamespace( uri ));
+        return uri.substring( Util.splitNamespaceXML( uri ));
     }
 
     /**

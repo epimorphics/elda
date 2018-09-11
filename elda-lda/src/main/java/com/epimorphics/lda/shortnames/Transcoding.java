@@ -113,7 +113,7 @@ public class Transcoding {
 	    uri_theEntireURIencoded.
 	*/
 	public static String encode( PrefixMapping pm, String any ) {
-		int cut = Util.splitNamespace( any );
+		int cut = Util.splitNamespaceXML( any );
 		String ns = any.substring( 0, cut );
 		String ln = any.substring( cut );
 		String prefix = pm.getNsURIPrefix( ns );

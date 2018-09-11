@@ -24,12 +24,12 @@ public class NsUtils {
 	}
 
 	public static String getNameSpace( String uri ) {
-		int split = Util.splitNamespace(uri);
+		int split = Util.splitNamespaceXML(uri);
 		return uri.substring(0, split);
 	}
 
 	public static String getLocalName( String uri ) {
-		int split = Util.splitNamespace(uri);
+		int split = Util.splitNamespaceXML(uri);
 		return uri.substring(split);
 	}
 }
