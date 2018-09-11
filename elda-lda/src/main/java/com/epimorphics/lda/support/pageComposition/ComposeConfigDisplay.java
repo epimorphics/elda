@@ -418,10 +418,10 @@ public class ComposeConfigDisplay {
 	}
     
     protected Set<Couple<String, Resource>> allFiltersOf( Set<Couple<String, Resource>> them, Resource sel) {
-    	for (RDFNode p: sel.listProperties( API.parent ).mapWith( Statement.Util.getObject ).toList()) {
+    	for (RDFNode p: sel.listProperties( API.parent ).mapWith( Statement::getObject ).toList()) {
     		allFiltersOf( them, (Resource) p );
     	}
-    	for (RDFNode f: sel.listProperties( API.filter ).mapWith( Statement.Util.getObject).toList()) {
+    	for (RDFNode f: sel.listProperties( API.filter ).mapWith( Statement::getObject).toList()) {
     		String pvs = ((Literal) f).getLexicalForm();
     		for (String filter: pvs.split( "&" ))
     			them.add( new Couple<String, Resource>( filter, sel ) );

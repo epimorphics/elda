@@ -89,7 +89,7 @@ public class StandardShortnameService implements ShortnameService {
     }
 
     private void extractDatatypes( Model m ) {
-        List<Resource> dataTypes = m.listStatements( null, RDF.type, RDFS.Datatype ).mapWith( Statement.Util.getSubject ).toList();
+        List<Resource> dataTypes = m.listStatements( null, RDF.type, RDFS.Datatype ).mapWith( Statement::getSubject ).toList();
         for (Resource t: dataTypes) declareDatatype( t.getURI() );
         for (Resource p: m.listSubjectsWithProperty( RDF.type, OWL.DatatypeProperty ).toList()) {
             for (RDFNode t: m.listObjectsOfProperty( p, RDFS.range ).toList()) {

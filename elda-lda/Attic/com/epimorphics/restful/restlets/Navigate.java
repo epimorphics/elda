@@ -97,7 +97,7 @@ import org.apache.jena.vocabulary.RDF;
         {
         Set<RDFNode> result = new HashSet<RDFNode>();
         for (Resource r: candidates) 
-            result.addAll( r.listProperties( px ).mapWith( Statement.Util.getObject ).toSet() );
+            result.addAll( r.listProperties( px ).mapWith( Statement::getObject ).toSet() );
         return result;
         }
 

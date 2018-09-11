@@ -117,7 +117,7 @@ import org.apache.jena.util.ResourceUtils;
     
     private RDFNode getLabelFor( Resource r, String id )
         {
-        List<RDFNode> labels = r.listProperties( DC.title ).mapWith( Statement.Util.getObject ).toList();
+        List<RDFNode> labels = r.listProperties( DC.title ).mapWith( Statement::getObject ).toList();
         return labels.isEmpty() ? r.getModel().createLiteral( id ) : labels.get( 0 );
         }
 

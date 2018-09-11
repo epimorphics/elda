@@ -269,7 +269,7 @@ public class APIEndpointSpec extends SpecCommon implements EndpointDetails, Name
 		setDescribeLabelIfPresent( tRes, v );
 		addViewPropertiesByString( v, m.listObjectsOfProperty( tRes, API.properties ).toList() );
 		addViewPropertiesByResource( v, m.listObjectsOfProperty( tRes, API.property ).toList() );
-		for (RDFNode n: tRes.listProperties( API.include ).mapWith( Statement.Util.getObject ).toList()) {
+		for (RDFNode n: tRes.listProperties( API.include ).mapWith( Statement::getObject ).toList()) {
 			if (n.isResource() && seen.add( (Resource) n ))
 				addViewProperties( m, seen, (Resource) n, v );
 		}

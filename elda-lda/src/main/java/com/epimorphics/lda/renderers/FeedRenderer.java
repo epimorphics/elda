@@ -303,7 +303,7 @@ public class FeedRenderer implements Renderer {
 	
 	private List<RDFNode> getEntryAuthors(Resource r) {
 		for (Property p: getAuthorProperties()) {
-			List<RDFNode> candidates = r.listProperties(p).mapWith(Statement.Util.getObject).toList();
+			List<RDFNode> candidates = r.listProperties(p).mapWith(Statement::getObject).toList();
 			if (candidates.size() > 0) return candidates;
 		}
 		return new ArrayList<RDFNode>();

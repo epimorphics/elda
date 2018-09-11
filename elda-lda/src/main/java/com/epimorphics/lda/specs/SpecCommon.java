@@ -19,7 +19,7 @@ public class SpecCommon {
 	
 	public SpecCommon(Resource root) {
 		this.root = root;
-		for (RDFNode x: root.listProperties(ELDA_API.license).mapWith(Statement.Util.getObject).toList()) {
+		for (RDFNode x: root.listProperties(ELDA_API.license).mapWith(Statement::getObject).toList()) {
 			licences.add(x);
 		}
 	}
@@ -30,7 +30,7 @@ public class SpecCommon {
 	
 	public Set<Resource> getNotices() {
 		Set<Resource> result = new HashSet<Resource>();
-		for (RDFNode x: root.listProperties(ELDA_API.notice).mapWith(Statement.Util.getObject).toList()) {
+		for (RDFNode x: root.listProperties(ELDA_API.notice).mapWith(Statement::getObject).toList()) {
 			result.add(x.asResource());
 		}
 		return result;		

@@ -357,7 +357,7 @@ public class XMLRendering {
 	private void addPropertyValues( Trail t, Element e, Resource x, Property p ) {		
 		Element pe = createElement(p);
 		e.appendChild( pe );
-		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement.Util.getObject ).toSet();		
+		Set<RDFNode> values = x.listProperties( p ).mapWith( Statement::getObject ).toSet();
 	//
 		if (values.size() > 1 || isMultiValued( p )) {
 			for (RDFNode value: sortObjects( p, values )) {
