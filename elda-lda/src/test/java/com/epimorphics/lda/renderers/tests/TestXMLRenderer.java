@@ -59,12 +59,12 @@ public class TestXMLRenderer
 	
 	@Test public void testSingleDataStatement()
 		{
-		ensureWrappedRendering( "(P 'b')", resourceInModel( "a P 'b'" ) );
+		ensureWrappedRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'" ) );
 		}
 	
 	@Test public void testSingleDataStatementWithLanguage()
 		{
-		ensureWrappedRendering( "(P lang=en-uk 'b')", resourceInModel( "a P 'b'en-uk" ) );
+		ensureWrappedRendering( "(P datatype=langString lang=en-uk 'b')", resourceInModel( "a P 'b'en-uk" ) );
 		}
 	
 	@Test public void testSingleDataStatementWithType()
@@ -79,7 +79,7 @@ public class TestXMLRenderer
 		// the choice of 'b' and 'aa' and their order of appearance in the model string.
 		// not sure how to improve this without arranging a pipeline through to the
 		// renderer.
-		ensureRendering( wrap("eh:/root", "(R href=eh:/a (P (item 'aa') (item 'b')))" ), resourceInModel( "root R a; a P 'b'; a P 'aa'" ) );
+		ensureRendering( wrap("eh:/root", "(R href=eh:/a (P (item 'aa' datatype=string) (item 'b' datatype=string)))" ), resourceInModel( "root R a; a P 'b'; a P 'aa'" ) );
 		ensureWrappedRendering( "(P datatype=string 'b')", resourceInModel( "a P 'b'xsd:string" ) );
 		}
 	

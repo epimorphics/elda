@@ -11,9 +11,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
 public class TestJsonLdLibrary {
-	
-	static { JenaJSONLD.init(); }
-	
+
 	@Test @Ignore public void testReadsJSON_LD() throws UnsupportedEncodingException {
 					
 		

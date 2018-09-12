@@ -8,6 +8,7 @@ import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import org.apache.jena.datatypes.RDFDatatype;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.datatypes.xsd.impl.RDFLangString;
 import org.apache.jena.datatypes.xsd.impl.XSDBaseNumericType;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.Triple;
@@ -175,7 +176,7 @@ public class JSONLDComposer {
 			String spelling = l.getLexicalForm();    	
 			RDFDatatype dt = l.getDatatype();
 
-			if (typeURI == null) {
+			if (dt == XSDDatatype.XSDstring || dt == RDFLangString.rdfLangString) {
 				if (lang.equals("")) {
 					jw.value(spelling);
 				} else {

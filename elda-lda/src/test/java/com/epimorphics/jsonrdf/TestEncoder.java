@@ -210,11 +210,11 @@ public class TestEncoder {
     }
     
     @Test public void testSimpleLiterals() throws IOException {
-        roundTripTester(":r :p 'foo'; :p2 23; :p3 '1.2'^^xsd:double.",  new String[]{":r"} );
+        roundTripTester(":r :p 'foo'; :p2 '23'^^xsd:int; :p3 '1.2'^^xsd:double.",  new String[]{":r"} );
     }
     
     @Test public void testMultivalues() throws IOException {
-        roundTripTester(":r :p 'foo' , 'bar' , 'baz' ; :p2 23 .",  new String[]{":r"} );
+        roundTripTester(":r :p 'foo' , 'bar' , 'baz' ; :p2 '23'^^xsd:int .",  new String[]{":r"} );
     }
     
     @Test public void testResourcesWithLabels() throws IOException {
@@ -347,7 +347,7 @@ public class TestEncoder {
             encoderForStructuredLiterals( context ), context,
             ":r :p 'english'@en.",
             new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','p': { '_value': 'english', '_lang': 'en'}}]" );
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p': { '_value': 'english', '_datatype': 'rdf_langString', '_lang': 'en'}}]" );
     }
     
     @Test public void testStructuredLiteralWithType() throws IOException {

@@ -11,6 +11,7 @@ package com.epimorphics.lda.sources.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.junit.Test;
 
 import com.epimorphics.lda.rdfq.*;
@@ -100,11 +101,11 @@ public class TestSourceConfig {
 		Source s = GetDataSource.sourceFromSpec( fm, config, am );
 	//
 		Any qA = RDFQ.uri( a );
-		Any qB = RDFQ.literal( b.getLexicalForm() );
-		Any qC = RDFQ.literal( c.getLexicalForm() );
+		Any qB = RDFQ.literal( b.getLexicalForm(), null, XSDDatatype.XSDstring.getURI());
+		Any qC = RDFQ.literal( c.getLexicalForm(), null, XSDDatatype.XSDstring.getURI() );
 	//
 		AnyList expected = RDFQ.list( qA, qB, qC );
-		assertEquals( expected, s.getTextSearchConfig().getTextSearchOperand() );		
+		assertEquals( expected.getElements(), s.getTextSearchConfig().getTextSearchOperand().getElements() );
 	}
 	
 }

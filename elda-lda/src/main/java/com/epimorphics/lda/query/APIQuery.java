@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -455,7 +456,7 @@ public class APIQuery implements VarSupply, WantsMetadata {
 		}
 	}
 
-	private static final Value variable_search = RDFQ.literal("?_search");
+	private static final Value variable_search = RDFQ.literal("?_search", null, XSDDatatype.XSDstring.getURI());
 
 	private Any substitute(Any any, Value literal) {
 		return any.equals(variable_search) ? literal : any;

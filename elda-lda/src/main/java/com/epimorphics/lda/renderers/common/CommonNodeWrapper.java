@@ -16,7 +16,9 @@ import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import org.apache.jena.datatypes.DatatypeFormatException;
 import org.apache.jena.datatypes.RDFDatatype;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.datatypes.xsd.impl.XMLLiteralType;
+import org.apache.jena.datatypes.xsd.impl.XSDBaseNumericType;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 
@@ -93,7 +95,7 @@ extends RDFNodeWrapper
 
         if (isResource()) {
             com.epimorphics.rdfutil.RDFNodeWrapper n = getPropertyValue( p );
-            if (n != null && n.isLiteral()) {
+            if (n != null && n.isLiteral() && n.asLiteral().getDatatype() instanceof XSDBaseNumericType) {
                 try {
                     v = n.asLiteral().getInt();
                 }

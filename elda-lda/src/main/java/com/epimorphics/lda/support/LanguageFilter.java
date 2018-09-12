@@ -10,6 +10,8 @@ package com.epimorphics.lda.support;
 
 import java.util.*;
 
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.datatypes.xsd.impl.RDFLangString;
 import org.apache.jena.graph.Node;
 import org.apache.jena.rdf.model.*;
 
@@ -62,6 +64,6 @@ public class LanguageFilter {
     }
     
 	private static boolean isStringLiteral(Node o) {
-		return o.isLiteral() && o.getLiteralDatatypeURI() == null; 
+		return o.isLiteral() && (o.getLiteralDatatype() == RDFLangString.rdfLangString || o.getLiteralDatatype() == XSDDatatype.XSDstring);
 	}
 }
