@@ -40,47 +40,47 @@ public class TestXMLRendererWithGold extends XMLTestCase {
 	public void testMiniEdA() throws Exception {
 		testGolden( "mini-ed-A" );
 	}
-	
+
 	public void testMiniEdB() throws Exception {
 		testGolden( "mini-ed-B" );
 	}
-	
+
 	public void testLrA() throws Exception {
 		testGolden( "lr-A" );
 	}
-	
+
 	public void testLrB() throws Exception {
 		testGolden( "lr-B" );
 	}
-	
+
 	public void testLrCB() throws Exception {
 		testGolden( "lr-C" );
 	}
-	
+
 	public void testNwqCB() throws Exception {
 		testGolden( "bwq-A" );
 	}
-	
+
 	public void testBwqCB() throws Exception {
 		testGolden( "bwq-B" );
 	}
-	
+
 	public void testBwqC() throws Exception {
 		testGolden( "bwq-C" );
 	}
-	
+
 	public void testBwqD() throws Exception {
 		testGolden( "bwq-D" );
 	}
-	
+
 	public void testBwqE() throws Exception {
 		testGolden( "bwq-E" );
 	}
-	
+
 	public void testAusA() throws Exception {
 		testGolden( "aus-A" );
 	}
-	
+
 	public void testAusB() throws Exception {
 		testGolden( "aus-B" );
 	}
@@ -142,7 +142,7 @@ public class TestXMLRendererWithGold extends XMLTestCase {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document parsed = dBuilder.parse( new InputSource( new StringReader( data ) ) );
-		// removeWhitespaceNodes( parsed.getDocumentElement() );
+		removeWhitespaceNodes( parsed.getDocumentElement() );
 		return parsed;
 	}
 	
