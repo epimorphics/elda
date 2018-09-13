@@ -291,7 +291,7 @@ public class EncoderDefault implements EncoderPlugin {
 
 	private RDFNode decodeNumber( JsonNumber jn ) {
 		BigDecimal bd = (BigDecimal) jn.value();
-		try { return ResourceFactory.createTypedLiteral( bd.intValueExact() ); }
+		try { return ResourceFactory.createTypedLiteral( bd.toBigIntegerExact() ); }
 		catch (ArithmeticException e) { /* fall through on exception */ }
 		try { return ResourceFactory.createTypedLiteral( bd.longValueExact() ); }
 		catch (ArithmeticException e) { /* fall through on exception */ }
