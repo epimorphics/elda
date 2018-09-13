@@ -43,7 +43,7 @@ public class TestAPISpecExtractPrefixMapping {
 	
 	@Test public void testWithOneMappingInModel() {
 		String modelString = "mine api:prefixMapping _x; _x api:prefix 'spoo'; _x api:namespace 'eh:/whatever/spoo#'";
-		testWithPrefixesFromModelAPI(modelString, "spoo=eh:/whatever/spoo#");
+		testWithPrefixesFromModelAPI(modelString, "spoo=eh:/whatever/spoo#; api=http://purl.org/linked-data/api/vocab#");
 	}
 	
 	@Test public void testWithTwoMappingsInModel() {
@@ -55,7 +55,7 @@ public class TestAPISpecExtractPrefixMapping {
 			+ "; _y api:prefix 'red'"
 			+ "; _y api:namespace 'eh:/whatever/reddish#'"
 			;
-		testWithPrefixesFromModelAPI(modelString, "spoo=eh:/whatever/spoo#; red=eh:/whatever/reddish#");
+		testWithPrefixesFromModelAPI(modelString, "spoo=eh:/whatever/spoo#; red=eh:/whatever/reddish#; api=http://purl.org/linked-data/api/vocab#");
 	}
 
 	private void testWithPrefixesFromModelAPI(String modelString, String mappingString) {
