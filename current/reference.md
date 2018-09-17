@@ -858,6 +858,23 @@ This allows "volatile" properties to be annotated with their expiry
 times and for those times to automatically propagate to any request that
 uses them.
 
+Forwarded Headers
+-----------------
+
+Elda supports the standard HTTP headers `X_Forwarded-Proto` and `X-Forwarded-Host`. When these headers are supplied
+by a request,
+if you have not specified a base URI for your API (represented by the `api:base` property in Elda configuration), the
+values of these headers will be used as the scheme and host for any boiler-plate URIs which are returned in the
+response. For example, this can affect the "next page" and "previous page" links, but does not affect the URIs of any
+RDF resources that were returned by the request. For HTML responses, this also affects the URIs which are used to
+locate static resources.
+
+If you are using a proxy server or load balancer then you should make sure that it sets these headers to the
+appropriate value before forwarding a request to Elda.
+
+This feature is enabled by default but it can be disabled for each API individually by setting the `elda:enableForwardHeaders`
+property for that API to `false`.
+
 Item template fallback
 ----------------------
 
