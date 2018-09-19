@@ -1,4 +1,14 @@
 + ---------------------------------------------------------------------
+| Elda 2.0.0
+
+See Elda 1.4.4 -- metadata and dynamic variables.
+
+Fixes #215 -- Elda supports forwarding headers. The default is
+for forwarding to be anbled; this is different from the
+previous (default) behaviour where Elda ignored such
+headers.
+
++ ---------------------------------------------------------------------
 | Elda 1.4.4 (RELEASED)
 
 * greater control over generated metadata is available, including
