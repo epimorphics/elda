@@ -8,6 +8,9 @@ for forwarding to be anbled; this is different from the
 previous (default) behaviour where Elda ignored such
 headers.
 
+Adds support for standard HTTP headers `X_Forwarded-Proto` and `X-Forwarded-Host`. See the "Forwarded Headers" section
+of the documentation for details.
+
 + ---------------------------------------------------------------------
 | Elda 1.4.4 (RELEASED)
 
