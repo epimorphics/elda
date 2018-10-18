@@ -22,7 +22,7 @@
 
     <ver.junit>4.11</ver.junit>
     <ver.log4j>1.2.17</ver.log4j>
-    <ver.lucene>4.6.1</ver.lucene>
+    <ver.lucene>7.1.0</ver.lucene>
 	<ver.jersey>1.18.2</ver.jersey>
     <ver.servlet-api>3.0.1</ver.servlet-api>
     <ver.slf4j>1.7.6</ver.slf4j>
