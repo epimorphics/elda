@@ -33,6 +33,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
+    <tomcat.version>7.0.94</tomcat.version>
   </properties>
 
   <build>
