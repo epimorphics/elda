@@ -9,7 +9,7 @@
 
     <properties>
         <jdk.version>1.7</jdk.version>
-        <ver.junit>4.11</ver.junit>
+        <ver.junit>4.13.1</ver.junit>
         <ver.wagon>2.2</ver.wagon>
     </properties>
     
