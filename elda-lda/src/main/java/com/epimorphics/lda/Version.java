@@ -17,5 +17,5 @@ package com.epimorphics.lda;
  *
  */
 public interface Version {
-	public final String string = "2.0.2-SNAPSHOT";
+	public final String string = "2.0.2";
 }
