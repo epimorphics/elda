@@ -121,6 +121,10 @@ elda:enableCounting a rdf:Property
 	; rdfs:label "enableCounting"
 	.
 
+elda:enableForwardHeaders a rdf:Property
+	; rdfs:comment ""
+	.
+
 elda:enhanceViewWith a rdf:Property
 	; rdfs:comment ""
 	.
