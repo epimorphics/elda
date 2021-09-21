@@ -355,6 +355,17 @@ public class PageTest
         assertEquals(0, results.size());
     }
 
+    @Test
+    public void filterRemovalLinks_withHtmlCharacters_escapesHtml() {
+        Resource res = createPageResource("label=%3Cscript%3Ealert(%27hello%27)%3C%2Fscript%3E");
+        Page p = new Page(rm, res);
+        p.initialiseShortNameRenderer(Fixtures.shortNameServiceFixture());
+
+        List<Link> results = p.filterRemovalLinks();
+        assertEquals(1, results.size());
+        assertEquals("<i class='fa fa-minus-circle'></i> label &lt;script&gt;alert('hello')&lt;/script&gt;", results.get(0).title());
+    }
+
     private Resource createPageResource(String query) {
         return ResourceFactory.createResource("http://localhost:8080/standalone/hello/games?" + query);
     }
