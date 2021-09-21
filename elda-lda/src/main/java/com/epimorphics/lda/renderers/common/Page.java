@@ -27,6 +27,8 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.sparql.vocabulary.FOAF;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
+
 /**
  * Value object representing the page of results returned by Elda's query
  * processing. Corresponds to a single resource of type <code>api:Page</code>.
@@ -513,7 +515,7 @@ public class Page extends CommonNodeWrapper
             RDFNodeWrapper n = new CommonNodeWrapper( getModelW(), RDFUtil.asRDFNode( filterValue ) );
 
             if (shortNameRenderer().isKnownShortnamePath( filterPath )) {
-                links.add( createRemovalLink( eu, p.name(), p.name(), filterValue, n.getName() ) );
+                links.add( createRemovalLink( eu, p.name(), p.name(), filterValue, escapeHtml(n.getName()) ) );
             }
         }
 
