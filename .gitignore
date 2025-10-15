@@ -25,3 +25,5 @@ velocity.log
 bin
 _site
 .sass-cache
+.idea/
+.vscode/
