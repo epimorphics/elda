@@ -9,9 +9,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Maven build
-        uses: epimorphics/github-actions/maven-build@v21
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Set up JDK
+        uses: actions/setup-java@v5
         with:
-          java-version: "17"
-          aws-access-key-id: ${{ secrets.DEPLOY_MAVEN_PRIVATE_S3_USERNAME }}
-          aws-secret-access-key: ${{ secrets.DEPLOY_MAVEN_PRIVATE_S3_PASSWORD }}
+          distribution: 'corretto'
+          java-version: '8'
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build and Test
+        run: |
+          mvn clean test
