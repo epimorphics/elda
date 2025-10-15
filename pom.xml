@@ -20,10 +20,10 @@
 	  <tempSCM>/tmp/tempSCM</tempSCM>
 	  <project.tagname />
 
-    <ver.junit>4.11</ver.junit>
-    <ver.log4j>1.2.17</ver.log4j>
+    <ver.junit>4.13.2</ver.junit>
+    <ver.log4j>2.17.1</ver.log4j>
     <ver.lucene>7.1.0</ver.lucene>
-	<ver.jersey>1.18.2</ver.jersey>
+  	<ver.jersey>1.18.2</ver.jersey>
     <ver.servlet-api>3.0.1</ver.servlet-api>
     <ver.slf4j>1.7.6</ver.slf4j>
     <ver.velocity>1.7</ver.velocity>
@@ -149,31 +149,15 @@
     </dependency>
 
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
       <version>${ver.log4j}</version>
-      <type>jar</type>
-      <scope>compile</scope>
+    </dependency>
 
-      <exclusions>
-        <exclusion>
-          <groupId>javax.mail</groupId>
-          <artifactId>mail</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>javax.jms</groupId>
-          <artifactId>jms</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jdmk</groupId>
-          <artifactId>jmxtools</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.sun.jmx</groupId>
-          <artifactId>jmxri</artifactId>
-        </exclusion>
-      </exclusions>
-
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${ver.log4j}</version>
     </dependency>
   </dependencies>
 
@@ -189,7 +173,7 @@
     <repository>
       <id>epi-public-repo</id>
       <name>Epimorphics Public Repository</name>
-      <url>http://repository.epimorphics.com</url>
+      <url>https://repository.epimorphics.com</url>
       <layout>default</layout>
       <releases>
         <enabled>true</enabled>
@@ -221,7 +205,7 @@
     <repository>
       <id>maven2-repository.dev.java.net</id>
       <name>Java.net Repository for Maven</name>
-      <url>http://download.java.net/maven/2/</url>
+      <url>https://download.java.net/maven/2/</url>
       <layout>default</layout>
     </repository>
 

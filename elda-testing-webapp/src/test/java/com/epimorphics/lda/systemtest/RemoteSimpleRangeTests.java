@@ -19,6 +19,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,7 +79,7 @@ import com.hp.hpl.jena.rdf.model.Model;
 	public void RunTestAllowingFailures() throws ClientProtocolException, IOException
 		{
 		log.debug("[test]: running '{}'", w.title);
-		HttpClient httpclient = new DefaultHttpClient();
+		HttpClient httpclient = HttpClients.createDefault();
 		String uri = "http://localhost:" + Config.port + "/elda/api" + w.path + ".ttl?" + w.queryParams;
 		HttpGet httpget = new HttpGet( uri );
 		HttpResponse response = httpclient.execute(httpget);
