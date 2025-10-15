@@ -1,0 +1,17 @@
+name: Build & Test
+on:
+  push:
+    branches:
+      - "**"
+      - "!main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Maven build
+        uses: epimorphics/github-actions/maven-build@v21
+        with:
+          java-version: "17"
+          aws-access-key-id: ${{ secrets.DEPLOY_MAVEN_PRIVATE_S3_USERNAME }}
+          aws-secret-access-key: ${{ secrets.DEPLOY_MAVEN_PRIVATE_S3_PASSWORD }}
