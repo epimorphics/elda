@@ -49,8 +49,9 @@
 
   <distributionManagement>
     <repository>
-      <id>epi-public-repo</id>
-      <url>ftp://repository.epimorphics.com</url>
+      <id>epi-public-s3-release</id>
+      <name>Epimorphics S3 release repository</name>
+      <url>s3://epi-repository/release</url>
     </repository>
   </distributionManagement>
 
