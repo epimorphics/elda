@@ -24,3 +24,5 @@ elda-standalone/velocity.log*
 
 _site
 .sass-cache
+.idea/
+.vscode/
