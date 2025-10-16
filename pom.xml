@@ -113,6 +113,13 @@
     </dependency>
 
     <dependency>
+      <!-- Override 3.2.1 introduced by org.apache.velocity:velocity@1.7 -->
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>
+      <version>3.2.2</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
       <version>${ver.lucene}</version>
