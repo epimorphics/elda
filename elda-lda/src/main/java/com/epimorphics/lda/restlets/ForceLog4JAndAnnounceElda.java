@@ -8,10 +8,13 @@
 
 package com.epimorphics.lda.restlets;
 
+import java.io.File;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,8 +34,12 @@ public class ForceLog4JAndAnnounceElda extends HttpServlet{
 	    	ServletContext sc = getServletContext(); 
 			String baseFilePath = ServletUtils.withTrailingSlash( sc.getRealPath("/") );
 			String propertiesFile = "log4j.properties";
-			PropertyConfigurator.configure( baseFilePath + propertiesFile );
-			log.info( "[init]\n\n    =>=> Starting Elda (Force) {}\n", Version.string); 
+		
+			LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
+			File file = new File(baseFilePath + propertiesFile);
+			context.setConfigLocation(file.toURI());
+
+			log.info( "[init]\n\n    =>=> Starting Elda (Force) {}\n", Version.string);
 			announced = true;
 		}
 	}	
