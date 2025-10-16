@@ -144,6 +144,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.codehaus.jettison</groupId>
+      <artifactId>jettison</artifactId>
+      <version>1.5.4</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.jmock</groupId>
       <artifactId>jmock-junit4</artifactId>
       <version>2.6.0</version>
