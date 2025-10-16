@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda</artifactId>
-  <version>2.0.3-SNAPSHOT</version>
+  <version>2.0.3</version>
   <packaging>pom</packaging>
   <name>elda</name>
   <description>Top level linked data API project</description>
@@ -170,8 +170,9 @@
 
   <distributionManagement>
     <repository>
-      <id>epi-public-repo</id>
-      <url>ftp://repository.epimorphics.com</url>
+      <id>epi-public-s3-release</id>
+      <name>Epimorphics S3 release repository</name>
+      <url>s3://epi-repository/release</url>
     </repository>
   </distributionManagement>
 
