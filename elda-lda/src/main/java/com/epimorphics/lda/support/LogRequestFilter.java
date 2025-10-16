@@ -21,7 +21,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.NDC;
+import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +93,7 @@ public class LogRequestFilter implements Filter {
         	if (ID == null) ID = generateID(httpRequest); 
         	
 			String fullID = ID.replace("*", seqId);
-			NDC.push(fullID);
+			ThreadContext.push(fullID);
 			
 			log.info("Request {}", fullPath);
 	        
@@ -109,8 +109,8 @@ public class LogRequestFilter implements Filter {
 				, status < 0 ? "(status unknown)" : "" + status
 	            , NameUtils.formatDuration(endTime - startTime) 
 	            );
-			
-			NDC.pop();
+
+			ThreadContext.pop();
 	    	} 
        }
 

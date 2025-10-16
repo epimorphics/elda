@@ -30,7 +30,8 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import com.epimorphics.lda.specs.APISpec;
-import org.apache.log4j.PropertyConfigurator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,7 +134,10 @@ import com.sun.jersey.api.NotFoundException;
 				String propertiesFile = System.getenv("ELDA_LOG4J_PROPERTIES");
 				if (propertiesFile == null) propertiesFile = "log4j.properties";
 				
-				PropertyConfigurator.configure( baseFilePath + propertiesFile );
+				LoggerContext context = (org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false);
+				File file = new File(baseFilePath + propertiesFile);
+				context.setConfigLocation(file.toURI());
+
 				log.info( "\n\n    =>=> Starting Elda (Init) {}\n", Version.string);
 				announced = true;
 			}

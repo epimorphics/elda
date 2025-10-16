@@ -25,7 +25,7 @@
     <ver.lucene>7.1.0</ver.lucene>
   	<ver.jersey>1.18.2</ver.jersey>
     <ver.servlet-api>3.0.1</ver.servlet-api>
-    <ver.slf4j>1.7.6</ver.slf4j>
+    <ver.slf4j>2.0.17</ver.slf4j>
     <ver.velocity>1.7</ver.velocity>
     <ver.wagon>2.2</ver.wagon>
     <ver.xmlunit>1.4</ver.xmlunit>

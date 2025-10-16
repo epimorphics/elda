@@ -11,7 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class Config {
 	
@@ -23,7 +24,7 @@ public class Config {
 		return properties;
 	}
 	
-    private static final Logger logger = Logger.getLogger(Config.class);
+    private static final Logger logger = LogManager.getLogger(Config.class);
 	
 	static {		
 		InputStream istream = Config.class.getClassLoader().getResourceAsStream(CONFIG_PROPERTIES_PATH_NAME);
