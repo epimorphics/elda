@@ -3,11 +3,14 @@ package com.epimorphics.lda.testing.utils;
 import java.io.*;
 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 
+import jakarta.ws.rs.client.*;
+import jakarta.ws.rs.core.Form;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.jena.atlas.json.JSON;
 import org.apache.jena.atlas.json.JsonObject;
+import org.glassfish.jersey.client.ClientResponse;
+import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
@@ -15,12 +18,9 @@ import org.slf4j.LoggerFactory;
 
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.FileManager;
-import com.sun.jersey.api.client.*;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
-import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public abstract class TomcatTestBase {
 
@@ -66,9 +66,7 @@ public abstract class TomcatTestBase {
         tomcat.start();
 
         // Allow arbitrary HTTP methods so we can use PATCH
-        DefaultClientConfig config = new DefaultClientConfig();
-        config.getProperties().put(URLConnectionClientHandler.PROPERTY_HTTP_URL_CONNECTION_SET_METHOD_WORKAROUND, true);
-        c = Client.create(config);
+        c = ClientBuilder.newBuilder().property(HttpUrlConnectorProvider.SET_METHOD_WORKAROUND, true).build();
 
         checkLive(200);
     }
@@ -97,53 +95,45 @@ public abstract class TomcatTestBase {
     }
 
     protected ClientResponse postFile(String file, String uri, String mime) {
-        WebResource r = c.resource(uri);
+        c.target(uri);
         File src = new File(file);
-        ClientResponse response = r.type(mime).post(ClientResponse.class, src);
-        return response;
+        return c.target(uri).request().post(Entity.entity(src, mime),  ClientResponse.class);
     }
 
     protected ClientResponse postModel(Model m, String uri) {
-        WebResource r = c.resource(uri);
         StringWriter sw = new StringWriter();
         m.write(sw, "Turtle");
-        ClientResponse response = r.type("text/turtle").post(ClientResponse.class, sw.getBuffer().toString());
-        return response;
+        return c.target(uri).request().post(Entity.entity(sw.getBuffer().toString(), "text/turtle"), ClientResponse.class);
     }
 
     protected ClientResponse invoke(String method, String file, String uri, String mime) {
-        WebResource r = c.resource(uri);
-        ClientResponse response = null;
         if (file == null) {
-            response = r.type(mime).header("X-HTTP-Method-Override", method).post(ClientResponse.class);
+            return c.target(uri).request().header("X-HTTP-Method-Override", method).post(null, ClientResponse.class);
         } else {
             File src = new File(file);
-            response = r.type(mime).header("X-HTTP-Method-Override", method).post(ClientResponse.class, src);
+            return c.target(uri).request().header("X-HTTP-Method-Override", method).post(Entity.entity(src, mime), ClientResponse.class);
         }
-        return response;
     }
 
     protected ClientResponse post(String uri, String...paramvals) {
-        WebResource r = c.resource(uri);
+        WebTarget r = c.target(uri);
         for (int i = 0; i < paramvals.length; ) {
             String param = paramvals[i++];
             String value = paramvals[i++];
             r = r.queryParam(param, value);
         }
-        ClientResponse response = r.post(ClientResponse.class);
-        return response;
+        return r.request().post(null, ClientResponse.class);
     }
 
     protected ClientResponse postForm(String uri, String...paramvals) {
-        WebResource r = c.resource(uri);
-        MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
+        WebTarget r = c.target(uri);
+        var formData = new Form();
         for (int i = 0; i < paramvals.length; ) {
             String param = paramvals[i++];
             String value = paramvals[i++];
-            formData.add(param, value);
+            formData.param(param, value);
         }
-        ClientResponse response = r.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE).post(ClientResponse.class, formData);
-        return response;
+        return r.request().buildPost(Entity.form(formData)).invoke(ClientResponse.class);
     }
 
     protected ClientResponse invoke(String method, String file, String uri) {
@@ -151,13 +141,13 @@ public abstract class TomcatTestBase {
     }
 
     protected Model getModelResponse(String uri, String...paramvals) {
-        WebResource r = c.resource( uri );
+        WebTarget r = c.target( uri );
         for (int i = 0; i < paramvals.length; ) {
             String param = paramvals[i++];
             String value = paramvals[i++];
             r = r.queryParam(param, value);
         }
-        InputStream response = r.accept("text/turtle").get(InputStream.class);
+        InputStream response = r.request("text/turtle").get(InputStream.class);
         Model result = ModelFactory.createDefaultModel();
         result.read(response, uri, "Turtle");
         return result;
@@ -168,13 +158,12 @@ public abstract class TomcatTestBase {
     }
 
     protected ClientResponse getResponse(String uri, String mime) {
-        WebResource r = c.resource( uri );
-        return r.accept(mime).get(ClientResponse.class);
+        return c.target(uri).request(mime).get(ClientResponse.class);
     }
     
     protected JsonObject getJSONResponse(String uri) {
         ClientResponse r = getResponse(uri, MediaType.APPLICATION_JSON);
-        return JSON.parse( r.getEntityInputStream() );
+        return JSON.parse( r.getEntityStream() );
     }
 
     protected Model checkModelResponse(String fetch, String rooturi, String file, Property...omit) {
@@ -204,15 +193,6 @@ public abstract class TomcatTestBase {
         return m;
     }
 
-    protected void printStatus(ClientResponse response) {
-        String msg = "Response: " + response.getStatus();
-        if (response.hasEntity() && response.getStatus() != 204) {
-            msg += " (" + response.getEntity(String.class) + ")";
-        }
-        System.out.println(msg);
-    }
-
-
     protected void checkLive(int targetStatus) {
         boolean tomcatLive = false;
         int count = 0;
@@ -224,10 +204,10 @@ public abstract class TomcatTestBase {
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
-                    assertTrue("Interrupted", false);
+                    fail("Interrupted");
                 }
                 if (count++ > 120 ) {
-                    assertTrue("Too many tries", false);
+                    fail("Too many tries");
                 }
             } else {
                 tomcatLive = true;

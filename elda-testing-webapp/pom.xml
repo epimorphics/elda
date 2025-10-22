@@ -21,13 +21,6 @@
       <scope>provided</scope>
 	</dependency>
 
-    <dependency>
-      <groupId>org.apache.tomcat.embed</groupId>
-      <artifactId>tomcat-embed-logging-log4j</artifactId>
-      <version>${tomcat.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
 	<dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-jasper</artifactId>
@@ -36,8 +29,8 @@
 	</dependency>
 
 	    <dependency>
-		       <groupId>com.sun.jersey.contribs</groupId>
-		        <artifactId>jersey-multipart</artifactId>
+		       <groupId>org.glassfish.jersey.media</groupId>
+		        <artifactId>jersey-media-multipart</artifactId>
 		        <version>${ver.jersey}</version>
 		</dependency>
 
@@ -48,17 +41,10 @@
 	</dependency>
 
 	   <dependency>
-	      <groupId>com.sun.jersey</groupId>
+	      <groupId>org.glassfish.jersey.core</groupId>
 	      <artifactId>jersey-client</artifactId>
 	      <version>${ver.jersey}</version>
   </dependency>
-
-	    <dependency>
-	     <groupId>com.sun.jersey.contribs</groupId>
-	     <artifactId>jersey-apache-client</artifactId>
-	     <version>${ver.jersey}</version>
-	     <scope>test</scope>
-	   </dependency>
 
     <dependency>
       <groupId>com.epimorphics.lda</groupId>

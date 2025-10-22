@@ -23,7 +23,7 @@
     <ver.junit>4.13.2</ver.junit>
     <ver.log4j>2.17.1</ver.log4j>
     <ver.lucene>7.1.0</ver.lucene>
-  	<ver.jersey>1.19.4</ver.jersey>
+  	<ver.jersey>3.1.8</ver.jersey>
     <ver.servlet-api>3.0.1</ver.servlet-api>
     <ver.slf4j>2.0.17</ver.slf4j>
     <ver.velocity>1.7</ver.velocity>
@@ -33,7 +33,7 @@
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
-    <tomcat.version>7.0.107</tomcat.version>
+    <tomcat.version>11.0.13</tomcat.version>
   </properties>
 
   <build>

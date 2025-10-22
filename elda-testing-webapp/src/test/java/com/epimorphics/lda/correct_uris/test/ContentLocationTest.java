@@ -2,6 +2,7 @@ package com.epimorphics.lda.correct_uris.test;
 
 import static org.junit.Assert.*;
 
+import org.glassfish.jersey.client.ClientResponse;
 import org.junit.Test;
 
 import com.epimorphics.lda.testing.utils.TestUtil;
@@ -9,7 +10,6 @@ import com.epimorphics.lda.testing.utils.TomcatTestBase;
 import com.epimorphics.lda.vocabularies.*;
 import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.*;
-import com.sun.jersey.api.client.ClientResponse;
 
 /**
     Test that the content-location header tracks the chosen rendering format.
@@ -72,7 +72,7 @@ public class ContentLocationTest extends TomcatTestBase {
 		assertEquals(expected, shortLocation);
 		
 		if (shortLocation.endsWith(".ttl")) {
-			String entity = response.getEntity(String.class);
+			String entity = response.readEntity(String.class);
 			Model result = TestUtil.modelFromTurtle(entity);
 			Resource root = result.createResource(fullLocation);
 			

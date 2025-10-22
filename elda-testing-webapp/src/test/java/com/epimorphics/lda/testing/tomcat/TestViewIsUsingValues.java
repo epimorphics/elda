@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.ws.rs.core.MediaType;
-
+import jakarta.ws.rs.core.MediaType;
+import org.glassfish.jersey.client.ClientResponse;
 import org.junit.Test;
 
 import com.epimorphics.lda.testing.utils.TestUtil;
@@ -22,7 +22,6 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.shared.PrefixMapping;
 import com.hp.hpl.jena.vocabulary.RDF;
-import com.sun.jersey.api.client.ClientResponse;
 
 public class TestViewIsUsingValues extends TomcatTestBase{
 
@@ -46,8 +45,8 @@ public class TestViewIsUsingValues extends TomcatTestBase{
 	@Test public void viewsUseValues() {
 		ClientResponse response = getResponse(BASE_URL + "testing/games?_metadata=all&_view=basic", "text/turtle");
 		assertEquals(200, response.getStatus());
-		assertTrue(response.getType().isCompatible(typeTurtle));
-		String entity = response.getEntity(String.class);
+		assertTrue(response.getMediaType().isCompatible(typeTurtle));
+		String entity = response.readEntity(String.class);
 		Model result = TestUtil.modelFromTurtle(entity);
 	//
 		List<RDFNode> selectedItems = result.listObjectsOfProperty(API.items).next().as(RDFList.class).asJavaList();		

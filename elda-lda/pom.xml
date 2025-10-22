@@ -113,22 +113,8 @@
       </exclusions>
   </dependency>
 
-  <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-core</artifactId>
-      <version>${ver.jersey}</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-
     <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-servlet</artifactId>
-      <version>${ver.jersey}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
+      <groupId>org.glassfish.jersey.core</groupId>
       <artifactId>jersey-server</artifactId>
       <version>${ver.jersey}</version>
       <type>jar</type>
@@ -136,18 +122,11 @@
     </dependency>
 
     <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-json</artifactId>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson</artifactId>
       <version>${ver.jersey}</version>
       <type>jar</type>
       <scope>compile</scope>
-      <exclusions>
-        <!-- Exclude org.codehaus.jackson artifacts that are replaced by com.fasterxml.jackson.core artifacts -->
-        <exclusion>
-          <groupId>org.codehaus.jackson</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
