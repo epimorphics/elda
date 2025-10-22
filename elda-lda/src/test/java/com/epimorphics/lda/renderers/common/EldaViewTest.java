@@ -14,9 +14,9 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
+import org.jmock.imposters.ByteBuddyClassImposteriser;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
-import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.*;
 
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
@@ -50,7 +50,7 @@ public class EldaViewTest
     @Rule public JUnitRuleMockery context = new JUnitRuleMockery() {{
         // we are forced to use the legacy imposteriser because APIResultSet does not
         // have an interface that it conforms to
-        setImposteriser(ClassImposteriser.INSTANCE);
+        setImposteriser(ByteBuddyClassImposteriser.INSTANCE);
 
         setThreadingPolicy(new Synchroniser());
     }};
@@ -129,4 +129,3 @@ public class EldaViewTest
     /***********************************/
 
 }
-
