@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -12,6 +13,10 @@
   <name>elda-testing-webapp</name>
   <description>webapp for Elda system tests</description>
 
+  <properties>
+    <skip-integration-test>false</skip-integration-test>
+  </properties>
+
   <dependencies>
 
     <dependency>
@@ -19,32 +24,44 @@
       <artifactId>tomcat-embed-core</artifactId>
       <version>${tomcat.version}</version>
       <scope>provided</scope>
-	</dependency>
+    </dependency>
 
-	<dependency>
+    <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-jasper</artifactId>
       <version>${tomcat.version}</version>
       <scope>provided</scope>
-	</dependency>
+    </dependency>
 
-	    <dependency>
-		       <groupId>org.glassfish.jersey.media</groupId>
-		        <artifactId>jersey-media-multipart</artifactId>
-		        <version>${ver.jersey}</version>
-		</dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-multipart</artifactId>
+      <version>${ver.jersey}</version>
+    </dependency>
 
-	    <dependency>
-	        <groupId>commons-beanutils</groupId>
-	        <artifactId>commons-beanutils</artifactId>
-	        <version>1.11.0</version>
-	</dependency>
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.11.0</version>
+    </dependency>
 
-	   <dependency>
-	      <groupId>org.glassfish.jersey.core</groupId>
-	      <artifactId>jersey-client</artifactId>
-	      <version>${ver.jersey}</version>
-  </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.core</groupId>
+      <artifactId>jersey-server</artifactId>
+      <version>${ver.jersey}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.containers</groupId>
+      <artifactId>jersey-container-servlet</artifactId>
+      <version>${ver.jersey}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish.jersey.inject</groupId>
+      <artifactId>jersey-hk2</artifactId>
+      <version>${ver.jersey}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.epimorphics.lda</groupId>
@@ -53,11 +70,11 @@
     </dependency>
 
     <dependency>
-        <groupId>com.epimorphics.lda</groupId>
-        <artifactId>elda-lda</artifactId>
-        <version>${project.version}</version>
-        <classifier>sources</classifier>
-        <scope>compile</scope>
+      <groupId>com.epimorphics.lda</groupId>
+      <artifactId>elda-lda</artifactId>
+      <version>${project.version}</version>
+      <classifier>sources</classifier>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
@@ -67,11 +84,11 @@
     </dependency>
 
     <dependency>
-        <groupId>com.epimorphics.lda</groupId>
-        <artifactId>elda-lda</artifactId>
-        <version>${project.version}</version>
-        <type>test-jar</type>
-        <scope>test</scope>
+      <groupId>com.epimorphics.lda</groupId>
+      <artifactId>elda-lda</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -90,7 +107,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
         <executions>
           <execution>
             <goals>
@@ -104,7 +120,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.5</version>
         <executions>
           <execution>
             <id>copy-test-resources</id>
@@ -178,7 +193,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.9</version>
+        <version>3.5.4</version>
         <executions>
 
           <execution>
@@ -199,23 +214,24 @@
               <goal>test</goal>
             </goals>
             <configuration>
-              <includes><include>**/*Tests.java</include></includes>
+              <includes>
+                <include>**/*Tests.java</include>
+              </includes>
               <skipTests>${skip-integration-test}</skipTests>
-		<showSuccess>false</showSuccess>
             </configuration>
           </execution>
 
         </executions>
       </plugin>
 
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.6</version>
-          <configuration>
-              <skip>true</skip>
-          </configuration>
-        </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>3.1.4</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
     </plugins>
 
 
@@ -245,7 +261,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore />
+                    <ignore/>
                   </action>
                 </pluginExecution>
               </pluginExecutions>
