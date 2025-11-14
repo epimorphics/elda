@@ -10,52 +10,45 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
-    Tiny tokeniser for tiny dom-expression parser for testing.
- 	
- 	@author chris
-*/
-public class TinyTokens 
-	{
-	protected String spelling;
-	protected TinyTokens.Type type;
-	private final Matcher m;
-	
-	static final Pattern p = Pattern.compile( "\\(|\\)|'[^']*'|[^()=' ]+=[^()=' ]+|[^()=' ]+|." );
+ * Tiny tokeniser for tiny dom-expression parser for testing.
+ *
+ * @author chris
+ */
+public class TinyTokens {
+    protected String spelling;
+    protected TinyTokens.Type type;
+    private final Matcher m;
 
-	enum Type {WRONG, EOF, LPAR, RPAR, LIT, WORD, ATTR}
-	
-	public TinyTokens( String source ) 
-		{
-		this.m = p.matcher( source );
-		advance();
-		}
-	
-	public void advance()
-		{
-		if (m.find()) 
-			{
-			spelling = m.group();
-			if (spelling.equals( " "))
-				advance();
-			else
-				type =
-					spelling.equals( "(" ) ? Type.LPAR
-					: spelling.equals( ")" ) ? Type.RPAR
-					: spelling.startsWith( "'" ) ? Type.LIT
-					: spelling.contains( "=" ) ? Type.ATTR
-					: Type.WORD
-					;
-			}
-		else
-			{
-			spelling = "";
-			type = Type.EOF;
-			}
-		}
+    static final Pattern p = Pattern.compile("\\(|\\)|'[^']*'|[^()=' ]+=[^()=' ]+|[^()=' ]+|.");
 
-	public void demand( TinyTokens.Type t ) 
-		{
-		if (type == t) advance();
-		else throw new RuntimeException( "expected a " + t + " but got: " + type + " " + spelling );
-		}
-	}
+    enum Type {WRONG, EOF, LPAR, RPAR, LIT, WORD, ATTR}
+
+    public TinyTokens(String source) {
+        this.m = p.matcher(source);
+        advance();
+    }
+
+    public void advance() {
+        if (m.find()) {
+            spelling = m.group();
+            if (spelling.equals(" "))
+                advance();
+            else
+                type =
+                        spelling.equals("(") ? Type.LPAR
+                                : spelling.equals(")") ? Type.RPAR
+                                : spelling.startsWith("'") ? Type.LIT
+                                : spelling.contains("=") ? Type.ATTR
+                                : Type.WORD
+                        ;
+        } else {
+            spelling = "";
+            type = Type.EOF;
+        }
+    }
+
+    public void demand(TinyTokens.Type t) {
+        if (type == t) advance();
+        else throw new RuntimeException("expected a " + t + " but got: " + type + " " + spelling);
+    }
+}

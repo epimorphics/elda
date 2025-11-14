@@ -20,8 +20,10 @@
 
 package com.epimorphics.lda.testing.utils;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import com.epimorphics.rdfutil.RDFUtil;
+import com.epimorphics.util.PrefixUtils;
+import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.util.iterator.Map1;
 
 import java.io.StringReader;
 import java.util.Collection;
@@ -29,17 +31,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.epimorphics.rdfutil.RDFUtil;
-import com.epimorphics.util.PrefixUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.rdf.model.StmtIterator;
-import com.hp.hpl.jena.util.iterator.Map1;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * Support for testing iterator/list values against and expected set
@@ -63,7 +56,7 @@ public class TestUtil {
         Set<Object> expectedSet = new HashSet<Object>();
         for (Object e : expected) expectedSet.add(e);
 
-        Set<Object> actualSet = new HashSet<Object>( actual );
+        Set<Object> actualSet = new HashSet<Object>(actual);
 
         assertEquals(expectedSet, actualSet);
     }
@@ -72,7 +65,7 @@ public class TestUtil {
         Set<Object> expectedSet = new HashSet<Object>();
         for (Object e : expected) expectedSet.add(e);
 
-        Set<Object> actualSet = new HashSet<Object>( );
+        Set<Object> actualSet = new HashSet<Object>();
         while (actual.hasNext()) {
             actualSet.add(actual.next());
         }
@@ -82,52 +75,56 @@ public class TestUtil {
 
     /**
      * Create a {@link Model} as a text fixture
+     *
      * @param content The model content in Turtle. Common prefixes may be assumed.
      * @return A new model containing triples parsed from the content
      */
-    public static Model modelFixture( String content ) {
+    public static Model modelFixture(String content) {
         Model m = ModelFactory.createDefaultModel();
-        m.setNsPrefixes( PrefixUtils.commonPrefixes() );
-        m.setNsPrefix( "", baseURIFixture() );
-        String withPrefixes = PrefixUtils.asTurtlePrefixes( m ) + content;
-        m.read( new StringReader( withPrefixes ), baseURIFixture(), "Turtle" );
+        m.setNsPrefixes(PrefixUtils.commonPrefixes());
+        m.setNsPrefix("", baseURIFixture());
+        String withPrefixes = PrefixUtils.asTurtlePrefixes(m) + content;
+        m.read(new StringReader(withPrefixes), baseURIFixture(), "Turtle");
         return m;
     }
 
     /**
      * Return a resource with the given URI.
-     * @param m Optional model. If null, the resource will be created using the {@link ResourceFactory}
+     *
+     * @param m   Optional model. If null, the resource will be created using the {@link ResourceFactory}
      * @param uri Resource URI. If the URI starts with <code>http:</code>, it will be left intact otherwise
-     * it is assumed relative to the {@link #baseURIFixture()}
+     *            it is assumed relative to the {@link #baseURIFixture()}
      * @return A resource
      */
-    public static Resource resourceFixture( Model m, String uri ) {
-        String u = uri.startsWith( "http:" ) ? uri : (baseURIFixture() + uri);
-        return (m == null) ? ResourceFactory.createResource( u ) : m.getResource( u );
+    public static Resource resourceFixture(Model m, String uri) {
+        String u = uri.startsWith("http:") ? uri : (baseURIFixture() + uri);
+        return (m == null) ? ResourceFactory.createResource(u) : m.getResource(u);
     }
 
     /**
      * Return a resource which is the (assumed sole) root subject of the model given by the turtle source.
      * Common prefixes are assumed.
      */
-    public static Resource resourceFixture( String src ) {
-        return RDFUtil.findRoot( modelFixture(src) );
+    public static Resource resourceFixture(String src) {
+        return RDFUtil.findRoot(modelFixture(src));
     }
 
     /**
      * Return a property with the given URI.
-     * @param m Optional model. If null, the property will be created using the {@link ResourceFactory}
+     *
+     * @param m   Optional model. If null, the property will be created using the {@link ResourceFactory}
      * @param uri Resource URI. If the URI starts with <code>http:</code>, it will be left intact otherwise
-     * it is assumed relative to the {@link #baseURIFixture()}
+     *            it is assumed relative to the {@link #baseURIFixture()}
      * @return A property
      */
-    public static Property propertyFixture( Model m, String uri ) {
-        String u = uri.startsWith( "http:" ) ? uri : (baseURIFixture() + uri);
-        return (m == null) ? ResourceFactory.createProperty( u ) : m.getProperty( u );
+    public static Property propertyFixture(Model m, String uri) {
+        String u = uri.startsWith("http:") ? uri : (baseURIFixture() + uri);
+        return (m == null) ? ResourceFactory.createProperty(u) : m.getProperty(u);
     }
 
     /**
      * Return a base URI that is guaranteed not to resolve.
+     *
      * @return "http://example.test/test#"
      */
     public static String baseURIFixture() {
@@ -136,15 +133,16 @@ public class TestUtil {
 
     /**
      * Test that the given resource/property has the given object value and ONLY the given object value.
-     * @param subject  subject resource
+     *
+     * @param subject   subject resource
      * @param predicate property to test
-     * @param object  the expected value or null to not test the value, just that there is one
+     * @param object    the expected value or null to not test the value, just that there is one
      */
     public static boolean isOnlyValue(Resource subject, Property predicate, RDFNode object) {
         StmtIterator si = subject.listProperties(predicate);
         if (si.hasNext()) {
             RDFNode value = si.next().getObject();
-            if (object != null && ! value.equals(object)) return false;
+            if (object != null && !value.equals(object)) return false;
         }
         if (si.hasNext()) {
             si.close();
@@ -177,8 +175,8 @@ public class TestUtil {
         return testProperties;
     }
 
-    private static boolean match(Resource expected, Resource actual, Property...props) {
-        return buildTestModel(actual, props).isIsomorphicWith( buildTestModel(expected, props));
+    private static boolean match(Resource expected, Resource actual, Property... props) {
+        return buildTestModel(actual, props).isIsomorphicWith(buildTestModel(expected, props));
     }
 
     private static void testMatch(Resource expected, Resource actual, Property p) {
@@ -192,12 +190,15 @@ public class TestUtil {
     }
 
     private static Set<RDFNode> getValues(Resource expected, Property p) {
-        return expected.listProperties(p).mapWith(new Map1<Statement,RDFNode>() {
-            @Override public RDFNode map1(Statement s) { return s.getObject(); }
+        return expected.listProperties(p).mapWith(new Map1<Statement, RDFNode>() {
+            @Override
+            public RDFNode map1(Statement s) {
+                return s.getObject();
+            }
         }).toSet();
     }
 
-    private static Model buildTestModel(Resource r, Property...props) {
+    private static Model buildTestModel(Resource r, Property... props) {
         Model m = ModelFactory.createDefaultModel();
         Resource dest = r.inModel(m);
         for (Property p : props) {
@@ -206,10 +207,9 @@ public class TestUtil {
         return m;
     }
 
-	public static Model modelFromTurtle(String ttl) {
-		Model model = ModelFactory.createDefaultModel();
-		return model.read( new StringReader(ttl), null, "Turtle");
-	}
+    public static Model modelFromTurtle(String ttl) {
+        Model model = ModelFactory.createDefaultModel();
+        return model.read(new StringReader(ttl), null, "Turtle");
+    }
 
 }
-

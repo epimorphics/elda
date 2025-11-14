@@ -21,22 +21,22 @@ public class VelocityRendererFactory implements RendererFactory {
     private Resource config = null;
 
     @Override
-    public Renderer buildWith( APIEndpoint ep, ShortnameService sns ) {
-        return new VelocityRenderer( mt, ep, config, null, sns );
+    public Renderer buildWith(APIEndpoint ep, ShortnameService sns) {
+        return new VelocityRenderer(mt, ep, config, null, sns);
     }
 
     @Override
-    public RendererFactory withRoot( @SuppressWarnings( "hiding" ) Resource config ) {
+    public RendererFactory withRoot(@SuppressWarnings("hiding") Resource config) {
         this.config = config;
         return this;
     }
 
     @Override
-    public RendererFactory withMediaType( @SuppressWarnings( "hiding" ) MediaType mt ) {
+    public RendererFactory withMediaType(@SuppressWarnings("hiding") MediaType mt) {
         this.mt = mt;
         return this;
     }
-    
+
     @Override
     public RendererFactory withISODateFormatting(Boolean jsonUsesISOdate) {
         return this;

@@ -7,10 +7,10 @@
 */
 
 /******************************************************************
-    File:        APIException.java
-    Created by:  Dave Reynolds
-    Created on:  31 Jan 2010
- * 
+ File:        APIException.java
+ Created by:  Dave Reynolds
+ Created on:  31 Jan 2010
+ *
  * (c) Copyright 2010, Epimorphics Limited
  * $Id:  $
  *****************************************************************/
@@ -24,9 +24,8 @@ public class APIException extends RuntimeException {
     public APIException(String message) {
         super(message);
     }
-    
+
     public APIException(String message, Throwable t) {
         super(message, t);
     }
 }
-

@@ -27,194 +27,192 @@ import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
-public class TestCatalogueModelConstruction 
-	{
-	private final class MyUriInfo implements UriInfo
-        {
+public class TestCatalogueModelConstruction {
+    private final class MyUriInfo implements UriInfo {
         protected final String base;
-        
-        public MyUriInfo( String base )
-            { this.base = base; }
 
-        @Override public UriBuilder getRequestUriBuilder()
-            {
+        public MyUriInfo(String base) {
+            this.base = base;
+        }
+
+        @Override
+        public UriBuilder getRequestUriBuilder() {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public URI getRequestUri()
-            {
+        @Override
+        public URI getRequestUri() {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public MultivaluedMap<String, String> getQueryParameters(
-                boolean decode )
-            {
+        @Override
+        public MultivaluedMap<String, String> getQueryParameters(
+                boolean decode) {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public MultivaluedMap<String, String> getQueryParameters()
-            {
+        @Override
+        public MultivaluedMap<String, String> getQueryParameters() {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public List<PathSegment> getPathSegments( boolean decode )
-            {
+        @Override
+        public List<PathSegment> getPathSegments(boolean decode) {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public List<PathSegment> getPathSegments()
-            {
+        @Override
+        public List<PathSegment> getPathSegments() {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public MultivaluedMap<String, String> getPathParameters(
-                boolean decode )
-            {
+        @Override
+        public MultivaluedMap<String, String> getPathParameters(
+                boolean decode) {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public MultivaluedMap<String, String> getPathParameters()
-            {
+        @Override
+        public MultivaluedMap<String, String> getPathParameters() {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public String getPath( boolean decode )
-            {
+        @Override
+        public String getPath(boolean decode) {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public String getPath()
-            {
+        @Override
+        public String getPath() {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public List<String> getMatchedURIs( boolean decode )
-            {
+        @Override
+        public List<String> getMatchedURIs(boolean decode) {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public List<String> getMatchedURIs()
-            {
+        @Override
+        public List<String> getMatchedURIs() {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public List<Object> getMatchedResources()
-            {
+        @Override
+        public List<Object> getMatchedResources() {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public UriBuilder getBaseUriBuilder()
-            {
+        @Override
+        public UriBuilder getBaseUriBuilder() {
             //  Auto-generated method stub
             return null;
-            }
+        }
 
-        @Override public URI getBaseUri()
-            { try
-                { return new URI( base ); }
-            catch (URISyntaxException e)
-                { throw new WrappedException( e ); }
-            }
-
-        @Override public UriBuilder getAbsolutePathBuilder()
-            {
-            //  Auto-generated method stub
-            return null;
-            }
-
-        @Override public URI getAbsolutePath()
-            {
-            //  Auto-generated method stub
-            return null;
+        @Override
+        public URI getBaseUri() {
+            try {
+                return new URI(base);
+            } catch (URISyntaxException e) {
+                throw new WrappedException(e);
             }
         }
 
-    private final class TrivialPathSegment implements PathSegment
-        {
-        @Override public String getPath()
-            {
+        @Override
+        public UriBuilder getAbsolutePathBuilder() {
             //  Auto-generated method stub
             return null;
-            }
-
-        @Override public MultivaluedMap<String, String> getMatrixParameters()
-            { return new MultivaluedMapImpl(); }
         }
 
-    @Test public void testEmptyCatalogue()
-		{
-		Model empty = ModelFactory.createDefaultModel();
-		Resource root = empty.createResource( "eh:/x" );
-		SharedConfig config = SharedConfig.create( null );
-		CatalogueInJSON cj = new CatalogueInJSON( config );
-		PathSegment c = new TrivialPathSegment();
-		Model out = cj.catalogueModelForCandidates( root, c, new HashSet<Resource>() );
-		Model expected = model( "eh:/x dsv:hasURL eh:/x; eh:/x rdf:type dsv:Catalogue" );
-		ModelTestBase.assertIsoModels( expected, out );
-		}
-    
-    @Test public void testSimpleCatalogue()
-        {
-        Model given = model( "R rdf:type dsv:DataSet; R dsv:hasID 'xxx'" );
-        Resource root = given.createResource( "eh:/x" );
-        UriInfo u = new MyUriInfo( "eh:/base#" );        
-        CatalogueInJSON cj = new CatalogueInJSON( SharedConfig.create( u ) );
+        @Override
+        public URI getAbsolutePath() {
+            //  Auto-generated method stub
+            return null;
+        }
+    }
+
+    private final class TrivialPathSegment implements PathSegment {
+        @Override
+        public String getPath() {
+            //  Auto-generated method stub
+            return null;
+        }
+
+        @Override
+        public MultivaluedMap<String, String> getMatrixParameters() {
+            return new MultivaluedMapImpl();
+        }
+    }
+
+    @Test
+    public void testEmptyCatalogue() {
+        Model empty = ModelFactory.createDefaultModel();
+        Resource root = empty.createResource("eh:/x");
+        SharedConfig config = SharedConfig.create(null);
+        CatalogueInJSON cj = new CatalogueInJSON(config);
+        PathSegment c = new TrivialPathSegment();
+        Model out = cj.catalogueModelForCandidates(root, c, new HashSet<Resource>());
+        Model expected = model("eh:/x dsv:hasURL eh:/x; eh:/x rdf:type dsv:Catalogue");
+        ModelTestBase.assertIsoModels(expected, out);
+    }
+
+    @Test
+    public void testSimpleCatalogue() {
+        Model given = model("R rdf:type dsv:DataSet; R dsv:hasID 'xxx'");
+        Resource root = given.createResource("eh:/x");
+        UriInfo u = new MyUriInfo("eh:/base#");
+        CatalogueInJSON cj = new CatalogueInJSON(SharedConfig.create(u));
         PathSegment c = new TrivialPathSegment();
         HashSet<Resource> candidates = new HashSet<Resource>();
-        candidates.add( given.createResource( "eh:/R" ) );
-        Model out = cj.catalogueModelForCandidates( root, c, candidates );
-        Model expected = xxx( given );
-        ModelTestBase.assertIsoModels( expected, out );
-        }
+        candidates.add(given.createResource("eh:/R"));
+        Model out = cj.catalogueModelForCandidates(root, c, candidates);
+        Model expected = xxx(given);
+        ModelTestBase.assertIsoModels(expected, out);
+    }
 
-    private Model xxx( Model given )
-        {
+    private Model xxx(Model given) {
         Model expected = model
-            ( "eh:/x dsv:hasURL eh:/x; eh:/x rdf:type dsv:Catalogue" 
-            + "; eh:/x dsv:hasProperty _p1"
-            );
-        Resource root = expected.createResource( "eh:/x" );
-        Resource rrr = expected.createResource( "eh:/base#datasets/xxx" );
-        root.addProperty( DSV.hasEntry, rrr );
-        rrr.addProperty( RDFS.label, "xxx" );
-        rrr.addProperty( RDF.type, DSV.DataSet );
-        addPropertyDescription( expected, RDF.type, "_p1", root );
-        addPropertyDescription( expected, DSV.hasID, "_p2", root );
+                ("eh:/x dsv:hasURL eh:/x; eh:/x rdf:type dsv:Catalogue"
+                        + "; eh:/x dsv:hasProperty _p1"
+                );
+        Resource root = expected.createResource("eh:/x");
+        Resource rrr = expected.createResource("eh:/base#datasets/xxx");
+        root.addProperty(DSV.hasEntry, rrr);
+        rrr.addProperty(RDFS.label, "xxx");
+        rrr.addProperty(RDF.type, DSV.DataSet);
+        addPropertyDescription(expected, RDF.type, "_p1", root);
+        addPropertyDescription(expected, DSV.hasID, "_p2", root);
         return expected;
-        }
+    }
 
-    private void addPropertyDescription( Model expected, Property p, String lll, Resource root )
-        {
-        Resource _p1 = expected.createResource( new AnonId( lll ) );
-        expected.add( root, DSV.hasProperty, _p1 );
-        expected.add( _p1, DSV.propertyName, p );
-        expected.add( _p1, DSV.valuesFor, expected.createResource( "eh:/base#anchor/property;p=" + encode( expected, p ) ) );
-        }
+    private void addPropertyDescription(Model expected, Property p, String lll, Resource root) {
+        Resource _p1 = expected.createResource(new AnonId(lll));
+        expected.add(root, DSV.hasProperty, _p1);
+        expected.add(_p1, DSV.propertyName, p);
+        expected.add(_p1, DSV.valuesFor, expected.createResource("eh:/base#anchor/property;p=" + encode(expected, p)));
+    }
 
-    private String encode( PrefixMapping pm, Property p )
-        {
-        return pm.shortForm( p.getURI() ).replace( ":", "%3A" );
-        }
+    private String encode(PrefixMapping pm, Property p) {
+        return pm.shortForm(p.getURI()).replace(":", "%3A");
+    }
 
-    private Model model( String terms )
-        {
+    private Model model(String terms) {
         Model result = ModelFactory.createDefaultModel();
-        result.setNsPrefixes( PrefixMapping.Extended );
-        result.setNsPrefix( "dsv", DSV.getURI() );
-        ModelTestBase.modelAdd( result, terms );
+        result.setNsPrefixes(PrefixMapping.Extended);
+        result.setNsPrefix("dsv", DSV.getURI());
+        ModelTestBase.modelAdd(result, terms);
         return result;
-        }
-	}
+    }
+}

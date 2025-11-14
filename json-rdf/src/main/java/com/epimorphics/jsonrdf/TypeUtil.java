@@ -23,16 +23,16 @@ import com.hp.hpl.jena.vocabulary.XSD;
 
 /**
  * Support for comparing datatypes to reflect XSD type heirarchy
- * 
+ *
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
 public class TypeUtil {
 
-    static TransitiveGraphCache tgc ;
-    
+    static TransitiveGraphCache tgc;
+
     static {
-        Node sc  = RDFS.subClassOf.asNode();
+        Node sc = RDFS.subClassOf.asNode();
         tgc = new TransitiveGraphCache(TransitiveReasoner.directSubClassOf, sc);
         addSubClass(tgc, XSD.integer, XSD.decimal);
         addSubClass(tgc, XSD.xlong, XSD.integer);
@@ -50,17 +50,16 @@ public class TypeUtil {
         addSubClass(tgc, XSD.IDREF, XSD.xstring);
         addSubClass(tgc, XSD.NMTOKEN, XSD.xstring);
     }
-    
+
     static void addSubClass(TransitiveGraphCache tgc, Resource sub, Resource sup) {
-        tgc.addRelation( new Triple( sub.asNode(), RDFS.subClassOf.asNode(), sup.asNode()) );
+        tgc.addRelation(new Triple(sub.asNode(), RDFS.subClassOf.asNode(), sup.asNode()));
     }
-    
+
     public static boolean isSubTypeOf(Resource a, Resource b) {
-        return tgc.contains( new TriplePattern(a.asNode(), RDFS.subClassOf.asNode(), b.asNode()) );
+        return tgc.contains(new TriplePattern(a.asNode(), RDFS.subClassOf.asNode(), b.asNode()));
     }
-    
+
     public static boolean isSubTypeOf(String aUri, String bUri) {
-        return tgc.contains( new TriplePattern(Node.createURI(aUri), RDFS.subClassOf.asNode(), Node.createURI(bUri)) );
+        return tgc.contains(new TriplePattern(Node.createURI(aUri), RDFS.subClassOf.asNode(), Node.createURI(bUri)));
     }
 }
-

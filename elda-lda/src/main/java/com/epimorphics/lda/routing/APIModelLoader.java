@@ -23,22 +23,25 @@ public class APIModelLoader implements ModelLoader {
         baseFilePathLocal = base;
     }
 
-    @Override public Model loadModel(String uri) {
-        RouterRestletSupport.log.info("loadModel '{}'", uri );
-        if (uri.startsWith( Container.LOCAL_PREFIX )) {
+    @Override
+    public Model loadModel(String uri) {
+        RouterRestletSupport.log.info("loadModel '{}'", uri);
+        if (uri.startsWith(Container.LOCAL_PREFIX)) {
             String specFile = "file:///" + baseFilePathLocal + uri.substring(Container.LOCAL_PREFIX.length());
-            return EldaFileManager.get().loadModel( specFile );
+            return EldaFileManager.get().loadModel(specFile);
 
-        } else if (uri.startsWith( TDBManager.PREFIX )) {
-            String modelName = uri.substring( TDBManager.PREFIX.length() );
-            Model tdb = TDBManager.getTDBModelNamed( modelName );
+        } else if (uri.startsWith(TDBManager.PREFIX)) {
+            String modelName = uri.substring(TDBManager.PREFIX.length());
+            Model tdb = TDBManager.getTDBModelNamed(modelName);
             RouterRestletSupport.log.info("get TDB model '{}'", modelName);
-            if (tdb.isEmpty()) RouterRestletSupport.log.warn("the TDB model at '{}' is empty -- has it been initialised?", modelName);
-            if (tdb.isEmpty()) throw new APIException( "the TDB model at " + modelName + " is empty -- has it been initialised?" );
+            if (tdb.isEmpty())
+                RouterRestletSupport.log.warn("the TDB model at '{}' is empty -- has it been initialised?", modelName);
+            if (tdb.isEmpty())
+                throw new APIException("the TDB model at " + modelName + " is empty -- has it been initialised?");
             return tdb;
 
         } else {
-            return EldaFileManager.get().loadModel( uri );
+            return EldaFileManager.get().loadModel(uri);
         }
     }
 }

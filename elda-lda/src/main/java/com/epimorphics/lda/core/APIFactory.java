@@ -7,10 +7,10 @@
 */
 
 /******************************************************************
-    File:        APIFactory.java
-    Created by:  Dave Reynolds
-    Created on:  31 Jan 2010
- * 
+ File:        APIFactory.java
+ Created by:  Dave Reynolds
+ Created on:  31 Jan 2010
+ *
  * (c) Copyright 2010, Epimorphics Limited
  * $Id:  $
  *****************************************************************/
@@ -22,9 +22,9 @@ import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
 
 /**
- * Factory for creating ApiInstances from a specification and 
+ * Factory for creating ApiInstances from a specification and
  * registering them.
- * 
+ *
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
@@ -33,7 +33,7 @@ public class APIFactory {
     public static APIEndpoint makeApiEndpoint(APIEndpointSpec spec) {
         return new APIEndpointImpl(spec);
     }
-    
+
     /**
      * Manufacture ApiInstances for each instance defined in the
      * given API and register them with the router.
@@ -44,6 +44,5 @@ public class APIFactory {
             router.register(context, ep.getURITemplate(), ep);
         }
     }
-    
-}
 
+}

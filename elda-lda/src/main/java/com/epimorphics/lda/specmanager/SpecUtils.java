@@ -7,25 +7,25 @@
 */
 
 /******************************************************************
-    File:        SpecUtils.java
-    Created by:  Dave Reynolds
-    Created on:  7 Feb 2010
- * 
+ File:        SpecUtils.java
+ Created by:  Dave Reynolds
+ Created on:  7 Feb 2010
+ *
  * (c) Copyright 2010, Epimorphics Limited
  * $Id:  $
  *****************************************************************/
 
 package com.epimorphics.lda.specmanager;
 
+import com.epimorphics.lda.exceptions.APIException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-import com.epimorphics.lda.exceptions.APIException;
-
 /**
  * Random utility methods for the implementing SpecManagers
- * 
+ *
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
@@ -42,11 +42,10 @@ public class SpecUtils {
         digester.update(key.getBytes());
         return digester.digest();
     }
-        
+
     public static boolean keyMatches(String uri, String key, byte[] digest) {
         byte[] newDigest = digestKey(uri, key);
         return Arrays.equals(digest, newDigest);
     }
-    
-}
 
+}

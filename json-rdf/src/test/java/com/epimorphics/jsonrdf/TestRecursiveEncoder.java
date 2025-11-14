@@ -7,10 +7,10 @@
 */
 
 /******************************************************************
-    File:        TestRecursiveEncoder.java
-    Created by:  Dave Reynolds
-    Created on:  3 Feb 2010
- * 
+ File:        TestRecursiveEncoder.java
+ Created by:  Dave Reynolds
+ Created on:  3 Feb 2010
+ *
  * (c) Copyright 2010, Epimorphics Limited
  * $Id:  $
  *****************************************************************/
@@ -38,18 +38,18 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import static com.epimorphics.jsonrdf.TestEncoder.*;
 
 public class TestRecursiveEncoder {
-    
-    public static String testRecursiveEncoding(String srcTTL,  String[] roots, String expectedEncoding, String baseUri) throws IOException {
+
+    public static String testRecursiveEncoding(String srcTTL, String[] roots, String expectedEncoding, String baseUri) throws IOException {
         try {
             Model src = ModelIOUtils.modelFromTurtle(srcTTL);
             StringWriter writer = new StringWriter();
             List<Resource> rootsR = modelRoots(roots, src);
             Context context = new Context();
-            if (baseUri != null) 
+            if (baseUri != null)
                 context.setBase(baseUri);
             Encoder.get(context).encodeRecursive(src, rootsR, writer);
             String encoding = writer.toString();
-            
+
             JsonArray actual = parseJSON(encoding).get(EncoderDefault.PNContent).getAsArray();
             if (expectedEncoding == null) {
                 System.out.println(actual);
@@ -57,17 +57,17 @@ public class TestRecursiveEncoder {
                 JsonArray expected = ParseWrapper.stringToJsonArray(expectedEncoding);
                 assertEquals(expected, actual);
             }
-            
-            StringReader reader = new StringReader( encoding );
+
+            StringReader reader = new StringReader(encoding);
             List<Resource> results = Decoder.decode(reader);
             if (roots != null) {
-                assertTrue( results.size() >= rootsR.size());
+                assertTrue(results.size() >= rootsR.size());
                 Iterator<Resource> i = results.iterator();
                 for (Resource r : rootsR) {
                     assertEquals(r, i.next());
                 }
             }
-            if ( ! results.isEmpty() ) {
+            if (!results.isEmpty()) {
                 Model found = results.get(0).getModel();
                 boolean ok = found.isIsomorphicWith(src);
                 if (!ok) {
@@ -79,29 +79,28 @@ public class TestRecursiveEncoder {
                     assertTrue("Compare returned model", ok);
                 }
             }
-            
-            
+
+
             return encoding;
         } catch (JsonException e) {
             throw new EncodingException(e.getMessage(), e);
         }
     }
-    
+
     @Test
     public void testSimpleNesting() throws IOException {
-        testRecursiveEncoding(":r :p (:r1 :r2). :r1 :q :r3. :r2 :q :r3.", new String[]{":r"}, 
+        testRecursiveEncoding(":r :p (:r1 :r2). :r1 :q :r3. :r2 :q :r3.", new String[]{":r"},
                 "[{'_about':'http://www.epimorphics.com/tools/example#r'," +
-                " 'p':[" +
-                "   {'q':'http://www.epimorphics.com/tools/example#r3','_about':'http://www.epimorphics.com/tools/example#r1'}," +
-                "   {'q':'http://www.epimorphics.com/tools/example#r3','_about':'http://www.epimorphics.com/tools/example#r2'}" +
-                "]}]", null );
+                        " 'p':[" +
+                        "   {'q':'http://www.epimorphics.com/tools/example#r3','_about':'http://www.epimorphics.com/tools/example#r1'}," +
+                        "   {'q':'http://www.epimorphics.com/tools/example#r3','_about':'http://www.epimorphics.com/tools/example#r2'}" +
+                        "]}]", null);
 
-        testRecursiveEncoding(":r :p (:r1 :r2). :r1 :q :r3. :r2 :q :r3.", new String[]{":r"}, 
+        testRecursiveEncoding(":r :p (:r1 :r2). :r1 :q :r3. :r2 :q :r3.", new String[]{":r"},
                 "[{'_about':'<r>'," +
-                " 'p':[" +
-                "   {'q':'<r3>','_about':'<r1>'}," +
-                "   {'q':'<r3>','_about':'<r2>'}" +
-                "]}]", "http://www.epimorphics.com/tools/example#" );
+                        " 'p':[" +
+                        "   {'q':'<r3>','_about':'<r1>'}," +
+                        "   {'q':'<r3>','_about':'<r2>'}" +
+                        "]}]", "http://www.epimorphics.com/tools/example#");
     }
 }
-

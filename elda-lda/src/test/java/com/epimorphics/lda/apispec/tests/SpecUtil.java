@@ -13,13 +13,13 @@ import com.hp.hpl.jena.rdf.model.Resource;
 
 public class SpecUtil {
 
-	/**
-	    Answer an APISPec derived from the specification at 
-	    <code>root</code>, loading no other models, and using the
-	    default FileManager to resolve files to load.
-	*/
-	public static APISpec specFrom( Resource root ) {
-		return new APISpec( "", "APP", EldaFileManager.get(), root, null );
-	}
+    /**
+     * Answer an APISPec derived from the specification at
+     * <code>root</code>, loading no other models, and using the
+     * default FileManager to resolve files to load.
+     */
+    public static APISpec specFrom(Resource root) {
+        return new APISpec("", "APP", EldaFileManager.get(), root, null);
+    }
 
 }

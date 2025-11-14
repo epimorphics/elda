@@ -13,16 +13,17 @@ import com.epimorphics.lda.support.EldaFileManager;
 import com.hp.hpl.jena.rdf.model.Model;
 
 /**
-    A ModelLoaderI that loads the model using the FileManager.
-    
- 	@author chris
-*/
+ * A ModelLoaderI that loads the model using the FileManager.
+ *
+ * @author chris
+ */
 public final class FileManagerModelLoader implements ModelLoader {
-	/**
-	    Load the model named by the uri using the FileManager's global
-	    instance.
-	*/
-	@Override public Model loadModel( String uri ) {
-	    return EldaFileManager.get().loadModel(uri);
-	}
+    /**
+     * Load the model named by the uri using the FileManager's global
+     * instance.
+     */
+    @Override
+    public Model loadModel(String uri) {
+        return EldaFileManager.get().loadModel(uri);
+    }
 }

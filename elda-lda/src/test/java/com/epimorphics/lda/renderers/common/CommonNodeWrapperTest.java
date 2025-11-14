@@ -10,24 +10,25 @@
 package com.epimorphics.lda.renderers.common;
 
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.rdfutil.DatasetWrapper;
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Unit tests for {@link CommonNodeWrapper}
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class CommonNodeWrapperTest
-{
+public class CommonNodeWrapperTest {
     /***********************************/
     /* Constants                       */
     /***********************************/
@@ -36,12 +37,12 @@ public class CommonNodeWrapperTest
     /* Static variables                */
     /***********************************/
 
-    static final Model testModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES +
+    static final Model testModel = ModelIOUtils.modelFromTurtle(Fixtures.COMMON_PREFIXES +
             "@prefix example: <http://example/foo#>. " +
             "example:foo example:p \"42\"^^xsd:int; " +
             "            example:q \"42\"^^xsd:string;" +
             "            example:r example:bar."
-            );
+    );
 
     /***********************************/
     /* Instance variables              */
@@ -53,52 +54,53 @@ public class CommonNodeWrapperTest
 
     /***********************************/
     /* External signature methods      */
+
     /***********************************/
 
     @Test
     public void testGetInt() {
         String ns = "http://example/foo#";
         ModelWrapper mw = modelWrapperFixture();
-        Resource foo = mw.getModel().getResource( ns + "foo" );
-        CommonNodeWrapper n = new CommonNodeWrapper( mw, foo );
+        Resource foo = mw.getModel().getResource(ns + "foo");
+        CommonNodeWrapper n = new CommonNodeWrapper(mw, foo);
 
         // various ways of specifying p
-        assertEquals( 42, n.getInt( mw.getModel().getProperty( ns+"p" ), -1 ) );
-        assertEquals( 42, n.getInt( ns+"p", -1 ) );
-        assertEquals( 42, n.getInt( "example:p", -1 ) );
+        assertEquals(42, n.getInt(mw.getModel().getProperty(ns + "p"), -1));
+        assertEquals(42, n.getInt(ns + "p", -1));
+        assertEquals(42, n.getInt("example:p", -1));
 
         // missing property
-        assertEquals( -123, n.getInt( "example:not-here", -123 ) );
+        assertEquals(-123, n.getInt("example:not-here", -123));
 
         // node is not a resource
-        CommonNodeWrapper l = new CommonNodeWrapper( mw, mw.getModel().createLiteral( "kermit" ) );
-        assertEquals( -1, l.getInt( "example:foo", -1 ));
+        CommonNodeWrapper l = new CommonNodeWrapper(mw, mw.getModel().createLiteral("kermit"));
+        assertEquals(-1, l.getInt("example:foo", -1));
 
         // value is not an int
-        assertEquals( -111, n.getInt( "example:q", -111 ));
+        assertEquals(-111, n.getInt("example:q", -111));
     }
 
     @Test
     public void testGetResource() {
         String ns = "http://example/foo#";
         ModelWrapper mw = modelWrapperFixture();
-        Resource foo = mw.getModel().getResource( ns + "foo" );
-        CommonNodeWrapper n = new CommonNodeWrapper( mw, foo );
+        Resource foo = mw.getModel().getResource(ns + "foo");
+        CommonNodeWrapper n = new CommonNodeWrapper(mw, foo);
 
         // various ways of specifying p
-        assertEquals( ResourceFactory.createResource( ns + "bar" ), n.getResource( mw.getModel().getProperty( ns+"r" ) ) );
-        assertEquals( ResourceFactory.createResource( ns + "bar" ), n.getResource( ns+"r" ) );
-        assertEquals( ResourceFactory.createResource( ns + "bar" ), n.getResource( "example:r" ) );
+        assertEquals(ResourceFactory.createResource(ns + "bar"), n.getResource(mw.getModel().getProperty(ns + "r")));
+        assertEquals(ResourceFactory.createResource(ns + "bar"), n.getResource(ns + "r"));
+        assertEquals(ResourceFactory.createResource(ns + "bar"), n.getResource("example:r"));
 
         // missing property
-        assertNull( n.getResource( "example:not-here" ) );
+        assertNull(n.getResource("example:not-here"));
 
         // node is not a resource
-        CommonNodeWrapper l = new CommonNodeWrapper( mw, mw.getModel().createLiteral( "kermit" ) );
-        assertNull( l.getResource( "example:p" ) );
+        CommonNodeWrapper l = new CommonNodeWrapper(mw, mw.getModel().createLiteral("kermit"));
+        assertNull(l.getResource("example:p"));
 
         // value is not a resource
-        assertNull( n.getResource( "example:p" ));
+        assertNull(n.getResource("example:p"));
     }
 
     @Test
@@ -106,26 +108,27 @@ public class CommonNodeWrapperTest
         String ns = "http://example/foo#";
         ModelWrapper mw = modelWrapperFixture();
 
-        Resource foo = mw.getModel().getResource( ns + "foo" );
-        CommonNodeWrapper n0 = new CommonNodeWrapper( mw, foo );
-        Resource endsWithHyphen = mw.getModel().getResource( "http://example.com/foo/-" );
-        CommonNodeWrapper n1 = new CommonNodeWrapper( mw, endsWithHyphen );
-        Resource endsWithSlash = mw.getModel().getResource( "http://example.com/foo/bar/" );
-        CommonNodeWrapper n2 = new CommonNodeWrapper( mw, endsWithSlash );
+        Resource foo = mw.getModel().getResource(ns + "foo");
+        CommonNodeWrapper n0 = new CommonNodeWrapper(mw, foo);
+        Resource endsWithHyphen = mw.getModel().getResource("http://example.com/foo/-");
+        CommonNodeWrapper n1 = new CommonNodeWrapper(mw, endsWithHyphen);
+        Resource endsWithSlash = mw.getModel().getResource("http://example.com/foo/bar/");
+        CommonNodeWrapper n2 = new CommonNodeWrapper(mw, endsWithSlash);
 
-        assertEquals(  "foo", n0.getName() );
-        assertEquals(  "foo/-", n1.getName() );
-        assertEquals(  "bar/", n2.getName() );
+        assertEquals("foo", n0.getName());
+        assertEquals("foo/-", n1.getName());
+        assertEquals("bar/", n2.getName());
     }
 
     /***********************************/
     /* Internal implementation methods */
+
     /***********************************/
 
     private ModelWrapper modelWrapperFixture() {
-        Dataset ds = DatasetFactory.create( testModel );
-        DatasetWrapper dsw = new DatasetWrapper( ds );
-        return new ModelWrapper( dsw );
+        Dataset ds = DatasetFactory.create(testModel);
+        DatasetWrapper dsw = new DatasetWrapper(ds);
+        return new ModelWrapper(dsw);
     }
 
     /***********************************/
@@ -133,4 +136,3 @@ public class CommonNodeWrapperTest
     /***********************************/
 
 }
-

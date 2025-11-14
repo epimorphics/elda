@@ -7,38 +7,35 @@
 */
 
 /**
- * 
+ *
  */
 package com.epimorphics.lda.vocabularies.test;
 
+import com.hp.hpl.jena.rdf.model.Resource;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
-import com.hp.hpl.jena.rdf.model.Resource;
-
-public class ResourceMatcher extends BaseMatcher<Resource>
-    {
+public class ResourceMatcher extends BaseMatcher<Resource> {
     protected final String ns;
     protected final String localName;
     protected final Class<? extends Resource> c;
-    
-    ResourceMatcher( Class<? extends Resource> c, String ns, String localName )
-        {
+
+    ResourceMatcher(Class<? extends Resource> c, String ns, String localName) {
         this.c = c;
         this.ns = ns;
         this.localName = localName;
-        }
-    
-    @Override public boolean matches( Object x )
-        { 
-        return 
-            c.isInstance( x ) 
-            && (ns + localName).equals( ((Resource) x).getURI() )
-            ;
-        }
-    
-    @Override public void describeTo( Description d )
-        {
-        d.appendText( "has local name " + localName + " in namespace " + ns );
-        }
     }
+
+    @Override
+    public boolean matches(Object x) {
+        return
+                c.isInstance(x)
+                        && (ns + localName).equals(((Resource) x).getURI())
+                ;
+    }
+
+    @Override
+    public void describeTo(Description d) {
+        d.appendText("has local name " + localName + " in namespace " + ns);
+    }
+}

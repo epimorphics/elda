@@ -9,9 +9,6 @@
 
 package com.epimorphics.lda.renderers.common;
 
-import org.jmock.Expectations;
-import org.jmock.integration.junit4.JUnitRuleMockery;
-
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.ShortnameService;
@@ -21,7 +18,8 @@ import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
-
+import org.jmock.Expectations;
+import org.jmock.integration.junit4.JUnitRuleMockery;
 
 
 /**
@@ -29,660 +27,666 @@ import com.hp.hpl.jena.vocabulary.RDF;
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class Fixtures
-{
+public class Fixtures {
     /***********************************/
     /* Constants                       */
     /***********************************/
 
     public static final Model PAGE_BWQ_MODEL;
     public static final Model PAGE_BWQ_PROPERTIES_MODEL;
+
     static {
-        PAGE_BWQ_MODEL = FileManager.get().loadModel( "src/test/resources/renderers/page_bwq_fixture.ttl" );
-        PAGE_BWQ_PROPERTIES_MODEL = FileManager.get().loadModel( "src/test/resources/renderers/page_bwq_with_properties_fixture.ttl" );
+        PAGE_BWQ_MODEL = FileManager.get().loadModel("src/test/resources/renderers/page_bwq_fixture.ttl");
+        PAGE_BWQ_PROPERTIES_MODEL = FileManager.get().loadModel("src/test/resources/renderers/page_bwq_with_properties_fixture.ttl");
     }
-    
-    /** Prefixes - the usual suspects */
+
+    /**
+     * Prefixes - the usual suspects
+     */
     public static final String COMMON_PREFIXES =
             "@prefix os:    <http://a9.com/-/spec/opensearch/1.1/> .\n" +
-            "@prefix opmv:  <http://purl.org/net/opmv/types/common#> .\n" +
-            "@prefix bw:    <http://environment.data.gov.uk/id/bathing-water/> .\n" +
-            "@prefix qb:    <http://purl.org/linked-data/cube#> .\n" +
-            "@prefix sparql: <http://purl.org/net/opmv/types/sparql#> .\n" +
-            "@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n" +
-            "@prefix elda:  <http://www.epimorphics.com/vocabularies/lda#> .\n" +
-            "@prefix dct:   <http://purl.org/dc/terms/> .\n" +
-            "@prefix def-bwq: <http://environment.data.gov.uk/def/bathing-water-quality/> .\n" +
-            "@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .\n" +
-            "@prefix api:   <http://purl.org/linked-data/api/vocab#> .\n" +
-            "@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
-            "@prefix xhv:   <http://www.w3.org/1999/xhtml/vocab#> .\n" +
-            "@prefix doap:  <http://usefulinc.com/ns/doap#> .\n" +
-            "@prefix hello: <http://epimorphics.com/public/vocabulary/games.ttl#> .\n" +
-            "@prefix skos: <http://www.w3.org/2004/02/skos/core#>.\n";
+                    "@prefix opmv:  <http://purl.org/net/opmv/types/common#> .\n" +
+                    "@prefix bw:    <http://environment.data.gov.uk/id/bathing-water/> .\n" +
+                    "@prefix qb:    <http://purl.org/linked-data/cube#> .\n" +
+                    "@prefix sparql: <http://purl.org/net/opmv/types/sparql#> .\n" +
+                    "@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .\n" +
+                    "@prefix elda:  <http://www.epimorphics.com/vocabularies/lda#> .\n" +
+                    "@prefix dct:   <http://purl.org/dc/terms/> .\n" +
+                    "@prefix def-bwq: <http://environment.data.gov.uk/def/bathing-water-quality/> .\n" +
+                    "@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .\n" +
+                    "@prefix api:   <http://purl.org/linked-data/api/vocab#> .\n" +
+                    "@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n" +
+                    "@prefix xhv:   <http://www.w3.org/1999/xhtml/vocab#> .\n" +
+                    "@prefix doap:  <http://usefulinc.com/ns/doap#> .\n" +
+                    "@prefix hello: <http://epimorphics.com/public/vocabulary/games.ttl#> .\n" +
+                    "@prefix skos: <http://www.w3.org/2004/02/skos/core#>.\n";
 
-    /** A page of bathing water results */
+    /**
+     * A page of bathing water results
+     */
     public static final String PAGE_BWQ =
             "def-bwq:SampleAssessment\n" +
-            "        rdfs:label  \"AsesiadSampl\"@cy , \"SampleAssessment\"@en .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04000/date/20140710/time/114000/recordDate/20140710>\n" +
-            "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
-            "        rdfs:label                    \"Low Newton sample assessment for 2014-W28\"@en ;\n" +
-            "        def-bwq:abnormalWeatherException\n" +
-            "                false ;\n" +
-            "        def-bwq:bathingWater          bw:ukc2101-04000 ;\n" +
-            "        def-bwq:escherichiaColiCount  18 ;\n" +
-            "        def-bwq:escherichiaColiQualifier\n" +
-            "                def-bwq:actual ;\n" +
-            "        def-bwq:intestinalEnterococciCount\n" +
-            "                10 ;\n" +
-            "        def-bwq:intestinalEnterococciQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        def-bwq:recordStatus          def-bwq:new ;\n" +
-            "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
-            "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:40:00> ;\n" +
-            "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
-            "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
-            "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04000> ;\n" +
-            "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000005> ;\n" +
-            "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04200/date/20140710/time/120000/recordDate/20140710>\n" +
-            "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
-            "        rdfs:label                    \"Warkworth sample assessment for 2014-W28\"@en ;\n" +
-            "        def-bwq:abnormalWeatherException\n" +
-            "                false ;\n" +
-            "        def-bwq:bathingWater          bw:ukc2101-04200 ;\n" +
-            "        def-bwq:escherichiaColiCount  136 ;\n" +
-            "        def-bwq:escherichiaColiQualifier\n" +
-            "                def-bwq:actual ;\n" +
-            "        def-bwq:intestinalEnterococciCount\n" +
-            "                10 ;\n" +
-            "        def-bwq:intestinalEnterococciQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        def-bwq:recordStatus          def-bwq:new ;\n" +
-            "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/I> ;\n" +
-            "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T12:00:00> ;\n" +
-            "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
-            "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
-            "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04200> ;\n" +
-            "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000006> ;\n" +
-            "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/def/bwq-cc-2012/I>\n" +
-            "        rdfs:label  \"Minimum\"@en , \"Isafswm\"@cy .\n" +
-            "\n" +
-            "<http://reference.data.gov.uk/id/year/2014>\n" +
-            "        rdfs:label  \"British Year:2014\"@en .\n" +
-            "\n" +
-            "<http://reference.data.gov.uk/id/week/2014-W28>\n" +
-            "        rdfs:label  \"British Week:2014-W28\"@en .\n" +
-            "\n" +
-            "bw:ukc2106-04400  rdfs:label  \"Newbiggin North\"@en .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03700/date/20140710/time/104000/recordDate/20140710>\n" +
-            "        a                             qb:Observation , def-bwq:SampleAssessment ;\n" +
-            "        rdfs:label                    \"Bamburgh Castle sample assessment for 2014-W28\"@en ;\n" +
-            "        def-bwq:abnormalWeatherException\n" +
-            "                false ;\n" +
-            "        def-bwq:bathingWater          bw:ukc2102-03700 ;\n" +
-            "        def-bwq:escherichiaColiCount  27 ;\n" +
-            "        def-bwq:escherichiaColiQualifier\n" +
-            "                def-bwq:actual ;\n" +
-            "        def-bwq:intestinalEnterococciCount\n" +
-            "                10 ;\n" +
-            "        def-bwq:intestinalEnterococciQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        def-bwq:recordStatus          def-bwq:new ;\n" +
-            "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
-            "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:40:00> ;\n" +
-            "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
-            "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
-            "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03700> ;\n" +
-            "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000002> ;\n" +
-            "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
-            "\n" +
-            "bw:ukc2101-04250  rdfs:label  \"Amble Links\"@en .\n" +
-            "\n" +
-            "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04250>\n" +
-            "        rdfs:label  \"Sampling point at Amble Links\"@en .\n" +
-            "\n" +
-            "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03900>\n" +
-            "        rdfs:label  \"Sampling point at Beadnell\"@en .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/def/bwq-cc-2012/G>\n" +
-            "        rdfs:label  \"Higher\"@en , \"Uchaf\"@cy .\n" +
-            "\n" +
-            "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03800>\n" +
-            "        rdfs:label  \"Sampling point at Seahouses North\"@en .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03800/date/20140710/time/105800/recordDate/20140710>\n" +
-            "        a                             qb:Observation , def-bwq:SampleAssessment ;\n" +
-            "        rdfs:label                    \"Seahouses North sample assessment for 2014-W28\"@en ;\n" +
-            "        def-bwq:abnormalWeatherException\n" +
-            "                false ;\n" +
-            "        def-bwq:bathingWater          bw:ukc2102-03800 ;\n" +
-            "        def-bwq:escherichiaColiCount  10 ;\n" +
-            "        def-bwq:escherichiaColiQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:intestinalEnterococciCount\n" +
-            "                10 ;\n" +
-            "        def-bwq:intestinalEnterococciQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        def-bwq:recordStatus          def-bwq:new ;\n" +
-            "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
-            "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:58:00> ;\n" +
-            "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
-            "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
-            "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03800> ;\n" +
-            "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000003> ;\n" +
-            "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
-            "\n" +
-            "bw:ukc2101-04200  rdfs:label  \"Warkworth\"@en .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04300/date/20140710/time/103500/recordDate/20140710>\n" +
-            "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
-            "        rdfs:label                    \"Druridge Bay South sample assessment for 2014-W28\"@en ;\n" +
-            "        def-bwq:abnormalWeatherException\n" +
-            "                false ;\n" +
-            "        def-bwq:bathingWater          bw:ukc2104-04300 ;\n" +
-            "        def-bwq:escherichiaColiCount  10 ;\n" +
-            "        def-bwq:escherichiaColiQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:intestinalEnterococciCount\n" +
-            "                10 ;\n" +
-            "        def-bwq:intestinalEnterococciQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        def-bwq:recordStatus          def-bwq:new ;\n" +
-            "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
-            "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:35:00> ;\n" +
-            "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
-            "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
-            "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04300> ;\n" +
-            "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000009> ;\n" +
-            "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
-            "\n" +
-            "bw:ukc2104-04300  rdfs:label  \"Druridge Bay South\"@en .\n" +
-            "\n" +
-            "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04400>\n" +
-            "        rdfs:label  \"Sampling point at Newbiggin North\"@en .\n" +
-            "\n" +
-            "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03700>\n" +
-            "        rdfs:label  \"Sampling point at Bamburgh Castle\"@en .\n" +
-            "\n" +
-            "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04300>\n" +
-            "        rdfs:label  \"Sampling point at Druridge Bay South\"@en .\n" +
-            "\n" +
-            "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03600>\n" +
-            "        rdfs:label  \"Sampling point at Spittal\"@en .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03600/date/20140710/time/100000/recordDate/20140710>\n" +
-            "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
-            "        rdfs:label                    \"Spittal sample assessment for 2014-W28\"@en ;\n" +
-            "        def-bwq:abnormalWeatherException\n" +
-            "                false ;\n" +
-            "        def-bwq:bathingWater          bw:ukc2102-03600 ;\n" +
-            "        def-bwq:escherichiaColiCount  127 ;\n" +
-            "        def-bwq:escherichiaColiQualifier\n" +
-            "                def-bwq:actual ;\n" +
-            "        def-bwq:intestinalEnterococciCount\n" +
-            "                10 ;\n" +
-            "        def-bwq:intestinalEnterococciQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        def-bwq:recordStatus          def-bwq:new ;\n" +
-            "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/I> ;\n" +
-            "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:00:00> ;\n" +
-            "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
-            "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
-            "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03600> ;\n" +
-            "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000001> ;\n" +
-            "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
-            "\n" +
-            "def-bwq:new  rdfs:label  \"newydd\"@cy , \"new\"@en .\n" +
-            "\n" +
-            "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04200>\n" +
-            "        rdfs:label  \"Sampling point at Warkworth\"@en .\n" +
-            "\n" +
-            "bw:ukc2101-04000  rdfs:label  \"Low Newton\"@en .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04400/date/20140710/time/100000/recordDate/20140710>\n" +
-            "        a                             qb:Observation , def-bwq:SampleAssessment ;\n" +
-            "        rdfs:label                    \"Newbiggin North sample assessment for 2014-W28\"@en ;\n" +
-            "        def-bwq:abnormalWeatherException\n" +
-            "                false ;\n" +
-            "        def-bwq:bathingWater          bw:ukc2106-04400 ;\n" +
-            "        def-bwq:escherichiaColiCount  55 ;\n" +
-            "        def-bwq:escherichiaColiQualifier\n" +
-            "                def-bwq:actual ;\n" +
-            "        def-bwq:intestinalEnterococciCount\n" +
-            "                91 ;\n" +
-            "        def-bwq:intestinalEnterococciQualifier\n" +
-            "                def-bwq:actual ;\n" +
-            "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        def-bwq:recordStatus          def-bwq:new ;\n" +
-            "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
-            "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:00:00> ;\n" +
-            "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
-            "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
-            "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04400> ;\n" +
-            "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000010> ;\n" +
-            "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
-            "\n" +
-            "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04000>\n" +
-            "        rdfs:label  \"Sampling point at Low Newton\"@en .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03900/date/20140710/time/111200/recordDate/20140710>\n" +
-            "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
-            "        rdfs:label                    \"Beadnell sample assessment for 2014-W28\"@en ;\n" +
-            "        def-bwq:abnormalWeatherException\n" +
-            "                false ;\n" +
-            "        def-bwq:bathingWater          bw:ukc2102-03900 ;\n" +
-            "        def-bwq:escherichiaColiCount  10 ;\n" +
-            "        def-bwq:escherichiaColiQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:intestinalEnterococciCount\n" +
-            "                10 ;\n" +
-            "        def-bwq:intestinalEnterococciQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        def-bwq:recordStatus          def-bwq:new ;\n" +
-            "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
-            "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:12:00> ;\n" +
-            "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
-            "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
-            "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03900> ;\n" +
-            "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000004> ;\n" +
-            "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season>\n" +
-            "        rdfs:label  \"Bathing Water Quality - In-Season Assessment Dataset (eaew).\"@en .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04280/date/20140710/time/111000/recordDate/20140710>\n" +
-            "        a                             qb:Observation , def-bwq:SampleAssessment ;\n" +
-            "        rdfs:label                    \"Druridge Bay North sample assessment for 2014-W28\"@en ;\n" +
-            "        def-bwq:abnormalWeatherException\n" +
-            "                false ;\n" +
-            "        def-bwq:bathingWater          bw:ukc2104-04280 ;\n" +
-            "        def-bwq:escherichiaColiCount  10 ;\n" +
-            "        def-bwq:escherichiaColiQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:intestinalEnterococciCount\n" +
-            "                10 ;\n" +
-            "        def-bwq:intestinalEnterococciQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        def-bwq:recordStatus          def-bwq:new ;\n" +
-            "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
-            "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:10:00> ;\n" +
-            "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
-            "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
-            "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04280> ;\n" +
-            "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000008> ;\n" +
-            "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
-            "\n" +
-            "bw:ukc2102-03900  rdfs:label  \"Beadnell\"@en .\n" +
-            "\n" +
-            "bw:ukc2102-03800  rdfs:label  \"Seahouses North\"@en .\n" +
-            "\n" +
-            "def-bwq:actual  rdfs:label  \"gwirioneddol\"@cy , \"actual\"@en .\n" +
-            "\n" +
-            "bw:ukc2102-03700  rdfs:label  \"Bamburgh Castle\"@en .\n" +
-            "\n" +
-            "def-bwq:lessThan  rdfs:label  \"llai-na\"@cy , \"less-than\"@en .\n" +
-            "\n" +
-            "bw:ukc2102-03600  rdfs:label  \"Spittal\"@en .\n" +
-            "\n" +
-            "bw:ukc2104-04280  rdfs:label  \"Druridge Bay North\"@en .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04250/date/20140710/time/113000/recordDate/20140710>\n" +
-            "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
-            "        rdfs:label                    \"Amble Links sample assessment for 2014-W28\"@en ;\n" +
-            "        def-bwq:abnormalWeatherException\n" +
-            "                false ;\n" +
-            "        def-bwq:bathingWater          bw:ukc2101-04250 ;\n" +
-            "        def-bwq:escherichiaColiCount  55 ;\n" +
-            "        def-bwq:escherichiaColiQualifier\n" +
-            "                def-bwq:actual ;\n" +
-            "        def-bwq:intestinalEnterococciCount\n" +
-            "                10 ;\n" +
-            "        def-bwq:intestinalEnterococciQualifier\n" +
-            "                def-bwq:lessThan ;\n" +
-            "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        def-bwq:recordStatus          def-bwq:new ;\n" +
-            "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
-            "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:30:00> ;\n" +
-            "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
-            "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
-            "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04250> ;\n" +
-            "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
-            "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000007> ;\n" +
-            "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
-            "\n" +
-            "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04280>\n" +
-            "        rdfs:label  \"Sampling point at Druridge Bay North\"@en .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.json?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
-            "        rdfs:label      \"json\" ;\n" +
-            "        dct:format      [ rdfs:label  \"application/json\" ] ;\n" +
-            "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=assessment&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"assessment\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:properties   \"bwq_samplingPoint.samplePointNotation\" , \"totalColiformCount\" , \"sampleClassification.complianceCodeNotation\" , \"entrovirusQualifier.countQualifierNotation\" , \"escherichiaColiQualifier.countQualifierNotation\" , \"salmonellaPresent.presenceNotation\" , \"intestinalEnterococciQualifier.countQualifierNotation\" , \"faecalStreptococciQualifier.countQualifierNotation\" , \"escherichiaColiCount\" , \"faecalColiformCount\" , \"abnormalWeatherException\" , \"faecalStreptococciCount\" , \"sampleDateTime.inXSDDateTime\" , \"intestinalEnterococciCount\" , \"source\" , \"sampleWeek.label\" , \"bwq_samplingPoint.name\" , \"salmonellaPresent.name\" , \"bwq_bathingWater.name\" , \"dataset\" , \"type\" , \"totalColiformQualifier.countQualifierNotation\" , \"faecalColiformQualifier.countQualifierNotation\" , \"entrovirusCount\" , \"label\" , \"sampleClassification.name\" , \"bwq_bathingWater.eubwidNotation\" ;\n" +
-            "        elda:viewName    \"assessment\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.text?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
-            "        rdfs:label      \"text\" ;\n" +
-            "        dct:format      [ rdfs:label  \"text/plain\" ] ;\n" +
-            "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.html?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
-            "        rdfs:label      \"html\" ;\n" +
-            "        dct:format      [ rdfs:label  \"text/html\" ] ;\n" +
-            "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=location&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"location\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:properties   \"label\" , \"source\" , \"bwq_bathingWater.eubwidNotation\" , \"totalColiformQualifier.countQualifierNotation\" , \"escherichiaColiQualifier.countQualifierNotation\" , \"dataset\" , \"entrovirusCount\" , \"faecalColiformCount\" , \"bwq_samplingPoint.northing\" , \"faecalColiformQualifier.countQualifierNotation\" , \"sampleDateTime.inXSDDateTime\" , \"sampleWeek.label\" , \"type\" , \"sampleClassification.complianceCodeNotation\" , \"bwq_samplingPoint.easting\" , \"intestinalEnterococciQualifier.countQualifierNotation\" , \"bwq_bathingWater.name\" , \"bwq_samplingPoint.samplePointNotation\" , \"entrovirusQualifier.countQualifierNotation\" , \"bwq_samplingPoint.long\" , \"escherichiaColiCount\" , \"intestinalEnterococciCount\" , \"bwq_samplingPoint.lat\" , \"faecalStreptococciQualifier.countQualifierNotation\" , \"faecalStreptococciCount\" , \"salmonellaPresent.presenceNotation\" , \"totalColiformCount\" , \"sampleClassification.name\" , \"salmonellaPresent.name\" , \"bwq_samplingPoint.name\" , \"abnormalWeatherException\" ;\n" +
-            "        elda:viewName    \"location\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"all\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        elda:viewName    \"all\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=streptococci&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"streptococci\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:properties   \"type\" , \"bwq_bathingWater.name\" , \"bwq_samplingPoint.name\" , \"source\" , \"sampleWeek.label\" , \"bwq_samplingPoint.samplePointNotation\" , \"sampleDateTime.inXSDDateTime\" , \"bwq_bathingWater.eubwidNotation\" , \"dataset\" , \"faecalStreptococciQualifier.countQualifierNotation\" , \"faecalStreptococciCount\" , \"label\" , \"abnormalWeatherException\" ;\n" +
-            "        elda:viewName    \"streptococci\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=description&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"description\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        elda:viewName    \"description\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.xml?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
-            "        rdfs:label      \"xml\" ;\n" +
-            "        dct:format      [ rdfs:label  \"application/xml\" ] ;\n" +
-            "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
-            "\n" +
-            "_:b0    a                   <http://www.w3.org/ns/sparql-service-description#Service> ;\n" +
-            "        api:sparqlEndpoint  <http://localhost:3030/bwq/query> ;\n" +
-            "        <http://www.w3.org/ns/sparql-service-description#url>\n" +
-            "                <http://localhost:3030/bwq/query> .\n" +
-            "\n" +
-            "<https://elda.googlecode.com/hg/>\n" +
-            "        a              doap:Repository ;\n" +
-            "        doap:browse    <http://code.google.com/p/elda/source/browse/> ;\n" +
-            "        doap:location  <https://elda.googlecode.com> .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=basic&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"basic\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:properties   \"type\" , \"label\" ;\n" +
-            "        elda:viewName    \"basic\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=intestinalEnterococci&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"intestinalEnterococci\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:properties   \"bwq_samplingPoint.name\" , \"bwq_samplingPoint.samplePointNotation\" , \"bwq_bathingWater.name\" , \"intestinalEnterococciQualifier.countQualifierNotation\" , \"source\" , \"label\" , \"sampleWeek.label\" , \"bwq_bathingWater.eubwidNotation\" , \"abnormalWeatherException\" , \"sampleDateTime.inXSDDateTime\" , \"intestinalEnterococciCount\" , \"type\" , \"dataset\" ;\n" +
-            "        elda:viewName    \"intestinalEnterococci\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=coliforms&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"coliforms\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:properties   \"bwq_bathingWater.eubwidNotation\" , \"abnormalWeatherException\" , \"bwq_samplingPoint.name\" , \"faecalColiformQualifier.countQualifierNotation\" , \"label\" , \"bwq_bathingWater.name\" , \"type\" , \"sampleWeek.label\" , \"dataset\" , \"sampleDateTime.inXSDDateTime\" , \"source\" , \"totalColiformCount\" , \"bwq_samplingPoint.samplePointNotation\" , \"faecalColiformCount\" , \"totalColiformQualifier.countQualifierNotation\" ;\n" +
-            "        elda:viewName    \"coliforms\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all>\n" +
-            "        a               api:ListEndpoint ;\n" +
-            "        dct:hasPart     <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:definition  <http://environment.data.gov.uk/meta/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all> .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.csv?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
-            "        rdfs:label      \"csv\" ;\n" +
-            "        dct:format      [ rdfs:label  \"text/csv\" ] ;\n" +
-            "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=entrovirus&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"entrovirus\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:properties   \"dataset\" , \"abnormalWeatherException\" , \"type\" , \"entrovirusQualifier.countQualifierNotation\" , \"sampleWeek.label\" , \"bwq_bathingWater.name\" , \"bwq_samplingPoint.samplePointNotation\" , \"bwq_samplingPoint.name\" , \"source\" , \"sampleDateTime.inXSDDateTime\" , \"bwq_bathingWater.eubwidNotation\" , \"entrovirusCount\" , \"label\" ;\n" +
-            "        elda:viewName    \"entrovirus\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=assessment-csv&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"assessment-csv\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:properties   \"sampleClassification.complianceCodeNotation\" , \"entrovirusQualifier.countQualifierNotation\" , \"bwq_samplingPoint.samplePointNotation\" , \"totalColiformQualifier.countQualifierNotation\" , \"sampleDateTime.inXSDDateTime\" , \"faecalColiformQualifier.countQualifierNotation\" , \"intestinalEnterococciCount\" , \"sampleWeek.label\" , \"abnormalWeatherException\" , \"escherichiaColiCount\" , \"totalColiformCount\" , \"bwq_bathingWater.name\" , \"faecalStreptococciCount\" , \"escherichiaColiQualifier.countQualifierNotation\" , \"faecalColiformCount\" , \"faecalStreptococciQualifier.countQualifierNotation\" , \"entrovirusCount\" , \"salmonellaPresent.presenceNotation\" , \"intestinalEnterococciQualifier.countQualifierNotation\" , \"bwq_bathingWater.eubwidNotation\" ;\n" +
-            "        elda:viewName    \"assessment-csv\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.rdf?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
-            "        rdfs:label      \"rdf\" ;\n" +
-            "        dct:format      [ rdfs:label  \"application/rdf+xml\" ] ;\n" +
-            "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
-            "        a                            api:Page ;\n" +
-            "        rdfs:label                   \"ttl\" ;\n" +
-            "        os:itemsPerPage              \"10\"^^xsd:long ;\n" +
-            "        os:startIndex                \"1\"^^xsd:long ;\n" +
-            "        dct:format                   [ rdfs:label\n" +
-            "                          \"text/turtle\" ] ;\n" +
-            "        dct:hasFormat                <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.text?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.rdf?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.csv?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.xml?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.html?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.json?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        dct:hasVersion               <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=assessment-csv&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=description&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=basic&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=streptococci&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=coliforms&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=location&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=assessment&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=salmonella&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=classification&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=entrovirus&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=escherichiaColi&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=intestinalEnterococci&_metadata=all&_page=0> ;\n" +
-            "        dct:isFormatOf               <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        dct:isPartOf                 <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all> ;\n" +
-            "        api:definition               <http://environment.data.gov.uk/meta/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all> ;\n" +
-            "        api:extendedMetadataVersion  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all&_page=0> ;\n" +
-            "        api:items                    ( <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03600/date/20140710/time/100000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03700/date/20140710/time/104000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03800/date/20140710/time/105800/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03900/date/20140710/time/111200/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04000/date/20140710/time/114000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04200/date/20140710/time/120000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04250/date/20140710/time/113000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04280/date/20140710/time/111000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04300/date/20140710/time/103500/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04400/date/20140710/time/100000/recordDate/20140710> ) ;\n" +
-            "        api:page                     \"0\"^^xsd:long ;\n" +
-            "        api:wasResultOf              [ a                    api:Execution ;\n" +
-            "                                       api:processor        [ a              api:Service ;\n" +
-            "                                                              opmv:software  elda:Elda_1.2.33\n" +
-            "                                                            ] ;\n" +
-            "                                       api:selectionResult  [ a                sparql:QueryResult ;\n" +
-            "                                                              sparql:endpoint  _:b0 ;\n" +
-            "                                                              sparql:query     [ rdf:value  \"PREFIX bwq-iss: <http://environment.data.gov.uk/data/bathing-water-quality/in-season/slice/>\\nPREFIX def-bwq: <http://environment.data.gov.uk/def/bathing-water-quality/>\\nPREFIX def-ef: <http://location.data.gov.uk/def/ef/SamplingPoint/>\\nPREFIX qb: <http://purl.org/linked-data/cube#>\\nSELECT DISTINCT ?item\\nWHERE {\\nbwq-iss:latest qb:observation ?item.OPTIONAL { ?item def-bwq:samplingPoint ?___1 . ?___1 def-ef:samplePointNotation ?___0 . }\\n}  ORDER BY  ?___0  ?item OFFSET 0 LIMIT 10\" ]\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"new\" ;\n" +
-            "                                                              api:property  def-bwq:new\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"created\" ;\n" +
-            "                                                              api:property  dct:created\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"sampleWeek\" ;\n" +
-            "                                                              api:property  def-bwq:sampleWeek\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"SampleAssessment\" ;\n" +
-            "                                                              api:property  def-bwq:SampleAssessment\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"bwq_bathingWater\" ;\n" +
-            "                                                              api:property  def-bwq:bathingWater\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"sampleDateTime\" ;\n" +
-            "                                                              api:property  def-bwq:sampleDateTime\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"api_definition\" ;\n" +
-            "                                                              api:property  api:definition\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"escherichiaColiCount\" ;\n" +
-            "                                                              api:property  def-bwq:escherichiaColiCount\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"dataset\" ;\n" +
-            "                                                              api:property  qb:dataSet\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"escherichiaColiQualifier\" ;\n" +
-            "                                                              api:property  def-bwq:escherichiaColiQualifier\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"first\" ;\n" +
-            "                                                              api:property  xhv:first\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"bwq_samplingPoint\" ;\n" +
-            "                                                              api:property  def-bwq:samplingPoint\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"hasPart\" ;\n" +
-            "                                                              api:property  dct:hasPart\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"isPartOf\" ;\n" +
-            "                                                              api:property  dct:isPartOf\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"sampleYear\" ;\n" +
-            "                                                              api:property  def-bwq:sampleYear\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"recordDate\" ;\n" +
-            "                                                              api:property  def-bwq:recordDate\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"itemsPerPage\" ;\n" +
-            "                                                              api:property  os:itemsPerPage\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"extendedMetadataVersion\" ;\n" +
-            "                                                              api:property  api:extendedMetadataVersion\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"startIndex\" ;\n" +
-            "                                                              api:property  os:startIndex\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"items\" ;\n" +
-            "                                                              api:property  api:items\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"Observation\" ;\n" +
-            "                                                              api:property  qb:Observation\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"type\" ;\n" +
-            "                                                              api:property  rdf:type\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"intestinalEnterococciCount\" ;\n" +
-            "                                                              api:property  def-bwq:intestinalEnterococciCount\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"next\" ;\n" +
-            "                                                              api:property  xhv:next\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"intestinalEnterococciQualifier\" ;\n" +
-            "                                                              api:property  def-bwq:intestinalEnterococciQualifier\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"label\" ;\n" +
-            "                                                              api:property  rdfs:label\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"source\" ;\n" +
-            "                                                              api:property  dct:source\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"recordStatus\" ;\n" +
-            "                                                              api:property  def-bwq:recordStatus\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"abnormalWeatherException\" ;\n" +
-            "                                                              api:property  def-bwq:abnormalWeatherException\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"sampleClassification\" ;\n" +
-            "                                                              api:property  def-bwq:sampleClassification\n" +
-            "                                                            ] ;\n" +
-            "                                       api:termBinding      [ api:label     \"page\" ;\n" +
-            "                                                              api:property  api:page\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_suppress_ipto\" ;\n" +
-            "                                                              api:value  \"yes\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"bw\" ;\n" +
-            "                                                              api:value  \"http://environment.data.gov.uk/id/bathing-water/{eubwid}\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"sp\" ;\n" +
-            "                                                              api:value  \"http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/{bwspid}\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_rootPath\" ;\n" +
-            "                                                              api:value  \"null\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_suffix\" ;\n" +
-            "                                                              api:value  \"ttl\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_lang\" ;\n" +
-            "                                                              api:value  \"en,cy\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_page\" ;\n" +
-            "                                                              api:value  \"0\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"visibleSparqlEndpoint\" ;\n" +
-            "                                                              api:value  \"http://environment.data.gov.uk/sparql/bwq/query\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_HOST\" ;\n" +
-            "                                                              api:value  \"environment.data.gov.uk\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_view\" ;\n" +
-            "                                                              api:value  \"all\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_metadata\" ;\n" +
-            "                                                              api:value  \"all\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_properties\" ;\n" +
-            "                                                              api:value  \"\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_APP\" ;\n" +
-            "                                                              api:value  \"\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_resourceRoot\" ;\n" +
-            "                                                              api:value  \"/lda-assets/\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"_strip_has\" ;\n" +
-            "                                                              api:value  \"yes\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:variableBinding  [ api:label  \"visibleSparqlForm\" ;\n" +
-            "                                                              api:value  \"http://environment.data.gov.uk/lab/sparql.html\"\n" +
-            "                                                            ] ;\n" +
-            "                                       api:viewingResult    [ a                sparql:QueryResult ;\n" +
-            "                                                              sparql:endpoint  _:b0 ;\n" +
-            "                                                              sparql:query     [ rdf:value  \"DESCRIBE\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04250/date/20140710/time/113000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03800/date/20140710/time/105800/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04400/date/20140710/time/100000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04280/date/20140710/time/111000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04000/date/20140710/time/114000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04300/date/20140710/time/103500/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04200/date/20140710/time/120000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03700/date/20140710/time/104000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03900/date/20140710/time/111200/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03600/date/20140710/time/100000/recordDate/20140710>\" ]\n" +
-            "                                                            ]\n" +
-            "                                     ] ;\n" +
-            "        xhv:first                    <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all&_page=0> ;\n" +
-            "        xhv:next                     <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all&_page=1> .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=salmonella&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"salmonella\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:properties   \"bwq_samplingPoint.name\" , \"type\" , \"bwq_bathingWater.eubwidNotation\" , \"sampleWeek.label\" , \"label\" , \"abnormalWeatherException\" , \"bwq_samplingPoint.samplePointNotation\" , \"bwq_bathingWater.name\" , \"source\" , \"salmonellaPresent.name\" , \"dataset\" , \"salmonellaPresent.presenceNotation\" , \"sampleDateTime.inXSDDateTime\" ;\n" +
-            "        elda:viewName    \"salmonella\" .\n" +
-            "\n" +
-            "elda:Elda_1.2.33  a     doap:Version ;\n" +
-            "        rdfs:label      \"Elda 1.2.33\" ;\n" +
-            "        doap:releaseOf  [ rdfs:label                 \"Elda\" ;\n" +
-            "                          doap:bug-database          <http://code.google.com/p/elda/issues/list> ;\n" +
-            "                          doap:homepage              <http://elda.googlecode.com> ;\n" +
-            "                          doap:implements            \"http://code.google.com/p/linked-data-api/wiki/Specification\" ;\n" +
-            "                          doap:programming-language  \"Java\" ;\n" +
-            "                          doap:repository            <https://elda.googlecode.com/hg/> ;\n" +
-            "                          doap:wiki                  <http://code.google.com/p/elda/w/list>\n" +
-            "                        ] ;\n" +
-            "        doap:revision   \"1.2.33\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=classification&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"classification\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:properties   \"sampleClassification.name\" , \"bwq_samplingPoint.samplePointNotation\" , \"dataset\" , \"bwq_bathingWater.eubwidNotation\" , \"sampleDateTime.inXSDDateTime\" , \"abnormalWeatherException\" , \"sampleClassification.complianceCodeNotation\" , \"bwq_samplingPoint.name\" , \"sampleWeek.label\" , \"bwq_bathingWater.name\" , \"source\" , \"type\" , \"label\" ;\n" +
-            "        elda:viewName    \"classification\" .\n" +
-            "\n" +
-            "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=escherichiaColi&_metadata=all&_page=0>\n" +
-            "        rdfs:label       \"escherichiaColi\" ;\n" +
-            "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
-            "        api:properties   \"type\" , \"sampleDateTime.inXSDDateTime\" , \"sampleWeek.label\" , \"dataset\" , \"bwq_samplingPoint.name\" , \"label\" , \"escherichiaColiCount\" , \"escherichiaColiQualifier.countQualifierNotation\" , \"bwq_bathingWater.name\" , \"source\" , \"bwq_bathingWater.eubwidNotation\" , \"bwq_samplingPoint.samplePointNotation\" , \"abnormalWeatherException\" ;\n" +
-            "        elda:viewName    \"escherichiaColi\" .";
+                    "        rdfs:label  \"AsesiadSampl\"@cy , \"SampleAssessment\"@en .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04000/date/20140710/time/114000/recordDate/20140710>\n" +
+                    "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
+                    "        rdfs:label                    \"Low Newton sample assessment for 2014-W28\"@en ;\n" +
+                    "        def-bwq:abnormalWeatherException\n" +
+                    "                false ;\n" +
+                    "        def-bwq:bathingWater          bw:ukc2101-04000 ;\n" +
+                    "        def-bwq:escherichiaColiCount  18 ;\n" +
+                    "        def-bwq:escherichiaColiQualifier\n" +
+                    "                def-bwq:actual ;\n" +
+                    "        def-bwq:intestinalEnterococciCount\n" +
+                    "                10 ;\n" +
+                    "        def-bwq:intestinalEnterococciQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        def-bwq:recordStatus          def-bwq:new ;\n" +
+                    "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
+                    "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:40:00> ;\n" +
+                    "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
+                    "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
+                    "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04000> ;\n" +
+                    "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000005> ;\n" +
+                    "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04200/date/20140710/time/120000/recordDate/20140710>\n" +
+                    "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
+                    "        rdfs:label                    \"Warkworth sample assessment for 2014-W28\"@en ;\n" +
+                    "        def-bwq:abnormalWeatherException\n" +
+                    "                false ;\n" +
+                    "        def-bwq:bathingWater          bw:ukc2101-04200 ;\n" +
+                    "        def-bwq:escherichiaColiCount  136 ;\n" +
+                    "        def-bwq:escherichiaColiQualifier\n" +
+                    "                def-bwq:actual ;\n" +
+                    "        def-bwq:intestinalEnterococciCount\n" +
+                    "                10 ;\n" +
+                    "        def-bwq:intestinalEnterococciQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        def-bwq:recordStatus          def-bwq:new ;\n" +
+                    "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/I> ;\n" +
+                    "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T12:00:00> ;\n" +
+                    "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
+                    "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
+                    "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04200> ;\n" +
+                    "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000006> ;\n" +
+                    "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/def/bwq-cc-2012/I>\n" +
+                    "        rdfs:label  \"Minimum\"@en , \"Isafswm\"@cy .\n" +
+                    "\n" +
+                    "<http://reference.data.gov.uk/id/year/2014>\n" +
+                    "        rdfs:label  \"British Year:2014\"@en .\n" +
+                    "\n" +
+                    "<http://reference.data.gov.uk/id/week/2014-W28>\n" +
+                    "        rdfs:label  \"British Week:2014-W28\"@en .\n" +
+                    "\n" +
+                    "bw:ukc2106-04400  rdfs:label  \"Newbiggin North\"@en .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03700/date/20140710/time/104000/recordDate/20140710>\n" +
+                    "        a                             qb:Observation , def-bwq:SampleAssessment ;\n" +
+                    "        rdfs:label                    \"Bamburgh Castle sample assessment for 2014-W28\"@en ;\n" +
+                    "        def-bwq:abnormalWeatherException\n" +
+                    "                false ;\n" +
+                    "        def-bwq:bathingWater          bw:ukc2102-03700 ;\n" +
+                    "        def-bwq:escherichiaColiCount  27 ;\n" +
+                    "        def-bwq:escherichiaColiQualifier\n" +
+                    "                def-bwq:actual ;\n" +
+                    "        def-bwq:intestinalEnterococciCount\n" +
+                    "                10 ;\n" +
+                    "        def-bwq:intestinalEnterococciQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        def-bwq:recordStatus          def-bwq:new ;\n" +
+                    "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
+                    "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:40:00> ;\n" +
+                    "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
+                    "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
+                    "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03700> ;\n" +
+                    "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000002> ;\n" +
+                    "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
+                    "\n" +
+                    "bw:ukc2101-04250  rdfs:label  \"Amble Links\"@en .\n" +
+                    "\n" +
+                    "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04250>\n" +
+                    "        rdfs:label  \"Sampling point at Amble Links\"@en .\n" +
+                    "\n" +
+                    "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03900>\n" +
+                    "        rdfs:label  \"Sampling point at Beadnell\"@en .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/def/bwq-cc-2012/G>\n" +
+                    "        rdfs:label  \"Higher\"@en , \"Uchaf\"@cy .\n" +
+                    "\n" +
+                    "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03800>\n" +
+                    "        rdfs:label  \"Sampling point at Seahouses North\"@en .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03800/date/20140710/time/105800/recordDate/20140710>\n" +
+                    "        a                             qb:Observation , def-bwq:SampleAssessment ;\n" +
+                    "        rdfs:label                    \"Seahouses North sample assessment for 2014-W28\"@en ;\n" +
+                    "        def-bwq:abnormalWeatherException\n" +
+                    "                false ;\n" +
+                    "        def-bwq:bathingWater          bw:ukc2102-03800 ;\n" +
+                    "        def-bwq:escherichiaColiCount  10 ;\n" +
+                    "        def-bwq:escherichiaColiQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:intestinalEnterococciCount\n" +
+                    "                10 ;\n" +
+                    "        def-bwq:intestinalEnterococciQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        def-bwq:recordStatus          def-bwq:new ;\n" +
+                    "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
+                    "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:58:00> ;\n" +
+                    "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
+                    "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
+                    "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03800> ;\n" +
+                    "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000003> ;\n" +
+                    "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
+                    "\n" +
+                    "bw:ukc2101-04200  rdfs:label  \"Warkworth\"@en .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04300/date/20140710/time/103500/recordDate/20140710>\n" +
+                    "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
+                    "        rdfs:label                    \"Druridge Bay South sample assessment for 2014-W28\"@en ;\n" +
+                    "        def-bwq:abnormalWeatherException\n" +
+                    "                false ;\n" +
+                    "        def-bwq:bathingWater          bw:ukc2104-04300 ;\n" +
+                    "        def-bwq:escherichiaColiCount  10 ;\n" +
+                    "        def-bwq:escherichiaColiQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:intestinalEnterococciCount\n" +
+                    "                10 ;\n" +
+                    "        def-bwq:intestinalEnterococciQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        def-bwq:recordStatus          def-bwq:new ;\n" +
+                    "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
+                    "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:35:00> ;\n" +
+                    "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
+                    "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
+                    "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04300> ;\n" +
+                    "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000009> ;\n" +
+                    "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
+                    "\n" +
+                    "bw:ukc2104-04300  rdfs:label  \"Druridge Bay South\"@en .\n" +
+                    "\n" +
+                    "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04400>\n" +
+                    "        rdfs:label  \"Sampling point at Newbiggin North\"@en .\n" +
+                    "\n" +
+                    "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03700>\n" +
+                    "        rdfs:label  \"Sampling point at Bamburgh Castle\"@en .\n" +
+                    "\n" +
+                    "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04300>\n" +
+                    "        rdfs:label  \"Sampling point at Druridge Bay South\"@en .\n" +
+                    "\n" +
+                    "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03600>\n" +
+                    "        rdfs:label  \"Sampling point at Spittal\"@en .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03600/date/20140710/time/100000/recordDate/20140710>\n" +
+                    "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
+                    "        rdfs:label                    \"Spittal sample assessment for 2014-W28\"@en ;\n" +
+                    "        def-bwq:abnormalWeatherException\n" +
+                    "                false ;\n" +
+                    "        def-bwq:bathingWater          bw:ukc2102-03600 ;\n" +
+                    "        def-bwq:escherichiaColiCount  127 ;\n" +
+                    "        def-bwq:escherichiaColiQualifier\n" +
+                    "                def-bwq:actual ;\n" +
+                    "        def-bwq:intestinalEnterococciCount\n" +
+                    "                10 ;\n" +
+                    "        def-bwq:intestinalEnterococciQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        def-bwq:recordStatus          def-bwq:new ;\n" +
+                    "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/I> ;\n" +
+                    "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:00:00> ;\n" +
+                    "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
+                    "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
+                    "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03600> ;\n" +
+                    "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000001> ;\n" +
+                    "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
+                    "\n" +
+                    "def-bwq:new  rdfs:label  \"newydd\"@cy , \"new\"@en .\n" +
+                    "\n" +
+                    "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04200>\n" +
+                    "        rdfs:label  \"Sampling point at Warkworth\"@en .\n" +
+                    "\n" +
+                    "bw:ukc2101-04000  rdfs:label  \"Low Newton\"@en .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04400/date/20140710/time/100000/recordDate/20140710>\n" +
+                    "        a                             qb:Observation , def-bwq:SampleAssessment ;\n" +
+                    "        rdfs:label                    \"Newbiggin North sample assessment for 2014-W28\"@en ;\n" +
+                    "        def-bwq:abnormalWeatherException\n" +
+                    "                false ;\n" +
+                    "        def-bwq:bathingWater          bw:ukc2106-04400 ;\n" +
+                    "        def-bwq:escherichiaColiCount  55 ;\n" +
+                    "        def-bwq:escherichiaColiQualifier\n" +
+                    "                def-bwq:actual ;\n" +
+                    "        def-bwq:intestinalEnterococciCount\n" +
+                    "                91 ;\n" +
+                    "        def-bwq:intestinalEnterococciQualifier\n" +
+                    "                def-bwq:actual ;\n" +
+                    "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        def-bwq:recordStatus          def-bwq:new ;\n" +
+                    "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
+                    "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T10:00:00> ;\n" +
+                    "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
+                    "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
+                    "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04400> ;\n" +
+                    "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000010> ;\n" +
+                    "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
+                    "\n" +
+                    "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04000>\n" +
+                    "        rdfs:label  \"Sampling point at Low Newton\"@en .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03900/date/20140710/time/111200/recordDate/20140710>\n" +
+                    "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
+                    "        rdfs:label                    \"Beadnell sample assessment for 2014-W28\"@en ;\n" +
+                    "        def-bwq:abnormalWeatherException\n" +
+                    "                false ;\n" +
+                    "        def-bwq:bathingWater          bw:ukc2102-03900 ;\n" +
+                    "        def-bwq:escherichiaColiCount  10 ;\n" +
+                    "        def-bwq:escherichiaColiQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:intestinalEnterococciCount\n" +
+                    "                10 ;\n" +
+                    "        def-bwq:intestinalEnterococciQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        def-bwq:recordStatus          def-bwq:new ;\n" +
+                    "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
+                    "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:12:00> ;\n" +
+                    "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
+                    "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
+                    "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/03900> ;\n" +
+                    "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000004> ;\n" +
+                    "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season>\n" +
+                    "        rdfs:label  \"Bathing Water Quality - In-Season Assessment Dataset (eaew).\"@en .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04280/date/20140710/time/111000/recordDate/20140710>\n" +
+                    "        a                             qb:Observation , def-bwq:SampleAssessment ;\n" +
+                    "        rdfs:label                    \"Druridge Bay North sample assessment for 2014-W28\"@en ;\n" +
+                    "        def-bwq:abnormalWeatherException\n" +
+                    "                false ;\n" +
+                    "        def-bwq:bathingWater          bw:ukc2104-04280 ;\n" +
+                    "        def-bwq:escherichiaColiCount  10 ;\n" +
+                    "        def-bwq:escherichiaColiQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:intestinalEnterococciCount\n" +
+                    "                10 ;\n" +
+                    "        def-bwq:intestinalEnterococciQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        def-bwq:recordStatus          def-bwq:new ;\n" +
+                    "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
+                    "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:10:00> ;\n" +
+                    "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
+                    "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
+                    "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04280> ;\n" +
+                    "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000008> ;\n" +
+                    "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
+                    "\n" +
+                    "bw:ukc2102-03900  rdfs:label  \"Beadnell\"@en .\n" +
+                    "\n" +
+                    "bw:ukc2102-03800  rdfs:label  \"Seahouses North\"@en .\n" +
+                    "\n" +
+                    "def-bwq:actual  rdfs:label  \"gwirioneddol\"@cy , \"actual\"@en .\n" +
+                    "\n" +
+                    "bw:ukc2102-03700  rdfs:label  \"Bamburgh Castle\"@en .\n" +
+                    "\n" +
+                    "def-bwq:lessThan  rdfs:label  \"llai-na\"@cy , \"less-than\"@en .\n" +
+                    "\n" +
+                    "bw:ukc2102-03600  rdfs:label  \"Spittal\"@en .\n" +
+                    "\n" +
+                    "bw:ukc2104-04280  rdfs:label  \"Druridge Bay North\"@en .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04250/date/20140710/time/113000/recordDate/20140710>\n" +
+                    "        a                             def-bwq:SampleAssessment , qb:Observation ;\n" +
+                    "        rdfs:label                    \"Amble Links sample assessment for 2014-W28\"@en ;\n" +
+                    "        def-bwq:abnormalWeatherException\n" +
+                    "                false ;\n" +
+                    "        def-bwq:bathingWater          bw:ukc2101-04250 ;\n" +
+                    "        def-bwq:escherichiaColiCount  55 ;\n" +
+                    "        def-bwq:escherichiaColiQualifier\n" +
+                    "                def-bwq:actual ;\n" +
+                    "        def-bwq:intestinalEnterococciCount\n" +
+                    "                10 ;\n" +
+                    "        def-bwq:intestinalEnterococciQualifier\n" +
+                    "                def-bwq:lessThan ;\n" +
+                    "        def-bwq:recordDate            \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        def-bwq:recordStatus          def-bwq:new ;\n" +
+                    "        def-bwq:sampleClassification  <http://environment.data.gov.uk/def/bwq-cc-2012/G> ;\n" +
+                    "        def-bwq:sampleDateTime        <http://reference.data.gov.uk/id/gregorian-instant/2014-07-10T11:30:00> ;\n" +
+                    "        def-bwq:sampleWeek            <http://reference.data.gov.uk/id/week/2014-W28> ;\n" +
+                    "        def-bwq:sampleYear            <http://reference.data.gov.uk/id/year/2014> ;\n" +
+                    "        def-bwq:samplingPoint         <http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04250> ;\n" +
+                    "        dct:created                   \"2014-07-15Z\"^^xsd:date ;\n" +
+                    "        dct:source                    <http://environment.data.gov.uk/sources/bwq/eaew/input/in-season-ea_bw_sample_update_20140715-20140715-073353-67.csv#line=000007> ;\n" +
+                    "        qb:dataSet                    <http://environment.data.gov.uk/data/bathing-water-quality/eaew/in-season> .\n" +
+                    "\n" +
+                    "<http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/04280>\n" +
+                    "        rdfs:label  \"Sampling point at Druridge Bay North\"@en .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.json?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
+                    "        rdfs:label      \"json\" ;\n" +
+                    "        dct:format      [ rdfs:label  \"application/json\" ] ;\n" +
+                    "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=assessment&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"assessment\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:properties   \"bwq_samplingPoint.samplePointNotation\" , \"totalColiformCount\" , \"sampleClassification.complianceCodeNotation\" , \"entrovirusQualifier.countQualifierNotation\" , \"escherichiaColiQualifier.countQualifierNotation\" , \"salmonellaPresent.presenceNotation\" , \"intestinalEnterococciQualifier.countQualifierNotation\" , \"faecalStreptococciQualifier.countQualifierNotation\" , \"escherichiaColiCount\" , \"faecalColiformCount\" , \"abnormalWeatherException\" , \"faecalStreptococciCount\" , \"sampleDateTime.inXSDDateTime\" , \"intestinalEnterococciCount\" , \"source\" , \"sampleWeek.label\" , \"bwq_samplingPoint.name\" , \"salmonellaPresent.name\" , \"bwq_bathingWater.name\" , \"dataset\" , \"type\" , \"totalColiformQualifier.countQualifierNotation\" , \"faecalColiformQualifier.countQualifierNotation\" , \"entrovirusCount\" , \"label\" , \"sampleClassification.name\" , \"bwq_bathingWater.eubwidNotation\" ;\n" +
+                    "        elda:viewName    \"assessment\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.text?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
+                    "        rdfs:label      \"text\" ;\n" +
+                    "        dct:format      [ rdfs:label  \"text/plain\" ] ;\n" +
+                    "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.html?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
+                    "        rdfs:label      \"html\" ;\n" +
+                    "        dct:format      [ rdfs:label  \"text/html\" ] ;\n" +
+                    "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=location&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"location\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:properties   \"label\" , \"source\" , \"bwq_bathingWater.eubwidNotation\" , \"totalColiformQualifier.countQualifierNotation\" , \"escherichiaColiQualifier.countQualifierNotation\" , \"dataset\" , \"entrovirusCount\" , \"faecalColiformCount\" , \"bwq_samplingPoint.northing\" , \"faecalColiformQualifier.countQualifierNotation\" , \"sampleDateTime.inXSDDateTime\" , \"sampleWeek.label\" , \"type\" , \"sampleClassification.complianceCodeNotation\" , \"bwq_samplingPoint.easting\" , \"intestinalEnterococciQualifier.countQualifierNotation\" , \"bwq_bathingWater.name\" , \"bwq_samplingPoint.samplePointNotation\" , \"entrovirusQualifier.countQualifierNotation\" , \"bwq_samplingPoint.long\" , \"escherichiaColiCount\" , \"intestinalEnterococciCount\" , \"bwq_samplingPoint.lat\" , \"faecalStreptococciQualifier.countQualifierNotation\" , \"faecalStreptococciCount\" , \"salmonellaPresent.presenceNotation\" , \"totalColiformCount\" , \"sampleClassification.name\" , \"salmonellaPresent.name\" , \"bwq_samplingPoint.name\" , \"abnormalWeatherException\" ;\n" +
+                    "        elda:viewName    \"location\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"all\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        elda:viewName    \"all\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=streptococci&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"streptococci\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:properties   \"type\" , \"bwq_bathingWater.name\" , \"bwq_samplingPoint.name\" , \"source\" , \"sampleWeek.label\" , \"bwq_samplingPoint.samplePointNotation\" , \"sampleDateTime.inXSDDateTime\" , \"bwq_bathingWater.eubwidNotation\" , \"dataset\" , \"faecalStreptococciQualifier.countQualifierNotation\" , \"faecalStreptococciCount\" , \"label\" , \"abnormalWeatherException\" ;\n" +
+                    "        elda:viewName    \"streptococci\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=description&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"description\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        elda:viewName    \"description\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.xml?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
+                    "        rdfs:label      \"xml\" ;\n" +
+                    "        dct:format      [ rdfs:label  \"application/xml\" ] ;\n" +
+                    "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
+                    "\n" +
+                    "_:b0    a                   <http://www.w3.org/ns/sparql-service-description#Service> ;\n" +
+                    "        api:sparqlEndpoint  <http://localhost:3030/bwq/query> ;\n" +
+                    "        <http://www.w3.org/ns/sparql-service-description#url>\n" +
+                    "                <http://localhost:3030/bwq/query> .\n" +
+                    "\n" +
+                    "<https://elda.googlecode.com/hg/>\n" +
+                    "        a              doap:Repository ;\n" +
+                    "        doap:browse    <http://code.google.com/p/elda/source/browse/> ;\n" +
+                    "        doap:location  <https://elda.googlecode.com> .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=basic&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"basic\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:properties   \"type\" , \"label\" ;\n" +
+                    "        elda:viewName    \"basic\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=intestinalEnterococci&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"intestinalEnterococci\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:properties   \"bwq_samplingPoint.name\" , \"bwq_samplingPoint.samplePointNotation\" , \"bwq_bathingWater.name\" , \"intestinalEnterococciQualifier.countQualifierNotation\" , \"source\" , \"label\" , \"sampleWeek.label\" , \"bwq_bathingWater.eubwidNotation\" , \"abnormalWeatherException\" , \"sampleDateTime.inXSDDateTime\" , \"intestinalEnterococciCount\" , \"type\" , \"dataset\" ;\n" +
+                    "        elda:viewName    \"intestinalEnterococci\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=coliforms&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"coliforms\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:properties   \"bwq_bathingWater.eubwidNotation\" , \"abnormalWeatherException\" , \"bwq_samplingPoint.name\" , \"faecalColiformQualifier.countQualifierNotation\" , \"label\" , \"bwq_bathingWater.name\" , \"type\" , \"sampleWeek.label\" , \"dataset\" , \"sampleDateTime.inXSDDateTime\" , \"source\" , \"totalColiformCount\" , \"bwq_samplingPoint.samplePointNotation\" , \"faecalColiformCount\" , \"totalColiformQualifier.countQualifierNotation\" ;\n" +
+                    "        elda:viewName    \"coliforms\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all>\n" +
+                    "        a               api:ListEndpoint ;\n" +
+                    "        dct:hasPart     <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:definition  <http://environment.data.gov.uk/meta/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all> .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.csv?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
+                    "        rdfs:label      \"csv\" ;\n" +
+                    "        dct:format      [ rdfs:label  \"text/csv\" ] ;\n" +
+                    "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=entrovirus&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"entrovirus\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:properties   \"dataset\" , \"abnormalWeatherException\" , \"type\" , \"entrovirusQualifier.countQualifierNotation\" , \"sampleWeek.label\" , \"bwq_bathingWater.name\" , \"bwq_samplingPoint.samplePointNotation\" , \"bwq_samplingPoint.name\" , \"source\" , \"sampleDateTime.inXSDDateTime\" , \"bwq_bathingWater.eubwidNotation\" , \"entrovirusCount\" , \"label\" ;\n" +
+                    "        elda:viewName    \"entrovirus\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=assessment-csv&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"assessment-csv\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:properties   \"sampleClassification.complianceCodeNotation\" , \"entrovirusQualifier.countQualifierNotation\" , \"bwq_samplingPoint.samplePointNotation\" , \"totalColiformQualifier.countQualifierNotation\" , \"sampleDateTime.inXSDDateTime\" , \"faecalColiformQualifier.countQualifierNotation\" , \"intestinalEnterococciCount\" , \"sampleWeek.label\" , \"abnormalWeatherException\" , \"escherichiaColiCount\" , \"totalColiformCount\" , \"bwq_bathingWater.name\" , \"faecalStreptococciCount\" , \"escherichiaColiQualifier.countQualifierNotation\" , \"faecalColiformCount\" , \"faecalStreptococciQualifier.countQualifierNotation\" , \"entrovirusCount\" , \"salmonellaPresent.presenceNotation\" , \"intestinalEnterococciQualifier.countQualifierNotation\" , \"bwq_bathingWater.eubwidNotation\" ;\n" +
+                    "        elda:viewName    \"assessment-csv\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.rdf?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
+                    "        rdfs:label      \"rdf\" ;\n" +
+                    "        dct:format      [ rdfs:label  \"application/rdf+xml\" ] ;\n" +
+                    "        dct:isFormatOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy>\n" +
+                    "        a                            api:Page ;\n" +
+                    "        rdfs:label                   \"ttl\" ;\n" +
+                    "        os:itemsPerPage              \"10\"^^xsd:long ;\n" +
+                    "        os:startIndex                \"1\"^^xsd:long ;\n" +
+                    "        dct:format                   [ rdfs:label\n" +
+                    "                          \"text/turtle\" ] ;\n" +
+                    "        dct:hasFormat                <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.text?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.rdf?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.csv?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.xml?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.html?_view=all&_metadata=all&_page=0&_lang=en,cy> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.json?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        dct:hasVersion               <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=assessment-csv&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=description&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=basic&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=streptococci&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=coliforms&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=location&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=assessment&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=salmonella&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=classification&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=entrovirus&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=escherichiaColi&_metadata=all&_page=0> , <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=intestinalEnterococci&_metadata=all&_page=0> ;\n" +
+                    "        dct:isFormatOf               <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        dct:isPartOf                 <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all> ;\n" +
+                    "        api:definition               <http://environment.data.gov.uk/meta/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all> ;\n" +
+                    "        api:extendedMetadataVersion  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all&_page=0> ;\n" +
+                    "        api:items                    ( <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03600/date/20140710/time/100000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03700/date/20140710/time/104000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03800/date/20140710/time/105800/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03900/date/20140710/time/111200/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04000/date/20140710/time/114000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04200/date/20140710/time/120000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04250/date/20140710/time/113000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04280/date/20140710/time/111000/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04300/date/20140710/time/103500/recordDate/20140710> <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04400/date/20140710/time/100000/recordDate/20140710> ) ;\n" +
+                    "        api:page                     \"0\"^^xsd:long ;\n" +
+                    "        api:wasResultOf              [ a                    api:Execution ;\n" +
+                    "                                       api:processor        [ a              api:Service ;\n" +
+                    "                                                              opmv:software  elda:Elda_1.2.33\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:selectionResult  [ a                sparql:QueryResult ;\n" +
+                    "                                                              sparql:endpoint  _:b0 ;\n" +
+                    "                                                              sparql:query     [ rdf:value  \"PREFIX bwq-iss: <http://environment.data.gov.uk/data/bathing-water-quality/in-season/slice/>\\nPREFIX def-bwq: <http://environment.data.gov.uk/def/bathing-water-quality/>\\nPREFIX def-ef: <http://location.data.gov.uk/def/ef/SamplingPoint/>\\nPREFIX qb: <http://purl.org/linked-data/cube#>\\nSELECT DISTINCT ?item\\nWHERE {\\nbwq-iss:latest qb:observation ?item.OPTIONAL { ?item def-bwq:samplingPoint ?___1 . ?___1 def-ef:samplePointNotation ?___0 . }\\n}  ORDER BY  ?___0  ?item OFFSET 0 LIMIT 10\" ]\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"new\" ;\n" +
+                    "                                                              api:property  def-bwq:new\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"created\" ;\n" +
+                    "                                                              api:property  dct:created\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"sampleWeek\" ;\n" +
+                    "                                                              api:property  def-bwq:sampleWeek\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"SampleAssessment\" ;\n" +
+                    "                                                              api:property  def-bwq:SampleAssessment\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"bwq_bathingWater\" ;\n" +
+                    "                                                              api:property  def-bwq:bathingWater\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"sampleDateTime\" ;\n" +
+                    "                                                              api:property  def-bwq:sampleDateTime\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"api_definition\" ;\n" +
+                    "                                                              api:property  api:definition\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"escherichiaColiCount\" ;\n" +
+                    "                                                              api:property  def-bwq:escherichiaColiCount\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"dataset\" ;\n" +
+                    "                                                              api:property  qb:dataSet\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"escherichiaColiQualifier\" ;\n" +
+                    "                                                              api:property  def-bwq:escherichiaColiQualifier\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"first\" ;\n" +
+                    "                                                              api:property  xhv:first\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"bwq_samplingPoint\" ;\n" +
+                    "                                                              api:property  def-bwq:samplingPoint\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"hasPart\" ;\n" +
+                    "                                                              api:property  dct:hasPart\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"isPartOf\" ;\n" +
+                    "                                                              api:property  dct:isPartOf\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"sampleYear\" ;\n" +
+                    "                                                              api:property  def-bwq:sampleYear\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"recordDate\" ;\n" +
+                    "                                                              api:property  def-bwq:recordDate\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"itemsPerPage\" ;\n" +
+                    "                                                              api:property  os:itemsPerPage\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"extendedMetadataVersion\" ;\n" +
+                    "                                                              api:property  api:extendedMetadataVersion\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"startIndex\" ;\n" +
+                    "                                                              api:property  os:startIndex\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"items\" ;\n" +
+                    "                                                              api:property  api:items\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"Observation\" ;\n" +
+                    "                                                              api:property  qb:Observation\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"type\" ;\n" +
+                    "                                                              api:property  rdf:type\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"intestinalEnterococciCount\" ;\n" +
+                    "                                                              api:property  def-bwq:intestinalEnterococciCount\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"next\" ;\n" +
+                    "                                                              api:property  xhv:next\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"intestinalEnterococciQualifier\" ;\n" +
+                    "                                                              api:property  def-bwq:intestinalEnterococciQualifier\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"label\" ;\n" +
+                    "                                                              api:property  rdfs:label\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"source\" ;\n" +
+                    "                                                              api:property  dct:source\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"recordStatus\" ;\n" +
+                    "                                                              api:property  def-bwq:recordStatus\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"abnormalWeatherException\" ;\n" +
+                    "                                                              api:property  def-bwq:abnormalWeatherException\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"sampleClassification\" ;\n" +
+                    "                                                              api:property  def-bwq:sampleClassification\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:termBinding      [ api:label     \"page\" ;\n" +
+                    "                                                              api:property  api:page\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_suppress_ipto\" ;\n" +
+                    "                                                              api:value  \"yes\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"bw\" ;\n" +
+                    "                                                              api:value  \"http://environment.data.gov.uk/id/bathing-water/{eubwid}\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"sp\" ;\n" +
+                    "                                                              api:value  \"http://location.data.gov.uk/so/ef/SamplingPoint/bwsp.eaew/{bwspid}\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_rootPath\" ;\n" +
+                    "                                                              api:value  \"null\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_suffix\" ;\n" +
+                    "                                                              api:value  \"ttl\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_lang\" ;\n" +
+                    "                                                              api:value  \"en,cy\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_page\" ;\n" +
+                    "                                                              api:value  \"0\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"visibleSparqlEndpoint\" ;\n" +
+                    "                                                              api:value  \"http://environment.data.gov.uk/sparql/bwq/query\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_HOST\" ;\n" +
+                    "                                                              api:value  \"environment.data.gov.uk\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_view\" ;\n" +
+                    "                                                              api:value  \"all\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_metadata\" ;\n" +
+                    "                                                              api:value  \"all\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_properties\" ;\n" +
+                    "                                                              api:value  \"\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_APP\" ;\n" +
+                    "                                                              api:value  \"\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_resourceRoot\" ;\n" +
+                    "                                                              api:value  \"/lda-assets/\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"_strip_has\" ;\n" +
+                    "                                                              api:value  \"yes\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:variableBinding  [ api:label  \"visibleSparqlForm\" ;\n" +
+                    "                                                              api:value  \"http://environment.data.gov.uk/lab/sparql.html\"\n" +
+                    "                                                            ] ;\n" +
+                    "                                       api:viewingResult    [ a                sparql:QueryResult ;\n" +
+                    "                                                              sparql:endpoint  _:b0 ;\n" +
+                    "                                                              sparql:query     [ rdf:value  \"DESCRIBE\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04250/date/20140710/time/113000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03800/date/20140710/time/105800/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04400/date/20140710/time/100000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04280/date/20140710/time/111000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04000/date/20140710/time/114000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04300/date/20140710/time/103500/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/04200/date/20140710/time/120000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03700/date/20140710/time/104000/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03900/date/20140710/time/111200/recordDate/20140710>\\n  <http://environment.data.gov.uk/data/bathing-water-quality/in-season/sample/point/03600/date/20140710/time/100000/recordDate/20140710>\" ]\n" +
+                    "                                                            ]\n" +
+                    "                                     ] ;\n" +
+                    "        xhv:first                    <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all&_page=0> ;\n" +
+                    "        xhv:next                     <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=all&_metadata=all&_page=1> .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=salmonella&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"salmonella\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:properties   \"bwq_samplingPoint.name\" , \"type\" , \"bwq_bathingWater.eubwidNotation\" , \"sampleWeek.label\" , \"label\" , \"abnormalWeatherException\" , \"bwq_samplingPoint.samplePointNotation\" , \"bwq_bathingWater.name\" , \"source\" , \"salmonellaPresent.name\" , \"dataset\" , \"salmonellaPresent.presenceNotation\" , \"sampleDateTime.inXSDDateTime\" ;\n" +
+                    "        elda:viewName    \"salmonella\" .\n" +
+                    "\n" +
+                    "elda:Elda_1.2.33  a     doap:Version ;\n" +
+                    "        rdfs:label      \"Elda 1.2.33\" ;\n" +
+                    "        doap:releaseOf  [ rdfs:label                 \"Elda\" ;\n" +
+                    "                          doap:bug-database          <http://code.google.com/p/elda/issues/list> ;\n" +
+                    "                          doap:homepage              <http://elda.googlecode.com> ;\n" +
+                    "                          doap:implements            \"http://code.google.com/p/linked-data-api/wiki/Specification\" ;\n" +
+                    "                          doap:programming-language  \"Java\" ;\n" +
+                    "                          doap:repository            <https://elda.googlecode.com/hg/> ;\n" +
+                    "                          doap:wiki                  <http://code.google.com/p/elda/w/list>\n" +
+                    "                        ] ;\n" +
+                    "        doap:revision   \"1.2.33\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=classification&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"classification\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:properties   \"sampleClassification.name\" , \"bwq_samplingPoint.samplePointNotation\" , \"dataset\" , \"bwq_bathingWater.eubwidNotation\" , \"sampleDateTime.inXSDDateTime\" , \"abnormalWeatherException\" , \"sampleClassification.complianceCodeNotation\" , \"bwq_samplingPoint.name\" , \"sampleWeek.label\" , \"bwq_bathingWater.name\" , \"source\" , \"type\" , \"label\" ;\n" +
+                    "        elda:viewName    \"classification\" .\n" +
+                    "\n" +
+                    "<http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=escherichiaColi&_metadata=all&_page=0>\n" +
+                    "        rdfs:label       \"escherichiaColi\" ;\n" +
+                    "        dct:isVersionOf  <http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy> ;\n" +
+                    "        api:properties   \"type\" , \"sampleDateTime.inXSDDateTime\" , \"sampleWeek.label\" , \"dataset\" , \"bwq_samplingPoint.name\" , \"label\" , \"escherichiaColiCount\" , \"escherichiaColiQualifier.countQualifierNotation\" , \"bwq_bathingWater.name\" , \"source\" , \"bwq_bathingWater.eubwidNotation\" , \"bwq_samplingPoint.samplePointNotation\" , \"abnormalWeatherException\" ;\n" +
+                    "        elda:viewName    \"escherichiaColi\" .";
 
-    /** Metadata from a BWQ page */
+    /**
+     * Metadata from a BWQ page
+     */
     public static final String PAGE_METADATA_BWQ = "<http://localhost:8080/standalone/bwq/doc/bathing-water?_view=all&_metadata=all&_page=0>\n" +
             "        <http://www.w3.org/2000/01/rdf-schema#label>\n" +
             "                \"all\" ;\n" +
@@ -1523,16 +1527,15 @@ public class Fixtures
             "";
 
 
-
     /***********************************/
     /* Static variables                */
     /***********************************/
     public static final Model shortNameServiceFixtureModel = ModelIOUtils.modelFromTurtle
-            ( "@prefix : <http://example/test/>. "
+            ("@prefix : <http://example/test/>. "
                     + "<stub:root> a api:API. "
                     + ":p a rdf:Property; api:label 'name_p'. "
                     + ":q a rdf:Property; api:label 'name_q'; rdfs:range xsd:decimal."
-                    );
+            );
 
 
     /***********************************/
@@ -1550,44 +1553,46 @@ public class Fixtures
     /**
      * Create an APIResultSet fixture without trying to do all that that very complex
      * class does.
+     *
      * @return Mocked {@link APIResultSet}
      */
-    public static APIResultSet mockResultSet( JUnitRuleMockery context,
-                                              final Model apiResultsModel,
-                                              final Model apiObjectModel,
-                                              final Model apiMetadataModel ) {
-        return mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel, "APIResultSet" );
+    public static APIResultSet mockResultSet(JUnitRuleMockery context,
+                                             final Model apiResultsModel,
+                                             final Model apiObjectModel,
+                                             final Model apiMetadataModel) {
+        return mockResultSet(context, apiResultsModel, apiObjectModel, apiMetadataModel, "APIResultSet");
     }
-    
+
     /**
      * Create a named APIResultSet fixture without trying to do all that that very complex
      * class does.
+     *
      * @return Mocked {@link APIResultSet}
      */
-    public static APIResultSet mockResultSet( JUnitRuleMockery context,
-                                              final Model apiResultsModel,
-                                              final Model apiObjectModel,
-                                              final Model apiMetadataModel,
-                                              String mockName ) {
-        final APIResultSet results = context.mock( APIResultSet.class, mockName );
-        final APIResultSet.MergedModels mm = context.mock( APIResultSet.MergedModels.class, mockName + "-mm" );
-        final Resource root = apiResultsModel.listResourcesWithProperty( RDF.type, API.Page ).next();
+    public static APIResultSet mockResultSet(JUnitRuleMockery context,
+                                             final Model apiResultsModel,
+                                             final Model apiObjectModel,
+                                             final Model apiMetadataModel,
+                                             String mockName) {
+        final APIResultSet results = context.mock(APIResultSet.class, mockName);
+        final APIResultSet.MergedModels mm = context.mock(APIResultSet.MergedModels.class, mockName + "-mm");
+        final Resource root = apiResultsModel.listResourcesWithProperty(RDF.type, API.Page).next();
 
         context.checking(new Expectations() {{
-            atLeast(0).of (results).getModels();
-            will( returnValue( mm ) );
+            atLeast(0).of(results).getModels();
+            will(returnValue(mm));
 
-            atLeast(0).of (mm).getMergedModel();
-            will( returnValue( apiResultsModel ));
+            atLeast(0).of(mm).getMergedModel();
+            will(returnValue(apiResultsModel));
 
-            atLeast(0).of (mm).getObjectModel();
-            will( returnValue( apiObjectModel));
+            atLeast(0).of(mm).getObjectModel();
+            will(returnValue(apiObjectModel));
 
-            atLeast(0).of (mm).getMetaModel();
-            will( returnValue( apiMetadataModel ));
+            atLeast(0).of(mm).getMetaModel();
+            will(returnValue(apiMetadataModel));
 
-            atLeast(0).of (results).getRoot();
-            will( returnValue( root ) );
+            atLeast(0).of(results).getRoot();
+            will(returnValue(root));
         }});
 
         return results;
@@ -1597,11 +1602,9 @@ public class Fixtures
      * @return Stub {@link ShortnameService}
      */
     public static ShortnameService shortNameServiceFixture() {
-        Resource root = shortNameServiceFixtureModel.createResource( "stub:root" );
-        return new StandardShortnameService( root, shortNameServiceFixtureModel, null );
+        Resource root = shortNameServiceFixtureModel.createResource("stub:root");
+        return new StandardShortnameService(root, shortNameServiceFixtureModel, null);
     }
-
-
 
 
     /***********************************/
@@ -1613,4 +1616,3 @@ public class Fixtures
     /***********************************/
 
 }
-

@@ -10,25 +10,28 @@
 package com.epimorphics.lda.renderers.common;
 
 
-import static org.junit.Assert.*;
-
-import java.util.*;
-
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import org.jmock.imposters.ByteBuddyClassImposteriser;
 import org.jmock.integration.junit4.JUnitRuleMockery;
 import org.jmock.lib.concurrent.Synchroniser;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
-import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.hp.hpl.jena.rdf.model.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link EldaView}
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class EldaViewTest
-{
+public class EldaViewTest {
     /***********************************/
     /* Constants                       */
     /***********************************/
@@ -39,7 +42,7 @@ public class EldaViewTest
 
     static final Model apiMetadataModel = ModelFactory.createDefaultModel();
     static final Model apiObjectModel = ModelFactory.createDefaultModel();
-    static final Model apiResultsModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES + Fixtures.PAGE_BWQ );
+    static final Model apiResultsModel = ModelIOUtils.modelFromTurtle(Fixtures.COMMON_PREFIXES + Fixtures.PAGE_BWQ);
 
     static final String view_uri = "http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_lang=en,cy&_view=salmonella&_metadata=all&_page=0";
 
@@ -47,7 +50,8 @@ public class EldaViewTest
     /* Instance variables              */
     /***********************************/
 
-    @Rule public JUnitRuleMockery context = new JUnitRuleMockery() {{
+    @Rule
+    public JUnitRuleMockery context = new JUnitRuleMockery() {{
         // we are forced to use the legacy imposteriser because APIResultSet does not
         // have an interface that it conforms to
         setImposteriser(ByteBuddyClassImposteriser.INSTANCE);
@@ -64,22 +68,23 @@ public class EldaViewTest
 
     /***********************************/
     /* External signature methods      */
+
     /***********************************/
 
     @Before
     public void before() {
-        rm = new ResultsModel( Fixtures.mockResultSet( context, apiResultsModel, apiObjectModel, apiMetadataModel ) );
-        view = new EldaView( rm.page(), ResourceFactory.createResource( view_uri ) );
+        rm = new ResultsModel(Fixtures.mockResultSet(context, apiResultsModel, apiObjectModel, apiMetadataModel));
+        view = new EldaView(rm.page(), ResourceFactory.createResource(view_uri));
     }
 
     @Test
     public void testLabel() {
-        assertEquals( "salmonella", view.label() );
+        assertEquals("salmonella", view.label());
     }
 
     @Test
     public void testViewName() {
-        assertEquals( "salmonella", view.viewName() );
+        assertEquals("salmonella", view.viewName());
     }
 
     @Test
@@ -87,37 +92,37 @@ public class EldaViewTest
         List<PropertyPath> paths = view.propertyPaths();
         List<String> pathStrs = new ArrayList<String>();
 
-        for (PropertyPath p: paths) {
-            pathStrs.add( p.toString() );
+        for (PropertyPath p : paths) {
+            pathStrs.add(p.toString());
         }
 
-        assertNotNull( paths );
-        assertEquals( 13, paths.size() );
-        assertTrue( pathStrs.contains( "sampleWeek.label" ) );
+        assertNotNull(paths);
+        assertEquals(13, paths.size());
+        assertTrue(pathStrs.contains("sampleWeek.label"));
     }
 
     @Test
     public void testIsFormatOf() {
-        assertEquals( "http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy", view.isVersionOf().getURI() );
+        assertEquals("http://environment.data.gov.uk/doc/bathing-water-quality/in-season/latest.ttl?_view=all&_metadata=all&_page=0&_lang=en,cy", view.isVersionOf().getURI());
     }
 
     @Test
     public void testBasicView() {
-        EldaView basic = new EldaView.BasicView( rm.page() );
+        EldaView basic = new EldaView.BasicView(rm.page());
 
-        assertEquals( "basic", basic.label() );
-        assertEquals( 2, basic.propertyPaths().size() );
-        assertEquals( "rdfs:label", basic.propertyPaths().get( 0 ).toString() );
-        assertEquals( "rdf:type", basic.propertyPaths().get( 1 ).toString() );
+        assertEquals("basic", basic.label());
+        assertEquals(2, basic.propertyPaths().size());
+        assertEquals("rdfs:label", basic.propertyPaths().get(0).toString());
+        assertEquals("rdf:type", basic.propertyPaths().get(1).toString());
     }
 
     @Test
     public void testDescriptionView() {
-        EldaView all = new EldaView.DescriptionView( rm.page() );
+        EldaView all = new EldaView.DescriptionView(rm.page());
 
-        assertEquals( "all", all.label() );
-        assertEquals( 1, all.propertyPaths().size() );
-        assertEquals( "*", all.propertyPaths().get( 0 ).toString() );
+        assertEquals("all", all.label());
+        assertEquals(1, all.propertyPaths().size());
+        assertEquals("*", all.propertyPaths().get(0).toString());
     }
 
     /***********************************/

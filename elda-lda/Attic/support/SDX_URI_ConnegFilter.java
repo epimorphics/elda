@@ -25,32 +25,30 @@ import com.sun.jersey.spi.container.ContainerRequestFilter;
 
 // OBSOLETE
 public class SDX_URI_ConnegFilter implements ContainerRequestFilter // extends UriConnegFilter
-    {
+{
     protected static final Map<String, MediaType> mediaExtensions = createMediaExtensions();
 
     protected static final Map<String, String> languageExtensions = createNewLanguageExtensions();
-    
+
     public static String SUFFIX_KEY = "SPOO";
-    
-    public SDX_URI_ConnegFilter()
-        {} // { super( mediaExtensions, languageExtensions  ); }
-    
-    private static HashMap<String, String> createNewLanguageExtensions()
-        {
+
+    public SDX_URI_ConnegFilter() {
+    } // { super( mediaExtensions, languageExtensions  ); }
+
+    private static HashMap<String, String> createNewLanguageExtensions() {
         HashMap<String, String> result = new HashMap<String, String>();
-        result.put( "en", "en-uk" );
+        result.put("en", "en-uk");
         return result;
-        }
-    
+    }
+
     /**
-        Do the content negotiation filtering, and remember the
-        media-type suffix if any (WARNING: this code assumes that
-        there's only one suffix; TODO generalise, might be best
-        done by ignoring the UriConnegFilter code completely since
-        it's not utterly clear.
-    */
-    public ContainerRequest filter( ContainerRequest request ) 
-		{
+     * Do the content negotiation filtering, and remember the
+     * media-type suffix if any (WARNING: this code assumes that
+     * there's only one suffix; TODO generalise, might be best
+     * done by ignoring the UriConnegFilter code completely since
+     * it's not utterly clear.
+     */
+    public ContainerRequest filter(ContainerRequest request) {
 //    	System.err.println( ">> ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::" );
 //    	Map<String, MediaType> m = createMediaExtensions();
 //    	Map<String, String> l = createNewLanguageExtensions();
@@ -72,22 +70,21 @@ public class SDX_URI_ConnegFilter implements ContainerRequestFilter // extends U
 //    			{}
 //    		}
 //    	System.err.println( ">> should trim back to " + last );
-    	return request;
-    	}
-    
-    public static HashMap<String, MediaType> createMediaExtensions()
-        {
-        HashMap<String, MediaType> result = new HashMap<String, MediaType>();
-        result.put( "xml", MediaType.TEXT_XML_TYPE );
-        result.put( "html", MediaType.TEXT_HTML_TYPE );
-        result.put( "text", MediaType.TEXT_PLAIN_TYPE );
-        result.put( "json", MediaType.APPLICATION_JSON_TYPE );
-        result.put( "ttl", new MediaType( "text", "turtle" ) );
-        result.put( "owl", new MediaType( "application", "rdf+xml" ) );
-        result.put( "rdf", new MediaType( "application", "rdf+xml" ) ); 
-        return result;
-        }
+        return request;
     }
+
+    public static HashMap<String, MediaType> createMediaExtensions() {
+        HashMap<String, MediaType> result = new HashMap<String, MediaType>();
+        result.put("xml", MediaType.TEXT_XML_TYPE);
+        result.put("html", MediaType.TEXT_HTML_TYPE);
+        result.put("text", MediaType.TEXT_PLAIN_TYPE);
+        result.put("json", MediaType.APPLICATION_JSON_TYPE);
+        result.put("ttl", new MediaType("text", "turtle"));
+        result.put("owl", new MediaType("application", "rdf+xml"));
+        result.put("rdf", new MediaType("application", "rdf+xml"));
+        return result;
+    }
+}
 
     
 /*

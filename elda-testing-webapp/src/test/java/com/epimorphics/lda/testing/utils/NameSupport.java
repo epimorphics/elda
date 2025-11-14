@@ -21,13 +21,12 @@
 
 package com.epimorphics.lda.testing.utils;
 
-import java.io.UnsupportedEncodingException;
-import java.util.UUID;
-
+import com.epimorphics.util.EpiException;
 import org.apache.jena.iri.IRI;
 import org.apache.jena.iri.IRIFactory;
 
-import com.epimorphics.util.EpiException;
+import java.io.UnsupportedEncodingException;
+import java.util.UUID;
 
 
 /**
@@ -45,7 +44,7 @@ public class NameSupport {
     public static String safeName(String name) {
         return name.replaceAll("[^@$a-zA-Z0-9_\\.\\-~]+", "_");
     }
-    
+
     /**
      * Convert an arbirary name, such as a CSV column name to something usable as a
      * variable name in an expression as well as a path segment, normalizing the case.
@@ -78,7 +77,7 @@ public class NameSupport {
      */
     public static boolean isURI(String name) {
         IRI testing = IRIFactory.jenaImplementation().create(name);
-        return ! testing.hasViolation(false);
+        return !testing.hasViolation(false);
     }
 
 
@@ -101,12 +100,12 @@ public class NameSupport {
         try {
             StringBuilder encode = new StringBuilder();
             for (byte b : name.getBytes("UTF-8")) {
-                char c = (char)b;
+                char c = (char) b;
                 if (c == '_' || c == '-' | c == '@' | c == '.' | Character.isLetterOrDigit(c)) {
                     encode.append(c);
                 } else {
                     encode.append("%");
-                    encode.append( Integer.toHexString(b) );
+                    encode.append(Integer.toHexString(b));
                 }
             }
             return encode.toString();
@@ -119,12 +118,12 @@ public class NameSupport {
      * Decode an encoded safe name
      */
     public static String decodeSafeName(String name) {
-        byte[] decode = new byte[ name.length() ];
+        byte[] decode = new byte[name.length()];
         int p = 0;
         for (int i = 0; i < name.length(); i++) {
             char c = name.charAt(i);
             if (c == '%') {
-                decode[p++] = (byte) Integer.parseInt(name.substring(i+1, i+3), 16);
+                decode[p++] = (byte) Integer.parseInt(name.substring(i + 1, i + 3), 16);
                 i += 2;
             } else {
                 decode[p++] = (byte) c;
@@ -143,7 +142,7 @@ public class NameSupport {
      * Generate a random name for something of the given type, result
      * will currently look like: {type}-{uuid}
      */
-    public static String newName(String type){
+    public static String newName(String type) {
         return type + "-" + UUID.randomUUID();
     }
 
@@ -151,19 +150,19 @@ public class NameSupport {
      * Generate a random URI for something of the given type, result
      * will currently look like: {server}/modal/{type}/{uuid}
      */
-    public static String newURI(String type, String serverURI){
+    public static String newURI(String type, String serverURI) {
         return serverURI + "/modal/" + type + "/" + UUID.randomUUID();
     }
 
-   /**
-    * Extract an integer from a parameter object, with default
-    */
+    /**
+     * Extract an integer from a parameter object, with default
+     */
     public static int asInt(Object param, int defaultint) {
         if (param == null) {
             return defaultint;
         }
         if (param instanceof Number) {
-            return ((Number)param).intValue();
+            return ((Number) param).intValue();
         }
         try {
             return Integer.parseInt(param.toString());
@@ -206,7 +205,7 @@ public class NameSupport {
      */
     public static String stripLastSlash(String u) {
         if (u.endsWith("/")) {
-            return u.substring(0, u.length()-1);
+            return u.substring(0, u.length() - 1);
         }
         return u;
     }

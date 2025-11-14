@@ -16,25 +16,34 @@ package com.epimorphics.lda.restlets;
 
 import javax.ws.rs.*;
 
-@Path("groo") public class DynamicExample
-    {
-    @Path("dynamic-{alpha}") public Object alpha( @PathParam("alpha") String a )
-        {
-        return a.equals( "a" ) ? new A() : new B();
-        }
-    
-    interface Alpha {}
-    
-    public static class A implements Alpha
-        {
-        @GET @Produces("text/plain") @Path("eggs") public String AA() { return "AA"; }
-        }
-    
-    public static class B implements Alpha
-        {
-        @GET @Produces("text/plain") @Path("ham") public String BB() { return "BB"; }
+@Path("groo")
+public class DynamicExample {
+    @Path("dynamic-{alpha}")
+    public Object alpha(@PathParam("alpha") String a) {
+        return a.equals("a") ? new A() : new B();
+    }
+
+    interface Alpha {
+    }
+
+    public static class A implements Alpha {
+        @GET
+        @Produces("text/plain")
+        @Path("eggs")
+        public String AA() {
+            return "AA";
         }
     }
+
+    public static class B implements Alpha {
+        @GET
+        @Produces("text/plain")
+        @Path("ham")
+        public String BB() {
+            return "BB";
+        }
+    }
+}
 
     
 /*

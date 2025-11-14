@@ -10,11 +10,16 @@ package com.epimorphics.lda.tests;
 import com.epimorphics.lda.core.NamedViews;
 import com.epimorphics.lda.core.View;
 
-public final class FakeNamedViews implements NamedViews 
-	{
-	final View v = new View();
-	
-	@Override public View getView(String viewname) { return v; }
-	
-	@Override public View getDefaultView() { return v; }
-	}
+public final class FakeNamedViews implements NamedViews {
+    final View v = new View();
+
+    @Override
+    public View getView(String viewname) {
+        return v;
+    }
+
+    @Override
+    public View getDefaultView() {
+        return v;
+    }
+}

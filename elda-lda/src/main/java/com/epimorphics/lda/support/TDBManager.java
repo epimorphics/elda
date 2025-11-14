@@ -14,62 +14,61 @@
 
 package com.epimorphics.lda.support;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.sparql.core.Quad;
 import com.hp.hpl.jena.tdb.TDBFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
-    Control point for TDB access -- everything goes through here so that
-    there's only one TDB open and the name-expansion is shared.
- 
-    @author chris
-*/
+ * Control point for TDB access -- everything goes through here so that
+ * there's only one TDB open and the name-expansion is shared.
+ *
+ * @author chris
+ */
 public class TDBManager {
 
     /**
-        The prefix that identifies a path as TDB-related
-    */
+     * The prefix that identifies a path as TDB-related
+     */
     public static final String PREFIX = "tdb:";
 
     /**
-        The init-param name that the loader should use to recognise a setting
-        for the TDB base directory.
-    */
+     * The init-param name that the loader should use to recognise a setting
+     * for the TDB base directory.
+     */
     public static final String TDB_BASE_DIRECTORY = "com.epimorphics.api.TDB-base-directory";
 
     /**
-        The method the loader should call to set the TDB base directory.
-    */
-    public static void setBaseTDBPath( String value ) { 
-        baseTDBPath = value; 
+     * The method the loader should call to set the TDB base directory.
+     */
+    public static void setBaseTDBPath(String value) {
+        baseTDBPath = value;
         log.info("setBaseTDBPath '{}'", value);
     }
 
     /**
-        The TDB base directory path, not (currently) accessible to the outside.
-    */
+     * The TDB base directory path, not (currently) accessible to the outside.
+     */
     protected static String baseTDBPath = "";
-    
-    static Logger log = LoggerFactory.getLogger( TDBManager.class );
+
+    static Logger log = LoggerFactory.getLogger(TDBManager.class);
 
     protected static Dataset dataset = null;
-    
+
     /**
-        Answer the model with the given name in the TDB dataset.
-    */
-    public static Model getTDBModelNamed( String uri ) {
+     * Answer the model with the given name in the TDB dataset.
+     */
+    public static Model getTDBModelNamed(String uri) {
         if (dataset == null) dataset = openDataset();
-        Model result = 
-            (uri == null || uri.isEmpty()) 
-                ? dataset.getNamedModel( Quad.unionGraph.getURI() )
-                : dataset.getNamedModel( uri );
+        Model result =
+                (uri == null || uri.isEmpty())
+                        ? dataset.getNamedModel(Quad.unionGraph.getURI())
+                        : dataset.getNamedModel(uri);
         return result;
     }
-    
+
     /*
      * Answer the whole dataset for this TDB
      */
@@ -80,7 +79,7 @@ public class TDBManager {
 
     private static Dataset openDataset() {
         log.info("requesting open on TDB dataset at {}", baseTDBPath);
-        Dataset result = TDBFactory.createDataset( baseTDBPath );
+        Dataset result = TDBFactory.createDataset(baseTDBPath);
         log.info("opened: result looks like {}", result.toString());
         return result;
     }

@@ -14,64 +14,70 @@
 
 package com.epimorphics.lda.sources;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.query.Dataset;
+import com.hp.hpl.jena.query.Query;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.rdf.model.ResourceFactory;
 import com.hp.hpl.jena.shared.Lock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class TDBSource extends SourceBase implements Source
-    {
+public class TDBSource extends SourceBase implements Source {
     static Logger log = LoggerFactory.getLogger(TDBSource.class);
 
-    protected final Model source; 
+    protected final Model source;
     protected final Dataset sourceSet;
     protected final String endpoint;
-    
-    public TDBSource( Resource endpoint ) {
-    	super( endpoint );
-    	String endpointString = endpoint.getURI();
-        String name = endpointString.substring( TDBManager.PREFIX.length() );
+
+    public TDBSource(Resource endpoint) {
+        super(endpoint);
+        String endpointString = endpoint.getURI();
+        String name = endpointString.substring(TDBManager.PREFIX.length());
         this.endpoint = endpointString;
         this.sourceSet = TDBManager.getDataset();
         if (name != null && !name.isEmpty()) {
             this.source = TDBManager.getTDBModelNamed(name);
             log.debug(
-            	"TDB with endpoint '{}' has model with {} triples"
-            	, endpointString, this.source.size()
-            	);
+                    "TDB with endpoint '{}' has model with {} triples"
+                    , endpointString, this.source.size()
+            );
             if (this.source.isEmpty())
-                EldaException.EmptyTDB( name );
+                EldaException.EmptyTDB(name);
         } else {
             source = null;
             log.info("using TDB whole dataset");
         }
     }
 
-    @Override public void addMetadata( Resource meta )
-        {        
-        meta.addProperty( API.sparqlEndpoint, ResourceFactory.createResource( endpoint ) );
-        }
+    @Override
+    public void addMetadata(Resource meta) {
+        meta.addProperty(API.sparqlEndpoint, ResourceFactory.createResource(endpoint));
+    }
 
-    @Override public String toString()
-        { return "TDB datasource - " + endpoint; }
-    
-    @Override public Lock getLock() {
-    	return source == null ? sourceSet.getLock() : source.getLock();
+    @Override
+    public String toString() {
+        return "TDB datasource - " + endpoint;
     }
-    
-    @Override public QueryExecution execute( Query query )
-        {
+
+    @Override
+    public Lock getLock() {
+        return source == null ? sourceSet.getLock() : source.getLock();
+    }
+
+    @Override
+    public QueryExecution execute(Query query) {
         return
-            source == null 
-                ?  QueryExecutionFactory.create( query, sourceSet )
-                :  QueryExecutionFactory.create( query, source );
-        }
+                source == null
+                        ? QueryExecutionFactory.create(query, sourceSet)
+                        : QueryExecutionFactory.create(query, source);
     }
+}
     
 /*
     (c) Copyright 2010 Epimorphics Limited

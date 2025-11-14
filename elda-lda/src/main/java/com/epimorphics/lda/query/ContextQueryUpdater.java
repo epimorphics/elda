@@ -8,24 +8,23 @@
 
 package com.epimorphics.lda.query;
 
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.*;
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.shortnames.ShortnameService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Set;
 
 /**
-    A ContextQueryUpdater is used to update an APIQuery according to context
-    parameters, including geospatial ones, and to deliver the view
-    specified by the context.
-
-    @author chris
-*/
+ * A ContextQueryUpdater is used to update an APIQuery according to context
+ * parameters, including geospatial ones, and to deliver the view
+ * specified by the context.
+ *
+ * @author chris
+ */
 public class ContextQueryUpdater implements ViewSetter {
 
     private final Bindings context;
@@ -44,15 +43,15 @@ public class ContextQueryUpdater implements ViewSetter {
     public static final int ListEndpoint = 2;
 
     /**
-        Initialise this ContextQueryUpdater.
-
-        @param endpointKind
-        @param context the context providing the parameters and their values
-        @param nv a mapping from names to views, with a default
-        @param sns the ShortnameService to use to translate to URIs
-        @param args place to build the query arguments
-    */
-    public ContextQueryUpdater( int endpointKind, Bindings context, NamedViews nv, ShortnameService sns, APIQuery args ) {
+     * Initialise this ContextQueryUpdater.
+     *
+     * @param endpointKind
+     * @param context      the context providing the parameters and their values
+     * @param nv           a mapping from names to views, with a default
+     * @param sns          the ShortnameService to use to translate to URIs
+     * @param args         place to build the query arguments
+     */
+    public ContextQueryUpdater(int endpointKind, Bindings context, NamedViews nv, ShortnameService sns, APIQuery args) {
         this.context = context;
         this.sns = sns;
         this.nt = nv;
@@ -62,41 +61,41 @@ public class ContextQueryUpdater implements ViewSetter {
     }
 
     /**
-        Apply the context updates to the query, and answer the view
-        specified.
-    */
-    public View updateQueryAndConstructView( List<PendingParameterValue> deferredFilters ) {
+     * Apply the context updates to the query, and answer the view
+     * specified.
+     */
+    public View updateQueryAndConstructView(List<PendingParameterValue> deferredFilters) {
         aq.clearLanguages();
         Set<String> allParamNames = context.parameterNames();
-        if (allParamNames.contains( QueryParameter._VIEW )) {
-            setViewByName( context.getValueString(QueryParameter._VIEW ) );
+        if (allParamNames.contains(QueryParameter._VIEW)) {
+            setViewByName(context.getValueString(QueryParameter._VIEW));
         }
-        if (allParamNames.contains( QueryParameter._TEMPLATE )) {
-            setViewByTemplate( context.getValueString(QueryParameter._TEMPLATE ) );
+        if (allParamNames.contains(QueryParameter._TEMPLATE)) {
+            setViewByTemplate(context.getValueString(QueryParameter._TEMPLATE));
         }
-        for (String param: allParamNames)
-            if (param.startsWith( QueryParameter.LANG_PREFIX ))
-                handleLangPrefix( param );
+        for (String param : allParamNames)
+            if (param.startsWith(QueryParameter.LANG_PREFIX))
+                handleLangPrefix(param);
             else if (param.equals(QueryParameter._LANG))
-                aq.setDefaultLanguage( context.getValueString( param ) );
+                aq.setDefaultLanguage(context.getValueString(param));
         GEOLocation geo = new GEOLocation();
-        for (String param: allParamNames)
-            handleParam( geo, param );
-        geo.addLocationQueryIfPresent( aq );
+        for (String param : allParamNames)
+            handleParam(geo, param);
+        geo.addLocationQueryIfPresent(aq);
         // ((QueryArgumentsImpl) args).updateQuery();
-        activateDeferredFilters( deferredFilters );
+        activateDeferredFilters(deferredFilters);
         return view;
     }
 
-    private void activateDeferredFilters( List<PendingParameterValue> deferred ) {
-        for (PendingParameterValue d: deferred) {
-            addFilterFromQuery( d.param.expand( context ), context.expandVariables( d.val ) );
+    private void activateDeferredFilters(List<PendingParameterValue> deferred) {
+        for (PendingParameterValue d : deferred) {
+            addFilterFromQuery(d.param.expand(context), context.expandVariables(d.val));
         }
     }
 
-    private void handleLangPrefix( String taggedParam ) {
-        String param = taggedParam.substring( QueryParameter.LANG_PREFIX.length() );
-        String sv = context.getValueString( taggedParam );
+    private void handleLangPrefix(String taggedParam) {
+        String param = taggedParam.substring(QueryParameter.LANG_PREFIX.length());
+        String sv = context.getValueString(taggedParam);
         if (sv == null) {
             // should probably return a 400 status, but no convenient route to
             // do so. For the moment we'll do a debug-level log (rather than the
@@ -105,113 +104,113 @@ public class ContextQueryUpdater implements ViewSetter {
             log.debug("'{}' supplied, but no value for {}", taggedParam, param);
             return;
         }
-        String val = context.expandVariables( sv );
-        String pString = context.expandVariables( param );
-        aq.setLanguagesFor( pString, val );
+        String val = context.expandVariables(sv);
+        String pString = context.expandVariables(param);
+        aq.setLanguagesFor(pString, val);
     }
 
-    private void handleParam( GEOLocation geo, String p ) {
-        String val = context.expandVariables( context.getValueString(p) );
-        String pString = context.expandVariables( p );
-        if (val == null) EldaException.NullParameter( p );
-    //
-        if (p.startsWith( QueryParameter.LANG_PREFIX )) {
+    private void handleParam(GEOLocation geo, String p) {
+        String val = context.expandVariables(context.getValueString(p));
+        String pString = context.expandVariables(p);
+        if (val == null) EldaException.NullParameter(p);
+        //
+        if (p.startsWith(QueryParameter.LANG_PREFIX)) {
             // Nothing to do -- done on previous pass
         } else if (p.equals(QueryParameter._LANG)) {
             // Also done on previous pass
         } else if (QueryParameter.isReserved(p)) {
-            handleReservedParameters( geo, this, p, val );
+            handleReservedParameters(geo, this, p, val);
         } else {
-            addFilterFromQuery( Param.make( sns, pString ), val );
+            addFilterFromQuery(Param.make(sns, pString), val);
         }
     }
 
     /**
-        handle the reserved, ie, _wossname, parameters. These may update
-        the given <code>geo</code>, the <code>vs</code>, or this query
-        object. <code>p</code> is the reserved-property name, <code>val</code>
-        is the value string.
-    */
-    public void handleReservedParameters( GEOLocation geo, ViewSetter vs, String p, String val ) {
+     * handle the reserved, ie, _wossname, parameters. These may update
+     * the given <code>geo</code>, the <code>vs</code>, or this query
+     * object. <code>p</code> is the reserved-property name, <code>val</code>
+     * is the value string.
+     */
+    public void handleReservedParameters(GEOLocation geo, ViewSetter vs, String p, String val) {
         if (p.equals(QueryParameter._PAGE)) {
-            mustBeListEndpoint( p );
-            aq.setPageNumber( integerAtLeast( 0, p, val ) );
+            mustBeListEndpoint(p);
+            aq.setPageNumber(integerAtLeast(0, p, val));
         } else if (p.equals(QueryParameter._PAGE_SIZE)) {
-            mustBeListEndpoint( p );
-            aq.setPageSize( integerAtLeast( 1, p, val ) );
-        } else if (p.equals( QueryParameter._FORMAT )) {
+            mustBeListEndpoint(p);
+            aq.setPageSize(integerAtLeast(1, p, val));
+        } else if (p.equals(QueryParameter._FORMAT)) {
             // already handled. WAS: vs.setFormat(val);
         } else if (p.equals(QueryParameter._METADATA)) {
-            aq.addMetadataOptions( val.split(",") );
+            aq.addMetadataOptions(val.split(","));
         } else if (p.equals(QueryParameter._SEARCH)) {
-            aq.addSearchTriple( val );
-        } else if (p.equals(QueryParameter._SELECT_PARAM )) {
-            aq.setFixedSelect( val );
+            aq.addSearchTriple(val);
+        } else if (p.equals(QueryParameter._SELECT_PARAM)) {
+            aq.setFixedSelect(val);
         } else if (p.equals(QueryParameter._WHERE)) {
-            aq.addWhere( val );
+            aq.addWhere(val);
         } else if (p.equals(QueryParameter._PROPERTIES)) {
             vs.setViewByProperties(val);
-        } else if (p.equals(QueryParameter._VIEW) || p.equals( QueryParameter._TEMPLATE )) {
+        } else if (p.equals(QueryParameter._VIEW) || p.equals(QueryParameter._TEMPLATE)) {
             // already done
-        } else if (p.equals( QueryParameter._MARK)) {
+        } else if (p.equals(QueryParameter._MARK)) {
             // ignored
         } else if (p.equals(QueryParameter._SUBJECT)) {
             aq.setSubjectAsItemEndpoint(val);
-        } else if (p.equals( QueryParameter.callback )) {
-            if (!QueryParameter.callbackPattern.matcher( val ).matches())
+        } else if (p.equals(QueryParameter.callback)) {
+            if (!QueryParameter.callbackPattern.matcher(val).matches())
                 EldaException.BadRequest("illegal callback name " + val);
-        } else if (p.equals( QueryParameter.NEAR_LAT)) {
-            geo.setNearLat( val );
-        } else if (p.equals( QueryParameter.NEAR_LONG )) {
-            geo.setNearLong( val );
-        } else if (p.equals( QueryParameter._DISTANCE )) {
-            geo.setDistance( val );
+        } else if (p.equals(QueryParameter.NEAR_LAT)) {
+            geo.setNearLat(val);
+        } else if (p.equals(QueryParameter.NEAR_LONG)) {
+            geo.setNearLong(val);
+        } else if (p.equals(QueryParameter._DISTANCE)) {
+            geo.setDistance(val);
         } else if (p.equals(QueryParameter._SORT)) {
-            aq.setSortBy( val );
-        } else if (p.equals(QueryParameter._ORDERBY )) {
-            aq.setOrderBy( val );
+            aq.setSortBy(val);
+        } else if (p.equals(QueryParameter._ORDERBY)) {
+            aq.setOrderBy(val);
         } else if (p.equals(QueryParameter._GRAPH)) {
-            aq.setGraphName( val );
+            aq.setGraphName(val);
         } else if (p.equals(QueryParameter._COUNT)) {
 
             Boolean count = getBoolean(val);
             if (count == null)
                 EldaException.BadRequest("illegal boolean (should be 'yes' or 'no') for _count: " + val);
-            else if (!aq.setTotalCountRequested( count ))
+            else if (!aq.setTotalCountRequested(count))
                 EldaException.BadRequest("this endpoint does not allow _count to be altered: " + val);
 
         } else if (p.equals(QueryParameter._QUERY_ID)) {
-        	// Nothing. _query-id is handled early by RouterRestlet.
-        } else if (!allowedReserved( p )){
-            EldaException.BadRequest( "unrecognised reserved parameter: " + p );
-            throw new EldaException( "Can never get here!" );
+            // Nothing. _query-id is handled early by RouterRestlet.
+        } else if (!allowedReserved(p)) {
+            EldaException.BadRequest("unrecognised reserved parameter: " + p);
+            throw new EldaException("Can never get here!");
         }
     }
 
     /**
-        Return true if val is "yes", false if it's "no", and null otherwise.
-    */
+     * Return true if val is "yes", false if it's "no", and null otherwise.
+     */
     private Boolean getBoolean(String val) {
         return val.equals("yes") ? Boolean.TRUE : val.equals("no") ? Boolean.FALSE : null;
     }
 
-    private boolean allowedReserved( String name ) {
-        return aq.allowReserved( name );
+    private boolean allowedReserved(String name) {
+        return aq.allowReserved(name);
     }
 
-    private void mustBeListEndpoint( String p ) {
+    private void mustBeListEndpoint(String p) {
         if (endpointKind != ListEndpoint)
-            EldaException.BadRequest( p + " can only be used with a list endpoint." );
+            EldaException.BadRequest(p + " can only be used with a list endpoint.");
     }
 
-    private int integerAtLeast( int minimum, String param, String val ) {
+    private int integerAtLeast(int minimum, String param, String val) {
         try {
-            int result = Integer.parseInt( val );
+            int result = Integer.parseInt(val);
             if (result < minimum)
-            	EldaException.BadRequest(param + "=" + val + ": value must be at least " + minimum + "." );
+                EldaException.BadRequest(param + "=" + val + ": value must be at least " + minimum + ".");
             return result;
         } catch (NumberFormatException e) {
-        	EldaException.BadRequest(param + "=" + val + ": value must be an integer." );
+            EldaException.BadRequest(param + "=" + val + ": value must be an integer.");
         }
         return /* never */ -1;
     }
@@ -219,11 +218,12 @@ public class ContextQueryUpdater implements ViewSetter {
     /**
      * General interface for extending the query with a specified parameter.
      * This parameter types handled include _page, _orderBy, min-, name- and path parameters.
+     *
      * @param param
      * @param raw_val
-    */
-    public void addFilterFromQuery( Param param, String raw_val ) {
-        if (raw_val.equals( "" )) {
+     */
+    public void addFilterFromQuery(Param param, String raw_val) {
+        if (raw_val.equals("")) {
             // see issue #175        	
             log.debug("parameter '{}' given empty value", param);
             return;
@@ -232,10 +232,10 @@ public class ContextQueryUpdater implements ViewSetter {
 
         String prefix = param.prefix();
         if (prefix == null) {
-            aq.addPropertyHasValue( param, val );     	
+            aq.addPropertyHasValue(param, val);
         } else if (prefix.equals(QueryParameter.NAME_PREFIX)) {
             aq.addNameProp(param.plain(), val);
-        } else if (prefix.equals( QueryParameter.LANG_PREFIX )) {
+        } else if (prefix.equals(QueryParameter.LANG_PREFIX)) {
             // handled elsewhere
         } else if (prefix.equals(QueryParameter.MIN_PREFIX)) {
             aq.addRangeFilter(param.plain(), val, ">=");
@@ -246,31 +246,34 @@ public class ContextQueryUpdater implements ViewSetter {
         } else if (prefix.equals(QueryParameter.MAX_EX_PREFIX)) {
             aq.addRangeFilter(param.plain(), val, "<");
         } else if (prefix.equals(QueryParameter.EXISTS_PREFIX)) {
-            if (val.equals( "true" )) aq.addPropertyHasValue( param );
-            else if (val.equals( "false" )) aq.addPropertyHasntValue( param );
-            else EldaException.BadBooleanParameter( param.toString(), val );
+            if (val.equals("true")) aq.addPropertyHasValue(param);
+            else if (val.equals("false")) aq.addPropertyHasntValue(param);
+            else EldaException.BadBooleanParameter(param.toString(), val);
         } else {
-            EldaException.BadRequest( "unrecognised parameter prefix: " + prefix );
+            EldaException.BadRequest("unrecognised parameter prefix: " + prefix);
         }
     }
 
-    @Override public void setFormat( String format ) {
+    @Override
+    public void setFormat(String format) {
         requestedFormat = format;
     }
 
-    public void setViewByTemplate( String template ) {
-        view = View.newTemplateView( "_template", template );
+    public void setViewByTemplate(String template) {
+        view = View.newTemplateView("_template", template);
     }
 
-    @Override public void setViewByName( String viewName ) {
-        View named  = nt.getView( viewName );
-        if (named == null) EldaException.BadRequest( "view not found: " + viewName );
+    @Override
+    public void setViewByName(String viewName) {
+        View named = nt.getView(viewName);
+        if (named == null) EldaException.BadRequest("view not found: " + viewName);
         view = named.copy();
     }
 
-    @Override public void setViewByProperties(String val) {
-        for (String prop: val.split(","))
+    @Override
+    public void setViewByProperties(String val) {
+        for (String prop : val.split(","))
             if (prop.length() > 0)
-                view.addViewFromParameterValue( prop, sns );
+                view.addViewFromParameterValue(prop, sns);
     }
 }

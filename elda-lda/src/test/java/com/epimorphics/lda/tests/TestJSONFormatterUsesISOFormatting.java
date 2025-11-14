@@ -1,6 +1,15 @@
 package com.epimorphics.lda.tests;
 
-import static org.junit.Assert.assertEquals;
+import com.epimorphics.lda.cache.Cache;
+import com.epimorphics.lda.core.APIEndpoint;
+import com.epimorphics.lda.core.APIResultSet;
+import com.epimorphics.lda.renderers.Renderer;
+import com.epimorphics.lda.renderers.Renderer.BytesOut;
+import com.epimorphics.lda.support.MultiMap;
+import com.epimorphics.lda.support.Times;
+import com.epimorphics.util.MediaType;
+import org.codehaus.jettison.json.JSONException;
+import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,17 +19,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Locale;
 
-import org.codehaus.jettison.json.JSONException;
-import org.junit.Test;
-
-import com.epimorphics.lda.cache.Cache;
-import com.epimorphics.lda.core.APIEndpoint;
-import com.epimorphics.lda.core.APIResultSet;
-import com.epimorphics.lda.renderers.Renderer;
-import com.epimorphics.lda.renderers.Renderer.BytesOut;
-import com.epimorphics.lda.support.MultiMap;
-import com.epimorphics.lda.support.Times;
-import com.epimorphics.util.MediaType;
+import static org.junit.Assert.assertEquals;
 
 public class TestJSONFormatterUsesISOFormatting {
 

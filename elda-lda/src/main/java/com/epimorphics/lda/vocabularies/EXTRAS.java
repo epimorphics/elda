@@ -9,11 +9,11 @@
 package com.epimorphics.lda.vocabularies;
 
 /**
-   Deprecated. Use ELDA_API (for API + Elda extensions) or plain API
-   (for LDA-defined properties).
-   
-   @deprecated
-*/
+ * Deprecated. Use ELDA_API (for API + Elda extensions) or plain API
+ * (for LDA-defined properties).
+ *
+ * @deprecated
+ */
 public class EXTRAS extends ELDA_API {
-	
+
 }

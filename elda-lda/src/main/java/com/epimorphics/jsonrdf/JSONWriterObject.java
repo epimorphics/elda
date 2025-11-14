@@ -12,13 +12,15 @@
 
 package com.epimorphics.jsonrdf;
 
-import java.util.ArrayDeque;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonException;
+import org.apache.jena.atlas.json.JsonObject;
 
-import org.apache.jena.atlas.json.*;
+import java.util.ArrayDeque;
 
 /**
  * Implements the JSONWriter emulation by creating a JsonObject
- * 
+ *
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
@@ -28,31 +30,31 @@ public class JSONWriterObject implements JSONWriterFacade {
     protected ArrayDeque<String> keystack = new ArrayDeque<String>();
     protected Object top = null;
     protected String key = "dummy";
-    
+
     /**
      * Return the created  JsonObject
      */
     public JsonObject getTopObject() {
-        if (! (top instanceof JsonObject)) {
+        if (!(top instanceof JsonObject)) {
             throw new EncodingException("getTopObject called on non object");
         }
         return (JsonObject) top;
     }
-    
+
     /**
      * Return the created  JsonArray
      */
     public JsonArray getTopArray() {
-        if (! (top instanceof JsonArray)) {
+        if (!(top instanceof JsonArray)) {
             throw new EncodingException("getTopArray called on non array");
         }
         return (JsonArray) top;
     }
-    
+
     @Override
     public JSONWriterFacade array() {
         if (top != null) {
-            stack.push( top );
+            stack.push(top);
             top = new JsonArray();
             keystack.push(key);
         } else {
@@ -63,49 +65,49 @@ public class JSONWriterObject implements JSONWriterFacade {
 
     @Override
     public JSONWriterFacade endArray() {
-        if (! (top instanceof JsonArray)) {
+        if (!(top instanceof JsonArray)) {
             throw new EncodingException("endArray called on non array");
         }
-        JsonArray o = (JsonArray)top;
+        JsonArray o = (JsonArray) top;
         if (stack.isEmpty()) return this;
         top = stack.pop();
         key = keystack.pop();
         if (top instanceof JsonObject) {
             try {
-                ((JsonObject)top).put(key, o);
+                ((JsonObject) top).put(key, o);
             } catch (JsonException e) {
                 throw new EncodingException(e.getMessage(), e);
             }
         } else {
-            ((JsonArray)top).add(o);
+            ((JsonArray) top).add(o);
         }
         return this;
     }
 
     @Override
     public JSONWriterFacade endObject() {
-        if (! (top instanceof JsonObject)) {
+        if (!(top instanceof JsonObject)) {
             throw new EncodingException("endObject called on non object");
         }
-        JsonObject o = (JsonObject)top;
+        JsonObject o = (JsonObject) top;
         if (stack.isEmpty()) return this;
         top = stack.pop();
         key = keystack.pop();
         if (top instanceof JsonObject) {
             try {
-                ((JsonObject)top).put(key, o);
+                ((JsonObject) top).put(key, o);
             } catch (JsonException e) {
                 throw new EncodingException(e.getMessage(), e);
             }
         } else {
-            ((JsonArray)top).add(o);
+            ((JsonArray) top).add(o);
         }
         return this;
     }
 
     @Override
     public JSONWriterFacade key(String s) {
-        if (! (top instanceof JsonObject)) {
+        if (!(top instanceof JsonObject)) {
             throw new EncodingException("key called on non object");
         }
         key = s;
@@ -115,8 +117,8 @@ public class JSONWriterObject implements JSONWriterFacade {
     @Override
     public JSONWriterFacade object() {
         if (top != null) {
-            stack.push( top );
-            keystack.push( key );
+            stack.push(top);
+            keystack.push(key);
             top = new JsonObject();
         } else {
             top = new JsonObject();
@@ -128,9 +130,9 @@ public class JSONWriterObject implements JSONWriterFacade {
     public JSONWriterFacade value(boolean b) {
         try {
             if (top instanceof JsonObject) {
-                ((JsonObject)top).put(key, b);
+                ((JsonObject) top).put(key, b);
             } else {
-                ((JsonArray)top).add(b);
+                ((JsonArray) top).add(b);
             }
         } catch (JsonException e) {
             throw new EncodingException(e.getMessage(), e);
@@ -139,8 +141,8 @@ public class JSONWriterObject implements JSONWriterFacade {
     }
 
     @Override
-    public JSONWriterFacade value(double d) {    	
-    	if (true) throw new IllegalArgumentException( "Given a double" );
+    public JSONWriterFacade value(double d) {
+        if (true) throw new IllegalArgumentException("Given a double");
 //        try {
 //            if (top instanceof JsonObject) {
 //                ((JsonObject)top).put(key, d);
@@ -157,9 +159,9 @@ public class JSONWriterObject implements JSONWriterFacade {
     public JSONWriterFacade value(long l) {
         try {
             if (top instanceof JsonObject) {
-                ((JsonObject)top).put(key, l);
+                ((JsonObject) top).put(key, l);
             } else {
-                ((JsonArray)top).add(l);
+                ((JsonArray) top).add(l);
             }
         } catch (JsonException e) {
             throw new EncodingException(e.getMessage(), e);
@@ -167,26 +169,26 @@ public class JSONWriterObject implements JSONWriterFacade {
         return this;
     }
 
-    @Override public JSONWriterFacade value(Object o) {
-    	try {
-    		if (o instanceof String) valueString( (String) o );
-    		else if (o instanceof Integer) valueInteger( (Integer) o );
-    		else throw new IllegalArgumentException( "Given a " + o.getClass().getSimpleName() );
-    	} catch (JsonException e) {
-    		throw new EncodingException(e.getMessage(), e);
-    	}        
+    @Override
+    public JSONWriterFacade value(Object o) {
+        try {
+            if (o instanceof String) valueString((String) o);
+            else if (o instanceof Integer) valueInteger((Integer) o);
+            else throw new IllegalArgumentException("Given a " + o.getClass().getSimpleName());
+        } catch (JsonException e) {
+            throw new EncodingException(e.getMessage(), e);
+        }
         return this;
     }
 
-	private void valueString(String s) {
-		if (top instanceof JsonObject) ((JsonObject)top).put(key, s);
-		else ((JsonArray)top).add(s);		
-		}
+    private void valueString(String s) {
+        if (top instanceof JsonObject) ((JsonObject) top).put(key, s);
+        else ((JsonArray) top).add(s);
+    }
 
-	private void valueInteger(Integer i) {
-		if (top instanceof JsonObject) ((JsonObject)top).put(key, i);
-		else ((JsonArray)top).add(i);		
-		}
+    private void valueInteger(Integer i) {
+        if (top instanceof JsonObject) ((JsonObject) top).put(key, i);
+        else ((JsonArray) top).add(i);
+    }
 
 }
-

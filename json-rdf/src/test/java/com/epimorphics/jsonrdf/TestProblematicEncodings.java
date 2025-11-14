@@ -7,10 +7,10 @@
 */
 
 /******************************************************************
-    File:        TestProblematicEncodings.java
-    Created by:  Dave Reynolds
-    Created on:  4 Feb 2010
- * 
+ File:        TestProblematicEncodings.java
+ Created by:  Dave Reynolds
+ Created on:  4 Feb 2010
+ *
  * (c) Copyright 2010, Epimorphics Limited
  * $Id:  $
  *****************************************************************/
@@ -22,9 +22,10 @@ import static com.epimorphics.jsonrdf.TestEncoder.testEncoding;
 import java.io.IOException;
 
 import org.junit.Test;
+
 /**
  * Collection of cases that didn't work at first.
- * 
+ *
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
@@ -38,18 +39,17 @@ public class TestProblematicEncodings {
 //        Encoder enc = Encoder.get();
 //        testEncoding(srcTTL, enc, roots, expectedEncoding);
 //    }
-    
+
     @Test
     public void testNullLists() throws IOException {
-        testEncoding(":r :p [] .", 
+        testEncoding(":r :p [] .",
                 Encoder.get(),
-                new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':{}}]" );
-        testEncoding(":r :p () .", 
+                new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':{}}]");
+        testEncoding(":r :p () .",
                 Encoder.get(),
-                new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':[]}]" );
+                new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':[]}]");
     }
-    
-}
 
+}

@@ -10,12 +10,12 @@ package com.epimorphics.lda;
 
 /**
  * An interface only to hold the project version number.
- * 
+ *
  * <p>This source file is generated automatically by the build process.</p>
- * 
+ *
  * @author bwm
  *
  */
 public interface Version {
-	public final String string = "3.0.0-SNAPSHOT";
+    public final String string = "3.0.0-SNAPSHOT";
 }

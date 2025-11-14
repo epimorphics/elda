@@ -13,21 +13,21 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 
 public class UnknownShortnameException extends EldaException {
 
-	private static final long serialVersionUID = 1L;
-	
-	private static final String reason = "unrecognised short name or literal: ";
+    private static final long serialVersionUID = 1L;
 
-	public UnknownShortnameException( String res ) {
-		super( reason + res, "", BAD_REQUEST );
-	}
+    private static final String reason = "unrecognised short name or literal: ";
 
-	public UnknownShortnameException( RDFNode res ) {
-		super( reason + res.toString(), "", BAD_REQUEST );
-	}
+    public UnknownShortnameException(String res) {
+        super(reason + res, "", BAD_REQUEST);
+    }
 
-	public UnknownShortnameException( Term r ) {
-		super( reason + r.toString(), "", BAD_REQUEST );
-	}
+    public UnknownShortnameException(RDFNode res) {
+        super(reason + res.toString(), "", BAD_REQUEST);
+    }
+
+    public UnknownShortnameException(Term r) {
+        super(reason + r.toString(), "", BAD_REQUEST);
+    }
 
 
 }

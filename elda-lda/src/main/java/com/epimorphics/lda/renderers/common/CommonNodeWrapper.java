@@ -9,9 +9,6 @@
 
 package com.epimorphics.lda.renderers.common;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.epimorphics.rdfutil.ModelWrapper;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.datatypes.DatatypeFormatException;
@@ -20,6 +17,8 @@ import com.hp.hpl.jena.datatypes.xsd.impl.XMLLiteralType;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.rdf.model.Resource;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -31,8 +30,7 @@ import com.hp.hpl.jena.rdf.model.Resource;
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
 public class CommonNodeWrapper
-extends RDFNodeWrapper
-{
+        extends RDFNodeWrapper {
     /***********************************/
     /* Constants                       */
     /***********************************/
@@ -45,15 +43,18 @@ extends RDFNodeWrapper
     /* Instance variables              */
     /***********************************/
 
-    /** The page this resource is attached to, if any */
+    /**
+     * The page this resource is attached to, if any
+     */
     private Page page;
 
     /***********************************/
     /* Constructors                    */
+
     /***********************************/
 
-    public CommonNodeWrapper( ModelWrapper mw, RDFNode node ) {
-        super( mw, node );
+    public CommonNodeWrapper(ModelWrapper mw, RDFNode node) {
+        super(mw, node);
     }
 
     /**
@@ -62,8 +63,8 @@ extends RDFNodeWrapper
      * @param page The page object
      * @param node The wrapped node
      */
-    public CommonNodeWrapper( Page page, RDFNode node ) {
-        super( page.getModelW(), node );
+    public CommonNodeWrapper(Page page, RDFNode node) {
+        super(page.getModelW(), node);
         this.page = page;
     }
 
@@ -84,20 +85,19 @@ extends RDFNodeWrapper
      * this resource does not have a property <code>p</code>, or the value of <code>p</code>
      * is not an integer.
      *
-     * @param p A property, specified as a property object, URI or curie
+     * @param p   A property, specified as a property object, URI or curie
      * @param def The default value
      * @return The integer value of p, or the default value
      */
-    public int getInt( Object p, int def ) {
+    public int getInt(Object p, int def) {
         int v = def;
 
         if (isResource()) {
-            com.epimorphics.rdfutil.RDFNodeWrapper n = getPropertyValue( p );
+            com.epimorphics.rdfutil.RDFNodeWrapper n = getPropertyValue(p);
             if (n != null && n.isLiteral()) {
                 try {
                     v = n.asLiteral().getInt();
-                }
-                catch (DatatypeFormatException e) {
+                } catch (DatatypeFormatException e) {
                     // ignore this error - we return the default value
                 }
             }
@@ -108,16 +108,17 @@ extends RDFNodeWrapper
 
     /**
      * Return the resource value of the given property, or null.
+     *
      * @param p A property, specified as a property object, URI or curie
      * @return The value of a <code>p</code> property of this node if it is a resource.
      * If this node is not a resource, or does not have at least one <code>p</code>
      * property, return null
      */
-    public Resource getResource( Object p ) {
+    public Resource getResource(Object p) {
         Resource r = null;
 
         if (isResource()) {
-            com.epimorphics.rdfutil.RDFNodeWrapper n = getPropertyValue( p );
+            com.epimorphics.rdfutil.RDFNodeWrapper n = getPropertyValue(p);
             if (n != null && n.isResource()) {
                 r = n.asResource();
             }
@@ -132,9 +133,8 @@ extends RDFNodeWrapper
     public boolean isXmlLiteral() {
         if (isLiteral()) {
             RDFDatatype typ = asLiteral().getDatatype();
-            return (typ != null) && XMLLiteralType.theXMLLiteralType.equals( typ );
-        }
-        else {
+            return (typ != null) && XMLLiteralType.theXMLLiteralType.equals(typ);
+        } else {
             return false;
         }
     }
@@ -154,16 +154,14 @@ extends RDFNodeWrapper
     public String getName() {
         String name = super.getName();
 
-        if (name.isEmpty() || name.matches("^\\s*$") || name.equals( getURI() )) {
+        if (name.isEmpty() || name.matches("^\\s*$") || name.equals(getURI())) {
             if (isAnon()) {
                 name = asRDFNode().asResource().getId().toString();
-            }
-            else {
+            } else {
                 Matcher match = lnmatch.matcher(getURI());
                 if (match.matches()) {
                     name = match.group(1);
-                }
-                else {
+                } else {
                     name = getURI();
                 }
             }
@@ -172,7 +170,7 @@ extends RDFNodeWrapper
         return name;
     }
 
-//    static final Pattern lnmatch = Pattern.compile("([^#/]*[/#]\\-?)$");
+    //    static final Pattern lnmatch = Pattern.compile("([^#/]*[/#]\\-?)$");
     static final Pattern lnmatch = Pattern.compile(".*[/#]([^#/]+[/#]-?)$");
 
     /***********************************/
@@ -184,4 +182,3 @@ extends RDFNodeWrapper
     /***********************************/
 
 }
-

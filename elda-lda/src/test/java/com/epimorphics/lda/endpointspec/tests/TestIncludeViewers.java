@@ -6,46 +6,45 @@
 */
 package com.epimorphics.lda.endpointspec.tests;
 
-import static org.junit.Assert.assertEquals;
-
-import com.epimorphics.lda.core.View;
-import org.junit.Test;
-
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.apispec.tests.SpecUtil;
+import com.epimorphics.lda.core.View;
 import com.epimorphics.lda.specs.APIEndpointSpec;
 import com.epimorphics.lda.specs.APISpec;
-import com.epimorphics.lda.support.PropertyChain;
-import com.epimorphics.util.CollectionUtils;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
-    Test that api:include works on viewers.
- 	@author eh
-*/
+ * Test that api:include works on viewers.
+ *
+ * @author eh
+ */
 public class TestIncludeViewers {
-	
-	@Test public void testViewer() {
-		String NS = "http://www.epimorphics.com/tools/example#";
-		Model m = ModelIOUtils.modelFromTurtle
-			( ":root api:sparqlEndpoint <http://example.com/sparql>."
-			+ "\n:root api:endpoint :ep."
-			+ "\n:ep a api:ListEndpoint; api:uriTemplate '/alpha/beta'."
-			+ "\n:ep api:viewer :v."
-			+ "\n:v a api:Viewer; api:name 'v'; api:include :va, :vb." 
-			+ "\n:va a api:Viewer; api:name 'va'; api:properties 'a'."
-			+ "\n:vb a api:Viewer; api:name 'vb'; api:properties 'b'."
-			+ "\n:A a rdf:Property; rdfs:label 'a'."
-			+ "\n:B a rdf:Property; rdfs:label 'b'."
-			);
-		Resource root = m.createResource( NS + "root" );
-		Resource endpoint = m.createResource( NS + "ep" );
-		APISpec as = SpecUtil.specFrom( root );
-		APIEndpointSpec es = new APIEndpointSpec( as, as, endpoint );
-		View view = es.getView( "v" );
-		assertEquals(NS + "A", view.chains().get(1).getProperties().get(0).asProperty().getURI());
-		assertEquals(NS + "B", view.chains().get(0).getProperties().get(0).asProperty().getURI());
-	}
+
+    @Test
+    public void testViewer() {
+        String NS = "http://www.epimorphics.com/tools/example#";
+        Model m = ModelIOUtils.modelFromTurtle
+                (":root api:sparqlEndpoint <http://example.com/sparql>."
+                        + "\n:root api:endpoint :ep."
+                        + "\n:ep a api:ListEndpoint; api:uriTemplate '/alpha/beta'."
+                        + "\n:ep api:viewer :v."
+                        + "\n:v a api:Viewer; api:name 'v'; api:include :va, :vb."
+                        + "\n:va a api:Viewer; api:name 'va'; api:properties 'a'."
+                        + "\n:vb a api:Viewer; api:name 'vb'; api:properties 'b'."
+                        + "\n:A a rdf:Property; rdfs:label 'a'."
+                        + "\n:B a rdf:Property; rdfs:label 'b'."
+                );
+        Resource root = m.createResource(NS + "root");
+        Resource endpoint = m.createResource(NS + "ep");
+        APISpec as = SpecUtil.specFrom(root);
+        APIEndpointSpec es = new APIEndpointSpec(as, as, endpoint);
+        View view = es.getView("v");
+        assertEquals(NS + "A", view.chains().get(1).getProperties().get(0).asProperty().getURI());
+        assertEquals(NS + "B", view.chains().get(0).getProperties().get(0).asProperty().getURI());
+    }
 
 }
