@@ -8,131 +8,139 @@
 
 package com.epimorphics.lda.jmx;
 
+import com.epimorphics.lda.support.statistics.Interval;
+import com.epimorphics.lda.support.statistics.StatsValues;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
-import com.epimorphics.lda.support.statistics.Interval;
-import com.epimorphics.lda.support.statistics.StatsValues;
-
 public class Statistics implements ServletContextListener {
-    
-	public void contextDestroyed(ServletContextEvent s) {
+
+    public void contextDestroyed(ServletContextEvent s) {
     }
 
     public void contextInitialized(ServletContextEvent s) {
-    	JMXSupport.register("com.epimorphics.lda.jmx:type=statistics", new Stats());
+        JMXSupport.register("com.epimorphics.lda.jmx:type=statistics", new Stats());
     }
 
-	public interface StatsMBean {
-    	
-    	public long getRequestCount();
-    	
-    	public long getTotalViewCacheHits();
-    	
-    	public long getTotalSelectCacheHits();
-    	
-    	public long getTotalTime();
-    	
-    	public long getFailedMatchCount();
-    	
-    	public Map<String, Object> getTotalSelectionTime();
-    	
-    	public Map<String, Object> getTotalViewerTime();
-    	
-    	public Map<String, Object> getTotalRenderTime();
-    	
-    	public Map<String, Object> getTotalRenderSize();
-    	
-    	public Map<String, Object> getTotalSelectQuerySize();
-    	
-    	public Map<String, Object> getTotalViewQuerySize();
-    	
-    	public Map<String, Object> getTotalStylesheetCompileTime();
-    	
-    	public Map<String, Object> getRenderingDurations();
-    	
-    	public Map<String, Object> getRenderingSizes();
+    public interface StatsMBean {
+
+        public long getRequestCount();
+
+        public long getTotalViewCacheHits();
+
+        public long getTotalSelectCacheHits();
+
+        public long getTotalTime();
+
+        public long getFailedMatchCount();
+
+        public Map<String, Object> getTotalSelectionTime();
+
+        public Map<String, Object> getTotalViewerTime();
+
+        public Map<String, Object> getTotalRenderTime();
+
+        public Map<String, Object> getTotalRenderSize();
+
+        public Map<String, Object> getTotalSelectQuerySize();
+
+        public Map<String, Object> getTotalViewQuerySize();
+
+        public Map<String, Object> getTotalStylesheetCompileTime();
+
+        public Map<String, Object> getRenderingDurations();
+
+        public Map<String, Object> getRenderingSizes();
     }
-    
+
     public static class Stats implements StatsMBean {
-    	
-    	public long getRequestCount() {
-    		return StatsValues.requestCount;
-    	}
-    	
-    	public long getTotalViewCacheHits() {
-    		return StatsValues.totalViewCacheHits;
-    	}
-    	
-    	public long getTotalSelectCacheHits() {
-    		return StatsValues.totalSelectCacheHits;
-    	}
-    	
-    	public long getTotalTime() {
-    		return StatsValues.totalTime;
-    	}
-    	
-    	public long getFailedMatchCount() {
-    		return StatsValues.failedMatchCount;
-    	}
 
-		@Override public Map<String, Object> getTotalSelectionTime() {
-			return canonise( StatsValues.totalSelectionTime );
-		}
+        public long getRequestCount() {
+            return StatsValues.requestCount;
+        }
 
-		@Override public Map<String, Object> getTotalViewerTime() {
-			return canonise( StatsValues.totalSelectionTime );
-		}
+        public long getTotalViewCacheHits() {
+            return StatsValues.totalViewCacheHits;
+        }
 
-		@Override public Map<String, Object> getTotalRenderTime() {
-			return canonise( StatsValues.totalRenderTime );
-		}
+        public long getTotalSelectCacheHits() {
+            return StatsValues.totalSelectCacheHits;
+        }
 
-		@Override public Map<String, Object> getTotalRenderSize() {
-			return canonise( StatsValues.totalRenderSize );
-		}
+        public long getTotalTime() {
+            return StatsValues.totalTime;
+        }
 
-		@Override public Map<String, Object> getTotalSelectQuerySize() {
-			return canonise( StatsValues.totalSelectQuerySize );
-		}
+        public long getFailedMatchCount() {
+            return StatsValues.failedMatchCount;
+        }
 
-		@Override public Map<String, Object> getTotalViewQuerySize() {
-			return canonise( StatsValues.totalViewQuerySize );
-		}
+        @Override
+        public Map<String, Object> getTotalSelectionTime() {
+            return canonise(StatsValues.totalSelectionTime);
+        }
 
-		@Override public Map<String, Object> getTotalStylesheetCompileTime() {
-			return canonise( StatsValues.totalStylesheetCompileTime );
-		}
-		
-		@Override public Map<String, Object> getRenderingDurations() {
-			return canonise( StatsValues.formatDurations );
-		}
-		
-		@Override public Map<String, Object> getRenderingSizes() {
-			return canonise( StatsValues.formatDurations );
-		}
-    	
-    	private Map<String, Object> canonise( Map<String, Interval> map ) {
-			Map<String, Object> result = new HashMap<String, Object>();
-			for (Map.Entry<String, Interval> e: map.entrySet()) 
-				result.put( e.getKey(), canonise( e.getValue() ) );
-			return result;
-		}
+        @Override
+        public Map<String, Object> getTotalViewerTime() {
+            return canonise(StatsValues.totalSelectionTime);
+        }
 
-		private Map<String, Object> canonise(Interval i) {
-    		Map<String, Object> c = new HashMap<String, Object>();
-    		if (i.count > 0) {
-    			c.put( "smallest", i.min );
-    			c.put( "biggest", i.max );
-    			c.put( "total", i.total );
-    			c.put( "hits", i.count );
-    		} else {
-    			c.put( "hits", 0 );
-    		}
-    		return c;
+        @Override
+        public Map<String, Object> getTotalRenderTime() {
+            return canonise(StatsValues.totalRenderTime);
+        }
+
+        @Override
+        public Map<String, Object> getTotalRenderSize() {
+            return canonise(StatsValues.totalRenderSize);
+        }
+
+        @Override
+        public Map<String, Object> getTotalSelectQuerySize() {
+            return canonise(StatsValues.totalSelectQuerySize);
+        }
+
+        @Override
+        public Map<String, Object> getTotalViewQuerySize() {
+            return canonise(StatsValues.totalViewQuerySize);
+        }
+
+        @Override
+        public Map<String, Object> getTotalStylesheetCompileTime() {
+            return canonise(StatsValues.totalStylesheetCompileTime);
+        }
+
+        @Override
+        public Map<String, Object> getRenderingDurations() {
+            return canonise(StatsValues.formatDurations);
+        }
+
+        @Override
+        public Map<String, Object> getRenderingSizes() {
+            return canonise(StatsValues.formatDurations);
+        }
+
+        private Map<String, Object> canonise(Map<String, Interval> map) {
+            Map<String, Object> result = new HashMap<String, Object>();
+            for (Map.Entry<String, Interval> e : map.entrySet())
+                result.put(e.getKey(), canonise(e.getValue()));
+            return result;
+        }
+
+        private Map<String, Object> canonise(Interval i) {
+            Map<String, Object> c = new HashMap<String, Object>();
+            if (i.count > 0) {
+                c.put("smallest", i.min);
+                c.put("biggest", i.max);
+                c.put("total", i.total);
+                c.put("hits", i.count);
+            } else {
+                c.put("hits", 0);
+            }
+            return c;
 //			CompositeType type;
 //			try {
 //				OpenType<?> longType = SimpleType.LONG;
@@ -150,10 +158,10 @@ public class Statistics implements ServletContextListener {
 //			} catch (OpenDataException e) {
 //				throw new WrappedException( e );
 //			}
-    	}
-    	
+        }
+
     }
-    
+
 //    public static class My implements DynamicMBean {
 //    	
 //		@Override public Object getAttribute( String name ) 

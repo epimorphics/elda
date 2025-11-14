@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.epimorphics.lda</groupId>
   <artifactId>elda</artifactId>
-  <version>2.0.4-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>elda</name>
   <description>Top level linked data API project</description>
@@ -17,23 +18,23 @@
   </scm>
 
   <properties>
-	  <tempSCM>/tmp/tempSCM</tempSCM>
-	  <project.tagname />
+    <tempSCM>/tmp/tempSCM</tempSCM>
+    <project.tagname/>
 
     <ver.junit>4.13.2</ver.junit>
     <ver.log4j>2.17.1</ver.log4j>
     <ver.lucene>7.1.0</ver.lucene>
-  	<ver.jersey>1.19.4</ver.jersey>
+    <ver.jersey>4.0.0</ver.jersey>
     <ver.servlet-api>3.0.1</ver.servlet-api>
     <ver.slf4j>2.0.17</ver.slf4j>
     <ver.velocity>1.7</ver.velocity>
     <ver.wagon>2.2</ver.wagon>
     <ver.xmlunit>1.4</ver.xmlunit>
-    <jdk.version>1.8</jdk.version>
+    <jdk.version>21</jdk.version>
 
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ssZ</maven.build.timestamp.format>
-    <tomcat.version>7.0.107</tomcat.version>
+    <tomcat.version>11.0.13</tomcat.version>
   </properties>
 
   <build>
@@ -59,6 +60,12 @@
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-war-plugin</artifactId>
+          <version>3.4.0</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
             <source>${jdk.version}</source>
@@ -73,6 +80,7 @@
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
         <artifactId>wagon-ftp</artifactId>
+        <version>3.5.3</version>
       </extension>
 
       <extension>
@@ -82,12 +90,14 @@
       </extension>
     </extensions>
 
-	<plugins>
+    <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.8</version>
-		<configuration><skip>true</skip></configuration>
+        <version>3.12.0</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
         <executions>
           <execution>
             <id>aggregate</id>
@@ -98,7 +108,7 @@
             </configuration>
           </execution>
         </executions>
-</plugin>
+      </plugin>
     </plugins>
   </build>
 
@@ -125,14 +135,6 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <version>${ver.servlet-api}</version>
-      <type>jar</type>
-	  <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${ver.junit}</version>
@@ -155,15 +157,15 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-api</artifactId>
-      <version>${ver.log4j}</version>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.5.20</version>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>${ver.log4j}</version>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+      <version>6.1.0</version>
     </dependency>
   </dependencies>
 

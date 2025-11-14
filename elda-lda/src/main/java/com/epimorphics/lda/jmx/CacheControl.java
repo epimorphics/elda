@@ -8,8 +8,8 @@
 
 package com.epimorphics.lda.jmx;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 import com.epimorphics.lda.cache.Cache;
 

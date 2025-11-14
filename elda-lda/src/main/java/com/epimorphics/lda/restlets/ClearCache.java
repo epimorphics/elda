@@ -8,23 +8,29 @@
 
 package com.epimorphics.lda.restlets;
 
+import com.epimorphics.lda.cache.Cache;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.Response;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
+@Path("/control/clear-cache")
+public class ClearCache {
+    @POST
+    @Produces("text/plain")
+    public Response clearCachePOST() throws URISyntaxException {
+        Cache.Registry.clearAll();
+        return Response.seeOther(new URI("control/show-cache")).build();
+    }
 
-import com.epimorphics.lda.cache.Cache;
-
-@Path( "/control/clear-cache") public class ClearCache 
-	{
-	@POST @Produces("text/plain") public Response clearCachePOST() throws URISyntaxException { 
-		Cache.Registry.clearAll();
-		return Response.seeOther( new URI("control/show-cache")).build();
-	}
-	
-	@GET @Produces("text/plain") public Response clearCacheGET() throws URISyntaxException { 
-		Cache.Registry.clearAll();
-		return Response.seeOther( new URI("control/show-cache?warn=true")).build();
-	}
+    @GET
+    @Produces("text/plain")
+    public Response clearCacheGET() throws URISyntaxException {
+        Cache.Registry.clearAll();
+        return Response.seeOther(new URI("control/show-cache?warn=true")).build();
+    }
 }

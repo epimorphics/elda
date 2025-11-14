@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.codehaus.jettison.json.JSONException;
 import org.junit.Test;
@@ -52,6 +53,8 @@ public class TestJSONFormatterUsesISOFormatting {
 
     @Test
     public void testListWithDefaultFormattedDates() throws IOException {
+        Locale originalLocale = Locale.getDefault();
+        Locale.setDefault(Locale.forLanguageTag("en-GB"));
         String uriTemplate = "http://dummy/default/persons";
         Path expectedResultFilePath = Paths.get(TEST_BASE, "testPersonListWithDefaultFormattedDates.json");
         Cache.Registry.clearAll();
@@ -70,6 +73,7 @@ public class TestJSONFormatterUsesISOFormatting {
         String expected = new String(Files.readAllBytes(expectedResultFilePath));
         String actual = baos.toString();
 
+        Locale.setDefault(originalLocale);
         assertEquals(expected, actual);
     }
 
