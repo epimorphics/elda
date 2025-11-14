@@ -9,14 +9,15 @@ package com.epimorphics.lda.acceptance.tests;
 import com.hp.hpl.jena.query.Query;
 
 /**
-    An ASK query, with the expected result: true (Positive) or
-    false (!isPositive).
-*/
-public class Ask 
-	{
-	public final boolean isPositive;
-	public final Query ask;
-	
-	public Ask( boolean isPositive, Query ask ) 
-		{ this.isPositive = isPositive; this.ask = ask;	}
-	}
+ * An ASK query, with the expected result: true (Positive) or
+ * false (!isPositive).
+ */
+public class Ask {
+    public final boolean isPositive;
+    public final Query ask;
+
+    public Ask(boolean isPositive, Query ask) {
+        this.isPositive = isPositive;
+        this.ask = ask;
+    }
+}

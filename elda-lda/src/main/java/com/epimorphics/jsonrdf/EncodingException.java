@@ -12,19 +12,20 @@
 
 package com.epimorphics.jsonrdf;
 
-/** Return problems found during JSON encode/decode */
+/**
+ * Return problems found during JSON encode/decode
+ */
 
 public class EncodingException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
-    
+
     public EncodingException(String message) {
         super(message);
     }
-    
+
     public EncodingException(String message, Throwable t) {
         super(message, t);
     }
 
 }
-

@@ -14,33 +14,32 @@
 
 package com.epimorphics.lda.vocabularies.test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import org.hamcrest.Matcher;
-import org.junit.Test;
-
 import com.epimorphics.lda.vocabularies.XHV;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
+import org.hamcrest.Matcher;
+import org.junit.Test;
 
-public class TestXHVocabulary
-    {
-    @Test public void testXHVURI()
-        {
-        assertThat( XHV.getURI(), is( "http://www.w3.org/1999/xhtml/vocab#" ) );
-        }
-    
-    @Test public void testXHTMLVocabulary()
-        {
-        assertThat( XHV.first, isXHVResource( Property.class, "first" ) );
-        assertThat( XHV.next, isXHVResource( Property.class, "next" ) );
-        assertThat( XHV.prev, isXHVResource( Property.class, "prev" ) );
-        }
-    
-    private Matcher<Resource> isXHVResource( final Class<? extends Resource> c, final String localName )
-        { return new ResourceMatcher( c, XHV.getURI(), localName ); }
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class TestXHVocabulary {
+    @Test
+    public void testXHVURI() {
+        assertThat(XHV.getURI(), is("http://www.w3.org/1999/xhtml/vocab#"));
     }
+
+    @Test
+    public void testXHTMLVocabulary() {
+        assertThat(XHV.first, isXHVResource(Property.class, "first"));
+        assertThat(XHV.next, isXHVResource(Property.class, "next"));
+        assertThat(XHV.prev, isXHVResource(Property.class, "prev"));
+    }
+
+    private Matcher<Resource> isXHVResource(final Class<? extends Resource> c, final String localName) {
+        return new ResourceMatcher(c, XHV.getURI(), localName);
+    }
+}
 
     
 /*

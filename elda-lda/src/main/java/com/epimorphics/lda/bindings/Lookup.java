@@ -10,35 +10,38 @@ package com.epimorphics.lda.bindings;
 import java.util.Map;
 
 /**
-    An interface to allow expandVariables to work on general maps.
-*/
+ * An interface to allow expandVariables to work on general maps.
+ */
 public interface Lookup {
-	
-	public String getValueString( String name );
-	
-	public static final Lookup empty = new Lookup() {
 
-		@Override public String toString() {
-			return "Lookup.empty";
-		}
-		
-		@Override public String getValueString(String name) {
-			return null;
-		}
-		
-	};
-	
-	public static class Util {
+    public String getValueString(String name);
 
-		/**
-		    Wraps a String-String map as a Lookup.
-		*/
-		public static Lookup asLookup( final Map<String, String> bindings ) {
-			return new Lookup() {
-				@Override public String getValueString(String name) {
-					return bindings.get( name );
-				}
-			};
-		}
-	}
+    public static final Lookup empty = new Lookup() {
+
+        @Override
+        public String toString() {
+            return "Lookup.empty";
+        }
+
+        @Override
+        public String getValueString(String name) {
+            return null;
+        }
+
+    };
+
+    public static class Util {
+
+        /**
+         * Wraps a String-String map as a Lookup.
+         */
+        public static Lookup asLookup(final Map<String, String> bindings) {
+            return new Lookup() {
+                @Override
+                public String getValueString(String name) {
+                    return bindings.get(name);
+                }
+            };
+        }
+    }
 }

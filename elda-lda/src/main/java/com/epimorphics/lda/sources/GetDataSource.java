@@ -22,28 +22,26 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-public class GetDataSource
-    {
-    public static Source sourceFromSpec( FileManager fm, Resource sourceConfig, AuthMap am ) 
-        {
-    	Resource endpoint = sourceConfig.getPropertyResourceValue( API.sparqlEndpoint );
-        
+public class GetDataSource {
+    public static Source sourceFromSpec(FileManager fm, Resource sourceConfig, AuthMap am) {
+        Resource endpoint = sourceConfig.getPropertyResourceValue(API.sparqlEndpoint);
+
         if (endpoint == null)
-        	EldaException.BadSpecification( "no SPARQL endpoint specified for " + sourceConfig );
-                
-        if (endpoint.hasProperty( RDF.type, ELDA_API.Combiner ))
-        	return new CombinedSource( fm, am, endpoint );
-        
-        String sparqlEndpointString = endpoint.getURI();  
-        
-        return 
-            sparqlEndpointString.startsWith( LocalSource.PREFIX ) ? new LocalSource( fm, endpoint )
-        	: sparqlEndpointString.startsWith( HereSource.PREFIX ) ? new HereSource( sourceConfig.getModel(), endpoint )
-            : sparqlEndpointString.startsWith( TDBManager.PREFIX ) ? new TDBSource( endpoint )
-            : new SparqlSource( endpoint, am )
-            ;
-        }
+            EldaException.BadSpecification("no SPARQL endpoint specified for " + sourceConfig);
+
+        if (endpoint.hasProperty(RDF.type, ELDA_API.Combiner))
+            return new CombinedSource(fm, am, endpoint);
+
+        String sparqlEndpointString = endpoint.getURI();
+
+        return
+                sparqlEndpointString.startsWith(LocalSource.PREFIX) ? new LocalSource(fm, endpoint)
+                        : sparqlEndpointString.startsWith(HereSource.PREFIX) ? new HereSource(sourceConfig.getModel(), endpoint)
+                        : sparqlEndpointString.startsWith(TDBManager.PREFIX) ? new TDBSource(endpoint)
+                        : new SparqlSource(endpoint, am)
+                ;
     }
+}
 
 /*
     (c) Copyright 2010 Epimorphics Limited

@@ -14,44 +14,59 @@
 
 package com.epimorphics.lda.support;
 
-import java.util.Iterator;
-
 import com.hp.hpl.jena.query.QuerySolution;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Literal;
+import com.hp.hpl.jena.rdf.model.RDFNode;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.util.iterator.SingletonIterator;
 
-/**
-    A QuerySolution with one literal binding, used as an initial setting
-    for a SPARQL query.
+import java.util.Iterator;
 
-    @author Chris
-*/
-public class InitialParameter implements QuerySolution
-	{
-	private final String name;
-	private final Literal literal;
-	
-	public InitialParameter( String name, Literal literal )
-		{ this.name = name; this.literal = literal; }
-	
-	@Override public String toString()
-		{ return "<" + name + "=" + literal + ">"; }
-	
-	@Override public Iterator<String> varNames()
-		{ return new SingletonIterator<String>( name ); }
-	
-	@Override public Resource getResource( String varName )
-		{ return null; }
-	
-	@Override public Literal getLiteral( String varName )
-		{ return (Literal) get( varName ); }
-	
-	@Override public RDFNode get( String varName )
-		{ return literal; }
-	
-	@Override public boolean contains( String varName )
-		{ return varName.equals( name ); }
-	}
+/**
+ * A QuerySolution with one literal binding, used as an initial setting
+ * for a SPARQL query.
+ *
+ * @author Chris
+ */
+public class InitialParameter implements QuerySolution {
+    private final String name;
+    private final Literal literal;
+
+    public InitialParameter(String name, Literal literal) {
+        this.name = name;
+        this.literal = literal;
+    }
+
+    @Override
+    public String toString() {
+        return "<" + name + "=" + literal + ">";
+    }
+
+    @Override
+    public Iterator<String> varNames() {
+        return new SingletonIterator<String>(name);
+    }
+
+    @Override
+    public Resource getResource(String varName) {
+        return null;
+    }
+
+    @Override
+    public Literal getLiteral(String varName) {
+        return (Literal) get(varName);
+    }
+
+    @Override
+    public RDFNode get(String varName) {
+        return literal;
+    }
+
+    @Override
+    public boolean contains(String varName) {
+        return varName.equals(name);
+    }
+}
     
 /*
     (c) Copyright 2010 Epimorphics Limited

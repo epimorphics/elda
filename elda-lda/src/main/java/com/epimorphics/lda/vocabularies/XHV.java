@@ -17,23 +17,24 @@ package com.epimorphics.lda.vocabularies;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
 
-public class XHV
-    {
+public class XHV {
     public static final String ns = "http://www.w3.org/1999/xhtml/vocab#";
-    
-    public static final Property first = property( "first" );
 
-    public static final Property next = property( "next" );
+    public static final Property first = property("first");
 
-    public static final Property prev = property( "prev" );
-    
-    public static String getURI()
-        { return ns; }
+    public static final Property next = property("next");
 
-    private static Property property( String localName )
-        { return ResourceFactory.createProperty( ns + localName ); }
+    public static final Property prev = property("prev");
 
+    public static String getURI() {
+        return ns;
     }
+
+    private static Property property(String localName) {
+        return ResourceFactory.createProperty(ns + localName);
+    }
+
+}
 
     
 /*

@@ -10,13 +10,12 @@
 package com.epimorphics.lda.renderers.common;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.DCTerms;
 import com.hp.hpl.jena.vocabulary.RDFS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Encapsulates a format that a page is declared as being available in.
@@ -24,9 +23,8 @@ import com.hp.hpl.jena.vocabulary.RDFS;
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
 public class PageFormat
-extends CommonNodeWrapper
-implements Comparable<PageFormat>
-{
+        extends CommonNodeWrapper
+        implements Comparable<PageFormat> {
     /***********************************/
     /* Constants                       */
     /***********************************/
@@ -35,8 +33,8 @@ implements Comparable<PageFormat>
     /* Static variables                */
     /***********************************/
 
-    @SuppressWarnings( value = "unused" )
-    private static final Logger log = LoggerFactory.getLogger( PageFormat.class );
+    @SuppressWarnings(value = "unused")
+    private static final Logger log = LoggerFactory.getLogger(PageFormat.class);
 
     /***********************************/
     /* Instance variables              */
@@ -52,8 +50,8 @@ implements Comparable<PageFormat>
      * @param page The page object this is one of the formats for
      * @param root The configuration root resource
      */
-    public PageFormat( Page page, Resource root ) {
-        super( page, root );
+    public PageFormat(Page page, Resource root) {
+        super(page, root);
     }
 
     /***********************************/
@@ -63,22 +61,24 @@ implements Comparable<PageFormat>
     /**
      * Return the label for this format, which is denoted by the <code>rdfs:label</code>
      * on the page format resource
+     *
      * @return The format label
      */
     public String label() {
-        return getPropertyValue( RDFS.label ).getLexicalForm();
+        return getPropertyValue(RDFS.label).getLexicalForm();
     }
 
     /**
      * Return the media (mime) type of this format
-     * @return  The mime type, or null if not specified
+     *
+     * @return The mime type, or null if not specified
      */
     public MediaType mimeType() {
         MediaType mime = null;
 
-        com.epimorphics.rdfutil.RDFNodeWrapper format = getPropertyValue( DCTerms.format );
+        com.epimorphics.rdfutil.RDFNodeWrapper format = getPropertyValue(DCTerms.format);
         if (format != null) {
-            mime = MediaType.decodeType( format.getPropertyValue( RDFS.label ).getLexicalForm() );
+            mime = MediaType.decodeType(format.getPropertyValue(RDFS.label).getLexicalForm());
         }
 
         return mime;
@@ -88,15 +88,15 @@ implements Comparable<PageFormat>
      * @return The resource denoting the page that this page format is a format of
      */
     public com.epimorphics.rdfutil.RDFNodeWrapper isFormatOf() {
-        return getPropertyValue( DCTerms.isFormatOf );
+        return getPropertyValue(DCTerms.isFormatOf);
     }
 
     /**
      * When sorting, use the name as a comparison key
      */
     @Override
-    public int compareTo( PageFormat o ) {
-        return label().compareTo( o.label() );
+    public int compareTo(PageFormat o) {
+        return label().compareTo(o.label());
     }
 
     /***********************************/
@@ -108,4 +108,3 @@ implements Comparable<PageFormat>
     /***********************************/
 
 }
-

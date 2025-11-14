@@ -25,42 +25,43 @@ import com.epimorphics.util.Util;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
 
-@Path("{sc : create}") public class ServiceCreate
-    {
+@Path("{sc : create}")
+public class ServiceCreate {
     final SharedConfig config;
 
-    public ServiceCreate( @Context UriInfo u ) 
-        { config = SharedConfig.create( u ); }
+    public ServiceCreate(@Context UriInfo u) {
+        config = SharedConfig.create(u);
+    }
 
-    @POST @Produces("text/html") public String createService( @FormParam("desc") String ttl )
-        {
-        try
-            {
+    @POST
+    @Produces("text/html")
+    public String createService(@FormParam("desc") String ttl) {
+        try {
             Model desc = ModelFactory.createDefaultModel();
-            desc.read( new StringReader( ttl ), "", "TTL" );
+            desc.read(new StringReader(ttl), "", "TTL");
             String ln = leafName();
-            String full = config.pathFor( "endpoint", ln );
-            EndPoint.registerLeaf( ln, desc );
+            String full = config.pathFor("endpoint", ln);
+            EndPoint.registerLeaf(ln, desc);
             String body = "<a href='" + full + ">" + full + "</a>";
-            return Util.withBody( "here is your endpoint URI", body );
-            }
-        catch (Exception e)
-            {
-            return Util.withBody( "oops!", e.toString() );
-            }
-        }
-    
-    static int label = 1000;
-    
-    static synchronized String leafName() 
-        { return "service-" + ++label; }
-    
-    @GET @Produces("text/html") public String supplyRequestForm()
-        {
-        String form = Util.readResource( "textlike/create-endpoint-form.html" );
-        return Util.withBody( "request a new service endpoint", form );
+            return Util.withBody("here is your endpoint URI", body);
+        } catch (Exception e) {
+            return Util.withBody("oops!", e.toString());
         }
     }
+
+    static int label = 1000;
+
+    static synchronized String leafName() {
+        return "service-" + ++label;
+    }
+
+    @GET
+    @Produces("text/html")
+    public String supplyRequestForm() {
+        String form = Util.readResource("textlike/create-endpoint-form.html");
+        return Util.withBody("request a new service endpoint", form);
+    }
+}
 
     
 /*

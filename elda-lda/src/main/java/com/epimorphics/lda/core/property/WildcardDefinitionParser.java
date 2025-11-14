@@ -14,31 +14,36 @@ import java.util.regex.Pattern;
  * Wildcards denote that all relations on a particular subject are included in the view.
  */
 class WildcardDefinitionParser implements DefinitionParser {
-	private final Pattern pattern = Pattern.compile("^(\\*)$");
+    private final Pattern pattern = Pattern.compile("^(\\*)$");
 
-	@Override public Pattern pattern() {
-		return pattern;
-	}
+    @Override
+    public Pattern pattern() {
+        return pattern;
+    }
 
-	@Override public ViewProperty getViewProperty(String definition, ViewProperty.Factory factory) {
-		return new WildcardProperty();
-	}
+    @Override
+    public ViewProperty getViewProperty(String definition, ViewProperty.Factory factory) {
+        return new WildcardProperty();
+    }
 
-	private class WildcardProperty extends ViewProperty.Base {
-		WildcardProperty() {
-			super(ResourceFactory.createProperty( "_magic:ANY" ));
-		}
+    private class WildcardProperty extends ViewProperty.Base {
+        WildcardProperty() {
+            super(ResourceFactory.createProperty("_magic:ANY"));
+        }
 
-		@Override public RDFQ.Triple asTriple(Any subject, Any object, VarSupply vars) {
-			return RDFQ.triple(subject, vars.newVar(), object);
-		}
+        @Override
+        public RDFQ.Triple asTriple(Any subject, Any object, VarSupply vars) {
+            return RDFQ.triple(subject, vars.newVar(), object);
+        }
 
-		@Override public String shortName(Context ctx) {
-			return "ANY";
-		}
+        @Override
+        public String shortName(Context ctx) {
+            return "ANY";
+        }
 
-		@Override public long expiryTimeMillis(PropertyExpiryTimes pet) {
-			return pet.minTimeMillis();
-		}
-	}
+        @Override
+        public long expiryTimeMillis(PropertyExpiryTimes pet) {
+            return pet.minTimeMillis();
+        }
+    }
 }

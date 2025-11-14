@@ -6,8 +6,6 @@
 */
 package com.epimorphics.lda.renderers;
 
-import java.util.Map;
-
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIEndpoint;
 import com.epimorphics.lda.core.APIResultSet;
@@ -23,10 +21,12 @@ import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.Statement;
 import com.hp.hpl.jena.shared.BrokenException;
 
+import java.util.Map;
+
 /**
-    Production of XSLT renderers, which transform the results
-    of an XML rendering.
-*/
+ * Production of XSLT renderers, which transform the results
+ * of an XML rendering.
+ */
 public class XSLT_RendererFactory implements RendererFactory {
 
     private final CompleteContext.Mode defaultMode = Mode.PreferLocalnames;
@@ -35,7 +35,7 @@ public class XSLT_RendererFactory implements RendererFactory {
     private final MediaType mt;
     private final CompleteContext.Mode mode;
 
-    public XSLT_RendererFactory( Resource root, MediaType mt ) {
+    public XSLT_RendererFactory(Resource root, MediaType mt) {
 
         if (root == null) throw new BrokenException("XSLT_RendererFactory has not been given a root.");
 
@@ -44,26 +44,31 @@ public class XSLT_RendererFactory implements RendererFactory {
         this.mode = Mode.decode(root, defaultMode);
     }
 
-    @Override public Renderer buildWith( final APIEndpoint ep, final ShortnameService sns ) {
+    @Override
+    public Renderer buildWith(final APIEndpoint ep, final ShortnameService sns) {
         return new Renderer() {
 
-            @Override public MediaType getMediaType( Bindings unused ) {
+            @Override
+            public MediaType getMediaType(Bindings unused) {
                 return mt;
             }
 
-            @Override public Mode getMode() {
+            @Override
+            public Mode getMode() {
                 return mode;
             }
 
-            @Override public String getPreferredSuffix() {
+            @Override
+            public String getPreferredSuffix() {
                 return "html";
             }
 
-            @Override public Renderer.BytesOut render( Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results ) {
+            @Override
+            public Renderer.BytesOut render(Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results) {
                 handleMetadata(results);
-                final String sheet = rc.expandVariables( objectSpelling( root.getProperty( API.stylesheet ) ));
-                final XMLRenderer xr = new XMLRenderer( mode, sns, mt, sheet );
-                return xr.render( t, rc.copyWithDefaults( ep.defaults() ), termBindings, results );
+                final String sheet = rc.expandVariables(objectSpelling(root.getProperty(API.stylesheet)));
+                final XMLRenderer xr = new XMLRenderer(mode, sns, mt, sheet);
+                return xr.render(t, rc.copyWithDefaults(ep.defaults()), termBindings, results);
             }
 
             private String objectSpelling(Statement s) {
@@ -71,21 +76,23 @@ public class XSLT_RendererFactory implements RendererFactory {
                 return ob.isLiteral() ? ob.getLiteralLexicalForm() : ob.getURI();
             }
 
-            public void handleMetadata( APIResultSet results ) {
-            	MetadataOptions mo = new MetadataOptions(root, "bindings,formats,versions,execution");
-                results.includeMetadata( mo.asArray() );
+            public void handleMetadata(APIResultSet results) {
+                MetadataOptions mo = new MetadataOptions(root, "bindings,formats,versions,execution");
+                results.includeMetadata(mo.asArray());
             }
         };
     }
 
-    @Override public RendererFactory withRoot( Resource r ) {
-        return new XSLT_RendererFactory( r, mt );
+    @Override
+    public RendererFactory withRoot(Resource r) {
+        return new XSLT_RendererFactory(r, mt);
     }
 
-    @Override public RendererFactory withMediaType( MediaType mt ) {
-        return new XSLT_RendererFactory( root, mt );
+    @Override
+    public RendererFactory withMediaType(MediaType mt) {
+        return new XSLT_RendererFactory(root, mt);
     }
-    
+
     @Override
     public RendererFactory withISODateFormatting(Boolean jsonUsesISOdate) {
         return this;

@@ -1,66 +1,69 @@
 package temp;
 
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
-
-import org.junit.Ignore;
-import org.junit.Test;
-
 import com.github.jsonldjava.jena.JenaJSONLD;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
 
 public class TestJsonLdLibrary {
-	
-	static { JenaJSONLD.init(); }
-	
-	@Test @Ignore public void testReadsJSON_LD() throws UnsupportedEncodingException {
-					
-		
-		Model reconstituted = ModelFactory.createDefaultModel();
-		
-		String source = response;
-		
-		reconstituted.read(new ByteArrayInputStream(source.getBytes("UTF-8")), "", "JSON-LD");
-		System.err.println(">> reconstituted "+ reconstituted.size() + " triples.");
-		reconstituted.write(System.err, "TURTLE");
-		System.err.println(">> done.");
-	}	
-	
-	static final String example =
-		joinup
-			( "\"@context\": {\"name\": \"eh:/bandersnatch/name\", \"born\": \"eh:/bandersnatch/born\"}"
-			, "\"@id\": \"http://dbpedia.org/resource/John_Lennon\""
-			, "\"name\": \"John Lennon\""
-			, "\"born\": \"1940-10-09\""
-			, "\"spouse\": \"http://dbpedia.org/resource/Cynthia_Lennon\""		
-			);
-	
-	static final String response = joinup2(
-    "	{",
-    "",
-    "	    \"@context\": ",
-    "",
-    "	{",
-    "",
-    "	    \"isPartOf\": \"http://purl.org/dc/terms/isPartOf\",",
-    "	    \"rest\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#rest\",",
-    "		\"results\": \"eh:/results\",",
-    "	    \"playTimeMinutes\": ",
-    "",
-    "	{",
-    "",
-    "	    \"@id\": \"http://epimorphics.com/public/vocabulary/games/playTimeMinutes\",",
-    "	    \"@type\": \"http://www.w3.org/2001/XMLSchema#integer\"",
-    "",
-    "	},",
-    "	\"publicationYear\": ",
-    "	{",
-    "",
-    "	    \"@id\": \"http://epimorphics.com/public/vocabulary/games/pubYear\",",
-    "	    \"@type\": \"http://www.w3.org/2001/XMLSchema#integer\"",
-    "",
-    "	},",
+
+    static {
+        JenaJSONLD.init();
+    }
+
+    @Test
+    @Ignore
+    public void testReadsJSON_LD() throws UnsupportedEncodingException {
+
+
+        Model reconstituted = ModelFactory.createDefaultModel();
+
+        String source = response;
+
+        reconstituted.read(new ByteArrayInputStream(source.getBytes("UTF-8")), "", "JSON-LD");
+        System.err.println(">> reconstituted " + reconstituted.size() + " triples.");
+        reconstituted.write(System.err, "TURTLE");
+        System.err.println(">> done.");
+    }
+
+    static final String example =
+            joinup
+                    ("\"@context\": {\"name\": \"eh:/bandersnatch/name\", \"born\": \"eh:/bandersnatch/born\"}"
+                            , "\"@id\": \"http://dbpedia.org/resource/John_Lennon\""
+                            , "\"name\": \"John Lennon\""
+                            , "\"born\": \"1940-10-09\""
+                            , "\"spouse\": \"http://dbpedia.org/resource/Cynthia_Lennon\""
+                    );
+
+    static final String response = joinup2(
+            "	{",
+            "",
+            "	    \"@context\": ",
+            "",
+            "	{",
+            "",
+            "	    \"isPartOf\": \"http://purl.org/dc/terms/isPartOf\",",
+            "	    \"rest\": \"http://www.w3.org/1999/02/22-rdf-syntax-ns#rest\",",
+            "		\"results\": \"eh:/results\",",
+            "	    \"playTimeMinutes\": ",
+            "",
+            "	{",
+            "",
+            "	    \"@id\": \"http://epimorphics.com/public/vocabulary/games/playTimeMinutes\",",
+            "	    \"@type\": \"http://www.w3.org/2001/XMLSchema#integer\"",
+            "",
+            "	},",
+            "	\"publicationYear\": ",
+            "	{",
+            "",
+            "	    \"@id\": \"http://epimorphics.com/public/vocabulary/games/pubYear\",",
+            "	    \"@type\": \"http://www.w3.org/2001/XMLSchema#integer\"",
+            "",
+            "	},",
 //    "	\"next\": \"http://www.w3.org/1999/xhtml/vocab#next\",",
 //    "	\"definition\": \"http://purl.org/linked-data/api/vocab#definition\",",
 //    "	\"BoardGame\": \"http://epimorphics.com/public/vocabulary/games/BoardGame\",",
@@ -100,37 +103,37 @@ public class TestJsonLdLibrary {
 //    "	    \"startIndex\": \"http://a9.com/-/spec/opensearch/1.1/startIndex\",",
 //    "	    \"itemsPerPage\": \"http://a9.com/-/spec/opensearch/1.1/itemsPerPage\",",
 //    "	    \"hasPart\": \"http://purl.org/dc/terms/hasPart\",",
-    "	    \"label\": \"http://www.w3.org/2000/01/rdf-schema#label\"",
-    "",
-    "	},",
+            "	    \"label\": \"http://www.w3.org/2000/01/rdf-schema#label\"",
+            "",
+            "	},",
 //    "	\"format\": \"linked-data-api\",",
 //    "	\"version\": \"0.2A\",",
-    "	\"meta\": ",
-    "	{",
-    "",
-    "	    \"@id\": \"http://localhost:8080/standalone/again/games.json-ld\",",
+            "	\"meta\": ",
+            "	{",
+            "",
+            "	    \"@id\": \"http://localhost:8080/standalone/again/games.json-ld\",",
 //    "	    \"startIndex\": ​1,",
-    "	    \"type\": ",
-    "",
-    "	[",
-    "",
-    "	{",
-    "",
-    "	    \"@id\": \"http://purl.org/linked-data/api/vocab#Page\"",
-    "",
-    "	},",
-    "",
-    "	    {",
-    "	        \"@id\": \"http://purl.org/linked-data/api/vocab#ListEndpoint\"",
-    "	    }",
-    "",
-    "	],",
-    "	\"isPartOf\": ",
-    "	{",
-    "",
-    "	    \"@id\": \"http://localhost:8080/standalone/again/games.json-ld\"",
-    "",
-    "	}",
+            "	    \"type\": ",
+            "",
+            "	[",
+            "",
+            "	{",
+            "",
+            "	    \"@id\": \"http://purl.org/linked-data/api/vocab#Page\"",
+            "",
+            "	},",
+            "",
+            "	    {",
+            "	        \"@id\": \"http://purl.org/linked-data/api/vocab#ListEndpoint\"",
+            "	    }",
+            "",
+            "	],",
+            "	\"isPartOf\": ",
+            "	{",
+            "",
+            "	    \"@id\": \"http://localhost:8080/standalone/again/games.json-ld\"",
+            "",
+            "	}",
 //    "	\"definition\": ",
 //    "	{",
 //    "",
@@ -162,52 +165,52 @@ public class TestJsonLdLibrary {
 //    "	    {",
 //    "	        \"@id\": \"http://localhost:8080/standalone/again/games.json-ld?_page=0\"",
 //    "	    }",
-    "",
-    "	},",
-    "	\"results\": ",
-    "	[",
+            "",
+            "	},",
+            "	\"results\": ",
+            "	[",
 //    "",
-    "	{",
-    "",
-    "	    \"@id\": \"http://epimorphics.com/public/vocabulary/games/BriefHistoryOfTheWorld\",",
-    "       \"publicationYear\": 2009,",
-    "	    \"designedBy\": ",
-    "",
-    "	{",
-    "",
-    "	    \"@id\": \"http://epimorphics.com/public/vocabulary/games/ragnar-brothers\"",
-    "",
-    "	},",
-    "	\"type\": ",
-    "	[",
-    "",
-    "	    {",
-    "	        \"@id\": \"http://epimorphics.com/public/vocabulary/games/BoardGame\"",
-    "	    }",
-    "",
-    "	],",
-    "	\"players\": ",
-    "	[",
-    "",
-    "      6,",
-    "      5,",
-    "      4,",
-    "      3,6,5,4,3",
-    "",
-    "	],",
-    "	\"sameAs\": ",
-    "	{",
-    "",
-    "	    \"@id\": \"http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html\"",
-    "",
-    "	},",
-    "	\"label\": ",
-    "",
-    "	    [",
-    "	        \"A Brief History of the World\"",
-    "	    ]",
-    "",
-    "	}",
+            "	{",
+            "",
+            "	    \"@id\": \"http://epimorphics.com/public/vocabulary/games/BriefHistoryOfTheWorld\",",
+            "       \"publicationYear\": 2009,",
+            "	    \"designedBy\": ",
+            "",
+            "	{",
+            "",
+            "	    \"@id\": \"http://epimorphics.com/public/vocabulary/games/ragnar-brothers\"",
+            "",
+            "	},",
+            "	\"type\": ",
+            "	[",
+            "",
+            "	    {",
+            "	        \"@id\": \"http://epimorphics.com/public/vocabulary/games/BoardGame\"",
+            "	    }",
+            "",
+            "	],",
+            "	\"players\": ",
+            "	[",
+            "",
+            "      6,",
+            "      5,",
+            "      4,",
+            "      3,6,5,4,3",
+            "",
+            "	],",
+            "	\"sameAs\": ",
+            "	{",
+            "",
+            "	    \"@id\": \"http://www.ragnarbrothers.co.uk/html/brief_history_of_the_world1.html\"",
+            "",
+            "	},",
+            "	\"label\": ",
+            "",
+            "	    [",
+            "	        \"A Brief History of the World\"",
+            "	    ]",
+            "",
+            "	}",
 //    "	{",
 //    "",
 //    "	    \"@id\": \"http://epimorphics.com/public/vocabulary/games/a-few-acres-of-snow\",",
@@ -664,31 +667,31 @@ public class TestJsonLdLibrary {
 //    "	                \"Matthias Cramer\"",
 //    "	            ]",
 //    "	        }",
-    "	    ]",
-    "",
-    "	}"
-	);
-	
-	static String joinup(String ...elements ) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("{\n");
-		String comma = ",";
-		for (String x: elements) {
-			sb.append(x).append(comma).append("\n");
-		}
-		sb.append("\"hack\": \"for parsing\"}\n");
-		return sb.toString();
-	}	
-	
-	static String joinup2(String ...elements ) {
-		int line = 0;
-		StringBuilder sb = new StringBuilder();
-		for (String x: elements) {
-			line += 1;
+            "	    ]",
+            "",
+            "	}"
+    );
+
+    static String joinup(String... elements) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n");
+        String comma = ",";
+        for (String x : elements) {
+            sb.append(x).append(comma).append("\n");
+        }
+        sb.append("\"hack\": \"for parsing\"}\n");
+        return sb.toString();
+    }
+
+    static String joinup2(String... elements) {
+        int line = 0;
+        StringBuilder sb = new StringBuilder();
+        for (String x : elements) {
+            line += 1;
 //			System.err.println("| " + line + ": " + x);
-			sb.append(x).append("\n");
-		}
-		return sb.toString();
-}
+            sb.append(x).append("\n");
+        }
+        return sb.toString();
+    }
 
 }

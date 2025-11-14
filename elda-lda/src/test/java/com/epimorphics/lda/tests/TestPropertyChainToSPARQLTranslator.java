@@ -8,62 +8,62 @@
 
 package com.epimorphics.lda.tests;
 
-import static com.epimorphics.util.CollectionUtils.list;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import com.epimorphics.lda.core.property.ViewProperty;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
-import org.junit.Test;
-
 import com.epimorphics.lda.core.VarSupply;
+import com.epimorphics.lda.core.property.ViewProperty;
 import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.Variable;
 import com.epimorphics.lda.support.PropertyChain;
 import com.epimorphics.lda.support.PropertyChainTranslator;
+import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
+import org.junit.Test;
 
-public class TestPropertyChainToSPARQLTranslator 
-{
-	@Test public void ensureNoChainsGeneratesEmptyOptionals()
-	{
-		PropertyChainTranslator t = new PropertyChainTranslator();
-		String generated = t.translate( new VarSupplyByCount(), false );
-		assertThat( generated, is( "" ) ); }
-	
-	@Test public void ensureSingleOneElementChainGeneratesOneOptional()
-	{
-		PropertyChain P = new PropertyChain( list( property( "P" ) ) ); 
-		PropertyChainTranslator t = new PropertyChainTranslator( P );
-		String generated = t.translate( new VarSupplyByCount(), false );
-		assertThat( generated, is( "{ {}\nUNION { ?item <eh:/P> ?v1}}" ) );
-	}
+import static com.epimorphics.util.CollectionUtils.list;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-	@Test public void ensureMultipleElementChainGeneratesNestedOptional()
-	{
-		PropertyChain PQ = new PropertyChain( list( property( "P" ), property( "Q" ) ) ); 
-		PropertyChainTranslator t = new PropertyChainTranslator( PQ );
-		String generated = t.translate( new VarSupplyByCount(), "meti", false );
-		assertThat( generated, is( "{ {}\nUNION { ?meti <eh:/P> ?v1\nOPTIONAL { ?v1 <eh:/Q> ?v2 . }}}" ) );
-	}
+public class TestPropertyChainToSPARQLTranslator {
+    @Test
+    public void ensureNoChainsGeneratesEmptyOptionals() {
+        PropertyChainTranslator t = new PropertyChainTranslator();
+        String generated = t.translate(new VarSupplyByCount(), false);
+        assertThat(generated, is(""));
+    }
 
-	@Test public void ensureMultiplePropertyChainsGenerateSeparateOptions()
-		{
-		PropertyChain P = new PropertyChain( list( property( "P" ) ) ); 
-		PropertyChain QR = new PropertyChain( list( property( "Q" ), property( "R" ) ) ); 
-		PropertyChainTranslator t = new PropertyChainTranslator( P, QR );
-		String generated = t.translate( new VarSupplyByCount(), "X", false );
-		assertThat( generated, is( "{ {}\nUNION { ?X <eh:/P> ?v1}UNION { ?X <eh:/Q> ?v2\nOPTIONAL { ?v2 <eh:/R> ?v1 . }}}" ) );
-		}
-	
-	static class VarSupplyByCount implements VarSupply
-	{
-		int count = 0;
+    @Test
+    public void ensureSingleOneElementChainGeneratesOneOptional() {
+        PropertyChain P = new PropertyChain(list(property("P")));
+        PropertyChainTranslator t = new PropertyChainTranslator(P);
+        String generated = t.translate(new VarSupplyByCount(), false);
+        assertThat(generated, is("{ {}\nUNION { ?item <eh:/P> ?v1}}"));
+    }
 
-		@Override public Variable newVar()
-		{ return RDFQ.var( "v" + ++count ); }
-	}
+    @Test
+    public void ensureMultipleElementChainGeneratesNestedOptional() {
+        PropertyChain PQ = new PropertyChain(list(property("P"), property("Q")));
+        PropertyChainTranslator t = new PropertyChainTranslator(PQ);
+        String generated = t.translate(new VarSupplyByCount(), "meti", false);
+        assertThat(generated, is("{ {}\nUNION { ?meti <eh:/P> ?v1\nOPTIONAL { ?v1 <eh:/Q> ?v2 . }}}"));
+    }
 
-	private static ViewProperty property(String name) {
-		return new ViewProperty.Base(ModelTestBase.property(name));
-	}
+    @Test
+    public void ensureMultiplePropertyChainsGenerateSeparateOptions() {
+        PropertyChain P = new PropertyChain(list(property("P")));
+        PropertyChain QR = new PropertyChain(list(property("Q"), property("R")));
+        PropertyChainTranslator t = new PropertyChainTranslator(P, QR);
+        String generated = t.translate(new VarSupplyByCount(), "X", false);
+        assertThat(generated, is("{ {}\nUNION { ?X <eh:/P> ?v1}UNION { ?X <eh:/Q> ?v2\nOPTIONAL { ?v2 <eh:/R> ?v1 . }}}"));
+    }
+
+    static class VarSupplyByCount implements VarSupply {
+        int count = 0;
+
+        @Override
+        public Variable newVar() {
+            return RDFQ.var("v" + ++count);
+        }
+    }
+
+    private static ViewProperty property(String name) {
+        return new ViewProperty.Base(ModelTestBase.property(name));
+    }
 }

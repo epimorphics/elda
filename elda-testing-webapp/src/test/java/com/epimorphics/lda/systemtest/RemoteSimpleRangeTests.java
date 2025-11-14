@@ -8,11 +8,13 @@ $Id$
 
 package com.epimorphics.lda.systemtest;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
-import java.util.Collection;
-
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.lda.acceptance.tests.Ask;
+import com.epimorphics.lda.acceptance.tests.TestFramework;
+import com.epimorphics.lda.acceptance.tests.WhatToDo;
+import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryExecutionFactory;
+import com.hp.hpl.jena.rdf.model.Model;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -27,81 +29,76 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.lda.acceptance.tests.Ask;
-import com.epimorphics.lda.acceptance.tests.TestFramework;
-import com.epimorphics.lda.acceptance.tests.WhatToDo;
-import com.hp.hpl.jena.query.QueryExecution;
-import com.hp.hpl.jena.query.QueryExecutionFactory;
-import com.hp.hpl.jena.rdf.model.Model;
+import java.io.IOException;
+import java.util.Collection;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * An example test to illustrate system testing framework.
- * 
+ *
  * @author bwm
- * 
+ *
  */
 
-@Ignore @RunWith(Parameterized.class) public class RemoteSimpleRangeTests {
-	
-	static Logger log = LoggerFactory.getLogger(RemoteSimpleRangeTests.class);
-    
-	private final WhatToDo w;
-	
-	public RemoteSimpleRangeTests( WhatToDo w )
-		{ this.w = w; }
-	
-	@Parameters public static Collection<Object[]> data()
-		{ return TestFramework.data( "/simple-range-tests" ); }
-	
-	// Messing around with exceptions because JUnit's Parameterized
-	// runner doesn't display a decent test name. So we bash out the
-	// test title if it fails.
-	@Test public void RUN() throws ClientProtocolException, IOException 
-		{
-		try
-			{ 
-			RunTestAllowingFailures(); 
-			}
-		catch (RuntimeException e)
-			{
-			System.err.println( ">> test " + w.title + " FAILED." );
-			throw e;
-			}
-		catch (Error e)
-			{
-			System.err.println( ">> test " + w.title + " FAILED." );
-			throw e;
-			}
-		}
+@Ignore
+@RunWith(Parameterized.class)
+public class RemoteSimpleRangeTests {
 
-	public void RunTestAllowingFailures() throws ClientProtocolException, IOException
-		{
-		log.debug("[test]: running '{}'", w.title);
-		HttpClient httpclient = HttpClients.createDefault();
-		String uri = "http://localhost:" + Config.port + "/elda/api" + w.path + ".ttl?" + w.queryParams;
-		HttpGet httpget = new HttpGet( uri );
-		HttpResponse response = httpclient.execute(httpget);
-		assertEquals( 200, response.getStatusLine().getStatusCode() );
-		HttpEntity entity = response.getEntity();
-		String content = Util.stringFrom( entity.getContent() );
-		Model rsm = ModelIOUtils.modelFromTurtle( content );
-		for (Ask a: w.shouldAppear)
-			{
-			QueryExecution qe = QueryExecutionFactory.create( a.ask, rsm );
-			if (qe.execAsk() != a.isPositive)
-				{
-				fail
-					( "test " + w.title + ": the probe query\n"
-					+ TestFramework.shortStringFor( a ) + "\n"
-					+ "failed for the result set\n"
-					+ TestFramework.shortStringFor( rsm )
-					)
-					;			
-				}
-			}
-		}
-	
+    static Logger log = LoggerFactory.getLogger(RemoteSimpleRangeTests.class);
+
+    private final WhatToDo w;
+
+    public RemoteSimpleRangeTests(WhatToDo w) {
+        this.w = w;
+    }
+
+    @Parameters
+    public static Collection<Object[]> data() {
+        return TestFramework.data("/simple-range-tests");
+    }
+
+    // Messing around with exceptions because JUnit's Parameterized
+    // runner doesn't display a decent test name. So we bash out the
+    // test title if it fails.
+    @Test
+    public void RUN() throws ClientProtocolException, IOException {
+        try {
+            RunTestAllowingFailures();
+        } catch (RuntimeException e) {
+            System.err.println(">> test " + w.title + " FAILED.");
+            throw e;
+        } catch (Error e) {
+            System.err.println(">> test " + w.title + " FAILED.");
+            throw e;
+        }
+    }
+
+    public void RunTestAllowingFailures() throws ClientProtocolException, IOException {
+        log.debug("[test]: running '{}'", w.title);
+        HttpClient httpclient = HttpClients.createDefault();
+        String uri = "http://localhost:" + Config.port + "/elda/api" + w.path + ".ttl?" + w.queryParams;
+        HttpGet httpget = new HttpGet(uri);
+        HttpResponse response = httpclient.execute(httpget);
+        assertEquals(200, response.getStatusLine().getStatusCode());
+        HttpEntity entity = response.getEntity();
+        String content = Util.stringFrom(entity.getContent());
+        Model rsm = ModelIOUtils.modelFromTurtle(content);
+        for (Ask a : w.shouldAppear) {
+            QueryExecution qe = QueryExecutionFactory.create(a.ask, rsm);
+            if (qe.execAsk() != a.isPositive) {
+                fail
+                        ("test " + w.title + ": the probe query\n"
+                                + TestFramework.shortStringFor(a) + "\n"
+                                + "failed for the result set\n"
+                                + TestFramework.shortStringFor(rsm)
+                        )
+                ;
+            }
+        }
+    }
+
 //	@Test public void exemplar() throws ClientProtocolException, IOException {
 //		HttpClient httpclient = new DefaultHttpClient();
 //		HttpGet httpget = new HttpGet("http://localhost:" + Config.port + "/elda/api/alpha?min-eastish=10");
@@ -115,5 +112,5 @@ import com.hp.hpl.jena.rdf.model.Model;
 //			}
 //		}
 //	}
-	
+
 }

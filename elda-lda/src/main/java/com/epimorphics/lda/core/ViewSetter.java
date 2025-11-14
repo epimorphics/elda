@@ -8,13 +8,15 @@
 package com.epimorphics.lda.core;
 
 /**
-    A ViewSetter chooses a view based on name or properties,
-    and can also set formatting.
-    
- 	@author chris
-*/
+ * A ViewSetter chooses a view based on name or properties,
+ * and can also set formatting.
+ *
+ * @author chris
+ */
 public interface ViewSetter {
-	public void setViewByName( String viewName );
-	public void setViewByProperties(String val);
-	public void setFormat(String val);
+    public void setViewByName(String viewName);
+
+    public void setViewByProperties(String val);
+
+    public void setFormat(String val);
 }

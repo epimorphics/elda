@@ -11,32 +11,34 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
-    A CountStream wraps an OutputStream and counts the bytes
-    as they fly past.
- 
-  	@author chris
-*/
+ * A CountStream wraps an OutputStream and counts the bytes
+ * as they fly past.
+ *
+ * @author chris
+ */
 public class CountStream extends OutputStream {
 
-	long count = 0;
-	final OutputStream os;
-	
-	public CountStream(OutputStream os) {
-		this.os = os;
-	}
+    long count = 0;
+    final OutputStream os;
 
-	public long size() {
-		return count;
-	}
+    public CountStream(OutputStream os) {
+        this.os = os;
+    }
 
-	@Override public void write(int b) throws IOException {
-		count += 1;
-		os.write( b );
-	}
-    
-	@Override public void write(byte b[], int off, int len) throws IOException {
-		count += len;
-		os.write( b, off, len );
-	}
-	
+    public long size() {
+        return count;
+    }
+
+    @Override
+    public void write(int b) throws IOException {
+        count += 1;
+        os.write(b);
+    }
+
+    @Override
+    public void write(byte b[], int off, int len) throws IOException {
+        count += len;
+        os.write(b, off, len);
+    }
+
 }

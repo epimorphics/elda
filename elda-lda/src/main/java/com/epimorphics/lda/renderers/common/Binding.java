@@ -15,8 +15,7 @@ package com.epimorphics.lda.renderers.common;
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class Binding<BoundType>
-{
+public class Binding<BoundType> {
     /***********************************/
     /* Constants                       */
     /***********************************/
@@ -34,15 +33,17 @@ public class Binding<BoundType>
 
     /***********************************/
     /* Constructors                    */
+
     /***********************************/
 
-    public Binding( String label, BoundType value ) {
+    public Binding(String label, BoundType value) {
         this.label = label;
         this.value = value;
     }
 
     /***********************************/
     /* External signature methods      */
+
     /***********************************/
 
     public String label() {
@@ -62,4 +63,3 @@ public class Binding<BoundType>
     /***********************************/
 
 }
-

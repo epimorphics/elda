@@ -7,10 +7,10 @@
 */
 
 /******************************************************************
-    File:        TestDecode.java
-    Created by:  Dave Reynolds
-    Created on:  22 Feb 2010
- * 
+ File:        TestDecode.java
+ Created by:  Dave Reynolds
+ Created on:  22 Feb 2010
+ *
  * (c) Copyright 2010, Epimorphics Limited
  * $Id:  $
  *****************************************************************/
@@ -21,6 +21,7 @@ import java.io.StringReader;
 import java.util.List;
 
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 import com.hp.hpl.jena.rdf.model.Model;
@@ -32,7 +33,7 @@ import com.hp.hpl.jena.util.FileManager;
  * Most decoder testing is done in the round trip testing.
  * The tests here just cover examples where context-free JSON
  * is assembled manually.
- * 
+ *
  * @author <a href="mailto:dave@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
@@ -72,4 +73,3 @@ public class TestDecode {
 //    }
 //    
 }
-

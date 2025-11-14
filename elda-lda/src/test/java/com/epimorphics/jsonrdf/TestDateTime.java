@@ -7,10 +7,10 @@
 */
 
 /******************************************************************
-    File:        TestDateTime.java
-    Created by:  Dave Reynolds
-    Created on:  28 Dec 2009
- * 
+ File:        TestDateTime.java
+ Created by:  Dave Reynolds
+ Created on:  28 Dec 2009
+ *
  * (c) Copyright 2011 Epimorphics Limited
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,10 +18,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,18 +33,17 @@
 
 package com.epimorphics.jsonrdf;
 
-import static org.junit.Assert.assertEquals;
-
-import java.text.ParseException;
-
-import org.junit.Test;
-
 import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
 import com.hp.hpl.jena.rdf.model.Literal;
 import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.junit.Test;
+
+import java.text.ParseException;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestDateTime {
-	
+
 //	@Test public void testNoTimeZone() {
 //		Literal l = ResourceFactory.createTypedLiteral("1999-05-31T02:09:32", XSDDatatype.XSDdateTime);
 //		System.err.println( ">> " + l );
@@ -62,38 +61,43 @@ public class TestDateTime {
 //		
 //	}
 
-    @Test public void testBasicSerialization() {
+    @Test
+    public void testBasicSerialization() {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31T02:09:32Z", XSDDatatype.XSDdateTime);
         assertEquals("Mon, 31 May 1999 02:09:32 GMT+0000", RDFUtil.formatDateTime(l, false));
     }
-    
-    @Test public void testRoundTrip() throws ParseException {
+
+    @Test
+    public void testRoundTrip() throws ParseException {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31T02:09:32Z", XSDDatatype.XSDdateTime);
         String date = RDFUtil.formatDateTime(l, false);
         Literal lret = RDFUtil.parseDateTime(date, null);
         assertEquals(l, lret);
     }
-    
-    @Test public void testRoundTripDate() throws ParseException {
+
+    @Test
+    public void testRoundTripDate() throws ParseException {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31", XSDDatatype.XSDdate);
         String date = RDFUtil.formatDateTime(l, false);
-        Literal lret = RDFUtil.parseDateTime(date, l.getDatatypeURI() );
+        Literal lret = RDFUtil.parseDateTime(date, l.getDatatypeURI());
         assertEquals(l, lret);
     }
-    
-    @Test public void testTimelessDatetimeRendering() {
+
+    @Test
+    public void testTimelessDatetimeRendering() {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31Z", XSDDatatype.XSDdate);
-    	assertEquals( "Mon, 31 May 1999", RDFUtil.formatDateTime( l, false ) );
+        assertEquals("Mon, 31 May 1999", RDFUtil.formatDateTime(l, false));
     }
-    
-    @Test public void testDateTimeISORendering() {
+
+    @Test
+    public void testDateTimeISORendering() {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31T02:09:32Z", XSDDatatype.XSDdateTime);
         assertEquals("1999-05-31T02:09:32Z", RDFUtil.formatDateTime(l, true));
     }
-    
-    @Test public void testTimelessDateISORendering() {
+
+    @Test
+    public void testTimelessDateISORendering() {
         Literal l = ResourceFactory.createTypedLiteral("1999-05-31Z", XSDDatatype.XSDdate);
-        assertEquals( "1999-05-31", RDFUtil.formatDateTime( l, true ) );
+        assertEquals("1999-05-31", RDFUtil.formatDateTime(l, true));
     }
 }
-

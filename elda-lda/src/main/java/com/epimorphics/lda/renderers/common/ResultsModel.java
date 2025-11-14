@@ -10,15 +10,16 @@
 package com.epimorphics.lda.renderers.common;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.vocabularies.API;
-import com.epimorphics.rdfutil.*;
+import com.epimorphics.rdfutil.DatasetWrapper;
+import com.epimorphics.rdfutil.ModelWrapper;
+import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.query.Dataset;
 import com.hp.hpl.jena.query.DatasetFactory;
 import com.hp.hpl.jena.rdf.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An facade for the {@link APIResultSet} returned from Elda processing,
@@ -27,38 +28,44 @@ import com.hp.hpl.jena.rdf.model.Model;
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class ResultsModel extends ModelWrapper
-{
+public class ResultsModel extends ModelWrapper {
     /***********************************/
     /* Constants                       */
     /***********************************/
 
-    /** Graph name for the graph of actual results data */
+    /**
+     * Graph name for the graph of actual results data
+     */
     public static final String RESULTS_OBJECT_GRAPH = API.NS + "results_object_graph";
 
-    /** Graph name for the graph of results metadata */
+    /**
+     * Graph name for the graph of results metadata
+     */
     public static final String RESULTS_METADATA_GRAPH = API.NS + "results_metadata_graph";
 
     /***********************************/
     /* Static variables                */
     /***********************************/
 
-    @SuppressWarnings( value = "unused" )
-    private static final Logger log = LoggerFactory.getLogger( ResultsModel.class );
+    @SuppressWarnings(value = "unused")
+    private static final Logger log = LoggerFactory.getLogger(ResultsModel.class);
 
     /***********************************/
     /* Instance variables              */
     /***********************************/
 
-    /** The API results, as given */
+    /**
+     * The API results, as given
+     */
     private APIResultSet results;
-    
+
     /***********************************/
     /* Constructors                    */
+
     /***********************************/
 
-    public ResultsModel( APIResultSet results ) {
-        super( asDataset( results ) );
+    public ResultsModel(APIResultSet results) {
+        super(asDataset(results));
         this.results = results;
     }
 
@@ -69,10 +76,11 @@ public class ResultsModel extends ModelWrapper
     /**
      * Return a {@link Page} object decorating the underlying page resource in
      * the API results model
+     *
      * @return A page object
      */
     public Page page() {
-        return new Page( this, results.getRoot().inModel( this.getModel() ) );
+        return new Page(this, results.getRoot().inModel(this.getModel()));
     }
 
     /**
@@ -81,14 +89,14 @@ public class ResultsModel extends ModelWrapper
     public Model metadataModel() {
         return results.getModels().getMetaModel();
     }
-    
+
     /**
      * @return The page root resource, but attached only to the metadata model
      */
     public RDFNodeWrapper metadataRoot() {
-        return new RDFNodeWrapper( new ModelWrapper( metadataModel() ), results.getRoot().inModel( metadataModel() ) );
+        return new RDFNodeWrapper(new ModelWrapper(metadataModel()), results.getRoot().inModel(metadataModel()));
     }
-    
+
     /***********************************/
     /* Internal implementation methods */
     /***********************************/
@@ -96,16 +104,17 @@ public class ResultsModel extends ModelWrapper
     /**
      * Return a {@link DatasetWrapper} for the given resultset, in which
      * the two embedded graphs are made named-graph members.
+     *
      * @return A dataset wrapper presenting the API results combined model as a dataset
      */
-    protected static DatasetWrapper asDataset( APIResultSet results ) {
+    protected static DatasetWrapper asDataset(APIResultSet results) {
         APIResultSet.MergedModels mm = results.getModels();
-        Dataset ds = DatasetFactory.create( mm.getMergedModel() );
+        Dataset ds = DatasetFactory.create(mm.getMergedModel());
 
-        ds.addNamedModel( RESULTS_OBJECT_GRAPH, mm.getObjectModel() );
-        ds.addNamedModel( RESULTS_METADATA_GRAPH, mm.getMetaModel() );
+        ds.addNamedModel(RESULTS_OBJECT_GRAPH, mm.getObjectModel());
+        ds.addNamedModel(RESULTS_METADATA_GRAPH, mm.getMetaModel());
 
-        return new DatasetWrapper( ds, false, mm.getMergedModel() );
+        return new DatasetWrapper(ds, false, mm.getMergedModel());
     }
 
     /***********************************/
@@ -113,4 +122,3 @@ public class ResultsModel extends ModelWrapper
     /***********************************/
 
 }
-

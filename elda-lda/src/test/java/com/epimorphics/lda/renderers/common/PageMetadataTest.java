@@ -10,25 +10,25 @@
 package com.epimorphics.lda.renderers.common;
 
 
-import static org.junit.Assert.*;
-
-import org.jmock.imposters.ByteBuddyClassImposteriser;
-import org.jmock.integration.junit4.JUnitRuleMockery;
-import org.jmock.lib.concurrent.Synchroniser;
-import org.junit.*;
-
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.rdfutil.RDFNodeWrapper;
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.jmock.imposters.ByteBuddyClassImposteriser;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.jmock.lib.concurrent.Synchroniser;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link PageMetadata}
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class PageMetadataTest
-{
+public class PageMetadataTest {
     /***********************************/
     /* Constants                       */
     /***********************************/
@@ -39,13 +39,14 @@ public class PageMetadataTest
     /* Static variables                */
     /***********************************/
 
-    static final Model pageMetadataModel = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES + Fixtures.PAGE_METADATA_BWQ );
+    static final Model pageMetadataModel = ModelIOUtils.modelFromTurtle(Fixtures.COMMON_PREFIXES + Fixtures.PAGE_METADATA_BWQ);
 
     /***********************************/
     /* Instance variables              */
     /***********************************/
 
-    @Rule public JUnitRuleMockery context = new JUnitRuleMockery() {{
+    @Rule
+    public JUnitRuleMockery context = new JUnitRuleMockery() {{
         // we are forced to use the legacy imposteriser because APIResultSet does not
         // have an interface that it conforms to
         setImposteriser(ByteBuddyClassImposteriser.INSTANCE);
@@ -62,47 +63,48 @@ public class PageMetadataTest
 
     /***********************************/
     /* External signature methods      */
+
     /***********************************/
 
     @Before
     public void setUp() throws Exception {
-        rm = new ResultsModel( Fixtures.mockResultSet( context, pageMetadataModel, ModelFactory.createDefaultModel(), pageMetadataModel ) );
+        rm = new ResultsModel(Fixtures.mockResultSet(context, pageMetadataModel, ModelFactory.createDefaultModel(), pageMetadataModel));
         page = rm.page();
     }
 
     @Test
     public void testPageRoot() {
-        assertEquals( TEST_ROOT_URI, page.metadata().pageRoot().getURI() );
+        assertEquals(TEST_ROOT_URI, page.metadata().pageRoot().getURI());
     }
 
     @Test
     public void testExecution() {
         RDFNodeWrapper exec = page.metadata().execution();
-        assertNotNull( exec );
-        assertTrue( exec.isAnon() );
+        assertNotNull(exec);
+        assertTrue(exec.isAnon());
     }
 
     @Test
     public void testSelectionQuery() {
         PageMetadata.QueryResult q = page.metadata().selectionQuery();
-        assertTrue( q.queryText().contains( "SELECT DISTINCT" ) );
-        assertEquals( "http://environment.data.gov.uk/sparql/bwq/query", q.queryEndpoint() );
+        assertTrue(q.queryText().contains("SELECT DISTINCT"));
+        assertEquals("http://environment.data.gov.uk/sparql/bwq/query", q.queryEndpoint());
     }
 
     @Test
     public void testViewingQuery() {
         PageMetadata.QueryResult q = page.metadata().viewingQuery();
-        assertTrue( q.queryText().contains( "CONSTRUCT" ) );
-        assertEquals( "http://environment.data.gov.uk/sparql/bwq/query", q.queryEndpoint() );
+        assertTrue(q.queryText().contains("CONSTRUCT"));
+        assertEquals("http://environment.data.gov.uk/sparql/bwq/query", q.queryEndpoint());
     }
 
     @Test
     public void testProcessorName() {
         PageMetadata.Processor proc = page.metadata().processor();
 
-        assertEquals( "Elda", proc.name() );
-        assertEquals( "1.2.36-SNAPSHOT", proc.version() );
-        assertEquals( "https://github.com/epimorphics/elda", proc.homePage() );
+        assertEquals("Elda", proc.name());
+        assertEquals("1.2.36-SNAPSHOT", proc.version());
+        assertEquals("https://github.com/epimorphics/elda", proc.homePage());
     }
 
     /***********************************/

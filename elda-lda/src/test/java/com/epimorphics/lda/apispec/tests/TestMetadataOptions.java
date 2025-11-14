@@ -10,23 +10,23 @@
 package com.epimorphics.lda.apispec.tests;
 
 
-import static org.junit.Assert.*;
-
+import com.epimorphics.lda.specs.MetadataOptions;
+import com.epimorphics.lda.vocabularies.ELDA_API;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.lda.specs.MetadataOptions;
-import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
+import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link MetadataOptions}
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class TestMetadataOptions
-{
+public class TestMetadataOptions {
     /***********************************/
     /* Constants                       */
     /***********************************/
@@ -35,8 +35,8 @@ public class TestMetadataOptions
     /* Static variables                */
     /***********************************/
 
-    @SuppressWarnings( value = "unused" )
-    private static final Logger log = LoggerFactory.getLogger( TestMetadataOptions.class );
+    @SuppressWarnings(value = "unused")
+    private static final Logger log = LoggerFactory.getLogger(TestMetadataOptions.class);
 
     /***********************************/
     /* Instance variables              */
@@ -48,39 +48,40 @@ public class TestMetadataOptions
 
     /***********************************/
     /* External signature methods      */
+
     /***********************************/
 
     @Test
     public void testMetadataOptions() {
         Model m = ModelFactory.createDefaultModel();
-        Resource r = m.createResource( "http://example/r" );
+        Resource r = m.createResource("http://example/r");
 
-        MetadataOptions md0 = new MetadataOptions( r, "foo,bar" );
-        assertTrue( md0.contains( "foo" ));
-        assertTrue( md0.contains( "bar" ));
-        assertFalse( md0.contains( "bindings") );
-        assertFalse( md0.contains( "formats") );
+        MetadataOptions md0 = new MetadataOptions(r, "foo,bar");
+        assertTrue(md0.contains("foo"));
+        assertTrue(md0.contains("bar"));
+        assertFalse(md0.contains("bindings"));
+        assertFalse(md0.contains("formats"));
 
-        r.addProperty( ELDA_API.metadataOptions, "formats,bindings" );
+        r.addProperty(ELDA_API.metadataOptions, "formats,bindings");
 
-        MetadataOptions md1 = new MetadataOptions( r, "foo" );
-        assertFalse( md1.contains( "foo" ));
-        assertFalse( md1.contains( "bar" ));
-        assertTrue( md1.contains( "bindings") );
-        assertTrue( md1.contains( "formats") );
+        MetadataOptions md1 = new MetadataOptions(r, "foo");
+        assertFalse(md1.contains("foo"));
+        assertFalse(md1.contains("bar"));
+        assertTrue(md1.contains("bindings"));
+        assertTrue(md1.contains("formats"));
     }
 
     @Test
     public void testAsArray() {
         Model m = ModelFactory.createDefaultModel();
-        Resource r = m.createResource( "http://example/r" );
+        Resource r = m.createResource("http://example/r");
 
-        MetadataOptions md0 = new MetadataOptions( r, "foo,bar,foo" );
+        MetadataOptions md0 = new MetadataOptions(r, "foo,bar,foo");
 
         String[] a = md0.asArray();
-        assertEquals( 2, a.length );
-        assertTrue( (a[0].equals( "foo" ) && a[1].equals( "bar" )) ||
-                    (a[1].equals( "foo" ) && a[0].equals( "bar" )) );
+        assertEquals(2, a.length);
+        assertTrue((a[0].equals("foo") && a[1].equals("bar")) ||
+                (a[1].equals("foo") && a[0].equals("bar")));
     }
 
     /***********************************/
@@ -92,4 +93,3 @@ public class TestMetadataOptions
     /***********************************/
 
 }
-

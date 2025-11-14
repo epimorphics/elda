@@ -7,10 +7,10 @@
 */
 
 /******************************************************************
-    File:        TestEncoder.java
-    Created by:  Dave Reynolds
-    Created on:  23 Dec 2009
- * 
+ File:        TestEncoder.java
+ Created by:  Dave Reynolds
+ Created on:  23 Dec 2009
+ *
  * (c) Copyright 2011 Epimorphics Limited
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,10 +18,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,43 +33,55 @@
  *****************************************************************/
 
 package com.epimorphics.jsonrdf;
-import static com.epimorphics.jsonrdf.utils.ModelIOUtils.*;
-import static org.junit.Assert.*;
-
-import java.io.*;
-import java.util.*;
-
-import org.apache.jena.atlas.json.*;
-import org.codehaus.jettison.json.JSONException;
-import org.junit.Test;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.jsonrdf.utils.ModelCompareUtils;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.*;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.OWL;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonException;
+import org.apache.jena.atlas.json.JsonObject;
+import org.codehaus.jettison.json.JSONException;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import static com.epimorphics.jsonrdf.utils.ModelIOUtils.modelFromTurtle;
+import static org.junit.Assert.*;
 
 public class TestEncoder {
-	
-	@Test public void testNullEncode() throws IOException {
+
+    @Test
+    public void testNullEncode() throws IOException {
         StringWriter writer = new StringWriter();
         Context context = new Context();
-        Encoder.get( context ).encode(
-                ModelFactory.createDefaultModel(), 
-                new ArrayList<Resource>(), 
+        Encoder.get(context).encode(
+                ModelFactory.createDefaultModel(),
+                new ArrayList<Resource>(),
                 writer, false);
         assertEquals("{\"format\":\"linked-data-api\",\"version\":\"0.2\",\"results\":[]}",
-                writer.toString().replaceAll( "[ \n]+", "" ));
+                writer.toString().replaceAll("[ \n]+", ""));
     }
-    
+
     /**
      * Test that the encoding round trips
-     * @param src  model to be encoded
-     * @param ont optional ontology model describing encoding
+     *
+     * @param src      model to be encoded
+     * @param ont      optional ontology model describing encoding
      * @param expected model expected back, may be same as source
-     * @param roots root resources to encode
-     * @param show set to true to print encoding to console (dev only)
+     * @param roots    root resources to encode
+     * @param show     set to true to print encoding to console (dev only)
      * @return the encoded string for further testing
      * @throws JSONException
      * @throws IOException
@@ -82,19 +94,19 @@ public class TestEncoder {
             enc.encode(src, roots, writer, false);
         }
         String written = writer.toString();
-		Reader reader = new StringReader( written );
-        
+        Reader reader = new StringReader(written);
+
         List<Resource> results = Decoder.decode(context, reader);
         if (roots != null) {
-            assertTrue( results.size() >= roots.size());
+            assertTrue(results.size() >= roots.size());
             Iterator<Resource> i = results.iterator();
             for (Resource r : roots) assertEquals(r, i.next());
         }
-        if ( ! results.isEmpty() ) {
+        if (!results.isEmpty()) {
             Model found = results.get(0).getModel();
             // assertIsoModels(expected, found);
-            boolean ok = ModelCompareUtils.compareAndDisplayDifferences( expected, found );
-            assertTrue( "models should be isomorphic", ok );
+            boolean ok = ModelCompareUtils.compareAndDisplayDifferences(expected, found);
+            assertTrue("models should be isomorphic", ok);
 //            boolean ok = found.isIsomorphicWith(expected);
 //            if (!ok) {
 //                System.out.println("Found:");
@@ -106,15 +118,15 @@ public class TestEncoder {
         }
         return writer.toString();
     }
-	
-    public static String roundTripTester(String srcTTL, String expectedTTL, String[] roots) throws  IOException {
+
+    public static String roundTripTester(String srcTTL, String expectedTTL, String[] roots) throws IOException {
         Model src = modelFromTurtle(srcTTL);
         Model expected = modelFromTurtle(expectedTTL);
         List<Resource> rootsR = modelRoots(roots, src);
         Context context = new Context();
         return roundTripTester(src, Encoder.get(context), context, expected, rootsR);
     }
-    
+
     public static String roundTripTester(String srcTTL, String[] roots) throws IOException {
         Model src = modelFromTurtle(srcTTL);
         Context context = new Context();
@@ -149,17 +161,17 @@ public class TestEncoder {
         if (roots == null) return null;
         List<Resource> rootsR = new ArrayList<Resource>();
         for (String root : roots) {
-            rootsR.add( src.createResource( src.expandPrefix(root) ) );
+            rootsR.add(src.createResource(src.expandPrefix(root)));
         }
         return rootsR;
     }
-    
-    public static String testEncoding(String srcTTL, String ontTTL,  String[] roots, String expectedEncoding) throws  IOException {
+
+    public static String testEncoding(String srcTTL, String ontTTL, String[] roots, String expectedEncoding) throws IOException {
         Context fromOntology = (ontTTL == null ? new Context() : new Context(ModelIOUtils.modelFromTurtle(ontTTL)));
         return testEncoding(srcTTL, Encoder.get(fromOntology), fromOntology, roots, expectedEncoding);
     }
-    
-    public static String testEncoding(String srcTTL, Encoder enc, Context context, String[] roots, String expectedEncoding) throws  IOException {
+
+    public static String testEncoding(String srcTTL, Encoder enc, Context context, String[] roots, String expectedEncoding) throws IOException {
         return testEncoding(srcTTL, enc, context, srcTTL, roots, expectedEncoding);
     }
 
@@ -172,7 +184,7 @@ public class TestEncoder {
             if (expectedEncoding == null) {
                 System.out.println(actual);
             } else {
-            	JsonArray expected = ParseWrapper.stringToJsonArray(expectedEncoding);
+                JsonArray expected = ParseWrapper.stringToJsonArray(expectedEncoding);
                 assertEquals(expected, actual);
             }
             return encoding;
@@ -188,123 +200,143 @@ public class TestEncoder {
             throw new EncodingException(e.getMessage(), e);
         }
     }
-    
-    @Test public void testSimpleResourceNoLabels() throws IOException {
-        roundTripTester(":r :p 'foo'.",  new String[]{":r"} );
+
+    @Test
+    public void testSimpleResourceNoLabels() throws IOException {
+        roundTripTester(":r :p 'foo'.", new String[]{":r"});
     }
-    
-    @Test public void testSimpleResourceClash() throws IOException {
-        roundTripTester(":r :p 'foo'; alt:p 'bar'.", new String[]{":r"} );
+
+    @Test
+    public void testSimpleResourceClash() throws IOException {
+        roundTripTester(":r :p 'foo'; alt:p 'bar'.", new String[]{":r"});
     }
-    
-    @Test public void testRDFtype() throws IOException {
-        roundTripTester(":r a :Thing; :p 'foo'.", new String[]{":r"} );
+
+    @Test
+    public void testRDFtype() throws IOException {
+        roundTripTester(":r a :Thing; :p 'foo'.", new String[]{":r"});
     }
-    
-    @Test public void testSimplebNode() throws IOException {
-        roundTripTester(":r :p [:p 'first'; :q 'second'].", new String[]{":r"} );
+
+    @Test
+    public void testSimplebNode() throws IOException {
+        roundTripTester(":r :p [:p 'first'; :q 'second'].", new String[]{":r"});
     }
-    
-    @Test public void testMultiRefbNode() throws IOException {
-        roundTripTester(":r :p _:1. :r2 :p _:1. _:1 :q 'foo'.", new String[]{":r", ":r2"} );
+
+    @Test
+    public void testMultiRefbNode() throws IOException {
+        roundTripTester(":r :p _:1. :r2 :p _:1. _:1 :q 'foo'.", new String[]{":r", ":r2"});
     }
-    
-    @Test public void testSimpleLiterals() throws IOException {
-        roundTripTester(":r :p 'foo'; :p2 23; :p3 '1.2'^^xsd:double.",  new String[]{":r"} );
+
+    @Test
+    public void testSimpleLiterals() throws IOException {
+        roundTripTester(":r :p 'foo'; :p2 23; :p3 '1.2'^^xsd:double.", new String[]{":r"});
     }
-    
-    @Test public void testMultivalues() throws IOException {
-        roundTripTester(":r :p 'foo' , 'bar' , 'baz' ; :p2 23 .",  new String[]{":r"} );
+
+    @Test
+    public void testMultivalues() throws IOException {
+        roundTripTester(":r :p 'foo' , 'bar' , 'baz' ; :p2 23 .", new String[]{":r"});
     }
-    
-    @Test public void testResourcesWithLabels() throws IOException {
+
+    @Test
+    public void testResourcesWithLabels() throws IOException {
         Context context = new Context();
-        testEncoding(":r :p :res. :res rdfs:label 'resource label'.", Encoder.get(context), context, ":r :p :res.",  new String[]{":r"},
-        "[{'_about':'http://www.epimorphics.com/tools/example#r', 'p':'http://www.epimorphics.com/tools/example#res'}]");
+        testEncoding(":r :p :res. :res rdfs:label 'resource label'.", Encoder.get(context), context, ":r :p :res.", new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r', 'p':'http://www.epimorphics.com/tools/example#res'}]");
     }
-    
-    @Test public void testSimpleLists() throws IOException {
-        roundTripTester(":r :p ('1'^^xsd:int '2'^^xsd:int '2'^^xsd:int).",  new String[]{":r"} );
+
+    @Test
+    public void testSimpleLists() throws IOException {
+        roundTripTester(":r :p ('1'^^xsd:int '2'^^xsd:int '2'^^xsd:int).", new String[]{":r"});
     }
-    
-    @Test public void testNestedLists() throws IOException {
-        roundTripTester(":r :p ('1'^^xsd:int '2'^^xsd:int ('a' 'b')).",  new String[]{":r"} );
+
+    @Test
+    public void testNestedLists() throws IOException {
+        roundTripTester(":r :p ('1'^^xsd:int '2'^^xsd:int ('a' 'b')).", new String[]{":r"});
     }
-    
-    @Test public void testOntologyNaming() throws IOException {
-        testEncoding(":r :p 'foo'; :q 'bar'.", ":p rdf:type rdf:Property; rdfs:label 'pee'.", new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','pee':'foo','q':'bar'}]" );
+
+    @Test
+    public void testOntologyNaming() throws IOException {
+        testEncoding(":r :p 'foo'; :q 'bar'.", ":p rdf:type rdf:Property; rdfs:label 'pee'.", new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','pee':'foo','q':'bar'}]");
     }
-    
-    @Test public void testForcedMultivalue() throws IOException {
-        testEncoding(":r :p 'foo'; :q 'bar'.", ":p rdf:type api:Multivalued, rdf:Property.", new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':['foo'],'q':'bar'}]" );
+
+    @Test
+    public void testForcedMultivalue() throws IOException {
+        testEncoding(":r :p 'foo'; :q 'bar'.", ":p rdf:type api:Multivalued, rdf:Property.", new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':['foo'],'q':'bar'}]");
     }
-    
-    @Test public void testForcedMultivalue2() throws IOException {
+
+    @Test
+    public void testForcedMultivalue2() throws IOException {
         roundTripOntTester(":r :p 'foo'. :r2 :p 'foo', 'bar'.", ":p rdf:type api:Multivalued, rdf:Property.", new String[]{":r", ":r2"});
     }
-    
-    @Test public void testHide() throws IOException {
+
+    @Test
+    public void testHide() throws IOException {
         roundTripOntTester(":r :p 'foo'; :q 'bar'.", ":p rdf:type api:Hidden, rdf:Property.", ":r :q 'bar'.", new String[]{":r"});
     }
-    
-    @Test public void testPropertyBase() throws IOException {
+
+    @Test
+    public void testPropertyBase() throws IOException {
         Context context = new Context("http://www.epimorphics.com/tools/");
-		testEncoding(":r :p 'foo'.", Encoder.get( context), context,
+        testEncoding(":r :p 'foo'.", Encoder.get(context), context,
                 new String[]{":r"}, "[{'_about':'<example#r>','p':'foo'}]");
     }
-    
-    @Test public void testResourceBase() throws IOException {
+
+    @Test
+    public void testResourceBase() throws IOException {
         Context context = new Context("http://www.epimorphics.com/tools/");
-		testEncoding(":r :p :r2. :r2 :p :r3.", Encoder.get( context), context,
+        testEncoding(":r :p :r2. :r2 :p :r3.", Encoder.get(context), context,
                 new String[]{":r", ":r2"}, "[{'_about':'<example#r>','p':'<example#r2>'},{'_about':'<example#r2>','p':'<example#r3>'}]");
     }
 
-    @Test public void testResourceList() throws IOException {
+    @Test
+    public void testResourceList() throws IOException {
         Context context = new Context("http://www.epimorphics.com/tools/");
-		roundTripEncTester(":r :p (:r1 :r2 :r3).", 
-                Encoder.get( context), context,
+        roundTripEncTester(":r :p (:r1 :r2 :r3).",
+                Encoder.get(context), context,
                 new String[]{":r"});
     }
-    
-    @Test public void testPropertySorting() throws IOException {
+
+    @Test
+    public void testPropertySorting() throws IOException {
         Context context = new Context();
         context.setSorted(true);
-        testEncoding(":r :p 'foo'; :q 'bar'; :s 'baz'.", Encoder.get( context ), context,
+        testEncoding(":r :p 'foo'; :q 'bar'; :s 'baz'.", Encoder.get(context), context,
                 new String[]{":r"}, "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'foo','q':'bar','s':'baz'}]");
     }
-    
+
     // Objects of RDF.type used to get shortened. Now they should not be.
-    @Test public void testTypesDontShorten() throws IOException {
+    @Test
+    public void testTypesDontShorten() throws IOException {
         Context context = new Context();
-        context.recordPreferredName( "T", "http://www.epimorphics.com/tools/example#t" );
-        context.recordPreferredName( "U", "http://www.epimorphics.com/tools/example#u" );
+        context.recordPreferredName("T", "http://www.epimorphics.com/tools/example#t");
+        context.recordPreferredName("U", "http://www.epimorphics.com/tools/example#u");
         context.setSorted(true);
-        testEncoding(":r rdf:type :t, :u.", Encoder.get( context ), context, 
+        testEncoding(":r rdf:type :t, :u.", Encoder.get(context), context,
                 new String[]{":r"}, "[{'_about':'http://www.epimorphics.com/tools/example#r', 'type':['http://www.epimorphics.com/tools/example#t', 'http://www.epimorphics.com/tools/example#u']}]");
-        }
-    
+    }
+
     /*
         This is the no-language-tags version of the encoding. The older test is below.
      */
-    @Test public void testLiterals() throws IOException {
+    @Test
+    public void testLiterals() throws IOException {
         Context context = new Context();
         testEncoding(":r :p 'foo'; :q '2.3'^^xsd:float; :s 'bar'^^xsd:string.",
                 Encoder.get(context), context,
                 ":r :p 'foo'; :q '2.3'^^xsd:double; :s 'bar'.",
-                new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','q':2.3,'p':'foo','s':'bar'}]" );
+                new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','q':2.3,'p':'foo','s':'bar'}]");
         Context context2 = new Context();
-        testEncoding(":r :p 'true'^^xsd:boolean.", 
+        testEncoding(":r :p 'true'^^xsd:boolean.",
                 Encoder.get(context2), context2,
-                new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':true}]" );
+                new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':true}]");
         Context context3 = new Context();
-        testEncoding(":r :p 'http://example.com/eg'^^xsd:anyURI.", 
+        testEncoding(":r :p 'http://example.com/eg'^^xsd:anyURI.",
                 Encoder.get(context3), context3,
-                new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'http://example.com/eg'}]");                
+                new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'http://example.com/eg'}]");
         // Problem with Jena datatype equality blocks testing
         // If we weren't using Maven this would be easy to fix. Sigh.
 //        testEncoding(":r :p 'foobar'^^alt:mytype.", 
@@ -312,7 +344,7 @@ public class TestEncoder {
 //                new String[]{":r"}, 
 //                null);
     }
-    
+
 //    @Test public void testLiterals() throws IOException {
 //        testEncoding(":r :p 'foo'@en; :q '2.3'^^xsd:float; :s 'bar'^^xsd:string.", 
 //                Encoder.get(),
@@ -329,87 +361,92 @@ public class TestEncoder {
 //                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'http://example.com/eg'}]");                
 //        // Problem with Jena datatype equality blocks testing
 //        // If we weren't using Maven this would be easy to fix. Sigh.
-////        testEncoding(":r :p 'foobar'^^alt:mytype.", 
-////                Encoder.get(),
-////                new String[]{":r"}, 
-////                null);
+    /// /        testEncoding(":r :p 'foobar'^^alt:mytype.",
+    /// /                Encoder.get(),
+    /// /                new String[]{":r"},
+    /// /                null);
 //    }
-    
-    static final String somePrefixes = 
-    	"@prefix api: <" + API.getURI() + ">.\n"
-    	+ "@prefix owl: <" + OWL.getURI() + ">.\n"
-    	;
-    
-    @Test public void testStructuredLiteralWithLanguage() throws IOException {
-    	Context context = new Context(ontForLiterals);
-    	testEncoding( 
-    		":r :p 'english'@en.", 
-            encoderForStructuredLiterals( context ), context,
-            ":r :p 'english'@en.",
-            new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','p': { '_value': 'english', '_lang': 'en'}}]" );
+
+    static final String somePrefixes =
+            "@prefix api: <" + API.getURI() + ">.\n"
+                    + "@prefix owl: <" + OWL.getURI() + ">.\n";
+
+    @Test
+    public void testStructuredLiteralWithLanguage() throws IOException {
+        Context context = new Context(ontForLiterals);
+        testEncoding(
+                ":r :p 'english'@en.",
+                encoderForStructuredLiterals(context), context,
+                ":r :p 'english'@en.",
+                new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p': { '_value': 'english', '_lang': 'en'}}]");
     }
-    
-    @Test public void testStructuredLiteralWithType() throws IOException {
-    	Context context = new Context(ontForLiterals);
+
+    @Test
+    public void testStructuredLiteralWithType() throws IOException {
+        Context context = new Context(ontForLiterals);
 //    	context.setSorted(true);
-    	testEncoding( 
-    		":r :p 'english'^^xsd:string.", 
-            encoderForStructuredLiterals(context), context,
-            ":r :p 'english'^^xsd:string.",
-            new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','p': { '_value': 'english', '_datatype': 'string'}}]" );
+        testEncoding(
+                ":r :p 'english'^^xsd:string.",
+                encoderForStructuredLiterals(context), context,
+                ":r :p 'english'^^xsd:string.",
+                new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p': { '_value': 'english', '_datatype': 'string'}}]");
     }
 
     private static final Model ontForLiterals = ModelIOUtils.modelFromTurtle
-    	( ":p a owl:DatatypeProperty; api:structured true. xsd:string a rdfs:Class." );
+            (":p a owl:DatatypeProperty; api:structured true. xsd:string a rdfs:Class.");
 
-	private Encoder encoderForStructuredLiterals(Context context) {
-    	return Encoder.get( Encoder.defaultPlugin, context, false );
-	}
-
-    @Test public void testDateLiteral() throws IOException {
-        Context context = new Context();
-        testEncoding(":r :p '1999-05-31T02:09:32Z'^^xsd:dateTime.", 
-                Encoder.get(context), context,
-                new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'Mon, 31 May 1999 02:09:32 GMT+0000'}]" );
+    private Encoder encoderForStructuredLiterals(Context context) {
+        return Encoder.get(Encoder.defaultPlugin, context, false);
     }
 
-    @Test public void testUnzonedDateLiteral() throws IOException {
+    @Test
+    public void testDateLiteral() throws IOException {
         Context context = new Context();
-        testEncoding(":r :p '1999-05-31T02:09:32'^^xsd:dateTime.", 
+        testEncoding(":r :p '1999-05-31T02:09:32Z'^^xsd:dateTime.",
                 Encoder.get(context), context,
-                new String[]{":r"}, 
-                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'Mon, 31 May 1999 02:09:32'}]" );
+                new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'Mon, 31 May 1999 02:09:32 GMT+0000'}]");
+    }
+
+    @Test
+    public void testUnzonedDateLiteral() throws IOException {
+        Context context = new Context();
+        testEncoding(":r :p '1999-05-31T02:09:32'^^xsd:dateTime.",
+                Encoder.get(context), context,
+                new String[]{":r"},
+                "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'Mon, 31 May 1999 02:09:32'}]");
     }
 
     /**
-        Test that a datetime with no timezone IN THE LEXICAL FORM renders without a timezone
-        in the JSON. (This test pre-dates getting the timezone right for the round-trip
-        test above.)
-    */
-    @Test public void testZonelessDateLiterals() throws IOException {
-    	String srcTTL = ":r :p '1999-05-31T02:09:32'^^xsd:dateTime.";
+     * Test that a datetime with no timezone IN THE LEXICAL FORM renders without a timezone
+     * in the JSON. (This test pre-dates getting the timezone right for the round-trip
+     * test above.)
+     */
+    @Test
+    public void testZonelessDateLiterals() throws IOException {
+        String srcTTL = ":r :p '1999-05-31T02:09:32'^^xsd:dateTime.";
         Context context = new Context();
-    	Encoder enc = Encoder.get(context);
-    	String [] roots = new String[]{":r"};
-    	String expectedEncoding = "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'Mon, 31 May 1999 02:09:32'}]";
+        Encoder enc = Encoder.get(context);
+        String[] roots = new String[]{":r"};
+        String expectedEncoding = "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'Mon, 31 May 1999 02:09:32'}]";
         Model src = modelFromTurtle(srcTTL);
-		List<Resource> roots1 = modelRoots(roots, src);
-		StringWriter writer = new StringWriter();
-		enc.encode(src, roots1, writer, false);
+        List<Resource> roots1 = modelRoots(roots, src);
+        StringWriter writer = new StringWriter();
+        enc.encode(src, roots1, writer, false);
         String encoding = writer.toString();
         JsonArray actual = parseJSON(encoding).get(EncoderDefault.PNContent).getAsArray();
         JsonArray expected = ParseWrapper.stringToJsonArray(expectedEncoding);
         assertEquals(expected, actual);
     }
-    
-    @Test public void testISOFormattedDateTimeLiterals() throws IOException {
+
+    @Test
+    public void testISOFormattedDateTimeLiterals() throws IOException {
         String srcTTL = ":r :p '1999-05-31T02:09:32'^^xsd:dateTime. :r :o '2015-07-27'^^xsd:date.";
         Context context = new Context();
         Encoder enc = Encoder.get(context, true);
-        String [] roots = new String[]{":r"};
+        String[] roots = new String[]{":r"};
         String expectedEncoding = "[{'_about':'http://www.epimorphics.com/tools/example#r','p':'1999-05-31T02:09:32','o':'2015-07-27'}]";
         Model src = modelFromTurtle(srcTTL);
         List<Resource> roots1 = modelRoots(roots, src);
@@ -420,15 +457,17 @@ public class TestEncoder {
         JsonArray expected = ParseWrapper.stringToJsonArray(expectedEncoding);
         assertEquals(expected, actual);
     }
-    
-    @Test public void testWholeModels() throws IOException, JsonException {
+
+    @Test
+    public void testWholeModels() throws IOException, JsonException {
         roundTripTester(":r :p 'foo', 'bar'.");
         roundTripTester(":r :p 'foo', 'bar'. :r2 :q :r.");
         roundTripTester(":r :p 'foo', 'bar'; :q [:s 'baz'].");
         roundTripTester(":r :p 'foo', 'bar'. [] :s 'baz'.");
     }
-    
-    @Test public void testOddResourceURIs() throws IOException {
+
+    @Test
+    public void testOddResourceURIs() throws IOException {
         Model model = ModelFactory.createDefaultModel();
         String NS = "/foo/bar";
         Property p = model.createProperty(NS + "#p");
@@ -439,19 +478,21 @@ public class TestEncoder {
         // by the JSON writer ("</foo" becomes "<\/foo" to allow insertion into HTML
         // However, such URIs are broken anyway so accept this encoding for now.
     }
-    
-    @Test public void testRecursiveEncoding1() throws IOException {
+
+    @Test
+    public void testRecursiveEncoding1() throws IOException {
         testRecursiveRoundTrip(
                 ":r :p :r1. :r1 :p :r2. :r2 :p :r1; :s 'foo'.",
                 ":r :p :r1. :r1 :p :r2. :r2 :p :r1; :s 'foo'.",
-                new String[]{":r"} );
+                new String[]{":r"});
     }
 
-    @Test public void testRecursiveEncoding2() throws IOException {
+    @Test
+    public void testRecursiveEncoding2() throws IOException {
         testRecursiveRoundTrip(
                 ":r :p :r1. :r1 :p :r2. :r2 :p :r1; :s 'foo'. :r3 :p 'bar'.",
                 ":r :p :r1. :r1 :p :r2. :r2 :p :r1; :s 'foo'.",
-                new String[]{":r"} );
+                new String[]{":r"});
     }
 
     void testRecursiveRoundTrip(String srcTTL, String expectedTTL, String[] roots) {
@@ -461,15 +502,14 @@ public class TestEncoder {
         Context context = new Context();
         StringWriter writer = new StringWriter();
         Encoder.get(context).encodeRecursive(src, rootsR, writer, false);
-        StringReader reader = new StringReader( writer.toString() );
+        StringReader reader = new StringReader(writer.toString());
         List<Resource> results = Decoder.decode(context, reader);
         assertNotNull(results);
         assertFalse(results.isEmpty());
         Model found = results.get(0).getModel();
 //        assertIsoModels(expected, found);
-        boolean ok = ModelCompareUtils.compareAndDisplayDifferences( expected, found );
-        assertTrue("Compare returned model", ok);        
+        boolean ok = ModelCompareUtils.compareAndDisplayDifferences(expected, found);
+        assertTrue("Compare returned model", ok);
     }
-    
-}
 
+}

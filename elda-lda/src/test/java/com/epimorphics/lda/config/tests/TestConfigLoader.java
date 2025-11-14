@@ -1,9 +1,5 @@
 package com.epimorphics.lda.config.tests;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
 import com.epimorphics.lda.configs.ConfigLoader;
 import com.epimorphics.lda.core.ModelLoader;
 import com.epimorphics.lda.tests_support.FileManagerModelLoader;
@@ -13,19 +9,23 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.XSD;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 public class TestConfigLoader {
 
-	static final Model testModel = ModelFactory.createDefaultModel();
-	
-	static final ModelLoader ml = new FileManagerModelLoader();
-	
-	static final Resource example = testModel.createResource(ELDA_API.getURI() + "example");
-		
-	static final Model testModelAgain = testModel.add(example, RDF.type, XSD.xstring);
-	
-	@Test public void testConfigLoader() {
-		Model m = ConfigLoader.loadModelExpanding("includefiles/toplevel.ttl");		
-		assertTrue(m.isIsomorphicWith(testModel));
-	}
+    static final Model testModel = ModelFactory.createDefaultModel();
+
+    static final ModelLoader ml = new FileManagerModelLoader();
+
+    static final Resource example = testModel.createResource(ELDA_API.getURI() + "example");
+
+    static final Model testModelAgain = testModel.add(example, RDF.type, XSD.xstring);
+
+    @Test
+    public void testConfigLoader() {
+        Model m = ConfigLoader.loadModelExpanding("includefiles/toplevel.ttl");
+        assertTrue(m.isIsomorphicWith(testModel));
+    }
 }

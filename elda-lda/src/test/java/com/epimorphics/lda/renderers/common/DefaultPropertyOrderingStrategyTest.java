@@ -10,25 +10,26 @@
 package com.epimorphics.lda.renderers.common;
 
 
-import static org.junit.Assert.*;
-
-import java.util.List;
-
+import com.epimorphics.jsonrdf.utils.ModelIOUtils;
+import com.epimorphics.rdfutil.ModelWrapper;
+import com.epimorphics.rdfutil.PropertyValue;
+import com.epimorphics.rdfutil.RDFNodeWrapper;
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.Resource;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.epimorphics.jsonrdf.utils.ModelIOUtils;
-import com.epimorphics.rdfutil.*;
-import com.hp.hpl.jena.rdf.model.*;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * TODO class comment
  *
  * @author Ian Dickinson, Epimorphics (mailto:ian@epimorphics.com)
  */
-public class DefaultPropertyOrderingStrategyTest
-{
+public class DefaultPropertyOrderingStrategyTest {
     /***********************************/
     /* Constants                       */
     /***********************************/
@@ -37,18 +38,18 @@ public class DefaultPropertyOrderingStrategyTest
     /* Static variables                */
     /***********************************/
 
-    @SuppressWarnings( value = "unused" )
-    private static final Logger log = LoggerFactory.getLogger( DefaultPropertyOrderingStrategyTest.class );
+    @SuppressWarnings(value = "unused")
+    private static final Logger log = LoggerFactory.getLogger(DefaultPropertyOrderingStrategyTest.class);
 
     /***********************************/
     /* Instance variables              */
     /***********************************/
 
-    private Model m = ModelIOUtils.modelFromTurtle( Fixtures.COMMON_PREFIXES +
-                                                    "@prefix test: <http://example/test#>.\n"
-                                                    + "test:subj test:p1 test:foo ; test:p2 test:bar ; test:p3 test:fubar.\n"
-                                                    + "test:p1 rdfs:label 'yy last'.\n"
-                                                    + "test:p3 skos:prefLabel 'xx second'." );
+    private Model m = ModelIOUtils.modelFromTurtle(Fixtures.COMMON_PREFIXES +
+            "@prefix test: <http://example/test#>.\n"
+            + "test:subj test:p1 test:foo ; test:p2 test:bar ; test:p3 test:fubar.\n"
+            + "test:p1 rdfs:label 'yy last'.\n"
+            + "test:p3 skos:prefLabel 'xx second'.");
 
     /***********************************/
     /* Constructors                    */
@@ -56,19 +57,20 @@ public class DefaultPropertyOrderingStrategyTest
 
     /***********************************/
     /* External signature methods      */
+
     /***********************************/
 
     @Test
     public void testOrderProperties() {
-        Resource subj = m.getResource( "http://example/test#subj" );
-        ModelWrapper mw = new ModelWrapper( m );
-        RDFNodeWrapper subjw = new RDFNodeWrapper( mw, subj );
+        Resource subj = m.getResource("http://example/test#subj");
+        ModelWrapper mw = new ModelWrapper(m);
+        RDFNodeWrapper subjw = new RDFNodeWrapper(mw, subj);
 
-        List<PropertyValue> triples = new DefaultPropertyOrderingStrategy().orderProperties( subjw );
+        List<PropertyValue> triples = new DefaultPropertyOrderingStrategy().orderProperties(subjw);
 
-        assertEquals( "http://example/test#p2", triples.get(0).getProp().getURI() );
-        assertEquals( "http://example/test#p3", triples.get(1).getProp().getURI() );
-        assertEquals( "http://example/test#p1", triples.get(2).getProp().getURI() );
+        assertEquals("http://example/test#p2", triples.get(0).getProp().getURI());
+        assertEquals("http://example/test#p3", triples.get(1).getProp().getURI());
+        assertEquals("http://example/test#p1", triples.get(2).getProp().getURI());
     }
 
     /***********************************/
@@ -80,4 +82,3 @@ public class DefaultPropertyOrderingStrategyTest
     /***********************************/
 
 }
-

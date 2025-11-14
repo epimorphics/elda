@@ -8,9 +8,6 @@
 
 package com.epimorphics.lda.renderers;
 
-import java.io.*;
-import java.util.Map;
-
 import com.epimorphics.lda.bindings.Bindings;
 import com.epimorphics.lda.core.APIResultSet;
 import com.epimorphics.lda.shortnames.CompleteContext;
@@ -18,59 +15,67 @@ import com.epimorphics.lda.support.Times;
 import com.epimorphics.util.MediaType;
 import com.hp.hpl.jena.shared.WrappedException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Map;
+
 /**
-    Renderers -- turning result sets into byte streams.
- 	@author chris, dave
-*/
+ * Renderers -- turning result sets into byte streams.
+ *
+ * @author chris, dave
+ */
 public interface Renderer {
 
-	/**
-	    Renderers produce BytesOut objects which will then
-	    stream the rendering to a provided output stream
-	    later.
-	 
-	 	@author chris
-	*/
-	public interface BytesOut {
-		/**
-			Render the result down os. Update the times information.
-		*/
-		public void writeAll(Times t, OutputStream os);
-	
-		/**
-			Return a string used to poison the output stream so that
-			a client detects that an error has occurred.
-		*/
-		public String getPoison();
-	}
-	
-	/**
-     	@return the mimetype which this renderer returns
-     		in the given renderer context.
-    */
-    public MediaType getMediaType( Bindings rc );
-    
     /**
-     	@return the shortname completion mode for this renderer;
-    */
+     * Renderers produce BytesOut objects which will then
+     * stream the rendering to a provided output stream
+     * later.
+     *
+     * @author chris
+     */
+    public interface BytesOut {
+        /**
+         * Render the result down os. Update the times information.
+         */
+        public void writeAll(Times t, OutputStream os);
+
+        /**
+         * Return a string used to poison the output stream so that
+         * a client detects that an error has occurred.
+         */
+        public String getPoison();
+    }
+
+    /**
+     * @return the mimetype which this renderer returns
+     * in the given renderer context.
+     */
+    public MediaType getMediaType(Bindings rc);
+
+    /**
+     * @return the shortname completion mode for this renderer;
+     */
     public CompleteContext.Mode getMode();
-    
-    /**
-     	Render a result set. Use t to log times if required.
-    */
-    public BytesOut render( Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results );
 
     /**
-     	Answer the format suffix associated with this renderer.
-    */
-	public String getPreferredSuffix();
-	
-	public static class UTF8 {
+     * Render a result set. Use t to log times if required.
+     */
+    public BytesOut render(Times t, Bindings rc, Map<String, String> termBindings, APIResultSet results);
 
-		public static String toString(ByteArrayOutputStream os) {
-			try { return os.toString("UTF-8"); }
-			catch (IOException e) { throw new WrappedException( e ); }
-		}
-	}
+    /**
+     * Answer the format suffix associated with this renderer.
+     */
+    public String getPreferredSuffix();
+
+    public static class UTF8 {
+
+        public static String toString(ByteArrayOutputStream os) {
+            try {
+                return os.toString("UTF-8");
+            } catch (IOException e) {
+                throw new WrappedException(e);
+            }
+        }
+    }
 }
-

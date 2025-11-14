@@ -7,10 +7,10 @@
 */
 
 /******************************************************************
-    File:        TestNamedGraphs.java
-    Created by:  Dave Reynolds
-    Created on:  29 Dec 2009
- * 
+ File:        TestNamedGraphs.java
+ Created by:  Dave Reynolds
+ Created on:  29 Dec 2009
+ *
  * (c) Copyright 2011 Epimorphics Limited
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,10 +18,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -53,7 +53,7 @@ import static org.junit.Assert.*;
 
 /**
  * Test the round tripping of named graphs
- * 
+ *
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
@@ -69,8 +69,8 @@ public class TestNamedGraphs {
         Encoder.get().encode(source, writer);
         String encoding = writer.toString();
 //        System.out.println(encoding);
-        
-        StringReader reader = new StringReader( encoding );
+
+        StringReader reader = new StringReader(encoding);
         Dataset result = Decoder.decodeGraphs(reader);
         assertTrue("Check default model", result.getDefaultModel().isIsomorphicWith(defM));
         int i = 0;
@@ -81,7 +81,7 @@ public class TestNamedGraphs {
             Model model = result.getNamedModel(name);
             Model expectedModel = source.getNamedModel(expectedName);
 //            boolean match = model.isIsomorphicWith(expectedModel);
-            boolean match = ModelCompareUtils.compareAndDisplayDifferences( expectedModel, model );
+            boolean match = ModelCompareUtils.compareAndDisplayDifferences(expectedModel, model);
 //            if (!match) {
 //                System.out.println("Model " + name);
 //                model.write(System.out, "Turtle");
@@ -89,21 +89,21 @@ public class TestNamedGraphs {
             assertTrue("expected and found models must be isomorphic", match);
         }
     }
-    
-    /* @Test */ public void testNamedGraphs() throws IOException, JsonException {
-        testNamedGraphs(
-                ":r :p 'foo'.", 
-                new String[]{"http://www.epimoporphics.com/graph1", "http://www.epimoporphics.com/graph2"},
-                new String[]{":r2 :p2 'foobar'.", ":r3 :p3 'foobarbaz'."} );
-        testNamedGraphs(
-                ":r :p 'foo'.", 
-                new String[]{},
-                new String[]{} );
-        testNamedGraphs(
-                ":r :p 'foo'.", 
-                new String[]{"http://www.epimoporphics.com/graph1"},
-                new String[]{":r2 :p2 'foobar'."} );
-    }
-    
-}
 
+    /* @Test */
+    public void testNamedGraphs() throws IOException, JsonException {
+        testNamedGraphs(
+                ":r :p 'foo'.",
+                new String[]{"http://www.epimoporphics.com/graph1", "http://www.epimoporphics.com/graph2"},
+                new String[]{":r2 :p2 'foobar'.", ":r3 :p3 'foobarbaz'."});
+        testNamedGraphs(
+                ":r :p 'foo'.",
+                new String[]{},
+                new String[]{});
+        testNamedGraphs(
+                ":r :p 'foo'.",
+                new String[]{"http://www.epimoporphics.com/graph1"},
+                new String[]{":r2 :p2 'foobar'."});
+    }
+
+}

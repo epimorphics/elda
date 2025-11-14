@@ -12,8 +12,8 @@ import java.util.Set;
 
 public interface WantsMetadata {
 
-	public boolean wantsMetadata( String name );
-	
-	public Set<String> metaNames();
-	
+    public boolean wantsMetadata(String name);
+
+    public Set<String> metaNames();
+
 }

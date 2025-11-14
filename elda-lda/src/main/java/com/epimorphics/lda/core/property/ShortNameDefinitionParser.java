@@ -12,29 +12,31 @@ import java.util.regex.Pattern;
  * This parser accepts any definition and attempts to obtain a property from it.
  */
 class ShortNameDefinitionParser implements DefinitionParser {
-	private final Pattern pattern;
-	private final ShortnameService svc;
+    private final Pattern pattern;
+    private final ShortnameService svc;
 
-	ShortNameDefinitionParser(ShortnameService svc) {
-		this.pattern = Pattern.compile("(.+)");
-		this.svc = svc;
-	}
+    ShortNameDefinitionParser(ShortnameService svc) {
+        this.pattern = Pattern.compile("(.+)");
+        this.svc = svc;
+    }
 
-	@Override public Pattern pattern() {
-		return pattern;
-	}
+    @Override
+    public Pattern pattern() {
+        return pattern;
+    }
 
-	@Override public ViewProperty getViewProperty(String definition, ViewProperty.Factory factory) {
-		Property prop = expand(definition);
-		return new ViewProperty.Base(prop);
-	}
+    @Override
+    public ViewProperty getViewProperty(String definition, ViewProperty.Factory factory) {
+        Property prop = expand(definition);
+        return new ViewProperty.Base(prop);
+    }
 
-	private Property expand(String name) {
-		String fullName = svc.expand(name);
-		if (fullName == null) {
-			throw new UnknownShortnameException(name);
-		}
+    private Property expand(String name) {
+        String fullName = svc.expand(name);
+        if (fullName == null) {
+            throw new UnknownShortnameException(name);
+        }
 
-		return ResourceFactory.createProperty(fullName);
-	}
+        return ResourceFactory.createProperty(fullName);
+    }
 }

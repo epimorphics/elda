@@ -17,126 +17,140 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.hp.hpl.jena.rdf.model.Resource;
 
 /**
- 	introduced to try and pull apart the types of arguments to the different filtering
- 	functions so that they're not all strings.
-*/
-public abstract class Param
-	{
-	final String p;
-	final ShortnameService sns;
-	
-	protected Param( ShortnameService sns, String p ) { this.p = p; this.sns = sns; }
-	
-	public static Param make( ShortnameService sns, String p ) 
-		{ 
-		int hyphen = p.indexOf('-');
-		if (hyphen < 0)
-			{
-			return new PlainParam( sns, p );
-			}
-		else
-			{
-			String prefix = p.substring(0, hyphen+1);
-			String name = p.substring(hyphen+1);
-			return new PrefixedParam( sns, prefix, name );
-			}
-		}
-	    	
-	static class PrefixedParam extends Param 
-		{
-		final String prefix;
-		
-		protected PrefixedParam( ShortnameService sns, String prefix, String p ) 
-			{ super( sns, p ); this.prefix = prefix; }
-		
-		@Override public String toString()
-			{ return prefix + "--" + p; }
+ * introduced to try and pull apart the types of arguments to the different filtering
+ * functions so that they're not all strings.
+ */
+public abstract class Param {
+    final String p;
+    final ShortnameService sns;
 
-		@Override public Param expand(Bindings cc) 
-			{ return new PrefixedParam( sns, prefix, cc.expandVariables( p ) ); }
+    protected Param(ShortnameService sns, String p) {
+        this.p = p;
+        this.sns = sns;
+    }
 
-		@Override public String prefix() 
-			{ return prefix; }
+    public static Param make(ShortnameService sns, String p) {
+        int hyphen = p.indexOf('-');
+        if (hyphen < 0) {
+            return new PlainParam(sns, p);
+        } else {
+            String prefix = p.substring(0, hyphen + 1);
+            String name = p.substring(hyphen + 1);
+            return new PrefixedParam(sns, prefix, name);
+        }
+    }
 
-		@Override public Param plain() 
-			{ return new PlainParam( sns, p ); }
-		}
-	
-	static class PlainParam extends Param
-		{
-		protected PlainParam( ShortnameService sns, String p )
-			{ super( sns, p ); }
+    static class PrefixedParam extends Param {
+        final String prefix;
 
-		@Override public Param expand(Bindings cc) 
-			{ return new PlainParam( sns, cc.expandVariables( p ) ); }
+        protected PrefixedParam(ShortnameService sns, String prefix, String p) {
+            super(sns, p);
+            this.prefix = prefix;
+        }
 
-		@Override public String prefix()
-			{ return null; }
+        @Override
+        public String toString() {
+            return prefix + "--" + p;
+        }
 
-		@Override public Param plain() 
-			 { return this; }
-		}
+        @Override
+        public Param expand(Bindings cc) {
+            return new PrefixedParam(sns, prefix, cc.expandVariables(p));
+        }
 
-	public String lastPropertyOf() {
-		String [] parts = this.asString().split( "\\." );
-		return parts[parts.length - 1];
-	}
-	
-	@Override public String toString() { return p; }
-	
-	public String asString() { return p; }
-	
-	public static class Info
-		{
-		public final String shortName;
-		public final Resource asResource;
-		public final URINode asURI;
-		public final String typeURI;
-		public final boolean inverse;
-		
-		private Info(Resource r, boolean inverse, String p, String typeURI) 
-			{
-			this.asResource = r;
-			this.shortName = p;
-			this.typeURI = typeURI;
-			this.asURI = RDFQ.uri( r );
-			this.inverse = inverse;
-			}
+        @Override
+        public String prefix() {
+            return prefix;
+        }
 
-		public static Info create( ShortnameService sns, String p ) 
-			{
-			boolean inverse = false;
-			if (p.startsWith("~")) {
-				inverse = true;
-				p = p.substring(1);
-			}
-			Resource r = sns.asResource(p);
-			ContextPropertyInfo prop = sns.asContext().getPropertyByName( p );
-			String type = prop == null ? null : prop.getType();
-			return new Info(r, inverse, p, type);
-			}
-		
-		public Triple tripleWith(Any S, Any O) {
-			return inverse ? RDFQ.triple(O, asURI, S) : RDFQ.triple(S, asURI, O);
-		}
-		
-		@Override public String toString() 
-			{
-			return "<Info " + (inverse ? "(inverted) " : "") + shortName + " is " + asResource + ", with type " + typeURI + ">";
-			}
-		}
-	
-	public Info[] fullParts() 
-		{
-		String [] parts = p.split("\\.");
-		Info [] result = new Info[parts.length];
-		for (int i = 0; i < result.length; i += 1) result[i] = Info.create(sns, parts[i]);
-		return result;
-		}
-	
-	public abstract Param expand( Bindings cc );
+        @Override
+        public Param plain() {
+            return new PlainParam(sns, p);
+        }
+    }
 
-	public abstract String prefix();
+    static class PlainParam extends Param {
+        protected PlainParam(ShortnameService sns, String p) {
+            super(sns, p);
+        }
 
-	public abstract Param plain();
-	}
+        @Override
+        public Param expand(Bindings cc) {
+            return new PlainParam(sns, cc.expandVariables(p));
+        }
+
+        @Override
+        public String prefix() {
+            return null;
+        }
+
+        @Override
+        public Param plain() {
+            return this;
+        }
+    }
+
+    public String lastPropertyOf() {
+        String[] parts = this.asString().split("\\.");
+        return parts[parts.length - 1];
+    }
+
+    @Override
+    public String toString() {
+        return p;
+    }
+
+    public String asString() {
+        return p;
+    }
+
+    public static class Info {
+        public final String shortName;
+        public final Resource asResource;
+        public final URINode asURI;
+        public final String typeURI;
+        public final boolean inverse;
+
+        private Info(Resource r, boolean inverse, String p, String typeURI) {
+            this.asResource = r;
+            this.shortName = p;
+            this.typeURI = typeURI;
+            this.asURI = RDFQ.uri(r);
+            this.inverse = inverse;
+        }
+
+        public static Info create(ShortnameService sns, String p) {
+            boolean inverse = false;
+            if (p.startsWith("~")) {
+                inverse = true;
+                p = p.substring(1);
+            }
+            Resource r = sns.asResource(p);
+            ContextPropertyInfo prop = sns.asContext().getPropertyByName(p);
+            String type = prop == null ? null : prop.getType();
+            return new Info(r, inverse, p, type);
+        }
+
+        public Triple tripleWith(Any S, Any O) {
+            return inverse ? RDFQ.triple(O, asURI, S) : RDFQ.triple(S, asURI, O);
+        }
+
+        @Override
+        public String toString() {
+            return "<Info " + (inverse ? "(inverted) " : "") + shortName + " is " + asResource + ", with type " + typeURI + ">";
+        }
+    }
+
+    public Info[] fullParts() {
+        String[] parts = p.split("\\.");
+        Info[] result = new Info[parts.length];
+        for (int i = 0; i < result.length; i += 1) result[i] = Info.create(sns, parts[i]);
+        return result;
+    }
+
+    public abstract Param expand(Bindings cc);
+
+    public abstract String prefix();
+
+    public abstract Param plain();
+}

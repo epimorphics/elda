@@ -27,74 +27,71 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.vocabulary.RDF;
 import com.hp.hpl.jena.vocabulary.RDFS;
 
-public class ResultSetResource
-    {
+public class ResultSetResource {
     final String resourceVar;
     final String parameterName;
     final String parameterValue;
     final String queryString;
     final String myURI;
-    
-    public ResultSetResource( SharedConfig config, String var, String name, String value, String query, String myURI )
-        {
+
+    public ResultSetResource(SharedConfig config, String var, String name, String value, String query, String myURI) {
         this.resourceVar = var;
         this.parameterName = name;
         this.parameterValue = value;
         this.queryString = query;
         this.myURI = myURI;
-        }
-    
-    public String getURI()
-        { return myURI; }
-    
-    public String pullResults( int from, int limit )
-        {
+    }
+
+    public String getURI() {
+        return myURI;
+    }
+
+    public String pullResults(int from, int limit) {
         List<Resource> inOrder = new ArrayList<Resource>();
         Model resultModel = ModelFactory.createDefaultModel();
-        resultModel.setNsPrefixes( EndPoint.model );
-        Resource me = resultModel.createResource( myURI );
-        Resource firstPage = resultModel.createResource( myURI + ";offset=0" );
-        Resource nextPage = resultModel.createResource( myURI + ";offset=" + (from + limit) + ";limit=" + limit );
-        Resource prevPage = resultModel.createResource( myURI + ";offset=" + notNegative(from - limit) + ";limit=" + limit );
+        resultModel.setNsPrefixes(EndPoint.model);
+        Resource me = resultModel.createResource(myURI);
+        Resource firstPage = resultModel.createResource(myURI + ";offset=0");
+        Resource nextPage = resultModel.createResource(myURI + ";offset=" + (from + limit) + ";limit=" + limit);
+        Resource prevPage = resultModel.createResource(myURI + ";offset=" + notNegative(from - limit) + ";limit=" + limit);
         me
-            .addProperty( RDF.type, API.ListEndpoint)
-            .addProperty( RDFS.comment, "some comment here" )
-            .addProperty( XHV.first, firstPage )
-            ;
-        ResultSet rs = rq( from, limit );
+                .addProperty(RDF.type, API.ListEndpoint)
+                .addProperty(RDFS.comment, "some comment here")
+                .addProperty(XHV.first, firstPage)
+        ;
+        ResultSet rs = rq(from, limit);
         StringBuilder b = new StringBuilder();
-        while (rs.hasNext()) 
-            {
+        while (rs.hasNext()) {
             QuerySolution row = rs.next();
-            Resource x = row.getResource( resourceVar );
-            inOrder.add( x );
-            System.err.println( "|> " + resourceVar + " = " + x );
-            resultModel.add( x.inModel( EndPoint.model ).listProperties() );
-            b.append( row );
-            b.append( "\n" );
-            }
-        RDFList list = resultModel.createList( inOrder.iterator() );
+            Resource x = row.getResource(resourceVar);
+            inOrder.add(x);
+            System.err.println("|> " + resourceVar + " = " + x);
+            resultModel.add(x.inModel(EndPoint.model).listProperties());
+            b.append(row);
+            b.append("\n");
+        }
+        RDFList list = resultModel.createList(inOrder.iterator());
         firstPage
-            .addProperty( API.contains, list )
-            .addProperty( XHV.first, firstPage )
-            .addProperty( XHV.prev, prevPage )
-            .addProperty( XHV.next, nextPage )
-            ;
+                .addProperty(API.contains, list)
+                .addProperty(XHV.first, firstPage)
+                .addProperty(XHV.prev, prevPage)
+                .addProperty(XHV.next, nextPage)
+        ;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        resultModel.write( bos, "TTL" );
+        resultModel.write(bos, "TTL");
         String resultModelString = bos.toString();
         return b.toString() + "\n" + resultModelString;
-        }
-    
-    private ResultSet rq( int from, int limit )
-        {
-        QuerySolution initial = QuerySupport.mapToStringLiteral( parameterName, parameterValue );
-        return QuerySupport.runQuery( EndPoint.model, queryString, from, limit, initial );
-        }
-    
-    private int notNegative( int i )
-        { return i < 0 ? 0 : i; }
     }
+
+    private ResultSet rq(int from, int limit) {
+        QuerySolution initial = QuerySupport.mapToStringLiteral(parameterName, parameterValue);
+        return QuerySupport.runQuery(EndPoint.model, queryString, from, limit, initial);
+    }
+
+    private int notNegative(int i) {
+        return i < 0 ? 0 : i;
+    }
+}
     
 /*
     (c) Copyright 2010 Epimorphics Limited

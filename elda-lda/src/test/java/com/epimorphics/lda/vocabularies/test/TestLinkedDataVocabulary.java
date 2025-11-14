@@ -14,39 +14,38 @@
 
 package com.epimorphics.lda.vocabularies.test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import org.hamcrest.Matcher;
-import org.junit.Test;
-
 import com.epimorphics.lda.vocabularies.API;
 import com.hp.hpl.jena.rdf.model.Property;
 import com.hp.hpl.jena.rdf.model.Resource;
+import org.hamcrest.Matcher;
+import org.junit.Test;
 
-public class TestLinkedDataVocabulary
-    {
-    @Test public void testAPIURI()
-        {
-        assertThat( API.getURI(), is( "http://purl.org/linked-data/api/vocab#" ) );
-        }
-    
-    @Test public void testAPITypes()
-        {
-        assertThat( API.ListEndpoint, isAPIResource( Resource.class, "ListEndpoint" ) );
-        }
-    
-    @Test public void testAPIProperties()
-        {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+public class TestLinkedDataVocabulary {
+    @Test
+    public void testAPIURI() {
+        assertThat(API.getURI(), is("http://purl.org/linked-data/api/vocab#"));
+    }
+
+    @Test
+    public void testAPITypes() {
+        assertThat(API.ListEndpoint, isAPIResource(Resource.class, "ListEndpoint"));
+    }
+
+    @Test
+    public void testAPIProperties() {
 //        assertThat( API.resourceVar, isAPIResource( Property.class, "resourceVar" ) );
 //        assertThat( API.paramVar, isAPIResource( Property.class, "paramVar" ) );
-        assertThat( API.viewer, isAPIResource( Property.class, "viewer" ) );
-        assertThat( API.items, isAPIResource( Property.class, "items" ) );
-        }
-    
-    private Matcher<Resource> isAPIResource( final Class<? extends Resource> c, final String localName )
-        { return new ResourceMatcher( c, API.getURI(), localName ); }
+        assertThat(API.viewer, isAPIResource(Property.class, "viewer"));
+        assertThat(API.items, isAPIResource(Property.class, "items"));
     }
+
+    private Matcher<Resource> isAPIResource(final Class<? extends Resource> c, final String localName) {
+        return new ResourceMatcher(c, API.getURI(), localName);
+    }
+}
 
     
 /*

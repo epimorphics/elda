@@ -15,7 +15,7 @@ package com.epimorphics.lda.exceptions;
 /**
  * Used to indicated an update/delete operation on an API
  * specification was rejected due to incorrect credential of some sort.
- * 
+ *
  * @author <a href="mailto:der@epimorphics.com">Dave Reynolds</a>
  * @version $Revision: $
  */
@@ -27,4 +27,3 @@ public class APISecurityException extends Exception {
         super(message);
     }
 }
-

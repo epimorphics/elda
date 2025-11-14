@@ -16,15 +16,17 @@ import com.epimorphics.lda.exceptions.EldaException;
 import com.hp.hpl.jena.rdf.model.Model;
 
 /**
-	A ModelLoadI that throws a NotFoundException whatever uri is
-	passed to loadModel. 
- 
-	@author chris
-*/
-public class LoadsNothing implements ModelLoader
-	{
-	public static final LoadsNothing instance = new LoadsNothing();
-	
-	@Override public Model loadModel( String uri) 
-		{ EldaException.NotFound( "model", uri ); return /* never */ null; }
-	}
+ * A ModelLoadI that throws a NotFoundException whatever uri is
+ * passed to loadModel.
+ *
+ * @author chris
+ */
+public class LoadsNothing implements ModelLoader {
+    public static final LoadsNothing instance = new LoadsNothing();
+
+    @Override
+    public Model loadModel(String uri) {
+        EldaException.NotFound("model", uri);
+        return /* never */ null;
+    }
+}
