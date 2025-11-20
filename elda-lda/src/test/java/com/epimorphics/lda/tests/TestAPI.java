@@ -33,7 +33,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestAPI {
 
@@ -55,12 +55,12 @@ public class TestAPI {
                 Model expected = EldaFileManager.get().loadModel(TEST_BASE + expectedResults);
                 if (!compareNormalized(expected, rsm)) {
                     // Print out to help debugging
-                    // System.out.println(">>  FAILED output for " + description
-                    // + " [" + expectedResults + "]");
-                    // rs.getModel().write(System.out, "Turtle");
-                    // System.out.println( ">> EXPECTED:" );
-                    // expected.write(System.out, "Turtle" );
-                    assertTrue("Failed model comparison for " + expectedResults, false);
+//                     System.out.println(">>  FAILED output for " + description
+//                     + " [" + expectedResults + "]");
+                     rsm.write(System.out, "Turtle");
+                     System.out.println( ">> EXPECTED:" );
+                     expected.write(System.out, "Turtle" );
+                    fail("Failed model comparison for " + expectedResults);
                 }
             } catch (NotFoundException e) {
                 // Create the data file for comparison with future runs
@@ -198,6 +198,14 @@ public class TestAPI {
     public void testOrderInQuery() {
         testAPI("http://dummy/doc/schools/london", "_sort=size", "testSpecLondonSize.ttl");
         testAPI("http://dummy/doc/schools/london", "_sort=-size", "testSpecLondonSizeDown.ttl");
+        testAPI("http://dummy/doc/schools", "_pageSize=25&_sort=localAuthority.rdfs_label,localAuthority.rdf_type,name", "testSortTree.ttl");
+        testAPI("http://dummy/doc/schools", "_pageSize=25&min-localAuthority.rdfs_label=A&_sort=localAuthority.rdfs_label,localAuthority.rdf_type,name", "testSortTreeWithFilter.ttl");
+    }
+
+    @Test
+    public void testFilterNotExists() {
+        testAPI("http://dummy/doc/schools", "exists-ex_type=false&_sort=name", "testSpecFilterNotEx.ttl");
+        testAPI("http://dummy/doc/schools", "exists-ex_type=false&_sort=ex_type,name", "testSpecFilterNotEx.ttl");
     }
 
     @Test
