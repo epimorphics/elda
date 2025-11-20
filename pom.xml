@@ -224,7 +224,7 @@
     <repository>
       <id>epi-public-s3-snapshot</id>
       <name>Epimorphics S3 snapshot repository</name>
-      <url>s3://epi-repository/snapshot</url>
+      <url>https://s3-eu-west-1.amazonaws.com/epi-repository/snapshot</url>
       <releases>
         <enabled>false</enabled>
       </releases>
@@ -236,7 +236,7 @@
     <repository>
       <id>epi-public-s3-release</id>
       <name>Epimorphics S3 release repository</name>
-      <url>s3://epi-repository/release</url>
+      <url>https://s3-eu-west-1.amazonaws.com/epi-repository/release</url>
       <releases>
         <enabled>true</enabled>
       </releases>
