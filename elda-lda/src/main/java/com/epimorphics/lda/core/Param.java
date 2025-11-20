@@ -14,7 +14,7 @@ import com.epimorphics.lda.rdfq.RDFQ;
 import com.epimorphics.lda.rdfq.RDFQ.Triple;
 import com.epimorphics.lda.rdfq.URINode;
 import com.epimorphics.lda.shortnames.ShortnameService;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 /**
  * introduced to try and pull apart the types of arguments to the different filtering

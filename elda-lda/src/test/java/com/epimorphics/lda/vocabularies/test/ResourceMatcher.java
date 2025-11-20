@@ -11,7 +11,7 @@
  */
 package com.epimorphics.lda.vocabularies.test;
 
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 

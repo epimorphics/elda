@@ -13,11 +13,11 @@ import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.util.DOMUtils;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.shared.PrefixMapping;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -64,12 +64,17 @@ public class TestXMLRenderer {
 
     @Test
     public void testSingleDataStatementWithLanguage() {
-        ensureWrappedRendering("(P lang=en-uk 'b')", resourceInModel("a P 'b'en-uk"));
+        ensureWrappedRendering("(P lang=en-UK 'b')", resourceInModel("a P 'b'en-uk"));
     }
 
     @Test
     public void testSingleDataStatementWithType() {
-        ensureWrappedRendering("(P datatype=string 'b')", resourceInModel("a P 'b'xsd:string"));
+        ensureWrappedRendering("(P datatype=integer '42')", resourceInModel("a P '42'xsd:integer"));
+    }
+
+    @Test
+    public void stringDatatypeIsSuppressed() {
+        ensureWrappedRendering("(P 'b')", resourceInModel("a P 'b'xsd:string"));
     }
 
     @Test
@@ -80,7 +85,7 @@ public class TestXMLRenderer {
         // not sure how to improve this without arranging a pipeline through to the
         // renderer.
         ensureRendering(wrap("eh:/root", "(R href=eh:/a (P (item 'aa') (item 'b')))"), resourceInModel("root R a; a P 'b'; a P 'aa'"));
-        ensureWrappedRendering("(P datatype=string 'b')", resourceInModel("a P 'b'xsd:string"));
+        ensureWrappedRendering("(P 'b')", resourceInModel("a P 'b'xsd:string"));
     }
 
     /*

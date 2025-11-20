@@ -8,7 +8,7 @@
 
 package com.epimorphics.jsonrdf.utils;
 
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 public class ModelCompareUtils {
 

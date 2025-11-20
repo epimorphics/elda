@@ -9,7 +9,7 @@ package com.epimorphics.lda.apispec.tests;
 
 import com.epimorphics.lda.specs.APISpec;
 import com.epimorphics.lda.support.EldaFileManager;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 public class SpecUtil {
 

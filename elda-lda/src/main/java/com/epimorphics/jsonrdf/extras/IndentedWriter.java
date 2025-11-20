@@ -8,8 +8,8 @@
 
 package com.epimorphics.jsonrdf.extras;
 
-import com.hp.hpl.jena.sparql.ARQInternalErrorException;
-import com.hp.hpl.jena.util.FileUtils;
+import org.apache.jena.sparql.ARQInternalErrorException;
+import org.apache.jena.util.FileUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;

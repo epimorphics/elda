@@ -11,7 +11,7 @@ package com.epimorphics.lda.shortnames.tests;
 import com.epimorphics.lda.renderers.json.JSONPropertyNaming;
 import com.epimorphics.lda.tests_support.MakeData;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.shared.PrefixMapping;
 import org.junit.Test;
 
 import java.util.Map;

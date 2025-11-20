@@ -13,7 +13,7 @@ import com.epimorphics.lda.exceptions.APIException;
 import com.epimorphics.lda.restlets.RouterRestletSupport;
 import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.support.TDBManager;
-import com.hp.hpl.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Model;
 
 public class APIModelLoader implements ModelLoader {
 

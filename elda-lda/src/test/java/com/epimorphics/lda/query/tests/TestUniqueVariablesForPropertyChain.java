@@ -16,7 +16,7 @@ import com.epimorphics.lda.support.MultiMap;
 import com.epimorphics.lda.tests.FakeNamedViews;
 import com.epimorphics.lda.tests.SNS;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.shared.PrefixMapping;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;

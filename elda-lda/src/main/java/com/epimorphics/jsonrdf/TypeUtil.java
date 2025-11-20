@@ -12,15 +12,15 @@
 
 package com.epimorphics.jsonrdf;
 
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.NodeFactory;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.reasoner.TriplePattern;
-import com.hp.hpl.jena.reasoner.transitiveReasoner.TransitiveGraphCache;
-import com.hp.hpl.jena.reasoner.transitiveReasoner.TransitiveReasoner;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.NodeFactory;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.reasoner.TriplePattern;
+import org.apache.jena.reasoner.transitiveReasoner.TransitiveGraphCache;
+import org.apache.jena.reasoner.transitiveReasoner.TransitiveReasoner;
+import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 
 /**
  * Support for comparing datatypes to reflect XSD type heirarchy
@@ -53,7 +53,7 @@ public class TypeUtil {
     }
 
     static void addSubClass(TransitiveGraphCache tgc, Resource sub, Resource sup) {
-        tgc.addRelation(new Triple(sub.asNode(), RDFS.subClassOf.asNode(), sup.asNode()));
+        tgc.addRelation(Triple.create(sub.asNode(), RDFS.subClassOf.asNode(), sup.asNode()));
     }
 
     public static boolean isSubTypeOf(Resource a, Resource b) {

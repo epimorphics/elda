@@ -75,6 +75,7 @@ spec:londonSchools
     api:selector [
     	api:type school-ont:School;
     	api:filter "localAuthority.label=London";
+    	api:orderBy "?item"
     ] .
      
 spec:laSchools
@@ -127,6 +128,7 @@ spec:typedSchools
     api:selector [
     	api:type school-ont:School;
     	api:filter "school_type={type}";
+    	api:orderBy "?item";
     ] .
          
 spec:departmentsEn
@@ -151,7 +153,7 @@ spec:departmentsFr
          
 # Ontology and annotation information
 school-ont:School a owl:Class; api:label "School" .
-ex:size a owl:DatatypeProperty; api:label "size" ; rdfs:range xsd:int .
+ex:size a owl:DatatypeProperty; api:label "size" ; rdfs:range xsd:integer .
 ex:name a owl:DatatypeProperty; api:label "name" .
 
 ex:type a owl:ObjectProperty
@@ -170,6 +172,3 @@ school-ont:localAuthority
 rdfs:label a rdf:Property
     ; api:label "label"
     .
-
-
-

@@ -33,12 +33,11 @@ import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.util.iterator.Map1;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static com.epimorphics.util.RDFUtils.getResourceValue;
 import static com.epimorphics.util.RDFUtils.getStringValue;
@@ -244,13 +244,8 @@ public class APISpec extends SpecCommon {
         return result;
     }
 
-    private static final Map1<Statement, Source> toSource(final FileManager fm, final AuthMap am) {
-        return new Map1<Statement, Source>() {
-            @Override
-            public Source map1(Statement o) {
-                return GetDataSource.sourceFromSpec(fm, o.getResource(), am);
-            }
-        };
+    private static Function<Statement, Source> toSource(final FileManager fm, final AuthMap am) {
+        return statement -> GetDataSource.sourceFromSpec(fm, statement.getResource(), am);
     }
 
     ;

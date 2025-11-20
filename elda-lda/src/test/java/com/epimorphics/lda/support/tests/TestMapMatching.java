@@ -16,7 +16,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import static com.hp.hpl.jena.test.JenaTestBase.setOfStrings;
+import static org.apache.jena.test.JenaTestBase.setOfStrings;
 import static org.junit.Assert.assertEquals;
 
 public class TestMapMatching {

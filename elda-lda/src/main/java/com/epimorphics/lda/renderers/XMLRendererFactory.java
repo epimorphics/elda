@@ -13,7 +13,7 @@ import com.epimorphics.lda.shortnames.CompleteContext;
 import com.epimorphics.lda.shortnames.CompleteContext.Mode;
 import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.util.MediaType;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Resource;
 
 public class XMLRendererFactory implements RendererFactory {
 

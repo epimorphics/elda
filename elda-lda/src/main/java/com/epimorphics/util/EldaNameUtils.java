@@ -8,7 +8,8 @@
 
 package com.epimorphics.util;
 
-import com.hp.hpl.jena.rdf.model.impl.Util;
+import org.apache.jena.rdf.model.impl.Util;
+import org.apache.jena.util.SplitIRI;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,11 +31,11 @@ public class EldaNameUtils {
     public static final Pattern prefixSyntax = Pattern.compile("^[A-Za-z][a-zA-Z0-9]*_");
 
     public static String nameSpace(String uri) {
-        return uri.substring(0, Util.splitNamespace(uri));
+        return SplitIRI.namespace(uri);
     }
 
     public static String localName(String uri) {
-        return uri.substring(Util.splitNamespace(uri));
+        return SplitIRI.localname(uri);
     }
 
     /**
@@ -47,5 +48,23 @@ public class EldaNameUtils {
         return m.find() ? m.end() : -1;
     }
 
-
+    /**
+     * Answer an escaped version of the local name <code>ln</code>,
+     * where any character that is not a letter, digit or _ is replaced
+     * by _<hex>_, where <hex> is the hexadecimal code of the character.
+     */
+    public static String escapeLocalName(String ln) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < ln.length(); i++) {
+            char c = ln.charAt(i);
+            if (Character.isLetterOrDigit(c) || c == '_') {
+                sb.append(c);
+            } else {
+                sb.append('_');
+                sb.append(Integer.toHexString(c));
+                sb.append('_');
+            }
+        }
+        return sb.toString();
+    }
 }

@@ -10,11 +10,11 @@ package com.epimorphics.lda.apispec.tests;
 
 import com.epimorphics.lda.specs.ExtractPrefixMapping;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.test.ModelTestBase;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.test.ModelTestBase;
+import org.apache.jena.shared.PrefixMapping;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -51,7 +51,7 @@ public class TestAPISpecExtractPrefixMapping {
     @Test
     public void testWithOneMappingInModel() {
         String modelString = "mine api:prefixMapping _x; _x api:prefix 'spoo'; _x api:namespace 'eh:/whatever/spoo#'";
-        testWithPrefixesFromModelAPI(modelString, "spoo=eh:/whatever/spoo#");
+        testWithPrefixesFromModelAPI(modelString, "spoo=eh:/whatever/spoo#; api=http://purl.org/linked-data/api/vocab#");
     }
 
     @Test
@@ -63,7 +63,7 @@ public class TestAPISpecExtractPrefixMapping {
                         + "; mine api:prefixMapping _y"
                         + "; _y api:prefix 'red'"
                         + "; _y api:namespace 'eh:/whatever/reddish#'";
-        testWithPrefixesFromModelAPI(modelString, "spoo=eh:/whatever/spoo#; red=eh:/whatever/reddish#");
+        testWithPrefixesFromModelAPI(modelString, "spoo=eh:/whatever/spoo#; red=eh:/whatever/reddish#; api=http://purl.org/linked-data/api/vocab#");
     }
 
     private void testWithPrefixesFromModelAPI(String modelString, String mappingString) {

@@ -20,8 +20,8 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.shortnames.StandardShortnameService;
 import com.epimorphics.lda.tests_support.LoadsNothing;
 import com.epimorphics.lda.tests_support.MakeData;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
@@ -143,7 +143,7 @@ public class TestPropertyChainEndToEnd {
         APIQuery q = QueryTestUtils.queryFromSNS(sns);
         ContextQueryUpdater x = new ContextQueryUpdater(ContextQueryUpdater.ListEndpoint, (Bindings) null, NamedViews.oneNamedView, sns, q);
         x.addFilterFromQuery(Param.make(sns, propertyThing), "17.9");
-        assertContains(q.assembleSelectQuery(prefixes), "\"17.9\"^^<http://www.w3.org/2001/XMLSchema#string>");
+        assertContains(q.assembleSelectQuery(prefixes), "\"17.9\"");
     }
 
     private void assertContains(String target, String want) {

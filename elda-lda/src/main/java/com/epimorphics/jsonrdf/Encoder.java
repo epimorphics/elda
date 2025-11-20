@@ -14,12 +14,11 @@ package com.epimorphics.jsonrdf;
 
 import com.epimorphics.jsonrdf.impl.EncoderDefault;
 import com.epimorphics.lda.vocabularies.API;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.OneToManyMap;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
-import com.hp.hpl.jena.util.iterator.Map1;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.util.OneToManyMap;
+import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.atlas.json.JsonObject;
 import org.codehaus.jettison.json.JSONException;
 
@@ -367,12 +366,7 @@ public class Encoder {
 
             if (roots != null) for (Resource root : roots) {
                 ExtendedIterator<Resource> i = root.listProperties(API.items)
-                        .mapWith(new Map1<Statement, Resource>() {
-                            @Override
-                            public Resource map1(Statement o) {
-                                return o.getResource();
-                            }
-                        });
+                        .mapWith(Statement::getResource);
                 while (i.hasNext()) {
                     Resource list = i.next();
                     if (RDFUtil.isList(list))
@@ -380,13 +374,7 @@ public class Encoder {
                 }
                 topItemLists = res;
                 for (RDFList list : topItemLists) {
-                    ExtendedIterator<Resource> iter = list.iterator().mapWith(new Map1<RDFNode, Resource>() {
-
-                        @Override
-                        public Resource map1(RDFNode o) {
-                            return o.asResource();
-                        }
-                    });
+                    ExtendedIterator<Resource> iter = list.iterator().mapWith(RDFNode::asResource);
                     res2.addAll(iter.toList());
                 }
             }

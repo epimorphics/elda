@@ -8,11 +8,14 @@
 
 package com.epimorphics.sources.test;
 
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.sparql.util.Context;
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.sparql.core.Quad;
+import org.apache.jena.sparql.util.Context;
+import org.apache.jena.util.FileManager;
 
 import java.util.Iterator;
 import java.util.List;
@@ -30,16 +33,6 @@ public class QueryExecutionWithHistory implements QueryExecution {
     QueryExecutionWithHistory(QueryExecution qe, List<String> history) {
         this.qe = qe;
         this.history = history;
-    }
-
-    @Override
-    public void setInitialBinding(QuerySolution binding) {
-        qe.setInitialBinding(binding);
-    }
-
-    @Override
-    public void setFileManager(FileManager fm) {
-        qe.setFileManager(fm);
     }
 
     @Override
@@ -87,9 +80,24 @@ public class QueryExecutionWithHistory implements QueryExecution {
     }
 
     @Override
+    public JsonArray execJson() {
+        return null;
+    }
+
+    @Override
+    public Iterator<JsonObject> execJsonItems() {
+        return null;
+    }
+
+    @Override
     public void close() {
         history.add("CLOSE");
         qe.close();
+    }
+
+    @Override
+    public boolean isClosed() {
+        return false;
     }
 
     @Override
@@ -98,33 +106,33 @@ public class QueryExecutionWithHistory implements QueryExecution {
     }
 
     @Override
-    public void setTimeout(long timeout) {
-        qe.setTimeout(timeout);
-    }
-
-    @Override
-    public void setTimeout(long timeout, TimeUnit unit) {
-        qe.setTimeout(timeout, unit);
-    }
-
-    @Override
-    public void setTimeout(long arg0, long arg1) {
-        qe.setTimeout(arg0, arg1);
-    }
-
-    @Override
-    public void setTimeout(long time1, TimeUnit unit1, long time2, TimeUnit unit2) {
-        qe.setTimeout(time1, unit1, time2, unit2);
-    }
-
-    @Override
     public Query getQuery() {
         return qe.getQuery();
     }
 
     @Override
+    public String getQueryString() {
+        return qe.getQueryString();
+    }
+
+    @Override
     public Iterator<Triple> execConstructTriples() {
         return qe.execConstructTriples();
+    }
+
+    @Override
+    public Iterator<Quad> execConstructQuads() {
+        return qe.execConstructQuads();
+    }
+
+    @Override
+    public Dataset execConstructDataset() {
+        return qe.execConstructDataset();
+    }
+
+    @Override
+    public Dataset execConstructDataset(Dataset dataset) {
+        return qe.execConstructDataset(dataset);
     }
 
     @Override

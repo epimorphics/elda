@@ -14,11 +14,11 @@ import java.io.StringReader;
 import java.io.StringWriter;
 
 import com.epimorphics.vocabs.API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.shared.JenaException;
-import com.hp.hpl.jena.sparql.vocabulary.FOAF;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.shared.JenaException;
+import org.apache.jena.sparql.vocabulary.FOAF;
+import org.apache.jena.vocabulary.XSD;
 
 public class ModelIOUtils {
 

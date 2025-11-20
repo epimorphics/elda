@@ -8,8 +8,8 @@
 
 package com.epimorphics.lda.rdfq;
 
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.PrefixMapping;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.PrefixMapping;
 
 import java.util.List;
 

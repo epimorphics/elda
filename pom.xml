@@ -21,6 +21,7 @@
     <tempSCM>/tmp/tempSCM</tempSCM>
     <project.tagname/>
 
+    <ver.jena>5.5.0</ver.jena>
     <ver.junit>4.13.2</ver.junit>
     <ver.log4j>2.17.1</ver.log4j>
     <ver.lucene>7.1.0</ver.lucene>

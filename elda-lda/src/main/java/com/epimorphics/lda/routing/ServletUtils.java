@@ -13,10 +13,10 @@ import com.epimorphics.lda.support.MapMatching;
 import com.epimorphics.lda.support.TDBManager;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
-import com.hp.hpl.jena.vocabulary.RDF;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +51,7 @@ public class ServletUtils {
         List<Statement> toAdd = new ArrayList<Statement>();
         List<Resource> apis = m
                 .listStatements(null, RDF.type, API.API)
-                .mapWith(Statement.Util.getSubject)
+                .mapWith(Statement::getSubject)
                 .toList();
         for (Resource api : apis) toAdd.add(m.createStatement(api, ELDA_API.loadedFrom, name));
         m.add(toAdd);

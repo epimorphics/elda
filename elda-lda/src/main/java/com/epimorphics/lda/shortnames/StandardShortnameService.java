@@ -25,12 +25,12 @@ import com.epimorphics.lda.exceptions.UnknownShortnameException;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.RDFUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.OWL;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.RDFS;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.OWL;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.XSD;
 
 import java.util.*;
 
@@ -96,7 +96,7 @@ public class StandardShortnameService implements ShortnameService {
     }
 
     private void extractDatatypes(Model m) {
-        List<Resource> dataTypes = m.listStatements(null, RDF.type, RDFS.Datatype).mapWith(Statement.Util.getSubject).toList();
+        List<Resource> dataTypes = m.listStatements(null, RDF.type, RDFS.Datatype).mapWith(Statement::getSubject).toList();
         for (Resource t : dataTypes) declareDatatype(t.getURI());
         for (Resource p : m.listSubjectsWithProperty(RDF.type, OWL.DatatypeProperty).toList()) {
             for (RDFNode t : m.listObjectsOfProperty(p, RDFS.range).toList()) {

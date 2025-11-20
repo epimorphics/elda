@@ -10,8 +10,8 @@ package com.epimorphics.lda.sources;
 
 import com.epimorphics.lda.support.EldaFileManager;
 import com.epimorphics.lda.support.Glob;
-import com.hp.hpl.jena.shared.WrappedException;
-import com.hp.hpl.jena.util.FileManager;
+import org.apache.jena.shared.WrappedException;
+import org.apache.jena.util.FileManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

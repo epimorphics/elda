@@ -8,7 +8,7 @@ import com.epimorphics.lda.rdfq.Value;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.sources.Source.ResultSetConsumer;
 import com.epimorphics.lda.support.PrefixLogger;
-import com.hp.hpl.jena.query.*;
+import org.apache.jena.query.*;
 
 import java.util.Map;
 import java.util.regex.Matcher;

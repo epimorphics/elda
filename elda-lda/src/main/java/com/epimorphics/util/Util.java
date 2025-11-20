@@ -10,8 +10,8 @@ package com.epimorphics.util;
 
 import com.epimorphics.lda.exceptions.EldaException;
 import com.epimorphics.lda.support.EldaFileManager;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
 
 import java.io.InputStream;
 

@@ -22,9 +22,9 @@ import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.Couple;
 import com.epimorphics.util.URIUtils;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.shared.PrefixMapping;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -422,10 +422,10 @@ public class ComposeConfigDisplay {
     }
 
     protected Set<Couple<String, Resource>> allFiltersOf(Set<Couple<String, Resource>> them, Resource sel) {
-        for (RDFNode p : sel.listProperties(API.parent).mapWith(Statement.Util.getObject).toList()) {
+        for (RDFNode p : sel.listProperties(API.parent).mapWith(Statement::getObject).toList()) {
             allFiltersOf(them, (Resource) p);
         }
-        for (RDFNode f : sel.listProperties(API.filter).mapWith(Statement.Util.getObject).toList()) {
+        for (RDFNode f : sel.listProperties(API.filter).mapWith(Statement::getObject).toList()) {
             String pvs = ((Literal) f).getLexicalForm();
             for (String filter : pvs.split("&"))
                 them.add(new Couple<String, Resource>(filter, sel));

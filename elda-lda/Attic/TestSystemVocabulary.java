@@ -14,8 +14,8 @@ import org.hamcrest.*;
 import static org.junit.Assert.*;
 
 import com.epimorphics.sdx.vocabulary.SYSV;
-import com.hp.hpl.jena.rdf.model.Property;
-import com.hp.hpl.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
 
 public class TestSystemVocabulary {
     @Test

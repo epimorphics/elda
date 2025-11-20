@@ -11,11 +11,11 @@ package com.epimorphics.sources.test;
 import com.epimorphics.lda.sources.Source;
 import com.epimorphics.lda.sources.SourceBase;
 import com.epimorphics.util.CollectionUtils;
-import com.hp.hpl.jena.query.*;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.ModelFactory;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.shared.Lock;
+import org.apache.jena.query.*;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.Lock;
 import org.junit.Test;
 
 import java.util.ArrayList;

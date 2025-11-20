@@ -13,11 +13,11 @@ package com.epimorphics.lda.renderers.common;
 import com.epimorphics.jsonrdf.utils.ModelIOUtils;
 import com.epimorphics.rdfutil.DatasetWrapper;
 import com.epimorphics.rdfutil.ModelWrapper;
-import com.hp.hpl.jena.query.Dataset;
-import com.hp.hpl.jena.query.DatasetFactory;
-import com.hp.hpl.jena.rdf.model.Model;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.ResourceFactory;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.DatasetFactory;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -41,7 +41,8 @@ public class CommonNodeWrapperTest {
             "@prefix example: <http://example/foo#>. " +
             "example:foo example:p \"42\"^^xsd:int; " +
             "            example:q \"42\"^^xsd:string;" +
-            "            example:r example:bar."
+            "            example:r example:bar;" +
+            "            example:s \"forty-two\"."
     );
 
     /***********************************/
@@ -76,8 +77,10 @@ public class CommonNodeWrapperTest {
         CommonNodeWrapper l = new CommonNodeWrapper(mw, mw.getModel().createLiteral("kermit"));
         assertEquals(-1, l.getInt("example:foo", -1));
 
-        // value is not an int
-        assertEquals(-111, n.getInt("example:q", -111));
+        // value is not an int - but can be parsed as one
+        assertEquals(42, n.getInt("example:q", -111));
+        // value is not an int - and cannot be parsed as one
+        assertEquals(-111, n.getInt("example:s", -111));
     }
 
     @Test

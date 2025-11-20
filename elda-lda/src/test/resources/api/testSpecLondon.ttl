@@ -88,16 +88,16 @@ ex:school_27
       api:definition <http://dummy/doc/schools/london/meta> ;
       api:extendedMetadataVersion
               <http://dummy/doc/schools/london?_metadata=all> ;
-      api:items (ex:school_24 ex:school_29 ex:school_28 ex:school_23 ex:school_21 ex:school_22 ex:school_31 ex:school_27 ex:school_25 ex:school_26) ;
+      api:items (ex:school_21 ex:school_22 ex:school_23 ex:school_24 ex:school_25 ex:school_26 ex:school_27 ex:school_28 ex:school_29 ex:school_30) ;
       api:page "0"^^xsd:long ;
       xhv:first <http://dummy/doc/schools/london?_page=0> ;
       xhv:next <http://dummy/doc/schools/london?_page=1> .
 
-ex:school_31
+ex:school_30
       a       school-ont:School ;
       school-ont:localAuthority
               <http://admin.data.gov.uk/def/localAythority#789> ;
-      ex:name "Name31" ;
+      ex:name "Name30" ;
       ex:size 100 ;
       ex:type ex:Primary .
 

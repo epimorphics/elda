@@ -3,9 +3,9 @@ package com.epimorphics.lda.config.tests;
 import com.epimorphics.lda.configs.IncludeReader;
 import com.epimorphics.lda.configs.Position;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.vocabulary.RDF;
-import com.hp.hpl.jena.vocabulary.XSD;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.XSD;
 import org.apache.jena.riot.RiotException;
 import org.junit.Test;
 

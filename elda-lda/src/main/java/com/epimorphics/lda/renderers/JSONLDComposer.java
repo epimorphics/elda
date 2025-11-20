@@ -6,14 +6,18 @@ import com.epimorphics.jsonrdf.RDFUtil;
 import com.epimorphics.jsonrdf.ReadContext;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.datatypes.RDFDatatype;
-import com.hp.hpl.jena.datatypes.xsd.XSDDatatype;
-import com.hp.hpl.jena.datatypes.xsd.impl.XSDBaseNumericType;
-import com.hp.hpl.jena.graph.Node;
-import com.hp.hpl.jena.graph.Triple;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.util.iterator.ExtendedIterator;
-import com.hp.hpl.jena.vocabulary.DCTerms;
+import org.apache.jena.datatypes.RDFDatatype;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.datatypes.xsd.impl.RDFLangString;
+import org.apache.jena.datatypes.xsd.impl.XSDBaseNumericType;
+import org.apache.jena.graph.Node;
+import org.apache.jena.graph.Triple;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.RDFLanguages;
+import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.vocabulary.DCTerms;
+import org.apache.jena.vocabulary.RDF;
+import org.apache.jena.vocabulary.XSD;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -182,15 +186,13 @@ public class JSONLDComposer {
             String spelling = l.getLexicalForm();
             RDFDatatype dt = l.getDatatype();
 
-            if (typeURI == null) {
-                if (lang.equals("")) {
-                    jw.value(spelling);
-                } else {
-                    jw.object();
-                    jw.key("@lang").value(lang);
-                    jw.key("@value").value(spelling);
-                    jw.endObject();
-                }
+            if (RDFLangString.isRDFLangString(dt)){
+                jw.object();
+                jw.key("@lang").value(lang);
+                jw.key("@value").value(spelling);
+                jw.endObject();
+            } else if(dt.equals(XSDDatatype.XSDstring)) {
+                jw.value(spelling);
             } else if (isStructured(p)) {
                 jw.object();
                 jw.key("@type").value(term(typeURI));

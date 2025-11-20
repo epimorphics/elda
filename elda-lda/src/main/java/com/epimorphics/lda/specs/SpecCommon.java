@@ -1,9 +1,9 @@
 package com.epimorphics.lda.specs;
 
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.RDFNode;
-import com.hp.hpl.jena.rdf.model.Resource;
-import com.hp.hpl.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +21,7 @@ public class SpecCommon {
 
     public SpecCommon(Resource root) {
         this.root = root;
-        for (RDFNode x : root.listProperties(ELDA_API.license).mapWith(Statement.Util.getObject).toList()) {
+        for (RDFNode x : root.listProperties(ELDA_API.license).mapWith(Statement::getObject).toList()) {
             licences.add(x);
         }
     }
@@ -32,7 +32,7 @@ public class SpecCommon {
 
     public Set<Resource> getNotices() {
         Set<Resource> result = new HashSet<Resource>();
-        for (RDFNode x : root.listProperties(ELDA_API.notice).mapWith(Statement.Util.getObject).toList()) {
+        for (RDFNode x : root.listProperties(ELDA_API.notice).mapWith(Statement::getObject).toList()) {
             result.add(x.asResource());
         }
         return result;

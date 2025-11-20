@@ -18,10 +18,10 @@ import com.epimorphics.lda.sources.SparqlSource;
 import com.epimorphics.lda.textsearch.TextSearchConfig;
 import com.epimorphics.lda.vocabularies.API;
 import com.epimorphics.lda.vocabularies.ELDA_API;
-import com.hp.hpl.jena.rdf.model.*;
-import com.hp.hpl.jena.test.JenaTestBase;
-import com.hp.hpl.jena.util.FileManager;
-import com.hp.hpl.jena.vocabulary.RDFS;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.test.JenaTestBase;
+import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.RDFS;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
