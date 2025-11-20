@@ -39,7 +39,6 @@ public class TestSharesPropertyVariables {
         ContextQueryUpdater cq = new ContextQueryUpdater(ContextQueryUpdater.ListEndpoint, cc, nv, sns, aq);
         cq.updateQueryAndConstructView(aq.deferredFilters);
         String q = aq.assembleSelectQuery(PrefixMapping.Factory.create());
-        System.out.println(q);
         int count = aq.countVarsAllocated();
         if (count != 1) {
             fail("expected to allocate only one variable, but generated query was:\n" + q + "\nwith " + count + " variables.");
@@ -67,7 +66,6 @@ public class TestSharesPropertyVariables {
         //		OPTIONAL { ?___0 <eh:/p2> ?___1 . }
         //		}  ORDER BY  ?___0  ?___1  ?item OFFSET 0 LIMIT 10
 
-        System.out.println(q);
         List<String> opts = new ArrayList<String>();
         List<String> lines = Arrays.asList(q.split("\n"));
         for (String line : lines)
