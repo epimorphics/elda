@@ -71,16 +71,11 @@ public class TestSharesPropertyVariables {
         for (String line : lines)
             if (line.startsWith("OPTIONAL"))
                 opts.add(line);
-        assertEquals(2, opts.size());
+        assertEquals(1, opts.size());
 
-        String A = opts.get(0), B = opts.get(1);
-        String opt0 = "OPTIONAL { ?item <eh:/p1> ?___0 . }";
-        String opt1 = "OPTIONAL { ?___0 <eh:/p2> ?___1 . }";
-        if (A.equals(opt0) && B.equals(opt1)) return;
-        if (A.equals(opt1) && B.equals(opt0)) return;
-
-        fail("generated query does not reuse ?___0");
-
+        String actual = opts.getFirst();
+        String expected = "OPTIONAL { ?item <eh:/p1> ?___0 . OPTIONAL { ?___0 <eh:/p2> ?___1 .  }  } ";
+        assertEquals("generated query does not construct optional graph tree.", expected, actual);
     }
 
 }

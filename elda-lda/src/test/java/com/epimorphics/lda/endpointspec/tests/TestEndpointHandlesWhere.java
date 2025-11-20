@@ -36,7 +36,7 @@ public class TestEndpointHandlesWhere {
         APIEndpointSpec eps = new APIEndpointSpec(a, a, e);
         APIEndpointImpl i = new APIEndpointImpl(eps);
         String q = i.getSelectQuery();
-        if (!q.replaceAll("[\n ]+", " ").matches("SELECT \\?item WHERE \\{ PONDENOME\\} OFFSET 0 LIMIT 10")) {
+        if (!q.replaceAll("[\n ]+", " ").matches("SELECT \\?item WHERE \\{ PONDENOME \\} OFFSET 0 LIMIT 10")) {
             fail("constructed query '" + q + "'\ndoes not contain api:where clause");
         }
     }
