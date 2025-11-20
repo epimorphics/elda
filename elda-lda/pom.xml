@@ -58,6 +58,7 @@
       </exclusions>
     </dependency>
 
+
     <dependency>
       <groupId>org.apache.jena</groupId>
       <artifactId>jena-core</artifactId>
@@ -70,6 +71,13 @@
           <artifactId>log4j</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-cmds</artifactId>
+      <version>${ver.jena}</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
