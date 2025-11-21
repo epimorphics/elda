@@ -6,3 +6,4 @@
 * Updated Jena to version 5.6.0. Of note in this upgrade is that plain string literals are now represented as xsd:string typed literals, which may affect some node manipulations.
 * Updated Apache Commons Libraries. In particular the `esc` variable in the Velocity context is now the static class `org.apache.commons.text.StringEscapeUtils`, which has different method names than the previous version.
 * Updated Velocity to version 2.4.1. This may require updates to custom templates. See the Velocity 2.x migration guide (https://velocity.apache.org/engine/2.4/upgrading.html#upgrading-from-velocity-1x-to-the-latest-2x-version-for-busy-people) for details.
+* Removed unused dependency on jsonld-java library.

@@ -12,7 +12,6 @@ import com.epimorphics.lda.shortnames.ShortnameService;
 import com.epimorphics.lda.support.Times;
 import com.epimorphics.lda.vocabularies.ELDA_API;
 import com.epimorphics.util.MediaType;
-import com.github.jsonldjava.jena.JenaJSONLD;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
@@ -35,10 +34,6 @@ import java.util.Map;
  * inspection straightforward.
  */
 public class JSONLDRenderer implements Renderer {
-
-    static {
-        JenaJSONLD.init();
-    }
 
     final MediaType mt;
     final APIEndpoint ep;
